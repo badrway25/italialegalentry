@@ -1,0 +1,52 @@
+{% extends "ecosystem/_layout.html" %}{% load i18n static %}
+{% comment %}
+Projet Pilote Vénétie–Maroc — PHASE 3 (Implementation §3.6): gated by G3 (404 while closed).
+Prescribed texts: p3.pilot.title (h1), p3.pilot.body (lead), p3.pilot.sequence (diagram labels).
+Buttons reuse prescribed labels verbatim: p2.forum.registration.button_secondary_pilot (→ the
+« Recueil des besoins » form) and p3.institutions.button (→ institutional proposal form).
+The source note forbids presenting the project as an already authorised channel: the notice right
+after the diagram says so in factual UI wording (it is NOT a prescribed text and quotes no statute).
+{% endcomment %}
+{% block space_header %}
+{% include "components/page_header.html" with eyebrow=_("Projet pilote") title=title.text lead=body.text lang=title.lang_attr %}
+{% endblock %}
+
+{% block space_lead %}
+<section id="sequence" class="pilot-diagram section section--muted section--flush-top" aria-labelledby="sequence-header">
+  <div class="container">
+    <div class="pilot-diagram__head">
+      {% include "components/section_header.html" with id="sequence-header" eyebrow=_("Séquence proposée") title=_("La séquence du projet pilote") %}
+      <img class="pilot-diagram__illustration" src="{% static 'img/illustrations/pilot-flow.svg' %}" alt="" aria-hidden="true" width="640" height="160" loading="lazy" decoding="async">
+    </div>
+  </div>
+  <div class="container container--wide">
+    {% include "ecosystem/partials/pilot_flow.html" %}
+  </div>
+  <div class="container">
+    {% comment %}CONTENT_PENDING_LEGAL_REVIEW — mandatory notice (Implementation §3.6, note): the project is a proposal under construction; factual wording, no statute quoted, to be confirmed by the legal reviewer.{% endcomment %}
+    <div class="pilot-diagram__notice" data-notice="pilot-not-authorised">
+      {% include "components/notice.html" with kind="warning" title=_("Un projet en cours de construction") text=_("Le projet pilote Vénétie–Maroc est présenté ici comme une proposition en cours de construction avec les interlocuteurs concernés. Cette présentation ne signifie pas qu’un canal d’entrée soit déjà autorisé ou opérationnel.") %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block space_main %}
+{% include "ecosystem/partials/photo.html" %}
+{% include "ecosystem/partials/note.html" %}
+
+<div id="participer" class="ecosystem-cta">
+  {% locked "p2.forum.registration.button_secondary_pilot" as interest_label %}{% locked "p3.institutions.button" as institution_label %}
+  {% include "components/cta_panel.html" with title=_("Participer à la construction du projet") text=_("Entreprises : signalez vos besoins professionnels. Institutions : proposez une collaboration.") primary_label=interest_label primary_url=links.company_needs secondary_label=institution_label secondary_url=links.institution_proposal %}
+</div>
+
+{% if links.forum or links.partners %}
+<section class="ecosystem-section ecosystem-related" aria-labelledby="related-header">
+  {% include "components/section_header.html" with id="related-header" title=_("Pour aller plus loin") %}
+  <ul class="list-reset grid-auto">
+    {% if links.forum %}<li>{% locked "p2.forum.header.subtitle" as forum_subtitle %}{% include "components/card.html" with flat=True url=links.forum title=_("Le Forum Vénétie–Maroc") text=forum_subtitle %}</li>{% endif %}
+    {% if links.partners %}<li>{% include "components/card.html" with flat=True url=links.partners title=_("Partenaires") text=_("Les organisations qui participent à l’écosystème.") %}</li>{% endif %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

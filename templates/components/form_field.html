@@ -1,0 +1,28 @@
+{% load i18n %}{% comment %}
+Contract: include with `field` (a BoundField). Optional: `help` (override help text),
+`consent` (True → consent styling for the mandatory, never pre-checked checkbox).
+Renders label, control, help text and errors. Django 5.2 adds aria-invalid and an
+aria-describedby pointing at `{{ field.auto_id }}_helptext` / `{{ field.auto_id }}_error`, so the
+help and error elements below use exactly those ids. Hidden widgets and the honeypot field
+render bare (no label), inside the off-screen wrapper.
+{% endcomment %}{% if field.is_hidden %}{{ field }}{% elif field.name == "website_url" %}<div class="hp-wrap" aria-hidden="true">{{ field }}</div>{% else %}
+<div class="form-field{% if field.errors %} form-field--error{% endif %}{% if field.field.required %} form-field--required{% endif %}{% if consent or 'consent-checkbox' in field.field.widget.attrs.class %} form-field--consent{% endif %}" id="wrap_{{ field.id_for_label }}">
+  {% if field.field.widget.input_type != "checkbox" %}<label class="form-field__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>{% endif %}
+  {% if field.field.widget.input_type == "checkbox" %}
+    <div class="form-field__check">
+      {{ field }}
+      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>
+    </div>
+  {% elif field.field.widget.input_type == "password" %}
+    {# design V4 (CREATIVE_DIRECTION.md §3.3): a labelled show/hide control; shell.js swaps the type #}
+    <div class="form-field__control form-field__control--password">
+      {{ field }}
+      <button class="form-field__toggle" type="button" data-password-toggle aria-controls="{{ field.id_for_label }}" aria-pressed="false" data-label-show="{% translate 'Afficher le mot de passe' %}" data-label-hide="{% translate 'Masquer le mot de passe' %}">{% translate "Afficher le mot de passe" %}</button>
+    </div>
+  {% else %}
+    {{ field }}
+  {% endif %}
+  {% if help or field.help_text %}<p class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help|default:field.help_text }}</p>{% endif %}
+  {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error" role="alert">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+</div>
+{% endif %}

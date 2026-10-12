@@ -1,0 +1,13 @@
+{% load i18n static %}
+{% comment %}
+Projet Pilote — the prescribed sequence (p3.pilot.sequence) as an institutional diagram.
+Contract: `flow` = ecosystem.services.PilotFlow (steps with .label; the eight prescribed labels always
+come from the locked registry, in the prescribed order; optional editorial additions follow them).
+Built on components/timeline.html (semantic <ol>, CSS grid: vertical on mobile, 4 + 4 from 48rem,
+eight in a row from 80rem, connectors drawn in CSS and mirrored in RTL). ecosystem.css upgrades it
+inside .pilot-diagram: 01–08 numerals, accent connectors, staggered reveal — all motion is disabled
+by prefers-reduced-motion and nothing is hidden without JavaScript.
+{% endcomment %}
+<div class="pilot-diagram__figure" data-diagram="pilot-sequence" data-steps="{{ flow.steps|length }}">
+  {% include "components/timeline.html" with steps=flow.steps lang=flow.lang_attr label=_("Séquence proposée du projet pilote, étape par étape") %}
+</div>

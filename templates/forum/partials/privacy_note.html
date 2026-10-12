@@ -1,0 +1,7 @@
+{% load i18n %}
+{% comment %}Document §2.1 note: the information link points to the Privacy Policy in Italian (official version).{% endcomment %}
+<p class="forum-privacy-note">
+  {% translate "L’information sur le traitement des données personnelles est disponible sur la page" %}
+  {% language "it" %}<a href="{% url 'legal:privacy' %}" hreflang="it" data-privacy-link>Privacy Policy</a>{% endlanguage %}
+  ({% translate "version officielle en italien" %}).
+</p>

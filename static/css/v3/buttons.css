@@ -1,0 +1,546 @@
+/* ============================================================================
+   BUTTONS V3 — the full system
+
+   Replaces the one-rule correction of a79fbb2. Built from docs/design-v3/specs/
+   buttons.md round 2, which the independent reviewer served IN PLACE OF this
+   file against the running site and pixel-sampled — so what survives here is
+   what was measured to work, and what is different is what was measured to
+   break. The differences, each with its reason:
+
+   1. HOVER IS A COLOUR, NOT A LAYER. The spec painted hover on `::before` at
+      `inset: -1px` under `isolation: isolate`. The pseudo sat above the
+      element's own border and above its lighting gradient, so on hover the
+      secondary lost its only boundary (edge row #7A868B became #ECEBE6 —
+      1.08:1 on the page) and the primary went flat (delta-L* 0.00). Here hover
+      changes `background-color` on the element itself. The border stays; the
+      light stays.
+
+   2. NO DROP SHADOW ON A BUTTON. The spec asked DESIGN_SYSTEM_V2 §2 for a
+      fifth shadow role, and the reviewer counted eight distinct literals in
+      the sheet that asked for four. §2 as written allows four roles, and §7
+      forbids shadows on DENSE pages — where most buttons live. So the material
+      is the vertical light alone: `background-image`, 3% white to 3% ink, and
+      inverted on press. The only box-shadow in this file is the focus halo,
+      which is the system's own literal (v2/shell.css). `grep box-shadow` here
+      returns exactly that.
+
+   3. THE FORUM GROUNDS ARE MIDNIGHT. `.forum-hero` and `.forum-banner` are
+      navy (#0f2547). Measured with the spec served: primary --accent on that
+      navy = 2.42:1. They join the dark contexts, and so does `.hero`, whose
+      own override block in v2/hero.css is removed in the same commit — one
+      owner per property.
+
+   4. IN-ROW VARIANTS COME AFTER SIZES. `.btn--sm` and `.btn--link` both set
+      the box height and padding at equal specificity, and the spec put sizes
+      last, so `btn--link btn--sm` (portal/messages.html) measured 177 x 40
+      with a rule 12px under its text. Source order is the fix: in-row wins.
+
+   5. DANGER STAYS OUTLINED. The spec silently turned it into a solid --err-700
+      slab on every delete and withdraw action. Red is «error only» (V2 §1.3
+      rule 3) and a destructive action is confirmed in a dialog anyway; the
+      outlined form the site ships today is kept, and declared here.
+
+   6. FORCED COLORS KEEPS A HIERARCHY. Measured: primary, secondary and danger
+      all became ButtonFace/ButtonText, identical. Primary now carries an inner
+      outline, danger a dashed edge — borders survive high contrast, fills and
+      shadows do not.
+
+   7. NO ASYNC BUTTON YET. §4.5's busy/done faces and meter need button.js,
+      three of whose functions the spec calls and none of which it writes.
+      That is a component, not a style, and it lands with its script.
+
+   Contrast, computed (WCAG 2.x relative luminance):
+     primary        --min-0 on --accent 5.69 · on --accent-hover 7.67
+     secondary      --ink on --min-2 15.56 · edge --hairline-strong on --min-0 3.37
+     danger         --err-700 on --min-2 6.27 · on --err-100 (hover) 5.10
+     quiet/ghost    --ink-2 on --min-0 6.46
+     link/tertiary  --accent on --min-0 5.69 · rule at 70% = #549398, 3.15
+     dark primary   --mid-1 on --accent-dark 10.01 · on #a5e0e5 (hover) 12.00
+     dark secondary --on-dark on --mid-3 12.29 · edge (#68757a composited) on --mid-1 3.68
+     dark danger    #f0a49b on --mid-3 6.93
+     navy (forum)   --mid-1 on --accent-dark 10.01 · --accent-dark on #0f2547 8.73
+                    the secondary's fill (--mid-3) is 1.10 on navy: its EDGE is the boundary
+     disabled       --ink-3 on #e3e2dd 4.73 · edge --hairline on --min-0 1.37
+                    (a disabled control is exempt from 1.4.3 and 1.4.11; stated, not hidden)
+   ========================================================================== */
+
+:root {
+  --btn-h: 48px;
+  --btn-h-sm: 40px;
+  --btn-h-lg: 56px;
+  --btn-h-icon: 44px;
+  --btn-pad-sm: var(--s-5);
+  --btn-pad-md: var(--s-6);
+  --btn-pad-lg: var(--s-8);
+  --accent-dark-hover: #a5e0e5; /* the literal v2/hero.css carried; now a token */
+  --err-hover: #9e2019;
+  --surface-disabled: #e3e2dd;
+  --btn-edge-dark: rgba(214, 226, 228, 0.45);
+  /* The light luminosity of the error red, for a midnight ground. V2 gives the dark chapter a
+     light green (--ok-300) and a light bronze (--seal-300) but no light red, and --err-700 on
+     --mid-3 is 2.12:1 — below the 3:1 a boundary needs. Same hue, second luminosity, as the two
+     tokens V2 already has; #f0a49b is 6.93:1 on --mid-3. The badges specification proposes the
+     same token for the same reason, so it is declared once, here, until tokens.css takes it. */
+  --err-300: #f0a49b;
+  /* the material: a vertical light, 3% each way; inverted under the pointer */
+  --btn-lit: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(10, 21, 28, 0.03));
+  --btn-lit-press: linear-gradient(180deg, rgba(10, 21, 28, 0.04), rgba(255, 255, 255, 0.02));
+  /* focus — the two literals of v2/shell.css, not new values */
+  --focus-halo: rgba(29, 138, 147, 0.3);
+  --focus-halo-dark: rgba(127, 209, 216, 0.3);
+  --dir: 1;
+  --origin-inline: left;
+}
+
+[dir="rtl"] {
+  --dir: -1;
+  --origin-inline: right;
+}
+
+/* ---- 1. The slab ---------------------------------------------------------- */
+
+.btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  min-block-size: var(--btn-box-h, var(--btn-h));
+  padding-block: 0;
+  padding-inline: var(--btn-pad, var(--btn-pad-md)) var(--btn-pad-end, var(--btn-pad, var(--btn-pad-md)));
+  font-family: var(--f-sans);
+  font-size: var(--btn-type, var(--t-ui));
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: var(--btn-track, 0);
+  text-align: center;
+  text-decoration: none;
+  color: var(--btn-ink, var(--accent));
+  background-color: var(--btn-fill, transparent);
+  background-image: var(--btn-lighting, none);
+  border: 1px solid var(--btn-edge, transparent);
+  border-radius: var(--radius-control);
+  box-shadow: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: none; /* MOTION §3: outside the motion block NOTHING transitions */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- 2. What components.css still says, and why each line is overruled --- */
+
+/* components.css paints hover with the `background` shorthand and the retired
+   --btn-bg-hover; that shorthand would erase the light and swap the colour to a
+   token this system no longer reads. Same specificity, later file: this wins. */
+.btn:hover,
+.btn:focus-visible,
+.btn:active {
+  color: var(--btn-ink, var(--accent));
+  background-color: var(--btn-fill, transparent);
+  background-image: var(--btn-lighting, none);
+  border-color: var(--btn-edge, transparent);
+  text-decoration: none;
+}
+
+/* Hover is the fill changing, with the edge and the light left alone (item 1). */
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--btn-fill-hover, var(--btn-fill, transparent));
+  }
+}
+
+.btn:focus-visible {
+  background-color: var(--btn-fill-hover, var(--btn-fill, transparent));
+}
+
+/* components.css presses with `transform`; this presses with `translate`. They
+   are different properties, and without this line the travel would be 2px. */
+.btn:active {
+  transform: none;
+  translate: 0 1px;
+  background-color: var(--btn-fill-hover, var(--btn-fill, transparent));
+  background-image: var(--btn-lighting-press, var(--btn-lighting, none));
+}
+
+/* components.css (and forum.css) dim disabled to opacity and remove the pointer,
+   which removes the explanation with it. §10 forbids both. */
+.btn:disabled,
+.btn[aria-disabled="true"],
+.btn.is-disabled {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* components.css declares the arrow's transition and translate outside any media
+   query: under «reduce motion» the arrow would still move. */
+.btn--arrow .icon {
+  transition: none;
+}
+
+.btn--arrow:hover .icon,
+[dir="rtl"] .btn--arrow:hover .icon {
+  translate: none;
+}
+
+/* ---- 3. Filled variants --------------------------------------------------- */
+
+.btn--primary {
+  --btn-fill: var(--accent);
+  --btn-ink: var(--min-0);
+  --btn-edge: var(--accent-hover);
+  --btn-lighting: var(--btn-lit);
+  --btn-lighting-press: var(--btn-lit-press);
+  --btn-fill-hover: var(--accent-hover);
+}
+
+.btn--secondary {
+  --btn-fill: var(--min-2);
+  --btn-ink: var(--ink);
+  --btn-edge: var(--hairline-strong);
+  --btn-fill-hover: var(--min-1);
+}
+
+/* Outlined, as shipped today (item 5): red is for error, and this is a warning
+   that a confirmation follows, not the error itself. */
+.btn--danger {
+  --btn-fill: var(--min-2);
+  --btn-ink: var(--err-700);
+  --btn-edge: var(--err-700);
+  --btn-fill-hover: var(--err-100);
+}
+
+/* ---- 4. Without a frame, with the box ------------------------------------- */
+
+.btn--quiet,
+.btn--ghost {
+  --btn-fill: transparent;
+  --btn-edge: transparent;
+  --btn-ink: var(--ink-2);
+  --btn-fill-hover: var(--min-1);
+}
+
+/* ---- 5. Sizes -------------------------------------------------------------- */
+
+.btn--sm {
+  --btn-box-h: var(--btn-h-sm);
+  --btn-pad: var(--btn-pad-sm);
+}
+
+.btn--lg,
+.btn--large {
+  --btn-box-h: var(--btn-h-lg);
+  --btn-pad: var(--btn-pad-lg);
+  --btn-type: var(--t-body);
+}
+
+.btn--block {
+  inline-size: 100%;
+}
+
+.btn--icon {
+  --btn-box-h: var(--btn-h-icon);
+  --btn-pad: 0;
+  --btn-fill: transparent;
+  --btn-edge: transparent;
+  --btn-ink: var(--ink-2);
+  --btn-fill-hover: var(--min-1);
+  inline-size: var(--btn-h-icon);
+}
+
+.btn--upper {
+  --btn-track: 0.08em;
+  --btn-type: var(--t-folio);
+  text-transform: uppercase;
+}
+
+/* Measured: the arrow's ink occupies 12.5 x 10 px inside a 20 x 20 box, with
+   4.17 px of air on the exit side. The end padding comes down by 4 px so the
+   optical margins match: 24 on one side, 24.17 on the other. */
+.btn--arrow {
+  --btn-pad-end: calc(var(--btn-pad, var(--btn-pad-md)) - 4px);
+}
+
+/* ---- 6. Without a frame, in the line of text — AFTER the sizes (item 4) --- */
+
+.btn--tertiary,
+.btn--link,
+.btn--text,
+.btn--inline {
+  --btn-fill: transparent;
+  --btn-edge: transparent;
+  --btn-ink: var(--accent);
+  --btn-fill-hover: transparent;
+  --btn-box-h: 24px;
+  --btn-pad: 0;
+  --btn-pad-end: 0;
+  min-inline-size: 24px;
+  padding-block: var(--s-1);
+  text-decoration: none; /* the rule is ::after, not the system underline */
+}
+
+.btn--inline {
+  --btn-type: var(--t-folio);
+  --btn-track: var(--track-folio);
+  font-family: var(--f-mono);
+}
+
+/* ::after is the rule at rest; ::before is the mooring line that draws itself.
+   No pseudo-element carries two jobs. */
+.btn--tertiary::after,
+.btn--link::after,
+.btn--text::after,
+.btn--inline::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 2px 0;
+  block-size: 1px;
+  background: currentcolor;
+  opacity: 0.7;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.btn--tertiary::before,
+.btn--link::before,
+.btn--text::before,
+.btn--inline::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 2px 0;
+  block-size: 1px;
+  background: currentcolor;
+  z-index: 0;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: var(--origin-inline, left);
+}
+
+.btn--tertiary:hover::before,
+.btn--link:hover::before,
+.btn--text:hover::before,
+.btn--inline:hover::before,
+.btn--tertiary:focus-visible::before,
+.btn--link:focus-visible::before,
+.btn--text:focus-visible::before,
+.btn--inline:focus-visible::before {
+  transform: scaleX(1);
+}
+
+/* ---- 7. Midnight by CONTEXT, not by class — and by the one legacy class --- */
+
+/* `.btn--inverse` is what eight templates already say; it means exactly what
+   the dark context means, so it is spelled here as one more way of saying it. */
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn--primary,
+.btn--inverse.btn--primary {
+  --btn-fill: var(--accent-dark);
+  --btn-ink: var(--mid-1);
+  --btn-edge: var(--accent-dark);
+  --btn-fill-hover: var(--accent-dark-hover);
+}
+
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn--secondary,
+.btn--inverse.btn--secondary {
+  --btn-fill: var(--mid-3);
+  --btn-ink: var(--on-dark);
+  --btn-edge: var(--btn-edge-dark);
+  --btn-fill-hover: var(--mid-4);
+}
+
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn--danger,
+.btn--inverse.btn--danger {
+  --btn-fill: var(--mid-3);
+  --btn-ink: var(--on-dark);
+  --btn-edge: var(--err-300);
+  --btn-fill-hover: var(--mid-4);
+}
+
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner)
+  :is(.btn--tertiary, .btn--link, .btn--text, .btn--inline, .btn--quiet, .btn--ghost),
+.btn--inverse:is(.btn--tertiary, .btn--link, .btn--text, .btn--inline, .btn--quiet, .btn--ghost) {
+  --btn-ink: var(--accent-dark);
+  --btn-fill-hover: var(--mid-2);
+}
+
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn--icon,
+.btn--inverse.btn--icon {
+  --btn-ink: var(--on-dark-2);
+  --btn-fill-hover: var(--mid-2);
+}
+
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn,
+.btn--inverse {
+  --btn-ring: var(--accent-dark);
+  --btn-halo: var(--focus-halo-dark);
+}
+
+/* ---- 8. Disabled: by colour AND by shape, never by opacity ---------------- */
+
+.btn:disabled,
+.btn[aria-disabled="true"],
+.btn.is-disabled {
+  --btn-fill: var(--surface-disabled);
+  --btn-ink: var(--ink-3);
+  --btn-edge: var(--hairline);
+  --btn-lighting: none;
+  --btn-fill-hover: var(--surface-disabled);
+  cursor: not-allowed;
+}
+
+:is(.btn--tertiary, .btn--link, .btn--text, .btn--inline, .btn--quiet, .btn--ghost, .btn--icon):is(
+    :disabled,
+    [aria-disabled="true"],
+    .is-disabled
+  ) {
+  --btn-fill: transparent;
+  --btn-edge: transparent;
+  --btn-ink: var(--ink-3);
+  --btn-fill-hover: transparent;
+}
+
+.btn:disabled::before,
+.btn:disabled::after,
+.btn[aria-disabled="true"]::before,
+.btn[aria-disabled="true"]::after,
+.btn.is-disabled::before,
+.btn.is-disabled::after {
+  display: none;
+}
+
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn:is(:disabled, [aria-disabled="true"], .is-disabled),
+.btn--inverse:is(:disabled, [aria-disabled="true"], .is-disabled) {
+  --btn-fill: var(--mid-3);
+  --btn-ink: var(--on-dark-3);
+  --btn-edge: var(--hairline-dark);
+}
+
+.btn:is(:disabled, [aria-disabled="true"], .is-disabled):active {
+  translate: none;
+  background-image: none;
+}
+
+/* ---- 9. Focus: the system ring, and the one box-shadow in this file ------- */
+
+.btn:focus-visible {
+  outline: 2px solid var(--btn-ring, var(--accent-ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--btn-halo, var(--focus-halo));
+}
+
+/* ---- 10. Motion — all of it, and only here (MOTION §3) -------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the press has no latency down and 120 ms back up */
+  .btn {
+    transition:
+      translate var(--motion-instant) var(--ease-out),
+      background-color var(--motion-instant) var(--ease-in);
+  }
+
+  .btn:active {
+    transition: none;
+  }
+
+  /* hover: 180 in (--ease-out), 120 out (--ease-in); the asymmetry is the two rules */
+  .btn:hover,
+  .btn:focus-visible {
+    transition-duration: var(--motion-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  /* mooring line: 240 in, 120 out */
+  .btn--tertiary::before,
+  .btn--link::before,
+  .btn--text::before,
+  .btn--inline::before {
+    transition: transform var(--motion-instant) var(--ease-in);
+  }
+
+  .btn--tertiary:hover::before,
+  .btn--link:hover::before,
+  .btn--text:hover::before,
+  .btn--inline:hover::before,
+  .btn--tertiary:focus-visible::before,
+  .btn--link:focus-visible::before,
+  .btn--text:focus-visible::before,
+  .btn--inline:focus-visible::before {
+    transition-duration: var(--motion-base);
+    transition-timing-function: var(--ease-out);
+  }
+
+  /* arrow: 240, and on :focus-visible as well as :hover */
+  .btn--arrow .icon {
+    transition: translate var(--motion-base) var(--ease-out);
+  }
+
+  .btn--arrow:hover .icon,
+  .btn--arrow:focus-visible .icon,
+  [dir="rtl"] .btn--arrow:hover .icon,
+  [dir="rtl"] .btn--arrow:focus-visible .icon {
+    translate: calc(3px * var(--dir, 1)) 0;
+  }
+}
+
+/* ---- 11. Forced colors — a hierarchy that borders can carry (item 6) ------ */
+
+@media (forced-colors: active) {
+  .btn {
+    background-color: ButtonFace;
+    color: ButtonText;
+    border-color: ButtonText;
+    background-image: none;
+  }
+
+  .btn::before,
+  .btn::after {
+    display: none; /* light and rules are noise here */
+  }
+
+  /* the primary is the button with a second line inside its edge */
+  .btn--primary {
+    outline: 1px solid ButtonText;
+    outline-offset: -4px;
+  }
+
+  /* danger warns with a dashed edge; same width, so nothing moves */
+  .btn--danger {
+    border-style: dashed;
+  }
+
+  .btn--tertiary,
+  .btn--link,
+  .btn--text,
+  .btn--inline,
+  .btn--quiet,
+  .btn--ghost,
+  .btn--icon {
+    background-color: Canvas;
+    color: LinkText;
+    border-color: transparent;
+    text-decoration: underline; /* the rule comes back as an underline */
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"],
+  .btn.is-disabled {
+    color: GrayText;
+    border-color: GrayText;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
+
+/* ---- 12. Arabic (§3.2): no tracking, no uppercase, a wider minimum -------- */
+
+:lang(ar) .btn {
+  --btn-track: 0;
+  text-transform: none;
+}
+
+:lang(ar) :is(.btn--primary, .btn--secondary, .btn--danger, .btn--quiet, .btn--ghost) {
+  min-inline-size: 120px;
+}

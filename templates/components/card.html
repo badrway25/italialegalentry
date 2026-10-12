@@ -1,0 +1,11 @@
+{% comment %}
+Card — use sparingly (news teasers, sheets). Contract: `title`, optional `url` (whole card
+becomes clickable, the title link is the only tab stop), `eyebrow`, `text`, `meta` (str or safe
+html), `lang`, `flat` (True → no box, hairline rule only).
+{% endcomment %}
+<article class="card{% if url %} card--link{% endif %}{% if flat %} card--flat{% endif %}"{% if lang %} lang="{{ lang }}"{% endif %}>
+  {% if eyebrow %}<p class="card__eyebrow">{{ eyebrow }}</p>{% endif %}
+  <h3 class="card__title">{% if url %}<a href="{{ url }}">{{ title }}</a>{% else %}{{ title }}{% endif %}</h3>
+  {% if text %}<p class="card__text">{{ text }}</p>{% endif %}
+  {% if meta %}<div class="card__meta">{{ meta }}</div>{% endif %}
+</article>

@@ -1,0 +1,831 @@
+/* ============================================================================
+   Espace réservé — page-level styles (loaded only inside the portal).
+   Design tokens only (no literal colours), logical properties only (RTL-safe),
+   no decorative motion. Panels are typographic: a fine accent rule, no shadow.
+   ========================================================================== */
+
+/* ============================================================================
+   THE PLATFORM SHELL — art direction A §14, rebuilt 21/09/2026.
+
+   The reserved area used to render inside the PUBLIC shell: institutional
+   utility bar, seven-section mega-menu, full public footer, with the actual
+   work parked in a sidebar underneath. Someone who had just signed in to find
+   their next action was being offered seven sections about the project.
+
+   Same identity, different shell. Quiet chrome, a stable context, and one
+   priority above the content.
+   ========================================================================== */
+
+/* ---- The platform bar ----------------------------------------------------- */
+.portal-bar {
+  background: var(--navy-deep);
+  color: var(--paper-on-navy);
+  border-block-end: 2px solid var(--rubric-on-navy);
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+}
+
+.portal-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  max-inline-size: var(--container);
+  margin-inline: auto;
+  padding: var(--s-3) var(--grid-margin);
+}
+
+.portal-bar__brand {
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+.portal-bar__context {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin: 0;
+  padding-inline-start: var(--s-6);
+  border-inline-start: 1px solid var(--paper-muted-on-navy);
+}
+
+.portal-bar__context-label {
+  color: var(--paper-muted-on-navy);
+}
+
+.portal-bar__context-value {
+  font-family: var(--font-ref);
+  font-variant-numeric: slashed-zero lining-nums tabular-nums;
+}
+
+/* Wraps rather than overflows. At 320 this group asks for 301px inside a 265px content box — the
+   public link, the account menu and the language switcher, with two 16px gaps — and without
+   `flex-wrap` it simply ran 36px past the container and 16px past the viewport, taking the
+   language switcher's chevron off the screen on every page of the reserved area.
+
+   No breakpoint: the group wraps when it must and not before, so there is no width at which the
+   rule is either premature or late. `flex-end` keeps the wrapped line on the reading edge, which
+   in Arabic is the left one — hence the logical keyword and not `right`. */
+.portal-bar__account {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--s-2) var(--s-4);
+  margin-inline-start: auto;
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+}
+
+.portal-bar__link {
+  color: var(--paper-on-navy);
+  text-decoration: none;
+  border-block-end: 1px solid transparent;
+  /* "Site public" is one label, not two words to be broken over two lines — which is what it did
+     at 320, where it measured 42px because it had folded in half. */
+  white-space: nowrap;
+}
+
+.portal-bar__link:hover,
+.portal-bar__link:focus-visible {
+  border-block-end-color: var(--rubric-on-navy);
+}
+
+.portal-bar :focus-visible {
+  outline: 2px solid var(--paper-on-navy);
+  outline-offset: 2px;
+}
+
+.portal-bar .account-menu__summary,
+.portal-bar .language-switcher__link,
+.portal-bar .language-switcher summary {
+  color: var(--paper-on-navy);
+}
+
+/* ---- The case header ------------------------------------------------------ */
+/* On the process ground: a case file is a procedure, and the ground says so. */
+.case-header {
+  background: var(--paper-deep);
+  border-block-end: 1px solid var(--rule-hair);
+}
+
+.case-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--s-6) var(--s-12);
+  padding-block: var(--s-6);
+}
+
+.case-header__folio {
+  margin-block-end: var(--s-1);
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+
+.case-header__reference {
+  margin: 0;
+  font-size: var(--t-entry-size);
+}
+
+.case-header__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-6) var(--s-12);
+  margin: 0;
+}
+
+.case-header__fact dt {
+  margin-block-end: var(--s-1);
+}
+
+.case-header__fact dd {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-gloss-lh);
+}
+
+.case-header__since {
+  display: block;
+  color: var(--ink-muted);
+  font-size: var(--t-caption-size);
+}
+
+.case-header__actors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-header__suspension {
+  flex-basis: 100%;
+}
+
+/* ---- The next action ------------------------------------------------------ */
+/* One priority, on every authenticated screen. The 4px inline-start rule is the
+   urgency; the WORD beside it says the same thing, because colour alone never
+   carries a state here. */
+.next-action {
+  border-block-end: 1px solid var(--rule-hair);
+}
+
+.next-action__inner {
+  border-inline-start: 4px solid var(--state-info-br);
+  padding: var(--s-4) var(--s-6);
+  margin-block: var(--s-6);
+}
+
+.next-action--soon .next-action__inner {
+  border-inline-start-color: var(--state-warn-br);
+}
+
+.next-action--overdue .next-action__inner,
+.next-action--blocked .next-action__inner {
+  border-inline-start-color: var(--state-error-br);
+}
+
+.next-action__label {
+  margin: 0 0 var(--s-2);
+  color: var(--ink-muted);
+}
+
+.next-action__label-text {
+  font-family: var(--font-display);
+  font-size: var(--t-entry-size);
+  line-height: var(--t-entry-lh);
+  margin: 0;
+  max-inline-size: 52ch;
+}
+
+.next-action__detail,
+.next-action__actor {
+  margin-block-start: var(--s-2);
+  max-inline-size: 60ch;
+}
+
+.next-action__actor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  align-items: baseline;
+}
+
+.next-action__cta {
+  margin-block-start: var(--s-4);
+}
+
+/* ---- The work area -------------------------------------------------------- */
+.portal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8) var(--grid-gutter);
+  align-items: start;
+  padding-block: var(--s-8) var(--s-16);
+}
+
+@media (min-width: 64rem) {
+  .portal {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  }
+
+  .portal__aside {
+    position: sticky;
+    inset-block-start: calc(var(--chrome-masthead) + var(--s-6));
+  }
+}
+
+.portal-section + .portal-section {
+  margin-block-start: var(--s-12);
+}
+
+.portal-columns {
+  display: grid;
+  gap: var(--s-12) var(--grid-gutter);
+  margin-block-start: var(--s-12);
+}
+
+@media (min-width: 48rem) {
+  .portal-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .portal-columns .portal-section + .portal-section {
+    margin-block-start: 0;
+  }
+}
+
+.portal-account {
+  background: var(--paper-deep);
+  padding: var(--s-6);
+}
+
+/* ---- The platform footer -------------------------------------------------- */
+/* Four lines, not the institutional footer with its four columns and the whole
+   public navigation: someone inside their own file needs the legal pages and
+   the way back out, not the site map. */
+.portal-footer {
+  border-block-start: 1px solid var(--rule-hair);
+  margin-block-start: auto;
+  font-family: var(--font-ui);
+  font-size: var(--t-caption-size);
+  color: var(--ink-muted);
+}
+
+.portal-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-6);
+  justify-content: space-between;
+  padding-block: var(--s-6);
+}
+
+.portal-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin: 0;
+}
+
+.portal-footer__contact {
+  margin: 0;
+}
+
+/* ---- Data table ----------------------------------------------------------- */
+/* A checklist is a table, always headed, with a dash for a null and never an
+   empty cell. Aligned by reading direction, so RTL resolves on its own. */
+.data-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-gloss-lh);
+}
+
+.data-table th,
+.data-table td {
+  text-align: start;
+  vertical-align: baseline;
+  padding-block: var(--s-3);
+  padding-inline: 0 var(--s-4);
+  border-block-end: 1px solid var(--rule-hair);
+}
+
+.data-table thead th {
+  font-size: var(--t-folio-size);
+  font-weight: 600;
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--ink-secondary);
+  border-block-end: 2px solid var(--navy);
+}
+
+:lang(ar) .data-table thead th {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.data-table tbody th {
+  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: var(--t-gloss-size);
+}
+
+.data-table tbody th .t-caption {
+  display: block;
+}
+
+.data-table tr.is-overdue th {
+  border-inline-start: 2px solid var(--state-error-br);
+  padding-inline-start: var(--s-3);
+}
+
+.table-region {
+  overflow-x: auto;
+  border-inline-end: 1px solid var(--rule-hair);
+}
+
+.table-region:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.table-region .data-table {
+  min-inline-size: 34rem;
+}
+
+/* A wide table on a phone — §14.5 of the art direction: "Below 768, a defined pop-in: each row
+   becomes a labelled stack of label / value pairs at 48px minimum, hairline separated. Never a
+   horizontal scroll for a four-column table."
+
+   This block replaces an argument that used to stand here for doing the opposite. That argument
+   held that WCAG 2.2 §1.4.10 excepts data tables from the ban on two-dimensional scrolling, and
+   that the columns must not be dropped on a narrow screen because each one carries a fact the
+   reader needs — what is required, who must do it, under which provision, by when. The second
+   half is right and the pop-in honours it: NOTHING is dropped. Every column becomes a labelled
+   line. The first half is a permission, not an instruction, and the art direction had already
+   declined it — as `apps/documents/static/documents/documents.css` says in as many words, having
+   built this same pop-in for the register because `.data-table` did not have it.
+
+   What it looked like before: the dashboard checklist at 390px put each column at roughly one word
+   per line — «Identifier / les / interlocuteurs / et / les / autorités» down the first column,
+   «À / FAIRE» down the second — and still overflowed the viewport.
+
+   The labels come from `data-label` on each cell, written from the `<thead>`, so the header row
+   stays the single source of the column names. Above 768 the table is a real table and the header
+   is read normally; below it the header is hidden visually and each cell carries its own name.
+
+   `table:has(tbody [data-label])` and not a class, because carrying the labels IS the contract. A
+   table that has them can pop in; a table that has not cannot, and must go on scrolling — the
+   allauth element templates render `.account-table` from a `{% slot %}` whose cells this project
+   does not write, and popping those in would hide the column names instead of moving them. The
+   guard is therefore the one condition that actually matters, and adding `data-label` to a
+   template is how a table opts in. */
+@media (max-width: 47.99rem) {
+  table:has(tbody [data-label]),
+  table:has(tbody [data-label]) tbody,
+  table:has(tbody [data-label]) tr,
+  table:has(tbody [data-label]) th,
+  table:has(tbody [data-label]) td {
+    display: block;
+    inline-size: auto;
+  }
+
+  table:has(tbody [data-label]) thead {
+    /* The column names live on the cells below this width. Hiding the header row visually — not
+       removing it — keeps the table's semantics intact for anyone above the breakpoint and for
+       anyone whose assistive technology reads the DOM rather than the rendering. */
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  table:has(tbody [data-label]) tbody tr {
+    border-block-end: 2px solid var(--navy);
+    padding-block: var(--s-3);
+  }
+
+  table:has(tbody [data-label]) tbody tr:last-child {
+    border-block-end: 0;
+  }
+
+  table:has(tbody [data-label]) tbody th,
+  table:has(tbody [data-label]) tbody td {
+    border-block-end: 1px solid var(--rule-hair);
+    padding-block: var(--s-2);
+    padding-inline: 0;
+    min-block-size: 48px;
+  }
+
+  table:has(tbody [data-label]) tbody tr > :last-child {
+    border-block-end: 0;
+  }
+
+  table:has(tbody [data-label]) tbody th::before,
+  table:has(tbody [data-label]) tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--t-folio-size);
+    line-height: var(--t-folio-lh);
+    font-weight: 600;
+    letter-spacing: var(--track-folio);
+    text-transform: uppercase;
+    font-feature-settings: "case" 1;
+    color: var(--ink-muted);
+    margin-block-end: var(--s-1);
+  }
+
+  /* Arabic has no letter case and no small-caps tradition; the folio treatment is Latin. */
+  :lang(ar) table:has(tbody [data-label]) tbody th::before,
+  :lang(ar) table:has(tbody [data-label]) tbody td::before {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* The overdue marker was an inline-start border on the row's `<th>`; once the row is a stack it
+     belongs on the row, where it marks the whole entry rather than its first line. */
+  table:has(tbody [data-label]) tr.is-overdue {
+    border-inline-start: 2px solid var(--state-error-br);
+    padding-inline-start: var(--s-3);
+  }
+
+  table:has(tbody [data-label]) tr.is-overdue th {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+
+  /* Nothing left to scroll: the scroll containers stop being scroll containers, and the minimum
+     width that forced the table wider than the phone is released. Both wrappers are covered —
+     `.table-region` here and the global `.scroll-x` of static/css/layout.css — because the pop-in
+     is a property of the table, not of whichever wrapper a template reached for.
+
+     `:has(table:has(tbody [data-label]))` and not the bare class: `.scroll-x` also wraps `.account-table`, which does
+     NOT pop in, and releasing its scroll container left « Mes demandes » overflowing 360px by 17px.
+     The existing browser test caught it in the same run that introduced it. A container only stops
+     scrolling when the thing inside it has stopped needing to be scrolled. */
+  .table-region:has(table:has(tbody [data-label])),
+  .scroll-x:has(table:has(tbody [data-label])) {
+    overflow-x: visible;
+    border-inline-end: 0;
+  }
+
+  .table-region table:has(tbody [data-label]) {
+    min-inline-size: 0;
+  }
+}
+
+/* The sequence marks the step you are on. */
+.sequence__step--current .sequence__marker {
+  border-inline-start-width: 4px;
+  color: var(--rubric);
+}
+
+.sequence__step--current .sequence__title {
+  font-weight: 600;
+}
+
+/* Without JavaScript the shared header renders the whole navigation expanded below the navigation
+   breakpoint (80rem — components.css §navigation) while staying position:sticky: it then measures
+   ≈780px and covers the entire viewport of a phone or tablet, so nothing in the reserved area can be
+   reached or clicked (review 2026-09-20: « Marquer comme lue » was unclickable at 1024×800). Inside
+   the reserved area the header simply scrolls away in that case. The root cause belongs to the
+   design system (change request: `html.no-js .site-header { position: static }` below 80rem); this
+   scoped rule becomes redundant, and stays harmless, once it is fixed there. */
+@media (max-width: 79.999rem) {
+  html.no-js .page-portal .site-header {
+    position: static;
+  }
+}
+
+/* Breadcrumb labels of the detail pages are free text (a subject, a company name): a long unbroken
+   value must wrap instead of stretching the page on a phone. Scoped to the reserved area. */
+.page-portal .breadcrumbs__item {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.page-portal .breadcrumbs__item > span,
+.page-portal .breadcrumbs__item > a {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A grid item's automatic minimum size is its CONTENT, not zero, so `minmax(0, 1fr)` on the track
+   is not enough: one wide table inside pushes the whole column past the viewport and the PAGE
+   scrolls sideways instead of the table. Found at 390px in Arabic on the case file, where a
+   five-column register overflowed the document by 58px even though the table already had its own
+   scroll region. */
+.portal__main,
+.portal__aside {
+  min-inline-size: 0;
+}
+
+.portal__main > * + * {
+  margin-block-start: var(--space-10);
+}
+
+.portal__section-title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-h3);
+}
+
+.portal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal__summary {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.portal__summary + .portal-list {
+  margin-block-start: var(--space-4);
+}
+
+/* ---- Notices (staff-editable, reserved area only) ------------------------- */
+.portal-notices {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* ---- Dashboard panels ------------------------------------------------------ */
+.portal-cards {
+  display: grid;
+  gap: var(--space-10) var(--gutter);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  .portal-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.portal-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  padding-block-start: var(--space-5);
+  border-block-start: var(--border-width-strong) solid var(--color-primary-900);
+}
+
+.portal-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.portal-card__header .icon {
+  color: var(--color-accent-600);
+}
+
+.portal-card__title {
+  margin: 0;
+  font-size: var(--font-size-h4);
+  margin-inline-end: auto;
+}
+
+.portal-card__figure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.portal-card__count {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h2);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.portal-card__footer {
+  margin: 0;
+  margin-block-start: auto;
+}
+
+.portal-card .empty-state,
+.portal__main .empty-state {
+  max-inline-size: none;
+  margin-inline: 0;
+}
+
+.portal-card .empty-state {
+  padding: var(--space-6) var(--space-4);
+}
+
+.portal-card .empty-state__icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  margin-block-end: var(--space-2);
+}
+
+.portal-card .empty-state__title {
+  font-size: var(--font-size-body);
+}
+
+.portal-card .empty-state__text {
+  font-size: var(--font-size-small);
+  margin-block-end: var(--space-2);
+}
+
+/* ---- Item lists ------------------------------------------------------------ */
+.portal-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal-list__item {
+  display: grid;
+  gap: var(--space-1) var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  padding-block: var(--space-3);
+  border-block-end: var(--border-width) solid var(--border-hairline);
+}
+
+.portal-list__item:first-child {
+  border-block-start: var(--border-width) solid var(--border-hairline);
+}
+
+.portal-list__title {
+  margin: 0;
+  font-weight: var(--weight-medium);
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.portal-list__item--unread .portal-list__title {
+  font-weight: var(--weight-semibold);
+}
+
+.portal-list__meta {
+  margin: 0;
+  grid-column: 1;
+  font-size: var(--font-size-caption);
+  color: var(--text-muted);
+}
+
+.portal-list__aside {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.portal-list__form {
+  margin: 0;
+}
+
+/* ---- Facts (definition lists) ---------------------------------------------- */
+.portal-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.portal-facts__row {
+  display: grid;
+  gap: var(--space-1) var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: var(--space-3);
+  border-block-end: var(--border-width) solid var(--border-hairline);
+}
+
+.portal-facts__row:first-child {
+  border-block-start: var(--border-width) solid var(--border-hairline);
+}
+
+@media (min-width: 40rem) {
+  .portal-facts__row {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+  }
+}
+
+.portal-facts dt {
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+}
+
+.portal-facts dd {
+  margin: 0;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* ---- Account panel ---------------------------------------------------------- */
+.portal-account {
+  padding: var(--space-6);
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+.portal-account__identity {
+  margin: 0 0 var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--font-size-small);
+  overflow-wrap: anywhere;
+}
+
+.portal-account__identity strong {
+  display: block;
+  font-size: var(--font-size-body);
+  color: var(--text-strong);
+}
+
+/* ---- Orientation results ---------------------------------------------------- */
+.portal-result {
+  padding-block: var(--space-6);
+  border-block-end: var(--border-width) solid var(--border-hairline);
+}
+
+.portal-result:first-of-type {
+  border-block-start: var(--border-width-strong) solid var(--color-primary-900);
+}
+
+.portal-result__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-h3);
+}
+
+.portal-result__checklist {
+  margin-block-start: var(--space-4);
+}
+
+.portal-result__checklist h4 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--font-size-small);
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+}
+
+.portal-result__checklist ul {
+  margin: 0;
+  padding-inline-start: var(--space-5);
+}
+
+/* ---- Message ---------------------------------------------------------------- */
+.portal-message__body {
+  max-inline-size: var(--measure-prose);
+  overflow-wrap: anywhere;
+}
+
+.portal-message__body p {
+  margin: 0 0 var(--space-4);
+}
+
+/* ---- Tables ------------------------------------------------------------------ */
+.portal-table__note {
+  display: block;
+  font-size: var(--font-size-caption);
+  font-weight: var(--weight-regular);
+  color: var(--text-muted);
+}
+
+/* The dashboard numbers whatever it actually renders. Typed ordinals leave gaps
+   when a section is absent because it is empty — 02, 03, 05 reads as a bug. */
+.portal__main {
+  counter-reset: portal-section;
+}
+
+.portal__main .folio__ordinal::before {
+  counter-increment: portal-section;
+  content: counter(portal-section, decimal-leading-zero);
+}
+
+/* The reserved area's prescribed title is a PAGE title here, not a plate: an
+   application does not introduce itself at 52px, it gets used. The words are
+   locked content and never change; only their rank does. */
+.page-portal .page-header__title {
+  font-size: var(--t-band-size);
+  line-height: var(--t-band-lh);
+  letter-spacing: var(--track-band);
+  max-inline-size: none;
+}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% translate "Demande d’accès" %} · {% locked "p3.virtual_forum.title" %}{% endblock %}
+{% block meta_description %}{% translate "Demande d’accès au Forum Virtuel réservé aux participants." %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% translate "Demande d’accès au Forum Virtuel" as page_title %}
+{% translate "Indiquez votre catégorie de participant. La demande est examinée par la modération ; rien vous concernant n’est visible par les autres participants sans votre choix explicite." as page_lead %}
+{% include "components/page_header.html" with title=page_title lead=page_lead %}
+<section class="container community-join" aria-label="{% translate 'Formulaire de demande d’accès' %}">
+  {% if forms_closed %}
+    {% include "components/form_unavailable.html" %}
+  {% else %}
+  <form method="post" action="{% url 'community:join' %}" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    {% include "components/form_field.html" with field=form.category %}
+    {% include "components/form_field.html" with field=form.organisation %}
+    <fieldset class="community-join__visibility">
+      <legend>{% translate "Visibilité auprès des autres membres (désactivée par défaut)" %}</legend>
+      {% include "components/form_field.html" with field=form.show_name %}
+      {% include "components/form_field.html" with field=form.show_organisation %}
+    </fieldset>
+    {% include "components/form_field.html" with field=form.consent %}
+    <p class="community-join__legal">
+      {% url 'legal:terms' as terms_url %}{% url 'legal:privacy' as privacy_url %}
+      <a href="{{ terms_url }}">{% translate "Conditions d’utilisation" %}</a> · <a href="{{ privacy_url }}">Privacy Policy</a>
+    </p>
+    <p><button type="submit" class="btn btn--primary">{% translate "Envoyer la demande" %}</button></p>
+  </form>
+  {% endif %}
+</section>
+{% endblock %}

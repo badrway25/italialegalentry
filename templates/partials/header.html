@@ -1,0 +1,43 @@
+{% load i18n cms_nav %}
+<header class="site-header" id="site-header">
+  <div class="container site-header__inner">
+    {% comment %}
+    The official lock-up (docs/design-v2/BRAND_ASSETS.md §1): mark, wordmark, tagline, drawn by the
+    `brand_lockup` tag from the recovered SVG and the locked trademark text. A logo uploaded in the
+    back-office still wins, as before — that switch is the client's, not the design's.
+    {% endcomment %}
+    <a class="brand brand--lockup" href="{% url 'pages:home' %}" aria-label="{{ site.project_name }} — {% translate 'accueil' %}">
+      {% if site.settings and site.settings.use_logo_image and site.settings.logo %}
+        <img class="brand__logo" src="{{ site.settings.logo.url }}" alt="{{ site.project_name }}" width="160" height="40">
+      {% else %}
+        {% brand_lockup %}
+      {% endif %}
+    </a>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-controls="nav-drawer" aria-expanded="false">
+      {% svg_icon "menu" "icon icon--menu" %}{% svg_icon "close" "icon icon--close" %}<span>{% translate "Menu" %}</span>
+    </button>
+    <div class="nav-drawer" id="nav-drawer" data-nav-drawer>
+      {% comment %}
+      Below the navigation breakpoint the header's actions are not drawn (the letterhead is the
+      lock-up and the menu button), so they live at the top of the drawer instead: the promoter
+      (whose bar is not drawn below md), the reserved-area access, the languages. Same links, same
+      order; v4/shell.css shows this block only under 80rem.
+      {% endcomment %}
+      <div class="drawer-utility">
+        <p class="drawer-utility__identity"><strong>{{ site.promoter }}</strong> — {% translate "promoteur du projet" %}</p>
+        {% flag "reserved_area_public_link" as reserved_link_drawer %}
+        {% if user.is_authenticated %}
+          {% include "components/account_menu.html" %}
+        {% elif reserved_link_drawer and site.settings.reserved_area_enabled %}
+          {% safe_url 'account_login' as login_url_drawer %}
+          {% if login_url_drawer %}<a class="btn btn--secondary btn--sm drawer-utility__reserved" href="{{ login_url_drawer }}">{% svg_icon "lock" "icon" %}<span>{% translate "Espace réservé" %}</span></a>{% endif %}
+        {% endif %}
+        {% include "components/language_segmented.html" %}
+      </div>
+      <nav class="main-nav" aria-label="{% translate 'Navigation principale' %}">
+        {% include "partials/main_nav.html" %}
+      </nav>
+    </div>
+  </div>
+  <div class="nav-overlay" data-nav-overlay></div>
+</header>

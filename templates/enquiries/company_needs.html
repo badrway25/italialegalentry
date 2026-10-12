@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--company-needs{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<article class="container enquiry-page enquiry-page--companies">
+  <header class="page-header">
+    <p class="page-header__eyebrow">{% translate "Espace Entreprises" %}</p>
+    {% locked "p1.companies.title" "h1" "page-header__title" %}
+    {% locked "p1.companies.intro" "p" "page-header__lead" %}
+  </header>
+  <figure class="blockquote blockquote--institutional">
+    {% locked "p1.companies.quote" "blockquote" "blockquote__text" %}
+  </figure>
+  <section class="enquiry-page__form" id="formulaire" aria-labelledby="company-needs-form-title">
+    <h2 id="company-needs-form-title" class="enquiry-page__form-title">{% translate "Recueil des besoins" %}</h2>
+    {% include "enquiries/partials/company_needs_form.html" %}
+  </section>
+</article>
+{% endblock %}

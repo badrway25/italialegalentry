@@ -1,0 +1,18 @@
+{% load i18n %}
+{% comment %}
+Homepage banner (document §2.2) — include from the homepage with the context returned by
+``forum.services.banner_context()`` (e.g. ``{% include "forum/partials/home_banner.html" with banner=banner %}``).
+Rendered only while core.gates.forum_banner_visible() is open (until 2 Oct 2026).
+{% endcomment %}
+{% if banner.visible %}
+<aside class="forum-banner" aria-labelledby="forum-banner-title" data-banner="forum"{% if banner.lang != site.lang %} lang="{{ banner.lang }}"{% endif %}>
+  <div class="container forum-banner__inner">
+    <div class="forum-banner__text">
+      <p class="forum-banner__title" id="forum-banner-title">{{ banner.title }}</p>
+      <p class="forum-banner__meta">{{ banner.meta }}</p>
+      <p class="forum-banner__quote">{{ banner.quote }}</p>
+    </div>
+    <p class="forum-banner__action"><a class="btn btn--primary" href="{{ banner.url }}">{{ banner.button }}</a></p>
+  </div>
+</aside>
+{% endif %}

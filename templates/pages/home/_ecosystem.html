@@ -1,0 +1,44 @@
+{% load i18n %}{% comment %}
+11. INSTITUTIONAL ECOSYSTEM — the promoter (AGAMI) and the AUTHORISED partners only
+(partners.services.authorized_partners(): live status AND written authorisation, gate G6).
+No logo is shown unless partner.logo_public; no institutional person is named; nothing suggests
+a public authority. When gate G3 is open the promoter is presented with the prescribed FAQ
+answer (faq_who); otherwise with a connective sentence stating only who promotes the project.
+CONTENT_PENDING_LEGAL_REVIEW — registered office, RUNTS number and tax code belong to the official
+« Mentions légales » (Allegato 1, not received): they are not published here.
+{% endcomment %}
+{% translate "Promoteur et partenaires" as eyebrow %}{% translate "Un écosystème institutionnel" as fallback_title %}
+<section class="section section--c home-ecosystem" id="{{ s.anchor }}" aria-labelledby="home-ecosystem-title" data-section="ecosystem">
+  <div class="container">
+    {% include "pages/partials/_section_header.html" with title_id="home-ecosystem-title" heading=s.heading intro=s.intro fallback_title=fallback_title eyebrow=eyebrow %}
+    <div class="home-ecosystem__grid">
+      <div class="home-ecosystem__promoter">
+        <p class="home-ecosystem__label">{% translate "Promoteur" %}</p>
+        <h3 class="home-ecosystem__name" translate="no">{{ d.promoter }}</h3>
+        {% if d.promoter_quote %}
+        <p class="home-ecosystem__text"{% if d.promoter_quote.lang %} lang="{{ d.promoter_quote.lang }}"{% endif %} data-faq="{{ d.promoter_quote.key }}">{{ d.promoter_quote.answer }}</p>
+        {% else %}
+        <p class="home-ecosystem__text">{% blocktranslate with project=site.project_name promoter=d.promoter %}{{ project }} est promu par {{ promoter }}.{% endblocktranslate %}</p>
+        {% endif %}
+        {% if d.agami_url %}<p><a class="link-arrow" href="{{ d.agami_url }}">{% translate "En savoir plus sur le promoteur" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      </div>
+      <div class="home-ecosystem__partners">
+        <p class="home-ecosystem__label">{% translate "Partenaires" %}</p>
+        {% if d.partners %}
+        <ul class="home-ecosystem__list" data-partners="{{ d.partners|length }}">
+          {% for card in d.partners %}
+          <li class="home-ecosystem__partner">
+            {% if card.partner.logo_public %}<img class="home-ecosystem__logo" src="{{ card.partner.logo.file.url }}" alt="" width="{{ card.partner.logo.width|default:'160' }}" height="{{ card.partner.logo.height|default:'80' }}" loading="lazy" decoding="async">{% endif %}
+            <span class="home-ecosystem__partner-name">{{ card.partner.name }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="home-ecosystem__empty" data-partners="0">{% translate "Les partenaires sont présentés au fur et à mesure de leurs autorisations écrites." %}</p>
+        {% endif %}
+        {% if d.partners_url %}<p><a class="link-arrow" href="{{ d.partners_url }}">{% translate "Voir les partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      </div>
+    </div>
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
+  </div>
+</section>

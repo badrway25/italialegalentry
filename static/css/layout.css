@@ -1,0 +1,392 @@
+/* ============================================================================
+   Layout — containers, the three-zone register grid, sections, rhythm.
+
+   The build this replaces used ONE container width for every band on every
+   page at every viewport: seven of seven on the home page at 1440 AND at 1920,
+   where 37.5% of the screen became empty gutter. A page whose every band shares
+   an edge cannot have a hierarchy of moments.
+
+   Here the container is a function of the viewport (tokens.css) AND of the
+   section's rank, and a band may break it in either direction.
+   ========================================================================== */
+
+/* ---- Containers ----------------------------------------------------------- */
+.container {
+  inline-size: 100%;
+  max-inline-size: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+/* A reading column, for prose that is not annotated. */
+.container--read {
+  max-inline-size: 42rem;
+}
+
+/* A register that runs the full container: the rail is empty and the ordinals
+   become the list's own first column. */
+.container--spread {
+  max-inline-size: var(--container);
+}
+
+.container--flush {
+  padding-inline: 0;
+}
+
+/* ---- The three zones -------------------------------------------------------
+   RAIL (folio: ordinal, running head, date) · CONTENT · MARGIN (note, source,
+   caveat). Column 10 is a fixed empty channel: it is what makes the margin read
+   as a margin rather than as a second content column.
+
+   Below lg the rail becomes a horizontal folio line above the block and the
+   margin note moves beneath the block it annotates, keeping its marker.
+
+   A page with no real marginalia does NOT get this layout: it gets a centred
+   reading column (.container--read). That rule is the reason the previous
+   build's 576px column could sit alone inside 1200px for 1100px of scroll —
+   the layout was applied whether or not there was anything to put beside it.
+   -------------------------------------------------------------------------- */
+.zones {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6);
+}
+
+.zones__rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.zones__content {
+  min-inline-size: 0;
+}
+
+.zones__margin {
+  font-family: var(--font-ui);
+  font-size: var(--t-caption-size);
+  line-height: var(--t-caption-lh);
+  color: var(--ink-muted);
+  max-inline-size: var(--measure-note);
+}
+
+@media (min-width: 75rem) {
+  .zones {
+    grid-template-columns:
+      var(--container-rail)
+      minmax(0, 1fr)
+      var(--container-rail);
+    gap: 0 var(--grid-gutter);
+    align-items: start;
+  }
+
+  /* The empty channel: the margin starts one gutter further in. */
+  .zones__margin {
+    padding-inline-start: var(--grid-gutter);
+  }
+
+  /* No margin content, no third zone: the content takes the space instead of
+     leaving a void beside it. */
+  .zones--no-margin {
+    grid-template-columns: var(--container-rail) minmax(0, 1fr);
+  }
+
+  .zones--no-rail {
+    grid-template-columns: minmax(0, 1fr) var(--container-rail);
+  }
+}
+
+/* The content column of an annotated block is a measured reading column. */
+.zones__content > .prose,
+.zones__content > p,
+.zones__content > .t-prose {
+  max-inline-size: var(--measure-prose);
+}
+
+/* ---- Sections: RANK sets the outer space -----------------------------------
+   Space between sections is always greater than space inside them, and a
+   section's rank decides how much. The build this replaces used 72/72 on every
+   section at 1440 and 80/80 at 1920 — so a page read top to bottom was six
+   beats of identical duration, which is why nothing on it seemed to matter
+   more than anything else.
+
+   Rank A  the plate: one per page, full bleed, no inner padding
+   Rank B  a spread: title + prose + margin apparatus
+   Rank C  a register, a table, a sequence
+   Rank D  a notice, a marginal band, legal text
+   -------------------------------------------------------------------------- */
+.section {
+  padding-block: var(--rank-b-block);
+}
+
+.section--a {
+  padding-block: 0;
+  margin-block-end: var(--rank-a-after);
+}
+
+.section--b {
+  padding-block: var(--rank-b-block);
+}
+
+.section--c {
+  padding-block: var(--rank-c-block);
+}
+
+.section--d {
+  padding-block: var(--rank-d-block);
+}
+
+.section--flush-top {
+  padding-block-start: 0;
+}
+
+/* Ground changes ARE the composition: no page ships with a single ground. */
+.section--process {
+  background: var(--paper-deep);
+}
+
+.section--verso {
+  background: var(--navy);
+  color: var(--paper-on-navy);
+  border-block-start: 2px solid var(--navy);
+  border-block-end: 2px solid var(--rubric-on-navy);
+}
+
+.section--verso :is(h1, h2, h3, h4, .t-plate, .t-title, .t-band, .t-entry, .folio__head) {
+  color: inherit;
+}
+
+.section--verso :is(.t-muted, .t-gloss, .t-caption, .t-lead) {
+  color: var(--paper-muted-on-navy);
+}
+
+.section--verso a:not(.btn) {
+  color: inherit;
+}
+
+.section--rule {
+  border-block-start: 1px solid var(--rule-hair);
+}
+
+.section__header {
+  max-inline-size: var(--measure-lead);
+  margin-block-end: var(--s-8);
+}
+
+.section__title {
+  margin-block-end: var(--s-3);
+}
+
+.section__lead {
+  color: var(--ink-secondary);
+  font-family: var(--font-display);
+  font-size: var(--t-lead-size);
+  line-height: var(--t-lead-lh);
+}
+
+/* ---- Legacy section aliases (demolition scaffold) ------------------------- */
+.section--tight {
+  padding-block: var(--rank-c-block);
+}
+
+.section--muted {
+  background: var(--paper-deep);
+}
+
+.section--inverse {
+  background: var(--navy);
+  color: var(--paper-on-navy);
+}
+
+.section--inverse :is(h1, h2, h3, .eyebrow, a:not(.btn)) {
+  color: inherit;
+}
+
+.section--header--center,
+.section__header--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* ---- Editorial grid (12 columns, collapses to 1 under 48rem) -------------- */
+.grid {
+  display: grid;
+  gap: var(--space-6) var(--gutter);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.grid > * {
+  grid-column: span 12;
+  min-inline-size: 0;
+}
+
+@media (min-width: 48rem) {
+  .col-4 { grid-column: span 4; }
+  .col-5 { grid-column: span 5; }
+  .col-6 { grid-column: span 6; }
+  .col-7 { grid-column: span 7; }
+  .col-8 { grid-column: span 8; }
+  .col-9 { grid-column: span 9; }
+  .col-start-2 { grid-column-start: 2; }
+  .col-start-3 { grid-column-start: 3; }
+  .col-start-4 { grid-column-start: 4; }
+}
+
+@media (min-width: 64rem) {
+  .lg\:col-3 { grid-column: span 3; }
+  .lg\:col-4 { grid-column: span 4; }
+  .lg\:col-6 { grid-column: span 6; }
+  .lg\:col-8 { grid-column: span 8; }
+}
+
+/* Auto-fit grid for lists of equal items (pathways, sheets) */
+.grid-auto {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+/* ---- Two-column editorial layouts ---------------------------------------- */
+/* content + side navigation / aside */
+.layout-sidebar {
+  display: grid;
+  gap: var(--space-10) var(--gutter);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .layout-sidebar {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  }
+
+  .layout-sidebar--end {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
+  }
+
+  .layout-sidebar__aside {
+    position: sticky;
+    inset-block-start: calc(var(--header-height) + var(--space-6));
+  }
+}
+
+/* text + figure split (hero-like) */
+.split {
+  display: grid;
+  gap: var(--space-10) var(--gutter);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+@media (min-width: 56rem) {
+  .split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .split--even {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- Composition utilities ------------------------------------------------ */
+.stack > * + * {
+  margin-block-start: var(--stack-gap);
+}
+
+.stack--sm { --stack-gap: var(--space-2); }
+.stack--lg { --stack-gap: var(--space-8); }
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  align-items: center;
+}
+
+.cluster--between {
+  justify-content: space-between;
+}
+
+.cluster--end {
+  justify-content: flex-end;
+}
+
+.center {
+  text-align: center;
+}
+
+.measure {
+  max-inline-size: var(--measure-prose);
+}
+
+.mx-auto {
+  margin-inline: auto;
+}
+
+.flow > * + * {
+  margin-block-start: var(--space-4);
+}
+
+.mt-0 { margin-block-start: 0 !important; }
+.mb-0 { margin-block-end: 0 !important; }
+.mt-4 { margin-block-start: var(--space-4); }
+.mt-8 { margin-block-start: var(--space-8); }
+.mb-4 { margin-block-end: var(--space-4); }
+.mb-8 { margin-block-end: var(--space-8); }
+
+/* ---- Rules ---------------------------------------------------------------- */
+.rule {
+  border: 0;
+  border-block-start: var(--border-width) solid var(--border-hairline);
+  margin-block: var(--space-8);
+}
+
+.rule--accent {
+  inline-size: 3rem;
+  margin-inline: 0;
+  margin-block: var(--space-5);
+  border-block-start: var(--border-width-strong) solid var(--border-accent);
+}
+
+.rule--accent.center,
+.center > .rule--accent {
+  margin-inline: auto;
+}
+
+/* ---- Responsive visibility ------------------------------------------------ */
+@media (max-width: 63.999rem) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 64rem) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ---- Scroll container for wide content (tables, diagrams) ---------------- */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.scroll-x:focus-visible {
+  outline-offset: -2px;
+}
+
+/* ---- Legacy container aliases (demolition scaffold) -----------------------
+   Migrated to .container--read / .container--spread as each template is
+   rebuilt. See _legacy-tokens.css for the countdown. */
+.container--wide,
+.container--narrow,
+.container--prose {
+  max-inline-size: var(--container);
+}
+
+.container--narrow,
+.container--prose {
+  max-inline-size: 42rem;
+}

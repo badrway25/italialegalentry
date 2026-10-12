@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+ENTRANCE — login, signup, password reset, e-mail verification: design V4 (docs/design-v4/
+CREATIVE_DIRECTION.md §3.3, DARK + FOCUS). Two panels from 64rem: at the reading edge the stage —
+the owner's door on the evolved navy with the radial mesh, and the one help line the entrance
+keeps, on a glass strip; at the other end the FOCUS ground with the sheet (level 2, radius xl,
+480 px) that carries the account page's content — title, invitation, fields, one primary action.
+Below 64rem the stage becomes a 120 px band with the arch and the steps, then the sheet full width.
+
+The public letterhead stays above: the entrance is a page of the site, and the lock-up up there
+is the way back. The classes `account-page account-page--entrance`, `form`, `form-field` and
+`btn btn--primary` are the contract tests/frontend/test_layout.py holds the entrance to; the
+allauth elements (templates/allauth/elements/) keep producing them.
+{% endcomment %}
+{% block page_title %}{% block head_title %}{% endblock head_title %}{% endblock %}
+{% block meta_description %}{% translate "Espace réservé — accès au compte" %}{% endblock %}
+{% block body_class %}page-account page-entrance{% endblock %}
+{% block extra_head %}<link rel="preload" as="image" href="{% static 'brand/v2/doorway-arch-400.webp' %}" fetchpriority="high">
+<link rel="stylesheet" href="{% static 'css/dist/accounts/entrance.css' %}">{% endblock %}
+{% block main_content %}
+<section class="account-page account-page--entrance entrance">
+  <div class="entrance__stage chapter--dark" data-entrance-stage>
+    <svg class="entrance__door doorway" viewBox="264 64 368 456" aria-hidden="true" focusable="false" data-doorway>
+      {% include "components/doorway.html" with prefix="entrance" %}
+    </svg>
+    {% block account_help %}
+    <p class="entrance__help">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    {% endblock %}
+  </div>
+  <div class="entrance__focus">
+    <div class="account-page__main entrance__sheet">
+      {% block body %}{% block content %}{% endblock content %}{% endblock body %}
+    </div>
+  </div>
+</section>
+{% endblock main_content %}
+{% comment %}No page script: the door's choreography (arch trace, steps, key) ran from a deferred module
+after the first paint and took back what had been drawn — removed with the home's (gate A, round 4,
+defect 11; README §4.8). The door is complete and still from the first frame.{% endcomment %}
+{% block extra_scripts %}{% block extra_body %}{% endblock extra_body %}{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% locked "p3.virtual_forum.title" %}{% endblock %}
+{% block meta_description %}{% locked "p3.virtual_forum.body" %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<header class="page-header container">
+  {% locked "p3.virtual_forum.title" "h1" "page-header__title" %}
+  {% locked "p3.virtual_forum.body" "p" "page-header__lead" %}
+</header>
+<nav class="container community-nav" aria-label="{% translate 'Sections du Forum Virtuel' %}">
+  <ul class="community-nav__list">
+    <li><a href="{% url 'community:index' %}" aria-current="page">{% translate "Salles" %}</a></li>
+    <li><a href="{% url 'community:calendar' %}">{% translate "Calendrier" %}</a></li>
+    <li><a href="{% url 'community:initiatives' %}">{% translate "Initiatives" %}</a></li>
+  </ul>
+</nav>
+<section class="container community-rooms" aria-labelledby="rooms-heading">
+  <h2 id="rooms-heading">{% translate "Salles thématiques" %}</h2>
+  {% if membership %}
+  <p class="community-rooms__me">{% translate "Vous participez en tant que :" %} {{ membership.get_category_display }}{% if moderator %} — {% translate "modération" %}{% endif %}</p>
+  {% elif moderator %}
+  <p class="community-rooms__me">{% translate "Accès de modération." %}</p>
+  {% endif %}
+  {% if rooms %}
+  <ul class="community-rooms__list">
+    {% for room in rooms %}
+    <li class="community-rooms__item">
+      <h3 class="community-rooms__title"><a href="{% url 'community:room' slug=room.slug %}">{{ room.name_fr }}</a></h3>
+      {% if room.description_fr %}<p class="community-rooms__description">{{ room.description_fr }}</p>{% endif %}
+      {% if room.is_moderated %}<p class="community-rooms__meta">{% translate "Salle modérée" %}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    {% translate "Aucune salle n’est ouverte pour votre catégorie pour le moment." as empty_title %}
+    {% include "components/empty_state.html" with title=empty_title %}
+  {% endif %}
+</section>
+<section class="container community-agenda" aria-labelledby="agenda-heading">
+  <h2 id="agenda-heading">{% translate "Prochains rendez-vous" %}</h2>
+  {% if calendar %}
+  <ul class="community-agenda__list">
+    {% for entry in calendar %}
+    <li><time datetime="{{ entry.starts_at|date:'c' }}">{{ entry.starts_at|date:"d/m/Y H:i" }}</time> — {{ entry.title }}{% if entry.room %} ({{ entry.room.name_fr }}){% endif %}</li>
+    {% endfor %}
+  </ul>
+  <p><a href="{% url 'community:calendar' %}">{% translate "Voir tout le calendrier" %}</a></p>
+  {% else %}
+  <p>{% translate "Aucun rendez-vous programmé." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

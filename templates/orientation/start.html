@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% load i18n static %}
+{% block page_title %}{% translate "Orientation vers un parcours régulier" %}{% endblock %}
+{% block meta_description %}{% translate "Répondez à quelques questions sur votre situation et recevez une pré-évaluation à caractère informatif sur la famille de parcours régulier vers l’Italie qui correspond à votre projet." %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+<article class="container wizard-intro">
+  <header class="page-header">
+    <p class="page-header__eyebrow">{% translate "Espace Personnes" %}</p>
+    <h1 class="page-header__title">{% translate "Orientation vers un parcours régulier" %}</h1>
+    <p class="page-header__lead">{% translate "Répondez à quelques questions sur votre projet : vous recevrez une pré-évaluation à caractère informatif indiquant la famille de parcours régulier vers l’Italie qui semble correspondre à votre situation, avec des étapes générales de préparation." %}</p>
+  </header>
+
+  <section class="wizard-intro__how" aria-labelledby="how-title">
+    <h2 id="how-title">{% translate "Comment se déroule le questionnaire" %}</h2>
+    <ol class="wizard-intro__steps">
+      <li><strong>{% translate "Quelques questions progressives" %}</strong> — {% translate "une question par écran, sans aucune donnée personnelle ; vous pouvez revenir en arrière à tout moment." %}</li>
+      <li><strong>{% translate "Une pré-évaluation informative" %}</strong> — {% translate "la famille de parcours qui correspond à votre projet, avec une explication." %}</li>
+      <li><strong>{% translate "Les étapes suivantes" %}</strong> — {% translate "une liste de préparation générale et les acteurs compétents à contacter." %}</li>
+    </ol>
+  </section>
+
+  <aside class="notice notice--info wizard-disclaimer" role="note" aria-labelledby="disclaimer-title">
+    <p class="notice__title" id="disclaimer-title"><strong>{% translate "À lire avant de commencer" %}</strong></p>
+    {# Phase 3 prescribed wording (p3.persons.how_it_works) only once gate G3 is open; before that a neutral sentence with the same meaning. #}
+    <div class="notice__body"><p>{% if gates.phase3_public %}{% locked disclaimer_locked_key %}{% else %}{% translate "Le résultat du questionnaire est une pré-évaluation à caractère informatif : les décisions relèvent des autorités compétentes." %}{% endif %}</p></div>
+  </aside>
+
+  {% if available %}
+    <form method="post" action="{% url 'orientation:start' %}" class="wizard-intro__start">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--primary btn--large">{% translate "Commencer" %}</button>
+      <p class="wizard-intro__resume-link"><a href="{% url 'orientation:resume' %}">{% translate "Vous avez un code de reprise ? Reprendre une pré-évaluation" %}</a></p>
+    </form>
+  {% else %}
+    {% translate "Le questionnaire d’orientation n’est pas disponible pour le moment. Vous pouvez consulter la présentation des parcours réguliers ou nous écrire." as unavailable_text %}
+    {% include "components/notice.html" with kind="pending" title=_("Questionnaire indisponible") text=unavailable_text %}
+    <p><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  {% endif %}
+
+  {% if phase3_open %}{% safe_url 'pathways:index' as pathways_url %}{% if pathways_url %}
+  <p class="wizard-intro__pathways"><a href="{{ pathways_url }}">{% translate "Découvrir les parcours réguliers présentés dans l’Espace Personnes" %}</a></p>
+  {% endif %}{% endif %}
+</article>
+{% endblock %}

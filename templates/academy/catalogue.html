@@ -1,0 +1,104 @@
+{% extends "academy/base_academy.html" %}{% load i18n %}
+{% comment %}
+The catalogue: one register, one filter line, nothing else.
+
+Deliberately NOT a grid of course cards with a cover image, a rating and a "popular" badge. A
+course is an entry in a register: an ordinal, a title, what it is, how long it lasts, and — at the
+inline end, where this system puts the answerable party — the body that delivers it. A learner must
+always be able to say who is answerable for what they are being taught.
+
+The state chip on a row the person is already following is a WORD, not a colour: `.state` carries
+its label, and the colour only repeats what the word already says.
+{% endcomment %}
+{% block page_title %}{% translate "Academy" %}{% endblock %}
+{% block meta_description %}{% translate "Le catalogue de formation : langue, droits et devoirs, éducation civique, sécurité, culture du travail, formation professionnelle, préparation au départ." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Academy" as header_title %}
+{% translate "Les formations ouvertes à toute personne disposant d’un compte." as header_lead %}
+{% translate "Plateforme" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+
+{% block academy_content %}
+{% safe_url 'academy:catalogue' as catalogue_url %}
+{% safe_url 'academy:mine' as mine_url %}
+<section class="portal-section" aria-labelledby="catalogue-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Catalogue" %}</span></p>
+  <h2 class="portal__section-title" id="catalogue-title">{% translate "Les cours disponibles" %}</h2>
+
+  {% if domains %}
+  <ul class="academy-filters" aria-label="{% translate 'Filtrer par domaine' %}">
+    <li>
+      <a class="academy-filters__link" href="{{ catalogue_url }}"{% if not selected_domain %} aria-current="true"{% endif %}>{% translate "Tous les domaines" %}</a>
+    </li>
+    {% for domain in domains %}
+    <li>
+      <a class="academy-filters__link" href="{{ catalogue_url }}?domaine={{ domain.key }}"{% if selected_domain == domain.key %} aria-current="true"{% endif %}>
+        {{ domain.label }}<span class="academy-filters__count">{{ domain.count }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if courses %}
+  <ol class="register">
+    {% for course in courses %}
+    <li class="register__item">
+      {% safe_url 'academy:course' course.slug as course_url %}
+      {% if course_url %}<a class="entry" href="{{ course_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <h3 class="entry__title" lang="{{ course.text_language }}" dir="auto">{{ course.title }}</h3>
+        <span class="entry__gloss" lang="{{ course.text_language }}" dir="auto">
+          {{ course.summary }}
+          {% comment %}
+          The body answerable for the course leads the caption rather than sitting in the
+          `.entry__actor` slot: that slot is `white-space: nowrap` by design — it is drawn for a
+          short actor label such as « L’AUTORITÉ » — and an organisation's full name overflowed a
+          390px screen by 79px. The answerable party is still named first, and named in full.
+          {% endcomment %}
+          <span class="t-caption">
+            {{ course.provider.name }} · {{ course.get_course_type_display }} ·
+            {{ course.get_course_format_display }} ·
+            {% blocktranslate with hours=course.duration_hours %}{{ hours }} h{% endblocktranslate %} ·
+            {% blocktranslate count modules=course.modules_count %}{{ modules }} module{% plural %}{{ modules }} modules{% endblocktranslate %} ·
+            {% blocktranslate with language=course.get_language_display %}enseigné en {{ language }}{% endblocktranslate %}
+          </span>
+        </span>
+        {% if course.id in enrolled_ids %}
+        <span class="entry__actor state state--done" data-register="conforme">{% translate "déjà inscrit" %}</span>
+        {% endif %}
+      {% if course_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">
+    {% if search or selected_domain %}
+      {% translate "Aucun cours ne correspond à cette recherche." %}
+      {% if catalogue_url %}<a href="{{ catalogue_url }}">{% translate "Revenir au catalogue complet" %}</a>{% endif %}
+    {% else %}
+      {% translate "Le catalogue est constitué par l’équipe du projet à partir des besoins de compétences recensés sur le territoire ; les cours publiés apparaîtront ici." %}
+    {% endif %}
+  </p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="catalogue-mine-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Mon suivi" %}</span></p>
+  <h2 class="portal__section-title" id="catalogue-mine-title">{% translate "Où j’en suis" %}</h2>
+  {% if summary.ongoing or summary.completed or summary.plans %}
+  <dl class="portal-facts">
+    <div class="portal-facts__row"><dt>{% translate "Formations en cours" %}</dt><dd>{{ summary.ongoing }}</dd></div>
+    <div class="portal-facts__row"><dt>{% translate "Formations suivies jusqu’au terme" %}</dt><dd>{{ summary.completed }}</dd></div>
+    <div class="portal-facts__row"><dt>{% translate "Plans de formation" %}</dt><dd>{{ summary.plans }}</dd></div>
+  </dl>
+  {% if mine_url %}<p class="portal__actions"><a class="link-arrow" href="{{ mine_url }}">{% translate "Voir mes formations" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  {% else %}
+  <p class="empty">
+    {% translate "Vous ne suivez encore aucun cours. Choisissez-en un dans le catalogue ci-dessus : l’inscription est immédiate et n’exige aucune démarche préalable." %}
+  </p>
+  {% endif %}
+</section>
+{% endblock %}

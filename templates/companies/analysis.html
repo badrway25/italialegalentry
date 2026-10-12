@@ -1,0 +1,132 @@
+{% extends "companies/base_companies.html" %}{% load i18n %}
+{% comment %}
+TERRITORIAL AND SECTORAL ANALYSIS — counts only (REQ-B2B-05).
+
+Not visible to a company: it aggregates the needs of every company. It shows counts, and nothing
+that could be turned back into a row — no company name, no need title, no identifier. Drafts and
+withdrawn needs are excluded: a draft is a private working document and a withdrawn need is not a
+need.
+
+No meter, no percentage, no chart. A headed table with a dash for a null, which is what a count is.
+{% endcomment %}
+{% block page_title %}{% translate "Analyse territoriale des besoins" %}{% endblock %}
+{% block meta_description %}{% translate "Les besoins exprimés, agrégés par territoire et par secteur." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Analyse territoriale des besoins" as header_title %}
+{% translate "Les besoins exprimés, comptés par territoire et par secteur. Des effectifs, jamais des personnes." as header_lead %}
+{% include "components/page_header.html" with title=header_title lead=header_lead %}
+{% endblock %}
+
+{% block companies_content %}
+<section class="portal-section" aria-labelledby="totals-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Ensemble" %}</span></p>
+  <h2 class="portal__section-title" id="totals-title">{% translate "Ce qui est compté" %}</h2>
+  <dl class="portal-facts">
+    <div class="portal-facts__row">
+      <dt>{% translate "Besoins exprimés" %}</dt>
+      <dd>{{ aggregate.total_needs }}</dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "Profils cumulés" %}</dt>
+      <dd>{{ aggregate.total_headcount }}</dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "États retenus" %}</dt>
+      <dd>{{ aggregate.counted_states|join:", " }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="portal-section" aria-labelledby="territory-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Territoires" %}</span></p>
+  <h2 class="portal__section-title" id="territory-title">{% translate "Par territoire" %}</h2>
+  {% if aggregate.by_territory %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-1">
+    <table class="data-table">
+      <caption id="t-analysis-1" class="visually-hidden">{% translate "Nombre de besoins et de profils par territoire" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Territoire" %}</th>
+          <th scope="col">{% translate "Besoins" %}</th>
+          <th scope="col">{% translate "Profils" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in aggregate.by_territory %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Territoire' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Besoins' %}">{{ row.needs }}</td>
+          <td data-label="{% translate 'Profils' %}">{{ row.headcount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun besoin transmis à ce jour : l’agrégation apparaîtra dès la première transmission." %}</p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="sector-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Secteurs" %}</span></p>
+  <h2 class="portal__section-title" id="sector-title">{% translate "Par secteur" %}</h2>
+  {% if aggregate.by_sector %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-2">
+    <table class="data-table">
+      <caption id="t-analysis-2" class="visually-hidden">{% translate "Nombre de besoins et de profils par secteur d’activité" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Secteur" %}</th>
+          <th scope="col">{% translate "Besoins" %}</th>
+          <th scope="col">{% translate "Profils" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in aggregate.by_sector %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Secteur' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Besoins' %}">{{ row.needs }}</td>
+          <td data-label="{% translate 'Profils' %}">{{ row.headcount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="status-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "États" %}</span></p>
+  <h2 class="portal__section-title" id="status-title">{% translate "Par état de traitement" %}</h2>
+  {% if aggregate.by_status %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-3">
+    <table class="data-table">
+      <caption id="t-analysis-3" class="visually-hidden">{% translate "Nombre de besoins par état de traitement" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "État" %}</th>
+          <th scope="col">{% translate "Besoins" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in aggregate.by_status %}
+        <tr>
+          <th scope="row" data-label="{% translate 'État' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Besoins' %}">{{ row.needs }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
+  {% endif %}
+</section>
+
+<p class="note">
+  {% translate "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, ni intitulé de besoin, ni identifiant, et elle ne compte aucune personne." %}
+</p>
+{% endblock %}

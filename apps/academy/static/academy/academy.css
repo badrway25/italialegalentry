@@ -1,0 +1,143 @@
+/* ============================================================================
+   ACADEMY — the few devices the register language does not already carry.
+
+   Everything else on these pages is the existing system: .folio, .register /
+   .entry, .sequence, .data-table, .state, .empty, .note, .sources. Nothing here
+   introduces a card, a shadow, a gradient, a radius above 2px, a KPI tile or a
+   percentage meter — a progress meter is forbidden by the brief and by the
+   domain: attendance is counted in modules, and the count is printed as words.
+
+   Four additions only:
+     .academy-filters   the domain filter — a line of words, not a row of chips
+     .attendance        the record of attendance, drawn as a document, not a
+                        badge, and never in the colour of an approval
+     .module-form       the inline "mark as attended" control inside a sequence
+     .academy-inline    a row of actions that wraps on a phone
+   ========================================================================== */
+
+/* ---- The domain filter -----------------------------------------------------
+   A filter is navigation, not decoration. Words on a hairline, the current one
+   carrying a 2px rubric rule — the same device the register uses for the
+   current entry, so the page has one vocabulary and not two. Never a pill, and
+   never colour alone: the current filter is also marked aria-current in the
+   markup, which is what a screen reader reads.
+   -------------------------------------------------------------------------- */
+.academy-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  list-style: none;
+  margin: 0 0 var(--s-6);
+  padding-block: var(--s-3);
+  border-block: 1px solid var(--rule-hair);
+}
+
+.academy-filters__link {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-ui-lh);
+  color: var(--ink-secondary);
+  text-decoration: none;
+  border-block-end: 2px solid transparent;
+  padding-block-end: 2px;
+}
+
+.academy-filters__link:hover,
+.academy-filters__link:focus-visible {
+  color: var(--ink);
+  border-block-end-color: var(--rule-hair);
+}
+
+.academy-filters__link[aria-current="true"] {
+  color: var(--ink);
+  font-weight: 600;
+  border-block-end-color: var(--rubric);
+}
+
+.academy-filters__count {
+  font-family: var(--font-ref);
+  font-size: var(--t-caption-size);
+  color: var(--ink-muted);
+  margin-inline-start: var(--s-1);
+}
+
+/* ---- The record of attendance ----------------------------------------------
+   Drawn as a short document: two rules, a reference in the monospaced register
+   used for references elsewhere, and the caveat immediately under it — never a
+   green badge, never a seal, never a word that could be read as a licence. The
+   caveat is part of the object, so it cannot be scrolled past or styled out.
+   -------------------------------------------------------------------------- */
+.attendance {
+  border-block: 2px solid var(--navy);
+  padding-block: var(--s-4);
+  margin-block: var(--s-6);
+}
+
+.attendance__head {
+  font-family: var(--font-ui);
+  font-size: var(--t-folio-size);
+  line-height: var(--t-folio-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--ink-secondary);
+  margin: 0 0 var(--s-2);
+}
+
+:lang(ar) .attendance__head {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.attendance__reference {
+  font-family: var(--font-ref);
+  font-size: var(--t-entry-size);
+  line-height: var(--t-entry-lh);
+  color: var(--ink);
+  margin: 0;
+}
+
+.attendance__facts {
+  margin-block-start: var(--s-3);
+}
+
+/* ---- The attendance control inside a sequence ------------------------------
+   A form, inline with the step it belongs to, so the action sits where the
+   thing it acts on is. No icon: the label is the affordance.
+   -------------------------------------------------------------------------- */
+.module-form {
+  display: inline;
+  margin-block-start: var(--s-2);
+}
+
+.module-form .btn {
+  margin-block-start: var(--s-2);
+}
+
+.academy-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-4);
+  align-items: baseline;
+  margin-block-start: var(--s-6);
+}
+
+/* A register entry that is not a link still carries its state at the end of the
+   row; on a phone the actor area stacks under the gloss, which the grid already
+   handles. Nothing to add but the muted register for the secondary line. */
+.entry__gloss .t-caption {
+  display: block;
+  color: var(--ink-muted);
+}
+
+@media (forced-colors: active) {
+  .attendance {
+    border-color: CanvasText;
+  }
+
+  .academy-filters__link[aria-current="true"] {
+    border-block-end-color: Highlight;
+  }
+}

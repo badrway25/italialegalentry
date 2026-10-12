@@ -1,0 +1,25 @@
+{% load i18n forum_tags %}
+{% comment %}
+Primary CTA anchors to the registration form (event mode, registrations open). Secondary CTAs
+(document §2.1 « Boutons secondaires ») point to the companies form and the collaboration form
+owned by the enquiries app — resolved with safe_url so the page renders while those routes land.
+{% endcomment %}
+{% safe_url "enquiries:company_needs" as pilot_url %}{% safe_url "enquiries:institution_proposal" as collab_url %}
+<section class="forum-cta container" id="forum-cta" aria-labelledby="forum-cta-title">
+  <h2 class="forum-cta__title" id="forum-cta-title">{% translate "Participer et collaborer" %}</h2>
+  <div class="forum-cta__actions">
+    {% if not is_permanent and registration_open %}
+      <a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a>
+    {% endif %}
+    {% if pilot_url %}
+      <a class="btn btn--secondary" href="{{ pilot_url }}">{% event_text event "registration.button_secondary_pilot" %}</a>
+    {% else %}
+      <span class="btn btn--secondary is-disabled" aria-disabled="true" data-pending-route="enquiries:company_needs">{% event_text event "registration.button_secondary_pilot" %}</span>
+    {% endif %}
+    {% if collab_url %}
+      <a class="btn btn--secondary" href="{{ collab_url }}">{% event_text event "registration.button_secondary_collab" %}</a>
+    {% else %}
+      <span class="btn btn--secondary is-disabled" aria-disabled="true" data-pending-route="enquiries:institution_proposal">{% event_text event "registration.button_secondary_collab" %}</span>
+    {% endif %}
+  </div>
+</section>

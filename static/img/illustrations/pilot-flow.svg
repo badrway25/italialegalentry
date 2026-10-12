@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" width="640" height="160" role="img" aria-labelledby="t" fill="none" stroke="#0f2b52" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+  <title id="t">Séquence en huit étapes reliant deux territoires en coopération</title>
+  <!-- baseline -->
+  <path d="M20 120h600" stroke="#9a7b2f" stroke-width="1"/>
+  <!-- eight nodes joined by a rising line -->
+  <path d="M40 110 118 98l78-10 78-6 78-6 78-10 78-12 72-8" stroke-dasharray="5 5"/>
+  <g fill="#fbfaf7">
+    <circle cx="40" cy="110" r="7"/>
+    <circle cx="118" cy="98" r="7"/>
+    <circle cx="196" cy="88" r="7"/>
+    <circle cx="274" cy="82" r="7"/>
+    <circle cx="352" cy="76" r="7"/>
+    <circle cx="430" cy="66" r="7"/>
+    <circle cx="508" cy="54" r="7"/>
+    <circle cx="580" cy="46" r="7" fill="#9a7b2f" stroke="#9a7b2f"/>
+  </g>
+  <!-- two territories joined by cooperation -->
+  <path d="M20 140c60-14 120-14 180 0" stroke="#1f6b48"/>
+  <path d="M440 140c60-14 120-14 180 0" stroke="#1f6b48"/>
+  <path d="M200 140h240" stroke="#9a7b2f" stroke-dasharray="3 5"/>
+</svg>

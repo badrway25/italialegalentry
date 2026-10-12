@@ -1,0 +1,67 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}
+Glossaire — termes italiens expliqués (Phase 3, gate G3). Locked terms come from the registry through
+glossary.services (cms.locked_content). A–Z index lists only letters that have terms.
+{% endcomment %}
+{% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Glossaire{% endblocktranslate %}{% else %}{% translate "Glossaire" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots : visto, permesso di soggiorno, nulla osta, codice fiscale…" %}{% endblock %}
+{% block body_class %}page-glossary{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
+{% endif %}
+{% include "components/page_header.html" with title=_("Glossaire") lead=_("Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots.") %}
+<div class="container glossary">
+  <form class="search-form glossary__search" method="get" action="{% url 'glossary:index' %}" role="search" aria-label="{% translate 'Rechercher un terme' %}">
+    <label class="search-form__label" for="glossary-q">{% translate "Rechercher un terme" %}</label>
+    <div class="search-form__row">
+      <input class="search-form__input" type="search" id="glossary-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="glossary-q-help">
+      <button class="btn btn--primary" type="submit">{% translate "Rechercher" %}</button>
+    </div>
+    <p class="search-form__help" id="glossary-q-help">{% translate "Saisissez un terme italien ou un mot de sa définition." %}</p>
+    {% if is_search %}<p><a class="search-form__reset" href="{% url 'glossary:index' %}">{% translate "Effacer la recherche et afficher tous les termes" %}</a></p>{% endif %}
+  </form>
+
+  {% if is_search %}
+    <h2 id="glossary-results-title">{% blocktranslate count counter=entries|length with q=query %}{{ counter }} terme pour « {{ q }} »{% plural %}{{ counter }} termes pour « {{ q }} »{% endblocktranslate %}</h2>
+    {% if not entries %}
+      {% url 'glossary:index' as glossary_index_url %}
+      {% include "components/empty_state.html" with title=_("Aucun terme ne correspond à votre recherche.") text=_("Essayez un autre mot ou parcourez l’index alphabétique.") action_label=_("Voir tous les termes") action_url=glossary_index_url %}
+    {% endif %}
+  {% elif letters %}
+    <nav class="az-index glossary__index" aria-label="{% translate 'Index alphabétique' %}">
+      <ol class="az-index__list">
+        {% for letter in letters %}<li><a class="az-index__link" href="#lettre-{{ letter }}">{{ letter }}</a></li>{% endfor %}
+      </ol>
+    </nav>
+  {% else %}
+    {% include "components/empty_state.html" with title=_("Le glossaire est en cours de préparation.") text=_("Cette page sera enrichie progressivement.") %}
+  {% endif %}
+
+  {% for group in groups %}
+  <section class="glossary__group" id="lettre-{{ group.letter }}" aria-labelledby="lettre-{{ group.letter }}-title">
+    <h2 class="glossary__letter" id="lettre-{{ group.letter }}-title">{{ group.letter }}</h2>
+    <dl class="glossary__list">
+      {% for entry in group.entries %}
+      <div class="glossary-entry" id="{{ entry.key }}">
+        <dt class="glossary-entry__term" lang="{{ entry.term_lang }}"><a href="{{ entry.url }}">{{ entry.term }}</a></dt>
+        <dd class="glossary-entry__definition"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </section>
+  {% endfor %}
+
+  {% safe_url 'faq:index' as faq_url %}{% safe_url 'pathways:index' as pathways_url %}{% safe_url 'pages:antifraud' as antifraud_url %}
+  <aside class="related-links glossary__related" aria-labelledby="glossary-related-title">
+    <h2 id="glossary-related-title">{% translate "Pour aller plus loin" %}</h2>
+    <ul class="related-links__list">
+      {% if faq_url %}<li><a href="{{ faq_url }}">{% translate "Questions fréquentes" %}</a></li>{% endif %}
+      {% if pathways_url %}<li><a href="{{ pathways_url }}">{% translate "Les parcours réguliers vers l’Italie" %}</a></li>{% endif %}
+      {% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Attention aux fraudes" %}</a></li>{% endif %}
+    </ul>
+  </aside>
+</div>
+{% endblock %}
+{% block extra_head %}{% if glossary_jsonld %}<script type="application/ld+json">{{ glossary_jsonld }}</script>{% endif %}{% endblock %}

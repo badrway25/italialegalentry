@@ -1,0 +1,254 @@
+/* ============================================================================
+   THE FOUR ACCESS ROUTES — «a quay of four piers»
+   docs/design-v2/DESIGN_SYSTEM_V2.md §8.5
+
+   The four doors of the ecosystem, and the section the anti-patterns file names twice: four
+   identical cards, each with an icon in a rounded square. They are not cards here and they are
+   not identical: a zig-zag of four sheets on a twelve-column grid (7/5 · 5/7), each with its own
+   landform glyph, its own index, its own tint, and a mooring line on the reading edge that traces
+   when the pier is hovered or focused.
+
+   The markup is unchanged — `ol.register.register--entrances > li.register__item > a.entry`, which
+   apps/pages/tests/test_home.py and test_browser.py hold to. Only the drawing is new, so the
+   contract "exactly four, in an ordered list, each one a link" survives the redesign.
+   ========================================================================== */
+
+.home-entrances .register--entrances {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: route;
+}
+
+.home-entrances .register__item {
+  counter-increment: route;
+  margin: 0;
+  border: 0;
+}
+
+/* The zig-zag: 7/5, then 5/7. Two piers per row, alternating which one is the long one. */
+.home-entrances .register__item:nth-child(1) { grid-column: span 7; }
+.home-entrances .register__item:nth-child(2) { grid-column: span 5; }
+.home-entrances .register__item:nth-child(3) { grid-column: span 5; }
+.home-entrances .register__item:nth-child(4) { grid-column: span 7; }
+
+/* Each pier is a level-2 sheet. The old register grid (ordinal / title / gloss / actor / arrow)
+   is replaced outright: here the areas are the glyph, the index, the title, the gloss and the cta. */
+.home-entrances .entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "index glyph"
+    "title glyph"
+    "gloss glyph"
+    "cta   glyph";
+  align-content: start;
+  gap: var(--s-2) var(--s-6);
+  block-size: 100%;
+  min-block-size: 230px;
+  padding: var(--s-6) var(--s-6) var(--s-5);
+  background: var(--min-2);
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  border-inline-start: 0;
+  color: var(--ink);
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform var(--motion-base) var(--ease-out), box-shadow var(--motion-base) var(--ease-standard);
+}
+
+/* The mooring line: 3px on the reading edge, in the route's tint, drawn from the top on hover or
+   focus. `transform: scaleY` on a pseudo-element — no layout, no paint beyond the first frame. */
+.home-entrances .entry::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  background: var(--route-tint, var(--accent));
+  transform: scaleY(0.18);
+  transform-origin: 50% 0;
+  transition: transform var(--motion-emphasized) var(--ease-out);
+}
+
+.home-entrances .entry:hover,
+.home-entrances .entry:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+
+.home-entrances .entry:hover::before,
+.home-entrances .entry:focus-visible::before {
+  transform: scaleY(1);
+}
+
+/* The tint per route, from the actor on the <li>. Three ways to tell them apart — index, glyph,
+   tint — so removing colour removes nothing. */
+.home-entrances [data-route="person"] .entry { --route-tint: var(--route-1); }
+.home-entrances [data-route="company"] .entry { --route-tint: var(--route-2); }
+.home-entrances [data-route="institution"] .entry { --route-tint: var(--route-3); }
+.home-entrances [data-route="university"] .entry { --route-tint: var(--route-4); }
+
+/* The index: a serif numeral, the folio of the pier. */
+.home-entrances .entry__ordinal {
+  grid-area: index;
+  font-family: var(--f-serif);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--route-tint, var(--accent));
+}
+
+.home-entrances .entry__ordinal::before {
+  content: counter(route, decimal-leading-zero);
+}
+
+.home-entrances .route__glyph {
+  grid-area: glyph;
+  align-self: end;
+  /* Clear of the arrow, which is pinned to the same corner. */
+  margin-block-end: var(--s-8);
+  inline-size: 120px;
+  block-size: 80px;
+  color: var(--route-tint, var(--accent));
+  opacity: 0.35;
+  transition: opacity var(--motion-emphasized) var(--ease-standard);
+}
+
+.home-entrances .entry:hover .route__glyph,
+.home-entrances .entry:focus-visible .route__glyph {
+  opacity: 0.6;
+}
+
+/* The register underlined the title to say "this row is a link". Here the whole pier is the
+   target, the mooring line and the arrow say so, and an underline on a 22px serif over two lines
+   reads as a defect. */
+.home-entrances .entry__title {
+  grid-area: title;
+  margin: 0;
+  font-family: var(--f-serif);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  letter-spacing: 0;
+  text-transform: none;
+  text-decoration: none;
+  color: var(--ink);
+  max-inline-size: 22ch;
+  text-wrap: balance;
+}
+
+.home-entrances .entry__gloss {
+  grid-area: gloss;
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--ink-2);
+  max-inline-size: 46ch;
+}
+
+.home-entrances .entry__cta {
+  grid-area: cta;
+  align-self: end;
+  margin-block-start: var(--s-4);
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.home-entrances .entry__arrow {
+  position: absolute;
+  inset-block-end: var(--s-5);
+  inset-inline-end: var(--s-6);
+  inline-size: 20px;
+  block-size: 20px;
+  color: var(--accent);
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.home-entrances .entry:hover .entry__arrow,
+.home-entrances .entry:focus-visible .entry__arrow {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .home-entrances .entry:hover .entry__arrow,
+[dir="rtl"] .home-entrances .entry:focus-visible .entry__arrow {
+  transform: translateX(-3px);
+}
+
+/* ---- Responsive --------------------------------------------------------------- */
+@media (max-width: 63.999rem) {
+  .home-entrances .register__item:nth-child(n) {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .home-entrances .register--entrances {
+    gap: var(--s-4);
+  }
+
+  .home-entrances .register__item:nth-child(n) {
+    grid-column: span 12;
+  }
+
+  .home-entrances .entry {
+    min-block-size: 0;
+    padding: var(--s-5);
+    /* On a phone the glyph is a small mark beside the index, not a panel-filling landform. */
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "index glyph"
+      "title title"
+      "gloss gloss"
+      "cta   cta";
+    gap: var(--s-2) var(--s-4);
+  }
+
+  .home-entrances .route__glyph {
+    justify-self: start;
+    align-self: center;
+    /* Beside the index, not under it: the desktop's clearance for the arrow would open a
+       32px hole between the index row and the title. */
+    margin-block-end: 0;
+    inline-size: 60px;
+    block-size: 40px;
+  }
+
+  .home-entrances .entry__arrow {
+    position: static;
+    grid-area: cta;
+    justify-self: end;
+    align-self: end;
+  }
+}
+
+/* ---- Arabic ------------------------------------------------------------------- */
+:lang(ar) .home-entrances .entry__title,
+:lang(ar) .home-entrances .entry__cta {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+[dir="rtl"] .home-entrances .route__glyph {
+  transform: scaleX(-1);
+}
+
+/* ---- Forced colours ----------------------------------------------------------- */
+@media (forced-colors: active) {
+  .home-entrances .entry {
+    border: 1px solid CanvasText;
+  }
+
+  .home-entrances .entry::before {
+    background: CanvasText;
+    forced-color-adjust: none;
+  }
+}

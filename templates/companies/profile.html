@@ -1,0 +1,65 @@
+{% extends "companies/base_companies.html" %}{% load i18n %}
+{% block page_title %}{% translate "Mon entreprise" %}{% endblock %}
+{% block meta_description %}{% translate "L’identité de votre entreprise telle qu’elle est enregistrée, et son état de vérification." %}{% endblock %}
+
+{% block portal_header %}
+{% include "companies/partials/company_header.html" with company=company %}
+{% endblock %}
+
+{% block companies_content %}
+<section class="portal-section" aria-labelledby="identity-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Identité" %}</span></p>
+  <h1 class="portal__section-title" id="identity-title">{% translate "Mon entreprise" %}</h1>
+  <p class="portal__summary">
+    {% translate "Ces éléments sont ceux qui rendent une vérification possible. Ils ne sont visibles que par les comptes rattachés à votre entreprise et par l’administration du projet." %}
+  </p>
+
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-profile-1">
+    <table class="data-table">
+      <caption id="t-profile-1" class="visually-hidden">{% translate "Identité de l’entreprise telle qu’enregistrée" %}</caption>
+      <tbody>
+        <tr><th scope="row">{% translate "Dénomination légale" %}</th><td dir="auto">{{ company.legal_name }}</td></tr>
+        <tr><th scope="row">{% translate "Nom commercial" %}</th><td dir="auto">{% if company.trade_name %}{{ company.trade_name }}{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Numéro d’immatriculation" %}</th><td>{% if company.registration_number %}<span class="t-ref">{{ company.registration_number }}</span>{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Numéro de TVA" %}</th><td>{% if company.vat_number %}<span class="t-ref">{{ company.vat_number }}</span>{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Secteur d’activité" %}</th><td>{% if company.sector %}{{ company.sector.label }}{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Taille" %}</th><td>{% if company.size %}{{ company.get_size_display }}{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Année de création" %}</th><td>{% if company.year_founded %}{{ company.year_founded }}{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Référent" %}</th><td dir="auto">{{ company.contact_name }} — {{ company.contact_function }}</td></tr>
+        <tr><th scope="row">{% translate "Contact du référent" %}</th><td>{{ company.contact_email }}{% if company.contact_phone %} · {{ company.contact_phone }}{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Adresse" %}</th><td dir="auto">{% if company.display_address %}{{ company.display_address }}{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% translate "Site web" %}</th><td>{% if company.website %}<a href="{{ company.website }}" rel="noopener">{{ company.website }}</a>{% else %}—{% endif %}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  {% if can_manage and edit_url %}
+  <p class="companies-actions"><a class="btn btn--secondary btn--sm" href="{{ edit_url }}">{% translate "Modifier l’identité" %}</a></p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="verification-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Vérification" %}</span></p>
+  <h2 class="portal__section-title" id="verification-title">{% translate "L’état de la vérification" %}</h2>
+  <dl class="portal-facts">
+    <div class="portal-facts__row">
+      <dt>{% translate "État" %}</dt>
+      <dd><span class="state state--{{ company.verification_state_modifier }}" data-register="{{ company.verification_status|chip_register:'accounts.VerificationStatus' }}">{{ company.verification_label }}</span></dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "Décidée par" %}</dt>
+      {% comment %} The project team as an institution, never a staff member's name or address. {% endcomment %}
+      <dd>{% translate "L’équipe du projet" %}</dd>
+    </div>
+    {% if company.verification.decided_at %}
+    <div class="portal-facts__row">
+      <dt>{% translate "Décidée le" %}</dt>
+      <dd><time datetime="{{ company.verification.decided_at|date:'c' }}">{{ company.verification.decided_at|date:"d.m.Y" }}</time></dd>
+    </div>
+    {% endif %}
+  </dl>
+  <p class="note">
+    {% translate "La vérification porte sur l’entreprise en tant que personne morale : sa dénomination, son immatriculation et son référent. Elle n’emporte aucune approbation concernant une personne, et n’autorise aucun accès à des données personnelles." %}
+  </p>
+</section>
+{% endblock %}

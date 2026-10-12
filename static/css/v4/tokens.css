@@ -1,0 +1,291 @@
+/* ============================================================================
+   TOKENS V4 — «Il portico e la console»
+   docs/design-v4/DESIGN_SYSTEM_V4.md · decided in docs/design-v4/CREATIVE_DIRECTION.md
+   after the owner's directive of 24 September 2026 (OWNER_DIRECTIVE_2026-09-24.md)
+   and the 20:58 clarification that made the previous art direction non-binding.
+
+   Loaded LAST, on purpose. It keeps the V2 names — the sheets that consume
+   them (shell, hero, routes, voyage, buttons, chip) change value without
+   changing a line — and adds what V4 needs: the navy chapter evolved from
+   the official brand navy, the accent as a family with two gradients, the
+   background recipes, five depths with six shadow roles, five radii, the
+   Plex superfamily, the console scale, the console layout, control and icon
+   measures, ten z-index levels, six durations and three curves.
+
+   Two cascade facts this file has to respect, because it comes after
+   v2/tokens.css and after tokens.css:
+     · a `:root` declaration here beats a `:root` declaration inside a media
+       query up there, whatever the query — so every narrow-viewport and
+       reduced-motion override V2 relied on is restated at the bottom;
+     · a name that the shim (_legacy-tokens.css) already uses as a COLOUR
+       (--border-strong, --border-accent) is not redefined as a border
+       shorthand: the line tokens are --line-* for that reason.
+
+   Every contrast figure in a comment is computed (WCAG 2.x relative
+   luminance) against the ground named on the line and re-verified by
+   tests/frontend/test_v4_tokens.py.
+   ========================================================================== */
+
+:root {
+  /* ---- MINERAL — the reading chapter: conserved from v2/tokens.css ------ */
+  /* --min-0 #f4f3f0 · --min-1 #ecebe6 · --min-2 #fbfaf8 · --min-3 #ffffff
+     --ink #15222a · --ink-2 #4a5a62 · --ink-3 #55646b
+     --hairline #d3d2cc · --hairline-strong #7a868b */
+
+  /* ---- NAVY-MIDNIGHT — evolved from --brand-navy #0f2547 ---------------- */
+  --mid-0: #071226; /* utility, footer, base of the scrim */
+  --mid-1: #0b1a33; /* canvas of the dark chapters, rail, hero, process */
+  --mid-2: #10233f; /* area, rail hover */
+  --mid-3: #16304f; /* sheet, active item, tooltip */
+  --mid-4: #1d3b5e; /* elevated on dark */
+  --on-dark: #eef1f6;   /* 15.33:1 on --mid-1 · 13.90 mid-2 · 11.82 mid-3 · 10.08 mid-4 */
+  --on-dark-2: #b9c5d6; /*  9.94 · 9.01 · 7.66 · 6.53 */
+  --on-dark-3: #8a9bb3; /*  6.13 · 5.56 · 4.73 · 4.03 → text only on mid-1 / mid-2 */
+  --edge-dark: rgba(214, 226, 228, 0.45); /* 3.63:1 on --mid-1: a component edge on dark */
+
+  /* ---- THE ACCENT — a family, not a dogma ------------------------------- */
+  --accent: #0f6a72;            /* text and links: 5.69 on min-0 · 6.05 on min-2 · 5.29 on min-1 */
+  --accent-2: #12777f;          /* the light: icons, top stop of the gradient: 4.77 min-0 · 5.07 min-2 */
+  --accent-3: #15808a;          /* top stop in hover — never text on light */
+  --accent-hover: #0b555c;      /* 7.67 on min-0 */
+  --accent-dark: #7fd1d8;       /* on dark: 9.93 on mid-1 · 7.65 on mid-3 */
+  --accent-dark-2: #8fd8de;     /* top stop of the dark gradient: mid-1 on it 10.78 */
+  --accent-dark-hover: #a5e0e5; /* mid-1 on it 11.90 */
+  --accent-ring: #1d8a93;       /* focus ring: 3.70 min-0 · 3.94 min-2 · 3.44 min-1 · 4.11 white · 3.41 wash */
+  --accent-wash: #d9eef0;       /* BRAND ground, SOFT button, selection */
+  --accent-wash-2: #c7e4e7;     /* SOFT hover */
+  --accent-glow: rgba(15, 106, 114, 0.35);
+  --grad-primary: linear-gradient(180deg, #12777f, #0f6a72);        /* white on it: 5.29 → 6.32 */
+  --grad-primary-hover: linear-gradient(180deg, #15808a, #12777f);  /* white: 4.68 → 5.29 */
+  --grad-primary-dark: linear-gradient(180deg, #8fd8de, #7fd1d8);   /* mid-1 on it: 10.78 → 9.93 */
+  --grad-brand: linear-gradient(135deg, #d9eef0, #eef6f7);          /* ink on it 13.48 → 14.81 */
+  --grad-brand-dark: linear-gradient(135deg, #1b344e, #10233f);     /* on-dark 11.26 · accent-dark 7.29 */
+  /* the primary's press (the light inverted) and the dark primary's hover and press */
+  --grad-primary-press: linear-gradient(180deg, #0f6a72, #12777f);
+  --grad-primary-dark-hover: linear-gradient(180deg, #a5e0e5, #8fd8de);
+  --grad-primary-dark-press: linear-gradient(180deg, #7fd1d8, #8fd8de);
+
+  /* ---- BACKGROUND RECIPES (DS §1.4) — DARK, FOCUS, IMMERSIVE ------------ */
+  --mesh-dark:
+    radial-gradient(70% 60% at 15% 0%, rgba(31, 74, 138, 0.22), transparent 60%),
+    radial-gradient(50% 50% at 100% 100%, rgba(63, 166, 175, 0.08), transparent 60%);
+  --light-focus: radial-gradient(80% 60% at 50% 0%, #ffffff, transparent 70%);
+  --grad-photo-dark: linear-gradient(180deg, rgba(11, 26, 51, 0) 40%, rgba(11, 26, 51, 0.45));
+
+  /* ---- SEMANTIC — conserved, two promotions from the V3 sheets ---------- */
+  --pending-300: #d8bd8e; /* 9.58 on mid-1 */
+  --err-300: #f0a49b;     /* 8.67 on mid-1 */
+
+  /* ---- THE FOUR ROUTES on navy — never alone: node + glyph + word ------- */
+  --route-1-dark: #7fd1d8; /* 9.93 on mid-1 */
+  --route-2-dark: #8fbfe8; /* 8.92 */
+  --route-3-dark: #aab7cc; /* 8.56 */
+  --route-4-dark: #a8cfc0; /* 10.21 — dimmed to 50 % they stay ≥ 3.08 */
+
+  /* ---- STATE SURFACES, SCRIM, GLASS ------------------------------------- */
+  --surface-hover: color-mix(in oklab, var(--accent) 4%, var(--min-2)); /* ≈ #f2f4f3: ink 14.69 · accent 5.72 */
+  --surface-selected: var(--accent-wash);
+  --surface-disabled: #e3e2dd; /* ink-3 on it 4.73 */
+  --surface-soft-dark: rgba(127, 209, 216, 0.14); /* on mid-1 → #1b344a: accent-dark 7.34 */
+  --scrim: rgba(7, 18, 38, 0.5);
+  --glass-light: rgba(251, 250, 248, 0.85);           /* worst composite on paper #faf9f7: ink 15.42 · accent 6.00 */
+  --glass-light-over-dark: rgba(251, 250, 248, 0.92); /* over a navy chapter → #e8e8e7: ink 13.23 · accent 5.15 */
+  --glass-dark: rgba(11, 26, 51, 0.55);               /* over the mesh → #0f233f: on-dark 13.92 · accent-dark 9.02 */
+  --blur-nav: 12px;   /* sticky bars only */
+  --blur-panel: 16px; /* glass panels of the hero and the login */
+  --blur-scrim: 6px;  /* behind a modal */
+
+  /* ---- DEPTH — five levels, six shadow roles and no seventh ------------- */
+  --shadow-1: 0 1px 2px rgba(7, 18, 38, 0.06);
+  --shadow-2: 0 1px 2px rgba(7, 18, 38, 0.06), 0 8px 24px -8px rgba(7, 18, 38, 0.14);
+  --shadow-3: 0 4px 8px -2px rgba(7, 18, 38, 0.08), 0 16px 40px -12px rgba(7, 18, 38, 0.2);
+  --shadow-4: 0 12px 24px -6px rgba(7, 18, 38, 0.16), 0 32px 64px -16px rgba(7, 18, 38, 0.3);
+  --shadow-glow: 0 4px 12px -4px var(--accent-glow); /* the primary button in hover, nothing else */
+  --shadow-glow-dark: 0 4px 12px -4px rgba(127, 209, 216, 0.35); /* the dark primary in hover */
+  --shadow-door: 0 40px 64px -32px rgba(7, 18, 38, 0.6); /* conserved: the door */
+  --drop-door: drop-shadow(0 32px 40px rgba(7, 18, 38, 0.6)); /* the same role, for the door drawn in SVG */
+  /* in the navy the alphas double, same offsets */
+  --shadow-1-dark: 0 1px 2px rgba(7, 18, 38, 0.12);
+  --shadow-2-dark: 0 1px 2px rgba(7, 18, 38, 0.12), 0 8px 24px -8px rgba(7, 18, 38, 0.28);
+  --shadow-3-dark: 0 4px 8px -2px rgba(7, 18, 38, 0.16), 0 16px 40px -12px rgba(7, 18, 38, 0.4);
+  --shadow-4-dark: 0 12px 24px -6px rgba(7, 18, 38, 0.32), 0 32px 64px -16px rgba(7, 18, 38, 0.6);
+  /* V2 alias, for the sheets not yet migrated */
+  --shadow-5: var(--shadow-4);
+
+  /* ---- RADII ------------------------------------------------------------ */
+  --radius-xs: 4px;   /* tooltip, checkbox, skeleton share --radius-sm; xs is the inner corner */
+  --radius-sm: 6px;
+  --radius-md: 10px;  /* button, input, select, textarea, rail item, brand tile */
+  --radius-lg: 14px;  /* panel, option card, document card, popover, toast, dropzone */
+  --radius-xl: 20px;  /* modal, drawer, mega-menu bottom corners, wizard, login sheet, glass legend */
+  --radius-full: 999px; /* chip, badge, avatar, rail indicator, segmented track, meter notches */
+  --radius-control: var(--radius-md); /* V2 redefined: was 2px */
+  --radius-tile: var(--radius-md);    /* V2 redefined: was 6px */
+  --radius-pill: var(--radius-full);  /* shim name */
+
+  /* ---- TYPE — the Plex superfamily for the interface, Newsreader kept --- */
+  --f-serif: "Newsreader", "Noto Naskh Arabic", "Iowan Old Style", Georgia, serif;
+  --f-sans: "IBM Plex Sans", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  /* the names of tokens.css and of the shim, re-pointed so that layers 1–7 change face at once */
+  --font-ui: var(--f-sans);
+  --font-ref: var(--f-mono);
+  --font-mono: var(--f-mono);
+  --font-ui-ar: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif;
+  /* The system's Arabic face, for the one glyph a non-Arabic page shows («ع» in the language
+     control): a webfont fetch of 44.5 KB for one letter is not paid (measured 25/09/2026). */
+  --f-arabic-sys: "Segoe UI", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif;
+  /* ONE focus ring: the V2 names of the ring re-pointed to the V4 token, so every :focus-visible of
+     the cascade draws the same ring (gate D review, correction 9: three styles on one page). */
+  /* The stagger of a drawn sequence (notches, rail): one token, the delays as multiples. */
+  --motion-stagger: 60ms;
+  /* The fade at the end of a row that scrolls (the phone's segmented control): the hint that there
+     is more, in the reading direction and mirrored. */
+  --mask-fade-end: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+  --mask-fade-end-rtl: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+  --focus-ring-color: var(--accent-ring);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Public scale (the portico). Sizes that V4 lowers: display 52→100 becomes
+     44→76, plate 64 becomes 52, title 48 becomes 40. The others are V2's. */
+  --t-display: clamp(2.75rem, 1.5rem + 3.6vw, 4.75rem); /* 44 → 76, only the hero H1 */
+  --t-display-lh: 0.96;
+  --t-plate: 3.25rem;   --t-plate-lh: 3.5rem;   /* 52/56 */
+  --t-title: 2.5rem;    --t-title-lh: 2.75rem;  /* 40/44 */
+  --track-folio: 0.06em; /* V2 was .08em: Plex Mono needs less air */
+
+  /* Console scale — Plex Sans only, no serif on an operational screen */
+  --u-title: 1.75rem;     --u-title-lh: 2.25rem;   /* 28/36 · 600 · --track-title */
+  --u-section: 1.25rem;   --u-section-lh: 1.75rem; /* 20/28 · 600 */
+  --u-card: 1.0625rem;    --u-card-lh: 1.5rem;     /* 17/24 · 600 */
+  --u-body: 0.9375rem;    --u-body-lh: 1.5rem;     /* 15/24 · 400 */
+  --u-ui: 0.875rem;       --u-ui-lh: 1.25rem;      /* 14/20 · 500 */
+  --u-small: 0.8125rem;   --u-small-lh: 1.25rem;   /* 13/20 · 400 */
+  --u-caption: 0.75rem;   --u-caption-lh: 1rem;    /* 12/16 · 500 */
+  --u-eyebrow: 0.6875rem; --u-eyebrow-lh: 1rem;    /* 11/16 · 600 · --track-eyebrow · uppercase */
+  --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 500 · tabular-nums */
+  --u-ref: 0.8125rem;     --u-ref-lh: 1.25rem;     /* 13/20 · 400 · mono */
+  --track-title: -0.01em;
+  --track-eyebrow: 0.06em;
+
+  /* ---- LAYOUT — the console ------------------------------------------- */
+  --rail-w: 64px;
+  --rail-w-open: 248px;
+  --ctx-h: 56px;
+  --bottom-bar-h: 56px;
+  --workspace-max: 1320px;
+  --inspector-w: 320px;
+  --page-pad: 32px;
+  --container-lg: 1176px;
+  --container-xl: 1320px;
+  --container-xxl: 1440px;
+  /* the letterhead: utility 36 → 32, header 64 that becomes 56 on scroll */
+  --utility-h: 32px;
+  --header-h: 64px;
+  --header-h-scrolled: 56px;
+  --utility-height: var(--utility-h); /* V2 name */
+  --header-height: var(--header-h);   /* V2 name */
+
+  /* ---- CONTROLS --------------------------------------------------------- */
+  --control-sm: 36px;
+  --control-md: 44px;
+  --control-lg: 52px;
+  --control-icon: 40px;
+  --hit-min: 44px;
+  --input-h: 44px;
+  --textarea-min: 96px;
+  --chip-h: 24px;
+  --chip-h-s: 20px;
+  --chip-h-l: 28px;
+  --segmented-h: 36px;
+  --rail-item-h: 44px;
+  --row-min-h: 64px;
+  --table-row-h: 48px;
+
+  /* ---- ICONS ------------------------------------------------------------ */
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+  --icon-hero: 48px;
+  --glyph-disc-sm: 24px;
+  --glyph-disc-md: 32px;
+  --glyph-disc-lg: 40px;
+
+  /* ---- LINES — shorthands (see the header for why they are not --border-*) */
+  --line-hair: 1px solid var(--hairline);
+  --line-strong: 1px solid var(--hairline-strong);
+  --line-accent: 2px solid var(--accent);
+  --line-dash: 1.5px dashed var(--hairline-strong);
+  --line-grad: linear-gradient(135deg, var(--accent-2), transparent 70%); /* via mask, 1px, public panels in hover */
+  --line-grad-err: linear-gradient(135deg, var(--err-700), transparent 70%);         /* the next step, overdue or blocked */
+  --line-grad-pending: linear-gradient(135deg, var(--pending-700), transparent 70%); /* the next step, soon */
+  --mask-fill: linear-gradient(#000 0 0);
+  /* The non-chromatic channel of the HealthStrip's registers (gate C review, correction 1): the
+     hatch of «attesa» and the dots of «rifiuto», white over the register's mark, as the
+     jurisdiction bar's textures — legible in greyscale and under forced colours. */
+  --texture-hatch: repeating-linear-gradient(45deg, transparent 0 3px, rgba(255, 255, 255, 0.45) 3px 5px);
+  --texture-dots: radial-gradient(circle, rgba(255, 255, 255, 0.6) 1.2px, transparent 1.5px); /* the opaque layer of a mask (the gradient edge) */
+
+  /* ---- Z-INDEX — ten levels, named ------------------------------------ */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky: 10;
+  --z-rail: 15;
+  --z-header: 20;
+  --z-popover: 30;
+  --z-drawer: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-tooltip: 70;
+  /* the names of tokens.css and of the shim, kept in the same order */
+  --z-dropdown: var(--z-popover);
+  --z-dialog: var(--z-modal);
+  --z-skiplink: calc(var(--z-tooltip) + 1);
+
+  /* ---- MOTION — six durations, three curves ----------------------------- */
+  --motion-fast: 120ms;       /* feedback, hover, exits */
+  --motion-standard: 200ms;   /* panels, tabs, tooltip, state changes */
+  --motion-emphasized: 320ms; /* modals, drawers, reveals, strips, images */
+  --motion-slow: 480ms;       /* public page enter, chapters, the hero title */
+  --motion-draw: 900ms;       /* the arch, the routes, the JourneyRail — once */
+  --motion-ambient: 28s;      /* the current of the routes — the one loop */
+  --ease-enter: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-layout: cubic-bezier(0.4, 0, 0.2, 1);
+  /* V2 aliases, for the sheets not yet migrated */
+  --motion-instant: var(--motion-fast);
+  --motion-base: var(--motion-standard);
+  --ease-out: var(--ease-enter);
+  --ease-in: var(--ease-exit);
+  --ease-standard: var(--ease-layout);
+}
+
+/* Below md the letterhead is 56px in total and the page padding halves.
+   Restated here because the same override in v2/tokens.css sits earlier in
+   the cascade and would lose to the :root block above. */
+@media (max-width: 47.999rem) {
+  :root {
+    --utility-h: 0px;
+    --header-h: 56px;
+    --page-pad: 16px;
+    --u-title: 1.5rem;
+    --u-title-lh: 2rem;
+  }
+}
+
+/* Reduced motion is a complete state, not a shorter one: every duration is
+   zero, so a transition written against a token simply lands. The ambient
+   loop is not zeroed — an infinite animation with no duration would spin —
+   the sheet that owns it removes the object instead. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-standard: 0ms;
+    --motion-emphasized: 0ms;
+    --motion-slow: 0ms;
+    --motion-draw: 0ms;
+  }
+}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}
+Espace Personnes — INTERIM page rendered while gate G3 (Phase 3) is closed.
+Only Phase 1 locked texts (p1.persons.replacement_1/2) and neutral UI strings: no p3.* text here.
+{% endcomment %}
+{% block page_title %}{% translate "Espace Personnes" %}{% endblock %}
+{% block meta_description %}{% locked "p1.persons.replacement_1" as lead_text %}{% translate "Espace Personnes d’Italy Legal Entry™ :" %} {{ lead_text|striptags }}{% endblock %}
+{% block body_class %}page-pathways page-pathways--interim{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<header class="page-header container">
+  <p class="page-header__eyebrow">{% translate "Italy Legal Entry™ pour les personnes" %}</p>
+  <h1 class="page-header__title">{% translate "Espace Personnes" %}</h1>
+  <p class="page-header__lead">{% locked "p1.persons.replacement_1" %}</p>
+</header>
+
+<div class="container container--prose stack stack--lg">
+  <section class="section section--flush-top section--tight" aria-labelledby="interim-how-title">
+    <div class="section__header">
+      <h2 id="interim-how-title" class="section__title">{% translate "Comment ça marche" %}</h2>
+    </div>
+    <ol class="timeline" data-steps="2">
+      <li class="timeline__item">
+        <span class="timeline__marker" aria-hidden="true"></span>
+        <div>
+          <h3 class="timeline__label">{% translate "Orientation" %}</h3>
+          <p class="timeline__text">{% translate "Répondez à quelques questions pour identifier les voies régulières à explorer, avec les étapes et la documentation généralement requises." %}</p>
+        </div>
+      </li>
+      <li class="timeline__item">
+        <span class="timeline__marker" aria-hidden="true"></span>
+        <div>
+          <h3 class="timeline__label">{% translate "Accompagnement" %}</h3>
+          <p class="timeline__text">{% locked "p1.persons.replacement_2" %}</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
+
+  <section class="section section--tight section--rule" aria-labelledby="interim-notice-title">
+    <div class="section__header">
+      <h2 id="interim-notice-title" class="section__title">{% translate "Fiches des parcours réguliers" %}</h2>
+      <p class="section__lead">{% translate "Les fiches détaillées des parcours réguliers vers l’Italie seront publiées progressivement dans cet espace. Aucun résultat administratif n’est promis : les décisions relèvent des autorités compétentes." %}</p>
+    </div>
+    <p><a class="link-arrow" href="mailto:{{ site.contact_email }}">{% svg_icon "mail" %}{{ site.contact_email }}</a></p>
+  </section>
+</div>
+{% endblock %}

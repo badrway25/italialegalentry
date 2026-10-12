@@ -1,0 +1,13 @@
+{% comment %}
+A prescribed enumeration shown as a styled list WITHOUT altering a word.
+Contract: `items` (tuple of str, cut from the prescribed sentence on "," / ";" by
+ecosystem.services.split_enumeration), `lang` (lang attr of the prescribed text, may be ""),
+`icon` (sprite icon name), optional `columns` ("2").
+The list is a visual presentation only (aria-hidden): the caller renders the full prescribed
+sentence — verbatim, from the locked registry — next to it for assistive technologies and integrity.
+{% endcomment %}
+<ul class="ecosystem-enum{% if columns == '2' %} ecosystem-enum--two{% endif %}" aria-hidden="true"{% if lang %} lang="{{ lang }}"{% endif %}>
+  {% for item in items %}
+  <li class="ecosystem-enum__item">{% svg_icon icon|default:"check" "icon ecosystem-enum__icon" %}<span class="ecosystem-enum__text">{{ item }}</span></li>
+  {% endfor %}
+</ul>

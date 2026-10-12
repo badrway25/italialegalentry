@@ -1,0 +1,32 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+Shell of the company workspace.
+
+It EXTENDS the platform shell — it never re-renders the public one and never redraws the shell
+itself. What it adds is one stylesheet and one region the person's shell does not need: the company
+band, which answers « quelle entreprise, vérifiée ou non, combien de besoins ouverts » and stays
+stable while the user moves inside the workspace. It occupies the shell's own `portal_header` slot,
+so the order on screen stays the one the shell prescribes: identity, then the single next action.
+
+The shell's regions are reused as they are:
+  · the platform bar, with `portal_context` set to the company name
+  · the next action — ONE priority — from companies.services.next_action
+  · the local navigation, from companies.services.navigation
+
+Contract: `portal_nav`, `breadcrumbs`, `noindex`, optional `company`, `next_action`.
+Blocks: `companies_content`.
+{% endcomment %}
+
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}">{% endblock %}
+{% block body_class %}page-portal page-companies console{% endblock %}
+
+{% block portal_header %}
+{% if company %}{% include "companies/partials/company_header.html" with company=company %}{% endif %}
+{% endblock %}
+
+{% comment %}
+Flash messages are NOT repeated here: ``base.html`` already renders them once, above the
+breadcrumbs, in a live region. Rendering them again produced the same sentence twice on one screen,
+which is how a reader learns to stop reading them.
+{% endcomment %}
+{% block portal_content %}{% block companies_content %}{% endblock %}{% endblock %}

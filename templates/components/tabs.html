@@ -1,0 +1,18 @@
+{% comment %}
+Tabs — WAI-ARIA tabs with JS; stacked, titled sections without JS.
+Contract: `tabs` = list of dicts {id, label, body (safe html)}; optional `id` (widget id),
+`remember` (key to remember the selected tab in localStorage).
+{% endcomment %}
+<div class="tabs" data-tabs{% if remember %} data-tabs-remember="{{ remember }}"{% endif %} id="{{ id|default:'tabs' }}">
+  <div class="tabs__list" role="tablist">
+    {% for tab in tabs %}
+    <button class="tabs__tab" type="button" role="tab" id="{{ id|default:'tabs' }}-tab-{{ tab.id }}" aria-controls="{{ tab.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">{{ tab.label }}</button>
+    {% endfor %}
+  </div>
+  {% for tab in tabs %}
+  <section class="tabs__panel" role="tabpanel" id="{{ tab.id }}" aria-labelledby="{{ id|default:'tabs' }}-tab-{{ tab.id }}" tabindex="0"{% if not forloop.first %} hidden{% endif %}>
+    <h3 class="tabs__panel-title">{{ tab.label }}</h3>
+    {{ tab.body }}
+  </section>
+  {% endfor %}
+</div>

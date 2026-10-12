@@ -1,0 +1,40 @@
+{% extends "pages/institutional_base.html" %}{% load i18n %}
+{% comment %}
+/attention-aux-fraudes/ — Phase 3 page (gate G3: 404 while closed; staff preview is noindex).
+The page body IS the prescribed text: p3.antifraud.title (h1) and p3.antifraud.body, verbatim,
+inside a shield-marked callout. Calm design: no red, no alarm pictogram, no added capitals.
+
+CONTENT_PENDING_LEGAL_REVIEW — links to official authorities and reporting channels: NONE is
+authorised yet, so none is published. The official links must be supplied in writing
+(which authority, which URL, in which languages) before an « official resources » list is added
+under the callout. Do not add embassy, police, ministry or portal links on the team's initiative.
+{% endcomment %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_header %}
+<header class="page-header container">
+  <p class="page-header__eyebrow">{% translate "Votre protection" %}</p>
+  <h1 class="page-header__title"{% if title.lang %} lang="{{ title.lang }}"{% endif %}>{{ title }}</h1>
+</header>
+{% endblock %}
+{% block page_body %}
+<div class="antifraud-panel antifraud-panel--page" data-callout="antifraud">
+  <div class="antifraud-panel__mark" aria-hidden="true">{% svg_icon "shield" "icon icon--xl" %}</div>
+  <div class="antifraud-panel__content">
+    <p class="antifraud-panel__body"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body }}</p>
+  </div>
+</div>
+
+<section class="page-section" aria-labelledby="antifraud-report-title">
+  <h2 class="page-section__title" id="antifraud-report-title">{% translate "Signaler une offre suspecte" %}</h2>
+  <p class="page-section__text">{% translate "Si une offre vous paraît suspecte, vous pouvez la signaler à l’adresse suivante :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+</section>
+
+<section class="page-section" aria-labelledby="antifraud-more-title">
+  <h2 class="page-section__title" id="antifraud-more-title">{% translate "S’informer sur les voies régulières" %}</h2>
+  <ul class="page-links">
+    {% if links.faq %}<li class="page-links__item"><a class="page-links__link" href="{{ links.faq }}">{% svg_icon "info" "icon page-links__icon" %}<span>{% translate "Questions fréquentes" %}{% if faq_question %} — <span{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %} data-faq="{{ faq_question.key }}">{{ faq_question.question }}</span>{% endif %}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>{% endif %}
+    {% if links.pathways %}<li class="page-links__item"><a class="page-links__link" href="{{ links.pathways }}">{% svg_icon "compass" "icon page-links__icon" %}<span>{% translate "Espace Personnes : les parcours réguliers" %}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>{% endif %}
+    {% if links.glossary %}<li class="page-links__item"><a class="page-links__link" href="{{ links.glossary }}">{% svg_icon "list" "icon page-links__icon" %}<span>{% translate "Glossaire des termes officiels" %}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>{% endif %}
+  </ul>
+</section>
+{% endblock %}

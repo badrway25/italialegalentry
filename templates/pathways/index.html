@@ -1,0 +1,59 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}
+Espace Personnes — Phase 3 page (gate G3 open). Header, eight locked pathways, orientation CTA,
+closing « Comment ça marche » box, side resources and the anti-fraud callout (Implementation §3.3, §3.8.1).
+{% endcomment %}
+{% block page_title %}{% locked "p3.persons.title" as title_text %}{% translate "Espace Personnes" %} · {{ title_text|striptags }}{% endblock %}
+{% block meta_description %}{% locked "p3.persons.intro" as intro_text %}{{ intro_text|striptags }}{% endblock %}
+{% block body_class %}page-pathways page-pathways--index{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% include "pathways/_preview_notice.html" %}
+{% locked_is_fallback "p3.persons.title" as title_fallback %}{% locked_lang "p3.persons.title" as title_lang %}
+<header class="page-header container">
+  <p class="page-header__eyebrow">{% translate "Espace Personnes" %}</p>
+  <h1 class="page-header__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% locked "p3.persons.title" %}</h1>
+  <p class="page-header__lead"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% locked "p3.persons.intro" %}</p>
+</header>
+
+<div class="container layout-sidebar layout-sidebar--end">
+  <div class="stack stack--lg">
+    <section class="section section--flush-top section--tight" aria-labelledby="pathways-title">
+      <div class="section__header">
+        <h2 id="pathways-title" class="section__title">{% translate "Les parcours réguliers" %}</h2>
+        <p class="section__lead">{% translate "Huit voies d’entrée régulière, présentées avec leurs principales étapes. Chaque fiche est informative : la voie adaptée à votre situation se vérifie avec le questionnaire d’orientation et auprès des acteurs compétents." %}</p>
+      </div>
+      <ol class="pathway-list" data-pathways="{{ entries|length }}">
+        {% for entry in entries %}
+        <li class="pathway-list__item{% if not entry.is_live %} pathway-list__item--pending{% endif %}" data-pathway="{{ entry.key }}">
+          <span class="pathway-list__num" aria-hidden="true"></span>
+          <h3 class="pathway-list__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>
+            <span class="pathway-list__icon icon--accent" aria-hidden="true">{% svg_icon entry.icon "icon icon--sm" %}</span>
+            {% if entry.url %}<a href="{{ entry.url }}">{{ entry.title }}</a>{% else %}{{ entry.title }}{% endif %}
+          </h3>
+          <p class="pathway-list__desc"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{{ entry.description }}</p>
+          {% if entry.url %}
+            <span class="pathway-list__arrow" aria-hidden="true">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span>
+          {% else %}
+            <span class="pathway-list__arrow badge badge--pending" data-register="attesa" role="status">{% translate "Fiche détaillée en préparation" %}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
+
+    <section class="notice notice--institutional" aria-labelledby="how-it-works-title" data-callout="how-it-works">
+      <span class="notice__icon" aria-hidden="true">{% svg_icon "list" "icon icon--lg" %}</span>
+      <h2 class="notice__title" id="how-it-works-title">{% translate "Comment ça marche" %}</h2>
+      <div class="notice__body"><p>{% locked "p3.persons.how_it_works" %}</p></div>
+    </section>
+  </div>
+
+  <aside class="layout-sidebar__aside stack stack--lg" aria-label="{% translate 'Ressources de l’Espace Personnes' %}">
+    {% include "pathways/_side_links.html" with links=links suffix="index" %}
+    {% include "pathways/_antifraud_callout.html" with links=links level=2 suffix="index" %}
+  </aside>
+</div>
+{% endblock %}

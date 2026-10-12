@@ -1,0 +1,121 @@
+{% extends "academy/base_academy.html" %}{% load i18n %}
+{% comment %}
+My trainings: three registers and the training plans, in the order that is useful.
+
+Progress is stated in WORDS and COUNTS — "3 modules sur 5 suivis". There is no bar, no ring, no
+percentage: a meter would suggest a measurement that nobody performed. The same rule the case file
+applies to its checklist.
+
+An interrupted training is listed, not hidden: interrupting is not a fault and the row says so by
+offering the way back.
+{% endcomment %}
+{% block page_title %}{% translate "Mes formations" %}{% endblock %}
+{% block meta_description %}{% translate "Les formations que vous suivez, celles que vous avez suivies jusqu’au terme, et vos plans de formation." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Mes formations" as header_title %}
+{% translate "Ce que vous suivez, ce que vous avez suivi, et les parcours qui vous sont conseillés." as header_lead %}
+{% translate "Academy" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+
+{% block academy_content %}
+{% safe_url 'academy:catalogue' as catalogue_url %}
+
+<section class="portal-section" aria-labelledby="mine-ongoing-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "En cours" %}</span></p>
+  <h2 class="portal__section-title" id="mine-ongoing-title">{% translate "Les formations que je suis" %}</h2>
+  {% if ongoing %}
+  <ol class="register">
+    {% for row in ongoing %}{% include "academy/partials/enrolment_entry.html" with row=row %}{% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">
+    {% translate "Vous ne suivez aucune formation en ce moment. Le catalogue est ouvert : aucune sélection préalable n’est nécessaire." %}
+    {% if catalogue_url %}<a href="{{ catalogue_url }}">{% translate "Parcourir le catalogue" %}</a>{% endif %}
+  </p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="mine-done-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivies" %}</span></p>
+  <h2 class="portal__section-title" id="mine-done-title">{% translate "Les formations suivies jusqu’au terme" %}</h2>
+  {% if completed %}
+  <ol class="register">
+    {% for row in completed %}{% include "academy/partials/enrolment_entry.html" with row=row %}{% endfor %}
+  </ol>
+  <p class="t-caption">{% translate "Chaque formation suivie jusqu’au terme donne lieu à une attestation de participation. Elle décrit ce qui a été suivi ; elle ne vaut ni titre ni autorisation." %}</p>
+  {% else %}
+  <p class="empty">{% translate "Les formations que vous aurez suivies jusqu’au dernier module apparaîtront ici, avec la date et les modules suivis." %}</p>
+  {% endif %}
+</section>
+
+{% if withdrawn %}
+<section class="portal-section" aria-labelledby="mine-withdrawn-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Interrompues" %}</span></p>
+  <h2 class="portal__section-title" id="mine-withdrawn-title">{% translate "Les formations interrompues" %}</h2>
+  <ol class="register">
+    {% for row in withdrawn %}{% include "academy/partials/enrolment_entry.html" with row=row %}{% endfor %}
+  </ol>
+  <p class="t-caption">{% translate "Une formation interrompue peut être reprise à tout moment ; les modules déjà suivis sont conservés." %}</p>
+</section>
+{% endif %}
+
+<section class="portal-section" aria-labelledby="mine-plans-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Plans" %}</span></p>
+  <h2 class="portal__section-title" id="mine-plans-title">{% translate "Mes plans de formation" %}</h2>
+  {% if plans %}
+  <ol class="register">
+    {% for plan in plans %}
+    <li class="register__item">
+      {% safe_url 'academy:plan' plan.uuid as plan_url %}
+      {% if plan_url %}<a class="entry" href="{{ plan_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <h3 class="entry__title">{{ plan.title }}</h3>
+        <span class="entry__gloss">
+          {{ plan.get_origin_display }}{% if plan.origin_reference %} · {{ plan.origin_reference }}{% endif %}
+          <span class="t-caption">{% blocktranslate count n=plan.item_count %}{{ n }} cours conseillé{% plural %}{{ n }} cours conseillés{% endblocktranslate %} · {% translate "parcours conseillé, jamais une condition d’accès" %}</span>
+        </span>
+        <span class="entry__actor">{{ plan.get_status_display }}</span>
+      {% if plan_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">
+    {% translate "Un plan de formation réunit les cours conseillés pour un objectif donné. Il peut venir de votre orientation, d’un professionnel ou d’un besoin de compétences recensé ; il ne conditionne jamais l’accès aux cours, qui restent ouverts à tous." %}
+  </p>
+  {% endif %}
+</section>
+
+{% if mandated_plans %}
+{% comment %}
+Plans that are NOT the reader's own, read under a live assignment on the linked case file.
+
+They are kept in a register of their own, and never mixed with "mes plans" — a page headed « Mes
+formations » that listed another person's record among the reader's own would say something false
+about whose record it is. Each row names the case the mandate rests on, so the reader can always
+answer « under what authority am I reading this ».
+{% endcomment %}
+<section class="portal-section" aria-labelledby="mine-mandated-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Mandat" %}</span></p>
+  <h2 class="portal__section-title" id="mine-mandated-title">{% translate "Plans que je consulte au titre d’un mandat" %}</h2>
+  <ol class="register">
+    {% for plan in mandated_plans %}
+    <li class="register__item">
+      {% safe_url 'academy:plan' plan.uuid as plan_url %}
+      {% if plan_url %}<a class="entry" href="{{ plan_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <h3 class="entry__title">{{ plan.title }}</h3>
+        <span class="entry__gloss">
+          {% if plan.case %}{% blocktranslate with reference=plan.case.reference %}Dossier {{ reference }}{% endblocktranslate %}{% else %}{{ plan.get_origin_display }}{% endif %}
+          <span class="t-caption">{% translate "Ce parcours n’est pas le vôtre : vous le consultez au titre de votre affectation sur ce dossier, tant qu’elle est en cours." %}</span>
+        </span>
+        <span class="entry__actor">{{ plan.get_status_display }}</span>
+      {% if plan_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+{% endblock %}

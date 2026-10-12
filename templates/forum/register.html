@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load i18n static forum_tags %}
+{% block page_title %}{% translate "Inscription" %} · {{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-forum page-forum--register{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/forum/forum.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+<article class="container forum-register" aria-labelledby="forum-register-title">
+  <header class="forum-register__header">
+    <p class="forum-hero__eyebrow">{% if event %}{% event_text event "header.title" %}{% else %}{% locked "p2.forum.header.title" %}{% endif %}</p>
+    <h1 class="forum-register__title" id="forum-register-title">{% if event %}{% event_text event "registration.title" %}{% else %}{% locked "p2.forum.registration.title" %}{% endif %}</h1>
+    {% if event %}{% event_text event "registration.intro" "p" "forum-lead" %}{% endif %}
+  </header>
+  {% if not event %}
+    {% include "components/empty_state.html" with title=_("Les inscriptions ne sont pas encore ouvertes.") action_label=_("Retour à la page du Forum") action_url=index_url %}
+  {% elif not registration_open %}
+    <div class="notice notice--info" role="status" data-registration="closed">
+      <p><strong>{% translate "Les inscriptions sont closes." %}</strong></p>
+      <p><a href="{% url 'forum:index' %}">{% translate "Retour à la page du Forum" %}</a></p>
+    </div>
+  {% elif not forms_enabled %}
+    {% include "components/form_unavailable.html" %}
+  {% else %}
+    {% include "forum/partials/registration_form.html" %}
+  {% endif %}
+  {% if event %}{% include "forum/partials/privacy_note.html" %}{% endif %}
+</article>
+{% endblock %}

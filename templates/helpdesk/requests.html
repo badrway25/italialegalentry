@@ -1,0 +1,65 @@
+{% extends "helpdesk/base_helpdesk.html" %}{% load i18n %}
+{% comment %}
+THE PERSON'S REQUESTS.
+
+What this replaces: a button labelled «Assistant ItalyLegalEntry», present on every screen of the
+previous platform, which opened a third-party language model offering to answer «tout sur les visas
+proposés, les documents à fournir» — no source, no version, no human, no trace
+(previous-platform audit, part 2 §7, private register).
+
+Here a request is an object with a reference, a state, a date and, when it has been confided, a
+professional who is answerable for it. Nothing on this page is generated; everything on it was
+written by somebody.
+
+A register, not cards. An empty region is one hairline and one sentence, never a dashed box.
+{% endcomment %}
+{% block page_title %}{% translate "Guichet numérique" %}{% endblock %}
+{% block meta_description %}{% translate "Vos demandes au guichet numérique, leur état et la suite prévue." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Guichet numérique" as header_title %}
+{% translate "Poser une question à une personne, pas à une machine. Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier." as header_lead %}
+{% include "components/page_header.html" with title=header_title lead=header_lead %}
+{% endblock %}
+
+{% block portal_content %}
+<div class="portal__actions">
+  <a class="btn btn--primary" href="{% url 'helpdesk:open' %}">{% translate "Ouvrir une demande" %}</a>
+</div>
+
+<section class="portal-section" aria-labelledby="requests-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Mes demandes" %}</span></p>
+  <h2 class="portal__section-title" id="requests-title">{% translate "Ce que j’ai demandé, et où cela en est" %}</h2>
+
+  {% if tickets %}
+  <p class="portal__summary">{% blocktranslate count n=open_count %}{{ n }} demande en cours.{% plural %}{{ n }} demandes en cours.{% endblocktranslate %}</p>
+  <ol class="register" aria-label="{% translate 'Vos demandes au guichet' %}">
+    {% for ticket in tickets %}
+    <li class="register__item">
+      <a class="entry" href="{% url 'helpdesk:detail' uuid=ticket.uuid %}">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ ticket.subject }}</span>
+        <span class="entry__gloss">
+          <span class="t-ref">{{ ticket.reference }}</span>
+          — <time datetime="{{ ticket.created_at|date:'c' }}">{{ ticket.created_at|date:"d.m.Y" }}</time>
+          {% if ticket.case %} — {% blocktranslate with reference=ticket.case.reference %}dossier {{ reference }}{% endblocktranslate %}{% endif %}
+        </span>
+        <span class="entry__actor"><span class="state state--{{ ticket.state_tone }}" data-register="{{ ticket.effective_status|chip_register:'helpdesk.TicketStatus' }}">{{ ticket.effective_status_display }}</span></span>
+        {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">
+    {% translate "Vous n’avez encore adressé aucune demande au guichet. Une demande peut être ouverte à tout moment ; elle est lue par une personne et jamais par un automate." %}
+    <a href="{% url 'helpdesk:open' %}">{% translate "Ouvrir une demande" %}</a>
+  </p>
+  {% endif %}
+</section>
+
+<p class="note">
+  <span class="note__marker" aria-hidden="true">1</span>
+  {% translate "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni titre de séjour, ni autorisation, et aucune réponse reçue ici n’est une décision administrative." %}
+</p>
+{% endblock %}

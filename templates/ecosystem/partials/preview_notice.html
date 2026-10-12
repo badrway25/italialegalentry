@@ -1,0 +1,7 @@
+{% load i18n %}
+{% comment %}Back-office preview of a gated page (?preview=1, staff only): never indexed, never public.{% endcomment %}
+{% if is_preview %}
+<div class="container ecosystem-preview" data-preview="phase3">
+  {% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au back-office") text=_("Cette page n’est pas encore publique : elle le deviendra à l’ouverture de la Phase 3.") %}
+</div>
+{% endif %}

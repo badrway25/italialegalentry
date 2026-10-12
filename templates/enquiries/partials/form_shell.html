@@ -1,0 +1,25 @@
+{% load i18n %}
+{% comment %}
+Contract: `form` (a PublicSubmissionForm), `form_action` (URL, optional), `form_id`, `form_class`,
+`legend` (str), `submit_label_key` (locked key rendered with {% locked %}) OR `submit_label` (plain).
+Renders CSRF, honeypot fields (off-screen, never focusable), the data fields in the form's order,
+the consent checkbox (never pre-checked) and the submit button. Works without JavaScript.
+{% endcomment %}
+<form method="post" action="{{ form_action|default:'' }}" class="form enquiry-form {{ form_class|default:'' }}" id="{{ form_id|default:'formulaire' }}" novalidate>
+  {% csrf_token %}
+  {% include "components/form_errors.html" with form=form %}
+  {% for hp in form.spam_fields %}{% if hp.name == "website_url" %}<div class="hp-field" aria-hidden="true"><label for="{{ hp.id_for_label }}">{% translate "Ne pas remplir ce champ" %}</label>{{ hp }}</div>{% else %}{{ hp }}{% endif %}{% endfor %}
+  <p class="form__required-note">{% translate "Les champs marqués d’un astérisque (*) sont obligatoires." %}</p>
+  <fieldset class="form__group">
+    <legend class="form__legend">{{ legend }}</legend>
+    {% for field in form.prescribed_fields %}{% include "enquiries/partials/form_field.html" with field=field %}{% endfor %}
+  </fieldset>
+  <fieldset class="form__group form__group--consent">
+    <legend class="form__legend">{% translate "Données personnelles" %}</legend>
+    {% include "enquiries/partials/form_field.html" with field=form.consent %}
+    <p class="form__privacy-link"><a href="{% url 'legal:privacy' %}">{% translate "Consulter l’information sur le traitement des données personnelles (Privacy Policy)" %}</a></p>
+  </fieldset>
+  <div class="form__actions">
+    <button type="submit" class="btn btn--primary">{% if submit_label_key %}{% locked submit_label_key %}{% else %}{{ submit_label }}{% endif %}</button>
+  </div>
+</form>

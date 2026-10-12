@@ -1,0 +1,71 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+THE AUTHORISED ACTOR'S WORKSPACE.
+
+ONLY the processes entrusted to this account, under an authorisation in force. There is deliberately
+no search field, no filter by person, no "browse profiles": there is nothing to search, because the
+workspace holds mandates, not people (CONFLICT_REGISTER CR-03 and CR-04). A list of people is the
+thing this product refuses to build.
+
+The register device replaces the card here as everywhere: one row per process, ordinal on the
+inline start, the responsible actor on the inline end.
+{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/selection/selection.css' %}">{% endblock %}
+{% block page_title %}{% translate "Processus assignés" %}{% endblock %}
+{% block meta_description %}{% translate "Les processus de sélection confiés à votre autorisation." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Processus assignés" as header_title %}
+{% translate "Les processus de sélection que des mandats confient à votre autorisation. Vous n’y voyez rien d’autre." as header_lead %}
+{% translate "Sélection autorisée" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+
+{% block portal_content %}
+
+{% if actors %}
+<section class="selection-actors" aria-labelledby="actors-title">
+  <h2 class="portal__section-title" id="actors-title">{% translate "Vos autorisations" %}</h2>
+  {% for actor in actors %}
+    {% include "selection/partials/responsible.html" with actor=actor %}
+  {% endfor %}
+</section>
+{% endif %}
+
+<section aria-labelledby="processes-title">
+  <h2 class="portal__section-title" id="processes-title">{% translate "Processus" %}</h2>
+
+  {% if processes %}
+  <p class="portal__summary">
+    {% blocktranslate count n=open_count %}{{ n }} processus en cours{% plural %}{{ n }} processus en cours{% endblocktranslate %}
+    · {% blocktranslate count total=processes|length %}{{ total }} au total{% plural %}{{ total }} au total{% endblocktranslate %}
+  </p>
+
+  <ul class="register">
+    {% for process in processes %}
+    <li class="register__item">
+      <a class="entry" href="{% url 'selection:process' process.uuid %}">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ process.mandate.need_profile }}</span>
+        <span class="entry__gloss">
+          {% blocktranslate with reference=process.reference company=process.mandate.company.name %}Processus {{ reference }} — besoin de {{ company }}{% endblocktranslate %}
+          · <span class="state state--{% if process.is_closed %}done{% elif process.stage == 'suspended' %}invalid{% else %}review{% endif %}" data-register="{{ process.stage|chip_register:'selection.SelectionStage' }}">{{ process.get_stage_display }}</span>
+        </span>
+        <span class="entry__actor">{{ process.actor.organisation.name }}</span>
+        {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  {% comment %} One hairline and one sentence naming who fills it and when. Never a dashed box. {% endcomment %}
+  <p class="empty">
+    {% translate "Aucun processus ne vous est confié pour l’instant. Un processus apparaît ici lorsqu’un mandat est délivré à votre autorisation par l’administration du projet, pour un besoin précis d’une entreprise nommée." %}
+  </p>
+  {% endif %}
+</section>
+
+<p class="note">
+  {% translate "Cette page ne contient aucun répertoire de personnes et n’en contiendra pas. Un processus porte sur un besoin, des compétences et des justificatifs ; l’identité d’une personne n’est communiquée à une entreprise que sur son consentement exprès, pour une finalité déclarée et pour une durée limitée." %}
+</p>
+{% endblock %}

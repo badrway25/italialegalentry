@@ -1,0 +1,13 @@
+{% load i18n %}
+{% comment %}
+Reusable « Recueil des besoins » block (Phase 1, §1.1).
+Contract: `form` (enquiries.forms.CompanyNeedsForm or None), `forms_open` (bool, gate G2),
+`form_action` (URL of enquiries:company_needs). Other apps (ecosystem:companies) can simply use
+{% load enquiries_tags %}{% company_needs_form %} which fills this contract.
+Labels are the 14 prescribed labels in the prescribed order; consent and button are locked texts.
+{% endcomment %}
+{% if not forms_open or not form %}
+  {% include "components/form_unavailable.html" %}
+{% else %}
+  {% include "enquiries/partials/form_shell.html" with form=form form_action=form_action form_id="formulaire-recueil-des-besoins" form_class="enquiry-form--company-needs" legend=_("Votre entreprise et ses besoins") submit_label_key="p1.companies.form.button" %}
+{% endif %}

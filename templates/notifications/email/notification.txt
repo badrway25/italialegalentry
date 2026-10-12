@@ -1,0 +1,9 @@
+{% load i18n %}{% autoescape off %}{{ project.PROJECT_NAME }} — {{ heading }}
+
+{{ body }}
+
+--
+{{ project.PROMOTER }}
+{% trans "Cet avis accompagne une notification déposée dans votre espace réservé, où figure le détail complet. Cet e-mail ne contient jamais de pièce jointe et ne demande jamais de mot de passe." %}
+{% trans "Vous pouvez désactiver les e-mails de cette catégorie depuis votre espace réservé. L’avis y restera visible : c’est la trace de ce qui vous a été communiqué, et elle ne se désactive pas." %}
+{% blocktrans with contact=project.PUBLIC_CONTACT_EMAIL %}Questions : {{ contact }}{% endblocktrans %}{% endautoescape %}

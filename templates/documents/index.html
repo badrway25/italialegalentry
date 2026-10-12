@@ -1,0 +1,72 @@
+{% extends "portal/base_portal.html" %}{% load i18n static documents_register %}
+{% comment %}
+MES PIÈCES — the register of what each case file still needs.
+
+What this replaces: a file browser. The previous screen listed filenames, sizes and an ANTIVIRUS
+verdict ("En attente d'analyse") in the column where a person looked for their own status. It
+answered a question about bytes on a disk; the question a person has is *what is still missing,
+who is waiting for it, and what happens next*.
+
+So the row is the REQUIREMENT, the files are versions inside it, and the loose files that answer no
+requirement keep a place at the bottom so nothing already uploaded becomes unreachable.
+{% endcomment %}
+{% block page_title %}{% translate "Mes pièces" %}{% endblock %}
+{% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+
+{% block portal_content %}
+<h1 class="doc-page__title">{% translate "Mes pièces" %}</h1>
+<p class="doc-page__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
+
+{% include "documents/partials/register.html" with register=register %}
+
+{% comment %}
+The files attached to no requirement. Kept, demoted, and named for what they are — not a second
+register competing with the first.
+{% endcomment %}
+{% if loose_documents %}
+<section class="doc-loose" aria-labelledby="loose-title">
+  <p class="folio">
+    <span class="folio__head" id="loose-title">{% translate "Autres fichiers déposés" %}</span>
+  </p>
+  <p class="t-gloss doc-loose__lead">{% translate "Ces fichiers ne répondent à aucune pièce demandée. Vous pouvez les supprimer." %}</p>
+  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate 'Autres fichiers déposés' %}">
+    <table class="data-table">
+      <caption class="visually-hidden">{% translate "Autres fichiers déposés" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Fichier" %}</th>
+          <th scope="col">{% translate "Type" %}</th>
+          <th scope="col">{% translate "Taille" %}</th>
+          <th scope="col">{% translate "Déposé le" %}</th>
+          <th scope="col">{% translate "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in loose_documents %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Fichier' %}">{{ doc.original_name }}</th>
+          <td data-label="{% translate 'Type' %}">{{ doc.get_kind_display }}</td>
+          <td data-label="{% translate 'Taille' %}">{{ doc.size|filesizeformat }}</td>
+          <td data-label="{% translate 'Déposé le' %}"><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
+          <td data-label="{% translate 'Action' %}">
+            <form method="post" action="{% url 'documents:delete' doc.pk %}" class="doc-inline-form">{% csrf_token %}
+              <button type="submit" class="btn btn--text">{% translate "Supprimer" %}</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+<p class="doc-page__aside">
+  {% if may_upload %}
+  <a href="{% url 'documents:upload' %}">{% translate "Déposer un fichier hors exigence" %}</a>
+  {% else %}
+  {% translate "Le dépôt de fichiers nécessite l’acceptation des Conditions d’utilisation." %}
+  {% endif %}
+</p>
+{% endblock %}

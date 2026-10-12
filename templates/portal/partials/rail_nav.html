@@ -1,0 +1,19 @@
+{% load i18n %}{% comment %}
+The rail's navigation, design V4 (docs/design-v4/CREATIVE_DIRECTION.md §3.9): the reserved area's
+own entries (portal.services.navigation), in semantic groups with a title each — the titles are a
+proposal for the copy review (§92); if they are refused the separators stay. Included twice: in
+the rail (`id_prefix="rail"`) and in the mobile drawer (`id_prefix="drawer"`), so the ids that
+label each list differ.
+
+Contract: `portal_nav` = list of {key, label, url, current, icon, group}; `id_prefix`.
+{% endcomment %}{% regroup portal_nav by group as rail_groups %}
+{% for group in rail_groups %}
+<div class="rail__group">
+  {% if group.grouper %}<p class="rail__group-title" id="{{ id_prefix }}-group-{{ forloop.counter }}">{{ group.grouper }}</p>{% endif %}
+  <ul class="rail__list" role="list"{% if group.grouper %} aria-labelledby="{{ id_prefix }}-group-{{ forloop.counter }}"{% endif %}>
+    {% for item in group.list %}
+    <li class="rail__li"><a class="rail__item" href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %} data-rail-item data-label="{{ item.label }}">{% svg_icon item.icon "icon rail__glyph" %}<span class="rail__label">{{ item.label }}</span></a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endfor %}

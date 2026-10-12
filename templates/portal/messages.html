@@ -1,0 +1,44 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% comment %}
+Inbox of the signed-in account (portal.services.inbox): staff-authored, read-only. The only action
+is « marquer comme lue » (POST, CSRF-protected, works without JavaScript).
+{% endcomment %}
+{% block page_title %}{% translate "Communications" %}{% endblock %}
+{% block meta_description %}{% translate "Les messages que l’équipe du projet vous a adressés." %}{% endblock %}
+{% block portal_header %}
+{% translate "Communications" as header_title %}
+{% translate "Les messages que l’équipe du projet vous a adressés. Vous seul pouvez les lire ici." as header_lead %}
+{% translate "Espace réservé" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+{% block portal_content %}
+{% if page_obj.object_list %}
+<p class="portal__summary" data-unread="{{ unread_count }}">
+  {% if unread_count %}{% blocktranslate count n=unread_count %}{{ n }} communication non lue{% plural %}{{ n }} communications non lues{% endblocktranslate %}{% else %}{% translate "Toutes vos communications sont lues." %}{% endif %}
+</p>
+<ul class="portal-list">
+  {% for message in page_obj %}
+  <li class="portal-list__item{% if not message.is_read %} portal-list__item--unread{% endif %}">
+    <p class="portal-list__title" dir="auto"><a href="{% url 'portal:message_detail' message.pk %}">{{ message.subject }}</a></p>
+    <p class="portal-list__meta"><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time></p>
+    <div class="portal-list__aside">
+      {% if message.is_read %}
+        {% translate "Lue" as read_label %}{% include "components/badge.html" with label=read_label kind="neutral" %}
+      {% else %}
+        {% translate "Non lue" as unread_label %}{% include "components/badge.html" with label=unread_label kind="primary" %}
+        <form class="portal-list__form" method="post" action="{% url 'portal:message_read' message.pk %}">{% csrf_token %}
+          <input type="hidden" name="next" value="list">
+          <button class="btn btn--link btn--sm" type="submit" aria-label="{% blocktranslate with subject=message.subject %}Marquer comme lue : {{ subject }}{% endblocktranslate %}">{% translate "Marquer comme lue" %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% include "components/pagination.html" with page_obj=page_obj %}
+{% else %}
+  {% translate "Aucune communication" as empty_title %}
+  {% translate "Les messages que l’équipe vous adresse apparaîtront ici." as empty_text %}
+  {% include "components/empty_state.html" with title=empty_title text=empty_text icon="mail" %}
+{% endif %}
+{% endblock %}

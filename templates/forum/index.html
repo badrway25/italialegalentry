@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n static forum_tags %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-forum{% if is_permanent %} page-forum--permanent{% endif %}{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dist/forum/forum.css' %}">
+{% if jsonld %}<script type="application/ld+json">{{ jsonld }}</script>{% endif %}
+{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+{% if not event %}
+  <section class="container forum-empty" aria-labelledby="forum-empty-title">
+    <h1 id="forum-empty-title">{% locked "p2.forum.header.title" %}</h1>
+    {% include "components/empty_state.html" with title=_("Cette page est en cours de préparation.") text=_("Les informations sur le Forum seront publiées prochainement.") %}
+  </section>
+{% else %}
+  {% include "forum/partials/hero.html" %}
+  {% include "forum/partials/local_nav.html" %}
+  <div class="forum-sections">
+    {% include "forum/partials/presentation.html" %}
+    {% include "forum/partials/programme.html" %}
+    {% include "forum/partials/speakers.html" %}
+    {% if is_permanent %}
+      {% include "forum/partials/permanent_sections.html" %}
+      {% include "forum/partials/virtual_forum_teaser.html" %}
+    {% else %}
+      {% include "forum/partials/registration_section.html" %}
+    {% endif %}
+    {% include "forum/partials/cta_row.html" %}
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n %}
+{% comment %}
+One digital table: its subject, its referent and the proposals being elaborated there.
+
+The referent is named by ORGANISATION and only while their mandate is in force — `table.live_referent`
+returns None the day the mandate lapses, and the page then says so rather than keeping a stale name
+on screen. « Qui modère cette table » and « jusqu’à quand » are the same fact in this module.
+{% endcomment %}
+{% block page_title %}{{ table.title_fr }}{% endblock %}
+{% block meta_description %}{% translate "Table thématique du Forum permanent : sujet, référent et propositions en élaboration." %}{% endblock %}
+
+{% block portal_header %}
+{% include "components/page_header.html" with title=table.title_fr lead=table.topic_fr eyebrow=commission.name_fr %}
+{% endblock %}
+
+{% block governance_content %}
+<p class="gloss">
+  <span class="state state--{{ table.state_class }}" data-register="{{ table.status|chip_register:'forum.TableStatus' }}">{{ table.get_status_display }}</span>
+  <span>{% blocktranslate with date=table.opened_on|date:"d.m.Y" %}Ouverte le {{ date }}{% endblocktranslate %}</span>
+  {% if table.closed_on %}<span>{% blocktranslate with date=table.closed_on|date:"d.m.Y" %}Clôturée le {{ date }}{% endblocktranslate %}</span>{% endif %}
+</p>
+
+<section class="portal-section" aria-labelledby="referent-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Référent" %}</span></p>
+  <h2 class="portal__section-title" id="referent-title">{% translate "Qui modère cette table" %}</h2>
+  {% if referent %}
+  <p class="t-prose">
+    {{ referent.profile.display_label }} — {{ referent.profile.get_category_display }}
+    <br>
+    {% if referent.valid_until %}
+      {% blocktranslate with start=referent.valid_from|date:"d.m.Y" end=referent.valid_until|date:"d.m.Y" %}Mandat du {{ start }} au {{ end }}.{% endblocktranslate %}
+    {% else %}
+      {% blocktranslate with start=referent.valid_from|date:"d.m.Y" %}Mandat ouvert depuis le {{ start }}, sans échéance fixée.{% endblocktranslate %}
+    {% endif %}
+  </p>
+  {% else %}
+  <p class="empty">{% translate "Cette table n’a pas de référent en fonction : le mandat précédent est échu ou n’a pas encore été ouvert par le secrétariat du Forum." %}</p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="table-proposals-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Propositions" %}</span></p>
+  <h2 class="portal__section-title" id="table-proposals-title">{% translate "Les propositions élaborées ici" %}</h2>
+  {% if proposals %}
+  <ol class="register">
+    {% for proposal in proposals %}
+    <li class="register__item">
+      {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
+      {% if proposal_url %}<a class="entry" href="{{ proposal_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <h3 class="entry__title">{{ proposal.title_fr }}</h3>
+        <span class="entry__gloss">{{ proposal.reference }}</span>
+        <span class="entry__actor state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+      {% if proposal_url %}</a>{% else %}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">{% translate "Aucune proposition rattachée à cette table pour l’instant." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

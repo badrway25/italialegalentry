@@ -1,0 +1,17 @@
+{% load i18n %}{% comment %}
+Contract: include with `form`. Renders the non-field errors and a summary list linking to each
+field in error (WCAG 3.3.1) — place it right after the <form> opening tag.
+{% endcomment %}{% if form.non_field_errors or form.errors %}
+<div class="notice notice--error form-errors" role="alert" tabindex="-1" id="form-errors">
+  {% svg_icon "warning" "icon notice__icon" %}
+  <p class="notice__title">{% translate "Le formulaire contient des erreurs." %}</p>
+  <div class="notice__body">
+    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+    {% if form.errors %}
+    <ul class="form-errors__list">
+      {% for field in form %}{% if field.errors and not field.is_hidden %}<li><a href="#{{ field.id_for_label }}"><span{% if field.field.label_lang %} lang="{{ field.field.label_lang }}"{% endif %}>{{ field.label }}</span></a> — {{ field.errors|join:" " }}</li>{% endif %}{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

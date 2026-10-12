@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% translate "Modifier le message" %}{% endblock %}
+{% block meta_description %}{% translate "Modification d’un message du Forum Virtuel." %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% translate "Modifier le message" as page_title %}
+{% include "components/page_header.html" with title=page_title eyebrow=post.discussion.title %}
+<section class="container community-compose" aria-label="{% translate 'Formulaire de modification' %}">
+  <form method="post" action="{% url 'community:post_edit' pk=post.pk %}" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    {% include "components/form_field.html" with field=form.body %}
+    <p>
+      <button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button>
+      <a class="btn btn--secondary" href="{% url 'community:discussion' pk=post.discussion_id %}">{% translate "Annuler" %}</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

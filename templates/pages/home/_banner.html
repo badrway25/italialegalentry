@@ -1,0 +1,12 @@
+{% load i18n %}{% comment %}
+3. INSTITUTIONAL NOTICE — Forum Vénétie–Maroc banner (document §2.2), immediately under the hero.
+The forum partial renders the prescribed p2.home.banner.* texts and re-checks its own gate.
+A quiet in-flow band: it never overlays content. The dismiss control is progressive enhancement
+only (hidden without JS, no cookie; the choice lives in sessionStorage for the current tab).
+{% endcomment %}
+<div class="home-banner" id="{{ s.anchor }}" data-section="banner" data-dismissible="forum-banner">
+  {% include "forum/partials/home_banner.html" with banner=d.banner %}
+  <button class="home-banner__dismiss" type="button" data-dismiss hidden>
+    {% svg_icon "close" "icon icon--sm" %}<span class="visually-hidden">{% translate "Masquer cette annonce" %}</span>
+  </button>
+</div>

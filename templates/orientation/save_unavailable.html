@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% load i18n static %}
+{% block page_title %}{% translate "Enregistrement indisponible" %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
+{% block content %}
+<article class="container wizard-result">
+  <h1>{% translate "Enregistrement indisponible" %}</h1>
+  {% include "components/form_unavailable.html" %}
+  <p><a class="btn btn--secondary" href="{% url 'orientation:result' session_id=session.id %}">{% translate "Retour à la pré-évaluation" %}</a></p>
+</article>
+{% endblock %}

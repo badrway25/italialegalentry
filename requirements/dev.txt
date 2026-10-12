@@ -1,0 +1,11 @@
+-r base.txt
+pytest==9.0.3
+pytest-django==4.14.0
+pytest-cov==7.1.0
+freezegun==1.5.5               # date-gate tests (Phase 3 / Forum transitions)
+model-bakery==1.24.0           # test fixtures
+beautifulsoup4==4.15.0         # HTML assertions in tests
+playwright==1.63.0             # browser / visual / RTL / a11y QA
+ruff==0.16.8
+bandit==1.9.4
+pip-audit==2.10.1

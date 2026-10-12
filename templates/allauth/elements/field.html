@@ -1,0 +1,17 @@
+{% load allauth %}{% comment %}allauth `field` element (explicit fields, e.g. one-time codes) mapped to .form-field.{% endcomment %}
+<div class="form-field{% if attrs.errors %} form-field--error{% endif %}{% if attrs.required %} form-field--required{% endif %}">
+  {% if attrs.type == "textarea" %}
+    <label class="form-field__label" for="{{ attrs.id }}">{% slot label %}{% endslot %}{% if attrs.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>
+    <textarea {% if attrs.required %}required{% endif %} {% if attrs.rows %}rows="{{ attrs.rows }}"{% endif %} {% if attrs.disabled %}disabled{% endif %} {% if attrs.readonly %}readonly{% endif %} {% if attrs.name %}name="{{ attrs.name }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}{% if slots.help_text %} aria-describedby="{{ attrs.id }}_helptext"{% endif %}>{% slot value %}{% endslot %}</textarea>
+  {% elif attrs.type == "checkbox" or attrs.type == "radio" %}
+    <div class="form-field__check">
+      <input {% if attrs.required %}required{% endif %} {% if attrs.disabled %}disabled{% endif %} {% if attrs.readonly %}readonly{% endif %} {% if attrs.checked %}checked{% endif %} {% if attrs.name %}name="{{ attrs.name }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %} type="{{ attrs.type }}"{% if slots.help_text %} aria-describedby="{{ attrs.id }}_helptext"{% endif %}>
+      <label for="{{ attrs.id }}">{% slot label %}{% endslot %}</label>
+    </div>
+  {% else %}
+    <label class="form-field__label" for="{{ attrs.id }}">{% slot label %}{% endslot %}{% if attrs.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>
+    <input {% if attrs.required %}required{% endif %} {% if attrs.disabled %}disabled{% endif %} {% if attrs.readonly %}readonly{% endif %} {% if attrs.name %}name="{{ attrs.name }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %} {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %} {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %} type="{{ attrs.type }}"{% if attrs.type == "email" or attrs.type == "tel" or attrs.type == "password" or attrs.type == "url" %} dir="ltr"{% endif %}{% if slots.help_text %} aria-describedby="{{ attrs.id }}_helptext"{% endif %}{% if attrs.errors %} aria-invalid="true"{% endif %}>
+  {% endif %}
+  {% if slots.help_text %}<p class="form-field__help" id="{{ attrs.id }}_helptext">{% slot help_text %}{% endslot %}</p>{% endif %}
+  {% if attrs.errors %}<div class="form-field__errors" role="alert">{{ attrs.errors }}</div>{% endif %}
+</div>

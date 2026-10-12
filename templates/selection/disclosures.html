@@ -1,0 +1,144 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+THE PERSON'S PANEL — the screen the previous platform did not have.
+
+There, a company asked to see a candidate's identity and the PLATFORM'S OWN STAFF decided, from
+``/admin/identity-requests``, with two buttons: "Refuser" and "Communiquer l'identité". No consent
+from the person concerned, no purpose recorded, no duration, no legal basis
+(previous-platform audit, part 2 §5, private register). Once communicated, the identity appeared to be communicated for ever.
+
+Here the decision is the person's, it names a purpose, it lasts a stated number of days, it can be
+withdrawn in one click without justification, and every consultation is listed underneath — so the
+person can see not only that they said yes, but exactly who looked, and when.
+{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/selection/selection.css' %}">{% endblock %}
+{% block page_title %}{% translate "Communications d’identité" %}{% endblock %}
+{% block meta_description %}{% translate "Les demandes de communication de votre identité, et vos décisions." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Communications d’identité" as header_title %}
+{% translate "Votre identité n’est jamais communiquée à une entreprise sans votre accord. Vous décidez ici, vous fixez la durée, et vous pouvez revenir sur votre décision à tout moment." as header_lead %}
+{% translate "Sélection autorisée" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+
+{% block portal_content %}
+
+{% if pending %}
+<section class="portal-section" aria-labelledby="pending-title">
+  <h2 class="portal__section-title" id="pending-title">{% translate "Demandes qui attendent votre décision" %}</h2>
+
+  {% for row in pending %}
+  <article class="selection-disclosure" aria-labelledby="pending-{{ row.pk }}">
+    <p class="t-folio" id="pending-{{ row.pk }}">{% translate "Demande de communication" %}</p>
+
+    {% include "selection/partials/responsible.html" with actor=row.process.actor mandate=row.process.mandate %}
+
+    <dl class="selection-facts">
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Entreprise destinataire" %}</dt>
+        <dd>{{ row.recipient_organisation.name }}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Finalité déclarée" %}</dt>
+        <dd>{{ row.purpose }}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Ce qui serait communiqué" %}</dt>
+        <dd>{% for label in row.field_labels %}{{ label }}{% if not forloop.last %} · {% endif %}{% endfor %}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Durée demandée" %}</dt>
+        <dd>{% blocktranslate count n=row.duration_days %}{{ n }} jour{% plural %}{{ n }} jours{% endblocktranslate %}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Besoin concerné" %}</dt>
+        <dd>{{ row.process.mandate.need_profile }}</dd>
+      </div>
+    </dl>
+
+    <form method="post" action="{% url 'selection:decide_disclosure' row.uuid %}" class="selection-form">
+      {% csrf_token %}
+      <p class="form-field">
+        <label class="form-field__label" for="note-{{ row.pk }}">{% translate "Remarque (facultative)" %}</label>
+        <input type="text" id="note-{{ row.pk }}" name="note" maxlength="300">
+      </p>
+      <p class="portal__actions">
+        <button type="submit" name="decision" value="grant" class="btn btn--primary">{% translate "J’autorise, pour la durée indiquée" %}</button>
+        <button type="submit" name="decision" value="refuse" class="btn btn--secondary">{% translate "Je refuse" %}</button>
+      </p>
+    </form>
+
+    <p class="note">
+      {% translate "Un refus n’a aucune conséquence sur votre dossier, sur votre parcours de formation ni sur vos droits. Vous n’avez pas à vous justifier. Base juridique d’une autorisation : votre consentement, RGPD art. 6§1 a)." %}
+    </p>
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="portal-section" aria-labelledby="all-title">
+  <h2 class="portal__section-title" id="all-title">{% translate "Vos décisions" %}</h2>
+
+  {% if disclosures %}
+  <ul class="register">
+    {% for row in disclosures %}
+    <li class="register__item">
+      <div class="entry">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ row.recipient_organisation.name }}</span>
+        <span class="entry__gloss">
+          {{ row.purpose }}
+          · <span class="state state--{{ row.status_word }}" data-register="{{ row.status_word|chip_register:'selection.consent' }}">{{ row.get_status_display }}</span>
+          {% if row.expires_at %} · {% blocktranslate with date=row.expires_at|date:"d.m.Y" %}jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
+        </span>
+        <span class="entry__actor">{{ row.process.actor.organisation.name }}</span>
+      </div>
+
+      {% if row.status == 'granted' and not row.is_expired %}
+      <form method="post" action="{% url 'selection:decide_disclosure' row.uuid %}" class="selection-inline-form">
+        {% csrf_token %}
+        <button type="submit" name="decision" value="withdraw" class="btn btn--ghost">{% translate "Retirer cette autorisation" %}</button>
+      </form>
+      {% endif %}
+
+      {% with rows=accesses|get_item:row.pk %}
+      {% if rows %}
+      {% comment %}A table is the one element allowed to exceed the column, and only inside its
+      own scroll container: the page body must never scroll sideways on a phone. The region is
+      focusable so a keyboard user can scroll it too.{% endcomment %}
+      <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Consultations enregistrées" %}">
+      <table class="data-table data-table--wide selection-accesses">
+        <caption class="t-folio">{% translate "Consultations enregistrées" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Date" %}</th>
+            <th scope="col">{% translate "Consulté par" %}</th>
+            <th scope="col">{% translate "Finalité au moment de l’accès" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for access in rows %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Date' %}">{{ access.accessed_at|date:"d.m.Y H:i" }}</th>
+            <td data-label="{% translate 'Consulté par' %}">{{ access.accessed_by_organisation.name|default:_("Vous-même") }}</td>
+            <td data-label="{% translate 'Finalité au moment de l’accès' %}">{{ access.purpose_at_access|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+      {% else %}
+      <p class="empty selection-accesses">{% translate "Aucune consultation enregistrée à ce jour." %}</p>
+      {% endif %}
+      {% endwith %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty">
+    {% translate "Aucune entreprise n’a demandé à connaître votre identité. Une demande apparaît ici lorsqu’un acteur autorisé en formule une, en nommant l’entreprise, la finalité et la durée." %}
+  </p>
+  {% endif %}
+</section>
+{% endblock %}

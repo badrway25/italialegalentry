@@ -1,0 +1,20 @@
+{% load i18n %}{% comment %}
+Stepper (design V4, CREATIVE_DIRECTION.md §3.7 a): the questions of a guided form as a vertical
+list — a node per question, filled when the question has an answer (the same rule the profile's
+`answered()` applies: «not yet» is not an answer, 0 is), the current one ringed, the line between
+them advancing (v4/wizard.css). Each entry is a link to its question, so the list works without
+JavaScript (an in-page anchor) and with it (situation.js shows that question).
+
+Contract: `fields` = the form's visible fields, in question order; `answered` = the set of field
+names that carry an answer (from the profile, not re-derived here); optional `label`.
+{% endcomment %}
+<ol class="wstep" role="list" aria-label="{{ label|default:_('Progression') }}" data-wizard-stepper>
+  {% for field in fields %}
+  <li class="wstep__item{% if field.name in answered %} wstep__item--done{% endif %}{% if forloop.first %} wstep__item--current{% endif %}" data-wizard-mark="{{ forloop.counter }}"{% if forloop.first %} aria-current="step"{% endif %}>
+    <a class="wstep__link" href="#q-{{ field.name }}" data-wizard-go="{{ forloop.counter }}">
+      <span class="wstep__node" aria-hidden="true"></span>
+      <span class="wstep__label">{{ field.label }}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ol>

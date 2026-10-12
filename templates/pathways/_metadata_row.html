@@ -1,0 +1,14 @@
+{% load i18n %}
+{% comment %}Contract: `reviewed_at` (datetime or None).{% endcomment %}
+<dl class="meta-row" data-metadata="pathway">
+  <div class="meta-row__item">
+    {% svg_icon "info" %}
+    <dt>{% translate "Nature" %}</dt>
+    <dd>{% translate "Contenu informatif — les décisions relèvent des autorités compétentes" %}</dd>
+  </div>
+  <div class="meta-row__item">
+    {% svg_icon "calendar" %}
+    <dt>{% translate "Dernière vérification" %}</dt>
+    <dd>{% if reviewed_at %}<time datetime="{{ reviewed_at|date:'c' }}">{{ reviewed_at|date:"d.m.Y" }}</time>{% else %}{% translate "contenus détaillés en cours de vérification" %}{% endif %}</dd>
+  </div>
+</dl>

@@ -1,0 +1,16 @@
+{% load i18n %}{% comment %}Contract: `article` (news.Article), `texts` (ArticleText), `heading_level` (default 2).{% endcomment %}
+<article class="news-card"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
+  {% if article.hero_image and article.hero_image.file %}
+  <a class="news-card__media" href="{{ article.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ article.hero_image.file.url }}" alt="" loading="lazy" decoding="async"{% if article.hero_image.width %} width="{{ article.hero_image.width }}" height="{{ article.hero_image.height }}"{% endif %}>
+  </a>
+  {% endif %}
+  <div class="news-card__body">
+    <p class="news-card__meta">
+      <span class="news-card__category"{% if article.category.name_is_fallback %} lang="fr"{% endif %}>{{ article.category.name }}</span>
+      {% if article.date_published %} · <time datetime="{{ article.date_published|date:'c' }}">{{ article.date_published|date:"d.m.Y" }}</time>{% endif %}
+    </p>
+    {% if heading_level == 3 %}<h3 class="news-card__title"><a href="{{ article.get_absolute_url }}">{{ texts.title }}</a></h3>{% else %}<h2 class="news-card__title"><a href="{{ article.get_absolute_url }}">{{ texts.title }}</a></h2>{% endif %}
+    <p class="news-card__summary">{{ texts.summary }}</p>
+  </div>
+</article>

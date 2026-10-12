@@ -1,0 +1,397 @@
+/* ============================================================================
+   DESIGN SYSTEM SHOWCASE — DEVELOPMENT ONLY
+
+   Loaded by templates/dev/showcase.html, which is served only when DEBUG is on.
+   It is never imported by main.css, so it costs a production page nothing.
+
+   WHY THERE IS ONE RULE PER TOKEN BELOW, AND NOT A LOOP
+
+   The Content-Security-Policy of this site is `style-src 'self'`: an inline
+   `style=""` attribute is blocked by the browser, so the template cannot write
+   `style="background: var(--accent)"` on a swatch, and there is no CSS feature
+   that turns an attribute VALUE into a custom-property NAME. The honest way to
+   paint a swatch is therefore an explicit rule per token.
+
+   That is a duplication, and duplication rots. So core.dev reads this file,
+   collects every `[data-swatch="…"]` it finds, compares it with the palette it
+   reads from static/css/v2/tokens.css, and prints a warning at the top of the
+   page naming any token that has no square. Add a token to the palette, reload
+   the page, and it tells you what to add here.
+   ========================================================================== */
+
+/* -------------------------------------------------------------- scaffolding */
+
+.ds {
+  padding-bottom: var(--s-20, 80px);
+}
+
+.ds__masthead {
+  padding: var(--s-10, 40px) 0 var(--s-5, 20px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ds__kicker {
+  margin: 0 0 8px;
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: var(--t-folio-lh);
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  color: var(--pending-700);
+}
+
+.ds__title {
+  margin: 0 0 12px;
+  font-family: var(--f-serif);
+  font-size: var(--t-title);
+  line-height: var(--t-title-lh);
+  color: var(--ink);
+}
+
+.ds__lead {
+  max-width: 62ch;
+  margin: 0 0 var(--s-5, 20px);
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--ink-2);
+}
+
+/* The table of contents follows the header down the page — but only where it fits
+   on one line. Below 64rem the eleven links wrap to two or three rows, and a
+   sticky element three rows tall eats a third of a phone screen.
+
+   `top` clears the real chrome. The utility bar disappears under 48rem, which is
+   why the height is read from the token pair rather than written as a number. */
+@media (min-width: 64rem) {
+  .ds__toc {
+    position: sticky;
+    top: var(--chrome-height, 100px);
+    z-index: 5;
+  }
+
+  /* base.css already sets `scroll-padding-block-start` on the root for the site's
+     sticky header. This page puts a SECOND sticky element under it, so an anchor
+     that clears only the header lands 42px beneath the table of contents — which
+     is exactly what «Boutons» did. The rule sits on :root because that is the
+     scroll container (on `body` it would do nothing), and it is safe to write it
+     unconditionally here: this stylesheet is loaded by one template. */
+  :root {
+    scroll-padding-block-start: calc(var(--header-height, 64px) + 42px + var(--s-4, 16px));
+  }
+}
+
+.ds__toc {
+  background: var(--min-2);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ds__toc-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.ds__toc a {
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: 1.6;
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.ds__toc a:hover,
+.ds__toc a:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ds__section {
+  padding: var(--s-10, 40px) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ds__h {
+  margin: 0 0 var(--s-5, 20px);
+  font-family: var(--f-serif);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  color: var(--ink);
+}
+
+.ds__h3 {
+  margin: var(--s-10, 40px) 0 12px;
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: var(--t-folio-lh);
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.ds__h3:first-of-type {
+  margin-top: var(--s-5, 20px);
+}
+
+.ds__note {
+  max-width: 68ch;
+  margin: 0 0 16px;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.ds__block {
+  margin-bottom: var(--s-10, 40px);
+}
+
+.ds__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ds__row--baseline {
+  align-items: baseline;
+}
+
+.ds__stack > * + * {
+  margin-top: 12px;
+}
+
+.ds__narrow {
+  max-width: 24rem;
+}
+
+.ds__two {
+  display: grid;
+  gap: var(--s-10, 40px);
+  grid-template-columns: 1fr;
+}
+
+.ds__cards {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 48rem) {
+  .ds__two,
+  .ds__cards {
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  }
+}
+
+.ds__form {
+  padding: 20px;
+  background: var(--min-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-tile);
+}
+
+/* A real midnight ground, so an inverse button is judged where it lives. */
+.ds__dark {
+  padding: 24px;
+  background: var(--mid-1);
+  border-radius: var(--radius-tile);
+  color: var(--on-dark);
+}
+
+.ds__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-small);
+}
+
+.ds__table th,
+.ds__table td {
+  padding: 8px 12px 8px 0;
+  text-align: start;
+  vertical-align: top;
+  border-bottom: 1px solid var(--hairline);
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.ds__table thead th {
+  color: var(--ink);
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+}
+
+.ds code {
+  font-family: var(--f-mono);
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------ swatches */
+
+.ds__swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds__swatch {
+  display: grid;
+  gap: 2px;
+}
+
+/* The chip always carries a hairline: --min-0 on --min-0 is a real value and an
+   invisible square, and a showcase that hides a token is worse than none. */
+.ds__chip {
+  display: block;
+  height: 56px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-control);
+}
+
+.ds__token {
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  color: var(--ink);
+}
+
+.ds__value {
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  color: var(--ink-3);
+}
+
+[data-swatch="min-0"] { background: var(--min-0); }
+[data-swatch="min-1"] { background: var(--min-1); }
+[data-swatch="min-2"] { background: var(--min-2); }
+[data-swatch="min-3"] { background: var(--min-3); }
+[data-swatch="ink"] { background: var(--ink); }
+[data-swatch="ink-2"] { background: var(--ink-2); }
+[data-swatch="ink-3"] { background: var(--ink-3); }
+[data-swatch="hairline"] { background: var(--hairline); }
+[data-swatch="hairline-strong"] { background: var(--hairline-strong); }
+
+[data-swatch="mid-0"] { background: var(--mid-0); }
+[data-swatch="mid-1"] { background: var(--mid-1); }
+[data-swatch="mid-2"] { background: var(--mid-2); }
+[data-swatch="mid-3"] { background: var(--mid-3); }
+[data-swatch="mid-4"] { background: var(--mid-4); }
+[data-swatch="on-dark"] { background: var(--on-dark); }
+[data-swatch="on-dark-2"] { background: var(--on-dark-2); }
+[data-swatch="on-dark-3"] { background: var(--on-dark-3); }
+
+[data-swatch="accent"] { background: var(--accent); }
+[data-swatch="accent-hover"] { background: var(--accent-hover); }
+[data-swatch="accent-dark"] { background: var(--accent-dark); }
+[data-swatch="accent-ring"] { background: var(--accent-ring); }
+[data-swatch="accent-wash"] { background: var(--accent-wash); }
+
+[data-swatch="ok-700"] { background: var(--ok-700); }
+[data-swatch="ok-300"] { background: var(--ok-300); }
+[data-swatch="ok-100"] { background: var(--ok-100); }
+[data-swatch="err-700"] { background: var(--err-700); }
+[data-swatch="err-100"] { background: var(--err-100); }
+[data-swatch="pending-700"] { background: var(--pending-700); }
+[data-swatch="seal-600"] { background: var(--seal-600); }
+[data-swatch="seal-300"] { background: var(--seal-300); }
+[data-swatch="seal-100"] { background: var(--seal-100); }
+
+[data-swatch="brand-green"] { background: var(--brand-green); }
+[data-swatch="brand-navy"] { background: var(--brand-navy); }
+[data-swatch="brand-red"] { background: var(--brand-red); }
+[data-swatch="brand-gold"] { background: var(--brand-gold); }
+
+[data-swatch="route-1"] { background: var(--route-1); }
+[data-swatch="route-2"] { background: var(--route-2); }
+[data-swatch="route-3"] { background: var(--route-3); }
+[data-swatch="route-4"] { background: var(--route-4); }
+[data-swatch="owner-person"] { background: var(--owner-person); }
+[data-swatch="owner-project"] { background: var(--owner-project); }
+[data-swatch="owner-training"] { background: var(--owner-training); }
+[data-swatch="owner-authority"] { background: var(--owner-authority); }
+[data-swatch="owner-territory"] { background: var(--owner-territory); }
+
+/* -------------------------------------------------------------- type specimen */
+
+.ds__type {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds__type-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ds__specimen {
+  margin: 0;
+  color: var(--ink);
+  /* The specimen must not force the page wider than the viewport at the display
+     size: it is one line of text shown at 100 px, and it is allowed to wrap. */
+  overflow-wrap: break-word;
+}
+
+.ds__type-meta {
+  margin: 4px 0 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  color: var(--ink-3);
+}
+
+[data-type="display"] { font-family: var(--f-serif); font-size: var(--t-display); line-height: var(--t-display-lh); letter-spacing: var(--track-display); }
+[data-type="plate"] { font-family: var(--f-serif); font-size: var(--t-plate); line-height: var(--t-plate-lh); }
+[data-type="title"] { font-family: var(--f-serif); font-size: var(--t-title); line-height: var(--t-title-lh); }
+[data-type="band"] { font-family: var(--f-serif); font-size: var(--t-band); line-height: var(--t-band-lh); }
+[data-type="entry"] { font-family: var(--f-serif); font-size: var(--t-entry); line-height: var(--t-entry-lh); }
+[data-type="lead"] { font-family: var(--f-sans); font-size: var(--t-lead); line-height: var(--t-lead-lh); }
+[data-type="body"] { font-family: var(--f-sans); font-size: var(--t-body); line-height: var(--t-body-lh); }
+[data-type="ui"] { font-family: var(--f-sans); font-size: var(--t-ui); line-height: var(--t-ui-lh); }
+[data-type="small"] { font-family: var(--f-sans); font-size: var(--t-small); line-height: var(--t-small-lh); }
+[data-type="folio"] { font-family: var(--f-mono); font-size: var(--t-folio); line-height: var(--t-folio-lh); letter-spacing: var(--track-folio); text-transform: uppercase; }
+[data-type="caption"] { font-family: var(--f-sans); font-size: var(--t-caption); line-height: var(--t-caption-lh); }
+
+/* ---------------------------------------------------------------------- icons */
+
+.ds__icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds__icon {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  background: var(--min-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-tile);
+}
+
+.ds__icon-box {
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+}
+
+.ds__icon code {
+  font-size: var(--t-caption);
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,381 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+ONE SELECTION PROCESS.
+
+The same page serves the three perimeters, and shows each of them what it is entitled to see —
+decided in ``selection.services.viewpoint``, never in this template:
+
+  the AUTHORISED ACTOR   the mandate, the stages it may move to, the evidence, the identity request
+  the PERSON             who is working on their file, at which stage, and every access to their
+                         identity — a selection conducted on someone without their knowledge is not
+                         traceability
+  the COMPANY            its own need, the stage, the competences. NO identity unless the person
+                         has authorised it, and then only for the declared duration (CR-04)
+
+The responsible actor is named at the top, before anything else: that band is not decoration, it is
+the answer to "who is answerable", which this product made an acceptance criterion.
+{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/selection/selection.css' %}">{% endblock %}
+{% block page_title %}{% blocktranslate with reference=process.reference %}Processus {{ reference }}{% endblocktranslate %}{% endblock %}
+{% block meta_description %}{% translate "Processus de sélection conduit par un acteur autorisé." %}{% endblock %}
+
+{% block portal_header %}
+{% blocktranslate with profile=process.mandate.need_profile asvar header_title %}Processus — {{ profile }}{% endblocktranslate %}
+{% blocktranslate with reference=process.reference company=process.mandate.company.name asvar header_lead %}Processus {{ reference }}, ouvert sous mandat pour le besoin exprimé par {{ company }}.{% endblocktranslate %}
+{% translate "Sélection autorisée" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+
+{% block portal_content %}
+
+{% include "selection/partials/responsible.html" with actor=process.actor mandate=process.mandate %}
+
+{% if view.reason %}
+{% include "components/notice.html" with kind="warning" text=view.reason %}
+{% endif %}
+
+{# ---- The mandate context ------------------------------------------------------------------ #}
+<section class="portal-section" aria-labelledby="mandate-title">
+  <h2 class="portal__section-title" id="mandate-title">{% translate "Contexte du mandat" %}</h2>
+  <dl class="selection-facts">
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Mandat" %}</dt>
+      <dd>{{ process.mandate.reference }}
+        <span class="state state--{{ process.mandate.status_word }}" data-register="{{ process.mandate.status_word|chip_register:'selection.mandate' }}">
+          {% if process.mandate.status_word == 'valid' %}{% translate "En vigueur" %}{% elif process.mandate.status_word == 'expired' %}{% translate "Échu" %}{% else %}{% translate "Révoqué" %}{% endif %}
+        </span>
+      </dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Besoin de" %}</dt>
+      <dd>{{ process.mandate.company.name }}{% if process.mandate.need_reference %} · {{ process.mandate.need_reference }}{% endif %}</dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Profil professionnel" %}</dt>
+      <dd>{{ process.mandate.need_profile }}</dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Secteur et territoire" %}</dt>
+      <dd>{{ process.mandate.need_sector|default:"—" }} · {{ process.mandate.need_territory|default:"—" }}</dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Postes exprimés" %}</dt>
+      <dd>{{ process.mandate.need_headcount }}</dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Exigence linguistique" %}</dt>
+      <dd>{{ process.mandate.need_language_requirement|default:"—" }}</dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Échéance du besoin" %}</dt>
+      <dd>{{ process.mandate.need_timeframe|default:"—" }}</dd>
+    </div>
+    <div class="selection-facts__row">
+      <dt class="t-folio">{% translate "Portée du mandat" %}</dt>
+      <dd>{{ process.mandate.scope_note|default:"—" }}</dd>
+    </div>
+  </dl>
+
+  {% if process.mandate.competences %}
+  <h3 class="t-folio selection-subhead">{% translate "Compétences attendues" %}</h3>
+  {% comment %}A table is the one element allowed to exceed the column, and only inside its
+  own scroll container: the page body must never scroll sideways on a phone. The region is
+  focusable so a keyboard user can scroll it too.{% endcomment %}
+  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Compétences attendues par le besoin" %}">
+  <table class="data-table">
+    <caption class="visually-hidden">{% translate "Compétences attendues par le besoin" %}</caption>
+    <thead>
+      <tr><th scope="col">{% translate "Compétence" %}</th><th scope="col">{% translate "Niveau attendu" %}</th></tr>
+    </thead>
+    <tbody>
+      {% for row in process.mandate.competences %}
+      <tr><th scope="row" data-label="{% translate 'Compétence' %}">{{ row.label }}</th><td data-label="{% translate 'Niveau attendu' %}">{{ row.level|default:"—" }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+
+  <p class="note">
+    {% translate "Le besoin est figé tel qu’il a été confié à l’acteur autorisé : il fixe des compétences et des conditions de travail. Il ne comporte ni âge, ni tranche d’âge, ni nationalité, ni aucun autre critère protégé — ces critères ne sont pas des critères de sélection et n’existent pas dans ce dossier." %}
+  </p>
+</section>
+
+{# ---- The stages ---------------------------------------------------------------------------- #}
+<section class="portal-section" aria-labelledby="stages-title">
+  <h2 class="portal__section-title" id="stages-title">{% translate "Phases du processus" %}</h2>
+
+  <ol class="sequence">
+    {% for step in page.stage_sequence %}
+    <li class="sequence__step{% if step.is_current %} sequence__step--current{% endif %}">
+      <span class="sequence__marker" aria-hidden="true"></span>
+      <div>
+        <p class="sequence__title">{{ step.label }}</p>
+        {% if step.is_current %}
+        <p class="sequence__body">{% blocktranslate with date=process.stage_since|date:"d.m.Y" %}Phase en cours depuis le {{ date }}.{% endblocktranslate %}</p>
+        {% elif step.is_done %}
+        <p class="sequence__body">{% translate "Phase franchie." %}</p>
+        {% endif %}
+        {% comment %}
+        The responsible actor is named on the step the process is ON, not five times down the list:
+        the band above already states who answers for the process, and repeating the same 90
+        characters under every step turns the one sentence that matters into wallpaper. The
+        requirement is that the actor is named wherever a stage is visible — it is, twice.
+        {% endcomment %}
+        {% if step.is_current %}<span class="sequence__actor">{{ step.responsible }}</span>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+
+  {% if process.stage == 'suspended' %}
+  {% include "components/notice.html" with kind="warning" title=_("Processus suspendu") text=process.suspension_reason %}
+  {% endif %}
+
+  {% if process.outcome %}
+  <div class="outcome outcome--review selection-outcome">
+    <p class="t-folio">{% translate "Issue du processus" %}</p>
+    <p class="outcome__kind">{{ process.get_outcome_display }}</p>
+    {% if process.closing_note %}<p class="t-gloss">{{ process.closing_note }}</p>{% endif %}
+    <p class="note">
+      {% translate "L’issue décrit ce qu’il est advenu du processus. Elle ne porte aucune appréciation sur la personne et ne vaut ni autorisation, ni promesse de visa, de titre de séjour ou d’embauche." %}
+    </p>
+  </div>
+  {% endif %}
+
+  {% if view.can_advance %}
+  <form method="post" action="{% url 'selection:advance' process.uuid %}" class="selection-form">
+    {% csrf_token %}
+    <fieldset>
+      <legend class="t-folio">{% translate "Enregistrer une phase" %}</legend>
+      <p class="form-field">
+        <label class="form-field__label" for="stage-select">{% translate "Phase suivante" %}</label>
+        <select id="stage-select" name="stage" required>
+          {% for step in view.next_stages %}
+          <option value="{{ step.key }}">{{ step.label }}</option>
+          {% endfor %}
+        </select>
+      </p>
+      <p class="form-field">
+        <label class="form-field__label" for="stage-note">{% translate "Note (obligatoire pour une suspension)" %}</label>
+        <input type="text" id="stage-note" name="note" maxlength="300">
+      </p>
+      <p class="portal__actions"><button type="submit" class="btn btn--primary">{% translate "Enregistrer la phase" %}</button></p>
+    </fieldset>
+  </form>
+
+  <form method="post" action="{% url 'selection:conclude' process.uuid %}" class="selection-form">
+    {% csrf_token %}
+    <fieldset>
+      <legend class="t-folio">{% translate "Clore le processus" %}</legend>
+      <p class="form-field">
+        <label class="form-field__label" for="outcome-select">{% translate "Issue" %}</label>
+        <select id="outcome-select" name="outcome" required>
+          {% for value, label in outcomes %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+      </p>
+      <p class="form-field">
+        <label class="form-field__label" for="outcome-note">{% translate "Note de clôture" %}</label>
+        <input type="text" id="outcome-note" name="note" maxlength="300">
+      </p>
+      <p class="portal__actions"><button type="submit" class="btn btn--secondary">{% translate "Clore le processus" %}</button></p>
+    </fieldset>
+  </form>
+  {% endif %}
+</section>
+
+{# ---- The evidence -------------------------------------------------------------------------- #}
+<section class="portal-section" aria-labelledby="evidence-title">
+  <h2 class="portal__section-title" id="evidence-title">{% translate "Justificatifs requis" %}</h2>
+  {% if page.evidence %}
+  <p class="portal__summary">
+    {% blocktranslate with provided=page.summary.provided total=page.summary.total %}{{ provided }} sur {{ total }} justificatifs fournis{% endblocktranslate %}
+    {% if page.summary.overdue %} · <span class="state state--expired" data-register="azione">{% blocktranslate count n=page.summary.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
+  </p>
+  {% comment %}A table is the one element allowed to exceed the column, and only inside its
+  own scroll container: the page body must never scroll sideways on a phone. The region is
+  focusable so a keyboard user can scroll it too.{% endcomment %}
+  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Justificatifs requis par l’acteur autorisé" %}">
+  <table class="data-table data-table--wide">
+    <caption class="visually-hidden">{% translate "Justificatifs requis par l’acteur autorisé" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Justificatif" %}</th>
+        <th scope="col">{% translate "Responsable" %}</th>
+        <th scope="col">{% translate "État" %}</th>
+        <th scope="col">{% translate "Échéance" %}</th>
+        {% if view.can_advance %}<th scope="col">{% translate "Action" %}</th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in page.evidence %}
+      <tr{% if row.is_overdue %} class="is-overdue"{% endif %}>
+        <th scope="row" data-label="{% translate 'Justificatif' %}">{{ row.requirement }}{% if row.detail %}<span class="t-caption">{{ row.detail }}</span>{% endif %}</th>
+        <td data-label="{% translate 'Responsable' %}">{{ row.get_responsible_actor_display }}</td>
+        <td data-label="{% translate 'État' %}"><span class="state state--{% if row.status == 'provided' %}done{% elif row.status == 'blocked' %}invalid{% elif row.status == 'not_applicable' %}replace{% else %}missing{% endif %}" data-register="{{ row.status|chip_register:'selection.EvidenceStatus' }}">{{ row.get_status_display }}</span></td>
+        <td data-label="{% translate 'Échéance' %}">{{ row.due_date|date:"d.m.Y"|default:"—" }}</td>
+        {% if view.can_advance %}
+        <td data-label="{% translate 'Action' %}">
+          <form method="post" action="{% url 'selection:evidence' process.uuid row.pk %}" class="selection-inline-form">
+            {% csrf_token %}
+            <label class="visually-hidden" for="evidence-{{ row.pk }}">{% translate "Nouvel état" %}</label>
+            <select id="evidence-{{ row.pk }}" name="status">
+              {% for value, label in evidence_statuses %}<option value="{{ value }}"{% if value == row.status %} selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+            <button type="submit" class="btn btn--ghost">{% translate "Mettre à jour" %}</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun justificatif n’est encore demandé. L’acteur autorisé inscrit ici ce qu’il exige, et qui doit le produire." %}</p>
+  {% endif %}
+</section>
+
+{# ---- Progressive disclosure of identity ------------------------------------------------------ #}
+<section class="portal-section" aria-labelledby="identity-title">
+  <h2 class="portal__section-title" id="identity-title">{% translate "Communication de l’identité" %}</h2>
+
+  <p class="t-gloss selection-lead">
+    {% translate "L’acteur autorisé travaille sur des compétences. L’identité de la personne n’atteint l’entreprise que par un consentement exprès de la personne elle-même, pour une finalité nommée, pour une durée limitée, et chaque consultation est enregistrée." %}
+  </p>
+
+  {% if page.live_disclosure %}
+  <div class="selection-disclosure selection-disclosure--live">
+    <p class="t-folio">{% translate "Autorisation en vigueur" %}</p>
+    <dl class="selection-facts">
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Destinataire" %}</dt><dd>{{ page.live_disclosure.recipient_organisation.name }}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Finalité déclarée" %}</dt><dd>{{ page.live_disclosure.purpose }}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Champs communiqués" %}</dt>
+        <dd>{% for label in page.live_disclosure.field_labels %}{{ label }}{% if not forloop.last %} · {% endif %}{% endfor %}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Expire le" %}</dt><dd>{{ page.live_disclosure.expires_at|date:"d.m.Y H:i" }}</dd>
+      </div>
+      <div class="selection-facts__row">
+        <dt class="t-folio">{% translate "Base juridique" %}</dt><dd>{% translate "Consentement de la personne concernée — RGPD art. 6§1 a)." %}</dd>
+      </div>
+    </dl>
+
+    {% if view.can_read_identity %}
+    <form method="post" action="{% url 'selection:identity' process.uuid %}">
+      {% csrf_token %}
+      <p class="portal__actions"><button type="submit" class="btn btn--primary">{% translate "Consulter l’identité communiquée" %}</button></p>
+      <p class="note">{% translate "Chaque consultation est enregistrée et visible par la personne concernée." %}</p>
+    </form>
+    {% endif %}
+  </div>
+  {% elif page.pending_disclosure %}
+  <div class="selection-disclosure">
+    <p class="t-folio">{% translate "Demande en attente" %}</p>
+    <p class="t-gloss">{{ page.pending_disclosure.purpose }}</p>
+    <p><span class="state state--missing" data-register="attesa">{% translate "En attente de la décision de la personne" %}</span></p>
+    <p class="note">{% translate "La décision appartient à la personne concernée, et à elle seule. Ni l’acteur autorisé, ni l’entreprise, ni l’équipe du projet ne peut la prendre à sa place." %}</p>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucune identité n’est communiquée à l’entreprise pour ce processus." %}</p>
+  {% endif %}
+
+  {% if view.can_request_identity %}
+  <form method="post" action="{% url 'selection:request_identity' process.uuid %}" class="selection-form">
+    {% csrf_token %}
+    <fieldset>
+      <legend class="t-folio">{% translate "Demander la communication de l’identité" %}</legend>
+      <p class="form-field">
+        <label class="form-field__label" for="purpose">{% translate "Finalité déclarée" %}</label>
+        <input type="text" id="purpose" name="purpose" maxlength="300" required
+               placeholder="{% translate 'Ex. prise de contact en vue d’un entretien conduit par l’acteur autorisé' %}">
+      </p>
+      <fieldset class="selection-fields">
+        <legend>{% translate "Champs demandés" %}</legend>
+        {% for value, label in identity_fields %}
+        <label class="selection-check"><input type="checkbox" name="fields" value="{{ value }}"> {{ label }}</label>
+        {% endfor %}
+      </fieldset>
+      <p class="form-field">
+        <label class="form-field__label" for="duration">{% blocktranslate with max=max_disclosure_days %}Durée en jours (maximum {{ max }}){% endblocktranslate %}</label>
+        <input type="number" id="duration" name="duration_days" min="1" max="{{ max_disclosure_days }}" value="30" required>
+      </p>
+      <p class="portal__actions"><button type="submit" class="btn btn--secondary">{% translate "Transmettre la demande à la personne" %}</button></p>
+    </fieldset>
+  </form>
+  {% endif %}
+
+  {% if page.disclosures %}
+  <h3 class="t-folio selection-subhead">{% translate "Historique des demandes" %}</h3>
+  {% comment %}A table is the one element allowed to exceed the column, and only inside its
+  own scroll container: the page body must never scroll sideways on a phone. The region is
+  focusable so a keyboard user can scroll it too.{% endcomment %}
+  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Historique des demandes de communication d’identité" %}">
+  <table class="data-table data-table--wide">
+    <caption class="visually-hidden">{% translate "Historique des demandes de communication d’identité" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Demandée le" %}</th>
+        <th scope="col">{% translate "Destinataire" %}</th>
+        <th scope="col">{% translate "État" %}</th>
+        <th scope="col">{% translate "Expire le" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in page.disclosures %}
+      <tr>
+        <th scope="row" data-label="{% translate 'Demandée le' %}">{{ row.requested_at|date:"d.m.Y" }}</th>
+        <td data-label="{% translate 'Destinataire' %}">{{ row.recipient_organisation.name }}</td>
+        <td data-label="{% translate 'État' %}"><span class="state state--{{ row.status_word }}" data-register="{{ row.status_word|chip_register:'selection.consent' }}">{{ row.get_status_display }}</span></td>
+        <td data-label="{% translate 'Expire le' %}">{{ row.expires_at|date:"d.m.Y"|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+</section>
+
+{# ---- The trail ------------------------------------------------------------------------------ #}
+<section class="portal-section" aria-labelledby="trail-title">
+  <h2 class="portal__section-title" id="trail-title">{% translate "Mouvements enregistrés" %}</h2>
+  {% if page.events %}
+  {% comment %}A table is the one element allowed to exceed the column, and only inside its
+  own scroll container: the page body must never scroll sideways on a phone. The region is
+  focusable so a keyboard user can scroll it too.{% endcomment %}
+  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Mouvements de phase du processus" %}">
+  <table class="data-table data-table--wide">
+    <caption class="visually-hidden">{% translate "Mouvements de phase du processus" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Date" %}</th>
+        <th scope="col">{% translate "Phase" %}</th>
+        <th scope="col">{% translate "Acteur responsable" %}</th>
+        <th scope="col">{% translate "Note" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in page.events %}
+      <tr>
+        <th scope="row" data-label="{% translate 'Date' %}">{{ event.created_at|date:"d.m.Y H:i" }}</th>
+        <td data-label="{% translate 'Phase' %}">{{ event.get_to_stage_display }}</td>
+        <td data-label="{% translate 'Acteur responsable' %}">{{ event.responsible_label }}</td>
+        <td data-label="{% translate 'Note' %}">{{ event.note|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun mouvement enregistré." %}</p>
+  {% endif %}
+  <p class="note">
+    {% translate "Chaque mouvement est également inscrit dans le registre d’audit de la plateforme, avec l’acteur autorisé qui l’a effectué." %}
+  </p>
+</section>
+{% endblock %}

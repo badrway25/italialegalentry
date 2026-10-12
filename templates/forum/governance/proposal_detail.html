@@ -1,0 +1,123 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n %}
+{% comment %}
+One proposal: who tabled it, what it says, where it stands, and what may happen to it next.
+
+Two deliberate choices:
+
+1. The PROPOSER is rendered through `governance_services.public_profile` — organisation, category,
+   declared interests. The template is handed a dict with exactly three keys, so it could not print
+   an e-mail address even if someone later added one to the model.
+
+2. The transitions offered are the ones the DOMAIN would accept from this caller
+   (`available_transitions`), not every edge of the lifecycle. A screen that offers a button the
+   service will refuse teaches people to distrust the screen. The form posts a target; the service
+   re-checks it, because a form is an interface and an interface can be bypassed.
+
+The decision is rendered as `.outcome`: a WORD at title size with a state rule, and the motivation
+underneath. There is no « approuvé » that could be read as an administrative decision — a commission
+retains or sets aside a proposal, it decides nothing about anyone's situation.
+{% endcomment %}
+{% block page_title %}{{ proposal.title_fr }}{% endblock %}
+{% block meta_description %}{% translate "Proposition du Forum permanent : texte, état et décision motivée." %}{% endblock %}
+
+{% block portal_header %}
+{% include "components/page_header.html" with title=proposal.title_fr eyebrow=proposal.commission.name_fr %}
+{% endblock %}
+
+{% block governance_content %}
+<p class="gloss">
+  <span class="state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+  <span>{{ proposal.reference }}</span>
+  <span>{% blocktranslate with date=proposal.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span>
+</p>
+
+<section class="portal-section" aria-labelledby="proposer-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Proposant" %}</span></p>
+  <h2 class="portal__section-title" id="proposer-title">{% translate "Qui a déposé cette proposition" %}</h2>
+  {% comment %}
+  Exactly three facts about the proposer, and they are the three `public_profile` returns. No name,
+  no e-mail, no telephone — the model holds none of them, so there is nothing here to forget to hide.
+  {% endcomment %}
+  <dl class="portal-facts">
+    <div class="portal-facts__row"><dt>{% translate "Organisation" %}</dt><dd>{{ proposer.organisation }}</dd></div>
+    <div class="portal-facts__row"><dt>{% translate "Catégorie" %}</dt><dd>{{ proposer.category }}</dd></div>
+    {% if proposer.interests %}<div class="portal-facts__row"><dt>{% translate "Intérêts déclarés" %}</dt><dd>{{ proposer.interests }}</dd></div>{% endif %}
+    <div class="portal-facts__row">
+      <dt>{% translate "Commission" %}</dt>
+      <dd>
+        {% safe_url 'forum_governance:commission_detail' proposal.commission.key as commission_url %}
+        {% if commission_url %}<a href="{{ commission_url }}">{{ proposal.commission.name_fr }}</a>{% else %}{{ proposal.commission.name_fr }}{% endif %}
+      </dd>
+    </div>
+    {% if proposal.table %}
+    <div class="portal-facts__row">
+      <dt>{% translate "Table" %}</dt>
+      <dd>
+        {% safe_url 'forum_governance:table_detail' proposal.commission.key proposal.table.key as table_url %}
+        {% if table_url %}<a href="{{ table_url }}">{{ proposal.table.title_fr }}</a>{% else %}{{ proposal.table.title_fr }}{% endif %}
+      </dd>
+    </div>
+    {% endif %}
+  </dl>
+</section>
+
+<section class="portal-section" aria-labelledby="text-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Texte" %}</span></p>
+  <h2 class="portal__section-title" id="text-title">{% translate "La proposition" %}</h2>
+  <div class="t-prose">{{ proposal.body_fr|linebreaks }}</div>
+</section>
+
+{% if proposal.is_decided %}
+<section class="portal-section" aria-labelledby="decision-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Décision" %}</span></p>
+  <h2 class="portal__section-title" id="decision-title">{% translate "Ce que la commission a décidé" %}</h2>
+  <div class="outcome outcome--{% if proposal.state_class == 'done' %}possible{% else %}stop{% endif %}">
+    <p class="outcome__kind">{{ proposal.get_status_display }}</p>
+    {% if proposal.decision_note_fr %}<p class="t-prose">{{ proposal.decision_note_fr }}</p>{% endif %}
+  </div>
+  {% if proposal.decided_at %}
+  <p class="note">{% blocktranslate with date=proposal.decided_at|date:"d.m.Y" %}Décision consignée le {{ date }}. Elle porte sur la proposition, jamais sur la situation d’une personne.{% endblocktranslate %}</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if project %}
+<section class="portal-section" aria-labelledby="project-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suite" %}</span></p>
+  <h2 class="portal__section-title" id="project-title">{% translate "Le projet issu de cette proposition" %}</h2>
+  <ol class="register">
+    <li class="register__item">
+      {% safe_url 'forum_governance:project_detail' project.uuid as project_url %}
+      {% if project_url %}<a class="entry" href="{{ project_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ project.title_fr }}</span>
+        <span class="entry__gloss">{% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}</span>
+        <span class="entry__actor state state--{{ project.state_class }}" data-register="{{ project.status|chip_register:'forum.ProjectStatus' }}">{{ project.get_status_display }}</span>
+      {% if project_url %}</a>{% else %}</div>{% endif %}
+    </li>
+  </ol>
+</section>
+{% endif %}
+
+{% if transition_form %}
+<section class="portal-section" aria-labelledby="transition-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Cycle" %}</span></p>
+  <h2 class="portal__section-title" id="transition-title">{% translate "Faire avancer la proposition" %}</h2>
+  <form method="post" action="{% url 'forum_governance:proposal_transition' proposal.uuid %}" class="form" novalidate>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=transition_form %}
+    {% for field in transition_form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary">{% translate "Enregistrer le nouvel état" %}</button>
+    </div>
+  </form>
+  <p class="note">
+    {% translate "Seules les transitions prévues par le cycle du Forum sont proposées ici, et seulement celles que votre mandat vous permet de demander. Une décision — retenir ou écarter — doit être motivée." %}
+  </p>
+</section>
+{% else %}
+<p class="empty">
+  {% translate "Aucune action ne vous est ouverte sur cette proposition dans son état actuel : soit le cycle ne prévoit plus de suite, soit la décision revient au référent de la commission." %}
+</p>
+{% endif %}
+{% endblock %}

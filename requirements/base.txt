@@ -1,0 +1,10 @@
+# Runtime dependencies — pinned. Every dependency is justified in docs/ARCHITECTURE.md §Dependencies.
+Django==5.2.17                 # LTS (security support to April 2028) — ADR-001
+psycopg[binary]==3.3.5         # PostgreSQL driver (psycopg 3)
+django-environ==0.14.0         # 12-factor settings from environment
+whitenoise==6.12.0             # static files serving with immutable caching
+django-csp==4.0                # Content-Security-Policy middleware (Mozilla)
+django-allauth[mfa]==65.19.4   # accounts: email verification, password reset, rate limits, TOTP MFA — ADR-006
+django-unfold==0.107.0         # back-office UX layer over django.contrib.admin — ADR-005
+Pillow==12.3.0                 # image processing (WebP/AVIF derivatives, upload validation)
+gunicorn==26.2.0               # production WSGI server

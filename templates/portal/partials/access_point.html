@@ -1,0 +1,27 @@
+{% load i18n %}{% comment %}
+PRESCRIBED access point to the reserved area (Impl. §3.10): title, sentence and button come from the
+locked registry (p3.reserved.title / .body / .button) — never retype them. Reusable by any page that
+must offer the entrance to ANONYMOUS visitors (secondary block of the home page, login page):
+
+  {% include "portal/partials/access_point.html" %}                 (h2 by default)
+  {% include "portal/partials/access_point.html" with heading="h3" %}
+
+The button targets the login page and comes back to the dashboard; an authenticated visitor gets
+the link to the dashboard instead (the prescribed button would make no sense for them).
+{% endcomment %}
+<section class="cta-panel" aria-labelledby="reserved-access-title" data-block="reserved-access">
+  <div class="container cta-panel__inner">
+    <div>
+      {% if heading == "h3" %}<h3 id="reserved-access-title" class="cta-panel__title">{% locked "p3.reserved.title" %}</h3>{% else %}<h2 id="reserved-access-title" class="cta-panel__title">{% locked "p3.reserved.title" %}</h2>{% endif %}
+      <p class="cta-panel__text">{% locked "p3.reserved.body" %}</p>
+    </div>
+    <div class="cta-panel__actions">
+      {% if user.is_authenticated %}
+        <a class="btn btn--secondary" href="{% url 'portal:dashboard' %}">{% svg_icon "home" "icon" %}{% translate "Tableau de bord" %}</a>
+      {% else %}
+        {% safe_url 'account_login' as reserved_login_url %}
+        {% if reserved_login_url %}<a class="btn btn--primary btn--upper" href="{{ reserved_login_url }}?next={% url 'portal:dashboard' %}">{% svg_icon "lock" "icon" %}{% locked "p3.reserved.button" %}</a>{% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}Rendered (HTTP 503) while core.SiteSettings.reserved_area_enabled is switched off in the back-office.{% endcomment %}
+{% block page_title %}{% translate "Espace réservé" %}{% endblock %}
+{% block meta_description %}{% translate "L’espace réservé est momentanément indisponible." %}{% endblock %}
+{% block content %}
+{% translate "Espace réservé" as header_title %}
+{% include "components/page_header.html" with title=header_title %}
+<div class="container section section--flush-top">
+  {% translate "Espace momentanément indisponible" as notice_title %}
+  {% translate "L’espace réservé est temporairement fermé pour maintenance. Vos données sont conservées ; merci de réessayer plus tard." as notice_text %}
+  {% include "components/notice.html" with kind="pending" title=notice_title text=notice_text %}
+  <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+</div>
+{% endblock %}

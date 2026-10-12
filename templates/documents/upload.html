@@ -1,0 +1,25 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+A file that answers NO requirement — a personal copy an account keeps in its own space. The
+register (documents/index.html) is the main road; this is the layby, and it says so.
+{% endcomment %}
+{% block page_title %}{% translate "Déposer un fichier" %}{% endblock %}
+{% block meta_description %}{% translate "Dépôt d’un fichier privé." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+{% block portal_content %}
+<h1 class="doc-page__title">{% translate "Déposer un fichier" %}</h1>
+<p class="doc-page__lead">{% translate "Ce fichier ne répondra à aucune pièce demandée. Pour déposer une pièce exigée par votre dossier, passez par sa ligne dans le registre." %}</p>
+<form method="post" action="{% url 'documents:upload' %}" enctype="multipart/form-data" class="form doc-form" novalidate>
+  {% csrf_token %}
+  {% include "components/form_errors.html" with form=form %}
+  {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">{% translate "Déposer" %}</button>
+    <a class="btn btn--secondary" href="{% url 'documents:index' %}">{% translate "Annuler" %}</a>
+  </div>
+</form>
+<p class="note">
+  <span class="note__marker">1</span>
+  {% translate "Formats acceptés : PDF, JPEG, PNG — 10 Mo maximum. Ne déposez aucune donnée sensible qui ne vous est pas demandée." %}
+</p>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% comment %}
+Homepage section header — the FOLIO (art direction A §7.2), which replaces the eyebrow entirely.
+
+The page this replaces carried six eyebrows on one screen, all at the same size, weight, tracking
+and colour, so none of them told the reader anything except "a section starts here". The folio says
+three things instead: WHERE you are (an ordinal), WHAT this is (the running head) and WHEN it was
+revised or from which source it comes.
+
+The ordinal is a CSS counter and is PRESENTATIONAL: the anchor is always the section's slug, so
+reordering the home page from the back-office never breaks a link to it.
+
+Contract: `title_id`, `heading` / `intro` (pages.services.Text), `fallback_title` (str),
+optional `eyebrow` (the running head — kept under its old name so the callers do not all change at
+once), optional `date` (a revision date or a source).
+{% endcomment %}
+<div class="section__header">
+  {% if eyebrow %}
+  <p class="folio">
+    <span class="folio__ordinal" aria-hidden="true"></span>
+    <span class="folio__head">{{ eyebrow }}</span>
+    {% if date %}<span class="folio__date">{{ date }}</span>{% endif %}
+  </p>
+  {% endif %}
+  {% if heading %}<h2 class="section__title" id="{{ title_id }}"{% if heading.lang %} lang="{{ heading.lang }}"{% endif %}>{{ heading }}</h2>{% else %}<h2 class="visually-hidden" id="{{ title_id }}">{{ fallback_title }}</h2>{% endif %}
+  {% if intro %}<p class="section__lead"{% if intro.lang %} lang="{{ intro.lang }}"{% endif %}>{{ intro }}</p>{% endif %}
+</div>

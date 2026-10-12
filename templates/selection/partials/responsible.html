@@ -1,0 +1,49 @@
+{% load i18n %}{% comment %}
+WHO IS ANSWERABLE — included on EVERY screen where a selection stage is visible.
+
+Italy Legal Entry is never the intermediary. Search and selection are reserved activities and they
+belong to an authorised party who is named, whose authorisation has a reference, a jurisdiction and
+an end date, and who answers for what happens here (Master Dossier §4, CONFLICT_REGISTER CR-03).
+
+A screen that shows a selection stage without saying whose act it is implies, by omission, that it
+is the platform's. That omission is the defect: the previous platform had no authorised actor at
+all, and its own staff moved candidates between states.
+
+The band names an ORGANISATION and a FUNCTION, never a natural person.
+
+Contract: `actor` = a selection.AuthorizedActor, `mandate` (optional) = a SelectionMandate.
+{% endcomment %}
+<section class="responsible" aria-labelledby="responsible-title">
+  <p class="t-folio responsible__label" id="responsible-title">{% translate "Acteur responsable de cette phase" %}</p>
+  <p class="responsible__name">{{ actor.organisation.name }}</p>
+  <dl class="responsible__facts">
+    <div class="responsible__fact">
+      <dt class="t-folio">{% translate "Qualité" %}</dt>
+      <dd>{{ actor.get_actor_type_display }}</dd>
+    </div>
+    <div class="responsible__fact">
+      <dt class="t-folio">{% translate "Autorisation" %}</dt>
+      <dd>{{ actor.authorisation_reference }}</dd>
+    </div>
+    <div class="responsible__fact">
+      <dt class="t-folio">{% translate "Juridiction" %}</dt>
+      <dd>{{ actor.jurisdiction }}</dd>
+    </div>
+    <div class="responsible__fact">
+      <dt class="t-folio">{% translate "Validité" %}</dt>
+      <dd>
+        <span class="state state--{{ actor.status_word }}" data-register="{{ actor.status_word|chip_register:'selection.actor' }}">
+          {% if actor.status_word == 'valid' %}{% translate "En vigueur" %}
+          {% elif actor.status_word == 'expired' %}{% translate "Échue" %}
+          {% elif actor.status_word == 'suspended' %}{% translate "Suspendue" %}
+          {% else %}{% translate "Retirée" %}{% endif %}
+        </span>
+        <span class="t-caption">{% if actor.valid_until %}{% blocktranslate with date=actor.valid_until|date:"d.m.Y" %}jusqu’au {{ date }}{% endblocktranslate %}{% else %}{% translate "sans échéance inscrite" %}{% endif %}</span>
+      </dd>
+    </div>
+  </dl>
+  <p class="note responsible__note">
+    {% translate "Italy Legal Entry™ n’est pas l’intermédiaire de ce processus et ne prend aucune décision sur les personnes. La sélection est conduite par l’acteur autorisé nommé ci-dessus, sous sa responsabilité et dans les limites de son autorisation." %}
+    {% if actor.scope_note %}<span class="responsible__scope">{{ actor.scope_note }}</span>{% endif %}
+  </p>
+</section>

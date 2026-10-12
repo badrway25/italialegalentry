@@ -1,0 +1,138 @@
+{% extends "companies/base_companies.html" %}{% load i18n %}
+{% comment %}
+THE COMPANY DASHBOARD — design V4 (CREATIVE_DIRECTION.md §3.8): NEUTRAL + DATA.
+
+It turns around the NEEDS, never around people. There is no list of persons on this screen, no
+candidate card, no search over persons, no count of matching persons — and there is no route from
+here to any of those, because none exists in this application. No marketplace aesthetics.
+
+  ContextHeader   eyebrow «Entreprise», the legal name as the h1, the meta row (the verification as
+                  a WORD with its register — a fact the project checked about the legal entity,
+                  never an approval of anyone · secteur · établissement · «n besoins en cours»)
+                  and ONE primary action, the next step's, when it has a link
+  Row 1 — 8/4     «Votre prochaine action» (level 2, the responsibility bar: a dashed glyph when no
+                  party is designated) · «Mon entreprise» (level 1): the identity as held, the
+                  verification and what it waits on, the way to the identity page
+  Row 2 — 12      «Mes besoins en compétences» as a semantic Table (partials/need_table.html)
+  Row 3 — 12      Communications — the account's own messages
+  Without company the workspace head keeps the existing wording and the next step is the
+  declaration.
+
+The shell's next-action band is not drawn (base_portal.html block): the panel above carries it.
+Not built, and said: the «Formation liée» panel of §3.8.4 — no data links a training to a
+company in this application, and a panel with nothing real to show would be an invented function.
+An empty region is one hairline and one sentence naming who fills it and when, with the resolving
+action inline — never a dashed box with an icon.
+{% endcomment %}
+{% block page_title %}{% translate "Espace entreprise" %}{% endblock %}
+{% block meta_description %}{% translate "Vos besoins en compétences, l’identité de votre entreprise et vos communications." %}{% endblock %}
+
+{% block next_action_block %}{% endblock %}
+
+{% block portal_header %}
+{% if company %}
+<header class="ctx ctx--company" data-ctx>
+  <div class="ctx__words">
+    <p class="ctx__eyebrow">{% translate "Entreprise" %}</p>
+    <h1 class="ctx__title" dir="auto">{{ company.legal_name }}</h1>
+    <p class="ctx__meta">
+      <span class="chip state state--{{ company.verification_state_modifier }}{% if company.is_verified %} chip--seal{% endif %}" data-register="{{ company.verification_status|chip_register:'accounts.VerificationStatus' }}">{{ company.verification_label }}</span>
+      {% if company.sector %}<span>{{ company.sector.label }}</span>{% endif %}
+      {% if company.city %}<span>{{ company.city }}{% if company.country %}, {{ company.country }}{% endif %}</span>{% endif %}
+      <span class="ctx__count">{% blocktranslate count n=open_needs|length %}{{ n }} besoin en cours{% plural %}{{ n }} besoins en cours{% endblocktranslate %}</span>
+    </p>
+  </div>
+  {% if next_action and next_action.url %}
+  <div class="ctx__action">
+    <a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+  </div>
+  {% endif %}
+</header>
+{% else %}
+<header class="ws-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Espace entreprise" %}</h1>
+    <p class="ws-head__lead">{% translate "Déclarez votre entreprise, puis exprimez vos besoins en compétences. Le projet recueille des besoins : il ne présente aucune personne et ne promet aucun résultat." %}</p>
+  </div>
+</header>
+{% endif %}
+{% endblock %}
+
+{% block companies_content %}
+<div class="ws-grid">
+
+  {% comment %} Row 1 — the next step, and the company {% endcomment %}
+  <section class="panel panel--l2 panel--edge ws-next{% if not company %} ws-next--alone{% endif %}{% if next_action %} ws-next--{{ next_action.urgency }}{% endif %}" aria-labelledby="ws-next-title">
+    {% if next_action %}
+    <p class="panel__eyebrow" id="ws-next-title">{% if next_action.is_for_someone_else %}{% translate "Prochaine étape" %}{% else %}{% translate "Votre prochaine action" %}{% endif %}</p>
+    <p class="panel__title">{{ next_action.label }}</p>
+    {% if next_action.detail %}<p class="panel__text">{{ next_action.detail }}</p>{% endif %}
+    <div class="resp">
+      {% include "components/glyph.html" with glyph=next_action.responsible_actor|actor_glyph size="sm" %}
+      <span class="resp__label">{% translate "Responsable" %}</span>
+      <span class="resp__actor">{% if next_action.is_for_someone_else %}{{ next_action.get_responsible_display }}{% else %}{% translate "Votre entreprise" %}{% endif %}</span>
+      {% if next_action.is_for_someone_else %}<span class="resp__note">{% translate "Cette étape ne dépend pas de vous." %}</span>{% endif %}
+    </div>
+    {% if next_action.url and not company %}<p class="panel__actions"><a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    {% else %}
+    <p class="panel__eyebrow" id="ws-next-title">{% translate "Prochaine étape" %}</p>
+    <p class="panel__text">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
+    {% endif %}
+  </section>
+
+  {% if company %}
+  <section class="panel panel--l1 ws-company" aria-labelledby="identity-title">
+    <div class="company-id">
+      {% include "components/glyph.html" with glyph="building" size="lg" %}
+      <p class="panel__eyebrow" id="identity-title">{% translate "Mon entreprise" %}</p>
+    </div>
+    <dl class="facts facts--two">
+      <div class="facts__row"><dt>{% translate "Dénomination légale" %}</dt><dd dir="auto">{{ company.legal_name }}</dd></div>
+      <div class="facts__row"><dt>{% translate "Immatriculation" %}</dt><dd>{% if company.registration_number %}<span class="ctx__ref">{{ company.registration_number }}</span>{% else %}<span class="table__none" aria-hidden="true">—</span>{% endif %}</dd></div>
+      <div class="facts__row"><dt>{% translate "Référent" %}</dt><dd dir="auto">{{ company.contact_name }} — {{ company.contact_function }}</dd></div>
+    </dl>
+    <p class="panel__text">{% translate "La vérification est prononcée par l’équipe du projet sur les éléments déclarés. Elle porte sur l’entreprise, jamais sur une personne." %}{% if not company.is_verified %} {% translate "La transmission d’un besoin est possible une fois la vérification prononcée." %}{% endif %}</p>
+    <p class="panel__actions"><a class="btn btn--link btn--sm" href="{{ profile_url }}">{% translate "Voir et modifier l’identité" %}</a></p>
+  </section>
+
+  {% comment %} Row 2 — the needs {% endcomment %}
+  <section class="panel panel--l1 ws-wide ws-needs" aria-labelledby="needs-title">
+    <div class="panel__head">
+      <h2 class="panel__section" id="needs-title">{% translate "Mes besoins en compétences" %}</h2>
+      {% if can_manage and create_url %}<a class="btn btn--secondary btn--sm" href="{{ create_url }}">{% translate "Nouveau besoin" %}</a>{% endif %}
+    </div>
+    {% if needs %}
+    {% include "companies/partials/need_table.html" with needs=needs %}
+    {% if needs_url %}<p class="panel__actions"><a class="btn btn--link btn--sm" href="{{ needs_url }}">{% translate "Tous mes besoins" %}</a></p>{% endif %}
+    {% else %}
+    <p class="empty">
+      {% translate "Un besoin décrit un poste : territoire, métier, tâches confiées, compétences obligatoires et souhaitées, langue, sécurité, calendrier. Il ne décrit jamais une personne." %}
+      {% if can_manage and create_url %}<a href="{{ create_url }}">{% translate "Créer mon premier besoin" %}</a>{% endif %}
+    </p>
+    {% endif %}
+  </section>
+
+  {% comment %} Row 3 — the account's own communications {% endcomment %}
+  <section class="panel panel--l1 ws-wide ws-messages" aria-labelledby="messages-title">
+    <div class="panel__head">
+      <h2 class="panel__section" id="messages-title">{% translate "Communications" %}</h2>
+    </div>
+    {% if communications %}
+    <ul class="threads" role="list">
+      {% for message in communications %}
+      <li class="threads__row{% if message.is_unread %} threads__row--unread{% endif %}">
+        <a class="threads__link" href="{{ message.url }}">
+          <span class="threads__subject">{{ message.subject }}</span>
+          <span class="threads__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} <span class="chip state state--review" data-register="neutro">{% translate "Nouveau" %}</span>{% endif %}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">{% translate "Les messages que l’équipe du projet adresse à votre compte apparaîtront ici." %}</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}

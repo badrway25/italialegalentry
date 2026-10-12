@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}{{ project.PROJECT_NAME }} — {% translate "Lettre d’information : nouvelle demande d’inscription" %}
+
+{% translate "Une demande d’inscription à la lettre d’information a été enregistrée (en attente de confirmation par double opt-in)." %}
+{% translate "Type" %} : {{ state }}
+{% translate "Langue" %} : {{ language }}
+{% translate "Date" %} : {{ requested_at|date:"d.m.Y H:i" }}
+
+{% translate "Aucune donnée personnelle n’est transmise dans ce message : la liste des inscriptions est consultable dans le back-office (Consensi & GDPR › Iscrizioni newsletter)." %}
+
+--
+{{ project.PROMOTER }}
+{% endautoescape %}

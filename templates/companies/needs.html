@@ -1,0 +1,33 @@
+{% extends "companies/base_companies.html" %}{% load i18n %}
+{% block page_title %}{% translate "Mes besoins en compétences" %}{% endblock %}
+{% block meta_description %}{% translate "Les besoins exprimés par votre entreprise, leur état et l’intervenant responsable de chacun." %}{% endblock %}
+
+{% block portal_header %}
+{% include "companies/partials/company_header.html" with company=company as_heading=True %}
+{% endblock %}
+
+{% block companies_content %}
+<section class="portal-section" aria-labelledby="needs-title">
+  <p class="folio">
+    <span class="folio__ordinal" aria-hidden="true"></span>
+    <span class="folio__head">{% translate "Registre des besoins" %}</span>
+  </p>
+  <h2 class="portal__section-title" id="needs-title">{% translate "Mes besoins en compétences" %}</h2>
+  <p class="portal__summary">
+    {% translate "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste — jamais une personne — et porte l’état de son traitement ainsi que l’intervenant qui en répond." %}
+  </p>
+
+  {% if needs %}
+  {% include "companies/partials/need_register.html" with needs=needs %}
+  {% else %}
+  <p class="empty">
+    {% translate "Aucun besoin pour l’instant. Un besoin décrit le territoire, le métier, les tâches confiées, les compétences obligatoires et souhaitées, la langue, la sécurité et le calendrier." %}
+    {% if can_manage and create_url %}<a href="{{ create_url }}">{% translate "Créer un besoin" %}</a>{% endif %}
+  </p>
+  {% endif %}
+
+  {% if can_manage and create_url %}
+  <p class="companies-actions"><a class="btn btn--primary btn--sm" href="{{ create_url }}">{% translate "Nouveau besoin" %}</a></p>
+  {% endif %}
+</section>
+{% endblock %}

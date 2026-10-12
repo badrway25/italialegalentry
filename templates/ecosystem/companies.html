@@ -1,0 +1,53 @@
+{% extends "ecosystem/_layout.html" %}{% load i18n enquiries_tags %}
+{% comment %}
+Espace Entreprises — PHASE 1 (Implementation §1.1): online now, never gated, independent of gate G3.
+Replaces the former recruitment page: no ranking, no selection, no candidate profiles.
+Prescribed texts: p1.companies.title (h1), p1.companies.intro (lead), p1.companies.quote (pull-quote),
+and — only while gate G3 is open — the prescribed FAQ answer faq_recruitment_agency (p3.faq.items).
+The form is NOT re-implemented here: {% company_needs_form %} (enquiries) renders the one canonical
+« Recueil des besoins » form, posting to enquiries:company_needs; while gate G2 is closed the same
+tag renders components/form_unavailable.html.
+{% endcomment %}
+{% block space_header %}
+{% include "components/page_header.html" with eyebrow=_("Espace Entreprises") title=title.text lead=intro.text lang=title.lang_attr %}
+{% endblock %}
+
+{% block space_main %}
+{% include "ecosystem/partials/photo.html" %}
+{% include "components/blockquote.html" with text=quote.text lang=quote.lang_attr %}
+{% include "ecosystem/partials/note.html" %}
+
+<section id="demarche" class="ecosystem-section ecosystem-moments" aria-labelledby="demarche-header">
+  {% include "components/section_header.html" with id="demarche-header" eyebrow=_("La démarche") title=_("Trois temps, une même démarche") %}
+  {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral UI wording limited to the vocabulary of the prescribed introduction; no procedure, no delay, no outcome is described.{% endcomment %}
+  {% include "components/timeline.html" with steps=moments label=_("Les trois temps de la démarche") %}
+</section>
+
+<section id="formulaire" class="ecosystem-section ecosystem-form" aria-labelledby="formulaire-header">
+  {% include "components/section_header.html" with id="formulaire-header" eyebrow=_("Formulaire") title=_("Recueil des besoins") %}
+  {% company_needs_form %}
+  <p class="ecosystem-form__destination text-small">
+    {% svg_icon "mail" "icon icon--sm" %}
+    {% translate "Toutes les demandes transmises par les formulaires du site parviennent à une adresse unique :" %}
+    <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
+  </p>
+</section>
+
+{% if guarantee %}
+<section id="transparence" class="ecosystem-section ecosystem-guarantee" aria-labelledby="transparence-header" data-block="recruitment-guarantee">
+  {% include "components/section_header.html" with id="transparence-header" eyebrow=_("Transparence") title=_("Ce que la plateforme fait, et ne fait pas") %}
+  {% include "components/notice.html" with kind="institutional" icon="shield" title=guarantee.question text=guarantee.answer lang=guarantee.lang_attr %}
+  {% if guarantee.faq_url %}<p><a class="link-arrow" href="{{ guarantee.faq_url }}">{% translate "Toutes les questions fréquentes" %} {% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+</section>
+{% endif %}
+
+{% if links.forum or links.pilot %}
+<section class="ecosystem-section ecosystem-related" aria-labelledby="related-header">
+  {% include "components/section_header.html" with id="related-header" title=_("Pour aller plus loin") %}
+  <ul class="list-reset grid-auto">
+    {% if links.forum %}<li>{% locked "p2.forum.header.subtitle" as forum_subtitle %}{% include "components/card.html" with flat=True url=links.forum title=_("Le Forum Vénétie–Maroc") text=forum_subtitle %}</li>{% endif %}
+    {% if links.pilot %}<li>{% locked "p3.pilot.title" as pilot_title %}{% include "components/card.html" with flat=True url=links.pilot title=pilot_title text=_("Présentation du projet et de la séquence proposée.") %}</li>{% endif %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

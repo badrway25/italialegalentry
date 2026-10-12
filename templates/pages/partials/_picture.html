@@ -1,0 +1,9 @@
+{% comment %}
+Responsive, self-hosted photograph. Contract: `photo` (pages.services.Photo: src, srcset, alt,
+alt_lang, width, height), optional `sizes` (default 100vw), `loading` ("lazy" default | "eager").
+WebP derivatives through <source>, the 1440 JPG as <img> fallback. Never an external host.
+{% endcomment %}
+<picture>
+  {% if photo.srcset %}<source type="image/webp" srcset="{{ photo.srcset }}" sizes="{{ sizes|default:'100vw' }}">{% endif %}
+  <img src="{{ photo.src }}" alt="{{ photo.alt }}"{% if photo.alt_lang %} lang="{{ photo.alt_lang }}"{% endif %} width="{{ photo.width }}" height="{{ photo.height }}" loading="{{ loading|default:'lazy' }}" decoding="async"{% if loading == 'eager' %} fetchpriority="high"{% endif %}>
+</picture>

@@ -1,0 +1,144 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n %}
+{% comment %}
+« Ma participation » — the first screen of the module, and the one that answers the four questions
+the client made an acceptance criterion: where am I, what is my path, what should I do next, who is
+responsible.
+
+  1. MES ÉDITIONS      the profiles this account holds, with the role they carry
+  2. MES MANDATS       commission, capacity, FROM and TO — the dates are the point, so they are a
+                       column, not a tooltip. A mandate that has lapsed is listed separately and
+                       marked, because « you used to sit on this » is a fact worth reading once.
+  3. MES COMMISSIONS   the perimeter this account can actually open
+  4. MES PROPOSITIONS  the ones still moving; decided ones live in the proposals register
+
+Nothing on this page is invented to make it look populated: an empty region is one hairline and one
+sentence saying who fills it and when.
+{% endcomment %}
+{% block page_title %}{% translate "Forum permanent — ma participation" %}{% endblock %}
+{% block meta_description %}{% translate "Votre participation au Forum permanent : éditions, mandats en commission et propositions en cours." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Ma participation" as header_title %}
+{% translate "Les éditions du Forum permanent auxquelles vous prenez part, les mandats que vous détenez et les propositions que vous suivez." as header_lead %}
+{% translate "Forum permanent" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+
+{% block governance_content %}
+<section class="portal-section" aria-labelledby="editions-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Éditions" %}</span></p>
+  <h2 class="portal__section-title" id="editions-title">{% translate "Mes éditions" %}</h2>
+  {% if profiles %}
+  {% for row in profiles %}
+  <ol class="register">
+    <li class="register__item">
+      <div class="entry">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ row.edition.title_fr }}</span>
+        <span class="entry__gloss">
+          {{ row.profile.display_label }} — {{ row.profile.get_category_display }}
+          {% if row.profile.declared_interests %}<br>{{ row.profile.declared_interests }}{% endif %}
+        </span>
+        <span class="entry__actor state state--{{ row.edition.state_class }}" data-register="{{ row.edition.status|chip_register:'forum.EditionStatus' }}">{{ row.profile.get_role_display }}</span>
+      </div>
+    </li>
+  </ol>
+
+  {% if row.mandates %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-participation-1-{{ forloop.counter }}">
+    <table class="data-table">
+      <caption id="t-participation-1-{{ forloop.counter }}" class="visually-hidden">{% blocktranslate with edition=row.edition.title_fr %}Mandats en cours pour {{ edition }}{% endblocktranslate %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Commission" %}</th>
+          <th scope="col">{% translate "Qualité" %}</th>
+          <th scope="col">{% translate "Depuis le" %}</th>
+          <th scope="col">{% translate "Jusqu’au" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mandate in row.mandates %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Commission' %}">
+            {% safe_url 'forum_governance:commission_detail' mandate.commission.key as commission_url %}
+            {% if commission_url %}<a href="{{ commission_url }}">{{ mandate.commission.name_fr }}</a>{% else %}{{ mandate.commission.name_fr }}{% endif %}
+          </th>
+          <td data-label="{% translate 'Qualité' %}">{{ mandate.get_role_display }}</td>
+          <td data-label="{% translate 'Depuis le' %}"><time datetime="{{ mandate.valid_from|date:'Y-m-d' }}">{{ mandate.valid_from|date:"d.m.Y" }}</time></td>
+          {% comment %}A dash for « sans échéance », never an empty cell.{% endcomment %}
+          <td data-label="{% translate 'Jusqu’au' %}">{% if mandate.valid_until %}<time datetime="{{ mandate.valid_until|date:'Y-m-d' }}">{{ mandate.valid_until|date:"d.m.Y" }}</time>{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun mandat en cours sur cette édition. Un mandat est ouvert par le secrétariat du Forum, pour une période déterminée." %}</p>
+  {% endif %}
+
+  {% if row.lapsed_mandates %}
+  <p class="gloss">{% translate "Mandats échus ou révoqués — ils n’ouvrent plus aucun accès :" %}</p>
+  <ul class="gloss">
+    {% for mandate in row.lapsed_mandates %}
+    <li>
+      {{ mandate.commission.name_fr }} — {{ mandate.get_role_display }}
+      <span class="state state--expired" data-register="nullo">{% translate "échu" %}</span>
+      {% if mandate.valid_until %}<time datetime="{{ mandate.valid_until|date:'Y-m-d' }}">{{ mandate.valid_until|date:"d.m.Y" }}</time>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endfor %}
+  {% else %}
+  <p class="empty">
+    {% translate "Vous ne participez à aucune édition du Forum permanent. Le secrétariat du Forum ouvre un profil de participation lorsqu’une organisation rejoint une édition." %}
+  </p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="my-commissions-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Commissions" %}</span></p>
+  <h2 class="portal__section-title" id="my-commissions-title">{% translate "Les commissions que je peux consulter" %}</h2>
+  {% if commissions %}
+  <ol class="register">
+    {% for commission in commissions %}
+    <li class="register__item">
+      {% safe_url 'forum_governance:commission_detail' commission.key as commission_url %}
+      {% if commission_url %}<a class="entry" href="{{ commission_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ commission.name_fr }}</span>
+        <span class="entry__gloss">{{ commission.edition.title_fr }}{% if commission.scope_fr %} — {{ commission.scope_fr }}{% endif %}</span>
+        <span class="entry__actor state state--{{ commission.state_class }}" data-register="{{ commission.status|chip_register:'forum.CommissionStatus' }}">{{ commission.get_status_display }}</span>
+      {% if commission_url %}</a>{% else %}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">{% translate "Aucune commission ne vous est ouverte : l’accès à une commission suit un mandat, et un mandat a une date de début et une date de fin." %}</p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="my-proposals-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Propositions" %}</span></p>
+  <h2 class="portal__section-title" id="my-proposals-title">{% translate "Propositions en cours d’examen" %}</h2>
+  {% if open_proposals %}
+  <ol class="register">
+    {% for proposal in open_proposals %}
+    <li class="register__item">
+      {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
+      {% if proposal_url %}<a class="entry" href="{{ proposal_url }}">{% else %}<div class="entry">{% endif %}
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ proposal.title_fr }}</span>
+        <span class="entry__gloss">{{ proposal.reference }} — {{ proposal.commission.name_fr }}</span>
+        <span class="entry__actor state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+      {% if proposal_url %}</a>{% else %}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">
+    {% translate "Aucune proposition en cours. Une proposition s’élabore dans une commission dont vous êtes membre ; elle reste un brouillon visible de vous seul jusqu’à son dépôt." %}
+  </p>
+  {% endif %}
+</section>
+{% endblock %}

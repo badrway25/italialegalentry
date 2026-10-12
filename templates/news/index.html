@@ -1,0 +1,50 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% if category %}{{ category.name }} · {% endif %}{% translate "Actualités" %}{% if page_obj.number > 1 %} · {% blocktranslate with n=page_obj.number %}page {{ n }}{% endblocktranslate %}{% endif %}{% endblock %}
+{% block meta_description %}{% if phase3 %}{% locked "p3.news.body" as news_body %}{{ news_body|striptags }}{% else %}{% translate "Actualités d’Italy Legal Entry™ : nouveautés, échéances et activités de l’écosystème." %}{% endif %}{% endblock %}
+{% block body_class %}page-news{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<header class="page-header container">
+  {% if phase3 %}
+    {% locked "p3.news.title" "h1" "page-header__title" %}
+    {% locked "p3.news.body" "p" "page-header__lead" %}
+  {% else %}
+    <h1 class="page-header__title">{% translate "Actualités" %}</h1>
+  {% endif %}
+</header>
+
+<div class="container news-index">
+  {% if categories %}
+  <nav class="filter-bar" aria-label="{% translate 'Filtrer par catégorie' %}">
+    <ul class="filter-bar__list">
+      <li><a class="filter-bar__link{% if not category %} is-active{% endif %}" href="{% url 'news:index' %}"{% if not category %} aria-current="true"{% endif %}>{% translate "Toutes" %}</a></li>
+      {% for cat in categories %}
+      <li><a class="filter-bar__link{% if category and category.pk == cat.pk %} is-active{% endif %}" href="{% url 'news:index' %}?categorie={{ cat.slug }}"{% if category and category.pk == cat.pk %} aria-current="true"{% endif %}{% if cat.name_is_fallback %} lang="fr"{% endif %}>{{ cat.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  {% if articles %}
+  <section class="news-list" aria-label="{% translate 'Liste des articles' %}">
+    {% for article, texts in articles %}
+      {% include "news/_card.html" with article=article texts=texts heading_level=2 %}
+    {% endfor %}
+  </section>
+  {% include "components/pagination.html" with page_obj=page_obj query=query %}
+  {% else %}
+    {% if category %}
+      {% translate "Aucun article dans cette catégorie pour le moment." as empty_title %}
+      {% url 'news:index' as index_url %}
+      {% translate "Voir toutes les actualités" as empty_action %}
+      {% include "components/empty_state.html" with title=empty_title action_label=empty_action action_url=index_url %}
+    {% else %}
+      {% translate "Aucune actualité publiée pour le moment." as empty_title %}
+      {% translate "Les nouveautés normatives, les échéances officielles et les activités de l’écosystème seront publiées ici." as empty_text %}
+      {% include "components/empty_state.html" with title=empty_title text=empty_text %}
+    {% endif %}
+  {% endif %}
+</div>
+
+{% include "news/_newsletter.html" %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "ecosystem/_layout.html" %}{% load i18n %}
+{% comment %}
+Espace Universités et Formation — PHASE 3 (Implementation §3.5): gated by G3 (404 while closed).
+Prescribed texts: p3.universities.intro (lead, verbatim) and p3.universities.button.
+The enumeration of the introduction is ALSO shown as two styled lists (actors / fields), cut on
+":" and "," only — no word is altered; that block is presentational (aria-hidden) because the
+verbatim sentence right above it is the accessible, authoritative text.
+The form is not re-implemented: the prescribed button links enquiries:university_proposal.
+CONTENT_PENDING_LEGAL_REVIEW — no programme, recognition, duration or attestation value is described.
+{% endcomment %}
+{% block space_header %}
+{% locked "p3.universities.intro" as intro_html %}
+{% include "components/page_header.html" with eyebrow=_("Écosystème") title=_("Espace Universités et Formation") lead=intro_html %}
+{% endblock %}
+
+{% block space_main %}
+{% include "ecosystem/partials/photo.html" %}
+{% include "ecosystem/partials/note.html" %}
+
+{# Visual breakdown of the sentence above: hidden from assistive technologies, which already read the verbatim lead. #}
+<div id="domaines" class="ecosystem-section" aria-hidden="true" data-block="universities-enumeration">
+  <div class="ecosystem-enum-groups">
+    <div class="ecosystem-enum-group">
+      <p class="eyebrow">{% translate "Acteurs" %}</p>
+      {% include "ecosystem/partials/enumeration.html" with items=intro.label_items lang=intro.source.lang_attr icon="university" %}
+    </div>
+    <div class="ecosystem-enum-group">
+      <p class="eyebrow">{% translate "Domaines" %}</p>
+      {% include "ecosystem/partials/enumeration.html" with items=intro.items lang=intro.source.lang_attr icon="check" columns="2" %}
+    </div>
+  </div>
+</div>
+
+<div id="partenariat" class="ecosystem-cta">
+  {% locked "p3.universities.button" as button_label %}
+  {% include "components/cta_panel.html" with title=_("Proposer un partenariat") text=_("Présentez votre établissement et votre proposition : chaque demande est lue par l’équipe du projet.") primary_label=button_label primary_url=links.university_proposal %}
+</div>
+
+{% if links.training or links.pathways %}
+<section class="ecosystem-section ecosystem-related" aria-labelledby="related-header">
+  {% include "components/section_header.html" with id="related-header" title=_("Pour aller plus loin") %}
+  <ul class="list-reset grid-auto">
+    {% if links.training %}<li>{% include "components/card.html" with flat=True url=links.training title=_("Formation : avant le départ et après l’arrivée") text=_("Deux temps d’un même parcours, dans l’Espace Personnes.") %}</li>{% endif %}
+    {% if links.pathways %}<li>{% include "components/card.html" with flat=True url=links.pathways title=_("Les parcours réguliers") text=_("Dont le parcours d’études et de formation, dans l’Espace Personnes.") %}</li>{% endif %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

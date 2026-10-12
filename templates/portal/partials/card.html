@@ -1,0 +1,31 @@
+{% load i18n %}{% comment %}
+Dashboard panel. Contract: `card` = portal.services.Card (key, title, icon, available, count,
+count_label, badge_label/kind, items[CardItem], url, url_label, empty_*). Real rows or an explicit
+empty state — never a placeholder figure.
+{% endcomment %}
+<section class="portal-card" aria-labelledby="card-{{ card.key }}-title" data-card="{{ card.key }}">
+  <div class="portal-card__header">
+    {% svg_icon card.icon "icon" %}
+    <h2 class="portal-card__title" id="card-{{ card.key }}-title">{{ card.title }}</h2>
+    {% if card.badge_label %}{% include "components/badge.html" with label=card.badge_label kind=card.badge_kind %}{% endif %}
+  </div>
+  {% if not card.available %}
+    {% translate "Cette rubrique est momentanément indisponible. Vos données ne sont pas affectées." as unavailable_text %}
+    {% include "components/notice.html" with kind="pending" text=unavailable_text %}
+  {% elif card.items %}
+    <p class="portal-card__figure"><span class="portal-card__count" data-count="{{ card.count }}">{{ card.count }}</span> <span>{{ card.count_label }}</span></p>
+    <ul class="portal-list">
+      {% for item in card.items %}
+      <li class="portal-list__item">
+        <p class="portal-list__title"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{% if item.url %}<a href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</p>
+        <p class="portal-list__meta">{% if item.date %}<time datetime="{{ item.date|date:'c' }}">{{ item.date|date:"d.m.Y" }}</time>{% if item.meta %} · {% endif %}{% endif %}{{ item.meta }}</p>
+        {% if item.badge_label %}<div class="portal-list__aside">{% include "components/badge.html" with label=item.badge_label kind=item.badge_kind %}</div>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% if card.url %}<p class="portal-card__footer"><a class="link-arrow" href="{{ card.url }}">{{ card.url_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  {% else %}
+    {% include "components/empty_state.html" with title=card.empty_title text=card.empty_text action_label=card.empty_action_label action_url=card.empty_action_url icon=card.icon %}
+    {% if card.url %}<p class="portal-card__footer"><a class="link-arrow" href="{{ card.url }}">{{ card.url_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  {% endif %}
+</section>

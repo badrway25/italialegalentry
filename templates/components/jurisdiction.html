@@ -1,0 +1,41 @@
+{% load i18n %}{% comment %}
+THE JURISDICTION BAR — who is answerable for each stretch of the process.
+
+The one device the Design Council asked for unanimously: all four judges, with four different
+mandates, named it independently as the element to carry into the selected direction. Their argument
+was that a register device and a route rule both encode SEQUENCE, which every process diagram on the
+web encodes, while this encodes JURISDICTION — which is this project's actual subject, and the thing
+a person who has already been approached by someone claiming to act for an administration most needs
+to be able to read.
+
+It is also the graphic answer to the product's own acceptance criterion: "chi è responsabile".
+
+Four owners, four textures. The texture is not decoration: a reader who cannot use colour, a reader
+in greyscale and a reader under forced colours all still get the answer, because the hatch and the
+legend carry it. The legend is a list, so a screen reader reads owners and stretches in order.
+
+Contract: `segments` = list of {owner, label, share} where owner is one of
+morocco | italy | platform | authority, and share is an integer from 1 to 6 (relative width).
+
+The share travels as a data attribute, not as an inline style: the public Content-Security-Policy
+is self-only with no unsafe-inline, so a style attribute would be silently dropped in production and
+the bar would render with four equal segments — a diagram quietly telling the wrong story.
+Optional `title` and `caption`.
+{% endcomment %}
+<div class="jurisdiction">
+  {% if title %}<p class="t-folio jurisdiction__title">{{ title }}</p>{% endif %}
+  <div class="jurisdiction__bar" role="img" aria-label="{% translate 'Répartition des responsabilités le long du parcours' %}">
+    {% for seg in segments %}
+    <span class="jurisdiction__segment jurisdiction__segment--{{ seg.owner }}" data-share="{{ seg.share }}"></span>
+    {% endfor %}
+  </div>
+  <ul class="jurisdiction__legend">
+    {% for seg in segments %}
+    <li class="jurisdiction__key">
+      <span class="jurisdiction__swatch jurisdiction__segment--{{ seg.owner }}" aria-hidden="true"></span>
+      <span>{{ seg.label }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if caption %}<p class="t-caption jurisdiction__caption">{{ caption }}</p>{% endif %}
+</div>

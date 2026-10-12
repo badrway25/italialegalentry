@@ -1,0 +1,428 @@
+/* ============================================================================
+   CHIP V3 — «la vidimazione»: the status chip as a register stamp
+
+   From docs/design-v3/specs/badges.md, round 3 — the one specification whose
+   repair re-measured every figure from screenshot pixels. Its rule set is kept
+   as written; what is different is the SCOPE, and the reason is below.
+
+   THE IDEA. A chip is a word, a rule beside it, and a faint body. The word is
+   never coloured: it takes the chapter's ink. The colour lives only in the
+   MARK — the rule and the 8% body tint — and even the mark carries no verdict:
+   «conforme» is ink, without chroma, closed by a hairline under the body and a
+   check, because this platform approves nothing (tokens.css §STATE,
+   DESIGN_SYSTEM_2026 §4.3). Meaning is carried three times without colour:
+   the word, the STYLE of the rule (solid · dashed · double · dotted) and the
+   GEOMETRY of the rule (1/3/4px, and the closing rules above and below).
+
+   THE REGISTER comes from Python (apps/core/chips.py), per producer and per
+   enum member, and reaches the DOM as `data-register`. A chip with no
+   register is painted with a DOTTED rule: unmapped, visible, tested.
+
+   THE SPECIFICITY LAW (spec §4.2). The register is written on a BARE attribute
+   selector, (0,1,0). Every modifier is written `:is(.chip,.badge).chip--x`,
+   (0,2,0), so a modifier always wins over a register by exactly one class.
+   Round 2 had it the other way round and the seal never turned bronze.
+
+   SCOPE. `.badge` came first (its nine includes take the register from `kind`);
+   `.state` joined once its 65 sites on 33 templates carried `data-register`,
+   in the same commit that retired register.css's `.state--*` colour rules —
+   so that no chip was ever painted «unmapped» merely for not having been
+   converted yet. The class words (`state--done` and the rest) stay in the
+   markup and mean nothing to the cascade any more.
+
+   Contrast is the spec's table, re-read from pixels, eight grounds: worst word
+   5.10:1 (nullo on --mid-3), worst mark 3.14:1 (nullo on --min-1, where the
+   body is absent and the rule meets only the ground).
+   ========================================================================== */
+
+:root {
+  --chip-neutral: var(--ink-2);
+  --chip-action: var(--pending-700);
+  --chip-conform: var(--ink);
+  --chip-refuse: var(--err-700);
+  --chip-void: var(--hairline-strong);
+  --chip-seal: var(--seal-600);
+  --chip-ink: var(--ink);
+  --chip-ink-void: var(--ink-3);
+  --chip-rest: var(--hairline);
+  --chip-tint-base: 8%;
+  --chip-tint-step: 5%;
+  --chip-gutter: 3px;
+  --chip-glyph: 14px;
+  --chip-pad-b: 2px;
+  --chip-track: 21px;
+  /* The light luminosity of the pending brown, for a midnight ground: --pending-700 on --mid-3
+     is 1.99:1, below what a mark needs. Same hue, second luminosity, as V2 already does for
+     green and bronze; Lab chroma 27.5, below --ok-300's 38.9. 9.66:1 on --mid-1. */
+  --pending-300: #d8bd8e;
+}
+
+.on-inverse,
+.section--verso,
+.plate--verso,
+.site-footer {
+  --chip-neutral: var(--on-dark-3);
+  --chip-action: var(--pending-300);
+  --chip-conform: var(--on-dark-2);
+  --chip-refuse: var(--err-300);
+  --chip-void: var(--on-dark-3);
+  --chip-seal: var(--seal-300);
+  --chip-ink: var(--on-dark);
+  --chip-ink-void: var(--on-dark-3);
+  --chip-rest: var(--hairline-dark);
+  --chip-tint-base: 14%;
+  --chip-tint-step: 7%;
+}
+
+/* ---- 1. The body, the word, the rule -------------------------------------- */
+
+.chip,
+.state,
+.badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: 24px;
+  padding-block: var(--chip-pad-b);
+  padding-inline: var(--s-2);
+  border: 0 solid var(--chip-rest);
+  border-inline-start-width: var(--chip-gutter);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: var(--radius-control);
+  border-end-end-radius: var(--radius-control);
+  background-color: color-mix(in oklab, var(--chip-mark) var(--chip-tint), transparent);
+  color: var(--chip-ink);
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  font-weight: 500;
+  line-height: var(--t-small-lh);
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: start;
+  white-space: normal; /* wraps, never truncates: measured in a 180px column on 16 real labels */
+  font-variant-numeric: tabular-nums;
+  --chip-mark: var(--chip-neutral);
+  --chip-gutter-style: solid;
+  --chip-tint: var(--chip-tint-base);
+}
+
+/* In a table cell the chip does NOT wrap. `white-space: normal` above is the spec's guarantee for
+   a fixed narrow column (a register entry at 180px wraps to two lines rather than truncating), but
+   an auto-layout table squeezes every wrappable cell in proportion, and «À faire» came out as
+   «À / faire», 44px tall, on the dashboard checklist — measured. With nowrap the cell's min-content
+   is the whole label and the table gives the column what it needs; on a phone the table already
+   scrolls inside .scroll-x, so nothing overflows the page. */
+td :is(.chip, .state, .badge),
+th :is(.chip, .state, .badge) {
+  white-space: nowrap;
+}
+
+/* The rule itself is a pseudo-element drawn OVER the track (the base border), so that a gauge
+   (§4) can shorten the rule while the track stays. */
+.chip::before,
+.state::before,
+.badge::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: calc(-1 * var(--chip-gutter));
+  inline-size: 0;
+  block-size: 100%;
+  pointer-events: none;
+  border-inline-start: var(--chip-gutter) var(--chip-gutter-style) var(--chip-mark);
+}
+
+/* ---- 2. Sizes: 20 / 24 / 30, exact, closing rules included ---------------- */
+
+.chip--s {
+  min-block-size: 20px;
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  --chip-glyph: 12px;
+  --chip-track: 15px;
+}
+
+.chip--l {
+  min-block-size: 30px;
+  --chip-pad-b: 5px;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  --chip-glyph: 16px;
+  --chip-track: 27px;
+}
+
+/* A register longer than twelve rows is demoted as a WHOLE block: the view puts
+   `register--dense` on the container, and no size changes mid-table. */
+.register--dense :is(.chip, .state) {
+  min-block-size: 20px;
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  --chip-glyph: 12px;
+  --chip-track: 15px;
+}
+
+/* ---- 3. The six registers — bare attribute selectors, (0,1,0) ------------- */
+
+[data-register="neutro"] {
+  --chip-mark: var(--chip-neutral);
+}
+
+[data-register="attesa"] {
+  --chip-mark: var(--chip-neutral);
+  --chip-gutter-style: dashed;
+}
+
+[data-register="azione"] {
+  --chip-mark: var(--chip-action);
+  --chip-gutter: 4px;
+}
+
+[data-register="conforme"] {
+  --chip-mark: var(--chip-conform);
+  border-block-end: 1px solid var(--chip-mark);
+  padding-block-end: calc(var(--chip-pad-b) - 1px);
+}
+
+/* Struck through: a rule above AND below, the gesture that annuls an entry in a ledger — the
+   opposite of the single rule that closes a completed one. */
+[data-register="rifiuto"] {
+  --chip-mark: var(--chip-refuse);
+  border-block: 1px solid var(--chip-mark);
+  padding-block: calc(var(--chip-pad-b) - 1px);
+}
+
+[data-register="nullo"] {
+  --chip-mark: var(--chip-void);
+  --chip-tint-base: 0%;
+  --chip-ink: var(--chip-ink-void);
+  --chip-gutter: 1px;
+}
+
+/* Unmapped: a value chips.py does not know. Dotted, so that it is seen and fixed. */
+:is(.chip, .state, .badge):not([data-register]) {
+  --chip-mark: var(--chip-void);
+  --chip-gutter-style: dotted;
+}
+
+/* ---- 4. The gauge: the rule's LENGTH is the phase, on a track that stays --- */
+
+[data-stage="1"] {
+  --chip-stage: 1;
+}
+
+[data-stage="2"] {
+  --chip-stage: 2;
+}
+
+[data-stage="3"] {
+  --chip-stage: 3;
+}
+
+/* The track (21px) is longer than the run on a 24px body, so phase 3 always leaves 3px of track
+   uncovered and a full gauge is never mistaken for the full rule of a chip that has no phase. */
+/* Only the three phases, by value: a chip whose `data-stage` is empty or unknown has no
+   `--chip-stage`, the calc() would be invalid at computed-value time and block-size would fall
+   to auto — a rule of ZERO height. That chip must keep its full rule, so it is left alone. */
+:is(.chip, .state):is([data-stage="1"], [data-stage="2"], [data-stage="3"])::before {
+  block-size: calc(var(--chip-stage) * var(--chip-track) / 3);
+}
+
+/* ---- 5. Glyph, qualifier, counter ----------------------------------------- */
+
+.chip__g {
+  inline-size: var(--chip-glyph);
+  block-size: var(--chip-glyph);
+  flex: none;
+  fill: none;
+  stroke: var(--chip-mark);
+  stroke-width: 2.6; /* 1.52px effective at 14px on the sprite's 24 grid: the 1.5px of V2 §6 */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chip__q {
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  color: var(--chip-ink-void);
+}
+
+/* content-box, and no rule for a single digit: 1 and 2 digits both reserve 2ch, so a counter
+   going from 9 to 10 moves 0.02px, not 8.40. data-digits is computed on the block's maximum. */
+.chip__n {
+  font-family: var(--f-mono);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  box-sizing: content-box;
+  padding-inline-start: var(--s-2);
+  margin-inline-start: auto;
+  text-align: end;
+  min-inline-size: calc(var(--digits, 2) * 1ch);
+  border-inline-start: 1px solid color-mix(in oklab, var(--chip-mark) 34%, transparent);
+}
+
+[data-digits="3"] {
+  --digits: 3;
+}
+
+[data-digits="4"] {
+  --digits: 4;
+}
+
+[data-digits="5"] {
+  --digits: 5;
+}
+
+/* ---- 6. Modifiers — (0,2,0), one class above any register ----------------- */
+
+/* The seal of an authority: a cut corner on the reading-end side, a DOUBLE rule (the rule that
+   closes an act in typography) and, in phase 2, the shield. Never interactive: a seal asserts a
+   provenance, it does not offer an action — and clip-path would cut a focus ring. */
+:is(.chip, .state, .badge).chip--seal {
+  --chip-mark: var(--chip-seal);
+  --chip-gutter-style: double;
+  --chip-gutter: 3px;
+  padding-inline-end: 14px;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+  /* the hairline that closes the cut: band at 3.95–4.95px, BEFORE the diagonal at 4.9497px,
+     because the gradient axis grows toward the removed triangle. Measured at 100% coverage. */
+  background-image: linear-gradient(
+    45deg,
+    transparent 0 3.95px,
+    var(--chip-mark) 3.95px 4.95px,
+    transparent 4.95px
+  );
+  background-repeat: no-repeat;
+  background-position: right 0 top 0;
+  background-size: 7px 7px;
+}
+
+[dir="rtl"] :is(.chip, .state, .badge).chip--seal {
+  clip-path: polygon(7px 0, 100% 0, 100% 100%, 0 100%, 0 7px);
+  background-image: linear-gradient(
+    -45deg,
+    transparent 0 3.95px,
+    var(--chip-mark) 3.95px 4.95px,
+    transparent 4.95px
+  );
+  background-position: left 0 top 0;
+}
+
+/* Indicative: anything that does not come from the Rule Engine. Dotted rule, no body, and the
+   visible qualifier «à titre indicatif» beside the word (V2 §9.3). */
+:is(.chip, .state, .badge).chip--indicative {
+  --chip-tint-base: 0%;
+  --chip-gutter-style: dotted;
+}
+
+/* ---- 7. Interactive chips (filters): the scale is an offset from the chapter's rest ---- */
+
+:is(a, button):is(.chip, .state):hover {
+  --chip-tint: calc(var(--chip-tint-base) + var(--chip-tint-step));
+}
+
+:is(a, button):is(.chip, .state):active {
+  --chip-tint: calc(var(--chip-tint-base) + 2 * var(--chip-tint-step));
+}
+
+/* Selected closes the chip: a rule below and one on the reading-end side. A tint alone, at
+   1.08:1 against rest, is feedback and not a state. */
+:is(.chip, .state)[aria-pressed="true"] {
+  --chip-tint: calc(var(--chip-tint-base) + 2 * var(--chip-tint-step));
+  border-block-end: 1px solid var(--chip-mark);
+  border-inline-end: 1px solid var(--chip-mark);
+  padding-block-end: calc(var(--chip-pad-b) - 1px);
+  padding-inline-end: calc(var(--s-2) - 1px);
+}
+
+/* aria-disabled, never disabled: the filter stays focusable and announced. Never opacity. */
+:is(.chip, .state)[aria-disabled="true"] {
+  --chip-tint-base: 0%;
+  --chip-tint-step: 0%;
+  --chip-ink: var(--chip-ink-void);
+  --chip-mark: var(--chip-void);
+  cursor: default;
+}
+
+/* Loading: the track is there, the run is not — «not yet known». No spinner, no loop. */
+:is(.chip, .state).is-pending {
+  --chip-tint-base: 0%;
+  --chip-ink: var(--chip-ink-void);
+}
+
+:is(.chip, .state).is-pending::before {
+  block-size: 0;
+}
+
+/* A 20px chip is below the 24px of WCAG 2.2 §2.5.8 on a fine pointer, so chip--s is forbidden
+   on a and button (tested); on a coarse pointer every interactive chip gets a 44px target. */
+@media (pointer: coarse) {
+  :is(a, button):is(.chip, .state)::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+}
+
+/* ---- 8. Motion — all of it, and only here (MOTION §3) ---------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(a, button):is(.chip, .state) {
+    transition:
+      background-color var(--motion-instant) var(--ease-in),
+      translate var(--motion-instant) var(--ease-in);
+  }
+
+  @media (hover: hover) {
+    :is(a, button):is(.chip, .state):hover {
+      translate: 0 -1px;
+      transition-duration: var(--motion-fast);
+      transition-timing-function: var(--ease-out);
+    }
+  }
+
+  :is(a, button):is(.chip, .state):active {
+    translate: 0 0;
+  }
+}
+
+/* ---- 9. Forced colors and print ------------------------------------------- */
+
+/* Style, thickness, gauge height, closing rules and the clip-path all survive high contrast.
+   background-image does not (measured: none), so the seal's corner hairline becomes an outline. */
+@media (forced-colors: active) {
+  .chip,
+  .state,
+  .badge {
+    border-inline-start-color: GrayText;
+  }
+
+  .chip::before,
+  .state::before,
+  .badge::before {
+    border-inline-start-color: CanvasText;
+  }
+
+  [data-register="nullo"] {
+    color: GrayText;
+  }
+
+  :is(.chip, .state, .badge).chip--seal {
+    outline: 1px solid CanvasText;
+    outline-offset: 1px;
+  }
+}
+
+/* Backgrounds do not print by default: rule, glyph, word, closing rules and the cut corner
+   remain — which is why the state never lives in the colour. */
+@media print {
+  .chip,
+  .state,
+  .badge {
+    break-inside: avoid;
+  }
+}

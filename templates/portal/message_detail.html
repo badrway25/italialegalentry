@@ -1,0 +1,33 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% comment %}
+One communication addressed to the signed-in account (portal.services.get_own_message — 403 for
+anybody else). Plain text, auto-escaped. The sender's identity is never shown (data minimisation).
+{% endcomment %}
+{% block page_title %}{{ message.subject }}{% endblock %}
+{% block meta_description %}{% translate "Communication de l’équipe du projet." %}{% endblock %}
+{% block portal_header %}
+{% translate "Communication" as header_eyebrow %}
+{% include "components/page_header.html" with title=message.subject eyebrow=header_eyebrow %}
+{% endblock %}
+{% block portal_content %}
+<dl class="meta-row">
+  <div class="meta-row__item">{% svg_icon "calendar" "icon" %}<dt>{% translate "Reçue le" %}</dt><dd><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time></dd></div>
+  <div class="meta-row__item">{% svg_icon "user" "icon" %}<dt>{% translate "De" %}</dt><dd>{% translate "L’équipe du projet" %}</dd></div>
+  <div class="meta-row__item">{% svg_icon "check" "icon" %}<dt>{% translate "État" %}</dt><dd>{% if message.is_read %}{% translate "Lue" %}{% if message.read_at %} — <time datetime="{{ message.read_at|date:'c' }}">{{ message.read_at|date:"d.m.Y H:i" }}</time>{% endif %}{% else %}{% translate "Non lue" %}{% endif %}</dd></div>
+</dl>
+
+<div class="portal-message__body" dir="auto">{{ message.body|linebreaks }}</div>
+
+{% if related_link %}
+<p class="portal__actions"><a class="link-arrow" href="{{ related_link.url }}">{{ related_link.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+{% endif %}
+
+<div class="portal__actions">
+  {% if not message.is_read %}
+  <form method="post" action="{% url 'portal:message_read' message.pk %}">{% csrf_token %}
+    <button class="btn btn--primary" type="submit">{% svg_icon "check" "icon" %}{% translate "Marquer comme lue" %}</button>
+  </form>
+  {% endif %}
+  <a class="btn btn--secondary" href="{% url 'portal:messages' %}">{% translate "Retour aux communications" %}</a>
+</div>
+{% endblock %}

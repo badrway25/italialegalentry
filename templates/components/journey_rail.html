@@ -1,0 +1,25 @@
+{% load i18n %}{% comment %}
+JourneyRail (design V4, CREATIVE_DIRECTION.md §3.4.3, DESIGN_SYSTEM_V4.md §8.28): the seven locked
+steps of a case file as a horizontal rail from 64rem — node, line, label — vertical below; the
+current step carries the accent ring, its halo and «Vous êtes ici»; the frontier between the
+Moroccan and the Italian sides is marked between the steps whose `side` changes. The line of the
+rail draws itself once (v4/workspace.css); under reduced motion it is simply there.
+
+Contract: `steps` = portal.services.journey_for(case) (label, side, is_current, detail, actor) —
+or cases.presenters.journey_with_dates(case), which adds `state` (done · current · upcoming) and
+`reached_at`; optional `label` (aria-label of the list); optional `descriptive` (the case file,
+CD §3.6.2: vertical at every width, each step with the date it was reached when the trail knows
+it — a step not reached has no date).
+{% endcomment %}
+<ol class="journey{% if descriptive %} journey--descriptive{% endif %}"{% if label %} aria-label="{{ label }}"{% endif %}>
+  {% for step in steps %}
+  <li class="journey__step{% if step.is_current %} journey__step--current{% endif %}{% if step.state == 'done' %} journey__step--done{% endif %}{% if step.side == 'italy' %} journey__step--italy{% endif %}{% if step.frontier %} journey__step--frontier{% endif %}"{% if step.is_current %} aria-current="step"{% endif %}>
+    <span class="journey__node" aria-hidden="true"></span>
+    {% ifchanged step.side %}<span class="journey__side">{% if step.side == "italy" %}{% translate "Italie" %}{% else %}{% translate "Maroc" %}{% endif %}</span>{% endifchanged %}
+    <span class="journey__label">{{ step.label }}</span>
+    {% if step.is_current %}<span class="journey__here">{% translate "Vous êtes ici" %}</span>{% endif %}
+    {% if descriptive and step.reached_at %}<span class="journey__when"><time datetime="{{ step.reached_at|date:'c' }}">{{ step.reached_at|date:"d.m.Y" }}</time></span>{% endif %}
+    {% if step.actor %}<span class="journey__actor">{{ step.actor }}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ol>

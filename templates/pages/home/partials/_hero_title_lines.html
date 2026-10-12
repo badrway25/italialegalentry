@@ -1,0 +1,10 @@
+{% load cms_nav %}{% comment %}
+The hero title as lines. The text content is the title character for character — `hero_lines`
+only decides where the line breaks fall (before the last word for a three-word trademark, near the
+middle for a longer interim title) and wraps a trailing trademark sign so it can be set smaller.
+The lines do not move: the mask reveal they were cut for is gone (static/js/src/home.js).
+
+This comment deliberately does not quote the prescribed wording. A template that contains a locked
+string — even inside a comment — is a template somebody can edit without going through the
+registry, and apps/pages/tests/test_templates_static.py refuses it on sight.
+{% endcomment %}{% for line in title|hero_lines %}<span class="line"><span>{{ line.text }}{% if line.tm %}<span class="tm">™</span>{% endif %}</span></span>{% if not forloop.last %} {% endif %}{% endfor %}

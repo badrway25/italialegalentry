@@ -1,0 +1,42 @@
+{% load i18n orientation_tags %}
+<div id="orientation-step" class="wizard__step" data-question="{{ q.key }}" data-step="{{ step_number }}">
+  <div class="wizard__progress">
+    <p id="wizard-progress-label" class="wizard__progress-label">
+      {% blocktranslate with n=step_number %}Question {{ n }}{% endblocktranslate %}
+      <span class="wizard__progress-value">· {{ progress }} %</span>
+    </p>
+    <div class="wizard__progress-bar" role="progressbar" aria-labelledby="wizard-progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress }}" aria-valuetext="{% blocktranslate with n=step_number m=max_steps %}Question {{ n }} sur {{ m }} au maximum{% endblocktranslate %}">
+      <div class="wizard__progress-fill {{ progress|progress_class }}"></div>
+    </div>
+  </div>
+
+  <form method="post" action="{{ step_url }}" class="wizard__form" hx-post="{{ step_url }}" hx-target="#orientation-step" hx-swap="outerHTML" hx-push-url="true">
+    {% csrf_token %}
+    <input type="hidden" name="question_key" value="{{ q.key }}">
+    <fieldset class="wizard__fieldset"{% if error %} aria-describedby="answer-error" aria-invalid="true"{% endif %}>
+      <legend class="wizard__legend"><span class="wizard__question" id="wizard-question" tabindex="-1"{% if q.fallback %} lang="{{ q.lang }}"{% endif %}>{{ q.text }}</span></legend>
+      {% if q.help %}
+      <details class="wizard__help">
+        <summary>{% translate "Pourquoi cette question ?" %}</summary>
+        <p{% if q.fallback %} lang="{{ q.lang }}"{% endif %}>{{ q.help }}</p>
+      </details>
+      {% endif %}
+      {% if error %}<p class="form-field__errors wizard__error" id="answer-error" role="alert">{{ error }}</p>{% endif %}
+      <div class="wizard__choices" role="group">
+        {% for c in q.choices %}
+        <div class="wizard__choice">
+          <input class="wizard__input" type="{{ q.input_type }}" id="answer-{{ c.key }}" name="answer" value="{{ c.key }}"{% if q.input_type == "radio" %} required{% endif %}>
+          <label class="wizard__label" for="answer-{{ c.key }}"{% if c.lang != site.lang %} lang="{{ c.lang }}"{% endif %}>{{ c.label }}</label>
+        </div>
+        {% endfor %}
+      </div>
+      {% if q.type == "multiple" %}<p class="wizard__hint">{% translate "Plusieurs réponses possibles." %}</p>{% endif %}
+    </fieldset>
+    <div class="wizard__actions">
+      {# "Continuer" comes first in the DOM: the Enter key triggers the first submit button (implicit submission). #}
+      <button type="submit" name="action" value="answer" class="btn btn--primary">{% translate "Continuer" %}</button>
+      {% if can_go_back %}<button type="submit" name="action" value="back" class="btn btn--secondary" formnovalidate>{% translate "Précédent" %}</button>{% endif %}
+    </div>
+  </form>
+  <p class="wizard__reference"><small>{% translate "Référence de la session" %} : {{ session.reference }}</small></p>
+</div>

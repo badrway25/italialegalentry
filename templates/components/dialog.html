@@ -1,0 +1,15 @@
+{% load i18n %}{% comment %}
+Modal dialog — native <dialog> (focus trap, Escape and inert background handled by the platform).
+Contract: `id` (required), `title`, `body` (safe html), optional `actions` (safe html of buttons),
+`light` (True → clicking the backdrop closes). Open it with:
+  <a class="btn" href="#{{ id }}" data-dialog-open="{{ id }}">…</a>
+Without JS the link targets the dialog, which CSS shows as an in-page panel (`:target`).
+{% endcomment %}
+<dialog class="dialog" id="{{ id }}" aria-labelledby="{{ id }}-title"{% if light %} data-dialog-light{% endif %}>
+  <div class="dialog__header">
+    <h2 class="dialog__title" id="{{ id }}-title">{{ title }}</h2>
+    <button class="dialog__close" type="button" data-dialog-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</button>
+  </div>
+  <div class="dialog__body">{{ body }}</div>
+  {% if actions %}<div class="dialog__actions">{{ actions }}</div>{% endif %}
+</dialog>

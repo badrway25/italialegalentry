@@ -1,0 +1,65 @@
+{% load i18n static cms_nav %}{% site_context as site %}<!DOCTYPE html>
+<html lang="{{ site.lang }}" dir="{{ site.dir }}" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}{% block page_title %}{% endblock %} · {{ site.project_name }}{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+{% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+{% block head_seo %}{% include "partials/seo_head.html" %}{% endblock %}
+{% comment %}
+SVG first for the browsers that take it, .ico behind it for the rest — and, more to the point, so
+Chrome stops probing /favicon.ico at the site root and logging a 404 on every page of every
+session. Declaring only the SVG left one red line in a console that is otherwise clean.
+
+`{% comment %}`, not `{# #}`: the short form is SINGLE-LINE ONLY, and a three-line `{# #}` ships
+its own text into the rendered head of every page. Which is what happened here, and what
+tests/frontend/test_favicon.py caught one minute later.
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+<link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="48x48" type="image/x-icon">
+{# The reading face of the current script: on an Arabic page that is the Naskh, not the Latin serif. #}
+{% if site.is_rtl %}<link rel="preload" href="{% static 'fonts/noto-naskh-arabic-400-700-normal-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'fonts/ibm-plex-sans-arabic-400-normal-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>{% else %}<link rel="preload" href="{% static 'fonts/ibm-plex-sans-400-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'fonts/newsreader-200-800-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>{% endif %}
+{% comment %}
+ONE stylesheet: static/css/dist/main.css, the @import cascade of static/css/main.css bundled and
+minified by `npm run build:css` (scripts/build_css.mjs). The 21 sheets it replaces held the six
+HTTP/1.1 connections for about 1.3 s while the LCP photograph queued behind them (Gate A, 26/09/2026).
+Edit the sources, rebuild; tests/frontend/test_css_bundle_is_current.py refuses a stale bundle.
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<script src="{% static 'js/head.js' %}"></script>
+{% block extra_head %}{% endblock %}
+{% block jsonld %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}{% if site.is_rtl %} is-rtl{% endif %}">
+<a class="skip-link" href="#main-content">{% translate "Aller au contenu principal" %}</a>
+{% comment %}
+The chrome is a BLOCK, not a fixed include: the public site and the authenticated platform share one
+identity and must not share one shell. Discovery and task completion are different problems, and the
+platform kept the public mega-menu — seven public sections offered to someone who has just signed in
+to find their next action.
+{% endcomment %}
+{% block chrome %}{% include "partials/utility_bar.html" %}
+{% include "partials/header.html" %}{% endblock %}
+{% block banner %}{% endblock %}
+<main id="main-content" tabindex="-1">
+  {% block breadcrumbs %}{% endblock %}
+  {% if messages %}
+  <div class="container messages" role="status" aria-live="polite">
+    {% for message in messages %}<div class="alert alert--{{ message.tags|default:'info' }}"{% if message.tags == 'error' %} role="alert"{% endif %}>{{ message }}</div>{% endfor %}
+  </div>
+  {% endif %}
+  {% block main_content %}{% block content %}{% endblock %}{% endblock %}
+</main>
+{% block site_footer %}{% include "partials/footer.html" %}{% endblock %}
+<script type="module" src="{% static 'js/main.js' %}"></script>
+{% comment %}
+Design V2 shell behaviour (header state on scroll, section reveals), bundled by esbuild from
+static/js/src/shell.js with Motion. Deferred by being a module; never inline (CSP script-src 'self').
+{% endcomment %}
+<script type="module" src="{% static 'js/dist/shell.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

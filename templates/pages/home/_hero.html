@@ -1,0 +1,104 @@
+{% load i18n static %}{% comment %}
+THE HERO — «il portico e la console», design V4 (docs/design-v4/CREATIVE_DIRECTION.md §3.1, §4).
+
+An IMMERSIVE chapter on the evolved navy: the copy column carries the locked title as the H1, the
+lead, the body and the two actions; the right column is THE STAGE — the owner's doorway (arch,
+photograph, solid navy inner arch, golden key, three steps: BRAND_ASSETS.md §2, proportions
+unchanged) with the four access routes of the ecosystem drawn through it, one per actor, from the
+glass legend at the foot of the stage to the exits past the arch.
+
+What the V2 hero had and V4 removes, per the owner's directive §5 («no user value = remove»): the
+graticule, the contour layers and their tide, the coordinates strip, the «svg» word and the
+«Suspendre le mouvement» control. Nothing replaces them. The one living object of the page is now
+the current that runs along the four routes (28s, paused off screen, absent under reduced motion).
+
+The information is in the HTML: the legend is an <ol> of four links to the four landings, each with
+the actor's glyph, the entrance title and its gloss (pages.services.entrances(), the same texts the
+entrances section renders). The SVG is aria-hidden and carries no text except the three exit
+labels, which are the three words of the editorial eyebrow when it has three — nothing prescribed
+is typed here. The route paths in the markup are the no-JavaScript drawing; home.js re-anchors
+each route to the real position of its legend row, so the callouts hold at every width.
+
+The copy is complete on the first frame: eyebrow, title, lead, body and actions carry no reveal
+and never start hidden. Neither does the stage: nothing painted is taken back (static/js/src/home.js
+has no entrance choreography — gate A, round 4, defect 11). What moves is the current along the
+routes (CSS, from the first frame) and, with the scroll, the photograph and the stage; under
+reduced motion nothing moves.
+
+The data contract is unchanged (d.eyebrow / d.title / d.subtitle / d.body / d.primary /
+d.secondary / d.variant) plus d.legend (the four entrances) and d.exits (the eyebrow's words).
+{% endcomment %}
+<section class="hero chapter--dark" id="{{ s.anchor }}" aria-labelledby="hero-title" data-section="hero" data-hero data-hero-variant="{{ d.variant }}">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      {% if d.eyebrow %}<p class="hero__eyebrow"><span{% if d.eyebrow.lang %} lang="{{ d.eyebrow.lang }}"{% endif %}>{{ d.eyebrow }}</span></p>{% endif %}
+      <h1 class="hero__title" id="hero-title" data-hero-title{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}{% if d.variant == 'phase3' %} translate="no" dir="ltr"{% endif %}>{% include "pages/home/partials/_hero_title_lines.html" with title=d.title %}</h1>
+      {% if d.subtitle %}<p class="hero__lead"{% if d.subtitle.lang %} lang="{{ d.subtitle.lang }}"{% endif %}>{{ d.subtitle }}</p>{% endif %}
+      {% if d.body %}<p class="hero__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>{% endif %}
+      {% if d.primary or d.secondary %}
+      <div class="hero__actions">
+        {% if d.primary %}<a class="btn btn--primary btn--arrow" href="{{ d.primary.url }}"{% if d.primary.label.lang %} lang="{{ d.primary.label.lang }}"{% endif %}>{{ d.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+        {% if d.secondary %}<a class="btn btn--secondary" href="{{ d.secondary.url }}"{% if d.secondary.label.lang %} lang="{{ d.secondary.label.lang }}"{% endif %}>{{ d.secondary.label }}</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="hero__stage" data-stage>
+      <svg class="doorway{% if d.exits %} doorway--exits{% endif %}" viewBox="0 0 640 520" aria-hidden="true" focusable="false" data-doorway>
+        {% include "components/doorway.html" %}
+        <defs>
+          {% comment %}Without labelled exits a route dissolves into the navy of the inner arch: its stroke is a
+          gradient in stage units from the arch's opening to its far edge. One per route colour.{% endcomment %}
+          {% for e in d.legend %}<linearGradient id="route-fade-{{ e.actor }}" gradientUnits="userSpaceOnUse" x1="365" y1="0" x2="531" y2="0"><stop class="route__fade-a" offset="0.72"/><stop class="route__fade-b" offset="1"/></linearGradient>{% endfor %}
+          {% comment %}Without JavaScript, below 80rem, the routes keep the exit path the server drew but the exits are
+          hidden: v4/hero.css clips them at the arch's edge (x 531) with this (round-5 review, defect 16).{% endcomment %}
+          <clipPath id="doorway-routes-arch" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="531" height="520"/></clipPath>
+        </defs>
+
+        {% comment %}The four routes: from the legend into the solid navy of the inner arch — and past the arch
+        to the three exits, when the eyebrow gives them their words.{% endcomment %}
+        <g class="doorway__routes" data-doorway-routes>
+          {% for e in d.legend %}
+          <g class="route" data-route="{{ e.actor }}" data-exit="{{ e.exit }}">
+            <path class="route__casing" d="{{ e.path }}" data-route-casing/>
+            <path class="route__line" pathLength="1" d="{{ e.path }}" data-route-line/>
+            <path class="route__current" pathLength="1" d="{{ e.path }}" data-route-current/>
+            <circle class="route__ring" cx="{{ e.x0 }}" cy="{{ e.y0 }}" r="12" data-route-ring/>
+            <circle class="route__node" cx="{{ e.x0 }}" cy="{{ e.y0 }}" r="6" data-route-node/>
+          </g>
+          {% endfor %}
+        </g>
+
+        {% if d.exits %}
+        <g class="doorway__exits" data-doorway-exits>
+          {% for x in d.exits %}
+          <g class="exit">
+            <circle class="exit__node" cx="624" cy="{{ x.y }}" r="4"/>
+            <text class="exit__label" text-anchor="end"{% if d.eyebrow.lang %} lang="{{ d.eyebrow.lang }}"{% endif %}>{% for line in x.lines %}<tspan x="636" y="{{ line.y }}">{{ line.text }}</tspan>{% endfor %}</text>
+          </g>
+          {% endfor %}
+        </g>
+        {% endif %}
+      </svg>
+
+      <ol class="doorway-legend" aria-label="{% translate 'Les quatre accès de l’écosystème' %}" data-legend>
+        {% comment %}The caption slot: two reserved lines that home.js fills with the active row's gloss, so
+        that no row ever changes height under the pointer (the routes are anchored to the rows). The
+        same gloss stays in each row, visually hidden, as the link's DESCRIPTION (aria-describedby,
+        which reads a hidden element), not in its name: the name is the entrance's word (gate A,
+        round 3 — the name was word + gloss, up to 76 characters).{% endcomment %}
+        <li class="doorway-legend__caption" aria-hidden="true" data-legend-caption></li>
+        {% for e in d.legend %}
+        <li class="doorway-legend__item">
+          {% if e.url %}<a class="doorway-legend__row" href="{{ e.url }}" aria-describedby="hero-gloss-{{ e.actor }}" data-legend-row="{{ e.actor }}"{% if e.label_lang %} lang="{{ e.label_lang }}"{% endif %}>{% else %}<div class="doorway-legend__row" data-legend-row="{{ e.actor }}"{% if e.label_lang %} lang="{{ e.label_lang }}"{% endif %}>{% endif %}
+            <span class="doorway-legend__node" aria-hidden="true" data-legend-node></span>
+            {% svg_icon e.icon "icon doorway-legend__glyph" %}
+            <span class="doorway-legend__word">{{ e.label }}</span>
+            <span class="doorway-legend__gloss" id="hero-gloss-{{ e.actor }}"{% if e.url %} aria-hidden="true"{% endif %}><span{% if e.text_lang %} lang="{{ e.text_lang }}"{% endif %}>{{ e.text }}</span></span>
+          {% if e.url %}</a>{% else %}</div>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>

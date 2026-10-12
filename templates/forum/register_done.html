@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load i18n static forum_tags %}
+{% block page_title %}{% translate "Inscription enregistrée" %} · {{ page_title }}{% endblock %}
+{% block meta_description %}{% translate "Confirmation de réception de votre inscription au Forum." %}{% endblock %}
+{% block body_class %}page-forum page-forum--done{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/forum/forum.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+<article class="container forum-done" aria-labelledby="forum-done-title">
+  <p class="forum-hero__eyebrow">{% if event %}{% event_text event "header.title" %}{% else %}{% locked "p2.forum.header.title" %}{% endif %}</p>
+  <h1 class="forum-done__title" id="forum-done-title">{% translate "Votre inscription a bien été reçue." %}</h1>
+  <div class="notice notice--success" role="status" data-registration="done">
+    <p>{% translate "Un message de confirmation de réception a été envoyé à l’adresse e-mail indiquée. Aucune autre démarche n’est nécessaire pour le moment." %}</p>
+    <p>{% translate "Pour toute question relative à votre inscription, écrivez-nous à" %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>.</p>
+  </div>
+  <p class="forum-done__actions"><a class="btn btn--secondary" href="{% url 'forum:index' %}">{% translate "Retour à la page du Forum" %}</a></p>
+</article>
+{% endblock %}

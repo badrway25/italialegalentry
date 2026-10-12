@@ -1,0 +1,1 @@
+{% load allauth %}<div class="notice notice--{{ attrs.level|default:'info' }}" role="{% if attrs.level == 'error' %}alert{% else %}status{% endif %}">{% svg_icon "info" "icon notice__icon" %}<div class="notice__body">{% slot message %}{% endslot %}</div></div>

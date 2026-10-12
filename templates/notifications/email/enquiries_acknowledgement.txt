@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}{{ project.PROJECT_NAME }}
+
+{% translate "Bonjour," %}
+
+{% blocktranslate with kind=kind_label date=submitted_at|date:"d.m.Y" %}Votre demande ({{ kind }}) a bien été transmise le {{ date }} à l’équipe du projet.{% endblocktranslate %}
+
+{% translate "Ce message est un simple accusé de réception automatique : il ne constitue ni une candidature, ni un engagement, ni une garantie de résultat. Aucune donnée transmise n’est reproduite dans ce message." %}
+
+{% translate "Pour toute question :" %} {{ project.PUBLIC_CONTACT_EMAIL }}
+
+--
+{{ project.PROMOTER }}{% endautoescape %}

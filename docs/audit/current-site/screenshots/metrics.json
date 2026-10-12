@@ -1,0 +1,1402 @@
+{
+ "320": {
+  "domContentLoaded": 10992,
+  "loadEvent": 22875.299999952316,
+  "resources": 13,
+  "transferKB": 1347,
+  "scrollWidth": 404,
+  "clientWidth": 320,
+  "horizontalOverflow": true,
+  "docHeight": 15823,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform →",
+   "MENU",
+   "× Close",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 23.4,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "360": {
+  "domContentLoaded": 4463.700000047684,
+  "loadEvent": 12723.299999952316,
+  "resources": 14,
+  "transferKB": 1380,
+  "scrollWidth": 404,
+  "clientWidth": 360,
+  "horizontalOverflow": true,
+  "docHeight": 15056,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform →",
+   "MENU",
+   "× Close",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 13.24,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "375": {
+  "domContentLoaded": 3581.0999999046326,
+  "loadEvent": 8997.400000095367,
+  "resources": 15,
+  "transferKB": 1422,
+  "scrollWidth": 404,
+  "clientWidth": 375,
+  "horizontalOverflow": true,
+  "docHeight": 14637,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform →",
+   "MENU",
+   "× Close",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 9.72,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "390": {
+  "domContentLoaded": 4708.5,
+  "loadEvent": 12740.299999952316,
+  "resources": 15,
+  "transferKB": 1422,
+  "scrollWidth": 404,
+  "clientWidth": 390,
+  "horizontalOverflow": true,
+  "docHeight": 14579,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform →",
+   "MENU",
+   "× Close",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 13.24,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "412": {
+  "domContentLoaded": 4547.199999809265,
+  "loadEvent": 14674.099999904633,
+  "resources": 15,
+  "transferKB": 1422,
+  "scrollWidth": 412,
+  "clientWidth": 412,
+  "horizontalOverflow": false,
+  "docHeight": 14336,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform →",
+   "MENU",
+   "× Close",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 15.18,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "768": {
+  "domContentLoaded": 3776.7999999523163,
+  "loadEvent": 9905,
+  "resources": 17,
+  "transferKB": 1536,
+  "scrollWidth": 768,
+  "clientWidth": 768,
+  "horizontalOverflow": false,
+  "docHeight": 10687,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform →",
+   "MENU",
+   "× Close",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 13.42,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "1024": {
+  "domContentLoaded": 4396.5,
+  "loadEvent": 11203.100000143051,
+  "resources": 21,
+  "transferKB": 1595,
+  "scrollWidth": 1028,
+  "clientWidth": 1024,
+  "horizontalOverflow": true,
+  "docHeight": 8524,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform\n→",
+   "MENU",
+   "× Close",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 19.59,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "1280": {
+  "domContentLoaded": 4262.400000095367,
+  "loadEvent": 9597.900000095367,
+  "resources": 20,
+  "transferKB": 1137,
+  "scrollWidth": 1280,
+  "clientWidth": 1280,
+  "horizontalOverflow": false,
+  "docHeight": 8455,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform\n→",
+   "MENU",
+   "× Close",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 13.17,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "1440": {
+  "domContentLoaded": 2858.600000143051,
+  "loadEvent": 7401.400000095367,
+  "resources": 20,
+  "transferKB": 1137,
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "horizontalOverflow": false,
+  "docHeight": 8455,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform\n→",
+   "MENU",
+   "× Close",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 9.94,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ },
+ "1920": {
+  "domContentLoaded": 2992.7000000476837,
+  "loadEvent": 9308,
+  "resources": 21,
+  "transferKB": 1595,
+  "scrollWidth": 1920,
+  "clientWidth": 1920,
+  "horizontalOverflow": false,
+  "docHeight": 8455,
+  "fonts": [
+   "Amiri",
+   "Cormorant Garamond",
+   "IBM Plex Mono",
+   "Source Sans 3",
+   "Tajawal"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "h1": [
+   "Cross the doorway\nto Italy,\nlegally."
+  ],
+  "buttons": [
+   "Access the Platform\n→",
+   "MENU",
+   "× Close",
+   "Access the Platform →",
+   "Start My Pathway\n→",
+   "I am an Enterprise",
+   "❚❚",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "EXPLORE THIS PATHWAY\n→",
+   "Express Interest\n→",
+   "Learn the Approach",
+   "Learn more about the project"
+  ],
+  "navLinks": [
+   "ITALY LEGAL ENTRY\nDIGITAL PATHWAYS TO ITALY",
+   "Pathways",
+   "Short-Stay Visas",
+   "Training",
+   "Enterprises",
+   "Network",
+   "About",
+   "Access the Platform\n→",
+   "Start My Pathway\n→",
+   "I am an Enterprise"
+  ],
+  "footerLinks": [
+   [
+    "Work in Italy",
+    "#parcours"
+   ],
+   [
+    "Family Reunification",
+    "#parcours"
+   ],
+   [
+    "Study in Italy",
+    "#parcours"
+   ],
+   [
+    "Foreign Degrees",
+    "#parcours"
+   ],
+   [
+    "Short-Stay Visas",
+    "#visas"
+   ],
+   [
+    "Training",
+    "#formation"
+   ],
+   [
+    "Enterprise Area",
+    "#entreprises"
+   ],
+   [
+    "Network",
+    "#reseau"
+   ],
+   [
+    "The Project",
+    "#apropos"
+   ],
+   [
+    "Contact",
+    "http://app.legalitalentry.it"
+   ],
+   [
+    "Legal Notices",
+    "#apropos"
+   ],
+   [
+    "Privacy Policy",
+    "#apropos"
+   ],
+   [
+    "Cookie Policy",
+    "#apropos"
+   ],
+   [
+    "Terms of Use",
+    "#apropos"
+   ],
+   [
+    "Disclaimers",
+    "#apropos"
+   ]
+  ],
+  "langSwitch": [
+   "lang",
+   "lang"
+  ],
+  "cookieBanner": false,
+  "imagesNoAlt": 0,
+  "images": 20,
+  "skipLink": false,
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "emptyAnchors": [],
+  "forms": 2,
+  "smallText": 20,
+  "tapTargetsSmall": 25,
+  "load_s": 13.07,
+  "status": 200,
+  "console_errors": [],
+  "failed_requests": [
+   [
+    "https://images.unsplash.com/photo-1563276326-880c83f8b82a?auto=format&fit=crop&w=1400&q=80",
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  ]
+ }
+}

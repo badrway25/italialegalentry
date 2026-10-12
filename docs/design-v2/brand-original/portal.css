@@ -1,0 +1,284 @@
+/* Recovered verbatim from legalitalentry.it/wp-content/themes/italy-template/style.css (v1.0.0), 23 September 2026.
+   Every rule that draws the hero doorway (.portal/.arch/.arch-photo-bg/.inner/.steps/.cap), the logo lock-up (.lock/.mark/.wm/.tag)
+   and the scroll reveal (.rv), with the keyframes they use. Kept as-is for reference; the V2 evolution lives elsewhere. */
+
+.lock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+.lock .mark {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lock:hover .mark {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.lock .mark g[fill="#C39A2B"] {
+  animation: logoKeyShimmer 3.5s ease-in-out infinite alternate;
+  transform-origin: 100px 120px;
+}
+
+@keyframes logoKeyShimmer {
+  0% { transform: translateY(0); filter: drop-shadow(0 0 0 rgba(195, 154, 43, 0)); }
+  50% { transform: translateY(-2px); filter: drop-shadow(0 0 4px rgba(227, 200, 113, .75)); }
+  100% { transform: translateY(0); filter: drop-shadow(0 0 0 rgba(195, 154, 43, 0)); }
+}
+
+.lock .wm {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.lock .wm .g {
+  color: var(--green);
+}
+
+.lock .wm .r {
+  color: var(--red);
+}
+
+.lock .tag {
+  font-family: var(--body);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-top: 4px;
+}
+
+/* portal illustration with lively floating & glowing animations */
+.portal {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.portal .arch {
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 3/4;
+  border: 1.5px solid var(--rule);
+  border-radius: 190px 190px 0 0;
+  background: linear-gradient(180deg, var(--sand), var(--paper));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0 34px;
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .35s ease;
+}
+
+.portal .arch:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px -15px rgba(15, 37, 71, .15);
+}
+
+.portal .arch::before {
+  content: "";
+  position: absolute;
+  inset: 16px 16px 0;
+  border: 1px solid var(--rule);
+  border-radius: 180px 180px 0 0;
+  pointer-events: none;
+}
+
+.portal .inner {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52%;
+  aspect-ratio: 1/1.55;
+  background: var(--navy);
+  border-radius: 110px 110px 0 0;
+  box-shadow: 0 22px 50px -22px rgba(15, 37, 71, .55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .3s ease;
+  animation: portalInnerFloat 6s ease-in-out infinite alternate;
+}
+
+.portal:hover .inner {
+  transform: translateX(-50%) translateY(-6px) scale(1.02);
+  box-shadow: 0 28px 60px -20px rgba(195, 154, 43, .45);
+}
+
+.portal .inner svg {
+  width: 34%;
+  transform-origin: center 70%;
+  animation: keyInfiniteLevitate 3.6s ease-in-out infinite alternate, keyGlow 2.8s ease-in-out infinite alternate;
+  transition: transform .35s ease, filter .35s ease;
+}
+
+.portal:hover .inner svg {
+  transform: scale(1.14) rotate(4deg);
+  filter: drop-shadow(0 0 16px rgba(227, 200, 113, .9));
+}
+
+@keyframes portalInnerFloat {
+  0% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+  100% { transform: translateX(-50%) translateY(2px); }
+}
+
+@keyframes keyInfiniteLevitate {
+  0% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-7px) rotate(2deg) scale(1.03); }
+  100% { transform: translateY(2px) rotate(-1deg); }
+}
+
+@keyframes keyGlow {
+  0% { filter: drop-shadow(0 0 3px rgba(195, 154, 43, .3)); }
+  50% { filter: drop-shadow(0 0 12px rgba(227, 200, 113, .85)); }
+  100% { filter: drop-shadow(0 0 4px rgba(195, 154, 43, .4)); }
+}
+
+.portal .steps {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+}
+
+.portal .steps i {
+  display: block;
+  height: 6px;
+  background: var(--navy);
+  opacity: .14;
+  border-radius: 2px;
+  transition: opacity .3s, transform .3s, background-color .3s;
+}
+
+.portal:hover .steps i:nth-child(1) {
+  opacity: .5;
+  background: var(--gold);
+  transform: scaleX(1.04);
+}
+
+.portal:hover .steps i:nth-child(2) {
+  opacity: .35;
+  background: var(--navy);
+  transform: scaleX(1.02);
+}
+
+.portal:hover .steps i:nth-child(3) {
+  opacity: .25;
+}
+
+.portal .steps i:nth-child(1) { width: 66%; opacity: .30; }
+
+.portal .steps i:nth-child(2) { width: 80%; opacity: .22; }
+
+.portal .steps i:nth-child(3) { width: 94%; opacity: .14; }
+
+.portal .cap {
+  position: absolute;
+  bottom: -32px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--grey);
+  transition: color .25s ease;
+}
+
+.portal:hover .cap {
+  color: var(--navy);
+}
+
+@media(max-width: 900px) {
+.portal {
+    order: -1;
+  }
+}
+
+@media(max-width: 900px) {
+.portal .arch {
+    max-width: 250px;
+  }
+}
+
+/* reveal animations */
+.rv {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+
+.rv.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media(prefers-reduced-motion: reduce) {
+.rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   HERO ARCHWAY PHOTO INTEGRATION
+   ========================================================================== */
+.arch-photo-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 140px 140px 0 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.arch-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .28;
+  filter: saturate(1.2) contrast(1.1);
+  transform: scale(1.04);
+  transition: opacity .4s ease, transform 1.2s ease;
+}
+
+.portal:hover .arch-bg-img {
+  opacity: .42;
+  transform: scale(1.1);
+}
+
+.arch-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(15, 37, 71, .85) 100%);
+}
+
+.portal .inner {
+  z-index: 2;
+}
+
+.portal .steps {
+  z-index: 3;
+}

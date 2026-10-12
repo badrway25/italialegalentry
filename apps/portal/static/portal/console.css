@@ -1,0 +1,770 @@
+/* ============================================================================
+   THE CONSOLE — the platform shell, design V4
+   docs/design-v4/CREATIVE_DIRECTION.md §3.9 · DESIGN_SYSTEM_V4.md §8 (NavigationRail,
+   ContextBar, BottomBar) · loaded by templates/portal/base_portal.html after portal.css.
+
+   Tokens only, logical properties only (RTL: the rail sits at the end edge by
+   itself). The rail is fixed at the reading edge; the body takes its width as
+   padding; the context bar is sticky in the normal flow; below 64rem the rail
+   is not drawn and the bottom bar and the drawer take over.
+   ========================================================================== */
+
+body.console {
+  --rail-current: var(--rail-w);
+  padding-inline-start: var(--rail-current);
+  background: var(--min-0);
+}
+
+/* Open by default from 90rem, unless the person collapsed it (console.js persists the choice). */
+@media (min-width: 90rem) {
+  body.console:not([data-rail]) {
+    --rail-current: var(--rail-w-open);
+  }
+}
+
+body.console[data-rail="open"] {
+  --rail-current: var(--rail-w-open);
+}
+
+/* ---- The rail --------------------------------------------------------------- */
+.rail {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--rail-current);
+  z-index: var(--z-rail);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--mid-1);
+  color: var(--on-dark-2);
+  border-inline-end: 1px solid var(--hairline-dark);
+  overflow: hidden;
+}
+
+/* The mesh, attenuated: the same radial light as the dark chapters at roughly half its strength. */
+.rail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--mesh-dark);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.rail > * {
+  position: relative;
+}
+
+.rail__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  block-size: var(--header-h);
+  padding-inline: 12px;
+  color: var(--on-dark);
+  text-decoration: none;
+  flex: none;
+}
+
+.rail__tile {
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  flex: none;
+  background: var(--min-0);
+  border-radius: var(--radius-md);
+}
+
+.rail__tile img {
+  display: block;
+  inline-size: 24px;
+  block-size: 24px;
+}
+
+.rail__wordmark {
+  font-family: var(--f-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--on-dark);
+  direction: ltr;
+}
+
+.rail__scroll {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--s-2) 10px;
+  scrollbar-width: thin;
+}
+
+.rail__group + .rail__group {
+  margin-block-start: var(--s-2);
+  padding-block-start: var(--s-2);
+  border-block-start: 1px solid var(--hairline-dark);
+}
+
+.rail__group-title {
+  margin: var(--s-2) 0 var(--s-1);
+  padding-inline: 12px;
+  font-family: var(--f-sans);
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--on-dark-3);
+  white-space: nowrap;
+}
+
+.rail__list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail__li {
+  margin: 0;
+}
+
+.rail__item,
+.rail__collapse {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-block-size: var(--rail-item-h);
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--on-dark-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: 500;
+  text-decoration: none;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+}
+
+.rail__glyph {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  flex: none;
+  transition: translate var(--motion-fast) var(--ease-enter);
+}
+
+.rail__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity var(--motion-fast) var(--ease-exit);
+}
+
+.rail__item:hover,
+.rail__collapse:hover,
+.rail__item:focus-visible,
+.rail__collapse:focus-visible {
+  background: var(--mid-2);
+  color: var(--on-dark);
+}
+
+.rail__item:hover .rail__glyph {
+  translate: 0 -1px;
+}
+
+.rail__item:active {
+  background: var(--mid-3);
+}
+
+/* The active entry: the sheet level of the navy, and the 3 px indicator at the reading edge. */
+.rail__item[aria-current="page"] {
+  background: var(--mid-3);
+  color: var(--on-dark);
+}
+
+.rail__item[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -10px;
+  inset-block: 10px;
+  inline-size: 3px;
+  border-radius: var(--radius-full);
+  background: var(--accent-dark);
+}
+
+.rail__collapse {
+  flex: none;
+  margin: var(--s-2) 10px var(--s-3);
+  color: var(--on-dark-3);
+}
+
+.rail__collapse .rail__glyph {
+  transition: rotate var(--motion-standard) var(--ease-layout);
+}
+
+/* ---- Collapsed: glyphs only, the label as a tooltip (level 3) ---------------- */
+/* Only the fixed rail collapses: the drawer's copy (.rail--drawer) always shows its words. */
+body.console:not([data-rail="open"]) .rail:not(.rail--drawer) .rail__label,
+body.console:not([data-rail="open"]) .rail:not(.rail--drawer) .rail__group-title,
+body.console:not([data-rail="open"]) .rail:not(.rail--drawer) .rail__wordmark {
+  opacity: 0;
+  inline-size: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 90rem) {
+  body.console:not([data-rail]) .rail:not(.rail--drawer) .rail__label,
+  body.console:not([data-rail]) .rail:not(.rail--drawer) .rail__group-title,
+  body.console:not([data-rail]) .rail:not(.rail--drawer) .rail__wordmark {
+    opacity: 1;
+    inline-size: auto;
+    pointer-events: auto;
+  }
+}
+
+/* The chevron points where the rail will go: towards its edge when open (collapse), into the page
+   when closed (expand). `chevron-end` points into the page by default. */
+body.console[data-rail="open"] .rail .rail__collapse .rail__glyph {
+  rotate: 180deg;
+}
+
+@media (min-width: 90rem) {
+  body.console:not([data-rail]) .rail .rail__collapse .rail__glyph {
+    rotate: 180deg;
+  }
+}
+
+/* The tooltip of a collapsed rail (DS §8, Tooltip: --mid-3, 13/20, radius sm, shadow 3): one
+   element, fixed to the viewport so the rail's scroll area cannot clip it, placed by console.js
+   beside the entry under the pointer or the focus. */
+.rail__tip {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  max-inline-size: 280px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--mid-3);
+  color: var(--on-dark);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: var(--shadow-3);
+  pointer-events: none;
+  z-index: var(--z-tooltip);
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-enter);
+}
+
+.rail__tip.is-on {
+  opacity: 1;
+}
+
+/* ---- The context bar: 56 px of glass, sticky ------------------------------------ */
+.console-bar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  background: var(--glass-light);
+  -webkit-backdrop-filter: blur(var(--blur-nav)) saturate(1.2);
+  backdrop-filter: blur(var(--blur-nav)) saturate(1.2);
+  border-block-end: 1px solid var(--hairline);
+  color: var(--ink);
+}
+
+.console-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-block-size: var(--ctx-h);
+  max-inline-size: var(--workspace-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+.console-bar__menu,
+.console-bar__tile,
+.console-bar__title {
+  display: none;
+}
+
+.console-bar__crumbs {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.console-bar .breadcrumbs {
+  max-inline-size: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+}
+
+.console-bar .breadcrumbs__list {
+  margin: 0;
+  padding: 0;
+}
+
+.console-bar .breadcrumbs a {
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.console-bar .breadcrumbs a:hover,
+.console-bar .breadcrumbs a:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.console-bar .breadcrumbs [aria-current="page"] {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.console-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  flex: none;
+}
+
+.console-bar__link {
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.console-bar__link:hover,
+.console-bar__link:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.console-bar .account-menu__summary,
+.console-bar .account-menu__name {
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+}
+
+/* ---- The workspace ------------------------------------------------------------------ */
+.console__workspace {
+  max-inline-size: var(--workspace-max);
+  margin-inline: auto;
+  padding: var(--s-6) var(--page-pad) var(--s-12);
+}
+
+.console .portal {
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: var(--s-4) var(--s-8);
+}
+
+.console__footer {
+  max-inline-size: var(--workspace-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+/* ---- The bottom bar and the drawer: below 64rem ------------------------------------- */
+.console-bottom {
+  display: none;
+}
+
+.console-drawer {
+  display: none;
+}
+
+@media (max-width: 63.999rem) {
+  body.console {
+    --rail-current: 0px;
+    padding-inline-start: 0;
+    padding-block-end: calc(var(--bottom-bar-h) + var(--s-4));
+  }
+
+  .rail:not(.rail--drawer) {
+    display: none;
+  }
+
+  .console-bar__menu,
+  .console-bar__tile {
+    display: grid;
+    place-items: center;
+    flex: none;
+  }
+
+  .console-bar__menu {
+    position: relative;
+    inline-size: var(--control-icon);
+    block-size: var(--control-icon);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .console-bar__menu:hover,
+  .console-bar__menu:focus-visible {
+    background: var(--min-1);
+  }
+
+  .console-bar__menu .icon {
+    inline-size: var(--icon-md);
+    block-size: var(--icon-md);
+  }
+
+  /* IconButton: 40 visible, 44 to the touch (DS §8 #2). */
+  .console-bar__menu::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+  }
+
+  .console-bar__tile {
+    inline-size: 32px;
+    block-size: 32px;
+    background: var(--min-1);
+    border-radius: var(--radius-sm);
+  }
+
+  .console-bar__tile img {
+    inline-size: 20px;
+    block-size: 20px;
+  }
+
+  .console-bar__crumbs,
+  .console-bar__link,
+  .console-bar__lang {
+    display: none;
+  }
+
+  .console-bar__title {
+    display: block;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    margin: 0;
+    font-family: var(--f-sans);
+    font-size: var(--u-ui);
+    line-height: var(--u-ui-lh);
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .console-bar__inner {
+    gap: var(--s-3);
+    padding-inline: var(--s-3);
+  }
+
+  .console-bottom {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: var(--z-header);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    block-size: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+    background: var(--glass-light);
+    -webkit-backdrop-filter: blur(var(--blur-nav)) saturate(1.2);
+    backdrop-filter: blur(var(--blur-nav)) saturate(1.2);
+    border-block-start: 1px solid var(--hairline);
+  }
+
+  .console-bottom__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-block-size: var(--bottom-bar-h);
+    padding: 4px 2px;
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    font-family: var(--f-sans);
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .console-bottom__item .icon {
+    inline-size: var(--icon-md);
+    block-size: var(--icon-md);
+  }
+
+  /* Two lines at most, broken at a hyphenation point — never mid-word («Communicatio-ns»). */
+  .console-bottom__label {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    max-inline-size: 100%;
+    hyphens: auto;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .console-bottom__item[aria-current="page"] {
+    color: var(--accent);
+  }
+
+  .console-bottom__item:hover,
+  .console-bottom__item:focus-visible {
+    color: var(--ink);
+  }
+
+  /* The drawer: the whole rail, from the reading edge, over a blurred scrim. */
+  .console-drawer[open] {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    margin: 0;
+    inline-size: min(300px, 88vw);
+    max-inline-size: none;
+    max-block-size: none;
+    block-size: 100%;
+    padding: 0;
+    border: 0;
+    border-start-end-radius: var(--radius-xl);
+    border-end-end-radius: var(--radius-xl);
+    background-color: var(--mid-1);
+    background-image: var(--mesh-dark);
+    color: var(--on-dark-2);
+    box-shadow: var(--shadow-4-dark);
+  }
+
+  .console-drawer::backdrop {
+    background: var(--scrim);
+    -webkit-backdrop-filter: blur(var(--blur-scrim));
+    backdrop-filter: blur(var(--blur-scrim));
+  }
+
+  .console-drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline-end: var(--s-2);
+    border-block-end: 1px solid var(--hairline-dark);
+  }
+
+  .console-drawer__close {
+    display: grid;
+    place-items: center;
+    inline-size: var(--control-icon);
+    block-size: var(--control-icon);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--on-dark-2);
+    cursor: pointer;
+  }
+
+  .console-drawer__close:hover,
+  .console-drawer__close:focus-visible {
+    background: var(--mid-2);
+    color: var(--on-dark);
+  }
+
+  .console-drawer__close .icon {
+    inline-size: var(--icon-md);
+    block-size: var(--icon-md);
+  }
+
+  .rail--drawer {
+    position: static;
+    inline-size: auto;
+    flex: 1 1 auto;
+    min-block-size: 0;
+    display: block;
+    overflow-y: auto;
+    padding: var(--s-2) 10px;
+    border: 0;
+    background: transparent;
+  }
+
+  .rail--drawer::before {
+    display: none;
+  }
+
+  .rail--drawer .rail__item[aria-current="page"]::before {
+    inset-inline-start: -10px;
+  }
+
+  .console-drawer__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    border-block-start: 1px solid var(--hairline-dark);
+  }
+
+  /* The bar hides its link below 64rem; the drawer's foot shows its own copy. */
+  .console-drawer__foot .console-bar__link {
+    display: inline;
+    color: var(--on-dark-2);
+  }
+
+  /* The list's height comes from --utility-h, which is 0 below 48rem: the drawer's copy gets its
+     own (gate B review, correction 3: 36 × 0 px links with a fine pointer). */
+  .console-drawer__foot .lang-seg__list {
+    background: var(--mid-2);
+    block-size: auto;
+    min-block-size: 36px;
+    padding: 2px;
+  }
+
+  .console-drawer__foot .lang-seg__link {
+    min-block-size: 32px;
+    min-inline-size: 40px;
+  }
+
+  .console-drawer__foot .lang-seg__link {
+    color: var(--on-dark-2);
+  }
+
+  .console-drawer__foot .lang-seg__link[aria-current] {
+    background: var(--mid-3);
+    color: var(--on-dark);
+  }
+}
+
+/* ---- Motion: the drawer slides in from its edge -------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .console-drawer[open] {
+    animation: console-drawer-in var(--motion-emphasized) var(--ease-enter);
+  }
+}
+
+@keyframes console-drawer-in {
+  from { translate: -100% 0; }
+  to { translate: 0 0; }
+}
+
+[dir="rtl"] .console-drawer[open] {
+  animation-name: console-drawer-in-rtl;
+}
+
+@keyframes console-drawer-in-rtl {
+  from { translate: 100% 0; }
+  to { translate: 0 0; }
+}
+
+/* ---- Forced colours --------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .rail,
+  .console-bar,
+  .console-bottom {
+    border-color: CanvasText;
+  }
+
+  .rail__item[aria-current="page"],
+  .console-bottom__item[aria-current="page"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  .rail__item[aria-current="page"]::before {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
+/* ---- Touch (gate B review, correction 4) ------------------------------------------------ */
+@media (pointer: coarse) {
+  .console-bar .account-menu__summary {
+    min-block-size: var(--hit-min);
+  }
+
+  .console-drawer__foot .lang-seg__list {
+    min-block-size: var(--hit-min);
+    padding: 0;
+  }
+
+  .console-drawer__foot .lang-seg__link {
+    min-block-size: var(--hit-min);
+    min-inline-size: var(--hit-min);
+  }
+}
+
+/* ---- No page enter. Pattern 1 (DS §7) was built for the gate B review, then removed at the gate
+   E review: its `translate` made the workspace the containing block of a fixed action bar (gate
+   D), and its opacity 0 → 1 hid the real LCP element from the observer (gate E: the LCP fell on
+   the skip link). The console arrives complete. Deviation written in the README. ------------- */
+
+/* The focus ring on the glass bar: the V2 `.portal-bar :focus-visible` painted the paper-on-navy
+   outline (1.03 : 1 on the glass); the cascade's ring instead (gate E review, correction 2). */
+.console-bar :focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+/* On the dark rail and in the drawer the ring is the dark accent with the rail's own ground as the
+   companion (gate B round 2, defect 18: the light halo read 1.47 : 1 there). */
+.rail :focus-visible {
+  outline: var(--focus-ring-width) solid var(--accent-dark);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--mid-1);
+}
+
+/* ---- Forced colours (gate B review, correction 8) --------------------------------------- */
+@media (forced-colors: active) {
+  .rail__tip {
+    border: 1px solid CanvasText;
+  }
+
+  .console-drawer[open] {
+    border-inline-end: 1px solid CanvasText;
+  }
+}
+
+/* ---- The rail's width moves only once the page is ready (console.js adds `is-ready` after the
+   first frame): a transition at first paint turned the stored preference into a layout shift of
+   0.19 in one run out of three (gate C review, correction 3). ------------------------------- */
+body.console.is-ready {
+  transition: padding var(--motion-standard) var(--ease-layout);
+}
+
+body.is-ready .rail {
+  transition: inline-size var(--motion-standard) var(--ease-layout);
+}
+
+/* ---- The console's footer links: the cascade's ring, not the V2 5 px halo of v2/shell.css (gate
+   E round 2, defect 12). -------------------------------------------------------------------- */
+body.console .portal-footer a:focus-visible,
+.console__footer a:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}

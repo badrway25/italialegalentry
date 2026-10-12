@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n static %}
+{% block page_title %}{% blocktranslate with n=step_number %}Question {{ n }}{% endblocktranslate %} · {% translate "Orientation" %}{% endblock %}
+{% block meta_description %}{% translate "Questionnaire d’orientation — pré-évaluation à caractère informatif." %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+<article class="container wizard">
+  <header class="wizard__header">
+    <h1 class="wizard__title">{% translate "Questionnaire d’orientation" %}</h1>
+    <p class="wizard__subtitle">{% translate "Vos réponses servent uniquement à une pré-évaluation à caractère informatif." %}</p>
+  </header>
+  {% include "orientation/_step.html" %}
+</article>
+{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'orientation/wizard.js' %}"></script>{% endblock %}

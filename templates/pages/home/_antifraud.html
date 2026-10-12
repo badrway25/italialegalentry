@@ -1,0 +1,18 @@
+{% load i18n %}{% comment %}
+9. ANTI-FRAUD — Phase 3 only. Prescribed p3.antifraud.title + p3.antifraud.body inside a shield
+callout: highly visible, never sensationalist (no red, no alarm icon, no capitals added).
+While gate G3 is closed NOTHING is rendered: no substitute text is invented.
+{% endcomment %}
+<section class="section section--d home-antifraud" id="{{ s.anchor }}" aria-labelledby="home-antifraud-title" data-section="antifraud">
+  <div class="container">
+    <div class="antifraud-panel">
+      <div class="antifraud-panel__mark" aria-hidden="true">{% svg_icon "shield" "icon icon--xl" %}</div>
+      <div class="antifraud-panel__content">
+        <h2 class="antifraud-panel__title" id="home-antifraud-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
+        <p class="antifraud-panel__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>
+        {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
+        {% if d.url %}<p class="antifraud-panel__actions"><a class="btn btn--secondary btn--arrow" href="{{ d.url }}">{% translate "Lire la page « Attention aux fraudes »" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>

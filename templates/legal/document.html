@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_title }} — Italy Legal Entry™{% endblock %}
+{% block content %}
+<article class="container legal-page"{% if available %} lang="it"{% endif %}>
+  <header class="legal-page__header">
+    <h1>{{ page_title }}</h1>
+    {% if available %}
+      <p class="legal-page__meta" lang="{{ site.lang }}">{% translate "Version officielle en italien" %}{% if document.effective_date %} · {% translate "en vigueur depuis le" %} {{ document.effective_date|date:"d.m.Y" }}{% endif %} · v{{ document.version }}</p>
+    {% endif %}
+  </header>
+  {% if available %}
+    <div class="legal-page__body prose">
+      {% for kind, text in paragraphs %}{% if kind == "h" %}<h2>{{ text }}</h2>{% else %}<p>{{ text }}</p>{% endif %}{% endfor %}
+    </div>
+    {% if courtesy %}
+    <aside class="legal-page__courtesy" lang="fr" aria-labelledby="courtesy-title">
+      <p class="legal-page__courtesy-notice" id="courtesy-title"><strong>{{ courtesy_notice }}</strong></p>
+      <h2>{{ courtesy.title }}</h2>
+      {% if courtesy.intro %}<p>{{ courtesy.intro }}</p>{% endif %}
+      {% for section in courtesy.sections %}{% if section.heading %}<h3>{{ section.heading }}</h3>{% endif %}<p>{{ section.body }}</p>{% endfor %}
+    </aside>
+    {% endif %}
+  {% else %}
+    <div class="notice notice--pending" role="status" data-gate="legal-blocked">
+      <p><strong>{% translate "Page en cours de préparation." %}</strong></p>
+      <p>{% translate "Le texte officiel de cette page (version italienne) sera publié dès sa transmission. Aucun texte provisoire n’est affiché." %}</p>
+      <p><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  {% endif %}
+</article>
+{% endblock %}

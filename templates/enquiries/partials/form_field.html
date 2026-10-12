@@ -1,0 +1,23 @@
+{% comment %}
+Contract: include with `field` (a BoundField).
+Same markup as components/form_field.html, plus:
+* `lang` attribute on the label when the form set `field.field.label_lang` (locked label rendered in
+  fallback French while the official translation is missing — gate G10);
+* help / error containers use the Django 5 ids `{id}_helptext` and `{id}_error`, which the widget's
+  automatic `aria-describedby` (BoundField.aria_describedby) points to; `aria-invalid` is set by Django.
+{% endcomment %}
+{% with lang=field.field.label_lang %}
+<div class="form-field{% if field.errors %} form-field--error{% endif %}{% if field.field.required %} form-field--required{% endif %}" id="wrap_{{ field.auto_id }}">
+  {% if field.field.widget.input_type == "checkbox" %}
+    <div class="form-field__check">
+      {{ field }}
+      <label for="{{ field.id_for_label }}"{% if lang %} lang="{{ lang }}"{% endif %}>{{ field.label }}</label>
+    </div>
+  {% else %}
+    <label class="form-field__label" for="{{ field.id_for_label }}"><span{% if lang %} lang="{{ lang }}"{% endif %}>{{ field.label }}</span>{% if field.field.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>
+    {{ field }}
+  {% endif %}
+  {% if field.help_text %}<p class="form-field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+  {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+</div>
+{% endwith %}

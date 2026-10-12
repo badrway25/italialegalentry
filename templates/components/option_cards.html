@@ -1,0 +1,28 @@
+{% load i18n %}{% comment %}
+OptionCard (design V4, CREATIVE_DIRECTION.md §3.7, DESIGN_SYSTEM_V4.md §8 «OptionCard»): the
+choices of a radio or checkbox question as cards — a <label> around the NATIVE input, level 1,
+radius lg, title 15/24 500; hover level 2; selected = 2 px accent border, accent wash and a check
+that draws itself (v4/wizard.css). The input is the control: keyboard, form submission and
+validation are the browser's, nothing is re-implemented. ≥ 48 px, `touch-action: manipulation`.
+No glyph disc: no option here has an honest glyph of its own (a language, «oui», «non»), and a
+decorative one would be invented.
+
+Contract: `field` = a BoundField whose widget is RadioSelect or CheckboxSelectMultiple (Django
+renders each choice through `{{ choice.tag }}`); optional `ordinal` (the question's number, said
+before the legend for the screen reader).
+{% endcomment %}
+<fieldset class="opts{% if field.errors %} opts--error{% endif %}" id="wrap_{{ field.auto_id }}"{% if field.help_text %} aria-describedby="{{ field.auto_id }}_helptext"{% endif %}>
+  <legend class="opts__legend" id="q-{{ field.name }}-title">{{ field.label }}</legend>
+  {% if field.help_text %}<p class="opts__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+  {% if field.field.widget.allow_multiple_selected %}<p class="opts__hint">{% translate "Plusieurs réponses possibles." %}</p>{% endif %}
+  <div class="opts__grid">
+    {% for choice in field %}
+    <label class="opt" for="{{ choice.id_for_label }}">
+      {{ choice.tag }}
+      <span class="opt__mark" aria-hidden="true">{% svg_icon "check" "icon" %}</span>
+      <span class="opt__title">{{ choice.choice_label }}</span>
+    </label>
+    {% endfor %}
+  </div>
+  {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error" role="alert">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+</fieldset>

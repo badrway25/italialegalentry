@@ -1,0 +1,13 @@
+{% comment %}
+Sober photograph of the space, from cms.MediaAsset (self-hosted; licence in docs/IMAGE_LICENSES.md).
+Contract: `photo` = ecosystem.services.Photo or None. Curated photos use the responsive WebP
+derivatives of static/img/photos with the 1440px JPEG as fallback; no external host, ever.
+{% endcomment %}
+{% if photo %}
+<figure class="ecosystem-photo">
+  <picture>
+    {% if photo.webp_srcset %}<source type="image/webp" srcset="{{ photo.webp_srcset }}" sizes="{{ photo.sizes }}">{% endif %}
+    <img class="ecosystem-photo__img" src="{{ photo.src }}" alt="{{ photo.alt }}"{% if photo.alt_lang %} lang="{{ photo.alt_lang }}"{% endif %} width="{{ photo.width }}" height="{{ photo.height }}" decoding="async" fetchpriority="high">
+  </picture>
+</figure>
+{% endif %}

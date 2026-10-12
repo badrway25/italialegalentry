@@ -1,0 +1,72 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}
+FAQ — Questions fréquentes (Phase 3, gate G3). Locked answers are rendered from the registry through
+faq.services (cms.locked_content); editors only add unlocked entries in the back-office.
+Accordion = native <details>/<summary> (works without JavaScript); search results are rendered open.
+{% endcomment %}
+{% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Questions fréquentes{% endblocktranslate %}{% else %}{% translate "Questions fréquentes" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers vers l’Italie." %}{% endblock %}
+{% block body_class %}page-faq{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
+{% endif %}
+{% include "components/page_header.html" with title=_("Questions fréquentes") lead=_("Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers vers l’Italie.") %}
+<div class="container faq">
+  <form class="search-form faq__search" method="get" action="{% url 'faq:index' %}" role="search" aria-label="{% translate 'Rechercher dans les questions fréquentes' %}">
+    <label class="search-form__label" for="faq-q">{% translate "Rechercher dans les questions fréquentes" %}</label>
+    <div class="search-form__row">
+      <input class="search-form__input" type="search" id="faq-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="faq-q-help">
+      <button class="btn btn--primary" type="submit">{% translate "Rechercher" %}</button>
+    </div>
+    <p class="search-form__help" id="faq-q-help">{% translate "Saisissez un mot-clé, par exemple « visa » ou « diplôme »." %}</p>
+    {% if is_search %}<p><a class="search-form__reset" href="{% url 'faq:index' %}">{% translate "Effacer la recherche et afficher toutes les questions" %}</a></p>{% endif %}
+  </form>
+
+  {% if is_search %}
+  <section class="faq__results" aria-labelledby="faq-results-title">
+    <h2 id="faq-results-title">{% blocktranslate count counter=entries|length with q=query %}{{ counter }} résultat pour « {{ q }} »{% plural %}{{ counter }} résultats pour « {{ q }} »{% endblocktranslate %}</h2>
+    {% if entries %}
+      <div class="accordion">
+        {% for entry in entries %}{% include "faq/_item.html" with entry=entry open=True %}{% endfor %}
+      </div>
+    {% else %}
+      {% url 'faq:index' as faq_index_url %}
+      {% include "components/empty_state.html" with title=_("Aucune question ne correspond à votre recherche.") text=_("Essayez un autre mot-clé ou parcourez toutes les questions par catégorie.") action_label=_("Voir toutes les questions") action_url=faq_index_url %}
+    {% endif %}
+  </section>
+  {% else %}
+    {% if groups %}
+    {% if groups|length > 1 %}
+    <nav class="faq__toc" aria-label="{% translate 'Catégories' %}">
+      <ul class="faq__toc-list">
+        {% for group in groups %}<li><a href="#{{ group.category.anchor }}"{% if group.is_fallback %} lang="{{ group.lang }}"{% endif %}>{{ group.name }}</a></li>{% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+    {% for group in groups %}
+    <section class="faq__category" id="{{ group.category.anchor }}" aria-labelledby="{{ group.category.anchor }}-title">
+      <h2 class="faq__category-title" id="{{ group.category.anchor }}-title"{% if group.is_fallback %} lang="{{ group.lang }}"{% endif %}>{{ group.name }}</h2>
+      <div class="accordion">
+        {% for entry in group.entries %}{% include "faq/_item.html" with entry=entry %}{% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+    {% else %}
+      {% include "components/empty_state.html" with title=_("Les questions fréquentes sont en cours de préparation.") text=_("Cette page sera enrichie progressivement.") %}
+    {% endif %}
+  {% endif %}
+
+  {% safe_url 'glossary:index' as glossary_url %}{% safe_url 'pages:antifraud' as antifraud_url %}{% safe_url 'pages:contact' as contact_url %}
+  <aside class="related-links faq__related" aria-labelledby="faq-related-title">
+    <h2 id="faq-related-title">{% translate "Pour aller plus loin" %}</h2>
+    <ul class="related-links__list">
+      {% if glossary_url %}<li><a href="{{ glossary_url }}">{% translate "Glossaire : les termes italiens expliqués" %}</a></li>{% endif %}
+      {% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Attention aux fraudes" %}</a></li>{% endif %}
+      {% if contact_url %}<li><a href="{{ contact_url }}">{% translate "Vous n’avez pas trouvé de réponse ? Contactez-nous" %}</a></li>{% else %}<li><a href="mailto:{{ site.contact_email }}">{% translate "Vous n’avez pas trouvé de réponse ? Écrivez-nous :" %} {{ site.contact_email }}</a></li>{% endif %}
+    </ul>
+  </aside>
+</div>
+{% endblock %}
+{% block extra_head %}{% if faq_jsonld %}<script type="application/ld+json">{{ faq_jsonld }}</script>{% endif %}{% endblock %}

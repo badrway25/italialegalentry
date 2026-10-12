@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% translate "Signaler un message" %}{% endblock %}
+{% block meta_description %}{% translate "Signalement d’un message à la modération du Forum Virtuel." %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% translate "Signaler un message" as page_title %}
+{% translate "Le signalement est transmis uniquement à la modération. Merci d’indiquer le motif sans données personnelles de tiers." as page_lead %}
+{% include "components/page_header.html" with title=page_title lead=page_lead eyebrow=post.discussion.title %}
+<section class="container community-compose" aria-label="{% translate 'Formulaire de signalement' %}">
+  <blockquote class="community-report__quote">{{ post.body|truncatechars:300|linebreaksbr }}</blockquote>
+  <form method="post" action="{% url 'community:post_report' pk=post.pk %}" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    {% include "components/form_field.html" with field=form.reason %}
+    <p>
+      <button type="submit" class="btn btn--primary">{% translate "Envoyer le signalement" %}</button>
+      <a class="btn btn--secondary" href="{% url 'community:discussion' pk=post.discussion_id %}">{% translate "Annuler" %}</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

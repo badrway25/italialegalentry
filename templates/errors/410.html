@@ -1,0 +1,4 @@
+{% extends "errors/base_error.html" %}{% load i18n %}
+{% block error_code %}410{% endblock %}{% block error_code_display %}410{% endblock %}
+{% block error_title %}{% translate "Cette page n’existe plus" %}{% endblock %}
+{% block error_text %}{% translate "L’adresse demandée appartenait à l’ancienne version du site et a été supprimée définitivement." %}{% endblock %}

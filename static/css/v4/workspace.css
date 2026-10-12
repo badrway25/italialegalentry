@@ -1,0 +1,2237 @@
+/* ============================================================================
+   WORKSPACE V4 — the components of the console's pages
+   docs/design-v4/CREATIVE_DIRECTION.md §3.4 (dashboard), §3.5 (Mes Documents)
+   DESIGN_SYSTEM_V4.md §2 (depth), §6 (hover), §7.1 (motion), §8 (Panel, HealthStrip,
+   SegmentedControl, DocumentRow, DocumentCard, Avatar/Glyph, JourneyRail,
+   ResponsibilityBar, EmptyState, ContextHeader)
+
+   Tokens only (test_the_v4_component_sheets_carry_no_literal_colour). The
+   shell itself — rail, context bar, bottom bar — lives in
+   apps/portal/static/portal/console.css.
+   ========================================================================== */
+
+/* ---- The workspace grid: 12 columns, three panel measures ------------------------- */
+.ws-grid {
+  align-items: start;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-6);
+  margin-block-start: var(--s-6);
+}
+
+.ws-grid > * {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+}
+
+@media (min-width: 64rem) {
+  .ws-next { grid-column: span 8; }
+  .ws-file { grid-column: span 4; }
+  .ws-journey { grid-column: 1 / -1; }
+  .ws-pieces { grid-column: span 7; }
+  .ws-deadlines { grid-column: span 5; }
+  .ws-messages { grid-column: span 6; }
+  .ws-academy { grid-column: span 6; }
+}
+
+/* ---- Panel (DS §8, last row): level 1 at rest, level 2 raised ----------------------- */
+.panel {
+  position: relative;
+  padding: var(--s-6);
+  background: var(--min-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.panel--l2 {
+  box-shadow: var(--shadow-2);
+}
+
+/* The one raised panel at rest carries the gradient edge on its start side: the accent's light
+   fading into the panel, 1 px, drawn with a mask so it needs no extra element. */
+.panel--edge::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--line-grad);
+  -webkit-mask: var(--mask-fill) content-box, var(--mask-fill);
+  mask: var(--mask-fill) content-box, var(--mask-fill);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-block-end: var(--s-4);
+}
+
+.panel__eyebrow {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.panel__section {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.panel__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: 600;
+  color: var(--ink);
+  max-inline-size: 52ch;
+}
+
+.panel__text {
+  margin: 0 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  max-inline-size: 60ch;
+}
+
+.panel__actions {
+  margin: var(--s-4) 0 0;
+}
+
+.panel__more,
+.panel__meta {
+  margin: var(--s-3) 0 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+}
+
+.panel .empty {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+}
+
+/* ---- ContextHeader (DS §8.33) ------------------------------------------------------- */
+.ctx {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  padding-block-end: var(--s-4);
+}
+
+.ctx__greeting {
+  margin: 0 0 var(--s-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+}
+
+.ctx__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-title);
+  line-height: var(--u-title-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+}
+
+.ctx__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ctx__ref {
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  line-height: var(--u-ref-lh);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.ctx__action {
+  flex: none;
+}
+
+/* The workspace header of a page (Mes pièces): the same measures, the title first. */
+.ws-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  margin-block-end: var(--s-6);
+}
+
+.ws-head__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-title);
+  line-height: var(--u-title-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+}
+
+.ws-head__lead {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  max-inline-size: 65ch;
+}
+
+.ws-head__action {
+  display: grid;
+  justify-items: end;
+  gap: var(--s-1);
+  flex: none;
+}
+
+.ws-head__action-note {
+  font-family: var(--f-sans);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  color: var(--ink-3);
+  max-inline-size: 28ch;
+  text-align: end;
+}
+
+/* ---- Facts and the five-notch meter ------------------------------------------------ */
+.facts {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+}
+
+.facts__row {
+  display: grid;
+  gap: 2px;
+}
+
+.facts__row dt {
+  font-family: var(--f-sans);
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.facts__row dd {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink);
+}
+
+.facts__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.facts__row--meter dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+}
+
+.meter {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.meter__notch {
+  inline-size: 18px;
+  block-size: 6px;
+  border-radius: var(--radius-full);
+  background: var(--min-1);
+  border: 1px solid var(--hairline);
+}
+
+.meter__notch--on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.meter__words {
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .meter__notch--on {
+    animation: notch-fill var(--motion-emphasized) var(--ease-layout) both;
+  }
+
+  .meter__notch--on:nth-child(2) { animation-delay: calc(1 * var(--motion-stagger)); }
+  .meter__notch--on:nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)); }
+  .meter__notch--on:nth-child(4) { animation-delay: calc(3 * var(--motion-stagger)); }
+  .meter__notch--on:nth-child(5) { animation-delay: calc(4 * var(--motion-stagger)); }
+  .meter__notch--on:nth-child(n + 6) { animation-delay: calc(5 * var(--motion-stagger)); }
+}
+
+@keyframes notch-fill {
+  from { transform: scaleX(0); transform-origin: 0 50%; }
+  to { transform: scaleX(1); transform-origin: 0 50%; }
+}
+
+/* ---- ResponsibilityBar (DS §8.29): glyph + type + name, one line ----------------------- */
+.resp {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  margin-block-start: var(--s-3);
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--ink);
+}
+
+.resp__label {
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.resp__note {
+  color: var(--ink-2);
+  font-size: var(--u-small);
+}
+
+/* The next step's urgency, as the panel's edge colour — the word beside it says the same. */
+.ws-next--overdue::before,
+.ws-next--blocked::before {
+  background: var(--line-grad-err);
+}
+
+.ws-next--soon::before {
+  background: var(--line-grad-pending);
+}
+
+/* ---- Glyph (DS §8.6) ------------------------------------------------------------------ */
+.glyph {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--glyph-disc-md);
+  block-size: var(--glyph-disc-md);
+  border-radius: var(--radius-full);
+  background: var(--min-1);
+  color: var(--ink-2);
+}
+
+.glyph--sm { inline-size: var(--glyph-disc-sm); block-size: var(--glyph-disc-sm); }
+.glyph--lg { inline-size: var(--glyph-disc-lg); block-size: var(--glyph-disc-lg); }
+
+.glyph__icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.glyph--sm .glyph__icon { inline-size: var(--icon-xs); block-size: var(--icon-xs); }
+.glyph--lg .glyph__icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+
+.glyph--dark {
+  background: var(--mid-3);
+  color: var(--on-dark-2);
+}
+
+.glyph--none {
+  background: transparent;
+  border: 1.5px dashed var(--hairline-strong);
+}
+
+/* ---- HealthStrip (DS §8, CD §3.5.2) --------------------------------------------------- */
+.health__strip {
+  display: flex;
+  gap: 2px;
+  block-size: 10px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--min-1);
+}
+
+.health__segment {
+  flex: attr(data-share type(<number>), 1) 1 0;
+  min-inline-size: 6px;
+  background: var(--hairline-strong);
+  transform-origin: 0 50%;
+}
+
+/* The six registers with the CHIPS' marks (v3/chip.css: conforme = ink, neutro = ink-2, attesa =
+   ink-2 dashed, azione = pending, rifiuto = err, nullo = hairline-strong) — never the green of a
+   verdict, never the accent (gate C review, correction 1) — and, since four of them share the ink,
+   a texture as the non-chromatic channel: hatch for «attesa», dots for «rifiuto». */
+.health__segment[data-register="conforme"] { background: var(--ink); }
+.health__segment[data-register="neutro"] { background: var(--ink-2); }
+.health__segment[data-register="attesa"] { background: var(--ink-2); background-image: var(--texture-hatch); }
+.health__segment[data-register="azione"] { background: var(--pending-700); }
+.health__segment[data-register="rifiuto"] { background: var(--err-700); background-image: var(--texture-dots); background-size: 4px 4px; }
+.health__segment[data-register="nullo"] { background: var(--hairline-strong); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .health__segment {
+    animation: strip-fill var(--motion-emphasized) var(--ease-layout) both;
+  }
+}
+
+@keyframes strip-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.health__counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) var(--s-3);
+  margin: var(--s-3) 0 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.health__n {
+  font-size: var(--u-card);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.health__sep {
+  color: var(--ink-3);
+}
+
+.health__open {
+  color: var(--pending-700);
+  font-weight: 500;
+}
+
+.health--compact .health__counts {
+  font-size: var(--u-small);
+}
+
+/* ---- The controls row: SegmentedControl (DS §8.14) + search --------------------------- */
+.doc-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-block: var(--s-5) var(--s-4);
+  container-type: inline-size;
+  container-name: controls;
+}
+
+/* The control takes the row; the search stays at its end while both fit (1440), and wraps below
+   when they do not (1280 with the rail open) — never a control cut in a hidden scroll. */
+.doc-controls .seg {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+/* Narrower than the eight entries the row still scrolls: its end fades to say so. */
+@container controls (max-width: 899px) {
+  .doc-controls .seg {
+    -webkit-mask-image: var(--mask-fade-end);
+    mask-image: var(--mask-fade-end);
+  }
+
+  [dir="rtl"] .doc-controls .seg {
+    -webkit-mask-image: var(--mask-fade-end-rtl);
+    mask-image: var(--mask-fade-end-rtl);
+  }
+}
+
+.seg__list {
+  display: flex;
+  flex-wrap: nowrap;
+  inline-size: max-content;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  background: var(--min-1);
+  border-radius: var(--radius-full);
+}
+
+.seg__item {
+  margin: 0;
+}
+
+.seg__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: 32px;
+  padding: 0 var(--s-3);
+  border-radius: var(--radius-full);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--motion-fast) var(--ease-exit), background-color var(--motion-fast) var(--ease-exit);
+}
+
+.seg__link:hover,
+.seg__link:focus-visible {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.seg__link[aria-current] {
+  background: var(--min-2);
+  color: var(--ink);
+  box-shadow: var(--shadow-1);
+}
+
+.seg__link:focus-visible,
+.seg__link[aria-current]:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+.seg__link--empty {
+  color: var(--ink-3);
+}
+
+.seg__count {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.seg__link[aria-current] .seg__count {
+  color: var(--ink-2);
+}
+
+/* The register dot: the control is the strip's legend (one row, not two). */
+.seg__dot {
+  flex: none;
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--hairline-strong);
+  background: var(--hairline-strong);
+}
+
+/* The same marks and the same border language as the chips (solid · dashed · double · dotted). */
+.seg__dot[data-register="conforme"] { border-color: var(--ink); background: var(--ink); }
+.seg__dot[data-register="neutro"] { border-color: var(--ink-2); background: var(--ink-2); }
+.seg__dot[data-register="attesa"] { border-style: dashed; border-color: var(--ink-2); background: transparent; }
+.seg__dot[data-register="azione"] { border-color: var(--pending-700); background: var(--pending-700); }
+.seg__dot[data-register="rifiuto"] { border-style: double; border-width: 3px; border-color: var(--err-700); background: transparent; }
+.seg__dot[data-register="nullo"] { border-style: dotted; border-color: var(--hairline-strong); background: transparent; }
+
+.seg__link--empty .seg__dot {
+  opacity: 0.4;
+}
+
+/* On the phone the control is one scrolling row, not a pile of pills in a grey blob. */
+@media (max-width: 47.999rem) {
+  /* The eighth entry is off screen at 390: the row fades at its end (gate C round 2, defect 12: the
+     thin bar never renders under touch emulation). */
+  .seg {
+    margin-inline: calc(-1 * var(--page-pad));
+    padding-inline: var(--page-pad);
+    padding-block-end: var(--s-1);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-mask-image: var(--mask-fade-end);
+    mask-image: var(--mask-fade-end);
+  }
+
+  [dir="rtl"] .seg {
+    -webkit-mask-image: var(--mask-fade-end-rtl);
+    mask-image: var(--mask-fade-end-rtl);
+  }
+
+}
+
+.doc-search {
+  position: relative;
+  flex: 0 0 240px;
+}
+
+.doc-search__icon {
+  position: absolute;
+  inset-inline-start: var(--s-3);
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.doc-search__input {
+  inline-size: 100%;
+  min-block-size: var(--input-h);
+  padding: 0 var(--s-4) 0 calc(var(--s-3) + var(--icon-md) + var(--s-2));
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink);
+  background: var(--min-3);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+}
+
+[dir="rtl"] .doc-search__input {
+  padding: 0 calc(var(--s-3) + var(--icon-md) + var(--s-2)) 0 var(--s-4);
+}
+
+.doc-search__input:focus-visible {
+  border-color: var(--accent-ring);
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+/* ---- DocumentCollection and DocumentRow (DS §8.23–24) ---------------------------------- */
+.doc-workspace + .doc-workspace {
+  margin-block-start: var(--s-10);
+}
+
+.doc-workspace__head {
+  margin-block-end: var(--s-4);
+}
+
+.doc-workspace__title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.doc-workspace__ref {
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.doc-health {
+  padding: var(--s-5);
+}
+
+.doc-collection {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.doc-collection.panel {
+  padding: 0;
+  overflow: visible;
+}
+
+.doc-collection--bare {
+  margin-block-start: var(--s-4);
+  border-block-start: 1px solid var(--hairline);
+}
+
+.doc-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 1.5fr) minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1fr) auto 40px;
+  grid-template-areas: "identity state responsible due health action menu";
+  align-items: center;
+  gap: var(--s-4);
+  min-block-size: var(--row-min-h);
+  padding: var(--s-3) var(--s-5);
+  border-block-end: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--ink);
+  transition: background-color var(--motion-fast) var(--ease-exit), box-shadow var(--motion-fast) var(--ease-exit);
+}
+
+.doc-row:last-child {
+  border-block-end: 0;
+}
+
+.doc-collection.panel .doc-row:first-child {
+  border-start-start-radius: var(--radius-lg);
+  border-start-end-radius: var(--radius-lg);
+}
+
+.doc-collection.panel .doc-row:last-child {
+  border-end-start-radius: var(--radius-lg);
+  border-end-end-radius: var(--radius-lg);
+}
+
+/* The row lifts off the sheet under the pointer (DS §6); focus inside draws the inset ring. */
+.doc-row:hover {
+  background: var(--surface-hover);
+  box-shadow: var(--shadow-1);
+  z-index: var(--z-raised);
+}
+
+.doc-row:focus-within {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: -2px;
+}
+
+.doc-row__identity {
+  grid-area: identity;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-inline-size: 0;
+}
+
+.doc-row__words {
+  min-inline-size: 0;
+}
+
+.doc-row__title {
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.doc-row__qualifier {
+  font-size: var(--u-caption);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.doc-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-3);
+}
+
+.doc-row__reason {
+  color: var(--ink-2);
+}
+
+.doc-row__state {
+  grid-area: state;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.doc-row__blocked {
+  font-family: var(--f-mono);
+  font-size: var(--u-caption);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.doc-row__responsible {
+  grid-area: responsible;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-inline-size: 0;
+  color: var(--ink-2);
+}
+
+.doc-row__actor-note {
+  color: var(--ink-3);
+}
+
+.doc-row__due {
+  grid-area: due;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+
+.doc-row__due-icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.doc-row__due--soon { color: var(--pending-700); }
+.doc-row__due--overdue { color: var(--err-700); font-weight: 500; }
+
+.doc-row__none {
+  color: var(--ink-3);
+}
+
+.doc-row__health {
+  grid-area: health;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-3);
+}
+
+.doc-row__action {
+  grid-area: action;
+  justify-self: end;
+}
+
+.doc-row__menu {
+  grid-area: menu;
+  justify-self: end;
+  position: relative;
+}
+
+.doc-row__more {
+  display: grid;
+  place-items: center;
+  inline-size: var(--control-icon);
+  block-size: var(--control-icon);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.doc-row__more:hover,
+.doc-row__more:focus-visible {
+  background: var(--min-1);
+  color: var(--ink);
+}
+
+.doc-row__more .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+/* The row's menu: a native popover, level 3. */
+.doc-menu {
+  margin: 0;
+  padding: var(--s-2);
+  min-inline-size: 220px;
+  background: var(--min-3);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-3);
+}
+
+.doc-menu:popover-open {
+  display: grid;
+  gap: 2px;
+}
+
+.doc-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: var(--control-sm);
+  padding: 0 var(--s-3);
+  border-radius: var(--radius-md);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.doc-menu__item:hover,
+.doc-menu__item:focus-visible {
+  background: var(--min-1);
+  text-decoration: none;
+}
+
+.doc-menu__item .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--ink-3);
+}
+
+/* The dashboard's compact row: identity · state · due, in a bare list (no responsible, no action
+   — the register page carries those; the dashboard's action is the next step's). Two classes so
+   the rule outranks the width rules below whatever their order. */
+.doc-row.doc-row--compact {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "identity state due";
+  column-gap: var(--s-4);
+  min-block-size: 52px;
+  padding-inline: 0;
+}
+
+.doc-collection__none {
+  margin: var(--s-4) 0 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  color: var(--ink-2);
+}
+
+/* The row's grid follows the SHEET's width, not the viewport's (gate C review, correction 2: at
+   1024 with the rail open the sheet is 712 px). Seven zones only when the seven fit on one line
+   with the chips whole (≥ 1100 px of sheet: measured whole at 1128); below, five zones with the action on its own row; below
+   700 px the row is a DocumentCard. */
+.doc-collection {
+  container-type: inline-size;
+  container-name: collection;
+}
+
+.doc-row__state,
+.doc-row__state .chip {
+  white-space: nowrap;
+}
+
+@container collection (max-width: 1099px) {
+  .doc-row {
+    grid-template-columns: minmax(0, 1fr) auto auto 40px;
+    grid-template-areas:
+      "identity state responsible menu"
+      "due action action menu";
+    row-gap: var(--s-2);
+  }
+
+  .doc-row__health { display: none; }
+
+  .doc-row__action { justify-self: end; }
+}
+
+@container collection (max-width: 699px) {
+  .doc-collection.panel {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .doc-row,
+  .doc-row--compact {
+    grid-template-columns: minmax(0, 1fr) 40px;
+    grid-template-areas:
+      "identity menu"
+      "state state"
+      "responsible responsible"
+      "due due"
+      "action action";
+    gap: var(--s-3);
+    padding: var(--s-4);
+    background: var(--min-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-1);
+  }
+
+  .doc-row.doc-row--compact {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "identity identity"
+      "state due";
+    background: transparent;
+    border: 0;
+    border-block-end: 1px solid var(--hairline);
+    border-radius: 0;
+    box-shadow: none;
+    padding-inline: 0;
+  }
+
+  .doc-collection.panel .doc-row:first-child,
+  .doc-collection.panel .doc-row:last-child {
+    border-radius: var(--radius-lg);
+  }
+
+  .doc-row__action,
+  .doc-row__action .btn {
+    justify-self: stretch;
+    inline-size: 100%;
+  }
+
+  .doc-controls {
+    align-items: stretch;
+  }
+
+  .doc-search {
+    flex-basis: 100%;
+  }
+}
+
+/* ---- JourneyRail (DS §8.28) -------------------------------------------------------------- */
+.ws-journey {
+  padding: var(--s-2) 0 0;
+}
+
+.journey {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: journey;
+}
+
+.journey__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: start;
+  counter-increment: journey;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+}
+
+.journey__node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: var(--radius-full);
+  background: var(--min-2);
+  border: 2px solid var(--hairline-strong);
+  font-size: var(--u-caption);
+  font-weight: 600;
+  color: var(--ink-2);
+  z-index: var(--z-raised);
+}
+
+.journey__node::after {
+  content: counter(journey);
+}
+
+.journey__step--current .journey__node {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 6px var(--accent-wash);
+}
+
+.journey__step--current {
+  color: var(--ink);
+}
+
+.journey__label {
+  font-weight: 500;
+}
+
+.journey__here {
+  grid-column: 2;
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.journey__actor {
+  grid-column: 2;
+  color: var(--ink-3);
+}
+
+/* The vertical line between nodes, and the frontier MA→IT as a dashed stretch. */
+.journey__step::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 13px;
+  inset-block-start: 28px;
+  block-size: calc(100% + var(--s-4));
+  inline-size: 2px;
+  background: var(--hairline-strong);
+}
+
+/* The side's name at the first step of each side: the frontier MA→IT as a word (correction 7c). */
+.journey__side {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  margin-block-end: var(--s-1);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.journey__step:has(.journey__side) .journey__label {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* The vertical rails draw their line downwards, once (pattern «draw»); the horizontal one below
+   64rem keeps `rail-draw` (scaleX). Gate D review, correction 6. */
+@media (prefers-reduced-motion: no-preference) {
+  .journey__step::before {
+    transform-origin: 50% 0;
+    animation: rail-draw-y var(--motion-draw) var(--ease-enter) both;
+  }
+
+  .journey__step:nth-child(2)::before { animation-delay: calc(2 * var(--motion-stagger)); }
+  .journey__step:nth-child(3)::before { animation-delay: calc(4 * var(--motion-stagger)); }
+  .journey__step:nth-child(4)::before { animation-delay: calc(6 * var(--motion-stagger)); }
+  .journey__step:nth-child(5)::before { animation-delay: calc(8 * var(--motion-stagger)); }
+  .journey__step:nth-child(6)::before { animation-delay: calc(10 * var(--motion-stagger)); }
+}
+
+@keyframes rail-draw-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.journey__step:last-child::before {
+  display: none;
+}
+
+.journey__step--frontier .journey__node {
+  border-style: dashed;
+}
+
+@media (min-width: 64rem) {
+  .journey {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--s-3);
+  }
+
+  .journey__step {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-2);
+  }
+
+  .journey__step::before {
+    inset-inline-start: 28px;
+    inset-block-start: 13px;
+    block-size: 2px;
+    inline-size: calc(100% - 28px + var(--s-3));
+  }
+
+  .journey__here,
+  .journey__actor {
+    grid-column: 1;
+  }
+
+  /* The line draws itself once, from the start (pattern «draw»). */
+  /* The horizontal rail: the side's name on a row of its own above every node, so the nodes of
+     the seven steps stay on one line (gate D review, correction 1). */
+  .journey:not(.journey--descriptive) .journey__step {
+    grid-template-rows: 16px 28px auto auto;
+  }
+
+  .journey:not(.journey--descriptive) .journey__side {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .journey:not(.journey--descriptive) .journey__node {
+    grid-row: 2;
+  }
+
+  .journey:not(.journey--descriptive) .journey__label,
+  .journey:not(.journey--descriptive) .journey__step:has(.journey__side) .journey__label {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .journey:not(.journey--descriptive) .journey__step::before {
+    inset-block-start: 37px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .journey:not(.journey--descriptive) .journey__step::before {
+      transform-origin: 0 50%;
+      animation: rail-draw var(--motion-draw) var(--ease-enter) both;
+    }
+
+    /* The stagger at the animation's own specificity (gate D round 2, defect 14). */
+    .journey:not(.journey--descriptive) .journey__step:nth-child(2)::before { animation-delay: calc(2 * var(--motion-stagger)); }
+    .journey:not(.journey--descriptive) .journey__step:nth-child(3)::before { animation-delay: calc(4 * var(--motion-stagger)); }
+    .journey:not(.journey--descriptive) .journey__step:nth-child(4)::before { animation-delay: calc(6 * var(--motion-stagger)); }
+    .journey:not(.journey--descriptive) .journey__step:nth-child(5)::before { animation-delay: calc(8 * var(--motion-stagger)); }
+    .journey:not(.journey--descriptive) .journey__step:nth-child(6)::before { animation-delay: calc(10 * var(--motion-stagger)); }
+
+    [dir="rtl"] .journey:not(.journey--descriptive) .journey__step::before {
+      transform-origin: 100% 50%;
+    }
+
+    .journey__step:nth-child(2)::before { animation-delay: calc(2 * var(--motion-stagger)); }
+    .journey__step:nth-child(3)::before { animation-delay: calc(4 * var(--motion-stagger)); }
+    .journey__step:nth-child(4)::before { animation-delay: calc(6 * var(--motion-stagger)); }
+    .journey__step:nth-child(5)::before { animation-delay: calc(8 * var(--motion-stagger)); }
+    .journey__step:nth-child(6)::before { animation-delay: calc(10 * var(--motion-stagger)); }
+  }
+}
+
+@keyframes rail-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ---- Dates and threads (the dashboard's small lists) --------------------------------------- */
+.dates,
+.threads {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dates__row,
+.threads__row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-block-size: var(--table-row-h);
+  border-block-start: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--ink);
+}
+
+.dates__when {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+  min-inline-size: 7ch;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+
+.dates__when .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.dates__row--soon .dates__when { color: var(--pending-700); }
+.dates__row--overdue .dates__when { color: var(--err-700); font-weight: 500; }
+
+.threads__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  inline-size: 100%;
+  min-block-size: var(--table-row-h);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.threads__link:hover .threads__subject,
+.threads__link:focus-visible .threads__subject {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.threads__row--unread .threads__subject {
+  font-weight: 600;
+}
+
+/* A word typed without a space (a reference, an identifier) never widens the row: the flex item
+   may shrink below its longest word, which then breaks (browser test, 101 characters → 1105 px). */
+.dates__what,
+.threads__subject {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.threads__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+  font-size: var(--u-small);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- EmptyState V4 (DS §8.30) ------------------------------------------------------------- */
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-2);
+  padding: var(--s-8) var(--s-6);
+  text-align: center;
+  border: 1.5px dashed var(--hairline-strong);
+  border-radius: var(--radius-lg);
+  font-family: var(--f-sans);
+}
+
+.empty-state__icon {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  padding: 12px;
+  box-sizing: content-box;
+  border-radius: var(--radius-full);
+  background: var(--min-1);
+  color: var(--ink-3);
+}
+
+.empty-state__title {
+  margin: var(--s-2) 0 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.empty-state__text {
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  max-inline-size: 40ch;
+}
+
+.empty-state p:last-child {
+  margin: var(--s-2) 0 0;
+}
+
+/* ---- Chip: the pill form of V4 on top of the V3 stamp ---------------------------------------- */
+.chip {
+  border-radius: var(--radius-full);
+  min-block-size: var(--chip-h);
+  padding-inline: 10px;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 500;
+}
+
+/* ---- The assessment panel keeps its outcome block; the rest is the panel's ----------------- */
+.ws-assessment {
+  margin-block-start: var(--s-6);
+}
+
+/* ---- Forced colours ----------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .panel { border-color: CanvasText; }
+  .meter__notch--on, .health__segment[data-register] { background: Highlight; background-image: none; forced-color-adjust: none; }
+  .health__segment[data-register="attesa"] { background-image: var(--texture-hatch); }
+  .health__segment[data-register="rifiuto"] { background-image: var(--texture-dots); background-size: 4px 4px; }
+  .journey__step--current .journey__node { border-color: Highlight; }
+  .journey__step::before, .journey__step--done::before { background: CanvasText; forced-color-adjust: none; }
+  .doc-row:focus-within { outline-color: Highlight; }
+  .seg__list { border: 1px solid CanvasText; }
+  .seg__link[aria-current] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .seg__dot { border-color: CanvasText; forced-color-adjust: none; }
+  .seg__dot[data-register="conforme"], .seg__dot[data-register="neutro"], .seg__dot[data-register="azione"] { background: CanvasText; }
+}
+
+/* ---- The next step alone (no case file yet), the latest deposits, the account ---------- */
+.ws-grid .ws-next--alone {
+  grid-column: 1 / -1;
+}
+
+.deposits__head {
+  margin-block-start: var(--s-5);
+}
+
+.deposits {
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deposits__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: var(--s-3);
+  min-block-size: 40px;
+  padding-block: var(--s-1);
+  border-block-start: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  color: var(--ink);
+}
+
+.deposits__name {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.deposits__kind {
+  font-size: var(--u-small);
+  color: var(--ink-2);
+}
+
+.ws-grid .ws-account {
+  grid-column: 1 / -1;
+}
+
+.portal-account__identity {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.portal-account__identity strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.panel__actions--list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 47.999rem) {
+  .deposits__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .deposits__kind {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ==========================================================================================
+   THE CASE FILE (CREATIVE_DIRECTION.md §3.6): 8/4 from 80rem, the inspector sticky; the context
+   header's eyebrow, responsible and meter; the compact context bar; the descriptive journey; the
+   Timeline; the Table; the intervenants; the action bar of the phone.
+   ========================================================================================== */
+.ctx__eyebrow {
+  margin: 0 0 var(--s-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.ctx__resp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.ctx__progress {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* The compact bar: in the flow under the console bar, sticky, shown once the header is above. */
+.ctx-bar {
+  position: sticky;
+  inset-block-start: var(--ctx-h);
+  z-index: var(--z-sticky);
+  display: none;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: 56px;
+  margin: 0 calc(-1 * var(--page-pad)) var(--s-3);
+  padding: var(--s-2) var(--page-pad);
+  background: var(--glass-light);
+  -webkit-backdrop-filter: blur(var(--blur-nav));
+  backdrop-filter: blur(var(--blur-nav));
+  border-block-end: 1px solid var(--hairline);
+  box-shadow: var(--shadow-1);
+}
+
+.ctx-bar.is-on {
+  display: flex;
+}
+
+.ctx-bar__title {
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ctx-bar__action {
+  margin-inline-start: auto;
+}
+
+.file-grid {
+  display: grid;
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.file-grid__main,
+.file-grid__inspector {
+  display: grid;
+  gap: var(--s-5);
+  min-inline-size: 0;
+}
+
+/* The panels keep their dashboard spans nowhere else: one column here (measured: `span 8` in a
+   one-column grid made eight implicit tracks and 1 356 px of page at 1 280). */
+.file-grid__main > *,
+.file-grid__inspector > * {
+  grid-column: auto;
+}
+
+/* The pre-assessment's outcome inside a panel: the console's scale, not the V2 serif display. */
+.panel .outcome {
+  margin: 0 0 var(--s-3);
+  padding-inline-start: var(--s-3);
+  border-inline-start: 3px solid var(--accent);
+}
+
+.panel .outcome__kind {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (min-width: 80rem) {
+  .file-grid {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  }
+
+  .file-grid__inspector {
+    position: sticky;
+    inset-block-start: calc(var(--ctx-h) + 56px + var(--s-4));
+    /* Taller than the viewport it scrolls inside itself (gate D review, correction 3: 1 144 px
+       pinned at 900 kept two panels out of reach). */
+    max-block-size: calc(100dvh - var(--ctx-h) - 56px - var(--s-4) * 2);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-inline-end: var(--s-1);
+  }
+}
+
+/* The descriptive journey: vertical at every width, the date beside the step. */
+.journey--descriptive {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  gap: var(--s-4);
+}
+
+.journey--descriptive .journey__step {
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  column-gap: var(--s-3);
+  row-gap: 0;
+}
+
+.journey--descriptive .journey__step::before {
+  inset-inline-start: 13px;
+  inset-block-start: 28px;
+  block-size: calc(100% + var(--s-4));
+  inline-size: 2px;
+}
+
+.journey--descriptive .journey__here,
+.journey--descriptive .journey__actor {
+  grid-column: 2;
+}
+
+.journey--descriptive .journey__when {
+  grid-column: 3;
+  grid-row: 1;
+  font-family: var(--f-mono);
+  font-size: var(--u-small);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.journey__step--done .journey__node {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-dark);
+}
+
+.journey__step--done::before {
+  background: var(--accent);
+}
+
+/* The Timeline (§8.27): spine hairline, node 12, tabular date, the last node lit. */
+.tl {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s-3);
+}
+
+.tl__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 12px auto minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: start;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+}
+
+.tl__row::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 5px;
+  inset-block-start: 14px;
+  block-size: calc(100% + var(--s-3));
+  inline-size: 2px;
+  background: var(--hairline);
+}
+
+.tl__row--last::before {
+  display: none;
+}
+
+.tl__node {
+  inline-size: 12px;
+  block-size: 12px;
+  margin-block-start: 4px;
+  border-radius: var(--radius-full);
+  background: var(--hairline-strong);
+  z-index: var(--z-raised);
+}
+
+.tl__row--last .tl__node {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-wash);
+}
+
+.tl__when {
+  font-family: var(--f-mono);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tl__what {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+}
+
+.tl__title {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.tl__detail,
+.tl__actor {
+  flex-basis: 100%;
+  color: var(--ink-3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tl__row--last .tl__node {
+    animation: tl-light var(--motion-emphasized) var(--ease-enter) both;
+  }
+}
+
+@keyframes tl-light {
+  from { box-shadow: 0 0 0 0 var(--accent-wash); background: var(--hairline-strong); }
+  to { box-shadow: 0 0 0 4px var(--accent-wash); background: var(--accent); }
+}
+
+/* The Table (§8.23): semantic, sticky head 44, rows 48, the chip and the form in the last cell. */
+/* No scroll region around the V4 table (the V2 `.table-region` of components.css scrolls): the
+   sticky head then sticks to the page; below 64rem the rows are cards and nothing overflows. */
+.panel .table-region,
+.table-region {
+  overflow: visible;
+  margin: var(--s-3) 0 0;
+  /* The rows become cards by the REGION's width, not the viewport's (gate E review, correction 6:
+     at 1024 with the rail open the region is 712 px). */
+  container-type: inline-size;
+  container-name: table;
+}
+
+.table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink);
+}
+
+.table thead th {
+  position: sticky;
+  /* Under the console's sticky bar, and under the file's compact bar while it is on. */
+  inset-block-start: var(--ctx-h);
+  white-space: nowrap;
+  min-block-size: 44px;
+  padding: var(--s-3) var(--s-3);
+  background: var(--min-1);
+  border-block-end: 1px solid var(--hairline-strong);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  text-align: start;
+  color: var(--ink-2);
+}
+
+.table tbody th,
+.table tbody td {
+  padding: var(--s-3) var(--s-3);
+  border-block-end: 1px solid var(--hairline);
+  vertical-align: top;
+  text-align: start;
+  font-weight: 400;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.table__primary {
+  display: block;
+  font-weight: 500;
+}
+
+.table__gloss {
+  display: block;
+  color: var(--ink-3);
+}
+
+.table__actor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.table__none {
+  color: var(--ink-3);
+}
+
+.table__overdue {
+  color: var(--err-700);
+  font-weight: 500;
+}
+
+.table__row--overdue th {
+  border-inline-start: 3px solid var(--err-700);
+}
+
+.table__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-block-start: var(--s-2);
+}
+
+.table__select {
+  min-block-size: var(--control-sm);
+  padding: 0 var(--s-2);
+  background: var(--min-3);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  color: var(--ink);
+}
+
+/* The intervenants. */
+.actors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.actors__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: center;
+  min-block-size: 48px;
+  padding-block: var(--s-2);
+  border-block-start: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink);
+}
+
+.actors__who {
+  display: block;
+  font-weight: 500;
+}
+
+.actors__mandate {
+  display: block;
+  font-size: var(--u-small);
+  color: var(--ink-3);
+}
+
+.file-state__form {
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: 28rem;
+}
+
+/* The phone: the primary action in a bar above the bottom navigation. */
+.file-action-bar {
+  display: none;
+}
+
+@media (max-width: 63.999rem) {
+  .file-action-bar {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: var(--bottom-bar-h);
+    z-index: var(--z-sticky);
+    display: flex;
+    padding: var(--s-2) var(--page-pad);
+    background: var(--glass-light);
+    -webkit-backdrop-filter: blur(var(--blur-nav));
+    backdrop-filter: blur(var(--blur-nav));
+    border-block-start: 1px solid var(--hairline);
+  }
+
+  .file-action-bar .btn {
+    inline-size: 100%;
+  }
+
+  .file-grid {
+    padding-block-end: 72px;
+  }
+
+  .ctx-bar {
+    display: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .tl__node,
+  .tl__row--last .tl__node,
+  .journey__step--done .journey__node {
+    background: Highlight;
+    box-shadow: none;
+  }
+
+  .ctx-bar,
+  .file-action-bar {
+    background: Canvas;
+    border-color: CanvasText;
+  }
+}
+
+/* ---- The company dashboard (CREATIVE_DIRECTION.md §3.8) ------------------------------- */
+.company-id {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-block-end: var(--s-3);
+}
+
+.company-id .panel__eyebrow {
+  margin: 0;
+}
+
+.ctx__count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Two columns only when the panel can hold them (gate E review, correction 5: 147 px columns at
+   1440, 78 at 1024 with the rail open); the panel is the container. */
+.ws-company {
+  container-type: inline-size;
+  container-name: company;
+}
+
+.facts--two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--s-4);
+}
+
+.facts__row dd {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+@container company (min-width: 30rem) {
+  .facts--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.table--needs .table__action {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.table--needs .table__date {
+  font-family: var(--f-mono);
+  font-size: var(--u-small);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.table__actor--none {
+  color: var(--ink-3);
+}
+
+@media (min-width: 64rem) {
+  .ws-grid .ws-company {
+    grid-column: span 4;
+  }
+
+  .ws-grid .ws-wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .table--needs .table__action {
+    text-align: start;
+  }
+}
+
+/* ---- Gate C review: touch targets (5), the file's action on the phone (7a), the files table ----- */
+@media (pointer: coarse) {
+  .seg__link {
+    min-block-size: var(--hit-min);
+  }
+
+  .doc-row__more {
+    position: relative;
+  }
+
+  .doc-row__more::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  /* The sticky bar carries the action: not twice on one screen. */
+  .ctx--file .ctx__action {
+    display: none;
+  }
+
+  .doc-controls {
+    flex-wrap: wrap;
+  }
+
+  .doc-search {
+    flex: 1 1 100%;
+  }
+}
+
+/* The account's files and the organisation's, below the register (pilot page, correction 4):
+   a Table, Plex, the file name as a link without the underline of a paragraph. */
+.files__lead {
+  margin: 0 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  max-inline-size: 72ch;
+}
+
+.table__link {
+  font-weight: 500;
+  color: var(--accent-hover);
+  text-decoration: none;
+}
+
+.table__link:hover,
+.table__link:focus-visible {
+  text-decoration: underline;
+}
+
+.files__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: var(--s-4) 0 0;
+}
+
+@media (pointer: coarse) {
+  /* A file's link in a table cell reaches 44 px of touch without a taller row. */
+  .table__link {
+    position: relative;
+    z-index: var(--z-raised);
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+}
+
+/* ---- Gate D review: touch, forced colours, the state form as V4 inputs ------------------------ */
+@media (pointer: coarse) {
+  .table__select {
+    min-block-size: var(--hit-min);
+  }
+}
+
+@media (forced-colors: active) {
+  .tl__node,
+  .tl__row--last .tl__node {
+    animation: none;
+    background: Highlight;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+
+  .tl__row::before {
+    background: CanvasText;
+    forced-color-adjust: none;
+  }
+}
+
+.file-state__form select,
+.file-state__form input {
+  inline-size: 100%;
+  min-block-size: var(--input-h);
+  padding: 0 14px;
+  background: var(--min-3);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink);
+}
+
+.file-state__form .form-field__label {
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* The sample of the phone's action bar in the showcase: in the flow, not fixed. */
+.file-action-bar--sample {
+  position: static;
+  display: flex;
+  padding: var(--s-2) var(--s-4);
+  background: var(--glass-light);
+  border-block-start: 1px solid var(--hairline);
+}
+
+/* ---- The table as cards, by the region's width (gate E review, corrections 6 and 7) ---------
+   The V2 `table:has(tbody [data-label])` rules of portal.css also reach these tables below 48rem
+   (a «BESOIN» label over the title, 48 px per cell): overridden here at a higher specificity. */
+/* Cards below 640 px of region for every table; the needs table, five wide columns, below 880
+   (gate D round 2, defect 13: the file's checklist, 690–774 px, was never a table). */
+@container table (max-width: 639px) {
+  .panel .table thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .panel .table tbody tr {
+    display: grid;
+    gap: var(--s-1);
+    padding-block: var(--s-3);
+    border-block-end: 1px solid var(--hairline);
+  }
+
+  .panel .table tbody th,
+  .panel .table tbody td {
+    padding: 0;
+    border: 0;
+    min-block-size: 0;
+  }
+
+  .panel .table tbody th::before {
+    content: none;
+  }
+
+  .panel .table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin: 0 0 2px;
+    font-family: var(--f-sans);
+    font-size: var(--u-caption);
+    line-height: var(--u-caption-lh);
+    font-weight: 600;
+    letter-spacing: var(--track-eyebrow);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .panel .table__action {
+    text-align: start;
+  }
+}
+
+@container table (max-width: 879px) {
+  .panel .table--needs thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .panel .table--needs tbody tr {
+    display: grid;
+    gap: var(--s-1);
+    padding-block: var(--s-3);
+    border-block-end: 1px solid var(--hairline);
+  }
+
+  .panel .table--needs tbody th,
+  .panel .table--needs tbody td {
+    padding: 0;
+    border: 0;
+    min-block-size: 0;
+  }
+
+  .panel .table--needs tbody th::before {
+    content: none;
+  }
+
+  .panel .table--needs tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin: 0 0 2px;
+    font-family: var(--f-sans);
+    font-size: var(--u-caption);
+    line-height: var(--u-caption-lh);
+    font-weight: 600;
+    letter-spacing: var(--track-eyebrow);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .panel .table--needs .table__action {
+    text-align: start;
+  }
+}
+
+/* The sticky head under the file's compact bar while it is on (console.js, `has-ctx-bar`). */
+body.has-ctx-bar .table thead th {
+  inset-block-start: calc(var(--ctx-h) + 56px);
+}
+
+/* The need's title at the console's body size (CD §3.8.3: 15/24 500). */
+.table--needs .table__primary {
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+}
+
+/* The empty region inside a panel, in the console's face (the V2 rule is register.css's). */
+.panel .empty {
+  border-block-start-color: var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  max-inline-size: 60ch;
+}
+
+/* The showcase's samples stay in the flow. */
+.ctx-bar--sample {
+  position: static;
+  margin: 0 0 var(--s-3);
+}
+
+/* ---- ONE ring, ONE companion on every control of the workspace (gate C round 2, defect 14): the
+   generic 5 px halo of the older sheets gives way to the cascade's 2 px companion. ---------- */
+.console__workspace :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible,
+.console__workspace .form-field input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus-visible,
+.console__workspace .form-field select:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+/* ---- Gate E round 2 (defects 6, 7, 11) ---------------------------------------------------- */
+/* The need's title keeps at least two fifths of the row, so the title reads on one or two lines
+   with the rail open (measured 28–33 % before). */
+.table--needs th[scope="row"] {
+  inline-size: 40%;
+}
+
+/* A panel head's button never wraps («Nouveau besoin» on two lines at 390). */
+.panel__head .btn {
+  white-space: nowrap;
+}
+
+@container table (max-width: 639px) {
+  .panel .table tbody tr {
+    gap: 2px;
+  }
+}
+
+/* As cards the title cell takes the card's width, not two fifths of it. */
+@container table (max-width: 879px) {
+  .panel .table--needs tbody th[scope="row"] {
+    inline-size: auto;
+  }
+}

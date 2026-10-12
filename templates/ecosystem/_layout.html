@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Shared shell of the four ecosystem spaces (Entreprises, Institutions, Universités et Formation,
+Projet Pilote). Context contract (ecosystem.views._render): page_title, meta_description,
+breadcrumbs, space_key, photo, note, local_nav_items, links, is_preview, seo, jsonld.
+Blocks for the pages: space_header (page header, one h1), space_lead (optional full-width band
+between the header and the two-column body), space_main (main column), space_after (full-width).
+Prescribed texts enter only through the locked registry ({% locked %} / services.locked_text).
+{% endcomment %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-ecosystem page-ecosystem--{{ space_key }}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/ecosystem/ecosystem.css' %}">{% endblock %}
+{% block jsonld %}{% if jsonld %}<script type="application/ld+json">{{ jsonld }}</script>{% endif %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% include "ecosystem/partials/preview_notice.html" %}
+{% block space_header %}{% endblock %}
+{% block space_lead %}{% endblock %}
+<div class="container layout-sidebar ecosystem-layout">
+  <div class="layout-sidebar__aside ecosystem-layout__aside">
+    {% include "components/local_nav.html" with items=local_nav_items title=_("Les espaces de l’écosystème") %}
+  </div>
+  <div class="ecosystem-layout__main stack stack--lg">
+    {% block space_main %}{% endblock %}
+  </div>
+</div>
+{% block space_after %}{% endblock %}
+{% endblock %}

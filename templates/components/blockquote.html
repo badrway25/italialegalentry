@@ -1,0 +1,8 @@
+{% comment %}
+Institutional quotation (e.g. p1.companies.quote). Contract: `text` (the sentence, quotation
+marks included when prescribed), optional `cite`, `lang`.
+{% endcomment %}
+<blockquote class="blockquote-institutional"{% if lang %} lang="{{ lang }}"{% endif %}>
+  <p>{{ text }}</p>
+  {% if cite %}<cite>{{ cite }}</cite>{% endif %}
+</blockquote>

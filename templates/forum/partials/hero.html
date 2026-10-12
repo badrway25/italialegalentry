@@ -1,0 +1,38 @@
+{% load i18n forum_tags %}
+{% comment %}
+Institutional header. Title/subtitle/meta/patronage are locked texts (p2.forum.header.*).
+In permanent mode the H1 is the document's own wording « FORUM PERMANENT VÉNÉTIE–MAROC » (UI string).
+Logo slots render ONLY authorised partners with a logo (gate G6): no placeholder image is ever shown.
+{% endcomment %}
+<header class="forum-hero{% if event.hero_image %} forum-hero--with-image{% endif %}" id="forum-top">
+  <div class="container forum-hero__inner">
+    <div class="forum-hero__text">
+      <p class="forum-hero__eyebrow">{% if is_permanent %}{% translate "Espace permanent de dialogue et de coopération" %}{% else %}{% translate "Événement institutionnel" %}{% endif %}</p>
+      {% if is_permanent %}
+        <h1 class="forum-hero__title">{{ permanent_title }}</h1>
+        <p class="forum-hero__subtitle">{% event_text event "header.subtitle" %}</p>
+        <p class="forum-hero__meta"><span class="forum-hero__meta-label">{% translate "Rencontre de lancement :" %}</span> {% event_text event "header.meta" %}</p>
+      {% else %}
+        {% event_text event "header.title" "h1" "forum-hero__title" %}
+        {% event_text event "header.subtitle" "p" "forum-hero__subtitle" %}
+        <p class="forum-hero__meta"><time datetime="{{ event.starts_at|date:'c' }}">{% event_text event "header.meta" %}</time></p>
+      {% endif %}
+      {% event_text event "header.patronage" "p" "forum-hero__patronage" %}
+      {% if patron_partners %}
+        <ul class="forum-hero__logos" aria-label="{% translate 'Logos des institutions patronnes' %}">
+          {% for partner in patron_partners %}
+            <li class="forum-hero__logo"><img src="{{ partner.logo.file.url }}" alt="{{ partner.name }}" width="{{ partner.logo.width|default:160 }}" height="{{ partner.logo.height|default:80 }}" loading="lazy"></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if not is_permanent and registration_open and forms_enabled %}
+        <p class="forum-hero__actions"><a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a></p>
+      {% endif %}
+    </div>
+    {% if event.hero_image %}
+      <figure class="forum-hero__figure">
+        <img src="{{ event.hero_image.file.url }}" alt="{{ hero_image_alt }}" width="{{ event.hero_image.width|default:960 }}" height="{{ event.hero_image.height|default:640 }}">
+      </figure>
+    {% endif %}
+  </div>
+</header>

@@ -1,0 +1,402 @@
+[
+ {
+  "page": "home",
+  "path": "/fr/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home",
+  "path": "/fr/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home",
+  "path": "/fr/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home",
+  "path": "/fr/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home",
+  "path": "/fr/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "faq",
+  "path": "/fr/faq/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "faq",
+  "path": "/fr/faq/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "faq",
+  "path": "/fr/faq/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "faq",
+  "path": "/fr/faq/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "faq",
+  "path": "/fr/faq/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto",
+  "path": "/fr/espace-reserve/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto",
+  "path": "/fr/espace-reserve/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto",
+  "path": "/fr/espace-reserve/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto",
+  "path": "/fr/espace-reserve/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto",
+  "path": "/fr/espace-reserve/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "fascicoli",
+  "path": "/fr/espace-reserve/dossiers/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "fascicoli",
+  "path": "/fr/espace-reserve/dossiers/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "fascicoli",
+  "path": "/fr/espace-reserve/dossiers/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "fascicoli",
+  "path": "/fr/espace-reserve/dossiers/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "fascicoli",
+  "path": "/fr/espace-reserve/dossiers/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "documenti",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "documenti",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "documenti",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "documenti",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "documenti",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home_ar",
+  "path": "/ar/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home_ar",
+  "path": "/ar/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home_ar",
+  "path": "/ar/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home_ar",
+  "path": "/ar/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "home_ar",
+  "path": "/ar/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto_ar",
+  "path": "/ar/espace-reserve/",
+  "zoom": 100,
+  "css_viewport": "1280x800",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto_ar",
+  "path": "/ar/espace-reserve/",
+  "zoom": 125,
+  "css_viewport": "1024x640",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto_ar",
+  "path": "/ar/espace-reserve/",
+  "zoom": 150,
+  "css_viewport": "853x533",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto_ar",
+  "path": "/ar/espace-reserve/",
+  "zoom": 200,
+  "css_viewport": "640x400",
+  "status": 200,
+  "findings": []
+ },
+ {
+  "page": "cruscotto_ar",
+  "path": "/ar/espace-reserve/",
+  "zoom": 400,
+  "css_viewport": "320x200",
+  "status": 200,
+  "findings": []
+ }
+]

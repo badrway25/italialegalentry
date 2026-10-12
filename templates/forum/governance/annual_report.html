@@ -1,0 +1,223 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n %}
+{% comment %}
+The annual relation — and the page that must not lie about where its numbers come from.
+
+Every figure below was ASSEMBLED by `governance_services.build_report_sections` from the edition,
+its commissions, the proposals that were actually decided, the projects and the monitoring entries.
+Nothing here is typed by hand and nothing here is computed into an index: a number in this document
+is a count of rows or a sum of indicators somebody declared, which is the only kind of figure a
+governance report can still defend six months later.
+
+The sections are rendered one by one rather than through a generic table loop, because each one has
+its own columns and inventing a label for a key would be inventing content. A section the data does
+not support renders its `.empty` line and says who fills it.
+
+The relation is stored, not recomputed on read: once published it keeps saying what it said on the
+day it was published, even after the data moves on.
+{% endcomment %}
+{% block page_title %}{% translate "Relation annuelle" %}{% endblock %}
+{% block meta_description %}{% translate "La relation annuelle du Forum permanent, assemblée à partir des commissions, des propositions retenues, des projets et du suivi." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Relation annuelle" as header_title %}
+{% include "components/page_header.html" with title=header_title lead=edition.title_fr eyebrow=edition.year %}
+{% endblock %}
+
+{% block governance_content %}
+<p class="gloss">
+  {% if is_draft %}
+  <span class="state state--review" data-register="neutro">{% translate "projet" %}</span>
+  {% else %}
+  <span class="state state--done" data-register="conforme">{% translate "publiée" %}</span>
+  {% endif %}
+  {% if report.generated_at %}
+  <span>{% blocktranslate with date=report.generated_at|date:"d.m.Y" %}assemblée le {{ date }}{% endblocktranslate %}</span>
+  {% endif %}
+  {% if report.published_at %}
+  <span>{% blocktranslate with date=report.published_at|date:"d.m.Y" %}publiée le {{ date }}{% endblocktranslate %}</span>
+  {% endif %}
+</p>
+
+{% if is_draft %}
+<p class="note">
+  {% translate "Cette relation est un projet : elle est réassemblée à partir des données à chaque génération et n’a pas encore été publiée par le secrétariat du Forum. Les chiffres qu’elle contient peuvent donc encore changer." %}
+</p>
+{% endif %}
+
+{% if sections %}
+{% for section in sections %}
+
+{% if section.key == 'edition' %}
+<section class="portal-section" aria-labelledby="section-edition-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Édition" %}</span></p>
+  <h2 class="portal__section-title" id="section-edition-title">{{ section.title }}</h2>
+  {% for row in section.rows %}
+  <dl class="portal-facts">
+    <div class="portal-facts__row"><dt>{% translate "Intitulé" %}</dt><dd>{{ row.title }}</dd></div>
+    <div class="portal-facts__row"><dt>{% translate "Année" %}</dt><dd>{{ row.year }}</dd></div>
+    {% if row.city %}<div class="portal-facts__row"><dt>{% translate "Ville" %}</dt><dd>{{ row.city }}</dd></div>{% endif %}
+    <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{{ row.status }}</dd></div>
+  </dl>
+  {% endfor %}
+  <p class="gloss">
+    {% blocktranslate with participants=section.summary.participants commissions=section.summary.commissions mandates=section.summary.mandates_live %}{{ participants }} organisation(s) participante(s), {{ commissions }} commission(s), {{ mandates }} mandat(s) en cours.{% endblocktranslate %}
+  </p>
+</section>
+{% endif %}
+
+{% if section.key == 'commissions' %}
+<section class="portal-section" aria-labelledby="section-commissions-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Commissions" %}</span></p>
+  <h2 class="portal__section-title" id="section-commissions-title">{{ section.title }}</h2>
+  {% if section.rows %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-annual-report-1-{{ forloop.counter }}">
+    <table class="data-table">
+      <caption id="t-annual-report-1-{{ forloop.counter }}" class="visually-hidden">{% translate "Commissions de l’édition, leurs membres en fonction, leurs tables et leurs propositions" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Commission" %}</th>
+          <th scope="col">{% translate "État" %}</th>
+          <th scope="col">{% translate "Membres" %}</th>
+          <th scope="col">{% translate "Tables" %}</th>
+          <th scope="col">{% translate "Propositions" %}</th>
+          <th scope="col">{% translate "Retenues" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in section.rows %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Commission' %}">{{ row.name }}</th>
+          <td data-label="{% translate 'État' %}">{{ row.status }}</td>
+          <td data-label="{% translate 'Membres' %}">{{ row.members_live }}</td>
+          <td data-label="{% translate 'Tables' %}">{{ row.tables }}</td>
+          <td data-label="{% translate 'Propositions' %}">{{ row.proposals }}</td>
+          <td data-label="{% translate 'Retenues' %}">{{ row.accepted }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucune commission n’est constituée pour cette édition." %}</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if section.key == 'proposals' %}
+<section class="portal-section" aria-labelledby="section-proposals-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Propositions" %}</span></p>
+  <h2 class="portal__section-title" id="section-proposals-title">{{ section.title }}</h2>
+  <p class="gloss">
+    {% blocktranslate with submitted=section.summary.submitted accepted=section.summary.accepted rejected=section.summary.rejected withdrawn=section.summary.withdrawn %}{{ submitted }} proposition(s) déposée(s) : {{ accepted }} retenue(s), {{ rejected }} écartée(s), {{ withdrawn }} retirée(s).{% endblocktranslate %}
+  </p>
+  {% if section.rows %}
+  <ol class="sources">
+    {% for row in section.rows %}
+    {% comment %}
+    Exactly TWO grid children per row — the ordinal drawn by ::before and this span — or the
+    third one wraps under the ordinal column. Same constraint as the source list of an outcome.
+    {% endcomment %}
+    <li class="sources__item">
+      <span>
+        {{ row.title }} — {{ row.commission }}
+        <span class="sources__consulted">{{ row.reference }} · {{ row.proposer }}{% if row.decided_on %} · {{ row.decided_on }}{% endif %}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">{% translate "Aucune proposition retenue sur cette édition. Les propositions sont décidées par les commissions ; la relation ne reprend que celles qui l’ont été." %}</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if section.key == 'projects' %}
+<section class="portal-section" aria-labelledby="section-projects-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Projets" %}</span></p>
+  <h2 class="portal__section-title" id="section-projects-title">{{ section.title }}</h2>
+  {% if section.rows %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-annual-report-2-{{ forloop.counter }}">
+    <table class="data-table">
+      <caption id="t-annual-report-2-{{ forloop.counter }}" class="visually-hidden">{% translate "Projets de l’édition, leur responsable, leur état et l’avancement de leurs jalons" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Projet" %}</th>
+          <th scope="col">{% translate "Commission" %}</th>
+          <th scope="col">{% translate "Responsable" %}</th>
+          <th scope="col">{% translate "État" %}</th>
+          <th scope="col">{% translate "Jalons" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in section.rows %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Projet' %}">
+            {{ row.title }}
+            <span class="t-caption">{{ row.origin }}</span>
+          </th>
+          <td data-label="{% translate 'Commission' %}">{{ row.commission }}</td>
+          <td data-label="{% translate 'Responsable' %}">{{ row.lead }}</td>
+          <td data-label="{% translate 'État' %}">{{ row.status }}</td>
+          <td data-label="{% translate 'Jalons' %}">{% blocktranslate with done=row.milestones_done total=row.milestones_total %}{{ done }} sur {{ total }}{% endblocktranslate %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun projet n’est issu des propositions retenues de cette édition." %}</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if section.key == 'monitoring' %}
+<section class="portal-section" aria-labelledby="section-monitoring-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivi" %}</span></p>
+  <h2 class="portal__section-title" id="section-monitoring-title">{{ section.title }}</h2>
+  {% if section.rows %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-annual-report-3-{{ forloop.counter }}">
+    <table class="data-table">
+      <caption id="t-annual-report-3-{{ forloop.counter }}" class="visually-hidden">{% translate "Relevés de suivi par projet, période la plus récente et indicateurs déclarés" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Projet" %}</th>
+          <th scope="col">{% translate "Relevés" %}</th>
+          <th scope="col">{% translate "Dernière période" %}</th>
+          <th scope="col">{% translate "Indicateurs déclarés" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in section.rows %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Projet' %}">{{ row.project }}</th>
+          <td data-label="{% translate 'Relevés' %}">{{ row.entries }}</td>
+          <td data-label="{% translate 'Dernière période' %}">{{ row.latest_period }}</td>
+          <td data-label="{% translate 'Indicateurs déclarés' %}">{% for key, value in row.indicators.items %}{{ key }} : {{ value }}{% if not forloop.last %} · {% endif %}{% empty %}—{% endfor %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% if section.summary.projects_without_monitoring %}
+  <p class="gloss">
+    {% blocktranslate count counter=section.summary.projects_without_monitoring %}Un projet n’a fait l’objet d’aucun relevé de suivi.{% plural %}{{ counter }} projets n’ont fait l’objet d’aucun relevé de suivi.{% endblocktranslate %}
+  </p>
+  {% endif %}
+  {% if not section.rows %}
+  <p class="empty">{% translate "Aucun relevé de suivi n’a été consigné. Un projet sans suivi ne peut pas alimenter la relation : c’est précisément ce que cette section est là pour rendre visible." %}</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% endfor %}
+
+<p class="note">
+  {% translate "Cette relation est assemblée à partir des données de l’édition : éditions, commissions, propositions retenues, projets et relevés de suivi. Elle n’est pas rédigée : aucun chiffre n’y est saisi à la main et aucun indice n’y est calculé. Elle rend compte du travail des commissions ; elle n’emporte aucune décision." %}
+</p>
+{% else %}
+<p class="empty">
+  {% translate "La relation de cette édition n’a pas encore été assemblée. Le secrétariat du Forum la génère à partir des commissions, des propositions retenues, des projets et des relevés de suivi." %}
+</p>
+{% endif %}
+{% endblock %}

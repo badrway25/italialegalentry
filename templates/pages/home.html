@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n static cms_nav %}
+{% comment %}
+Homepage — institutional entry point (master brief §21). The page is the ordered list of sections
+computed by pages.services.home_sections(): back-office order, publication status, gates and
+"has content" are all decided there. Prescribed texts reach the partials only through the locked
+registry (services.locked / {% locked %}); nothing prescribed is typed in these templates.
+{% endcomment %}
+{% block title %}{{ site.project_name }} · {% translate "Parcours réguliers vers l’Italie" %}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-home{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/pages.css' %}">
+{% comment %}The door's photograph is the LCP element (measured on the gzip server, slow 4G): preloaded, or it is discovered only after the stylesheets.{% endcomment %}
+<link rel="preload" as="image" href="{% static 'brand/v2/doorway-arch-400.webp' %}" fetchpriority="high">{% endblock %}
+{% block jsonld %}<script type="application/ld+json">{{ jsonld|safe }}</script>{% endblock %}
+{% block content %}
+{% if not has_hero %}<h1 class="visually-hidden">{% brand "home__wordmark" %}</h1>{% endif %}
+{% for s in sections %}{% include s.template with s=s d=s.data %}
+{% endfor %}
+{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'pages/js/home.js' %}"></script>
+<script type="module" src="{% static 'js/dist/home.js' %}"></script>{% endblock %}

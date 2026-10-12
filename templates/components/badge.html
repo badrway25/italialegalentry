@@ -1,0 +1,9 @@
+{% comment %}
+Contract: `label`, optional `kind` in neutral|info|success|warning|error|pending|primary, `icon`.
+
+`data-register` is what the stylesheet reads (static/css/v3/chip.css); the `badge--kind` class is
+kept for the templates and tests that still name it, and no longer carries a colour. The kind is
+translated once, here, by core.chips.KIND_REGISTER: success → conforme (ink, a closing rule and a
+check — never green, because this platform approves nothing), warning → azione, error → rifiuto,
+pending → attesa, everything else → neutro.
+{% endcomment %}{% with register=kind|badge_register %}<span class="badge{% if kind %} badge--{{ kind }}{% endif %}"{% if register %} data-register="{{ register }}"{% endif %}>{% if icon %}{% svg_icon icon "icon icon--sm" %}{% endif %}{{ label }}</span>{% endwith %}

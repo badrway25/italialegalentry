@@ -1,0 +1,50 @@
+[project]
+name = "italylegalentry"
+version = "0.1.0"
+description = "Italy Legal Entry™ — institutional Django platform (AGAMI — Dialogo Giuridico Interculturale APS)"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["migrations", ".venv", "node_modules", "docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "DJ", "S", "C4", "SIM"]
+ignore = ["S101", "S308", "DJ001"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "B", "SIM", "E501"]
+"**/tests/**" = ["S", "B", "SIM"]
+"config/settings/*" = ["S105", "S106"]
+"apps/cms/locked_content.py" = ["E501"]
+"scripts/qa_browser_crawl.py" = ["E501"]  # embedded JavaScript probe
+"scripts/qa_chrome.py" = ["E501"]          # embedded JavaScript probe
+"apps/*/admin.py" = ["E501"]
+# Long regex literals that must stay on one line to remain readable, and `git` invoked by
+# name because the scanner runs wherever git runs.
+"scripts/history_secret_scan.py" = ["E501", "S603", "S607"]
+"scripts/history_rewrite_index_filter.py" = ["S603", "S607"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py", "tests.py"]
+testpaths = ["tests", "apps"]
+addopts = "-ra --strict-markers --reuse-db"
+markers = [
+  "browser: Playwright browser tests (require a running server or live_server)",
+  "compliance: content/legal compliance tests",
+  "security: security regression tests",
+]
+filterwarnings = ["error::DeprecationWarning:django"]
+
+[tool.coverage.run]
+source = ["apps", "config"]
+omit = ["*/migrations/*", "*/tests/*", "config/wsgi.py", "config/asgi.py"]
+
+[tool.bandit]
+exclude_dirs = [".venv", "tests", "docs", "node_modules"]
+skips = ["B101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "core", "cms", "accounts", "consents", "audit", "notifications", "legal", "pages", "ecosystem", "enquiries", "pathways", "orientation", "forum", "community", "news", "faq", "glossary", "living", "partners", "documents", "portal", "integrations", "cases", "rules", "companies", "selection", "academy", "helpdesk"]

@@ -1,0 +1,146 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% comment %}
+One frozen pre-assessment, and the reasoning behind it.
+
+This is the page that answers "why was I told this", and it is the difference between an orientation
+and an oracle. It reads the SNAPSHOT, never the current rules: an outcome given in October must still
+explain itself in March, when the rules have moved on without it.
+
+Three things are shown, in this order, because that is the order in which a reader builds trust:
+  1. the outcome itself, in words, never as a decision
+  2. the RULES that produced it, each named and versioned
+  3. the SOURCES those rules stand on, numbered, with their precise references
+
+An empty source list is stated rather than hidden. An outcome that cannot cite anything is still an
+honest outcome; one that quietly shows no sources invites the reader to assume they exist.
+{% endcomment %}
+{% block page_title %}{% translate "Pré-évaluation" %}{% endblock %}
+{% block meta_description %}{% translate "Le détail de votre pré-évaluation : les règles appliquées et les textes sur lesquels elles reposent." %}{% endblock %}
+
+{% block portal_header %}
+{% include "components/page_header.html" with title=_("Pré-évaluation") eyebrow=case.reference %}
+{% endblock %}
+
+{% block portal_content %}
+
+{% if demonstration_ruleset %}
+{% comment %}
+This page carries numbered sources, consultation dates and a reproducible replay. All of that reads
+as authority, and none of it is true when the ruleset behind the result was activated for a
+demonstration. The warning goes ABOVE the outcome, not beside the sources, because a reader who has
+already read the outcome has already believed it.
+
+Driven by the SNAPSHOT of the rules that produced this assessment, so it keeps telling the truth
+about this result after a real ruleset has replaced the demonstration one.
+{% endcomment %}
+{% translate "Résultat produit avec un jeu de règles de démonstration" as demo_title %}
+{% translate "Les règles qui ont produit ce résultat n’ont été approuvées par aucun juriste : elles ont été mises en vigueur pour montrer le fonctionnement de la plateforme. Les dates de consultation affichées plus bas ne correspondent à aucune vérification à la source officielle. Ce résultat ne doit servir à aucune démarche." as demo_text %}
+{% include "components/notice.html" with kind="error" title=demo_title text=demo_text %}
+{% endif %}
+
+<div class="outcome outcome--{{ assessment.outcome }}">
+  <p class="outcome__kind">{{ assessment.get_outcome_display }}</p>
+  {% if assessment.rationale %}<p class="t-prose">{{ assessment.rationale }}</p>{% endif %}
+</div>
+
+<p class="note">
+  <span class="t-folio">{% translate "Jeu de règles" %}</span>
+  <span class="t-ref">v{{ assessment.ruleset_version }}</span>
+  <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
+</p>
+
+{% comment %}
+The mandated designation — « pré-évaluation à caractère informatif » — must appear, but the SENTENCE
+that carries it in the FAQ is prescribed text (p3.faq.items[2].answer). Retyping a prescribed text
+lets it drift from the official version and puts it into the translation catalogues, which the
+Implementation document forbids. So the designation is used and the surrounding wording is this
+page's own.
+{% endcomment %}
+<p class="gloss">
+  {% blocktranslate %}Ce résultat est une pré-évaluation à caractère informatif. Il n’engage aucune autorité et ne préjuge d’aucune décision : seules les autorités compétentes décident.{% endblocktranslate %}
+</p>
+
+{# ---- the rules that fired ------------------------------------------------------------- #}
+<section class="portal-section" aria-labelledby="rules-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Règles appliquées" %}</span></p>
+  <h2 class="portal__section-title" id="rules-title">{% translate "Ce qui a produit ce résultat" %}</h2>
+
+  {% if applied_rules %}
+  <ol class="register">
+    {% for rule in applied_rules %}
+    <li class="register__item">
+      <span class="entry">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ rule.message }}</span>
+        <span class="entry__gloss"><span class="t-ref">{{ rule.rule_id }}</span> · v{{ rule.version }}</span>
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">{% translate "Aucune règle juridique en vigueur ne s’applique à ce parcours dans la plateforme. Ce résultat provient du questionnaire seul, qui oriente sans se fonder sur un texte précis." %}</p>
+  {% endif %}
+</section>
+
+{# ---- the requirements found missing ---------------------------------------------------- #}
+{% if missing %}
+<section class="portal-section" aria-labelledby="missing-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Exigences" %}</span></p>
+  <h2 class="portal__section-title" id="missing-title">{% translate "Ce qui manque encore" %}</h2>
+  <ol class="register">
+    {% for row in missing %}
+    <li class="register__item">
+      <span class="entry">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ row.requirement }}</span>
+        <span class="entry__gloss"><span class="t-ref">{{ row.rule_id }}</span></span>
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+  <p class="gloss">{% translate "Ces exigences figurent dans la liste des pièces de votre dossier, avec la personne ou l’institution responsable de chacune." %}</p>
+</section>
+{% endif %}
+
+{# ---- the sources ----------------------------------------------------------------------- #}
+<section class="portal-section" aria-labelledby="sources-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Fondements" %}</span></p>
+  <h2 class="portal__section-title" id="sources-title">{% translate "Les textes sur lesquels reposent ces règles" %}</h2>
+
+  {% if sources %}
+  <ol class="sources">
+    {% for source in sources %}
+    <li class="sources__item">
+      <span>
+        {% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}{{ source.title }}{% endif %}{% if source.reference %} — {{ source.reference }}{% endif %}
+        {% if source.consulted_on and not demonstration_ruleset %}<span class="sources__consulted">{% blocktranslate with date=source.consulted_on %}consultée le {{ date }}{% endblocktranslate %}</span>{% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="note">{% translate "Aucune source n’est rattachée à ce résultat, parce qu’aucune règle en vigueur ne s’y applique. Nous préférons ne rien citer plutôt que citer approximativement." %}</p>
+  {% endif %}
+</section>
+
+{# ---- reproducibility --------------------------------------------------------------------- #}
+{% if reproduction %}
+<section class="portal-section section--verso" aria-labelledby="replay-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Vérification" %}</span></p>
+  <h2 class="portal__section-title" id="replay-title">{% translate "Ce résultat est reproductible" %}</h2>
+  <p class="t-prose">
+    {% if reproduction.matches %}
+      {% blocktranslate %}Le jeu de règles utilisé ce jour-là est conservé avec votre résultat. Réexécuté à l’instant sur vos mêmes réponses, il donne le même résultat : votre pré-évaluation peut être vérifiée, même après une modification des règles.{% endblocktranslate %}
+    {% else %}
+      {% comment %}
+      Shown, not hidden. A divergence means the recorded outcome and the frozen ruleset disagree,
+      which is a defect the person is entitled to know about before acting on the result.
+      {% endcomment %}
+      {% blocktranslate %}La réexécution du jeu de règles conservé ne redonne pas le résultat enregistré. Cet écart est signalé à l’équipe du projet ; ne vous fondez pas sur ce résultat sans nous contacter.{% endblocktranslate %}
+    {% endif %}
+  </p>
+</section>
+{% endif %}
+
+<p class="gloss"><a href="{% url 'cases:detail' case.reference %}">{% translate "Retour au dossier" %}</a></p>
+{% endblock %}

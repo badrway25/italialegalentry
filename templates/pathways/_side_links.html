@@ -1,0 +1,27 @@
+{% load i18n %}
+{% comment %}Related areas of the Espace Personnes. Contract: `links` (dict); links owned by other apps appear only once available.{% endcomment %}
+<nav class="local-nav" aria-labelledby="side-links-title-{{ suffix|default:'main' }}">
+  <p class="local-nav__title" id="side-links-title-{{ suffix|default:'main' }}">{% translate "Dans l’Espace Personnes" %}</p>
+  <ul class="local-nav__list">
+    <li><a class="local-nav__link" href="{% url 'pathways:index' %}">{% translate "Les parcours réguliers" %}</a></li>
+    {% if links.training %}
+    <li>
+      <a class="local-nav__link" href="{{ links.training }}">{% translate "Formation" %}
+        <span class="text-caption text-muted">— {% translate "avant le départ et après l’arrivée" %}</span></a>
+    </li>
+    {% endif %}
+    {% if links.diplomas %}
+    <li><a class="local-nav__link" href="{{ links.diplomas }}">{% translate "Diplômes et titres étrangers" %}</a></li>
+    {% endif %}
+    {% if links.living %}
+    <li><a class="local-nav__link" href="{{ links.living }}">{% translate "Vivre en Italie" %}</a></li>
+    {% endif %}
+    {% if links.faq %}
+    <li><a class="local-nav__link" href="{{ links.faq }}">{% translate "Questions fréquentes" %}</a></li>
+    {% endif %}
+    {% if links.glossary %}
+    <li><a class="local-nav__link" href="{{ links.glossary }}">{% translate "Glossaire" %}
+        <span class="text-caption text-muted">— {% translate "les termes italiens expliqués" %}</span></a></li>
+    {% endif %}
+  </ul>
+</nav>

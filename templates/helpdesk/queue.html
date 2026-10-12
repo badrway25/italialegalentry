@@ -1,0 +1,55 @@
+{% extends "helpdesk/base_helpdesk.html" %}{% load i18n %}
+{% comment %}
+THE PROFESSIONAL'S REGISTER.
+
+Only what a mandate covers. There is no list of people, no search across requests and no way to
+reach a file that was not confided: the rows come from ``services.queue_for``, which is built on
+``readable_by`` — the authorisation is the query, not a filter applied afterwards.
+
+No identity of the person is shown. A mandate is about a question and a file reference.
+{% endcomment %}
+{% block page_title %}{% translate "Demandes qui me sont confiées" %}{% endblock %}
+{% block meta_description %}{% translate "Les demandes du guichet numérique confiées à votre mandat." %}{% endblock %}
+
+{% block portal_header %}
+{% translate "Demandes qui me sont confiées" as header_title %}
+{% translate "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom." as header_lead %}
+{% include "components/page_header.html" with title=header_title lead=header_lead %}
+{% endblock %}
+
+{% block portal_content %}
+<section class="portal-section" aria-labelledby="queue-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Mandats" %}</span></p>
+  <h2 class="portal__section-title" id="queue-title">{% translate "Ce qui m’a été confié" %}</h2>
+
+  {% if tickets %}
+  <p class="portal__summary">{% blocktranslate count n=open_count %}{{ n }} demande ouverte.{% plural %}{{ n }} demandes ouvertes.{% endblocktranslate %}</p>
+  <ol class="register" aria-label="{% translate 'Demandes confiées à votre mandat' %}">
+    {% for ticket in tickets %}
+    <li class="register__item">
+      <a class="entry" href="{% url 'helpdesk:detail' uuid=ticket.uuid %}">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">{{ ticket.subject }}</span>
+        <span class="entry__gloss">
+          <span class="t-ref">{{ ticket.reference }}</span>
+          — {% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}
+          {% if ticket.mandate_valid_until %} — {% blocktranslate with date=ticket.mandate_valid_until|date:"d.m.Y" %}mandat jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
+        </span>
+        <span class="entry__actor"><span class="state state--{{ ticket.state_tone }}" data-register="{{ ticket.effective_status|chip_register:'helpdesk.TicketStatus' }}">{{ ticket.effective_status_display }}</span></span>
+        {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">
+    {% translate "Aucune demande ne vous est confiée aujourd’hui. Une demande apparaît ici lorsqu’un mandat vous est enregistré, et disparaît le jour où ce mandat prend fin." %}
+  </p>
+  {% endif %}
+</section>
+
+<p class="note">
+  <span class="note__marker" aria-hidden="true">1</span>
+  {% translate "Votre accès à une demande cesse à l’expiration ou à la révocation du mandat. Vos notes professionnelles ne sont pas visibles par la personne ; seule une réponse transmise l’est." %}
+</p>
+{% endblock %}

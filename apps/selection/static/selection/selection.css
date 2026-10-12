@@ -1,0 +1,345 @@
+/* ============================================================================
+   AUTHORISED SELECTION — an EXTENSION of the register language, not a second
+   design system.
+
+   Everything structural is already in static/css/register.css and
+   apps/portal/static/portal/portal.css: .register/.entry for the lists,
+   .sequence for the stages, .data-table for the evidence, .state for a state
+   (a word plus a 2px rule, never a colour on its own), .note for the legal
+   apparatus, .empty for an empty region — one hairline and one sentence.
+
+   What is added here is what did not exist yet, and only that:
+
+     .responsible          the band naming the actor answerable for a stage
+     .selection-facts      the mandate's facts as a definition list
+     .selection-disclosure the identity-disclosure block
+     a few form and spacing rules for this module's screens
+
+   Rules kept from the art direction: no card, no dashed empty state, no KPI
+   grid, no box-shadow on content, no radius above 2px, no gradient, no icon
+   per row, no percentage meter, no colour as the only carrier of a state.
+   Structure is drawn with borders, so it survives Windows High Contrast.
+   ========================================================================== */
+
+/* ---- THE RESPONSIBLE ACTOR BAND --------------------------------------------
+   The one device this module needed and the register did not have.
+
+   It sits on the process ground (--paper-deep), opened by a 2px navy rule at
+   the top and closed by a 2px rubric rule at the bottom: the same grammar as
+   the plate, at the weight of a band rather than a full-bleed event. It is the
+   answer to "who is answerable", which is an acceptance criterion of this
+   product and the single sentence the previous platform never printed.
+   -------------------------------------------------------------------------- */
+.responsible {
+  background: var(--paper-deep);
+  border-block-start: 2px solid var(--navy);
+  border-block-end: 2px solid var(--rubric);
+  padding: var(--s-6);
+  margin-block-end: var(--s-8);
+}
+
+.responsible__label {
+  margin: 0 0 var(--s-2);
+  color: var(--ink-muted);
+}
+
+.responsible__name {
+  font-family: var(--font-display);
+  font-size: var(--t-entry-size);
+  line-height: var(--t-entry-lh);
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 var(--s-4);
+  max-inline-size: 44ch;
+}
+
+.responsible__facts {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+}
+
+@media (min-width: 48rem) {
+  .responsible__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .responsible__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.responsible__fact dt {
+  color: var(--ink-muted);
+  margin-block-end: var(--s-1);
+}
+
+.responsible__fact dd {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* The caveat is part of the band, not a footnote under it: a reader who takes
+   in the actor's name must take in, in the same glance, that the platform is
+   not the intermediary. */
+/* A note in the art direction lives in the RAIL, at a 34ch margin measure. The platform shell has
+   no rail: a note sits under the section it annotates, inside a column three times that wide, and at
+   34ch it reads as an orphaned sliver rather than as apparatus. The measure is opened to the gloss
+   measure — still a system token, still narrower than the prose around it, but now a line a reader
+   follows. Scoped to this stylesheet, which loads only on the selection screens. */
+.responsible__note,
+.portal-section > .note,
+.portal__main > .note,
+.selection-disclosure .note {
+  max-inline-size: var(--measure-gloss);
+}
+
+.responsible__note {
+  margin-block-start: var(--s-4);
+}
+
+.responsible__scope {
+  display: block;
+  margin-block-start: var(--s-1);
+}
+
+/* ---- FACTS OF A MANDATE, A DISCLOSURE ---------------------------------------
+   A definition list, headed like the data table and with a dash for a null —
+   never an empty cell, never a value without its label. Two columns from sm,
+   one column at phone width, because a label above its value reads at 320px
+   and a two-column grid does not.
+   -------------------------------------------------------------------------- */
+.selection-facts {
+  margin: 0 0 var(--s-6);
+  border-block-start: 2px solid var(--navy);
+}
+
+.selection-facts__row {
+  display: grid;
+  gap: var(--s-1) var(--s-4);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--rule-hair);
+}
+
+@media (min-width: 48rem) {
+  .selection-facts__row {
+    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+    align-items: baseline;
+  }
+}
+
+.selection-facts__row dt {
+  color: var(--ink-secondary);
+  margin: 0;
+}
+
+.selection-facts__row dd {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.selection-subhead {
+  margin: var(--s-8) 0 var(--s-3);
+  color: var(--ink-secondary);
+}
+
+.selection-lead {
+  max-inline-size: var(--measure-gloss, 60ch);
+  margin: 0 0 var(--s-6);
+  color: var(--ink-secondary);
+}
+
+/* ---- THE DISCLOSURE BLOCK ---------------------------------------------------
+   Bordered, never shadowed, never rounded: it is a section of a register, not a
+   card. The inline-start rule is the state carrier, and it is always paired
+   with the state WORD in the markup — a border alone would leave a
+   colour-blind reader, a greyscale printout and forced colours with nothing.
+   -------------------------------------------------------------------------- */
+.selection-disclosure {
+  border-block-start: 1px solid var(--rule-ink);
+  border-inline-start: 2px solid var(--rule-ink);
+  /* Logical, not the four-value shorthand: the rule above is `border-inline-start`, and the
+     shorthand's fourth value is LEFT. In Arabic the extra room landed opposite the rule. */
+  padding-block: var(--s-4);
+  padding-inline: var(--s-6) var(--s-4);
+  margin-block-end: var(--s-8);
+}
+
+.selection-disclosure--live {
+  border-inline-start-color: var(--cooperation);
+}
+
+.selection-disclosure > .responsible {
+  margin-block: var(--s-4);
+}
+
+/* ---- FORMS OF THIS MODULE ----------------------------------------------------
+   An act here is a decision that will be audited, so it is a real form with a
+   legend, never a bare button in a row of links.
+   -------------------------------------------------------------------------- */
+.selection-form {
+  margin-block-start: var(--s-8);
+}
+
+.selection-form fieldset {
+  border: 0;
+  border-block-start: 2px solid var(--navy);
+  margin: 0;
+  padding: var(--s-4) 0 0;
+}
+
+.selection-form legend {
+  padding: 0;
+  color: var(--ink-secondary);
+}
+
+.selection-form .form-field {
+  max-inline-size: 36rem;
+}
+
+.selection-fields {
+  border: 0;
+  border-block-start: 1px solid var(--rule-hair);
+  margin: 0 0 var(--s-6);
+  padding: var(--s-3) 0 0;
+}
+
+.selection-fields legend {
+  font-family: var(--font-ui);
+  font-size: var(--t-folio-size);
+  font-weight: 600;
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--ink-secondary);
+  padding: 0;
+}
+
+:lang(ar) .selection-fields legend {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.selection-check {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  padding-block: var(--s-2);
+  font-family: var(--font-ui);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-gloss-lh);
+}
+
+/* A form inside a table cell or a register row: it must not break the row. */
+.selection-inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-block-start: var(--s-2);
+}
+
+.selection-inline-form select {
+  min-block-size: var(--control-height, 44px);
+}
+
+/* `overflow-x: auto` clips a descendant only when the container is also that descendant's
+   CONTAINING BLOCK. `.visually-hidden` is `position: absolute !important` (static/css/base.css), so
+   the hidden `<label>` of every in-cell form escaped the static `.scroll-x` and was laid out
+   against the initial containing block — at the table's natural width, 544px. The table itself
+   scrolled correctly and `body.scrollWidth` stayed at the viewport, which is why the escape was
+   invisible to a body-only measurement, but `documentElement.scrollWidth` reached 440px at 390px
+   and the whole page scrolled sideways. Making the scroll container positioned gives those labels
+   a containing block that clips them. Measured: 440 → 390 at 390px, 440 → 337 at 320px (the
+   remainder at 320 is the platform bar, another lane — see the shared-file request). */
+.scroll-x {
+  position: relative;
+}
+
+/* Inside a scroll container the table must be free to reach its natural width and SCROLL. With
+   ``.data-table { inline-size: 100% }`` it instead shrank to the container and crushed five
+   columns into 350px, which is not a table any more — it is a wall of one-word-per-line cells.
+   `inline-size: auto` lets it size to content; `min-inline-size: 100%` keeps a narrow table
+   filling the column as before. */
+.scroll-x > .data-table {
+  inline-size: auto;
+  min-inline-size: 100%;
+}
+
+/* A table of four or five columns has a width below which it stops being a table: at 350px the
+   evidence table rendered one word per line in every cell. ``--wide`` gives it a floor and lets the
+   scroll container do its job. Two-column tables keep no floor and stay fluid. */
+.scroll-x > .data-table--wide {
+  min-inline-size: 34rem;
+}
+
+.selection-accesses {
+  margin-block: var(--s-4) var(--s-6);
+}
+
+.selection-accesses caption {
+  text-align: start;
+  color: var(--ink-muted);
+  padding-block-end: var(--s-2);
+}
+
+.selection-outcome {
+  margin-block-start: var(--s-8);
+}
+
+.selection-actors {
+  margin-block-end: var(--s-8);
+}
+
+/* ---- The actor label wraps here ---------------------------------------------
+   ``.entry__actor`` and ``.sequence__actor`` are ``white-space: nowrap`` in the
+   register, where the label is a short role word ("La personne", "L'autorité").
+   In this module the label is an ORGANISATION'S NAME — it is the answer to "who
+   is answerable", so it cannot be abbreviated — and at 390px a 50-character name
+   on one line pushed the document 96px wide, which scrolls the whole page
+   sideways. It wraps here instead. Scoped to this stylesheet, which loads only
+   on the selection screens.
+   -------------------------------------------------------------------------- */
+.register .entry__actor,
+.sequence__actor {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-inline-size: 28ch;
+}
+
+@media (min-width: 48rem) {
+  /* Room to run on one or two lines once there is room: 28ch is the phone constraint, not a taste. */
+  .register .entry__actor,
+  .sequence__actor {
+    max-inline-size: 56ch;
+  }
+}
+
+/* ---- FORCED COLOURS ----------------------------------------------------------
+   Under Windows High Contrast every painted surface is repainted Canvas, so the
+   band's ground disappears. Its rules are what carry the structure, and they are
+   restored with system colours here.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .responsible,
+  .selection-disclosure,
+  .selection-facts,
+  .selection-form fieldset {
+    background: Canvas;
+    border-color: CanvasText;
+  }
+
+  .selection-disclosure--live {
+    border-inline-start-color: CanvasText;
+  }
+}

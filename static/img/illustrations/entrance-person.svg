@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" role="img" aria-labelledby="t" fill="none" stroke="#0f2b52" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+  <title id="t">Personne — parcours d’orientation</title>
+  <!-- horizon rule -->
+  <path d="M8 100h144" stroke="#9a7b2f" stroke-width="1"/>
+  <!-- figure -->
+  <circle cx="52" cy="38" r="11"/>
+  <path d="M30 100c0-16 9-27 22-27s22 11 22 27"/>
+  <!-- path of steps -->
+  <path d="M84 96c10-2 15-8 19-16s9-14 20-16" stroke-dasharray="4 4"/>
+  <circle cx="84" cy="96" r="3" fill="#fbfaf7"/>
+  <circle cx="103" cy="80" r="3" fill="#fbfaf7"/>
+  <circle cx="123" cy="64" r="3" fill="#fbfaf7"/>
+  <circle cx="140" cy="60" r="3.5" fill="#9a7b2f" stroke="#9a7b2f"/>
+  <!-- compass mark -->
+  <path d="M140 42v-8M136 38h8" stroke="#9a7b2f"/>
+</svg>

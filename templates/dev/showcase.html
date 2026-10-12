@@ -1,0 +1,510 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% comment %}
+Design-system showcase — DEVELOPMENT ONLY (rendered by core.dev.design_showcase, registered in
+config/urls.py inside `if settings.DEBUG:`).
+
+Rule for this file: it INCLUDES the real components, it never copies their markup. A showcase that
+re-implements a button is a picture of a button, and a picture cannot regress. Everything below is
+the same partial the site renders, given demo data from core.dev.
+
+The page extends base.html on purpose: the header, the utility bar and the footer are themselves
+surfaces under revision, and this is the one route where they can be judged against every component
+they sit above.
+{% endcomment %}
+
+{% block page_title %}Design system{% endblock %}
+{% block body_class %}ds-page{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dev/showcase.css' %}">{% endblock %}
+
+{% block content %}
+<div class="ds">
+
+  <header class="ds__masthead">
+    <div class="container">
+      <p class="ds__kicker">Développement · cette page n'existe pas en production</p>
+      <h1 class="ds__title">Design system</h1>
+      <p class="ds__lead">
+        Chaque objet ci-dessous est le composant réel du site, inclus depuis <code>templates/components/</code>
+        et non recopié. Les valeurs de couleur sont lues dans <code>static/css/v2/tokens.css</code> au moment
+        du rendu : ce qui est écrit sous un carré est ce que le navigateur peint.
+      </p>
+      {% if uncovered %}
+      {% comment %}Self-check: a token with no rule in dev/showcase.css would paint an empty square.{% endcomment %}
+      <div class="notice notice--warning" role="status">
+        {% svg_icon "warning" "icon notice__icon" %}
+        <p class="notice__title">Jetons sans carré de couleur</p>
+        <div class="notice__body">
+          <p>Ajoutez une règle <code>[data-swatch="…"]</code> dans <code>static/css/dev/showcase.css</code> pour :
+          {% for token in uncovered %}<code>{{ token }}</code>{% if not forloop.last %}, {% endif %}{% endfor %}.</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <nav class="ds__toc" aria-label="Sections">
+    <div class="container ds__toc-inner">
+      <a href="#couleur">Couleur</a>
+      <a href="#typographie">Typographie</a>
+      <a href="#mouvement">Mouvement</a>
+      <a href="#boutons">Boutons</a>
+      <a href="#etats">États</a>
+      <a href="#formulaire">Formulaire</a>
+      <a href="#conteneurs">Conteneurs</a>
+      <a href="#navigation">Navigation</a>
+      <a href="#console">Console V4</a>
+      <a href="#donnees">Données</a>
+      <a href="#surcouches">Surcouches</a>
+      <a href="#icones">Icônes</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    {# ----------------------------------------------------------------- COULEUR #}
+    <section class="ds__section" id="couleur" aria-labelledby="h-couleur">
+      <h2 class="ds__h" id="h-couleur">Couleur</h2>
+      {% for group in colour_groups %}
+      <div class="ds__block">
+        <h3 class="ds__h3">{{ group.title }}</h3>
+        <p class="ds__note">{{ group.note }}</p>
+        <ul class="ds__swatches">
+          {% for swatch in group.swatches %}
+          <li class="ds__swatch">
+            <span class="ds__chip" data-swatch="{{ swatch.slug }}" aria-hidden="true"></span>
+            <code class="ds__token">{{ swatch.name }}</code>
+            <span class="ds__value">{{ swatch.value }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </section>
+
+    {# ------------------------------------------------------------ TYPOGRAPHIE #}
+    <section class="ds__section" id="typographie" aria-labelledby="h-typo">
+      <h2 class="ds__h" id="h-typo">Typographie</h2>
+      <p class="ds__note">Onze tailles, deux familles de lecture. Chaque ligne est rendue à sa taille réelle.</p>
+      <ul class="ds__type">
+        {% for step in type_scale %}
+        <li class="ds__type-row">
+          <p class="ds__specimen" data-type="{{ step.slug }}">Voie régulière</p>
+          <p class="ds__type-meta"><code>--t-{{ step.slug }}</code> · {{ step.value }} · {{ step.note }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    {# --------------------------------------------------------------- MOUVEMENT #}
+    <section class="ds__section" id="mouvement" aria-labelledby="h-motion">
+      <h2 class="ds__h" id="h-motion">Mouvement</h2>
+      <p class="ds__note">
+        Quatre durées d'interface, un tracé, un ambiant. Avec « réduire les animations », la composition
+        reste complète et s'arrête : elle ne disparaît pas.
+      </p>
+      <table class="ds__table">
+        <caption class="visually-hidden">Durées de mouvement</caption>
+        <thead><tr><th scope="col">Jeton</th><th scope="col">Durée</th><th scope="col">Emploi</th></tr></thead>
+        <tbody>
+          {% for item in motion %}
+          <tr>
+            <th scope="row" data-label="Jeton"><code>{{ item.name }}</code></th>
+            <td data-label="Durée">{{ item.value }}</td>
+            <td data-label="Emploi">{{ item.note }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    {# ----------------------------------------------------------------- BOUTONS #}
+    <section class="ds__section" id="boutons" aria-labelledby="h-btn">
+      <h2 class="ds__h" id="h-btn">Boutons</h2>
+      <p class="ds__note">
+        Une seule action principale par vue. L'accent interactif est unique : <code>--accent</code> sur
+        papier, <code>--accent-dark</code> sur fond de nuit.
+      </p>
+
+      <h3 class="ds__h3">Variantes</h3>
+      <div class="ds__row">
+        {% for variant in button_variants %}
+        <button type="button" class="btn btn--{{ variant }}">{{ variant|capfirst }}</button>
+        {% endfor %}
+      </div>
+
+      <h3 class="ds__h3">Tailles</h3>
+      <div class="ds__row ds__row--baseline">
+        <button type="button" class="btn btn--primary btn--sm">Petit</button>
+        <button type="button" class="btn btn--primary">Normal</button>
+        <button type="button" class="btn btn--primary btn--lg">Grand</button>
+      </div>
+
+      <h3 class="ds__h3">États</h3>
+      <div class="ds__row">
+        <button type="button" class="btn btn--primary">Repos</button>
+        <button type="button" class="btn btn--primary" disabled>Désactivé</button>
+        <button type="button" class="btn btn--secondary">Repos</button>
+        <button type="button" class="btn btn--secondary" disabled>Désactivé</button>
+        <a class="btn btn--primary btn--arrow" href="#boutons">Avec flèche {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+      </div>
+      <p class="ds__note">
+        Survol et focus ne se photographient pas : posez le pointeur, puis parcourez la rangée au clavier
+        pour voir l'anneau de focus (<code>--accent-ring</code>, décalé de 2 px, jamais supprimé).
+      </p>
+
+      <h3 class="ds__h3">Sur fond de nuit</h3>
+      <p class="ds__note">
+        Le fond de nuit se déclare par <strong>contexte</strong> (<code>.hero</code>, <code>.on-inverse</code>,
+        <code>.forum-cta</code>…) ; <code>.btn--inverse</code> reste accepté et signifie exactement la même chose.
+        Jusqu'au 24 septembre « Secondaire » et « Discret » y étaient le même bouton, mesurés pixel par pixel :
+        <code>.btn--inverse</code> écrasait la seule propriété qui les distinguait. Le secondaire a désormais
+        une surface (<code>--mid-3</code>) et un bord ; le discret n'a ni l'un ni l'autre.
+      </p>
+      <div class="ds__dark">
+        <div class="ds__row">
+          <button type="button" class="btn btn--primary btn--inverse">Principal</button>
+          <button type="button" class="btn btn--secondary btn--inverse">Secondaire</button>
+          <button type="button" class="btn btn--ghost btn--inverse">Discret</button>
+          <button type="button" class="btn btn--primary btn--inverse" disabled>Désactivé</button>
+        </div>
+      </div>
+
+      <h3 class="ds__h3">Pleine largeur</h3>
+      <div class="ds__narrow">
+        <button type="button" class="btn btn--primary btn--block">Bouton de bloc</button>
+      </div>
+    </section>
+
+    {# ------------------------------------------------------------------- ÉTATS #}
+    <section class="ds__section" id="etats" aria-labelledby="h-etats">
+      <h2 class="ds__h" id="h-etats">États</h2>
+
+      <h3 class="ds__h3">Pastilles</h3>
+      <div class="ds__row">
+        {% for kind in badge_kinds %}
+        {% include "components/badge.html" with label=kind kind=kind only %}
+        {% endfor %}
+      </div>
+      <p class="ds__note">
+        Sept <code>kind</code> hérités, cinq registres : <code>neutral</code>, <code>info</code> et
+        <code>primary</code> sont tous <em>neutro</em>. Les deux registres qu'aucun <code>kind</code> ne produit,
+        les deux modificateurs et les deux tailles, écrits à la main pour que les sept formes soient sous les yeux :
+      </p>
+      <div class="ds__row">
+        <span class="badge" data-register="nullo">nullo</span>
+        <span class="badge chip--seal" data-register="conforme">sigillo</span>
+        <span class="badge chip--indicative" data-register="attesa">indicatif</span>
+        <span class="badge">sans registre</span>
+        <span class="badge chip--s" data-register="azione">chip--s</span>
+        <span class="badge chip--l" data-register="conforme">chip--l</span>
+      </div>
+      <p class="ds__note">
+        « Sans registre » est une pastille dont la valeur n'est pas connue de <code>chips.py</code> : filet
+        pointillé, pour qu'elle se voie et se corrige. Le sigillo n'est jamais interactif ; l'indicatif n'a pas de
+        corps et porte, sur le site, la mention visible « à titre indicatif ».
+      </p>
+
+      {% comment %}
+      This block is the most important paragraph on the page. `success` and `info` render in the
+      SAME three colours, which looks like an obvious defect when the two sit side by side — and
+      the obvious repair is forbidden. The rule lives in static/css/tokens.css, in
+      docs/design/DESIGN_SYSTEM_2026.md §4.3 and in the domain's list of outcomes; it does NOT live
+      next to the CSS classes, whose names invite exactly the wrong fix. So it is written here, at
+      the one place where somebody is about to make that mistake.
+      {% endcomment %}
+      <div class="notice notice--institutional" role="status">
+        {% svg_icon "shield" "icon notice__icon" %}
+        <p class="notice__title">Pourquoi <code>success</code> n'est pas vert, et ne le sera pas</p>
+        <div class="notice__body">
+          <p>
+            <strong>Aucune couleur ne signifie jamais « approuvé ».</strong> Une étape achevée est
+            <em>transmise</em> ou <em>close</em> : un fait sur le dossier, pas un verdict. C'est la même raison
+            pour laquelle l'issue <code>eligible</code> n'existe pas dans le modèle de domaine — cette
+            plateforme n'approuve rien, et rien dans l'interface ne doit pouvoir se lire comme une approbation.
+            La règle est écrite dans <code>static/css/tokens.css</code> et dans
+            <code>DESIGN_SYSTEM_2026.md</code> §4.3.
+          </p>
+          <p>
+            La pastille porte donc son sens <strong>trois fois sans couleur</strong> : le mot, le style du
+            filet (plein · tireté · double · pointillé) et sa géométrie (1, 3 ou 4 px ; un filet de clôture
+            sous <em>conforme</em>, deux filets qui barrent <em>rifiuto</em>). Le mot est toujours dans l'encre
+            du chapitre ; la couleur ne vit que dans la marque, et <em>conforme</em> n'en a pas.
+            Le registre vient de l'enum, en Python (<code>apps/core/chips.py</code>), jamais du mot :
+            <code>closed</code> est un fait sur un dossier de documents et un vide sur une édition du forum.
+          </p>
+        </div>
+      </div>
+
+      <h3 class="ds__h3">Messages</h3>
+      <div class="ds__stack">
+        {% for kind in notice_kinds %}
+        {% include "components/notice.html" with kind=kind title=kind text="Une phrase d'exemple, assez longue pour que l'on voie le retour à la ligne et l'alignement du texte sous l'icône." only %}
+        {% endfor %}
+      </div>
+      <p class="ds__note">
+        Seule l'erreur porte <code>role="alert"</code> ; les autres sont des régions <code>status</code>, donc polies.
+      </p>
+
+      <h3 class="ds__h3">Messages de session</h3>
+      <div class="ds__stack">
+        <div class="alert alert--success">Vos modifications ont été enregistrées.</div>
+        <div class="alert alert--info">Ce dossier est consultable en lecture seule.</div>
+        <div class="alert alert--warning">Une pièce justificative arrive à échéance.</div>
+        <div class="alert alert--error" role="alert">L'envoi a échoué. Reprenez la dernière étape.</div>
+      </div>
+    </section>
+
+    {# -------------------------------------------------------------- FORMULAIRE #}
+    <section class="ds__section" id="formulaire" aria-labelledby="h-form">
+      <h2 class="ds__h" id="h-form">Formulaire</h2>
+      <p class="ds__note">
+        Deux rendus du même formulaire : vierge, puis lié à des données invalides. Les messages d'erreur
+        sont ceux de Django, pas une imitation. Le champ piège <code>website_url</code> est présent dans les
+        deux, hors de l'écran et <code>aria-hidden</code> : il ne se voit pas, c'est son travail.
+      </p>
+      <div class="ds__two">
+        <form class="ds__form" novalidate>
+          <h3 class="ds__h3">Vierge</h3>
+          {% for field in form %}{% include "components/form_field.html" with field=field only %}{% endfor %}
+          <button type="button" class="btn btn--primary">Envoyer</button>
+        </form>
+        <form class="ds__form" novalidate>
+          <h3 class="ds__h3">En erreur</h3>
+          {% for field in invalid_form %}{% include "components/form_field.html" with field=field only %}{% endfor %}
+          <button type="button" class="btn btn--primary">Envoyer</button>
+        </form>
+      </div>
+    </section>
+
+    {# -------------------------------------------------------------- CONTENEURS #}
+    <section class="ds__section" id="conteneurs" aria-labelledby="h-box">
+      <h2 class="ds__h" id="h-box">Conteneurs</h2>
+
+      <h3 class="ds__h3">Cartes</h3>
+      <div class="ds__cards">
+        {% include "components/card.html" with eyebrow="Actualité" title="Carte simple" text="Une carte porte un titre, un texte court et une métadonnée. Au-delà, ce n'est plus une carte." meta="3 octobre 2026" only %}
+        {% include "components/card.html" with eyebrow="Actualité" title="Carte cliquable" url="#conteneurs" text="Toute la surface réagit ; seul le titre est un arrêt de tabulation." meta="28 septembre 2026" only %}
+        {% include "components/card.html" with title="Carte plate" flat=True text="Sans boîte : un filet, et le rythme vertical fait le reste." only %}
+      </div>
+
+      <h3 class="ds__h3">En-tête de section</h3>
+      {% include "components/section_header.html" with eyebrow="Repère" title="Un titre de section" lead="Le chapeau porte une phrase, jamais un paragraphe." only %}
+
+      <h3 class="ds__h3">Citation</h3>
+      {% include "components/blockquote.html" with text="Une citation institutionnelle se distingue par la composition, pas par des guillemets décoratifs." cite="Source de la citation" only %}
+
+      <h3 class="ds__h3">Ligne de métadonnées</h3>
+      {% include "components/metadata_row.html" with items=meta_items only %}
+
+      <h3 class="ds__h3">Panneau d'appel</h3>
+      {% include "components/cta_panel.html" with title="Un panneau d'appel" text="Une phrase, une action principale, éventuellement une seconde en retrait." primary_label="Action principale" primary_url="#conteneurs" secondary_label="Action secondaire" secondary_url="#conteneurs" only %}
+      {% include "components/cta_panel.html" with variant="inverse" title="Le même, de nuit" text="La bande profonde renverse l'encre et l'accent, pas la hiérarchie." primary_label="Action principale" primary_url="#conteneurs" secondary_label="Action secondaire" secondary_url="#conteneurs" only %}
+    </section>
+
+    {# -------------------------------------------------------------- NAVIGATION #}
+    <section class="ds__section" id="navigation" aria-labelledby="h-nav">
+      <h2 class="ds__h" id="h-nav">Navigation</h2>
+
+      <h3 class="ds__h3">Fil d'Ariane</h3>
+      {% include "components/breadcrumbs.html" with breadcrumbs=crumbs only %}
+
+      <h3 class="ds__h3">Onglets</h3>
+      {% include "components/tabs.html" with tabs=tabs id="ds-tabs" only %}
+
+      <h3 class="ds__h3">Accordéon</h3>
+      {% include "components/accordion.html" with items=accordion only %}
+
+      <h3 class="ds__h3">Étapes</h3>
+      {% include "components/stepper.html" with steps=steps current=2 only %}
+
+      <h3 class="ds__h3">Pagination</h3>
+      {% include "components/pagination.html" with page_obj=page_obj only %}
+    </section>
+
+    {# ------------------------------------------------------------- CONSOLE V4 #}
+    <section class="ds__section" id="console" aria-labelledby="h-console">
+      <h2 class="ds__h" id="h-console">Console V4</h2>
+      <p class="ds__note">
+        Les composants de la console (design V4, gates B à D), inclus depuis <code>templates/components/</code>
+        avec des données de démonstration. La rail, la barre de contexte, la barre inférieure et le tiroir sont
+        la chrome de la console elle-même (<code>partials/portal_chrome.html</code>) : ils se jugent sur
+        <code>/fr/espace-reserve/</code>, connecté, pas ici.
+      </p>
+
+      <h3 class="ds__h3">Testata de contexte, testata de workspace, région vide</h3>
+      <p class="ds__note">Balisage de page (pas des composants) : la testata de contexte du fascicolo avec son misuratore a tacche et sa barre de responsabilité, la testata de workspace, une région vide.</p>
+      <header class="ctx ctx--file">
+        <div class="ctx__words">
+          <p class="ctx__eyebrow">Dossier</p>
+          <p class="ctx__title">Dossier E46E03B461</p>
+          <p class="ctx__meta">
+            <span>Travail</span>
+            <span class="chip state" data-register="neutro">Orientation terminée</span>
+            <span class="ctx__resp">{% include "components/glyph.html" with glyph="person" size="sm" only %}Vous</span>
+            <span class="ctx__progress"><span class="meter" aria-hidden="true"><span class="meter__notch meter__notch--on"></span><span class="meter__notch meter__notch--on"></span><span class="meter__notch"></span><span class="meter__notch"></span><span class="meter__notch"></span></span><span class="meter__words">2 sur 5 éléments complétés</span></span>
+          </p>
+        </div>
+        <div class="ctx__action"><a class="btn btn--primary btn--arrow" href="#console">Continuer {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></div>
+      </header>
+      <div class="resp">{% include "components/glyph.html" with glyph="shield" size="sm" only %}<span class="resp__label">Responsable</span><span class="resp__actor">L’autorité compétente</span><span class="resp__note">Cette étape ne dépend pas de vous.</span></div>
+      <header class="ws-head"><div class="ws-head__words"><p class="ws-head__title">Mes pièces</p><p class="ws-head__lead">Chaque ligne est une pièce demandée par votre dossier.</p></div></header>
+      <p class="empty">Les dates qui vous sont communiquées par l’équipe apparaîtront ici. <a href="#console">Voir mes documents</a></p>
+
+      <h3 class="ds__h3">Barre de contexte compacte, rail descriptif, tableau, intervenants</h3>
+      <div class="ctx-bar ctx-bar--sample is-on" aria-hidden="true"><span class="ctx-bar__title">Dossier <span class="ctx__ref">E46E03B461</span></span><span class="chip state" data-register="neutro">Orientation terminée</span><a class="btn btn--primary btn--sm btn--arrow ctx-bar__action" href="#console" tabindex="-1">Continuer {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></div>
+      {% include "components/journey_rail.html" with steps=journey descriptive=True label="Où en est ce dossier" only %}
+      <div class="table-region">
+        <table class="table">
+          <caption class="visually-hidden">Exemple de checklist</caption>
+          <thead><tr><th scope="col">Exigence</th><th scope="col">Responsable</th><th scope="col">Échéance</th><th scope="col">État</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" data-label="Exigence"><span class="table__primary">Passeport en cours de validité</span><span class="table__gloss">Original, valable six mois après la date prévue d’entrée.</span></th><td data-label="Responsable"><span class="table__actor">{% include "components/glyph.html" with glyph="person" size="sm" only %}<span>La personne</span></span></td><td data-label="Échéance"><time datetime="2026-11-20">20.11.2026</time></td><td data-label="État"><span class="chip state" data-register="attesa">Da fare</span></td></tr>
+            <tr><th scope="row" data-label="Exigence"><span class="table__primary">Nulla osta au travail</span></th><td data-label="Responsable"><span class="table__actor">{% include "components/glyph.html" with glyph="shield" size="sm" only %}<span>L’autorité compétente</span></span></td><td data-label="Échéance"><span class="table__none" aria-hidden="true">—</span></td><td data-label="État"><span class="chip state" data-register="neutro">In corso</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="actors" role="list">
+        <li class="actors__row">{% include "components/glyph.html" with glyph="briefcase" size="md" only %}<span class="actors__words"><span class="actors__who">Professionnel — Cabinet de démonstration</span><span class="actors__mandate">Autorisation DEMO-0001 · valable jusqu’au 31.12.2026</span></span></li>
+      </ul>
+
+      <h3 class="ds__h3">Faits de l’entreprise et tableau des besoins</h3>
+      <div class="ds__two">
+        <section class="panel panel--l1 ws-company">
+          <div class="company-id">{% include "components/glyph.html" with glyph="building" size="lg" only %}<p class="panel__eyebrow">Mon entreprise</p></div>
+          <dl class="facts facts--two">
+            <div class="facts__row"><dt>Dénomination légale</dt><dd>Cantiere di dimostrazione S.r.l.</dd></div>
+            <div class="facts__row"><dt>Immatriculation</dt><dd><span class="ctx__ref">RM-000000-DEMO</span></dd></div>
+            <div class="facts__row"><dt>Référent</dt><dd>Référent démonstration — Responsable des ressources humaines</dd></div>
+          </dl>
+        </section>
+        <section class="panel panel--l1"><div class="panel__head"><p class="panel__section">Mes besoins en compétences</p></div>{% include "companies/partials/need_table.html" with needs=demo_needs only %}</section>
+      </div>
+
+      <h3 class="ds__h3">Pied du formulaire guidé et barre d’action du téléphone</h3>
+      <div class="wiz__foot wiz__foot--sample"><button type="button" class="btn btn--secondary">Précédent</button><span class="wiz__foot-count">3 / 8</span><button type="button" class="btn btn--primary btn--arrow">Continuer {% svg_icon "arrow" "icon icon--flip-rtl" %}</button><button type="button" class="btn btn--secondary">Enregistrer et recalculer</button></div>
+      <div class="file-action-bar file-action-bar--sample"><a class="btn btn--primary btn--arrow" href="#console">Continuer {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></div>
+
+      <h3 class="ds__h3">Contrôle segmenté des états</h3>
+      <nav class="seg" aria-label="Filtrer par état">
+        <ul class="seg__list" role="list">
+          <li class="seg__item"><a class="seg__link" href="#console" aria-current="true">Tous <span class="seg__count">7</span></a></li>
+          {% for f in health.filters %}<li class="seg__item"><a class="seg__link" href="#console"><span class="seg__dot" data-register="{{ f.register }}" aria-hidden="true"></span>{{ f.label }} <span class="seg__count">{{ f.count }}</span></a></li>{% endfor %}
+        </ul>
+      </nav>
+
+      <h3 class="ds__h3">Champ mot de passe — afficher / masquer</h3>
+      <form class="ds__form" novalidate>
+        {% for field in console_form %}{% include "components/form_field.html" with field=field only %}{% endfor %}
+      </form>
+
+      <h3 class="ds__h3">Menu compte et sélecteur de langue</h3>
+      <div class="ds__two">
+        <div>{% include "components/account_menu.html" %}</div>
+        <div>{% include "components/language_segmented.html" %}</div>
+      </div>
+
+      <h3 class="ds__h3">Rail de parcours</h3>
+      {% include "components/journey_rail.html" with steps=journey label="Où j’en suis" only %}
+
+      <h3 class="ds__h3">Barre de santé et ligne de pièce</h3>
+      {% include "components/health_strip.html" with counts=health.counts filters=health.filters only %}
+      <ul class="doc-collection panel panel--l1" role="list">
+        {% include "components/document_row.html" with row=doc_row %}
+      </ul>
+
+      <h3 class="ds__h3">Chronologie du dossier</h3>
+      {% include "components/case_timeline.html" with rows=case_timeline only %}
+
+      <h3 class="ds__h3">Cartes d’option et étapes guidées</h3>
+      <div class="ds__two">
+        <form class="ds__form" novalidate>
+          {% include "components/option_cards.html" with field=situation.has_job_offer only %}
+          {% include "components/option_cards.html" with field=situation.languages only %}
+        </form>
+        <div>{% include "components/wizard_stepper.html" with fields=situation.visible_fields answered=answered_fields only %}</div>
+      </div>
+    </section>
+
+    {# ----------------------------------------------------------------- DONNÉES #}
+    <section class="ds__section" id="donnees" aria-labelledby="h-data">
+      <h2 class="ds__h" id="h-data">Données</h2>
+
+      <h3 class="ds__h3">Tableau</h3>
+      <p class="ds__note">
+        Mesuré à 320 px dans Chrome, et contraire à ce que le balisage laisse croire : chaque cellule
+        porte bien un <code>data-label</code>, mais <strong>aucune feuille de style ne le lit</strong>. Il
+        n'existe pas de repli en fiches. Sur un téléphone, le tableau garde sa forme de tableau et c'est le
+        conteneur <code>.scroll-x</code> qui défile latéralement — 355 px de tableau dans 280 px de colonne.
+        Le <code>data-label</code> a été écrit pour un repli qui n'a jamais été implémenté. À trancher dans
+        la révision des tableaux : écrire le repli, ou retirer l'attribut.
+      </p>
+      <div class="scroll-x">
+        <table class="account-table">
+          <caption class="visually-hidden">Exemple de liste de demandes</caption>
+          <thead>
+            <tr>
+              <th scope="col">Demande</th>
+              <th scope="col">Type</th>
+              <th scope="col">Transmise le</th>
+              <th scope="col">État</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <th scope="row" data-label="Demande"><a href="#donnees">{{ row.title }}</a></th>
+              <td data-label="Type">{{ row.kind }}</td>
+              <td data-label="Transmise le">{{ row.date }}</td>
+              <td data-label="État">{% include "components/badge.html" with label=row.status kind=row.badge only %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="ds__h3">Chronologie</h3>
+      {% include "components/timeline.html" with steps=timeline label="Exemple de séquence" only %}
+
+      <h3 class="ds__h3">État vide</h3>
+      {% include "components/empty_state.html" with title="Aucune demande pour l'instant" text="Les demandes que vous transmettez apparaissent ici, la plus récente en premier." action_label="Commencer" action_url="#donnees" icon="document" only %}
+    </section>
+
+    {# -------------------------------------------------------------- SURCOUCHES #}
+    <section class="ds__section" id="surcouches" aria-labelledby="h-over">
+      <h2 class="ds__h" id="h-over">Surcouches</h2>
+      <p class="ds__note">
+        La modale est un <code>&lt;dialog&gt;</code> natif : le navigateur piège le focus, gère Échap et rend
+        l'arrière-plan inerte. Sans JavaScript, le lien vise l'élément et la CSS l'affiche comme un panneau
+        dans la page.
+      </p>
+      <div class="ds__row">
+        <a class="btn btn--secondary" href="#ds-dialog" data-dialog-open="ds-dialog">Ouvrir la modale</a>
+        <a class="btn btn--secondary" href="#ds-dialog-light" data-dialog-open="ds-dialog-light">Modale légère</a>
+      </div>
+      {% include "components/dialog.html" with id="ds-dialog" title="Titre de la modale" body=dialog_body actions=dialog_actions only %}
+      {% include "components/dialog.html" with id="ds-dialog-light" light=True title="Modale légère" body=dialog_light_body only %}
+      <p class="ds__note">
+        Le tiroir du site est aujourd'hui celui de la navigation, dans l'en-tête, sur mobile. Il n'existe pas
+        encore de tiroir générique : la révision en cours doit décider s'il en faut un, ou si la modale et la
+        page suffisent.
+      </p>
+    </section>
+
+    {# ------------------------------------------------------------------ ICÔNES #}
+    <section class="ds__section" id="icones" aria-labelledby="h-icons">
+      <h2 class="ds__h" id="h-icons">Icônes</h2>
+      <p class="ds__note">
+        Un seul sprite, <code>static/img/icons.svg</code>, référencé par <code>&lt;use&gt;</code>. Les icônes sont
+        décoratives par défaut, sauf si un libellé leur est donné.
+      </p>
+      <ul class="ds__icons">
+        {% for name in icons %}
+        <li class="ds__icon"><span class="ds__icon-box">{% svg_icon name "icon" %}</span><code>{{ name }}</code></li>
+        {% endfor %}
+      </ul>
+    </section>
+
+  </div>
+</div>
+{% endblock %}

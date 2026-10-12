@@ -1,0 +1,1179 @@
+[
+ {
+  "page": "home",
+  "path": "/fr/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/",
+  "title": "Italy Legal Entry™ · Parcours réguliers vers l’Italie",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "ITALY LEGAL ENTRY™"
+  ],
+  "headings": [
+   "H1:ITALY LEGAL ENTRY™",
+   "H2:Quatre accès à l’écosystème",
+   "H3:ÊTES-VOUS UNE PERSONNE ?",
+   "H3:ÊTES-VOUS UNE ENTREPRISE ?",
+   "H3:ÊTES-VOUS UNE INSTITUTION ?",
+   "H3:ÊTES-VOUS UNE UNIVERSITÉ OU UN ORGANISME DE ",
+   "H2:Comment fonctionne l’orientation",
+   "H2:Les parcours réguliers",
+   "H3:Travail salarié",
+   "H3:Travail qualifié — Carte bleue européenne",
+   "H3:Formation dans le pays d’origine",
+   "H3:Études et formation en Italie",
+   "H3:Regroupement familial",
+   "H3:Travail indépendant et entrepreneuriat",
+   "H3:Recherche scientifique",
+   "H3:Autres voies régulières",
+   "H2:PROJET PILOTE VÉNÉTIE–MAROC",
+   "H2:Ce que fait la plateforme, et ce qu’elle ne ",
+   "H3:Italy Legal Entry délivre-t-elle des visas ?",
+   "H3:Italy Legal Entry est-elle une agence de rec",
+   "H3:La pré-évaluation garantit-elle l’entrée en ",
+   "H3:Italy Legal Entry reconnaît-elle les diplôme",
+   "H2:ATTENTION AUX FRAUDES",
+   "H2:Actualités"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "persone_hub",
+  "path": "/fr/parcours/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/parcours/",
+  "title": "Espace Personnes · VOTRE PARCOURS RÉGULIER VERS L’ITALIE · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "VOTRE PARCOURS RÉGULIER VERS L’ITALIE"
+  ],
+  "headings": [
+   "H1:VOTRE PARCOURS RÉGULIER VERS L’ITALIE",
+   "H2:Les parcours réguliers",
+   "H3:Travail salarié",
+   "H3:Travail qualifié — Carte bleue européenne",
+   "H3:Formation dans le pays d’origine",
+   "H3:Études et formation en Italie",
+   "H3:Regroupement familial",
+   "H3:Travail indépendant et entrepreneuriat",
+   "H3:Recherche scientifique",
+   "H3:Autres voies régulières",
+   "H2:Identifiez la voie régulière à explorer",
+   "H2:Comment ça marche",
+   "H2:ATTENTION AUX FRAUDES",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "percorso_lavoro",
+  "path": "/fr/parcours/salaried_work/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/parcours/salaried_work/",
+  "title": "Travail salarié · Espace Personnes · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Travail salarié"
+  ],
+  "headings": [
+   "H1:Travail salarié",
+   "H2:Aperçu",
+   "H2:Étapes",
+   "H3:S’orienter",
+   "H3:Préparer la documentation généralement requi",
+   "H3:Suivre la procédure régulière auprès des act",
+   "H3:Se préparer avant le départ",
+   "H3:Accompagnement après l’arrivée",
+   "H2:Documentation généralement requise",
+   "H2:Autorités et acteurs compétents",
+   "H2:Avertissements",
+   "H3:ATTENTION AUX FRAUDES",
+   "H2:Ressources",
+   "H3:Termes utiles",
+   "H2:Identifiez la voie régulière à explorer",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "imprese",
+  "path": "/fr/entreprises/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/entreprises/",
+  "title": "Espace Entreprises · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREPRISE A-T-ELLE BESOIN ?"
+  ],
+  "headings": [
+   "H1:DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREP",
+   "H2:Trois temps, une même démarche",
+   "H2:Recueil des besoins",
+   "H2:Ce que la plateforme fait, et ne fait pas",
+   "H2:Pour aller plus loin",
+   "H3:Le Forum Vénétie–Maroc",
+   "H3:PROJET PILOTE VÉNÉTIE–MAROC",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [
+   {
+    "tag": "div",
+    "cls": "hp-field",
+    "right": -9998
+   },
+   {
+    "tag": "label",
+    "cls": "",
+    "right": -9984
+   },
+   {
+    "tag": "input",
+    "cls": "hp-field",
+    "right": -19990
+   }
+  ],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "istituzioni",
+  "path": "/fr/institutions/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/institutions/",
+  "title": "Espace Institutions · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Espace Institutions"
+  ],
+  "headings": [
+   "H1:Espace Institutions",
+   "H2:Destinataires",
+   "H2:Proposer une collaboration",
+   "H2:Pour aller plus loin",
+   "H3:Le Forum Vénétie–Maroc",
+   "H3:PROJET PILOTE VÉNÉTIE–MAROC",
+   "H3:Partenaires",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "universita",
+  "path": "/fr/universites-et-formation/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/universites-et-formation/",
+  "title": "Espace Universités et Formation · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Espace Universités et Formation"
+  ],
+  "headings": [
+   "H1:Espace Universités et Formation",
+   "H2:Proposer un partenariat",
+   "H2:Pour aller plus loin",
+   "H3:Formation : avant le départ et après l’arriv",
+   "H3:Les parcours réguliers",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "progetto_pilota",
+  "path": "/fr/projet-pilote/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/projet-pilote/",
+  "title": "PROJET PILOTE VÉNÉTIE–MAROC · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "PROJET PILOTE VÉNÉTIE–MAROC"
+  ],
+  "headings": [
+   "H1:PROJET PILOTE VÉNÉTIE–MAROC",
+   "H2:La séquence du projet pilote",
+   "H2:Participer à la construction du projet",
+   "H2:Pour aller plus loin",
+   "H3:Le Forum Vénétie–Maroc",
+   "H3:Partenaires",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "forum",
+  "path": "/fr/forum/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/forum/",
+  "title": "FORUM PERMANENT VÉNÉTIE–MAROC · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "FORUM PERMANENT VÉNÉTIE–MAROC"
+  ],
+  "headings": [
+   "H1:FORUM PERMANENT VÉNÉTIE–MAROC",
+   "H2:QUI SOMMES-NOUS",
+   "H2:POURQUOI ITALY LEGAL ENTRY",
+   "H2:QU’EST-CE QUE LE FORUM",
+   "H2:OBJECTIFS",
+   "H2:À QUI S’ADRESSE-T-IL",
+   "H2:PROGRAMME",
+   "H2:INTERVIENNENT",
+   "H2:Participer et collaborer",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "forum_iscrizione",
+  "path": "/fr/forum/inscription/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/forum/inscription/",
+  "title": "Inscription · FORUM PERMANENT VÉNÉTIE–MAROC · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "INSCRIPTION"
+  ],
+  "headings": [
+   "H1:INSCRIPTION",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "faq",
+  "path": "/fr/faq/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/faq/",
+  "title": "Questions fréquentes · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Questions fréquentes"
+  ],
+  "headings": [
+   "H1:Questions fréquentes",
+   "H2:Général",
+   "H3:Italy Legal Entry délivre-t-elle des visas ?",
+   "H3:Italy Legal Entry est-elle une agence de rec",
+   "H3:La pré-évaluation garantit-elle l’entrée en ",
+   "H3:Qu’est-ce que le « decreto flussi » ?",
+   "H3:Italy Legal Entry reconnaît-elle les diplôme",
+   "H3:Un refus passé empêche-t-il toute demande fu",
+   "H3:Qui est derrière Italy Legal Entry ?",
+   "H3:Mes données sont-elles protégées ?",
+   "H3:Quelqu’un me propose un visa garanti contre ",
+   "H2:Pour aller plus loin",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [
+   {
+    "tag": "a",
+    "text": "Lien direct vers cette questio",
+    "w": 205,
+    "h": 17,
+    "why": "under 24px AND crowded by a neighbour"
+   },
+   {
+    "tag": "a",
+    "text": "Lien direct vers cette questio",
+    "w": 205,
+    "h": 17,
+    "why": "under 24px AND crowded by a neighbour"
+   },
+   {
+    "tag": "a",
+    "text": "Consulter « Attention aux frau",
+    "w": 244,
+    "h": 17,
+    "why": "under 24px AND crowded by a neighbour"
+   },
+   {
+    "tag": "a",
+    "text": "Glossaire : les termes italien",
+    "w": 264,
+    "h": 17,
+    "why": "under 24px AND crowded by a neighbour"
+   }
+  ],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "glossario",
+  "path": "/fr/glossaire/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/glossaire/",
+  "title": "Glossaire · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Glossaire"
+  ],
+  "headings": [
+   "H1:Glossaire",
+   "H2:C",
+   "H2:D",
+   "H2:L",
+   "H2:N",
+   "H2:P",
+   "H2:Q",
+   "H2:R",
+   "H2:V",
+   "H2:Pour aller plus loin",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "glossario_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/glossaire/nulla_osta/",
+  "title": "Nulla osta — Glossaire · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Nulla osta"
+  ],
+  "headings": [
+   "H1:Nulla osta",
+   "H2:Termes liés",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "formazione",
+  "path": "/fr/formation/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/formation/",
+  "title": "Formation : avant le départ et après l’arrivée · Espace Personnes · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Formation : avant le départ et après l’arrivée"
+  ],
+  "headings": [
+   "H1:Formation : avant le départ et après l’arriv",
+   "H2:Formation avant le départ",
+   "H2:FORMATION APRÈS L’ARRIVÉE",
+   "H2:Identifiez la voie régulière à explorer",
+   "H2:ATTENTION AUX FRAUDES",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "diplomi",
+  "path": "/fr/diplomes-et-titres/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/diplomes-et-titres/",
+  "title": "DIPLÔMES ET TITRES ÉTRANGERS · Espace Personnes · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "DIPLÔMES ET TITRES ÉTRANGERS"
+  ],
+  "headings": [
+   "H1:DIPLÔMES ET TITRES ÉTRANGERS",
+   "H2:Les démarches, étape par étape",
+   "H3:Documentation",
+   "H3:Traductions",
+   "H3:Légalisation ou apostille",
+   "H3:Déclaration de valeur",
+   "H3:Procédures auprès des autorités compétentes",
+   "H2:Qui décide ?",
+   "H2:Identifiez la voie régulière à explorer",
+   "H2:ATTENTION AUX FRAUDES",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "vivere_in_italia",
+  "path": "/fr/vivre-en-italie/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/vivre-en-italie/",
+  "title": "Vivre en Italie · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "VIVRE EN ITALIE"
+  ],
+  "headings": [
+   "H1:VIVRE EN ITALIE",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "attualita",
+  "path": "/fr/actualites/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/actualites/",
+  "title": "Actualités · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "ACTUALITÉS"
+  ],
+  "headings": [
+   "H1:ACTUALITÉS",
+   "H2:Restez informés",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [
+   {
+    "tag": "div",
+    "cls": "hp-wrap",
+    "right": -9998
+   },
+   {
+    "tag": "input",
+    "cls": "hp-field",
+    "right": -19990
+   }
+  ],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 1,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "progetto",
+  "path": "/fr/le-projet/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/le-projet/",
+  "title": "Le projet · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Italy Legal Entry™"
+  ],
+  "headings": [
+   "H1:Italy Legal Entry™",
+   "H2:En bref",
+   "H2:POURQUOI ITALY LEGAL ENTRY",
+   "H2:Qui porte le projet",
+   "H2:Les espaces de l’écosystème",
+   "H2:La marque",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "agami",
+  "path": "/fr/agami/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/agami/",
+  "title": "AGAMI, le promoteur · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "AGAMI — Dialogo Giuridico Interculturale APS"
+  ],
+  "headings": [
+   "H1:AGAMI — Dialogo Giuridico Interculturale APS",
+   "H2:Le promoteur du projet",
+   "H2:Qui est derrière Italy Legal Entry ?",
+   "H2:Identification et contact",
+   "H2:Pour aller plus loin",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "frodi",
+  "path": "/fr/attention-aux-fraudes/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/attention-aux-fraudes/",
+  "title": "ATTENTION AUX FRAUDES · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "ATTENTION AUX FRAUDES"
+  ],
+  "headings": [
+   "H1:ATTENTION AUX FRAUDES",
+   "H2:Signaler une offre suspecte",
+   "H2:S’informer sur les voies régulières",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "contatto",
+  "path": "/fr/contact/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/contact/",
+  "title": "Contact · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Contact"
+  ],
+  "headings": [
+   "H1:Contact",
+   "H2:Par e-mail",
+   "H2:Par le formulaire de contact",
+   "H2:Une demande précise ?",
+   "H2:Vos données",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "contatto_form",
+  "path": "/fr/contact/formulaire/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/contact/formulaire/",
+  "title": "Nous écrire · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Nous écrire"
+  ],
+  "headings": [
+   "H1:Nous écrire",
+   "H2:Votre message",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [
+   {
+    "tag": "div",
+    "cls": "hp-field",
+    "right": -9998
+   },
+   {
+    "tag": "label",
+    "cls": "",
+    "right": -9984
+   },
+   {
+    "tag": "input",
+    "cls": "hp-field",
+    "right": -19990
+   }
+  ],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "imprese_fabbisogni",
+  "path": "/fr/entreprises/recueil-des-besoins/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/entreprises/recueil-des-besoins/",
+  "title": "DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREPRISE A-T-ELLE BESOIN ? · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREPRISE A-T-ELLE BESOIN ?"
+  ],
+  "headings": [
+   "H1:DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREP",
+   "H2:Recueil des besoins",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [
+   {
+    "tag": "div",
+    "cls": "hp-field",
+    "right": -9998
+   },
+   {
+    "tag": "label",
+    "cls": "",
+    "right": -9984
+   },
+   {
+    "tag": "input",
+    "cls": "hp-field",
+    "right": -19990
+   }
+  ],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/compte/login/",
+  "title": "Connexion · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Connexion"
+  ],
+  "headings": [
+   "H1:Connexion",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "registrazione",
+  "path": "/fr/compte/signup/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/compte/signup/",
+  "title": "Inscription · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Création de compte"
+  ],
+  "headings": [
+   "H1:Création de compte",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [
+   {
+    "tag": "div",
+    "cls": "hp-wrap",
+    "right": -9998
+   },
+   {
+    "tag": "input",
+    "cls": "hp-field",
+    "right": -19990
+   }
+  ],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 1,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "reset_password",
+  "path": "/fr/compte/password/reset/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/compte/password/reset/",
+  "title": "Réinitialisation du mot de passe · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Réinitialisation du mot de passe"
+  ],
+  "headings": [
+   "H1:Réinitialisation du mot de passe",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "status": 404,
+  "url": "http://127.0.0.1:8771/fr/questa-pagina-non-esiste/",
+  "title": "Page not found at /fr/questa-pagina-non-esiste/",
+  "lang": "en",
+  "dir": "ltr",
+  "h1": [
+   "Page not found (404)"
+  ],
+  "headings": [
+   "H1:Page not found (404)"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 1,
+  "tables_without_th": 0,
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   },
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "legali_gated",
+  "path": "/fr/note-legali/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/note-legali/",
+  "title": "Mentions légales · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Mentions légales"
+  ],
+  "headings": [
+   "H1:Mentions légales",
+   "H2:Informations légales",
+   "H2:Navigation",
+   "H2:Le projet"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 0,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ }
+]

@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% translate "Partenaires" %}{% endblock %}
+{% block meta_description %}{% translate "Institutions, entreprises, universités, organismes de formation et professionnels qui participent au projet Italy Legal Entry™." %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% translate "Partenaires" as page_title %}
+{% translate "Les partenaires du projet sont présentés ici avec leur accord écrit, au fur et à mesure des autorisations." as page_lead %}
+{% include "components/page_header.html" with title=page_title lead=page_lead %}
+<section class="container partners" aria-label="{% translate 'Liste des partenaires' %}">
+  {% if groups %}
+    {% for group in groups %}
+    <section class="partners__group" aria-labelledby="partners-group-{{ group.kind }}">
+      <h2 id="partners-group-{{ group.kind }}" class="partners__group-title">{{ group.label }}</h2>
+      <ul class="partners__list">
+        {% for card in group.cards %}
+        <li class="partners__item">
+          {% if card.partner.logo_public %}
+            <img class="partners__logo" src="{{ card.partner.logo.file.url }}" alt="{{ card.partner.logo.alt_fr }}" width="{{ card.partner.logo.width|default:'160' }}" height="{{ card.partner.logo.height|default:'80' }}" loading="lazy">
+          {% endif %}
+          <p class="partners__name">{{ card.partner.name }}</p>
+          {% if card.partner.city or card.partner.country %}<p class="partners__place">{{ card.partner.city }}{% if card.partner.city and card.partner.country %}, {% endif %}{{ card.partner.country }}</p>{% endif %}
+          {% if card.description %}<p class="partners__description"{% if card.is_fallback %} lang="{{ card.lang }}"{% endif %}>{{ card.description }}</p>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endfor %}
+  {% else %}
+    {% translate "Aucun partenaire n’est encore présenté." as empty_title %}
+    {% translate "Les partenaires seront présentés au fur et à mesure des autorisations." as empty_text %}
+    {% include "components/empty_state.html" with title=empty_title text=empty_text %}
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% load i18n %}
+{% comment %}
+Contract: `breadcrumbs` = list of {"label": str, "url": str|"", "lang": str (optional)}; the last item is
+the current page. `lang` marks a label shown in another language than the page (French prescribed
+title, Italian legal term): it is rendered as <span lang> for screen readers and RTL isolation.
+Home is added automatically. Separators are CSS-drawn chevrons mirrored in RTL.
+{% endcomment %}
+<nav class="breadcrumbs container" aria-label="{% translate 'Fil d’Ariane' %}">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item"><a href="{% url 'pages:home' %}">{% translate "Accueil" %}</a></li>
+    {% for crumb in breadcrumbs %}
+      <li class="breadcrumbs__item"{% if forloop.last %} aria-current="page"{% endif %}>
+        {% firstof crumb.lang crumb.label.fallback_lang as crumb_lang %}{% if crumb.url and not forloop.last %}<a href="{{ crumb.url }}">{% if crumb_lang %}<span lang="{{ crumb_lang }}">{{ crumb.label }}</span>{% else %}{{ crumb.label }}{% endif %}</a>{% else %}<span{% if crumb_lang %} lang="{{ crumb_lang }}"{% endif %}>{{ crumb.label }}</span>{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}
+Project override of django-allauth's layout: every account page (login, signup, password reset,
+e-mail verification, MFA) renders inside the institutional shell. Entrance pages (login, signup,
+reset) use a single centred card; management pages add the account side navigation.
+{% endcomment %}
+{% block page_title %}{% block head_title %}{% endblock head_title %}{% endblock %}
+{% block meta_description %}{% translate "Espace réservé — accès au compte" %}{% endblock %}
+{% block body_class %}page-account{% endblock %}
+{% block main_content %}
+<section class="container account-page {% block account_layout_class %}account-page--entrance{% endblock %}">
+  {% block body %}
+    {% block account_aside %}{% endblock %}
+    <div class="account-page__main">
+      <div class="account-page__card">
+        {% block content %}{% endblock content %}
+      </div>
+      {% block account_help %}
+      <p class="account-page__aside">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      {% endblock %}
+    </div>
+  {% endblock body %}
+</section>
+{% endblock main_content %}
+{% block extra_scripts %}{% block extra_body %}{% endblock extra_body %}{% endblock %}

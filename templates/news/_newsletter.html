@@ -1,0 +1,35 @@
+{% load i18n %}{% comment %}
+Newsletter « Restez informés » (§3.8.6). Rendered only when the newsletter flag is on.
+Context: `newsletter_enabled`, `newsletter_forms_open` (gate G2), `newsletter_form`.
+The consent checkbox is separate, mandatory and never pre-ticked; its label is the locked text.
+Django 5.2 adds aria-invalid / aria-describedby="<auto_id>_error" on invalid controls, so the
+error list below uses exactly that id (same convention as components/form_field.html).
+{% endcomment %}
+{% if newsletter_enabled %}
+{% locked "p3.news.newsletter_label" as newsletter_label %}{% locked_is_fallback "p3.news.newsletter_label" as newsletter_label_fallback %}
+<section class="newsletter container" id="newsletter" aria-labelledby="newsletter-title">
+  <h2 id="newsletter-title" class="newsletter__title"{% if newsletter_label_fallback %} lang="{% locked_lang 'p3.news.newsletter_label' %}"{% endif %}>{{ newsletter_label }}</h2>
+  {% if newsletter_forms_open and newsletter_form %}
+  <form class="newsletter__form form" method="post" action="{% url 'news:newsletter_subscribe' %}" novalidate>
+    {% csrf_token %}
+    {% include "components/form_field.html" with field=newsletter_form.form_started_at %}
+    {% include "components/form_field.html" with field=newsletter_form.website_url %}
+    {% if newsletter_form.non_field_errors %}<div class="form__errors" role="alert">{{ newsletter_form.non_field_errors }}</div>{% endif %}
+    {% include "components/form_field.html" with field=newsletter_form.email %}
+    {% with field=newsletter_form.consent %}
+    <div class="form-field form-field--required form-field--consent{% if field.errors %} form-field--error{% endif %}" id="wrap_{{ field.id_for_label }}">
+      <div class="form-field__check">
+        {{ field }}
+        <label for="{{ field.id_for_label }}"{% if newsletter_form.consent_is_fallback %} lang="{{ newsletter_form.consent_language }}"{% endif %}>{{ field.label }} <span class="form-field__required" aria-hidden="true">*</span></label>
+      </div>
+      {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error" role="alert">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    {% endwith %}
+    <p class="form__help">{% translate "Un e-mail de confirmation vous sera envoyé (double opt-in). Vous pouvez vous désinscrire à tout moment via le lien présent dans chaque message." %}</p>
+    <button class="btn btn--primary" type="submit">{% translate "S’inscrire" %}</button>
+  </form>
+  {% else %}
+    {% include "components/form_unavailable.html" %}
+  {% endif %}
+</section>
+{% endif %}

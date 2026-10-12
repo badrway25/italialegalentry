@@ -1,0 +1,61 @@
+{% load i18n %}{% comment %}
+THE NEEDS TABLE — design V4 (CREATIVE_DIRECTION.md §3.8.3): the company's needs as a semantic Table
+(DESIGN_SYSTEM_V4.md §8.23) — Besoin (title, then reference · territory · sector · n profils) ·
+État (a word with its register) · Responsable (the named, live party, or «aucun intervenant
+désigné» with the dashed glyph: a blank slot would read as «nobody is looking», which is not what
+it means) · Mis à jour le (tabular date) · the action «Ouvrir le besoin». Sticky head, hover
+row; below 64rem the same markup as labelled cards (v4/workspace.css `.table`).
+
+It turns around the NEEDS, never around people: no candidate, no count of persons, no photograph.
+
+Contract: `needs` = an iterable of companies.models.CompanyNeed (with `live_assignments`).
+{% endcomment %}
+<div class="table-region">
+<table class="table table--needs">
+  <caption class="visually-hidden">{% translate "Les besoins exprimés par votre entreprise, leur état et l’intervenant responsable de chacun." %}</caption>
+  <thead>
+    <tr>
+      <th scope="col">{% translate "Besoin" %}</th>
+      <th scope="col">{% translate "État" %}</th>
+      <th scope="col">{% translate "Responsable" %}</th>
+      <th scope="col">{% translate "Mis à jour le" %}</th>
+      <th scope="col"><span class="visually-hidden">{% translate "Action" %}</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for need in needs %}
+    <tr>
+      <th scope="row" data-label="{% translate 'Besoin' %}">
+        <span class="table__primary" dir="auto">{{ need.title }}</span>
+        <span class="table__gloss">
+          <span class="ctx__ref">{{ need.reference }}</span>
+          · {% if need.territory %}{{ need.territory.label }}{% else %}{% translate "territoire à préciser" %}{% endif %}
+          · {% if need.sector %}{{ need.sector.label }}{% else %}{% translate "secteur à préciser" %}{% endif %}
+          · {% blocktranslate count n=need.headcount %}{{ n }} profil{% plural %}{{ n }} profils{% endblocktranslate %}
+        </span>
+      </th>
+      <td data-label="{% translate 'État' %}">
+        <span class="chip state state--{{ need.state_modifier }}" data-register="{{ need.status|chip_register:'companies.NeedStatus' }}">{{ need.get_status_display }}</span>
+      </td>
+      <td data-label="{% translate 'Responsable' %}">
+        {% with live=need.live_assignments %}
+        {% if live %}
+          {% for assignment in live %}
+          <span class="table__actor">{% include "components/glyph.html" with glyph=assignment.role|actor_glyph size="sm" %}<span dir="auto">{{ assignment.display_name }}</span></span>
+          {% endfor %}
+        {% else %}
+          <span class="table__actor table__actor--none">{% include "components/glyph.html" with glyph="" size="sm" %}<span>{% translate "aucun intervenant désigné" %}</span></span>
+        {% endif %}
+        {% endwith %}
+      </td>
+      <td data-label="{% translate 'Mis à jour le' %}">
+        <time class="table__date" datetime="{{ need.updated_at|date:'Y-m-d' }}">{{ need.updated_at|date:"d.m.Y" }}</time>
+      </td>
+      <td class="table__action">
+        <a class="btn btn--secondary btn--sm" href="{% url 'companies:need_detail' need.reference %}">{% translate "Ouvrir le besoin" %}<span class="visually-hidden"> — {{ need.title }}</span></a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>

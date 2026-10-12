@@ -1,0 +1,128 @@
+/* ============================================================================
+   TOKENS V2 — «Due rive, una porta»
+   docs/design-v2/DESIGN_SYSTEM_V2.md · decided in docs/design-v2/COUNCIL_DECISION.md
+
+   Two chapters, one accent. The mineral chapter is for reading, the midnight
+   chapter for the immersive moments (hero, process, platform bar). ONE colour
+   is interactive: links, the primary action and the focus ring share it, and
+   nothing else may use it. The teal of the territory is graphics — lines,
+   ticks, glyphs — never text, never a control.
+
+   Contrast figures are computed (WCAG 2.x relative luminance) against the
+   ground named on the line and re-verified by tests/frontend/test_v2_tokens.py.
+   ========================================================================== */
+
+:root {
+  /* ---- MINERAL — the reading chapter ------------------------------------ */
+  --min-0: #f4f3f0; /* canvas */
+  --min-1: #ecebe6; /* area: institutional bar, section grounds, navigation rail */
+  --min-2: #fbfaf8; /* sheet: cards, panels, header */
+  --min-3: #ffffff; /* elevated: popover, menu */
+  --ink: #15222a;   /* 14.62:1 on --min-0 */
+  --ink-2: #4a5a62; /*  6.46:1 */
+  --ink-3: #55646b; /*  5.48:1 — folio, captions */
+  --hairline: #d3d2cc;        /* 1px rhythm, informative */
+  --hairline-strong: #7a868b; /* 3.37:1 — a component boundary */
+
+  /* ---- MIDNIGHT — the immersive chapter --------------------------------- */
+  --mid-0: #0a151c; /* utility, footer */
+  --mid-1: #0e1b23; /* canvas: hero, process, platform bar */
+  --mid-2: #14242e; /* area */
+  --mid-3: #1b2f3a; /* sheet */
+  --mid-4: #223a46; /* elevated */
+  --on-dark: #eef2f1;   /* 15.51:1 on --mid-1 */
+  --on-dark-2: #b7c3c4; /*  9.68:1 */
+  --on-dark-3: #8fa0a3; /*  6.44:1 */
+  --hairline-dark: rgba(214, 226, 228, 0.14);
+  --hairline-dark-strong: rgba(214, 226, 228, 0.28);
+
+  /* ---- THE ACCENT — one, in two luminosities ---------------------------- */
+  --accent: #0f6a72;       /* 5.69:1 on --min-0, 6.05:1 on --min-2 */
+  --accent-hover: #0b555c;
+  --accent-dark: #7fd1d8;  /* 10.01:1 on --mid-1 */
+  --accent-ring: #1d8a93;  /* 3.70:1 on --min-0 — focus ring, UI strokes */
+  --accent-wash: #d9eef0;
+
+  /* ---- TERRITORY — graphics only ---------------------------------------- */
+  --terr-line: #3fa6af;    /* 6.07:1 on --mid-1 */
+  --terr-line-lt: #0f6a72;
+
+  /* ---- SEMANTIC — never a brand colour ---------------------------------- */
+  --ok-700: #1e7a4d;   --ok-100: #dcefe4;   --ok-300: #7ccfa0;   /* regular, done, valid */
+  --err-700: #b3261e;  --err-100: #f6dedc;                       /* error only */
+  --seal-600: #8c6d4b; --seal-100: #efe6da; --seal-300: #c7a77e; /* bronze: seals only */
+  --pending-700: #705434; /* 6.7:1 on --min-0 — «en attente» */
+
+  /* ---- OFFICIAL BRAND — never altered, never used elsewhere ------------- */
+  --brand-green: #157a3c; /* 5.19:1 on --min-2 */
+  --brand-navy: #0f2547;  /* 14.63:1 on --min-2 */
+  --brand-red: #c4142b;   /* 5.78:1 on --min-2 */
+  --brand-gold: #c39a2b;  /* 5.80:1 on --brand-navy — the key */
+
+  /* ---- THE FOUR ROUTES — never alone: index + glyph + text -------------- */
+  --route-1: #0f6a72; --route-2: #1c5f7c; --route-3: #34506a; --route-4: #2f6b5c;
+
+  /* ---- RESPONSIBLE ACTORS (rail 2.0) — never alone: texture + glyph + word */
+  --owner-person: #0f6a72;
+  --owner-project: #34506a;
+  --owner-training: #1c5f7c;
+  --owner-authority: #8c6d4b;
+  --owner-territory: #2f6b5c;
+
+  /* ---- SHADOWS — four roles, and no fifth ------------------------------- */
+  --shadow-2: 0 1px 2px rgba(10, 21, 28, 0.06), 0 4px 12px -6px rgba(10, 21, 28, 0.12);
+  --shadow-3: 0 2px 4px rgba(10, 21, 28, 0.06), 0 12px 28px -12px rgba(10, 21, 28, 0.18);
+  --shadow-5: 0 8px 16px -4px rgba(10, 21, 28, 0.14), 0 24px 48px -12px rgba(10, 21, 28, 0.24);
+  --shadow-door: 0 40px 64px -32px rgba(10, 21, 28, 0.6);
+
+  /* ---- TYPE — three voices --------------------------------------------- */
+  --f-serif: "Newsreader", "Noto Naskh Arabic", "Iowan Old Style", Georgia, serif;
+  --f-sans: "Fira Sans", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "Fira Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Eleven sizes, line-heights on a 4px grid. The display size is fluid only
+     inside the hero; everything else steps. */
+  --t-display: clamp(3.25rem, 2rem + 5.2vw, 6.25rem); /* 52 → 100 */
+  --t-display-lh: 0.96;
+  --t-plate: 4rem;      --t-plate-lh: 4rem;        /* 64/64 */
+  --t-title: 3rem;      --t-title-lh: 3.25rem;     /* 48/52 */
+  --t-band: 2rem;       --t-band-lh: 2.25rem;      /* 32/36 */
+  --t-entry: 1.375rem;  --t-entry-lh: 1.75rem;     /* 22/28 */
+  --t-lead: 1.25rem;    --t-lead-lh: 1.75rem;      /* 20/28 */
+  --t-body: 1.0625rem;  --t-body-lh: 1.75rem;      /* 17/28 */
+  --t-ui: 0.9375rem;    --t-ui-lh: 1.25rem;        /* 15/20 */
+  --t-small: 0.875rem;  --t-small-lh: 1.25rem;     /* 14/20 */
+  --t-folio: 0.8125rem; --t-folio-lh: 1rem;        /* 13/16, mono */
+  --t-caption: 0.75rem; --t-caption-lh: 1rem;      /* 12/16 */
+  --track-folio: 0.08em;
+  --track-display: -0.015em;
+
+  /* ---- SPACE — the 4px rhythm the site already has, plus three steps ---- */
+  --s-5: 20px; --s-10: 40px; --s-20: 80px;
+
+  /* ---- MOTION — one entrance, one exit, one standard; four durations ---- */
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-instant: 120ms;
+  --motion-fast: 180ms;
+  --motion-base: 240ms;
+  --motion-slow: 320ms;
+  --motion-draw: 900ms;     /* the one immersive trace (hero arch, route) */
+  --motion-ambient: 28s;    /* the one living object per page: the tide */
+
+  /* ---- LAYOUT ------------------------------------------------------------ */
+  --radius-control: 2px;
+  --radius-tile: 6px;
+  --utility-height: 36px;
+  --header-height: 64px;
+  --chrome-height: calc(var(--utility-height) + var(--header-height));
+}
+
+/* Below md the letterhead is 56px in total — the institutional bar moves into the drawer. */
+@media (max-width: 47.999rem) {
+  :root {
+    --utility-height: 0px;
+    --header-height: 56px;
+  }
+}

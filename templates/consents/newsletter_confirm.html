@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% translate "Confirmation" %}{% endblock %}
+{% block content %}<section class="container"><h1>{% translate "Confirmer l’inscription" %}</h1>
+{% if subscription.confirmed_at %}<p>{% translate "Inscription confirmée." %}</p>{% else %}<form method="post">{% csrf_token %}<button class="btn btn--primary" type="submit">{% translate "Confirmer" %}</button></form>{% endif %}</section>{% endblock %}

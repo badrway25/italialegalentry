@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--contact{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<article class="container enquiry-page enquiry-page--contact">
+  <header class="page-header">
+    <p class="page-header__eyebrow">{% translate "Contact" %}</p>
+    <h1 class="page-header__title">{{ page_title }}</h1>
+    <p class="page-header__lead">{% translate "Pour toute question sur le projet, utilisez ce formulaire ou écrivez directement à l’adresse ci-dessous." %}</p>
+    <p class="page-header__contact"><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  </header>
+  <section class="enquiry-page__form" id="formulaire" aria-labelledby="contact-form-title">
+    <h2 id="contact-form-title" class="enquiry-page__form-title">{% translate "Votre message" %}</h2>
+    {% if not forms_open or not form %}
+      {% include "components/form_unavailable.html" %}
+    {% else %}
+      {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-contact" form_class="enquiry-form--contact" legend=_("Vos coordonnées et votre message") submit_label=_("Envoyer le message") %}
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

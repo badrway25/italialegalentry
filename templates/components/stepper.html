@@ -1,0 +1,17 @@
+{% load i18n %}{% comment %}
+Stepper / progress indicator for multi-step flows (orientation wizard).
+Contract: `steps` = list of str; `current` = 1-based index of the current step.
+Renders a semantic <ol> with aria-current="step" and a native <progress> (no inline styles: CSP).
+{% endcomment %}
+<div class="stepper-wrap">
+  <ol class="stepper" aria-label="{% translate 'Progression' %}">
+    {% for step in steps %}
+    <li class="stepper__item{% if forloop.counter < current %} stepper__item--done{% elif forloop.counter == current %} stepper__item--current{% endif %}"{% if forloop.counter == current %} aria-current="step"{% endif %} data-step-marker>
+      <span class="stepper__marker" aria-hidden="true"></span>
+      <span class="stepper__label">{{ step }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+  <p class="progress-label"><span>{% blocktranslate with n=current total=steps|length %}Étape {{ n }} sur {{ total }}{% endblocktranslate %}</span></p>
+  <progress class="progress" value="{{ current }}" max="{{ steps|length }}" aria-hidden="true"></progress>
+</div>

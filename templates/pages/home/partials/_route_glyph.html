@@ -1,0 +1,39 @@
+{% comment %}
+The contour glyph of one access route — our own drawing, in the territory's language.
+
+Four landforms, one per actor, so the four routes are told apart by shape as well as by tint and
+by index (never colour alone): a single summit for the person, two summits for the company, the
+terraces of a built institution — the same three steps as the doorway — and a long ridge for the
+university. Decorative: the route's title is the name.
+
+Drawn on 120×80 so it scales with the panel; `vector-effect` keeps the stroke at 1px at any size.
+{% endcomment %}<svg class="route__glyph" viewBox="0 0 120 80" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" vector-effect="non-scaling-stroke">
+{% if actor == 'person' %}
+  <path d="M2 74C20 70 40 58 60 58s40 12 58 16"/>
+  <path d="M10 63C26 57 44 45 60 45s34 12 50 18"/>
+  <path d="M22 52C34 46 48 34 60 34s26 12 38 18"/>
+  <path d="M34 41C42 37 52 27 60 27s18 10 26 14"/>
+  <circle cx="60" cy="22" r="2" fill="currentColor" stroke="none"/>
+{% elif actor == 'company' %}
+  <path d="M2 74c16-6 28-14 38-14 12 0 18 6 24 6s12-8 20-8c12 0 24 10 34 16"/>
+  <path d="M9 63c11-6 21-14 31-14 10 0 16 6 24 6s12-8 20-8c12 0 22 10 30 16"/>
+  <path d="M18 52c8-6 14-14 22-14s14 8 22 8 10-8 18-8c10 0 18 8 24 14"/>
+  <path d="M29 41c5-5 9-11 15-11s11 7 17 7 8-7 14-7c7 0 13 6 17 11"/>
+  <circle cx="44" cy="27" r="2" fill="currentColor" stroke="none"/>
+  <circle cx="75" cy="24" r="2" fill="currentColor" stroke="none"/>
+{% elif actor == 'institution' %}
+  <path d="M2 74h116"/>
+  <path d="M14 62h92"/>
+  <path d="M26 50h68"/>
+  <path d="M38 38h44"/>
+  <path d="M50 26h20"/>
+  <path d="M60 26V16"/>
+  <circle cx="60" cy="14" r="2" fill="currentColor" stroke="none"/>
+{% else %}
+  <path d="M2 72c26-3 44-12 66-20 16-6 32-10 50-12"/>
+  <path d="M2 61c24-3 42-12 64-20 16-6 33-11 52-13"/>
+  <path d="M6 50c22-3 40-12 60-19 15-6 32-11 50-13"/>
+  <path d="M16 39c20-3 36-11 54-17 14-5 30-9 46-11"/>
+  <circle cx="104" cy="26" r="2" fill="currentColor" stroke="none"/>
+{% endif %}
+</svg>

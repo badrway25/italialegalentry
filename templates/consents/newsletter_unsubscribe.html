@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% translate "Désinscription" %}{% endblock %}
+{% block content %}<section class="container"><h1>{% translate "Se désinscrire" %}</h1>
+{% if subscription.unsubscribed_at %}<p>{% translate "Vous êtes désinscrit(e)." %}</p>{% else %}<form method="post">{% csrf_token %}<button class="btn btn--primary" type="submit">{% translate "Confirmer la désinscription" %}</button></form>{% endif %}</section>{% endblock %}

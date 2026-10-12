@@ -1,0 +1,22 @@
+{% load i18n %}
+{% comment %}
+Account overview / navigation for the reserved area. Include from portal pages and account pages.
+Contract: uses request.user; optional `active` (one of: profile, email, password, mfa, documents).
+Cross-app names go through safe_url (returns "" while a sibling app is not yet available).
+{% endcomment %}
+<nav class="account-menu" aria-label="{% translate 'Mon compte' %}">
+  <p class="account-menu__identity">
+    <span class="account-menu__name">{{ request.user.get_full_name }}</span>
+    <span class="account-menu__email">{{ request.user.email }}</span>
+  </p>
+  <ul class="account-menu__list">
+    {% safe_url 'portal:dashboard' as dashboard_url %}
+    {% if dashboard_url %}<li><a class="account-menu__link" href="{{ dashboard_url }}"{% if active == 'dashboard' %} aria-current="page"{% endif %}>{% translate "Tableau de bord" %}</a></li>{% endif %}
+    <li><a class="account-menu__link" href="{% url 'accounts:profile' %}"{% if active == 'profile' %} aria-current="page"{% endif %}>{% translate "Profil" %}</a></li>
+    <li><a class="account-menu__link" href="{% url 'account_email' %}"{% if active == 'email' %} aria-current="page"{% endif %}>{% translate "Adresses e-mail" %}</a></li>
+    <li><a class="account-menu__link" href="{% url 'account_change_password' %}"{% if active == 'password' %} aria-current="page"{% endif %}>{% translate "Mot de passe" %}</a></li>
+    <li><a class="account-menu__link" href="{% url 'mfa_index' %}"{% if active == 'mfa' %} aria-current="page"{% endif %}>{% translate "Authentification à deux facteurs" %}</a></li>
+    <li><a class="account-menu__link" href="{% url 'documents:index' %}"{% if active == 'documents' %} aria-current="page"{% endif %}>{% translate "Mes documents" %}</a></li>
+    <li><a class="account-menu__link" href="{% url 'account_logout' %}">{% translate "Se déconnecter" %}</a></li>
+  </ul>
+</nav>

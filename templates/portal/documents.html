@@ -1,0 +1,136 @@
+{% extends "portal/base_portal.html" %}{% load i18n static documents_register %}
+{% comment %}
+"Mes documents" in the reserved area — design V4 (CREATIVE_DIRECTION.md §3.5): the DOCUMENT
+WORKSPACE, the pilot page of the rebase. The header carries the locked title, the context sentence,
+the file's reference and — when there is one — the ONE deposit the person can make now, as the
+page's primary action; the register (documents/partials/register.html, the same presenter and the
+same authorisation as /documents/) carries the health strip, the state filters, the search and the
+rows; the account's own files and the organisation's stay below, demoted and named for what they are.
+
+Contract, from portal.views.documents / portal.services.documents_page: `available`, `may_upload`,
+`upload_url`, `page_obj`, `organisation_documents`, `organisation_documents_limit`; the primary
+action and the reference come from the register tag's own context (documents.presenters).
+{% endcomment %}
+{% block page_title %}{% translate "Mes pièces" %}{% endblock %}
+{% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+
+{% block portal_content %}
+{% register_data as register %}
+<header class="ws-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mes pièces" %}</h1>
+    <p class="ws-head__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
+  </div>
+  {% if register.primary_action %}
+  <div class="ws-head__action">
+    <a class="btn btn--primary btn--arrow" href="{{ register.primary_action.url }}" aria-describedby="ws-primary-piece">{{ register.primary_action.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+    <span class="ws-head__action-note" id="ws-primary-piece">{{ register.primary_action.title }}</span>
+  </div>
+  {% endif %}
+</header>
+
+{% if not available %}
+  {% translate "Cette rubrique est momentanément indisponible. Vos données ne sont pas affectées." as unavailable_text %}
+  {% include "components/notice.html" with kind="pending" text=unavailable_text %}
+{% else %}
+
+{% include "documents/partials/register.html" with register=register request=request %}
+
+{% comment %}
+THE FILES THEMSELVES, below the register — design V4 (gate C review, correction 4): the account's
+files as a Table (DS §8.23), Plex, the file name as the link that downloads it; the organisation's
+files the same way for a responsible; then the two ways out as LINK buttons and, once, the
+Conditions gate in the shared notice (in Plex since the same review).
+
+`page_obj` comes from portal.services.documents_page, which lists EVERY file of the account —
+including those already shown above as a version of a requirement. This page therefore calls the
+section what it is («tous les fichiers») rather than repeating /documents/'s wording, which would
+be false here.
+{% endcomment %}
+{% if page_obj.object_list %}
+<section class="panel panel--l1 files" aria-labelledby="loose-title">
+  <div class="panel__head">
+    <h2 class="panel__section" id="loose-title">{% translate "Tous les fichiers de votre compte" %}</h2>
+  </div>
+  <p class="files__lead">{% translate "Le registre ci-dessus dit ce que votre dossier attend ; cette liste montre les fichiers eux-mêmes, dans l’ordre de dépôt." %}</p>
+  <div class="table-region">
+    <table class="table">
+      <caption class="visually-hidden">{% translate "Tous les fichiers de votre compte" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Fichier" %}</th>
+          <th scope="col">{% translate "Type" %}</th>
+          <th scope="col">{% translate "Taille" %}</th>
+          <th scope="col">{% translate "Déposé le" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in page_obj %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Fichier' %}">
+            <span class="table__primary">{% if doc.url %}<a class="table__link" href="{{ doc.url }}">{{ doc.name }}</a>{% else %}{{ doc.name }}{% endif %}</span>
+            {% if doc.description %}<span class="table__gloss">{{ doc.description }}</span>{% endif %}
+            {% if doc.organisation %}<span class="table__gloss">{{ doc.organisation }}</span>{% endif %}
+          </th>
+          <td data-label="{% translate 'Type' %}">{{ doc.kind_label }}</td>
+          <td data-label="{% translate 'Taille' %}">{{ doc.size|filesizeformat }}</td>
+          <td data-label="{% translate 'Déposé le' %}"><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "components/pagination.html" with page_obj=page_obj %}
+</section>
+{% endif %}
+
+{% if organisation_documents %}
+<section class="panel panel--l1 files" aria-labelledby="org-documents-title">
+  <div class="panel__head">
+    <h2 class="panel__section" id="org-documents-title">{% translate "Documents de mon organisation" %}</h2>
+  </div>
+  <p class="files__lead">{% translate "En tant que responsable, vous pouvez consulter les documents rattachés à votre organisation par ses membres." %}{% if organisation_documents_limit %} {% blocktranslate with n=organisation_documents_limit %}Seuls les {{ n }} documents les plus récents sont affichés.{% endblocktranslate %}{% endif %}</p>
+  <div class="table-region">
+    <table class="table">
+      <caption class="visually-hidden">{% translate "Documents de mon organisation" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Document" %}</th>
+          <th scope="col">{% translate "Organisation" %}</th>
+          <th scope="col">{% translate "Type" %}</th>
+          <th scope="col">{% translate "Déposé le" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in organisation_documents %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Document' %}"><span class="table__primary">{% if doc.url %}<a class="table__link" href="{{ doc.url }}">{{ doc.name }}</a>{% else %}{{ doc.name }}{% endif %}</span></th>
+          <td data-label="{% translate 'Organisation' %}">{{ doc.organisation }}</td>
+          <td data-label="{% translate 'Type' %}">{{ doc.kind_label }}</td>
+          <td data-label="{% translate 'Déposé le' %}"><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+<p class="files__foot">
+  {% if may_upload and upload_url %}<a class="btn btn--link btn--sm" href="{{ upload_url }}">{% translate "Déposer un fichier hors exigence" %}</a>{% endif %}
+  <a class="btn btn--link btn--sm" href="{% url 'documents:index' %}">{% translate "Registre complet" %}</a>
+</p>
+
+{% if not may_upload %}
+  {% comment %}
+  The Conditions gate, said once at the foot of the page. It is ALSO carried on each row that it
+  blocks, with the link that resolves it: a banner above an empty box leaves the reader to work out
+  which row it was about.
+  {% endcomment %}
+  {% translate "Le dépôt de fichiers nécessite l’acceptation des Conditions d’utilisation et de la Privacy Policy." as terms_text %}
+  {% include "components/notice.html" with kind="pending" text=terms_text %}
+{% endif %}
+
+{% endif %}
+{% endblock %}

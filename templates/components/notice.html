@@ -1,0 +1,10 @@
+{% comment %}
+Contract: `kind` in info|success|warning|error|pending|institutional, `title` (optional),
+`text` (str or safe html), `icon` (optional icon name; default per kind), `lang` (optional).
+role="alert" only for errors; everything else is a polite status region.
+{% endcomment %}
+<div class="notice notice--{{ kind|default:'info' }}" role="{% if kind == 'error' %}alert{% else %}status{% endif %}"{% if lang %} lang="{{ lang }}"{% endif %}>
+  {% if icon %}{% svg_icon icon "icon notice__icon" %}{% elif kind == 'error' or kind == 'warning' %}{% svg_icon "warning" "icon notice__icon" %}{% elif kind == 'success' %}{% svg_icon "check" "icon notice__icon" %}{% elif kind == 'pending' %}{% svg_icon "clock" "icon notice__icon" %}{% else %}{% svg_icon "info" "icon notice__icon" %}{% endif %}
+  {% if title %}<p class="notice__title">{{ title }}</p>{% endif %}
+  <div class="notice__body">{{ text }}</div>
+</div>

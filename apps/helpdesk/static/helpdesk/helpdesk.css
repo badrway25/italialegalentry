@@ -1,0 +1,229 @@
+/* ============================================================================
+   THE DIGITAL HELP DESK — four additions to the register, no new language.
+
+   Everything else on these pages comes from static/css/register.css and
+   apps/portal/static/portal/portal.css: the folio, the register and its
+   entries, the sequence, the data table, the state chip, the empty region.
+   What follows is only what the exchange itself needs.
+
+   No card, no dashed empty region, no KPI grid, no shadow, no radius above
+   2px, no gradient, no icon per row, no percentage meter, and no colour that
+   carries a state on its own: every state below is written as a WORD and the
+   colour is a 4px rule beside it.
+   ========================================================================== */
+
+/* ---- THE STATE OF THE REQUEST ---------------------------------------------
+   Built like `.outcome` — a word at title size with a state rule on the inline
+   start — because a help-desk state and a rule-engine outcome are the same kind
+   of statement: this is where the matter stands, and here is what follows.
+   It is a separate class rather than a reuse of `.outcome` so that a reader is
+   never invited to mistake «réponse disponible» for a rule-engine finding.
+   -------------------------------------------------------------------------- */
+.desk-state {
+  border-inline-start: 4px solid var(--rule-ink);
+  padding-inline-start: var(--s-4);
+  margin-block-end: var(--s-8);
+}
+
+.desk-state__word {
+  font-family: var(--font-display);
+  font-size: var(--t-title-size);
+  line-height: var(--t-title-lh);
+  letter-spacing: var(--track-title);
+  margin: 0 0 var(--s-2);
+}
+
+.desk-state__next {
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink-secondary);
+  max-inline-size: var(--measure-gloss);
+  margin: 0;
+}
+
+/* The actor line: said plainly, so a person waiting on somebody else does not
+   think they are late. Same reasoning as the next-action region of the shell. */
+.desk-state__actor {
+  display: block;
+  margin-block-start: var(--s-3);
+  font-family: var(--font-ui);
+  font-size: var(--t-folio-size);
+  line-height: var(--t-folio-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--ink-muted);
+}
+
+:lang(ar) .desk-state__actor {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.desk-state--filed,
+.desk-state--review {
+  border-inline-start-color: var(--state-info-br);
+}
+
+.desk-state--missing {
+  border-inline-start-color: var(--state-pending-br);
+}
+
+/* The blue «done» rule. There is no green in this system and there is none
+   here: a written reply is a fact on the record, never an approval. */
+.desk-state--done {
+  border-inline-start-color: var(--state-done-br);
+}
+
+/* ---- THE EXCHANGE ----------------------------------------------------------
+   A `.sequence` of turns. The head of each turn is a FUNCTION and a date —
+   never a personal name, which is why the template has no field to print one.
+   -------------------------------------------------------------------------- */
+.exchange__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) var(--s-3);
+  margin: 0 0 var(--s-2);
+}
+
+.exchange__role {
+  font-family: var(--font-display);
+  font-size: var(--t-entry-size);
+  line-height: var(--t-entry-lh);
+  font-weight: 500;
+}
+
+.exchange__date {
+  font-family: var(--font-ui);
+  font-size: var(--t-caption-size);
+  line-height: var(--t-caption-lh);
+  color: var(--ink-muted);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.exchange__body {
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink);
+  max-inline-size: var(--measure-gloss);
+  margin: 0;
+}
+
+/* An internal note is set on the process ground and keeps its own rule, so the
+   professional can never mistake a private note for the shared exchange. */
+.sequence__step--internal {
+  background: var(--paper-deep);
+}
+
+.sequence__step--internal .sequence__marker {
+  border-inline-start-color: var(--rule-ink);
+}
+
+/* ---- FORMS OF THE EXCHANGE ------------------------------------------------- */
+.desk-form {
+  border-block-start: 2px solid var(--navy);
+  padding-block-start: var(--s-4);
+  margin-block-start: var(--s-8);
+  max-inline-size: 60ch;
+}
+
+.desk-form__title {
+  font-family: var(--font-ui);
+  font-size: var(--t-folio-size);
+  line-height: var(--t-folio-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--ink-secondary);
+  margin: 0 0 var(--s-4);
+}
+
+:lang(ar) .desk-form__title {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.desk-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-block-start: var(--s-4);
+}
+
+/* The dispatch form lives inside a <details> in a table row: it opens with no
+   script, which is the whole progressive-enhancement contract (ADR-009). */
+.desk-dispatch__form {
+  border-block-start: 1px solid var(--rule-hair);
+  padding-block: var(--s-4);
+  max-inline-size: 60ch;
+}
+
+/* ``display: list-item`` keeps the native disclosure marker, which is the only thing that tells a
+   reader the row opens; ``display: flex`` removes it silently. The underline says the same thing a
+   second time, for a reader whose browser hides the marker. */
+.desk-dispatch__summary {
+  display: list-item;
+  list-style-position: inside;
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  cursor: pointer;
+  min-block-size: 44px;
+  padding-block: var(--s-3);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.desk-dispatch__summary::marker {
+  color: var(--rubric);
+}
+
+/* A register of columns is the one element allowed to be wider than a phone,
+   and only inside its own scroll region. Focusable and labelled in the markup,
+   so a keyboard reader can reach the part that is off screen. */
+.desk-scroll {
+  overflow-x: auto;
+  max-inline-size: 100%;
+}
+
+/* ---- THE MANDATE ----------------------------------------------------------
+   Who is answerable for this request, and under what. It takes the jurisdiction
+   register of the site: a fact about responsibility, not decoration.
+   -------------------------------------------------------------------------- */
+.desk-mandate {
+  border-block-start: 1px solid var(--rule-hair);
+  padding-block-start: var(--s-3);
+  margin-block-start: var(--s-6);
+  font-family: var(--font-ui);
+  font-size: var(--t-caption-size);
+  line-height: var(--t-caption-lh);
+  color: var(--ink-muted);
+  max-inline-size: var(--measure-note);
+}
+
+.desk-mandate dt {
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+.desk-mandate dd {
+  margin: 0 0 var(--s-2);
+}
+
+@media (forced-colors: active) {
+  .desk-state,
+  .desk-form,
+  .desk-mandate,
+  .desk-dispatch__form {
+    border-color: CanvasText;
+  }
+
+  .sequence__step--internal {
+    background: Canvas;
+  }
+}

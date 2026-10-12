@@ -1,0 +1,54 @@
+{% load i18n ile_core %}{% comment %}
+7. PILOT / COOPERATION — Phase 3 only (pages.services.build_pilot returns nothing while G3 is
+closed). Title and the eight-step sequence are prescribed (p3.pilot.title, p3.pilot.sequence) and
+are rendered verbatim; the full page belongs to the ecosystem app. The pilot is never presented as
+an already authorised entry channel — that is what the section note says, and it stays.
+
+THE ROUTE BETWEEN TWO SHORES (DESIGN_SYSTEM_V2.md §8.6). The sequence was a row of eight circles
+joined by a line that ran to the container edge and stopped. It is now a route: a midnight chapter
+with the two shores of the project named at its ends — Maroc and Vénétie, which is the project's
+own name — and the prescribed steps as stations ON the line, drawn by `voyage_route` so a dot
+always sits on the curve whatever the client's text does to the number of steps.
+
+What the drawing does NOT claim: which shore each step belongs to. The locked list is a list of
+labels; assigning them to a side would be an editorial judgement about a legal pathway, and this
+template does not make those. The route rises from one named shore to the other, the steps are in
+their prescribed order along it, and nothing else is asserted.
+
+The line draws with the scroll (ScrollTimeline via Motion). With reduced motion it is simply
+drawn. Below 64rem the SVG is not rendered at all and the stations become a vertical list with a
+spine: a list works at 320px because it is a list.
+{% endcomment %}
+<section class="section home-pilot chapter--dark" id="{{ s.anchor }}" aria-labelledby="home-pilot-title" data-section="pilot">
+  <div class="container">
+    <div class="section__header">
+      <p class="eyebrow">{% translate "Coopération" %}</p>
+      <h2 class="section__title" id="home-pilot-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
+      {% if s.intro %}<p class="section__lead"{% if s.intro.lang %} lang="{{ s.intro.lang }}"{% endif %}>{{ s.intro }}</p>{% endif %}
+    </div>
+
+    {% voyage_route d.steps|length as route %}
+    <div class="voyage" data-voyage data-steps="{{ d.steps|length }}">
+      <p class="voyage__shore voyage__shore--south"><span class="voyage__dot" aria-hidden="true"></span>{% translate "Maroc" %}</p>
+      <svg class="voyage__svg" viewBox="0 0 {{ route.width }} {{ route.height }}" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path class="voyage__line" pathLength="1" d="{{ route.d }}"/>
+        {% for st in route.stations %}<circle class="voyage__station" cx="{{ st.x }}" cy="{{ st.y }}" r="4"/>{% endfor %}
+      </svg>
+      <p class="voyage__shore voyage__shore--north">{% translate "Vénétie" %}<span class="voyage__dot" aria-hidden="true"></span></p>
+
+      {% translate "Séquence du projet pilote" as sequence_label %}
+      <ol class="voyage__stations" aria-label="{{ sequence_label }}"{% if d.steps_lang %} lang="{{ d.steps_lang }}"{% endif %}>
+        {% for step in d.steps %}
+        <li class="voyage__step" data-reveal>
+          <span class="voyage__num" aria-hidden="true"></span>
+          <p class="voyage__label">{% if step.label %}{{ step.label }}{% else %}{{ step }}{% endif %}</p>
+          {% if step.text %}<p class="voyage__text">{{ step.text }}</p>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
+    {% if d.url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.url }}">{% translate "Découvrir le projet pilote" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  </div>
+</section>

@@ -1,0 +1,7 @@
+{% comment %}Contract: `title`, `text` (optional), `action_label` + `action_url` (optional), `icon` (optional, default "document").{% endcomment %}
+<div class="empty-state" role="status">
+  {% svg_icon icon|default:"document" "icon empty-state__icon" %}
+  <p class="empty-state__title">{{ title }}</p>
+  {% if text %}<p class="empty-state__text">{{ text }}</p>{% endif %}
+  {% if action_url %}<p><a class="btn btn--secondary" href="{{ action_url }}">{{ action_label }}</a></p>{% endif %}
+</div>

@@ -1,0 +1,19 @@
+{% comment %}
+Institutional banner (homepage notice, e.g. the Forum banner until 2 Oct 2026). Not dismissible,
+not a popup: a quiet band under the header. Contract: `title`, optional `meta`, `quote`,
+`button_label` + `button_url`, `lang`, `label` (aria-label of the region).
+{% endcomment %}
+<section class="institutional-banner" role="region" aria-label="{{ label|default:title }}"{% if lang %} lang="{{ lang }}"{% endif %}>
+  <div class="container institutional-banner__inner">
+    <div>
+      <p class="institutional-banner__title">{{ title }}</p>
+      {% if meta %}<p class="institutional-banner__meta">{{ meta }}</p>{% endif %}
+    </div>
+    {% if quote %}<blockquote class="institutional-banner__quote"><p>{{ quote }}</p></blockquote>{% endif %}
+    {% if button_url %}
+    <div class="institutional-banner__actions">
+      <a class="btn btn--primary btn--arrow" href="{{ button_url }}">{{ button_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+    </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}
+Rendered (HTTP 503) for EVERY route of the governance module while the `virtual_forum` gate is
+closed — to everyone, including a signed-in member of the secretariat and a staff account without
+superadmin. The reserved area answers the same way when its own kill switch is off
+(templates/portal/unavailable.html); this page follows that pattern, with the one difference that
+matters: the wording is honest about WHY. The module is not broken and it is not under maintenance,
+it has not opened yet, and saying « maintenance » about something that has never been available
+would be a small lie told at scale.
+
+No date is promised here. FORUM_GOVERNANCE §7 subordinates the gate to a decision and to the legal
+pages, not to a calendar entry, and this platform does not announce dates it does not control.
+{% endcomment %}
+{% block page_title %}{% translate "Forum permanent" %}{% endblock %}
+{% block meta_description %}{% translate "L’espace de gouvernance du Forum permanent n’est pas encore ouvert." %}{% endblock %}
+{% block content %}
+{% translate "Forum permanent" as header_title %}
+{% include "components/page_header.html" with title=header_title %}
+<div class="container section section--flush-top">
+  {% translate "Espace momentanément indisponible" as notice_title %}
+  {% translate "L’espace de gouvernance du Forum permanent — commissions, tables, propositions, projets et relation annuelle — n’est pas encore ouvert aux participants. La page publique du Forum reste consultable." as notice_text %}
+  {% include "components/notice.html" with kind="pending" title=notice_title text=notice_text %}
+  {% safe_url 'forum:index' as forum_url %}
+  {% if forum_url %}<p><a href="{{ forum_url }}">{% translate "Consulter la page publique du Forum" %}</a></p>{% endif %}
+  <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+</div>
+{% endblock %}

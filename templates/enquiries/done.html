@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{% translate "Confirmation de transmission d’une demande." %}{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--done{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<section class="container enquiry-done" aria-labelledby="done-title">
+  <h1 id="done-title" class="enquiry-done__title">{% translate "Votre demande a bien été transmise" %}</h1>
+  <div class="notice notice--success" role="status" data-enquiry-done="{{ kind }}">
+    <p>{% translate "Merci. Votre message a été transmis à l’équipe du projet, qui l’examinera et pourra vous recontacter à l’adresse e-mail indiquée." %}</p>
+    <p>{% translate "La transmission d’une demande ne constitue ni une candidature, ni un engagement, ni une garantie de résultat de la part d’Italy Legal Entry™." %}</p>
+  </div>
+  <nav class="enquiry-done__links" aria-label="{% translate 'Poursuivre la navigation' %}">
+    {% if back_url %}<a class="btn btn--secondary" href="{{ back_url }}">{% translate "Retour à la page précédente" %}</a>{% endif %}
+    <a class="btn btn--primary" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a>
+  </nav>
+</section>
+{% endblock %}

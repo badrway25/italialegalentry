@@ -1,0 +1,46 @@
+{% load i18n cms_nav %}{% footer_menu as footer_nav %}
+<footer class="site-footer on-inverse" id="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <div class="site-footer__col site-footer__col--identity">
+        <p class="site-footer__brand">{% brand_lockup "dark" %}</p>
+        <p class="site-footer__promoter">{{ site.promoter }}</p>
+        {% comment %}
+        CONTENT_PENDING_LEGAL_REVIEW — registered office, RUNTS number and tax code belong to the
+        official « Mentions légales » (Allegato 1, BLOCKED_BY_MISSING_OFFICIAL_SOURCE). They are
+        not rendered here until that text is published.
+        {% endcomment %}
+        <p><a class="site-footer__email email" href="mailto:{{ site.contact_email }}">{% svg_icon "mail" "icon icon--sm" %}<span>{{ site.contact_email }}</span></a></p>
+        {% brand_words as words %}{% if words %}<p class="site-footer__mark">{% brand "site-footer__wordmark-inline" %} — {{ words }}</p>{% endif %}
+      </div>
+      <nav class="site-footer__col site-footer__nav" aria-label="{% translate 'Informations légales' %}">
+        <h2 class="site-footer__heading">{% translate "Informations légales" %}</h2>
+        <ul class="site-footer__list">
+          <li><a href="{% url 'legal:notices' %}">{% translate "Mentions légales" %}</a></li>
+          <li><a href="{% url 'legal:privacy' %}">Privacy Policy</a></li>
+          <li><a href="{% url 'legal:cookies' %}">Cookie Policy</a></li>
+          <li><a href="{% url 'legal:terms' %}">{% translate "Conditions d’utilisation" %}</a></li>
+          <li><a href="{% url 'legal:disclaimer' %}">{% translate "Avertissement" %}</a></li>
+        </ul>
+      </nav>
+      <nav class="site-footer__col site-footer__nav" aria-label="{% translate 'Navigation du site' %}">
+        <h2 class="site-footer__heading">{% translate "Navigation" %}</h2>
+        <ul class="site-footer__list">
+          <li><a href="{% url 'pages:home' %}">{% translate "Accueil" %}</a></li>
+          {% for item in footer_nav %}<li><a href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a></li>{% endfor %}
+        </ul>
+      </nav>
+      <div class="site-footer__col">
+        <h2 class="site-footer__heading">{% translate "Le projet" %}</h2>
+        <p>{% blocktranslate with project=site.project_name promoter=site.promoter %}{{ project }} est un écosystème d’information et d’orientation promu par {{ promoter }}.{% endblocktranslate %}</p>
+        {% if gates.phase3_public %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}
+        <a class="site-footer__antifraud" href="{{ antifraud_url }}">{% svg_icon "shield" "icon" %}<span>{% locked "p3.antifraud.title" %}</span></a>
+        {% endif %}{% endif %}
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>© {% now "Y" %} {{ site.promoter }}</p>
+      <p class="site-footer__version">{{ site.version_label }}{% if site.content_verified_on %} — {% translate "contenus vérifiés le" %} <time datetime="{{ site.content_verified_on|date:'Y-m-d' }}">{{ site.content_verified_on|date:"d.m.Y" }}</time>{% endif %}</p>
+    </div>
+  </div>
+</footer>

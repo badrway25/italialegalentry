@@ -1,0 +1,19 @@
+{% load i18n forum_tags %}
+{% comment %}Programme items are editable from the back-office (seeded from p2.forum.programme.items).{% endcomment %}
+<section class="forum-section forum-section--programme container" id="forum-programme" aria-labelledby="forum-programme-title">
+  <h2 class="forum-section__title" id="forum-programme-title">{% event_text event "programme.title" %}</h2>
+  {% if programme %}
+    <ol class="forum-programme" lang="fr">
+      {% for item in programme %}
+        <li class="forum-programme__item">
+          <span class="forum-programme__time">{% if item.time_label %}{{ item.time_label }}{% endif %}</span>
+          <span class="forum-programme__text">
+            <span class="forum-programme__title">{{ item.title_fr }}</span>
+            {% if item.description_fr %}<span class="forum-programme__desc">{{ item.description_fr|linebreaksbr }}</span>{% endif %}
+          </span>
+        </li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+  {% event_text event "programme.note" "p" "forum-programme__note" %}
+</section>

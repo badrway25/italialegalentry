@@ -1,0 +1,18 @@
+{% load i18n %}{% comment %}
+Language control of the V4 header (docs/design-v4/CREATIVE_DIRECTION.md §3.2): a segmented control
+of four links — FR · IT · EN · ع — with the current language as the raised thumb. Plain links, no
+script: choosing a language is a navigation, and the page reloads in it. Each link carries
+lang / hreflang / dir so screen readers switch voice, and its accessible name is the language's
+own name; the two-letter code is presentation (uppercase by CSS, so the text node stays the ISO
+code the Arabic-chrome audit already allows).
+
+Links come from the `site.languages` context processor (translate_url of the current page), like
+components/language_switcher.html, which remains the control of the drawer and of the platform bar.
+{% endcomment %}
+<nav class="lang-seg" aria-label="{% translate 'Choisir la langue' %}">
+  <ul class="lang-seg__list" role="list">
+    {% for l in site.languages %}
+    <li class="lang-seg__item"><a class="lang-seg__link" href="{{ l.url }}" lang="{{ l.code }}" hreflang="{{ l.code }}" dir="{{ l.dir }}"{% if l.active %} aria-current="true"{% endif %}><span class="visually-hidden">{{ l.name }}</span><span class="lang-seg__code" aria-hidden="true">{% if l.code == 'ar' %}ع{% else %}{{ l.code }}{% endif %}</span></a></li>
+    {% endfor %}
+  </ul>
+</nav>

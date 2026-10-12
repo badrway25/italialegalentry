@@ -1,0 +1,21 @@
+{% load i18n %}
+{% comment %}
+Orientation call-to-action. Contract: `links` (dict), optional `cta_id` (section id for in-page navigation).
+The questionnaire belongs to the orientation app: the button is rendered only when its route exists.
+{% endcomment %}
+<section class="cta-panel cta-panel--orientation" id="{{ cta_id|default:'orientation' }}" aria-labelledby="{{ cta_id|default:'orientation' }}-title">
+  <div class="cta-panel__inner">
+    <div class="stack stack--sm">
+      <p class="eyebrow">{% svg_icon "compass" "icon icon--sm" %} {% translate "Orientation" %}</p>
+      <h2 class="cta-panel__title" id="{{ cta_id|default:'orientation' }}-title">{% translate "Identifiez la voie régulière à explorer" %}</h2>
+      <p class="cta-panel__text">{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." %}</p>
+    </div>
+    <div class="cta-panel__actions">
+      {% if links.orientation %}
+        <a class="btn btn--primary btn--arrow" href="{{ links.orientation }}">{% translate "Commencer le questionnaire d’orientation" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+      {% else %}
+        <p class="cta-panel__pending badge badge--pending" data-register="attesa" role="status">{% translate "Le questionnaire d’orientation sera disponible prochainement." %}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,58 @@
+{% load i18n %}{% comment %}
+THE COMPANY BAND — stable while you move inside the workspace.
+
+It answers, in one band and without scrolling: which company is speaking, whether it has been
+verified, and how many needs are open. The verification state is a WORD with a rule, never a colour
+alone, and it is never phrased as an approval of anyone: it says what the project has checked about
+the legal entity, nothing more.
+
+On the process ground (--paper-deep), because this is a procedure and the ground change says so.
+
+Contract: `company` (companies.models.CompanyProfile); optional `show_need_count` + `open_needs_count`;
+optional `as_heading` — true on the pages whose SUBJECT is the company itself (the dashboard, the
+register), where the company name is the page's h1. On a page that has its own h1 (a need, the
+identity form) it stays a paragraph: one h1 per page, and it names what the page is about.
+{% endcomment %}
+<section class="company-header" aria-label="{% translate 'Votre entreprise' %}">
+  <div class="container company-header__inner">
+
+    <div class="company-header__identity">
+      <p class="folio company-header__folio">
+        <span class="folio__head">{% translate "Entreprise" %}</span>
+      </p>
+      {% if as_heading %}<h1 class="company-header__name" dir="auto">{{ company.legal_name }}</h1>
+      {% else %}<p class="company-header__name" dir="auto">{{ company.legal_name }}</p>{% endif %}
+    </div>
+
+    <dl class="company-header__facts">
+      <div class="company-header__fact">
+        <dt class="t-folio">{% translate "Vérification" %}</dt>
+        <dd>
+          <span class="state state--{{ company.verification_state_modifier }}" data-register="{{ company.verification_status|chip_register:'accounts.VerificationStatus' }}">{{ company.verification_label }}</span>
+          {% if not company.is_verified %}
+          <span class="company-header__note">{% translate "La transmission d’un besoin est possible une fois la vérification prononcée." %}</span>
+          {% endif %}
+        </dd>
+      </div>
+
+      <div class="company-header__fact">
+        <dt class="t-folio">{% translate "Secteur" %}</dt>
+        {% comment %} A dash for a null, never an empty cell. {% endcomment %}
+        <dd>{% if company.sector %}{{ company.sector.label }}{% else %}—{% endif %}</dd>
+      </div>
+
+      <div class="company-header__fact">
+        <dt class="t-folio">{% translate "Établissement" %}</dt>
+        <dd>{% if company.city %}{{ company.city }}{% if company.country %}, {{ company.country }}{% endif %}{% else %}—{% endif %}</dd>
+      </div>
+
+      {% if show_need_count %}
+      <div class="company-header__fact">
+        <dt class="t-folio">{% translate "Besoins ouverts" %}</dt>
+        {% comment %} A count, not a percentage: a meter that cannot be verified is decoration. {% endcomment %}
+        <dd>{% blocktranslate count n=open_needs_count %}{{ n }} besoin en cours{% plural %}{{ n }} besoins en cours{% endblocktranslate %}</dd>
+      </div>
+      {% endif %}
+    </dl>
+  </div>
+</section>

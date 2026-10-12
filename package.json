@@ -1,0 +1,27 @@
+{
+  "name": "italylegalentry-frontend",
+  "version": "1.0.0",
+  "description": "Frontend bundles for Italy Legal Entry (design V2). Django serves the output from static/js/dist/.",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "node scripts/build_frontend.mjs && node scripts/build_css.mjs",
+    "build:js": "node scripts/build_frontend.mjs",
+    "watch:js": "node scripts/build_frontend.mjs --watch",
+    "build:css": "node scripts/build_css.mjs",
+    "watch:css": "node scripts/build_css.mjs --watch"
+  },
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "motion": "13.4.1"
+  },
+  "devDependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "esbuild": "0.28.2"
+  },
+  "private": true
+}

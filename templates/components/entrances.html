@@ -1,0 +1,75 @@
+{% load i18n %}{% comment %}
+The four ecosystem entrances — the most important object on the site, because they are the four
+doors of the ecosystem. Exactly four, never a fifth equivalent, and never fewer: when a gate is
+closed the destination changes, not the presence.
+
+Rebuilt as a REGISTER (art direction A §7.4), not as four cards. What was here before was the
+banned pattern twice over: four identical columns, each with its own line-art illustration, which is
+"a section of identical cards" and "every card containing an icon" at the same time. Worse, it gave
+the doors of the ecosystem the treatment of an ordinary grid of services.
+
+The four illustrations are retired with it. One of them — a pediment standing for "institution" —
+also appeared in the footer and six times identically in one six-item list on another page.
+
+Contract: optional `entrances` = list of 4 dicts {title, text, button, url, lang}. When omitted the
+four prescribed blocks are rendered from the locked registry (p3.entrances.*), which the caller may
+only do when gate G3 is open. `heading_level` = "h2" (default) or "h3". Links resolve through
+safe_url, so an entrance whose destination does not exist yet is shown without a link rather than
+hidden.
+{% endcomment %}
+{% if not entrances %}
+  {% safe_url 'pathways:index' as u_person %}{% safe_url 'ecosystem:companies' as u_company %}{% safe_url 'ecosystem:institutions' as u_institution %}{% safe_url 'ecosystem:universities' as u_university %}
+  {% locked_lang "p3.entrances.person.title" as locked_lang_code %}
+{% endif %}
+<ol class="register register--entrances" aria-label="{% translate 'Les quatre accès de l’écosystème' %}">
+{% if entrances %}
+  {% for e in entrances %}
+  <li class="register__item" data-route="{{ e.actor }}">
+    {% if e.url %}<a class="entry" href="{{ e.url }}">{% else %}<div class="entry">{% endif %}
+      <span class="entry__ordinal" aria-hidden="true"></span>
+      {% comment %}
+      The route's own landform (V2 §8.5). Decorative — the title carries the name — and drawn from
+      the actor, so the four routes differ by shape and index as well as by tint: never colour alone.
+      {% endcomment %}
+      {% include "pages/home/partials/_route_glyph.html" with actor=e.actor %}
+      {% if heading_level == 'h3' %}<h3 class="entry__title"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.title }}</h3>{% else %}<h2 class="entry__title"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.title }}</h2>{% endif %}
+      <span class="entry__gloss"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.text }}</span>
+      {% if e.url %}<span class="entry__cta"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.button }}</span>{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}{% endif %}
+    {% if e.url %}</a>{% else %}</div>{% endif %}
+  </li>
+  {% endfor %}
+{% else %}
+  <li class="register__item">
+    {% if u_person %}<a class="entry" href="{{ u_person }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      <span class="entry__ordinal" aria-hidden="true"></span>
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.person.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.person.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.person.text" "span" "entry__gloss" %}
+      {% if u_person %}<span class="entry__cta">{% locked "p3.entrances.person.button" %}</span>{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}{% endif %}
+    {% if u_person %}</a>{% else %}</div>{% endif %}
+  </li>
+  <li class="register__item">
+    {% if u_company %}<a class="entry" href="{{ u_company }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      <span class="entry__ordinal" aria-hidden="true"></span>
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.company.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.company.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.company.text" "span" "entry__gloss" %}
+      {% if u_company %}<span class="entry__cta">{% locked "p3.entrances.company.button" %}</span>{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}{% endif %}
+    {% if u_company %}</a>{% else %}</div>{% endif %}
+  </li>
+  <li class="register__item">
+    {% if u_institution %}<a class="entry" href="{{ u_institution }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      <span class="entry__ordinal" aria-hidden="true"></span>
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.institution.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.institution.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.institution.text" "span" "entry__gloss" %}
+      {% if u_institution %}<span class="entry__cta">{% locked "p3.entrances.institution.button" %}</span>{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}{% endif %}
+    {% if u_institution %}</a>{% else %}</div>{% endif %}
+  </li>
+  <li class="register__item">
+    {% if u_university %}<a class="entry" href="{{ u_university }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      <span class="entry__ordinal" aria-hidden="true"></span>
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.university.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.university.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.university.text" "span" "entry__gloss" %}
+      {% if u_university %}<span class="entry__cta">{% locked "p3.entrances.university.button" %}</span>{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}{% endif %}
+    {% if u_university %}</a>{% else %}</div>{% endif %}
+  </li>
+{% endif %}
+</ol>

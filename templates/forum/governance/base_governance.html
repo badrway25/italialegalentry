@@ -1,0 +1,27 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% comment %}
+The Forum permanent sits INSIDE the platform shell (templates/portal/base_portal.html): the same
+platform bar, the same navigation, the same four-line footer. It is part of the member's workspace,
+not a second product, and nothing of the public shell is re-rendered here.
+
+This intermediate template exists for one reason: the caveat that must appear on EVERY route of the
+module, whichever screen the reader arrived on.
+
+  * what is written here engages the organisations that wrote it, and nobody else;
+  * a proposal, a project or a monitoring entry is never a decision of an authority, and never a
+    promise about an outcome or a delay;
+  * a participation profile carries an organisation, a category and declared interests — and
+    nothing else, because FORUM_GOVERNANCE §5 says the Forum is not a contact directory.
+
+It is rendered as `.note`, the margin apparatus of this design system, which is where the legal
+clauses live throughout the site — the clause that qualifies the page, never the lead that opens it.
+No stylesheet is added: every class used across this module already exists in
+static/css/register.css and static/css/components.css.
+{% endcomment %}
+
+{% block portal_content %}
+{% block governance_content %}{% endblock %}
+<p class="note">
+  {% translate "Le Forum permanent est un espace de coopération institutionnelle. Les propositions, les projets et les relevés de suivi qui y figurent engagent les organisations qui les déposent ; ils ne constituent ni une décision d’une autorité, ni un engagement sur une issue ou sur un délai. Les profils de participation indiquent l’organisation représentée, la catégorie et les intérêts déclarés : aucune coordonnée personnelle n’y est publiée." %}
+</p>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% load i18n forum_tags %}
+{% comment %}
+INTERVIENNENT — only institutional functions. A person's name appears ONLY when the record is
+authorised in writing AND the site-wide flag forum_speaker_names_authorized is on (gate G5).
+{% endcomment %}
+<section class="forum-section forum-section--speakers container" id="forum-speakers" aria-labelledby="forum-speakers-title">
+  <h2 class="forum-section__title" id="forum-speakers-title">{% event_text event "speakers.title" %}</h2>
+  {% event_text event "speakers.body" "p" "forum-section__body" %}
+  {% if speakers %}
+    <ul class="forum-speakers" lang="fr">
+      {% for speaker in speakers %}
+        <li class="forum-speakers__item">
+          <span class="forum-speakers__role">{{ speaker.role_label }}</span>
+          {% if speaker.person_name %}<span class="forum-speakers__name">{{ speaker.person_name }}</span>{% endif %}
+          {% if speaker.organisation %}<span class="forum-speakers__org">{{ speaker.organisation }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>

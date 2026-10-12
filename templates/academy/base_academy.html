@@ -1,0 +1,30 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+The Academy sits INSIDE the platform shell (templates/portal/base_portal.html): the platform bar,
+the navigation and the platform footer are the same, because the Academy is part of the person's
+workspace and not a second product. Nothing of the public shell is re-rendered here.
+
+This intermediate template exists only to add the Academy stylesheet without losing the platform
+one — `{{ block.super }}` keeps portal.css — and to carry the single caveat that must appear on
+every Academy page, whatever the route:
+
+  * access does not depend on being selected by anybody (CR-14 / REQ-EDU-04);
+  * what the Academy records is attendance, never an approval (REQ-EDU-05).
+
+It is rendered as `.note`, the margin apparatus of the design system, which is where the legal
+caveats live throughout the site.
+{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/academy/academy.css' %}">{% endblock %}
+
+{% block portal_content %}
+{% block academy_content %}{% endblock %}
+{% comment %}
+The caveat CLOSES the page rather than opening it: `.note` is the margin apparatus of this design
+system and reads as the published clause under a text, not as a lead. The page header already
+states the openness positively ("ouvertes à toute personne disposant d'un compte"); this is the
+clause that qualifies it, and it is present on every route of the Academy without exception.
+{% endcomment %}
+<p class="note">
+  {% translate "L’accès à l’Academy ne dépend d’aucune sélection : toute personne disposant d’un compte peut suivre les cours. Le suivi d’un cours atteste une participation ; il ne constitue ni un titre reconnu ni une décision d’une autorité." %}
+</p>
+{% endblock %}

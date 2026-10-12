@@ -1,0 +1,308 @@
+/* ============================================================================
+   TOKENS — art direction A, «Le Registre»
+   docs/design/ART_DIRECTION_A.md · decision in ART_DIRECTION_DECISION.md
+
+   Five structural jobs for colour, and no sixth. A colour that cannot be
+   assigned one of the five is not in this file:
+
+     INK        text
+     GROUND     the page — three warm surfaces
+     STRUCTURE  navy — the institution speaking
+     ORDER      rubric red — position in a sequence
+     AXIS       cooperation green — the Morocco side, and nothing else
+
+   The test: if you cannot say which of the five jobs a coloured mark is doing,
+   remove it. Applied to the build this replaces, that test removed all 38
+   bronze declarations, where one colour was simultaneously eyebrow text, the
+   active nav marker, the default icon colour, a blockquote rule, a notice rule,
+   a decorative dot, a nav underline, a panel top rule and a footer heading.
+
+   Contrast figures are computed against the ground named on the line. They are
+   re-verified by tests/frontend/test_design_tokens.py, not trusted.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---- GROUND — three warm surfaces, and no fourth ---------------------- */
+  --paper: #faf7f0; /* the page: the site explains */
+  --paper-deep: #f0ebe0; /* the process: steps, forms, procedures */
+  --paper-edge: #e4ded0; /* table zebra, rule fill */
+  --surface-input: #ffffff; /* form controls only */
+
+  /* ---- INK -------------------------------------------------------------- */
+  --ink: #10161d; /* 16.99:1 on --paper */
+  --ink-secondary: #3a362e; /* 11.23:1 */
+  --ink-muted: #5f584c; /*  6.57:1 — marginalia, captions, credits */
+
+  /* ---- STRUCTURE — the institution speaking ----------------------------- */
+  --navy: #0e2a47; /* 13.96:1 on paper; paper on it 13.62:1 */
+  --navy-deep: #08182f; /* the platform top bar only */
+  --paper-on-navy: #faf7f0; /* 13.62:1 */
+  --paper-muted-on-navy: #c3cbd6; /*  8.91:1 */
+
+  /* ---- ORDER — position in a sequence ----------------------------------- */
+  --rubric: #a4231b; /*  6.92:1 on paper — text-safe at any size */
+  --rubric-on-navy: #d9705c; /*  4.46:1 on navy — RULE ONLY, never text */
+
+  /* ---- AXIS — the Morocco side of a bilateral diagram ------------------- */
+  --cooperation: #1b6b4a; /*  6.04:1 on paper */
+
+  /* ---- RULES — four weights, four meanings, no fifth -------------------- */
+  --rule-hair: #d8d1c4; /* 1px — rhythm between rows of the same kind */
+  --rule-ink: #8c8374; /* 1px — a structural boundary, 3.49:1 */
+  --rule-band: var(--navy); /* 2px — opens a band, closes a plate */
+  --rule-order: var(--rubric); /* 2px — the current item, the head of a register */
+
+  /* ---- STATE — fg on bg >= 4.5:1, border on paper >= 3:1 ---------------- */
+  /* No green means "approved". A finished step is TRANSMIS or CLOS: a fact
+     about the file, never a verdict. Same reasoning as the absent `eligible`
+     outcome in the domain — this platform approves nothing. */
+  --state-done-fg: #1e4a85;
+  --state-done-bg: #e8edf4;
+  --state-done-br: #5f84b5;
+  --state-info-fg: #1e4a85;
+  --state-info-bg: #e8edf4;
+  --state-info-br: #5f84b5;
+  --state-warn-fg: #7a4e00;
+  --state-warn-bg: #faf0df;
+  --state-warn-br: #a88232; /* 3.32:1 on paper — #b08a3c fell to 2.998 when the ground moved */
+  --state-error-fg: #8f1d1d;
+  --state-error-bg: #f8e7e5;
+  --state-error-br: #c4635f;
+  --state-pending-fg: #5e4b14;
+  --state-pending-bg: #f4eedc;
+  --state-pending-br: #a08a46;
+
+  /* ---- FAMILIES --------------------------------------------------------- */
+  /* Newsreader carries a real optical-size axis (6–72) in one file: the 88px
+     plate and the 17px prose are different drawings. That is the deficit that
+     made the previous 48px heading read soft and inflated. */
+  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-ui: "Fira Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-ref: "Fira Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --font-display-ar: "Noto Naskh Arabic", "Newsreader", serif;
+  --font-ui-ar: "IBM Plex Sans Arabic", "Fira Sans", sans-serif;
+
+  /* ---- TYPE SCALE — ten roles ------------------------------------------- */
+  /* Values below are the xs tier (320–429). Display sizes step up at each
+     breakpoint in base.css; prose NEVER changes size across breakpoints, only
+     the measure does. No clamp(): fluid interpolation is what flattened the
+     previous hierarchy, where the heading-to-prose ratio fell from 1.62 at
+     1920 to 1.35 at 390. Sizes step so the ratio is designed at each width. */
+  --t-plate-size: 40px;
+  --t-plate-lh: 44px;
+  --t-title-size: 32px;
+  --t-title-lh: 40px;
+  --t-band-size: 28px;
+  --t-band-lh: 36px;
+  --t-entry-size: 20px;
+  --t-entry-lh: 28px;
+  --t-lead-size: 19px;
+  --t-lead-lh: 28px;
+  --t-prose-size: 17px;
+  --t-prose-lh: 28px;
+  --t-gloss-size: 15px;
+  --t-gloss-lh: 24px;
+  --t-caption-size: 13px;
+  --t-caption-lh: 20px;
+  --t-ui-size: 15px;
+  --t-ui-lh: 20px;
+  --t-folio-size: 13px;
+  --t-folio-lh: 16px;
+  --t-numeral-size: 22px;
+  --t-numeral-lh: 24px;
+
+  /* ---- TRACKING — six values, each tied to one role --------------------- */
+  --track-plate: -0.02em;
+  --track-title: -0.015em;
+  --track-band: -0.01em;
+  --track-normal: 0;
+  --track-folio: 0.08em; /* the only tracked-caps register in the system */
+  --track-caps-display: 0.03em; /* a caps plate, at most once per page */
+
+  /* ---- SPACING — base unit 4px, one list, no value outside it ----------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-24: 96px;
+  --s-32: 128px;
+
+  /* ---- SECTION RANK — outer space is a function of rank ----------------- */
+  /* Space between sections is always greater than space inside them. The build
+     this replaces used 72/72 on every section at 1440 and 80/80 at 1920, so the
+     scroll had no accents: six beats of identical duration. */
+  --rank-a-after: var(--s-12);
+  --rank-b-block: var(--s-12);
+  --rank-c-block: var(--s-8);
+  --rank-d-block: var(--s-6);
+
+  /* ---- GRID ------------------------------------------------------------- */
+  --grid-columns: 4;
+  --grid-gutter: 12px;
+  --grid-margin: 20px;
+  --container: 100%;
+  --container-rail: 0px; /* the folio is horizontal below lg */
+
+  /* ---- MEASURE — leading is bound to measure, never to a style name ----- */
+  --measure-prose: 68ch; /* hard cap, no exception */
+  --measure-lead: 45ch;
+  --measure-gloss: 50ch;
+  --measure-note: 34ch;
+  --width-form: 528px;
+
+  /* ---- BORDERS AND RADIUS ----------------------------------------------- */
+  /* Radius 0. Two exceptions, both functional: 2px so a control reads as a
+     control, 50% on a step marker. The build this replaces had four radii on
+     one page (2px x12, 3px x7, 50% x5, 999px x5). --radius-pill is deleted. */
+  --radius-control: 2px;
+  --radius-marker: 50%;
+
+  /* ---- ELEVATION -------------------------------------------------------- */
+  /* One shadow in the entire system, for the two surfaces that genuinely float.
+     Everything else separates by rule and by ground change. A test asserts that
+     box-shadow appears on no selector other than .nav-drawer and dialog. */
+  --shadow-surface: 0 8px 32px rgb(14 42 71 / 0.18);
+
+  /* ---- MOTION ----------------------------------------------------------- */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 320ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Z-INDEX — five layers, named ------------------------------------- */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-header: 20;
+  --z-drawer: 30;
+  --z-dialog: 40;
+
+  /* ---- CHROME ----------------------------------------------------------- */
+  /* One measured token, computed in CSS and consumed by the drawer, the
+     overlay, scroll-padding-block-start, scroll-margin and every sticky
+     sub-navigation. No JavaScript writes geometry onto an element whose
+     siblings also need it. */
+  --chrome-utility: 32px;
+  --chrome-masthead: 64px;
+  --chrome-block-size: calc(var(--chrome-utility) + var(--chrome-masthead));
+}
+
+/* ---- sm 430–767 ---------------------------------------------------------- */
+@media (min-width: 26.875rem) {
+  :root {
+    --grid-columns: 6;
+    --grid-gutter: 16px;
+    --grid-margin: 24px;
+    --t-plate-size: 46px;
+    --t-plate-lh: 52px;
+    --t-title-size: 34px;
+    --t-title-lh: 40px;
+    --t-lead-size: 20px;
+    --t-numeral-size: 24px;
+  }
+}
+
+/* ---- md 768–1199 --------------------------------------------------------- */
+@media (min-width: 48rem) {
+  :root {
+    --grid-columns: 12;
+    --grid-gutter: 24px;
+    --grid-margin: 40px;
+    --t-plate-size: 60px;
+    --t-plate-lh: 64px;
+    --t-title-size: 42px;
+    --t-title-lh: 48px;
+    --t-band-size: 32px;
+    --t-band-lh: 40px;
+    --t-entry-size: 21px;
+    --t-lead-size: 21px;
+    --t-lead-lh: 32px;
+    --t-numeral-size: 28px;
+    --t-numeral-lh: 32px;
+    --rank-a-after: var(--s-16);
+    --rank-b-block: var(--s-16);
+    --rank-c-block: var(--s-8);
+    --chrome-masthead: 72px;
+  }
+}
+
+/* ---- lg 1200–1439 — the rail becomes vertical ---------------------------- */
+@media (min-width: 75rem) {
+  :root {
+    --container: 1176px;
+    --container-rail: 176px;
+    --t-plate-size: 76px;
+    --t-plate-lh: 80px;
+    --t-title-size: 48px;
+    --t-title-lh: 52px;
+    --t-band-size: 36px;
+    --t-band-lh: 44px;
+    --t-entry-size: 22px;
+    --t-lead-size: 22px;
+    --t-numeral-size: 40px;
+    --t-numeral-lh: 40px;
+    --rank-a-after: var(--s-24);
+    --rank-b-block: var(--s-24);
+    --rank-c-block: var(--s-12);
+    --rank-d-block: var(--s-8);
+  }
+}
+
+/* ---- xl 1440–1599 -------------------------------------------------------- */
+@media (min-width: 90rem) {
+  :root {
+    --container: 1320px;
+    --container-rail: 200px;
+    --t-plate-size: 88px;
+    --t-plate-lh: 92px;
+    --t-title-size: 52px;
+    --t-title-lh: 56px;
+    --t-band-size: 38px;
+    --t-numeral-size: 44px;
+    --t-numeral-lh: 44px;
+  }
+}
+
+/* ---- xxl >= 1600 — the container keeps growing --------------------------- */
+/* The build this replaces froze at 1200px and converted every pixel above it
+   into margin: at 1920 that was 37.5% of the screen as empty gutter, and the
+   1920 screenshot was the 1440 screenshot with wider white edges. */
+@media (min-width: 100rem) {
+  :root {
+    --container: 1440px;
+    --container-rail: 220px;
+    --t-plate-size: 104px;
+    --t-plate-lh: 108px;
+  }
+}
+
+/* ---- Arabic -------------------------------------------------------------- */
+/* Arabic is designed, not translated. It gets its own display/text pair, as the
+   Latin has: a true Naskh for reading, a Kufi-influenced sans for the interface
+   where a Kufi construction is correct. Arabic has no case, so the register
+   that uppercase carries in Latin is carried here by weight and by a rule. */
+:root:lang(ar),
+:root[dir="rtl"] {
+  --font-display: var(--font-display-ar);
+  --font-ui: var(--font-ui-ar);
+  /* Naskh needs room for diacritics: the leading opens, the sizes do not shrink. */
+  --t-prose-lh: 32px;
+  --t-gloss-lh: 28px;
+  --t-entry-lh: 32px;
+  --track-folio: 0; /* tracking breaks Arabic joining */
+  --track-caps-display: 0;
+}
+
+/* ---- Reduced motion ------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-slow: 0ms;
+  }
+}

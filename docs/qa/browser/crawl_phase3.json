@@ -1,0 +1,193 @@
+{
+ "label": "phase3",
+ "base": "http://127.0.0.1:8771",
+ "pages_checked": 804,
+ "links_checked": 276,
+ "pages_with_issues": 26,
+ "broken_links": {},
+ "problems": [
+  {
+   "url": "http://127.0.0.1:8771/it/forum-virtuel/",
+   "w": 360,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/it/faq/",
+   "w": 360,
+   "issues": [
+    "horizontal overflow 1px"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/it/glossaire/",
+   "w": 360,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/forum-virtuel/",
+   "w": 360,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/faq/",
+   "w": 360,
+   "issues": [
+    "horizontal overflow 2px"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/glossaire/",
+   "w": 360,
+   "issues": [
+    "horizontal overflow 9px",
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/forum-virtuel/",
+   "w": 360,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/faq/",
+   "w": 360,
+   "issues": [
+    "horizontal overflow 4px"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/glossaire/",
+   "w": 360,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/ar/forum-virtuel/",
+   "w": 360,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/ar/faq/",
+   "w": 360,
+   "issues": [
+    "horizontal overflow 63px"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/ar/glossaire/",
+   "w": 360,
+   "issues": [
+    "horizontal overflow 59px"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/it/forum-virtuel/",
+   "w": 768,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/it/glossaire/",
+   "w": 768,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/forum-virtuel/",
+   "w": 768,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/glossaire/",
+   "w": 768,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/forum-virtuel/",
+   "w": 768,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/glossaire/",
+   "w": 768,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/ar/forum-virtuel/",
+   "w": 768,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/it/forum-virtuel/",
+   "w": 1440,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/it/glossaire/",
+   "w": 1440,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/forum-virtuel/",
+   "w": 1440,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/fr/glossaire/",
+   "w": 1440,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/forum-virtuel/",
+   "w": 1440,
+   "issues": [
+    "status 404"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/en/glossaire/",
+   "w": 1440,
+   "issues": [
+    "small tap targets: ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A']"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8771/ar/forum-virtuel/",
+   "w": 1440,
+   "issues": [
+    "status 404"
+   ]
+  }
+ ]
+}

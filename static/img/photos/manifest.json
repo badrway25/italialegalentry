@@ -1,0 +1,574 @@
+{
+  "generated_by": "scripts/fetch_images.py",
+  "sources": {
+    "unsplash": {
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license"
+    }
+  },
+  "policy": "Self-hosted only. Never hotlink. Every image reviewed against forbidden subjects (F15).",
+  "derivative_widths": [
+    480,
+    960,
+    1440,
+    1920
+  ],
+  "max_bytes_per_file": 358400,
+  "images": [
+    {
+      "photo_id": "1552664730-d307ca884978",
+      "source": "unsplash",
+      "slug": "atelier-de-travail",
+      "usage_slot": "workshop",
+      "subject": "Atelier : notes adhésives au mur, équipe autour d’une table",
+      "title_fr": "Atelier de travail",
+      "alt_fr": "Atelier de travail : une animatrice organise des notes adhésives sur un mur devant une équipe",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1552664730-d307ca884978",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "887b5b2147cc262c50dd9350730b2305de5ef9b525dc019c212a675bdc731812",
+      "files": {
+        "webp": {
+          "480": "atelier-de-travail-480.webp",
+          "960": "atelier-de-travail-960.webp",
+          "1440": "atelier-de-travail-1440.webp",
+          "1920": "atelier-de-travail-1920.webp"
+        },
+        "jpg": "atelier-de-travail-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1568667256549-094345857637",
+      "source": "unsplash",
+      "slug": "bibliotheque-savoir",
+      "usage_slot": "academic",
+      "subject": "Grande bibliothèque circulaire (format portrait)",
+      "title_fr": "Bibliothèque",
+      "alt_fr": "Grande bibliothèque circulaire aux rayonnages remplis de livres",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1568667256549-094345857637",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 3360,
+      "source_width": 2400,
+      "source_height": 3360,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "dd5f229d3df116b33c30afb20e7496ef9aaee103754ba25f887bc8b706d150cc",
+      "files": {
+        "webp": {
+          "480": "bibliotheque-savoir-480.webp",
+          "960": "bibliotheque-savoir-960.webp",
+          "1440": "bibliotheque-savoir-1440.webp",
+          "1920": "bibliotheque-savoir-1920.webp"
+        },
+        "jpg": "bibliotheque-savoir-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1562774053-701939374585",
+      "source": "unsplash",
+      "slug": "campus-universitaire",
+      "usage_slot": "university",
+      "subject": "Façade d’un bâtiment universitaire et pelouse",
+      "title_fr": "Campus universitaire",
+      "alt_fr": "Façade d’un bâtiment universitaire donnant sur une pelouse entourée d’arbres",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1562774053-701939374585",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1571,
+      "source_width": 2400,
+      "source_height": 1571,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "269a79a43551fe77ad6a297b09889893653a86bd254974ac41c2e75b870e4750",
+      "files": {
+        "webp": {
+          "480": "campus-universitaire-480.webp",
+          "960": "campus-universitaire-960.webp",
+          "1440": "campus-universitaire-1440.webp",
+          "1920": "campus-universitaire-1920.webp"
+        },
+        "jpg": "campus-universitaire-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1600880292203-757bb62b4baf",
+      "source": "unsplash",
+      "slug": "collaboration-bureau",
+      "usage_slot": "cooperation",
+      "subject": "Deux collègues se félicitent dans un bureau",
+      "title_fr": "Collaboration",
+      "alt_fr": "Deux collègues se félicitent en se tapant dans la main, dans un bureau aux murs de briques",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1600880292203-757bb62b4baf",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "59bac95e529c031936cb4fb6f2e5582d13a85b0eafdd6c1a41651cee3a0b84d5",
+      "files": {
+        "webp": {
+          "480": "collaboration-bureau-480.webp",
+          "960": "collaboration-bureau-960.webp",
+          "1440": "collaboration-bureau-1440.webp",
+          "1920": "collaboration-bureau-1920.webp"
+        },
+        "jpg": "collaboration-bureau-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1434030216411-0b793f4b4173",
+      "source": "unsplash",
+      "slug": "demarches-ecriture",
+      "usage_slot": "living",
+      "subject": "Personne qui remplit des documents à la main",
+      "title_fr": "Démarches quotidiennes",
+      "alt_fr": "Personne qui remplit des documents à la main sur une table, avec une tasse et un carnet",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1434030216411-0b793f4b4173",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "ca03e1df62b1397ca0a9392300ec1e4fb2d92e39f5bdf5506cdaa7fac9e3b582",
+      "files": {
+        "webp": {
+          "480": "demarches-ecriture-480.webp",
+          "960": "demarches-ecriture-960.webp",
+          "1440": "demarches-ecriture-1440.webp",
+          "1920": "demarches-ecriture-1920.webp"
+        },
+        "jpg": "demarches-ecriture-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1517245386807-bb43f82c33c4",
+      "source": "unsplash",
+      "slug": "dialogue-institutionnel",
+      "usage_slot": "entrance_institution",
+      "subject": "Participant qui prend la parole en réunion",
+      "title_fr": "Dialogue en réunion",
+      "alt_fr": "Participant qui prend la parole pendant une réunion de travail, ordinateur et carnet ouverts devant lui",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1517245386807-bb43f82c33c4",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "9df84a72353d0bd6e53f99822f0b202d5cbcdf5ee6d2cbc0ea0e684980c818e3",
+      "files": {
+        "webp": {
+          "480": "dialogue-institutionnel-480.webp",
+          "960": "dialogue-institutionnel-960.webp",
+          "1440": "dialogue-institutionnel-1440.webp",
+          "1920": "dialogue-institutionnel-1920.webp"
+        },
+        "jpg": "dialogue-institutionnel-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1454165804606-c3d57bc86b40",
+      "source": "unsplash",
+      "slug": "entretien-accompagnement",
+      "usage_slot": "entrance_person",
+      "subject": "Deux personnes travaillent avec ordinateurs et carnet lors d’un entretien",
+      "title_fr": "Entretien d’accompagnement",
+      "alt_fr": "Deux personnes travaillent côte à côte avec des ordinateurs et un carnet de notes pendant un entretien",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1454165804606-c3d57bc86b40",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1602,
+      "source_width": 2400,
+      "source_height": 1602,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "2a54b9a993098b101c032324a978559354e081fb99cb03a9f794e74b9fd6b55a",
+      "files": {
+        "webp": {
+          "480": "entretien-accompagnement-480.webp",
+          "960": "entretien-accompagnement-960.webp",
+          "1440": "entretien-accompagnement-1440.webp",
+          "1920": "entretien-accompagnement-1920.webp"
+        },
+        "jpg": "entretien-accompagnement-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1522202176988-66273c2fd55f",
+      "source": "unsplash",
+      "slug": "equipe-entreprise",
+      "usage_slot": "entrance_company",
+      "subject": "Trois collègues échangent autour d’une table de travail",
+      "title_fr": "Équipe d’entreprise",
+      "alt_fr": "Trois collègues échangent avec le sourire autour d’une table de travail équipée d’ordinateurs",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1522202176988-66273c2fd55f",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": [
+        [
+          570,
+          520,
+          815,
+          758
+        ],
+        [
+          1075,
+          642,
+          1130,
+          672
+        ],
+        [
+          1095,
+          732,
+          1170,
+          768
+        ]
+      ],
+      "redact_reason": "blurs the left screen (third-party website) and manufacturer marks on both computers",
+      "original_sha256": "5e008a0be6a9d1a1d48d44df6a155aeef95efd2316597a1c6bb15d424c9e1c2a",
+      "files": {
+        "webp": {
+          "480": "equipe-entreprise-480.webp",
+          "960": "equipe-entreprise-960.webp",
+          "1440": "equipe-entreprise-1440.webp",
+          "1920": "equipe-entreprise-1920.webp"
+        },
+        "jpg": "equipe-entreprise-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1519389950473-47ba0277781c",
+      "source": "unsplash",
+      "slug": "espace-de-travail",
+      "usage_slot": "reserved_area",
+      "subject": "Vue de dessus d’un espace de travail partagé",
+      "title_fr": "Espace de travail",
+      "alt_fr": "Vue de dessus d’un espace de travail avec ordinateurs, carnets et casque audio",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1519389950473-47ba0277781c",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 1533,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": [
+        0,
+        0,
+        1150,
+        1200
+      ],
+      "crop_reason": "removes visible brand marks on a laptop and a charger",
+      "redact": [
+        [
+          422,
+          598,
+          454,
+          636
+        ]
+      ],
+      "redact_reason": "blurs the maker's emblem on an external drive",
+      "original_sha256": "14239ce7d721c9fd7e2c944f4ffa61559d2893f588b68701f99f4c6c0ff49ade",
+      "files": {
+        "webp": {
+          "480": "espace-de-travail-480.webp",
+          "960": "espace-de-travail-960.webp",
+          "1440": "espace-de-travail-1440.webp"
+        },
+        "jpg": "espace-de-travail-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1523240795612-9a054b0db644",
+      "source": "unsplash",
+      "slug": "etudiants-bibliotheque",
+      "usage_slot": "entrance_university",
+      "subject": "Étudiants qui travaillent ensemble dans une bibliothèque",
+      "title_fr": "Étudiants en bibliothèque",
+      "alt_fr": "Étudiants qui rient en travaillant ensemble dans une bibliothèque universitaire",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1523240795612-9a054b0db644",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": [
+        [
+          705,
+          640,
+          800,
+          712
+        ],
+        [
+          815,
+          805,
+          1050,
+          925
+        ]
+      ],
+      "redact_reason": "blurs a sports-team script on a cap and a printed brand on a sweatshirt",
+      "original_sha256": "a6f450209e2c1d50db53cbc15d33036edef7bf16c3cf6c32c967689a14e748c8",
+      "files": {
+        "webp": {
+          "480": "etudiants-bibliotheque-480.webp",
+          "960": "etudiants-bibliotheque-960.webp",
+          "1440": "etudiants-bibliotheque-1440.webp",
+          "1920": "etudiants-bibliotheque-1920.webp"
+        },
+        "jpg": "etudiants-bibliotheque-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1475721027785-f74eccf877e2",
+      "source": "unsplash",
+      "slug": "micro-conference",
+      "usage_slot": "news_default",
+      "subject": "Micro sur pied devant une salle de conférence",
+      "title_fr": "Micro de conférence",
+      "alt_fr": "Micro sur pied au premier plan, devant une salle de conférence en arrière-plan flou",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1475721027785-f74eccf877e2",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "8e700c8d036dad9021f75bd51afdf01a55caf99dc0b89a8f173cc5ef7a46d4b1",
+      "files": {
+        "webp": {
+          "480": "micro-conference-480.webp",
+          "960": "micro-conference-960.webp",
+          "1440": "micro-conference-1440.webp",
+          "1920": "micro-conference-1920.webp"
+        },
+        "jpg": "micro-conference-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1516321318423-f06f85e504b3",
+      "source": "unsplash",
+      "slug": "orientation-ecran",
+      "usage_slot": "orientation",
+      "subject": "Main qui pointe un élément à l’écran d’un ordinateur",
+      "title_fr": "Séance d’orientation",
+      "alt_fr": "Main qui pointe un élément à l’écran d’un ordinateur pendant une séance d’orientation",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1516321318423-f06f85e504b3",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "74f6971027762761d0e9e985287d45cbba53bd4c0a624f23618b1dbd98296765",
+      "files": {
+        "webp": {
+          "480": "orientation-ecran-480.webp",
+          "960": "orientation-ecran-960.webp",
+          "1440": "orientation-ecran-1440.webp",
+          "1920": "orientation-ecran-1920.webp"
+        },
+        "jpg": "orientation-ecran-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1540575467063-178a50c2df87",
+      "source": "unsplash",
+      "slug": "public-conference",
+      "usage_slot": "forum_event",
+      "subject": "Public assis dans une salle de conférence",
+      "title_fr": "Public d’une conférence",
+      "alt_fr": "Public attentif assis dans une salle de conférence pendant une intervention",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1540575467063-178a50c2df87",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "20811e37edfea9d1befc4ace3a84e41ff8df6bf7bf24c7a5f1e228b5fcfcefff",
+      "files": {
+        "webp": {
+          "480": "public-conference-480.webp",
+          "960": "public-conference-960.webp",
+          "1440": "public-conference-1440.webp",
+          "1920": "public-conference-1920.webp"
+        },
+        "jpg": "public-conference-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1517048676732-d65bc937f952",
+      "source": "unsplash",
+      "slug": "reunion-cooperation",
+      "usage_slot": "hero",
+      "subject": "Réunion de travail entre professionnels, prise de notes, lumière naturelle",
+      "title_fr": "Réunion de coopération",
+      "alt_fr": "Professionnels réunis autour d’une table de réunion, prenant des notes pendant un échange de travail",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1517048676732-d65bc937f952",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 2400,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": null,
+      "crop_reason": "",
+      "redact": null,
+      "redact_reason": "",
+      "original_sha256": "6016849f18bade07dfc7b8ac1d9c01beb5dfd76c53b43f7f288435a1f2cacac4",
+      "files": {
+        "webp": {
+          "480": "reunion-cooperation-480.webp",
+          "960": "reunion-cooperation-960.webp",
+          "1440": "reunion-cooperation-1440.webp",
+          "1920": "reunion-cooperation-1920.webp"
+        },
+        "jpg": "reunion-cooperation-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    },
+    {
+      "photo_id": "1524178232363-1fb2b075b655",
+      "source": "unsplash",
+      "slug": "salle-de-formation",
+      "usage_slot": "training_classroom",
+      "subject": "Formateur devant des participants dans une salle de formation",
+      "title_fr": "Salle de formation",
+      "alt_fr": "Salle de formation : un formateur s’adresse à des participants assis en rangées",
+      "author": "Unsplash contributor (author lookup unavailable offline)",
+      "source_url": "https://unsplash.com/photos/1524178232363-1fb2b075b655",
+      "license": "Unsplash License",
+      "license_url": "https://unsplash.com/license",
+      "downloaded_on": "2026-09-17",
+      "width": 1653,
+      "height": 1600,
+      "source_width": 2400,
+      "source_height": 1600,
+      "crop": [
+        560,
+        0,
+        1800,
+        1200
+      ],
+      "crop_reason": "removes the projected screen (readable third-party text)",
+      "redact": [
+        [
+          624,
+          602,
+          656,
+          634
+        ],
+        [
+          604,
+          615,
+          632,
+          647
+        ]
+      ],
+      "redact_reason": "blurs a social-network sticker and a manufacturer logo on the podium computer",
+      "original_sha256": "aac3579eb5336711c746eb1e07d4f380e7d1b9ba692271f9b08bd1193e8cbe08",
+      "files": {
+        "webp": {
+          "480": "salle-de-formation-480.webp",
+          "960": "salle-de-formation-960.webp",
+          "1440": "salle-de-formation-1440.webp"
+        },
+        "jpg": "salle-de-formation-1440.jpg"
+      },
+      "forbidden_subject_check": true
+    }
+  ]
+}

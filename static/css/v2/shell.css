@@ -1,0 +1,503 @@
+/* ============================================================================
+   SHELL V2 — the letterhead: institutional bar, header with the official
+   lock-up, navigation, and the colophon footer.
+   docs/design-v2/DESIGN_SYSTEM_V2.md §8.1, §8.2, §8.7
+
+   The markup is the one the site already has (partials/utility_bar.html,
+   header.html, main_nav.html, footer.html) and the navigation behaviour is the
+   one static/js/main.js already implements: drawer below 80rem, mega-menu
+   above. Only the drawing changes.
+   ========================================================================== */
+
+/* ---- Institutional bar ---------------------------------------------------- */
+.utility-bar {
+  background: var(--min-1);
+  color: var(--ink-2);
+  border-block-end: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+}
+
+.utility-bar__inner {
+  min-block-size: var(--utility-height);
+}
+
+.utility-bar__identity strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.utility-bar a {
+  color: var(--ink-2);
+}
+
+.utility-bar a:hover,
+.utility-bar a:focus-visible {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The bar carries `on-inverse` in the markup from the navy days; on paper its controls take ink.
+   The language switcher's summary and list were white — invisible on --min-1 in the first Chrome
+   render of V2. */
+.utility-bar.on-inverse,
+.utility-bar .lang-switcher__summary,
+.utility-bar .lang-switcher__current,
+.utility-bar .utility-bar__link,
+.utility-bar .utility-bar__link-label {
+  color: var(--ink-2);
+}
+
+.utility-bar .lang-switcher__summary:hover,
+.utility-bar .lang-switcher__summary:focus-visible,
+.utility-bar .utility-bar__link:hover {
+  color: var(--ink);
+}
+
+.utility-bar .lang-switcher__list {
+  background: var(--min-3);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-3);
+}
+
+.utility-bar .lang-switcher__list a {
+  color: var(--ink);
+}
+
+.utility-bar .lang-switcher__list a[aria-current="true"] {
+  color: var(--accent);
+}
+
+.utility-bar.on-inverse :focus-visible {
+  outline-color: var(--accent-ring);
+  box-shadow: 0 0 0 5px rgba(29, 138, 147, 0.3);
+}
+
+/* Below md the bar is not drawn: its content moves into the drawer (header.html). */
+@media (max-width: 47.999rem) {
+  .utility-bar {
+    display: none;
+  }
+}
+
+/* ---- Header --------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  background: var(--min-2);
+  color: var(--ink);
+  border-block-end: 1px solid var(--hairline);
+  transition: background-color var(--motion-emphasized) var(--ease-standard), box-shadow var(--motion-emphasized) var(--ease-standard);
+}
+
+/* Once the page has scrolled: paper at 88% with a blur — the one place backdrop-filter is
+   allowed (level 6, the floating bar) and the only role-2 shadow on the chrome. */
+.site-header.is-scrolled {
+  background: rgba(251, 250, 248, 0.88);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: var(--shadow-2);
+}
+
+.site-header__inner {
+  min-block-size: var(--header-height);
+  gap: var(--s-6);
+}
+
+/* ---- The official lock-up ------------------------------------------------- */
+/* Mark 38px + 12px + serif wordmark .13em. Geometry, colours and proportions are the current
+   site's (docs/design-v2/BRAND_ASSETS.md §1). It scales as a UNIT: 38/20 while it fits, then the
+   mark alone — never a squeezed wordmark. The site's English tagline is NOT part of it: that
+   string is forbidden public wording (cms.forbidden), and the addendum restored the mark, not
+   the line of text under it. */
+.lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  color: var(--brand-navy);
+  text-decoration: none;
+  direction: ltr;
+}
+
+.lock__mark {
+  inline-size: 38px;
+  block-size: 38px;
+  flex: none;
+  display: block;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.lock:hover .lock__mark {
+  transform: translateY(-1px);
+}
+
+.lock__text {
+  display: grid;
+}
+
+.lock__wm {
+  font-family: var(--f-serif);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--brand-navy);
+  white-space: nowrap;
+}
+
+.lock__wm .lock__w1 { color: var(--brand-green); }
+.lock__wm .lock__w3 { color: var(--brand-red); }
+.lock__wm .lock__tm { font-size: 0.55em; vertical-align: 0.5em; letter-spacing: 0; }
+
+
+/* Dark surfaces (footer, platform bar): the mark keeps its colours on a paper tile; the wordmark
+   goes monochrome, because green and red measure 3.23:1 and 2.90:1 on midnight. */
+.lock--dark {
+  color: var(--on-dark);
+}
+
+.lock--dark .lock__mark {
+  inline-size: 46px;
+  block-size: 46px;
+  padding: 4px;
+  background: var(--min-0);
+  border-radius: var(--radius-tile);
+}
+
+.lock--dark .lock__wm,
+.lock--dark .lock__wm .lock__w1,
+.lock--dark .lock__wm .lock__w3 {
+  color: var(--on-dark);
+}
+
+
+/* The wordmark scales as a unit with the mark; below 23rem only the mark remains. The rule belongs
+   to the COMPONENT, not to the header: written for the header alone, it left the footer's dark
+   lock-up at full size, and at 320px that lock-up asked for 311px inside a 280px column and gave
+   the whole page an 11px horizontal scroll. */
+@media (max-width: 47.999rem) {
+  .lock__wm { font-size: 14px; }
+}
+
+@media (max-width: 23rem) {
+  .lock__text { display: none; }
+}
+
+/* ---- Desktop navigation --------------------------------------------------- */
+@media (min-width: 80rem) {
+  .main-nav__list {
+    gap: var(--s-1);
+  }
+
+  .main-nav__link {
+    min-block-size: 40px;
+    padding: 0 10px;
+    border-radius: var(--radius-control);
+    color: var(--ink-2);
+    font-family: var(--f-sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    position: relative;
+    white-space: nowrap;
+    transition: color var(--motion-base) var(--ease-standard);
+  }
+
+  /* The active/hover marker is a 1px line that traces from the reading edge — not a pill. */
+  .main-nav__link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 10px;
+    inset-block-end: 6px;
+    block-size: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform var(--motion-emphasized) var(--ease-out);
+  }
+
+  [dir="rtl"] .main-nav__link::after {
+    transform-origin: 100% 50%;
+  }
+
+  .main-nav__link:hover,
+  .main-nav__link:focus-visible,
+  .main-nav__link[aria-current] {
+    color: var(--ink);
+  }
+
+  .main-nav__link:hover::after,
+  .main-nav__link:focus-visible::after,
+  .main-nav__link[aria-current]::after {
+    transform: scaleX(1);
+  }
+
+  .main-nav__panel {
+    background: var(--min-3);
+    border: 1px solid var(--hairline);
+    box-shadow: var(--shadow-3);
+    border-radius: 0;
+  }
+}
+
+/* ---- Drawer (below 80rem) ------------------------------------------------ */
+@media (max-width: 79.999rem) {
+  .nav-drawer {
+    background: var(--min-2);
+    border-block-start: 1px solid var(--hairline);
+  }
+
+  .main-nav__link {
+    min-block-size: 52px;
+    font-family: var(--f-sans);
+    font-size: var(--t-body);
+    color: var(--ink);
+    border-block-end: 1px solid var(--hairline);
+  }
+
+  .site-header.is-scrolled {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--min-2);
+  }
+}
+
+.nav-toggle {
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-control);
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  background: transparent;
+}
+
+/* The institutional bar's content, drawn inside the drawer below md. */
+.drawer-utility {
+  display: none;
+}
+
+@media (max-width: 47.999rem) {
+  .drawer-utility {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-4) 0 var(--s-6);
+    margin-block-end: var(--s-4);
+    border-block-end: 1px solid var(--hairline);
+    font-family: var(--f-sans);
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+
+  .drawer-utility__identity {
+    margin: 0;
+  }
+
+  .drawer-utility__identity strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .drawer-utility__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-block-size: 44px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .drawer-utility__link .icon {
+    inline-size: 16px;
+    block-size: 16px;
+  }
+
+  /* The language switcher inherits inverse colours from its navy days; in the drawer it is ink. */
+  .drawer-utility .lang-switcher__summary,
+  .drawer-utility .lang-switcher__current,
+  .drawer-utility .lang-switcher__list a {
+    color: var(--ink);
+  }
+
+  .drawer-utility .lang-switcher__summary {
+    min-block-size: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .drawer-utility .lang-switcher__list {
+    position: static;
+    background: var(--min-3);
+    border: 1px solid var(--hairline);
+    box-shadow: none;
+  }
+}
+
+/* ---- Mega-menu panel ---------------------------------------------------------- */
+@media (min-width: 80rem) {
+  /* No `min-inline-size` here. Giving the panel a floor of 44rem pushed the last section's panel
+     6px past the viewport at 1440 (measured: 1446 vs 1440), because components.css anchors it to
+     its own item and only the last one is end-aligned. The panel sizes to its content, as it did. */
+  .main-nav__panel {
+    padding: var(--s-6) var(--s-8);
+  }
+
+  .main-nav__panel-title {
+    font-family: var(--f-serif);
+    font-size: var(--t-entry);
+    line-height: var(--t-entry-lh);
+    color: var(--ink);
+  }
+
+  .main-nav__panel-desc {
+    color: var(--ink-2);
+    font-size: var(--t-small);
+    line-height: var(--t-small-lh);
+  }
+
+  .main-nav__sublink {
+    color: var(--ink);
+    font-size: var(--t-ui);
+    line-height: var(--t-ui-lh);
+    white-space: nowrap;
+  }
+
+  /* The chevron before each sub-link takes the accent, not the rubric of the old register. */
+  .main-nav__sublink .icon {
+    color: var(--accent);
+  }
+}
+
+/* ---- Footer — a colophon strip, not a site map --------------------------- */
+.site-footer {
+  background: var(--mid-0);
+  color: var(--on-dark-2);
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  padding-block: var(--s-12);
+}
+
+.site-footer__inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: var(--s-8);
+  align-items: start;
+}
+
+.site-footer__heading {
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  color: var(--on-dark-3);
+  margin: 0 0 var(--s-3);
+}
+
+.site-footer__list {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer a {
+  color: var(--on-dark-2);
+  text-decoration: none;
+  min-block-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* A visited footer link was being painted `--color-primary-800` by base.css's
+   `a:not([class]):visited` — a dark navy from the retired palette, which on the midnight footer is
+   very nearly the background. Three of the eight navigation links were unreadable for anyone who
+   had already been to those pages, and only for them, which is the kind of defect that never shows
+   up in a fresh screenshot. On a dark surface a visited link keeps its colour. */
+.site-footer a:visited {
+  color: var(--on-dark-2);
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible,
+.site-footer a:visited:hover,
+.site-footer a:visited:focus-visible {
+  color: var(--on-dark);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.site-footer p {
+  margin: 0 0 var(--s-3);
+  max-inline-size: 42ch;
+}
+
+.site-footer .lock {
+  margin-block-end: var(--s-4);
+}
+
+.site-footer__bottom {
+  margin-block-start: var(--s-8);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--hairline-dark);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  letter-spacing: 0.06em;
+  color: var(--on-dark-3);
+}
+
+.site-footer__bottom p {
+  margin: 0;
+  max-inline-size: none;
+}
+
+@media (max-width: 63.999rem) {
+  .site-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+  }
+}
+
+/* ---- Skip link and focus (level 4) --------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(29, 138, 147, 0.3);
+}
+
+.on-inverse :focus-visible,
+.chapter--dark :focus-visible {
+  outline-color: var(--accent-dark);
+  box-shadow: 0 0 0 5px rgba(127, 209, 216, 0.3);
+}
+
+html {
+  scroll-padding-block-start: calc(var(--header-height) + var(--s-4));
+}
+
+/* ---- Arabic ----------------------------------------------------------------- */
+/* The lock-up is Latin and stays Latin; it never inherits the Arabic letter-spacing reset. */
+:lang(ar) .lock__wm {
+  letter-spacing: 0.13em;
+}
+
+:lang(ar) .site-footer__heading,
+:lang(ar) .site-footer__bottom {
+  letter-spacing: 0;
+  text-transform: none;
+}

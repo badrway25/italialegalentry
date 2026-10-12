@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--collaboration{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<article class="container enquiry-page enquiry-page--collaboration" data-kind="{{ kind }}">
+  <header class="page-header">
+    <p class="page-header__eyebrow">{% if kind == "university" %}{% translate "Espace Universités et Formation" %}{% else %}{% translate "Espace Institutions" %}{% endif %}</p>
+    <h1 class="page-header__title">{{ page_title }}</h1>
+    {% if phase3_public %}
+      {% if kind == "university" %}
+        {% locked "p3.universities.intro" "p" "page-header__lead" %}
+      {% else %}
+        {% locked "p3.institutions.intro" "p" "page-header__lead" %}
+        {% locked "p3.institutions.recipients" "p" "page-header__recipients" %}
+      {% endif %}
+    {% else %}
+      {% comment %}CONTENT_PENDING_LEGAL_REVIEW — no prescribed introduction exists for this page before Phase 3; the locked p3.institutions.* / p3.universities.* texts render automatically once gate G3 opens.{% endcomment %}
+      <p class="page-header__lead">{% translate "Institutions, universités et organismes de formation : présentez votre proposition de collaboration dans le cadre du projet Italy Legal Entry™. Elle sera examinée par l’équipe du projet, qui vous recontactera si nécessaire." %}</p>
+    {% endif %}
+  </header>
+  <section class="enquiry-page__form" id="formulaire" aria-labelledby="collaboration-form-title">
+    <h2 id="collaboration-form-title" class="enquiry-page__form-title">{% translate "Votre proposition" %}</h2>
+    {% if not forms_open or not form %}
+      {% include "components/form_unavailable.html" %}
+    {% else %}
+      {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-collaboration" form_class="enquiry-form--collaboration" legend=_("Votre organisme et votre proposition") submit_label_key=button_key %}
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

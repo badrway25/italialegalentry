@@ -1,0 +1,77 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Shell of every authenticated page — design V4, the console (docs/design-v4/CREATIVE_DIRECTION.md
+§3.9; DESIGN_SYSTEM_V4.md §8).
+
+What this replaces: the reserved area rendered inside the PUBLIC shell — the institutional utility
+bar, the seven-section mega-menu and the full public footer, with the actual work parked in a
+sidebar underneath (the Design Council scored it 3/10) — and then, from 21/09, the platform bar
+with a text sidebar under it, which the owner rejected on 24/09 as editorial and static.
+
+Regions, in this order (partials/portal_chrome.html draws the first three):
+  1. the RAIL — the reserved area's own navigation, collapsible, persisted
+  2. the CONTEXT BAR — glass, sticky: breadcrumb, «Site public», account, language
+  3. below 64rem the BOTTOM BAR and the drawer
+  4. the WORKSPACE — max 1320: the page header (portal_header), the case header while inside a
+     case, the ONE next action, then the page's content
+
+Contract (portal.views._render): `portal_nav`, `breadcrumbs`, `noindex`, and optionally
+`portal_context`, `case`, `next_action`. Blocks: `portal_header`, `portal_content`.
+{% endcomment %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/portal/portal.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/portal/console.css' %}">{% endblock %}
+{% block body_class %}page-portal console{% endblock %}
+
+{% comment %}
+The rail's stored preference is applied BEFORE the rail is parsed (a classic, blocking script, its
+own file: the CSP allows no inline script): applied after the first frame it moved the workspace by
+184 px, CLS up to 1.19 (gate B shell, measured by the gate C review, correction 3).
+{% endcomment %}
+{% block chrome %}<script src="{% static 'js/rail-pref.js' %}"></script>
+{% include "partials/portal_chrome.html" %}{% endblock %}
+
+{% comment %}The breadcrumb lives in the context bar (portal_chrome.html), not above the content.{% endcomment %}
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="console__workspace">
+{% block portal_header %}{% endblock %}
+
+{% comment %}
+A page whose panels already carry the file's facts and the next step (the V4 dashboard) empties
+these two blocks; every other page inside a case keeps the header and the one priority.
+{% endcomment %}
+{% block case_header %}{% if case %}
+{% include "portal/partials/case_header.html" with case=case %}
+{% endif %}{% endblock %}
+
+{% block next_action_block %}{% if next_action %}
+{% include "portal/partials/next_action.html" with action=next_action %}
+{% endif %}{% endblock %}
+
+<div class="portal">
+  <div class="portal__main">
+    {% block portal_content %}{% endblock %}
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% comment %}
+The platform footer is four lines, not the institutional footer with its four columns and its
+whole public navigation: someone inside their own file does not need the site map, they need the
+legal pages and the way back out.
+{% endcomment %}
+{% block site_footer %}
+<footer class="portal-footer console__footer">
+  <div class="portal-footer__inner">
+    <p class="portal-footer__legal">
+      {% safe_url 'legal:privacy' as privacy_url %}{% if privacy_url %}<a href="{{ privacy_url }}">{% translate "Privacy Policy" %}</a>{% endif %}
+      {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Conditions d’utilisation" %}</a>{% endif %}
+      {% safe_url 'legal:disclaimer' as disclaimer_url %}{% if disclaimer_url %}<a href="{{ disclaimer_url }}">{% translate "Avertissement" %}</a>{% endif %}
+    </p>
+    <p class="portal-footer__contact">{{ site.contact_email }}</p>
+  </div>
+</footer>
+{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'js/dist/console.js' %}"></script>{% endblock %}

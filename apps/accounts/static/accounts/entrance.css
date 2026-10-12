@@ -1,0 +1,262 @@
+/* ============================================================================
+   ENTRANCE — the account pages, design V4 (CREATIVE_DIRECTION.md §3.3: DARK + FOCUS)
+   Loaded by templates/allauth/layouts/entrance.html. Tokens only, logical
+   properties only; the door's own drawing lives in static/css/v4/hero.css.
+   ========================================================================== */
+
+.entrance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-inline-size: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ---- The stage: the door on the navy ---------------------------------------- */
+.entrance__stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: var(--s-6);
+  min-block-size: 120px;
+  padding: var(--s-6) var(--page-pad);
+  background-color: var(--mid-1);
+  background-image: var(--mesh-dark);
+  color: var(--on-dark);
+}
+
+.entrance__door {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 320px;
+  block-size: auto;
+  align-self: center;
+  overflow: visible;
+}
+
+/* The one line the entrance keeps, on a glass strip (level 3). */
+.entrance__help {
+  margin: 0;
+  padding: var(--s-3) var(--s-5);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--on-dark-2);
+  background: var(--glass-dark);
+  -webkit-backdrop-filter: blur(var(--blur-panel));
+  backdrop-filter: blur(var(--blur-panel));
+  border: 1px solid var(--hairline-dark-strong);
+  border-radius: var(--radius-full);
+  text-align: center;
+}
+
+.entrance__help a {
+  color: var(--accent-dark);
+}
+
+/* ---- The focus ground and the sheet ---------------------------------------------- */
+.entrance__focus {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: var(--s-10) var(--page-pad) var(--s-16);
+  background-color: var(--min-0);
+  background-image: var(--light-focus);
+}
+
+.entrance__sheet {
+  inline-size: 100%;
+  max-inline-size: 480px;
+  padding: var(--s-10);
+  background: var(--min-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2);
+}
+
+.entrance .account-page__title {
+  margin: 0 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--u-title);
+  line-height: var(--u-title-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+}
+
+.entrance .account-page__text {
+  margin: 0 0 var(--s-6);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+}
+
+.entrance .form {
+  max-inline-size: none;
+}
+
+.entrance .form-field {
+  margin-block-end: var(--s-5);
+}
+
+.entrance .form-field__label {
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Input V4: 44 px, radius md, --min-3, strong hairline (3.37:1 on the ground) */
+.entrance .form-field input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.entrance .form-field select,
+.entrance .form-field textarea {
+  min-block-size: var(--input-h);
+  padding: 0 var(--s-4);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink);
+  background: var(--min-3);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  transition: border-color var(--motion-fast) var(--ease-exit), box-shadow var(--motion-fast) var(--ease-exit);
+}
+
+/* The password field keeps room for its show/hide control (v4/buttons.css): this sheet's input rule
+   above beat the cascade's at equal specificity (gate B round 2, defect 14: typed text ran under the
+   control). */
+.entrance .form-field .form-field__control--password > input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+  padding-inline-end: 11rem;
+}
+
+.entrance .form-field input:not([type="checkbox"]):not([type="radio"]):hover,
+.entrance .form-field select:hover {
+  border-color: var(--ink-3);
+}
+
+.entrance .form-field input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+.entrance .form-field select:focus-visible,
+.entrance .form-field textarea:focus-visible {
+  border-color: var(--accent-ring);
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+.entrance .form-field__help {
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+}
+
+.entrance .form-field__help a {
+  color: var(--accent);
+}
+
+/* The one primary action of the page: 52 px, full width, the gradient of the system. */
+.entrance .form__actions {
+  margin-block-start: var(--s-6);
+  padding-block-start: 0;
+  border: 0;
+}
+
+.entrance .form__actions .btn--primary {
+  --btn-box-h: var(--control-lg);
+  inline-size: 100%;
+  font-size: var(--u-card);
+}
+
+.entrance .account-page__aside {
+  display: none;
+}
+
+/* ---- From 64rem: two panels, 5/7 ------------------------------------------------- */
+@media (min-width: 64rem) {
+  .entrance {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    min-block-size: calc(100vh - var(--chrome-height));
+    min-block-size: calc(100svh - var(--chrome-height));
+  }
+
+  .entrance__stage {
+    padding: var(--s-12) var(--s-10);
+  }
+
+  .entrance__focus {
+    padding-block: var(--s-16);
+    align-content: center;
+  }
+}
+
+/* ---- Below 64rem: a 120 px band with the arch, then the sheet ------------------------ */
+@media (max-width: 63.999rem) {
+  .entrance__stage {
+    grid-template-rows: auto;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--s-5);
+    min-block-size: 120px;
+    padding: var(--s-4) var(--page-pad);
+  }
+
+  .entrance__door {
+    max-inline-size: 88px;
+  }
+
+  .entrance__help {
+    justify-self: start;
+    text-align: start;
+  }
+
+  .entrance__focus {
+    padding-block: var(--s-8) var(--s-12);
+  }
+
+  .entrance__sheet {
+    padding: var(--s-6);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  /* The door stays, small, beside the help: a band without the brand's element was measured as
+     120 px of navy with a capsule (gate B review, correction 7). */
+  .entrance__stage {
+    gap: var(--s-4);
+  }
+
+  .entrance__door {
+    max-inline-size: 64px;
+  }
+
+  .entrance__help {
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* Below 80rem the help goes on two lines: a soft rectangle, not a capsule around two lines
+   (gate B round 2, defect 19). */
+@media (max-width: 79.999rem) {
+  .entrance__help {
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* ---- Forced colours ------------------------------------------------------------------ */
+@media (forced-colors: active) {
+  .entrance__sheet,
+  .entrance__help {
+    border: 1px solid CanvasText;
+  }
+
+  .entrance .doorway__body,
+  .entrance .doorway__inner {
+    filter: none;
+  }
+}

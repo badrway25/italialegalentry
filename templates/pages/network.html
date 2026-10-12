@@ -1,0 +1,60 @@
+{% extends "pages/institutional_base.html" %}{% load i18n %}
+{% comment %}
+/reseau/ — the actors of the ecosystem: persons, enterprises, institutions, universities and
+training bodies, professionals. Neutral translated descriptions (pages.content.NETWORK_ACTORS):
+they only restate the list of actors that the prescribed presentation texts enumerate, and attribute
+no power, role or promise to anyone. The prescribed p3.hero.body is quoted only when gate G3 is open.
+Partners: authorised ones only (gate G6) — names, never a logo without written authorisation.
+{% endcomment %}
+{% block page_title %}{% translate "Le réseau" %}{% endblock %}
+{% block page_header %}
+{% translate "Le réseau" as page_title_text %}{% translate "L’écosystème" as eyebrow %}
+{% translate "Un projet construit avec les acteurs compétents, chacun dans son rôle." as page_lead %}
+{% include "components/page_header.html" with title=page_title_text eyebrow=eyebrow lead=page_lead %}
+{% endblock %}
+{% block page_body %}
+{% if photo %}
+<figure class="page-figure">
+  {% include "pages/partials/_picture.html" with photo=photo sizes="(min-width: 64rem) 52rem, 100vw" %}
+</figure>
+{% endif %}
+
+{% if presentation %}
+<section class="page-section" aria-labelledby="network-presentation-title">
+  <h2 class="page-section__title" id="network-presentation-title">{% translate "En bref" %}</h2>
+  <p class="page-section__lead"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
+</section>
+{% endif %}
+
+<section class="page-section" aria-labelledby="network-actors-title">
+  <h2 class="page-section__title" id="network-actors-title">{% translate "Les acteurs de l’écosystème" %}</h2>
+  <ul class="actor-list" data-actors="{{ actors|length }}">
+    {% for actor in actors %}
+    <li class="actor-list__item" data-actor="{{ actor.key }}">
+      <span class="actor-list__icon" aria-hidden="true">{% svg_icon actor.icon "icon icon--lg" %}</span>
+      <div class="actor-list__body">
+        <h3 class="actor-list__title"{% if actor.title.lang %} lang="{{ actor.title.lang }}"{% endif %}>{{ actor.title }}</h3>
+        <p class="actor-list__text"{% if actor.text.lang %} lang="{{ actor.text.lang }}"{% endif %}>{{ actor.text }}</p>
+        {% if actor.url %}<p><a class="link-arrow" href="{{ actor.url }}"{% if actor.link_label.lang %} lang="{{ actor.link_label.lang }}"{% endif %}>{{ actor.link_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="page-section" aria-labelledby="network-partners-title">
+  <h2 class="page-section__title" id="network-partners-title">{% translate "Partenaires" %}</h2>
+  {% if partners %}
+  <ul class="home-ecosystem__list" data-partners="{{ partners|length }}">
+    {% for card in partners %}<li class="home-ecosystem__partner"><span class="home-ecosystem__partner-name">{{ card.partner.name }}</span></li>{% endfor %}
+  </ul>
+  {% else %}
+  <p class="page-section__text" data-partners="0">{% translate "Les partenaires sont présentés au fur et à mesure de leurs autorisations écrites." %}</p>
+  {% endif %}
+  <p class="cluster page-section__more">
+    {% if links.partners %}<a class="link-arrow" href="{{ links.partners }}">{% translate "Voir les partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    {% if links.agami %}<a class="link-arrow" href="{{ links.agami }}">{% translate "Le promoteur" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+  </p>
+</section>
+{% endblock %}

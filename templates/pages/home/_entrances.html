@@ -1,0 +1,12 @@
+{% load i18n %}{% comment %}
+4. FOUR ECOSYSTEM ENTRANCES — exactly four, never a fifth equivalent box (Implementation §3.2).
+pages.services.entrances() supplies the prescribed p3.entrances.* texts when gate G3 is open and
+neutral translated labels otherwise; numbering 01–04 and line art come from the component.
+{% endcomment %}
+{% translate "Les quatre accès de l’écosystème" as fallback_title %}{% translate "L’écosystème" as eyebrow %}
+<section class="section section--b home-entrances" id="{{ s.anchor }}" aria-labelledby="home-entrances-title" data-section="entrances">
+  <div class="container">
+    {% include "pages/partials/_section_header.html" with title_id="home-entrances-title" heading=s.heading intro=s.intro fallback_title=fallback_title eyebrow=eyebrow %}
+    {% include "components/entrances.html" with entrances=d.entrances heading_level="h3" %}
+  </div>
+</section>

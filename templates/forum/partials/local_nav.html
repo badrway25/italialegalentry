@@ -1,0 +1,20 @@
+{% load i18n forum_tags %}
+<nav class="forum-localnav" aria-label="{% translate 'Sections de la page' %}">
+  <div class="container">
+    <ul class="forum-localnav__list">
+      <li><a href="#forum-who">{% event_text event "who.title" %}</a></li>
+      <li><a href="#forum-why">{% event_text event "why.title" %}</a></li>
+      <li><a href="#forum-what">{% event_text event "what.title" %}</a></li>
+      <li><a href="#forum-objectives">{% event_text event "objectives.title" %}</a></li>
+      <li><a href="#forum-audience">{% event_text event "audience.title" %}</a></li>
+      <li><a href="#forum-programme">{% event_text event "programme.title" %}</a></li>
+      {% if is_permanent %}
+        {% if outcomes %}<li><a href="#forum-outcomes">{% translate "Résultats" %}</a></li>{% endif %}
+        {% if documents %}<li><a href="#forum-documents">{% translate "Documents" %}</a></li>{% endif %}
+        {% if next_events %}<li><a href="#forum-next-events">{% translate "Prochains rendez-vous" %}</a></li>{% endif %}
+      {% else %}
+        <li><a href="#forum-registration">{% event_text event "registration.title" %}</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

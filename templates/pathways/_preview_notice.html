@@ -1,0 +1,7 @@
+{% load i18n %}{% if is_preview %}
+<div class="container">
+  <div class="notice notice--warning" role="status" data-preview="phase3">
+    <p><strong>{% translate "Aperçu réservé au back-office" %}</strong> — {% translate "cette page n’est pas encore publique (Phase 3)." %}</p>
+  </div>
+</div>
+{% endif %}

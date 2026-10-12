@@ -1,0 +1,111 @@
+{% extends "base.html" %}{% load i18n static orientation_tags %}
+{% block page_title %}{% translate "Votre pré-évaluation" %}{% endblock %}
+{% block meta_description %}{% translate "Pré-évaluation à caractère informatif — orientation vers une famille de parcours régulier." %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+<article class="container wizard-result" data-kind="{{ r.kind }}">
+  <div class="notice notice--info wizard-result__banner" role="status" data-result-kind="informational">
+    <p class="notice__title"><strong>{% translate "Pré-évaluation à caractère informatif" %}</strong></p>
+    <div class="notice__body"><p>{% translate "Ce résultat est une orientation fondée uniquement sur vos réponses. Il ne constitue pas une décision : chaque décision appartient exclusivement aux autorités compétentes." %}</p></div>
+  </div>
+
+  <header class="wizard-result__header">
+    <p class="page-header__eyebrow">{% translate "Votre pré-évaluation" %}</p>
+    <h1 class="page-header__title"{% if r.lang != site.lang %} lang="{{ r.lang }}"{% endif %}>{{ r.title }}</h1>
+  </header>
+
+  <section class="wizard-result__explanation" aria-labelledby="explanation-title">
+    <h2 id="explanation-title">{% translate "Ce que cela signifie" %}</h2>
+    {% for p in r.explanation_paragraphs %}<p{% if r.lang != site.lang %} lang="{{ r.lang }}"{% endif %}>{{ p }}</p>{% endfor %}
+  </section>
+
+  {% if r.is_individual_analysis %}
+    {% safe_url 'pathways:index' as pathways_url %}
+    {% if pathways_url and phase3_open %}
+    <section class="wizard-result__pathway" aria-labelledby="pathway-title">
+      <h2 id="pathway-title">{% translate "Parcours réguliers" %}</h2>
+      <p><a class="btn btn--secondary" href="{{ pathways_url }}">{% translate "Consulter la présentation des parcours réguliers" %}</a></p>
+    </section>
+    {% endif %}
+  {% else %}
+    {# The pathway title + description are Phase 3 prescribed texts (p3.persons.pathways): gate G3. #}
+    {% if gates.phase3_public %}{% locked_pathway r.pathway_key as pw %}{% endif %}
+    {% if pw %}
+    <section class="wizard-result__pathway" aria-labelledby="pathway-title">
+      <h2 id="pathway-title">{% translate "Famille de parcours correspondante" %}</h2>
+      <p class="wizard-result__pathway-card"{% if pw.fallback %} lang="{{ pw.lang }}"{% endif %}><strong>{{ pw.title }}</strong> — {{ pw.description }}</p>
+      {% safe_url 'pathways:detail' key=r.pathway_key as pathway_url %}
+      {% if pathway_url and phase3_open %}<p><a class="btn btn--secondary" href="{{ pathway_url }}">{% translate "Consulter la page du parcours" %}</a></p>{% endif %}
+    </section>
+    {% endif %}
+  {% endif %}
+
+  {% if r.checklist_groups %}
+  <section class="wizard-result__checklist" aria-labelledby="checklist-title">
+    <h2 id="checklist-title">{% translate "Prochaines étapes à caractère informatif" %}</h2>
+    {% for group in r.checklist_groups %}
+    <div class="wizard-result__group wizard-result__group--{{ group.key }}">
+      <h3>{{ group.label }}</h3>
+      <ul>
+        {% for item in group.items %}<li{% if item.lang != site.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.text }}</li>{% endfor %}
+        {% if group.key == "warnings" and phase3_open %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></li>{% endif %}{% endif %}
+      </ul>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if r.training_interest %}
+  <section class="wizard-result__training" aria-labelledby="training-title">
+    <h2 id="training-title">{% translate "Formation avant le départ" %}</h2>
+    <p>{% translate "Vous avez indiqué votre intérêt pour la formation avant le départ. Ces parcours de préparation (professionnels, linguistiques, civiques) sont présentés dans l’Espace Personnes." %}</p>
+    {% if phase3_open %}{% safe_url 'pathways:training' as training_url %}{% if training_url %}<p><a href="{{ training_url }}">{% translate "En savoir plus sur la formation avant le départ" %}</a></p>{% endif %}{% endif %}
+  </section>
+  {% endif %}
+
+  <aside class="notice notice--info wizard-disclaimer" role="note" aria-labelledby="result-disclaimer-title">
+    <p class="notice__title" id="result-disclaimer-title"><strong>{% translate "Avertissement" %}</strong></p>
+    {# Phase 3 prescribed wording (p3.persons.how_it_works) only once gate G3 is open; before that a neutral sentence with the same meaning. #}
+    <div class="notice__body"><p>{% if gates.phase3_public %}{% locked r.disclaimer_locked_key %}{% else %}{% translate "Le résultat du questionnaire est une pré-évaluation à caractère informatif : les décisions relèvent des autorités compétentes." %}{% endif %}</p></div>
+  </aside>
+
+  <dl class="wizard-result__meta">
+    <div><dt>{% translate "Référence" %}</dt><dd>{{ session.reference }}</dd></div>
+    <div><dt>{% translate "Date" %}</dt><dd><time datetime="{{ result.created_at|date:'c' }}">{{ result.created_at|date:"d.m.Y H:i" }}</time></dd></div>
+    <div><dt>{% translate "Version des règles d’orientation" %}</dt><dd>v{{ result.ruleset_version }}</dd></div>
+    <div><dt>{% translate "Version de l’avertissement" %}</dt><dd>{{ disclaimer_version }}</dd></div>
+  </dl>
+
+  {% if reveal_token %}
+  <section class="notice notice--warning wizard-result__token" role="region" aria-labelledby="token-title" data-reveal-once="true">
+    <h2 id="token-title" class="notice__title">{% translate "Votre code de reprise" %}</h2>
+    <p>{% translate "Conservez ce code : il ne sera plus affiché. Il vous permet de retrouver cette pré-évaluation pendant 30 jours, sans créer de compte." %}</p>
+    <p><code class="wizard-result__token-value" id="resume-token">{{ reveal_token }}</code></p>
+    <p><small>{% translate "Page de reprise :" %} <a href="{% url 'orientation:resume' %}">{{ resume_url }}</a></small></p>
+  </section>
+  {% endif %}
+
+  <nav class="wizard-result__actions" aria-label="{% translate 'Actions' %}">
+    {% if is_saved %}
+      {% safe_url 'portal:pathways' as portal_url %}
+      <p class="wizard-result__saved">{% translate "Cette pré-évaluation est enregistrée dans votre espace réservé." %}{% if portal_url %} <a href="{{ portal_url }}">{% translate "Voir mes parcours" %}</a>{% endif %}</p>
+    {% elif can_save %}
+      {% if forms_enabled %}
+      <form method="post" action="{% url 'orientation:save' session_id=session.id %}" class="wizard-result__save">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--primary">{% translate "Enregistrer dans mon espace" %}</button>
+      </form>
+      {% else %}
+      {% include "components/form_unavailable.html" %}
+      {% endif %}
+    {% endif %}
+    <form method="post" action="{% url 'orientation:restart' session_id=session.id %}" class="wizard-result__restart">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--secondary">{% translate "Recommencer le questionnaire" %}</button>
+    </form>
+    <button type="button" class="btn btn--secondary js-print" hidden>{% translate "Imprimer cette page" %}</button>
+  </nav>
+</article>
+{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'orientation/wizard.js' %}"></script>{% endblock %}

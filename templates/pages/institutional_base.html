@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Shared layout of the institutional pages (project, promoter, network, contact, anti-fraud):
+breadcrumbs → page header → content + local navigation (sticky column on desktop, pills on mobile).
+Child templates fill `page_header` and `page_body`. Context: `nav` (pages.services.institutional_nav),
+`breadcrumbs`, `meta_description`, `seo`.
+{% endcomment %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-institutional{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/pages.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% translate "Aperçu réservé à l’équipe : cette page n’est pas encore publique." as preview_text %}{% include "components/notice.html" with kind="pending" text=preview_text %}</div>
+{% endif %}
+{% block page_header %}{% endblock %}
+<div class="container layout-sidebar layout-sidebar--end page-institutional__layout">
+  <div class="page-institutional__main">
+    {% block page_body %}{% endblock %}
+  </div>
+  {% if nav %}
+  <aside class="layout-sidebar__aside page-institutional__aside">
+    {% translate "Le projet" as nav_title %}{% translate "Pages institutionnelles" as nav_label %}
+    {% include "components/local_nav.html" with items=nav title=nav_title label=nav_label %}
+  </aside>
+  {% endif %}
+</div>
+{% endblock %}

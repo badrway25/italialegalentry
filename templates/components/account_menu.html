@@ -1,0 +1,26 @@
+{% load i18n %}{% comment %}
+Account menu (authenticated users) — details dropdown in the utility bar.
+Links resolve through safe_url so the menu degrades gracefully while sibling apps are built.
+{% endcomment %}
+<details class="account-menu" data-dropdown>
+  <summary class="account-menu__summary">
+    {% svg_icon "user" "icon icon--sm" %}
+    <span class="account-menu__name">{{ user.get_short_name }}</span>
+    {% svg_icon "chevron" "icon icon--sm" %}
+  </summary>
+  <ul class="account-menu__list" role="list" aria-label="{% translate 'Mon compte' %}">
+    {% safe_url 'portal:dashboard' as dashboard_url %}{% if dashboard_url %}
+    <li><a class="account-menu__link" href="{{ dashboard_url }}">{% svg_icon "home" "icon" %}<span>{% translate "Espace réservé" %}</span></a></li>{% endif %}
+    {% safe_url 'accounts:profile' as profile_url %}{% if profile_url %}
+    <li><a class="account-menu__link" href="{{ profile_url }}">{% svg_icon "user" "icon" %}<span>{% translate "Profil" %}</span></a></li>{% endif %}
+    {% safe_url 'mfa_index' as mfa_url %}{% if mfa_url %}
+    <li><a class="account-menu__link" href="{{ mfa_url }}">{% svg_icon "key" "icon" %}<span>{% translate "Sécurité du compte" %}</span></a></li>{% endif %}
+    {% safe_url 'account_logout' as logout_url %}{% if logout_url %}
+    <li class="account-menu__sep" role="presentation"></li>
+    <li>
+      <form method="post" action="{{ logout_url }}">{% csrf_token %}
+        <button class="account-menu__link" type="submit">{% svg_icon "logout" "icon" %}<span>{% translate "Se déconnecter" %}</span></button>
+      </form>
+    </li>{% endif %}
+  </ul>
+</details>

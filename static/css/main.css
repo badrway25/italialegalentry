@@ -1,0 +1,33 @@
+/* ============================================================================
+   Italy Legal Entry™ — main stylesheet (single entry point).
+   Layers are imported in cascade order; ManifestStaticFilesStorage rewrites
+   the @import targets with hashed names at collectstatic time.
+   ========================================================================== */
+@import url("fonts.css");
+@import url("tokens.css");
+/* Demolition scaffold — shrinks to nothing; see the file header. */
+@import url("_legacy-tokens.css");
+@import url("base.css");
+@import url("layout.css");
+@import url("components.css");
+/* The proprietary graphic language: folio, register, sequence, jurisdiction bar. */
+@import url("register.css");
+/* ---- Design V2 «due rive, una porta» — docs/design-v2/DESIGN_SYSTEM_V2.md -------------
+   Loaded last so it wins the cascade. tokens → bridge (re-points the old ground and navy at the
+   new ones, so every page changes ground at once; deleted with register.css) → shell → hero. */
+@import url("v2/tokens.css");
+@import url("v2/bridge.css");
+@import url("v2/shell.css");
+@import url("v2/routes.css");
+@import url("v2/voyage.css");
+/* V3 — docs/design-v3/. Loaded last: it corrects what the V2 layers inherited from the shim. */
+@import url("v3/buttons.css");
+@import url("v3/chip.css");
+/* V4 — docs/design-v4/DESIGN_SYSTEM_V4.md. Loaded last: it keeps the V2 names and gives them the
+   V4 values, so every earlier layer changes value without changing a line. */
+@import url("v4/tokens.css");
+@import url("v4/buttons.css");
+@import url("v4/shell.css");
+@import url("v4/workspace.css");
+@import url("v4/hero.css");
+@import url("v4/wizard.css");

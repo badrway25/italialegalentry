@@ -1,0 +1,39 @@
+{% load i18n %}{% comment %}
+THE NEXT ACTION — one priority, on every authenticated screen.
+
+The client's acceptance question is "what must I do next", singular. A dashboard that answers it
+with five equally-weighted boxes has not answered it, and the one this replaces answered it with
+five — four of them empty, each drawn as a dashed rectangle with a centred icon.
+
+It also answers "who is responsible", because the honest answer is often "not you": a document the
+consulate must issue is not a task the applicant can do, and showing it as one would be a small lie
+that wastes a person's time.
+
+Contract: `action` = a cases.services.NextAction.
+{% endcomment %}
+<section class="next-action next-action--{{ action.urgency }}" aria-labelledby="next-action-title">
+  <div class="container next-action__inner">
+    <p class="t-folio next-action__label" id="next-action-title">
+      {% if action.is_for_someone_else %}{% translate "Prochaine étape" %}{% else %}{% translate "Votre prochaine action" %}{% endif %}
+    </p>
+
+    <p class="next-action__label-text">{{ action.label }}</p>
+
+    {% if action.detail %}<p class="next-action__detail t-gloss">{{ action.detail }}</p>{% endif %}
+
+    {% if action.is_for_someone_else %}
+    <p class="next-action__actor">
+      <span class="t-folio">{% translate "Responsable" %}</span>
+      <span>{{ action.get_responsible_display|default:action.responsible_actor }}</span>
+      {% comment %} Said plainly, because a person waiting on an authority should not think they are late. {% endcomment %}
+      <span class="t-gloss">{% translate "Cette étape ne dépend pas de vous." %}</span>
+    </p>
+    {% endif %}
+
+    {% if action.url %}
+    <p class="next-action__cta">
+      <a class="btn btn--primary btn--arrow" href="{{ action.url }}">{{ action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+    </p>
+    {% endif %}
+  </div>
+</section>

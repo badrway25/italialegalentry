@@ -1,0 +1,62 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% comment %}
+"Mes dossiers" — every case file the caller may read, from ONE queryset.
+
+A person normally sees a single row. A professional or an operator sees the files they hold a live
+mandate for, and their own if they have one. There is deliberately no separate "professional view":
+a second page would mean a second authorisation rule, and the two would eventually disagree.
+
+The rows are a register, not cards. A case file has an ordinal position in a list, a reference, an
+objective, a state with a date and a responsible actor — every one of those is a fact, and the
+register is the form that shows facts without dressing them up.
+{% endcomment %}
+{% block page_title %}{% translate "Mes dossiers" %}{% endblock %}
+{% block meta_description %}{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}{% endblock %}
+
+{% block portal_header %}
+{% include "components/page_header.html" with title=_("Mes dossiers") %}
+{% endblock %}
+
+{% block portal_content %}
+{% if rows %}
+  {% if has_foreign %}
+  <p class="note">
+    {% blocktranslate %}Cette liste contient des dossiers qui ne sont pas les vôtres : ils vous sont confiés par un mandat daté. Chaque consultation est enregistrée.{% endblocktranslate %}
+  </p>
+  {% endif %}
+
+  <ol class="register">
+    {% for row in rows %}
+    <li class="register__item">
+      <a class="entry" href="{% url 'cases:detail' row.case.reference %}">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">
+          {{ row.case.get_purpose_display }}
+          <span class="t-ref">{{ row.case.reference }}</span>
+        </span>
+        <span class="entry__gloss">
+          {% if not row.is_own %}{% blocktranslate with name=row.case.person.get_full_name %}Dossier confié — {{ name }}{% endblocktranslate %} · {% endif %}
+          {% blocktranslate with done=row.progress.done total=row.progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}
+          {% if row.progress.overdue %} · {% blocktranslate count n=row.progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}{% endif %}
+        </span>
+        <span class="entry__actor">
+          <span class="state state--{{ row.case.status }}" data-register="{{ row.case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ row.case.status|chip_stage }}">{{ row.case.get_status_display }}</span>
+          <time datetime="{{ row.case.status_since|date:'Y-m-d' }}">{{ row.case.status_since|date:"d.m.Y" }}</time>
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  {% comment %}
+  One hairline and one sentence naming who fills this and when — never a dashed box with an icon.
+  The resolving action is inline, because a person reading "you have no file" needs to know how one
+  comes to exist, not to be told again on another page.
+  {% endcomment %}
+  <p class="empty">
+    {% translate "Vous n’avez pas encore de dossier. Il s’en ouvre un lorsque vous terminez le questionnaire d’orientation, et il conserve alors votre résultat, votre liste de pièces et les personnes responsables de chaque étape." %}
+    {% url 'orientation:start' as orientation_url %}
+    {% if orientation_url %}<a href="{{ orientation_url }}">{% translate "Commencer l’orientation" %}</a>{% endif %}
+  </p>
+{% endif %}
+{% endblock %}

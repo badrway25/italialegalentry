@@ -1,0 +1,13 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% block page_title %}{% translate "Dépôt indisponible" %}{% endblock %}
+{% block meta_description %}{% translate "Dépôt de pièces indisponible." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+{% block portal_content %}
+<h1 class="doc-page__title">{% translate "Dépôt indisponible" %}</h1>
+{% comment %}CONTENT_PENDING_LEGAL_REVIEW: the acceptance flow for the Conditions d’utilisation / Privacy Policy depends on the official Italian legal texts (gate G1).{% endcomment %}
+<p class="empty">
+  {% translate "Le dépôt de pièces est réservé aux comptes ayant accepté les Conditions d’utilisation et la Privacy Policy." %}
+  {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}
+</p>
+<p class="doc-piece__back"><a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a></p>
+{% endblock %}

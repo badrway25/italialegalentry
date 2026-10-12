@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" role="img" aria-labelledby="t" fill="none" stroke="#0f2b52" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+  <title id="t">Université et formation</title>
+  <path d="M8 100h144" stroke="#9a7b2f" stroke-width="1"/>
+  <!-- open book -->
+  <path d="M30 92c14-6 26-6 40 0V50c-14-6-26-6-40 0v42ZM110 92c-14-6-26-6-40 0V50c14-6 26-6 40 0v42Z"/>
+  <path d="M70 50v42"/>
+  <path d="M38 60c8-3 16-3 24 0M38 70c8-3 16-3 24 0M78 60c8-3 16-3 24 0M78 70c8-3 16-3 24 0" stroke="#9a7b2f"/>
+  <!-- mortarboard -->
+  <path d="M118 36 140 28l-22-8-22 8 22 8Z"/>
+  <path d="M126 33v9M140 28v12" stroke="#1f6b48"/>
+</svg>

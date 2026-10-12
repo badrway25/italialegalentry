@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load i18n %}
+{% comment %}Permalink of one glossary term (Phase 3, gate G3). Contract: `entry` (GlossaryEntry), `related` (list).{% endcomment %}
+{% block page_title %}{{ entry.term }} — {% translate "Glossaire" %}{% endblock %}
+{% block meta_description %}{{ entry.term }} : {{ entry.definition|truncatechars:150 }}{% endblock %}
+{% block body_class %}page-glossary-term{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
+{% endif %}
+<article class="container glossary-term">
+  <header class="page-header glossary-term__header">
+    <p class="page-header__eyebrow">{% translate "Glossaire" %}</p>
+    <h1 class="page-header__title glossary-term__title" lang="{{ entry.term_lang }}">{{ entry.term }}</h1>
+  </header>
+  <p class="glossary-term__definition"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</p>
+
+  {% if related %}
+  <section class="glossary-term__related" aria-labelledby="related-terms-title">
+    <h2 id="related-terms-title">{% translate "Termes liés" %}</h2>
+    <ul class="glossary-term__related-list">
+      {% for rel in related %}<li><a href="{{ rel.url }}" lang="{{ rel.term_lang }}">{{ rel.term }}</a></li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <footer class="glossary-term__meta">
+    <dl class="meta-list">
+      {% if entry.source %}<div><dt>{% translate "Source" %}</dt><dd{% if site.lang != site.fallback_language %} lang="{{ site.fallback_language }}"{% endif %}>{{ entry.source }}</dd></div>{% endif %}
+      {% if entry.last_reviewed_at %}<div><dt>{% translate "Dernière vérification" %}</dt><dd><time datetime="{{ entry.last_reviewed_at|date:'Y-m-d' }}">{{ entry.last_reviewed_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
+    </dl>
+    <p class="glossary-term__note">{% translate "Définition à caractère informatif." %}</p>
+    <p><a class="btn btn--secondary" href="{% url 'glossary:index' %}#{{ entry.key }}">{% translate "Retour au glossaire" %}</a></p>
+  </footer>
+</article>
+{% endblock %}
+{% block extra_head %}{% if term_jsonld %}<script type="application/ld+json">{{ term_jsonld }}</script>{% endif %}{% endblock %}

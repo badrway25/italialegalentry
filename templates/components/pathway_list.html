@@ -1,0 +1,15 @@
+{% comment %}
+Pathway list — numbered editorial list (e.g. the 8 regular routes).
+Contract: `items` = list of dicts {title, text, url, lang}; optional `lang` for the whole list.
+Each item is fully clickable (stretched link) while the title link stays the only tab stop.
+{% endcomment %}
+<ol class="pathway-list"{% if lang %} lang="{{ lang }}"{% endif %}>
+  {% for item in items %}
+  <li class="pathway-list__item">
+    <span class="pathway-list__num" aria-hidden="true"></span>
+    <h3 class="pathway-list__title"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{% if item.url %}<a href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
+    {% if item.text %}<p class="pathway-list__desc"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.text }}</p>{% endif %}
+    {% if item.url %}{% svg_icon "arrow" "icon pathway-list__arrow icon--flip-rtl" %}{% endif %}
+  </li>
+  {% endfor %}
+</ol>

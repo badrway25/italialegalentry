@@ -1,0 +1,31 @@
+{% load i18n cms_nav %}{% main_menu as menu %}
+{% comment %}
+Main navigation: cms.MenuItem rows for location "main" (fallback: static structure in
+cms/templatetags/cms_nav.py). Desktop: mega-menu (button toggles the panel, arrow keys move
+between sections, Escape closes). Mobile: the same markup inside the drawer. Without JS every
+panel is visible on mobile and shown on hover/focus-within on desktop.
+{% endcomment %}
+<ul class="main-nav__list">
+{% for item in menu %}
+  <li class="main-nav__item{% if forloop.last and item.children %} main-nav__item--end{% endif %}"{% if item.children %} data-nav-item{% endif %}>
+    {% if item.url %}<a class="main-nav__link" href="{{ item.url }}" data-nav-link{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% else %}<span class="main-nav__label">{{ item.label }}</span>{% endif %}
+    {% if item.children %}
+    <button class="main-nav__toggle" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="{{ item.id }}-panel">
+      <span class="visually-hidden">{% blocktranslate with section=item.label %}Ouvrir le sous-menu « {{ section }} »{% endblocktranslate %}</span>{% svg_icon "chevron" "icon" %}
+    </button>
+    <div class="main-nav__panel" id="{{ item.id }}-panel" data-nav-panel>
+      <div class="main-nav__panel-lead">
+        <p class="main-nav__panel-title">{{ item.label }}</p>
+        {% if item.description %}<p class="main-nav__panel-desc">{{ item.description }}</p>{% endif %}
+        {% if item.url %}<a class="link-arrow hide-mobile" href="{{ item.url }}">{% translate "Voir l’espace" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+      </div>
+      <ul class="main-nav__sublist{% if item.children|length > 4 %} main-nav__sublist--two{% endif %}">
+        {% for child in item.children %}
+        <li><a class="main-nav__sublink" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}>{% svg_icon "chevron-end" "icon icon--flip-rtl" %}<span>{{ child.label }}</span></a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </li>
+{% endfor %}
+</ul>

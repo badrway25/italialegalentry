@@ -1,0 +1,17 @@
+{% load i18n %}{% comment %}CONTENT_PENDING_LEGAL_REVIEW — team-written neutral acknowledgement (no promise, no outcome); the data-processing sentence reuses the meaning of the prescribed consent text and awaits legal confirmation.{% endcomment %}{% autoescape off %}{% blocktranslate with name=registration.first_name %}Bonjour {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with title=event_title %}Nous accusons réception de votre inscription au {{ title }}.{% endblocktranslate %}
+{{ event_meta }}
+
+{% translate "Catégorie" %} : {{ category_label }}
+
+{% translate "Ce message confirme uniquement la réception de votre inscription. Le programme détaillé sera mis à jour sur la page du Forum." %}
+
+{% translate "Pour toute question ou pour annuler votre inscription, écrivez-nous à" %} {{ contact_email }}.
+
+{% translate "Vos données sont traitées pour la gestion de l’inscription au Forum, conformément à l’information sur le traitement des données personnelles publiée sur le site." %}
+
+--
+{{ project.PROMOTER }}
+{{ project.PROJECT_NAME }}
+{% endautoescape %}

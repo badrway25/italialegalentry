@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="fr" dir="ltr" class="no-js" data-mode="dense">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tableau de bord · Espace réservé · Italy Legal Entry™</title>
+<meta name="description" content="Votre espace personnel : parcours, documents, échéances et communications.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F1E2B">
+<link rel="stylesheet" href="/static/css/fonts.css">
+<link rel="stylesheet" href="styles.css">
+<script src="head.js"></script>
+<script type="module" src="main.js"></script>
+</head>
+<body class="page-dashboard">
+<a class="skip" href="#main">Aller au contenu</a>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L19 7"/></symbol>
+  <symbol id="i-current" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 24 24"><path d="M8 8h8M6 13h12M4 18h16"/></symbol>
+  <symbol id="g-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="g-training" viewBox="0 0 24 24"><path d="M4 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4zM20 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></symbol>
+  <symbol id="g-authority" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10M10 21V10M14 21V10M19 21V10M3 10h18L12 4z"/></symbol>
+  <symbol id="g-project" viewBox="0 0 24 24"><circle cx="7" cy="9" r="3"/><circle cx="17" cy="9" r="3"/><path d="M2 20a5 5 0 0 1 10 0M12 20a5 5 0 0 1 10 0"/></symbol>
+</svg>
+
+<header class="app-bar" data-appbar>
+  <div class="app-bar__inner">
+    <a class="lockup lockup--plate lockup--on-chamber" href="dashboard.html" aria-label="Italy Legal Entry — tableau de bord">
+      <img class="lockup__mark" src="/static/brand/original/logo-mark.svg" alt="" width="32" height="32">
+      <span class="lockup__text" aria-hidden="true"><span class="lockup__wm"><span class="g">Italy</span> Legal <span class="r">Entry</span></span></span>
+    </a>
+    <p class="app-bar__context"><span class="t-folio">Contexte</span><span class="app-bar__ref">E46E03B461</span></p>
+    <nav class="app-bar__account" aria-label="Compte et langue">
+      <a class="app-bar__link" href="home.html">Site public</a>
+      <details class="menu" data-dropdown>
+        <summary><svg class="icon" aria-hidden="true"><use href="#g-person"/></svg><span class="menu__name">qa-person</span><svg class="icon icon--chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <ul class="menu__list" role="list" aria-label="Compte">
+          <li><a class="menu__link" href="#">Profil et données personnelles</a></li>
+          <li><a class="menu__link" href="#">Sécurité du compte</a></li>
+          <li><a class="menu__link" href="home.html">Se déconnecter</a></li>
+        </ul>
+      </details>
+      <details class="lang" data-dropdown>
+        <summary><span class="visually-hidden">Langue : </span><span class="lang__long">Français</span><span class="lang__short" aria-hidden="true">FR</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <ul class="lang__list" role="list" aria-label="Choisir la langue">
+          <li><a class="lang__link" href="#" lang="fr" hreflang="fr" aria-current="true"><span>Français</span><span class="lang__code" aria-hidden="true">fr</span></a></li>
+          <li><a class="lang__link" href="#" lang="it" hreflang="it"><span>Italiano</span><span class="lang__code" aria-hidden="true">it</span></a></li>
+          <li><a class="lang__link" href="#" lang="en" hreflang="en"><span>English</span><span class="lang__code" aria-hidden="true">en</span></a></li>
+          <li><a class="lang__link" href="#" lang="ar" hreflang="ar" dir="rtl"><span>العربية</span><span class="lang__code" aria-hidden="true">ar</span></a></li>
+        </ul>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="app">
+  <div class="container">
+    <nav class="crumbs" aria-label="Fil d’Ariane">
+      <ol><li><a href="home.html">Accueil</a></li><li aria-current="page">Espace réservé</li></ol>
+    </nav>
+
+    <div class="app__head" data-plates>
+      <p class="eyebrow" data-plate>Espace réservé</p>
+      <h1 class="t-title" data-plate>Tableau de bord</h1>
+    </div>
+
+    <!-- THE FASCICOLO COVER PLATE -->
+    <section class="case" aria-label="Votre dossier" data-plates>
+      <div class="case__back" aria-hidden="true" data-plate></div>
+      <div class="case__plate" data-plate>
+        <div class="case__identity">
+          <p class="t-folio">Dossier</p>
+          <p class="case__ref">E46E03B461</p>
+        </div>
+        <dl class="case__facts">
+          <div class="case__fact"><dt class="t-folio">Objectif</dt><dd>Travail</dd></div>
+          <div class="case__fact"><dt class="t-folio">État</dt><dd><span class="state state--done">Orientation terminée</span><span class="case__since">depuis le <time datetime="2026-09-21">21.09.2026</time></span></dd></div>
+          <div class="case__fact"><dt class="t-folio">Responsable</dt><dd>Vous — aucun intervenant n’est assigné à ce dossier</dd></div>
+          <div class="case__fact"><dt class="t-folio">Avancement</dt><dd><span class="meter" aria-hidden="true"><span class="meter__seg"></span><span class="meter__seg"></span><span class="meter__seg"></span><span class="meter__seg"></span><span class="meter__seg"></span></span><span>0 sur 5 éléments complétés</span></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- RESPONSIBILITY RAIL 2.0 -->
+    <section class="rail" aria-labelledby="rail-title" data-rail>
+      <div class="rail__head">
+        <div>
+          <p class="eyebrow">Mon parcours</p>
+          <h2 class="rail__title" id="rail-title">Où j’en suis</h2>
+        </div>
+        <p class="rail__count t-mono">Étape 2 sur 7 · étape actuelle : pré-évaluation</p>
+      </div>
+      <div class="rail__track">
+        <div class="rail__group rail__group--ma">
+          <h3 class="rail__juris">Maroc · avant le départ</h3>
+          <ol aria-label="Étapes avant le départ">
+            <li class="seg seg--done">
+              <span class="seg__num">01</span>
+              <span class="seg__label">Votre situation et votre objectif</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-person"/></svg>La personne</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-check"/></svg>Terminée</span>
+            </li>
+            <li class="seg seg--current" aria-current="step">
+              <span class="seg__num">02</span>
+              <span class="seg__label">Pré-évaluation et parcours possibles</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-project"/></svg>L’équipe du projet</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-current"/></svg>Étape actuelle</span>
+            </li>
+            <li class="seg">
+              <span class="seg__num">03</span>
+              <span class="seg__label">Préparation et formation avant le départ</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-training"/></svg>Organismes de formation</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-next"/></svg>À venir</span>
+            </li>
+          </ol>
+        </div>
+        <div class="rail__group rail__group--it">
+          <h3 class="rail__juris">Italie · procédures et inclusion</h3>
+          <ol aria-label="Étapes en Italie">
+            <li class="seg">
+              <span class="seg__num">04</span>
+              <span class="seg__label">Procédures auprès des autorités compétentes</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-authority"/></svg>Autorités compétentes</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-next"/></svg>À venir</span>
+            </li>
+            <li class="seg">
+              <span class="seg__num">05</span>
+              <span class="seg__label">Préparation du départ</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-person"/></svg>La personne</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-next"/></svg>À venir</span>
+            </li>
+            <li class="seg">
+              <span class="seg__num">06</span>
+              <span class="seg__label">Arrivée et premières démarches</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-authority"/></svg>Autorités compétentes</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-next"/></svg>À venir</span>
+            </li>
+            <li class="seg">
+              <span class="seg__num">07</span>
+              <span class="seg__label">Accompagnement et inclusion</span>
+              <span class="seg__actor"><svg class="glyph" aria-hidden="true"><use href="#g-project"/></svg>L’équipe du projet</span>
+              <span class="seg__state"><svg class="glyph" aria-hidden="true"><use href="#i-next"/></svg>À venir</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <p class="rail__caption t-caption">Les proportions indiquent les étapes du modèle, non une durée. Le responsable de chaque étape est indiqué à titre indicatif : les décisions relèvent uniquement des autorités compétentes.</p>
+    </section>
+
+    <!-- WORKSPACE: index · main · inspector -->
+    <div class="workspace">
+      <nav class="index" aria-label="Navigation de l’espace réservé">
+        <p class="index__title t-folio">Espace réservé</p>
+        <ul class="index__list">
+          <li><a class="index__link" href="#" aria-current="page"><span>Tableau de bord</span><span class="index__num">01</span></a></li>
+          <li><a class="index__link" href="#"><span>Ma situation</span><span class="index__num">02</span></a></li>
+          <li><a class="index__link" href="#"><span>Mes dossiers</span><span class="index__num">03</span></a></li>
+          <li><a class="index__link" href="#"><span>Mes demandes</span><span class="index__num">04</span></a></li>
+          <li><a class="index__link" href="#"><span>Mon parcours</span><span class="index__num">05</span></a></li>
+          <li><a class="index__link" href="#"><span>Mes documents</span><span class="index__num">06</span></a></li>
+          <li><a class="index__link" href="#"><span>Mes échéances</span><span class="index__num">07</span></a></li>
+          <li><a class="index__link" href="#"><span>Communications</span><span class="index__num">08</span></a></li>
+          <li><a class="index__link" href="#"><span>Academy</span><span class="index__num">09</span></a></li>
+          <li><a class="index__link" href="#"><span>Guichet numérique</span><span class="index__num">10</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="main" data-plates>
+        <!-- THE NEXT ACTION — one priority -->
+        <section class="next" aria-labelledby="next-title" data-plate>
+          <p class="t-folio next__label" id="next-title">Prochaine étape</p>
+          <p class="next__text">Identifier les interlocuteurs et les autorités compétents pour votre situation avant toute démarche.</p>
+          <p class="next__meta">
+            <span class="actor"><svg class="glyph" aria-hidden="true"><use href="#g-authority"/></svg><span><span class="t-folio">Responsable</span>L’autorité compétente</span></span>
+            <span class="next__aside">Cette étape ne dépend pas de vous.</span>
+          </p>
+        </section>
+
+        <!-- CHECKLIST -->
+        <section class="panel" aria-labelledby="checklist-title" data-plate>
+          <div class="panel__head">
+            <div><p class="eyebrow">Checklist</p><h2 class="panel__title" id="checklist-title">Ce qui reste à faire, et par qui</h2></div>
+            <p class="panel__count t-mono">0 / 5 complétés</p>
+          </div>
+          <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-checklist">
+            <table class="table">
+              <caption id="t-checklist" class="visually-hidden">Éléments du dossier, leur état, le responsable et l’échéance</caption>
+              <thead><tr><th scope="col">Élément</th><th scope="col">État</th><th scope="col">Responsable</th><th scope="col">Échéance</th></tr></thead>
+              <tbody>
+                <tr>
+                  <th scope="row" data-label="Élément">Identifier les interlocuteurs et les autorités compétents pour votre situation avant toute démarche.</th>
+                  <td data-label="État"><span class="state state--todo">À faire</span></td>
+                  <td data-label="Responsable"><span class="actor"><svg class="glyph" aria-hidden="true"><use href="#g-authority"/></svg><span>L’autorité compétente — Selon l’autorité compétente pour votre situation</span></span></td>
+                  <td data-label="Échéance"><span class="dash"><span class="visually-hidden">Aucune échéance</span><span aria-hidden="true">—</span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-label="Élément">Vérifier les documents généralement requis auprès des autorités compétentes et rassembler ceux dont vous disposez.</th>
+                  <td data-label="État"><span class="state state--todo">À faire</span></td>
+                  <td data-label="Responsable"><span class="actor"><svg class="glyph" aria-hidden="true"><use href="#g-person"/></svg><span>La personne</span></span></td>
+                  <td data-label="Échéance"><span class="dash"><span class="visually-hidden">Aucune échéance</span><span aria-hidden="true">—</span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-label="Élément">Consulter la page du parcours dans l’Espace Personnes pour connaître les principales étapes.</th>
+                  <td data-label="État"><span class="state state--todo">À faire</span></td>
+                  <td data-label="Responsable"><span class="actor"><svg class="glyph" aria-hidden="true"><use href="#g-person"/></svg><span>La personne</span></span></td>
+                  <td data-label="Échéance"><span class="dash"><span class="visually-hidden">Aucune échéance</span><span aria-hidden="true">—</span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-label="Élément">Se renseigner sur les parcours de formation avant le départ proposés dans le cadre du projet.</th>
+                  <td data-label="État"><span class="state state--todo">À faire</span></td>
+                  <td data-label="Responsable"><span class="actor"><svg class="glyph" aria-hidden="true"><use href="#g-person"/></svg><span>La personne</span></span></td>
+                  <td data-label="Échéance"><span class="dash"><span class="visually-hidden">Aucune échéance</span><span aria-hidden="true">—</span></span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-label="Élément">Méfiez-vous de toute personne qui promet un résultat contre paiement : les décisions relèvent uniquement des autorités compétentes.</th>
+                  <td data-label="État"><span class="state state--todo">À faire</span></td>
+                  <td data-label="Responsable"><span class="actor"><svg class="glyph" aria-hidden="true"><use href="#g-project"/></svg><span>L’équipe du projet — Point d’attention signalé par l’équipe du projet</span></span></td>
+                  <td data-label="Échéance"><span class="dash"><span class="visually-hidden">Aucune échéance</span><span aria-hidden="true">—</span></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- DOCUMENTS -->
+        <section class="panel" aria-labelledby="documents-title" data-plate>
+          <div class="panel__head">
+            <div><p class="eyebrow">Documents</p><h2 class="panel__title" id="documents-title">Vos documents</h2></div>
+            <p class="panel__count t-mono">3 pièces</p>
+          </div>
+          <ol class="docs">
+            <li class="doc"><span class="doc__num">01</span><span><span class="doc__name"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg>work_contract.pdf</span><span class="doc__kind">Contrat</span></span><span class="state state--pending">Non analysé</span></li>
+            <li class="doc"><span class="doc__num">02</span><span><span class="doc__name"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg>language_certificate.pdf</span><span class="doc__kind">Diplôme ou titre</span></span><span class="state state--pending">Non analysé</span></li>
+            <li class="doc"><span class="doc__num">03</span><span><span class="doc__name"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg>diploma.pdf</span><span class="doc__kind">Diplôme ou titre</span></span><span class="state state--pending">Non analysé</span></li>
+          </ol>
+        </section>
+
+        <!-- ORIENTATION -->
+        <section class="panel" aria-labelledby="orientation-title" data-plate>
+          <div class="panel__head">
+            <div><p class="eyebrow">Orientation</p><h2 class="panel__title" id="orientation-title">Votre pré-évaluation</h2></div>
+          </div>
+          <div class="outcome">
+            <p class="outcome__kind">Parcours pertinent</p>
+            <p class="outcome__text">D’après vos réponses, votre projet semble correspondre à la famille de parcours « travail salarié » présentée dans l’Espace Personnes. Cette pré-évaluation a un caractère purement informatif : toute décision relève exclusivement des autorités compétentes. Prochaines étapes à caractère informatif : consulter la page du parcours, préparer la documentation généralement requise et prendre contact avec les acteurs compétents.</p>
+          </div>
+          <p class="note"><span class="t-folio">Jeu de règles</span><span class="t-mono">v1</span><span>évaluée le <time datetime="2026-09-21">21.09.2026</time></span></p>
+          <p class="note note--block">Cette pré-évaluation ne s’appuie sur aucune règle actuellement en vigueur dans la plateforme : aucune source ne lui est donc rattachée. Elle reste une orientation, jamais une décision.</p>
+          <a class="link-arrow" href="#">Voir le détail de la pré-évaluation <svg class="icon icon--flip" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </section>
+      </div>
+
+      <aside class="inspector" aria-label="Informations contextuelles" data-plates>
+        <section class="panel" aria-labelledby="messages-title" data-plate>
+          <div class="panel__head"><div><p class="eyebrow">Communications</p><h2 class="panel__title" id="messages-title">Messages</h2></div></div>
+          <p class="empty"><svg class="glyph" aria-hidden="true"><use href="#i-steps"/></svg><span>Les messages que l’équipe vous adresse apparaîtront ici.</span></p>
+        </section>
+        <section class="panel" aria-labelledby="deadlines-title" data-plate>
+          <div class="panel__head"><div><p class="eyebrow">Échéances</p><h2 class="panel__title" id="deadlines-title">Dates à retenir</h2></div></div>
+          <p class="empty"><svg class="glyph" aria-hidden="true"><use href="#i-steps"/></svg><span>Les dates qui vous sont communiquées par l’équipe apparaîtront ici.</span></p>
+        </section>
+        <section class="panel" aria-labelledby="account-title" data-plate>
+          <div class="panel__head"><div><p class="eyebrow">Compte</p><h2 class="panel__title" id="account-title">Mon compte</h2></div></div>
+          <p class="account">
+            <strong dir="auto">qa-person</strong>
+            <span>qa-person@example.test · Personne</span>
+            <span>Dernière connexion : <time datetime="2026-09-21T16:45">21.09.2026 16:45</time></span>
+          </p>
+          <ul class="account__actions" role="list">
+            <li><a class="btn btn--secondary btn--sm" href="#">Profil et données personnelles</a></li>
+            <li><a class="btn btn--secondary btn--sm" href="#">Sécurité du compte</a></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">
+  <div class="container app-footer__inner">
+    <p class="app-footer__legal"><a href="#">Privacy Policy</a><a href="#">Conditions d’utilisation</a><a href="#">Avertissement</a></p>
+    <p><a href="mailto:contact@agamieuromed.org">contact@agamieuromed.org</a></p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% load i18n static cms_nav ile_core %}{% comment %}
+THE PLATFORM SHELL — design V4 (docs/design-v4/CREATIVE_DIRECTION.md §3.9, DESIGN_SYSTEM_V4.md §8
+NavigationRail / ContextBar / BottomBar). Quiet, contextual, task-oriented: the public shell
+answers "what is this site", this one answers "where am I and how do I get to my work".
+
+Three regions, in this order:
+  1. the RAIL — the reserved area's own navigation on the evolved navy, 64 px collapsed / 248 px
+     open, at the reading edge (the end edge in Arabic); persisted collapse (console.js)
+  2. the CONTEXT BAR — 56 px of glass, sticky: breadcrumb, then «Site public», the account and
+     the segmented language control; below 64rem it is the top bar (menu, mark, page title, account)
+  3. below 64rem the BOTTOM BAR — four entries and «Menu», which opens the drawer with the whole rail
+
+The case header and the next action are rendered by the page (base_portal.html), not here.
+Contract, from portal.views._render: `portal_nav` (see portal/partials/rail_nav.html), `breadcrumbs`.
+The class `portal-bar` on the context bar is the contract three test modules hold the platform
+chrome to ("the platform chrome, not the public header").
+{% endcomment %}
+<nav class="rail" aria-label="{% translate 'Navigation de l’espace réservé' %}" data-rail>
+  <a class="rail__brand" href="{% url 'portal:dashboard' %}" aria-label="{{ site.project_name }} — {% translate 'Espace réservé' %}">
+    <span class="rail__tile" aria-hidden="true"><img src="{% static 'brand/original/logo-mark.svg' %}" alt="" width="24" height="24" decoding="async"></span>
+    <span class="rail__wordmark">{% brand "rail__wm" %}</span>
+  </a>
+  <div class="rail__scroll">
+    {% include "portal/partials/rail_nav.html" with id_prefix="rail" %}
+  </div>
+  <button class="rail__collapse" type="button" data-rail-toggle aria-expanded="true">
+    {% svg_icon "chevron-end" "icon rail__glyph icon--flip-rtl" %}<span class="rail__label">{% translate "Réduire la navigation" %}</span>
+  </button>
+</nav>
+
+<header class="portal-bar console-bar" data-console-bar>
+  <div class="console-bar__inner">
+    <button class="console-bar__menu" type="button" data-console-menu aria-controls="console-drawer" aria-expanded="false">
+      {% svg_icon "menu" "icon" %}<span class="visually-hidden">{% translate "Menu" %}</span>
+    </button>
+    <a class="console-bar__tile" href="{% url 'portal:dashboard' %}" aria-label="{{ site.project_name }} — {% translate 'Espace réservé' %}">
+      <img src="{% static 'brand/original/logo-mark.svg' %}" alt="" width="24" height="24" decoding="async">
+    </a>
+    <div class="console-bar__crumbs">{% include "components/breadcrumbs.html" %}</div>
+    {% with last=breadcrumbs|last %}<p class="console-bar__title">{% if last.lang %}<span lang="{{ last.lang }}">{{ last.label }}</span>{% else %}{{ last.label }}{% endif %}</p>{% endwith %}
+    <nav class="console-bar__actions" aria-label="{% translate 'Compte et langue' %}">
+      <a class="console-bar__link" href="{% url 'pages:home' %}">{% translate "Site public" %}</a>
+      {% include "components/account_menu.html" %}
+      <div class="console-bar__lang">{% include "components/language_segmented.html" %}</div>
+    </nav>
+  </div>
+</header>
+
+<nav class="console-bottom" aria-label="{% translate 'Navigation rapide' %}">
+  {% for item in portal_nav %}{% if item.bottom %}
+  <a class="console-bottom__item" href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{% svg_icon item.icon "icon" %}<span class="console-bottom__label">{{ item.label }}</span></a>
+  {% endif %}{% endfor %}
+  <button class="console-bottom__item" type="button" data-console-menu aria-controls="console-drawer" aria-expanded="false">{% svg_icon "menu" "icon" %}<span class="console-bottom__label">{% translate "Menu" %}</span></button>
+</nav>
+
+<dialog class="console-drawer" id="console-drawer" data-console-drawer aria-label="{% translate 'Navigation de l’espace réservé' %}">
+  <div class="console-drawer__head">
+    <a class="rail__brand" href="{% url 'portal:dashboard' %}" aria-label="{{ site.project_name }} — {% translate 'Espace réservé' %}">
+      <span class="rail__tile" aria-hidden="true"><img src="{% static 'brand/original/logo-mark.svg' %}" alt="" width="24" height="24" decoding="async"></span>
+      <span class="rail__wordmark">{% brand "rail__wm" %}</span>
+    </a>
+    <button class="console-drawer__close" type="button" data-console-close>{% svg_icon "close" "icon" %}<span class="visually-hidden">{% translate "Fermer le menu" %}</span></button>
+  </div>
+  <nav class="rail rail--drawer" aria-label="{% translate 'Menu' %}">
+    {% include "portal/partials/rail_nav.html" with id_prefix="drawer" %}
+  </nav>
+  <div class="console-drawer__foot">
+    {% include "components/language_segmented.html" %}
+    <a class="console-bar__link" href="{% url 'pages:home' %}">{% translate "Site public" %}</a>
+  </div>
+</dialog>

@@ -1,0 +1,267 @@
+/* ============================================================================
+   THE ROUTE BETWEEN TWO SHORES — the pilot sequence as a voyage
+   docs/design-v2/DESIGN_SYSTEM_V2.md §8.6
+
+   A midnight chapter: the two shores named at the ends, the prescribed steps as stations on a
+   line that draws itself with the scroll. Below 64rem the line is not drawn and the stations
+   become a vertical list with a spine — a list survives 320px because it is a list.
+   ========================================================================== */
+
+.home-pilot.chapter--dark {
+  background: var(--mid-1);
+  color: var(--on-dark);
+  padding-block: var(--s-24);
+}
+
+.home-pilot .eyebrow {
+  color: var(--accent-dark);
+}
+
+.home-pilot .section__title {
+  color: var(--on-dark);
+  font-family: var(--f-serif);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.home-pilot .section__lead,
+.home-pilot .home-section__note {
+  color: var(--on-dark-2);
+}
+
+.home-pilot .home-section__more .link-arrow,
+.home-pilot a {
+  color: var(--accent-dark);
+}
+
+/* ---- The drawing ---------------------------------------------------------- */
+.voyage {
+  position: relative;
+  margin-block-start: var(--s-12);
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-areas:
+    "south north"
+    "line  line"
+    "steps steps";
+  justify-content: space-between;
+  gap: var(--s-4) 0;
+}
+
+/* The line spans the full width, so a station dot sits exactly above its station: the columns of
+   the list below and the coordinates from `voyage_route` share the same 0–1200 span. Putting the
+   shore names beside the line instead — the first arrangement — narrowed it by their two widths
+   and pushed every dot off its label. */
+.voyage__svg,
+.voyage__stations {
+  grid-column: 1 / -1;
+}
+
+.voyage__shore {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: var(--t-folio-lh);
+  letter-spacing: var(--track-folio);
+  text-transform: uppercase;
+  color: var(--on-dark-2);
+  white-space: nowrap;
+}
+
+.voyage__shore--south { grid-area: south; }
+.voyage__shore--north { grid-area: north; }
+
+.voyage__dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--terr-line);
+  flex: none;
+}
+
+.voyage__svg {
+  grid-area: line;
+  inline-size: 100%;
+  block-size: 140px;
+  overflow: visible;
+}
+
+.voyage__line {
+  fill: none;
+  stroke: var(--accent-dark);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.voyage__station {
+  fill: var(--mid-1);
+  stroke: var(--accent-dark);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- The stations, as an ordered list under the line ---------------------- */
+.voyage__stations {
+  grid-area: steps;
+  display: grid;
+  /* One equal column per station, whatever the locked sequence's length turns out to be. An
+     inline `style="--steps: N"` would have said it more directly and is blocked by the CSP
+     (`style-src 'self'` covers style attributes), which is the right trade: the count lives in
+     the content, and the grid follows it without anyone having to restate it. */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  /* No column gap: a gap narrows every column and walks its centre inward, so the dots drifted
+     from their labels by up to 7px at the ends (measured). Separation comes from the padding
+     inside each station instead, and the top borders join into one continuous rule under the
+     route — which is what a shoreline should look like anyway. */
+  column-gap: 0;
+  row-gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: station;
+}
+
+.voyage__step {
+  counter-increment: station;
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding-block-start: var(--s-4);
+  padding-inline-end: var(--s-5);
+  border-block-start: 1px solid var(--hairline-dark);
+}
+
+.voyage__num {
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  letter-spacing: var(--track-folio);
+  color: var(--on-dark-3);
+}
+
+.voyage__num::before {
+  content: counter(station, decimal-leading-zero);
+}
+
+.voyage__label {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: 500;
+  color: var(--on-dark);
+}
+
+.voyage__text {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  color: var(--on-dark-2);
+}
+
+/* ---- Below the desktop tier: no line, a spine ----------------------------- */
+@media (max-width: 63.999rem) {
+  .voyage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "south"
+      "steps"
+      "north";
+    justify-content: stretch;
+    gap: var(--s-4);
+    align-items: start;
+  }
+
+  .voyage__svg {
+    display: none;
+  }
+
+  .voyage__shore--north {
+    justify-self: end;
+  }
+
+  .voyage__stations {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    gap: 0;
+  }
+
+  .voyage__step {
+    padding-inline-end: 0;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-4);
+    padding: var(--s-4) 0 var(--s-4) var(--s-5);
+    padding-inline-start: var(--s-5);
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--hairline-dark);
+    position: relative;
+  }
+
+  /* The spine's station mark, on the line. */
+  .voyage__step::before {
+    content: "";
+    position: absolute;
+    inset-block-start: calc(var(--s-4) + 4px);
+    inset-inline-start: -4px;
+    inline-size: 7px;
+    block-size: 7px;
+    border-radius: 50%;
+    background: var(--mid-1);
+    box-shadow: 0 0 0 1.5px var(--accent-dark);
+  }
+
+  .voyage__num,
+  .voyage__label,
+  .voyage__text {
+    grid-column: 2;
+  }
+
+  .voyage__num {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+/* ---- Reveal states — JS-gated -------------------------------------------- */
+html.js .voyage [data-reveal]:not(.is-in) {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .voyage [data-reveal]:not(.is-in) {
+    opacity: 1;
+  }
+}
+
+/* ---- Arabic / RTL --------------------------------------------------------- */
+[dir="rtl"] .voyage__svg {
+  transform: scaleX(-1);
+}
+
+:lang(ar) .voyage__shore,
+:lang(ar) .voyage__num {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---- Forced colours ------------------------------------------------------- */
+@media (forced-colors: active) {
+  .voyage__line,
+  .voyage__station {
+    stroke: CanvasText;
+  }
+
+  .voyage__step::before {
+    box-shadow: 0 0 0 1.5px CanvasText;
+    forced-color-adjust: none;
+  }
+}

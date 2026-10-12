@@ -1,0 +1,10 @@
+{% load i18n %}{% comment %}Contract: `row` = portal.services.present_deadline(...).{% endcomment %}
+<li class="portal-list__item">
+  <p class="portal-list__title" dir="auto">{{ row.title }}</p>
+  <p class="portal-list__meta">
+    {% svg_icon "calendar" "icon icon--sm" %} <time datetime="{{ row.due_on|date:'c' }}">{{ row.due_on|date:"d.m.Y" }}</time> · {{ row.kind_label }}{% if not row.is_open %} · {{ row.status_label }}{% endif %}
+    {% if row.description %}<br><span dir="auto">{{ row.description|linebreaksbr }}</span>{% endif %}
+    {% if row.source_note %}<br><span>{% translate "Origine :" %} <span dir="auto">{{ row.source_note }}</span></span>{% endif %}
+  </p>
+  {% if row.badge_label %}<div class="portal-list__aside">{% include "components/badge.html" with label=row.badge_label kind=row.badge_kind %}</div>{% endif %}
+</li>

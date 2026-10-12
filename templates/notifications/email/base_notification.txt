@@ -1,0 +1,6 @@
+{{ project.PROJECT_NAME }} — {{ heading }}
+
+{{ body }}
+
+--
+{{ project.PROMOTER }}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% locked "p3.virtual_forum.title" %}{% endblock %}
+{% block meta_description %}{% locked "p3.virtual_forum.body" %}{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<header class="page-header container">
+  {% locked "p3.virtual_forum.title" "h1" "page-header__title" %}
+  {% locked "p3.virtual_forum.body" "p" "page-header__lead" %}
+</header>
+<section class="container community-landing" aria-label="{% translate 'Accès au Forum Virtuel' %}">
+  {% if state == "anonymous" %}
+    <p class="community-landing__actions">
+      <a class="btn btn--primary" href="{% url 'account_login' %}?next={{ request.path|urlencode }}">{% locked "p3.virtual_forum.button" %}</a>
+      <a class="btn btn--secondary" href="{% url 'account_signup' %}">{% translate "Créer un compte" %}</a>
+    </p>
+    <p class="community-landing__note">{% translate "L’accès est réservé aux participants du Forum. Après connexion, une demande d’accès est examinée par la modération." %}</p>
+  {% elif state == "none" %}
+    <p class="community-landing__actions">
+      <a class="btn btn--primary" href="{% url 'community:join' %}">{% locked "p3.virtual_forum.button" %}</a>
+    </p>
+    <p class="community-landing__note">{% translate "Vous êtes connecté. Pour participer, complétez la demande d’accès : elle sera examinée par la modération." %}</p>
+  {% elif state == "pending" %}
+    {% translate "Demande d’accès en cours d’examen" as pending_title %}
+    {% translate "Votre demande a bien été enregistrée. Vous recevrez une réponse de la modération ; aucune information vous concernant n’est visible par les autres participants." as pending_text %}
+    {% include "components/notice.html" with kind="pending" title=pending_title text=pending_text %}
+  {% elif state == "suspended" %}
+    {% translate "Accès suspendu" as suspended_title %}
+    {% translate "Votre accès au Forum Virtuel est actuellement suspendu. Pour toute question, écrivez-nous." as suspended_text %}
+    {% include "components/notice.html" with kind="warning" title=suspended_title text=suspended_text %}
+    <p><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  {% endif %}
+</section>
+{% endblock %}

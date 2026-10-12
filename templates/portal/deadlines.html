@@ -1,0 +1,36 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% comment %}
+Deadlines of the signed-in account (portal.services.deadlines_page). Dates are entered by the team
+from a written source shown under « Origine » — the platform never computes a legal time-limit.
+{% endcomment %}
+{% block page_title %}{% translate "Mes échéances" %}{% endblock %}
+{% block meta_description %}{% translate "Les dates qui vous ont été communiquées par l’équipe du projet." %}{% endblock %}
+{% block portal_header %}
+{% translate "Mes échéances" as header_title %}
+{% translate "Les dates qui vous ont été communiquées par l’équipe. Ce rappel est informatif : seule la communication d’origine fait foi." as header_lead %}
+{% translate "Espace réservé" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+{% block portal_content %}
+<section aria-labelledby="deadlines-open-title">
+  <h2 class="portal__section-title" id="deadlines-open-title">{% translate "À venir" %}</h2>
+  {% if open_deadlines %}
+  <ul class="portal-list">
+    {% for row in open_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
+  </ul>
+  {% else %}
+    {% translate "Aucune échéance" as empty_title %}
+    {% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." as empty_text %}
+    {% include "components/empty_state.html" with title=empty_title text=empty_text icon="calendar" %}
+  {% endif %}
+</section>
+
+{% if closed_deadlines %}
+<section aria-labelledby="deadlines-closed-title">
+  <h2 class="portal__section-title" id="deadlines-closed-title">{% translate "Terminées ou annulées" %}</h2>
+  <ul class="portal-list">
+    {% for row in closed_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

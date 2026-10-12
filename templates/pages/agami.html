@@ -1,0 +1,54 @@
+{% extends "pages/institutional_base.html" %}{% load i18n %}
+{% comment %}
+/agami/ — the promoter. Prescribed texts only: p2.forum.who.body (Phase 2, already public) and, when
+gate G3 is open, the prescribed FAQ entry faq_who (question + answer, verbatim).
+
+CONTENT_PENDING_LEGAL_REVIEW — the registered office(s), the RUNTS registration number and the tax
+code of the association belong to the official « Mentions légales » (Allegato 1 — Testi legali,
+BLOCKED_BY_MISSING_OFFICIAL_SOURCE). They are deliberately NOT published on this page; the page
+links to the Mentions légales route, which will carry them once the official text is received.
+No institutional person is named and no logo of a public body is shown.
+{% endcomment %}
+{% block page_title %}{% translate "AGAMI, le promoteur" %}{% endblock %}
+{% block page_header %}
+{% translate "Le promoteur" as eyebrow %}
+{% include "components/page_header.html" with title=promoter eyebrow=eyebrow %}
+{% endblock %}
+{% block page_body %}
+{% if photo %}
+<figure class="page-figure">
+  {% include "pages/partials/_picture.html" with photo=photo sizes="(min-width: 64rem) 52rem, 100vw" %}
+</figure>
+{% endif %}
+
+<section class="page-section" aria-labelledby="agami-who-title">
+  <h2 class="page-section__title" id="agami-who-title">{% translate "Le promoteur du projet" %}</h2>
+  <p class="page-section__text"{% if who_body.lang %} lang="{{ who_body.lang }}"{% endif %} data-locked="p2.forum.who.body">{{ who_body }}</p>
+</section>
+
+{% if promoter_quote %}
+<section class="page-section" aria-labelledby="agami-faq-title"{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %}>
+  <h2 class="page-section__title" id="agami-faq-title">{{ promoter_quote.question }}</h2>
+  <p class="page-section__text" data-faq="{{ promoter_quote.key }}">{{ promoter_quote.answer }}</p>
+</section>
+{% endif %}
+
+<section class="page-section" aria-labelledby="agami-contact-title">
+  <h2 class="page-section__title" id="agami-contact-title">{% translate "Identification et contact" %}</h2>
+  <p class="page-section__text">{% translate "Les données d’identification de l’association relèvent des Mentions légales du site." %}</p>
+  <p class="cluster">
+    {% if links.notices %}<a class="link-arrow" href="{{ links.notices }}">{% translate "Mentions légales" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    <a class="link-arrow email" href="mailto:{{ site.contact_email }}">{% svg_icon "mail" "icon" %}<span>{{ site.contact_email }}</span></a>
+  </p>
+</section>
+
+<section class="page-section page-section--quiet" aria-labelledby="agami-more-title">
+  <h2 class="page-section__title page-section__title--small" id="agami-more-title">{% translate "Pour aller plus loin" %}</h2>
+  <p class="cluster">
+    {% if links.project %}<a class="link-arrow" href="{{ links.project }}">{% translate "Le projet" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    {% if links.network %}<a class="link-arrow" href="{{ links.network }}">{% translate "Le réseau" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    {% if links.partners %}<a class="link-arrow" href="{{ links.partners }}">{% translate "Partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+  </p>
+</section>
+{% endblock %}

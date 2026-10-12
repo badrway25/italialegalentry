@@ -1,0 +1,92 @@
+# Continuous integration — Italy Legal Entry
+#
+# Runs on every push and pull request to the two published branches. Everything here works on a
+# fresh checkout with no secret: the database is a throwaway PostgreSQL 17 service carrying the
+# same development credentials as docker-compose.yml, the production settings are never loaded,
+# and the only other variables are declared placeholders. The browser suite (marker `browser`,
+# Playwright) is excluded: it needs Chromium and runs locally. Nothing here deploys anything.
+name: CI
+
+on:
+  push:
+    branches: [main, design-v5]
+  pull_request:
+    branches: [main, design-v5]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: check · migrations · ruff · pytest
+    runs-on: ubuntu-latest
+    # ~3 200 tests against PostgreSQL take about 40 minutes on a hosted runner; a ceiling, not a target.
+    timeout-minutes: 90
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: ile
+          POSTGRES_USER: ile
+          POSTGRES_PASSWORD: ile-dev-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ile -d ile"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+
+    env:
+      PYTHONIOENCODING: utf-8
+      PYTHONDONTWRITEBYTECODE: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      # The throwaway service above, with the development credentials of docker-compose.yml:
+      # not a secret, not production.
+      DATABASE_URL: postgres://ile:ile-dev-password@127.0.0.1:5432/ile
+      # Read by config/settings/test.py; Django derives the test database (test_ile) from it.
+      TEST_DATABASE_URL: postgres://ile:ile-dev-password@127.0.0.1:5432/ile
+      # The three variables .env.example marks as mandatory in production, with CI-only
+      # placeholders. No step loads config.settings.prod, and dev.py / test.py pin or default
+      # everything else, so these only keep the job honest about what a deployment must provide.
+      DJANGO_SECRET_KEY: ci-only-placeholder-not-a-secret-0123456789-abcdefghijklmnopqrstuvwxyz
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DJANGO_CSRF_TRUSTED_ORIGINS: https://localhost
+      # DJANGO_SETTINGS_MODULE is deliberately NOT set here: manage.py defaults to
+      # config.settings.dev and pyproject.toml gives pytest config.settings.test; an environment
+      # variable would override the latter for pytest-django.
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements/*.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements/dev.txt
+
+      - name: Django system checks
+        run: python manage.py check
+
+      - name: Every model change has a migration
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Lint
+        run: python -m ruff check . --output-format=github
+
+      - name: Mark the committed bundles as current
+        # git does not store modification times, so on a fresh checkout the two mtime-based
+        # "bundle is current" tests would compare arbitrary clocks (their docstrings say as much).
+        # The content checks in the same test files still fail on a stale bundle.
+        run: find static/js/dist static/css/dist -type f -exec touch {} +
+
+      - name: Tests (everything but the browser suite)
+        run: python -m pytest -m "not browser" --durations=15

@@ -1,0 +1,41 @@
+{% extends "portal/base_portal.html" %}{% load i18n %}
+{% block page_title %}{% translate "Mes demandes" %}{% endblock %}
+{% block meta_description %}{% translate "Les demandes transmises depuis votre compte et leur état de traitement." %}{% endblock %}
+{% block portal_header %}
+{% translate "Mes demandes" as header_title %}
+{% translate "Les demandes transmises depuis votre compte, de la plus récente à la plus ancienne. Vous seul pouvez les consulter ici." as header_lead %}
+{% translate "Espace réservé" as header_eyebrow %}
+{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+{% endblock %}
+{% block portal_content %}
+{% if page_obj.object_list %}
+<div class="scroll-x" tabindex="0" role="region" aria-label="{% translate 'Liste de vos demandes' %}">
+  <table class="account-table">
+    <caption class="visually-hidden">{% translate "Liste de vos demandes" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Demande" %}</th>
+        <th scope="col">{% translate "Type" %}</th>
+        <th scope="col">{% translate "Transmise le" %}</th>
+        <th scope="col">{% translate "État" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in page_obj %}
+      <tr>
+        <th scope="row" data-label="{% translate 'Demande' %}"><a href="{{ item.url }}">{{ item.title }}</a></th>
+        <td data-label="{% translate 'Type' %}">{{ item.kind_label }}</td>
+        <td data-label="{% translate 'Transmise le' %}"><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y" }}</time></td>
+        <td data-label="{% translate 'État' %}">{% include "components/badge.html" with label=item.status_label kind=item.status_kind %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "components/pagination.html" with page_obj=page_obj %}
+{% else %}
+{% translate "Aucune demande" as empty_title %}
+{% translate "Les demandes transmises depuis votre compte apparaîtront ici." as empty_text %}
+{% include "components/empty_state.html" with title=empty_title text=empty_text icon="list" %}
+{% endif %}
+{% endblock %}

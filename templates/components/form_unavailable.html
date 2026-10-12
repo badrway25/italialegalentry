@@ -1,0 +1,10 @@
+{% load i18n %}
+{% comment %}Rendered instead of any public form while gate G2 (legal pages) is closed.{% endcomment %}
+<div class="notice notice--pending form-unavailable" role="status" data-gate="forms-closed">
+  {% svg_icon "clock" "icon notice__icon" %}
+  <p class="notice__title">{% translate "Formulaire temporairement indisponible." %}</p>
+  <div class="notice__body">
+    <p>{% translate "Ce formulaire sera activé dès la publication des informations sur le traitement des données personnelles. Vous pouvez nous écrire à l’adresse ci-dessous." %}</p>
+    <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ texts.title }} · {% translate "Vivre en Italie" %}{% endblock %}
+{% block meta_description %}{% if texts.body %}{{ texts.body|truncatechars:160 }}{% else %}{% blocktranslate with topic=texts.title %}Vivre en Italie — {{ topic }} : fiches pratiques pour accompagner l’intégration après l’entrée régulière.{% endblocktranslate %}{% endif %}{% endblock %}
+{% block body_class %}page-living-topic{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if preview %}
+<div class="container">{% translate "Aperçu réservé à la rédaction — cette section n’est pas encore publiée." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
+{% endif %}
+<header class="page-header container"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
+  <p class="page-header__eyebrow">{% translate "Vivre en Italie" %}</p>
+  <h1 class="page-header__title">{% if topic.icon %}{% svg_icon topic.icon "icon icon--heading" %} {% endif %}{{ texts.title }}</h1>
+  {% if intro_blocks %}
+  <div class="page-header__lead prose">
+    {% for block in intro_blocks %}
+      {% if block.kind == "h2" or block.kind == "h3" %}<p><strong>{{ block.text }}</strong></p>
+      {% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>
+      {% else %}<p>{{ block.text|linebreaksbr }}</p>{% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</header>
+
+<section class="container living-sheets" aria-labelledby="living-sheets-title">
+  <h2 id="living-sheets-title">{% translate "Fiches pratiques" %}</h2>
+  {% if sheets %}
+  <ul class="sheet-list">
+    {% for sheet, sheet_texts in sheets %}
+    <li class="sheet-card"{% if sheet_texts.is_fallback %} lang="{{ sheet_texts.language }}"{% endif %}>
+      <h3 class="sheet-card__title"><a href="{{ sheet.get_absolute_url }}">{{ sheet_texts.title }}</a></h3>
+      {% if sheet_texts.summary %}<p class="sheet-card__summary">{{ sheet_texts.summary }}</p>{% endif %}
+      {% if sheet.last_reviewed_at %}<p class="sheet-card__meta">{% translate "Vérifiée le" %} <time datetime="{{ sheet.last_reviewed_at|date:'c' }}">{{ sheet.last_reviewed_at|date:"d.m.Y" }}</time></p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    {% translate "Fiches en préparation" as empty_title %}
+    {% translate "Les fiches pratiques de ce thème sont en cours de rédaction et de vérification. Elles seront publiées progressivement." as empty_text %}
+    {% url 'living:index' as index_url %}
+    {% translate "Voir tous les thèmes" as empty_action %}
+    {% include "components/empty_state.html" with title=empty_title text=empty_text action_label=empty_action action_url=index_url %}
+  {% endif %}
+</section>
+{% endblock %}

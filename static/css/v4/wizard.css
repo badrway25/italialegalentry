@@ -1,0 +1,498 @@
+/* ==========================================================================================
+   DESIGN V4 — THE GUIDED FORM («Ma situation», CREATIVE_DIRECTION.md §3.7; DESIGN_SYSTEM_V4.md §8
+   Stepper · OptionCard). Part of the cascade (main.css); its rules are scoped to the guided
+   form's classes and cost nothing elsewhere. Tokens only.
+
+   Recipe FOCUS: the Stepper at the start of the row (3 of 12 from 64rem), ONE question at a time
+   on a level-2 panel in the middle (6 of 12) with `--light-focus` behind it, a sticky glass foot
+   with «Précédent» · «Continuer» and the submit. Without the script every question is shown, in
+   order, and the foot carries only the submit.
+   ========================================================================================== */
+
+.wiz {
+  display: grid;
+  gap: var(--s-5);
+  margin-block-start: var(--s-5);
+}
+
+.wiz__note {
+  max-inline-size: 72ch;
+}
+
+/* ---- The Stepper ------------------------------------------------------------------------- */
+.wstep {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+
+.wstep__item {
+  position: relative;
+}
+
+.wstep__link {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: center;
+  min-block-size: 44px;
+  padding: var(--s-1) var(--s-2);
+  border-radius: var(--radius-md);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.wstep__link:hover,
+.wstep__link:focus-visible {
+  background: var(--surface-hover);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wstep__node {
+  position: relative;
+  inline-size: 20px;
+  block-size: 20px;
+  justify-self: center;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--hairline-strong);
+  background: var(--min-2);
+  transition: border-color var(--motion-standard) var(--ease-exit), background-color var(--motion-standard) var(--ease-exit);
+}
+
+/* The line between the nodes: it advances as the questions get their answers. */
+.wstep__item::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(var(--s-2) + 11px);
+  inset-block-start: calc(50% + 10px);
+  block-size: calc(100% - 20px + 2px);
+  inline-size: 2px;
+  background: var(--hairline);
+}
+
+.wstep__item:last-child::before {
+  display: none;
+}
+
+.wstep__item--done .wstep__node {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.wstep__item--done::before {
+  background: var(--accent);
+}
+
+.wstep__item--current .wstep__node {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-wash);
+}
+
+.wstep__item--current .wstep__link {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.wiz__count {
+  margin: var(--s-4) 0 0;
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--hairline);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  max-inline-size: 36ch;
+}
+
+/* ---- The stage and the question ---------------------------------------------------------- */
+.wiz__stage {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+}
+
+/* The light behind the panel (recipe FOCUS). */
+.wiz__stage::before {
+  content: "";
+  position: absolute;
+  inset: -10% 0;
+  background: var(--light-focus);
+  pointer-events: none;
+}
+
+.wiz__q {
+  position: relative;
+  z-index: var(--z-raised);
+  border-radius: var(--radius-xl);
+  padding: var(--s-6);
+}
+
+.wiz__q:focus {
+  outline: none;
+}
+
+.wiz__q:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+.wiz__ordinal {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.wiz__question,
+.opts__legend {
+  display: block;
+  margin: 0 0 var(--s-2);
+  padding: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: 600;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.wiz__help,
+.opts__help {
+  margin: 0 0 var(--s-4);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  max-inline-size: 60ch;
+}
+
+.opts__hint {
+  margin: calc(-1 * var(--s-3)) 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  color: var(--ink-3);
+}
+
+.wiz__field input:not([type="checkbox"]):not([type="radio"]),
+.wiz__field select {
+  inline-size: 100%;
+  max-inline-size: 22rem;
+  min-block-size: var(--input-h);
+  padding: 0 14px;
+  background: var(--min-3);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  color: var(--ink);
+}
+
+.wiz__field input:focus-visible,
+.wiz__field select:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+/* ---- OptionCard -------------------------------------------------------------------------- */
+.opts {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.opts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: var(--s-3);
+}
+
+.opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: center;
+  min-block-size: 56px;
+  padding: var(--s-3) var(--s-4);
+  background: var(--min-2);
+  border: 2px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color var(--motion-fast) var(--ease-exit), box-shadow var(--motion-fast) var(--ease-exit), background-color var(--motion-fast) var(--ease-exit);
+}
+
+.opt:hover {
+  box-shadow: var(--shadow-2);
+  border-color: var(--hairline-strong);
+}
+
+/* «Je ne sais pas encore» / «Non précisé» (value "") is the current value, not an answer: it is
+   shown selected in the neutral register, so only a real answer wears the accent. */
+.opt:has(input[value=""]:checked) {
+  border-color: var(--hairline-strong);
+  background: var(--min-1);
+}
+
+.opt:has(input[value=""]:checked) .opt__mark {
+  border-color: var(--hairline-strong);
+  background: var(--ink-3);
+}
+
+/* The native input stays the control: it is the whole card's size, invisible, focusable. */
+.opt input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.opt__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--hairline-strong);
+  background: var(--min-3);
+  color: var(--min-3);
+}
+
+.opt input[type="checkbox"] + .opt__mark {
+  border-radius: var(--radius-sm);
+}
+
+.opt__mark .icon {
+  inline-size: 14px;
+  block-size: 14px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter);
+}
+
+.opt:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.opt:has(input:checked) .opt__mark {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.opt:has(input:checked) .opt__mark .icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* The neutral default is the current value, not an answer: no check (gate D review, 5). */
+.opt:has(input[value=""]:checked) .opt__mark .icon {
+  opacity: 0;
+}
+
+.opt:has(input:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}
+
+.opts--error .opt {
+  border-color: var(--err-700);
+}
+
+/* ---- The foot ---------------------------------------------------------------------------- */
+.wiz__foot {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: 64px;
+  margin: 0 calc(-1 * var(--s-2));
+  padding: var(--s-2) var(--s-4);
+  background: var(--glass-light);
+  -webkit-backdrop-filter: blur(var(--blur-nav));
+  backdrop-filter: blur(var(--blur-nav));
+  border-block-start: 1px solid var(--hairline);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.wiz__foot-count {
+  margin-inline-start: auto;
+  white-space: nowrap;
+  font-family: var(--f-mono);
+  font-size: var(--u-small);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.wiz__foot [data-wizard-submit] {
+  margin-inline-start: auto;
+}
+
+.wiz--guided .wiz__foot [data-wizard-submit] {
+  margin-inline-start: 0;
+}
+
+/* ---- What we do not ask ------------------------------------------------------------------ */
+.wiz__notask {
+  margin-block-start: var(--s-6);
+}
+
+.wiz__list {
+  margin: 0;
+  padding: 0 0 0 1.2em;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  max-inline-size: 72ch;
+}
+
+.wiz__list li + li {
+  margin-block-start: var(--s-2);
+}
+
+/* ---- Widths ------------------------------------------------------------------------------ */
+@media (min-width: 64rem) {
+  .wiz {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    column-gap: var(--s-6);
+    align-items: start;
+  }
+
+  .wiz__rail {
+    position: sticky;
+    inset-block-start: calc(var(--ctx-h) + var(--s-4));
+  }
+
+  .wiz__stage {
+    grid-column: 2;
+  }
+
+  .wiz__foot {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  /* Above the bottom navigation of the console. */
+  .wiz__foot {
+    inset-block-end: var(--bottom-bar-h);
+    margin: 0 calc(-1 * var(--page-pad));
+    padding-inline: var(--page-pad);
+    border-radius: 0;
+  }
+
+  /* On the phone the Stepper is a row of nodes: eight labelled entries put the first question at
+     y 869 (gate D review, correction 7d); the question's own title names the step. */
+  .wstep {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+  }
+
+  .wstep__item::before {
+    display: none;
+  }
+
+  .wstep__link {
+    grid-template-columns: 24px;
+    min-inline-size: 40px;
+    padding-inline: 0;
+    justify-items: center;
+  }
+
+  .wstep__label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .wiz__q {
+    padding: var(--s-5) var(--s-4);
+  }
+
+  .opts__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opt,
+  .opt__mark .icon,
+  .wstep__node {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .opt {
+    border-color: CanvasText;
+  }
+
+  .opt:has(input:checked) {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+  }
+
+  .opt__mark {
+    border-color: CanvasText;
+  }
+
+  .opt:has(input:checked) .opt__mark {
+    background: Highlight;
+  }
+
+  .wstep__item--done .wstep__node,
+  .wstep__item--done::before {
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  .wiz__foot {
+    background: Canvas;
+    border-block-start-color: CanvasText;
+  }
+}
+
+/* Before the script arrives the questions after the first are not drawn, so the guided form does
+   not collapse from eight panels to one on a slow network (gate D review, correction 11: CLS 0.045
+   on slow 4G). Without script (`html.no-js`) every question stays. */
+html.js .wiz:not(.wiz--guided) .wiz__q:not(:first-of-type) {
+  display: none;
+}
+
+.wiz__foot--sample {
+  position: static;
+  margin: 0 0 var(--s-3);
+}

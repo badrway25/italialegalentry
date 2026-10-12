@@ -1,0 +1,139 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n %}
+{% comment %}
+One project: where it comes from, who answers for it, what it has undertaken to do and by when,
+and what its monitoring actually recorded.
+
+  1. IDENTITÉ     responsible organisation, partners, origin proposal — the whole chain back to the
+                  commission that retained it, so nothing here appears out of nowhere
+  2. JALONS       title, responsible party, due date, state. Counts, never a percentage.
+  3. SUIVI        one row per monitoring period, with the indicators the commission declared. No
+                  index and no score: the report adds up what was entered and nothing else.
+
+Every party named on this page is an ORGANISATION. The milestones table has a « Responsable »
+column and it renders `public_profile`, which carries an organisation, a category and declared
+interests — there is no personal name to print.
+{% endcomment %}
+{% block page_title %}{{ project.title_fr }}{% endblock %}
+{% block meta_description %}{% translate "Projet du Forum permanent : responsable, partenaires, jalons et suivi." %}{% endblock %}
+
+{% block portal_header %}
+{% include "components/page_header.html" with title=project.title_fr lead=project.summary_fr eyebrow=project.commission.name_fr %}
+{% endblock %}
+
+{% block governance_content %}
+<p class="gloss">
+  <span class="state state--{{ project.state_class }}" data-register="{{ project.status|chip_register:'forum.ProjectStatus' }}">{{ project.get_status_display }}</span>
+  <span>{% blocktranslate with date=project.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span>
+</p>
+
+<section class="portal-section" aria-labelledby="project-identity-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Identité" %}</span></p>
+  <h2 class="portal__section-title" id="project-identity-title">{% translate "Qui porte ce projet" %}</h2>
+  <dl class="portal-facts">
+    <div class="portal-facts__row"><dt>{% translate "Responsable" %}</dt><dd>{{ lead.organisation }} — {{ lead.category }}</dd></div>
+    <div class="portal-facts__row">
+      <dt>{% translate "Partenaires" %}</dt>
+      <dd>
+        {% if project.partner_lines %}
+        {% for partner in project.partner_lines %}{{ partner }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+        {% else %}{% translate "Aucun partenaire associé à ce jour." %}{% endif %}
+      </dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "Proposition d’origine" %}</dt>
+      <dd>
+        {% safe_url 'forum_governance:proposal_detail' origin.uuid as origin_url %}
+        {% if origin_url %}<a href="{{ origin_url }}">{{ origin.reference }} — {{ origin.title_fr }}</a>{% else %}{{ origin.reference }} — {{ origin.title_fr }}{% endif %}
+      </dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "Calendrier" %}</dt>
+      <dd>
+        {% if project.started_on %}{% blocktranslate with date=project.started_on|date:"d.m.Y" %}Démarré le {{ date }}.{% endblocktranslate %}{% endif %}
+        {% if project.ends_on %}{% blocktranslate with date=project.ends_on|date:"d.m.Y" %}Échéance : {{ date }}.{% endblocktranslate %}{% endif %}
+        {% if not project.started_on and not project.ends_on %}{% translate "Aucune date arrêtée à ce jour." %}{% endif %}
+      </dd>
+    </div>
+  </dl>
+</section>
+
+<section class="portal-section" aria-labelledby="milestones-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Jalons" %}</span></p>
+  <h2 class="portal__section-title" id="milestones-title">{% translate "Ce qui reste à faire, et par qui" %}</h2>
+  {% if milestones %}
+  {% comment %}A count, never a percentage: the client forbade meaningless meters.{% endcomment %}
+  <p class="gloss">
+    {% blocktranslate with done=counts.done total=counts.total %}{{ done }} jalon(s) réalisé(s) sur {{ total }}.{% endblocktranslate %}
+    {% if counts.overdue %}{% blocktranslate count counter=counts.overdue %}Un jalon a dépassé son échéance.{% plural %}{{ counter }} jalons ont dépassé leur échéance.{% endblocktranslate %}{% endif %}
+  </p>
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-project-detail-1">
+    <table class="data-table">
+      <caption id="t-project-detail-1" class="visually-hidden">{% translate "Jalons du projet, leur état, l’organisation responsable et leur échéance" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Jalon" %}</th>
+          <th scope="col">{% translate "État" %}</th>
+          <th scope="col">{% translate "Responsable" %}</th>
+          <th scope="col">{% translate "Échéance" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for milestone in milestones %}
+        <tr{% if milestone.is_overdue %} class="is-overdue"{% endif %}>
+          <th scope="row" data-label="{% translate 'Jalon' %}">
+            {{ milestone.title_fr }}
+            {% if milestone.detail_fr %}<span class="t-caption">{{ milestone.detail_fr }}</span>{% endif %}
+          </th>
+          <td data-label="{% translate 'État' %}"><span class="state state--{{ milestone.state_class }}" data-register="{{ milestone.status|chip_register:'forum.MilestoneStatus' }}">{{ milestone.get_status_display }}</span></td>
+          {% comment %}
+          `display_label` is the organisation, or an honest placeholder — the same value
+          `public_profile` publishes. A milestone names an answerable ORGANISATION, never a person.
+          {% endcomment %}
+          <td data-label="{% translate 'Responsable' %}">{{ milestone.responsible.display_label }}{% if milestone.responsible_note %} — {{ milestone.responsible_note }}{% endif %}</td>
+          <td data-label="{% translate 'Échéance' %}">{% if milestone.due_on %}<time datetime="{{ milestone.due_on|date:'Y-m-d' }}">{{ milestone.due_on|date:"d.m.Y" }}</time>{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">{% translate "Aucun jalon n’est encore inscrit. Les jalons sont arrêtés par le référent de la commission : chacun porte une échéance et une organisation responsable." %}</p>
+  {% endif %}
+</section>
+
+<section class="portal-section" aria-labelledby="monitoring-title">
+  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivi" %}</span></p>
+  <h2 class="portal__section-title" id="monitoring-title">{% translate "Ce que le suivi a relevé" %}</h2>
+  {% if monitoring %}
+  <ol class="register">
+    {% for entry in monitoring %}
+    <li class="register__item">
+      <div class="entry">
+        <span class="entry__ordinal" aria-hidden="true"></span>
+        <span class="entry__title">
+          <time datetime="{{ entry.period_start|date:'Y-m-d' }}">{{ entry.period_start|date:"d.m.Y" }}</time>
+          —
+          <time datetime="{{ entry.period_end|date:'Y-m-d' }}">{{ entry.period_end|date:"d.m.Y" }}</time>
+        </span>
+        <span class="entry__gloss">
+          {% if entry.note_fr %}{{ entry.note_fr }}{% endif %}
+          {% if entry.indicators %}
+          <br>
+          {% for key, value in entry.indicators.items %}{{ key }} : {{ value }}{% if not forloop.last %} · {% endif %}{% endfor %}
+          {% endif %}
+        </span>
+        {% if entry.recorded_by %}<span class="entry__actor">{{ entry.recorded_by.display_label }}</span>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  <p class="note">
+    {% translate "Les indicateurs sont ceux que la commission a déclarés pour la période. La plateforme les additionne dans la relation annuelle ; elle n’en calcule aucun indice et n’en tire aucune appréciation." %}
+  </p>
+  {% else %}
+  <p class="empty">
+    {% translate "Aucun relevé de suivi pour ce projet. Un projet sans suivi ne peut pas alimenter la relation annuelle : le relevé est consigné par le référent de la commission, période par période." %}
+  </p>
+  {% endif %}
+</section>
+{% endblock %}

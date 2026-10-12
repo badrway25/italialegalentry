@@ -1,0 +1,29 @@
+{% load i18n forum_tags %}
+{% comment %}Sections in the order prescribed by the document §2.1 — every text is a locked key.{% endcomment %}
+<section class="forum-section forum-section--intro container" id="forum-who" aria-labelledby="forum-who-title">
+  <h2 class="forum-section__title" id="forum-who-title">{% event_text event "who.title" %}</h2>
+  {% event_text event "who.body" "p" "forum-section__body forum-lead" %}
+</section>
+
+<section class="forum-section forum-section--accent container" id="forum-why" aria-labelledby="forum-why-title">
+  <h2 class="forum-section__title" id="forum-why-title">{% event_text event "why.title" %}</h2>
+  {% event_text event "why.body" "p" "forum-section__body" %}
+</section>
+
+<section class="forum-section container" id="forum-what" aria-labelledby="forum-what-title">
+  <h2 class="forum-section__title" id="forum-what-title">{% event_text event "what.title" %}</h2>
+  {% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
+  <div class="forum-section__body forum-prose"{% if what_lang != site.lang %} lang="{{ what_lang }}"{% endif %}>
+    {% for paragraph in what_paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+  </div>
+</section>
+
+<section class="forum-section forum-section--objectives container" id="forum-objectives" aria-labelledby="forum-objectives-title">
+  <h2 class="forum-section__title" id="forum-objectives-title">{% event_text event "objectives.title" %}</h2>
+  {% event_text event "objectives.body" "p" "forum-section__body forum-objectives" %}
+</section>
+
+<section class="forum-section container" id="forum-audience" aria-labelledby="forum-audience-title">
+  <h2 class="forum-section__title" id="forum-audience-title">{% event_text event "audience.title" %}</h2>
+  {% event_text event "audience.body" "p" "forum-section__body" %}
+</section>

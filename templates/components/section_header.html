@@ -1,0 +1,9 @@
+{% comment %}
+Section header (typographic, no box). Contract: `title` (h2), optional `eyebrow`, `lead`,
+`lang`, `align` ("center"), `id` (anchor for in-page navigation).
+{% endcomment %}
+<div class="section__header{% if align == 'center' %} section__header--center{% endif %}"{% if id %} id="{{ id }}"{% endif %}>
+  {% if eyebrow %}<p class="eyebrow">{{ eyebrow }}</p>{% endif %}
+  <h2 class="section__title"{% if lang %} lang="{{ lang }}"{% endif %}>{{ title }}</h2>
+  {% if lead %}<p class="section__lead"{% if lang %} lang="{{ lang }}"{% endif %}>{{ lead }}</p>{% endif %}
+</div>

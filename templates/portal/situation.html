@@ -1,0 +1,97 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+"Ma situation" — the facts the legal rules read, and nothing else. Design V4 (CREATIVE_DIRECTION.md
+§3.7): the same single form, saved in ONE post (the legal flow does not change, §89), drawn as a
+guided form — a Stepper of the questions at the start of the row, one question at a time on a
+level-2 panel in the middle, a sticky glass foot with «Précédent» · «Continuer» and the form's
+submit. Without JavaScript the questions simply follow each other; situation.js is a progressive
+enhancement (it hides the other questions, never the fields from the submission).
+
+Two things this page must make visible, because both are promises the project has made:
+
+1. WHY each question is asked. Every field carries its own reason, supplied by the form, and the
+   page states the general one above them. A question whose answer nothing reads has no business
+   being here, and saying so is the only way that constraint stays true over time.
+
+2. WHAT changes when the answers change. Saving re-runs the rules in force against the new facts, so
+   the orientation moves on the same visit. The page says this before the form rather than after it,
+   because a person deciding whether to answer a question about their circumstances is entitled to
+   know what it will be used for first.
+
+Deliberately absent: any progress bar, score or percentage of "profile strength". The counter says
+how many questions have an answer. It is a count of answers, never a judgement about the person.
+The Stepper's filled nodes are the same count, question by question — the profile's own
+`answered()` rule, not a second one.
+{% endcomment %}
+{% block page_title %}{% translate "Ma situation" %}{% endblock %}
+{% block meta_description %}{% translate "Les informations que vous nous communiquez sur votre situation, et ce qu’elles servent à déterminer." %}{% endblock %}
+
+{% block case_header %}{% endblock %}
+{% block next_action_block %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Ma situation" %}</h1>
+    <p class="ws-head__lead">{% translate "Ces informations servent à une seule chose : déterminer quelles conditions d’entrée s’appliquent à votre projet. Chaque question indique ce qu’elle permet de vérifier. Aucune n’est obligatoire." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<p class="note wiz__note">
+  {% blocktranslate %}Lorsque vous enregistrez cette page, votre orientation est recalculée à partir des règles en vigueur. Les résultats précédents sont conservés dans votre dossier : ils attestent de ce qui vous a été indiqué, et à quelle date.{% endblocktranslate %}
+</p>
+
+<form method="post" action="{% url 'portal:situation' %}" class="wiz" novalidate data-wizard>
+  {% csrf_token %}
+  {% include "components/form_errors.html" with form=form %}
+
+  <div class="wiz__rail">
+    {% include "components/wizard_stepper.html" with fields=form.visible_fields answered=answered_fields %}
+    <p class="wiz__count">
+      {% blocktranslate %}{{ answered }} question(s) renseignée(s) sur {{ total }}. Ce nombre compte vos réponses ; il ne porte aucune appréciation sur votre situation.{% endblocktranslate %}
+    </p>
+  </div>
+
+  <div class="wiz__stage">
+    {% for field in form.visible_fields %}
+    <section class="wiz__q panel panel--l2" id="q-{{ field.name }}" data-wizard-step="{{ forloop.counter }}" aria-labelledby="q-{{ field.name }}-title" tabindex="-1">
+      <p class="wiz__ordinal">{% blocktranslate with n=forloop.counter %}Question {{ n }}{% endblocktranslate %}</p>
+      {% if field.field.widget.input_type == "radio" or field.field.widget.allow_multiple_selected %}
+        {% include "components/option_cards.html" with field=field %}
+      {% else %}
+        <div class="wiz__field">
+          <label class="wiz__question" id="q-{{ field.name }}-title" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% if field.help_text %}<p class="wiz__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+          {{ field }}
+          {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error" role="alert">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endif %}
+    </section>
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+  </div>
+
+  <div class="wiz__foot" data-wizard-foot>
+    <button type="button" class="btn btn--secondary" data-wizard-prev hidden>{% translate "Précédent" %}</button>
+    <span class="wiz__foot-count" data-wizard-position aria-live="polite"></span>
+    <button type="button" class="btn btn--primary btn--arrow" data-wizard-next hidden>{% translate "Continuer" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button>
+    <button type="submit" class="btn btn--primary" data-wizard-submit>{% translate "Enregistrer et recalculer" %}</button>
+  </div>
+</form>
+
+<section class="panel panel--l1 wiz__notask" aria-labelledby="notask-title">
+  <div class="panel__head">
+    <h2 class="panel__section" id="notask-title">{% translate "Ce que nous ne demandons pas" %}</h2>
+  </div>
+  <ul class="wiz__list">
+    <li>{% translate "Aucun numéro de passeport ni de document d’identité n’est demandé ici." %}</li>
+    <li>{% translate "Aucun nom d’établissement, de diplôme ni de note. Italy Legal Entry ne reconnaît aucun titre d’études : la reconnaissance relève des autorités compétentes." %}</li>
+    <li>{% translate "Aucun nom d’entreprise. Une proposition d’emploi se déclare par oui ou par non." %}</li>
+  </ul>
+  <p class="panel__actions"><a class="btn btn--link btn--sm" href="{% url 'accounts:profile' %}">{% translate "Voir, exporter ou supprimer l’ensemble de mes données" %}</a></p>
+</section>
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}
+<script type="module" src="{% static 'js/dist/situation.js' %}"></script>{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "companies/base_companies.html" %}{% load i18n %}
+{% comment %}
+Creating or editing a need.
+
+The form is grouped the way a company thinks about a post — where, what, how many, which skills,
+which language, which safety, when — and each group is a fieldset with its own legend, so the
+sequence is readable by ear as well as by eye.
+
+There is no age field, and there will not be one. The free-text criteria are validated against an
+age criterion as well: the previous platform structured an age band on every opening, which is
+direct age discrimination (Directive 2000/78/EC, D.lgs. 216/2003).
+{% endcomment %}
+{% block page_title %}{% if is_creation %}{% translate "Nouveau besoin" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Décrire un besoin en compétences : territoire, métier, tâches, compétences, langue, sécurité, calendrier." %}{% endblock %}
+
+{% block portal_header %}
+{% include "companies/partials/company_header.html" with company=company %}
+{% endblock %}
+
+{% block companies_content %}
+<section class="portal-section" aria-labelledby="need-form-title">
+  <p class="folio">
+    <span class="folio__ordinal" aria-hidden="true"></span>
+    <span class="folio__head">{% if is_creation %}{% translate "Nouveau besoin" %}{% else %}{% translate "Modification" %}{% endif %}</span>
+  </p>
+  <h1 class="portal__section-title" id="need-form-title">
+    {% if is_creation %}{% translate "Exprimer un besoin en compétences" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}
+  </h1>
+  <p class="portal__summary">
+    {% translate "Décrivez le poste. Ne décrivez jamais la personne attendue : aucun critère d’âge, d’origine, de situation familiale ou de santé n’a sa place ici, et la plateforme les refuse." %}
+  </p>
+
+  <form method="post" class="form companies-form" novalidate>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=form %}
+    <p class="form__required-note">{% translate "Les champs marqués d’un astérisque (*) sont obligatoires." %}</p>
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "Le poste et son territoire" %}</legend>
+      {% include "components/form_field.html" with field=form.title %}
+      {% include "components/form_field.html" with field=form.territory %}
+      {% include "components/form_field.html" with field=form.work_place %}
+      {% include "components/form_field.html" with field=form.sector %}
+      {% include "components/form_field.html" with field=form.professional_profile %}
+      {% include "components/form_field.html" with field=form.duties %}
+      {% include "components/form_field.html" with field=form.motivation %}
+      {% include "components/form_field.html" with field=form.engagement_type %}
+      {% include "components/form_field.html" with field=form.headcount %}
+    </fieldset>
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "Compétences attendues" %}</legend>
+      {% include "components/form_field.html" with field=form.mandatory_skills %}
+      {% include "components/form_field.html" with field=form.preferred_skills %}
+      {% include "components/form_field.html" with field=form.experience_years_min %}
+      {% include "components/form_field.html" with field=form.experience_note %}
+    </fieldset>
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "Langue et sécurité" %}</legend>
+      {% include "components/form_field.html" with field=form.language_code %}
+      {% include "components/form_field.html" with field=form.language_level %}
+      {% include "components/form_field.html" with field=form.language_note %}
+      {% include "components/form_field.html" with field=form.safety_training_required %}
+      {% include "components/form_field.html" with field=form.safety_training_note %}
+    </fieldset>
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "Formation et calendrier" %}</legend>
+      {% include "components/form_field.html" with field=form.training_needs %}
+      {% include "components/form_field.html" with field=form.start_from %}
+      {% include "components/form_field.html" with field=form.timing_note %}
+    </fieldset>
+
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">
+        {% if is_creation %}{% translate "Créer le besoin" %}{% else %}{% translate "Enregistrer" %}{% endif %}
+      </button>
+      {% if not is_creation %}
+      <a class="btn btn--secondary" href="{% url 'companies:need_detail' need.reference %}">{% translate "Annuler" %}</a>
+      {% else %}
+      <a class="btn btn--secondary" href="{% url 'companies:needs' %}">{% translate "Annuler" %}</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <p class="note">
+    {% translate "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée." %}
+  </p>
+</section>
+{% endblock %}

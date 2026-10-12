@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% load i18n static %}
+{% block page_title %}{% translate "Reprendre une pré-évaluation" %}{% endblock %}
+{% block meta_description %}{% translate "Retrouvez votre pré-évaluation d’orientation grâce à votre code de reprise." %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
+{% block content %}
+<article class="container wizard-resume">
+  <header class="page-header">
+    <h1 class="page-header__title">{% translate "Reprendre une pré-évaluation" %}</h1>
+    <p class="page-header__lead">{% translate "Saisissez le code de reprise affiché à la fin de votre questionnaire. Les pré-évaluations anonymes restent disponibles pendant 30 jours." %}</p>
+  </header>
+  <form method="post" action="{% url 'orientation:resume' %}" class="wizard-resume__form" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-field__errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    {% include "components/form_field.html" with field=form.token %}
+    <div class="wizard__actions">
+      <button type="submit" class="btn btn--primary">{% translate "Reprendre" %}</button>
+      <a class="btn btn--secondary" href="{% url 'orientation:start' %}">{% translate "Commencer un nouveau questionnaire" %}</a>
+    </div>
+  </form>
+</article>
+{% endblock %}
