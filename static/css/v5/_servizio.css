@@ -1,0 +1,842 @@
+/* ============================================================================================
+   THE SERVICE PAGES «le pagine di servizio» — design V5.4, W3-F2 «content, legal, error and account pages», step 2:
+   the pages a person meets when something stops (400, 403, 404, 410, 429, 500) and the pages of their own account
+   («Mon compte»: the profile, the e-mail addresses, the password, the second factor, the sign-out's confirmation, the
+   deletion request and its answer). docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 2; §1.18 D26 (the «who can help
+   me» slot in live words); §1.4 RH-1 … RH-8, SP-1 … SP-8, SH-1 … SH-9; §1.3 (three corners a screen); §1.7 (the
+   six-icon ceiling of the public editorial body); §1.8 (52 px public primaries and fields).
+
+   A page partial (plan §2.3, DL54-15): never in main.css; imported by two page sheets, loaded after main.css —
+   apps/cms/static/cms/servizio.css (built to static/css/dist/cms/servizio.css) by the account frame
+   (templates/allauth/layouts/base.html) and the deletion's answer, and apps/cms/static/cms/errori.css by the error
+   pages (templates/errors/base_error.html, templates/errors/standalone.html), which also imports the door stage
+   (static/css/v5/_door.css) for their door at rest. Every page says `servizio` in its body class; the rules that
+   re-draw a component of main.css are scoped by it (the trail, the empty state) or by the frame of the account pages,
+   `.conto`.
+
+   The grammar is the public interior's — «la lettura» (static/css/v5/_lettura.css, step 1) and the doors (W3-F1) —,
+   value for value: the trail at 13/20 on 24 px targets; the head at the reading edge (a label, the h1 at 28/36 then
+   36/44, the sentence at 17/28 then 20/28); hairlines before boxes; a quiet chapter at a page's foot (a label, not a
+   title, and links); one primary a page; «who can help me» on a hairline at the foot. Only what these pages draw is
+   restated here, so that a page of service carries neither the content pages' sheet nor this one's rules elsewhere.
+     1 · the trail             — the account pages' (the error pages have none: a broken address has no place);
+     2 · the quiet page        — an error: what happened (the status as the head's label, the title, one sentence),
+                                 what to do (one primary, the way back), the way on (a quiet chapter of links) — the
+                                 door at rest beside them is the error pages' own sheet's (cms/errori.css);
+     3 · the account pages     — «il conto»: the account's sections at the reading edge from 64rem (the chapter head's
+                                 seat, four columns of twelve, sticky from 75rem), a band above the page below; the
+                                 page in the body's eight columns: its title and sentence, its sections on hairlines
+                                 (allauth's elements and the product's pages share the class names), the register of
+                                 what the account is, the rows of the security, the organisations, the forms at the
+                                 reading measure, the person's data and the danger button behind its own page;
+     4 · «who can help me»     — the live line with the one address, on a hairline;
+     5 · the self-sufficient letterhead (400, 500: the lock-up on paper, nothing that reads the database);
+     6 · under a finger, Arabic, forced colours, print.
+
+   Corners (§1.3): the letterhead's plate draws 6 on the shell's pages, the buttons, fields and notices 4, the chips
+   and discs full — three values a screen; nothing here adds an 8 (no card: rows on hairlines). Shadows (§1.4): none
+   at rest. Type on the 4 px line (RH-1); every size and space a token of static/css/v5/tokens.css; logical properties
+   only; no literal colour, no gradient (the app-sheet token rule).
+   ============================================================================================ */
+
+/* ---- 1 · the trail (the account pages) ----------------------------------------------------------------------- */
+.servizio .breadcrumbs {
+  padding-block: var(--s-4) 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.servizio .breadcrumbs__item {
+  color: var(--text-2);
+}
+
+.servizio .breadcrumbs__item + .breadcrumbs__item::before {
+  inline-size: 6px;
+  block-size: 6px;
+  border-color: var(--text-3);
+}
+
+/* a trail's link is a 24 px target (SP-8), its line still 20 px */
+.servizio .breadcrumbs__item a {
+  display: inline-block;
+  padding-block: 2px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .servizio .breadcrumbs__item a:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+  }
+}
+
+.servizio .breadcrumbs__item[aria-current] {
+  color: var(--text-1);
+  font-weight: var(--w-control);
+}
+
+/* ---- 2 · the quiet page: an error ----------------------------------------------------------------------------- */
+/* one column at the reading edge — the head, the actions, the way on — and the page's closing space before the footer
+   (SP-6: no unplanned interval above 64 px) */
+.error-page {
+  padding-block: var(--s-12);
+}
+
+.error-page__head {
+  max-inline-size: var(--measure-lead);
+}
+
+/* what happened: the status as the head's label («Erreur 404», the document title's words), the title, one sentence */
+.error-page__code {
+  margin: 0 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  letter-spacing: 0;
+  color: var(--text-2);
+}
+
+.error-page__title {
+  max-inline-size: 20em;
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.error-page__text {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* the 500's reference: the request's correlation id, for whoever helps — never a personal datum */
+.error-page__ref {
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* what to do: one primary and the way back, at the public primaries' 52 px (plan §1.8); on a phone they take the
+   column, one under the other */
+.error-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-block-start: var(--s-8);
+}
+
+.error-page__actions > .btn {
+  --btn-box-h: var(--control-lg);
+  --btn-pad: var(--btn-pad-lg);
+}
+
+/* «Page précédente» needs the history only a script reads: without script it is not drawn (head.js sets `js`) */
+html.no-js .js-only {
+  display: none !important;
+}
+
+/* the way on: a quiet chapter — a label, not a title, and the spaces as links that wrap, 24 px apart */
+.error-page__links {
+  margin-block-start: var(--s-12);
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.error-page__links-title {
+  margin: 0 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-2);
+}
+
+.error-page__links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.error-page__links-list a {
+  display: inline-block;
+  padding-block: 2px;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+}
+
+.error-page .aiuto {
+  max-inline-size: none;
+  margin-block-start: var(--s-8);
+}
+
+@media (min-width: 48rem) {
+  .error-page {
+    padding-block: var(--s-16);
+  }
+
+  .error-page__title {
+    font-size: var(--t-title);
+    line-height: var(--t-title-lh);
+    letter-spacing: var(--track-title);
+  }
+
+  .error-page__text {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+
+  .error-page__links {
+    margin-block-start: var(--s-16);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .error-page__actions {
+    flex-direction: column;
+  }
+}
+
+/* ---- 3 · the account pages «il conto» ------------------------------------------------------------------------- */
+/* the frame: one column, the account's sections as a band above the page; from 64rem the chapter's two seats — the
+   sections in the head's (four columns of twelve, the list in three) and the page in the body's eight */
+.conto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-8);
+  padding-block: var(--s-6) var(--s-12);
+}
+
+.conto__main {
+  min-inline-size: 0;
+}
+
+/* a quiet page of the account (the deletion's answer: the person is signed out) has no trail and no sections: it opens
+   as an error page does, 48 px under the letterhead, 64 px from 48rem */
+.conto--solo {
+  padding-block: var(--s-12);
+}
+
+/* the page's flow: 32 px between its blocks, a section 48 px under what precedes it */
+.conto__main > *,
+.conto__head > * {
+  margin-block: 0;
+}
+
+.conto__main > * + * {
+  margin-block-start: var(--s-8);
+}
+
+@media (min-width: 48rem) {
+  .conto--solo {
+    padding-block: var(--s-16);
+  }
+}
+
+@media (min-width: 64rem) {
+  .conto {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    padding-block: var(--s-10) var(--s-16);
+  }
+
+  .conto--solo {
+    padding-block: var(--s-16);
+  }
+
+  .conto-nav {
+    grid-column: 1 / span 3;
+    align-self: start;
+  }
+
+  .conto__main {
+    grid-column: 5 / span 8;
+  }
+
+  .conto--solo .conto__main {
+    grid-column: 1 / span 8;
+  }
+}
+
+@media (min-width: 75rem) {
+  .conto-nav {
+    position: sticky;
+    inset-block-start: calc(var(--header-h) + var(--s-8));
+  }
+}
+
+/* the account's sections — a band of links on one hairline, the current one under the tabs' indicator (the news'
+   categories, step 1); from 64rem a list on a rule at the reading edge, the indicator on the rule */
+.conto-nav {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+/* the band's first word stands on the reading edge: the links' own padding is taken back at the list's start */
+.conto-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-1);
+  margin: 0;
+  margin-inline-start: calc(var(--s-3) * -1);
+  padding: 0;
+  list-style: none;
+}
+
+.conto-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-3);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.conto-nav__link[aria-current] {
+  color: var(--text-1);
+}
+
+.conto-nav__link[aria-current]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--s-3);
+  inset-block-end: -1px;
+  block-size: 2px;
+  background: var(--nav-indicator);
+}
+
+@media (hover: hover) {
+  .conto-nav__link:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.conto-nav__link:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 64rem) {
+  .conto-nav {
+    border-block-end: 0;
+  }
+
+  .conto-nav__list {
+    display: grid;
+    gap: 0;
+    margin-inline-start: 0;
+    border-inline-start: 1px solid var(--line-rhythm);
+  }
+
+  .conto-nav__link {
+    display: flex;
+    padding-block: var(--s-3);
+    padding-inline: var(--s-4) 0;
+  }
+
+  .conto-nav__link[aria-current]::after {
+    inset-inline: -1px auto;
+    inset-block: 0;
+    inline-size: 2px;
+    block-size: auto;
+  }
+}
+
+/* the page's head — its title and its sentence: allauth writes them with its elements (`account-page__title`,
+   `account-page__text`), the product's pages with the same names inside `.conto__head` */
+.conto .account-page__title {
+  max-inline-size: 20em;
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+/* a sentence of the page: 15/24 at the reading measure; the one under the title is the lead */
+.conto .account-page__text {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-1);
+}
+
+.conto .account-page__title + .account-page__text {
+  max-inline-size: var(--measure-lead);
+  margin-block-start: var(--s-4);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+@media (min-width: 48rem) {
+  .conto .account-page__title {
+    font-size: var(--t-title);
+    line-height: var(--t-title-lh);
+    letter-spacing: var(--track-title);
+  }
+
+  .conto .account-page__title + .account-page__text {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+}
+
+/* a section of the page — the profile's four, allauth's panels (the second factor's), allauth's bare second title
+   («Ajouter une adresse e-mail»): on a hairline, 48 px under what precedes it, its title at 20/28 */
+.conto .account-panel {
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.conto__main > .account-panel,
+.conto__main > .account-panel__title {
+  margin-block-start: var(--s-12);
+}
+
+.conto__main > .account-panel__title {
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.conto .account-panel__title {
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+.conto .account-panel > * {
+  margin-block: 0;
+}
+
+.conto .account-panel > * + * {
+  margin-block-start: var(--s-4);
+}
+
+.conto .account-panel > .account-panel__title + * {
+  margin-block-start: var(--s-3);
+}
+
+/* a panel's actions (allauth's list of buttons): a row that wraps */
+.conto .account-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  padding: 0;
+  list-style: none;
+}
+
+.conto .account-panel > .account-panel__actions {
+  margin-block-start: var(--s-5);
+}
+
+/* what the account is: a register of facts on shared hairlines — the label 14/20 over its value, side by side from
+   48rem */
+.conto-facts {
+  margin: 0;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.conto-facts__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-1);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.conto-facts dt {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.conto-facts dd {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.conto-facts__action {
+  display: inline-block;
+  margin-inline-start: var(--s-3);
+  font-weight: var(--w-control);
+}
+
+@media (min-width: 48rem) {
+  .conto-facts__row {
+    grid-template-columns: 12rem minmax(0, 1fr);
+    column-gap: var(--s-6);
+    align-items: baseline;
+  }
+}
+
+/* the security: rows on shared hairlines, the whole row the target (one destination each); a state's chip beside
+   its words, never a target of its own */
+.conto-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.conto-links__row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  min-block-size: var(--row-min-h);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+/* the row's words are its link and say so at rest — the link's colour (a finger finds no hover); the underline comes
+   under the pointer, no glyph is added (the six-icon ceiling; the review's m2) */
+.conto-links__row > a {
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.conto-links__row > a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+@media (hover: hover) {
+  .conto-links__row:hover {
+    border-block-end-color: var(--line-structure);
+  }
+
+  .conto-links__row:hover > a {
+    color: var(--accent-text-hover);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.conto-links__row:focus-within {
+  border-block-end-color: var(--line-structure);
+}
+
+/* rows that close their section leave their closing hairline to the next section's rule: one rule between two
+   sections, not a hairline, a band and a rule (the profile's «Sécurité» → «Organisations»; the review's m5) */
+.conto .account-panel > .conto-links:last-child > .conto-links__row:last-child {
+  border-block-end: 0;
+}
+
+/* the organisations: a table of rows on hairlines, its head in the label's voice */
+.conto .data-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.conto .data-table :is(th, td) {
+  padding-block: var(--s-3);
+  padding-inline: 0 var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+  text-align: start;
+  vertical-align: top;
+}
+
+.conto .data-table thead th {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  border-block-end-color: var(--line-structure);
+}
+
+.conto .data-table tbody th {
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+/* the forms: v5/field.css draws them (16 px typed text, 52 px plates, one primary after a hairline); here, their
+   column at the reading measure — and allauth's choice of an address: rows on hairlines, the radio on the address's
+   line, its chips after it */
+.conto .form {
+  max-inline-size: 36rem;
+}
+
+/* the list of addresses is a register, not a column of fields: it takes the body's width, so that its three actions
+   («Rendre principale», «Renvoyer la vérification», «Enlever») hold one row from 64rem instead of leaving the danger
+   alone on a second (the review's m5) */
+.conto .form:has(.form-field__check > input[type="radio"]) {
+  max-inline-size: none;
+}
+
+.conto .account-panel > .form {
+  margin-block-start: var(--s-8);
+}
+
+.conto .form-field:has(> .form-field__check > input[type="radio"]) {
+  margin: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.conto .form-errors + .form-field:has(> .form-field__check > input[type="radio"]),
+.conto .form > .form-field:has(> .form-field__check > input[type="radio"]):first-of-type {
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+/* a form with no field to fill (the sign-out's confirmation, the authenticator's deactivation, new recovery codes) is
+   its answer alone: no hairline above a lone button */
+.conto .form:not(:has(.form-field, .form-errors)) > .form__actions {
+  margin-block-start: 0;
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* the list of addresses closes on its own hairline: its actions follow without a second one */
+.conto .form-field:has(> .form-field__check > input[type="radio"]) + .form__actions {
+  margin-block-start: var(--s-6);
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.conto .form-field__check:has(> input[type="radio"]) {
+  align-items: center;
+  padding-block: var(--s-3);
+}
+
+.conto .form-field__check:has(> input[type="radio"]) > label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  overflow-wrap: anywhere;
+}
+
+/* the authenticator's QR code: on white with its quiet zone, a hairline and the fields' corner, a field's gap under it */
+.conto .account-page__img {
+  display: block;
+  inline-size: 12.5rem;
+  max-inline-size: 100%;
+  block-size: auto;
+  margin-block-end: var(--s-6);
+  padding: var(--s-3);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+
+/* a secret or a recovery code is read character by character: the figures' face, never a proportional one */
+.conto :is(#authenticator_secret, #recovery_codes) {
+  font-family: var(--f-mono);
+  font-variant-numeric: var(--numeric-data);
+  letter-spacing: var(--track-folio);
+}
+
+/* the notice that nobody may miss (the deletion's warning) at the reading measure */
+.conto .notice {
+  max-inline-size: var(--measure-body);
+}
+
+/* a row of actions outside a form (the person's data): a button and a link, 24 px apart */
+.conto-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-6);
+}
+
+.conto-actions > form {
+  margin: 0;
+}
+
+.conto-actions__link {
+  display: inline-block;
+  padding-block: 2px;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+}
+
+/* a button that stands outside a form's actions (the export, the deletion, a panel's action) keeps the public
+   primaries' 52 px, as the forms' own do (v5/buttons.css; plan §1.8) */
+.conto :is(.conto-actions, .conto-danger, .account-panel__actions) .btn {
+  --btn-box-h: var(--control-lg);
+  --btn-pad: var(--btn-pad-lg);
+}
+
+/* on a phone a quiet page's one primary takes the column, as an error page's and a form's do */
+@media (max-width: 47.999rem) {
+  .conto--solo .conto-actions > .btn--primary {
+    inline-size: 100%;
+  }
+}
+
+/* the deletion: the system's danger button (the garnet outline: its own page confirms) under a hairline of its own */
+.conto-danger {
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+/* the empty organisations (DS V5 §10.8 «EmptyState»): the glyph on its 40 px disc, the title at 20/28, one sentence —
+   at the reading edge, no dashed box (on V5 a broken edge says what is due) */
+.servizio .empty-state {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  text-align: start;
+}
+
+.servizio .empty-state__icon {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  margin: 0 0 var(--s-2);
+  padding: var(--s-2);
+  box-sizing: content-box;
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-disc-fg);
+}
+
+.servizio .empty-state__title {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  color: var(--text-1);
+}
+
+.servizio .empty-state__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* ---- 4 · «who can help me»: the page's live line with the one address, on a hairline at the foot (D26) --------- */
+.aiuto {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* its link is one box the height of the line (24 px: SP-8's floor under a fine pointer; the accessibility check's A3) */
+.aiuto a {
+  display: inline-block;
+  overflow-wrap: anywhere;
+}
+
+/* a link in a field's help (the password's «Mot de passe oublié ?»): a 24 px target in its 20 px line */
+.conto .form-field__help a {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+.conto__main > .aiuto {
+  max-inline-size: none;
+  margin-block-start: var(--s-12);
+}
+
+/* ---- 5 · the self-sufficient letterhead (400, 500): the lock-up on the letterhead's paper, and nothing else ------- */
+/* it scrolls with the page (no menu, no script to give it its glass); still the containing block of its own paper
+   layer (v5/chrome.css's `::before`), which a static box would hand to the whole page */
+.site-header--solo {
+  position: relative;
+}
+
+/* ---- 6 · under a finger a link that stands alone answers on 44 px (SP-8) without a taller line: the target grows,
+        the page does not; the wrapping rows open to 20 px so that two targets never overlap ---------------------- */
+@media (pointer: coarse) {
+  .error-page__links-list,
+  .servizio .breadcrumbs__list {
+    row-gap: var(--s-5);
+  }
+
+  /* each is a box of 24 px at least: 10 px above and below make 44, and a word narrower than 44 px («Gérer», «إدارة»,
+     «وثائقي») is widened to 44 about its middle (the accessibility check's A3: the trail and the password's help link
+     joined the list) */
+  .servizio :is(.breadcrumbs__item a, .error-page__links-list a, .aiuto a, .conto-facts__action, .conto-actions__link, .form-field__help a) {
+    position: relative;
+  }
+
+  .servizio :is(.breadcrumbs__item a, .error-page__links-list a, .aiuto a, .conto-facts__action, .conto-actions__link, .form-field__help a)::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: min(0px, calc((100% - var(--hit-primary)) / 2));
+  }
+}
+
+/* Arabic titles: 600 with no tracking, leading 1.4 (the type system's Arabic rule); a label without tracking */
+.servizio :is(.error-page__title, .account-page__title, .account-panel__title, .empty-state__title):lang(ar) {
+  letter-spacing: 0;
+  line-height: var(--ar-title-lh);
+}
+
+@media (forced-colors: active) {
+  .conto-nav__link[aria-current]::after {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
+@media print {
+  .conto-nav,
+  .error-page__actions,
+  .conto-actions,
+  .conto-danger {
+    display: none;
+  }
+
+  .conto-nav {
+    position: static;
+  }
+}

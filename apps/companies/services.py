@@ -36,6 +36,7 @@ from companies.models import (
     SkillLevel,
     transitions_from,
 )
+from core import icons
 
 #: Roles allowed to read the territorial / sectoral aggregate. Counts only, never a row.
 ANALYSIS_ROLES = (roles.STAFF, roles.ADMINISTRATOR)
@@ -589,16 +590,19 @@ def navigation(user, active: str = "", company: CompanyProfile | None = None) ->
     is_project_reader = may_read_analysis(user)
     entries = []
     if company is not None or not is_project_reader:
-        entries.append(("dashboard", _("Tableau de bord"), safe_reverse("companies:dashboard"), "home"))
+        entries.append(("dashboard", _("Tableau de bord"), safe_reverse("companies:dashboard")))
     if company is not None:
-        entries.append(("needs", _("Mes besoins"), safe_reverse("companies:needs"), "briefcase"))
-        entries.append(("profile", _("Mon entreprise"), safe_reverse("companies:profile"), "building"))
+        entries.append(("needs", _("Mes besoins"), safe_reverse("companies:needs")))
+        entries.append(("profile", _("Mon entreprise"), safe_reverse("companies:profile")))
     if is_project_reader:
-        entries.append(("analysis", _("Analyse territoriale"), safe_reverse("companies:analysis"), "map-pin"))
+        entries.append(("analysis", _("Analyse territoriale"), safe_reverse("companies:analysis")))
     portal_messages = safe_reverse("portal:messages")
     if portal_messages:
-        entries.append(("messages", _("Communications"), portal_messages, "mail"))
-    # Design V4: the rail draws a glyph per entry and a title per group (rail_nav.html).
+        entries.append(("messages", _("Communications"), portal_messages))
+    # The rail draws a glyph per entry and a title per group (rail_nav.html). The glyph is the icon
+    # registry's (apps/core/icons.py COMPANY_NAV; design V5, V5.4 plan §1.7): one concept, one glyph —
+    # the needs are a wrench, the analysis a map; `briefcase` and `map-pin` keep the meaning they have
+    # everywhere else (the professional, a place). tests/frontend/test_icons.py holds every entry to it.
     group = str(_("Espace entreprise"))
     # The phone's bottom bar (CD §3.9): the four entries of the workspace, then «Menu».
     bottom = {"dashboard", "needs", "profile", "messages"}
@@ -608,11 +612,11 @@ def navigation(user, active: str = "", company: CompanyProfile | None = None) ->
             "label": label,
             "url": url,
             "current": key == active,
-            "icon": icon,
+            "icon": icons.COMPANY_NAV[key],
             "group": group,
             "bottom": key in bottom,
         }
-        for key, label, url, icon in entries
+        for key, label, url in entries
         if url
     ]
 

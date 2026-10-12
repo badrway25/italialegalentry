@@ -200,7 +200,18 @@ ACCOUNT_RATE_LIMITS = {
     "manage_email": "10/m/user",
 }
 ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
-ACCOUNT_FORMS = {"signup": "accounts.forms.SignupForm"}
+# "login", "reset_password" and "reset_password_from_key" are allauth's own forms with their presentation only
+# (design V5 «Il varco», W2-B): what the widgets say to the browser, and no placeholder. Authentication,
+# validation and the rate limits are allauth's, untouched.
+ACCOUNT_FORMS = {
+    "signup": "accounts.forms.SignupForm",
+    "login": "accounts.forms.LoginForm",
+    "reset_password": "accounts.forms.ResetPasswordForm",
+    "reset_password_from_key": "accounts.forms.ResetPasswordKeyForm",
+}
+# The second factor's code on «Il varco»: allauth's form, its presentation only — no placeholder, the digits'
+# keyboard (W2-B; a second setting, written for the steward's agreement at the merge).
+MFA_FORMS = {"authenticate": "accounts.forms.AuthenticateForm"}
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes"]
 MFA_TOTP_ISSUER = "Italy Legal Entry"
 

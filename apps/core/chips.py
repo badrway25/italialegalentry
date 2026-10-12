@@ -14,34 +14,47 @@ and «an archived edition that carries nothing» for the forum. docs/design-v3/s
 (defect E14) is the full account.
 
 So the visual REGISTER — what the chip *asserts* — is looked up per producer and per member,
-here, and reaches the DOM as ``data-register``. The class words stay where they are and simply
-stop meaning anything to the stylesheet.
+here, and reaches the DOM as ``data-register``. The words of those dictionaries mean nothing to the
+stylesheet any more, and the chip no longer writes them.
 
-The six registers, and what each one asserts:
+The eight registers of design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.2; DESIGN_SYSTEM_V5.md
+§3.2): what each one asserts, its material and its mark — «i cerchi», outline = open, filled =
+settled (apps/core/icons.py ``STATUS``).
 
-  neutro    a fact is recorded; nobody must act, nobody judges          (the base line)
-  attesa    something is due, from someone, and is not late             (dashed rule)
-  azione    the file does not advance until a named actor acts, NOW     (4px rule)
-  conforme  the piece received is the piece asked; a step is done       (closing rule below)
-  rifiuto   an act was refused, or the piece is invalid                 (struck through)
-  nullo     withdrawn, not applicable, archived: it carries nothing     (1px, greyed word)
+  conforme  the piece received is the piece asked; a step is done    ink         a plain disc, no glyph
+  esame     in the hands of an intervener: it moves without you      lapis       a half-filled disc
+  neutro    a fact is recorded; nobody must act, nobody judges       slate       a ring and its centre
+  attesa    something is due, from someone, and is not late          amber       a dashed ring
+  azione    the file does not advance until a named actor acts, NOW  terracotta  a disc and clock hands
+  rifiuto   an act was refused, or the piece is invalid              garnet      a disc struck by a cross
+  blocco    a dependency: heavy and calm, never an alarm             graphite    the lock
+  nullo     withdrawn, not applicable, archived: it carries nothing  ash         a slashed dotted ring
 
-None of them is «approved». ``conforme`` takes the chapter's ink, without chroma, because this
-platform approves nothing (static/css/tokens.css §STATE; DESIGN_SYSTEM_2026 §4.3): a step done is
-a fact about the file, never a verdict, and the chip says so with a closing rule and a check, not
-with a colour.
+None of them is «approved». ``conforme`` takes the ink, without chroma, and its mark is a plain
+filled disc: this platform approves nothing (O14; DESIGN_SYSTEM_2026 §4.3), so a step done is a
+fact about the file, never a verdict — no colour says so and no check mark does, anywhere
+(tests/frontend/test_o14_lint.py).
 
-A value this module does not know gets NO register: ``register_for`` returns ``""``, the template
-writes the attribute only when it is non-empty, and the stylesheet paints an unmapped chip with a
-dotted rule — visible, and tested.
+Two of the eight are new in V5, and one rule moves the members onto them: every ``in_review``,
+``under_review``, ``assigned`` and ``in_progress`` is ``esame`` — somebody other than the reader has
+it in hand — and so are a scan and a verification that are ``pending``; every ``blocked`` is
+``blocco`` (tests/frontend/test_chips_registry.py holds the rule). «En examen» therefore reads in
+lapis.
+
+A value this module does not know gets NO register: ``register_for`` returns ``""``; the chip is
+then written without the attribute, drawn on the neutral tone with a dotted edge — visible — and
+the tag logs it (apps/core/templatetags/ile_core.py, ``chip``).
 """
 
 from __future__ import annotations
 
-REGISTERS: tuple[str, ...] = ("neutro", "attesa", "azione", "conforme", "rifiuto", "nullo")
+from core import icons
 
-#: Producer → member value → register. Keys are the enum's dotted name as a template would say it,
-#: so that a template can ask for ``value|chip_register:"cases.CaseStatus"`` without importing.
+#: The eight registers, in the order of the plan's table (§1.2).
+REGISTERS: tuple[str, ...] = ("conforme", "esame", "neutro", "attesa", "azione", "rifiuto", "blocco", "nullo")
+
+#: Producer → member value → register. Keys are the enum's dotted name as a template says it:
+#: ``{% chip case.status "cases.CaseStatus" %}``.
 REGISTER: dict[str, dict[str, str]] = {
     "cases.CaseStatus": {
         "draft": "attesa",
@@ -60,23 +73,23 @@ REGISTER: dict[str, dict[str, str]] = {
     },
     "cases.ChecklistStatus": {
         "pending": "attesa",
-        "in_progress": "neutro",
+        "in_progress": "esame",
         "done": "conforme",
         "not_applicable": "nullo",
-        "blocked": "attesa",  # a dependency, not a refusal
+        "blocked": "blocco",  # a dependency, not a refusal
     },
     "documents.RequirementState": {
         "missing": "attesa",
         "filed": "neutro",
-        "in_review": "neutro",
+        "in_review": "esame",  # «En examen»: an intervener of the file is reading the piece
         "valid": "conforme",
         "invalid": "rifiuto",
         "expired": "azione",  # an expired piece must be filed again
         "to_replace": "attesa",  # asked for, not yet late
     },
     "documents.ScanStatus": {
-        "not_configured": "neutro",
-        "pending": "attesa",
+        "not_configured": "nullo",  # no scanner is deployed: nothing was analysed, nothing is coming
+        "pending": "esame",  # the scanner has the file
         "clean": "neutro",  # an antivirus issues no conformity
         "infected": "rifiuto",
         "error": "azione",
@@ -84,31 +97,33 @@ REGISTER: dict[str, dict[str, str]] = {
     "companies.NeedStatus": {
         "draft": "attesa",
         "submitted": "neutro",
-        "under_review": "neutro",
-        "in_progress": "neutro",
+        "under_review": "esame",
+        "in_progress": "esame",
         "on_hold": "attesa",
         "closed": "neutro",
         "withdrawn": "nullo",
     },
     "accounts.VerificationStatus": {
-        "approved": "conforme",  # the one place a seal is born (chip--seal, phase 2)
-        "pending": "attesa",
+        # The project's own «Vérifiée»: a fact the team checked about the legal entity — ink, the plain
+        # disc. Never the seal, which is an authority's act (O18; icons.STATUS["seal"]).
+        "approved": "conforme",
+        "pending": "esame",  # a member of the team is checking the declared elements
         "rejected": "rifiuto",
-        "not_required": "neutro",
+        "not_required": "nullo",
     },
     "helpdesk.TicketStatus": {
         "information_only": "neutro",
         "needs_clarification": "azione",
         "professional_review_required": "azione",  # outcome CR-11 requires an act
-        "assigned": "neutro",
-        "in_review": "neutro",
+        "assigned": "esame",
+        "in_review": "esame",
         "response_available": "azione",  # the only transitions left are the person's acts
         "closed": "neutro",
     },
     "forum.ProposalStatus": {
         "draft": "attesa",
         "submitted": "neutro",
-        "under_review": "neutro",
+        "under_review": "esame",
         "accepted": "conforme",
         "rejected": "rifiuto",
         "withdrawn": "nullo",
@@ -122,9 +137,9 @@ REGISTER: dict[str, dict[str, str]] = {
     },
     "forum.MilestoneStatus": {
         "pending": "attesa",
-        "in_progress": "neutro",
+        "in_progress": "esame",
         "done": "conforme",
-        "blocked": "attesa",
+        "blocked": "blocco",
         "not_applicable": "nullo",
     },
     "forum.CommissionStatus": {
@@ -167,7 +182,7 @@ REGISTER: dict[str, dict[str, str]] = {
     # (academy.EnrolmentStatus docstring: none of the four states is an approval).
     "academy.EnrolmentStatus": {
         "enrolled": "neutro",
-        "in_progress": "neutro",
+        "in_progress": "esame",
         "completed": "conforme",
         "withdrawn": "nullo",
     },
@@ -182,13 +197,15 @@ REGISTER: dict[str, dict[str, str]] = {
         "requested": "attesa",
         "provided": "conforme",
         "not_applicable": "nullo",
-        "blocked": "attesa",  # a dependency, not a refusal — the spec's own reading of «bloqué»
+        "blocked": "blocco",  # a dependency, not a refusal — the spec's own reading of «bloqué»
     },
     "community.InitiativeStatus": {
         "proposed": "attesa",  # proposed, awaiting the room's take-up
         "active": "neutro",
         "closed": "neutro",
     },
+    # The stages of a selection process are positions, like the stages of a case file: a stage named
+    # «… review» is where the process stands, not a piece in somebody's hands.
     "selection.SelectionStage": {
         "mandate_confirmed": "neutro",
         "competence_review": "neutro",
@@ -198,6 +215,12 @@ REGISTER: dict[str, dict[str, str]] = {
         "suspended": "azione",  # a written suspension_reason is required: somebody must act
     },
 }
+
+#: The one rule of V5, whatever the producer: a member with one of these names is in somebody's
+#: hands — esame — and a blocked one is a dependency — blocco. A verification and a scan that are
+#: «pending» are esame by their own rows: elsewhere «pending» is a thing due (attesa).
+ESAME_MEMBERS: frozenset[str] = frozenset({"in_review", "under_review", "assigned", "in_progress"})
+BLOCCO_MEMBERS: frozenset[str] = frozenset({"blocked"})
 
 #: The phase of the case-file gauge (spec §4.4): before the pathway · under way · entered and after.
 STAGE: dict[str, int] = {
@@ -213,33 +236,41 @@ STAGE: dict[str, int] = {
     "post_entry": 3,
     "closed": 3,
 }
+#: The one producer whose chip carries the gauge: three notches after the word.
+STAGE_PRODUCER = "cases.CaseStatus"
 
-#: Register → sprite glyph (static/img/icons.svg). «neutro» has none on purpose: a recorded fact
-#: is the base line, and a dot on it would be the anti-pattern the spec rejects.
-GLYPH: dict[str, str] = {
-    "attesa": "clock",
-    "azione": "warning",
-    "conforme": "check",
-    "rifiuto": "close",
-    "nullo": "minus",
+#: A member that keeps its register and has a mark of its own (ICON_SEMANTIC_MAP §2): «À remplacer»
+#: is due like «Manquant» — one register, one amber, one dashed edge — and the ring with two arrows
+#: against the dashed ring is what tells them apart at 16 px.
+MEMBER_MARK: dict[tuple[str, str], str] = {
+    ("documents.RequirementState", "to_replace"): "st-attesa-replace",
 }
 
-#: The legacy ``kind`` of templates/components/badge.html, translated once for all its includes.
+#: The legacy ``kind`` of templates/components/badge.html, translated once for all its includes. V5
+#: reads two of them as the notices of the same name do (static/css/v5/notice.css): «warning» is
+#: amber — due, or needing attention, not late — and «pending» is lapis — in somebody's hands. The
+#: two deadline kinds are plan §1.2's: «soon» is attesa, «overdue» is azione; red never means lateness.
 KIND_REGISTER: dict[str, str] = {
     "neutral": "neutro",
     "info": "neutro",
     "primary": "neutro",
     "success": "conforme",
-    "warning": "azione",
+    "warning": "attesa",
     "error": "rifiuto",
-    "pending": "attesa",
+    "pending": "esame",
+    "soon": "attesa",
+    "overdue": "azione",
 }
+
+
+def _key(value: object) -> str:
+    key = getattr(value, "value", value)
+    return str(key) if key is not None else ""
 
 
 def register_for(producer: str, value: object) -> str:
     """The register of ``value`` as produced by ``producer``, or ``""`` when unknown."""
-    key = getattr(value, "value", value)
-    return REGISTER.get(producer, {}).get(str(key) if key is not None else "", "")
+    return REGISTER.get(producer, {}).get(_key(value), "")
 
 
 def stage_for(value: object) -> int | None:
@@ -249,3 +280,13 @@ def stage_for(value: object) -> int | None:
 
 def register_for_kind(kind: object) -> str:
     return KIND_REGISTER.get(str(kind or "neutral"), "")
+
+
+def mark_for(register: str, producer: str = "", value: object = None) -> str:
+    """
+    The sprite symbol a chip draws: its register's mark from the icon registry («i cerchi»), or the
+    member's own where it has one. A chip is never drawn without a mark — an unknown register draws
+    the neutral one — and no register's mark is a check (O14).
+    """
+    own = MEMBER_MARK.get((producer, _key(value))) if producer else None
+    return own or icons.STATUS.get(register) or icons.STATUS["neutro"]

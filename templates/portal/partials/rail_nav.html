@@ -1,19 +1,67 @@
 {% load i18n %}{% comment %}
-The rail's navigation, design V4 (docs/design-v4/CREATIVE_DIRECTION.md §3.9): the reserved area's
-own entries (portal.services.navigation), in semantic groups with a title each — the titles are a
-proposal for the copy review (§92); if they are refused the separators stay. Included twice: in
-the rail (`id_prefix="rail"`) and in the mobile drawer (`id_prefix="drawer"`), so the ids that
-label each list differ.
+THE RAIL'S LEVELS — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.18 D06 «Tre livelli»; W3-A):
+space → section → page, each by its form, never by decoration. The space's own name is the line under the name
+at the rail's head (templates/partials/portal_chrome.html); this partial draws the rest, in the rail and in the
+phone drawer:
 
-Contract: `portal_nav` = list of {key, label, url, current, icon, group}; `id_prefix`.
-{% endcomment %}{% regroup portal_nav by group as rail_groups %}
-{% for group in rail_groups %}
+  `part="space"`  LEVEL 1, continued — the way to the account's OTHER space when it has one, named as that space
+                  names itself («Espace entreprise» from «Espace réservé», and back). Nothing for an account
+                  that has one space.
+  `part="foot"`   THE FOOT — who the account is (its glyph, its name, its word → the profile), sign-out, the
+                  language by its own name and «Site public». `where="rail"`: pinned under the list, with the
+                  rail's own control, sign-out a lone glyph whose word console.js shows beside it.
+                  `where="drawer"`: the same foot under the drawer's list, where a finger finds no hover —
+                  sign-out is a row with its word, and the rail's control is not drawn (nothing folds there).
+  (no `part`)     LEVELS 2 and 3 — the sections, a word on the text axis each, and their pages: glyph + word, the
+                  glyph on a disc that the current page lights («il lume»). A section whose word would only repeat
+                  the space's name or its one entry («Academy») is drawn as a rule, without the word. `id_prefix`
+                  ("rail" / "drawer") keeps the ids that label each list distinct between the two copies.
+
+Contract: `portal_nav` = portal.services.shell_navigation(…): a list of
+{key, label, url, current, icon, group, bottom, kind, space}. An entry of kind "space" is the way to another space:
+level 1 draws it, the list never does (the entries of a kind follow one another). The foot reads `space` (the
+chrome's `{% with space=portal_nav.0.space %}`), `user` and `site.languages`.
+{% endcomment %}{% if part == "space" %}{% regroup portal_nav by kind as rail_kinds %}{% for kind in rail_kinds %}{% if kind.grouper == "space" %}
+<ul class="rail__spaces" role="list">
+  {% for item in kind.list %}
+  <li class="rail__li"><a class="rail__switch" href="{{ item.url }}" data-rail-tip data-label="{{ item.label }}"><span class="rail__disc">{% svg_icon item.icon "icon rail__glyph" %}</span><span class="rail__label">{{ item.label }}</span>{% svg_icon "arrow" "icon rail__switch-go" %}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}{% endfor %}{% elif part == "foot" %}
+<div class="rail__foot"{% if where == "rail" %} data-rail-foot{% endif %}>
+  <div class="rail__account">
+    {% safe_url 'accounts:profile' as profile_url %}
+    <{% if profile_url %}a href="{{ profile_url }}"{% else %}span{% endif %} class="rail__who" data-rail-tip data-label="{{ user.get_full_name }}{% if space.who %} — {{ space.who }}{% endif %}">
+      <span class="rail__who-disc" aria-hidden="true">{% if space.who_domain == "actor" %}{% svg_icon space.who_key|concept:"actor" "icon" %}{% elif space.who_key %}{% svg_icon space.who_key|concept:"audience" "icon" %}{% else %}{% svg_icon "circle-user-round" "icon" %}{% endif %}</span>
+      <span class="rail__who-words"><span class="rail__who-name" dir="auto">{{ user.get_full_name }}</span>{% if space.who %}<span class="rail__who-role">{{ space.who }}</span>{% endif %}{% if profile_url %}<span class="visually-hidden"> — {% translate "Profil" %}</span>{% endif %}</span>
+    </{% if profile_url %}a{% else %}span{% endif %}>
+    {% safe_url 'account_logout' as logout_url %}{% if logout_url %}
+    <form class="rail__signout" method="post" action="{{ logout_url }}">{% csrf_token %}
+      <button class="rail__tool" type="submit" data-rail-tip="always" data-label="{% translate 'Se déconnecter' %}">{% svg_icon "logout" "icon" %}<span class="rail__tool-word">{% translate "Se déconnecter" %}</span></button>
+    </form>{% endif %}
+  </div>
+  <div class="rail__tools">
+    {% if where == "rail" %}<button class="rail__tool rail__toggle" type="button" data-rail-toggle data-rail-tip="always" data-label="{% translate 'Navigation' %}" aria-controls="console-rail" aria-expanded="true">{% svg_icon "panel-left-close" "icon" %}<span class="visually-hidden">{% translate "Navigation" %}</span></button>
+    {% endif %}<details class="rail__lang" data-dropdown>
+      <summary class="rail__lang-summary">{% if where == "drawer" %}<span class="rail__disc">{% svg_icon "languages" "icon rail__glyph" %}</span>{% endif %}<span class="visually-hidden">{% translate "Langue" %} : </span>{% for l in site.languages %}{% if l.active %}<span lang="{{ l.code }}" dir="{{ l.dir }}">{{ l.name }}</span>{% endif %}{% endfor %}{% svg_icon "chevron" "icon rail__lang-chevron" %}</summary>
+      {% include "components/language_segmented.html" with lang_names=True %}
+    </details>
+    <a class="rail__exit" href="{% url 'pages:home' %}">{% translate "Site public" %}</a>
+  </div>
+</div>
+{% else %}{% regroup portal_nav by group as rail_groups %}
+{% for group in rail_groups %}{% with first=group.list.0 %}{% if first.kind != "space" %}
+{% if not group.grouper or group.grouper == first.space.label or group.list|length == 1 and group.grouper == first.label %}
+<div class="rail__group rail__group--rule">
+  <ul class="rail__list" role="list">
+{% else %}
 <div class="rail__group">
-  {% if group.grouper %}<p class="rail__group-title" id="{{ id_prefix }}-group-{{ forloop.counter }}">{{ group.grouper }}</p>{% endif %}
-  <ul class="rail__list" role="list"{% if group.grouper %} aria-labelledby="{{ id_prefix }}-group-{{ forloop.counter }}"{% endif %}>
+  <p class="rail__group-title" id="{{ id_prefix }}-group-{{ forloop.counter }}">{{ group.grouper }}</p>
+  <ul class="rail__list" role="list" aria-labelledby="{{ id_prefix }}-group-{{ forloop.counter }}">
+{% endif %}
     {% for item in group.list %}
-    <li class="rail__li"><a class="rail__item" href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %} data-rail-item data-label="{{ item.label }}">{% svg_icon item.icon "icon rail__glyph" %}<span class="rail__label">{{ item.label }}</span></a></li>
+    <li class="rail__li"><a class="rail__item" href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %} data-rail-item data-rail-tip data-key="{{ item.key }}" data-label="{{ item.label }}"><span class="rail__disc">{% svg_icon item.icon "icon rail__glyph" %}</span><span class="rail__label">{{ item.label }}</span></a></li>
     {% endfor %}
   </ul>
 </div>
-{% endfor %}
+{% endif %}{% endwith %}{% endfor %}{% endif %}

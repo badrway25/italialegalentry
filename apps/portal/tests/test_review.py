@@ -381,7 +381,8 @@ def test_account_panel_never_prints_the_email_address_twice(client, seeded, user
     import re
 
     html = client.get(DASHBOARD).content.decode()
-    panel = re.search(r'<p class="portal-account__identity">.*?</p>', html, flags=re.S).group(0)
+    # design V5 (W3-B): the account is one quiet line at the dashboard's foot
+    panel = re.search(r'<p class="db-account__who">.*?</p>', html, flags=re.S).group(0)
     assert panel.count("sans-nom@example.test") == 1 and "<strong" not in panel
 
 
@@ -407,5 +408,8 @@ def test_pathways_page_presents_only_the_requested_page(alice, completed_orienta
     second = services.pathways_page(alice, "2")
     assert second["available"] and len(second["page_obj"].object_list) == 1 and len(calls) == 1
     calls.clear()
-    card = {c.key: c for c in services.dashboard_context(alice)["cards"]}["orientation"]
+    card = {c.key: c for c in services.bridge_cards(alice)}["orientation"]
     assert card.count == services.PAGE_SIZE + 1 and len(card.items) == 1 and len(calls) == 1
+    # a person's dashboard builds no card grid (F9): its legacy pre-assessment still costs one presentation
+    calls.clear()
+    assert services.dashboard_context(alice)["assessment"] is not None and len(calls) == 1

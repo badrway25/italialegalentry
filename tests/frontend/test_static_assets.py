@@ -21,15 +21,26 @@ pytestmark = pytest.mark.compliance
 
 
 def _tokens() -> dict[str, str]:
-    css = (STATIC / "css" / "tokens.css").read_text(encoding="utf-8")
-    root = css.split(":root {", 1)[1].split("\n}", 1)[0]
-    return dict(re.findall(r"(--[a-z0-9-]+):\s*([^;]+);", root))
+    """The EFFECTIVE value of every token: the top-level :root blocks of the sheets main.css imports, in
+    cascade order, the last declaration winning — what a page renders. Design V5 (W1-A, V5.4 plan §2.7):
+    reading static/css/tokens.css alone would hold V1 values that no page renders any more, since
+    static/css/v2/bridge.css, v4/tokens.css and v5/aliases.css re-value the V1 names."""
+    imports = re.findall(r'@import url\("([^"]+)"\)', (STATIC / "css" / "main.css").read_text(encoding="utf-8"))
+    tokens: dict[str, str] = {}
+    for sheet in imports:
+        css = re.sub(r"/\*.*?\*/", "", (STATIC / "css" / sheet).read_text(encoding="utf-8"), flags=re.S)
+        for block in re.findall(r"^:root\s*\{(.*?)^\}", css, flags=re.M | re.S):
+            tokens.update(
+                {name: " ".join(value.split()) for name, value in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", block)}
+            )
+    return tokens
 
 
 def _hex(tokens: dict[str, str], name: str) -> str:
     value = tokens[name].strip()
     while value.startswith("var("):
         value = tokens[value[4:-1].strip()].strip()
+    value = value.lower()
     assert re.fullmatch(r"#[0-9a-f]{6}", value), (name, value)
     return value
 
@@ -92,9 +103,11 @@ REQUIRED_TYPE_ROLES = [
 ]
 
 # (label, foreground token, background token, minimum ratio).
-# Re-verified against --paper #FAF7F0 on 21 September 2026: the ground moved when art direction A
-# replaced the token set, and a contrast figure computed against the previous ground is not a
-# contrast figure. Every value here is recomputed by the test itself, never trusted from a document.
+# The V1 names, resolved on the EFFECTIVE cascade (_tokens above): since design V5 (W1-A, 5 October 2026) --paper is
+# carta-50 #f4f3f0, --ink the V5 ink, the state triplets the V5 notices — the values a page renders. They were first
+# re-verified against --paper #FAF7F0 (21 September 2026), when art direction A moved the ground: a figure computed
+# against a ground no page shows is not a contrast figure. Every value here is recomputed by the test itself, never
+# trusted from a document; the pairs of the V5 families are tests/frontend/test_v5_tokens.py's.
 CONTRAST_PAIRS = [
     # Text (WCAG 1.4.3 — 4.5:1)
     ("ink on paper", "--ink", "--paper", 4.5),
@@ -143,28 +156,45 @@ def test_tokens_file_is_complete():
 
 
 def test_every_line_height_is_a_multiple_of_four():
-    """AD-A §3.3 and §8: the vertical rhythm is 4px, so a line-height that is not is a defect."""
+    """AD-A §3.3 and §8, RH-1 of design V5: the vertical rhythm is 4px, so a line-height that is not is a
+    defect. Read on the effective cascade, in px and in rem (V5 writes its line-heights in rem); a unitless
+    ratio — the fluid display line — is checked by eye on stills."""
     tokens = _tokens()
     offenders = []
     for name, value in tokens.items():
-        if name.endswith("-lh") and value.strip().endswith("px"):
-            px = int(value.strip().removesuffix("px"))
-            if px % 4:
-                offenders.append(f"{name}: {px}px")
+        if not name.endswith("-lh"):
+            continue
+        while value.startswith("var("):
+            value = tokens[value[4:-1].strip()]
+        m = re.fullmatch(r"([0-9.]+)(px|rem)", value.strip())
+        if not m:
+            continue
+        px = float(m[1]) * (16 if m[2] == "rem" else 1)
+        if abs(px / 4 - round(px / 4)) > 0.01:
+            offenders.append(f"{name}: {px}px")
     assert offenders == [], offenders
 
 
 def test_prose_size_never_changes_across_breakpoints():
     """
     Fluid interpolation is what flattened the previous hierarchy: the heading-to-prose ratio fell
-    from 1.62 at 1920 to 1.35 at 390. Display sizes step at breakpoints; prose does not move at all.
+    from 1.62 at 1920 to 1.35 at 390. Prose does not move at all, in any layer of the cascade. Design V5
+    (V5.4 plan §1.1) keeps one fluid size and one only: the display line, clamp 40 → 64.
     """
-    css = (STATIC / "css" / "tokens.css").read_text(encoding="utf-8")
-    code = re.sub(r"/\*.*?\*/", "", css, flags=re.S)  # comments explain the rule; they are not the rule
-    # Every redefinition of --t-prose-size outside the base :root block would break it.
-    for block in code.split("@media")[1:]:
-        assert "--t-prose-size" not in block, "prose size must not change at a breakpoint"
-    assert "clamp(" not in code, "no clamp() on the type scale: sizes step so ratios are designed"
+    imports = re.findall(r'@import url\("([^"]+)"\)', (STATIC / "css" / "main.css").read_text(encoding="utf-8"))
+    for sheet in imports:
+        code = re.sub(r"/\*.*?\*/", "", (STATIC / "css" / sheet).read_text(encoding="utf-8"), flags=re.S)
+        for start in (m.end() for m in re.finditer(r"@media[^{]*\{", code)):
+            depth, end = 1, start
+            while depth and end < len(code):  # the whole @media block, nested rules included
+                depth += {"{": 1, "}": -1}.get(code[end], 0)
+                end += 1
+            block = code[start:end]
+            for name in ("--t-prose-size:", "--t-body:", "--t-body-lh:"):
+                assert name not in block, f"{sheet}: prose size must not change at a breakpoint ({name})"
+    tokens = _tokens()
+    fluid = sorted(name for name, value in tokens.items() if name.startswith("--t-") and "clamp(" in value)
+    assert fluid == ["--t-display"], fluid
 
 
 @pytest.mark.parametrize("label, fg, bg, minimum", CONTRAST_PAIRS, ids=[p[0] for p in CONTRAST_PAIRS])
@@ -204,27 +234,42 @@ def test_every_icon_used_in_templates_exists_in_sprite():
         used |= set(re.findall(r'svg_icon "([a-z0-9-]+)"', path.read_text(encoding="utf-8")))
     missing = used - ids
     assert not missing, missing
+    # Design V5 (W1-B, plan §1.7): the sprite is built from static/icons/src by scripts/build_icons.py and
+    # named by apps/core/icons.py — the four audiences, the identity tier, «i cerchi» and the utilities, plus
+    # the V4 aliases that still have a producer (home, list, globe: tests/frontend/test_icons.py).
     assert {
         "person",
         "building",
         "institution",
         "university",
+        "ile-arch",
+        "ile-key",
+        "ile-steps",
+        "ile-mark",
+        "st-attesa",
+        "st-conforme",
         "arrow",
+        "arrow-start",
         "check",
         "warning",
         "shield",
+        "shield-alert",
         "calendar",
+        "calendar-clock",
         "document",
-        "globe",
         "menu",
         "close",
         "chevron",
         "search",
         "mail",
+        "at-sign",
         "phone",
-        "user",
         "lock",
+        "home",
+        "list",
+        "globe",
     } <= ids
+    assert not {"user", "key"} & ids, "retired with their last producer (apps/core/icons.py LEGACY)"
 
 
 def test_static_assets_have_no_external_hosts_or_forbidden_strings():
@@ -297,6 +342,9 @@ def test_main_js_is_an_es_module_without_external_dependencies():
     assert "import " not in js.replace("importNode", "")
     assert "prefers-reduced-motion" in js
     assert "IntersectionObserver" in js
-    assert "showModal" in js
+    # the dialogs are the overlay system's (static/js/src/overlay.js, W2-A): main.js keeps none, and a dropdown
+    # fallback for the pages that do not load the system yet
+    assert "showModal" not in js
+    assert "showModal()" in (STATIC / "js" / "src" / "overlay.js").read_text(encoding="utf-8")
     assert "aria-expanded" in js
     assert "Escape" in js

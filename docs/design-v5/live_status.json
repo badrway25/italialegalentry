@@ -1,0 +1,232 @@
+{
+  "schema": "ile-live-status-v54/1",
+  "updated": "2026-10-12",
+  "families": [
+    {
+      "key": "w1-p",
+      "title": "Anteprima = prodotto V5 dal vivo (strip, indice, personas, archivio di ricerca)",
+      "state": "v5",
+      "decision": "w1-p/CD_DECISION.md",
+      "tag": "v54/w1-p",
+      "date": "2026-10-08"
+    },
+    {
+      "key": "w1-a",
+      "title": "Fondazione V5: caratteri «Una voce», token, registro dei colori, angoli «Lo spigolo», focus",
+      "state": "v5",
+      "decision": "w1-a/REVIEW.md",
+      "tag": "v54/w1-a",
+      "date": "2026-10-09"
+    },
+    {
+      "key": "w2-c1",
+      "title": "Barra di navigazione «Il portico» — «Fase 3 — menu aperto», sviluppata (testata e quattro pannelli)",
+      "state": "v5",
+      "decision": "w2-c1/REVIEW.md",
+      "tag": "v54/w2-c1",
+      "date": "2026-10-09"
+    },
+    {
+      "key": "w1-b",
+      "title": "Sistema di icone semantico — una sola mano ILE, significati distinti (il registro, 110 simboli, Persona ≠ Impresa ≠ Istituzione ≠ Università)",
+      "state": "v5",
+      "decision": "w1-b/REVIEW.md",
+      "tag": "v54/w1-b",
+      "date": "2026-10-09"
+    },
+    {
+      "key": "w1-d",
+      "title": "Moto e caricatore «Lume»: la chiave che gira a ogni invio, la porta che si illumina dopo l’accesso, il moto ridotto come stato",
+      "state": "v5",
+      "decision": "w1-d/REVIEW.md",
+      "tag": "v54/w1-d",
+      "date": "2026-10-09"
+    },
+    {
+      "key": "w2-d",
+      "title": "L’hero definitivo nella home reale — il flusso di E2 al desktop, la composizione di E3 sui telefoni, la luce che riparte a ogni gesto — e la home resa coerente attorno: i capitoli come un solo oggetto",
+      "state": "v5",
+      "decision": "w2-d/REVIEW.md",
+      "tag": "v54/w2-d",
+      "date": "2026-10-10"
+    },
+    {
+      "key": "w1-c",
+      "title": "Componenti di base V5 — bottoni a lastra, campi «la lastra», pastiglie di stato «i cerchi» con un solo produttore, card per funzione, notice, schede e disclosure",
+      "state": "v5",
+      "decision": "w1-c/REVIEW.md",
+      "tag": "v54/w1-c",
+      "date": "2026-10-11"
+    },
+    {
+      "key": "w3-a",
+      "title": "La console «Tre livelli» — la rail notturna in tre livelli con «il lume» sulla pagina corrente e il piede fisso (chi è il conto, la lingua, il sito pubblico), una sola rail per spazio su ogni pagina, la cornice di pagina; sotto 64rem la rail distesa: la barra superiore, la barra inferiore con «Menu», il cassetto",
+      "state": "v5",
+      "decision": "w3-a/REVIEW.md",
+      "tag": "v54/w3-a",
+      "date": "2026-10-11"
+    },
+    {
+      "key": "w2-b",
+      "title": "L’accesso «Il varco» e le pagine d’ingresso — un palcoscenico vivo che risponde alla persona (le vie, la soglia, il telaio della porta, la chiave che gira all’invio) e un modulo premium: una colonna sulla carta, i campi «la lastra», un solo primario che tiene la chiave",
+      "state": "v5",
+      "decision": "w2-b/REVIEW.md",
+      "tag": "v54/w2-b",
+      "date": "2026-10-11"
+    },
+    {
+      "key": "w3-b",
+      "title": "I cruscotti — la persona, l’impresa, il ponte: il NowPanel, l’unico piano rialzato con l’unico primario e quattro varianti scelte dal sistema (una scadenza superata lo prende), «il registro» dei documenti per chi li tiene, le liste piatte, ciò che è secondario che si piega; nessuna griglia di carte, nessuna cifra in grande; l’impresa nella stessa grammatica; il ponte senza NowPanel, i suoi registri piatti",
+      "state": "v5",
+      "decision": "w3-b/REVIEW.md",
+      "tag": "v54/w3-b",
+      "date": "2026-10-11"
+    },
+    {
+      "key": "w2-a",
+      "title": "Il sistema degli overlay — uno solo, su elementi nativi: il cassetto della console (sotto 64rem, «Menu»), il popover del conto e il menu «⋮» di ogni riga di «Mes documents» (sui telefoni uno sheet dal basso sopra l’unico velo, col suo nome in testa), la parola della rail come l’unico tooltip del livello superiore; dialog, alertdialog, sheet e il drawer accanto a una lista pronti per le famiglie che li adottano, sulla tavola degli overlay",
+      "state": "v5",
+      "decision": "w2-a/REVIEW.md",
+      "tag": "v54/w2-a",
+      "date": "2026-10-12"
+    },
+    {
+      "key": "w3-f2",
+      "title": "Le pagine di contenuto, legali, d’errore e del conto — il resto dell’interno pubblico: «la lettura» (la grammatica dell’interno della home: la traccia, il titolo al bordo di lettura, i capitoli, i registri su linee sottili, un piede quieto) e «le pagine di servizio» (gli errori in quattro lingue con la porta a riposo, la 400 e la 500 autosufficienti, il conto in una sola cornice); il loro CSS in fogli di pagina, il foglio comune più leggero",
+      "state": "v5",
+      "decision": "w3-f2/REVIEW.md",
+      "tag": "v54/w3-f2",
+      "date": "2026-10-12"
+    }
+  ],
+  "surfaces": {
+    "home": {
+      "state": "v5",
+      "tag": "v54/w2-d"
+    },
+    "login": {
+      "state": "v5",
+      "tag": "v54/w2-b"
+    },
+    "signup": {
+      "state": "v5",
+      "tag": "v54/w2-b"
+    },
+    "password-reset": {
+      "state": "v5",
+      "tag": "v54/w2-b"
+    },
+    "password-reset-done": {
+      "state": "v5",
+      "tag": "v54/w2-b"
+    },
+    "email-verification-sent": {
+      "state": "v5",
+      "tag": "v54/w2-b"
+    },
+    "dashboard-person": {
+      "state": "v5",
+      "tag": "v54/w3-b"
+    },
+    "dashboard-person-terms-pending": {
+      "state": "v5",
+      "tag": "v54/w3-b"
+    },
+    "dashboard-person-empty": {
+      "state": "v5",
+      "tag": "v54/w3-b"
+    },
+    "company-dashboard": {
+      "state": "v5",
+      "tag": "v54/w3-b"
+    },
+    "org-bridge": {
+      "state": "v5",
+      "tag": "v54/w3-b"
+    },
+    "living-index": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "living-topic": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "news-index": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "faq": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "glossary-index": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "glossary-term": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "partners": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "contact-form": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "enquiry-company-needs": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "enquiry-collaboration": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "enquiry-done": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "legal-document": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "account-profile": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "account-email": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "account-password-change": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "account-mfa": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "account-delete": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "logout-confirm": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "error-404": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "error-410": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    },
+    "error-403": {
+      "state": "v5",
+      "tag": "v54/w3-f2"
+    }
+  }
+}

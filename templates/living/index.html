@@ -1,34 +1,42 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static lettura %}
+{% comment %}
+«Vivre en Italie» — the topics (gate G3). Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through
+cms/lettura.css): the head at the reading edge (the prescribed title and lead, whole); the ten topics as a register in
+two columns, each row the way to its topic — typographic, without glyphs (the icon registry: ten glyphs on one public
+page, and two of them twins; a topic's glyph stands once, on its own page).
+{% endcomment %}
 {% block page_title %}{% translate "Vivre en Italie" %}{% endblock %}
 {% block meta_description %}{% locked "p3.living.body" as living_body %}{{ living_body|striptags }}{% endblock %}
-{% block body_class %}page-living{% endblock %}
+{% block body_class %}page-living lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% if preview %}
 <div class="container">{% translate "Aperçu réservé à la rédaction — cette section n’est pas encore publiée." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
 {% endif %}
 <header class="page-header container">
-  {% locked "p3.living.title" "h1" "page-header__title" %}
+  {% locked_title "p3.living.title" %}
   {% locked "p3.living.body" "p" "page-header__lead" %}
 </header>
 
-<section class="container living-topics" aria-label="{% translate 'Thèmes' %}">
-  {% if topics %}
-  <ul class="topic-grid">
-    {% for topic, texts in topics %}
-    <li class="topic-card"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
-      <a class="topic-card__link" href="{{ topic.get_absolute_url }}">
-        {% if topic.icon %}<span class="topic-card__icon">{% svg_icon topic.icon "icon icon--lg" %}</span>{% endif %}
-        <span class="topic-card__title">{{ texts.title }}</span>
-        <span class="topic-card__count">{% if topic.sheet_count %}{% blocktranslate count n=topic.sheet_count %}{{ n }} fiche{% plural %}{{ n }} fiches{% endblocktranslate %}{% else %}{% translate "Fiches en préparation" %}{% endif %}</span>
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-    {% translate "Thèmes en préparation." as empty_title %}
-    {% include "components/empty_state.html" with title=empty_title %}
-  {% endif %}
+<section class="chapter living-topics" aria-label="{% translate 'Thèmes' %}">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      {% if topics %}
+      <ul class="registro registro--two registro--links topic-grid">
+        {% for topic, texts in topics %}
+        <li class="registro__row topic-card">
+          <p class="registro__title topic-card__title"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}><a class="topic-card__link" href="{{ topic.get_absolute_url }}">{{ texts.title }}</a></p>
+          <p class="registro__meta topic-card__count">{% if topic.sheet_count %}{% blocktranslate count n=topic.sheet_count %}{{ n }} fiche{% plural %}{{ n }} fiches{% endblocktranslate %}{% else %}{% translate "Fiches en préparation" %}{% endif %}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        {% translate "Thèmes en préparation." as empty_title %}
+        {% include "components/empty_state.html" with title=empty_title icon="sprout" %}
+      {% endif %}
+    </div>
+  </div>
 </section>
 {# CONTENT_PENDING_LEGAL_REVIEW: sheet content is created from the back-office after legal review; nothing is seeded. #}
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

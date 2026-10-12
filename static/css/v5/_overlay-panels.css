@@ -1,0 +1,350 @@
+/* ============================================================================================
+   OVERLAYS V5 — THE PANELS WITH A HEAD, PAGE-ONLY (W2-A; the owner's V5.8 CSS budget, 11 October 2026): the modal
+   and the alert dialog, the bottom sheet and its grip, the head / body / foot anatomy that the components dialog.html,
+   sheet.html and drawer.html draw, and a native modal's ::backdrop (`data-overlay-modal="native"`, showModal()).
+   No product page draws one of them today, so they stay out of main.css: a page loads them by linking the entry that
+   imports this partial — apps/core/static/core/overlay-panels.css, built to css/dist/core/overlay-panels.css by
+   scripts/build_css.mjs —, in its extra_head:
+       <link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">
+   THE RULE (docs/design-v5/QA/v54/w2-a/CONTRACT.md §1): a page that draws a dialog, an alert dialog, a bottom sheet, a
+   drawer of components/drawer.html (its head; and, beside a list, its phone sheet) or a native modal links that sheet —
+   today the overlay board and the design showcase; next W3-E's staff dialogs, W3-F2's danger confirmation, W3-C's
+   preview drawer and filter sheet, W2-C2's phone sheet if it is the sheet family.
+   What every page may draw stays in static/css/v5/overlays.css (main.css): the panel, its motion both ways, the one
+   scrim, the drawer, the popover / menu — a bottom sheet on a phone —, the tooltips, the scroll lock.
+   This sheet comes after main.css in the cascade, so what main.css's overlays.css says after a family's rules there —
+   reduced motion, forced colours, the keyboard's tier 0 — is said again here, after them, for these families.
+   The contract, the clocks and the anatomy are plan §1.14 and CONTRACT §1–§5; the families' notes are in overlays.css.
+   ============================================================================================ */
+
+/* the clocks these families read beyond the panel's own: a native backdrop arrives in 200 ms (a drawer's with its
+   panel, below), and follows a sheet's grip (--overlay-drag, 0 … 1, written by overlay/extras.js) */
+.overlay { --overlay-scrim-in: var(--motion-standard); --overlay-drag: 0; }
+.overlay-scrim { --overlay-drag: 0; }
+
+/* ==============================================================================================
+   THE ANATOMY — a head (an optional 40 px glyph disc for a consequence, the title, «Fermer» at the inline end — always
+   present: a grip or a scrim is never the only way out, WCAG 2.5.7), a body that scrolls on its own and a pinned foot.
+   ============================================================================================== */
+.overlay__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-4) var(--s-3);
+  padding-inline: var(--s-6) var(--s-3);
+}
+.overlay__glyph {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--glyph-disc-lg);
+  block-size: var(--glyph-disc-lg);
+  border-radius: var(--radius-full);
+  background: var(--surface-area);
+  color: var(--icon-default);
+}
+.overlay__glyph .icon,
+.overlay__close .icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+.overlay__title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+.overlay__title:focus { outline: none; }
+.overlay__title:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+/* «Fermer» — 44 × 44 for every pointer, the glyph in the ink of the secondary text; a link (`href="#…"`, the
+   no-script path) or a button, drawn the same */
+.overlay__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--hit-primary);
+  block-size: var(--hit-primary);
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+}
+@media (hover: hover) and (pointer: fine) {
+  .overlay__close:hover { background-color: var(--surface-hover); color: var(--text-1); transition-timing-function: var(--ease-enter); }
+}
+.overlay__close:active { background-color: var(--surface-hover); color: var(--text-1); transition-duration: 0ms; }
+
+.overlay__body {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: 0 var(--s-6);
+  padding-inline: var(--s-6);
+}
+.overlay__body > :first-child { margin-block-start: 0; }
+.overlay__body > :last-child { margin-block-end: 0; }
+/* a body that scrolls and holds nothing to focus is a stop of its own (overlay/extras.js, WCAG 2.1.1): its ring is
+   drawn inside its box, which the panel's rounded edge would clip */
+.overlay__body:focus-visible { outline-offset: calc(-1 * var(--focus-ring-width)); }
+/* a menu's body is its rows, laid out by the menu (overlays.css): none of the above */
+.overlay--popover .overlay__body { padding: 0; overflow: visible; }
+/* the foot is pinned; the primary at the inline end (the last child), a destructive action last as the garnet
+   outline — the order is the markup's */
+.overlay__foot {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+.overlay__foot > form { margin: 0; }
+
+/* ==============================================================================================
+   A NATIVE MODAL'S BACKDROP (`data-overlay-modal="native"`): --scrim-modal, opacity only, never a blur, on its
+   panel's clocks — it reads its custom properties from its dialog (B3). A trapped modal has none: the one
+   .overlay-scrim of overlays.css stands in for it; here the scrim, too, follows a sheet's grip.
+   ============================================================================================== */
+.overlay::backdrop {
+  background: var(--scrim-modal);
+  opacity: 0;
+  transition:
+    opacity var(--overlay-out) var(--overlay-out-ease),
+    display var(--overlay-out) allow-discrete,
+    overlay var(--overlay-out) allow-discrete;
+}
+.overlay:is([open], :popover-open)::backdrop {
+  opacity: calc(1 - var(--overlay-drag));
+  transition-duration: var(--overlay-scrim-in);
+  transition-timing-function: var(--overlay-in-ease);
+}
+@starting-style {
+  .overlay:is([open], :popover-open)::backdrop { opacity: 0; }
+}
+/* a menu dims nothing: its backdrop lets every press through (the platform's own rule) and is not drawn */
+.overlay--popover::backdrop { background: none; }
+.overlay-scrim[data-open] { opacity: calc(1 - var(--overlay-drag)); }
+.overlay-scrim[data-overlay-dragging] { transition: none; }
+
+/* ==============================================================================================
+   THE FAMILIES
+   ============================================================================================== */
+
+/* -- the modal and the alert dialog: from the centre of the viewport, the one exemption (MS §6 O-1) — scale .96 → 1
+      with opacity in 320 ms, out in 120 ms (the panel's own way out) with the scrim; its scrim arrives in 200 ms. */
+.overlay--dialog {
+  --overlay-in: var(--motion-emphasized);
+  --overlay-closed-scale: 0.96;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  inline-size: min(calc(100% - 2 * var(--s-4)), 36rem);
+  block-size: fit-content;
+  max-block-size: min(calc(100dvh - 2 * var(--s-4)), 44rem);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-4);
+  transform-origin: 50% 50%;
+}
+.overlay--dialog.overlay--wide { inline-size: min(calc(100% - 2 * var(--s-4)), 48rem); }
+
+/* -- a drawer of components/drawer.html: its native backdrop moves with the panel; its head and foot clear the safe
+      areas (the drawer itself is overlays.css's) */
+.overlay--drawer { --overlay-scrim-in: var(--motion-emphasized); }
+.overlay--drawer .overlay__head { padding-block-start: max(var(--s-4), env(safe-area-inset-top, 0px)); }
+.overlay--drawer .overlay__foot { padding-block-end: max(var(--s-4), env(safe-area-inset-bottom, 0px)); }
+
+/* -- the bottom sheet — and a drawer beside the list opened on a phone (overlay.js, `data-overlay-mode="sheet"`):
+      from the bottom, on the sheet's spring (550 ms, no overshoot), out in 200 ms on the layout curve; a 48 px bleed
+      under the viewport's edge, so a drag upward or the spring's last pixel never shows a gap, and the safe area kept
+      clear. The grip is decorative: «Fermer» is the way out by keyboard and by pointer. */
+.overlay--sheet,
+.overlay[data-overlay-mode="sheet"] {
+  --overlay-in: var(--spring-sheet-duration);
+  --overlay-in-ease: var(--spring-sheet);
+  --overlay-out: var(--motion-standard);
+  --overlay-out-ease: var(--ease-layout);
+  --overlay-scrim-in: var(--motion-standard);
+  --overlay-closed-opacity: 1;
+  --overlay-closed-scale: none;
+  --overlay-closed-translate: 0 100%;
+  --overlay-bleed: var(--s-12);
+  position: fixed;
+  inset: auto 0 calc(-1 * var(--overlay-bleed));
+  margin-inline: auto;
+  inline-size: 100%;
+  max-inline-size: 40rem;
+  block-size: auto;
+  max-block-size: calc(92dvh + var(--overlay-bleed));
+  padding-block-end: calc(var(--overlay-bleed) + env(safe-area-inset-bottom, 0px));
+  border-block-end: 0;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: var(--shadow-4);
+}
+.overlay__grip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  block-size: var(--s-6);
+  cursor: grab;
+  touch-action: none;
+}
+.overlay__grip + .overlay__head { padding-block-start: var(--s-1); }
+.overlay__grip::before {
+  content: "";
+  inline-size: var(--s-10);
+  block-size: var(--s-1);
+  border-radius: var(--radius-full);
+  background: var(--line-structure);
+}
+.overlay[data-overlay-dragging] { cursor: grabbing; transition: none; }
+.overlay[data-overlay-dragging]::backdrop { transition: none; }
+
+/* -- the control's own tooltip (`data-tip` without "layer"): its `aria-label`, drawn by the control's ::after, so it
+      needs no markup and no script to appear. It waits --tooltip-delay (400 ms) under the pointer and then fades in
+      --motion-fast; it is there at once under the keyboard's focus; it leaves at 0 ms (leaving, blur; Esc and a press
+      through overlay.js, `data-tip-off`). Hoverable (WCAG 1.4.13): the tip's own 6 px transparent edge bridges the
+      gap to its control, and a pseudo-element is its control's box for :hover. The warm group (MS-O5) is CSS too:
+      inside `data-tip-group`, --tip-warm turns 1 once the pointer has been in the group for the wait and back to 0 the
+      wait after it left; a warm neighbour shows at 0 ms + 0 ms. Its box is the top-layer tip's (overlays.css §6), and
+      its control is a positioned box there (`:where([data-tip])`). Never on a submit button, whose ::after is the
+      loader's busy key: that one takes the layer tip. */
+@property --tip-warm {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+[data-tip-group] {
+  --tip-warm: 0;
+  transition: --tip-warm 0ms linear var(--tooltip-delay);
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-tip-group]:hover { --tip-warm: 1; }
+}
+[data-tip]:not([data-tip="layer"])::after {
+  content: attr(aria-label);
+  box-sizing: border-box;
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-start: 50%;
+  z-index: var(--z-tooltip);
+  inline-size: max-content;
+  max-inline-size: min(20rem, calc(100vw - 2 * var(--s-4)));
+  padding: var(--s-1) var(--s-2);
+  /* the bridge: 6 px of transparent edge toward the control; the painted corners stay 4 px round */
+  border-block-end: 6px solid transparent;
+  border-radius: var(--radius-sm);
+  border-end-start-radius: var(--radius-sm) calc(var(--radius-sm) + 6px);
+  border-end-end-radius: var(--radius-sm) calc(var(--radius-sm) + 6px);
+  background: var(--tooltip-bg);
+  background-clip: padding-box;
+  color: var(--tooltip-fg);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: break-word;
+  translate: calc(-50% * var(--dir)) 0;
+  pointer-events: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0ms, visibility 0ms;
+}
+[data-tip-side="block-end"]:not([data-tip="layer"])::after {
+  inset-block: 100% auto;
+  border-block-end: 0;
+  border-block-start: 6px solid transparent;
+  border-end-start-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  border-start-start-radius: var(--radius-sm) calc(var(--radius-sm) + 6px);
+  border-start-end-radius: var(--radius-sm) calc(var(--radius-sm) + 6px);
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-tip]:not([data-tip="layer"]):hover::after {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity calc((1 - var(--tip-warm)) * var(--motion-fast)) var(--ease-enter) calc((1 - var(--tip-warm)) * var(--tooltip-delay)),
+      visibility 0ms linear calc((1 - var(--tip-warm)) * var(--tooltip-delay));
+  }
+}
+[data-tip]:not([data-tip="layer"]):focus-visible::after { opacity: 1; visibility: visible; transition: none; }
+/* put away by Esc or a press (overlay.js): as specific as the hover and the focus rules above, and after them */
+[data-tip]:not([data-tip="layer"])[data-tip-off]::after { opacity: 0; visibility: hidden; transition: none; }
+/* a control whose menu or dialog is open names nothing: its panel is there */
+[data-tip][aria-expanded="true"]::after { display: none; }
+
+/* ==============================================================================================
+   ≤ 40rem (640 px): the dialog becomes a bottom sheet (a menu does too: overlays.css); no tooltip
+   ============================================================================================== */
+@media (max-width: 40rem) {
+  [data-tip]::after { display: none; }
+  .overlay--dialog {
+    --overlay-in: var(--spring-sheet-duration);
+    --overlay-in-ease: var(--spring-sheet);
+    --overlay-out: var(--motion-standard);
+    --overlay-out-ease: var(--ease-layout);
+    --overlay-closed-opacity: 1;
+    --overlay-closed-scale: none;
+    --overlay-closed-translate: 0 100%;
+    --overlay-bleed: var(--s-12);
+    inset: auto 0 calc(-1 * var(--overlay-bleed));
+    margin: 0;
+    inline-size: 100%;
+    block-size: auto;
+    max-block-size: calc(92dvh + var(--overlay-bleed));
+    padding-block-end: calc(var(--overlay-bleed) + env(safe-area-inset-bottom, 0px));
+    border-block-end: 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+}
+
+/* ==============================================================================================
+   REDUCED MOTION, FORCED COLOURS, PAPER — and, last, THE KEYBOARD — for these families, after their rules
+   ============================================================================================== */
+/* reduced motion is a state (MS-O4, RM-1): one 80 ms opacity, no transform at any frame — a phone's dialog included */
+@media (prefers-reduced-motion: reduce) {
+  .overlay--dialog,
+  .overlay--sheet,
+  .overlay[data-overlay-mode="sheet"] {
+    --overlay-closed-opacity: 0;
+    --overlay-closed-translate: none;
+    --overlay-closed-scale: none;
+  }
+  .overlay::backdrop,
+  .overlay:is([open], :popover-open)::backdrop {
+    transition: opacity var(--motion-reduced) linear, display var(--motion-reduced) allow-discrete, overlay var(--motion-reduced) allow-discrete;
+  }
+}
+
+@media (forced-colors: active) {
+  .overlay--dialog,
+  .overlay--sheet,
+  .overlay[data-overlay-mode="sheet"] { border: 1px solid CanvasText; }
+  .overlay__grip::before { background: CanvasText; forced-color-adjust: none; }
+  [data-tip]:not([data-tip="layer"])::after { outline: 1px solid CanvasText; outline-offset: -1px; }
+}
+
+@media print {
+  [data-tip]::after { display: none !important; }
+}
+
+/* tier 0 (R-07): a panel opened or closed from the keyboard — or opened `instant` by a script — at once */
+html[data-input="key"] .overlay::backdrop,
+.overlay.overlay[data-instant]::backdrop,
+html[data-input="key"] .overlay__close { transition-duration: 0ms; }

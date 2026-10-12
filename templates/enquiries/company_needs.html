@@ -1,21 +1,35 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static lettura %}
+{% comment %}
+«Recueil des besoins» of the companies (Phase 1, §1.1; gate G2): the 14 prescribed labels in their order, the locked
+consent and button. Design V5.4 (W3-F2 — the content pages): the head at the reading edge (the space's name, the
+prescribed title and introduction, whole); the prescribed quote as the page's one inset, on its rule at the reading
+edge; the form a chapter — the section device beside it from 75rem — drawn by v5/field.css, its one primary.
+{% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
-{% block body_class %}page-enquiries page-enquiries--company-needs{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--company-needs lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-<article class="container enquiry-page enquiry-page--companies">
-  <header class="page-header">
+<article class="enquiry-page enquiry-page--companies">
+  <header class="page-header container">
     <p class="page-header__eyebrow">{% translate "Espace Entreprises" %}</p>
-    {% locked "p1.companies.title" "h1" "page-header__title" %}
+    {% locked_title "p1.companies.title" %}
     {% locked "p1.companies.intro" "p" "page-header__lead" %}
   </header>
-  <figure class="blockquote blockquote--institutional">
-    {% locked "p1.companies.quote" "blockquote" "blockquote__text" %}
-  </figure>
-  <section class="enquiry-page__form" id="formulaire" aria-labelledby="company-needs-form-title">
-    <h2 id="company-needs-form-title" class="enquiry-page__form-title">{% translate "Recueil des besoins" %}</h2>
-    {% include "enquiries/partials/company_needs_form.html" %}
+  <section class="chapter enquiry-page__form" id="formulaire" aria-labelledby="company-needs-form-title">
+    <div class="container chapter__inner">
+      <div class="chapter__head">
+        {% svg_icon "ile-steps" "icon chapter__mark" %}
+        <h2 id="company-needs-form-title" class="chapter__title enquiry-page__form-title">{% translate "Recueil des besoins" %}</h2>
+      </div>
+      <div class="chapter__body">
+        <figure class="blockquote blockquote--institutional enquiry-page__quote">
+          {% locked "p1.companies.quote" "blockquote" "blockquote__text" %}
+        </figure>
+        {% include "enquiries/partials/company_needs_form.html" %}
+      </div>
+    </div>
   </section>
 </article>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

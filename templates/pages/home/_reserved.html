@@ -1,13 +1,19 @@
 {% comment %}
-12. RESERVED AREA — secondary, never protagonist (Implementation §3.10): one small panel at the
-bottom of the page. Prescribed p3.reserved.title / body / button (gate G3) and the
-reserved_area_public_link flag are both checked by pages.services.build_reserved(). The button
-leads to the login page, or to the dashboard for a signed-in visitor. No CRM widget on the homepage.
+12. RESERVED AREA — secondary, never protagonist (Implementation §3.10): one slim row at the foot of
+the page. Prescribed p3.reserved.title / body / button (gate G3) and the reserved_area_public_link flag
+are both checked by pages.services.build_reserved(). The button leads to the login page, or to the
+dashboard for a signed-in visitor. No CRM widget on the homepage.
+
+Design V5.4 (W2-D step 3; DESIGN_SYSTEM_V5 PX13 «la porta riservata»): the page's last door, on the
+night ground the footer continues — the key of the mark (the sprite's identity glyph `ile-key`, «Espace
+réservé» in apps/core/icons.py; not a padlock: a lock reads «not for you»),
+the prescribed title and sentence, one quiet button. A row, not a chapter: it carries no mark and no
+lead, and it never competes with the hero's action.
 {% endcomment %}
-<section class="home-reserved" id="{{ s.anchor }}" aria-labelledby="home-reserved-title" data-section="reserved">
+<section class="chapter--dark home-reserved" id="{{ s.anchor }}" aria-labelledby="home-reserved-title" data-section="reserved">
   <div class="container">
     <div class="home-reserved__panel">
-      <span class="home-reserved__mark" aria-hidden="true">{% svg_icon "lock" "icon" %}</span>
+      <span class="home-reserved__mark" aria-hidden="true">{% svg_icon "ile-key" "icon" %}</span>
       <div class="home-reserved__text">
         <h2 class="home-reserved__title" id="home-reserved-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
         <p class="home-reserved__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>

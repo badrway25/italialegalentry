@@ -55,13 +55,22 @@ def _crumb(label) -> dict:
 
 
 def _render(request, template: str, context: dict, *crumbs: dict):
+    from portal import services as portal_services
+
     root = {"label": _("Espace entreprise"), "url": reverse("companies:dashboard")}
+    if root["url"] == request.path:
+        root["url"] = ""  # never a link to the page one is on
     # Every view that has a company puts it under « company »; the navigation uses it to hide the
-    # entries that only mean something to an account that HAS one.
+    # entries that only mean something to an account that HAS one. The rail is the console shell's
+    # (design V5, V5.4 plan §1.18 D06; W3-A): «Espace entreprise» — this module's own entries
+    # (services.navigation), then the way back to «Espace réservé».
     context.update(
         {
-            "portal_nav": services.navigation(
-                request.user, getattr(request, "companies_active", ""), company=context.get("company")
+            "portal_nav": portal_services.shell_navigation(
+                request.user,
+                portal_services.SPACE_COMPANY,
+                getattr(request, "companies_active", ""),
+                company=context.get("company"),
             ),
             "breadcrumbs": [root, *crumbs] if crumbs else [{**root, "url": ""}],
             "noindex": True,
@@ -99,7 +108,14 @@ def dashboard(request):
         "profile_url": services.safe_reverse("companies:profile"),
         "declare_url": services.safe_reverse("companies:profile_create"),
     }
-    return _render(request, "companies/dashboard.html", context)
+    # The dashboard's composition — the NowPanel, the needs by who holds them — is the console's dashboard presenter
+    # (design V5, W3-B): the same raised plane and the same ledger as the person's, over this app's own answers.
+    from portal import services as portal_services
+
+    context.update(portal_services.company_dashboard(company, needs, context["next_action"], user=request.user))
+    # The space's first page ends its trail on itself — «Espace entreprise › Tableau de bord», the word the rail
+    # lights — as every other page does (the W3-A review's m3).
+    return _render(request, "companies/dashboard.html", context, {"label": _("Tableau de bord"), "url": ""})
 
 
 # ---------------------------------------------------------------------------------------------

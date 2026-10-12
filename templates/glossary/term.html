@@ -1,37 +1,51 @@
-{% extends "base.html" %}{% load i18n %}
-{% comment %}Permalink of one glossary term (Phase 3, gate G3). Contract: `entry` (GlossaryEntry), `related` (list).{% endcomment %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}Permalink of one glossary term (Phase 3, gate G3). Contract: `entry` (GlossaryEntry), `related` (list).
+
+Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): the head (the glossary's
+name, the Italian term as the h1); one chapter at the reading edge — the definition at the lead's size, the related
+terms as links, the verification line (D26: shown only where a date exists), what the definition is, and the way back.
+{% endcomment %}
 {% block page_title %}{{ entry.term }} — {% translate "Glossaire" %}{% endblock %}
 {% block meta_description %}{{ entry.term }} : {{ entry.definition|truncatechars:150 }}{% endblock %}
-{% block body_class %}page-glossary-term{% endblock %}
+{% block body_class %}page-glossary-term lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% if is_preview %}
 <div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
 {% endif %}
-<article class="container glossary-term">
-  <header class="page-header glossary-term__header">
+<article class="glossary-term">
+  <header class="page-header container glossary-term__header">
     <p class="page-header__eyebrow">{% translate "Glossaire" %}</p>
     <h1 class="page-header__title glossary-term__title" lang="{{ entry.term_lang }}">{{ entry.term }}</h1>
   </header>
-  <p class="glossary-term__definition"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</p>
+  <div class="chapter">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        <p class="glossary-term__definition"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</p>
 
-  {% if related %}
-  <section class="glossary-term__related" aria-labelledby="related-terms-title">
-    <h2 id="related-terms-title">{% translate "Termes liés" %}</h2>
-    <ul class="glossary-term__related-list">
-      {% for rel in related %}<li><a href="{{ rel.url }}" lang="{{ rel.term_lang }}">{{ rel.term }}</a></li>{% endfor %}
-    </ul>
-  </section>
-  {% endif %}
+        {% if related %}
+        <section class="glossary-term__related" aria-labelledby="related-terms-title">
+          <h2 class="chapter__label" id="related-terms-title">{% translate "Termes liés" %}</h2>
+          <ul class="chapter__links glossary-term__related-list">
+            {% for rel in related %}<li><a href="{{ rel.url }}" lang="{{ rel.term_lang }}">{{ rel.term }}</a></li>{% endfor %}
+          </ul>
+        </section>
+        {% endif %}
 
-  <footer class="glossary-term__meta">
-    <dl class="meta-list">
-      {% if entry.source %}<div><dt>{% translate "Source" %}</dt><dd{% if site.lang != site.fallback_language %} lang="{{ site.fallback_language }}"{% endif %}>{{ entry.source }}</dd></div>{% endif %}
-      {% if entry.last_reviewed_at %}<div><dt>{% translate "Dernière vérification" %}</dt><dd><time datetime="{{ entry.last_reviewed_at|date:'Y-m-d' }}">{{ entry.last_reviewed_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
-    </dl>
-    <p class="glossary-term__note">{% translate "Définition à caractère informatif." %}</p>
-    <p><a class="btn btn--secondary" href="{% url 'glossary:index' %}#{{ entry.key }}">{% translate "Retour au glossaire" %}</a></p>
-  </footer>
+        <div class="glossary-term__facts">
+          {% if entry.source or entry.last_reviewed_at %}
+          <dl class="verifica glossary-term__meta">
+            {% if entry.source %}<div><dt>{% translate "Source" %}</dt><dd{% if site.lang != site.fallback_language %} lang="{{ site.fallback_language }}"{% endif %}>{{ entry.source }}</dd></div>{% endif %}
+            {% if entry.last_reviewed_at %}<div><dt>{% translate "Dernière vérification" %}</dt><dd><time datetime="{{ entry.last_reviewed_at|date:'Y-m-d' }}">{{ entry.last_reviewed_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
+          </dl>
+          {% endif %}
+          <p class="fine glossary-term__note">{% translate "Définition à caractère informatif." %}</p>
+        </div>
+        <p class="actions"><a class="btn btn--secondary" href="{% url 'glossary:index' %}#{{ entry.key }}">{% translate "Retour au glossaire" %}</a></p>
+      </div>
+    </div>
+  </div>
 </article>
 {% endblock %}
-{% block extra_head %}{% if term_jsonld %}<script type="application/ld+json">{{ term_jsonld }}</script>{% endif %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">
+{% if term_jsonld %}<script type="application/ld+json">{{ term_jsonld }}</script>{% endif %}{% endblock %}

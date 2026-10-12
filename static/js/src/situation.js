@@ -12,9 +12,12 @@
  *                200 ms from 16 px in the reading direction; nothing under reduced motion
  *   stepper      the current node moves; a node fills when its question gets an answer
  *   hash         #q-<name> opens that question (the Stepper's links work without the script)
+ *
+ * Motion, the reduced-motion question and the frame wait come from motion.js: the one gate
+ * (V5.4 plan §1.5, W1-D) — the setting, or the preview's html.rm flag.
  */
 
-import { animate } from "motion";
+import { animate, nextFrame, reducedMotion } from "./motion.js";
 
 const form = document.querySelector("[data-wizard]");
 if (form) {
@@ -23,7 +26,6 @@ if (form) {
   const prev = form.querySelector("[data-wizard-prev]");
   const next = form.querySelector("[data-wizard-next]");
   const position = form.querySelector("[data-wizard-position]");
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   const direction = () => (document.documentElement.dir === "rtl" ? -1 : 1);
   let index = -1;
 
@@ -40,7 +42,7 @@ if (form) {
     index = target;
     const arriving = steps[index];
     const last = index === steps.length - 1;
-    const animated = Boolean(travel) && !reduced.matches;
+    const animated = Boolean(travel) && !reducedMotion();
     // The arriving question is drawn invisible until the leaving one has gone (pattern «wizard»:
     // 120 ms out, then 200 ms in — never two panels at once).
     if (animated) arriving.style.opacity = "0";
@@ -70,7 +72,7 @@ if (form) {
       // finished (the natural state IS the final state), so no `style` attribute survives the swap.
       const clear = (controls, element) => {
         // A frame later: Motion commits its final values right after `finished` resolves.
-        window.requestAnimationFrame(() => {
+        nextFrame().then(() => {
           if (controls && typeof controls.cancel === "function") controls.cancel();
           ["opacity", "transform", "translate"].forEach((property) => element.style.removeProperty(property));
           if (!element.getAttribute("style")) element.removeAttribute("style");

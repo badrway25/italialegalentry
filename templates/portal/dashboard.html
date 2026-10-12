@@ -1,27 +1,40 @@
 {% extends "portal/base_portal.html" %}{% load i18n %}
 {% comment %}
-The Person's dashboard — design V4 (CREATIVE_DIRECTION.md §3.4): a workspace of three panel
-measures, no grid of equal cards, no KPI tiles.
+THE DASHBOARD — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 4, §1.15, §3.1 item 7; W3-B), on the
+console's page frame (W3-A: one page header, the page's one primary). Rules: apps/portal/static/portal/v5/_dashboard.css.
 
-  ContextHeader   the account's name, the title, the file's reference · state chip · since, and the
-                  primary action of the next step at the end of the row (with a case file; without
-                  one the prescribed access-point header stays)
-  Row 1 — 8/4     «Prochaine étape» (level 2, the one raised panel at rest, gradient edge) with the
-                  responsibility bar · «Dossier» (level 1) with the five-notch meter. Without a case
-                  file the next step is the orientation questionnaire, and the panel is alone.
-  Row 2 — 12      JourneyRail: the seven locked steps, the current one ringed, the MA→IT frontier
-  Row 3 — 7/5     «Mes documents»: HealthStrip + the three most urgent rows, then the latest files
-                  deposited · «Mes échéances»
-  Row 4 — 6/6     Communications · Academy
-  Row 5 — 12      «Mon compte»: identity, last sign-in, profile, security, back-office (staff)
+A PERSON'S DASHBOARD answers, in this order — the DOM's order too (h1 → NowPanel → journey):
+  the page header      who and which file: the account's name, the title, the file's reference (ILE Mono), its state
+                       and since when. No action here: the primary is the NowPanel's (O50)
+  1 · the NowPanel     the ONE raised panel (the action card, v5/card.css): what to do now — the piece, its state,
+                       its date and who answers for it — and the ONE primary that does it. Composed by the system,
+                       never arranged by the person (plan §1.15): «à vous» · «en attente d'un tiers» · «rien à
+                       faire» · «pas encore de dossier»; an overdue date takes it over (portal.services.now_panel,
+                       fed by cases.services.next_action — T1: one next action for the dashboard, the case and the
+                       documents). One partial, templates/portal/partials/now_panel.html, the company's too
+  2 · Mon parcours     the journey «La soglia» — W3-D's rail, placed here and not redrawn
+  3 · Dossier          the file's facts, in a summary strip (v5/card.css): its objective, its progress, who
+                       intervenes. From 64rem it stands beside the NowPanel (the grid places it; the DOM keeps it
+                       after the journey, which carries no control, so the focus goes NowPanel → Dossier)
+  4 · Mes documents    «il registro» — the file's pieces by who holds them (the chips' marks, coloured by the group,
+                       O62), then every piece the person must act on, each with its act, then the pieces in
+                       somebody else's hands. The NowPanel's piece is drawn there and only there
+  5 · the dates and the communications, flat, under hairlines (SH-2: hairlines before boxes)
+  6 · what is secondary folds, in native disclosures whose default the server picks from the data and never
+      remembers: the Academy (open when there is an enrolment), the pre-assessment's sources, the latest files
+  7 · the account, last, in one quiet line — until the console's account popover (W2-A) holds it
 
-The shell's case header and next action are NOT drawn on this page (base_portal.html blocks):
-their facts live in the panels above. Accounts without a case file — company, institution,
-university, professional — keep their card grid until their own workspaces exist (the bridge is
-marked below). The access-point wording (title and body) is PRESCRIBED and rendered only through
-{% locked %} (p3.reserved.*), never retyped. An empty region is one hairline and one sentence
-naming who fills it and when, with the resolving action inline — never a dashed box with a
-centred icon, and never a zero.
+No stat card, no grid of equal cards, no board (plan §1.15). One raised panel and one shadow value on the screen
+(SH-8); corners 8 (the panels) · 4 (the controls) · full (the chips). Nothing animates at load (MS §3.2).
+
+THE BRIDGE — the accounts that are not a person (an institution, a university, a professional, a company account
+without the person's role) have no file and no next action of their own until their workspaces exist: no NowPanel,
+their registers in the same grammar — the main column (headed by one quiet link to where the account's work lives,
+when it has such a place: its space or its role's register, in the rail's words; then what is due, what came in,
+then what they sent and filed) and the side (the organisation they belong to), then the pre-assessment if they hold
+one, then the account's line (W3-B step 2; one register: templates/portal/partials/card.html). The access-point wording (title and body) is PRESCRIBED
+and rendered only through {% locked %} (p3.reserved.*), never retyped. Every word is the catalogue's: nothing on this
+page is new copy.
 {% endcomment %}
 {% block page_title %}{% translate "Espace réservé" %}{% endblock %}
 {% block meta_description %}{% translate "Votre espace personnel : parcours, documents, échéances et communications." %}{% endblock %}
@@ -31,25 +44,20 @@ centred icon, and never a zero.
 
 {% block portal_header %}
 {% if case %}
-<header class="ctx">
+<header class="ctx db-head">
   <div class="ctx__words">
     {% if account.name %}<p class="ctx__greeting" dir="auto">{{ account.name }}</p>{% endif %}
     <h1 class="ctx__title">{% translate "Tableau de bord" %}</h1>
     <p class="ctx__meta">
       <span class="ctx__ref">{{ case.reference }}</span>
-      <span class="chip state state--{{ case.status }}" data-register="{{ case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ case.status|chip_stage }}">{{ case.get_status_display }}</span>
+      {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
       <span class="ctx__since">{% blocktranslate with date=case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span>
     </p>
   </div>
-  {% if next_action and next_action.url %}
-  <div class="ctx__action">
-    <a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
-  </div>
-  {% endif %}
 </header>
 {% else %}
 {% locked "p3.reserved.title" as reserved_title %}{% locked "p3.reserved.body" as reserved_body %}
-<header class="ws-head">
+<header class="ws-head db-head">
   <div class="ws-head__words">
     <h1 class="ws-head__title">{{ reserved_title }}</h1>
     <p class="ws-head__lead">{{ reserved_body }}</p>
@@ -59,218 +67,258 @@ centred icon, and never a zero.
 {% endblock %}
 
 {% block portal_content %}
-{% if notices %}
-<section class="portal-notices" aria-label="{% translate 'Avis de l’équipe' %}">
-  {% for notice in notices %}
-  {% include "components/notice.html" with kind="institutional" title=notice.heading_fr text=notice.body_fr|linebreaksbr lang="fr" %}
-  {% endfor %}
-</section>
-{% endif %}
-
-{% if cards and not is_person %}
-{% comment %}
-Company, institution, university and professional accounts do not have a case file yet — their
-workspaces are P1 in docs/source-of-truth/REQUIREMENT_MATRIX_V2.md — so they keep the previous
-card grid rather than losing the function they had. A bridge, and marked as one.
-{% endcomment %}
-<div class="portal-cards">
-  {% for card in cards %}{% include "portal/partials/card.html" with card=card %}{% endfor %}
-</div>
-{% endif %}
-
+<div class="db{% if case %} db--file{% endif %}{% if not is_person %} db--bridge{% endif %}">
 {% if is_person %}
-<div class="ws-grid">
 
-  {% comment %} Row 1 — the next step, and the file {% endcomment %}
-  <section class="panel panel--l2 panel--edge ws-next{% if not case %} ws-next--alone{% endif %}{% if next_action %} ws-next--{{ next_action.urgency }}{% endif %}" aria-labelledby="ws-next-title">
-    {% if next_action %}
-    <p class="panel__eyebrow" id="ws-next-title">{% if next_action.is_for_someone_else %}{% translate "Prochaine étape" %}{% else %}{% translate "Votre prochaine action" %}{% endif %}</p>
-    <p class="panel__title">{{ next_action.label }}</p>
-    {% if next_action.detail %}<p class="panel__text">{{ next_action.detail }}</p>{% endif %}
-    <div class="resp">
-      {% include "components/glyph.html" with glyph=next_action.responsible_actor|actor_glyph size="sm" %}
-      <span class="resp__label">{% translate "Responsable" %}</span>
-      <span class="resp__actor">{{ next_action.get_responsible_display|default:next_action.responsible_actor }}</span>
-      {% if next_action.is_for_someone_else %}<span class="resp__note">{% translate "Cette étape ne dépend pas de vous." %}</span>{% endif %}
-    </div>
-    {% comment %} The action is the context header's (CD §3.4.1): one PRIMARY per screen. {% endcomment %}
-    {% elif not case %}
-    {% comment %} No case file yet: the file is opened by the orientation questionnaire. {% endcomment %}
-    <p class="panel__eyebrow" id="ws-next-title">{% translate "Votre prochaine action" %}</p>
-    <p class="panel__text">{% translate "Votre checklist se construit à partir du questionnaire d’orientation : elle indiquera chaque élément requis, qui en est responsable et pour quand." %}</p>
-    {% if orientation_url %}<p class="panel__actions"><a class="btn btn--primary btn--arrow" href="{{ orientation_url }}">{% translate "Commencer le questionnaire" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-    {% else %}
-    <p class="panel__eyebrow" id="ws-next-title">{% translate "Prochaine étape" %}</p>
-    <p class="panel__text">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
-    {% endif %}
-  </section>
+  {% comment %} 1 · THE NOWPANEL — the one raised panel, the one primary {% endcomment %}
+  {% include "portal/partials/now_panel.html" with now=now %}
 
-  {% if case %}
-  <section class="panel panel--l1 ws-file" aria-labelledby="ws-file-title">
-    <p class="panel__eyebrow" id="ws-file-title">{% translate "Dossier" %}</p>
-    <dl class="facts">
-      <div class="facts__row"><dt>{% translate "Objectif" %}</dt><dd>{{ case.get_purpose_display }}</dd></div>
-      <div class="facts__row"><dt>{% translate "État" %}</dt><dd><span class="chip state state--{{ case.status }}" data-register="{{ case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ case.status|chip_stage }}">{{ case.get_status_display }}</span></dd></div>
-      <div class="facts__row"><dt>{% translate "Responsable" %}</dt><dd>
-        {% if responsible %}<ul class="facts__list" role="list">{% for assignment in responsible %}<li>{{ assignment.get_role_display }}{% if assignment.organisation %} — {{ assignment.organisation.name }}{% endif %}</li>{% endfor %}</ul>
-        {% else %}{% translate "Vous — aucun intervenant n’est assigné à ce dossier" %}{% endif %}
-      </dd></div>
-      {% if progress and progress.total %}
-      <div class="facts__row facts__row--meter"><dt>{% translate "Avancement" %}</dt><dd>
-        <span class="meter" aria-hidden="true" data-meter>{% for _ in progress.notches %}<span class="meter__notch{% if forloop.counter <= progress.filled %} meter__notch--on{% endif %}"></span>{% endfor %}</span>
-        <span class="meter__words">{% blocktranslate with done=progress.done total=progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}</span>
-        {% if progress.overdue %}<span class="chip state state--expired" data-register="azione">{% blocktranslate count n=progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
-      </dd></div>
-      {% endif %}
-    </dl>
-    {% if case.suspension_reason %}<p class="notice notice--warn">{{ case.suspension_reason }}</p>{% endif %}
-  </section>
-  {% endif %}
-
-  {% comment %} Row 2 — where you are {% endcomment %}
+  {% comment %} 2 · MON PARCOURS — the journey «La soglia» (W3-D's component, placed) {% endcomment %}
   {% if journey %}
-  <section class="ws-journey" aria-labelledby="ws-journey-title">
-    <h2 class="panel__eyebrow" id="ws-journey-title">{% translate "Mon parcours" %}</h2>
+  <section class="db-journey" aria-labelledby="db-journey-title">
+    <h2 class="db-h2" id="db-journey-title">{% svg_icon glyphs.journey "icon" %}<span>{% translate "Mon parcours" %}</span></h2>
     {% translate "Où j’en suis" as journey_label %}
     {% include "components/journey_rail.html" with steps=journey label=journey_label %}
   </section>
   {% endif %}
 
-  {% comment %} Row 3 — the pieces, the dates {% endcomment %}
-  <section class="panel panel--l1 ws-pieces" aria-labelledby="ws-pieces-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="ws-pieces-title">{% translate "Mes documents" %}</h2>
-      {% if documents_url %}<a class="btn btn--link btn--sm" href="{{ documents_url }}">{% translate "Voir mes documents" %}</a>{% endif %}
+  {% comment %} 3 · DOSSIER — the file's facts, a summary strip {% endcomment %}
+  {% if case %}
+  <section class="db-file" aria-labelledby="db-file-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="db-file-title">{% svg_icon glyphs.file "icon" %}<span>{% translate "Dossier" %}</span></h2>
+      {% if case_url %}<a class="db-link" href="{{ case_url }}">{% translate "Votre dossier" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
     </div>
-    {% if pieces and pieces.counts %}
-      {% include "components/health_strip.html" with counts=pieces.counts filters=pieces.filters compact=True %}
-      <ul class="doc-collection doc-collection--bare" role="list" aria-label="{% translate 'Pièces demandées pour ce dossier' %}">
-        {% for row in pieces.rows %}{% include "components/document_row.html" with row=row compact=True %}{% endfor %}
+    <dl class="summary db-file__facts">
+      <div class="summary__item"><dt>{% translate "Objectif" %}</dt><dd>{{ case.get_purpose_display }}</dd></div>
+      {% if progress_words %}
+      <div class="summary__item"><dt>{% translate "Avancement" %}</dt><dd>{{ progress_words }}</dd></div>
+      {% endif %}
+      <div class="summary__item db-file__who"><dt>{% translate "Qui intervient sur ce dossier" %}</dt><dd>
+        {% if responsible %}<ul class="db-file__actors" role="list">{% for assignment in responsible %}<li>{{ assignment.get_role_display }}{% if assignment.organisation %} — <span dir="auto">{{ assignment.organisation.name }}</span>{% endif %}</li>{% endfor %}</ul>
+        {% else %}{% translate "Vous — aucun intervenant n’est assigné à ce dossier" %}{% endif %}
+      </dd></div>
+    </dl>
+    {% if case.suspension_reason %}{% include "components/notice.html" with kind="warning" text=case.suspension_reason %}{% endif %}
+  </section>
+  {% endif %}
+
+  {% if notices %}
+  <section class="portal-notices db-notices" aria-label="{% translate 'Avis de l’équipe' %}">
+    {% for notice in notices %}
+    {% include "components/notice.html" with kind="institutional" title=notice.heading_fr text=notice.body_fr|linebreaksbr lang="fr" %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% comment %} 4 · MES DOCUMENTS — «il registro», then the pieces: the person's first, each with its act {% endcomment %}
+  {% if case %}
+  <section class="db-todo" aria-labelledby="db-todo-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="db-todo-title">{% svg_icon glyphs.pieces "icon" %}<span>{% translate "Mes documents" %}</span></h2>
+      {% if documents_url %}<a class="db-link" href="{{ documents_url }}">{% translate "Voir mes documents" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
+    </div>
+    {% if pieces %}
+    <div class="db-ledger">
+      <p class="db-ledger__total">{% blocktranslate count n=pieces.counts.total %}{{ n }} pièce demandée{% plural %}{{ n }} pièces demandées{% endblocktranslate %}</p>
+      <ul class="db-ledger__groups" role="list">
+        {% for group in pieces.groups %}
+        <li class="db-ledger__group db-ledger__group--{{ group.key }}"><span class="db-ledger__label">{{ group.label }} <span class="db-ledger__n">{{ group.states|length }}</span></span><span class="db-ledger__marks" aria-hidden="true">{% for state in group.states %}{% svg_icon state|chip_mark:"documents.RequirementState" "icon" %}{% endfor %}</span></li>
+        {% endfor %}
       </ul>
-      {% if pieces.more %}<p class="panel__more">{% blocktranslate count n=pieces.more %}et {{ n }} autre pièce{% plural %}et {{ n }} autres pièces{% endblocktranslate %}</p>{% endif %}
+    </div>
+    {% if pieces.rows %}
+    <ul class="db-tasks" role="list" aria-label="{% translate 'Pièces demandées pour ce dossier' %}">
+      {% for row in pieces.rows %}
+      <li class="db-task{% if not row.is_yours %} db-task--theirs{% endif %}" data-piece="{{ row.id }}">
+        <div class="db-task__words">
+          <p class="db-task__title" id="db-piece-{{ row.id }}"{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% endif %}>{{ row.title }}</p>
+          {% if row.detail %}<p class="db-task__meta"{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% endif %}>{{ row.detail }}</p>{% endif %}
+        </div>
+        <div class="db-task__state">{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}</div>
+        <div class="db-task__due">{% if row.due_date %}<span class="db-due{% if row.urgency %} db-due--{{ row.urgency }}{% endif %}">{% svg_icon row.urgency|concept:"due"|default:"calendar" "icon" %}<span class="visually-hidden">{% translate "Échéance" %} </span><time datetime="{{ row.due_date|date:'Y-m-d' }}">{{ row.due_date|date:"d.m.Y" }}</time>{% if row.due_word %}<span class="db-due__word">{{ row.due_word }}</span>{% endif %}</span>{% endif %}</div>
+        <div class="db-task__end">
+          {% if row.is_yours %}
+          <a class="btn btn--secondary btn--sm" href="{{ row.detail_url }}" aria-describedby="db-piece-{{ row.id }}">{% if row.may_file %}{% if row.current %}{% translate "Remplacer la pièce" %}{% else %}{% translate "Déposer la pièce" %}{% endif %}{% else %}{% translate "Consulter" %}{% endif %}</a>
+          {% elif not row.is_for_the_person %}
+          <span class="db-task__who">{% include "components/glyph.html" with glyph=row.responsible_actor|actor_glyph size="sm" %}<span>{{ row.responsible }}</span></span>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if pieces.more %}<p class="db-line">{% blocktranslate count n=pieces.more %}et {{ n }} autre pièce{% plural %}et {{ n }} autres pièces{% endblocktranslate %}</p>{% endif %}
     {% else %}
-      <p class="empty">
-        {% translate "Ne téléversez que les documents qui vous sont demandés dans le cadre de votre parcours : la liste apparaîtra ici avec l’état de chacun." %}
-        {% if documents_url %}<a href="{{ documents_url }}">{% translate "Voir mes documents" %}</a>{% endif %}
+    <p class="db-empty">{% translate "Ne téléversez que les documents qui vous sont demandés dans le cadre de votre parcours : la liste apparaîtra ici avec l’état de chacun." %}</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% comment %} 5 · THE DATES AND THE COMMUNICATIONS — flat, under hairlines {% endcomment %}
+  <div class="db-side">
+    {% comment %} When the only date is the one the NowPanel took over, it is drawn there with the way to every date: no section left with a head and nothing under it. {% endcomment %}
+    {% if deadlines or not now.deadline_pk %}
+    <section class="db-dates" aria-labelledby="db-dates-title">
+      <div class="db-sec__head">
+        <h2 class="db-h2" id="db-dates-title">{% svg_icon glyphs.dates "icon" %}<span>{% translate "Mes échéances" %}</span></h2>
+        {% if deadlines_url and deadlines %}<a class="db-link" href="{{ deadlines_url }}">{% translate "Toutes mes échéances" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
+      </div>
+      {% if deadlines %}
+      <ul class="db-list" role="list">
+        {% for deadline in deadlines %}
+        <li class="db-list__row">
+          <span class="db-list__title" dir="auto">{{ deadline.title }}</span>
+          <span class="db-due{% if deadline.urgency %} db-due--{{ deadline.urgency }}{% endif %}">{% svg_icon deadline.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ deadline.date|date:'Y-m-d' }}">{{ deadline.date|date:"d.m.Y" }}</time>{% if deadline.word %}<span class="db-due__word">{{ deadline.word }}</span>{% endif %}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="db-empty">{% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." %}</p>
+      {% endif %}
+    </section>
+    {% endif %}
+
+    <section class="db-messages" aria-labelledby="db-messages-title">
+      <div class="db-sec__head">
+        <h2 class="db-h2" id="db-messages-title">{% svg_icon glyphs.messages "icon" %}<span>{% translate "Communications" %}</span></h2>
+        {% if messages_url and messages_list %}<a class="db-link" href="{{ messages_url }}">{% translate "Toutes mes communications" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
+      </div>
+      {% if messages_list %}
+      <ul class="db-list" role="list">
+        {% for message in messages_list %}
+        <li class="db-list__row{% if message.is_unread %} db-list__row--unread{% endif %}">
+          <a class="db-list__link" href="{{ message.url }}">{% if message.is_unread %}<span class="db-unread" aria-hidden="true"></span>{% endif %}<span class="db-list__title" dir="auto">{{ message.subject }}</span></a>
+          <span class="db-list__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} · <span class="db-list__new">{% translate "Non lue" %}</span>{% endif %}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="db-empty">{% translate "Les messages que l’équipe vous adresse apparaîtront ici." %}</p>
+      {% endif %}
+    </section>
+  </div>
+
+{% else %}
+
+  {% comment %}
+  THE BRIDGE — the accounts that are not a person (an institution, a university, a professional, a company account
+  without the person's role): no file and no next action of their own yet — their workspaces are P1 in
+  docs/source-of-truth/REQUIREMENT_MATRIX_V2.md —, so no NowPanel: the page claims nothing the system does not know.
+  The system still orders priority (plan §1.15): their registers, in the person's grammar, flat under hairlines — first
+  what is due and what came in (the dates, an overdue one said by its chip; the communications), then what they sent
+  and filed; the organisation they belong to stands beside, as the file's facts do on a person's page
+  (portal.services.bridge_cards; templates/portal/partials/card.html). No grid of equal cards, no figure in large.
+  {% endcomment %}
+  <div class="db-main">
+    {% comment %} Where the account's work lives — its space or its role's register, named as the rail names it (portal.services._bridge_space): one quiet link, no claim. {% endcomment %}
+    {% if space %}<p class="db-space"><a class="db-link" href="{{ space.url }}">{{ space.label }}{% svg_icon "chevron-end" "icon" %}</a></p>{% endif %}
+    {% for card in cards %}{% if card.key == "deadlines" or card.key == "messages" %}{% include "portal/partials/card.html" with card=card %}{% endif %}{% endfor %}
+    {% for card in cards %}{% if card.key == "requests" or card.key == "documents" %}{% include "portal/partials/card.html" with card=card %}{% elif card.key == "orientation" and not assessment %}{% include "portal/partials/card.html" with card=card %}{% endif %}{% endfor %}
+  </div>
+  {% for card in cards %}{% if card.key == "organisation" %}
+  <div class="db-side">
+    {% include "portal/partials/card.html" with card=card %}
+  </div>
+  {% endif %}{% endfor %}
+
+  {% if notices %}
+  <section class="portal-notices db-notices" aria-label="{% translate 'Avis de l’équipe' %}">
+    {% for notice in notices %}
+    {% include "components/notice.html" with kind="institutional" title=notice.heading_fr text=notice.body_fr|linebreaksbr lang="fr" %}
+    {% endfor %}
+  </section>
+  {% endif %}
+{% endif %}
+
+  {% comment %} 6 · WHAT IS SECONDARY FOLDS — native disclosures, their default picked by the server, never remembered {% endcomment %}
+  {% if is_person or assessment %}
+  <div class="db-folds">
+    {% if is_person %}
+    <div class="accordion db-fold">
+      <details class="accordion__item db-academy"{% if academy %} open{% endif %}>
+        <summary class="accordion__summary"><h2 class="db-h2">{% svg_icon glyphs.academy "icon" %}<span>{% translate "Academy" %}</span></h2></summary>
+        <div class="accordion__body">
+          {% if academy and academy.course %}
+          <div class="db-course">
+            <p class="db-course__title" id="db-course-title">{{ academy.course }}</p>
+            <p class="db-course__state">{% chip academy.status "academy.EnrolmentStatus" %}{{ academy.status_label }}{% endchip %}</p>
+            {% if academy.url %}<p class="db-course__act"><a class="btn btn--secondary btn--sm" href="{{ academy.url }}" aria-describedby="db-course-title">{% translate "Consulter" %}</a></p>{% endif %}
+          </div>
+          {% else %}
+          {% safe_url 'academy:catalogue' as academy_url %}
+          <p class="db-empty">{% translate "Aucune formation en cours." %}{% if academy_url %} <a href="{{ academy_url }}">{% translate "Academy" %}</a>{% endif %}</p>
+          {% endif %}
+        </div>
+      </details>
+
+      {% if documents %}
+      <details class="accordion__item db-deposits">
+        <summary class="accordion__summary"><h2 class="db-h2">{% svg_icon glyphs.deposits "icon" %}<span>{% translate "Derniers dépôts" %}</span></h2></summary>
+        <div class="accordion__body">
+          {% comment %} The latest files deposited, with what the scan found: a file is not a piece. {% endcomment %}
+          <ul class="db-list" role="list">
+            {% for document in documents %}
+            <li class="db-list__row">
+              <span class="db-list__title" dir="auto">{{ document.label }}</span>
+              <span class="db-list__meta">{% if document.detail %}{{ document.detail }} · {% endif %}{% chip document.scan_status "documents.ScanStatus" %}{{ document.state_label }}{% endchip %}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </details>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if assessment %}
+    <section class="db-assessment" aria-labelledby="db-assessment-title">
+      <div class="db-sec__head">
+        <h2 class="db-h2" id="db-assessment-title">{% svg_icon glyphs.assessment "icon" %}<span>{% translate "Votre pré-évaluation" %}</span></h2>
+        {% if pathways_url %}<a class="db-link" href="{{ pathways_url }}">{% translate "Voir le détail de la pré-évaluation" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
+      </div>
+      <div class="outcome outcome--{{ assessment.outcome_kind }}">
+        <p class="outcome__kind">{{ assessment.outcome_label }}</p>
+        {% if assessment.rationale %}<p class="db-assessment__text"><span dir="auto">{{ assessment.rationale }}</span></p>{% endif %}
+      </div>
+      <p class="db-line">
+        <span>{% translate "Jeu de règles" %} <span class="db-ref">v{{ assessment.ruleset_version }}</span></span>
+        <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
       </p>
+      {% if assessment.sources %}
+      <div class="accordion db-fold">
+        <details class="accordion__item">
+          <summary class="accordion__summary"><span>{% translate "Sources" %}</span></summary>
+          <div class="accordion__body">
+            <ol class="sources">
+              {% for source in assessment.sources %}
+              <li class="sources__item"><span>{% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}{{ source.title }}{% endif %}{% if source.reference %} — {{ source.reference }}{% endif %}{% if source.consulted_on %} <span class="sources__consulted">{% blocktranslate with date=source.consulted_on %}consultée le {{ date }}{% endblocktranslate %}</span>{% endif %}</span></li>
+              {% endfor %}
+            </ol>
+          </div>
+        </details>
+      </div>
+      {% else %}
+      <p class="note">{% translate "Cette pré-évaluation ne s’appuie sur aucune règle actuellement en vigueur dans la plateforme : aucune source ne lui est donc rattachée. Elle reste une orientation, jamais une décision." %}</p>
+      {% endif %}
+      {% if assessment.missing_count %}
+      <p class="gloss">{% blocktranslate count counter=assessment.missing_count %}Une exigence identifiée comme manquante figure dans votre liste de pièces.{% plural %}{{ counter }} exigences identifiées comme manquantes figurent dans votre liste de pièces.{% endblocktranslate %}</p>
+      {% endif %}
+    </section>
     {% endif %}
-    {% if documents %}
-    {% comment %} The latest files deposited, with what the scan found: a file is not a piece. {% endcomment %}
-    <p class="panel__eyebrow deposits__head">{% translate "Derniers dépôts" %}</p>
-    <ul class="deposits" role="list">
-      {% for document in documents %}
-      <li class="deposits__row">
-        <span class="deposits__name">{{ document.label }}</span>
-        {% if document.detail %}<span class="deposits__kind">{{ document.detail }}</span>{% endif %}
-        <span class="chip state state--{{ document.state }}" data-register="{{ document.scan_status|chip_register:'documents.ScanStatus' }}">{{ document.state_label }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  </section>
+  </div>
+  {% endif %}
 
-  <section class="panel panel--l1 ws-deadlines" aria-labelledby="ws-deadlines-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="ws-deadlines-title">{% translate "Mes échéances" %}</h2>
-    </div>
-    {% if deadlines %}
-    <ul class="dates" role="list">
-      {% for deadline in deadlines %}
-      <li class="dates__row{% if deadline.urgency %} dates__row--{{ deadline.urgency }}{% endif %}">
-        <span class="dates__when">{% if deadline.urgency == "overdue" %}{% svg_icon "warning" "icon" %}{% elif deadline.urgency == "soon" %}{% svg_icon "clock" "icon" %}{% else %}{% svg_icon "calendar" "icon" %}{% endif %}<time datetime="{{ deadline.date|date:'Y-m-d' }}">{{ deadline.date|date:"d.m.Y" }}</time></span>
-        <span class="dates__what">{{ deadline.title }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p class="empty">{% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." %}</p>
-    {% endif %}
-  </section>
-
-  {% comment %} Row 4 — exchanges, training {% endcomment %}
-  <section class="panel panel--l1 ws-messages" aria-labelledby="ws-messages-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="ws-messages-title">{% translate "Communications" %}</h2>
-    </div>
-    {% if messages_list %}
-    <ul class="threads" role="list">
-      {% for message in messages_list %}
-      <li class="threads__row{% if message.is_unread %} threads__row--unread{% endif %}">
-        <a class="threads__link" href="{{ message.url }}">
-          <span class="threads__subject">{{ message.subject }}</span>
-          <span class="threads__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} <span class="chip state state--review" data-register="neutro">{% translate "Nouveau" %}</span>{% endif %}</span>
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p class="empty">{% translate "Les messages que l’équipe vous adresse apparaîtront ici." %}</p>
-    {% endif %}
-  </section>
-
-  <section class="panel panel--l1 ws-academy" aria-labelledby="ws-academy-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="ws-academy-title">{% translate "Academy" %}</h2>
-    </div>
-    {% if academy and academy.course %}
-    <p class="panel__title">{{ academy.course }}</p>
-    <p class="panel__text"><span class="chip state" data-register="{{ academy.status|chip_register:'academy.EnrolmentStatus' }}">{{ academy.status_label }}</span></p>
-    {% if academy.url %}<p class="panel__actions"><a class="btn btn--secondary btn--sm" href="{{ academy.url }}">{% translate "Consulter" %}</a></p>{% endif %}
-    {% else %}
-    {% safe_url 'academy:catalogue' as academy_url %}
-    <p class="empty">
-      {% translate "Aucune formation en cours." %}
-      {% if academy_url %}<a href="{{ academy_url }}">{% translate "Academy" %}</a>{% endif %}
-    </p>
-    {% endif %}
-  </section>
-
-  {% comment %} Row 5 — the account, last: the least urgent thing on this page {% endcomment %}
-  <section class="panel panel--l1 ws-account" aria-labelledby="ws-account-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="ws-account-title">{% translate "Mon compte" %}</h2>
-    </div>
-    <p class="portal-account__identity">
-      {% if account.name %}<strong dir="auto">{{ account.name }}</strong>{% endif %}
-      <span>{{ account.email }}</span> · <span>{{ account.type_label }}</span>
-      {% if account.last_login %}<br><span>{% translate "Dernière connexion :" %} <time datetime="{{ account.last_login|date:'c' }}">{{ account.last_login|date:"d.m.Y H:i" }}</time></span>{% endif %}
-    </p>
-    <ul class="panel__actions panel__actions--list" role="list">
-      {% if account.profile_url %}<li><a class="btn btn--secondary btn--sm" href="{{ account.profile_url }}">{% translate "Profil" %}</a></li>{% endif %}
-      {% if account.mfa_url %}<li><a class="btn btn--secondary btn--sm" href="{{ account.mfa_url }}">{% translate "Sécurité du compte" %}</a></li>{% endif %}
-      {% if account.backoffice_url %}<li><a class="btn btn--secondary btn--sm" href="{{ account.backoffice_url }}">{% translate "Back-office" %}</a></li>{% endif %}
+  {% comment %} 7 · THE ACCOUNT — one quiet line, last: the least urgent thing on this page {% endcomment %}
+  <section class="db-account" aria-labelledby="db-account-title">
+    <h2 class="db-account__title" id="db-account-title">{% translate "Mon compte" %}</h2>
+    <p class="db-account__who"><span>{{ account.email }}</span> · <span>{{ account.type_label }}</span>{% if account.last_login %} · <span>{% translate "Dernière connexion :" %} <time datetime="{{ account.last_login|date:'c' }}">{{ account.last_login|date:"d.m.Y H:i" }}</time></span>{% endif %}</p>
+    <ul class="db-account__links" role="list">
+      {% if account.profile_url %}<li><a href="{{ account.profile_url }}">{% translate "Profil" %}</a></li>{% endif %}
+      {% if account.mfa_url %}<li><a href="{{ account.mfa_url }}">{% translate "Sécurité du compte" %}</a></li>{% endif %}
+      {% if account.backoffice_url %}<li><a href="{{ account.backoffice_url }}">{% translate "Back-office" %}</a></li>{% endif %}
     </ul>
   </section>
 
 </div>
-{% endif %}
-
-{% if assessment %}
-<section class="panel panel--l1 ws-assessment" aria-labelledby="ws-assessment-title">
-  <div class="panel__head">
-    <h2 class="panel__section" id="ws-assessment-title">{% translate "Votre pré-évaluation" %}</h2>
-    {% if pathways_url %}<a class="btn btn--link btn--sm" href="{{ pathways_url }}">{% translate "Voir le détail de la pré-évaluation" %}</a>{% endif %}
-  </div>
-  <div class="outcome outcome--{{ assessment.outcome_kind }}">
-    <p class="outcome__kind">{{ assessment.outcome_label }}</p>
-    {% if assessment.rationale %}<p class="panel__text">{{ assessment.rationale }}</p>{% endif %}
-  </div>
-  <p class="panel__meta">
-    <span>{% translate "Jeu de règles" %} <span class="ctx__ref">v{{ assessment.ruleset_version }}</span></span>
-    <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
-  </p>
-  {% if assessment.sources %}
-  <ol class="sources">
-    {% for source in assessment.sources %}
-    <li class="sources__item"><span>{% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}{{ source.title }}{% endif %}{% if source.reference %} — {{ source.reference }}{% endif %}{% if source.consulted_on %} <span class="sources__consulted">{% blocktranslate with date=source.consulted_on %}consultée le {{ date }}{% endblocktranslate %}</span>{% endif %}</span></li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="note">{% translate "Cette pré-évaluation ne s’appuie sur aucune règle actuellement en vigueur dans la plateforme : aucune source ne lui est donc rattachée. Elle reste une orientation, jamais une décision." %}</p>
-  {% endif %}
-  {% if assessment.missing_count %}
-  <p class="gloss">{% blocktranslate count counter=assessment.missing_count %}Une exigence identifiée comme manquante figure dans votre liste de pièces.{% plural %}{{ counter }} exigences identifiées comme manquantes figurent dans votre liste de pièces.{% endblocktranslate %}</p>
-  {% endif %}
-</section>
-{% endif %}
 {% endblock %}

@@ -1,7 +1,11 @@
 {% comment %}
-Card — use sparingly (news teasers, sheets). Contract: `title`, optional `url` (whole card
-becomes clickable, the title link is the only tab stop), `eyebrow`, `text`, `meta` (str or safe
-html), `lang`, `flat` (True → no box, hairline rule only).
+Card — the RECORD card of design V5 (static/css/v5/card.css, cards by purpose): something that exists and is
+read — a news entry, a related space, a sheet — and, with `url`, opened: the whole card is then the target
+and the title link its only tab stop. Contract: `title`, optional `url`, `eyebrow`, `text`, `meta` (str or
+safe html), `lang`, `flat` (True → an entry of a list: no box, the hairline of the row above — the form for
+several records in a row, which are a list and never a row of boxes).
+The two other purposes are written where they are composed, not here: the action card (`card card--action`,
+ONE action in `card__action`) and the summary strip (`dl.summary`).
 {% endcomment %}
 <article class="card{% if url %} card--link{% endif %}{% if flat %} card--flat{% endif %}"{% if lang %} lang="{{ lang }}"{% endif %}>
   {% if eyebrow %}<p class="card__eyebrow">{{ eyebrow }}</p>{% endif %}

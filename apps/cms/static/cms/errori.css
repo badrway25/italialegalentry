@@ -1,0 +1,93 @@
+/* ============================================================================================
+   THE PAGE SHEET OF THE ERROR PAGES — design V5.4, W3-F2 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 2, §2.3;
+   the review's M1). The 400, 403, 404, 410, 429 and 500 pages are pages of service — the same partial as the account
+   pages (static/css/v5/_servizio.css) — and they seat the brand's door at rest (CREATIVE_DIRECTION_V5 §0 item 2, §20;
+   DS V5 PX21): the owner's door stage as drawn (static/css/v5/_door.css, the entrance's partial) and, below, its seat
+   on these pages. Loaded in extra_head after main.css (static/css/dist/cms/errori.css, built by scripts/build_css.mjs)
+   by templates/errors/base_error.html and templates/errors/standalone.html (400 and 500, which need no database); the
+   account pages keep cms/servizio.css, without the door (V5.8: a surface's CSS loads where it is used). The imports
+   are written as they resolve in the collected tree: cms/errori.css → css/v5/_x.css (DS 2026 §2). Tokens only,
+   logical properties only, no literal colour; the stage is direction: ltr, so the door never mirrors.
+   ============================================================================================ */
+@import url("../css/v5/_door.css");
+@import url("../css/v5/_servizio.css");
+
+/* the door at rest (templates/errors/_door.html): the owner's door stage with the key out of the lock. Static: no
+   light, nothing moves, reduced motion is the same picture; never mirrored, while its SEAT follows the page. Compact
+   above the label below 64rem, at the reading edge; from 64rem in the head's end seat, beside what happened and what
+   to do, its threshold on the actions' line (the end seat is the left of an Arabic page). 5rem wide on a phone, 7rem
+   from 48rem, 14rem from 64rem (templates/errors/_door.html's `sizes` follows these). On the paper of a page the door
+   casts no shadow: the drop-shadow is the stage's on night (the hero, the login). */
+.error-page__door {
+  --door-w: 5rem;
+  --door-pull: calc(var(--door-w) * -24 / 368); /* the stage's margin beside the arch (x 264–288, 608–632) */
+  margin-block-end: var(--s-6);
+  margin-inline-start: var(--door-pull); /* the arch, not its box, on the reading edge */
+}
+
+/* the stage is left to right in every locale: on an Arabic page the reading edge is its inline end */
+[dir="rtl"] .error-page__door {
+  margin-inline: 0 var(--door-pull);
+}
+
+/* a tablet's page is wider than a phone's: the door above the label grows with it */
+@media (min-width: 48rem) {
+  .error-page__door {
+    --door-w: 7rem;
+  }
+}
+
+.error-page__door .door-stage__photo {
+  filter: none;
+}
+
+/* the key out of the lock: the verbatim key set down on the threshold — turned on its side about its own centre (its
+   bow at the door's right, its bit down), resting on the top step (stage y 477) on the door's axis (x 448). Its box is
+   the stage's key box (_door.css: 37.333 × 87.733) moved to x 429.333, y 414.467 in stage units. */
+.error-page__door .error-page__key {
+  --x: 429.333;
+  --y: 414.467;
+  transform: rotate(90deg);
+}
+
+/* from 64rem one row of the page's twelve columns: what happened and what to do (`.error-page__body`, one block, so
+   nothing in it stretches) in seven at the reading edge, the door in the end seat — its threshold on the actions' line
+   when the words are the taller, the words from the page's top when the door is */
+@media (min-width: 64rem) {
+  .error-page {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .error-page > * {
+    grid-column: 1 / -1;
+  }
+
+  .error-page__body {
+    grid-row: 1;
+    grid-column: 1 / span 7;
+    align-self: start;
+    min-inline-size: 0;
+  }
+
+  .error-page__door {
+    --door-w: 14rem;
+    grid-row: 1;
+    grid-column: 9 / -1;
+    justify-self: end;
+    align-self: end;
+    margin-block: 0;
+    margin-inline: 0 var(--door-pull); /* the arch on the end edge: the stage's inline end, the page's right */
+  }
+
+  [dir="rtl"] .error-page__door {
+    margin-inline: var(--door-pull) 0; /* the page's left, the stage's inline start */
+  }
+}
+
+@media print {
+  .error-page__door {
+    display: none;
+  }
+}

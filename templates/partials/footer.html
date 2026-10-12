@@ -10,7 +10,7 @@
         official « Mentions légales » (Allegato 1, BLOCKED_BY_MISSING_OFFICIAL_SOURCE). They are
         not rendered here until that text is published.
         {% endcomment %}
-        <p><a class="site-footer__email email" href="mailto:{{ site.contact_email }}">{% svg_icon "mail" "icon icon--sm" %}<span>{{ site.contact_email }}</span></a></p>
+        <p><a class="site-footer__email email" href="mailto:{{ site.contact_email }}">{% svg_icon "at-sign" "icon icon--sm" %}<span>{{ site.contact_email }}</span></a></p>
         {% brand_words as words %}{% if words %}<p class="site-footer__mark">{% brand "site-footer__wordmark-inline" %} — {{ words }}</p>{% endif %}
       </div>
       <nav class="site-footer__col site-footer__nav" aria-label="{% translate 'Informations légales' %}">
@@ -34,7 +34,7 @@
         <h2 class="site-footer__heading">{% translate "Le projet" %}</h2>
         <p>{% blocktranslate with project=site.project_name promoter=site.promoter %}{{ project }} est un écosystème d’information et d’orientation promu par {{ promoter }}.{% endblocktranslate %}</p>
         {% if gates.phase3_public %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}
-        <a class="site-footer__antifraud" href="{{ antifraud_url }}">{% svg_icon "shield" "icon" %}<span>{% locked "p3.antifraud.title" %}</span></a>
+        <a class="site-footer__antifraud" href="{{ antifraud_url }}">{% svg_icon "shield-alert" "icon" %}<span>{% locked "p3.antifraud.title" %}</span></a>
         {% endif %}{% endif %}
       </div>
     </div>

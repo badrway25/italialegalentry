@@ -1,0 +1,1076 @@
+{
+ "what": "The home hero's four audience photographs (V5.4 W2-D; HERO_FINAL C1): one per origin, none used twice; black-and-white at rest in the home hero only (DL54-12). Files copied byte for byte from the imagery lane (proof/research/hero/he-assets/photos/) and the hero-final plates (proof/research/hero/he/img/), never re-encoded.",
+ "pipeline": [
+  "ILE V5.3 · hero H-E · the four audience photographs — PROVISIONAL research derivatives (2 October 2026). One photograph per audience, no photograph used twice.",
+  "Hero final (V5.4) — two 1:1 widths missing from he-assets/photos, cut with the Image Art Director's pipeline (he-assets/.work/tools/build_he.py: masters → solve_gains on the 3:2 master → finish → Lanczos + unsharp → clean → AVIF q50 s6 / WebP q78 m6), imported read-only. PROVISIONAL, like the published set."
+ ],
+ "policy": "Self-hosted only, never hotlinked. Provisional adoption of stock and the image rulings O54 / O55 remain the owner's business record (V5.4 plan §1.16, §1.19).",
+ "photos": [
+  {
+   "audience": "Persona",
+   "key": "persona",
+   "label_fr": "Personnes",
+   "slug": "lectrice-bibliotheque-dos",
+   "pexels_id": 29492060,
+   "photographer": "Julio Lopez",
+   "photographer_url": "https://www.pexels.com/@julio-lopez-75309646",
+   "page_url": "https://www.pexels.com/photo/young-adult-studying-in-modern-library-setting-29492060/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Young adult studying alone at a table in a modern library setting in Mexico City.",
+   "original_px": [
+    6449,
+    4299
+   ],
+   "original_sha256": "e47dd774a08a44845281a11d64cec45c5c6174a8d3f93734536e744ffbb8a004",
+   "alt_fr": "Lectrice vue de dos, assise seule à une longue table de bibliothèque en bois, sous une lampe allumée",
+   "redactions": [],
+   "crop_note": "every crop stops at 76.5 % of the width: beyond it stand a brushed-steel volume and a glazed partition with thin mullions (kept out under the prudent O54 reading)",
+   "treatment": {
+    "grade": "the one V5 grade of gate 0: contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks lifted toward notte-900 #0b1a33, highlights +4 % warm",
+    "row_match": {
+     "method": "one white point: the near-neutral pixels (CIE Lab D65, C* < 10, 35 < L* < 95) of the graded 3:2 master are moved to the target by three luminance-preserving gains in linear light; a gain fades to 1 above 85 % of linear light",
+     "target_ab": [
+      0.8,
+      3.0
+     ],
+     "gains_rgb_linear": [
+      0.91209,
+      1.03299,
+      0.93215
+     ],
+     "white_point_graded": [
+      3.38,
+      2.03
+     ],
+     "white_point_matched": [
+      0.82,
+      3.01
+     ],
+     "white_point_final": [
+      0.98,
+      3.39
+     ],
+     "neutral_cover_graded": 0.094,
+     "mean_L_C_graded": [
+      40.9,
+      16.7
+     ],
+     "mean_L_C_final": [
+      40.5,
+      13.0
+     ]
+    },
+    "tone_match_saturation": 0.85,
+    "resample": "Lanczos, then unsharp (radius 1.0, 50 %, threshold 2)",
+    "encode": "AVIF quality 50 speed 6 (libavif/aom, 4:2:0) · WebP quality 78 method 6",
+    "metadata": "stripped: pixels copied into a fresh image before encoding (no EXIF, XMP or ICC; sRGB assumed, the originals carry no profile)"
+   },
+   "status": "PROVISIONAL — H-E research derivative; O54, O55 and the adoption are the owner's",
+   "files": [
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-128.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 128,
+     "height": 128,
+     "bytes": 1817,
+     "sha256": "5a33e0ef3fd77cf62f441ff632bedabbe06e3a3e54d246ac270c9643223928bd"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-128.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 128,
+     "height": 128,
+     "bytes": 2822,
+     "sha256": "c37ed302d0cf43710a31b9daca9865f782b40bcbb3abf30441bf446b9cafeb98"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-192.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 192,
+     "height": 192,
+     "bytes": 2859,
+     "sha256": "b186b58b1cefe6cb7dc5b48d79d3e43038901d056cab761d25a15e8734ecd634"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-192.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 192,
+     "height": 192,
+     "bytes": 4694,
+     "sha256": "2cdc947d2c1975b8a47e0c41112b89a3b6196a0a4354e921f98e67642b393fce"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-256.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 256,
+     "height": 256,
+     "bytes": 4142,
+     "sha256": "0ed914eacd3fb3d02b69f6e327a4b253804e10cec7fd86d658e46b3b0e34c5f7"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-256.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 256,
+     "height": 256,
+     "bytes": 6818,
+     "sha256": "3c6aed9d0d56ff84fc2291de5fa7f7dd638471ee8cdf9e312c152f1155dafa3f"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-3x2-320.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 320,
+     "height": 213,
+     "bytes": 4388,
+     "sha256": "6eb9847289eecbe686836cbccc2bb0eabf53ab616a856fca457f329ad22520cb"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-3x2-320.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 320,
+     "height": 213,
+     "bytes": 7366,
+     "sha256": "5b6758a479ea59e69b98c1c39ba25c143e4fa5244a631946621c0c4e68075c1b"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-3x2-480.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 480,
+     "height": 320,
+     "bytes": 7335,
+     "sha256": "6a0f7a68020d80187af6810bb0fdf756f9e161da65d1d57ee060816d945c1e7d"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-3x2-480.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 480,
+     "height": 320,
+     "bytes": 12262,
+     "sha256": "1545cc4d2ea90a6c98333d8b0884a6d6b4090d28afaffd91151942fb4f808a79"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-160.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 160,
+     "height": 200,
+     "bytes": 2742,
+     "sha256": "69f8be16fbae8fb1a694c8089033dff101d0abb89c51236a7571641a346dca66"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-160.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 160,
+     "height": 200,
+     "bytes": 4498,
+     "sha256": "49180b3b49e642834333d15a29270600b50d54608fd3635119e6afe7ee086bd6"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-240.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 240,
+     "height": 300,
+     "bytes": 4632,
+     "sha256": "cd078ea24aee21932c8d28a39ce458af128f8a37c22db3f63f1c52c4c8ee7391"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-240.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 240,
+     "height": 300,
+     "bytes": 7266,
+     "sha256": "9f353e002c3198f2bc0c592eac58e12c4d43c872aea4832c4cc9d4220cdb2db0"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-320.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 320,
+     "height": 400,
+     "bytes": 6407,
+     "sha256": "6c08c90ed22cf910e617e3342f8c06164418e28c22fc75aff62c3d0e2782a770"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-320.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 320,
+     "height": 400,
+     "bytes": 10686,
+     "sha256": "e020f6b2bed0570b328c3b486d203bff685965ee5fb1c09686aee84f82179f6b"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-480.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 480,
+     "height": 600,
+     "bytes": 11111,
+     "sha256": "5e0c653a2af654ad8a30f18147dd0ff78be2ef939e72bdb3c0d7c2f08d34dd67"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-4x5-480.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 480,
+     "height": 600,
+     "bytes": 18188,
+     "sha256": "1aec5bb99ff1554d93ac0e36e902e2fbd5cc436e3b2f89b9b81e33ac38aa3226"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-320.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 320,
+     "height": 320,
+     "bytes": 5803,
+     "sha256": "179dca62e4f799564503f8075aa6244054c71730a15c45a255b12ab9b961f735"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-320.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 320,
+     "height": 320,
+     "bytes": 9284,
+     "sha256": "fb4991e2efe169933c5042ac553025a87e977e0e75bc9906ace4830a78237aad"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-384.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 384,
+     "height": 384,
+     "bytes": 7158,
+     "sha256": "c65760e78c46e523aaa5629cee07a152be88c46d6ea6cb24fe503755a68b443e"
+    },
+    {
+     "file": "he-lectrice-bibliotheque-dos-1x1-384.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 384,
+     "height": 384,
+     "bytes": 11826,
+     "sha256": "ad6e0c76c837d7545b5376f6974c472c4d5755b22b44b2e6655a19997ea9166b"
+    }
+   ]
+  },
+  {
+   "audience": "Impresa",
+   "key": "impresa",
+   "label_fr": "Entreprises",
+   "slug": "chai-cuve-chene",
+   "pexels_id": 30557565,
+   "photographer": "Liv Kao",
+   "photographer_url": "https://www.pexels.com/@liv-kao-2149337698",
+   "page_url": "https://www.pexels.com/photo/winemaker-cleaning-oak-barrels-in-french-cellar-30557565/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A winemaker cleans oak barrels in a Pauillac wine cellar in France, using a hose to maintain hygiene.",
+   "original_px": [
+    6000,
+    4000
+   ],
+   "original_sha256": "617f127ae4d6ac55bbd518031dd0350c7ac8be92b3711475ca6a73e76e307da8",
+   "alt_fr": "Vu d’en haut, un ouvrier de chai nettoie au jet d’eau une grande cuve en chêne",
+   "redactions": [
+    {
+     "box_fraction": [
+      0.495,
+      0.405,
+      0.515,
+      0.435
+     ],
+     "radius_px": 8,
+     "reason": "a red tab on the jacket sleeve"
+    }
+   ],
+   "crop_note": "every crop stops at 77 % of the width or before: beyond it a steel gangway and its stanchion cross the frame, out of focus (kept out under the prudent O54 reading)",
+   "treatment": {
+    "grade": "the one V5 grade of gate 0: contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks lifted toward notte-900 #0b1a33, highlights +4 % warm",
+    "row_match": {
+     "method": "one white point: the near-neutral pixels (CIE Lab D65, C* < 10, 35 < L* < 95) of the graded 3:2 master are moved to the target by three luminance-preserving gains in linear light; a gain fades to 1 above 85 % of linear light",
+     "target_ab": [
+      0.8,
+      3.0
+     ],
+     "gains_rgb_linear": [
+      0.98045,
+      1.009,
+      0.96838
+     ],
+     "white_point_graded": [
+      2.36,
+      1.68
+     ],
+     "white_point_matched": [
+      0.74,
+      3.16
+     ],
+     "white_point_final": [
+      0.75,
+      3.15
+     ],
+     "neutral_cover_graded": 0.726,
+     "mean_L_C_graded": [
+      58.1,
+      6.5
+     ],
+     "mean_L_C_final": [
+      58.1,
+      6.6
+     ]
+    },
+    "tone_match_saturation": 1.0,
+    "resample": "Lanczos, then unsharp (radius 1.0, 50 %, threshold 2)",
+    "encode": "AVIF quality 50 speed 6 (libavif/aom, 4:2:0) · WebP quality 78 method 6",
+    "metadata": "stripped: pixels copied into a fresh image before encoding (no EXIF, XMP or ICC; sRGB assumed, the originals carry no profile)"
+   },
+   "status": "PROVISIONAL — H-E research derivative; O54, O55 and the adoption are the owner's",
+   "files": [
+    {
+     "file": "he-chai-cuve-chene-1x1-128.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 128,
+     "height": 128,
+     "bytes": 1903,
+     "sha256": "598740cb58d01233eb9003295b69e21bc555d4c96d6ec598c95eefb4e7786cd5"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-128.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 128,
+     "height": 128,
+     "bytes": 2748,
+     "sha256": "236afb0524a471d3e9e6d0966d123247670c4c0182497dabbe41a8447d4cccac"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-192.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 192,
+     "height": 192,
+     "bytes": 3184,
+     "sha256": "de095a7bd8988a405902d93fbc8f5742f1529b301ae15895a0d573d9803ec0ac"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-192.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 192,
+     "height": 192,
+     "bytes": 4692,
+     "sha256": "d077ddc06df7c8050023fe011be3392bdc6d60d5caeed9a537d7d461e0409035"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-256.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 256,
+     "height": 256,
+     "bytes": 4631,
+     "sha256": "3a7b0b5de45319b9056c74a72f0947c12ddbbf5cc7df6029867dc5d55b65fa6f"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-256.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 256,
+     "height": 256,
+     "bytes": 6940,
+     "sha256": "88a3624350349e6d206cc9e82dcda6379a7ea9b0b0cb474ac390ee9be60ecf69"
+    },
+    {
+     "file": "he-chai-cuve-chene-3x2-320.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 320,
+     "height": 213,
+     "bytes": 4420,
+     "sha256": "75387592cdb514262f4b9dd91aac789aa48e62c1e4e5f66896829e966f76f48a"
+    },
+    {
+     "file": "he-chai-cuve-chene-3x2-320.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 320,
+     "height": 213,
+     "bytes": 6830,
+     "sha256": "00c1a9c94b32945395791d75dd4926ddb709a5fb58f457c00e59c420415dffa2"
+    },
+    {
+     "file": "he-chai-cuve-chene-3x2-480.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 480,
+     "height": 320,
+     "bytes": 7595,
+     "sha256": "148d462d00d1ebf8f5fa882443f0f970625b5aa4c3afe41a282216e635214000"
+    },
+    {
+     "file": "he-chai-cuve-chene-3x2-480.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 480,
+     "height": 320,
+     "bytes": 11492,
+     "sha256": "4792ff2512670c7991baada624b73017c2b159af1d6e06ae8493d4a834c2ce94"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-160.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 160,
+     "height": 200,
+     "bytes": 2800,
+     "sha256": "fef5f660ad3247e34f974853f9f9e7332ef76880b4719a027a9425ecc755311f"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-160.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 160,
+     "height": 200,
+     "bytes": 4142,
+     "sha256": "e37295eda601f2e66456ee1e9ccbbc74fe2288dd350a76456c468f629ae33397"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-240.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 240,
+     "height": 300,
+     "bytes": 4806,
+     "sha256": "11ff3104c372dffbf6ad11fe3103b75d511290e4056decb3bbfe54a1ebdd743b"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-240.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 240,
+     "height": 300,
+     "bytes": 7044,
+     "sha256": "d3a3a5f917d33bdb300bb596fe533a9f46ce949db6424ba89536554797c48bd9"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-320.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 320,
+     "height": 400,
+     "bytes": 7198,
+     "sha256": "f4c3073e0beea1ea4fb56e56e4eec7f40556d135029fc67abc40132f52040b97"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-320.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 320,
+     "height": 400,
+     "bytes": 10530,
+     "sha256": "0cb329df0465230f28963a2ff2bd367d2f53529b8d0d9bb6075acc559c4af770"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-480.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 480,
+     "height": 600,
+     "bytes": 13692,
+     "sha256": "692b10122e5b5eb5bed40b1aea204e62a350f77baab7d425d5c9743d98b5bd09"
+    },
+    {
+     "file": "he-chai-cuve-chene-4x5-480.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 480,
+     "height": 600,
+     "bytes": 20752,
+     "sha256": "668e15fe1b249c6f369afd251b33e62c190d754a2efa3a601484dd232986b012"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-320.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 320,
+     "height": 320,
+     "bytes": 6504,
+     "sha256": "c7d136d4bf54ae6a6c67d30066f96bed165f9c88bcf86b54646b45c2d9df78b2"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-320.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 320,
+     "height": 320,
+     "bytes": 9472,
+     "sha256": "bae263957651df286bc186048d04f4f0a1da44f4b477ae83f9d1fe0dc431653c"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-384.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 384,
+     "height": 384,
+     "bytes": 8592,
+     "sha256": "27bc9d1b031b6b47b6a421cfcc035338242100cc989793d3ce76c91d295e218e"
+    },
+    {
+     "file": "he-chai-cuve-chene-1x1-384.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 384,
+     "height": 384,
+     "bytes": 12336,
+     "sha256": "a141a85b2dee6845670ac7c8d953ff4a14f496a7f1ceefdcdf578b06927db441"
+    }
+   ]
+  },
+  {
+   "audience": "Istituzione",
+   "key": "istituzione",
+   "label_fr": "Institutions",
+   "slug": "table-en-seance",
+   "pexels_id": 6949886,
+   "photographer": "Werner Pfennig",
+   "photographer_url": "https://www.pexels.com/@werner-pfennig",
+   "page_url": "https://www.pexels.com/photo/tablets-on-table-in-conference-room-6949886/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A conference room setup with tablets, microphones, and water bottles for a professional meeting.",
+   "original_px": [
+    6720,
+    4480
+   ],
+   "original_sha256": "a8332f9d1b9c6e3dd2a9410f21a24786e14016e327dbb0ba1857e88bf03237a7",
+   "alt_fr": "Table de réunion publique en séance : micros, verre d’eau et chevalet vierge au premier plan, un orateur et une participante flous à l’arrière-plan",
+   "redactions": [],
+   "crop_note": "every crop starts at 12 % of the height: the lower edge of a surgical mask sits on the top edge of the frame",
+   "treatment": {
+    "grade": "the one V5 grade of gate 0: contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks lifted toward notte-900 #0b1a33, highlights +4 % warm",
+    "row_match": {
+     "method": "one white point: the near-neutral pixels (CIE Lab D65, C* < 10, 35 < L* < 95) of the graded 3:2 master are moved to the target by three luminance-preserving gains in linear light; a gain fades to 1 above 85 % of linear light",
+     "target_ab": [
+      0.8,
+      3.0
+     ],
+     "gains_rgb_linear": [
+      1.05232,
+      0.98607,
+      0.98389
+     ],
+     "white_point_graded": [
+      -1.01,
+      2.23
+     ],
+     "white_point_matched": [
+      0.76,
+      3.11
+     ],
+     "white_point_final": [
+      0.75,
+      3.12
+     ],
+     "neutral_cover_graded": 0.638,
+     "mean_L_C_graded": [
+      62.7,
+      5.4
+     ],
+     "mean_L_C_final": [
+      62.8,
+      5.8
+     ]
+    },
+    "tone_match_saturation": 1.0,
+    "resample": "Lanczos, then unsharp (radius 1.0, 50 %, threshold 2)",
+    "encode": "AVIF quality 50 speed 6 (libavif/aom, 4:2:0) · WebP quality 78 method 6",
+    "metadata": "stripped: pixels copied into a fresh image before encoding (no EXIF, XMP or ICC; sRGB assumed, the originals carry no profile)"
+   },
+   "status": "PROVISIONAL — H-E research derivative; O54, O55 and the adoption are the owner's",
+   "files": [
+    {
+     "file": "he-table-en-seance-1x1-128.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 128,
+     "height": 128,
+     "bytes": 1969,
+     "sha256": "119306f3637a3164a54eaf97482ce04a720e57691992d285a51234afb347af7e"
+    },
+    {
+     "file": "he-table-en-seance-1x1-128.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 128,
+     "height": 128,
+     "bytes": 2898,
+     "sha256": "844948c6b7333d5e8bfd03be22b8cf5d144980c6b4bf6d96bc0b547b0350269c"
+    },
+    {
+     "file": "he-table-en-seance-1x1-192.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 192,
+     "height": 192,
+     "bytes": 2828,
+     "sha256": "691a8b058edb079b1e823ea2c5280f9f0ad658b7178ca578be95ba55fd0dd92b"
+    },
+    {
+     "file": "he-table-en-seance-1x1-192.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 192,
+     "height": 192,
+     "bytes": 4458,
+     "sha256": "950352f6ecd1787f4f9b36ce59082f5ba3ba74ee708e84a1ff74ea7bf233d191"
+    },
+    {
+     "file": "he-table-en-seance-1x1-256.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 256,
+     "height": 256,
+     "bytes": 3883,
+     "sha256": "76dbb22e5dda2102b93b3c5eb5e9db793523db659b0b4b61b1e5c60195207f5c"
+    },
+    {
+     "file": "he-table-en-seance-1x1-256.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 256,
+     "height": 256,
+     "bytes": 6000,
+     "sha256": "3ebd3a44d5cacc92c0f35b9e5247245ac81f6d2eeb9397f639ff60335051d5f8"
+    },
+    {
+     "file": "he-table-en-seance-3x2-320.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 320,
+     "height": 213,
+     "bytes": 4424,
+     "sha256": "493bc039f29d9cdcc21ed00bf085da1dc368839e06865bad147f98b2a659d5b8"
+    },
+    {
+     "file": "he-table-en-seance-3x2-320.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 320,
+     "height": 213,
+     "bytes": 6792,
+     "sha256": "6382efb192bdd2df24864f34243cac16b1d04dd845c68db61888e34e0b671136"
+    },
+    {
+     "file": "he-table-en-seance-3x2-480.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 480,
+     "height": 320,
+     "bytes": 6650,
+     "sha256": "ba9e9b576a5420cd44e4d4dcb563a490f04cc29e89338d008d6b03e86bce900e"
+    },
+    {
+     "file": "he-table-en-seance-3x2-480.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 480,
+     "height": 320,
+     "bytes": 10194,
+     "sha256": "00191395cd6659337076423d97dd1c152a64a8d29a18f8837c2805cca51beb44"
+    },
+    {
+     "file": "he-table-en-seance-4x5-160.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 160,
+     "height": 200,
+     "bytes": 2577,
+     "sha256": "f4a9edcbff0d91790deac322dc04e1a7f0565e560ea5d4d68400a2323c99094a"
+    },
+    {
+     "file": "he-table-en-seance-4x5-160.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 160,
+     "height": 200,
+     "bytes": 3976,
+     "sha256": "97c30c2d6904b7029044510c309e0579eff1e4c595c6a4ee9e7acd157a2b033f"
+    },
+    {
+     "file": "he-table-en-seance-4x5-240.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 240,
+     "height": 300,
+     "bytes": 4125,
+     "sha256": "3a83f912dff75dd02ed76fe5691a6f9751e91193d9fd436ed2073f2fcd24cdfe"
+    },
+    {
+     "file": "he-table-en-seance-4x5-240.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 240,
+     "height": 300,
+     "bytes": 6256,
+     "sha256": "e244b518a7fc58a09992ae26bc94ac4d5135c2aa74fdd4908633e6ab9976fb98"
+    },
+    {
+     "file": "he-table-en-seance-4x5-320.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 320,
+     "height": 400,
+     "bytes": 5512,
+     "sha256": "776c91f89f7dcad15d9d88b10dc7982b9d1eede54e3d7eb7b86d0905a823e13c"
+    },
+    {
+     "file": "he-table-en-seance-4x5-320.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 320,
+     "height": 400,
+     "bytes": 8428,
+     "sha256": "96a24b2f25adcc58ef0f589980e6813dee1e7440ca71f4e202d408f8ceb17239"
+    },
+    {
+     "file": "he-table-en-seance-4x5-480.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 480,
+     "height": 600,
+     "bytes": 8865,
+     "sha256": "90a49fcd2c15ee3d197a2e6d66125b1290a04f0d94c5f4a9834bfbde17c11c53"
+    },
+    {
+     "file": "he-table-en-seance-4x5-480.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 480,
+     "height": 600,
+     "bytes": 13642,
+     "sha256": "11870d0a33912a50a8c03b20a2e283432f75499341a37b2fd84c5952649ad742"
+    },
+    {
+     "file": "he-table-en-seance-1x1-320.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 320,
+     "height": 320,
+     "bytes": 4907,
+     "sha256": "9c0e6d6d73207cc3cc5adb9208397ac389818f44c1fd8bf9ef100da52dacdcf8"
+    },
+    {
+     "file": "he-table-en-seance-1x1-320.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 320,
+     "height": 320,
+     "bytes": 7810,
+     "sha256": "1585b66896d4330f98a253c9401801ee32cdc122865865ca82c9775846b9d2a4"
+    },
+    {
+     "file": "he-table-en-seance-1x1-384.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 384,
+     "height": 384,
+     "bytes": 6177,
+     "sha256": "fe000fa1f2d1c4774672518b3ceaf3fb3aec743abfc4a7ac25da4da7ccec2ab6"
+    },
+    {
+     "file": "he-table-en-seance-1x1-384.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 384,
+     "height": 384,
+     "bytes": 9436,
+     "sha256": "ef9b7411560d4cf3be8ce03d2c2b9fa2698412853a1bbaf7ee7b34f2ced144d3"
+    }
+   ]
+  },
+  {
+   "audience": "Università / Formazione",
+   "key": "universita",
+   "label_fr": "Universités et organismes de formation",
+   "slug": "paillasse-deux-etudiantes",
+   "pexels_id": 3735757,
+   "photographer": "Polina Tankilevitch",
+   "photographer_url": "https://www.pexels.com/@polina-tankilevitch",
+   "page_url": "https://www.pexels.com/photo/women-in-white-laboratory-gown-standing-3735757/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Two female scientists working on an experiment in a laboratory setting.",
+   "original_px": [
+    3500,
+    2333
+   ],
+   "original_sha256": "95f8e6ff038fdbca63300482f45ee62064c052bd43ecb6666a7e2152e35004a6",
+   "alt_fr": "Deux étudiantes en blouse blanche, vues de dos, travaillent à une paillasse de laboratoire en bois",
+   "redactions": [
+    {
+     "box_fraction": [
+      0.243,
+      0.866,
+      0.282,
+      0.884
+     ],
+     "radius_px": 8,
+     "reason": "a pencil scrawl (digits) on the left drawer rail, inside the lower-left corner of the 1:1 crop and on the edge of the 4:5 crop (found 4 October 2026)"
+    }
+   ],
+   "crop_note": "the 4:5 and 3:4 crops stop at 89 % of the height and the 3:2 at 87 %: stencilled cupboard numbers sit below; the 3:2 stops at 90.5 % of the width: a chalk scrawl sits beyond; a pencil scrawl on the left drawer rail (24-28 % x 87-88 %) is blurred because the 1:1 and 4:5 crops reach it",
+   "treatment": {
+    "grade": "the one V5 grade of gate 0: contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks lifted toward notte-900 #0b1a33, highlights +4 % warm",
+    "row_match": {
+     "method": "one white point: the near-neutral pixels (CIE Lab D65, C* < 10, 35 < L* < 95) of the graded 3:2 master are moved to the target by three luminance-preserving gains in linear light; a gain fades to 1 above 85 % of linear light",
+     "target_ab": [
+      0.8,
+      3.0
+     ],
+     "gains_rgb_linear": [
+      0.97628,
+      1.00486,
+      1.02169
+     ],
+     "white_point_graded": [
+      1.18,
+      4.09
+     ],
+     "white_point_matched": [
+      0.82,
+      3.01
+     ],
+     "white_point_final": [
+      0.82,
+      3.02
+     ],
+     "neutral_cover_graded": 0.802,
+     "mean_L_C_graded": [
+      72.4,
+      7.2
+     ],
+     "mean_L_C_final": [
+      72.3,
+      6.5
+     ]
+    },
+    "tone_match_saturation": 1.0,
+    "resample": "Lanczos, then unsharp (radius 1.0, 50 %, threshold 2)",
+    "encode": "AVIF quality 50 speed 6 (libavif/aom, 4:2:0) · WebP quality 78 method 6",
+    "metadata": "stripped: pixels copied into a fresh image before encoding (no EXIF, XMP or ICC; sRGB assumed, the originals carry no profile)"
+   },
+   "status": "PROVISIONAL — H-E research derivative; O54, O55 and the adoption are the owner's",
+   "files": [
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-128.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 128,
+     "height": 128,
+     "bytes": 1968,
+     "sha256": "80a4e0b3802b07b93339d590005e0e3eea74b091990f787af3d27b76112196e5"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-128.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 128,
+     "height": 128,
+     "bytes": 2788,
+     "sha256": "a56ad79cea28938b67aa7e907dc88448589cc4ac1cc8991f805e89dfc4487039"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-192.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 192,
+     "height": 192,
+     "bytes": 2847,
+     "sha256": "8f4df0db93727f0e500f126b104e18fb1d53cc00d5d4a9e6fbe681e55f012230"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-192.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 192,
+     "height": 192,
+     "bytes": 4820,
+     "sha256": "b63806a3dc83bab4114eddf2eaee0de2a15b4ba10589fde40036d23bcdcc92da"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-256.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 256,
+     "height": 256,
+     "bytes": 4626,
+     "sha256": "0a5a67c290967dd5083722c36e6729adac469a7b87244cf46069a02ddec82c65"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-256.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 256,
+     "height": 256,
+     "bytes": 7332,
+     "sha256": "b5b768491f41b60c51a4eee2b6418b9a43165d438d8696c829dd8d17f62e24ad"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-3x2-320.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 320,
+     "height": 213,
+     "bytes": 4813,
+     "sha256": "90b88ba5a897f97d0a7d8096e9f55df3248a2bcf416b840ddf4da677e134274e"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-3x2-320.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 320,
+     "height": 213,
+     "bytes": 7750,
+     "sha256": "173650f2cdd65f30fe282e3ce09c730eabddec74c3fc132ccf47140fc0523194"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-3x2-480.avif",
+     "crop": "3x2",
+     "format": "avif",
+     "width": 480,
+     "height": 320,
+     "bytes": 7846,
+     "sha256": "6d4b124ea4b9bee3e5524904f289996a3da0f001b861e43f21dc1c254c2859d3"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-3x2-480.webp",
+     "crop": "3x2",
+     "format": "webp",
+     "width": 480,
+     "height": 320,
+     "bytes": 13220,
+     "sha256": "ceb2b5b73904ba661ce18e5032fbe0efe0cd3b80ef57816e729ac91676a2a074"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-160.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 160,
+     "height": 200,
+     "bytes": 2627,
+     "sha256": "7f4b4bd97fc9a96d9cd2b17f0c523ad35513e4c18409cc9fce1f9dd16b52a1d0"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-160.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 160,
+     "height": 200,
+     "bytes": 4240,
+     "sha256": "e0592e2201d17ac0ecaebc71937693d9469b1f8b1ebbb2f309f8a58224b52f1b"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-240.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 240,
+     "height": 300,
+     "bytes": 4511,
+     "sha256": "e3d75d0362c36084090d8c74a15c543d4f951a1a672ef70b643f360f5145b046"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-240.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 240,
+     "height": 300,
+     "bytes": 7302,
+     "sha256": "8f1a4bf8f7b05755c4be2a8ae6cdcb3c878e5c7d28ad42ad26720e584706a48d"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-320.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 320,
+     "height": 400,
+     "bytes": 6533,
+     "sha256": "9c8c0b4d7b24aa87abe6f759be2859ff6594933bba4e35f7ee0e59760b4ccc07"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-320.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 320,
+     "height": 400,
+     "bytes": 10844,
+     "sha256": "06fbb8525558117cda035e0edd5528f28726e632d93c22f8d4bbaf15a29696a5"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-480.avif",
+     "crop": "4x5",
+     "format": "avif",
+     "width": 480,
+     "height": 600,
+     "bytes": 11541,
+     "sha256": "85a9a7987d49c7f88204d78feb1eb51c538453b1d4c7158603f9ed7aaac6dba5"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-4x5-480.webp",
+     "crop": "4x5",
+     "format": "webp",
+     "width": 480,
+     "height": 600,
+     "bytes": 18834,
+     "sha256": "0b5953f458f1ffc2909b421e143ca36fa02fad614c0a7c1c6fa9f209deea2b50"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-320.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 320,
+     "height": 320,
+     "bytes": 6073,
+     "sha256": "bbff1bb3d9e951d8afb58c277fcbd837cee869d5fc4cbcb8cc58ced9446f3e19"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-320.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 320,
+     "height": 320,
+     "bytes": 9948,
+     "sha256": "82a79ea99a985cf0b163bab70972f8fbb3c6db37bffd0fd54590b08283b11eb1"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-384.avif",
+     "crop": "1x1",
+     "format": "avif",
+     "width": 384,
+     "height": 384,
+     "bytes": 7638,
+     "sha256": "3467b07e3b99ca0e3fad05332fc28b96f57ede6170a38a990acc34f391adf630"
+    },
+    {
+     "file": "he-paillasse-deux-etudiantes-1x1-384.webp",
+     "crop": "1x1",
+     "format": "webp",
+     "width": 384,
+     "height": 384,
+     "bytes": 12976,
+     "sha256": "61ee7bcd74cce8c511035be73a87bfdf9694de07dd4c81ab807a4e664cbc56a8"
+    }
+   ]
+  }
+ ]
+}

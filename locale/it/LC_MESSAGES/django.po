@@ -7660,6 +7660,10 @@ msgstr "Cooperazione"
 msgid "Séquence du projet pilote"
 msgstr "Sequenza del progetto pilota"
 
+#: .\templates\pages\home\_hero.html
+msgid "Rejouer l’animation de la porte"
+msgstr "Riproduci di nuovo l’animazione della porta"
+
 #: .\templates\pages\home\_pilot.html
 msgid "Découvrir le projet pilote"
 msgstr "Scopri il progetto pilota"

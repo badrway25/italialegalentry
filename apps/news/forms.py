@@ -30,3 +30,6 @@ class NewsletterForm(HoneypotFormMixin, PublicFormMixin):
         self.fields["consent"].label = text
         self.consent_language = effective
         self.consent_is_fallback = effective != lang.split("-")[0]
+        # the error summary (components/form_errors.html) names the field by its label: a prescribed text shown in
+        # another language than the page's keeps its `lang` there too, as the enquiry forms' consent does
+        self.fields["consent"].label_lang = effective if self.consent_is_fallback else ""

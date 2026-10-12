@@ -1,0 +1,898 @@
+/* ============================================================================================
+   THE DASHBOARD — design V5 (W3-B)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 4 · §1.15 (cards by purpose, no board) · §1.3 corners · §1.4
+   spacing and shadow (SP-1 … SP-8, SH-1 … SH-9) · §3.1 item 7 (the screen's identity carriers). A console-only
+   partial (plan §2.3): imported by apps/portal/static/portal/console.css, never by main.css, never an output of its
+   own. Markup: templates/portal/dashboard.html (the person's dashboard and the bridge of the accounts that are not
+   a person), templates/companies/dashboard.html (the company's), templates/portal/partials/now_panel.html (the
+   NowPanel of both) and card.html (a register of the bridge). The cards are W1-C's (static/css/v5/card.css): this
+   sheet places them and draws what is the dashboard's own — one grammar for the three dashboards.
+
+   1 · the grid          a column on a phone; from 64rem twelve columns: the NowPanel 8 | the file 4 (the company:
+                         its identity), the journey across, the pieces 8 (the needs) | the dates and the
+                         communications 4, what folds, the account; the bridge: its registers 8 (what is due and
+                         what came in first) | its organisation 4
+   2 · the NowPanel      the screen's ONE raised plane (the action card): eyebrow, the piece, its facts, ONE primary
+   3 · the sections      flat on the page under hairlines — a head (the word, the domain's glyph, its one link)
+   4 · the file          the summary strip (v5/card.css) of the file's facts
+   5 · the pieces        «il registro» (O62: the colour is the group, the shape is the state), then the rows
+   6 · the lists         the dates and the communications: one line a row, hairlines between
+   7 · what folds        W1-C's disclosure (v5/tabs.css) with a section's head as its summary; the account's line
+   8 · states            touch, forced colours, paper
+
+   Tokens only, logical properties only. One shadow value on the screen — the NowPanel's (SH-8: one raised panel, at
+   most two values); corners 8 (the panels, the strip) · 4 (the controls, the frame's fold) · full (the chips, the
+   discs) — three, the shell's included (plan §1.3). Nothing here animates at load: a disclosure's chevron and a
+   link's colour answer the person's own act, on duration tokens that are 0 ms under reduced motion.
+   ============================================================================================ */
+
+/* ---- 1 · The grid ------------------------------------------------------------------------------ */
+.db {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-10) var(--s-6);
+  align-items: start;
+}
+
+.db > * {
+  min-inline-size: 0;
+}
+
+@media (min-width: 64rem) {
+  .db {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .db > * {
+    grid-column: 1 / -1;
+  }
+
+  /* the NowPanel first, 8 columns; the file's facts (the company's identity) beside it, and the journey under both
+     — auto-placed in the first free row. The DOM keeps the journey second (h1 → NowPanel → journey): it carries no
+     control, so the focus still goes NowPanel → file */
+  .db > .db-now {
+    grid-column: 1 / span 8;
+    grid-row: 1;
+  }
+
+  .db--file > .db-file {
+    grid-column: 9 / -1;
+    grid-row: 1;
+  }
+
+  .db > .db-todo {
+    grid-column: 1 / span 8;
+  }
+
+  .db > .db-side {
+    grid-column: 9 / -1;
+  }
+
+  /* without a file (the NowPanel opens one): the dates and the communications stand in the first row, where the
+     file's facts stand once there is a file; on the bridge the side holds the organisation, beside its registers */
+  .db:not(.db--file) > .db-side {
+    grid-column: 9 / -1;
+    grid-row: 1;
+  }
+
+  .db > .db-folds {
+    grid-column: 1 / span 8;
+  }
+
+  /* the bridge: no NowPanel — its registers in the main column, the dates and the communications first */
+  .db > .db-main {
+    grid-column: 1 / span 8;
+    grid-row: 1;
+  }
+}
+
+/* the page header's h1 when it is a record's own name (the company's): its own direction, its box on the page's
+   reading edge — a Latin name on an Arabic page stood at the far side (dir="auto" sets the box's direction too) */
+.db-head .ctx__title[dir] {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+/* ---- 2 · The NowPanel: the screen's one raised plane, its one primary --------------------------------
+   The action card of v5/card.css (the raised surface, no edge, shadow level 2). The eyebrow says whose move it is,
+   the title names the piece, the facts say its state, its date and who answers for it, and the primary does it. */
+.db-now {
+  gap: var(--s-3);
+}
+
+.db-now__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.db-now__disc {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--glyph-disc-md);
+  block-size: var(--glyph-disc-md);
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-strong);
+}
+
+.db-now__disc .icon,
+.db-h2 > .icon,
+.db-link .icon,
+.db-due .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.db-now__title {
+  max-inline-size: 40rem;
+  margin: var(--s-1) 0 0;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+/* a record's own words in another language than the page (a French piece on an Arabic page), or in a direction
+   only the text knows (dir="auto": a date the team wrote, the NowPanel's takeover), hug their box, which then
+   stands on the panel's reading edge (the frame's rule for a title, DL54-64) */
+.db-now__title[lang],
+.db-now__title[dir],
+.db-now__text[lang],
+.db-now__text[dir] {
+  inline-size: fit-content;
+  max-inline-size: min(40rem, 100%);
+}
+
+:lang(ar) .db-now__title:not([lang]) {
+  letter-spacing: 0;
+  line-height: var(--ar-title-lh, var(--u-section-lh));
+}
+
+.db-now__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.db-now__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4) var(--s-8);
+  margin: var(--s-2) 0 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.db-now__fact {
+  display: grid;
+  gap: var(--s-1);
+  align-content: start;
+  min-inline-size: 0;
+}
+
+.db-now__fact dt {
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-3);
+}
+
+.db-now__fact dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--s-6);
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+/* who answers for it: the disc and its word hold together — a narrow fact (two by two on a phone) wraps the word
+   beside its disc, never under it */
+.db-now__who {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-inline-size: 0;
+}
+
+.db-now__note {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.db-now__act {
+  margin-block-start: var(--s-3);
+}
+
+/* the act's own form (a POST, as the act's page posts it) draws no box: its button is the row's item, as a link is */
+.db-now__form {
+  display: contents;
+}
+
+/* «pas encore de dossier» — the console's one empty state shows the owner's door, as the doorway component draws
+   it (templates/components/doorway.html; its paint is v4/hero.css until W2-B's _door.css takes the stage): never
+   mirrored, never taking the pointer, at the panel's end beside the words — above them on a phone. */
+.db-now--no-case {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  column-gap: var(--s-8);
+}
+
+.db-now--no-case > * {
+  grid-column: 1;
+}
+
+.db-now--no-case > .db-now__door {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: center;
+  inline-size: 7.5rem;
+}
+
+/* an overdue date takes the panel over: the eyebrow's disc and the date speak azione — terracotta, never red, and
+   never colour alone: the glyph and the word «En retard» stand beside the date (plan §1.2) */
+.db-now--overdue .db-now__disc {
+  background: var(--tone-azione-bg);
+  color: var(--tone-azione-mark);
+}
+
+/* ---- 3 · The sections: flat on the page, a head under nothing but the page's air ------------------------------ */
+.db-sec__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-4);
+  margin-block-end: var(--s-4);
+}
+
+.db-h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.db-h2 > .icon,
+.db-due .icon {
+  color: var(--icon-muted);
+}
+
+/* a section's one link: the way to its whole page */
+.db-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-block-size: var(--s-6);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+@media (hover: hover) {
+  .db-link:hover {
+    color: var(--accent-text-hover);
+  }
+
+  .db-link:hover,
+  .db-list__link:hover .db-list__title,
+  .db-task__title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+/* an empty region is one line: who fills it, and when */
+.db-empty,
+.db-line {
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+/* a link inside the sentence keeps the floor of every target (SP-8): 24 px */
+.db-empty a {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+.db-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  margin-block-start: var(--s-3);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+}
+
+/* the bridge: where the account's work lives — one quiet link at the head of its main column */
+.db-space {
+  margin: 0;
+}
+
+.db-ref {
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  line-height: var(--u-ref-lh);
+  color: var(--text-1);
+}
+
+/* the journey: W3-D's rail, placed — the section draws its head and nothing of the rail. One rule only: on the
+   dashboard the rail is drawn still at load, as the journey's own decision says (plan §1.18 D16: «in V5.4 the rail
+   is drawn still at load, with no relay») and as the console's motion says (MS §3.2: the dashboard is seen at
+   every visit) — V4's line still drew itself, six animations at every load. Redundant, and harmless, the day W3-D
+   redraws the rail. */
+.db-journey > .db-h2 {
+  margin-block-end: var(--s-4);
+}
+
+.db-journey .journey:not(.journey--descriptive) .journey__step::before {
+  animation: none;
+}
+
+/* ---- 4 · The file: the summary strip of its facts ---------------------------------------------------------- */
+.db-file__facts .summary__item > dd {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+}
+
+.db-file__who {
+  flex-basis: 100%;
+}
+
+.db-file__actors {
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.db-file .notice {
+  margin-block-start: var(--s-4);
+}
+
+/* ---- 5 · The pieces ------------------------------------------------------------------------------------------
+   «Il registro»: the pieces grouped by who holds them — to act (the person's), in hand (somebody else's), settled —
+   each a 16 px mark of its state, the colour of its group (the ledger tokens of v5/tokens.css). The group's word and
+   its count are the text; the marks are decoration over them. */
+.db-ledger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-8);
+  padding-block: var(--s-3) var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.db-ledger__total {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.db-ledger__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.db-ledger__group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-3);
+}
+
+.db-ledger__label {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.db-ledger__n {
+  margin-inline-start: var(--s-1);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.db-ledger__marks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+
+.db-ledger__marks .icon {
+  inline-size: var(--ledger-mark-size);
+  block-size: var(--ledger-mark-size);
+}
+
+.db-ledger__group--to-act .db-ledger__marks { color: var(--ledger-to-act); }
+.db-ledger__group--in-hand .db-ledger__marks { color: var(--ledger-in-hand); }
+.db-ledger__group--settled .db-ledger__marks { color: var(--ledger-settled); }
+
+/* the rows: the columns line up from row to row (subgrid) — the piece, its state, its date, then its act or who
+   holds it. A row is 64 px at least (SP-4), hairlines between rows (SH-2), no box */
+.db-tasks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  column-gap: var(--s-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.db-task {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  min-block-size: var(--s-16);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.db-task__words {
+  min-inline-size: 0;
+}
+
+.db-task__title {
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.db-task__meta {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.db-task__title[lang],
+.db-task__meta[lang] {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+/* a need's title is the way to its page (the row's one destination; its act, for a draft, is the button) */
+.db-task__title a {
+  display: inline-block;
+  min-block-size: var(--s-6);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* the needs: the need, its state, then its act or who answers for it — a long name wraps in its column. The end
+   track is a fixed measure, not «auto»: when the web font replaced its fallback, a party's name re-wrapped, the
+   shared column grew (189 → 240 px) and the rows under it dropped (CLS up to 0.015 on a cold load) */
+.db-tasks--needs {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 15rem);
+}
+
+.db-tasks--needs .db-task__who {
+  max-inline-size: 15rem;
+}
+
+/* two live parties on one need stand one under the other, at the row's end */
+.db-tasks--needs .db-task__end {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-1);
+}
+
+.db-acts {
+  margin: var(--s-4) 0 0;
+}
+
+/* a piece in somebody else's hands reads one step quieter: no act of the person's, the word of who holds it */
+.db-task--theirs .db-task__title {
+  font-weight: var(--w-control);
+}
+
+.db-task__end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.db-task__who {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* a due date: its glyph, the date, and its word when it is near or past (never a colour alone; plan §1.2) */
+.db-due {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--deadline-normal-text);
+  white-space: nowrap;
+}
+
+.db-due--upcoming {
+  color: var(--deadline-upcoming-text);
+}
+
+.db-due--soon {
+  color: var(--deadline-soon-text);
+}
+
+.db-due--soon .icon {
+  color: var(--deadline-soon-mark);
+}
+
+.db-due--overdue {
+  color: var(--deadline-overdue-text);
+}
+
+.db-due--overdue .icon {
+  color: var(--deadline-overdue-mark);
+}
+
+.db-due__word {
+  font-weight: var(--w-title);
+}
+
+.db-now__fact .db-due {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+}
+
+/* ---- 6 · The lists: the dates, the communications, the latest files ------------------------------------------ */
+.db-side,
+.db-main {
+  display: grid;
+  gap: var(--s-10);
+}
+
+.db-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.db-list__row {
+  display: grid;
+  gap: var(--s-1);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.db-list__title {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+/* a title that is a row of its own hugs its words: isolated in its own direction (a French name on an Arabic page),
+   it still stands on the row's reading edge */
+.db-list__row > .db-list__title {
+  justify-self: start;
+}
+
+.db-list__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  min-block-size: var(--s-6);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.db-list__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* unread: the weight, an ink dot and the word «Non lue» — never a colour alone (laguna means interactive) */
+.db-list__row--unread .db-list__title {
+  font-weight: var(--w-title);
+}
+
+.db-unread {
+  flex: none;
+  inline-size: var(--s-2);
+  block-size: var(--s-2);
+  border-radius: var(--radius-full);
+  background: var(--text-1);
+  transform: translateY(-1px);
+}
+
+.db-list__new {
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+/* ---- 7 · What folds, and the account ---------------------------------------------------------------------------
+   W1-C's disclosure (v5/tabs.css): a hairline, a 56 px row, the chevron it draws. Its summary is a section's head. */
+.db-folds {
+  display: grid;
+  gap: var(--s-10);
+}
+
+.accordion__summary > .db-h2 {
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+}
+
+.db-course {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.db-course__title {
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.db-course__state,
+.db-course__act {
+  margin: 0;
+}
+
+.db-course__act {
+  margin-block-start: var(--s-2);
+}
+
+.db-deposits .db-list {
+  border-block-start: 0;
+}
+
+/* the pre-assessment's outcome at the console's scale: a word at section size on its state rule — the V2 display
+   (36 px) made it the largest word of the page, above the page's own title */
+.db-assessment .outcome {
+  margin-block-start: 0;
+  padding-inline-start: var(--s-3);
+  border-inline-start-width: 3px;
+}
+
+.db-assessment .outcome__kind {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+.db-assessment__text {
+  max-inline-size: var(--measure-small);
+  margin: var(--s-2) 0 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.db-assessment .db-fold {
+  margin-block-start: var(--s-4);
+}
+
+.db-assessment .note,
+.db-assessment .gloss {
+  margin-block-start: var(--s-3);
+}
+
+/* the account: one quiet line at the foot of the page — the least urgent thing on it */
+.db-account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-4);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.db-account__title {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.db-account__who {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.db-account__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.db-account__links a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--s-6);
+  color: var(--accent-text);
+}
+
+/* ---- Below 64rem: one column, recomposed (SP-7) ---------------------------------------------------------------- */
+@media (max-width: 63.999rem) {
+  .db {
+    gap: var(--s-8);
+  }
+
+  .db-side,
+  .db-main,
+  .db-folds {
+    gap: var(--s-8);
+  }
+}
+
+/* ---- A phone: the facts two by two, the primary across, a row in three lines ------------------------------------ */
+@media (max-width: 47.999rem) {
+  .db-now__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3) var(--s-4);
+  }
+
+  .db-now__fact:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .db-now__act .btn {
+    inline-size: 100%;
+  }
+
+  .db-now--no-case > .db-now__door {
+    grid-row: 1 / span 2;
+    align-self: start;
+    inline-size: 4.5rem;
+  }
+
+  .db-now--no-case > :is(.db-now__text, .db-now__act) {
+    grid-column: 1 / -1;
+  }
+
+  .db-tasks {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--s-3);
+  }
+
+  .db-task {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--s-2);
+  }
+
+  .db-task__words,
+  .db-task__end {
+    grid-column: 1 / -1;
+  }
+
+  .db-task__end {
+    justify-content: flex-start;
+  }
+
+  .db-tasks--needs .db-task__end {
+    align-items: flex-start;
+  }
+
+  .db-task__end .btn {
+    inline-size: 100%;
+  }
+
+  .db-ledger,
+  .db-ledger__groups {
+    gap: var(--s-2) var(--s-5);
+  }
+}
+
+/* ---- 8 · States ------------------------------------------------------------------------------------------------ */
+/* a finger: every link of the page is 44 px tall (SP-8; plan §1.8) — a list row's link with its words centred in
+   the 44 px, the row's date tight under it (the box left 24 px under the subject); a link inside an empty line's
+   sentence too, the line growing to hold it */
+@media (pointer: coarse) {
+  .db-link,
+  .db-list__link,
+  .db-task__title a,
+  .db-account__links a {
+    min-block-size: var(--hit-primary);
+  }
+
+  .db-list__link {
+    align-items: center;
+  }
+
+  .db-list__row:has(> .db-list__link) {
+    row-gap: 0;
+  }
+
+  .db-empty a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--hit-primary);
+  }
+}
+
+/* forced colours: the raised plane keeps an edge when its shadow is gone, and a disc keeps its outline */
+@media (forced-colors: active) {
+  .db-now {
+    border: 1px solid CanvasText;
+  }
+
+  .db-now__disc,
+  .db-unread {
+    border: 1px solid CanvasText;
+  }
+
+  .db-unread {
+    background: CanvasText;
+    forced-color-adjust: none;
+  }
+}
+
+/* paper: the plane and the lists as ink on paper — no shadow, nothing hidden */
+@media print {
+  .db-now {
+    box-shadow: none;
+    border: 1px solid currentColor;
+  }
+}

@@ -89,7 +89,7 @@ person can see not only that they said yes, but exactly who looked, and when.
         <span class="entry__title">{{ row.recipient_organisation.name }}</span>
         <span class="entry__gloss">
           {{ row.purpose }}
-          · <span class="state state--{{ row.status_word }}" data-register="{{ row.status_word|chip_register:'selection.consent' }}">{{ row.get_status_display }}</span>
+          · {% chip row.status_word "selection.consent" %}{{ row.get_status_display }}{% endchip %}
           {% if row.expires_at %} · {% blocktranslate with date=row.expires_at|date:"d.m.Y" %}jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
         </span>
         <span class="entry__actor">{{ row.process.actor.organisation.name }}</span>

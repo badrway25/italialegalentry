@@ -1,18 +1,9 @@
-{% extends "allauth/layouts/base.html" %}{% load i18n %}
-{% block account_layout_class %}account-page--manage layout-sidebar{% endblock %}
-{% block account_aside %}
-<aside class="layout-sidebar__aside">
-  <nav class="local-nav" aria-label="{% translate 'Gestion du compte' %}">
-    <p class="local-nav__title">{% translate "Mon compte" %}</p>
-    <ul class="local-nav__list">
-      {% safe_url 'portal:dashboard' as u_dash %}{% if u_dash %}<li><a class="local-nav__link" href="{{ u_dash }}">{% translate "Espace réservé" %}</a></li>{% endif %}
-      {% safe_url 'accounts:profile' as u_profile %}{% if u_profile %}<li><a class="local-nav__link" href="{{ u_profile }}"{% if request.path == u_profile %} aria-current="page"{% endif %}>{% translate "Profil" %}</a></li>{% endif %}
-      {% safe_url 'account_email' as u_email %}{% if u_email %}<li><a class="local-nav__link" href="{{ u_email }}"{% if request.path == u_email %} aria-current="page"{% endif %}>{% translate "Adresse e-mail" %}</a></li>{% endif %}
-      {% safe_url 'account_change_password' as u_pwd %}{% if u_pwd %}<li><a class="local-nav__link" href="{{ u_pwd }}"{% if request.path == u_pwd %} aria-current="page"{% endif %}>{% translate "Mot de passe" %}</a></li>{% endif %}
-      {% safe_url 'mfa_index' as u_mfa %}{% if u_mfa %}<li><a class="local-nav__link" href="{{ u_mfa }}"{% if request.path == u_mfa %} aria-current="page"{% endif %}>{% translate "Authentification à deux facteurs" %}</a></li>{% endif %}
-      {% safe_url 'account_logout' as u_logout %}{% if u_logout %}<li><a class="local-nav__link" href="{{ u_logout }}">{% translate "Se déconnecter" %}</a></li>{% endif %}
-    </ul>
-  </nav>
-</aside>
-{% endblock %}
+{% extends "allauth/layouts/base.html" %}
+{% comment %}
+allauth's management layout (the e-mail addresses, the password, the second factor, the sign-out's confirmation) and
+the product's account pages: the frame of allauth/layouts/base.html with the account's sections at its reading edge.
+allauth reads the layout's name from this file's path: its elements look for `<element>__manage.html` first
+(templates/allauth/elements/button__manage.html).
+{% endcomment %}
+{% block account_aside %}{% include "accounts/partials/account_nav.html" %}{% endblock %}
 {% block content %}{% endblock %}

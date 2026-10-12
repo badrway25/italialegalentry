@@ -117,7 +117,7 @@ def index(request):
                 "case": case,
                 "is_own": case.person_id == request.user.id,
                 "progress": services.progress(case),
-                "next_action": services.next_action(case),
+                "next_action": services.next_action(case, reader=request.user),
                 "responsible": services.responsible_for(case),
             }
         )
@@ -152,7 +152,7 @@ def detail(request, reference: str):
             "case": case,
             "is_own": case.person_id == request.user.id,
             "progress": portal_services._with_meter(services.progress(case)),
-            "next_action": services.next_action(case),
+            "next_action": services.next_action(case, reader=request.user),
             "responsible": services.responsible_for(case),
             "checklist": checklist,
             "checklist_health": presenters.checklist_health(checklist),

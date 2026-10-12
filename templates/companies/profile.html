@@ -44,7 +44,7 @@
   <dl class="portal-facts">
     <div class="portal-facts__row">
       <dt>{% translate "État" %}</dt>
-      <dd><span class="state state--{{ company.verification_state_modifier }}" data-register="{{ company.verification_status|chip_register:'accounts.VerificationStatus' }}">{{ company.verification_label }}</span></dd>
+      <dd>{% chip company.verification_status "accounts.VerificationStatus" %}{{ company.verification_label }}{% endchip %}</dd>
     </div>
     <div class="portal-facts__row">
       <dt>{% translate "Décidée par" %}</dt>

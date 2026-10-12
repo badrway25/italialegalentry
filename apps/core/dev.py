@@ -197,7 +197,7 @@ DEMO_HEALTH = {
     "filters": [
         {"value": "missing", "label": "Manquant", "count": 1, "register": "attesa"},
         {"value": "filed", "label": "Déposé", "count": 1, "register": "neutro"},
-        {"value": "in_review", "label": "En examen", "count": 1, "register": "neutro"},
+        {"value": "in_review", "label": "En examen", "count": 1, "register": "esame"},
         {"value": "valid", "label": "Valide", "count": 1, "register": "conforme"},
         {"value": "invalid", "label": "Non valide", "count": 1, "register": "rifiuto"},
         {"value": "expired", "label": "Expiré", "count": 1, "register": "azione"},
@@ -313,8 +313,8 @@ class PasswordShowcaseForm(forms.Form):
 # right place to opt out of it is here, over content this module wrote itself.
 DEMO_DIALOG_BODY = mark_safe("<p>Le corps de la modale. Échap ferme ; le focus revient au bouton qui l'a ouverte.</p>")
 DEMO_DIALOG_ACTIONS = mark_safe(
-    '<button type="button" class="btn btn--secondary" data-dialog-close>Annuler</button>'
-    '<button type="button" class="btn btn--primary" data-dialog-close>Confirmer</button>'
+    '<button type="button" class="btn btn--secondary" data-overlay-close>Annuler</button>'
+    '<button type="button" class="btn btn--primary" data-overlay-close>Confirmer</button>'
 )
 DEMO_DIALOG_LIGHT_BODY = mark_safe(
     "<p>Celle-ci se ferme aussi par un clic sur le fond. À réserver aux surcouches sans décision à prendre.</p>"
@@ -373,9 +373,11 @@ DEMO_TABLE = [
 BADGE_KINDS = ("neutral", "info", "success", "warning", "error", "pending", "primary")
 NOTICE_KINDS = ("info", "success", "warning", "error", "pending", "institutional")
 BUTTON_VARIANTS = ("primary", "secondary", "ghost", "link", "danger")
+#: The showcase's icon list — symbols of the registry (apps/core/icons.py), never a V4 alias: `user` was a
+#: duplicate of `person`, and `globe`, `key`, `home`, `list` are named by the symbol each one draws
+#: (tests/frontend/test_icons.py). The whole sprite is on the icon board, /__design-v5/specimens/icons/.
 ICONS = (
     "person",
-    "user",
     "building",
     "institution",
     "university",
@@ -388,7 +390,7 @@ ICONS = (
     "calendar",
     "clock",
     "document",
-    "globe",
+    "languages",
     "menu",
     "close",
     "chevron",
@@ -399,15 +401,15 @@ ICONS = (
     "mail",
     "phone",
     "lock",
-    "key",
+    "ile-key",
     "info",
     "map-pin",
     "download",
-    "home",
+    "house",
     "logout",
     "settings",
     "quote",
-    "list",
+    "send",
     "handshake",
     "compass",
 )

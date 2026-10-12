@@ -34,9 +34,9 @@ items belong to the orientation rule set and stay under its review workflow — 
     {% endif %}
     <dl class="meta-row">
       <div class="meta-row__item">{% svg_icon "calendar" "icon" %}<dt>{% translate "Date" %}</dt><dd><time datetime="{{ row.date|date:'c' }}">{{ row.date|date:"d.m.Y" }}</time></dd></div>
-      <div class="meta-row__item">{% svg_icon "document" "icon" %}<dt>{% translate "Version des règles" %}</dt><dd>v{{ row.ruleset_version }}</dd></div>
+      <div class="meta-row__item">{% svg_icon "history" "icon" %}<dt>{% translate "Version des règles" %}</dt><dd>v{{ row.ruleset_version }}</dd></div>
       <div class="meta-row__item">{% svg_icon "info" "icon" %}<dt>{% translate "État" %}</dt><dd>{{ row.status_label }}</dd></div>
-      <div class="meta-row__item">{% svg_icon "key" "icon" %}<dt>{% translate "Référence" %}</dt><dd>{{ row.reference }}</dd></div>
+      <div class="meta-row__item">{% svg_icon "hash" "icon" %}<dt>{% translate "Référence" %}</dt><dd>{{ row.reference }}</dd></div>
     </dl>
     {% if row.result %}
       {% if row.result.checklist_groups %}

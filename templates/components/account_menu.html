@@ -1,20 +1,55 @@
 {% load i18n %}{% comment %}
-Account menu (authenticated users) — details dropdown in the utility bar.
-Links resolve through safe_url so the menu degrades gracefully while sibling apps are built.
-{% endcomment %}
-<details class="account-menu" data-dropdown>
+The account menu — the account POPOVER of the overlay system (design V5, V5.4 plan §1.14; the contract
+docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). Its rows: «Espace réservé», «Profil», «Sécurité du compte» and, after a
+rule, «Se déconnecter» — links resolved through safe_url, so the menu degrades gracefully while sibling apps are built.
+
+Two faces, one set of rows:
+  `popover=True`  the overlay system's: a real button (`popovertarget`) — the person glyph, the short name, a chevron —
+                  named «‹short name› — Mon compte» (the words it shows first, WCAG 2.5.3, then what it opens: two
+                  live strings; below 48rem it shows its glyph alone), and components/popover.html with these rows
+                  (`.overlay__item`, 36 px, 44 under a finger), headed on a phone by «Mon compte». A press
+                  outside or Esc closes it natively; static/js/src/overlay.js (imported by console.js) adds the place on
+                  the trigger's inline end, the focus on the first row and back, the arrows, the close when the focus
+                  leaves or a row is chosen; at ≤ 40rem a bottom sheet that stays a menu. The console's top bar
+                  (templates/partials/portal_chrome.html).
+  (default)       design V4's `<details data-dropdown>`, which the letterhead's seat and drawer still draw: W2-C2 moves
+                  them onto the popover when shell.js imports overlay.js, and deletes this face with v4/shell.css.
+Contract: `user`; `popover` (True → the overlay system's face); `menu_id` (the popover's id; default "account-menu");
+`overlay_part` is the popover component's (it includes this file again for the rows).
+{% endcomment %}{% if overlay_part == "body" %}<ul class="overlay__list" role="list">
+  {% safe_url 'portal:dashboard' as dashboard_url %}{% if dashboard_url %}
+  <li><a class="overlay__item" href="{{ dashboard_url }}">{% svg_icon "ile-key" "icon" %}<span>{% translate "Espace réservé" %}</span></a></li>{% endif %}
+  {% safe_url 'accounts:profile' as profile_url %}{% if profile_url %}
+  <li><a class="overlay__item" href="{{ profile_url }}">{% svg_icon "circle-user-round" "icon" %}<span>{% translate "Profil" %}</span></a></li>{% endif %}
+  {% safe_url 'mfa_index' as mfa_url %}{% if mfa_url %}
+  <li><a class="overlay__item" href="{{ mfa_url }}">{% svg_icon "shield" "icon" %}<span>{% translate "Sécurité du compte" %}</span></a></li>{% endif %}
+  {% safe_url 'account_logout' as logout_url %}{% if logout_url %}
+  <li class="overlay__sep" role="presentation"></li>
+  <li>
+    <form method="post" action="{{ logout_url }}">{% csrf_token %}
+      <button class="overlay__item" type="submit">{% svg_icon "logout" "icon" %}<span>{% translate "Se déconnecter" %}</span></button>
+    </form>
+  </li>{% endif %}
+</ul>{% elif popover %}{% with panel_id=menu_id|default:"account-menu" %}{% translate "Mon compte" as account_label %}<div class="account-menu">
+  <button class="account-menu__summary" type="button" popovertarget="{{ panel_id }}" aria-label="{{ user.get_short_name }} — {{ account_label }}">
+    {% svg_icon "circle-user-round" "icon icon--sm" %}
+    <span class="account-menu__name">{{ user.get_short_name }}</span>
+    {% svg_icon "chevron" "icon icon--sm" %}
+  </button>
+  {% include "components/popover.html" with id=panel_id label=account_label body_template="components/account_menu.html" %}
+</div>{% endwith %}{% else %}<details class="account-menu" data-dropdown>
   <summary class="account-menu__summary">
-    {% svg_icon "user" "icon icon--sm" %}
+    {% svg_icon "circle-user-round" "icon icon--sm" %}
     <span class="account-menu__name">{{ user.get_short_name }}</span>
     {% svg_icon "chevron" "icon icon--sm" %}
   </summary>
   <ul class="account-menu__list" role="list" aria-label="{% translate 'Mon compte' %}">
     {% safe_url 'portal:dashboard' as dashboard_url %}{% if dashboard_url %}
-    <li><a class="account-menu__link" href="{{ dashboard_url }}">{% svg_icon "home" "icon" %}<span>{% translate "Espace réservé" %}</span></a></li>{% endif %}
+    <li><a class="account-menu__link" href="{{ dashboard_url }}">{% svg_icon "ile-key" "icon" %}<span>{% translate "Espace réservé" %}</span></a></li>{% endif %}
     {% safe_url 'accounts:profile' as profile_url %}{% if profile_url %}
-    <li><a class="account-menu__link" href="{{ profile_url }}">{% svg_icon "user" "icon" %}<span>{% translate "Profil" %}</span></a></li>{% endif %}
+    <li><a class="account-menu__link" href="{{ profile_url }}">{% svg_icon "circle-user-round" "icon" %}<span>{% translate "Profil" %}</span></a></li>{% endif %}
     {% safe_url 'mfa_index' as mfa_url %}{% if mfa_url %}
-    <li><a class="account-menu__link" href="{{ mfa_url }}">{% svg_icon "key" "icon" %}<span>{% translate "Sécurité du compte" %}</span></a></li>{% endif %}
+    <li><a class="account-menu__link" href="{{ mfa_url }}">{% svg_icon "shield" "icon" %}<span>{% translate "Sécurité du compte" %}</span></a></li>{% endif %}
     {% safe_url 'account_logout' as logout_url %}{% if logout_url %}
     <li class="account-menu__sep" role="presentation"></li>
     <li>
@@ -23,4 +58,4 @@ Links resolve through safe_url so the menu degrades gracefully while sibling app
       </form>
     </li>{% endif %}
   </ul>
-</details>
+</details>{% endif %}

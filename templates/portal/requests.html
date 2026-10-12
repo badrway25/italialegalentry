@@ -36,6 +36,6 @@
 {% else %}
 {% translate "Aucune demande" as empty_title %}
 {% translate "Les demandes transmises depuis votre compte apparaîtront ici." as empty_text %}
-{% include "components/empty_state.html" with title=empty_title text=empty_text icon="list" %}
+{% include "components/empty_state.html" with title=empty_title text=empty_text icon="send" %}
 {% endif %}
 {% endblock %}

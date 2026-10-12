@@ -12,7 +12,7 @@
     {% if event %}{% event_text event "registration.intro" "p" "forum-lead" %}{% endif %}
   </header>
   {% if not event %}
-    {% include "components/empty_state.html" with title=_("Les inscriptions ne sont pas encore ouvertes.") action_label=_("Retour à la page du Forum") action_url=index_url %}
+    {% include "components/empty_state.html" with title=_("Les inscriptions ne sont pas encore ouvertes.") action_label=_("Retour à la page du Forum") action_url=index_url icon="handshake" %}
   {% elif not registration_open %}
     <div class="notice notice--info" role="status" data-registration="closed">
       <p><strong>{% translate "Les inscriptions sont closes." %}</strong></p>

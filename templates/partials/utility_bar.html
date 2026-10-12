@@ -1,28 +1,17 @@
 {% load i18n %}{% comment %}
-The institutional bar, design V4 (docs/design-v4/CREATIVE_DIRECTION.md §3.2, adapted): 32px, paper,
-the promoter at the reading edge and — at the other end — the segmented language control and the
-reserved-area access (or the account menu, signed in).
-
-The direction placed language and access in the header. Measured in Chrome at 1440: the seven
-top-level sections the CMS menu carries (Plex 15/20 500, 44px items) take 905px beside the 303px
-lock-up, which leaves no room for a 152px language control and a 140px button in a 1240px row;
-they overlapped the lock-up. Until the information architecture settles on the four voices the
-direction proposes (a decision for the owner, not for a stylesheet), the two controls stay on
-this bar — redrawn as the direction draws them. Below md the bar is not drawn and the drawer
-carries the same controls (partials/header.html).
+The institutional bar, design V5 «Il portico» (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11, §1.12; W2-C1):
+32 px, night, not sticky. The promoter at the reading edge; at the other end the language control, one
+component — four links named in their own language (Italiano · Français · English · العربية, never «ع»:
+DL A25), 24 px targets on a fine pointer and 44 px on a coarse one. The reserved-area entrance left this bar
+for the letterhead's end zone («la targa», §1.11): the bar is not sticky, and the entrance used to leave
+the screen at the first scroll (NV-1). Below md the bar is not drawn and the drawer carries the same
+controls (partials/header.html).
 {% endcomment %}
 <div class="utility-bar" role="region" aria-label="{% translate 'Barre institutionnelle' %}">
   <div class="container utility-bar__inner">
     <p class="utility-bar__identity"><strong>{{ site.promoter }}</strong><span class="hide-mobile"> — {% translate "promoteur du projet" %}</span></p>
     <div class="utility-bar__actions">
-      {% flag "reserved_area_public_link" as reserved_link %}
-      {% if user.is_authenticated %}
-        {% include "components/account_menu.html" %}
-      {% elif reserved_link and site.settings.reserved_area_enabled %}
-        {% safe_url 'account_login' as login_url %}
-        {% if login_url %}<a class="utility-bar__link" href="{{ login_url }}">{% svg_icon "lock" "icon" %}<span class="utility-bar__link-label">{% translate "Espace réservé" %}</span></a>{% endif %}
-      {% endif %}
-      {% include "components/language_segmented.html" %}
+      {% include "components/language_segmented.html" with lang_names=True %}
     </div>
   </div>
 </div>

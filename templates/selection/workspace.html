@@ -49,7 +49,7 @@ inline start, the responsible actor on the inline end.
         <span class="entry__title">{{ process.mandate.need_profile }}</span>
         <span class="entry__gloss">
           {% blocktranslate with reference=process.reference company=process.mandate.company.name %}Processus {{ reference }} — besoin de {{ company }}{% endblocktranslate %}
-          · <span class="state state--{% if process.is_closed %}done{% elif process.stage == 'suspended' %}invalid{% else %}review{% endif %}" data-register="{{ process.stage|chip_register:'selection.SelectionStage' }}">{{ process.get_stage_display }}</span>
+          · {% chip process.stage "selection.SelectionStage" %}{{ process.get_stage_display }}{% endchip %}
         </span>
         <span class="entry__actor">{{ process.actor.organisation.name }}</span>
         {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}

@@ -1,0 +1,111 @@
+/* ============================================================================================
+   BASE V5 — type roles, the name, links, the one focus system, Arabic (W1-A)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.1 (type «Una voce»), §1.6 (focus); DESIGN_SYSTEM_V5 §5, §10.
+   Loaded LAST (static/css/main.css): every rule here re-values the legacy roles of the same specificity
+   without a template changing. It is written for that position, not copied from the gate-0 sheet: the
+   proof's reset and layout helpers are not carried — the product's own reset (V1 base.css) stays, and a
+   reset placed last would have flattened every heading of every page.
+   Reads layers 2 and 3 of static/css/v5/tokens.css only.
+   ============================================================================================ */
+
+/* ---- a language boundary re-resolves the family ------------------------------------------------
+   A lang="fr" run on an Arabic page (or a lang="ar" block on a Latin one) would otherwise inherit the
+   parent's already-resolved stack. :where(): any rule that names its own family still wins. */
+:where([lang]) { font-family: var(--f-sans); }
+
+/* ---- the type roles: 600 titles, 500 acts, 400 reads; tracking follows size and stops at 20 px --- */
+h1, h2, h3, .t-title, .t-band { font-weight: var(--w-title); }
+h3 { letter-spacing: var(--track-entry); }
+/* the V2 home titles V4 set in the serif at 300 / 400 take the title weight of one voice; the door cards'
+   titles are capitals in the locked copy itself, so they are tracked as every capital run is (TR rule 6) */
+.home-entrances .entry__title, .home-pilot .section__title { font-weight: var(--w-title); }
+.home-entrances .entry__title { letter-spacing: var(--track-display-caps); }
+.t-plate { font-weight: var(--w-display); letter-spacing: var(--track-display); }
+/* the lead is roman, 400 — the all-sans system keeps italics for the titles of acts (TR §3.B) */
+.t-lead, .lead { font-weight: var(--w-body); font-style: normal; }
+/* V1's caption is 13 px: it reads on the 20 px line, not on the 12 px caption's 16 */
+.t-caption, figcaption, small { line-height: var(--t-small-lh); }
+
+/* ---- the name, one drawing (DS §5; plan §1.1): every rendering of «ITALY LEGAL ENTRY™» --------
+   The {% brand %} and {% brand_lockup %} classes, the console rail's, and the home hero's name line
+   (phase 3: the H1 is the name, translate="no"). The locked text is kept as written; the capitals are
+   CSS — the subset holds only the eleven capitals and the ™. :root lifts the selector above the app
+   sheets that load after main.css (console.css's .rail__wordmark). */
+:root :is(.lock__wm, .brand__wordmark, .home__wordmark, .page-header__wordmark, .site-footer__wordmark-inline,
+          .rail__wm, .rail__wordmark, .hero__title[translate="no"]) {
+  font-family: var(--f-wordmark);
+  font-weight: var(--w-wordmark);
+  text-transform: uppercase;
+  font-synthesis: none;
+}
+:root .hero__title[translate="no"] { letter-spacing: var(--track-display-caps); line-height: var(--t-display-lh); }
+/* (the name is Latin on every page: v4/hero.css's Arabic title leading, 1.2, is for Arabic text and leaves it) */
+
+/* ---- «ILE Mono» has one seat: references, hashes, rule versions (plan §1.1). The legacy sheets set
+        their footer labels, the pilot's shore names and numbers, the questionnaire's count, journey and
+        timeline dates, chip counters and the inline button in the mono: they take the sans with tabular
+        figures, so a page without a reference downloads no mono (the font budget, plan §2.6). The
+        references keep it: .ctx__ref, .doc-workspace__ref, .error-page__ref, code, .t-ref. ---------- */
+:root :is(.site-footer__heading, .site-footer__bottom, .voyage__shore, .voyage__num, .btn--inline, .wiz__foot-count,
+          .doc-row__blocked, .journey__when, .tl__when) {
+  font-family: var(--f-sans);
+  font-variant-numeric: var(--numeric-data);
+}
+
+/* ---- italics are kept for the titles of acts cited in sources (plan §1.1: never on the portico).
+        The legacy quotes and notes of the portico are set roman, so a public page downloads no italic
+        (14 KB: the forum page measured 35 952 B of fonts with its italic note). `:root body` lifts the
+        rule over the app sheets that load after main.css (pages.css, forum.css). ------------------- */
+:root body :is(.forum-programme__note, .forum-banner__quote, .institutional-banner__quote) { font-style: normal; }
+
+/* ---- links: the one interactive accent; underlined at rest in running text ---------------------- */
+a {
+  color: var(--accent-text);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+@media (hover: hover) {
+  a:hover { color: var(--accent-text-hover); text-decoration-thickness: 2px; }
+}
+
+/* ---- the one focus system (plan §1.6) -------------------------------------------------------------
+   :focus-visible only: a 2 px ring at a 2 px offset, following the element's own radius (the outline
+   does); laguna-400 inside a night context (tokens.css re-points --focus-ring there); two tones on a
+   photograph; the 5 px halo on text fields only; Highlight in forced colours; never animated. The
+   legacy halo on every focused element (v2/shell.css) is withdrawn here. A component's own,
+   more specific focus rule is its family's to retarget (buttons and fields W1-C, the chrome W2-C1). */
+:focus { outline: none; }
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
+}
+:is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="submit"], [type="button"], [type="reset"], [type="image"]), textarea, select):focus-visible {
+  box-shadow: 0 0 0 5px var(--focus-halo);
+}
+@media (forced-colors: active) {
+  :focus-visible { outline: 2px solid Highlight; box-shadow: none; }
+}
+
+/* ---- typed text: 16 px in every field, at every width (LG-1, TY-14, RS S26: the login's 15 px fields
+        trigger the iOS zoom). Fields are W1-C's; the size is a rule of the type system, held against
+        every field rule of the legacy sheets and of the app sheets that load after main.css
+        (entrance.css sets them at (0,5,1)) — hence the one !important of this file. --------------- */
+:is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="submit"], [type="button"], [type="reset"], [type="image"], [type="hidden"]), textarea, select) {
+  font-size: var(--t-field) !important;
+}
+
+/* ---- Arabic (Vazirmatn): titles 600 with no ×1.15, no tracking, leading 1.4; no capitals, no
+        tracking on labels; emphasis by weight, never italic; references isolated left-to-right ----- */
+:lang(ar) :is(h1, h2, h3, .t-plate, .t-title, .t-band, .t-entry):not([translate="no"]) { letter-spacing: 0; line-height: var(--ar-title-lh); }
+:lang(ar) :is(h4, h5, h6, .t-folio, .eyebrow) { letter-spacing: 0; text-transform: none; }
+:lang(ar) :is(em, i) { font-style: normal; font-weight: var(--w-control); }
+:lang(ar) :is(code, kbd, samp, .t-ref) { direction: ltr; unicode-bidi: isolate; }
+/* the entrance's help line under a field: Vazirmatn's content area at 14 px is 22 px, so on entrance.css's
+   20 px line an inline link stands 1 px past its line box — the login's «forgotten password» link, flush
+   under the password field, reached 1 px into the field (W1-A ship sweep: overlapping targets 1 → 2, ar login
+   at 1440 and 390). 24 px is the Arabic leading of the type system at 14 px (body 1.75, console 1.7, on the
+   4 px line); (0,3,0) holds over entrance.css's (0,2,0), loaded after main.css. */
+:lang(ar) .entrance .form-field__help { line-height: 1.5rem; }

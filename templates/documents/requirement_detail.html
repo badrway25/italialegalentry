@@ -28,7 +28,7 @@ Contract: `row` = documents.presenters.present_requirement(..., with_versions=Tr
   {% comment %} The state: the word carries it, the rule explains it, the reason names this row. {% endcomment %}
   <section class="outcome outcome--{{ row.state_css }} doc-piece__state" aria-labelledby="state-title">
     <p class="t-folio" id="state-title">{% translate "État de la pièce" %}</p>
-    <p class="outcome__kind"><span class="state state--{{ row.state_css }}" data-register="{{ row.state|chip_register:'documents.RequirementState' }}">{{ row.state_label }}</span></p>
+    <p class="outcome__kind">{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}</p>
     <p class="t-gloss">{{ row.state_rule }}</p>
     {% if row.state_reason %}<p class="t-gloss doc-piece__reason">{{ row.state_reason }}</p>{% endif %}
   </section>
@@ -92,7 +92,7 @@ Contract: `row` = documents.presenters.present_requirement(..., with_versions=Tr
           <span class="entry__ordinal" aria-hidden="true"></span>
           <p class="entry__title">
             {% blocktranslate with n=version.number %}Version {{ n }}{% endblocktranslate %}
-            {% if version.is_current %}<span class="state state--filed" data-register="neutro">{% translate "En vigueur" %}</span>{% endif %}
+            {% if version.is_current %}{% chip register="neutro" %}{% translate "En vigueur" %}{% endchip %}{% endif %}
           </p>
           {% comment %}
           ONE grid area. Two sibling paragraphs both assigned to `gloss` would be placed in the

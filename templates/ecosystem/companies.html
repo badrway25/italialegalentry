@@ -27,7 +27,7 @@ tag renders components/form_unavailable.html.
   {% include "components/section_header.html" with id="formulaire-header" eyebrow=_("Formulaire") title=_("Recueil des besoins") %}
   {% company_needs_form %}
   <p class="ecosystem-form__destination text-small">
-    {% svg_icon "mail" "icon icon--sm" %}
+    {% svg_icon "at-sign" "icon icon--sm" %}
     {% translate "Toutes les demandes transmises par les formulaires du site parviennent à une adresse unique :" %}
     <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
   </p>

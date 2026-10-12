@@ -30,7 +30,7 @@ from the same query and differ only in who wrote the row.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <h3 class="entry__title">{{ proposal.title_fr }}</h3>
         <span class="entry__gloss">{{ proposal.reference }} — {{ proposal.commission.name_fr }}</span>
-        <span class="entry__actor state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
       {% if proposal_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}
@@ -66,7 +66,7 @@ from the same query and differ only in who wrote the row.
             <span class="t-caption">{{ proposal.reference }}</span>
           </th>
           <td data-label="{% translate 'Commission' %}">{{ proposal.commission.name_fr }}</td>
-          <td data-label="{% translate 'État' %}"><span class="state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span></td>
+          <td data-label="{% translate 'État' %}">{% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}</td>
           <td data-label="{% translate 'Depuis le' %}"><time datetime="{{ proposal.status_since|date:'Y-m-d' }}">{{ proposal.status_since|date:"d.m.Y" }}</time></td>
         </tr>
         {% endfor %}

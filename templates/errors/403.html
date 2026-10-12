@@ -1,5 +1,12 @@
-{% extends "errors/base_error.html" %}{% load i18n %}
+{% extends "errors/base_error.html" %}{% load i18n %}{% comment %}
+The 403. To a person who is not signed in, the sign-in is the one primary — its sentence asks for it — and it carries
+the refused address (`next`: allauth goes there after the sign-in, and only to an address of this site), so the person
+lands where they were going, not on the dashboard (the review's m9); a signed-in person gets the home and the way back.
+{% endcomment %}
 {% block error_code %}403{% endblock %}{% block error_code_display %}403{% endblock %}
 {% block error_title %}{% translate "Accès non autorisé" %}{% endblock %}
 {% block error_text %}{% translate "Vous n’avez pas les droits nécessaires pour consulter cette ressource. Si vous pensez qu’il s’agit d’une erreur, connectez-vous avec le compte approprié ou contactez-nous." %}{% endblock %}
-{% block error_extra %}{% safe_url 'account_login' as login_url %}{% if login_url and not user.is_authenticated %}<p><a class="link-arrow" href="{{ login_url }}">{% translate "Se connecter" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}{% endblock %}
+{% block error_actions %}{% safe_url 'account_login' as login_url %}{% if login_url and not user.is_authenticated %}<div class="error-page__actions">
+  <a class="btn btn--primary btn--arrow" href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">{% translate "Se connecter" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+  <a class="btn btn--secondary" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a>
+</div>{% else %}{{ block.super }}{% endif %}{% endblock %}

@@ -16,7 +16,7 @@ chip_register, actor); optional `label` (aria-label of the list).
     <time class="tl__when" datetime="{{ row.when|date:'c' }}">{{ row.when|date:"d.m.Y" }}</time>
     <span class="tl__what">
       <span class="tl__title">{{ row.title }}</span>
-      {% if row.chip_label %}{% with register=row.chip_register %}<span class="chip state"{% if register %} data-register="{{ register }}"{% endif %}>{{ row.chip_label }}</span>{% endwith %}{% endif %}
+      {% if row.chip_label %}{% chip register=row.chip_register %}{{ row.chip_label }}{% endchip %}{% endif %}
       {% if row.detail %}<span class="tl__detail">{{ row.detail }}</span>{% endif %}
       {% if row.actor %}<span class="tl__actor">{{ row.actor }}</span>{% endif %}
     </span>

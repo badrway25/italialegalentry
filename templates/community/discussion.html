@@ -1,11 +1,24 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+A thread of the Forum Virtuel (members; moderators see their forms). Design V5.4 (W3-F2 — the content pages): the head
+at the reading edge (the room as the space's name, the thread's title); a chapter for the messages — the thread's
+state as a notice, the moderation's form on a broken edge (an act still to be done), the messages as records on shared
+hairlines (who, when, the state as a chip of its register, the words, the attachments, the person's own actions);
+the reply's form a chapter of its own.
+{% endcomment %}
 {% block page_title %}{{ discussion.title }} · {{ room.name_fr }}{% endblock %}
 {% block meta_description %}{{ discussion.title }}{% endblock %}
+{% block body_class %}page-community lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "components/page_header.html" with title=discussion.title eyebrow=room.name_fr %}
-<section class="container community-thread" aria-labelledby="thread-heading">
-  <h2 id="thread-heading">{% translate "Messages" %}</h2>
+<section class="chapter community-thread" aria-labelledby="thread-heading">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      <h2 class="chapter__title" id="thread-heading">{% translate "Messages" %}</h2>
+    </div>
+    <div class="chapter__body">
   {% if discussion.status == "closed" %}
     {% translate "Discussion fermée : il n’est plus possible de répondre." as closed_text %}
     {% include "components/notice.html" with kind="info" text=closed_text %}
@@ -14,71 +27,82 @@
     {% include "components/notice.html" with kind="warning" text=hidden_text %}
   {% endif %}
   {% if moderator and moderation_form %}
-  <form class="community-moderation" method="post" action="{% url 'community:discussion_moderate' pk=discussion.pk %}">
-    {% csrf_token %}
-    <fieldset>
-      <legend>{% translate "Modération de la discussion" %}</legend>
-      {% include "components/form_field.html" with field=moderation_form.action %}
-      {% include "components/form_field.html" with field=moderation_form.note %}
-      <button type="submit" class="btn btn--secondary">{% translate "Appliquer" %}</button>
-    </fieldset>
-  </form>
+      <form class="community-moderation form" method="post" action="{% url 'community:discussion_moderate' pk=discussion.pk %}">
+        {% csrf_token %}
+        <fieldset class="form__fieldset">
+          <legend class="form__legend">{% translate "Modération de la discussion" %}</legend>
+          {% include "components/form_field.html" with field=moderation_form.action %}
+          {% include "components/form_field.html" with field=moderation_form.note %}
+          <div class="form__actions"><button type="submit" class="btn btn--secondary">{% translate "Appliquer" %}</button></div>
+        </fieldset>
+      </form>
   {% endif %}
   {% if posts %}
-  <ol class="community-thread__list">
+      <ol class="registro community-thread__list">
     {% for post in posts %}
-    <li class="community-post community-post--{{ post.status }}" id="post-{{ post.pk }}">
-      <article aria-labelledby="post-{{ post.pk }}-author">
-        <p class="community-post__meta">
-          <span id="post-{{ post.pk }}-author" class="community-post__author">{% if post.author %}{{ post.author.public_label }}{% if membership and post.author_id == membership.id %} ({% translate "vous" %}){% endif %}{% else %}{% translate "Participant" %}{% endif %}</span>
-          {% if post.author %}<span class="community-post__category">{{ post.author.get_category_display }}</span>{% endif %}
-          · <time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|date:"d/m/Y H:i" }}</time>
-          {% if post.edited_at %} · <span>{% translate "modifié" %}</span>{% endif %}
-          {% if post.status == "pending_moderation" %} · <span class="badge" data-register="attesa">{% translate "En attente de modération" %}</span>{% endif %}
-          {% if post.status == "hidden" %} · <span class="badge" data-register="nullo">{% translate "Masqué" %}</span>{% endif %}
-        </p>
-        <div class="community-post__body">{{ post.body|linebreaks }}</div>
-        {% if post.attachments.all %}
-        <ul class="community-post__attachments">
-          {% for attachment in post.attachments.all %}
-          <li>{{ attachment.label }}{% if attachment.document_uuid %} — {% url 'documents:download' attachment.document_uuid as download_url %}{% if download_url %}<a href="{{ download_url }}">{% translate "Télécharger" %}</a>{% else %}<span>{% translate "téléchargement bientôt disponible" %}</span>{% endif %}{% endif %}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        <p class="community-post__actions">
-          {% if membership and post.author_id == membership.id and post.status != "hidden" and discussion.is_open %}<a href="{% url 'community:post_edit' pk=post.pk %}">{% translate "Modifier" %}</a>{% endif %}
-          {% if membership and post.author_id != membership.id and post.status == "visible" %}<a href="{% url 'community:post_report' pk=post.pk %}">{% translate "Signaler" %}</a>{% endif %}
-        </p>
-        {% if moderator and post_moderation_form %}
-        <form class="community-moderation community-moderation--post" method="post" action="{% url 'community:post_moderate' pk=post.pk %}">
-          {% csrf_token %}
-          <label for="post-{{ post.pk }}-action">{% translate "Action de modération" %}</label>
-          <select id="post-{{ post.pk }}-action" name="action">
-            {% for value, label in post_moderation_form.fields.action.choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
-          </select>
-          <label for="post-{{ post.pk }}-note">{% translate "Note (interne)" %}</label>
-          <input id="post-{{ post.pk }}-note" type="text" name="note" maxlength="300">
-          <button type="submit" class="btn btn--secondary">{% translate "Appliquer" %}</button>
-        </form>
-        {% endif %}
-      </article>
-    </li>
+        <li class="registro__row community-post community-post--{{ post.status }}" id="post-{{ post.pk }}">
+          <article aria-labelledby="post-{{ post.pk }}-author" class="community-post__inner">
+            <p class="registro__meta community-post__meta">
+              <span id="post-{{ post.pk }}-author" class="community-post__author">{% if post.author %}{{ post.author.public_label }}{% if membership and post.author_id == membership.id %} ({% translate "vous" %}){% endif %}{% else %}{% translate "Participant" %}{% endif %}</span>
+              {% if post.author %}<span class="community-post__category">{{ post.author.get_category_display }}</span>{% endif %}
+              · <time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|date:"d/m/Y H:i" }}</time>
+              {% if post.edited_at %} · <span>{% translate "modifié" %}</span>{% endif %}
+              {% if post.status == "pending_moderation" %} · {% chip register="attesa" %}{% translate "En attente de modération" %}{% endchip %}{% endif %}
+              {% if post.status == "hidden" %} · {% chip register="nullo" %}{% translate "Masqué" %}{% endchip %}{% endif %}
+            </p>
+            <div class="community-post__body">{{ post.body|linebreaks }}</div>
+            {% if post.attachments.all %}
+            <ul class="registro__text community-post__attachments">
+              {% for attachment in post.attachments.all %}
+              <li>{{ attachment.label }}{% if attachment.document_uuid %} — {% url 'documents:download' attachment.document_uuid as download_url %}{% if download_url %}<a href="{{ download_url }}">{% translate "Télécharger" %}</a>{% else %}<span>{% translate "téléchargement bientôt disponible" %}</span>{% endif %}{% endif %}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <p class="community-post__actions">{% if membership and post.author_id == membership.id and post.status != "hidden" and discussion.is_open %}<a href="{% url 'community:post_edit' pk=post.pk %}">{% translate "Modifier" %}</a>{% endif %}{% if membership and post.author_id != membership.id and post.status == "visible" %}<a href="{% url 'community:post_report' pk=post.pk %}">{% translate "Signaler" %}</a>{% endif %}</p>
+            {% if moderator and post_moderation_form %}
+            <form class="community-moderation community-moderation--post" method="post" action="{% url 'community:post_moderate' pk=post.pk %}">
+              {% csrf_token %}
+              <div class="form-field">
+                <label class="form-field__label" for="post-{{ post.pk }}-action">{% translate "Action de modération" %}</label>
+                <select id="post-{{ post.pk }}-action" name="action">
+                  {% for value, label in post_moderation_form.fields.action.choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="post-{{ post.pk }}-note">{% translate "Note (interne)" %}</label>
+                <input id="post-{{ post.pk }}-note" type="text" name="note" maxlength="300">
+              </div>
+              <button type="submit" class="btn btn--secondary">{% translate "Appliquer" %}</button>
+            </form>
+            {% endif %}
+          </article>
+        </li>
     {% endfor %}
-  </ol>
+      </ol>
   {% else %}
     {% translate "Aucun message visible." as empty_title %}
     {% include "components/empty_state.html" with title=empty_title %}
   {% endif %}
+    </div>
+  </div>
 </section>
 {% if form %}
-<section class="container community-compose" aria-labelledby="reply-heading">
-  <h2 id="reply-heading">{% translate "Répondre" %}</h2>
-  <form method="post" action="{% url 'community:discussion' pk=discussion.pk %}" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-    {% include "components/form_field.html" with field=form.body %}
-    <p><button type="submit" class="btn btn--primary">{% translate "Publier la réponse" %}</button></p>
-  </form>
+<section class="chapter community-compose" aria-labelledby="reply-heading">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      <h2 class="chapter__title" id="reply-heading">{% translate "Répondre" %}</h2>
+    </div>
+    <div class="chapter__body">
+      <form class="form" method="post" action="{% url 'community:discussion' pk=discussion.pk %}" novalidate>
+        {% csrf_token %}
+        {% include "components/form_errors.html" with form=form %}
+        {% include "components/form_field.html" with field=form.body %}
+        <div class="form__actions"><button type="submit" class="btn btn--primary">{% translate "Publier la réponse" %}</button></div>
+      </form>
+    </div>
+  </div>
 </section>
 {% endif %}
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

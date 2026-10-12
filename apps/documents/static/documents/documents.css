@@ -71,7 +71,7 @@
 }
 
 /* A cell may hold a state chip and the sentence that resolves it: they stack. */
-.doc-register__table td .state + .t-caption {
+.doc-register__table td .chip + .t-caption {
   display: block;
   margin-block-start: var(--s-1);
 }
@@ -235,7 +235,7 @@
   margin-block-start: var(--s-3);
 }
 
-.doc-version .entry__title .state {
+.doc-version .entry__title .chip {
   margin-inline-start: var(--s-3);
 }
 

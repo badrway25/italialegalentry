@@ -1,0 +1,48 @@
+{% load static %}<!DOCTYPE html>
+<html lang="it" dir="ltr" class="dp-live-root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if strip.page_title %}{{ strip.page_title }} · {% endif %}V5 dal vivo · Italy Legal Entry™</title>
+<meta name="robots" content="noindex, nofollow">
+{% comment %}
+V5 live preview — the landing: what /__design-v5/ opens since V5.4 (plan §4.1). DEVELOPMENT ONLY;
+rendered by designpreview.views.landing.
+
+The live V5 home — the real /fr/ page of this server — full window, in ONE same-origin frame,
+under the strip (_strip.html), which sits outside the page. `?page=` frames another page of this
+site (designpreview.live.page_param: a path under /fr/, /ar/, /it/, /en/ or /documents/, nothing
+else; `?lang=` gives a page of the documents app its language); `?frame=phone` draws it in a phone
+of 390 px. The frame is a real page: it may be framed by this origin only under
+designpreview.frames' narrow condition, and its own policy is untouched but for that.
+
+The window and the frame are named after the page (review W1-P, accessibility m1). When the page
+the frame was asked for cannot be shown in it — the back-office, the preview itself, another
+site — the script hides the frame and shows the stage's message instead of a blank frame (review
+W1-P B1): the page alone, when its address is known, and the way back.
+
+A standalone document, like the pickers: base.css hides every iframe, by policy, so this loads the
+font and token layers and the dev sheet (_stylesheets.html), never the bundled cascade. The script
+keeps the strip in step with the page the frame navigates to, and sends an old link to an anchor
+of the hub (/__design-v5/#g-…) on to the research archive, which holds that anchor now. Without
+it the strip says what it said when the page was served, and loses nothing else.
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+{% include "dev/designpreview/_stylesheets.html" %}
+<script src="{% static 'js/dev/designpreview.js' %}" defer></script>
+</head>
+<body class="dp-live">
+{% include "dev/designpreview/_strip.html" with mode="landing" %}
+<main class="dp-live__stage dp-live__stage--{{ strip.frame }}" data-dp-stage>
+  {% if error %}<div class="dp-live__message" role="alert"><p>{{ error }}</p><p><a href="{% url 'designpreview:landing' %}">Torna alla home</a></p></div>
+  {% else %}<iframe class="dp-live__frame" src="{{ strip.page }}" title="{{ strip.page_title|default:strip.page }} — {{ strip.state_label }}" data-dp-frame></iframe>
+  <div class="dp-live__message dp-live__message--blocked" role="alert" data-dp-blocked hidden>
+    <p class="dp-live__message-title">Questa pagina non si apre nella cornice.</p>
+    <p>È un indirizzo che la cornice non tiene — il back-office, una pagina dell’anteprima stessa, un altro sito — e il browser ha rifiutato di mostrarlo qui. Niente è cambiato.</p>
+    <p class="dp-live__message-actions"><a href="{{ strip.page }}" target="_blank" rel="noopener" data-dp-blocked-open hidden>Apri la pagina da sola<span class="dp-hidden"> (nuova scheda)</span></a> <a href="{% url 'designpreview:landing' %}" data-dp-blocked-back>Torna alla pagina di prima</a></p>
+  </div>
+  {% endif %}
+</main>
+{{ strip.map|json_script:"dp-live-map" }}
+</body>
+</html>

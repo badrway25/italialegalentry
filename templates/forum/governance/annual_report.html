@@ -26,9 +26,9 @@ day it was published, even after the data moves on.
 {% block governance_content %}
 <p class="gloss">
   {% if is_draft %}
-  <span class="state state--review" data-register="neutro">{% translate "projet" %}</span>
+  {% chip register="neutro" %}{% translate "projet" %}{% endchip %}
   {% else %}
-  <span class="state state--done" data-register="conforme">{% translate "publiée" %}</span>
+  {% chip register="conforme" %}{% translate "publiée" %}{% endchip %}
   {% endif %}
   {% if report.generated_at %}
   <span>{% blocktranslate with date=report.generated_at|date:"d.m.Y" %}assemblée le {{ date }}{% endblocktranslate %}</span>

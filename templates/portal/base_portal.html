@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load i18n static %}
 {% comment %}
-Shell of every authenticated page — design V4, the console (docs/design-v4/CREATIVE_DIRECTION.md
-§3.9; DESIGN_SYSTEM_V4.md §8).
+Shell of every authenticated page — design V5, the console (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.18 D06,
+§3.5 item 3; W3-A).
 
 What this replaces: the reserved area rendered inside the PUBLIC shell — the institutional utility
 bar, the seven-section mega-menu and the full public footer, with the actual work parked in a
@@ -9,14 +9,19 @@ sidebar underneath (the Design Council scored it 3/10) — and then, from 21/09,
 with a text sidebar under it, which the owner rejected on 24/09 as editorial and static.
 
 Regions, in this order (partials/portal_chrome.html draws the first three):
-  1. the RAIL — the reserved area's own navigation, collapsible, persisted
-  2. the CONTEXT BAR — glass, sticky: breadcrumb, «Site public», account, language
+  1. the RAIL — the console's own navigation in three levels (space → section → page), compact or open,
+     the choice remembered; its foot holds the account, the language and sign-out
+  2. the CONTEXT BAR — glass, sticky: the level of the page (the breadcrumb)
   3. below 64rem the BOTTOM BAR and the drawer
-  4. the WORKSPACE — max 1320: the page header (portal_header), the case header while inside a
-     case, the ONE next action, then the page's content
+  4. the WORKSPACE — the page frame, max 1320: ONE page header (portal_header: the title, its line of context
+     and the page's one primary action at the reading end), the case header while inside a case, the ONE next
+     action, then the page's content — all on one start edge, 32 px from the rail (16 px on a phone)
 
-Contract (portal.views._render): `portal_nav`, `breadcrumbs`, `noindex`, and optionally
-`portal_context`, `case`, `next_action`. Blocks: `portal_header`, `portal_content`.
+Two skip links follow base.html's «Aller au contenu principal»: the rail from 64rem, «Menu» below it — where
+the navigation is the LAST Tab stop of the page (21 to 41 presses, the platform audit's S-2).
+
+Contract (every producer of a console page): `portal_nav` (portal.services.shell_navigation), `breadcrumbs`,
+`noindex`, and optionally `portal_context`, `case`, `next_action`. Blocks: `portal_header`, `portal_content`.
 {% endcomment %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/portal/portal.css' %}">
 <link rel="stylesheet" href="{% static 'css/dist/portal/console.css' %}">{% endblock %}
@@ -27,7 +32,9 @@ The rail's stored preference is applied BEFORE the rail is parsed (a classic, bl
 own file: the CSP allows no inline script): applied after the first frame it moved the workspace by
 184 px, CLS up to 1.19 (gate B shell, measured by the gate C review, correction 3).
 {% endcomment %}
-{% block chrome %}<script src="{% static 'js/rail-pref.js' %}"></script>
+{% block chrome %}<a class="skip-link skip-link--rail" href="#console-rail">{% translate "Navigation de l’espace réservé" %}</a>
+<a class="skip-link skip-link--menu" href="#console-menu">{% translate "Menu" %}</a>
+<script src="{% static 'js/rail-pref.js' %}"></script>
 {% include "partials/portal_chrome.html" %}{% endblock %}
 
 {% comment %}The breadcrumb lives in the context bar (portal_chrome.html), not above the content.{% endcomment %}
@@ -58,7 +65,7 @@ these two blocks; every other page inside a case keeps the header and the one pr
 {% endblock %}
 
 {% comment %}
-The platform footer is four lines, not the institutional footer with its four columns and its
+The platform footer is one line, not the institutional footer with its four columns and its
 whole public navigation: someone inside their own file does not need the site map, they need the
 legal pages and the way back out.
 {% endcomment %}

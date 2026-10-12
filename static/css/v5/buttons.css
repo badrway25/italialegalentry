@@ -1,0 +1,291 @@
+/* ============================================================================================
+   BUTTONS V5 — the slab, its variants, sizes and states (W1-C)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.4 (SH-9, DL54-13: every primary is FLAT — one colour, no gradient,
+   no inner light, no glow, no shadow; the one material signature is the hero's CTA and it is the hero's),
+   §1.5 (feedback in and out on --ease-enter in 120 ms; the press goes down at 0 ms and is released on
+   --spring-snappy), §1.6 (the one ring of v5/base.css — a button adds nothing to it), §1.8 (36 · 44 · 52 on
+   the control tokens; 44 px under a coarse pointer); DESIGN_SYSTEM_V5 §10.1; drawn reference: the gate-0
+   foundation's components.css §2.
+   Replaces components.css §1, v3/buttons.css and v4/buttons.css (plan §2.3, the deletion map).
+   The V3 property API is kept, because other sheets write it or read it — the entrance's 52 px action
+   (apps/accounts/static/accounts/entrance.css) and the loader's busy key, which sits in the middle of the
+   inline-end padding and takes the button's own ink (v5/loader.css, W1-D):
+     --btn-fill · --btn-fill-hover · --btn-fill-press · --btn-ink · --btn-ink-hover · --btn-edge ·
+     --btn-edge-hover · --btn-box-h · --btn-pad · --btn-pad-end (a padless variant writes `--btn-pad: 0`:
+     its box is its text or its icon). V4's --btn-lighting is not read: a slab has no light.
+   States: rest · hover (only where a pointer hovers) · focus-visible (the ring) · pressed (ONE gesture: the
+   press fill and 1 px down, never a scale) · disabled, aria-disabled, .is-disabled (by colour and by cursor,
+   never by opacity; the pointer still reaches it, so a title or a description can say why) · busy is the
+   loader's (v5/loader.css: the key in the end padding; every variant keeps its own surface while it waits).
+   Tokens only (layers 2 and 3 of v5/tokens.css); logical properties; the arrow's lean has its RTL twin.
+   ============================================================================================ */
+
+/* ---- 1. The slab ---------------------------------------------------------------------------------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--btn-gap);
+  min-block-size: var(--btn-box-h, var(--btn-h));
+  padding-block: var(--s-1);
+  padding-inline: var(--btn-pad, var(--btn-pad-md)) var(--btn-pad-end, var(--btn-pad, var(--btn-pad-md)));
+  border: 1px solid var(--btn-edge, transparent);
+  border-radius: var(--btn-radius);
+  background-color: var(--btn-fill, transparent);
+  background-image: none;
+  box-shadow: none;
+  color: var(--btn-ink, var(--accent-text));
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-align: center;
+  text-decoration: none;
+  text-wrap-style: balance; /* the style alone: a cell that says nowrap keeps its button on one line */
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--motion-fast) var(--ease-enter),
+    border-color var(--motion-fast) var(--ease-enter),
+    color var(--motion-fast) var(--ease-enter),
+    translate var(--spring-snappy-duration) var(--btn-release);
+}
+.btn .icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+
+/* hover: the fill, the edge and the ink move one step; a disabled or busy button does not answer */
+@media (hover: hover) {
+  .btn:where(:not(:disabled, [aria-disabled="true"], .is-disabled, .is-busy)):hover {
+    background-color: var(--btn-fill-hover, var(--btn-fill, transparent));
+    border-color: var(--btn-edge-hover, var(--btn-edge, transparent));
+    color: var(--btn-ink-hover, var(--btn-ink, var(--accent-text)));
+  }
+}
+/* the press — the one gesture of every boxed button: the press fill and 1 px down at 0 ms; the way back is
+   the slab's own transition (the snappy spring) */
+.btn:where(:not(:disabled, [aria-disabled="true"], .is-disabled, .is-busy)):active {
+  background-color: var(--btn-fill-press, var(--btn-fill-hover, var(--btn-fill, transparent)));
+  border-color: var(--btn-edge-hover, var(--btn-edge, transparent));
+  color: var(--btn-ink-hover, var(--btn-ink, var(--accent-text)));
+  translate: 0 var(--btn-press-shift);
+  transition-duration: 0ms;
+}
+
+/* ---- 2. Variants ------------------------------------------------------------------------------------ */
+/* PRIMARY — flat laguna, white label 5.29:1; hover 6.32, press 8.51. One per view. */
+.btn--primary {
+  --btn-fill: var(--fill-primary);
+  --btn-fill-hover: var(--fill-primary-hover);
+  --btn-fill-press: var(--fill-primary-press);
+  --btn-ink: var(--text-on-accent);
+  --btn-edge: var(--fill-primary-press);
+}
+/* SECONDARY — paper, a structural edge (3.37:1), an ink label */
+.btn--secondary {
+  --btn-fill: var(--surface-sheet);
+  --btn-fill-hover: var(--surface-hover);
+  --btn-fill-press: var(--surface-area);
+  --btn-ink: var(--text-1);
+  --btn-edge: var(--line-structure);
+  --btn-edge-hover: var(--text-2);
+}
+/* SOFT — the accent wash */
+.btn--soft {
+  --btn-fill: var(--accent-wash);
+  --btn-fill-hover: var(--accent-wash-2);
+  --btn-ink: var(--accent-text-hover);
+}
+/* GHOST — the quiet action: no box at rest, the accent label, a wash under the pointer */
+.btn--ghost {
+  --btn-fill-hover: var(--surface-hover);
+  --btn-fill-press: var(--surface-area);
+  --btn-ink: var(--accent-text);
+  --btn-ink-hover: var(--accent-text-hover);
+}
+/* DANGER — outlined in garnet, never a red slab: it warns that a confirmation follows */
+.btn--danger {
+  --btn-fill: var(--surface-sheet);
+  --btn-fill-hover: var(--tone-rifiuto-bg);
+  --btn-fill-press: var(--tone-rifiuto-bg-hover);
+  --btn-ink: var(--tone-rifiuto-text);
+  --btn-edge: var(--tone-rifiuto-mark);
+}
+/* ICON — 40 px visible (44 under a coarse pointer), a 44 px hit area; the markup gives it its name */
+.btn--icon {
+  --btn-box-h: var(--btn-h-icon);
+  --btn-pad: 0;
+  --btn-fill-hover: var(--surface-hover);
+  --btn-fill-press: var(--surface-area);
+  --btn-ink: var(--icon-default);
+  --btn-ink-hover: var(--icon-strong);
+  inline-size: var(--btn-h-icon);
+}
+.btn--icon::before { content: ""; position: absolute; inset: min(-2px, calc(50% - var(--hit-primary) / 2)); }
+
+/* ---- 3. Sizes --------------------------------------------------------------------------------------- */
+.btn--sm { --btn-box-h: var(--btn-h-sm); --btn-pad: var(--btn-pad-sm); }
+.btn--lg, .btn--large { --btn-box-h: var(--btn-h-lg); --btn-pad: var(--btn-pad-lg); }
+.btn--block { inline-size: 100%; }
+/* the arrow's ink has 4 px of air on its exit side inside its 20 px box: the end padding comes down by 4 px, so
+   the optical margins match (V3's measure) — and the loader's busy key keeps its air beside the arrow */
+.btn--arrow { --btn-pad-end: calc(var(--btn-pad, var(--btn-pad-md)) - 4px); }
+.btn--upper { font-size: var(--t-small); letter-spacing: var(--track-eyebrow); text-transform: uppercase; }
+:lang(ar) .btn--upper { letter-spacing: 0; text-transform: none; }
+/* Arabic words are short: a boxed button keeps a floor, so a one-word action is not a 60 px chip */
+:lang(ar) :is(.btn--primary, .btn--secondary, .btn--danger) { min-inline-size: 7.5rem; }
+/* a locked French, Italian or English label on an Arabic page is isolated left to right by base.css, which also
+   aligns it to its own start: wrapped on two lines, it hung on the left of a centred slab. It stays centred. */
+[dir="rtl"] .btn:not(.btn--link, .btn--text) > :is([lang="fr"], [lang="it"], [lang="en"]) { text-align: center; }
+
+/* ---- 4. In the line of text — after the sizes, so `btn--link btn--sm` is a link ----------------------- */
+/* LINK — a text action: the accent, a 1 px underline at 0.2 em, 2 px under the pointer; no box, no travel */
+.btn--link,
+.btn--text {
+  --btn-box-h: 1.5rem;
+  --btn-pad: 0;
+  --btn-pad-end: 0;
+  --btn-fill-hover: transparent;
+  --btn-fill-press: transparent;
+  --btn-ink: var(--accent-text);
+  --btn-ink-hover: var(--accent-text-hover);
+  padding-block: 0;
+  border-width: 0;
+  border-radius: var(--radius-xs);
+  text-align: start;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+/* a text action wraps like the text it stands in: a panel head's `.btn { white-space: nowrap }` (v4/workspace.css)
+   is for its boxed buttons, and a long link on one line overflowed the 320 px page (A11Y A1) */
+.btn.btn--link,
+.btn.btn--text { white-space: normal; }
+.btn--link:where(:not(:disabled, [aria-disabled="true"], .is-disabled)):is(:hover, :active),
+.btn--text:where(:not(:disabled, [aria-disabled="true"], .is-disabled)):is(:hover, :active) {
+  text-decoration-thickness: 2px;
+  translate: none;
+}
+
+/* the forward arrow: one per block, on the action that goes on; it leans 3 px the way the text reads */
+.btn--arrow .icon,
+.link-arrow .icon { transition: translate var(--motion-standard) var(--ease-enter); }
+@media (hover: hover) and (pointer: fine) {
+  .btn--arrow:hover .icon,
+  .link-arrow:hover .icon { translate: 3px 0; }
+  [dir="rtl"] .btn--arrow:hover .icon,
+  [dir="rtl"] .link-arrow:hover .icon { translate: -3px 0; }
+}
+
+/* the text link with its arrow (the second action of a list or a card) */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-weight: var(--w-control);
+  text-decoration: none;
+}
+.link-arrow .icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); flex: none; }
+@media (hover: hover) { .link-arrow:hover { text-decoration: underline; } }
+/* under a finger the link answers on 44 px (plan §1.4 SP-8, §1.8) without a taller line: the target grows, the
+   page does not (A11Y A3; the home's chapters do the same in pages.css) */
+@media (pointer: coarse) {
+  .link-arrow { position: relative; }
+  .link-arrow::after {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc(50% - var(--hit-primary) / 2));
+    inset-inline: 0;
+  }
+}
+
+/* ---- 5. On night — by context, and by the one legacy class that says the same thing ------------------- */
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn,
+.btn--inverse { --focus-ring: var(--focus-ring-night); }
+/* the primary is the paper plate (ink label 15.56:1): the letterhead's paper laid on the night, no glow */
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn--primary,
+.btn--inverse.btn--primary {
+  --btn-fill: var(--fill-primary-night);
+  --btn-fill-hover: var(--fill-primary-night-hover);
+  --btn-fill-press: var(--fill-primary-night-press);
+  --btn-ink: var(--text-1);
+  --btn-edge: transparent;
+}
+/* the secondary keeps a surface and an edge: over a photograph a bare outline read as the ghost */
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) :is(.btn--secondary, .btn--soft, .btn--danger),
+.btn--inverse:is(.btn--secondary, .btn--soft, .btn--danger) {
+  --btn-fill: var(--surface-night-sheet);
+  --btn-fill-hover: var(--surface-night-raised);
+  --btn-fill-press: var(--surface-night-raised);
+  --btn-ink: var(--text-on-night-1);
+  --btn-edge: var(--line-night);
+  --btn-edge-hover: var(--text-on-night-2);
+}
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn--danger,
+.btn--inverse.btn--danger { --btn-edge: var(--tone-rifiuto-night-text); }
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) :is(.btn--ghost, .btn--link, .btn--text, .btn--icon),
+.btn--inverse:is(.btn--ghost, .btn--link, .btn--text, .btn--icon) {
+  --btn-fill-hover: var(--surface-night-area);
+  --btn-fill-press: var(--surface-night-sheet);
+  --btn-ink: var(--accent-night);
+  --btn-ink-hover: var(--text-on-night-1);
+}
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) :is(.btn--link, .btn--text),
+.btn--inverse:is(.btn--link, .btn--text) { --btn-fill-hover: transparent; --btn-fill-press: transparent; }
+
+/* ---- 6. Disabled — only when the action is impossible, never while it is busy; by colour and by cursor,
+        never by opacity, and the pointer still reaches it -------------------------------------------- */
+.btn:is(:disabled, [aria-disabled="true"], .is-disabled):where(:not(.is-busy)) {
+  --btn-fill: var(--btn-disabled-fill);
+  --btn-ink: var(--btn-disabled-ink);
+  --btn-edge: transparent;
+  cursor: not-allowed;
+}
+:is(.btn--ghost, .btn--link, .btn--text, .btn--icon):is(:disabled, [aria-disabled="true"], .is-disabled) {
+  --btn-fill: transparent;
+  text-decoration: none;
+}
+:is(.hero, .chapter--dark, .on-inverse, .forum-cta, .forum-hero, .forum-banner) .btn:is(:disabled, [aria-disabled="true"], .is-disabled):where(:not(.is-busy)),
+.btn--inverse:is(:disabled, [aria-disabled="true"], .is-disabled):where(:not(.is-busy)) {
+  --btn-fill: var(--surface-night-area);
+  --btn-ink: var(--text-on-night-3);
+}
+
+/* ---- 7. Touch, reduced motion, forced colours --------------------------------------------------------- */
+/* a public form's actions stand at its fields' height, 52 px (plan §1.8: «public primaries, public form fields»;
+   the fields take it in v5/field.css), and on a phone its primary takes the column, as the entrance's does
+   (review M3). The console keeps 44. */
+body:not(.console) :is(.form__actions, .form-actions) > .btn:not(.btn--link, .btn--text, .btn--sm, .btn--icon) {
+  --btn-box-h: var(--control-lg);
+  --btn-pad: var(--btn-pad-lg);
+}
+@media (max-width: 47.999rem) {
+  body:not(.console) :is(.form__actions, .form-actions) > .btn--primary { inline-size: 100%; }
+}
+/* 36 px is a fine-pointer size; a link button's line gets a 44 px box to be hit in */
+@media (pointer: coarse) {
+  .btn--sm, .btn--link, .btn--text { --btn-box-h: var(--hit-primary); }
+}
+/* reduced motion: colour changes only — the durations are already 0 ms (v5/tokens.css) */
+@media (prefers-reduced-motion: reduce) {
+  .btn:active,
+  .btn--arrow:hover .icon,
+  .link-arrow:hover .icon,
+  [dir="rtl"] .btn--arrow:hover .icon,
+  [dir="rtl"] .link-arrow:hover .icon { translate: none; }
+}
+/* tier 0 (plan §1.5, R-07): what the keyboard asks is there in the next frame — the press, its way back, the
+   fill. html[data-input] is the input-modality flag of static/js/head.js (W1-D). */
+html[data-input="key"] .btn { transition-duration: 0ms; }
+/* borders carry the hierarchy when fills are gone: the primary has a second line inside its edge, the danger
+   a dashed one, the boxless ones the link colour and an underline */
+@media (forced-colors: active) {
+  .btn { background-color: ButtonFace; background-image: none; color: ButtonText; border-color: ButtonText; }
+  .btn--primary { outline: 1px solid ButtonText; outline-offset: -4px; }
+  .btn--primary:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+  .btn--danger { border-style: dashed; }
+  .btn--ghost, .btn--link, .btn--text, .btn--icon { background-color: Canvas; color: LinkText; border-color: transparent; }
+  .btn--ghost { text-decoration: underline; }
+  .btn:is(:disabled, [aria-disabled="true"], .is-disabled) { color: GrayText; border-color: GrayText; text-decoration: none; }
+}

@@ -22,7 +22,8 @@ def _html(client, path, status=200):
 
 
 def _card(html: str, key: str) -> str:
-    match = re.search(rf'<section class="portal-card"[^>]*data-card="{key}".*?</section>', html, flags=re.S)
+    # a register of the bridge (design V5, W3-B step 2: templates/portal/partials/card.html), by its key
+    match = re.search(rf'<section class="db-card"[^>]*data-card="{key}".*?</section>', html, flags=re.S)
     assert match, f"card {key} not rendered"
     return match.group(0)
 
@@ -41,7 +42,8 @@ def test_dashboard_for_a_fresh_account_shows_empty_states_not_numbers(client, se
     html = _html(client, DASHBOARD)
     assert 'class="portal-cards"' not in html, "the Person dashboard is not a card grid"
     assert 'class="empty-state"' not in html, "no dashed box with a centred icon"
-    assert html.count('class="empty"') >= 3
+    # design V5 (W3-B): an empty region is one line, `db-empty` — the dates, the communications, the Academy
+    assert html.count('class="db-empty"') >= 3
     assert "data-count" not in html, "an empty region must not print a figure"
     assert 'data-card="organisation"' not in html
     assert "Alice ALPHA-UNIQUE" in html and alice.email in html
@@ -62,9 +64,9 @@ def test_dashboard_cards_show_the_real_counts(
     assert "contrat-alice.pdf" in html
     assert "Convocation Alice" in html and "Rappel Alice" in html
     assert "Dépôt Alice" in html
-    # Real rows, in real lists: no empty state is drawn where there is content (design V4: the
-    # dashboard's pieces are DocumentRows, its messages threads, its deadlines dates).
-    assert html.count('class="threads__row') >= 2 and html.count('class="dates__row') >= 1
+    # Real rows, in real lists: no empty state is drawn where there is content (design V5, W3-B: the
+    # dashboard's dates and communications are the rows of its flat lists, `db-list__row`).
+    assert html.count('class="db-list__row') >= 3 and 'class="db-list__row db-list__row--unread"' in html
     assert "Dépôt Alice" in html
     # The pre-assessment is shown with its ruleset version and its evaluation date, because an
     # outcome without them cannot be reproduced and should not be trusted.

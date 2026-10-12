@@ -4,106 +4,10 @@
    no decorative motion. Panels are typographic: a fine accent rule, no shadow.
    ========================================================================== */
 
-/* ============================================================================
-   THE PLATFORM SHELL — art direction A §14, rebuilt 21/09/2026.
-
-   The reserved area used to render inside the PUBLIC shell: institutional
-   utility bar, seven-section mega-menu, full public footer, with the actual
-   work parked in a sidebar underneath. Someone who had just signed in to find
-   their next action was being offered seven sections about the project.
-
-   Same identity, different shell. Quiet chrome, a stable context, and one
-   priority above the content.
-   ========================================================================== */
-
-/* ---- The platform bar ----------------------------------------------------- */
-.portal-bar {
-  background: var(--navy-deep);
-  color: var(--paper-on-navy);
-  border-block-end: 2px solid var(--rubric-on-navy);
-  position: sticky;
-  inset-block-start: 0;
-  z-index: var(--z-header);
-}
-
-.portal-bar__inner {
-  display: flex;
-  align-items: center;
-  gap: var(--s-6);
-  flex-wrap: wrap;
-  max-inline-size: var(--container);
-  margin-inline: auto;
-  padding: var(--s-3) var(--grid-margin);
-}
-
-.portal-bar__brand {
-  color: inherit;
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 18px;
-}
-
-.portal-bar__context {
-  display: flex;
-  align-items: baseline;
-  gap: var(--s-2);
-  margin: 0;
-  padding-inline-start: var(--s-6);
-  border-inline-start: 1px solid var(--paper-muted-on-navy);
-}
-
-.portal-bar__context-label {
-  color: var(--paper-muted-on-navy);
-}
-
-.portal-bar__context-value {
-  font-family: var(--font-ref);
-  font-variant-numeric: slashed-zero lining-nums tabular-nums;
-}
-
-/* Wraps rather than overflows. At 320 this group asks for 301px inside a 265px content box — the
-   public link, the account menu and the language switcher, with two 16px gaps — and without
-   `flex-wrap` it simply ran 36px past the container and 16px past the viewport, taking the
-   language switcher's chevron off the screen on every page of the reserved area.
-
-   No breakpoint: the group wraps when it must and not before, so there is no width at which the
-   rule is either premature or late. `flex-end` keeps the wrapped line on the reading edge, which
-   in Arabic is the left one — hence the logical keyword and not `right`. */
-.portal-bar__account {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: var(--s-2) var(--s-4);
-  margin-inline-start: auto;
-  font-family: var(--font-ui);
-  font-size: var(--t-ui-size);
-}
-
-.portal-bar__link {
-  color: var(--paper-on-navy);
-  text-decoration: none;
-  border-block-end: 1px solid transparent;
-  /* "Site public" is one label, not two words to be broken over two lines — which is what it did
-     at 320, where it measured 42px because it had folded in half. */
-  white-space: nowrap;
-}
-
-.portal-bar__link:hover,
-.portal-bar__link:focus-visible {
-  border-block-end-color: var(--rubric-on-navy);
-}
-
-.portal-bar :focus-visible {
-  outline: 2px solid var(--paper-on-navy);
-  outline-offset: 2px;
-}
-
-.portal-bar .account-menu__summary,
-.portal-bar .language-switcher__link,
-.portal-bar .language-switcher summary {
-  color: var(--paper-on-navy);
-}
+/* The platform shell — the rail, the context bar, the page frame, the footer — is the console's own sheet:
+   apps/portal/static/portal/v5/_shell.css (design V5, W3-A). The V1 platform bar and the platform footer that
+   stood here left with it; `portal-bar` survives as a class name on the bar, the contract three test modules
+   hold the platform chrome to. */
 
 /* ---- The case header ------------------------------------------------------ */
 /* On the process ground: a case file is a procedure, and the ground says so. */
@@ -231,11 +135,6 @@
   .portal {
     grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
   }
-
-  .portal__aside {
-    position: sticky;
-    inset-block-start: calc(var(--chrome-masthead) + var(--s-6));
-  }
 }
 
 .portal-section + .portal-section {
@@ -256,42 +155,6 @@
   .portal-columns .portal-section + .portal-section {
     margin-block-start: 0;
   }
-}
-
-.portal-account {
-  background: var(--paper-deep);
-  padding: var(--s-6);
-}
-
-/* ---- The platform footer -------------------------------------------------- */
-/* Four lines, not the institutional footer with its four columns and the whole
-   public navigation: someone inside their own file needs the legal pages and
-   the way back out, not the site map. */
-.portal-footer {
-  border-block-start: 1px solid var(--rule-hair);
-  margin-block-start: auto;
-  font-family: var(--font-ui);
-  font-size: var(--t-caption-size);
-  color: var(--ink-muted);
-}
-
-.portal-footer__inner {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3) var(--s-6);
-  justify-content: space-between;
-  padding-block: var(--s-6);
-}
-
-.portal-footer__legal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-4);
-  margin: 0;
-}
-
-.portal-footer__contact {
-  margin: 0;
 }
 
 /* ---- Data table ----------------------------------------------------------- */
@@ -493,19 +356,6 @@
   font-weight: 600;
 }
 
-/* Without JavaScript the shared header renders the whole navigation expanded below the navigation
-   breakpoint (80rem — components.css §navigation) while staying position:sticky: it then measures
-   ≈780px and covers the entire viewport of a phone or tablet, so nothing in the reserved area can be
-   reached or clicked (review 2026-09-20: « Marquer comme lue » was unclickable at 1024×800). Inside
-   the reserved area the header simply scrolls away in that case. The root cause belongs to the
-   design system (change request: `html.no-js .site-header { position: static }` below 80rem); this
-   scoped rule becomes redundant, and stays harmless, once it is fixed there. */
-@media (max-width: 79.999rem) {
-  html.no-js .page-portal .site-header {
-    position: static;
-  }
-}
-
 /* Breadcrumb labels of the detail pages are free text (a subject, a company name): a long unbroken
    value must wrap instead of stretching the page on a phone. Scoped to the reserved area. */
 .page-portal .breadcrumbs__item {
@@ -524,8 +374,7 @@
    scrolls sideways instead of the table. Found at 390px in Arabic on the case file, where a
    five-column register overflowed the document by 58px even though the table already had its own
    scroll region. */
-.portal__main,
-.portal__aside {
+.portal__main {
   min-inline-size: 0;
 }
 
@@ -564,91 +413,15 @@
   gap: var(--space-4);
 }
 
-/* ---- Dashboard panels ------------------------------------------------------ */
-.portal-cards {
-  display: grid;
-  gap: var(--space-10) var(--gutter);
-  grid-template-columns: minmax(0, 1fr);
-}
-
-@media (min-width: 48rem) {
-  .portal-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.portal-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  min-inline-size: 0;
-  padding-block-start: var(--space-5);
-  border-block-start: var(--border-width-strong) solid var(--color-primary-900);
-}
-
-.portal-card__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-}
-
-.portal-card__header .icon {
-  color: var(--color-accent-600);
-}
-
-.portal-card__title {
-  margin: 0;
-  font-size: var(--font-size-h4);
-  margin-inline-end: auto;
-}
-
-.portal-card__figure {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: var(--font-size-small);
-}
-
-.portal-card__count {
-  font-family: var(--font-display);
-  font-size: var(--font-size-h2);
-  font-weight: var(--weight-medium);
-  line-height: 1;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
-}
-
-.portal-card__footer {
-  margin: 0;
-  margin-block-start: auto;
-}
-
-.portal-card .empty-state,
+/* ---- The empty state inside the console's main column ---------------------- */
+/* components/empty_state.html across the column, on its start edge — not the
+   centred 42rem box of a public page. «Communications», «Mes échéances»,
+   «Mes demandes» and «Mon parcours» draw it; it left by mistake with the
+   bridge's card grid (the W3-B review's M3). W3-C and W3-E retire it when
+   they redraw those pages. */
 .portal__main .empty-state {
   max-inline-size: none;
   margin-inline: 0;
-}
-
-.portal-card .empty-state {
-  padding: var(--space-6) var(--space-4);
-}
-
-.portal-card .empty-state__icon {
-  inline-size: 1.75rem;
-  block-size: 1.75rem;
-  margin-block-end: var(--space-2);
-}
-
-.portal-card .empty-state__title {
-  font-size: var(--font-size-body);
-}
-
-.portal-card .empty-state__text {
-  font-size: var(--font-size-small);
-  margin-block-end: var(--space-2);
 }
 
 /* ---- Item lists ------------------------------------------------------------ */
@@ -739,26 +512,6 @@
   white-space: pre-line;
 }
 
-/* ---- Account panel ---------------------------------------------------------- */
-.portal-account {
-  padding: var(--space-6);
-  background: var(--surface-2);
-  border-radius: var(--radius-sm);
-}
-
-.portal-account__identity {
-  margin: 0 0 var(--space-4);
-  color: var(--text-secondary);
-  font-size: var(--font-size-small);
-  overflow-wrap: anywhere;
-}
-
-.portal-account__identity strong {
-  display: block;
-  font-size: var(--font-size-body);
-  color: var(--text-strong);
-}
-
 /* ---- Orientation results ---------------------------------------------------- */
 .portal-result {
   padding-block: var(--space-6);
@@ -818,14 +571,4 @@
 .portal__main .folio__ordinal::before {
   counter-increment: portal-section;
   content: counter(portal-section, decimal-leading-zero);
-}
-
-/* The reserved area's prescribed title is a PAGE title here, not a plate: an
-   application does not introduce itself at 52px, it gets used. The words are
-   locked content and never change; only their rank does. */
-.page-portal .page-header__title {
-  font-size: var(--t-band-size);
-  line-height: var(--t-band-lh);
-  letter-spacing: var(--track-band);
-  max-inline-size: none;
 }

@@ -1,0 +1,15 @@
+{% load allauth %}{% comment %}
+allauth `form` element on the ENTRANCE layout (allauth looks for `<element>__<layout>.html` before
+`<element>.html`): the form of templates/allauth/elements/form.html, attribute for attribute — the error
+summary, the body, a design-system actions row — and, on the forms that complete a sign-in, the name of the
+loader's L1 host: the door stage of templates/allauth/layouts/entrance.html. On their submit
+static/js/src/shell.js hands the form to static/js/src/loader.js, and the stage's key turns once and holds
+(V5.4 plan §1.9 «the engage on the login»; DL54-07). The sign-in's forms are the login (allauth tags it
+`login`) and the second factor's code (mfa/authenticate: the submit after which the console arrives, where the
+release plays); no other entrance form engages the stage, and a form without visible fields never does.
+{% endcomment %}
+<form class="form" method="{{ attrs.method }}" {% if attrs.action %}action="{{ attrs.action }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} novalidate data-single-submit{% if not attrs.no_visible_fields %}{% if "login" in attrs.tags or origin == "mfa/authenticate" %} data-loader-host="varco-door"{% endif %}{% endif %}>
+  {% if attrs.form %}{% include "components/form_errors.html" with form=attrs.form %}{% endif %}
+  {% slot body %}{% endslot %}
+  {% if slots.actions %}<div class="form__actions">{% slot actions %}{% endslot %}</div>{% endif %}
+</form>

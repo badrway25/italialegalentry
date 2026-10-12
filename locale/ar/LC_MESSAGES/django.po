@@ -7486,6 +7486,10 @@ msgstr "التعاون"
 msgid "Séquence du projet pilote"
 msgstr "تسلسل المشروع التجريبي"
 
+#: .\templates\pages\home\_hero.html
+msgid "Rejouer l’animation de la porte"
+msgstr "إعادة تشغيل الرسوم المتحركة للباب"
+
 #: .\templates\pages\home\_pilot.html
 msgid "Découvrir le projet pilote"
 msgstr "اكتشفوا المشروع التجريبي"

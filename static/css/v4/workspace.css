@@ -10,30 +10,6 @@
    apps/portal/static/portal/console.css.
    ========================================================================== */
 
-/* ---- The workspace grid: 12 columns, three panel measures ------------------------- */
-.ws-grid {
-  align-items: start;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--s-6);
-  margin-block-start: var(--s-6);
-}
-
-.ws-grid > * {
-  grid-column: 1 / -1;
-  min-inline-size: 0;
-}
-
-@media (min-width: 64rem) {
-  .ws-next { grid-column: span 8; }
-  .ws-file { grid-column: span 4; }
-  .ws-journey { grid-column: 1 / -1; }
-  .ws-pieces { grid-column: span 7; }
-  .ws-deadlines { grid-column: span 5; }
-  .ws-messages { grid-column: span 6; }
-  .ws-academy { grid-column: span 6; }
-}
-
 /* ---- Panel (DS §8, last row): level 1 at rest, level 2 raised ----------------------- */
 .panel {
   position: relative;
@@ -115,7 +91,6 @@
   margin: var(--s-4) 0 0;
 }
 
-.panel__more,
 .panel__meta {
   margin: var(--s-3) 0 0;
   font-family: var(--f-sans);
@@ -233,49 +208,7 @@
   text-align: end;
 }
 
-/* ---- Facts and the five-notch meter ------------------------------------------------ */
-.facts {
-  display: grid;
-  gap: var(--s-3);
-  margin: 0;
-}
-
-.facts__row {
-  display: grid;
-  gap: 2px;
-}
-
-.facts__row dt {
-  font-family: var(--f-sans);
-  font-size: var(--u-eyebrow);
-  line-height: var(--u-eyebrow-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-.facts__row dd {
-  margin: 0;
-  font-family: var(--f-sans);
-  font-size: var(--u-body);
-  line-height: var(--u-body-lh);
-  color: var(--ink);
-}
-
-.facts__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.facts__row--meter dd {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-2) var(--s-3);
-}
-
+/* ---- The five-notch meter (the case file's header) ------------------------------------- */
 .meter {
   display: inline-flex;
   gap: 3px;
@@ -374,7 +307,7 @@
 .glyph--lg { inline-size: var(--glyph-disc-lg); block-size: var(--glyph-disc-lg); }
 
 .glyph__icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
-.glyph--sm .glyph__icon { inline-size: var(--icon-xs); block-size: var(--icon-xs); }
+.glyph--sm .glyph__icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); } /* V5: a 16 px glyph in the 24 px disc — stamp, university and institution are clean from 16 px, not 14 (plan §1.7, IC §3.1) */
 .glyph--lg .glyph__icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
 
 .glyph--dark {
@@ -404,16 +337,21 @@
   transform-origin: 0 50%;
 }
 
-/* The six registers with the CHIPS' marks (v3/chip.css: conforme = ink, neutro = ink-2, attesa =
-   ink-2 dashed, azione = pending, rifiuto = err, nullo = hairline-strong) — never the green of a
-   verdict, never the accent (gate C review, correction 1) — and, since four of them share the ink,
-   a texture as the non-chromatic channel: hatch for «attesa», dots for «rifiuto». */
-.health__segment[data-register="conforme"] { background: var(--ink); }
-.health__segment[data-register="neutro"] { background: var(--ink-2); }
-.health__segment[data-register="attesa"] { background: var(--ink-2); background-image: var(--texture-hatch); }
-.health__segment[data-register="azione"] { background: var(--pending-700); }
-.health__segment[data-register="rifiuto"] { background: var(--err-700); background-image: var(--texture-dots); background-size: 4px 4px; }
-.health__segment[data-register="nullo"] { background: var(--hairline-strong); }
+/* The eight registers with the CHIPS' marks (design V5, W1-C: v5/tokens.css §4.1 re-points --chip-mark and
+   --chip-pattern on every [data-register]; v5/chip.css) — never the green of a verdict, never the accent
+   (gate C review, correction 1) — and a texture as the non-chromatic channel: hatch for «attesa», dots for
+   «rifiuto», a cross-hatch for «blocco»; «nullo», which carries nothing, is an outline. */
+.health__segment[data-register] {
+  background-color: var(--chip-mark);
+  background-image: var(--chip-pattern);
+  background-size: var(--chip-pattern-size);
+}
+
+.health__segment[data-register="nullo"] {
+  box-sizing: border-box;
+  border: 1px dotted var(--chip-mark);
+  background-color: transparent;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .health__segment {
@@ -452,10 +390,6 @@
 .health__open {
   color: var(--pending-700);
   font-weight: 500;
-}
-
-.health--compact .health__counts {
-  font-size: var(--u-small);
 }
 
 /* ---- The controls row: SegmentedControl (DS §8.14) + search --------------------------- */
@@ -558,25 +492,21 @@
   color: var(--ink-2);
 }
 
-/* The register dot: the control is the strip's legend (one row, not two). */
+/* The register's mark: the control is the strip's legend (one row, not two). The mark is the chip's own —
+   «i cerchi», from the sprite — and takes its colour from the entry's `data-register` (design V5, W1-C:
+   v5/chip.css `.chip__g`). The element that carries the register draws no box of its own. */
 .seg__dot {
-  flex: none;
-  inline-size: 10px;
-  block-size: 10px;
-  border-radius: var(--radius-full);
-  border: 2px solid var(--hairline-strong);
-  background: var(--hairline-strong);
+  display: contents;
+  --chip-mark-size: 14px;
 }
 
-/* The same marks and the same border language as the chips (solid · dashed · double · dotted). */
-.seg__dot[data-register="conforme"] { border-color: var(--ink); background: var(--ink); }
-.seg__dot[data-register="neutro"] { border-color: var(--ink-2); background: var(--ink-2); }
-.seg__dot[data-register="attesa"] { border-style: dashed; border-color: var(--ink-2); background: transparent; }
-.seg__dot[data-register="azione"] { border-color: var(--pending-700); background: var(--pending-700); }
-.seg__dot[data-register="rifiuto"] { border-style: double; border-width: 3px; border-color: var(--err-700); background: transparent; }
-.seg__dot[data-register="nullo"] { border-style: dotted; border-color: var(--hairline-strong); background: transparent; }
+/* 14 px and 4 px of air: the entry is as wide as it was with its 10 px dot and 8 px, so the eight
+   entries and the search still share one row at 1440. */
+.seg__dot .chip__g {
+  margin-inline-end: calc(-1 * var(--s-1));
+}
 
-.seg__link--empty .seg__dot {
+.seg__link--empty .chip__g {
   opacity: 0.4;
 }
 
@@ -627,7 +557,7 @@
   color: var(--ink);
   background: var(--min-3);
   border: 1px solid var(--hairline-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--field-radius);
 }
 
 [dir="rtl"] .doc-search__input {
@@ -683,11 +613,6 @@
 .doc-collection.panel {
   padding: 0;
   overflow: visible;
-}
-
-.doc-collection--bare {
-  margin-block-start: var(--s-4);
-  border-block-start: 1px solid var(--hairline);
 }
 
 .doc-row {
@@ -864,58 +789,7 @@
   block-size: var(--icon-md);
 }
 
-/* The row's menu: a native popover, level 3. */
-.doc-menu {
-  margin: 0;
-  padding: var(--s-2);
-  min-inline-size: 220px;
-  background: var(--min-3);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-3);
-}
-
-.doc-menu:popover-open {
-  display: grid;
-  gap: 2px;
-}
-
-.doc-menu__item {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  min-block-size: var(--control-sm);
-  padding: 0 var(--s-3);
-  border-radius: var(--radius-md);
-  font-family: var(--f-sans);
-  font-size: var(--u-ui);
-  line-height: var(--u-ui-lh);
-  color: var(--ink);
-  text-decoration: none;
-}
-
-.doc-menu__item:hover,
-.doc-menu__item:focus-visible {
-  background: var(--min-1);
-  text-decoration: none;
-}
-
-.doc-menu__item .icon {
-  inline-size: var(--icon-sm);
-  block-size: var(--icon-sm);
-  color: var(--ink-3);
-}
-
-/* The dashboard's compact row: identity · state · due, in a bare list (no responsible, no action
-   — the register page carries those; the dashboard's action is the next step's). Two classes so
-   the rule outranks the width rules below whatever their order. */
-.doc-row.doc-row--compact {
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  grid-template-areas: "identity state due";
-  column-gap: var(--s-4);
-  min-block-size: 52px;
-  padding-inline: 0;
-}
+/* The row's menu is the overlay system's popover (static/css/v5/overlays.css; W2-A deleted its rules here). */
 
 .doc-collection__none {
   margin: var(--s-4) 0 0;
@@ -961,8 +835,7 @@
     gap: var(--s-3);
   }
 
-  .doc-row,
-  .doc-row--compact {
+  .doc-row {
     grid-template-columns: minmax(0, 1fr) 40px;
     grid-template-areas:
       "identity menu"
@@ -976,19 +849,6 @@
     border: 1px solid var(--hairline);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-1);
-  }
-
-  .doc-row.doc-row--compact {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "identity identity"
-      "state due";
-    background: transparent;
-    border: 0;
-    border-block-end: 1px solid var(--hairline);
-    border-radius: 0;
-    box-shadow: none;
-    padding-inline: 0;
   }
 
   .doc-collection.panel .doc-row:first-child,
@@ -1012,10 +872,6 @@
 }
 
 /* ---- JourneyRail (DS §8.28) -------------------------------------------------------------- */
-.ws-journey {
-  padding: var(--s-2) 0 0;
-}
-
 .journey {
   position: relative;
   display: grid;
@@ -1346,22 +1202,6 @@
   margin: var(--s-2) 0 0;
 }
 
-/* ---- Chip: the pill form of V4 on top of the V3 stamp ---------------------------------------- */
-.chip {
-  border-radius: var(--radius-full);
-  min-block-size: var(--chip-h);
-  padding-inline: 10px;
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  font-weight: 500;
-}
-
-/* ---- The assessment panel keeps its outcome block; the rest is the panel's ----------------- */
-.ws-assessment {
-  margin-block-start: var(--s-6);
-}
-
 /* ---- Forced colours ----------------------------------------------------------------------- */
 @media (forced-colors: active) {
   .panel { border-color: CanvasText; }
@@ -1373,81 +1213,6 @@
   .doc-row:focus-within { outline-color: Highlight; }
   .seg__list { border: 1px solid CanvasText; }
   .seg__link[aria-current] { outline: 2px solid Highlight; outline-offset: -2px; }
-  .seg__dot { border-color: CanvasText; forced-color-adjust: none; }
-  .seg__dot[data-register="conforme"], .seg__dot[data-register="neutro"], .seg__dot[data-register="azione"] { background: CanvasText; }
-}
-
-/* ---- The next step alone (no case file yet), the latest deposits, the account ---------- */
-.ws-grid .ws-next--alone {
-  grid-column: 1 / -1;
-}
-
-.deposits__head {
-  margin-block-start: var(--s-5);
-}
-
-.deposits {
-  margin: var(--s-2) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.deposits__row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  column-gap: var(--s-3);
-  min-block-size: 40px;
-  padding-block: var(--s-1);
-  border-block-start: 1px solid var(--hairline);
-  font-family: var(--f-sans);
-  font-size: var(--u-body);
-  color: var(--ink);
-}
-
-.deposits__name {
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-
-.deposits__kind {
-  font-size: var(--u-small);
-  color: var(--ink-2);
-}
-
-.ws-grid .ws-account {
-  grid-column: 1 / -1;
-}
-
-.portal-account__identity {
-  margin: 0;
-  font-family: var(--f-sans);
-  font-size: var(--u-body);
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-
-.portal-account__identity strong {
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.panel__actions--list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
-  padding: 0;
-  list-style: none;
-}
-
-@media (max-width: 47.999rem) {
-  .deposits__row {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .deposits__kind {
-    grid-column: 1 / -1;
-  }
 }
 
 /* ==========================================================================================
@@ -1789,7 +1554,7 @@
   padding: 0 var(--s-2);
   background: var(--min-3);
   border: 1px solid var(--hairline-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--field-radius);
   font-family: var(--f-sans);
   font-size: var(--u-small);
   color: var(--ink);
@@ -1879,78 +1644,6 @@
   .file-action-bar {
     background: Canvas;
     border-color: CanvasText;
-  }
-}
-
-/* ---- The company dashboard (CREATIVE_DIRECTION.md §3.8) ------------------------------- */
-.company-id {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  margin-block-end: var(--s-3);
-}
-
-.company-id .panel__eyebrow {
-  margin: 0;
-}
-
-.ctx__count {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Two columns only when the panel can hold them (gate E review, correction 5: 147 px columns at
-   1440, 78 at 1024 with the rail open); the panel is the container. */
-.ws-company {
-  container-type: inline-size;
-  container-name: company;
-}
-
-.facts--two {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  column-gap: var(--s-4);
-}
-
-.facts__row dd {
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
-}
-
-@container company (min-width: 30rem) {
-  .facts--two {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.table--needs .table__action {
-  text-align: end;
-  white-space: nowrap;
-}
-
-.table--needs .table__date {
-  font-family: var(--f-mono);
-  font-size: var(--u-small);
-  color: var(--ink-2);
-  font-variant-numeric: tabular-nums;
-}
-
-.table__actor--none {
-  color: var(--ink-3);
-}
-
-@media (min-width: 64rem) {
-  .ws-grid .ws-company {
-    grid-column: span 4;
-  }
-
-  .ws-grid .ws-wide {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 47.999rem) {
-  .table--needs .table__action {
-    text-align: start;
   }
 }
 
@@ -2055,7 +1748,7 @@
   padding: 0 14px;
   background: var(--min-3);
   border: 1px solid var(--hairline-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--field-radius);
   font-family: var(--f-sans);
   font-size: var(--u-body);
   line-height: var(--u-body-lh);
@@ -2123,66 +1816,11 @@
     text-transform: uppercase;
     color: var(--ink-3);
   }
-
-  .panel .table__action {
-    text-align: start;
-  }
-}
-
-@container table (max-width: 879px) {
-  .panel .table--needs thead {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-  }
-
-  .panel .table--needs tbody tr {
-    display: grid;
-    gap: var(--s-1);
-    padding-block: var(--s-3);
-    border-block-end: 1px solid var(--hairline);
-  }
-
-  .panel .table--needs tbody th,
-  .panel .table--needs tbody td {
-    padding: 0;
-    border: 0;
-    min-block-size: 0;
-  }
-
-  .panel .table--needs tbody th::before {
-    content: none;
-  }
-
-  .panel .table--needs tbody td::before {
-    content: attr(data-label);
-    display: block;
-    margin: 0 0 2px;
-    font-family: var(--f-sans);
-    font-size: var(--u-caption);
-    line-height: var(--u-caption-lh);
-    font-weight: 600;
-    letter-spacing: var(--track-eyebrow);
-    text-transform: uppercase;
-    color: var(--ink-3);
-  }
-
-  .panel .table--needs .table__action {
-    text-align: start;
-  }
 }
 
 /* The sticky head under the file's compact bar while it is on (console.js, `has-ctx-bar`). */
 body.has-ctx-bar .table thead th {
   inset-block-start: calc(var(--ctx-h) + 56px);
-}
-
-/* The need's title at the console's body size (CD §3.8.3: 15/24 500). */
-.table--needs .table__primary {
-  font-size: var(--u-body);
-  line-height: var(--u-body-lh);
 }
 
 /* The empty region inside a panel, in the console's face (the V2 rule is register.css's). */
@@ -2212,12 +1850,6 @@ body.has-ctx-bar .table thead th {
 }
 
 /* ---- Gate E round 2 (defects 6, 7, 11) ---------------------------------------------------- */
-/* The need's title keeps at least two fifths of the row, so the title reads on one or two lines
-   with the rail open (measured 28–33 % before). */
-.table--needs th[scope="row"] {
-  inline-size: 40%;
-}
-
 /* A panel head's button never wraps («Nouveau besoin» on two lines at 390). */
 .panel__head .btn {
   white-space: nowrap;
@@ -2226,12 +1858,5 @@ body.has-ctx-bar .table thead th {
 @container table (max-width: 639px) {
   .panel .table tbody tr {
     gap: 2px;
-  }
-}
-
-/* As cards the title cell takes the card's width, not two fifths of it. */
-@container table (max-width: 879px) {
-  .panel .table--needs tbody th[scope="row"] {
-    inline-size: auto;
   }
 }

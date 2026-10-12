@@ -1,17 +1,27 @@
-{% load i18n %}{% comment %}
-9. ANTI-FRAUD — Phase 3 only. Prescribed p3.antifraud.title + p3.antifraud.body inside a shield
-callout: highly visible, never sensationalist (no red, no alarm icon, no capitals added).
-While gate G3 is closed NOTHING is rendered: no substitute text is invented.
+{% load i18n pages_typo %}{% comment %}
+9. ANTI-FRAUD — Phase 3 only. Prescribed p3.antifraud.title + p3.antifraud.body: highly visible, never
+sensationalist (no red, no alarm icon, no capitals added). While gate G3 is closed NOTHING is rendered:
+no substitute text is invented.
+
+Design V5.4 (W2-D step 3; DESIGN_SYSTEM_V5 PX08 «il gradino»): the warning on a plate of its own — a raised
+sheet on the stone ground with an ink rule at the reading edge (ink, not a status colour: the tones name
+document states), the prescribed title beside the prescribed paragraph, whole and as written, at the
+reading measure (36 rem: it ran to 80 characters a line), and one link. Its sign is the registry's glyph of
+this warning (apps/core/icons.py, shield-alert: W1-B), the one the footer, the navigation's panels and the
+anti-fraud page put beside it: one sign for one warning.
 {% endcomment %}
-<section class="section section--d home-antifraud" id="{{ s.anchor }}" aria-labelledby="home-antifraud-title" data-section="antifraud">
-  <div class="container">
-    <div class="antifraud-panel">
-      <div class="antifraud-panel__mark" aria-hidden="true">{% svg_icon "shield" "icon icon--xl" %}</div>
-      <div class="antifraud-panel__content">
-        <h2 class="antifraud-panel__title" id="home-antifraud-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
-        <p class="antifraud-panel__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>
-        {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
-        {% if d.url %}<p class="antifraud-panel__actions"><a class="btn btn--secondary btn--arrow" href="{{ d.url }}">{% translate "Lire la page « Attention aux fraudes »" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+{% translate "Lire la page « Attention aux fraudes »" as fraud_page %}
+<section class="chapter chapter--area home-antifraud" id="{{ s.anchor }}" aria-labelledby="home-antifraud-title" data-section="antifraud">
+  <div class="container chapter__inner">
+    <div class="gradino">
+      <div class="gradino__head">
+        <span class="gradino__mark" aria-hidden="true">{% svg_icon "shield-alert" "icon" %}</span>
+        <h2 class="gradino__title" id="home-antifraud-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
+      </div>
+      <div class="gradino__content">
+        <p class="gradino__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>
+        {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+        {% if d.url %}<p class="gradino__actions"><a class="link-arrow" href="{{ d.url }}">{{ fraud_page|typo }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
       </div>
     </div>
   </div>

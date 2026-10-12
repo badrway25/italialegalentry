@@ -1,0 +1,7 @@
+{% comment %}One term of the glossary's register (design V5.4, W3-F2): the Italian term at the reading edge — the heading of
+its definition and the way to its own page — and the definition beside it from 48rem. Contract: `entry`
+(glossary.services.GlossaryEntry).{% endcomment %}
+<div class="glossary-entry" id="{{ entry.key }}">
+  <dt class="glossary-entry__term" lang="{{ entry.term_lang }}"><a href="{{ entry.url }}">{{ entry.term }}</a></dt>
+  <dd class="glossary-entry__definition"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</dd>
+</div>

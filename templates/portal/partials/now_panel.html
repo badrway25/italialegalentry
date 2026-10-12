@@ -1,0 +1,53 @@
+{% load i18n pages_typo %}{% comment %}
+THE NOWPANEL — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 4, §1.15; W3-B): the dashboard's ONE raised
+plane (the action card, static/css/v5/card.css) and its ONE primary. What to do now — the obligation, its state, its
+date and who answers for it — and the act that does it, composed by the system, never arranged by the account and
+never remembered: «à vous» · «en attente d'un tiers» (no primary; a quiet «Consulter» for a piece) · «rien à faire» ·
+«pas encore de dossier» (the questionnaire — and the owner's door, the console's one empty state that shows it). An
+overdue date takes it over. Rules: apps/portal/static/portal/v5/_dashboard.css §2.
+
+Drawn by the person's dashboard (templates/portal/dashboard.html) and the company's (templates/companies/dashboard.html).
+Contract: `now` = portal.services.now_panel(…) or company_now_panel(…) — variant, eyebrow, glyph, title, text,
+text_label (a label before the text, in the page's language — the takeover's «Origine :»), words (the record's own
+words: `lang` when the data holds their language, `dir` — "ltr"/"rtl", or "auto" when it does not), state (value,
+producer, label), due (date, urgency, word), responsible (actor, label, organisation), note, primary (label, url,
+method: "post" draws the act's own form, as the act's page does) / secondary (label, url), takeover, piece_id /
+need_ref (the obligation it draws, drawn nowhere else on the page; a need's reference is shown). Every word is the
+presenter's, from the catalogue; the title and the text pass the French-spacing filter (`typo`, W2-D: a no-break
+space inside « » and before : ; ! ?), never a prescribed text. The region is named by whose move it is and by the
+obligation (the eyebrow, then the h2).
+{% endcomment %}
+<section class="card card--action db-now db-now--{{ now.variant }}{% if now.takeover %} db-now--overdue{% endif %}" aria-labelledby="db-now-eyebrow db-now-title" data-now="{{ now.variant }}"{% if now.piece_id %} data-piece="{{ now.piece_id }}"{% endif %}{% if now.need_ref %} data-need="{{ now.need_ref }}"{% endif %}>
+  {% if now.variant == "no-case" %}
+  {% comment %} The console's one empty state shows the owner's door, as drawn (plan §2.3, §3.1 item 7): imagery, hidden from assistive technology. {% endcomment %}
+  <svg class="doorway db-now__door" viewBox="264 64 368 456" aria-hidden="true" focusable="false">{% include "components/doorway.html" with prefix="db-door" %}</svg>
+  {% endif %}
+  <p class="db-now__eyebrow"><span class="db-now__disc" aria-hidden="true">{% svg_icon now.glyph "icon" %}</span><span id="db-now-eyebrow">{{ now.eyebrow }}</span></p>
+  <h2 class="db-now__title" id="db-now-title"{% if now.words.lang %} lang="{{ now.words.lang }}"{% endif %}{% if now.words.dir %} dir="{{ now.words.dir }}"{% endif %}>{{ now.title|typo }}</h2>
+  {% if now.text %}{% if now.text_label %}<p class="db-now__text"><span class="db-now__label">{{ now.text_label|typo }}</span> <span{% if now.words.lang %} lang="{{ now.words.lang }}"{% endif %}{% if now.words.dir %} dir="{{ now.words.dir }}"{% endif %}>{{ now.text|typo }}</span></p>{% else %}<p class="db-now__text"{% if now.words.lang %} lang="{{ now.words.lang }}"{% endif %}{% if now.words.dir %} dir="{{ now.words.dir }}"{% endif %}>{{ now.text|typo }}</p>{% endif %}{% endif %}
+  {% if now.state or now.due or now.responsible or now.need_ref %}
+  <dl class="db-now__facts">
+    {% if now.state %}
+    <div class="db-now__fact"><dt>{% translate "État" %}</dt><dd>{% if now.state.producer == "documents.RequirementState" %}{% chip now.state.value "documents.RequirementState" %}{{ now.state.label }}{% endchip %}{% elif now.state.producer == "companies.NeedStatus" %}{% chip now.state.value "companies.NeedStatus" %}{{ now.state.label }}{% endchip %}{% else %}{% chip now.state.value "cases.ChecklistStatus" %}{{ now.state.label }}{% endchip %}{% endif %}</dd></div>
+    {% endif %}
+    {% if now.need_ref %}
+    <div class="db-now__fact"><dt>{% translate "Référence" %}</dt><dd><span class="db-ref">{{ now.need_ref }}</span></dd></div>
+    {% endif %}
+    {% if now.due %}
+    <div class="db-now__fact"><dt>{% translate "Échéance" %}</dt><dd><span class="db-due{% if now.due.urgency %} db-due--{{ now.due.urgency }}{% endif %}">{% svg_icon now.due.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ now.due.date|date:'Y-m-d' }}">{{ now.due.date|date:"d.m.Y" }}</time>{% if now.due.word %}<span class="db-due__word">{{ now.due.word }}</span>{% endif %}</span></dd></div>
+    {% endif %}
+    {% if now.responsible %}
+    {% comment %} The glyph and its word hold together: a narrow fact wraps the word beside its disc, never under it. {% endcomment %}
+    <div class="db-now__fact"><dt>{% translate "Responsable" %}</dt><dd><span class="db-now__who">{% include "components/glyph.html" with glyph=now.responsible.actor|actor_glyph size="sm" %}<span>{{ now.responsible.label }}{% if now.responsible.organisation %} — <span dir="auto">{{ now.responsible.organisation }}</span>{% endif %}</span></span></dd></div>
+    {% endif %}
+  </dl>
+  {% endif %}
+  {% if now.note %}<p class="db-now__note">{{ now.note }}</p>{% endif %}
+  {% if now.primary or now.secondary %}
+  <div class="card__action db-now__act">
+    {% comment %} ONE primary: the act's own form when the act is a POST (the need page's «Transmettre au projet»), else the link to the act's page — never both. {% endcomment %}
+    {% if now.primary.method == "post" %}<form class="db-now__form" method="post" action="{{ now.primary.url }}">{% csrf_token %}<button class="btn btn--primary btn--arrow" type="submit" data-now-primary>{{ now.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button></form>{% elif now.primary %}<a class="btn btn--primary btn--arrow" href="{{ now.primary.url }}" data-now-primary>{{ now.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    {% if now.secondary %}<a class="btn btn--secondary" href="{{ now.secondary.url }}" aria-describedby="db-now-title">{{ now.secondary.label }}</a>{% endif %}
+  </div>
+  {% endif %}
+</section>

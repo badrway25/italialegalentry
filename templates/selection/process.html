@@ -41,9 +41,7 @@ the answer to "who is answerable", which this product made an acceptance criteri
     <div class="selection-facts__row">
       <dt class="t-folio">{% translate "Mandat" %}</dt>
       <dd>{{ process.mandate.reference }}
-        <span class="state state--{{ process.mandate.status_word }}" data-register="{{ process.mandate.status_word|chip_register:'selection.mandate' }}">
-          {% if process.mandate.status_word == 'valid' %}{% translate "En vigueur" %}{% elif process.mandate.status_word == 'expired' %}{% translate "Échu" %}{% else %}{% translate "Révoqué" %}{% endif %}
-        </span>
+        {% chip process.mandate.status_word "selection.mandate" %}{% if process.mandate.status_word == 'valid' %}{% translate "En vigueur" %}{% elif process.mandate.status_word == 'expired' %}{% translate "Échu" %}{% else %}{% translate "Révoqué" %}{% endif %}{% endchip %}
       </dd>
     </div>
     <div class="selection-facts__row">
@@ -190,7 +188,7 @@ the answer to "who is answerable", which this product made an acceptance criteri
   {% if page.evidence %}
   <p class="portal__summary">
     {% blocktranslate with provided=page.summary.provided total=page.summary.total %}{{ provided }} sur {{ total }} justificatifs fournis{% endblocktranslate %}
-    {% if page.summary.overdue %} · <span class="state state--expired" data-register="azione">{% blocktranslate count n=page.summary.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
+    {% if page.summary.overdue %} · {% chip register="azione" %}{% blocktranslate count n=page.summary.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}{% endchip %}{% endif %}
   </p>
   {% comment %}A table is the one element allowed to exceed the column, and only inside its
   own scroll container: the page body must never scroll sideways on a phone. The region is
@@ -212,7 +210,7 @@ the answer to "who is answerable", which this product made an acceptance criteri
       <tr{% if row.is_overdue %} class="is-overdue"{% endif %}>
         <th scope="row" data-label="{% translate 'Justificatif' %}">{{ row.requirement }}{% if row.detail %}<span class="t-caption">{{ row.detail }}</span>{% endif %}</th>
         <td data-label="{% translate 'Responsable' %}">{{ row.get_responsible_actor_display }}</td>
-        <td data-label="{% translate 'État' %}"><span class="state state--{% if row.status == 'provided' %}done{% elif row.status == 'blocked' %}invalid{% elif row.status == 'not_applicable' %}replace{% else %}missing{% endif %}" data-register="{{ row.status|chip_register:'selection.EvidenceStatus' }}">{{ row.get_status_display }}</span></td>
+        <td data-label="{% translate 'État' %}">{% chip row.status "selection.EvidenceStatus" %}{{ row.get_status_display }}{% endchip %}</td>
         <td data-label="{% translate 'Échéance' %}">{{ row.due_date|date:"d.m.Y"|default:"—" }}</td>
         {% if view.can_advance %}
         <td data-label="{% translate 'Action' %}">
@@ -278,7 +276,7 @@ the answer to "who is answerable", which this product made an acceptance criteri
   <div class="selection-disclosure">
     <p class="t-folio">{% translate "Demande en attente" %}</p>
     <p class="t-gloss">{{ page.pending_disclosure.purpose }}</p>
-    <p><span class="state state--missing" data-register="attesa">{% translate "En attente de la décision de la personne" %}</span></p>
+    <p>{% chip register="attesa" %}{% translate "En attente de la décision de la personne" %}{% endchip %}</p>
     <p class="note">{% translate "La décision appartient à la personne concernée, et à elle seule. Ni l’acteur autorisé, ni l’entreprise, ni l’équipe du projet ne peut la prendre à sa place." %}</p>
   </div>
   {% else %}
@@ -331,7 +329,7 @@ the answer to "who is answerable", which this product made an acceptance criteri
       <tr>
         <th scope="row" data-label="{% translate 'Demandée le' %}">{{ row.requested_at|date:"d.m.Y" }}</th>
         <td data-label="{% translate 'Destinataire' %}">{{ row.recipient_organisation.name }}</td>
-        <td data-label="{% translate 'État' %}"><span class="state state--{{ row.status_word }}" data-register="{{ row.status_word|chip_register:'selection.consent' }}">{{ row.get_status_display }}</span></td>
+        <td data-label="{% translate 'État' %}">{% chip row.status_word "selection.consent" %}{{ row.get_status_display }}{% endchip %}</td>
         <td data-label="{% translate 'Expire le' %}">{{ row.expires_at|date:"d.m.Y"|default:"—" }}</td>
       </tr>
       {% endfor %}

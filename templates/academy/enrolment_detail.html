@@ -28,7 +28,7 @@ as a badge and never in a colour that could read as an approval (REQ-EDU-05).
   <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivi" %}</span></p>
   <h2 class="portal__section-title" id="enrolment-facts-title">{% translate "Où j’en suis dans ce cours" %}</h2>
   <dl class="portal-facts">
-    <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd><span class="state state--{% if enrolment.is_completed %}done{% elif enrolment.status == 'withdrawn' %}replace{% else %}filed{% endif %}" data-register="{{ enrolment.status|chip_register:'academy.EnrolmentStatus' }}">{{ enrolment.get_status_display }}</span></dd></div>
+    <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}</dd></div>
     <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{% blocktranslate with total=progress.total count n=progress.attended %}{{ n }} module sur {{ total }}{% plural %}{{ n }} modules sur {{ total }}{% endblocktranslate %}</dd></div>
     <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
     <div class="portal-facts__row"><dt>{% translate "Inscrit le" %}</dt><dd><time datetime="{{ enrolment.enrolled_at|date:'c' }}">{{ enrolment.enrolled_at|date:"d.m.Y" }}</time></dd></div>
@@ -64,7 +64,7 @@ as a badge and never in a colour that could read as an approval (REQ-EDU-05).
       <div>
         <p class="sequence__title">
           {{ row.module.title }}
-          {% if row.attended %}<span class="state state--done" data-register="conforme">{% translate "suivi" %}</span>{% endif %}
+          {% if row.attended %}{% chip register="conforme" %}{% translate "suivi" %}{% endchip %}{% endif %}
         </p>
         {% if row.module.summary %}<p class="sequence__body">{{ row.module.summary }}</p>{% endif %}
         <span class="sequence__actor">

@@ -59,6 +59,13 @@ loop) e `:hover` con `scale(1.08) rotate(-3deg)` su curva con overshoot `(.34,1.
 segnali «premium a buon mercato» dei benchmark. Il marchio in V2 è fermo; se si muove, si muove
 una volta, all'ingresso, con transform/opacity.
 
+**Emendamento V5.4 (DL54-07, 4 ottobre 2026; costruito da W1-D l'8 ottobre):** una volta, all'ingresso, *attraverso il
+caricamento della pagina* — all'invio del login la chiave gira una volta sul proprio gambo e tiene; sulla prima pagina
+della console dopo un accesso riuscito la porta si illumina dall'occhio della chiave, una volta per sessione, e torna al
+marchio verbatim. È l'unico altro contesto; piani, porta e gradini non si muovono mai e la chiave non è mai tenuta,
+disegnata o servita specchiata (DL54-08). `docs/design-v5/DECISION_LOG_V54.md` DL54-07; il marchio a strati in
+`templates/components/loader.html`.
+
 ### Dove sta ora
 
 | Cosa | Percorso | Note |

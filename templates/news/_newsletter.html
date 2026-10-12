@@ -4,32 +4,49 @@ Context: `newsletter_enabled`, `newsletter_forms_open` (gate G2), `newsletter_fo
 The consent checkbox is separate, mandatory and never pre-ticked; its label is the locked text.
 Django 5.2 adds aria-invalid / aria-describedby="<auto_id>_error" on invalid controls, so the
 error list below uses exactly that id (same convention as components/form_field.html).
+
+Design V5.4 (W3-F2 — the content pages): a chapter of its own at the news' foot — the section device (the mark's
+steps, the prescribed label as its title) at the reading edge, the form beside it from 75rem (v5/field.css: fields at
+16 px, an error said by its edge, its mark and its words, never by colour alone); the page's one primary. A refusal
+opens with the system's summary (components/form_errors.html, `#form-errors`: the non-field errors and a link to
+each field in error), which static/js/main.js focuses and scrolls into view — the page the view renders again starts
+at its top, and an alert present at load is not announced (the review's M3, the accessibility check's A1); the
+field keeps its own error.
 {% endcomment %}
 {% if newsletter_enabled %}
 {% locked "p3.news.newsletter_label" as newsletter_label %}{% locked_is_fallback "p3.news.newsletter_label" as newsletter_label_fallback %}
-<section class="newsletter container" id="newsletter" aria-labelledby="newsletter-title">
-  <h2 id="newsletter-title" class="newsletter__title"{% if newsletter_label_fallback %} lang="{% locked_lang 'p3.news.newsletter_label' %}"{% endif %}>{{ newsletter_label }}</h2>
-  {% if newsletter_forms_open and newsletter_form %}
-  <form class="newsletter__form form" method="post" action="{% url 'news:newsletter_subscribe' %}" novalidate>
-    {% csrf_token %}
-    {% include "components/form_field.html" with field=newsletter_form.form_started_at %}
-    {% include "components/form_field.html" with field=newsletter_form.website_url %}
-    {% if newsletter_form.non_field_errors %}<div class="form__errors" role="alert">{{ newsletter_form.non_field_errors }}</div>{% endif %}
-    {% include "components/form_field.html" with field=newsletter_form.email %}
-    {% with field=newsletter_form.consent %}
-    <div class="form-field form-field--required form-field--consent{% if field.errors %} form-field--error{% endif %}" id="wrap_{{ field.id_for_label }}">
-      <div class="form-field__check">
-        {{ field }}
-        <label for="{{ field.id_for_label }}"{% if newsletter_form.consent_is_fallback %} lang="{{ newsletter_form.consent_language }}"{% endif %}>{{ field.label }} <span class="form-field__required" aria-hidden="true">*</span></label>
-      </div>
-      {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error" role="alert">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+<section class="chapter newsletter" id="newsletter" aria-labelledby="newsletter-title">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      <h2 id="newsletter-title" class="chapter__title newsletter__title"{% if newsletter_label_fallback %} lang="{% locked_lang 'p3.news.newsletter_label' %}"{% endif %}>{{ newsletter_label }}</h2>
     </div>
-    {% endwith %}
-    <p class="form__help">{% translate "Un e-mail de confirmation vous sera envoyé (double opt-in). Vous pouvez vous désinscrire à tout moment via le lien présent dans chaque message." %}</p>
-    <button class="btn btn--primary" type="submit">{% translate "S’inscrire" %}</button>
-  </form>
-  {% else %}
-    {% include "components/form_unavailable.html" %}
-  {% endif %}
+    <div class="chapter__body">
+      {% if newsletter_forms_open and newsletter_form %}
+      <form class="newsletter__form form" method="post" action="{% url 'news:newsletter_subscribe' %}" novalidate>
+        {% csrf_token %}
+        {% include "components/form_errors.html" with form=newsletter_form %}
+        {% include "components/form_field.html" with field=newsletter_form.form_started_at %}
+        {% include "components/form_field.html" with field=newsletter_form.website_url %}
+        {% include "components/form_field.html" with field=newsletter_form.email %}
+        {% with field=newsletter_form.consent %}
+        <div class="form-field form-field--required form-field--consent{% if field.errors %} form-field--error{% endif %}" id="wrap_{{ field.id_for_label }}">
+          <div class="form-field__check">
+            {{ field }}
+            <label for="{{ field.id_for_label }}"{% if newsletter_form.consent_is_fallback %} lang="{{ newsletter_form.consent_language }}"{% endif %}>{{ field.label }} <span class="form-field__required" aria-hidden="true">*</span></label>
+          </div>
+          {% if field.errors %}<div class="form-field__errors" id="{{ field.auto_id }}_error" role="alert"><ul class="form-field__error-list">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
+        </div>
+        {% endwith %}
+        <p class="form__help">{% translate "Un e-mail de confirmation vous sera envoyé (double opt-in). Vous pouvez vous désinscrire à tout moment via le lien présent dans chaque message." %}</p>
+        <div class="form__actions">
+          <button class="btn btn--primary" type="submit">{% translate "S’inscrire" %}</button>
+        </div>
+      </form>
+      {% else %}
+        {% include "components/form_unavailable.html" %}
+      {% endif %}
+    </div>
+  </div>
 </section>
 {% endif %}

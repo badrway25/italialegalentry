@@ -1,15 +1,28 @@
 {% load i18n %}{% comment %}
-Modal dialog — native <dialog> (focus trap, Escape and inert background handled by the platform).
-Contract: `id` (required), `title`, `body` (safe html), optional `actions` (safe html of buttons),
-`light` (True → clicking the backdrop closes). Open it with:
-  <a class="btn" href="#{{ id }}" data-dialog-open="{{ id }}">…</a>
-Without JS the link targets the dialog, which CSS shows as an in-page panel (`:target`).
-{% endcomment %}
-<dialog class="dialog" id="{{ id }}" aria-labelledby="{{ id }}-title"{% if light %} data-dialog-light{% endif %}>
-  <div class="dialog__header">
-    <h2 class="dialog__title" id="{{ id }}-title">{{ title }}</h2>
-    <button class="dialog__close" type="button" data-dialog-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</button>
+Dialog — the overlay system's modal and alert dialog (design V5, V5.4 plan §1.14; the contract
+docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). A native <dialog> that static/js/src/overlay.js opens modal — show()
+over the one scrim with the trap in script and aria-modal (the INP rule; `data-overlay-modal="native"` on the dialog
+keeps showModal()): Esc closes it, the scrim closes it (never an alert, never with unsaved input), the focus comes
+back to the opener. From the centre of the viewport; at ≤ 40rem a bottom sheet (static/css/v5/_overlay-panels.css).
+PAGE-ONLY CSS (CONTRACT §1, the owner's V5.8 budget): its rules are static/css/v5/_overlay-panels.css, not main.css
+— the page that includes it links {% static 'css/dist/core/overlay-panels.css' %} in its extra_head, after main.css
+(tests/frontend/test_overlays.py refuses a page that draws one without it).
+Contract: `id` (required); `title`; `body` (safe HTML) — or `body_template`, a template included with the context
+and `overlay_part` = "body"; optional `actions` (safe HTML of the foot's buttons — the primary last, a destructive
+action last as `btn--danger`; a button that only closes carries `data-overlay-close`) — or `actions_template`
+(included with `overlay_part` = "actions");
+`kind` = "alert" (role alertdialog: the scrim never closes it and Esc is its safe answer — mark the safe button
+`data-overlay-safe`, which also takes the focus); `glyph` (an icon id: the 40 px disc of a consequence); `wide`
+(True → 48rem); `describedby` (the id of the body's sentence an alert reads out); `return_id` (where «Fermer» leads
+without script; default `main-content`). Open it with a link that also works without script:
+  <a class="btn btn--secondary" href="#{{ id }}" data-overlay-open>…</a>
+Without script the link shows the dialog in place (`:target`) and «Fermer» is a link back.
+{% endcomment %}<dialog class="overlay overlay--dialog{% if kind == 'alert' %} overlay--alert{% endif %}{% if wide %} overlay--wide{% endif %}" id="{{ id }}" data-overlay="{% if kind == 'alert' %}alert{% else %}dialog{% endif %}"{% if kind == 'alert' %} role="alertdialog"{% endif %} aria-labelledby="{{ id }}-title"{% if describedby %} aria-describedby="{{ describedby }}"{% endif %}>
+  <div class="overlay__head">
+    {% if glyph %}<span class="overlay__glyph" aria-hidden="true">{% svg_icon glyph "icon" %}</span>{% endif %}
+    <h2 class="overlay__title" id="{{ id }}-title">{{ title }}</h2>
+    <a class="overlay__close" href="#{{ return_id|default:'main-content' }}" data-overlay-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</a>
   </div>
-  <div class="dialog__body">{{ body }}</div>
-  {% if actions %}<div class="dialog__actions">{{ actions }}</div>{% endif %}
+  <div class="overlay__body">{% if body_template %}{% include body_template with overlay_part="body" %}{% else %}{{ body }}{% endif %}</div>
+  {% if actions_template %}<div class="overlay__foot">{% include actions_template with overlay_part="actions" %}</div>{% elif actions %}<div class="overlay__foot">{{ actions }}</div>{% endif %}
 </dialog>

@@ -67,17 +67,22 @@ def test_html_lang_and_dir_attributes(client, seeded):
     assert '<html lang="fr" dir="ltr" class="no-js">' in fr
     assert '<html lang="ar" dir="rtl" class="no-js">' in ar
     assert " is-rtl" in ar and "is-rtl" not in fr
-    # Each page preloads the READING face of its own script, not a Latin serif on an Arabic page.
-    # Art direction A gives Arabic its own display/text pair: a true Naskh for reading, because a
-    # Kufi-influenced sans is a register mismatch against a serif, and IBM Plex Sans Arabic for the
-    # interface, where a Kufi construction is correct.
-    assert "noto-naskh-arabic-400-700-normal-arabic.woff2" in ar
-    assert "ibm-plex-sans-arabic-400-normal-arabic.woff2" in ar
-    assert "newsreader-200-800-normal-latin.woff2" in fr
-    assert "ibm-plex-sans-400-normal-latin.woff2" in fr
-    # A Latin page must not pull the Arabic faces, and the reverse.
-    assert "noto-naskh" not in fr
-    assert "newsreader" not in ar
+    # Each page preloads its first screen's faces, per script (design V5, V5.4 plan §1.1 «Loading»; PFR §0):
+    # a Latin page Host Grotesk (every Latin role) and «ILE Wordmark» (the name in the letterhead) — two
+    # preloads; an Arabic page Vazirmatn, Host Grotesk for the Latin runs and the digits, and the wordmark —
+    # three (the budget of plan §2.6). Every preloaded file is one static/css/v5/fonts.css declares.
+    preload = r'<link rel="preload" href="/static/fonts/([a-z0-9-]+\.woff2)" as="font" type="font/woff2" crossorigin>'
+    assert re.findall(preload, fr) == ["v5-host-grotesk-var-400-700.woff2", "v5-ile-wordmark-600.woff2"]
+    assert re.findall(preload, ar) == [
+        "v5-vazirmatn-var-400-700-arabic.woff2",
+        "v5-host-grotesk-var-400-700.woff2",
+        "v5-ile-wordmark-600.woff2",
+    ]
+    faces = (ROOT / "static" / "css" / "v5" / "fonts.css").read_text(encoding="utf-8")
+    for name in set(re.findall(preload, fr + ar)):
+        assert f'url("../../fonts/{name}")' in faces, name
+    # A Latin page must not pull the Arabic face.
+    assert "vazirmatn" not in fr
 
 
 def test_language_switcher_lists_every_language_with_hreflang(client, seeded):
@@ -126,11 +131,14 @@ def test_antifraud_footer_link_hidden_before_phase3(client, seeded, before_phase
 
 
 def test_reserved_area_link_follows_flag(client, seeded, set_flag):
+    # «la targa» (design V5, plan §1.11; W2-C1): the entrance sits in the letterhead's end zone and, below 48rem, in
+    # the drawer; when the flag is off no plate is drawn at all
     _r, html = _get(client, "/fr/")
-    assert 'href="/fr/compte/login/"' in html
+    assert 'class="targa" href="/fr/compte/login/"' in html
+    assert 'class="targa targa--drawer drawer-utility__reserved" href="/fr/compte/login/"' in html
     set_flag("reserved_area_public_link", False)
     _r, html = _get(client, "/fr/")
-    assert 'class="utility-bar__link" href="/fr/compte/login/"' not in html
+    assert 'class="targa' not in html
 
 
 def test_authenticated_user_gets_account_menu(client, seeded, person_user):
@@ -240,7 +248,10 @@ def test_static_css_and_js_are_served_and_referenced(client, seeded):
         "css/base.css",
         "css/layout.css",
         "css/components.css",
-        "css/fonts.css",
+        "css/v5/fonts.css",
+        "css/v5/tokens.css",
+        "css/v5/aliases.css",
+        "css/v5/base.css",
         "js/main.js",
         "js/head.js",
         "img/icons.svg",
@@ -254,20 +265,32 @@ def test_static_css_and_js_are_served_and_referenced(client, seeded):
 
 
 def test_fonts_css_references_only_local_files_that_exist():
-    css = (ROOT / "static" / "css" / "fonts.css").read_text(encoding="utf-8")
+    """Type «Una voce» (design V5, V5.4 plan §1.1, §2.3): five self-hosted faces, six files (ILE Mono in two
+    unicode-range halves), in static/css/v5/fonts.css,
+    each with its SIL OFL 1.1 text in static/fonts/licenses/; the V4 faces and static/css/fonts.css are gone."""
+    css = (ROOT / "static" / "css" / "v5" / "fonts.css").read_text(encoding="utf-8")
     urls = re.findall(r'url\("([^"]+)"\)', css)
-    assert urls, "fonts.css has no @font-face rules — run scripts/fetch_fonts.py"
+    assert len(urls) == 6, urls
     for url in urls:
-        assert url.startswith("../fonts/"), url
+        assert url.startswith("../../fonts/v5-"), url
         assert (ROOT / "static" / "fonts" / url.split("/")[-1]).exists(), url
-    assert "googleapis" not in css and "gstatic" not in css
-    assert "font-display: swap" in css
+    on_disk = {p.name for p in (ROOT / "static" / "fonts").glob("*.woff2")}
+    assert on_disk == {url.split("/")[-1] for url in urls}, "every woff2 on disk is a face the cascade declares"
+    assert not (ROOT / "static" / "css" / "fonts.css").exists(), "the V4 fonts.css left with its faces"
+    assert "googleapis" not in css and "gstatic" not in css and "http" not in css
+    assert css.count("font-display: swap") == 6
     assert "unicode-range" in css
-    # Design V4 (docs/design-v4/DESIGN_SYSTEM_V4.md §4.1): the Latin interface is IBM Plex Sans and
-    # IBM Plex Mono — one superfamily with IBM Plex Sans Arabic, which art direction A had kept as
-    # the Arabic INTERFACE face. Fira Sans and Fira Mono retired with their files; Plex Serif never
-    # came back.
-    for family in ("Newsreader", "IBM Plex Sans", "IBM Plex Mono", "Noto Naskh Arabic", "IBM Plex Sans Arabic"):
+    for family in ("Host Grotesk", "ILE Wordmark", "ILE Mono", "Vazirmatn"):
         assert f'font-family: "{family}"' in css, family
-    for retired in ('"IBM Plex Serif"', '"Fira Sans"', '"Fira Mono"'):
-        assert f"font-family: {retired}" not in css, retired
+    for retired in ("IBM Plex", "Newsreader", "Noto Naskh", "Fira", "Source Serif", "Markazi"):
+        assert f'font-family: "{retired}' not in css, retired
+    licences = ROOT / "static" / "fonts" / "licenses"
+    for name, holder in (
+        ("OFL-HostGrotesk.txt", "The Host Grotesk Project Authors"),
+        ("OFL-Newsreader.txt", "The Newsreader Project Authors"),
+        ("OFL-IBMPlexMono.txt", 'IBM Corp. with Reserved Font Name "Plex"'),
+        ("OFL-Vazirmatn.txt", "The Vazirmatn Project Authors"),
+    ):
+        text = (licences / name).read_text(encoding="utf-8")
+        assert holder in text and "SIL OPEN FONT LICENSE Version 1.1" in text, name
+        assert name in css, f"static/css/v5/fonts.css does not point to {name}"

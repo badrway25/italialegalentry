@@ -1,0 +1,10 @@
+{% load i18n %}{% comment %}
+What to do, on every error page (errors/base_error.html, errors/standalone.html): ONE primary — the home, the action
+that goes on, with the one forward arrow (DS V5 §10.1: one a block; `icon--flip-rtl`, it points the way the page
+reads) — and the way back to the page the person came from, which only a script can take (history.back(),
+static/js/main.js `initMisc`; without script the link is hidden, and leads home), without an arrow: going back is not
+going on.
+{% endcomment %}<div class="error-page__actions">
+  <a class="btn btn--primary btn--arrow" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+  <a class="btn btn--secondary js-only" href="{% url 'pages:home' %}" data-history-back>{% translate "Page précédente" %}</a>
+</div>

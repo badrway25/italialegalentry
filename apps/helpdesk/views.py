@@ -61,53 +61,30 @@ def _reserved_area_enabled() -> bool:
 
 def _navigation(user, active: str) -> list[dict]:
     """
-    The platform navigation, with the help desk appended.
+    The console's rail on the help desk's pages, with this page's row marked.
 
-    ``portal.services.navigation`` owns the reserved area's entries and is read, never edited; the
-    help desk adds its own row so the module is reachable from every authenticated page. When the
-    signed-in account is a professional or dispatches requests, its working register is listed too —
-    « la navigation s'adapte aux permissions : un module non disponible ne se montre pas ».
+    ``portal.services.shell_navigation`` builds the rail of «Espace réservé» for EVERY page of the
+    console (design V5, V5.4 plan §1.18 D06; W3-A): the help desk, a professional's queue and the
+    dispatch desk are rows of it wherever the account is — « la navigation s'adapte aux permissions :
+    un module non disponible ne se montre pas ». This module used to append the last two itself, on
+    its own pages only: the queue was then listed twice here, and the dispatch desk could be reached
+    from nowhere else.
+
+    If the sibling app cannot answer, the module stays reachable from its own pages.
     """
-    items: list[dict] = []
     try:
-        from portal.services import navigation
+        from portal.services import shell_navigation
 
-        items = list(navigation(user, ""))
+        return shell_navigation(user, active=active)
     except Exception:  # noqa: BLE001 - a sibling app being changed must not break this page
-        items = []
-    known = {item.get("key") for item in items}
-    if "helpdesk" not in known:
-        # `portal.services.navigation` lists the help desk now, so this is the fallback for the
-        # case where it does not — a sibling app being changed must not make the module
-        # unreachable from its own pages.
-        items.append(
+        return [
             {
                 "key": "helpdesk",
                 "label": _("Guichet numérique"),
                 "url": reverse("helpdesk:requests"),
+                "current": active == "helpdesk",
             }
-        )
-    for item in items:
-        item["current"] = item.get("key") == active
-    if roles.has_role(user, roles.PROFESSIONAL):
-        items.append(
-            {
-                "key": "helpdesk-queue",
-                "label": _("Demandes qui me sont confiées"),
-                "url": reverse("helpdesk:queue"),
-                "current": active == "helpdesk-queue",
-            }
-        )
-    if roles.has_role(user, roles.OPERATOR, roles.ADMINISTRATOR):
-        items.append(
-            {
-                "key": "helpdesk-dispatch",
-                "label": _("Désignation des professionnels"),
-                "url": reverse("helpdesk:dispatch"),
-                "current": active == "helpdesk-dispatch",
-            }
-        )
-    return items
+        ]
 
 
 def _render(request, template: str, context: dict, *crumbs: dict):

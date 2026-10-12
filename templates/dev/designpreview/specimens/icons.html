@@ -1,0 +1,258 @@
+{% load static i18n %}{% icon_registry as reg %}<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Specimen — icone</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/dev/specimen-icons.css' %}">
+</head>
+<body class="sp">
+{% comment %}
+The icon sheet of design V5 (W1-B, V5.4 plan §1.7, §3.3 item 5): the built sprite drawn through the svg_icon tag
+and the registry apps/core/icons.py, to be looked at at 1x and 2x, fr and ar. Standalone (the README of this
+folder): Italian chrome, the product's own strings in their language, nothing from the database, nothing inline.
+{% endcomment %}
+<header class="sp-head">
+  <p class="sp-eyebrow">Specimen · {{ board }} · design V5 · W1-B</p>
+  <h1 class="sp-title">Il sistema di icone ILE — una mano, significati distinti</h1>
+  <p class="sp-lead">Lo sprite costruito (<code>static/img/icons.svg</code>, {{ reg.SYMBOLS|length }} simboli), reso dal tag <code>svg_icon</code> attraverso il registro <code>apps/core/icons.py</code>: tratto 1.5 px da 14 a 24 px, terminali quadri, giunzioni a spigolo, <code>currentcolor</code>. Persona ≠ Impresa ≠ Istituzione ≠ Università; i documenti, il fascicolo, l'Academy, il Forum, il percorso, le scadenze, i messaggi, le richieste, gli stati «i cerchi», l'aiuto, la ricerca, la lingua, l'account, la chiave e i gradini. Da guardare a 1× e a 2×.</p>
+</header>
+
+<section class="sp-section" aria-labelledby="sp-s1">
+  <h2 class="sp-h2" id="sp-s1">1 · I quattro pubblici</h2>
+  <p class="sp-note">Un busto, una torre con l'annesso, un frontone su colonne, un tocco accademico. Soglie di misura: <code>person</code> e <code>building</code> 14 px; <code>institution</code> e <code>university</code> 16 px (sotto la soglia la cella resta vuota). Nei dischi il glifo è a 16 px.</p>
+  <div class="sp-scroll" tabindex="0" role="region" aria-label="Tabella dei quattro pubblici, da 14 a 32 px">
+  <table class="sp-table">
+    <thead><tr><th scope="col">simbolo</th><th scope="col">14</th><th scope="col">16</th><th scope="col">20</th><th scope="col">24</th><th scope="col">32</th><th scope="col">disco 24</th><th scope="col">disco 32</th><th scope="col">fr</th><th scope="col">ar</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>person</code></th><td>{% svg_icon "person" "icon icon--xs" %}</td><td>{% svg_icon "person" "icon icon--sm" %}</td><td>{% svg_icon "person" "icon icon--md" %}</td><td>{% svg_icon "person" "icon icon--lg" %}</td><td>{% svg_icon "person" "icon icon--xl" %}</td><td>{% include "components/glyph.html" with glyph="person" size="sm" %}</td><td>{% include "components/glyph.html" with glyph="person" size="md" %}</td><td lang="fr">{% language "fr" %}{% translate "Personnes" %}{% endlanguage %}</td><td lang="ar" dir="rtl">{% language "ar" %}{% translate "Personnes" %}{% endlanguage %}</td></tr>
+      <tr><th scope="row"><code>building</code></th><td>{% svg_icon "building" "icon icon--xs" %}</td><td>{% svg_icon "building" "icon icon--sm" %}</td><td>{% svg_icon "building" "icon icon--md" %}</td><td>{% svg_icon "building" "icon icon--lg" %}</td><td>{% svg_icon "building" "icon icon--xl" %}</td><td>{% include "components/glyph.html" with glyph="building" size="sm" %}</td><td>{% include "components/glyph.html" with glyph="building" size="md" %}</td><td lang="fr">{% language "fr" %}{% translate "Entreprises" %}{% endlanguage %}</td><td lang="ar" dir="rtl">{% language "ar" %}{% translate "Entreprises" %}{% endlanguage %}</td></tr>
+      <tr><th scope="row"><code>institution</code></th><td class="sp-below">—</td><td>{% svg_icon "institution" "icon icon--sm" %}</td><td>{% svg_icon "institution" "icon icon--md" %}</td><td>{% svg_icon "institution" "icon icon--lg" %}</td><td>{% svg_icon "institution" "icon icon--xl" %}</td><td>{% include "components/glyph.html" with glyph="institution" size="sm" %}</td><td>{% include "components/glyph.html" with glyph="institution" size="md" %}</td><td lang="fr">{% language "fr" %}{% translate "Institutions" %}{% endlanguage %}</td><td lang="ar" dir="rtl">{% language "ar" %}{% translate "Institutions" %}{% endlanguage %}</td></tr>
+      <tr><th scope="row"><code>university</code></th><td class="sp-below">—</td><td>{% svg_icon "university" "icon icon--sm" %}</td><td>{% svg_icon "university" "icon icon--md" %}</td><td>{% svg_icon "university" "icon icon--lg" %}</td><td>{% svg_icon "university" "icon icon--xl" %}</td><td>{% include "components/glyph.html" with glyph="university" size="sm" %}</td><td>{% include "components/glyph.html" with glyph="university" size="md" %}</td><td lang="fr">{% language "fr" %}{% translate "Universités" %}{% endlanguage %}</td><td lang="ar" dir="rtl">{% language "ar" %}{% translate "Universités" %}{% endlanguage %}</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s2">
+  <h2 class="sp-h2" id="sp-s2">2 · I domini della piattaforma</h2>
+  <p class="sp-note">Nell'ordine della rail della console, a 20 px, su carta e su notte: i simboli del registro (<code>NAV</code>, <code>COMPANY_NAV</code>) con le parole del prodotto — gli stessi che la rail, la barra in basso e il cassetto disegnano. Il Forum è a 24 px, la sua soglia.</p>
+  <div class="sp-two">
+    <div class="sp-panel">
+      <div class="sp-row" lang="fr">
+        <span class="sp-item">{% svg_icon "layout-dashboard" "icon icon--md" %}{% language "fr" %}{% translate "Tableau de bord" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "compass" "icon icon--md" %}{% language "fr" %}{% translate "Ma situation" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "ile-steps" "icon icon--md" %}{% language "fr" %}{% translate "Mon parcours" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "folder" "icon icon--md" %}{% language "fr" %}{% translate "Mes dossiers" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "send" "icon icon--md" %}{% language "fr" %}{% translate "Mes demandes" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "document" "icon icon--md" %}{% language "fr" %}{% translate "Mes pièces" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "calendar-clock" "icon icon--md" %}{% language "fr" %}{% translate "Mes échéances" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "mail" "icon icon--md" %}{% language "fr" %}{% translate "Communications" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "concierge-bell" "icon icon--md" %}{% language "fr" %}{% translate "Guichet numérique" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "book-open" "icon icon--md" %}Academy</span>
+        <span class="sp-item">{% svg_icon "list-ordered" "icon icon--md" %}{% language "fr" %}{% translate "Processus assignés" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "building" "icon icon--md" %}{% language "fr" %}{% translate "Mon entreprise" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "inbox" "icon icon--md" %}{% language "fr" %}{% translate "Demandes qui me sont confiées" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "wrench" "icon icon--md" %}{% language "fr" %}{% translate "Mes besoins" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "map" "icon icon--md" %}{% language "fr" %}{% translate "Analyse territoriale" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "handshake" "icon icon--lg" %}Forum</span>
+        <span class="sp-item">{% svg_icon "sprout" "icon icon--md" %}{% language "fr" %}{% translate "Vivre en Italie" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "bell" "icon icon--md" %}<code>bell</code></span>
+        <span class="sp-item">{% svg_icon "settings" "icon icon--md" %}<code>settings</code></span>
+        <span class="sp-item">{% svg_icon "award" "icon icon--md" %}{% language "fr" %}{% translate "Diplômes et titres" %}{% endlanguage %}</span>
+      </div>
+    </div>
+    <div class="sp-panel sp-night">
+      <div class="sp-row" lang="fr">
+        <span class="sp-item">{% svg_icon "layout-dashboard" "icon icon--md" %}{% language "fr" %}{% translate "Tableau de bord" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "compass" "icon icon--md" %}{% language "fr" %}{% translate "Ma situation" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "ile-steps" "icon icon--md" %}{% language "fr" %}{% translate "Mon parcours" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "folder" "icon icon--md" %}{% language "fr" %}{% translate "Mes dossiers" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "send" "icon icon--md" %}{% language "fr" %}{% translate "Mes demandes" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "document" "icon icon--md" %}{% language "fr" %}{% translate "Mes pièces" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "calendar-clock" "icon icon--md" %}{% language "fr" %}{% translate "Mes échéances" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "mail" "icon icon--md" %}{% language "fr" %}{% translate "Communications" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "concierge-bell" "icon icon--md" %}{% language "fr" %}{% translate "Guichet numérique" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "book-open" "icon icon--md" %}Academy</span>
+        <span class="sp-item">{% svg_icon "list-ordered" "icon icon--md" %}{% language "fr" %}{% translate "Processus assignés" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "building" "icon icon--md" %}{% language "fr" %}{% translate "Mon entreprise" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "inbox" "icon icon--md" %}{% language "fr" %}{% translate "Demandes qui me sont confiées" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "ile-key" "icon icon--md" %}{% language "fr" %}{% translate "Espace réservé" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "circle-user-round" "icon icon--md" %}{% language "fr" %}{% translate "Profil" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "shield" "icon icon--md" %}{% language "fr" %}{% translate "Sécurité du compte" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "logout" "icon icon--md" %}{% language "fr" %}{% translate "Se déconnecter" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "languages" "icon icon--md" %}{% language "fr" %}{% translate "Langue" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "search" "icon icon--md" %}{% language "fr" %}{% translate "Rechercher" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "circle-help" "icon icon--md" %}{% language "fr" %}{% translate "Questions fréquentes" %}{% endlanguage %}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s3">
+  <h2 class="sp-h2" id="sp-s3">3 · Il percorso — sette stazioni, due soglie</h2>
+  <p class="sp-note">Una stazione ha il numerale e la frase; le due soglie — l'atto delle autorità (<code>stamp</code>) e l'arrivo (<code>ile-arch</code>, l'unico arco del percorso) — sono le sole immagini sulla linea. Mai una spunta sul percorso.</p>
+  <div class="sp-line" lang="fr">
+    <div class="sp-station"><span class="sp-num">1</span>{% svg_icon "compass" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Votre situation et votre objectif" %}{% endlanguage %}</span></div>
+    <div class="sp-station"><span class="sp-num">2</span>{% svg_icon "signpost" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Pré-évaluation et parcours possibles" %}{% endlanguage %}</span></div>
+    <div class="sp-station"><span class="sp-num">3</span>{% svg_icon "book-open" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Préparation et formation avant le départ" %}{% endlanguage %}</span></div>
+    <div class="sp-station sp-station--threshold"><span class="sp-num">A</span>{% svg_icon "stamp" "icon icon--lg" %}<span lang="it">soglia · l'atto delle autorità competenti</span></div>
+    <div class="sp-station"><span class="sp-num">4</span>{% svg_icon "scroll-text" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Procédures auprès des autorités compétentes" %}{% endlanguage %}</span></div>
+    <div class="sp-station"><span class="sp-num">5</span>{% svg_icon "clipboard-list" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Préparation du départ" %}{% endlanguage %}</span></div>
+    <div class="sp-station sp-station--threshold"><span class="sp-num">B</span>{% svg_icon "ile-arch" "icon icon--lg" %}<span lang="it">soglia · l'arrivo</span></div>
+    <div class="sp-station"><span class="sp-num">6</span>{% svg_icon "building-2" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Arrivée et premières démarches" %}{% endlanguage %}</span></div>
+    <div class="sp-station"><span class="sp-num">7</span>{% svg_icon "sprout" "icon icon--lg" %}<span>{% language "fr" %}{% translate "Accompagnement et inclusion" %}{% endlanguage %}</span></div>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s4">
+  <h2 class="sp-h2" id="sp-s4">4 · Responsabilità — chi agisce</h2>
+  <p class="sp-note">Il disco dell'attore sulla riga: un glifo a 16 px nel disco da 24, mai una spunta. L'équipe del progetto porta il marchio (<code>ile-mark</code>, soglia 20 px: il disco da 40). Nessun attore: il disco tratteggiato.</p>
+  <div class="sp-row">
+    <span class="sp-item">{% include "components/glyph.html" with glyph="person" size="sm" %}{% translate "La persona" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="building" size="sm" %}{% translate "L'impresa" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="stamp" size="sm" %}{% translate "L'autorità competente" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="briefcase" size="sm" %}{% translate "Il professionista incaricato" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="university" size="sm" %}{% translate "L'ente di formazione" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="badge-dot" size="sm" %}{% translate "Il soggetto autorizzato" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="ile-mark" size="lg" %}{% translate "L'équipe del progetto" %}</span>
+    <span class="sp-item">{% include "components/glyph.html" with glyph="" size="sm" %}<code>nessuno</code></span>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s5">
+  <h2 class="sp-h2" id="sp-s5">5 · Gli stati — «i cerchi»</h2>
+  <p class="sp-note">Contorno = aperto, pieno = concluso; il colore è del registro della chip (W1-C), la parola porta il significato. A 14, 16 e 20 px, su carta e su notte. <code>conforme</code> è un disco pieno senza glifo; <code>blocco</code> è il lucchetto; il sigillo (<code>badge-check</code>) solo per un atto di un'autorità.</p>
+  <div class="sp-two">
+    <div class="sp-panel">
+      <div class="sp-row">
+        <span class="sp-item"><span class="sp-mark" data-register="attesa">{% svg_icon "st-attesa" "icon icon--xs" %}{% svg_icon "st-attesa" "icon icon--sm" %}{% svg_icon "st-attesa" "icon icon--md" %}</span><code>attesa</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="attesa">{% svg_icon "st-attesa-replace" "icon icon--xs" %}{% svg_icon "st-attesa-replace" "icon icon--sm" %}{% svg_icon "st-attesa-replace" "icon icon--md" %}</span><code>à remplacer</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="neutro">{% svg_icon "st-neutro" "icon icon--xs" %}{% svg_icon "st-neutro" "icon icon--sm" %}{% svg_icon "st-neutro" "icon icon--md" %}</span><code>neutro</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="esame">{% svg_icon "st-esame" "icon icon--xs" %}{% svg_icon "st-esame" "icon icon--sm" %}{% svg_icon "st-esame" "icon icon--md" %}</span><code>esame</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="conforme">{% svg_icon "st-conforme" "icon icon--xs" %}{% svg_icon "st-conforme" "icon icon--sm" %}{% svg_icon "st-conforme" "icon icon--md" %}</span><code>conforme</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="azione">{% svg_icon "st-azione" "icon icon--xs" %}{% svg_icon "st-azione" "icon icon--sm" %}{% svg_icon "st-azione" "icon icon--md" %}</span><code>azione</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="rifiuto">{% svg_icon "st-rifiuto" "icon icon--xs" %}{% svg_icon "st-rifiuto" "icon icon--sm" %}{% svg_icon "st-rifiuto" "icon icon--md" %}</span><code>rifiuto</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="blocco">{% svg_icon "lock" "icon icon--xs" %}{% svg_icon "lock" "icon icon--sm" %}{% svg_icon "lock" "icon icon--md" %}</span><code>blocco</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="nullo">{% svg_icon "st-nullo" "icon icon--xs" %}{% svg_icon "st-nullo" "icon icon--sm" %}{% svg_icon "st-nullo" "icon icon--md" %}</span><code>nullo</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="neutro">{% svg_icon "badge-check" "icon icon--sm" %}{% svg_icon "badge-check" "icon icon--md" %}</span><code>sigillo</code></span>
+      </div>
+    </div>
+    <div class="sp-panel sp-night">
+      <div class="sp-row">
+        <span class="sp-item"><span class="sp-mark" data-register="attesa">{% svg_icon "st-attesa" "icon icon--xs" %}{% svg_icon "st-attesa" "icon icon--sm" %}{% svg_icon "st-attesa" "icon icon--md" %}</span><code>attesa</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="attesa">{% svg_icon "st-attesa-replace" "icon icon--xs" %}{% svg_icon "st-attesa-replace" "icon icon--sm" %}{% svg_icon "st-attesa-replace" "icon icon--md" %}</span><code>à remplacer</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="neutro">{% svg_icon "st-neutro" "icon icon--xs" %}{% svg_icon "st-neutro" "icon icon--sm" %}{% svg_icon "st-neutro" "icon icon--md" %}</span><code>neutro</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="esame">{% svg_icon "st-esame" "icon icon--xs" %}{% svg_icon "st-esame" "icon icon--sm" %}{% svg_icon "st-esame" "icon icon--md" %}</span><code>esame</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="conforme">{% svg_icon "st-conforme" "icon icon--xs" %}{% svg_icon "st-conforme" "icon icon--sm" %}{% svg_icon "st-conforme" "icon icon--md" %}</span><code>conforme</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="azione">{% svg_icon "st-azione" "icon icon--xs" %}{% svg_icon "st-azione" "icon icon--sm" %}{% svg_icon "st-azione" "icon icon--md" %}</span><code>azione</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="rifiuto">{% svg_icon "st-rifiuto" "icon icon--xs" %}{% svg_icon "st-rifiuto" "icon icon--sm" %}{% svg_icon "st-rifiuto" "icon icon--md" %}</span><code>rifiuto</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="blocco">{% svg_icon "lock" "icon icon--xs" %}{% svg_icon "lock" "icon icon--sm" %}{% svg_icon "lock" "icon icon--md" %}</span><code>blocco</code></span>
+        <span class="sp-item"><span class="sp-mark" data-register="nullo">{% svg_icon "st-nullo" "icon icon--xs" %}{% svg_icon "st-nullo" "icon icon--sm" %}{% svg_icon "st-nullo" "icon icon--md" %}</span><code>nullo</code></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s6">
+  <h2 class="sp-h2" id="sp-s6">6 · Avvisi, scadenze, azioni — il livello di utilità</h2>
+  <p class="sp-note">Un avviso non poggia sul suo glifo: il titolo ne dice il genere, il tono lo dipinge. Mai due cerchi nella stessa lista (gemelli). <code>circle-check</code> solo per un atto della persona, compiuto.</p>
+  <h3 class="sp-h3">Avvisi</h3>
+  <div class="sp-row">
+    <span class="sp-item">{% svg_icon "info" "icon icon--md" %}<code>info</code></span>
+    <span class="sp-item">{% svg_icon "warning" "icon icon--md" %}<code>warning</code></span>
+    <span class="sp-item">{% svg_icon "circle-alert" "icon icon--md" %}<code>error</code></span>
+    <span class="sp-item">{% svg_icon "clock" "icon icon--md" %}<code>pending</code></span>
+    <span class="sp-item">{% svg_icon "circle-pause" "icon icon--md" %}<code>unavailable</code></span>
+    <span class="sp-item">{% svg_icon "megaphone" "icon icon--md" %}<code>institutional</code></span>
+    <span class="sp-item">{% svg_icon "circle-check" "icon icon--md" %}<code>success — un atto proprio</code></span>
+  </div>
+  <h3 class="sp-h3">Scadenze — a 16 e 20 px</h3>
+  <div class="sp-row">
+    <span class="sp-item">{% svg_icon "calendar" "icon icon--sm" %}{% svg_icon "calendar" "icon icon--md" %}<code>una data · upcoming</code></span>
+    <span class="sp-item">{% svg_icon "clock" "icon icon--sm" %}{% svg_icon "clock" "icon icon--md" %}<code>soon</code></span>
+    <span class="sp-item">{% svg_icon "alarm-clock" "icon icon--sm" %}{% svg_icon "alarm-clock" "icon icon--md" %}<code>overdue</code></span>
+  </div>
+  <h3 class="sp-h3">Azioni</h3>
+  <div class="sp-row">
+    <span class="sp-item">{% svg_icon "upload" "icon icon--md" %}<code>upload</code></span>
+    <span class="sp-item">{% svg_icon "refresh-cw" "icon icon--md" %}<code>refresh-cw</code></span>
+    <span class="sp-item">{% svg_icon "download" "icon icon--md" %}<code>download</code></span>
+    <span class="sp-item">{% svg_icon "eye" "icon icon--md" %}<code>eye</code></span>
+    <span class="sp-item">{% svg_icon "eye-off" "icon icon--md" %}<code>eye-off</code></span>
+    <span class="sp-item">{% svg_icon "trash-2" "icon icon--md" %}<code>trash-2</code></span>
+    <span class="sp-item">{% svg_icon "plus" "icon icon--md" %}<code>plus</code></span>
+    <span class="sp-item">{% svg_icon "minus" "icon icon--md" %}<code>minus</code></span>
+    <span class="sp-item">{% svg_icon "pencil" "icon icon--md" %}<code>pencil</code></span>
+    <span class="sp-item">{% svg_icon "copy" "icon icon--md" %}<code>copy</code></span>
+    <span class="sp-item">{% svg_icon "mail-open" "icon icon--md" %}<code>mail-open</code></span>
+    <span class="sp-item">{% svg_icon "list-filter" "icon icon--md" %}<code>list-filter</code></span>
+    <span class="sp-item">{% svg_icon "arrow-down-up" "icon icon--md" %}<code>arrow-down-up</code></span>
+    <span class="sp-item">{% svg_icon "printer" "icon icon--md" %}<code>printer</code></span>
+    <span class="sp-item">{% svg_icon "search" "icon icon--md" %}<code>search</code></span>
+    <span class="sp-item">{% svg_icon "ellipsis-vertical" "icon icon--md" %}<code>ellipsis-vertical</code></span>
+    <span class="sp-item">{% svg_icon "menu" "icon icon--md" %}<code>menu</code></span>
+    <span class="sp-item">{% svg_icon "close" "icon icon--md" %}<code>close</code></span>
+    <span class="sp-item">{% svg_icon "check" "icon icon--md" %}<code>check — un atto proprio</code></span>
+    <span class="sp-item">{% svg_icon "chevron" "icon icon--md" %}<code>chevron</code></span>
+    <span class="sp-item">{% svg_icon "arrow-up-right" "icon icon--md" %}<code>arrow-up-right</code></span>
+  </div>
+  <h3 class="sp-h3">Stato vuoto — a 24 px, nel suo disco</h3>
+  <p class="sp-note">Il glifo dice QUALE spazio è vuoto: una pagina vuota porta il glifo di concetto del suo dominio; una regione sotto il proprio titolo, e una pagina il cui dominio non ha un glifo nel registro, portano <code>{{ reg.EMPTY_STATE }}</code> — una cornice tratteggiata, «qui non c'è ancora nulla». Mai <code>document</code> per difetto: è «Mes pièces».</p>
+  <div class="sp-row">
+    <span class="sp-item"><span class="sp-disc">{% svg_icon reg.EMPTY_STATE "icon icon--lg" %}</span><code>{{ reg.EMPTY_STATE }} — il segno neutro</code></span>
+    <span class="sp-item"><span class="sp-disc">{% svg_icon "circle-help" "icon icon--lg" %}</span>FAQ</span>
+    <span class="sp-item"><span class="sp-disc">{% svg_icon "book-a" "icon icon--lg" %}</span>{% language "fr" %}{% translate "Glossaire" %}{% endlanguage %}</span>
+    <span class="sp-item"><span class="sp-disc">{% svg_icon "newspaper" "icon icon--lg" %}</span>{% language "fr" %}{% translate "Actualités" %}{% endlanguage %}</span>
+    <span class="sp-item"><span class="sp-disc">{% svg_icon "handshake" "icon icon--lg" %}</span>Forum</span>
+    <span class="sp-item"><span class="sp-disc">{% svg_icon "sprout" "icon icon--lg" %}</span>{% language "fr" %}{% translate "Vivre en Italie" %}{% endlanguage %}</span>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s7">
+  <h2 class="sp-h2" id="sp-s7">7 · Direzione — la lista chiusa di flip</h2>
+  <p class="sp-note">La direzione si specchia, il significato no: <code>arrow</code>, <code>arrow-start</code>, <code>chevron-end</code>, <code>logout</code>, <code>send</code>, <code>signpost</code>, <code>panel-left-close</code> ricevono <code>.icon--flip-rtl</code> dal tag stesso; i gradini di «Mon parcours» salgono come i gradini della scena e non si specchiano.</p>
+  <div class="sp-two">
+    <div class="sp-panel sp-dir" lang="fr">
+      <div class="sp-row">
+        <span class="sp-item">{% language "fr" %}{% translate "Suivant" %}{% endlanguage %}{% svg_icon "arrow" "icon icon--sm" %}</span>
+        <span class="sp-item">{% svg_icon "arrow-start" "icon icon--sm" %}{% language "fr" %}{% translate "Précédent" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "chevron-end" "icon icon--sm" %}<code>chevron-end</code></span>
+        <span class="sp-item">{% svg_icon "logout" "icon icon--md" %}{% language "fr" %}{% translate "Se déconnecter" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "send" "icon icon--md" %}{% language "fr" %}{% translate "Mes demandes" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "signpost" "icon icon--md" %}{% language "fr" %}{% translate "Parcours réguliers" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "panel-left-close" "icon icon--md" %}<code>panel-left-close</code></span>
+        <span class="sp-item">{% svg_icon "ile-steps" "icon icon--md" %}{% language "fr" %}{% translate "Mon parcours" %}{% endlanguage %}</span>
+      </div>
+    </div>
+    <div class="sp-panel sp-dir" lang="ar" dir="rtl">
+      <div class="sp-row">
+        <span class="sp-item">{% language "ar" %}{% translate "Suivant" %}{% endlanguage %}{% svg_icon "arrow" "icon icon--sm" %}</span>
+        <span class="sp-item">{% svg_icon "arrow-start" "icon icon--sm" %}{% language "ar" %}{% translate "Précédent" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "chevron-end" "icon icon--sm" %}<code lang="en" dir="ltr">chevron-end</code></span>
+        <span class="sp-item">{% svg_icon "logout" "icon icon--md" %}{% language "ar" %}{% translate "Se déconnecter" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "send" "icon icon--md" %}{% language "ar" %}{% translate "Mes demandes" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "signpost" "icon icon--md" %}{% language "ar" %}{% translate "Parcours réguliers" %}{% endlanguage %}</span>
+        <span class="sp-item">{% svg_icon "panel-left-close" "icon icon--md" %}<code lang="en" dir="ltr">panel-left-close</code></span>
+        <span class="sp-item">{% svg_icon "ile-steps" "icon icon--md" %}{% language "ar" %}{% translate "Mon parcours" %}{% endlanguage %}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="sp-s8">
+  <h2 class="sp-h2" id="sp-s8">8 · Tutti i simboli, dal registro</h2>
+  <p class="sp-note">A 20 px (a 24 px quando la soglia è 24), nell'ordine dello sprite, con la soglia di misura di ciascuno (<code>MIN_SIZE</code>); i simboli della lista di flip sono segnati «↔».</p>
+  {% for label, names in reg.GROUPS %}
+  <h3 class="sp-h3">{{ label }}</h3>
+  <ul class="sp-grid">
+    {% for name in names %}
+    {% with floor=reg.MIN_SIZE|get_item:name %}<li>{% if floor > 20 %}{% svg_icon name "icon icon--lg" %}{% else %}{% svg_icon name "icon icon--md" %}{% endif %}<code>{{ name }}</code><small>{{ floor }}{% if name in reg.FLIP_RTL %} ↔{% endif %}</small></li>{% endwith %}
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</section>
+</body>
+</html>

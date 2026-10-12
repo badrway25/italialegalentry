@@ -21,7 +21,7 @@ Contract: `needs` = an iterable of companies.models.CompanyNeed.
         · {% blocktranslate count n=need.headcount %}{{ n }} profil{% plural %}{{ n }} profils{% endblocktranslate %}
       </span>
       <span class="entry__actor">
-        <span class="state state--{{ need.state_modifier }}" data-register="{{ need.status|chip_register:'companies.NeedStatus' }}">{{ need.get_status_display }}</span>
+        {% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}
         <span class="entry__responsible">
           {% with live=need.live_assignments %}
           {% if live %}{% for assignment in live %}{{ assignment.display_name }}{% if not forloop.last %} · {% endif %}{% endfor %}

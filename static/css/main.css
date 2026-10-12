@@ -3,7 +3,6 @@
    Layers are imported in cascade order; ManifestStaticFilesStorage rewrites
    the @import targets with hashed names at collectstatic time.
    ========================================================================== */
-@import url("fonts.css");
 @import url("tokens.css");
 /* Demolition scaffold — shrinks to nothing; see the file header. */
 @import url("_legacy-tokens.css");
@@ -17,17 +16,41 @@
    new ones, so every page changes ground at once; deleted with register.css) → shell → hero. */
 @import url("v2/tokens.css");
 @import url("v2/bridge.css");
-@import url("v2/shell.css");
-@import url("v2/routes.css");
-@import url("v2/voyage.css");
-/* V3 — docs/design-v3/. Loaded last: it corrects what the V2 layers inherited from the shim. */
-@import url("v3/buttons.css");
-@import url("v3/chip.css");
+/* V3 — docs/design-v3/ — left the cascade with its two sheets: v3/buttons.css gave way to v5/buttons.css and
+   v3/chip.css to v5/chip.css (W1-C). */
 /* V4 — docs/design-v4/DESIGN_SYSTEM_V4.md. Loaded last: it keeps the V2 names and gives them the
    V4 values, so every earlier layer changes value without changing a line. */
 @import url("v4/tokens.css");
-@import url("v4/buttons.css");
 @import url("v4/shell.css");
 @import url("v4/workspace.css");
 @import url("v4/hero.css");
 @import url("v4/wizard.css");
+/* V5 — docs/design-v5/V5_4_EXECUTION_PLAN.md §2.1, §2.3. Loaded last: v5 closes the cascade. The faces
+   (static/fonts/v5-*, replacing fonts.css and the V4 woff2), the tokens, the aliases that give the
+   V1 / V2 / V4 names their V5 values, and the base roles. Until a page's own family passes, it is
+   «V4 + fondation»: V4's composition on V5's tokens. */
+@import url("v5/fonts.css");
+@import url("v5/tokens.css");
+@import url("v5/aliases.css");
+@import url("v5/base.css");
+/* The core components (plan §2.3, §3.3 item 7; W1-C), in the plan's order: the buttons, the fields «la lastra»,
+   the status chip «i cerchi», the cards by purpose, the notices, the tabs and the disclosure. They replace
+   components.css §1, §3, §4, §13, §14, §15 and §20's field rules, v3/buttons.css, v3/chip.css and
+   v4/buttons.css (its busy face gave way to the loader's key, below). */
+@import url("v5/buttons.css");
+@import url("v5/field.css");
+@import url("v5/chip.css");
+@import url("v5/card.css");
+@import url("v5/notice.css");
+@import url("v5/tabs.css");
+/* The overlay system (plan §1.14, §2.3; W2-A): one system on native elements — the modal and the alert dialog, the drawer,
+   the bottom sheet, the popover / menu and the tooltip, behind static/js/src/overlay.js. It replaces components.css §21. */
+@import url("v5/overlays.css");
+/* The V5 components follow the foundation, in the order of plan §2.3; after the core ones, W1-D's loader «Lume»: the mark in
+   layers and the key-turn primitive, the busy key of every submit button (L2), the seat of fetched rows (L3). The
+   entrance release is console-only (_loader-light.css, imported by the console entry). */
+@import url("v5/loader.css");
+/* The public chrome «Il portico» (plan §1.12, §2.3; W2-C1): the institutional bar, the letterhead, the navigation
+   and its door panels, «la targa», the drawer, the lock-up and the footer. It replaces v2/shell.css, components.css
+   §5–§7 and §25 and the chrome of v4/shell.css. */
+@import url("v5/chrome.css");

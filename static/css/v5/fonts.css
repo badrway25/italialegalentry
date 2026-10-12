@@ -1,0 +1,135 @@
+/* ============================================================================================
+   FONTS V5 — type «Una voce» (W1-A; docs/design-v5/V5_4_EXECUTION_PLAN.md §1.1, §2.3)
+   Five self-hosted faces in six files (ILE Mono is split in two by unicode-range) and their
+   metric-matched fallback faces. Nothing is fetched from another
+   host. Sources, versions, the subsetting and renaming commands and the SHA-256 of every file:
+   docs/design-v5/FONTS_V5.md. Each family's SIL Open Font License 1.1 text is in
+   static/fonts/licenses/: OFL-HostGrotesk.txt · OFL-Newsreader.txt (the «ILE Wordmark» subset) ·
+   OFL-IBMPlexMono.txt («ILE Mono»: a Modified Version of IBM Plex Mono, renamed because «Plex» is a
+   Reserved Font Name; IBM's copyright notice is kept in the file and in the licence) ·
+   OFL-Vazirmatn.txt.
+   Rules: font-display swap everywhere; unicode-range as the typography council set it, so the Arabic
+   file never loads on a Latin page and the Latin files never draw Arabic; a face downloads only when
+   text needs it. base.html preloads the first screen's faces per script (§1.1 «Loading»).
+   ============================================================================================ */
+
+/* ---- Host Grotesk — every Latin role, public and console (variable wght 400–700) ------------- */
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../../fonts/v5-host-grotesk-var-400-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+0178, U+02C6, U+02DC, U+2000-206F, U+20AC, U+2116, U+2122, U+2190-2193, U+2197, U+2212, U+2215, U+2264-2265;
+}
+/* italic 400 — on use, for the titles of acts cited in sources only; never on the portico */
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../fonts/v5-host-grotesk-400-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+0178, U+02C6, U+02DC, U+2000-206F, U+20AC, U+2116, U+2122, U+2212, U+2215;
+}
+
+/* ---- «ILE Wordmark» — Newsreader 600 opsz 20: the 11 code points of «ITALY LEGAL ENTRY™» --------
+   Every rendering of the name, and nothing else. The capitals come from CSS (text-transform). */
+@font-face {
+  font-family: "ILE Wordmark";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../../fonts/v5-ile-wordmark-600.woff2") format("woff2");
+  unicode-range: U+0020, U+0041, U+0045, U+0047, U+0049, U+004C, U+004E, U+0052, U+0054, U+0059, U+2122;
+}
+
+/* ---- «ILE Mono» — the IBM Plex Mono 400 subset, renamed: references, hashes, rule versions --------
+   Two files with complementary ranges: the reference core (space, # + , - . / : _, the digits, the
+   capitals, U+00A0 — what a case or document reference is made of, 2.6 KB) and the rest of the subset.
+   A page whose references are digits and capitals downloads the core alone: the Arabic console holds
+   its font budget (V5.4 plan §2.6) with it. */
+@font-face {
+  font-family: "ILE Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../fonts/v5-ile-mono-400.woff2") format("woff2");
+  unicode-range: U+0020, U+0023, U+002B-003A, U+0041-005A, U+005F, U+00A0;
+}
+@font-face {
+  font-family: "ILE Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../fonts/v5-ile-mono-400-ext.woff2") format("woff2");
+  unicode-range: U+0021-0022, U+0024-002A, U+003B-0040, U+005B-005E, U+0060-007E, U+00A1-00FF, U+0131, U+0152-0153, U+0178, U+2000-206F, U+20AC, U+2116, U+2122, U+2212, U+2215;
+}
+
+/* ---- Vazirmatn — every Arabic role (variable wght 400–700) ------------------------------------
+   U+0020 and U+00A0 are the file's own: an Arabic line never borrows its spaces from Host Grotesk, so a
+   late Latin face does not re-lay out the Arabic text (gate-0 round 3). PROVISIONAL until the Moroccan
+   reader's review (owner item B2); the build does not wait for it. */
+@font-face {
+  font-family: "Vazirmatn";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../../fonts/v5-vazirmatn-var-400-700-arabic.woff2") format("woff2");
+  unicode-range: U+0020, U+00A0, U+0600-06FF, U+0750-077F, U+0870-08FF, U+200C-200F, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFC;
+}
+
+/* ---- metric-matched fallbacks — what draws until the web face arrives ---------------------------
+   size-adjust = the mean advance of a real ILE sample in the web face ÷ the same in the fallback;
+   ascent / descent = the web face's metrics ÷ size-adjust (the typography lane's tools/fallback_metrics.py
+   on 626 characters of product copy; FONTS_V5.md). Windows: Segoe UI, then Arial, which also serves macOS
+   and iOS with Arial's metrics; Android: Roboto (TR C2, computed from the file, not verified on a device).
+   Apple's own system faces are computed before the integration milestone (plan §7). */
+@font-face {
+  font-family: "ILE Sans Fallback";
+  src: local("Segoe UI"), local("SegoeUI");
+  size-adjust: 105.5%;
+  ascent-override: 96.2%;
+  descent-override: 29.9%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "ILE Sans Fallback Arial";
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 104.5%;
+  ascent-override: 97.1%;
+  descent-override: 30.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "ILE Sans Fallback Android";
+  src: local("Roboto"), local("Roboto-Regular");
+  size-adjust: 105.1%;
+  ascent-override: 96.6%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "ILE Arabic Fallback";
+  src: local("Segoe UI"), local("SegoeUI");
+  size-adjust: 97.1%;
+  ascent-override: 105.6%;
+  descent-override: 55.3%;
+  line-gap-override: 0%;
+}
+/* the name and the references (computed by W1-A on «ITALY LEGAL ENTRY» and on real references) */
+@font-face {
+  font-family: "ILE Wordmark Fallback";
+  src: local("Georgia");
+  size-adjust: 103.4%;
+  ascent-override: 71.1%;
+  descent-override: 25.6%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "ILE Mono Fallback";
+  src: local("Consolas");
+  size-adjust: 109.1%;
+  ascent-override: 93.9%;
+  descent-override: 25.2%;
+  line-gap-override: 0%;
+}

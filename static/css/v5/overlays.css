@@ -1,0 +1,472 @@
+/* ============================================================================================
+   OVERLAYS V5 — one system on native elements (W2-A): the modal and the alert dialog, the drawer, the bottom
+   sheet, the popover / menu and the tooltip
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.14 (the overlay system, O1–O11), §1.5 (MS-O2 the exit's curve, MS-O4
+   reduced motion, MS-O5 the tooltip group, MS-O6 the 4 px drop), §1.3 (corners), §1.4 (shadows), §1.6 (focus);
+   DS V5 §10.6; the primitive contract docs/design-v5/QA/v54/w2-a/CONTRACT.md, which W2-C2 and W3-C build on.
+   Markup: templates/components/{dialog,drawer,popover,tooltip,sheet}.html. Behaviour: static/js/src/overlay.js.
+   Loaded by static/css/main.css after v5/tabs.css and before v5/loader.css (plan §2.3).
+
+   THIS SHEET IS SHARED — every page loads it — so it holds what every page may draw (the owner's V5.8 budget:
+   the shared ceilings are hard): the panel and its motion both ways, the one scrim, the drawer (the console's), the
+   popover / menu — a bottom sheet on a phone — and the top-layer tooltip, the scroll lock. The panels with a head
+   (the dialog and the alert, the bottom sheet and its grip, the head / body / foot that dialog.html, sheet.html and
+   drawer.html draw), a native modal's ::backdrop and the control's own CSS tooltip are PAGE-ONLY:
+   static/css/v5/_overlay-panels.css, linked as css/dist/core/overlay-panels.css by the pages that draw them
+   (CONTRACT §1).
+
+   1 · the direction                       5 · ≤ 40rem: the menu becomes a sheet, a modal drawer takes the width
+   2 · the panel                           6 · the tooltip: the top-layer tip
+   3 · open and closed, both ways          7 · the scroll lock, without a shift
+   4 · the drawer and the popover          8 · no script · reduced motion · forced colours · touch · paper · keyboard
+                                           9 · the account popover's trigger
+
+   Native first: a modal kind is a <dialog> — opened with show(), `aria-modal` and ONE shared scrim (.overlay-scrim,
+   §3), the trap, Esc and the page's absence from the accessibility tree in overlay.js (the INP rule of plan §1.14:
+   showModal() made the whole page inert and re-styled it at every opening; `data-overlay-modal="native"` keeps it on
+   a light page, with its own ::backdrop) —, a menu a `popover` (light dismiss and Esc are the platform's; shown as a
+   phone sheet it stands over the same scrim, §5). What moves is a TRANSITION in both
+   directions — a second press retargets from where the panel is (O1) — entering by @starting-style and leaving by
+   `allow-discrete` on display and overlay; nothing that shapes a panel is written under [open] / :popover-open (B1),
+   so its rows do not move while it leaves. Tokens only, logical properties only; the one horizontal travel (the
+   drawer's) is `calc(100% * edge * --dir)`, which test_rtl_browser_overlays.py measures. Corners: tooltip 4 ·
+   popover 8 · dialog, drawer and sheet 12 (an open overlay brings its own radius, DL54-14).
+   ============================================================================================ */
+
+/* ==============================================================================================
+   1 · THE DIRECTION — one --dir for the whole system (1, or -1 under [dir="rtl"]): the drawer's travel and the
+   tooltip's centring multiply by it, so one rule serves both directions.
+   ============================================================================================== */
+:root { --dir: 1; }
+[dir="rtl"] { --dir: -1; }
+[dir="ltr"] { --dir: 1; }
+
+/* ==============================================================================================
+   2 · THE PANEL — a paper sheet with a hairline edge (no lit arris on paper, §1.4). Its clocks are declared here and
+   each family re-points them — nothing below is a duration of its own —, with the closed pose the panel leaves to and
+   comes from (§3). A popover holds rows; the head, body and foot of the other kinds are _overlay-panels.css's.
+   ============================================================================================== */
+.overlay {
+  --overlay-in: var(--motion-standard);          /* the way in */
+  --overlay-in-ease: var(--ease-enter);
+  --overlay-out: var(--motion-fast);             /* the way out (MS-O2: a small surface on the entrance curve) */
+  --overlay-out-ease: var(--ease-enter);
+  --overlay-closed-opacity: 0;                   /* the closed pose */
+  --overlay-closed-translate: none;
+  --overlay-closed-scale: none;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  max-inline-size: none;
+  max-block-size: none;
+  overflow: hidden;
+  border: 1px solid var(--line-rhythm);
+  background: var(--surface-raised);
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  /* above the page while it is outside the top layer: a non-modal drawer, an exit where `overlay` does not
+     transition (Firefox, Safari) */
+  z-index: var(--z-modal);
+  /* 3 · the closed pose, and the way OUT */
+  opacity: var(--overlay-closed-opacity);
+  translate: var(--overlay-closed-translate);
+  scale: var(--overlay-closed-scale);
+  transition:
+    opacity var(--overlay-out) var(--overlay-out-ease),
+    translate var(--overlay-out) var(--overlay-out-ease),
+    scale var(--overlay-out) var(--overlay-out-ease),
+    display var(--overlay-out) allow-discrete,
+    overlay var(--overlay-out) allow-discrete;
+}
+
+/* a popover's rows: 36 px on a fine pointer, 44 under a coarse one (§8); a press is a colour at 0 ms, no transform
+   (navigation never moves under a finger, MS §9) */
+.overlay__list { display: grid; margin: 0; padding: 0; list-style: none; }
+.overlay__list > li { display: grid; }
+.overlay__list > li > form { display: grid; margin: 0; }
+.overlay__item {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  inline-size: 100%;
+  min-block-size: var(--menu-row-h);
+  padding-block: var(--s-2);
+  padding-inline: var(--s-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-exit);
+}
+.overlay__item .icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--icon-default); }
+.overlay__item:focus-visible { outline-offset: -2px; }
+@media (hover: hover) and (pointer: fine) {
+  .overlay__item:hover { background-color: var(--surface-hover); transition-timing-function: var(--ease-enter); }
+}
+.overlay__item:active { background-color: var(--surface-hover); transition-duration: 0ms; }
+.overlay__item[aria-current] { font-weight: var(--w-title); }
+.overlay__sep { block-size: 0; margin: var(--s-1) 0; border: 0; border-block-start: 1px solid var(--line-rhythm); }
+.overlay__list > .overlay__sep { display: block; }
+
+/* ==============================================================================================
+   3 · OPEN AND CLOSED, BOTH WAYS. The panel's rule (§2) is the closed pose and carries the way OUT; the open state
+   carries only what changes and the way IN; @starting-style is the first frame of an opening. A closed panel is not
+   drawn (`display: none`, held by the discrete transition for the length of the exit), takes no pointer, and
+   overlay.js makes it `inert` as it closes (B2: engines where a leaving panel is outside the top layer).
+   A trapped modal (opened without showModal(), the INP rule) has no ::backdrop: the one .overlay-scrim below stands
+   under it — and under a menu shown as a phone sheet (§5), whose own ::backdrop lets every press through.
+   ============================================================================================== */
+.overlay:not([open]):not(:popover-open) { display: none; pointer-events: none; }
+.overlay:is([open], :popover-open) {
+  opacity: 1;
+  translate: none;
+  scale: none;
+  transition-duration: var(--overlay-in);
+  transition-timing-function: var(--overlay-in-ease);
+}
+@starting-style {
+  .overlay:is([open], :popover-open) {
+    opacity: var(--overlay-closed-opacity);
+    translate: var(--overlay-closed-translate);
+    scale: var(--overlay-closed-scale);
+  }
+}
+
+/* the trap's scrim (overlay.js, the INP rule of plan §1.14): ONE element under the topmost trapped panel — or under a
+   menu shown as a phone sheet — --scrim-modal, opacity only, never a blur, on that panel's clocks (data-kind); it
+   takes the press that closes the panel, and every other press on the page. A press is the scrim's whole, pointerdown
+   to click (`data-held`): a menu sheet is light-dismissed on the way up, and the scrim is still under the finger when
+   the click comes, so the page behind is never reached */
+.overlay-scrim {
+  --overlay-in: var(--motion-standard);
+  --overlay-out: var(--motion-fast);
+  --overlay-out-ease: var(--ease-enter);
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) - 1);
+  background: var(--scrim-modal);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--overlay-out) var(--overlay-out-ease);
+}
+.overlay-scrim[data-open] {
+  opacity: 1;
+  pointer-events: auto;
+  transition-duration: var(--overlay-in);
+  transition-timing-function: var(--ease-enter);
+}
+.overlay-scrim[data-kind="drawer"] {
+  --overlay-in: var(--motion-emphasized);
+  --overlay-out: var(--motion-standard);
+  --overlay-out-ease: var(--ease-layout);
+}
+.overlay-scrim[data-kind="sheet"] {
+  --overlay-out: var(--motion-standard);
+  --overlay-out-ease: var(--ease-layout);
+}
+.overlay-scrim[data-held] { pointer-events: auto; }
+
+/* overlay.js reads the menus' sizes once, at idle, on inert clones in this box: laid out, never seen, never focused —
+   so a menu knows its side before its first opening */
+.overlay-measure {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  visibility: hidden;
+  pointer-events: none;
+  contain: layout style;
+}
+.overlay.overlay[data-overlay-measure] {
+  display: flex;
+  position: static;
+  opacity: 1;
+  translate: none;
+  scale: none;
+  transition: none;
+}
+
+/* ==============================================================================================
+   4 · THE DRAWER AND THE POPOVER (the dialog, the alert and the bottom sheet: _overlay-panels.css)
+   ============================================================================================== */
+
+/* -- the drawer: «Slide» — the whole panel travels from its edge, opaque (EMIL §8: it matches gate 0's entrance to
+      0.1 px and adds the exit, the scrim and the retarget); in 320 ms on the entrance curve, out in 200 ms on the
+      layout curve; the scrim moves with the panel. The end edge by default (a detail); `data-overlay-edge="start"`
+      for navigation (the reading edge). The corners are the free edge's. A non-modal drawer (the preview drawer,
+      beside the list on desktop) has no scrim: show() draws none. */
+.overlay--drawer {
+  --overlay-in: var(--motion-emphasized);
+  --overlay-out: var(--motion-standard);
+  --overlay-out-ease: var(--ease-layout);
+  --overlay-closed-opacity: 1;
+  --overlay-edge: 1;
+  --overlay-closed-translate: calc(100% * var(--overlay-edge) * var(--dir)) 0;
+  position: fixed;
+  inset-block: 0;
+  inset-inline: auto 0;
+  inline-size: min(var(--drawer-w), 100%);
+  block-size: 100%;
+  border-block: 0;
+  border-inline-end: 0;
+  border-start-start-radius: var(--radius-xl);
+  border-end-start-radius: var(--radius-xl);
+  box-shadow: var(--shadow-4);
+}
+.overlay--drawer[data-overlay-edge="start"] {
+  --overlay-edge: -1;
+  inset-inline: 0 auto;
+  border-inline-start: 0;
+  border-inline-end: 1px solid var(--line-rhythm);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: var(--radius-xl);
+  border-end-end-radius: var(--radius-xl);
+}
+
+/* -- the popover / menu: anchored to its trigger, on the trigger's inline end (O-4: in Arabic the menu's left edge
+      on the trigger's left edge), 4 px away; it arrives by a 4 px drop AWAY from the trigger with opacity in 200 ms
+      and leaves in 120 ms (MS-O6: the panel's own clocks). overlay.js picks the side before it opens (below unless
+      the room is above) and binds the anchor; without anchor positioning it places the panel itself, with the same
+      flip and clamp. Its body is its rows (§2): nothing of the head / body / foot anatomy. */
+.overlay--popover {
+  --overlay-side: 1;
+  --overlay-closed-translate: 0 calc(-4px * var(--overlay-side));
+  position: fixed;
+  inset: auto;
+  inline-size: max-content;
+  min-inline-size: 12rem;
+  max-inline-size: min(22rem, calc(100vw - 2 * var(--s-2)));
+  block-size: auto;
+  max-block-size: min(calc(100dvh - 2 * var(--s-2)), 32rem);
+  padding: var(--s-1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-3);
+  z-index: var(--z-popover);
+}
+.overlay--popover[data-overlay-side="above"] { --overlay-side: -1; }
+/* a menu's name as a head line is the phone sheet's alone (§5): anchored, the menu stands beside the trigger that
+   names it */
+.overlay__caption { display: none; }
+/* the area is read in the panel's OWN direction (`self-`): the viewport's is the root's, and a menu in an Arabic run of
+   a Latin page — or the reverse — still aligns on its trigger's inline end */
+@supports (position-area: self-block-end span-self-inline-start) {
+  .overlay--popover {
+    margin-block: var(--s-1);
+    position-area: self-block-end span-self-inline-start;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+  .overlay--popover[data-overlay-side="above"] { position-area: self-block-start span-self-inline-start; }
+}
+
+/* ==============================================================================================
+   5 · ≤ 40rem (640 px): the menu becomes a bottom sheet and a modal drawer takes the whole width (the dialog's sheet
+   is _overlay-panels.css's). A menu as a sheet stays a menu — no trap, no scroll lock; Esc, the focus leaving and a
+   choice close it — but it stands over the one scrim, which takes the whole press that dismisses it: far from its
+   trigger, a sheet over a live page let that press act on whatever lay under it (a field focused, a link followed —
+   the W2-A review's M1). Its name — the group's `aria-label`, the piece's title, «Mon compte» — heads its rows in the
+   small secondary ink (.overlay__caption, drawn by components/popover.html and seen only here).
+   `data-overlay-phone="none"` keeps a small popover anchored, with neither.
+   ============================================================================================== */
+@media (max-width: 40rem) {
+  .overlay--popover:not([data-overlay-phone="none"]) {
+    --overlay-in: var(--spring-sheet-duration);
+    --overlay-in-ease: var(--spring-sheet);
+    --overlay-out: var(--motion-standard);
+    --overlay-out-ease: var(--ease-layout);
+    --overlay-closed-opacity: 1;
+    --overlay-closed-translate: 0 100%;
+    --overlay-bleed: var(--s-12);
+    inset: auto 0 calc(-1 * var(--overlay-bleed));
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: none;
+    max-block-size: calc(92dvh + var(--overlay-bleed));
+    padding: var(--s-2) var(--s-2) calc(var(--overlay-bleed) + env(safe-area-inset-bottom, 0px));
+    border-block-end: 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: var(--shadow-4);
+    position-area: none;
+  }
+  /* the sheet's head line: on the rows' own inline edge, above them */
+  .overlay--popover:not([data-overlay-phone="none"]) .overlay__caption {
+    display: block;
+    margin: 0;
+    padding-block: var(--s-1) var(--s-2);
+    padding-inline: var(--s-3);
+    color: var(--text-2);
+    font-size: var(--u-small);
+    line-height: var(--u-small-lh);
+    font-weight: var(--w-body);
+    overflow-wrap: anywhere;
+  }
+  .overlay--drawer:not([data-overlay-mode="sheet"]) {
+    inline-size: 100%;
+    border-inline: 0;
+    border-radius: 0;
+  }
+}
+
+/* ==============================================================================================
+   6 · THE TOOLTIP — the visible twin of an icon-only control's name (R-21). What a product page draws is the
+   top-layer tip (`data-tip="layer"`; the rail's words, «⋮» of a register row): ONE shared .tooltip, a manual popover
+   that overlay.js places beside its control — or beyond the ancestor `data-tip-beyond` names —, after --tooltip-delay
+   (400 ms) under the pointer and at once under the keyboard's focus, fading in --motion-fast and leaving at 0 ms; the
+   pointer may rest on it (WCAG 1.4.13: a 120 ms way across), a warm neighbour shows at once, Esc and a press put it
+   away. Its ::backdrop is the platform's: transparent, it takes no press. No tip on a phone (≤ 40rem) nor where nothing
+   hovers: the name is the control's accessible name. The control's own ::after (`data-tip` without "layer": no
+   markup, no script) and its CSS warm group are page-only, with the panels (_overlay-panels.css): no product page
+   draws them today.
+   ============================================================================================== */
+:where([data-tip]) { position: relative; }
+.tooltip {
+  box-sizing: border-box;
+  position: fixed;
+  inset: auto;
+  inline-size: max-content;
+  max-inline-size: min(20rem, calc(100vw - 2 * var(--s-4)));
+  margin: 0;
+  padding: var(--s-1) var(--s-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  overflow: visible;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: break-word;
+  opacity: 0;
+  transition: opacity 0ms, display 0ms allow-discrete, overlay 0ms allow-discrete;
+}
+.tooltip:not(:popover-open) { display: none; }
+.tooltip:popover-open { opacity: 1; transition: opacity var(--motion-fast) var(--ease-enter); }
+@starting-style { .tooltip:popover-open { opacity: 0; } }
+.tooltip[data-instant]:popover-open { transition: none; }
+
+@media (max-width: 40rem) {
+  .tooltip { display: none; }
+}
+
+/* ==============================================================================================
+   7 · THE SCROLL LOCK — while a modal kind is open the page behind does not scroll; where the page had a
+   scrollbar its gutter is kept (`="gutter"`, measured by overlay.js), so nothing moves sideways (O8).
+   ============================================================================================== */
+html[data-overlay-lock] { overflow: hidden; }
+html[data-overlay-lock="gutter"] { scrollbar-gutter: stable; }
+
+/* ==============================================================================================
+   8 · NO SCRIPT, REDUCED MOTION, FORCED COLOURS, TOUCH, PAPER — and, last, THE KEYBOARD
+   (_overlay-panels.css says them again for its families, after their rules)
+   ============================================================================================== */
+/* no script: an opener is a link to its panel (`href="#id"`), and the link shows the panel in place, over the page;
+   «Fermer» is a link back — the panel appears and leaves at once (nothing of the system's clocks without its script).
+   A popover opens natively. */
+html.no-js .overlay { transition: none; }
+html.no-js .overlay:target {
+  display: flex;
+  opacity: 1;
+  translate: none;
+  scale: none;
+  pointer-events: auto;
+  z-index: var(--z-modal);
+}
+
+/* reduced motion is a state (MS-O4, RM-1): every overlay appears and leaves in one 80 ms opacity, with no transform
+   at any frame — the closed pose is the open pose, transparent */
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    --overlay-closed-opacity: 0;
+    --overlay-closed-translate: none;
+    --overlay-closed-scale: none;
+  }
+  .overlay,
+  .overlay:is([open], :popover-open) {
+    transition: opacity var(--motion-reduced) linear, display var(--motion-reduced) allow-discrete, overlay var(--motion-reduced) allow-discrete;
+  }
+  .overlay-scrim,
+  .overlay-scrim[data-open] { transition: opacity var(--motion-reduced) linear; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 40rem) {
+  .overlay--popover:not([data-overlay-phone="none"]) {
+    --overlay-closed-opacity: 0;
+    --overlay-closed-translate: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .overlay { border: 1px solid CanvasText; }
+  .overlay__sep { border-block-start-color: CanvasText; }
+  .tooltip { outline: 1px solid CanvasText; outline-offset: -1px; }
+  .overlay__item[aria-current] { outline: 2px solid Highlight; outline-offset: -2px; }
+}
+
+@media (pointer: coarse) {
+  .overlay__item { min-block-size: var(--hit-primary); }
+}
+
+@media print {
+  .overlay,
+  .overlay-scrim,
+  .tooltip { display: none !important; }
+}
+
+/* tier 0 (R-07), last so that it wins over every clock above, reduced motion's included: a panel opened or closed
+   from the keyboard — or opened `instant` by a script — and a tip shown by the focus change at once */
+html[data-input="key"] .overlay,
+html[data-input="key"] .overlay-scrim,
+html[data-input="key"] .tooltip,
+html[data-input="key"] .overlay__item,
+.overlay.overlay[data-instant],
+.overlay-scrim.overlay-scrim[data-instant] { transition-duration: 0ms; }
+
+/* ==============================================================================================
+   9 · THE ACCOUNT POPOVER'S TRIGGER (templates/components/account_menu.html): the person glyph, the short name — cut
+   by an ellipsis where its seat is short, whole in the trigger's accessible name — and a chevron, on a button
+   (`popovertarget`, the console's top bar) or on design V4's summary (the letterhead's, until W2-C2). The panel is
+   §4's popover; where the trigger stands draws it (v5/_shell.css in the console, v5/chrome.css in the letterhead).
+   No motion of its own.
+   ============================================================================================== */
+.account-menu__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  max-inline-size: 14rem;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--s-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--w-control);
+  list-style: none;
+  cursor: pointer;
+}
+.account-menu__summary::-webkit-details-marker { display: none; }
+.account-menu__name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

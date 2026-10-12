@@ -1,0 +1,162 @@
+/* ============================================================================================
+   ALIASES V5 — the V1 / V2 / V4 names re-pointed at the V5 values (W1-A; DESIGN_SYSTEM_V5 §13)
+   Architecture A, «in place, alias-first» (docs/design-v5/V5_4_EXECUTION_PLAN.md §2.1): every legacy
+   sheet keeps its names and takes the V5 values, so every page is re-valued at once — a page is
+   «V4 + fondation» until its own family passes. A regression is fixed HERE, never in a template.
+   Loaded after static/css/v5/tokens.css. Where a value is not the same as the name had in V4, the
+   line says so. A name the legacy layers use with a meaning V5 gives another value keeps its legacy
+   meaning here until its owning family retargets the consumers, and the line names that family.
+   The declarations of V1 tokens.css, v2/tokens.css (brand colours excepted) and v4/tokens.css that
+   this file re-declares, and the adopted names of _legacy-tokens.css, leave those sheets in W1-A's
+   deletion step (plan §2.3, the deletion map).
+   ============================================================================================ */
+
+:root {
+  /* ---- the paper and the ink (same hex) ----------------------------------------------------- */
+  --min-0: var(--p-carta-50);
+  --min-1: var(--p-carta-100);
+  --min-2: var(--p-carta-25);
+  --min-3: var(--p-carta-0);
+  --ink: var(--p-inchiostro-900);
+  --ink-2: var(--p-inchiostro-600);
+  --ink-3: var(--p-inchiostro-500);
+  --hairline: var(--p-carta-200);
+  --hairline-strong: var(--p-inchiostro-400);
+
+  /* ---- the night (same hex) ------------------------------------------------------------------ */
+  --mid-0: var(--p-notte-950);
+  --mid-1: var(--p-notte-900);
+  --mid-2: var(--p-notte-850);
+  --mid-3: var(--p-notte-800);
+  --mid-4: var(--p-notte-700);
+  --on-dark: var(--p-notte-50);
+  --on-dark-2: var(--p-notte-200);
+  --on-dark-3: var(--p-notte-400);
+  --edge-dark: var(--line-night);
+  --hairline-dark: var(--line-night-soft);
+  --surface-soft-dark: var(--accent-night-fade);
+
+  /* ---- the accent (same hex) ----------------------------------------------------------------- */
+  --accent: var(--p-laguna-700);
+  --accent-2: var(--p-laguna-650);
+  --accent-3: var(--p-laguna-600);
+  --accent-hover: var(--p-laguna-800);
+  --accent-dark: var(--p-laguna-400);
+  --accent-dark-2: var(--p-laguna-350);
+  --accent-dark-hover: var(--p-laguna-300);
+  --accent-ring: var(--p-laguna-550);
+
+  /* ---- focus (plan §1.6): one ring; the halo belongs to text fields (static/css/v5/base.css) --- */
+  --focus-ring-color: var(--p-laguna-550);
+  --focus-ring-inverse: var(--p-laguna-400);
+  --focus-ring-offset-color: var(--p-carta-50);
+
+  /* ---- the four audiences on night: NOT the same — Persona on sand (O19), Istituzione «argento»
+          (PC C8); the hero-final council's measured set wins if it records another (plan §1.2) ------ */
+  --route-1-dark: var(--aud-persona);
+  --route-2-dark: var(--aud-impresa);
+  --route-3-dark: var(--aud-istituzione);
+  --route-4-dark: var(--aud-universita);
+
+  /* ---- states: NOT the same — garnet replaces the crude red, amber the brown, the bronze seal
+          retires to the navy disc (DS §13). --pending-700 was a TEXT colour (6.7:1): it takes the
+          amber word, not the amber mark (3.57:1 would fail as text). ------------------------------- */
+  --err-700: var(--tone-rifiuto-mark);
+  --err-300: var(--tone-rifiuto-night-text);
+  --err-100: var(--tone-rifiuto-bg);
+  --err-hover: var(--p-granata-800);
+  --pending-700: var(--tone-attesa-text);
+  --pending-300: var(--tone-attesa-night-text);
+  --seal-600: var(--seal-disc);
+  --seal-300: var(--p-oro-300);
+  --seal-100: var(--p-notte-50);
+  /* V1's five state triplets → the V5 notices (NOT the same): done and info are facts, on the slate
+     wash (C2); pending in the register's lapis (C1) */
+  --state-done-fg: var(--notice-info-text);
+  --state-done-bg: var(--notice-info-bg);
+  --state-done-br: var(--notice-info-edge);
+  --state-info-fg: var(--notice-info-text);
+  --state-info-bg: var(--notice-info-bg);
+  --state-info-br: var(--notice-info-edge);
+  --state-warn-fg: var(--notice-warning-text);
+  --state-warn-bg: var(--notice-warning-bg);
+  --state-warn-br: var(--notice-warning-edge);
+  --state-error-fg: var(--notice-error-text);
+  --state-error-bg: var(--notice-error-bg);
+  --state-error-br: var(--notice-error-edge);
+  --state-pending-fg: var(--notice-pending-text);
+  --state-pending-bg: var(--notice-pending-bg);
+  --state-pending-br: var(--notice-pending-edge);
+  /* the hatch and the dots of the HealthStrip: the V5 patterns (the hatch now at α 0.78, C4) */
+  --texture-hatch: var(--pattern-hatch);
+  --texture-dots: var(--pattern-dots);
+
+  /* ---- materials: NOT the same — every primary flat (SH-9, DL54-13): the V4 gradients become one
+          colour; on night the paper plate; no glow; glass only on the two sticky bars, so the V4
+          glass panels lose their blur and take the solid night plate (SH-5); the modal scrim is
+          opacity only ------------------------------------------------------------------------------- */
+  --grad-primary: linear-gradient(var(--fill-primary), var(--fill-primary));
+  --grad-primary-hover: linear-gradient(var(--fill-primary-hover), var(--fill-primary-hover));
+  --grad-primary-press: linear-gradient(var(--fill-primary-press), var(--fill-primary-press));
+  --grad-primary-dark: linear-gradient(var(--fill-primary-night), var(--fill-primary-night));
+  --grad-primary-dark-hover: linear-gradient(var(--fill-primary-night-hover), var(--fill-primary-night-hover));
+  --grad-primary-dark-press: linear-gradient(var(--fill-primary-night-press), var(--fill-primary-night-press));
+  --shadow-glow: 0 0 0 0 transparent;
+  --shadow-glow-dark: 0 0 0 0 transparent;
+  --accent-glow: transparent;
+  --glass-dark: var(--plate-night);
+  --blur-panel: 0px;
+  --blur-scrim: 0px;
+  --scrim: var(--scrim-modal);
+  --shadow-surface: var(--shadow-4);
+
+  /* ---- corners «Lo spigolo» (plan §1.3): buttons and fields on sm (4), the brand tile on md (6) ---- */
+  --radius-control: var(--radius-sm);
+  --radius-tile: var(--radius-md);
+  --radius-pill: var(--radius-full);
+
+  /* ---- controls: --hit-min keeps its V4 meaning, 44 px, for the sixteen V4 controls that read it
+          (v4/shell.css, v4/buttons.css, v4/workspace.css, the console) until W1-C retargets them to
+          --control-* and --hit-primary; V5's floor is 24 px on a fine pointer (plan §1.8) ------------- */
+  --hit-min: var(--hit-primary);
+  --control-height: var(--control-md);
+  --control-height-sm: var(--control-sm);
+
+  /* ---- type «Una voce»: NOT the same — Host Grotesk replaces Newsreader, IBM Plex Sans and the Fira
+          names; ILE Mono replaces IBM Plex Mono; Vazirmatn replaces Noto Naskh Arabic and IBM Plex Sans
+          Arabic (plan §1.1) ------------------------------------------------------------------------- */
+  --font-display: var(--f-sans-lat);
+  --font-ui: var(--f-sans-lat);
+  --font-ref: var(--f-mono);
+  --font-mono: var(--f-mono);
+  --font-display-ar: var(--f-sans-ar);
+  --font-ui-ar: var(--f-sans-ar);
+  /* V1's ten roles on the eight public sizes (64 · 36 · 28 · 20 · 17 · 15 · 13 · 12): V1 stepped the
+     display sizes per breakpoint; V5 holds the titles and lets only the display line move */
+  --t-plate-size: var(--t-display);
+  --t-title-size: var(--t-title);
+  --t-band-size: var(--t-band);
+  --t-entry-size: var(--t-entry);
+  --t-lead-size: var(--t-lead);
+  --t-prose-size: var(--t-body);
+  --t-prose-lh: var(--t-body-lh);
+  --t-gloss-size: 0.9375rem;
+  --t-gloss-lh: 1.5rem;
+  --t-caption-size: var(--t-small);
+  --t-ui-size: var(--t-ui);
+  --t-folio-size: var(--t-small);
+  --t-numeral-size: var(--u-numeral);
+  --t-numeral-lh: var(--u-numeral-lh);
+  --track-caps-display: var(--track-display-caps);
+  /* measures in rem (TR C1) */
+  --measure-prose: var(--measure-body);
+  --measure-gloss: var(--measure-small);
+}
+
+/* V1 re-points its two family names on Arabic pages with :root:lang(ar) (0,2,0): the Arabic stack
+   above follows. A French, Italian or English run on an Arabic page takes the Latin stack back through
+   the legacy names too (gate-0 A6 bis; static/css/v5/tokens.css does the same for --f-sans). */
+:where(:root:lang(ar)) :where([lang="fr"], [lang="it"], [lang="en"]) {
+  --font-display: var(--f-sans-lat);
+  --font-ui: var(--f-sans-lat);
+}

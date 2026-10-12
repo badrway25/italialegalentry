@@ -45,19 +45,34 @@ _PHONE_RE = re.compile(r"^\+?[0-9 ().-]{6,40}$")
 
 
 class ProfileForm(PublicFormMixin, forms.Form):
-    full_name = forms.CharField(label=_("Nom et prénom"), max_length=160, required=False)
+    # Each personal field says what it is for (WCAG 2.2 AA, 1.3.5 «identify input purpose» — W3-F2's accessibility
+    # check, A2), as SignupForm's name does: a browser can fill it, assistive technology can name it. The telephone is
+    # typed `tel` (the dialling keypad on a phone; base.css keeps it left to right on an Arabic page); the validation
+    # stays the form's own (`clean_phone`).
+    full_name = forms.CharField(
+        label=_("Nom et prénom"),
+        max_length=160,
+        required=False,
+        widget=forms.TextInput(attrs={"autocomplete": "name"}),
+    )
     preferred_language = forms.ChoiceField(
         label=_("Langue de communication"),
         choices=settings.LANGUAGES,
-        widget=LanguageSelect,
+        widget=LanguageSelect(attrs={"autocomplete": "language"}),
     )
     phone = forms.CharField(
         label=_("Téléphone"),
         max_length=40,
         required=False,
         help_text=_("Facultatif — utilisé uniquement pour le suivi de vos demandes."),
+        widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel", "inputmode": "tel"}),
     )
-    country_of_residence = forms.CharField(label=_("Pays de résidence"), max_length=80, required=False)
+    country_of_residence = forms.CharField(
+        label=_("Pays de résidence"),
+        max_length=80,
+        required=False,
+        widget=forms.TextInput(attrs={"autocomplete": "country-name"}),
+    )
 
     def __init__(self, *args, user=None, profile=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -231,7 +246,7 @@ def _tristate_value(value) -> str:
 
 
 def _tristate_to_bool(value):
-    """"" means the person has not answered — which is different from answering "no"."""
+    """ "" means the person has not answered — which is different from answering "no"."""
     if value == "yes":
         return True
     if value == "no":

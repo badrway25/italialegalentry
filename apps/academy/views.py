@@ -65,26 +65,16 @@ def academy_view(active: str = "academy", methods: tuple[str, ...] = ("GET", "HE
 
 def _navigation(user, active: str) -> list[dict]:
     """
-    The platform navigation, with the Academy entries added.
+    The console's rail on the Academy's pages, with the Academy marked.
 
-    ``portal.services.navigation`` belongs to another lane and does not know about the Academy yet;
-    rather than edit it, its result is extended here and the Academy entry is skipped if it appears
-    there later, so nothing is ever listed twice.
+    ``portal.services.shell_navigation`` builds the rail of «Espace réservé» for every page of the
+    console (design V5, V5.4 plan §1.18 D06; W3-A), and the Academy is one of its rows. «Mes
+    formations» is reached from the catalogue and marks the same row: it used to be a second row
+    that existed on the Academy's pages only, so the rail changed when one entered the module.
     """
     from portal import services as portal_services
 
-    items = [dict(item) for item in portal_services.navigation(user, "")]
-    known = {item.get("key") for item in items}
-    extra = (
-        ("academy", _("Academy"), public_url("academy:catalogue")),
-        ("academy_mine", _("Mes formations"), public_url("academy:mine")),
-    )
-    for key, label, url in extra:
-        if key not in known and url:
-            items.append({"key": key, "label": label, "url": url})
-    for item in items:
-        item["current"] = item.get("key") == active
-    return items
+    return portal_services.shell_navigation(user, active="academy" if active.startswith("academy") else active)
 
 
 def _crumb(label) -> dict:

@@ -8,6 +8,7 @@ import re
 import pytest
 from freezegun import freeze_time
 
+from cms import locked_content
 from cms.forbidden import scan
 from cms.models import PublicationStatus
 from core import flags
@@ -37,10 +38,9 @@ OPEN_ORDER = [
     "pilot",
     "trust",
     "antifraud",
-    "news",
     "ecosystem",
     "reserved",
-]
+]  # no news chapter while no article is live (the review fix, m4): the tests that need it publish one
 
 
 # ---------------------------------------------------------------------------------------------
@@ -67,16 +67,21 @@ def test_arabic_home_is_rtl_and_marks_french_fallback(page, seeded, phase3_open)
     _response, html = page("/ar/")
     assert '<html lang="ar" dir="rtl"' in html
     assert " is-rtl" in html
-    # Prescribed texts have no official Arabic version: French, explicitly tagged.
-    assert re.search(r'<h1 class="hero__title" id="hero-title"[^>]* lang="fr"', html)
-    assert 'class="antifraud-panel__body" lang="fr"' in html
+    # Prescribed texts have no official Arabic version: French, explicitly tagged — in the V5 hero the h1 holds the
+    # name (visually hidden) and the promise, each a locked text in its own span. The promise carries the fallback
+    # marker; the name is an English name on every page and says so, as the header's lock-up does (a11y F10).
+    assert re.search(r'<span class="visually-hidden he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
+    assert '<span class="he__promise" lang="fr" dir="ltr">' in html
+    assert 'class="gradino__body" lang="fr"' in html
 
 
 def test_french_home_has_no_fallback_lang_attributes_on_locked_texts(page, seeded, phase3_open):
     _response, html = page("/fr/")
-    assert re.search(r'<h1 class="hero__title" id="hero-title"[^>]* translate="no"', html)
-    assert not re.search(r'<h1 class="hero__title"[^>]* lang="', html)
-    assert 'class="antifraud-panel__body">' in html
+    # the name's own language is not a fallback marker: «Italy Legal Entry» is English on the French page too
+    assert re.search(r'<span class="visually-hidden he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
+    assert not re.search(r'<h1 class="he__title"[^>]* lang="', html)
+    assert '<span class="he__promise">' in html
+    assert 'class="gradino__body">' in html
 
 
 def test_heading_outline_is_logical(page, seeded, phase3_open):
@@ -95,7 +100,10 @@ def test_home_has_no_inline_style_or_external_resource(page, seeded, phase3_open
     urls = re.findall(r'(?:src|href|srcset|content|action)="(https?://[^"]+)"', html)
     assert [u for u in urls if "testserver" not in u] == []
     assert 'href="/static/css/dist/pages/css/pages.css"' in html
-    assert '<script type="module" src="/static/pages/js/home.js"></script>' in html
+    assert 'href="/static/css/dist/pages/css/hero.css"' in html
+    # The home's one script (V5.4 plan §2.3): the hero's module and the dismissible notice, bundled by esbuild.
+    assert '<script type="module" src="/static/js/dist/home.js"></script>' in html
+    assert "/static/pages/js/home.js" not in html
 
 
 # ---------------------------------------------------------------------------------------------
@@ -116,10 +124,22 @@ def test_phase3_hero_renders_exact_prescribed_texts(page, seeded, phase3_open):
     _response, html = page("/fr/")
     assert 'data-hero-variant="phase3"' in html
     hero = html.split('data-section="hero"', 1)[1].split("</section>", 1)[0]
-    assert h1_text(hero) == text_of("p3.hero.title")
-    assert escaped(text_of("p3.hero.subtitle")) in hero
+    # The V5 hero's one h1: the locked name (visually hidden, for assistive technology and search) and the locked
+    # promise in sight — each whole, character for character (HERO_FINAL.md §2.1; plan §1.17 «one brand expression»).
+    name = re.search(r'<span class="visually-hidden he__name"[^>]*>(.*?)</span>', hero, flags=re.S).group(1)
+    promise = re.search(r'<span class="he__promise"[^>]*>(.*?)</span>', hero, flags=re.S).group(1)
+    assert name.strip() == escaped(text_of("p3.hero.title"))
+    assert promise.strip() == escaped(text_of("p3.hero.subtitle"))
+    assert h1_text(hero) == f"{text_of('p3.hero.title')} {text_of('p3.hero.subtitle')}"
     assert escaped(text_of("p3.hero.body")) in hero
     assert "Un écosystème pour les parcours réguliers" not in hero
+    # The path's stations: the shore, then the pilot sequence's second to sixth steps — whole, in their prescribed
+    # order.
+    sequence = locked_content.LOCKED_TEXTS["fr"]["p3.pilot.sequence"]
+    labels = re.findall(r'<span class="he-station__label"[^>]*>(.*?)</span>', hero, flags=re.S)
+    assert labels == ["Maroc", *(escaped(step) for step in sequence[1:6])]
+    assert hero.count("data-station=") == 6
+    assert escaped(sequence[0]) not in hero and escaped(sequence[6]) not in hero
 
 
 def test_date_alone_does_not_switch_the_hero(page, seeded, set_flag):
@@ -154,9 +174,122 @@ def test_the_hero_carries_the_owners_doorway_and_no_uncaptioned_figure(page, see
     it, and is the only image of the hero. It is not a <figure>: nothing to caption."""
     _response, html = page("/fr/")
     hero = html.split('data-section="hero"', 1)[1].split("</section>", 1)[0]
-    assert 'class="doorway__img"' in hero and 'class="doorway__key"' in hero and 'class="doorway__steps"' in hero
+    # The V5 stage (W2-D): the photograph is a <picture> of the door-master derivatives in stage units — the LCP
+    # element, the one high-priority image —, the arch, the inner door and the steps stay the SVG, the key is an HTML
+    # layer that turns once; no <image> element is left.
+    assert 'class="door-stage__photo"' in hero and 'class="door-stage__key doorway__key"' in hero
+    assert 'class="doorway__steps"' in hero and 'class="doorway__arch"' in hero and 'class="doorway__inner"' in hero
     assert "<figure" not in hero
-    assert hero.count("<image ") == 2, "the photograph and the key, nothing else"
+    assert hero.count("<image ") == 0
+    assert hero.count('fetchpriority="high"') == 1, "the door's photograph, nothing else"
+    assert hero.count("<picture") == 9, "the door and the four origins' two layers (black-and-white, colour)"
+    assert hero.count('loading="lazy"') == 8, "every photograph but the door is lazy"
+    assert "doorway-arch-576.webp" in hero and "doorway-arch-1200.avif" in hero
+
+
+def test_the_four_photographs_pair_with_the_four_entrances_in_order(page, seeded):
+    """The template pairs the photographs with the entrances BY ORDER ({% cycle %}): the order of
+    pages.content.ENTRANCES is the pairing, and this test is what holds it (PROVENANCE.json names the audiences)."""
+    _response, html = page("/fr/")
+    hero = html.split('data-section="hero"', 1)[1].split("</section>", 1)[0]
+    pairs = re.findall(r'data-aud="([a-z]+)" data-photo="([a-z-]+)"', hero)
+    assert pairs == [
+        ("person", "lectrice-bibliotheque-dos"),
+        ("company", "chai-cuve-chene"),
+        ("institution", "table-en-seance"),
+        ("university", "paillasse-deux-etudiantes"),
+    ]
+    for _actor, slug in pairs:
+        # src and srcset, in the black-and-white layer and in the colour layer
+        assert hero.count(f"he-{slug}-1x1-192.webp") == 4, slug
+
+
+def test_the_doors_preload_and_sources_are_character_identical(page, seeded):
+    """CD C-9: the preload (home.html) and the hero's AVIF <source> carry the same candidates and the same sizes, so the
+    preloaded file is the one the browser then picks."""
+    _response, html = page("/fr/")
+    preload = re.search(
+        r'<link rel="preload" as="image" type="image/avif" fetchpriority="high" imagesrcset="([^"]+)" '
+        r'imagesizes="([^"]+)">',
+        html,
+    )
+    assert preload, "the door's preload"
+    source = re.search(r'<source type="image/avif" srcset="([^"]+doorway-arch[^"]+)" sizes="([^"]+)">', html)
+    assert source, "the door's AVIF source"
+    assert preload.group(1) == source.group(1) and preload.group(2) == source.group(2)
+    webp = re.search(r'<source type="image/webp" srcset="([^"]+doorway-arch[^"]+)" sizes="([^"]+)">', html)
+    assert webp and webp.group(2) == source.group(2)
+
+
+def _aria_hidden_ancestors_of(html: str, needle: str) -> list[str]:
+    """The open elements carrying aria-hidden="true" around the first element whose start tag contains ``needle``."""
+    from html.parser import HTMLParser
+
+    void = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+    class Walker(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.stack: list[tuple[str, bool]] = []
+            self.found: list[str] | None = None
+
+        def handle_starttag(self, tag, attrs):
+            hidden = dict(attrs).get("aria-hidden") == "true"
+            text = self.get_starttag_text() or ""
+            if self.found is None and needle in text:
+                self.found = [t for t, h in self.stack if h]
+            if tag not in void:
+                self.stack.append((tag, hidden))
+
+        def handle_endtag(self, tag):
+            for i in range(len(self.stack) - 1, -1, -1):
+                if self.stack[i][0] == tag:
+                    del self.stack[i:]
+                    break
+
+    walker = Walker()
+    walker.feed(html)
+    assert walker.found is not None, needle
+    return walker.found
+
+
+@pytest.mark.parametrize(
+    "lang, label",
+    [("fr", "Rejouer l’animation de la porte"), ("ar", "إعادة تشغيل الرسوم المتحركة للباب")],
+)
+def test_the_niche_is_decorative_and_its_one_control_is_the_replay_button(page, seeded, lang, label):
+    """The review fix (design V5.4, W2-D, 9 October 2026): keyboard users get the repeatable flow too. The door stage
+    stays decorative (aria-hidden on the stage, the reveal and the halo — not on the niche), and beside the stage, in
+    the door box, stands the one control of the niche: a real button over the golden key, named by the catalogue in
+    the page's language, outside every aria-hidden subtree (a focusable control inside one would be unreachable for
+    assistive technology). hero.js shows it only on a page that moves; hero.css hides it under reduced motion and
+    forced colours."""
+    _response, html = page(f"/{lang}/")
+    hero = html.split('data-section="hero"', 1)[1].split("</section>", 1)[0]
+    assert '<div class="he-niche" data-niche>' in hero, "the niche itself is not aria-hidden: it holds a control"
+    assert '<div class="door-stage he-door" data-door aria-hidden="true">' in hero
+    assert '<span class="he-niche__reveal" aria-hidden="true">' in hero
+    assert 'class="he-niche__halo" aria-hidden="true"' in hero
+    button = f'<button type="button" class="he-replay" data-replay aria-label="{label}"></button>'
+    assert hero.count(button) == 1, "one replay control, named in the page's language"
+    assert hero.count("<button") == 1
+    assert _aria_hidden_ancestors_of(hero, 'class="he-replay"') == []
+    # the key's light response: its halo behind the key and the glint inside the key, both decorative layers of the
+    # stage
+    assert 'class="kt__l he-key-halo" data-key-halo' in hero and 'class="kt__l kg__glint" data-key-glint' in hero
+    assert _aria_hidden_ancestors_of(hero, "data-key-glint") == ["div"]
+
+
+def test_interim_hero_draws_the_path_the_origins_and_the_door_without_a_station(page, seeded):
+    """While gate G3 is closed the pilot sequence may not be shown: the path, the four origins and the door are drawn,
+    the stations are not (test_no_phase3_prescribed_text_while_gate_closed holds the words)."""
+    _response, html = page("/fr/")
+    hero = html.split('data-section="hero"', 1)[1].split("</section>", 1)[0]
+    assert 'data-hero-variant="interim"' in hero
+    assert "data-station=" not in hero and "he-stations" not in hero
+    assert hero.count("<picture") == 9 and 'class="door-stage__photo"' in hero
+    assert hero.count('class="he-origin"') == 4
+    assert 'class="he__eyebrow"' in hero
 
 
 def test_hero_disabled_keeps_exactly_one_h1(page, seeded):
@@ -195,7 +328,9 @@ def test_phase3_prescribed_texts_present_when_open(page, seeded, phase3_open):
         assert escaped(text_of(key)) in html, key
     from cms import locked_content
 
-    for step in locked_content.get("p3.pilot.sequence", "fr")[0]:
+    # The pilot sequence is on the page where the hero's path carries it (its second to sixth steps, after the
+    # origin's shore): the chapters under the hero do not print it a second time (below: the model is said once).
+    for step in locked_content.get("p3.pilot.sequence", "fr")[0][1:6]:
         assert escaped(step) in html
     for pathway in locked_content.get("p3.persons.pathways", "fr")[0]:
         assert escaped(pathway["title"]) in html
@@ -243,9 +378,12 @@ def test_exactly_four_entrances_gate_closed(page, seeded):
     ]
     # The four line drawings are retired with the cards that carried them: "a section of identical
     # cards" and "every card containing an icon" at once, on the four most important links of the
-    # site. What replaces them is an ordinal — a position in a register, which is information.
+    # site. Design V5.4 (W2-D step 3) retires what replaced them too: the four are never ranked, so no
+    # ordinal 01–04, and no landform glyph nobody could decode — each row is its title, its sentence and
+    # its call, with one arrow beside the call's words.
     assert not any("entrance-" in item and ".svg" in item for item in items)
-    assert all('class="entry__ordinal"' in item for item in items)
+    assert not any("entry__ordinal" in item or "route__glyph" in item for item in items)
+    assert all(item.count("#icon-arrow") == 1 and 'class="entry__cta"' in item for item in items)
 
 
 def test_exactly_four_entrances_phase3_open_with_prescribed_texts(page, seeded, phase3_open):
@@ -352,7 +490,10 @@ def test_trust_gate_closed_uses_phase1_fragments_and_neutral_statements(page, se
     _response, html = page("/fr/")
     block = html.split('data-section="trust"', 1)[1].split("</section>", 1)[0]
     assert 'data-trust="interim"' in block
-    assert escaped(text_of("p1.persons.replacement_1")) in block
+    # One thing once (pages.services._say_once): the hero's description IS the first of the two Phase 1 fragments,
+    # so the chapter lists the other one and does not print the hero's sentence a second time.
+    assert escaped(text_of("p1.persons.replacement_1")) not in block
+    assert html.count(escaped(text_of("p1.persons.replacement_1"))) == 1
     assert escaped(text_of("p1.persons.replacement_2")) in block
     assert block.count('class="home-trust__column"') == 2
     assert 'href="/fr/avvertenze/"' in block
@@ -373,7 +514,7 @@ def test_antifraud_renders_nothing_while_gate_closed(page, seeded):
     _response, html = page("/fr/")
     main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
     assert 'data-section="antifraud"' not in main
-    assert "antifraud-panel" not in main
+    assert "gradino" not in main and "antifraud-panel" not in main
     assert "fraude" not in main.lower()  # no substitute text is invented
 
 
@@ -383,7 +524,9 @@ def test_antifraud_callout_links_the_page_when_open(page, seeded, phase3_open):
     assert escaped(text_of("p3.antifraud.title")) in block
     assert escaped(text_of("p3.antifraud.body")) in block
     assert 'href="/fr/attention-aux-fraudes/"' in block
-    assert "#icon-shield" in block
+    # one sign for one warning: the registry's glyph of «Attention aux fraudes» (apps/core/icons.py), the one the
+    # footer and the navigation's panels draw beside it — never the account-security shield
+    assert block.count("#icon-shield-alert") == 1 and '#icon-shield"' not in block
 
 
 def test_gate_cannot_be_bypassed_from_the_back_office(before_the_forum, page, seeded):
@@ -409,10 +552,25 @@ def test_news_section_appears_before_phase3_once_an_article_is_published(page, s
     assert "Programme du Forum publié" in html
 
 
-def test_news_empty_state_when_open_without_articles(page, seeded, phase3_open):
+def test_news_section_hidden_in_phase3_too_while_no_article_is_live(page, seeded, phase3_open):
+    """The review fix (design V5.4, W2-D, m4): with gate G3 open the home announced an empty chapter — «Actualités»,
+    then «Aucune actualité publiée pour le moment» — between the warning and the promoter. The chapter is on the home
+    once an article is live, in either gate state; the news' own page keeps its empty state, which says which space
+    is empty (DL54-33: the news' glyph, never the documents')."""
     _response, html = page("/fr/")
+    assert 'data-section="news"' not in html
+    assert "Aucune actualité publiée" not in html
+    _response, index = page("/fr/actualites/")
+    block = index.split('class="empty-state"', 1)[1].split("</div>", 1)[0]
+    assert "#icon-newspaper" in block and "#icon-document" not in block and "#icon-empty" not in block
+
+
+def test_news_section_appears_in_phase3_once_an_article_is_published(page, seeded, phase3_open, article_factory):
+    article_factory("Programme du Forum publié")
+    _response, html = page("/fr/")
+    assert section_order(html) == [*OPEN_ORDER[:7], "news", *OPEN_ORDER[7:]]
     block = html.split('data-section="news"', 1)[1].split("</section>", 1)[0]
-    assert 'class="empty-state"' in block
+    assert "Programme du Forum publié" in block and 'class="empty-state"' not in block
     assert 'href="/fr/actualites/"' in block
 
 
@@ -482,6 +640,8 @@ def test_reserved_panel_needs_phase3_and_flag(page, seeded, set_flag, phase3_ope
         assert escaped(text_of(key)) in block
     assert 'href="/fr/compte/login/"' in block
     assert section_order(html)[-1] == "reserved"  # secondary: last, never protagonist
+    # the row's sign is the key of the mark (the sprite's identity glyph), never a padlock
+    assert block.count("#icon-ile-key") == 1 and "#icon-lock" not in block
     set_flag("reserved_area_public_link", False)
     _response, html = page("/fr/")
     assert 'data-section="reserved"' not in html
@@ -498,6 +658,101 @@ def test_reserved_panel_links_dashboard_for_signed_in_visitor(client, seeded, ph
 def test_reserved_panel_hidden_before_phase3(page, seeded):
     _response, html = page("/fr/")
     assert 'data-section="reserved"' not in html
+
+
+# ---------------------------------------------------------------------------------------------
+# The home around the hero (design V5.4, W2-D step 3): one thing once
+# ---------------------------------------------------------------------------------------------
+def _main(html: str) -> str:
+    return html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
+
+
+def _under_the_hero(html: str) -> str:
+    """The chapters: what the main landmark holds after the hero's own section."""
+    return _main(html).split('data-section="hero"', 1)[1].split("</section>", 1)[1]
+
+
+@pytest.mark.parametrize("lang", LANGS)
+def test_the_morocco_italy_model_is_said_once_by_the_heros_path(page, seeded, phase3_open, lang):
+    """
+    The hero's path carries the model — the origin's shore, five stations of the pilot sequence, the door. The
+    chapters under it do not draw it again: no second route between two shores in the pilot chapter (design V2's
+    «voyage»), no jurisdiction bar from the country of origin to the Italian territory in the trust chapter.
+    """
+    _response, html = page(f"/{lang}/")
+    main, below = _main(html), _under_the_hero(html)
+    assert main.count('class="he-station__label"') == 6
+    for gone in ('class="voyage', "data-voyage", 'class="jurisdiction', "data-share", 'class="timeline'):
+        assert gone not in below, gone
+    # No station of the hero's path is printed again under it: the pilot chapter is a statement — its prescribed
+    # title, the section's sentence, one link — and the whole sequence stands on the pilot's own page.
+    sequence = locked_content.LOCKED_TEXTS["fr"]["p3.pilot.sequence"]
+    for step in sequence:
+        assert escaped(step) not in below, step
+    pilot = html.split('data-section="pilot"', 1)[1].split("</section>", 1)[0]
+    assert escaped(text_of("p3.pilot.title")) in pilot
+    assert "<ol" not in pilot and "<li" not in pilot
+    assert pilot.count("<a ") == 1 and 'href="/' + lang + "/" in pilot
+
+
+@pytest.mark.parametrize("state", ["closed", "open"])
+def test_the_chapters_carry_one_section_device_and_no_running_head(request, page, seeded, state):
+    """
+    Every chapter under the hero opens the same way: the mark (the sprite's `ile-steps`, decorative), its title, its
+    lead. No folio, no ordinal and no eyebrow: five of the seven running heads repeated the title under them or the
+    link at the chapter's foot. Numerals are kept for the one real sequence (the neutral steps of the orientation
+    while the gate is closed).
+    """
+    if state == "open":
+        request.getfixturevalue("phase3_open")
+    _response, html = page("/fr/")
+    below = _under_the_hero(html)
+    for gone in ('class="folio', "folio__ordinal", 'class="eyebrow"', "entry__ordinal", "section--process"):
+        assert gone not in below, gone
+    titled = re.findall(r'<h2 class="section__title" id="home-([a-z]+)-title"', below)
+    assert titled, "the chapters have their titles"
+    # the mark is the sprite's identity glyph, through the registry's tag: decorative, never mirrored
+    marks = re.findall(
+        r'<svg class="icon chapter__mark" aria-hidden="true" focusable="false"><use href="[^"]+#icon-([a-z-]+)">', below
+    )
+    assert marks == ["ile-steps"] * len(titled), "one mark per titled chapter, never two"
+    assert below.count("chapter__mark") == len(titled) and "<path" not in below, "no drawing outside the sprite"
+    # every chapter's forward link carries one arrow, mirrored on the Arabic page by its class
+    for link in re.findall(r'<a class="link-arrow"[^>]*>.*?</a>', below, flags=re.S):
+        assert link.count("#icon-arrow") == 1 and "icon--flip-rtl" in link, link
+
+
+def test_a_sentence_the_hero_shows_is_given_back_when_the_hero_says_something_else(page, seeded):
+    """The other half of «one thing once»: the trust chapter drops a fragment only while the hero prints it."""
+    from cms.models import HeroVariant, HomeHero
+
+    rows = HomeHero.objects.filter(variant=HeroVariant.INTERIM)
+    updated = rows.update(body_fr="Une description écrite par la rédaction.")
+    assert updated == 1, "the seeded interim hero is the row under test"
+    _response, html = page("/fr/")
+    block = html.split('data-section="trust"', 1)[1].split("</section>", 1)[0]
+    assert escaped(text_of("p1.persons.replacement_1")) in block
+    assert escaped(text_of("p1.persons.replacement_2")) in block
+
+
+@pytest.mark.parametrize("state", ["closed", "open"])
+def test_black_and_white_rests_only_in_the_hero(request, page, seeded, state):
+    """
+    DL54-12: the four audience photographs rest in black and white in the hero, and nowhere else. The chapters
+    under the hero ship no photograph today (a partner's authorised logo apart), and their sheet sets no filter.
+    """
+    from pathlib import Path
+
+    if state == "open":
+        request.getfixturevalue("phase3_open")
+    _response, html = page("/fr/")
+    below = _under_the_hero(html)
+    assert "<img" not in below and "<picture" not in below
+    root = Path(__file__).resolve().parents[3]
+    sheet = (root / "apps" / "pages" / "static" / "pages" / "css" / "pages.css").read_text(encoding="utf-8")
+    assert "filter" not in re.sub(r"/\*.*?\*/", "", sheet, flags=re.S)
+    hero_sheet = (root / "apps" / "pages" / "static" / "pages" / "css" / "hero.css").read_text(encoding="utf-8")
+    assert ".he-plate__bw .he-photo { filter: grayscale(1)" in hero_sheet, "the black-and-white rest is the hero's"
 
 
 # ---------------------------------------------------------------------------------------------

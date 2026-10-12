@@ -31,7 +31,7 @@ members or proposals: a number a reader cannot click through to is decoration.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <h3 class="entry__title">{{ commission.name_fr }}</h3>
         <span class="entry__gloss">{{ commission.edition.title_fr }}{% if commission.scope_fr %} — {{ commission.scope_fr }}{% endif %}</span>
-        <span class="entry__actor state state--{{ commission.state_class }}" data-register="{{ commission.status|chip_register:'forum.CommissionStatus' }}">{{ commission.get_status_display }}</span>
+        {% chip commission.status "forum.CommissionStatus" css_class="entry__actor" %}{{ commission.get_status_display }}{% endchip %}
       {% if commission_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}

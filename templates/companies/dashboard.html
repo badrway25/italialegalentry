@@ -1,28 +1,35 @@
 {% extends "companies/base_companies.html" %}{% load i18n %}
 {% comment %}
-THE COMPANY DASHBOARD — design V4 (CREATIVE_DIRECTION.md §3.8): NEUTRAL + DATA.
+THE COMPANY DASHBOARD — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 4, §1.15, §3.1 item 7; W3-B step 2),
+on the console's page frame (W3-A) and in the person's dashboard grammar: the same NowPanel, the same «registro», the
+same flat sections. Rules: apps/portal/static/portal/v5/_dashboard.css; composition: portal.services.company_dashboard
+over companies.services (next_action, needs_of, communications — unchanged).
 
-It turns around the NEEDS, never around people. There is no list of persons on this screen, no
-candidate card, no search over persons, no count of matching persons — and there is no route from
-here to any of those, because none exists in this application. No marketplace aesthetics.
+It turns around the NEEDS, never around people. There is no list of persons on this screen, no candidate card, no
+search over persons, no count of matching persons — and there is no route from here to any of those, because none
+exists in this application. No marketplace aesthetics.
 
-  ContextHeader   eyebrow «Entreprise», the legal name as the h1, the meta row (the verification as
-                  a WORD with its register — a fact the project checked about the legal entity,
-                  never an approval of anyone · secteur · établissement · «n besoins en cours»)
-                  and ONE primary action, the next step's, when it has a link
-  Row 1 — 8/4     «Votre prochaine action» (level 2, the responsibility bar: a dashed glyph when no
-                  party is designated) · «Mon entreprise» (level 1): the identity as held, the
-                  verification and what it waits on, the way to the identity page
-  Row 2 — 12      «Mes besoins en compétences» as a semantic Table (partials/need_table.html)
-  Row 3 — 12      Communications — the account's own messages
-  Without company the workspace head keeps the existing wording and the next step is the
-  declaration.
+In this order — the DOM's too (h1 → NowPanel):
+  the page header      «Entreprise», the legal name as the h1, the verification as a WORD with its register (a fact
+                       the project checked about the legal entity, never an approval of anyone), sector, place. No
+                       action here: the primary is the NowPanel's
+  1 · the NowPanel     the ONE raised panel: the company's one next action — declare the company, complete or transmit
+                       a need, express the first one — with its ONE primary; «en attente d'un tiers» while the project
+                       team verifies the company or examines the needs (no primary); «rien à faire». The need it is
+                       about lends its state and is drawn there only (data-need)
+  2 · Mon entreprise   the identity as held — a summary strip; from 64rem beside the NowPanel
+  3 · Mes besoins      «il registro» of the needs by who holds them (the colour is the group, the shape is the state),
+                       then the needs: the company's drafts first, each with its act, then the needs in somebody
+                       else's hands with who answers for them, then the closed ones — five at most; «Tous mes besoins»
+                       for the register
+  4 · Communications   the account's own messages, flat — with a company or without one (then beside the NowPanel,
+                       as the person's page draws them without a file)
+  Without a company the workspace head keeps its wording and the NowPanel's act is the declaration.
 
-The shell's next-action band is not drawn (base_portal.html block): the panel above carries it.
-Not built, and said: the «Formation liée» panel of §3.8.4 — no data links a training to a
-company in this application, and a panel with nothing real to show would be an invented function.
-An empty region is one hairline and one sentence naming who fills it and when, with the resolving
-action inline — never a dashed box with an icon.
+No stat card, no grid of equal cards, no board (plan §1.15). One raised panel, one shadow value; corners 8 · 4 · full.
+Nothing animates at load. The shell's next-action band is not drawn (base_portal.html block): the NowPanel carries
+it. Not built, and said: the «Formation liée» panel of CREATIVE_DIRECTION.md §3.8.4 — no data links a training to a
+company in this application. Every word is the catalogue's: nothing on this page is new copy.
 {% endcomment %}
 {% block page_title %}{% translate "Espace entreprise" %}{% endblock %}
 {% block meta_description %}{% translate "Vos besoins en compétences, l’identité de votre entreprise et vos communications." %}{% endblock %}
@@ -31,25 +38,19 @@ action inline — never a dashed box with an icon.
 
 {% block portal_header %}
 {% if company %}
-<header class="ctx ctx--company" data-ctx>
+<header class="ctx db-head">
   <div class="ctx__words">
     <p class="ctx__eyebrow">{% translate "Entreprise" %}</p>
     <h1 class="ctx__title" dir="auto">{{ company.legal_name }}</h1>
     <p class="ctx__meta">
-      <span class="chip state state--{{ company.verification_state_modifier }}{% if company.is_verified %} chip--seal{% endif %}" data-register="{{ company.verification_status|chip_register:'accounts.VerificationStatus' }}">{{ company.verification_label }}</span>
+      {% chip company.verification_status "accounts.VerificationStatus" %}{{ company.verification_label }}{% endchip %}
       {% if company.sector %}<span>{{ company.sector.label }}</span>{% endif %}
       {% if company.city %}<span>{{ company.city }}{% if company.country %}, {{ company.country }}{% endif %}</span>{% endif %}
-      <span class="ctx__count">{% blocktranslate count n=open_needs|length %}{{ n }} besoin en cours{% plural %}{{ n }} besoins en cours{% endblocktranslate %}</span>
     </p>
   </div>
-  {% if next_action and next_action.url %}
-  <div class="ctx__action">
-    <a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
-  </div>
-  {% endif %}
 </header>
 {% else %}
-<header class="ws-head">
+<header class="ws-head db-head">
   <div class="ws-head__words">
     <h1 class="ws-head__title">{% translate "Espace entreprise" %}</h1>
     <p class="ws-head__lead">{% translate "Déclarez votre entreprise, puis exprimez vos besoins en compétences. Le projet recueille des besoins : il ne présente aucune personne et ne promet aucun résultat." %}</p>
@@ -59,80 +60,91 @@ action inline — never a dashed box with an icon.
 {% endblock %}
 
 {% block companies_content %}
-<div class="ws-grid">
+<div class="db db--company{% if company %} db--file{% endif %}">
 
-  {% comment %} Row 1 — the next step, and the company {% endcomment %}
-  <section class="panel panel--l2 panel--edge ws-next{% if not company %} ws-next--alone{% endif %}{% if next_action %} ws-next--{{ next_action.urgency }}{% endif %}" aria-labelledby="ws-next-title">
-    {% if next_action %}
-    <p class="panel__eyebrow" id="ws-next-title">{% if next_action.is_for_someone_else %}{% translate "Prochaine étape" %}{% else %}{% translate "Votre prochaine action" %}{% endif %}</p>
-    <p class="panel__title">{{ next_action.label }}</p>
-    {% if next_action.detail %}<p class="panel__text">{{ next_action.detail }}</p>{% endif %}
-    <div class="resp">
-      {% include "components/glyph.html" with glyph=next_action.responsible_actor|actor_glyph size="sm" %}
-      <span class="resp__label">{% translate "Responsable" %}</span>
-      <span class="resp__actor">{% if next_action.is_for_someone_else %}{{ next_action.get_responsible_display }}{% else %}{% translate "Votre entreprise" %}{% endif %}</span>
-      {% if next_action.is_for_someone_else %}<span class="resp__note">{% translate "Cette étape ne dépend pas de vous." %}</span>{% endif %}
-    </div>
-    {% if next_action.url and not company %}<p class="panel__actions"><a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-    {% else %}
-    <p class="panel__eyebrow" id="ws-next-title">{% translate "Prochaine étape" %}</p>
-    <p class="panel__text">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
-    {% endif %}
-  </section>
+  {% comment %} 1 · THE NOWPANEL — the one raised panel, the one primary {% endcomment %}
+  {% include "portal/partials/now_panel.html" with now=now %}
 
   {% if company %}
-  <section class="panel panel--l1 ws-company" aria-labelledby="identity-title">
-    <div class="company-id">
-      {% include "components/glyph.html" with glyph="building" size="lg" %}
-      <p class="panel__eyebrow" id="identity-title">{% translate "Mon entreprise" %}</p>
+  {% comment %} 2 · MON ENTREPRISE — the identity as held, a summary strip {% endcomment %}
+  <section class="db-file db-company" aria-labelledby="db-company-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="db-company-title">{% svg_icon glyphs.company "icon" %}<span>{% translate "Mon entreprise" %}</span></h2>
+      {% if profile_url %}<a class="db-link" href="{{ profile_url }}">{% translate "Voir et modifier l’identité" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
     </div>
-    <dl class="facts facts--two">
-      <div class="facts__row"><dt>{% translate "Dénomination légale" %}</dt><dd dir="auto">{{ company.legal_name }}</dd></div>
-      <div class="facts__row"><dt>{% translate "Immatriculation" %}</dt><dd>{% if company.registration_number %}<span class="ctx__ref">{{ company.registration_number }}</span>{% else %}<span class="table__none" aria-hidden="true">—</span>{% endif %}</dd></div>
-      <div class="facts__row"><dt>{% translate "Référent" %}</dt><dd dir="auto">{{ company.contact_name }} — {{ company.contact_function }}</dd></div>
+    {% comment %} The legal name is the page's h1: said once. A record's own words keep their direction in an inline isolate, so the cell's line stays on the page's reading edge. {% endcomment %}
+    <dl class="summary db-file__facts">
+      <div class="summary__item"><dt>{% translate "Immatriculation" %}</dt><dd>{% if company.registration_number %}<span class="db-ref">{{ company.registration_number }}</span>{% else %}<span aria-hidden="true">—</span>{% endif %}</dd></div>
+      <div class="summary__item db-file__who"><dt>{% translate "Référent" %}</dt><dd><span dir="auto">{{ company.contact_name }}</span> — <span dir="auto">{{ company.contact_function }}</span></dd></div>
     </dl>
-    <p class="panel__text">{% translate "La vérification est prononcée par l’équipe du projet sur les éléments déclarés. Elle porte sur l’entreprise, jamais sur une personne." %}{% if not company.is_verified %} {% translate "La transmission d’un besoin est possible une fois la vérification prononcée." %}{% endif %}</p>
-    <p class="panel__actions"><a class="btn btn--link btn--sm" href="{{ profile_url }}">{% translate "Voir et modifier l’identité" %}</a></p>
+    <p class="db-line">{% translate "La vérification est prononcée par l’équipe du projet sur les éléments déclarés. Elle porte sur l’entreprise, jamais sur une personne." %}{% if not company.is_verified %} {% translate "La transmission d’un besoin est possible une fois la vérification prononcée." %}{% endif %}</p>
   </section>
 
-  {% comment %} Row 2 — the needs {% endcomment %}
-  <section class="panel panel--l1 ws-wide ws-needs" aria-labelledby="needs-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="needs-title">{% translate "Mes besoins en compétences" %}</h2>
-      {% if can_manage and create_url %}<a class="btn btn--secondary btn--sm" href="{{ create_url }}">{% translate "Nouveau besoin" %}</a>{% endif %}
+  {% comment %} 3 · MES BESOINS — «il registro», then the needs: the company's drafts first, each with its act {% endcomment %}
+  <section class="db-todo db-needs" aria-labelledby="db-needs-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="db-needs-title">{% svg_icon glyphs.needs "icon" %}<span>{% translate "Mes besoins en compétences" %}</span></h2>
+      {% if needs and needs_url %}<a class="db-link" href="{{ needs_url }}">{% translate "Tous mes besoins" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
     </div>
     {% if needs %}
-    {% include "companies/partials/need_table.html" with needs=needs %}
-    {% if needs_url %}<p class="panel__actions"><a class="btn btn--link btn--sm" href="{{ needs_url }}">{% translate "Tous mes besoins" %}</a></p>{% endif %}
-    {% else %}
-    <p class="empty">
-      {% translate "Un besoin décrit un poste : territoire, métier, tâches confiées, compétences obligatoires et souhaitées, langue, sécurité, calendrier. Il ne décrit jamais une personne." %}
-      {% if can_manage and create_url %}<a href="{{ create_url }}">{% translate "Créer mon premier besoin" %}</a>{% endif %}
-    </p>
-    {% endif %}
-  </section>
-
-  {% comment %} Row 3 — the account's own communications {% endcomment %}
-  <section class="panel panel--l1 ws-wide ws-messages" aria-labelledby="messages-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="messages-title">{% translate "Communications" %}</h2>
+    <div class="db-ledger">
+      <ul class="db-ledger__groups" role="list">
+        {% for group in needs_ledger.groups %}
+        <li class="db-ledger__group db-ledger__group--{{ group.key }}"><span class="db-ledger__label">{{ group.label }} <span class="db-ledger__n">{{ group.states|length }}</span></span><span class="db-ledger__marks" aria-hidden="true">{% for state in group.states %}{% svg_icon state|chip_mark:"companies.NeedStatus" "icon" %}{% endfor %}</span></li>
+        {% endfor %}
+      </ul>
     </div>
-    {% if communications %}
-    <ul class="threads" role="list">
-      {% for message in communications %}
-      <li class="threads__row{% if message.is_unread %} threads__row--unread{% endif %}">
-        <a class="threads__link" href="{{ message.url }}">
-          <span class="threads__subject">{{ message.subject }}</span>
-          <span class="threads__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} <span class="chip state state--review" data-register="neutro">{% translate "Nouveau" %}</span>{% endif %}</span>
-        </a>
+    {% if needs_ledger.rows %}
+    <ul class="db-tasks db-tasks--needs" role="list">
+      {% for need in needs_ledger.rows %}
+      <li class="db-task{% if need.status != "draft" %} db-task--theirs{% endif %}" data-need="{{ need.reference }}">
+        <div class="db-task__words">
+          {% comment %} One destination, one stop: a draft's way to its page is its act; another need's is its title. {% endcomment %}
+          <p class="db-task__title" id="db-need-{{ need.reference }}">{% if need.status == "draft" %}<span dir="auto">{{ need.title }}</span>{% else %}<a href="{% url 'companies:need_detail' need.reference %}" dir="auto">{{ need.title }}</a>{% endif %}</p>
+          <p class="db-task__meta"><span class="db-ref">{{ need.reference }}</span> · {% if need.territory %}{{ need.territory.label }}{% else %}{% translate "territoire à préciser" %}{% endif %} · {% if need.sector %}{{ need.sector.label }}{% else %}{% translate "secteur à préciser" %}{% endif %} · {% blocktranslate count n=need.headcount %}{{ n }} profil{% plural %}{{ n }} profils{% endblocktranslate %} · {% translate "Mis à jour le" %} <time datetime="{{ need.updated_at|date:'Y-m-d' }}">{{ need.updated_at|date:"d.m.Y" }}</time></p>
+        </div>
+        <div class="db-task__state">{% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}</div>
+        <div class="db-task__end">
+          {% if need.status == "draft" %}
+          <a class="btn btn--secondary btn--sm" href="{% url 'companies:need_detail' need.reference %}" aria-describedby="db-need-{{ need.reference }}">{% translate "Ouvrir le besoin" %}</a>
+          {% else %}
+          {% with live=need.live_assignments %}{% if live %}{% for assignment in live %}<span class="db-task__who">{% include "components/glyph.html" with glyph=assignment.role|actor_glyph size="sm" %}<span dir="auto">{{ assignment.display_name }}</span></span>{% endfor %}{% else %}<span class="db-task__who">{% include "components/glyph.html" with glyph="" size="sm" %}<span>{% translate "aucun intervenant désigné" %}</span></span>{% endif %}{% endwith %}
+          {% endif %}
+        </div>
       </li>
       {% endfor %}
     </ul>
-    {% else %}
-    <p class="empty">{% translate "Les messages que l’équipe du projet adresse à votre compte apparaîtront ici." %}</p>
     {% endif %}
+    {% else %}
+    <p class="db-empty">{% translate "Un besoin décrit un poste : territoire, métier, tâches confiées, compétences obligatoires et souhaitées, langue, sécurité, calendrier. Il ne décrit jamais une personne." %}</p>
+    {% endif %}
+    {% comment %} A need can be prepared before the verification: the act stays offered, unless it is already the NowPanel's primary. {% endcomment %}
+    {% if can_manage and create_url and now.primary.url != create_url %}<p class="db-acts"><a class="btn btn--secondary btn--sm" href="{{ create_url }}">{% translate "Nouveau besoin" %}</a></p>{% endif %}
   </section>
   {% endif %}
+
+  {% comment %} 4 · COMMUNICATIONS — the account's own messages, flat; without a company, beside the NowPanel {% endcomment %}
+  <div class="db-side">
+    <section class="db-messages" aria-labelledby="db-messages-title">
+      {% safe_url 'portal:messages' as messages_url %}
+      <div class="db-sec__head">
+        <h2 class="db-h2" id="db-messages-title">{% svg_icon glyphs.messages "icon" %}<span>{% translate "Communications" %}</span></h2>
+        {% if messages_url and communications %}<a class="db-link" href="{{ messages_url }}">{% translate "Toutes mes communications" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
+      </div>
+      {% if communications %}
+      <ul class="db-list" role="list">
+        {% for message in communications %}
+        <li class="db-list__row{% if message.is_unread %} db-list__row--unread{% endif %}">
+          <a class="db-list__link" href="{{ message.url }}">{% if message.is_unread %}<span class="db-unread" aria-hidden="true"></span>{% endif %}<span class="db-list__title" dir="auto">{{ message.subject }}</span></a>
+          <span class="db-list__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} · <span class="db-list__new">{% translate "Non lue" %}</span>{% endif %}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="db-empty">{% translate "Les messages que l’équipe du projet adresse à votre compte apparaîtront ici." %}</p>
+      {% endif %}
+    </section>
+  </div>
 
 </div>
 {% endblock %}

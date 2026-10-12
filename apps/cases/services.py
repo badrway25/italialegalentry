@@ -11,6 +11,7 @@ the mapping between the document's operations and the code is obvious — see CO
 
 from __future__ import annotations
 
+import datetime as dt
 import logging
 from dataclasses import dataclass
 
@@ -45,7 +46,14 @@ class TransitionRefused(ValidationError):
 
 @dataclass(frozen=True)
 class NextAction:
-    """The single thing the person should do next. One priority, never a list of five."""
+    """The single thing the person should do next. One priority, never a list of five.
+
+    Design V5.4, T1 (W3-B): the action also says WHAT obligation it is about, so the dashboard, the case and the
+    documents can draw the same thing — ``kind`` ("item": a checklist item · "piece": a required piece ·
+    "outcome": the pre-assessment's · "orientation": the questionnaire), the obligation's ``due_date`` and
+    ``state`` (the piece's ``RequirementState`` or the item's ``ChecklistStatus``), the piece's ``piece_id`` and the
+    ``lang`` the obligation's own words are written in ("" when the words are the interface's).
+    """
 
     label: str
     url_name: str = ""
@@ -54,6 +62,11 @@ class NextAction:
     urgency: str = "normal"  # normal | soon | overdue | blocked
     responsible_actor: str = ""
     cta_label: str = ""
+    kind: str = ""
+    due_date: dt.date | None = None
+    state: str = ""
+    piece_id: str = ""
+    lang: str = ""
 
     @property
     def is_for_someone_else(self) -> bool:
@@ -500,12 +513,120 @@ def case_detail(user, uuid_value) -> CaseFile:
     return case
 
 
-def next_action(case: CaseFile) -> NextAction | None:
+@dataclass(frozen=True)
+class _Obligation:
+    """One open obligation of a case file: a checklist item, or a piece the file is still waiting for (T1)."""
+
+    kind: str  # "item" | "piece"
+    label: str
+    detail: str
+    due_date: dt.date | None
+    overdue: bool
+    responsible_actor: str
+    state: str
+    pk: object
+    lang: str
+
+    def action(self, urgency: str) -> NextAction:
+        piece = self.kind == "piece"
+        return NextAction(
+            label=self.label,
+            detail=self.detail,
+            urgency=urgency,
+            responsible_actor=self.responsible_actor,
+            # A piece has its own page — where it is filed, replaced or read; a checklist item has none.
+            url_name="documents:requirement" if piece else "",
+            url_args=(self.pk,) if piece else (),
+            kind=self.kind,
+            due_date=self.due_date,
+            state=self.state,
+            piece_id=str(self.pk) if piece else "",
+            lang=self.lang,
+        )
+
+    @property
+    def is_the_persons(self) -> bool:
+        return self.responsible_actor == "person"
+
+
+def _open_pieces(case: CaseFile, reader=None) -> list:
+    """
+    The pieces this file is still waiting for (``documents.models.OPEN_STATES``), in their declared order.
+
+    Read through the documents app's own authorisation, AT QUERY TIME: with a ``reader``, the pieces that account may
+    read (``DocumentRequirement.objects.readable_by``); without one, only the pieces every reader of the case may read
+    — the access class CASE — so a caller that does not say who is looking never learns the title of a piece kept to
+    the person and the administration. Imported late, like every other reference to a sibling app: the case file
+    does not depend on the documents app at module level.
+    """
+    try:
+        from documents.models import OPEN_STATES, AccessClass, DocumentRequirement
+    except (ImportError, LookupError):  # pragma: no cover - the documents app ships with every deployment today
+        return []
+    pieces = DocumentRequirement.objects.filter(case=case)
+    if reader is not None:
+        pieces = DocumentRequirement.objects.readable_by(reader).filter(case=case)
+    else:
+        pieces = pieces.filter(access_class=AccessClass.CASE)
+    pieces = pieces.prefetch_related("versions__document").order_by("order", "title", "pk")
+    return [piece for piece in pieces if piece.derived_state() in OPEN_STATES]
+
+
+def _open_obligations(case: CaseFile, reader=None) -> list[_Obligation]:
+    """
+    Every open obligation of the file: its open checklist items, then the pieces it is still waiting for.
+
+    A piece that satisfies a checklist item (``DocumentRequirement.checklist_item``) stands for that item while it is
+    open: the same obligation is counted — and drawn — once, as the piece, which has a page and an act.
+    """
+    pieces = _open_pieces(case, reader)
+    met_by_a_piece = {piece.checklist_item_id for piece in pieces if piece.checklist_item_id}
+    obligations = [
+        _Obligation(
+            kind="item",
+            label=item.requirement,
+            detail=item.detail,
+            due_date=item.due_date,
+            overdue=item.is_overdue,
+            responsible_actor=item.responsible_actor,
+            state=item.status,
+            pk=item.pk,
+            lang=item.language,
+        )
+        for item in open_items(case)
+        if item.pk not in met_by_a_piece
+    ]
+    obligations += [
+        _Obligation(
+            kind="piece",
+            label=piece.title,
+            detail=piece.detail,
+            due_date=piece.due_date,
+            overdue=piece.is_overdue,
+            responsible_actor=piece.responsible_actor,
+            state=piece.derived_state(),
+            pk=piece.pk,
+            lang=piece.language,
+        )
+        for piece in pieces
+    ]
+    return obligations
+
+
+def next_action(case: CaseFile, *, reader=None) -> NextAction | None:
     """
     The one thing to do next.
 
     Order of precedence: a blocking outcome, then an overdue requirement, then the nearest due
     requirement, then the first open one, then the state itself.
+
+    Design V5.4, T1 (W3-B): ONE next action over every open obligation of the file — its checklist items AND the
+    pieces it is still waiting for — on that same precedence, so the dashboard, the case and the documents name the
+    same thing. A presenter change only: no rung moves and no rule, permission or state changes. Inside a rung an
+    item comes before a piece on the same date, as before T1; among the obligations with no date, the first one the
+    person must act on comes first («open item the person must act on», IMPLEMENTATION_PLAN.md §2 T1), and when none
+    is theirs the first of anybody's, so the page can say whose hands it is in. ``reader`` is the account the action
+    is shown to: the pieces it may read are the ones considered (see ``_open_pieces``).
     """
     assessment = latest_assessment(case)
     if assessment and assessment.is_blocking:
@@ -514,6 +635,10 @@ def next_action(case: CaseFile) -> NextAction | None:
             detail=_("Un elemento impedisce di proseguire su questo percorso."),
             urgency="blocked",
             responsible_actor="person",
+            # the outcome and its sources have a page of their own: the action leads to it
+            url_name="cases:assessment",
+            url_args=(case.reference, assessment.pk),
+            kind="outcome",
         )
     if assessment and assessment.needs_human_review and case.status == CaseStatus.REVIEW_REQUIRED:
         return NextAction(
@@ -521,36 +646,32 @@ def next_action(case: CaseFile) -> NextAction | None:
             detail=_("La situazione richiede una valutazione da parte di un professionista."),
             urgency="soon",
             responsible_actor="person",
+            kind="outcome",
         )
-    items = list(open_items(case))
-    overdue = [row for row in items if row.is_overdue]
+    obligations = _open_obligations(case, reader)
+    overdue = sorted((row for row in obligations if row.overdue), key=_by_date)
     if overdue:
-        item = overdue[0]
-        return NextAction(
-            label=item.requirement,
-            detail=item.detail,
-            urgency="overdue",
-            responsible_actor=item.responsible_actor,
-        )
-    dated = [row for row in items if row.due_date]
+        return overdue[0].action("overdue")
+    dated = sorted((row for row in obligations if row.due_date), key=_by_date)
     if dated:
-        item = dated[0]
-        return NextAction(
-            label=item.requirement, detail=item.detail, urgency="soon", responsible_actor=item.responsible_actor
-        )
-    if items:
-        item = items[0]
-        return NextAction(
-            label=item.requirement, detail=item.detail, urgency="normal", responsible_actor=item.responsible_actor
-        )
+        return dated[0].action("soon")
+    if obligations:
+        theirs = [row for row in obligations if row.is_the_persons]
+        return (theirs or obligations)[0].action("normal")
     if case.status == CaseStatus.DRAFT:
         return NextAction(
             label=_("Completare il questionario di orientamento"),
             url_name="orientation:start",
             urgency="normal",
             responsible_actor="person",
+            kind="orientation",
         )
     return None
+
+
+def _by_date(row: _Obligation) -> tuple:
+    """The nearest date first; on the same date a checklist item before a piece (the order before T1)."""
+    return (row.due_date, 0 if row.kind == "item" else 1)
 
 
 def transitions_available(case: CaseFile, user) -> list[tuple[str, str]]:

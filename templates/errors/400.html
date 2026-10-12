@@ -1,4 +1,4 @@
-{% extends "errors/base_error.html" %}{% load i18n %}
+{% extends "errors/standalone.html" %}{% load i18n %}
 {% block error_code %}400{% endblock %}{% block error_code_display %}400{% endblock %}
 {% block error_title %}{% translate "Requête invalide" %}{% endblock %}
 {% block error_text %}{% translate "La requête n’a pas pu être traitée. Vérifiez l’adresse saisie ou revenez à l’accueil." %}{% endblock %}

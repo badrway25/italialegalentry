@@ -1,18 +1,34 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The answer after a request was sent. Design V5.4 (W3-F2 — the content pages): the head at the reading edge; the notice
+in the ink of a done thing (no colour says «approved»), then the way on — the way back and, as the one primary, home.
+{% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{% translate "Confirmation de transmission d’une demande." %}{% endblock %}
-{% block body_class %}page-enquiries page-enquiries--done{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--done lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-<section class="container enquiry-done" aria-labelledby="done-title">
-  <h1 id="done-title" class="enquiry-done__title">{% translate "Votre demande a bien été transmise" %}</h1>
-  <div class="notice notice--success" role="status" data-enquiry-done="{{ kind }}">
-    <p>{% translate "Merci. Votre message a été transmis à l’équipe du projet, qui l’examinera et pourra vous recontacter à l’adresse e-mail indiquée." %}</p>
-    <p>{% translate "La transmission d’une demande ne constitue ni une candidature, ni un engagement, ni une garantie de résultat de la part d’Italy Legal Entry™." %}</p>
+<section class="enquiry-done" aria-labelledby="done-title">
+  <header class="page-header container">
+    <h1 id="done-title" class="page-header__title enquiry-done__title">{% translate "Votre demande a bien été transmise" %}</h1>
+  </header>
+  <div class="chapter">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        <div class="notice notice--success" role="status" data-enquiry-done="{{ kind }}">
+          {% with notice_kind="success" %}{% svg_icon notice_kind|concept:"notice" "icon notice__icon" %}{% endwith %}
+          <div class="notice__body">
+            <p>{% translate "Merci. Votre message a été transmis à l’équipe du projet, qui l’examinera et pourra vous recontacter à l’adresse e-mail indiquée." %}</p>
+            <p>{% translate "La transmission d’une demande ne constitue ni une candidature, ni un engagement, ni une garantie de résultat de la part d’Italy Legal Entry™." %}</p>
+          </div>
+        </div>
+        <nav class="actions enquiry-done__links" aria-label="{% translate 'Poursuivre la navigation' %}">
+          {% if back_url %}<a class="btn btn--secondary btn--lg" href="{{ back_url }}">{% translate "Retour à la page précédente" %}</a>{% endif %}
+          <a class="btn btn--primary btn--lg" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a>
+        </nav>
+      </div>
+    </div>
   </div>
-  <nav class="enquiry-done__links" aria-label="{% translate 'Poursuivre la navigation' %}">
-    {% if back_url %}<a class="btn btn--secondary" href="{{ back_url }}">{% translate "Retour à la page précédente" %}</a>{% endif %}
-    <a class="btn btn--primary" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a>
-  </nav>
 </section>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

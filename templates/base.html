@@ -18,10 +18,17 @@ tests/frontend/test_favicon.py caught one minute later.
 {% endcomment %}
 <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
 <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="48x48" type="image/x-icon">
-{# The reading face of the current script: on an Arabic page that is the Naskh, not the Latin serif. #}
-{% if site.is_rtl %}<link rel="preload" href="{% static 'fonts/noto-naskh-arabic-400-700-normal-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{% static 'fonts/ibm-plex-sans-arabic-400-normal-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>{% else %}<link rel="preload" href="{% static 'fonts/ibm-plex-sans-400-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{% static 'fonts/newsreader-200-800-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>{% endif %}
+{% comment %}
+Every first-screen face is preloaded, per script (V5.4 plan §1.1 «Loading»; PFR §0: preloading the first
+screen's faces cut the French home's first-render task from 350 to 221 ms). A Latin page: Host Grotesk
+(every Latin role) and «ILE Wordmark» (the name in the letterhead). An Arabic page: Vazirmatn, Host
+Grotesk for the Latin runs and the digits, and the wordmark. Two preloads on a Latin page, three on an
+Arabic one (the budget of plan §2.6). The hrefs are the files static/css/v5/fonts.css names, so the
+hashed URL of the preload and of the bundle's url() are one request under the manifest storage.
+{% endcomment %}
+{% if site.is_rtl %}<link rel="preload" href="{% static 'fonts/v5-vazirmatn-var-400-700-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>
+{% endif %}<link rel="preload" href="{% static 'fonts/v5-host-grotesk-var-400-700.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'fonts/v5-ile-wordmark-600.woff2' %}" as="font" type="font/woff2" crossorigin>
 {% comment %}
 ONE stylesheet: static/css/dist/main.css, the @import cascade of static/css/main.css bundled and
 minified by `npm run build:css` (scripts/build_css.mjs). The 21 sheets it replaces held the six

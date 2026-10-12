@@ -28,7 +28,7 @@ identity form) it stays a paragraph: one h1 per page, and it names what the page
       <div class="company-header__fact">
         <dt class="t-folio">{% translate "Vérification" %}</dt>
         <dd>
-          <span class="state state--{{ company.verification_state_modifier }}" data-register="{{ company.verification_status|chip_register:'accounts.VerificationStatus' }}">{{ company.verification_label }}</span>
+          {% chip company.verification_status "accounts.VerificationStatus" %}{{ company.verification_label }}{% endchip %}
           {% if not company.is_verified %}
           <span class="company-header__note">{% translate "La transmission d’un besoin est possible une fois la vérification prononcée." %}</span>
           {% endif %}

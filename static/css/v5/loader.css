@@ -1,0 +1,298 @@
+/* ============================================================================
+   LOADER «LUME» — the signature loader, design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.9; DL54-07, DL54-08,
+   DL54-09; W1-D). One state machine for three tiers — rest → engaged → open → rest — and nothing loops: a long wait
+   is a still picture and the words carry it (static/js/src/loader.js: 1 s, 10 s). This sheet is a layer of
+   main.css: the mark in layers with the key-turn primitive (L1's engage; the hero's and the login's rotating key),
+   the busy key of every submit button (L2), the seat of asynchronously fetched rows (L3), and the REST state of the
+   two layers the release animates. The release itself — the lit doorway on the first console page after a sign-in —
+   is the generated static/css/v5/_loader-light.css, imported by the console entry only (plan §2.3).
+
+   THE MARK IN LAYERS (templates/components/loader.html). A `.sig` host is a box in mark units — the viewBox of
+   static/brand/original/logo-mark.svg, 0 0 200 200 — and each `.sig__l` layer is placed in those units through
+   --x --y --w --h; a stage passes its own viewBox in --vx --vy --vw --vh and places the key at the stage's key box.
+   The base (planes, door, steps) and the key are two full-size SVGs drawn from the same origin, so at rest they
+   rasterise as the one-file mark does: the key is the verbatim key, its bow a true ring over the navy door (the
+   light later shows through the eye). The key turns 0 → 360° about its shaft — x = 100, the centre of its own box —
+   on --ease-turn and ends on the verbatim mark: never held, drawn or served mirrored (DL54-08). The planes, the
+   door and the steps never move (DL54-09). The host is direction: ltr in every locale: the tricolour never mirrors.
+
+   TOKENS ONLY, LOGICAL PROPERTIES ONLY: the host is ltr, so inline-start is left by construction and nothing here
+   needs an RTL twin. Three durations — --motion-slow (the engage: one turn, then the hold), --motion-emphasized
+   (L2's turn), --motion-standard with --motion-stagger (L3) — all zeroed under prefers-reduced-motion: reduce by
+   v5/tokens.css; `fill-mode: both` then lands every layer on its still, which is the designed state (plan §1.5:
+   every tier has its still, and it is also the no-JS state). No `will-change` anywhere: the layers are small and
+   Chromium composites an animated transform or opacity on its own (0 compositeFailed, QA/v54/w1-d/NOTES.md).
+   ========================================================================== */
+
+/* ---- 1. The mark in layers: the host and the layer formula ----------------------------------------------------- */
+
+.sig {
+  --vx: 0;
+  --vy: 0;
+  --vw: 200;
+  --vh: 200;
+  position: relative;
+  display: block;
+  inline-size: var(--sig-size, 160px);
+  aspect-ratio: var(--vw) / var(--vh);
+  flex: none;
+  direction: ltr;
+  forced-color-adjust: none; /* an image of the brand keeps its colours, as the <img> it stands for does */
+}
+
+.sig__l {
+  position: absolute;
+  inset-inline-start: calc((var(--x) - var(--vx)) / var(--vw) * 100%);
+  inset-block-start: calc((var(--y) - var(--vy)) / var(--vh) * 100%);
+  inline-size: calc(var(--w) / var(--vw) * 100%);
+  block-size: calc(var(--h) / var(--vh) * 100%);
+  pointer-events: none;
+}
+
+.sig__l > svg,
+.sig__turn > svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+/* the base — planes, door, steps — and the key: two full-size layers from one origin (pixel-identical at rest) */
+.sig__base,
+.sig__key {
+  --x: 0;
+  --y: 0;
+  --w: 200;
+  --h: 200;
+}
+
+/* the key: the turning face sits in a box with a little depth, so a turn reads as a turn and not as a flip */
+.sig__key {
+  perspective: calc(var(--sig-size, 160px) * 1.6);
+  perspective-origin: 50% 55%;
+}
+
+.sig__turn {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+
+/* the key in ink: drawn over the gold face, shown by the release only (opacity 0 is its rest) */
+.sig__face--ink {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+/* the room behind the door: the interior inside the white frame (x 78.5–121.5, y 82.5–153.5), a still clip whose
+   top is the arch's own semicircle (radius 21.5 of 71) — only the light inside it ever moves */
+.sig__room {
+  --x: 78.5;
+  --y: 82.5;
+  --w: 43;
+  --h: 71;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / 30.282% 30.282% 0 0;
+}
+
+/* the light: a disc of radius 80 units centred on the key's eye (100, 96); at scale 1 it covers the whole room, at
+   its rest it is the bow's size and transparent. Warm white at the eye, the key's gold at the rim; a short feather. */
+.sig__lume {
+  position: absolute;
+  inset-inline-start: -136.047%;
+  inset-block-start: -93.662%;
+  inline-size: 372.093%;
+  block-size: 225.352%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    var(--p-carta-0) 0%,
+    var(--p-oro-300) 60%,
+    var(--brand-gold) 92%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scale(0.08);
+  transform-origin: 50% 50%;
+}
+
+/* ---- 2. The engage — the key turns once and holds (L1 on the login's submit, through loader.js) --------------- */
+
+.sig.is-engaged .sig__turn {
+  animation: sig-turn var(--motion-slow) var(--ease-turn) 1 both;
+}
+
+@keyframes sig-turn {
+  from {
+    transform: rotateY(0deg);
+  }
+
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* the words of a long wait, beside the host: the word at 1 s, the sentence at 10 s, then «Réessayer» */
+.loader__status {
+  margin: var(--s-3) 0 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.loader__status:empty {
+  display: none;
+}
+
+:is(.chapter--dark, .on-inverse, .hero) .loader__status {
+  color: var(--text-on-night-2);
+}
+
+/* ---- 3. L2 — the busy key: on every `.btn.is-busy`, drawn here, no markup (shell.js sets the class) ----------- */
+/* key.svg cropped symmetric about its shaft (viewBox 10 11 40 94: the token --key-mask of v5/tokens.css, which the
+   entrance's primary reads too — one key at rest and busy) as a mask on the button's own ink: one turn of
+   --motion-emphasized on --ease-turn, then the key holds, dim; it lights when an in-page answer comes (.is-lit).
+   V4's three notches (v4/buttons.css) hid the label — the label stays.
+
+   ITS PLACE is the middle of the inline-end padding, whatever the button's size — the padding is the variant's own
+   (--btn-pad-end, --btn-pad, as v3/buttons.css lays the slab out): the label never moves, nothing is laid out
+   again, and the key keeps the same air on both sides — measured on the product's buttons, 7 px from the label's
+   last glyph in a button, 9 px in a large one, 5 px in a small one and 3 px in a small Arabic one (at a fixed 8 px
+   from the edge it stood 1.2 px from the label of a `.btn--sm`, and 0.3 px in Arabic).
+
+   ITS DIM FACE is 80 % of the button's ink. The key is the one visual indicator of the state, so WCAG 1.4.11 asks
+   3 : 1 of it against its ground: at 80 % it reads 4.0 : 1 on the primary's teal — the ground V4's busy rule gives
+   every busy button today (at 55 % it read 2.7) — and stays above 3 : 1 on every variant's OWN ink and ground, for
+   the day a busy button keeps its own surface: the lowest, the ghost's ink on a section ground, is 3.9 : 1, where
+   65 % read 2.9. A grey ink that meets 4.5 : 1 on white is the worst case in general, and its floor is 78 %. The
+   lit face is the ink itself.
+
+   WHERE THE KEY HAS NO PLACE THERE IS NO KEY. A link-styled button (tertiary, link, text, inline) is its text and
+   an icon-only one is its icon: no padding, and the key was drawn over the label's last glyphs. shell.js gives
+   those no `.is-busy` — they wait with `aria-busy` and keep their own face — and marks nothing in a form
+   `data-loader="none"`, whose answer is a file, not a page: nothing would ever end that wait. */
+
+.btn.is-busy,
+.btn.is-busy:disabled,
+.btn.is-busy[aria-disabled="true"] {
+  --key-size: 18px;
+  --key-inline: calc(var(--key-size) * 40 / 94);
+  color: var(--btn-ink, var(--accent));
+  cursor: progress;
+  perspective: calc(var(--key-size) * 6);
+}
+
+/* a control that waits without the key still says so to the pointer */
+.btn[aria-busy="true"] {
+  cursor: progress;
+}
+
+.btn.is-busy::after {
+  content: "";
+  display: block;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: auto;
+  inset-inline-end: calc((var(--btn-pad-end, var(--btn-pad, var(--btn-pad-md))) - var(--key-inline)) / 2);
+  inline-size: var(--key-inline);
+  block-size: var(--key-size);
+  translate: 0 -50%;
+  border-radius: 0;
+  background: currentColor;
+  box-shadow: none;
+  -webkit-mask: var(--key-mask) center / contain no-repeat;
+  mask: var(--key-mask) center / contain no-repeat;
+  opacity: 0.8;
+  animation: sig-turn var(--motion-emphasized) var(--ease-turn) 1 both;
+}
+
+.btn.is-busy.is-lit::after {
+  opacity: 1;
+  transition: opacity var(--motion-fast) var(--ease-enter);
+}
+
+/* the same key as markup, outside a button (templates/components/busy_key.html): a row that waits, in the row's
+   own text colour — dim at the same 80 % */
+.busy-key {
+  --key-size: 16px;
+  position: relative;
+  display: inline-block;
+  block-size: var(--key-size);
+  aspect-ratio: 40 / 94;
+  flex: none;
+  vertical-align: middle;
+  direction: ltr;
+  perspective: calc(var(--key-size) * 6);
+  opacity: 0.8;
+}
+
+.busy-key__turn {
+  display: block;
+  block-size: 100%;
+  transform-origin: 50% 50%;
+}
+
+.busy-key svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  fill: currentColor;
+}
+
+.is-busy .busy-key__turn {
+  animation: sig-turn var(--motion-emphasized) var(--ease-turn) 1 both;
+}
+
+.is-lit .busy-key {
+  opacity: 1;
+  transition: opacity var(--motion-fast) var(--ease-enter);
+}
+
+/* ---- 4. L3 — the seat: on a fragment container's FIRST arrival its rows rise 4 px, --motion-stagger apart ----- */
+/* loader.js adds .is-seating to a [data-seat] container (never a server-rendered region: DS 2026 §12, W1-D) and
+   removes it once the animations have settled; a refresh swaps in place. No light: the signature belongs to L1. */
+
+[data-seat].is-seating > * {
+  animation: sig-seat var(--motion-standard) var(--ease-enter) 1 both;
+}
+
+[data-seat].is-seating > :nth-child(2) { animation-delay: var(--motion-stagger); }
+[data-seat].is-seating > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)); }
+[data-seat].is-seating > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger)); }
+[data-seat].is-seating > :nth-child(5) { animation-delay: calc(4 * var(--motion-stagger)); }
+[data-seat].is-seating > :nth-child(6) { animation-delay: calc(5 * var(--motion-stagger)); }
+[data-seat].is-seating > :nth-child(7) { animation-delay: calc(6 * var(--motion-stagger)); }
+[data-seat].is-seating > :nth-child(n + 8) { animation-delay: calc(7 * var(--motion-stagger)); }
+
+@keyframes sig-seat {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- 5. Forced colours: the mark keeps its colours (forced-color-adjust: none above); no light, no ink; the busy
+        key follows the button's forced text colour ------------------------------------------------------------ */
+
+@media (forced-colors: active) {
+  /* `.sig__turn > .sig__face--ink`, not the class alone: the layer rule `.sig__turn > svg` (0,1,1) beats a lone
+     class (0,1,0) and the ink would stay displayed — at rest it is opacity 0, but the still must not depend on it */
+  .sig__room,
+  .sig__turn > .sig__face--ink {
+    display: none;
+  }
+
+  .btn.is-busy::after,
+  .busy-key {
+    forced-color-adjust: none;
+    color: ButtonText;
+  }
+}

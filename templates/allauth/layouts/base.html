@@ -1,25 +1,35 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
-Project override of django-allauth's layout: every account page (login, signup, password reset,
-e-mail verification, MFA) renders inside the institutional shell. Entrance pages (login, signup,
-reset) use a single centred card; management pages add the account side navigation.
+THE ACCOUNT PAGES «il conto» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 2; W3-F2, step 2). The frame
+of every page of «Mon compte»: allauth's management pages (allauth/layouts/manage.html: the e-mail addresses, the
+password, the second factor, the sign-out's confirmation) and the product's own (accounts/profile.html,
+accounts/delete_request.html extend the same layout). The entrance — the sign-in and the pages around it — is not
+drawn here: it is «Il varco» (allauth/layouts/entrance.html, W2-B).
+
+The public interior's grammar, on the public shell: the trail (accounts/partials/trail.html), then from 64rem the
+chapter's two seats — the account's sections at the reading edge (four columns of twelve, in sight while the page
+scrolls from 75rem) and the page in the body's eight — and below 64rem one column, the sections as a band above the
+page. The page: its one title and its sentence, its sections on hairlines, its forms at the reading measure with one
+primary, and «who can help me» — the live line with the one address — at the foot (D26).
+
+allauth's pages write their content through the elements of templates/allauth/elements/ (`account-page__title`,
+`account-page__text`, `account-panel`…); the product's pages use the same class names, so one drawing serves both:
+static/css/v5/_servizio.css, scoped by `.conto` (cms/servizio.css, loaded here). Every account page is kept out of
+the index (robots.txt already disallows /*/compte/): the head says so where the view has not.
 {% endcomment %}
 {% block page_title %}{% block head_title %}{% endblock head_title %}{% endblock %}
 {% block meta_description %}{% translate "Espace réservé — accès au compte" %}{% endblock %}
-{% block body_class %}page-account{% endblock %}
+{% block body_class %}page-account servizio{% endblock %}
+{% block extra_head %}{% if not noindex %}<meta name="robots" content="noindex, nofollow">
+{% endif %}<link rel="stylesheet" href="{% static 'css/dist/cms/servizio.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "accounts/partials/trail.html" %}{% endblock %}
 {% block main_content %}
-<section class="container account-page {% block account_layout_class %}account-page--entrance{% endblock %}">
-  {% block body %}
-    {% block account_aside %}{% endblock %}
-    <div class="account-page__main">
-      <div class="account-page__card">
-        {% block content %}{% endblock content %}
-      </div>
-      {% block account_help %}
-      <p class="account-page__aside">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-      {% endblock %}
-    </div>
-  {% endblock body %}
-</section>
+<div class="container conto">
+  {% block account_aside %}{% endblock %}
+  <div class="conto__main">
+    {% block body %}{% block content %}{% endblock content %}{% endblock body %}
+    {% block account_help %}<p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>{% endblock %}
+  </div>
+</div>
 {% endblock main_content %}
 {% block extra_scripts %}{% block extra_body %}{% endblock extra_body %}{% endblock %}

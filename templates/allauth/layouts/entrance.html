@@ -1,40 +1,117 @@
 {% extends "base.html" %}{% load i18n static %}
 {% comment %}
-ENTRANCE — login, signup, password reset, e-mail verification: design V4 (docs/design-v4/
-CREATIVE_DIRECTION.md §3.3, DARK + FOCUS). Two panels from 64rem: at the reading edge the stage —
-the owner's door on the evolved navy with the radial mesh, and the one help line the entrance
-keeps, on a glass strip; at the other end the FOCUS ground with the sheet (level 2, radius xl,
-480 px) that carries the account page's content — title, invitation, fields, one primary action.
-Below 64rem the stage becomes a 120 px band with the arch and the steps, then the sheet full width.
+THE ENTRANCE «IL VARCO» — login, signup, password reset, e-mail verification, MFA: design V5
+(docs/design-v5/V5_4_EXECUTION_PLAN.md §1.13 «Le vie convergono al varco», §1.9 the engage; W2-B).
+Two panels from 64rem: at the reading edge the STAGE — a night niche behind the page's light wall, with
+the owner's door stage (arch, photograph, golden key, three steps) on its threshold, the four ways drawn
+on the floor toward it, and the one help line the entrance keeps; at the other end the FOCUS, which carries
+the account page's content — title, invitation, fields, one primary action. Below 64rem the stage is a
+short band above the form: the door and the help line.
 
-The public letterhead stays above: the entrance is a page of the site, and the lock-up up there
-is the way back. The classes `account-page account-page--entrance`, `form`, `form-field` and
-`btn btn--primary` are the contract tests/frontend/test_layout.py holds the entrance to; the
-allauth elements (templates/allauth/elements/) keep producing them.
+The stage is drawn here in full, and it is complete without script (the rest, the reduced-motion state,
+the no-JS state); on a page longer than the screen (the signup) the set — the scene and the help line —
+stays in sight while the form scrolls. Its paint is static/css/v5/_door.css (the door, as drawn) and
+apps/accounts/static/accounts/entrance.css (the niche, the floor, the lights); static/js/src/entrance.js
+makes it answer the person — the e-mail field's focus, a valid address, the password — and says the arrival
+once. The door stage is also the loader's L1 host (`door-stage sig`, id `varco-door`): on the sign-in's
+submit its key turns once and holds — static/js/src/loader.js, through the form's data-loader-host, which
+templates/allauth/elements/form__entrance.html writes on the sign-in's forms. The key is the verbatim key
+of static/brand/original/key.svg, as an HTML layer so that it turns on the compositor. The stage is
+decorative (aria-hidden) and direction: ltr in every locale: the door, the key and the ways never mirror.
+
+In the source the focus comes first and the stage after it: after the skip link the next stop is in the
+form, and the help line's address follows the form's action instead of standing between the navigation and
+the first field. The sheet PLACES the two — the stage at the reading edge, and above the form below 64rem —
+and holds the stage's place from the first frame, so nothing moves if a browser paints before the stage has
+been parsed. For the same reason the stage's own parts are written in the order that keeps each one's place
+known before it arrives: the help line before the scene, the door before the floor that hangs from it.
+
+THE FOCUS has one hierarchy on every entrance page (step 2 of the family: the form). The EYEBROW names the
+place — «Espace réservé», with the key the letterhead's plate gives the same words — then the page's ONE
+title and its content, which allauth's own templates write through the elements of
+templates/allauth/elements/ (the fields through `fields.html`, the form through
+`form__entrance.html`). A page that is not a form — «a message has been sent», a link that has expired, too
+many requests (templates/429.html) — ends with the WAY BACK to the sign-in, for a person who is not signed
+in; a form never carries it. When a form comes back with errors the DOCUMENT'S TITLE says so first
+(«Erreur — …»): a person who listens to the page hears it before anything else. A session message, which
+templates/base.html writes before this section, is placed in the form's column by the sheet.
+
+THE PHOTOGRAPH is the home's (static/brand/v5: the same registration as V4's 400 px file, 400 to 1200 px, AVIF and
+WebP; PROVENANCE.json), so the door keeps its focus from the home to the sign-in on a dense screen. Its `sizes`
+says the WIDEST the photograph is drawn in each range of windows, never less — told less, the browser takes a file
+too small and stretches it: the photo box is 320 / 368 of the door's width (`--door-w`, entrance.css), read from the
+sheet's last rule to its first — the short desktop's clamp(14.5rem, 20vw, 18rem), the desktop's clamp(15.5rem, 22vw,
+26rem), each cut at the widths where its middle term meets a bound, then the short band (2.75rem), the band from 48rem
+(5.5rem) and the phone's (4.875rem). A change to --door-w is a change here (tests/frontend/test_entrance_w2_b.py
+holds the two to each other in the browser). The preload names the AVIF set with the same sizes, character for
+character, so the one file the picture chooses is the one fetched.
+
+The public letterhead stays above: the entrance is a page of the site, and the lock-up up there is the way
+back; the promoter's line is the letterhead's. The classes `account-page account-page--entrance`, `form`,
+`form-field` and `btn btn--primary` are the contract tests/frontend/test_layout.py holds the entrance to;
+the allauth elements (templates/allauth/elements/) keep producing them.
 {% endcomment %}
-{% block page_title %}{% block head_title %}{% endblock head_title %}{% endblock %}
+{% block page_title %}{% if form.errors %}{% translate "Erreur" %} — {% endif %}{% block head_title %}{% endblock head_title %}{% endblock %}
 {% block meta_description %}{% translate "Espace réservé — accès au compte" %}{% endblock %}
 {% block body_class %}page-account page-entrance{% endblock %}
-{% block extra_head %}<link rel="preload" as="image" href="{% static 'brand/v2/doorway-arch-400.webp' %}" fetchpriority="high">
+{% block extra_head %}<link rel="preload" as="image" type="image/avif" fetchpriority="high" imagesrcset="{% static 'brand/v5/doorway-arch-400.avif' %} 400w, {% static 'brand/v5/doorway-arch-576.avif' %} 576w, {% static 'brand/v5/doorway-arch-800.avif' %} 800w, {% static 'brand/v5/doorway-arch-960.avif' %} 960w, {% static 'brand/v5/doorway-arch-1200.avif' %} 1200w" imagesizes="(min-width: 90rem) and (max-height: 51rem) 15.66rem, (min-width: 72.5rem) and (max-height: 51rem) 17.4vw, (min-width: 64rem) and (max-height: 51rem) 12.61rem, (min-width: 118.19rem) 22.61rem, (min-width: 70.46rem) 19.14vw, (min-width: 64rem) 13.48rem, (max-height: 43.999rem) 2.4rem, (min-width: 48rem) 4.79rem, 4.24rem">
 <link rel="stylesheet" href="{% static 'css/dist/accounts/entrance.css' %}">{% endblock %}
 {% block main_content %}
-<section class="account-page account-page--entrance entrance">
-  <div class="entrance__stage chapter--dark" data-entrance-stage>
-    <svg class="entrance__door doorway" viewBox="264 64 368 456" aria-hidden="true" focusable="false" data-doorway>
-      {% include "components/doorway.html" with prefix="entrance" %}
-    </svg>
-    {% block account_help %}
-    <p class="entrance__help">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-    {% endblock %}
-  </div>
-  <div class="entrance__focus">
-    <div class="account-page__main entrance__sheet">
+<section class="account-page account-page--entrance varco">
+  <div class="varco__focus">
+    <div class="account-page__main varco__sheet">
+      <p class="varco__eyebrow">{% svg_icon "ile-key" "icon icon--xs varco__eyebrow-key" %}<span>{% translate "Espace réservé" %}</span></p>
       {% block body %}{% block content %}{% endblock content %}{% endblock body %}
+      {% if not form and not user.is_authenticated %}<p class="varco__back"><a class="link-arrow" href="{% url 'account_login' %}">{% translate "Se connecter" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    </div>
+  </div>
+  <div class="varco__stage chapter--dark" data-varco-stage>
+    <div class="varco__set">
+      <div class="varco__colophon">
+        {% block account_help %}
+        <p class="varco__help">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+        {% endblock %}
+      </div>
+      <div class="varco__scene">
+        <div class="varco__plinth">
+          <div class="door-stage sig varco__door" id="varco-door" aria-hidden="true">
+            <picture class="door-stage__photo"><source type="image/avif" srcset="{% static 'brand/v5/doorway-arch-400.avif' %} 400w, {% static 'brand/v5/doorway-arch-576.avif' %} 576w, {% static 'brand/v5/doorway-arch-800.avif' %} 800w, {% static 'brand/v5/doorway-arch-960.avif' %} 960w, {% static 'brand/v5/doorway-arch-1200.avif' %} 1200w" sizes="(min-width: 90rem) and (max-height: 51rem) 15.66rem, (min-width: 72.5rem) and (max-height: 51rem) 17.4vw, (min-width: 64rem) and (max-height: 51rem) 12.61rem, (min-width: 118.19rem) 22.61rem, (min-width: 70.46rem) 19.14vw, (min-width: 64rem) 13.48rem, (max-height: 43.999rem) 2.4rem, (min-width: 48rem) 4.79rem, 4.24rem"><source type="image/webp" srcset="{% static 'brand/v5/doorway-arch-400.webp' %} 400w, {% static 'brand/v5/doorway-arch-576.webp' %} 576w, {% static 'brand/v5/doorway-arch-800.webp' %} 800w, {% static 'brand/v5/doorway-arch-960.webp' %} 960w" sizes="(min-width: 90rem) and (max-height: 51rem) 15.66rem, (min-width: 72.5rem) and (max-height: 51rem) 17.4vw, (min-width: 64rem) and (max-height: 51rem) 12.61rem, (min-width: 118.19rem) 22.61rem, (min-width: 70.46rem) 19.14vw, (min-width: 64rem) 13.48rem, (max-height: 43.999rem) 2.4rem, (min-width: 48rem) 4.79rem, 4.24rem"><img src="{% static 'brand/v5/doorway-arch-400.webp' %}" width="400" height="533" alt="" decoding="async" fetchpriority="high"></picture>
+            <svg class="door" viewBox="264 64 368 456" focusable="false">
+              <defs>
+                <clipPath id="varco-clip" clipPathUnits="userSpaceOnUse"><path d="M288 507V240a160 160 0 0 1 320 0v267z"/></clipPath>
+                <linearGradient id="varco-veil" x1="0" y1="0" x2="0" y2="1"><stop class="doorway__veil-a" offset="0.4"/><stop class="doorway__veil-b" offset="1"/></linearGradient>
+                <radialGradient id="varco-glow"><stop class="doorway__glow-a" offset="0"/><stop class="doorway__glow-b" offset="0.4"/><stop class="doorway__glow-c" offset="0.7"/></radialGradient>
+              </defs>
+              <g class="doorway__door">
+                <rect class="doorway__veil" x="288" y="80" width="320" height="427" fill="url(#varco-veil)" clip-path="url(#varco-clip)"/>
+                <path class="doorway__arch-inset" d="M304 507V240a144 144 0 0 1 288 0v267"/>
+                <path class="doorway__inner" d="M365 397V222a83 83 0 0 1 166 0v175z"/>
+                <circle class="doorway__glow" cx="448" cy="268" r="60" fill="url(#varco-glow)"/>
+                <g class="doorway__steps">
+                  <rect x="342.5" y="477" width="211" height="6" rx="2"/>
+                  <rect x="320" y="486" width="256" height="6" rx="2"/>
+                  <rect x="297.5" y="495" width="301" height="6" rx="2"/>
+                </g>
+                <path class="doorway__arch" d="M288 507V240a160 160 0 0 1 320 0v267"/>
+              </g>
+            </svg>
+            <span class="sig__l door-stage__step door-stage__step--top"></span><span class="sig__l door-stage__step door-stage__step--mid"></span><span class="sig__l door-stage__step door-stage__step--low"></span>
+            <span class="door-stage__frame"><span class="door-stage__frame-wipe"><svg class="door-stage__frame-light" viewBox="264 64 368 456" focusable="false"><path class="door-stage__frame-glow" d="M288 507V240a160 160 0 0 1 320 0v267"/><path class="door-stage__frame-core" d="M288 507V240a160 160 0 0 1 320 0v267"/></svg></span></span>
+            <span class="sig__l sig__key door-stage__key"><span class="sig__turn"><svg viewBox="10 11 40 94" focusable="false"><circle cx="30" cy="26" r="15"/><circle class="door-key__eye" cx="30" cy="26" r="6.4"/><rect x="25.6" y="39" width="8.8" height="66"/><rect x="34" y="72" width="16" height="8"/><rect x="34" y="88" width="12" height="8"/></svg></span></span>
+          </div>
+          <div class="varco__floor" aria-hidden="true">
+            <span class="varco__pool"></span><span class="varco__pool varco__pool--lit"></span>
+            <span class="varco__threshold"></span><span class="varco__threshold varco__threshold--lit"></span>
+            <span class="varco__way" data-way="persona"><span class="varco__way-line"></span><span class="varco__way-lit"></span><span class="varco__way-light"></span></span>
+            <span class="varco__way" data-way="impresa"><span class="varco__way-line"></span><span class="varco__way-lit"></span><span class="varco__way-light"></span></span>
+            <span class="varco__way" data-way="istituzione"><span class="varco__way-line"></span><span class="varco__way-lit"></span><span class="varco__way-light"></span></span>
+            <span class="varco__way" data-way="universita"><span class="varco__way-line"></span><span class="varco__way-lit"></span><span class="varco__way-light"></span></span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 {% endblock main_content %}
-{% comment %}No page script: the door's choreography (arch trace, steps, key) ran from a deferred module
-after the first paint and took back what had been drawn — removed with the home's (gate A, round 4,
-defect 11; README §4.8). The door is complete and still from the first frame.{% endcomment %}
-{% block extra_scripts %}{% block extra_body %}{% endblock extra_body %}{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'js/dist/entrance.js' %}"></script>
+{% block extra_body %}{% endblock extra_body %}{% endblock %}

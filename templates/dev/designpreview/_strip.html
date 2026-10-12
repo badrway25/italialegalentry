@@ -1,0 +1,81 @@
+{% load cms_nav %}{% comment %}
+V5 live preview — the strip: the slim dev-only bar (40 px) above the live product, outside the page
+(V5.4 plan §4.1). DEVELOPMENT ONLY. Included by landing.html (`mode="landing"`, above the frame)
+and index.html (`mode="index"`).
+
+What it carries: the name — «Italy Legal Entry™ — V5, la migliore di oggi»; the tag this server
+is checked out at and its commit (the date in the tooltip and in the menus); the state of the page
+in the frame, «V5 — council-passed» only where the steward's live_status.json says so and «V4 +
+fondation» everywhere else, after a muted «pagina:» (review W1-P, UX m5); the page's languages
+(fr and ar, it and en as well for the home and the login); the frame — the window or a phone of
+390 px; «Superfici V5 · n», the council-passed surfaces in one menu, drawn when there are any
+(review W1-P M5: a row of links outgrew the strip); «Personas» — Entrer / Sortir
+(designpreview.personas); «Novità», three lines of the steward's changelog under «Cambiato
+dall’ultimo rapporto», opened on demand; «Indice»; «Apri a parte», the page alone in a new tab (the
+plainer words of review W1-P, UX m1; the full sentence is its tooltip).
+
+From 80 rem everything stands on one row — the name, then the controls at the end (the claim from
+120 rem, the build from 100 rem, «Italy Legal Entry™ — » from 90 rem: the measured worst case,
+designpreview.css); from 64 rem to 80 rem the languages stay on the row too, and the frame, the
+surfaces, the build, the changelog and the page alone are one click away in «Altro»; below 64 rem
+the languages join them; below 48 rem «Indice» too, and the name is the mark alone (review W1-P,
+UX m5, m8; accessibility m4). Below 90 rem «Italy Legal Entry™ — » leaves the eye, never the link's
+name (accessibility r2 n1). Signed out, on the sign-in or a reserved page, one muted line says the
+way in without a password, «Personas», and each «Entrer» carries the page the sign-in was asked for
+(UX r2 n2; CD conditions C4, C8). The menus are
+<details>: they open and close without a script. The preview's script keeps the strip in step with
+the page the frame navigates to. The state and the build are words in a bar, not paragraphs
+(review W1-P, accessibility m4).
+A persona form is a POST with its CSRF token; the token is handed over by the view, which renders
+this without the request's context processors.
+{% endcomment %}<header class="dp-strip" data-dp-strip data-dp-landing="{% url 'designpreview:landing' %}" data-dp-archive="{% url 'designpreview:hub' %}">
+  <a class="dp-strip__home" href="{% url 'designpreview:landing' %}" title="Italy Legal Entry™ — V5, la migliore di oggi">{% brand_lockup "dark" %}<span class="dp-strip__name"><span class="dp-strip__ile">Italy Legal Entry™ — </span><span class="dp-strip__v5">V5</span><span class="dp-strip__claim">, la migliore di oggi</span></span></a>
+  <span class="dp-strip__build dp-strip__xl" title="Il tag che questo server serve e il suo commit{% if strip.identity.date %} — {{ strip.identity.day|date:"j F Y"|lower|default:strip.identity.date }}{% endif %}">{% include "dev/designpreview/_build.html" with identity=strip.identity short=True %}</span>
+  {% if mode == "landing" %}<span class="dp-strip__state dp-strip__state--{{ strip.state }}" title="{{ strip.state_label }}" data-dp-state><span class="dp-hidden">Stato della pagina nella cornice: </span><span class="dp-strip__state-what" aria-hidden="true">pagina:</span> <span class="dp-strip__state-label" data-dp-state-label{% if strip.state != "v5" %} lang="fr"{% endif %}>{{ strip.state_label }}</span></span>
+  <span class="dp-strip__hint" data-dp-hint{% if not strip.hint %} hidden{% endif %}>Per entrare senza password: «Personas»</span>
+  <nav class="dp-strip__group dp-strip__group--lang dp-strip__from-64" aria-label="Lingua della pagina">
+    {% for item in strip.langs %}<a class="dp-strip__link" href="{{ item.url }}" hreflang="{{ item.code }}" title="{{ item.name }}" data-dp-lang="{{ item.code }}"{% if item.current %} aria-current="true"{% endif %}>{{ item.code }}<span class="dp-hidden"> — {{ item.name|lower }}</span></a>{% endfor %}
+  </nav>
+  <nav class="dp-strip__group dp-strip__wide" aria-label="Cornice">
+    {% for item in strip.frames %}<a class="dp-strip__link" href="{{ item.url }}" data-dp-frame-mode="{{ item.code }}"{% if item.current %} aria-current="true"{% endif %}>{{ item.label }}</a>{% endfor %}
+  </nav>
+  {% if strip.quick.count %}<details class="dp-strip__menu dp-strip__menu--quick dp-strip__wide">
+    <summary class="dp-strip__summary">Superfici V5<span class="dp-hidden">:</span> <span class="dp-strip__count">{{ strip.quick.count }}</span><span class="dp-hidden"> pagin{{ strip.quick.count|pluralize:"a,e" }}</span></summary>
+    <div class="dp-strip__panel">
+      {% include "dev/designpreview/_quick.html" %}
+    </div>
+  </details>{% endif %}{% endif %}
+  <details class="dp-strip__menu dp-strip__menu--personas{% if mode != 'landing' %} dp-strip__push{% endif %}">
+    <summary class="dp-strip__summary">Personas{% if strip.persona %}<span class="dp-strip__dot" aria-hidden="true"></span><span class="dp-strip__who"><span class="dp-hidden"> — dentro come </span><span lang="fr">{{ strip.persona }}</span></span>{% endif %}</summary>
+    <div class="dp-strip__panel">
+      {% include "dev/designpreview/_personas.html" %}
+    </div>
+  </details>
+  <details class="dp-strip__menu dp-strip__wide">
+    <summary class="dp-strip__summary">Novità</summary>
+    <div class="dp-strip__panel">
+      <p class="dp-strip__panel-title">Versione in uso</p>
+      <p class="dp-strip__line">{% include "dev/designpreview/_build.html" with identity=strip.identity %}</p>
+      {% include "dev/designpreview/_changelog.html" %}
+    </div>
+  </details>
+  {% if mode == "landing" %}<a class="dp-strip__link dp-strip__index" href="{% url 'designpreview:index' %}">Indice</a>
+  <a class="dp-strip__open dp-strip__wide" href="{{ strip.page }}" target="_blank" rel="noopener" title="Apri la pagina da sola, in una nuova scheda" data-dp-open>Apri a parte<span class="dp-hidden"> (nuova scheda)</span></a>
+  {% else %}<a class="dp-strip__link dp-strip__index" href="{% url 'designpreview:landing' %}">V5 dal vivo</a>
+  <a class="dp-strip__open dp-strip__wide" href="{% url 'designpreview:hub' %}">Archivio della ricerca</a>
+  {% endif %}<details class="dp-strip__menu dp-strip__narrow">
+    <summary class="dp-strip__summary">Altro</summary>
+    <div class="dp-strip__panel">
+      {% if mode == "landing" %}<p class="dp-strip__panel-title dp-strip__below-64">Lingua della pagina</p>
+      <p class="dp-strip__row dp-strip__below-64">{% for item in strip.langs %}<a class="dp-strip__chip" href="{{ item.url }}" hreflang="{{ item.code }}" title="{{ item.name }}" data-dp-lang="{{ item.code }}"{% if item.current %} aria-current="true"{% endif %}>{{ item.code }}<span class="dp-hidden"> — {{ item.name|lower }}</span></a>{% endfor %}</p>
+      <p class="dp-strip__panel-title dp-strip__from-48">Cornice</p>
+      <p class="dp-strip__row dp-strip__from-48">{% for item in strip.frames %}<a class="dp-strip__chip" href="{{ item.url }}" data-dp-frame-mode="{{ item.code }}"{% if item.current %} aria-current="true"{% endif %}>{{ item.label }}</a>{% endfor %}</p>
+      {% if strip.quick.count %}{% include "dev/designpreview/_quick.html" %}{% endif %}
+      <p class="dp-strip__row"><a class="dp-strip__panel-link" href="{% url 'designpreview:index' %}">Indice</a><a class="dp-strip__panel-link" href="{{ strip.page }}" target="_blank" rel="noopener" data-dp-open>Apri la pagina da sola<span class="dp-hidden"> (nuova scheda)</span></a></p>
+      {% else %}<p class="dp-strip__row"><a class="dp-strip__panel-link" href="{% url 'designpreview:landing' %}">V5 dal vivo</a><a class="dp-strip__panel-link" href="{% url 'designpreview:hub' %}">Archivio della ricerca</a></p>
+      {% endif %}<p class="dp-strip__panel-title">Versione in uso</p>
+      <p class="dp-strip__line">{% include "dev/designpreview/_build.html" with identity=strip.identity %}</p>
+      {% include "dev/designpreview/_changelog.html" %}
+    </div>
+  </details>
+</header>

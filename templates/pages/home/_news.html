@@ -1,24 +1,35 @@
-{% load i18n %}{% comment %}
+{% load i18n pages_typo %}{% comment %}
 10. LATEST NEWS — the three latest live articles (news.services.latest_articles → Article.objects
 .public(): PUBLISHED or due SCHEDULED rows only; translations only when PUBLISHED, else French
-tagged lang="fr"). Cards are used here and nowhere else on the homepage.
+tagged lang="fr").
+
+Design V5.4 (W2-D step 3): the articles are rows of a register (category and date, title, summary), not
+three boxes. No running head: the title is the word.
+
+The chapter is on the home only once an article is live (pages.services.build_news, both gate states: the
+review fix, m4 — the home announced an empty chapter). The empty row below is therefore not drawn today; it
+is kept, with its rules in the chapter's sheet, as what the page shows if the builder hands the chapter over
+empty again: the empty state's glyph in its disc (W1-B, DL54-33: an empty state says which space is empty,
+the news' `newspaper`), the sentence, what will stand here — no dashed frame, nothing centred.
 {% endcomment %}
-{% translate "Informations" as eyebrow %}{% translate "Actualités" as fallback_title %}
-<section class="section section--c section--process home-news" id="{{ s.anchor }}" aria-labelledby="home-news-title" data-section="news">
-  <div class="container">
-    {% include "pages/partials/_section_header.html" with title_id="home-news-title" heading=s.heading intro=s.intro fallback_title=fallback_title eyebrow=eyebrow %}
-    {% if d.articles %}
-    <div class="grid-auto home-news__grid" data-articles="{{ d.articles|length }}">
-      {% for article in d.articles %}
-        {% include "components/card.html" with title=article.title url=article.url eyebrow=article.category text=article.summary meta=article.date lang=article.lang %}
-      {% endfor %}
+{% translate "Actualités" as fallback_title %}
+<section class="chapter chapter--page home-news" id="{{ s.anchor }}" aria-labelledby="home-news-title" data-section="news">
+  <div class="container chapter__inner">
+    {% include "pages/partials/_section_header.html" with title_id="home-news-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
+    <div class="chapter__body">
+      {% if d.articles %}
+      <div class="home-news__list" data-articles="{{ d.articles|length }}">
+        {% for article in d.articles %}
+          {% include "components/card.html" with title=article.title url=article.url eyebrow=article.category text=article.summary meta=article.date lang=article.lang %}
+        {% endfor %}
+      </div>
+      {% else %}
+        {% translate "Aucune actualité publiée pour le moment." as empty_title %}
+        {% translate "Les informations du projet seront publiées ici." as empty_text %}
+        {% include "components/empty_state.html" with title=empty_title text=empty_text icon="newspaper" %}
+      {% endif %}
+      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+      {% if d.index_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Toutes les actualités" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
     </div>
-    {% else %}
-      {% translate "Aucune actualité publiée pour le moment." as empty_title %}
-      {% translate "Les informations du projet seront publiées ici." as empty_text %}
-      {% include "components/empty_state.html" with title=empty_title text=empty_text icon="document" %}
-    {% endif %}
-    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
-    {% if d.index_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Toutes les actualités" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
   </div>
 </section>

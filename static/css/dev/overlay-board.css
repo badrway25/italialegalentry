@@ -1,0 +1,106 @@
+/* ============================================================================
+   THE OVERLAY SYSTEM — THE SPECIMEN BOARD · DEVELOPMENT ONLY (V5.4 plan §1.14, §3.4 item 1; W2-A)
+
+   Loaded by templates/dev/designpreview/specimens/overlays.html alone, which is served only when DEBUG is on and
+   ILE_DESIGN_PREVIEW=1 (/__design-v5/specimens/overlays/). Never imported by main.css
+   (tests/frontend/test_design_docs.py::test_the_dev_stylesheet_stays_out_of_the_production_cascade).
+
+   What it adds, and only that: the board's own layout — sections, the French and Arabic cells side by side,
+   captions, and a short scrolling list that clips (where the top-layer tip is needed). Every overlay on the board
+   is drawn by the product's own static/css/v5/overlays.css. Tokens only, logical properties only, no literal colour.
+   ========================================================================== */
+
+.ob {
+  background: var(--surface-page);
+  color: var(--text-1);
+}
+
+.ob__main {
+  padding-block: var(--s-10) var(--s-16);
+}
+
+.ob__lede {
+  max-inline-size: 72ch;
+  color: var(--text-2);
+}
+
+.ob__section {
+  margin-block-start: var(--s-12);
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.ob__h2 {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.ob__note {
+  max-inline-size: 72ch;
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.ob__pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--s-6);
+}
+
+.ob__cell {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background: var(--surface-sheet);
+}
+
+.ob__cell > .btn {
+  justify-self: start;
+}
+
+.ob__cap {
+  margin: 0;
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-3);
+}
+
+.ob__toolbar {
+  gap: var(--s-1);
+}
+
+/* a list that scrolls and clips its rows: the ::after of a control inside it would be cut — the top-layer tip is not */
+.ob__scroller {
+  display: grid;
+  max-block-size: 7.5rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+
+.ob__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-block: var(--s-1);
+  padding-inline: var(--s-4) var(--s-1);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.ob__row:last-child {
+  border-block-end: 0;
+}

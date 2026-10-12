@@ -1,19 +1,29 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+A member edits a message of theirs. Design V5.4 (W3-F2 — the content pages): the head at the reading edge (the thread
+as the space's name); the form in one chapter, the primary and the way back side by side.
+{% endcomment %}
 {% block page_title %}{% translate "Modifier le message" %}{% endblock %}
 {% block meta_description %}{% translate "Modification d’un message du Forum Virtuel." %}{% endblock %}
+{% block body_class %}page-community lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% translate "Modifier le message" as page_title %}
 {% include "components/page_header.html" with title=page_title eyebrow=post.discussion.title %}
-<section class="container community-compose" aria-label="{% translate 'Formulaire de modification' %}">
-  <form method="post" action="{% url 'community:post_edit' pk=post.pk %}" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-    {% include "components/form_field.html" with field=form.body %}
-    <p>
-      <button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button>
-      <a class="btn btn--secondary" href="{% url 'community:discussion' pk=post.discussion_id %}">{% translate "Annuler" %}</a>
-    </p>
-  </form>
+<section class="chapter community-compose" aria-label="{% translate 'Formulaire de modification' %}">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      <form class="form" method="post" action="{% url 'community:post_edit' pk=post.pk %}" novalidate>
+        {% csrf_token %}
+        {% include "components/form_errors.html" with form=form %}
+        {% include "components/form_field.html" with field=form.body %}
+        <div class="form__actions">
+          <button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button>
+          <a class="btn btn--secondary" href="{% url 'community:discussion' pk=post.discussion_id %}">{% translate "Annuler" %}</a>
+        </div>
+      </form>
+    </div>
+  </div>
 </section>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

@@ -35,7 +35,7 @@ Contract: `needs` = an iterable of companies.models.CompanyNeed (with `live_assi
         </span>
       </th>
       <td data-label="{% translate 'État' %}">
-        <span class="chip state state--{{ need.state_modifier }}" data-register="{{ need.status|chip_register:'companies.NeedStatus' }}">{{ need.get_status_display }}</span>
+        {% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}
       </td>
       <td data-label="{% translate 'Responsable' %}">
         {% with live=need.live_assignments %}

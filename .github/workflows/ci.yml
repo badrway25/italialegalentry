@@ -24,7 +24,8 @@ jobs:
   test:
     name: check · migrations · ruff · pytest
     runs-on: ubuntu-latest
-    # ~3 200 tests against PostgreSQL take about 40 minutes on a hosted runner; a ceiling, not a target.
+    # ~4 500 non-browser tests against PostgreSQL took about 57 minutes in the fresh-clone rehearsal
+    # (DL54-77); a ceiling, not a target.
     timeout-minutes: 90
 
     services:

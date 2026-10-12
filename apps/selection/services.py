@@ -956,10 +956,24 @@ def process_page(user, process: SelectionProcess) -> ProcessPage:
     )
 
 
+def _own_disclosures(user):
+    """A person's own rows — the ONE filter of the panel and of the rail's entry to it."""
+    return IdentityDisclosure.objects.filter(process__case__person=user)
+
+
+def has_disclosures(user) -> bool:
+    """
+    Whether anybody ever asked to know this person's identity. The console's rail offers «Communications
+    d’identité» to those accounts only (portal.services.shell_navigation): the panel is theirs, and its history
+    stays — a consent can be withdrawn at any moment.
+    """
+    return _own_disclosures(user).exists()
+
+
 def disclosures_for_person(user) -> list[IdentityDisclosure]:
     """What a person is being asked, and what they have already authorised. Their own, only."""
     return list(
-        IdentityDisclosure.objects.filter(process__case__person=user)
+        _own_disclosures(user)
         .select_related(
             "process",
             "process__actor",
@@ -979,18 +993,23 @@ def accesses_for(disclosure: IdentityDisclosure) -> list[IdentityAccess]:
 
 def navigation(user, active: str = "") -> list[dict]:
     """
-    The module's own local navigation, built here so the platform shell stays untouched.
+    The console's rail on the module's pages: the one every page of «Espace réservé» draws
+    (``portal.services.shell_navigation``; design V5, V5.4 plan §1.18 D06; W3-A), with «Processus
+    assignés» marked. The module used to draw a rail of its own here — three rows without a glyph —
+    so the navigation changed when one entered it.
 
-    An account that is not an operator never sees the workspace entry: a menu item that answers 403
-    is a way of telling someone that something exists.
+    An account that is not an authorised actor is never offered the workspace: a menu item that
+    answers 403 is a way of telling someone that something exists. The panel of identity disclosures
+    is a person's own: the rail lists it for the account somebody has asked (``has_disclosures``) and
+    marks it there; for any other account the panel's place is the module's — «Processus assignés»
+    for an actor, and no row at all for an account that is none.
     """
-    from django.urls import reverse
+    from portal import services as portal_services
 
-    entries = [("portal", _("Tableau de bord"), reverse("portal:dashboard"))]
-    if actors_of(user):
-        entries.append(("workspace", _("Processus assignés"), reverse("selection:workspace")))
-    entries.append(("disclosures", _("Communications d’identité"), reverse("selection:disclosures")))
-    return [{"key": key, "label": label, "url": url, "current": key == active} for key, label, url in entries]
+    key = active
+    if active == "workspace" or (active == "disclosures" and not has_disclosures(user)):
+        key = "selection"
+    return portal_services.shell_navigation(user, active=key)
 
 
 def max_disclosure_days() -> int:

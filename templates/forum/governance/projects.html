@@ -33,7 +33,7 @@ count is verifiable against the milestones table one click away; a meter is not.
           {% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}
           — {{ project.commission.name_fr }}
         </span>
-        <span class="entry__actor state state--{{ project.state_class }}" data-register="{{ project.status|chip_register:'forum.ProjectStatus' }}">{{ project.get_status_display }}</span>
+        {% chip project.status "forum.ProjectStatus" css_class="entry__actor" %}{{ project.get_status_display }}{% endchip %}
       {% if project_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}

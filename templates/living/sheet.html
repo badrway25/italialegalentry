@@ -1,42 +1,61 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static lettura %}
+{% comment %}
+A practical sheet of «Vivre en Italie» (gate G3; published only after its legal review). Design V5.4 (W3-F2 — the
+content pages, static/css/v5/_lettura.css through cms/lettura.css): an advice page on D26's slots, the headings verbatim
+(the reader's questions are the owner's copy, B1 item 7) — the head (the topic as the space's name, the title, the
+summary as the lead) with the verification line where a date exists; the one inset, the condition nobody may miss
+(these are general indications, not the authorities'); the body as long-form prose (PX24); the official sources, each
+with its host beside it; «who can help me» in live words; the way back to the topic.
+{% endcomment %}
 {% block page_title %}{{ texts.title }} · {{ topic_texts.title }}{% endblock %}
 {% block meta_description %}{{ texts.summary|truncatechars:160 }}{% endblock %}
-{% block body_class %}page-living-sheet{% endblock %}
+{% block body_class %}page-living-sheet lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% if preview %}
 <div class="container">{% translate "Aperçu réservé à la rédaction — cette section n’est pas encore publiée." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
 {% endif %}
-<article class="container sheet"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
-  <header class="sheet__header">
-    <p class="sheet__eyebrow"><a href="{{ topic.get_absolute_url }}">{{ topic_texts.title }}</a></p>
-    <h1 class="sheet__title">{{ texts.title }}</h1>
-    {% if texts.summary %}<p class="sheet__summary">{{ texts.summary }}</p>{% endif %}
-    <dl class="sheet__meta">
+<article class="sheet">
+  <header class="page-header container sheet__header">
+    <p class="page-header__eyebrow sheet__eyebrow"><a href="{{ topic.get_absolute_url }}">{{ topic_texts.title }}</a></p>
+    <h1 class="page-header__title sheet__title"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>{{ texts.title }}</h1>
+    {% if texts.summary %}<p class="page-header__lead sheet__summary"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>{{ texts.summary }}</p>{% endif %}
+    {% if sheet.last_reviewed_at or sheet.published_at %}
+    <dl class="verifica page-header__meta sheet__meta">
       {% if sheet.last_reviewed_at %}<div class="sheet__meta-item"><dt>{% translate "Dernière vérification" %}</dt><dd><time datetime="{{ sheet.last_reviewed_at|date:'c' }}">{{ sheet.last_reviewed_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
       {% if sheet.published_at %}<div class="sheet__meta-item"><dt>{% translate "Publiée le" %}</dt><dd><time datetime="{{ sheet.published_at|date:'c' }}">{{ sheet.published_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
     </dl>
+    {% endif %}
   </header>
 
-  <div class="sheet__body prose">
-    {% for block in blocks %}
-      {% if block.kind == "h2" %}<h2>{{ block.text }}</h2>
-      {% elif block.kind == "h3" %}<h3>{{ block.text }}</h3>
-      {% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>
-      {% else %}<p>{{ block.text|linebreaksbr }}</p>{% endif %}
-    {% endfor %}
+  <div class="chapter sheet__chapter">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        <p class="inset sheet__disclaimer">{% translate "Informations pratiques à caractère général : elles ne remplacent pas les indications des autorités compétentes." %}</p>
+
+        <div class="sheet__body prose"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
+          {% for block in blocks %}
+            {% if block.kind == "h2" %}<h2>{{ block.text }}</h2>
+            {% elif block.kind == "h3" %}<h3>{{ block.text }}</h3>
+            {% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>
+            {% else %}<p>{{ block.text|linebreaksbr }}</p>{% endif %}
+          {% endfor %}
+        </div>
+
+        {% if sources %}
+        <section class="sheet__sources" aria-labelledby="sheet-sources-title">
+          <h2 class="chapter__label" id="sheet-sources-title">{% translate "Sources officielles" %}</h2>
+          <ul class="fonti sheet__sources-list">
+            {% for link in sources %}<li><a href="{{ link.url }}" rel="noopener noreferrer external">{{ link.label }}</a>{% with host=link.url|host %}{% if host %} <span class="autorita__host">{{ host }}</span>{% endif %}{% endwith %}</li>{% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+
+        <p class="aiuto sheet__help">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+        <p class="chapter__links sheet__back"><a href="{{ topic.get_absolute_url }}">{% translate "Retour au thème" %}</a></p>
+      </div>
+    </div>
   </div>
-
-  {% if sources %}
-  <section class="sheet__sources" aria-labelledby="sheet-sources-title">
-    <h2 id="sheet-sources-title">{% translate "Sources officielles" %}</h2>
-    <ul class="sheet__sources-list">
-      {% for link in sources %}<li><a href="{{ link.url }}" rel="noopener noreferrer external">{{ link.label }}</a></li>{% endfor %}
-    </ul>
-  </section>
-  {% endif %}
-
-  <p class="sheet__disclaimer">{% translate "Informations pratiques à caractère général : elles ne remplacent pas les indications des autorités compétentes." %}</p>
 </article>
-<p class="container sheet__back"><a href="{{ topic.get_absolute_url }}">{% translate "Retour au thème" %}</a></p>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

@@ -1,0 +1,1459 @@
+/* ============================================================================================
+   THE CONTENT PAGES «la lettura» — design V5.4, W3-F2 «content, legal, error and account pages», step 1: the pages a
+   person reads and consults — the FAQ, the glossary and its terms, the news and an article, «Vivre en Italie» (its
+   topics and sheets), the partners, the Forum Virtuel, the enquiry forms, the legal pages and the newsletter consents.
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 2; §1.18 D26 («the grammar of a legal page», as layout slots);
+   §1.4 RH-1 … RH-8, SP-1 … SP-8, SH-1 … SH-9; §1.3 (three corners a screen); §1.7 (the six-icon ceiling of the
+   editorial body); §1.16 (a caption and a credit under every photograph); DESIGN_SYSTEM_V5 PX17, PX18, PX24 … PX26.
+
+   A page partial (plan §2.3, DL54-15): never in main.css; imported by the one page sheet these pages load,
+   apps/cms/static/cms/lettura.css (built to static/css/dist/cms/lettura.css), so a reader going from the FAQ to the
+   glossary to a legal page downloads it once. Every page carries `lettura` in its body class: the rules that re-draw
+   a component of main.css on these pages are scoped by it, the page's own blocks by their names.
+
+   The grammar is the public interior's (the home's chapters, W2-D; the doors', W3-F1), value for value, so that the
+   site reads as one:
+     1 · the trail             — the breadcrumbs at 13/20 on 24 px targets, the current page in ink;
+     2 · the head              — the page's one header at the reading edge: the space's name, the h1 and the lead,
+                                 verbatim; a page that is searched carries its search in the head's end seat;
+     3 · the chapters          — one section device at the reading edge (the mark's steps, the title), the head four
+                                 columns of twelve and in sight while its body scrolls from 75rem; a page's foot is a
+                                 quiet chapter with a label, not a title, and no device: dense, then quiet;
+     4 · the register          — rows on shared hairlines; the whole row is the target where the row has one
+                                 destination; no glyph, no arrow (a row carries a glyph only when it says something);
+     5 · the tools             — the search, the letter index, the category filter, the pagination, an empty page;
+     6 · the pages' own blocks — the FAQ's answers, the glossary's register, the news, «Vivre en Italie», the
+                                 partners, the Forum Virtuel, the forms;
+     7 · D26's slots           — the verification line where a date exists, one inset, one action, an authority's
+                                 host beside its link, a caption and a credit under every photograph, «who can help
+                                 me» in live text only — and long-form prose (PX24);
+     8 · Arabic, forced colours, print.
+
+   Corners (§1.3): the chrome draws 6 on every screen (the targa), the buttons, fields and notices 4, the chips and
+   discs full — so these pages' cards and thumbnails fold their 8 into the 6 already there: three values a screen.
+   Shadows (§1.4): hairlines before boxes; no shadow at rest on these pages (the system's action card would be the one
+   raised plane, and none of these pages needs one).
+   Type on the 4 px line (RH-1); every size and space a token of static/css/v5/tokens.css; logical properties only;
+   no literal colour, no gradient (the app-sheet token rule).
+   ============================================================================================ */
+
+/* ---- 0 · three corners a screen ---------------------------------------------------------------------------- */
+.lettura {
+  --card-radius: var(--radius-md);
+}
+
+/* ---- 1 · the trail ------------------------------------------------------------------------------------------ */
+.lettura .breadcrumbs {
+  padding-block: var(--s-4) 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.lettura .breadcrumbs__item {
+  color: var(--text-2);
+}
+
+.lettura .breadcrumbs__item + .breadcrumbs__item::before {
+  inline-size: 6px;
+  block-size: 6px;
+  border-color: var(--text-3);
+}
+
+/* a trail's link is a 24 px target (SP-8), its line still 20 px */
+.lettura .breadcrumbs__item a {
+  display: inline-block;
+  padding-block: 2px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .lettura .breadcrumbs__item a:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+  }
+}
+
+.lettura .breadcrumbs__item[aria-current] {
+  color: var(--text-1);
+  font-weight: var(--w-control);
+}
+
+/* ---- 2 · the head ------------------------------------------------------------------------------------------- */
+/* components/page_header.html and the heads these pages write themselves share one drawing: no rule under the head
+   (the chapter's hairline follows it), the space's name as a label, the h1 at 28/36 then 36/44, the lead at 17/28 then
+   20/28 — the interior's entrance (W3-F1) to the pixel. */
+.lettura .page-header {
+  margin-block-end: 0;
+  padding-block: var(--s-8) var(--s-12);
+  border-block-end: 0;
+}
+
+.lettura .page-header__eyebrow {
+  margin: 0 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-2);
+}
+
+.lettura .page-header__eyebrow a {
+  color: inherit;
+}
+
+/* a topic's glyph with its title (the review's m10: beside the eyebrow «Vivre en Italie» a house read as «home» for the
+   section): on the title's first line at the reading edge, centred on its x-height, in the title's ink — 24 px with the
+   28 px title, 32 px with the 36 px one (the icon scale's stroke table) */
+.lettura .page-header__glyph {
+  display: inline-block;
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  margin-block-start: -0.125em;
+  margin-inline-end: var(--s-3);
+  vertical-align: middle;
+  color: var(--text-1);
+}
+
+.lettura .page-header__title {
+  max-inline-size: 20em;
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+/* a prescribed title written in capitals is tracked as every capital run is (TR rule 6) — on the Arabic page the run
+   in French inside the h1 (lettura.py `locked_title`) */
+.lettura .page-header__title--caps:not(:lang(ar)),
+.lettura .page-header__title--caps > :not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+.lettura .page-header__lead {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* a lead that is several blocks (a topic's introduction) keeps the lead's size and its own paragraphs */
+.lettura .page-header__lead > * {
+  margin-block: 0 var(--s-3);
+}
+
+.lettura .page-header__lead > :last-child {
+  margin-block-end: 0;
+}
+
+.lettura .page-header__meta,
+.lettura .page-header__contact {
+  margin: var(--s-6) 0 0;
+}
+
+.lettura .page-header__contact {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.lettura .page-header__contact a {
+  display: inline-block;
+}
+
+/* the page's index under the lead — the FAQ's categories: links that wrap, 24 px apart */
+.page-index {
+  margin: var(--s-6) 0 0;
+}
+
+.page-index__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-index__list a {
+  display: inline-block;
+  padding-block: 2px;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+}
+
+@media (min-width: 48rem) {
+  .lettura .page-header {
+    padding-block: var(--s-10) var(--s-16);
+  }
+
+  .lettura .page-header__title {
+    font-size: var(--t-title);
+    line-height: var(--t-title-lh);
+    letter-spacing: var(--track-title);
+  }
+
+  .lettura .page-header__glyph {
+    inline-size: var(--icon-xl);
+    block-size: var(--icon-xl);
+    stroke-width: 1.67;
+  }
+
+  .lettura .page-header__lead {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+}
+
+/* the end seat: a page that is searched carries its search there, on the lead's last line (from 64rem) */
+@media (min-width: 64rem) {
+  .lettura .page-header--seat {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+    column-gap: var(--s-6);
+  }
+
+  .page-header__text {
+    grid-column: 1 / span 7;
+    min-inline-size: 0;
+  }
+
+  .page-header__aside {
+    grid-column: 8 / span 5;
+    min-inline-size: 0;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .lettura .page-header .page-header__aside {
+    margin-block-start: var(--s-8);
+  }
+}
+
+/* ---- 3 · the chapters --------------------------------------------------------------------------------------- */
+.lettura .chapter {
+  padding-block: var(--s-12);
+}
+
+.lettura :is(.page-header, .chapter) + .chapter {
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.chapter__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-8);
+}
+
+.chapter__head {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+}
+
+/* the mark: the sprite's `ile-steps`, pulled by its drawing's shares onto the reading edge and the head's first line,
+   16 px above the title (the home's chapter__mark) */
+.chapter__mark {
+  --mark: var(--icon-lg);
+  display: block;
+  inline-size: var(--mark);
+  block-size: var(--mark);
+  margin-block: calc(var(--mark) * -7 / 24) calc(var(--s-4) - var(--mark) * 5 / 24);
+  margin-inline-start: calc(var(--mark) * -3 / 24);
+  color: var(--text-1);
+}
+
+.chapter__title,
+.chapter__head > h2:not([class]) {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.chapter__lead {
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.chapter__body {
+  min-inline-size: 0;
+}
+
+/* the quiet chapter at a page's foot: a label, not a title, and no device */
+.lettura .chapter--quiet {
+  padding-block: var(--s-8) var(--s-12);
+}
+
+.chapter__label {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  color: var(--text-2);
+}
+
+/* a row of links under a body: they wrap, 24 px apart, each a 24 px target at least */
+.chapter__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chapter__links a {
+  display: inline-block;
+  padding-block: 2px;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+}
+
+@media (min-width: 48rem) {
+  .lettura .chapter {
+    padding-block: var(--s-16);
+  }
+
+  .lettura .chapter--quiet {
+    padding-block: var(--s-10) var(--s-16);
+  }
+
+  .chapter__title,
+  .chapter__head > h2:not([class]) {
+    font-size: var(--t-band);
+    line-height: var(--t-band-lh);
+    letter-spacing: var(--track-band);
+  }
+}
+
+@media (min-width: 75rem) {
+  .chapter__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .chapter__head {
+    grid-column: 1 / span 4;
+    align-self: start;
+    position: sticky;
+    inset-block-start: calc(var(--header-h) + var(--s-8));
+  }
+
+  .chapter__body {
+    grid-column: 5 / span 8;
+  }
+
+  /* a chapter with no head (a page's single body) reads from the reading edge */
+  .chapter__inner > .chapter__body:only-child {
+    grid-column: 1 / span 8;
+  }
+
+  .chapter__head--quiet {
+    position: static;
+  }
+}
+
+/* ---- 4 · the register: rows on shared hairlines; the whole row is the target where it has one destination ---- */
+.registro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.registro__row {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--s-1);
+  min-block-size: var(--row-min-h);
+  padding-block: var(--s-4) var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.registro__title {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  color: var(--text-1);
+}
+
+/* a title that is a link says so at rest — the link's colour (a finger finds no hover): the underline comes under the
+   pointer, the row stays a register and no glyph is added (the six-icon ceiling; the review's m2) */
+.registro__title a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.registro--links .registro__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.registro__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.registro__meta {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* a link of its own inside a row that opens (a sheet's «Lien de connexion»): above the row's stretched link */
+.registro__row :is(.registro__text, .registro__meta) a {
+  position: relative;
+  z-index: 1;
+}
+
+.registro__row > .chip {
+  justify-self: start;
+  margin-block-start: var(--s-2);
+}
+
+@media (hover: hover) {
+  .registro--links .registro__row:hover {
+    border-block-end-color: var(--line-structure);
+  }
+
+  .registro--links .registro__row:hover .registro__title a {
+    color: var(--accent-text-hover);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.registro--links .registro__row:focus-within {
+  border-block-end-color: var(--line-structure);
+}
+
+@media (min-width: 48rem) {
+  .registro--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+}
+
+/* ---- 5 · the tools ------------------------------------------------------------------------------------------- */
+/* the search of a page (the FAQ, the glossary): the label of a field (14/20 at 500, 8 px above), the plate and the
+   page's one primary on a row that wraps — the plate is v5/field.css's, 52 px on public pages */
+.lettura .search-form {
+  display: grid;
+  gap: var(--s-2);
+  max-inline-size: 36rem;
+  margin: 0;
+}
+
+.lettura .search-form__label {
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.lettura .search-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.lettura .search-form__input {
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+}
+
+.lettura .search-form__help,
+.lettura .search-form__reset {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.lettura .search-form__reset a {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+/* the letter index of the glossary: the letters that have terms, each a 44 px target; it stays under the letterhead
+   while the register scrolls (PX25) from 48rem, where one row holds it — on a phone it is a block of its own. The band
+   is a row of equal cells, 44 px at least and no gap, which take the gutter's first 16 px on both sides: a letter,
+   centred in its cell, stands on the reading edge with its drawing rather than with its box (as the identity glyphs
+   do), and eight letters hold one line from 360 px (352 px of band); a longer alphabet — or a narrower screen — wraps
+   into the same cells, a grid by design, never a letter left alone at the end of a line of loose links (the review's
+   m1) */
+.az-index {
+  border-block: 1px solid var(--line-rhythm);
+  background: var(--surface-page);
+}
+
+.az-index__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--hit-primary), 1fr));
+  margin-block: 0;
+  margin-inline: calc(var(--s-4) * -1);
+  padding: 0;
+  list-style: none;
+}
+
+.az-index__link {
+  display: grid;
+  place-items: center;
+  min-inline-size: var(--hit-primary);
+  min-block-size: var(--hit-primary);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .az-index__link:hover {
+    color: var(--accent-text-hover);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.az-index__link:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 48rem) {
+  .az-index {
+    position: sticky;
+    inset-block-start: calc(var(--header-h-scrolled) + 1px);
+    z-index: var(--z-sticky);
+  }
+
+  html.no-js .az-index {
+    position: static;
+  }
+
+  /* a letter or a term reached from a link (the index, «Retour au glossaire»), and a focus moved by the keyboard, stand
+     under the letterhead AND the index, never behind them (WCAG 2.4.11) */
+  html:has(.az-index) {
+    scroll-padding-block-start: calc(var(--header-h) + var(--hit-primary) + var(--s-5));
+  }
+}
+
+/* the category filter of the news: links on one hairline, the current one under the one indicator of the tabs */
+.filter-bar {
+  margin: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.filter-bar__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filter-bar__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-3);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.filter-bar__link[aria-current] {
+  color: var(--text-1);
+}
+
+.filter-bar__link[aria-current]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--s-3);
+  inset-block-end: -1px;
+  block-size: 2px;
+  background: var(--nav-indicator);
+}
+
+@media (hover: hover) {
+  .filter-bar__link:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.filter-bar__link:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+/* the pagination of a list: the previous and the next page at the row's two ends, the position in words between */
+.lettura .pagination {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+.lettura .pagination__list {
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.lettura .pagination__link {
+  min-block-size: var(--hit-primary);
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sheet);
+  color: var(--text-1);
+  font-weight: var(--w-control);
+}
+
+@media (hover: hover) {
+  .lettura .pagination__link:hover {
+    border-color: var(--text-2);
+    background: var(--surface-hover);
+  }
+}
+
+.lettura .pagination__status {
+  padding-inline: 0;
+  color: var(--text-2);
+  font-variant-numeric: var(--numeric-data);
+}
+
+/* an empty page (DS V5 §10.8 «EmptyState (page)»): the domain's glyph on its 40 px disc, the title at 20/28, one
+   sentence, one action — at the reading edge on a hairline. No dashed box: on V5 a broken edge is the register of
+   what is due («attesa»), and an empty list owes nothing. */
+.lettura .empty-state {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: var(--s-6) 0 0;
+  border: 0;
+  border-block-start: 1px solid var(--line-rhythm);
+  border-radius: 0;
+  text-align: start;
+}
+
+.lettura .empty-state__icon {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  margin: 0 0 var(--s-2);
+  padding: var(--s-2);
+  box-sizing: content-box;
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-disc-fg);
+}
+
+.lettura .empty-state__title {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+.lettura .empty-state__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.lettura .empty-state > p:last-child:not(.empty-state__title, .empty-state__text) {
+  margin: var(--s-4) 0 0;
+}
+
+/* ---- 6 · the pages' own blocks ------------------------------------------------------------------------------- */
+/* THE FAQ — the system's disclosure (v5/tabs.css): the question at 17/24 on a 56 px row, the answer at the same size
+   under it (PX18: the question is never smaller than its answer), its links 24 px apart, its line of facts quiet */
+.faq-item__answer > p:first-child {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.faq-item__links {
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.faq-item__links > li + li {
+  margin-block-start: var(--s-3);
+}
+
+.faq-item__links a {
+  display: inline-block;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.faq-item__meta {
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* the permalink: a 24 px target in its 20 px line (the trail's recipe; the accessibility check's A3) */
+.faq-item__permalink {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+/* THE GLOSSARY — one band for the register, a group a letter: the letter is the group's head (in sight while its terms
+   scroll, from 75rem); the terms a register, the term at the reading edge and its definition beside it from 48rem (a
+   dictionary's two columns), under it on a phone. Groups 40 px apart: one band, not eight. */
+.glossary__group + .glossary__group {
+  margin-block-start: var(--s-10);
+}
+
+@media (max-width: 74.999rem) {
+  .glossary__group {
+    row-gap: var(--s-3);
+  }
+}
+
+.glossary__letter {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  color: var(--text-1);
+}
+
+.glossary__list {
+  margin: 0;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.glossary-entry {
+  display: grid;
+  gap: var(--s-1) var(--s-6);
+  padding-block: var(--s-4) var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+/* one rule between two groups — the next group's opening rule: a group's last term leaves its closing hairline to it
+   (a closing hairline, a band, an opening rule drew two; the review's m5) */
+.glossary__list > .glossary-entry:last-child {
+  border-block-end: 0;
+}
+
+.glossary-entry__term {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+}
+
+/* the term is the heading of its definition and the only way to its page: a standalone target of 24 px at least */
+.glossary-entry__term a {
+  display: inline-block;
+  text-decoration-thickness: 1px;
+}
+
+.glossary-entry__definition {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .glossary__letter {
+    font-size: var(--t-title);
+    line-height: var(--t-title-lh);
+  }
+
+  .glossary-entry {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  }
+}
+
+/* the term's own page: the definition at the lead's size, its facts and its related terms quiet under it */
+.glossary-term__definition {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+.glossary-term__related > * + *,
+.glossary-term__facts > * + * {
+  margin-block-start: var(--s-2);
+}
+
+/* THE NEWS (PX17) — the articles are records on shared hairlines (v5/card.css `.card--flat`): the facts, the title,
+   the summary; a cover, when the article has one, at the row's end from 48rem and above the words on a phone */
+.news-list {
+  margin: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.news-card.card--flat {
+  gap: var(--s-2);
+}
+
+.news-card .card__eyebrow {
+  font-variant-numeric: var(--numeric-data);
+}
+
+.news-card .card__text {
+  max-inline-size: var(--measure-body);
+}
+
+.news-card__media {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--card-radius);
+  box-shadow: var(--passe-partout);
+}
+
+@media (min-width: 48rem) {
+  .news-card:has(.news-card__media) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    align-items: start;
+    column-gap: var(--s-6);
+  }
+
+  .news-card:has(.news-card__media) > .news-card__body {
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .news-card__media {
+    order: -1;
+  }
+}
+
+.news-card__body {
+  display: grid;
+  gap: var(--s-2);
+  min-inline-size: 0;
+}
+
+.news-card .card__title {
+  text-wrap: balance;
+}
+
+/* the related articles of a page: the same records, three abreast from 64rem */
+@media (min-width: 64rem) {
+  .related-articles__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .related-articles__grid .news-card {
+    display: flex;
+  }
+
+  .related-articles__grid .news-card__media {
+    order: -1;
+  }
+}
+
+/* «VIVRE EN ITALIE» (PX26) — the ten topics are typographic (the icon registry: ten glyphs on one public page, and two
+   of them twins): a register in two columns, each row the way to its topic; a topic's sheets are records */
+.living-topics .registro__meta {
+  color: var(--text-2);
+}
+
+/* THE PARTNERS — a record each: the logo when it is public, the name, the place, the short description */
+.partner__logo {
+  display: block;
+  inline-size: auto;
+  max-inline-size: 10rem;
+  block-size: auto;
+  max-block-size: 4rem;
+  margin-block-end: var(--s-2);
+  object-fit: contain;
+  object-position: left center;
+}
+
+[dir="rtl"] .partner__logo {
+  object-position: right center;
+}
+
+/* THE FORUM VIRTUEL — the anonymous landing's two ways in, the rooms, the calendar, the threads */
+.lettura .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  margin: 0;
+}
+
+.community-post__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+}
+
+.community-post__author {
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.community-post__body {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.community-post__body > :last-child,
+.community-calendar__description > :last-child,
+.community-initiatives__description > :last-child {
+  margin-block-end: 0;
+}
+
+.community-post__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+.community-post__actions:empty {
+  display: none;
+}
+
+.community-moderation {
+  max-inline-size: 36rem;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px dashed var(--line-structure);
+}
+
+.community-moderation--post {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--s-2) var(--s-4);
+}
+
+.community-report__quote {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-inline-start: var(--s-4);
+  border-inline-start: 3px solid var(--line-structure);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+/* THE FORMS — the enquiry forms, the newsletter and the Forum's forms: v5/field.css draws them; here, their column
+   in a chapter's body, the privacy link of their consent, and the honeypot's place (never shown, never focused) */
+.lettura .chapter__body > .form,
+.lettura .chapter__body > form {
+  max-inline-size: 36rem;
+}
+
+/* an enquiry form's first group is its chapter's own subject: the chapter's title says it on the screen, once; the
+   group's legend stays the fieldset's name for assistive technology, off the screen (two titles in a row — «Votre
+   message», «Vos coordonnées et votre message» —; the review's m6). The consent's group keeps its legend. */
+.lettura .chapter__head + .chapter__body .enquiry-form > .form__group:first-of-type > .form__legend {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* the privacy link of a consent stands alone in its paragraph: one box the height of its line (24 px, SP-8's floor
+   under a fine pointer; the accessibility check's A3), whatever lines its words take */
+.form__privacy-link {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.form__privacy-link a {
+  display: inline-block;
+}
+
+.lettura .form__help {
+  max-inline-size: 36rem;
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* the recipients of an institution's proposal, under the lead: the lead's second paragraph, one step quieter */
+.lettura .page-header__recipients {
+  margin-block-start: var(--s-3);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+/* a prescribed quote (the companies' form page): the words whole at the lead's size, on the institutional rule */
+.lettura .blockquote {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-inline-start: var(--s-5);
+  border-inline-start: 3px solid var(--notice-institutional-rule);
+}
+
+.lettura .blockquote__text {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+/* the newsletter's two answers: the state in one sentence */
+.consent-answer__state {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+/* the newsletter's consent is a field of its own: the box on the label's first line, the error under it */
+.form-field--consent {
+  margin-block-end: var(--s-4);
+}
+
+/* the confirmation of a sent request and the newsletter's two answers: the sentence, then the way on */
+.lettura .notice {
+  max-inline-size: 44rem;
+}
+
+/* ---- 7 · D26's slots and long-form prose (PX24) -------------------------------------------------------------- */
+/* the verification line — the date a text was checked or took effect, where one exists (no new commitment) */
+.verifica {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-6);
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.verifica > div {
+  display: flex;
+  gap: var(--s-1);
+}
+
+.verifica dt {
+  font-weight: var(--w-control);
+}
+
+.verifica dt::after {
+  content: "\00a0:";
+}
+
+.verifica dd {
+  margin: 0;
+}
+
+/* long-form prose: the reading measure and the reading size, titles on the 4 px line, no rule above a title */
+.lettura .prose {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.lettura .prose > * {
+  margin-block: 0;
+}
+
+.lettura .prose > * + * {
+  margin-block-start: var(--s-4);
+}
+
+.lettura .prose h2 {
+  margin-block-start: var(--s-10);
+  padding: 0;
+  border: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  letter-spacing: var(--track-entry);
+}
+
+.lettura .prose h3 {
+  margin-block-start: var(--s-8);
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  letter-spacing: 0;
+}
+
+.lettura .prose :is(h2, h3) + * {
+  margin-block-start: var(--s-2);
+}
+
+.lettura .prose li + li {
+  margin-block-start: var(--s-2);
+}
+
+/* the one inset: the condition nobody may miss — a notice, or the courtesy translation of a legal text — in the
+   body's own flow, at the reading measure */
+.lettura .chapter__body > .notice {
+  margin-block: 0;
+}
+
+.inset {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: var(--s-5) var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-inline-start: 3px solid var(--notice-institutional-rule);
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  background: var(--notice-institutional-bg);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-1);
+}
+
+.inset > * {
+  margin-block: 0;
+}
+
+.inset > * + * {
+  margin-block-start: var(--s-3);
+}
+
+.inset :is(h2, h3) {
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  letter-spacing: 0;
+}
+
+/* sources: an authority's link shows where it leads — the host, in the quiet ink, beside its name */
+.fonti {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.fonti > li {
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.autorita__host {
+  display: inline-block;
+  margin-inline-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* a photograph: its caption and its credit under it, never on it */
+.figura {
+  margin: 0;
+}
+
+.figura img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--card-radius);
+  box-shadow: var(--passe-partout);
+}
+
+.figura figcaption {
+  max-inline-size: var(--measure-small);
+  margin-block-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+/* «who can help me»: the page's live line, on a hairline at the foot of the reading */
+.aiuto {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* its link is one box the height of the line (24 px: SP-8's floor under a fine pointer; the accessibility check's A3) */
+.aiuto a {
+  display: inline-block;
+  overflow-wrap: anywhere;
+}
+
+/* a note under a reading — what the text is (informative, general): quiet, at the small measure */
+.fine {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* ---- the flow of a chapter's body: 32 px between its blocks, whatever margins the blocks carry elsewhere (written
+        last, so that it wins over them); an empty state under the filter it answers, or first in a chapter without a
+        head (under the chapter's own rule), draws no second hairline ---- */
+.lettura .chapter__body > * {
+  margin-block: 0;
+}
+
+.lettura .chapter__body > * + * {
+  margin-block-start: var(--s-8);
+}
+
+.lettura .filter-bar + .empty-state,
+.lettura .filter-bar + .news-list > .card--flat:first-child,
+.lettura .chapter__inner > .chapter__body:only-child > .empty-state:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* «who can help me» under the sources' last hairline: one rule, not two */
+.lettura .sheet__sources + .aiuto {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* «who can help me» at the foot of a quiet chapter spans the body: its hairline closes the links above it */
+.lettura .chapter--quiet .aiuto {
+  max-inline-size: none;
+}
+
+/* the page's last band carries its closing space; the footer follows it (SP-6: no unplanned interval above 64 px) */
+.lettura .site-footer {
+  margin-block-start: 0;
+}
+
+/* the legal page is one column in the container (the markup the i18n tests pin): the head, then the text, the inset
+   and «who can help me», 32 px apart, the page's closing space under them */
+.lettura .legal-page {
+  padding-block-end: var(--s-12);
+}
+
+.lettura .legal-page > .page-header {
+  padding-block-end: var(--s-8);
+}
+
+.lettura .legal-page > * {
+  margin-block: 0;
+}
+
+.lettura .legal-page > * + * {
+  margin-block-start: var(--s-8);
+}
+
+.lettura .legal-page > .page-header + * {
+  margin-block-start: 0;
+}
+
+/* the legal page's verification line — the official version, its date of effect, its number — drawn as the sheets'
+   and the terms' (`.verifica` in a head: 24 px under the title, 13/20 in the quiet ink, the figures tabular); its markup
+   is the one the i18n tests pin, `<p class="legal-page__meta" lang>` (the review's m3) */
+.lettura .legal-page__meta {
+  margin: var(--s-6) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .lettura .legal-page {
+    padding-block-end: var(--s-16);
+  }
+
+  .lettura .legal-page > .page-header {
+    padding-block-end: var(--s-10);
+  }
+}
+
+/* ---- under a finger, a link that stands alone answers on 44 px (SP-8) without a taller line: the target grows, the
+        page does not; the rows of links open to 20 px so that two targets never overlap -------------------------- */
+@media (pointer: coarse) {
+  .lettura :is(.breadcrumbs__list, .chapter__links, .page-index__list) {
+    row-gap: var(--s-5);
+  }
+
+  .faq-item__links > li + li {
+    margin-block-start: var(--s-5);
+  }
+
+  /* the answer's line of facts carries the permalink: 24 px under the last link, so that their targets meet without
+     overlapping */
+  .faq-item__links + .faq-item__meta {
+    margin-block-start: var(--s-6);
+  }
+
+  /* each of these is a box of 24 px at least (its line, or its line and 2 px): 10 px above and below make 44, and a
+     word narrower than 44 px is widened to 44 about its middle (the accessibility check's A3: the trail, the glossary's
+     terms, the FAQ's links and its permalink, the consent's privacy link joined the list) */
+  .lettura :is(.breadcrumbs__item a, .chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a) {
+    position: relative;
+  }
+
+  .lettura :is(.breadcrumbs__item a, .chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a)::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: min(0px, calc((100% - var(--hit-primary)) / 2));
+  }
+}
+
+/* ---- 8 · Arabic, forced colours, print --------------------------------------------------------------------- */
+/* Arabic titles: 600 with no tracking, leading 1.4 (the type system's Arabic rule, restated above the page's own) */
+.lettura :is(.page-header__title, .chapter__title, .chapter__head > h2, .glossary__letter, .empty-state__title):lang(ar) {
+  letter-spacing: 0;
+  line-height: var(--ar-title-lh);
+}
+
+/* A text shown in French (or Italian) on the Arabic page keeps its own direction, so that its punctuation never moves
+   (the wording of a prescribed text must never look altered); in a head it ends on the reading edge. */
+[dir="rtl"] .lettura :is(h1, h2, h3, p, li, blockquote, dd, dt, figcaption)[lang="fr"],
+[dir="rtl"] .lettura :is(h1, h2, h3, p, li, dd, dt)[lang="it"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+/* (the run's own direction is left to right, so its «end» is the reading edge of the Arabic page: `end`, logical; a
+   prescribed h1 holds its French run as a `<span lang dir="ltr">` and keeps the page's direction and `start` — what
+   tests/i18n/test_rtl_browser.py reads off the h1). Every HEAD of the area does the same, whatever block draws it — a
+   page's or a chapter's title, a glossary's Italian term in its column, a FAQ's question on its row, a register's title
+   (the Forum Virtuel's rooms exist in French only): each ends on its cell's reading edge (the review's M2) */
+[dir="rtl"] .lettura :is(.page-header, .chapter__head) :is(h1, h2):is([lang="fr"], [lang="it"]),
+[dir="rtl"] .lettura :is(.glossary-entry__term, .faq-item__question, .registro__title):is([lang="fr"], [lang="it"]) {
+  text-align: end;
+}
+
+/* a PARAGRAPH of a head — a lead, an eyebrow, a chapter's lead — stands on the reading edge as a box the width of its
+   words: a line ends there as a heading's does, and a longer text reads from its own start, as a body does, instead of
+   ending ragged on the reading edge (the review's m8; W3-F1's review m7 asks the same of the doors: one rule for both
+   families) — a topic's introduction of several blocks too. The run is left to right: its inline start is the page's
+   left, so its auto start margin pushes it right. */
+[dir="rtl"] .lettura :is(.page-header, .chapter__head) :is(p, div.page-header__lead):is([lang="fr"], [lang="it"]) {
+  inline-size: fit-content;
+  margin-inline-start: auto;
+}
+
+[dir="rtl"] .lettura span[lang="fr"] {
+  unicode-bidi: isolate;
+}
+
+[dir="rtl"] .lettura :is(.prose, div.page-header__lead)[lang]:not([lang="ar"]) {
+  direction: ltr;
+  text-align: start;
+}
+
+/* a quote held in French on the Arabic page: its box stands on the reading edge, its rule at the start of its words —
+   and so does the courtesy translation of a legal text, in French on every page */
+[dir="rtl"] .lettura :is(.blockquote:has(> [lang="fr"], > [lang="it"]), .legal-page__courtesy[lang="fr"]) {
+  direction: ltr;
+}
+
+/* the official Italian text on the Arabic page reads left to right from its own start, its punctuation in place: its
+   `lang` is the article's, not each paragraph's, so the rules above, which read the element's own attribute, did not
+   reach it (seen on the full-text page in Arabic: «.uno», «.Paragrafo due») */
+[dir="rtl"] .lettura .legal-page[lang="it"] .legal-page__body {
+  direction: ltr;
+  text-align: start;
+}
+
+@media (forced-colors: active) {
+  .filter-bar__link[aria-current]::after {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+
+  .inset {
+    border: 1px solid CanvasText;
+    border-inline-start-width: 3px;
+  }
+
+  .lettura .pagination__link {
+    border-color: ButtonText;
+  }
+}
+
+@media print {
+  .az-index,
+  .filter-bar,
+  .page-header__aside,
+  .lettura .pagination {
+    display: none;
+  }
+
+  .chapter__head,
+  .az-index {
+    position: static;
+  }
+}

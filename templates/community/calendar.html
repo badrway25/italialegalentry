@@ -1,31 +1,42 @@
-{% extends "base.html" %}{% load i18n %}
-{% block page_title %}{% translate "Calendrier" %} · {% locked "p3.virtual_forum.title" %}{% endblock %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The Forum Virtuel's calendar (members). Design V5.4 (W3-F2 — the content pages): the head at the reading edge; the
+meetings as a register — the date and the time first, the title, the room, the place or the connection link, the
+description.
+{% endcomment %}
+{% block page_title %}{% translate "Calendrier" %} · {% locked "p3.virtual_forum.title" as forum_title %}{{ forum_title|striptags }}{% endblock %}
 {% block meta_description %}{% translate "Rendez-vous et échéances du Forum Virtuel." %}{% endblock %}
+{% block body_class %}page-community lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% translate "Calendrier" as page_title %}
 {% translate "Rendez-vous, réunions et échéances partagés avec les participants." as page_lead %}
 {% include "components/page_header.html" with title=page_title lead=page_lead %}
-<section class="container community-calendar" aria-label="{% translate 'Liste des rendez-vous' %}">
+<section class="chapter community-calendar" aria-label="{% translate 'Liste des rendez-vous' %}">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
   {% if entries %}
-  <ul class="community-calendar__list">
+      <ul class="registro community-calendar__list">
     {% for entry in entries %}
-    <li class="community-calendar__item">
-      <h2 class="community-calendar__title">{{ entry.title }}</h2>
-      <p class="community-calendar__when">
-        <time datetime="{{ entry.starts_at|date:'c' }}">{{ entry.starts_at|date:"d/m/Y H:i" }}</time>
-        {% if entry.ends_at %} – <time datetime="{{ entry.ends_at|date:'c' }}">{{ entry.ends_at|date:"d/m/Y H:i" }}</time>{% endif %}
-        {% if entry.room %} · {{ entry.room.name_fr }}{% endif %}
-      </p>
-      {% if entry.place %}<p class="community-calendar__place">{{ entry.place }}</p>{% endif %}
-      {% if entry.online_url %}<p><a href="{{ entry.online_url }}" rel="noopener noreferrer">{% translate "Lien de connexion" %}</a></p>{% endif %}
-      {% if entry.description %}<div class="community-calendar__description">{{ entry.description|linebreaks }}</div>{% endif %}
-    </li>
+        <li class="registro__row community-calendar__item">
+          <p class="registro__meta community-calendar__when">
+            <time datetime="{{ entry.starts_at|date:'c' }}">{{ entry.starts_at|date:"d/m/Y H:i" }}</time>
+            {% if entry.ends_at %} – <time datetime="{{ entry.ends_at|date:'c' }}">{{ entry.ends_at|date:"d/m/Y H:i" }}</time>{% endif %}
+            {% if entry.room %} · {{ entry.room.name_fr }}{% endif %}
+          </p>
+          <h2 class="registro__title community-calendar__title">{{ entry.title }}</h2>
+          {% if entry.place %}<p class="registro__text community-calendar__place">{{ entry.place }}</p>{% endif %}
+          {% if entry.online_url %}<p class="registro__text"><a href="{{ entry.online_url }}" rel="noopener noreferrer">{% translate "Lien de connexion" %}</a></p>{% endif %}
+          {% if entry.description %}<div class="registro__text community-calendar__description">{{ entry.description|linebreaks }}</div>{% endif %}
+        </li>
     {% endfor %}
-  </ul>
+      </ul>
   {% else %}
     {% translate "Aucun rendez-vous programmé." as empty_title %}
     {% include "components/empty_state.html" with title=empty_title %}
   {% endif %}
+    </div>
+  </div>
 </section>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

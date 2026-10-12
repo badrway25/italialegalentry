@@ -14,7 +14,7 @@ The questionnaire belongs to the orientation app: the button is rendered only wh
       {% if links.orientation %}
         <a class="btn btn--primary btn--arrow" href="{{ links.orientation }}">{% translate "Commencer le questionnaire d’orientation" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
       {% else %}
-        <p class="cta-panel__pending badge badge--pending" data-register="attesa" role="status">{% translate "Le questionnaire d’orientation sera disponible prochainement." %}</p>
+        <p class="cta-panel__pending">{% chip register="attesa" role="status" %}{% translate "Le questionnaire d’orientation sera disponible prochainement." %}{% endchip %}</p>
       {% endif %}
     </div>
   </div>

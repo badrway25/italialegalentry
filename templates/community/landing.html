@@ -1,33 +1,45 @@
-{% extends "base.html" %}{% load i18n %}
-{% block page_title %}{% locked "p3.virtual_forum.title" %}{% endblock %}
-{% block meta_description %}{% locked "p3.virtual_forum.body" %}{% endblock %}
+{% extends "base.html" %}{% load i18n static lettura %}
+{% comment %}
+The Forum Virtuel's door (flag G11 → login → membership): the prescribed teaser for everyone, then the way in for the
+person's state. Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): the head at
+the reading edge (the prescribed title and text, whole); one chapter — the way in (one primary, its locked label) and
+the sentence that says what follows, or the state's notice.
+{% endcomment %}
+{% block page_title %}{% locked "p3.virtual_forum.title" as forum_title %}{{ forum_title|striptags }}{% endblock %}
+{% block meta_description %}{% locked "p3.virtual_forum.body" as forum_body %}{{ forum_body|striptags }}{% endblock %}
+{% block body_class %}page-community lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 <header class="page-header container">
-  {% locked "p3.virtual_forum.title" "h1" "page-header__title" %}
+  {% locked_title "p3.virtual_forum.title" %}
   {% locked "p3.virtual_forum.body" "p" "page-header__lead" %}
 </header>
-<section class="container community-landing" aria-label="{% translate 'Accès au Forum Virtuel' %}">
+<section class="chapter community-landing" aria-label="{% translate 'Accès au Forum Virtuel' %}">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
   {% if state == "anonymous" %}
-    <p class="community-landing__actions">
-      <a class="btn btn--primary" href="{% url 'account_login' %}?next={{ request.path|urlencode }}">{% locked "p3.virtual_forum.button" %}</a>
-      <a class="btn btn--secondary" href="{% url 'account_signup' %}">{% translate "Créer un compte" %}</a>
-    </p>
-    <p class="community-landing__note">{% translate "L’accès est réservé aux participants du Forum. Après connexion, une demande d’accès est examinée par la modération." %}</p>
+      <p class="actions community-landing__actions">
+        <a class="btn btn--primary btn--lg" href="{% url 'account_login' %}?next={{ request.path|urlencode }}">{% locked "p3.virtual_forum.button" %}</a>
+        <a class="btn btn--secondary btn--lg" href="{% url 'account_signup' %}">{% translate "Créer un compte" %}</a>
+      </p>
+      <p class="fine community-landing__note">{% translate "L’accès est réservé aux participants du Forum. Après connexion, une demande d’accès est examinée par la modération." %}</p>
   {% elif state == "none" %}
-    <p class="community-landing__actions">
-      <a class="btn btn--primary" href="{% url 'community:join' %}">{% locked "p3.virtual_forum.button" %}</a>
-    </p>
-    <p class="community-landing__note">{% translate "Vous êtes connecté. Pour participer, complétez la demande d’accès : elle sera examinée par la modération." %}</p>
+      <p class="actions community-landing__actions">
+        <a class="btn btn--primary btn--lg" href="{% url 'community:join' %}">{% locked "p3.virtual_forum.button" %}</a>
+      </p>
+      <p class="fine community-landing__note">{% translate "Vous êtes connecté. Pour participer, complétez la demande d’accès : elle sera examinée par la modération." %}</p>
   {% elif state == "pending" %}
-    {% translate "Demande d’accès en cours d’examen" as pending_title %}
-    {% translate "Votre demande a bien été enregistrée. Vous recevrez une réponse de la modération ; aucune information vous concernant n’est visible par les autres participants." as pending_text %}
-    {% include "components/notice.html" with kind="pending" title=pending_title text=pending_text %}
+      {% translate "Demande d’accès en cours d’examen" as pending_title %}
+      {% translate "Votre demande a bien été enregistrée. Vous recevrez une réponse de la modération ; aucune information vous concernant n’est visible par les autres participants." as pending_text %}
+      {% include "components/notice.html" with kind="pending" title=pending_title text=pending_text %}
   {% elif state == "suspended" %}
-    {% translate "Accès suspendu" as suspended_title %}
-    {% translate "Votre accès au Forum Virtuel est actuellement suspendu. Pour toute question, écrivez-nous." as suspended_text %}
-    {% include "components/notice.html" with kind="warning" title=suspended_title text=suspended_text %}
-    <p><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      {% translate "Accès suspendu" as suspended_title %}
+      {% translate "Votre accès au Forum Virtuel est actuellement suspendu. Pour toute question, écrivez-nous." as suspended_text %}
+      {% include "components/notice.html" with kind="warning" title=suspended_title text=suspended_text %}
+      <p class="aiuto"><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   {% endif %}
+    </div>
+  </div>
 </section>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

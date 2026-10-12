@@ -32,12 +32,12 @@ Contract: `actor` = a selection.AuthorizedActor, `mandate` (optional) = a Select
     <div class="responsible__fact">
       <dt class="t-folio">{% translate "Validité" %}</dt>
       <dd>
-        <span class="state state--{{ actor.status_word }}" data-register="{{ actor.status_word|chip_register:'selection.actor' }}">
+        {% chip actor.status_word "selection.actor" %}
           {% if actor.status_word == 'valid' %}{% translate "En vigueur" %}
           {% elif actor.status_word == 'expired' %}{% translate "Échue" %}
           {% elif actor.status_word == 'suspended' %}{% translate "Suspendue" %}
           {% else %}{% translate "Retirée" %}{% endif %}
-        </span>
+        {% endchip %}
         <span class="t-caption">{% if actor.valid_until %}{% blocktranslate with date=actor.valid_until|date:"d.m.Y" %}jusqu’au {{ date }}{% endblocktranslate %}{% else %}{% translate "sans échéance inscrite" %}{% endif %}</span>
       </dd>
     </div>

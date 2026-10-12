@@ -3,7 +3,7 @@
 {% if page_obj.paginator.num_pages > 1 %}
 <nav class="pagination" aria-label="{% translate 'Pagination' %}">
   <ul class="pagination__list">
-    {% if page_obj.has_previous %}<li><a class="pagination__link pagination__link--prev" href="?page={{ page_obj.previous_page_number }}{% if query %}&{{ query }}{% endif %}" rel="prev">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl pagination__icon-prev" %}{% translate "Précédent" %}</a></li>{% endif %}
+    {% if page_obj.has_previous %}<li><a class="pagination__link pagination__link--prev" href="?page={{ page_obj.previous_page_number }}{% if query %}&{{ query }}{% endif %}" rel="prev">{% svg_icon "arrow-start" "icon icon--sm" %}{% translate "Précédent" %}</a></li>{% endif %}
     <li class="pagination__status" aria-current="page">{% blocktranslate with n=page_obj.number total=page_obj.paginator.num_pages %}Page {{ n }} sur {{ total }}{% endblocktranslate %}</li>
     {% if page_obj.has_next %}<li><a class="pagination__link pagination__link--next" href="?page={{ page_obj.next_page_number }}{% if query %}&{{ query }}{% endif %}" rel="next">{% translate "Suivant" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></li>{% endif %}
   </ul>

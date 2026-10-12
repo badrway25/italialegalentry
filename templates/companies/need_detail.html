@@ -28,7 +28,7 @@ need, which the company has a right to know and which is named by organisation o
     <div class="portal-facts__row">
       <dt>{% translate "État" %}</dt>
       <dd>
-        <span class="state state--{{ need.state_modifier }}" data-register="{{ need.status|chip_register:'companies.NeedStatus' }}">{{ need.get_status_display }}</span>
+        {% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}
         <span class="t-caption">{% blocktranslate with date=need.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span>
       </dd>
     </div>
@@ -171,14 +171,14 @@ need, which the company has a right to know and which is named by organisation o
         {% for skill in mandatory_skills %}
         <tr>
           <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
-          <td data-label="{% translate 'Niveau d’exigence' %}"><span class="state state--missing" data-register="attesa">{{ skill.get_level_display }}</span></td>
+          <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
           <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
         </tr>
         {% endfor %}
         {% for skill in preferred_skills %}
         <tr>
           <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
-          <td data-label="{% translate 'Niveau d’exigence' %}"><span class="state state--filed" data-register="neutro">{{ skill.get_level_display }}</span></td>
+          <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
           <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
         </tr>
         {% endfor %}
@@ -203,7 +203,7 @@ need, which the company has a right to know and which is named by organisation o
       <span class="sequence__marker" aria-hidden="true"></span>
       <div>
         <p class="sequence__title">
-          <span class="state state--{{ event.state_modifier }}" data-register="{{ event.to_status|chip_register:'companies.NeedStatus' }}">{{ event.get_to_status_display }}</span>
+          {% chip event.to_status "companies.NeedStatus" %}{{ event.get_to_status_display }}{% endchip %}
           <time class="t-caption" datetime="{{ event.created_at|date:'c' }}">{{ event.created_at|date:"d.m.Y" }}</time>
         </p>
         {% if event.note %}<p class="sequence__body">{{ event.note }}</p>{% endif %}

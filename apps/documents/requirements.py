@@ -26,7 +26,7 @@ import datetime as dt
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
-from core import clock
+from core import clock, icons
 from documents.models import RequirementState, ScanStatus, VersionDecision
 
 #: A piece whose validity ends within this many days is already "à remplacer": telling somebody the
@@ -288,13 +288,7 @@ def health(state: str, version, *, today=None) -> str:
 
 #: The glyph of the actor answerable for a piece (static/img/icons.svg) — beside the actor's name,
 #: never instead of it; an unknown actor gets the dashed disc the stylesheet draws for no glyph.
-ACTOR_GLYPHS: dict[str, str] = {
-    "person": "person",
-    "company": "building",
-    "authority": "shield",
-    "professional": "briefcase",
-    "training_body": "university",
-    # The company's needs (companies.models.ActorRole): the authorised actor and the project team.
-    "authorised_actor": "handshake",
-    "project_team": "institution",
-}
+#: Design V5 (W1-B): the icon registry's ACTOR map — person · building · stamp (the authority's act) · briefcase ·
+#: university · badge-dot (the authorised actor, no check) · ile-mark (the project team); the company's needs
+#: (companies.models.ActorRole) share the last two. One table (tests/frontend/test_icons.py).
+ACTOR_GLYPHS: dict[str, str] = dict(icons.ACTOR)

@@ -37,7 +37,7 @@ deliver: a record of the sessions attended.
 
   {% if enrolment %}
     <p class="portal__summary">
-      <span class="state state--{% if enrolment.is_completed %}done{% else %}filed{% endif %}" data-register="{{ enrolment.status|chip_register:'academy.EnrolmentStatus' }}">{{ enrolment.get_status_display }}</span>
+      {% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}
     </p>
     {% if enrolment_url %}
     <p class="portal__actions"><a class="btn btn--primary" href="{{ enrolment_url }}">{% translate "Ouvrir mon suivi" %}</a></p>

@@ -28,14 +28,14 @@ closing « Comment ça marche » box, side resources and the anti-fraud callout 
         <li class="pathway-list__item{% if not entry.is_live %} pathway-list__item--pending{% endif %}" data-pathway="{{ entry.key }}">
           <span class="pathway-list__num" aria-hidden="true"></span>
           <h3 class="pathway-list__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>
-            <span class="pathway-list__icon icon--accent" aria-hidden="true">{% svg_icon entry.icon "icon icon--sm" %}</span>
+            <span class="pathway-list__icon icon--accent" aria-hidden="true">{% svg_icon entry.key|concept:"pathway"|default:entry.icon "icon icon--sm" %}</span>
             {% if entry.url %}<a href="{{ entry.url }}">{{ entry.title }}</a>{% else %}{{ entry.title }}{% endif %}
           </h3>
           <p class="pathway-list__desc"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{{ entry.description }}</p>
           {% if entry.url %}
             <span class="pathway-list__arrow" aria-hidden="true">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span>
           {% else %}
-            <span class="pathway-list__arrow badge badge--pending" data-register="attesa" role="status">{% translate "Fiche détaillée en préparation" %}</span>
+            {% chip register="attesa" css_class="pathway-list__arrow" role="status" %}{% translate "Fiche détaillée en préparation" %}{% endchip %}
           {% endif %}
         </li>
         {% endfor %}
@@ -45,7 +45,7 @@ closing « Comment ça marche » box, side resources and the anti-fraud callout 
     {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
 
     <section class="notice notice--institutional" aria-labelledby="how-it-works-title" data-callout="how-it-works">
-      <span class="notice__icon" aria-hidden="true">{% svg_icon "list" "icon icon--lg" %}</span>
+      <span class="notice__icon" aria-hidden="true">{% svg_icon "ile-steps" "icon icon--lg" %}</span>
       <h2 class="notice__title" id="how-it-works-title">{% translate "Comment ça marche" %}</h2>
       <div class="notice__body"><p>{% locked "p3.persons.how_it_works" %}</p></div>
     </section>

@@ -1,26 +1,20 @@
-{% comment %}
-Homepage section header — the FOLIO (art direction A §7.2), which replaces the eyebrow entirely.
+{% load pages_typo %}{% comment %}
+THE CHAPTER HEAD of the home (design V5.4, W2-D step 3 «the home around the hero»; DESIGN_SYSTEM_V5 PX04).
 
-The page this replaces carried six eyebrows on one screen, all at the same size, weight, tracking
-and colour, so none of them told the reader anything except "a section starts here". The folio says
-three things instead: WHERE you are (an ordinal), WHAT this is (the running head) and WHEN it was
-revised or from which source it comes.
+One section device, at the reading edge: the mark's three steps as a small mark in ink — the sprite's identity
+glyph `ile-steps` (apps/core/icons.py: a stair profile, never mirrored; PX04's micro-mark) — then the title
+and, when the section has one, its lead. No eyebrow and no ordinal: five of the seven running heads this
+partial used to print said again what the title under them, or the link at the chapter's foot, already
+said, and a number in front of a chapter told the reader nothing (numerals are kept for real sequences).
+The mark is decorative; the anchor is the section's slug, so reordering the home from the back office
+never breaks a link to it.
 
-The ordinal is a CSS counter and is PRESENTATIONAL: the anchor is always the section's slug, so
-reordering the home page from the back-office never breaks a link to it.
-
-Contract: `title_id`, `heading` / `intro` (pages.services.Text), `fallback_title` (str),
-optional `eyebrow` (the running head — kept under its old name so the callers do not all change at
-once), optional `date` (a revision date or a source).
+Contract: `title_id`, `heading` / `intro` (pages.services.Text), `fallback_title` (str: the name of the
+section when an editor has blanked its heading — the outline keeps it, visually hidden). The heading and the
+intro are editorial (team-authored, never a prescribed text): they take the French spacing filter.
 {% endcomment %}
-<div class="section__header">
-  {% if eyebrow %}
-  <p class="folio">
-    <span class="folio__ordinal" aria-hidden="true"></span>
-    <span class="folio__head">{{ eyebrow }}</span>
-    {% if date %}<span class="folio__date">{{ date }}</span>{% endif %}
-  </p>
-  {% endif %}
-  {% if heading %}<h2 class="section__title" id="{{ title_id }}"{% if heading.lang %} lang="{{ heading.lang }}"{% endif %}>{{ heading }}</h2>{% else %}<h2 class="visually-hidden" id="{{ title_id }}">{{ fallback_title }}</h2>{% endif %}
-  {% if intro %}<p class="section__lead"{% if intro.lang %} lang="{{ intro.lang }}"{% endif %}>{{ intro }}</p>{% endif %}
+<div class="section__header chapter__head">
+  {% if heading %}{% svg_icon "ile-steps" "icon chapter__mark" %}
+  <h2 class="section__title" id="{{ title_id }}"{% if heading.lang %} lang="{{ heading.lang }}"{% endif %}>{{ heading|typo }}</h2>{% else %}<h2 class="visually-hidden" id="{{ title_id }}">{{ fallback_title }}</h2>{% endif %}
+  {% if intro %}<p class="section__lead"{% if intro.lang %} lang="{{ intro.lang }}"{% endif %}>{{ intro|typo }}</p>{% endif %}
 </div>

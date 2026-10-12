@@ -1,0 +1,57 @@
+{% load i18n static cms_nav %}{% get_current_language as page_lang %}{% get_current_language_bidi as page_rtl %}<!DOCTYPE html>
+<html lang="{{ page_lang }}" dir="{% if page_rtl %}rtl{% else %}ltr{% endif %}" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>{% translate "Erreur" %} {% block error_code %}{% endblock %} · {% firstof project_name site.project_name %}</title>
+<meta name="description" content="{% translate "Page d’erreur" %}">
+{% comment %}
+THE SELF-SUFFICIENT ERROR PAGE — 400 and 500 (design V5, V5.4 plan §3.5 item 2; W3-F2, step 2). The same quiet page
+as errors/base_error.html — what happened, what to do, the way on, «who can help me» — in a frame that needs NOTHING
+the failure may have taken with it: no database, no context processor, no session, no request beyond the language
+LocaleMiddleware has already set. Like Django's own `bad_request` and `server_error`, core.views renders it without
+the request (`project_name`, `contact_email` and `request_id` come from the view, from settings and from the
+request id middleware), and if even that fails it answers a bare page of the same words (core.views._bare).
+
+What it draws: the letterhead's paper with the official lock-up and nothing that reads the database (no menu, no
+switch of language, no reserved-area entrance), then the page — the door at rest included (errors/_door.html: static
+files only). What it loads: the faces of the page's script and the wordmark's (base.html's preloads), the one bundle
+(main.css) and the error pages' sheet (cms/errori.css: the service pages' partial and the door stage) — static files,
+which the manifest storage names without a query — head.js (the `js` class: «Page précédente» exists only with
+script) and main.js (its back link).
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+<link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="48x48" type="image/x-icon">
+{% if page_rtl %}<link rel="preload" href="{% static 'fonts/v5-vazirmatn-var-400-700-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>
+{% endif %}<link rel="preload" href="{% static 'fonts/v5-host-grotesk-var-400-700.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'fonts/v5-ile-wordmark-600.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/cms/errori.css' %}">
+<script src="{% static 'js/head.js' %}"></script>
+</head>
+<body class="page-error servizio servizio--solo{% if page_rtl %} is-rtl{% endif %}">
+<a class="skip-link" href="#main-content">{% translate "Aller au contenu principal" %}</a>
+<header class="site-header site-header--solo">
+  <div class="container site-header__inner">
+    <a class="brand brand--lockup" href="{% url 'pages:home' %}" aria-label="{% firstof project_name site.project_name %} — {% translate 'accueil' %}">{% brand_lockup %}</a>
+  </div>
+</header>
+<main id="main-content" tabindex="-1">
+<section class="container error-page" aria-labelledby="error-title">
+  {% include "errors/_door.html" %}
+  <div class="error-page__body">
+    <header class="error-page__head">
+      <p class="error-page__code" aria-hidden="true">{% translate "Erreur" %} {% block error_code_display %}{% endblock %}</p>
+      <h1 id="error-title" class="error-page__title">{% block error_title %}{% translate "Une erreur est survenue" %}{% endblock %}</h1>
+      <p class="error-page__text">{% block error_text %}{% translate "La page demandée n’est pas disponible." %}{% endblock %}</p>
+      {% block error_extra %}{% endblock %}
+    </header>
+    {% block error_actions %}{% include "errors/_actions.html" %}{% endblock %}
+  </div>
+  {% include "errors/_way_on.html" %}
+</section>
+</main>
+<script type="module" src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

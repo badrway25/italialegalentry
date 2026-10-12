@@ -1,28 +1,45 @@
-{% load i18n %}{% comment %}
+{% load i18n ile_core %}{% comment %}
 Contract: include with `field` (a BoundField). Optional: `help` (override help text),
 `consent` (True → consent styling for the mandatory, never pre-checked checkbox).
 Renders label, control, help text and errors. Django 5.2 adds aria-invalid and an
 aria-describedby pointing at `{{ field.auto_id }}_helptext` / `{{ field.auto_id }}_error`, so the
 help and error elements below use exactly those ids. Hidden widgets and the honeypot field
 render bare (no label), inside the off-screen wrapper.
+
+THE LABEL ROW'S SLOT (design V5 «Il varco», V5.4 plan §1.13; W2-B). A field whose form sets
+`help_beside_label` (accounts.forms.LoginForm, on the password) has its help text at the END OF THE LABEL'S
+ROW instead of under the control: a short link that belongs to the label — the sign-in's «forgotten
+password». It is the `form-field__aside`, WRITTEN AFTER THE CONTROL — from the keyboard the address is
+followed by the password, never by a link — and placed in the label's row by the sheet that draws it
+(apps/accounts/static/accounts/entrance.css); a sheet that does not know it leaves it under the control,
+where a help text stands. The element keeps the help's id, so the control is described by it as before.
+
+THE HELP is a <div>: a help text may be a block (allauth's password rules are a list), and a <ul> written
+inside a <p> closes it — the id was left on an empty paragraph, and the rules outside the help's style.
+
+THE SHOW / HIDE CONTROL is the system's glyph (W1-C, review M2 and A10; v5/field.css §5): the eye in a seat at
+the plate's end, under ONE name that does not change — `aria-pressed` alone says the state. static/js/src/shell.js
+swaps the input's type and keeps the caret (W2-B).
 {% endcomment %}{% if field.is_hidden %}{{ field }}{% elif field.name == "website_url" %}<div class="hp-wrap" aria-hidden="true">{{ field }}</div>{% else %}
 <div class="form-field{% if field.errors %} form-field--error{% endif %}{% if field.field.required %} form-field--required{% endif %}{% if consent or 'consent-checkbox' in field.field.widget.attrs.class %} form-field--consent{% endif %}" id="wrap_{{ field.id_for_label }}">
-  {% if field.field.widget.input_type != "checkbox" %}<label class="form-field__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>{% endif %}
+  {% if field.field.widget.input_type != "checkbox" %}<label class="form-field__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}&nbsp;<span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>{% endif %}
   {% if field.field.widget.input_type == "checkbox" %}
     <div class="form-field__check">
       {{ field }}
-      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>
+      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}&nbsp;<span class="form-field__required" aria-hidden="true">*</span>{% endif %}</label>
     </div>
   {% elif field.field.widget.input_type == "password" %}
-    {# design V4 (CREATIVE_DIRECTION.md §3.3): a labelled show/hide control; shell.js swaps the type #}
+    {# a glyph in a 44 px seat (review M2, A10): eye / eye-off swapped by the sheet on aria-pressed, the one channel of the state; a constant name; shell.js swaps the type #}
     <div class="form-field__control form-field__control--password">
       {{ field }}
-      <button class="form-field__toggle" type="button" data-password-toggle aria-controls="{{ field.id_for_label }}" aria-pressed="false" data-label-show="{% translate 'Afficher le mot de passe' %}" data-label-hide="{% translate 'Masquer le mot de passe' %}">{% translate "Afficher le mot de passe" %}</button>
+      <button class="form-field__toggle" type="button" data-password-toggle aria-controls="{{ field.id_for_label }}" aria-pressed="false"><span class="visually-hidden">{% translate "Afficher le mot de passe" %}</span>{% svg_icon "eye" "icon form-field__toggle-show" %}{% svg_icon "eye-off" "icon form-field__toggle-hide" %}</button>
     </div>
   {% else %}
     {{ field }}
   {% endif %}
-  {% if help or field.help_text %}<p class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help|default:field.help_text }}</p>{% endif %}
-  {% if field.errors %}<ul class="form-field__errors" id="{{ field.auto_id }}_error" role="alert">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+  {# a div: Django's password help is a list, which a <p> cannot hold (review M1, A11Y R3); the label row's slot (W2-B) is the aside #}
+  {% if help %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help }}</div>{% elif field.help_text and field.field.help_beside_label %}<span class="form-field__aside" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>{% elif field.help_text %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</div>{% endif %}
+  {# the alert is the wrapper, so the list keeps its items (A11Y A2: axe `listitem`) #}
+  {% if field.errors %}<div class="form-field__errors" id="{{ field.auto_id }}_error" role="alert"><ul class="form-field__error-list">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
 </div>
 {% endif %}

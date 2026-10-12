@@ -21,7 +21,7 @@ The form is not re-implemented: the prescribed button links enquiries:institutio
     <h2 id="destinataires-title" class="section__title"{% if recipients.source.lang_attr %} lang="{{ recipients.source.lang_attr }}"{% endif %}>{{ recipients.label }}</h2>
   </div>
   {% locked "p3.institutions.recipients" "p" "visually-hidden" %}
-  {% include "ecosystem/partials/enumeration.html" with items=recipients.items lang=recipients.source.lang_attr icon="institution" columns="2" %}
+  {% include "ecosystem/partials/enumeration.html" with items=recipients.items lang=recipients.source.lang_attr columns="2" %}
 </section>
 
 <div id="collaboration" class="ecosystem-cta">

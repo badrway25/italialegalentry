@@ -3,8 +3,9 @@ Browser tests (Playwright, Chromium) for the design system shell.
 
 Run with: pytest tests/frontend/test_browser.py -m browser
 Screenshots land in docs/qa/design/ (ignored by git except the golden set).
-Checks: no horizontal overflow at 360/768/1440 in LTR and RTL, keyboard-operable mega-menu,
-mobile drawer, reveal never hides content, dialogs restore focus.
+Checks: no horizontal overflow at 360/768/1440 in LTR and RTL, the keyboard model of «Il portico» (design V5,
+V5.4 plan §1.12; the full behaviour checks are in test_browser_w2_c1.py), mobile drawer, reveal never hides content,
+dialogs restore focus.
 """
 
 from __future__ import annotations
@@ -121,7 +122,7 @@ def test_no_horizontal_overflow_and_screenshots(browser, live_server, seeded, me
             page.click("[data-nav-toggle]")
             page.wait_for_timeout(300)
         else:
-            page.click("[data-nav-item] [data-nav-panel-toggle]")
+            page.click("[data-portico-door]")
             page.wait_for_timeout(300)
         scroll_w, client_w = _overflow(page)
         assert scroll_w <= client_w
@@ -131,34 +132,43 @@ def test_no_horizontal_overflow_and_screenshots(browser, live_server, seeded, me
 
 
 def test_mega_menu_is_keyboard_operable(browser, live_server, seeded, menu_rows):
+    """«Il portico» (design V5, plan §1.12) is a disclosure navigation: Enter toggles a panel and leaves the focus on
+    its door, ↓ enters the panel, Esc closes it and returns the focus, ← → walk the bar — with a panel open the
+    open panel follows them — and focus leaving the navigation closes it (WCAG 1.4.13)."""
     context, page = _page(browser, 1440, 900)
     try:
         page.goto(live_server.url + "/fr/", wait_until="networkidle")
-        toggle = page.locator("[data-nav-item] [data-nav-panel-toggle]").first
-        panel_id = toggle.get_attribute("aria-controls")
-        toggle.focus()
+        door = page.locator("[data-portico-door]").first
+        panel_id = door.get_attribute("aria-controls")
+        panel = page.locator(f"#{panel_id}")
+        door.focus()
         page.keyboard.press("Enter")
-        assert toggle.get_attribute("aria-expanded") == "true"
-        assert page.locator(f"#{panel_id}").is_visible()
-        # focus moved inside the panel; Escape closes it and returns focus to the toggle
-        assert page.evaluate(f"document.getElementById('{panel_id}').contains(document.activeElement)")
-        page.keyboard.press("Escape")
-        assert toggle.get_attribute("aria-expanded") == "false"
-        assert not page.locator(f"#{panel_id}").is_visible()
-        assert page.evaluate("document.activeElement.hasAttribute('data-nav-panel-toggle')")
-        # ArrowDown on the top-level link opens the panel and moves focus into it
-        page.locator("[data-nav-item] [data-nav-link]").first.focus()
+        assert door.get_attribute("aria-expanded") == "true"
+        assert panel.is_visible()
+        # a disclosure, not a menu: the focus stays on the door; ↓ enters the panel
+        assert page.evaluate("document.activeElement.hasAttribute('data-portico-door')")
         page.keyboard.press("ArrowDown")
-        assert page.locator(f"#{panel_id}").is_visible()
-        # ArrowRight moves between top-level items
+        assert page.evaluate(f"document.getElementById('{panel_id}').contains(document.activeElement)")
+        # Escape closes it and returns the focus to the door
         page.keyboard.press("Escape")
-        page.locator("[data-nav-item] [data-nav-link]").first.focus()
+        assert door.get_attribute("aria-expanded") == "false"
+        assert not panel.is_visible()
+        assert page.evaluate("document.activeElement.hasAttribute('data-portico-door')")
+        # ← → move between the top-level items without opening anything
         page.keyboard.press("ArrowRight")
         assert page.evaluate("document.activeElement.textContent.trim()") == "Entreprises"
-        # Tab past the last item closes the panel (focusout)
-        page.keyboard.press("Enter")
-        page.keyboard.press("Escape")
-        assert page.locator("[data-nav-item][data-open='true']").count() == 0
+        assert page.locator("[data-portico-door][aria-expanded='true']").count() == 0
+        # with a panel open, the arrows move the open panel with the focus (never a closed bar)
+        page.keyboard.press("ArrowDown")
+        page.keyboard.press("ArrowLeft")
+        assert page.evaluate("document.activeElement.textContent.trim()") == "Personnes"
+        assert door.get_attribute("aria-expanded") == "true"
+        # Tab past the navigation closes the panel (focusout)
+        for _ in range(30):
+            page.keyboard.press("Tab")
+            if not page.evaluate("document.querySelector('[data-portico]').contains(document.activeElement)"):
+                break
+        assert page.locator("[data-portico-door][aria-expanded='true']").count() == 0
     finally:
         context.close()
 
@@ -216,8 +226,17 @@ def test_fonts_are_self_hosted_and_loaded(browser, live_server, seeded):
         page.goto(live_server.url + "/fr/", wait_until="networkidle")
         externals = [u for u in requests if not u.startswith(live_server.url)]
         assert externals == [], externals
-        assert page.evaluate("document.fonts.check('16px \"IBM Plex Sans\"')")
-        assert page.evaluate("document.fonts.check('500 16px \"IBM Plex Serif\"')")
-        assert any(u.endswith(".woff2") for u in requests)
+        # Design V5, type «Una voce» (V5.4 plan §1.1): Host Grotesk draws every Latin role and «ILE Wordmark»
+        # the name in the letterhead — both preloaded, both loaded; no V4 face is requested.
+        assert page.evaluate("document.fonts.ready.then(() => document.fonts.check('16px \"Host Grotesk\"'))")
+        loaded = page.evaluate("[...document.fonts].filter(f => f.status === 'loaded').map(f => f.family)")
+        assert "Host Grotesk" in loaded and "ILE Wordmark" in loaded, loaded
+        assert page.evaluate("getComputedStyle(document.body).fontFamily").startswith('"Host Grotesk"')
+        assert page.evaluate("getComputedStyle(document.querySelector('.lock__wm')).fontFamily").startswith(
+            '"ILE Wordmark"'
+        )
+        fonts = [u.rsplit("/", 1)[-1] for u in requests if u.endswith(".woff2")]
+        assert fonts and all(name.startswith("v5-") for name in fonts), fonts
+        assert not any("vazirmatn" in name for name in fonts), "a Latin page never downloads the Arabic face"
     finally:
         context.close()

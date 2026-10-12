@@ -75,7 +75,7 @@ authorised actor, for the same reason: an assignment without a stated mandate an
   {% endcomment %}
   {% if not ticket.mandate_is_live %}
   <dt>{% translate "État du mandat" %}</dt>
-  <dd><span class="state state--expired" data-register="nullo">{% translate "mandat terminé" %}</span> — {% translate "ce professionnel n’a plus accès à la demande." %}</dd>
+  <dd>{% chip register="nullo" %}{% translate "mandat terminé" %}{% endchip %} — {% translate "ce professionnel n’a plus accès à la demande." %}</dd>
   {% endif %}
 </dl>
 {% endif %}
@@ -92,8 +92,8 @@ authorised actor, for the same reason: an assignment without a stated mandate an
         <p class="exchange__head">
           <span class="exchange__role">{{ message.get_author_role_display }}</span>
           <time class="exchange__date" datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y" }}</time>
-          <span class="state state--filed" data-register="neutro">{{ message.get_kind_display }}</span>
-          {% if message.is_internal %}<span class="state state--missing" data-register="neutro">{% translate "note interne" %}</span>{% endif %}
+          <span class="tag">{{ message.get_kind_display }}</span>
+          {% if message.is_internal %}<span class="tag">{% translate "note interne" %}</span>{% endif %}
         </p>
         <p class="exchange__body">{{ message.body|linebreaksbr }}</p>
       </div>

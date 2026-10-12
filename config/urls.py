@@ -77,3 +77,8 @@ if settings.DEBUG:
         path("_errors/500/", core_views.error_500),
         path("_design/", core_dev.design_showcase, name="dev_design_showcase"),
     ]
+    # The V5 live preview (apps/designpreview): a second switch inside the DEBUG guard. The flag
+    # is defined by config/settings/dev.py alone — read from the environment, ILE_DESIGN_PREVIEW=1 —
+    # so under the test and production settings `getattr` finds nothing and the routes never exist.
+    if getattr(settings, "ILE_DESIGN_PREVIEW", False):
+        urlpatterns += [path("__design-v5/", include("designpreview.urls"))]

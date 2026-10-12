@@ -66,6 +66,8 @@ def _crumb(label) -> dict:
 
 def _render(request, template: str, context: dict, *crumbs: dict):
     root = {"label": _("Espace réservé"), "url": reverse("portal:dashboard")}
+    if root["url"] == request.path:
+        root["url"] = ""  # never a link to the page one is on
     context.update(
         {
             "portal_nav": services.navigation(request.user, getattr(request, "portal_active", "")),
@@ -78,7 +80,14 @@ def _render(request, template: str, context: dict, *crumbs: dict):
 
 @portal_view("dashboard")
 def dashboard(request):
-    return _render(request, "portal/dashboard.html", services.dashboard_context(request.user))
+    # The space's first page ends its trail on itself, as every other page does — «Espace réservé › Tableau de
+    # bord», the word the rail lights — and not on the space's name (the W3-A review's m3).
+    return _render(
+        request,
+        "portal/dashboard.html",
+        services.dashboard_context(request.user),
+        {"label": _("Tableau de bord"), "url": ""},
+    )
 
 
 @portal_view("requests")

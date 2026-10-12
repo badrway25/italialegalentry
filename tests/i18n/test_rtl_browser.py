@@ -156,11 +156,12 @@ def test_desktop_mega_menu_opens_inside_the_viewport(browser, site, lang):
     context, page = _open(browser, 1440)
     try:
         page.goto(site + f"/{lang}/", wait_until="networkidle")
-        toggle = page.locator("[data-nav-item] [data-nav-panel-toggle]").first
-        toggle.click()
+        # «Il portico» (design V5, W2-C1): a door is a disclosure button; its panel hangs from the content width
+        door = page.locator("[data-portico-door]").first
+        door.click()
         page.wait_for_timeout(350)
-        assert toggle.get_attribute("aria-expanded") == "true"
-        panel = page.locator("#" + toggle.get_attribute("aria-controls"))
+        assert door.get_attribute("aria-expanded") == "true"
+        panel = page.locator("#" + door.get_attribute("aria-controls"))
         assert panel.is_visible()
         box = panel.bounding_box()
         assert 0 <= box["x"] and box["x"] + box["width"] <= 1440, box
@@ -198,22 +199,39 @@ def test_header_breadcrumbs_and_arrows_are_mirrored_semantically(browser, site):
             page.goto(site + f"/{lang}/page-inexistante/", wait_until="networkidle")
             transform = page.evaluate("getComputedStyle(document.querySelector('main .icon--flip-rtl')).transform")
             assert transform == expected, (lang, transform)
+        # Direction mirrors, meaning does not (design V5, the closed flip list of core.icons): on the Arabic page the
+        # key of «Espace réservé» — the identity tier, on the letterhead's plate since «Il portico» (W2-C1) — keeps
+        # its drawing, and the tag gave it no flip class.
+        page.goto(site + "/ar/", wait_until="networkidle")
+        key = page.evaluate(
+            "(() => { const s = document.querySelector('.site-header__end .targa svg.icon');"
+            " return s && [getComputedStyle(s).transform, s.getAttribute('class'), s.querySelector('use').getAttribute('href')]; })()"
+        )
+        assert key and key[0] == "none" and "icon--flip-rtl" not in key[1] and key[2].endswith("#icon-ile-key"), key
     finally:
         context.close()
 
 
 def test_arabic_typefaces_are_applied_and_loaded(browser, site):
-    """The interface face on a nav link, the reading face on the body: two faces, not one."""
+    """Design V5, type «Una voce» (V5.4 plan §1.1): Vazirmatn draws every Arabic role — the interface on a
+    nav link and the reading text of the body — with Host Grotesk right behind it in the stack for the Latin
+    runs and the digits; both are preloaded on an Arabic page, and loaded."""
     context, page = _open(browser, 1440)
     try:
         page.goto(site + "/ar/", wait_until="networkidle")
+
+        def stack(css: str) -> list[str]:  # a one-word family is serialised without quotes
+            return [family.strip().strip('"') for family in css.split(",")]
+
         nav = page.evaluate("getComputedStyle(document.querySelector('.main-nav__link')).fontFamily")
-        assert "IBM Plex Sans Arabic" in nav
+        assert stack(nav)[:2] == ["Vazirmatn", "Host Grotesk"], nav
         body = page.evaluate("getComputedStyle(document.body).fontFamily")
-        assert "Noto Naskh Arabic" in body
-        page.evaluate("document.fonts.ready")
-        assert page.evaluate("document.fonts.check('16px \"IBM Plex Sans Arabic\"', 'الرئيسية')")
-        assert page.evaluate("document.fonts.check('17px \"Noto Naskh Arabic\"', 'الرئيسية')")
+        assert stack(body)[:2] == ["Vazirmatn", "Host Grotesk"], body
+        assert page.evaluate("document.fonts.ready.then(() => document.fonts.check('16px \"Vazirmatn\"', 'الرئيسية'))")
+        loaded = page.evaluate("[...document.fonts].filter(f => f.status === 'loaded').map(f => f.family)")
+        assert "Vazirmatn" in loaded and "Host Grotesk" in loaded, loaded
+        for retired in ("Noto Naskh Arabic", "IBM Plex Sans Arabic"):
+            assert retired not in loaded, retired
         # Naskh needs room for its diacritics: the leading opens, the size does not shrink.
         assert page.evaluate("getComputedStyle(document.body).lineHeight") == "32px"
     finally:

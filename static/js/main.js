@@ -2,11 +2,14 @@
  * Italy Legal Entry™ — progressive enhancement (ES module, no framework, no external libs).
  *
  * Every behaviour here enhances markup that already works without JavaScript:
- *  - navigation drawer + accessible mega-menu (keyboard, Escape, aria-expanded)
- *  - details-based dropdowns (language switcher, account menu): Escape / outside click
- *  - accordion (exclusive mode), tabs (roving tabindex), stepper (client-side panels)
+ *  - (the public navigation moved to static/js/src/nav.js, bundled into shell.js: design V5 «Il portico»,
+ *    V5.4 plan §1.12 and §2.2's slice of this file, W2-C1)
+ *  - details-based dropdowns: Escape / outside click — a fallback for the pages that do not load the overlay
+ *    system yet (static/js/src/overlay.js owns every dropdown, dialog, drawer, popover and tooltip of a page
+ *    that does: V5.4 plan §1.14, W2-A)
+ *  - accordion (exclusive mode, a link opens its row), tabs (roving tabindex, one indicator), stepper
+ *    (client-side panels)
  *  - reveal-on-scroll (never hides content when JS is off; honours prefers-reduced-motion)
- *  - native <dialog> open/close with focus restore
  *  - optional count-up counters
  *
  * Conventions: behaviours are attached through data-* attributes; no inline handlers
@@ -14,9 +17,6 @@
  */
 
 const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)");
-// Navigation breakpoint — keep in sync with components.css §navigation (80rem).
-const DESKTOP = window.matchMedia("(min-width: 80rem)");
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const qs = (sel, root = document) => root.querySelector(sel);
 const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -34,208 +34,25 @@ function initFormErrorFocus() {
 }
 
 /* ------------------------------------------------------------------------ */
-/* 1. Navigation: drawer (mobile) + mega-menu (desktop)                      */
-/* ------------------------------------------------------------------------ */
-function initNavigation() {
-  const toggle = qs("[data-nav-toggle]");
-  const drawer = qs("[data-nav-drawer]");
-  const overlay = qs("[data-nav-overlay]");
-  const items = qsa("[data-nav-item]");
-
-  const closeAllPanels = (except = null) => {
-    items.forEach((item) => {
-      if (item === except) return;
-      item.dataset.open = "false";
-      const btn = qs("[data-nav-panel-toggle]", item);
-      if (btn) btn.setAttribute("aria-expanded", "false");
-    });
-  };
-
-  const openPanel = (item) => {
-    closeAllPanels(item);
-    item.dataset.open = "true";
-    const btn = qs("[data-nav-panel-toggle]", item);
-    if (btn) btn.setAttribute("aria-expanded", "true");
-  };
-
-  items.forEach((item) => {
-    const btn = qs("[data-nav-panel-toggle]", item);
-    if (!btn) return;
-    btn.setAttribute("aria-expanded", "false");
-    btn.addEventListener("click", () => {
-      const isOpen = item.dataset.open === "true";
-      if (isOpen) {
-        closeAllPanels();
-      } else {
-        item.navOpener = btn;
-        openPanel(item);
-        const first = qs(FOCUSABLE, qs("[data-nav-panel]", item));
-        if (first && DESKTOP.matches) first.focus();
-      }
-    });
-    item.addEventListener("keydown", (event) => {
-      // Inside an open panel the arrows keep working (gate A review, correction 7): Down/Up walk
-      // the panel's links (Up from the first returns to the toggle), Left/Right leave for the
-      // neighbouring section, as they do on the bar.
-      // Only for a key pressed IN the panel: the bar's own ArrowDown bubbles here too, after it has
-      // focused the panel's first link, and used to be handled twice — the first link was skipped
-      // (gate A, round 4, defect 15).
-      const panel = qs("[data-nav-panel]", item);
-      if (item.dataset.open === "true" && panel && panel.contains(event.target)) {
-        const links = qsa(FOCUSABLE, panel).filter((el) => el.offsetParent !== null);
-        const at = links.indexOf(document.activeElement);
-        const isRtl = document.documentElement.dir === "rtl";
-        const step = event.key === (isRtl ? "ArrowLeft" : "ArrowRight") ? 1 : event.key === (isRtl ? "ArrowRight" : "ArrowLeft") ? -1 : 0;
-        if (event.key === "ArrowDown" && at >= 0) {
-          event.preventDefault();
-          links[(at + 1) % links.length].focus();
-          return;
-        }
-        if (event.key === "ArrowUp" && at >= 0) {
-          event.preventDefault();
-          // Up from the first link returns to the stop that opened the panel: the section's link
-          // (ArrowDown on it) or its chevron (a click or Enter on it).
-          (at === 0 ? item.navOpener || qs("[data-nav-link]", item) || btn : links[at - 1]).focus();
-          return;
-        }
-        if (step && DESKTOP.matches) {
-          event.preventDefault();
-          // The same stops as the bar's arrows (below), sections without a panel included.
-          const index = sections.findIndex((section) => section.li === item);
-          const target = sections[(index + step + sections.length) % sections.length];
-          closeAllPanels();
-          (target.link || target.btn).focus();
-          return;
-        }
-      }
-      if (event.key === "Escape" && item.dataset.open === "true") {
-        event.preventDefault();
-        // Escape closes the INNERMOST open thing, and only that one. Without stopping the event
-        // here it also reaches the drawer's handler on `document`, so one key press closed both
-        // the section panel and the whole menu around it.
-        event.stopPropagation();
-        closeAllPanels();
-        (item.navOpener || btn).focus();
-      }
-    });
-    // Desktop: close when focus leaves the item
-    item.addEventListener("focusout", (event) => {
-      if (!DESKTOP.matches) return;
-      if (!item.contains(event.relatedTarget)) closeAllPanels();
-    });
-  });
-
-  // Arrow keys on the bar (desktop menubar behaviour). Every stop of a section — its link and its
-  // chevron — answers them (the chevron was a dead end: → did nothing, ↓ scrolled the page; gate A,
-  // round 4, defect 15): ←/→ go to the neighbouring section, ↓ opens the panel and enters it, and
-  // no arrow scrolls the page while the focus is on the bar. Sections without a panel are stops too.
-  const sections = qsa(".main-nav__list > .main-nav__item").map((li) => ({
-    li,
-    link: qs(":scope > [data-nav-link]", li),
-    btn: qs(":scope > [data-nav-panel-toggle]", li),
-  })).filter((section) => section.link || section.btn);
-  sections.forEach((section, index) => {
-    [section.link, section.btn].filter(Boolean).forEach((stop) => {
-      stop.addEventListener("keydown", (event) => {
-        if (!DESKTOP.matches) return;
-        const isRtl = document.documentElement.dir === "rtl";
-        const next = isRtl ? "ArrowLeft" : "ArrowRight";
-        const prev = isRtl ? "ArrowRight" : "ArrowLeft";
-        if (event.key === next || event.key === prev) {
-          event.preventDefault();
-          const step = event.key === next ? 1 : -1;
-          const target = sections[(index + step + sections.length) % sections.length];
-          (target.link || target.btn).focus();
-        } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-          event.preventDefault();
-          if (event.key !== "ArrowDown" || !section.btn) return;
-          section.li.navOpener = stop;
-          openPanel(section.li);
-          const first = qsa(FOCUSABLE, qs("[data-nav-panel]", section.li)).find((el) => el.offsetParent !== null);
-          if (first) first.focus();
-        }
-      });
-    });
-  });
-
-  if (!toggle || !drawer) return;
-
-  const header = qs("#site-header");
-  // The drawer and its scrim are position:fixed: both start under the header's REAL bottom edge,
-  // which moves with the utility bar (visible or scrolled away) and the scrolled header. The
-  // property is set on the header so that both of its children inherit it (gate A, round 3: a
-  // z-index inside the sticky header cannot put the scrim under the header's own content) — and
-  // measured again whenever the viewport or the header changes while the drawer is open: rotating
-  // a phone left the drawer over the lock-up, or a 41px band of page uncovered (round 4, 12).
-  const placeDrawer = () => {
-    if (!header) return;
-    const bottom = Math.max(0, Math.round(header.getBoundingClientRect().bottom));
-    header.style.setProperty("--nav-drawer-top", `${bottom}px`);
-  };
-  const isOpen = () => document.body.dataset.navOpen === "true";
-  window.addEventListener("resize", () => { if (isOpen()) placeDrawer(); });
-  if (header && "ResizeObserver" in window) new ResizeObserver(() => { if (isOpen()) placeDrawer(); }).observe(header);
-  const setDrawer = (open) => {
-    if (open) placeDrawer();
-    document.body.dataset.navOpen = open ? "true" : "false";
-    toggle.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) {
-      const first = qs(FOCUSABLE, drawer);
-      if (first) first.focus();
-    }
-  };
-
-  toggle.setAttribute("aria-expanded", "false");
-  toggle.addEventListener("click", () => setDrawer(document.body.dataset.navOpen !== "true"));
-  if (overlay) overlay.addEventListener("click", () => setDrawer(false));
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && document.body.dataset.navOpen === "true") {
-      setDrawer(false);
-      toggle.focus();
-    }
-  });
-
-  // Keep focus inside the drawer while open on mobile (simple loop trap)
-  drawer.addEventListener("keydown", (event) => {
-    if (event.key !== "Tab" || DESKTOP.matches || document.body.dataset.navOpen !== "true") return;
-    const focusables = qsa(FOCUSABLE, drawer).filter((el) => el.offsetParent !== null);
-    if (!focusables.length) return;
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      toggle.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      toggle.focus();
-    }
-  });
-
-  DESKTOP.addEventListener("change", () => {
-    setDrawer(false);
-    closeAllPanels();
-  });
-}
-
-/* ------------------------------------------------------------------------ */
-/* 2. Details-based dropdowns (language switcher, account menu)              */
+/* 2. Details-based dropdowns — a FALLBACK (W2-A): the overlay system        */
+/*    (static/js/src/overlay.js) owns the dropdowns of every page that loads */
+/*    it — the console's — and marks each `data-dropdown="overlay"`, which   */
+/*    this function then leaves alone. It serves the pages that do not load  */
+/*    it yet: the letterhead's account menu, until W2-C2 moves it onto the   */
+/*    popover and shell.js imports overlay.js — and this function goes.      */
 /* ------------------------------------------------------------------------ */
 function initDropdowns() {
   const dropdowns = qsa("details[data-dropdown]");
   if (!dropdowns.length) return;
-
-  const closeOthers = (current) => {
-    dropdowns.forEach((d) => {
-      if (d !== current) d.removeAttribute("open");
-    });
-  };
+  // overlay.js loads after this module (document order): who owns a dropdown is read at the event, not here
+  const mine = (details) => details.getAttribute("data-dropdown") !== "overlay";
 
   dropdowns.forEach((details) => {
     const summary = qs("summary", details);
     details.addEventListener("toggle", () => {
+      if (!mine(details)) return;
       if (details.open) {
-        closeOthers(details);
+        dropdowns.forEach((d) => d !== details && mine(d) && d.removeAttribute("open"));
         summary?.setAttribute("aria-expanded", "true");
       } else {
         summary?.setAttribute("aria-expanded", "false");
@@ -243,30 +60,29 @@ function initDropdowns() {
     });
     summary?.setAttribute("aria-expanded", details.open ? "true" : "false");
     details.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && details.open) {
+      if (event.key === "Escape" && details.open && mine(details)) {
         event.preventDefault();
-        // Same rule as the navigation panels: close this dropdown and stop. The language switcher
-        // now lives inside the drawer on a phone (design V2 §8.2), and without this line Escape
-        // dismissed the language list AND the menu it was sitting in.
+        // close this dropdown and stop: Escape dismisses the list, not a menu it may sit in
         event.stopPropagation();
         details.removeAttribute("open");
         summary?.focus();
       }
     });
     details.addEventListener("focusout", (event) => {
-      if (!details.contains(event.relatedTarget)) details.removeAttribute("open");
+      if (mine(details) && !details.contains(event.relatedTarget)) details.removeAttribute("open");
     });
   });
 
   document.addEventListener("click", (event) => {
     dropdowns.forEach((d) => {
-      if (d.open && !d.contains(event.target)) d.removeAttribute("open");
+      if (d.open && mine(d) && !d.contains(event.target)) d.removeAttribute("open");
     });
   });
 }
 
 /* ------------------------------------------------------------------------ */
-/* 3. Accordion — exclusive mode for browsers without <details name>         */
+/* 3. Accordion — native <details>: exclusive mode for browsers without      */
+/*    <details name>, and a link to a row opens it                           */
 /* ------------------------------------------------------------------------ */
 function initAccordions() {
   qsa('[data-accordion="single"]').forEach((group) => {
@@ -280,56 +96,100 @@ function initAccordions() {
       });
     });
   });
+  // A link to a row (/faq/#key, «Lien direct vers cette question») lands on the answer, not on a closed question.
+  const openTarget = () => {
+    let target = null;
+    try {
+      target = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    } catch (_) {
+      /* a malformed fragment names nothing */
+    }
+    if (target && target.matches("details.accordion__item")) target.open = true;
+  };
+  openTarget();
+  window.addEventListener("hashchange", openTarget);
 }
 
 /* ------------------------------------------------------------------------ */
-/* 4. Tabs — WAI-ARIA tabs with roving tabindex; stacked sections without JS */
+/* 4. Tabs — WAI-ARIA tabs: roving tabindex, automatic activation, the one   */
+/*    indicator of static/css/v5/tabs.css; stacked sections without JS       */
 /* ------------------------------------------------------------------------ */
 function initTabs() {
   qsa("[data-tabs]").forEach((widget) => {
+    const list = qs("[role=tablist]", widget);
     const tabs = qsa("[role=tab]", widget);
-    const panels = qsa("[role=tabpanel]", widget);
-    if (!tabs.length || tabs.length !== panels.length) return;
+    const panels = tabs.map((tab) => document.getElementById(tab.getAttribute("aria-controls")));
+    if (!list || !tabs.length || panels.some((panel) => !panel)) return;
+    let current = -1;
 
-    const activate = (index, focus = true) => {
-      tabs.forEach((tab, i) => {
-        const selected = i === index;
-        tab.setAttribute("aria-selected", selected ? "true" : "false");
-        tab.tabIndex = selected ? 0 : -1;
-        panels[i].hidden = !selected;
-        if (selected && focus) tab.focus();
-      });
-      try {
-        if (widget.dataset.tabsRemember) localStorage.setItem(`tabs:${widget.dataset.tabsRemember}`, String(index));
-      } catch (_) {
-        /* storage unavailable */
+    // The indicator (design V5, V5.4 plan §1.5 MS-O3): where the selected label is inside the list, in physical
+    // pixels from the list's top left corner — the same measure in both directions — written as custom
+    // properties; tabs.css moves a 1 px box there with transform alone. Nothing is animated from here: a
+    // pointer's choice sets .is-travelling and the sheet's transition does the rest (0 ms under reduced motion).
+    const place = () => {
+      const tab = tabs[current];
+      const box = list.getBoundingClientRect();
+      const r = tab ? tab.getBoundingClientRect() : null;
+      if (!r || !r.width) return; // not rendered (a hidden ancestor): the next measure will find it
+      const pad = parseFloat(getComputedStyle(tab).paddingInlineStart) || 0;
+      const x = r.left - box.left + pad;
+      const before = parseFloat(widget.style.getPropertyValue("--tabs-x"));
+      widget.style.setProperty("--tabs-dir", Number.isFinite(before) && x < before ? "-1" : "1");
+      widget.style.setProperty("--tabs-x", `${x.toFixed(2)}px`);
+      widget.style.setProperty("--tabs-y", `${(r.bottom - box.top - 1).toFixed(2)}px`);
+      widget.style.setProperty("--tabs-w", Math.max(1, r.width - 2 * pad).toFixed(2));
+      widget.classList.add("is-ready");
+    };
+
+    // `travel` is true for a pointer's choice only: from the keyboard, at load, from a link and on a resize the
+    // change is static (tier 0). The class is set before anything is measured, so the arriving panel is first
+    // rendered with its transition.
+    const select = (index, { focus = false, travel = false } = {}) => {
+      widget.classList.toggle("is-travelling", travel && index !== current);
+      if (index !== current) {
+        current = index;
+        tabs.forEach((tab, i) => {
+          const selected = i === index;
+          tab.setAttribute("aria-selected", selected ? "true" : "false");
+          tab.tabIndex = selected ? 0 : -1;
+          panels[i].hidden = !selected;
+        });
+        place();
       }
+      if (focus) tabs[index].focus();
     };
 
     tabs.forEach((tab, index) => {
-      tab.addEventListener("click", () => activate(index, false));
+      // event.detail is the click count: 0 when Enter or Space made the click
+      tab.addEventListener("click", (event) => select(index, { travel: event.detail > 0 }));
       tab.addEventListener("keydown", (event) => {
-        const isRtl = document.documentElement.dir === "rtl";
-        const next = isRtl ? "ArrowLeft" : "ArrowRight";
-        const prev = isRtl ? "ArrowRight" : "ArrowLeft";
+        if (event.altKey || event.ctrlKey || event.metaKey) return; // Alt + arrow is the browser's «back»
+        const rtl = getComputedStyle(list).direction === "rtl";
         let target = null;
-        if (event.key === next) target = (index + 1) % tabs.length;
-        else if (event.key === prev) target = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "ArrowRight") target = index + (rtl ? -1 : 1);
+        else if (event.key === "ArrowLeft") target = index + (rtl ? 1 : -1);
         else if (event.key === "Home") target = 0;
         else if (event.key === "End") target = tabs.length - 1;
-        if (target !== null) {
-          event.preventDefault();
-          activate(target);
-        }
+        if (target === null) return;
+        event.preventDefault();
+        select((target + tabs.length) % tabs.length, { focus: true });
       });
     });
 
-    let initial = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true");
-    if (location.hash) {
-      const byHash = panels.findIndex((p) => `#${p.id}` === location.hash);
-      if (byHash >= 0) initial = byHash;
+    const fromHash = () => panels.findIndex((panel) => location.hash === `#${panel.id}`);
+    const marked = tabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true");
+    select(fromHash() >= 0 ? fromHash() : Math.max(0, marked));
+    window.addEventListener("hashchange", () => {
+      if (fromHash() >= 0) select(fromHash());
+    });
+    // The labels move when the face arrives, the list wraps or the page is resized: measure again, in place.
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(() => {
+        widget.classList.remove("is-travelling");
+        place();
+      });
+      [list, ...tabs].forEach((el) => observer.observe(el));
     }
-    activate(initial >= 0 ? initial : 0, false);
   });
 }
 
@@ -410,44 +270,9 @@ function initReveal() {
 }
 
 /* ------------------------------------------------------------------------ */
-/* 7. Dialog — native <dialog>; the platform traps focus and handles Escape  */
+/* 7. Dialogs — the overlay system's (static/js/src/overlay.js, W2-A): the   */
+/*    `initDialogs` of design V1 left this file with its last caller.        */
 /* ------------------------------------------------------------------------ */
-function initDialogs() {
-  let opener = null;
-  document.addEventListener("click", (event) => {
-    const openBtn = event.target.closest("[data-dialog-open]");
-    if (openBtn) {
-      const id = openBtn.dataset.dialogOpen || (openBtn.getAttribute("href") || "").replace(/^#/, "");
-      const dialog = id && document.getElementById(id);
-      if (dialog && typeof dialog.showModal === "function") {
-        event.preventDefault();
-        opener = openBtn;
-        dialog.showModal();
-        const first = qs("[data-dialog-focus]", dialog) || qs(FOCUSABLE, dialog);
-        if (first) first.focus();
-      }
-      return;
-    }
-    const closeBtn = event.target.closest("[data-dialog-close]");
-    if (closeBtn) {
-      const dialog = closeBtn.closest("dialog");
-      if (dialog) {
-        event.preventDefault();
-        dialog.close();
-      }
-    }
-  });
-  qsa("dialog").forEach((dialog) => {
-    dialog.addEventListener("close", () => {
-      if (opener && document.contains(opener)) opener.focus();
-      opener = null;
-    });
-    // Click on the backdrop closes (only when the click target is the dialog itself)
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog && dialog.dataset.dialogLight !== undefined) dialog.close();
-    });
-  });
-}
 
 /* ------------------------------------------------------------------------ */
 /* 8. Counters — count up once visible (optional; static value without JS)    */
@@ -499,12 +324,27 @@ function initMisc() {
       }
     });
   });
+  // The double-submit guard (design V5, V5.4 plan §1.9, W1-D): the first submit goes through and the form
+  // is marked `data-submitted`; a second one — Enter again, a second click — is refused until the answer
+  // replaces the page. The button is `aria-disabled`, never `disabled`: the focus stays where the person left
+  // it, and the busy key v5/loader.css draws on `.is-busy` (set by shell.js in the same task) turns on it.
+  // loader.js lifts the mark when the wait ends without a new page — «Réessayer», the lease of 10 s, a submit
+  // answered in the page; a page back from the cache is at rest again.
   qsa("form[data-single-submit]").forEach((form) => {
-    form.addEventListener("submit", () => {
-      qsa('button[type="submit"]', form).forEach((btn) => {
-        btn.setAttribute("aria-disabled", "true");
-        btn.disabled = true;
-      });
+    form.addEventListener("submit", (event) => {
+      if (form.hasAttribute("data-submitted")) {
+        event.preventDefault();
+        return;
+      }
+      form.setAttribute("data-submitted", "");
+      qsa('button[type="submit"]', form).forEach((btn) => btn.setAttribute("aria-disabled", "true"));
+    });
+  });
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted) return;
+    qsa("form[data-single-submit][data-submitted]").forEach((form) => {
+      form.removeAttribute("data-submitted");
+      qsa('button[type="submit"]', form).forEach((btn) => btn.removeAttribute("aria-disabled"));
     });
   });
   // Section navigation: mark the link of the section currently in view
@@ -531,13 +371,11 @@ function initMisc() {
 /* ------------------------------------------------------------------------ */
 function init() {
   initFormErrorFocus();
-  initNavigation();
   initDropdowns();
   initAccordions();
   initTabs();
   initSteppers();
   initReveal();
-  initDialogs();
   initCounters();
   initMisc();
 }

@@ -1,0 +1,1179 @@
+/* ============================================================================================
+   THE HOME HERO — design V5.4, the final version (W2-D, the port)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.17 · DL54-06 · the proof C:/tmp/ile_v5_council/proof/research/hero/he/he.css as the
+   Creative Director passed it (QA/hero-final/CD_DECISION.md: PASSES WITH CONDITIONS) with its review fixes of round 2.
+   A page entry, loaded by templates/pages/home.html only; never in main.css (plan §2.3). Tokens only: the hero's literal
+   colours, shadows and paints are named in static/css/v5/tokens.css «§4.2 THE HOME HERO» (DL54-15).
+
+   The direction (HERO_FINAL_BRIEF.md): DESKTOP = E2's flow — one path, a bronze inlay drawn once across the light wall at
+   the exact height of the door's springing, carrying the live stations Maroc → … → PROCÉDURES RÉGULIÈRES, crossing the
+   stone reveal, becoming gold light in the night niche and meeting the door; «ENTRÉE EN ITALIE» inscribed at the threshold.
+   The four origins hang from the path in one row (photograph, word, sentence at rest). 1024–1279: the same path, the four
+   as rows hung on one string from Maroc. MOBILE = E3's composition: statement → night band (the door, the six stations on a
+   rail that turns into the floor line) → 2 × 2 tiles joined to the floor line by one spine.
+
+   Rules: transform / opacity only · nothing loops · REST = the first paint (the stage closed) · the settled hero = REST + the
+   door ajar · hover under (hover: hover) and (pointer: fine), focus and press at 0 ms · black-and-white at rest, colour under
+   the light · no inline style · RTL mirrors the layout, never the door, the key, the mark or a photograph · gold never on
+   the open wall · no dashed or dotted stroke, no tick, no stepped bus: five kinds of line, each once.
+
+   PAINT ORDER (G6, CD C-7) — every element the score moves is painted after every word, so that no text is ever re-rastered
+   into a non-opaque layer while the movement runs: the wall's lines (z 1) → the station labels (z auto) → the statement and
+   the origins' words (z 2; their plates and lit twins at z 1 after the text) → the station lights (z 3) → the niche with every
+   door light (z 4) → the path's crossing of the stone, its gold run and terminal disc (z 5) → «ENTRÉE EN ITALIE» (z 6) → the
+   hand's route and the travelling lights (.he-lights, z 7). Phones: the band's night is the niche's own ::after at z −2, so that
+   the niche and the stations' list are not stacking contexts; the tiles (z 6), the halo (z 6), the door (z 6), the glints and
+   the lights (z 7) paint after the band's labels.
+
+   What the port changed, and why (each with the product's reason):
+   · the door stage (gate-0 components.css §10, loader-light.css «door-arch») is carried here, scoped to .he, until W2-B's
+     static/css/v5/_door.css takes it (this sheet imports it then and drops its copy);
+   · CTA-B sits on the product's button API (static/css/v3/buttons.css, v4/buttons.css): --btn-lighting none, corners on the
+     product's scale (sm 4 px, plan §1.3), the press translate of the system kept;
+   · the plates' corners are the product's sm (4 px, «the hero's plates» — plan §1.3), the proof's xs;
+   · the halo's centre is set on .he (its paint is a token that resolves there), not on the halo;
+   · the review flags of the proof (?t, ?state, ?rm, ?dir, ?every, Replay; html.rm) are not shipped (CD ruling R6);
+   · the origins carry the product's actor keys (person, company, institution, university: pages.content.ENTRANCES);
+   · the stage's layers are placed with logical properties — the stage is direction: ltr, so they resolve as drawn and the
+     static RTL guard (tests/i18n/test_rtl_static.py) needs no allow-list;
+   · the hero's description (the locked body) is the hero's own last row and the fold's peek — the composition above it
+     is the first screen; chapter 01's head follows (W2-E);
+   · the interim variant (gate G3 closed: no prescribed station, the editorial title as the promise) has its eyebrow and lead;
+   · the hand's flow is repeatable (V5.5): on the settled hero a hover (fine pointer) or a touch on an origin runs the light
+     along the one path to the door again, every time (hero.js; the states themselves stay CSS, 0 ms from the keyboard) — and
+     the keyboard's share (the review fix, 9 Oct): focus on an origin runs its light, and a button over the golden key
+     (.he-replay) replays the whole sequence;
+   · the review fix (QA/hero-final/*_s2r2.md, measured on the prototype; 9 Oct): the cell on the 4 px scale; THE WALL TAKES THE
+     PAGE — it starts at the page's pad at every desktop width (the proof's 1320 px container is not the product chrome's
+     column), ends 16 px before the reveal, and the stage box stands on the reveal (niche pad 0): columns 196 px at 1440 × 900
+     (4 · 5 · 5 · 3 lines), 222–277 px from 1536 (≤ 4 lines), plates 192 px at 1440 and ≥ 160 from 1280, a 4 : 5 plate from
+     1680 × 940; THE DOOR STANDS ON THE NICHE'S FLOOR (16 px) and the height left over is headroom and air above the promise,
+     not a band under the columns; the composition keeps the hero's height (an empty spanning item: the description's row
+     had taken the grid's min-block-size); the travelling light with a bead, a comet's tail and a held trace; the key's slower
+     turn with its halo and glint; the band brightest at the gap, rest .9; the inlay one step deeper and the wall's labels at
+     600 (C-6 d); every French run end-aligned on the Arabic page (promise, sentences, calls, station labels); 16 px tile
+     words, the arrow at the word; the stations' list above the product's list reset (the rail's nodes on the rail); the
+     register under the hero not drawn where the hero carries the four sentences;
+   · the senior review's fix pass (QA/v54/w2-d/REVIEW.md, A11Y_PERF.md, measured on the product; 9–10 Oct; DL54-42): FROM
+     96 rem THE WALL STANDS ON THE PAGE'S COLUMN — the container's content edge, where the logo and the chapters start; up to
+     1535 px it still takes the page —, the niche capped so that four columns always fit, the plate as wide as its column and
+     as tall as the height leaves; ON THE DESKTOP THE DESCRIPTION STANDS ON THE PAGE'S COLUMN, on the page's paper, and the
+     niche on the composition's bottom edge (the wall's light and the grain are the composition's, on .he-ground; the niche
+     clips its own shadows); the word's arrow hangs, so the four sentences share a line; Maroc at 700; no light of its own on
+     the door's station on the desktop; the interim variant's phone band without a rail, its door on the spine's axis and sized
+     by the window's height, its lead not drawn there; where nothing hovers the key's halo rests softly lit and the four calls
+     stand at rest in the desktop layout; an arrow in a left-to-right run of the Arabic page points the way the run reads; the
+     stations' row has its height before its list is parsed.
+   ============================================================================================ */
+
+/* ---- the owner's door stage, as drawn (arch, photograph, golden key, three steps; never mirrored) — scoped to the hero ---- */
+.he .door-stage {
+  --vx: 264; --vy: 64; --vw: 368; --vh: 456;
+  position: relative;
+  aspect-ratio: 368 / 456;
+  inline-size: 100%;
+  direction: ltr;                                    /* the door is not a reading-direction thing */
+}
+.he .door-stage > svg.door { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; overflow: visible; }
+.he .door { pointer-events: none; }
+.he .doorway__veil-a { stop-color: var(--surface-night); stop-opacity: 0; }
+.he .doorway__veil-b { stop-color: var(--surface-night); stop-opacity: 0.55; }
+.he .doorway__glow-a { stop-color: var(--brand-gold); stop-opacity: 0.3; }
+.he .doorway__glow-b { stop-color: var(--brand-gold); stop-opacity: 0.12; }
+.he .doorway__glow-c { stop-color: var(--brand-gold); stop-opacity: 0; }
+.he .vignette-a { stop-color: var(--surface-night); stop-opacity: 0; }
+.he .vignette-b { stop-color: var(--surface-night); stop-opacity: 0.65; }
+.he .doorway__arch-inset { fill: none; stroke: var(--line-night); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.he .doorway__inner { fill: var(--brand-navy); stroke: var(--he-door-inner-edge); stroke-width: 1; vector-effect: non-scaling-stroke; filter: none; }
+.he .doorway__glow { opacity: 0.7; }
+.he .doorway__arch { fill: none; stroke: var(--accent-night); stroke-width: 1.5; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: none; }
+/* the key, an HTML layer in stage units (key.svg 60 × 130 at 420, 207, 56 × 122, «meet»; the crop x 10–50, y 11–105): at rest
+   it IS the verbatim key, and the hero turns it on the compositor */
+.he .door-stage__key {
+  position: absolute;
+  --x: 429.333; --y: 217.6; --w: 37.333; --h: 87.733;
+  inset-inline-start: calc((var(--x) - var(--vx)) / var(--vw) * 100%);
+  inset-block-start: calc((var(--y) - var(--vy)) / var(--vh) * 100%);
+  inline-size: calc(var(--w) / var(--vw) * 100%);
+  block-size: calc(var(--h) / var(--vh) * 100%);
+  color: var(--brand-gold);
+}
+.he .door-stage__key > .kg { display: block; block-size: 100%; }
+.he .kt__l {                                         /* a layer placed in viewBox units inside a box that sets --vx --vy --vw --vh; the stage is
+                                                        direction: ltr, so its logical offsets ARE the drawing's left and top (never mirrored) */
+  position: absolute;
+  inset-inline-start: calc((var(--x) - var(--vx)) / var(--vw) * 100%);
+  inset-block-start: calc((var(--y) - var(--vy)) / var(--vh) * 100%);
+  inline-size: calc(var(--w) / var(--vw) * 100%);
+  block-size: calc(var(--h) / var(--vh) * 100%);
+}
+.he .kt__l > svg { display: block; inline-size: 100%; block-size: 100%; overflow: visible; }
+.he .kg { --vx: 10; --vy: 11; --vw: 40; --vh: 94; position: relative; display: inline-block; block-size: 18px; aspect-ratio: 40 / 94; direction: ltr; color: currentColor; flex: none; vertical-align: middle; }
+.he .kg__bow { --x: 15; --y: 11; --w: 30; --h: 30; }
+.he .kg__blade { --x: 10; --y: 39; --w: 40; --h: 66; }
+.he .kg .kt__l > svg { fill: currentColor; }
+/* the arch light: the ring over the arch and the streak down the far jamb, parked and transparent; played once by hero.js */
+.he .lx { position: absolute; inset: 0; pointer-events: none; contain: strict; }
+.he .lx__clip { overflow: hidden; }
+.he .lx__streak { position: absolute; inset-inline-start: 0; inline-size: 100%; }
+.he .lx__clip--r .lx__streak { inset-block-start: 0; transform: translateY(-100%); opacity: 0; }
+.he .lx__ring { opacity: 0; position: absolute; inset-inline-start: 0; inset-block-start: 0; inline-size: 100%; block-size: 200%; border-radius: 50%; transform-origin: 50% 50%; }
+.he .lx--door-arch .lx__clip--a { --x: 288; --y: 80; --w: 320; --h: 160; }
+.he .lx--door-arch .lx__clip--r { --x: 596; --y: 240; --w: 12; --h: 267; }
+.he .lx--door-arch .lx__streak { inline-size: 3px; block-size: 62.122%; border-radius: 1px; }
+.he .lx--door-arch .lx__clip--r .lx__streak { inset-inline-start: auto; inset-inline-end: 0; background: var(--he-arch-streak); }
+.he .lx--door-arch .lx__ring { background: var(--he-arch-ring); mask-image: var(--he-arch-ring-mask); }
+[dir="rtl"] .he .lx--door-arch .lx__clip--r { --x: 288; }   /* in Arabic the light arrives at the right springing: over the arch, down the left jamb */
+/* the key's light response (motion M-B): a warm halo behind the key while it turns, a glint across the bow as its face returns —
+   parked and transparent, moved once by hero.js (opacity only) */
+.he .he-key-halo { --x: 380; --y: 166.5; --w: 136; --h: 190; opacity: 0; pointer-events: none; border-radius: 50%; background: var(--he-key-halo); }   /* centred on the key (448, 261.5) */
+.he .kg__glint { --x: 12; --y: 8; --w: 36; --h: 36; opacity: 0; pointer-events: none; border-radius: 50%; background: var(--he-key-glint); }
+/* THE REPLAY (V5.5, the keyboard's share of the repeatable flow): a button over the golden key — Enter, Space or a click replays the
+   whole sequence from the closed door; drawn only when the module runs on a page that moves (hero.js adds has-replay), never under
+   reduced motion or forced colours; the stage stays decorative (aria-hidden) and the button stands beside it, named by the catalogue */
+.he-replay {
+  position: absolute; z-index: 4; display: none;
+  inset-inline-start: 50%; inset-block-start: 30.5%; inline-size: max(19.5%, 2.75rem); block-size: 25.7%;   /* the key's box with a margin (stage x 412–484, y 203–320), ≥ 44 px wide on the smallest phone stage: centred on the key, which is centred in the stage — the same box from either edge (the door box keeps the page's direction) */
+  margin-inline-start: min(-9.75%, -1.375rem); min-block-size: 2.75rem;
+  margin-block: 0; padding: 0; border: 0; background: none; appearance: none; color: inherit;
+  border-radius: var(--radius-full); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.he.has-replay .he-replay { display: block; }
+.he-replay:focus-visible { outline: 2px solid var(--focus-ring-night); outline-offset: 3px; box-shadow: none; }   /* the night ring of the one focus system (plan §1.6), round the key */
+/* the key answers the hand and the focus before it turns: its halo lit softly — the pointer's sign that the key is a control (the ring is
+   the keyboard's); the score's own animation of the halo overrides it while the sequence plays */
+.he .he-key-halo { transition: opacity var(--motion-fast) var(--ease-enter); }
+.he-door-box:has(.he-replay:focus-visible) .he-key-halo { opacity: 0.6; }
+@media (hover: hover) and (pointer: fine) { .he-door-box:has(.he-replay:hover) .he-key-halo { opacity: 0.6; } }
+
+.he {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  overflow-clip-margin: 0.5rem;
+  color: var(--text-1);
+  background-color: var(--surface-page);           /* carta-50: the letterhead, the wall and chapter 01 one field */
+  --reveal-w: 1rem;
+  --gutter: 1.25rem;
+  --stem: 2rem;
+  --stem-x: 1.875rem;                              /* the stem's x from the plate's start (≥ 80 rem: the plate's centre) */
+  --head: 1.5rem;                                  /* the travelling head's box (the bead; its glow is wider: the wipe boxes are 36 px tall) */
+  --he-stroke-sm: 2.25;                            /* the 16 px glyphs' stroke (the 24 px grid's 1.5 at 16 px) */
+  --he-stroke-md: 1.8;                             /* the 20 px glyphs' stroke */
+}
+
+/* ---- the statement: the promise IS the headline; the name is in the H1 for assistive technology and search ---- */
+.he__title { margin: 0; }
+.he__promise {
+  display: block;
+  max-inline-size: 13.9em;                         /* the promise's first line (13.5 em) always fits: two lines, broken at the comma */
+  font-family: var(--f-sans);
+  font-weight: 500;
+  font-size: var(--promise-fs);
+  line-height: var(--promise-lh, 1.05);
+  letter-spacing: -0.028em;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+.he__promise:lang(ar) { letter-spacing: 0; }   /* an Arabic promise (none today): no Latin tracking */
+/* the Arabic page: a French statement ends on the wall's start edge, with the action under it and the four below — one edge per column
+   in both languages (design M-4); the description too on the desktop, where its box hugs that edge and is narrower than a wide
+   wall (a left-aligned paragraph started mid-wall); on phones and tablets its box is the page's width and it keeps its own
+   alignment (eight lines of a paragraph are read from one edge) */
+[dir="rtl"] .he__promise[dir="ltr"], [dir="rtl"] .he__title[lang]:not([lang="ar"]) .he__promise, [dir="rtl"] :is(.he__eyebrow, .he__lead)[lang]:not([lang="ar"]) { text-align: end; }
+@media (min-width: 64rem) { [dir="rtl"] .he__body[lang]:not([lang="ar"]) { text-align: end; } }
+/* the interim variant (gate G3 closed): an editorial eyebrow over the promise, a lead under it — the stations' voice */
+.he__eyebrow { margin: 0 0 var(--s-3); font-size: var(--t-folio); line-height: 1rem; font-weight: var(--w-control); letter-spacing: 0.04em; text-transform: uppercase; font-feature-settings: var(--feat-caps); color: var(--he-label); }
+.he__eyebrow:lang(ar) { letter-spacing: 0; }
+.he__lead { margin: var(--s-4) 0 0; max-inline-size: 36ch; font-size: var(--t-ui); line-height: var(--t-ui-lh); color: var(--text-1); text-wrap: pretty; }
+@media (min-width: 64rem) { .he__lead { max-inline-size: 46rem; font-size: var(--t-body); line-height: var(--t-body-lh); } }   /* under a 52 px title the lead is read at the reading size (17 / 28), on one line where the wall has the room (the review's M3: it was 15 px on two) */
+.he__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-6); margin-block-start: var(--gap-a, 2rem); }
+.he__primary { min-block-size: var(--cta-h, 3.25rem); font-size: var(--t-ui); }
+.he__primary:focus-visible, .he__secondary:focus-visible { outline-color: var(--he-ring); }
+.he__primary:focus-visible { outline-offset: 6px; }   /* the ring clear of the 5 px halo (p5 4.55) */
+.he__primary .icon { inline-size: var(--icon-md); block-size: var(--icon-md); stroke-width: var(--he-stroke-md); }
+.he .btn__arrow { margin-inline-end: calc(var(--s-1) * -1); }
+.he__secondary.btn--link {
+  min-block-size: var(--hit-primary);
+  gap: var(--s-2);
+  padding-inline: 0;
+  text-decoration: none;
+  font-size: var(--t-ui);
+  font-weight: var(--w-control);
+  --btn-ink: var(--he-secondary);
+  --btn-ink-hover: var(--he-secondary);
+}
+.he__secondary.btn--link::before, .he__secondary.btn--link::after { content: none; }   /* the system's rule under the whole link: here the text alone is underlined */
+.he__secondary .icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); stroke-width: var(--he-stroke-sm); color: var(--he-secondary); }
+.he__secondary-text { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; text-decoration-color: currentColor; transition: text-decoration-thickness var(--motion-fast) var(--ease-enter); }
+@media (hover: hover) and (pointer: fine) { .he__secondary:hover .he__secondary-text { text-decoration-thickness: 2px; } }
+.he__secondary:focus-visible .he__secondary-text { text-decoration-thickness: 2px; transition: none; }
+
+/* ---- the stations (shared) ---- */
+/* the list's own rules carry the hero's class — (0,2,0) —: the product's reset (base.css: ol[role="list"] { padding-inline-start: 0 },
+   (0,1,1)) would otherwise take the list's start padding, which places the rail's nodes on the rail (phones) and Maroc's disc on the
+   path's corner (the compact desktop) */
+.he .he-stations { margin: 0; padding: 0; list-style: none; }
+.he-station { position: relative; list-style: none; overflow-wrap: normal; }
+.he-station__label {
+  display: block;
+  font-size: var(--t-folio);
+  line-height: 1rem;
+  font-weight: var(--w-title);                     /* 600, the words' weight: the five wall labels stand with the path (C-6 d) */
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-feature-settings: var(--feat-caps);
+  color: var(--he-label);
+  text-align: match-parent;                        /* the item's start / centre / end, read in the item's direction (a French label in the RTL flow) */
+  text-wrap: balance;                              /* never nowrap, never truncated: a long label takes two lines */
+}
+.he-station__label:lang(ar) { letter-spacing: 0; }   /* an Arabic station name (Maroc on /ar/): no Latin tracking */
+.he-station__node { position: absolute; box-sizing: border-box; inline-size: 7px; block-size: 7px; border-radius: 50%; }
+.he-station__lit { position: absolute; opacity: 0; pointer-events: none; }
+.he-station--door .he-station__label { color: var(--he-gold); font-weight: var(--w-strong); letter-spacing: 0.07em; }   /* 700: ≥ 7 : 1 at DPR 1 */
+.he-station--maroc .he-station__label { font-weight: var(--w-strong); }   /* the origin is a terminus too: 700, as the destination (the review's m5); its ink stays the labels' — the path's bronze is under 7 : 1 at this size */
+
+/* ---- the origins (shared) ---- */
+.he-origins { position: relative; min-inline-size: 0; }
+.he-origins__list { margin: 0; padding: 0; list-style: none; }
+.he-origin { position: relative; min-inline-size: 0; list-style: none; }
+.he-origin__link {
+  position: relative;
+  display: grid;
+  color: var(--text-1);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+/* the word, the sentence and the call keep their ink in every state — above the base sheet's a:hover */
+.he-origin__link, .he-origin__link:hover, .he-origin__link:focus-visible, .he-origin__link:active,
+.he-origin__link:hover .he-origin__word, .he-origin__link:active .he-origin__word { color: var(--text-1); }
+.he-origin__link:focus-visible { outline: 2px solid var(--he-ring); outline-offset: 3px; box-shadow: none; }
+.he-origin__link:is(:active, .is-pressed) { background-color: var(--he-press); transition: none; }   /* pressed: the ground one step darker, at 0 ms, no transform */
+
+/* the plate: a photograph set in the wall — hairline, a lit top arris, --shadow-2; black-and-white at rest at full tonal range
+   (never dimmed); the colour layer above it at opacity 0 — only its opacity ever changes (a filter is never animated) */
+.he-plate {
+  position: relative;
+  display: block;
+  flex: none;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background-color: var(--he-plate-ground);
+  box-shadow: var(--shadow-2);
+  z-index: 1;                                      /* painted after the four's words (G6) */
+}
+.he-plate::after {                                 /* the plate's edge, above the photograph: hairline + lit top arris */
+  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none;
+  box-shadow: var(--he-plate-edge);
+}
+.he-plate__bw, .he-plate__col { position: absolute; inset: 0; display: block; }
+.he-photo { display: block; inline-size: 100%; block-size: 100%; max-inline-size: none; object-fit: cover; }
+.he-plate__bw .he-photo { filter: grayscale(1); }   /* the base grade as cut (C-6 d: the row sits one step under the path's line; the phone chips keep their 1.12) */
+.he-plate__col { opacity: 0; transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }   /* out: 120 ms on the ease-out curve, after the grace */
+.he-plate__col .he-photo { filter: saturate(var(--he-chroma, 1)); }   /* the colour layer: the grade's own hues, a little stronger where the grade is near-neutral */
+.he [data-aud="company"] { --he-chroma: 1.55; }
+.he [data-aud="institution"] { --he-chroma: 1.7; }
+.he [data-aud="university"] { --he-chroma: 1.6; }
+/* in the desktop's first movement the four are named at their own grade: four boosted plates at once, with the door's act, would pass
+   the brief's «no curtain» (12 % of the screen by ΔE00). The filter changes only at the class flips, while the colour layer is at 0 */
+@media (min-width: 64rem) { .he.is-discovering .he-plate__col .he-photo { filter: none; } }
+.he-plate__veil { position: absolute; inset: 0; z-index: 1; background: var(--he-veil); opacity: 0; pointer-events: none; }   /* the exposure lift: the door's light reaches the four */
+/* where a plate's box is not its file's cut (from 96 rem: a 4 : 5 file under a box as tall as the hero leaves, a 3 : 2 one in a
+   short window) the photograph is held on its subject: the reader and her chair, the cellarman from head to foot, the seated
+   woman's head and the table, the two students and their bench. Below 96 rem a plate is its file's own cut: no effect there */
+.he [data-aud="person"] .he-photo { object-position: 60% 56%; }
+.he [data-aud="company"] .he-photo { object-position: 44% 48%; }
+.he [data-aud="institution"] .he-photo { object-position: 58% 28%; }
+.he [data-aud="university"] .he-photo { object-position: 50% 66%; }
+
+.he-origin__text { display: flex; flex-direction: column; min-inline-size: 0; }
+.he-origin__word { display: block; font-weight: var(--w-title); letter-spacing: -0.008em; }   /* no nowrap: under 200 % the word wraps (1.4.12) */
+.he-origin__end { white-space: nowrap; }           /* a no-break space and the arrow: glued to the word's last letter; the word itself may wrap */
+.he-origin__go { display: inline-block; margin-inline-start: 0.125rem; line-height: 0; vertical-align: -0.0625rem; }   /* after a no-break space: ≈ 6 px */
+.he-origin__go .icon { inline-size: 1rem; block-size: 1rem; stroke-width: var(--he-stroke-sm); color: currentColor; opacity: 0.6; transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }
+.he-origin__gloss { color: var(--text-1); text-wrap: pretty; }
+.he-origin__call {                                 /* the origin's own call: a reserved line, opacity only, no layout shift; always in the AX description */
+  display: block;
+  min-block-size: 1rem;
+  font-size: 0.75rem; line-height: 1rem; font-weight: var(--w-title);
+  letter-spacing: 0.04em; text-transform: uppercase; font-feature-settings: var(--feat-caps);
+  color: var(--he-call);
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms);
+}
+.he-origin__call .he-origin__go { margin-inline-start: 0.375rem; vertical-align: -0.125rem; }   /* inside its no-break wrapper */
+.he-origin__call .he-origin__go .icon { inline-size: 0.875rem; block-size: 0.875rem; opacity: 1; }
+.he-origin__word:lang(ar) { letter-spacing: 0; }   /* the Arabic words: no Latin tracking anywhere */
+.he-origin__lit { position: absolute; inset: 0; pointer-events: none; }   /* no stacking context: its twins take their own z, after the four's words (G6) */
+.he-origin__stem, .he-origin__eye { position: absolute; display: none; opacity: 0; transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }
+.he-origin__stem { z-index: 1; }                   /* the eyelet (z 3) caps it; the eyelet's glow (z 4) above both */
+/* the Arabic page: a French run (lang="fr" dir="ltr") ends on its column's start edge, where the Arabic word above it ends — one edge
+   per column in both languages (design M-4); «end» in the run's own direction is the column's start in the page's */
+[dir="rtl"] .he-origin__gloss[dir="ltr"], [dir="rtl"] .he-origin__call[dir="ltr"] { text-align: end; }
+/* …and the arrow of such a run points the way the run reads (the review's m3): the base sheet turns every forward glyph of an
+   Arabic page, which left «DÉCOUVREZ VOTRE PARCOURS ←» pointing back into its own words */
+[dir="rtl"] .he :is(.he-origin__word, .he-origin__call)[lang]:not([lang="ar"]) .icon--flip-rtl { transform: none; }
+
+/* ---- the niche (shared): the dark architectural zone ---- */
+.he-niche { position: relative; z-index: 4; isolation: isolate; background-color: var(--surface-night); color: var(--text-on-night-1); }   /* after every word: its moving lights never put a word in a layer (G6) */
+.he-niche__reveal {                                /* the wall's thickness: two rings of stone and a 1 px lit arris on the wall's side */
+  position: absolute; z-index: 0; inset-block: 0; inset-inline-start: 0; inline-size: var(--reveal-w);
+  background: var(--he-reveal-ltr);
+  box-shadow: var(--he-reveal-arris-ltr);
+}
+[dir="rtl"] .he-niche__reveal { background: var(--he-reveal-rtl); box-shadow: var(--he-reveal-arris-rtl); }
+.he-niche::before {                                /* the wall's cast shadow inside the niche (N2 3.53) */
+  content: ""; position: absolute; z-index: 0; inset-block: 0; inset-inline-start: var(--reveal-w); inline-size: 3rem;
+  background: var(--he-cast-ltr); pointer-events: none;
+}
+[dir="rtl"] .he-niche::before { background: var(--he-cast-rtl); }
+.he-niche__halo {                                  /* the doorway's light on the niche's back wall: nothing at rest, lifted once while the door takes the light */
+  position: absolute; inset: 0; z-index: 0; opacity: 0; pointer-events: none;
+  background: var(--he-halo);                      /* a rim: transparent inside the arch (the stage covers it), warm just outside its outline, gone at the niche's walls */
+}
+.he-door-box { position: relative; z-index: 1; }
+.he-door { position: relative; inline-size: 100%; }
+.he-door .lx { z-index: 2; }
+.he-door .door-stage__key { z-index: 3; perspective: calc(var(--stage-h) * 0.7696); }   /* ≈ 4 × the key's height: the turn reads as a turn, not a squash */
+.he-door .he-key-halo { z-index: 2; }              /* behind the key, over the stage */
+/* the photograph: the door-master derivatives — a <picture> in STAGE UNITS under the SVG (arch, inner door, key, steps stay vector) */
+.he .door-stage__photo {
+  position: absolute;
+  display: block;
+  --x: 288; --y: 80; --w: 320; --h: 427;
+  inset-inline-start: calc((var(--x) - var(--vx)) / var(--vw) * 100%);
+  inset-block-start: calc((var(--y) - var(--vy)) / var(--vh) * 100%);
+  inline-size: calc(var(--w) / var(--vw) * 100%);
+  block-size: calc(var(--h) / var(--vh) * 100%);
+  border-radius: 50% 50% 0 0 / calc(160 / 427 * 100%) calc(160 / 427 * 100%) 0 0;
+  overflow: hidden;
+  background: var(--he-door-photo-ground);
+  filter: var(--he-door-photo-drop);
+}
+.he .door-stage__photo > img { display: block; inline-size: 100%; block-size: 100%; max-inline-size: none; object-fit: cover; opacity: 0.5; filter: saturate(0.8) contrast(1.05); }
+
+/* the steps — the owner's request, «the stair with more evident colour»: the stage's own laguna at .95 / .80 / .66 (top →
+   bottom; the stage as first drawn had .55 / .38 / .24), each with a lit nosing; the markup of the stage is unchanged */
+.he .doorway__steps rect { fill: var(--he-step); }
+.he .doorway__steps rect:nth-child(1) { opacity: 0.95; }
+.he .doorway__steps rect:nth-child(2) { opacity: 0.8; }
+.he .doorway__steps rect:nth-child(3) { opacity: 0.66; }
+.he-tread, .he-tread-lit { pointer-events: none; border-radius: calc(var(--stage-h) * 2 / 456); }
+/* lit stone (CD C-6a): the lit nosing on top; the tread's face modelled by the light from above; under each tread a 1 px riser in a
+   darker laguna (the step's front face) and its 1 px shadow on the step below: three bars read as three steps */
+.he-tread { background: var(--he-tread-face); box-shadow: var(--he-tread-edge); }
+.he-tread--1, .he-tread-lit--1 { --x: 342.5; --y: 477; --w: 211; --h: 6; }
+.he-tread--2, .he-tread-lit--2 { --x: 320; --y: 486; --w: 256; --h: 6; }
+.he-tread--3, .he-tread-lit--3 { --x: 297.5; --y: 495; --w: 301; --h: 6; }
+.he-tread-lit { opacity: 0; background: var(--he-tread-lit); box-shadow: var(--he-tread-lit-glow); }
+/* the warm spill that falls from the open door: a pool on the floor under the gap (stage x ≈ 520, from the leaf's foot, y 397),
+   and on each tread where the gap's light falls on it (× 0.8 at rest: a warm sand on the top tread, not a pale green); never on
+   the leaf (D9) */
+.he-spill { --x: 297.5; --y: 397; --w: 301; --h: 104; pointer-events: none; opacity: 0; background: var(--he-spill); }
+/* the aperture: a band of warm light along the leaf's opening edge (stage x 365–531, y 139–397; the stage never mirrors, so
+   the band is on its right edge in Arabic too), 14 % of the leaf's width, following the leaf's round top; the leaf never moves */
+.he-leaf { --x: 365; --y: 139; --w: 166; --h: 258; overflow: clip; pointer-events: none; border-radius: 50% 50% 0 0 / 32.17% 32.17% 0 0; }
+.he-aperture {
+  position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 14%;   /* the stage is direction: ltr: its inline end IS the leaf's right edge */
+  opacity: 0; transform: translateX(100%);
+  background: var(--he-aperture);
+  box-shadow: var(--he-aperture-edge);
+}
+[dir="rtl"] .he-aperture { transform: translateX(100%); }   /* the same shift: the door never mirrors (the static RTL guard asks every horizontal shift for its twin) */
+/* the opening's light OUTSIDE the leaf (CD C-6b): a soft warm falloff from the leaf's opening edge onto the doorway's stone (stage x
+   531 → 587, short of the arch's inset line at 592), α .35 at the edge (× 0.8 at rest), a bell, not a second stripe */
+.he-bloom { --x: 531; --y: 196; --w: 56; --h: 201; pointer-events: none; opacity: 0; background: var(--he-bloom); mask-image: var(--he-bloom-mask); }
+.he.is-ajar .he-aperture { opacity: 0.9; transform: none; }   /* the settled hero: the door ajar (DL54-11; its revert: this 0.9 and the next one at 0; .8 → .9 at the review fix: taste m-1, motion m-3) */
+.he.is-ajar :is(.he-spill, .he-bloom) { opacity: 0.9; }
+.he-aperture, .he-spill, .he-bloom { transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }
+
+/* ---- the lines at rest and what moves (shared) ---- */
+.he-ground, .he-lights { position: relative; pointer-events: none; min-inline-size: 0; }
+.he-lights { z-index: 7; }                         /* the ground has no z: each of its lines takes its own (the wall's 1, the night's 5) */
+.he-path, .he-rail, .he-spine, .he-spine-top, .he-wipe, .he-corner, .he-junction, .he-route { display: none; }
+.he-wipe { position: relative; overflow: clip; }
+.he-wipe__bar { position: absolute; opacity: 0; }
+.he-corner, .he-junction { opacity: 0; }
+.he.is-priming :is(.he-plate__col, .he-plate__veil, .he-origin__stem, .he-origin__eye, .he-station__lit, .he-wipe__bar, .he-corner, .he-junction,
+  .he-niche__halo, .lx__ring, .lx__streak, .he-tread-lit, .he-aperture, .he-bloom, .he-spill, .kg, .he-key-halo, .kg__glint) { will-change: transform, opacity; }
+
+/* ============================================================================================
+   DESKTOP — from 64 rem: the wall | the niche; the path at the springing of the door
+   ============================================================================================ */
+@media (min-width: 64rem) {
+  .he {
+    --chrome: calc(var(--utility-h) + var(--header-h) + 1px);
+    --peek: 3rem;
+    --hero-h: min(64rem, calc(100svh - var(--chrome) - var(--peek)));
+    /* the door: the largest stage the hero's height allows (40–80 px of night in all: 16 under it, the rest above), capped so that the niche stays ≤ 44 % */
+    --door-pad: clamp(1.25rem, calc((var(--hero-h) - 37.5rem) * 0.133 + 1.25rem), 2.5rem);
+    --niche-pad: 0rem;                             /* no night beside the stage box: the arch itself stands 24 stage units inside it (≈ 35 px at 1440), which is the niche's air — the wall takes the rest (design M-2, M-3) */
+    --niche-max: 44vw;
+    --stage-w: min(calc((var(--hero-h) - 2 * var(--door-pad)) * 368 / 456), calc(var(--niche-max) - var(--reveal-w) - 2 * var(--niche-pad)));
+    --stage-h: calc(var(--stage-w) * 456 / 368);
+    --niche-w: clamp(36vw, calc(var(--stage-w) + var(--reveal-w) + 2 * var(--niche-pad)), var(--niche-max));
+    --stage-x: calc(var(--reveal-w) + (var(--niche-w) - var(--reveal-w) - var(--stage-w)) / 2);   /* from the niche's start */
+    /* THE PATH: the springing of the arch (stage y 240 of the viewBox 64–520). The door stands on the niche's floor — 16 px of night
+       under the stage box — and the height left over is headroom above the arch: the path, the statement and the four move down with
+       it, so the leftover is air above the promise and not an empty band under the columns (taste M-A; the proof centred the stage) */
+    --door-floor: 1rem;
+    --stage-top: calc(var(--hero-h) - var(--stage-h) - var(--door-floor));
+    --path-y: calc(var(--stage-top) + var(--stage-h) * 176 / 456);
+    --jamb: calc(var(--stage-x) + var(--stage-w) * 24 / 368);   /* the arch's jamb (stage x 288), from the niche's start */
+    --halo-x: calc(var(--stage-x) + var(--stage-w) / 2);
+    --halo-y: calc(var(--stage-top) + var(--stage-h) * 229.5 / 456);   /* the arch's middle (stage y 293.5) */
+    /* THE WALL TAKES THE PAGE (design M-3, taste M-B: «a dense text field»): it starts at the page's pad at every desktop width —
+       the hero is the page's one full-bleed band, the niche bleeding at the far side — and ends 16 px before the reveal, so that the
+       four columns are as wide as the door leaves them: 196 px at 1440 × 900 (4 · 5 · 5 · 3 lines), 222 at 1536 × 864 and 245 at
+       1680 × 960 (3 · 4 · 4 · 3), 277 at 1920 × 1080 (3 · 4 · 4 · 2). Past --wall-max (four columns of ≈ 282 px) the leftover goes to
+       the start side. The proof started the wall on a 1320 px container's edge, which the product's chrome and chapters do not share */
+    --wall-max: 75rem;
+    --wall-end: 1rem;
+    --pad-start: max(var(--page-pad), calc(100vw - var(--niche-w) - var(--wall-end) - var(--wall-max)));
+    --promise-fs: clamp(2.25rem, min(3.6vw, 5.8svh, calc((100vw - var(--niche-w) - var(--pad-start) - var(--wall-end)) / 13.8)), 3.625rem);
+    --promise-lh: 1.05;
+    --gap-a: 2rem;
+    --cta-h: 3.25rem;
+    --pad-top: 1.25rem;                            /* the least air above the promise; the height left over goes there */
+    --labels-h: 2.5rem;                            /* the stations' two lines and their 8 px above the path */
+    --labels-min: 0px;                             /* the stations' row: --labels-h where the stations are drawn (below); 0 in the interim variant, where the row above it carries the path's whole height */
+    --gap-labels: 1.75rem;                         /* the actions → the stations' capitals (28–44 px) */
+    display: grid;
+    --body-inset: 0px;                             /* from the wall's start to the page's column, where the description stands (below) */
+    grid-template-columns: [full-start] max(var(--page-pad), calc(100% - var(--niche-w) - var(--wall-end) - var(--wall-max))) [wall-start] var(--body-inset) [body-start] minmax(0, 1fr) [wall-end] var(--wall-end) [niche-start] var(--niche-w) [full-end];
+    /* the stations have their own row above the path: at the default text it is exactly --labels-h (two lines + 8 px), so the path
+       is where it always was; under a larger text the row grows and the path — and the door anchored on it — move down with it,
+       instead of the labels running into the actions (CD C-4) */
+    grid-template-rows: [top] minmax(calc(var(--path-y) - var(--labels-min)), auto) [labels] minmax(var(--labels-min), auto) [path] auto [rest] minmax(0.5rem, 1fr) [bottom];
+    min-block-size: var(--hero-h);
+  }
+  [dir="rtl"] .he { --halo-x: calc(100% - var(--stage-x) - var(--stage-w) / 2); }
+  /* ONE light on the wall: white where it arrives (the reading-start top corner), the niche's navy where it leaves — on the
+     composition's own box (the ground spans its tracks), not on the description's row under it, which is the page's paper */
+  .he-ground { background-image: var(--he-wall-light-ltr); }
+  [dir="rtl"] .he-ground { background-image: var(--he-wall-light-rtl); }
+  /* the stations' row has its height before its list is parsed (a11y F9): while the document was still arriving, an early frame
+     drew the path one row higher — the row is --labels-h from the first paint wherever the stations are drawn. Without stations
+     (the interim variant) the statement's row is the path's whole height: the door stands on its floor in a tall window too
+     (it hung one row, 40 px, above it) */
+  .he[data-hero-variant="phase3"] { --labels-min: var(--labels-h); }
+  /* THE COMPOSITION KEEPS THE HERO'S HEIGHT. Since the description became the hero's last row (the port), the grid's own
+     min-block-size is met by that row and the composition's tracks would shrink to their content — the niche ending 8 px under the
+     stage instead of the door pad. An empty item that spans the composition's tracks carries the height, so the «rest» track takes
+     the leftover and the niche runs the hero's whole height, as in the proof (a subgrid cannot carry it: its own min size does
+     not reach the parent's tracks) */
+  .he::after { content: ""; grid-column: full-start; grid-row: top / bottom; inline-size: 0; min-block-size: var(--hero-h); pointer-events: none; }
+  .he-ground::before {                             /* the grain: the product's vendored tile (static/img/grain.svg: the same 180 px fractal noise), static, under the content, on the composition as the light is */
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.02;
+    background-image: url("../../img/grain.svg");
+  }
+
+  /* the statement, end-aligned to the path: fixed gaps down to the stations, the leftover above the promise */
+  .he__statement { grid-column: wall-start / wall-end; grid-row: top; align-self: end; position: relative; z-index: 2; padding-block: var(--pad-top) var(--gap-labels); }
+
+  /* THE STATIONS — off the origins' columns: Maroc at the path's start (its disc there), the three inner stations centred on the
+     three gaps between origins (each label straddles two of them, its node on the gap's centre), the fifth end-aligned 24 px before
+     the reveal with its node at its end. Labels 8 px above the path, two balanced lines at their own measured widths (in em) */
+  .he .he-stations {
+    grid-column: wall-start / wall-end; grid-row: labels; align-self: end; position: relative; z-index: auto;   /* no stacking context: the labels paint before every light (G6) */
+    container: he-st / inline-size;                /* the wall, queried in its own ems (a size container makes no stacking context here) */
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end;
+    padding-block-end: 8px;
+    --node: 9px;
+  }
+  .he-station { grid-row: 1; }
+  .he-station__label { inline-size: var(--st-w, auto); }
+  .he-station--maroc { grid-column: 1; justify-self: start; text-align: start; }
+  .he-station:nth-child(2) { grid-column: 1 / span 2; --st-w: 7.95em; }
+  .he-station:nth-child(3) { grid-column: 2 / span 2; --st-w: 9.7em; }
+  .he-station:nth-child(4) { grid-column: 3 / span 2; --st-w: 9.25em; }
+  .he-station:is(:nth-child(2), :nth-child(3), :nth-child(4)) { justify-self: center; text-align: center; }
+  .he-station:nth-child(5) { grid-column: 4; justify-self: end; text-align: end; --st-w: 6.95em; }
+  [dir="rtl"] .he-station:nth-child(5) .he-station__label[dir="ltr"] { text-align: start; }   /* its lines hug its node (the box's reveal side) in Arabic too (design M-4) */
+  [dir="rtl"] .he-station:is(:nth-child(2), :nth-child(3), :nth-child(4)) .he-station__label[dir="ltr"] { text-align: center; }   /* the three inner labels centred over their nodes, as on the French page (base.css starts every French run of an Arabic page) */
+  .he-station__node { z-index: 8; inline-size: var(--node); block-size: var(--node); inset-inline-start: 0; inset-block-end: calc(-8px - var(--node) / 2); background: var(--surface-page); border: 2px solid var(--he-bronze); }   /* a ring, filled with the wall */
+  .he-station:is(:nth-child(2), :nth-child(3), :nth-child(4)) .he-station__node { inset-inline-start: calc(50% - var(--node) / 2); }
+  .he-station:nth-child(5) .he-station__node { inset-inline-start: auto; inset-inline-end: 0; }
+  .he-station--maroc .he-station__node { background: var(--he-bronze); border: 0; }   /* the origin: a solid disc */
+  /* the station's light: the ring GLINTS as the light passes (a lit-bronze ring and a soft warm halo, 0 → 1 → 0) — never a solid fill */
+  .he-station__lit { z-index: 9; inline-size: 21px; block-size: 21px; inset-inline-start: calc(var(--node) / 2 - 10.5px); inset-block-end: -18.5px; border-radius: 50%;
+    background: var(--he-station-glint); transform: scale(0.85); }   /* 21 px: the glint fills the ring and halos it as the light passes (motion M-A) */
+  .he-station:is(:nth-child(2), :nth-child(3), :nth-child(4)) .he-station__lit { inset-inline-start: calc(50% - 10.5px); }
+  .he-station:nth-child(5) .he-station__lit { inset-inline-start: auto; inset-inline-end: calc(var(--node) / 2 - 10.5px); }
+  .he-station--maroc .he-station__lit { background: var(--he-maroc-glint); }   /* Maroc lights as the light leaves it */
+  .he-station--maroc::after {                      /* Maroc lit under the hand: the route's start (its own layer, never the score's) */
+    content: ""; position: absolute; z-index: 9; inline-size: 15px; block-size: 15px; inset-inline-start: calc(var(--node) / 2 - 7.5px); inset-block-end: -15.5px; border-radius: 50%;
+    background: var(--he-maroc-glint);
+    opacity: 0; pointer-events: none; transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms);
+  }
+  /* «ENTRÉE EN ITALIE» — the sixth item, not on the line: inscribed at the door's threshold, centred under the steps */
+  .he-station--door {
+    position: absolute; z-index: 6;                /* above the niche (z 4): the threshold's inscription */
+    inset-inline-start: calc(100% + var(--wall-end) + var(--stage-x));
+    inline-size: var(--stage-w);
+    inset-block-start: calc(100% + var(--stage-h) * 268 / 456 + 2px);
+    text-align: center;
+  }
+  .he-station--door { grid-row: auto; grid-column: auto; }   /* its containing block: the list's padding box, not a grid area */
+  .he-station--door .he-station__label { text-align: center; max-inline-size: none; }
+  [dir="rtl"] .he-station--door .he-station__label { text-align: center; }   /* on the Arabic page too: base.css:493 starts every French run (0,2,1), which left the inscription at the stage's edge (design M-4) */
+  .he-station--door .he-station__node { display: none; }
+  .he-station--door .he-station__lit { display: none; }   /* no light of its own here: the threshold is lit by the steps and the arch (the review's m1 — sized as a node's glint, 21 px, it stood on nothing, 90 px before the inscription); on phones it is the rail's last node */
+
+  /* THE FOUR ORIGINS — one row of four, each hung from the path by one stem */
+  .he-origins { grid-column: wall-start / wall-end; grid-row: path; z-index: 2; }
+  .he-origins__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gutter); }
+  .he-origin { padding-block-start: var(--stem); }
+  .he-origin:nth-child(1) { --k: 0; }
+  .he-origin:nth-child(2) { --k: 1; }
+  .he-origin:nth-child(3) { --k: 2; }
+  .he-origin:nth-child(4) { --k: 3; }
+  .he-origin::before {                             /* the stem: one continuous 2 px bronze segment, a clean joint at the path */
+    content: ""; position: absolute; inset-block-start: 1px; inset-inline-start: calc(var(--stem-x) - 1px);
+    inline-size: 2px; block-size: calc(var(--stem) - 1px); background: var(--he-bronze);
+  }
+  .he-origin::after {                              /* the eyelet on the plate's top edge */
+    content: ""; position: absolute; z-index: 3; inset-block-start: calc(var(--stem) - 2.5px); inset-inline-start: calc(var(--stem-x) - 2.5px);
+    inline-size: 5px; block-size: 5px; border-radius: 50%; background: var(--he-bronze);
+  }
+  .he-origin__link { align-content: start; }
+  .he-plate { inline-size: min(100%, var(--plate-max, 100%)); aspect-ratio: var(--plate-ratio, 1); }
+  .he-origin__text { margin-block-start: 0.75rem; }   /* the cell on the 4 px scale (design M-1, taste M-A): plate → text 12, word → sentence 4, sentence → call 8 */
+  .he-origin__word { font-size: 1.0625rem; line-height: 1.5rem; }
+  .he-origin__gloss { margin-block-start: 0.25rem; font-size: 0.9375rem; line-height: 1.375rem; }
+  .he-origin__call { margin-block-start: 0.5rem; }
+
+  /* the origin's own lit twin: its stem, in the inlay's lit bronze (the movement's «they feed the path», and the hand's state) */
+  .he-origin__stem { display: block; inset-block-start: 1px; inset-inline-start: calc(var(--stem-x) - 5px); inline-size: 10px; block-size: calc(var(--stem) - 1px); background: var(--he-stem-lit); transform-origin: 50% 100%; }   /* a 10 px column of light with a bright core, rising up the stem (motion M-A: «they feed the path» is seen) */
+  .he-origin__eye { display: block; z-index: 4; inset-block-start: calc(var(--stem) - 6.5px); inset-inline-start: calc(var(--stem-x) - 6.5px); inline-size: 13px; block-size: 13px; border-radius: 50%; background: var(--he-eye-lit); }
+  /* the hit areas meet in the gaps: between two neighbours the hand's state passes in one frame */
+  .he-origin__link::before { content: ""; position: absolute; inset: calc(-1 * var(--stem)) calc(var(--gutter) / -2) -0.5rem; }
+
+  /* the niche bleeds to the screen's edge, the full height of the hero; the door stands on its floor, its springing on the path */
+  .he-niche {
+    grid-column: niche-start / full-end; grid-row: top / bottom;
+    display: grid; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr);
+    background-image: var(--he-niche-ltr);
+  }
+  [dir="rtl"] .he-niche { background-image: var(--he-niche-rtl); }
+  .he-niche__halo { inset-block-end: calc(var(--stage-h) * 12 / 456 + var(--door-floor) + 0.75rem); }   /* the halo's box ends above «ENTRÉE EN ITALIE» (stage y 444 + 2 px): the label is never promoted into a moving layer (motion m-1); the rim itself ends at stage y ≈ 440 */
+  .he-door-box {                                   /* anchored on the path's row: its springing (stage y 240) on the path, by construction */
+    grid-row: path / bottom; align-self: start; justify-self: start;
+    margin-block-start: calc(var(--stage-h) * -176 / 456);
+    margin-block-end: var(--door-floor);           /* the floor is the stage's own: on the compact desktop, where the door hangs from a path the rows place, it kept 3 px at 1279 × 900 */
+    margin-inline-start: var(--stage-x);
+    inline-size: var(--stage-w);
+  }
+
+  /* the lines at rest and what moves — both on the hero's own tracks */
+  .he-ground, .he-lights { grid-column: full-start / full-end; grid-row: top / bottom; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+  /* THE PATH — one line: a bronze inlay on the wall (3 px, its lit arris above, its shadow edge below), across the stone, then gold
+     light in the night (2.5 px, its static bloom) ending on a terminal disc 4 px short of the arch's outline: the path's arrival */
+  .he-path { display: block; grid-row: path; align-self: start; position: relative; }
+  .he-path--wall { z-index: 1; grid-column: wall-start / niche-start; block-size: 3px; margin-block-start: -1.5px; background: var(--he-bronze); box-shadow: var(--he-inlay-edge); }
+  .he-path--night { z-index: 5; grid-column: niche-start / full-end; justify-self: start; margin-inline-start: var(--reveal-w);
+    inline-size: calc(var(--jamb) - var(--reveal-w) - 7.5px); block-size: 2.5px; margin-block-start: -1.25px;
+    background: var(--he-gold); box-shadow: var(--he-gold-bloom); }
+  .he-path--night::before {                        /* the inlay crossing both stone rings of the reveal */
+    content: ""; position: absolute; inset-inline-end: 100%; inline-size: var(--reveal-w); inset-block-start: 50%; block-size: 3px; margin-block-start: -1.5px;
+    background: var(--he-bronze); box-shadow: var(--he-inlay-edge);
+  }
+  .he-path--night::after {                         /* the terminal disc: where the path arrives, before the arch light takes over */
+    content: ""; position: absolute; inset-inline-end: -3.5px; inset-block-start: 50%; inline-size: 7px; block-size: 7px; margin-block-start: -3.5px;
+    border-radius: 50%; background: var(--he-gold-lit); box-shadow: var(--he-disc-bloom);
+  }
+  /* THE TRAVELLING LIGHT — one bar per material under its own clip, slid by hero.js (transform only). On the wall it is a LIGHT,
+     never ink: a bead of light with a long warm glow glides along the inlay, and the inlay stays lit behind it until the doorway has
+     taken the light (motion M-A: the travel is seen on frames). In the night: gold light with its glow that stays until the settle
+     and lands on the terminal disc */
+  .he-wipe--wall, .he-wipe--night { display: block; grid-row: path; align-self: start; block-size: 36px; margin-block-start: -18px; }   /* room for the glow */
+  .he-wipe--wall { grid-column: wall-start / niche-start; margin-inline-end: calc(-1 * var(--reveal-w)); }
+  .he-wipe--night { grid-column: niche-start / full-end; justify-self: start; margin-inline-start: var(--reveal-w); inline-size: calc(var(--jamb) - var(--reveal-w) - 4px); }
+  .he-wipe--wall .he-wipe__bar { inset-block: 0; inset-inline-start: 0; inline-size: calc(100% + var(--head)); background: var(--he-wipe-wall-ltr); }
+  .he-wipe--night .he-wipe__bar { inset-block: 0; inset-inline-start: 0; inline-size: calc(100% + var(--head)); background: var(--he-wipe-night-ltr); }
+  [dir="rtl"] .he-wipe--wall .he-wipe__bar { background: var(--he-wipe-wall-rtl); }
+  /* the comet's tail: it starts at the bead's centre and fades backward along the inlay; it travels with the bar (no animation of its own) */
+  .he-wipe--wall .he-wipe__bar::before { content: ""; position: absolute; inset-block: 0; inset-inline-end: calc(var(--head) / 2); inline-size: min(30rem, 100%); background: var(--he-tail); mask-image: var(--he-tail-mask-ltr); }
+  [dir="rtl"] .he-wipe--wall .he-wipe__bar::before { mask-image: var(--he-tail-mask-rtl); }
+  [dir="rtl"] .he-wipe--night .he-wipe__bar { background: var(--he-wipe-night-rtl); }
+  /* THE HAND'S ROUTE — one route for the four: an origin under the hand lights Maroc's disc, the whole path in the inlay's lit
+     bronze, the crossing of the stone and the gold run to the terminal disc — «you join the one path» */
+  .he-route { display: block; grid-row: path; align-self: start; position: relative; opacity: 0; transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }
+  .he-route--wall { grid-column: wall-start / niche-start; margin-inline-end: calc(-1 * var(--reveal-w)); block-size: 3px; margin-block-start: -1.5px;
+    background: var(--he-bronze-lit); box-shadow: var(--he-route-edge); }
+  .he-route--night { grid-column: niche-start / full-end; justify-self: start; margin-inline-start: var(--reveal-w); inline-size: calc(var(--jamb) - var(--reveal-w) - 7.5px);
+    block-size: 2.5px; margin-block-start: -1.25px; background: var(--he-route-night); box-shadow: var(--he-route-bloom); }
+  .he-route--night::after {                        /* the terminal disc, brighter */
+    content: ""; position: absolute; inset-inline-end: -4.5px; inset-block-start: 50%; inline-size: 9px; block-size: 9px; margin-block-start: -4.5px; border-radius: 50%;
+    background: var(--he-route-disc);
+  }
+  /* THE REGISTER UNDER THE HERO (chapter 01, templates/pages/home/_entrances.html): where the four origins carry word, sentence and
+     call at rest, the block under the hero that offers the same four with the same sentences is not drawn — a block that repeats the
+     hero's question (UX-1, design M-6, RH-5 / RH-6); W2-E gives the chapter its next answer */
+  .he + .home-entrances, .he + .home-banner + .home-entrances { display: none; }
+}
+
+/* ---- a text larger than the wall was laid out for (CD C-4, brief A9): the five labels take two tiers — MAROC, FORMATION… and
+   PROCÉDURES… on the path, PROFILS… and PRÉPARATION… one tier above with their nodes still on the path. At the default text every
+   wall is ≥ 38.99 em (1280 × 800); the query (38.5 em) acts before two labels meet and never at the default text ---- */
+@media (min-width: 80rem) {
+  @container he-st (max-width: 38.5em) {
+    .he-station:not(.he-station--door) { grid-row: 2; }
+    .he-station:is(:nth-child(2), :nth-child(4)) { grid-row: 1 / span 2; display: grid; grid-template-rows: subgrid; }
+    .he-station:is(:nth-child(2), :nth-child(4)) .he-station__label { grid-row: 1; inline-size: auto; padding-block-end: 0.75rem; }
+    .he-station:is(:nth-child(3), :nth-child(5)) .he-station__label { inline-size: min-content; }
+  }
+}
+
+/* ---- the wide desktop (≥ 80 rem): the row of four; the plate's ratio and size by the hero's height ---- */
+@media (min-width: 80rem) { .he { --gutter: 1rem; } }   /* the row of four: 16 px gutters from 1280 (plates 160 at 1280 × 800, 192 from 1440), the arch unchanged */
+@media (min-width: 80rem) { .he { --plate-max: 12rem; } .he-origin { --stem-x: calc(min(100%, var(--plate-max, 100%)) / 2); } }   /* each plate hung from its centre: stems and station nodes alternate; the 1 : 1 plate ≤ 192 px (its 384 file at DPR 2, never upscaled: C2) */
+/* the last word's arrow may HANG (the review's m2): the fourth word's line runs into the 16 px of wall before the reveal, so
+   «Universités & Formation» keeps its arrow on its own line — with it the word was a fraction of a pixel wider than the 196 px
+   column of 1440 × 900 and took two lines, its sentence 24 px under the other three. The line stops at the reveal: the arrow
+   never stands on the stone. Only the last column: every other one ends on a gutter that the next word starts */
+@media (min-width: 80rem) { .he-origin:last-child .he-origin__word { margin-inline-end: calc(-1 * var(--wall-end)); } }
+@media (min-width: 64rem) and (min-height: 60rem) { .he { --peek: 3.5rem; } }
+@media (min-width: 64rem) and (min-height: 67.5rem) { .he { --peek: 4rem; } }
+@media (min-width: 112.5rem) and (min-height: 66.25rem) { .he { --stem: 2.5rem; --gutter: 1.5rem; } }   /* 1920 × 1080: 24 px gutters, 40 px stems */
+/* the short laptops (≤ 864 px tall): 14 px sentences, tighter air */
+@media (min-width: 64rem) and (max-height: 54rem) {
+  .he { --gap-a: 1.5rem; --cta-h: 3rem; --stem: 1.75rem; --gap-labels: 1.5rem; }
+  .he-origin__gloss { font-size: 0.875rem; line-height: 1.25rem; }
+}
+@media (min-width: 64rem) and (max-height: 50rem) {
+  .he-origin__call { margin-block-start: 0.25rem; }   /* sentence → call 4 px, a step of the scale: the fold keeps its 40 px with the 160 px plate */
+  .he {
+    --peek: 2.5rem; --he-shade: var(--he-shade-short); --plate-max: 10rem; --stem: 1.5625rem;   /* the plate ≥ 160 px (design M-2); the stem 24 px (A3) */
+    grid-template-rows: [top] minmax(calc(var(--path-y) - var(--labels-min)), auto) [labels] minmax(var(--labels-min), auto) [path] auto [rest] minmax(0, 1fr) [bottom];   /* the 8 px under the row (a11y M1) is the description's own padding */
+  }
+}
+/* 1280 × 720: the 3 : 2 plate, the peek 24 px */
+@media (min-width: 64rem) and (max-height: 46rem) { .he { --peek: 2rem; --gap-a: 1rem; --stem: 1.5625rem; --gap-labels: 1.25rem; } }   /* the description's first line whole in the peek (26 + 4 px) */
+@media (min-width: 80rem) and (max-width: 95.999rem) and (max-height: 46rem) { .he { --plate-ratio: 3 / 2; } }
+@media (min-width: 90rem) and (min-height: 54rem) { .he { --gap-labels: 2.5rem; } }   /* ≥ 1440 × 864: actions → stations 40 px */
+/* ≤ 1366: the word 16 px, the stations 12 px */
+@media (min-width: 64rem) and (max-width: 85.375rem) {
+  .he-origin__word { font-size: 1rem; line-height: 1.375rem; }
+  .he-station__label { font-size: 0.75rem; line-height: 0.9375rem; letter-spacing: 0.05em; }
+  .he-station__label:lang(ar) { font-size: 0.875rem; letter-spacing: 0; }   /* an Arabic station name never under 14 px (tokens: «never under 14 px in Arabic») */
+  .he { --labels-h: 2.375rem; }
+}
+@media (min-width: 64rem) and (max-width: 81.25rem) { .he-origin__gloss { font-size: 0.875rem; line-height: 1.25rem; } }   /* 1280: 14 px */
+@media (min-width: 80rem) and (max-width: 82rem) { .he-origin__word { font-size: 0.9375rem; line-height: 1.25rem; } }   /* 1280–1312: the word 15 px over its 14 px sentence — at 16 px the fourth word alone filled its 170 px column (1280 × 800) and its arrow took a second line (m2) */
+
+/* ---- FROM 96 rem THE WALL STANDS ON THE PAGE'S COLUMN (the review's M1). Up to 1535 px the wall needs the page (above: at
+   1440 × 900 the four columns are 196 px with the wall at the page's pad, and Institutions takes five lines from 195 px). From
+   1536 px four columns of that width fit between the container's content edge — where the letterhead's logo, the navigation's
+   panels and every chapter under the hero start — and the niche: the wall starts THERE, the niche keeps the far edge of the
+   window. What follows from it:
+   · the niche gives way to the wall, never the wall to the niche: its width is capped so that four columns of --col-min and
+     their gutters always fit (a tall, narrow window draws a smaller door with more night above it);
+   · the plate is as wide as its column — no sentence runs past its photograph — and as tall as the hero's height leaves under
+     the path for a five-line column and --row-air of wall, between 3 : 2 and 4 : 5 of its width (--plate-fit: the door's
+     floor and the stage under its springing, less the stem, the cell's gaps, the word, five lines, the call and the air);
+     its file is the 4 : 5 cut, or the 3 : 2 one in a short window (templates/pages/home/_hero.html), covered by the box;
+   · the columns are never wider than the largest plate its files allow (15 rem: the 480 px cuts at density 2); on a screen
+     wider than that the night takes the leftover and the door stays centred in it;
+   · the sentences are 14 px wherever a column may be under 196 px (1536–1599 px, where the container is still 1320 px, and
+     every window at most 864 px tall), 15 px elsewhere. ---- */
+@media (min-width: 96rem) {
+  .he {
+    --edge: max(var(--page-pad), calc((100vw - var(--container)) / 2 + var(--grid-margin)));   /* the container's content edge */
+    --col-min: 12rem;                              /* «Universités & Formation →» needs 187.5 px of column (its 203.5 px less the 16 px its line may run into, below); the cap is read in vw and the grid in %, so a classic 17 px scrollbar takes 2.1 px of each column: 192 px keeps both */
+    --plate-max: 15rem;
+    --gloss-fs: 0.875rem; --gloss-lh: 1.25rem;
+    --call-gap: 0.5rem;
+    --row-air: 2rem;
+    --wall-min: calc(4 * var(--col-min) + 3 * var(--gutter));
+    --wall-max: calc(4 * var(--plate-max) + 3 * var(--gutter));
+    --niche-max: min(44vw, calc(100vw - var(--edge) - var(--wall-end) - var(--wall-min)));
+    --niche-w: max(clamp(min(36vw, var(--niche-max)), calc(var(--stage-w) + var(--reveal-w) + 2 * var(--niche-pad)), var(--niche-max)), calc(100vw - var(--edge) - var(--wall-end) - var(--wall-max)));
+    --pad-start: var(--edge);
+    --col: calc((100vw - var(--niche-w) - var(--edge) - var(--wall-end) - 3 * var(--gutter)) / 4);
+    --plate-fit: calc(var(--door-floor) + var(--stage-h) * 280 / 456 - var(--stem) - 3.5rem - 5 * var(--gloss-lh) - var(--call-gap) - var(--row-air));   /* 3.5 rem: plate → text 12, the word 24, word → sentence 4, the call's line 16 */
+    grid-template-columns: [full-start] max(var(--page-pad), calc((100% - var(--container)) / 2 + var(--grid-margin))) [wall-start body-start] minmax(0, 1fr) [wall-end] var(--wall-end) [niche-start] var(--niche-w) [full-end];
+  }
+  .he-plate { inline-size: 100%; aspect-ratio: auto; block-size: clamp(calc(var(--col) * 2 / 3), var(--plate-fit), calc(var(--col) * 5 / 4)); }
+  .he-origin__gloss { font-size: var(--gloss-fs); line-height: var(--gloss-lh); }
+  .he-origin__call { margin-block-start: var(--call-gap); }
+}
+@media (min-width: 96rem) and (max-height: 50rem) { .he { --call-gap: 0.25rem; --row-air: 1.25rem; } }
+@media (min-width: 100rem) and (min-height: 54.0625rem) { .he { --col-min: 12.5rem; --gloss-fs: 0.9375rem; --gloss-lh: 1.375rem; } }
+
+/* ---- the compact desktop (1024–1279): the same path; the four as rows hung on one string from Maroc (the chips are beads) ---- */
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  .he {
+    --chip: 4.5rem; --row-gap: 0.5rem; --stem: 1.25rem; --niche-max: 40vw; --niche-pad: 1rem;
+    --labels-h: 2.375rem; --gap-labels: 1.5rem; --gap-a: 1.5rem; --cta-h: 3rem; --pad-top: 1.5rem;
+    grid-template-rows: [top] minmax(auto, 1fr) [labels] minmax(var(--labels-min), auto) [path] auto [rest] minmax(1rem, auto) [bottom];   /* the height left over goes above the promise: the path, the door hung on it and the four rows stand on the hero's foot */
+  }
+  .he__actions { gap: var(--s-2) var(--s-6); }
+  .he .he-stations { display: flex; justify-content: space-between; column-gap: 0.75rem; padding-inline-start: calc(var(--chip) / 2 + 12px - var(--node) / 2); }
+  .he-station, .he-station:nth-child(n) { margin-inline: 0; flex: none; text-align: start; }
+  .he-station:nth-child(n) .he-station__node { inset-inline-start: 0; inset-inline-end: auto; }
+  [dir="rtl"] .he-station:not(.he-station--door) .he-station__label[dir="ltr"] { text-align: end; }   /* the Arabic page: each French label ends at its node, the label's start side (design M-4); the door's inscription stays centred under the stage */
+  .he-station:nth-child(n) .he-station__lit { inset-inline-start: calc(var(--node) / 2 - 10.5px); inset-inline-end: auto; }
+  .he-station:nth-child(2) .he-station__label { inline-size: 8em; }
+  .he-station:nth-child(3) .he-station__label { inline-size: 10em; }
+  .he-station:nth-child(4) .he-station__label { inline-size: 9.5em; }
+  .he-station:nth-child(5) .he-station__label { inline-size: 7.2em; }
+  .he-path--wall, .he-wipe--wall, .he-route--wall { margin-inline-start: calc(var(--chip) / 2 + 12px); }
+  .he-origins { padding-block-start: var(--stem); }
+  .he-origins__list { grid-template-columns: minmax(0, 1fr); row-gap: var(--row-gap); }
+  .he-origin { padding-block-start: 0; }
+  .he-origin::before {                             /* the string, one segment per row (it follows the rows whatever their height) */
+    inset-block: calc(-1 * var(--row-gap)) 0; inset-inline-start: calc(var(--chip) / 2 - 1px); inline-size: 2px; block-size: auto;
+  }
+  .he-origin:first-child::before {                 /* …and the turn into the path at Maroc, one 12 px radius */
+    inset-block-start: calc(-1 * var(--stem) - 1px); inline-size: 14px; background: none;
+    border-inline-start: 2px solid var(--he-bronze); border-block-start: 2px solid var(--he-bronze); border-start-start-radius: 12px;
+  }
+  .he-origin:last-child::before { inset-block-end: 50%; }
+  .he-origin::after { display: none; }
+  .he-origin__link { grid-template-columns: var(--chip) minmax(0, 1fr); column-gap: 1rem; align-items: center; min-block-size: var(--chip); }
+  .he-origin__link::before { inset: calc(var(--row-gap) / -2) -0.5rem; }
+  .he-plate { inline-size: var(--chip); aspect-ratio: 1; }
+  .he-origin__text { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "word call" "gloss gloss"; column-gap: 1rem; align-items: baseline; }
+  .he-origin__word { grid-area: word; font-size: 1rem; line-height: 1.375rem; }
+  .he-origin__call { grid-area: call; margin: 0; justify-self: start; }   /* the call at the end of the word's line, a reserved slot */
+  .he-origin__gloss { grid-area: gloss; margin: 0; font-size: 0.875rem; line-height: 1.25rem; }
+  .he-origin__stem { inset-block: calc(-1 * var(--row-gap)) 0; inset-inline-start: calc(var(--chip) / 2 - 5px); block-size: auto; }   /* the string's lit twin, row by row */
+  .he-origin:first-child .he-origin__stem { inset-block-start: calc(-1 * var(--stem) + 11px); }
+  .he-origin:last-child .he-origin__stem { inset-block-end: 50%; }
+  .he-origin__eye { display: none; }
+  .he-origins { padding-block-end: 0.5rem; }      /* the last row's focus ring clear of the hero's edge (a11y M1) */
+  .he-corner--maroc {
+    display: block; grid-column: wall-start / wall-end; grid-row: path; justify-self: start; align-self: start;
+    margin-inline-start: calc(var(--chip) / 2 - 1px); margin-block-start: -1px; inline-size: 14px; block-size: 13px;
+    border-inline-start: 2px solid var(--he-bronze-lit); border-block-start: 2px solid var(--he-bronze-lit); border-start-start-radius: 12px;
+  }
+}
+
+/* ============================================================================================
+   INTERACTION (desktop) — colour follows light; the call; the route lit; the door's light answers.
+   Hover 200 ms in / 120 ms out on the ease-out curve (fine pointers only); focus and press at 0 ms both ways.
+   ============================================================================================ */
+@media (hover: hover) and (pointer: fine) {
+  .he-origin__link:hover .he-plate__col { opacity: 1; transition-duration: var(--motion-standard); transition-delay: 0ms; }
+  .he-origin__link:hover .he-origin__call, .he-origin__link:hover .he-origin__word .he-origin__go .icon { opacity: 1; transition-delay: 0ms; }
+}
+.he-origin__link:is(:focus-visible, :active, .is-pressed) .he-plate__col,
+.he-origin__link:is(:focus-visible, :active, .is-pressed) .he-origin__call,
+.he-origin__link:is(:focus-visible, :active, .is-pressed) .he-origin__word .he-origin__go .icon { opacity: 1; transition: none; }
+@media (hover: none) and (min-width: 64rem) { .he-origin__call { opacity: 1; } }   /* a touch screen in the desktop layout (a tablet lying down): nothing hovers, and the register that carries the four calls is not drawn at this width — they stand at rest (a11y F8) */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .he .he-origin:has(> .he-origin__link:hover) .he-origin__stem { opacity: 1; transition-delay: 0ms; }
+  .he:has(.he-origin__link:hover) .he-route, .he:has(.he-origin__link:hover) .he-station--maroc::after { opacity: 1; transition-delay: 0ms; }   /* the one route: Maroc → the whole path → the door */
+  .he.is-ajar:has(.he-origin__link:hover) :is(.he-aperture, .he-spill, .he-bloom) { opacity: 1; transition: opacity var(--motion-standard) var(--ease-enter) var(--motion-fast); }   /* after the route */
+}
+@media (min-width: 64rem) {
+  /* under the hand the stem is the route's own line (3 px of lit bronze); the wide column of light is the movement's */
+  .he-origins__list:has(.he-origin__link:is(:hover, :focus-visible, :active, .is-pressed)) .he-origin__stem { background: var(--he-stem-held); }
+  .he .he-origin:has(> .he-origin__link:is(:focus-visible, :active, .is-pressed)) .he-origin__stem { opacity: 1; transition: none; }
+  .he:has(.he-origin__link:is(:focus-visible, :active, .is-pressed)) .he-route,
+  .he:has(.he-origin__link:is(:focus-visible, :active, .is-pressed)) .he-station--maroc::after { opacity: 1; transition: none; }
+  .he.is-ajar:has(.he-origin__link:is(:focus-visible, :active, .is-pressed)) :is(.he-aperture, .he-spill, .he-bloom) { opacity: 1; transition: none; }
+}
+/* the compact desktop: the string lit from the row to Maroc and its corner (with the route) */
+@media (min-width: 64rem) and (max-width: 79.999rem) and (hover: hover) and (pointer: fine) {
+  .he-origins__list:has(.he-origin:nth-child(2) .he-origin__link:hover) .he-origin:nth-child(-n + 2) .he-origin__stem,
+  .he-origins__list:has(.he-origin:nth-child(3) .he-origin__link:hover) .he-origin:nth-child(-n + 3) .he-origin__stem,
+  .he-origins__list:has(.he-origin:nth-child(4) .he-origin__link:hover) .he-origin__stem { opacity: 1; transition-delay: 0ms; }
+  .he:has(.he-origin__link:hover) .he-corner--maroc { opacity: 1; transition-delay: 0ms; }
+}
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  .he-origins__list:has(.he-origin:nth-child(2) .he-origin__link:focus-visible) .he-origin:nth-child(-n + 2) .he-origin__stem,
+  .he-origins__list:has(.he-origin:nth-child(3) .he-origin__link:focus-visible) .he-origin:nth-child(-n + 3) .he-origin__stem,
+  .he-origins__list:has(.he-origin:nth-child(4) .he-origin__link:focus-visible) .he-origin__stem { opacity: 1; transition: none; }
+  .he:has(.he-origin__link:focus-visible) .he-corner--maroc { opacity: 1; transition: none; }
+  .he-corner--maroc { transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }
+}
+/* the grace: leaving the group, each state holds 120 ms before its 120 ms out (fine pointers only); between neighbours the bridged
+   hit areas keep one origin hovered, and the shared route and the door's answer never drop */
+@media (hover: hover) and (pointer: fine) { .he { --he-grace: var(--motion-fast); } }
+/* the keyboard: the module marks the modality (html.he-keys, set by a key, cleared by a pointer) — every state at 0 ms, out as in */
+.he-keys .he :is(.he-plate__col, .he-origin__call, .he-origin__go .icon, .he-origin__stem, .he-route, .he-aperture, .he-spill, .he-bloom, .he-corner--maroc) { transition: none; }
+.he-keys .he .he-station--maroc::after { transition: none; }
+
+/* ============================================================================================
+   PHONES AND TABLETS — below 64 rem: the statement, the night band (the door at the end side, the six stations on a rail that
+   turns into the floor line — one route — at the start side), four tiles 2 × 2 joined to the floor line by one spine.
+   ============================================================================================ */
+@media (max-width: 63.999rem) {
+  .he {
+    --arch-w: 50vw;
+    --stage-w: calc(var(--arch-w) * 368 / 320);
+    --stage-h: calc(var(--arch-w) * 456 / 320);
+    --band-h: calc(var(--stage-h) + 1.5rem);
+    --floor: 0.5rem;                               /* the floor line above the band's bottom */
+    --rail-top: 1.75rem;                           /* Maroc's node from the band's top */
+    --tile-h: 4rem;
+    --chip: 3.5rem;
+    --gap: 0.75rem;
+    --promise-fs: clamp(1.625rem, 7.2vw, 1.875rem);
+    --promise-lh: 1.1;
+    --gap-a: 1rem;
+    --cta-h: 3.25rem;
+    /* the halo's centre: the door's column (its paint, --he-halo, resolves on the hero) */
+    --halo-x: calc(100% - var(--page-pad) - var(--arch-w) / 2);
+    --halo-y: calc(100% - var(--floor) - var(--stage-h) * 213.5 / 456);
+    display: grid;
+    grid-template-columns: [full-start] var(--page-pad) [wall-start] minmax(0, 1fr) [mid-start] var(--gap) [mid-end] minmax(0, 1fr) [wall-end] var(--page-pad) [full-end];
+    grid-template-rows: [top] auto [band-start] minmax(var(--band-h), max-content) [band-end] 0.75rem [t1] minmax(var(--tile-h), auto) [t1-end] 0.5rem [t2] minmax(var(--tile-h), auto) [t2-end] 1rem [bottom];
+    background-image: var(--he-wall-light-phone-ltr);
+  }
+  [dir="rtl"] .he { background-image: var(--he-wall-light-phone-rtl); --halo-x: calc(var(--page-pad) + var(--arch-w) / 2); }
+  .he__statement { grid-column: wall-start / wall-end; grid-row: top; padding-block: 1.5rem 1rem; z-index: 2; }
+  .he__promise { max-inline-size: none; }
+  .he__actions { flex-direction: column; align-items: stretch; gap: var(--s-2); }   /* 8 px between the two targets */
+  .he__primary { inline-size: 100%; }
+  .he__secondary { align-self: flex-start; }
+
+  /* the night band: the door at the end side */
+  .he-niche { grid-column: full-start / full-end; grid-row: band-start / band-end; z-index: auto; isolation: auto; background-color: transparent; }   /* not a stacking context (C-7) */
+  .he-niche::after {                               /* the band's night, under everything the band holds (z -2 in the hero's own stacking context) */
+    content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+    background-color: var(--surface-night);
+    background-image: var(--he-band-ltr);
+    box-shadow: var(--he-band-inset);
+  }
+  [dir="rtl"] .he-niche::after { background-image: var(--he-band-rtl); }
+  .he-niche__reveal {                              /* the reveal, turned: the lintel's thickness above the band */
+    z-index: -1; inset-inline: 0; inset-block: auto 100%; inline-size: auto; block-size: 0.5rem;
+    background: var(--he-reveal-down); box-shadow: var(--he-reveal-arris-down);
+  }
+  [dir="rtl"] .he-niche__reveal { background: var(--he-reveal-down); box-shadow: var(--he-reveal-arris-down); }
+  .he-niche::before { z-index: -1; inset-inline: 0; inset-block-start: 0; inline-size: auto; block-size: 2.5rem; background: var(--he-cast-down); }   /* the cast shadow over the night, under the labels */
+  [dir="rtl"] .he-niche::before { background: var(--he-cast-down); }
+  .he-niche__halo { z-index: 6; inset-inline-start: calc(100% - var(--page-pad) - var(--arch-w) - 4px); }   /* after the band's labels and the tiles' words, and only the door's column (C-7) */
+  .he-door-box { position: absolute; z-index: 6; inset-inline-end: calc(var(--page-pad) - var(--stage-w) * 24 / 368); inset-block-end: calc(var(--floor) - var(--stage-h) * 13 / 456); inline-size: var(--stage-w); }   /* the door and its lights after the band's labels (C-7) */
+
+  /* the six stations on the rail, at the start side of the band; «ENTRÉE EN ITALIE» at the foot in gold, 10 px above the floor line */
+  .he .he-stations {
+    grid-column: full-start / full-end; grid-row: band-start / band-end; justify-self: start; z-index: auto;   /* no stacking context: the labels paint with their items over the night (z -2); the glints rise to z 7 (C-7) */
+    display: flex; flex-direction: column; justify-content: space-between; row-gap: 0.25rem;   /* the band grows with its labels; they never touch */
+    inline-size: calc(100% - var(--page-pad) - var(--arch-w) - 4px);
+    padding-block: calc(var(--rail-top) - 8px) calc(var(--floor) + 10px);
+    padding-inline-start: var(--page-pad);
+  }
+  .he-station { display: flex; align-items: flex-start; gap: 0.625rem; }
+  .he-station__label { color: var(--text-on-night-1); min-inline-size: 0; max-inline-size: 100%; overflow-wrap: break-word; hyphens: manual; }   /* never hyphenated (CD C-1): a two-word label breaks between its words; only a single word wider than the space beside its node (a text-only enlargement) breaks inside it — the last resort —, never onto the door */
+  .he-station__node { position: relative; flex: none; margin-block-start: 4.5px; background: var(--he-gold); box-shadow: 0 0 0 3px var(--surface-night); }
+  .he-station__lit { z-index: 7; inset-inline-start: -3px; inset-block-start: 1.5px; inline-size: 13px; block-size: 13px; border-radius: 50%; background: var(--he-band-glint); }   /* after every word (C-7) */
+  .he-station--door .he-station__label { color: var(--he-gold); }
+
+  /* the four tiles: a 1 : 1 chip (black-and-white at rest) beside the word, the arrow at the end; the whole tile the target */
+  .he-origins { grid-column: wall-start / wall-end; grid-row: t1 / t2-end; z-index: 6; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }   /* the tiles and their moving colour layers after the band's labels (C-7) */
+  .he-origins__list { grid-column: 1 / -1; grid-row: 1 / -1; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+  .he-origin:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .he-origin:nth-child(2) { grid-column: 3; grid-row: 1; }
+  .he-origin:nth-child(3) { grid-column: 1; grid-row: 3; }
+  .he-origin:nth-child(4) { grid-column: 3; grid-row: 3; }
+  /* the tile: the chip and the word side by side in a flex row that WRAPS — a word whose longest word cannot stand beside the chip
+     (WCAG 1.4.12 spacing, a text-only enlargement) moves under the chip whole instead of breaking inside a word (CD C-1, a11y B1) */
+  .he-origin__link {
+    display: flex; flex-wrap: wrap; align-items: center; align-content: center; column-gap: 0.5rem; row-gap: 0.375rem;
+    block-size: 100%; padding: 0.1875rem 0.3125rem 0.1875rem 0.1875rem;
+  }
+  .he-origin__text { flex: 1 1 0; min-inline-size: auto; max-inline-size: 100%; align-items: flex-start; }   /* the column takes the room beside the chip (basis 0: a long label never wraps under the chip), and the word's box inside it is its own words' width — so the arrow's row ends at the word, not at the tile's far edge (UX m-1, taste M-C); its automatic minimum: its longest word */
+  .he-origin__word { max-inline-size: 100%; }
+  .he-origin__link:focus-visible { box-shadow: 0 0 0 8px var(--surface-page); }   /* the ring on a clear field, over the spine where they meet */
+  .he-plate { inline-size: var(--chip); aspect-ratio: 1; box-shadow: none; }
+  .he-plate__bw .he-photo { filter: grayscale(1) contrast(1.12); }   /* the chips: a touch more contrast (Institutions, the lightest picture, at 56 px) */
+  .he-origin__word { position: relative; padding-block-end: 1.125rem; font-size: 1rem; line-height: 1.2; font-weight: var(--w-control); letter-spacing: -0.006em; overflow-wrap: break-word; hyphens: manual; }   /* 16 px at every phone width (RE-4, UX MOB-1); the arrow's own row, reserved under the word; never hyphenated */
+  .he-origin__word .he-origin__end { font-size: 0; }   /* on a tile the arrow leaves the line: no glue */
+  .he-origin__word .he-origin__go { position: absolute; inset-inline-end: 0; inset-block-end: 0; display: flex; align-items: center; block-size: 1rem; margin: 0; line-height: 0; }   /* in the reserved row, at the word's end: never over a letter */
+  .he-origin__word .he-origin__go .icon { inline-size: var(--icon-xs); block-size: var(--icon-xs); opacity: 1; }
+  .he-origin__gloss { position: absolute; inline-size: 1px; block-size: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* the sentence: the tile's description; drawn one swipe lower */
+  .he-origin__call { display: none; }
+
+  /* THE ROUTE AT REST: the rail and the floor line, one route with one 12 px radius at the rail's foot — down from Maroc, then
+     along the band's floor to the door's first step; the spine rises from the centre of the 2 × 2 into the floor line */
+  .he-ground, .he-lights { grid-column: full-start / full-end; grid-row: top / bottom; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+  .he-rail {
+    display: block; z-index: auto;                 /* with the ground: over the night (z -2), under the nodes and their night rings */
+    grid-column: full-start / full-end; grid-row: band-start / band-end; justify-self: start; align-self: stretch;
+    margin-inline-start: calc(var(--page-pad) + 2.75px);
+    margin-block: var(--rail-top) calc(var(--floor) - 0.75px);
+    inline-size: calc(100% - 2 * var(--page-pad) - 2.75px - var(--stage-w) * 310.5 / 368);
+    border-inline-start: 1.5px solid var(--he-gold-line); border-block-end: 1.5px solid var(--he-gold-line); border-end-start-radius: 12px;
+  }
+  .he-spine {                                      /* grid-row ends on t1-end (an end named «t2» would resolve to t2-end): the 2 × 2's centre */
+    display: block; position: relative; z-index: 1; grid-column: mid-start / mid-end; grid-row: band-end / t1-end; justify-self: center; align-self: stretch;
+    inline-size: 1.5px; margin-block: 0 -0.25rem; background: var(--he-bronze);
+  }
+  .he-spine::after {                               /* the eyelet where the four meet: the spine's origin (the desktop's eyelet) */
+    content: ""; position: absolute; inset-inline-start: 50%; inset-block-end: -2.5px; inline-size: 5px; block-size: 5px; margin-inline-start: -2.5px;
+    border-radius: 50%; background: var(--he-bronze);
+  }
+  .he-spine-top { display: block; z-index: auto; grid-column: mid-start / mid-end; grid-row: band-start / band-end; justify-self: center; align-self: end; inline-size: 1.5px; block-size: var(--floor); background: var(--he-gold-line); }
+  /* what moves on a phone: the spine's twin (up), the junction, the rail's twin (down), its corner, the floor's twin (to the door) */
+  .he-wipe--spine, .he-junction, .he-wipe--rail, .he-corner--rail, .he-wipe--floor { display: block; }
+  .he-wipe--spine { grid-column: mid-start / mid-end; grid-row: band-end / t1-end; justify-self: center; align-self: stretch; inline-size: 20px; margin-block: calc(-1 * var(--floor)) -0.25rem; }   /* the three phone clips are 20 px wide: the bead's glow (motion M-A) */
+  .he-wipe--spine .he-wipe__bar { inset-inline: 0; inset-block-end: 0; block-size: calc(100% + var(--head)); background: var(--he-wipe-spine); }
+  .he-junction { grid-column: mid-start / mid-end; grid-row: band-start / band-end; justify-self: center; align-self: end; margin-block-end: calc(var(--floor) - 7px); inline-size: 14px; block-size: 14px; border-radius: 50%; background: var(--he-junction); }
+  .he-wipe--rail { grid-column: full-start / full-end; grid-row: band-start / band-end; justify-self: start; align-self: stretch; inline-size: 20px; margin-inline-start: calc(var(--page-pad) + 3.5px - 10px); margin-block: var(--rail-top) calc(var(--floor) + 12px); }
+  .he-wipe--rail .he-wipe__bar { inset-inline: 0; inset-block-start: 0; block-size: calc(100% + var(--head)); background: var(--he-wipe-rail); }
+  .he-corner--rail { grid-column: full-start / full-end; grid-row: band-start / band-end; justify-self: start; align-self: end; margin-inline-start: calc(var(--page-pad) + 2.5px); margin-block-end: calc(var(--floor) - 1px); inline-size: 14px; block-size: 13.5px; border-inline-start: 2px solid var(--he-gold-lit); border-block-end: 2px solid var(--he-gold-lit); border-end-start-radius: 12px; }
+  .he-wipe--floor { grid-column: full-start / full-end; grid-row: band-start / band-end; justify-self: start; align-self: end; block-size: 20px; margin-block-end: calc(var(--floor) - 10px); margin-inline-start: calc(var(--page-pad) + 2.75px + 12px); inline-size: calc(100% - 2 * var(--page-pad) - 2.75px - 12px - var(--stage-w) * 310.5 / 368); }
+  .he-wipe--floor .he-wipe__bar { inset-block: 0; inset-inline-start: 0; inline-size: calc(100% + var(--head)); background: var(--he-wipe-floor-ltr); }
+  [dir="rtl"] .he-wipe--floor .he-wipe__bar { background: var(--he-wipe-floor-rtl); }
+  /* the press: the chip in colour, its route lit (the spine, the floor line, the steps' twins at .6), the pressed ground — at 0 ms;
+     on a touch, hero.js runs the light along that route instead, every time (the repeatable flow) */
+  .he:has(.he-origin__link:is(:active, .is-pressed)):not(.is-flowing) :is(.he-wipe--spine, .he-wipe--floor) .he-wipe__bar { opacity: 1; transition: none; }
+  .he:has(.he-origin__link:is(:active, .is-pressed)):not(.is-flowing) .he-tread-lit { opacity: 0.6; transition: none; }
+  .he.is-ajar:has(.he-origin__link:is(:active, .is-pressed)) :is(.he-aperture, .he-spill, .he-bloom) { opacity: 1; transition: none; }
+  .he-plate__veil { background: var(--he-veil-chip); }   /* the small chips need the stronger arriving light (motion m-4) */
+  .he-aperture { inline-size: 16%; }               /* the phone's door beat (motion M-C): the band at D9's cap, the opening's light stronger */
+  .he-bloom { background: var(--he-bloom-phone); }
+  [dir="rtl"] .he-station__label[dir="ltr"] { text-align: end; }   /* the French rail labels end at the rail, as MAROC does (design M-4) */
+}
+/* the narrow phones (≤ 376 px): the chip 52 px, so that «& Formation» at 16 px keeps its line beside the chip (UX MOB-1); from 424 px (430):
+   the chip 64, the tile 72 */
+@media (max-width: 23.5rem) { .he { --chip: 3.25rem; } }
+/* the narrowest phones (≤ 340 px, and 400 % reflow): the chip above the word — every word on its line, nothing past its tile */
+@media (max-width: 21.25rem) {
+  .he { --chip: 2.75rem; }
+  .he-origin__link { align-items: flex-start; align-content: flex-start; row-gap: 0.375rem; padding: 0.375rem; }
+  .he-origin__text { flex-basis: 100%; }
+}
+/* …and whenever the text is large for its tile (a text-only enlargement): the tile, measured in its own ems, stacks the chip above the word */
+@media (max-width: 63.999rem) { .he-origin { container-type: inline-size; } }
+@container (max-width: 7.5em) {
+  .he-origin__link { align-items: flex-start; align-content: flex-start; row-gap: 0.375rem; padding: 0.375rem; }
+  .he-origin__link .he-origin__text { flex-basis: 100%; }
+  .he-origin__link .he-plate { inline-size: 2.75rem; }
+}
+@media (max-width: 63.999rem) and (min-height: 51rem) { .he { --band-h: calc(var(--stage-h) + 1rem); --rail-top: 1.5rem; } }   /* ≤ 40 % of the screen's height */
+@media (max-width: 63.999rem) and (max-height: 52rem) { .he { --arch-w: min(50vw, 12.375rem); } }   /* 412 × 823: the chapter's eyebrow whole at the fold */
+@media (max-width: 63.999rem) and (min-height: 58rem) { .he__statement { padding-block: 1.75rem 1.25rem; } }
+@media (max-width: 63.999rem) and (min-width: 26.5rem) { .he { --chip: 4rem; --tile-h: 4.5rem; } }
+@media (max-width: 63.999rem) and (min-width: 24.375rem) and (min-height: 52rem) { .he { --chip: 4rem; --tile-h: 4.5rem; } }   /* 390 × 844: the 64 px chip (the four seen at their naming) */
+/* tablets and wide phones: the door no larger than 17 rem; the statement and the 2 × 2 centred, at most 46 rem wide */
+@media (max-width: 63.999rem) and (min-width: 30rem) {
+  .he { --arch-w: clamp(12.5rem, 40vw, 17rem);
+    grid-template-columns: [full-start] minmax(var(--page-pad), 1fr) [wall-start] minmax(0, 22.625rem) [mid-start] var(--gap) [mid-end] minmax(0, 22.625rem) [wall-end] minmax(var(--page-pad), 1fr) [full-end]; }
+  .he__actions { flex-direction: row; align-items: center; gap: var(--s-2) var(--s-6); }
+  .he__primary { inline-size: auto; }
+}
+/* tablets from 640 px: the sentence drawn beside the chip (14 / 20, ≤ 4 lines) */
+@media (max-width: 63.999rem) and (min-width: 40rem) and (min-height: 30.0625rem) {
+  .he { --chip: 4.5rem; --tile-h: 5.5rem; }
+  .he-origin__link { column-gap: 0.875rem; padding: 0.375rem 0.75rem 0.375rem 0.375rem; align-items: flex-start; align-content: flex-start; }
+  .he-origin__text { flex: 1 1 0; padding-block-start: 0.125rem; }   /* the sentence takes the tile's width */
+  .he + .home-entrances, .he + .home-banner + .home-entrances { display: none; }   /* the tiles carry the sentence: the register under the hero is not drawn (UX-1) */
+  .he-origin__gloss { position: static; inline-size: auto; block-size: auto; margin: 0.25rem 0 0; overflow: visible; clip-path: none; white-space: normal; font-size: 0.875rem; line-height: 1.25rem; }   /* word → sentence 4 px, the cell's own step */
+  .he-origin__word { padding-block-end: 0; }      /* the arrow back on the word's line, as on the desktop */
+  .he-origin__word .he-origin__end { font-size: inherit; }
+  .he-origin__word .he-origin__go { position: static; display: inline-block; block-size: auto; margin-inline-start: 0.125rem; vertical-align: -0.0625rem; }
+}
+@media (max-width: 47.999rem) and (min-width: 40rem) and (min-height: 30.0625rem) { .he-origin__gloss { font-size: 1rem; line-height: 1.5rem; } }   /* below 48 rem the reading text is 16 px (RE-4): the small tablets' sentences */
+/* short phones (≤ 700 px tall): the door gives way first, then the promise; the secondary may leave the first screen; the stations keep
+   their 13 px (UX m-2: the band has the room, ≤ 40 % of the screen). The door keeps the tablets' ceiling of 17 rem: in a short window
+   wider than 698 px (a small tablet lying down, 960 × 600) 39vw alone drew it 374 px wide, the stage 89 % of the window's height */
+@media (max-width: 63.999rem) and (max-height: 43.75rem) {
+  .he { --arch-w: min(39vw, 17rem); --promise-fs: clamp(1.5rem, 6.6vw, 1.75rem); --gap-a: 0.75rem; --rail-top: 1.375rem; }
+  .he__statement { padding-block: 1rem 0.75rem; }
+}
+/* landscape phones (844 × 390, 932 × 430): the door beside the statement, the four tiles under it, the six stations as a two-line
+   plinth as the hero's last row; the short score without a travelling light (the rail and the spine are not drawn) */
+@media (max-width: 63.999rem) and (min-width: 36rem) and (orientation: landscape) and (max-height: 30rem) {
+  .he {
+    --arch-w: clamp(9rem, 34vh, 14rem);
+    --tile-h: 3.25rem; --chip: 3rem;               /* 52 px tiles and 8 px gaps: 16 px more above the promise (taste m-4), the plinth and the door where they were */
+    grid-template-columns: [full-start] var(--page-pad) [wall-start] minmax(0, 1fr) [mid-start] var(--gap) [mid-end] minmax(0, 1fr) [wall-end] 1rem [niche-start] calc(var(--stage-w) + 1rem) var(--page-pad) [full-end];
+    grid-template-rows: [top] auto [band-start] 0.5rem [t1] minmax(var(--tile-h), auto) [t1-end] 0.5rem [t2] minmax(var(--tile-h), auto) [t2-end] 0.5rem [plinth] minmax(3.25rem, auto) [bottom];
+    background-image: none;
+  }
+  [dir="rtl"] .he { background-image: none; }
+  .he__statement { grid-column: wall-start / wall-end; grid-row: top; padding-block: 1rem 0.25rem; }
+  .he__promise { font-size: clamp(1.375rem, 4.6vh, 1.75rem); line-height: 1.1; }
+  .he__actions { flex-direction: row; align-items: center; gap: var(--s-2) var(--s-5); margin-block-start: 0.5rem; }
+  .he__primary { inline-size: auto; min-block-size: 2.75rem; }
+  .he__secondary.btn--link { min-block-size: var(--hit-primary); }
+  .he-niche { grid-column: niche-start / full-end; grid-row: top / plinth; box-shadow: none; }
+  .he-niche::after { box-shadow: none; }
+  .he-niche__halo { inset-inline-start: 0; }      /* landscape: no label shares the niche */
+  .he-niche__reveal { inset-inline: auto 100%; inset-block: 0; inline-size: 0.5rem; block-size: auto; background: var(--he-reveal-rtl); box-shadow: var(--he-reveal-arris-rtl); }
+  [dir="rtl"] .he-niche__reveal { background: var(--he-reveal-ltr); box-shadow: var(--he-reveal-arris-ltr); }
+  .he-niche::before { inset: 0 auto 0 0; inline-size: 2.5rem; block-size: auto; background: var(--he-cast-soft-ltr); }
+  [dir="rtl"] .he-niche::before { inset: 0 0 0 auto; background: var(--he-cast-soft-rtl); }
+  .he-door-box { inset-inline: auto 50%; translate: 50% 0; inset-block-end: calc(0.75rem - var(--stage-h) * 13 / 456); }
+  [dir="rtl"] .he-door-box { translate: -50% 0; }
+  .he-origins { grid-column: wall-start / wall-end; grid-row: t1 / t2-end; }
+  .he-origin__word { padding-block-end: 0; }      /* wide tiles: the arrow on the word's line, never 200 px away */
+  .he-origin__word .he-origin__end { font-size: inherit; }
+  .he-origin__word .he-origin__go { position: static; display: inline-block; block-size: auto; margin-inline-start: 0.125rem; vertical-align: -0.0625rem; }
+  .he .he-stations { grid-column: wall-start / wall-end; grid-row: plinth; inline-size: auto; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 0.375rem 1.25rem; padding: 0.5rem 0 0; }
+  .he-station { align-items: center; gap: 0.5rem; }
+  .he-station__label { color: var(--he-label); padding: 0; font-size: 0.75rem; line-height: 0.9375rem; }   /* the plinth keeps its two lines of three (12 px, the Latin floor); the portrait phones' rail reads at 13 px */
+  .he-station__label:lang(ar) { font-size: 0.875rem; }
+  .he-station__node { margin: 0; background: var(--he-bronze); box-shadow: none; }
+  .he-station--door .he-station__label { color: var(--text-1); }
+  .he-station--door .he-station__node { background: var(--he-bronze); }
+  .he-station__lit { display: none; }
+  .he-rail, .he-spine, .he-spine-top, .he-wipe--spine, .he-junction, .he-wipe--rail, .he-corner--rail, .he-wipe--floor { display: none; }
+  .he .he-stations { z-index: 2; }
+}
+
+/* ---- THE INTERIM VARIANT BELOW 64 rem (gate G3 closed: no station may be drawn — the review's M3). No rail where there is no
+   station: the band kept it, and half of the night was empty but for an L-shaped gold line. The door stands in the middle of the
+   band, on the spine's axis — the spine rises from the four tiles straight into its threshold —, on a floor line that runs the
+   band's width; the band's light and the doorway's halo are centred with it. The lead is not drawn (the eyebrow has said it, and
+   the description says it one swipe lower), and on phones the door is sized by the window's height (below), so that the four
+   tiles stand in the first screen under the taller statement. Not in the landscape plinth, which has no band. ---- */
+@media (max-width: 35.999rem), (max-width: 63.999rem) and (orientation: portrait), (max-width: 63.999rem) and (min-height: 30.0625rem) {
+  .he[data-hero-variant="interim"], [dir="rtl"] .he[data-hero-variant="interim"] { --band-x: 50%; --halo-x: 50%; }
+  .he[data-hero-variant="interim"] .he-door-box { inset-inline-end: calc(50% - var(--stage-w) / 2); }
+  .he[data-hero-variant="interim"] .he-niche__halo { inset-inline-start: 0; }   /* no label shares the band */
+  .he[data-hero-variant="interim"] .he-rail { justify-self: stretch; inline-size: auto; margin-inline: var(--page-pad); border-inline-start: 0; border-end-start-radius: 0; }   /* the floor line alone, under the door from pad to pad */
+  .he[data-hero-variant="interim"] :is(.he-wipe--rail, .he-corner--rail, .he-wipe--floor) { display: none; }   /* no route to run in the band: the spine's light arrives at the threshold itself */
+}
+@media (max-width: 63.999rem) { .he[data-hero-variant="interim"] .he__lead { display: none; } }
+/* the door by the window's height, on phones (the statement stacked above the band, the 2 × 2 under it): what is left of the
+   screen once the letterhead, the statement, the tiles and 16 px under them are counted — 30.625 rem of them, 29.625 rem in a
+   window at most 700 px tall, where the statement is set tighter —, never above Phase 3's own width at that height and never
+   under 6.5 rem. 4 / 4 tiles in the first screen from 360 × 640 up, with no step at 700 px */
+@media (max-width: 29.999rem) { .he[data-hero-variant="interim"] { --arch-w: min(50vw, 12.375rem, max(6.5rem, calc((100svh - 30.625rem) * 0.7))); } }
+@media (max-width: 29.999rem) and (max-height: 43.75rem) { .he[data-hero-variant="interim"] { --arch-w: min(39vw, max(6.5rem, calc((100svh - 29.625rem) * 0.7))); } }
+
+/* ---- THE KEY UNDER A FINGER (the review's M4). Where nothing hovers, the replay over the key had no sign at rest: the halo is the
+   fine pointer's, the ring the keyboard's. On such a screen the key's halo rests softly lit once the movement can be played again
+   (the settled hero on a page that moves) — the hero's own layer, the sign a mouse gets under the hand — so the key reads as the
+   one live object of the niche. The score's own animation of the halo overrides it while the sequence plays; hero.js also sends
+   the hand's short light again each time the hero comes back into view. ---- */
+@media (hover: none) { .he.has-replay.is-ajar .he-key-halo { opacity: 0.45; } }
+
+/* ============================================================================================
+   CTA-B «Soglia» (plan §1.10, DL54-13) — a leaf that opens toward the door, the hero's own gesture at the scale of the hand; the
+   plate's lit arris; on the hero's primary only, once per page. On the product's button API (v3 / v4 buttons.css).
+   ============================================================================================ */
+.btn.cta-b {
+  --btn-fill: var(--surface-night);
+  --btn-fill-hover: var(--surface-night);
+  --btn-fill-press: var(--surface-night);
+  --btn-ink: var(--text-on-night-1);
+  --btn-ink-hover: var(--text-on-night-1);
+  --btn-edge: var(--he-cta-edge);
+  --btn-edge-hover: var(--he-cta-leaf);
+  --btn-lighting: none;
+  --btn-lighting-press: none;
+  --btn-shadow: var(--he-cta-shadow);
+  --cta-leaf: var(--he-cta-leaf);                  /* laguna-800: the 15 px label keeps ≥ 7 : 1 in every frame */
+  --cta-dir: 1;
+  --cta-go: 3px;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: clip;
+  gap: var(--s-2);
+  min-block-size: var(--btn-h-lg);
+  padding-inline: var(--btn-pad-lg);
+  border-radius: var(--radius-sm);
+  font-weight: var(--w-control);
+  line-height: var(--t-ui-lh);
+  white-space: nowrap;
+}
+[dir="rtl"] .btn.cta-b { --cta-dir: -1; }
+.btn.cta-b::before { content: ""; position: absolute; z-index: -1; inset: 0; background-color: var(--cta-leaf); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--motion-fast) var(--ease-enter); }
+[dir="rtl"] .btn.cta-b::before { transform-origin: 100% 50%; }
+.btn.cta-b::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: var(--he-cta-arris); }   /* the plate's lit arris and its lower edge */
+.btn.cta-b .btn__arrow { translate: 0 0; transition: translate var(--motion-fast) var(--ease-enter); }
+.btn.cta-b:focus-visible { transition-duration: 0ms; box-shadow: 0 0 0 5px var(--focus-halo); }   /* the ring and the halo (the plate's shadow gives way to it) */
+.btn.cta-b:focus-visible::before { transform: none; transition-duration: 0ms; }
+@media (hover: hover) and (pointer: fine) {
+  .btn.cta-b:hover::before { transform: none; transition-duration: var(--motion-standard); }
+  .btn.cta-b:hover .btn__arrow { translate: calc(var(--cta-go) * var(--cta-dir)) 0; transition-duration: var(--motion-standard); }
+}
+.btn.cta-b:not(:disabled):not([aria-disabled="true"]):active, .btn.cta-b.is-pressed { --cta-leaf: var(--he-call); }   /* the press: one step darker by shade */
+.btn.cta-b:active::before, .btn.cta-b.is-pressed::before { transform: none; transition-duration: 0ms; }
+@media (max-width: 29.999rem) {
+  .btn.cta-b { inline-size: 100%; padding-inline: var(--s-2); white-space: normal; text-wrap: balance; max-inline-size: 100%; padding-block: var(--s-2); text-align: center; }
+  .btn.cta-b .btn__arrow { margin-inline-end: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .btn.cta-b { --cta-go: 0px; } }
+@media (forced-colors: active) { .btn.cta-b::before, .btn.cta-b::after { display: none; } }
+.he-keys .btn.cta-b::before, .he-keys .btn.cta-b .btn__arrow { transition: none; }   /* the keyboard's states at 0 ms */
+
+/* ============================================================================================
+   THE HERO'S DESCRIPTION (the locked body) — the paragraph that leaves the first screen and opens what follows (HF §3.6, D24,
+   K16): the hero's own last row, under the composition, whose first line is the fold's peek (--peek is sized to show it whole);
+   the chapter under the hero (W2-E) follows it. One voice, 20–27 px, never two leads.
+   ============================================================================================ */
+.he__body {
+  grid-column: wall-start / wall-end;
+  grid-row: bottom;                                /* the implicit row after the composition's tracks, on every grid of this sheet */
+  position: relative; z-index: 2;
+  margin: 0;
+  padding-block: 0.5rem 3.5rem;                    /* the hero's foot: 56 px of the hero's own ground under the description, before the chapter's ground */
+  max-inline-size: 58rem;
+  font-family: var(--f-sans);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1rem + 0.9vw, 1.6875rem);
+  line-height: 1.32;
+  letter-spacing: -0.014em;
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+.he__body:lang(ar) { letter-spacing: 0; }
+.he + .home-entrances, .he + .home-banner + .home-entrances { padding-block-start: 1.25rem; }
+/* ON THE DESKTOP THE DESCRIPTION STANDS ON THE PAGE'S COLUMN (the review's M1; DL54-39 item 1's forward correction): it is the
+   statement that opens what follows, so it starts where the chapters under it start — the page's pad below 75 rem, the
+   container's content edge from there (the hero's own line «body-start»: placed by the grid, it follows the page's direction
+   whatever the paragraph's own) — on the page's paper: the wall's light is the composition's. The niche therefore stands on the
+   hero's bottom edge, as in the owner's reference: nothing of the wall's shade or of the door's cast shadow is left under it
+   (the niche clips its own shadows; they fell on the description's row). */
+@media (min-width: 64rem) {
+  .he__body { grid-column: body-start / full-end; justify-self: start; }
+  .he-niche { overflow: clip; }
+}
+@media (min-width: 75rem) and (max-width: 95.999rem) { .he { --body-inset: calc((100% - var(--container)) / 2 + var(--grid-margin) - var(--page-pad)); } }
+@media (min-width: 64rem) and (max-height: 50rem) { .he__body { font-size: 1.375rem; } }   /* the short laptops: the peek is 40 px */
+@media (min-width: 64rem) and (max-height: 46rem) { .he__body { font-size: 1.25rem; line-height: 1.3; padding-block-start: 0.25rem; } }   /* 1280 × 720: the peek is 32 px */
+@media (max-width: 63.999rem) {
+  .he + .home-entrances { padding-block-start: 0.875rem; }
+  .he__body { padding-block: 0.75rem 2rem; font-size: 1.25rem; }   /* the foot: 32 px on phones */
+}
+
+/* ---- reduced motion: the complete still — the settled hero (the door ajar, the photographs black-and-white, the path at rest);
+   nothing plays (hero.js); the hand's states at 0 ms (the tokens) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .he-wipe, .he-corner, .he-junction, .he-station__lit, .he-tread-lit, .he-plate__veil, .he-origin__eye, .he-niche__halo { display: none; }
+  .he .lx { visibility: hidden; }
+  .he-replay, .he-key-halo, .kg__glint { display: none; }   /* nothing to replay */
+  .he .he-aperture { opacity: 0.9; transform: none; }
+  .he :is(.he-spill, .he-bloom) { opacity: 0.9; }
+  .he:has(.he-origin__link:is(:hover, :focus-visible, :active, .is-pressed)) :is(.he-aperture, .he-spill, .he-bloom) { opacity: 1; }
+  .he :is(.he-route, .he-plate__col, .he-origin__stem, .he-aperture, .he-spill, .he-bloom) { transition: none; }
+}
+
+/* ---- forced colours (both palettes): word + edge; every decorative light off; the stage present at every size ---- */
+@media (forced-colors: active) {
+  .he { background: Canvas; }
+  .he-ground { background: none; }
+  .he-ground::before, .he-niche::before, .he-niche__halo, .he-wipe, .he-corner, .he-junction, .he-station__lit, .he-tread, .he-tread-lit, .he-spill, .he-leaf, .he-bloom, .he-plate__veil, .he-origin__eye, .he-origin__stem, .he-route, .he-station--maroc::after, .he .lx, .he-key-halo, .kg__glint, .he-replay { display: none; }
+  .he-niche { background: Canvas; outline: 1px solid CanvasText; outline-offset: -1px; }   /* an outline, not a border: the stage box fills the niche (pad 0), and a border's 2 px would push it past the page's edge */
+  .he-niche::after { display: none; }
+  .he-niche__reveal { background: none; box-shadow: none; border-inline-end: 1px solid CanvasText; }
+  .he-path, .he-path--night::before, .he-path--night::after, .he-spine, .he-spine::after, .he-spine-top, .he-origin::before, .he-origin::after, .he-station__node { background: CanvasText; border-color: CanvasText; box-shadow: none; forced-color-adjust: none; }
+  .he-rail { border-color: CanvasText; forced-color-adjust: none; }
+  .he-origin__link { outline: 1px solid CanvasText; outline-offset: 2px; background: Canvas; box-shadow: none; }
+  .he-origin__link:is(:hover, :focus-visible, :active) { outline: 3px solid Highlight; }
+  .he-origin__word { color: LinkText; }
+  .he-origin__gloss, .he-origin__call, .he-station__label, .he-station--door .he-station__label { color: CanvasText; }
+  .he-origin__call { opacity: 1; }
+  .he-plate { box-shadow: none; outline: 1px solid CanvasText; }
+  .he-plate::after { display: none; }
+  .he__secondary .icon, .he-origin__go .icon { color: currentColor; opacity: 1; }
+  .he .door-stage__photo { filter: none; }
+  .he .doorway__arch, .he .doorway__arch-inset, .he .doorway__inner { stroke: CanvasText; }
+  .he .doorway__inner { filter: none; }
+  .he .doorway__steps rect { fill: CanvasText; opacity: 1; forced-color-adjust: none; }
+  .he .door-stage__key { forced-color-adjust: none; }
+  .he-station--maroc .he-station__node { background: CanvasText; }   /* the origin's disc in the system palette too */
+}
+/* the compact desktop's turn into the path is a border corner (no fill); on the wide desktop Personnes' stem is a stem like the other
+   three (CD C-3) */
+@media (forced-colors: active) and (min-width: 64rem) and (max-width: 79.999rem) { .he-origin:first-child::before { background: none; border-color: CanvasText; } }

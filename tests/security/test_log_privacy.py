@@ -63,6 +63,65 @@ def test_the_log_stream_carries_no_e_mail_address(captured, person):
     assert "Nome Cognome" not in blob
 
 
+def test_the_persona_switch_logs_a_persona_key_never_an_e_mail(django_user_model):
+    """
+    The V5 preview's persona switch (apps/designpreview, V5.4 plan §4.4) signs one of the preview
+    database's QA accounts in without a password. Its log lines carry the persona key —
+    ``qa-doc-person`` — never the account's e-mail: not in the record, not in the structured stream,
+    not when the switch refuses. The switch exists only in a DEBUG process with
+    ``ILE_DESIGN_PREVIEW=1``; it is mounted here for the length of the test, as the preview's own
+    tests mount it, and put back.
+    """
+    import importlib
+
+    from django.db import connection
+    from django.test import Client, override_settings
+    from django.urls import clear_url_caches
+
+    import config.urls
+
+    django_user_model.objects.create_user(email="qa-doc-person@example.test", password=None)
+    django_user_model.objects.create_superuser(email="qa-admin@example.test", password=None)
+    handler = Capture()
+    preview_log = logging.getLogger("ile.designpreview")
+    preview_log.addHandler(handler)
+    previous = preview_log.level
+    preview_log.setLevel(logging.INFO)
+    host = "127.0.0.1:8780"
+    try:
+        with override_settings(
+            DEBUG=True,
+            ILE_DESIGN_PREVIEW=True,
+            ILE_DESIGN_PREVIEW_PORT=8780,
+            ILE_DESIGN_PREVIEW_PERSONAS={
+                "qa-doc-person": "qa-doc-person@example.test",
+                "qa-person": "qa-admin@example.test",
+            },
+            ILE_DESIGN_PREVIEW_ALLOWED_DATABASES=(connection.settings_dict["NAME"],),
+        ):
+            clear_url_caches()
+            importlib.reload(config.urls)
+            browser = Client(HTTP_HOST=host)
+            entered = browser.post("/__design-v5/accedi/qa-doc-person/")
+            refused = browser.post("/__design-v5/accedi/qa-person/")
+            left = browser.post("/__design-v5/esci/")
+    finally:
+        preview_log.removeHandler(handler)
+        preview_log.setLevel(previous)
+        clear_url_caches()
+        importlib.reload(config.urls)
+    assert (entered.status_code, refused.status_code, left.status_code) == (302, 403, 302)
+    payloads = formatted(handler)
+    assert [payload["message"] for payload in payloads] == [
+        "Design preview: persona qa-doc-person signed in (read-only session).",
+        "Design preview: persona qa-person refused (staff).",
+        "Design preview: persona qa-doc-person signed out.",
+    ]
+    blob = json.dumps(payloads, ensure_ascii=False)
+    assert "@" not in blob and "example.test" not in blob
+    assert "@" not in refused.content.decode(), "the refusal names the persona, never its e-mail"
+
+
 def test_the_log_stream_identifies_the_actor_by_key(captured, person):
     record(action="test.event", actor=person)
     assert formatted(captured)[0]["actor"] == f"user:{person.pk}"

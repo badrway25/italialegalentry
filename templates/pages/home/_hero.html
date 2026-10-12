@@ -1,104 +1,123 @@
 {% load i18n static %}{% comment %}
-THE HERO — «il portico e la console», design V4 (docs/design-v4/CREATIVE_DIRECTION.md §3.1, §4).
+THE HERO — design V5.4, the final version (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.17; DL54-06, DL54-11, DL54-12;
+HERO_FINAL.md and the Creative Director's decision, QA/hero-final/CD_DECISION.md: PASSES WITH CONDITIONS). The proof
+C:/tmp/ile_v5_council/proof/research/hero/he/ ported by W2-D: this partial, apps/pages/static/pages/css/hero.css and
+static/js/src/hero.js (imported by the home's one entry, static/js/src/home.js).
 
-An IMMERSIVE chapter on the evolved navy: the copy column carries the locked title as the H1, the
-lead, the body and the two actions; the right column is THE STAGE — the owner's doorway (arch,
-photograph, solid navy inner arch, golden key, three steps: BRAND_ASSETS.md §2, proportions
-unchanged) with the four access routes of the ecosystem drawn through it, one per actor, from the
-glass legend at the foot of the stage to the exits past the arch.
+The figure. DESKTOP (≥ 64 rem) = E2's flow: the statement, ONE path — a bronze inlay across the light wall at the height
+of the door's springing, carrying the live stations of the pilot sequence, crossing the stone reveal, becoming gold light
+in the night niche and meeting the owner's door, the last station inscribed at its threshold — and the four origins hung
+from the path (photograph, word, sentence at rest; the call under the hand). 1024–1279: the four as rows on one string.
+PHONES = E3's composition: statement → the night band (the door, the six stations on a rail that turns into the floor
+line) → the 2 × 2 tiles joined to the floor line by one spine. Then the hero's description, whose first line is the fold.
 
-What the V2 hero had and V4 removes, per the owner's directive §5 («no user value = remove»): the
-graticule, the contour layers and their tide, the coordinates strip, the «svg» word and the
-«Suspendre le mouvement» control. Nothing replaces them. The one living object of the page is now
-the current that runs along the four routes (28s, paused off screen, absent under reduced motion).
+The owner's door stage (arch, photograph, golden key, three steps) is drawn verbatim in stage units, never mirrored:
+the photograph is a <picture> of the door-master derivatives (AVIF and WebP, 400–1200 px, one preload in home.html,
+the LCP element, never upscaled); the arch, inner door and steps are the SVG; the key is an HTML layer so that it turns
+once on the compositor; the treads' twins, the spill, the aperture band, the bloom and the arch light are layers that
+only hero.js moves (transform and opacity). The first paint is the stage closed; the settled hero keeps the door AJAR
+(DL54-11; its revert: hero.css, the two 0.8). Nothing loops; nothing moves at rest.
 
-The information is in the HTML: the legend is an <ol> of four links to the four landings, each with
-the actor's glyph, the entrance title and its gloss (pages.services.entrances(), the same texts the
-entrances section renders). The SVG is aria-hidden and carries no text except the three exit
-labels, which are the three words of the editorial eyebrow when it has three — nothing prescribed
-is typed here. The route paths in the markup are the no-JavaScript drawing; home.js re-anchors
-each route to the real position of its legend row, so the callouts hold at every width.
+The information is in the HTML: one h1 (the name, visually hidden, and the visible promise), the two actions, an <ol>
+of stations, a <nav> of four links — each named by its word, described by its sentence and its call — and the locked
+description. The name is an English name in every language of the site: its span says so, as the header's lock-up
+does (cms_nav.brand_lockup) — it carried the locked text's language, and a French voice read it on the English page. The four photographs are black-and-white at rest and take colour under the light (DL54-12, here only).
+Live copy only: the prescribed texts come through the data contract (pages.services.build_hero: d.variant, d.eyebrow,
+d.title, d.subtitle, d.body, d.body_is_fragment, d.primary, d.secondary, d.legend — the four entrances) and the
+registry ({% locked %}); the interface strings from the catalogue. Nothing prescribed is typed here, not even in this
+comment. Arabic: layout only — the French runs keep lang="fr" dir="ltr"; the stage, the key and the photographs never
+mirror.
 
-The copy is complete on the first frame: eyebrow, title, lead, body and actions carry no reveal
-and never start hidden. Neither does the stage: nothing painted is taken back (static/js/src/home.js
-has no entrance choreography — gate A, round 4, defect 11). What moves is the current along the
-routes (CSS, from the first frame) and, with the scroll, the photograph and the stage; under
-reduced motion nothing moves.
+The stations are drawn only when the pilot sequence may be shown (gate G3 open: the Phase 3 variant); the interim
+variant draws the path, the origins and the door, with its editorial eyebrow, title and lead.
 
-The data contract is unchanged (d.eyebrow / d.title / d.subtitle / d.body / d.primary /
-d.secondary / d.variant) plus d.legend (the four entrances) and d.exits (the eyebrow's words).
+The four photographs are paired with the four entrances BY ORDER (pages.content.ENTRANCES: person, company,
+institution, university), through the {% cycle %} below — apps/pages/tests/test_home.py holds the pairing. Their
+provenance: static/img/photos/hero/PROVENANCE.json; the door's: static/brand/v5/PROVENANCE.json.
+
+The door's sizes (door_sizes below; the preload's imagesizes in pages/home.html is the same string, character for
+character) say the WIDEST the photograph is drawn in each range of windows, never less: told a smaller width, the
+browser takes a file too small and stretches it. They follow hero.css rule for rule. On the desktop the photograph is
+the hero's height less the chrome (97 px), the peek and the door's two pads, times 320 / 456: one line per regime of
+the pads, in vh (the peek's smallest value in each); 41.4375 rem at the hero's 64 rem ceiling; in the compact band the
+niche's 40vw decides. From 96 rem the wall caps the niche (hero.css, «the wall stands on the page's column»): between
+1536 and 1599 px, in a window at least 896 px tall, the door is that cap's — 43.5vw less 198 px — and the first line
+says it (at 1599 px the cap only binds from about 933 px of height: told up to 5.5 % more between the two, never less); from
+1600 px the same cap can draw the door up to 9 % narrower than the height's line tells (a tall, narrow window: told
+more, never less). The interim variant sizes its door by the window's height on phones, under these
+widths: told more there too. Below 64 rem it is --arch-w, the cascade read from its last rule to its first: the landscape
+plinth, the short windows, the tablets, the phones. A change to --stage-w, --peek, --door-pad, --niche-max or --arch-w
+is a change here (apps/pages/tests/test_browser.py holds it).
 {% endcomment %}
-<section class="hero chapter--dark" id="{{ s.anchor }}" aria-labelledby="hero-title" data-section="hero" data-hero data-hero-variant="{{ d.variant }}">
-  <div class="container hero__inner">
-    <div class="hero__copy">
-      {% if d.eyebrow %}<p class="hero__eyebrow"><span{% if d.eyebrow.lang %} lang="{{ d.eyebrow.lang }}"{% endif %}>{{ d.eyebrow }}</span></p>{% endif %}
-      <h1 class="hero__title" id="hero-title" data-hero-title{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}{% if d.variant == 'phase3' %} translate="no" dir="ltr"{% endif %}>{% include "pages/home/partials/_hero_title_lines.html" with title=d.title %}</h1>
-      {% if d.subtitle %}<p class="hero__lead"{% if d.subtitle.lang %} lang="{{ d.subtitle.lang }}"{% endif %}>{{ d.subtitle }}</p>{% endif %}
-      {% if d.body %}<p class="hero__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>{% endif %}
-      {% if d.primary or d.secondary %}
-      <div class="hero__actions">
-        {% if d.primary %}<a class="btn btn--primary btn--arrow" href="{{ d.primary.url }}"{% if d.primary.label.lang %} lang="{{ d.primary.label.lang }}"{% endif %}>{{ d.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-        {% if d.secondary %}<a class="btn btn--secondary" href="{{ d.secondary.url }}"{% if d.secondary.label.lang %} lang="{{ d.secondary.label.lang }}"{% endif %}>{{ d.secondary.label }}</a>{% endif %}
-      </div>
-      {% endif %}
+{% get_current_language as current_lang %}
+{% with door_sizes="(min-width: 96rem) and (max-width: 99.999rem) and (min-height: 56rem) calc(43.5vw - 198px), (min-width: 80rem) and (min-height: 73rem) 41.4375rem, (min-width: 80rem) and (min-height: 56rem) calc(70.2vh - 5.5625rem - 68px), (min-width: 80rem) and (min-height: 46.0625rem) calc(51.6vh + 4rem - 50px), (min-width: 80rem) calc(70.2vh - 3.125rem - 68px), (min-width: 64rem) calc(34.8vw - 2.5625rem), (min-width: 36rem) and (orientation: landscape) and (max-height: 26.4375rem) 9rem, (min-width: 36rem) and (orientation: landscape) and (max-height: 30rem) 34vh, (min-width: 43.625rem) and (max-height: 43.75rem) 17rem, (max-height: 43.75rem) 39vw, (min-width: 42.5rem) 17rem, (min-width: 31.25rem) 40vw, (min-width: 30rem) 12.5rem, (min-width: 24.75rem) and (max-height: 52rem) 12.375rem, 50vw" plate_sizes="(min-width: 80rem) 192px, (min-width: 64rem) 72px, (min-width: 26.5rem) 64px, (max-width: 23.5rem) 52px, 56px" wide_sizes="(min-width: 120rem) 240px, (min-width: 100rem) 224px, 200px" %}
+<section class="he" id="{{ s.anchor }}" data-section="hero" data-hero data-hero-variant="{{ d.variant }}" data-he>
+
+  {% comment %}1 · AT REST: the path (a bronze inlay on the wall; across the stone and in the niche, gold light ending on a
+  terminal disc), the phone's rail and floor line (one route) and its spine; the compact desktop's string is each row's own.{% endcomment %}
+  <div class="he-ground" aria-hidden="true"><span class="he-path he-path--wall"></span><span class="he-path he-path--night"></span><span class="he-rail"></span><span class="he-spine"></span><span class="he-spine-top"></span></div>
+
+  {% comment %}2 · THE STATEMENT — the one h1: the name for assistive technology and search, the promise in sight.{% endcomment %}
+  <div class="he__statement">
+    {% if d.variant == "phase3" %}
+    <h1 class="he__title" id="hero-title" data-hero-title><span class="visually-hidden he__name" id="hero-name" translate="no" dir="ltr" lang="en">{{ d.title }}</span> <span class="he__promise"{% if d.subtitle.lang %} lang="{{ d.subtitle.lang }}" dir="ltr"{% endif %}>{{ d.subtitle }}</span></h1>
+    {% else %}
+    {% if d.eyebrow %}<p class="he__eyebrow"{% if d.eyebrow.lang %} lang="{{ d.eyebrow.lang }}"{% endif %}>{{ d.eyebrow }}</p>{% endif %}
+    <h1 class="he__title" id="hero-title" data-hero-title{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}><span class="he__promise">{{ d.title }}</span></h1>
+    {% if d.subtitle %}<p class="he__lead"{% if d.subtitle.lang %} lang="{{ d.subtitle.lang }}"{% endif %}>{{ d.subtitle }}</p>{% endif %}
+    {% endif %}
+    {% if d.primary or d.secondary %}
+    <div class="he__actions">
+      {% if d.primary %}<a class="btn btn--primary cta-b he__primary" href="{{ d.primary.url }}"{% if d.primary.label.lang %} lang="{{ d.primary.label.lang }}"{% endif %} data-cta>{{ d.primary.label }}{% svg_icon "arrow" "icon btn__arrow icon--flip-rtl" %}</a>{% endif %}
+      {% if d.secondary %}<a class="btn btn--link he__secondary" href="{{ d.secondary.url }}"{% if d.secondary.label.lang %} lang="{{ d.secondary.label.lang }}"{% endif %}>{% svg_icon "chevron-end" "icon icon--flip-rtl" %}<span class="he__secondary-text">{{ d.secondary.label }}</span></a>{% endif %}
     </div>
-
-    <div class="hero__stage" data-stage>
-      <svg class="doorway{% if d.exits %} doorway--exits{% endif %}" viewBox="0 0 640 520" aria-hidden="true" focusable="false" data-doorway>
-        {% include "components/doorway.html" %}
-        <defs>
-          {% comment %}Without labelled exits a route dissolves into the navy of the inner arch: its stroke is a
-          gradient in stage units from the arch's opening to its far edge. One per route colour.{% endcomment %}
-          {% for e in d.legend %}<linearGradient id="route-fade-{{ e.actor }}" gradientUnits="userSpaceOnUse" x1="365" y1="0" x2="531" y2="0"><stop class="route__fade-a" offset="0.72"/><stop class="route__fade-b" offset="1"/></linearGradient>{% endfor %}
-          {% comment %}Without JavaScript, below 80rem, the routes keep the exit path the server drew but the exits are
-          hidden: v4/hero.css clips them at the arch's edge (x 531) with this (round-5 review, defect 16).{% endcomment %}
-          <clipPath id="doorway-routes-arch" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="531" height="520"/></clipPath>
-        </defs>
-
-        {% comment %}The four routes: from the legend into the solid navy of the inner arch — and past the arch
-        to the three exits, when the eyebrow gives them their words.{% endcomment %}
-        <g class="doorway__routes" data-doorway-routes>
-          {% for e in d.legend %}
-          <g class="route" data-route="{{ e.actor }}" data-exit="{{ e.exit }}">
-            <path class="route__casing" d="{{ e.path }}" data-route-casing/>
-            <path class="route__line" pathLength="1" d="{{ e.path }}" data-route-line/>
-            <path class="route__current" pathLength="1" d="{{ e.path }}" data-route-current/>
-            <circle class="route__ring" cx="{{ e.x0 }}" cy="{{ e.y0 }}" r="12" data-route-ring/>
-            <circle class="route__node" cx="{{ e.x0 }}" cy="{{ e.y0 }}" r="6" data-route-node/>
-          </g>
-          {% endfor %}
-        </g>
-
-        {% if d.exits %}
-        <g class="doorway__exits" data-doorway-exits>
-          {% for x in d.exits %}
-          <g class="exit">
-            <circle class="exit__node" cx="624" cy="{{ x.y }}" r="4"/>
-            <text class="exit__label" text-anchor="end"{% if d.eyebrow.lang %} lang="{{ d.eyebrow.lang }}"{% endif %}>{% for line in x.lines %}<tspan x="636" y="{{ line.y }}">{{ line.text }}</tspan>{% endfor %}</text>
-          </g>
-          {% endfor %}
-        </g>
-        {% endif %}
-      </svg>
-
-      <ol class="doorway-legend" aria-label="{% translate 'Les quatre accès de l’écosystème' %}" data-legend>
-        {% comment %}The caption slot: two reserved lines that home.js fills with the active row's gloss, so
-        that no row ever changes height under the pointer (the routes are anchored to the rows). The
-        same gloss stays in each row, visually hidden, as the link's DESCRIPTION (aria-describedby,
-        which reads a hidden element), not in its name: the name is the entrance's word (gate A,
-        round 3 — the name was word + gloss, up to 76 characters).{% endcomment %}
-        <li class="doorway-legend__caption" aria-hidden="true" data-legend-caption></li>
-        {% for e in d.legend %}
-        <li class="doorway-legend__item">
-          {% if e.url %}<a class="doorway-legend__row" href="{{ e.url }}" aria-describedby="hero-gloss-{{ e.actor }}" data-legend-row="{{ e.actor }}"{% if e.label_lang %} lang="{{ e.label_lang }}"{% endif %}>{% else %}<div class="doorway-legend__row" data-legend-row="{{ e.actor }}"{% if e.label_lang %} lang="{{ e.label_lang }}"{% endif %}>{% endif %}
-            <span class="doorway-legend__node" aria-hidden="true" data-legend-node></span>
-            {% svg_icon e.icon "icon doorway-legend__glyph" %}
-            <span class="doorway-legend__word">{{ e.label }}</span>
-            <span class="doorway-legend__gloss" id="hero-gloss-{{ e.actor }}"{% if e.url %} aria-hidden="true"{% endif %}><span{% if e.text_lang %} lang="{{ e.text_lang }}"{% endif %}>{{ e.text }}</span></span>
-          {% if e.url %}</a>{% else %}</div>{% endif %}
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
+    {% endif %}
   </div>
+
+  {% if d.variant == "phase3" %}{% locked "p3.pilot.sequence" as sequence %}{% locked_lang "p3.pilot.sequence" as sequence_lang %}
+  {% comment %}3 · THE PATH'S SIX STATIONS — the origin's shore, then four stations of the pilot sequence on the line, and its
+  sixth inscribed at the door's threshold: the door is the last station. Decorations hidden; the words are the list.{% endcomment %}
+  <ol class="he-stations" role="list" aria-label="{% translate 'Séquence du projet pilote' %}" data-stations><li class="he-station he-station--maroc" data-station="0"><span class="he-station__node" aria-hidden="true"></span><span class="he-station__lit" aria-hidden="true"></span><span class="he-station__label">{% translate "Maroc" %}</span></li>{% for step in sequence|slice:"1:6" %}<li class="he-station{% if forloop.last %} he-station--door{% endif %}" data-station="{{ forloop.counter }}"><span class="he-station__node" aria-hidden="true"></span><span class="he-station__lit" aria-hidden="true"></span><span class="he-station__label"{% if sequence_lang != current_lang %} lang="{{ sequence_lang }}" dir="ltr"{% endif %}>{{ step }}</span></li>{% endfor %}</ol>
+  {% endif %}
+
+  {% comment %}4 · THE FOUR ORIGINS — hung from the path: photograph (black-and-white at rest), word, sentence; the call under
+  the hand. Each link is named by its word and described by its sentence and its call.{% endcomment %}
+  <nav class="he-origins" aria-label="{% translate 'Les quatre accès de l’écosystème' %}" data-origins>
+    <ol class="he-origins__list" role="list">
+      {% for e in d.legend %}{% cycle "lectrice-bibliotheque-dos" "chai-cuve-chene" "table-en-seance" "paillasse-deux-etudiantes" as slug silent %}{% with base="img/photos/hero/he-"|add:slug %}
+      <li class="he-origin" data-aud="{{ e.actor }}" data-photo="{{ slug }}" data-origin>
+        <a class="he-origin__link" href="{{ e.url }}" aria-labelledby="he-word-{{ e.actor }}" aria-describedby="he-gloss-{{ e.actor }} he-call-{{ e.actor }}" data-origin-link>
+          <span class="he-plate">{% for layer in "bc" %}<picture class="he-plate__{% if layer == "b" %}bw{% else %}col{% endif %}"><source type="image/avif" media="(min-width: 96rem) and (max-height: 46rem)" srcset="{% static base|add:'-3x2-320.avif' %} 320w, {% static base|add:'-3x2-480.avif' %} 480w" sizes="240px" width="320" height="213"><source type="image/webp" media="(min-width: 96rem) and (max-height: 46rem)" srcset="{% static base|add:'-3x2-320.webp' %} 320w, {% static base|add:'-3x2-480.webp' %} 480w" sizes="240px" width="320" height="213"><source type="image/avif" media="(min-width: 96rem)" srcset="{% static base|add:'-4x5-160.avif' %} 160w, {% static base|add:'-4x5-240.avif' %} 240w, {% static base|add:'-4x5-320.avif' %} 320w, {% static base|add:'-4x5-480.avif' %} 480w" sizes="{{ wide_sizes }}" width="160" height="200"><source type="image/webp" media="(min-width: 96rem)" srcset="{% static base|add:'-4x5-160.webp' %} 160w, {% static base|add:'-4x5-240.webp' %} 240w, {% static base|add:'-4x5-320.webp' %} 320w, {% static base|add:'-4x5-480.webp' %} 480w" sizes="{{ wide_sizes }}" width="160" height="200"><source type="image/avif" media="(min-width: 80rem) and (max-width: 95.999rem) and (max-height: 46rem)" srcset="{% static base|add:'-3x2-320.avif' %} 320w, {% static base|add:'-3x2-480.avif' %} 480w" sizes="160px" width="320" height="213"><source type="image/webp" media="(min-width: 80rem) and (max-width: 95.999rem) and (max-height: 46rem)" srcset="{% static base|add:'-3x2-320.webp' %} 320w, {% static base|add:'-3x2-480.webp' %} 480w" sizes="160px" width="320" height="213"><source type="image/avif" srcset="{% static base|add:'-1x1-128.avif' %} 128w, {% static base|add:'-1x1-192.avif' %} 192w, {% static base|add:'-1x1-256.avif' %} 256w, {% static base|add:'-1x1-320.avif' %} 320w, {% static base|add:'-1x1-384.avif' %} 384w" sizes="{{ plate_sizes }}" width="128" height="128"><img class="he-photo" src="{% static base|add:'-1x1-192.webp' %}" srcset="{% static base|add:'-1x1-128.webp' %} 128w, {% static base|add:'-1x1-192.webp' %} 192w, {% static base|add:'-1x1-256.webp' %} 256w, {% static base|add:'-1x1-320.webp' %} 320w, {% static base|add:'-1x1-384.webp' %} 384w" sizes="{{ plate_sizes }}" width="128" height="128" alt="" loading="lazy" decoding="async" fetchpriority="low"></picture>{% endfor %}<span class="he-plate__veil"></span></span>
+          <span class="he-origin__text"><span class="he-origin__word" id="he-word-{{ e.actor }}"{% if e.label_lang %} lang="{{ e.label_lang }}"{% endif %}>{{ e.label }}<span class="he-origin__end" aria-hidden="true">&nbsp;<span class="he-origin__go">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span></span></span><span class="he-origin__gloss" id="he-gloss-{{ e.actor }}"{% if e.text_lang %} lang="{{ e.text_lang }}" dir="ltr"{% endif %}>{{ e.text }}</span><span class="he-origin__call" id="he-call-{{ e.actor }}"{% if e.lang %} lang="{{ e.lang }}" dir="ltr"{% endif %}>{{ e.button }}<span class="he-origin__end" aria-hidden="true">&nbsp;<span class="he-origin__go">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span></span></span></span>
+        </a>
+        <span class="he-origin__lit" aria-hidden="true"><span class="he-origin__stem"></span><span class="he-origin__eye"></span></span>
+      </li>
+      {% endwith %}{% endfor %}
+    </ol>
+  </nav>
+
+  {% comment %}5 · THE NICHE — the wall's thickness, the cast shadow, the owner's door stage (arch, photograph, golden key, three
+  steps). The stage is direction: ltr in hero.css and never mirrors; it is decorative. Beside it, in the door box, the one control
+  of the niche: the replay button over the golden key (Enter, Space or a click plays the sequence again; hero.js shows it on a
+  page that moves), named by the catalogue.{% endcomment %}
+  <div class="he-niche" data-niche>
+    <span class="he-niche__reveal" aria-hidden="true"></span>
+    <span class="he-niche__halo" aria-hidden="true" data-halo></span>
+    <div class="he-door-box"><div class="door-stage he-door" data-door aria-hidden="true">
+      <picture class="door-stage__photo"><source type="image/avif" srcset="{% static 'brand/v5/doorway-arch-400.avif' %} 400w, {% static 'brand/v5/doorway-arch-576.avif' %} 576w, {% static 'brand/v5/doorway-arch-800.avif' %} 800w, {% static 'brand/v5/doorway-arch-960.avif' %} 960w, {% static 'brand/v5/doorway-arch-1200.avif' %} 1200w" sizes="{{ door_sizes }}"><source type="image/webp" srcset="{% static 'brand/v5/doorway-arch-400.webp' %} 400w, {% static 'brand/v5/doorway-arch-576.webp' %} 576w, {% static 'brand/v5/doorway-arch-800.webp' %} 800w, {% static 'brand/v5/doorway-arch-960.webp' %} 960w" sizes="{{ door_sizes }}"><img src="{% static 'brand/v5/doorway-arch-576.webp' %}" width="400" height="533" alt="" decoding="async" fetchpriority="high" data-door-img></picture>
+      <svg class="door" viewBox="264 64 368 456" focusable="false" aria-hidden="true"><defs><clipPath id="he-clip" clipPathUnits="userSpaceOnUse"><path d="M288 507V240a160 160 0 0 1 320 0v267z"/></clipPath><linearGradient id="he-veil" x1="0" y1="0" x2="0" y2="1"><stop class="doorway__veil-a" offset="0.4"/><stop class="doorway__veil-b" offset="1"/></linearGradient><radialGradient id="he-vignette" gradientUnits="userSpaceOnUse" cx="448" cy="268" r="250"><stop class="vignette-a" offset="0.3"/><stop class="vignette-b" offset="1"/></radialGradient><radialGradient id="he-glow"><stop class="doorway__glow-a" offset="0"/><stop class="doorway__glow-b" offset="0.4"/><stop class="doorway__glow-c" offset="0.7"/></radialGradient></defs><g class="doorway__door"><rect class="doorway__veil" x="288" y="80" width="320" height="427" fill="url(#he-veil)" clip-path="url(#he-clip)"/><rect class="doorway__vignette" x="288" y="80" width="320" height="427" fill="url(#he-vignette)" clip-path="url(#he-clip)"/><path class="doorway__arch-inset" d="M304 507V240a144 144 0 0 1 288 0v267"/><path class="doorway__inner" d="M365 397V222a83 83 0 0 1 166 0v175z"/><circle class="doorway__glow" cx="448" cy="268" r="60" fill="url(#he-glow)"/><g class="doorway__steps"><rect x="342.5" y="477" width="211" height="6" rx="2"/><rect x="320" y="486" width="256" height="6" rx="2"/><rect x="297.5" y="495" width="301" height="6" rx="2"/></g><path class="doorway__arch" d="M288 507V240a160 160 0 0 1 320 0v267"/></g></svg>
+      <span class="kt__l he-tread he-tread--1"></span><span class="kt__l he-tread he-tread--2"></span><span class="kt__l he-tread he-tread--3"></span><span class="kt__l he-tread-lit he-tread-lit--1" data-tread="1"></span><span class="kt__l he-tread-lit he-tread-lit--2" data-tread="2"></span><span class="kt__l he-tread-lit he-tread-lit--3" data-tread="3"></span><span class="kt__l he-spill" data-spill></span><span class="kt__l he-leaf"><span class="he-aperture" data-aperture></span></span><span class="kt__l he-bloom" data-bloom></span>
+      <span class="lx lx--door-arch"><span class="kt__l lx__clip lx__clip--a"><span class="lx__ring" data-arch="ring"></span></span><span class="kt__l lx__clip lx__clip--r"><span class="lx__streak" data-arch="streak"></span></span></span>
+      <span class="kt__l he-key-halo" data-key-halo></span><span class="door-stage__key doorway__key"><span class="kg"><span class="kt__l kg__bow"><svg viewBox="15 11 30 30" focusable="false" aria-hidden="true"><path fill-rule="evenodd" d="M15,26 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0 Z M23.6,26 a6.4,6.4 0 1,0 12.8,0 a6.4,6.4 0 1,0 -12.8,0 Z"/></svg></span><span class="kt__l kg__blade"><svg viewBox="10 39 40 66" focusable="false" aria-hidden="true"><rect x="25.6" y="39" width="8.8" height="66"/><rect x="34" y="72" width="16" height="8"/><rect x="34" y="88" width="12" height="8"/></svg></span><span class="kt__l kg__glint" data-key-glint></span></span></span>
+    </div><button type="button" class="he-replay" data-replay aria-label="{% translate 'Rejouer l’animation de la porte' %}"></button></div>
+  </div>
+
+  {% comment %}6 · WHAT MOVES OR LIGHTS, painted after every word: the hand's route (the whole path, the origin's shore to the
+  door), the path's travelling light (two clips, one per material), the compact desktop's corner, the phone's spine, junction,
+  rail, corner and floor twins.{% endcomment %}
+  <div class="he-lights" aria-hidden="true" data-lights><span class="he-route he-route--wall"></span><span class="he-route he-route--night"></span><span class="he-wipe he-wipe--wall" data-wipe="wall"><span class="he-wipe__bar"></span></span><span class="he-wipe he-wipe--night" data-wipe="night"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--maroc" data-corner="maroc"></span><span class="he-wipe he-wipe--spine" data-wipe="spine"><span class="he-wipe__bar"></span></span><span class="he-junction" data-junction></span><span class="he-wipe he-wipe--rail" data-wipe="rail"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--rail" data-corner="rail"></span><span class="he-wipe he-wipe--floor" data-wipe="floor"><span class="he-wipe__bar"></span></span></div>
+
+  {% comment %}7 · THE DESCRIPTION — the locked body: the hero's last row, whose first line is the fold.{% endcomment %}
+  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>{% endif %}
 </section>
+{% endwith %}

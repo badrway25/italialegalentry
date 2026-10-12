@@ -1,0 +1,11 @@
+{% comment %}
+V5 live preview — one group of choices in the bar of a picker or of the compare view (frame.html,
+compare.html). DEVELOPMENT ONLY.
+
+`group` is {slot, label, aria, options}, as designpreview.services._frame or
+designpreview.services.compare_view builds it; an option is {label, url, key, current, off, title,
+lang} (designpreview.services._option).
+{% endcomment %}<nav class="dp-bar__group dp-bar__group--{{ group.slot }}" aria-label="{{ group.aria }}">
+    <span class="dp-bar__label">{{ group.label }}</span>
+    {% for item in group.options %}<a class="dp-bar__link{% if item.off %} dp-bar__link--off{% endif %}" href="{{ item.url }}"{% if item.lang %} hreflang="{{ item.lang }}"{% endif %}{% if item.key %} data-dp-key="{{ item.key }}"{% endif %}{% if item.current %} aria-current="true"{% endif %} title="{{ item.title }}">{{ item.label }}</a>{% endfor %}
+  </nav>

@@ -1,0 +1,202 @@
+{% load static i18n %}{% if overlay_part %}{% comment %}
+The panels' bodies and feet: the components include this same file as their `body_template` / `actions_template`
+(`overlay_part` = "body" or "actions"; `panel` says which panel). The French is the live pages' — the account
+deletion (templates/accounts/delete_request.html), the need's withdrawal (templates/companies/need_detail.html), the
+account menu, the row menu, the rail's pages —, the Arabic the catalogue's.
+{% endcomment %}{% if panel == "alert" %}{% if overlay_part == "body" %}<p id="{{ id }}-text"><strong>{% translate "Cette action est définitive." %}</strong></p>
+<p>{% translate "Votre compte sera désactivé immédiatement. Vos données personnelles (nom, e-mail, téléphone, pays, appartenances, documents téléversés) seront anonymisées ou supprimées et vos consentements révoqués. Les enregistrements techniques nécessaires à la sécurité sont conservés sous forme pseudonymisée." %}</p>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close data-overlay-safe>{% translate "Annuler" %}</button>
+<button class="btn btn--danger" type="button" data-overlay-close>{% translate "Confirmer la suppression" %}</button>{% endif %}{% elif panel == "need" %}{% if overlay_part == "body" %}<div class="form-field">
+  <label class="form-field__label" for="{{ id }}-reason">{% translate "Retirer ce besoin — motif (facultatif)" %}</label>
+  <input class="input" type="text" id="{{ id }}-reason" name="reason" maxlength="300">
+</div>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close>{% translate "Annuler" %}</button>
+<button class="btn btn--primary" type="button" data-overlay-close>{% translate "Retirer le besoin" %}</button>{% endif %}{% elif panel == "nav" %}<ul class="overlay__list" role="list">
+  <li><a class="overlay__item" href="#ob-drawer" aria-current="page">{% svg_icon "layout-dashboard" "icon" %}<span>{% translate "Tableau de bord" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-drawer">{% svg_icon "folder" "icon" %}<span>{% translate "Mes dossiers" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-drawer">{% svg_icon "document" "icon" %}<span>{% translate "Mes documents" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-drawer">{% svg_icon "mail" "icon" %}<span>{% translate "Communications" %}</span></a></li>
+</ul>{% elif panel == "detail" or panel == "row" %}<ul class="overlay__list" role="list">
+  <li><a class="overlay__item" href="#ob-popover">{% svg_icon "eye" "icon" %}<span>{% translate "Consulter" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-popover">{% svg_icon "download" "icon" %}<span>{% translate "Télécharger" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-popover">{% svg_icon "history" "icon" %}<span>{% blocktranslate count n=2 %}{{ n }} dépôt{% plural %}{{ n }} dépôts{% endblocktranslate %}</span></a></li>
+</ul>{% elif panel == "languages" %}<ul class="overlay__list" role="list">
+  <li><a class="overlay__item" href="#ob-sheet" lang="fr"{% if lang == "fr" %} aria-current="true"{% endif %}>Français</a></li>
+  <li><a class="overlay__item" href="#ob-sheet" lang="it">Italiano</a></li>
+  <li><a class="overlay__item" href="#ob-sheet" lang="en">English</a></li>
+  <li><a class="overlay__item" href="#ob-sheet" lang="ar" dir="rtl"{% if lang == "ar" %} aria-current="true"{% endif %}>العربية</a></li>
+</ul>{% elif panel == "account" %}<ul class="overlay__list" role="list" aria-label="{% translate 'Mon compte' %}">
+  <li><a class="overlay__item" href="#ob-popover">{% svg_icon "ile-key" "icon" %}<span>{% translate "Espace réservé" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-popover">{% svg_icon "circle-user-round" "icon" %}<span>{% translate "Profil" %}</span></a></li>
+  <li><a class="overlay__item" href="#ob-popover">{% svg_icon "shield" "icon" %}<span>{% translate "Sécurité du compte" %}</span></a></li>
+  <li class="overlay__sep" role="presentation"></li>
+  <li><button class="overlay__item" type="button">{% svg_icon "logout" "icon" %}<span>{% translate "Se déconnecter" %}</span></button></li>
+</ul>{% endif %}{% else %}<!doctype html>
+<html lang="it" dir="ltr" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il sistema degli overlay — tavola campione (W2-A)</title>
+<meta name="description" content="Design V5 — la tavola campione del sistema degli overlay: dialog e alertdialog, drawer, sheet, popover e tooltip, sugli elementi nativi, in francese e in arabo.">
+<meta name="robots" content="noindex, nofollow">
+{% comment %}
+THE OVERLAY BOARD — W2-A's specimen board (V5.4 plan §1.14, §3.4 item 1; templates/dev/designpreview/specimens/
+README.md). A standalone document: the product's own sheets — dist/main.css (v5/overlays.css inside it) and the
+page-only dist/core/overlay-panels.css (the panels with a head, the native backdrop, the control's own tooltip: the
+board draws them all, CONTRACT §1) —, the product's own module (dist/overlay.js) and the board's dev sheet, which only
+lays the cells out. Every panel is a real
+component — templates/components/{dialog,drawer,sheet,popover,tooltip}.html — whose body and foot this file gives
+(the branch above). No style attribute, no inline script, nothing remote; Italian chrome. Nothing is submitted:
+the foot's buttons close their panel.
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">
+<link rel="stylesheet" href="{% static 'css/dev/overlay-board.css' %}">
+<script src="{% static 'js/head.js' %}"></script>
+<script type="module" src="{% static 'js/dist/overlay.js' %}"></script>
+</head>
+<body class="ob">
+<main id="main-content" class="container ob__main" tabindex="-1">
+  <p class="eyebrow">Design V5 · W2-A · tavola campione</p>
+  <h1 class="t-band">Il sistema degli overlay — uno solo, sugli elementi nativi</h1>
+  <p class="ob__lede">Dialog e alertdialog, drawer, sheet: un <code>&lt;dialog&gt;</code> aperto modale sopra l'unico scrim, con la trappola in script e <code>aria-modal</code> — la regola INP del piano: <code>showModal()</code> ristila tutta la pagina — ; Esc chiude, lo scrim chiude (mai un alertdialog, mai con un campo già scritto), il fuoco torna a chi ha aperto. Il menu: un <code>popover</code> ancorato al suo comando. Il tooltip: l'<code>::after</code> del comando stesso, che legge il suo <code>aria-label</code>. Ogni movimento è una transizione nei due sensi; da tastiera nulla si anima; a moto ridotto una sola opacità di 80 ms. Il contratto: <code>docs/design-v5/QA/v54/w2-a/CONTRACT.md</code>.</p>
+  <p class="cluster"><a class="btn btn--ghost btn--sm" href="/__design-v5/">Anteprima V5</a></p>
+
+  <section class="ob__section" aria-labelledby="ob-dialog">
+    <h2 class="ob__h2" id="ob-dialog">Dialog e alertdialog — dal centro, .96 → 1 in 320 ms, fuori in 120 ms; sotto 40rem uno sheet</h2>
+    <p class="ob__note">L'alertdialog dice una conseguenza: il disco del glifo, nessuna chiusura dallo scrim, Esc è la risposta sicura («Annuler», che prende il fuoco). Il dialog con un campo: scritto qualcosa, lo scrim non lo chiude più — Esc e «Fermer» sì.</p>
+    <div class="ob__pair">
+      <div class="ob__cell" lang="fr">
+        <p class="ob__cap" lang="it">francese</p>
+{% language "fr" %}        <div class="cluster">
+          <a class="btn btn--secondary" href="#ob-alert-fr" data-overlay-open>{% translate "Supprimer mon compte" %}</a>
+          <a class="btn btn--secondary" href="#ob-need-fr" data-overlay-open>{% translate "Retirer le besoin" %}</a>
+        </div>{% endlanguage %}
+      </div>
+      <div class="ob__cell" lang="ar" dir="rtl">
+        <p class="ob__cap" lang="it" dir="ltr">arabo — il verso specchiato, la stessa geometria</p>
+        {% language "ar" %}<div class="cluster">
+          <a class="btn btn--secondary" href="#ob-alert-ar" data-overlay-open>{% translate "Supprimer mon compte" %}</a>
+          <a class="btn btn--secondary" href="#ob-need-ar" data-overlay-open>{% translate "Retirer le besoin" %}</a>
+        </div>{% endlanguage %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ob__section" aria-labelledby="ob-drawer">
+    <h2 class="ob__h2" id="ob-drawer">Drawer — «Slide» dal suo bordo in 320 ms, fuori in 200 ms, lo scrim con il pannello</h2>
+    <p class="ob__note">La navigazione viene dal bordo di lettura (a destra in arabo); un dettaglio dal bordo finale, accanto alla lista, senza scrim: la pagina resta usabile, Esc, «Fermer» e Indietro lo chiudono (una voce di cronologia). Sotto 40rem quel pannello è uno sheet modale.</p>
+    <div class="ob__pair">
+      <div class="ob__cell" lang="fr">
+        <p class="ob__cap" lang="it">francese</p>
+{% language "fr" %}        <div class="cluster">
+          <a class="btn btn--secondary" href="#ob-nav-fr" data-overlay-open>{% translate "Menu" %}</a>
+          <a class="btn btn--secondary" href="#ob-detail-fr" data-overlay-open>{% translate "Mes documents" %}</a>
+        </div>{% endlanguage %}
+      </div>
+      <div class="ob__cell" lang="ar" dir="rtl">
+        <p class="ob__cap" lang="it" dir="ltr">arabo</p>
+        {% language "ar" %}<div class="cluster">
+          <a class="btn btn--secondary" href="#ob-nav-ar" data-overlay-open>{% translate "Menu" %}</a>
+          <a class="btn btn--secondary" href="#ob-detail-ar" data-overlay-open>{% translate "Mes documents" %}</a>
+        </div>{% endlanguage %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ob__section" aria-labelledby="ob-sheet">
+    <h2 class="ob__h2" id="ob-sheet">Sheet — dal basso sulla molla dello sheet (550 ms), fuori in 200 ms; non si specchia</h2>
+    <p class="ob__note">La maniglia, trascinata in giù oltre un terzo o in fretta, lo chiude; non è mai l'unica uscita: «Fermer» c'è sempre. 48 px di margine sotto il bordo dello schermo, l'area sicura rispettata. Le lingue, ciascuna col proprio nome.</p>
+    <div class="ob__pair">
+      <div class="ob__cell" lang="fr">
+        <p class="ob__cap" lang="it">francese</p>
+{% language "fr" %}        <a class="btn btn--secondary" href="#ob-sheet-fr" data-overlay-open>{% translate "Langue" %}</a>{% endlanguage %}
+      </div>
+      <div class="ob__cell" lang="ar" dir="rtl">
+        <p class="ob__cap" lang="it" dir="ltr">arabo</p>
+        {% language "ar" %}<a class="btn btn--secondary" href="#ob-sheet-ar" data-overlay-open>{% translate "Langue" %}</a>{% endlanguage %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ob__section" aria-labelledby="ob-popover">
+    <h2 class="ob__h2" id="ob-popover">Popover / menu — dal suo comando, 4 px di caduta in 200 ms, fuori in 120 ms</h2>
+    <p class="ob__note">Allineato sul bordo finale del comando (in arabo il bordo sinistro sul bordo sinistro), sotto se c'è posto, altrimenti sopra. Si chiude con un clic fuori, con Esc, quando il fuoco lo lascia, alla scelta di una voce; le frecce passano da una voce all'altra. Sotto 40rem uno sheet che resta un menu.</p>
+    <div class="ob__pair">
+      <div class="ob__cell" lang="fr">
+        <p class="ob__cap" lang="it">francese</p>
+{% language "fr" %}        <div class="cluster ob__toolbar">
+          <button class="btn btn--secondary" type="button" popovertarget="ob-account-fr">{% svg_icon "circle-user-round" "icon" %}<span>{% translate "Mon compte" %}</span></button>
+          {% translate "Ouvrir le menu de la pièce" as fr_row_menu %}{% include "components/tooltip.html" with label=fr_row_menu icon="ellipsis-vertical" popovertarget="ob-row-fr" %}
+        </div>{% endlanguage %}
+      </div>
+      <div class="ob__cell" lang="ar" dir="rtl">
+        <p class="ob__cap" lang="it" dir="ltr">arabo</p>
+        {% language "ar" %}<div class="cluster ob__toolbar">
+          <button class="btn btn--secondary" type="button" popovertarget="ob-account-ar">{% svg_icon "circle-user-round" "icon" %}<span>{% translate "Mon compte" %}</span></button>
+          {% translate "Ouvrir le menu de la pièce" as ar_row_menu %}{% include "components/tooltip.html" with label=ar_row_menu icon="ellipsis-vertical" popovertarget="ob-row-ar" %}
+        </div>{% endlanguage %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ob__section" aria-labelledby="ob-tooltip">
+    <h2 class="ob__h2" id="ob-tooltip">Tooltip — il gemello visibile del nome: 400 ms di attesa, poi 120 ms; un vicino nel gruppo subito</h2>
+    <p class="ob__note">Sotto il puntatore aspetta, poi appare; col fuoco della tastiera è subito lì; se ne va a 0 ms (uscita, blur, Esc, una pressione). Il puntatore può riposare sulla parola (WCAG 1.4.13). Dentro un contenitore che taglia — la lista qui sotto scorre — la parola è quella del livello superiore.</p>
+    <div class="ob__pair">
+      <div class="ob__cell" lang="fr">
+        <p class="ob__cap" lang="it">francese — un gruppo</p>
+{% language "fr" %}        {% translate "Rechercher" as fr_search %}{% translate "Télécharger" as fr_download %}{% translate "Consulter" as fr_view %}{% translate "Fermer" as fr_close %}
+        <div class="cluster ob__toolbar" data-tip-group>
+          {% include "components/tooltip.html" with label=fr_search icon="search" %}
+          {% include "components/tooltip.html" with label=fr_download icon="download" %}
+          {% include "components/tooltip.html" with label=fr_view icon="eye" %}
+          {% include "components/tooltip.html" with label=fr_close icon="close" %}
+        </div>
+        <p class="ob__cap" lang="it">dentro una lista che scorre — il livello superiore</p>
+        <ul class="ob__scroller" role="list">
+          <li class="ob__row"><span>{% translate "Tableau de bord" %}</span>{% include "components/tooltip.html" with label=fr_view icon="eye" layer=True side="inline-end" %}</li>
+          <li class="ob__row"><span>{% translate "Mes dossiers" %}</span>{% include "components/tooltip.html" with label=fr_download icon="download" layer=True side="inline-end" %}</li>
+          <li class="ob__row"><span>{% translate "Mes documents" %}</span>{% include "components/tooltip.html" with label=fr_search icon="search" layer=True side="inline-end" %}</li>
+        </ul>{% endlanguage %}
+      </div>
+      <div class="ob__cell" lang="ar" dir="rtl">
+        <p class="ob__cap" lang="it" dir="ltr">arabo — un gruppo</p>
+        {% language "ar" %}{% translate "Rechercher" as ar_search %}{% translate "Télécharger" as ar_download %}{% translate "Consulter" as ar_view %}{% translate "Fermer" as ar_close %}
+        <div class="cluster ob__toolbar" data-tip-group>
+          {% include "components/tooltip.html" with label=ar_search icon="search" %}
+          {% include "components/tooltip.html" with label=ar_download icon="download" %}
+          {% include "components/tooltip.html" with label=ar_view icon="eye" %}
+          {% include "components/tooltip.html" with label=ar_close icon="close" %}
+        </div>
+        <p class="ob__cap" lang="it" dir="ltr">dentro una lista che scorre — il livello superiore</p>
+        <ul class="ob__scroller" role="list">
+          <li class="ob__row"><span>{% translate "Tableau de bord" %}</span>{% include "components/tooltip.html" with label=ar_view icon="eye" layer=True side="inline-end" %}</li>
+          <li class="ob__row"><span>{% translate "Mes dossiers" %}</span>{% include "components/tooltip.html" with label=ar_download icon="download" layer=True side="inline-end" %}</li>
+          <li class="ob__row"><span>{% translate "Mes documents" %}</span>{% include "components/tooltip.html" with label=ar_search icon="search" layer=True side="inline-end" %}</li>
+        </ul>{% endlanguage %}
+      </div>
+    </div>
+  </section>
+</main>
+{% with board_template="dev/designpreview/specimens/overlays.html" %}
+<div class="ob__panels" lang="fr">{% language "fr" %}
+  {% translate "Supprimer mon compte" as t %}{% include "components/dialog.html" with id="ob-alert-fr" kind="alert" glyph="trash-2" title=t describedby="ob-alert-fr-text" panel="alert" body_template=board_template actions_template=board_template %}
+  {% translate "Retirer le besoin" as t %}{% include "components/dialog.html" with id="ob-need-fr" title=t panel="need" body_template=board_template actions_template=board_template %}
+  {% translate "Menu" as t %}{% include "components/drawer.html" with id="ob-nav-fr" edge="start" title=t panel="nav" body_template=board_template %}
+  {% translate "Mes documents" as t %}{% include "components/drawer.html" with id="ob-detail-fr" modal=False history=True title=t panel="detail" body_template=board_template %}
+  {% translate "Langue" as t %}{% include "components/sheet.html" with id="ob-sheet-fr" title=t panel="languages" lang="fr" body_template=board_template %}
+  {% translate "Mon compte" as t %}{% include "components/popover.html" with id="ob-account-fr" label=t panel="account" body_template=board_template %}
+  {% include "components/popover.html" with id="ob-row-fr" panel="row" body_template=board_template %}
+{% endlanguage %}</div>
+<div class="ob__panels" lang="ar" dir="rtl">{% language "ar" %}
+  {% translate "Supprimer mon compte" as t %}{% include "components/dialog.html" with id="ob-alert-ar" kind="alert" glyph="trash-2" title=t describedby="ob-alert-ar-text" panel="alert" body_template=board_template actions_template=board_template %}
+  {% translate "Retirer le besoin" as t %}{% include "components/dialog.html" with id="ob-need-ar" title=t panel="need" body_template=board_template actions_template=board_template %}
+  {% translate "Menu" as t %}{% include "components/drawer.html" with id="ob-nav-ar" edge="start" title=t panel="nav" body_template=board_template %}
+  {% translate "Mes documents" as t %}{% include "components/drawer.html" with id="ob-detail-ar" modal=False history=True title=t panel="detail" body_template=board_template %}
+  {% translate "Langue" as t %}{% include "components/sheet.html" with id="ob-sheet-ar" title=t panel="languages" lang="ar" body_template=board_template %}
+  {% translate "Mon compte" as t %}{% include "components/popover.html" with id="ob-account-ar" label=t panel="account" body_template=board_template %}
+  {% include "components/popover.html" with id="ob-row-ar" panel="row" body_template=board_template %}
+{% endlanguage %}</div>
+{% endwith %}
+</body>
+</html>
+{% endif %}

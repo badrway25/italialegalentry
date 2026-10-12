@@ -1,0 +1,28 @@
+{% comment %}
+THE LOADER «LUME» — the mark in layers, the L1 host (V5.4 plan §1.9; DL54-07, DL54-08, DL54-09; W1-D).
+
+The verbatim mark (docs/design-v2/BRAND_ASSETS.md §1) as the layers v5/loader.css places in mark units: the base —
+the two tricolour planes, the arched door, the three steps — the room behind the door with its light, and the key,
+gold with its ink twin. At rest it is pixel for pixel the one-file mark: the key's bow is a ring, and what shows
+through its eye is the navy door. Two gestures, one movement split by the navigation (DL54-07): the ENGAGE — the
+key turns once and holds, on the login's submit, through loader.js (`engage(host)`, `.is-engaged`) — and the
+RELEASE — the lit doorway, on the first console page after a successful sign-in, once per session, served by this
+template with `release=True` (`data-lume="release"`): a CSS animation of the console's _loader-light.css that
+starts at the first paint and needs no script. The planes, the door and the steps never move; the key is never
+held, drawn or served mirrored; the host is `direction: ltr` in every locale. Under reduced motion every token is
+0 ms and the mark shows the still.
+
+Contract (all optional):
+  `release`   True on the console's seat — the release plays once at load; never on an OUTCOME_BEARING form
+              (loader.js), never on a public page (test_loader_rules holds the allow-list).
+  `id`        the host's id, which a form names in `data-loader-host` to engage it on submit; the status line is
+              `<id>-status`.
+  `css_class` extra classes on the host; the size is the consumer's `--sig-size` (160 px by default).
+  `word`, `slow`, `retry`  the words of a long wait — the word at 1 s, the sentence at 10 s, the label of the
+              «Réessayer» control that lets the person submit again — written by the INCLUDING template with its own
+              translations: this component carries no string of its own, and the release's seat has none.
+The host is decorative (`aria-hidden`): the state is carried by the busy control's `aria-busy` and by the status
+line (`role="status"`), never by the picture.
+{% endcomment %}<span class="sig{% if css_class %} {{ css_class }}{% endif %}"{% if id %} id="{{ id }}"{% endif %}{% if release %} data-lume="release"{% endif %} aria-hidden="true"><span class="sig__l sig__base"><svg viewBox="0 0 200 200" focusable="false"><polygon points="26,16 80,44 80,166 26,178" fill="#157A3C"/><polygon points="174,16 120,44 120,166 174,178" fill="#C4142B"/><path d="M76,156 L76,104 a24,24 0 0 1 48,0 L124,156 Z" fill="#0F2547" stroke="#fff" stroke-width="5"/><g fill="#0F2547"><rect x="72" y="160" width="56" height="5"/><rect x="66" y="167" width="68" height="5"/><rect x="60" y="174" width="80" height="5"/></g></svg></span><span class="sig__l sig__room"><span class="sig__lume"></span></span><span class="sig__l sig__key"><span class="sig__turn"><svg class="sig__face" viewBox="0 0 200 200" focusable="false"><g fill="#C39A2B"><path fill-rule="evenodd" d="M92,96 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 Z M96.6,96 a3.4,3.4 0 1,0 6.8,0 a3.4,3.4 0 1,0 -6.8,0 Z"/><rect x="97.6" y="103" width="4.8" height="30"/><rect x="102" y="118" width="8" height="4"/><rect x="102" y="126" width="6" height="4"/></g></svg><svg class="sig__face sig__face--ink" viewBox="0 0 200 200" focusable="false"><g fill="#0F2547"><path fill-rule="evenodd" d="M92,96 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 Z M96.6,96 a3.4,3.4 0 1,0 6.8,0 a3.4,3.4 0 1,0 -6.8,0 Z"/><rect x="97.6" y="103" width="4.8" height="30"/><rect x="102" y="118" width="8" height="4"/><rect x="102" y="126" width="6" height="4"/></g></svg></span></span></span>{% if word or slow or retry %}
+<p class="loader__status" role="status" aria-live="polite"{% if id %} id="{{ id }}-status"{% endif %} data-loader-status{% if word %} data-loader-word="{{ word }}"{% endif %}{% if slow %} data-loader-slow="{{ slow }}"{% endif %}></p>{% if retry %}
+<button class="btn btn--secondary btn--sm loader__retry" type="button" data-loader-retry hidden>{{ retry }}</button>{% endif %}{% endif %}

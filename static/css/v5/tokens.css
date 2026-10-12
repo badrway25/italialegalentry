@@ -1,0 +1,925 @@
+/* ============================================================================================
+   TOKENS V5 — «La soglia» · the foundation (W1-A, V5.4)
+   docs/design-v5/DESIGN_SYSTEM_V5.md §2–§4, ported from the gate-0 foundation
+   (C:/tmp/ile_v5_council/proof/assets/css/tokens.css) WITHOUT its «PROOF ADDITION 0» — the brand
+   colours stay declared once, in static/css/v2/tokens.css (tests/frontend/test_v4_tokens.py) — and
+   amended by the decisions of docs/design-v5/V5_4_EXECUTION_PLAN.md:
+     §1.1 type «Una voce» (Host Grotesk for everything; «ILE Wordmark» for the name; «ILE Mono» for
+          references; Vazirmatn for Arabic; eight public sizes; the console one step up on phones);
+     §1.2 colour: «En examen» in lapis (the nine wisteria primitives go), the information notice on
+          the slate wash, broken edges at step 600, the hatch at α 0.78, the night marks re-solved,
+          the pinned glass at α 0.94, «argento» for Istituzione, literals named (PLATFORM_COLORS C1–C9);
+     §1.3 corners «Lo spigolo»: 2 · 4 · 6 · 8 · 12 · full on the existing names;
+     §1.4 five shadow levels in the night's own colour, glass on the two sticky bars only;
+     §1.5 the motion tokens as decided (no duration changed; --motion-reduced and --ease-turn added);
+     §1.6 the focus tokens; §1.8 the control heights.
+   Loaded after static/css/v4/* (static/css/main.css): every name declared here is the value every
+   earlier layer ends up with. Two cascade facts follow, as they did for V4:
+     · a top-level :root declaration here beats an earlier :root declaration inside a media query,
+       whatever the query — so the narrow-viewport and reduced-motion overrides of the names declared
+       here are restated in this file;
+     · a name the legacy layers already use with another meaning keeps that meaning in
+       static/css/v5/aliases.css until its owning family retargets the consumers (--hit-min).
+   Component sheets never read layer 1: the primitives are read in this file only.
+   Contrast is recomputed from the effective cascade by tests/frontend/test_v5_tokens.py.
+   ============================================================================================ */
+
+/* ==============================================================================================
+   LAYER 1 — PRIMITIVES (never read by a component) · DS §2
+   ============================================================================================== */
+:root {
+  /* carta — the paper (V2/V4 --min-*, unchanged hex) */
+  --p-carta-0: #ffffff;
+  --p-carta-25: #fbfaf8;
+  --p-carta-50: #f4f3f0;
+  --p-carta-100: #ecebe6;
+  --p-carta-150: #e3e2dd;
+  --p-carta-200: #d3d2cc;
+
+  /* inchiostro — the ink (V2 --ink*, unchanged) */
+  --p-inchiostro-400: #7a868b; /* 3.37:1 on carta-50: a component edge, never text */
+  --p-inchiostro-500: #55646b; /* 5.48 */
+  --p-inchiostro-600: #4a5a62; /* 6.46 */
+  --p-inchiostro-900: #15222a; /* 14.62 */
+
+  /* notte — the night, evolved from --brand-navy (V4 --mid-*, unchanged) */
+  --p-notte-950: #071226;
+  --p-notte-900: #0b1a33;
+  --p-notte-850: #10233f;
+  --p-notte-800: #16304f;
+  --p-notte-700: #1d3b5e;
+  --p-notte-50: #eef1f6;  /* 15.33 on notte-900 */
+  --p-notte-200: #b9c5d6; /*  9.94 */
+  --p-notte-400: #8a9bb3; /*  6.13 — text on notte-900 / 850; 4.72 on notte-800; never on notte-700 (4.03) */
+
+  /* laguna — the one interactive accent (V4 --accent*, unchanged) */
+  --p-laguna-50: #d9eef0;
+  --p-laguna-100: #c7e4e7;
+  --p-laguna-300: #a5e0e5;
+  --p-laguna-350: #8fd8de;
+  --p-laguna-400: #7fd1d8; /* on night: 9.93 on notte-900 */
+  --p-laguna-550: #1d8a93; /* focus ring: ≥ 3:1 on every paper */
+  --p-laguna-600: #15808a;
+  --p-laguna-650: #12777f; /* mark, flat primary: 4.76 on carta-50 */
+  --p-laguna-700: #0f6a72; /* text: 5.69 on carta-50 */
+  --p-laguna-800: #0b555c; /* hover text: 7.67 */
+
+  /* oro — the key. --brand-gold #c39a2b lives in v2/tokens.css (2.37:1 on paper: ornament only) */
+  --p-oro-300: #dfc176; /* text-capable on night: 9.94 on notte-900, 7.66 on notte-800 */
+
+  /* the state materials — steps: 25 notice wash · 50 body · 100 hover body · 200 edge · 500 mark ·
+     600 mark / broken edge · 800 word · 900 night body · 300 night word · 400 night mark.
+     Plan §1.2: «En examen» takes the register's lapis (PC C1: --p-registro-500 new; the nine wisteria
+     --p-esame-* primitives are retired — no violet is left); the information notice moves to the
+     slate wash (C2: --p-deposito-25 new); every step 400 is the night mark re-solved on the paper
+     ladder mirrored (C5: 8 of 28 weak night pairs → 0). */
+  --p-registro-25: #f2f5fb; --p-registro-50: #e6efff; --p-registro-100: #d6e5ff; --p-registro-200: #a1b6dc;
+  --p-registro-500: #5278c1; --p-registro-600: #284b8f; --p-registro-800: #1d3f82; --p-registro-900: #253249;
+  --p-registro-300: #a4c1f4; --p-registro-400: #668ed8;
+  --p-deposito-25: #f3f5f8; --p-deposito-50: #eaeff4; --p-deposito-100: #dee5eb; --p-deposito-200: #b6bec7;
+  --p-deposito-600: #586674; --p-deposito-800: #434f5c; --p-deposito-900: #2d3238; --p-deposito-300: #b2c1cf;
+  --p-deposito-400: #93a3b2;
+  --p-ambra-25: #fdf4e6; --p-ambra-50: #ffeccf; --p-ambra-100: #fbe0b7; --p-ambra-200: #e2c394;
+  --p-ambra-600: #aa7600; --p-ambra-800: #694700; --p-ambra-900: #412e0c; --p-ambra-300: #dcba84; --p-ambra-400: #b37d03;
+  --p-cotto-50: #ffe9e0; --p-cotto-100: #ffdbcc; --p-cotto-200: #e5b19b;
+  --p-cotto-600: #aa4300; --p-cotto-800: #873300; --p-cotto-900: #47291b; --p-cotto-300: #edb096; --p-cotto-400: #f28452;
+  --p-granata-25: #fdf2f1; --p-granata-50: #ffe8e9; --p-granata-100: #ffd9db; --p-granata-200: #e1a5a9;
+  --p-granata-600: #932039; --p-granata-800: #830a2c; --p-granata-900: #47272a; --p-granata-300: #f0acb1;
+  --p-granata-400: #ffa0a8;
+  --p-grafite-50: #e2e7eb; --p-grafite-100: #d8dde3; --p-grafite-200: #b1b8c0;
+  --p-grafite-600: #353e49; --p-grafite-800: #242c35; --p-grafite-900: #2f3339; --p-grafite-300: #c2ccd6;
+  --p-grafite-400: #c5d0dd;
+  --p-cenere-50: #f1f0ec; --p-cenere-100: #e8e7e2; --p-cenere-200: #d3d2cc;
+  --p-cenere-600: #7a868b; --p-cenere-800: #55646b; --p-cenere-900: #32322f; --p-cenere-300: #c1c0bc; --p-cenere-400: #858480;
+
+  /* the four audience accents — night grounds and photographs only; never on paper */
+  --p-route-1: #7fd1d8;    /* 9.93 on notte-900 — equals --p-laguna-400 */
+  --p-sabbia-300: #e6cdb0; /* 11.34 — Persona (O19, confirmed by PC C8) */
+  --p-route-2: #8fbfe8;    /* 8.92 — Impresa */
+  --p-route-3: #aab7cc;    /* 8.56 — the V4 Istituzione, kept as a primitive */
+  --p-argento-300: #d9dee6; /* 12.84 — «argento», Istituzione (PC C8): Impresa / Istituzione 0.047 → 0.131 */
+  --p-route-4: #a8cfc0;    /* 10.21 — Università */
+
+  /* space — the 4 px rhythm (tokens.css V1 + v2/tokens.css, unchanged) */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px;
+  --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px; --s-20: 80px; --s-24: 96px; --s-32: 128px;
+
+  /* radius — «Lo spigolo» (plan §1.3, DL54-14): 2 · 4 · 6 · 8 · 12 · full on the existing names.
+     xs: inner corners, nested insets · sm: buttons, fields, tooltip, skeleton, checkbox, the hero's plates ·
+     md: the targa, menu rows, the segmented track · lg: cards, panels, photographs on paper, popovers ·
+     xl: dialogs, drawers, sheets · full: chips, counts, indicators — never a button or a card.
+     Concentric nesting (the thumb 4 inside a 6 track, 2 px apart); 21:9 bands at 0; the arch is the only
+     large curve; at most three distinct radii on a screen at rest. */
+  --radius-xs: 2px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-xl: 12px; --radius-full: 999px;
+}
+
+/* ==============================================================================================
+   LAYER 2 — SEMANTIC · DS §3
+   ============================================================================================== */
+
+/* §3.1 Colour, surfaces, lines, focus, identity, scrims — the portico (public) is the default shell */
+:root {
+  color-scheme: light; /* no dark mode exists: night is a set of contexts, not a theme (CD §3) */
+
+  --surface-page: var(--p-carta-50);
+  --surface-area: var(--p-carta-100);
+  --surface-sheet: var(--p-carta-25);
+  --surface-raised: var(--p-carta-0);
+  --surface-disabled: var(--p-carta-150);
+  --surface-hover: #f2f4f3;              /* 4 % laguna in carta-25, frozen (ink 14.69) */
+  --surface-selected: var(--p-laguna-50);
+  --surface-night: var(--p-notte-900);
+  --surface-night-deep: var(--p-notte-950);
+  --surface-night-area: var(--p-notte-850);
+  --surface-night-sheet: var(--p-notte-800);
+  --surface-night-raised: var(--p-notte-700);
+
+  --text-1: var(--p-inchiostro-900);
+  --text-2: var(--p-inchiostro-600);
+  --text-3: var(--p-inchiostro-500);
+  --text-on-night-1: var(--p-notte-50);
+  --text-on-night-2: var(--p-notte-200);
+  --text-on-night-3: var(--p-notte-400);
+  --text-on-accent: var(--p-carta-0);
+
+  --line-rhythm: var(--p-carta-200);          /* decorative hairline, 1 px */
+  --line-structure: var(--p-inchiostro-400);  /* a component edge, ≥ 3:1 on every paper */
+  --line-night: rgba(214, 226, 228, 0.45);    /* an edge on every night level (3.02–3.62) */
+  --line-night-soft: rgba(214, 226, 228, 0.14); /* C9: the night hairline below the edge role, named */
+
+  --accent-text: var(--p-laguna-700);
+  --accent-text-hover: var(--p-laguna-800);
+  --accent-mark: var(--p-laguna-650);
+  --accent-night: var(--p-laguna-400);
+  --accent-night-fade: rgba(127, 209, 216, 0.14); /* C9: the laguna-400 wash on night, named */
+  --accent-wash: var(--p-laguna-50);
+  --accent-wash-2: var(--p-laguna-100);
+
+  /* focus (plan §1.6): :focus-visible only; a 2 px ring at a 2 px offset on the element's radius;
+     laguna-400 on night; two tones on photographs; the 5 px halo on text fields only; Highlight in
+     forced colours; never animated; ≥ 3:1 against both neighbours on every ground */
+  --focus-ring: var(--p-laguna-550);
+  --focus-ring-night: var(--p-laguna-400);
+  --focus-halo: rgba(29, 138, 147, 0.3);
+  --focus-halo-night: rgba(127, 209, 216, 0.3);
+  --focus-ring-image-inner: var(--p-carta-0);
+  --focus-ring-image-outer: var(--p-notte-900);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  --identity-key: var(--brand-gold);          /* ornament on paper, glyph on navy (5.80) */
+  --identity-key-night-text: var(--p-oro-300);
+  --identity-light: var(--brand-gold);        /* the travelling light on paper-framed marks */
+  --identity-light-night: var(--p-oro-300);   /* the travelling light on night */
+
+  /* scrims and plates over a photograph — PC C6, kept as a rule: on --scrim-photo-aa only
+     --text-on-night-1 holds AA; on --plate-night-photo (α 0.80) every night ink but --text-on-night-3 */
+  --scrim-photo-aa: rgba(11, 26, 51, 0.64);
+  --scrim-photo-aaa: rgba(11, 26, 51, 0.76);
+  --plate-night-photo: rgba(11, 26, 51, 0.8);
+  --scrim-overlay: rgba(7, 18, 38, 0.32);     /* behind the portico panel */
+  --scrim-modal: rgba(7, 18, 38, 0.6);        /* behind a modal / drawer — opacity only, no blur */
+
+  /* audiences — night grounds and photographs only (hero legend, micro-visual); never on paper.
+     Persona on sand (O19); Istituzione «argento» (PC C8; the hero-final council's set wins if it
+     records another, measured in context — plan §1.2). */
+  --aud-persona: var(--p-sabbia-300);
+  --aud-impresa: var(--p-route-2);
+  --aud-istituzione: var(--p-argento-300);
+  --aud-universita: var(--p-route-4);
+
+  /* icons (COLOUR §8) — never a brand colour */
+  --icon-default: var(--text-2);
+  --icon-muted: var(--text-3);
+  --icon-strong: var(--text-1);
+  --icon-interactive: var(--accent-mark);
+  --icon-status: currentColor;
+  --icon-on-night: var(--text-on-night-2);
+  --icon-on-night-strong: var(--text-on-night-1);
+  --icon-on-night-muted: var(--text-on-night-3);
+  --icon-disc-bg: var(--surface-area);
+  --icon-disc-fg: var(--text-2);
+  --icon-disc-night-bg: var(--p-notte-800);
+  --icon-disc-night-fg: var(--text-on-night-2);
+
+  /* patterns — the non-chromatic channel of strips, legends, ledgers (white over the mark).
+     The hatch at α 0.78: the stripe reaches 3.04:1 on the amber mark (PC C4). */
+  --pattern-hatch: repeating-linear-gradient(45deg, transparent 0 3px, rgba(255, 255, 255, 0.78) 3px 5px);
+  --pattern-dots: radial-gradient(circle, rgba(255, 255, 255, 0.6) 1.2px, transparent 1.5px);
+  --pattern-cross: repeating-linear-gradient(45deg, transparent 0 3px, rgba(255, 255, 255, 0.45) 3px 4px),
+                   repeating-linear-gradient(-45deg, transparent 0 3px, rgba(255, 255, 255, 0.45) 3px 4px);
+}
+
+/* the console: one step lighter paper under the same night chrome (O13) */
+body.console {
+  --surface-page: var(--p-carta-25);
+  --surface-area: var(--p-carta-50);
+  --surface-sheet: var(--p-carta-0);
+  --surface-raised: var(--p-carta-0);   /* depth by shadow, not by colour */
+  --icon-disc-bg: var(--p-carta-100);
+}
+
+/* night contexts flip focus, icons, indicators and lines (the product's existing context classes) */
+:is(.on-inverse, .rail, .tooltip, .site-footer, .hero, .chapter--dark, .chapter--night, .section--verso, .plate--verso) {
+  --focus-ring: var(--focus-ring-night);
+  --focus-halo: var(--focus-halo-night);
+  --icon-default: var(--icon-on-night);
+  --icon-strong: var(--icon-on-night-strong);
+  --icon-muted: var(--icon-on-night-muted);
+  --icon-interactive: var(--accent-night);
+  --icon-disc-bg: var(--icon-disc-night-bg);
+  --icon-disc-fg: var(--icon-disc-night-fg);
+}
+
+/* §3.2 The eight tones (state registers) — conforme is INK, no chroma; the seven others from their
+   materials. Plan §1.2: esame ← the register's lapis (C1); attesa's dashed and nullo's dotted edge at
+   step 600 — the broken edge is their meaning and now reaches 3.13–3.96:1 (C3); the six solid edges
+   stay at step 200, the body's own outline. */
+:root {
+  --tone-conforme-bg: var(--p-carta-100);
+  --tone-conforme-bg-hover: var(--p-carta-150);
+  --tone-conforme-edge: var(--p-inchiostro-400);
+  --tone-conforme-mark: var(--p-inchiostro-900);     /* the plain filled disc — no glyph (O14) */
+  --tone-conforme-text: var(--p-inchiostro-900);
+  --tone-conforme-night-bg: var(--p-notte-800);
+  --tone-conforme-night-text: var(--p-notte-50);
+  --tone-conforme-night-mark: var(--p-notte-50);
+
+  --tone-esame-bg: var(--p-registro-50);
+  --tone-esame-bg-hover: var(--p-registro-100);
+  --tone-esame-edge: var(--p-registro-200);
+  --tone-esame-mark: var(--p-registro-500);
+  --tone-esame-text: var(--p-registro-800);
+  --tone-esame-night-bg: var(--p-registro-900);
+  --tone-esame-night-text: var(--p-registro-300);
+  --tone-esame-night-mark: var(--p-registro-400);
+
+  --tone-neutro-bg: var(--p-deposito-50);
+  --tone-neutro-bg-hover: var(--p-deposito-100);
+  --tone-neutro-edge: var(--p-deposito-200);
+  --tone-neutro-mark: var(--p-deposito-600);
+  --tone-neutro-text: var(--p-deposito-800);
+  --tone-neutro-night-bg: var(--p-deposito-900);
+  --tone-neutro-night-text: var(--p-deposito-300);
+  --tone-neutro-night-mark: var(--p-deposito-400);
+
+  --tone-attesa-bg: var(--p-ambra-50);
+  --tone-attesa-bg-hover: var(--p-ambra-100);
+  --tone-attesa-edge: var(--p-ambra-600);            /* dashed */
+  --tone-attesa-mark: var(--p-ambra-600);
+  --tone-attesa-text: var(--p-ambra-800);
+  --tone-attesa-night-bg: var(--p-ambra-900);
+  --tone-attesa-night-text: var(--p-ambra-300);
+  --tone-attesa-night-mark: var(--p-ambra-400);
+
+  --tone-azione-bg: var(--p-cotto-50);
+  --tone-azione-bg-hover: var(--p-cotto-100);
+  --tone-azione-edge: var(--p-cotto-200);
+  --tone-azione-mark: var(--p-cotto-600);
+  --tone-azione-text: var(--p-cotto-800);
+  --tone-azione-night-bg: var(--p-cotto-900);
+  --tone-azione-night-text: var(--p-cotto-300);
+  --tone-azione-night-mark: var(--p-cotto-400);
+
+  --tone-rifiuto-bg: var(--p-granata-50);
+  --tone-rifiuto-bg-hover: var(--p-granata-100);
+  --tone-rifiuto-edge: var(--p-granata-200);
+  --tone-rifiuto-mark: var(--p-granata-600);
+  --tone-rifiuto-text: var(--p-granata-800);
+  --tone-rifiuto-night-bg: var(--p-granata-900);
+  --tone-rifiuto-night-text: var(--p-granata-300);
+  --tone-rifiuto-night-mark: var(--p-granata-400);
+
+  --tone-blocco-bg: var(--p-grafite-50);
+  --tone-blocco-bg-hover: var(--p-grafite-100);
+  --tone-blocco-edge: var(--p-grafite-200);
+  --tone-blocco-mark: var(--p-grafite-600);
+  --tone-blocco-text: var(--p-grafite-800);
+  --tone-blocco-night-bg: var(--p-grafite-900);
+  --tone-blocco-night-text: var(--p-grafite-300);
+  --tone-blocco-night-mark: var(--p-grafite-400);
+
+  --tone-nullo-bg: var(--p-cenere-50);
+  --tone-nullo-bg-hover: var(--p-cenere-100);
+  --tone-nullo-edge: var(--p-cenere-600);            /* dotted */
+  --tone-nullo-mark: var(--p-cenere-600);
+  --tone-nullo-text: var(--p-cenere-800);
+  --tone-nullo-night-bg: var(--p-cenere-900);
+  --tone-nullo-night-text: var(--p-cenere-300);
+  --tone-nullo-night-mark: var(--p-cenere-400);
+}
+
+/* §3.3 Type — «Una voce» (plan §1.1). One family, Host Grotesk, for every Latin role, public and
+   console; the only serif on a page is the trademark name, always in «ILE Wordmark»; «ILE Mono» in its
+   one seat (references, hashes, rule versions); Vazirmatn for every Arabic role. The serif names stay
+   and resolve to the sans, so the V1–V4 consumers change face at once (DL54-10: TY-2, TY-3, CDV law 2's
+   serif clause and HET §0 item 9 are retired while B is the system). The Arabic stack carries the Latin
+   pair right after the Arabic face (gate-0 A6): its digits, spaces of Latin runs and names are Host's. */
+:root {
+  --f-sans-lat: "Host Grotesk", "ILE Sans Fallback", "ILE Sans Fallback Arial", "ILE Sans Fallback Android", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-sans-ar: "Vazirmatn", "Host Grotesk", "ILE Arabic Fallback", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
+  --f-serif-lat: var(--f-sans-lat);
+  --f-serif-ar: var(--f-sans-ar);
+  --f-sans: var(--f-sans-lat);
+  --f-serif: var(--f-sans-lat);
+  --f-mono: "ILE Mono", "ILE Mono Fallback", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --f-wordmark: "ILE Wordmark", "ILE Wordmark Fallback", "Iowan Old Style", Georgia, serif; /* every rendering of
+     the name: the {% brand %} and {% brand_lockup %} classes and the hero's name line (static/css/v5/base.css) */
+  --f-arabic-sys: "Segoe UI", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif; /* the «ع» control on Latin pages */
+
+  --numeric-data: lining-nums tabular-nums;
+  --numeric-ref: lining-nums tabular-nums slashed-zero;
+  --feat-caps: "case" 1;
+
+  /* tracking follows size, the larger the tighter, and stops at 20 px: nothing smaller is tracked
+     but capitals (the console eyebrow, locked capital strings) */
+  --track-display: -0.026em;   /* 64 px; -0.02em under 48rem, where the display line is 40 px */
+  --track-plate: var(--track-display);
+  --track-title: -0.024em;     /* 36 px */
+  --track-band: -0.02em;       /* 28 px */
+  --track-entry: -0.012em;     /* 20 px */
+  --track-display-caps: 0.02em;
+  --track-eyebrow: 0.06em;
+  --track-folio: 0.06em;
+
+  /* the public scale — eight sizes: 64 · 36 · 28 · 20 · 17 · 15 · 13 · 12; line-heights on the 4 px line */
+  --t-display: clamp(2.5rem, 1.94rem + 2.29vw, 4rem); --t-display-lh: 1.0625; /* 40 → 64 (390 → 1440) · 500 */
+  --t-plate: var(--t-display); --t-plate-lh: var(--t-display-lh);              /* no ninth size: the plate is the display */
+  --t-title: 2.25rem;     --t-title-lh: 2.75rem;   /* 36/44 · 600 · public H1 */
+  --t-band: 1.75rem;      --t-band-lh: 2.25rem;    /* 28/36 · 600 · section titles */
+  --t-entry: 1.25rem;     --t-entry-lh: 1.75rem;   /* 20/28 · 600 · entry and panel titles */
+  --t-lead: 1.25rem;      --t-lead-lh: 1.75rem;    /* 20/28 · 400 · roman (no italic lead) */
+  --t-body: 1.0625rem;    --t-body-lh: 1.75rem;    /* 17/28 · 400 · ≤ 36rem */
+  --t-ui: 0.9375rem;      --t-ui-lh: 1.25rem;      /* 15/20 · 500 */
+  --t-small: 0.8125rem;   --t-small-lh: 1.25rem;   /* 13/20 */
+  --t-caption: 0.75rem;   --t-caption-lh: 1rem;    /* 12/16 · 500 · the floor: nothing Latin smaller */
+  --t-folio: 0.8125rem;   --t-folio-lh: 1rem;      /* 13/16 · ILE Mono · .06em */
+  --t-field: 1rem;                                  /* typed text in every field, at every width (LG-1, TY-14) */
+  /* measures in rem, not ch — a ch measure gave 80 characters a line and shifted at the swap (TR C1) */
+  --measure-body: 36rem;  /* at 17 px ≈ 70 characters */
+  --measure-lead: 36rem;
+  --measure-small: 29rem; /* at 15 px */
+
+  /* the console scale — the foundation's roles; the eyebrow rises from 11 to 12 px (TR C5) */
+  --u-title: 1.75rem;     --u-title-lh: 2.25rem;   /* 28/36 · 600 */
+  --u-section: 1.25rem;   --u-section-lh: 1.75rem; /* 20/28 · 600 */
+  --u-card: 1.0625rem;    --u-card-lh: 1.5rem;     /* 17/24 · 600 */
+  --u-body: 0.9375rem;    --u-body-lh: 1.5rem;     /* 15/24 · 400 */
+  --u-ui: 0.875rem;       --u-ui-lh: 1.25rem;      /* 14/20 · 500 */
+  --u-small: 0.8125rem;   --u-small-lh: 1.25rem;   /* 13/20 */
+  --u-caption: 0.75rem;   --u-caption-lh: 1rem;    /* 12/16 · 500 */
+  --u-eyebrow: 0.75rem;   --u-eyebrow-lh: 1rem;    /* 12/16 · 600 · uppercase · "case" · .06em */
+  --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 500 · tabular */
+  --u-ref: 0.8125rem;     --u-ref-lh: 1.25rem;     /* 13/20 · ILE Mono */
+
+  /* 500 acts, 400 reads, 600 titles (TR C4) */
+  --w-body: 400; --w-control: 500; --w-title: 600; --w-display: 500; --w-strong: 700; --w-wordmark: 600;
+  /* Arabic (Vazirmatn): titles 600 with no ×1.15 (it sits full on the em), leading 1.35–1.4; body 1.75;
+     console 1.7; never under 14 px */
+  --ar-title-lh: 1.4; --ar-body-lh: 1.75; --ar-console-lh: 1.7;
+}
+body.console { --f-serif: var(--f-sans); } /* the serif never reaches the console (tested) */
+:lang(ar) {
+  --f-sans: var(--f-sans-ar);
+  --f-serif: var(--f-sans-ar);
+  /* never under 14 px in Arabic (DL A7, A25): the small roles of both scales re-pointed */
+  --t-small: 0.875rem; --t-caption: 0.875rem; --t-caption-lh: 1.25rem; --t-folio: 0.875rem;
+  --u-small: 0.875rem; --u-caption: 0.875rem; --u-caption-lh: 1.25rem; --u-eyebrow: 0.875rem; --u-eyebrow-lh: 1.25rem;
+}
+/* a French, Italian or English run on an Arabic page takes the Latin stacks back (gate-0 A6 bis):
+   static/css/v5/base.css re-resolves the family at every language boundary */
+:where(:root:lang(ar)) :where([lang="fr"], [lang="it"], [lang="en"]) { --f-sans: var(--f-sans-lat); --f-serif: var(--f-sans-lat); }
+/* the console one step up below 48 rem or under a coarse pointer (TR F2 «A+»: text under 14 px falls from
+   63–67 % to 29–33 %, no overflow) */
+@media (max-width: 47.999rem), (pointer: coarse) {
+  body.console {
+    --u-body: 1rem;          --u-body-lh: 1.5rem;
+    --u-ui: 0.9375rem;       --u-ui-lh: 1.25rem;
+    --u-small: 0.875rem;     --u-small-lh: 1.25rem;
+    --u-caption: 0.8125rem;  --u-caption-lh: 1.25rem;
+    --u-eyebrow: 0.75rem;
+    --u-ref: 0.875rem;
+  }
+}
+
+/* §3.4 Elevation, glass, materials (plan §1.4: SH-1 … SH-9) */
+:root {
+  /* five levels, each with a meaning: 0 canvas · 1 sheet · 2 raised (the NowPanel, a hovered card) ·
+     3 popover, menu, portico panel · 4 modal, drawer, with a scrim. Shadows are the night's own colour,
+     rgba(7, 18, 38, α): never black, never coloured, never luminous — the glow is retired. A row and the
+     navigation never carry one; a shadow never animates; hairlines before boxes. */
+  --shadow-1: 0 1px 2px rgba(7, 18, 38, 0.06);
+  --shadow-2: 0 1px 2px rgba(7, 18, 38, 0.06), 0 8px 24px -8px rgba(7, 18, 38, 0.14);
+  --shadow-3: 0 4px 8px -2px rgba(7, 18, 38, 0.08), 0 16px 40px -12px rgba(7, 18, 38, 0.2);
+  --shadow-4: 0 12px 24px -6px rgba(7, 18, 38, 0.16), 0 32px 64px -16px rgba(7, 18, 38, 0.3);
+  --shadow-1-dark: 0 1px 2px rgba(7, 18, 38, 0.12);
+  --shadow-2-dark: 0 1px 2px rgba(7, 18, 38, 0.12), 0 8px 24px -8px rgba(7, 18, 38, 0.28);
+  --shadow-3-dark: 0 4px 8px -2px rgba(7, 18, 38, 0.16), 0 16px 40px -12px rgba(7, 18, 38, 0.4);
+  --shadow-4-dark: 0 12px 24px -6px rgba(7, 18, 38, 0.32), 0 32px 64px -16px rgba(7, 18, 38, 0.6);
+  --shadow-door: 0 40px 64px -32px rgba(7, 18, 38, 0.6);            /* the door only */
+  --passe-partout: inset 0 0 0 1px rgba(21, 34, 42, 0.08);          /* images on paper */
+  --passe-partout-night: inset 0 0 0 1px rgba(238, 241, 246, 0.1);  /* C9: images on night, named */
+
+  /* glass has one seat: the two sticky bars, once scrolled — blur 12 px, static, α 0.94 (PC C7: «Italy»
+     over the night hero 3.79 → 4.61:1; the green letter holds 4.5 even over a black pixel) */
+  --glass-light: rgba(251, 250, 248, 0.94);
+  --glass-light-over-dark: var(--glass-light);       /* retired as a second value (C7) */
+  --plate-night: rgba(11, 26, 51, 0.72);             /* the solid night plate, NO blur: hero legend, login panel */
+  --blur-nav: 12px;                                  /* the sticky bars only — static, never animated */
+
+  /* every primary is flat (SH-9, DL54-13): no gradient, no inner light, no glow, no arris */
+  --fill-primary: var(--p-laguna-650);               /* white label 5.29 */
+  --fill-primary-hover: var(--p-laguna-700);         /* 6.32 */
+  --fill-primary-press: var(--p-laguna-800);         /* 8.51 */
+  --fill-primary-night: var(--p-carta-25);           /* the paper plate on night: ink label 15.56 */
+  --fill-primary-night-hover: var(--p-carta-100);
+  --fill-primary-night-press: var(--p-carta-150);
+  --grad-brand: linear-gradient(135deg, #d9eef0, #eef6f7);           /* the one BRAND chapter */
+  --grad-brand-dark: linear-gradient(135deg, #1b344e, #10233f);      /* «La porta riservata» */
+  /* C9: the hero's night mesh, declared once (its first light is the register's lapis to ΔE 0.013) */
+  --mesh-dark:
+    radial-gradient(70% 60% at 15% 0%, rgba(31, 74, 138, 0.22), transparent 60%),
+    radial-gradient(50% 50% at 100% 100%, rgba(63, 166, 175, 0.08), transparent 60%);
+}
+
+/* §3.5 Motion (plan §1.5: no duration added or changed) */
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 200ms;
+  --motion-emphasized: 320ms;
+  --motion-slow: 480ms;          /* public lines only */
+  --motion-draw: 900ms;
+  --motion-route-light: 1200ms;
+  --motion-route-stagger: 400ms;
+  --motion-stagger: 60ms;
+  --motion-key: 1200ms;
+  --motion-door: 1600ms;
+  --motion-luce: 2200ms;
+  --motion-wait: 400ms;          /* a threshold, not a duration */
+  --motion-reduced: 80ms;        /* MS-O4: under reduced motion, overlays use one opacity and nothing else */
+
+  /* curves — no control point outside [0, 1] on y: no overshoot anywhere */
+  --ease-enter: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-layout: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --ease-turn: cubic-bezier(0.77, 0, 0.175, 1); /* the one key-turn curve: loader, login, hero (DL54-05) */
+
+  /* springs as CSS twins of motion.js (SOFT 260/30 ζ .93 · SNAPPY 400/40 ζ 1 · SHEET 200/27 ζ .955) */
+  --spring-soft: linear(0, 0.049, 0.157, 0.288, 0.42, 0.539, 0.643, 0.728, 0.797, 0.851, 0.892, 0.923, 0.946, 0.963, 0.975, 0.984, 0.99, 0.994, 0.996, 0.998, 1);
+  --spring-soft-duration: 430ms;
+  --spring-snappy: linear(0, 0.081, 0.242, 0.412, 0.561, 0.681, 0.772, 0.84, 0.889, 0.924, 0.948, 0.965, 0.976, 0.984, 0.989, 0.993, 0.995, 0.997, 0.998, 0.999, 1);
+  --spring-snappy-duration: 470ms;
+  --spring-sheet: linear(0, 0.059, 0.187, 0.333, 0.473, 0.595, 0.696, 0.776, 0.838, 0.884, 0.919, 0.943, 0.961, 0.974, 0.983, 0.989, 0.993, 0.995, 0.997, 0.998, 1);
+  --spring-sheet-duration: 550ms;
+}
+/* reduced motion is a state (plan §1.5; W1-D's entry in DL54): every duration this file declares is zeroed again
+   here — a top-level :root beats an earlier media query, so v4's block alone would lose — and with it every
+   transition and animation written on a token lands at once, the key, the door and the light on their still
+   (nothing in V5 loops). Two names stay: --motion-wait, a threshold (the tooltip still waits, the loader
+   still shows nothing early), and --motion-reduced, the one 80 ms opacity an overlay may keep (MS-O4, RM-1),
+   read inside a reduced-motion block only and on opacity only (tests/frontend/test_v5_tokens.py). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasized: 0ms; --motion-slow: 0ms; --motion-draw: 0ms;
+    --motion-route-light: 0ms; --motion-route-stagger: 0ms; --motion-stagger: 0ms;
+    --motion-key: 0ms; --motion-door: 0ms; --motion-luce: 0ms;
+    --spring-soft-duration: 0ms; --spring-snappy-duration: 0ms; --spring-sheet-duration: 0ms;
+  }
+}
+/* the preview's flag is the same state (MS7, RM-2): html.rm declares exactly the list of the media block above
+   — tests/frontend/test_rm_flag_parity.py compares the two cascades name by name and prints this block when they
+   part — and static/js/src/motion.js's reducedMotion() reads it beside the setting. The flag is for review only:
+   reduced-motion evidence is taken with the setting emulated, never with the flag alone. */
+html.rm {
+  --motion-fast: 0ms; --motion-standard: 0ms; --motion-emphasized: 0ms; --motion-slow: 0ms; --motion-draw: 0ms;
+  --motion-route-light: 0ms; --motion-route-stagger: 0ms; --motion-stagger: 0ms;
+  --motion-key: 0ms; --motion-door: 0ms; --motion-luce: 0ms;
+  --spring-soft-duration: 0ms; --spring-snappy-duration: 0ms; --spring-sheet-duration: 0ms;
+}
+
+/* §3.6 Layout, controls (plan §1.8), icons, layers */
+:root {
+  --container-lg: 1176px; --container-xl: 1320px; --container-xxl: 1440px;
+  --page-pad: 32px;
+  --utility-h: 32px; --header-h: 64px; --header-h-scrolled: 56px;
+  --rail-w-compact: 80px; --rail-w-open: 248px;
+  --ctx-h: 56px; --bottom-bar-h: 56px; --action-bar-h: 61px;
+  --workspace-max: 1320px; --inspector-w: 320px;
+  --drawer-w: 420px;
+
+  /* sm 36 — fine pointer only: dense console toolbars, the segmented track · md 44 — the default, every
+     control under a coarse pointer · lg 52 — public primaries and form fields, the hero's and the login's
+     CTA · icon 40 on a fine pointer, 44 on a coarse one · hit area: floor 24 on a fine pointer, 44 under a
+     coarse pointer and for every primary (SP-8). W1-C applies them. */
+  --control-sm: 36px; --control-md: 44px; --control-lg: 52px; --control-icon: 40px;
+  --hit-min: 24px;
+  --hit-primary: 44px;
+  --input-h: 44px; --textarea-min: 96px; --chip-h: 24px; --chip-h-s: 20px; --chip-h-l: 28px;
+  --segmented-h: 36px; --rail-item-h: 44px; --row-min-h: 64px; --table-row-h: 48px; --drawer-row-h: 64px;
+
+  --icon-xs: 14px; --icon-sm: 16px; --icon-md: 20px; --icon-lg: 24px; --icon-xl: 32px; --icon-hero: 48px;
+  --glyph-disc-sm: 24px; --glyph-disc-md: 32px; --glyph-disc-lg: 40px;
+
+  --z-base: 0; --z-raised: 1; --z-sticky: 10; --z-rail: 15; --z-header: 20; --z-popover: 30;
+  --z-drawer: 40; --z-modal: 50; --z-toast: 60; --z-tooltip: 70;
+}
+@media (pointer: coarse) {
+  :root { --control-icon: 44px; }
+}
+/* below md the letterhead is 56 px in all, the page padding halves, the console title steps down and the
+   display line tracks less: restated, because the top-level :root above beats v4's same override */
+@media (max-width: 47.999rem) {
+  :root {
+    --page-pad: 16px;
+    --utility-h: 0px;
+    --header-h: 56px;
+    --u-title: 1.5rem;
+    --u-title-lh: 2rem;
+    --track-display: -0.02em;
+  }
+}
+
+/* ==============================================================================================
+   LAYER 3 — COMPONENT (re-pointed by context, never by a template) · DS §4
+   W1-C, W1-D, W2-A … apply them; declared here so that every family reads one foundation.
+   ============================================================================================== */
+:root {
+  /* buttons — the V3/V4 property API is kept (--btn-fill / -ink / -edge / -shadow) */
+  --btn-h: var(--control-md); --btn-h-sm: var(--control-sm); --btn-h-lg: var(--control-lg); --btn-h-icon: var(--control-icon);
+  --btn-pad-sm: var(--s-4); --btn-pad-md: var(--s-5); --btn-pad-lg: var(--s-6);
+  --btn-radius: var(--radius-sm);
+  --btn-gap: var(--s-2);
+  --btn-press-shift: 1px;
+  --btn-release: var(--spring-snappy);
+  --btn-disabled-fill: var(--surface-disabled);
+  --btn-disabled-ink: var(--text-3);
+
+  /* chips — defaults (a chip that forgets its register is drawn neutro); [data-register] re-points them */
+  --chip-pad-inline: 10px; --chip-gap: 6px; --chip-mark-size: 16px;
+  --chip-hit: 44px;
+  --chip-edge-width: 1px; --chip-edge-style: solid;
+  --chip-bg: var(--tone-neutro-bg); --chip-bg-hover: var(--tone-neutro-bg-hover);
+  --chip-edge: var(--tone-neutro-edge); --chip-mark: var(--tone-neutro-mark); --chip-text: var(--tone-neutro-text);
+  --chip-pattern: none; --chip-pattern-size: auto; --chip-fill-kind: solid;
+  --count-h: 18px;
+
+  /* fields */
+  --field-h: var(--input-h);
+  --field-radius: var(--radius-sm);
+  --field-bg: var(--surface-raised);
+  --field-edge: var(--line-structure);
+  --field-edge-hover: var(--text-2);
+  --field-edge-focus: var(--focus-ring);
+  --field-edge-invalid: var(--tone-rifiuto-mark);
+  --field-edge-warning: var(--tone-attesa-mark);
+  --field-bg-disabled: var(--surface-disabled);
+  --field-text-disabled: var(--text-3);
+
+  /* cards and panels: a hairline first; one raised panel on a console screen */
+  --card-radius: var(--radius-lg);
+  --card-pad: var(--s-6);
+  --card-edge: 1px solid var(--line-rhythm);
+  --card-shadow: var(--shadow-1);
+  --card-shadow-hover: var(--shadow-2);
+  --panel-raised-shadow: var(--shadow-2);
+
+  /* overlays */
+  --popover-bg: var(--surface-raised); --popover-shadow: var(--shadow-3); --popover-radius: var(--radius-lg);
+  --menu-row-h: 36px;
+  --dialog-radius: var(--radius-xl); --dialog-shadow: var(--shadow-4);
+  --drawer-radius: var(--radius-xl);
+  --tooltip-bg: var(--p-notte-800); --tooltip-fg: var(--text-on-night-1); --tooltip-delay: 400ms;
+  --toast-w: 360px; --toast-timeout: 6s;
+
+  /* public chrome */
+  --nav-indicator: var(--accent-mark);
+  --nav-indicator-night: var(--accent-night);
+  --panel-inset: var(--s-4);
+  --panel-hover-intent: 120ms; --panel-grace: 250ms;
+
+  /* console chrome */
+  --rail-bg: var(--surface-night);
+  --rail-item-fg: var(--text-on-night-2);
+  --rail-item-fg-current: var(--text-on-night-1);
+  --rail-item-bg-hover: var(--surface-night-area);
+  --rail-item-bg-current: var(--surface-night-sheet);
+  --rail-indicator: var(--accent-night);
+  /* the rail list's scroll edge (W3-A's fix pass, the review's m1; portal/v5/_shell.css §2): the band of the
+     night's sheet at the list's end while more follows, and the rail's own night that covers it at the end —
+     named here because an app sheet draws no gradient (tests/frontend/test_design_docs.py) */
+  --rail-scroll-edge: linear-gradient(transparent, var(--surface-night-sheet));
+  --rail-scroll-cover: linear-gradient(transparent, var(--rail-bg) var(--s-4));
+  --ctx-bg: var(--glass-light);
+
+  /* loader and light */
+  --loader-thread: var(--accent-mark);
+  --loader-thread-night: var(--accent-night);
+  --loader-light: var(--identity-light);
+  --loader-light-night: var(--identity-light-night);
+  --skeleton-bg: var(--surface-area);
+  --skeleton-radius: var(--radius-sm);
+
+  /* journey «la soglia» */
+  --journey-line: var(--line-rhythm);
+  --journey-line-night: rgba(214, 226, 228, 0.35);
+  --journey-line-travelled: var(--accent-mark);
+  --journey-line-travelled-night: var(--accent-night);
+  --journey-light-head: var(--identity-light-night);
+  --journey-light-tail: var(--accent-night);
+  --journey-threshold: var(--line-structure);
+  --journey-station-edge: 2px;
+  --journey-station-done: var(--p-notte-50);
+
+  /* nodes, deadlines, seal, notices (COLOUR §7) */
+  --node-done-fill: var(--p-inchiostro-900);   /* a filled ink dot, NO glyph */
+  --node-current-ring: var(--p-laguna-700); --node-current-halo: var(--p-laguna-50);
+  --node-next-edge: var(--p-inchiostro-400); --node-next-text: var(--text-3);
+  --node-blocked-fill: var(--p-grafite-600);
+  /* «soon» is attesa (amber), «overdue» is azione (terracotta): red never means lateness, and a deadline is
+     never drawn without its glyph (plan §1.2, PC §3.5, D-doc-3) */
+  --deadline-normal-text: var(--text-2); --deadline-upcoming-text: var(--text-1);
+  --deadline-soon-text: var(--tone-attesa-text); --deadline-soon-mark: var(--tone-attesa-mark);
+  --deadline-overdue-text: var(--tone-azione-text); --deadline-overdue-mark: var(--tone-azione-mark);
+  --seal-disc: var(--brand-navy); --seal-glyph: var(--brand-gold);
+  /* the information notice on the slate wash (C2); the pending notice in the register's lapis (C1) */
+  --notice-info-bg: var(--p-deposito-25); --notice-info-text: var(--p-deposito-800); --notice-info-edge: var(--p-deposito-600);
+  --notice-pending-bg: var(--p-registro-25); --notice-pending-text: var(--p-registro-800); --notice-pending-edge: var(--p-registro-600);
+  --notice-warning-bg: var(--p-ambra-25); --notice-warning-text: var(--p-ambra-800); --notice-warning-edge: var(--p-ambra-600);
+  --notice-error-bg: var(--p-granata-25); --notice-error-text: var(--p-granata-800); --notice-error-edge: var(--p-granata-600);
+  --notice-institutional-bg: var(--p-carta-100); --notice-institutional-text: var(--text-1);
+  --notice-institutional-edge: var(--brand-navy); --notice-institutional-rule: var(--brand-gold);
+  /* no tricolour filet: the tricolour lives in the mark (O57) */
+  --ledger-mark-size: 16px;
+  --ledger-to-act: var(--p-cotto-600);
+  --ledger-in-hand: var(--p-inchiostro-600);
+  --ledger-settled: var(--p-inchiostro-900);
+}
+:is(.on-inverse, .rail, .tooltip, .site-footer, .hero, .chapter--dark, .chapter--night, .section--verso, .plate--verso) {
+  --nav-indicator: var(--nav-indicator-night);
+  --loader-thread: var(--loader-thread-night);
+  --loader-light: var(--loader-light-night);
+  --journey-line: var(--journey-line-night);
+  --journey-line-travelled: var(--journey-line-travelled-night);
+}
+
+/* §4.1 The chip, re-pointed by register and by night — the eight registers (plan §1.2): conforme ink,
+   a plain disc with no glyph · esame lapis · neutro slate · attesa amber, dashed · azione terracotta ·
+   rifiuto garnet, struck · blocco graphite, `lock` · nullo ash, dotted */
+[data-register="conforme"] {
+  --chip-bg: var(--tone-conforme-bg); --chip-bg-hover: var(--tone-conforme-bg-hover);
+  --chip-edge: var(--tone-conforme-edge); --chip-mark: var(--tone-conforme-mark); --chip-text: var(--tone-conforme-text); }
+[data-register="esame"] {
+  --chip-bg: var(--tone-esame-bg); --chip-bg-hover: var(--tone-esame-bg-hover);
+  --chip-edge: var(--tone-esame-edge); --chip-mark: var(--tone-esame-mark); --chip-text: var(--tone-esame-text); }
+[data-register="neutro"] {
+  --chip-bg: var(--tone-neutro-bg); --chip-bg-hover: var(--tone-neutro-bg-hover);
+  --chip-edge: var(--tone-neutro-edge); --chip-mark: var(--tone-neutro-mark); --chip-text: var(--tone-neutro-text); }
+[data-register="attesa"] {
+  --chip-bg: var(--tone-attesa-bg); --chip-bg-hover: var(--tone-attesa-bg-hover);
+  --chip-edge: var(--tone-attesa-edge); --chip-mark: var(--tone-attesa-mark); --chip-text: var(--tone-attesa-text);
+  --chip-edge-style: dashed; --chip-pattern: var(--pattern-hatch); }
+[data-register="azione"] {
+  --chip-bg: var(--tone-azione-bg); --chip-bg-hover: var(--tone-azione-bg-hover);
+  --chip-edge: var(--tone-azione-edge); --chip-mark: var(--tone-azione-mark); --chip-text: var(--tone-azione-text); }
+[data-register="rifiuto"] {
+  --chip-bg: var(--tone-rifiuto-bg); --chip-bg-hover: var(--tone-rifiuto-bg-hover);
+  --chip-edge: var(--tone-rifiuto-edge); --chip-mark: var(--tone-rifiuto-mark); --chip-text: var(--tone-rifiuto-text);
+  --chip-pattern: var(--pattern-dots); --chip-pattern-size: 5px 5px; }
+[data-register="blocco"] {
+  --chip-bg: var(--tone-blocco-bg); --chip-bg-hover: var(--tone-blocco-bg-hover);
+  --chip-edge: var(--tone-blocco-edge); --chip-mark: var(--tone-blocco-mark); --chip-text: var(--tone-blocco-text);
+  --chip-pattern: var(--pattern-cross); }
+[data-register="nullo"] {
+  --chip-bg: var(--tone-nullo-bg); --chip-bg-hover: var(--tone-nullo-bg-hover);
+  --chip-edge: var(--tone-nullo-edge); --chip-mark: var(--tone-nullo-mark); --chip-text: var(--tone-nullo-text);
+  --chip-edge-style: dotted; --chip-fill-kind: outline; }
+
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="conforme"] {
+  --chip-bg: var(--tone-conforme-night-bg); --chip-edge: var(--tone-conforme-night-mark);
+  --chip-mark: var(--tone-conforme-night-mark); --chip-text: var(--tone-conforme-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="esame"] {
+  --chip-bg: var(--tone-esame-night-bg); --chip-edge: var(--tone-esame-night-mark);
+  --chip-mark: var(--tone-esame-night-mark); --chip-text: var(--tone-esame-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="neutro"] {
+  --chip-bg: var(--tone-neutro-night-bg); --chip-edge: var(--tone-neutro-night-mark);
+  --chip-mark: var(--tone-neutro-night-mark); --chip-text: var(--tone-neutro-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="attesa"] {
+  --chip-bg: var(--tone-attesa-night-bg); --chip-edge: var(--tone-attesa-night-mark);
+  --chip-mark: var(--tone-attesa-night-mark); --chip-text: var(--tone-attesa-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="azione"] {
+  --chip-bg: var(--tone-azione-night-bg); --chip-edge: var(--tone-azione-night-mark);
+  --chip-mark: var(--tone-azione-night-mark); --chip-text: var(--tone-azione-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="rifiuto"] {
+  --chip-bg: var(--tone-rifiuto-night-bg); --chip-edge: var(--tone-rifiuto-night-mark);
+  --chip-mark: var(--tone-rifiuto-night-mark); --chip-text: var(--tone-rifiuto-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="blocco"] {
+  --chip-bg: var(--tone-blocco-night-bg); --chip-edge: var(--tone-blocco-night-mark);
+  --chip-mark: var(--tone-blocco-night-mark); --chip-text: var(--tone-blocco-night-text); }
+:is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="nullo"] {
+  --chip-bg: var(--tone-nullo-night-bg); --chip-edge: var(--tone-nullo-night-mark);
+  --chip-mark: var(--tone-nullo-night-mark); --chip-text: var(--tone-nullo-night-text); }
+
+/* forced colours win everywhere, night contexts included (gate-0 A7: the plain [data-register] block lost to
+   the night re-pointing on the smoke page) */
+@media (forced-colors: active) {
+  [data-register][data-register], :is(.on-inverse, .rail, .tooltip, .site-footer) [data-register] {
+    --chip-bg: Canvas; --chip-text: CanvasText; --chip-mark: CanvasText; --chip-edge: CanvasText; }
+  [data-register="nullo"][data-register], :is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="nullo"] {
+    --chip-text: GrayText; --chip-mark: GrayText; }
+}
+
+
+/* ==============================================================================================
+   §4.2 THE HOME HERO — W2-D's named block (plan §1.17, §2.2 «W2-D the hero's»; DL54-06, DL54-15; PC C9)
+   The final hero's literal colours, shadows and paints (HERO_FINAL.md; the proof's he.css as the Creative
+   Director passed it on 5 October), named so that apps/pages/static/pages/css/hero.css reads tokens only
+   (tests/frontend/test_design_docs.py: no hex, no rgba(), no gradient in an app sheet). Read by the hero
+   only; every value is the proof's, unchanged. The ink is the night's own colour (7, 18, 38); gold never
+   lands on the open wall; the stone is the reveal's two rings.
+   ============================================================================================== */
+:root {
+  /* the wall and its words */
+  --he-shade: rgba(7, 18, 38, 0.05);          /* the wall where the light leaves, toward the reveal */
+  --he-shade-short: rgba(7, 18, 38, 0.075);   /* the same on the short laptops (at most 50 rem tall) */
+  --he-label: rgba(7, 18, 38, 0.86);          /* the stations' capitals on the wall (12 : 1 or more) */
+  --he-press: rgba(7, 18, 38, 0.06);          /* an origin pressed: the ground one step darker */
+  --he-ring: var(--p-laguna-700);             /* the focus ring on the wall (p5 4.5 or more) */
+  --he-call: #083f45;                         /* an origin's call and CTA-B's press (10.2 : 1 on carta-50) */
+  --he-secondary: var(--p-laguna-800);        /* the secondary link and its glyph (7.67 : 1) */
+  /* the inlay and its light */
+  --he-bronze: #7a4f16;                       /* the inlay: a warm bronze, one step deeper than the proof's #8f5f1f (C-6 d), ≈ 6.5 : 1 on carta-50 */
+  --he-bronze-lit: #c9a24a;                   /* the inlay catching the light, never ink */
+  --he-glint: #e2ad3c;                        /* a station's glint, Maroc's disc lit */
+  --he-ember: #b98012;                        /* the travelling light's rim on the wall */
+  --he-gold: var(--p-oro-300);                /* the night's light (9.94 : 1 on notte-900) */
+  --he-gold-lit: #f3dc96;                     /* the lit gold */
+  --he-gold-line: rgba(223, 193, 118, 0.85);  /* the phone's rail and floor line */
+  --he-inlay-edge: 0 -1px 0 rgba(255, 255, 255, 0.7), 0 1px 0 rgba(7, 18, 38, 0.16);   /* the lit arris above (α .7: C-6 d), the shadow edge below */
+  --he-gold-bloom: 0 0 6px rgba(223, 193, 118, 0.45);
+  --he-disc-bloom: 0 0 6px rgba(243, 220, 150, 0.45);
+  --he-route-edge: 0 -1px 0 rgba(255, 255, 255, 0.9);
+  --he-route-night: #fff3cf;
+  --he-route-bloom: 0 0 8px rgba(255, 236, 180, 0.6);
+  --he-route-disc: radial-gradient(circle, #fffdf3 0 2px, var(--he-gold-lit) 3px 4px, rgba(243, 220, 150, 0) 100%);
+  --he-station-glint: radial-gradient(circle, #fff3c9 0 1.8px, var(--he-glint) 2.4px 4.6px, rgba(232, 184, 74, 0.5) 5.6px, rgba(232, 184, 74, 0.18) 8px, rgba(232, 184, 74, 0) 10.5px);   /* the ring filled with gold and haloed as the light passes (21 px) */
+  --he-maroc-glint: radial-gradient(circle, var(--he-glint) 0 4.5px, rgba(232, 184, 74, 0.45) 5px, rgba(232, 184, 74, 0) 7.5px);
+  --he-band-glint: radial-gradient(circle, #fff8e2 0 27%, rgba(243, 220, 150, 0.85) 28% 46%, rgba(243, 220, 150, 0) 66%);
+  --he-junction: radial-gradient(circle, #fff8e2 0 22%, rgba(243, 220, 150, 0.8) 23% 40%, rgba(243, 220, 150, 0) 70%);
+  /* the origins */
+  --he-plate-ground: #8c8c8a;
+  --he-plate-edge: inset 0 0 0 1px rgba(7, 18, 38, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.45);   /* hairline and lit top arris */
+  --he-veil: rgba(255, 252, 240, 0.3);        /* the exposure lift: the door's light reaches the four */
+  --he-veil-chip: rgba(255, 252, 240, 0.38);  /* stronger on the phones' small chips */
+  --he-stem-lit: linear-gradient(to right, rgba(255, 186, 64, 0), rgba(255, 186, 64, 0.55) 22%, #ffd978 40%, #fff6d6 50%, #ffd978 60%, rgba(255, 186, 64, 0.55) 78%, rgba(255, 186, 64, 0));   /* the stem's light: the tail's amber round a bright core, 10 px wide — seen on the light wall, not a paler stem */
+  --he-stem-held: linear-gradient(to right, rgba(201, 162, 74, 0) 35%, var(--he-bronze-lit) 35% 65%, rgba(201, 162, 74, 0) 65%);   /* the stem under the hand: a 3 px line of lit bronze, the route's own (the wide column is the movement's rising light) */
+  --he-eye-lit: radial-gradient(circle, #fff8e2 0 34%, rgba(223, 193, 118, 0.9) 35% 58%, rgba(223, 193, 118, 0) 60%);
+  /* the stone: the reveal's two rings and its lit arris on the wall's side; the wall's shadow in the niche */
+  --he-reveal-ltr: linear-gradient(to right, #d8d8d8 0 50%, #cecfd0 50% 100%);
+  --he-reveal-rtl: linear-gradient(to left, #d8d8d8 0 50%, #cecfd0 50% 100%);
+  --he-reveal-down: linear-gradient(to bottom, #d8d8d8 0 50%, #cecfd0 50% 100%);
+  --he-reveal-arris-ltr: inset 1px 0 0 rgba(255, 255, 255, 0.7);
+  --he-reveal-arris-rtl: inset -1px 0 0 rgba(255, 255, 255, 0.7);
+  --he-reveal-arris-down: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --he-cast-ltr: linear-gradient(to right, rgba(7, 18, 38, 0.85), rgba(7, 18, 38, 0));
+  --he-cast-rtl: linear-gradient(to left, rgba(7, 18, 38, 0.85), rgba(7, 18, 38, 0));
+  --he-cast-soft-ltr: linear-gradient(to right, rgba(7, 18, 38, 0.6), rgba(7, 18, 38, 0));
+  --he-cast-soft-rtl: linear-gradient(to left, rgba(7, 18, 38, 0.6), rgba(7, 18, 38, 0));
+  --he-cast-down: linear-gradient(to bottom, rgba(7, 18, 38, 0.6), rgba(7, 18, 38, 0));
+  --he-band-inset: inset 0 10px 14px -10px rgba(7, 18, 38, 0.9);
+  /* the door: the stage as drawn (gate-0 components.css §10, loader-light.css «door-arch») and the hero's light */
+  --he-door-inner-edge: rgba(127, 209, 216, 0.18);
+  --he-door-photo-ground: linear-gradient(var(--surface-night-sheet), var(--surface-night));
+  --he-arch-ring: conic-gradient(from 210.604deg, rgba(195, 154, 43, 0) 0deg, rgba(195, 154, 43, 0.55) 26.728deg, rgb(195, 154, 43) 52.268deg, rgb(255, 240, 204) 59.396deg, transparent 59.396deg);
+  --he-arch-ring-mask: radial-gradient(closest-side, transparent calc(100% - 3.6px), #000 calc(100% - 3px), #000 calc(100% - 0.4px), transparent 100%);
+  --he-arch-streak: linear-gradient(to bottom, rgba(195, 154, 43, 0) 0%, rgba(195, 154, 43, 0.55) 45%, rgb(195, 154, 43) 88%, rgb(255, 240, 204) 100%);
+  --he-step: var(--p-laguna-400);             /* the treads, in the stage's own laguna at .95 / .80 / .66 */
+  --he-tread-face: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 42%, rgba(7, 18, 38, 0.1));
+  --he-tread-edge: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 1px 0 var(--p-laguna-800), 0 2px 0 rgba(4, 11, 25, 0.45);   /* nosing, riser, its shadow */
+  --he-tread-lit: linear-gradient(to bottom, #fff6da, #e8ca7c);
+  --he-spill:
+    radial-gradient(58% 150% at 84% 35%, rgba(255, 199, 118, 0.92), rgba(255, 207, 136, 0.5) 50%, rgba(255, 214, 150, 0) 100%) 50% 81.6% / 70.1% 5.77% no-repeat,
+    radial-gradient(54% 150% at 78% 35%, rgba(255, 202, 124, 0.62), rgba(255, 210, 140, 0.3) 50%, rgba(255, 214, 150, 0) 100%) 50% 90.8% / 85.05% 5.77% no-repeat,
+    radial-gradient(50% 150% at 74% 35%, rgba(255, 206, 132, 0.38), rgba(255, 212, 146, 0.16) 50%, rgba(255, 214, 150, 0) 100%) 50% 100% / 100% 5.77% no-repeat,
+    radial-gradient(26% 78% at 73.8% 0%, rgba(255, 230, 165, 0.3), rgba(255, 230, 165, 0.1) 55%, rgba(255, 230, 165, 0) 100%);
+  --he-aperture: linear-gradient(90deg, rgba(240, 215, 150, 0.1) 0, rgba(245, 225, 170, 0.55) 26%, #f9e8bf 56%, #fff6dc 82%, #fffdf6 100%);   /* brightest at the gap (the leaf's opening edge, on the right), falling off across its own width toward the leaf — no flat core (taste m-1, motion m-3) */
+  --he-aperture-edge: inset 1px 0 1px 0 rgba(7, 18, 38, 0.3);   /* the leaf's thickness on the band's inner edge, softened */
+  --he-bloom: linear-gradient(to right, rgba(255, 233, 172, 0.45), rgba(255, 230, 165, 0.4) 8%, rgba(255, 227, 156, 0.3) 20%,
+    rgba(255, 224, 150, 0.19) 36%, rgba(255, 222, 146, 0.095) 56%, rgba(255, 220, 140, 0.03) 78%, rgba(255, 220, 140, 0) 100%);   /* α .45 at the edge (the review fix) */
+  --he-bloom-phone: linear-gradient(to right, rgba(255, 233, 172, 0.6), rgba(255, 230, 165, 0.52) 8%, rgba(255, 227, 156, 0.4) 20%,
+    rgba(255, 224, 150, 0.25) 36%, rgba(255, 222, 146, 0.12) 56%, rgba(255, 220, 140, 0.04) 78%, rgba(255, 220, 140, 0) 100%);   /* the phones' smaller door: the opening's light stronger (motion M-C) */
+  /* the key's turn (motion M-B): the hero's own in-out curve — seen once and large, its half-turn (90° → 270°) lasts ≈ 300 ms of 800 —
+     the loader keeps --ease-turn (DL54-05); a warm halo behind the key while it turns; a glint across the bow as its face returns */
+  --he-ease-turn: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  --he-key-halo: radial-gradient(closest-side, rgba(255, 214, 120, 0.58), rgba(255, 200, 90, 0.26) 50%, rgba(255, 200, 90, 0) 100%);
+  --he-key-glint: radial-gradient(circle, #fffbe8 0 20%, rgba(255, 240, 200, 0.85) 32%, rgba(255, 230, 170, 0) 62%);
+  --he-bloom-mask: linear-gradient(to bottom, transparent, #000 28%, #000 90%, rgba(0, 0, 0, 0.55));
+  /* CTA-B «Soglia» (plan §1.10): the night plate, the leaf, the plate's lit arris */
+  --he-cta-edge: var(--p-notte-950);
+  --he-cta-leaf: var(--p-laguna-800);
+  --he-cta-shadow: 0 1px 1px rgba(7, 18, 38, 0.2), 0 12px 24px -14px rgba(7, 18, 38, 0.42);
+  --he-cta-arris: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+/* the paints that read the hero's own geometry (the stage, the travelling head, the halo's centre, the band's
+   door) are declared on the hero, where their var()s resolve; --he-shade is re-pointed on the hero by height */
+.he {
+  --he-wall-light-ltr: radial-gradient(110% 95% at 0% 0%, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 58%), linear-gradient(98deg, rgba(7, 18, 38, 0) 30%, var(--he-shade) 100%);
+  --he-wall-light-rtl: radial-gradient(110% 95% at 100% 0%, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 58%), linear-gradient(262deg, rgba(7, 18, 38, 0) 30%, var(--he-shade) 100%);
+  --he-wall-light-phone-ltr: radial-gradient(140% 60% at 0% 0%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 60%), linear-gradient(to bottom, rgba(7, 18, 38, 0) 55%, rgba(7, 18, 38, 0.04) 100%);
+  --he-wall-light-phone-rtl: radial-gradient(140% 60% at 100% 0%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 60%), linear-gradient(to bottom, rgba(7, 18, 38, 0) 55%, rgba(7, 18, 38, 0.04) 100%);
+  --he-niche-ltr:
+    radial-gradient(80% 70% at calc(var(--stage-x) + var(--stage-w) / 2) 30%, rgb(22, 48, 79), rgba(11, 26, 51, 0) 100%),
+    linear-gradient(to bottom, rgba(7, 18, 38, 0.85), rgba(7, 18, 38, 0) 22%, rgba(7, 18, 38, 0) 72%, rgba(7, 18, 38, 0.9) 100%),
+    linear-gradient(to left, rgba(7, 18, 38, 0.75), rgba(7, 18, 38, 0) 26%);
+  --he-niche-rtl:
+    radial-gradient(80% 70% at calc(100% - var(--stage-x) - var(--stage-w) / 2) 30%, rgb(22, 48, 79), rgba(11, 26, 51, 0) 100%),
+    linear-gradient(to bottom, rgba(7, 18, 38, 0.85), rgba(7, 18, 38, 0) 22%, rgba(7, 18, 38, 0) 72%, rgba(7, 18, 38, 0.9) 100%),
+    linear-gradient(to right, rgba(7, 18, 38, 0.75), rgba(7, 18, 38, 0) 26%);
+  /* the phone band's light is centred on the door: at the band's end side, or where --band-x says (hero.css: the interim
+     variant's door stands in the middle of its band) */
+  --he-band-ltr:
+    radial-gradient(60% 70% at var(--band-x, calc(100% - var(--page-pad) - var(--arch-w) / 2)) 40%, rgba(22, 48, 79, 0.9), rgba(11, 26, 51, 0) 100%),
+    linear-gradient(to bottom, rgba(7, 18, 38, 0.75), rgba(7, 18, 38, 0) 24%, rgba(7, 18, 38, 0) 76%, rgba(7, 18, 38, 0.9) 100%);
+  --he-band-rtl:
+    radial-gradient(60% 70% at var(--band-x, calc(var(--page-pad) + var(--arch-w) / 2)) 40%, rgba(22, 48, 79, 0.9), rgba(11, 26, 51, 0) 100%),
+    linear-gradient(to bottom, rgba(7, 18, 38, 0.75), rgba(7, 18, 38, 0) 24%, rgba(7, 18, 38, 0) 76%, rgba(7, 18, 38, 0.9) 100%);
+  /* the doorway's light on the niche's back wall: a rim, transparent inside the arch, warm just outside its outline */
+  --he-halo: radial-gradient(calc(var(--stage-w) * 0.6) calc(var(--stage-h) * 0.5) at var(--halo-x, 50%) var(--halo-y, 45%),
+    rgba(232, 190, 92, 0) 56%, rgba(232, 190, 92, 0.34) 72%, rgba(205, 162, 58, 0.12) 86%, rgba(195, 154, 43, 0) 100%);   /* tighter than the proof's (.64 → .5 tall, the rim a little brighter): it fades out above the threshold's label (motion m-1, m-2) */
+  --he-door-photo-drop: drop-shadow(0 calc(var(--stage-h) * 24 / 456) calc(var(--stage-h) * 32 / 456) rgba(7, 18, 38, 0.45));
+  --he-tread-lit-glow: 0 0 calc(var(--stage-h) * 8 / 456) rgba(232, 202, 124, 0.55);
+  /* the travelling lights (motion M-A: the travel is seen on frames): on the wall a bead of light with a comet's tail — a warm band,
+     brightest at the head and fading backward (--he-tail under its mask, the bar's ::before) — and the inlay lit behind it, held until
+     the doorway takes the light; in the night gold light with its glow; on phones the same bead down the rail and along the floor,
+     the spine's on the wall. Every bar is its clip's width plus the head */
+  --he-wipe-wall-ltr:
+    radial-gradient(16px 12px at calc(100% - var(--head) / 2) 50%, #fffbe8 0 2px, #f6d27a 3.5px, var(--he-ember) 5px, rgba(232, 170, 40, 0.5) 7px, rgba(232, 184, 74, 0) 100%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 82%) 0 calc(50% - 2px) / calc(100% - var(--head) / 2) 1px no-repeat,
+    linear-gradient(90deg, var(--he-bronze-lit), var(--he-bronze-lit) 60%, var(--he-glint)) 0 50% / calc(100% - var(--head) / 2) 3px no-repeat;
+  --he-wipe-wall-rtl:
+    radial-gradient(16px 12px at calc(var(--head) / 2) 50%, #fffbe8 0 2px, #f6d27a 3.5px, var(--he-ember) 5px, rgba(232, 170, 40, 0.5) 7px, rgba(232, 184, 74, 0) 100%),
+    linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 82%) 100% calc(50% - 2px) / calc(100% - var(--head) / 2) 1px no-repeat,
+    linear-gradient(270deg, var(--he-bronze-lit), var(--he-bronze-lit) 60%, var(--he-glint)) 100% 50% / calc(100% - var(--head) / 2) 3px no-repeat;
+  --he-tail: linear-gradient(to bottom, rgba(255, 186, 64, 0) 11%, rgba(255, 186, 64, 0.42) 33%, rgba(255, 196, 84, 0.8) 50%, rgba(255, 186, 64, 0.42) 67%, rgba(255, 186, 64, 0) 89%);   /* the tail's section: ±14 px, clear of the labels above the path */
+  --he-tail-mask-ltr: linear-gradient(to left, #000, rgba(0, 0, 0, 0.72) 25%, rgba(0, 0, 0, 0.36) 60%, rgba(0, 0, 0, 0));   /* brightest at the head, gone 30 rem behind it */
+  --he-tail-mask-rtl: linear-gradient(to right, #000, rgba(0, 0, 0, 0.72) 25%, rgba(0, 0, 0, 0.36) 60%, rgba(0, 0, 0, 0));
+  --he-wipe-night-ltr:
+    radial-gradient(circle at calc(100% - var(--head) / 2) 50%, #fffdf3 0 3.5px, rgba(255, 243, 207, 0.7) 5px, rgba(255, 243, 207, 0.25) 8px, rgba(255, 243, 207, 0) 12px),
+    linear-gradient(var(--he-gold-lit), var(--he-gold-lit)) 0 50% / calc(100% - var(--head) / 2) 2.5px no-repeat,
+    linear-gradient(rgba(255, 236, 180, 0), rgba(255, 236, 180, 0.45), rgba(255, 236, 180, 0)) 0 50% / calc(100% - var(--head) / 2) 14px no-repeat;
+  --he-wipe-night-rtl:
+    radial-gradient(circle at calc(var(--head) / 2) 50%, #fffdf3 0 3.5px, rgba(255, 243, 207, 0.7) 5px, rgba(255, 243, 207, 0.25) 8px, rgba(255, 243, 207, 0) 12px),
+    linear-gradient(var(--he-gold-lit), var(--he-gold-lit)) 100% 50% / calc(100% - var(--head) / 2) 2.5px no-repeat,
+    linear-gradient(rgba(255, 236, 180, 0), rgba(255, 236, 180, 0.45), rgba(255, 236, 180, 0)) 100% 50% / calc(100% - var(--head) / 2) 14px no-repeat;
+  --he-wipe-spine:
+    radial-gradient(12px 16px at 50% calc(var(--head) / 2), #fffbe8 0 2px, #f6d27a 3.5px, var(--he-ember) 5px, rgba(232, 170, 40, 0.5) 7px, rgba(232, 184, 74, 0) 100%),
+    radial-gradient(10px 120px at 50% calc(var(--head) / 2 + 60px), rgba(255, 196, 80, 0.38), rgba(255, 196, 80, 0.18) 45%, rgba(255, 196, 80, 0) 100%),
+    linear-gradient(var(--he-bronze-lit), var(--he-bronze-lit)) 50% 100% / 2px calc(100% - var(--head) / 2) no-repeat;
+  --he-wipe-rail:
+    radial-gradient(circle at 50% calc(100% - var(--head) / 2), #fffdf3 0 3.5px, rgba(255, 243, 207, 0.7) 5px, rgba(255, 243, 207, 0.25) 8px, rgba(255, 243, 207, 0) 12px),
+    linear-gradient(var(--he-gold-lit), var(--he-gold-lit)) 50% 0 / 2px calc(100% - var(--head) / 2) no-repeat,
+    linear-gradient(to right, rgba(255, 236, 180, 0), rgba(255, 236, 180, 0.45), rgba(255, 236, 180, 0)) 50% 0 / 14px calc(100% - var(--head) / 2) no-repeat;
+  --he-wipe-floor-ltr:
+    radial-gradient(circle at calc(100% - var(--head) / 2) 50%, #fffdf3 0 3.5px, rgba(255, 243, 207, 0.7) 5px, rgba(255, 243, 207, 0.25) 8px, rgba(255, 243, 207, 0) 12px),
+    linear-gradient(var(--he-gold-lit), var(--he-gold-lit)) 0 50% / calc(100% - var(--head) / 2) 2px no-repeat,
+    linear-gradient(rgba(255, 236, 180, 0), rgba(255, 236, 180, 0.45), rgba(255, 236, 180, 0)) 0 50% / calc(100% - var(--head) / 2) 14px no-repeat;
+  --he-wipe-floor-rtl:
+    radial-gradient(circle at calc(var(--head) / 2) 50%, #fffdf3 0 3.5px, rgba(255, 243, 207, 0.7) 5px, rgba(255, 243, 207, 0.25) 8px, rgba(255, 243, 207, 0) 12px),
+    linear-gradient(var(--he-gold-lit), var(--he-gold-lit)) 100% 50% / calc(100% - var(--head) / 2) 2px no-repeat,
+    linear-gradient(rgba(255, 236, 180, 0), rgba(255, 236, 180, 0.45), rgba(255, 236, 180, 0)) 100% 50% / calc(100% - var(--head) / 2) 14px no-repeat;
+}
+
+
+/* ==============================================================================================
+   §4.3 THE DOOR STAGE AND THE ENTRANCE «IL VARCO» — W2-B's named block (plan §1.13, §2.2 «W2-B the
+   door stage's», §2.3 «Page-only CSS»; DL54-15; PC C9)
+   The literal colours of the owner's door stage as drawn (static/css/v5/_door.css: the arch, the
+   photograph, the golden key, the three steps — and the two lights it can take, on its frame and on
+   its steps) and the five colours the login's stage adds to the system (static/css/v5/_varco.css: the
+   niche, the floor, the four ways and their light). Colours only: the stage's gradients are composed
+   in that page-only partial from these and from the night's own steps, so that main.css — every page
+   of the site — does not carry one page's picture (as paint tokens here they weighed 579 B gzip).
+   The ink is the night's own (--surface-night-deep); the light is the key's gold on night
+   (--identity-light-night); the four ways are the audience accents, which live on night only.
+   And ONE SHAPE, the key as a mask: static/brand/original/key.svg cropped symmetric about its shaft
+   (viewBox 10 11 40 94) — the busy key of every button (static/css/v5/loader.css) and the key the
+   entrance's primary holds at rest read this one token, so the two are one key and its 0.5 KB is
+   written once (W2-B's fix pass, the performance check's P1: the entrance's sheet carried a copy).
+   ============================================================================================== */
+:root {
+  /* ---- the door stage, as drawn ---------------------------------------------------------------- */
+  --door-body: linear-gradient(var(--surface-night-sheet), var(--surface-night));   /* the arch's ground under the photograph */
+  --door-drop-ink: rgba(7, 18, 38, 0.45);       /* the door's own shadow on its ground (0 24 32 at 368 units, scaled with the stage) */
+  --door-inner-edge: rgba(127, 209, 216, 0.18); /* the hairline of the inner door: laguna-400 at .18, as drawn */
+  --door-frame-glow: rgba(223, 193, 118, 0.3);  /* the halo of the lit frame; its core and the lit steps are --identity-light-night */
+
+  /* ---- the entrance's stage: the colours of its light (never text, never a surface) ------------- */
+  --varco-hairline: #d6e2e4;     /* the threshold at rest: the night hairline's own colour (--line-night-soft is it at .14) */
+  --varco-light: #fff3cf;        /* the light at its fullest: the lit threshold's centre, the bead's halo */
+  --varco-light-core: #fffdf3;   /* the bead's core */
+  --varco-light-warm: #ffd68a;   /* the lit pool at the steps' foot… */
+  --varco-light-amber: #f3ce84;  /* …and its first ring, toward the key's gold */
+
+  /* ---- the key, as a mask (never a colour: the element paints it in its own ink) ------------------ */
+  --key-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='10 11 40 94'%3E%3Cpath fill-rule='evenodd' d='M15,26 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0 Z M23.6,26 a6.4,6.4 0 1,0 12.8,0 a6.4,6.4 0 1,0 -12.8,0 Z'/%3E%3Crect x='25.6' y='39' width='8.8' height='66'/%3E%3Crect x='34' y='72' width='16' height='8'/%3E%3Crect x='34' y='88' width='12' height='8'/%3E%3C/svg%3E");
+}

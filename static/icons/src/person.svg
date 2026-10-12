@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- person: ILE drawing (Italy Legal Entry) -->
+  <circle fill="currentColor" fill-opacity=".12" stroke="none" cx="12" cy="7.25" r="4.25"/>
+  <circle cx="12" cy="7.25" r="4.25"/>
+  <path d="M3.75 21.5c0-4.25 3.7-7 8.25-7s8.25 2.75 8.25 7"/>
+</svg>

@@ -17,11 +17,14 @@ ROOT = Path(__file__).resolve().parents[3]
 TEMPLATES = sorted((ROOT / "templates" / "pages").rglob("*.html"))
 APP_DIR = ROOT / "apps" / "pages"
 CSS = APP_DIR / "static" / "pages" / "css" / "pages.css"
-JS = APP_DIR / "static" / "pages" / "js" / "home.js"
+# The home's scripts since design V5.4 (W2-D): the one entry and the hero's module, bundled by esbuild into
+# static/js/dist/home.js (apps/pages/static/pages/js/home.js moved into the entry and was deleted).
+JS = (ROOT / "static" / "js" / "src" / "home.js", ROOT / "static" / "js" / "src" / "hero.js")
+# Design V5 (W1-B): the sprite's own ids — static/img/icons.svg is built from static/icons/src by
+# scripts/build_icons.py and named by apps/core/icons.py; a literal that is not a symbol fails here and in
+# tests/frontend/test_icons.py.
 AVAILABLE_ICONS = set(
-    "person user building institution university briefcase arrow arrow-up-right check warning shield calendar "
-    "clock document globe menu close chevron chevron-end plus minus search mail phone lock key info map-pin "
-    "download home logout settings quote list handshake compass".split()
+    re.findall(r'<symbol id="icon-([a-z0-9-]+)"', (ROOT / "static" / "img" / "icons.svg").read_text(encoding="utf-8"))
 )
 
 
@@ -124,7 +127,9 @@ def test_no_border_crossing_cliche_imagery_anywhere():
 
 def test_stylesheet_and_script_are_discoverable_static_files():
     assert finders.find("pages/css/pages.css")
-    assert finders.find("pages/js/home.js")
+    assert finders.find("pages/css/hero.css")
+    assert finders.find("js/dist/home.js")
+    assert not finders.find("pages/js/home.js"), "the home's script is the esbuild entry, not a second request"
 
 
 def test_stylesheet_uses_tokens_and_logical_properties_only():
@@ -145,14 +150,18 @@ def test_stylesheet_uses_tokens_and_logical_properties_only():
 
 
 def test_stylesheet_motion_relies_on_design_system_durations():
+    """Every transition reads a duration token: the V5 names (--motion-*, the home's chapters since W2-D step 3) or the
+    legacy shim's (--duration-*, the institutional pages until their family rebuilds them). Both are zeroed under
+    reduced motion by the token sheets."""
     css = CSS.read_text(encoding="utf-8")
     for declaration in re.findall(r"transition:[^;]+;", css):
-        assert "var(--duration-" in declaration, declaration
+        assert "var(--motion-" in declaration or "var(--duration-" in declaration, declaration
     assert "animation" not in css  # restrained motion: transitions only, collapsed by reduced-motion tokens
 
 
-def test_script_is_cookie_free_and_network_free():
-    js = JS.read_text(encoding="utf-8")
+@pytest.mark.parametrize("path", JS, ids=lambda p: p.name)
+def test_script_is_cookie_free_and_network_free(path):
+    js = path.read_text(encoding="utf-8")
     code = re.sub(r"/\*.*?\*/", "", js, flags=re.S)
     code = re.sub(r"//[^\n]*", "", code)
     assert "document.cookie" not in code

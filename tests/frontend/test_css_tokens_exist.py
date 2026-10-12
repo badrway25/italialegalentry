@@ -4,6 +4,12 @@ Every CSS custom property referenced anywhere in the project must be defined.
 Regression (browser QA 2026-09-20): the Forum stylesheet referenced token names that do not exist
 (``--color-primary``, ``--color-text`` …). Each ``var()`` silently fell back to a hard-coded colour and
 the page drifted from the design system; its hero title ended up dark on dark navy.
+
+The sheets read are the SOURCES (design V5, W1-A; V5.4 plan §2.3, DL54-15): every sheet of static/css and
+of the apps, a `_`-prefixed partial included wherever it is — a partial is never an entry and has no output
+of its own, so it is checked here like any sheet — and never the bundles of static/css/dist/, which are
+outputs: a name that only a stale bundle still declares is not defined
+(tests/frontend/test_css_bundle_is_current.py holds the bundles to their sources).
 """
 
 import re
@@ -15,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CSS_FILES = sorted(
     p
     for p in [*(ROOT / "static").rglob("*.css"), *(ROOT / "apps").rglob("static/**/*.css")]
-    if "staticfiles" not in p.parts
+    if "staticfiles" not in p.parts and "dist" not in p.relative_to(ROOT).parts
 )
 DECLARATION = re.compile(r"(--[a-zA-Z0-9-]+)\s*:")
 REFERENCE = re.compile(r"var\(\s*(--[a-zA-Z0-9-]+)")
@@ -33,6 +39,10 @@ def _defined_everywhere() -> set[str]:
 def test_css_files_are_discovered():
     assert any(p.name == "tokens.css" for p in CSS_FILES)
     assert len(CSS_FILES) >= 5
+    # the partials are sources and are checked; the bundles are outputs and are not
+    assert ROOT / "static" / "css" / "_legacy-tokens.css" in CSS_FILES
+    assert ROOT / "static" / "css" / "v5" / "tokens.css" in CSS_FILES
+    assert not [p for p in CSS_FILES if "dist" in p.relative_to(ROOT).parts]
 
 
 @pytest.mark.parametrize("path", CSS_FILES, ids=[str(p.relative_to(ROOT)) for p in CSS_FILES])

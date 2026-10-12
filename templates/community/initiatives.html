@@ -1,34 +1,46 @@
-{% extends "base.html" %}{% load i18n %}
-{% block page_title %}{% translate "Initiatives" %} · {% locked "p3.virtual_forum.title" %}{% endblock %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The initiatives born in the Forum Virtuel's rooms (members). Design V5.4 (W3-F2 — the content pages): the head at the
+reading edge; the initiatives as a register — the title, its state as a chip of its register (apps/core/chips.py), the
+room, the description, the collaborations.
+{% endcomment %}
+{% block page_title %}{% translate "Initiatives" %} · {% locked "p3.virtual_forum.title" as forum_title %}{{ forum_title|striptags }}{% endblock %}
 {% block meta_description %}{% translate "Initiatives et collaborations nées du Forum." %}{% endblock %}
+{% block body_class %}page-community lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% translate "Initiatives" as page_title %}
 {% translate "Projets et collaborations proposés par les participants et suivis par le Forum." as page_lead %}
 {% include "components/page_header.html" with title=page_title lead=page_lead %}
-<section class="container community-initiatives" aria-label="{% translate 'Liste des initiatives' %}">
+<section class="chapter community-initiatives" aria-label="{% translate 'Liste des initiatives' %}">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
   {% if initiatives %}
-  <ul class="community-initiatives__list">
+      <ul class="registro community-initiatives__list">
     {% for initiative in initiatives %}
-    <li class="community-initiatives__item">
-      <h2 class="community-initiatives__title">{{ initiative.title }} <span class="badge" data-register="{{ initiative.status|chip_register:'community.InitiativeStatus' }}">{{ initiative.get_status_display }}</span></h2>
-      {% if initiative.room %}<p class="community-initiatives__room">{{ initiative.room.name_fr }}</p>{% endif %}
-      {% if initiative.description %}<div class="community-initiatives__description">{{ initiative.description|linebreaks }}</div>{% endif %}
-      {% if initiative.collaborations.all %}
-      <h3>{% translate "Collaborations" %}</h3>
-      <ul>
-        {% for collaboration in initiative.collaborations.all %}
-        <li>{{ collaboration.organisation_names }} — {{ collaboration.get_status_display }}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    </li>
+        <li class="registro__row community-initiatives__item">
+          <h2 class="registro__title community-initiatives__title">{{ initiative.title }}</h2>
+          {% chip initiative.status "community.InitiativeStatus" %}{{ initiative.get_status_display }}{% endchip %}
+          {% if initiative.room %}<p class="registro__meta community-initiatives__room">{{ initiative.room.name_fr }}</p>{% endif %}
+          {% if initiative.description %}<div class="registro__text community-initiatives__description">{{ initiative.description|linebreaks }}</div>{% endif %}
+          {% if initiative.collaborations.all %}
+          <h3 class="chapter__label">{% translate "Collaborations" %}</h3>
+          <ul class="registro__text">
+            {% for collaboration in initiative.collaborations.all %}
+            <li>{{ collaboration.organisation_names }} — {{ collaboration.get_status_display }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </li>
     {% endfor %}
-  </ul>
+      </ul>
   {% else %}
     {% translate "Aucune initiative n’est encore publiée." as empty_title %}
     {% translate "Les initiatives proposées dans les salles seront présentées ici." as empty_text %}
     {% include "components/empty_state.html" with title=empty_title text=empty_text %}
   {% endif %}
+    </div>
+  </div>
 </section>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

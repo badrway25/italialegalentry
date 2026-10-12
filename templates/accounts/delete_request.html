@@ -1,26 +1,27 @@
-{% extends "base.html" %}{% load i18n %}
-{% block page_title %}{% translate "Supprimer mon compte" %}{% endblock %}
+{% extends "allauth/layouts/manage.html" %}{% load i18n %}
+{% comment %}
+The deletion request — a page of the profile on the account pages' frame (design V5, W3-F2 step 2): the title, the
+one inset that nobody may miss (the warning notice: what the deletion does, verbatim), then the confirmation itself —
+the password and the mandatory, never pre-ticked box — and the two answers, «Annuler» first and the system's danger
+button last (the destructive action stands at the end of its row, DS V5 §10.6). The confirmation is this page:
+W2-A's overlay dialog is not on design-v5, so the mechanism stays the one the product has (the profile's danger
+button leads here; the view checks the password, the box and the rate limit, and signs the person out).
+{% endcomment %}
+{% block head_title %}{% translate "Supprimer mon compte" %}{% endblock %}
 {% block meta_description %}{% translate "Demande de suppression du compte personnel." %}{% endblock %}
-{% block body_class %}page-account{% endblock %}
-{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-<div class="container account-layout">
-  <aside class="account-layout__aside">
-    {% include "accounts/partials/account_menu.html" with active="profile" %}
-  </aside>
-  <div class="account-layout__main">
-    {% include "components/page_header.html" with title=_("Supprimer mon compte") %}
-    {% url 'accounts:profile' as profile_url %}
-    {% include "components/notice.html" with kind="warning" title=_("Cette action est définitive.") text=_("Votre compte sera désactivé immédiatement. Vos données personnelles (nom, e-mail, téléphone, pays, appartenances, documents téléversés) seront anonymisées ou supprimées et vos consentements révoqués. Les enregistrements techniques nécessaires à la sécurité sont conservés sous forme pseudonymisée.") %}
-    <form method="post" action="{% url 'accounts:delete_request' %}" class="form account-form" novalidate>
-      {% csrf_token %}
-      {% include "components/form_errors.html" with form=form %}
-      {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
-      <div class="form-actions">
-        <button type="submit" class="btn btn--danger">{% translate "Confirmer la suppression" %}</button>
-        <a class="btn btn--secondary" href="{{ profile_url }}">{% translate "Annuler" %}</a>
-      </div>
-    </form>
+<header class="conto__head">
+  <h1 class="account-page__title">{% translate "Supprimer mon compte" %}</h1>
+</header>
+{% include "components/notice.html" with kind="warning" title=_("Cette action est définitive.") text=_("Votre compte sera désactivé immédiatement. Vos données personnelles (nom, e-mail, téléphone, pays, appartenances, documents téléversés) seront anonymisées ou supprimées et vos consentements révoqués. Les enregistrements techniques nécessaires à la sécurité sont conservés sous forme pseudonymisée.") %}
+<form method="post" action="{% url 'accounts:delete_request' %}" class="form" novalidate data-single-submit>
+  {% csrf_token %}
+  {% include "components/form_errors.html" with form=form %}
+  {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
+  {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+  <div class="form__actions">
+    <a class="btn btn--secondary" href="{% url 'accounts:profile' %}">{% translate "Annuler" %}</a>
+    <button type="submit" class="btn btn--danger">{% translate "Confirmer la suppression" %}</button>
   </div>
-</div>
+</form>
 {% endblock %}

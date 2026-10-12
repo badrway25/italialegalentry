@@ -1,0 +1,36 @@
+{% load static %}{% comment %}
+THE DOOR AT REST, on every error page (docs/design-v5/CREATIVE_DIRECTION_V5.md §0 item 2 and brand act 1 «La porta …
+home hero, login, error pages (static)», §1.4 law 5 — the arch's allow-list —, §20 «the door at rest with the key out
+of the lock, the message, three ways back»; DS V5 PX21; W3-F2's review M1). The owner's door stage as the entrance
+draws it (templates/allauth/layouts/entrance.html), painted by static/css/v5/_door.css, which the error pages' sheet
+(cms/errori.css) imports: the arch, the owner's photograph as served (static/brand/v5, the home's and the login's
+registration), the solid navy inner door, the three steps, the arch's outline — and the KEY OUT OF THE LOCK, the
+verbatim key set down on the threshold (static/css/v5/_servizio.css places it and turns it on its side).
+
+At rest, and static: no light (no glow at the keyhole, no lit frame, no lit steps), nothing moves, and reduced motion
+is the same picture; never mirrored (the stage is direction: ltr in every locale); decorative — aria-hidden, nothing
+focusable: the page's information is in its text. Static files only, so errors/standalone.html draws it too and the
+400 and the 500 stay self-sufficient; their bare fallback (core.views._bare) stays text. The photograph's `sizes` says
+the widest the photo box is drawn (320 / 368 of the door's --door-w, cms/errori.css): 4.35rem on a phone, 6.09rem from
+48rem, 12.18rem from 64rem.
+{% endcomment %}<div class="door-stage sig error-page__door" aria-hidden="true">
+  <picture class="door-stage__photo"><source type="image/avif" srcset="{% static 'brand/v5/doorway-arch-400.avif' %} 400w, {% static 'brand/v5/doorway-arch-576.avif' %} 576w, {% static 'brand/v5/doorway-arch-800.avif' %} 800w" sizes="(min-width: 64rem) 12.18rem, (min-width: 48rem) 6.09rem, 4.35rem"><source type="image/webp" srcset="{% static 'brand/v5/doorway-arch-400.webp' %} 400w, {% static 'brand/v5/doorway-arch-576.webp' %} 576w, {% static 'brand/v5/doorway-arch-800.webp' %} 800w" sizes="(min-width: 64rem) 12.18rem, (min-width: 48rem) 6.09rem, 4.35rem"><img src="{% static 'brand/v5/doorway-arch-400.webp' %}" width="400" height="533" alt="" decoding="async"></picture>
+  <svg class="door" viewBox="264 64 368 456" focusable="false">
+    <defs>
+      <clipPath id="errore-clip" clipPathUnits="userSpaceOnUse"><path d="M288 507V240a160 160 0 0 1 320 0v267z"/></clipPath>
+      <linearGradient id="errore-veil" x1="0" y1="0" x2="0" y2="1"><stop class="doorway__veil-a" offset="0.4"/><stop class="doorway__veil-b" offset="1"/></linearGradient>
+    </defs>
+    <g class="doorway__door">
+      <rect class="doorway__veil" x="288" y="80" width="320" height="427" fill="url(#errore-veil)" clip-path="url(#errore-clip)"/>
+      <path class="doorway__arch-inset" d="M304 507V240a144 144 0 0 1 288 0v267"/>
+      <path class="doorway__inner" d="M365 397V222a83 83 0 0 1 166 0v175z"/>
+      <g class="doorway__steps">
+        <rect x="342.5" y="477" width="211" height="6" rx="2"/>
+        <rect x="320" y="486" width="256" height="6" rx="2"/>
+        <rect x="297.5" y="495" width="301" height="6" rx="2"/>
+      </g>
+      <path class="doorway__arch" d="M288 507V240a160 160 0 0 1 320 0v267"/>
+    </g>
+  </svg>
+  <span class="sig__l door-stage__key error-page__key"><svg viewBox="10 11 40 94" focusable="false"><circle cx="30" cy="26" r="15"/><circle class="door-key__eye" cx="30" cy="26" r="6.4"/><rect x="25.6" y="39" width="8.8" height="66"/><rect x="34" y="72" width="16" height="8"/><rect x="34" y="88" width="12" height="8"/></svg></span>
+</div>

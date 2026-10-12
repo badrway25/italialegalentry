@@ -13,6 +13,8 @@ from dataclasses import dataclass
 
 from django.utils.translation import gettext_lazy as _
 
+from core.icons import LIVING
+
 
 @dataclass(frozen=True)
 class TopicSpec:
@@ -22,18 +24,24 @@ class TopicSpec:
     order: int
 
 
-# Icon names refer to the design-system sprite (static/img/icons.svg); decorative only.
+# A topic's glyph is the icon registry's (apps/core/icons.py LIVING — design V5, W1-B's map; drawn once, on the topic's
+# own page, the index of the ten being typographic): the seed copies it into the row's `icon`, the fallback for a topic
+# the registry does not know. The V4 ids the seed wrote before («globe», «home», …) were two of the V4 aliases'
+# last producers (W1-B's hand-over to W3-F2); rows already seeded keep them, and the page never reads them for these
+# ten slugs (living/topic.html asks the registry first).
 INITIAL_TOPICS: tuple[TopicSpec, ...] = (
-    TopicSpec("langue-italienne", "Langue italienne", "globe", 10),
-    TopicSpec("logement", "Logement", "home", 20),
-    TopicSpec("sante", "Santé", "plus", 30),
-    TopicSpec("service-sanitaire-national", "Service sanitaire national (SSN)", "institution", 40),
-    TopicSpec("ecole", "École", "university", 50),
-    TopicSpec("education-civique", "Éducation civique", "compass", 60),
-    TopicSpec("droits-et-devoirs", "Droits et devoirs", "document", 70),
-    TopicSpec("securite-au-travail", "Sécurité au travail", "shield", 80),
-    TopicSpec("fiscalite-de-base", "Fiscalité de base", "briefcase", 90),
-    TopicSpec("services-publics", "Services publics", "building", 100),
+    TopicSpec("langue-italienne", "Langue italienne", LIVING["langue-italienne"], 10),
+    TopicSpec("logement", "Logement", LIVING["logement"], 20),
+    TopicSpec("sante", "Santé", LIVING["sante"], 30),
+    TopicSpec(
+        "service-sanitaire-national", "Service sanitaire national (SSN)", LIVING["service-sanitaire-national"], 40
+    ),
+    TopicSpec("ecole", "École", LIVING["ecole"], 50),
+    TopicSpec("education-civique", "Éducation civique", LIVING["education-civique"], 60),
+    TopicSpec("droits-et-devoirs", "Droits et devoirs", LIVING["droits-et-devoirs"], 70),
+    TopicSpec("securite-au-travail", "Sécurité au travail", LIVING["securite-au-travail"], 80),
+    TopicSpec("fiscalite-de-base", "Fiscalité de base", LIVING["fiscalite-de-base"], 90),
+    TopicSpec("services-publics", "Services publics", LIVING["services-publics"], 100),
 )
 
 # Translatable labels (gettext source = FR). Kept in a mapping so makemessages collects them

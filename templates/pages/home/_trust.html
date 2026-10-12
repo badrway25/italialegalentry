@@ -1,53 +1,58 @@
-{% load i18n %}{% comment %}
+{% load i18n pages_typo %}{% comment %}
 8. TRUST / TRANSPARENCY — « ce que fait / ce que ne fait pas la plateforme », built only from
 prescribed material:
    * gate G3 open   → four prescribed FAQ entries (p3.faq.items: faq_visas, faq_recruitment_agency,
      faq_preassessment_guarantee, faq_diplomas) quoted verbatim, question + answer;
    * gate G3 closed → the two Phase 1 prescribed fragments (p1.persons.replacement_1 / _2) as what the
-     platform does, and neutral statements mirroring the meaning of the official Disclaimer as what it
-     does not do. No legal text is invented, no outcome is promised.
-Two calm columns, typographic markers only.
+     platform does — less the one the hero already shows as its description (pages.services._say_once:
+     a sentence is printed once on the page) — and neutral statements mirroring the meaning of the
+     official Disclaimer as what it does not do. No legal text is invented, no outcome is promised.
+
+Design V5.4 (W2-D step 3): four questions and their answers in one column at the reading measure, kept
+open — the question on its own line, never smaller than its answer (17/24 at 600; the questions were 13 px
+above 17 px answers). Each text carries its own language: on the Arabic page the block stays on the reading
+edge and only the French lines run left to right.
+The jurisdiction bar that closed this chapter is not drawn on the home any more: its four stretches,
+from the country of origin to the Italian territory, were the page's third drawing of the Morocco →
+Italy model, under the hero's path and the pilot's route, and the words of this chapter say who answers
+for what four times over. The component (components/jurisdiction.html) is kept.
 {% endcomment %}
-{% translate "Transparence" as eyebrow %}{% translate "Ce que fait la plateforme, et ce qu’elle ne fait pas" as fallback_title %}
-<section class="section section--b home-trust" id="{{ s.anchor }}" aria-labelledby="home-trust-title" data-section="trust">
-  <div class="container">
-    {% include "pages/partials/_section_header.html" with title_id="home-trust-title" heading=s.heading intro=s.intro fallback_title=fallback_title eyebrow=eyebrow %}
-    {% if d.quotes %}
-    <div class="home-trust__grid" data-trust="faq">
-      {% for quote in d.quotes %}
-      <article class="home-trust__item"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %} data-faq="{{ quote.key }}">
-        <h3 class="home-trust__question">{{ quote.question }}</h3>
-        <p class="home-trust__answer">{{ quote.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    {% if d.faq_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.faq_url }}">{% translate "Toutes les questions fréquentes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-    {% else %}
-    <div class="home-trust__grid" data-trust="interim">
-      <div class="home-trust__column">
-        <h3 class="home-trust__column-title">{% translate "Ce que fait la plateforme" %}</h3>
-        <ul class="home-trust__list">
-          {% for statement in d.does %}<li class="home-trust__statement home-trust__statement--fragment"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}>{{ statement }}</li>{% endfor %}
-        </ul>
+{% translate "Ce que fait la plateforme, et ce qu’elle ne fait pas" as fallback_title %}
+<section class="chapter chapter--page home-trust" id="{{ s.anchor }}" aria-labelledby="home-trust-title" data-section="trust">
+  <div class="container chapter__inner">
+    {% include "pages/partials/_section_header.html" with title_id="home-trust-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
+    <div class="chapter__body">
+      {% if d.quotes %}
+      <div class="home-trust__grid" data-trust="faq">
+        {% for quote in d.quotes %}
+        <article class="home-trust__item" data-faq="{{ quote.key }}">
+          <h3 class="home-trust__question"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>{{ quote.question }}</h3>
+          <p class="home-trust__answer"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>{{ quote.answer }}</p>
+        </article>
+        {% endfor %}
       </div>
-      <div class="home-trust__column">
-        <h3 class="home-trust__column-title">{% translate "Ce qu’elle ne fait pas" %}</h3>
-        <ul class="home-trust__list home-trust__list--not">
-          {% for statement in d.does_not %}<li class="home-trust__statement"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}>{{ statement }}</li>{% endfor %}
-        </ul>
+      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+      {% if d.faq_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.faq_url }}">{% translate "Toutes les questions fréquentes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      {% else %}
+      <div class="home-trust__grid home-trust__grid--columns" data-trust="interim">
+        {% if d.does %}
+        <div class="home-trust__column">
+          <h3 class="home-trust__column-title">{% translate "Ce que fait la plateforme" %}</h3>
+          <ul class="home-trust__list">
+            {% for statement in d.does %}<li class="home-trust__statement home-trust__statement--fragment"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}>{{ statement }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <div class="home-trust__column">
+          <h3 class="home-trust__column-title">{% translate "Ce qu’elle ne fait pas" %}</h3>
+          <ul class="home-trust__list home-trust__list--not">
+            {% for statement in d.does_not %}<li class="home-trust__statement"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}>{{ statement|typo }}</li>{% endfor %}
+          </ul>
+        </div>
       </div>
+      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+      {% if d.disclaimer_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.disclaimer_url }}">{% translate "Lire l’avertissement" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      {% endif %}
     </div>
-    {% if d.disclaimer_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.disclaimer_url }}">{% translate "Lire l’avertissement" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-    {% endif %}
-    {% comment %}
-    The jurisdiction bar belongs here and nowhere else on this page: "what the platform does and does
-    not do" IS a statement about who is answerable, and stating it in words while the graphic says
-    nothing would waste the one device that makes this site recognisable on a 200px crop.
-    The shares are the four stretches of the model, not measured quantities, and the caption says so.
-    {% endcomment %}
-    {% translate "Qui répond de quoi" as jurisdiction_title %}
-    {% translate "Les proportions indiquent les étapes du modèle, non une durée." as jurisdiction_caption %}
-    {% include "components/jurisdiction.html" with title=jurisdiction_title caption=jurisdiction_caption segments=d.jurisdiction %}
-    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
   </div>
 </section>

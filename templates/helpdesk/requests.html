@@ -44,7 +44,7 @@ A register, not cards. An empty region is one hairline and one sentence, never a
           — <time datetime="{{ ticket.created_at|date:'c' }}">{{ ticket.created_at|date:"d.m.Y" }}</time>
           {% if ticket.case %} — {% blocktranslate with reference=ticket.case.reference %}dossier {{ reference }}{% endblocktranslate %}{% endif %}
         </span>
-        <span class="entry__actor"><span class="state state--{{ ticket.state_tone }}" data-register="{{ ticket.effective_status|chip_register:'helpdesk.TicketStatus' }}">{{ ticket.effective_status_display }}</span></span>
+        <span class="entry__actor">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}</span>
         {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
       </a>
     </li>

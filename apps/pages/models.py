@@ -39,7 +39,15 @@ LOCKED_HEADING_SECTIONS: frozenset[str] = frozenset({SectionKey.PILOT, SectionKe
 
 # Locked registry keys rendered by each section — shown to editors, used by the compliance tests.
 LOCKED_KEYS_BY_SECTION: dict[str, tuple[str, ...]] = {
-    SectionKey.HERO: ("p3.hero.title", "p3.hero.subtitle", "p3.hero.body", "p1.persons.replacement_1"),
+    # The hero's path carries the stations of the pilot sequence (design V5.4, W2-D): the Morocco → Italy model is
+    # said once, there; the pilot chapter keeps the prescribed title and links the pilot's own page.
+    SectionKey.HERO: (
+        "p3.hero.title",
+        "p3.hero.subtitle",
+        "p3.hero.body",
+        "p1.persons.replacement_1",
+        "p3.pilot.sequence",
+    ),
     SectionKey.BANNER: (
         "p2.home.banner.title",
         "p2.home.banner.meta",
@@ -53,7 +61,7 @@ LOCKED_KEYS_BY_SECTION: dict[str, tuple[str, ...]] = {
     ),
     SectionKey.ORIENTATION: ("p3.persons.how_it_works",),
     SectionKey.PATHWAYS: ("p3.persons.pathways",),
-    SectionKey.PILOT: ("p3.pilot.title", "p3.pilot.sequence"),
+    SectionKey.PILOT: ("p3.pilot.title",),
     SectionKey.TRUST: ("p3.faq.items", "p1.persons.replacement_1", "p1.persons.replacement_2"),
     SectionKey.ANTIFRAUD: ("p3.antifraud.title", "p3.antifraud.body"),
     SectionKey.NEWS: (),

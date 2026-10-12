@@ -1,0 +1,19 @@
+{% load i18n %}{% comment %}
+The way on, on every error page: the recovery navigation as a QUIET CHAPTER — a label, not a title, and the main
+spaces when their routes exist (safe_url) — then «who can help me», the live line with the one address (D26). The
+address comes from the site's settings through the context processor on the shell's pages, and from the view on the
+two pages drawn without one (`contact_email`, core.views: errors/standalone.html). «Privacy Policy» is the policy's
+English name, kept in the original in every language: it says so (`lang="en"`, WCAG 3.1.2; the accessibility check's
+A4).
+{% endcomment %}<nav class="error-page__links" aria-label="{% translate 'Navigation de secours' %}">
+  <p class="error-page__links-title">{% translate "Poursuivre la navigation" %}</p>
+  <ul class="error-page__links-list">
+    {% safe_url 'pathways:index' as u1 %}{% if u1 %}<li><a href="{{ u1 }}">{% translate "Personnes" %}</a></li>{% endif %}
+    {% safe_url 'ecosystem:companies' as u2 %}{% if u2 %}<li><a href="{{ u2 }}">{% translate "Entreprises" %}</a></li>{% endif %}
+    {% safe_url 'forum:index' as u3 %}{% if u3 %}<li><a href="{{ u3 }}">{% translate "Forum Vénétie–Maroc" %}</a></li>{% endif %}
+    {% safe_url 'pages:project' as u4 %}{% if u4 %}<li><a href="{{ u4 }}">{% translate "Le projet" %}</a></li>{% endif %}
+    {% safe_url 'pages:contact' as u5 %}{% if u5 %}<li><a href="{{ u5 }}">{% translate "Contact" %}</a></li>{% endif %}
+    <li><a href="{% url 'legal:privacy' %}" lang="en">Privacy Policy</a></li>
+  </ul>
+</nav>
+{% firstof contact_email site.contact_email as address %}{% if address %}<p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ address }}">{{ address }}</a></p>{% endif %}

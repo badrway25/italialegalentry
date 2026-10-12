@@ -1,40 +1,44 @@
-{% load i18n %}{% comment %}
+{% load i18n pages_typo %}{% comment %}
 6. REGULAR PATHWAYS OVERVIEW.
    * gate G3 open   → the eight prescribed pathways (titles + descriptions from p3.persons.pathways,
-     through pathways.services.index_entries) in the numbered editorial list;
+     through pathways.services.index_entries) as a register of titled rows;
    * gate G3 closed → neutral family labels only: no prescribed title, no description, no
      eligibility statement; everything points to the Espace Personnes.
 CONTENT_PENDING_LEGAL_REVIEW — the detailed sheets (eligibility, steps, documents) belong to the
 pathways app and to the legal reviewers; nothing of that kind is written here.
+
+Design V5.4 (W2-D step 3): a register in two columns, each title above its description and never
+smaller than it (17/24 at 600 over 15/24 — the titles were 13 px above 15 px descriptions). The eight
+are a catalogue, not a ranking: no numeral. The chapter's one forward link names the space once, at its
+foot; the running head that named it a second time is gone.
 {% endcomment %}
-{% translate "Espace Personnes" as eyebrow %}{% translate "Les parcours réguliers" as fallback_title %}
-<section class="section section--c home-pathways" id="{{ s.anchor }}" aria-labelledby="home-pathways-title" data-section="pathways">
-  <div class="container">
-    {% include "pages/partials/_section_header.html" with title_id="home-pathways-title" heading=s.heading intro=s.intro fallback_title=fallback_title eyebrow=eyebrow %}
-    {% if d.pathway_items %}
+{% translate "Les parcours réguliers" as fallback_title %}
+<section class="chapter chapter--page home-pathways" id="{{ s.anchor }}" aria-labelledby="home-pathways-title" data-section="pathways">
+  <div class="container chapter__inner">
+    {% include "pages/partials/_section_header.html" with title_id="home-pathways-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
+    <div class="chapter__body">
+      {% if d.pathway_items %}
       <div class="home-pathways__list" data-pathways="{{ d.pathway_items|length }}">
         {% include "components/pathway_list.html" with items=d.pathway_items %}
       </div>
-    {% else %}
+      {% else %}
       {% comment %}
-      The families were five 999px pills. A pill is not a shape this system has: --radius-pill is
-      deleted, and a row of equal rounded labels says "tags" when the content is a closed list of
-      legal pathway families. They are a register with no destination yet — the ordinal carries the
-      position, the absent arrow says there is nothing to open.
+      The families are a closed list of legal pathway families with no destination yet: plain rows, no
+      arrow (there is nothing to open) and no numeral (they are not ranked).
       {% endcomment %}
       <ol class="register home-families" aria-label="{% translate 'Familles de parcours' %}">
         {% for family in d.families %}
         <li class="register__item">
           <div class="entry">
-            <span class="entry__ordinal" aria-hidden="true"></span>
             <span class="entry__title"{% if family.lang %} lang="{{ family.lang }}"{% endif %}>{{ family }}</span>
           </div>
         </li>
         {% endfor %}
       </ol>
       <p class="home-pathways__pending">{% translate "Les fiches détaillées des parcours seront publiées progressivement dans l’Espace Personnes." %}</p>
-    {% endif %}
-    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note }}</p>{% endif %}
-    {% if d.index_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Voir l’Espace Personnes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      {% endif %}
+      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+      {% if d.index_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Voir l’Espace Personnes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    </div>
   </div>
 </section>

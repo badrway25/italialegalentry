@@ -1,0 +1,25 @@
+{% load i18n %}{% comment %}
+Drawer — the overlay system's side panel (design V5, V5.4 plan §1.14; the contract
+docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). A native <dialog> that static/js/src/overlay.js opens: «Slide» from
+its edge in 320 ms, out in 200 ms, the scrim with it. Modal by default (over the one scrim, the trap in script,
+aria-modal; Esc, the scrim, «Fermer» or a link inside it close it); `modal=False` is the panel BESIDE the list on desktop (show(): no
+scrim, the page stays usable; Esc, «Fermer», and Back with `history`) and a modal sheet on a phone.
+PAGE-ONLY CSS (CONTRACT §1, the owner's V5.8 budget): the drawer itself is main.css's (v5/overlays.css); its
+head, body and foot — and, beside the list, its phone sheet — are static/css/v5/_overlay-panels.css: the page that
+includes it links {% static 'css/dist/core/overlay-panels.css' %} in its extra_head, after main.css
+(tests/frontend/test_overlays.py refuses a page that draws one without it). The console's drawer has its own head
+(portal_chrome.html) and links nothing.
+Contract: `id` (required); `title`; `body` (safe HTML) — or `body_template`, a template included with the context and `overlay_part` = "body";
+optional `actions` (safe HTML of the foot) — or `actions_template` (included with `overlay_part` = "actions"); `edge` = "start"
+(navigation, from the reading edge; default the inline end, for a detail); `modal` (False → beside the list);
+`history` (True → the opening pushes one history entry and Back closes the drawer); `return_id` (where «Fermer»
+leads without script; default `main-content`). Open it with a link that also works without script:
+  <a href="#{{ id }}" data-overlay-open>…</a>
+{% endcomment %}<dialog class="overlay overlay--drawer" id="{{ id }}" data-overlay="drawer"{% if edge == 'start' %} data-overlay-edge="start"{% endif %}{% if modal is False %} data-overlay-modal="none"{% endif %}{% if history %} data-overlay-history{% endif %} aria-labelledby="{{ id }}-title">
+  <div class="overlay__head">
+    <h2 class="overlay__title" id="{{ id }}-title">{{ title }}</h2>
+    <a class="overlay__close" href="#{{ return_id|default:'main-content' }}" data-overlay-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</a>
+  </div>
+  <div class="overlay__body">{% if body_template %}{% include body_template with overlay_part="body" %}{% else %}{{ body }}{% endif %}</div>
+  {% if actions_template %}<div class="overlay__foot">{% include actions_template with overlay_part="actions" %}</div>{% elif actions %}<div class="overlay__foot">{{ actions }}</div>{% endif %}
+</dialog>

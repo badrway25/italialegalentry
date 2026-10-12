@@ -1,0 +1,81 @@
+/* ============================================================================================
+   NOTICES V5 — a message on its register's wash, read by its rule, its mark and its words (W1-C)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.2 (the registers: a done thing is INK — no green, and no colour
+   ever means «approved», O14; «en examen» is lapis; information is slate; a warning is amber and its edge is
+   BROKEN; an error is garnet), §1.4 (a sheet with a hairline, no shadow); DESIGN_SYSTEM_V5 §10.8; drawn
+   reference: the gate-0 foundation's components.css §6.
+   Markup: templates/components/notice.html (kind, title, text, the kind's mark), components/form_errors.html,
+   components/form_unavailable.html, allauth/elements/alert.html; `.alert` is the session message of
+   templates/base.html (no mark, no title: its words are the message).
+   Never colour alone — a kind is said three times: the mark the markup gives it, the title in the register's
+   word colour, and the STYLE of the 3 px rule at the reading edge: solid (a fact), dashed (a warning: the
+   broken edge of «attesa»), double (an error: the two lines of «rifiuto»).
+   Replaces components.css §4 (plan §2.3, the deletion map). Tokens only; logical properties.
+   ============================================================================================ */
+.notice,
+.alert {
+  --notice-wash: var(--notice-info-bg);
+  --notice-word: var(--notice-info-text);
+  --notice-rule: var(--notice-info-edge);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-1) var(--s-3);
+  margin-block: var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  border-inline-start: 3px solid var(--notice-rule);
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  background: var(--notice-wash);
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+.alert { display: block; }
+.messages { margin-block: var(--s-6) 0; }
+
+/* the registers */
+.notice--success, .alert--success { --notice-wash: var(--tone-conforme-bg); --notice-word: var(--tone-conforme-text); --notice-rule: var(--tone-conforme-mark); }
+.notice--pending, .alert--pending { --notice-wash: var(--notice-pending-bg); --notice-word: var(--notice-pending-text); --notice-rule: var(--notice-pending-edge); }
+.notice--warning, .notice--warn, .alert--warning {
+  --notice-wash: var(--notice-warning-bg);
+  --notice-word: var(--notice-warning-text);
+  --notice-rule: var(--notice-warning-edge);
+  border-inline-start-style: dashed;
+}
+.notice--error, .alert--error {
+  --notice-wash: var(--notice-error-bg);
+  --notice-word: var(--notice-error-text);
+  --notice-rule: var(--notice-error-edge);
+  border-inline-start-style: double;
+}
+/* the institutional word (the informative nature of the project, the gates): paper, a hairline frame, the
+   navy mark and a gold rule — no tricolour filet (O57) */
+.notice--institutional {
+  --notice-wash: var(--notice-institutional-bg);
+  --notice-word: var(--notice-institutional-text);
+  --notice-rule: var(--notice-institutional-rule);
+  border: 1px solid var(--line-rhythm);
+  border-inline-start: 3px solid var(--notice-rule);
+}
+
+/* the anatomy */
+/* the mark is the glyph itself or a box around it: 20 px by the icon's own rule, on the title's line */
+.notice__icon { grid-row: 1 / span 2; align-self: start; margin-block-start: 2px; color: var(--notice-rule); }
+.notice--institutional .notice__icon { color: var(--notice-institutional-edge); }
+.notice__title { margin: 0; font-weight: var(--w-title); color: var(--notice-word); }
+.notice__body { grid-column: 2; }
+/* the box may run wide; its lines keep the reading measure (review m5) */
+.notice__title,
+.notice__body { max-inline-size: var(--measure-body); }
+.notice__body > :last-child { margin-block-end: 0; }
+.notice:not(:has(.notice__icon)) > * { grid-column: 1 / -1; }
+
+/* the sentence that stands in for a public form while its gate is closed */
+.form-unavailable { max-inline-size: var(--container-narrow); }
+
+@media (forced-colors: active) {
+  .notice, .alert { border: 1px solid CanvasText; border-inline-start-width: 3px; }
+  .notice--warning, .notice--warn, .alert--warning { border-inline-start-style: dashed; }
+  .notice--error, .alert--error { border-inline-start-style: double; }
+}

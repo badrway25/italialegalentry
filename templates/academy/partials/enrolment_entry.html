@@ -17,6 +17,6 @@ is written out. No bar, no percentage, no colour carrying meaning on its own.
         {% if row.completed_at %} · {% blocktranslate with date=row.completed_at|date:"d.m.Y" %}terminé le {{ date }}{% endblocktranslate %}{% endif %}
       </span>
     </span>
-    <span class="entry__actor state state--{% if row.is_completed %}done{% elif row.status == 'withdrawn' %}replace{% else %}filed{% endif %}" data-register="{{ row.status|chip_register:'academy.EnrolmentStatus' }}">{{ row.get_status_display }}</span>
+    {% chip row.status "academy.EnrolmentStatus" css_class="entry__actor" %}{{ row.get_status_display }}{% endchip %}
   {% if row_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
 </li>

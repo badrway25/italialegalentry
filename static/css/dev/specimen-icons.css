@@ -1,0 +1,225 @@
+/* The icon specimen board (design V5, W1-B) — development only. Loaded by
+   templates/dev/designpreview/specimens/icons.html after css/dist/main.css, which holds the
+   .icon rule and the sizes. Tokens only, logical properties; nothing here reaches a product page. */
+
+.sp {
+  max-inline-size: 1200px;
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-6);
+  color: var(--text-1);
+}
+
+.sp > * {
+  min-inline-size: 0; /* the body is a flex/grid container: without this, a wide table or line would widen the page instead of scrolling in its box */
+  max-inline-size: 100%;
+}
+
+.sp-head {
+  margin-block-end: var(--space-8);
+}
+
+.sp-eyebrow {
+  margin: 0 0 var(--space-2);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.sp-title {
+  margin: 0 0 var(--space-3);
+}
+
+.sp-lead,
+.sp-note {
+  max-inline-size: 72ch;
+  color: var(--text-2);
+}
+
+.sp-section {
+  margin-block: var(--space-10) 0;
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--border-hairline);
+}
+
+.sp-h2 {
+  margin: 0 0 var(--space-3);
+  font-size: 1.125rem;
+}
+
+.sp-h3 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: 0.9375rem;
+  color: var(--text-2);
+}
+
+.sp-scroll {
+  /* the ten-column table scrolls inside its box on a phone; the page never does. The box is a named,
+     focusable region (tabindex + role in the template, a11y check m1); its ring is the one focus system's. */
+  overflow-x: auto;
+}
+
+/* The empty state's seat: a 24 px glyph in its 48 px disc, as v4/workspace.css draws it. */
+.sp-disc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: var(--radius-full);
+  background: var(--min-1);
+  color: var(--ink-3);
+}
+
+.sp-table {
+  inline-size: 100%;
+  min-inline-size: 48rem;
+  border-collapse: collapse;
+}
+
+.sp-table th,
+.sp-table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: start;
+  vertical-align: middle;
+  border-block-end: 1px solid var(--border-hairline);
+  font-size: 0.875rem;
+}
+
+.sp-table thead th {
+  font-family: var(--f-mono);
+  font-size: var(--t-caption); /* 12 px, the Latin floor (plan §1.1) */
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.sp-below {
+  color: var(--text-3);
+}
+
+.sp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  align-items: center;
+}
+
+.sp-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+}
+
+.sp-item code,
+.sp-grid code,
+.sp-table code {
+  font-size: var(--t-caption);
+  color: var(--text-3);
+}
+
+.sp-panel {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-sm);
+  background: var(--icon-disc-bg);
+}
+
+.sp-night {
+  background: var(--icon-disc-night-bg);
+  color: var(--icon-on-night);
+}
+
+.sp-night .sp-item code {
+  color: var(--icon-on-night-muted);
+}
+
+.sp-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 48rem) {
+  .sp-two {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The nine stations wrap onto a second row when the line cannot hold them: a side-scrolling strip
+   could not be reached from the keyboard (a11y check m1, WCAG 2.1.1). */
+.sp-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-2);
+  align-items: flex-start;
+  padding-block: var(--space-2);
+}
+
+.sp-station {
+  display: flex;
+  flex: 1 1 7rem;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 7rem;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+
+.sp-station--threshold {
+  color: var(--text-1);
+}
+
+.sp-station .icon {
+  color: var(--icon-strong);
+}
+
+.sp-num {
+  font-family: var(--f-mono);
+  font-size: var(--t-caption);
+  color: var(--text-3);
+}
+
+.sp-mark {
+  display: inline-flex;
+}
+
+.sp-mark[data-register="attesa"] { color: var(--tone-attesa-mark); }
+.sp-mark[data-register="neutro"] { color: var(--tone-neutro-mark); }
+.sp-mark[data-register="esame"] { color: var(--tone-esame-mark); }
+.sp-mark[data-register="conforme"] { color: var(--tone-conforme-mark); }
+.sp-mark[data-register="azione"] { color: var(--tone-azione-mark); }
+.sp-mark[data-register="rifiuto"] { color: var(--tone-rifiuto-mark); }
+.sp-mark[data-register="blocco"] { color: var(--tone-blocco-mark); }
+.sp-mark[data-register="nullo"] { color: var(--tone-nullo-mark); }
+.sp-night .sp-mark[data-register="conforme"] { color: var(--tone-conforme-night-mark); }
+.sp-night .sp-mark[data-register="esame"] { color: var(--tone-esame-night-mark); }
+
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sp-grid li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+}
+
+.sp-grid small {
+  margin-inline-start: auto;
+  font-family: var(--f-mono);
+  color: var(--text-3);
+}
+
+.sp-dir .icon {
+  color: var(--icon-interactive);
+}

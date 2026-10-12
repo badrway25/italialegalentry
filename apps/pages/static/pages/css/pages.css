@@ -1,13 +1,19 @@
 /* ============================================================================
    Italy Legal Entry™ — homepage and institutional pages (pages app).
-   Builds on the design system (static/css): tokens only through var(--…), no
-   literal colour, logical properties everywhere, BEM-like names, motion limited
-   to the design-system durations (collapsed by prefers-reduced-motion).
-   Loaded only by templates/pages/*.html.
+   Loaded only by templates/pages/*.html, after main.css. Tokens only through
+   var(--…): no literal colour, no literal paint; logical properties everywhere.
+
+   1 · shared helpers (the home and the institutional pages);
+   2 · THE HOME'S CHAPTERS — design V5.4, W2-D step 3 «the home around the hero»: on the V5 tokens
+       of static/css/v5/tokens.css (the eight public sizes, the 4 px space scale, the paper, the
+       night and the one accent), written for this sheet's place after main.css;
+   3 · the anti-fraud page's panel and the institutional pages, still on the names of the legacy
+       shim until their own family (the public interior) rebuilds them.
    ========================================================================== */
 
-/* ---- Shared helpers -------------------------------------------------------- */
-.page-home .eyebrow,
+/* ============================================================================
+   1 · Shared helpers
+   ========================================================================== */
 .page-institutional .eyebrow {
   display: flex;
   align-items: center;
@@ -24,13 +30,6 @@
   text-align: start;
 }
 
-/* The hero's locked title is the exception (design V4, gate A review): its copy block sits at the
-   end edge of the Arabic page, so the LTR title is set flush with that edge, not with the start. */
-[dir="rtl"] .page-home .hero__title[lang="fr"],
-[dir="rtl"] .page-home .hero__eyebrow[lang="fr"] {
-  text-align: end;
-}
-
 /* Same rule for the Forum banner, whose partial carries lang="fr" on its wrapper: only its three
    text lines switch direction, the band itself keeps the page layout. */
 [dir="rtl"] .home-banner .forum-banner[lang="fr"] :is(.forum-banner__title, .forum-banner__meta, .forum-banner__quote) {
@@ -39,107 +38,213 @@
   text-align: start;
 }
 
-/* Reveal on scroll never makes content invisible on these pages: the design-system motion is kept
-   as a short upward settle, but the opacity stays at 1 from the first paint (long pages would
-   otherwise hold below-the-fold blocks at opacity 0 until they are scrolled into view). */
+/* Reveal on scroll never makes content invisible on these pages: the opacity stays at 1 from the
+   first paint (long pages would otherwise hold below-the-fold blocks at opacity 0 until they are
+   scrolled into view). */
 html.js .page-home .reveal,
 html.js .page-institutional .reveal {
   opacity: 1;
 }
 
-/* Homepage rhythm comes from SECTION RANK (layout.css), not from one clamp() applied to every
-   section. This rule used to give all six sections the same padding at every width — the single
-   line of CSS most responsible for a page that read as six beats of identical duration. A hairline
-   still separates two sections that share a ground, so each block reads as one unit. */
-.page-home .section:not(.section--process) + .section:not(.section--process) {
-  border-block-start: 1px solid var(--rule-hair);
-}
-
-.home-section__more {
-  margin-block: var(--space-8) 0;
-}
-
-.home-section__note {
-  margin-block: var(--space-6) 0;
-  max-inline-size: var(--measure-prose);
-  font-size: var(--font-size-small);
-  color: var(--text-muted);
-}
-
-/* =========================================================================
-   2. Hero
-   ========================================================================= */
-/* The hero is a plate now: its vertical space is the band's own (register.css). */
-
-.home-hero__grid {
-  align-items: center;
-}
-
-@media (min-width: 56rem) {
-  .home-hero__grid {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-    column-gap: clamp(var(--space-10), 5vw, var(--space-20));
-  }
-}
-
-/* The interim hero carries an editorial sentence, not the short wordmark: it is
-   set on the h1 scale so that the first screen stays calm. */
-.home-hero[data-hero-variant="interim"] .hero__title {
-  font-size: var(--font-size-h1);
-  line-height: var(--leading-heading);
-  max-inline-size: 22ch;
-}
-
-.home-hero[data-hero-variant="phase3"] .hero__title {
-  letter-spacing: 0.01em;
-}
-
-/* A prescribed fragment starts with a lower-case letter: presentation only,
-   the text itself is never altered. */
-.home-hero__fragment::first-letter,
+/* A prescribed fragment starts with a lower-case letter: presentation only, the text itself is
+   never altered (the interim hero's description, the interim «what the platform does»). */
+.home-plate__fragment::first-letter,
 .home-trust__statement--fragment::first-letter {
   text-transform: uppercase;
 }
 
-.home-hero__figure {
-  position: relative;
-  isolation: isolate;
-  margin: 0;
+/* ============================================================================
+   2 · THE HOME'S CHAPTERS (design V5.4, W2-D step 3)
+
+   The hero is the page's one full-bleed band and the one place where a photograph rests in black
+   and white (DL54-12). Under it every chapter is the same object: a band on its ground, a head at
+   the reading edge — the mark's three steps in ink (the sprite's `ile-steps`), the title, the lead — and a
+   body. From 75rem the head takes four columns of twelve and stays in sight while its body
+   scrolls; below, the head stands above the body. One section device, no running head, no ordinal;
+   each chapter answers a question the one before it raised and says its thing once.
+
+   Space: 48 · 64 · 96 px around a chapter (phone · tablet · desktop), 32 px from head to body,
+   hairlines before boxes. Type: 28/36 at 600 for a title, 20/28 for a lead, 17/24 at 600 for a row's
+   title over 15/24 for its text (16/24 below 64rem), 13/20 for a label; a title is never smaller
+   than what it titles. Grounds: the page's paper, the stone, the one brand chapter, the night.
+   ========================================================================== */
+.chapter {
+  padding-block: var(--s-12);
 }
 
-.home-hero__figure picture {
-  display: block;
+.chapter--page + .chapter--page {
+  border-block-start: 1px solid var(--line-rhythm);
 }
 
-.home-hero__figure img {
-  inline-size: 100%;
-  max-inline-size: none;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
+.page-home .chapter--brand {
+  background: var(--grad-brand);
 }
 
-@media (min-width: 56rem) {
-  .home-hero__figure::before {
-    content: "";
-    position: absolute;
-    z-index: var(--z-below);
-    inset-block: var(--space-5) calc(-1 * var(--space-5));
-    inset-inline: var(--space-5) calc(-1 * var(--space-5));
-    border: var(--border-width) solid var(--border-accent);
-    border-radius: var(--radius-sm);
+.page-home .chapter--area {
+  background: var(--surface-area);
+}
+
+.page-home .chapter--dark {
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+/* Below 75rem the container is the page's width: the chapters stand on the page's own pad, the
+   edge the hero's wall starts on (16 px on phones, 32 px on tablets), so that nothing under the
+   hero is a few pixels off it. From 75rem they stand on the chrome's column. */
+@media (max-width: 74.999rem) {
+  .page-home :is(.chapter, .home-reserved, .home-banner) .container {
+    padding-inline: var(--page-pad);
   }
 }
 
-/* =========================================================================
-   3. Institutional notice — Forum banner (quiet in-flow band, never an overlay)
-   ========================================================================= */
+/* The last chapter carries its own closing space: on this page the footer follows it directly (the
+   reserved row and the footer are one night). */
+.page-home .site-footer {
+  margin-block-start: 0;
+}
+
+.chapter__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-8);
+}
+
+.chapter__head {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+}
+
+/* The mark is the sprite's identity glyph `ile-steps` (apps/core/icons.py: the mark's three steps seen from
+   the side; it never mirrors): its hand — 1.5 px, square caps — and its ink under forced colours are the
+   icon rule's (components.css §2). The symbol draws inside its 24-unit box, 3 units in from either side, 7
+   from the top and 5 from the bottom: the box is pulled by those shares, so the drawing — not its box —
+   stands on the reading edge and on the head's first line, 16 px above the title. */
+.chapter__mark {
+  --mark: var(--icon-lg);
+  display: block;
+  inline-size: var(--mark);
+  block-size: var(--mark);
+  margin-block: calc(var(--mark) * -7 / 24) calc(var(--s-4) - var(--mark) * 5 / 24);
+  margin-inline-start: calc(var(--mark) * -3 / 24);
+  color: var(--text-1);
+}
+
+/* (0,3,0), after main.css: above the base sheet's Arabic title rule, which reaches a French title on
+   an Arabic page through its ancestor — so the Arabic metrics are restated for Arabic titles only. */
+.page-home .chapter .section__title {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.page-home .chapter .section__title:lang(ar) {
+  line-height: var(--ar-title-lh);
+  letter-spacing: 0;
+}
+
+.chapter .section__lead {
+  margin-block: var(--s-3) 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  font-weight: var(--w-body);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.chapter__body {
+  min-inline-size: 0;
+}
+
+/* The chapter's one forward link — what acts is set at the interface size, 15/20 at 500, as the hero's
+   own links are — and an editor's note under a body. */
+.home-section__more {
+  margin-block: var(--s-8) 0;
+}
+
+.page-home main .link-arrow {
+  position: relative;
+  min-block-size: var(--s-6);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+/* Under a finger the link answers on 44 px (SP-8) without a taller line: the target grows, the page
+   does not. */
+@media (pointer: coarse) {
+  .page-home main .link-arrow::after {
+    content: "";
+    position: absolute;
+    inset-block: calc((var(--s-6) - var(--hit-primary)) / 2);
+    inset-inline: 0;
+  }
+}
+
+.home-section__note {
+  max-inline-size: var(--measure-small);
+  margin-block: var(--s-6) 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .chapter {
+    padding-block: var(--s-16);
+  }
+}
+
+@media (min-width: 75rem) {
+  .chapter {
+    padding-block: var(--s-24);
+  }
+
+  .chapter__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .chapter__head {
+    grid-column: 1 / span 4;
+    align-self: start;
+    position: sticky;
+    inset-block-start: calc(var(--header-h) + var(--s-8));
+  }
+
+  .chapter__body {
+    grid-column: 5 / span 8;
+  }
+}
+
+/* ---- the night chapters: the words, the mark and the links on the night's own inks ---------- */
+.page-home .chapter--dark .section__title,
+.page-home .chapter--dark .chapter__mark {
+  color: var(--text-on-night-1);
+}
+
+.page-home .chapter--dark .section__lead {
+  color: var(--text-on-night-2);
+}
+
+.page-home .chapter--dark .home-section__note {
+  color: var(--text-on-night-2);
+}
+
+.page-home .chapter--dark .link-arrow,
+.page-home .chapter--dark .link-arrow:hover {
+  color: var(--accent-night);
+}
+
+/* ---- 3 · the institutional notice (the Forum's banner): a quiet band in the flow, never an
+        overlay; the dismiss control never sits on the text ---------------------------------- */
 .home-banner {
   position: relative;
-  background: var(--surface-2);
-  border-block-start: var(--border-width-strong) solid var(--border-accent);
-  border-block-end: var(--border-width) solid var(--border-hairline);
+  background: var(--surface-area);
+  border-block: 1px solid var(--line-rhythm);
 }
 
 .home-banner .forum-banner {
@@ -150,38 +255,37 @@ html.js .page-institutional .reveal {
 
 .home-banner .forum-banner__inner {
   display: grid;
-  gap: var(--space-4) var(--space-8);
+  gap: var(--s-4) var(--s-8);
   align-items: center;
-  padding-block: var(--space-6);
-  /* room for the dismiss control so that it never sits on the text */
-  padding-inline-end: calc(var(--gutter) + var(--control-height));
+  padding-block: var(--s-6);
+  padding-inline-end: calc(var(--page-pad) + var(--control-md));
 }
 
 .home-banner .forum-banner__title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--font-size-h3);
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.02em;
-  color: var(--color-primary-900);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-display-caps);
+  color: var(--text-1);
 }
 
 .home-banner .forum-banner__meta {
-  margin: var(--space-1) 0 0;
-  font-size: var(--font-size-caption);
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.04em;
-  color: var(--color-accent-700);
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
 }
 
 .home-banner .forum-banner__quote {
-  margin: var(--space-3) 0 0;
-  max-inline-size: 60ch;
-  padding-inline-start: var(--space-4);
-  border-inline-start: var(--border-width-strong) solid var(--border-accent);
-  font-family: var(--font-display);
-  font-style: italic;
-  color: var(--text-secondary);
+  max-inline-size: var(--measure-body);
+  margin: var(--s-3) 0 0;
+  padding-inline-start: var(--s-4);
+  border-inline-start: 1px solid var(--line-structure);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
 }
 
 .home-banner .forum-banner__action {
@@ -196,7 +300,7 @@ html.js .page-institutional .reveal {
   .home-banner .forum-banner__text {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    column-gap: var(--space-10);
+    column-gap: var(--s-10);
     align-items: center;
   }
 
@@ -217,221 +321,470 @@ html.js .page-institutional .reveal {
   }
 }
 
-@media (min-width: 88rem) {
-  .home-banner .forum-banner__inner {
-    padding-inline-end: var(--gutter);
-  }
-}
-
 .home-banner__dismiss {
   position: absolute;
-  inset-block-start: var(--space-2);
-  inset-inline-end: var(--space-2);
+  inset-block-start: var(--s-2);
+  inset-inline-end: var(--s-2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: var(--control-height);
-  block-size: var(--control-height);
-  border-radius: 50%;
-  color: var(--text-secondary);
-  transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  inline-size: var(--control-md);
+  block-size: var(--control-md);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
 
 .home-banner__dismiss:hover {
-  background: var(--surface-3);
-  color: var(--color-primary-900);
+  background: var(--surface-hover);
+  color: var(--text-1);
 }
 
-/* =========================================================================
-   4. Four entrances — the component owns the look; only the rhythm is set here
-   ========================================================================= */
-.home-entrances .section__header {
-  margin-block-end: var(--space-8);
-}
-
-/* Single column: every entrance starts on the same edge as the section title. */
-@media (max-width: 47.999rem) {
-  .home-entrances .entrance {
-    padding-inline: 0;
-  }
-}
-
-/* =========================================================================
-   5. Orientation
-   ========================================================================= */
-.home-orientation__top {
-  display: grid;
-  gap: var(--space-6) var(--space-12);
-  align-items: end;
-}
-
-@media (min-width: 64rem) {
-  .home-orientation__top {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-}
-
-.home-orientation__top .section__header {
-  margin-block-end: var(--space-8);
-}
-
-.home-orientation__illustration {
-  inline-size: 15rem;
-  block-size: auto;
-  margin-block-end: var(--space-8);
-}
-
-.home-orientation__steps {
-  padding-block: var(--space-8);
-  border-block: var(--border-width) solid var(--border-subtle);
-}
-
-/* The stepper is used as an explanation, not as a progress indicator. */
-.home-orientation .stepper {
-  margin-block-end: 0;
-}
-
-.home-orientation .stepper__item {
-  color: var(--text-body);
-  font-size: var(--font-size-body);
-}
-
-.home-orientation .stepper__marker {
-  border-color: var(--color-primary-900);
-  color: var(--color-primary-900);
-}
-
-.home-orientation .progress-label,
-.home-orientation .progress {
+/* ---- 4 · the register of the four entrances — one frame, four rows (two bays from 48rem).
+        Drawn under the hero only where the hero's tiles carry words alone (hero.css holds that
+        rule): there it is the page's one copy of the four sentences. The whole row is the link;
+        the call and its arrow stand together, the block's one forward mark. --------------------- */
+/* Under the hero the register is the legend's continuation — its title, then the four rows: the lead,
+   which names the four once more between the hero's four and the register's, is not drawn there. */
+.he + .home-entrances .section__lead,
+.he + .home-banner + .home-entrances .section__lead {
   display: none;
 }
 
-.home-orientation__how {
-  max-inline-size: 62ch;
+.home-entrances .register--entrances {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   margin: 0;
-  padding-inline-start: var(--space-6);
-  border-inline-start: var(--border-width-strong) solid var(--border-accent);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h3);
-  line-height: var(--leading-tight);
-  color: var(--color-primary-900);
+  padding: 0;
+  list-style: none;
+  border-block: 0;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-entrances .register__item {
+  margin: 0;
+  border: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.home-entrances .entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: none;
+  align-content: start;
+  gap: var(--s-1);
+  block-size: 100%;
+  min-block-size: 0;
+  padding: var(--s-5) 0;
+  border: 0;
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.home-entrances .entry__title {
+  grid-area: auto;
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  text-decoration: none;
+  text-wrap: balance;
+}
+
+/* The prescribed titles are capitals in the copy itself: tracked as every capital run is, on the
+   French page and where they stand in French on the Arabic one — never an Arabic title. */
+.page-home .home-entrances .entry__title:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+.home-entrances .entry__gloss {
+  grid-area: auto;
+  max-inline-size: var(--measure-small);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* A call may take two lines: under a text-only enlargement «DÉCOUVREZ VOTRE PARCOURS» on one line pushed the phone page
+   66 px past its edge at 390 px (a11y F6). */
+.home-entrances .entry__cta {
+  grid-area: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-block-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-display-caps);
+  color: var(--accent-text);
+  white-space: normal;
+}
+
+.home-entrances .entry__arrow {
+  grid-area: auto;
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: currentColor;
+  transition: translate var(--motion-fast) var(--ease-enter);
+}
+
+.home-entrances .entry__cta:lang(ar) {
+  letter-spacing: 0;
+}
+
+@media (hover: hover) {
+  .home-entrances .entry:hover .entry__cta {
+    color: var(--accent-text-hover);
+  }
+
+  .home-entrances .entry:hover .entry__arrow {
+    translate: 4px 0;
+  }
+
+  [dir="rtl"] .home-entrances .entry:hover .entry__arrow {
+    translate: -4px 0;
+  }
+
+  [dir="rtl"] .home-entrances .entry:hover .entry__cta[lang]:not([lang="ar"]) .entry__arrow {
+    translate: 4px 0;
+  }
+}
+
+/* On the Arabic page a call that stands in French reads left to right (the base sheet turns the run), and its arrow
+   points the way it reads: the forward glyph of an Arabic page is mirrored, which left «DÉCOUVREZ VOTRE PARCOURS ←»
+   pointing back into its own words (the review's m3). */
+[dir="rtl"] .home-entrances .entry__cta[lang]:not([lang="ar"]) .entry__arrow {
+  transform: none;
+}
+
+@media (min-width: 48rem) {
+  .home-entrances .register--entrances {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+}
+
+/* ---- 5 · orientation: the brand chapter. The prescribed sentence is the statement, as written;
+        the four neutral steps (gate G3 closed) are a real sequence and keep their numerals. ---- */
+.home-orientation__how {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  font-weight: var(--w-body);
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+
+.home-orientation .sequence {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-orientation .sequence__step {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--s-2) var(--s-3);
+  align-items: baseline;
+  align-content: start;
+  padding-block: var(--s-4);
+  border: 0;
+  border-block-end: 1px solid var(--line-structure);
+}
+
+.home-orientation .sequence__marker {
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  font-size: var(--t-small);
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.home-orientation .sequence__title {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.home-orientation .sequence__body {
+  max-inline-size: var(--measure-small);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
 }
 
 .home-orientation__note {
-  display: flex;
-  gap: var(--space-2);
-  align-items: flex-start;
-  max-inline-size: var(--measure-prose);
-  margin-block: var(--space-6) 0;
-  font-size: var(--font-size-small);
-  color: var(--text-secondary);
-}
-
-.home-orientation__note .icon {
-  margin-block-start: 0.2em;
-  color: var(--color-accent-700);
+  max-inline-size: var(--measure-small);
+  margin-block: var(--s-6) 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
 }
 
 .home-orientation__actions {
-  margin-block: var(--space-8) 0;
+  margin-block: var(--s-8) 0;
 }
 
-/* =========================================================================
-   6. Regular pathways
-   ========================================================================= */
-@media (min-width: 64rem) {
-  .home-pathways__list .pathway-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-16);
+@media (max-width: 47.999rem) {
+  .home-orientation__how {
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+  }
+
+  .home-orientation__actions .btn {
+    inline-size: 100%;
+    justify-content: space-between;
   }
 }
 
-/* Items of a row share their height: keep title, description and arrow packed at the top. */
-.home-pathways__list .pathway-list__item {
-  align-content: start;
-}
-
-/* The five pathway families were 999px pills laid out in a wrapping row. They are a register now:
-   the layout comes from .register, and this rule only adds the section's own bottom space. */
-.home-families {
-  margin-block-end: var(--s-6);
-}
-
-.home-pathways__pending {
-  max-inline-size: var(--measure-prose);
-  color: var(--text-secondary);
-}
-
-/* =========================================================================
-   7. Pilot project — compact sequence
-   ========================================================================= */
-.home-pilot .timeline__marker {
-  background: var(--surface-2);
-}
-
-/* Compact teaser: two rows of four at every desktop width (eight in a row cannot hold the longest
-   prescribed label), with a single horizontal connector between the steps of a row. The selectors
-   are deliberately as specific as the component's mobile rule so that no vertical rule survives. */
 @media (min-width: 48rem) {
-  .home-pilot .timeline {
+  .home-orientation .sequence {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+}
+
+@media (min-width: 75rem) {
+  .home-orientation .sequence {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .home-pilot .timeline__item::before,
-  .home-pilot .timeline__item:not(:last-child)::before {
-    inset-block-start: 1.25rem;
-    inset-inline-start: 2.5rem;
-    inline-size: calc(100% - 2.5rem + var(--space-4));
-    block-size: 0;
-    border-inline-start: 0;
-    border-block-start: var(--border-width) solid var(--timeline-line);
-  }
-
-  .home-pilot .timeline__item:nth-child(4n)::before,
-  .home-pilot .timeline__item:last-child::before {
-    display: none;
+  .home-orientation .sequence__step {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* =========================================================================
-   8. Trust / transparency — two calm columns, typographic markers only
-   ========================================================================= */
-.home-trust__grid {
+/* ---- 6 · the regular pathways: a register in two columns, the title over its description and
+        never smaller than it; a catalogue, not a ranking — no numeral. The row is the link. ----- */
+.home-pathways .pathway-list {
   display: grid;
-  gap: var(--space-8) var(--space-16);
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-pathways .pathway-list__item,
+.home-pathways .pathway-list__item:hover,
+.home-pathways .pathway-list__item:focus-within {
+  background: none;
+}
+
+.home-pathways .pathway-list__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-1) var(--s-4);
+  align-items: start;
+  align-content: start;
+  padding: var(--s-5) 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.home-pathways .pathway-list__num {
+  display: none;
+}
+
+.home-pathways .pathway-list__title {
+  grid-column: 1;
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+}
+
+.home-pathways .pathway-list__title a {
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.home-pathways .pathway-list__title a:hover {
+  color: var(--text-1);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.home-pathways .pathway-list__desc {
+  grid-column: 1;
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.home-pathways .pathway-list__arrow {
+  display: block;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: var(--s-1);
+  color: var(--text-3);
+  transition: translate var(--motion-fast) var(--ease-enter), opacity var(--motion-fast) var(--ease-enter);
+}
+
+/* The arrow is the row's standing sign that it opens something — the trust chapter's rows, drawn alike, open
+   nothing (a11y F5: it waited at 0 for the hand, and nothing at rest told the two apart). Under a hand that hovers
+   it rests at .6, as the hero's own arrows do, and answers at 1; under a finger it stands whole. */
+@media (hover: hover) {
+  .home-pathways .pathway-list__arrow {
+    opacity: 0.6;
+  }
+
+  .home-pathways .pathway-list__item:hover .pathway-list__arrow,
+  .home-pathways .pathway-list__item:focus-within .pathway-list__arrow {
+    opacity: 1;
+    translate: 4px 0;
+  }
+
+  [dir="rtl"] .home-pathways .pathway-list__item:hover .pathway-list__arrow,
+  [dir="rtl"] .home-pathways .pathway-list__item:focus-within .pathway-list__arrow {
+    translate: -4px 0;
+  }
+
+  [dir="rtl"] .home-pathways .pathway-list__item:has(> .pathway-list__title[lang]:not([lang="ar"])):is(:hover, :focus-within) .pathway-list__arrow {
+    translate: 4px 0;
+  }
+}
+
+/* On the Arabic page a row whose title stands in French reads left to right, as a whole: its title starts the row
+   and its arrow ends it, pointing the way the title reads (the review's m3: the mirrored row put «←» in front of
+   «Travail salarié», pointing back). The row keeps its place in the mirrored register. */
+[dir="rtl"] .home-pathways .pathway-list__item:has(> .pathway-list__title[lang]:not([lang="ar"])) {
+  direction: ltr;
+}
+
+[dir="rtl"] .home-pathways .pathway-list__item:has(> .pathway-list__title[lang]:not([lang="ar"])) .pathway-list__arrow {
+  transform: none;
+}
+
+/* The families shown while gate G3 is closed: plain rows — nothing to open, nothing ranked. */
+.home-families {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0 0 var(--s-6);
+  padding: 0;
+  list-style: none;
+  border-block: 0;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-families .register__item {
+  border: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.home-families .entry {
+  display: block;
+  min-block-size: 0;
+  padding: var(--s-4) 0;
+  border: 0;
+}
+
+.home-families .entry__title {
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.home-pathways__pending {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
 }
 
 @media (min-width: 48rem) {
-  .home-trust__grid {
+  .home-pathways .pathway-list,
+  .home-families {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
   }
 }
 
+/* ---- 7 · the pilot: a statement on the night ground — the prescribed title (capitals in the
+        copy itself, tracked as every capital run), the section's sentence, one link. The route
+        is the hero's: it is not drawn again here. ------------------------------------------- */
+.page-home .home-pilot .section__title:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+.home-pilot .section__lead {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+}
+
+/* ---- 8 · trust: four questions and their answers in one column at the reading measure, kept
+        open — the four «Non.» are the chapter. The question stands on its own line above its
+        answer and is never smaller than it; it wraps as it comes (a balanced wrap broke the
+        questions inside their verb–pronoun inversion at every width). ------------------------ */
+.home-trust__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-block-start: 1px solid var(--line-structure);
+}
+
 .home-trust__item {
-  padding-block-start: var(--space-5);
-  border-block-start: var(--border-width) solid var(--border-subtle);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-2);
+  padding-block: var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
 }
 
 .home-trust__question {
-  margin-block-end: var(--space-2);
-  font-size: var(--font-size-h4);
-  font-family: var(--font-display);
-  font-weight: var(--weight-medium);
-  color: var(--color-primary-900);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  color: var(--text-1);
+  text-wrap: wrap;
 }
 
 .home-trust__answer {
+  max-inline-size: var(--measure-body);
   margin: 0;
-  color: var(--text-secondary);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+/* While gate G3 is closed: what the platform does, and what it does not, as two columns. */
+.home-trust__grid--columns {
+  gap: var(--s-8) var(--s-6);
+  border: 0;
 }
 
 .home-trust__column-title {
-  margin-block-end: 0;
-  padding-block-end: var(--space-3);
-  border-block-end: var(--border-width-strong) solid var(--border-accent);
-  font-size: var(--font-size-h3);
-  color: var(--color-primary-900);
+  margin: 0;
+  padding-block-end: var(--s-3);
+  border-block-end: 1px solid var(--line-structure);
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  color: var(--text-1);
 }
 
 .home-trust__list {
@@ -441,28 +794,434 @@ html.js .page-institutional .reveal {
 }
 
 .home-trust__statement {
+  max-inline-size: none;
+  padding-block: var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .home-trust__grid--columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- 9 · «il gradino», the anti-fraud warning on a plate of its own: a raised sheet on the
+        stone, an ink rule at the reading edge (ink, not a status colour), the prescribed
+        paragraph whole at the reading measure. ---------------------------------------------- */
+.page-home .home-antifraud {
+  padding-block: var(--s-12);
+}
+
+.gradino {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-5);
+  padding: var(--s-6);
+  background: var(--surface-raised);
+  border: 1px solid var(--line-rhythm);
+  border-inline-start: 3px solid var(--text-1);
+  border-start-end-radius: var(--radius-lg);
+  border-end-end-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.gradino__mark {
+  display: block;
+  margin-block-end: var(--s-4);
+  color: var(--text-1);
+}
+
+.gradino__mark .icon {
+  display: block;
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+}
+
+.page-home .gradino .gradino__title {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-display-caps);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.page-home .gradino .gradino__title:lang(ar) {
+  line-height: var(--ar-title-lh);
+  letter-spacing: 0;
+}
+
+.gradino__body {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+
+.gradino__actions {
+  margin-block: var(--s-5) 0;
+}
+
+@media (min-width: 48rem) {
+  .page-home .home-antifraud {
+    padding-block: var(--s-16);
+  }
+
+  .gradino {
+    padding: var(--s-10);
+  }
+}
+
+/* From 75rem the plate takes the chapter's twelve columns as its own (a subgrid): its head fills the
+   first four less the plate's pad, and its paragraph starts on the line every chapter's body starts on. */
+@media (min-width: 75rem) {
+  .gradino {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
+
+  .gradino__head {
+    grid-column: 1 / span 4;
+  }
+
+  .gradino__content {
+    grid-column: 5 / span 8;
+  }
+}
+
+/* ---- 10 · the news: rows of a register (category and date, title, summary); while nothing is
+         published, one plain sentence in the same row — no dashed frame, no pictogram. --------- */
+.home-news__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-news .card,
+.home-news .card--link:hover,
+.home-news .card--link:focus-within {
+  border-color: var(--line-rhythm);
+  box-shadow: none;
+}
+
+.home-news .card {
   position: relative;
-  padding-block: var(--space-4);
-  padding-inline-start: var(--space-8);
-  border-block-end: var(--border-width) solid var(--border-hairline);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "eyebrow meta"
+    "title   title"
+    "text    text";
+  gap: var(--s-1) var(--s-4);
+  padding: var(--s-5) 0;
+  background: none;
+  border: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+  border-radius: 0;
 }
 
-.home-trust__statement::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: 0;
-  inset-block-start: calc(var(--space-4) + 0.75em);
-  inline-size: var(--space-4);
-  border-block-start: var(--border-width-strong) solid var(--color-secondary-800);
+.home-news .card__eyebrow {
+  grid-area: eyebrow;
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-2);
 }
 
-.home-trust__list--not .home-trust__statement::before {
-  border-block-start-color: var(--border-strong);
+.home-news .card__meta {
+  grid-area: meta;
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
 }
 
-/* =========================================================================
-   9. Anti-fraud — shield panel: visible, never sensationalist
-   ========================================================================= */
+.home-news .card__title {
+  grid-area: title;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.home-news .card__title a,
+.home-news .card__title a:hover {
+  color: var(--text-1);
+}
+
+.home-news .card__title a {
+  text-decoration: none;
+}
+
+.home-news .card__title a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.home-news .card__text {
+  grid-area: text;
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* While nothing is published the chapter says so in one row: the empty state's own glyph in its disc (W1-B,
+   DL54-33: an empty state says which space is empty — the news' `newspaper` — and is one composition on
+   every page that uses it), the sentence, what will stand here. Only the V4 box is undone: no dashed frame,
+   nothing centred; the disc is as tall as the row's two lines. W3-E redraws the component. */
+.home-news .empty-state {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 var(--s-4);
+  justify-items: start;
+  max-inline-size: none;
+  margin: 0;
+  padding: var(--s-5) 0;
+  text-align: start;
+  border: 0;
+  border-block-start: 1px solid var(--line-structure);
+  border-block-end: 1px solid var(--line-rhythm);
+  border-radius: 0;
+  color: var(--text-2);
+}
+
+.home-news .empty-state__icon {
+  grid-row: 1 / span 2;
+  margin: 0;
+}
+
+/* beside the disc a phone's column breaks both sentences: balanced, neither leaves one word on a line */
+.home-news .empty-state__title {
+  grid-column: 2;
+  margin: 0;
+  text-wrap: balance;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.home-news .empty-state__text {
+  grid-column: 2;
+  max-inline-size: var(--measure-small);
+  text-wrap: balance;
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+/* ---- 11 · the ecosystem: two bays under one lintel — who promotes the project, and with whom. - */
+.home-ecosystem__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8) var(--s-6);
+}
+
+.home-ecosystem__promoter,
+.home-ecosystem__partners {
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-ecosystem__label {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-2);
+}
+
+.home-ecosystem__name {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.home-ecosystem__text,
+.home-ecosystem__empty {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.home-ecosystem__more {
+  margin: var(--s-4) 0 0;
+}
+
+.home-ecosystem__list {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-ecosystem__partner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.home-ecosystem__logo {
+  inline-size: auto;
+  max-block-size: 2.5rem;
+}
+
+@media (min-width: 48rem) {
+  .home-ecosystem__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- 12 · the reserved area: the page's last door — a slim row on the night the footer
+         continues, the key of the mark, one quiet button. Secondary, never protagonist. ------- */
+.page-home .home-reserved {
+  padding-block: var(--s-8);
+  background: var(--grad-brand-dark);
+  color: var(--text-on-night-1);
+}
+
+.home-reserved__panel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+}
+
+.home-reserved__button {
+  grid-column: 2;
+}
+
+/* The key is the sprite's identity glyph `ile-key` (apps/core/icons.py: «Espace réservé», never mirrored): a
+   narrow upright drawing, 6.5 units of its 24-unit box, 9 in from one side and 8.5 from the other. The box is
+   pulled by those shares, so the key — not its box — stands on the reading edge, level with the label it
+   signs, the row's gap away from the words. The pull is the seat's, not the glyph's: the reset caps an svg
+   at its container's width (base.css), and a seat shrunk to the drawing would shrink the key with it. */
+.home-reserved__mark {
+  display: block;
+  align-self: start;
+  inline-size: var(--icon-lg);
+  margin-inline: calc(var(--icon-lg) * -9 / 24) calc(var(--icon-lg) * -8 / 24);
+  color: var(--identity-key);
+}
+
+.home-reserved__mark .icon {
+  display: block;
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+}
+
+.page-home .home-reserved .home-reserved__title {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-eyebrow);
+  color: var(--text-on-night-1);
+}
+
+.page-home .home-reserved .home-reserved__title:lang(ar) {
+  letter-spacing: 0;
+}
+
+.home-reserved__body {
+  max-inline-size: var(--measure-small);
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-on-night-2);
+}
+
+.home-reserved__button {
+  justify-self: start;
+}
+
+@media (min-width: 48rem) {
+  .home-reserved__panel {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--s-5);
+    align-items: center;
+  }
+
+  .home-reserved__button {
+    grid-column: auto;
+  }
+}
+
+/* ---- the reading text of a row is 16 px below 64rem (RE-4: nothing a person reads on a phone
+        or a small tablet is under 16 px), and the register's title with it: it is never smaller
+        than its sentence --------------------------------------------------------------------- */
+@media (max-width: 63.999rem) {
+  .home-section__note,
+  .home-entrances .entry__title,
+  .home-entrances .entry__gloss,
+  .home-orientation .sequence__body,
+  .home-orientation__note,
+  .home-pathways .pathway-list__desc,
+  .home-pathways__pending,
+  .home-trust__answer,
+  .gradino__body,
+  .home-trust__statement,
+  .home-news .card__text,
+  .home-news .empty-state__text,
+  .home-ecosystem__text,
+  .home-ecosystem__empty,
+  .home-reserved__body {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* ---- the Arabic page. A chapter mirrors: its head stands at the reading edge, its body beside it.
+        A French run in a head or in the reserved row — a prescribed title with no official Arabic
+        version, an editor's heading — ends on that edge, under the mark (the hero's rule: one edge
+        per column). A French reading block in a body keeps its own alignment, in a box that stands on
+        the reading edge. (0,4,1): above the shared helper of part 1. ---------------------------- */
+[dir="rtl"] .page-home :is(.chapter__head, .gradino__head, .home-reserved__text) :is(h2, p)[lang="fr"] {
+  text-align: end;
+}
+
+/* ---- forced colours: the plate's rule and the registers' lines are borders already -------- */
+@media (forced-colors: active) {
+  .gradino {
+    border-color: CanvasText;
+  }
+
+  /* a ground is gone: its band keeps its edge as a rule, and the mark takes the text's colour (an SVG keeps
+     the colour its own rule gives it) */
+  .page-home :is(.chapter--brand, .chapter--area, .chapter--dark, .home-reserved) {
+    background: Canvas;
+    color: CanvasText;
+    border-block-start: 1px solid CanvasText;
+  }
+}
+
+/* ============================================================================
+   3 · The anti-fraud page's panel (templates/pages/antifraud.html) and the institutional pages
+   ========================================================================== */
 .antifraud-panel {
   display: grid;
   gap: var(--space-5) var(--space-8);
@@ -491,13 +1250,6 @@ html.js .page-institutional .reveal {
   color: var(--color-primary-900);
 }
 
-.antifraud-panel__title {
-  margin-block-end: var(--space-4);
-  font-size: var(--font-size-h2);
-  letter-spacing: 0.02em;
-  color: var(--color-primary-900);
-}
-
 .antifraud-panel__body {
   max-inline-size: var(--measure-prose);
   margin: 0;
@@ -506,125 +1258,8 @@ html.js .page-institutional .reveal {
   color: var(--text-body);
 }
 
-.antifraud-panel__actions {
-  margin-block: var(--space-6) 0;
-}
-
 .antifraud-panel--page {
   margin-block-end: var(--space-12);
-}
-
-/* =========================================================================
-   11. Institutional ecosystem
-   ========================================================================= */
-.home-ecosystem__grid {
-  display: grid;
-  gap: var(--space-10) var(--space-16);
-}
-
-@media (min-width: 56rem) {
-  .home-ecosystem__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.home-ecosystem__promoter,
-.home-ecosystem__partners {
-  padding-block-start: var(--space-6);
-  border-block-start: var(--border-width) solid var(--border-subtle);
-}
-
-.home-ecosystem__label {
-  margin-block-end: var(--space-3);
-  font-size: var(--font-size-eyebrow);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-  color: var(--color-accent-700);
-}
-
-:lang(ar) .home-ecosystem__label {
-  text-transform: none;
-}
-
-.home-ecosystem__name {
-  margin-block-end: var(--space-3);
-  color: var(--color-primary-900);
-}
-
-.home-ecosystem__text,
-.home-ecosystem__empty {
-  max-inline-size: var(--measure-lead);
-  color: var(--text-secondary);
-}
-
-.home-ecosystem__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3) var(--space-8);
-  margin: 0 0 var(--space-5);
-  padding: 0;
-  list-style: none;
-}
-
-.home-ecosystem__partner {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h4);
-  color: var(--color-primary-900);
-}
-
-.home-ecosystem__logo {
-  inline-size: auto;
-  max-block-size: 3rem;
-}
-
-/* =========================================================================
-   12. Reserved area — secondary, never protagonist
-   ========================================================================= */
-.home-reserved {
-  padding-block: 0 var(--section-gap);
-}
-
-.home-reserved__panel {
-  display: grid;
-  gap: var(--space-4) var(--space-5);
-  align-items: center;
-  padding: var(--space-5) var(--space-6);
-  background: var(--surface-1);
-  border: var(--border-width) solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-@media (min-width: 48rem) {
-  .home-reserved__panel {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
-}
-
-.home-reserved__mark {
-  color: var(--color-accent-700);
-}
-
-.home-reserved__title {
-  margin: 0 0 var(--space-1);
-  font-family: var(--font-body);
-  font-size: var(--font-size-label);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
-  color: var(--color-primary-900);
-}
-
-.home-reserved__body {
-  margin: 0;
-  font-size: var(--font-size-small);
-  color: var(--text-secondary);
-}
-
-.home-reserved__button {
-  justify-self: start;
 }
 
 /* =========================================================================
@@ -804,7 +1439,6 @@ html.js .page-institutional .reveal {
 /* ---- Print ------------------------------------------------------------------ */
 @media print {
   .home-banner__dismiss,
-  .home-hero__figure,
   .page-figure {
     display: none !important;
   }

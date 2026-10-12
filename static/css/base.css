@@ -157,13 +157,6 @@ h6 {
   text-wrap: balance;
 }
 
-/* A caps plate, permitted at most once per page and only on a plate. */
-.t-plate--caps {
-  text-transform: uppercase;
-  letter-spacing: var(--track-caps-display);
-  font-feature-settings: "case" 1;
-}
-
 h1,
 .t-title {
   font-size: var(--t-title-size);
@@ -180,8 +173,7 @@ h2,
   letter-spacing: var(--track-band);
 }
 
-h3,
-.t-entry {
+h3 {
   font-size: var(--t-entry-size);
   line-height: var(--t-entry-lh);
   font-weight: 500;
@@ -261,30 +253,8 @@ small {
   color: var(--ink-muted);
 }
 
-/* Buttons, navigation, labels, table cells. */
-.t-ui {
-  font-family: var(--font-ui);
-  font-size: var(--t-ui-size);
-  line-height: var(--t-ui-lh);
-  font-weight: 500;
-}
-
-.t-muted {
-  color: var(--ink-muted);
-}
-
 .t-secondary {
   color: var(--ink-secondary);
-}
-
-/* The rail ordinal: the strongest single mark on the site. */
-.t-numeral {
-  font-family: var(--font-display);
-  font-size: var(--t-numeral-size);
-  line-height: var(--t-numeral-lh);
-  font-weight: 400;
-  font-variant-numeric: lining-nums tabular-nums;
-  color: var(--rubric);
 }
 
 strong,
@@ -311,11 +281,9 @@ th,
 .utility-bar,
 .breadcrumbs,
 .pagination,
-.lang-switcher,
 .site-footer nav,
 .local-nav,
 .tabs,
-.state,
 .folio__head,
 .folio__date {
   font-family: var(--font-ui);
@@ -327,7 +295,6 @@ th,
 td,
 th,
 time[datetime],
-.t-numeral,
 .t-ref,
 .folio__ordinal,
 .entry__ordinal {
@@ -356,43 +323,8 @@ html {
   font-synthesis: none;
 }
 
-/* ---- Links ---------------------------------------------------------------- */
-a {
-  color: var(--text-link);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
-  text-decoration-color: color-mix(in srgb, currentcolor 45%, transparent);
-  transition: color var(--duration-fast) var(--ease-standard),
-    text-decoration-color var(--duration-fast) var(--ease-standard);
-}
-
-a:hover {
-  color: var(--text-link-hover);
-  text-decoration-color: currentcolor;
-}
-
-a:not([class]):visited {
-  color: var(--color-primary-800);
-}
-
-/* ---- Focus (WCAG 2.4.7 / 2.4.11) — two-tone ring visible on any surface --- */
-:focus {
-  outline: none;
-}
-
-:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
-  border-radius: var(--radius-xs);
-}
-
-.on-inverse :focus-visible,
-.surface-inverse :focus-visible {
-  outline-color: var(--focus-ring-inverse);
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--surface-inverse);
-}
+/* ---- Links and focus: moved to static/css/v5/base.css (design V5, W1-A; V5.4 plan §1.6 and §2.3,
+   the deletion map) — one link rule and one focus system for the whole cascade. ---------------- */
 
 /* ---- Skip link ------------------------------------------------------------ */
 .skip-link {
@@ -580,8 +512,7 @@ a:not([class]):visited {
   .site-header,
   .site-footer__nav,
   .skip-link,
-  .breadcrumbs,
-  .no-print {
+  .breadcrumbs {
     display: none !important;
   }
 

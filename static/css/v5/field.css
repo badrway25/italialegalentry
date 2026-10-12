@@ -1,0 +1,369 @@
+/* ============================================================================================
+   FIELDS V5 — «la lastra»: the form's scaffold, the field, its controls and their states (W1-C)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.4 (SP-3: the label belongs to its control — above it, 14/20 at 500,
+   8 px away, 24 px between two fields; SH-9: paper carries a hairline only, no lit edge, no shadow), §1.6 (the
+   one focus system: the ring and, on text fields, the 5 px halo — both in v5/base.css — and here the 2 px
+   rule that draws from the reading edge on a pointer focus), §1.8 (44 px; 52 px on public pages; 44 px
+   targets under a coarse pointer), §1.13 («la lastra»); DESIGN_SYSTEM_V5 §10.3; drawn reference: the gate-0
+   foundation's components.css §5.
+   Markup: templates/components/form_field.html and the other producers of the same contract
+   (enquiries/partials/form_field.html, allauth/elements/field.html, the hand-written console forms):
+   .form-field > label.form-field__label + the control + p.form-field__help + .form-field__errors, wired by
+   Django with aria-describedby and aria-invalid. Replaces components.css §20's field rules and the password
+   control of v4/buttons.css (plan §2.3, the deletion map).
+   Typed text is 16 px in every field at every width: v5/base.css holds that size against every sheet.
+   An error is never colour alone: a 2 px edge (1 px at rest), a drawn mark and the words.
+   Specificity is kept low on purpose — the plate is (0,1,0) — so a component that draws its own control
+   keeps it (the wizard's, the documents' search, the console's table select).
+   Tokens only (layers 2 and 3 of v5/tokens.css); logical properties; the reading-edge origins and the
+   switch's travel have their RTL twins.
+   ============================================================================================ */
+
+/* public pages take the 52 px control (plan §1.8); the console keeps 44 */
+body:not(.console) { --field-h: var(--control-lg); }
+
+/* ---- 1. The scaffold: one column, groups two and a half fields apart (SP-2), actions after a hairline ---- */
+.form { max-inline-size: var(--container-narrow); }
+.form__group,
+.form__fieldset {
+  min-inline-size: 0;
+  margin: 0 0 var(--s-16);
+  padding: 0;
+  border: 0;
+}
+.form__legend {
+  margin-block-end: var(--s-5);
+  padding: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+:lang(ar) .form__legend { letter-spacing: 0; }
+/* the group's last field gives its own margin up: two groups are 64 px apart, not 64 and a field's 24 */
+:is(.form__group, .form__fieldset) > :last-child { margin-block-end: 0; }
+.form__required-note { margin-block-end: var(--s-6); font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  margin-block-start: var(--s-8);
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+.form-row { display: grid; gap: 0 var(--s-6); }
+@media (min-width: 48rem) {
+  .form-row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 47.999rem) {
+  .form__group, .form__fieldset { margin-block-end: var(--s-12); }
+}
+
+/* ---- 2. The field: label, control, help, errors — a column, so the focus rule can sit on the control ---- */
+.form-field {
+  --field-draw: var(--motion-standard);
+  display: flex;
+  flex-direction: column;
+  margin-block-end: var(--s-6);
+}
+/* a focus that came from the keyboard draws nothing: the rule is there at once (plan §1.5, tier 0) */
+html[data-input="key"] .form-field { --field-draw: 0ms; }
+.form-field__label {
+  display: block;
+  margin-block-end: var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+.form-field__required { margin-inline-start: 0.15em; color: var(--tone-rifiuto-mark); }
+.form-field__help,
+.form-field__errors { order: 2; margin: var(--s-2) 0 0; font-size: var(--t-small); line-height: var(--t-small-lh); }
+.form-field__help { color: var(--text-2); }
+/* a help that is a list (Django's password rules): the help's own type, a small indent, 4 px between items —
+   never the body's bullets at body size (review M1) */
+.form-field__help :is(ul, ol) { margin: 0; padding-inline-start: 1.25em; }
+.form-field__help li + li { margin-block-start: var(--s-1); }
+.form-field__help p { margin: 0; }
+
+/* ---- 3. The control — a plate: paper, a hairline that holds 3:1, 4 px corners, no shadow ---------------- */
+/* any text control, wherever it is and at no specificity: a control no component has drawn yet is a plate
+   too, and every component that draws its own keeps it */
+:where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="submit"], [type="button"], [type="reset"], [type="image"], [type="hidden"]), select, textarea) {
+  min-block-size: var(--field-h);
+  padding-inline: calc((var(--field-h) - 1.25rem) / 2);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--field-radius);
+  background-color: var(--field-bg);
+}
+:where(textarea) { padding-block: var(--s-3); }
+:where(input, textarea)::placeholder { color: var(--text-3); opacity: 1; }
+:where(input[type="file"]) { max-inline-size: 100%; }
+
+.form-field :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea),
+.input,
+.search-form__input {
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--field-h);
+  padding-block: 0;
+  padding-inline: calc((var(--field-h) - 1.25rem) / 2);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--field-radius);
+  background-color: var(--field-bg);
+  box-shadow: none;
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  line-height: 1.5rem;
+  transition: border-color var(--motion-fast) var(--ease-enter);
+}
+.form-field textarea { min-block-size: var(--textarea-min); max-block-size: 50vh; padding-block: var(--s-3); resize: vertical; }
+.form-field input[type="search"], .search-form__input { appearance: none; }
+.form-field :is(input, textarea)::placeholder { color: var(--text-3); opacity: 1; }
+/* autofill keeps the plate: the browser's tint would be a second surface */
+.form-field :is(input, select, textarea):autofill { box-shadow: inset 0 0 0 100vmax var(--field-bg); -webkit-text-fill-color: var(--text-1); }
+
+/* the select: the native control, with the system's chevron drawn from the icon ink at the inline end */
+.form-field select:not([multiple], [size]) {
+  appearance: none;
+  padding-inline-end: calc((var(--field-h) - 1.25rem) / 2 + 1.25rem);
+  background-image:
+    linear-gradient(45deg, transparent calc(50% - 1.1px), var(--icon-default) calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 1.1px)),
+    linear-gradient(135deg, transparent calc(50% - 1.1px), var(--icon-default) calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 1.1px));
+  background-repeat: no-repeat;
+  background-size: 5px 5px;
+  background-position: right calc((var(--field-h) - 1.25rem) / 2 + 5px) center, right calc((var(--field-h) - 1.25rem) / 2) center;
+}
+[dir="rtl"] .form-field select:not([multiple], [size]) {
+  background-position: left calc((var(--field-h) - 1.25rem) / 2) center, left calc((var(--field-h) - 1.25rem) / 2 + 5px) center;
+}
+.form-field select:is([multiple], [size]) { padding-block: var(--s-2); }
+
+/* the file control: the browser's own, its button a small secondary */
+.form-field input[type="file"] { max-inline-size: 100%; font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
+.form-field input[type="file"]::file-selector-button {
+  min-block-size: var(--control-sm);
+  margin-inline-end: var(--s-3);
+  padding-inline: var(--s-4);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--btn-radius);
+  background: var(--surface-sheet);
+  color: var(--text-1);
+  font: inherit;
+  font-weight: var(--w-control);
+  cursor: pointer;
+}
+@media (pointer: coarse) {
+  .form-field input[type="file"]::file-selector-button { min-block-size: var(--hit-primary); }
+}
+
+/* a date field's calendar button takes the system's ring, not the browser's (A11Y A9) */
+::-webkit-calendar-picker-indicator:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: var(--radius-xs); }
+
+/* ---- 4. States of the plate ------------------------------------------------------------------------------ */
+@media (hover: hover) {
+  .form-field :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):hover:not(:disabled, :focus-visible),
+  :is(.input, .search-form__input):hover:not(:disabled, :focus-visible) { border-color: var(--field-edge-hover); }
+}
+/* focus: the ring and the halo are v5/base.css's; the edge takes the ring's colour, and a 2 px rule draws
+   along the foot from the reading edge in 200 ms — at once from the keyboard (html[data-input="key"], the
+   input-modality flag of static/js/head.js) and under reduced motion (the duration token is 0 ms).
+   In the console the workspace's own rule (v4/workspace.css, the console family's) keeps V4's 2 px companion
+   in the ground's colour in the halo's place: the ring, the edge and the rule are the same. */
+.form-field :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):focus-visible,
+:is(.input, .search-form__input):focus-visible { border-color: var(--field-edge-focus); }
+.form-field::after {
+  content: "";
+  order: 1;
+  block-size: 2px;
+  margin-block-start: -2px;
+  border-radius: 0 0 var(--field-radius) var(--field-radius) / 0 0 2px 2px;
+  background: var(--field-edge-focus);
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+[dir="rtl"] .form-field::after { transform-origin: 100% 50%; }
+.form-field:has(> :is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):focus-visible, > .form-field__control > input:focus-visible)::after {
+  transform: scaleX(1);
+  transition: transform var(--field-draw) var(--ease-enter);
+}
+
+/* invalid: the edge doubles (2 px against 1), in the garnet of a refusal; the message below carries a mark
+   and the words. A warning takes the amber edge and does not block. */
+.form-field--error :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea),
+:where(input, select, textarea)[aria-invalid="true"] {
+  border-color: var(--field-edge-invalid);
+  box-shadow: inset 0 0 0 1px var(--field-edge-invalid);
+}
+/* the halo is a text field's (plan §1.6): an invalid checkbox keeps its ring alone (A11Y A6) */
+:is(input:not([type="checkbox"], [type="radio"]), select, textarea)[aria-invalid="true"]:focus-visible {
+  border-color: var(--field-edge-invalid);
+  box-shadow: inset 0 0 0 1px var(--field-edge-invalid), 0 0 0 5px var(--focus-halo);
+}
+.form-field :where(input, select, textarea).is-warning { border-color: var(--field-edge-warning); }
+.form-field__errors { padding: 0; list-style: none; font-weight: var(--w-control); color: var(--tone-rifiuto-text); }
+.form-field__error-list { margin: 0; padding: 0; list-style: none; }
+.form-field__errors li { display: grid; grid-template-columns: 1rem minmax(0, 1fr); gap: var(--s-2); }
+.form-field__errors li + li { margin-block-start: var(--s-1); }
+/* the mark: a ring with its stroke and its point, drawn in the message's own ink — never a glyph a reader hears */
+.form-field__errors li::before {
+  content: "";
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-block-start: 2px;
+  border: 1.5px solid;
+  border-radius: 50%;
+  background:
+    linear-gradient(currentColor, currentColor) 50% 3px / 1.5px 4.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 50% 9px / 1.5px 1.5px no-repeat;
+}
+
+/* disabled, read-only */
+.form-field :where(input, select, textarea):disabled,
+.input:disabled {
+  border-color: transparent;
+  background-color: var(--field-bg-disabled);
+  color: var(--field-text-disabled);
+  cursor: not-allowed;
+}
+.form-field :where(input, textarea):read-only:not(:disabled, [type="checkbox"], [type="radio"], [type="file"]) { background-color: var(--surface-area); }
+
+/* ---- 5. The password field's show / hide control: a glyph in a seat at the plate's end (review M2) ---------
+   The plate gives the control one square at its end — its own height — and the password the rest: 12 characters
+   and more stay readable on a 320 px phone. The seat is the plate's height less 8 px (44 px public, 36 px in the
+   console) and is hit 4 px further on every side (52 / 44 px). `eye` while the password is hidden, `eye-off`
+   while it is shown: aria-pressed is the one channel (A11Y A10), the glyph swaps at once (plan §1.13). */
+.form-field__control { position: relative; }
+.form-field .form-field__control--password > input:not([type="checkbox"], [type="radio"], [type="file"]) { padding-inline-end: var(--field-h); }
+/* a password is typed left to right on an Arabic page too (V1 base.css), shown or hidden: the room for the
+   control is then at the input's own start, which is where the page's inline end is */
+[dir="rtl"] .form-field .form-field__control--password > input:not([type="checkbox"], [type="radio"], [type="file"]) {
+  direction: ltr;
+  padding-inline: var(--field-h) calc((var(--field-h) - 1.25rem) / 2);
+  text-align: end;
+}
+.form-field__toggle {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  display: grid;
+  place-items: center;
+  inline-size: calc(var(--field-h) - 8px);
+  block-size: calc(var(--field-h) - 8px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--accent-text);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
+}
+.form-field__toggle .icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+.form-field__toggle-hide,
+.form-field__toggle[aria-pressed="true"] .form-field__toggle-show { display: none; }
+.form-field__toggle[aria-pressed="true"] .form-field__toggle-hide { display: block; }
+.form-field__toggle::after { content: ""; position: absolute; inset: -4px; }
+@media (hover: hover) {
+  .form-field__toggle:hover { background: var(--surface-hover); color: var(--accent-text-hover); }
+}
+.form-field__toggle:active,
+.form-field__toggle[aria-pressed="true"] { background: var(--accent-wash); color: var(--accent-text-hover); }
+
+/* ---- 6. Checkbox, radio, switch — the native control, drawn: a 24 px box (the target floor), the person's
+        own mark in it (a check is theirs to make: it is never a status) -------------------------------------- */
+:where(input[type="checkbox"], input[type="radio"]) {
+  appearance: none;
+  position: relative;
+  display: inline-grid;
+  place-content: center;
+  flex: none;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  margin: 0;
+  border: 1px solid var(--field-edge);
+  border-radius: var(--field-radius);
+  background-color: var(--field-bg);
+  color: var(--text-on-accent);
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-enter), border-color var(--motion-fast) var(--ease-enter);
+}
+:where(input[type="radio"]) { border-radius: var(--radius-full); }
+:where(input[type="checkbox"], input[type="radio"])::before {
+  content: "";
+  inline-size: 1rem;
+  block-size: 1rem;
+  background: currentColor;
+  clip-path: polygon(11.2% 53.2%, 42.4% 83%, 90.8% 26.4%, 82.4% 19.2%, 41.6% 67%, 18.8% 45.2%);
+  transform: scale(0);
+  transition: transform var(--motion-fast) var(--ease-enter);
+}
+:where(input[type="radio"])::before { inline-size: 0.5rem; block-size: 0.5rem; border-radius: 50%; clip-path: none; }
+:where(input[type="checkbox"], input[type="radio"]):checked { border-color: var(--fill-primary-press); background-color: var(--fill-primary); }
+/* the person's mark is white on the fill (5.29 : 1): V1's `input { color: inherit }` outranks the zero-specificity
+   base, so this one rule carries real specificity (review m1, A11Y R2) */
+input:is([type="checkbox"], [type="radio"]):checked { color: var(--text-on-accent); }
+:where(input[type="checkbox"], input[type="radio"]):checked::before { transform: scale(1); }
+/* tier 0 (plan §1.5, R-07): from the keyboard the edge, the show / hide control and the tick are there in the
+   next frame (the 2 px rule: --field-draw, above) */
+html[data-input="key"] :is(.form-field :is(input, select, textarea), .input, .search-form__input, .form-field__toggle, input[type="checkbox"], input[type="radio"]),
+html[data-input="key"] :is(input[type="checkbox"], input[type="radio"])::before { transition-duration: 0ms; }
+@media (hover: hover) {
+  :where(input[type="checkbox"], input[type="radio"]):hover:not(:checked, :disabled) { border-color: var(--field-edge-hover); }
+}
+:where(input[type="checkbox"], input[type="radio"]):disabled { border-color: transparent; background-color: var(--field-bg-disabled); color: var(--field-text-disabled); cursor: not-allowed; }
+/* the switch: a checkbox that says role="switch" — a 44 × 24 track, the thumb at the end when it is on */
+:where(input[type="checkbox"][role="switch"]) { inline-size: 2.75rem; place-content: center start; padding-inline: 2px; border-radius: var(--radius-full); background-color: var(--surface-area); }
+:where(input[type="checkbox"][role="switch"])::before { inline-size: 1.125rem; block-size: 1.125rem; border-radius: 50%; background: var(--text-2); clip-path: none; transform: none; }
+:where(input[type="checkbox"][role="switch"]):checked::before { background: currentColor; transform: translateX(1.25rem); }
+[dir="rtl"] :where(input[type="checkbox"][role="switch"]):checked::before { transform: translateX(-1.25rem); }
+/* under a coarse pointer the box is hit in 44 px (22 px inside its edge, 11 px more on every side) */
+@media (pointer: coarse) {
+  :where(input[type="checkbox"], input[type="radio"])::after { content: ""; position: absolute; inset: -11px; }
+}
+
+/* the row of a checkbox or a radio and its label: 44 px for one line, the box on the first line */
+.form-field__check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding-block: calc((var(--hit-primary) - 1.5rem) / 2);
+}
+.form-field__check label {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-weight: var(--w-body);
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+/* ---- 7. The summary of a form's errors (components/form_errors.html: an error notice with links) --------- */
+.form-errors { margin-block-end: var(--s-8); }
+.form-errors__list { margin: var(--s-2) 0 0; padding-inline-start: 1.25em; }
+.form-errors__list a { font-weight: var(--w-control); color: var(--tone-rifiuto-text); }
+
+/* ---- 8. Forced colours: the system's own controls come back; the edges and the words carry the rest ----- */
+@media (forced-colors: active) {
+  .form-field select:not([multiple], [size]) { appearance: auto; background-image: none; }
+  :where(input[type="checkbox"], input[type="radio"]) { appearance: auto; }
+  :where(input[type="checkbox"], input[type="radio"])::before { display: none; }
+  .form-field::after { background: Highlight; }
+  .form-field__toggle { border: 1px solid ButtonText; }
+  .form-field__toggle[aria-pressed="true"] { border-color: Highlight; }
+  :is(input, select, textarea)[aria-invalid="true"] { border-width: 2px; }
+  /* the error's mark keeps its stroke and its point: gradients are not painted here (A11Y A5) */
+  .form-field__errors li::before {
+    forced-color-adjust: none;
+    border-color: CanvasText;
+    background:
+      linear-gradient(CanvasText, CanvasText) 50% 3px / 1.5px 4.5px no-repeat,
+      linear-gradient(CanvasText, CanvasText) 50% 9px / 1.5px 1.5px no-repeat;
+  }
+}

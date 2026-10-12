@@ -1,170 +1,27 @@
 /* ============================================================================
-   HERO V4 — «il portico e la console»
-   docs/design-v4/CREATIVE_DIRECTION.md §3.1, §4 · DESIGN_SYSTEM_V4.md §1.4 (IMMERSIVE), §7
+   V4 — THE DOOR'S PAINT for templates/components/doorway.html (what is left of «il portico»)
+   docs/design-v2/BRAND_ASSETS.md §2 · docs/design-v4/CREATIVE_DIRECTION.md §3.1 · V5.4 plan §2.3
 
-   An IMMERSIVE chapter: the evolved navy, the radial mesh, a 3% grain. The
-   copy column carries the locked title; the stage carries the owner's
-   doorway with the four access routes drawn through it and the glass legend
-   that names them. The one living object of the page is the current along
-   the routes. Everything is complete on the first frame; the choreography in
-   static/js/src/home.js draws on top.
+   The V4 home hero («il portico e la console») left with design V5.4's hero (W2-D, 8 October
+   2026, the deletion map of plan §2.3): its immersive chapter, grid, copy column, routes, exits,
+   current and glass legend are gone — the V5 hero is templates/pages/home/_hero.html, with its
+   own page sheet (apps/pages/static/pages/css/hero.css) and its module (static/js/src/hero.js).
 
-   Replaces v2/hero.css entirely: the territory, the tide, the coordinates
-   strip and the tide control are gone (owner's directive §5).
+   What this file still carries is the paint of the owner's door as the doorway COMPONENT draws
+   it — today for the entrance page only (templates/allauth/layouts/entrance.html): the gradient
+   stops (classes, no literal colour in the markup), the photograph, the arch, the inner door,
+   the key, the three steps, and their forced-colours rules. Nothing animates it. It leaves
+   main.css when W2-B's static/css/v5/_door.css takes the stage as drawn; the last named consumer
+   deletes the file (plan §2.1 «delete what you supersede»).
    ========================================================================== */
 
-.hero {
-  position: relative;
-  isolation: isolate;
-  overflow: clip;
-  background-color: var(--mid-1);
-  background-image: var(--mesh-dark);
-  color: var(--on-dark);
-  display: flex;
-  flex-direction: column;
-  min-block-size: calc(100vh - var(--chrome-height));
-  min-block-size: calc(100svh - var(--chrome-height));
-  max-block-size: none;
-}
-
-/* The grain: a vendored SVG, 3%, multiplied — texture without a request per frame. */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image: url("../../img/grain.svg");
-  background-size: 180px 180px;
-  opacity: 0.03;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-/* ---- Layout: 6/6 from xl, the stage needs 560–640px ------------------------- */
-.hero__inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: var(--s-10);
-  flex: 1;
-  align-items: center;
-  padding-block: clamp(var(--s-10), 7vh, var(--s-20)) var(--s-12);
-}
-
-/* From 64rem the stage has the half: the door needs 440–600px to be the protagonist it is. */
-@media (min-width: 64rem) {
-  .hero__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--s-12);
-  }
-}
-
-/* ---- Copy column ------------------------------------------------------------ */
-.hero__copy {
-  align-self: center;
-  max-inline-size: 40rem;
-}
-
-.hero__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: var(--s-4);
-  margin: 0 0 var(--s-6);
-  font-family: var(--f-sans);
-  font-size: var(--u-eyebrow);
-  line-height: var(--u-eyebrow-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
-  color: var(--accent-dark);
-}
-
-.hero__eyebrow::before {
-  content: "";
-  inline-size: 24px;
-  block-size: 1px;
-  background: var(--accent-dark);
-  flex: none;
-}
-
-/* The locked title, as the H1: Newsreader 300 at 44→76px, co-protagonist of the stage; its lines are
-   still (the mask reveal is gone: home.js). */
-.hero__title {
-  margin: 0 0 var(--s-6);
-  font-family: var(--f-serif);
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-size: var(--t-display);
-  line-height: var(--t-display-lh);
-  letter-spacing: var(--track-display);
-  text-transform: uppercase;
-  color: var(--on-dark);
-}
-
-/* The interim title is an editorial sentence, not the three-word trademark: at display size its
-   two lines wrapped into six (measured on 8770 at 1440). It steps down to 36→56 and balances. */
-[data-hero-variant="interim"] .hero__title {
-  font-size: clamp(2.25rem, 1.25rem + 2.6vw, 3.5rem);
-  text-wrap: balance;
-}
-
-.hero__title .line {
-  display: block;
-}
-
-.hero__title .line > span {
-  display: block;
-}
-
-.hero__title .tm {
-  font-size: 0.4em;
-  vertical-align: 0.9em;
-  font-weight: 400;
-  margin-inline-start: 0.1em;
-}
-
-.hero__lead {
-  margin: 0 0 var(--s-5);
-  /* Plex, not the serif italic: that one paragraph pulled Newsreader's italic file (144 KB) on
-     every home load (measured 25/09/2026 on the gzip server, slow 4G). */
-  font-family: var(--f-sans);
-  font-weight: 400;
-  font-size: var(--t-lead);
-  line-height: var(--t-lead-lh);
-  color: var(--on-dark);
-  max-inline-size: 36ch;
-}
-
-.hero__body {
-  margin: 0 0 var(--s-8);
-  font-family: var(--f-sans);
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
-  color: var(--on-dark-2);
-  max-inline-size: 56ch;
-}
-
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-}
-
-/* ---- The stage --------------------------------------------------------------- */
-.hero__stage {
-  position: relative;
-  inline-size: 100%;
-  max-inline-size: 640px;
-  justify-self: end;
-  align-self: center;
-}
-
+/* The stage is not mirrored: the door is the door, at the stage's right. */
 .doorway {
   display: block;
   inline-size: 100%;
   block-size: auto;
   overflow: visible;
+  direction: ltr;
 }
 
 /* The door — the owner's composition. Colours through classes on the gradient stops: no literal
@@ -177,7 +34,7 @@
 .doorway__glow-b { stop-color: var(--brand-gold); stop-opacity: 0.12; }
 .doorway__glow-c { stop-color: var(--brand-gold); stop-opacity: 0; }
 
-/* The door never takes the pointer: the legend does, and the photograph must not steal a hover. */
+/* The door never takes the pointer. */
 .doorway__door {
   pointer-events: none;
 }
@@ -188,8 +45,7 @@
 }
 
 /* The owner's photograph, inside the arch: opacity .5 (on navy the original .28 disappears),
-   saturation .8 so the stone sits under the teal rather than against it. Scaled a little so the
-   scroll-linked drift of 18px never shows an edge. */
+   saturation .8 so the stone sits under the teal rather than against it. */
 .doorway__img {
   opacity: 0.5;
   filter: saturate(0.8) contrast(1.05);
@@ -205,8 +61,7 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* The inner arch: SOLID official navy, as in the original, so the key keeps its 5.80:1 and the
-   routes cross it at ≥ 8.7:1. */
+/* The inner arch: SOLID official navy, as in the original, so the key keeps its 5.80:1. */
 .doorway__inner {
   fill: var(--brand-navy);
   stroke: color-mix(in srgb, var(--accent-dark) 18%, transparent);
@@ -224,9 +79,7 @@
   transform-origin: 50% 50%;
 }
 
-/* Three steps, 66/80/94% — laid down from the widest on load. */
-/* No hover on the stage: it is not interactive, and an effect on it would be an effect without a
-   function (gate A review, correction 10). */
+/* Three steps, 66/80/94 %. No hover on the stage: it is not interactive. */
 .doorway__steps rect {
   fill: var(--accent-dark);
   transform-box: fill-box;
@@ -237,7 +90,7 @@
 .doorway__steps rect:nth-child(2) { opacity: 0.38; }
 .doorway__steps rect:nth-child(3) { opacity: 0.24; }
 
-/* The arch outline: a hairline, drawn from the first frame (its trace on load is gone: home.js). */
+/* The arch outline: a hairline, drawn from the first frame. */
 .doorway__arch {
   fill: none;
   stroke: var(--accent-dark);
@@ -248,493 +101,14 @@
   stroke-dashoffset: 0;
 }
 
-/* ---- The four routes ----------------------------------------------------------- */
-/* One colour per route, on navy (DS §1.6) — never alone: node + glyph + word in the legend. */
-.route { --route-ink: var(--accent-dark); }
-.route[data-route="person"] { --route-ink: var(--route-1-dark); }
-.route[data-route="company"] { --route-ink: var(--route-2-dark); }
-.route[data-route="institution"] { --route-ink: var(--route-3-dark); }
-.route[data-route="university"] { --route-ink: var(--route-4-dark); }
-
-/* Without labelled exits the route dissolves into the navy of the inner arch: the stroke is the
-   gradient the template declares per route (stage units 365→531), colour from the same token. */
-#route-fade-person stop { stop-color: var(--route-1-dark); }
-#route-fade-company stop { stop-color: var(--route-2-dark); }
-#route-fade-institution stop { stop-color: var(--route-3-dark); }
-#route-fade-university stop { stop-color: var(--route-4-dark); }
-.route__fade-a { stop-opacity: 1; }
-.route__fade-b { stop-opacity: 0; }
-
-.route[data-route="person"] .route__line,
-.route[data-route="person"] .route__current { stroke: url("#route-fade-person"); }
-.route[data-route="company"] .route__line,
-.route[data-route="company"] .route__current { stroke: url("#route-fade-company"); }
-.route[data-route="institution"] .route__line,
-.route[data-route="institution"] .route__current { stroke: url("#route-fade-institution"); }
-.route[data-route="university"] .route__line,
-.route[data-route="university"] .route__current { stroke: url("#route-fade-university"); }
-
-/* With named exits the route is a solid stroke from 80rem, where the exits are drawn; below it the
-   route dissolves into the navy (round 4, defect 13b). */
-@media (min-width: 80rem) {
-  .doorway--exits .route .route__line,
-  .doorway--exits .route .route__current {
-    stroke: var(--route-ink);
-  }
-}
-
-/* The casing: the same path, wider, in the navy of the chapter, drawn UNDER the route so the
-   route reads over the stone of the photograph as it does over the mesh (review, correction 4). */
-.route__casing {
-  fill: none;
-  stroke: var(--mid-1);
-  stroke-opacity: 0.75;
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.route__line {
-  fill: none;
-  stroke: var(--route-ink);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-  transition: opacity var(--motion-fast) var(--ease-exit), stroke-width var(--motion-fast) var(--ease-exit);
-}
-
-/* The current: a second trace, a short dash that runs the length of the route in 28s. The one
-   living object of the page. Paused off screen and on a hidden tab (.is-offscreen from home.js);
-   not drawn at all under reduced motion. */
-.route__current {
-  fill: none;
-  stroke: var(--route-ink);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 0.06 0.94;
-  stroke-dashoffset: 1;
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .route__current {
-    opacity: 0.55;
-    animation: route-current var(--motion-ambient) linear infinite;
-  }
-
-  .hero.is-offscreen .route__current {
-    animation-play-state: paused;
-  }
-}
-
-@keyframes route-current {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
-
-.route__node {
-  fill: var(--route-ink);
-}
-
-.route__ring {
-  fill: none;
-  stroke: var(--route-ink);
-  stroke-opacity: 0.4;
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-  transition: stroke-opacity var(--motion-fast) var(--ease-exit), stroke-width var(--motion-fast) var(--ease-exit);
-}
-
-/* Interaction (§4.3): the stage receives data-route from the legend; the active route thickens,
-   the other three dim to .5 (≥ 3.08:1 on the navy: still legible), the node takes a ring. */
-.doorway[data-route] .route:not(.is-active) .route__line { opacity: 0.5; }
-.doorway[data-route] .route:not(.is-active) .route__current { opacity: 0; }
-.doorway[data-route] .route:not(.is-active) .route__node { opacity: 0.5; }
-.doorway[data-route] .route.is-active .route__line { stroke-width: 2.5; }
-.doorway[data-route] .route.is-active .route__ring { stroke: var(--accent-dark); stroke-opacity: 1; stroke-width: 2; }
-
-@media (prefers-reduced-motion: no-preference) {
-  .doorway[data-route] .route.is-active .route__line,
-  .doorway[data-route] .route.is-active .route__ring {
-    transition-duration: var(--motion-fast);
-    transition-timing-function: var(--ease-enter);
-  }
-}
-
-/* The exits: the eyebrow's three words, from 80rem. The stage is not mirrored, nor its text: in RTL
-   `text-anchor: end` put the words outside the stage (round 4, defect 14). */
-.doorway {
-  direction: ltr;
-}
-
-.exit__node {
-  fill: var(--on-dark-3);
-}
-
-.exit__label {
-  font-family: var(--f-sans);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  fill: var(--on-dark-2);
-  /* A canvas halo under the letters: the door's outline runs behind every exit word (round 3, 8). */
-  paint-order: stroke fill;
-  stroke: var(--mid-1);
-  stroke-width: 4px;
-  stroke-linejoin: round;
-}
-
-@media (max-width: 79.999rem) {
-  .doorway__exits { display: none; }
-}
-
-/* ---- The glass legend (§4.2) ------------------------------------------------------ */
-/* An HTML list positioned over the stage, at the foot, reading-edge side. Level 3: the dark glass
-   over the mesh, 16px blur, a strong hairline, radius xl. Each row is a link to the actor's landing;
-   its node disc is where the route starts (home.js anchors the path to it). */
-.doorway-legend {
-  position: absolute;
-  inset-inline-start: 0;
-  inset-block-end: 0;
-  inline-size: 264px;
-  margin: 0;
-  padding: var(--s-3);
-  list-style: none;
-  display: grid;
-  gap: 2px;
-  background: var(--glass-dark);
-  -webkit-backdrop-filter: blur(var(--blur-panel));
-  backdrop-filter: blur(var(--blur-panel));
-  border: 1px solid var(--hairline-dark-strong);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-3-dark);
-  z-index: 2;
-}
-
-.doorway-legend__item {
-  margin: 0;
-}
-
-.doorway-legend__row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 12px 16px minmax(0, 1fr);
-  grid-template-areas: "node glyph word";
-  column-gap: var(--s-3);
-  align-items: center;
-  min-block-size: var(--rail-item-h);
-  padding: var(--s-2) var(--s-3);
-  border-radius: var(--radius-md);
-  color: var(--on-dark);
-  text-decoration: none;
-  font-family: var(--f-sans);
-  font-size: var(--u-ui);
-  line-height: var(--u-ui-lh);
-  font-weight: 500;
-  transition: background-color var(--motion-fast) var(--ease-exit);
-}
-
-.doorway-legend__node {
-  grid-area: node;
-  inline-size: 12px;
-  block-size: 12px;
-  border-radius: var(--radius-full);
-  background: var(--route-ink, var(--accent-dark));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--on-dark) 6%, transparent);
-}
-
-.doorway-legend__row[data-legend-row="person"] { --route-ink: var(--route-1-dark); }
-.doorway-legend__row[data-legend-row="company"] { --route-ink: var(--route-2-dark); }
-.doorway-legend__row[data-legend-row="institution"] { --route-ink: var(--route-3-dark); }
-.doorway-legend__row[data-legend-row="university"] { --route-ink: var(--route-4-dark); }
-
-.doorway-legend__glyph {
-  grid-area: glyph;
-  inline-size: 16px;
-  block-size: 16px;
-  color: var(--on-dark-2);
-}
-
-.doorway-legend__word {
-  grid-area: word;
-  color: var(--on-dark);
-}
-
-/* The gloss is not laid out in the row: a row that grows moves the panel, the panel is anchored
-   at the foot of the stage, and the routes are anchored to the rows (gate A review, correction 2).
-   The row keeps the gloss as text for assistive technology; sighted readers see it in the
-   CAPTION — a reserved slot of two lines at the head of the panel that home.js fills with the
-   active row's gloss. Opacity only: no layout changes on hover. */
-.doorway-legend__gloss {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* The caption floats ABOVE the panel, on its own glass, and takes the height its text needs: the
-   panel's rows and the routes anchored to them never move (measured: a caption in the flow moved
-   the panel by 60 px on the longest gloss). */
-.doorway-legend__caption {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: calc(100% + var(--s-2));
-  margin: 0;
-  padding: var(--s-3) var(--s-4);
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  font-weight: 400;
-  color: var(--on-dark);
-  background: var(--glass-dark);
-  -webkit-backdrop-filter: blur(var(--blur-panel));
-  backdrop-filter: blur(var(--blur-panel));
-  border: 1px solid var(--hairline-dark-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-3-dark);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--motion-standard) var(--ease-enter);
-}
-
-.doorway-legend__caption.is-on {
-  opacity: 1;
-}
-
-.doorway-legend__row:hover,
-.doorway-legend__row:focus-visible,
-.doorway-legend__row.is-active {
-  background: color-mix(in oklab, var(--mid-3) 60%, transparent);
-}
-
-/* Touch: the press is the emphasis, for as long as it lasts; the tap navigates. */
-.doorway-legend__row:active {
-  background: var(--mid-3);
-}
-
-/* ---- Responsive: a composition of its own, not the desktop compressed ------------ */
-@media (max-width: 63.999rem) {
-  /* 40px above the door, not 7vh: the interim actions stay inside a 768 × 1024 fold (round 3, 4). */
-  .hero__inner {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--s-8);
-    padding-block-start: var(--s-10);
-  }
-
-  /* The door comes first, alone, at 220px, then the copy, then the legend as plain rows (fond
-     --mid-2, no glass): the diagram is implied, not squeezed, and the first scroll reaches the
-     actions. The stage dissolves into the grid (display: contents) so its two children can be
-     ordered around the copy. home.js narrows the viewBox to the arch; without JS the whole stage
-     is drawn small, which is still complete. */
-  .hero__stage {
-    display: contents;
-  }
-
-  /* The box has the arch's proportions (home.js's compact viewBox, 368 × 456) from the first frame:
-     narrowed after the paint, the SVG grew by 77px and pushed the copy down (CLS 0.054, 26/09). */
-  .hero__stage .doorway {
-    order: -1;
-    justify-self: center;
-    inline-size: 220px;
-    block-size: auto;
-    aspect-ratio: 368 / 456;
-  }
-
-  .hero__stage.is-compact .doorway__routes,
-  .hero__stage.is-compact .doorway__exits {
-    display: none;
-  }
-
-  .doorway-legend {
-    position: static;
-    inline-size: 100%;
-    order: 1;
-    padding: var(--s-2);
-    background: var(--mid-2);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    box-shadow: none;
-    border-radius: var(--radius-lg);
-  }
-
-  .doorway-legend__row {
-    min-block-size: 52px;
-    grid-template-columns: 24px 12px 16px minmax(0, 1fr);
-    grid-template-areas: "trait node glyph word";
-  }
-
-  /* The word alone: the gloss stays as text for assistive technology (visually hidden, as at every
-     width) and the caption slot is not drawn — four glosses here would push the hero to 180 % of a
-     phone's viewport (measured: 1493px at 390). */
-  .doorway-legend__caption {
-    display: none;
-  }
-
-  /* A stretch of route, 24 × 2px, in the row's colour: the diagram's memory. */
-  .doorway-legend__row::before {
-    content: "";
-    grid-area: trait;
-    inline-size: 24px;
-    block-size: 2px;
-    border-radius: 1px;
-    background: var(--route-ink, var(--accent-dark));
-  }
-
-}
-
-/* 64–80rem: a 236px legend, the narrowest where «Universités & Formation» holds one line (round 3, 5). */
-@media (min-width: 64rem) and (max-width: 79.999rem) {
-  .doorway-legend {
-    inline-size: 236px;
-    padding: var(--s-2);
-  }
-
-  /* 44 px stays the floor of a row (a hit target), whatever the width. */
-  .doorway-legend__row {
-    font-size: var(--u-small);
-    padding-inline: var(--s-2);
-  }
-}
-
-/* Below md the legend leaves the 220px column and takes the full width under the copy. */
-@media (max-width: 47.999rem) {
-  .hero {
-    /* ≤ 130 % of 844 at 390 with both actions 16px inside the screen: the waiver proposed to the CD. */
-    min-block-size: 0;
-  }
-
-  .hero__inner {
-    padding-block: var(--s-6) var(--s-8);
-    gap: var(--s-5);
-  }
-
-  .hero__stage .doorway {
-    inline-size: 180px;
-  }
-
-  .hero__lead {
-    margin-block-end: var(--s-4);
-  }
-
-  /* On a phone the four rows become two by two: 120px instead of 230, so the hero stays near
-     the viewport's height with the legend in it. */
-  .doorway-legend {
-    justify-self: stretch;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px;
-  }
-
-  .doorway-legend__row {
-    min-block-size: 44px;
-    font-size: var(--u-small);
-    line-height: var(--u-small-lh);
-    grid-template-columns: 16px 10px 16px minmax(0, 1fr);
-    column-gap: var(--s-2);
-    padding-inline: var(--s-2);
-  }
-
-  .doorway-legend__row::before {
-    inline-size: 16px;
-  }
-
-  .doorway-legend__node {
-    inline-size: 10px;
-    block-size: 10px;
-  }
-
-  /* On a phone the actions come before the body: door → title → lead → actions → body, so the
-     first scroll reaches a decision. The order changes, the content does not. */
-  .hero__copy {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* The V1 top margin (32px) does not collapse in this flex column: 8 + 16 = 24 after the lead. */
-  .hero__actions {
-    order: 1;
-    margin-block: var(--s-2) var(--s-6);
-  }
-
-  .hero__body {
-    order: 2;
-    margin-block-end: 0;
-  }
-
-  .hero__title .tm {
-    font-size: 0.45em;
-  }
-}
-
-@media (max-width: 26.875rem) {
-  .hero__actions .btn {
-    inline-size: 100%;
-  }
-}
-
-/* ---- Arabic / RTL ------------------------------------------------------------- */
-/* The locked title is French (lang="fr") on the Arabic page: base.css isolates such fallbacks as
-   LTR and start-aligned, which is right for a paragraph and wrong for the H1 of a block that sits
-   at the end edge — the attribute in the selector outranks that rule (review, correction 6). */
-[dir="rtl"] .hero__title,
-[dir="rtl"] .hero__title[lang],
-[dir="rtl"] .hero__eyebrow[lang] {
-  text-align: end;
-}
-
-:lang(ar) .hero__title {
-  letter-spacing: 0;
-  line-height: 1.2;
-  font-weight: 400;
-}
-
-:lang(ar) .hero__eyebrow,
-:lang(ar) .exit__label {
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-/* The stage is not mirrored (the door is the door, at the stage's right); in Arabic the legend
-   keeps the physical left, clear of the door, and the routes still run from it into the arch. */
-[dir="rtl"] .doorway-legend {
-  inset-inline-start: auto;
-  inset-inline-end: 0;
-}
-
 /* ---- Forced colours --------------------------------------------------------- */
-/* Forced colours keep SVG gradients as they are, so the fading stroke is replaced by a solid one
-   at a specificity above the per-route gradient rules; the current — decorative motion — is not
-   drawn at all. */
-/* Without JavaScript below 80rem the routes are clipped at the arch's edge (round 5, defect 16). */
-@media (max-width: 79.999rem) {
-  html.no-js .doorway--exits .doorway__routes {
-    clip-path: url("#doorway-routes-arch");
-  }
-}
-
 @media (forced-colors: active) {
-  .doorway__arch, .doorway__arch-inset,
-  .doorway .route .route__line { stroke: CanvasText; }
-  /* Each route has a Canvas casing; the inner arch keeps its navy, the key's ground (rounds 5–6, 18, 20). */
+  .doorway__arch, .doorway__arch-inset { stroke: CanvasText; }
+  /* The inner arch keeps its navy, the key's ground (rounds 5–6, 18, 20). */
   .doorway__inner { stroke: CanvasText; }
-  .route__casing { stroke: Canvas; stroke-opacity: 1; forced-color-adjust: none; }
-  /* The legend is Canvas: glyphs in CanvasText, steps at full opacity (round 6, defect 21). */
-  .doorway-legend__glyph { color: CanvasText; }
-  /* …and, like each route, each step carries a Canvas edge: in the light palette CanvasText on the
-     photograph's dark stone was 1.9–2.4:1. */
+  /* Each step carries a Canvas edge: in the light palette CanvasText on the photograph's dark stone
+     was 1.9–2.4:1. */
   .doorway__steps rect:nth-child(n) { opacity: 1; stroke: Canvas; stroke-width: 2px; paint-order: stroke; vector-effect: non-scaling-stroke; }
-  .doorway .route .route__current { display: none; }
-  .route__node, .doorway__steps rect, .doorway-legend__node { fill: CanvasText; background: CanvasText; forced-color-adjust: none; }
-  .doorway-legend { border: 1px solid CanvasText; background: Canvas; }
+  .doorway__steps rect { fill: CanvasText; forced-color-adjust: none; }
   .doorway__body, .doorway__inner { filter: none; }
-  .exit__label { fill: CanvasText; stroke: Canvas; forced-color-adjust: none; }
-  .exit__node { fill: CanvasText; forced-color-adjust: none; }
-  .doorway-legend__row:hover, .doorway-legend__row:focus-visible { outline: 2px solid Highlight; }
 }

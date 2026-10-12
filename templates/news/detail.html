@@ -1,7 +1,7 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static lettura %}
 {% block page_title %}{{ texts.seo_title }}{% endblock %}
 {% block meta_description %}{{ texts.seo_description }}{% endblock %}
-{% block body_class %}page-news-detail{% endblock %}
+{% block body_class %}page-news-detail lettura{% endblock %}
 {% block head_seo %}{% get_current_language as CURRENT_LANG %}
 <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
 {% for l in site.languages %}<link rel="alternate" hreflang="{{ l.code }}" href="{{ request.scheme }}://{{ request.get_host }}{{ l.url }}">
@@ -28,57 +28,79 @@
 {% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
+{% comment %}
+Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): long-form prose (PX24) —
+the head at the reading edge (the category as the space's name, the title, the summary as the lead, the facts as a
+verification line); the photograph with its caption and its credit under it (D26); the body at the reading measure;
+the sources with their hosts beside them (D26); the related articles as records; the way back.
+{% endcomment %}
 {% if preview %}
 <div class="container">{% translate "Aperçu réservé à la rédaction — cet article n’est pas publié." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
 {% endif %}
-<article class="container article"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
-  <header class="article__header">
-    <p class="article__category"><a href="{% url 'news:index' %}?categorie={{ article.category.slug }}"{% if article.category.name_is_fallback %} lang="fr"{% endif %}>{{ article.category.name }}</a></p>
-    <h1 class="article__title">{{ texts.title }}</h1>
-    <p class="article__summary">{{ texts.summary }}</p>
-    <dl class="article__meta">
+<article class="article">
+  <header class="page-header container article__header">
+    <p class="page-header__eyebrow article__category"><a href="{% url 'news:index' %}?categorie={{ article.category.slug }}"{% if article.category.name_is_fallback %} lang="fr"{% endif %}>{{ article.category.name }}</a></p>
+    <h1 class="page-header__title article__title"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>{{ texts.title }}</h1>
+    {% if texts.summary %}<p class="page-header__lead article__summary"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>{{ texts.summary }}</p>{% endif %}
+    {% if article.date_published or article.last_updated or article.editor.full_name %}
+    <dl class="verifica page-header__meta article__meta">
       {% if article.date_published %}<div class="article__meta-item"><dt>{% translate "Publié le" %}</dt><dd><time datetime="{{ article.date_published|date:'c' }}">{{ article.date_published|date:"d.m.Y" }}</time></dd></div>{% endif %}
       {% if article.last_updated %}<div class="article__meta-item"><dt>{% translate "Mis à jour le" %}</dt><dd><time datetime="{{ article.last_updated|date:'c' }}">{{ article.last_updated|date:"d.m.Y" }}</time></dd></div>{% endif %}
       {% if article.editor and article.editor.full_name %}<div class="article__meta-item"><dt>{% translate "Rédaction" %}</dt><dd>{{ article.editor.full_name }}</dd></div>{% endif %}
     </dl>
+    {% endif %}
   </header>
 
-  {% if article.hero_image and article.hero_image.file %}
-  <figure class="article__figure">
-    <picture>
-      <img class="article__image" src="{{ article.hero_image.file.url }}" alt="{{ hero_alt }}"{% if article.hero_image.width %} width="{{ article.hero_image.width }}" height="{{ article.hero_image.height }}"{% endif %} decoding="async" sizes="(min-width: 72rem) 72rem, 100vw">
-    </picture>
-    {% if article.image_caption %}<figcaption class="article__caption">{{ article.image_caption }}</figcaption>{% endif %}
-  </figure>
-  {% endif %}
+  <div class="chapter article__chapter">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        {% if article.hero_image and article.hero_image.file %}
+        {% with image=article.hero_image %}
+        <figure class="figura article__figure">
+          <img class="article__image" src="{{ image.file.url }}" alt="{{ hero_alt }}"{% if image.width %} width="{{ image.width }}" height="{{ image.height }}"{% endif %} decoding="async">
+          {% if article.image_caption or image.caption_fr or image.caption_place or image.credit %}<figcaption class="article__caption">{% if article.image_caption %}{{ article.image_caption }}{% elif image.caption_fr %}<span{% if lang != "fr" %} lang="fr"{% endif %}>{{ image.caption_fr }}</span>{% endif %}{% if image.caption_place %} · {{ image.caption_place }}{% if image.caption_date %}, {{ image.caption_date|date:"d.m.Y" }}{% endif %}{% endif %}{% if image.credit %} — {% translate "Photo" %} : {{ image.credit }}{% endif %}</figcaption>{% endif %}
+        </figure>
+        {% endwith %}
+        {% endif %}
 
-  <div class="article__body prose">
-    {% for block in blocks %}
-      {% if block.kind == "h2" %}<h2>{{ block.text }}</h2>
-      {% elif block.kind == "h3" %}<h3>{{ block.text }}</h3>
-      {% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>
-      {% else %}<p>{{ block.text|linebreaksbr }}</p>{% endif %}
-    {% endfor %}
+        <div class="article__body prose"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
+          {% for block in blocks %}
+            {% if block.kind == "h2" %}<h2>{{ block.text }}</h2>
+            {% elif block.kind == "h3" %}<h3>{{ block.text }}</h3>
+            {% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>
+            {% else %}<p>{{ block.text|linebreaksbr }}</p>{% endif %}
+          {% endfor %}
+        </div>
+
+        {% if sources %}
+        <section class="article__sources" aria-labelledby="article-sources-title">
+          <h2 class="chapter__label" id="article-sources-title">{% translate "Sources" %}</h2>
+          <ul class="fonti article__sources-list">
+            {% for link in sources %}<li><a href="{{ link.url }}" rel="noopener noreferrer external">{{ link.label }}</a>{% with host=link.url|host %}{% if host %} <span class="autorita__host">{{ host }}</span>{% endif %}{% endwith %}</li>{% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+        <p class="chapter__links article__back"><a href="{% url 'news:index' %}">{% translate "Toutes les actualités" %}</a></p>
+      </div>
+    </div>
   </div>
-
-  {% if sources %}
-  <section class="article__sources" aria-labelledby="article-sources-title">
-    <h2 id="article-sources-title">{% translate "Sources" %}</h2>
-    <ul class="article__sources-list">
-      {% for link in sources %}<li><a href="{{ link.url }}" rel="noopener noreferrer external">{{ link.label }}</a></li>{% endfor %}
-    </ul>
-  </section>
-  {% endif %}
 </article>
 
 {% if related %}
-<section class="container related-articles" aria-labelledby="related-title">
-  <h2 id="related-title">{% translate "À lire aussi" %}</h2>
-  <div class="related-articles__grid">
-    {% for rel, rel_texts in related %}{% include "news/_card.html" with article=rel texts=rel_texts heading_level=3 %}{% endfor %}
+<section class="chapter related-articles" aria-labelledby="related-title">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      <h2 class="chapter__title" id="related-title">{% translate "À lire aussi" %}</h2>
+    </div>
+    <div class="chapter__body">
+      <div class="news-list related-articles__grid">
+        {% for rel, rel_texts in related %}{% include "news/_card.html" with article=rel texts=rel_texts heading_level=3 %}{% endfor %}
+      </div>
+    </div>
   </div>
 </section>
 {% endif %}
 
-<p class="container article__back"><a href="{% url 'news:index' %}">{% translate "Toutes les actualités" %}</a></p>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

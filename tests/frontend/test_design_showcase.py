@@ -12,6 +12,13 @@ Three of these tests guard a duplication that CSP forces on us. ``style-src 'sel
 so each swatch needs its own rule in ``static/css/dev/showcase.css``. A token added to the palette
 without a rule would paint a blank square. The page warns about it at runtime; these tests fail
 about it in CI, which is the half that works when nobody is looking.
+
+Design V5 (W1-A, V5.4 plan §2.7): the palette a swatch paints is the EFFECTIVE cascade — the sheets of
+``static/css/main.css`` in order, the last top-level ``:root`` declaration winning — since
+``static/css/v4/tokens.css`` and ``static/css/v5/aliases.css`` re-value the V2 names the showcase lists.
+A named token must exist there, a swatch rule must paint one that does, and the caption must be the
+value the square paints. The last is not true yet, and the test says so (strict xfail, below): the
+showcase's reader and stylesheet have no owner in the V5.4 ownership manifest.
 """
 
 from __future__ import annotations
@@ -35,6 +42,25 @@ SHOWCASE_CSS = ROOT / "static" / "css" / "dev" / "showcase.css"
 TOKENS_CSS = ROOT / "static" / "css" / "v2" / "tokens.css"
 
 ALL_COLOUR_TOKENS = [name for _, _, names in dev.COLOUR_GROUPS for name in names]
+
+
+def _effective() -> dict[str, str]:
+    """Every custom property of the cascade every page loads, with the value that wins: the top-level :root blocks
+    of the sheets static/css/main.css imports, in order (the way tests/frontend/test_v5_tokens.py reads it)."""
+    css_dir = ROOT / "static" / "css"
+    tokens: dict[str, str] = {}
+    for sheet in re.findall(r'@import url\("([^"]+)"\)', (css_dir / "main.css").read_text(encoding="utf-8")):
+        css = re.sub(r"/\*.*?\*/", "", (css_dir / sheet).read_text(encoding="utf-8"), flags=re.S)
+        for block in re.findall(r"^:root\s*\{(.*?)^\}", css, flags=re.M | re.S):
+            tokens.update({n: " ".join(v.split()) for n, v in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", block)})
+    return tokens
+
+
+def _painted(tokens: dict[str, str], name: str) -> str:
+    value = tokens[name]
+    while value.startswith("var("):
+        value = tokens[value[4:-1].strip()]
+    return value.lower()
 
 
 @pytest.fixture
@@ -183,20 +209,43 @@ def test_every_colour_token_has_a_swatch_rule():
 
 
 def test_every_named_token_exists_in_the_palette():
-    """A renamed or retired token must not survive as a caption under a transparent square."""
-    tokens = dev.read_tokens()
-    assert tokens, "static/css/v2/tokens.css parsed to nothing"
+    """A renamed or retired token must not survive as a caption under a transparent square — and the palette is the
+    cascade every page loads, not one of its layers (design V5 re-values the V2 names in static/css/v5/aliases.css)."""
+    tokens = _effective()
+    assert dev.read_tokens(), "static/css/v2/tokens.css parsed to nothing"
     named = [
         *ALL_COLOUR_TOKENS,
         *(token for token, _, _ in dev.TYPE_SCALE),
         *(token for token, _ in dev.MOTION),
     ]
     missing = [name for name in named if name not in tokens]
-    assert not missing, "core.dev names tokens that tokens.css no longer declares: " + ", ".join(missing)
+    assert not missing, "core.dev names tokens the cascade no longer declares: " + ", ".join(missing)
 
 
 def test_no_swatch_rule_is_orphaned():
     """The other direction: a rule left behind after a token is retired is dead CSS."""
-    declared = set(dev.read_tokens())
+    declared = set(_effective())
     orphans = sorted(slug for slug in dev.covered_swatches() if f"--{slug}" not in declared)
     assert not orphans, "static/css/dev/showcase.css paints tokens that no longer exist: " + ", ".join(orphans)
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "apps/core/dev.py prints its captions from static/css/v2/tokens.css, one layer of the cascade: V4 re-valued "
+        "the night (--mid-*, --on-dark-*) and design V5 the states and the seal (--err-*, --pending-700, --seal-*), so "
+        "14 of the 44 captions name a hex no page paints, and the swatches show the V2 palette, not V5's. "
+        "apps/core/dev.py and static/css/dev/showcase.css have no owner in docs/design-v5/OWNERSHIP_V54.json: the "
+        "family the steward gives them reads the effective cascade, lists the V5 palette (plan §2.7), and drops this "
+        "marker — strict, so the fix cannot go unnoticed."
+    ),
+)
+def test_every_caption_is_the_value_its_swatch_paints():
+    """The showcase's own promise (apps/core/dev.py): «the hex printed under a swatch is the hex the browser paints»."""
+    tokens, printed = _effective(), dev.read_tokens()
+    wrong = {
+        name: (printed.get(name), _painted(tokens, name))
+        for name in ALL_COLOUR_TOKENS
+        if (printed.get(name) or "").lower() != _painted(tokens, name)
+    }
+    assert not wrong, wrong

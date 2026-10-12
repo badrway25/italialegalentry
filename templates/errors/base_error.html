@@ -1,33 +1,42 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
-Error pages (400/403/404/429/500). Children fill: error_code, error_code_display, error_title,
-error_text. Recovery navigation: home, back (JS only), contact, and the main spaces when their
-routes exist (safe_url). The request id helps support without exposing any personal data.
+THE ERROR PAGES — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 2; W3-F2, step 2). One quiet page in
+the public interior's grammar, the same for every status: WHAT HAPPENED — the status as the head's label («Erreur
+404», the words of the document's title), the title, one sentence —, WHAT TO DO — one primary, the way back (the
+previous page, with script) —, THE WAY ON — the recovery navigation as a quiet chapter: a label, not a title, and
+links — and «who can help me», the live line with the one address (D26). Nothing is revealed: no stack, no path, no
+detail of an account; the 500's reference is the request's correlation id, which holds no personal datum.
+THE DOOR AT REST (errors/_door.html; CREATIVE_DIRECTION_V5 §20, DS V5 PX21; the review's M1): the owner's door stage
+with the key out of the lock, static — in the head's end seat from 64rem, compact above the label on a phone; first in
+the source (decorative, aria-hidden), placed by the sheet.
+
+Two frames draw the same page. This one — the public shell, its letterhead and its footer — serves the answers
+the product gives in the course of a visit: 403, 404, 410 and 429 (templates/429.html, W2-B's, puts this page's
+content in a signed-in person's way). 400 and 500 are drawn by errors/standalone.html, which needs neither the
+database nor a context processor: a request that could not be read, a server that failed (core.views).
+
+Children fill: error_code and error_code_display (the status), error_title, error_text; optionally error_extra
+(under the sentence) and error_actions (the 403 offers the sign-in first to a person who is not signed in). The
+class names are the contract tests/frontend/test_layout.py, tests/i18n/test_ui_translations.py and
+tests/frontend/test_429_w2_b.py read; static/css/v5/_servizio.css draws them and static/css/v5/_door.css the door
+(cms/errori.css, the error pages' sheet: the account pages load cms/servizio.css, without the door).
 {% endcomment %}
 {% block page_title %}{% translate "Erreur" %} {% block error_code %}{% endblock %}{% endblock %}
 {% block meta_description %}{% translate "Page d’erreur" %}{% endblock %}
-{% block body_class %}page-error{% endblock %}
+{% block body_class %}page-error servizio{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/errori.css' %}">{% endblock %}
 {% block content %}
 <section class="container error-page" aria-labelledby="error-title">
-  <p class="error-page__code" aria-hidden="true">{% block error_code_display %}{% endblock %}</p>
-  <h1 id="error-title" class="error-page__title">{% block error_title %}{% translate "Une erreur est survenue" %}{% endblock %}</h1>
-  <p class="error-page__text">{% block error_text %}{% translate "La page demandée n’est pas disponible." %}{% endblock %}</p>
-  {% block error_extra %}{% endblock %}
-  <div class="error-page__actions">
-    <a class="btn btn--primary btn--arrow" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
-    <a class="btn btn--secondary js-only" href="{% url 'pages:home' %}" data-history-back>{% translate "Page précédente" %}</a>
-    <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">{% svg_icon "mail" "icon" %}<span class="email">{{ site.contact_email }}</span></a>
+  {% include "errors/_door.html" %}
+  <div class="error-page__body">
+    <header class="error-page__head">
+      <p class="error-page__code" aria-hidden="true">{% translate "Erreur" %} {% block error_code_display %}{% endblock %}</p>
+      <h1 id="error-title" class="error-page__title">{% block error_title %}{% translate "Une erreur est survenue" %}{% endblock %}</h1>
+      <p class="error-page__text">{% block error_text %}{% translate "La page demandée n’est pas disponible." %}{% endblock %}</p>
+      {% block error_extra %}{% endblock %}
+    </header>
+    {% block error_actions %}{% include "errors/_actions.html" %}{% endblock %}
   </div>
-  <nav class="error-page__links" aria-label="{% translate 'Navigation de secours' %}">
-    <p class="error-page__links-title">{% translate "Poursuivre la navigation" %}</p>
-    <ul class="error-page__links-list">
-      {% safe_url 'pathways:index' as u1 %}{% if u1 %}<li><a href="{{ u1 }}">{% translate "Personnes" %}</a></li>{% endif %}
-      {% safe_url 'ecosystem:companies' as u2 %}{% if u2 %}<li><a href="{{ u2 }}">{% translate "Entreprises" %}</a></li>{% endif %}
-      {% safe_url 'forum:index' as u3 %}{% if u3 %}<li><a href="{{ u3 }}">{% translate "Forum Vénétie–Maroc" %}</a></li>{% endif %}
-      {% safe_url 'pages:project' as u4 %}{% if u4 %}<li><a href="{{ u4 }}">{% translate "Le projet" %}</a></li>{% endif %}
-      {% safe_url 'pages:contact' as u5 %}{% if u5 %}<li><a href="{{ u5 }}">{% translate "Contact" %}</a></li>{% endif %}
-      <li><a href="{% url 'legal:privacy' %}">Privacy Policy</a></li>
-    </ul>
-  </nav>
+  {% include "errors/_way_on.html" %}
 </section>
 {% endblock %}

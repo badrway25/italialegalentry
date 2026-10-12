@@ -6,3 +6,7 @@
 *.avif binary
 *.woff2 binary
 *.pdf binary
+# Generated bundles (npm run build): never diffed as text, never merged line by line. A conflict keeps
+# one side whole and the steward rebuilds the bundle from its sources (V5.4 plan, section 2.2).
+static/css/dist/** -diff merge=binary
+static/js/dist/** -diff merge=binary

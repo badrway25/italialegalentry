@@ -18,21 +18,6 @@
   padding-inline: var(--grid-margin);
 }
 
-/* A reading column, for prose that is not annotated. */
-.container--read {
-  max-inline-size: 42rem;
-}
-
-/* A register that runs the full container: the rail is empty and the ordinals
-   become the list's own first column. */
-.container--spread {
-  max-inline-size: var(--container);
-}
-
-.container--flush {
-  padding-inline: 0;
-}
-
 /* ---- The three zones -------------------------------------------------------
    RAIL (folio: ordinal, running head, date) · CONTENT · MARGIN (note, source,
    caveat). Column 10 is a fixed empty channel: it is what makes the margin read
@@ -52,24 +37,6 @@
   gap: var(--s-6);
 }
 
-.zones__rail {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-}
-
-.zones__content {
-  min-inline-size: 0;
-}
-
-.zones__margin {
-  font-family: var(--font-ui);
-  font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
-  color: var(--ink-muted);
-  max-inline-size: var(--measure-note);
-}
-
 @media (min-width: 75rem) {
   .zones {
     grid-template-columns:
@@ -79,26 +46,10 @@
     gap: 0 var(--grid-gutter);
     align-items: start;
   }
-
-  /* The empty channel: the margin starts one gutter further in. */
-  .zones__margin {
-    padding-inline-start: var(--grid-gutter);
-  }
-
-  /* No margin content, no third zone: the content takes the space instead of
-     leaving a void beside it. */
-  .zones--no-margin {
-    grid-template-columns: var(--container-rail) minmax(0, 1fr);
-  }
-
-  .zones--no-rail {
-    grid-template-columns: minmax(0, 1fr) var(--container-rail);
-  }
 }
 
 /* The content column of an annotated block is a measured reading column. */
 .zones__content > .prose,
-.zones__content > p,
 .zones__content > .t-prose {
   max-inline-size: var(--measure-prose);
 }
@@ -117,19 +68,6 @@
    -------------------------------------------------------------------------- */
 .section {
   padding-block: var(--rank-b-block);
-}
-
-.section--a {
-  padding-block: 0;
-  margin-block-end: var(--rank-a-after);
-}
-
-.section--b {
-  padding-block: var(--rank-b-block);
-}
-
-.section--c {
-  padding-block: var(--rank-c-block);
 }
 
 .section--d {
@@ -202,7 +140,6 @@
   color: inherit;
 }
 
-.section--header--center,
 .section__header--center {
   margin-inline: auto;
   text-align: center;
@@ -218,18 +155,6 @@
 .grid > * {
   grid-column: span 12;
   min-inline-size: 0;
-}
-
-@media (min-width: 48rem) {
-  .col-4 { grid-column: span 4; }
-  .col-5 { grid-column: span 5; }
-  .col-6 { grid-column: span 6; }
-  .col-7 { grid-column: span 7; }
-  .col-8 { grid-column: span 8; }
-  .col-9 { grid-column: span 9; }
-  .col-start-2 { grid-column-start: 2; }
-  .col-start-3 { grid-column-start: 3; }
-  .col-start-4 { grid-column-start: 4; }
 }
 
 @media (min-width: 64rem) {
@@ -282,10 +207,6 @@
   .split {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   }
-
-  .split--even {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 /* ---- Composition utilities ------------------------------------------------ */
@@ -303,14 +224,6 @@
   align-items: center;
 }
 
-.cluster--between {
-  justify-content: space-between;
-}
-
-.cluster--end {
-  justify-content: flex-end;
-}
-
 .center {
   text-align: center;
 }
@@ -319,18 +232,11 @@
   max-inline-size: var(--measure-prose);
 }
 
-.mx-auto {
-  margin-inline: auto;
-}
-
 .flow > * + * {
   margin-block-start: var(--space-4);
 }
 
-.mt-0 { margin-block-start: 0 !important; }
-.mb-0 { margin-block-end: 0 !important; }
 .mt-4 { margin-block-start: var(--space-4); }
-.mt-8 { margin-block-start: var(--space-8); }
 .mb-4 { margin-block-end: var(--space-4); }
 .mb-8 { margin-block-end: var(--space-8); }
 
@@ -356,12 +262,6 @@
 /* ---- Responsive visibility ------------------------------------------------ */
 @media (max-width: 63.999rem) {
   .hide-mobile {
-    display: none !important;
-  }
-}
-
-@media (min-width: 64rem) {
-  .hide-desktop {
     display: none !important;
   }
 }

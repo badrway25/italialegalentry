@@ -15,7 +15,7 @@ on screen. « Qui modère cette table » and « jusqu’à quand » are the same
 
 {% block governance_content %}
 <p class="gloss">
-  <span class="state state--{{ table.state_class }}" data-register="{{ table.status|chip_register:'forum.TableStatus' }}">{{ table.get_status_display }}</span>
+  {% chip table.status "forum.TableStatus" %}{{ table.get_status_display }}{% endchip %}
   <span>{% blocktranslate with date=table.opened_on|date:"d.m.Y" %}Ouverte le {{ date }}{% endblocktranslate %}</span>
   {% if table.closed_on %}<span>{% blocktranslate with date=table.closed_on|date:"d.m.Y" %}Clôturée le {{ date }}{% endblocktranslate %}</span>{% endif %}
 </p>
@@ -50,7 +50,7 @@ on screen. « Qui modère cette table » and « jusqu’à quand » are the same
         <span class="entry__ordinal" aria-hidden="true"></span>
         <h3 class="entry__title">{{ proposal.title_fr }}</h3>
         <span class="entry__gloss">{{ proposal.reference }}</span>
-        <span class="entry__actor state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
       {% if proposal_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}

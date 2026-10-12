@@ -1,44 +1,65 @@
-{% extends "base.html" %}{% load i18n %}
-{% block page_title %}{{ room.name_fr }} · {% locked "p3.virtual_forum.title" %}{% endblock %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+A room of the Forum Virtuel (members). Design V5.4 (W3-F2 — the content pages): the head at the reading edge (the
+room's name and description); a chapter for the discussions — a register, each row the way to its thread, its state
+as a chip of its register, the pinned ones first — with the pagination; the new discussion's form a chapter of its own.
+{% endcomment %}
+{% block page_title %}{{ room.name_fr }} · {% locked "p3.virtual_forum.title" as forum_title %}{{ forum_title|striptags }}{% endblock %}
 {% block meta_description %}{{ room.description_fr|truncatechars:160 }}{% endblock %}
+{% block body_class %}page-community lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-{% include "components/page_header.html" with title=room.name_fr lead=room.description_fr %}
-<section class="container community-discussions" aria-labelledby="discussions-heading">
-  <h2 id="discussions-heading">{% translate "Discussions" %}</h2>
-  {% if room.is_moderated %}<p class="community-discussions__note">{% translate "Salle modérée : les premiers messages des nouveaux membres sont publiés après vérification." %}</p>{% endif %}
+{% if site.lang != "fr" %}{% include "components/page_header.html" with title=room.name_fr lead=room.description_fr lang="fr" %}{% else %}{% include "components/page_header.html" with title=room.name_fr lead=room.description_fr %}{% endif %}
+<section class="chapter community-discussions" aria-labelledby="discussions-heading">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      <h2 class="chapter__title" id="discussions-heading">{% translate "Discussions" %}</h2>
+      {% if room.is_moderated %}<p class="chapter__lead community-discussions__note">{% translate "Salle modérée : les premiers messages des nouveaux membres sont publiés après vérification." %}</p>{% endif %}
+    </div>
+    <div class="chapter__body">
   {% if page_obj.object_list %}
-  <ul class="community-discussions__list">
+      <ul class="registro registro--links community-discussions__list">
     {% for discussion in page_obj.object_list %}
-    <li class="community-discussions__item{% if discussion.pinned %} community-discussions__item--pinned{% endif %}">
-      <h3 class="community-discussions__title"><a href="{% url 'community:discussion' pk=discussion.pk %}">{{ discussion.title }}</a></h3>
-      <p class="community-discussions__meta">
-        {% if discussion.pinned %}<span class="badge" data-register="neutro">{% translate "En évidence" %}</span> {% endif %}
-        {% if discussion.status == "closed" %}<span class="badge" data-register="neutro">{% translate "Fermée" %}</span> {% endif %}
-        {% if discussion.status == "hidden" %}<span class="badge" data-register="nullo">{% translate "Masquée" %}</span> {% endif %}
-        {% if discussion.author %}{{ discussion.author.public_label }} · {% endif %}
-        <time datetime="{{ discussion.last_activity_at|date:'c' }}">{{ discussion.last_activity_at|date:"d/m/Y H:i" }}</time>
-      </p>
-    </li>
+        <li class="registro__row community-discussions__item{% if discussion.pinned %} community-discussions__item--pinned{% endif %}">
+          <h3 class="registro__title community-discussions__title"><a href="{% url 'community:discussion' pk=discussion.pk %}">{{ discussion.title }}</a></h3>
+          <p class="registro__meta community-discussions__meta">
+            {% if discussion.pinned %}<span class="tag">{% translate "En évidence" %}</span> {% endif %}
+            {% if discussion.status == "closed" %}{% chip register="neutro" %}{% translate "Fermée" %}{% endchip %} {% endif %}
+            {% if discussion.status == "hidden" %}{% chip register="nullo" %}{% translate "Masquée" %}{% endchip %} {% endif %}
+            {% if discussion.author %}{{ discussion.author.public_label }} · {% endif %}
+            <time datetime="{{ discussion.last_activity_at|date:'c' }}">{{ discussion.last_activity_at|date:"d/m/Y H:i" }}</time>
+          </p>
+        </li>
     {% endfor %}
-  </ul>
-  {% include "components/pagination.html" %}
+      </ul>
+      {% include "components/pagination.html" %}
   {% else %}
     {% translate "Aucune discussion pour le moment." as empty_title %}
     {% translate "Ouvrez la première discussion de cette salle." as empty_text %}
     {% include "components/empty_state.html" with title=empty_title text=empty_text %}
   {% endif %}
+    </div>
+  </div>
 </section>
 {% if form %}
-<section class="container community-compose" aria-labelledby="compose-heading">
-  <h2 id="compose-heading">{% translate "Nouvelle discussion" %}</h2>
-  <form method="post" action="{% url 'community:room' slug=room.slug %}" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-    {% include "components/form_field.html" with field=form.title %}
-    {% include "components/form_field.html" with field=form.body %}
-    <p><button type="submit" class="btn btn--primary">{% translate "Publier la discussion" %}</button></p>
-  </form>
+<section class="chapter community-compose" aria-labelledby="compose-heading">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      <h2 class="chapter__title" id="compose-heading">{% translate "Nouvelle discussion" %}</h2>
+    </div>
+    <div class="chapter__body">
+      <form class="form" method="post" action="{% url 'community:room' slug=room.slug %}" novalidate>
+        {% csrf_token %}
+        {% include "components/form_errors.html" with form=form %}
+        {% include "components/form_field.html" with field=form.title %}
+        {% include "components/form_field.html" with field=form.body %}
+        <div class="form__actions"><button type="submit" class="btn btn--primary">{% translate "Publier la discussion" %}</button></div>
+      </form>
+    </div>
+  </div>
 </section>
 {% endif %}
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

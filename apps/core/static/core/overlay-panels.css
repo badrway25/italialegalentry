@@ -1,0 +1,13 @@
+/* ============================================================================
+   THE OVERLAY PANELS — a page-only entry of the overlay system (design V5, W2-A; the owner's V5.8 CSS budget,
+   11 October 2026). Built by scripts/build_css.mjs to static/css/dist/core/overlay-panels.css and linked, in
+   extra_head, ONLY by the pages that draw a panel with a head — a dialog, an alert dialog, a bottom sheet, a drawer
+   of components/drawer.html — or a native modal (docs/design-v5/QA/v54/w2-a/CONTRACT.md §1):
+       <link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">
+   Today: the overlay board (templates/dev/designpreview/specimens/overlays.html) and the design showcase
+   (templates/dev/showcase.html). What every page may draw — the panel, the drawer, the popover, the tooltips, the
+   one scrim — is static/css/v5/overlays.css, in main.css.
+   This sheet is an IMPORT LIST: the rules are the partial static/css/v5/_overlay-panels.css, written as it resolves
+   in the COLLECTED tree from this sheet's collected path core/overlay-panels.css (DS 2026 §2).
+   ========================================================================== */
+@import url("../css/v5/_overlay-panels.css");

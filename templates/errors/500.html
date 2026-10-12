@@ -1,5 +1,5 @@
-{% extends "errors/base_error.html" %}{% load i18n %}
+{% extends "errors/standalone.html" %}{% load i18n %}
 {% block error_code %}500{% endblock %}{% block error_code_display %}500{% endblock %}
 {% block error_title %}{% translate "Erreur technique" %}{% endblock %}
 {% block error_text %}{% translate "Une erreur technique est survenue. Nos équipes en ont été informées ; vous pouvez réessayer dans quelques instants." %}{% endblock %}
-{% block error_extra %}{% if request.request_id %}<p class="error-page__ref">{% translate "Référence :" %} <span class="ltr">{{ request.request_id }}</span></p>{% endif %}{% endblock %}
+{% block error_extra %}{% firstof request_id request.request_id as reference %}{% if reference %}<p class="error-page__ref">{% translate "Référence :" %} <span class="ltr">{{ reference }}</span></p>{% endif %}{% endblock %}

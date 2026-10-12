@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- calendar: ILE drawing (Italy Legal Entry) -->
+  <rect x="2.5" y="4.5" width="19" height="17" rx="1.5"/>
+  <path d="M2.5 9.5h19M7.5 2.5v4M16.5 2.5v4M7.5 13.5h.01M12 13.5h.01M16.5 13.5h.01M7.5 17.5h.01M12 17.5h.01"/>
+</svg>

@@ -621,8 +621,12 @@ def latest_news(lang: str, limit: int = NEWS_LIMIT) -> list[dict]:
 
 def build_news(ctx: BuildContext) -> dict | None:
     articles = latest_news(ctx.lang)
-    if not articles and not ctx.phase3:
-        return None  # before Phase 3 the block appears only once something is published
+    if not articles:
+        # The chapter appears once something is published, in either gate state. With gate G3 open it used to
+        # announce itself empty (« Aucune actualité publiée pour le moment ») between the warning and the promoter:
+        # a chapter about nothing on the page that introduces the project (design V5.4, W2-D review fix, m4). The
+        # news index keeps its own empty state; the partial keeps its empty row, so the revert is this condition.
+        return None
     return {"articles": articles, "index_url": safe_reverse("news:index")}
 
 
@@ -737,7 +741,26 @@ def home_sections(request) -> list[SectionView]:
                 data=data,
             )
         )
+    _say_once(views)
     return views
+
+
+def _say_once(views: list[SectionView]) -> None:
+    """One thing once: a prescribed sentence the hero shows as its description is not printed again under it.
+
+    While gate G3 is closed the hero's description is, by default, a Phase 1 fragment (``content.HERO_INTERIM``) that
+    the trust chapter also lists under « what the platform does » — the same sentence twice on one page, 2 000 px
+    apart. The chapter then keeps its other statements. No text is changed: an editor who gives the hero another
+    description gets the whole list back, and the order of the sections is still the back office's.
+    """
+    hero = next((view for view in views if view.key == SectionKey.HERO), None)
+    said = str(hero.data.get("body") or "").strip() if hero is not None else ""
+    if not said:
+        return
+    for view in views:
+        does = view.data.get("does")
+        if view.key == SectionKey.TRUST and does:
+            view.data["does"] = [statement for statement in does if str(statement).strip() != said]
 
 
 _JSON_ESCAPES = {ord(">"): "\\u003E", ord("<"): "\\u003C", ord("&"): "\\u0026"}

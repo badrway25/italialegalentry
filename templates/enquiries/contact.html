@@ -1,23 +1,38 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The contact form (gate G2; the form, its consent, honeypot, throttle and recipient are the enquiries app's and stay as
+they are). Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): the head at the
+reading edge — the space's name, the title, the lead and the one address (the page's «who can help me»); the form a
+chapter — the section device beside it from 75rem — drawn by v5/field.css: fields at 16 px, an error said by its
+edge, its mark and its words and wired with aria-describedby, never by colour alone; the one primary.
+{% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
-{% block body_class %}page-enquiries page-enquiries--contact{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--contact lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-<article class="container enquiry-page enquiry-page--contact">
-  <header class="page-header">
+<article class="enquiry-page enquiry-page--contact">
+  <header class="page-header container">
     <p class="page-header__eyebrow">{% translate "Contact" %}</p>
     <h1 class="page-header__title">{{ page_title }}</h1>
     <p class="page-header__lead">{% translate "Pour toute question sur le projet, utilisez ce formulaire ou écrivez directement à l’adresse ci-dessous." %}</p>
-    <p class="page-header__contact"><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    <p class="page-header__contact"><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   </header>
-  <section class="enquiry-page__form" id="formulaire" aria-labelledby="contact-form-title">
-    <h2 id="contact-form-title" class="enquiry-page__form-title">{% translate "Votre message" %}</h2>
-    {% if not forms_open or not form %}
-      {% include "components/form_unavailable.html" %}
-    {% else %}
-      {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-contact" form_class="enquiry-form--contact" legend=_("Vos coordonnées et votre message") submit_label=_("Envoyer le message") %}
-    {% endif %}
+  <section class="chapter enquiry-page__form" id="formulaire" aria-labelledby="contact-form-title">
+    <div class="container chapter__inner">
+      <div class="chapter__head">
+        {% svg_icon "ile-steps" "icon chapter__mark" %}
+        <h2 id="contact-form-title" class="chapter__title enquiry-page__form-title">{% translate "Votre message" %}</h2>
+      </div>
+      <div class="chapter__body">
+        {% if not forms_open or not form %}
+          {% include "components/form_unavailable.html" %}
+        {% else %}
+          {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-contact" form_class="enquiry-form--contact" legend=_("Vos coordonnées et votre message") submit_label=_("Envoyer le message") %}
+        {% endif %}
+      </div>
+    </div>
   </section>
 </article>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

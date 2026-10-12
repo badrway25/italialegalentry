@@ -1,6 +1,10 @@
-{% comment %}Contract: `title`, `text` (optional), `action_label` + `action_url` (optional), `icon` (optional, default "document").{% endcomment %}
+{% comment %}Contract: `title`, `text` (optional), `action_label` + `action_url` (optional), `icon` (optional).
+The glyph says WHICH space is empty (apps/core/icons.py EMPTY_STATE): an empty page passes its domain's concept glyph —
+the FAQ `circle-help`, the glossary `book-a`, the news `newspaper`, the Forum `handshake`, «Vivre en Italie» `sprout`,
+a console list its own. A region under its own heading, and a page whose domain the registry does not draw, pass none
+and get `empty`, the neutral mark «nothing here yet». Never `document` by default: that glyph is «Mes pièces».{% endcomment %}
 <div class="empty-state" role="status">
-  {% svg_icon icon|default:"document" "icon empty-state__icon" %}
+  {% svg_icon icon|default:"empty" "icon empty-state__icon" %}
   <p class="empty-state__title">{{ title }}</p>
   {% if text %}<p class="empty-state__text">{{ text }}</p>{% endif %}
   {% if action_url %}<p><a class="btn btn--secondary" href="{{ action_url }}">{{ action_label }}</a></p>{% endif %}

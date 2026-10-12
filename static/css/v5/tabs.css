@@ -1,0 +1,146 @@
+/* ============================================================================================
+   TABS AND THE DISCLOSURE V5 — true alternatives inside a page; a question that opens (W1-C)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.5 (MS-O3: inside a page there is ONE indicator — on
+   --spring-snappy on public pages, on --ease-layout in the console; tier 0: a change made from the keyboard
+   does not travel; only transform and opacity move), §1.6 (the one ring), §1.8 (44 px tabs);
+   CREATIVE_DIRECTION_V5 §15; drawn reference: the gate-0 foundation's components.css §7.
+   Markup: templates/components/tabs.html (WAI-ARIA tabs, automatic activation) and
+   templates/components/accordion.html / templates/faq/_item.html (native <details>).
+   Behaviour: initTabs and initAccordions in static/js/main.js. Without script the tab list is not shown
+   and the panels stand one under the other, each under its own title; <details> works by itself.
+   Replaces components.css §14 and §15 (plan §2.3, the deletion map). Tokens only; logical properties — the
+   one physical placement is the indicator's, measured in pixels by initTabs (`inset` shorthand, below).
+   ============================================================================================ */
+
+/* ---- 1. Tabs ---------------------------------------------------------------------------------------- */
+/* set at run time by initTabs on the widget (declared here with their no-script values): where the selected
+   label is inside the list, in pixels from its top left corner, how wide it is, and the side it was reached from */
+.tabs {
+  --tabs-x: 0px;
+  --tabs-y: 0px;
+  --tabs-w: 0;
+  --tabs-dir: 1;
+}
+.tabs__list {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-1);
+  margin: 0 0 var(--s-6);
+  padding: 0;
+  list-style: none;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+html.no-js .tabs__list { display: none; }
+.tabs__tab {
+  position: relative;
+  min-block-size: var(--hit-primary);
+  padding: 0 var(--s-3);
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+.tabs__tab[aria-selected="true"] { color: var(--text-1); }
+@media (hover: hover) { .tabs__tab:hover { color: var(--text-1); } }
+.tabs__tab:focus-visible { outline-offset: -2px; border-radius: var(--radius-xs); } /* the system's 2 px corner (review m6) */
+/* until the script has measured (and if it never runs) the selected tab draws its own line, in place */
+.tabs__tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--s-3);
+  inset-block-end: -1px;
+  block-size: 2px;
+  background: var(--nav-indicator);
+}
+.tabs.is-ready .tabs__tab::after { content: none; }
+/* the one indicator: a 1 px box scaled to the selected label and moved under it — transform only */
+.tabs__list::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  inline-size: 1px;
+  block-size: 2px;
+  background: var(--nav-indicator);
+  transform: translate(var(--tabs-x), var(--tabs-y)) scaleX(var(--tabs-w));
+  transform-origin: 0 50%;
+  pointer-events: none;
+  visibility: hidden;
+}
+.tabs.is-ready .tabs__list::after { visibility: visible; }
+/* .is-travelling is set for a pointer's choice only: from the keyboard, at load and on resize it is where it is */
+.tabs.is-travelling .tabs__list::after { transition: transform var(--spring-snappy-duration) var(--spring-snappy); }
+body.console .tabs.is-travelling .tabs__list::after { transition: transform var(--motion-standard) var(--ease-layout); }
+
+.tabs__panel[hidden] { display: none; }
+html.no-js .tabs .tabs__panel { display: block; padding-block: var(--s-4); border-block-start: 1px solid var(--line-rhythm); }
+.tabs__panel:focus-visible { outline-offset: var(--s-1); }
+.tabs__panel-title { font-size: var(--t-entry); line-height: var(--t-entry-lh); }
+html.js .tabs__panel-title {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+/* the chosen panel comes 12 px from the side the indicator travelled from (--tabs-dir is 1 or -1, set by
+   initTabs with the indicator), in the same 200 ms; nothing when the choice came from the keyboard */
+.tabs.is-travelling .tabs__panel { transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter); }
+@starting-style {
+  .tabs.is-travelling .tabs__panel { opacity: 0; transform: translateX(calc(var(--tabs-dir) * 12px)); }
+}
+
+/* ---- 2. The disclosure (accordion): hairlines, a 56 px row, a chevron that turns ------------------------ */
+.accordion { border-block-start: 1px solid var(--line-rhythm); }
+.accordion__item { border-block-end: 1px solid var(--line-rhythm); }
+.accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-block-size: 3.5rem;
+  padding: var(--s-3) 0; /* the question on its section's edge (review m6) */
+  list-style: none;
+  font-family: var(--f-sans);
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  cursor: pointer;
+}
+.accordion__summary::-webkit-details-marker { display: none; }
+/* a question written as a heading keeps its role, not its size nor its margin: one disclosure, one row type
+   (review m7) — the row centres one line */
+.accordion__summary > :is(h2, h3, h4, p) { margin: 0; font: inherit; letter-spacing: inherit; }
+/* the mark is drawn, for every producer of the row: the legacy inline glyph gives way to it */
+.accordion__summary > .icon { display: none; }
+.accordion__summary::after {
+  content: "";
+  flex: none;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-inline: var(--s-2);
+  border: solid var(--icon-default);
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform var(--motion-standard) var(--ease-enter);
+}
+.accordion__item[open] > .accordion__summary::after { transform: translateY(25%) rotate(-135deg); }
+/* tier 0 (plan §1.5, R-07): a row opened and a tab chosen from the keyboard change in the next frame (the
+   indicator and the panel travel for a pointer only: .is-travelling, set by initTabs) */
+html[data-input="key"] .tabs__tab,
+html[data-input="key"] .accordion__summary::after { transition-duration: 0ms; }
+@media (hover: hover) { .accordion__summary:hover::after { border-color: var(--icon-strong); } }
+/* the answer: the reading measure, the row's own inset, room before the next hairline (`__panel` is the name
+   the FAQ's markup gives the same box) */
+.accordion__body,
+.accordion__panel { max-inline-size: var(--measure-body); padding: 0 0 var(--s-6); }
+:is(.accordion__body, .accordion__panel) > :last-child { margin-block-end: 0; }
+
+@media (forced-colors: active) {
+  .tabs__tab[aria-selected="true"]::after, .tabs__list::after { background: Highlight; forced-color-adjust: none; }
+  .accordion__summary::after { border-color: CanvasText; }
+}

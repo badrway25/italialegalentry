@@ -17,10 +17,10 @@ the link to the dashboard instead (the prescribed button would make no sense for
     </div>
     <div class="cta-panel__actions">
       {% if user.is_authenticated %}
-        <a class="btn btn--secondary" href="{% url 'portal:dashboard' %}">{% svg_icon "home" "icon" %}{% translate "Tableau de bord" %}</a>
+        <a class="btn btn--secondary" href="{% url 'portal:dashboard' %}">{% svg_icon "layout-dashboard" "icon" %}{% translate "Tableau de bord" %}</a>
       {% else %}
         {% safe_url 'account_login' as reserved_login_url %}
-        {% if reserved_login_url %}<a class="btn btn--primary btn--upper" href="{{ reserved_login_url }}?next={% url 'portal:dashboard' %}">{% svg_icon "lock" "icon" %}{% locked "p3.reserved.button" %}</a>{% endif %}
+        {% if reserved_login_url %}<a class="btn btn--primary btn--upper" href="{{ reserved_login_url }}?next={% url 'portal:dashboard' %}">{% svg_icon "ile-key" "icon" %}{% locked "p3.reserved.button" %}</a>{% endif %}
       {% endif %}
     </div>
   </div>

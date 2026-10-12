@@ -14,7 +14,16 @@ state_reason, responsible, responsible_note, responsible_glyph, due_date, is_ove
 health, mandatory, current, version_count, may_file, action_blocked, detail_url); optional
 `compact` (True on the dashboard: identity · state · due only — no responsible, no action, no
 menu, no reason; the register page carries those).
-{% endcomment %}
+
+The row menu is the overlay system's popover (design V5, V5.4 plan §1.14; W2-A): «⋮» is a real button
+named by its tooltip (the top-layer tip: the row may sit in a clipping sheet), and components/popover.html
+holds the rows — this file again, with `overlay_part` = "body". Placed on the button's inline end by
+static/js/src/overlay.js; a bottom sheet at ≤ 40rem.
+{% endcomment %}{% if overlay_part == "body" %}<ul class="overlay__list" role="list">
+  <li><a class="overlay__item" href="{{ row.detail_url }}">{% svg_icon "eye" "icon" %}<span>{% translate "Consulter" %}</span></a></li>
+  {% if row.current and row.current.download_url %}<li><a class="overlay__item" href="{{ row.current.download_url }}">{% svg_icon "download" "icon" %}<span>{% translate "Télécharger" %}</span></a></li>{% endif %}
+  {% if row.version_count %}<li><a class="overlay__item" href="{{ row.detail_url }}#versions">{% svg_icon "history" "icon" %}<span>{% blocktranslate count n=row.version_count %}{{ n }} dépôt{% plural %}{{ n }} dépôts{% endblocktranslate %}</span></a></li>{% endif %}
+</ul>{% else %}
 <li class="doc-row{% if row.is_overdue %} doc-row--overdue{% endif %}{% if compact %} doc-row--compact{% endif %}" data-state="{{ row.state }}">
   <div class="doc-row__identity">
     {% include "components/glyph.html" with glyph="document" size="md" %}
@@ -27,7 +36,7 @@ menu, no reason; the register page carries those).
     </div>
   </div>
   <div class="doc-row__state">
-    <span class="chip state state--{{ row.state_css }}" data-register="{{ row.state|chip_register:'documents.RequirementState' }}">{{ row.state_label }}</span>
+    {% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}
     {% if row.action_blocked and not compact %}<span class="doc-row__blocked">{% translate "Bloqué" %}</span>{% endif %}
   </div>
   {% if not compact %}
@@ -38,7 +47,7 @@ menu, no reason; the register page carries those).
   {% endif %}
   <div class="doc-row__due{% if row.urgency %} doc-row__due--{{ row.urgency }}{% endif %}">
     {% if row.due_date %}
-      {% if row.urgency == "overdue" %}{% svg_icon "warning" "icon doc-row__due-icon" %}{% elif row.urgency == "soon" %}{% svg_icon "clock" "icon doc-row__due-icon" %}{% elif row.urgency == "upcoming" %}{% svg_icon "calendar" "icon doc-row__due-icon" %}{% endif %}
+      {% svg_icon row.urgency|concept:"due" "icon doc-row__due-icon" %}
       <time datetime="{{ row.due_date|date:'c' }}">{{ row.due_date|date:"d.m.Y" }}</time>
     {% else %}<span class="doc-row__none" aria-hidden="true">—</span>{% endif %}
   </div>
@@ -53,13 +62,9 @@ menu, no reason; the register page carries those).
       <a class="btn btn--secondary btn--sm" href="{{ row.detail_url }}">{% translate "Consulter" %}</a>
     {% endif %}
   </div>
-  <div class="doc-row__menu">
-    <button class="doc-row__more" type="button" popovertarget="doc-menu-{{ row.id }}">{% svg_icon "menu" "icon" %}<span class="visually-hidden">{% translate "Ouvrir le menu de la pièce" %}</span></button>
-    <div class="doc-menu" id="doc-menu-{{ row.id }}" popover>
-      <a class="doc-menu__item" href="{{ row.detail_url }}">{% svg_icon "document" "icon" %}<span>{% translate "Consulter" %}</span></a>
-      {% if row.current and row.current.download_url %}<a class="doc-menu__item" href="{{ row.current.download_url }}">{% svg_icon "download" "icon" %}<span>{% translate "Télécharger" %}</span></a>{% endif %}
-      {% if row.version_count %}<a class="doc-menu__item" href="{{ row.detail_url }}#versions">{% svg_icon "list" "icon" %}<span>{% blocktranslate count n=row.version_count %}{{ n }} dépôt{% plural %}{{ n }} dépôts{% endblocktranslate %}</span></a>{% endif %}
-    </div>
-  </div>
+  <div class="doc-row__menu">{% with row_key=row.id|stringformat:"s" %}{% with menu_id="doc-menu-"|add:row_key %}
+    <button class="doc-row__more" type="button" popovertarget="{{ menu_id }}" aria-label="{% translate 'Ouvrir le menu de la pièce' %}" data-tip="layer">{% svg_icon "ellipsis-vertical" "icon" %}</button>
+    {% include "components/popover.html" with id=menu_id label=row.title body_template="components/document_row.html" %}
+  {% endwith %}{% endwith %}</div>
   {% endif %}
-</li>
+</li>{% endif %}

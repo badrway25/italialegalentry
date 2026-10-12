@@ -11,7 +11,7 @@ warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose th
 {% include "pathways/_preview_notice.html" %}
 {% locked_is_fallback "p3.persons.pathways" as entries_fallback %}{% locked_lang "p3.persons.pathways" as entries_lang %}
 <header class="page-header page-header--pathway container" data-pathway="{{ pathway.key }}">
-  <p class="page-header__eyebrow">{% svg_icon pathway.icon|default:"map-pin" "icon icon--sm" %} {% translate "Parcours régulier" %} {{ pathway.order }}/8</p>
+  <p class="page-header__eyebrow">{% svg_icon pathway.key|concept:"pathway"|default:pathway.icon|default:"signpost" "icon icon--sm icon--inline" %}{% translate "Parcours régulier" %} {{ pathway.order }}/8</p>
   <h1 class="page-header__title"{% if entries_fallback %} lang="{{ entries_lang }}"{% endif %}>{{ d.title }}</h1>
   <p class="page-header__lead"{% if entries_fallback %} lang="{{ entries_lang }}"{% endif %}>{{ d.description }}</p>
   {% if pathway.hero_image %}
@@ -79,7 +79,6 @@ warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose th
         <ul class="list-reset stack stack--sm doc-list">
           {% for doc in d.documents %}
           <li class="doc-list__item{% if doc.pending %} doc-list__item--pending{% endif %}">
-            <span class="icon--accent" aria-hidden="true">{% svg_icon "document" "icon icon--sm" %}</span>
             <span{% if doc.lang != site.lang %} lang="{{ doc.lang }}"{% endif %}>{{ doc.heading }}</span>
             {% if doc.body %}<span class="text-small text-muted">— {{ doc.body }}</span>{% endif %}
           </li>
@@ -124,7 +123,7 @@ warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose th
         <h3 class="text-h4">{% translate "Termes utiles" %}</h3>
         <ul class="list-reset cluster" data-glossary="{{ d.glossary|length }}">
           {% for term in d.glossary %}
-            <li>{% if term.url %}<a class="badge" data-register="neutro" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="badge" data-register="neutro" lang="it">{{ term.term }}</span>{% endif %}</li>
+            <li>{% if term.url %}<a class="tag" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="tag" lang="it">{{ term.term }}</span>{% endif %}</li>
           {% endfor %}
         </ul>
       {% endif %}

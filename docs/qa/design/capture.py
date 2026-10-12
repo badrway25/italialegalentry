@@ -179,9 +179,10 @@ def capture(base_url: str) -> int:
             page.wait_for_timeout(350)
 
         def open_mega_menu(page):
-            toggle = page.locator("[data-nav-item] [data-nav-panel-toggle]").first
-            if toggle.count():
-                toggle.focus()
+            # «Il portico» (design V5, W2-C1): a door is a disclosure button; Enter opens, the focus stays on it
+            door = page.locator("[data-portico-door]").first
+            if door.count():
+                door.focus()
                 page.keyboard.press("Enter")
                 page.wait_for_timeout(300)
 

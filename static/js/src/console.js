@@ -1,24 +1,44 @@
 /**
- * The console shell (docs/design-v4/CREATIVE_DIRECTION.md §3.9): the rail that collapses and
- * remembers it, its keyboard model, and the mobile drawer.
+ * The console shell (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.18 D06, §3.5 item 3; W3-A): the rail that
+ * folds and remembers it, the word of a glyph that stands alone, its keyboard model, and the mobile drawer.
  *
- * No animation library here: what moves is the rail's width (a CSS transition on a token) and
- * the drawer (a CSS animation on `[open]`). The active entry's indicator is drawn by CSS on
- * `aria-current`; a page is a full navigation, so there is nothing for it to travel between.
+ * No animation library here: what moves is the rail's width (a CSS transition on a token, on the
+ * person's own act) and the overlays (the overlay system's transitions, static/css/v5/overlays.css). The
+ * current page is drawn by CSS on `aria-current` («il lume»); a page is a full navigation, so there is
+ * nothing for it to travel between. Nothing moves at load.
  *
- *   rail collapse   persisted in localStorage under `ile.rail` (try/catch: private windows,
- *                   blocked storage — the console must work without it); default: open from
- *                   90rem, collapsed below, as the stylesheet says without the attribute
+ * The overlays of every console page — the drawer, the account popover, the row menu, the disclosures, the
+ * tooltips — are the overlay system's (static/js/src/overlay.js, V5.4 plan §1.14; W2-A), imported here: it
+ * wires the page's hooks when it loads, and this module adds only what is the shell's own.
+ *
+ *   rail state      `data-rail` on <body>, "open" or "closed". static/js/rail-pref.js writes it before
+ *                   the first frame — the choice stored in localStorage under `ile.rail`, else open
+ *                   from 80rem and compact below; this module keeps the control's `aria-expanded` in
+ *                   step, stores the choice on every press (try/catch: private windows, blocked
+ *                   storage — the console must work without it) and follows the width while no choice
+ *                   is stored. Without script the stylesheet keeps the rail open.
+ *   rail words      a glyph without its word (the compact rail's entries, the foot's controls) shows it
+ *                   beside itself on hover and on keyboard focus: the overlay system's one top-layer
+ *                   tip, the rail saying which controls and when (`overlay:tip`)
  *   rail keyboard   ArrowUp/ArrowDown move between entries, Home/End to the first/last
- *   drawer          a native <dialog>: showModal() traps focus and Esc closes; the two «Menu»
- *                   buttons (top bar, bottom bar) carry aria-expanded
+ *   drawer          a modal drawer of the overlay system. «Menu» — once, in the bottom bar — is a link
+ *                   to it (`data-overlay-open`; without script the system's stylesheet shows the drawer
+ *                   it points at); the system makes it the button of a modal: the role, Enter and
+ *                   Space, aria-expanded and aria-haspopup, the trap, Esc and the scrim, the focus on
+ *                   the page one is on and back to «Menu» on close. Here: a window widened past 64rem
+ *                   puts it away.
+ *
+ * The one frame wait (the rail's width transitions only once the first frame is painted) goes
+ * through motion.js's gate, like every frame wait of the project (V5.4 plan §1.5, W1-D).
  */
+import { afterPaint } from "./motion.js";
+import { close, isOpen } from "./overlay.js";
 
 const KEY = "ile.rail";
-const WIDE = window.matchMedia("(min-width: 90rem)");
+const WIDE = window.matchMedia("(min-width: 80rem)");
 
-/* 1. The rail. */
-const rail = document.querySelector("[data-rail]");
+/* 1. The rail — the <nav>, not the <body> that carries the state under the same attribute. */
+const rail = document.querySelector("nav[data-rail]");
 const toggle = document.querySelector("[data-rail-toggle]");
 if (rail && toggle) {
   const read = () => {
@@ -43,62 +63,55 @@ if (rail && toggle) {
   const stored = read();
   if (stored === "open" || stored === "closed") apply(stored, false);
   else apply(WIDE.matches ? "open" : "closed", false);
-  // The width transitions only after the first frame (console.css `is-ready`): never at load.
-  window.requestAnimationFrame(() => window.requestAnimationFrame(() => document.body.classList.add("is-ready")));
+  // The width transitions only after the first frame (`is-ready`, v5/_shell.css §6): never at load.
+  afterPaint().then(() => document.body.classList.add("is-ready"));
 
   toggle.addEventListener("click", () => {
     apply(document.body.dataset.rail === "open" ? "closed" : "open", true);
   });
 
-  // No stored preference: follow the width, as the stylesheet would without the attribute.
+  // No stored preference: follow the width, as rail-pref.js decided it at load.
   WIDE.addEventListener("change", (event) => {
     if (read() === null) apply(event.matches ? "open" : "closed", false);
   });
 
-  const items = [...rail.querySelectorAll("[data-rail-item]")];
+  /* The current page stays in view: on a short screen the list scrolls under the pinned foot, and a
+     page near its end would otherwise be marked out of sight. Placed at once — a scroll offset, not
+     a movement. */
+  const scroller = rail.querySelector("[data-rail-scroll]");
+  const current = scroller ? scroller.querySelector("[aria-current='page']") : null;
+  if (scroller && current && scroller.scrollHeight > scroller.clientHeight) {
+    const view = scroller.getBoundingClientRect();
+    const row = current.getBoundingClientRect();
+    if (row.bottom > view.bottom) scroller.scrollTop += row.bottom - view.bottom + 8;
+    else if (row.top < view.top) scroller.scrollTop -= view.top - row.top + 8;
+  }
 
-  /* The tooltip of the collapsed rail: one fixed element beside the entry under the pointer or
-     the focus (the rail's scroll area would clip a pseudo-element). Only while collapsed: open,
-     the label is beside the glyph. */
-  const tip = document.createElement("span");
-  tip.className = "rail__tip";
-  tip.setAttribute("aria-hidden", "true");
-  document.body.append(tip);
-  /* Physical sides on purpose: in RTL the rail is on the right and the tip goes on the item's
-     LEFT — which is inline-END there, the opposite of what a logical property spelt for LTR does
-     (gate B review, correction 2: the tip sat at x 78 with the item at x 1374). */
-  const showTip = (item) => {
-    if (document.body.dataset.rail !== "closed") return;
-    const box = item.getBoundingClientRect();
-    const rtl = document.documentElement.dir === "rtl";
-    tip.textContent = item.dataset.label || "";
-    tip.style.top = `${Math.round(box.top + box.height / 2)}px`;
-    tip.style.transform = "translateY(-50%)";
-    if (rtl) {
-      tip.style.left = "auto";
-      tip.style.right = `${Math.round(window.innerWidth - box.left + 12)}px`;
-    } else {
-      tip.style.right = "auto";
-      tip.style.left = `${Math.round(box.right + 12)}px`;
-    }
-    tip.classList.add("is-on");
-  };
-  let tipTimer = 0;
-  const hideTip = () => {
-    window.clearTimeout(tipTimer);
-    tip.classList.remove("is-on");
-  };
-  items.forEach((item) => {
-    // The pointer waits the tooltip's 400 ms (DS §7.1); the keyboard focus does not wait.
-    item.addEventListener("pointerenter", () => {
-      window.clearTimeout(tipTimer);
-      tipTimer = window.setTimeout(() => showTip(item), 400);
-    });
-    item.addEventListener("pointerleave", hideTip);
-    item.addEventListener("focus", () => showTip(item));
-    item.addEventListener("blur", hideTip);
+  /* The word of a glyph that stands alone — the overlay system's one top-layer tip (W2-A; plan §1.14, O11),
+     which the list's scroll edge cannot clip: beside the control, beyond the rail's own edge — never over the
+     rail, so the pointer may rest on the word (WCAG 1.4.13) without it lying over the foot's next control, and
+     in Arabic on the rail's left, the inline end there —, after the tooltip's 400 ms under the pointer and at
+     once under the keyboard's focus; Esc (wherever the focus is), a press, the pointer or the focus leaving put
+     it away. The rail says which controls have a word (`data-rail-tip`, the word in `data-label`) and when:
+     `data-rail-tip="always"` — a control that never shows its word (sign-out, the rail's own control) —,
+     otherwise only while the rail is compact or the word is cut (a long name, a long audience): open, the
+     word is beside the glyph, and the rail refuses the tip. */
+  const clipped = (item) =>
+    [...item.querySelectorAll(".rail__who-name, .rail__who-role, .rail__space")].some(
+      (word) => word.scrollWidth > word.clientWidth,
+    );
+  rail.querySelectorAll("[data-rail-tip]").forEach((item) => {
+    item.setAttribute("data-tip", "layer");
+    item.setAttribute("data-tip-side", "inline-end");
+    item.setAttribute("data-tip-beyond", "nav[data-rail]");
+    item.setAttribute("data-tip-label", item.dataset.label || "");
   });
-  toggle.addEventListener("click", hideTip);
+  rail.addEventListener("overlay:tip", (event) => {
+    const item = event.target.closest("[data-rail-tip]");
+    if (item && item.dataset.railTip !== "always" && document.body.dataset.rail !== "closed" && !clipped(item)) {
+      event.preventDefault();
+    }
+  });
 }
 
 /* The keyboard model — ArrowUp/ArrowDown, Home, End — on every rail: the fixed one and the
@@ -152,29 +165,8 @@ document.querySelectorAll("[data-doc-search]").forEach((input) => {
   });
 });
 
-/* 2b. The row menu (design V4 §3.5.4): a native popover with `margin: 0` lands at the viewport's
-      origin unless it is placed. Placed when it opens, beside its button, on the reading edge of
-      the row (CSSOM only — no style attribute); above the button when the viewport ends first. */
-document.querySelectorAll(".doc-menu[popover]").forEach((menu) => {
-  const button = document.querySelector(`[popovertarget="${menu.id}"]`);
-  if (!button) return;
-  menu.addEventListener("toggle", (event) => {
-    if (event.newState !== "open") return;
-    const box = button.getBoundingClientRect();
-    const rtl = document.documentElement.dir === "rtl";
-    const below = box.bottom + 4;
-    const top = below + menu.offsetHeight > window.innerHeight ? Math.max(8, box.top - 4 - menu.offsetHeight) : below;
-    menu.style.top = `${Math.round(top)}px`;
-    menu.style.bottom = "auto";
-    if (rtl) {
-      menu.style.left = `${Math.round(box.left)}px`;
-      menu.style.right = "auto";
-    } else {
-      menu.style.right = `${Math.round(window.innerWidth - box.right)}px`;
-      menu.style.left = "auto";
-    }
-  });
-});
+/* 2b. The row menu is the overlay system's popover (templates/components/document_row.html): its place
+      beside its button, its side, its focus and its dismissals are overlay.js's. */
 
 /* 2c. The context bar (design V4 §3.6.1): the case file's header, once scrolled past, becomes a
       compact glass bar under the console bar — title, chip, action. Shown by a class; the bar is
@@ -193,28 +185,19 @@ if (ctx && ctxBar && "IntersectionObserver" in window) {
   ).observe(ctx);
 }
 
-/* 3. The drawer. */
-const drawer = document.querySelector("[data-console-drawer]");
-if (drawer && typeof drawer.showModal === "function") {
-  const openers = [...document.querySelectorAll("[data-console-menu]")];
-  const setExpanded = (open) => openers.forEach((button) => button.setAttribute("aria-expanded", open ? "true" : "false"));
-  let lastOpener = null;
-  openers.forEach((button) => {
-    button.addEventListener("click", () => {
-      lastOpener = button;
-      drawer.showModal();
-      setExpanded(true);
-      const current = drawer.querySelector("[aria-current='page']") || drawer.querySelector("[data-rail-item]");
-      if (current) current.focus();
-    });
-  });
-  drawer.querySelectorAll("[data-console-close]").forEach((button) => button.addEventListener("click", () => drawer.close()));
-  // A click on the backdrop lands on the dialog element itself, not on its content.
-  drawer.addEventListener("click", (event) => {
-    if (event.target === drawer) drawer.close();
-  });
-  drawer.addEventListener("close", () => {
-    setExpanded(false);
-    if (lastOpener) lastOpener.focus();
+/* 3. The drawer — a modal drawer of the overlay system (data-overlay="drawer", from the reading edge). «Menu»
+      and the drawer's close control are links (`#console-drawer`, `#main-content`): without script they still
+      lead somewhere, and they say what they are. With the system they are buttons — the role comes with the
+      behaviour — Space presses them as Enter does, nothing is added to the address, and the focus goes to the
+      page one is on (the system's «current entry») and back to «Menu».
+      The drawer — and the top bar's account popover — belong to the widths that draw the top and bottom bars: a
+      window widened past 64rem puts them away, and a focus that was in one goes to the rail, which stands at the
+      reading edge again (neither «Menu» nor the bar's account is drawn there). */
+const phoneOnly = [document.querySelector("[data-console-drawer]"), document.getElementById("console-account")].filter(Boolean);
+if (phoneOnly.length) {
+  window.matchMedia("(min-width: 64rem)").addEventListener("change", (event) => {
+    if (!event.matches) return;
+    const rail = document.getElementById("console-rail") || undefined;
+    phoneOnly.forEach((panel) => isOpen(panel) && close(panel, { focus: rail }));
   });
 }

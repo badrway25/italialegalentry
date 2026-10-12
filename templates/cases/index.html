@@ -40,7 +40,7 @@ register is the form that shows facts without dressing them up.
           {% if row.progress.overdue %} · {% blocktranslate count n=row.progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}{% endif %}
         </span>
         <span class="entry__actor">
-          <span class="state state--{{ row.case.status }}" data-register="{{ row.case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ row.case.status|chip_stage }}">{{ row.case.get_status_display }}</span>
+          {% chip row.case.status "cases.CaseStatus" %}{{ row.case.get_status_display }}{% endchip %}
           <time datetime="{{ row.case.status_since|date:'Y-m-d' }}">{{ row.case.status_since|date:"d.m.Y" }}</time>
         </span>
       </a>

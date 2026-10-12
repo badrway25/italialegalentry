@@ -41,7 +41,7 @@ once, which the specification forbids).
     <h1 class="ctx__title">{% translate "Dossier" %} <span class="ctx__ref">{{ case.reference }}</span></h1>
     <p class="ctx__meta">
       <span>{{ case.get_purpose_display }}</span>
-      <span class="chip state state--{{ case.status }}" data-register="{{ case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ case.status|chip_stage }}">{{ case.get_status_display }}</span>
+      {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
       <span class="ctx__resp">
         {% if responsible %}{% include "components/glyph.html" with glyph=responsible.0.role|actor_glyph size="sm" %}{{ responsible.0.get_role_display }}{% if responsible.0.organisation %} — {{ responsible.0.organisation.name }}{% endif %}
         {% else %}{% include "components/glyph.html" with glyph="person" size="sm" %}{% translate "Vous" %}{% endif %}
@@ -62,7 +62,7 @@ once, which the specification forbids).
 </header>
 <div class="ctx-bar" data-ctx-bar aria-hidden="true">
   <span class="ctx-bar__title">{% translate "Dossier" %} <span class="ctx__ref">{{ case.reference }}</span></span>
-  <span class="chip state state--{{ case.status }}" data-register="{{ case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ case.status|chip_stage }}">{{ case.get_status_display }}</span>
+  {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
   {% if next_action and next_action.url %}<a class="btn btn--primary btn--sm btn--arrow ctx-bar__action" href="{{ next_action.url }}" tabindex="-1">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
 </div>
 {% endblock %}
@@ -150,7 +150,7 @@ once, which the specification forbids).
           </td>
           {% endif %}
           <td data-label="{% translate 'État' %}">
-            <span class="chip state state--{{ item.status }}" data-register="{{ item.status|chip_register:'cases.ChecklistStatus' }}">{{ item.get_status_display }}</span>
+            {% chip item.status "cases.ChecklistStatus" %}{{ item.get_status_display }}{% endchip %}
             {% if item.can_change %}
             <form method="post" action="{% url 'cases:set_item_status' case.reference item.pk %}" class="table__form">
               {% csrf_token %}
@@ -280,7 +280,7 @@ once, which the specification forbids).
       <li class="threads__row{% if message.is_unread %} threads__row--unread{% endif %}">
         <a class="threads__link" href="{{ message.url }}">
           <span class="threads__subject">{{ message.subject }}</span>
-          <span class="threads__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} <span class="chip state state--review" data-register="neutro">{% translate "Nouveau" %}</span>{% endif %}</span>
+          <span class="threads__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} {% chip register="neutro" %}{% translate "Nouveau" %}{% endchip %}{% endif %}</span>
         </a>
       </li>
       {% endfor %}
@@ -298,7 +298,7 @@ once, which the specification forbids).
     <ul class="dates" role="list">
       {% for deadline in deadlines %}
       <li class="dates__row{% if deadline.urgency %} dates__row--{{ deadline.urgency }}{% endif %}">
-        <span class="dates__when">{% if deadline.urgency == "overdue" %}{% svg_icon "warning" "icon" %}{% elif deadline.urgency == "soon" %}{% svg_icon "clock" "icon" %}{% else %}{% svg_icon "calendar" "icon" %}{% endif %}<time datetime="{{ deadline.date|date:'Y-m-d' }}">{{ deadline.date|date:"d.m.Y" }}</time></span>
+        <span class="dates__when">{% svg_icon deadline.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ deadline.date|date:'Y-m-d' }}">{{ deadline.date|date:"d.m.Y" }}</time></span>
         <span class="dates__what">{{ deadline.title }}</span>
       </li>
       {% endfor %}

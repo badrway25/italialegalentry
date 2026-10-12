@@ -1,4 +1,28 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The newsletter's unsubscription, reached from the link present in every message. Design V5.4 (W3-F2 — the content
+pages): the head at the reading edge; the state in one sentence, or the one action that unsubscribes. Once done, the
+page is not a dead end: the way home (the error pages' «Retour à l’accueil», the one primary) and «who can help me» in
+the live words of the account pages and the login (D26; the review's m4).
+{% endcomment %}
 {% block page_title %}{% translate "Désinscription" %}{% endblock %}
-{% block content %}<section class="container"><h1>{% translate "Se désinscrire" %}</h1>
-{% if subscription.unsubscribed_at %}<p>{% translate "Vous êtes désinscrit(e)." %}</p>{% else %}<form method="post">{% csrf_token %}<button class="btn btn--primary" type="submit">{% translate "Confirmer la désinscription" %}</button></form>{% endif %}</section>{% endblock %}
+{% block body_class %}page-consent lettura{% endblock %}
+{% block content %}
+<header class="page-header container">
+  <h1 class="page-header__title">{% translate "Se désinscrire" %}</h1>
+</header>
+<section class="chapter consent-answer">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      {% if subscription.unsubscribed_at %}
+      <p class="consent-answer__state">{% translate "Vous êtes désinscrit(e)." %}</p>
+      <p class="consent-answer__way"><a class="btn btn--primary btn--lg btn--arrow" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+      {% else %}
+      <form method="post">{% csrf_token %}<button class="btn btn--primary btn--lg" type="submit">{% translate "Confirmer la désinscription" %}</button></form>
+      {% endif %}
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

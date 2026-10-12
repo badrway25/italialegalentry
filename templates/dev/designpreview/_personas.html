@@ -1,0 +1,25 @@
+{% comment %}
+V5 live preview — the persona switch as the strip shows it (designpreview.personas). DEVELOPMENT
+ONLY. Each «Entrer» is a POST with its CSRF token and says which page it opens; the persona inside
+reads «dentro» instead (review W1-P, UX m6, m7; accessibility m9); «Sortir» signs this browser out.
+A persona session is read-only, and the list never holds a staff account. The persona names and
+the product's words are French, and say so (accessibility m6). Each «Entrer» carries the page the
+sign-in was asked for (``page``; the script keeps it current): the switch opens it when it is that
+persona's own, its first page otherwise (review W1-P, UX r2 n2; CD condition C4).
+{% endcomment %}<p class="dp-strip__panel-title">Personas — sessioni di prova, in sola lettura</p>
+{% if not strip.database_allowed %}<p class="dp-strip__warn">Questo server usa il database «{{ strip.database }}»: qui le personas sono rifiutate (soltanto il database dell’anteprima e le sue copie).</p>{% endif %}
+{% if strip.persona_key %}<form class="dp-persona dp-persona--active" method="post" action="{% url 'designpreview:persona_exit' %}">{% csrf_token %}
+  <input type="hidden" name="page" value="{{ strip.page }}" data-dp-page-field><input type="hidden" name="lang" value="{{ strip.lang }}" data-dp-lang-field><input type="hidden" name="frame" value="{{ strip.frame }}" data-dp-frame-field>
+  <p class="dp-persona__name">Dentro come «<span lang="fr">{{ strip.persona }}</span>»</p>
+  <button class="dp-persona__button" type="submit" lang="fr">Sortir</button>
+</form>{% endif %}
+<ul class="dp-persona__list" role="list">
+  {% for persona in strip.personas %}<li>
+    <form class="dp-persona{% if persona.inside %} dp-persona--current{% endif %}" method="post" action="{% url 'designpreview:persona_enter' persona.key %}">{% csrf_token %}
+      <input type="hidden" name="page" value="{{ strip.next }}" data-dp-next-field><input type="hidden" name="lang" value="{{ strip.lang }}" data-dp-lang-field><input type="hidden" name="frame" value="{{ strip.frame }}" data-dp-frame-field>
+      <p class="dp-persona__name"><span lang="fr">{{ persona.name }}</span> <span class="dp-persona__key">{{ persona.key }}</span>{% if persona.opens %}<span class="dp-persona__opens">apre il suo <span lang="fr">{{ persona.opens }}</span></span>{% endif %}</p>
+      {% if persona.inside %}<span class="dp-persona__state">dentro</span>{% elif persona.allowed %}<button class="dp-persona__button" type="submit"><span lang="fr">Entrer</span><span class="dp-hidden"> — <span lang="fr">{{ persona.name }}</span></span></button>{% else %}<span class="dp-persona__off">non nella lista</span>{% endif %}
+    </form>
+  </li>{% endfor %}
+</ul>
+<p class="dp-strip__line">Nessuna password: la sessione è aperta per l’account di prova che il database di questo server già contiene. Ogni invio che cambierebbe dei dati viene fermato.</p>

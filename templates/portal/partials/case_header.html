@@ -29,7 +29,7 @@ Contract: `case` = a cases.models.CaseFile, with `responsible` prefetched by the
       <div class="case-header__fact">
         <dt class="t-folio">{% translate "État" %}</dt>
         <dd>
-          <span class="state state--{{ case.status }}" data-register="{{ case.status|chip_register:'cases.CaseStatus' }}" data-stage="{{ case.status|chip_stage }}">{{ case.get_status_display }}</span>
+          {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
           <span class="case-header__since">{% blocktranslate with date=case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span>
         </dd>
       </div>
@@ -56,7 +56,7 @@ Contract: `case` = a cases.models.CaseFile, with `responsible` prefetched by the
         <dd>
           {% comment %} A count, not a percentage: a meter that cannot be verified is decoration. {% endcomment %}
           {% blocktranslate with done=progress.done total=progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}
-          {% if progress.overdue %}<span class="state state--expired" data-register="azione">{% blocktranslate count n=progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
+          {% if progress.overdue %}{% chip register="azione" %}{% blocktranslate count n=progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}{% endchip %}{% endif %}
         </dd>
       </div>
       {% endif %}

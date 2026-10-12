@@ -39,7 +39,7 @@ sentence saying who fills it and when.
           {{ row.profile.display_label }} — {{ row.profile.get_category_display }}
           {% if row.profile.declared_interests %}<br>{{ row.profile.declared_interests }}{% endif %}
         </span>
-        <span class="entry__actor state state--{{ row.edition.state_class }}" data-register="{{ row.edition.status|chip_register:'forum.EditionStatus' }}">{{ row.profile.get_role_display }}</span>
+        {% chip row.edition.status "forum.EditionStatus" css_class="entry__actor" %}{{ row.profile.get_role_display }}{% endchip %}
       </div>
     </li>
   </ol>
@@ -82,7 +82,7 @@ sentence saying who fills it and when.
     {% for mandate in row.lapsed_mandates %}
     <li>
       {{ mandate.commission.name_fr }} — {{ mandate.get_role_display }}
-      <span class="state state--expired" data-register="nullo">{% translate "échu" %}</span>
+      {% chip register="nullo" %}{% translate "échu" %}{% endchip %}
       {% if mandate.valid_until %}<time datetime="{{ mandate.valid_until|date:'Y-m-d' }}">{{ mandate.valid_until|date:"d.m.Y" }}</time>{% endif %}
     </li>
     {% endfor %}
@@ -108,7 +108,7 @@ sentence saying who fills it and when.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <span class="entry__title">{{ commission.name_fr }}</span>
         <span class="entry__gloss">{{ commission.edition.title_fr }}{% if commission.scope_fr %} — {{ commission.scope_fr }}{% endif %}</span>
-        <span class="entry__actor state state--{{ commission.state_class }}" data-register="{{ commission.status|chip_register:'forum.CommissionStatus' }}">{{ commission.get_status_display }}</span>
+        {% chip commission.status "forum.CommissionStatus" css_class="entry__actor" %}{{ commission.get_status_display }}{% endchip %}
       {% if commission_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}
@@ -130,7 +130,7 @@ sentence saying who fills it and when.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <span class="entry__title">{{ proposal.title_fr }}</span>
         <span class="entry__gloss">{{ proposal.reference }} — {{ proposal.commission.name_fr }}</span>
-        <span class="entry__actor state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
       {% if proposal_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}

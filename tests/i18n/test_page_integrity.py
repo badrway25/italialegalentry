@@ -10,7 +10,8 @@ the reserved area for a signed-in person — in Italian, English and Arabic:
   « form unavailable » notices, 404 pages of the Phase 3 routes);
 * on Arabic pages no Latin-script text is left without a ``lang`` attribute (WCAG 3.1.2 « language of
   parts »): a French or Italian fallback value must say so, for screen readers and for the bidi isolation;
-* on Arabic pages every forward icon (``arrow``, ``chevron-end``) carries ``.icon--flip-rtl``;
+* on Arabic pages every symbol of the closed flip list (``core.icons.FLIP_RTL`` — design V5, plan §1.7 «RTL»)
+  carries ``.icon--flip-rtl``, and no other symbol does: direction mirrors, meaning does not;
 * the language chosen on the site is kept on the language-neutral pages.
 
 Protocol for a defect that belongs to another owner (docs/I18N_RTL.md §9): list it in a ``KNOWN_…`` table that
@@ -27,6 +28,7 @@ import re
 
 import pytest
 
+from core import icons
 from core.public_routes import all_routes
 
 from .conftest import TRANSLATED, html_tag, located_strings, region, visible_strings
@@ -56,8 +58,10 @@ RESERVED_AREA = (
     "compte/2fa/",
 )
 
-_FORWARD_ICONS = ("arrow", "chevron-end")
-_ICON = re.compile(r'<svg class="([^"]*)"[^>]*>\s*<use href="[^"#]*#icon-([a-z-]+)"')
+#: The closed flip list of the icon registry (W1-B): arrow, arrow-start, chevron-end, logout, send, signpost,
+#: panel-left-close — the svg_icon tag adds the class to these and strips it from every other symbol.
+_FORWARD_ICONS = tuple(sorted(icons.FLIP_RTL))
+_ICON = re.compile(r'<svg class="([^"]*)"[^>]*>\s*<use href="[^"#]*#icon-([a-z0-9-]+)"')
 _MARKUP_IN_ATTRIBUTE = re.compile(r'\b[a-z-]+="[^"]*(?:<|&lt;)span\b')
 
 
@@ -308,10 +312,12 @@ def test_the_language_of_parts_detector(audit):
 # Semantic mirroring of forward icons
 # ---------------------------------------------------------------------------------------------
 def _unflipped(page: str) -> list[str]:
+    """A flip-list symbol without the class, or any other symbol with it (the mark, the steps, the statuses, the
+    audiences and arrow-up-right never mirror)."""
     return [
         f"{name}: {classes}"
         for classes, name in _ICON.findall(page)
-        if name in _FORWARD_ICONS and "icon--flip-rtl" not in classes.split()
+        if (name in _FORWARD_ICONS) != ("icon--flip-rtl" in classes.split())
     ]
 
 

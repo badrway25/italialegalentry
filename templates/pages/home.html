@@ -4,18 +4,24 @@ Homepage — institutional entry point (master brief §21). The page is the orde
 computed by pages.services.home_sections(): back-office order, publication status, gates and
 "has content" are all decided there. Prescribed texts reach the partials only through the locked
 registry (services.locked / {% locked %}); nothing prescribed is typed in these templates.
+
+Design V5.4 (W2-D): the page loads two page sheets — pages.css and the hero's hero.css (a page entry,
+never in main.css: plan §2.3, DL54-06) — one preload, the door's photograph (the LCP element: the AVIF
+set of static/brand/v5 with the sizes the hero's <source> carries, character-identical), and ONE
+script, static/js/dist/home.js, which imports the hero's module and carries the dismissible notice
+(apps/pages/static/pages/js/home.js is gone: one request fewer).
 {% endcomment %}
 {% block title %}{{ site.project_name }} · {% translate "Parcours réguliers vers l’Italie" %}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
 {% block body_class %}page-home{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/pages.css' %}">
-{% comment %}The door's photograph is the LCP element (measured on the gzip server, slow 4G): preloaded, or it is discovered only after the stylesheets.{% endcomment %}
-<link rel="preload" as="image" href="{% static 'brand/v2/doorway-arch-400.webp' %}" fetchpriority="high">{% endblock %}
+{% if has_hero %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/hero.css' %}">
+{% comment %}The door's photograph is the LCP element: preloaded, or it is discovered only after the stylesheets. The candidates and the sizes are the hero's <source type="image/avif"> character for character (CD C-9).{% endcomment %}
+<link rel="preload" as="image" type="image/avif" fetchpriority="high" imagesrcset="{% static 'brand/v5/doorway-arch-400.avif' %} 400w, {% static 'brand/v5/doorway-arch-576.avif' %} 576w, {% static 'brand/v5/doorway-arch-800.avif' %} 800w, {% static 'brand/v5/doorway-arch-960.avif' %} 960w, {% static 'brand/v5/doorway-arch-1200.avif' %} 1200w" imagesizes="(min-width: 96rem) and (max-width: 99.999rem) and (min-height: 56rem) calc(43.5vw - 198px), (min-width: 80rem) and (min-height: 73rem) 41.4375rem, (min-width: 80rem) and (min-height: 56rem) calc(70.2vh - 5.5625rem - 68px), (min-width: 80rem) and (min-height: 46.0625rem) calc(51.6vh + 4rem - 50px), (min-width: 80rem) calc(70.2vh - 3.125rem - 68px), (min-width: 64rem) calc(34.8vw - 2.5625rem), (min-width: 36rem) and (orientation: landscape) and (max-height: 26.4375rem) 9rem, (min-width: 36rem) and (orientation: landscape) and (max-height: 30rem) 34vh, (min-width: 43.625rem) and (max-height: 43.75rem) 17rem, (max-height: 43.75rem) 39vw, (min-width: 42.5rem) 17rem, (min-width: 31.25rem) 40vw, (min-width: 30rem) 12.5rem, (min-width: 24.75rem) and (max-height: 52rem) 12.375rem, 50vw">{% endif %}{% endblock %}
 {% block jsonld %}<script type="application/ld+json">{{ jsonld|safe }}</script>{% endblock %}
 {% block content %}
 {% if not has_hero %}<h1 class="visually-hidden">{% brand "home__wordmark" %}</h1>{% endif %}
 {% for s in sections %}{% include s.template with s=s d=s.data %}
 {% endfor %}
 {% endblock %}
-{% block extra_scripts %}<script type="module" src="{% static 'pages/js/home.js' %}"></script>
-<script type="module" src="{% static 'js/dist/home.js' %}"></script>{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'js/dist/home.js' %}"></script>{% endblock %}

@@ -1,10 +1,12 @@
 {% comment %}
-Contract: `kind` in info|success|warning|error|pending|institutional, `title` (optional),
-`text` (str or safe html), `icon` (optional icon name; default per kind), `lang` (optional).
+Contract: `kind` in info|success|warning|error|pending|unavailable|institutional, `title` (optional),
+`text` (str or safe html), `icon` (optional icon name; default = the kind's mark in core.icons.NOTICE:
+info · warning · circle-alert · clock · circle-pause · megaphone; circle-check only for the person's own
+act, done), `lang` (optional). A notice never rests on its glyph: the title names the kind, the tone paints it.
 role="alert" only for errors; everything else is a polite status region.
 {% endcomment %}
 <div class="notice notice--{{ kind|default:'info' }}" role="{% if kind == 'error' %}alert{% else %}status{% endif %}"{% if lang %} lang="{{ lang }}"{% endif %}>
-  {% if icon %}{% svg_icon icon "icon notice__icon" %}{% elif kind == 'error' or kind == 'warning' %}{% svg_icon "warning" "icon notice__icon" %}{% elif kind == 'success' %}{% svg_icon "check" "icon notice__icon" %}{% elif kind == 'pending' %}{% svg_icon "clock" "icon notice__icon" %}{% else %}{% svg_icon "info" "icon notice__icon" %}{% endif %}
+  {% if icon %}{% svg_icon icon "icon notice__icon" %}{% else %}{% svg_icon kind|default:"info"|concept:"notice"|default:"info" "icon notice__icon" %}{% endif %}
   {% if title %}<p class="notice__title">{{ title }}</p>{% endif %}
   <div class="notice__body">{{ text }}</div>
 </div>

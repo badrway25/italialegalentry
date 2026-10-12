@@ -1,6 +1,6 @@
 {% load allauth %}{% comment %}
-allauth's badge element (e-mail «primary» / «verified», MFA «active»…). The register is what
-static/css/v3/chip.css reads: verified → conforme (ink, a closing rule — not green, this platform
-approves nothing), warning → azione, everything else → neutro. The class is kept for allauth's own
-markup expectations and carries no colour any more.
-{% endcomment %}<span class="badge{% if 'success' in attrs.tags %} badge--success{% elif 'warning' in attrs.tags %} badge--warning{% elif 'primary' in attrs.tags %} badge--primary{% endif %}" data-register="{% if 'success' in attrs.tags %}conforme{% elif 'warning' in attrs.tags %}azione{% else %}neutro{% endif %}"{% if attrs.title %} title="{{ attrs.title }}"{% endif %}>{% slot %}{% endslot %}</span>
+allauth's badge element (e-mail «primary» / «verified», MFA «active»…), drawn as a chip (templates/components/chip.html):
+verified → conforme (ink and a plain disc — not green, no check: this platform approves nothing), warning → attesa
+(an address still to confirm is a thing due), everything else → neutro. The `badge` class is kept as a hook for
+allauth's own markup expectations and carries no paint.
+{% endcomment %}{% if 'success' in attrs.tags %}{% chip register="conforme" css_class="badge" title=attrs.title %}{% slot %}{% endslot %}{% endchip %}{% elif 'warning' in attrs.tags %}{% chip register="attesa" css_class="badge" title=attrs.title %}{% slot %}{% endslot %}{% endchip %}{% else %}{% chip register="neutro" css_class="badge" title=attrs.title %}{% slot %}{% endslot %}{% endchip %}{% endif %}

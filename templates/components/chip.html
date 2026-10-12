@@ -1,0 +1,13 @@
+{% comment %}
+Chip — the status chip of design V5, «i cerchi» (V5.4 plan §1.2; static/css/v5/chip.css): a mark, a word, an edge.
+The state is said three times without colour — the word, the mark's drawing (outline = open, filled = settled) and
+the edge's style (solid · dashed for a thing due · dotted for one that carries nothing) — and never by a check:
+«conforme» is ink and a plain disc (O14).
+
+Rendered by the {% chip %} … {% endchip %} pair of apps/core/templatetags/ile_core.py and by nothing else: a template
+never includes this file and never writes the element by hand. Contract, as the tag gives it: `label` (the word,
+already rendered), `register` (one of the eight of apps/core/chips.py, or empty for a value the module does not
+know), `mark` (the register's symbol of static/img/icons.svg, from the icon registry — never chosen here), optional
+`size` ("s" 20 px · "l" 28 px), `notches` (the three phases of a case status, a list of three booleans),
+`css_class` (the classes that place the chip in its page), `role`, `lang`, `title`.
+{% endcomment %}<span class="{% if css_class %}{{ css_class }} {% endif %}chip{% if size %} chip--{{ size }}{% endif %}"{% if register %} data-register="{{ register }}"{% endif %}{% if role %} role="{{ role }}"{% endif %}{% if lang %} lang="{{ lang }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}>{% svg_icon mark "icon chip__g" %}<span class="chip__w">{{ label }}</span>{% if notches %}<span class="chip__meter" aria-hidden="true">{% for on in notches %}<span{% if on %} class="is-on"{% endif %}></span>{% endfor %}</span>{% endif %}</span>

@@ -103,6 +103,49 @@ def test_the_menu_button_fits_and_keeps_its_name_at_320(browser, live_server, se
         context.close()
 
 
+PHONE_ROW_JS = """async () => {
+  await document.fonts.ready;
+  const rect = (e) => e.getBoundingClientRect();
+  const button = document.querySelector('[data-nav-toggle]');
+  const inner = button.closest('.site-header__inner');
+  const cs = getComputedStyle(inner);
+  const ib = rect(inner);
+  const rtl = document.documentElement.dir === 'rtl';
+  const colEnd = rtl ? ib.left + parseFloat(cs.paddingLeft) : ib.right - parseFloat(cs.paddingRight);
+  const b = rect(button);
+  const name = document.querySelector('.lock__text');
+  const word = button.querySelector('span');
+  return {
+    past: +(rtl ? colEnd - b.left : b.right - colEnd).toFixed(1),
+    nameShown: Boolean(name) && rect(name).width > 2,
+    wordShown: Boolean(word) && rect(word).width > 2,
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  };
+}"""
+
+
+@pytest.mark.parametrize("lang", ["fr", "ar"])
+def test_the_name_and_the_menu_button_share_the_phone_row(browser, live_server, seeded, lang):
+    """The review's M4, and the arithmetic behind it (chrome.css §1, §3, §7): the brand's name is on screen from
+    329 px — 340, 360, 375 and 390 included — and the mark stands alone only at ≤ 20.5rem, where the name (227.5 px)
+    and «Menu» (44 px) cannot share the 280 px of a 320 px screen; the button's word returns from 369 px; at every
+    width the button ends on the column's edge, never past it, and nothing scrolls sideways."""
+    context = browser.new_context(viewport={"width": 390, "height": 740}, device_scale_factor=1)
+    try:
+        page = context.new_page()
+        for width in (320, 328, 329, 340, 360, 368, 369, 375, 390):
+            page.set_viewport_size({"width": width, "height": 740})
+            page.goto(f"{live_server.url}/{lang}/", wait_until="load")
+            row = page.evaluate(PHONE_ROW_JS)
+            assert row["past"] <= 0.5, f"«Menu» runs {row['past']} px past the column at {width} ({lang}): {row}"
+            assert row["scrollWidth"] <= row["clientWidth"], (width, lang, row)
+            assert row["nameShown"] is (width >= 329), (width, lang, row)
+            assert row["wordShown"] is (width >= 369), (width, lang, row)
+    finally:
+        context.close()
+
+
 def test_nothing_at_all_overflows_the_narrowest_viewport(browser, live_server, seeded):
     """
     The header was the one that showed, not necessarily the only one.

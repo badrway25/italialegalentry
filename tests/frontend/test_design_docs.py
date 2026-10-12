@@ -18,6 +18,7 @@ render of ``components/form_field.html``.
 from __future__ import annotations
 
 import importlib.util
+import posixpath
 import re
 import xml.etree.ElementTree as ET
 from collections import Counter
@@ -187,6 +188,38 @@ def _cascade() -> list[str]:
     itself a defect, which is what test_breakpoints_keyframes_and_stylesheets_are_documented checks.
     """
     return re.findall(r'@import url\("([^"]+)"\)', _read(STATIC / "css" / "main.css"))
+
+
+def _is_partial(path: Path) -> bool:
+    """A `_`-prefixed sheet is a partial wherever it is: never a build entry, bundled by the sheets that import it
+    (design V5, V5.4 plan §2.3, DL54-15)."""
+    return path.name.startswith("_")
+
+
+def _design_system_partials() -> list[Path]:
+    """The design system's partials that main.css does not carry: page-only CSS in static/css (outside dist/ and dev/)
+    and console-only CSS in apps/portal/static/portal/v5/ (plan §2.3). None exists before the families that draw them."""
+    css = STATIC / "css"
+    found = [p for p in css.rglob("_*.css") if not {"dist", "dev"} & set(p.relative_to(css).parts)]
+    found += (ROOT / "apps" / "portal" / "static" / "portal" / "v5").glob("_*.css")
+    in_cascade = {(css / name).resolve() for name in _cascade()}
+    return sorted(p for p in found if p.resolve() not in in_cascade)
+
+
+def _page_sheets() -> list[Path]:
+    """The app entries — the page sheets and the console entry, loaded in extra_head (plan §2.3): every sheet under
+    apps/*/static that is not a partial."""
+    return sorted(p for p in ROOT.glob("apps/*/static/**/*.css") if not _is_partial(p))
+
+
+def _imported_sheet(sheet: Path, target: str) -> Path | None:
+    """The file an @import of `sheet` draws, read as collectstatic and scripts/build_css.mjs read it: from the sheet's
+    place in the COLLECTED tree (static/<p> → <p>, apps/<app>/static/<p> → <p>; DS 2026 §2), never through the source
+    tree. None when nothing is collected there: tests/frontend/test_static_pipeline.py names that reference."""
+    roots = [STATIC, *sorted((ROOT / "apps").glob("*/static"))]
+    here = next(sheet.relative_to(root).as_posix() for root in roots if sheet.is_relative_to(root))
+    collected = posixpath.normpath(posixpath.join(posixpath.dirname(here), target))
+    return next(((root / collected).resolve() for root in roots if (root / collected).is_file()), None)
 
 
 def _component_custom_properties() -> set[str]:
@@ -498,7 +531,11 @@ def test_every_component_file_has_a_section_and_vice_versa():
 
 
 def test_component_css_blocks_and_consumers_are_real():
-    css = "".join(_read(STATIC / "css" / name) for name in _cascade())
+    """A component's CSS block is defined somewhere a page loads it: the main.css cascade, the design system's page
+    and console partials, or the app entries that import them — the console entry and the page sheets (design V5
+    moves page-only and console-only CSS out of main.css, V5.4 plan §2.3)."""
+    sources = [*(STATIC / "css" / name for name in _cascade()), *_design_system_partials(), *_page_sheets()]
+    css = "".join(_read(path) for path in sources)
     for name, body in _component_sections().items():
         block = re.search(r"`(\.[a-z][a-z0-9_-]*)`", _bullet(body, "Blocco CSS"))
         assert block, name
@@ -561,20 +598,24 @@ def test_listed_font_files_exist_and_every_font_file_is_listed():
     listed = set(re.findall(r"`([a-z0-9-]+\.woff2)`", section))
     assert listed == on_disk, (sorted(on_disk - listed), sorted(listed - on_disk))
     assert f"{len(on_disk)} file woff2" in section
+    # Design V5, type «Una voce» (V5.4 plan §1.1, §2.3): the faces are declared in static/css/v5/fonts.css;
+    # the V4 fonts.css left with its 26 files.
     in_css = {
-        url.rsplit("/", 1)[-1] for url in re.findall(r'url\("([^"]+\.woff2)"\)', _read(STATIC / "css" / "fonts.css"))
+        url.rsplit("/", 1)[-1]
+        for url in re.findall(r'url\("([^"]+\.woff2)"\)', _read(STATIC / "css" / "v5" / "fonts.css"))
     }
     assert in_css == on_disk, (sorted(on_disk - in_css), sorted(in_css - on_disk))
     typography = _between(_design(), "## 6. Tipografia", "## 7. ")
     for phrase in (
         "SIL Open Font License 1.1",
         "font-display: swap",
-        "Newsreader",
-        "IBM Plex Sans",
-        "IBM Plex Mono",
-        "Noto Naskh Arabic",
-        "IBM Plex Sans Arabic",
+        "Host Grotesk",
+        "ILE Wordmark",
+        "ILE Mono",
+        "Vazirmatn",
         "unicode-range",
+        "static/fonts/licenses/",
+        "docs/design-v5/FONTS_V5.md",
     ):
         assert phrase in typography, phrase
     # Every font base.html preloads must be named in §6, and a preload of a file that is not on
@@ -604,9 +645,11 @@ def test_js_module_inventory_matches_the_source():
     assert functions == documented, (sorted(functions - documented), sorted(documented - functions))
     hooks = set(re.findall(r"`(data-[a-z-]+)", inventory))
     assert hooks, "no data-* hook documented"
+    # a hook lives in main.js or in a bundled module of static/js/src/ (design V5: the navigation in nav.js)
+    sources = main_js + "".join(_read(path) for path in sorted((STATIC / "js" / "src").glob("*.js")))
     for hook in hooks:
         camel = re.sub(r"-([a-z])", lambda m: m.group(1).upper(), hook[5:])
-        assert hook in main_js or f"dataset.{camel}" in main_js, f"documented hook not in main.js: {hook}"
+        assert hook in sources or f"dataset.{camel}" in sources, f"documented hook not in main.js or static/js/src: {hook}"
 
 
 def test_breakpoints_keyframes_and_stylesheets_are_documented():
@@ -643,16 +686,41 @@ def test_breakpoints_keyframes_and_stylesheets_are_documented():
     # _production_cascade` below holds the other end of that bargain. `dist/` is excluded too: it is
     # the OUTPUT of `npm run build:css` (the bundle and the minified app sheets), not a layer;
     # tests/frontend/test_css_bundle_is_current.py holds it to its sources.
+    #
+    # Design V5 (V5.4 plan §2.3, DL54-15): a `_`-prefixed sheet is a partial. Every NON-partial sheet of static/css is
+    # a layer of main.css; a partial is imported by at least one entry — main.css (the legacy shim is one) or an app
+    # entry (the page sheets, the console entry) — directly or through the sheets those import.
     on_disk = sorted(
         p.relative_to(STATIC / "css").as_posix()
         for p in (STATIC / "css").rglob("*.css")
         if p.name != "main.css" and p.parent.name != "dev" and "dist" not in p.relative_to(STATIC / "css").parts
     )
-    assert sorted(imports) == on_disk, (
-        f"main.css and static/css disagree: not imported {sorted(set(on_disk) - set(imports))}, "
+    layers = [name for name in on_disk if not name.rsplit("/", 1)[-1].startswith("_")]
+    assert not set(layers) - set(imports) and not set(imports) - set(on_disk), (
+        f"main.css and static/css disagree: not imported {sorted(set(layers) - set(imports))}, "
         f"imported but missing {sorted(set(imports) - set(on_disk))}"
     )
-    assert imports[:2] == ["fonts.css", "tokens.css"], imports
+    reached: set[Path] = set()
+    todo = [(STATIC / "css" / "main.css").resolve(), *(p.resolve() for p in _page_sheets())]
+    while todo:
+        sheet = todo.pop()
+        for target in re.findall(r'@import url\("([^"]+)"\)', re.sub(r"/\*.*?\*/", "", _read(sheet), flags=re.S)):
+            path = _imported_sheet(sheet, target)
+            if path is not None and path not in reached:
+                reached.add(path)
+                todo.append(path)
+    partials = [STATIC / "css" / name for name in on_disk if name.rsplit("/", 1)[-1].startswith("_")]
+    partials += _design_system_partials()
+    orphans = sorted({p.relative_to(ROOT).as_posix() for p in partials if p.resolve() not in reached})
+    assert not orphans, f"partials that no entry imports: {orphans}"
+    # V1's tokens open the cascade; design V5 closes it (V5.4 plan §2.3): the faces, the tokens, the aliases
+    # that give the V1 / V2 / V4 names their V5 values, and the base roles, after every V4 layer.
+    assert imports[0] == "tokens.css", imports
+    # the foundation's four sheets first, then the families' sheets (chrome.css, W2-C1 …) in plan §2.3's order
+    v5 = [name for name in imports if name.startswith("v5/")]
+    assert imports[-len(v5) :] == v5, imports
+    assert v5[:4] == ["v5/fonts.css", "v5/tokens.css", "v5/aliases.css", "v5/base.css"], imports
+    assert "fonts.css" not in imports, "the V4 fonts.css left the cascade with its faces"
     positions = [architecture.index(f"| `{name}` |") for name in imports]
     assert positions == sorted(positions), "the cascade order in §2 differs from main.css"
     sections = re.findall(r"^   (\d+)\. ", sheets["components.css"], flags=re.M)
@@ -798,7 +866,7 @@ def test_keyboard_model_covers_every_interactive_component():
     for needle in (
         "Skip link",
         "details[data-dropdown]",
-        "Mega-menu",
+        "«Il portico»",
         "Drawer",
         "templates/components/tabs.html",
         "templates/components/accordion.html",
@@ -812,32 +880,56 @@ def test_keyboard_model_covers_every_interactive_component():
         assert needle in keyboard, needle
 
 
+def _v5(name: str) -> str:
+    return re.sub(r"/\*.*?\*/", "", _read(STATIC / "css" / "v5" / name), flags=re.S)
+
+
 def test_focus_and_motion_claims_match_the_stylesheets():
     base = _read(STATIC / "css" / "base.css")
-    focus = _between(base, ":focus-visible {", "}")
+    # The one focus system of design V5 (V5.4 plan §1.6), in static/css/v5/base.css — V1's navy two-tone
+    # ring left base.css in W1-A's deletion step: `:focus-visible` only, a 2 px ring at a 2 px offset on the
+    # element's own radius, no halo but on text fields, Highlight in forced colours, laguna-400 inside a night
+    # context (the token is re-pointed there, so no selector has to repeat the ring).
+    v5_base = _v5("base.css")
+    focus = _between(v5_base, "\n:focus-visible {", "}")
     for declaration in (
-        "outline: var(--focus-ring-width) solid var(--focus-ring-color)",
+        "outline: var(--focus-ring-width) solid var(--focus-ring)",
         "outline-offset: var(--focus-ring-offset)",
-        "box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color)",
+        "box-shadow: none",
     ):
         assert declaration in focus, declaration
+    assert "border-radius" not in focus, "the ring follows the element's own radius"
+    assert "box-shadow: 0 0 0 5px var(--focus-halo)" in v5_base, "the halo belongs to text fields"
+    assert "outline: 2px solid Highlight" in _between(v5_base, "@media (forced-colors: active) {", "}\n}")
+    assert ":focus-visible" not in re.sub(r"/\*.*?\*/", "", base, flags=re.S).replace(".skip-link:focus-visible", "")
+    v5_tokens = _v5("tokens.css")
+    night = re.search(r":is\(\.on-inverse, \.rail, [^)]*\) \{([^}]*)\}", v5_tokens)
+    assert night and "--focus-ring: var(--focus-ring-night)" in night.group(1), "the night contexts re-point the ring"
+    assert "--focus-ring: var(--p-laguna-550)" in v5_tokens and "--focus-ring-night: var(--p-laguna-400)" in v5_tokens
+    assert "--focus-ring-width: 2px" in v5_tokens and "--focus-ring-offset: 2px" in v5_tokens
     assert "scroll-padding-block-start: calc(var(--chrome-block-size) + var(--s-4))" in base
     assert "transform: translateY(-200%)" in _between(base, ".skip-link {", "}")
-    assert ".on-inverse :focus-visible" in base
-    # The control height and the focus ring are still one value each; they live in the shim until
-    # the components that consume them are migrated, so look for them where they actually are.
-    tokens = _tokens() | _shim_tokens()
-    assert tokens["--control-height"] == "44px" and tokens["--focus-ring-width"] == "2px"
-    assert tokens["--focus-ring-color"] == "var(--navy)"
-    assert tokens["--focus-ring-offset-color"] == "var(--paper)"
-    components = _read(STATIC / "css" / "components.css")
-    reduced = components.split("@media (prefers-reduced-motion: reduce)", 1)[1]
+    # The control height is one value; its legacy name follows the V5 token (static/css/v5/aliases.css).
+    assert "--control-height: var(--control-md)" in _v5("aliases.css") and "--control-md: 44px" in v5_tokens
+    # Reduced motion is a state, not a switch (V5.4 plan §1.5, W1-D; ACCESSIBILITY.md §7, DS 2026 §12): V1's
+    # universal `0.01ms !important` rule left components.css; static/css/v5/tokens.css zeroes the duration tokens
+    # every transition and animation is written with, and its twin html.rm is the preview's flag
+    # (test_rm_flag_parity.py); the smooth scroll of base.css yields to the setting on its own.
+    components = re.sub(r"/\*.*?\*/", "", _read(STATIC / "css" / "components.css"), flags=re.S)
+    assert (
+        "0.01ms" not in components
+        and "!important" not in components.split("@media (prefers-reduced-motion: reduce)", 1)[1]
+    )
+    reduced = _between(v5_tokens, "@media (prefers-reduced-motion: reduce) {", "\n}")
     for declaration in (
-        "transition-duration: 0.01ms !important",
-        "animation-duration: 0.01ms !important",
-        "scroll-behavior: auto !important",
+        "--motion-fast: 0ms",
+        "--motion-standard: 0ms",
+        "--motion-key: 0ms",
+        "--spring-snappy-duration: 0ms",
     ):
-        assert declaration in reduced, declaration
+        assert declaration in reduced and declaration in _between(v5_tokens, "\nhtml.rm {", "}"), declaration
+    assert "--motion-reduced" not in reduced and "--motion-wait" not in reduced, "a threshold and the one fade stay"
+    assert "scroll-behavior: auto" in _between(base, "@media (prefers-reduced-motion: reduce) {", "}")
     shell = _read(ROOT / "templates" / "base.html")
     assert '<a class="skip-link" href="#main-content">' in shell
     assert '<main id="main-content" tabindex="-1">' in shell
@@ -864,7 +956,8 @@ def test_form_field_contract_matches_accessibility_doc():
     assert 'aria-invalid="true"' in field
     assert 'aria-describedby="id_email_helptext id_email_error"' in field
     assert 'id="id_email_helptext"' in field
-    assert '<ul class="form-field__errors" id="id_email_error" role="alert">' in field
+    assert '<div class="form-field__errors" id="id_email_error" role="alert"><ul class="form-field__error-list">' in field
+    assert '<div class="form-field__help" id="id_email_helptext">' in field
     assert '<span class="form-field__required" aria-hidden="true">*</span>' in field
     ids = set(re.findall(r'\sid="([^"]+)"', field))
     for described in re.findall(r'aria-describedby="([^"]+)"', field):
@@ -998,11 +1091,12 @@ def test_sticky_header_does_not_trap_fixed_drawer():
 
     A backdrop-filter (or filter, transform, perspective, contain) on .site-header makes the header the
     containing block of the position: fixed drawer it contains: the drawer collapsed to 65 px. The veil
-    now lives on .site-header::before, which has no fixed descendant.
+    now lives on .site-header::before, which has no fixed descendant. Design V5 (W2-C1): the chrome moved to
+    static/css/v5/chrome.css, where the same rule holds (the glass is painted by the pseudo-element).
     """
-    components = _read(STATIC / "css" / "components.css")
-    header_rule = _between(components, "\n.site-header {", "}")
-    drawer_rules = re.findall(r"^\s*\.nav-drawer \{([^}]*)\}", components, flags=re.M)
+    chrome = _read(STATIC / "css" / "v5" / "chrome.css")
+    header_rule = _between(chrome, "\n.site-header {", "}")
+    drawer_rules = re.findall(r"^\s*\.nav-drawer \{([^}]*)\}", chrome, flags=re.M)
     drawer_is_fixed = any("position: fixed" in rule for rule in drawer_rules)
     drawer_inside_header = "nav-drawer" in _between(
         _read(ROOT / "templates" / "partials" / "header.html"), "<header", "</header>"
@@ -1038,13 +1132,17 @@ def test_open_defects_are_described_where_the_reader_will_look():
 # Claims that used to be unguarded (found stale by the second independent review)
 # ---------------------------------------------------------------------------------------------
 def _design_system_css() -> str:
-    """Every sheet of static/css, the demolition scaffold included.
+    """Every sheet of the design system, the demolition scaffold included.
 
     The scaffold is part of the cascade and it consumes real tokens (that is its whole job), so a
-    token it uses is genuinely consumed and is not a reserve. App stylesheets stay out of scope on
-    purpose (see the test).
+    token it uses is genuinely consumed and is not a reserve. Design V5 (V5.4 plan §2.3) moves page-only
+    and console-only CSS out of main.css into partials, which the page sheets and the console entry import:
+    those partials are the design system's wherever they live, and are read too. The app sheets' own rules
+    — the page sheets', the console entry's — stay out of scope on purpose (see the test): an app
+    stylesheet may consume a reserve token, which is what a reserve is for.
     """
-    return "".join(_read(STATIC / "css" / name) for name in _cascade())
+    sources = [*(STATIC / "css" / name for name in _cascade()), *_design_system_partials()]
+    return "".join(_read(path) for path in sources)
 
 
 def test_reserve_labels_match_the_design_system_stylesheets():
@@ -1188,40 +1286,52 @@ def test_gap_status_and_xfail_markers_stay_in_lockstep():
 
 
 def test_navigation_breakpoint_is_consistent_and_documented():
-    """The drawer/mega-menu threshold lives in the CSS and in main.js: both must agree with the documents.
+    """The navigation's thresholds live in chrome.css and in nav.js: both must agree with the documents.
 
-    It moved from 64rem to 80rem during browser QA and every «≥ 64rem» in the two documents went stale.
+    Design V5 «Il portico» (W2-C1): the four doors enter the letterhead at `BAR` (64rem) and the full bar with the
+    panels' photographs at `DESKTOP` (80rem), below which «Menu» and the fixed drawer apply. Every «≥ 64rem» in the
+    two documents went stale once already, when the threshold moved: the documents quote the code's numbers.
     """
-    components = _read(STATIC / "css" / "components.css")
-    main_js = _read(STATIC / "js" / "main.js")
-    in_js = re.search(r'const DESKTOP = window\.matchMedia\("\(min-width: ([0-9.]+)rem\)"\)', main_js)
-    assert in_js, "main.js no longer declares the DESKTOP media query"
-    threshold = in_js.group(1)
-    desktop_block = re.search(r"@media \(min-width: ([0-9.]+)rem\) \{\s*\.nav-toggle \{\s*display: none;", components)
-    assert desktop_block, "components.css no longer hides .nav-toggle in a min-width block"
-    assert desktop_block.group(1) == threshold, (desktop_block.group(1), threshold)
+    chrome = _read(STATIC / "css" / "v5" / "chrome.css")
+    nav_js = _read(STATIC / "js" / "src" / "nav.js")
+    desktop = re.search(r'const DESKTOP = window\.matchMedia\("\(min-width: ([0-9.]+)rem\)"\)', nav_js)
+    bar = re.search(r'const BAR = window\.matchMedia\("\(min-width: ([0-9.]+)rem\)"\)', nav_js)
+    assert desktop and bar, "nav.js no longer declares the DESKTOP and BAR media queries"
+    threshold, doors = desktop.group(1), bar.group(1)
     drawer_block = re.search(
-        r"@media \(max-width: ([0-9.]+)rem\) \{(?:(?!@media).)*?\n  \.nav-drawer \{\s*position: fixed;",
-        components,
+        r"@media \(max-width: ([0-9.]+)rem\) \{(?:(?!@media).)*?\n  \.nav-toggle \{ display: inline-flex; \}",
+        chrome,
         flags=re.S,
     )
-    assert drawer_block, "components.css no longer fixes .nav-drawer in a max-width block"
+    assert drawer_block, "chrome.css no longer shows .nav-toggle in a max-width block"
     assert 0 < float(threshold) - float(drawer_block.group(1)) < 0.01, (drawer_block.group(1), threshold)
+    fixed = re.search(
+        r"@media \(max-width: "
+        + re.escape(drawer_block.group(1))
+        + r"rem\) \{(?:(?!@media).)*?\n  \.nav-drawer \{\s*position: fixed;",
+        chrome,
+        flags=re.S,
+    )
+    assert fixed, "chrome.css no longer fixes .nav-drawer in the drawer's block"
+    assert f"@media (min-width: {doors}rem)" in chrome and f"@media (min-width: {threshold}rem)" in chrome
+    assert "function initNavigation" not in _read(STATIC / "js" / "main.js"), "initNavigation moved into nav.js"
 
     design, a11y = _design(), _a11y()
-    assert f"### 11.1 Mega-menu (≥ {threshold}rem)" in design
+    assert f"### 11.1 «Il portico» (≥ {doors}rem; con la fotografia da {threshold}rem)" in design
     assert f"### 11.2 Drawer (< {threshold}rem" in design
     breakpoints = _between(design, "### 7.2 ", "### 7.3 ")
     rows = {m.group(1): m.group(0) for m in re.finditer(r"^\| `([0-9.]+)rem` \|.*$", breakpoints, flags=re.M)}
-    assert threshold in rows, f"§6.2 has no row for {threshold}rem"
+    assert threshold in rows and doors in rows, f"§7.2 has no row for {threshold}rem or {doors}rem"
     for width, row in rows.items():
         assert ("navigazione desktop" in row) is (width == threshold), (
-            f"§6.2: wrong row claims the desktop navigation ({width}rem)"
+            f"§7.2: wrong row claims the desktop navigation ({width}rem)"
         )
+    assert "le quattro porte entrano nella testata" in rows[doors]
     assert f'matchMedia("(min-width: {threshold}rem)")' in breakpoints
+    assert f'matchMedia("(min-width: {doors}rem)")' in breakpoints
     assert f"`max-width: {drawer_block.group(1)}rem` (drawer)" in breakpoints
     keyboard = _between(a11y, "## 3. Modello tastiera", "## 4. ")
-    assert f"| Mega-menu (≥ {threshold}rem) |" in keyboard
+    assert f"| «Il portico» (≥ {doors}rem" in keyboard
     assert f"| Drawer (< {threshold}rem" in keyboard
 
 

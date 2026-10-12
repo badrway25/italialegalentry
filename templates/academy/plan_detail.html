@@ -69,7 +69,7 @@ what authority am I looking at it ».
           </span>
         </span>
         {% if row.own and row.enrolment %}
-        <span class="entry__actor state state--{% if row.enrolment.is_completed %}done{% else %}filed{% endif %}" data-register="{{ row.enrolment.status|chip_register:'academy.EnrolmentStatus' }}">{{ row.enrolment.get_status_display }}</span>
+        {% chip row.enrolment.status "academy.EnrolmentStatus" css_class="entry__actor" %}{{ row.enrolment.get_status_display }}{% endchip %}
         {% elif row.own %}
         <span class="entry__cta">{% translate "ouvrir la fiche pour s’inscrire" %}</span>
         {% else %}
@@ -111,7 +111,7 @@ what authority am I looking at it ».
           </th>
           <td data-label="{% translate 'Niveau requis' %}">{{ row.required }}</td>
           <td data-label="{% translate 'Niveau actuel' %}">{{ row.current }}</td>
-          <td data-label="{% translate 'Écart' %}"><span class="state state--{% if row.gap_key == 'covered' %}valid{% elif row.gap_key == 'partial' %}review{% else %}missing{% endif %}" data-register="{{ row.gap_key|chip_register:'academy.gap' }}">{{ row.gap }}</span></td>
+          <td data-label="{% translate 'Écart' %}">{% chip row.gap_key "academy.gap" %}{{ row.gap }}{% endchip %}</td>
           <td dir="auto" data-label="{% translate 'Module ou cours' %}">{% if row.module %}{{ row.module.title }}{% elif row.course %}{{ row.course.title }}{% else %}—{% endif %}</td>
           <td data-label="{% translate 'Résultat attendu' %}">{% if row.expected_outcome %}{{ row.expected_outcome }}{% else %}—{% endif %}</td>
         </tr>

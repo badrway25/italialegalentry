@@ -1,10 +1,36 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The five legal pages: the official Italian text when it has been transmitted (gate G1), else a notice that says so —
+never a provisional text.
+
+Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): D26 «the grammar of a
+legal page» as layout slots, with the headings verbatim (the official text's own; the reader's questions are the
+owner's copy, B1 item 7): the head at the reading edge with the verification line where a date exists (the effective
+date and the version); the text as long-form prose at the reading measure; the one inset — the courtesy translation
+with its notice, or, while the text is awaited, the notice that says so (its address is the page's «who can help
+me»); then «who can help me» in live words. The markup the i18n tests pin is kept (`container legal-page`,
+`legal-page__meta`, `data-gate="legal-blocked"`).
+The trail, as on every page of the area (the view gives none: the breadcrumbs component's markup, Accueil › the page;
+the review's m3). The title's language is said where it is not the page's (WCAG 3.1.2; the accessibility check's A4):
+the official Italian title, or the policy's English name («Privacy Policy», «Cookie Policy», kept in the original in
+every language) — as a run of its own, `<span lang dir="ltr">`, so the h1 keeps the page's direction and its reading
+edge (the pattern of `{% locked_title %}`).
+{% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ page_title }} — Italy Legal Entry™{% endblock %}
-{% block content %}
+{% block body_class %}page-legal lettura{% endblock %}
+{% block breadcrumbs %}{% if available and document.title_it %}{% firstof "it" as title_lang %}{% elif kind == "privacy" or kind == "cookies" %}{% firstof "en" as title_lang %}{% endif %}
+<nav class="breadcrumbs container" aria-label="{% translate 'Fil d’Ariane' %}">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item"><a href="{% url 'pages:home' %}">{% translate "Accueil" %}</a></li>
+    <li class="breadcrumbs__item" aria-current="page"><span{% if title_lang and title_lang != site.lang %} lang="{{ title_lang }}"{% endif %}>{{ page_title }}</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}{% if available and document.title_it %}{% firstof "it" as title_lang %}{% elif kind == "privacy" or kind == "cookies" %}{% firstof "en" as title_lang %}{% elif available %}{% firstof site.lang as title_lang %}{% endif %}
 <article class="container legal-page"{% if available %} lang="it"{% endif %}>
-  <header class="legal-page__header">
-    <h1>{{ page_title }}</h1>
+  <header class="page-header legal-page__header">
+    <h1 class="page-header__title">{% if title_lang and title_lang != site.lang %}<span lang="{{ title_lang }}" dir="ltr">{{ page_title }}</span>{% elif title_lang %}<span lang="{{ title_lang }}">{{ page_title }}</span>{% else %}{{ page_title }}{% endif %}</h1>
     {% if available %}
       <p class="legal-page__meta" lang="{{ site.lang }}">{% translate "Version officielle en italien" %}{% if document.effective_date %} · {% translate "en vigueur depuis le" %} {{ document.effective_date|date:"d.m.Y" }}{% endif %} · v{{ document.version }}</p>
     {% endif %}
@@ -14,19 +40,24 @@
       {% for kind, text in paragraphs %}{% if kind == "h" %}<h2>{{ text }}</h2>{% else %}<p>{{ text }}</p>{% endif %}{% endfor %}
     </div>
     {% if courtesy %}
-    <aside class="legal-page__courtesy" lang="fr" aria-labelledby="courtesy-title">
+    <aside class="legal-page__courtesy inset" lang="fr" aria-labelledby="courtesy-title">
       <p class="legal-page__courtesy-notice" id="courtesy-title"><strong>{{ courtesy_notice }}</strong></p>
       <h2>{{ courtesy.title }}</h2>
       {% if courtesy.intro %}<p>{{ courtesy.intro }}</p>{% endif %}
       {% for section in courtesy.sections %}{% if section.heading %}<h3>{{ section.heading }}</h3>{% endif %}<p>{{ section.body }}</p>{% endfor %}
     </aside>
     {% endif %}
+    <p class="aiuto legal-page__help" lang="{{ site.lang }}">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   {% else %}
-    <div class="notice notice--pending" role="status" data-gate="legal-blocked">
-      <p><strong>{% translate "Page en cours de préparation." %}</strong></p>
-      <p>{% translate "Le texte officiel de cette page (version italienne) sera publié dès sa transmission. Aucun texte provisoire n’est affiché." %}</p>
-      <p><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    <div class="notice notice--pending legal-page__pending" role="status" data-gate="legal-blocked">
+      {% with notice_kind="pending" %}{% svg_icon notice_kind|concept:"notice" "icon notice__icon" %}{% endwith %}
+      <p class="notice__title">{% translate "Page en cours de préparation." %}</p>
+      <div class="notice__body">
+        <p>{% translate "Le texte officiel de cette page (version italienne) sera publié dès sa transmission. Aucun texte provisoire n’est affiché." %}</p>
+        <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      </div>
     </div>
   {% endif %}
 </article>
 {% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

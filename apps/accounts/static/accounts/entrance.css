@@ -1,262 +1,1014 @@
 /* ============================================================================
-   ENTRANCE — the account pages, design V4 (CREATIVE_DIRECTION.md §3.3: DARK + FOCUS)
-   Loaded by templates/allauth/layouts/entrance.html. Tokens only, logical
-   properties only; the door's own drawing lives in static/css/v4/hero.css.
+   THE ENTRANCE «IL VARCO» — the login and every entrance page, design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md
+   §1.13 «Le vie convergono al varco», §1.9 the engage; DL54-07, DL54-08, DL54-13; W2-B).
+   Loaded by templates/allauth/layouts/entrance.html. Two panels from 64rem — at the reading edge the STAGE, a
+   night niche set behind the light wall of the page; at the other end the FOCUS, the paper the form sits on —
+   and below 64rem a short band of the niche above the form.
+
+   THE STAGE (this step). The owner's door stage as drawn (static/css/v5/_door.css, imported below) stands on a
+   threshold; the wall's reveal and the shadow it casts set the niche behind the page; four ways in the audience
+   accents rise from the plate's lower edge and converge on the threshold — the door is the vanishing point — with
+   a low warm pool on the floor at its foot. That picture is complete without script: it is the rest, the
+   reduced-motion state and the no-JS state.
+
+   THE STAGE ANSWERS THE PERSON (static/js/src/entrance.js writes the state as classes on `.varco__stage`; nothing
+   loops, nothing plays unprompted after the first settle):
+     .is-ways   the e-mail field has the focus, or holds a valid address — the four ways are lit;
+     .is-held   the address is valid — the threshold holds the light: its line, the pool, the three steps;
+     .is-frame  the password has the focus, or is typed — the light stands on the door's frame;
+     and on the sign-in's submit the stage's key turns once and holds (the loader's engage: `.sig.is-engaged`,
+     static/css/v5/loader.css, through static/js/src/loader.js — the form names the stage in data-loader-host).
+   A state is its END, declared here; the way to it is one pass on a pointer's focus (.is-passing-ways,
+   .is-passing-frame: --motion-slow, then the bead goes out in --motion-fast — a tier-2 sequence of 600 ms),
+   an opacity in --motion-standard otherwise, and nothing at all from the keyboard (tier 0) or under reduced
+   motion, where every duration token is 0 ms. On arrival, once, the four lights travel into the threshold, each
+   way lit behind its light (.is-arriving: --motion-route-light each, --motion-route-stagger apart); any focus or
+   input cuts it.
+
+   ONLY transform AND opacity MOVE, on layers painted once: no pass ends on a filled animation (the keyframes
+   have a `from` only and end on the element's own state), so nothing stays in effect after it. The light layers
+   are contained (contain: paint / strict) and no text sits on one. Tokens only, and no gradient: the stage's
+   paints — the niche's shadows, the wall's reveal, the threshold, the pool, the ways and their light — are
+   static/css/v5/_varco.css, the page-only partial imported below (this sheet places and moves the parts, that
+   one paints them), so that no other page carries them. Logical properties only: the scene is direction: ltr
+   (the door, the key and the ways are drawn, never mirrored), so its logical offsets are the drawing's own;
+   what belongs to the page — the panels, the reveal, the colophon — follows the reading direction.
+
+   THE FOCUS (step 2 of the family: the form). The paper panel carries no card: the form is one column set on the
+   page's own ground, hung from the top of its panel at a distance the screen gives — never centred on its own
+   height. One hierarchy on every entrance page — the eyebrow with the key, ONE title, the invitation, the fields,
+   ONE primary action, then what is quiet: the assurance, the way back. The fields are the system's «la lastra»
+   (static/css/v5/field.css); this sheet adds the label's row with the «forgotten password» link at its end, the
+   show / hide control as a glyph in a 44 px target, and the primary that holds the key the loader turns. The
+   form's states — a refusal, a field's own error, the wait — are the system's: the error summary
+   (static/css/v5/notice.css), the field's doubled edge with its mark and its words, the busy key
+   (static/css/v5/loader.css).
    ========================================================================== */
 
-.entrance {
+/* An import, and every image the sheet draws, is written as it resolves in the COLLECTED tree, from this
+   sheet's collected path accounts/entrance.css: a partial of static/css/v5/ is ../css/v5/_x.css, an image of
+   static/img/ is ../img/x.svg — never a source-tree path, which stops collectstatic in production (DS 2026 §2). */
+@import url("../css/v5/_door.css");
+@import url("../css/v5/_varco.css");
+
+/* The two parts are PLACED, never left to the order of the source: there the focus comes first (after the skip
+   link the next stop is in the form; the help line's address follows the form's action) and the stage second, and a
+   browser may paint before the stage has been parsed. So the stage's place is held from the first frame — its
+   column from 64rem, and below 64rem the band's row at the band's own height (the door's, with its two pads) — and
+   nothing moves when it arrives (measured at CPU ×4: a 0.446 layout shift without this, 0 with it). */
+.varco {
+  --door-w: 4.875rem;
+  --varco-band-pad: var(--s-3);
+  --varco-band-min: 120px;
+  --varco-reveal: 10px; /* the wall's thickness seen from the niche: two rings of its stone (_varco.css paints them) */
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  max-inline-size: none;
-  padding: 0;
+  grid-template-rows: minmax(max(var(--varco-band-min), calc(var(--door-w) * 456 / 368 + 2 * var(--varco-band-pad))), auto) auto;
+  padding: 0; /* the account pages' own block padding (components.css §27) is not the entrance's */
   margin: 0;
 }
 
-/* ---- The stage: the door on the navy ---------------------------------------- */
-.entrance__stage {
+/* …and so is its ground: the night is painted in the stage's place by the page's own box, which is there from
+   the first frame — a browser that paints before the stage has been parsed shows the niche's night, not the
+   page's light ground turning dark a frame later. The stage, when it arrives, stands on it. */
+.varco::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 1;
+  background-color: var(--surface-night);
+}
+
+/* ---- 1. The stage: a night niche behind the light wall --------------------------------------------------- */
+
+.varco__stage {
+  --varco-band: 1; /* read by entrance.js: below 64rem the stage is a band and only the door's frame answers */
+  grid-column: 1; /* the cell is named in full: the ground above is in it, and an auto-placed part would step aside */
+  grid-row: 1;
+  display: grid;
   position: relative;
   isolation: isolate;
-  overflow: clip;
+  overflow: clip; /* clip, not hidden: no scroll container, so the set can stay in sight (position: sticky) */
+  background-color: var(--surface-night); /* its image — the band's pool, the niche's shadows — is _varco.css's */
+  color: var(--text-on-night-1);
+}
+
+/* the set: the scene and the colophon — the band's row below 64rem, the niche's one screen from 64rem. Its
+   two parts are placed too (the colophon comes first in the source): the door's column is the door's width. */
+.varco__set {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  justify-items: center;
-  gap: var(--s-6);
-  min-block-size: 120px;
-  padding: var(--s-6) var(--page-pad);
-  background-color: var(--mid-1);
-  background-image: var(--mesh-dark);
-  color: var(--on-dark);
+  grid-template-columns: var(--door-w) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--varco-band-pad) var(--page-pad);
 }
 
-.entrance__door {
-  display: block;
-  inline-size: 100%;
-  max-inline-size: 320px;
-  block-size: auto;
-  align-self: center;
-  overflow: visible;
+/* the sill: below 64rem the wall is under the band — two rings of its stone close the niche */
+.varco__stage::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 2;
+  block-size: 4px;
+  pointer-events: none;
 }
 
-/* The one line the entrance keeps, on a glass strip (level 3). */
-.entrance__help {
+/* ---- 2. The scene: the door on its threshold, and the floor in front of it -------------------------------- */
+/* direction: ltr — the scene is a drawing. The plinth has the door's box; the floor hangs from the threshold
+   (stage y 507, 13 units above the stage's foot) in the door's own units, 1100 × 300, so the fan keeps its angles
+   at every width; the scene clips it at the plate's lower edge. */
+
+.varco__scene {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-inline-size: 0;
+  min-block-size: 0;
+  direction: ltr;
+}
+
+.varco__plinth {
+  position: relative;
+  inline-size: var(--door-w);
+}
+
+.varco__door {
+  z-index: 1;
+}
+
+.varco__floor {
+  display: none;
+}
+
+/* ---- 3. The colophon: the one line the entrance keeps ------------------------------------------------------ */
+
+.varco__colophon {
+  grid-column: 2;
+  grid-row: 1;
+  min-inline-size: 0;
+}
+
+.varco__help {
   margin: 0;
-  padding: var(--s-3) var(--s-5);
   font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--on-dark-2);
-  background: var(--glass-dark);
-  -webkit-backdrop-filter: blur(var(--blur-panel));
-  backdrop-filter: blur(var(--blur-panel));
-  border: 1px solid var(--hairline-dark-strong);
-  border-radius: var(--radius-full);
-  text-align: center;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-on-night-2);
 }
 
-.entrance__help a {
-  color: var(--accent-dark);
+.varco__help a {
+  color: var(--accent-night);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
-/* ---- The focus ground and the sheet ---------------------------------------------- */
-.entrance__focus {
+@media (hover: hover) and (pointer: fine) {
+  .varco__help a:hover {
+    color: var(--text-on-night-1);
+  }
+}
+
+/* a 44 px band, without moving the line: the help line's address at every pointer (plan §1.13: «the help link,
+   with a 44 px target»; it was 18 px at a fine pointer), the invitation's link («enregistrer», «vous connecter»)
+   under a finger — a link in a sentence, one per paragraph */
+.varco__help a,
+.varco .account-page__text a {
+  position: relative;
+}
+
+.varco__help a::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block: calc(50% - var(--hit-primary) / 2);
+}
+
+@media (pointer: coarse) {
+  .varco .account-page__text a::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block: calc(50% - var(--hit-primary) / 2);
+  }
+}
+
+/* ---- 4. The lights: transparent at rest, shown by the stage's state --------------------------------------- */
+/* the door's two lights are _door.css's layers, switched by its two switches (--door-frame, --door-steps), and the
+   stage's state sets each switch ON THE LAYER IT LIGHTS: set on the stage's root, a switch is inherited by the whole
+   stage, and every state restyled every one of its elements — the Tab into the password was one task of 54–68 ms at
+   CPU ×4 (the performance check's P3). _door.css draws the rest: each step's own opacity, their order from the
+   threshold up, --motion-stagger apart, and the light given back together. */
+
+.varco__stage.is-frame .door-stage__frame {
+  --door-frame: 1;
+}
+
+.varco__stage.is-held .door-stage__step {
+  --door-steps: 1;
+}
+
+/* the pass: on a pointer's focus the light runs up the frame from the threshold, once */
+.varco__stage.is-passing-frame .door-stage__frame {
+  transition: none;
+}
+
+.varco__stage.is-passing-frame .door-stage__frame-wipe {
+  animation: door-frame-rise var(--motion-slow) var(--ease-sine) 1 backwards;
+}
+
+.varco__stage.is-passing-frame .door-stage__frame-light {
+  animation: door-frame-hold var(--motion-slow) var(--ease-sine) 1 backwards;
+}
+
+/* the first application of a state (a page that loads with an address kept) is its still: no way to it */
+.varco__stage.is-still .door-stage__frame,
+.varco__stage.is-still .door-stage__step,
+.varco__stage.is-still .varco__way-lit,
+.varco__stage.is-still .varco__pool--lit,
+.varco__stage.is-still .varco__threshold--lit {
+  transition: none;
+}
+
+/* ---- 5. The focus: the form, set on the paper (plan §1.13) -------------------------------------------------- */
+/* No card: the paper panel is the page's own ground, and the form is one column on it — at most 25rem, centred in
+   the panel. ITS PLACE IS A FUNCTION OF THE SCREEN, NEVER OF ITS OWN HEIGHT: it hangs from the top of its panel
+   at a distance the viewport gives (§7), so the title stands at the same height on every entrance page, and a
+   browser that paints before the whole column is parsed draws every line where it will stay (the V4 sheet was
+   centred, and moved up by half of whatever arrived after its first paint). The class is still `varco__sheet`:
+   static/js/src/entrance.js reads its fields from it. */
+
+.varco__focus {
+  grid-column: 1;
+  grid-row: 2;
   display: grid;
   justify-items: center;
   align-content: start;
-  padding: var(--s-10) var(--page-pad) var(--s-16);
-  background-color: var(--min-0);
-  background-image: var(--light-focus);
+  padding: var(--s-8) var(--page-pad) var(--s-12);
+  background-color: var(--surface-page);
 }
 
-.entrance__sheet {
+.varco__sheet {
   inline-size: 100%;
-  max-inline-size: 480px;
-  padding: var(--s-10);
-  background: var(--min-2);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-2);
+  max-inline-size: 25rem;
 }
 
-.entrance .account-page__title {
+/* 5.1 The hierarchy: the eyebrow, ONE title, the invitation — then the fields and ONE primary action */
+
+/* the eyebrow names the place, with the key the letterhead's plate gives the same words («la targa»). Its row
+   has its line's height before its words are parsed: the key, written first, is drawn where it stays */
+.varco__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--t-small-lh);
   margin: 0 0 var(--s-3);
   font-family: var(--f-sans);
-  font-size: var(--u-title);
-  line-height: var(--u-title-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-title);
-  color: var(--ink);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
 }
 
-.entrance .account-page__text {
-  margin: 0 0 var(--s-6);
+.varco__eyebrow-key {
+  color: var(--identity-key); /* an ornament on paper, never text: the words beside it carry the name */
+}
+
+.varco .account-page__title {
+  margin: 0;
   font-family: var(--f-sans);
-  font-size: var(--u-body);
-  line-height: var(--u-body-lh);
-  color: var(--ink-2);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-wrap: balance;
 }
 
-.entrance .form {
+.varco .account-page__text {
+  margin: var(--s-3) 0 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+/* a sentence after the form is a note, one step down */
+.varco .form ~ .account-page__text {
+  margin-block-start: var(--s-6);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+:lang(ar) .varco .account-page__title {
+  line-height: var(--ar-title-lh);
+  letter-spacing: 0;
+}
+
+:lang(ar) .varco .account-page__text {
+  line-height: var(--ar-body-lh);
+}
+
+/* 5.2 The fields are the system's «la lastra» (static/css/v5/field.css: 52 px on a public page, the label above,
+       a hairline plate, the one ring with its halo and the 2 px rule, an error by its edge, its mark and its
+       words). THIS SHEET DRAWS NO CONTROL (the core components' decision «the entrance draws no field of its own»;
+       tests/frontend/test_components_w1_c.py holds it to that): no rule here names a field's input, select or
+       textarea. What the entrance adds is below — said of the form, of the field's parts, or of what a control is
+       for. */
+
+.varco .form {
   max-inline-size: none;
+  margin-block-start: var(--s-8);
+  caret-color: var(--accent-mark); /* inherited: the caret of every field of the form */
 }
 
-.entrance .form-field {
-  margin-block-end: var(--s-5);
+/* the summary of a refusal (templates/components/form_errors.html): its sentences stand on the notice's own
+   rhythm, and its list of fields — empty when the refusal names no field: «the address or the password» — takes
+   no room and is not announced as a list of nothing */
+.varco .form-errors {
+  margin-block: 0 var(--s-6); /* the form's own air above it; a field's distance under it */
 }
 
-.entrance .form-field__label {
+.varco .form-errors .notice__body > p {
+  margin-block-end: 0;
+}
+
+.varco .form-errors__list:not(:has(li)) {
+  display: none;
+}
+
+/* allauth writes each label a second time as a placeholder: on the entrance it is not drawn (the sign-in's
+   and the signup's fields have none at all: accounts.forms) */
+.varco .form ::placeholder {
+  color: transparent;
+}
+
+/* when every field of a form is required the mark says nothing, and it is not drawn (the inputs keep
+   `required`); a form with one optional field keeps them all */
+.varco .form:not(:has(.form-field:not(.form-field--required))) .form-field__required {
+  display: none;
+}
+
+/* a help that is a list (the rules of a new password): the help's own size, no air of its own */
+.varco .form-field__help ul {
+  margin: 0;
+  padding-inline-start: 1.25em;
+}
+
+/* the label's row: the label at its start and, at its end, the short link that belongs to it — the sign-in's
+   «forgotten password» (the slot of templates/components/form_field.html). The link is WRITTEN AFTER THE CONTROL:
+   from the keyboard the address is followed by the password, then by its show / hide control, and only then by
+   the link. The field that holds one becomes a grid, and the link is PLACED at the end of the label's row; where
+   `:has()` is not understood the field stays the system's column and the link stands under the control, as a
+   help text does. The 2 px focus rule keeps its seat: the foot of the control. */
+.form-field:has(> .form-field__aside) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--s-4);
+}
+
+.form-field:has(> .form-field__aside) > .form-field__label {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.form-field:has(> .form-field__aside) > .form-field__aside {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* the control — whatever it is — is what is neither the label, nor the aside, nor the errors */
+.form-field:has(> .form-field__aside) > :not(.form-field__label, .form-field__aside, .form-field__errors) {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.form-field:has(> .form-field__aside)::after {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  align-self: end;
+  margin-block-start: 0;
+}
+
+.form-field:has(> .form-field__aside) > .form-field__errors {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+/* the label's own type and line, in every language: the row is as tall with the link as without it, so a paint
+   that comes before the link is parsed draws the control where it stays */
+.form-field__aside {
   font-family: var(--f-sans);
   font-size: var(--u-ui);
   line-height: var(--u-ui-lh);
-  font-weight: 500;
-  color: var(--ink);
 }
 
-/* Input V4: 44 px, radius md, --min-3, strong hairline (3.37:1 on the ground) */
-.entrance .form-field input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
-.entrance .form-field select,
-.entrance .form-field textarea {
-  min-block-size: var(--input-h);
-  padding: 0 var(--s-4);
-  font-family: var(--f-sans);
-  font-size: var(--u-body);
-  line-height: var(--u-body-lh);
-  color: var(--ink);
-  background: var(--min-3);
-  border: 1px solid var(--hairline-strong);
-  border-radius: var(--radius-md);
-  box-shadow: none;
-  transition: border-color var(--motion-fast) var(--ease-exit), box-shadow var(--motion-fast) var(--ease-exit);
+/* a 24 px target on its 20 px line; 44 px under a finger — upward, into the air between two fields, so that it
+   never lies over the field below. The assurance's link, alone in its paragraph under the action, takes the same
+   (28 px on its 24 px line; 48 under a finger, upward into its own answer) */
+.form-field__aside a,
+.varco__assurance-more a {
+  position: relative;
+  display: inline-block; /* its box is its line, 20 px: the target below is measured from it */
 }
 
-/* The password field keeps room for its show/hide control (v4/buttons.css): this sheet's input rule
-   above beat the cascade's at equal specificity (gate B round 2, defect 14: typed text ran under the
-   control). */
-.entrance .form-field .form-field__control--password > input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
-  padding-inline-end: 11rem;
+.form-field__aside a::after,
+.varco__assurance-more a::after {
+  content: "";
+  position: absolute;
+  inset: -2px 0;
 }
 
-.entrance .form-field input:not([type="checkbox"]):not([type="radio"]):hover,
-.entrance .form-field select:hover {
-  border-color: var(--ink-3);
+@media (pointer: coarse) {
+  .form-field__aside a::after,
+  .varco__assurance-more a::after {
+    inset-block: -20px -4px;
+  }
 }
 
-.entrance .form-field input:not([type="checkbox"]):not([type="radio"]):focus-visible,
-.entrance .form-field select:focus-visible,
-.entrance .form-field textarea:focus-visible {
-  border-color: var(--accent-ring);
-  outline: 2px solid var(--accent-ring);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+/* without script the show / hide control would do nothing: the entrance does not draw it (the system's control,
+   v5/field.css §5, is drawn everywhere — handed to W1-C) */
+html.no-js .varco [data-password-toggle] {
+  display: none;
 }
 
-.entrance .form-field__help {
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--ink-2);
+/* a one-time code is read digit by digit: tabular figures, a little air between them, left to right */
+.varco .form [autocomplete="one-time-code"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: var(--numeric-data);
+  letter-spacing: 0.2em;
 }
 
-.entrance .form-field__help a {
-  color: var(--accent);
+[dir="rtl"] .varco .form [autocomplete="one-time-code"] {
+  text-align: end; /* as an address or a password on an Arabic page (static/css/base.css): read left to right, set at the label's side */
 }
 
-/* The one primary action of the page: 52 px, full width, the gradient of the system. */
-.entrance .form__actions {
-  margin-block-start: var(--s-6);
+/* 5.3 The action: ONE primary, the full width of the column, 52 px, flat (the system's primary: no gradient, no
+       inner light, no shadow — DL54-13). What is not the primary (the second factor's «cancel») stands under it. */
+
+.varco .form__actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+  margin-block-start: var(--s-8);
   padding-block-start: 0;
   border: 0;
 }
 
-.entrance .form__actions .btn--primary {
+.varco .form__actions .btn--primary {
   --btn-box-h: var(--control-lg);
-  inline-size: 100%;
-  font-size: var(--u-card);
+  --btn-pad: var(--btn-pad-lg);
+  justify-self: stretch;
+  font-size: var(--t-field);
+  line-height: 1.5rem;
 }
 
-.entrance .account-page__aside {
-  display: none;
+/* the link under it («Annuler») is 44 px tall under a finger (v5/buttons.css) and at least as wide — allauth's Arabic
+   word, «يلغي», is 28 px — with its words kept at the column's start */
+@media (pointer: coarse) {
+  .varco .form__actions .btn--link {
+    min-inline-size: var(--hit-primary);
+    justify-content: start;
+  }
 }
 
-/* ---- From 64rem: two panels, 5/7 ------------------------------------------------- */
+/* «the button holds the key»: on the forms that complete a sign-in — the ones that name the stage — the primary
+   carries, at rest, the very key the loader turns when it is busy (static/css/v5/loader.css, `.btn.is-busy::after`:
+   the same mask — the one token --key-mask of v5/tokens.css, read by both — the same box, the middle of the same
+   end pad), so the wait begins with the key the person was looking at. At rest it is the label's ink; loader.css
+   turns it once and dims it while the answer comes. Its two pads are the plate's own height: the label stays
+   centred on the plate, and the end is the key's seat. */
+.varco form[data-loader-host] .form__actions .btn--primary {
+  --btn-pad: var(--control-lg);
+  --btn-pad-end: var(--control-lg);
+  --key-size: 18px;
+  --key-inline: calc(var(--key-size) * 40 / 94);
+}
+
+.varco form[data-loader-host] .form__actions .btn--primary::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: calc((var(--btn-pad-end) - var(--key-inline)) / 2);
+  inline-size: var(--key-inline);
+  block-size: var(--key-size);
+  translate: 0 -50%;
+  background: currentColor;
+  -webkit-mask: var(--key-mask) center / contain no-repeat;
+  mask: var(--key-mask) center / contain no-repeat;
+}
+
+/* 5.4 After the action: the assurance (the sign-in), the way back (a page that is not a form) */
+
+/* the locked answer on data protection, verbatim, with its question as a label — after a hairline, never a badge */
+.varco__assurance {
+  margin-block-start: var(--s-10);
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.varco__assurance-q {
+  margin: 0 0 var(--s-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  color: var(--text-1);
+}
+
+.varco__assurance-a,
+.varco__assurance-more {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.varco__assurance-more {
+  margin-block-start: var(--s-2);
+}
+
+.varco__back {
+  margin: var(--s-8) 0 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+/* 5.5 A session message — «a confirmation e-mail has been sent to …», «your password is changed» — is written by
+       templates/base.html before the entrance, as a band across the page: the stage then began under it, and the
+       two panels no longer met the letterhead. It belongs to the form's column. The page's <main> becomes the
+       grid whose lines the entrance takes (subgrid): the stage keeps the reading edge for the page's whole
+       height, and the message stands in the form's column, above the eyebrow, hung where the form would hang.
+       Below 64rem: the band, the message, the form. Without `:has()` or subgrid the message stays a band above,
+       as before. The band's row is held by the ground the entrance paints there, for the paint that comes before
+       the stage is parsed. */
+
+@supports (grid-template-rows: subgrid) {
+  .page-entrance main:has(> .messages) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+  }
+
+  .page-entrance main:has(> .messages) > .varco {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    grid-template-rows: subgrid;
+  }
+
+  .page-entrance main:has(> .messages) > .varco::before {
+    min-block-size: max(var(--varco-band-min), calc(var(--door-w) * 456 / 368 + 2 * var(--varco-band-pad)));
+  }
+
+  .page-entrance main:has(> .messages) .varco__focus {
+    grid-row: 3;
+    padding-block-start: var(--s-6);
+  }
+
+  .page-entrance main:has(> .messages) > .messages {
+    grid-column: 1;
+    grid-row: 2;
+    position: relative; /* over the entrance's own box, which spans the grid */
+    z-index: 1;
+    justify-self: center;
+    inline-size: min(100% - 2 * var(--page-pad), 25rem);
+    max-inline-size: none;
+    margin: var(--s-8) 0 0;
+    padding: 0;
+  }
+
+  .page-entrance main:has(> .messages) > .messages .alert {
+    margin: 0;
+  }
+
+  .page-entrance main:has(> .messages) > .messages .alert + .alert {
+    margin-block-start: var(--s-3);
+  }
+
+  @media (min-width: 64rem) {
+    .page-entrance main:has(> .messages) {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .page-entrance main:has(> .messages) > .varco {
+      grid-template-columns: subgrid;
+    }
+
+    .page-entrance main:has(> .messages) > .varco::before {
+      grid-row: 1 / -1;
+      min-block-size: 0;
+    }
+
+    .page-entrance main:has(> .messages) .varco__stage {
+      grid-row: 1 / -1;
+    }
+
+    .page-entrance main:has(> .messages) .varco__focus {
+      grid-row: 2;
+    }
+
+    .page-entrance main:has(> .messages) > .messages {
+      grid-column: 2;
+      grid-row: 1;
+      margin-block-start: clamp(var(--s-12), 14vh - 1rem, 12rem);
+    }
+  }
+}
+
+/* ---- 6. The band's sizes: from 48rem, and on short phones -------------------------------------------------- */
+
+@media (min-width: 48rem) {
+  .varco {
+    --door-w: 5.5rem;
+    --varco-band-pad: var(--s-4);
+  }
+
+  .varco__set {
+    gap: var(--s-5);
+  }
+
+  /* the one title: 28/36 on a phone, the public title's 36/44 from here */
+  .varco .account-page__title {
+    font-size: var(--t-title);
+    line-height: var(--t-title-lh);
+    letter-spacing: var(--track-title);
+  }
+
+  .varco__focus {
+    padding-block: var(--s-12) var(--s-16);
+  }
+}
+
+/* below 44rem of height the band is 72 px, so that the form's action stays in the first viewport (LG-5) */
+@media (max-width: 63.999rem) and (max-height: 43.999rem) {
+  .varco {
+    --door-w: 2.75rem;
+    --varco-band-pad: var(--s-2);
+    --varco-band-min: 72px;
+  }
+
+  .varco__focus {
+    padding-block-start: var(--s-5);
+  }
+}
+
+/* ---- 7. From 64rem: two panels, 5 / 7 — the niche, the wall's reveal, the floor, the four ways ------------- */
+
 @media (min-width: 64rem) {
-  .entrance {
+  .varco {
+    --door-w: clamp(15.5rem, 22vw, 26rem); /* at 26rem the arch is 362 px wide: the 400 px photograph is never upscaled at 1× */
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto;
     min-block-size: calc(100vh - var(--chrome-height));
     min-block-size: calc(100svh - var(--chrome-height));
   }
 
-  .entrance__stage {
-    padding: var(--s-12) var(--s-10);
+  .varco__stage {
+    --varco-band: 0;
+    grid-column: 1;
+    padding-inline-end: var(--varco-reveal);
   }
 
-  .entrance__focus {
-    padding-block: var(--s-16);
-    align-content: center;
+  /* the grain: a vendored SVG at 3 %, multiplied — texture, never an image of anything. The niche's only: on the
+     band (the plan's «below 48 rem the band keeps the arch only») a 3 % grain is not seen, and its 246 B file over a
+     phone's small band was the page's largest contentful paint (acceptance L9: «the door, not the grain») */
+  .varco__stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url("../img/grain.svg");
+    background-size: 180px 180px;
+    opacity: 0.03;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
+  .varco__focus {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* one screen of the niche, in sight while a long form scrolls (the signup): it stays under the pinned letterhead */
+  .varco__set {
+    position: sticky;
+    inset-block-start: calc(var(--header-h-scrolled) + 1px);
+    align-self: start; /* one screen tall, not the plate's height: that is what lets it stay in sight */
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 0;
+    min-block-size: calc(100vh - var(--chrome-height));
+    min-block-size: calc(100svh - var(--chrome-height));
+    padding: 0;
+  }
+
+  /* the seam: the wall's thickness — two rings of its stone, a lit arris on the wall's side — and the shadow
+     the wall casts into the niche, over the set and for the plate's whole height */
+  .varco__stage::after {
+    inset-block: 0;
+    inset-inline: auto 0;
+    inline-size: calc(var(--varco-reveal) + 7rem);
+    block-size: auto;
+  }
+
+  /* the door stands a little above the middle: four parts of the air over it, six under — the floor's */
+  .varco__scene {
+    grid-template-rows: minmax(var(--s-10), 4fr) auto minmax(var(--s-16), 6fr);
+    place-items: start center;
+    overflow: clip;
+  }
+
+  .varco__plinth {
+    grid-row: 2;
+  }
+
+  /* a quiet pool of the next night step behind the door */
+  .varco__plinth::before {
+    content: "";
+    position: absolute;
+    inset: -22% -66%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .varco__floor {
+    display: block;
+    position: absolute;
+    inset-block-start: calc(443 / 456 * 100%);
+    inset-inline-start: calc(50% - var(--door-w) * 550 / 368);
+    z-index: 0;
+    inline-size: calc(var(--door-w) * 1100 / 368);
+    block-size: calc(var(--door-w) * 300 / 368);
+    overflow: clip;
+    contain: layout paint;
+    pointer-events: none;
+  }
+
+  /* the threshold: one level hairline at the door's foot, fading toward the niche's walls */
+  .varco__threshold {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 15.45%;
+    block-size: 1px;
+  }
+
+  .varco__threshold--lit {
+    inset-inline: 28.18%;
+    block-size: 2px;
+  }
+
+  /* the warm pool on the floor, at the foot of the steps */
+  .varco__pool {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 20.9%;
+    block-size: 40%;
+  }
+
+  .varco__pool--lit {
+    inset-inline: 29.5%;
+    block-size: 30%;
+  }
+
+  .varco__pool--lit,
+  .varco__threshold--lit {
+    opacity: 0;
+    transition: opacity var(--motion-standard) var(--ease-sine);
+  }
+
+  /* a way: a strip from its far end on the plate's lower edge (S) to its place on the threshold (E), turned on
+     S. Persona and Università come from the corners, Impresa and Istituzione from between; they would meet 41
+     units inside the door. */
+  .varco__way {
+    --way-h: 16px;
+    position: absolute;
+    inset-block-start: calc(100% - var(--way-h) / 2);
+    inset-inline-start: var(--way-x);
+    inline-size: var(--way-l);
+    block-size: var(--way-h);
+    overflow: hidden;
+    contain: strict;
+    transform-origin: 0 50%;
+    transform: rotate(var(--way-a));
+  }
+
+  .varco__way[data-way="persona"] { --way-x: 0.3636%; --way-l: 51.4581%; --way-a: -32.0054deg; --way-n: 0; color: var(--aud-persona); }
+  .varco__way[data-way="impresa"] { --way-x: 33.4545%; --way-l: 30.9091%; --way-a: -61.9275deg; --way-n: 1; color: var(--aud-impresa); }
+  .varco__way[data-way="istituzione"] { --way-x: 66.5455%; --way-l: 30.9091%; --way-a: -118.0725deg; --way-n: 2; color: var(--aud-istituzione); }
+  .varco__way[data-way="universita"] { --way-x: 99.6364%; --way-l: 51.4581%; --way-a: -147.9946deg; --way-n: 3; color: var(--aud-universita); }
+
+  /* drawn: a hairline in the way's accent, out of the night toward the threshold */
+  .varco__way-line,
+  .varco__way-lit,
+  .varco__way-light {
+    position: absolute;
+    inset-inline: 0;
+  }
+
+  .varco__way-line {
+    inset-block-start: calc(50% - 0.5px);
+    block-size: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  /* lit: the core with its halo, drawn from the far end by the pass */
+  .varco__way-lit {
+    inset-block: calc(50% - 5px);
+    opacity: 0;
+    transform-origin: 0 50%;
+    transition: opacity var(--motion-standard) var(--ease-sine);
+  }
+
+  /* the light: a bead with a tail at the strip's leading end; at rest it has arrived and gone out */
+  .varco__way-light {
+    inset-block: 0;
+    opacity: 0;
+  }
+
+  .varco__stage.is-ways .varco__way-lit {
+    opacity: 1;
+  }
+
+  .varco__stage.is-held .varco__pool--lit,
+  .varco__stage.is-held .varco__threshold--lit {
+    opacity: 1;
+  }
+
+  /* the pass: on a pointer's focus the four lights run into the threshold together and the ways are lit behind
+     them, once; the beads go out where they arrive */
+  .varco__stage.is-passing-ways .varco__way-lit {
+    transition: none;
+    animation: varco-draw var(--motion-slow) var(--ease-sine) 1 backwards;
+  }
+
+  .varco__stage.is-passing-ways .varco__way-light {
+    animation:
+      varco-run var(--motion-slow) var(--ease-sine) 1 backwards,
+      varco-out var(--motion-fast) var(--ease-sine) var(--motion-slow) 1 backwards;
+  }
+
+  /* the arrival: once, after the first paint of the door, the four lights travel into the threshold one after
+     the other, each way lit behind its light — drawn from the night as the light runs, given back as it arrives —
+     and the stage rests. Four beads on grey hairlines read as sparks to a person who has not acted yet (the
+     review's m2): the lit way is the light the e-mail field will call, shown once */
+  .varco__stage.is-arriving .varco__way-light {
+    animation:
+      varco-run var(--motion-route-light) var(--ease-sine) calc(var(--motion-route-stagger) * var(--way-n)) 1 backwards,
+      varco-glint var(--motion-route-light) var(--ease-sine) calc(var(--motion-route-stagger) * var(--way-n)) 1 backwards;
+  }
+
+  .varco__stage.is-arriving .varco__way-lit {
+    animation:
+      varco-draw var(--motion-route-light) var(--ease-sine) calc(var(--motion-route-stagger) * var(--way-n)) 1 backwards,
+      varco-glint var(--motion-route-light) var(--ease-sine) calc(var(--motion-route-stagger) * var(--way-n)) 1 backwards;
+  }
+
+  /* its words stay clear of the wall's shadow, which lies over the set */
+  .varco__colophon {
+    grid-column: 1;
+    grid-row: 2;
+    padding-block: var(--s-5) var(--s-8);
+    padding-inline: var(--grid-margin) calc(7rem + var(--s-2));
+    border-block-start: 1px solid var(--line-night-soft);
+  }
+
+  /* the form hangs from the top of its panel: about a seventh of the screen's height under the letterhead, never
+     less than 3rem nor more than 12rem — the title then stands level with the top of the arch beside it */
+  .varco__focus {
+    padding-block: clamp(var(--s-12), 14vh - 1rem, 12rem) var(--s-16);
+  }
+
+  /* the niche meets the footer: one night, as the home's last chapter meets it (pages.css). The footer's 80 px of
+     air left a band of light wall between the two nights (the review's m1); the form's panel keeps its own foot */
+  .page-entrance .site-footer {
+    margin-block-start: 0;
   }
 }
 
-/* ---- Below 64rem: a 120 px band with the arch, then the sheet ------------------------ */
-@media (max-width: 63.999rem) {
-  .entrance__stage {
-    grid-template-rows: auto;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: var(--s-5);
-    min-block-size: 120px;
-    padding: var(--s-4) var(--page-pad);
-  }
-
-  .entrance__door {
-    max-inline-size: 88px;
-  }
-
-  .entrance__help {
-    justify-self: start;
-    text-align: start;
-  }
-
-  .entrance__focus {
-    padding-block: var(--s-8) var(--s-12);
-  }
-
-  .entrance__sheet {
-    padding: var(--s-6);
+/* from 75rem the colophon starts on the letterhead's content edge (the lock-up's) */
+@media (min-width: 75rem) {
+  .varco__colophon {
+    padding-inline-start: calc((100vw - var(--container)) / 2 + var(--grid-margin));
   }
 }
 
-@media (max-width: 47.999rem) {
-  /* The door stays, small, beside the help: a band without the brand's element was measured as
-     120 px of navy with a capsule (gate B review, correction 7). */
-  .entrance__stage {
-    gap: var(--s-4);
+/* short desktop screens (1366 × 768): the whole threshold stays in one screen */
+@media (min-width: 64rem) and (max-height: 51rem) {
+  .varco {
+    --door-w: clamp(14.5rem, 20vw, 18rem);
   }
 
-  .entrance__door {
-    max-inline-size: 64px;
+  .varco__scene {
+    grid-template-rows: minmax(var(--s-8), 4fr) auto minmax(var(--s-12), 6fr);
   }
 
-  .entrance__help {
-    border-radius: var(--radius-lg);
-  }
-}
-
-/* Below 80rem the help goes on two lines: a soft rectangle, not a capsule around two lines
-   (gate B round 2, defect 19). */
-@media (max-width: 79.999rem) {
-  .entrance__help {
-    border-radius: var(--radius-lg);
+  .varco__colophon {
+    padding-block: var(--s-4) var(--s-6);
   }
 }
 
-/* ---- Forced colours ------------------------------------------------------------------ */
+/* the ways' keyframes: a `from` only — each ends on the element's own state, so nothing stays in effect */
+@keyframes varco-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes varco-run {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes varco-out {
+  from {
+    opacity: 1;
+  }
+}
+
+@keyframes varco-glint {
+  0% {
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  84% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---- 8. The keyboard never animates (tier 0, R-07): a state asked from the keyboard is there at once ------ */
+
+html[data-input="key"] .varco__stage :is(.door-stage__frame, .door-stage__step, .varco__way-lit, .varco__pool--lit, .varco__threshold--lit) {
+  transition-duration: 0ms;
+  transition-delay: 0ms;
+}
+
+/* ---- 9. Forced colours: the ways in the system's ink, no light, no pool, no stone -------------------------- */
+
 @media (forced-colors: active) {
-  .entrance__sheet,
-  .entrance__help {
-    border: 1px solid CanvasText;
+  .varco__stage {
+    background-image: none;
+    border-block-end: 1px solid CanvasText;
   }
 
-  .entrance .doorway__body,
-  .entrance .doorway__inner {
-    filter: none;
+  .varco__stage::before,
+  .varco__stage::after,
+  .varco__plinth::before,
+  .varco__pool,
+  .varco__threshold--lit,
+  .varco__way-lit,
+  .varco__way-light {
+    display: none;
+  }
+
+  .varco__threshold,
+  .varco__way-line {
+    background: CanvasText;
+    opacity: 1;
+    forced-color-adjust: none;
+  }
+
+  .varco__colophon {
+    border-color: CanvasText;
+  }
+
+  /* the key on the primary takes the system's text colour */
+  .varco form[data-loader-host] .form__actions .btn--primary::after {
+    forced-color-adjust: none;
+    background: ButtonText;
+  }
+
+  .varco__eyebrow-key {
+    color: CanvasText;
+  }
+
+  .varco__assurance {
+    border-color: CanvasText;
+  }
+}
+
+@media (forced-colors: active) and (min-width: 64rem) {
+  .varco__stage {
+    border-block-end: 0;
+    border-inline-end: 1px solid CanvasText;
   }
 }

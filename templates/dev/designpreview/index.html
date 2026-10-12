@@ -1,0 +1,149 @@
+{% load static %}<!DOCTYPE html>
+<html lang="it" dir="ltr" class="dp-live-root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indice · V5 dal vivo · Italy Legal Entry™</title>
+<meta name="robots" content="noindex, nofollow">
+{% comment %}
+V5 live preview — the index, one click from the landing (V5.4 plan §4.1). DEVELOPMENT ONLY;
+rendered by designpreview.views.index.
+
+Every page type of W1-0's census (designpreview.live: 79 types, one row each — review W1-P M2),
+public and authenticated, in fr and ar (it and en as well for the home and the login). A surface is
+«V5 — council-passed» only where the steward's live_status.json says so; the pages that are not
+stand apart, under «V4 + fondation» — open while nothing has passed, collapsed once something has
+(review W1-P M4) — behind a fold that shows it opens. Each URL opens in the landing's frame;
+«Desktop 1440» and «Telefono 390» open it here instead, in frames made on demand — at most ONE PAIR
+AT A TIME: the script unloads the pair it holds before it loads the next (8780's database ceiling
+is eight slots), and without the script the two links open the landing, which holds one frame. No
+iframe is in this markup.
+
+Then: the four personas — «Entrer» is a POST with its CSRF token, a staff persona is never
+offered, and a page of a persona that is not inside is a POST too: one click enters that persona
+and opens that page, in that language (review W1-P M3); the page types only a role account reaches,
+«fuori dall'anteprima»; the states a person reaches without credentials (§4.5); the families'
+state, from live_status.json (the steward writes it, the preview reads it); the foundation's
+specimen boards; the V4 control — the same URLs on 8771, never on this server; the research
+archive. French words say they are French; a link that opens a new tab says so (accessibility m6,
+m7).
+
+A standalone document: it holds frames, and base.css hides every iframe (_stylesheets.html).
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+{% include "dev/designpreview/_stylesheets.html" %}
+<script src="{% static 'js/dev/designpreview.js' %}" defer></script>
+</head>
+<body class="dp-live dp-live--index">
+{% include "dev/designpreview/_strip.html" with mode="index" %}
+<main class="dp-index" data-dp-index>
+
+  <header class="dp-index__head">
+    <p class="dp-index__eyebrow">V5.4 · il prodotto V5 dal vivo · indice</p>
+    <h1 class="dp-index__title">Ogni superficie, dal vivo</h1>
+    <p class="dp-index__lead">Le pagine vere di questo server, in francese e in arabo. Un indirizzo si apre nella cornice della pagina principale; «Desktop 1440» e «Telefono 390» lo aprono qui, una coppia di cornici alla volta. Una superficie è «V5 — council-passed» soltanto quando il consiglio l’ha approvata; tutte le altre sono «<span lang="fr">V4 + fondation</span>».</p>
+    {% if not status.present %}<p class="dp-index__note" title="{{ status.path }}">Nessuna superficie ha ancora passato il consiglio: per ora ogni pagina è «<span lang="fr">V4 + fondation</span>».</p>{% elif status.error %}<p class="dp-index__note dp-index__note--warn" title="{{ status.path }}">Il registro dello stato è {{ status.error }}: per ora ogni pagina è «<span lang="fr">V4 + fondation</span>».</p>{% endif %}
+    <nav class="dp-index__toc" aria-label="Sezioni dell’indice">
+      <a href="#pubbliche">Pagine pubbliche</a>
+      <a href="#personas">Personas</a>
+      <a href="#stati">Stati senza credenziali</a>
+      <a href="#famiglie">Stato delle famiglie</a>
+      <a href="#fondazione">Fondazione</a>
+      <a href="#v4">Confronto con la V4</a>
+      <a href="#archivio">Archivio della ricerca</a>
+    </nav>
+  </header>
+
+  <section class="dp-index__section" id="pubbliche" aria-labelledby="h-pubbliche">
+    <h2 class="dp-index__h2" id="h-pubbliche">Pagine pubbliche</h2>
+    {% if passed %}<ul class="dp-rows" role="list">
+      {% for row in passed %}{% include "dev/designpreview/_row.html" %}{% endfor %}
+    </ul>{% else %}<p class="dp-index__empty">Nessuna pagina pubblica ha ancora passato il consiglio: tutte sono qui sotto.</p>{% endif %}
+    <details class="dp-index__fold"{% if not passed %} open{% endif %}>
+      <summary class="dp-index__summary"><span class="dp-state dp-state--v4-fondation"><span lang="fr">V4 + fondation</span></span> {{ fondation|length }} pagin{{ fondation|length|pluralize:"a,e" }} pubblic{{ fondation|length|pluralize:"a,he" }}</summary>
+      <ul class="dp-rows" role="list">
+        {% for row in fondation %}{% ifchanged row.group %}<li class="dp-rows__group"><h3 class="dp-rows__heading">{{ row.group }}</h3></li>{% endifchanged %}{% include "dev/designpreview/_row.html" %}{% endfor %}
+      </ul>
+    </details>
+  </section>
+
+  <section class="dp-index__section" id="personas" aria-labelledby="h-personas">
+    <h2 class="dp-index__h2" id="h-personas">Pagine autenticate — le personas</h2>
+    <p class="dp-index__text">Quattro account di prova del database di questo server, senza password, in sola lettura: ogni invio che cambierebbe dei dati viene fermato, tranne l’uscita e il cambio di lingua. «fr» o «ar» di una pagina entra come quella persona e apre quella pagina.{% if not strip.database_allowed %} <strong>Questo server usa il database «{{ strip.database }}»: qui le personas sono rifiutate.</strong>{% endif %}</p>
+    <ul class="dp-cards" role="list">
+      {% for card in cards %}<li class="dp-card{% if card.active %} dp-card--active{% endif %}">
+        <h3 class="dp-card__name" lang="fr">{{ card.name }}</h3>
+        <p class="dp-card__key"><code>{{ card.key }}</code>{% if card.case %} · fascicolo <code>{{ card.case }}</code>{% endif %}</p>
+        <p class="dp-card__note">{{ card.note }}</p>
+        {% if card.active %}<form class="dp-card__form" method="post" action="{% url 'designpreview:persona_exit' %}">{% csrf_token %}<input type="hidden" name="page" value="/fr/"><button class="dp-card__button" type="submit"><span lang="fr">Sortir</span><span class="dp-hidden"> — <span lang="fr">{{ card.name }}</span></span></button> <span class="dp-card__state">dentro</span></form>
+        {% elif card.allowed %}<form class="dp-card__form" method="post" action="{% url 'designpreview:persona_enter' card.key %}">{% csrf_token %}<input type="hidden" name="lang" value="fr"><button class="dp-card__button" type="submit"><span lang="fr">Entrer</span><span class="dp-hidden"> — <span lang="fr">{{ card.name }}</span></span></button>{% if card.opens %} <span class="dp-card__opens">apre il suo <span lang="fr">{{ card.opens }}</span></span>{% endif %}</form>
+        {% else %}<p class="dp-card__off">Non è nella lista delle personas di questo server.</p>{% endif %}
+        <ul class="dp-card__pages" role="list">
+          {% for page in card.pages %}<li class="dp-card__page"><span class="dp-card__title"><span lang="fr">{{ page.title }}</span>{% if page.note %} <span class="dp-card__aside">— {{ page.note }}</span>{% endif %}</span><span class="dp-card__langs">{% for u in page.urls %}{% if card.active %}<a class="dp-card__link" href="{{ u.landing }}" hreflang="{{ u.lang }}">{{ u.lang }}<span class="dp-hidden"> — <span lang="fr">{{ page.title }}</span>, {{ u.name|lower }}</span></a>{% elif card.allowed %}<form class="dp-card__go" method="post" action="{% url 'designpreview:persona_enter' card.key %}">{% csrf_token %}<input type="hidden" name="page" value="{{ u.url }}"><input type="hidden" name="lang" value="{{ u.lang }}"><button class="dp-card__link" type="submit">{{ u.lang }}<span class="dp-hidden"> — <span lang="fr">{{ page.title }}</span>, {{ u.name|lower }}, entrando come <span lang="fr">{{ card.name }}</span></span></button></form>{% else %}<span class="dp-card__lang">{{ u.lang }}</span>{% endif %}{% endfor %}</span>{% if page.state == "v5" %} <span class="dp-state dp-state--v5">{{ page.label }}</span>{% endif %}</li>{% endfor %}
+        </ul>
+      </li>{% endfor %}
+    </ul>
+    <p class="dp-index__text dp-index__outside"><strong>Fuori dall’anteprima</strong> — nessuna persona per questi ruoli: {% for item in outside %}{{ item.title }} ({{ item.role }}){% if not forloop.last %} · {% endif %}{% endfor %}.</p>
+  </section>
+
+  <section class="dp-index__section" id="stati" aria-labelledby="h-stati">
+    <h2 class="dp-index__h2" id="h-stati">Stati senza credenziali</h2>
+    <ul class="dp-states" role="list">
+      <li class="dp-states__item"><h3 class="dp-states__name">Dopo l’invio, sull’accesso</h3><div class="dp-states__how">Un indirizzo qualunque e una password sbagliata: la chiave gira una volta e si ferma; la pagina dell’errore arriva poi a riposo, senza luce.{% if coming.engage %} <span class="dp-states__coming">{{ coming.engage }}</span>{% endif %} {% if strip.persona_key %}<form class="dp-states__go" method="post" action="{% url 'designpreview:persona_exit' %}">{% csrf_token %}<input type="hidden" name="page" value="{{ login }}"><button class="dp-states__button" type="submit">Esci dalla persona e apri l’accesso</button></form>{% else %}<a href="{% url 'designpreview:landing' %}?page={{ login }}">Nella cornice</a> · <a href="{{ login }}" target="_blank" rel="noopener">l’accesso da solo<span class="dp-hidden"> (nuova scheda)</span></a>.{% endif %}</div></li>
+      <li class="dp-states__item"><h3 class="dp-states__name">L’ingresso, dopo «<span lang="fr">Entrer</span>»</h3><p class="dp-states__how">«<span lang="fr">Entrer</span>» come una persona: la prima pagina della console accende la porta del marchio, nella colonna di sinistra, una volta per sessione.{% if coming.release %} <span class="dp-states__coming">{{ coming.release }}</span>{% endif %}</p></li>
+      <li class="dp-states__item"><h3 class="dp-states__name">La scena dell’accesso, mentre si compila</h3><div class="dp-states__how">Sull’accesso: il fuoco su «<span lang="fr">Courriel</span>», un indirizzo scritto, il fuoco sulla password — la scena risponde a ogni passo (senza inviare).{% if coming.stage %} <span class="dp-states__coming">{{ coming.stage }}</span>{% endif %} {% if strip.persona_key %}<form class="dp-states__go" method="post" action="{% url 'designpreview:persona_exit' %}">{% csrf_token %}<input type="hidden" name="page" value="{{ login }}"><button class="dp-states__button" type="submit">Esci dalla persona e apri l’accesso</button></form>{% else %}<a href="{% url 'designpreview:landing' %}?page={{ login }}">Nella cornice</a>.{% endif %}</div></li>
+      <li class="dp-states__item"><h3 class="dp-states__name">Il menu aperto</h3><p class="dp-states__how">La home con il suo menu aperto: sotto i 1280 px il pulsante «<span lang="fr">Menu</span>», da 1280 px il primo pannello. <a href="{% url 'designpreview:landing' %}">Nella cornice</a>.</p></li>
+      <li class="dp-states__item"><h3 class="dp-states__name">Un passo del questionario</h3><p class="dp-states__how">«<span lang="fr">Commencer</span>» sul questionario di orientamento apre il primo passo, per una sessione anonima nel database di questo server. <a href="{% url 'designpreview:landing' %}?page={{ orientation }}">Nella cornice</a>.</p></li>
+      <li class="dp-states__item"><h3 class="dp-states__name">Le pagine d’errore</h3><p class="dp-states__how">La 404 del prodotto, per una pagina che non esiste: <a href="{% url 'designpreview:state' '404' %}?lang=fr" hreflang="fr" target="_blank" rel="noopener">fr<span class="dp-hidden"> — la pagina 404, francese (nuova scheda)</span></a> · <a href="{% url 'designpreview:state' '404' %}?lang=ar" hreflang="ar" target="_blank" rel="noopener">ar<span class="dp-hidden"> — la pagina 404, arabo (nuova scheda)</span></a>. La 403: «<span lang="fr">Analyse territoriale</span>» di <span lang="fr">Entreprise — Cantiere Adriatico</span>, fra le personas. La 410 di un vecchio indirizzo WordPress: <a href="/wp-login.php" target="_blank" rel="noopener">la pagina, da sola<span class="dp-hidden"> (nuova scheda)</span></a>. Troppi invii di un modulo: <a href="{% url 'designpreview:state' '429' %}" target="_blank" rel="noopener">la pagina 429<span class="dp-hidden"> (nuova scheda)</span></a>. E le pagine d’errore del server di sviluppo: {% for code in error_pages %}<a href="/_errors/{{ code }}/" target="_blank" rel="noopener">{{ code }}<span class="dp-hidden"> (nuova scheda)</span></a>{% if not forloop.last %} · {% endif %}{% endfor %}.</p></li>
+    </ul>
+  </section>
+
+  <section class="dp-index__section" id="famiglie" aria-labelledby="h-famiglie">
+    <h2 class="dp-index__h2" id="h-famiglie">Stato delle famiglie</h2>
+    {% if status.updated %}<p class="dp-index__text">Aggiornato il <time datetime="{{ status.updated }}">{{ status.updated_day|date:"j F Y"|lower|default:status.updated }}</time>.</p>{% endif %}
+    {% if families_passed %}<ul class="dp-families" role="list">{% for family in families_passed %}{% include "dev/designpreview/_family.html" %}{% endfor %}</ul>{% else %}<p class="dp-index__empty">Nessuna famiglia ha ancora passato il consiglio.</p>{% endif %}
+    {% if families_fondation %}<details class="dp-index__fold">
+      <summary class="dp-index__summary"><span class="dp-state dp-state--v4-fondation"><span lang="fr">V4 + fondation</span></span> {{ families_fondation|length }} famigli{{ families_fondation|length|pluralize:"a,e" }}</summary>
+      <ul class="dp-families" role="list">{% for family in families_fondation %}{% include "dev/designpreview/_family.html" %}{% endfor %}</ul>
+    </details>{% endif %}
+    <details class="dp-index__fold dp-index__fold--keys">
+      <summary class="dp-index__summary">Le chiavi delle superfici, per lo steward</summary>
+      <p class="dp-index__text">Il registro dello stato è <code>{{ status.path }}</code>{% if not status.present %} (non c’è ancora){% endif %}; le novità della barra vengono da <code>{{ strip.changelog.path }}</code>. In <code>live_status.json</code>, <code>surfaces</code> nomina queste chiavi — gli id del censimento di W1-0, uno per tipo di pagina —; ogni chiave che non vi compare con <code>"v5"</code> è «<span lang="fr">V4 + fondation</span>».</p>
+      <p class="dp-index__keys">{% for key in surface_keys %}<code>{{ key }}</code>{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    </details>
+  </section>
+
+  <section class="dp-index__section" id="fondazione" aria-labelledby="h-fondazione">
+    <h2 class="dp-index__h2" id="h-fondazione">Fondazione — le tavole dei campioni</h2>
+    <ul class="dp-boards" role="list">
+      {% for board in boards %}<li class="dp-boards__item">{% if board.url %}<a href="{{ board.url }}">{{ board.title }}</a>{% else %}<span class="dp-boards__missing">{{ board.title }} · non ancora</span>{% endif %} <span class="dp-boards__family">{{ board.family }}</span></li>{% endfor %}
+    </ul>
+  </section>
+
+  <section class="dp-index__section" id="v4" aria-labelledby="h-v4">
+    <h2 class="dp-index__h2" id="h-v4">Confronto con la V4</h2>
+    {% if v4_origin %}<p class="dp-index__text">La V4 resta il controllo su <code>{{ v4_origin }}</code> (il sito di oggi), mai su questo server: ogni pagina pubblica qui sopra ha il suo «V4 · 8771». Entrare qui non vi fa uscire di là, e viceversa. <a href="{{ v4_origin }}/fr/" target="_blank" rel="noopener">La home V4<span class="dp-hidden"> (nuova scheda)</span></a>.</p>{% else %}<p class="dp-index__text">Nessun server di controllo V4 configurato su un’altra porta di questo computer.</p>{% endif %}
+  </section>
+
+  <section class="dp-index__section" id="archivio" aria-labelledby="h-archivio">
+    <h2 class="dp-index__h2" id="h-archivio">Archivio della ricerca</h2>
+    <p class="dp-index__text">I prototipi di ricerca — H-0 … H-E ed E1–E3, i selettori dell’hero e della tipografia, il confronto, le maquette del gate 0, i caricatori candidati, la navigazione, i colori, le icone — restano consultabili, ciascuno con il suo «prototipo di ricerca — non approvato»: <a href="{% url 'designpreview:hub' %}">l’archivio della ricerca</a>.</p>
+  </section>
+
+</main>
+
+<dialog class="dp-viewer" data-dp-viewer aria-labelledby="dp-viewer-title">
+  <div class="dp-viewer__bar">
+    <p class="dp-viewer__title" id="dp-viewer-title" data-dp-viewer-title>Cornici</p>
+    <div class="dp-viewer__actions">
+      <button class="dp-viewer__button" type="button" data-dp-add="desktop">Desktop 1440</button>
+      <button class="dp-viewer__button" type="button" data-dp-add="phone">Telefono 390</button>
+      <button class="dp-viewer__button" type="button" data-dp-true-size aria-pressed="false" title="La cornice desktop alla sua misura vera, senza ridurla" disabled>1:1<span class="dp-hidden"> — misura vera della cornice desktop</span></button>
+      <a class="dp-viewer__alone" href="{% url 'designpreview:landing' %}" target="_blank" rel="noopener" data-dp-viewer-alone>Apri la pagina da sola<span class="dp-hidden"> (nuova scheda)</span></a>
+      <button class="dp-viewer__button dp-viewer__close" type="button" data-dp-close>Chiudi</button>
+    </div>
+  </div>
+  <div class="dp-viewer__frames" data-dp-frames></div>
+</dialog>
+</body>
+</html>

@@ -1,0 +1,245 @@
+/* ============================================================================================
+   ILE design V5 — CARDS BY PURPOSE (W1-C; V5.4 plan §1.3, §1.4, §1.15, §2.3; DESIGN_SYSTEM_V5 §8,
+   §10.5). It replaces components.css §13 «Cards and metadata rows».
+
+   A card is not a container for anything: it is one of three things, and a screen says which.
+
+     the RECORD card   .card            something that exists and is read — an entry, a sheet, a
+                                        phase — and, with a link, opened. A sheet and a hairline
+                                        (level 1). Several records in a row are a LIST, not a row
+                                        of boxes: .card--flat draws them as entries on shared lines.
+     the ACTION card   .card--action    the one thing to do on a screen: what, why, and ONE action.
+                                        It is the raised panel (level 2), so a screen has one.
+     the SUMMARY strip .summary         a few facts about what the screen lists, read in one line
+                                        of cells on one sheet — words and figures at text size.
+
+   What the system does not draw, on purpose: a stat card (a box around a large numeral — no KPI
+   tile on a person's or a company's screen), a grid of equal icon cards, a card that is dragged,
+   resized or hidden. The system orders a screen by priority; what is secondary folds with a native
+   disclosure (v5/tabs.css) and its choice is not remembered (plan §1.15).
+
+   Corners and planes (plan §1.3, §1.4). A card is --radius-lg (8): with the 4 of its controls and
+   the pill of its chips a screen keeps three radii. Hairlines before boxes: a record has the
+   sheet's own shadow and nothing more; contact strengthens its hairline and underlines its title —
+   no shadow animates and none is added. Shadows are the night's colour, from the five levels.
+   ============================================================================================ */
+
+/* ---- 1. The record card ----------------------------------------------------------------------- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-inline-size: 0;
+  padding: var(--card-pad);
+  border: var(--card-edge);
+  border-radius: var(--card-radius);
+  background-color: var(--surface-sheet);
+  box-shadow: var(--card-shadow);
+  color: var(--text-1);
+  transition: border-color var(--motion-fast) var(--ease-enter);
+}
+
+/* A phone is recomposed, not shrunk: 16 px of padding (SP-7). Before the entry form below, which
+   has no padding to give up. */
+@media (max-width: 47.999rem) {
+  .card {
+    padding: var(--s-4);
+  }
+}
+
+.card__eyebrow {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.card__title {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+.card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* One destination, one tab stop: the title's link covers the card. */
+.card--link .card__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.card__meta {
+  margin: 0;
+  margin-block-start: auto;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
+}
+
+/* The meta line can hold the card's second action — «Voir le parcours …». A link that stands alone
+   there keeps the 24 px floor of every target (SP-8); the line itself stays 13/20. */
+.card__meta > :any-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 1.5rem;
+}
+/* in a card that opens, the meta line's own link stands over the stretched title link (A11Y A8) */
+.card--link .card__meta > :any-link { position: relative; z-index: 1; }
+
+/* A card whose content is wrapped in one labelled <section> — a phase of «Formation» — keeps the
+   card's flow: the same gap between its parts, the meta line at the foot, so the second actions of
+   two cards in a row stand on one line. The wrapper's own flow margins (.stack) give way to the gap. */
+.card > :where(section, div):only-child {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: inherit;
+  min-inline-size: 0;
+}
+
+/* the children are named: a universal subject after :only-child made every page recalculate its whole subtree
+   when the parse closed a parent (A11Y P1) — the same specificity, so nothing else in the cascade moves */
+.card > :where(section, div):only-child > :where(.card__eyebrow, .card__title, .card__text, .card__meta, .notice) {
+  margin-block: 0;
+}
+
+.card > :where(section, div):only-child > .card__meta {
+  margin-block-start: auto;
+}
+
+/* A record among records: an entry of a list — no box, the hairline of the row above it, and the
+   same room under its last line as over its first: the lists that hold entries keep a small row
+   gap, and the next entry's hairline would otherwise sit on the text. */
+.card--flat {
+  padding: var(--s-5) 0;
+  border: 0;
+  border-block-start: 1px solid var(--line-rhythm);
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Contact: the hairline strengthens and the title is underlined. The one transition of the sheet
+   answers the pointer only — nothing here changes for a keyboard, so tier 0 has nothing to stop —
+   and its time is a token: 0 ms under reduced motion. */
+@media (hover: hover) {
+  .card--link:hover {
+    border-color: var(--line-structure);
+  }
+
+  .card--link:hover .card__title a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+/* ---- 2. The action card: the raised panel of its screen (level 2) — one a screen ------------- */
+.card--action {
+  border-color: transparent;
+  background-color: var(--surface-raised);
+  box-shadow: var(--panel-raised-shadow);
+}
+
+.card__action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  margin: var(--s-2) 0 0;
+}
+
+/* ---- 3. The summary strip: a <dl> of cells on one sheet, hairlines between them. The cells share
+   a row and fill it; when they wrap, every row is full. A value is text — never a large numeral. */
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  margin: 0;
+  border: var(--card-edge);
+  border-radius: var(--card-radius);
+  background-color: var(--surface-sheet);
+}
+
+.summary__item {
+  flex: 1 1 10rem;
+  min-inline-size: 0;
+  margin-block-start: -1px;
+  margin-inline-start: -1px;
+  padding: var(--s-4) var(--s-5);
+  border-block-start: 1px solid var(--line-rhythm);
+  border-inline-start: 1px solid var(--line-rhythm);
+}
+
+.summary__item > dt {
+  font-size: var(--u-small);
+  line-height: 1.25rem;
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.summary__item > dd {
+  margin: 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+/* ---- 4. The metadata row: the facts of ONE thing on a line of its page — a date, a version, a
+   reference — each a label and its value, with no box. Carried over from components.css §13 on
+   the V5 names, value for value. (G-14 stands: the « : » after a label is French punctuation
+   written by this sheet, not by the catalogue.) */
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  font-size: var(--t-ui);
+  color: var(--text-2);
+}
+
+.meta-row__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.meta-row__item dt {
+  font-weight: var(--w-control);
+  color: var(--text-3);
+  white-space: nowrap; /* the label and its colon stay on one line (review m8) */
+}
+
+.meta-row__item dt::after {
+  content: "\00a0:";
+}
+
+.meta-row__item dd {
+  margin: 0;
+}
+
+.meta-row .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--icon-muted);
+}

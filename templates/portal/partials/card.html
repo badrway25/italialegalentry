@@ -1,31 +1,34 @@
 {% load i18n %}{% comment %}
-Dashboard panel. Contract: `card` = portal.services.Card (key, title, icon, available, count,
-count_label, badge_label/kind, items[CardItem], url, url_label, empty_*). Real rows or an explicit
-empty state — never a placeholder figure.
+A REGISTER OF THE BRIDGE — design V5 (W3-B step 2; docs/design-v5/V5_4_EXECUTION_PLAN.md §1.15, §3.5 item 4). One of
+the registers an account that is not a person keeps on its dashboard (templates/portal/dashboard.html, «the bridge»),
+drawn in the person's grammar and with its rules (apps/portal/static/portal/v5/_dashboard.css): a section flat on
+the page under its head — the domain's glyph, the word, a state worth saying («1 en retard», «2 non lues») as a chip,
+the one link to its whole page — then its latest rows as a flat list, each with its date, its kind and its state as
+a chip (components/badge.html IS the chip). Real rows or one line saying who fills the region and when — never a
+placeholder, never a figure in large, never a box (the six equal cards with their numerals were V4's). A row's title is
+a record's own words — a request's subject, a file's name —: isolated in its own direction (dir="auto").
+
+Contract: `card` = portal.services.Card (key, title, icon, available, badge_label/kind, items[CardItem], url,
+url_label, empty_text, empty_action_label/url). `data-card` is the key the tests read.
 {% endcomment %}
-<section class="portal-card" aria-labelledby="card-{{ card.key }}-title" data-card="{{ card.key }}">
-  <div class="portal-card__header">
-    {% svg_icon card.icon "icon" %}
-    <h2 class="portal-card__title" id="card-{{ card.key }}-title">{{ card.title }}</h2>
-    {% if card.badge_label %}{% include "components/badge.html" with label=card.badge_label kind=card.badge_kind %}{% endif %}
+<section class="db-card" aria-labelledby="card-{{ card.key }}-title" data-card="{{ card.key }}">
+  <div class="db-sec__head">
+    <h2 class="db-h2" id="card-{{ card.key }}-title">{% svg_icon card.key|concept:"card"|default:card.icon "icon" %}<span>{{ card.title }}</span>{% if card.badge_label %}{% include "components/badge.html" with label=card.badge_label kind=card.badge_kind %}{% endif %}</h2>
+    {% if card.url and card.items and card.available %}<a class="db-link" href="{{ card.url }}">{{ card.url_label }}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
   </div>
   {% if not card.available %}
-    {% translate "Cette rubrique est momentanément indisponible. Vos données ne sont pas affectées." as unavailable_text %}
-    {% include "components/notice.html" with kind="pending" text=unavailable_text %}
+  {% translate "Cette rubrique est momentanément indisponible. Vos données ne sont pas affectées." as unavailable_text %}
+  {% include "components/notice.html" with kind="pending" text=unavailable_text icon="circle-pause" %}
   {% elif card.items %}
-    <p class="portal-card__figure"><span class="portal-card__count" data-count="{{ card.count }}">{{ card.count }}</span> <span>{{ card.count_label }}</span></p>
-    <ul class="portal-list">
-      {% for item in card.items %}
-      <li class="portal-list__item">
-        <p class="portal-list__title"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{% if item.url %}<a href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</p>
-        <p class="portal-list__meta">{% if item.date %}<time datetime="{{ item.date|date:'c' }}">{{ item.date|date:"d.m.Y" }}</time>{% if item.meta %} · {% endif %}{% endif %}{{ item.meta }}</p>
-        {% if item.badge_label %}<div class="portal-list__aside">{% include "components/badge.html" with label=item.badge_label kind=item.badge_kind %}</div>{% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% if card.url %}<p class="portal-card__footer"><a class="link-arrow" href="{{ card.url }}">{{ card.url_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  <ul class="db-list" role="list">
+    {% for item in card.items %}
+    <li class="db-list__row">
+      {% if item.url %}<a class="db-list__link" href="{{ item.url }}"><span class="db-list__title" dir="auto"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span></a>{% else %}<span class="db-list__title" dir="auto"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span>{% endif %}
+      {% if item.date or item.meta or item.badge_label %}<span class="db-list__meta">{% if item.date %}<time datetime="{{ item.date|date:'c' }}">{{ item.date|date:"d.m.Y" }}</time>{% endif %}{% if item.meta %}{% if item.date %} · {% endif %}<span>{{ item.meta }}</span>{% endif %}{% if item.badge_label %} {% include "components/badge.html" with label=item.badge_label kind=item.badge_kind %}{% endif %}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
   {% else %}
-    {% include "components/empty_state.html" with title=card.empty_title text=card.empty_text action_label=card.empty_action_label action_url=card.empty_action_url icon=card.icon %}
-    {% if card.url %}<p class="portal-card__footer"><a class="link-arrow" href="{{ card.url }}">{{ card.url_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  <p class="db-empty">{{ card.empty_text }}{% if card.empty_action_url %} <a href="{{ card.empty_action_url }}">{{ card.empty_action_label }}</a>{% endif %}</p>
   {% endif %}
 </section>

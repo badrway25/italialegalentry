@@ -1,31 +1,74 @@
-{% load i18n cms_nav %}{% main_menu as menu %}
+{% load i18n cms_nav %}{% if not menu %}{% main_menu as menu %}{% endif %}
 {% comment %}
-Main navigation: cms.MenuItem rows for location "main" (fallback: static structure in
-cms/templatetags/cms_nav.py). Desktop: mega-menu (button toggles the panel, arrow keys move
-between sections, Escape closes). Mobile: the same markup inside the drawer. Without JS every
-panel is visible on mobile and shown on hover/focus-within on desktop.
+Main navigation: cms.MenuItem rows for location "main" (fallback: the D-U3 structure in
+cms/templatetags/cms_nav.py, decorated there by `_portico()` with live content only). Two drawings of
+one tree, never on screen together:
+
+* nav_variant unset — «IL PORTICO», the letterhead's bar (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.12,
+  W2-C1): every section is a disclosure button (`button[aria-expanded][aria-controls]`, the APG
+  «disclosure navigation», not an ARIA menu) followed by its panel INSIDE its <li>, so Tab walks
+  bar → open panel → next door with no script. A door's panel is the door card opened: the locked gloss
+  (a prescribed French gloss on a page of another language carries lang + dir on its paragraph, so the
+  French block is set ragged-right in its column until the copy is signed: B1), «Voir l’espace» right
+  under it, the entries on hairline rows with a live second line where one exists, the door's
+  photograph at the inline end with its audience glyph, the anti-fraud foot where the menu carries it.
+  A section that is not a door (Projet) has a plain panel. One travelling indicator, «l'architrave».
+  static/js/src/nav.js adds intent, the keyboard model, the scrim and the photographs' idle prefetch;
+  without it a panel opens on hover and on focus-within (static/css/v5/chrome.css).
+* nav_variant "drawer" — today's drawer below 80rem (its move onto the overlay system is W2-C2's): a link
+  and a chevron toggle per section, the sub-links unfolding in place. Between 64 and 80rem the bar carries
+  the doors, so the drawer lists only what the bar does not (data-nav-door).
 {% endcomment %}
+{% if nav_variant == "drawer" %}
 <ul class="main-nav__list">
 {% for item in menu %}
-  <li class="main-nav__item{% if forloop.last and item.children %} main-nav__item--end{% endif %}"{% if item.children %} data-nav-item{% endif %}>
+  <li class="main-nav__item{% if forloop.last and item.children %} main-nav__item--end{% endif %}"{% if item.children %} data-nav-item{% endif %}{% if item.audience %} data-nav-door{% endif %}>
     {% if item.url %}<a class="main-nav__link" href="{{ item.url }}" data-nav-link{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% else %}<span class="main-nav__label">{{ item.label }}</span>{% endif %}
     {% if item.children %}
     <button class="main-nav__toggle" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="{{ item.id }}-panel">
       <span class="visually-hidden">{% blocktranslate with section=item.label %}Ouvrir le sous-menu « {{ section }} »{% endblocktranslate %}</span>{% svg_icon "chevron" "icon" %}
     </button>
     <div class="main-nav__panel" id="{{ item.id }}-panel" data-nav-panel>
-      <div class="main-nav__panel-lead">
-        <p class="main-nav__panel-title">{{ item.label }}</p>
-        {% if item.description %}<p class="main-nav__panel-desc">{{ item.description }}</p>{% endif %}
-        {% if item.url %}<a class="link-arrow hide-mobile" href="{{ item.url }}">{% translate "Voir l’espace" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-      </div>
-      <ul class="main-nav__sublist{% if item.children|length > 4 %} main-nav__sublist--two{% endif %}">
+      <ul class="main-nav__sublist">
         {% for child in item.children %}
         <li><a class="main-nav__sublink" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}>{% svg_icon "chevron-end" "icon icon--flip-rtl" %}<span>{{ child.label }}</span></a></li>
         {% endfor %}
+        {% if item.foot_url %}<li><a class="main-nav__sublink" href="{{ item.foot_url }}">{% svg_icon "shield-alert" "icon" %}<span>{% translate "Lire la page « Attention aux fraudes »" %}</span></a></li>{% endif %}
       </ul>
     </div>
     {% endif %}
   </li>
 {% endfor %}
 </ul>
+{% else %}
+<ul class="main-nav__list" role="list">
+{% for item in menu %}
+  {% if item.is_section %}
+  <li class="main-nav__item main-nav__item--section{% if item.audience %} main-nav__item--door{% endif %}{% if item.after_doors %} main-nav__item--after-doors{% endif %}">
+    <button class="main-nav__link main-nav__door" type="button" aria-expanded="false" aria-controls="{{ item.id }}-portico" data-portico-door{% if item.is_current %} aria-current="true"{% endif %}><span class="main-nav__word">{{ item.label }}</span>{% svg_icon "chevron" "icon icon--chevron" %}</button>
+    <div class="portico{% if item.photo %} portico--door{% else %} portico--plain{% endif %}" id="{{ item.id }}-portico" data-portico-panel{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}>
+      <div class="portico__sheet">
+        {% if item.gloss %}<p class="portico__gloss"{% if item.gloss_lang %} lang="{{ item.gloss_lang }}" dir="ltr"{% endif %}>{{ item.gloss }}</p>{% endif %}
+        <ul class="portico__entries" role="list">
+          {% for child in item.children %}
+          <li class="portico__entry"><a class="portico__link" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}{% if child.description %} aria-describedby="{{ child.id }}-line"{% endif %}><span class="portico__title">{{ child.label }}</span>{% if child.description %}<span class="portico__line" id="{{ child.id }}-line" aria-hidden="true">{{ child.description }}</span>{% endif %}</a></li>
+          {% endfor %}
+        </ul>
+        {% if item.url %}<a class="portico__space" href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{% translate "Voir l’espace" %}</a>{% endif %}
+        {% if item.foot_url %}<p class="portico__foot">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ item.foot_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></p>{% endif %}
+      </div>
+      {% if item.photo %}
+      <div class="portico__field" aria-hidden="true">
+        <img class="portico__photo" src="{{ item.photo.src }}" srcset="{{ item.photo.srcset }}" sizes="(min-width: 100rem) 28rem, 25rem" width="{{ item.photo.width }}" height="{{ item.photo.height }}" alt="" loading="lazy" decoding="async" fetchpriority="low" data-portico-photo>
+        <span class="portico__disc">{% svg_icon item.icon "icon" %}</span>
+      </div>
+      {% endif %}
+    </div>
+  </li>
+  {% elif item.url %}
+  <li class="main-nav__item{% if item.after_doors %} main-nav__item--after-doors{% endif %}"><a class="main-nav__link" href="{{ item.url }}"{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}><span class="main-nav__word">{{ item.label }}</span></a></li>
+  {% endif %}
+{% endfor %}
+</ul>
+<span class="main-nav__architrave" aria-hidden="true" data-portico-architrave></span>
+{% endif %}

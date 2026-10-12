@@ -22,7 +22,7 @@ interests — there is no personal name to print.
 
 {% block governance_content %}
 <p class="gloss">
-  <span class="state state--{{ project.state_class }}" data-register="{{ project.status|chip_register:'forum.ProjectStatus' }}">{{ project.get_status_display }}</span>
+  {% chip project.status "forum.ProjectStatus" %}{{ project.get_status_display }}{% endchip %}
   <span>{% blocktranslate with date=project.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span>
 </p>
 
@@ -84,7 +84,7 @@ interests — there is no personal name to print.
             {{ milestone.title_fr }}
             {% if milestone.detail_fr %}<span class="t-caption">{{ milestone.detail_fr }}</span>{% endif %}
           </th>
-          <td data-label="{% translate 'État' %}"><span class="state state--{{ milestone.state_class }}" data-register="{{ milestone.status|chip_register:'forum.MilestoneStatus' }}">{{ milestone.get_status_display }}</span></td>
+          <td data-label="{% translate 'État' %}">{% chip milestone.status "forum.MilestoneStatus" %}{{ milestone.get_status_display }}{% endchip %}</td>
           {% comment %}
           `display_label` is the organisation, or an honest placeholder — the same value
           `public_profile` publishes. A milestone names an answerable ORGANISATION, never a person.

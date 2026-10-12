@@ -1,11 +1,20 @@
-{% load i18n cms_nav %}
+{% load i18n cms_nav %}{% main_menu as menu %}
+{% comment %}
+«Il portico» — the letterhead (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11, §1.12; W2-C1). Paper, sticky,
+64 px → 56 px once the page has moved (glass only then, on a fine pointer, with no panel open). The
+official lock-up at the reading edge (docs/design-v2/BRAND_ASSETS.md §1, drawn by `brand_lockup`; a logo
+uploaded in the back-office still wins, as before — that switch is the client's, not the design's), the
+navigation bar (partials/main_nav.html: the owner's «Fase 3 — menu aperto», developed), and the end zone:
+«la targa», the reserved-area entrance, flat, in both states — the plate when signed out (only behind
+`reserved_area_public_link` + `reserved_area_enabled`; when they are off no hole is left), the account
+menu when signed in (its popover on the overlay system is W2-C2's) — and «Menu» below 80rem.
+
+The menu tree is built once here and drawn twice: the bar, and the drawer below 80rem (today's drawer,
+kept working until W2-C2 moves it onto the overlay system). Below 48rem the institutional bar is not drawn,
+so the drawer carries its promoter, the entrance and the languages.
+{% endcomment %}
 <header class="site-header" id="site-header">
   <div class="container site-header__inner">
-    {% comment %}
-    The official lock-up (docs/design-v2/BRAND_ASSETS.md §1): mark, wordmark, tagline, drawn by the
-    `brand_lockup` tag from the recovered SVG and the locked trademark text. A logo uploaded in the
-    back-office still wins, as before — that switch is the client's, not the design's.
-    {% endcomment %}
     <a class="brand brand--lockup" href="{% url 'pages:home' %}" aria-label="{{ site.project_name }} — {% translate 'accueil' %}">
       {% if site.settings and site.settings.use_logo_image and site.settings.logo %}
         <img class="brand__logo" src="{{ site.settings.logo.url }}" alt="{{ site.project_name }}" width="160" height="40">
@@ -13,31 +22,37 @@
         {% brand_lockup %}
       {% endif %}
     </a>
-    <button class="nav-toggle" type="button" data-nav-toggle aria-controls="nav-drawer" aria-expanded="false">
-      {% svg_icon "menu" "icon icon--menu" %}{% svg_icon "close" "icon icon--close" %}<span>{% translate "Menu" %}</span>
-    </button>
+    <nav class="main-nav" aria-label="{% translate 'Navigation principale' %}" data-portico>
+      {% include "partials/main_nav.html" %}
+    </nav>
+    <div class="site-header__end">
+      {% flag "reserved_area_public_link" as reserved_link %}
+      {% if user.is_authenticated %}
+        <div class="targa-seat">{% include "components/account_menu.html" %}</div>
+      {% elif reserved_link and site.settings.reserved_area_enabled %}
+        {% safe_url 'account_login' as login_url %}
+        {% if login_url %}<a class="targa" href="{{ login_url }}">{% svg_icon "ile-key" "icon targa__key" %}<span class="targa__label">{% translate "Espace réservé" %}</span><span class="targa__tip" aria-hidden="true">{% translate "Espace réservé" %}</span></a>{% endif %}
+      {% endif %}
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="nav-drawer" aria-expanded="false">
+        {% svg_icon "menu" "icon icon--menu" %}{% svg_icon "close" "icon icon--close" %}<span>{% translate "Menu" %}</span>
+      </button>
+    </div>
     <div class="nav-drawer" id="nav-drawer" data-nav-drawer>
-      {% comment %}
-      Below the navigation breakpoint the header's actions are not drawn (the letterhead is the
-      lock-up and the menu button), so they live at the top of the drawer instead: the promoter
-      (whose bar is not drawn below md), the reserved-area access, the languages. Same links, same
-      order; v4/shell.css shows this block only under 80rem.
-      {% endcomment %}
       <div class="drawer-utility">
         <p class="drawer-utility__identity"><strong>{{ site.promoter }}</strong> — {% translate "promoteur du projet" %}</p>
-        {% flag "reserved_area_public_link" as reserved_link_drawer %}
         {% if user.is_authenticated %}
           {% include "components/account_menu.html" %}
-        {% elif reserved_link_drawer and site.settings.reserved_area_enabled %}
+        {% elif reserved_link and site.settings.reserved_area_enabled %}
           {% safe_url 'account_login' as login_url_drawer %}
-          {% if login_url_drawer %}<a class="btn btn--secondary btn--sm drawer-utility__reserved" href="{{ login_url_drawer }}">{% svg_icon "lock" "icon" %}<span>{% translate "Espace réservé" %}</span></a>{% endif %}
+          {% if login_url_drawer %}<a class="targa targa--drawer drawer-utility__reserved" href="{{ login_url_drawer }}">{% svg_icon "ile-key" "icon targa__key" %}<span>{% translate "Espace réservé" %}</span></a>{% endif %}
         {% endif %}
         {% include "components/language_segmented.html" %}
       </div>
-      <nav class="main-nav" aria-label="{% translate 'Navigation principale' %}">
-        {% include "partials/main_nav.html" %}
+      <nav class="main-nav main-nav--drawer" aria-label="{% translate 'Menu' %}">
+        {% include "partials/main_nav.html" with nav_variant="drawer" %}
       </nav>
     </div>
   </div>
   <div class="nav-overlay" data-nav-overlay></div>
+  <div class="portico-scrim" data-portico-scrim hidden></div>
 </header>

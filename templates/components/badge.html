@@ -1,9 +1,10 @@
 {% comment %}
-Contract: `label`, optional `kind` in neutral|info|success|warning|error|pending|primary, `icon`.
+Badge — a short label with its register, for the includes that name a `kind`. Contract: `label`, optional `kind` in
+neutral|info|primary|success|warning|error|pending|soon|overdue.
 
-`data-register` is what the stylesheet reads (static/css/v3/chip.css); the `badge--kind` class is
-kept for the templates and tests that still name it, and no longer carries a colour. The kind is
-translated once, here, by core.chips.KIND_REGISTER: success → conforme (ink, a closing rule and a
-check — never green, because this platform approves nothing), warning → azione, error → rifiuto,
-pending → attesa, everything else → neutro.
-{% endcomment %}{% with register=kind|badge_register %}<span class="badge{% if kind %} badge--{{ kind }}{% endif %}"{% if register %} data-register="{{ register }}"{% endif %}>{% if icon %}{% svg_icon icon "icon icon--sm" %}{% endif %}{{ label }}</span>{% endwith %}
+It IS a chip (templates/components/chip.html, through the {% chip %} pair): the kind is translated once, by
+core.chips.KIND_REGISTER — success → conforme (ink and a plain disc: never green and never a check, because this
+platform approves nothing), warning → attesa, error → rifiuto, pending → esame, soon → attesa, overdue → azione,
+everything else → neutro — and the mark is the register's, never a glyph the caller picks. The `badge` class is a
+hook for the pages that place it; no rule paints it.
+{% endcomment %}{% chip register=kind|badge_register css_class="badge" %}{{ label }}{% endchip %}

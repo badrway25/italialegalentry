@@ -21,7 +21,9 @@ pytestmark = pytest.mark.django_db
 
 
 def _cards(user) -> dict[str, services.Card]:
-    return {card.key: card for card in services.dashboard_context(user)["cards"]}
+    # The card builders, as the bridge draws them: a person's dashboard builds none (F9, design V5 W3-B) — the
+    # builders' counts and their defence against a missing sibling are tested here, whoever the account is.
+    return {card.key: card for card in services.bridge_cards(user)}
 
 
 # ---- dashboard ------------------------------------------------------------------------------

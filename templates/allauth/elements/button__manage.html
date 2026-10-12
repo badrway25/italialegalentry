@@ -1,0 +1,9 @@
+{% load allauth %}{% comment %}
+allauth's `button` element on the MANAGEMENT layout (allauth looks for `<element>__<layout>.html` before
+`<element>.html`): templates/allauth/elements/button.html's mapping — danger / delete → the system's danger button
+(the garnet outline: a confirmation follows, allauth's own), secondary / outline → secondary, link → link, the rest
+primary — with ONE PRIMARY a page (design V5, DS V5 §10.1; W3-F2 step 2). allauth tags two of its untagged buttons as
+primaries on pages that already have one: «Rendre principale» on the e-mail addresses beside «Ajouter un e-mail», and
+«Générer de nouveaux codes» beside «Télécharger les codes» on the recovery codes. Both are secondaries here; the
+entrance keeps button.html as it is.
+{% endcomment %}{% url 'mfa_generate_recovery_codes' as generate_url %}{% if 'danger' in attrs.tags or 'delete' in attrs.tags %}{% setvar variant %}btn--danger{% endsetvar %}{% elif 'secondary' in attrs.tags or 'outline' in attrs.tags or attrs.name == 'action_primary' or attrs.href and attrs.href == generate_url %}{% setvar variant %}btn--secondary{% endsetvar %}{% elif 'link' in attrs.tags %}{% setvar variant %}btn--link{% endsetvar %}{% else %}{% setvar variant %}btn--primary{% endsetvar %}{% endif %}{% if attrs.href %}<a class="btn {{ variant }}" href="{{ attrs.href }}"{% if attrs.id %} id="{{ attrs.id }}"{% endif %}>{% slot %}{% endslot %}</a>{% else %}<button class="btn {{ variant }}"{% if attrs.form %} form="{{ attrs.form }}"{% endif %}{% if attrs.id %} id="{{ attrs.id }}"{% endif %}{% if attrs.name %} name="{{ attrs.name }}"{% endif %}{% if attrs.value %} value="{{ attrs.value }}"{% endif %} type="{{ attrs.type|default:'button' }}">{% slot %}{% endslot %}</button>{% endif %}

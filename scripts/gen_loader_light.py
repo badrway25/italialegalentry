@@ -1,0 +1,163 @@
+"""
+Generate static/css/v5/_loader-light.css — the entrance release of the loader «Lume» (V5.4 plan §1.9; DL54-07,
+DL54-08, DL54-09; W1-D).
+
+    C:/tmp/italylegalentry/.venv/Scripts/python scripts/gen_loader_light.py           # writes the sheet
+    C:/tmp/italylegalentry/.venv/Scripts/python scripts/gen_loader_light.py --check   # exit 1 when it is stale
+
+WHAT THE SHEET IS. The one phase of the release. On the first console page after a successful sign-in the mark the
+rail carries — templates/components/loader.html with `release=True`, i.e. `[data-lume="release"]`, or below 64rem
+the top bar's mark — plays the lit doorway once: the light grows from the key's eye and fills the room behind the
+door, the key reads in ink against it, the picture holds, then the light withdraws into the eye and goes out, and
+the key is gold again on the navy door: the verbatim mark. Nothing else of the mark moves: the planes, the door and
+the steps stay still and the light stays inside the door's own interior (DL54-09). It is imported by the console entry
+only, apps/portal/static/portal/console.css (plan §2.3): a public page
+never downloads it. The REST state of every layer — the light at opacity 0, the ink key at opacity 0 — is declared in
+static/css/v5/loader.css (main.css), so a page without this sheet shows the mark at rest, and so does this sheet's
+last keyframe.
+
+PHASE-ALIGNED (LOADER_SIGNATURE §5.2). Every layer's animation starts at the first paint and lasts the whole phase,
+`--motion-door`; a beat is a keyframe offset inside it, so the main thread is woken at the phase's two boundary
+instants, whatever the number of layers. Under reduced motion v5/tokens.css zeroes `--motion-door`: the animations
+last 0 ms and `fill-mode: both` lands every layer on its last keyframe — the rest — so the mark shows the release's end
+state without travel (plan §1.9). No `will-change`: the layers are a few pixels and Chromium composites an animated
+transform or opacity on its own (0 `compositeFailed` measured, QA/v54/w1-d/NOTES.md).
+
+WHY GENERATED. The beats are a table in milliseconds (BEATS below) and the curves are the tokens' literal values —
+`var()` inside @keyframes does not animate (DS 2026 §3.5) — turned into keyframe offsets with the token named beside
+each one. tests/frontend/test_loader_rules.py regenerates the sheet in memory and refuses a committed copy that differs,
+and holds every literal curve to a declared `--ease-*` token. Written as UTF-8 bytes with LF line endings.
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "static" / "css" / "v5" / "_loader-light.css"
+
+#: The phase: one token, the whole release (plan §1.5: door 1600 ms; 0 ms under reduced motion).
+PHASE_TOKEN = "--motion-door"  # noqa: S105 — a custom property's name, not a credential
+PHASE_MS = 1600
+
+#: The curves, as v5/tokens.css declares them (test_loader_rules holds the literal to the token).
+ENTER = ("cubic-bezier(0.25, 1, 0.5, 1)", "--ease-enter")
+SINE = ("cubic-bezier(0.37, 0, 0.63, 1)", "--ease-sine")
+
+#: The beats, in milliseconds of the phase: (time, value, curve-to-the-next-beat | None). The first value holds from
+#: 0, the last to the end of the phase. The light grows at full opacity from a disc the size of the key's bow — the
+#: 80 ms ramp happens over the bow alone, so the room never shows a cream-over-navy blend (the muddy grey-beige of
+#: LOADER_SIGNATURE §6, fixed before any measurement as plan §1.9 asks); it is full at 360 ms, holds lit to 1000 ms
+#: (≥ 600 ms, plan §1.9 condition 1), then WITHDRAWS into the eye on the light's curve — the lit disc shrinks back to
+#: the bow's size by 1400 and only then goes out, over the bow alone: an opacity fade over the navy showed the same
+#: grey-beige on the way out (the 8 October filmstrip, frames 1160-1240 ms, QA/v54/w1-d/NOTES.md step 2). The key
+#: reads in ink from the moment the light is under it (40 ms), holds, and is gold again at 1360, just before the
+#: light has gone, so the gold key is back on the navy door at rest.
+BEATS: dict[str, dict[str, list[tuple]]] = {
+    "lume-light": {
+        "opacity": [(0, "0", ENTER), (80, "1"), (1320, "1", SINE), (1400, "0")],
+        "transform": [(0, "scale(0.08)", ENTER), (360, "scale(1)"), (1000, "scale(1)", SINE), (1400, "scale(0.08)")],
+    },
+    "lume-ink": {
+        "opacity": [(0, "0"), (40, "0", ENTER), (240, "1"), (1000, "1", SINE), (1360, "0")],
+    },
+}
+
+#: The seats, sized here because this sheet is the console's: the rail's tile (40 px, the mark at 24) and, below
+#: 64rem, the top bar's tile (32 px, the mark at 20) — the sizes console.css gives their <img>.
+SEATS = (
+    (".rail__tile > .sig", "24px"),
+    (".console-bar__tile > .sig", "20px"),
+)
+
+HEAD = f"""/* ============================================================================
+   LOADER «LUME» — THE ENTRANCE RELEASE · GENERATED by scripts/gen_loader_light.py — do not edit.
+   (V5.4 plan §1.9; DL54-07, DL54-08, DL54-09; W1-D.) Imported by apps/portal/static/portal/console.css only.
+
+   On the first console page after a successful sign-in the rail's mark — templates/components/loader.html with
+   release=True, [data-lume="release"]; below 64rem the top bar's mark — plays once, across the page load: the light
+   grows from the key's eye and fills the room behind the door, the key reads in ink against it, the picture holds,
+   then the light withdraws into the eye and goes out: the verbatim mark. The planes, the door and the steps never
+   move; the light stays inside the door's interior; nothing loops; it plays once per session (the flag of
+   accounts.signals, consumed by the first console page). The rest state of the layers is declared in
+   v5/loader.css; this sheet adds the one phase,
+   {PHASE_TOKEN} ({PHASE_MS} ms; 0 ms under prefers-reduced-motion: reduce, where fill-mode: both lands every layer on
+   its last keyframe — the rest — without travel). Curves are the tokens' literal values: var() inside @keyframes
+   does not animate (DS 2026 §3.5). The same phase answers `.sig.is-open`, loader.js's release of an in-page host.
+   ========================================================================== */
+"""
+
+
+def pct(t: float) -> str:
+    v = round(t / PHASE_MS * 100, 3)
+    return f"{v:g}%"
+
+
+def keyframes(name: str, prop: str, beats: list[tuple]) -> str:
+    pts = [(b[0], b[1], b[2] if len(b) > 2 else None) for b in beats]
+    assert all(0 <= p[0] <= PHASE_MS for p in pts), (name, pts)
+    assert all(a[0] < b[0] for a, b in zip(pts, pts[1:], strict=False)), (name, pts)
+    lines = []
+    for i, (t, value, curve) in enumerate(pts):
+        selectors = []
+        if i == 0 and t > 0:
+            selectors.append("0%")
+        selectors.append(pct(t))
+        if i == len(pts) - 1 and t < PHASE_MS:
+            selectors.append("100%")
+        last = i == len(pts) - 1
+        easing = f" animation-timing-function: {curve[0]};" if curve and not last else ""
+        note = f" /* {curve[1]} */" if curve and not last else ""
+        lines.append(f"  {', '.join(dict.fromkeys(selectors))} {{ {prop}: {value};{easing} }}{note}")
+    return f"@keyframes {name}-{prop[0]} {{\n" + "\n".join(lines) + "\n}"
+
+
+def render() -> str:
+    out = [HEAD]
+    out.append("/* the seats — the console's two tiles; a public page sizes its own host */")
+    for selector, size in SEATS:
+        out.append(f"{selector} {{ --sig-size: {size}; }}")
+    out.append("")
+    out.append(f"/* the one phase: every layer starts at the first paint and runs {PHASE_TOKEN} */")
+    layers = {"lume-light": ".sig__lume", "lume-ink": ".sig__face--ink"}
+    frames = []
+    for name, tracks in BEATS.items():
+        animations = ", ".join(f"{name}-{prop[0]} var({PHASE_TOKEN}) linear 1 both" for prop in tracks)
+        selector = layers[name]
+        out.append(f'[data-lume="release"] {selector},\n.sig.is-open {selector} {{ animation: {animations}; }}')
+        for prop, beats in tracks.items():
+            frames.append(keyframes(name, prop, beats))
+    out.append("")
+    out.append("/* keyframes — milliseconds of the phase as percentages; the curve of each beat is the named token */")
+    out.extend(frames)
+    out.append("")
+    out.append(
+        "/* forced colours: no light and no ink — the mark keeps its own colours "
+        "(v5/loader.css hides the two layers) */"
+    )
+    out.append("@media (forced-colors: active) {")
+    out.append('  [data-lume="release"] :is(.sig__lume, .sig__face--ink),')
+    out.append("  .sig.is-open :is(.sig__lume, .sig__face--ink) { animation: none; }")
+    out.append("}")
+    return "\n".join(out) + "\n"
+
+
+def main(argv: list[str]) -> int:
+    text = render().encode("utf-8")
+    if "--check" in argv:
+        current = OUT.read_bytes() if OUT.exists() else b""
+        if current != text:
+            print(f"{OUT.relative_to(ROOT).as_posix()} is stale: run scripts/gen_loader_light.py")
+            return 1
+        print(f"{OUT.relative_to(ROOT).as_posix()} is current")
+        return 0
+    OUT.write_bytes(text)
+    print(
+        f"{OUT.relative_to(ROOT).as_posix()}: {len(text)} B, {len(BEATS)} layers, phase {PHASE_TOKEN} = {PHASE_MS} ms"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

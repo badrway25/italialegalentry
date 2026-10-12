@@ -1,0 +1,165 @@
+/* ============================================================================================
+   ILE design V5 — THE STATUS CHIP «i cerchi», and the tag (W1-C; V5.4 plan §1.2, §1.3, §1.8, §2.3;
+   DESIGN_SYSTEM_V5 §4.1, §10.2). It replaces static/css/v3/chip.css («la vidimazione»), the badge
+   pointer of components.css §3 and the pill block of v4/workspace.css.
+
+   THE IDEA. A chip is a mark, a word and an edge on a faint body. The state is said three times
+   without colour: the WORD; the MARK — one of the circles of the sprite, outline = open, filled =
+   settled, the lock for a dependency — and the STYLE OF THE EDGE: solid, dashed for a thing that is
+   due, dotted for one that carries nothing. The colour is the fourth voice and never the only one.
+   «Conforme» is ink and a plain disc: no colour and no check mark means «approved» on this
+   platform (O14; tests/frontend/test_o14_lint.py). «En examen» is lapis.
+
+   WHO DECIDES. The register comes from Python — apps/core/chips.py, per producer and per enum
+   member — and reaches the element as `data-register`; v5/tokens.css §4.1 re-points the five
+   names this sheet reads (--chip-bg, -edge, -edge-style, -mark, -text) for each of the eight
+   registers, on paper and on night, and under forced colours. The mark is the register's, from
+   the icon registry (apps/core/icons.py STATUS). The element has ONE producer, the {% chip %}
+   pair (templates/components/chip.html): a template never writes it by hand, so a chip is never
+   drawn without its mark (tests/frontend/test_state_chips_carry_a_register.py).
+
+   A status is not a control: the chip takes no pointer, has no hover and no focus. What a person
+   chooses — a filter — is a control of its own family and never carries a check either.
+   ============================================================================================ */
+
+/* ---- 1. The chip: 24 px on its line; 20 dense, 28 large (plan §1.8) -----------------------------
+   The height is the line (20 px, 18 dense) plus the block padding plus the 1 px edge, so a chip is
+   exact in every script and at every step of the type scale; Arabic takes the same box at its own
+   14 px floor (the small roles of v5/tokens.css are re-pointed under :lang(ar)). A long label
+   wraps — it is never cut — and its mark stays on the first line; in a table cell it does not
+   wrap, or an auto-layout table squeezes «À faire» onto two lines (measured, V3), and it is not
+   held to the cell's width either: the body always holds its word. */
+.chip {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--chip-gap);
+  box-sizing: border-box;
+  inline-size: fit-content; /* as wide as its word, whatever lays it out — a grid's row stretched it (review M4) */
+  max-inline-size: 100%;
+  min-block-size: var(--chip-box, var(--chip-h));
+  padding-block: var(--chip-pad-block, 1px);
+  padding-inline: var(--chip-pad-start, 3px) var(--chip-pad-inline);
+  border: var(--chip-edge-width) var(--chip-edge-style) var(--chip-edge);
+  border-radius: calc(var(--chip-box, var(--chip-h)) / 2); /* the pill on one line, a plate on two (review m2) */
+  background-color: var(--chip-bg);
+  color: var(--chip-text);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  font-weight: var(--w-control);
+  line-height: var(--chip-line, 1.25rem);
+  font-variant-numeric: var(--numeric-data);
+  letter-spacing: 0;
+  text-align: start;
+  text-transform: none;
+  white-space: normal;
+  vertical-align: middle;
+}
+
+:is(td, th) .chip {
+  max-inline-size: none;
+  white-space: nowrap;
+}
+
+.chip--s {
+  --chip-box: var(--chip-h-s);
+  --chip-line: 1.125rem;
+  --chip-pad-block: 0px;
+  --chip-pad-start: 2px;
+  --chip-pad-inline: 8px;
+  --chip-gap: 4px;
+  --chip-mark-size: 14px;
+  font-size: var(--u-caption);
+}
+
+.chip--l {
+  --chip-box: var(--chip-h-l);
+  --chip-pad-block: 3px;
+  --chip-pad-start: 5px;
+  --chip-pad-inline: 12px;
+}
+
+/* A value chips.py does not know: the neutral tone of the tokens' default, and a dotted edge so
+   that it is seen and mapped. The registry test keeps it out of the product. */
+.chip:not([data-register]) {
+  border-style: dotted;
+}
+
+/* ---- 2. The mark — 16 px (14 in the dense chip), centred on the first line, concentric with the
+   chip's end cap. Painted by the register, never by a template. Drawn bare, outside a chip — a
+   filter's entry, a legend — it takes the same colour from the `data-register` of the element
+   that holds it. Under forced colours it is the ink of its word (components.css §2). */
+.chip__g {
+  inline-size: var(--chip-mark-size);
+  block-size: var(--chip-mark-size);
+  margin-block: 2px;
+  color: var(--chip-mark);
+}
+
+/* ---- 3. The gauge of a case status: three notches after the word, as many filled as phases
+   reached (chips.STAGE: before the pathway · under way · entered and after). Decoration on top of
+   the word, which names the stage: aria-hidden in the markup. */
+.chip__meter {
+  display: inline-flex;
+  flex: none;
+  align-self: center;
+  gap: 2px;
+}
+
+.chip__meter > span {
+  box-sizing: border-box;
+  inline-size: 6px;
+  block-size: 6px;
+  border: 1px solid var(--chip-mark);
+  border-radius: var(--radius-full);
+}
+
+.chip__meter > .is-on {
+  background-color: var(--chip-mark);
+}
+
+/* ---- 4. The tag: a term, not a state — the words of the glossary under a pathway. No register,
+   no mark: paper and a hairline. As a link it answers the pointer, keeps the one focus ring of the
+   foundation and is hit in 44 px under a coarse pointer, the pill itself staying 24 px. */
+.tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-block-size: var(--chip-h);
+  padding-inline: var(--chip-pad-inline);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-raised);
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  font-weight: var(--w-body);
+  line-height: 1.25rem;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  a.tag:hover {
+    border-color: var(--text-2);
+    background-color: var(--surface-hover);
+    color: var(--text-1);
+  }
+}
+
+/* Centred on the tag's padding box, whatever its height and its width: 50 % of the box less half the target,
+   and nothing where the box is already wider (an extension computed from the 24 px alone would forget the edge). */
+@media (pointer: coarse) {
+  a.tag::after {
+    content: "";
+    position: absolute;
+    inset: calc(50% - var(--chip-hit) / 2) calc(50% - max(50%, var(--chip-hit) / 2));
+  }
+}
+
+/* ---- 5. Print: backgrounds do not print; the edge, the mark and the word do — which is why the
+   state never lives in the colour. */
+@media print {
+  .chip {
+    break-inside: avoid;
+  }
+}

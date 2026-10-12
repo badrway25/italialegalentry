@@ -35,7 +35,7 @@ No identity of the person is shown. A mandate is about a question and a file ref
           — {% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}
           {% if ticket.mandate_valid_until %} — {% blocktranslate with date=ticket.mandate_valid_until|date:"d.m.Y" %}mandat jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
         </span>
-        <span class="entry__actor"><span class="state state--{{ ticket.state_tone }}" data-register="{{ ticket.effective_status|chip_register:'helpdesk.TicketStatus' }}">{{ ticket.effective_status_display }}</span></span>
+        <span class="entry__actor">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}</span>
         {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
       </a>
     </li>

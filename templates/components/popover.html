@@ -1,0 +1,18 @@
+{% comment %}
+Popover / menu — the overlay system's anchored panel (design V5, V5.4 plan §1.14; the contract
+docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). A native `popover`: its trigger opens and closes it, a press outside
+or Esc closes it, all without script. static/js/src/overlay.js adds the place — on the trigger's inline end, below
+unless the room is above, 4 px away, arriving by a 4 px drop away from the trigger —, the focus on the first row and
+back to the trigger, the arrows, and the close when the focus leaves it or a row is chosen. At ≤ 40rem a bottom
+sheet that stays a menu — no trap, no scroll lock — over the one scrim, which takes the whole press that dismisses it
+(the page behind is never reached), headed by its `label` in the small secondary ink (`.overlay__caption`, hidden from
+assistive technology: the group's name already says it); unless `anchored`.
+Contract: `id` (required); `body` (safe HTML: the rows — a `ul.overlay__list` of `.overlay__item` links or buttons,
+`li.overlay__sep` between groups) — or `body_template`, a template included with the context and
+`overlay_part` = "body"; optional `label` (the panel's accessible name, a group's — and the phone sheet's head line);
+`anchored` (True → stays anchored on a phone). The trigger is the caller's — a real button:
+  <button class="btn btn--icon btn--ghost" type="button" popovertarget="{{ id }}" aria-label="…">…</button>
+{% endcomment %}<div class="overlay overlay--popover" id="{{ id }}" data-overlay="popover" popover{% if anchored %} data-overlay-phone="none"{% endif %}{% if label %} role="group" aria-label="{{ label }}"{% endif %}>
+  {% if label and not anchored %}<p class="overlay__caption" aria-hidden="true">{{ label }}</p>
+  {% endif %}<div class="overlay__body">{% if body_template %}{% include body_template with overlay_part="body" %}{% else %}{{ body }}{% endif %}</div>
+</div>

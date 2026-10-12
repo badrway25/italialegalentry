@@ -1,0 +1,68 @@
+{% load static cms_nav %}<!DOCTYPE html>
+<html lang="it" dir="ltr" class="dp-frame-root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} · {% endif %}{{ picker_name|default:"Selettore V5" }} · Italy Legal Entry™</title>
+<meta name="robots" content="noindex, nofollow">
+{% comment %}
+V5 live preview — a picker: the hero picker (designpreview.views.hero) and the type picker
+(designpreview.views.type_systems) are this one page. DEVELOPMENT ONLY.
+
+A standalone document, not a child of base.html: the page is a slim bar above a full-height
+iframe, and the site's shell (skip link, <main>, footer, shell.js) has no place around a frame.
+It loads the token layers and the fonts, NOT the bundled cascade: base.css hides every iframe
+(`iframe { display: none !important }` — the site embeds nothing, by policy), and that rule is
+right for the site and fatal here. The comp inside the iframe is served by
+designpreview.views.proof with frame-ancestors 'self'; this response carries frame-src 'self'.
+Both are per-view decorators — the global policy is untouched.
+
+The bar is data: services.hero_picker / services.type_picker hand over the groups of choices, the
+widths, what is framed and its status. A choice with no file behind it is still a link, struck
+through: the page it opens is the one that says what is missing. The second line of the bar says
+what the frame holds and that it is not approved, then whatever the owner must know before
+judging it (the /ar/ of phase 3 is the locked copy, not translated; a combination that does not
+exist). Below 48 rem the widths and that line give way — each group carries the slot it takes
+there — and the flag takes the line's place: the status in its closing words, in every state,
+then the warning in a few words when there is one (review W1-2: the status is drawn at every
+width, not only written in the markup). Both bars are three rows there, in every state. The type
+picker's five surfaces fill the second row, so its flag is a third (`dp-bar--dense`). The hero
+picker's nine first screens do not fit beside the language, so they are the second row and the
+phases, with the flag beside them, the third (`dp-bar--long`).
+
+The keyboard shortcuts (the key is in each link's title) come from
+static/js/dev/designpreview.js, a classic script outside the production bundle; without it the
+bar is plain links and loses nothing.
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+{% include "dev/designpreview/_stylesheets.html" %}
+</head>
+<body class="dp-frame-page">
+<header class="dp-bar{% if bar.dense %} dp-bar--dense{% endif %}{% if bar.long %} dp-bar--long{% endif %}" data-dp-bar>
+  <a class="dp-bar__home" href="{% url 'designpreview:hub' %}" aria-label="Anteprima V5 — hub">{% brand_lockup "dark" %}<span class="dp-bar__hub">Hub</span></a>
+  {% if bar %}
+  {% for group in bar.groups %}{% if group.slot == "rest" %}<div class="dp-bar__rest">
+    {% include "dev/designpreview/bar_group.html" %}
+    <p class="dp-bar__flag"><span class="dp-bar__flag-status">{{ bar.status_short }}</span>{% if bar.flag %} <strong class="dp-bar__flag-warning">{{ bar.flag }}</strong>{% endif %}</p>
+  </div>
+  {% else %}{% include "dev/designpreview/bar_group.html" %}
+  {% endif %}{% endfor %}<nav class="dp-bar__group dp-bar__group--widths" aria-label="Larghezza della finestra">
+    <span class="dp-bar__label">Larghezza</span>
+    {% for item in bar.widths %}<a class="dp-bar__link" href="{{ item.url }}"{% if item.current %} aria-current="true"{% endif %}{% if item.title %} title="{{ item.title }}"{% endif %}>{{ item.label }}</a>{% endfor %}
+  </nav>
+  {% if frame_url %}<a class="dp-bar__open" href="{{ frame_url }}" target="_blank" rel="noopener" title="Apri il file da solo, in una nuova scheda">Apri<span class="dp-bar__open-rest"> il file da solo</span></a>{% endif %}
+  <p class="dp-bar__note"><span class="dp-bar__what"><span class="dp-bar__code">{{ bar.code }}</span> {{ bar.name }}</span> <span class="dp-bar__status">{{ bar.status }}</span>{% if bar.warning %} <strong class="dp-bar__warning">{{ bar.warning }}</strong>{% endif %}</p>
+  {% endif %}
+</header>
+<div class="dp-stage {{ stage_class }}">
+  {% if error %}
+  <div class="dp-stage__message" role="alert"><p>{{ error }}</p><p><a href="{{ back_url }}">{{ back_label }}</a></p></div>
+  {% elif frame_url %}
+  <iframe class="dp-stage__frame" src="{{ frame_url }}" title="{{ title }} — {{ bar.status }}"></iframe>
+  {% else %}
+  <div class="dp-stage__message" role="status"><p class="dp-stage__code">{{ stage_code }}</p><p>{{ message }}</p></div>
+  {% endif %}
+</div>
+<script src="{% static 'js/dev/designpreview.js' %}" defer></script>
+</body>
+</html>

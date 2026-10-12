@@ -1,0 +1,158 @@
+{% load static i18n %}<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Specimen — pastiglie di stato e schede</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/dev/specimen-icons.css' %}">
+<link rel="stylesheet" href="{% static 'css/dev/specimen-chips.css' %}">
+</head>
+<body class="sp">
+{% comment %}
+The chip board of design V5 (W1-C, V5.4 plan §1.2, §3.3 item 7): the eight registers of apps/core/chips.py, each with
+its mark from the sprite, drawn by the product's own {% chip %} pair on the three grounds — the public stone, the
+console's sheet, the night — in French and in Arabic, at 20 / 24 / 28 px; then the cards by purpose
+(static/css/v5/card.css). Standalone (the README of this folder): Italian chrome, the product's own strings in
+their language — the Arabic is the catalogue's, never written here —, nothing from the database, nothing inline.
+The frame (`sp-*`) is the icon board's sheet; `cb-*` is this board's.
+{% endcomment %}
+<header class="sp-head">
+  <p class="sp-eyebrow">Specimen · {{ board }} · design V5 · W1-C</p>
+  <h1 class="sp-title">Le pastiglie di stato «i cerchi» e le schede per funzione</h1>
+  <p class="sp-lead">Una pastiglia è una <strong>marca</strong>, una <strong>parola</strong> e un <strong>bordo</strong> su un corpo tenue. Lo stato è detto tre volte senza colore: la parola; la marca — un cerchio dello sprite, aperto = in corso, pieno = risolto, il lucchetto per una dipendenza; lo stile del bordo — pieno, tratteggiato per ciò che è dovuto, puntinato per ciò che non porta nulla. Il colore è la quarta voce, mai la sola. «Valide» è inchiostro e un disco pieno: nessun colore e nessuna spunta dice «approvato» (O14). «En examen» è lapis. Il registro viene da <code>apps/core/chips.py</code>, la marca dal registro delle icone; il solo produttore dell'elemento è la coppia <code>{% templatetag openblock %} chip {% templatetag closeblock %}</code>.</p>
+</header>
+
+<section class="sp-section" aria-labelledby="cb-s1">
+  <h2 class="sp-h2" id="cb-s1">1 · Gli otto registri sui tre fondi, in francese e in arabo</h2>
+  <p class="sp-note">Le parole sono quelle del prodotto: gli stati di un documento (<code>documents.RequirementState</code>), «Bloqué» e «Sans objet» di un giustificativo di selezione (<code>selection.EvidenceStatus</code>). «Manquant» e «À remplacer» sono un solo registro, <em>attesa</em>, e due marche.</p>
+  <div class="cb-board" role="table" aria-label="Gli otto registri sui tre fondi">
+    <div class="cb-row cb-row--head" role="row">
+      <span role="columnheader">registro · ciò che afferma</span>
+      <span role="columnheader">pietra — il sito pubblico</span>
+      <span role="columnheader">foglio — la console</span>
+      <span role="columnheader">notte</span>
+    </div>
+    {% comment %} one row per chip: (member, producer, the catalogue's word), the same three cells {% endcomment %}
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>conforme</code> ciò che è ricevuto è ciò che era chiesto — un fatto, mai un verdetto</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>esame</code> nelle mani di un interveniente: procede senza di voi</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>neutro</code> un fatto è registrato; nessuno deve agire, nessuno giudica</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>attesa</code> qualcosa è dovuto, da qualcuno, e non è in ritardo — l'anello tratteggiato di un'assenza</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>attesa</code> lo stesso registro, la sua marca: l'anello con due frecce</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>azione</code> il fascicolo non avanza finché un attore nominato non agisce, ora</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>rifiuto</code> un atto è stato rifiutato, o il documento non è valido — col suo motivo</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>blocco</code> una dipendenza: pesante e calma, mai un allarme — il lucchetto</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+    <div class="cb-row" role="row">
+      <span class="cb-what" role="rowheader"><code>nullo</code> ritirato, non applicabile, archiviato: non porta nulla</span>
+      <span class="cb-cell cb-cell--stone" role="cell"><span lang="fr">{% language "fr" %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--sheet" role="cell"><span lang="fr">{% language "fr" %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></span>
+      <span class="cb-cell cb-cell--night on-inverse" role="cell"><span lang="fr">{% language "fr" %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span><span lang="ar" dir="rtl">{% language "ar" %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></span>
+    </div>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="cb-s2">
+  <h2 class="sp-h2" id="cb-s2">2 · Le tre taglie: 20, 24, 28 px</h2>
+  <p class="sp-note">L'altezza è la riga (20 px, 18 nella densa) più il margine e il bordo: esatta in ogni scrittura. La marca è 16 px, 14 nella densa. In arabo il testo non scende sotto i 14 px.</p>
+  <div class="cb-sizes">
+    <p class="cb-size" data-size="s"><span class="cb-size__label">densa · 20 px · <code>size="s"</code></span><span class="cb-size__chips" lang="fr">{% language "fr" %}{% chip "valid" "documents.RequirementState" size="s" %}{% translate "Valide" %}{% endchip %}{% chip "in_review" "documents.RequirementState" size="s" %}{% translate "En examen" %}{% endchip %}{% chip "filed" "documents.RequirementState" size="s" %}{% translate "Déposé" %}{% endchip %}{% chip "missing" "documents.RequirementState" size="s" %}{% translate "Manquant" %}{% endchip %}{% chip "to_replace" "documents.RequirementState" size="s" %}{% translate "À remplacer" %}{% endchip %}{% chip "expired" "documents.RequirementState" size="s" %}{% translate "Expiré" %}{% endchip %}{% chip "invalid" "documents.RequirementState" size="s" %}{% translate "Non valide" %}{% endchip %}{% chip "blocked" "selection.EvidenceStatus" size="s" %}{% translate "Bloqué" %}{% endchip %}{% chip "not_applicable" "selection.EvidenceStatus" size="s" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></p>
+    <p class="cb-size" data-size="m"><span class="cb-size__label">normale · 24 px</span><span class="cb-size__chips" lang="fr">{% language "fr" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></p>
+    <p class="cb-size" data-size="l"><span class="cb-size__label">grande · 28 px · <code>size="l"</code></span><span class="cb-size__chips" lang="fr">{% language "fr" %}{% chip "valid" "documents.RequirementState" size="l" %}{% translate "Valide" %}{% endchip %}{% chip "in_review" "documents.RequirementState" size="l" %}{% translate "En examen" %}{% endchip %}{% chip "filed" "documents.RequirementState" size="l" %}{% translate "Déposé" %}{% endchip %}{% chip "missing" "documents.RequirementState" size="l" %}{% translate "Manquant" %}{% endchip %}{% chip "to_replace" "documents.RequirementState" size="l" %}{% translate "À remplacer" %}{% endchip %}{% chip "expired" "documents.RequirementState" size="l" %}{% translate "Expiré" %}{% endchip %}{% chip "invalid" "documents.RequirementState" size="l" %}{% translate "Non valide" %}{% endchip %}{% chip "blocked" "selection.EvidenceStatus" size="l" %}{% translate "Bloqué" %}{% endchip %}{% chip "not_applicable" "selection.EvidenceStatus" size="l" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></p>
+    <p class="cb-size" data-size="s"><span class="cb-size__label">densa, arabo · 20 px</span><span class="cb-size__chips" lang="ar" dir="rtl">{% language "ar" %}{% chip "valid" "documents.RequirementState" size="s" %}{% translate "Valide" %}{% endchip %}{% chip "in_review" "documents.RequirementState" size="s" %}{% translate "En examen" %}{% endchip %}{% chip "filed" "documents.RequirementState" size="s" %}{% translate "Déposé" %}{% endchip %}{% chip "missing" "documents.RequirementState" size="s" %}{% translate "Manquant" %}{% endchip %}{% chip "to_replace" "documents.RequirementState" size="s" %}{% translate "À remplacer" %}{% endchip %}{% chip "expired" "documents.RequirementState" size="s" %}{% translate "Expiré" %}{% endchip %}{% chip "invalid" "documents.RequirementState" size="s" %}{% translate "Non valide" %}{% endchip %}{% chip "blocked" "selection.EvidenceStatus" size="s" %}{% translate "Bloqué" %}{% endchip %}{% chip "not_applicable" "selection.EvidenceStatus" size="s" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></p>
+    <p class="cb-size" data-size="m"><span class="cb-size__label">normale, arabo · 24 px</span><span class="cb-size__chips" lang="ar" dir="rtl">{% language "ar" %}{% chip "valid" "documents.RequirementState" %}{% translate "Valide" %}{% endchip %}{% chip "in_review" "documents.RequirementState" %}{% translate "En examen" %}{% endchip %}{% chip "filed" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}{% chip "missing" "documents.RequirementState" %}{% translate "Manquant" %}{% endchip %}{% chip "to_replace" "documents.RequirementState" %}{% translate "À remplacer" %}{% endchip %}{% chip "expired" "documents.RequirementState" %}{% translate "Expiré" %}{% endchip %}{% chip "invalid" "documents.RequirementState" %}{% translate "Non valide" %}{% endchip %}{% chip "blocked" "selection.EvidenceStatus" %}{% translate "Bloqué" %}{% endchip %}{% chip "not_applicable" "selection.EvidenceStatus" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></p>
+    <p class="cb-size" data-size="l"><span class="cb-size__label">grande, arabo · 28 px</span><span class="cb-size__chips" lang="ar" dir="rtl">{% language "ar" %}{% chip "valid" "documents.RequirementState" size="l" %}{% translate "Valide" %}{% endchip %}{% chip "in_review" "documents.RequirementState" size="l" %}{% translate "En examen" %}{% endchip %}{% chip "filed" "documents.RequirementState" size="l" %}{% translate "Déposé" %}{% endchip %}{% chip "missing" "documents.RequirementState" size="l" %}{% translate "Manquant" %}{% endchip %}{% chip "to_replace" "documents.RequirementState" size="l" %}{% translate "À remplacer" %}{% endchip %}{% chip "expired" "documents.RequirementState" size="l" %}{% translate "Expiré" %}{% endchip %}{% chip "invalid" "documents.RequirementState" size="l" %}{% translate "Non valide" %}{% endchip %}{% chip "blocked" "selection.EvidenceStatus" size="l" %}{% translate "Bloqué" %}{% endchip %}{% chip "not_applicable" "selection.EvidenceStatus" size="l" %}{% translate "Sans objet" %}{% endchip %}{% endlanguage %}</span></p>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="cb-s3">
+  <h2 class="sp-h2" id="cb-s3">3 · La parola lunga, la tabella, la fase, il valore sconosciuto, l'etichetta</h2>
+  <p class="sp-note">Una parola lunga va a capo — non è mai tagliata — e la marca resta sulla prima riga (colonna di 180 px); in una cella di tabella non va a capo. Lo stato di un fascicolo porta la sua fase in tre tacche. Un valore che <code>chips.py</code> non conosce è disegnato sul tono neutro col bordo puntinato. L'etichetta è un termine, non uno stato: nessun registro, nessuna marca.</p>
+  <div class="cb-cases">
+    <div class="cb-narrow" lang="fr">{% language "fr" %}{% chip "review_required" "cases.CaseStatus" %}{% translate "Verifica professionale necessaria" %}{% endchip %}{% chip "selection" "cases.CaseStatus" %}{% translate "Fase gestita da soggetto autorizzato" %}{% endchip %}{% endlanguage %}</div>
+    <div class="cb-narrow" lang="ar" dir="rtl">{% language "ar" %}{% chip "review_required" "cases.CaseStatus" %}{% translate "Verifica professionale necessaria" %}{% endchip %}{% chip "selection" "cases.CaseStatus" %}{% translate "Fase gestita da soggetto autorizzato" %}{% endchip %}{% endlanguage %}</div>
+    <table class="cb-table" lang="fr"><tbody><tr><td>{% language "fr" %}{% chip "pending" "cases.ChecklistStatus" %}{% translate "Da fare" %}{% endchip %}{% endlanguage %}</td></tr></tbody></table>
+    <div class="cb-line" lang="fr">{% language "fr" %}{% chip "oriented" "cases.CaseStatus" %}{% translate "Orientamento completato" %}{% endchip %}{% chip "training" "cases.CaseStatus" %}{% translate "Percorso formativo attivo" %}{% endchip %}{% chip "entered" "cases.CaseStatus" %}{% translate "Ingresso registrato" %}{% endchip %}{% chip "valore-sconosciuto" "documents.RequirementState" %}{% translate "Déposé" %}{% endchip %}<a class="tag" href="#cb-s3" lang="it">nulla osta</a><span class="tag">{% translate "Obligatoire" %}</span>{% endlanguage %}</div>
+  </div>
+</section>
+
+<section class="sp-section" aria-labelledby="cb-s4">
+  <h2 class="sp-h2" id="cb-s4">4 · Le schede per funzione</h2>
+  <p class="sp-note">Tre funzioni, mai una scatola per tutto (<code>static/css/v5/card.css</code>): la <strong>scheda</strong> — ciò che esiste e si legge; più schede di seguito sono una lista, senza scatola —, la scheda d'<strong>azione</strong> — la sola cosa da fare sullo schermo, e una sola azione: è il piano rialzato, uno per schermo —, la striscia di <strong>sintesi</strong> — parole e cifre a misura di testo. Nessuna scheda-cifra, nessuna griglia di schede uguali, niente che si sposti: il sistema ordina per priorità.</p>
+  <div class="cb-cards" lang="fr">{% language "fr" %}
+    <article class="card card--action" aria-labelledby="cb-action">
+      <p class="card__eyebrow">{% translate "Votre prochaine action" %}</p>
+      <h3 class="card__title" id="cb-action">{% translate "Commencer le questionnaire d’orientation" %}</h3>
+      <p class="card__text">{% translate "Votre checklist se construit à partir du questionnaire d’orientation : elle indiquera chaque élément requis, qui en est responsable et pour quand." %}</p>
+      <p class="card__action"><a class="btn btn--primary btn--arrow" href="#cb-s4">{% translate "Commencer le questionnaire" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+    </article>
+    <dl class="summary">
+      <div class="summary__item"><dt>{% translate "Dossier" %}</dt><dd><span class="t-ref">E46E03B461</span></dd></div>
+      <div class="summary__item"><dt>{% translate "État" %}</dt><dd>{% translate "Orientamento completato" %}</dd></div>
+      <div class="summary__item"><dt>{% translate "Responsable" %}</dt><dd>{% translate "La personne" %}</dd></div>
+      <div class="summary__item"><dt>{% translate "Échéance" %}</dt><dd><time datetime="2026-11-20">20.11.2026</time></dd></div>
+    </dl>
+    <div class="cb-records">
+      {% translate "Le Forum Vénétie–Maroc" as forum_title %}{% translate "Partenaires" as partners_title %}{% translate "Les organisations qui participent à l’écosystème." as partners_text %}
+      {% include "components/card.html" with title=partners_title url="#cb-s4" text=partners_text only %}
+      {% include "components/card.html" with flat=True title=partners_title url="#cb-s4" text=partners_text only %}
+      {% include "components/card.html" with flat=True title=forum_title url="#cb-s4" only %}
+    </div>
+  {% endlanguage %}</div>
+  <div class="cb-cards" lang="ar" dir="rtl">{% language "ar" %}
+    <article class="card card--action" aria-labelledby="cb-action-ar">
+      <p class="card__eyebrow">{% translate "Votre prochaine action" %}</p>
+      <h3 class="card__title" id="cb-action-ar">{% translate "Commencer le questionnaire d’orientation" %}</h3>
+      <p class="card__text">{% translate "Votre checklist se construit à partir du questionnaire d’orientation : elle indiquera chaque élément requis, qui en est responsable et pour quand." %}</p>
+      <p class="card__action"><a class="btn btn--primary btn--arrow" href="#cb-s4">{% translate "Commencer le questionnaire" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+    </article>
+    <dl class="summary">
+      <div class="summary__item"><dt>{% translate "Dossier" %}</dt><dd><span class="t-ref">E46E03B461</span></dd></div>
+      <div class="summary__item"><dt>{% translate "État" %}</dt><dd>{% translate "Orientamento completato" %}</dd></div>
+      <div class="summary__item"><dt>{% translate "Responsable" %}</dt><dd>{% translate "La personne" %}</dd></div>
+      <div class="summary__item"><dt>{% translate "Échéance" %}</dt><dd><time datetime="2026-11-20">20.11.2026</time></dd></div>
+    </dl>
+  {% endlanguage %}</div>
+</section>
+</body>
+</html>

@@ -13,6 +13,17 @@
  *     cascade is the one main.css declares; comments removed; whitespace and numbers minified.
  *   - every app sheet (apps/<app>/static/**.css) → static/css/dist/<its static path>: minified,
  *     one file each, loaded by the templates that loaded the source.
+ *   - a `_`-prefixed sheet is a PARTIAL, wherever it is: never an entry, never an output of its own;
+ *     the entries that draw it import it and carry it in their bundle (design V5, V5.4 plan §2.3 «the
+ *     one build change», DL54-15). static/css/_legacy-tokens.css was already one, inside main.css.
+ *   - every @import and url() of a source sheet is written as it resolves in the COLLECTED tree
+ *     (static/x → x, apps/<app>/static/x → x), from the sheet's own collected path: production's
+ *     manifest storage post-processes every collected CSS file, raw sources included, and resolves
+ *     them there. A partial of static/css/v5/ is `../css/v5/_x.css` from apps/<app>/static/<app>/
+ *     <sheet>.css, never `../../../../static/css/v5/_x.css` — that path exists only in the source
+ *     tree and stops collectstatic. The plugin below bundles each @import from the one source file
+ *     collected at that path (static/ first, then each app's static/, the order of Django's finders)
+ *     and refuses a path that climbs out (DS 2026 §2; tests/frontend/test_static_pipeline.py).
  *   - NO syntax lowering: no `target`, so esbuild rewrites no property for older browsers and the
  *     cascade is not reinterpreted. Minification only.
  *   - url() to fonts and images stay files served by collectstatic, never inlined or copied: the
@@ -26,8 +37,8 @@
  */
 
 import { build, context } from "esbuild";
-import { readdirSync, statSync, mkdirSync } from "node:fs";
-import { join, resolve, dirname, relative, sep, posix } from "node:path";
+import { existsSync, readdirSync, statSync, mkdirSync } from "node:fs";
+import { join, resolve, dirname, relative, isAbsolute, sep, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -35,13 +46,31 @@ const STATIC = join(ROOT, "static");
 const DIST = join(STATIC, "css", "dist");
 const watch = process.argv.includes("--watch");
 
+/** The directories collectstatic merges, in the order Django's two default finders read them:
+ *  STATICFILES_DIRS (static/), then each app's static/ (AppDirectoriesFinder). */
+const STATIC_DIRS = [STATIC];
+for (const app of readdirSync(join(ROOT, "apps"))) {
+  const dir = join(ROOT, "apps", app, "static");
+  if (existsSync(dir) && statSync(dir).isDirectory()) STATIC_DIRS.push(dir);
+}
+
 /** The path a file has once collectstatic has merged every static directory: static/x → x,
  *  apps/<app>/static/x → x. */
 function staticPath(absolute) {
-  const parts = absolute.split(sep);
-  const at = parts.lastIndexOf("static");
-  if (at < 0) throw new Error(`not under a static directory: ${absolute}`);
-  return parts.slice(at + 1).join("/");
+  for (const dir of STATIC_DIRS) {
+    const rel = relative(dir, absolute);
+    if (rel && rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel)) return rel.split(sep).join("/");
+  }
+  throw new Error(`not under a static directory: ${absolute}`);
+}
+
+/** Where a reference written in a source sheet lands once collected: read from the sheet's OWN
+ *  collected path, never through the source tree. `null` for a path that climbs above the collected
+ *  root (or starts at it): it only exists in the source tree, and collectstatic stops on it. */
+function collectedTarget(importer, ref) {
+  if (ref.startsWith("/")) return null;
+  const target = posix.normalize(posix.join(posix.dirname(staticPath(importer)), ref));
+  return target === ".." || target.startsWith("../") ? null : target;
 }
 
 function walk(dir, out = []) {
@@ -53,29 +82,39 @@ function walk(dir, out = []) {
   return out;
 }
 
-// Entry points: the main cascade, and every app sheet (none of them imports another).
+/** A `_`-prefixed file is a partial: its importers bundle it (V5.4 plan §2.3, DL54-15). */
+const isPartial = (file) => file.split(sep).pop().startsWith("_");
+
+// Entry points: the main cascade, and every app sheet that is not a partial.
 const entries = [{ source: join(STATIC, "css", "main.css"), out: "main.css" }];
-for (const app of readdirSync(join(ROOT, "apps"))) {
-  const dir = join(ROOT, "apps", app, "static");
-  try {
-    if (!statSync(dir).isDirectory()) continue;
-  } catch {
-    continue;
-  }
-  for (const source of walk(dir)) entries.push({ source, out: staticPath(source) });
+for (const dir of STATIC_DIRS.slice(1)) {
+  for (const source of walk(dir)) if (!isPartial(source)) entries.push({ source, out: staticPath(source) });
 }
 
-/** Keep fonts and images as files, with their path re-anchored on the output's location. */
-function assetPaths(outfile) {
+/** @import and url() resolved in the collected tree, as the manifest storage resolves them in
+ *  production: an @import is bundled from the one source file collected at its path; a font or an
+ *  image stays a file, its path re-anchored on the output's location. */
+function collectedPaths(outfile) {
   const outDir = posix.dirname(staticPath(outfile));
   return {
-    name: "static-asset-paths",
+    name: "collected-paths",
     setup(pluginBuild) {
       pluginBuild.onResolve({ filter: /.*/ }, (args) => {
-        if (args.kind !== "url-token") return undefined; // @import is bundled normally
+        if (args.kind !== "import-rule" && args.kind !== "url-token") return undefined;
         if (/^(#|data:|https?:|\/\/)/.test(args.path)) return { path: args.path, external: true };
-        const target = staticPath(resolve(args.resolveDir, args.path));
-        return { path: posix.relative(outDir, target), external: true };
+        const where = `${relative(ROOT, args.importer).split(sep).join("/")}: "${args.path}"`;
+        const target = collectedTarget(args.importer, args.path);
+        if (target === null) {
+          const text = `${where} is not a path of the collected static tree: write it as it resolves there, from this sheet's collected path (DS 2026 §2)`;
+          return { errors: [{ text }] };
+        }
+        if (args.kind === "url-token") return { path: posix.relative(outDir, target), external: true };
+        const sources = STATIC_DIRS.map((dir) => join(dir, ...target.split("/"))).filter((file) => existsSync(file));
+        if (sources.length === 1) return { path: sources[0] };
+        const text = sources.length
+          ? `${where}: ${target} is collected from ${sources.length} static directories — give it one`
+          : `${where}: nothing is collected at ${target}`;
+        return { errors: [{ text }] };
       });
     },
   };
@@ -93,7 +132,7 @@ function options({ source, out }) {
     sourcemap: watch,
     logLevel: "warning",
     metafile: true,
-    plugins: [assetPaths(outfile)],
+    plugins: [collectedPaths(outfile)],
   };
 }
 

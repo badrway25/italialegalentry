@@ -1,0 +1,13 @@
+{% comment %}
+THE BUSY KEY — L2 outside a button (V5.4 plan §1.9; W1-D): the key alone, in `currentColor`, for a row or a line
+that waits — a document being processed, a region's head while a fragment arrives. In a BUTTON the key needs no
+markup: v5/loader.css draws it on `.btn.is-busy::after`, in the middle of the inline-end padding (shell.js sets the
+class on the submitted button, in the click's own task — where the key has a place: a link-styled or icon-only
+button has no padding and waits with `aria-busy` alone). Here the same key as markup: `key.svg` cropped symmetric
+about its shaft (viewBox 10 11 40 94), so it turns about the shaft; 16 px by default (`--key-size` on the host, or
+`css_class`).
+
+Behaviour, from the host's state: while the host is `.is-busy` the key turns once (--motion-emphasized, --ease-turn)
+and holds, dim (80 % of the text's colour); `.is-lit` lights it when the answer comes (loader.js `busy()` /
+`settle()`). Decorative (`aria-hidden`): the host says `aria-busy`, the words say the rest.
+{% endcomment %}<span class="busy-key{% if css_class %} {{ css_class }}{% endif %}" aria-hidden="true"><span class="busy-key__turn"><svg viewBox="10 11 40 94" focusable="false"><path fill-rule="evenodd" d="M15,26 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0 Z M23.6,26 a6.4,6.4 0 1,0 12.8,0 a6.4,6.4 0 1,0 -12.8,0 Z"/><rect x="25.6" y="39" width="8.8" height="66"/><rect x="34" y="72" width="16" height="8"/><rect x="34" y="88" width="12" height="8"/></svg></span></span>

@@ -1,0 +1,18 @@
+{% comment %}
+V5 live preview — one public page of the index (designpreview.live.public_rows). DEVELOPMENT ONLY.
+Per language: the URL, opened in the landing's frame; «Desktop 1440» and «Telefono 390», opened
+in this page's frames by the script (one pair at a time) and, without it, in the landing; the same
+URL on the V4 control, in a new tab, which it says (review W1-P, accessibility m7). The state's chip
+only where it says something: «V5 — council-passed». Inside the «V4 + fondation» fold, the fold's
+summary already says it (review W1-P, UX r2 n9; CD condition C9).
+{% endcomment %}<li class="dp-row" id="p-{{ row.slug }}">
+  <p class="dp-row__title">{{ row.title }}{% if row.note %} <span class="dp-row__note">— {{ row.note }}</span>{% endif %}{% if row.state == "v5" %} <span class="dp-state dp-state--v5">{{ row.label }}</span>{% endif %}</p>
+  <ul class="dp-row__urls" role="list">
+    {% for u in row.urls %}<li class="dp-row__url">
+      <a class="dp-row__page" href="{{ u.landing }}" hreflang="{{ u.lang }}" title="{{ u.name }} — nella cornice">{{ u.lang }}<span class="dp-hidden"> — {{ row.title }}, {{ u.name|lower }}</span></a>
+      <a class="dp-row__frame" href="{{ u.desktop }}" data-dp-pair="{{ u.url }}" data-dp-kind="desktop" data-dp-title="{{ row.title }} · {{ u.lang }}">Desktop 1440<span class="dp-hidden"> — {{ row.title }}, {{ u.lang }}</span></a>
+      <a class="dp-row__frame" href="{{ u.phone }}" data-dp-pair="{{ u.url }}" data-dp-kind="phone" data-dp-title="{{ row.title }} · {{ u.lang }}">Telefono 390<span class="dp-hidden"> — {{ row.title }}, {{ u.lang }}</span></a>
+      {% if u.v4 %}<a class="dp-row__v4" href="{{ u.v4 }}" target="_blank" rel="noopener" title="La stessa pagina sul controllo V4">V4 · 8771<span class="dp-hidden"> — {{ row.title }}, {{ u.lang }} (nuova scheda)</span></a>{% endif %}
+    </li>{% endfor %}
+  </ul>
+</li>

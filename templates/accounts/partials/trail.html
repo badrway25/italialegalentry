@@ -1,0 +1,20 @@
+{% load i18n %}{% comment %}
+The account pages' trail (design V5, W3-F2 step 2): «Accueil › Espace réservé › Mon compte», then the section the page
+belongs to, read from the address — the account pages are allauth's as well as the product's, and allauth's views
+give no trail of their own. The drawing is the public interior's (components/breadcrumbs.html's markup and classes;
+static/css/v5/_servizio.css). «Espace réservé» is the account menu's way back (portal:dashboard).
+{% endcomment %}{% safe_url 'portal:dashboard' as u_space %}{% safe_url 'accounts:profile' as u_profile %}{% safe_url 'account_email' as u_email %}{% safe_url 'account_change_password' as u_pwd %}{% safe_url 'account_set_password' as u_pwd_set %}{% safe_url 'mfa_index' as u_mfa %}{% safe_url 'accounts:delete_request' as u_delete %}{% safe_url 'account_logout' as u_logout %}
+<nav class="breadcrumbs container" aria-label="{% translate 'Fil d’Ariane' %}">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item"><a href="{% url 'pages:home' %}">{% translate "Accueil" %}</a></li>
+    {% if u_space %}<li class="breadcrumbs__item"><a href="{{ u_space }}">{% translate "Espace réservé" %}</a></li>{% endif %}
+    {% if request.path == u_profile %}<li class="breadcrumbs__item" aria-current="page"><span>{% translate "Mon compte" %}</span></li>
+    {% else %}<li class="breadcrumbs__item"><a href="{{ u_profile }}">{% translate "Mon compte" %}</a></li>
+    {% if request.path == u_email %}<li class="breadcrumbs__item" aria-current="page"><span>{% translate "Adresses e-mail" %}</span></li>
+    {% elif request.path == u_pwd or request.path == u_pwd_set %}<li class="breadcrumbs__item" aria-current="page"><span>{% translate "Mot de passe" %}</span></li>
+    {% elif u_mfa and u_mfa in request.path %}<li class="breadcrumbs__item" aria-current="page"><span>{% translate "Authentification à deux facteurs" %}</span></li>
+    {% elif request.path == u_delete %}<li class="breadcrumbs__item" aria-current="page"><span>{% translate "Supprimer mon compte" %}</span></li>
+    {% elif request.path == u_logout %}<li class="breadcrumbs__item" aria-current="page"><span>{% translate "Se déconnecter" %}</span></li>
+    {% endif %}{% endif %}
+  </ol>
+</nav>

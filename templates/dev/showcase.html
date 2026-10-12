@@ -15,7 +15,8 @@ they sit above.
 
 {% block page_title %}Design system{% endblock %}
 {% block body_class %}ds-page{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dev/showcase.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dev/showcase.css' %}">{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'js/dist/overlay.js' %}"></script>{% endblock %}
 
 {% block content %}
 <div class="ds">
@@ -180,29 +181,49 @@ they sit above.
     <section class="ds__section" id="etats" aria-labelledby="h-etats">
       <h2 class="ds__h" id="h-etats">États</h2>
 
-      <h3 class="ds__h3">Pastilles</h3>
+      <h3 class="ds__h3">Pastilles — « i cerchi »</h3>
+      <div class="ds__row">
+        {% chip register="conforme" %}Valide{% endchip %}
+        {% chip register="esame" %}En examen{% endchip %}
+        {% chip register="neutro" %}Déposé{% endchip %}
+        {% chip "missing" "documents.RequirementState" %}Manquant{% endchip %}
+        {% chip "to_replace" "documents.RequirementState" %}À remplacer{% endchip %}
+        {% chip register="azione" %}Expiré{% endchip %}
+        {% chip register="rifiuto" %}Non valide{% endchip %}
+        {% chip register="blocco" %}Bloqué{% endchip %}
+        {% chip register="nullo" %}Sans objet{% endchip %}
+      </div>
+      <p class="ds__note">
+        Huit registres (<code>apps/core/chips.py</code>), et pour chacun sa marque du sprite — cercle ouvert : en
+        cours ; plein : réglé ; le cadenas : une dépendance. « Manquant » et « À remplacer » sont un seul registre,
+        <em>attesa</em>, et deux marques. La pastille n'a qu'un producteur, la paire
+        <code>{% templatetag openblock %} chip {% templatetag closeblock %}</code> : un gabarit n'écrit jamais
+        l'élément à la main et ne choisit jamais la marque.
+      </p>
       <div class="ds__row">
         {% for kind in badge_kinds %}
         {% include "components/badge.html" with label=kind kind=kind only %}
         {% endfor %}
       </div>
       <p class="ds__note">
-        Sept <code>kind</code> hérités, cinq registres : <code>neutral</code>, <code>info</code> et
-        <code>primary</code> sont tous <em>neutro</em>. Les deux registres qu'aucun <code>kind</code> ne produit,
-        les deux modificateurs et les deux tailles, écrits à la main pour que les sept formes soient sous les yeux :
+        Les sept <code>kind</code> hérités de <code>components/badge.html</code>, traduits une fois en registres :
+        <code>neutral</code>, <code>info</code> et <code>primary</code> sont <em>neutro</em>, <code>success</code>
+        <em>conforme</em>, <code>warning</code> <em>attesa</em>, <code>error</code> <em>rifiuto</em>,
+        <code>pending</code> <em>esame</em>. Ci-dessous : les trois tailles (20, 24, 28 px), l'état d'un dossier
+        avec sa jauge de phase, une valeur inconnue de <code>chips.py</code>, et l'étiquette — un terme, pas un état.
       </p>
       <div class="ds__row">
-        <span class="badge" data-register="nullo">nullo</span>
-        <span class="badge chip--seal" data-register="conforme">sigillo</span>
-        <span class="badge chip--indicative" data-register="attesa">indicatif</span>
-        <span class="badge">sans registre</span>
-        <span class="badge chip--s" data-register="azione">chip--s</span>
-        <span class="badge chip--l" data-register="conforme">chip--l</span>
+        {% chip register="azione" size="s" %}20 px{% endchip %}
+        {% chip register="azione" %}24 px{% endchip %}
+        {% chip register="azione" size="l" %}28 px{% endchip %}
+        {% chip "training" "cases.CaseStatus" %}Formation{% endchip %}
+        {% chip "valeur-inconnue" "documents.RequirementState" %}sans registre{% endchip %}
+        <a class="tag" href="#etats" lang="it">nulla osta</a>
+        <span class="tag">Obligatoire</span>
       </div>
       <p class="ds__note">
-        « Sans registre » est une pastille dont la valeur n'est pas connue de <code>chips.py</code> : filet
-        pointillé, pour qu'elle se voie et se corrige. Le sigillo n'est jamais interactif ; l'indicatif n'a pas de
-        corps et porte, sur le site, la mention visible « à titre indicatif ».
+        « Sans registre » : ton neutre et bord pointillé, pour que la valeur se voie et se corrige. Une pastille
+        n'est jamais un contrôle : pas de survol, pas de focus. L'étiquette, quand elle est un lien, en a.
       </p>
 
       {% comment %}
@@ -226,10 +247,10 @@ they sit above.
             <code>DESIGN_SYSTEM_2026.md</code> §4.3.
           </p>
           <p>
-            La pastille porte donc son sens <strong>trois fois sans couleur</strong> : le mot, le style du
-            filet (plein · tireté · double · pointillé) et sa géométrie (1, 3 ou 4 px ; un filet de clôture
-            sous <em>conforme</em>, deux filets qui barrent <em>rifiuto</em>). Le mot est toujours dans l'encre
-            du chapitre ; la couleur ne vit que dans la marque, et <em>conforme</em> n'en a pas.
+            La pastille porte donc son sens <strong>trois fois sans couleur</strong> : le mot, la marque
+            (cercle ouvert · plein · cadenas) et le style du bord (plein · tireté pour ce qui est dû ·
+            pointillé pour ce qui ne porte rien). <em>Conforme</em> est à l'encre, un disque plein sans signe :
+            ni couleur ni coche ne dit « approuvé » (O14).
             Le registre vient de l'enum, en Python (<code>apps/core/chips.py</code>), jamais du mot :
             <code>closed</code> est un fait sur un dossier de documents et un vide sur une édition du forum.
           </p>
@@ -281,11 +302,39 @@ they sit above.
     <section class="ds__section" id="conteneurs" aria-labelledby="h-box">
       <h2 class="ds__h" id="h-box">Conteneurs</h2>
 
-      <h3 class="ds__h3">Cartes</h3>
+      <h3 class="ds__h3">Cartes — par fonction</h3>
+      <p class="ds__note">
+        Trois fonctions, jamais une boîte pour tout : la <strong>fiche</strong> (ce qui existe et se lit), la carte
+        d'<strong>action</strong> (la chose à faire sur l'écran, et une seule action — le seul plan relevé) et la
+        bande de <strong>synthèse</strong>. Pas de carte-chiffre, pas de grille de cartes égales, rien qui se
+        déplace : le système ordonne par priorité.
+      </p>
       <div class="ds__cards">
-        {% include "components/card.html" with eyebrow="Actualité" title="Carte simple" text="Une carte porte un titre, un texte court et une métadonnée. Au-delà, ce n'est plus une carte." meta="3 octobre 2026" only %}
-        {% include "components/card.html" with eyebrow="Actualité" title="Carte cliquable" url="#conteneurs" text="Toute la surface réagit ; seul le titre est un arrêt de tabulation." meta="28 septembre 2026" only %}
-        {% include "components/card.html" with title="Carte plate" flat=True text="Sans boîte : un filet, et le rythme vertical fait le reste." only %}
+        {% include "components/card.html" with eyebrow="Actualité" title="Fiche" text="Une fiche porte un titre, un texte court et une métadonnée. Au-delà, ce n'est plus une carte." meta="3 octobre 2026" only %}
+        {% include "components/card.html" with eyebrow="Actualité" title="Fiche qui s'ouvre" url="#conteneurs" text="Toute la surface réagit ; seul le titre est un arrêt de tabulation." meta="28 septembre 2026" only %}
+        {% include "components/card.html" with title="Fiche en liste" flat=True text="Plusieurs fiches à la suite sont une liste : sans boîte, un filet, sur des lignes communes." only %}
+        <article class="card" data-sample="wrapped">
+          <section aria-labelledby="ds-wrapped-title">
+            <p class="card__eyebrow">Premier temps</p>
+            <h3 class="card__title" id="ds-wrapped-title">Fiche à section</h3>
+            <p class="card__text">Le contenu d’une fiche peut être enveloppé dans une section nommée : le rythme reste celui de la carte.</p>
+            <p class="card__meta"><a class="link-arrow" href="#conteneurs">Sa seconde action {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+          </section>
+        </article>
+      </div>
+      <div class="ds__stack">
+        <article class="card card--action" aria-labelledby="ds-action-title">
+          <p class="card__eyebrow">Votre prochaine action</p>
+          <h3 class="card__title" id="ds-action-title">Commencer le questionnaire d’orientation</h3>
+          <p class="card__text">Votre checklist se construit à partir du questionnaire d’orientation : elle indiquera chaque élément requis, qui en est responsable et pour quand.</p>
+          <p class="card__action"><a class="btn btn--primary btn--arrow" href="#conteneurs">Commencer le questionnaire {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+        </article>
+        <dl class="summary">
+          <div class="summary__item"><dt>Pièces demandées</dt><dd>7</dd></div>
+          <div class="summary__item"><dt>Validées</dt><dd>1 sur 7</dd></div>
+          <div class="summary__item"><dt>En attente</dt><dd>4</dd></div>
+          <div class="summary__item"><dt>Prochaine échéance</dt><dd><time datetime="2026-11-20">20.11.2026</time></dd></div>
+        </dl>
       </div>
 
       <h3 class="ds__h3">En-tête de section</h3>
@@ -340,7 +389,7 @@ they sit above.
           <p class="ctx__title">Dossier E46E03B461</p>
           <p class="ctx__meta">
             <span>Travail</span>
-            <span class="chip state" data-register="neutro">Orientation terminée</span>
+            {% chip "oriented" "cases.CaseStatus" %}Orientation terminée{% endchip %}
             <span class="ctx__resp">{% include "components/glyph.html" with glyph="person" size="sm" only %}Vous</span>
             <span class="ctx__progress"><span class="meter" aria-hidden="true"><span class="meter__notch meter__notch--on"></span><span class="meter__notch meter__notch--on"></span><span class="meter__notch"></span><span class="meter__notch"></span><span class="meter__notch"></span></span><span class="meter__words">2 sur 5 éléments complétés</span></span>
           </p>
@@ -352,15 +401,15 @@ they sit above.
       <p class="empty">Les dates qui vous sont communiquées par l’équipe apparaîtront ici. <a href="#console">Voir mes documents</a></p>
 
       <h3 class="ds__h3">Barre de contexte compacte, rail descriptif, tableau, intervenants</h3>
-      <div class="ctx-bar ctx-bar--sample is-on" aria-hidden="true"><span class="ctx-bar__title">Dossier <span class="ctx__ref">E46E03B461</span></span><span class="chip state" data-register="neutro">Orientation terminée</span><a class="btn btn--primary btn--sm btn--arrow ctx-bar__action" href="#console" tabindex="-1">Continuer {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></div>
+      <div class="ctx-bar ctx-bar--sample is-on" aria-hidden="true"><span class="ctx-bar__title">Dossier <span class="ctx__ref">E46E03B461</span></span>{% chip "oriented" "cases.CaseStatus" %}Orientation terminée{% endchip %}<a class="btn btn--primary btn--sm btn--arrow ctx-bar__action" href="#console" tabindex="-1">Continuer {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></div>
       {% include "components/journey_rail.html" with steps=journey descriptive=True label="Où en est ce dossier" only %}
       <div class="table-region">
         <table class="table">
           <caption class="visually-hidden">Exemple de checklist</caption>
           <thead><tr><th scope="col">Exigence</th><th scope="col">Responsable</th><th scope="col">Échéance</th><th scope="col">État</th></tr></thead>
           <tbody>
-            <tr><th scope="row" data-label="Exigence"><span class="table__primary">Passeport en cours de validité</span><span class="table__gloss">Original, valable six mois après la date prévue d’entrée.</span></th><td data-label="Responsable"><span class="table__actor">{% include "components/glyph.html" with glyph="person" size="sm" only %}<span>La personne</span></span></td><td data-label="Échéance"><time datetime="2026-11-20">20.11.2026</time></td><td data-label="État"><span class="chip state" data-register="attesa">Da fare</span></td></tr>
-            <tr><th scope="row" data-label="Exigence"><span class="table__primary">Nulla osta au travail</span></th><td data-label="Responsable"><span class="table__actor">{% include "components/glyph.html" with glyph="shield" size="sm" only %}<span>L’autorité compétente</span></span></td><td data-label="Échéance"><span class="table__none" aria-hidden="true">—</span></td><td data-label="État"><span class="chip state" data-register="neutro">In corso</span></td></tr>
+            <tr><th scope="row" data-label="Exigence"><span class="table__primary">Passeport en cours de validité</span><span class="table__gloss">Original, valable six mois après la date prévue d’entrée.</span></th><td data-label="Responsable"><span class="table__actor">{% include "components/glyph.html" with glyph="person" size="sm" only %}<span>La personne</span></span></td><td data-label="Échéance"><time datetime="2026-11-20">20.11.2026</time></td><td data-label="État">{% chip "pending" "cases.ChecklistStatus" %}À faire{% endchip %}</td></tr>
+            <tr><th scope="row" data-label="Exigence"><span class="table__primary">Nulla osta au travail</span></th><td data-label="Responsable"><span class="table__actor">{% include "components/glyph.html" with glyph="shield" size="sm" only %}<span>L’autorité compétente</span></span></td><td data-label="Échéance"><span class="table__none" aria-hidden="true">—</span></td><td data-label="État">{% chip "in_progress" "cases.ChecklistStatus" %}En cours{% endchip %}</td></tr>
           </tbody>
         </table>
       </div>
@@ -389,7 +438,7 @@ they sit above.
       <nav class="seg" aria-label="Filtrer par état">
         <ul class="seg__list" role="list">
           <li class="seg__item"><a class="seg__link" href="#console" aria-current="true">Tous <span class="seg__count">7</span></a></li>
-          {% for f in health.filters %}<li class="seg__item"><a class="seg__link" href="#console"><span class="seg__dot" data-register="{{ f.register }}" aria-hidden="true"></span>{{ f.label }} <span class="seg__count">{{ f.count }}</span></a></li>{% endfor %}
+          {% for f in health.filters %}<li class="seg__item"><a class="seg__link" href="#console"><span class="seg__dot" data-register="{{ f.register }}" aria-hidden="true">{% svg_icon f.value|chip_mark:"documents.RequirementState" "icon chip__g" %}</span>{{ f.label }} <span class="seg__count">{{ f.count }}</span></a></li>{% endfor %}
         </ul>
       </nav>
 
@@ -467,27 +516,27 @@ they sit above.
       {% include "components/timeline.html" with steps=timeline label="Exemple de séquence" only %}
 
       <h3 class="ds__h3">État vide</h3>
-      {% include "components/empty_state.html" with title="Aucune demande pour l'instant" text="Les demandes que vous transmettez apparaissent ici, la plus récente en premier." action_label="Commencer" action_url="#donnees" icon="document" only %}
+      {% include "components/empty_state.html" with title="Aucune demande pour l'instant" text="Les demandes que vous transmettez apparaissent ici, la plus récente en premier." action_label="Commencer" action_url="#donnees" icon="send" only %}
     </section>
 
     {# -------------------------------------------------------------- SURCOUCHES #}
     <section class="ds__section" id="surcouches" aria-labelledby="h-over">
       <h2 class="ds__h" id="h-over">Surcouches</h2>
       <p class="ds__note">
-        La modale est un <code>&lt;dialog&gt;</code> natif : le navigateur piège le focus, gère Échap et rend
-        l'arrière-plan inerte. Sans JavaScript, le lien vise l'élément et la CSS l'affiche comme un panneau
-        dans la page.
+        La modale est un <code>&lt;dialog&gt;</code> natif, ouvert par le système des surcouches
+        (<code>static/js/src/overlay.js</code>) : le focus reste dans la modale, Échap la ferme, l'arrière-plan
+        ne prend aucun clic et le focus revient au lien qui l'a ouverte. Sans JavaScript, le lien vise l'élément
+        et la CSS l'affiche comme un panneau dans la page.
       </p>
       <div class="ds__row">
-        <a class="btn btn--secondary" href="#ds-dialog" data-dialog-open="ds-dialog">Ouvrir la modale</a>
-        <a class="btn btn--secondary" href="#ds-dialog-light" data-dialog-open="ds-dialog-light">Modale légère</a>
+        <a class="btn btn--secondary" href="#ds-dialog" data-overlay-open>Ouvrir la modale</a>
+        <a class="btn btn--secondary" href="#ds-dialog-light" data-overlay-open>Modale légère</a>
       </div>
       {% include "components/dialog.html" with id="ds-dialog" title="Titre de la modale" body=dialog_body actions=dialog_actions only %}
-      {% include "components/dialog.html" with id="ds-dialog-light" light=True title="Modale légère" body=dialog_light_body only %}
+      {% include "components/dialog.html" with id="ds-dialog-light" title="Modale légère" body=dialog_light_body only %}
       <p class="ds__note">
-        Le tiroir du site est aujourd'hui celui de la navigation, dans l'en-tête, sur mobile. Il n'existe pas
-        encore de tiroir générique : la révision en cours doit décider s'il en faut un, ou si la modale et la
-        page suffisent.
+        Le tiroir, la feuille, le popover et l'infobulle du même système : la planche des surcouches de
+        l'aperçu (<code>/__design-v5/specimens/overlays/</code>).
       </p>
     </section>
 

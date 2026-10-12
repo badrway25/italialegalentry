@@ -1,38 +1,38 @@
-{% load i18n %}{% comment %}
+{% load i18n pages_typo %}{% comment %}
 5. ORIENTATION — how the questionnaire works.
    * gate G3 open   → the prescribed p3.persons.how_it_works sentence (it carries its own caveat);
-   * gate G3 closed → a neutral four-step stepper + the editorial note reminding that the result is
+   * gate G3 closed → a neutral four-step sequence + the editorial note reminding that the result is
      an informational pre-assessment and that decisions belong to the competent authorities.
-The four steps are a SEQUENCE (art direction A §13.2): vertical, numbered, one rule with a tick per
-step. Not a row of circles joined by lines — that diagram ran its connector to the container edge and
-stopped, so a reader had to jump back to find the next step, and at 390px it carried no meaning at
-all. A vertical list works unchanged at 320px, because it is a list.
 
-The decorative illustration beside the heading is retired: it was one of six line drawings that
-served fifty-two pages and said nothing the heading did not already say.
+Design V5.4 (W2-D step 3): the page's one BRAND chapter — the question «where do I start?» answered
+beside its action. The prescribed sentence is set as the chapter's statement, whole and as written (its
+arrows are its own); the four neutral steps are a real sequence, so they keep their numerals — a list at
+320 px, four columns on a desktop. No running head: the title names the questionnaire already.
 {% endcomment %}
-{% translate "Orientation" as eyebrow %}{% translate "Le questionnaire d’orientation" as fallback_title %}
-<section class="section section--c section--process home-orientation" id="{{ s.anchor }}" aria-labelledby="home-orientation-title" data-section="orientation">
-  <div class="container">
-    {% include "pages/partials/_section_header.html" with title_id="home-orientation-title" heading=s.heading intro=s.intro fallback_title=fallback_title eyebrow=eyebrow %}
-    {% if d.how_it_works %}
-    <p class="home-orientation__how"{% if d.how_it_works.lang %} lang="{{ d.how_it_works.lang }}"{% endif %} data-locked="p3.persons.how_it_works">{{ d.how_it_works }}</p>
-    {% else %}
-    <ol class="sequence home-orientation__steps"{% if d.steps_lang %} lang="{{ d.steps_lang }}"{% endif %}>
-      {% for step in d.steps %}
-      <li class="sequence__step sequence__step--italy">
-        <span class="sequence__marker" aria-hidden="true"></span>
-        <div>
-          <p class="sequence__title">{{ step.label|default:step }}</p>
-          {% if step.text %}<p class="sequence__body">{{ step.text }}</p>{% endif %}
-        </div>
-      </li>
-      {% endfor %}
-    </ol>
-    {% if s.note %}<p class="home-orientation__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{% svg_icon "info" "icon icon--sm" %}<span>{{ s.note }}</span></p>{% endif %}
-    {% endif %}
-    {% if d.url %}
-    <p class="home-orientation__actions"><a class="btn btn--primary btn--arrow" href="{{ d.url }}">{% translate "Commencer le questionnaire d’orientation" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-    {% endif %}
+{% translate "Le questionnaire d’orientation" as fallback_title %}
+<section class="chapter chapter--brand home-orientation" id="{{ s.anchor }}" aria-labelledby="home-orientation-title" data-section="orientation">
+  <div class="container chapter__inner">
+    {% include "pages/partials/_section_header.html" with title_id="home-orientation-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
+    <div class="chapter__body">
+      {% if d.how_it_works %}
+      <p class="home-orientation__how"{% if d.how_it_works.lang %} lang="{{ d.how_it_works.lang }}"{% endif %} data-locked="p3.persons.how_it_works">{{ d.how_it_works }}</p>
+      {% else %}
+      <ol class="sequence home-orientation__steps"{% if d.steps_lang %} lang="{{ d.steps_lang }}"{% endif %}>
+        {% for step in d.steps %}
+        <li class="sequence__step sequence__step--italy">
+          <span class="sequence__marker" aria-hidden="true"></span>
+          <div>
+            <p class="sequence__title">{{ step.label|default:step }}</p>
+            {% if step.text %}<p class="sequence__body">{{ step.text }}</p>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ol>
+      {% if s.note %}<p class="home-orientation__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+      {% endif %}
+      {% if d.url %}
+      <p class="home-orientation__actions"><a class="btn btn--primary btn--arrow" href="{{ d.url }}">{% translate "Commencer le questionnaire d’orientation" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+      {% endif %}
+    </div>
   </div>
 </section>

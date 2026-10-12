@@ -1,0 +1,9 @@
+{% comment %}
+V5 live preview — one family of the status board (designpreview.live.live_status). DEVELOPMENT
+ONLY. Its state, its scores, its CD decision (served as text from docs/design-v5/QA/v54/), its
+tag and its date — as the steward wrote them.
+{% endcomment %}<li class="dp-family">
+  <p class="dp-family__name"><code>{{ family.key }}</code> {{ family.title }} <span class="dp-state dp-state--{{ family.state }}"{% if family.state != "v5" %} lang="fr"{% endif %}>{{ family.label }}</span></p>
+  {% if family.scores %}<p class="dp-family__scores">{% for score in family.scores %}<span class="dp-family__score">{{ score.label }} {{ score.value }}</span>{% endfor %}</p>{% endif %}
+  <p class="dp-family__meta">{% if family.decision %}<a href="{% url 'designpreview:decision' family.decision %}">la decisione del CD</a>{% endif %}{% if family.tag %} · <code>{{ family.tag }}</code>{% endif %}{% if family.date %} · <time datetime="{{ family.date }}">{{ family.day|date:"j F Y"|lower|default:family.date }}</time>{% endif %}</p>
+</li>

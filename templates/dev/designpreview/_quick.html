@@ -1,0 +1,11 @@
+{% comment %}
+V5 live preview — the council-passed surfaces, as the strip's «Superfici V5» menu lists them
+(designpreview.live.quick_surfaces; review W1-P M5: one menu, never a row of links that outgrows the
+strip). DEVELOPMENT ONLY. Included by _strip.html twice: in its own menu from 80 rem, in «Altro»
+below. The public pages, then each persona's: a page of the persona inside is a link; a page of
+another persona is a POST to the switch that enters that persona and opens that page.
+{% endcomment %}<p class="dp-strip__panel-title">Superfici V5 — hanno passato il consiglio</p>
+{% if strip.quick.public %}<p class="dp-strip__subtitle">Pagine pubbliche</p>
+<ul class="dp-strip__links" role="list">{% for item in strip.quick.public %}<li><a href="{{ item.landing }}">{{ item.title }}</a></li>{% endfor %}</ul>{% endif %}
+{% for group in strip.quick.personas %}<p class="dp-strip__subtitle" lang="fr">{{ group.name }}</p>
+<ul class="dp-strip__links" role="list">{% for item in group.pages %}<li>{% if group.inside %}<a href="{{ item.landing }}" lang="fr">{{ item.title }}</a>{% elif group.allowed %}<form class="dp-strip__go" method="post" action="{% url 'designpreview:persona_enter' group.key %}">{% csrf_token %}<input type="hidden" name="page" value="{{ item.url }}"><input type="hidden" name="lang" value="{{ item.lang }}"><input type="hidden" name="frame" value="{{ strip.frame }}" data-dp-frame-field><button class="dp-strip__go-button" type="submit"><span lang="fr">{{ item.title }}</span><span class="dp-hidden"> — entrando come <span lang="fr">{{ group.name }}</span></span></button></form>{% else %}<span lang="fr">{{ item.title }}</span>{% endif %}</li>{% endfor %}</ul>{% endfor %}

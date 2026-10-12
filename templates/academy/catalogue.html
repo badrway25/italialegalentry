@@ -67,7 +67,7 @@ its label, and the colour only repeats what the word already says.
           </span>
         </span>
         {% if course.id in enrolled_ids %}
-        <span class="entry__actor state state--done" data-register="conforme">{% translate "déjà inscrit" %}</span>
+        {% chip register="conforme" css_class="entry__actor" %}{% translate "déjà inscrit" %}{% endchip %}
         {% endif %}
       {% if course_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
     </li>

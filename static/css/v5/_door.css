@@ -1,0 +1,266 @@
+/* ============================================================================
+   THE DOOR STAGE — the owner's composition, as drawn (docs/design-v2/BRAND_ASSETS.md §2; V5.4 plan §1.13,
+   §2.3 «Page-only CSS»; DL54-08, DL54-15; W2-B). A `_` partial: never in main.css, bundled by the entries
+   that draw the door — today apps/accounts/static/accounts/entrance.css (the login «Il varco» and every
+   entrance page).
+
+   WHAT IT DRAWS. The arch (3 : 4, 320 × 427 at x 288–608 / y 80–507 of the 640 × 520 stage), the owner's
+   photograph inside it, the solid navy inner door, the golden key, the three steps and the arch's outline,
+   in STAGE UNITS: `.door-stage` is the arch's crop of the stage — viewBox 264 64 368 456 — and every layer
+   is placed in those units. The vector parts are one <svg class="door">; the photograph is an <img> in a
+   box of the arch's shape under it (it can take a srcset, and it is the page's LCP element); the key is an
+   HTML layer over it, so that it can turn on the compositor — at rest it is static/brand/original/key.svg,
+   shape for shape, at the place the stage gives it (60 × 130 at 420, 207 in a 56 × 122 box, «meet»: its
+   crop about the shaft, x 10–50 / y 11–105, is 37.333 × 87.733 at 429.333, 217.6).
+
+   THE STAGE IS A LOADER HOST. The markup gives the stage the classes `door-stage sig` and the key
+   `sig__l sig__key door-stage__key` with a `.sig__turn` inside: the layer formula, the key's turn
+   (`sig-turn`, --motion-slow on --ease-turn, then the hold) and the forced-colours rule of the mark are
+   static/css/v5/loader.css's, in main.css — one key-turn primitive for the loader, the login and the hero
+   (plan §1.9). This sheet only says where the key stands on the stage and how deep its turn is.
+
+   TWO LIGHTS IT CAN TAKE, both pre-painted and transparent at rest: the frame (the arch's outline in the
+   key's gold, with its halo) and the three steps (their gold twins). A consumer lights them by setting
+   --door-frame or --door-steps to 1 on the stage or above it — an opacity in --motion-standard, the steps
+   one after the other from the threshold up — and may run the frame's light up from the threshold with the
+   two keyframes below: a clip that rises while the drawing inside it stays in place. A consumer whose state
+   changes often sets each switch on the layer it lights (the entrance does): a custom property is inherited,
+   and set on a stage's root it restyles every element under it. Transform and opacity only,
+   nothing repainted; nothing here moves by itself.
+
+   NEVER MIRRORED: the stage is direction: ltr in every locale (the door is the door, the key turns the way
+   it turns), so its logical offsets are the drawing's own by construction and nothing needs an RTL twin.
+   Tokens only: the literal colours are the door's block of static/css/v5/tokens.css (§4.3).
+   ========================================================================== */
+
+/* ---- 1. The stage: the arch's crop, in stage units -------------------------------------------------------- */
+
+.door-stage {
+  --vx: 264;
+  --vy: 64;
+  --vw: 368;
+  --vh: 456;
+  --sig-size: var(--door-w, 100%);
+  position: relative;
+  display: block;
+  flex: none;
+  inline-size: var(--door-w, 100%);
+  aspect-ratio: 368 / 456;
+  direction: ltr;
+}
+
+.door-stage > svg.door {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ---- 2. The photograph: the owner's, inside the arch (opacity .5 on the arch's ground, saturation .8) ------ */
+
+.door-stage__photo {
+  --x: 288;
+  --y: 80;
+  --w: 320;
+  --h: 427;
+  position: absolute;
+  inset-inline-start: calc((var(--x) - var(--vx)) / var(--vw) * 100%);
+  inset-block-start: calc((var(--y) - var(--vy)) / var(--vh) * 100%);
+  inline-size: calc(var(--w) / var(--vw) * 100%);
+  block-size: calc(var(--h) / var(--vh) * 100%);
+  display: block;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / calc(160 / 427 * 100%) calc(160 / 427 * 100%) 0 0;
+  background: var(--door-body);
+  /* the door's shadow on its ground: 0 24 32 in stage units, so that a small door casts a small shadow */
+  filter: drop-shadow(0 calc(var(--door-w, 320px) * 24 / 368) calc(var(--door-w, 320px) * 32 / 368) var(--door-drop-ink));
+}
+
+.door-stage__photo > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  object-fit: cover;
+  opacity: 0.5;
+  filter: saturate(0.8) contrast(1.05);
+}
+
+/* ---- 3. The vector parts: the veil, the arch's inset, the inner door, the key's glow, the steps, the outline -- */
+
+.doorway__veil-a { stop-color: var(--surface-night); stop-opacity: 0; }
+.doorway__veil-b { stop-color: var(--surface-night); stop-opacity: 0.55; }
+.doorway__glow-a { stop-color: var(--brand-gold); stop-opacity: 0.3; }
+.doorway__glow-b { stop-color: var(--brand-gold); stop-opacity: 0.12; }
+.doorway__glow-c { stop-color: var(--brand-gold); stop-opacity: 0; }
+
+.door-stage .doorway__arch-inset {
+  fill: none;
+  stroke: var(--line-night);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* the inner door: SOLID official navy, as in the original, so that the key keeps its 5.80 : 1 */
+.door-stage .doorway__inner {
+  fill: var(--brand-navy);
+  stroke: var(--door-inner-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  filter: none;
+}
+
+.door-stage .doorway__glow {
+  opacity: 0.7;
+}
+
+.door-stage .doorway__steps rect {
+  fill: var(--accent-night);
+}
+
+.door-stage .doorway__steps rect:nth-child(1) { opacity: 0.55; }
+.door-stage .doorway__steps rect:nth-child(2) { opacity: 0.38; }
+.door-stage .doorway__steps rect:nth-child(3) { opacity: 0.24; }
+
+.door-stage .doorway__arch {
+  fill: none;
+  stroke: var(--accent-night);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: none;
+}
+
+/* ---- 4. The key: the verbatim key, an HTML layer at the stage's key box ------------------------------------ */
+/* `.sig__l` places it (loader.css) and `.sig__turn` turns it about its shaft — x = 448, the centre of its own
+   box. The depth is about four times the key's height: a turn reads as a turn, not as a squash. */
+
+.door-stage__key {
+  --x: 429.333;
+  --y: 217.6;
+  --w: 37.333;
+  --h: 87.733;
+  z-index: 3;
+  perspective: calc(var(--door-w, 320px) * 0.954);
+  perspective-origin: 50% 50%;
+}
+
+.door-stage__key svg {
+  fill: var(--identity-key);
+}
+
+.door-stage__key .door-key__eye {
+  fill: var(--brand-navy);
+}
+
+/* ---- 5. The steps taking the light: three gold twins over the drawn steps, transparent at rest ------------- */
+/* --door-steps: 1 lights them. --step-lit is each twin's opacity when lit, --step-n its order from the threshold
+   up (0 is the lowest step): they take the light one after the other, --motion-stagger apart, and give it back
+   together. */
+
+.door-stage__step {
+  --h: 6;
+  z-index: 2;
+  border-radius: calc(var(--door-w, 320px) * 2 / 368);
+  background: var(--identity-light-night); /* the key's gold on night: 9.94 : 1 on notte-900 */
+  opacity: calc(var(--door-steps, 0) * var(--step-lit));
+  transition: opacity var(--motion-standard) var(--ease-sine) calc(var(--door-steps, 0) * var(--step-n) * var(--motion-stagger));
+}
+
+.door-stage__step--top { --x: 342.5; --y: 477; --w: 211; --step-lit: 0.9; --step-n: 2; }
+.door-stage__step--mid { --x: 320; --y: 486; --w: 256; --step-lit: 0.74; --step-n: 1; }
+.door-stage__step--low { --x: 297.5; --y: 495; --w: 301; --step-lit: 0.58; --step-n: 0; }
+
+/* ---- 6. The frame taking the light: the arch's outline in the key's gold, transparent at rest -------------- */
+/* --door-frame: 1 lights it. `.door-stage__frame` is the still box (the whole stage); `.door-stage__frame-wipe`
+   the clip a consumer may raise from the threshold; `.door-stage__frame-light` the drawing, which stays where
+   it is. */
+
+.door-stage__frame {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none;
+  opacity: var(--door-frame, 0);
+  transition: opacity var(--motion-standard) var(--ease-sine);
+}
+
+.door-stage__frame-wipe {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.door-stage__frame-light {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.door-stage__frame-light path {
+  fill: none;
+  stroke-linecap: butt; /* the light ends flush with the threshold */
+  vector-effect: non-scaling-stroke;
+}
+
+.door-stage__frame-glow {
+  stroke: var(--door-frame-glow);
+  stroke-width: 7;
+}
+
+.door-stage__frame-core {
+  stroke: var(--identity-light-night);
+  stroke-width: 2;
+}
+
+/* The light runs up the frame: the clip rises from the threshold and the drawing inside it stays in place — the
+   two run on one duration and one curve, and end on the element's own state (no fill: nothing stays in effect). */
+@keyframes door-frame-rise {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes door-frame-hold {
+  from {
+    transform: translateY(-100%);
+  }
+}
+
+/* ---- 7. Forced colours: the stage keeps its colours as the image it is (loader.css: forced-color-adjust: none
+        on the host); its lines take the system's ink, and it takes no light --------------------------------- */
+
+@media (forced-colors: active) {
+  .door-stage .doorway__arch,
+  .door-stage .doorway__arch-inset,
+  .door-stage .doorway__inner {
+    stroke: CanvasText;
+  }
+
+  /* each step carries a Canvas edge: CanvasText alone on the photograph's dark stone read 1.9–2.4 : 1 */
+  .door-stage .doorway__steps rect:nth-child(n) {
+    fill: CanvasText;
+    opacity: 1;
+    stroke: Canvas;
+    stroke-width: 2px;
+    paint-order: stroke;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .door-stage__photo {
+    filter: none;
+  }
+
+  .door-stage__frame,
+  .door-stage__step {
+    display: none;
+  }
+}

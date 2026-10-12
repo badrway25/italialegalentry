@@ -1,14 +1,22 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+After the deletion (design V5, W3-F2 step 2): the person is signed out, so the page is a quiet one of the service
+pages — no trail, no account's sections —: what happened (the title and its sentence), what to do (one primary, the
+home) and «who can help me» in the page's own live words. Drawn by static/css/v5/_servizio.css (cms/servizio.css).
+{% endcomment %}
 {% block page_title %}{% translate "Compte supprimé" %}{% endblock %}
 {% block meta_description %}{% translate "Confirmation de la suppression du compte." %}{% endblock %}
-{% block body_class %}page-account{% endblock %}
+{% block body_class %}page-account servizio{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/servizio.css' %}">{% endblock %}
 {% block content %}
-<section class="container account-page" aria-labelledby="deleted-title">
-  <div class="account-page__card">
-    <h1 id="deleted-title">{% translate "Votre compte a été supprimé" %}</h1>
-    <p>{% translate "Votre compte a été désactivé et vos données personnelles anonymisées. Vos consentements ont été révoqués." %}</p>
-    <p>{% translate "Pour toute question relative à vos droits, écrivez-nous :" %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-    <p><a class="btn btn--primary" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a></p>
+<section class="container conto conto--solo" aria-labelledby="deleted-title">
+  <div class="conto__main">
+    <header class="conto__head">
+      <h1 id="deleted-title" class="account-page__title">{% translate "Votre compte a été supprimé" %}</h1>
+      <p class="account-page__text">{% translate "Votre compte a été désactivé et vos données personnelles anonymisées. Vos consentements ont été révoqués." %}</p>
+    </header>
+    <div class="conto-actions"><a class="btn btn--primary" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a></div>
+    <p class="aiuto">{% translate "Pour toute question relative à vos droits, écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   </div>
 </section>
 {% endblock %}

@@ -1,0 +1,11 @@
+/* ============================================================================================
+   THE PAGE SHEET OF THE SERVICE PAGES — design V5.4, W3-F2 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 2, §2.3).
+   One entry for the pages a person meets when something stops — the 400, 403, 404, 410, 429 and 500 error pages —
+   and for the pages of their own account — the profile, allauth's management pages, the deletion request and its
+   answer. Loaded in extra_head after main.css (static/css/dist/cms/servizio.css, built by scripts/build_css.mjs) by
+   templates/errors/base_error.html, templates/errors/standalone.html (400 and 500, which need no database),
+   templates/allauth/layouts/base.html and templates/accounts/delete_done.html. Its rules are the partial's
+   (static/css/v5/_servizio.css). The import is written as it resolves in the collected tree: cms/servizio.css →
+   css/v5/_servizio.css (DS 2026 §2).
+   ============================================================================================ */
+@import url("../css/v5/_servizio.css");

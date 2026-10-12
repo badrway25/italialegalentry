@@ -1,0 +1,2 @@
+<p class="dp-strip__panel-title">Cambiato dall’ultimo rapporto</p>
+{% if strip.changelog.lines %}<ul class="dp-strip__news" role="list">{% for line in strip.changelog.lines %}<li>{{ line }}</li>{% endfor %}</ul>{% else %}<p class="dp-strip__line" title="{{ strip.changelog.path }}">Ancora nessuna novità registrata.</p>{% endif %}

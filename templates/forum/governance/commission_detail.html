@@ -23,7 +23,7 @@ from « who ever did », and the second one is the annual report's job.
 {% if commission.governance_fr %}<p class="note">{{ commission.governance_fr }}</p>{% endif %}
 
 <p class="gloss">
-  <span class="state state--{{ commission.state_class }}" data-register="{{ commission.status|chip_register:'forum.CommissionStatus' }}">{{ commission.get_status_display }}</span>
+  {% chip commission.status "forum.CommissionStatus" %}{{ commission.get_status_display }}{% endchip %}
   {% if may_propose %}
   {% safe_url 'forum_governance:proposal_create' commission.key as propose_url %}
   {% if propose_url %}<a class="btn btn--secondary btn--sm" href="{{ propose_url }}">{% translate "Déposer une proposition" %}</a>{% endif %}
@@ -45,7 +45,7 @@ from « who ever did », and the second one is the annual report's job.
           {% if table.topic_fr %}{{ table.topic_fr }}{% endif %}
           {% if table.live_referent %}<br>{% blocktranslate with organisation=table.live_referent.profile.display_label %}Référent : {{ organisation }}{% endblocktranslate %}{% endif %}
         </span>
-        <span class="entry__actor state state--{{ table.state_class }}" data-register="{{ table.status|chip_register:'forum.TableStatus' }}">{{ table.get_status_display }}</span>
+        {% chip table.status "forum.TableStatus" css_class="entry__actor" %}{{ table.get_status_display }}{% endchip %}
       {% if table_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}
@@ -107,7 +107,7 @@ from « who ever did », and the second one is the annual report's job.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <h3 class="entry__title">{{ proposal.title_fr }}</h3>
         <span class="entry__gloss">{{ proposal.reference }}{% if proposal.table %} — {{ proposal.table.title_fr }}{% endif %}</span>
-        <span class="entry__actor state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
       {% if proposal_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}
@@ -129,7 +129,7 @@ from « who ever did », and the second one is the annual report's job.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <h3 class="entry__title">{{ project.title_fr }}</h3>
         <span class="entry__gloss">{% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}</span>
-        <span class="entry__actor state state--{{ project.state_class }}" data-register="{{ project.status|chip_register:'forum.ProjectStatus' }}">{{ project.get_status_display }}</span>
+        {% chip project.status "forum.ProjectStatus" css_class="entry__actor" %}{{ project.get_status_display }}{% endchip %}
       {% if project_url %}</a>{% else %}</div>{% endif %}
     </li>
     {% endfor %}

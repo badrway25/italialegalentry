@@ -1,71 +1,75 @@
-{% extends "base.html" %}{% load i18n %}
-{% block page_title %}{% translate "Mon compte" %}{% endblock %}
+{% extends "allauth/layouts/manage.html" %}{% load i18n %}
+{% comment %}
+«Mon compte» — the profile, on the account pages' frame (allauth/layouts/manage.html; design V5, W3-F2 step 2): the
+page's title and its sentence, then four sections on hairlines — the profile (what the account is, as a register;
+what the person may change, as a form with one primary), the security (the password, the second factor and its
+state), the organisations, the person's data (the export, the documents, and the deletion: the system's danger
+button, which leads to its own confirmation page — accounts/delete_request.html). Words verbatim.
+The export answers an attachment and leaves the page where it is: its form says `data-loader="none"`, so the
+button never waits for a page that does not come (W1-D; tests/frontend/test_loader_rules.py).
+{% endcomment %}
+{% block head_title %}{% translate "Mon compte" %}{% endblock %}
 {% block meta_description %}{% translate "Gestion de votre compte personnel : profil, sécurité, données." %}{% endblock %}
-{% block body_class %}page-account{% endblock %}
-{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-<div class="container account-layout">
-  <aside class="account-layout__aside">
-    {% include "accounts/partials/account_menu.html" with active="profile" %}
-  </aside>
-  <div class="account-layout__main">
-    {% include "components/page_header.html" with title=_("Mon compte") lead=_("Vos informations personnelles sont limitées à ce qui est nécessaire au suivi de vos demandes. Vous pouvez les modifier, les exporter ou demander la suppression de votre compte à tout moment.") %}
+<header class="conto__head">
+  <h1 class="account-page__title">{% translate "Mon compte" %}</h1>
+  <p class="account-page__text">{% translate "Vos informations personnelles sont limitées à ce qui est nécessaire au suivi de vos demandes. Vous pouvez les modifier, les exporter ou demander la suppression de votre compte à tout moment." %}</p>
+</header>
 
-    <section class="account-section" aria-labelledby="profile-heading">
-      <h2 id="profile-heading">{% translate "Profil" %}</h2>
-      <dl class="account-facts">
-        <div class="account-facts__row"><dt>{% translate "Adresse e-mail" %}</dt><dd>{{ request.user.email }} <a class="account-facts__action" href="{% url 'account_email' %}">{% translate "Gérer" %}</a></dd></div>
-        <div class="account-facts__row"><dt>{% translate "Type de compte" %}</dt><dd>{{ request.user.get_account_type_display }}</dd></div>
-        <div class="account-facts__row"><dt>{% translate "Inscrit le" %}</dt><dd><time datetime="{{ request.user.date_joined|date:'c' }}">{{ request.user.date_joined|date:"d.m.Y" }}</time></dd></div>
-        {% if roles %}<div class="account-facts__row"><dt>{% translate "Rôles" %}</dt><dd>{{ roles|join:", " }}</dd></div>{% endif %}
-      </dl>
-      <form method="post" action="{% url 'accounts:profile' %}" class="form account-form" novalidate>
-        {% csrf_token %}
-        {% include "components/form_errors.html" with form=form %}
-        {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
-        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
-        <div class="form-actions"><button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button></div>
-      </form>
-    </section>
+<section class="account-panel" aria-labelledby="profile-heading">
+  <h2 id="profile-heading" class="account-panel__title">{% translate "Profil" %}</h2>
+  <dl class="conto-facts">
+    <div class="conto-facts__row"><dt>{% translate "Adresse e-mail" %}</dt><dd><span class="email">{{ request.user.email }}</span> <a class="conto-facts__action" href="{% url 'account_email' %}">{% translate "Gérer" %}</a></dd></div>
+    <div class="conto-facts__row"><dt>{% translate "Type de compte" %}</dt><dd>{{ request.user.get_account_type_display }}</dd></div>
+    <div class="conto-facts__row"><dt>{% translate "Inscrit le" %}</dt><dd><time datetime="{{ request.user.date_joined|date:'c' }}">{{ request.user.date_joined|date:"d.m.Y" }}</time></dd></div>
+    {% if roles %}<div class="conto-facts__row"><dt>{% translate "Rôles" %}</dt><dd>{{ roles|join:", " }}</dd></div>{% endif %}
+  </dl>
+  <form method="post" action="{% url 'accounts:profile' %}" class="form" novalidate data-single-submit>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=form %}
+    {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+    <div class="form__actions"><button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button></div>
+  </form>
+</section>
 
-    <section class="account-section" aria-labelledby="security-heading">
-      <h2 id="security-heading">{% translate "Sécurité" %}</h2>
-      <ul class="account-links">
-        <li><a href="{% url 'account_change_password' %}">{% translate "Changer le mot de passe" %}</a></li>
-        <li><a href="{% url 'mfa_index' %}">{% translate "Authentification à deux facteurs" %}</a> — {% if has_totp %}<span class="badge badge--success" data-register="conforme">{% translate "activée" %}</span>{% else %}<span class="badge badge--neutral" data-register="neutro">{% translate "non activée" %}</span>{% endif %}</li>
-      </ul>
-    </section>
+<section class="account-panel" aria-labelledby="security-heading">
+  <h2 id="security-heading" class="account-panel__title">{% translate "Sécurité" %}</h2>
+  <ul class="conto-links">
+    <li class="conto-links__row"><a href="{% url 'account_change_password' %}">{% translate "Changer le mot de passe" %}</a></li>
+    <li class="conto-links__row"><a href="{% url 'mfa_index' %}">{% translate "Authentification à deux facteurs" %}</a>{% if has_totp %}{% chip register="conforme" %}{% translate "activée" %}{% endchip %}{% else %}{% chip register="neutro" %}{% translate "non activée" %}{% endchip %}{% endif %}</li>
+  </ul>
+</section>
 
-    <section class="account-section" aria-labelledby="orgs-heading">
-      <h2 id="orgs-heading">{% translate "Organisations" %}</h2>
-      {% if memberships %}
-      <div class="table-wrap">
-        <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-profile-1">
-          <table class="data-table">
-            <caption id="t-profile-1" class="visually-hidden">{% translate "Organisations auxquelles vous appartenez" %}</caption>
-            <thead><tr><th scope="col">{% translate "Organisation" %}</th><th scope="col">{% translate "Type" %}</th><th scope="col">{% translate "Votre rôle" %}</th></tr></thead>
-            <tbody>
-              {% for m in memberships %}<tr><th scope="row" data-label="{% translate 'Organisation' %}">{{ m.organisation.name }}</th><td data-label="{% translate 'Type' %}">{{ m.organisation.get_kind_display }}</td><td data-label="{% translate 'Votre rôle' %}">{{ m.get_role_display }}</td></tr>{% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {% else %}
-      {% include "components/empty_state.html" with title=_("Aucune organisation") text=_("Votre compte n’est rattaché à aucune organisation pour le moment.") %}
-      {% endif %}
-    </section>
-
-    <section class="account-section" aria-labelledby="data-heading">
-      <h2 id="data-heading">{% translate "Vos données" %}</h2>
-      <p>{% translate "Vous pouvez obtenir une copie de vos données au format JSON. Pour toute autre demande relative à vos droits, écrivez-nous :" %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-      <form method="post" action="{% url 'accounts:export_data' %}" class="form-inline">
-        {% csrf_token %}
-        <button type="submit" class="btn btn--secondary">{% translate "Exporter mes données (JSON)" %}</button>
-      </form>
-      {% if can_delete %}
-      <p class="account-section__danger"><a class="btn btn--danger" href="{% url 'accounts:delete_request' %}">{% translate "Supprimer mon compte" %}</a></p>
-      {% endif %}
-    </section>
+<section class="account-panel" aria-labelledby="orgs-heading">
+  <h2 id="orgs-heading" class="account-panel__title">{% translate "Organisations" %}</h2>
+  {% if memberships %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-profile-1">
+    <table class="data-table">
+      <caption id="t-profile-1" class="visually-hidden">{% translate "Organisations auxquelles vous appartenez" %}</caption>
+      <thead><tr><th scope="col">{% translate "Organisation" %}</th><th scope="col">{% translate "Type" %}</th><th scope="col">{% translate "Votre rôle" %}</th></tr></thead>
+      <tbody>
+        {% for m in memberships %}<tr><th scope="row" data-label="{% translate 'Organisation' %}">{{ m.organisation.name }}</th><td data-label="{% translate 'Type' %}">{{ m.organisation.get_kind_display }}</td><td data-label="{% translate 'Votre rôle' %}">{{ m.get_role_display }}</td></tr>{% endfor %}
+      </tbody>
+    </table>
   </div>
-</div>
+  {% else %}
+  {% include "components/empty_state.html" with title=_("Aucune organisation") text=_("Votre compte n’est rattaché à aucune organisation pour le moment.") %}
+  {% endif %}
+</section>
+
+<section class="account-panel" aria-labelledby="data-heading">
+  <h2 id="data-heading" class="account-panel__title">{% translate "Vos données" %}</h2>
+  <p class="account-page__text">{% translate "Vous pouvez obtenir une copie de vos données au format JSON. Pour toute autre demande relative à vos droits, écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  <div class="conto-actions">
+    <form method="post" action="{% url 'accounts:export_data' %}" data-loader="none">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--secondary">{% translate "Exporter mes données (JSON)" %}</button>
+    </form>
+    <a class="conto-actions__link" href="{% url 'documents:index' %}">{% translate "Mes documents" %}</a>
+  </div>
+  {% if can_delete %}
+  <p class="conto-danger"><a class="btn btn--danger" href="{% url 'accounts:delete_request' %}">{% translate "Supprimer mon compte" %}</a></p>
+  {% endif %}
+</section>
 {% endblock %}

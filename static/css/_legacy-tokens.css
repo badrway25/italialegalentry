@@ -116,12 +116,8 @@
   --section-gap: var(--rank-b-block);
 
   /* ---- Radius ------------------------------------------------------------ */
-  /* Radius is 0 with two functional exceptions. The old system had four radii
-     on a single page. --radius-pill resolves to the control radius rather than
-     to 999px: a pill is not a shape this system has. */
-  --radius-xs: 0;
-  --radius-sm: var(--radius-control);
-  --radius-md: var(--radius-control);
+  /* --radius-xs / -sm / -md left the shim on 5 October 2026: design V5 adopts
+     them as its corner scale «Lo spigolo» (static/css/v5/tokens.css, W1-A). */
   --radius-pill: var(--radius-control);
   --forum-radius: 0;
 
@@ -149,8 +145,7 @@
   --tracking-eyebrow: var(--track-folio);
 
   /* ---- Controls and chrome ----------------------------------------------- */
-  --control-height: 44px;
-  --control-height-sm: 36px;
+  /* --control-height / -sm left the shim: static/css/v5/aliases.css points them at --control-md / -sm. */
   --icon-size: 20px;
   --icon-size-sm: 16px;
   --icon-size-lg: 24px;
@@ -158,12 +153,8 @@
   --header-height: var(--chrome-masthead);
   --nav-drawer-top: var(--chrome-block-size);
 
-  /* ---- Focus ------------------------------------------------------------- */
-  --focus-ring-color: var(--navy);
-  --focus-ring-inverse: var(--paper-on-navy);
-  --focus-ring-width: 2px;
-  --focus-ring-offset: 2px;
-  --focus-ring-offset-color: var(--paper);
+  /* ---- Focus: the five --focus-ring-* names left the shim — design V5's one focus system declares
+     them (static/css/v5/tokens.css, aliases.css; V5.4 plan §1.6). ------------------------------ */
 
   /* ---- Motion ------------------------------------------------------------ */
   --duration-fast: var(--motion-fast);
@@ -179,7 +170,6 @@
   --measure-narrow: 42ch;
   --z-below: -1;
   --z-dropdown: var(--z-header);
-  --z-modal: var(--z-dialog);
   --z-skiplink: var(--z-dialog);
   --reveal-index: 0;
 
@@ -236,43 +226,11 @@
   --measure-lead-legacy: var(--measure-lead);
 }
 
-.text-display {
-  font-family: var(--font-display);
-  font-size: var(--t-plate-size);
-  line-height: var(--t-plate-lh);
-  font-weight: 400;
-  font-variation-settings: "opsz" 72;
-  letter-spacing: var(--track-plate);
-}
-
-.text-h1 {
-  font-size: var(--t-title-size);
-  line-height: var(--t-title-lh);
-}
-
-.text-h2 {
-  font-size: var(--t-band-size);
-  line-height: var(--t-band-lh);
-}
-
-.text-h3 {
-  font-size: var(--t-entry-size);
-  line-height: var(--t-entry-lh);
-}
-
 .text-h4 {
   font-family: var(--font-ui);
   font-size: var(--t-folio-size);
   line-height: var(--t-folio-lh);
   font-weight: 600;
-}
-
-.text-lead {
-  font-family: var(--font-display);
-  font-size: var(--t-lead-size);
-  line-height: var(--t-lead-lh);
-  color: var(--ink-secondary);
-  max-inline-size: var(--measure-lead);
 }
 
 .text-small {
@@ -281,24 +239,11 @@
   line-height: var(--t-gloss-lh);
 }
 
-.text-legal {
-  font-family: var(--font-ui);
-  font-size: var(--t-gloss-size);
-  line-height: var(--t-gloss-lh);
-  color: var(--ink-muted);
-}
-
 .text-caption {
   font-family: var(--font-ui);
   font-size: var(--t-caption-size);
   line-height: var(--t-caption-lh);
   color: var(--ink-muted);
-}
-
-.text-label {
-  font-family: var(--font-ui);
-  font-size: var(--t-ui-size);
-  font-weight: 500;
 }
 
 .text-muted {

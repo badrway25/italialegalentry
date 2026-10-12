@@ -32,7 +32,7 @@ headings only (CONTENT_PENDING_LEGAL_REVIEW) derived from the wording of the loc
             <h3 class="timeline__label">{{ step.label }}</h3>
             {% if step.glossary %}
               <ul class="list-reset cluster timeline__text">
-                {% for term in step.glossary %}<li>{% if term.url %}<a class="badge" data-register="neutro" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="badge" data-register="neutro" lang="it">{{ term.term }}</span>{% endif %}</li>{% endfor %}
+                {% for term in step.glossary %}<li>{% if term.url %}<a class="tag" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="tag" lang="it">{{ term.term }}</span>{% endif %}</li>{% endfor %}
               </ul>
             {% endif %}
           </div>

@@ -4,7 +4,7 @@ Anti-fraud callout (locked p3.antifraud.title / p3.antifraud.body — Implementa
 Contract: `links` (dict from pathways.services.related_links), optional `level` (2|3, heading level), `suffix` (unique id part).
 {% endcomment %}
 <aside class="notice notice--institutional antifraud-callout" aria-labelledby="antifraud-title-{{ suffix|default:'main' }}" data-callout="antifraud">
-  <span class="notice__icon" aria-hidden="true">{% svg_icon "shield" "icon icon--lg" %}</span>
+  <span class="notice__icon" aria-hidden="true">{% svg_icon "shield-alert" "icon icon--lg" %}</span>
   {% if level == 3 %}<h3 class="notice__title" id="antifraud-title-{{ suffix|default:'main' }}">{% locked "p3.antifraud.title" %}</h3>{% else %}<h2 class="notice__title" id="antifraud-title-{{ suffix|default:'main' }}">{% locked "p3.antifraud.title" %}</h2>{% endif %}
   <div class="notice__body">
     <p>{% locked "p3.antifraud.body" %}</p>

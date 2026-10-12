@@ -26,7 +26,7 @@ retains or sets aside a proposal, it decides nothing about anyone's situation.
 
 {% block governance_content %}
 <p class="gloss">
-  <span class="state state--{{ proposal.state_class }}" data-register="{{ proposal.status|chip_register:'forum.ProposalStatus' }}">{{ proposal.get_status_display }}</span>
+  {% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}
   <span>{{ proposal.reference }}</span>
   <span>{% blocktranslate with date=proposal.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span>
 </p>
@@ -92,7 +92,7 @@ retains or sets aside a proposal, it decides nothing about anyone's situation.
         <span class="entry__ordinal" aria-hidden="true"></span>
         <span class="entry__title">{{ project.title_fr }}</span>
         <span class="entry__gloss">{% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}</span>
-        <span class="entry__actor state state--{{ project.state_class }}" data-register="{{ project.status|chip_register:'forum.ProjectStatus' }}">{{ project.get_status_display }}</span>
+        {% chip project.status "forum.ProjectStatus" css_class="entry__actor" %}{{ project.get_status_display }}{% endchip %}
       {% if project_url %}</a>{% else %}</div>{% endif %}
     </li>
   </ol>
