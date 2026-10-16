@@ -1,40 +1,55 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
 Pathway detail (gate G3). Title/description are locked (registry, by key); steps, documents, authorities and
 warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose their heading only.
+
+Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): long-form prose (PX24). The entrance — the
+pathway's order, the locked title and description, the metadata row, and the page's index in the end seat (the
+sticky section bar of V4 that covered the side column is gone, review O2) — then one chapter per section of the
+index, one section device at the reading edge, the reading text at its measure:
+  * the steps on «la linea», down the reading edge (V4's horizontal timeline squeezed its labels into letter-wide
+    columns at 1440);
+  * the authorities, each link with its host beside it (D26);
+  * «Avertissements»: the editors' warnings and the ONE inset, the anti-fraud callout;
+  * «Ressources»: the useful terms (one row of tags of one height), the space's other areas;
+  * «Orientation»: the page's ONE action, and the live «who can help me» line.
+What is still being verified says so in words on a broken (dashed) edge — the «attesa» register's sign — never with
+a glyph per section (the editorial body keeps ≤ 6 icons).
 {% endcomment %}
 {% block page_title %}{{ d.title }} · {% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{{ d.title }} — {{ d.description }}{% endblock %}
-{% block body_class %}page-pathways page-pathways--detail{% endblock %}
+{% block body_class %}page-pathways page-pathways--detail interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
 {% locked_is_fallback "p3.persons.pathways" as entries_fallback %}{% locked_lang "p3.persons.pathways" as entries_lang %}
-<header class="page-header page-header--pathway container" data-pathway="{{ pathway.key }}">
-  <p class="page-header__eyebrow">{% svg_icon pathway.key|concept:"pathway"|default:pathway.icon|default:"signpost" "icon icon--sm icon--inline" %}{% translate "Parcours régulier" %} {{ pathway.order }}/8</p>
-  <h1 class="page-header__title"{% if entries_fallback %} lang="{{ entries_lang }}"{% endif %}>{{ d.title }}</h1>
-  <p class="page-header__lead"{% if entries_fallback %} lang="{{ entries_lang }}"{% endif %}>{{ d.description }}</p>
-  {% if pathway.hero_image %}
-    <figure class="hero__figure">
-      <img src="{{ pathway.hero_image.file.url }}" alt="{% if pathway.hero_image.is_decorative %}{% else %}{{ pathway.hero_image.alt_fr }}{% endif %}" width="{{ pathway.hero_image.width }}" height="{{ pathway.hero_image.height }}" loading="lazy">
-    </figure>
+{% translate "Parcours régulier" as order_label %}
+<div class="pathway-entrance" data-pathway="{{ pathway.key }}">{% with order_suffix=pathway.order|stringformat:"s"|add:"/8" %}
+{% if entries_fallback %}
+{% include "pages/partials/_ingresso.html" with label=order_label label_suffix=order_suffix title=d.title title_lang=entries_lang lead=d.description lead_lang=entries_lang meta_template="pathways/_review_meta.html" reviewed_at=pathway.last_reviewed_at index=d.sections only %}
+{% else %}
+{% include "pages/partials/_ingresso.html" with label=order_label label_suffix=order_suffix title=d.title lead=d.description meta_template="pathways/_review_meta.html" reviewed_at=pathway.last_reviewed_at index=d.sections only %}
+{% endif %}{% endwith %}
+</div>
+
+{% if pathway.hero_image and pathway.hero_image.is_publishable %}
+<div class="container pathway-figure">
+  {% if pathway.hero_image.is_decorative %}
+  <img class="pathway-figure__img" src="{{ pathway.hero_image.file.url }}" alt="" width="{{ pathway.hero_image.width }}" height="{{ pathway.hero_image.height }}" loading="lazy" decoding="async">
+  {% else %}
+  <figure class="figura">
+    <img src="{{ pathway.hero_image.file.url }}" alt="{{ pathway.hero_image.alt_fr }}" lang="fr" width="{{ pathway.hero_image.width }}" height="{{ pathway.hero_image.height }}" loading="lazy" decoding="async">
+    <figcaption lang="fr">{{ pathway.hero_image.caption_fr }}{% if pathway.hero_image.caption_place %} · {{ pathway.hero_image.caption_place }}{% endif %}{% if pathway.hero_image.caption_date %}, {{ pathway.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if pathway.hero_image.credit %} — {% translate "Photo" %} : {{ pathway.hero_image.credit }}{% endif %}</figcaption>
+  </figure>
   {% endif %}
-  <div class="page-header__meta">{% include "pathways/_metadata_row.html" with reviewed_at=pathway.last_reviewed_at %}</div>
-</header>
+</div>
+{% endif %}
 
-<nav class="section-nav" aria-label="{% translate 'Sommaire de la page' %}">
-  <div class="container">
-    <ul class="section-nav__list">
-      {% for section in d.sections %}<li><a class="section-nav__link" href="#{{ section.id }}">{{ section.label }}</a></li>{% endfor %}
-    </ul>
-  </div>
-</nav>
-
-<div class="container layout-sidebar layout-sidebar--end">
-  <div class="stack stack--lg prose">
-
-    <section id="apercu" class="section section--flush-top section--tight" aria-labelledby="apercu-title">
-      <div class="section__header"><h2 id="apercu-title" class="section__title">{% translate "Aperçu" %}</h2></div>
+<section id="apercu" class="chapter chapter--prose" aria-labelledby="apercu-title">
+  <div class="container chapter__inner">
+    {% translate "Aperçu" as apercu_title %}{% include "pages/partials/_chapter_head.html" with title_id="apercu-title" title=apercu_title only %}
+    <div class="chapter__body">
       {% if d.is_training_in_origin_country %}
         {% comment %}CONTENT_PENDING_LEGAL_REVIEW — fixed neutral notice required by Implementation §3.3 Note (never presented as an already authorised channel).{% endcomment %}
         <div class="notice notice--info" role="status" data-notice="training-in-origin-country">
@@ -43,71 +58,73 @@ warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose th
         </div>
       {% endif %}
       {% if d.eligibility %}
-        <div class="stack"{% if d.eligibility_lang != site.lang %} lang="{{ d.eligibility_lang }}"{% endif %}>{{ d.eligibility|linebreaks }}</div>
+        <div class="chapter__prose"{% if d.eligibility_lang != site.lang %} lang="{{ d.eligibility_lang }}"{% endif %}>{{ d.eligibility|linebreaks }}</div>
       {% else %}
         {% comment %}CONTENT_PENDING_LEGAL_REVIEW — eligibility context is written and verified by the legal reviewer; nothing is invented here.{% endcomment %}
-        {% include "components/empty_state.html" with title=_("Contexte en cours de vérification") text=_("Les conditions générales de ce parcours seront décrites après vérification sur les sources officielles. Les décisions relèvent des autorités compétentes.") %}
+        <div class="en-attente" role="status"><p class="en-attente__title">{% translate "Contexte en cours de vérification" %}</p><p class="en-attente__text">{% translate "Les conditions générales de ce parcours seront décrites après vérification sur les sources officielles. Les décisions relèvent des autorités compétentes." %}</p></div>
       {% endif %}
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section id="etapes" class="section section--tight section--rule" aria-labelledby="etapes-title">
-      <div class="section__header"><h2 id="etapes-title" class="section__title">{% translate "Étapes" %}</h2></div>
+<section id="etapes" class="chapter chapter--prose" aria-labelledby="etapes-title">
+  <div class="container chapter__inner">
+    {% translate "Étapes" as etapes_title %}{% include "pages/partials/_chapter_head.html" with title_id="etapes-title" title=etapes_title only %}
+    <div class="chapter__body">
       {% if d.steps %}
-        <ol class="timeline" data-steps="{{ d.steps|length }}">
-          {% for step in d.steps %}
-          <li class="timeline__item{% if step.pending %} timeline__item--pending{% endif %}">
-            <span class="timeline__marker" aria-hidden="true"></span>
-            <div>
-              <h3 class="timeline__label"{% if step.lang != site.lang %} lang="{{ step.lang }}"{% endif %}>{{ step.heading }}</h3>
-              {% if step.body %}<div class="timeline__text">{{ step.body|linebreaks }}</div>{% endif %}
-            </div>
-          </li>
-          {% endfor %}
-        </ol>
-        <p class="text-small text-muted">{% translate "Les détails de chaque étape sont publiés au fur et à mesure de leur vérification avec les acteurs compétents." %}</p>
+        {% include "pages/partials/_linea.html" with steps=d.steps %}
+        <p class="chapter__fine">{% translate "Les détails de chaque étape sont publiés au fur et à mesure de leur vérification avec les acteurs compétents." %}</p>
       {% else %}
-        {% include "components/empty_state.html" with title=_("Étapes en préparation") %}
+        <div class="en-attente" role="status"><p class="en-attente__title">{% translate "Étapes en préparation" %}</p></div>
       {% endif %}
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section id="documentation" class="section section--tight section--rule" aria-labelledby="documentation-title">
-      <div class="section__header">
-        <h2 id="documentation-title" class="section__title">{% translate "Documentation généralement requise" %}</h2>
-        <p class="section__lead">{% translate "Liste indicative : les documents effectivement demandés dépendent de votre situation et des indications des autorités compétentes." %}</p>
-      </div>
+<section id="documentation" class="chapter chapter--prose" aria-labelledby="documentation-title">
+  <div class="container chapter__inner">
+    {% translate "Documentation généralement requise" as doc_title %}{% translate "Liste indicative : les documents effectivement demandés dépendent de votre situation et des indications des autorités compétentes." as doc_lead %}
+    {% include "pages/partials/_chapter_head.html" with title_id="documentation-title" title=doc_title lead=doc_lead only %}
+    <div class="chapter__body">
       {% if d.documents %}
-        <ul class="list-reset stack stack--sm doc-list">
+        <ul class="registro registro--words doc-list">
           {% for doc in d.documents %}
-          <li class="doc-list__item{% if doc.pending %} doc-list__item--pending{% endif %}">
-            <span{% if doc.lang != site.lang %} lang="{{ doc.lang }}"{% endif %}>{{ doc.heading }}</span>
-            {% if doc.body %}<span class="text-small text-muted">— {{ doc.body }}</span>{% endif %}
+          <li class="registro__row doc-list__item{% if doc.pending %} doc-list__item--pending{% endif %}">
+            <p class="registro__title"{% if doc.lang != site.lang %} lang="{{ doc.lang }}"{% endif %}>{{ doc.heading }}</p>
+            {% if doc.body %}<p class="registro__text">{{ doc.body }}</p>{% endif %}
           </li>
           {% endfor %}
         </ul>
       {% else %}
         {% comment %}CONTENT_PENDING_LEGAL_REVIEW — no document list is invented; editors add verified items in the back-office.{% endcomment %}
-        {% include "components/empty_state.html" with title=_("Liste en cours de vérification") text=_("La documentation généralement requise pour ce parcours sera publiée après vérification.") %}
+        <div class="en-attente" role="status"><p class="en-attente__title">{% translate "Liste en cours de vérification" %}</p><p class="en-attente__text">{% translate "La documentation généralement requise pour ce parcours sera publiée après vérification." %}</p></div>
       {% endif %}
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section id="autorites" class="section section--tight section--rule" aria-labelledby="autorites-title">
-      <div class="section__header">
-        <h2 id="autorites-title" class="section__title">{% translate "Autorités et acteurs compétents" %}</h2>
-        <p class="section__lead">{% translate "Liste indicative des acteurs généralement concernés. Italy Legal Entry™ n’intervient pas auprès des autorités et ne délivre aucune autorisation." %}</p>
-      </div>
+<section id="autorites" class="chapter chapter--prose" aria-labelledby="autorites-title">
+  <div class="container chapter__inner">
+    {% translate "Autorités et acteurs compétents" as auth_title %}{% translate "Liste indicative des acteurs généralement concernés. Italy Legal Entry™ n’intervient pas auprès des autorités et ne délivre aucune autorisation." as auth_lead %}
+    {% include "pages/partials/_chapter_head.html" with title_id="autorites-title" title=auth_title lead=auth_lead only %}
+    <div class="chapter__body">
       {% if d.authorities %}
-        <ul class="authority-list">
+        <ul class="registro registro--words authority-list">
           {% for a in d.authorities %}
-          <li>{% if a.url %}<a class="link-arrow" href="{{ a.url }}" rel="noopener"><span{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</span>{% svg_icon "arrow-up-right" %}</a>{% else %}<span{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</span>{% endif %}</li>
+          <li class="registro__row">{% if a.url %}<p class="registro__title"><a class="autorita" href="{{ a.url }}" rel="noopener"><span{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</span></a>{% if a.host %} <span class="autorita__host">{{ a.host }}</span>{% endif %}</p>{% else %}<p class="registro__title"{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</p>{% endif %}</li>
           {% endfor %}
         </ul>
       {% else %}
-        {% include "components/empty_state.html" with title=_("Acteurs en cours d’identification") %}
+        <div class="en-attente" role="status"><p class="en-attente__title">{% translate "Acteurs en cours d’identification" %}</p></div>
       {% endif %}
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section id="avertissements" class="section section--tight section--rule" aria-labelledby="avertissements-title">
-      <div class="section__header"><h2 id="avertissements-title" class="section__title">{% translate "Avertissements" %}</h2></div>
+<section id="avertissements" class="chapter chapter--prose" aria-labelledby="avertissements-title">
+  <div class="container chapter__inner">
+    {% translate "Avertissements" as warn_title %}{% include "pages/partials/_chapter_head.html" with title_id="avertissements-title" title=warn_title only %}
+    <div class="chapter__body">
       {% for w in d.warnings %}
         <div class="notice notice--warning" role="status"{% if w.lang != site.lang %} lang="{{ w.lang }}"{% endif %}>
           <span class="notice__icon" aria-hidden="true">{% svg_icon "warning" %}</span>
@@ -115,27 +132,37 @@ warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose th
         </div>
       {% endfor %}
       {% include "pathways/_antifraud_callout.html" with links=links level=3 suffix="detail" %}
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section id="ressources" class="section section--tight section--rule" aria-labelledby="ressources-title">
-      <div class="section__header"><h2 id="ressources-title" class="section__title">{% translate "Ressources" %}</h2></div>
+<section id="ressources" class="chapter chapter--prose" aria-labelledby="ressources-title">
+  <div class="container chapter__inner">
+    {% translate "Ressources" as res_title %}{% include "pages/partials/_chapter_head.html" with title_id="ressources-title" title=res_title only %}
+    <div class="chapter__body">
       {% if d.glossary %}
-        <h3 class="text-h4">{% translate "Termes utiles" %}</h3>
-        <ul class="list-reset cluster" data-glossary="{{ d.glossary|length }}">
+      <div class="termes">
+        <h3 class="termes__title">{% translate "Termes utiles" %}</h3>
+        <ul class="termes__list" data-glossary="{{ d.glossary|length }}">
           {% for term in d.glossary %}
             <li>{% if term.url %}<a class="tag" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="tag" lang="it">{{ term.term }}</span>{% endif %}</li>
           {% endfor %}
         </ul>
+      </div>
       {% endif %}
-      {% include "pathways/_side_links.html" with links=links suffix="resources" %}
-    </section>
-
-    {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
+      {% include "pathways/_space_links.html" with links=links %}
+      <p class="chapter__more"><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}</a></p>
+    </div>
   </div>
+</section>
 
-  <aside class="layout-sidebar__aside stack stack--lg" aria-label="{% translate 'Navigation entre les parcours' %}">
-    <p><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-    {% include "pathways/_side_links.html" with links=links suffix="aside" %}
-  </aside>
-</div>
+<section id="orientation" class="chapter chapter--area" aria-labelledby="orientation-chapter-title">
+  <div class="container chapter__inner">
+    {% translate "Orientation" as orientation_title %}{% include "pages/partials/_chapter_head.html" with title_id="orientation-chapter-title" title=orientation_title only %}
+    <div class="chapter__body">
+      {% include "pathways/_orientation_action.html" with links=links %}
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+</section>
 {% endblock %}

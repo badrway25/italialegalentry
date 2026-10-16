@@ -1,24 +1,27 @@
 {% load i18n %}{% comment %}
-Timeline (design V4, CREATIVE_DIRECTION.md §3.6.3, DESIGN_SYSTEM_V4.md §8.27): what happened to a
-case file, in the order it happened — append-only, read from the audit trail (cases.presenters.
-timeline), never composed by hand. Node 12 px on a hairline spine, tabular date, the title of the
-event, the state it produced as a chip with its register, the actor as a type («Vous», the role
-held on the file, the project team) — never a person's name. The last node lights up once at load
-(v4/workspace.css, `tl-light`); under reduced motion it is simply lit.
+The case file's timeline — design V5 (W3-D: V5.4 plan §3.5 item 6), drawn by the journey's ONE rail drawing
+(apps/portal/static/portal/v5/_journey-rail.css, on the vocabulary of v5/_journey-nodes.css): what happened to a file, newest first — append-only, read from the
+audit trail (cases.presenters.timeline), never composed by hand. Where the file stands now heads the list: the
+inspector that holds it scrolls inside itself, and its first row is the one in view. A spine of the rail's nodes:
+every event behind the file a filled ink dot (no check, O14), the latest one — the first row — the laguna ring on its
+wash; the date in tabular figures; the event's words; the state it produced as a chip with its register; the actor as
+a type («Vous», the role held on the file, the project team) — never a person's name, and not said twice (an
+assignment's detail is already the role). Still at load: the latest node is painted lit, nothing moves (plan §1.5).
+The timeline's title is the page's, and its wording is the owner's (B1 item 4).
 
-Contract: `rows` = cases.presenters.timeline(case) (when, title, detail, chip_label,
-chip_register, actor); optional `label` (aria-label of the list).
+Contract: `rows` = cases.presenters.timeline(case) (when, title, detail, chip_label, chip_register, actor), newest
+first; optional `label` (aria-label of the list).
 {% endcomment %}
 <ol class="tl" role="list"{% if label %} aria-label="{{ label }}"{% endif %}>
   {% for row in rows %}
-  <li class="tl__row{% if forloop.last %} tl__row--last{% endif %}">
+  <li class="tl__row{% if forloop.first %} tl__row--latest{% endif %}">
     <span class="tl__node" aria-hidden="true"></span>
     <time class="tl__when" datetime="{{ row.when|date:'c' }}">{{ row.when|date:"d.m.Y" }}</time>
     <span class="tl__what">
       <span class="tl__title">{{ row.title }}</span>
       {% if row.chip_label %}{% chip register=row.chip_register %}{{ row.chip_label }}{% endchip %}{% endif %}
       {% if row.detail %}<span class="tl__detail">{{ row.detail }}</span>{% endif %}
-      {% if row.actor %}<span class="tl__actor">{{ row.actor }}</span>{% endif %}
+      {% if row.actor and row.actor != row.detail %}<span class="tl__actor">{{ row.actor }}</span>{% endif %}
     </span>
   </li>
   {% endfor %}

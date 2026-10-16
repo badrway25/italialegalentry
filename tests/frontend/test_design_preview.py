@@ -2949,7 +2949,11 @@ def test_a_client_that_resets_after_its_page_costs_the_server_no_slot(preview, m
         return sock, status
 
     def reset(sock: socket.socket) -> None:
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("hh", 1, 0))
+        # SO_LINGER on, timeout 0: close() sends a RST instead of a FIN. The option is the platform's
+        # struct linger — two u_short on Windows (winsock2.h), two int on Linux and macOS (sys/socket.h);
+        # Linux refuses the 4-byte Windows layout with EINVAL (errno 22), as GitHub's runner did.
+        layout = "HH" if sys.platform == "win32" else "ii"
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack(layout, 1, 0))
         sock.close()
 
     before, held = _baseline(), []
@@ -5908,6 +5912,10 @@ def test_a_page_the_frame_cannot_hold_is_said_never_a_blank_frame(chromium, dev_
     Review W1-P B1, item 2. Some addresses can never be framed — the back-office, the preview's own
     pages, another site. When the frame is refused one, the stage says so instead of a blank frame:
     the page alone, at the address the link asked for, and the way back to the page before.
+
+    The link is to the preview's own index. It was ``/backoffice/login/`` until F-5 closed the back
+    office's own sign-in form: signed out, every back-office address now ends at allauth's sign-in
+    (accounts.admin_site), a product page the frame may hold.
     """
     page = chromium.new_page(viewport={"width": 1440, "height": 900}, device_scale_factor=1)
     try:
@@ -5917,8 +5925,8 @@ def test_a_page_the_frame_cannot_hold_is_said_never_a_blank_frame(chromium, dev_
             """() => {
               const doc = document.querySelector('iframe[data-dp-frame]').contentDocument;
               const link = doc.createElement('a');
-              link.href = '/backoffice/login/';
-              link.textContent = 'back-office';
+              link.href = '/__design-v5/index/';
+              link.textContent = 'index';
               doc.body.appendChild(link);
               link.click();
             }"""
@@ -5935,7 +5943,7 @@ def test_a_page_the_frame_cannot_hold_is_said_never_a_blank_frame(chromium, dev_
             })"""
         )
         assert not seen["frameShown"] and seen["role"] == "alert", seen
-        assert seen["aloneShown"] and seen["alone"].endswith("/backoffice/login/"), seen
+        assert seen["aloneShown"] and seen["alone"].endswith(INDEX), seen
         assert seen["back"] == f"{LANDING}?page=/fr/le-projet/", seen
         assert "Questa pagina non si apre nella cornice." in seen["text"]
     finally:

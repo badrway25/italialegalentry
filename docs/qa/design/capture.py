@@ -84,19 +84,24 @@ def _metrics(page) -> dict:
 
 
 def _drawer_geometry(page) -> dict:
-    """Evidence for gaps G-02 (drawer height) and G-23 (overlay painted over the header): never a failure."""
+    """Evidence for gaps G-02 (the menu's height) and G-23 (the veil over the header): never a failure. Design V5
+    (W2-C2): the menu below 80rem is the sheet, the overlay system's modal drawer, and its veil the system's one
+    scrim; the sheet owns its head line (`top` 0: «Fermer» stands on the letterhead's row), so a scrim over the
+    header is the modal's own and never hides the way out."""
     return page.evaluate(
         """() => {
-            const drawer = document.querySelector('#nav-drawer');
-            const overlay = document.querySelector('[data-nav-overlay]');
+            const drawer = document.querySelector('#nav-sheet');
+            const overlay = document.querySelector('.overlay-scrim[data-open], .overlay-scrim');
             const header = document.querySelector('.site-header');
+            const box = drawer.getBoundingClientRect();
             return {
-                height: Math.round(drawer.getBoundingClientRect().height),
+                height: Math.round(box.height),
                 contentHeight: drawer.scrollHeight,
                 overlayHeight: overlay ? Math.round(overlay.getBoundingClientRect().height) : null,
-                expectedHeight: Math.round(window.innerHeight - drawer.getBoundingClientRect().top),
+                expectedHeight: Math.round(window.innerHeight - box.top),
                 overlayTop: overlay ? Math.round(overlay.getBoundingClientRect().top) : null,
                 headerBottom: Math.round(header.getBoundingClientRect().bottom),
+                top: Math.round(box.top),
             };
         }"""
     )
@@ -175,8 +180,9 @@ def capture(base_url: str) -> int:
             page.keyboard.press("Tab")
 
         def open_drawer(page):
+            # the sheet (W2-C2): in 320 ms, the drawer's clock
             page.click("[data-nav-toggle]")
-            page.wait_for_timeout(350)
+            page.wait_for_timeout(450)
 
         def open_mega_menu(page):
             # «Il portico» (design V5, W2-C1): a door is a disclosure button; Enter opens, the focus stays on it
@@ -196,7 +202,7 @@ def capture(base_url: str) -> int:
         for lang in LANGS:
             shot(f"state-skiplink-{lang}-390", f"/{lang}/", 390, 844, full_page=False, before=focus_skip_link)
             shot(f"state-drawer-open-{lang}-390", f"/{lang}/", 390, 844, full_page=False, before=open_drawer)
-            # The navigation breakpoint is 80rem: a 1024 px laptop or a landscape tablet gets the drawer too.
+            # The navigation breakpoint is 80rem: a 1024 px laptop or a landscape tablet gets the sheet too.
             shot(f"state-drawer-open-{lang}-1024", f"/{lang}/", 1024, 768, full_page=False, before=open_drawer)
             shot(f"state-megamenu-open-{lang}-1440", f"/{lang}/", 1440, 900, full_page=False, before=open_mega_menu)
             shot(f"state-focus-field-{lang}-1440", f"/{lang}/compte/login/", 1440, 900, before=focus_first_field)

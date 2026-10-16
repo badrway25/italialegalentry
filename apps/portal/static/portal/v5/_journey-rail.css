@@ -1,0 +1,615 @@
+/* ============================================================================================
+   «LA SOGLIA» — THE JOURNEY RAIL, design V5 (W3-D)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 6 · §1.18 D16 (A′: no relay until the actors' mapping is signed;
+   SELECTION on threshold A; still at load; `ile-steps` beside the title; one marker a column) · §1.5 (the console has no
+   entrance and no stagger at load) · §1.2 O14 · the research's JOURNEY_SIGNATURE.md §5.3 («La soglia» at console
+   density), §5.5 (the compact density), §5.7 (the states), §7.1 (one list).
+
+   The journey and the timeline on the console's one rail drawing: this partial composes the vocabulary of
+   v5/_journey-nodes.css (one line, three nodes — imported before it), as v5/_journey-stepper.css does for «Ma
+   situation»'s Stepper. A page-only partial (plan §2.3; the owner's V5.8: the shared bundles' ceilings are hard):
+   imported by apps/portal/static/portal/journey.css, which only the pages that draw a journey link, after console.css —
+   never by main.css nor console.css, never an output of its own. Two templates draw with it, both W3-D's:
+     components/journey_rail.html      «Mon parcours» on the dashboard and at the head of the «Mon parcours» page
+                                       (level, or the card), the case file's journey (descriptive: the spine with
+                                       dates)
+     components/case_timeline.html     the case file's timeline: the events on the spine, the latest one lit
+   What it adds to the vocabulary:
+     a threshold   a narrow column of its own on the level line (2rem; the whole column when the file stands on it),
+                   its glyph at the head with the jurisdiction's caption, a hairline across the line; on the spine a
+                   row, its glyph on the line
+     the shores    «Maroc» and «Italie», the line's two ends: over the first and the last node, or the spine's first
+                   and last rows
+   1 · the spine (the base)      3 · the level line (the component's own width: 56rem)   5 · the timeline
+   2 · the words                 4 · the card and its disclosure (under 56rem)            6 · the «Mon parcours» page
+                                                                                          7 · forced colours
+   Tokens of static/css/v5/tokens.css only; logical properties only (RTL: the reading start is Morocco's). Still at
+   load: nothing moves, no will-change — the drawing is its own still, which is also the reduced-motion state and the
+   no-JS state. Corners: full (the nodes, the «here» pill) — of the console's three.
+   ============================================================================================ */
+
+/* ---- 1 · The spine — the base of every density -------------------------------------------------------------- */
+/* Each item is a row: its node on the line at the reading start, its words beside. Each item draws the stretch from
+   its node's centre to the next item's (the rows touch: their room is padding). */
+.journey > li,
+.tl__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--node) minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-content: start;
+  padding-block-end: var(--s-4);
+}
+
+.journey > li > *,
+.tl__row > * {
+  grid-column: 2;
+  min-inline-size: 0;
+}
+
+.journey > li > .journey__node,
+.tl__row > .tl__node {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.journey > :is(.journey__shore--start, .journey__step--done, .journey__threshold--done)::before {
+  background: var(--journey-line-travelled);
+}
+
+/* where a file off the line stopped (SUSPENDED, CLOSED — the case file reads it from the trail): reached, so behind
+   it, but the line was never travelled past it */
+.journey > :is(.journey__step--stop, .journey__threshold--stop)::before {
+  background: var(--journey-line);
+}
+
+/* the shores: the line's two ends, in words on its level — the spine's first and last rows */
+.journey > .journey__shore {
+  display: block;
+  padding-block: 0 var(--s-3);
+  padding-inline-start: calc(var(--node) + var(--s-3));
+  font-size: var(--u-caption);
+  line-height: var(--node);
+  font-weight: var(--w-title);
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+}
+
+/* a threshold on the spine: its glyph on the line, cut from it by the ground; the caption beside, a hairline after it */
+.journey__gate {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.journey__gate .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--text-1);
+}
+
+.journey__threshold:not(.journey__threshold--current) > .journey__gate {
+  display: contents;
+}
+
+.journey__threshold:not(.journey__threshold--current) > .journey__gate > .icon {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  position: relative;
+  z-index: 1;
+  margin-block: 2px;
+  outline: 3px solid var(--rail-ground);
+  background: var(--rail-ground);
+}
+
+.journey__threshold:not(.journey__threshold--current) > .journey__gate > span {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.journey__threshold:not(.journey__threshold--current) > .journey__gate > span::after {
+  content: "";
+  flex: 1;
+  min-inline-size: var(--s-4);
+  block-size: 1px;
+  background: var(--journey-threshold);
+  opacity: 0.6;
+}
+
+/* the file standing ON the threshold: the node takes the line beside the caption, its glyph joins the caption, and the
+   phase has its own words under it */
+.journey__threshold--current > .journey__gate {
+  grid-row: 1;
+  min-block-size: var(--node);
+}
+
+/* ---- 2 · The words -------------------------------------------------------------------------------------------- */
+.journey__label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.journey__label .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 2px;
+  color: var(--icon-muted);
+}
+
+.journey__step--done > .journey__label .icon {
+  color: var(--icon-default);
+}
+
+.journey__step--upcoming > .journey__label {
+  color: var(--node-next-text);
+}
+
+:is(.journey__step--current, .journey__threshold--current) > .journey__label {
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.journey__step--current > .journey__label .icon {
+  color: var(--accent-text);
+}
+
+.journey__now {
+  margin: var(--s-1) 0 0;
+}
+
+/* «Vous êtes ici»: the current item's own words — a pill in the accent's wash, its dot the ring's */
+.journey__here {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px var(--s-2) 2px 6px;
+  border-radius: var(--radius-full);
+  background: var(--accent-wash);
+  color: var(--accent-text);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: var(--w-title);
+  white-space: nowrap;
+}
+
+.journey__here::before {
+  content: "";
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: var(--radius-full);
+  background: currentcolor;
+}
+
+.journey__when,
+.journey__actor {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-3);
+}
+
+/* a date in tabular figures — in the sans: «ILE Mono» has one seat, the references (v5/base.css, plan §1.1) */
+.journey__when time,
+.tl__when {
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* the case file: the date at the row's end, on the label's line */
+.journey--descriptive > li {
+  grid-template-columns: var(--node) minmax(0, 1fr) auto;
+}
+
+.journey--descriptive > li > .journey__when {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.journey--descriptive > .journey__threshold--current > .journey__when {
+  grid-row: 2;
+}
+
+/* a threshold's caption has no date on its own line: it takes the date's column too (at 360 px it wrapped in four) */
+.journey--descriptive > .journey__threshold--current > .journey__gate,
+.journey--descriptive > .journey__threshold:not(.journey__threshold--current) > .journey__gate > span {
+  grid-column: 2 / -1;
+}
+
+:lang(ar) :is(.journey__shore, .journey__gate) {
+  letter-spacing: 0;
+}
+
+/* ---- 3 · The level line: from 56rem of the component's OWN width (the dashboard's «Mon parcours») ------------- */
+/* the component's own width decides (the research said 46rem; at that width the eight columns came to 88 px and a
+   step's long word — «Accompagnement», 110 px — left its column: from 56rem a column is never under 108 px) */
+.journey-rail {
+  container: journey / inline-size;
+}
+
+.journey-rail--descriptive {
+  container-type: normal;
+}
+
+@container journey (min-width: 56rem) {
+  .journey:not(.journey--descriptive) {
+    --th: 2rem;
+    display: grid;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr)) var(--th-a, var(--th)) repeat(2, minmax(0, 1fr)) var(--th)
+      repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto var(--node) auto auto;
+    row-gap: var(--s-2);
+  }
+
+  .journey--on-a {
+    --th-a: minmax(0, 1fr);
+  }
+
+  /* every item a column of the four rows: the heads (the shores, the thresholds' captions), the nodes, the words, the
+     row that is the current item's alone */
+  .journey:not(.journey--descriptive) > li {
+    grid-row: 1 / -1;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+    column-gap: 0;
+    row-gap: var(--s-2);
+    padding: 0;
+  }
+
+  .journey:not(.journey--descriptive) > li > * {
+    grid-column: 1;
+  }
+
+  .journey:not(.journey--descriptive) > li > .journey__node {
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .journey:not(.journey--descriptive) > li > .journey__label {
+    grid-row: 3;
+    flex-direction: column;
+    gap: 6px;
+    padding-inline-end: var(--s-4);
+  }
+
+  .journey:not(.journey--descriptive) > li > .journey__label .icon {
+    margin-block-start: 0;
+  }
+
+  /* the last column has no neighbour: its words take the whole column (a long word never leaves the line's end) */
+  .journey:not(.journey--descriptive) > .journey__step--7 > .journey__label {
+    padding-inline-end: 0;
+  }
+
+  /* «Vous êtes ici» under its own node, the last one's too (at 56rem a column is 108 px, the pill 94 px in French) */
+  .journey:not(.journey--descriptive) > li > .journey__now {
+    grid-row: 4;
+    justify-self: start;
+    margin: 0;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__step--1 { grid-column: 1; }
+  .journey:not(.journey--descriptive) > .journey__step--2 { grid-column: 2; }
+  .journey:not(.journey--descriptive) > .journey__step--3 { grid-column: 3; }
+  .journey:not(.journey--descriptive) > .journey__step--4 { grid-column: 5; }
+  .journey:not(.journey--descriptive) > .journey__step--5 { grid-column: 6; }
+  .journey:not(.journey--descriptive) > .journey__step--6 { grid-column: 8; }
+  .journey:not(.journey--descriptive) > .journey__step--7 { grid-column: 9; }
+
+  /* a threshold reaches over the heads of the steps it opens (A: the two before B; B: the two after it, leaving
+     «Italie» its room at the end), so its caption wraps there; the hairline crosses the line in its own narrow
+     column. Every head sits on the line's side of its row: the shores, the captions' last lines, the glyphs */
+  .journey:not(.journey--descriptive) > .journey__threshold--a {
+    grid-column: 4 / span 3;
+    grid-template-columns: subgrid;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold--b {
+    grid-column: 7 / span 3;
+    grid-template-columns: subgrid;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold > .journey__gate {
+    display: flex;
+    grid-row: 1;
+    grid-column: 1 / -1;
+    align-self: end;
+    align-items: flex-end;
+    gap: 6px;
+    min-block-size: 0;
+    padding-inline-end: var(--s-4);
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold--b > .journey__gate {
+    padding-inline-end: var(--s-16);
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold > .journey__gate > .icon {
+    position: static;
+    margin: 0;
+    margin-inline-start: calc(var(--nc) - var(--icon-sm) / 2);
+    outline: 0;
+    background: none;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold > .journey__gate > span {
+    display: block;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold > .journey__gate > span::after {
+    display: none;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__threshold::after {
+    content: "";
+    position: absolute;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    inset-block: calc(-1 * var(--s-2));
+    inset-inline-start: calc(var(--nc) - 0.5px);
+    inline-size: 1px;
+    background: var(--journey-threshold);
+    opacity: 0.6;
+  }
+
+  /* the shores over the line's two ends, in the heads' row */
+  .journey:not(.journey--descriptive) > .journey__shore {
+    display: block;
+    grid-row: 1;
+    align-self: end;
+    padding: 0;
+    line-height: var(--u-caption-lh);
+  }
+
+  .journey:not(.journey--descriptive) > .journey__shore--start {
+    grid-column: 1;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__shore--end {
+    grid-column: 9;
+    justify-self: end;
+  }
+
+  /* the line: every column draws the stretch from its node to the next column's, on the nodes' row (an absolutely
+     placed box takes its grid area from BOTH lines it names: an `auto` end would be the container's padding edge) */
+  .journey:not(.journey--descriptive) > li::before {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    inset-block: calc(50% - 1px) auto;
+    inset-inline-start: var(--nc);
+    inline-size: 100%;
+    block-size: 2px;
+  }
+
+  .journey:not(.journey--descriptive) > .journey__shore::before {
+    display: none;
+  }
+
+  /* the last column carries the line on to «Italie», at the rail's far end — as the spine carries it to its last row:
+     the shores are the line's two ends. Its stretch runs from its node to the column's end, which is the rail's */
+  .journey:not(.journey--descriptive) > .journey__step--7::before {
+    inline-size: calc(100% - var(--nc));
+  }
+}
+
+/* ---- 4 · The card and its disclosure: under 56rem, what is true NOW first -------------------------------------- */
+.journey-now {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+}
+
+.journey-now > p {
+  margin: 0;
+}
+
+/* on a threshold the card is headed by its caption — where that phase sits among the steps (the spine's own words) */
+.journey-now__where {
+  flex-basis: 100%;
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.journey-now__label {
+  display: flex;
+  flex-basis: 100%;
+  align-items: flex-start;
+  gap: var(--s-3);
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.journey-now__label .icon {
+  flex: none;
+  margin-block-start: 2px;
+  color: var(--accent-text);
+}
+
+.journey-now__rank {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+  font-variant-numeric: var(--numeric-data);
+}
+
+.journey-fold {
+  margin-block-start: var(--s-4);
+  border-block: 1px solid var(--line-rhythm);
+}
+
+.journey-fold__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-block-size: var(--hit-primary);
+  list-style: none;
+  cursor: pointer;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+}
+
+.journey-fold__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* the disclosure's chevron, drawn as W1-C's disclosure draws its own (v5/tabs.css): it turns at once — nothing moves */
+.journey-fold__summary::after {
+  content: "";
+  flex: none;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-inline: var(--s-2);
+  border: solid currentcolor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateY(-25%) rotate(45deg);
+}
+
+.journey-fold[open] > .journey-fold__summary::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+.journey-fold > .journey {
+  padding-block: var(--s-2) var(--s-2);
+}
+
+@container journey (min-width: 56rem) {
+  /* the fold exists for the compact density only: where the browser lays out a closed <details>, the wide density
+     shows the list and drops the summary and the card; where it cannot, the card stays — nothing is hidden */
+  @supports selector(::details-content) {
+    .journey-now,
+    .journey-fold > .journey-fold__summary {
+      display: none;
+    }
+
+    .journey-fold {
+      margin: 0;
+      border: 0;
+    }
+
+    /* both ways a closed details may be hidden — the slot's content-visibility (the HTML standard, Chromium 131+) or
+       its display — are undone, so that a browser that knows the selector never shows nothing at this width */
+    .journey-fold::details-content {
+      display: block;
+      content-visibility: visible;
+    }
+
+    .journey-fold > .journey {
+      padding: 0;
+    }
+  }
+}
+
+/* ---- 5 · The timeline: the case file's events on the spine --------------------------------------------------- */
+.tl__row {
+  grid-template-columns: var(--node) auto minmax(0, 1fr);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.tl__row > .tl__when {
+  grid-column: 2;
+  grid-row: 1;
+  line-height: var(--u-small-lh);
+}
+
+.tl__what {
+  grid-column: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+}
+
+.tl__title {
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.tl__detail,
+.tl__actor {
+  flex-basis: 100%;
+  color: var(--text-3);
+}
+
+/* ---- 6 · The «Mon parcours» page: the dashboard's rail at the page's head, the pre-assessments under it ---------- */
+.journey-page {
+  margin-block-end: var(--s-8);
+}
+
+/* ---- 7 · Forced colours: the lines and the nodes in system colours, the wash dropped --------------------------- */
+@media (forced-colors: active) {
+  .journey > li::before,
+  .tl__row::before,
+  .journey:not(.journey--descriptive) > .journey__threshold::after,
+  .journey__threshold:not(.journey__threshold--current) > .journey__gate > span::after {
+    forced-color-adjust: none;
+    background: GrayText;
+    opacity: 1;
+  }
+
+  .journey > :is(.journey__shore--start, .journey__step--done, .journey__threshold--done)::before {
+    background: CanvasText;
+  }
+
+  .journey > :is(.journey__step--stop, .journey__threshold--stop)::before {
+    background: GrayText;
+  }
+
+  /* the nodes in system colours, each rule at its drawing's own weight so that it wins */
+  :is(.journey, .tl) :is(.journey__node, .tl__node)::after,
+  .journey__step--upcoming > .journey__node::after {
+    forced-color-adjust: none;
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .journey__step--done > .journey__node::after,
+  .tl .tl__node::after {
+    background: CanvasText;
+  }
+
+  .journey__step--current > .journey__node::after,
+  .journey__threshold--current > .journey__node::after,
+  .tl .tl__row--latest .tl__node::after {
+    border-color: Highlight;
+    background: Canvas;
+  }
+
+  :is(.journey__node, .tl__node)::before {
+    display: none;
+  }
+
+  .journey__here {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+}

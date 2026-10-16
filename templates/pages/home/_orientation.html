@@ -6,8 +6,10 @@
 
 Design V5.4 (W2-D step 3): the page's one BRAND chapter — the question «where do I start?» answered
 beside its action. The prescribed sentence is set as the chapter's statement, whole and as written (its
-arrows are its own); the four neutral steps are a real sequence, so they keep their numerals — a list at
-320 px, four columns on a desktop. No running head: the title names the questionnaire already.
+arrows are its own); the four neutral steps are a real sequence, so they keep their numerals: the public
+passage «la linea» (W3-D: components/stepper.html, static/css/v5/_journey-passage.css — the site's one
+passage drawing), down the reading edge at 320 px, four stations across from 48rem. It explains how the
+questionnaire works: no `current`, never a progress. No running head: the title names the questionnaire.
 {% endcomment %}
 {% translate "Le questionnaire d’orientation" as fallback_title %}
 <section class="chapter chapter--brand home-orientation" id="{{ s.anchor }}" aria-labelledby="home-orientation-title" data-section="orientation">
@@ -17,17 +19,7 @@ arrows are its own); the four neutral steps are a real sequence, so they keep th
       {% if d.how_it_works %}
       <p class="home-orientation__how"{% if d.how_it_works.lang %} lang="{{ d.how_it_works.lang }}"{% endif %} data-locked="p3.persons.how_it_works">{{ d.how_it_works }}</p>
       {% else %}
-      <ol class="sequence home-orientation__steps"{% if d.steps_lang %} lang="{{ d.steps_lang }}"{% endif %}>
-        {% for step in d.steps %}
-        <li class="sequence__step sequence__step--italy">
-          <span class="sequence__marker" aria-hidden="true"></span>
-          <div>
-            <p class="sequence__title">{{ step.label|default:step }}</p>
-            {% if step.text %}<p class="sequence__body">{{ step.text }}</p>{% endif %}
-          </div>
-        </li>
-        {% endfor %}
-      </ol>
+      {% include "components/stepper.html" with steps=d.steps lang=d.steps_lang across=True %}
       {% if s.note %}<p class="home-orientation__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
       {% endif %}
       {% if d.url %}

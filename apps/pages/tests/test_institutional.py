@@ -30,7 +30,9 @@ def test_institutional_pages_render_in_every_language(page, seeded, lang, path):
     assert response.status_code == 200
     assert html.count("<h1") == 1
     assert 'class="breadcrumbs container"' in html
-    assert 'class="local-nav"' in html
+    # design V5.4 (W3-F1): the interior's entrance; no side column — the five pages are the «Projet» door's entries
+    assert '<header class="ingresso"' in html
+    assert 'class="local-nav"' not in html
     assert re.search(r'<meta name="description" content="[^"]{20,}">', html)
     assert scan(html) == []
     assert "®" not in html
@@ -45,23 +47,24 @@ def test_institutional_pages_render_with_phase3_open(page, seeded, phase3_open, 
     assert response.status_code == 200
     assert html.count("<h1") == 1
     assert scan(html) == []
-    assert 'href="/fr/attention-aux-fraudes/"' in html  # joins the local navigation once public
+    assert 'href="/fr/attention-aux-fraudes/"' in html  # the footer's link, once public
 
 
-def test_local_navigation_marks_the_current_page_and_hides_gated_entry(page, seeded):
+def test_promoter_page_links_its_siblings_and_hides_the_gated_entry(page, seeded):
+    """Design V5.4 (W3-F1): no side column; «Pour aller plus loin» links the project's pages that are public."""
     _response, html = page("/fr/agami/")
-    nav = html.split('<nav class="local-nav"', 1)[1].split("</nav>", 1)[0]
-    assert '<a class="local-nav__link" href="/fr/agami/" aria-current="page">' in nav
-    for href in ("/fr/le-projet/", "/fr/reseau/", "/fr/contact/"):
-        assert f'href="{href}"' in nav
-    assert "attention-aux-fraudes" not in nav
+    main = _main(html)
+    assert '<nav class="local-nav"' not in main
+    for href in ("/fr/le-projet/", "/fr/reseau/"):
+        assert f'href="{href}"' in main
+    assert "attention-aux-fraudes" not in main
 
 
 def test_arabic_institutional_page_is_rtl(page, seeded):
     _response, html = page("/ar/le-projet/")
     assert '<html lang="ar" dir="rtl"' in html
     assert 'data-locked="p2.forum.why.body"' in html
-    assert re.search(r'<p class="page-section__text" lang="fr" data-locked="p2.forum.why.body">', html)
+    assert re.search(r'<p class="page-section__text chapter__prose" lang="fr" data-locked="p2.forum.why.body">', html)
 
 
 # ---- /le-projet/ --------------------------------------------------------------------------------
@@ -170,7 +173,7 @@ def test_contact_page_when_forms_are_open(page, seeded, legal_published):
     _response, html = page("/fr/contact/")
     main = _main(html)
     assert 'data-gate="forms-closed"' not in main
-    assert 'class="btn btn--primary btn--arrow" href="/fr/contact/formulaire/"' in main
+    assert re.search(r'class="btn btn--primary[^"]*" href="/fr/contact/formulaire/"', main), "the page's one action"
 
 
 # ---- /attention-aux-fraudes/ --------------------------------------------------------------------
@@ -193,7 +196,7 @@ def test_antifraud_is_200_with_exact_locked_text_when_open(page, seeded, phase3_
     assert html.count("<h1") == 1
     main = _main(html)
     title, body = escaped(text_of("p3.antifraud.title")), escaped(text_of("p3.antifraud.body"))
-    assert re.search(rf'<h1 class="page-header__title"[^>]*>{re.escape(title)}</h1>', main)
+    assert re.search(rf'<h1 class="ingresso__title[^"]*"[^>]*>{re.escape(title)}</h1>', main)
     assert re.search(
         rf'<p class="antifraud-panel__body"[^>]*data-locked="p3.antifraud.body">{re.escape(body)}</p>', main
     )

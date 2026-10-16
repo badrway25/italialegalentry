@@ -7,6 +7,7 @@ class CoreConfig(AppConfig):
     verbose_name = "Core / Gate"
 
     def ready(self):
+        import core.checks  # noqa: F401 — registers the production configuration checks
         from core import signals  # noqa: F401
         from core.public_routes import register_public_paths
 

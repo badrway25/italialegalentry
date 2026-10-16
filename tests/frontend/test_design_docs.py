@@ -992,11 +992,35 @@ def _app_stylesheets() -> list[Path]:
     return sorted((ROOT / "apps").glob("*/static/**/*.css"))
 
 
+def _declared(path: Path) -> set[str]:
+    return set(re.findall(r"(?<![\w-])(--[a-z0-9-]+)\s*:", re.sub(r"/\*.*?\*/", "", _read(path), flags=re.S)))
+
+
+def _vocabulary_before(path: Path) -> set[str]:
+    """The custom properties a partial may read from the partials an entry imports BEFORE it: it composes their
+    vocabulary (the w3-d merge: the journey's v5/_journey-rail.css and v5/_journey-stepper.css on
+    v5/_journey-nodes.css — one line, three nodes, written once). Only sibling imports (resolved next to the entry, as
+    in the collected tree, DS 2026 §2) are read; an import of static/css/v5/ is a partial of its own grammar."""
+    names: set[str] = set()
+    if not path.name.startswith("_"):
+        return names
+    for entry in _app_stylesheets():
+        if entry.name.startswith("_"):
+            continue
+        refs = re.findall(r'@import url\("([^"]+)"\);', _read(entry))
+        sources = [(entry.parent / ref).resolve() for ref in refs if not ref.startswith("../")]
+        if path.resolve() in sources:
+            for earlier in sources[: sources.index(path.resolve())]:
+                names |= _declared(earlier)
+    return names
+
+
 def _stylesheet_violations(path: Path) -> list[str]:
     """Design-system rules for a stylesheet outside static/css: real tokens only, no literal colour."""
     css = re.sub(r"/\*.*?\*/", "", _read(path), flags=re.S)
     css = re.sub(r"url\(\"data:[^\"]+\"\)", "", css)
     known = set(_tokens()) | _component_custom_properties() | set(re.findall(r"(?<![\w-])(--[a-z0-9-]+)\s*:", css))
+    known |= _vocabulary_before(path)
     violations = [f"unknown token {name}" for name in sorted(set(re.findall(r"var\((--[a-z0-9-]+)", css)) - known)]
     for value in re.findall(r":\s*([^;{}]+);", css):
         violations += [f"literal colour {colour}" for colour in re.findall(r"#[0-9a-fA-F]{3,8}\b", value)]
@@ -1092,20 +1116,19 @@ def test_sticky_header_does_not_trap_fixed_drawer():
     A backdrop-filter (or filter, transform, perspective, contain) on .site-header makes the header the
     containing block of the position: fixed drawer it contains: the drawer collapsed to 65 px. The veil
     now lives on .site-header::before, which has no fixed descendant. Design V5 (W2-C1): the chrome moved to
-    static/css/v5/chrome.css, where the same rule holds (the glass is painted by the pseudo-element).
+    static/css/v5/chrome.css, where the same rule holds (the glass is painted by the pseudo-element). W2-C2: the
+    menu below 80rem is the sheet, a trapped panel of the overlay system, which stands at the body's level, after
+    the header — never inside it, whatever the header declares (docs/design-v5/QA/v54/w2-a/CONTRACT.md).
     """
     chrome = _read(STATIC / "css" / "v5" / "chrome.css")
     header_rule = _between(chrome, "\n.site-header {", "}")
-    drawer_rules = re.findall(r"^\s*\.nav-drawer \{([^}]*)\}", chrome, flags=re.M)
-    drawer_is_fixed = any("position: fixed" in rule for rule in drawer_rules)
-    drawer_inside_header = "nav-drawer" in _between(
-        _read(ROOT / "templates" / "partials" / "header.html"), "<header", "</header>"
-    )
-    trapped = drawer_is_fixed and drawer_inside_header
+    header_html = _read(ROOT / "templates" / "partials" / "header.html")
+    inside = _between(header_html, "<header", "</header>")
+    trapped = 'nav_variant="sheet"' in inside or "<dialog" in inside or "nav-drawer" in inside
+    assert not trapped, "a menu panel sits inside the sticky header"
+    assert 'nav_variant="sheet"' in header_html.split("</header>", 1)[1], "the sheet follows the header"
     for prop in ("backdrop-filter", "filter:", "transform:", "perspective:", "contain:"):
-        assert not (trapped and prop in header_rule), (
-            f".site-header declares {prop} while containing a position: fixed drawer"
-        )
+        assert not (trapped and prop in header_rule), f".site-header declares {prop} around a fixed menu panel"
 
 
 def test_open_defects_are_described_where_the_reader_will_look():
@@ -1229,6 +1252,7 @@ def test_capture_report_is_current_and_backs_the_documented_figures():
             "expectedHeight",
             "overlayTop",
             "headerBottom",
+            "top",
         }, f"{name}: the report predates the current capture.py, regenerate it"
         fills_the_screen = drawer["height"] >= drawer["expectedHeight"] - 2
         if "chiusa" in gap_rows["G-02"]:
@@ -1238,8 +1262,10 @@ def test_capture_report_is_current_and_backs_the_documented_figures():
             assert not fills_the_screen, "G-02 looks fixed: close it in both documents"
         for text in (gap_rows["G-02"], drawer_section):
             assert f"{drawer['height']} px" in text and f"{drawer['expectedHeight']} px" in text, (name, drawer)
-        # G-23: the overlay must start where the header ends, not on top of the wordmark and the «Menu» button.
-        veils_the_header = drawer["overlayTop"] < drawer["headerBottom"] - 1
+        # G-23: the veil never lies over the header's controls while the menu is open — the V4 drawer's scrim started
+        # where the header ends; the V5 sheet (W2-C2) owns its head line from the top, «Fermer» where «Menu» was, so a
+        # scrim over the rest of the letterhead is the modal's own
+        veils_the_header = drawer["overlayTop"] < drawer["headerBottom"] - 1 and drawer["top"] > 0
         if "chiusa" in gap_rows["G-23"]:
             assert not veils_the_header, f"{name}: G-23 is documented as closed but the overlay still covers the header"
         else:
@@ -1289,8 +1315,9 @@ def test_navigation_breakpoint_is_consistent_and_documented():
     """The navigation's thresholds live in chrome.css and in nav.js: both must agree with the documents.
 
     Design V5 «Il portico» (W2-C1): the four doors enter the letterhead at `BAR` (64rem) and the full bar with the
-    panels' photographs at `DESKTOP` (80rem), below which «Menu» and the fixed drawer apply. Every «≥ 64rem» in the
-    two documents went stale once already, when the threshold moved: the documents quote the code's numbers.
+    panels' photographs at `DESKTOP` (80rem), below which «Menu» and the sheet apply (the overlay system's modal
+    drawer, W2-C2). Every «≥ 64rem» in the two documents went stale once already, when the threshold moved: the
+    documents quote the code's numbers.
     """
     chrome = _read(STATIC / "css" / "v5" / "chrome.css")
     nav_js = _read(STATIC / "js" / "src" / "nav.js")
@@ -1305,14 +1332,9 @@ def test_navigation_breakpoint_is_consistent_and_documented():
     )
     assert drawer_block, "chrome.css no longer shows .nav-toggle in a max-width block"
     assert 0 < float(threshold) - float(drawer_block.group(1)) < 0.01, (drawer_block.group(1), threshold)
-    fixed = re.search(
-        r"@media \(max-width: "
-        + re.escape(drawer_block.group(1))
-        + r"rem\) \{(?:(?!@media).)*?\n  \.nav-drawer \{\s*position: fixed;",
-        chrome,
-        flags=re.S,
-    )
-    assert fixed, "chrome.css no longer fixes .nav-drawer in the drawer's block"
+    # the sheet (W2-C2): the overlay system's modal drawer, which «Menu» opens
+    assert 'href="#nav-sheet" data-overlay-open' in _read(ROOT / "templates" / "partials" / "header.html")
+    assert 'data-overlay="drawer"' in _read(ROOT / "templates" / "partials" / "main_nav.html")
     assert f"@media (min-width: {doors}rem)" in chrome and f"@media (min-width: {threshold}rem)" in chrome
     assert "function initNavigation" not in _read(STATIC / "js" / "main.js"), "initNavigation moved into nav.js"
 

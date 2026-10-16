@@ -1,0 +1,12 @@
+{% comment %}
+THE CHAPTER HEAD of a page of the public interior (design V5.4, W3-F1; static/css/v5/_interior.css §3) — the home's
+section device carried into the interior: the mark's three steps (the sprite's identity glyph `ile-steps`, never
+mirrored), the title, the lead. No eyebrow, no ordinal. The headings are the live strings, verbatim (the reader's
+questions are the owner's copy packet, B1 item 7).
+
+Contract: `title_id`, `title` (safe), optional `title_lang`, `lead` (safe), `lead_lang`.
+{% endcomment %}
+<div class="chapter__head">{% svg_icon "ile-steps" "icon chapter__mark" %}
+  <h2 class="chapter__title" id="{{ title_id }}"{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h2>
+  {% if lead %}<p class="chapter__lead"{% if lead_lang %} lang="{{ lead_lang }}"{% endif %}>{{ lead }}</p>{% endif %}
+</div>

@@ -1,0 +1,21 @@
+/* ============================================================================
+   «MA SITUATION» — the page's one page-only sheet, design V5
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 1 (W3-F1's guided form), §3.5 item 6 (W3-D's Stepper) · the owner's
+   V5.8 (11 October 2026, «CSS budget») and the orchestrator's definitive ruling (12 October 2026): the shared bundles
+   never rise — a surface's own CSS goes into a page-only sheet, loaded only where it is drawn, and each page loads only
+   what it draws. The guided form is «Ma situation»'s alone: it left the shared console bundle (console.css, on every
+   console page) at the w3-d merge.
+
+   This sheet is the page's IMPORT LIST and nothing else, in the order of the cascade the page had: the guided form,
+   v5/_wizard.css (W3-F1: the question's panel, the OptionCards, the foot); then its Stepper on the console's one rail
+   drawing — the vocabulary, v5/_journey-nodes.css, and the Stepper, v5/_journey-stepper.css (W3-D). scripts/build_css.mjs
+   bundles them into css/dist/portal/situation.css (a partial is never an output of its own, DL54-15); the imports are
+   written as they resolve in the COLLECTED tree, from this sheet's collected path portal/situation.css (DS 2026 §2).
+
+   Linked by templates/portal/situation.html alone, AFTER the shell's two sheets — the place in the cascade the form
+   held as console.css's last import — through {% block extra_head %}{{ block.super }}<link …>{% endblock %}.
+   ========================================================================== */
+
+@import url("v5/_wizard.css");
+@import url("v5/_journey-nodes.css");
+@import url("v5/_journey-stepper.css");

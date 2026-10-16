@@ -4,18 +4,17 @@ reloads in it (no script). Each link carries lang / hreflang / dir so screen rea
 accessible name is the language's own name (the `site.languages` context processor: translate_url of the
 current page).
 
-Two drawings of the same links:
-* lang_names — the public institutional bar, design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11): the
-  four names visible in their own language (Italiano · Français · English · العربية — never «ع», DL A25),
-  the current one marked by a line and by its weight, never by colour alone;
-* default — the segmented track FR · IT · EN · ع of design V4, kept for the drawer and the console bar
-  (templates/partials/portal_chrome.html), whose families redraw them: the two-letter code is presentation
-  (uppercase by CSS) and the name stays visually hidden.
+One drawing (design V5, docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11): the four names visible in their own language
+(Italiano · Français · English · العربية — never «ع», DL A25), the current one marked by a line and by its weight,
+never by colour alone; 24 px targets on a fine pointer, 44 on a coarse one. Drawn on night in the institutional bar
+and at the foot of the console's rail, on paper — its night inks re-pointed — first in the phone's sheet
+(static/css/v5/chrome.css §2 and §7). Design V4's segmented track FR · IT · EN · ع left with the drawer it was drawn
+for (W2-C2). `lang_names` is accepted and changes nothing.
 {% endcomment %}
 <nav class="lang-seg" aria-label="{% translate 'Choisir la langue' %}">
-  <ul class="lang-seg__list{% if lang_names %} lang-seg__list--names{% endif %}" role="list">
+  <ul class="lang-seg__list lang-seg__list--names" role="list">
     {% for l in site.languages %}
-    <li class="lang-seg__item"><a class="lang-seg__link" href="{{ l.url }}" lang="{{ l.code }}" hreflang="{{ l.code }}" dir="{{ l.dir }}"{% if l.active %} aria-current="true"{% endif %}>{% if lang_names %}<span class="lang-seg__name">{{ l.name }}</span>{% else %}<span class="visually-hidden">{{ l.name }}</span><span class="lang-seg__code" aria-hidden="true">{% if l.code == 'ar' %}ع{% else %}{{ l.code }}{% endif %}</span>{% endif %}</a></li>
+    <li class="lang-seg__item"><a class="lang-seg__link" href="{{ l.url }}" lang="{{ l.code }}" hreflang="{{ l.code }}" dir="{{ l.dir }}"{% if l.active %} aria-current="true"{% endif %}><span class="lang-seg__name">{{ l.name }}</span></a></li>
     {% endfor %}
   </ul>
 </nav>

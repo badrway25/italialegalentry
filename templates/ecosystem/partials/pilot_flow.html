@@ -1,13 +1,17 @@
-{% load i18n static %}
+{% load i18n %}
 {% comment %}
-Projet Pilote — the prescribed sequence (p3.pilot.sequence) as an institutional diagram.
-Contract: `flow` = ecosystem.services.PilotFlow (steps with .label; the eight prescribed labels always
-come from the locked registry, in the prescribed order; optional editorial additions follow them).
-Built on components/timeline.html (semantic <ol>, CSS grid: vertical on mobile, 4 + 4 from 48rem,
-eight in a row from 80rem, connectors drawn in CSS and mirrored in RTL). ecosystem.css upgrades it
-inside .pilot-diagram: 01–08 numerals, accent connectors, staggered reveal — all motion is disabled
-by prefers-reduced-motion and nothing is hidden without JavaScript.
+Projet Pilote — the prescribed sequence (p3.pilot.sequence) as the page's figure.
+Contract: `flow` = ecosystem.services.PilotFlow (steps with .label; the eight prescribed labels always come from the
+locked registry, in the prescribed order; optional editorial additions follow them).
+Design V5.4 (W3-F1): drawn on «la linea» (pages/partials/_linea.html → components/stepper.html, the site's one
+passage drawing: static/css/v5/_journey-passage.css, W3-D) — a semantic
+<ol>, numerals 01–08 over open stations on one level line: down the reading edge on a phone, four a row from 48rem,
+eight in a row from 90rem across the whole column (below it the seventh station's word broke in its middle, W3-F1's
+review M5); mirrored with the page in Arabic (the labels carry no punctuation); nothing moves, nothing is hidden without
+JavaScript. The V4 diagram's boxes and its illustration (img/illustrations/pilot-flow.svg) are retired
+(CREATIVE_DIRECTION_V5 §19).
 {% endcomment %}
 <div class="pilot-diagram__figure" data-diagram="pilot-sequence" data-steps="{{ flow.steps|length }}">
-  {% include "components/timeline.html" with steps=flow.steps lang=flow.lang_attr label=_("Séquence proposée du projet pilote, étape par étape") %}
+  {% translate "Séquence proposée du projet pilote, étape par étape" as flow_label %}
+  {% include "pages/partials/_linea.html" with steps=flow.steps lang=flow.lang_attr label=flow_label across=True cols="8" %}
 </div>

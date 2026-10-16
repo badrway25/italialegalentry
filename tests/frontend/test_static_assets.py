@@ -342,9 +342,11 @@ def test_main_js_is_an_es_module_without_external_dependencies():
     assert "import " not in js.replace("importNode", "")
     assert "prefers-reduced-motion" in js
     assert "IntersectionObserver" in js
-    # the dialogs are the overlay system's (static/js/src/overlay.js, W2-A): main.js keeps none, and a dropdown
-    # fallback for the pages that do not load the system yet
-    assert "showModal" not in js
-    assert "showModal()" in (STATIC / "js" / "src" / "overlay.js").read_text(encoding="utf-8")
-    assert "aria-expanded" in js
-    assert "Escape" in js
+    # the dialogs and the dropdowns are the overlay system's (static/js/src/overlay.js, W2-A): main.js keeps none —
+    # its dropdown fallback left once shell.js imported the system on every page (W2-C2), so the disclosures' state
+    # and their Esc are overlay.js's
+    overlay = (STATIC / "js" / "src" / "overlay.js").read_text(encoding="utf-8")
+    assert "showModal" not in js and "initDropdowns" not in js
+    assert "showModal()" in overlay
+    assert "aria-expanded" in overlay
+    assert "Escape" in overlay

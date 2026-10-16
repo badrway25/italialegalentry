@@ -104,7 +104,7 @@ def test_preview_keeps_links_inside_the_preview(client, seeded, staff_user, cura
     client.force_login(staff_user)
     html = client.get("/fr/institutions/?preview=1").content.decode("utf-8")
     assert 'href="/fr/projet-pilote/?preview=1"' in html
-    assert 'class="ecosystem-photo"' in html, "the scheduled editorial row is visible in a preview"
+    assert 'class="ingresso__aside figura"' in html, "the scheduled editorial row is visible in a preview"
 
 
 # ---------------------------------------------------------------------------------------------
@@ -113,43 +113,41 @@ def test_preview_keeps_links_inside_the_preview(client, seeded, staff_user, cura
 @pytest.mark.compliance
 def test_institutions_prescribed_texts_and_button(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["institutions"])
-    assert re.search(r'<p class="page-header__lead">' + re.escape(_t("p3.institutions.intro")) + "</p>", html)
+    assert re.search(r'<p class="ingresso__lead">' + re.escape(_t("p3.institutions.intro")) + "</p>", html)
     assert _t("p3.institutions.recipients") in html, "the recipients sentence is printed verbatim"
-    button = re.search(r'<a class="btn btn--primary[^"]*" href="([^"]+)"[^>]*>\s*(.*?)\s*<svg', html, flags=re.S)
+    # the page's own primary is read in its content: the chrome's phone sheet carries a primary of its own earlier in
+    # the document (W2-C2's «Découvrir le questionnaire d'orientation», `nav-sheet__primary`)
+    main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
+    button = re.search(r'<a class="btn btn--primary[^"]*" href="([^"]+)"[^>]*>\s*(.*?)\s*<svg', main, flags=re.S)
     assert button, "prescribed CTA missing"
     assert button.group(1) == "/fr/collaboration/institutions/"
     assert button.group(2).strip() == _t("p3.institutions.button")
 
 
-def test_institutions_recipients_are_a_styled_list_of_the_same_words(get_html, seeded, phase3_open):
+def test_institutions_recipients_are_the_prescribed_sentence_as_written(get_html, seeded, phase3_open):
+    """
+    Design V5.4 (W3-F1's review m4): the sentence is the chapter's visible body, as written — its fragments, cut into
+    rows with their mixed initials («Régions» · «organismes publics» · «Chambres de Commerce» …), read as a list with
+    typos; a register is kept for real lists. No hidden copy, no presentational list beside it.
+    """
     html = get_html("fr", GATED_PATHS["institutions"])
     block = html.split('data-block="recipients"', 1)[1].split("</section>", 1)[0]
-    assert re.search(r'<h2 id="destinataires-title" class="section__title">Destinataires</h2>', block)
-    items = re.findall(r'<span class="ecosystem-enum__text">(.*?)</span>', block)
-    assert items == [
-        "Régions",
-        "Communes",
-        "organismes publics",
-        "Chambres de Commerce",
-        "organismes du travail",
-        "représentations diplomatiques et consulaires et institutions des pays partenaires",
-    ]
-    assert '<p class="visually-hidden">' + _t("p3.institutions.recipients") + "</p>" in block
-    assert '<ul class="ecosystem-enum ecosystem-enum--two" aria-hidden="true">' in block
+    assert re.search(r'<h2 class="chapter__title" id="destinataires-title">Destinataires</h2>', block)
+    assert '<p class="chapter__statement">' + _t("p3.institutions.recipients") + "</p>" in block
+    assert "visually-hidden" not in block and "ecosystem-enum" not in block and 'aria-hidden="true"><li' not in block
 
 
 def test_institutions_secondary_links(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["institutions"])
-    related = html.split('class="ecosystem-section ecosystem-related"', 1)[1].split("</section>", 1)[0]
+    related = html.split('class="chapter ecosystem-related"', 1)[1].split("</section>", 1)[0]
     for href in ("/fr/forum/", "/fr/projet-pilote/", "/fr/partenaires/"):
         assert f'href="{href}"' in related
 
 
 def test_institutions_fallback_language_marked(get_html, seeded, phase3_open):
     html = get_html("en", GATED_PATHS["institutions"])
-    assert '<p class="page-header__lead"><span lang="fr">' + _t("p3.institutions.intro") + "</span></p>" in html
-    assert '<p class="visually-hidden" lang="fr">' + _t("p3.institutions.recipients") + "</p>" in html
-    assert re.search(r'<ul class="ecosystem-enum[^"]*" aria-hidden="true" lang="fr">', html)
+    assert '<p class="ingresso__lead"><span lang="fr">' + _t("p3.institutions.intro") + "</span></p>" in html
+    assert '<p class="chapter__statement" lang="fr">' + _t("p3.institutions.recipients") + "</p>" in html
 
 
 # ---------------------------------------------------------------------------------------------
@@ -158,35 +156,27 @@ def test_institutions_fallback_language_marked(get_html, seeded, phase3_open):
 @pytest.mark.compliance
 def test_universities_prescribed_texts_and_button(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["universities"])
-    assert re.search(r'<p class="page-header__lead">' + re.escape(_t("p3.universities.intro")) + "</p>", html)
-    button = re.search(r'<a class="btn btn--primary[^"]*" href="([^"]+)"[^>]*>\s*(.*?)\s*<svg', html, flags=re.S)
+    assert re.search(r'<p class="ingresso__lead">' + re.escape(_t("p3.universities.intro")) + "</p>", html)
+    main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]  # the page's own primary (as above)
+    button = re.search(r'<a class="btn btn--primary[^"]*" href="([^"]+)"[^>]*>\s*(.*?)\s*<svg', main, flags=re.S)
     assert button and button.group(1) == "/fr/collaboration/universites-formation/"
     assert button.group(2).strip() == _t("p3.universities.button")
 
 
-def test_universities_enumeration_lists_keep_every_word(get_html, seeded, phase3_open):
+def test_universities_sentence_is_said_once(get_html, seeded, phase3_open):
+    """
+    Design V5.4 (W3-F1; RH-5 «one thing once»): the prescribed sentence is the page's lead, whole; the presentational
+    breakdown of its words into «Acteurs» and «Domaines» — the same words a second time, a screen below — left the page.
+    """
     html = get_html("fr", GATED_PATHS["universities"])
-    block = html.split('data-block="universities-enumeration"', 1)[1].split('<div id="partenariat"', 1)[0]
-    items = re.findall(r'<span class="ecosystem-enum__text">(.*?)</span>', block)
-    assert items == [
-        "Universités",
-        "organismes de formation",
-        "instituts et centres de recherche",
-        "formation",
-        "stages",
-        "mobilité internationale",
-        "échanges d’étudiants",
-        "programmes conjoints",
-        "coopération académique",
-        "formation avant le départ et valorisation des compétences",
-    ]
-    # The breakdown is presentational: the verbatim lead above it is the accessible text.
-    assert '<div id="domaines" class="ecosystem-section" aria-hidden="true"' in html
+    main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
+    assert main.count(_t("p3.universities.intro")) == 1
+    assert 'data-block="universities-enumeration"' not in main and "ecosystem-enum" not in main
 
 
 def test_universities_links_to_training_and_pathways(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["universities"])
-    related = html.split('class="ecosystem-section ecosystem-related"', 1)[1].split("</section>", 1)[0]
+    related = html.split('class="chapter ecosystem-related"', 1)[1].split("</section>", 1)[0]
     assert 'href="/fr/formation/"' in related
     assert 'href="/fr/parcours/"' in related
 
@@ -197,8 +187,8 @@ def test_universities_links_to_training_and_pathways(get_html, seeded, phase3_op
 @pytest.mark.compliance
 def test_pilot_title_and_body(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["pilot"])
-    assert re.search(r'<h1 class="page-header__title">' + re.escape(_t("p3.pilot.title")) + "</h1>", html)
-    assert re.search(r'<p class="page-header__lead">' + re.escape(_t("p3.pilot.body")) + "</p>", html)
+    assert re.search(r'<h1 class="ingresso__title[^"]*">' + re.escape(_t("p3.pilot.title")) + "</h1>", html)
+    assert re.search(r'<p class="ingresso__lead">' + re.escape(_t("p3.pilot.body")) + "</p>", html)
 
 
 @pytest.mark.compliance
@@ -206,11 +196,11 @@ def test_pilot_sequence_has_the_eight_prescribed_steps_in_order(get_html, seeded
     assert locked_content.get("p3.pilot.sequence", "fr")[0] == SEQUENCE
     html = get_html("fr", GATED_PATHS["pilot"])
     diagram = html.split('data-diagram="pilot-sequence"', 1)[1].split("</ol>", 1)[0]
-    assert re.search(r"<ol class=\"timeline[^\"]*\" aria-label=", diagram), "ordered-list semantics"
-    labels = re.findall(r'<p class="timeline__label">(.*?)</p>', diagram)
+    assert re.search(r"<ol class=\"linea[^\"]*\"[^>]* aria-label=", diagram), "ordered-list semantics"
+    labels = re.findall(r'<p class="linea__label">(.*?)</p>', diagram)
     assert labels == SEQUENCE
     assert 'data-steps="8"' in html
-    assert "timeline__text" not in diagram, "each step is a short prescribed label only"
+    assert "linea__text" not in diagram, "each step is a short prescribed label only"
 
 
 def test_pilot_notice_follows_the_diagram_immediately(get_html, seeded, phase3_open):
@@ -261,7 +251,7 @@ def test_pilot_notice_keeps_its_negative_meaning_in_every_language(get_html, see
 
 def test_pilot_calls_to_action(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["pilot"])
-    cta = html.split('<div id="participer"', 1)[1].split("</section>", 1)[0]
+    cta = html.split('<section id="participer"', 1)[1].split("</section>", 1)[0]
     primary = re.search(r'<a class="btn btn--primary[^"]*" href="([^"]+)"[^>]*>\s*(.*?)\s*<svg', cta, flags=re.S)
     assert primary.group(1) == "/fr/entreprises/recueil-des-besoins/"
     assert primary.group(2).strip() == _t("p2.forum.registration.button_secondary_pilot")
@@ -270,11 +260,11 @@ def test_pilot_calls_to_action(get_html, seeded, phase3_open):
     assert secondary.group(2).strip() == _t("p3.institutions.button")
 
 
-def test_pilot_illustration_is_decorative_and_local(get_html, seeded, phase3_open):
+def test_pilot_draws_its_sequence_on_the_line_and_no_illustration(get_html, seeded, phase3_open):
+    """CREATIVE_DIRECTION_V5 §19: the pilot-flow illustration is retired; the sequence stands on «la linea» alone."""
     html = get_html("fr", GATED_PATHS["pilot"])
-    img = re.search(r'<img class="pilot-diagram__illustration"[^>]*>', html).group(0)
-    assert 'src="/static/img/illustrations/pilot-flow.svg"' in img
-    assert 'alt=""' in img and 'aria-hidden="true"' in img
+    assert "pilot-flow.svg" not in html and "pilot-diagram__illustration" not in html
+    assert 'class="linea linea--across"' in html
 
 
 def test_pilot_additions_follow_the_prescribed_sequence_only_when_visible(get_html, seeded, phase3_open):
@@ -286,7 +276,7 @@ def test_pilot_additions_follow_the_prescribed_sequence_only_when_visible(get_ht
     PilotStep.objects.filter(order=9).update(is_visible=True)
     html = get_html("fr", GATED_PATHS["pilot"])
     diagram = html.split('data-diagram="pilot-sequence"', 1)[1].split("</ol>", 1)[0]
-    labels = re.findall(r'<p class="timeline__label">(.*?)</p>', diagram)
+    labels = re.findall(r'<p class="linea__label">(.*?)</p>', diagram)
     assert labels == SEQUENCE + ["ÉVALUATION PARTAGÉE"]
 
 

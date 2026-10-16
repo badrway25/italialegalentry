@@ -56,6 +56,12 @@ SEED_NOTE = (
 # to see which of the two they are watching. Found by `rules_pending_review`, which prints the
 # jurisdiction next to the reference and made five EU regulations read as Italian law.
 
+#: The fields of a seeded source that the build keeps asserting on every run. The back-office does not
+#: offer them (rules/admin.py), so no editorial change can be lost, and the seed has had to correct one
+#: before (the five EU sources above). Every other field belongs to the legal referent once the source
+#: exists — see `_complete_source`.
+BUILD_OWNED_SOURCE_FIELDS = frozenset({"jurisdiction"})
+
 SOURCES: tuple[dict, ...] = (
     {
         "key": "tui-286-1998",
@@ -446,7 +452,9 @@ REVIEW_RULES: tuple[dict, ...] = (
 @register_seed("rules.legal_ruleset", order=45)
 def seed() -> dict[str, int]:
     """
-    Create the sources and the rules, idempotently. **Nothing is put in force.**
+    Create the sources and the rules, idempotently. **Nothing is put in force.** A source or a rule that
+    already exists keeps what staff made of it: rules are created only when missing, and an existing source
+    is only completed where a field is empty (`_complete_source`).
 
     This used to seed eleven rules straight to ``ACTIVE`` so that the engine could be seen working
     before the legal review had happened, with ``approved_by`` left empty on purpose and a command
@@ -466,10 +474,10 @@ def seed() -> dict[str, int]:
 
     by_key: dict[str, LegalSource] = {}
     for spec in SOURCES:
-        source, created = LegalSource.objects.update_or_create(
-            key=spec["key"],
-            defaults={**{k: v for k, v in spec.items() if k != "key"}, "note": SEED_NOTE},
-        )
+        values = {k: v for k, v in spec.items() if k != "key"}
+        source, created = LegalSource.objects.get_or_create(key=spec["key"], defaults={**values, "note": SEED_NOTE})
+        if not created:
+            _complete_source(source, values)
         by_key[source.key] = source
         counts["sources"] += int(created)
 
@@ -482,6 +490,31 @@ def seed() -> dict[str, int]:
             counts["legacy_candidates"] += 1
 
     return counts
+
+
+def _complete_source(source: LegalSource, values: dict) -> list[str]:
+    """
+    Bring an existing source up to the seed WITHOUT undoing the legal referent's work.
+
+    The referent corrects a source's titles, reference, authority and note in the back-office
+    (rules/admin.py), and `seed_all` runs at every deployment. Until 12 October 2026 this seed wrote every
+    seeded field back with `update_or_create`, so a corrected citation silently returned to the build's
+    text at the next release (DevOps review, finding M9) — the one seed that broke the contract of
+    core.seeds («never overwrite editorial changes»). Now only an EMPTY field is completed from the seed,
+    and the build-owned fields (`BUILD_OWNED_SOURCE_FIELDS`) follow it. Returns the fields written.
+    """
+    changed = [
+        name
+        for name, value in values.items()
+        if (
+            getattr(source, name) != value if name in BUILD_OWNED_SOURCE_FIELDS else value and not getattr(source, name)
+        )
+    ]
+    for name in changed:
+        setattr(source, name, values[name])
+    if changed:
+        source.save(update_fields=[*changed, "updated_at"])
+    return changed
 
 
 def _write(spec: dict, by_key: dict[str, LegalSource], status: str, provenance: str) -> bool:

@@ -33,6 +33,14 @@ def _html(response) -> str:
     return response.content.decode("utf-8")
 
 
+def _how_text(html: str) -> str:
+    """The text of «Comment ça marche» as a reader gets it (the stations' words, the hidden arrows between them)."""
+    from bs4 import BeautifulSoup
+
+    block = BeautifulSoup(html, "html.parser").select_one('[data-locked="p3.persons.how_it_works"]')
+    return " ".join(block.get_text(" ").split()) if block else ""
+
+
 # ---- interim (gate closed) -----------------------------------------------------------------
 
 
@@ -109,7 +117,9 @@ class TestPhase3Index:
         assert html.count("<h1") == 1
         assert P3_TITLE in html
         assert P3_INTRO in html
-        assert P3_HOW in html
+        # cut on its own arrows into four stations of «la linea» (CREATIVE_DIRECTION_V5 law 8, D-U4): joined back,
+        # the words are the registry's sentence, character for character
+        assert _how_text(html) == locked_content.text("p3.persons.how_it_works", "fr")
         assert 'data-callout="how-it-works"' in html
         assert 'name="robots" content="noindex' not in html
 
@@ -167,7 +177,7 @@ class TestPhase3Detail:
         assert r.status_code == 200
         html = _html(r)
         assert html.count("<h1") == 1
-        assert f'<h1 class="page-header__title">{escape(entry["title"])}</h1>' in html
+        assert re.search(rf'<h1 class="ingresso__title[^"]*">{re.escape(escape(entry["title"]))}</h1>', html)
         assert escape(entry["description"]) in html
         assert f'data-pathway="{entry["key"]}"' in html
         assert 'data-callout="antifraud"' in html
@@ -187,7 +197,7 @@ class TestPhase3Detail:
         assert 'data-steps="5"' in html
         assert "S’orienter" in html
         assert "Accompagnement après l’arrivée" in html
-        assert "timeline__item--pending" in html
+        assert "linea__step--pending" in html
         assert "Documentation généralement requise" in html
         assert "Sportello Unico per l’Immigrazione" in html
         assert 'data-glossary="' in html

@@ -127,15 +127,17 @@ def test_every_arabic_public_page_fits_the_viewport(browser, site, width):
 
 @pytest.mark.parametrize("lang", ["ar", "fr"])
 def test_mobile_drawer_opens_inside_the_viewport(browser, site, lang):
+    """Below 80rem «Menu» opens the sheet (design V5, plan §1.12 item 8; W2-C2): inside the viewport, in both
+    directions; the full measures in Arabic are tests/i18n/test_rtl_browser_w2_c2.py's."""
     context, page = _open(browser, 390)
     try:
         page.goto(site + f"/{lang}/", wait_until="networkidle")
         toggle = page.locator("[data-nav-toggle]")
         assert toggle.get_attribute("aria-expanded") == "false"
         toggle.click()
-        page.wait_for_timeout(350)
+        page.wait_for_timeout(450)
         assert toggle.get_attribute("aria-expanded") == "true"
-        drawer = page.locator("[data-nav-drawer]")
+        drawer = page.locator("#nav-sheet")
         assert drawer.is_visible()
         first_link = drawer.locator("a").first
         assert first_link.is_visible()

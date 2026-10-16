@@ -89,11 +89,13 @@ def test_the_top_bar_s_account_is_the_systems_popover(client, seeded, person, la
     assert "<details" not in bar and "account-menu__list" not in bar, "no V4 menu in the console"
 
 
-def test_the_letterhead_keeps_v4s_details_face_until_w2_c2(client, seeded, person):
+def test_the_letterhead_holds_the_account_popover_since_w2_c2(client, seeded, person):
     client.force_login(person)
     html = client.get("/fr/").content.decode()
-    assert html.count('<details class="account-menu" data-dropdown>') == 2, "the seat and the drawer (W2-C2's)"
-    assert 'popovertarget="console-account"' not in html and 'data-overlay="popover"' not in html
+    # the targa's seat and the phone sheet's foot: the system's popover, never V4's <details> (W2-C2)
+    assert "<details class=\"account-menu\"" not in html and "data-dropdown" not in html
+    assert 'popovertarget="account-menu"' in html and 'popovertarget="account-menu-sheet"' in html
+    assert html.count('data-overlay="popover"') == 2 and 'popovertarget="console-account"' not in html
 
 
 def test_the_console_drawer_is_a_modal_drawer_of_the_system(client, seeded, person):
@@ -110,30 +112,22 @@ def test_the_console_drawer_is_a_modal_drawer_of_the_system(client, seeded, pers
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_every_row_of_the_register_has_its_menu_as_the_systems_popover(client, seeded, person, requirement, lang):
+def test_every_row_of_the_register_opens_its_piece_in_the_systems_drawer(client, seeded, person, requirement, lang):
+    """Retargeted by W3-C (intent kept: the register's overlay is the system's): «Mes pièces» V5.2 has no row menu — the
+    row is the link (DOCUMENT_WORKSPACE D2) — and the piece opens in the system's drawer, non-modal beside the list."""
     client.force_login(person)
     with translation.override(lang):
         url = reverse("portal:documents")
-        named = translation.gettext("Ouvrir le menu de la pièce")
-        consult = translation.gettext("Consulter")
+        close = translation.gettext("Fermer")
     html = client.get(url).content.decode()
-    menu = f"doc-menu-{requirement.pk}"
+    assert "doc-row__more" not in html and "doc-menu" not in html, "no row menu"
     assert re.search(
-        rf'<button class="doc-row__more" type="button" popovertarget="{menu}" aria-label="{re.escape(named)}" '
-        rf'data-tip="layer">',
+        r'<dialog class="overlay overlay--drawer doc-drawer" id="piece-drawer" data-overlay="drawer" '
+        r'data-overlay-modal="none"',
         html,
-    ), "«⋮» is a real button named by its tooltip (the top-layer tip: the row may sit in a clipping sheet)"
-    assert re.search(
-        rf'<div class="overlay overlay--popover" id="{menu}" data-overlay="popover" popover role="group" '
-        rf'aria-label="{re.escape(requirement.title)}">',
-        html,
-    ), "the menu is named by the piece's title"
-    panel = html.split(f'id="{menu}"', 1)[1].split("</ul>", 1)[0]
-    assert re.search(
-        rf'<a class="overlay__item" href="[^"]+">.*?<span>{re.escape(consult)}</span></a>', panel, flags=re.S
-    )
-    assert "#versions" not in panel, "no filing yet: no row for the filings"
-    assert "doc-menu__item" not in html and 'class="doc-menu"' not in html
+    ), "the system's drawer, beside the list"
+    assert f'data-overlay-close aria-label="{close}"' in html
+    assert f'href="/documents/requirements/{requirement.pk}/"' in html, "the row's title: the link the drawer takes"
 
 
 def test_the_dashboards_compact_rows_draw_no_menu(client, seeded, person, requirement):

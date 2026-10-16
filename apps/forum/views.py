@@ -15,8 +15,8 @@ from forum.forms import ForumRegistrationForm
 THROTTLE_SCOPE = "forum_register"
 
 
-def _breadcrumbs(page_title: str, extra: list[dict] | None = None) -> list[dict]:
-    crumbs = [{"label": page_title, "url": reverse("forum:index")}]
+def _breadcrumbs(page_title: str, extra: list[dict] | None = None, lang: str = "") -> list[dict]:
+    crumbs = [{"label": page_title, "url": reverse("forum:index"), "lang": lang}]
     if extra:
         crumbs.extend(extra)
     return crumbs
@@ -24,7 +24,7 @@ def _breadcrumbs(page_title: str, extra: list[dict] | None = None) -> list[dict]
 
 def _base_context(request, event):
     ctx = services.page_context(request, event)
-    ctx["breadcrumbs"] = _breadcrumbs(ctx["page_title"])
+    ctx["breadcrumbs"] = _breadcrumbs(ctx["page_title"], lang=ctx.get("page_title_lang", ""))
     ctx["index_url"] = reverse("forum:index")
     return ctx
 
@@ -42,7 +42,9 @@ def index(request):
 def register(request):
     event = services.current_event()
     ctx = _base_context(request, event)
-    ctx["breadcrumbs"] = _breadcrumbs(ctx["page_title"], [{"label": _("Inscription"), "url": ""}])
+    ctx["breadcrumbs"] = _breadcrumbs(
+        ctx["page_title"], [{"label": _("Inscription"), "url": ""}], lang=ctx.get("page_title_lang", "")
+    )
     ctx["standalone"] = True
     if event is None or not ctx["registration_open"]:
         if request.method == "POST":
@@ -73,5 +75,7 @@ def register(request):
 def register_done(request):
     event = services.current_event()
     ctx = _base_context(request, event)
-    ctx["breadcrumbs"] = _breadcrumbs(ctx["page_title"], [{"label": _("Inscription enregistrée"), "url": ""}])
+    ctx["breadcrumbs"] = _breadcrumbs(
+        ctx["page_title"], [{"label": _("Inscription enregistrée"), "url": ""}], lang=ctx.get("page_title_lang", "")
+    )
     return render(request, "forum/register_done.html", ctx)

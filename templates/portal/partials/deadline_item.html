@@ -1,8 +1,8 @@
-{% load i18n %}{% comment %}Contract: `row` = portal.services.present_deadline(...).{% endcomment %}
+{% load i18n %}{% comment %}Contract: `row` = portal.services.present_deadline(...). The date keeps its glyph on its own line of text — the glyph of its register (F13, design V5 W3-C: alarm-clock when late, clock when close by, the calendar otherwise), in the deadline tokens beside the chip that says it: the dashboard's own grammar of a date (`.db-due`, apps/portal/static/portal/v5/_dashboard.css, already on every console page — V5.8: no new shared CSS).{% endcomment %}
 <li class="portal-list__item">
   <p class="portal-list__title" dir="auto">{{ row.title }}</p>
   <p class="portal-list__meta">
-    {% svg_icon "calendar" "icon icon--sm" %} <time datetime="{{ row.due_on|date:'c' }}">{{ row.due_on|date:"d.m.Y" }}</time> · {{ row.kind_label }}{% if not row.is_open %} · {{ row.status_label }}{% endif %}
+    <span class="db-due{% if row.urgency %} db-due--{{ row.urgency }}{% endif %}">{% svg_icon row.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ row.due_on|date:'c' }}">{{ row.due_on|date:"d.m.Y" }}</time></span> · {{ row.kind_label }}{% if not row.is_open %} · {{ row.status_label }}{% endif %}
     {% if row.description %}<br><span dir="auto">{{ row.description|linebreaksbr }}</span>{% endif %}
     {% if row.source_note %}<br><span>{% translate "Origine :" %} <span dir="auto">{{ row.source_note }}</span></span>{% endif %}
   </p>

@@ -59,7 +59,9 @@ def events_for(case: CaseFile):
 
 def timeline(case: CaseFile, *, limit: int = TIMELINE_LIMIT) -> list[dict]:
     """
-    The file's events, oldest first, the last ``limit`` of them.
+    The file's events, newest first, the latest ``limit`` of them: where the file stands now
+    heads the list (the inspector that holds it scrolls inside itself, and its first row is the
+    one in view).
 
     The actor is a TYPE, never a name: «Vous» for the person, the role held on the file for an
     assignee, the project team for anybody else. A person's file is not the place to print the
@@ -67,7 +69,7 @@ def timeline(case: CaseFile, *, limit: int = TIMELINE_LIMIT) -> list[dict]:
     """
     roles = {assignment.assignee_id: str(assignment.get_role_display()) for assignment in case.assignments.all()}
     rows: list[dict] = []
-    for event in list(events_for(case))[-limit:]:
+    for event in events_for(case).order_by("-created_at", "-id")[:limit]:
         meta = event.metadata or {}
         chip_label, chip_register, detail = "", "", ""
         if event.action == "case.transition":
@@ -104,28 +106,41 @@ def journey_with_dates(case: CaseFile) -> list[dict]:
     portal.services.journey_for(case), each step with the date it was reached when the trail
     knows it: the opening for the first step, the transition that produced the step's status for
     the others, the file's own ``status_since`` for the current one. A step not yet reached has
-    no date — and no invented one.
-    """
-    from portal.services import JOURNEY_STEPS, journey_for
+    no date — and no invented one. A file standing on a threshold (SELECTION, on threshold A)
+    dates the threshold, not a step: the steps before it are reached, the step after it is not.
 
-    steps = journey_for(case)
-    if not steps:
-        return steps
+    A SUSPENDED or CLOSED file has no place on the line, so nothing on it is current (the header's
+    chip says the state): the trail says how far it had come — the last place it held on the line,
+    read from the transitions in their order — and every step up to there is behind it, dated
+    where the trail knows the date. Where a suspended file waits (a held node) is the trail
+    contract's (JOURNEY_SIGNATURE.md §7.3), not drawn yet.
+    """
+    from portal.services import JOURNEY_STEPS, journey_for, journey_place
+
+    if case is None:
+        return []
     reached: dict[str, object] = {}
+    stopped_at = 0.0  # the opening: a file starts on the first step
     for event in events_for(case).filter(action__in=("case.opened", "case.transition")):
         if event.action == "case.opened":
             reached.setdefault(str(CaseStatus.DRAFT), event.created_at)
-        else:
-            target = (event.metadata or {}).get("to")
-            if target:
-                reached[str(target)] = event.created_at
+            continue
+        meta = event.metadata or {}
+        target = meta.get("to")
+        if target:
+            reached[str(target)] = event.created_at
+        for status in (meta.get("from"), target):
+            place = journey_place(status)
+            if place is not None:
+                stopped_at = place
+    steps = journey_for(case, stopped_at=stopped_at)
     reached.setdefault(str(CaseStatus.DRAFT), case.created_at)
     reached.setdefault(str(case.status), case.status_since)
-    current = next((index for index, step in enumerate(steps) if step["is_current"]), 0)
     for index, (status, _side, _label) in enumerate(JOURNEY_STEPS):
         step = steps[index]
-        step["state"] = "done" if index < current else "current" if index == current else "upcoming"
-        step["reached_at"] = reached.get(str(status)) if index <= current else None
+        step["reached_at"] = reached.get(str(status)) if step["state"] != "upcoming" else None
+        if step["threshold"] and step["threshold"]["is_current"]:
+            step["threshold"]["reached_at"] = reached.get(str(case.status))
     return steps
 
 

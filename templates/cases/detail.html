@@ -1,4 +1,4 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
 The case file — design V4 (CREATIVE_DIRECTION.md §3.6): a workspace split 8/4 from 80rem, the
 inspector in the tail below.
@@ -30,6 +30,8 @@ once, which the specification forbids).
 {% endcomment %}
 {% block page_title %}{% blocktranslate with reference=case.reference %}Dossier {{ reference }}{% endblocktranslate %}{% endblock %}
 {% block meta_description %}{% translate "Votre dossier : parcours, pièces demandées, pré-évaluation et intervenants." %}{% endblock %}
+{% comment %}The journey's page-only sheet (W3-D; the owner's V5.8: never in the shared bundles), after the shell's two: the journey and the timeline.{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endblock %}
 
 {% block case_header %}{% endblock %}
 {% block next_action_block %}{% endblock %}

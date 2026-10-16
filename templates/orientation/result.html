@@ -1,111 +1,162 @@
 {% extends "base.html" %}{% load i18n static orientation_tags %}
+{% comment %}
+The pre-evaluation. Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/_interior.css, through
+orientation/wizard.css), the page as a chain of questions:
+  * what is my result, and what is it worth? — the entrance: «Votre pré-évaluation», the result as the h1, and under
+    it the ONE inset, the informational banner (orientation/_result_banner.html);
+  * what does it mean? — the explanation, at the reading measure;
+  * which family of regular pathways? — the prescribed title over its description, as written, on a register's row;
+    then the way to the pathway's sheet (gate G3), said in words on a secondary button — or, for a situation to
+    examine individually, the way to the pathways' presentation;
+  * what comes next? — the informative checklist, its «Points d'attention» on the warning's broken edge, with the
+    anti-fraud page;
+  * the training before departure, when it was asked for;
+  * the record's note — the disclaimer (the prescribed sentence once gate G3 is open), the reference, the date and
+    the two versions, quiet;
+  * on the stone, what to do with it: the resume code, shown once (the warning's register: its mark, its words, its
+    broken edge), then save it in the reserved area (the one primary), start again, print.
+{% endcomment %}
 {% block page_title %}{% translate "Votre pré-évaluation" %}{% endblock %}
 {% block meta_description %}{% translate "Pré-évaluation à caractère informatif — orientation vers une famille de parcours régulier." %}{% endblock %}
+{% block body_class %}page-orientation page-orientation--result interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-<article class="container wizard-result" data-kind="{{ r.kind }}">
-  <div class="notice notice--info wizard-result__banner" role="status" data-result-kind="informational">
-    <p class="notice__title"><strong>{% translate "Pré-évaluation à caractère informatif" %}</strong></p>
-    <div class="notice__body"><p>{% translate "Ce résultat est une orientation fondée uniquement sur vos réponses. Il ne constitue pas une décision : chaque décision appartient exclusivement aux autorités compétentes." %}</p></div>
-  </div>
+<article class="wizard-result" data-kind="{{ r.kind }}">
+  {% translate "Votre pré-évaluation" as result_label %}
+  {% if r.lang != site.lang %}
+  {% include "pages/partials/_ingresso.html" with label=result_label title=r.title title_lang=r.lang meta_template="orientation/_result_banner.html" only %}
+  {% else %}
+  {% include "pages/partials/_ingresso.html" with label=result_label title=r.title meta_template="orientation/_result_banner.html" only %}
+  {% endif %}
 
-  <header class="wizard-result__header">
-    <p class="page-header__eyebrow">{% translate "Votre pré-évaluation" %}</p>
-    <h1 class="page-header__title"{% if r.lang != site.lang %} lang="{{ r.lang }}"{% endif %}>{{ r.title }}</h1>
-  </header>
-
-  <section class="wizard-result__explanation" aria-labelledby="explanation-title">
-    <h2 id="explanation-title">{% translate "Ce que cela signifie" %}</h2>
-    {% for p in r.explanation_paragraphs %}<p{% if r.lang != site.lang %} lang="{{ r.lang }}"{% endif %}>{{ p }}</p>{% endfor %}
+  <section class="chapter" aria-labelledby="explanation-title">
+    <div class="container chapter__inner">
+      {% translate "Ce que cela signifie" as explanation_title %}{% include "pages/partials/_chapter_head.html" with title_id="explanation-title" title=explanation_title only %}
+      <div class="chapter__body">
+        <div class="chapter__prose wizard-result__explanation"{% if r.lang != site.lang %} lang="{{ r.lang }}"{% endif %}>{% for p in r.explanation_paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+      </div>
+    </div>
   </section>
 
   {% if r.is_individual_analysis %}
     {% safe_url 'pathways:index' as pathways_url %}
     {% if pathways_url and phase3_open %}
-    <section class="wizard-result__pathway" aria-labelledby="pathway-title">
-      <h2 id="pathway-title">{% translate "Parcours réguliers" %}</h2>
-      <p><a class="btn btn--secondary" href="{{ pathways_url }}">{% translate "Consulter la présentation des parcours réguliers" %}</a></p>
-    </section>
+  <section class="chapter wizard-result__pathway" aria-labelledby="pathway-title">
+    <div class="container chapter__inner">
+      {% translate "Parcours réguliers" as pathway_title %}{% include "pages/partials/_chapter_head.html" with title_id="pathway-title" title=pathway_title only %}
+      <div class="chapter__body">
+        <p class="wizard-result__go"><a class="btn btn--secondary btn--lg" href="{{ pathways_url }}">{% translate "Consulter la présentation des parcours réguliers" %}</a></p>
+      </div>
+    </div>
+  </section>
     {% endif %}
   {% else %}
     {# The pathway title + description are Phase 3 prescribed texts (p3.persons.pathways): gate G3. #}
     {% if gates.phase3_public %}{% locked_pathway r.pathway_key as pw %}{% endif %}
     {% if pw %}
-    <section class="wizard-result__pathway" aria-labelledby="pathway-title">
-      <h2 id="pathway-title">{% translate "Famille de parcours correspondante" %}</h2>
-      <p class="wizard-result__pathway-card"{% if pw.fallback %} lang="{{ pw.lang }}"{% endif %}><strong>{{ pw.title }}</strong> — {{ pw.description }}</p>
-      {% safe_url 'pathways:detail' key=r.pathway_key as pathway_url %}
-      {% if pathway_url and phase3_open %}<p><a class="btn btn--secondary" href="{{ pathway_url }}">{% translate "Consulter la page du parcours" %}</a></p>{% endif %}
-    </section>
+    {% safe_url 'pathways:detail' key=r.pathway_key as pathway_url %}
+  <section class="chapter wizard-result__pathway" aria-labelledby="pathway-title">
+    <div class="container chapter__inner">
+      {% translate "Famille de parcours correspondante" as pathway_title %}{% include "pages/partials/_chapter_head.html" with title_id="pathway-title" title=pathway_title only %}
+      <div class="chapter__body">
+        <ul class="registro wizard-result__family">
+          <li class="registro__row" data-pathway="{{ r.pathway_key }}">
+            <h3 class="registro__title"{% if pw.fallback %} lang="{{ pw.lang }}"{% endif %}>{{ pw.title }}</h3>
+            <p class="registro__text"{% if pw.fallback %} lang="{{ pw.lang }}"{% endif %}>{{ pw.description }}</p>
+          </li>
+        </ul>
+        {% if pathway_url and phase3_open %}<p class="wizard-result__go"><a class="btn btn--secondary btn--lg" href="{{ pathway_url }}">{% translate "Consulter la page du parcours" %}</a></p>{% endif %}
+      </div>
+    </div>
+  </section>
     {% endif %}
   {% endif %}
 
   {% if r.checklist_groups %}
-  <section class="wizard-result__checklist" aria-labelledby="checklist-title">
-    <h2 id="checklist-title">{% translate "Prochaines étapes à caractère informatif" %}</h2>
-    {% for group in r.checklist_groups %}
-    <div class="wizard-result__group wizard-result__group--{{ group.key }}">
-      <h3>{{ group.label }}</h3>
-      <ul>
-        {% for item in group.items %}<li{% if item.lang != site.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.text }}</li>{% endfor %}
-        {% if group.key == "warnings" and phase3_open %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></li>{% endif %}{% endif %}
-      </ul>
+  <section class="chapter wizard-result__checklist" aria-labelledby="checklist-title">
+    <div class="container chapter__inner">
+      {% translate "Prochaines étapes à caractère informatif" as checklist_title %}{% include "pages/partials/_chapter_head.html" with title_id="checklist-title" title=checklist_title only %}
+      <div class="chapter__body">
+        {% for group in r.checklist_groups %}
+        <div class="wizard-result__group wizard-result__group--{{ group.key }}">
+          <h3 class="wizard-result__group-title">{{ group.label }}</h3>
+          <ul class="wizard-result__list">
+            {% for item in group.items %}<li{% if item.lang != site.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.text }}</li>{% endfor %}
+            {% if group.key == "warnings" and phase3_open %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></li>{% endif %}{% endif %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
     </div>
-    {% endfor %}
   </section>
   {% endif %}
 
   {% if r.training_interest %}
-  <section class="wizard-result__training" aria-labelledby="training-title">
-    <h2 id="training-title">{% translate "Formation avant le départ" %}</h2>
-    <p>{% translate "Vous avez indiqué votre intérêt pour la formation avant le départ. Ces parcours de préparation (professionnels, linguistiques, civiques) sont présentés dans l’Espace Personnes." %}</p>
-    {% if phase3_open %}{% safe_url 'pathways:training' as training_url %}{% if training_url %}<p><a href="{{ training_url }}">{% translate "En savoir plus sur la formation avant le départ" %}</a></p>{% endif %}{% endif %}
+  <section class="chapter wizard-result__training" aria-labelledby="training-title">
+    <div class="container chapter__inner">
+      {% translate "Formation avant le départ" as training_title %}{% include "pages/partials/_chapter_head.html" with title_id="training-title" title=training_title only %}
+      <div class="chapter__body">
+        <p class="chapter__prose">{% translate "Vous avez indiqué votre intérêt pour la formation avant le départ. Ces parcours de préparation (professionnels, linguistiques, civiques) sont présentés dans l’Espace Personnes." %}</p>
+        {% if phase3_open %}{% safe_url 'pathways:training' as training_url %}{% if training_url %}<p class="chapter__more"><a href="{{ training_url }}">{% translate "En savoir plus sur la formation avant le départ" %}</a></p>{% endif %}{% endif %}
+      </div>
+    </div>
   </section>
   {% endif %}
 
-  <aside class="notice notice--info wizard-disclaimer" role="note" aria-labelledby="result-disclaimer-title">
-    <p class="notice__title" id="result-disclaimer-title"><strong>{% translate "Avertissement" %}</strong></p>
-    {# Phase 3 prescribed wording (p3.persons.how_it_works) only once gate G3 is open; before that a neutral sentence with the same meaning. #}
-    <div class="notice__body"><p>{% if gates.phase3_public %}{% locked r.disclaimer_locked_key %}{% else %}{% translate "Le résultat du questionnaire est une pré-évaluation à caractère informatif : les décisions relèvent des autorités compétentes." %}{% endif %}</p></div>
-  </aside>
-
-  <dl class="wizard-result__meta">
-    <div><dt>{% translate "Référence" %}</dt><dd>{{ session.reference }}</dd></div>
-    <div><dt>{% translate "Date" %}</dt><dd><time datetime="{{ result.created_at|date:'c' }}">{{ result.created_at|date:"d.m.Y H:i" }}</time></dd></div>
-    <div><dt>{% translate "Version des règles d’orientation" %}</dt><dd>v{{ result.ruleset_version }}</dd></div>
-    <div><dt>{% translate "Version de l’avertissement" %}</dt><dd>{{ disclaimer_version }}</dd></div>
-  </dl>
-
-  {% if reveal_token %}
-  <section class="notice notice--warning wizard-result__token" role="region" aria-labelledby="token-title" data-reveal-once="true">
-    <h2 id="token-title" class="notice__title">{% translate "Votre code de reprise" %}</h2>
-    <p>{% translate "Conservez ce code : il ne sera plus affiché. Il vous permet de retrouver cette pré-évaluation pendant 30 jours, sans créer de compte." %}</p>
-    <p><code class="wizard-result__token-value" id="resume-token">{{ reveal_token }}</code></p>
-    <p><small>{% translate "Page de reprise :" %} <a href="{% url 'orientation:resume' %}">{{ resume_url }}</a></small></p>
+  <section class="chapter chapter--quiet wizard-result__note" aria-labelledby="result-disclaimer-title">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        <h2 class="chapter__label" id="result-disclaimer-title">{% translate "Avertissement" %}</h2>
+        {# Phase 3 prescribed wording (p3.persons.how_it_works) only once gate G3 is open; before that a neutral sentence with the same meaning. #}
+        <p class="wizard-result__disclaimer">{% if gates.phase3_public %}{% locked r.disclaimer_locked_key %}{% else %}{% translate "Le résultat du questionnaire est une pré-évaluation à caractère informatif : les décisions relèvent des autorités compétentes." %}{% endif %}</p>
+        <dl class="wizard-result__meta">
+          <div><dt>{% translate "Référence" %}</dt><dd>{{ session.reference }}</dd></div>
+          <div><dt>{% translate "Date" %}</dt><dd><time datetime="{{ result.created_at|date:'c' }}">{{ result.created_at|date:"d.m.Y H:i" }}</time></dd></div>
+          <div><dt>{% translate "Version des règles d’orientation" %}</dt><dd>v{{ result.ruleset_version }}</dd></div>
+          <div><dt>{% translate "Version de l’avertissement" %}</dt><dd>{{ disclaimer_version }}</dd></div>
+        </dl>
+      </div>
+    </div>
   </section>
-  {% endif %}
 
-  <nav class="wizard-result__actions" aria-label="{% translate 'Actions' %}">
-    {% if is_saved %}
-      {% safe_url 'portal:pathways' as portal_url %}
-      <p class="wizard-result__saved">{% translate "Cette pré-évaluation est enregistrée dans votre espace réservé." %}{% if portal_url %} <a href="{{ portal_url }}">{% translate "Voir mes parcours" %}</a>{% endif %}</p>
-    {% elif can_save %}
-      {% if forms_enabled %}
-      <form method="post" action="{% url 'orientation:save' session_id=session.id %}" class="wizard-result__save">
-        {% csrf_token %}
-        <button type="submit" class="btn btn--primary">{% translate "Enregistrer dans mon espace" %}</button>
-      </form>
-      {% else %}
-      {% include "components/form_unavailable.html" %}
-      {% endif %}
-    {% endif %}
-    <form method="post" action="{% url 'orientation:restart' session_id=session.id %}" class="wizard-result__restart">
-      {% csrf_token %}
-      <button type="submit" class="btn btn--secondary">{% translate "Recommencer le questionnaire" %}</button>
-    </form>
-    <button type="button" class="btn btn--secondary js-print" hidden>{% translate "Imprimer cette page" %}</button>
-  </nav>
+  <div class="chapter chapter--area wizard-result__keep">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        {% if reveal_token %}
+        <section class="notice notice--warning wizard-result__token" role="region" aria-labelledby="token-title" data-reveal-once="true">
+          {% svg_icon "warning" "icon notice__icon" %}
+          <h2 id="token-title" class="notice__title">{% translate "Votre code de reprise" %}</h2>
+          <div class="notice__body">
+            <p>{% translate "Conservez ce code : il ne sera plus affiché. Il vous permet de retrouver cette pré-évaluation pendant 30 jours, sans créer de compte." %}</p>
+            <p><code class="wizard-result__token-value" id="resume-token">{{ reveal_token }}</code></p>
+            <p class="wizard-result__token-page">{% translate "Page de reprise :" %} <a href="{% url 'orientation:resume' %}">{{ resume_url }}</a></p>
+          </div>
+        </section>
+        {% endif %}
+        <div class="wizard-result__actions" role="group" aria-label="{% translate 'Actions' %}">
+          {% if is_saved %}
+            {% safe_url 'portal:pathways' as portal_url %}
+            <p class="wizard-result__saved">{% translate "Cette pré-évaluation est enregistrée dans votre espace réservé." %}{% if portal_url %} <a href="{{ portal_url }}">{% translate "Voir mes parcours" %}</a>{% endif %}</p>
+          {% elif can_save %}
+            {% if forms_enabled %}
+            <form method="post" action="{% url 'orientation:save' session_id=session.id %}" class="wizard-result__save">
+              {% csrf_token %}
+              <button type="submit" class="btn btn--primary btn--lg">{% translate "Enregistrer dans mon espace" %}</button>
+            </form>
+            {% else %}
+            {% include "components/form_unavailable.html" %}
+            {% endif %}
+          {% endif %}
+          <form method="post" action="{% url 'orientation:restart' session_id=session.id %}" class="wizard-result__restart">
+            {% csrf_token %}
+            <button type="submit" class="btn btn--secondary btn--lg">{% translate "Recommencer le questionnaire" %}</button>
+          </form>
+          <button type="button" class="btn btn--secondary btn--lg js-print" hidden>{% translate "Imprimer cette page" %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </article>
 {% endblock %}
 {% block extra_scripts %}<script type="module" src="{% static 'orientation/wizard.js' %}"></script>{% endblock %}

@@ -75,7 +75,7 @@ def test_the_project_stylesheets_are_found():
     names = {path.name for path in STYLESHEETS}
     assert {"tokens.css", "base.css", "layout.css", "components.css"} <= names
     relative = {path.relative_to(ROOT).as_posix() for path in STYLESHEETS}
-    assert {"static/css/v5/tokens.css", "static/css/v5/base.css", "static/css/v4/shell.css"} <= relative
+    assert {"static/css/v5/tokens.css", "static/css/v5/base.css", "static/css/v4/workspace.css"} <= relative
     assert not [name for name in relative if "/dist/" in name or "/dev/" in name]
     assert len(STYLESHEETS) >= 30
 

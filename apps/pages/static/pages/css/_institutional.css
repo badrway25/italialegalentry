@@ -1,0 +1,91 @@
+/* ============================================================================================
+   THE INSTITUTIONAL PAGES — what they draw beyond the interior's grammar (design V5.4, W3-F1; imported by
+   pages/css/interior.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only; logical properties.
+   ============================================================================================ */
+
+/* ---- from the interior's grammar (v5/_interior.css), drawn by these pages alone: the register whose rows name WHO, which /reseau/ and /le-projet/ alone draw (W3-F1's budget pass, 12 October 2026: a page sheet holds what its pages draw) ---- */
+/* a register whose rows each name WHO (an audience, an actor): the registry's glyph says it, once a row, in ink */
+.registro--glyph .registro__title {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+.registro__glyph {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: 2px;
+  color: var(--text-1);
+}
+
+.registro--glyph .registro__text {
+  padding-inline-start: calc(var(--icon-md) + var(--s-3));
+}
+
+
+/* ---- Contact: the one address, large — the page's first answer ------------------------------------------ */
+.contact-address {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.contact-address__link {
+  overflow-wrap: anywhere;
+}
+
+/* under a finger the address answers on 44 px (SP-8) */
+@media (pointer: coarse) {
+  .contact-address__link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--hit-primary);
+  }
+}
+
+@media (min-width: 48rem) {
+  .contact-address {
+    font-size: var(--t-band);
+    line-height: var(--t-band-lh);
+    letter-spacing: var(--track-band);
+  }
+}
+
+/* ---- Le projet: the trademark line, quiet ------------------------------------------------------------- */
+.page-trademark {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* ---- Attention aux fraudes: the prescribed text as the page's one inset, at the reading size — a warning notice
+        of the core components (v5/notice.css): the anti-fraud entry's mark, its title «Votre protection» in the
+        register's word, the warning's broken rule; never colour alone, no red, no alarm (W3-F1, step 2) ------ */
+.antifraud-panel__title {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.antifraud-panel__body {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+@media (min-width: 48rem) {
+  .antifraud-panel__body {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+}
+
+.antifraud-panel--page {
+  max-inline-size: 48rem;
+  margin: 0;
+  padding: var(--s-6);
+}

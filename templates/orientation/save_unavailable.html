@@ -1,10 +1,20 @@
 {% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Saving is unavailable while the public forms' gate (G2) is closed. Design V5.4 (W3-F1, step 2 — the public interior,
+through orientation/wizard.css): the entrance, the gate's own notice, the way back to the pre-evaluation.
+{% endcomment %}
 {% block page_title %}{% translate "Enregistrement indisponible" %}{% endblock %}
+{% block body_class %}page-orientation page-orientation--unavailable interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
 {% block content %}
-<article class="container wizard-result">
-  <h1>{% translate "Enregistrement indisponible" %}</h1>
-  {% include "components/form_unavailable.html" %}
-  <p><a class="btn btn--secondary" href="{% url 'orientation:result' session_id=session.id %}">{% translate "Retour à la pré-évaluation" %}</a></p>
-</article>
+{% translate "Enregistrement indisponible" as page_title %}
+{% include "pages/partials/_ingresso.html" with title=page_title only %}
+<div class="chapter wizard-result">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      {% include "components/form_unavailable.html" %}
+      <p class="wizard-result__go"><a class="btn btn--secondary btn--lg" href="{% url 'orientation:result' session_id=session.id %}">{% translate "Retour à la pré-évaluation" %}</a></p>
+    </div>
+  </div>
+</div>
 {% endblock %}

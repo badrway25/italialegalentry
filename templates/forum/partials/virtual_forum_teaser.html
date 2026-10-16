@@ -1,16 +1,23 @@
 {% load i18n %}
-{% comment %}Virtual Forum teaser — visible only behind FeatureFlag virtual_forum (gate G11).{% endcomment %}
+{% comment %}
+Virtual Forum teaser — visible only behind FeatureFlag virtual_forum (gate G11).
+Design V5.4 (W3-F1): a chapter — the prescribed title, its body, its one button.
+{% endcomment %}
 {% if virtual_forum_enabled %}
 {% safe_url "community:index" as community_url %}
-<section class="forum-section forum-section--virtual container" id="forum-virtual" aria-labelledby="forum-virtual-title" data-gate="virtual-forum">
-  <h2 class="forum-section__title" id="forum-virtual-title">{% locked "p3.virtual_forum.title" %}</h2>
-  {% locked "p3.virtual_forum.body" "p" "forum-section__body" %}
-  <p class="forum-section__actions">
-    {% if community_url %}
-      <a class="btn btn--primary" href="{{ community_url }}">{% locked "p3.virtual_forum.button" %}</a>
-    {% else %}
-      <span class="btn btn--primary is-disabled" aria-disabled="true" data-pending-route="community:index">{% locked "p3.virtual_forum.button" %}</span>
-    {% endif %}
-  </p>
+<section class="chapter chapter--area forum-section forum-section--virtual" id="forum-virtual" aria-labelledby="forum-virtual-title" data-gate="virtual-forum">
+  <div class="container chapter__inner">
+    {% locked "p3.virtual_forum.title" as virtual_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-virtual-title" title=virtual_title only %}
+    <div class="chapter__body">
+      {% locked "p3.virtual_forum.body" "p" "chapter__prose forum-section__body" %}
+      <p class="chapter__more forum-section__actions">
+        {% if community_url %}
+          <a class="btn btn--secondary btn--lg" href="{{ community_url }}">{% locked "p3.virtual_forum.button" %}</a>
+        {% else %}
+          <span class="btn btn--secondary btn--lg is-disabled" aria-disabled="true" data-pending-route="community:index">{% locked "p3.virtual_forum.button" %}</span>
+        {% endif %}
+      </p>
+    </div>
+  </div>
 </section>
 {% endif %}

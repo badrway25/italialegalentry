@@ -1,20 +1,29 @@
 {% load i18n forum_tags %}
 {% comment %}
-Institutional header. Title/subtitle/meta/patronage are locked texts (p2.forum.header.*).
+The Forum's entrance. Title/subtitle/meta/patronage are locked texts (p2.forum.header.*).
 In permanent mode the H1 is the document's own wording « FORUM PERMANENT VÉNÉTIE–MAROC » (UI string).
 Logo slots render ONLY authorised partners with a logo (gate G6): no placeholder image is ever shown.
+
+Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css §2): the interior's entrance «l'ingresso» on
+the night ground — the Forum is the institutional event of the ecosystem, and its band is the page's one night chapter
+above the footer's (RH-8: two nights a page at most, never adjacent). The eyebrow, the h1 and the subtitle at the
+reading edge; the launch meeting as a fact line; the patronage; the page's index in the end seat (the sections
+below, «Sommaire de la page»: the V4 sticky band of section links is gone). No photograph: the Forum context has no
+approved frame in the repository (plan §1.16), and its own frames wait for the owner's publication (D20).
 {% endcomment %}
-<header class="forum-hero{% if event.hero_image %} forum-hero--with-image{% endif %}" id="forum-top">
-  <div class="container forum-hero__inner">
-    <div class="forum-hero__text">
-      <p class="forum-hero__eyebrow">{% if is_permanent %}{% translate "Espace permanent de dialogue et de coopération" %}{% else %}{% translate "Événement institutionnel" %}{% endif %}</p>
+<header class="ingresso ingresso--night forum-hero{% if event.hero_image %} forum-hero--with-image{% endif %}" id="forum-top">
+  <div class="container ingresso__inner">
+    <div class="ingresso__text forum-hero__text">
+      {% if is_permanent %}{% translate "Espace permanent de dialogue et de coopération" as eyebrow %}{% else %}{% translate "Événement institutionnel" as eyebrow %}{% endif %}{% get_current_language as page_lang %}
+      {# a UI string the translators have not given yet stays in French: it says so (WCAG 3.1.2; B2) #}
+      <p class="ingresso__label forum-hero__eyebrow"{% if page_lang != "fr" and eyebrow == "Espace permanent de dialogue et de coopération" %} lang="fr"{% endif %}>{{ eyebrow }}</p>
       {% if is_permanent %}
-        <h1 class="forum-hero__title">{{ permanent_title }}</h1>
-        <p class="forum-hero__subtitle">{% event_text event "header.subtitle" %}</p>
+        <h1 class="ingresso__title ingresso__title--caps forum-hero__title"{% if permanent_title_lang %} lang="{{ permanent_title_lang }}"{% endif %}>{{ permanent_title }}</h1>
+        {% event_text event "header.subtitle" "p" "ingresso__lead forum-hero__subtitle" %}
         <p class="forum-hero__meta"><span class="forum-hero__meta-label">{% translate "Rencontre de lancement :" %}</span> {% event_text event "header.meta" %}</p>
       {% else %}
-        {% event_text event "header.title" "h1" "forum-hero__title" %}
-        {% event_text event "header.subtitle" "p" "forum-hero__subtitle" %}
+        {% event_text event "header.title" "h1" "ingresso__title ingresso__title--caps forum-hero__title" %}
+        {% event_text event "header.subtitle" "p" "ingresso__lead forum-hero__subtitle" %}
         <p class="forum-hero__meta"><time datetime="{{ event.starts_at|date:'c' }}">{% event_text event "header.meta" %}</time></p>
       {% endif %}
       {% event_text event "header.patronage" "p" "forum-hero__patronage" %}
@@ -26,13 +35,19 @@ Logo slots render ONLY authorised partners with a logo (gate G6): no placeholder
         </ul>
       {% endif %}
       {% if not is_permanent and registration_open and forms_enabled %}
-        <p class="forum-hero__actions"><a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a></p>
+        <p class="forum-hero__actions"><a class="btn btn--primary btn--lg btn--inverse" href="#forum-registration">{% event_text event "registration.button_primary" %}</a></p>
+      {% endif %}
+      {% if event.hero_image and event.hero_image.is_publishable %}{# an editor's photograph ships only with its caption apparatus (D26) #}
+        {% if event.hero_image.is_decorative %}
+        <img class="forum-hero__img" src="{{ event.hero_image.file.url }}" alt="" width="{{ event.hero_image.width|default:960 }}" height="{{ event.hero_image.height|default:640 }}" decoding="async">
+        {% else %}
+        <figure class="figura forum-hero__figure">
+          <img src="{{ event.hero_image.file.url }}" alt="{{ hero_image_alt }}" width="{{ event.hero_image.width|default:960 }}" height="{{ event.hero_image.height|default:640 }}" decoding="async">
+          <figcaption lang="fr">{{ event.hero_image.caption_fr }}{% if event.hero_image.caption_place %} · {{ event.hero_image.caption_place }}{% endif %}{% if event.hero_image.caption_date %}, {{ event.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if event.hero_image.credit %} — {% translate "Photo" %} : {{ event.hero_image.credit }}{% endif %}</figcaption>
+        </figure>
+        {% endif %}
       {% endif %}
     </div>
-    {% if event.hero_image %}
-      <figure class="forum-hero__figure">
-        <img src="{{ event.hero_image.file.url }}" alt="{{ hero_image_alt }}" width="{{ event.hero_image.width|default:960 }}" height="{{ event.hero_image.height|default:640 }}">
-      </figure>
-    {% endif %}
+    {% include "forum/partials/local_nav.html" %}
   </div>
 </header>

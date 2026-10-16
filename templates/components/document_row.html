@@ -1,70 +1,37 @@
 {% load i18n %}{% comment %}
-DocumentRow (design V4, CREATIVE_DIRECTION.md §3.5.4, DESIGN_SYSTEM_V4.md §8.24): one required
-piece of a case file as a row of seven zones — identity · state · responsible · due date · health ·
-action · menu — inside a DocumentCollection sheet. Below 48rem the same markup stacks as a card
-(v4/workspace.css); there is no second template for the phone.
+DocumentRow — design V5, «Mes pièces» V5.2 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5;
+DOCUMENT_WORKSPACE.md §6; W3-C): one required piece of a case file as a row of SIX zones on the columns every row
+of the collection shares — piece · state · responsible · deadline · act · open — and, when there is one, the NOTE as
+the row's footer on its full measure (the motive of a refusal, the reason a replacement was asked). Rules:
+apps/portal/static/portal/v5/_workspace.css. Below 52rem of register the same markup is a card (placed by `order`):
+there is no second template for the phone.
 
-Every state is a WORD with its register (data-register from apps/core/chips.py, never chosen
-here); nothing in the row says «approved». The action names WHAT it does; a piece that is not the
-person's to provide offers «Consulter», and the Conditions gate is stated on the row that it blocks,
-with the link that resolves it.
+THE ROW IS THE LINK. The title's link is stretched over the whole row, above the chip, the actor, the date and the
+note — every point of the row that shows its hover state opens the piece (gate 0 left 14 of 30 dead) — and under
+the act, the one other control. No row menu and no «Consulter»: «Télécharger» and the deposits are on the piece's
+page. The act is there only where the reader acts — «Déposer la pièce», «Remplacer la pièce» on an open piece —
+and it is described by the piece's title (W-3: no two
+controls of the collection share a name and a description). Where the reader cannot act the zone stays empty —
+where the Conditions gate blocks the filing too: «Bloqué» beside the chip, the strip says why (the acceptance flow
+waits on the legal texts, G1: no button promises an act its target cannot do).
 
-Contract: `row` = one entry of documents.presenters.register_rows (title, state, state_label,
-state_reason, responsible, responsible_note, responsible_glyph, due_date, is_overdue, urgency,
-health, mandatory, current, version_count, may_file, action_blocked, detail_url); optional
-`compact` (True on the dashboard: identity · state · due only — no responsible, no action, no
-menu, no reason; the register page carries those).
+Every state is a WORD with its register (the chip pair; data-register from apps/core/chips.py, never chosen here);
+nothing in the row says «approved». The date keeps its glyph whatever its urgency (the registry's DUE map), with
+«Bientôt» / «En retard» beside it; once a piece is filed the date is drawn calm (F8, documents.presenters). «Bloqué»
+is the Conditions gate, beside the chip (RequirementState has no blocked: plan's D8, the owner's).
 
-The row menu is the overlay system's popover (design V5, V5.4 plan §1.14; W2-A): «⋮» is a real button
-named by its tooltip (the top-layer tip: the row may sit in a clipping sheet), and components/popover.html
-holds the rows — this file again, with `overlay_part` = "body". Placed on the button's inline end by
-static/js/src/overlay.js; a bottom sheet at ≤ 40rem.
-{% endcomment %}{% if overlay_part == "body" %}<ul class="overlay__list" role="list">
-  <li><a class="overlay__item" href="{{ row.detail_url }}">{% svg_icon "eye" "icon" %}<span>{% translate "Consulter" %}</span></a></li>
-  {% if row.current and row.current.download_url %}<li><a class="overlay__item" href="{{ row.current.download_url }}">{% svg_icon "download" "icon" %}<span>{% translate "Télécharger" %}</span></a></li>{% endif %}
-  {% if row.version_count %}<li><a class="overlay__item" href="{{ row.detail_url }}#versions">{% svg_icon "history" "icon" %}<span>{% blocktranslate count n=row.version_count %}{{ n }} dépôt{% plural %}{{ n }} dépôts{% endblocktranslate %}</span></a></li>{% endif %}
-</ul>{% else %}
-<li class="doc-row{% if row.is_overdue %} doc-row--overdue{% endif %}{% if compact %} doc-row--compact{% endif %}" data-state="{{ row.state }}">
-  <div class="doc-row__identity">
-    {% include "components/glyph.html" with glyph="document" size="md" %}
-    <div class="doc-row__words">
-      <p class="doc-row__title">{{ row.title }}{% if not row.mandatory %} <span class="doc-row__qualifier">{% translate "Facultative" %}</span>{% endif %}</p>
-      <p class="doc-row__meta">
-        {% if row.current %}<span>{% blocktranslate with n=row.version_count %}version {{ n }}{% endblocktranslate %}</span>{% endif %}
-        {% if row.state_reason and not compact %}<span class="doc-row__reason">{{ row.state_reason }}</span>{% endif %}
-      </p>
-    </div>
+Contract: `row` = one entry of documents.presenters.register_rows / register_for_case (id, title, words, mandatory,
+current, version_count, health, state, state_label, state_reason, action_blocked, responsible, responsible_note,
+responsible_glyph, due_date, urgency, due_word, act {label, url, glyph, aria_label} or None, detail_url).
+{% endcomment %}<li class="doc-row" data-state="{{ row.state }}" data-piece="{{ row.id }}">
+  <div class="doc-row__piece">
+    <p class="doc-row__title" id="piece-{{ row.id }}"><a class="doc-row__link" href="{{ row.detail_url }}"{% if row.state_reason %} aria-describedby="note-{{ row.id }}"{% endif %}{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% endif %}>{{ row.title }}</a>{% if not row.mandatory %} <span class="doc-row__qualifier">{% translate "Facultative" %}</span>{% endif %}</p>
+    {% if row.current or row.health %}<p class="doc-row__meta">{% if row.current %}<span>{% blocktranslate with n=row.version_count %}version {{ n }}{% endblocktranslate %}</span>{% endif %}{% if row.health %}<span>{{ row.health }}</span>{% endif %}</p>{% endif %}
   </div>
-  <div class="doc-row__state">
-    {% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}
-    {% if row.action_blocked and not compact %}<span class="doc-row__blocked">{% translate "Bloqué" %}</span>{% endif %}
-  </div>
-  {% if not compact %}
-  <div class="doc-row__responsible">
-    {% include "components/glyph.html" with glyph=row.responsible_glyph size="sm" %}
-    <span class="doc-row__actor">{{ row.responsible }}{% if row.responsible_note %} <span class="doc-row__actor-note">— {{ row.responsible_note }}</span>{% endif %}</span>
-  </div>
-  {% endif %}
-  <div class="doc-row__due{% if row.urgency %} doc-row__due--{{ row.urgency }}{% endif %}">
-    {% if row.due_date %}
-      {% svg_icon row.urgency|concept:"due" "icon doc-row__due-icon" %}
-      <time datetime="{{ row.due_date|date:'c' }}">{{ row.due_date|date:"d.m.Y" }}</time>
-    {% else %}<span class="doc-row__none" aria-hidden="true">—</span>{% endif %}
-  </div>
-  {% if not compact %}
-  <div class="doc-row__health">{% if row.health %}{{ row.health }}{% endif %}</div>
-  <div class="doc-row__action">
-    {% if row.may_file %}
-      <a class="btn btn--secondary btn--sm" href="{{ row.detail_url }}">{% if row.current %}{% translate "Remplacer la pièce" %}{% else %}{% translate "Déposer la pièce" %}{% endif %}</a>
-    {% elif row.action_blocked %}
-      {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a class="btn btn--secondary btn--sm" href="{{ terms_url }}" aria-label="{% translate 'Accepter les Conditions d’utilisation' %}">{% translate "Accepter les Conditions" %}</a>{% else %}<span class="doc-row__qualifier">{% translate "Acceptation des Conditions d’utilisation requise." %}</span>{% endif %}
-    {% else %}
-      <a class="btn btn--secondary btn--sm" href="{{ row.detail_url }}">{% translate "Consulter" %}</a>
-    {% endif %}
-  </div>
-  <div class="doc-row__menu">{% with row_key=row.id|stringformat:"s" %}{% with menu_id="doc-menu-"|add:row_key %}
-    <button class="doc-row__more" type="button" popovertarget="{{ menu_id }}" aria-label="{% translate 'Ouvrir le menu de la pièce' %}" data-tip="layer">{% svg_icon "ellipsis-vertical" "icon" %}</button>
-    {% include "components/popover.html" with id=menu_id label=row.title body_template="components/document_row.html" %}
-  {% endwith %}{% endwith %}</div>
-  {% endif %}
-</li>{% endif %}
+  <div class="doc-row__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}{% if row.action_blocked %} <span class="doc-row__blocked">{% translate "Bloqué" %}</span>{% endif %}</div>
+  {% if row.state_reason %}<p class="doc-row__note{% if row.state == 'invalid' %} doc-row__note--refusal{% endif %}" id="note-{{ row.id }}">{% if row.state == 'invalid' %}{% svg_icon "circle-alert" "icon" %}{% else %}{% svg_icon "info" "icon" %}{% endif %}<span dir="auto">{{ row.state_reason }}</span></p>{% endif %}
+  <div class="doc-row__resp"><span class="visually-hidden">{% translate "Responsable" %} </span>{% include "components/glyph.html" with glyph=row.responsible_glyph size="sm" %}<span class="doc-row__actor">{{ row.responsible }}{% if row.responsible_note %} <span class="doc-row__actor-note">— {{ row.responsible_note }}</span>{% endif %}</span></div>
+  <div class="doc-row__due">{% if row.due_date %}<span class="visually-hidden">{% translate "Échéance" %} </span><span class="doc-due{% if row.urgency %} doc-due--{{ row.urgency }}{% endif %}"><span class="doc-due__mark">{% svg_icon row.urgency|concept:"due" "icon" %}</span><time datetime="{{ row.due_date|date:'Y-m-d' }}">{{ row.due_date|date:"d.m.Y" }}</time>{% if row.due_word %}<span class="doc-due__word">{{ row.due_word }}</span>{% endif %}</span>{% endif %}</div>
+  {% if row.act %}<div class="doc-row__act"><a class="btn btn--secondary btn--sm" href="{{ row.act.url }}" aria-describedby="piece-{{ row.id }}"{% if row.act.aria_label %} aria-label="{{ row.act.aria_label }}"{% endif %}>{% if row.act.glyph == "refresh-cw" %}{% svg_icon "refresh-cw" "icon" %}{% elif row.act.glyph == "upload" %}{% svg_icon "upload" "icon" %}{% endif %}{{ row.act.label }}</a></div>{% endif %}
+  <span class="doc-row__open" aria-hidden="true">{% svg_icon "chevron-end" "icon" %}</span>
+</li>

@@ -48,12 +48,6 @@
   }
 }
 
-/* The content column of an annotated block is a measured reading column. */
-.zones__content > .prose,
-.zones__content > .t-prose {
-  max-inline-size: var(--measure-prose);
-}
-
 /* ---- Sections: RANK sets the outer space -----------------------------------
    Space between sections is always greater than space inside them, and a
    section's rank decides how much. The build this replaces used 72/72 on every
@@ -102,10 +96,6 @@
   color: inherit;
 }
 
-.section--rule {
-  border-block-start: 1px solid var(--rule-hair);
-}
-
 .section__header {
   max-inline-size: var(--measure-lead);
   margin-block-end: var(--s-8);
@@ -123,23 +113,6 @@
 }
 
 /* ---- Legacy section aliases (demolition scaffold) ------------------------- */
-.section--tight {
-  padding-block: var(--rank-c-block);
-}
-
-.section--muted {
-  background: var(--paper-deep);
-}
-
-.section--inverse {
-  background: var(--navy);
-  color: var(--paper-on-navy);
-}
-
-.section--inverse :is(h1, h2, h3, .eyebrow, a:not(.btn)) {
-  color: inherit;
-}
-
 .section__header--center {
   margin-inline: auto;
   text-align: center;
@@ -164,38 +137,9 @@
   .lg\:col-8 { grid-column: span 8; }
 }
 
-/* Auto-fit grid for lists of equal items (pathways, sheets) */
-.grid-auto {
-  display: grid;
-  gap: var(--space-6);
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-}
-
 /* ---- Two-column editorial layouts ---------------------------------------- */
-/* content + side navigation / aside */
-.layout-sidebar {
-  display: grid;
-  gap: var(--space-10) var(--gutter);
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-}
-
-@media (min-width: 64rem) {
-  .layout-sidebar {
-    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
-  }
-
-  .layout-sidebar--end {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
-  }
-
-  .layout-sidebar__aside {
-    position: sticky;
-    inset-block-start: calc(var(--header-height) + var(--space-6));
-  }
-}
-
-/* text + figure split (hero-like) */
+/* text + figure split (hero-like); the sidebar layout left with its last consumer (allauth's manage layout,
+   W3-F2) in W3-F1's budget pass */
 .split {
   display: grid;
   gap: var(--space-10) var(--gutter);
@@ -214,8 +158,6 @@
   margin-block-start: var(--stack-gap);
 }
 
-.stack--sm { --stack-gap: var(--space-2); }
-.stack--lg { --stack-gap: var(--space-8); }
 
 .cluster {
   display: flex;
@@ -247,18 +189,6 @@
   margin-block: var(--space-8);
 }
 
-.rule--accent {
-  inline-size: 3rem;
-  margin-inline: 0;
-  margin-block: var(--space-5);
-  border-block-start: var(--border-width-strong) solid var(--border-accent);
-}
-
-.rule--accent.center,
-.center > .rule--accent {
-  margin-inline: auto;
-}
-
 /* ---- Responsive visibility ------------------------------------------------ */
 @media (max-width: 63.999rem) {
   .hide-mobile {
@@ -277,16 +207,3 @@
   outline-offset: -2px;
 }
 
-/* ---- Legacy container aliases (demolition scaffold) -----------------------
-   Migrated to .container--read / .container--spread as each template is
-   rebuilt. See _legacy-tokens.css for the countdown. */
-.container--wide,
-.container--narrow,
-.container--prose {
-  max-inline-size: var(--container);
-}
-
-.container--narrow,
-.container--prose {
-  max-inline-size: 42rem;
-}

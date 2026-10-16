@@ -5,47 +5,66 @@ The contact form is NOT re-implemented here: this page links to the enquiries ap
 form, its consent, throttle, honeypot and the G2 gate (form unavailable while the official legal
 texts are missing). No phone number and no postal address are invented.
 CONTENT_PENDING_LEGAL_REVIEW — postal address / registered office: official « Mentions légales » only.
+
+Design V5.4 (W3-F1): the entrance; the address, large, as the page's first answer; the form as the page's ONE
+action; the dedicated forms as a register; the data note, quiet.
 {% endcomment %}
 {% block page_title %}{% translate "Contact" %}{% endblock %}
 {% block page_header %}
-{% translate "Contact" as page_title_text %}{% translate "Nous écrire" as eyebrow %}
+{% translate "Contact" as page_title_text %}{% translate "Nous écrire" as page_label %}
 {% translate "Une adresse unique pour toutes les demandes relatives au projet." as page_lead %}
-{% include "components/page_header.html" with title=page_title_text eyebrow=eyebrow lead=page_lead %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=page_title_text lead=page_lead only %}
 {% endblock %}
 {% block page_body %}
-<section class="page-section" aria-labelledby="contact-email-title">
-  <h2 class="page-section__title" id="contact-email-title">{% translate "Par e-mail" %}</h2>
-  <p class="contact-address"><a class="contact-address__link email" href="mailto:{{ site.contact_email }}">{% svg_icon "at-sign" "icon icon--lg" %}<span>{{ site.contact_email }}</span></a></p>
-  <p class="page-section__text">{% translate "Tous les formulaires du site sont acheminés vers cette adresse." %}</p>
+<section class="chapter" aria-labelledby="contact-email-title">
+  <div class="container chapter__inner">
+    {% translate "Par e-mail" as email_title %}{% include "pages/partials/_chapter_head.html" with title_id="contact-email-title" title=email_title only %}
+    <div class="chapter__body">
+      <p class="contact-address"><a class="contact-address__link email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      <p class="page-section__text chapter__prose">{% translate "Tous les formulaires du site sont acheminés vers cette adresse." %}</p>
+    </div>
+  </div>
 </section>
 
-<section class="page-section" aria-labelledby="contact-form-title">
-  <h2 class="page-section__title" id="contact-form-title">{% translate "Par le formulaire de contact" %}</h2>
-  {% if not forms_open %}
-    {# Gate G2 closed: the design-system notice used by every gated public form. #}
-    {% include "components/form_unavailable.html" %}
-  {% endif %}
-  {% if contact_form_url %}
-  <p><a class="btn {% if forms_open %}btn--primary{% else %}btn--secondary{% endif %} btn--arrow" href="{{ contact_form_url }}">{% translate "Ouvrir le formulaire de contact" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-  {% endif %}
+<section class="chapter chapter--area" aria-labelledby="contact-form-title">
+  <div class="container chapter__inner">
+    {% translate "Par le formulaire de contact" as form_title %}{% include "pages/partials/_chapter_head.html" with title_id="contact-form-title" title=form_title only %}
+    <div class="chapter__body">
+      {% if not forms_open %}
+        {# Gate G2 closed: the design-system notice used by every gated public form. #}
+        {% include "components/form_unavailable.html" %}
+      {% endif %}
+      {% if contact_form_url %}
+      <p class="chapter__more"><a class="btn {% if forms_open %}btn--primary{% else %}btn--secondary{% endif %} btn--lg btn--arrow" href="{{ contact_form_url }}">{% translate "Ouvrir le formulaire de contact" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+      {% endif %}
+    </div>
+  </div>
 </section>
 
 {% if dedicated_forms %}
-<section class="page-section" aria-labelledby="contact-dedicated-title">
-  <h2 class="page-section__title" id="contact-dedicated-title">{% translate "Une demande précise ?" %}</h2>
-  <ul class="page-links">
-    {% for item in dedicated_forms %}
-    <li class="page-links__item"><a class="page-links__link" href="{{ item.url }}"{% if item.label.lang %} lang="{{ item.label.lang }}"{% endif %}><span>{{ item.label }}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>
-    {% endfor %}
-  </ul>
+<section class="chapter" aria-labelledby="contact-dedicated-title">
+  <div class="container chapter__inner">
+    {% translate "Une demande précise ?" as dedicated_title %}{% include "pages/partials/_chapter_head.html" with title_id="contact-dedicated-title" title=dedicated_title only %}
+    <div class="chapter__body">
+      <ul class="registro registro--two page-links">
+        {% for item in dedicated_forms %}
+        <li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ item.url }}"{% if item.label.lang %} lang="{{ item.label.lang }}"{% endif %}>{{ item.label }}</a></p></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if links.privacy %}
-<section class="page-section page-section--quiet" aria-labelledby="contact-data-title">
-  <h2 class="page-section__title page-section__title--small" id="contact-data-title">{% translate "Vos données" %}</h2>
-  {# The sentence about data processing is prescribed wording (consent texts): only the link is shown here. #}
-  <p><a class="link-arrow" href="{{ links.privacy }}">{% translate "Lire la Privacy Policy" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+<section class="chapter chapter--quiet" aria-labelledby="contact-data-title">
+  <div class="container chapter__inner">
+    <div class="chapter__head chapter__head--quiet"><h2 class="chapter__label" id="contact-data-title">{% translate "Vos données" %}</h2></div>
+    <div class="chapter__body">
+      {# The sentence about data processing is prescribed wording (consent texts): only the link is shown here. #}
+      <p class="chapter__more"><a class="link-arrow" href="{{ links.privacy }}">{% translate "Lire la Privacy Policy" %}</a></p>
+    </div>
+  </div>
 </section>
 {% endif %}
 {% endblock %}

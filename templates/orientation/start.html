@@ -1,45 +1,35 @@
 {% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Orientation — the questionnaire's first page. Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/
+_interior.css, loaded through orientation/wizard.css): the entrance (the space's name, the h1 and the lead,
+verbatim), the ONE inset under the lead — what to read before starting (the prescribed sentence once gate G3 is
+open, a neutral one with the same meaning before) — and the ONE action beside them in the entrance's end seat from
+64rem, right after them on a phone: the questionnaire, what it is and why, «Commencer», the way back in with a resume
+code (W3-F1's review M4: «Commencer» stood under the first screen at every width); then how the questionnaire goes,
+its three moments on «la linea».
+{% endcomment %}
 {% block page_title %}{% translate "Orientation vers un parcours régulier" %}{% endblock %}
 {% block meta_description %}{% translate "Répondez à quelques questions sur votre situation et recevez une pré-évaluation à caractère informatif sur la famille de parcours régulier vers l’Italie qui correspond à votre projet." %}{% endblock %}
+{% block body_class %}page-orientation page-orientation--start interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-<article class="container wizard-intro">
-  <header class="page-header">
-    <p class="page-header__eyebrow">{% translate "Espace Personnes" %}</p>
-    <h1 class="page-header__title">{% translate "Orientation vers un parcours régulier" %}</h1>
-    <p class="page-header__lead">{% translate "Répondez à quelques questions sur votre projet : vous recevrez une pré-évaluation à caractère informatif indiquant la famille de parcours régulier vers l’Italie qui semble correspondre à votre situation, avec des étapes générales de préparation." %}</p>
-  </header>
+{% translate "Espace Personnes" as space_label %}{% translate "Orientation vers un parcours régulier" as page_title %}{% translate "Répondez à quelques questions sur votre projet : vous recevrez une pré-évaluation à caractère informatif indiquant la famille de parcours régulier vers l’Italie qui semble correspondre à votre situation, avec des étapes générales de préparation." as page_lead %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=page_lead meta_template="orientation/_start_notice.html" aside_template="orientation/_start_action.html" phase3_public=gates.phase3_public disclaimer_locked_key=disclaimer_locked_key available=available csrf_token=csrf_token site=site only %}
 
-  <section class="wizard-intro__how" aria-labelledby="how-title">
-    <h2 id="how-title">{% translate "Comment se déroule le questionnaire" %}</h2>
-    <ol class="wizard-intro__steps">
-      <li><strong>{% translate "Quelques questions progressives" %}</strong> — {% translate "une question par écran, sans aucune donnée personnelle ; vous pouvez revenir en arrière à tout moment." %}</li>
-      <li><strong>{% translate "Une pré-évaluation informative" %}</strong> — {% translate "la famille de parcours qui correspond à votre projet, avec une explication." %}</li>
-      <li><strong>{% translate "Les étapes suivantes" %}</strong> — {% translate "une liste de préparation générale et les acteurs compétents à contacter." %}</li>
-    </ol>
-  </section>
-
-  <aside class="notice notice--info wizard-disclaimer" role="note" aria-labelledby="disclaimer-title">
-    <p class="notice__title" id="disclaimer-title"><strong>{% translate "À lire avant de commencer" %}</strong></p>
-    {# Phase 3 prescribed wording (p3.persons.how_it_works) only once gate G3 is open; before that a neutral sentence with the same meaning. #}
-    <div class="notice__body"><p>{% if gates.phase3_public %}{% locked disclaimer_locked_key %}{% else %}{% translate "Le résultat du questionnaire est une pré-évaluation à caractère informatif : les décisions relèvent des autorités compétentes." %}{% endif %}</p></div>
-  </aside>
-
-  {% if available %}
-    <form method="post" action="{% url 'orientation:start' %}" class="wizard-intro__start">
-      {% csrf_token %}
-      <button type="submit" class="btn btn--primary btn--large">{% translate "Commencer" %}</button>
-      <p class="wizard-intro__resume-link"><a href="{% url 'orientation:resume' %}">{% translate "Vous avez un code de reprise ? Reprendre une pré-évaluation" %}</a></p>
-    </form>
-  {% else %}
-    {% translate "Le questionnaire d’orientation n’est pas disponible pour le moment. Vous pouvez consulter la présentation des parcours réguliers ou nous écrire." as unavailable_text %}
-    {% include "components/notice.html" with kind="pending" title=_("Questionnaire indisponible") text=unavailable_text %}
-    <p><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-  {% endif %}
-
-  {% if phase3_open %}{% safe_url 'pathways:index' as pathways_url %}{% if pathways_url %}
-  <p class="wizard-intro__pathways"><a href="{{ pathways_url }}">{% translate "Découvrir les parcours réguliers présentés dans l’Espace Personnes" %}</a></p>
-  {% endif %}{% endif %}
-</article>
+<section class="chapter" aria-labelledby="how-title">
+  <div class="container chapter__inner">
+    {% translate "Comment se déroule le questionnaire" as how_title %}{% include "pages/partials/_chapter_head.html" with title_id="how-title" title=how_title only %}
+    <div class="chapter__body">
+      <ol class="linea linea--across wizard-intro__steps" data-steps="3">
+        <li class="linea__step"><span class="linea__num" aria-hidden="true"></span><p class="linea__label">{% translate "Quelques questions progressives" %}</p><p class="linea__text linea__text--fragment">{% translate "une question par écran, sans aucune donnée personnelle ; vous pouvez revenir en arrière à tout moment." %}</p></li>
+        <li class="linea__step"><span class="linea__num" aria-hidden="true"></span><p class="linea__label">{% translate "Une pré-évaluation informative" %}</p><p class="linea__text linea__text--fragment">{% translate "la famille de parcours qui correspond à votre projet, avec une explication." %}</p></li>
+        <li class="linea__step"><span class="linea__num" aria-hidden="true"></span><p class="linea__label">{% translate "Les étapes suivantes" %}</p><p class="linea__text linea__text--fragment">{% translate "une liste de préparation générale et les acteurs compétents à contacter." %}</p></li>
+      </ol>
+      {% if phase3_open %}{% safe_url 'pathways:index' as pathways_url %}{% if pathways_url %}
+      <p class="chapter__more wizard-intro__pathways"><a href="{{ pathways_url }}">{% translate "Découvrir les parcours réguliers présentés dans l’Espace Personnes" %}</a></p>
+      {% endif %}{% endif %}
+    </div>
+  </div>
+</section>
 {% endblock %}

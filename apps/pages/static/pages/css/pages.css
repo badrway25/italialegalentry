@@ -1,30 +1,30 @@
 /* ============================================================================
-   Italy Legal Entry™ — homepage and institutional pages (pages app).
-   Loaded only by templates/pages/*.html, after main.css. Tokens only through
+   Italy Legal Entry™ — the homepage (pages app).
+   Loaded only by templates/pages/home.html, after main.css. Tokens only through
    var(--…): no literal colour, no literal paint; logical properties everywhere.
 
-   1 · shared helpers (the home and the institutional pages);
+   1 · shared helpers;
    2 · THE HOME'S CHAPTERS — design V5.4, W2-D step 3 «the home around the hero»: on the V5 tokens
        of static/css/v5/tokens.css (the eight public sizes, the 4 px space scale, the paper, the
-       night and the one accent), written for this sheet's place after main.css;
-   3 · the anti-fraud page's panel and the institutional pages, still on the names of the legacy
-       shim until their own family (the public interior) rebuilds them.
+       night and the one accent), written for this sheet's place after main.css.
+   The institutional pages (project, promoter, network, contact, anti-fraud) left this sheet with
+   design V5.4's public interior (W3-F1): they load pages/css/interior.css.
+   The public passage «la linea» (the orientation's neutral steps) is the site's one passage drawing,
+   imported here from static/css/v5/ (W3-D; an @import is written as it resolves in the COLLECTED
+   tree, from this sheet's collected path pages/css/pages.css — DS 2026 §2).
    ========================================================================== */
+
+/* Design V5 — the public passage «la linea» (V5.4 plan §2.3, §3.5 item 6; W3-D): a page-only partial, first because
+   an @import precedes every rule. */
+@import url("../../css/v5/_journey-passage.css");
 
 /* ============================================================================
    1 · Shared helpers
    ========================================================================== */
-.page-institutional .eyebrow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
 /* Prescribed texts shown in their French version inside the Arabic page keep
    their own writing direction (block-level text only: links and buttons follow
    the page so that directional arrows stay coherent). */
-[dir="rtl"] .page-home :is(p, h1, h2, h3, li, article, section, blockquote)[lang="fr"],
-[dir="rtl"] .page-institutional :is(p, h1, h2, h3, li, article, section, blockquote)[lang="fr"] {
+[dir="rtl"] .page-home :is(p, h1, h2, h3, li, article, section, blockquote)[lang="fr"] {
   direction: ltr;
   unicode-bidi: isolate;
   text-align: start;
@@ -41,8 +41,7 @@
 /* Reveal on scroll never makes content invisible on these pages: the opacity stays at 1 from the
    first paint (long pages would otherwise hold below-the-fold blocks at opacity 0 until they are
    scrolled into view). */
-html.js .page-home .reveal,
-html.js .page-institutional .reveal {
+html.js .page-home .reveal {
   opacity: 1;
 }
 
@@ -468,7 +467,8 @@ html.js .page-institutional .reveal {
 }
 
 /* ---- 5 · orientation: the brand chapter. The prescribed sentence is the statement, as written;
-        the four neutral steps (gate G3 closed) are a real sequence and keep their numerals. ---- */
+        the four neutral steps (gate G3 closed) are a real sequence and keep their numerals: the public
+        passage, drawn by static/css/v5/_journey-passage.css (W3-D). ---------------------------- */
 .home-orientation__how {
   max-inline-size: var(--measure-lead);
   margin: 0;
@@ -477,52 +477,6 @@ html.js .page-institutional .reveal {
   font-weight: var(--w-body);
   color: var(--text-1);
   text-wrap: pretty;
-}
-
-.home-orientation .sequence {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-block-start: 1px solid var(--line-structure);
-}
-
-.home-orientation .sequence__step {
-  display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
-  gap: var(--s-2) var(--s-3);
-  align-items: baseline;
-  align-content: start;
-  padding-block: var(--s-4);
-  border: 0;
-  border-block-end: 1px solid var(--line-structure);
-}
-
-.home-orientation .sequence__marker {
-  min-inline-size: 0;
-  padding: 0;
-  border: 0;
-  font-size: var(--t-small);
-  line-height: 1.5rem;
-  font-weight: var(--w-control);
-  font-variant-numeric: var(--numeric-data);
-  color: var(--text-2);
-}
-
-.home-orientation .sequence__title {
-  margin: 0;
-  font-size: var(--t-body);
-  line-height: 1.5rem;
-  font-weight: var(--w-title);
-  color: var(--text-1);
-}
-
-.home-orientation .sequence__body {
-  max-inline-size: var(--measure-small);
-  font-size: var(--t-ui);
-  line-height: 1.5rem;
-  color: var(--text-2);
 }
 
 .home-orientation__note {
@@ -549,25 +503,10 @@ html.js .page-institutional .reveal {
   }
 }
 
-@media (min-width: 48rem) {
-  .home-orientation .sequence {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--s-6);
-  }
-}
-
-@media (min-width: 75rem) {
-  .home-orientation .sequence {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .home-orientation .sequence__step {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 /* ---- 6 · the regular pathways: a register in two columns, the title over its description and
-        never smaller than it; a catalogue, not a ranking — no numeral. The row is the link. ----- */
+        never smaller than it; a catalogue, not a ranking — no numeral. The row is the link. The list's
+        whole drawing is this sheet's: components/pathway_list.html has no other consumer, and its legacy
+        rules (components.css §18) left the shared sheet with W3-F1's budget pass (12 October 2026). ----- */
 .home-pathways .pathway-list {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -601,6 +540,7 @@ html.js .page-institutional .reveal {
 .home-pathways .pathway-list__title {
   grid-column: 1;
   margin: 0;
+  font-family: var(--font-display);
   font-size: var(--t-body);
   line-height: 1.5rem;
   font-weight: var(--w-title);
@@ -610,6 +550,13 @@ html.js .page-institutional .reveal {
 .home-pathways .pathway-list__title a {
   color: var(--text-1);
   text-decoration: none;
+}
+
+/* the row is the link: the title's link covers it, one tab stop */
+.home-pathways .pathway-list__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 .home-pathways .pathway-list__title a:hover {
@@ -1178,7 +1125,6 @@ html.js .page-institutional .reveal {
   .home-section__note,
   .home-entrances .entry__title,
   .home-entrances .entry__gloss,
-  .home-orientation .sequence__body,
   .home-orientation__note,
   .home-pathways .pathway-list__desc,
   .home-pathways__pending,
@@ -1219,227 +1165,9 @@ html.js .page-institutional .reveal {
   }
 }
 
-/* ============================================================================
-   3 · The anti-fraud page's panel (templates/pages/antifraud.html) and the institutional pages
-   ========================================================================== */
-.antifraud-panel {
-  display: grid;
-  gap: var(--space-5) var(--space-8);
-  padding: clamp(var(--space-6), 4vw, var(--space-12));
-  background: var(--surface-1);
-  border: var(--border-width) solid var(--border-subtle);
-  border-inline-start: var(--space-1) solid var(--color-primary-900);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-}
-
-@media (min-width: 48rem) {
-  .antifraud-panel {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-}
-
-.antifraud-panel__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 4rem;
-  block-size: 4rem;
-  border-radius: 50%;
-  background: var(--color-primary-50);
-  color: var(--color-primary-900);
-}
-
-.antifraud-panel__body {
-  max-inline-size: var(--measure-prose);
-  margin: 0;
-  font-size: var(--font-size-lead);
-  line-height: var(--leading-relaxed);
-  color: var(--text-body);
-}
-
-.antifraud-panel--page {
-  margin-block-end: var(--space-12);
-}
-
-/* =========================================================================
-   Institutional pages (project, promoter, network, contact, anti-fraud)
-   ========================================================================= */
-.page-institutional__layout {
-  padding-block-end: var(--section-gap);
-}
-
-.page-institutional__main > * + * {
-  margin-block-start: var(--space-12);
-}
-
-.page-figure {
-  margin: 0;
-}
-
-.page-figure img {
-  inline-size: 100%;
-  aspect-ratio: 16 / 7;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-}
-
-.page-section__title {
-  margin-block-end: var(--space-4);
-}
-
-.page-section__title--small {
-  font-family: var(--font-body);
-  font-size: var(--font-size-h4);
-  font-weight: var(--weight-semibold);
-}
-
-.page-section__lead {
-  max-inline-size: var(--measure-lead);
-  padding-inline-start: var(--space-6);
-  border-inline-start: var(--border-width-strong) solid var(--border-accent);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h3);
-  line-height: var(--leading-tight);
-  color: var(--color-primary-900);
-}
-
-.page-section__text {
-  max-inline-size: var(--measure-prose);
-  line-height: var(--leading-relaxed);
-}
-
-.page-section__more {
-  margin-block-start: var(--space-6);
-  gap: var(--space-3) var(--space-8);
-}
-
-.page-section--quiet {
-  padding-block-start: var(--space-8);
-  border-block-start: var(--border-width) solid var(--border-hairline);
-}
-
-.page-trademark {
-  font-family: var(--font-display);
-  font-size: var(--font-size-h4);
-  color: var(--color-primary-900);
-}
-
-/* Directed link list */
-.page-links {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-block-start: var(--border-width) solid var(--border-subtle);
-}
-
-.page-links__link {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding-block: var(--space-4);
-  border-block-end: var(--border-width) solid var(--border-hairline);
-  color: var(--color-primary-900);
-  font-weight: var(--weight-medium);
-  text-decoration: none;
-  transition: background-color var(--duration-base) var(--ease-standard);
-}
-
-.page-links__link > span {
-  flex: 1 1 auto;
-}
-
-.page-links__link:hover {
-  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
-  text-decoration: underline;
-}
-
-.page-links__icon {
-  color: var(--color-accent-600);
-}
-
-.page-links__arrow {
-  transition: transform var(--duration-base) var(--ease-out);
-}
-
-.page-links__link:hover .page-links__arrow {
-  transform: translateX(4px);
-}
-
-[dir="rtl"] .page-links__link:hover .page-links__arrow {
-  transform: scaleX(-1) translateX(4px);
-}
-
-/* Contact address */
-.contact-address {
-  margin-block-end: var(--space-4);
-}
-
-.contact-address__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h3);
-  color: var(--color-primary-900);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-}
-
-.contact-address__link:hover {
-  text-decoration: underline;
-}
-
-.contact-address__link .icon {
-  color: var(--color-accent-600);
-}
-
-/* Network actors */
-.actor-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-block-start: var(--border-width) solid var(--border-subtle);
-}
-
-.actor-list__item {
-  display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr);
-  gap: var(--space-5);
-  padding-block: var(--space-6);
-  border-block-end: var(--border-width) solid var(--border-hairline);
-}
-
-.actor-list__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 3.5rem;
-  block-size: 3.5rem;
-  border: var(--border-width) solid var(--border-subtle);
-  border-radius: 50%;
-  background: var(--surface-1);
-  color: var(--color-primary-900);
-}
-
-.actor-list__title {
-  margin-block-end: var(--space-1);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h4);
-  font-weight: var(--weight-medium);
-  color: var(--color-primary-900);
-}
-
-.actor-list__text {
-  max-inline-size: var(--measure-lead);
-  margin-block-end: var(--space-2);
-  color: var(--text-secondary);
-}
-
 /* ---- Print ------------------------------------------------------------------ */
 @media print {
-  .home-banner__dismiss,
-  .page-figure {
+  .home-banner__dismiss {
     display: none !important;
   }
 }

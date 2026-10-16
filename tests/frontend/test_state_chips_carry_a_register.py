@@ -55,13 +55,17 @@ PAINT = re.compile(r"(?<![\w-])(?:state|chip)(?:--[\w-]+)?(?![\w-])|badge--")
 #: The calls whose register is computed elsewhere, each with its reason. Everything else is a literal or a producer.
 COMPUTED = {
     ("templates/components/badge.html", "kind|badge_register"): "the legacy `kind`, translated by chips.KIND_REGISTER",
-    ("templates/components/case_timeline.html", "row.chip_register"): "cases.presenters.timeline reads the audit event's member",
+    (
+        "templates/components/case_timeline.html",
+        "row.chip_register",
+    ): "cases.presenters.timeline reads the audit event's member",
 }
 #: Where `data-register` may be written in a template: the partial, and the two elements that speak the registers
 #: without being chips.
 NOT_CHIPS = {
     "templates/components/health_strip.html": "health__segment",
-    "templates/documents/partials/register.html": "seg__dot",
+    # the state filter's entries, drawn in the register's flow and in its sheet from one partial (W3-C)
+    "templates/documents/partials/state_filter.html": "seg__dot",
 }
 
 
@@ -191,7 +195,7 @@ def test_the_computed_registers_are_all_used():
 @pytest.mark.parametrize("producer", sorted(chips.REGISTER))
 def test_every_member_is_rendered_with_its_register_its_mark_and_its_word(producer):
     for member, register in chips.REGISTER[producer].items():
-        html = _render('{% chip value producer %}Mot{% endchip %}', value=member, producer=producer)
+        html = _render("{% chip value producer %}Mot{% endchip %}", value=member, producer=producer)
         mark = chips.mark_for(register, producer, member)
         assert mark in icons.SYMBOLS and mark not in icons.CHECK_BEARING
         match = re.fullmatch(_chip(register, mark, "Mot") + r"(?P<meter>.*)</span>", html)
@@ -206,9 +210,18 @@ def test_every_member_is_rendered_with_its_register_its_mark_and_its_word(produc
 
 @pytest.mark.parametrize("register", chips.REGISTERS)
 def test_a_register_the_template_knows_is_rendered_the_same_way(register):
-    html = _render('{% chip register=word css_class="entry__actor" size="s" role="status" lang="it" %}Mot{% endchip %}', word=register)
+    html = _render(
+        '{% chip register=word css_class="entry__actor" size="s" role="status" lang="it" %}Mot{% endchip %}',
+        word=register,
+    )
     assert re.fullmatch(
-        _chip(register, icons.STATUS[register], "Mot", classes="entry__actor chip chip--s", extra=' role="status" lang="it"')
+        _chip(
+            register,
+            icons.STATUS[register],
+            "Mot",
+            classes="entry__actor chip chip--s",
+            extra=' role="status" lang="it"',
+        )
         + "</span>",
         html,
     ), html
@@ -217,7 +230,7 @@ def test_a_register_the_template_knows_is_rendered_the_same_way(register):
 def test_the_word_is_the_block_already_rendered_and_never_escaped_twice():
     html = _render(
         '{% load i18n %}{% chip register="azione" %}\n  {% blocktranslate count n=n %}{{ n }} en retard{% plural %}'
-        "{{ n }} en retard{% endblocktranslate %}\n{% endchip %}|{% chip register=\"neutro\" %}{{ label }}{% endchip %}",
+        '{{ n }} en retard{% endblocktranslate %}\n{% endchip %}|{% chip register="neutro" %}{{ label }}{% endchip %}',
         n=3,
         label="R&D <b>",
     )
@@ -252,7 +265,9 @@ def test_the_partial_draws_the_mark_the_tag_gives_it_never_a_literal():
 def test_the_badge_component_is_a_chip_for_every_kind():
     for kind, register in chips.KIND_REGISTER.items():
         html = _render('{% include "components/badge.html" with label="Mot" kind=kind only %}', kind=kind).strip()
-        assert re.fullmatch(_chip(register, icons.STATUS[register], "Mot", classes="badge chip") + "</span>", html), html
+        assert re.fullmatch(_chip(register, icons.STATUS[register], "Mot", classes="badge chip") + "</span>", html), (
+            html
+        )
     assert "badge--" not in _source(ROOT / "templates" / "components" / "badge.html")
 
 
@@ -268,18 +283,24 @@ def test_data_register_is_written_by_the_partial_and_by_two_legends_only():
         assert rel == PARTIAL or rel in NOT_CHIPS, f"{rel} writes data-register by hand"
         if rel in NOT_CHIPS:
             tags = re.findall(r"<[a-z]+\b[^>]*data-register=[^>]*>", text)
-            assert tags and all(NOT_CHIPS[rel] in tag and 'data-register="{{ f.register }}"' in tag for tag in tags), (rel, tags)
+            assert tags and all(NOT_CHIPS[rel] in tag and 'data-register="{{ f.register }}"' in tag for tag in tags), (
+                rel,
+                tags,
+            )
 
 
 def test_the_filters_legend_draws_the_chips_own_mark():
     """Icon review m4: «Manquant» and «À remplacer» shared one V4 dot. The filter's entry draws the member's mark
     from the same registry as the chip — two marks for the one register — on the element that carries the register."""
-    text = _source(ROOT / "templates" / "documents" / "partials" / "register.html")
+    text = _source(ROOT / "templates" / "documents" / "partials" / "state_filter.html")
     assert (
         '<span class="seg__dot" data-register="{{ f.register }}" aria-hidden="true">'
         '{% svg_icon f.value|chip_mark:"documents.RequirementState" "icon chip__g" %}</span>'
     ) in text
-    drawn = {member: _render('{{ m|chip_mark:"documents.RequirementState" }}', m=member) for member in chips.REGISTER["documents.RequirementState"]}
+    drawn = {
+        member: _render('{{ m|chip_mark:"documents.RequirementState" }}', m=member)
+        for member in chips.REGISTER["documents.RequirementState"]
+    }
     assert drawn["missing"] == "st-attesa" and drawn["to_replace"] == "st-attesa-replace"
     assert len(set(drawn.values())) == len(drawn), "one mark per state of a piece"
     assert _render('{{ "blocco"|chip_mark }}|{{ ""|chip_mark }}') == "lock|st-neutro"

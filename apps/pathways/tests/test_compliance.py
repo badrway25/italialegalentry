@@ -122,9 +122,19 @@ class TestRenderedPagesOpen:
             "diplomes-et-titres/": ("p3.diplomas.title", "p3.diplomas.body", "p3.antifraud.title"),
             "formation/": ("p3.training_after.title", "p3.training_after.body", "p3.antifraud.title"),
         }
+        #: a locked text the page cuts on its own separators for layout (CREATIVE_DIRECTION_V5 law 8): it is read whole
+        #: in its element's text, never retyped
+        cut = {"p3.persons.how_it_works"}
         for path, keys in placements.items():
             html = client.get(f"/fr/{path}").content.decode()
             for key in keys:
+                if key in cut:
+                    from bs4 import BeautifulSoup
+
+                    block = BeautifulSoup(html, "html.parser").select_one(f'[data-locked="{key}"]')
+                    text = " ".join(block.get_text(" ").split()) if block else ""
+                    assert text == locked_content.text(key, "fr"), (path, key)
+                    continue
                 assert escape(locked_content.text(key, "fr")) in html, (path, key)
 
     def test_fallback_language_marked_for_non_french(self, client, pathways_seeded, phase3_open):

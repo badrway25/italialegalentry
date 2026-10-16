@@ -1,17 +1,31 @@
 {% extends "base.html" %}{% load i18n static forum_tags %}
+{% comment %}
+The Forum's registration, received. Design V5.4 (W3-F1 — the public interior): the entrance (the Forum's name as the
+label, the confirmation as the h1), one chapter at the reading measure — the success notice (the register's own words:
+received, nothing more to do now; the live address for a question) — and the way back, as the page's one action.
+{% endcomment %}
 {% block page_title %}{% translate "Inscription enregistrée" %} · {{ page_title }}{% endblock %}
 {% block meta_description %}{% translate "Confirmation de réception de votre inscription au Forum." %}{% endblock %}
-{% block body_class %}page-forum page-forum--done{% endblock %}
+{% block body_class %}page-forum page-forum--done interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/forum/forum.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-<article class="container forum-done" aria-labelledby="forum-done-title">
-  <p class="forum-hero__eyebrow">{% if event %}{% event_text event "header.title" %}{% else %}{% locked "p2.forum.header.title" %}{% endif %}</p>
-  <h1 class="forum-done__title" id="forum-done-title">{% translate "Votre inscription a bien été reçue." %}</h1>
-  <div class="notice notice--success" role="status" data-registration="done">
-    <p>{% translate "Un message de confirmation de réception a été envoyé à l’adresse e-mail indiquée. Aucune autre démarche n’est nécessaire pour le moment." %}</p>
-    <p>{% translate "Pour toute question relative à votre inscription, écrivez-nous à" %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>.</p>
-  </div>
-  <p class="forum-done__actions"><a class="btn btn--secondary" href="{% url 'forum:index' %}">{% translate "Retour à la page du Forum" %}</a></p>
+{% if event %}{% event_text event "header.title" as forum_label %}{% else %}{% locked "p2.forum.header.title" as forum_label %}{% endif %}
+<article class="forum-done" aria-labelledby="forum-done-title">
+  {% translate "Votre inscription a bien été reçue." as done_title %}
+  {% include "pages/partials/_ingresso.html" with label=forum_label title=done_title title_id="forum-done-title" only %}
+  <section class="chapter chapter--single" aria-labelledby="forum-done-title">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        <div class="notice notice--success" role="status" data-registration="done">
+          <div class="notice__body">
+            <p>{% translate "Un message de confirmation de réception a été envoyé à l’adresse e-mail indiquée. Aucune autre démarche n’est nécessaire pour le moment." %}</p>
+            <p>{% translate "Pour toute question relative à votre inscription, écrivez-nous à" %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>.</p>
+          </div>
+        </div>
+        <p class="chapter__more forum-done__actions"><a class="btn btn--secondary btn--lg" href="{% url 'forum:index' %}">{% translate "Retour à la page du Forum" %}</a></p>
+      </div>
+    </div>
+  </section>
 </article>
 {% endblock %}

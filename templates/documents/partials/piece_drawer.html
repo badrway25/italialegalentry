@@ -1,0 +1,43 @@
+{% load i18n %}{% comment %}
+THE PREVIEW DRAWER — one piece of the register, unfolded beside it (design V5: docs/design-v5/V5_4_EXECUTION_PLAN.md
+§1.14 «Preview drawer», §3.5 item 5; DOCUMENT_WORKSPACE.md §12; W3-C). The overlay system's drawer
+(templates/components/drawer.html's anatomy, static/js/src/overlay.js, static/css/v5/overlays.css), NON-MODAL beside
+the list on desktop (`data-overlay-modal="none"`: no scrim, the page stays usable — another row swaps the content, the
+slide never replays) and a modal sheet on a phone (≤ 40rem, overlay.js). Behaviour: static/js/src/piece-drawer.js,
+imported by console.js where the register draws this element.
+
+  the head   filled at 0 ms from the row the person pressed — «Pièce demandée» and the file's reference, the title,
+             then the row's own line: the state's chip, the actor, the date (`data-piece-head` marks the same facts in
+             the body, which the drawer does not draw twice); «Fermer», 44 px, always there; the busy key of a region
+             whose fragment is on its way, after the 400 ms the eye forgives
+  the body   the piece's page itself — its <article>, fetched from the piece's URL — seated by L3 on its first
+             arrival (loader.js `seat`): the state and its reason, the Dépôt while the piece is open (its answers
+             composed in place, the drawer read again after a filing), what is asked, the source, the deposits
+History: opening pushes the piece's URL (a reload lands on the full page); Back, Esc and «Fermer» close it and the
+register's URL comes back with its `?état=`; a swap replaces the entry (replaceState). The focus goes to the title on
+opening and back to the row's title on closing. Without script the rows are links to the pieces' pages: this element
+is never shown.
+
+Contract: none — the register's rows and the strip carry what the head needs (documents/partials/register.html).
+{% endcomment %}<dialog class="overlay overlay--drawer doc-drawer" id="piece-drawer" data-overlay="drawer" data-overlay-modal="none" aria-labelledby="piece-drawer-title" data-piece-drawer>
+  <div class="overlay__head doc-drawer__head">
+    <div class="doc-drawer__words">
+      <p class="doc-drawer__meta">{% translate "Pièce demandée" %} <span class="ws-case__ref">{% svg_icon "hash" "icon" %}<span data-drawer-ref> </span></span></p>
+      <h2 class="overlay__title doc-drawer__title" id="piece-drawer-title"><span data-drawer-title> </span></h2>
+      {% comment %}
+      The row's line, as SLOTS the press fills with words and attributes: a node inserted in the press's own task
+      re-evaluates the console's document-wide :has() rules (≈ 80 ms at CPU × 4 on «Mes pièces», measured) — a text
+      node's data or an attribute does not; each slot holds its text node from the start (a space). The chip is the
+      registry's (the tag, a neutral register until the press), its register, mark and word copied from the row's.
+      {% endcomment %}
+      <p class="doc-drawer__line">
+        <span class="doc-drawer__fact" data-drawer-state><span class="visually-hidden">{% translate "État" %} </span>{% chip register="neutro" %}&nbsp;{% endchip %}<span class="doc-row__blocked" data-drawer-blocked hidden>{% translate "Bloqué" %}</span></span>
+        <span class="doc-drawer__fact" data-drawer-actor><span class="visually-hidden">{% translate "Responsable" %} </span>{% include "components/glyph.html" with glyph="person" size="sm" %}<span data-drawer-actor-name> </span></span>
+        <span class="doc-drawer__fact" data-drawer-due hidden><span class="visually-hidden">{% translate "Échéance" %} </span><span class="doc-due doc-due--inline"><span class="doc-due__mark">{% svg_icon "calendar" "icon" %}</span><time datetime=""> </time><span class="doc-due__word" hidden> </span></span></span>
+      </p>
+    </div>
+    {% include "components/busy_key.html" with css_class="doc-drawer__key" %}
+    <a class="overlay__close" href="#main-content" data-overlay-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</a>
+  </div>
+  <div class="overlay__body doc-drawer__body" data-drawer-body></div>
+</dialog>

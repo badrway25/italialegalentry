@@ -1,76 +1,98 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-ONE REQUIRED PIECE — its state, its source, its history, and the one action available.
+ONE REQUIRED PIECE — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5; DOCUMENT_WORKSPACE.md §11, §12;
+W3-C), on the console's page frame. Rules: apps/portal/static/portal/v5/_depot.css (imported by the documents page
+sheet).
 
-Four regions, in the order the reader needs them (art direction A §13.4, §14.6):
-  1. the state, as a WORD with the rule it carries — never a colour, never a decision;
-  2. what is asked, who is answerable, and by when;
-  3. the numbered SOURCE list — the element that turns "a form asked me for this" into
-     "the law asks for this, here is where it says so";
-  4. the deposits: versions inside the row, newest first, each with what the antivirus said
-     (a fact about a file) kept visibly apart from what a reviewer concluded (a fact about a piece).
+The regions follow the ORDER OF NEED (DOCUMENT_WORKSPACE §12 item 2 — V4 put the act last, W-6): a person who opens a
+refused piece wants the reason, then the way to answer it; the archive is for later.
+  1. the state, as a WORD with the rule it carries and this piece's reason — never a colour, never a decision; under
+     it, empty at rest, the slot where the Dépôt's answer to a filing lands once the piece is read again;
+  2. the deposit, when the piece is OPEN and the reader's to file (or the Conditions gate, a sentence and its link):
+     documents/partials/depot.html — the Dépôt, its answers composed in place (DOCUMENT_WORKSPACE §11) — after the
+     deposits instead when the piece is filed, in review or valid;
+  3. what is asked: who is answerable, by when, whether it is mandatory, who may read it, its validity;
+  4. the numbered SOURCE — the element that turns "a form asked me for this" into "the law asks for this, here";
+  5. the deposits: versions inside the row, newest first, each with what the antivirus said (a fact about a file)
+     kept visibly apart from what a reviewer concluded (a fact about a piece) — «Télécharger» named by its version;
+  6. the review, for an intervener — never offered to the person whose file it is.
 
-Contract: `row` = documents.presenters.present_requirement(..., with_versions=True).
+`data-piece-head` marks what the preview drawer's head already says from the row (the chip, the due date): drawn
+here, not drawn twice in the drawer (documents/partials/piece_drawer.html; _workspace.css §10).
+
+Contract: `row` = documents.presenters.present_requirement(..., with_versions=True); `case`; `upload_form`,
+`review_form`.
 {% endcomment %}
 {% block page_title %}{{ row.title }}{% endblock %}
 {% block meta_description %}{% translate "Pièce demandée dans votre dossier." %}{% endblock %}
 {% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
 
+{% block portal_header %}
+<header class="ws-head doc-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% if row.words.lang %}<span lang="{{ row.words.lang }}" dir="{{ row.words.dir }}">{{ row.title }}</span>{% else %}{{ row.title }}{% endif %}</h1>
+    <p class="doc-head__meta">{% translate "Pièce demandée" %} <span class="ws-case__ref">{% svg_icon "hash" "icon" %}<span>{{ case.reference }}</span></span></p>
+  </div>
+</header>
+{% endblock %}
+
+{% comment %}
+The file's band is not drawn here: the piece's head names its file by its reference (ILE Mono), and on a phone the
+band took 200 px before the piece's state. The file itself is one rail entry away («Mes dossiers»).
+{% endcomment %}
+{% block case_header %}{% endblock %}
+
 {% block portal_content %}
 <article class="doc-piece">
-  <p class="folio">
-    <span class="folio__head">{% translate "Pièce demandée" %}</span>
-    <span class="folio__date t-ref">{{ case.reference }}</span>
-  </p>
-
-  <h1 class="doc-piece__title">{{ row.title }}</h1>
-
-  {% comment %} The state: the word carries it, the rule explains it, the reason names this row. {% endcomment %}
-  <section class="outcome outcome--{{ row.state_css }} doc-piece__state" aria-labelledby="state-title">
-    <p class="t-folio" id="state-title">{% translate "État de la pièce" %}</p>
-    <p class="outcome__kind">{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}</p>
-    <p class="t-gloss">{{ row.state_rule }}</p>
-    {% if row.state_reason %}<p class="t-gloss doc-piece__reason">{{ row.state_reason }}</p>{% endif %}
+  {% comment %} 1 · The state: the word carries it, the rule explains it, the reason names this piece. {% endcomment %}
+  <section class="doc-piece__state" aria-labelledby="state-title">
+    <h2 class="doc-piece__h2" id="state-title">{% translate "État de la pièce" %}</h2>
+    <p class="doc-piece__chip" data-piece-head>{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}</p>
+    <p class="doc-piece__rule">{{ row.state_rule }}</p>
+    {% if row.state_reason %}<p class="doc-piece__reason{% if row.state == 'invalid' %} doc-piece__reason--refusal{% endif %}">{% if row.state == 'invalid' %}{% svg_icon "circle-alert" "icon" %}{% else %}{% svg_icon "info" "icon" %}{% endif %}<span dir="auto">{{ row.state_reason }}</span></p>{% endif %}
+    {% comment %} The Dépôt's answer to a filing lands here, under the state it changed (depot.js) — empty at rest. {% endcomment %}
+    <div class="doc-piece__answer" data-piece-answer></div>
   </section>
 
-  <dl class="portal-facts doc-piece__facts">
-    <div class="portal-facts__row">
+  {% comment %}
+  2 · The deposit, against this named piece — here while the piece is OPEN (the act the person came for); once it is
+  filed, in review or valid, a replacement is rare and the deposit waits after the deposits (5 bis).
+  {% endcomment %}
+  {% if row.is_open %}{% include "documents/partials/depot.html" %}{% endif %}
+
+  {% comment %} 3 · What is asked. {% endcomment %}
+  <dl class="doc-facts">
+    <div class="doc-facts__row">
       <dt>{% translate "Responsable" %}</dt>
-      {% comment %}
-      `.portal-facts dd` is `white-space: pre-line`, so a newline in the source becomes a BLANK
-      LINE on the page. Everything in this cell therefore stays on one line; the gloss carries its
-      own `display: block`.
-      {% endcomment %}
-      <dd>{{ row.responsible }}{% if row.responsible_note %} — {{ row.responsible_note }}{% endif %}{% if not row.is_for_the_person %}<span class="t-gloss doc-piece__responsible-note">{% translate "Cette pièce ne dépend pas de vous." %}</span>{% endif %}</dd>
+      <dd>{% include "components/glyph.html" with glyph=row.responsible_glyph size="sm" %}<span>{{ row.responsible }}{% if row.responsible_note %} — <span dir="auto">{{ row.responsible_note }}</span>{% endif %}{% if not row.is_for_the_person %}<span class="doc-facts__gloss">{% translate "Cette pièce ne dépend pas de vous." %}</span>{% endif %}</span></dd>
     </div>
-    <div class="portal-facts__row">
+    <div class="doc-facts__row" data-piece-head>
       <dt>{% translate "Échéance" %}</dt>
-      <dd>{% if row.due_date %}<time datetime="{{ row.due_date|date:'c' }}">{{ row.due_date|date:"d.m.Y" }}</time>{% else %}—{% endif %}</dd>
+      <dd>{% if row.due_date %}<span class="doc-due{% if row.urgency %} doc-due--{{ row.urgency }}{% endif %}"><span class="doc-due__mark">{% svg_icon row.urgency|concept:"due" "icon" %}</span><time datetime="{{ row.due_date|date:'Y-m-d' }}">{{ row.due_date|date:"d.m.Y" }}</time>{% if row.due_word %}<span class="doc-due__word">{{ row.due_word }}</span>{% endif %}</span>{% else %}<span aria-hidden="true">—</span>{% endif %}</dd>
     </div>
-    <div class="portal-facts__row">
+    <div class="doc-facts__row">
       <dt>{% translate "Obligatoire" %}</dt>
       <dd>{% if row.mandatory %}{% translate "Oui" %}{% else %}{% translate "Non" %}{% endif %}</dd>
     </div>
-    <div class="portal-facts__row">
+    <div class="doc-facts__row">
       <dt>{% translate "Qui peut consulter cette pièce" %}</dt>
       <dd>{{ row.access_class_label }}</dd>
     </div>
-    <div class="portal-facts__row">
+    <div class="doc-facts__row">
       <dt>{% translate "Validité de la pièce" %}</dt>
-      <dd>{% if row.current.expires_on %}<time datetime="{{ row.current.expires_on|date:'c' }}">{{ row.current.expires_on|date:"d.m.Y" }}</time>{% else %}—{% endif %}</dd>
+      <dd>{% if row.current.expires_on %}<time datetime="{{ row.current.expires_on|date:'Y-m-d' }}">{{ row.current.expires_on|date:"d.m.Y" }}</time>{% else %}<span aria-hidden="true">—</span>{% endif %}</dd>
     </div>
   </dl>
+  {% if row.detail %}<p class="doc-piece__detail"><span dir="auto">{{ row.detail }}</span></p>{% endif %}
 
-  {% if row.detail %}<p class="doc-piece__detail">{{ row.detail }}</p>{% endif %}
-
-  {% comment %} The numbered source list: where the obligation comes from, checkable by the reader. {% endcomment %}
+  {% comment %} 4 · The numbered source list: where the obligation comes from, checkable by the reader. {% endcomment %}
   {% if row.source_title %}
-  <section aria-labelledby="sources-title">
-    <p class="t-folio" id="sources-title">{% translate "Source" %}</p>
+  <section class="doc-piece__source" aria-labelledby="sources-title">
+    <h2 class="doc-piece__h2" id="sources-title">{% translate "Source" %}</h2>
     <ol class="sources">
       <li class="sources__item">
         <span>
-          {{ row.source_title }}{% if row.source_ref %} — {{ row.source_ref }}{% endif %}
+          <span dir="auto">{{ row.source_title }}{% if row.source_ref %} — {{ row.source_ref }}{% endif %}</span>
           {% if row.source_url %}<br><a href="{{ row.source_url }}" rel="noopener">{% translate "Consulter la source" %}</a>{% endif %}
         </span>
       </li>
@@ -79,117 +101,73 @@ Contract: `row` = documents.presenters.present_requirement(..., with_versions=Tr
   {% endif %}
 
   {% comment %}
-  THE DEPOSITS. Versions inside the row, newest first. Two columns that must never be confused:
-  what the ANTIVIRUS said about the file, and what a PERSON concluded about the piece.
+  5 · THE DEPOSITS. Versions inside the piece, newest first. Two lines that must never merge: what the ANTIVIRUS
+  said about the file, and what a PERSON concluded about the piece.
   {% endcomment %}
-  <section aria-labelledby="versions-title">
-    <p class="folio"><span class="folio__head" id="versions-title">{% translate "Dépôts" %}</span></p>
+  <section class="doc-versions" id="versions" aria-labelledby="versions-title">
+    <h2 class="doc-piece__h2" id="versions-title">{% translate "Dépôts" %}</h2>
     {% if row.versions %}
-    <ol class="register doc-versions">
+    <ol class="doc-versions__list" role="list">
       {% for version in row.versions %}
-      <li class="register__item">
-        <div class="entry doc-version{% if version.is_current %} doc-version--current{% endif %}">
-          <span class="entry__ordinal" aria-hidden="true"></span>
-          <p class="entry__title">
-            {% blocktranslate with n=version.number %}Version {{ n }}{% endblocktranslate %}
-            {% if version.is_current %}{% chip register="neutro" %}{% translate "En vigueur" %}{% endchip %}{% endif %}
-          </p>
-          {% comment %}
-          ONE grid area. Two sibling paragraphs both assigned to `gloss` would be placed in the
-          same cell and drawn on top of each other — which is exactly what happened.
-          {% endcomment %}
-          <div class="entry__gloss doc-version__body">
-          <p class="doc-version__facts">
-            <span class="doc-version__fact"><span class="t-folio">{% translate "Déposée le" %}</span> <time datetime="{{ version.filed_at|date:'c' }}">{{ version.filed_at|date:"d.m.Y H:i" }}</time></span>
-            <span class="doc-version__fact"><span class="t-folio">{% translate "Empreinte" %}</span> <code class="t-ref">{{ version.sha256_short|default:"—" }}</code></span>
-            <span class="doc-version__fact"><span class="t-folio">{% translate "Taille" %}</span> {% if version.size %}{{ version.size|filesizeformat }}{% else %}—{% endif %}</span>
-            {% if version.superseded_at %}<span class="doc-version__fact"><span class="t-folio">{% translate "Remplacée le" %}</span> <time datetime="{{ version.superseded_at|date:'c' }}">{{ version.superseded_at|date:"d.m.Y" }}</time></span>{% endif %}
-          </p>
-          <p class="doc-version__lines">
-            {% comment %} A fact about the FILE. Honest when no scanner is deployed. {% endcomment %}
-            <span class="doc-version__line">
-              <span class="t-folio">{% translate "Antivirus" %}</span>
-              <span>{{ version.antivirus.label }}</span>
-              <span class="t-caption">{{ version.antivirus.rule }}</span>
-            </span>
-            {% comment %} A conclusion about the PIECE, reached by a person. {% endcomment %}
-            <span class="doc-version__line">
-              <span class="t-folio">{% translate "Examen" %}</span>
-              <span>{{ version.decision_label }}</span>
-              {% if version.decision_note %}<span class="t-caption">{{ version.decision_note }}</span>{% endif %}
-            </span>
-          </p>
-          </div>
-          <p class="entry__cta">
+      <li class="doc-version{% if version.is_current %} doc-version--current{% endif %}">
+        <div class="doc-version__head">
+          <p class="doc-version__title" id="version-{{ version.number }}">{% blocktranslate with n=version.number %}Version {{ n }}{% endblocktranslate %}{% if version.is_current %} {% chip register="neutro" %}{% translate "En vigueur" %}{% endchip %}{% endif %}</p>
+          <p class="doc-version__get">
             {% if version.download_url %}
-            <a href="{{ version.download_url }}">{% translate "Télécharger" %}</a>
+            <a href="{{ version.download_url }}" aria-describedby="version-{{ version.number }}" data-overlay-keep>{% translate "Télécharger" %}</a>
             {% comment %} The previous platform said this beside the button, and it was right to. {% endcomment %}
-            <span class="t-caption doc-version__ttl">{% blocktranslate with n=version.link_minutes %}Lien valable {{ n }} minutes{% endblocktranslate %}</span>
+            <span class="doc-version__ttl">{% blocktranslate with n=version.link_minutes %}Lien valable {{ n }} minutes{% endblocktranslate %}</span>
             {% else %}
             {% comment %}
-            No link, and the reason where there is one to give. A reviewer whose installation has
-            no antivirus passes the object-level check and still cannot be handed the file: saying
-            so is the difference between a rule and a dead link.
+            No link, and the reason where there is one to give. A reviewer whose installation has no antivirus passes the
+            object-level check and still cannot be handed the file: saying so is the difference between a rule and a dead
+            link.
             {% endcomment %}
-            <span class="t-caption">{% translate "Fichier non remis" %}</span>
-            {% if version.delivery_rule %}<span class="t-caption doc-version__block">{{ version.delivery_rule }}</span>{% endif %}
+            <span class="doc-version__ttl">{% translate "Fichier non remis" %}</span>
+            {% if version.delivery_rule %}<span class="doc-version__block">{{ version.delivery_rule }}</span>{% endif %}
             {% endif %}
           </p>
         </div>
+        <dl class="doc-version__facts">
+          <div><dt>{% translate "Déposée le" %}</dt><dd><time datetime="{{ version.filed_at|date:'c' }}">{{ version.filed_at|date:"d.m.Y H:i" }}</time></dd></div>
+          <div><dt>{% translate "Empreinte" %}</dt><dd><code class="t-ref">{{ version.sha256_short|default:"—" }}</code></dd></div>
+          <div><dt>{% translate "Taille" %}</dt><dd>{% if version.size %}{{ version.size|filesizeformat }}{% else %}—{% endif %}</dd></div>
+          {% if version.superseded_at %}<div><dt>{% translate "Remplacée le" %}</dt><dd><time datetime="{{ version.superseded_at|date:'c' }}">{{ version.superseded_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
+        </dl>
+        <dl class="doc-version__lines">
+          {% comment %} A fact about the FILE. Honest when no scanner is deployed. {% endcomment %}
+          <div class="doc-version__line"><dt>{% translate "Antivirus" %}</dt><dd><span>{{ version.antivirus.label }}</span><span class="doc-version__rule">{{ version.antivirus.rule }}</span></dd></div>
+          {% comment %} A conclusion about the PIECE, reached by a person. {% endcomment %}
+          <div class="doc-version__line"><dt>{% translate "Examen" %}</dt><dd><span>{{ version.decision_label }}</span>{% if version.decision_note %}<span class="doc-version__rule" dir="auto">{{ version.decision_note }}</span>{% endif %}</dd></div>
+        </dl>
       </li>
       {% endfor %}
     </ol>
     {% else %}
-    <p class="empty">{% translate "Aucun dépôt pour l’instant." %}
-      {% if row.may_file %}{% translate "Déposez la pièce ci-dessous." %}{% elif not row.is_for_the_person %}{% blocktranslate with who=row.responsible %}Cette pièce est attendue de : {{ who }}.{% endblocktranslate %}{% endif %}
+    <p class="ws-empty">{% translate "Aucun dépôt pour l’instant." %}
+      {% if not row.may_file and not row.is_for_the_person %}{% blocktranslate with who=row.responsible %}Cette pièce est attendue de : {{ who }}.{% endblocktranslate %}{% endif %}
     </p>
     {% endif %}
   </section>
 
-  {% comment %} DEPOSIT. Against this named requirement, with its source shown above. {% endcomment %}
-  {% if upload_form %}
-  <section aria-labelledby="file-title">
-    <p class="folio"><span class="folio__head" id="file-title">{% if row.current %}{% translate "Remplacer la pièce" %}{% else %}{% translate "Déposer la pièce" %}{% endif %}</span></p>
-    <p class="t-gloss">{% translate "Le dépôt d’une nouvelle version remplace la précédente. L’historique est conservé." %}</p>
-    <form method="post" action="{{ row.upload_url }}" enctype="multipart/form-data" class="form doc-form" novalidate>
-      {% csrf_token %}
-      {% include "components/form_errors.html" with form=upload_form %}
-      {% for field in upload_form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
-      <div class="form-actions">
-        <button type="submit" class="btn btn--primary">{% translate "Déposer" %}</button>
-      </div>
-    </form>
-    <p class="note">
-      <span class="note__marker">1</span>
-      {% translate "Formats acceptés : PDF, JPEG, PNG — 10 Mo maximum. Ne déposez que la pièce demandée ici." %}
-    </p>
-  </section>
-  {% elif row.consent_required %}
-  <p class="empty">
-    {% translate "Le dépôt d’une pièce nécessite l’acceptation des Conditions d’utilisation." %}
-    {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}
-  </p>
-  {% endif %}
+  {% if not row.is_open %}{% include "documents/partials/depot.html" %}{% endif %}
 
-  {% comment %} REVIEW. Never offered to the person whose case this is: nobody validates their own evidence. {% endcomment %}
+  {% comment %} 6 · REVIEW. Never offered to the person whose case this is: nobody validates their own evidence. {% endcomment %}
   {% if review_form %}
-  <section aria-labelledby="review-title">
-    <p class="folio"><span class="folio__head" id="review-title">{% translate "Examen de la version en vigueur" %}</span></p>
-    <form method="post" action="{{ row.review_url }}" class="form doc-form" novalidate>
+  <section class="doc-depot doc-review" aria-labelledby="review-title">
+    <h2 class="doc-piece__h2" id="review-title">{% translate "Examen de la version en vigueur" %}</h2>
+    <form method="post" action="{{ row.review_url }}" class="form doc-depot__form" novalidate>
       {% csrf_token %}
       {% include "components/form_errors.html" with form=review_form %}
       {% for field in review_form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
-      <div class="form-actions">
+      <div class="form__actions">
         <button type="submit" class="btn btn--primary">{% translate "Enregistrer l’examen" %}</button>
       </div>
     </form>
-    <p class="note">
-      <span class="note__marker">2</span>
-      {% translate "Un examen porte sur la pièce reçue. Il ne constitue ni une décision ni une autorisation : celles-ci relèvent exclusivement des autorités compétentes." %}
-    </p>
+    <p class="doc-depot__note">{% svg_icon "info" "icon" %}<span>{% translate "Un examen porte sur la pièce reçue. Il ne constitue ni une décision ni une autorisation : celles-ci relèvent exclusivement des autorités compétentes." %}</span></p>
   </section>
   {% endif %}
 
-  <p class="doc-piece__back"><a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a></p>
+  <p class="doc-aside"><a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a></p>
 </article>
 {% endblock %}

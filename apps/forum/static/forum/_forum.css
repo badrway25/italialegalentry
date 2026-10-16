@@ -1,0 +1,345 @@
+/* ============================================================================================
+   THE FORUM — what its public pages draw beyond the interior's grammar (design V5.4, W3-F1; imported by
+   forum/forum.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only; logical properties.
+   ============================================================================================ */
+
+/* ---- the entrance on the night ground: the page's one night chapter above the footer's (RH-8) ------------- */
+.ingresso--night {
+  margin-block-start: var(--s-4);
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+  --focus-ring: var(--focus-ring-night);
+}
+
+.ingresso--night .ingresso__label,
+.ingresso--night .forum-hero__patronage,
+.ingresso--night .forum-hero__meta-label {
+  color: var(--text-on-night-2);
+}
+
+.ingresso--night .ingresso__title {
+  color: var(--text-on-night-1);
+}
+
+.ingresso--night .ingresso__lead {
+  color: var(--text-on-night-2);
+}
+
+.forum-hero__meta {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-6) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-on-night-1);
+}
+
+.forum-hero__meta-label {
+  font-weight: var(--w-body);
+}
+
+.forum-hero__patronage {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.forum-hero__logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin: var(--s-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-hero__logo img {
+  inline-size: auto;
+  max-block-size: 4rem;
+  padding: var(--s-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+
+.forum-hero__actions {
+  margin: var(--s-8) 0 0;
+}
+
+.forum-hero__img,
+.forum-hero__figure {
+  max-inline-size: 36rem;
+  margin-block-start: var(--s-8);
+}
+
+.forum-hero__figure figcaption {
+  color: var(--text-on-night-2);
+}
+
+/* the index on the night: its hairlines and its links in the night's own inks */
+.ingresso--night .sommaire__title {
+  color: var(--text-on-night-2);
+}
+
+.ingresso--night .sommaire__list,
+.ingresso--night .sommaire__list > li {
+  border-color: var(--line-night-soft);
+}
+
+.ingresso--night .sommaire__link {
+  color: var(--text-on-night-1);
+}
+
+@media (hover: hover) {
+  .ingresso--night .sommaire__link:hover {
+    color: var(--accent-night);
+  }
+}
+
+/* the prescribed section titles are capitals in the copy: tracked as capitals, in the index and in the heads */
+.forum-localnav .sommaire__link:not(:lang(ar)),
+.forum-section .chapter__title:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+/* ---- the programme: a document (PX15) — at the reading edge, the time in tabular figures when every row has one
+        (CD §20: a time column only then), else the row's number 01 … 08 and the time, where a row has one, in
+        its own words (W3-F1's review m1: «15h00» over 02 … 08 read as a list starting at 02) ------------------ */
+.forum-programme {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: programme;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.forum-programme__item {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--s-4);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+  counter-increment: programme;
+}
+
+.forum-programme__time {
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+.forum-programme--timed .forum-programme__item {
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+}
+
+.forum-programme__num::before {
+  content: counter(programme, decimal-leading-zero);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.forum-programme__num {
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-variant-numeric: var(--numeric-data);
+}
+
+.forum-programme__text {
+  display: grid;
+  gap: var(--s-1);
+}
+
+.forum-programme__title {
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.forum-programme__desc {
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* ---- the tribune and the records -------------------------------------------------------------------- */
+.forum-speakers .registro__row {
+  min-block-size: 0;
+}
+
+.forum-doc-link {
+  font-weight: var(--w-control);
+}
+
+.forum-card__url {
+  overflow-wrap: anywhere;
+  font-variant-numeric: var(--numeric-data);
+}
+
+.forum-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-gallery__image,
+.forum-gallery__video {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--surface-area);
+}
+
+.forum-partners {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-partners__item img {
+  inline-size: auto;
+  max-block-size: 4.5rem;
+}
+
+/* ---- registration: the form on its sheet, two columns of «la lastra» fields from 40rem ------------------ */
+.forum-form {
+  max-inline-size: 44rem;
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background: var(--surface-sheet);
+}
+
+.forum-form__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-5) var(--s-6);
+}
+
+@media (min-width: 40rem) {
+  .forum-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .forum-form__grid .form-field:nth-last-child(-n+2) {
+    grid-column: 1 / -1;
+  }
+}
+
+.forum-form__summary {
+  margin-block: 0 var(--s-5);
+}
+
+.forum-form__required-note {
+  margin: var(--s-5) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.forum-form__actions {
+  margin-block-start: var(--s-5);
+}
+
+.forum-privacy-note {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* ---- the Forum with no edition yet: the empty state's own glyph says which space is empty (W1-B: the handshake),
+        drawn as the interior's «attesa» row — the glyph in its disc at the reading edge, the words beside it; no
+        dashed box, nothing centred (the component's legacy look is W3-E's to redraw) ----------------------------- */
+.page-forum .empty-state {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  justify-items: start;
+  align-items: start;
+  gap: var(--s-1) var(--s-4);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: start;
+}
+
+.page-forum .empty-state__icon {
+  grid-row: 1 / span 3;
+  margin: 0;
+}
+
+.page-forum .empty-state > :not(.empty-state__icon) {
+  grid-column: 2;
+  margin: 0;
+}
+
+.page-forum .empty-state__title {
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+}
+
+.page-forum .empty-state__text {
+  max-inline-size: none;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.page-forum .empty-state p:last-child:not(.empty-state__title, .empty-state__text) {
+  margin-block-start: var(--s-3);
+}
+
+/* the actions of the one card wrap, 12 px apart; on a phone each takes the line */
+.forum-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+@media (max-width: 47.999rem) {
+  .forum-form {
+    padding: var(--s-4);
+  }
+
+  .forum-programme--timed .forum-programme__item {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-forum {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (forced-colors: active) {
+  .ingresso--night {
+    border-block: 1px solid CanvasText;
+  }
+}
+
+@media print {
+  .forum-action,
+  .forum-hero__actions {
+    display: none;
+  }
+
+  .ingresso--night {
+    background: none;
+    color: CanvasText;
+  }
+}

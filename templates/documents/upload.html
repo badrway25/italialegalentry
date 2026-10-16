@@ -1,25 +1,26 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-A file that answers NO requirement — a personal copy an account keeps in its own space. The
-register (documents/index.html) is the main road; this is the layby, and it says so.
+A file that answers NO requirement — a personal copy an account keeps in its own space (design V5: docs/design-v5/
+V5_4_EXECUTION_PLAN.md §3.5 item 5; W3-C). The register (documents/index.html) is the main road; this is the layby,
+and it says so. On the console's page frame; the deposit is the Dépôt (documents/partials/depot.html, its loose
+road): the same zone, the same guards, the same answers composed in place, with this road's own words — «Document
+téléversé.», and the antivirus sentence of a loose file.
 {% endcomment %}
 {% block page_title %}{% translate "Déposer un fichier" %}{% endblock %}
 {% block meta_description %}{% translate "Dépôt d’un fichier privé." %}{% endblock %}
 {% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
-{% block portal_content %}
-<h1 class="doc-page__title">{% translate "Déposer un fichier" %}</h1>
-<p class="doc-page__lead">{% translate "Ce fichier ne répondra à aucune pièce demandée. Pour déposer une pièce exigée par votre dossier, passez par sa ligne dans le registre." %}</p>
-<form method="post" action="{% url 'documents:upload' %}" enctype="multipart/form-data" class="form doc-form" novalidate>
-  {% csrf_token %}
-  {% include "components/form_errors.html" with form=form %}
-  {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
-  <div class="form-actions">
-    <button type="submit" class="btn btn--primary">{% translate "Déposer" %}</button>
-    <a class="btn btn--secondary" href="{% url 'documents:index' %}">{% translate "Annuler" %}</a>
+
+{% block portal_header %}
+<header class="ws-head doc-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Déposer un fichier" %}</h1>
+    <p class="ws-head__lead">{% translate "Ce fichier ne répondra à aucune pièce demandée. Pour déposer une pièce exigée par votre dossier, passez par sa ligne dans le registre." %}</p>
   </div>
-</form>
-<p class="note">
-  <span class="note__marker">1</span>
-  {% translate "Formats acceptés : PDF, JPEG, PNG — 10 Mo maximum. Ne déposez aucune donnée sensible qui ne vous est pas demandée." %}
-</p>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="doc-piece doc-piece--loose">
+{% include "documents/partials/depot.html" with upload_form=form row=None %}
+</div>
 {% endblock %}

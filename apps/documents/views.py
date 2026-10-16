@@ -12,6 +12,12 @@ Two invariants this module defends:
   in for the object-level check, which runs again on the way out.
 * **One way in, one way out.** Files enter through ``services.store_upload`` (directly, or through
   ``services.file_version``) and leave through ``_serve`` — nowhere else.
+
+The Dépôt (design V5, W3-C — ``templates/documents/partials/depot.html``, ``static/js/src/depot.js``) sends the SAME
+form to the SAME two endpoints and asks for its answer as JSON (``DEPOT_HEADER``), so that the server's answer is
+composed IN PLACE, in the Dépôt, instead of a page change (DOCUMENT_WORKSPACE.md §11: the eleven answers). The header
+changes the form of the answer and nothing else: the validation chain, the size limit, the MIME and antivirus checks,
+the storage, the throttle and the permissions run the same lines on both roads.
 """
 
 from __future__ import annotations
@@ -20,7 +26,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.signing import BadSignature, SignatureExpired
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -38,6 +44,51 @@ from documents.models import DocumentRequirement, PrivateDocument
 UPLOAD_THROTTLE = {"limit": 30, "window_seconds": 3600}
 #: A compromised session should not be able to drain a case file in one sweep unnoticed.
 DOWNLOAD_THROTTLE = {"limit": 120, "window_seconds": 3600}
+
+#: The Dépôt's request header: its script asks for the answer as JSON. Without it — no script — every view below answers
+#: as it always has (a redirect and its message, the 429 page, the Conditions page).
+DEPOT_HEADER = "X-ILE-Depot"
+
+
+# ---------------------------------------------------------------------------------------------
+# The Dépôt's answers (design V5, W3-C; DOCUMENT_WORKSPACE.md §11.1)
+# ---------------------------------------------------------------------------------------------
+def _depot_json(request) -> bool:
+    return request.headers.get(DEPOT_HEADER) == "1"
+
+
+def _depot_answer(answer: str, message, **extra) -> JsonResponse:
+    """
+    One answer of the Dépôt: its code — the client composes its state from it — and the server's own sentence,
+    verbatim, in the reader's language. Always a 200: a refusal, the throttle or the Conditions gate is an ANSWER the
+    Dépôt composes, not a failure of the request (the road without script keeps its 403 and 429 pages). Never cached;
+    nothing about a file's scan is said beyond what the page says.
+    """
+    response = JsonResponse({"answer": answer, "message": str(message), **extra})
+    response["Cache-Control"] = "no-store"
+    return response
+
+
+def _depot_refusal(form) -> JsonResponse:
+    """The first refusal of a bound form, with its field and its code (``empty``, ``too_large``, ``extension``,
+    ``content_mismatch``, ``image_invalid``, ``pdf_active_content``, ``required``, ``invalid`` …) — the messages are
+    the form's and the validation chain's, untouched."""
+    for field, errors in form.errors.as_data().items():
+        for error in errors:
+            message = next(iter(error), "")
+            return _depot_answer(getattr(error, "code", None) or "invalid", message, field=field)
+    return _depot_answer("invalid", "")
+
+
+def _depot_throttled() -> JsonResponse:
+    return _depot_answer(
+        "throttled",
+        _(
+            "Vous avez atteint la limite d’envois autorisée. Merci de réessayer dans quelques minutes ; "
+            "rien n’a été perdu de votre côté."
+        ),
+        title=_("Trop de requêtes"),
+    )
 
 
 # ---------------------------------------------------------------------------------------------
@@ -156,7 +207,12 @@ def _get_requirement(user, pk) -> DocumentRequirement:
 def requirement_file(request, pk):
     requirement = _get_requirement(request.user, pk)
     require(request.user, "file", requirement)
+    as_json = _depot_json(request)
     if not services.user_may_upload(request.user):
+        if as_json:
+            return _depot_answer(
+                "terms", _("Le dépôt d’une pièce nécessite l’acceptation des Conditions d’utilisation.")
+            )
         return render(
             request,
             "documents/terms_required.html",
@@ -164,7 +220,7 @@ def requirement_file(request, pk):
             status=403,
         )
     if not throttle.allow(request, "documents_upload", **UPLOAD_THROTTLE):
-        return error_429(request)
+        return _depot_throttled() if as_json else error_429(request)
 
     form = RequirementUploadForm(request.POST, request.FILES, requirement=requirement, user=request.user)
     if form.is_valid():
@@ -177,22 +233,29 @@ def requirement_file(request, pk):
                 request=request,
             )
         except ValidationError as exc:
+            if as_json:
+                return _depot_answer(getattr(exc, "code", None) or "refused", " ".join(exc.messages))
             for message in exc.messages:
                 messages.error(request, message)
         else:
             if version.document is not None and version.document.is_infected:
-                messages.error(
-                    request,
-                    _("Le fichier a été signalé par l’analyse antivirus : il n’a pas été conservé."),
-                )
+                infected = _("Le fichier a été signalé par l’analyse antivirus : il n’a pas été conservé.")
+                if as_json:
+                    # The deposit is recorded and the file is gone: the piece's state changed (NON VALIDE), so the
+                    # Dépôt reads the piece again — `version` says a version was written.
+                    return _depot_answer("infected", infected, version=version.number)
+                messages.error(request, infected)
             else:
-                messages.success(
-                    request,
-                    _("Pièce déposée (version %(n)d). Elle sera examinée par un intervenant du dossier.")
-                    % {"n": version.number},
-                )
+                filed = _("Pièce déposée (version %(n)d). Elle sera examinée par un intervenant du dossier.") % {
+                    "n": version.number
+                }
+                if as_json:
+                    return _depot_answer("filed", filed, version=version.number)
+                messages.success(request, filed)
             return redirect("documents:requirement", pk=requirement.pk)
     else:
+        if as_json:
+            return _depot_refusal(form)
         for field_errors in form.errors.values():
             for message in field_errors:
                 messages.error(request, message)
@@ -333,7 +396,16 @@ def _breadcrumb_register() -> dict:
 @never_cache
 @require_http_methods(["GET", "POST"])
 def upload(request):
+    as_json = request.method == "POST" and _depot_json(request)
     if not services.user_may_upload(request.user):
+        if as_json:
+            return _depot_answer(
+                "terms",
+                _(
+                    "Le dépôt de pièces est réservé aux comptes ayant accepté les Conditions d’utilisation et la "
+                    "Privacy Policy."
+                ),
+            )
         return render(
             request,
             "documents/terms_required.html",
@@ -342,7 +414,7 @@ def upload(request):
         )
     if request.method == "POST":
         if not throttle.allow(request, "documents_upload", **UPLOAD_THROTTLE):
-            return error_429(request)
+            return _depot_throttled() if as_json else error_429(request)
         form = DocumentUploadForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             doc = services.store_upload(
@@ -354,10 +426,17 @@ def upload(request):
                 request=request,
             )
             if doc.is_infected:
-                messages.error(request, _("Le fichier a été bloqué par l’analyse antivirus et n’a pas été conservé."))
+                blocked = _("Le fichier a été bloqué par l’analyse antivirus et n’a pas été conservé.")
+                if as_json:
+                    return _depot_answer("infected", blocked)
+                messages.error(request, blocked)
             else:
+                if as_json:
+                    return _depot_answer("filed", _("Document téléversé."), next=reverse("documents:index"))
                 messages.success(request, _("Document téléversé."))
             return redirect("documents:index")
+        if as_json:
+            return _depot_refusal(form)
     else:
         form = DocumentUploadForm(user=request.user)
     return render(

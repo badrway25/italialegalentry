@@ -15,8 +15,9 @@
  *     at the opening and on a resize; the trap counts it;
  *   · the press on a native modal's ::backdrop (`data-overlay-modal="native"`, showModal()): it closes the dialog
  *     only when it went down AND came up outside the panel — never an alert, never unsaved input.
- * It imports nothing: overlay.js hands over what the parts need (`install(core)`). CSSOM writes only (left, top,
- * translate, --overlay-drag), which the CSP allows; strings are the templates', never this file's.
+ * It imports nothing: overlay.js hands over what the parts need (`install(core)`) — the frame wait of motion.js's gate
+ * among them (`core.nextFrame`: no module asks for a frame itself, W1-D). CSSOM writes only (left, top, translate,
+ * --overlay-drag), which the CSP allows; strings are the templates', never this file's.
  */
 
 let core = null;
@@ -34,14 +35,16 @@ export function install(api) {
       }
     });
   });
-  // a resize (a zoom) may make a body scroll, or stop: its stop follows
-  let resizing = 0;
+  // a resize (a zoom) may make a body scroll, or stop: its stop follows — once a frame, the frame asked of the gate
+  // (under reduced motion it answers at once: a resize is already one a frame)
+  let resizing = false;
   window.addEventListener(
     "resize",
     () => {
       if (resizing) return;
-      resizing = window.requestAnimationFrame(() => {
-        resizing = 0;
+      resizing = true;
+      core.nextFrame().then(() => {
+        resizing = false;
         core.opened.forEach(reachable);
       });
     },

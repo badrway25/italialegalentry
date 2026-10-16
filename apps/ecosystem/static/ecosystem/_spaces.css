@@ -1,0 +1,124 @@
+/* ============================================================================================
+   THE ECOSYSTEM SPACES — what the four spaces draw beyond the interior's grammar (design V5.4, W3-F1; imported by
+   ecosystem/ecosystem.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only; logical properties.
+   ============================================================================================ */
+
+/* ---- from the interior's grammar (v5/_interior.css), drawn by these pages alone: the wide chapter, which the pilot alone draws (W3-F1's budget pass, 12 October 2026: a page sheet holds what its pages draw) ---- */
+/* a chapter whose body is a figure across the whole column (the pilot's sequence): its head stands above it */
+@media (min-width: 75rem) {
+  .chapter--wide .chapter__head {
+    position: static;
+    grid-column: 1 / span 8;
+  }
+
+  .chapter--wide .chapter__body {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* ---- Espace Entreprises: the prescribed quotation, set as the statement of «La démarche» ----------- */
+.citazione {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  padding-inline-start: var(--s-5);
+  border-inline-start: 2px solid var(--line-structure);
+}
+
+.citazione p {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+
+@media (min-width: 48rem) {
+  .citazione p {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+}
+
+/* the form on the stone: «la lastra» fields on their sheet, at the reading measure */
+.ecosystem-form .form {
+  max-inline-size: 40rem;
+}
+
+/* its six short single-line fields (the company, the sector, the seat, the contact, the e-mail, the telephone) two by
+   two from 64rem, the others across the form — about 300 px less of a task that is not reading (W3-F1's review M2;
+   the form's region stands outside RH-3's cadence, DL54) */
+@media (min-width: 64rem) {
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) > * {
+    grid-column: 1 / -1;
+  }
+
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) > .form-field:nth-of-type(-n+6) {
+    grid-column: auto;
+  }
+}
+
+/* ---- Projet Pilote: the eight prescribed stations on «la linea». Four a row from 48rem (the row's last
+        station ends its line), eight in a row from 90rem across the whole column — below it a tracked capital word
+        of 13 px had ≈ 125 px and the seventh station's word broke in its middle at 1280 and 1366 (W3-F1's review
+        M5); the
+        labels are capitals in the copy, tracked as capitals, never hyphenated ---------------------------------- */
+.pilot-diagram .linea__label {
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+.pilot-diagram .linea__label:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+.pilot-diagram__notice {
+  max-inline-size: var(--measure-lead);
+}
+
+.pilot-diagram__notice .notice {
+  margin-block: 0;
+}
+
+@media (min-width: 48rem) {
+  .pilot-diagram .linea--across {
+    --linea-cols: 4;
+    row-gap: var(--s-10);
+  }
+
+  .pilot-diagram .linea--across .linea__step:nth-child(4n)::before {
+    display: none;
+  }
+}
+
+@media (min-width: 90rem) {
+  .pilot-diagram .linea--across {
+    --linea-cols: 8;
+    column-gap: var(--s-4);
+  }
+
+  .pilot-diagram .linea--across .linea__step:nth-child(4n):not(:last-child)::before {
+    display: block;
+  }
+
+  .pilot-diagram .linea--across .linea__step:not(:last-child)::before {
+    inset-inline-end: calc(2px - var(--s-4));
+  }
+
+  .pilot-diagram .linea__label {
+    font-size: var(--t-small);
+    line-height: var(--t-small-lh);
+  }
+}
+
+@media print {
+  .pilot-diagram .linea--across {
+    display: block;
+  }
+}

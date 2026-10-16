@@ -1,12 +1,21 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-The account's saved orientation results (portal.services.pathway_sessions). Every result is an
+«Mon parcours» — where the person stands, then the account's saved orientation results.
+
+The journey first, when the person has a file: «La soglia», the dashboard's own component and words
+(components/journey_rail.html with portal.services.journey_for(active_case) and the label «Où j’en suis»; W3-D,
+V5.4 plan §3.5 item 6) — the rail's «Mon parcours» entry wears the journey's glyph, and the page answers it. No file,
+no journey: the pre-assessments alone, as before.
+
+Then the saved orientation results (portal.services.pathway_sessions). Every result is an
 INFORMATIONAL pre-assessment: ruleset version, date, outcome and checklist are shown exactly as
 frozen by the orientation app. CONTENT_PENDING_LEGAL_REVIEW: outcome explanations and checklist
 items belong to the orientation rule set and stay under its review workflow — nothing is added here.
 {% endcomment %}
 {% block page_title %}{% translate "Mon parcours" %}{% endblock %}
 {% block meta_description %}{% translate "Vos pré-évaluations d’orientation enregistrées, à caractère informatif." %}{% endblock %}
+{% comment %}The journey's page-only sheet (W3-D; the owner's V5.8: never in the shared bundles), after the shell's two, where a journey is drawn.{% endcomment %}
+{% block extra_head %}{{ block.super }}{% if journey %}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endif %}{% endblock %}
 {% block portal_header %}
 {% translate "Mon parcours" as header_title %}
 {% translate "Les pré-évaluations d’orientation enregistrées dans votre compte." as header_lead %}
@@ -14,6 +23,12 @@ items belong to the orientation rule set and stay under its review workflow — 
 {% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
 {% endblock %}
 {% block portal_content %}
+{% if journey %}
+<div class="journey-page">
+  {% translate "Où j’en suis" as journey_label %}
+  {% include "components/journey_rail.html" with steps=journey label=journey_label %}
+</div>
+{% endif %}
 <div class="notice notice--info" role="note" data-result-kind="informational">
   {% svg_icon "info" "icon notice__icon" %}
   <p class="notice__title"><strong>{% translate "Pré-évaluation à caractère informatif" %}</strong></p>

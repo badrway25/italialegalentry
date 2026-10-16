@@ -1,0 +1,17 @@
+{% load i18n %}
+{% comment %}
+The page's ONE action (D26) on the Espace Personnes' pages of design V5.4 (W3-F1): the orientation questionnaire, as
+the action card of v5/card.css — the raised panel of its screen (level 2): what, why, ONE button. The questionnaire
+belongs to the orientation app: the button is rendered only when its route exists; otherwise the «attesa» chip says
+it is coming. Contract: `links` (dict), optional `title_id`.
+(The legacy CTA band of V4 left with its last consumers, W3-F1's second step.)
+{% endcomment %}
+<div class="card card--action action" data-action="orientation">
+  <h3 class="card__title" id="{{ title_id|default:'orientation-title' }}">{% translate "Identifiez la voie régulière à explorer" %}</h3>
+  <p class="card__text">{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." %}</p>
+  {% if links.orientation %}
+  <p class="card__action"><a class="btn btn--primary btn--lg btn--arrow" href="{{ links.orientation }}">{% translate "Commencer le questionnaire d’orientation" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+  {% else %}
+  <p class="card__action">{% chip register="attesa" role="status" %}{% translate "Le questionnaire d’orientation sera disponible prochainement." %}{% endchip %}</p>
+  {% endif %}
+</div>

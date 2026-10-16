@@ -1,0 +1,1379 @@
+/* ============================================================================================
+   «MES PIÈCES» — the document workspace, design V5.2 (W3-C)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5, §1.2 (the registers; «soon» attesa, «overdue» azione), §1.3
+   (corners: 4 · 8 · full), §1.4 (SH-2 hairlines before boxes, SH-8 one raised plane), §1.15; the drawn reference:
+   proof/research/documents/ and DOCUMENT_WORKSPACE.md §0, §6–§16 (K5: the documents lane's phone).
+   A partial (`_`): imported by the documents page sheet (apps/documents/static/documents/documents.css), never an
+   output of its own, never in main.css — only the pages that draw the register load it (DS 2026 §2).
+   Markup: templates/documents/partials/register.html, templates/components/document_row.html, the page headers of
+   templates/portal/documents.html and templates/documents/index.html.
+
+     1  the page header and the page's column
+     2  the file's block — the query container of everything the register holds
+     3  «il registro» — the register strip: three runs, the page's one act, the count sentence
+     4  the date: its glyph, the date, its word (the registry's DUE map; «soon» amber, «overdue» terracotta)
+     5  the state filter — a segmented track in the flow; in the card layout one control and the overlay system's sheet
+     6  the collection — one sheet, six columns every row inherits (subgrid), three groups
+     7  the row — six zones and a footer; the whole row is the link
+     8  three layouts by the width the register is GIVEN (container `wscase`): 6 columns · 5 · cards
+     9  forced colours
+    10  the preview drawer — the overlay system's, non-modal beside the register (the workspace makes room)
+
+   Planes: the strip is the screen's ONE raised plane (the action card's level, as the dashboard's NowPanel);
+   the collection is one flat sheet under a hairline, rows divided by hairlines; a card has an edge and no shadow.
+   One shadow value at rest. Nothing moves at load; the filter's sheet and the preview drawer are the overlay system's
+   (static/css/v5/overlays.css: their motion, their reduced motion, their 12 px corners — an open overlay's own).
+   Tokens only (layers 2 and 3 of v5/tokens.css), logical properties only; the chip is v5/chip.css's — this sheet
+   places it, it never paints it.
+   ============================================================================================ */
+
+/* ---- 1 · The page header and the page's column ----------------------------------------------- */
+/* the frame's distance from the header to the content (SP-5), as the ContextHeader's */
+.console__workspace > .doc-head {
+  margin-block-end: var(--s-8);
+}
+
+/* a head's line of facts: what the page is, and the file it belongs to */
+.doc-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-3);
+  margin: var(--s-2) 0 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.doc-page {
+  display: grid;
+  gap: var(--s-12);
+  min-inline-size: 0;
+}
+
+/* ---- 2 · The file's block -------------------------------------------------------------------- */
+/* the register: its files, then its caveat beside it */
+.doc-register {
+  display: grid;
+  gap: var(--s-4);
+  min-inline-size: 0;
+}
+
+.ws-case {
+  display: grid;
+  gap: var(--s-4);
+  min-inline-size: 0;
+  container: wscase / inline-size;
+}
+
+.ws-case + .ws-case {
+  margin-block-start: var(--s-8);
+}
+
+.ws-case__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3) var(--s-6);
+}
+
+.ws-case__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-3);
+  margin: 0;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+:lang(ar) .ws-case__title {
+  letter-spacing: 0;
+}
+
+/* the reference: ILE Mono, its own order whatever the page's direction */
+.ws-case__ref {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  line-height: var(--u-ref-lh);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--text-2);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.ws-case__ref .icon {
+  inline-size: var(--icon-xs);
+  block-size: var(--icon-xs);
+  color: var(--icon-muted);
+}
+
+.ws-search {
+  position: relative;
+  inline-size: min(100%, 20rem);
+}
+
+.ws-search > .icon {
+  position: absolute;
+  inset-inline-start: var(--s-3);
+  inset-block-start: calc(50% - var(--icon-sm) / 2);
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--icon-default);
+  pointer-events: none;
+}
+
+.ws-search__input {
+  padding-inline-start: calc(var(--s-3) + var(--icon-sm) + var(--s-2));
+}
+
+/* an empty region: one hairline and one sentence naming who fills it and when */
+.ws-empty {
+  margin: 0;
+  max-inline-size: 60ch;
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.ws-empty[hidden] {
+  display: none;
+}
+
+/* ---- 3 · «Il registro» — the register strip ---------------------------------------------------
+   runs | the next act
+   the locked count sentence
+   A run is a link to its group in the collection: an index, not a filter — no state to keep, no script; Back
+   returns. One 16 px mark per piece, aria-hidden: the colour is the run (the ledger tokens), the shape is the
+   state (the chip's own mark). The words and the figures carry it. The marks are «il registro» as the dashboard
+   draws it — `.db-ledger__marks` and its group's colour (`.db-ledger__group--*`, v5/_dashboard.css, on every
+   console page through console.css): one family drawn once (V5.8 rule 3, REVIEW m7); here only the strip's own
+   placing of them — their own band under the count. */
+.reg {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "runs next"
+    "cap cap";
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  box-shadow: var(--panel-raised-shadow);
+  overflow: clip;
+}
+
+.reg__runs {
+  grid-area: runs;
+  display: flex;
+}
+
+.reg-run {
+  display: grid;
+  align-content: start;
+  min-inline-size: 8.25rem;
+  max-inline-size: 15rem;
+  padding: var(--s-4) var(--s-6) var(--s-3);
+  border-inline-end: 1px solid var(--line-rhythm);
+  color: inherit;
+  text-decoration: none;
+}
+
+.reg-run__label {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* the count at 20/28 and 500: one step under the page's title, lighter than the next piece's title — never the
+   stat card's 28 px numeral, which stays off a person's screen (DOCUMENT_WORKSPACE §7.4, D7) */
+.reg-run__n {
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+.reg-run__marks {
+  display: flex;
+  gap: 6px;
+  margin-block-start: var(--s-2);
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+/* a run with no piece: its word and «0», no hairline, no marks — and no link: its group is not drawn */
+.reg-run--empty .reg-run__n {
+  color: var(--text-3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.reg-run:hover {
+    background-color: var(--surface-hover);
+  }
+
+  a.reg-run:hover .reg-run__label {
+    color: var(--text-1);
+  }
+}
+
+/* inside the cell: the strip clips what stands outside it, so the ring is drawn inside the run (the rail's inset
+   ring) — and above the workspace's one-ring rule (v4/workspace.css: `.console__workspace :is(a, …):focus-visible`,
+   0-3-0), which set the system's 2 px offset back and gave the ring to the clip (A11Y_PERF finding 2) */
+.reg a.reg-run:focus-visible {
+  outline-offset: -4px;
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+a.reg-run:active {
+  background-color: var(--surface-area);
+}
+
+.reg__next {
+  grid-area: next;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "label act"
+    "title act"
+    "due act"
+    "note act";
+  align-content: center;
+  align-items: center;
+  column-gap: var(--s-6);
+  row-gap: 2px;
+  min-inline-size: 0;
+  /* one axis for every act: the page's primary ends where the rows' acts end — before the 20 px «opens» column
+     and its gap (DOCUMENT_WORKSPACE §19.2) */
+  padding-block: var(--s-4) var(--s-3);
+  padding-inline: var(--s-6) calc(20px + var(--s-6) + var(--s-6));
+}
+
+.reg__next > p {
+  margin: 0;
+}
+
+.reg__next-label {
+  grid-area: label;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.reg__next-title {
+  grid-area: title;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+:lang(ar) .reg__next-title {
+  letter-spacing: 0;
+}
+
+.reg__next-due {
+  grid-area: due;
+  margin-block-start: var(--s-1);
+}
+
+.reg__next-act {
+  grid-area: act;
+}
+
+/* why the next piece cannot be filed now: the Conditions gate, in the register row's own words, its cause's mark */
+.reg__next-note {
+  grid-area: note;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-block-start: var(--s-1);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.reg__next-note .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 2px;
+  color: var(--icon-muted);
+}
+
+.reg__next-none {
+  grid-column: 1 / -1;
+  max-inline-size: 60ch;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+}
+
+/* the locked count sentence closes the strip, on its own band */
+.reg__caption {
+  grid-area: cap;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-1);
+  margin: 0;
+  padding: var(--s-2) var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+  background-color: var(--surface-area);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.reg__total {
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg__sep {
+  color: var(--text-3);
+}
+
+/* ---- 4 · The date: its glyph, the date, its word ----------------------------------------------
+   Every dated row carries its glyph (the registry's DUE map: calendar · clock · alarm-clock), in a 20 px seat —
+   `alarm-clock` is drawn no smaller than 20 px (its floor, apps/core/icons.py), the others at 16 in the same seat,
+   so the dates of a column share one edge. «Bientôt» is amber (attesa), «En retard» terracotta (azione): red never
+   means lateness. Once a piece is filed the date is calm (F8): no word, the calendar, the second ink. */
+.doc-due {
+  display: inline-grid;
+  grid-template-columns: 20px auto;
+  align-items: center;
+  justify-content: start;
+  column-gap: 6px;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--deadline-normal-text);
+}
+
+.doc-due__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 20px;
+  block-size: 20px;
+  color: var(--icon-muted);
+}
+
+.doc-due__mark .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.doc-due time {
+  grid-column: 2;
+}
+
+.doc-due__word {
+  grid-column: 2;
+  font-weight: var(--w-control);
+}
+
+.doc-due--upcoming {
+  color: var(--deadline-upcoming-text);
+}
+
+.doc-due--upcoming .doc-due__mark {
+  color: var(--icon-default);
+}
+
+.doc-due--soon {
+  color: var(--deadline-soon-text);
+  font-weight: var(--w-control);
+}
+
+.doc-due--soon .doc-due__mark {
+  color: var(--deadline-soon-mark);
+}
+
+.doc-due--overdue {
+  color: var(--deadline-overdue-text);
+  font-weight: var(--w-control);
+}
+
+.doc-due--overdue .doc-due__mark {
+  color: var(--deadline-overdue-mark);
+}
+
+.doc-due--overdue .doc-due__mark .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+/* in the strip the word follows the date on its line */
+.doc-due--inline {
+  grid-template-columns: 20px auto auto;
+}
+
+.doc-due--inline .doc-due__word {
+  grid-column: 3;
+}
+
+.doc-due--inline .doc-due__word::before {
+  content: "·";
+  margin-inline-end: 6px;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+/* a date is a Western-digit sequence: its own order inside right-to-left text */
+:where(.ws-case, .doc-piece, .doc-drawer) time {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ---- 5 · The state filter ---------------------------------------------------------------------
+   The entries follow the register's order (STATE_ORDER), each its state's mark and its count: the filter is the
+   key to the marks — no separate legend. A state with no piece is a word, not a link. In the card layout the
+   track folds into ONE 44 px control — a link to the overlay system's bottom sheet holding the same entries
+   (templates/documents/partials/state_filter.html, drawn twice). */
+.ws-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  min-inline-size: 0;
+}
+
+.seg__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  border-radius: var(--radius-lg);
+  background-color: var(--icon-disc-bg);
+}
+
+.seg__item {
+  margin: 0;
+}
+
+.seg__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: calc(var(--segmented-h) - 4px);
+  padding-inline: var(--s-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.seg__link:hover {
+    color: var(--text-1);
+  }
+}
+
+/* the chosen entry: a paper thumb with its 1 px structure edge (a white thumb on the track alone was 1.14 : 1) and
+   the ink's weight — never a check mark (O14) */
+.seg__link[aria-current] {
+  background-color: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-structure);
+  color: var(--text-1);
+}
+
+.seg__link--empty {
+  color: var(--text-3);
+  cursor: default;
+}
+
+.seg__count {
+  font-weight: 400;
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
+}
+
+.seg__link[aria-current] .seg__count {
+  color: var(--text-2);
+}
+
+/* the entry's mark is the chip's own, coloured by the entry's `data-register`: the element that carries the
+   register draws no box of its own; 14 px and 4 px of air before the word */
+.seg__dot {
+  display: contents;
+  --chip-mark-size: 14px;
+}
+
+.seg__dot > .icon {
+  margin-inline-end: calc(-1 * var(--s-1));
+}
+
+.seg__link--empty .seg__dot > .icon {
+  opacity: 0.4;
+}
+
+@media (pointer: coarse) {
+  .seg__list {
+    row-gap: 4px;
+  }
+
+  .seg__link {
+    min-block-size: var(--hit-primary);
+  }
+}
+
+/* the card layout's control — out of the flow until section 8 calls it; the entries in the sheet it opens */
+.ws-filter {
+  display: none;
+}
+
+.ws-filter .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.ws-filter__now {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-inline-start: auto;
+  font-weight: 400;
+  color: var(--text-2);
+}
+
+.seg--sheet .seg__list {
+  display: grid;
+  gap: var(--s-2);
+  padding: 0;
+  background: none;
+}
+
+.seg--sheet .seg__link {
+  display: flex;
+  justify-content: flex-start;
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-4);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-area);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  white-space: normal;
+}
+
+.seg--sheet .seg__link[aria-current] {
+  background-color: var(--surface-raised);
+  box-shadow: inset 0 0 0 2px var(--text-1);
+}
+
+.seg--sheet .seg__count {
+  margin-inline-start: auto;
+}
+
+/* ---- 6 · The collection ------------------------------------------------------------------------
+   One sheet; six columns every row inherits through subgrid, so the state, the actor and the date of every row
+   stand on one x. The groups are the strip's runs, in the same order, under the same words.
+   A subgrid's padding is a margin on the items of its edge tracks: the «opens» track is 20 px PLUS the row's
+   inline padding, or the row's 24 px would leave its 16 px chevron no room at all (measured: 0 px wide). */
+.doc-collection {
+  display: grid;
+  grid-template-columns:
+    [piece] minmax(0, 1fr)
+    [state] minmax(9.5rem, max-content)
+    [resp] minmax(11rem, max-content)
+    [due] minmax(8.5rem, max-content)
+    [act] minmax(0, max-content)
+    [open] calc(20px + var(--s-6));
+  column-gap: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-sheet);
+  overflow: clip;
+}
+
+.doc-collection__cols,
+.doc-group,
+.doc-group__rows,
+.doc-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.doc-collection__cols {
+  padding: var(--s-3) var(--s-6);
+  border-block-end: 1px solid var(--line-rhythm);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-3);
+}
+
+.doc-group {
+  scroll-margin-block-start: calc(var(--ctx-h) + var(--s-4));
+}
+
+.doc-group[hidden],
+.doc-row[hidden] {
+  display: none;
+}
+
+.doc-group__head {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s-2);
+  min-block-size: 44px;
+  margin: 0;
+  padding: var(--s-3) var(--s-6);
+  border-block-end: 1px solid var(--line-rhythm);
+  background-color: var(--surface-area);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.doc-group__n {
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.doc-group + .doc-group .doc-group__head {
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+/* the group that asks something of the person carries its run's colour as a 3 px rule on the reading edge */
+.doc-group--to-act .doc-group__head {
+  box-shadow: inset 3px 0 0 var(--ledger-to-act);
+}
+
+[dir="rtl"] .doc-group--to-act .doc-group__head {
+  box-shadow: inset -3px 0 0 var(--ledger-to-act);
+}
+
+.doc-group__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- 7 · The row — six zones and a footer ------------------------------------------------------ */
+.doc-row {
+  position: relative;
+  align-items: center;
+  row-gap: var(--s-2);
+  min-block-size: var(--row-min-h);
+  padding: var(--s-4) var(--s-6);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.doc-group:last-child .doc-row:last-child {
+  border-block-end: 0;
+}
+
+/* hover is a colour, at once: a list read every day does not lift, cast a shadow or scale */
+@media (hover: hover) and (pointer: fine) {
+  .doc-row:hover {
+    background-color: var(--surface-hover);
+  }
+
+  .doc-row:hover .doc-row__link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .doc-row:hover .doc-row__open {
+    color: var(--accent-mark);
+  }
+}
+
+/* the keyboard's focus in a row lights the row as the pointer does — read from the input's modality (head.js), never
+   from a :has(:focus-visible): Blink re-styles the whole page from <body> for every focus that enters or leaves a row
+   whose subject a :has() names (≈ 650 elements a time on a phone, measured; the drawer's open and close paid it) */
+html[data-input="key"] .doc-row:focus-within {
+  background-color: var(--surface-hover);
+}
+
+.doc-row__piece {
+  grid-column: piece;
+  grid-row: 1;
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.doc-row__piece > p {
+  margin: 0;
+}
+
+.doc-row__title {
+  font-size: var(--t-ui);
+  line-height: 1.375rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.doc-row__link {
+  border-radius: var(--radius-xs);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* THE ROW IS THE TARGET: the title's link is stretched over the whole row, above the chip, the actor, the date
+   and the note (z 1) and below the act (z 2) — no point of the row that shows the hover state is dead (gate 0
+   raised the chip and the date to the link's level: 14 of 30 probe points did nothing) */
+.doc-row__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.doc-row__link:focus-visible {
+  outline-offset: 3px;
+}
+
+.doc-row__qualifier {
+  margin-inline-start: var(--s-2);
+  font-size: var(--u-small);
+  font-weight: 400;
+  color: var(--text-2);
+}
+
+.doc-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-3);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.doc-row__meta > span + span::before {
+  content: "·";
+  margin-inline-end: var(--s-3);
+  color: var(--text-3);
+}
+
+.doc-row__state {
+  grid-column: state;
+  grid-row: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+}
+
+/* the Conditions gate, beside the chip: a word, quiet (V4's «Bloqué», kept until the owner rules on D8) */
+.doc-row__blocked {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.doc-row__resp {
+  grid-column: resp;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-inline-size: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-1);
+}
+
+.doc-row__actor {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.doc-row__actor-note {
+  color: var(--text-2);
+}
+
+.doc-row__due {
+  grid-column: due;
+  grid-row: 1;
+}
+
+.doc-row__act {
+  grid-column: act;
+  grid-row: 1;
+  justify-self: end;
+  position: relative;
+  z-index: 2;
+}
+
+.doc-row__act .btn .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+
+.doc-row__open {
+  grid-column: open;
+  grid-row: 1;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  color: var(--icon-muted);
+}
+
+.doc-row__open .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+/* the note is the row's footer: the motive of a refusal, the reason a replacement was asked — on the row's full
+   measure (≤ 72 ch), under the zones, which keep one height */
+.doc-row__note {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  max-inline-size: 72ch;
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-1);
+}
+
+.doc-row__note .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 2px;
+  color: var(--icon-muted);
+}
+
+.doc-row__note--refusal .icon {
+  color: var(--tone-rifiuto-mark);
+}
+
+/* the register's caveat, beside the register */
+.doc-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  max-inline-size: 72ch;
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.doc-note .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 2px;
+  color: var(--icon-muted);
+}
+
+/* the ways out, at the foot: links in a line */
+.doc-aside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* a stand-alone link keeps its line and gets an invisible 44 px band under a finger */
+@media (pointer: coarse) {
+  .doc-aside a {
+    position: relative;
+  }
+
+  .doc-aside a::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block: calc(50% - var(--hit-primary) / 2);
+  }
+}
+
+/* ---- 8 · Three layouts by the width the register is GIVEN (container wscase) ---------------------
+     ≥ 66rem    six columns (above)
+     52–66rem   five columns: the actor goes under the title
+     < 52rem    cards; the filter folds into one control and its sheet; the search only from thirteen pieces
+   The strip keeps its one row (runs | next act) from 52rem and stacks with the cards. */
+@container wscase (min-width: 52rem) and (max-width: 61.999rem) {
+  .reg-run {
+    padding-inline: var(--s-4);
+  }
+
+  .reg__next {
+    column-gap: var(--s-4);
+    padding-inline-start: var(--s-5);
+  }
+
+  .reg__next-title {
+    font-size: var(--t-ui);
+    line-height: 1.375rem;
+  }
+
+  .reg__caption {
+    padding-inline: var(--s-5);
+  }
+}
+
+@container wscase (min-width: 52rem) and (max-width: 65.999rem) {
+  /* the same axis for the acts with this layout's 16 px gap */
+  .reg__next {
+    padding-inline-end: calc(20px + var(--s-4) + var(--s-6));
+  }
+
+  .doc-collection {
+    grid-template-columns:
+      [piece] minmax(0, 1fr)
+      [state] max-content
+      [due] max-content
+      [act] max-content
+      [open] calc(20px + var(--s-6));
+    column-gap: var(--s-4);
+  }
+
+  .doc-collection__cols > :nth-child(3) {
+    display: none;
+  }
+
+  .doc-row__resp {
+    grid-column: piece / -1;
+    grid-row: 2;
+    color: var(--text-2);
+  }
+
+  .doc-row__note {
+    grid-row: 3;
+  }
+}
+
+@container wscase (max-width: 51.999rem) {
+  /* a dozen cards need no search field: it returns from thirteen pieces (.ws-case--long) */
+  .ws-case:not(.ws-case--long) .ws-search {
+    display: none;
+  }
+
+  .ws-search {
+    inline-size: 100%;
+  }
+
+  .reg {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "runs"
+      "next"
+      "cap";
+  }
+
+  .reg__runs {
+    border-block-end: 1px solid var(--line-rhythm);
+  }
+
+  /* three runs share a phone's width: 12 px gutters and 4 px between marks keep four marks on one line at 360 */
+  .reg-run {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    max-inline-size: none;
+    padding: var(--s-4) var(--s-3) var(--s-3);
+  }
+
+  .reg-run:last-child {
+    border-inline-end: 0;
+  }
+
+  .reg-run__label {
+    white-space: normal;
+  }
+
+  .reg-run__marks {
+    gap: 4px;
+  }
+
+  .reg__next {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "label"
+      "title"
+      "due"
+      "note"
+      "act";
+    padding: var(--s-4);
+  }
+
+  .reg__next-title {
+    font-size: var(--t-ui);
+    line-height: 1.375rem;
+  }
+
+  .reg__next-act {
+    margin-block-start: var(--s-3);
+  }
+
+  .reg__next-act .btn {
+    inline-size: 100%;
+  }
+
+  .reg__caption {
+    padding: var(--s-2) var(--s-4);
+  }
+
+  .ws-filters__seg {
+    display: none;
+  }
+
+  .ws-filter {
+    display: inline-flex;
+    justify-content: flex-start;
+    inline-size: 100%;
+    min-block-size: var(--hit-primary);
+  }
+
+  .doc-collection {
+    display: block;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    overflow: visible;
+  }
+
+  .doc-collection__cols {
+    display: none;
+  }
+
+  .doc-group,
+  .doc-group__rows {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-3);
+  }
+
+  .doc-group + .doc-group {
+    margin-block-start: var(--s-6);
+  }
+
+  .doc-group__head,
+  .doc-group + .doc-group .doc-group__head {
+    min-block-size: 32px;
+    padding: 0 var(--s-1);
+    border: 0;
+    background: none;
+    align-items: center;
+  }
+
+  .doc-group--to-act .doc-group__head,
+  [dir="rtl"] .doc-group--to-act .doc-group__head {
+    box-shadow: none;
+  }
+
+  /* two columns; the zones are placed by `order`, so a card with no note or no act has no empty track. The two
+     focusable things — the title's link, then the act — keep their document order. Identity first (V5.1 §54). */
+  .doc-row {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--s-2) var(--s-3);
+    align-items: start;
+    min-block-size: 0;
+    padding: var(--s-4);
+    border: 1px solid var(--line-rhythm);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-sheet);
+  }
+
+  .doc-group:last-child .doc-row:last-child {
+    border-block-end: 1px solid var(--line-rhythm);
+  }
+
+  .doc-group--to-act .doc-row {
+    border-inline-start: 3px solid var(--ledger-to-act);
+  }
+
+  .doc-row__piece {
+    order: 1;
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .doc-row__open {
+    order: 2;
+    grid-column: 2;
+    grid-row: auto;
+    align-self: start;
+    block-size: 1.375rem;
+  }
+
+  .doc-row__state {
+    order: 3;
+    grid-column: 1;
+    grid-row: auto;
+    align-self: center;
+  }
+
+  .doc-row__due {
+    order: 4;
+    grid-column: 2;
+    grid-row: auto;
+    justify-self: end;
+    align-self: center;
+  }
+
+  .doc-row__resp {
+    order: 5;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    color: var(--text-2);
+  }
+
+  .doc-row__note {
+    order: 6;
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .doc-row__act {
+    order: 7;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: stretch;
+    margin-block-start: var(--s-1);
+  }
+
+  .doc-row__act .btn {
+    inline-size: 100%;
+    min-block-size: var(--hit-primary);
+  }
+}
+
+/* a tablet in portrait (36–52rem of register): cards, but the acts keep their own width at the inline end */
+@container wscase (min-width: 36rem) and (max-width: 51.999rem) {
+  .reg__next {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label act"
+      "title act"
+      "due act"
+      "note act";
+  }
+
+  .reg__next-act {
+    margin-block-start: 0;
+  }
+
+  .reg__next-act .btn {
+    inline-size: auto;
+  }
+
+  .doc-row__act {
+    justify-self: end;
+  }
+
+  .doc-row__act .btn {
+    inline-size: auto;
+  }
+
+  .ws-filter {
+    inline-size: auto;
+  }
+}
+
+/* the register's own phone rule: its header's line stays for assistive technology only — the first screen is for
+   the pieces (W-1). The other documents pages keep their line: it says what the page is for. */
+@media (max-width: 47.999rem) {
+  .doc-head--register .ws-head__lead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---- 10 · The preview drawer (templates/documents/partials/piece_drawer.html) ----------------------
+   The overlay system's drawer (static/css/v5/overlays.css draws the panel: its edge, its 12 px free corners, its
+   shadow, its «Slide», its sheet on a phone, its reduced motion and forced colours). Here only what it holds: a head
+   that repeats the row — the reference, the title, the row's line —, the busy key after the eye's 400 ms, and the
+   piece's page in one column. While it is non-modal the workspace gives it its width: the register lays itself out
+   by what is left (five columns, or cards). */
+.console__workspace[data-drawer-beside] {
+  padding-inline-end: calc(var(--page-pad) + var(--drawer-w));
+}
+
+/* the piece the drawer shows (REVIEW M2): its row keeps the hover's surface and the current entry's 2 px rule on its
+   reading edge (the rule the portico's current link carries), its title `aria-current` — held while the drawer is
+   open, moved on a swap, cleared on closing (piece-drawer.js `mark`). Where the strip names that piece, its next
+   piece takes the same state and its act steps down to a secondary: the drawer holds the act now (REVIEW m2). */
+.doc-row[data-drawer-open],
+.reg__next[data-drawer-open] {
+  background-color: var(--surface-hover);
+  box-shadow: inset 2px 0 0 var(--accent-mark);
+}
+
+[dir="rtl"] .doc-row[data-drawer-open],
+[dir="rtl"] .reg__next[data-drawer-open] {
+  box-shadow: inset -2px 0 0 var(--accent-mark);
+}
+
+/* the panel stands in the page's column, where the flow's spacing (portal.css: `.portal__main > * + *`) would push
+   it 48 px down from the viewport's top: a fixed panel takes no margin */
+.overlay.doc-drawer {
+  margin: 0;
+}
+
+.doc-drawer__head {
+  align-items: flex-start;
+  border-block-end: 1px solid var(--line-rhythm);
+  padding-block-end: var(--s-4);
+}
+
+.doc-drawer__words {
+  display: grid;
+  flex: 1 1 auto;
+  gap: var(--s-1);
+  min-inline-size: 0;
+}
+
+.doc-drawer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-3);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.doc-drawer__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  margin: var(--s-1) 0 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.doc-drawer__line:empty {
+  display: none;
+}
+
+.doc-drawer__fact {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  min-inline-size: 0;
+}
+
+.doc-drawer__key {
+  margin-block-start: var(--s-3);
+  visibility: hidden;
+  color: var(--text-2);
+}
+
+.doc-drawer.is-busy .doc-drawer__key {
+  visibility: visible;
+}
+
+.doc-drawer__body {
+  padding-block-start: var(--s-6);
+}
+
+.doc-drawer .doc-piece {
+  gap: var(--s-8);
+  max-inline-size: none;
+}
+
+/* the facts the head already says, and the way back to a register that is right there, are not drawn twice */
+.doc-drawer [data-piece-head],
+.doc-drawer .doc-piece > .doc-aside {
+  display: none;
+}
+
+/* in 420 px the facts stand in one column, the label over its value */
+.doc-drawer .doc-facts__row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---- 9 · Forced colours ------------------------------------------------------------------------
+   The filter's sheet and the preview drawer are the overlay system's (static/css/v5/overlays.css): their motion, their
+   reduced-motion state and their forced-colour edge are drawn there, once. */
+@media (forced-colors: active) {
+  .reg,
+  .doc-collection {
+    border-color: CanvasText;
+  }
+
+  .reg-run {
+    border-inline-end-color: CanvasText;
+  }
+
+  .reg-run__marks {
+    border-block-start-color: CanvasText;
+    color: CanvasText;
+  }
+
+  .reg__caption,
+  .doc-row,
+  .doc-group__head,
+  .doc-collection__cols {
+    border-color: CanvasText;
+  }
+
+  .doc-group--to-act .doc-group__head,
+  [dir="rtl"] .doc-group--to-act .doc-group__head {
+    box-shadow: none;
+    border-inline-start: 3px solid CanvasText;
+  }
+
+  .seg__link[aria-current] {
+    outline: 2px solid Highlight;
+  }
+
+  /* the piece the drawer shows: no surface and no shadow here, so an edge says it */
+  .doc-row[data-drawer-open],
+  .reg__next[data-drawer-open] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  /* a glyph drawn in currentColor keeps the author's colour in forced colours unless it is named here */
+  .doc-due__mark,
+  .reg__next-note .icon,
+  .doc-row__open,
+  .doc-row__note .icon,
+  .doc-note .icon,
+  .ws-case__ref .icon {
+    color: CanvasText;
+  }
+}

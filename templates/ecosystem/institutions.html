@@ -3,40 +3,45 @@
 Espace Institutions — PHASE 3 (Implementation §3.4): the route answers only while gate G3 is open
 (404 otherwise; staff preview with ?preview=1).
 Prescribed texts: p3.institutions.intro (lead), p3.institutions.recipients, p3.institutions.button.
-The recipients sentence is printed verbatim once (visually hidden, read by assistive technologies)
-and presented as a styled list cut on "," only — no word is altered (services.split_enumeration).
+The recipients sentence is printed verbatim, as written, as the body of «Destinataires» (W3-F1's review m4: its
+fragments, cut into rows, read as a list with typos; a register is kept for real lists).
 The form is not re-implemented: the prescribed button links enquiries:institution_proposal.
+
+Design V5.4 (W3-F1): the entrance with the institution door, whose card carries the door's way in — the prescribed
+button and its one sentence, the page's ONE action, in the first screen (W3-F1's review M1); who the space addresses
+(the prescribed sentence) with the live «who can help me» line; where next.
 {% endcomment %}
 {% block space_header %}
-{% locked "p3.institutions.intro" as intro_html %}
-{% include "components/page_header.html" with eyebrow=_("Écosystème") title=_("Espace Institutions") lead=intro_html %}
+{% locked "p3.institutions.intro" as intro_html %}{% translate "Écosystème" as space_label %}{% translate "Espace Institutions" as space_title %}
+{% locked "p3.institutions.button" as button_label %}{% translate "Présentez votre institution et votre proposition : chaque demande est lue par l’équipe du projet." as way_text %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=intro_html audience="institution" photo=photo way_text=way_text way_label=button_label way_url=links.institution_proposal only %}
 {% endblock %}
 
 {% block space_main %}
-{% include "ecosystem/partials/photo.html" %}
-{% include "ecosystem/partials/note.html" %}
-
-<section id="destinataires" class="ecosystem-section" aria-labelledby="destinataires-title" data-block="recipients">
-  <div class="section__header">
-    <h2 id="destinataires-title" class="section__title"{% if recipients.source.lang_attr %} lang="{{ recipients.source.lang_attr }}"{% endif %}>{{ recipients.label }}</h2>
+<section id="destinataires" class="chapter" aria-labelledby="destinataires-title" data-block="recipients">
+  <div class="container chapter__inner">
+    {% include "pages/partials/_chapter_head.html" with title_id="destinataires-title" title=recipients.label title_lang=recipients.source.lang_attr only %}
+    <div class="chapter__body">
+      {% include "ecosystem/partials/note.html" %}
+      {% locked "p3.institutions.recipients" "p" "chapter__statement" %}
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
   </div>
-  {% locked "p3.institutions.recipients" "p" "visually-hidden" %}
-  {% include "ecosystem/partials/enumeration.html" with items=recipients.items lang=recipients.source.lang_attr columns="2" %}
 </section>
 
-<div id="collaboration" class="ecosystem-cta">
-  {% locked "p3.institutions.button" as button_label %}
-  {% include "components/cta_panel.html" with title=_("Proposer une collaboration") text=_("Présentez votre institution et votre proposition : chaque demande est lue par l’équipe du projet.") primary_label=button_label primary_url=links.institution_proposal %}
-</div>
-
 {% if links.forum or links.pilot or links.partners %}
-<section class="ecosystem-section ecosystem-related" aria-labelledby="related-header">
-  {% include "components/section_header.html" with id="related-header" title=_("Pour aller plus loin") %}
-  <ul class="list-reset grid-auto">
-    {% if links.forum %}<li>{% locked "p2.forum.header.subtitle" as forum_subtitle %}{% include "components/card.html" with flat=True url=links.forum title=_("Le Forum Vénétie–Maroc") text=forum_subtitle %}</li>{% endif %}
-    {% if links.pilot %}<li>{% locked "p3.pilot.title" as pilot_title %}{% include "components/card.html" with flat=True url=links.pilot title=pilot_title text=_("Présentation du projet et de la séquence proposée.") %}</li>{% endif %}
-    {% if links.partners %}<li>{% include "components/card.html" with flat=True url=links.partners title=_("Partenaires") text=_("Les organisations qui participent à l’écosystème.") %}</li>{% endif %}
-  </ul>
+<section class="chapter ecosystem-related" aria-labelledby="related-header">
+  <div class="container chapter__inner">
+    {% translate "Pour aller plus loin" as related_title %}
+    {% include "pages/partials/_chapter_head.html" with title_id="related-header" title=related_title only %}
+    <div class="chapter__body">
+      <ul class="registro registro--two">
+        {% if links.forum %}<li class="registro__row">{% locked "p2.forum.header.subtitle" as forum_subtitle %}<h3 class="registro__title"><a href="{{ links.forum }}">{% translate "Le Forum Vénétie–Maroc" %}</a></h3><p class="registro__text">{{ forum_subtitle }}</p></li>{% endif %}
+        {% if links.pilot %}<li class="registro__row">{% locked "p3.pilot.title" as pilot_title %}<h3 class="registro__title"><a href="{{ links.pilot }}">{{ pilot_title }}</a></h3><p class="registro__text">{% translate "Présentation du projet et de la séquence proposée." %}</p></li>{% endif %}
+        {% if links.partners %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.partners }}">{% translate "Partenaires" %}</a></h3><p class="registro__text">{% translate "Les organisations qui participent à l’écosystème." %}</p></li>{% endif %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 {% endblock %}

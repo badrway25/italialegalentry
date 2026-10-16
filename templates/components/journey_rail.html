@@ -1,25 +1,79 @@
 {% load i18n %}{% comment %}
-JourneyRail (design V4, CREATIVE_DIRECTION.md §3.4.3, DESIGN_SYSTEM_V4.md §8.28): the seven locked
-steps of a case file as a horizontal rail from 64rem — node, line, label — vertical below; the
-current step carries the accent ring, its halo and «Vous êtes ici»; the frontier between the
-Moroccan and the Italian sides is marked between the steps whose `side` changes. The line of the
-rail draws itself once (v4/workspace.css); under reduced motion it is simply there.
+«LA SOGLIA» — the journey rail, design V5 (W3-D: V5.4 plan §3.5 item 6, §1.18 D16; JOURNEY_SIGNATURE.md §5.3–§5.5,
+§5.7, §7.1). Rules: apps/portal/static/portal/v5/_journey-rail.css on the vocabulary of v5/_journey-nodes.css — the
+console's ONE rail drawing (the case file's timeline and «Ma situation»'s Stepper are the same drawing). No script:
+the rail is complete without one.
 
-Contract: `steps` = portal.services.journey_for(case) (label, side, is_current, detail, actor) —
-or cases.presenters.journey_with_dates(case), which adds `state` (done · current · upcoming) and
-`reached_at`; optional `label` (aria-label of the list); optional `descriptive` (the case file,
-CD §3.6.2: vertical at every width, each step with the date it was reached when the trail knows
-it — a step not reached has no date).
+ONE list, one DOM: the seven locked steps (portal.services.JOURNEY_STEPS) on a level line between the two shores,
+«Maroc» and «Italie», crossed by two thresholds — A, the competent authorities (`stamp`), B, the Italian territory
+(`ile-arch`), each captioned by the site's jurisdiction label. A threshold is a place: a file in SELECTION stands ON
+threshold A (OJ2) — the list's current item is then the threshold. Which way the list runs is the component's OWN
+width (a container query at 56rem), never the template's:
+  the level line   56rem and more: the nodes on one level, each step's glyph and words under its node at the reading
+                   start, «Vous êtes ici» on the row that is the current item's alone
+  the card         under 56rem (a phone, a narrow column): what is true NOW — the current item's glyph and words, the
+                   step's rank (on a threshold, its caption heads the card instead: where that phase sits), «Vous êtes
+                   ici» — then the list behind the native disclosure «Où j’en suis», closed, as a spine. Where a
+                   browser cannot lay out a closed <details> (no ::details-content), the card and its disclosure stay
+                   at every width: nothing is hidden
+  descriptive      the case file: the spine at every width, every reached step with its date (<time>, tabular figures)
+«Vous êtes ici» belongs to the current item, and only to it: a file whose status has no place on the line (SUSPENDED,
+CLOSED — the header's chip says the state) has no current item and nothing says it. On the case file such a file's
+reached steps are behind it, dated, and the item where it stopped (`stop`) draws no travelled line onward.
+Still at load (plan §1.5; D16: «in V5.4 the rail is drawn still at load, with no relay»): the travelled line, the ring
+and «Vous êtes ici» are painted from the first frame, and nothing moves.
+
+Markers (D16, TS §24 row 8): one a column — the step's phase glyph (core.icons.JOURNEY, through the registry); no
+numeral (the public passage's marker), no check (O14: a step behind the file is a filled ink dot). The holder, when
+the presenter knows it (`actor` — empty until the actors' mapping D9 is signed: A′, OJ1), on a row of its own. A
+threshold that is not the file's place is hidden from assistive technology; its caption is said in the step it opens.
+
+Contract: `steps` = portal.services.journey_for(case) — or cases.presenters.journey_with_dates(case), which adds
+`reached_at` (and the threshold's, when the file stands on it) and, for a file off the line, the steps its trail
+reached (`stop` on the last); `label` the list's accessible name and the disclosure's words; `descriptive` the case
+file.
 {% endcomment %}
-<ol class="journey{% if descriptive %} journey--descriptive{% endif %}"{% if label %} aria-label="{{ label }}"{% endif %}>
-  {% for step in steps %}
-  <li class="journey__step{% if step.is_current %} journey__step--current{% endif %}{% if step.state == 'done' %} journey__step--done{% endif %}{% if step.side == 'italy' %} journey__step--italy{% endif %}{% if step.frontier %} journey__step--frontier{% endif %}"{% if step.is_current %} aria-current="step"{% endif %}>
-    <span class="journey__node" aria-hidden="true"></span>
-    {% ifchanged step.side %}<span class="journey__side">{% if step.side == "italy" %}{% translate "Italie" %}{% else %}{% translate "Maroc" %}{% endif %}</span>{% endifchanged %}
-    <span class="journey__label">{{ step.label }}</span>
-    {% if step.is_current %}<span class="journey__here">{% translate "Vous êtes ici" %}</span>{% endif %}
-    {% if descriptive and step.reached_at %}<span class="journey__when"><time datetime="{{ step.reached_at|date:'c' }}">{{ step.reached_at|date:"d.m.Y" }}</time></span>{% endif %}
-    {% if step.actor %}<span class="journey__actor">{{ step.actor }}</span>{% endif %}
-  </li>
-  {% endfor %}
-</ol>
+<div class="journey-rail{% if descriptive %} journey-rail--descriptive{% endif %}">
+{% if not descriptive %}
+  <div class="journey-now">
+    {% for step in steps %}{% if step.threshold.is_current %}
+    <p class="journey-now__where">{{ step.threshold.caption }}</p>
+    <p class="journey-now__label">{% svg_icon "threshold_"|add:step.threshold.key|concept:"journey" "icon" %}<span>{{ step.threshold.label }}</span></p>
+    <p class="journey-now__here"><span class="journey__here">{% translate "Vous êtes ici" %}</span></p>
+    {% elif step.is_current %}
+    <p class="journey-now__label">{% svg_icon step.status|concept:"journey" "icon" %}<span>{{ step.label }}</span></p>
+    <p class="journey-now__rank">{% blocktranslate with n=forloop.counter total=steps|length %}Étape {{ n }} sur {{ total }}{% endblocktranslate %}</p>
+    <p class="journey-now__here"><span class="journey__here">{% translate "Vous êtes ici" %}</span></p>
+    {% endif %}{% endfor %}
+  </div>
+  <details class="journey-fold">
+    <summary class="journey-fold__summary">{{ label }}</summary>
+{% endif %}
+    <ol class="journey{% if descriptive %} journey--descriptive{% endif %}{% for step in steps %}{% if step.threshold.is_current %} journey--on-{{ step.threshold.key }}{% endif %}{% endfor %}"{% if label %} aria-label="{{ label }}"{% endif %}>
+      <li class="journey__shore journey__shore--start" aria-hidden="true">{% translate "Maroc" %}</li>
+      {% for step in steps %}
+      {% if step.threshold %}
+      <li class="journey__threshold journey__threshold--{{ step.threshold.key }} journey__threshold--{{ step.threshold.state }}{% if step.threshold.stop %} journey__threshold--stop{% endif %}"{% if step.threshold.is_current %} aria-current="step"{% else %} aria-hidden="true"{% endif %}>
+        {% if step.threshold.is_current %}<span class="journey__node" aria-hidden="true"></span>{% endif %}
+        <p class="journey__gate">{% svg_icon "threshold_"|add:step.threshold.key|concept:"journey" "icon" %}<span>{{ step.threshold.caption }}</span></p>
+        {% if step.threshold.is_current %}
+        <p class="journey__label">{{ step.threshold.label }}</p>
+        <p class="journey__now"><span class="journey__here">{% translate "Vous êtes ici" %}</span></p>
+        {% if descriptive and step.threshold.reached_at %}<p class="journey__when"><time datetime="{{ step.threshold.reached_at|date:'c' }}">{{ step.threshold.reached_at|date:"d.m.Y" }}</time></p>{% endif %}
+        {% endif %}
+      </li>
+      {% endif %}
+      <li class="journey__step journey__step--{{ forloop.counter }} journey__step--{{ step.state }}{% if step.stop %} journey__step--stop{% endif %}"{% if step.is_current %} aria-current="step"{% endif %}>
+        <span class="journey__node" aria-hidden="true"></span>
+        <p class="journey__label">{% svg_icon step.status|concept:"journey" "icon" %}<span>{% if step.threshold and not step.threshold.is_current %}<span class="visually-hidden">{{ step.threshold.caption }}. </span>{% endif %}{{ step.label }}</span></p>
+        {% if step.is_current %}<p class="journey__now"><span class="journey__here">{% translate "Vous êtes ici" %}</span></p>{% endif %}
+        {% if descriptive and step.reached_at %}<p class="journey__when"><time datetime="{{ step.reached_at|date:'c' }}">{{ step.reached_at|date:"d.m.Y" }}</time></p>{% endif %}
+        {% if step.actor %}<p class="journey__actor">{{ step.actor }}</p>{% endif %}
+      </li>
+      {% endfor %}
+      <li class="journey__shore journey__shore--end" aria-hidden="true">{% translate "Italie" %}</li>
+    </ol>
+{% if not descriptive %}
+  </details>
+{% endif %}
+</div>

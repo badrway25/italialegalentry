@@ -1,50 +1,50 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
 Espace Personnes — INTERIM page rendered while gate G3 (Phase 3) is closed.
 Only Phase 1 locked texts (p1.persons.replacement_1/2) and neutral UI strings: no p3.* text here.
+
+Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): the entrance with the person door, whose card
+carries the door's way in — the questionnaire, the page's ONE action (W3-F1's review M1); how it works (the two
+moments on «la linea»), what comes next (the sheets, said in words; the address as the live «who can help me» line).
 {% endcomment %}
 {% block page_title %}{% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{% locked "p1.persons.replacement_1" as lead_text %}{% translate "Espace Personnes d’Italy Legal Entry™ :" %} {{ lead_text|striptags }}{% endblock %}
-{% block body_class %}page-pathways page-pathways--interim{% endblock %}
+{% block body_class %}page-pathways page-pathways--interim interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
-<header class="page-header container">
-  <p class="page-header__eyebrow">{% translate "Italy Legal Entry™ pour les personnes" %}</p>
-  <h1 class="page-header__title">{% translate "Espace Personnes" %}</h1>
-  <p class="page-header__lead">{% locked "p1.persons.replacement_1" %}</p>
-</header>
+{% translate "Italy Legal Entry™ pour les personnes" as space_label %}{% translate "Espace Personnes" as space_title %}{% locked "p1.persons.replacement_1" as lead_html %}
+{% translate "Identifiez la voie régulière à explorer" as way_title %}{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." as way_text %}{% translate "Commencer le questionnaire d’orientation" as way_label %}{% translate "Le questionnaire d’orientation sera disponible prochainement." as way_pending %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=lead_html audience="person" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending only %}
 
-<div class="container container--prose stack stack--lg">
-  <section class="section section--flush-top section--tight" aria-labelledby="interim-how-title">
-    <div class="section__header">
-      <h2 id="interim-how-title" class="section__title">{% translate "Comment ça marche" %}</h2>
+<section class="chapter" id="orientation" aria-labelledby="interim-how-title">
+  <div class="container chapter__inner">
+    {% translate "Comment ça marche" as how_title %}
+    {% include "pages/partials/_chapter_head.html" with title_id="interim-how-title" title=how_title only %}
+    <div class="chapter__body">
+      <ol class="linea linea--across" data-steps="2">
+        <li class="linea__step">
+          <span class="linea__num" aria-hidden="true"></span>
+          <h3 class="linea__label">{% translate "Orientation" %}</h3>
+          <p class="linea__text">{% translate "Répondez à quelques questions pour identifier les voies régulières à explorer, avec les étapes et la documentation généralement requises." %}</p>
+        </li>
+        <li class="linea__step">
+          <span class="linea__num" aria-hidden="true"></span>
+          <h3 class="linea__label">{% translate "Accompagnement" %}</h3>
+          <p class="linea__text">{% locked "p1.persons.replacement_2" %}</p>
+        </li>
+      </ol>
     </div>
-    <ol class="timeline" data-steps="2">
-      <li class="timeline__item">
-        <span class="timeline__marker" aria-hidden="true"></span>
-        <div>
-          <h3 class="timeline__label">{% translate "Orientation" %}</h3>
-          <p class="timeline__text">{% translate "Répondez à quelques questions pour identifier les voies régulières à explorer, avec les étapes et la documentation généralement requises." %}</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <span class="timeline__marker" aria-hidden="true"></span>
-        <div>
-          <h3 class="timeline__label">{% translate "Accompagnement" %}</h3>
-          <p class="timeline__text">{% locked "p1.persons.replacement_2" %}</p>
-        </div>
-      </li>
-    </ol>
-  </section>
+  </div>
+</section>
 
-  {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
-
-  <section class="section section--tight section--rule" aria-labelledby="interim-notice-title">
-    <div class="section__header">
-      <h2 id="interim-notice-title" class="section__title">{% translate "Fiches des parcours réguliers" %}</h2>
-      <p class="section__lead">{% translate "Les fiches détaillées des parcours réguliers vers l’Italie seront publiées progressivement dans cet espace. Aucun résultat administratif n’est promis : les décisions relèvent des autorités compétentes." %}</p>
+<section class="chapter" aria-labelledby="interim-notice-title">
+  <div class="container chapter__inner">
+    {% translate "Fiches des parcours réguliers" as sheets_title %}{% translate "Les fiches détaillées des parcours réguliers vers l’Italie seront publiées progressivement dans cet espace. Aucun résultat administratif n’est promis : les décisions relèvent des autorités compétentes." as sheets_lead %}
+    {% include "pages/partials/_chapter_head.html" with title_id="interim-notice-title" title=sheets_title lead=sheets_lead only %}
+    <div class="chapter__body">
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
     </div>
-    <p><a class="link-arrow" href="mailto:{{ site.contact_email }}">{% svg_icon "at-sign" %}{{ site.contact_email }}</a></p>
-  </section>
-</div>
+  </div>
+</section>
 {% endblock %}

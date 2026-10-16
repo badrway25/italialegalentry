@@ -131,11 +131,11 @@ def test_antifraud_footer_link_hidden_before_phase3(client, seeded, before_phase
 
 
 def test_reserved_area_link_follows_flag(client, seeded, set_flag):
-    # «la targa» (design V5, plan §1.11; W2-C1): the entrance sits in the letterhead's end zone and, below 48rem, in
-    # the drawer; when the flag is off no plate is drawn at all
+    # «la targa» (design V5, plan §1.11; W2-C1, W2-C2): the entrance sits in the letterhead's end zone and, below
+    # 48rem, in the sheet's foot on night; when the flag is off no plate is drawn at all
     _r, html = _get(client, "/fr/")
     assert 'class="targa" href="/fr/compte/login/"' in html
-    assert 'class="targa targa--drawer drawer-utility__reserved" href="/fr/compte/login/"' in html
+    assert 'class="targa targa--night" href="/fr/compte/login/"' in html
     set_flag("reserved_area_public_link", False)
     _r, html = _get(client, "/fr/")
     assert 'class="targa' not in html

@@ -3,7 +3,10 @@
    One entry for every page of «la lettura» — the FAQ, the glossary, the news, «Vivre en Italie», the partners, the
    Forum Virtuel, the enquiry forms, the legal pages and the newsletter consents — so a reader going from one to the
    next downloads it once. Loaded in extra_head after main.css (static/css/dist/cms/lettura.css, built by
-   scripts/build_css.mjs); its rules are the partial's (static/css/v5/_lettura.css). The import is written as it
-   resolves in the collected tree: cms/lettura.css → css/v5/_lettura.css (DS 2026 §2).
+   scripts/build_css.mjs); its rules are the shared page of the public interior's (static/css/v5/_pagina.css: the
+   trail, the head, the chapters, the register, D26's shared slots — drawn once for these pages and W3-F1's), then the
+   partial's (static/css/v5/_lettura.css). The imports are written as they resolve in the collected tree:
+   cms/lettura.css → css/v5/_pagina.css, css/v5/_lettura.css (DS 2026 §2).
    ============================================================================================ */
+@import url("../css/v5/_pagina.css");
 @import url("../css/v5/_lettura.css");

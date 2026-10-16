@@ -8,33 +8,51 @@ CONTENT_PENDING_LEGAL_REVIEW — links to official authorities and reporting cha
 authorised yet, so none is published. The official links must be supplied in writing
 (which authority, which URL, in which languages) before an « official resources » list is added
 under the callout. Do not add embassy, police, ministry or portal links on the team's initiative.
+
+Design V5.4 (W3-F1): the entrance (the prescribed title as the h1, nothing above it); the prescribed text as the
+page's ONE inset — a warning notice of the core components (v5/notice.css), never colour alone: the anti-fraud
+entry's mark (`shield-alert`, once), its title «Votre protection» in the register's word, the warning's BROKEN rule;
+no red, no alarm — then where to report (the live address) and where to read about the regular ways (a register,
+no glyph).
 {% endcomment %}
 {% block page_title %}{{ title }}{% endblock %}
 {% block page_header %}
-<header class="page-header container">
-  <p class="page-header__eyebrow">{% translate "Votre protection" %}</p>
-  <h1 class="page-header__title"{% if title.lang %} lang="{{ title.lang }}"{% endif %}>{{ title }}</h1>
-</header>
+{% include "pages/partials/_ingresso.html" with title=title title_lang=title.lang only %}
 {% endblock %}
 {% block page_body %}
-<div class="antifraud-panel antifraud-panel--page" data-callout="antifraud">
-  <div class="antifraud-panel__mark" aria-hidden="true">{% svg_icon "shield-alert" "icon icon--xl" %}</div>
-  <div class="antifraud-panel__content">
-    <p class="antifraud-panel__body"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body }}</p>
+<section class="chapter chapter--inset" aria-labelledby="antifraud-inset-title">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      <div class="antifraud-panel antifraud-panel--page notice notice--warning" data-callout="antifraud">
+        {% svg_icon "shield-alert" "icon notice__icon antifraud-panel__mark" %}
+        <h2 class="notice__title antifraud-panel__title" id="antifraud-inset-title">{% translate "Votre protection" %}</h2>
+        <div class="notice__body antifraud-panel__content">
+          <p class="antifraud-panel__body"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body }}</p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
-<section class="page-section" aria-labelledby="antifraud-report-title">
-  <h2 class="page-section__title" id="antifraud-report-title">{% translate "Signaler une offre suspecte" %}</h2>
-  <p class="page-section__text">{% translate "Si une offre vous paraît suspecte, vous pouvez la signaler à l’adresse suivante :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
 </section>
 
-<section class="page-section" aria-labelledby="antifraud-more-title">
-  <h2 class="page-section__title" id="antifraud-more-title">{% translate "S’informer sur les voies régulières" %}</h2>
-  <ul class="page-links">
-    {% if links.faq %}<li class="page-links__item"><a class="page-links__link" href="{{ links.faq }}">{% svg_icon "circle-help" "icon page-links__icon" %}<span>{% translate "Questions fréquentes" %}{% if faq_question %} — <span{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %} data-faq="{{ faq_question.key }}">{{ faq_question.question }}</span>{% endif %}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>{% endif %}
-    {% if links.pathways %}<li class="page-links__item"><a class="page-links__link" href="{{ links.pathways }}">{% svg_icon "signpost" "icon page-links__icon" %}<span>{% translate "Espace Personnes : les parcours réguliers" %}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>{% endif %}
-    {% if links.glossary %}<li class="page-links__item"><a class="page-links__link" href="{{ links.glossary }}">{% svg_icon "book-a" "icon page-links__icon" %}<span>{% translate "Glossaire des termes officiels" %}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>{% endif %}
-  </ul>
+<section class="chapter" aria-labelledby="antifraud-report-title">
+  <div class="container chapter__inner">
+    {% translate "Signaler une offre suspecte" as report_title %}{% include "pages/partials/_chapter_head.html" with title_id="antifraud-report-title" title=report_title only %}
+    <div class="chapter__body">
+      <p class="page-section__text chapter__prose">{% translate "Si une offre vous paraît suspecte, vous pouvez la signaler à l’adresse suivante :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" aria-labelledby="antifraud-more-title">
+  <div class="container chapter__inner">
+    {% translate "S’informer sur les voies régulières" as more_title %}{% include "pages/partials/_chapter_head.html" with title_id="antifraud-more-title" title=more_title only %}
+    <div class="chapter__body">
+      <ul class="registro page-links">
+        {% if links.faq %}<li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ links.faq }}">{% translate "Questions fréquentes" %}</a></p>{% if faq_question %}<p class="registro__text"{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %} data-faq="{{ faq_question.key }}">{{ faq_question.question }}</p>{% endif %}</li>{% endif %}
+        {% if links.pathways %}<li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ links.pathways }}">{% translate "Espace Personnes : les parcours réguliers" %}</a></p></li>{% endif %}
+        {% if links.glossary %}<li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ links.glossary }}">{% translate "Glossaire des termes officiels" %}</a></p></li>{% endif %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endblock %}

@@ -1,6 +1,6 @@
 {
   "schema": "ile-live-status-v54/1",
-  "updated": "2026-10-12",
+  "updated": "2026-10-16",
   "families": [
     {
       "key": "w1-p",
@@ -97,6 +97,38 @@
       "decision": "w3-f2/REVIEW.md",
       "tag": "v54/w3-f2",
       "date": "2026-10-12"
+    },
+    {
+      "key": "w2-c2",
+      "title": "La barra di navigazione, seconda parte — il foglio del telefono e del tablet sul sistema degli overlay (la testa sulla riga della testata, le porte che si aprono sul posto con la glossa e le voci, il piede notturno con «la targa» o il conto, specchiato in arabo) e il popover del conto della targa; la testata su una riga da 1024 px",
+      "state": "v5",
+      "decision": "w2-c2/REVIEW.md",
+      "tag": "v54/w2-c2",
+      "date": "2026-10-12"
+    },
+    {
+      "key": "w3-f1",
+      "title": "Le porte, le pagine del progetto e l’orientamento — l’interno pubblico in V5: una sola grammatica (l’ingresso al bordo di lettura, i capitoli col dispositivo della home, i registri sui filetti, «la linea» per le vere sequenze, la pietra per l’unica azione) disegnata una volta con le pagine di W3-F2, «la porta» che porta la via d’ingresso della porta, il questionario che dice il suo punto a parole, nessuna colonna laterale; francese e arabo, 1440–320",
+      "state": "v5",
+      "decision": "w3-f1/REVIEW.md",
+      "tag": "v54/w3-f1",
+      "date": "2026-10-12"
+    },
+    {
+      "key": "w3-c",
+      "title": "Lo spazio dei documenti e lo stato — «Mes pièces»: «il registro» (l’unica striscia rialzata con l’unico primario, di chi è la mossa in tre gruppi, i segni che sono le pièces stesse), una pièce per riga con la riga come link, lo stato sempre in parola e segno («Valide» in inchiostro, «En examen» in lapis); il cassetto d’anteprima accanto alla lista e il filtro sullo sheet del sistema; il Dépôt che compone ogni risposta sul posto; la pagina della pièce, il deposito libero e la porta delle Condizioni; F13 sui registri delle scadenze («En retard» in azione, mai nel rosso di un rifiuto; un solo orologio)",
+      "state": "v5",
+      "decision": "w3-c/REVIEW.md",
+      "tag": "v54/w3-c",
+      "date": "2026-10-12"
+    },
+    {
+      "key": "w3-d",
+      "title": "Il viaggio «La soglia» — un solo disegno del passaggio pubblico e un solo disegno del binario della console, mai un terzo: sul cruscotto la linea in piano fra «Maroc» e «Italie», attraversata dalle due soglie (il timbro e l’arco, con le loro didascalie di giurisdizione; una pratica in SELECTION sta sulla soglia A), sul telefono la carta con la sua divulgazione; la spina datata del fascicolo e la sua cronologia (la più recente in cima, accesa); lo Stepper di «Ma situation» sugli stessi nodi; «Mon parcours» che disegna il viaggio in testa; una pratica sospesa o chiusa senza «Vous êtes ici»; «la linea» delle porte, delle schede, del questionario e della home in un solo foglio; tutto fermo al caricamento, specchiato in arabo",
+      "state": "v5",
+      "decision": "w3-d/REVIEW.md",
+      "tag": "v54/w3-d",
+      "date": "2026-10-15"
     }
   ],
   "surfaces": {
@@ -227,6 +259,102 @@
     "error-403": {
       "state": "v5",
       "tag": "v54/w3-f2"
+    },
+    "navbar-open": {
+      "state": "v5",
+      "tag": "v54/w2-c2"
+    },
+    "door-persons": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "door-companies": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "door-institutions": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "door-universities": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "door-forum": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "project": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "project-pilot": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "project-agami": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "project-network": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "antifraud": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "orientation-start": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "orientation-resume": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "orientation-step": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "pathway-detail": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "diplomas": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "training": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "forum-register": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "contact": {
+      "state": "v5",
+      "tag": "v54/w3-f1"
+    },
+    "documents-portal": {
+      "state": "v5",
+      "tag": "v54/w3-c"
+    },
+    "documents": {
+      "state": "v5",
+      "tag": "v54/w3-c"
+    },
+    "document-requirement": {
+      "state": "v5",
+      "tag": "v54/w3-c"
+    },
+    "document-upload": {
+      "state": "v5",
+      "tag": "v54/w3-c"
+    },
+    "document-upload-terms-required": {
+      "state": "v5",
+      "tag": "v54/w3-c"
     }
   }
 }

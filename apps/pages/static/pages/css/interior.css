@@ -1,0 +1,10 @@
+/* ============================================================================================
+   The institutional pages (project, promoter, network, contact, anti-fraud): the page sheet.
+   Design V5.4, W3-F1 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 1): a plain list of imports, written as they
+   resolve in the collected static tree (DS 2026 §2) — the page of the public interior (shared with the content pages),
+   W3-F1's own parts of it, then these pages' own rules.
+   They left pages.css, which is the home's alone now. A later family adds its partial on a line of its own.
+   ============================================================================================ */
+@import url("../../css/v5/_pagina.css");
+@import url("../../css/v5/_interior.css");
+@import url("_institutional.css");

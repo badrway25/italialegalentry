@@ -1,0 +1,186 @@
+/* ============================================================================================
+   THE DOOR CARD «la porta» AND THE DOOR'S WAY IN «la via» — design V5.4, W3-F1 (the fix pass of the senior review's
+   M1; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 1, §1.18 D26, §1.16; CREATIVE_DIRECTION_V5 §10).
+
+   A page partial (plan §2.3): never in main.css; imported, after css/v5/_interior.css, by the two sheets of the door
+   pages alone — pathways/pathways.css (the Espace Personnes) and ecosystem/ecosystem.css (Entreprises, Institutions,
+   Universités et Formation) — so that the pages that draw no door (the Forum, the project's pages, the questionnaire)
+   do not load it (V5.8: a surface's own CSS loads only where it is drawn). Markup: templates/pages/partials/
+   _ingresso.html (the end seat) and _via.html (the way in).
+
+   The portico's door card (v5/chrome.css §5) — the night plate, the audience glyph once on its 36 px night disc, the
+   door's accent as a 3 px rule along its foot — carrying what the door offers first instead of a picture: every
+   audience frame in the repository is already that audience's panel or hero frame (§1.16), and the drawn stair that
+   stood in the seat read as a photograph that failed to load. A curated, captioned photograph takes the seat the day
+   it exists (D26); the way in then stands under the lead, on the paper (.ingresso__way).
+   Corners: 6 (the plate, folded into the chrome's 6), 4 (the button), full (the disc). Tokens only; logical
+   properties only; nothing moves.
+   ============================================================================================ */
+
+/* the door card «la porta», carrying the door's way in (W3-F1's review M1): the portico's door card (v5/chrome.css §5)
+   — the night plate, the audience glyph once on its 36 px night disc, the door's accent as a 3 px rule along the foot
+   — with the door's first task on it where the panel shows a photograph: the way's title or its sentence beside the
+   disc, then its one control (pages/partials/_via.html). On the night the controls take their night faces
+   (.on-inverse, v5/buttons.css §5). Below 64rem it stands under the lead, at the lead's measure. */
+.porta {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-4) var(--s-3);
+  max-inline-size: var(--measure-lead);
+  padding: var(--s-4) var(--s-4) calc(var(--s-4) + 3px);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+.ingresso[data-audience="person"] { --porta-tint: var(--aud-persona); }
+.ingresso[data-audience="company"] { --porta-tint: var(--aud-impresa); }
+.ingresso[data-audience="institution"] { --porta-tint: var(--aud-istituzione); }
+.ingresso[data-audience="university"] { --porta-tint: var(--aud-universita); }
+
+/* the door's accent as a 3 px rule along the plate's foot (the portico's field::after) */
+.porta::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 3px;
+  background: var(--porta-tint, var(--accent-night));
+}
+
+/* the disc and the way's first words on one line; what follows takes the plate's measure */
+.porta > * {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.porta > .porta__disc {
+  grid-column: 1;
+}
+
+.porta > .porta__disc + * {
+  grid-column: 2;
+}
+
+.porta > .via__action {
+  margin-block-start: var(--s-2);
+}
+
+/* the audience glyph once, ≥ 20 px on a 36 px night disc (BI04: a solid disc, no glass) */
+.porta__disc {
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: var(--radius-full);
+  background: var(--surface-night-sheet);
+  color: var(--text-on-night-1);
+  box-shadow: 0 0 0 1px var(--line-night-soft);
+}
+
+.porta__disc .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+/* the way in «la via»: its title at the entry's size, its one sentence, its one control */
+.via__title {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.via__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.via__action {
+  margin: 0;
+}
+
+.porta .via__title {
+  color: var(--text-on-night-1);
+}
+
+.porta .via__text {
+  color: var(--text-on-night-2);
+}
+
+/* on the plate the control takes the plate's measure: its words wrap rather than overflow, its arrow at the end */
+.porta .via__action .btn {
+  inline-size: 100%;
+  justify-content: space-between;
+  text-align: start;
+}
+
+/* under the lead, where a curated photograph holds the end seat: the same way, on the paper */
+.ingresso__way {
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: var(--measure-lead);
+  margin-block-start: var(--s-6);
+}
+
+/* a phone is recomposed (SP-7): the plate's parts 12 px apart, 24 px under the lead — the door's control inside the
+   first screen at 390 × 844 */
+@media (max-width: 47.999rem) {
+  .ingresso__inner:has(> .porta) {
+    row-gap: var(--s-6);
+  }
+
+  .porta {
+    row-gap: var(--s-3);
+  }
+
+  .porta > .via__action {
+    margin-block-start: var(--s-1);
+  }
+}
+
+@media (min-width: 48rem) {
+  .porta {
+    padding: var(--s-6) var(--s-6) calc(var(--s-6) + 3px);
+  }
+}
+
+@media (min-width: 64rem) {
+  .porta {
+    max-inline-size: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .porta,
+  .porta__disc {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .porta :is(.via__title, .via__text) {
+    color: CanvasText;
+  }
+
+  .porta::after {
+    background: CanvasText;
+  }
+}
+
+@media print {
+  .porta {
+    display: none;
+  }
+}

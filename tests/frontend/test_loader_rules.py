@@ -314,6 +314,12 @@ def test_no_wait_is_for_ever():
     hook = _read(SHELL_JS).split('document.addEventListener("submit"', 1)[1].split('window.addEventListener("pageshow"', 1)[0]
     assert "if (at === returns) loader.submitted(form, control, event);" in hook, "a submit from before a return is over"
     assert "if (control) restFace(control);" in hook.split(".catch(", 1)[1], "no state machine, no wait"
+    # …and no refusal: main.js's guard on a data-single-submit form is lifted with the face (the integration fix (d):
+    # the account's profile form is guarded since W3-F2, and without loader.js it refused for ever)
+    caught = hook.split(".catch(", 1)[1]
+    assert 'form.removeAttribute("data-submitted");' in caught and 'removeAttribute("aria-disabled")' in caught, (
+        "no state machine, no refusal"
+    )
     guard = _read(MAIN_JS).split("function initMisc()", 1)[1].split('window.addEventListener("pageshow"', 1)[1].split("});\n  });", 1)[0]
     assert "if (!event.persisted) return;" in guard and 'form.removeAttribute("data-submitted");' in guard
 

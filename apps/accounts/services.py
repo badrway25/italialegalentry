@@ -4,7 +4,8 @@ Account services — every rule about a person's own account lives here (views s
 * profile update (data minimisation: only the fields the reserved area needs)
 * data export (GDPR art. 15/20) — JSON of the person's OWN data, sections pluggable by other apps
 * deletion request → immediate anonymisation (GDPR art. 17) — keeps the audit trail pseudonymised
-* MFA policy helpers used by the back-office middleware / decorator
+* MFA policy helpers used by the back-office middleware / decorator / admin site — enrolment, and whether
+  THIS session presented the second factor (F-5)
 
 All functions operate on the user object passed in; callers pass ``request.user`` only.
 """
@@ -331,6 +332,153 @@ def needs_backoffice_mfa(user) -> bool:
     if not reads_other_peoples_data(user):
         return False
     return not has_active_totp(user)
+
+
+#: The authenticator types allauth's sign-in asks for in its MFA stage (``allauth.mfa.stages.AuthenticateStage``).
+#: Recovery codes are not among them: they stand in for a lost device and are never enrolled alone.
+SIGN_IN_FACTOR_TYPES = ("totp", "webauthn")
+
+#: The devices THIS session enrolled through allauth's activation (``remember_enrolment``).
+ENROLLED_IN_SESSION_KEY = "ile.second_factor_enrolled"
+
+
+def remember_enrolment(sender, request, user, authenticator, **kwargs) -> None:
+    """
+    ``allauth.mfa.signals.authenticator_added`` receiver: a device this session has just enrolled counts as presented.
+
+    allauth's activation asks for a code of the new device and accepts the device only if the code is right, but it
+    writes no ``mfa`` step in its log. Without this, an account that has just enrolled — the enrolment the policy
+    itself demanded — would be stopped on the very next page allauth shows it, its recovery codes, and asked for a
+    second code to prove what it has just proved. It changes nothing for a device that existed before the session:
+    allauth adds a TOTP device only to an account that holds none, and the pages that add one are behind the Present
+    rule for an account that already holds a factor. Only allauth's own flows send the signal (an authenticator
+    saved any other way — the admin, a script — sends nothing and proves nothing), and only for the session's own
+    account is anything remembered; the record dies with the session, like allauth's.
+    """
+    session = getattr(request, "session", None)
+    if session is None or authenticator.type not in SIGN_IN_FACTOR_TYPES:
+        return
+    if getattr(getattr(request, "user", None), "pk", None) != authenticator.user_id:
+        return
+    enrolled = [pk for pk in session.get(ENROLLED_IN_SESSION_KEY, []) if type(pk) is int]
+    session[ENROLLED_IN_SESSION_KEY] = [*enrolled, authenticator.pk]
+
+
+def _presented_authenticator_ids(request) -> set[int]:
+    """
+    The authenticators THIS session presented: allauth's MFA step, at sign-in or at re-authentication, or the
+    activation of a device the session enrolled (``remember_enrolment``).
+
+    allauth logs every authentication step of the current session — ``record_authentication``, read through
+    the public ``allauth.account.authentication.get_authentication_records`` — and appends
+    ``{"method": "mfa", "id": <authenticator pk>, "type": …}`` when it accepts a code: at sign-in (the MFA
+    stage, before it signs the account in) and at ``mfa_reauthenticate``. The log is session data, so it lives
+    server-side: Django keeps it across the key rotation of a sign-in (which is how allauth's own steps reach the
+    signed-in session) and flushes it with the session when the session changes hands (``logout``, or ``login``
+    as another account). A password step — at sign-in or at allauth's password re-authentication — is never
+    an ``mfa`` record.
+    """
+    from allauth.account.authentication import get_authentication_records
+
+    session = getattr(request, "session", None)
+    if session is None:
+        return set()
+    presented = {
+        record["id"]
+        for record in get_authentication_records(request)
+        if isinstance(record, dict) and record.get("method") == "mfa" and type(record.get("id")) is int
+    }
+    return presented | {pk for pk in session.get(ENROLLED_IN_SESSION_KEY, []) if type(pk) is int}
+
+
+def _authenticators_of(user) -> dict[int, str]:
+    """The account's authenticators as ``{pk: type}`` (TOTP, recovery codes, WebAuthn), in one query."""
+    from allauth.mfa.models import Authenticator
+
+    return dict(Authenticator.objects.filter(user_id=user.pk).values_list("pk", "type"))
+
+
+def session_presented_second_factor(request, user, *, owned: dict[int, str] | None = None) -> bool:
+    """
+    Whether THIS session presented one of ``user``'s OWN authenticators to allauth (F-5) — the binding the policy
+    applies (``needs_second_factor_in_session``).
+
+    A record must name an authenticator of this account. A session can carry steps that belong to no one
+    signed in — a sign-in begun under another account and abandoned — and a code from somebody else's device
+    proves nothing about this one. A record whose authenticator was deleted since proves nothing either.
+    ``owned``: the account's authenticators (``_authenticators_of``), when the caller has already read them.
+    """
+    if not getattr(user, "is_authenticated", False):
+        return False
+    presented = _presented_authenticator_ids(request)
+    if not presented:
+        return False
+    if owned is None:
+        owned = _authenticators_of(user)
+    return bool(presented & owned.keys())
+
+
+def needs_second_factor_in_session(request, user) -> bool:
+    """
+    True when ``user`` is held to the policy, HOLDS a second factor, and THIS session never presented it (F-5).
+
+    Enrolment proves that a device exists, not that the person at the keyboard has it: asking only whether a
+    device was enrolled is what let Django's own admin sign-in form, which has no MFA stage, open the back
+    office on a password alone.
+
+    Independent of ``BACKOFFICE_MFA_ENFORCED``. The setting decides whether enrolment is MANDATORY; an account
+    that has enrolled is asked for its code by allauth at every sign-in whatever the setting says. A signed-in
+    session of such an account that never presented the code was therefore opened by some other door —
+    the admin form, ``Client.force_login``, any shortcut written later — and must present it before it reads
+    another person's file.
+    """
+    if not getattr(user, "is_authenticated", False):
+        return False
+    if not reads_other_peoples_data(user):
+        return False
+    owned = _authenticators_of(user)
+    if not any(kind in SIGN_IN_FACTOR_TYPES for kind in owned.values()):
+        return False
+    return not session_presented_second_factor(request, user, owned=owned)
+
+
+#: What the policy asks of a session before a guarded page (``second_factor_due``).
+ENROL = "enrol"
+PRESENT = "present"
+
+#: Where ``second_factor_due`` keeps its answer for the rest of the request.
+_DUE_ON_REQUEST = "_ile_second_factor_due"
+
+
+def second_factor_due(request, user) -> str | None:
+    """
+    What the second-factor policy asks of this session before it opens a guarded page.
+
+    ``ENROL`` — the account must activate a TOTP device first (``needs_backoffice_mfa``, when enforced);
+    ``PRESENT`` — the account holds a second factor this session never presented
+    (``needs_second_factor_in_session``); ``None`` — nothing, the page may open.
+
+    Answered once per request (the sec-f5 review, finding 3): one admin page asked it four times — the middleware,
+    ``admin_view``, ``each_context``, the index — and read the account's authenticators twice each time. The answer
+    is kept on the request together with what it was computed from that the request itself can change — the account,
+    the setting and the steps this session presented — so a factor presented while the request runs counts at once.
+    What the account holds, and its roles, are read once per request.
+    """
+    if not getattr(user, "is_authenticated", False):
+        return None
+    key = (user.pk, backoffice_mfa_enforced(), frozenset(_presented_authenticator_ids(request)))
+    kept = getattr(request, _DUE_ON_REQUEST, None)
+    if kept is not None and kept[0] == key:
+        return kept[1]
+    if needs_backoffice_mfa(user):
+        due = ENROL
+    elif needs_second_factor_in_session(request, user):
+        due = PRESENT
+    else:
+        due = None
+    if request is not None:
+        setattr(request, _DUE_ON_REQUEST, (key, due))
+    return due
 
 
 # ---------------------------------------------------------------------------------------------

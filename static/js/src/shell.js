@@ -2,9 +2,13 @@
  * Shell behaviour shared by every public page — the one public entry (docs/design-v5/V5_4_EXECUTION_PLAN.md
  * §2.3): it imports the navigation and adds the few behaviours every page shares.
  *
- *   nav.js                 «Il portico» (W2-C1): the letterhead's scrolled state, the bar and its door panels,
- *                          «l'architrave», the keyboard model, the drawer below 80rem. It replaces this file's
- *                          V4 header observer and sliding indicator, and main.js's initNavigation.
+ *   overlay.js             the overlay system (W2-A; plan §1.14), imported here for every public page (W2-C2, plan
+ *                          §2.3): it wires its hooks when it loads — the sheet below 80rem, the signed-in targa's
+ *                          account popover, the tooltip of the key alone; the console's console.js imports the same
+ *                          module, one chunk for both
+ *   nav.js                 «Il portico» (W2-C1, W2-C2): the letterhead's scrolled state, the bar and its door panels,
+ *                          «l'architrave», the keyboard model, the sheet's one rule of its own. It replaces this
+ *                          file's V4 header observer and sliding indicator, and main.js's initNavigation.
  *   [data-password-toggle] fields that show and hide themselves (design V4 §3.3; the glyph control, the kept
  *                          caret and no spelling on a shown password: design V5 «Il varco», W2-B)
  *   form (submit)          a submitted form's button waits — L2 of the loader «Lume» (W1-D): `aria-busy`, and the
@@ -14,6 +18,7 @@
  *                          12px below, siblings staggered 40ms; reduced motion shows them complete, immediately
  *                          (W4-B's to retire with initReveal)
  */
+import "./overlay.js";
 import { initNavigation } from "./nav.js";
 import { animate, inView, stagger, withMotion } from "./motion.js";
 
@@ -70,7 +75,11 @@ document.querySelectorAll("[data-password-toggle]").forEach((button) => {
         control says `aria-busy` and keeps its own face: no class, so neither the key nor V4's busy slab;
       · a page that comes back from the back/forward cache comes back as it was left: every control this
         hook marked is at rest again, whether or not loader.js had arrived (`faced`, `pageshow`);
-      · if loader.js cannot be loaded there is no state machine, so nothing waits. */
+      · if loader.js cannot be loaded there is no state machine, so nothing waits — and nothing refuses: main.js's
+        double-submit guard on a `data-single-submit` form (the mark, the `aria-disabled` of its submit buttons) is
+        lifted with the face, at once — the lease that would have lifted it later is loader.js's, and it is not
+        there: a refusal that nothing would end is never left announced (WCAG 4.1.3; the account's profile form is
+        guarded since W3-F2). */
 const faced = new Set(); // the controls this hook has marked since the page was shown
 let returns = 0; // the returns from the cache so far: a submit from before one is over
 /** The `.btn` variants with no inline padding (v5/buttons.css: `--btn-pad: 0`): their box is their text or their
@@ -111,6 +120,9 @@ document.addEventListener("submit", (event) => {
     })
     .catch(() => {
       if (control) restFace(control);
+      if (!form.hasAttribute("data-single-submit")) return;
+      form.removeAttribute("data-submitted");
+      form.querySelectorAll('button[type="submit"]').forEach((button) => button.removeAttribute("aria-disabled"));
     });
 });
 

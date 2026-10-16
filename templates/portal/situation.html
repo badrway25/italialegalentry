@@ -25,6 +25,9 @@ The Stepper's filled nodes are the same count, question by question — the prof
 {% endcomment %}
 {% block page_title %}{% translate "Ma situation" %}{% endblock %}
 {% block meta_description %}{% translate "Les informations que vous nous communiquez sur votre situation, et ce qu’elles servent à déterminer." %}{% endblock %}
+{% comment %}The page's one page-only sheet (the owner's V5.8: never in the shared bundles), after the shell's two: the
+guided form (W3-F1's v5/_wizard.css — the w3-d merge took it out of console.css) and its Stepper (W3-D).{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/situation.css' %}">{% endblock %}
 
 {% block case_header %}{% endblock %}
 {% block next_action_block %}{% endblock %}

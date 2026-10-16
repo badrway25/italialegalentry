@@ -1,19 +1,33 @@
 {% load i18n forum_tags %}
-{% comment %}Programme items are editable from the back-office (seeded from p2.forum.programme.items).{% endcomment %}
-<section class="forum-section forum-section--programme container" id="forum-programme" aria-labelledby="forum-programme-title">
-  <h2 class="forum-section__title" id="forum-programme-title">{% event_text event "programme.title" %}</h2>
-  {% if programme %}
-    <ol class="forum-programme" lang="fr">
-      {% for item in programme %}
-        <li class="forum-programme__item">
-          <span class="forum-programme__time">{% if item.time_label %}{{ item.time_label }}{% endif %}</span>
-          <span class="forum-programme__text">
-            <span class="forum-programme__title">{{ item.title_fr }}</span>
-            {% if item.description_fr %}<span class="forum-programme__desc">{{ item.description_fr|linebreaksbr }}</span>{% endif %}
-          </span>
-        </li>
-      {% endfor %}
-    </ol>
-  {% endif %}
-  {% event_text event "programme.note" "p" "forum-programme__note" %}
+{% comment %}
+Programme items are editable from the back-office (seeded from p2.forum.programme.items).
+Design V5.4 (W3-F1; DESIGN_SYSTEM_V5 PX15 «It is a document»): a timetable on hairlines — the title over its
+description. A time column only when every row has a time (CREATIVE_DIRECTION_V5 §20); otherwise each row is
+numbered 01, 02 … at the reading edge and a row's time stays in its own words, «15h00 — Accueil et enregistrement»,
+as the programme writes it (the item's own wording, ForumProgramItem.__str__) — W3-F1's review m1: «15h00» in the
+numeral column over 02 … 08 read as a list starting at 02. The note under it.
+{% endcomment %}
+<section class="chapter chapter--area forum-section forum-section--programme" id="forum-programme" aria-labelledby="forum-programme-title">
+  <div class="container chapter__inner">
+    {% event_text event "programme.title" as programme_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-programme-title" title=programme_title only %}
+    <div class="chapter__body">
+      {% if programme %}
+        {# sorted by time, an untimed row comes first: when even that row has a time, every row has one #}
+        {% with earliest=programme|dictsort:"time_label"|first %}
+        <ol class="forum-programme{% if earliest.time_label %} forum-programme--timed{% endif %}" lang="fr">
+          {% for item in programme %}
+            <li class="forum-programme__item">
+              {% if earliest.time_label %}<span class="forum-programme__time">{{ item.time_label }}</span>{% else %}<span class="forum-programme__num" aria-hidden="true"></span>{% endif %}
+              <span class="forum-programme__text">
+                <span class="forum-programme__title">{% if earliest.time_label %}{{ item.title_fr }}{% else %}{{ item }}{% endif %}</span>
+                {% if item.description_fr %}<span class="forum-programme__desc">{{ item.description_fr|linebreaksbr }}</span>{% endif %}
+              </span>
+            </li>
+          {% endfor %}
+        </ol>
+        {% endwith %}
+      {% endif %}
+      {% event_text event "programme.note" "p" "chapter__fine forum-programme__note" %}
+    </div>
+  </div>
 </section>

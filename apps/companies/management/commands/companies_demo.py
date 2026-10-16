@@ -10,6 +10,12 @@ repeat (previous-platform audit, part 2 §3, private register).
 
 It is a command rather than a seed on purpose: ``seed_all`` runs on every deployment, and a
 deployment must not invent an entreprise. It is idempotent — running it twice changes nothing.
+
+It refuses to run wherever ``demonstration_data_allowed()`` is false, which is every environment
+holding real people — the production settings pin the switch off. Until 12 October 2026 it had no
+such guard: run under ``config.settings.prod`` it created the company and its needs and, through
+``--verified`` (on by default), marked the account's verification APPROVED, while the deployment
+runbook said it refused (DevOps verification, finding 1).
 """
 
 from __future__ import annotations
@@ -45,6 +51,7 @@ from companies.models import (
     SkillLevel,
     Territory,
 )
+from core.seeds import demonstration_data_allowed
 
 DEMO_ORGANISATION = "Demo — Cantiere Adriatico S.r.l. (entreprise fictive)"
 DEMO_REGISTRATION = "RM-000000-DEMO"
@@ -153,6 +160,13 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options) -> None:
+        if not demonstration_data_allowed():
+            raise CommandError(
+                "This environment does not allow demonstration data (ILE_SEED_DEMONSTRATION_DATA).\n"
+                "The command invents a company and its needs and approves the account's verification: where "
+                "real people are, that is a false record. A real company is declared and verified through the "
+                "platform, by a person who answers for it."
+            )
         User = get_user_model()
         email = options["account"].strip().lower()
         user = User.objects.filter(email=email).first()

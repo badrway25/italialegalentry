@@ -1,8 +1,15 @@
-"""Back-office MFA policy: staff/superusers without TOTP are redirected to the activation page."""
+"""
+Back-office MFA policy: staff/superusers without TOTP are redirected to the activation page; those WITH one
+must have presented it in this session, or they are sent to allauth's MFA re-authentication (F-5 — the whole
+set of F-5 tests is ``test_backoffice_second_factor.py``).
+"""
 
 from __future__ import annotations
 
+from urllib.parse import urlsplit
+
 import pytest
+from allauth.account.internal.flows.login import AUTHENTICATION_METHODS_SESSION_KEY
 from allauth.mfa.models import Authenticator
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
@@ -27,18 +34,26 @@ MIDDLEWARE_WITH_MFA.insert(
     MFA_MIDDLEWARE,
 )
 TOTP_ACTIVATE = "/fr/compte/2fa/totp/activate/"
+MFA_REAUTHENTICATE = "/fr/compte/2fa/reauthenticate/"
 
 
 def _totp(user):
     return Authenticator.objects.create(user=user, type=Authenticator.Type.TOTP, data={"secret": "test"})
 
 
-def _request(path, user):
+def _request(path, user, presented=None):
     request = RequestFactory().get(path)
     SessionMiddleware(lambda r: HttpResponse()).process_request(request)
     request._messages = FallbackStorage(request)
     request.user = user
+    if presented is not None:
+        request.session[AUTHENTICATION_METHODS_SESSION_KEY] = [_mfa_step(presented)]
     return request
+
+
+def _mfa_step(authenticator):
+    """The record allauth's MFA step leaves in the session (``record_authentication``)."""
+    return {"method": "mfa", "at": 0.0, "id": authenticator.pk, "type": authenticator.type}
 
 
 @override_settings(BACKOFFICE_MFA_ENFORCED=True)
@@ -66,8 +81,10 @@ def test_middleware_redirects_staff_without_totp(staff_user, person_user):
     assert middleware(_request("/fr/", staff_user)).status_code == 200
     assert middleware(_request("/backoffice/", person_user)).status_code == 200
     assert middleware(_request("/backoffice/", AnonymousUser())).status_code == 200
-    _totp(staff_user)
-    assert middleware(_request("/backoffice/", staff_user)).status_code == 200
+    device = _totp(staff_user)
+    r = middleware(_request("/backoffice/", staff_user))
+    assert r.status_code == 302 and urlsplit(r["Location"]).path == MFA_REAUTHENTICATE, "enrolled is not presented"
+    assert middleware(_request("/backoffice/", staff_user, presented=device)).status_code == 200
 
 
 @override_settings(BACKOFFICE_MFA_ENFORCED=True, MIDDLEWARE=MIDDLEWARE_WITH_MFA)
@@ -78,7 +95,12 @@ def test_middleware_integration_with_admin(client, staff_user):
     r = client.get("/backoffice/logout/")
     assert r.status_code != 302 or r["Location"] != TOTP_ACTIVATE, "logout stays reachable"
     client.force_login(staff_user)
-    _totp(staff_user)
+    device = _totp(staff_user)
+    r = client.get("/backoffice/")
+    assert r.status_code == 302 and urlsplit(r["Location"]).path == MFA_REAUTHENTICATE, "F-5: a device, never presented"
+    session = client.session
+    session[AUTHENTICATION_METHODS_SESSION_KEY] = [_mfa_step(device)]
+    session.save()
     r = client.get("/backoffice/")
     assert r.status_code == 200
 
@@ -88,6 +110,10 @@ def test_decorator(staff_user, person_user):
     view = mfa_required_for_backoffice(lambda request: HttpResponse("ok"))
     assert view(_request("/fr/export/", staff_user)).status_code == 302
     assert view(_request("/fr/export/", person_user)).status_code == 200
+    device = _totp(staff_user)
+    r = view(_request("/fr/export/", staff_user))
+    assert r.status_code == 302 and urlsplit(r["Location"]).path == MFA_REAUTHENTICATE
+    assert view(_request("/fr/export/", staff_user, presented=device)).status_code == 200
 
 
 def test_deploy_checks():

@@ -84,10 +84,13 @@ def test_programme_seed_order_and_note(client, event):
     start = html.index('id="forum-programme"')
     section = html[start : html.index('id="forum-speakers"')]
     titles = re.findall(r'forum-programme__title">([^<]+)<', section)
-    assert titles[0] == "Accueil et enregistrement"
+    # not every row has a time, so there is no time column (CREATIVE_DIRECTION_V5 §20): the rows are numbered and the
+    # first keeps its prescribed words whole (W3-F1's review m1)
+    first = locked_content.get("p2.forum.programme.items", "fr")[0][0]
+    assert titles[0] == "15h00 — Accueil et enregistrement" == first
     assert titles[-1] == "Conclusions et prochaines étapes"
     assert len(titles) == 8
-    assert 'forum-programme__time">15h00<' in section
+    assert "forum-programme__time" not in section and section.count('class="forum-programme__num"') == 8
     assert _text("p2.forum.programme.note") in section
 
 
@@ -137,7 +140,7 @@ def test_no_person_names_public_without_both_authorisations(client, event, speak
 
 def test_patronage_no_fake_logos(client, event):
     html = _page(client)
-    hero = html[html.index('class="forum-hero') : html.index('class="forum-localnav')]
+    hero = html[html.index('id="forum-top"') : html.index("forum-localnav")]
     assert _text("p2.forum.header.patronage") in hero
     assert "<img" not in hero, "unauthorised partners must never render a logo"
     assert "Regione del Veneto" not in html and "Comune di Rovigo" not in html
@@ -246,5 +249,5 @@ def test_accessibility_landmarks(client, event):
     html = _page(client)
     assert html.count("<h1") == 1
     assert '<main id="main-content"' in html
-    assert 'aria-label="Sections de la page"' in html
+    assert 'aria-labelledby="forum-sommaire-title"' in html, "the page's index is a labelled navigation"
     assert 'aria-labelledby="forum-programme-title"' in html

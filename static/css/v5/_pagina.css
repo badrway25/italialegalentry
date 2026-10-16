@@ -1,0 +1,393 @@
+/* ============================================================================================
+   THE PAGE OF THE PUBLIC INTERIOR «la pagina» — design V5.4: the components every page of the public interior draws,
+   drawn once. The owner's V5.8 («no duplicated component families») and W3-F2's review m11: W3-F1's doors, project
+   pages and orientation (static/css/v5/_interior.css) and W3-F2's content and legal pages (static/css/v5/_lettura.css)
+   drew them value for value, each in its own partial; W3-F1, the family that merged second, consolidated them here
+   (12 October 2026). docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 items 1 and 2; §1.18 D26; §1.4 RH-1 … RH-8,
+   SP-1 … SP-8, SH-1 … SH-9; §1.3 three corners a screen; §1.16 a caption and a credit under every photograph.
+
+   A page partial (plan §2.3, DL54-15): never in main.css; the FIRST import of the page sheets of the public interior —
+   ecosystem/ecosystem.css, forum/forum.css, pages/css/interior.css, pathways/pathways.css and orientation/wizard.css
+   (W3-F1), cms/lettura.css (W3-F2) — each surface's own partial after it, which keeps only its own parts: W3-F1's
+   entrance seat, index, «la linea» and register variants; W3-F2's tools and pages' blocks; each surface's rhythm in a
+   chapter's body and its own Arabic rules. Loaded after main.css, a rule here re-draws a legacy component of the shared
+   sheet (the trail, the page header) by order, at the same specificity: no body scope is needed, and none of these
+   page sheets is loaded on a console page.
+
+     1 · the trail             — the breadcrumbs at 13/20, the current page in ink; each link a 24 px box (SP-8) whose
+                                 target grows to 44 px under a finger without a taller line;
+     2 · the head              — the page's one header at the reading edge: the space's name as a label, the h1 at
+                                 28/36 then 36/44 (48rem), the lead at 17/28 then 20/28, verbatim — W3-F1's entrance
+                                 «l'ingresso» (pages/partials/_ingresso.html) and W3-F2's page header
+                                 (components/page_header.html and the heads its pages write): one drawing;
+     3 · the chapters          — the section device at the reading edge (the mark's steps, the title, the lead), the
+                                 head four columns of twelve and in sight while its body scrolls from 75rem; a row of
+                                 links under a body; the quiet chapter's label;
+     4 · the register          — rows on shared hairlines (each surface says how its titles read: W3-F1's in ink, the
+                                 whole row the target; W3-F2's in the link's colour);
+     5 · D26's shared slots    — an authority's host beside its link, a caption and a credit under a photograph, «who
+                                 can help me» in live text.
+
+   Corners (§1.3): the chrome draws 6 on every screen (the targa), the buttons, fields and notices 4, the discs and
+   chips full — so the interior's cards and photographs fold their 8 into the 6 already there: three values a screen.
+   Type on the 4 px line (RH-1); every size and space a token of static/css/v5/tokens.css; logical properties only; no
+   literal colour, no gradient (the app-sheet token rule).
+   ============================================================================================ */
+
+/* ---- 0 · three corners a screen ------------------------------------------------------------------------------ */
+.interior,
+.lettura {
+  --card-radius: var(--radius-md);
+}
+
+/* ---- 1 · the trail -------------------------------------------------------------------------------------------- */
+.breadcrumbs {
+  padding-block: var(--s-4) 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.breadcrumbs__item {
+  color: var(--text-2);
+}
+
+.breadcrumbs__item + .breadcrumbs__item::before {
+  inline-size: 6px;
+  block-size: 6px;
+  border-color: var(--text-3);
+}
+
+/* a trail's link is a 24 px target (SP-8), its line still 20 px */
+.breadcrumbs__item a {
+  display: inline-block;
+  padding-block: 2px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .breadcrumbs__item a:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+  }
+}
+
+.breadcrumbs__item[aria-current] {
+  color: var(--text-1);
+  font-weight: var(--w-control);
+}
+
+/* under a finger a trail's link answers on 44 px (SP-8) without a taller line: 10 px above and below its 24 px box,
+   and a word narrower than 44 px widened about its middle; a trail that wraps opens its rows to 20 px, so that two
+   targets never overlap */
+@media (pointer: coarse) {
+  .breadcrumbs__list {
+    row-gap: var(--s-5);
+  }
+
+  .breadcrumbs__item a {
+    position: relative;
+  }
+
+  .breadcrumbs__item a::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: min(0px, calc((100% - var(--hit-primary)) / 2));
+  }
+}
+
+/* ---- 2 · the head --------------------------------------------------------------------------------------------- */
+/* no rule under the head (the chapter's hairline follows it); the space's name as a label, the h1, the lead */
+.ingresso,
+.page-header {
+  padding-block: var(--s-8) var(--s-12);
+}
+
+.ingresso__label,
+.page-header__eyebrow {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.ingresso__title,
+.page-header__title {
+  max-inline-size: 20em;
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+/* a prescribed title written in capitals is tracked as every capital run is (TR rule 6) — on the Arabic page the run
+   in French inside the h1 (cms/templatetags/lettura.py `locked_title`) */
+.ingresso__title--caps:not(:lang(ar)),
+.page-header__title--caps:not(:lang(ar)),
+.page-header__title--caps > :not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+.ingresso__lead,
+.page-header__lead {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.ingresso__meta,
+.page-header__meta,
+.page-header__contact {
+  margin: var(--s-6) 0 0;
+}
+
+@media (min-width: 48rem) {
+  .ingresso,
+  .page-header {
+    padding-block: var(--s-10) var(--s-16);
+  }
+
+  .ingresso__title,
+  .page-header__title {
+    font-size: var(--t-title);
+    line-height: var(--t-title-lh);
+    letter-spacing: var(--track-title);
+  }
+
+  .ingresso__lead,
+  .page-header__lead {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+}
+
+/* ---- 3 · the chapters ----------------------------------------------------------------------------------------- */
+.chapter {
+  padding-block: var(--s-12);
+}
+
+/* full-bleed hairlines between the bands: under the head, between two chapters */
+:is(.ingresso, .page-header, .chapter) + .chapter {
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.chapter__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-8);
+}
+
+.chapter__head {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+}
+
+/* the mark: the sprite's `ile-steps`, pulled by its drawing's shares onto the reading edge and the head's first line,
+   16 px above the title (the home's chapter__mark) */
+.chapter__mark {
+  --mark: var(--icon-lg);
+  display: block;
+  inline-size: var(--mark);
+  block-size: var(--mark);
+  margin-block: calc(var(--mark) * -7 / 24) calc(var(--s-4) - var(--mark) * 5 / 24);
+  margin-inline-start: calc(var(--mark) * -3 / 24);
+  color: var(--text-1);
+}
+
+.chapter__title,
+.chapter__head > h2:not([class]) {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.chapter__lead {
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.chapter__body {
+  min-inline-size: 0;
+}
+
+/* the quiet chapter at a page's foot: a label, not a title (13/20 at 500, untracked, whatever element carries it),
+   and no section device */
+.chapter__label {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+  color: var(--text-2);
+}
+
+/* a row of links under a body: they wrap, 24 px apart (each surface draws its links: W3-F1's arrows, W3-F2's list) */
+.chapter__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .chapter {
+    padding-block: var(--s-16);
+  }
+
+  .chapter__title,
+  .chapter__head > h2:not([class]) {
+    font-size: var(--t-band);
+    line-height: var(--t-band-lh);
+    letter-spacing: var(--track-band);
+  }
+}
+
+@media (min-width: 75rem) {
+  .chapter__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .chapter__head {
+    grid-column: 1 / span 4;
+    align-self: start;
+    position: sticky;
+    inset-block-start: calc(var(--header-h) + var(--s-8));
+  }
+
+  .chapter__body {
+    grid-column: 5 / span 8;
+  }
+
+  /* a chapter with no head (a page's single body, an inset that opens the page) reads from the reading edge */
+  .chapter__inner > .chapter__body:only-child {
+    grid-column: 1 / span 8;
+  }
+
+  .chapter__head--quiet {
+    position: static;
+  }
+}
+
+/* ---- 4 · the register: rows on shared hairlines --------------------------------------------------------------- */
+.registro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.registro__row {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--s-1);
+  min-block-size: var(--row-min-h);
+  padding-block: var(--s-4) var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.registro__title {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.registro__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.registro__row > .chip {
+  justify-self: start;
+  margin-block-start: var(--s-2);
+}
+
+@media (min-width: 48rem) {
+  .registro--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+}
+
+/* ---- 5 · D26's shared slots ------------------------------------------------------------------------------------ */
+/* an authority's link shows where it leads: the host, in the quiet ink, beside its name */
+.autorita__host {
+  display: inline-block;
+  margin-inline-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* a photograph: its caption and its credit under it (D26), never on it */
+.figura {
+  margin: 0;
+}
+
+.figura img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--card-radius);
+  box-shadow: var(--passe-partout);
+}
+
+.figura figcaption {
+  max-inline-size: var(--measure-small);
+  margin-block-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+/* «who can help me»: the page's live line, on a hairline at the foot of the reading */
+.aiuto {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* its link is one box the height of the line (24 px: SP-8's floor under a fine pointer) */
+.aiuto a {
+  display: inline-block;
+  overflow-wrap: anywhere;
+}
+
+/* ---- 6 · print ------------------------------------------------------------------------------------------------- */
+@media print {
+  .chapter__head {
+    position: static;
+  }
+}

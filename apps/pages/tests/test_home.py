@@ -453,8 +453,10 @@ def test_banner_sets_no_cookie(before_the_forum, client, seeded):
 def test_orientation_gate_closed_uses_neutral_stepper_and_disclaimer(page, seeded):
     _response, html = page("/fr/")
     block = html.split('data-section="orientation"', 1)[1].split("</section>", 1)[0]
-    assert block.count('class="sequence__step') == 4
-    assert "aria-current" not in block  # an explanation, not a progress state
+    # the four neutral steps on the public passage «la linea» (W3-D: components/stepper.html), across from 48rem
+    assert block.count('class="linea__step') == 4
+    assert '<ol class="linea linea--across"' in block
+    assert "aria-current" not in block and "linea__rank" not in block  # an explanation, not a progress state
     assert "pré-évaluation à caractère informatif" in block
     assert "autorités compétentes" in block
     assert 'href="/fr/orientation/"' in block
@@ -464,7 +466,7 @@ def test_orientation_phase3_uses_the_prescribed_sentence(page, seeded, phase3_op
     _response, html = page("/fr/")
     block = html.split('data-section="orientation"', 1)[1].split("</section>", 1)[0]
     assert escaped(text_of("p3.persons.how_it_works")) in block
-    assert 'class="sequence' not in block
+    assert 'class="linea' not in block and 'class="sequence' not in block
 
 
 def test_pathways_gate_closed_shows_neutral_families_only(page, seeded):

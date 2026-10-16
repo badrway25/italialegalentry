@@ -344,17 +344,10 @@
   color: var(--text-1);
 }
 
-/* the journey: W3-D's rail, placed — the section draws its head and nothing of the rail. One rule only: on the
-   dashboard the rail is drawn still at load, as the journey's own decision says (plan §1.18 D16: «in V5.4 the rail
-   is drawn still at load, with no relay») and as the console's motion says (MS §3.2: the dashboard is seen at
-   every visit) — V4's line still drew itself, six animations at every load. Redundant, and harmless, the day W3-D
-   redraws the rail. */
+/* the journey: W3-D's rail, placed — the section draws its head and nothing of the rail (v5/_journey-rail.css draws
+   it, still at load by itself: W3-B's one scoped rule that stopped V4's line drawing itself left with W3-D's redraw) */
 .db-journey > .db-h2 {
   margin-block-end: var(--s-4);
-}
-
-.db-journey .journey:not(.journey--descriptive) .journey__step::before {
-  animation: none;
 }
 
 /* ---- 4 · The file: the summary strip of its facts ---------------------------------------------------------- */

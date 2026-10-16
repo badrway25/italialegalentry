@@ -1,0 +1,14 @@
+{% load i18n %}
+{% comment %}
+«Dans l'Espace Personnes» on the pages of design V5.4 (W3-F1): the related areas as a register — rows on shared
+hairlines, the whole row the target, no glyph and no arrow. Links owned by other apps appear only once available.
+Contract: `links` (dict); optional `current` (training · diplomas): the page that draws the register leaves its
+own row out. (The side column of V4 left with its last consumer, W3-F1's second step.)
+{% endcomment %}
+<ul class="registro registro--two">
+  {% if links.training and current != "training" %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.training }}">{% translate "Formation" %}</a></h3><p class="registro__text registro__text--fragment">{% translate "avant le départ et après l’arrivée" %}</p></li>{% endif %}
+  {% if links.diplomas and current != "diplomas" %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.diplomas }}">{% translate "Diplômes et titres étrangers" %}</a></h3></li>{% endif %}
+  {% if links.living %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.living }}">{% translate "Vivre en Italie" %}</a></h3></li>{% endif %}
+  {% if links.faq %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.faq }}">{% translate "Questions fréquentes" %}</a></h3></li>{% endif %}
+  {% if links.glossary %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.glossary }}">{% translate "Glossaire" %}</a></h3><p class="registro__text registro__text--fragment">{% translate "les termes italiens expliqués" %}</p></li>{% endif %}
+</ul>

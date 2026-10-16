@@ -1,54 +1,110 @@
 {% load i18n %}{% comment %}
-THE REGISTER OF REQUIRED PIECES — design V4 (CREATIVE_DIRECTION.md §3.5): a DOCUMENT WORKSPACE.
+THE REGISTER OF REQUIRED PIECES — design V5, «Mes pièces» V5.2 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5;
+DOCUMENT_WORKSPACE.md §0, §6–§14; W3-C). Rules: apps/portal/static/portal/v5/_workspace.css, imported by the
+documents page sheet.
 
-One block per case file: the HealthStrip (the state of the file as one bar and as words), the
-SegmentedControl of states (links carrying the filter in the query string: shareable, no script),
-a search field on the register (script: filters the rows shown), then the DocumentCollection —
-a sheet of DocumentRows, one per REQUIREMENT, never per file, missing and expiring rows first.
+One block per case file — `.ws-case`, the query container of everything the register holds:
+  the head        «Pièces du dossier», the file's reference (ILE Mono) and the search at the inline end (in the card
+                  layout the search is drawn from thirteen pieces on: `.ws-case--long`)
+  «il registro»   the register strip — the screen's one raised plane: three runs, whose move it is (À faire · En
+                  cours · Valide, the catalogue's words until B1 signs «À vous · En cours · Réglées»), each a count,
+                  one 16 px mark per piece (the colour is the group, the shape is the state) and a link to its group
+                  (an index, not a filter); then the page's ONE primary with its piece and its date; the locked count
+                  sentence closes it
+  the filter      the state filter in the register's own order (STATE_ORDER), each entry its state's mark and count —
+                  the key to the marks: links carrying `?état=` (shareable, back-safe, no script); in the card layout
+                  ONE 44 px control opens the same entries (documents/partials/state_filter.html, one markup) in the
+                  overlay system's bottom sheet (templates/components/sheet.html: the scrim, «Fermer» always there,
+                  the grip, Esc; without script a link that shows it in place)
+  the collection  the SAME three groups as the strip, each a section with its heading — one partition, one
+                  vocabulary — and one row per REQUIREMENT (components/document_row.html): six zones on columns every
+                  row shares, the note as a footer, the whole row opening the piece
+The layout follows the width the register is GIVEN, not the viewport (a container query): six columns from 66rem,
+five with the actor under the title from 52rem, cards below. A row's title, its act and the strip's act open the piece
+in the preview drawer beside the register (documents/partials/piece_drawer.html, drawn by the page outside the
+register; static/js/src/piece-drawer.js) — without script they are links to the piece's page.
 
-Every state is a WORD carrying a rule, never a colour alone, and none of them says «approved»: this
-platform approves nobody. The uploaded files are VERSIONS INSIDE the row.
+Every state is a WORD carrying a rule, never a colour alone, and none of them says «approved»: this platform approves
+nobody. The uploaded files are VERSIONS INSIDE the row (on the piece's page). Every word here is the catalogue's.
 
-Contract: `register` = documents.presenters.register_context(user, state_filter=…) — blocks (case,
-rows, all_rows, counts, filters, primary_action), state_filter, state_filter_label, empty_text;
+Contract: `register` = documents.presenters.register_context(user, state_filter=…) — blocks (case, rows, all_rows,
+counts, filters, runs, groups, marks, long, next, next_act, next_is_primary), state_filter, state_filter_label, empty_text;
 `request` for the current path.
 {% endcomment %}
 {% if register.blocks %}
+<div class="doc-register">
   {% for block in register.blocks %}
-  <section class="doc-workspace" aria-labelledby="register-{{ block.case.pk }}">
-    <div class="doc-workspace__head">
-      <h2 class="doc-workspace__title" id="register-{{ block.case.pk }}">{% translate "Pièces du dossier" %} <span class="doc-workspace__ref">{{ block.case.reference }}</span></h2>
-    </div>
-
-    <div class="panel panel--l1 doc-health">
-      {% include "components/health_strip.html" with counts=block.counts filters=block.filters %}
-    </div>
-
-    <div class="doc-controls">
-      <nav class="seg" aria-label="{% translate 'Filtrer par état' %}">
-        <ul class="seg__list" role="list">
-          <li class="seg__item"><a class="seg__link" href="{{ request.path }}"{% if not register.state_filter %} aria-current="true"{% endif %}>{% translate "Tous" %} <span class="seg__count">{{ block.counts.total }}</span></a></li>
-          {% for f in block.filters %}
-          <li class="seg__item"><a class="seg__link{% if not f.count %} seg__link--empty{% endif %}" href="{{ request.path }}?état={{ f.value }}"{% if register.state_filter == f.value %} aria-current="true"{% endif %}><span class="seg__dot" data-register="{{ f.register }}" aria-hidden="true">{% svg_icon f.value|chip_mark:"documents.RequirementState" "icon chip__g" %}</span>{{ f.label }} <span class="seg__count">{{ f.count }}</span></a></li>
-          {% endfor %}
-        </ul>
-      </nav>
-      <div class="doc-search">
-        {% svg_icon "search" "icon doc-search__icon" %}
-        <input class="doc-search__input" type="search" data-doc-search="register-{{ block.case.pk }}-rows" placeholder="{% translate 'Rechercher une pièce' %}" aria-label="{% translate 'Rechercher une pièce' %}" autocomplete="off">
+  <section class="ws-case{% if block.long %} ws-case--long{% endif %}" aria-labelledby="register-{{ block.case.pk }}">
+    <div class="ws-case__head">
+      <h2 class="ws-case__title" id="register-{{ block.case.pk }}">{% translate "Pièces du dossier" %} <span class="ws-case__ref">{% svg_icon "hash" "icon" %}<span>{{ block.case.reference }}</span></span></h2>
+      <div class="ws-search">
+        {% svg_icon "search" "icon" %}
+        <input class="input ws-search__input" type="search" data-doc-search="register-{{ block.case.pk }}-rows" placeholder="{% translate 'Rechercher une pièce' %}" aria-label="{% translate 'Rechercher une pièce' %}" autocomplete="off">
       </div>
     </div>
 
-    {% if block.rows %}
-    <ul class="doc-collection panel panel--l1" id="register-{{ block.case.pk }}-rows" role="list" aria-label="{% translate 'Pièces demandées pour ce dossier' %}">
-      {% for row in block.rows %}{% include "components/document_row.html" with row=row %}{% endfor %}
-    </ul>
-    <div role="status" data-doc-search-status="register-{{ block.case.pk }}-rows" data-doc-search-label="{% translate 'Pièces affichées :' %}">
+    {% comment %} «IL REGISTRO» — the runs (whose move it is), the page's one act, the count sentence. {% endcomment %}
+    <div class="reg">
+      <nav class="reg__runs" aria-labelledby="register-{{ block.case.pk }}">
+        {% for run in block.runs %}{% with n=run.rows|length %}
+        {% if n %}<a class="reg-run reg-run--{{ run.key }} db-ledger__group--{{ run.key }}" href="{% if register.state_filter %}{{ request.path }}{% endif %}#g-{{ block.case.pk }}-{{ run.key }}">{% else %}<span class="reg-run reg-run--{{ run.key }} reg-run--empty">{% endif %}
+          <span class="reg-run__label">{{ run.label }}</span>
+          <span class="reg-run__n">{{ n }}</span>
+          {% if n and block.marks %}<span class="reg-run__marks db-ledger__marks" aria-hidden="true">{% for row in run.rows %}{% svg_icon row.state|chip_mark:"documents.RequirementState" "icon" %}{% endfor %}</span>{% endif %}
+        {% if n %}</a>{% else %}</span>{% endif %}
+        {% endwith %}{% endfor %}
+      </nav>
+      <div class="reg__next">
+        {% if block.next %}
+        <p class="reg__next-label">{% translate "Votre prochaine action" %}</p>
+        <p class="reg__next-title" id="next-{{ block.case.pk }}">{% if block.next.words.lang %}<span lang="{{ block.next.words.lang }}" dir="{{ block.next.words.dir }}">{{ block.next.title }}</span>{% else %}{{ block.next.title }}{% endif %}</p>
+        {% if block.next.due_date %}<p class="reg__next-due"><span class="visually-hidden">{% translate "Échéance" %} </span><span class="doc-due doc-due--inline{% if block.next.urgency %} doc-due--{{ block.next.urgency }}{% endif %}"><span class="doc-due__mark">{% svg_icon block.next.urgency|concept:"due" "icon" %}</span><time datetime="{{ block.next.due_date|date:'Y-m-d' }}">{{ block.next.due_date|date:"d.m.Y" }}</time>{% if block.next.due_word %}<span class="doc-due__word">{{ block.next.due_word }}</span>{% endif %}</span></p>{% endif %}
+        {% if block.next_act.note %}<p class="reg__next-note">{% svg_icon "lock" "icon" %}<span>{{ block.next_act.note }}</span></p>{% endif %}
+        <p class="reg__next-act"><a class="btn {% if block.next_is_primary %}btn--primary{% else %}btn--secondary{% endif %} btn--arrow" href="{{ block.next_act.url }}" aria-describedby="next-{{ block.case.pk }}"{% if block.next_act.aria_label %} aria-label="{{ block.next_act.aria_label }}"{% endif %}{% if block.next_is_primary %} data-page-primary{% endif %}>{{ block.next_act.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+        {% else %}
+        <p class="reg__next-none">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
+        {% endif %}
+      </div>
+      <p class="reg__caption">
+        <span class="reg__total">{% blocktranslate count n=block.counts.total %}{{ n }} pièce demandée{% plural %}{{ n }} pièces demandées{% endblocktranslate %}</span>
+        <span class="reg__sep" aria-hidden="true">·</span>
+        <span>{% blocktranslate with valid=block.counts.valid total=block.counts.total %}{{ valid }} sur {{ total }} validées{% endblocktranslate %}</span>
+      </p>
+    </div>
+
+    {% comment %}
+    THE STATE FILTER — in the flow from 52rem; below, ONE control and the overlay system's bottom sheet holding the same
+    entries (templates/components/sheet.html, static/js/src/overlay.js: the scrim, the trap, «Fermer», the grip, Esc;
+    the focus on the current entry and back on the control). The control is a link to the sheet: without script the
+    sheet shows in place (:target) and «Fermer» is a link back.
+    {% endcomment %}
+    <div class="ws-filters">
+      {% include "documents/partials/state_filter.html" %}
+      <a class="btn btn--secondary ws-filter" href="#states-{{ block.case.pk }}" data-overlay-open="states-{{ block.case.pk }}">{% svg_icon "list-filter" "icon" %}<span class="ws-filter__label">{% translate "Filtrer par état" %}</span><span class="ws-filter__now">{% if register.state_filter %}{{ register.state_filter_label }}{% else %}{% translate "Tous" %}{% endif %} <span class="seg__count">{{ block.rows|length }}</span></span></a>
+      {% with case_pk=block.case.pk|stringformat:"s" %}{% with sheet_id="states-"|add:case_pk %}{% translate "Filtrer par état" as sheet_title %}
+      {% include "components/sheet.html" with id=sheet_id title=sheet_title body_template="documents/partials/state_filter.html" return_id="main-content" %}
+      {% endwith %}{% endwith %}
+    </div>
+
+    {% comment %} THE COLLECTION — the strip's three groups, one row per requirement. {% endcomment %}
+    {% if block.groups %}
+    <div class="doc-collection" id="register-{{ block.case.pk }}-rows">
+      <div class="doc-collection__cols" aria-hidden="true"><span>{% translate "Pièce demandée" %}</span><span>{% translate "État" %}</span><span>{% translate "Responsable" %}</span><span>{% translate "Échéance" %}</span></div>
+      {% for group in block.groups %}
+      <section class="doc-group doc-group--{{ group.key }}" id="g-{{ block.case.pk }}-{{ group.key }}" aria-labelledby="g-{{ block.case.pk }}-{{ group.key }}-h">
+        <h3 class="doc-group__head" id="g-{{ block.case.pk }}-{{ group.key }}-h"><span>{{ group.label }}</span> <span class="doc-group__n">{{ group.rows|length }}</span></h3>
+        <ul class="doc-group__rows" role="list">
+          {% for row in group.rows %}{% include "components/document_row.html" with row=row %}{% endfor %}
+        </ul>
+      </section>
+      {% endfor %}
+    </div>
+    <div class="doc-search-status" role="status" data-doc-search-status="register-{{ block.case.pk }}-rows" data-doc-search-label="{% translate 'Pièces affichées :' %}">
       <span class="visually-hidden" data-doc-search-count></span>
-      <p class="doc-collection__none" hidden data-doc-search-empty="register-{{ block.case.pk }}-rows">{% translate "Aucune pièce ne correspond à cette recherche." %}</p>
+      <p class="ws-empty" hidden data-doc-search-empty="register-{{ block.case.pk }}-rows">{% translate "Aucune pièce ne correspond à cette recherche." %}</p>
     </div>
     {% else %}
-    <p class="empty" role="status">
+    <p class="ws-empty" role="status">
       {% translate "Aucune pièce ne correspond à ce filtre." %}
       <a href="{{ request.path }}">{% translate "Voir toutes les pièces" %}</a>
     </p>
@@ -56,15 +112,10 @@ rows, all_rows, counts, filters, primary_action), state_filter, state_filter_lab
   </section>
   {% endfor %}
 
-  {% comment %}
-  The margin apparatus: the caveat lives beside the register, not in a grey footnote at the bottom.
-  {% endcomment %}
-  <p class="note doc-register__note">
-    <span class="note__marker">1</span>
-    {% comment %} Reworded: the previous sentence repeated prescribed text (p3.persons.intro). {% endcomment %}
-    {% translate "L’état d’une pièce dit ce que le dossier a reçu, et rien de plus. Aucune ligne de ce registre ne vaut acceptation." %}
-  </p>
+  {% comment %} The register's caveat, beside it — never a grey footnote at the bottom of the page. {% endcomment %}
+  <p class="doc-note">{% svg_icon "info" "icon" %}<span>{% translate "L’état d’une pièce dit ce que le dossier a reçu, et rien de plus. Aucune ligne de ce registre ne vaut acceptation." %}</span></p>
+</div>
 {% else %}
   {% comment %} One hairline and one sentence naming who fills the region and when. {% endcomment %}
-  <p class="empty">{{ register.empty_text }}</p>
+  <p class="ws-empty">{{ register.empty_text }}</p>
 {% endif %}

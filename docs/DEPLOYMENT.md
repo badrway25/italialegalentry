@@ -1,5 +1,14 @@
 # Deployment — preparazione (NON ESEGUITO)
 
+> **SUPERATO il 12 ottobre 2026 da [`docs/deployment/`](deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md)** —
+> `PRODUCTION_DEPLOYMENT_RUNBOOK.md`, `PRODUCTION_CHECKLIST.md`, `ROLLBACK.md`, `production.env.example`.
+> Questo documento resta come storia e non va seguito: le variabili obbligatorie in produzione sono ora
+> cinque (`DATABASE_URL` e `IP_HASH_SALT` in più); `REDIS_URL` deve restare vuota (la libreria client non è
+> nei requisiti); i media pubblici sono serviti da nginx e i lavori periodici sono timer systemd, fra cui
+> `documents_refresh_requirements` e `clearsessions`, mentre `deliver_outbound_events` non serve finché
+> nessuna integrazione push è approvata; il dominio nominato qui sotto è un esempio, non una configurazione
+> confermata — i nuovi documenti usano segnaposto.
+
 > **Nessun deployment è stato effettuato.** Questo documento prepara la fase successiva, che avverrà solo su
 > istruzione esplicita del committente. Nessuna modifica a DNS, hosting, database o caselle di produzione.
 

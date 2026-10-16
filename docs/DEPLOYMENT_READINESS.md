@@ -1,5 +1,11 @@
 # DEPLOYMENT READINESS — preparazione, **nessun deploy eseguito**
 
+> **SUPERATO il 12 ottobre 2026 da [`docs/deployment/`](deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md)**
+> per la procedura, le variabili, i lavori periodici, il backup e il rollback. Restano riferimenti validi, e il
+> runbook li cita: la checklist dell'hosting UE (§3, CR-08), la proposta di RPO/RTO e la prova di ripristino
+> completa (§4), la regola delle migrazioni riduttive in due rilasci (§5.2). Il resto è storia: per esempio le
+> variabili obbligatorie in produzione sono ora cinque, non tre.
+
 Stato: preparatorio · 21 settembre 2026 · Nessun remote, nessun DNS, nessuna infrastruttura toccata
 
 > Questo documento prepara. Non esegue. `docs/DEPLOYMENT.md` resta la procedura operativa; qui c'è

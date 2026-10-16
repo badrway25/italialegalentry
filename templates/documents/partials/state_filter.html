@@ -1,0 +1,17 @@
+{% load i18n %}{% comment %}
+THE STATE FILTER'S ENTRIES — design V5, «Mes pièces» (DOCUMENT_WORKSPACE.md §13; W3-C): drawn twice from one markup —
+in the register's flow from 52rem (the segmented track), and in the card layout as the body of the filter's bottom
+sheet (the overlay system's `sheet`, templates/components/sheet.html: `overlay_part` = "body" there). The register's own
+order (STATE_ORDER), each entry its state's mark, word and count — the key to the marks; a state with no piece is a
+word, not a link; `?état=` in the URL, shareable, no script.
+
+Contract: `block` (one register block: counts, filters, rows), `register` (state_filter), `request`; `id` and
+`overlay_part` when drawn in the sheet.
+{% endcomment %}{% if overlay_part %}<nav class="seg seg--sheet" aria-labelledby="{{ id }}-title">{% else %}<nav class="seg ws-filters__seg" aria-label="{% translate 'Filtrer par état' %}">{% endif %}
+  <ul class="seg__list" role="list">
+    <li class="seg__item"><a class="seg__link" href="{{ request.path }}"{% if not register.state_filter %} aria-current="true"{% endif %}>{% translate "Tous" %} <span class="seg__count">{{ block.counts.total }}</span></a></li>
+    {% for f in block.filters %}
+    <li class="seg__item">{% if f.count %}<a class="seg__link" href="{{ request.path }}?état={{ f.value }}"{% if register.state_filter == f.value %} aria-current="true"{% endif %}>{% else %}<span class="seg__link seg__link--empty">{% endif %}<span class="seg__dot" data-register="{{ f.register }}" aria-hidden="true">{% svg_icon f.value|chip_mark:"documents.RequirementState" "icon chip__g" %}</span>{{ f.label }} <span class="seg__count">{{ f.count }}</span>{% if f.count %}</a>{% else %}</span>{% endif %}</li>
+    {% endfor %}
+  </ul>
+</nav>

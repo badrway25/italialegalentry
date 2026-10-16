@@ -3,8 +3,8 @@
 
 The keyboard model, hover intent and the pin, the safe triangle (doors 2–4: the open panel holds along the straight
 path from the door to its first entry, the travel reported in px), the photographs' loading policy (nothing before
-`load`, four at idle from 80rem, never on a phone), the no-script fallback (a door opens on hover, the header does
-not stick: G-04), and WCAG 2.4.11 under the sticky letterhead. Chromium on the French home with the static fallback
+`load`, four at idle from 80rem, never on a phone), the no-script fallback (a door opens on hover; below 80rem the
+sheet shows in place: G-04), and WCAG 2.4.11 under the sticky letterhead. Chromium on the French home with the static fallback
 menu, gate G3 open so that the four doors are in the bar.
 """
 
@@ -315,9 +315,11 @@ def test_the_photographs_follow_the_loading_policy(browser, live_server, seeded,
             context.close()
 
 
-def test_without_script_a_door_opens_on_hover_and_the_header_does_not_stick(browser, live_server, seeded, four_doors):
+def test_without_script_a_door_opens_on_hover_and_the_sheet_opens_in_place(browser, live_server, seeded, four_doors):
     """The CSS fallback (NAVIGATION §4.8, four checks): a panel opens on :hover and :focus-within, its entries are
-    reachable links; below 80rem the menu is in the flow of a header that no longer sticks (G-04 closed)."""
+    reachable links. Below 80rem «Menu» is a link to the sheet, which shows in place (:target) over a letterhead that
+    holds nothing but its row — so a sticky header never hides the page (G-04 closed) — and «Fermer» is a link back
+    (W2-C2, the overlay system's no-script path)."""
     context, page = _open(browser, java_script_enabled=False)
     try:
         page.goto(live_server.url + "/fr/", wait_until="load")
@@ -337,8 +339,18 @@ def test_without_script_a_door_opens_on_hover_and_the_header_does_not_stick(brow
         header = page.evaluate(
             "(() => { const h = document.querySelector('.site-header'); return {position: getComputedStyle(h).position, height: h.getBoundingClientRect().height}; })()"
         )
-        assert header["position"] != "sticky" and header["position"] != "fixed", header
-        assert page.locator("#nav-drawer a[href]").first.is_visible(), "the menu is in the flow, visible"
+        assert header["height"] < 844 / 2, header
+        sheet = page.locator("#nav-sheet")
+        assert not sheet.is_visible()
+        page.locator("[data-nav-toggle]").click()
+        page.wait_for_timeout(200)
+        assert page.evaluate("location.hash") == "#nav-sheet" and sheet.is_visible(), "the sheet shows in place"
+        assert sheet.locator("a[href]").first.is_visible()
+        sheet.locator("summary").first.click()
+        assert page.evaluate("document.querySelector('#nav-sheet details').open"), "a door unfolds without script"
+        sheet.locator(".nav-sheet__head .nav-toggle").click()
+        page.wait_for_timeout(200)
+        assert not sheet.is_visible(), "«Fermer» is a link back"
     finally:
         context.close()
 

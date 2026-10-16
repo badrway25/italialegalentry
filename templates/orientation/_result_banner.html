@@ -1,0 +1,10 @@
+{% load i18n %}{% comment %}
+The pre-evaluation's nature, said first, under its title (design V5.4, W3-F1, step 2): the result page's ONE inset,
+an information notice — its mark, its title in the register's word, its solid rule — in the entrance's meta slot
+(pages/partials/_ingresso.html), so the h1 and what it is read together.
+{% endcomment %}
+<div class="notice notice--info wizard-result__banner" role="status" data-result-kind="informational">
+  {% svg_icon "info" "icon notice__icon" %}
+  <p class="notice__title">{% translate "Pré-évaluation à caractère informatif" %}</p>
+  <div class="notice__body"><p>{% translate "Ce résultat est une orientation fondée uniquement sur vos réponses. Il ne constitue pas une décision : chaque décision appartient exclusivement aux autorités compétentes." %}</p></div>
+</div>

@@ -1,22 +1,32 @@
 {% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Resume a pre-evaluation with its code. Design V5.4 (W3-F1, step 2 — the public interior, through
+orientation/wizard.css): the entrance (the h1 and the lead, verbatim), then the form at the reading edge — the one
+field «la lastra» of v5/field.css (16 px typed text, 52 px on a public page, its error wired by Django and said in
+words beside a drawn mark), the one primary «Reprendre» and the way to a new questionnaire after a hairline.
+{% endcomment %}
 {% block page_title %}{% translate "Reprendre une pré-évaluation" %}{% endblock %}
 {% block meta_description %}{% translate "Retrouvez votre pré-évaluation d’orientation grâce à votre code de reprise." %}{% endblock %}
+{% block body_class %}page-orientation page-orientation--resume interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-<article class="container wizard-resume">
-  <header class="page-header">
-    <h1 class="page-header__title">{% translate "Reprendre une pré-évaluation" %}</h1>
-    <p class="page-header__lead">{% translate "Saisissez le code de reprise affiché à la fin de votre questionnaire. Les pré-évaluations anonymes restent disponibles pendant 30 jours." %}</p>
-  </header>
-  <form method="post" action="{% url 'orientation:resume' %}" class="wizard-resume__form" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}<div class="form-field__errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-    {% include "components/form_field.html" with field=form.token %}
-    <div class="wizard__actions">
-      <button type="submit" class="btn btn--primary">{% translate "Reprendre" %}</button>
-      <a class="btn btn--secondary" href="{% url 'orientation:start' %}">{% translate "Commencer un nouveau questionnaire" %}</a>
+{% translate "Reprendre une pré-évaluation" as page_title %}{% translate "Saisissez le code de reprise affiché à la fin de votre questionnaire. Les pré-évaluations anonymes restent disponibles pendant 30 jours." as page_lead %}
+{% include "pages/partials/_ingresso.html" with title=page_title lead=page_lead only %}
+
+<div class="chapter wizard-resume">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      <form method="post" action="{% url 'orientation:resume' %}" class="form wizard-resume__form" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-field__errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        {% include "components/form_field.html" with field=form.token %}
+        <div class="form__actions">
+          <button type="submit" class="btn btn--primary btn--lg">{% translate "Reprendre" %}</button>
+          <a class="btn btn--secondary btn--lg" href="{% url 'orientation:start' %}">{% translate "Commencer un nouveau questionnaire" %}</a>
+        </div>
+      </form>
     </div>
-  </form>
-</article>
+  </div>
+</div>
 {% endblock %}

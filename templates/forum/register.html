@@ -1,28 +1,38 @@
 {% extends "base.html" %}{% load i18n static forum_tags %}
+{% comment %}
+The Forum's registration page. Design V5.4 (W3-F1 — the public interior): the entrance (the Forum's name as the label,
+the prescribed registration title as the h1, its intro as the lead), then one chapter at the reading measure — the
+form on its sheet («la lastra» fields at 16 px, W1-C), or the state that stands in for it (not open, closed, the
+public forms' gate) — and the privacy note.
+{% endcomment %}
 {% block page_title %}{% translate "Inscription" %} · {{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
-{% block body_class %}page-forum page-forum--register{% endblock %}
+{% block body_class %}page-forum page-forum--register interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/forum/forum.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-<article class="container forum-register" aria-labelledby="forum-register-title">
-  <header class="forum-register__header">
-    <p class="forum-hero__eyebrow">{% if event %}{% event_text event "header.title" %}{% else %}{% locked "p2.forum.header.title" %}{% endif %}</p>
-    <h1 class="forum-register__title" id="forum-register-title">{% if event %}{% event_text event "registration.title" %}{% else %}{% locked "p2.forum.registration.title" %}{% endif %}</h1>
-    {% if event %}{% event_text event "registration.intro" "p" "forum-lead" %}{% endif %}
-  </header>
-  {% if not event %}
-    {% include "components/empty_state.html" with title=_("Les inscriptions ne sont pas encore ouvertes.") action_label=_("Retour à la page du Forum") action_url=index_url icon="handshake" %}
-  {% elif not registration_open %}
-    <div class="notice notice--info" role="status" data-registration="closed">
-      <p><strong>{% translate "Les inscriptions sont closes." %}</strong></p>
-      <p><a href="{% url 'forum:index' %}">{% translate "Retour à la page du Forum" %}</a></p>
+{% if event %}{% event_text event "header.title" as forum_label %}{% event_text event "registration.title" as register_title %}{% event_text event "registration.intro" as register_intro %}
+{% else %}{% locked "p2.forum.header.title" as forum_label %}{% locked "p2.forum.registration.title" as register_title %}{% endif %}
+<article class="forum-register" aria-labelledby="forum-register-title">
+  {% include "pages/partials/_ingresso.html" with label=forum_label title=register_title title_id="forum-register-title" lead=register_intro only %}
+  <section class="chapter chapter--single" aria-labelledby="forum-register-title">
+    <div class="container chapter__inner">
+      <div class="chapter__body">
+        {% if not event %}
+          {% include "components/empty_state.html" with title=_("Les inscriptions ne sont pas encore ouvertes.") action_label=_("Retour à la page du Forum") action_url=index_url icon="handshake" %}
+        {% elif not registration_open %}
+          <div class="notice notice--info" role="status" data-registration="closed">
+            <p class="notice__title">{% translate "Les inscriptions sont closes." %}</p>
+            <div class="notice__body"><p><a href="{% url 'forum:index' %}">{% translate "Retour à la page du Forum" %}</a></p></div>
+          </div>
+        {% elif not forms_enabled %}
+          {% include "components/form_unavailable.html" %}
+        {% else %}
+          {% include "forum/partials/registration_form.html" %}
+        {% endif %}
+        {% if event %}{% include "forum/partials/privacy_note.html" %}{% endif %}
+      </div>
     </div>
-  {% elif not forms_enabled %}
-    {% include "components/form_unavailable.html" %}
-  {% else %}
-    {% include "forum/partials/registration_form.html" %}
-  {% endif %}
-  {% if event %}{% include "forum/partials/privacy_note.html" %}{% endif %}
+  </section>
 </article>
 {% endblock %}

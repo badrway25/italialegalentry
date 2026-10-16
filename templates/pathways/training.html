@@ -1,59 +1,78 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
 Formation — two moments of one path (Implementation §3.8.5): before departure (neutral UI wording,
 CONTENT_PENDING_LEGAL_REVIEW, Annexe §5 nature: orientation/preparation, never an administrative approval)
 and after arrival (locked p3.training_after.title / p3.training_after.body).
+
+Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/_interior.css, through pathways/pathways.css): the
+entrance (the space's name, the h1, the lead, the sheet's metadata row — no glyph); then the two moments as what
+they are, one path: two stations on «la linea» down the reading edge, each with its word («Premier temps», «Second
+temps») beside its open ring, its title, its text at the reading size and measure, and its one way further — the
+first carries the page's notice (no attestation is an administrative approval); then the space's other areas with
+the ONE anti-fraud inset; on the stone, the page's ONE action and the live «who can help me» line, as at the end of
+a pathway's sheet. No card, no side column.
 {% endcomment %}
 {% block page_title %}{% translate "Formation : avant le départ et après l’arrivée" %} · {% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{% translate "Formation avant le départ et après l’arrivée : deux temps d’un même parcours régulier vers l’Italie." %}{% endblock %}
-{% block body_class %}page-pathways page-pathways--training{% endblock %}
+{% block body_class %}page-pathways page-pathways--training interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
-<header class="page-header container">
-  <p class="page-header__eyebrow">{% translate "Espace Personnes" %}</p>
-  <h1 class="page-header__title">{% translate "Formation : avant le départ et après l’arrivée" %}</h1>
-  <p class="page-header__lead">{% translate "Deux temps d’un même parcours : se préparer dans le pays d’origine, puis continuer à se former en Italie. Les formations ont une finalité d’orientation et de préparation." %}</p>
-</header>
+{% translate "Espace Personnes" as space_label %}{% translate "Formation : avant le départ et après l’arrivée" as page_title %}{% translate "Deux temps d’un même parcours : se préparer dans le pays d’origine, puis continuer à se former en Italie. Les formations ont une finalité d’orientation et de préparation." as page_lead %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=page_lead meta_template="pathways/_review_meta.html" reviewed_at=None only %}
 
-<div class="container layout-sidebar layout-sidebar--end">
-  <div class="stack stack--lg">
-    <ol class="list-reset grid-auto training-phases" data-phases="2">
-      <li class="card training-phase" id="avant-le-depart">
-        <section class="stack" aria-labelledby="training-before-title">
-          <p class="card__eyebrow"><span class="numeral" aria-hidden="true">1</span> {% translate "Premier temps" %}</p>
-          <h2 id="training-before-title" class="card__title">{% translate "Formation avant le départ" %}</h2>
-          {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral wording; no programme, duration or attestation value is described.{% endcomment %}
-          <p class="card__text">{% translate "Avant le départ, des parcours de formation professionnelle et civico-linguistique peuvent être organisés dans le pays d’origine avec des organismes partenaires : langue italienne, connaissance de la vie en Italie, compétences utiles au parcours envisagé." %}</p>
-          <div class="notice notice--info" role="status" data-notice="training-before">
-            <span class="notice__icon" aria-hidden="true">{% svg_icon "info" %}</span>
-            <div class="notice__body"><p>{% translate "Les formations sont promues avec des organismes partenaires ; aucune attestation n’a valeur d’approbation administrative." %}</p></div>
+<div class="chapter chapter--prose training">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      {% locked_is_fallback "p3.training_after.title" as after_fallback %}{% locked_lang "p3.training_after.title" as after_lang %}{% locked "p3.training_after.title" as after_title %}
+      <ol class="linea linea--phases training-phases" data-phases="2">
+        <li class="linea__step training-phase" id="avant-le-depart">
+          <span class="linea__num" aria-hidden="true"></span>
+          <p class="linea__kicker">{% translate "Premier temps" %}</p>
+          <h2 class="linea__label" id="training-before-title">{% translate "Formation avant le départ" %}</h2>
+          <div class="linea__text">
+            {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral wording; no programme, duration or attestation value is described.{% endcomment %}
+            <p>{% translate "Avant le départ, des parcours de formation professionnelle et civico-linguistique peuvent être organisés dans le pays d’origine avec des organismes partenaires : langue italienne, connaissance de la vie en Italie, compétences utiles au parcours envisagé." %}</p>
+            <div class="notice notice--info" role="status" data-notice="training-before">
+              <span class="notice__icon" aria-hidden="true">{% svg_icon "info" %}</span>
+              <div class="notice__body"><p>{% translate "Les formations sont promues avec des organismes partenaires ; aucune attestation n’a valeur d’approbation administrative." %}</p></div>
+            </div>
+            {% if origin_pathway_url %}<p class="linea__more"><a href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" %}</a></p>{% endif %}
           </div>
-          {% if origin_pathway_url %}
-            <p class="card__meta"><a class="link-arrow" href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-          {% endif %}
-        </section>
-      </li>
-      <li class="card training-phase" id="apres-l-arrivee">
-        <section class="stack" aria-labelledby="training-after-title">
-          <p class="card__eyebrow"><span class="numeral" aria-hidden="true">2</span> {% translate "Second temps" %}</p>
-          {% locked_is_fallback "p3.training_after.title" as after_fallback %}{% locked_lang "p3.training_after.title" as after_lang %}
-          <h2 id="training-after-title" class="card__title"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{% locked "p3.training_after.title" %}</h2>
-          <p class="card__text"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{% locked "p3.training_after.body" %}</p>
-          {% if links.living %}
-            <p class="card__meta"><a class="link-arrow" href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-          {% endif %}
-        </section>
-      </li>
-    </ol>
-
-    {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
-    {% include "pathways/_metadata_row.html" with reviewed_at=None %}
+        </li>
+        <li class="linea__step training-phase" id="apres-l-arrivee">
+          <span class="linea__num" aria-hidden="true"></span>
+          <p class="linea__kicker">{% translate "Second temps" %}</p>
+          <h2 class="linea__label{% if after_title|striptags|upper == after_title|striptags %} linea__label--caps{% endif %}" id="training-after-title"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{{ after_title }}</h2>
+          <div class="linea__text">
+            {% locked "p3.training_after.body" "p" %}
+            {% if links.living %}<p class="linea__more"><a href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" %}</a></p>{% endif %}
+          </div>
+        </li>
+      </ol>
+    </div>
   </div>
-
-  <aside class="layout-sidebar__aside stack stack--lg" aria-label="{% translate 'Ressources de l’Espace Personnes' %}">
-    {% include "pathways/_side_links.html" with links=links suffix="training" %}
-    {% include "pathways/_antifraud_callout.html" with links=links level=2 suffix="training" %}
-  </aside>
 </div>
+
+<section class="chapter" aria-labelledby="space-links-title">
+  <div class="container chapter__inner">
+    {% translate "Dans l’Espace Personnes" as space_links_title %}{% include "pages/partials/_chapter_head.html" with title_id="space-links-title" title=space_links_title only %}
+    <div class="chapter__body">
+      {% include "pathways/_space_links.html" with links=links current="training" %}
+      <p class="chapter__more"><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}</a></p>
+      {% include "pathways/_antifraud_callout.html" with links=links level=3 suffix="training" %}
+    </div>
+  </div>
+</section>
+
+<section class="chapter chapter--area" id="orientation" aria-labelledby="orientation-chapter-title">
+  <div class="container chapter__inner">
+    {% translate "Orientation" as orientation_title %}{% include "pages/partials/_chapter_head.html" with title_id="orientation-chapter-title" title=orientation_title only %}
+    <div class="chapter__body">
+      {% include "pathways/_orientation_action.html" with links=links %}
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+</section>
 {% endblock %}

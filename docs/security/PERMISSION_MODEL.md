@@ -116,6 +116,13 @@ giuridici, redazione e amministrazione — e non soltanto a chi ha `is_staff`. U
 assegnato legge la situazione giuridica di una persona senza alcun flag di staff: legare la seconda
 prova al flag significava proteggere la porta sbagliata (L-10).
 
+**Attivare e presentare sono due regole (F-5).** `BACKOFFICE_MFA_ENFORCED` rende obbligatoria
+l'attivazione del TOTP per questi ruoli; un account che ha già un dispositivo lo presenta in ogni
+sessione prima del back-office, dell'area riservata e di `/documents/`, qualunque sia il valore del
+flag (`accounts.services.second_factor_due`). L'attivazione prova che un dispositivo esiste, non che
+la persona alla tastiera lo abbia: per questo il modulo di accesso proprio del back-office, che non
+chiedeva il codice, non autentica più nessuno.
+
 **«Candidato» non è un ruolo** (**CR-09**): è uno stato della persona dentro un processo di
 selezione, rappresentato da `SelectionProcess.stage`. Non deve mai comparire fra i gruppi.
 
@@ -238,7 +245,7 @@ Forum chiamano `require` prima di ogni azione.
 È una scelta di progetto (serve un'ultima risorsa amministrativa), ma implica:
 
 - il numero di superadmin è minimo, nominativo e rivisto periodicamente;
-- l'accesso avviene solo da `/backoffice/` con MFA `apps/accounts/middleware.py:37-53`;
+- l'accesso avviene solo da `/backoffice/` con MFA, presentata nella sessione (`apps/accounts/middleware.py`, `apps/accounts/admin_site.py`);
 - **ogni** azione va tracciata: oggi lo sono le scritture via admin `apps/audit/signals.py:12-24`,
   **non** le letture (vedi `AUDIT_MODEL.md` §3.2).
 
@@ -562,7 +569,7 @@ Aggiornato il 21 settembre 2026, dopo il lavoro su rule engine, ruoli e permessi
 | **L-07** | Risposte non uniformi: 403 sui documenti altrui, 404 sulle sessioni | Tutto ciò che il chiamante non può vedere risponde **404**, identico a ciò che non esiste | `test_security.py`, `test_object_permissions.py` §11 |
 | **L-08** | Nessuna revoca di sessione alla revoca di un ruolo | `roles.revoke_role` chiama `services.revoke_sessions`: le sessioni aperte terminano subito | `test_identity_gaps.py::TestSessionRevocation` |
 | **L-09** | Nessun instradamento post-login per ruolo | `AccountAdapter.get_login_redirect_url` porta ciascun ruolo alla propria superficie | `test_identity_gaps.py::TestPostLoginRouting` |
-| **L-10** | MFA obbligatoria solo per `/backoffice/` | `MFA_REQUIRED_ROLES`: la richiede chiunque legga dati di terzi, anche senza `is_staff` — **e il middleware sorveglia ora anche l'area riservata**, non solo il back-office | `test_identity_gaps.py::TestSecondFactor`, `::TestTheSecondFactorIsEnforcedWhereItIsRequired` |
+| **L-10** | MFA obbligatoria solo per `/backoffice/` | `MFA_REQUIRED_ROLES`: la richiede chiunque legga dati di terzi, anche senza `is_staff` — **e il middleware sorveglia ora anche l'area riservata**, non solo il back-office. Da F-5, un dispositivo già attivato va presentato in ogni sessione, qualunque sia `BACKOFFICE_MFA_ENFORCED` | `test_identity_gaps.py::TestSecondFactor`, `::TestTheSecondFactorIsEnforcedWhereItIsRequired`, `test_backoffice_second_factor.py` |
 | **L-13** *(nuova)* | La policy di `CaseFile` concedeva a `role:staff` una vista che la queryset negava | Le due ora coincidono: solo proprietario, assegnatario vivo e amministratore | `test_object_permissions.py::test_13_the_list_and_the_object_check_agree` |
 | **L-14** *(nuova)* | Nessun ruolo poteva più cancellare una comunicazione notificata: l'admin di Django rifiuta una cancellazione la cui cascata tocca un modello su cui l'account non ha `delete`, e `notifications.Notification` è legata a `portal.Message` in `CASCADE` | `ROLE_PERMISSIONS` accetta chiavi `app.model`: la concessione si ferma alla notifica e **non** raggiunge `EmailOutbox`. La cancellazione diretta di una notifica è ora tracciata | `apps/portal/tests/test_admin_cascade.py` (5 test) |
 

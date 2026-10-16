@@ -27,15 +27,26 @@
  *                      door (--portico-lead, N2), one height for the four door panels (--portico-h, LA-7 — measured
  *                      when the width, the bar or the fonts change, not on the scrolled switch), the short panels
  *                      marked (.portico--short) so that their list closes with a hairline;
- *   initTarga        the key-alone plate's name tooltip hides on Esc while the pointer or the focus stays (1.4.13).
  *                    - the photographs: nothing before `load`; at idle after it, from 80rem, without Save-Data,
  *                      fetched once (N8); a panel opened before that fetches its own; the old one cross-fades.
- *   initDrawer       today's drawer below 80rem (main.js's, kept until W2-C2 moves it onto the overlay system):
- *                    «Menu», the scrim and the drawer from the letterhead's real foot, Esc, the focus loop,
- *                    the sections unfolding in place.
+ *                    The panel's open state, scrim, Esc, light dismissal and focus return are still this module's own
+ *                    (W2-C1's adapter): the overlay system's contract (docs/design-v5/QA/v54/w2-a/CONTRACT.md) has no
+ *                    primitive for a disclosure region yet — the portico family (surfaces PC03) is asked of W2-A
+ *                    (docs/design-v5/QA/v54/w2-c2/NOTES.md, «For W2-A»); until the switch, any `overlay:open` of the
+ *                    system puts the panel away.
+ *   initSheet        the sheet below 80rem (W2-C2, plan §1.12 item 8): the overlay system's modal drawer — «Menu»
+ *                    opens it, overlay.js holds the trap, the scrim, Esc, «Fermer», a link and the focus back on
+ *                    «Menu» (CONTRACT §2–§4); its doors unfold in place with no script (an exclusive <details name>,
+ *                    main.js's accordion where the name is not supported). Here only what the system cannot know:
+ *                    a window widened past 80rem — where the bar carries everything — puts the sheet away.
+ *   initTarga        «la targa»'s key alone is named by the overlay system's top-layer tooltip (`data-tip="layer"`:
+ *                    the wait, the keyboard's focus, Esc and a press are overlay.js's); from 100rem the plate says its
+ *                    name, so its tip is refused (the system's cancelable `overlay:tip`). The signed-in seat's account
+ *                    menu is the system's popover (components/account_menu.html): nothing of it is this module's.
  */
 
 import { nextFrame, reducedMotion } from "./motion.js";
+import { close as closeOverlay } from "./overlay.js";
 
 const DESKTOP = window.matchMedia("(min-width: 80rem)");
 const BAR = window.matchMedia("(min-width: 64rem)");
@@ -44,8 +55,6 @@ const OPEN_MS = 120; /* --panel-hover-intent */
 const SWITCH_MS = 80; /* a neighbour while a panel is open */
 const CLOSE_MS = 250; /* --panel-grace */
 const AIM_MS = 160; /* the pointer heads for the open panel: hold the switch this long, then look again */
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const rtl = () => document.documentElement.dir === "rtl";
 const shown = (el) => Boolean(el && el.getClientRects().length);
@@ -129,11 +138,16 @@ function initPortico(header) {
     return box;
   }
   function heights() {
-    // One height for the door panels: each is measured at its natural height, out of sight, in one frame.
-    nav.classList.add("is-measuring");
+    // One height for the door panels: each is measured at its natural height, out of sight, in one frame — and
+    // leaves at once: without `is-instant` the panels' discrete `display` transition held them on screen 120 ms
+    // after the measure, long enough for the browser to fetch their lazy photographs, Save-Data or not (N8, W2-C2)
+    const instant = nav.classList.contains("is-instant");
+    nav.classList.add("is-measuring", "is-instant");
     nav.style.setProperty("--portico-h", "auto");
     const natural = photoDoors.map((door) => [panelOf(door), panelOf(door).offsetHeight]);
     nav.classList.remove("is-measuring");
+    getComputedStyle(photoDoors.length ? panelOf(photoDoors[0]) : nav).display; // the closed pose, taken at once
+    nav.classList.toggle("is-instant", instant);
     const height = Math.max(0, ...natural.map(([, h]) => h));
     if (height) nav.style.setProperty("--portico-h", `${Math.ceil(height)}px`);
     // A door whose own content ends well above the shared height (LA-7's 24 px) closes its list with a hairline.
@@ -389,6 +403,10 @@ function initPortico(header) {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && openDoor() && !nav.contains(document.activeElement)) close(false);
   });
+  // A panel of the overlay system opening — the sheet, the account popover — puts the door's panel away: in Safari and
+  // on an iPad a press does not focus the button pressed, so a door pinned by a press has no focus to lose and the
+  // focusout above never comes; the opening moves the focus into its own panel (W2-C2 REVIEW m2).
+  document.addEventListener("overlay:open", () => close(false));
 
   /* ---- widths, fonts, the scrolled letterhead ---- */
   let asked = 0; // the layout requests so far: only the last one of a frame measures
@@ -420,94 +438,22 @@ function initPortico(header) {
 
 /* ---------------------------------------------------------------------------------- «la targa» */
 function initTarga(header) {
-  // Below the label threshold the key alone carries a name tooltip on hover and on focus; Esc hides it while the
-  // pointer or the focus stays (WCAG 1.4.13: dismissible), until either leaves. The tip is chrome.css §6's.
-  const targa = header.querySelector(".site-header__end > .targa");
+  const targa = header.querySelector(".site-header__end > .targa[data-tip]");
   if (!targa) return;
-  const back = () => targa.classList.remove("tip-off");
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && targa.matches(":hover, :focus-visible")) targa.classList.add("tip-off");
+  const labelled = window.matchMedia("(min-width: 100rem)"); /* chrome.css §6: the plate's word from 100rem */
+  targa.addEventListener("overlay:tip", (event) => {
+    if (labelled.matches) event.preventDefault();
   });
-  targa.addEventListener("pointerleave", back);
-  targa.addEventListener("blur", back);
 }
 
-/* ---------------------------------------------------------------------------------- the drawer (< 80rem) */
-function initDrawer(header) {
-  const toggle = header.querySelector("[data-nav-toggle]");
-  const drawer = header.querySelector("[data-nav-drawer]");
-  const overlay = header.querySelector("[data-nav-overlay]");
-  if (!toggle || !drawer) return;
-  const items = [...drawer.querySelectorAll("[data-nav-item]")];
-
-  // The sections unfold in place: one open at a time, Esc closes the innermost.
-  const closeItems = (except = null) =>
-    items.forEach((item) => {
-      if (item === except) return;
-      item.dataset.open = "false";
-      item.querySelector("[data-nav-panel-toggle]")?.setAttribute("aria-expanded", "false");
-    });
-  items.forEach((item) => {
-    const button = item.querySelector("[data-nav-panel-toggle]");
-    if (!button) return;
-    button.setAttribute("aria-expanded", "false");
-    button.addEventListener("click", () => {
-      const opening = item.dataset.open !== "true";
-      closeItems(item);
-      item.dataset.open = opening ? "true" : "false";
-      button.setAttribute("aria-expanded", opening ? "true" : "false");
-    });
-    item.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && item.dataset.open === "true") {
-        event.preventDefault();
-        event.stopPropagation(); /* Esc closes the innermost open thing, and only that one */
-        closeItems();
-        button.focus();
-      }
-    });
-  });
-
-  // The drawer and its scrim start at the letterhead's REAL foot, which moves with the institutional bar and
-  // the scrolled state: written on the header, so that both inherit it (G-23), and measured again whenever the
-  // viewport or the header changes while the drawer is open (rotation, round 4 defect 12).
-  const placeDrawer = () => {
-    const bottom = Math.max(0, Math.round(header.getBoundingClientRect().bottom));
-    header.style.setProperty("--nav-drawer-top", `${bottom}px`);
-  };
-  const isOpen = () => document.body.dataset.navOpen === "true";
-  addEventListener("resize", () => isOpen() && placeDrawer(), { passive: true });
-  if ("ResizeObserver" in window) new ResizeObserver(() => isOpen() && placeDrawer()).observe(header);
-  const setDrawer = (open) => {
-    if (open) placeDrawer();
-    document.body.dataset.navOpen = open ? "true" : "false";
-    toggle.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) drawer.querySelector(FOCUSABLE)?.focus();
-  };
-  toggle.setAttribute("aria-expanded", "false");
-  toggle.addEventListener("click", () => setDrawer(!isOpen()));
-  overlay?.addEventListener("click", () => setDrawer(false));
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isOpen()) {
-      setDrawer(false);
-      toggle.focus();
-    }
-  });
-  // The focus stays inside the open drawer: Tab from the last stop and Shift+Tab from the first return to «Menu».
-  drawer.addEventListener("keydown", (event) => {
-    if (event.key !== "Tab" || DESKTOP.matches || !isOpen()) return;
-    const stops = [...drawer.querySelectorAll(FOCUSABLE)].filter(shown);
-    if (!stops.length) return;
-    if (event.shiftKey && document.activeElement === stops[0]) {
-      event.preventDefault();
-      toggle.focus();
-    } else if (!event.shiftKey && document.activeElement === stops[stops.length - 1]) {
-      event.preventDefault();
-      toggle.focus();
-    }
-  });
+/* ---------------------------------------------------------------------------------- the sheet (< 80rem) */
+function initSheet(header) {
+  const sheet = document.getElementById("nav-sheet");
+  if (!sheet) return;
+  // past 80rem the sheet is not drawn and «Menu» neither: the sheet goes at once, and a focus that was in it lands on
+  // the letterhead's lock-up (overlay.js moves it only from inside the sheet)
   DESKTOP.addEventListener("change", () => {
-    setDrawer(false);
-    closeItems();
+    if (DESKTOP.matches) closeOverlay(sheet, { reason: "api", instant: true, focus: header.querySelector(".brand") });
   });
 }
 
@@ -517,5 +463,5 @@ export function initNavigation() {
   initHeaderState(header);
   initPortico(header);
   initTarga(header);
-  initDrawer(header);
+  initSheet(header);
 }

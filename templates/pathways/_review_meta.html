@@ -1,0 +1,12 @@
+{% load i18n %}
+{% comment %}
+The pathway's metadata row under its entrance (design V5.4, W3-F1): the facts of the sheet — its nature and its last
+verification — as a label and its value each, on one line of the page, no box and no glyph (v5/card.css «the
+metadata row»). The «verified on» date appears only where the sheet carries one (D26); otherwise the row says the
+detailed contents are being verified. Contract: `reviewed_at` (datetime or None).
+(The metadata row with its two glyphs left with its last consumers, W3-F1's second step.)
+{% endcomment %}
+<dl class="meta-row" data-metadata="pathway">
+  <div class="meta-row__item"><dt>{% translate "Nature" %}</dt><dd>{% translate "Contenu informatif — les décisions relèvent des autorités compétentes" %}</dd></div>
+  <div class="meta-row__item"><dt>{% translate "Dernière vérification" %}</dt><dd>{% if reviewed_at %}<time datetime="{{ reviewed_at|date:'c' }}">{{ reviewed_at|date:"d.m.Y" }}</time>{% else %}{% translate "contenus détaillés en cours de vérification" %}{% endif %}</dd></div>
+</dl>

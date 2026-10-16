@@ -1,7 +1,9 @@
-{% load i18n %}{% if is_preview %}
-<div class="container">
-  <div class="notice notice--warning" role="status" data-preview="phase3">
-    <p><strong>{% translate "Aperçu réservé au back-office" %}</strong> — {% translate "cette page n’est pas encore publique (Phase 3)." %}</p>
-  </div>
+{% load i18n %}{% comment %}
+Back-office preview of a gated page of the Espace Personnes (?preview=1, staff only): never indexed, never public.
+Design V5.4 (W3-F1, step 2): the same notice as the ecosystem's (components/notice.html — the pending register, its
+mark, its title, its words), no longer a bare warning box.
+{% endcomment %}{% if is_preview %}
+<div class="container pathways-preview" data-preview="phase3">
+  {% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au back-office") text=_("Cette page n’est pas encore publique : elle le deviendra à l’ouverture de la Phase 3.") %}
 </div>
 {% endif %}

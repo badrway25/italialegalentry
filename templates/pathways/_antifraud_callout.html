@@ -2,12 +2,19 @@
 {% comment %}
 Anti-fraud callout (locked p3.antifraud.title / p3.antifraud.body — Implementation §3.8.1): prominent but calm.
 Contract: `links` (dict from pathways.services.related_links), optional `level` (2|3, heading level), `suffix` (unique id part).
+
+Design V5.4 (W3-F1, step 2): a warning notice of the core components (v5/notice.css) — the amber register, never colour
+alone: the anti-fraud entry's mark (`shield-alert`, the registry's), the prescribed title in the register's word (its
+capitals tracked as every capital run is) and the warning's BROKEN rule at the reading edge. No red, no alarm. On the
+Arabic page the French title is a run in its own direction (the locked tag's span) inside a heading that keeps the
+page's: it ends on the reading edge, beside the mark.
 {% endcomment %}
-<aside class="notice notice--institutional antifraud-callout" aria-labelledby="antifraud-title-{{ suffix|default:'main' }}" data-callout="antifraud">
-  <span class="notice__icon" aria-hidden="true">{% svg_icon "shield-alert" "icon icon--lg" %}</span>
-  {% if level == 3 %}<h3 class="notice__title" id="antifraud-title-{{ suffix|default:'main' }}">{% locked "p3.antifraud.title" %}</h3>{% else %}<h2 class="notice__title" id="antifraud-title-{{ suffix|default:'main' }}">{% locked "p3.antifraud.title" %}</h2>{% endif %}
+{% locked "p3.antifraud.title" as af_title %}
+<aside class="notice notice--warning antifraud-callout" aria-labelledby="antifraud-title-{{ suffix|default:'main' }}" data-callout="antifraud">
+  {% svg_icon "shield-alert" "icon notice__icon" %}
+  {% if level == 3 %}<h3{% else %}<h2{% endif %} class="notice__title{% if af_title|striptags|upper == af_title|striptags %} notice__title--caps{% endif %}" id="antifraud-title-{{ suffix|default:'main' }}">{{ af_title }}{% if level == 3 %}</h3>{% else %}</h2>{% endif %}
   <div class="notice__body">
-    <p>{% locked "p3.antifraud.body" %}</p>
-    {% if links.antifraud %}<p><a class="link-arrow" href="{{ links.antifraud }}">{% translate "Lire la page « Attention aux fraudes »" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    {% locked "p3.antifraud.body" "p" %}
+    {% if links.antifraud %}<p class="antifraud-callout__more"><a class="link-arrow" href="{{ links.antifraud }}">{% translate "Lire la page « Attention aux fraudes »" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
   </div>
 </aside>

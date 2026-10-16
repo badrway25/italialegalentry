@@ -1,0 +1,759 @@
+/* ============================================================================================
+   ONE PIECE AND ITS DEPOSIT — design V5 (W3-C; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5;
+   DOCUMENT_WORKSPACE.md §11, §12)
+   A partial (`_`): imported by the documents page sheet, never an output of its own.
+   Markup: templates/documents/requirement_detail.html, templates/documents/partials/depot.html,
+   templates/documents/upload.html, templates/documents/terms_required.html.
+
+   The piece's page in the order of need: the state (its word, its rule, this piece's reason), the deposit while
+   the piece is open, what is asked, the source, the deposits (each version: when, its fingerprint, its size, then
+   two lines that never merge — what the antivirus said about the FILE, what a person concluded about the PIECE).
+   One column on the frame's edge; sections under hairlines (SH-2), no card, no shadow; the form is W1-C's.
+   THE DÉPÔT (§11; static/js/src/depot.js): the zone that keeps the real input inside it, the chosen file's row,
+   the transfer, and the answers composed in place — a refusal on the file's row (the double rule of «rifiuto»),
+   a notice above the act, the gate in a dashed frame, the filed state's mark drawing itself under the state. The
+   one motion is the person's: the mark draws once it is composed (a transition from @starting-style — never at
+   load, never under reduced motion, where the tokens are 0 ms). Corners 8 (the frames) and full (the discs).
+   Tokens only, logical properties only.
+   ============================================================================================ */
+
+.doc-piece {
+  display: grid;
+  gap: var(--s-10);
+  max-inline-size: 52rem;
+  min-inline-size: 0;
+}
+
+.doc-piece__h2 {
+  margin: 0;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+:lang(ar) .doc-piece__h2 {
+  letter-spacing: 0;
+}
+
+/* ---- 1 · The state: the word, its rule, this piece's reason --------------------------------- */
+.doc-piece__state {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.doc-piece__state > p,
+.doc-piece__detail {
+  margin: 0;
+}
+
+.doc-piece__chip {
+  margin-block-start: var(--s-1);
+}
+
+.doc-piece__rule {
+  max-inline-size: 62ch;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.doc-piece__reason {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  max-inline-size: 62ch;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+}
+
+.doc-piece__reason .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 4px;
+  color: var(--icon-muted);
+}
+
+/* a refusal's motive carries the refusal's mark; a replacement's reason the information's */
+.doc-piece__reason--refusal .icon {
+  color: var(--tone-rifiuto-mark);
+}
+
+.doc-piece__detail {
+  max-inline-size: 62ch;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+}
+
+/* ---- 2 · The deposit ---------------------------------------------------------------------- */
+.doc-depot {
+  display: grid;
+  gap: var(--s-3);
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.doc-depot--loose {
+  padding-block-start: 0;
+  border: 0;
+}
+
+.doc-depot__rule {
+  margin: 0;
+  max-inline-size: 62ch;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.doc-depot__form {
+  max-inline-size: 36rem;
+}
+
+.doc-depot__form .form__actions {
+  margin-block-start: var(--s-6);
+}
+
+.doc-depot__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  max-inline-size: 62ch;
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.doc-depot__note .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 2px;
+  color: var(--icon-muted);
+}
+
+/* ---- 2 bis · The zone that keeps the real input inside it (DOCUMENT_WORKSPACE §11.2) -------------------------
+   Without script: a dashed frame around the browser's own control and its formats. With script (`[data-enhanced]`,
+   static/js/src/depot.js): the input covers the frame, transparent — a press anywhere opens the picker, a file dropped
+   on it is the input's own —, and the frame says what it is: the glyph, «Déposer un fichier», the formats. */
+.doc-depot__zone {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  min-block-size: 4.5rem;
+  padding: var(--s-4) var(--s-5);
+  border: 1px dashed var(--line-structure);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-sheet);
+}
+
+.doc-depot__zone-mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--icon-disc-bg);
+  color: var(--icon-strong);
+}
+
+.doc-depot__zone-mark .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+.doc-depot__zone-words {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.doc-depot__zone-title {
+  display: none;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.form-field .doc-depot__zone-hint {
+  margin: 0;
+}
+
+/* the enhanced zone: the input is the whole frame, its words are the frame's */
+[data-enhanced] .doc-depot__zone > input[type="file"] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+[data-enhanced] .doc-depot__zone {
+  flex-wrap: nowrap;
+}
+
+[data-enhanced] .doc-depot__zone-words {
+  flex: 1;
+}
+
+[data-enhanced] .doc-depot__zone-title {
+  display: block;
+}
+
+/* the frame takes the input's focus ring and its hover; a file held above it lights it (solid laguna, the wash). The
+   keyboard's focus is read from the input's modality (head.js) and the frame's own focus, never from a
+   :has(:focus-visible): Blink re-styles the whole page from <body> for every focus that enters or leaves the subject's
+   input (measured on the piece's page, 276 elements a time on a phone) — the field is the zone's only control */
+html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
+  border-style: solid;
+  border-color: var(--accent-mark);
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-enhanced] .doc-depot__zone:hover {
+    border-color: var(--accent-mark);
+  }
+
+  [data-enhanced] .doc-depot__zone:hover .doc-depot__zone-mark {
+    color: var(--accent-mark);
+  }
+}
+
+.doc-depot__zone.is-over {
+  border-style: solid;
+  border-color: var(--accent-mark);
+  background-color: var(--accent-wash);
+}
+
+.doc-depot__zone.is-over .doc-depot__zone-mark {
+  background-color: var(--surface-raised);
+  color: var(--accent-mark);
+}
+
+/* while the deposit travels (depot.js writes `data-sending` with the controls' wait) */
+[data-enhanced] .doc-depot__zone[data-sending] {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+/* a finger: a 56 px target at least, and nothing that speaks of dragging (the words never did); «Télécharger» of a
+   deposit carries the foot links' invisible 44 px band — 44 px wide too where its word is shorter (A11Y_PERF finding 3:
+   77 × 20 px in French, 30 × 22 in Arabic). The gate's link stays inline in its sentence (WCAG 2.5.8's exception). */
+@media (pointer: coarse) {
+  .doc-depot__zone {
+    min-block-size: 3.5rem;
+  }
+
+  .doc-version__get a {
+    position: relative;
+  }
+
+  .doc-version__get a::before {
+    content: "";
+    position: absolute;
+    inset-inline: min(0px, calc(50% - var(--hit-primary) / 2));
+    inset-block: calc(50% - var(--hit-primary) / 2);
+  }
+}
+
+/* ---- 2 ter · The chosen file: its whole name, its type and size, the transfer, a refusal in place -------------- */
+.doc-depot__file {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px var(--s-3);
+  margin-block-start: var(--s-3);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.doc-depot__file[hidden] {
+  display: none;
+}
+
+.doc-depot__file > p {
+  margin: 0;
+}
+
+.doc-depot__file-mark {
+  grid-row: 1 / span 2;
+  display: inline-grid;
+  place-items: center;
+  color: var(--icon-muted);
+}
+
+.doc-depot__file-mark .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+/* the name in its own order (an Arabic page included), starting where the row starts; it wraps, never an ellipsis */
+.doc-depot__file-name {
+  grid-column: 2;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.doc-depot__file-meta {
+  grid-column: 2;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.doc-depot__abort {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+}
+
+.doc-depot__abort[hidden] {
+  display: none;
+}
+
+.doc-depot__transfer {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-block-start: var(--s-2);
+}
+
+.doc-depot__transfer[hidden] {
+  display: none;
+}
+
+.doc-depot__progress {
+  flex: 1;
+  inline-size: 100%;
+  block-size: 6px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-area);
+  color: var(--accent-mark);
+  overflow: hidden;
+  appearance: none;
+}
+
+.doc-depot__progress::-webkit-progress-bar {
+  border-radius: var(--radius-full);
+  background-color: var(--surface-area);
+}
+
+.doc-depot__progress::-webkit-progress-value {
+  border-radius: var(--radius-full);
+  background-color: var(--accent-mark);
+}
+
+.doc-depot__progress::-moz-progress-bar {
+  border-radius: var(--radius-full);
+  background-color: var(--accent-mark);
+}
+
+.doc-depot__percent {
+  flex: none;
+  min-inline-size: 4ch;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  text-align: end;
+  color: var(--text-2);
+}
+
+/* a refusal stays on the file's row: the double rule of «rifiuto» at the reading edge, the mark, the server's words */
+.doc-depot__file[data-state="refused"] {
+  padding-inline-start: var(--s-3);
+  border-inline-start: 3px double var(--tone-rifiuto-mark);
+}
+
+.doc-depot__refusal {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-block-start: var(--s-2);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--tone-rifiuto-text);
+}
+
+.doc-depot__refusal[hidden] {
+  display: none;
+}
+
+.doc-depot__refusal .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 4px;
+  color: var(--tone-rifiuto-mark);
+}
+
+/* the answers composed in place (a notice: the throttle, an error) stand above the act that answers them */
+.doc-depot__answer:empty {
+  display: none;
+}
+
+.doc-depot__answer > .notice {
+  margin-block: var(--s-4) 0;
+}
+
+/* ---- 2 quater · The gate: the sentence and its link in the dashed frame of a shut door (§11.2 «gate») ---------- */
+.doc-depot__gate {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  max-inline-size: 62ch;
+  margin: 0;
+  padding: var(--s-4) var(--s-5);
+  border: 1px dashed var(--line-structure);
+  border-radius: var(--radius-lg);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+}
+
+.doc-depot__gate .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: 4px;
+  color: var(--tone-blocco-mark);
+}
+
+/* ---- 2 quinquies · Filed: the filed state's own mark draws itself — ring, then dot; no check, no verdict ------- */
+.doc-filed {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  max-inline-size: 62ch;
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+}
+
+.doc-filed:focus {
+  outline: none;
+}
+
+.doc-filed:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.doc-filed__words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+}
+
+/* the loose road's answer names the file first, on its own line, in its own order (REVIEW m5) */
+.doc-filed__name {
+  flex: 1 0 100%;
+  font-weight: var(--w-control);
+  overflow-wrap: anywhere;
+}
+
+.doc-filed__mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 20px;
+  block-size: 20px;
+  margin-block-start: 2px;
+  color: var(--tone-neutro-mark);
+}
+
+.doc-filed__mark svg {
+  inline-size: 20px;
+  block-size: 20px;
+  overflow: visible;
+}
+
+.doc-filed__ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--motion-standard) var(--ease-enter);
+}
+
+.doc-filed__dot {
+  fill: currentColor;
+  opacity: 1;
+  transition: opacity var(--motion-fast) var(--ease-enter) var(--motion-standard);
+}
+
+/* drawn on the person's act only: the block exists only once the Dépôt composes it (a <template> until then) */
+@starting-style {
+  .doc-filed__ring {
+    stroke-dashoffset: 1;
+  }
+
+  .doc-filed__dot {
+    opacity: 0;
+  }
+}
+
+/* the answer to a filing, under the state it changed */
+.doc-piece__answer:empty {
+  display: none;
+}
+
+.doc-piece__answer {
+  margin-block-start: var(--s-2);
+}
+
+.doc-piece__state .doc-piece__h2:focus {
+  outline: none;
+}
+
+.doc-piece__state .doc-piece__h2:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- 3 · What is asked -------------------------------------------------------------------- */
+.doc-facts {
+  display: grid;
+  margin: 0;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.doc-facts__row {
+  display: grid;
+  grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr);
+  gap: var(--s-1) var(--s-6);
+  align-items: baseline;
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.doc-facts__row dt {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.doc-facts__row dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+  min-inline-size: 0;
+}
+
+.doc-facts__gloss {
+  display: block;
+  inline-size: 100%;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+@media (max-width: 47.999rem) {
+  .doc-facts__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- 4 · The source: register.css's numbered list, on the section's own edge --------------- */
+.doc-piece__source {
+  display: grid;
+  gap: var(--s-3);
+}
+
+/* ---- 5 · The deposits ------------------------------------------------------------------------ */
+.doc-versions {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.doc-versions__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.doc-version {
+  display: grid;
+  gap: var(--s-3);
+  padding-block: var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.doc-version__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-6);
+}
+
+.doc-version__head > p {
+  margin: 0;
+}
+
+.doc-version__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-2);
+}
+
+.doc-version--current .doc-version__title {
+  color: var(--text-1);
+}
+
+.doc-version__get {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  text-align: end;
+}
+
+/* the validity of a temporary link, said beside the link and not in a tooltip */
+.doc-version__ttl {
+  color: var(--text-2);
+}
+
+/* the reason a file is not handed over, where the link would have been: it wraps */
+.doc-version__block {
+  max-inline-size: 34ch;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.doc-version__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-6);
+  margin: 0;
+}
+
+.doc-version__facts > div {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.doc-version__facts dt,
+.doc-version__line dt {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.doc-version__facts dd,
+.doc-version__line dd {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+.doc-version__lines {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.doc-version__line {
+  display: grid;
+  grid-template-columns: 10ch minmax(0, 1fr);
+  gap: var(--s-1) var(--s-3);
+  align-items: baseline;
+}
+
+.doc-version__line dd {
+  display: grid;
+  gap: 2px;
+}
+
+/* a reviewer's note keeps its own direction (dir="auto") and stays on the reading edge: it hugs its words */
+.doc-version__line dd > * {
+  justify-self: start;
+}
+
+.doc-version__rule {
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  color: var(--text-2);
+}
+
+@media (max-width: 30rem) {
+  .doc-version__get {
+    justify-items: start;
+    text-align: start;
+  }
+
+  .doc-version__line {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (forced-colors: active) {
+  .doc-depot,
+  .doc-facts,
+  .doc-facts__row,
+  .doc-versions__list,
+  .doc-version,
+  .doc-depot__zone,
+  .doc-depot__file,
+  .doc-depot__gate {
+    border-color: CanvasText;
+  }
+
+  .doc-depot__zone.is-over,
+  html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
+    border-color: Highlight;
+  }
+
+  .doc-piece__reason .icon,
+  .doc-depot__note .icon,
+  .doc-depot__zone-mark,
+  .doc-depot__file-mark,
+  .doc-depot__refusal .icon,
+  .doc-depot__gate .icon,
+  .doc-filed__mark {
+    color: CanvasText;
+  }
+
+  .doc-depot__progress {
+    border: 1px solid CanvasText;
+  }
+}

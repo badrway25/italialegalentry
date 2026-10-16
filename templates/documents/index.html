@@ -1,37 +1,47 @@
-{% extends "portal/base_portal.html" %}{% load i18n static documents_register %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-MES PIÈCES — the register of what each case file still needs.
+MES PIÈCES — the register of what each case file still needs (design V5, «Mes pièces» V5.2: docs/design-v5/
+V5_4_EXECUTION_PLAN.md §3.5 item 5; W3-C), on the console's page frame. Rules: the documents page sheet.
 
-What this replaces: a file browser. The previous screen listed filenames, sizes and an ANTIVIRUS
-verdict ("En attente d'analyse") in the column where a person looked for their own status. It
-answered a question about bytes on a disk; the question a person has is *what is still missing,
-who is waiting for it, and what happens next*.
+What this replaces: a file browser. The previous screen listed filenames, sizes and an ANTIVIRUS verdict ("En attente
+d'analyse") in the column where a person looked for their own status. It answered a question about bytes on a disk;
+the question a person has is *what is still missing, who is waiting for it, and what happens next*.
 
-So the row is the REQUIREMENT, the files are versions inside it, and the loose files that answer no
-requirement keep a place at the bottom so nothing already uploaded becomes unreachable.
+So the row is the REQUIREMENT, the files are versions inside it, and the loose files that answer no requirement keep
+a place at the bottom — a real table, named for what it is — so nothing already uploaded becomes unreachable.
+
+Contract: `register` (documents.presenters.register_context), `loose_documents`, `may_upload`.
 {% endcomment %}
 {% block page_title %}{% translate "Mes pièces" %}{% endblock %}
 {% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head doc-head doc-head--register">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mes pièces" %}</h1>
+    <p class="ws-head__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
+  </div>
+</header>
+{% endblock %}
 
 {% block portal_content %}
-<h1 class="doc-page__title">{% translate "Mes pièces" %}</h1>
-<p class="doc-page__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
-
+<div class="doc-page">
 {% include "documents/partials/register.html" with register=register %}
 
 {% comment %}
-The files attached to no requirement. Kept, demoted, and named for what they are — not a second
-register competing with the first.
+The files attached to no requirement. Kept, demoted, and named for what they are — not a second register competing
+with the first. Each «Supprimer» is described by its file (W-3: n buttons called «Supprimer» said nothing), and asks
+first (REVIEW m4): it opens the overlay system's alert dialog (`data-overlay-open`, documents/partials/delete_confirm.html)
+— the file's name in the question, «Annuler» the safe answer, «Supprimer» the garnet outline that sends this row's form.
+Without script the button posts its form at once, as it always has.
 {% endcomment %}
 {% if loose_documents %}
-<section class="doc-loose" aria-labelledby="loose-title">
-  <p class="folio">
-    <span class="folio__head" id="loose-title">{% translate "Autres fichiers déposés" %}</span>
-  </p>
-  <p class="t-gloss doc-loose__lead">{% translate "Ces fichiers ne répondent à aucune pièce demandée. Vous pouvez les supprimer." %}</p>
-  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate 'Autres fichiers déposés' %}">
-    <table class="data-table">
+<section class="doc-files" aria-labelledby="loose-title">
+  <h2 class="doc-files__title" id="loose-title">{% translate "Autres fichiers déposés" %}</h2>
+  <p class="doc-files__lead">{% translate "Ces fichiers ne répondent à aucune pièce demandée. Vous pouvez les supprimer." %}</p>
+  <div class="doc-files__sheet">
+    <table class="doc-files__table">
       <caption class="visually-hidden">{% translate "Autres fichiers déposés" %}</caption>
       <thead>
         <tr>
@@ -45,13 +55,13 @@ register competing with the first.
       <tbody>
         {% for doc in loose_documents %}
         <tr>
-          <th scope="row" data-label="{% translate 'Fichier' %}">{{ doc.original_name }}</th>
-          <td data-label="{% translate 'Type' %}">{{ doc.get_kind_display }}</td>
-          <td data-label="{% translate 'Taille' %}">{{ doc.size|filesizeformat }}</td>
-          <td data-label="{% translate 'Déposé le' %}"><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
-          <td data-label="{% translate 'Action' %}">
-            <form method="post" action="{% url 'documents:delete' doc.pk %}" class="doc-inline-form">{% csrf_token %}
-              <button type="submit" class="btn btn--text">{% translate "Supprimer" %}</button>
+          <th scope="row"><span class="doc-files__name" id="loose-{{ doc.pk }}" dir="auto">{{ doc.original_name }}</span></th>
+          <td>{{ doc.get_kind_display }}</td>
+          <td>{{ doc.size|filesizeformat }}</td>
+          <td><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
+          <td class="doc-files__act">
+            <form method="post" action="{% url 'documents:delete' doc.pk %}" class="doc-files__form" id="loose-delete-{{ doc.pk }}" data-doc-delete="{{ doc.original_name }}">{% csrf_token %}
+              <button type="submit" class="btn btn--text" aria-describedby="loose-{{ doc.pk }}" data-overlay-open="loose-delete">{% translate "Supprimer" %}</button>
             </form>
           </td>
         </tr>
@@ -59,14 +69,19 @@ register competing with the first.
       </tbody>
     </table>
   </div>
+  {% translate "Supprimer" as delete_title %}
+  {% include "components/dialog.html" with id="loose-delete" kind="alert" glyph="trash-2" title=delete_title describedby="loose-delete-text" body_template="documents/partials/delete_confirm.html" actions_template="documents/partials/delete_confirm.html" %}
 </section>
 {% endif %}
 
-<p class="doc-page__aside">
+<p class="doc-aside">
   {% if may_upload %}
   <a href="{% url 'documents:upload' %}">{% translate "Déposer un fichier hors exigence" %}</a>
   {% else %}
   {% translate "Le dépôt de fichiers nécessite l’acceptation des Conditions d’utilisation." %}
   {% endif %}
 </p>
+</div>
+{% comment %} The preview drawer: beside the register on desktop, a sheet on a phone — outside the page it reads again. {% endcomment %}
+{% if register.blocks %}{% include "documents/partials/piece_drawer.html" %}{% endif %}
 {% endblock %}

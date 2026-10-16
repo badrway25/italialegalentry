@@ -139,8 +139,13 @@ def test_the_legacy_rules_these_sheets_replace_are_gone():
     # §3 (the badges' pointer) and §13 (the cards) went with part 2 of the family: the chip and the cards
     # (tests/frontend/test_chips_cards_w1_c.py holds that half of the deletion map)
     assert not {"3", "13"} & set(numbered), numbered
-    shell = re.sub(r"/\*.*?\*/", "", _read(CSS / "v4" / "shell.css"), flags=re.S)
-    assert ".notice" not in shell, "the notice's face is v5/notice.css's"
+    shell_path = CSS / "v4" / "shell.css"
+    if shell_path.exists():
+        shell = re.sub(r"/\*.*?\*/", "", _read(shell_path), flags=re.S)
+        assert ".notice" not in shell, "the notice's face is v5/notice.css's"
+    else:
+        # the file left with the letterhead's account menu (W2-C2): no face of the notice can stay behind in it
+        assert "v4/shell.css" not in _imports()
 
 
 def test_what_is_left_of_the_v4_buttons_is_the_busy_face_and_nothing_else():

@@ -5,56 +5,61 @@ training bodies, professionals. Neutral translated descriptions (pages.content.N
 they only restate the list of actors that the prescribed presentation texts enumerate, and attribute
 no power, role or promise to anyone. The prescribed p3.hero.body is quoted only when gate G3 is open.
 Partners: authorised ones only (gate G6) — names, never a logo without written authorisation.
+
+Design V5.4 (W3-F1): the entrance; «En bref»; the actors as a register — the actor's glyph says who (one per row,
+the registry's), the title, the text, the actor's page as the row's link; the partners, by name only.
 {% endcomment %}
 {% block page_title %}{% translate "Le réseau" %}{% endblock %}
 {% block page_header %}
-{% translate "Le réseau" as page_title_text %}{% translate "L’écosystème" as eyebrow %}
+{% translate "Le réseau" as page_title_text %}{% translate "L’écosystème" as page_label %}
 {% translate "Un projet construit avec les acteurs compétents, chacun dans son rôle." as page_lead %}
-{% include "components/page_header.html" with title=page_title_text eyebrow=eyebrow lead=page_lead %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=page_title_text lead=page_lead photo=photo only %}
 {% endblock %}
 {% block page_body %}
-{% if photo %}
-<figure class="page-figure">
-  {% include "pages/partials/_picture.html" with photo=photo sizes="(min-width: 64rem) 52rem, 100vw" %}
-</figure>
-{% endif %}
-
 {% if presentation %}
-<section class="page-section" aria-labelledby="network-presentation-title">
-  <h2 class="page-section__title" id="network-presentation-title">{% translate "En bref" %}</h2>
-  <p class="page-section__lead"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
+<section class="chapter" aria-labelledby="network-presentation-title">
+  <div class="container chapter__inner">
+    {% translate "En bref" as brief_title %}{% include "pages/partials/_chapter_head.html" with title_id="network-presentation-title" title=brief_title only %}
+    <div class="chapter__body">
+      <p class="chapter__statement"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
+    </div>
+  </div>
 </section>
 {% endif %}
 
-<section class="page-section" aria-labelledby="network-actors-title">
-  <h2 class="page-section__title" id="network-actors-title">{% translate "Les acteurs de l’écosystème" %}</h2>
-  <ul class="actor-list" data-actors="{{ actors|length }}">
-    {% for actor in actors %}
-    <li class="actor-list__item" data-actor="{{ actor.key }}">
-      <span class="actor-list__icon" aria-hidden="true">{% svg_icon actor.icon "icon icon--lg" %}</span>
-      <div class="actor-list__body">
-        <h3 class="actor-list__title"{% if actor.title.lang %} lang="{{ actor.title.lang }}"{% endif %}>{{ actor.title }}</h3>
-        <p class="actor-list__text"{% if actor.text.lang %} lang="{{ actor.text.lang }}"{% endif %}>{{ actor.text }}</p>
-        {% if actor.url %}<p><a class="link-arrow" href="{{ actor.url }}"{% if actor.link_label.lang %} lang="{{ actor.link_label.lang }}"{% endif %}>{{ actor.link_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
+<section class="chapter" aria-labelledby="network-actors-title">
+  <div class="container chapter__inner">
+    {% translate "Les acteurs de l’écosystème" as actors_title %}{% include "pages/partials/_chapter_head.html" with title_id="network-actors-title" title=actors_title only %}
+    <div class="chapter__body">
+      <ul class="registro registro--glyph actor-list" data-actors="{{ actors|length }}">
+        {% for actor in actors %}
+        <li class="registro__row actor-list__item" data-actor="{{ actor.key }}">
+          <h3 class="registro__title actor-list__title"{% if actor.title.lang %} lang="{{ actor.title.lang }}"{% endif %}>{% svg_icon actor.icon "icon registro__glyph" %}{% if actor.url %}<a href="{{ actor.url }}">{{ actor.title }}</a>{% else %}{{ actor.title }}{% endif %}</h3>
+          <p class="registro__text actor-list__text"{% if actor.text.lang %} lang="{{ actor.text.lang }}"{% endif %}>{{ actor.text }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 
-<section class="page-section" aria-labelledby="network-partners-title">
-  <h2 class="page-section__title" id="network-partners-title">{% translate "Partenaires" %}</h2>
-  {% if partners %}
-  <ul class="home-ecosystem__list" data-partners="{{ partners|length }}">
-    {% for card in partners %}<li class="home-ecosystem__partner"><span class="home-ecosystem__partner-name">{{ card.partner.name }}</span></li>{% endfor %}
-  </ul>
-  {% else %}
-  <p class="page-section__text" data-partners="0">{% translate "Les partenaires sont présentés au fur et à mesure de leurs autorisations écrites." %}</p>
-  {% endif %}
-  <p class="cluster page-section__more">
-    {% if links.partners %}<a class="link-arrow" href="{{ links.partners }}">{% translate "Voir les partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-    {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-    {% if links.agami %}<a class="link-arrow" href="{{ links.agami }}">{% translate "Le promoteur" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-  </p>
+<section class="chapter chapter--area" aria-labelledby="network-partners-title">
+  <div class="container chapter__inner">
+    {% translate "Partenaires" as partners_title %}{% include "pages/partials/_chapter_head.html" with title_id="network-partners-title" title=partners_title only %}
+    <div class="chapter__body">
+      {% if partners %}
+      <ul class="registro registro--two registro--words" data-partners="{{ partners|length }}">
+        {% for card in partners %}<li class="registro__row"><p class="registro__title">{{ card.partner.name }}</p></li>{% endfor %}
+      </ul>
+      {% else %}
+      <p class="page-section__text chapter__prose" data-partners="0">{% translate "Les partenaires sont présentés au fur et à mesure de leurs autorisations écrites." %}</p>
+      {% endif %}
+      <p class="chapter__more chapter__links">
+        {% if links.partners %}<a class="link-arrow" href="{{ links.partners }}">{% translate "Voir les partenaires" %}</a>{% endif %}
+        {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %}</a>{% endif %}
+        {% if links.agami %}<a class="link-arrow" href="{{ links.agami }}">{% translate "Le promoteur" %}</a>{% endif %}
+      </p>
+    </div>
+  </div>
 </section>
 {% endblock %}

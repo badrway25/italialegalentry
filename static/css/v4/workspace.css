@@ -2,8 +2,10 @@
    WORKSPACE V4 — the components of the console's pages
    docs/design-v4/CREATIVE_DIRECTION.md §3.4 (dashboard), §3.5 (Mes Documents)
    DESIGN_SYSTEM_V4.md §2 (depth), §6 (hover), §7.1 (motion), §8 (Panel, HealthStrip,
-   SegmentedControl, DocumentRow, DocumentCard, Avatar/Glyph, JourneyRail,
-   ResponsibilityBar, EmptyState, ContextHeader)
+   Avatar/Glyph, ResponsibilityBar, EmptyState, ContextHeader)
+   The SegmentedControl, the search and DocumentCollection / Row / Card left with «Mes
+   pièces» V5 (W3-C; the documents page sheet's partials, apps/portal/static/portal/v5/); the JourneyRail and the
+   Timeline with design V5's journey (W3-D: apps/portal/static/portal/v5/_journey-rail.css).
 
    Tokens only (test_the_v4_component_sheets_carry_no_literal_colour). The
    shell itself — rail, context bar, bottom bar — lives in
@@ -282,7 +284,11 @@
 }
 
 /* The next step's urgency, as the panel's edge colour — the word beside it says the same. */
-.ws-next--overdue::before,
+/* F13 (design V5, W3-C): lateness speaks azione — terracotta, never a refusal's garnet; a block keeps its own edge */
+.ws-next--overdue::before {
+  background: var(--deadline-overdue-mark);
+}
+
 .ws-next--blocked::before {
   background: var(--line-grad-err);
 }
@@ -392,696 +398,6 @@
   font-weight: 500;
 }
 
-/* ---- The controls row: SegmentedControl (DS §8.14) + search --------------------------- */
-.doc-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-4);
-  flex-wrap: wrap;
-  margin-block: var(--s-5) var(--s-4);
-  container-type: inline-size;
-  container-name: controls;
-}
-
-/* The control takes the row; the search stays at its end while both fit (1440), and wraps below
-   when they do not (1280 with the rail open) — never a control cut in a hidden scroll. */
-.doc-controls .seg {
-  flex: 1 1 auto;
-  min-inline-size: 0;
-  overflow-x: auto;
-  scrollbar-width: thin;
-}
-
-/* Narrower than the eight entries the row still scrolls: its end fades to say so. */
-@container controls (max-width: 899px) {
-  .doc-controls .seg {
-    -webkit-mask-image: var(--mask-fade-end);
-    mask-image: var(--mask-fade-end);
-  }
-
-  [dir="rtl"] .doc-controls .seg {
-    -webkit-mask-image: var(--mask-fade-end-rtl);
-    mask-image: var(--mask-fade-end-rtl);
-  }
-}
-
-.seg__list {
-  display: flex;
-  flex-wrap: nowrap;
-  inline-size: max-content;
-  gap: 2px;
-  margin: 0;
-  padding: 2px;
-  list-style: none;
-  background: var(--min-1);
-  border-radius: var(--radius-full);
-}
-
-.seg__item {
-  margin: 0;
-}
-
-.seg__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  min-block-size: 32px;
-  padding: 0 var(--s-3);
-  border-radius: var(--radius-full);
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  font-weight: 500;
-  color: var(--ink-2);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color var(--motion-fast) var(--ease-exit), background-color var(--motion-fast) var(--ease-exit);
-}
-
-.seg__link:hover,
-.seg__link:focus-visible {
-  color: var(--ink);
-  text-decoration: none;
-}
-
-.seg__link[aria-current] {
-  background: var(--min-2);
-  color: var(--ink);
-  box-shadow: var(--shadow-1);
-}
-
-.seg__link:focus-visible,
-.seg__link[aria-current]:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
-}
-
-.seg__link--empty {
-  color: var(--ink-3);
-}
-
-.seg__count {
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-3);
-  font-weight: 400;
-}
-
-.seg__link[aria-current] .seg__count {
-  color: var(--ink-2);
-}
-
-/* The register's mark: the control is the strip's legend (one row, not two). The mark is the chip's own —
-   «i cerchi», from the sprite — and takes its colour from the entry's `data-register` (design V5, W1-C:
-   v5/chip.css `.chip__g`). The element that carries the register draws no box of its own. */
-.seg__dot {
-  display: contents;
-  --chip-mark-size: 14px;
-}
-
-/* 14 px and 4 px of air: the entry is as wide as it was with its 10 px dot and 8 px, so the eight
-   entries and the search still share one row at 1440. */
-.seg__dot .chip__g {
-  margin-inline-end: calc(-1 * var(--s-1));
-}
-
-.seg__link--empty .chip__g {
-  opacity: 0.4;
-}
-
-/* On the phone the control is one scrolling row, not a pile of pills in a grey blob. */
-@media (max-width: 47.999rem) {
-  /* The eighth entry is off screen at 390: the row fades at its end (gate C round 2, defect 12: the
-     thin bar never renders under touch emulation). */
-  .seg {
-    margin-inline: calc(-1 * var(--page-pad));
-    padding-inline: var(--page-pad);
-    padding-block-end: var(--s-1);
-    overflow-x: auto;
-    scrollbar-width: thin;
-    -webkit-mask-image: var(--mask-fade-end);
-    mask-image: var(--mask-fade-end);
-  }
-
-  [dir="rtl"] .seg {
-    -webkit-mask-image: var(--mask-fade-end-rtl);
-    mask-image: var(--mask-fade-end-rtl);
-  }
-
-}
-
-.doc-search {
-  position: relative;
-  flex: 0 0 240px;
-}
-
-.doc-search__icon {
-  position: absolute;
-  inset-inline-start: var(--s-3);
-  inset-block-start: 50%;
-  translate: 0 -50%;
-  inline-size: var(--icon-md);
-  block-size: var(--icon-md);
-  color: var(--ink-3);
-  pointer-events: none;
-}
-
-.doc-search__input {
-  inline-size: 100%;
-  min-block-size: var(--input-h);
-  padding: 0 var(--s-4) 0 calc(var(--s-3) + var(--icon-md) + var(--s-2));
-  font-family: var(--f-sans);
-  font-size: var(--u-body);
-  line-height: var(--u-body-lh);
-  color: var(--ink);
-  background: var(--min-3);
-  border: 1px solid var(--hairline-strong);
-  border-radius: var(--field-radius);
-}
-
-[dir="rtl"] .doc-search__input {
-  padding: 0 calc(var(--s-3) + var(--icon-md) + var(--s-2)) 0 var(--s-4);
-}
-
-.doc-search__input:focus-visible {
-  border-color: var(--accent-ring);
-  outline: 2px solid var(--accent-ring);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
-}
-
-/* ---- DocumentCollection and DocumentRow (DS §8.23–24) ---------------------------------- */
-.doc-workspace + .doc-workspace {
-  margin-block-start: var(--s-10);
-}
-
-.doc-workspace__head {
-  margin-block-end: var(--s-4);
-}
-
-.doc-workspace__title {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--s-2) var(--s-3);
-  margin: 0;
-  font-family: var(--f-sans);
-  font-size: var(--u-section);
-  line-height: var(--u-section-lh);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.doc-workspace__ref {
-  font-family: var(--f-mono);
-  font-size: var(--u-ref);
-  font-weight: 400;
-  color: var(--ink-2);
-}
-
-.doc-health {
-  padding: var(--s-5);
-}
-
-.doc-collection {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.doc-collection.panel {
-  padding: 0;
-  overflow: visible;
-}
-
-.doc-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 1.5fr) minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1fr) auto 40px;
-  grid-template-areas: "identity state responsible due health action menu";
-  align-items: center;
-  gap: var(--s-4);
-  min-block-size: var(--row-min-h);
-  padding: var(--s-3) var(--s-5);
-  border-block-end: 1px solid var(--hairline);
-  font-family: var(--f-sans);
-  font-size: var(--u-ui);
-  line-height: var(--u-ui-lh);
-  color: var(--ink);
-  transition: background-color var(--motion-fast) var(--ease-exit), box-shadow var(--motion-fast) var(--ease-exit);
-}
-
-.doc-row:last-child {
-  border-block-end: 0;
-}
-
-.doc-collection.panel .doc-row:first-child {
-  border-start-start-radius: var(--radius-lg);
-  border-start-end-radius: var(--radius-lg);
-}
-
-.doc-collection.panel .doc-row:last-child {
-  border-end-start-radius: var(--radius-lg);
-  border-end-end-radius: var(--radius-lg);
-}
-
-/* The row lifts off the sheet under the pointer (DS §6); focus inside draws the inset ring. */
-.doc-row:hover {
-  background: var(--surface-hover);
-  box-shadow: var(--shadow-1);
-  z-index: var(--z-raised);
-}
-
-.doc-row:focus-within {
-  outline: 2px solid var(--accent-ring);
-  outline-offset: -2px;
-}
-
-.doc-row__identity {
-  grid-area: identity;
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  min-inline-size: 0;
-}
-
-.doc-row__words {
-  min-inline-size: 0;
-}
-
-.doc-row__title {
-  margin: 0;
-  font-size: var(--u-body);
-  line-height: var(--u-body-lh);
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.doc-row__qualifier {
-  font-size: var(--u-caption);
-  font-weight: 400;
-  color: var(--ink-3);
-}
-
-.doc-row__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-1) var(--s-3);
-  margin: 0;
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--ink-3);
-}
-
-.doc-row__reason {
-  color: var(--ink-2);
-}
-
-.doc-row__state {
-  grid-area: state;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-2);
-}
-
-.doc-row__blocked {
-  font-family: var(--f-mono);
-  font-size: var(--u-caption);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-.doc-row__responsible {
-  grid-area: responsible;
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  min-inline-size: 0;
-  color: var(--ink-2);
-}
-
-.doc-row__actor-note {
-  color: var(--ink-3);
-}
-
-.doc-row__due {
-  grid-area: due;
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-2);
-}
-
-.doc-row__due-icon {
-  inline-size: var(--icon-sm);
-  block-size: var(--icon-sm);
-}
-
-.doc-row__due--soon { color: var(--pending-700); }
-.doc-row__due--overdue { color: var(--err-700); font-weight: 500; }
-
-.doc-row__none {
-  color: var(--ink-3);
-}
-
-.doc-row__health {
-  grid-area: health;
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--ink-3);
-}
-
-.doc-row__action {
-  grid-area: action;
-  justify-self: end;
-}
-
-.doc-row__menu {
-  grid-area: menu;
-  justify-self: end;
-  position: relative;
-}
-
-.doc-row__more {
-  display: grid;
-  place-items: center;
-  inline-size: var(--control-icon);
-  block-size: var(--control-icon);
-  border: 0;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--ink-2);
-  cursor: pointer;
-}
-
-.doc-row__more:hover,
-.doc-row__more:focus-visible {
-  background: var(--min-1);
-  color: var(--ink);
-}
-
-.doc-row__more .icon {
-  inline-size: var(--icon-md);
-  block-size: var(--icon-md);
-}
-
-/* The row's menu is the overlay system's popover (static/css/v5/overlays.css; W2-A deleted its rules here). */
-
-.doc-collection__none {
-  margin: var(--s-4) 0 0;
-  font-family: var(--f-sans);
-  font-size: var(--u-body);
-  color: var(--ink-2);
-}
-
-/* The row's grid follows the SHEET's width, not the viewport's (gate C review, correction 2: at
-   1024 with the rail open the sheet is 712 px). Seven zones only when the seven fit on one line
-   with the chips whole (≥ 1100 px of sheet: measured whole at 1128); below, five zones with the action on its own row; below
-   700 px the row is a DocumentCard. */
-.doc-collection {
-  container-type: inline-size;
-  container-name: collection;
-}
-
-.doc-row__state,
-.doc-row__state .chip {
-  white-space: nowrap;
-}
-
-@container collection (max-width: 1099px) {
-  .doc-row {
-    grid-template-columns: minmax(0, 1fr) auto auto 40px;
-    grid-template-areas:
-      "identity state responsible menu"
-      "due action action menu";
-    row-gap: var(--s-2);
-  }
-
-  .doc-row__health { display: none; }
-
-  .doc-row__action { justify-self: end; }
-}
-
-@container collection (max-width: 699px) {
-  .doc-collection.panel {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    display: grid;
-    gap: var(--s-3);
-  }
-
-  .doc-row {
-    grid-template-columns: minmax(0, 1fr) 40px;
-    grid-template-areas:
-      "identity menu"
-      "state state"
-      "responsible responsible"
-      "due due"
-      "action action";
-    gap: var(--s-3);
-    padding: var(--s-4);
-    background: var(--min-2);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-1);
-  }
-
-  .doc-collection.panel .doc-row:first-child,
-  .doc-collection.panel .doc-row:last-child {
-    border-radius: var(--radius-lg);
-  }
-
-  .doc-row__action,
-  .doc-row__action .btn {
-    justify-self: stretch;
-    inline-size: 100%;
-  }
-
-  .doc-controls {
-    align-items: stretch;
-  }
-
-  .doc-search {
-    flex-basis: 100%;
-  }
-}
-
-/* ---- JourneyRail (DS §8.28) -------------------------------------------------------------- */
-.journey {
-  position: relative;
-  display: grid;
-  gap: var(--s-4);
-  margin: var(--s-3) 0 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: journey;
-}
-
-.journey__step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  column-gap: var(--s-3);
-  align-items: start;
-  counter-increment: journey;
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--ink-2);
-}
-
-.journey__node {
-  position: relative;
-  display: grid;
-  place-items: center;
-  inline-size: 28px;
-  block-size: 28px;
-  border-radius: var(--radius-full);
-  background: var(--min-2);
-  border: 2px solid var(--hairline-strong);
-  font-size: var(--u-caption);
-  font-weight: 600;
-  color: var(--ink-2);
-  z-index: var(--z-raised);
-}
-
-.journey__node::after {
-  content: counter(journey);
-}
-
-.journey__step--current .journey__node {
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: 0 0 0 6px var(--accent-wash);
-}
-
-.journey__step--current {
-  color: var(--ink);
-}
-
-.journey__label {
-  font-weight: 500;
-}
-
-.journey__here {
-  grid-column: 2;
-  font-size: var(--u-caption);
-  line-height: var(--u-caption-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.journey__actor {
-  grid-column: 2;
-  color: var(--ink-3);
-}
-
-/* The vertical line between nodes, and the frontier MA→IT as a dashed stretch. */
-.journey__step::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: 13px;
-  inset-block-start: 28px;
-  block-size: calc(100% + var(--s-4));
-  inline-size: 2px;
-  background: var(--hairline-strong);
-}
-
-/* The side's name at the first step of each side: the frontier MA→IT as a word (correction 7c). */
-.journey__side {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: start;
-  margin-block-end: var(--s-1);
-  font-size: var(--u-caption);
-  line-height: var(--u-caption-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-.journey__step:has(.journey__side) .journey__label {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-/* The vertical rails draw their line downwards, once (pattern «draw»); the horizontal one below
-   64rem keeps `rail-draw` (scaleX). Gate D review, correction 6. */
-@media (prefers-reduced-motion: no-preference) {
-  .journey__step::before {
-    transform-origin: 50% 0;
-    animation: rail-draw-y var(--motion-draw) var(--ease-enter) both;
-  }
-
-  .journey__step:nth-child(2)::before { animation-delay: calc(2 * var(--motion-stagger)); }
-  .journey__step:nth-child(3)::before { animation-delay: calc(4 * var(--motion-stagger)); }
-  .journey__step:nth-child(4)::before { animation-delay: calc(6 * var(--motion-stagger)); }
-  .journey__step:nth-child(5)::before { animation-delay: calc(8 * var(--motion-stagger)); }
-  .journey__step:nth-child(6)::before { animation-delay: calc(10 * var(--motion-stagger)); }
-}
-
-@keyframes rail-draw-y {
-  from { transform: scaleY(0); }
-  to { transform: scaleY(1); }
-}
-
-.journey__step:last-child::before {
-  display: none;
-}
-
-.journey__step--frontier .journey__node {
-  border-style: dashed;
-}
-
-@media (min-width: 64rem) {
-  .journey {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
-    gap: var(--s-3);
-  }
-
-  .journey__step {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--s-2);
-  }
-
-  .journey__step::before {
-    inset-inline-start: 28px;
-    inset-block-start: 13px;
-    block-size: 2px;
-    inline-size: calc(100% - 28px + var(--s-3));
-  }
-
-  .journey__here,
-  .journey__actor {
-    grid-column: 1;
-  }
-
-  /* The line draws itself once, from the start (pattern «draw»). */
-  /* The horizontal rail: the side's name on a row of its own above every node, so the nodes of
-     the seven steps stay on one line (gate D review, correction 1). */
-  .journey:not(.journey--descriptive) .journey__step {
-    grid-template-rows: 16px 28px auto auto;
-  }
-
-  .journey:not(.journey--descriptive) .journey__side {
-    grid-column: 1;
-    grid-row: 1;
-    margin: 0;
-  }
-
-  .journey:not(.journey--descriptive) .journey__node {
-    grid-row: 2;
-  }
-
-  .journey:not(.journey--descriptive) .journey__label,
-  .journey:not(.journey--descriptive) .journey__step:has(.journey__side) .journey__label {
-    grid-column: 1;
-    grid-row: 3;
-  }
-
-  .journey:not(.journey--descriptive) .journey__step::before {
-    inset-block-start: 37px;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .journey:not(.journey--descriptive) .journey__step::before {
-      transform-origin: 0 50%;
-      animation: rail-draw var(--motion-draw) var(--ease-enter) both;
-    }
-
-    /* The stagger at the animation's own specificity (gate D round 2, defect 14). */
-    .journey:not(.journey--descriptive) .journey__step:nth-child(2)::before { animation-delay: calc(2 * var(--motion-stagger)); }
-    .journey:not(.journey--descriptive) .journey__step:nth-child(3)::before { animation-delay: calc(4 * var(--motion-stagger)); }
-    .journey:not(.journey--descriptive) .journey__step:nth-child(4)::before { animation-delay: calc(6 * var(--motion-stagger)); }
-    .journey:not(.journey--descriptive) .journey__step:nth-child(5)::before { animation-delay: calc(8 * var(--motion-stagger)); }
-    .journey:not(.journey--descriptive) .journey__step:nth-child(6)::before { animation-delay: calc(10 * var(--motion-stagger)); }
-
-    [dir="rtl"] .journey:not(.journey--descriptive) .journey__step::before {
-      transform-origin: 100% 50%;
-    }
-
-    .journey__step:nth-child(2)::before { animation-delay: calc(2 * var(--motion-stagger)); }
-    .journey__step:nth-child(3)::before { animation-delay: calc(4 * var(--motion-stagger)); }
-    .journey__step:nth-child(4)::before { animation-delay: calc(6 * var(--motion-stagger)); }
-    .journey__step:nth-child(5)::before { animation-delay: calc(8 * var(--motion-stagger)); }
-    .journey__step:nth-child(6)::before { animation-delay: calc(10 * var(--motion-stagger)); }
-  }
-}
-
-@keyframes rail-draw {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
 /* ---- Dates and threads (the dashboard's small lists) --------------------------------------- */
 .dates,
 .threads {
@@ -1118,8 +434,9 @@
   block-size: var(--icon-sm);
 }
 
-.dates__row--soon .dates__when { color: var(--pending-700); }
-.dates__row--overdue .dates__when { color: var(--err-700); font-weight: 500; }
+/* F13 (W3-C): «soon» attesa, «overdue» azione — the deadline tokens, as on the register and the dashboard */
+.dates__row--soon .dates__when { color: var(--deadline-soon-text); }
+.dates__row--overdue .dates__when { color: var(--deadline-overdue-text); font-weight: 500; }
 
 .threads__link {
   display: flex;
@@ -1208,17 +525,13 @@
   .meter__notch--on, .health__segment[data-register] { background: Highlight; background-image: none; forced-color-adjust: none; }
   .health__segment[data-register="attesa"] { background-image: var(--texture-hatch); }
   .health__segment[data-register="rifiuto"] { background-image: var(--texture-dots); background-size: 4px 4px; }
-  .journey__step--current .journey__node { border-color: Highlight; }
-  .journey__step::before, .journey__step--done::before { background: CanvasText; forced-color-adjust: none; }
-  .doc-row:focus-within { outline-color: Highlight; }
-  .seg__list { border: 1px solid CanvasText; }
-  .seg__link[aria-current] { outline: 2px solid Highlight; outline-offset: -2px; }
 }
 
 /* ==========================================================================================
    THE CASE FILE (CREATIVE_DIRECTION.md §3.6): 8/4 from 80rem, the inspector sticky; the context
-   header's eyebrow, responsible and meter; the compact context bar; the descriptive journey; the
-   Timeline; the Table; the intervenants; the action bar of the phone.
+   header's eyebrow, responsible and meter; the compact context bar; the Table; the intervenants; the
+   action bar of the phone. (The descriptive journey and the Timeline left with W3-D: the console's one rail
+   drawing, apps/portal/static/portal/v5/_journey-rail.css.)
    ========================================================================================== */
 .ctx__eyebrow {
   margin: 0 0 var(--s-1);
@@ -1329,136 +642,6 @@
   }
 }
 
-/* The descriptive journey: vertical at every width, the date beside the step. */
-.journey--descriptive {
-  grid-auto-flow: row;
-  grid-auto-columns: auto;
-  gap: var(--s-4);
-}
-
-.journey--descriptive .journey__step {
-  grid-template-columns: 28px minmax(0, 1fr) auto;
-  column-gap: var(--s-3);
-  row-gap: 0;
-}
-
-.journey--descriptive .journey__step::before {
-  inset-inline-start: 13px;
-  inset-block-start: 28px;
-  block-size: calc(100% + var(--s-4));
-  inline-size: 2px;
-}
-
-.journey--descriptive .journey__here,
-.journey--descriptive .journey__actor {
-  grid-column: 2;
-}
-
-.journey--descriptive .journey__when {
-  grid-column: 3;
-  grid-row: 1;
-  font-family: var(--f-mono);
-  font-size: var(--u-small);
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-}
-
-.journey__step--done .journey__node {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--on-dark);
-}
-
-.journey__step--done::before {
-  background: var(--accent);
-}
-
-/* The Timeline (§8.27): spine hairline, node 12, tabular date, the last node lit. */
-.tl {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--s-3);
-}
-
-.tl__row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 12px auto minmax(0, 1fr);
-  column-gap: var(--s-3);
-  align-items: start;
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--ink-2);
-}
-
-.tl__row::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: 5px;
-  inset-block-start: 14px;
-  block-size: calc(100% + var(--s-3));
-  inline-size: 2px;
-  background: var(--hairline);
-}
-
-.tl__row--last::before {
-  display: none;
-}
-
-.tl__node {
-  inline-size: 12px;
-  block-size: 12px;
-  margin-block-start: 4px;
-  border-radius: var(--radius-full);
-  background: var(--hairline-strong);
-  z-index: var(--z-raised);
-}
-
-.tl__row--last .tl__node {
-  background: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-wash);
-}
-
-.tl__when {
-  font-family: var(--f-mono);
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.tl__what {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-1) var(--s-2);
-}
-
-.tl__title {
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.tl__detail,
-.tl__actor {
-  flex-basis: 100%;
-  color: var(--ink-3);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .tl__row--last .tl__node {
-    animation: tl-light var(--motion-emphasized) var(--ease-enter) both;
-  }
-}
-
-@keyframes tl-light {
-  from { box-shadow: 0 0 0 0 var(--accent-wash); background: var(--hairline-strong); }
-  to { box-shadow: 0 0 0 4px var(--accent-wash); background: var(--accent); }
-}
-
 /* The Table (§8.23): semantic, sticky head 44, rows 48, the chip and the form in the last cell. */
 /* No scroll region around the V4 table (the V2 `.table-region` of components.css scrolls): the
    sticky head then sticks to the page; below 64rem the rows are cards and nothing overflows. */
@@ -1532,13 +715,14 @@
   color: var(--ink-3);
 }
 
+/* F13 (W3-C): a date past due is the person's to beat — azione, never the garnet of a refusal */
 .table__overdue {
-  color: var(--err-700);
+  color: var(--deadline-overdue-text);
   font-weight: 500;
 }
 
 .table__row--overdue th {
-  border-inline-start: 3px solid var(--err-700);
+  border-inline-start: 3px solid var(--deadline-overdue-mark);
 }
 
 .table__form {
@@ -1633,13 +817,6 @@
 }
 
 @media (forced-colors: active) {
-  .tl__node,
-  .tl__row--last .tl__node,
-  .journey__step--done .journey__node {
-    background: Highlight;
-    box-shadow: none;
-  }
-
   .ctx-bar,
   .file-action-bar {
     background: Canvas;
@@ -1647,75 +824,12 @@
   }
 }
 
-/* ---- Gate C review: touch targets (5), the file's action on the phone (7a), the files table ----- */
-@media (pointer: coarse) {
-  .seg__link {
-    min-block-size: var(--hit-min);
-  }
-
-  .doc-row__more {
-    position: relative;
-  }
-
-  .doc-row__more::after {
-    content: "";
-    position: absolute;
-    inset: -2px;
-  }
-}
-
+/* ---- Gate C review: the file's action on the phone (7a) — the register's touch rules and its files table
+   left with «Mes pièces» V5 (W3-C: apps/portal/static/portal/v5/_workspace.css, _table.css) ---------------- */
 @media (max-width: 63.999rem) {
   /* The sticky bar carries the action: not twice on one screen. */
   .ctx--file .ctx__action {
     display: none;
-  }
-
-  .doc-controls {
-    flex-wrap: wrap;
-  }
-
-  .doc-search {
-    flex: 1 1 100%;
-  }
-}
-
-/* The account's files and the organisation's, below the register (pilot page, correction 4):
-   a Table, Plex, the file name as a link without the underline of a paragraph. */
-.files__lead {
-  margin: 0 0 var(--s-3);
-  font-family: var(--f-sans);
-  font-size: var(--u-small);
-  line-height: var(--u-small-lh);
-  color: var(--ink-2);
-  max-inline-size: 72ch;
-}
-
-.table__link {
-  font-weight: 500;
-  color: var(--accent-hover);
-  text-decoration: none;
-}
-
-.table__link:hover,
-.table__link:focus-visible {
-  text-decoration: underline;
-}
-
-.files__foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
-  margin: var(--s-4) 0 0;
-}
-
-@media (pointer: coarse) {
-  /* A file's link in a table cell reaches 44 px of touch without a taller row. */
-  .table__link {
-    position: relative;
-    z-index: var(--z-raised);
-    display: inline-block;
-    padding-block: 12px;
-    margin-block: -12px;
   }
 }
 
@@ -1723,21 +837,6 @@
 @media (pointer: coarse) {
   .table__select {
     min-block-size: var(--hit-min);
-  }
-}
-
-@media (forced-colors: active) {
-  .tl__node,
-  .tl__row--last .tl__node {
-    animation: none;
-    background: Highlight;
-    box-shadow: none;
-    forced-color-adjust: none;
-  }
-
-  .tl__row::before {
-    background: CanvasText;
-    forced-color-adjust: none;
   }
 }
 

@@ -1,0 +1,135 @@
+/* ============================================================================================
+   «LA SOGLIA» — THE JOURNEY'S VOCABULARY, design V5 (W3-D)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 6 · §1.18 D16 · §1.5 (the console has no entrance and no stagger at
+   load) · §1.2 O14 (no check: a step behind the file is a filled ink dot) · the research's JOURNEY_SIGNATURE.md §5.3.
+
+   THE CONSOLE'S ONE RAIL DRAWING — never a second one (the gate: «one passage and one rail drawing, never a third») —
+   is one vocabulary, written here once, that two component partials compose:
+     v5/_journey-rail.css      the journey (components/journey_rail.html: the dashboard's «Mon parcours», the head of
+                               the «Mon parcours» page, the case file's dated spine) and the case file's timeline
+                               (components/case_timeline.html)
+     v5/_journey-stepper.css   «Ma situation»'s Stepper (components/wizard_stepper.html)
+   A page-only partial (plan §2.3; the owner's V5.8): imported FIRST by each page-only sheet that draws a journey —
+   portal/journey.css (the dashboard, «Mon parcours», the case file: with the rail) and portal/situation.css («Ma
+   situation»: with the Stepper, after the guided form) — never by main.css nor console.css, never an output of its own.
+   Each page loads only what it draws (the orchestrator's definitive CSS ruling, 12 October 2026, rule 2): «Ma
+   situation» never loads the level line, the card or the timeline; the journey's pages never load the Stepper.
+
+   The vocabulary, everywhere the same:
+     the line      2 px; laguna (--journey-line-travelled) where the file has been, the decorative hairline
+                   (--journey-line) ahead. Every item draws the stretch from its node to the next item's: it is
+                   travelled once the item is behind the file — no gradient, no measure, no script. A drawing, never a
+                   target: the line takes no pointer
+     the nodes     behind the file: a 10 px filled ink dot (--node-done-fill), never a check · where it stands: an
+                   18 px laguna ring (--node-current-ring) on its flat wash (--node-current-halo, a disc — not a
+                   shadow) · ahead: a 12 px open ring (--node-next-edge, 3.37 : 1 — a component edge)
+   Each component partial ends with the forced colours of its own nodes and lines. Tokens of static/css/v5/tokens.css
+   only; logical properties only (RTL: the reading start is Morocco's). Still at load: nothing moves — the drawing is
+   its own still, which is also the reduced-motion state and the no-JS state. Corners: full (the nodes).
+   ============================================================================================ */
+
+/* ---- 1 · The vocabulary: one line, three nodes ----------------------------------------------------------- */
+.journey,
+.tl,
+.wstep {
+  --node: 20px;              /* the node's box */
+  --nc: 10px;                /* the node's centre, from the start of its column */
+  --node-y: 10px;            /* the node's centre, from the top of its row (the spine) */
+  --rail-ground: var(--surface-page);
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:is(.journey, .tl, .wstep) :is(.journey__node, .tl__node, .wstep__node) {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--node);
+  block-size: var(--node);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.journey__node::after,
+.tl__node::after,
+.wstep__node::after {
+  content: "";
+  position: relative;
+  box-sizing: border-box;
+  border-radius: var(--radius-full);
+}
+
+/* behind the file: a filled ink dot — never a check (O14) */
+.journey__step--done > .journey__node::after,
+.tl__node::after,
+.wstep__item--done .wstep__node::after {
+  inline-size: 10px;
+  block-size: 10px;
+  background: var(--node-done-fill);
+}
+
+/* ahead: a small open ring */
+.journey__step--upcoming > .journey__node::after,
+.wstep__item:not(.wstep__item--done) .wstep__node::after {
+  inline-size: 12px;
+  block-size: 12px;
+  border: 2px solid var(--node-next-edge);
+  background: var(--rail-ground);
+}
+
+/* where the file stands: the laguna ring on its flat wash — a disc behind it, not a shadow (the Stepper's at the open
+   ring's weight, so that the question shown wins whether answered or not) */
+.journey__step--current > .journey__node::after,
+.journey__threshold--current > .journey__node::after,
+.tl__row--latest .tl__node::after,
+.wstep__item.wstep__item--current .wstep__node::after {
+  inline-size: 18px;
+  block-size: 18px;
+  border: 2px solid var(--node-current-ring);
+  background: var(--rail-ground);
+}
+
+.journey__step--current > .journey__node::before,
+.journey__threshold--current > .journey__node::before,
+.tl__row--latest .tl__node::before,
+.wstep__item--current .wstep__node::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: var(--radius-full);
+  background: var(--node-current-halo);
+}
+
+/* the question shown, already answered: its ink dot inside the ring */
+.wstep__item--current.wstep__item--done .wstep__node::after {
+  padding: 3px;
+  border-color: var(--node-current-ring);
+  background: var(--node-done-fill) content-box;
+}
+
+/* ---- 2 · The line: from each node to the next item's -------------------------------------------------------- */
+.journey > li::before,
+.tl__row::before,
+.wstep__item::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset-block: var(--node-y) calc(-1 * var(--node-y));
+  inset-inline-start: calc(var(--nc) - 1px);
+  inline-size: 2px;
+  block-size: auto; /* the two insets decide: an older sheet's height must not shorten the stretch */
+  background: var(--journey-line);
+  pointer-events: none; /* a drawing, never a target: the Stepper's line crosses its own link */
+}
+
+.journey > li:last-child::before,
+.tl__row:last-child::before,
+.wstep__item:last-child::before {
+  display: none;
+}

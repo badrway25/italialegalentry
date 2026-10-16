@@ -29,6 +29,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from core import clock
 from core.models import TimeStampedModel
 
 
@@ -301,7 +302,9 @@ class ChecklistItem(TimeStampedModel):
 
     @property
     def is_overdue(self) -> bool:
-        return bool(self.due_date and self.is_open and self.due_date < timezone.localdate())
+        # the project's clock, as every deadline of the interface (T1, the documents' register, the deadlines page):
+        # on a lane or the preview a reference date stands in for today (W3-C REVIEW M3)
+        return bool(self.due_date and self.is_open and self.due_date < clock.today())
 
 
 class AssignmentRole(models.TextChoices):

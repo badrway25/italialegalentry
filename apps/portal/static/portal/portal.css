@@ -83,11 +83,15 @@
   margin-block: var(--s-6);
 }
 
+/* F13 (design V5, W3-C): «soon» attesa, «overdue» azione — lateness is never drawn as a refusal; a block keeps its edge */
 .next-action--soon .next-action__inner {
-  border-inline-start-color: var(--state-warn-br);
+  border-inline-start-color: var(--deadline-soon-mark);
 }
 
-.next-action--overdue .next-action__inner,
+.next-action--overdue .next-action__inner {
+  border-inline-start-color: var(--deadline-overdue-mark);
+}
+
 .next-action--blocked .next-action__inner {
   border-inline-start-color: var(--state-error-br);
 }
@@ -203,7 +207,7 @@
 }
 
 .data-table tr.is-overdue th {
-  border-inline-start: 2px solid var(--state-error-br);
+  border-inline-start: 2px solid var(--deadline-overdue-mark);
   padding-inline-start: var(--s-3);
 }
 
@@ -317,7 +321,7 @@
   /* The overdue marker was an inline-start border on the row's `<th>`; once the row is a stack it
      belongs on the row, where it marks the whole entry rather than its first line. */
   table:has(tbody [data-label]) tr.is-overdue {
-    border-inline-start: 2px solid var(--state-error-br);
+    border-inline-start: 2px solid var(--deadline-overdue-mark);
     padding-inline-start: var(--s-3);
   }
 

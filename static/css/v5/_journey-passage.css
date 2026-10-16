@@ -1,0 +1,217 @@
+/* ============================================================================================
+   «LA SOGLIA» — THE PUBLIC PASSAGE, design V5 (W3-D)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 6 · §1.18 D16 (one marker a column: the NUMERAL is the public
+   passage's — the console's rail says its steps by their glyphs) · §1.5 (nothing moves at load: the passage is its own
+   still) · §2.3 (a page-only partial: imported by the page sheets of the pages that draw it, never by main.css).
+   Markup: templates/components/stepper.html — the passage component.
+
+   THE SITE'S ONE PASSAGE DRAWING — never a second one (the gate: «one passage and one rail drawing, never a third»):
+   «la linea», a real sequence on a level line — the numerals over open stations (an outline is open: nothing on this
+   site settles a step for anyone), the words under them. W3-F1 drew it first for the door pages («the site keeps one
+   diagram language: the public passage, when W3-D draws it, is the same line»); this partial is that drawing's home:
+   since the w3-d merge the door pages, the advice pages and the questionnaire draw it from here too — their page
+   sheets import it after css/v5/_interior.css, templates/pages/partials/_linea.html includes the component, and a
+   page's modifiers stay in its own partial (_pathways.css, _spaces.css, orientation/wizard.css).
+   The Morocco → Italy model itself is said once on the home, by the hero's path (DL54-41), and the console's journey
+   is the rail (apps/portal/static/portal/v5/_journey-rail.css).
+     down the reading edge   a phone, and wherever the passage is not set across: the station's ring on the step's
+                             first line, its numeral beside it, the words under the numeral, the line from ring to ring
+     across its column       from 48rem when the passage is short enough for one row (`across`): the numeral over the
+                             ring, the line along the rings' row, the words under each — as many columns as stations
+     a flow's place          (`current`, a multi-step form) the steps behind it filled in ink, its own ring in the
+                             primary and thicker, its words in weight — never the colour alone; aria-current="step"
+     being verified          (`pending`) the ring broken, the words in the quiet ink — said in words around it
+   Tokens of static/css/v5/tokens.css only; logical properties only (in Arabic the passage starts at the right, and a
+   French station's words end on the ring's side); nothing moves, at load or after — the passage is its own still.
+   Corners: full (the rings) — one of the page's three.
+   ============================================================================================ */
+
+.linea {
+  --linea-node: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: linea;
+}
+
+.linea__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--linea-node) minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: center;
+  padding-block-end: var(--s-6);
+  counter-increment: linea;
+}
+
+.linea__num {
+  display: contents;
+}
+
+/* the numeral: the passage's one marker */
+.linea__num::before {
+  content: counter(linea, decimal-leading-zero);
+  grid-column: 2;
+  grid-row: 1;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* the station: an open ring — open through to its ground, whatever the chapter's (the line stops short of it) */
+.linea__num::after {
+  content: "";
+  grid-column: 1;
+  grid-row: 1;
+  box-sizing: border-box;
+  inline-size: var(--linea-node);
+  block-size: var(--linea-node);
+  border: 1.5px solid var(--text-1);
+  border-radius: var(--radius-full);
+  background: transparent;
+}
+
+/* the line: from under this ring to above the next one */
+.linea__step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-block: calc(var(--t-small-lh) / 2 + var(--linea-node) / 2 + 2px) calc(var(--linea-node) / 2 + 2px - var(--t-small-lh) / 2);
+  inset-inline-start: calc(var(--linea-node) / 2 - 0.5px);
+  inline-size: 1px;
+  background: var(--line-structure);
+}
+
+.linea__label {
+  grid-column: 2;
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+
+.linea__text {
+  grid-column: 2;
+  max-inline-size: var(--measure-small);
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.linea__text p {
+  margin: 0 0 var(--s-2);
+}
+
+/* a station still being verified: its words in the quiet ink, its ring broken */
+.linea__step--pending .linea__label {
+  color: var(--text-2);
+  font-weight: var(--w-control);
+}
+
+.linea__step--pending .linea__num::after {
+  border-style: dashed;
+  border-color: var(--text-3);
+}
+
+/* a flow's place: behind it, the ring filled in ink (the person's own answers — never a check, O14); its own ring
+   thicker and in the primary, its words in weight */
+.linea__step--done .linea__num::after {
+  background: var(--text-1);
+}
+
+.linea__step--current .linea__num::after {
+  border-width: 3px;
+  border-color: var(--fill-primary);
+}
+
+.linea__step--current .linea__num::before {
+  color: var(--text-1);
+}
+
+.linea__rank {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* across its column, from 48rem, when the passage is short enough to stand on one row */
+@media (min-width: 48rem) {
+  .linea--across {
+    grid-template-columns: repeat(var(--linea-cols, 3), minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  /* as many columns as stations, for the short passages */
+  .linea--across:has(> :nth-child(2):last-child) { --linea-cols: 2; }
+  .linea--across:has(> :nth-child(4):last-child) { --linea-cols: 4; }
+
+  .linea--across .linea__step {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    align-content: start;
+    row-gap: var(--s-1);
+    padding-block-end: 0;
+  }
+
+  .linea--across .linea__num::before {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .linea--across .linea__num::after {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .linea--across :is(.linea__label, .linea__text) {
+    grid-column: 1;
+  }
+
+  .linea--across .linea__label {
+    margin-block-start: var(--s-3);
+  }
+
+  /* the line now runs along the rings' row, from this ring to the next one */
+  .linea--across .linea__step:not(:last-child)::before {
+    inset-block: calc(var(--t-small-lh) + var(--s-1) + var(--linea-node) / 2 - 0.5px) auto;
+    inset-inline: calc(var(--linea-node) + 2px) calc(2px - var(--s-6));
+    inline-size: auto;
+    block-size: 1px;
+  }
+}
+
+/* in Arabic a French station's words end on the ring's side, beside their numeral (W3-F1's rule, homed here) */
+[dir="rtl"] .linea :is(.linea__label, .linea__text)[lang="fr"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: end;
+}
+
+@media (forced-colors: active) {
+  .linea__num::after {
+    border-color: CanvasText;
+  }
+
+  .linea__step--done .linea__num::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+
+  .linea__step--current .linea__num::after {
+    border-color: Highlight;
+  }
+
+  .linea__step:not(:last-child)::before {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}

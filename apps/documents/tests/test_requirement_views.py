@@ -64,8 +64,8 @@ def test_the_register_shows_the_piece_its_state_and_who_is_answerable(client, ow
     assert requirement.title in body
     assert "Manquant" in body, "the word, not a colour"
     assert str(ResponsibleActor.PERSON.label) in body
-    # design V4: the register is a DocumentCollection of DocumentRows, not a table
-    assert 'class="doc-collection panel panel--l1"' in body and 'class="doc-row' in body
+    # design V5 (W3-C): the register is a collection of rows in three groups, not a table — the row is the link
+    assert 'class="doc-collection"' in body and 'class="doc-row"' in body and 'class="doc-row__link"' in body
 
 
 def test_the_register_is_not_a_file_browser(client, owner, requirement):
@@ -223,7 +223,9 @@ def test_filing_requires_the_conditions_to_have_been_accepted(client, user_facto
     assert role_names.has_role(person, role_names.PERSON)
     client.force_login(person)
     body = client.get(REGISTER).content.decode()
-    assert "Accepter les Conditions d’utilisation" in body
+    # design V5 (W3-C): the row says it is blocked and the register's strip says why, in the row's own words — no
+    # button promises an acceptance its target cannot do (the acceptance flow waits on the legal texts, G1)
+    assert "Bloqué" in body and "Acceptation des Conditions d’utilisation requise." in body
     assert client.post(file_url(requirement), {"file": pdf()}).status_code == 403
 
 
@@ -403,8 +405,10 @@ def test_the_consent_blocker_is_not_shown_beside_a_piece_that_needs_nothing(clie
 
     client.force_login(owner)
     body = client.get(REGISTER).content.decode()
-    # Exactly one blocked row: the one that still needs a deposit.
-    assert body.count("Accepter les Conditions d’utilisation") == 1
+    # Exactly one blocked row: the one that still needs a deposit (design V5: counted on the rows — the register's
+    # strip names that same piece and says why).
+    rows = [part.split("</li>")[0] for part in body.split('<li class="doc-row"')[1:]]
+    assert sum("Bloqué" in row for row in rows) == 1
     # And the gate is still stated once for the page, so nothing about it is hidden.
     assert "Le dépôt de fichiers nécessite l’acceptation des Conditions" in body
 

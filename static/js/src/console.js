@@ -135,14 +135,19 @@ document.querySelectorAll(".rail").forEach((element) => {
 });
 
 /* 2. The register's search (design V4 §3.5.3): filters the rows shown by their title, in the
-      page, as the person types; the state filter stays in the URL. Nothing is sent anywhere. */
-document.querySelectorAll("[data-doc-search]").forEach((input) => {
+      page, as the person types; the state filter stays in the URL. Nothing is sent anywhere. A register read
+      again by the preview drawer (`documents:refreshed`) has its search wired again. */
+const bindSearch = (root) => root.querySelectorAll("[data-doc-search]").forEach((input) => {
+  if (input.dataset.docSearchReady !== undefined) return;
+  input.dataset.docSearchReady = "";
   const list = document.getElementById(input.dataset.docSearch);
   const none = document.querySelector(`[data-doc-search-empty="${input.dataset.docSearch}"]`);
   if (!list) return;
   const status = document.querySelector(`[data-doc-search-status="${input.dataset.docSearch}"]`);
   const count = status ? status.querySelector("[data-doc-search-count]") : null;
   const rows = [...list.querySelectorAll(".doc-row")];
+  // «Mes pièces» V5 (W3-C): the rows stand in three groups; a group whose rows are all filtered out goes with them.
+  const groups = [...list.querySelectorAll(".doc-group")];
   const fold = (text) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   let announce = 0;
   input.addEventListener("input", () => {
@@ -154,6 +159,9 @@ document.querySelectorAll("[data-doc-search]").forEach((input) => {
       row.hidden = !hit;
       if (hit) shown += 1;
     });
+    groups.forEach((group) => {
+      group.hidden = !group.querySelector(".doc-row:not([hidden])");
+    });
     if (none) none.hidden = shown > 0;
     // The screen reader hears the count once the typing pauses (gate C review, correction 8).
     if (count && status) {
@@ -164,9 +172,36 @@ document.querySelectorAll("[data-doc-search]").forEach((input) => {
     }
   });
 });
+bindSearch(document);
+document.addEventListener("documents:refreshed", (event) => bindSearch(event.target));
 
-/* 2b. The row menu is the overlay system's popover (templates/components/document_row.html): its place
-      beside its button, its side, its focus and its dismissals are overlay.js's. */
+/* 2b. The preview drawer and the filter's sheet (design V5, W3-C; plan §1.14; DOCUMENT_WORKSPACE.md §12, §13), on
+      the overlay system: the sheet is overlay.js's own (a link to it, data-overlay-open); the drawer's module —
+      the row unfolded beside the register, a sheet on a phone — is imported where the register draws it. */
+if (document.querySelector("[data-piece-drawer]")) {
+  import("./piece-drawer.js").then(({ initPieceDrawer }) => initPieceDrawer());
+}
+
+/* 2d. The Dépôt (design V5, W3-C; DOCUMENT_WORKSPACE.md §11): where a page draws one — a piece's page, the upload
+      page — its module is imported, never before; without it the Dépôt is the browser's own form. */
+if (document.querySelector("[data-depot-form]")) {
+  import("./depot.js").then(({ initDepots }) => initDepots(document));
+}
+
+/* 2e. The deletion of a loose file asks first (design V5, W3-C; REVIEW m4): a row's «Supprimer» opens the overlay
+      system's alert dialog (its `data-overlay-open`; without script it posts its form at once). Here only what the
+      dialog needs of the row that asked: the file's name in the question, and its «Supprimer» pointed at that row's
+      form — a submit of that form, the same POST. */
+const deletion = document.querySelector("[data-doc-delete-go]");
+if (deletion) {
+  deletion.closest("[data-overlay]").addEventListener("overlay:open", (event) => {
+    const form = event.detail && event.detail.opener ? event.detail.opener.form : null;
+    if (!form || !form.id) return;
+    const name = event.currentTarget.querySelector("[data-doc-delete-name]");
+    if (name) name.textContent = form.dataset.docDelete || "";
+    deletion.setAttribute("form", form.id);
+  });
+}
 
 /* 2c. The context bar (design V4 §3.6.1): the case file's header, once scrolled past, becomes a
       compact glass bar under the console bar — title, chip, action. Shown by a class; the bar is

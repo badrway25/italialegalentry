@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import posixpath
 import re
 from pathlib import Path
 
@@ -133,20 +134,34 @@ def test_stylesheet_and_script_are_discoverable_static_files():
 
 
 def test_stylesheet_uses_tokens_and_logical_properties_only():
+    """The home's sheet, and the partials it imports — the passage «la linea», static/css/v5/_journey-passage.css
+    (W3-D, DL54-128 item 4) —, use tokens and logical properties only, and load nothing: the source imports local
+    partials only, written in the collected tree, and the bundle the page links (css/dist/pages/css/pages.css, built by
+    scripts/build_css.mjs) carries them inlined, without an @import."""
     css = CSS.read_text(encoding="utf-8")
-    stripped = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
-    assert re.findall(r"#[0-9a-fA-F]{3,8}\b", stripped) == [], "no literal colour: use var(--…)"
-    assert not re.search(r"\brgba?\(|\bhsla?\(", stripped)
-    physical = re.findall(
-        r"(?<![-\w])(?:margin|padding|border)-(?:left|right)\b|(?<![-\w])(?:left|right)\s*:|text-align:\s*(?:left|right)"
-        r"|float:\s*(?:left|right)",
-        stripped,
-    )
-    assert physical == [], physical
-    assert not re.search(r"https?://", stripped)
-    assert "@import" not in stripped
-    assert "!important" not in re.sub(r"@media print\s*{.*", "", stripped, flags=re.S)
-    assert scan(css) == []
+    imports = re.findall(r'@import url\("([^"]+)"\);', re.sub(r"/\*.*?\*/", "", css, flags=re.S))
+    sheets = {CSS.name: css}
+    for target in imports:
+        assert posixpath.basename(target).startswith("_") and not re.match(r"[a-z]+:|/", target), target
+        found = finders.find(posixpath.normpath(posixpath.join("pages/css", target)))
+        assert found, target
+        sheets[target] = Path(found).read_text(encoding="utf-8")
+    for name, text in sheets.items():
+        stripped = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+        assert re.findall(r"#[0-9a-fA-F]{3,8}\b", stripped) == [], f"{name}: no literal colour: use var(--…)"
+        assert not re.search(r"\brgba?\(|\bhsla?\(", stripped), name
+        physical = re.findall(
+            r"(?<![-\w])(?:margin|padding|border)-(?:left|right)\b|(?<![-\w])(?:left|right)\s*:"
+            r"|text-align:\s*(?:left|right)|float:\s*(?:left|right)",
+            stripped,
+        )
+        assert physical == [], (name, physical)
+        assert not re.search(r"https?://", stripped), name
+        assert "!important" not in re.sub(r"@media print\s*{.*", "", stripped, flags=re.S), name
+        assert scan(text) == [], name
+    assert re.sub(r"/\*.*?\*/", "", css, flags=re.S).count("@import") == len(imports), "an @import is a partial's url"
+    bundle = ROOT / "static" / "css" / "dist" / "pages" / "css" / "pages.css"
+    assert "@import" not in bundle.read_text(encoding="utf-8"), "the sheet the home links loads nothing more"
 
 
 def test_stylesheet_motion_relies_on_design_system_durations():

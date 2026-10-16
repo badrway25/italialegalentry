@@ -1,0 +1,83 @@
+{% load i18n documents_register %}{% comment %}
+THE DÉPÔT — the deposit of a file, design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5; DOCUMENT_WORKSPACE.md
+§11; W3-C). One markup for the two roads:
+  · a REQUIRED PIECE (`row` given) — included twice by templates/documents/requirement_detail.html and drawn once: under
+    the state while the piece is open, after the deposits once it is filed, in review or valid;
+  · a file that answers NO requirement (no `row`) — templates/documents/upload.html.
+Rules: apps/portal/static/portal/v5/_depot.css. Behaviour: static/js/src/depot.js — imported by console.js where a
+Dépôt is drawn, and by the preview drawer for the piece it shows.
+
+THE LAYERS (§11, kept from gate 0):
+  1. the native field, labelled, its formats said under it — without script it is the whole Dépôt: the browser's own
+     control, a real form post, the server's answer as a page;
+  2. the zone that keeps the real input inside it — with script the input covers the zone: a press anywhere opens the
+     picker, and a file dropped on it is the input's own (no script ever reads a dropped file);
+  3. the client guards — the server's rules repeated, read from documents.presenters.deposit_rules (empty, over the size,
+     outside the allow-list; a validity date already past, as a courtesy: the server's clock decides);
+  4. the transfer and its real <progress>, «Annuler» beside it;
+  5. THE ANSWERS, composed in place (§11.1, eleven): a refusal stays on the file's row — the server's sentence, never a
+     toast alone, never a page change; a date already past under its field; the throttle as a notice, «Déposer» kept as
+     the retry; the Conditions gate as its sentence and its link; the filing as the piece read again, its answer under
+     the state — «filed ≠ examined»: no verdict and no check, the filed state's own mark (ring and dot).
+Every word is the catalogue's: the server's sentences verbatim, and the blocks below, inert in <template>s until the
+Dépôt composes one. Announcements go through two live regions that the script keeps outside what it replaces.
+
+Contract: `upload_form` (None when the reader may not file); `row` (documents.presenters.present_requirement) on the
+piece's road.
+{% endcomment %}{% if upload_form %}{% deposit_rules as rules %}
+<section class="doc-depot{% if not row %} doc-depot--loose{% endif %}"{% if row %} aria-labelledby="file-title" data-depot-piece="{{ row.detail_url }}"{% endif %} data-depot>
+  {% if row %}
+  <h2 class="doc-piece__h2" id="file-title">{% if row.current %}{% translate "Remplacer la pièce" %}{% else %}{% translate "Déposer la pièce" %}{% endif %}</h2>
+  {% if row.current %}<p class="doc-depot__rule">{% translate "Le dépôt d’une nouvelle version remplace la précédente. L’historique est conservé." %}</p>{% endif %}
+  {% endif %}
+  <form method="post" action="{% if row %}{{ row.upload_url }}{% else %}{% url 'documents:upload' %}{% endif %}" enctype="multipart/form-data" class="form doc-depot__form" novalidate data-depot-form data-depot-max="{{ rules.max_bytes }}" data-depot-extensions="{{ rules.extensions }}" data-depot-today="{{ rules.today|date:'Y-m-d' }}" data-depot-empty="{% translate 'Le fichier est vide.' %}" data-depot-too-large="{% translate 'Le fichier dépasse la taille maximale de 10 Mo.' %}" data-depot-extension="{% translate 'Format non accepté : seuls les fichiers PDF, JPEG et PNG sont autorisés.' %}" data-depot-past="{% translate 'Cette date est déjà passée : la pièce ne serait pas valable.' %}">
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=upload_form %}
+    {% with field=upload_form.file %}
+    <div class="form-field form-field--required doc-depot__field{% if field.errors %} form-field--error{% endif %}" id="wrap_{{ field.id_for_label }}">
+      <label class="form-field__label" for="{{ field.id_for_label }}">{{ field.label }}&nbsp;<span class="form-field__required" aria-hidden="true">*</span></label>
+      <div class="doc-depot__zone" data-depot-zone>
+        {{ field }}
+        <span class="doc-depot__zone-mark" aria-hidden="true">{% svg_icon "upload" "icon" %}</span>
+        <span class="doc-depot__zone-words">
+          <span class="doc-depot__zone-title" aria-hidden="true">{% translate "Déposer un fichier" %}</span>
+          <span class="form-field__help doc-depot__zone-hint" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>
+        </span>
+      </div>
+      {% if field.errors %}<div class="form-field__errors" id="{{ field.auto_id }}_error" role="alert"><ul class="form-field__error-list">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
+      {% comment %} The chosen file — its whole name in its own order, its type and size; the transfer; a refusal, in place. {% endcomment %}
+      <div class="doc-depot__file" data-depot-file hidden>
+        <span class="doc-depot__file-mark" aria-hidden="true">{% svg_icon "document" "icon" %}</span>
+        <p class="doc-depot__file-name" id="{{ field.auto_id }}_name"><span dir="ltr" data-depot-name></span></p>
+        <p class="doc-depot__file-meta" data-depot-meta></p>
+        <button class="btn btn--icon btn--ghost doc-depot__abort" type="button" data-depot-abort hidden aria-label="{% translate 'Annuler' %}" aria-describedby="{{ field.auto_id }}_name">{% svg_icon "close" "icon" %}</button>
+        <div class="doc-depot__transfer" data-depot-transfer hidden>
+          <progress class="doc-depot__progress" max="100" value="0" data-depot-progress aria-labelledby="{{ field.auto_id }}_name"></progress>
+          <span class="doc-depot__percent" data-depot-percent aria-hidden="true"></span>
+        </div>
+        <p class="doc-depot__refusal" id="{{ field.auto_id }}_refusal" data-depot-refusal hidden>{% svg_icon "circle-alert" "icon" %}<span data-depot-refusal-text></span></p>
+      </div>
+    </div>
+    {% endwith %}
+    {% for field in upload_form.visible_fields %}{% if field.name != "file" %}{% include "components/form_field.html" with field=field %}{% endif %}{% endfor %}
+    <div class="doc-depot__answer" data-depot-answer></div>
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary" data-depot-submit>{% translate "Déposer" %}</button>
+      {% if not row %}<a class="btn btn--secondary" href="{% url 'documents:index' %}">{% translate "Annuler" %}</a>{% endif %}
+    </div>
+  </form>
+  <p class="doc-depot__note">{% svg_icon "info" "icon" %}<span>{% if row %}{% translate "Formats acceptés : PDF, JPEG, PNG — 10 Mo maximum. Ne déposez que la pièce demandée ici." %}{% else %}{% translate "Formats acceptés : PDF, JPEG, PNG — 10 Mo maximum. Ne déposez aucune donnée sensible qui ne vous est pas demandée." %}{% endif %}</span></p>
+
+  {% comment %} The answers' blocks, inert until the Dépôt composes one of them (depot.js clones them). {% endcomment %}
+  {% translate "Trop de requêtes" as throttled_title %}{% translate "Vous avez atteint la limite d’envois autorisée. Merci de réessayer dans quelques minutes ; rien n’a été perdu de votre côté." as throttled_text %}
+  <template data-depot-block="throttled">{% include "components/notice.html" with kind="pending" title=throttled_title text=throttled_text %}</template>
+  {% translate "Une erreur est survenue" as error_text %}
+  <template data-depot-block="error">{% include "components/notice.html" with kind="error" text=error_text %}</template>
+  {% translate "Une erreur technique est survenue. Nos équipes en ont été informées ; vous pouvez réessayer dans quelques instants." as server_text %}
+  <template data-depot-block="server">{% include "components/notice.html" with kind="error" text=server_text %}</template>
+  <template data-depot-block="gate"><p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span><span data-depot-gate-text></span> {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}</span></p></template>
+  <template data-depot-block="filed"><p class="doc-filed"><span class="doc-filed__mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle class="doc-filed__ring" cx="12" cy="12" r="8.75" pathLength="1"/><circle class="doc-filed__dot" cx="12" cy="12" r="2.6"/></svg></span><span class="doc-filed__words">{% if not row %}<span class="doc-filed__name" dir="auto" data-depot-filed-name hidden></span> {% endif %}<span data-depot-filed-text></span>{% if not row %} <a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a>{% endif %}</span></p></template>
+</section>
+{% elif row.consent_required %}
+<p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span>{% translate "Le dépôt d’une pièce nécessite l’acceptation des Conditions d’utilisation." %} {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}</span></p>
+{% endif %}

@@ -3,23 +3,34 @@
 Primary CTA anchors to the registration form (event mode, registrations open). Secondary CTAs
 (document §2.1 « Boutons secondaires ») point to the companies form and the collaboration form
 owned by the enquiries app — resolved with safe_url so the page renders while those routes land.
+
+Design V5.4 (W3-F1): «Participer et collaborer» as the page's ONE action — the action card (the raised panel of its
+screen): one primary (the registration while it is open, otherwise the pilot's interest), the other ways as
+secondaries; the live «who can help me» line under it.
 {% endcomment %}
 {% safe_url "enquiries:company_needs" as pilot_url %}{% safe_url "enquiries:institution_proposal" as collab_url %}
-<section class="forum-cta container" id="forum-cta" aria-labelledby="forum-cta-title">
-  <h2 class="forum-cta__title" id="forum-cta-title">{% translate "Participer et collaborer" %}</h2>
-  <div class="forum-cta__actions">
-    {% if not is_permanent and registration_open %}
-      <a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a>
-    {% endif %}
-    {% if pilot_url %}
-      <a class="btn btn--secondary" href="{{ pilot_url }}">{% event_text event "registration.button_secondary_pilot" %}</a>
-    {% else %}
-      <span class="btn btn--secondary is-disabled" aria-disabled="true" data-pending-route="enquiries:company_needs">{% event_text event "registration.button_secondary_pilot" %}</span>
-    {% endif %}
-    {% if collab_url %}
-      <a class="btn btn--secondary" href="{{ collab_url }}">{% event_text event "registration.button_secondary_collab" %}</a>
-    {% else %}
-      <span class="btn btn--secondary is-disabled" aria-disabled="true" data-pending-route="enquiries:institution_proposal">{% event_text event "registration.button_secondary_collab" %}</span>
-    {% endif %}
+<section class="chapter forum-action" id="forum-cta" aria-labelledby="forum-cta-title">
+  <div class="container chapter__inner">
+    {% translate "Participer et collaborer" as cta_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-cta-title" title=cta_title only %}
+    <div class="chapter__body">
+      <div class="card card--action action">
+        <p class="card__action forum-cta__actions">
+          {% if not is_permanent and registration_open %}
+            <a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a>
+          {% endif %}
+          {% if pilot_url %}
+            <a class="btn {% if is_permanent or not registration_open %}btn--primary{% else %}btn--secondary{% endif %} btn--lg" href="{{ pilot_url }}">{% event_text event "registration.button_secondary_pilot" %}</a>
+          {% else %}
+            <span class="btn btn--secondary btn--lg is-disabled" aria-disabled="true" data-pending-route="enquiries:company_needs">{% event_text event "registration.button_secondary_pilot" %}</span>
+          {% endif %}
+          {% if collab_url %}
+            <a class="btn btn--secondary btn--lg" href="{{ collab_url }}">{% event_text event "registration.button_secondary_collab" %}</a>
+          {% else %}
+            <span class="btn btn--secondary btn--lg is-disabled" aria-disabled="true" data-pending-route="enquiries:institution_proposal">{% event_text event "registration.button_secondary_collab" %}</span>
+          {% endif %}
+        </p>
+      </div>
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
   </div>
 </section>

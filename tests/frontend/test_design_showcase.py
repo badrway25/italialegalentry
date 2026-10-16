@@ -141,8 +141,7 @@ def test_renders_every_family_of_component(client, debug_urlconf):
         ("account-table", 1),
         ("tabs__tab", len(dev.DEMO_TABS)),
         ("accordion__item", len(dev.DEMO_ACCORDION)),
-        ("timeline__item", len(dev.DEMO_TIMELINE)),
-        ("stepper__item", len(dev.DEMO_STEPS)),
+        ("linea__step", len(dev.DEMO_STEPS)),  # components/stepper.html: the public passage «la linea» (W3-D)
         ("pagination__link", 2),
         ("card__title", 3),
         ("empty-state", 1),

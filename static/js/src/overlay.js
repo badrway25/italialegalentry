@@ -15,7 +15,8 @@
  * `data-overlay-modal="native"` keeps showModal() where a page is light.
  * A menu is a `popover` with a `popovertarget` trigger: light dismiss and Esc are the platform's. This module adds
  * what the platform does not give, and nothing else:
- *   · the state at t = 0 — open, aria-expanded, the focus — in the task of the input; nothing waits for a motion;
+ *   · the state at t = 0 — open, aria-expanded, the focus — in the task of the input; nothing waits for a motion; and
+ *     a dialog's `close` event, which the platform sends late, settles nothing that has opened again;
  *   · the focus moved in (CONTRACT §4) and given back to the opener, or to its successor (`data-overlay-return`),
  *     brought into the panel's own view when it lands low in a long list (the page behind never scrolls);
  *     Tab and Shift+Tab wrap inside a modal panel, and a focus sent outside a trapped one comes back; a body that
@@ -46,10 +47,14 @@
  * imported on demand (at idle where a page draws one; at once for the placement), so the console's pages do not fetch
  * them (plan §2.6's module budget; A11Y_PERF M4).
  *
+ * THE ONE FRAME WAIT of the system — the rarer parts' resize, once a frame — is motion.js's gate (`nextFrame`, W1-D:
+ * no module asks for a frame itself), handed over to them with the rest of what they need.
+ *
  * API (CONTRACT §6): open(panel, {opener, focus, instant, history}) · close(panel, {reason, focus, instant}) ·
  * toggle(panel, options) · isOpen(panel) · initOverlays(root). Events on the panel, bubbling: `overlay:open`,
  * `overlay:close` — detail {reason, opener}. The module wires the document when it is imported.
  */
+import { nextFrame } from "./motion.js";
 
 const ROOT = document.documentElement;
 const PHONE = window.matchMedia("(max-width: 40rem)");
@@ -282,6 +287,7 @@ function loadExtras() {
         tabbables,
         topTrapped: () => trapped().pop(),
         scrim: () => scrim,
+        nextFrame,
         GAP,
         EDGE,
         ROOT,
@@ -322,6 +328,9 @@ export function open(target, options = {}) {
     if (history && record.pushed) remember(panel, record, typeof history === "object" ? history : { replace: true });
     return true;
   }
+  // closed, and still open in the books: a close not heard yet (a form, another script — the platform's `close` comes
+  // with the next frame) is settled before the opening, so that its lock and its place in the stack are not left behind
+  if (record.open) settle(panel);
   const scrollbar = kind !== "popover" && locks === 0 ? hasScrollbar() : false; // the one read, before any write
   const active = document.activeElement;
   record.opener = options.opener || (active && active !== document.body && !panel.contains(active) ? active : null);
@@ -502,7 +511,11 @@ function syncScrim() {
   const base = zBase || 50;
   stack.forEach((panel, index) => panel.style.setProperty("z-index", String(base + 2 * index)));
   const under = stack.includes(top) ? stack.indexOf(top) : stack.length;
-  scrim.style.setProperty("z-index", String(base + 2 * under - 1));
+  // a press held on the scrim keeps it where the press found it until the press ends (the release re-stacks it): the
+  // platform light-dismisses a menu sheet on the way up, and a touch's compatibility mouse events and its click are
+  // hit-tested after that — re-stacked under a trapped panel at once, the scrim handed them to the panel's rows (a
+  // door unfolded, a link followed: the menu sheet in the phone sheet's foot, W2-C2 A11Y_PERF M1)
+  if (!scrim.hasAttribute("data-held")) scrim.style.setProperty("z-index", String(base + 2 * under - 1));
   // the scrim moves on the clocks of what the panel is now: a menu or a dialog on a phone, a drawer opened as a
   // sheet, leave as sheets
   const kind = kindOf(top);
@@ -529,6 +542,7 @@ function makeScrim() {
   const release = () => {
     window.clearTimeout(held);
     scrim.removeAttribute("data-held");
+    syncScrim(); // the place the press kept, given up
   };
   scrim.addEventListener("pointerdown", (event) => {
     pressed = event.target === scrim ? scrimTop() : null;
@@ -622,7 +636,13 @@ function wirePanel(panel) {
       event.preventDefault();
       escapePanel(panel);
     });
-    panel.addEventListener("close", () => settle(panel));
+    // the platform's close comes late — Chromium dispatches it with the next frame's events: a dialog closed and opened
+    // again in between (Esc then Space, a close and an opening in one task) hears it open, and that close is settled
+    // already (close() settles at once, open() settles a close it has not heard) — settled again, it took the new
+    // opening's trap away: the scrim, the lock, aria-modal, the panel made inert under a drawer still drawn
+    panel.addEventListener("close", () => {
+      if (!panel.open) settle(panel);
+    });
     // a dialog opened by another script (dialog toggle events, where they exist)
     panel.addEventListener("toggle", (event) => {
       if (event.newState === "open" && panel.open) adopt(panel);

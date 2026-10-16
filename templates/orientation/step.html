@@ -1,15 +1,23 @@
 {% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The questionnaire, one question a page. Design V5.4 (W3-F1, step 2; orientation/wizard.css on the core components of
+static/css/v5/): the page's compact title at the reading edge — its sentence is said once, on the first page (W3-F1's
+review m5: repeated above every question, it pushed «Continuer» under the fold) —, then the step
+(orientation/_step.html): «Question n sur N» in words over a quiet line, the question as the fieldset's legend, the
+choices as plates around the native controls, ONE primary («Continuer», first in the DOM: Enter submits it), the error
+wired to the group and said in words beside a drawn mark. Nothing on this page moves.
+{% endcomment %}
 {% block page_title %}{% blocktranslate with n=step_number %}Question {{ n }}{% endblocktranslate %} · {% translate "Orientation" %}{% endblock %}
 {% block meta_description %}{% translate "Questionnaire d’orientation — pré-évaluation à caractère informatif." %}{% endblock %}
+{% block body_class %}page-orientation page-orientation--step interior{% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/orientation/wizard.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-<article class="container wizard">
+<div class="container wizard">
   <header class="wizard__header">
     <h1 class="wizard__title">{% translate "Questionnaire d’orientation" %}</h1>
-    <p class="wizard__subtitle">{% translate "Vos réponses servent uniquement à une pré-évaluation à caractère informatif." %}</p>
   </header>
   {% include "orientation/_step.html" %}
-</article>
+</div>
 {% endblock %}
 {% block extra_scripts %}<script type="module" src="{% static 'orientation/wizard.js' %}"></script>{% endblock %}

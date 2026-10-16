@@ -47,10 +47,13 @@ CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=[])
 # Applications
 # ---------------------------------------------------------------------------
 DJANGO_APPS = [
-    "unfold",  # back-office UX layer; must precede django.contrib.admin (ADR-005)
+    # Back-office UX layer; must precede django.contrib.admin (ADR-005). Its basic config leaves the default admin
+    # site alone: the site is accounts.admin_site.BackofficeAdminSite — unfold's, whose own sign-in form is closed
+    # (staff sign in through allauth and its MFA stage, F-5) — installed by the admin config two lines below.
+    "unfold.apps.BasicAppConfig",
     "unfold.contrib.filters",
     "unfold.contrib.forms",
-    "django.contrib.admin",
+    "accounts.admin_apps.BackofficeAdminConfig",  # django.contrib.admin, defaulting to the site above
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -258,7 +261,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 # Private documents are NEVER under MEDIA_ROOT; they are served only through authorised views.
-PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", default=str(BASE_DIR / "private_media")))
+# An EMPTY value means the default, not the current directory: django-environ returns "" for a declared
+# empty variable, Path("") is ".", and identity documents then landed in the root of the checkout.
+PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", default="") or BASE_DIR / "private_media")
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
@@ -380,8 +385,11 @@ PUBLIC_FORM_THROTTLE = {"limit": 5, "window_seconds": 600}
 # ---------------------------------------------------------------------------
 # Pluggable security / integration hooks (see docs/SECURITY.md, docs/CRM_INTEGRATION_CONTRACT.md)
 # ---------------------------------------------------------------------------
-# TOTP mandatory for every staff account entering /backoffice/ (accounts.middleware).
-# Off by default so a fresh local install can reach the back-office; production must enable it.
+# Makes TOTP enrolment mandatory for every account that reads another person's data
+# (accounts.services.MFA_REQUIRED_ROLES) before the back office, the reserved area and /documents/
+# (accounts.middleware). Off by default so a fresh local install can reach the back office without enrolling;
+# production turns it on and refuses it off (prod.py). Whatever it says, a device an account holds is asked for in
+# every session before those pages (F-5): the flag makes enrolment mandatory, it does not switch the factor on or off.
 BACKOFFICE_MFA_ENFORCED = env.bool("BACKOFFICE_MFA_ENFORCED", default=False)
 # Dotted path of a callable(path) -> ScanStatus used to scan private uploads. Empty = files stay
 # "pending" and are downloadable only by their owner (documents.services.scan_file).

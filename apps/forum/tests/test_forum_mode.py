@@ -38,7 +38,7 @@ def test_switch_to_permanent_by_flag_with_frozen_time(client, event, set_flag):
     with freeze_time(dt.datetime(2026, 10, 2, 18, 30, tzinfo=ROME)):
         flags.invalidate()
         html = _page(client)
-        assert f'<h1 class="forum-hero__title">{PERMANENT_TITLE}</h1>' in html
+        assert f'forum-hero__title">{PERMANENT_TITLE}</h1>' in html
         assert 'id="forum-registration"' not in html
         assert 'type="application/ld+json"' not in html
         assert "page-forum--permanent" in html

@@ -1958,18 +1958,21 @@
         },
         {
           "glob": "static/css/v5/chrome.css",
-          "slice": "the sheet's parts",
-          "source": "§3.4 item 5"
+          "slice": "the sheet's parts — and, as written: §7 «Menu» and the sheet (the V4 drawer's rules replaced: the drawer of the overlay system with its own head and pinned night foot, «Quiet» below 48rem, the side sheet from 48rem, one width for «Menu» and «Fermer», the short viewport); §3–§4's compact letterhead from 64rem (REVIEW M1); §5's `.portico__*` drawing shared with the sheet; §6's targa (its CSS tip gone to the layer tip, the bare end zone, the seat's flex); §2's V4 segmented track (deleted) and the languages on paper in the sheet; §9's reduced-motion, forced-colour and print rows of the sheet; the chrome's tap tint; `--nav-drawer-top` (deleted); the header comment",
+          "source": "§3.4 item 5",
+          "note": "steward assignment (w2-c2 merge, 12 Oct 2026): the slice named as written (DL54-100, DL54-101)"
         },
         {
           "glob": "static/js/src/nav.js",
-          "slice": "the sheet's parts; the panel's switch from the local adapter to overlay.js",
-          "source": "§3.4 item 5"
+          "slice": "the sheet's parts; the panel's switch from the local adapter to overlay.js — and, as written: `initDrawer` replaced by `initSheet` (the sheet put away past 80rem through overlay.js's close); `initTarga` on the system's layer tip (refused from 100rem through `overlay:tip`); `initPortico`'s measuring pass made instant (N8) and its panel closed by any `overlay:open` (REVIEW m2); the header comment. The panel's own switch to overlay.js waits for W2-A's disclosure primitive",
+          "source": "§3.4 item 5",
+          "note": "steward assignment (w2-c2 merge, 12 Oct 2026): the slice named as written (DL54-100 items 1, 3 and 5; DL54-101 item 7)"
         },
         {
           "glob": "templates/partials/header.html",
-          "slice": "the signed-in targa's account popover",
-          "source": "§3.4 item 5"
+          "slice": "the signed-in targa's account popover — and, as written: the V4 drawer's markup replaced by the sheet's include (partials/main_nav.html, «sheet», after the letterhead at the body's level); «Menu» a link to the sheet that holds «Fermer» hidden; the bare end zone when the flags are off; the key alone named by the layer tip; the header comment",
+          "source": "§3.4 item 5",
+          "note": "steward assignment (w2-c2 merge, 12 Oct 2026): the slice named as written (DL54-100 items 1, 3 and 6; DL54-101 item 6)"
         },
         {
           "glob": "static/js/src/shell.js",
@@ -1978,13 +1981,15 @@
         },
         {
           "glob": "static/css/components.css",
-          "slice": "the drawer's last legacy rules (§7)",
-          "source": "§3.4 item 5; §2.3 deletion map (W2-C2 for the drawer's last rules)"
+          "slice": "the drawer's last legacy rules (§7) — as written: the V4 drawer panel's guard `.main-nav__panel { animation: none; }` in the universal reduced-motion block (deleted) and that block's comment",
+          "source": "§3.4 item 5; §2.3 deletion map (W2-C2 for the drawer's last rules)",
+          "note": "steward assignment (w2-c2 merge, 12 Oct 2026): the slice named as written (DL54-100 item 4)"
         },
         {
           "glob": "tests/frontend/test_design_docs.py",
-          "slice": "the section count of components.css (test_breakpoints_keyframes_and_stylesheets_are_documented, :658), in the merge that deletes sections",
-          "source": "§2.3 deletion map"
+          "slice": "the section count of components.css (test_breakpoints_keyframes_and_stylesheets_are_documented, :658), in the merge that deletes sections — and, as written: W2-C1's assertions on the menu below 80rem follow the sheet (test_sticky_header_does_not_trap_fixed_drawer: the sheet at the body's level, after the header; test_navigation_breakpoint_is_consistent_and_documented: «Menu» opens the overlay system's drawer); in the steward's test_capture_report_is_current_and_backs_the_documented_figures, the sheet's `top` among the report's keys and the G-23 rule with the sheet's own head",
+          "source": "§2.3 deletion map",
+          "note": "steward assignment (w2-c2 merge, 12 Oct 2026): the slice named as written (DL54-100)"
         },
         {
           "glob": "docs/design-v5/QA/v54/w2-c2/**",
@@ -2002,8 +2007,109 @@
         },
         {
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
-          "slice": "the sheet's and the targa popover's prose (§11)",
-          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+          "slice": "the sheet's and the targa popover's prose (§11) — and, as written: §10's account_menu.html and language_segmented.html (one face each), §10.2's shell, §3.17's row of the sheet, §16's rows of main.js, nav.js, shell.js and overlay.js, §21's known defects that the sheet closed; §2's sentences on v4/shell.css (gone) and v5/chrome.css; every figure of §2 is regenerated by the steward",
+          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)",
+          "note": "steward assignment (w2-c2 merge, 12 Oct 2026): the slice named as written (DL54-100, DL54-101)"
+        },
+        {
+          "glob": "docs/ACCESSIBILITY.md",
+          "slice": "the sheet's and the targa popover's rows: the dated line; §2's 1.4.10, 1.4.13, 2.1.2 and 2.4.3 (G-11 closed: Conforme) and the summary's counts that follow; §3's menu and drawer rows; §4.3's sheet; §4.5; §9.1's targets; §11's checks; §12.1's keyboard path; §13's G-02, G-04, G-11 and G-23",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the keyboard, focus and target contract of the sheet and the account popover as built, W2-C1's precedent (DL54-100, DL54-101)"
+        },
+        {
+          "glob": "docs/qa/design/capture.py",
+          "slice": "_metrics' menu geometry (`#nav-sheet`, the system's scrim, the sheet's `top`), the open's wait (450 ms) and the comments that say so",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — W2-C1's «drawer selectors and figures»: the menu below 80rem is the sheet, so the evidence for G-02 and G-23 reads the sheet (DL54-100); the report itself stays the steward's"
+        },
+        {
+          "glob": "static/css/main.css",
+          "slice": "the import line of v4/shell.css (deleted with the file) and the comment of v5/chrome.css's import",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the deletion map's row «W2-C1 (W2-C2 for the drawer's last rules)»: v4/shell.css leaves and its import with it (DL54-100 item 4)"
+        },
+        {
+          "glob": "static/css/v4/shell.css",
+          "slice": "the whole file, deleted: its last block, the account menu's details face",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the letterhead's `<details>` account menu left when the letterhead moved onto the system's popover, as the file's header asked of W2-C2 (DL54-100 item 4); the file was W2-C1's"
+        },
+        {
+          "glob": "static/js/main.js",
+          "slice": "initDropdowns (deleted), its call in initMisc and the header line that named it — reworded at the merge so that the file names no `import ` (test_static_assets' guard)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — W2-A's fallback for the letterhead's `<details>`, which its comment said goes when shell.js imports overlay.js; every page now loads the system (DL54-100 item 4)"
+        },
+        {
+          "glob": "static/js/src/overlay.js",
+          "slice": "syncScrim() and makeScrim()'s release(): the scrim keeps its z-index while a press holds it (`data-held`), the release re-syncs it — four lines and a comment",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the accessibility check's M1: a tap on a menu sheet's scrim reached the trapped phone sheet's rows, a case only this family's composition reaches; W2-A's DL54-93 item 1 now holds over a trapped panel too (DL54-101 item 5); the file stays W2-A's, which owns the fix from the merge"
+        },
+        {
+          "glob": "templates/components/account_menu.html",
+          "slice": "design V4's `<details data-dropdown>` face (deleted) and the header comment: one face, the popover",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — W2-A's hand-over: the letterhead's seat and the sheet's foot moved onto the popover, so the details face left, as the component's comment asked (DL54-100 items 3 and 4); the file stays W2-A's"
+        },
+        {
+          "glob": "templates/components/language_segmented.html",
+          "slice": "design V4's segmented track (deleted): one drawing, the names; `lang_names` accepted and inert; the header comment",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the track was drawn for the drawer and the console bar, whose families redrew them: no caller is left, every include passes `lang_names` (DL54-100 item 4); the file stays W2-C1's"
+        },
+        {
+          "glob": "templates/dev/showcase.html",
+          "slice": "the account menu's demo (the popover face, `popover=True menu_id=\"ds-account\"`) and the language demo on the bar's night (`utility-bar`)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the design showcase follows the components' one face (DL54-100 item 4)"
+        },
+        {
+          "glob": "tests/frontend/test_browser.py",
+          "slice": "test_mobile_drawer_and_language_switcher: «Menu» opens the sheet (`aria-expanded`, Esc, its four languages)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test pinned the V4 drawer; each assertion follows the sheet, none weakened (DL54-100); the file stays W2-C1's"
+        },
+        {
+          "glob": "tests/frontend/test_browser_w2_c1.py",
+          "slice": "the no-script test: below 80rem «Menu» a link to the sheet, shown in place (:target, G-04 closed), «Fermer» a link back (renamed test_without_script_a_door_opens_on_hover_and_the_sheet_opens_in_place); the module docstring",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test pinned the V4 drawer's no-script face; the intent kept (DL54-100); the file stays W2-C1's"
+        },
+        {
+          "glob": "tests/frontend/test_cms_nav.py",
+          "slice": "test_main_menu_tag_renders_in_template: the menu tree drawn in the sheet (the current section's door open and marked, its current entry marked twice: bar and sheet)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test pinned the V4 drawer's markup; it reads the sheet's (DL54-100); the file stays W2-C1's"
+        },
+        {
+          "glob": "tests/frontend/test_layout.py",
+          "slice": "test_reserved_area_link_follows_flag: «la targa» in the letterhead and on night in the sheet's foot",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test pinned the drawer's plate; it reads the sheet's foot (DL54-100, DL54-101 item 2)"
+        },
+        {
+          "glob": "tests/frontend/test_overlays.py",
+          "slice": "test_the_account_menu_is_the_systems_popover_in_the_console_and_in_the_letterhead (renamed: one face, v4/shell.css gone) and test_main_js_keeps_no_dialog_and_a_dropdown_fallback_that_steps_aside (initDropdowns gone)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — W2-A's tests pinned its hand-over to W2-C2 «until W2-C2»; they read the hand-over as done (DL54-100 item 4); the file stays W2-A's"
+        },
+        {
+          "glob": "tests/frontend/test_overlays_console_w2_a.py",
+          "slice": "test_the_letterhead_holds_the_account_popover_since_w2_c2 (was …keeps_v4s_details_face_until_w2_c2)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test pinned V4's details face «until W2-C2»; it reads the letterhead's two popovers (DL54-100 item 3); the file stays W2-A's"
+        },
+        {
+          "glob": "tests/i18n/test_rtl_browser.py",
+          "slice": "test_mobile_drawer_opens_inside_the_viewport: the sheet inside the viewport in both directions",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test pinned the V4 drawer; it reads the sheet (DL54-100 item 2)"
+        },
+        {
+          "glob": "tests/i18n/test_rtl_static.py",
+          "slice": "test_the_project_stylesheets_are_found: v4/workspace.css stands for the V4 sheets (v4/shell.css deleted)",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — the test named v4/shell.css, which the deletion map's row removes (DL54-100 item 4); the file stays W1-A's"
+        },
+        {
+          "glob": "tests/frontend/test_static_assets.py",
+          "slice": "test_main_js_is_an_es_module_without_external_dependencies: the dropdowns' `aria-expanded` and Esc read in overlay.js, `initDropdowns` absent from main.js",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — found by the merge's targeted tests: the test pinned main.js's dropdown fallback, which W2-C2 deleted as W2-A's hand-over asked (DL54-100 item 4); the intent kept (someone owns the disclosures' state and Esc: overlay.js); the slice stays W2-A's too (DL54-102 item 8)"
+        },
+        {
+          "glob": "tests/frontend/test_components_w1_c.py",
+          "slice": "test_the_legacy_rules_these_sheets_replace_are_gone: the read of v4/shell.css guarded by the file's existence — without it, the import's absence asserted",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — found by the merge's targeted tests: the test read v4/shell.css, which W2-C2 deleted (DL54-100 item 4); the intent kept, as the file's own v4/buttons.css test does it; the file stays W1-C's (DL54-102 item 8)"
+        },
+        {
+          "glob": "tests/i18n/test_page_integrity.py",
+          "slice": "_french_sources: a French msgid that is also one of the language's own translations (a homograph) is not counted as a French string",
+          "source": "steward assignment (w2-c2 merge, 12 Oct 2026): justified extra path — found by the merge's widened run: the sheet draws «Fermer» on every page, «Close» in English, which is also the helpdesk's French source «Close» (une demande close), so the guard read the English word as a French leak on every English page; the text alone cannot tell a homograph apart (three in the catalogues: «Close», «note», «note interne») (DL54-102 item 8)"
         }
       ]
     },
@@ -2138,7 +2244,7 @@
         },
         {
           "glob": "apps/pages/static/pages/css/pages.css",
-          "slice": "the interior part",
+          "slice": "the interior part — and, as written: the pathway list's whole drawing in the home's §6 (the titles' face, the stretched link), components.css §18 having left the shared sheet for its one consumer's (DL54-108)",
           "source": "§3.5 item 1"
         },
         {
@@ -2165,12 +2271,12 @@
         },
         {
           "glob": "static/css/register.css",
-          "slice": "the folio, marginal note, sources, jurisdiction bar, slab and outcome — by page",
+          "slice": "the folio, marginal note, sources, jurisdiction bar, slab and outcome — by page — and, as written (deleted): the prescribed titles typeset in capitals (`.page-header__title`, redrawn by the shared page and the console's frame) (DL54-108)",
           "source": "§2.3 deletion map (W3-F1 / W3-F2, by page)"
         },
         {
           "glob": "static/css/layout.css",
-          "slice": "V1 layout.css's editorial parts — by page",
+          "slice": "V1 layout.css's editorial parts — by page — as written (deleted, each proved unused): `.zones__content > .prose`, `.section--rule`, `--tight`, `--muted`, `--inverse`, `.grid-auto`, `.layout-sidebar` (its last consumer gone with W3-F2), `.stack--sm` / `--lg`, `.rule--accent` and the legacy container aliases (DL54-104, DL54-106, DL54-108)",
           "source": "§2.3 deletion map (W3-F1 / W3-F2, by page)"
         },
         {
@@ -2204,8 +2310,142 @@
         },
         {
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
-          "slice": "the prose of its pages' components (§8 and §10 entries it changes)",
+          "slice": "the prose of its pages' components (§8 and §10 entries it changes) — and, as written: §2.1's rows of its page sheets (pages/css/interior.css, pathways/pathways.css, ecosystem.css, forum.css, orientation/wizard.css and wizard.js) and its clause in console.css's row; §3.10's and §3.12's «riserva» labels (`--track-caps-display`, `--rank-c-block`: their last consumers deleted); §7.2's 64rem row and §7.4's sentence on the rules it deleted (the sidebar layout, the local navigation, the section aliases); §10.1's «Sommario di pagina»; §11.4 (the trail, the local navigation, the page index); §14.1 (the pilot's illustration retired); every figure of §2 is regenerated by the steward",
           "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+        },
+        {
+          "glob": "static/css/v5/_interior.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — what W3-F1's pages draw beside the shared page of the public interior (the entrance's grid and end seat, the chapters' and the register's own, «la linea», D26's inset and action), a page partial never in main.css (plan §2.3), imported after v5/_pagina.css by the area's five page sheets (DL54-103 item 1, DL54-104 item 1, DL54-108)"
+        },
+        {
+          "glob": "static/css/v5/_pagina.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the shared page of the public interior — the trail, the head, the chapters, the register, D26's shared slots — drawn once for W3-F1's pages and W3-F2's and imported first by both families' page sheets (the owner's V5.8 rule 3: one component, one drawing; W3-F2's REVIEW m11; consolidated by this area, merging second) (DL54-108)"
+        },
+        {
+          "glob": "static/css/v5/_porta.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the door card «la porta» and the door's way in, page-only: imported by the two door sheets alone under the owner's V5.8 budget (DL54-103 items 1 and 7, DL54-107)"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/interior.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the institutional pages' page sheet (project, promoter, network, contact, anti-fraud), an import list built to css/dist/pages/css/interior.css; they left pages.css, the home's alone now (DL54-104 item 1)"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/_institutional.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the institutional pages' own rules beside their sheet (DL54-104 item 1, DL54-108)"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_spaces.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the ecosystem doors' own rules beside the owned ecosystem.css (DL54-104 item 1, DL54-108)"
+        },
+        {
+          "glob": "apps/forum/static/forum/_forum.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the Forum's public pages' own rules beside forum.css's public part; the governance pages load nothing from it (DL54-104 item 1)"
+        },
+        {
+          "glob": "apps/pathways/static/pathways/pathways.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pathway pages' page sheet (the Espace Personnes, the sheets, «Diplômes et titres», «Formation»), new: no family held apps/pathways/static/ (DL54-104 item 1; the page type's first sheet, recorded by the steward)"
+        },
+        {
+          "glob": "apps/pathways/static/pathways/_pathways.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pathway pages' own rules beside their sheet (DL54-104 item 1, DL54-106 item 5, DL54-107 item 2, DL54-108)"
+        },
+        {
+          "glob": "apps/portal/static/portal/v5/_wizard.css",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — «Ma situation»'s guided form, console-only, out of main.css with v4/wizard.css (the area's deletion-map row); the Stepper's rules leave with W3-D's redraw of components/wizard_stepper.html (DL54-106 items 1 and 2)"
+        },
+        {
+          "glob": "static/img/illustrations/pilot-flow.svg",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pilot's growth-curve illustration, retired — one diagram language, «la linea» (CDV §19; DL54-103 item 8)"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_browser.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the ecosystem doors' browser tests, retargeted to the interior's markup, their intents kept (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_companies_page.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the companies' door tests, retargeted to the markup, intents kept (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_compliance.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the ecosystem doors' compliance tests (locked texts byte-identical), retargeted to the markup and to ecosystem.css's import list (DL54-104 item 4, DL54-108)"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_gated_pages.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the ecosystem doors' gate tests, retargeted to the markup, intents kept (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/forum/tests/test_forum_page.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the Forum's public page tests, retargeted to the markup (the programme numbered, the name's language) (DL54-104 item 4, DL54-107 item 5)"
+        },
+        {
+          "glob": "apps/forum/tests/test_forum_mode.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the Forum's mode tests: the permanent title's assertion reads the entrance's h1 (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/pathways/tests/test_compliance.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pathway pages' compliance tests: a locked text cut for layout is read back whole (DL54-107 item 8)"
+        },
+        {
+          "glob": "apps/pathways/tests/test_services.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pathways services' tests: the icons from the registry, the authorities' host (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/pathways/tests/test_views.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pathway pages' view tests, retargeted to the markup (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/pages/tests/test_institutional.py",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the institutional pages' tests, retargeted to the interior's markup, intents kept; W2-D's tests of the home stay in their own files (DL54-104 item 4)"
+        },
+        {
+          "glob": "apps/pathways/services.py",
+          "slice": "the presentation of the pages it owns: `DEFAULT_ICONS` (the registry's PATHWAY map), `authorities()`'s `host`, `how_it_works()` and `HowItWorks` (the locked sentence cut on its own arrows for «la linea», read back whole)",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — W1-B's review m2 (no V4 id), D26 (an authority's host), RH-3 on /parcours/ (DL54-104 item 4, DL54-107 item 2); the gates and the registry logic keep no writer until the steward assigns them"
+        },
+        {
+          "glob": "apps/pathways/views.py",
+          "slice": "index(): the `how` context entry",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the person door's «Comment ça marche» on «la linea» (DL54-107 item 2)"
+        },
+        {
+          "glob": "apps/forum/services.py",
+          "slice": "page_context(): `permanent_title_lang` and `page_title_lang` (the Forum's untranslated name says its language)",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — WCAG 3.1.2 on the Arabic Forum page until the translators give the name (DL54-107 item 5)"
+        },
+        {
+          "glob": "apps/forum/views.py",
+          "slice": "`_breadcrumbs()`'s `lang`, and the trail of the three public views (index, register, register_done)",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the trail's link to the Forum says its language on the registration pages (DL54-107 item 5)"
+        },
+        {
+          "glob": "apps/portal/static/portal/console.css",
+          "slice": "the import line of v5/_wizard.css (after the dashboards' partial) and its row in the header list, through the steward",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — plan §2.2: each family that adds a console partial adds its import line through the steward (DL54-106 item 1); the file stays W3-A's"
+        },
+        {
+          "glob": "static/css/v5/_lettura.css",
+          "slice": "the consolidation (the owner's V5.8 rule 3): the rules the shared page now draws once, moved to v5/_pagina.css, and the dead resets of the legacy page header, deleted — with the header and the comments that say so",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — W3-F2's REVIEW m11; the family merging second consolidates (DL54-108); the file stays W3-F2's"
+        },
+        {
+          "glob": "apps/cms/static/cms/lettura.css",
+          "slice": "the import line of v5/_pagina.css, first, and the header sentence that names it",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the content pages' sheet imports the shared page before its partial (DL54-108); the file stays W3-F2's"
+        },
+        {
+          "glob": "tests/frontend/test_content_pages_w3_f2.py",
+          "slice": "test_the_partial_is_page_only_css_imported_by_its_entry: the entry's exact import list (v5/_pagina.css, then v5/_lettura.css)",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the consolidation's import order pinned (DL54-108); the file stays W3-F2's"
+        },
+        {
+          "glob": "tests/frontend/test_chips_cards_w1_c.py",
+          "slice": "test_the_chip_is_drawn_by_one_sheet: the interior's placements (`.registro__row > .chip` in the shared page, `.termes__list .tag`); test_an_entry_keeps_its_room…: «Formation» draws no card any more, the showcase keeps the case",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the interior's chip and tag placements named (DL54-106 item 5, DL54-108); «Formation»'s phases on «la linea»; the file stays W1-C's"
+        },
+        {
+          "glob": "tests/frontend/test_icons.py",
+          "slice": "test_the_empty_state_draws_its_space_or_the_neutral_mark_never_document_by_default: the floor of empty-state callers 25 → 21",
+          "source": "steward assignment (w3-f1 merge, 12 Oct 2026): justified extra path — the pathway sheet's four sections being verified say so in words on the «attesa» edge — a glyph in each would break the six-icon ceiling (DL54-103 item 9, DL54-104 item 4); the file stays W1-B's"
         }
       ]
     },
@@ -2632,8 +2872,9 @@
         },
         {
           "glob": "static/js/src/console.js",
-          "slice": "the preview drawer and the filter sheet, on overlay.js",
-          "source": "§3.5 item 5"
+          "slice": "the preview drawer and the filter sheet, on overlay.js — as written: §2's search (a group whose rows are all filtered out hides with them; wired again on documents:refreshed), §2b the drawer's module imported where the register draws it, §2d the Dépôt's module imported where a page draws one, §2e the loose file's deletion dialog (its name, its «Supprimer» pointed at the row's form)",
+          "source": "§3.5 item 5",
+          "note": "steward assignment (w3-c merge, 12 Oct 2026): the slice named as written (DL54-113, DL54-115, DL54-118, DL54-119)"
         },
         {
           "glob": "apps/portal/static/portal/console.css",
@@ -2642,13 +2883,15 @@
         },
         {
           "glob": "static/css/v4/workspace.css",
-          "slice": "DocumentCollection / Row / Card, SegmentedControl, search",
-          "source": "§2.3 deletion map (W3-C)"
+          "slice": "DocumentCollection / Row / Card, SegmentedControl, search — as written (deleted): the row menu, their forced-colour and touch lines, the portal files table's rules (.files__*, .table__link), the sheet's header; and F13 on the case file's checklist, date list and next step (the deadline tokens, colour only)",
+          "source": "§2.3 deletion map (W3-C)",
+          "note": "steward assignment (w3-c merge, 12 Oct 2026): the slice named as written (DL54-113, DL54-115)"
         },
         {
           "glob": "static/css/register.css",
-          "slice": "the register and entry",
-          "source": "§2.3 deletion map (W3-C)"
+          "slice": "the register and entry — as written: the current entry's rules (.entry[aria-current] and their forced-colour twin) deleted, the section kept for its eight other consumers, its header says so",
+          "source": "§2.3 deletion map (W3-C)",
+          "note": "steward assignment (w3-c merge, 12 Oct 2026): the slice named as written (DL54-115)"
         },
         {
           "glob": "static/css/main.css",
@@ -2671,8 +2914,78 @@
         },
         {
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
-          "slice": "the document workspace's prose (document_row and the registers)",
-          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+          "slice": "the document workspace's prose: §10's document_row.html and health_strip.html, form_field.html's consumer line, §11.8 «Mes pièces» — il registro, la riga, lo stato; as written: §2's v4/workspace.css row (the rows that left with «Mes pièces» V5; every figure is the steward's, regenerated)",
+          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)",
+          "note": "steward assignment (w3-c merge, 12 Oct 2026): the slice named as written (DL54-110 … DL54-119)"
+        },
+        {
+          "glob": "templates/documents/partials/{depot,piece_drawer,state_filter,delete_confirm}.html",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the register's and the piece's partials beside register.html: the Dépôt (one markup for the piece's page, the preview drawer's body and the loose upload), the preview drawer, the state filter (in the register's flow and in its sheet) and the loose file's deletion dialog (DL54-113, DL54-118, DL54-119)"
+        },
+        {
+          "glob": "static/js/src/{depot,piece-drawer}.js",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the Dépôt's module and the preview drawer's module, each imported on demand by console.js where a page draws it — the slice «the preview drawer and the filter sheet, on overlay.js» needs its module; the loader L2 on demand, no frame waited on outside motion.js (DL54-115, DL54-118, DL54-119)"
+        },
+        {
+          "glob": "apps/documents/templatetags/documents_register.py",
+          "slice": "deposit_rules(): the Dépôt's client guards read the server's own limits (presenters.deposit_rules)",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the Dépôt writes the server's limits on its form, never a second copy of the rule in a script (DL54-115); no family held the file"
+        },
+        {
+          "glob": "apps/documents/models.py",
+          "slice": "DocumentRequirement.is_overdue: the project's clock (core.clock.today()), one line and its import",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — REVIEW M3 — one clock decides one deadline, as the register's urgency, the deadlines page and T1 already read it (DL54-119); no family held the file"
+        },
+        {
+          "glob": "apps/cases/models.py",
+          "slice": "ChecklistItem.is_overdue: the project's clock (core.clock.today()), one line and its import",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — REVIEW M3 — the case file's checklist and T1 read the same clock as the documents' register (DL54-119); no family held the file"
+        },
+        {
+          "glob": "apps/documents/tests/test_requirement_views.py",
+          "slice": "the V4 register's pins retargeted, intent kept: the register a collection of rows, the row as the link; the blocked row and its reason; one blocked row counted on the rows",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — «Mes pièces» V5.2 drew the register again (DL54-110, DL54-113); no family held the file"
+        },
+        {
+          "glob": "apps/portal/static/portal/portal.css",
+          "slice": "F13: the console's next action (.next-action--soon, --overdue) and the tables' late rows (tr.is-overdue) on the deadline tokens — colour only",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the platform map's F13 «on every page that shows them»: lateness is never drawn with a refusal's colour (DL54-115)"
+        },
+        {
+          "glob": "templates/portal/partials/deadline_item.html",
+          "slice": "the date's line: the glyph of its register in the dashboard's date grammar (.db-due; F13)",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — F13 on the deadlines page with no new shared CSS (DL54-115)",
+          "note": "W3-E keeps the partial (the list partials)"
+        },
+        {
+          "glob": "templates/dev/showcase.html",
+          "slice": "the documents page sheet's link in extra_head; the document row sample without V4's panel classes",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the showcase's state filter and document row are drawn by the documents page sheet's partials, which left main.css (DL54-113)"
+        },
+        {
+          "glob": "tests/frontend/test_v5_tokens.py",
+          "slice": "test_the_console_partials_close_the_console_entry: a console partial drawn by a few pages is imported by their page sheet (one importer each)",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the documents page sheet imports the three documents partials (DL54-112, DL54-113)"
+        },
+        {
+          "glob": "tests/frontend/test_state_chips_carry_a_register.py",
+          "slice": "the filter legend's two pins follow it into state_filter.html (NOT_CHIPS, test_the_filters_legend_draws_the_chips_own_mark), and ruff format's reflow",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — the filter's legend moved into its own partial (DL54-118)"
+        },
+        {
+          "glob": "tests/frontend/test_overlays.py",
+          "slice": "test_the_panels_are_page_only_and_linked_by_the_pages_that_draw_them (a partial is linked through the pages that include it) and test_the_register_row_opens_its_piece_in_the_systems_drawer (the row menu's pin retargeted, intent kept)",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — «Mes pièces» V5.2 has no row menu; the piece opens in the system's drawer (DL54-116, DL54-118)"
+        },
+        {
+          "glob": "tests/frontend/test_overlays_console_w2_a.py",
+          "slice": "test_every_row_of_the_register_opens_its_piece_in_the_systems_drawer (the row menu's pin retargeted, intent kept)",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — «Mes pièces» V5.2 has no row menu; the piece opens in the system's drawer (DL54-116, DL54-118)"
+        },
+        {
+          "glob": "tests/frontend/test_overlays_console_browser_w2_a.py",
+          "slice": "test_a_menu_sheet_takes_the_whole_press_that_dismisses_it (on the account popover's sheet) and test_the_rows_piece_opens_in_the_systems_drawer_beside_the_list (the row menu's tests retargeted, intent kept)",
+          "source": "steward assignment (w3-c merge, 12 Oct 2026): justified extra path — «Mes pièces» V5.2 has no row menu; the piece opens in the system's drawer (DL54-116, DL54-118)"
         }
       ]
     },
@@ -2704,8 +3017,9 @@
         },
         {
           "glob": "apps/*/static/**/*.css",
-          "slice": "the _journey-passage.css import line in the page sheets that draw the passage (after W3-F1's merge)",
-          "source": "§3.5 item 6"
+          "slice": "the _journey-passage.css import line in the page sheets that draw the passage (after W3-F1's merge) — as written at the merge: pages/css/pages.css (the home: the line first, and the home's V4 `.sequence` rules deleted with their print line), pathways/pathways.css, ecosystem/ecosystem.css and orientation/wizard.css (the line after css/v5/_interior.css), each with its header's line; and, as written: portal/v5/_dashboard.css (W3-B's one rule that stopped V4's rail drawing itself, removed as W3-B's comment asked), portal/v5/_wizard.css (the Stepper's rules retired — §2, the phone row, the forced-colours line; the header names its new sheet)",
+          "source": "§3.5 item 6",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-126, DL54-128)"
         },
         {
           "glob": "apps/portal/static/portal/v5/_journey-rail.css",
@@ -2718,17 +3032,20 @@
         {
           "glob": "apps/cases/services.py",
           "slice": "the SELECTION mapping in journey_for",
-          "source": "§3.5 item 6; §2.2 serialized table"
+          "source": "§3.5 item 6; §2.2 serialized table",
+          "note": "steward note (w3-d merge, 15 Oct 2026): journey_for lives in apps/portal/services.py (assigned to w3-d as a slice at the merge); the family changed nothing in this file"
         },
         {
           "glob": "apps/portal/static/portal/console.css",
-          "slice": "its own console partial's import line, through the steward",
-          "source": "§2.2 serialized table"
+          "slice": "its own console partial's import line, through the steward — as written: none (the rail is the journey's page-only sheet, V5.8); W3-F1's `v5/_wizard.css` import line removed (the guided form moved to «Ma situation»'s page-only sheet) and the header's list that says where both are drawn",
+          "source": "§2.2 serialized table",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-127, DL54-128 item 4)"
         },
         {
           "glob": "static/css/components.css",
-          "slice": "§16 stepper, §17 timeline",
-          "source": "§2.3 deletion map (W3-D)"
+          "slice": "§16 stepper, §17 timeline — as written: both sections deleted whole (§16 with the progress bar, `progress.progress` and `.progress-label`; §17 with components/timeline.html)",
+          "source": "§2.3 deletion map (W3-D)",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-126 item 2, DL54-128 item 3)"
         },
         {
           "glob": "static/css/v2/voyage.css",
@@ -2736,13 +3053,15 @@
         },
         {
           "glob": "static/css/v4/workspace.css",
-          "slice": "the JourneyRail",
-          "source": "§2.3 deletion map (W3-D)"
+          "slice": "the JourneyRail — as written: the JourneyRail and the Timeline (`.journey*`, `.tl*`, the keyframes rail-draw, rail-draw-y and tl-light, their forced-colour and reduced-motion lines) deleted, the header saying where they went",
+          "source": "§2.3 deletion map (W3-D)",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-126 items 1 and 2)"
         },
         {
           "glob": "static/css/register.css",
-          "slice": "the sequence",
-          "source": "§2.3 deletion map (W3-D)"
+          "slice": "the sequence — as written: its shore crossing (`.sequence__step--italy`, `.sequence__crossing` and its Arabic line) deleted with its last consumer, the home's orientation steps; the section kept for the console's secondary pages, its header and its comment say so",
+          "source": "§2.3 deletion map (W3-D)",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-126 item 2)"
         },
         {
           "glob": "static/css/main.css",
@@ -2751,8 +3070,9 @@
         },
         {
           "glob": "tests/frontend/test_design_docs.py",
-          "slice": "the section count of components.css (test_breakpoints_keyframes_and_stylesheets_are_documented, :658), in the merge that deletes sections",
-          "source": "§2.3 deletion map"
+          "slice": "the section count of components.css (test_breakpoints_keyframes_and_stylesheets_are_documented, :658), in the merge that deletes sections — as written: the token check's composition helpers (_declared, _vocabulary_before: a partial reads the custom properties of the sibling partials its entry imports before it), used by _stylesheet_violations",
+          "source": "§2.3 deletion map",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-128 item 5)"
         },
         {
           "glob": "docs/design-v5/QA/v54/w3-d/**",
@@ -2770,8 +3090,115 @@
         },
         {
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
-          "slice": "the journey's prose (journey_rail, case_timeline, stepper, wizard_stepper)",
-          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+          "slice": "the journey's prose (journey_rail, case_timeline, stepper, wizard_stepper) — as written: §11.9 «La soglia» (new); §10's four entries and timeline.html's entry (deleted); §10.1's «Avanzamento» row (gone with components.css §16); §2's sentences on v4/workspace.css and components.css; §2.1's rows of portal/console.css, portal/journey.css and portal/situation.css (new), pages/css/pages.css and the page sheets that import the passage (the interior's partial no longer draws «la linea»); §11.7's «Mon parcours» row; §12's sentences on tl-light and the rail's keyframes (retired)",
+          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)",
+          "note": "steward assignment (w3-d merge, 15 Oct 2026): the slice named as written (DL54-126 … DL54-128); every figure of §2 and §10's count regenerated by the steward"
+        },
+        {
+          "glob": "apps/portal/services.py",
+          "slice": "the journey: journey_for (each step's status, state and threshold; SELECTION on threshold A; a status off the line has no current item, `stopped_at` from the trail), JOURNEY_THRESHOLDS, _JOURNEY_POSITION, journey_place, _journey_state; and pathways_page's `journey` (the «Mon parcours» page draws the dashboard's journey at its head)",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the plan's slice names apps/cases/services.py, but journey_for lives here; the presenter change the slice describes, and REVIEW M2 / M3 (DL54-122, DL54-126, DL54-127)"
+        },
+        {
+          "glob": "apps/cases/presenters.py",
+          "slice": "journey_with_dates (the presenter's states; a threshold dated, never a step the file left; a file off the line read from its trail, the stop marked) and timeline (newest first: the latest `limit` events)",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the case file's two journey presenters, read by components/journey_rail.html (descriptive) and components/case_timeline.html, W3-D's (REVIEW M3, m1; DL54-126, DL54-127); no family held the file"
+        },
+        {
+          "glob": "apps/core/dev.py",
+          "slice": "_demo_journey (the showcase's journey through the presenter the pages use, portal.services.journey_for — not a copy); DEMO_TIMELINE and its context key removed with components/timeline.html",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the design showcase draws the journey's components from the real presenter (DL54-126, DL54-128 item 3); the file stays W1-B's, W1-C's and W2-A's for their slices"
+        },
+        {
+          "glob": "static/js/src/situation.js",
+          "slice": "the guided form's first frame: the submit takes its secondary role at load under `transition: none`, restored once painted (afterPaint from motion.js)",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — V5.4 plan §1.5 (still at load): «Ma situation» played a colour transition at load (DL54-125); the motion gate stays W1-D's"
+        },
+        {
+          "glob": "templates/pages/home/_orientation.html",
+          "slice": "the orientation's four neutral steps (gate G3 closed) drawn by components/stepper.html, the public passage «la linea» (no `current`: an explanation, never a progress), and its comment",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the passage on the home (DL54-124, DL54-126); the file stays W2-E's (W2-D's chapter)"
+        },
+        {
+          "glob": "apps/pages/tests/test_home.py",
+          "slice": "the two orientation tests retargeted to the passage's markup (`linea__step`, `linea--across`), their intent kept",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the tests pinned the V1 sequence's markup the passage replaced (DL54-126); the file stays W2-D's"
+        },
+        {
+          "glob": "tests/frontend/test_design_showcase.py",
+          "slice": "test_renders_every_family_of_component's markers: the stepper's follows the passage's markup (`linea__step`); the timeline's left with components/timeline.html",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the marker follows the component it counts (DL54-126, DL54-128 item 3); the file stays W1-A's"
+        },
+        {
+          "glob": "templates/cases/detail.html",
+          "slice": "the journey's page-only sheet (css/dist/portal/journey.css) linked in extra_head after {{ block.super }}, and `static` in the load tag",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the owner's V5.8: the rail left the shared console bundle for a page-only sheet, linked by the pages that draw a journey (REVIEW M1; DL54-127, DL54-128 item 4); the file stays W3-E's"
+        },
+        {
+          "glob": "templates/portal/dashboard.html",
+          "slice": "the journey's page-only sheet linked in extra_head after {{ block.super }}, only when a person's journey is drawn, and `static` in the load tag",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the same link (DL54-127); the file stays W3-B's"
+        },
+        {
+          "glob": "templates/portal/pathways.html",
+          "slice": "the journey at the page's head (components/journey_rail.html with the dashboard's label «Où j’en suis», in `.journey-page`) and its sheet's link, only when the person has a file; the comment",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — REVIEW M2: «Mon parcours» drew no journey (DL54-127); the file stays W3-E's"
+        },
+        {
+          "glob": "templates/portal/situation.html",
+          "slice": "«Ma situation»'s one page-only sheet (css/dist/portal/situation.css: the guided form, then its Stepper) linked in extra_head after {{ block.super }}",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the shared payload paid for: the guided form left console.css for the page that draws it (DL54-128 item 4); the file stays W3-E's"
+        },
+        {
+          "glob": "static/css/v5/_interior.css",
+          "slice": "§5 «la linea» — its rules moved to static/css/v5/_journey-passage.css, the site's one passage drawing —, its Arabic and forced-colours lines in §7, and the header's lines that name them",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the consolidation with W3-F1 (REVIEW M4; the orchestrator's definitive ruling, rule 3: the family that merges second consolidates; DL54-128 item 2); the rest of the file is W3-F1's"
+        },
+        {
+          "glob": "templates/pages/partials/_linea.html",
+          "slice": "its markup replaced by an include of components/stepper.html `with current=None` (one component); W3-F1's contract and callers kept",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the consolidation (DL54-128 item 2); the file stays W3-F1's"
+        },
+        {
+          "glob": "templates/ecosystem/partials/pilot_flow.html",
+          "slice": "the comment's line that names the passage's drawing (components/stepper.html, static/css/v5/_journey-passage.css)",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the consolidation (DL54-128 items 2 and 6); the file stays W3-F1's"
+        },
+        {
+          "glob": "templates/components/timeline.html",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — retired (deleted) with components.css §17, W3-D's row of the deletion map: its last caller was the design showcase's demo, proved unused on design-v5 and in flight (DL54-128 item 3)"
+        },
+        {
+          "glob": "templates/dev/showcase.html",
+          "slice": "the journey's page-only sheets linked in extra_head (portal/journey.css, portal/situation.css; pages/css/pages.css for the passage) and the «Chronologie» demo removed with components/timeline.html",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the showcase's journey demos were bare once the journey's CSS left main.css and console.css (DL54-128 items 3 and 7)"
+        },
+        {
+          "glob": "tests/frontend/test_interior_w3_f1.py",
+          "slice": "test_page_sheets_are_plain_import_lists_in_the_collected_tree: the passage's import line in the pathways' and the spaces' sheets — the line the test was written to receive",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the consolidation (DL54-128 items 2 and 6); the file stays W3-F1's"
+        },
+        {
+          "glob": "tests/frontend/test_orientation_w3_f1.py",
+          "slice": "the module docstring's line on the guided form's sheet; test_the_orientation_sheet_imports_the_interior_first_and_draws_on_tokens (the passage's import line) and test_v4_wizard_left_main_css_for_a_console_partial (v5/_wizard.css in «Ma situation»'s page-only sheet, never in console.css)",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the consolidation and the shared payload paid for (DL54-128 items 2, 4 and 6); the file stays W3-F1's"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_compliance.py",
+          "slice": "test_stylesheet_uses_tokens_logical_properties_and_no_motion: the passage's import line, and its partial read with the others",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the consolidation (DL54-128 items 2 and 6); the file stays W3-F1's"
+        },
+        {
+          "glob": "apps/portal/static/portal/journey.css",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the journey's page-only entry, a W3-D whole file: its import list (v5/_journey-nodes.css, v5/_journey-rail.css), linked by the dashboard, «Mon parcours» and the case file (the owner's V5.8; DL54-127, DL54-128 item 4)"
+        },
+        {
+          "glob": "apps/portal/static/portal/situation.css",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — «Ma situation»'s page-only entry, a W3-D whole file: its import list (W3-F1's v5/_wizard.css, then v5/_journey-nodes.css and v5/_journey-stepper.css), linked by templates/portal/situation.html alone of the product's templates (DL54-128 items 4 and 7)"
+        },
+        {
+          "glob": "apps/portal/static/portal/v5/{_journey-nodes,_journey-stepper}.css",
+          "source": "steward assignment (w3-d merge, 15 Oct 2026): justified extra path — the console's one rail drawing as a vocabulary and two components: the nodes (one line, three nodes, written once) and the Stepper, beside v5/_journey-rail.css, which the slice names (DL54-128 item 4)"
         }
       ]
     },
@@ -3090,6 +3517,290 @@
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
           "slice": "DS 2026 final (§3.6 item 4)",
           "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+        }
+      ]
+    },
+    "devops": {
+      "title": "Production readiness: deployment runbook, checklist, rollback, .env.example, production settings",
+      "wave": 0,
+      "plan": "the owner's directive V5.9 of 12 October 2026 («DELIVERY + FUTURE PRODUCTION READINESS»), §3–§17 — not a workflow of plan §3",
+      "branch": "v54-devops",
+      "worktree": "C:/tmp/ile_wt/v54-devops",
+      "after": [],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the devops merge, 12 October 2026: a family outside plan §3's waves (wave 0, as the steward's infrastructure), launched under V5.9 §3 («a small DevOps agent may prepare deployment readiness») beside the V5 families, whose files it stays out of (templates, CSS, JS, their QA folders). No merge tag: V5.9's release tags mark the whole product after final QA (§14), not a family.",
+      "owns": [
+        {
+          "glob": "docs/deployment/**",
+          "source": "V5.9 §3 («Create/update: docs/deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md, PRODUCTION_CHECKLIST.md, ROLLBACK.md»), §4, §5, §9–§13; steward assignment (devops merge, 12 Oct 2026)",
+          "note": "with production.env.example, the template of the server's environment file"
+        },
+        {
+          "glob": "docs/design-v5/QA/v54/devops/**",
+          "source": "§5.1 step 1 (a family's reports: the lane's notes, review and verification); steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "tests/deployment/**",
+          "source": "steward assignment (devops merge, 12 Oct 2026): the tests that hold the runbook to the code — the production checks, the private documents' one exit, the error pages through the real handlers, the pinned closure"
+        },
+        {
+          "glob": "apps/core/checks.py",
+          "source": "steward assignment (devops merge, 12 Oct 2026): the production configuration checks core.E001, core.W001–W003 (lane notes F-1, F-2)"
+        },
+        {
+          "glob": "requirements/constraints.txt",
+          "source": "steward assignment (devops merge, 12 Oct 2026): the server's pinned dependency closure (VERIFY finding 13), held to requirements/base.txt by tests/deployment/test_requirements_constraints.py"
+        },
+        {
+          "glob": "apps/companies/tests/test_demo_command.py",
+          "source": "steward assignment (devops merge, 12 Oct 2026): companies_demo refuses where demonstration data is not allowed (VERIFY finding 1)"
+        },
+        {
+          "glob": "apps/rules/tests/test_seed_keeps_editorial_changes.py",
+          "source": "steward assignment (devops merge, 12 Oct 2026): the legal sources keep the referent's corrections at every seed_all (REVIEW M9)"
+        },
+        {
+          "glob": ".env.example",
+          "slice": "every variable the application reads, grouped, one comment each, the optional ones commented out, and the NOT FOR PRODUCTION section — all but w1-0's ILE_QA_PASSWORD placeholder",
+          "source": "V5.9 §5; steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "config/settings/prod.py",
+          "slice": "V5.9 §6: the docstring; DATABASE_URL, IP_HASH_SALT and the two HSTS directives without a default; the database's health checks; ALLAUTH_TRUSTED_PROXY_COUNT; MEDIA_ROOT; the refusals (a wildcard host, a published or short salt, a mail backend that does not deliver, an unfilled <...> placeholder) and, even through the hatch, a PRIVATE_MEDIA_ROOT overlapping a served directory",
+          "source": "V5.9 §6; steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "config/settings/base.py",
+          "slice": "PRIVATE_MEDIA_ROOT: an empty value means the default directory (lane notes F-3)",
+          "source": "V5.9 §12; steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "apps/core/apps.py",
+          "slice": "CoreConfig.ready(): the import that registers core.checks",
+          "source": "steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "apps/companies/management/commands/companies_demo.py",
+          "slice": "the demonstration_data_allowed() guard and its docstring paragraph (VERIFY finding 1)",
+          "source": "steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "apps/rules/seeds.py",
+          "slice": "rules.legal_ruleset's sources: get_or_create, _complete_source and BUILD_OWNED_SOURCE_FIELDS (REVIEW M9)",
+          "source": "steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "docker-compose.staging.yml",
+          "slice": "the variables the production settings made mandatory (IP_HASH_SALT, the two HSTS directives) and the header's list of what comes from the shell",
+          "source": "steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "README.md",
+          "slice": "the deployment pointers: the release-state paragraph, «Variabili d'ambiente», «Deployment — cenni», the documentation table's deployment rows",
+          "source": "V5.9 §3; steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "docs/{DEPLOYMENT,DEPLOYMENT_READINESS}.md",
+          "slice": "the «SUPERATO» banner that points to docs/deployment/ (the history below it kept)",
+          "source": "steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "tests/security/test_production_settings_refuse_to_start.py",
+          "slice": "the boot refusals and environment-driven settings of V5.9 §6: the mandatory variables, the HSTS directives, the trusted proxy, the database's health checks, public media outside the checkout, a private root inside a served directory",
+          "source": "steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "tests/test_env_example_is_complete.py",
+          "slice": "the rule since 12 October 2026: three readers (the settings; the code, scripts and tests; the compose files) and two files (.env.example, docs/deployment/production.env.example), the other direction, the empty-value trap — all but w1-0's ILE_QA_PASSWORD exception and its guard",
+          "source": "V5.9 §5; steward assignment (devops merge, 12 Oct 2026)"
+        }
+      ]
+    },
+    "sec-f5": {
+      "title": "Security fix F-5: the back office's second factor — Django's admin sign-in closed, a held device presented in every session",
+      "wave": 0,
+      "plan": "the DevOps lane's finding F-5 (docs/design-v5/QA/v54/devops/NOTES.md; checklist A-13), a go-live blocker under the owner's directive V5.9 of 12 October 2026 — a security fix, not a workflow of plan §3",
+      "branch": "v54-sec-f5",
+      "worktree": "C:/tmp/ile_wt/v54-sec-f5",
+      "after": [],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the sec-f5 merge, 15 October 2026: a family outside plan §3's waves (wave 0, as devops), launched for the DevOps lane's F-5 — with BACKOFFICE_MFA_ENFORCED=True an account holding a TOTP device reached /backoffice/ on its password alone through Django's admin sign-in form. It stays in the accounts app's second-factor policy, the settings and documents that describe it, and their tests; no template, CSS or JS. Whole files: what it created; slices: what it changed in files that were nobody's or another family's. No merge tag: V5.9's release tags mark the whole product after final QA (§14), not a family.",
+      "owns": [
+        {
+          "glob": "apps/accounts/admin_site.py",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): the back office's admin site — unfold's, its login view closed (it signs no one in: signed out → allauth's sign-in with a safe next; signed in without the back office → 403) and has_permission keeping the second-factor policy wherever the site is mounted (lane notes «The fix» (a) and (b) 2)"
+        },
+        {
+          "glob": "apps/accounts/admin_apps.py",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): the AdminConfig whose default_site is BackofficeAdminSite, installed in place of django.contrib.admin (Django's documented way; lane notes «The fix» (a))"
+        },
+        {
+          "glob": "apps/accounts/tests/test_backoffice_second_factor.py",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): F-5's tests — the reproduction (a strict xfail until the fix), every way into the back office, the reserved area and /documents/, allauth's resumption after a password step (REVIEW finding 1), the policy answered once per request (finding 3)",
+          "note": "a new file; w2-b's slice «the allauth flows' tests» (apps/accounts/tests/**) also matches it"
+        },
+        {
+          "glob": "docs/design-v5/QA/v54/sec-f5/**",
+          "source": "§5.1 step 1 (a family's reports: the lane's notes and the independent review); steward assignment (sec-f5 merge, 15 Oct 2026)"
+        },
+        {
+          "glob": "apps/accounts/middleware.py",
+          "slice": "BackofficeMFAMiddleware's rules since F-5: the module docstring (Enrol, Present, allauth's resumption); /documents/ in the reserved perimeter (DOCUMENTS_PREFIX, is_reserved_path); the exact exempt routes (LEAVING, is_leaving) in place of EXEMPT_FRAGMENTS; allauth's second-factor pages (SECOND_FACTOR_PAGES, PRESENTING_PAGES, manages_second_factor); mfa_redirect's docstring; second_factor_redirect, second_factor_response, forget_what_a_password_step_must_not_resume (PASSWORD_REAUTHENTICATION); __call__ and must_redirect",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): no family held the file; the policy's first enforcement point (lane notes «The fix» (b) 1; REVIEW finding 1)"
+        },
+        {
+          "glob": "apps/accounts/services.py",
+          "slice": "the second-factor policy since F-5: the module docstring's MFA line; SIGN_IN_FACTOR_TYPES, ENROLLED_IN_SESSION_KEY, remember_enrolment, _presented_authenticator_ids, _authenticators_of, session_presented_second_factor, needs_second_factor_in_session, ENROL / PRESENT and second_factor_due (answered once per request)",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): no family held the file; the rule itself (lane notes «The fix» (b); REVIEW findings 3 and 4)"
+        },
+        {
+          "glob": "apps/accounts/decorators.py",
+          "slice": "mfa_required_for_backoffice through second_factor_due (Enrol and Present), and the module docstring",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): no family held the file; the policy's third enforcement point (lane notes «The fix» (b) 3)"
+        },
+        {
+          "glob": "apps/accounts/apps.py",
+          "slice": "ready(): the authenticator_added receiver (services.remember_enrolment), connected with its dispatch_uid",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): a device this session enrols through allauth counts as presented (lane notes, e6170d6); beside w1-d's user_logged_in receiver"
+        },
+        {
+          "glob": "apps/accounts/checks.py",
+          "slice": "accounts.W001's message and hint: what the flag does since F-5 (enrolment mandatory; a held device asked for in every session) and no first deployment needing it off",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): no family held the file; REVIEW finding 2"
+        },
+        {
+          "glob": "apps/accounts/tests/test_mfa_middleware.py",
+          "slice": "the assertions that encoded the account-level rule: an enrolled device passes only with the session's MFA step (_request's presented, _mfa_step) — the middleware, the admin integration and the decorator's Present case",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026); beside w2-b's slice «the allauth flows' tests»"
+        },
+        {
+          "glob": "config/settings/base.py",
+          "slice": "INSTALLED_APPS' admin pair (unfold.apps.BasicAppConfig; accounts.admin_apps.BackofficeAdminConfig in place of django.contrib.admin) and the comment above BACKOFFICE_MFA_ENFORCED",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): F-5 (a) installs the back office's site; REVIEW finding 2"
+        },
+        {
+          "glob": "config/settings/prod.py",
+          "slice": "the second factor's words: the docstring's list of refusals («second-factor enrolment optional»), the comment above BACKOFFICE_MFA_ENFORCED, and its refusal's comment (no EXEMPT_FRAGMENTS) and message",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): REVIEW finding 2; beside devops's V5.9 §6 slice"
+        },
+        {
+          "glob": ".env.example",
+          "slice": "the BACKOFFICE_MFA_ENFORCED comment: enrolment mandatory; a held device asked for in every session",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): REVIEW finding 2; beside devops's slice"
+        },
+        {
+          "glob": "README.md",
+          "slice": "the BACKOFFICE_MFA_ENFORCED row of «Variabili d'ambiente»",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): REVIEW finding 2; beside devops's slice"
+        },
+        {
+          "glob": "docs/SECURITY.md",
+          "slice": "the second factor's A07 row and §12.2's BACKOFFICE_MFA_ENFORCED row",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): no family held the file; lane notes «For the owner» 5; REVIEW finding 2"
+        },
+        {
+          "glob": "docs/security/PERMISSION_MODEL.md",
+          "slice": "«Attivare e presentare sono due regole (F-5)», the superadmin's access line and the L-10 row",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026): no family held the file; lane notes «For the owner» 5; REVIEW finding 2"
+        },
+        {
+          "glob": "docs/deployment/PRODUCTION_CHECKLIST.md",
+          "slice": "A-13: F-5 fixed, with its tests (the curl line and D-12 kept)",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "docs/deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md",
+          "slice": "F-5's lines: the «Second factor» row, ILE_ALLOW_INSECURE_PROD's paragraph, the accounts.W001 row, step 8's sign-in, the comment above step 11's /backoffice/login/ redirect, «Known limits»' back-office sign-in path",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "docs/design-v5/QA/v54/devops/NOTES.md",
+          "slice": "F-5's entry («fixed by …»), open question 1, «Not done»'s F-5 line and M8's row",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "tests/deployment/test_runbook_matches_the_code.py",
+          "slice": "the docstring of test_the_password_only_backoffice_sign_in_is_closed_at_the_edge (the application closes the path; nginx's redirect a second layer)",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "tests/frontend/test_design_preview.py",
+          "slice": "test_a_page_the_frame_cannot_hold_is_said_never_a_blank_frame: the link is the preview's own index (signed out, the back office's sign-in now ends at allauth's sign-in, which the frame may hold)",
+          "source": "steward assignment (sec-f5 merge, 15 Oct 2026); the file stays w1-p's"
+        }
+      ]
+    },
+    "intfix": {
+      "title": "The steward's integration fixes: integration checkpoint 3 — the full suite on design-v5 after Wave 3's merges, its reds fixed at their root",
+      "wave": 0,
+      "plan": "integration checkpoint 3 (the orchestrator, 12 October 2026: after the W3-F1, W3-C and DevOps merges; W3-D's merge joined it on 15 October), under V5.5's «full regression only at important integration checkpoints» — the steward's integration fixes, not a workflow of plan §3",
+      "branch": "v54-intfix",
+      "worktree": "C:/tmp/ile_wt/v54-intfix",
+      "after": [],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the intfix merge, 16 October 2026: a family outside plan §3's waves (wave 0, as devops and sec-f5), the steward's own branch for the checkpoint's fixes — the four known reds of 12 October (GitHub's SO_LINGER, the motion gate, the overlay's late settle, the loader), the teardown deadlock its first full browser run met, and W3-D's three reds. Not marked «steward»: its fixes are held to slices in other families' files like any family's, and the steward's own files of the merge (this manifest, the checker and its test, the decision log, the changelog, live_status.json) stay the steward family's. Whole files: its reports; slices: what it changed, each file staying its owner's. No family's design changed (no stylesheet, no product template). No merge tag: the checkpoint's annotated tag v54/checkpoint-3 marks design-v5 after the merge, not a family.",
+      "owns": [
+        {
+          "glob": "docs/design-v5/QA/v54/intfix/**",
+          "source": "§5.1 step 1 (a family's reports: the steward's notes of the checkpoint and the independent review); steward assignment (intfix merge, 16 Oct 2026)"
+        },
+        {
+          "glob": "static/js/src/overlay.js",
+          "slice": "the late settle (NOTES (c)): the dialog's `close` listener settles only a closed dialog (`if (!panel.open) settle(panel)`) and open() settles a close it has not heard (`if (record.open) settle(panel)`), their comments and the header's line; the frame wait (NOTES (b)): nextFrame imported from motion.js and handed over in loadExtras()'s core, the header's «THE ONE FRAME WAIT» paragraph",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (b) 822b3ae and (c) 96b389d — a real bug of the overlay system (a reopened drawer lost its trap) and W1-D's motion gate; the file stays w2-a's"
+        },
+        {
+          "glob": "static/js/src/overlay/extras.js",
+          "slice": "install()'s resize throttle: one re-read per frame through core.nextFrame() behind a boolean latch, no requestAnimationFrame of its own; the header's sentence on the frame wait",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (b) 822b3ae — W1-D's rule (test_script_motion_gate: no frame loop outside motion.js); the file stays w2-a's"
+        },
+        {
+          "glob": "static/js/src/shell.js",
+          "slice": "section 4's .catch(): when loader.js cannot be loaded, main.js's double-submit guard of a data-single-submit form (data-submitted, the aria-disabled of its submit buttons) is lifted with the face; the header comment's last bullet",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (d) 37dd8ad — a refusal nothing ended (WCAG 4.1.3) on every guarded form; beside w1-d's section 4, which stays w1-d's"
+        },
+        {
+          "glob": "templates/dev/showcase.html",
+          "slice": "the journey sheets' comment in extra_head as a {% comment %} block (a four-line {# #} rendered into the page); its words and the links are w3-d's",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES, second pass, item 1 (f2f1e67; test_template_comments_do_not_leak); development only"
+        },
+        {
+          "glob": "tests/frontend/test_design_preview.py",
+          "slice": "test_a_client_that_resets_after_its_page_costs_the_server_no_slot: reset()'s SO_LINGER packed in the platform's struct linger («HH» on Windows, «ii» on Linux and macOS) and its comment",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (a) 31e3084 — errno 22 on GitHub's Linux runner; the file stays w1-p's"
+        },
+        {
+          "glob": "tests/frontend/test_drawer_browser_w3_c.py",
+          "slice": "test_a_modified_press_keeps_the_links_own_way: the new tab reaches the link's own path and loads before it is closed (and the urlsplit import)",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES «The failure — a new tab left loading, and the flush deadlocked» (d8fdc42); the file stays w3-c's"
+        },
+        {
+          "glob": "tests/frontend/test_loader_rules.py",
+          "slice": "test_no_wait_is_for_ever: the assertion that the submit hook's catch lifts main.js's guard (data-submitted, aria-disabled)",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (d) 37dd8ad; the file stays w1-d's"
+        },
+        {
+          "glob": "tests/frontend/test_loader_w1_d.py",
+          "slice": "the three tests NOTES (d) brought to today's markup — test_a_wait_that_no_page_ends_is_a_lease (the unguarded form is the help desk's request: DESK_PAGE, DESK), test_without_the_state_machine_nothing_waits (a guarded and an unguarded form, the guard read in the submit's task), test_a_submit_control_that_is_not_a_button_of_the_system_declares_no_state (LOGOUT_PROBE: the sign-out controls found by their form's action) —; PROFILE's comment, the two imports and the module docstring's two lines",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (d) 37dd8ad — one product gap and two stale tests (W3-F2 and W2-C2 changed the markup legitimately); the file stays w1-d's"
+        },
+        {
+          "glob": "tests/frontend/test_overlays_console_browser_w2_a.py",
+          "slice": "test_a_drawer_closed_and_opened_again_within_a_frame_keeps_its_trap_and_a_press_on_the_scrim_closes_it (added)",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES (c) 96b389d — the late settle proved (4 runs of 4 failed before the fix, 10 of 10 passed after); the file stays w2-a's"
+        },
+        {
+          "glob": "tests/frontend/test_v5_tokens.py",
+          "slice": "test_the_console_partials_close_the_console_entry: an import read where the collected tree resolves it; a partial is the console entry's or page sheets', never both; the entry imports a partial once; no product template, through its chain of {% extends %} (_product_template_chains), links two sheets that import one partial",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES, second pass, item 2 (71a3675) — DL54-112's «one importer» brought back to its purpose after W3-D's DL54-128 item 4; beside w3-c's slice; the file stays w1-a's"
+        },
+        {
+          "glob": "apps/pages/tests/test_templates_static.py",
+          "slice": "test_stylesheet_uses_tokens_and_logical_properties_only: the home's sheet may import local `_` partials (written in the collected tree, found by the static finders), the tokens, logical-properties, no-URL, no-!important and wording checks run on each of them too, and the bundle the home links (css/dist/pages/css/pages.css) carries no @import",
+          "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES, second pass, item 3 (34c5471) — 3093261's @import ban moved onto the bundle the home links; beside w1-b's and w2-d's slices"
         }
       ]
     }

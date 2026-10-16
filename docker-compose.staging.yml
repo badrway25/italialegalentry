@@ -2,7 +2,7 @@
 # storage, DEBUG=False, PostgreSQL, security headers on. It is NOT production — one host, no TLS
 # termination, no CDN, synthetic data — and every number taken from it is labelled as such.
 #
-# No secret is written in this file. DJANGO_SECRET_KEY and POSTGRES_PASSWORD come from the shell
+# No secret is written in this file. DJANGO_SECRET_KEY, IP_HASH_SALT and POSTGRES_PASSWORD come from the shell
 # environment — or from the git-ignored `.env` next to this file, which `docker compose` reads for
 # interpolation — and `${…:?…}` makes the stack refuse to start, naming the variable, when one is
 # missing. Generate them locally (`python -c "import secrets; print(secrets.token_urlsafe(50))"`),
@@ -44,11 +44,17 @@ services:
       DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,staging-web
       DJANGO_CSRF_TRUSTED_ORIGINS: http://127.0.0.1:8900,http://localhost:8900
       DATABASE_URL: "postgres://ile:${POSTGRES_PASSWORD:?set it in the environment}@staging-db:5432/ile_staging"
+      # Mandatory under config.settings.prod since 12 Oct 2026 (no default: base.py's fallback is published).
+      IP_HASH_SALT: "${IP_HASH_SALT:?set it in the environment}"
       BACKOFFICE_MFA_ENFORCED: "1"
       # No TLS in front of this container, so the redirect and HSTS are off and the guard rail is
       # told so ON PURPOSE. This is exactly the escape hatch prod.py documents, used exactly once.
       SECURE_SSL_REDIRECT: "false"
       SECURE_HSTS_SECONDS: "0"
+      # No default under config.settings.prod since 12 Oct 2026 (an explicit decision per domain); moot here, where
+      # SECURE_HSTS_SECONDS is 0 and no Strict-Transport-Security header is sent at all.
+      SECURE_HSTS_INCLUDE_SUBDOMAINS: "0"
+      SECURE_HSTS_PRELOAD: "0"
       ILE_ALLOW_INSECURE_PROD: "1"
       # NOT set to 1, and it would not matter if it were: config/settings/prod.py pins
       # ILE_SEED_DEMONSTRATION_DATA to False unconditionally, so `rules_activate_demonstration`

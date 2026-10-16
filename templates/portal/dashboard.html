@@ -1,4 +1,4 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
 THE DASHBOARD — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 4, §1.15, §3.1 item 7; W3-B), on the
 console's page frame (W3-A: one page header, the page's one primary). Rules: apps/portal/static/portal/v5/_dashboard.css.
@@ -38,6 +38,8 @@ page is new copy.
 {% endcomment %}
 {% block page_title %}{% translate "Espace réservé" %}{% endblock %}
 {% block meta_description %}{% translate "Votre espace personnel : parcours, documents, échéances et communications." %}{% endblock %}
+{% comment %}The journey's page-only sheet (W3-D; the owner's V5.8: never in the shared bundles), after the shell's two, where a journey is drawn.{% endcomment %}
+{% block extra_head %}{{ block.super }}{% if is_person and journey %}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endif %}{% endblock %}
 
 {% block case_header %}{% endblock %}
 {% block next_action_block %}{% endblock %}

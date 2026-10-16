@@ -1,28 +1,22 @@
 {% extends "base.html" %}{% load i18n static %}
 {% comment %}
-Shared layout of the institutional pages (project, promoter, network, contact, anti-fraud):
-breadcrumbs → page header → content + local navigation (sticky column on desktop, pills on mobile).
-Child templates fill `page_header` and `page_body`. Context: `nav` (pages.services.institutional_nav),
-`breadcrumbs`, `meta_description`, `seo`.
+Shared layout of the institutional pages (project, promoter, network, contact, anti-fraud).
+Child templates fill `page_header` (the entrance, pages/partials/_ingresso.html: the page's one h1) and `page_body`
+(the chapters). Context: `breadcrumbs`, `meta_description`, `seo`, `is_preview`.
+
+Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css, loaded through pages/css/interior.css): the
+trail, the entrance, then the page as a chain of chapters with one section device at the reading edge. No side
+column: the five pages are the entries of the navigation's «Projet» door («Il portico»), and a page does not repeat
+its chrome.
 {% endcomment %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
-{% block body_class %}page-institutional{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/pages.css' %}">{% endblock %}
+{% block body_class %}page-institutional interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/interior.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% if is_preview %}
 <div class="container">{% translate "Aperçu réservé à l’équipe : cette page n’est pas encore publique." as preview_text %}{% include "components/notice.html" with kind="pending" text=preview_text %}</div>
 {% endif %}
 {% block page_header %}{% endblock %}
-<div class="container layout-sidebar layout-sidebar--end page-institutional__layout">
-  <div class="page-institutional__main">
-    {% block page_body %}{% endblock %}
-  </div>
-  {% if nav %}
-  <aside class="layout-sidebar__aside page-institutional__aside">
-    {% translate "Le projet" as nav_title %}{% translate "Pages institutionnelles" as nav_label %}
-    {% include "components/local_nav.html" with items=nav title=nav_title label=nav_label %}
-  </aside>
-  {% endif %}
-</div>
+{% block page_body %}{% endblock %}
 {% endblock %}

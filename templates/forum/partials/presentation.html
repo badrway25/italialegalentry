@@ -1,29 +1,46 @@
 {% load i18n forum_tags %}
-{% comment %}Sections in the order prescribed by the document §2.1 — every text is a locked key.{% endcomment %}
-<section class="forum-section forum-section--intro container" id="forum-who" aria-labelledby="forum-who-title">
-  <h2 class="forum-section__title" id="forum-who-title">{% event_text event "who.title" %}</h2>
-  {% event_text event "who.body" "p" "forum-section__body forum-lead" %}
-</section>
-
-<section class="forum-section forum-section--accent container" id="forum-why" aria-labelledby="forum-why-title">
-  <h2 class="forum-section__title" id="forum-why-title">{% event_text event "why.title" %}</h2>
-  {% event_text event "why.body" "p" "forum-section__body" %}
-</section>
-
-<section class="forum-section container" id="forum-what" aria-labelledby="forum-what-title">
-  <h2 class="forum-section__title" id="forum-what-title">{% event_text event "what.title" %}</h2>
-  {% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
-  <div class="forum-section__body forum-prose"{% if what_lang != site.lang %} lang="{{ what_lang }}"{% endif %}>
-    {% for paragraph in what_paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+{% comment %}
+Sections in the order prescribed by the document §2.1 — every text is a locked key.
+Design V5.4 (W3-F1): one chapter each, one section device at the reading edge (the prescribed title, capitals in the
+copy), the prescribed body at the reading measure — the first as the page's statement, «why» on the stone ground (the
+page's ground changes every two or three chapters, RH-2).
+{% endcomment %}
+<section class="chapter forum-section forum-section--intro" id="forum-who" aria-labelledby="forum-who-title">
+  <div class="container chapter__inner">
+    {% event_text event "who.title" as who_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-who-title" title=who_title only %}
+    <div class="chapter__body">{% event_text event "who.body" "p" "chapter__statement forum-section__body forum-lead" %}</div>
   </div>
 </section>
 
-<section class="forum-section forum-section--objectives container" id="forum-objectives" aria-labelledby="forum-objectives-title">
-  <h2 class="forum-section__title" id="forum-objectives-title">{% event_text event "objectives.title" %}</h2>
-  {% event_text event "objectives.body" "p" "forum-section__body forum-objectives" %}
+<section class="chapter chapter--area forum-section forum-section--accent" id="forum-why" aria-labelledby="forum-why-title">
+  <div class="container chapter__inner">
+    {% event_text event "why.title" as why_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-why-title" title=why_title only %}
+    <div class="chapter__body">{% event_text event "why.body" "p" "chapter__prose forum-section__body" %}</div>
+  </div>
 </section>
 
-<section class="forum-section container" id="forum-audience" aria-labelledby="forum-audience-title">
-  <h2 class="forum-section__title" id="forum-audience-title">{% event_text event "audience.title" %}</h2>
-  {% event_text event "audience.body" "p" "forum-section__body" %}
+<section class="chapter forum-section" id="forum-what" aria-labelledby="forum-what-title">
+  <div class="container chapter__inner">
+    {% event_text event "what.title" as what_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-what-title" title=what_title only %}
+    {% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
+    <div class="chapter__body">
+      <div class="chapter__prose forum-section__body forum-prose"{% if what_lang != site.lang %} lang="{{ what_lang }}"{% endif %}>
+        {% for paragraph in what_paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter forum-section forum-section--objectives" id="forum-objectives" aria-labelledby="forum-objectives-title">
+  <div class="container chapter__inner">
+    {% event_text event "objectives.title" as objectives_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-objectives-title" title=objectives_title only %}
+    <div class="chapter__body">{% event_text event "objectives.body" "p" "chapter__prose forum-section__body forum-objectives" %}</div>
+  </div>
+</section>
+
+<section class="chapter forum-section" id="forum-audience" aria-labelledby="forum-audience-title">
+  <div class="container chapter__inner">
+    {% event_text event "audience.title" as audience_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-audience-title" title=audience_title only %}
+    <div class="chapter__body">{% event_text event "audience.body" "p" "chapter__prose forum-section__body" %}</div>
+  </div>
 </section>

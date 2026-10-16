@@ -15,7 +15,14 @@ they sit above.
 
 {% block page_title %}Design system{% endblock %}
 {% block body_class %}ds-page{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dev/showcase.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dev/showcase.css' %}">
+{# the documents page sheet: the state filter and the document row are drawn by its partials (W3-C), not by main.css #}
+<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">
+{% comment %}the journey's page-only sheets: the rail and the timeline are drawn by portal/journey.css, «Ma situation»'s
+   Stepper and OptionCards by portal/situation.css (W3-D, W3-F1), not by main.css; the passage «la linea» by the
+   home's sheet, whose home rules find no element here. In the product, situation.css is linked by «Ma situation»
+   alone{% endcomment %}
+<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/situation.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/pages.css' %}">{% endblock %}
 {% block extra_scripts %}<script type="module" src="{% static 'js/dist/overlay.js' %}"></script>{% endblock %}
 
 {% block content %}
@@ -449,8 +456,8 @@ they sit above.
 
       <h3 class="ds__h3">Menu compte et sélecteur de langue</h3>
       <div class="ds__two">
-        <div>{% include "components/account_menu.html" %}</div>
-        <div>{% include "components/language_segmented.html" %}</div>
+        <div>{% include "components/account_menu.html" with popover=True menu_id="ds-account" %}</div>
+        <div class="utility-bar">{% include "components/language_segmented.html" %}</div>
       </div>
 
       <h3 class="ds__h3">Rail de parcours</h3>
@@ -458,7 +465,7 @@ they sit above.
 
       <h3 class="ds__h3">Barre de santé et ligne de pièce</h3>
       {% include "components/health_strip.html" with counts=health.counts filters=health.filters only %}
-      <ul class="doc-collection panel panel--l1" role="list">
+      <ul class="doc-collection" role="list">
         {% include "components/document_row.html" with row=doc_row %}
       </ul>
 
@@ -511,9 +518,6 @@ they sit above.
           </tbody>
         </table>
       </div>
-
-      <h3 class="ds__h3">Chronologie</h3>
-      {% include "components/timeline.html" with steps=timeline label="Exemple de séquence" only %}
 
       <h3 class="ds__h3">État vide</h3>
       {% include "components/empty_state.html" with title="Aucune demande pour l'instant" text="Les demandes que vous transmettez apparaissent ici, la plus récente en premier." action_label="Commencer" action_url="#donnees" icon="send" only %}

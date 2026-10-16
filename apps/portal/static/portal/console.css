@@ -16,6 +16,15 @@
      v5/_dashboard.css                 the dashboards: the NowPanel, the file's facts, «il registro», the
                                        lists, what folds (W3-B)
 
+   Not here — each the CSS of the pages that draw it, in a page-only sheet linked after this one (the owner's V5.8,
+   11 October 2026, and the orchestrator's definitive ruling of 12 October: the shared bundles never rise; a
+   surface's own CSS goes into a page-only sheet, and each page loads only what it draws):
+     «La soglia», the console's one rail drawing (W3-D) — v5/_journey-nodes.css with v5/_journey-rail.css in
+       portal/journey.css (the dashboard, «Mon parcours», the case file), with v5/_journey-stepper.css in
+       portal/situation.css («Ma situation»);
+     «Ma situation»'s guided form (W3-F1) — v5/_wizard.css, in portal/situation.css (it stood in this list from
+       W3-F1's merge to W3-D's).
+
    The V4 console rules this file held (the mesh-lit rail with its edge bar, the glyph-only rail below 90rem,
    the bar with the account and the segmented language control) are replaced by v5/_shell.css.
    ========================================================================== */

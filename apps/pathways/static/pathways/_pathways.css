@@ -1,0 +1,202 @@
+/* ============================================================================================
+   THE REGULAR PATHWAYS — what the Espace Personnes draws beyond the interior's grammar (design V5.4, W3-F1; imported
+   by pathways/pathways.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only; logical properties.
+   ============================================================================================ */
+
+/* ---- from the interior's grammar (v5/_interior.css), drawn by these pages alone: a row's fragment, a row still being prepared and what is still being verified, which the Espace Personnes alone draws (W3-F1's budget pass, 12 October 2026: a page sheet holds what its pages draw) ---- */
+/* a row's text that is a prescribed fragment starting in lower case: presentation only, the words are not altered */
+.registro__text--fragment::first-letter {
+  text-transform: uppercase;
+}
+
+/* a row whose sheet is still being prepared: no link, its words in the quiet ink, its chip under them */
+.registro__row--pending .registro__title {
+  color: var(--text-2);
+}
+
+/* ---- what is still being verified: said in words on a broken edge — the «attesa» register's sign (a dashed rule
+        at the reading edge, plan §1.2) — never a glyph in a box, never a promise of a date ---------------- */
+.en-attente {
+  max-inline-size: var(--measure-body);
+  padding-block: var(--s-1);
+  padding-inline-start: var(--s-4);
+  border-inline-start: 2px dashed var(--line-structure);
+}
+
+.en-attente__title {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.en-attente__text {
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+
+/* ---- a sheet's metadata row under its entrance: the facts in the quiet ink, wrapping as a phrase ------------- */
+.pathway-entrance .meta-row {
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.pathway-entrance .meta-row__item {
+  align-items: baseline;
+}
+
+/* ---- the sheet's photograph, when an editor gives it one with its caption apparatus ------------------------- */
+.pathway-figure {
+  padding-block-end: var(--s-12);
+}
+
+.pathway-figure .figura,
+.pathway-figure__img {
+  max-inline-size: 48rem;
+}
+
+/* ---- «Termes utiles»: one row of tags of one height, 8 px apart, at the body's start (W1-C's note: the first
+        row's two tags stood 4 px apart in height and the list touched the box under it) ---------------------- */
+.termes__title {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.termes__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.termes__list > li {
+  display: flex;
+}
+
+/* the row places its tags at one height (a line that must not break); the tag itself is v5/chip.css's, its hover too;
+   under a finger a tag answers on 44 px (SP-8) */
+.termes__list .tag {
+  block-size: var(--chip-h-l);
+}
+
+@media (pointer: coarse) {
+  .termes__list .tag {
+    block-size: var(--hit-primary);
+  }
+}
+
+/* ---- «Comment ça marche» on «la linea» (W3-F1's review M2): the locked sentence cut on its own arrows into four
+        stations (CREATIVE_DIRECTION_V5 law 8, D-U4), its caveat under them — the door's page alone draws it ------ */
+/* a station's words that the source writes as a fragment of its sentence (lower case first): presentation only, the
+   words are not altered */
+.linea__label--fragment::first-letter {
+  text-transform: uppercase;
+}
+
+.how-steps__caveat {
+  margin-block-start: var(--s-6);
+}
+
+/* on the Arabic page the caveat's one French line ends on the reading edge, under the first station: its box is no
+   wider than its words, as the interior's French leads (_interior.css §7) */
+[dir="rtl"] .how-steps__caveat[lang="fr"] {
+  inline-size: fit-content;
+}
+
+/* ---- an authority's name links out: the name in the link's ink, its host beside it --------------------------- */
+.authority-list .autorita {
+  font-weight: var(--w-control);
+}
+
+/* ---- the documents still being verified: their heading in the quiet ink ----------------------------------- */
+.doc-list__item--pending .registro__title {
+  color: var(--text-2);
+}
+
+/* ---- «Diplômes et titres étrangers»: the Italian terms of the glossary under the station they belong to, one row of
+        tags of one height (W3-F1, step 2) ----------------------------------------------------------------------- */
+.diploma-steps .linea__text.termes__list {
+  max-inline-size: none;
+  margin-block-start: var(--s-2);
+}
+
+/* ---- «Formation»: the two moments of one path on «la linea» down the reading edge (W3-F1, step 2). Each station
+        says its moment in words beside its open ring («Premier temps», «Second temps»: the order is in the words,
+        so the numeral gives them its seat), then its title at the entry's size, then its text at the reading size
+        and measure — its one way further too —, the page's notice. ----------------------------------------- */
+.linea--phases .linea__step {
+  padding-block-end: var(--s-12);
+}
+
+.linea--phases .linea__step:last-child {
+  padding-block-end: 0;
+}
+
+.linea--phases .linea__num::before {
+  content: none;
+}
+
+/* the moment's word takes the numeral's seat, on the ring's line (the level line's geometry is the numeral's) */
+.linea__kicker {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.linea--phases .linea__label {
+  margin-block-start: var(--s-2);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  letter-spacing: var(--track-entry);
+  text-wrap: balance;
+}
+
+.linea--phases .linea__text {
+  max-inline-size: var(--measure-body);
+  margin-block-start: var(--s-3);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.linea--phases .linea__text > * {
+  margin: 0;
+}
+
+.linea--phases .linea__text > * + * {
+  margin-block-start: var(--s-4);
+}
+
+/* ---- the anti-fraud callout: a warning notice of the core components (v5/notice.css) — its mark, its title in the
+        register's word, its broken rule (W3-F1, step 2). The title is the notice's line, whatever its level. ---- */
+.antifraud-callout .notice__title {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* a prescribed title written in capitals is tracked as every capital run is (TR rule 6): Formation's second
+   moment, the callout's title (on the Arabic page, its French run) */
+.linea--phases .linea__label--caps:not(:lang(ar)),
+.antifraud-callout .notice__title--caps:not(:lang(ar)),
+.antifraud-callout .notice__title--caps > :not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+  font-feature-settings: var(--feat-caps);
+}
+
+.antifraud-callout .notice__body > * {
+  margin-block: var(--s-2) 0;
+}

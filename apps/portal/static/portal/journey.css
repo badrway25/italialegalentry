@@ -1,0 +1,23 @@
+/* ============================================================================
+   THE JOURNEY «LA SOGLIA» — the console's page-only sheet for the journey, design V5 (W3-D)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 6 · the owner's V5.8 (11 October 2026, «CSS budget») and the
+   orchestrator's definitive ruling (12 October 2026): the shared bundles never rise (main + console + portal on every
+   console page) — a surface's own CSS goes into a page-only sheet, loaded only by the pages that draw it, and each page
+   loads only what it draws.
+
+   This sheet is the journey's IMPORT LIST and nothing else: the console's one rail drawing as the journey and the
+   timeline draw it — its vocabulary, v5/_journey-nodes.css, then v5/_journey-rail.css — which scripts/build_css.mjs
+   bundles into css/dist/portal/journey.css (a partial is never an output of its own, DL54-15). The imports are written
+   as they resolve in the COLLECTED tree, from this sheet's collected path portal/journey.css (DS 2026 §2). «Ma
+   situation»'s Stepper is the same drawing, in that page's own sheet (portal/situation.css).
+
+   Linked AFTER console.css — the place in the cascade the rail held as console.css's last import — by the pages that
+   draw a journey, each through {% block extra_head %}{{ block.super }}<link …>{% endblock %}
+   (tests/frontend/test_console_shell_stylesheets.py keeps the shell's two sheets):
+     templates/portal/dashboard.html     «Mon parcours» — a person with a file (the rail, level or card)
+     templates/portal/pathways.html      the «Mon parcours» page — a person with a file (the same rail, at its head)
+     templates/cases/detail.html         the case file's journey (descriptive) and its timeline
+   ========================================================================== */
+
+@import url("v5/_journey-nodes.css");
+@import url("v5/_journey-rail.css");

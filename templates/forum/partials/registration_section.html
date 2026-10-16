@@ -1,18 +1,27 @@
 {% load i18n forum_tags %}
-<section class="forum-section forum-section--registration container" id="forum-registration" aria-labelledby="forum-registration-title">
-  <h2 class="forum-section__title" id="forum-registration-title">{% event_text event "registration.title" %}</h2>
-  {% event_text event "registration.intro" "p" "forum-section__body forum-lead" %}
-  {% if registration_open %}
-    {% if forms_enabled %}
-      {% include "forum/partials/registration_form.html" %}
-    {% else %}
-      {% include "components/form_unavailable.html" %}
-    {% endif %}
-  {% else %}
-    <div class="notice notice--info" role="status" data-registration="closed">
-      <p><strong>{% translate "Les inscriptions sont closes." %}</strong></p>
-      <p>{% translate "Pour toute question, écrivez-nous à l’adresse ci-dessous." %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+{% comment %}
+The registration chapter (event mode). Design V5.4 (W3-F1): the prescribed title and intro at the reading edge; the
+form on its sheet at the reading measure — «la lastra» fields at 16 px (W1-C) — or, closed, the notice and the live
+«who can help me» line; the privacy note under it.
+{% endcomment %}
+<section class="chapter chapter--area forum-section forum-section--registration" id="forum-registration" aria-labelledby="forum-registration-title">
+  <div class="container chapter__inner">
+    {% event_text event "registration.title" as registration_title %}{% event_text event "registration.intro" as registration_intro %}
+    {% include "pages/partials/_chapter_head.html" with title_id="forum-registration-title" title=registration_title lead=registration_intro only %}
+    <div class="chapter__body">
+      {% if registration_open %}
+        {% if forms_enabled %}
+          {% include "forum/partials/registration_form.html" %}
+        {% else %}
+          {% include "components/form_unavailable.html" %}
+        {% endif %}
+      {% else %}
+        <div class="notice notice--info" role="status" data-registration="closed">
+          <p class="notice__title">{% translate "Les inscriptions sont closes." %}</p>
+          <div class="notice__body"><p>{% translate "Pour toute question, écrivez-nous à l’adresse ci-dessous." %} <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p></div>
+        </div>
+      {% endif %}
+      {% include "forum/partials/privacy_note.html" %}
     </div>
-  {% endif %}
-  {% include "forum/partials/privacy_note.html" %}
+  </div>
 </section>

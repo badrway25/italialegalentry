@@ -45,6 +45,7 @@ def index(request):
         return render(request, "pathways/index_interim.html", context)
     context = {
         "entries": services.index_entries(),
+        "how": services.how_it_works(),
         "links": links,
         "is_preview": is_preview,
         "noindex": is_preview,

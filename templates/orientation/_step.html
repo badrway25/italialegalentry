@@ -1,10 +1,20 @@
-{% load i18n orientation_tags %}
+{% load i18n orientation_tags %}{% comment %}
+One step of the questionnaire — the fragment the page includes and an HTMX request receives (design V5.4, W3-F1,
+step 2; orientation/wizard.css):
+  * the progress as a quiet register: «Question n sur N au maximum», in words — never a percentage (FM12,
+    DESIGN_SYSTEM_V5 §11; on an adaptive questionnaire a figure jumps, and it opened at 0) — over a 2 px line on its
+    hairline (role="progressbar", its value in the same words); it fills from the reading edge and never moves on
+    its own;
+  * the question is the fieldset's legend (focused after a swap, and after the wizard's own post: wizard.js);
+  * «Plusieurs réponses possibles.» is said BEFORE the choices, and the group is described by it;
+  * the choices are plates around the native controls of v5/field.css (24 px; the whole plate is the target);
+  * an error is wired to the group (aria-describedby, aria-invalid), announced (role="alert") and said in words
+    beside a drawn mark, the plates' edges doubled in the refusal's ink — never colour alone;
+  * ONE primary: «Continuer», first in the DOM so that Enter submits it (implicit submission); «Précédent» after it.
+{% endcomment %}
 <div id="orientation-step" class="wizard__step" data-question="{{ q.key }}" data-step="{{ step_number }}">
   <div class="wizard__progress">
-    <p id="wizard-progress-label" class="wizard__progress-label">
-      {% blocktranslate with n=step_number %}Question {{ n }}{% endblocktranslate %}
-      <span class="wizard__progress-value">· {{ progress }} %</span>
-    </p>
+    <p id="wizard-progress-label" class="wizard__progress-label">{% blocktranslate with n=step_number m=max_steps %}Question {{ n }} sur {{ m }} au maximum{% endblocktranslate %}</p>
     <div class="wizard__progress-bar" role="progressbar" aria-labelledby="wizard-progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress }}" aria-valuetext="{% blocktranslate with n=step_number m=max_steps %}Question {{ n }} sur {{ m }} au maximum{% endblocktranslate %}">
       <div class="wizard__progress-fill {{ progress|progress_class }}"></div>
     </div>
@@ -13,16 +23,17 @@
   <form method="post" action="{{ step_url }}" class="wizard__form" hx-post="{{ step_url }}" hx-target="#orientation-step" hx-swap="outerHTML" hx-push-url="true">
     {% csrf_token %}
     <input type="hidden" name="question_key" value="{{ q.key }}">
-    <fieldset class="wizard__fieldset"{% if error %} aria-describedby="answer-error" aria-invalid="true"{% endif %}>
+    <fieldset class="wizard__fieldset"{% if error or q.type == 'multiple' %} aria-describedby="{% if q.type == 'multiple' %}answer-hint{% if error %} {% endif %}{% endif %}{% if error %}answer-error{% endif %}"{% endif %}{% if error %} aria-invalid="true"{% endif %}>
       <legend class="wizard__legend"><span class="wizard__question" id="wizard-question" tabindex="-1"{% if q.fallback %} lang="{{ q.lang }}"{% endif %}>{{ q.text }}</span></legend>
       {% if q.help %}
       <details class="wizard__help">
-        <summary>{% translate "Pourquoi cette question ?" %}</summary>
-        <p{% if q.fallback %} lang="{{ q.lang }}"{% endif %}>{{ q.help }}</p>
+        <summary class="wizard__help-toggle">{% translate "Pourquoi cette question ?" %}</summary>
+        <p class="wizard__help-text"{% if q.fallback %} lang="{{ q.lang }}"{% endif %}>{{ q.help }}</p>
       </details>
       {% endif %}
-      {% if error %}<p class="form-field__errors wizard__error" id="answer-error" role="alert">{{ error }}</p>{% endif %}
-      <div class="wizard__choices" role="group">
+      {% if q.type == "multiple" %}<p class="wizard__hint" id="answer-hint">{% translate "Plusieurs réponses possibles." %}</p>{% endif %}
+      {% if error %}<p class="wizard__error" id="answer-error" role="alert">{% svg_icon "circle-alert" "icon wizard__error-mark" %}<span>{{ error }}</span></p>{% endif %}
+      <div class="wizard__choices">
         {% for c in q.choices %}
         <div class="wizard__choice">
           <input class="wizard__input" type="{{ q.input_type }}" id="answer-{{ c.key }}" name="answer" value="{{ c.key }}"{% if q.input_type == "radio" %} required{% endif %}>
@@ -30,13 +41,12 @@
         </div>
         {% endfor %}
       </div>
-      {% if q.type == "multiple" %}<p class="wizard__hint">{% translate "Plusieurs réponses possibles." %}</p>{% endif %}
     </fieldset>
     <div class="wizard__actions">
-      {# "Continuer" comes first in the DOM: the Enter key triggers the first submit button (implicit submission). #}
-      <button type="submit" name="action" value="answer" class="btn btn--primary">{% translate "Continuer" %}</button>
-      {% if can_go_back %}<button type="submit" name="action" value="back" class="btn btn--secondary" formnovalidate>{% translate "Précédent" %}</button>{% endif %}
+      {# «Continuer» comes first in the DOM: the Enter key triggers the first submit button (implicit submission). #}
+      <button type="submit" name="action" value="answer" class="btn btn--primary btn--lg">{% translate "Continuer" %}</button>
+      {% if can_go_back %}<button type="submit" name="action" value="back" class="btn btn--secondary btn--lg" formnovalidate>{% translate "Précédent" %}</button>{% endif %}
     </div>
   </form>
-  <p class="wizard__reference"><small>{% translate "Référence de la session" %} : {{ session.reference }}</small></p>
+  <p class="wizard__reference">{% translate "Référence de la session" %} : <span class="wizard__reference-code">{{ session.reference }}</span></p>
 </div>

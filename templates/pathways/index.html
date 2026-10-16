@@ -1,59 +1,82 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
-Espace Personnes — Phase 3 page (gate G3 open). Header, eight locked pathways, orientation CTA,
-closing « Comment ça marche » box, side resources and the anti-fraud callout (Implementation §3.3, §3.8.1).
+Espace Personnes — Phase 3 page (gate G3 open). Header, eight locked pathways, «Comment ça marche» and the
+orientation action, the related areas and the anti-fraud callout (Implementation §3.3, §3.8.1).
+
+Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): the entrance with the person door, whose card
+carries the door's way in — the questionnaire, the page's ONE action, in the first screen (W3-F1's review M1); then
+the page as a chain of questions, one section device at the reading edge — which regular pathways exist (a register:
+the title over its description, the row is the link; one marker, none: a catalogue, not a ranking, as on the home),
+how does it work («Comment ça marche»: the prescribed sentence cut on its own arrows into four stations of «la
+linea», its caveat under them — CREATIVE_DIRECTION_V5 law 8, D-U4; the words joined back are the registry's
+sentence), where else to look (the space's other areas), and the ONE inset (the anti-fraud callout) with the live
+«who can help me» line.
 {% endcomment %}
 {% block page_title %}{% locked "p3.persons.title" as title_text %}{% translate "Espace Personnes" %} · {{ title_text|striptags }}{% endblock %}
 {% block meta_description %}{% locked "p3.persons.intro" as intro_text %}{{ intro_text|striptags }}{% endblock %}
-{% block body_class %}page-pathways page-pathways--index{% endblock %}
+{% block body_class %}page-pathways page-pathways--index interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
 {% locked_is_fallback "p3.persons.title" as title_fallback %}{% locked_lang "p3.persons.title" as title_lang %}
-<header class="page-header container">
-  <p class="page-header__eyebrow">{% translate "Espace Personnes" %}</p>
-  <h1 class="page-header__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% locked "p3.persons.title" %}</h1>
-  <p class="page-header__lead"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% locked "p3.persons.intro" %}</p>
-</header>
+{% locked "p3.persons.title" as title_html %}{% locked "p3.persons.intro" as intro_html %}{% translate "Espace Personnes" as space_label %}
+{% translate "Identifiez la voie régulière à explorer" as way_title %}{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." as way_text %}{% translate "Commencer le questionnaire d’orientation" as way_label %}{% translate "Le questionnaire d’orientation sera disponible prochainement." as way_pending %}
+{% if title_fallback %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=intro_html lead_lang=title_lang audience="person" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending only %}
+{% else %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=intro_html audience="person" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending only %}
+{% endif %}
 
-<div class="container layout-sidebar layout-sidebar--end">
-  <div class="stack stack--lg">
-    <section class="section section--flush-top section--tight" aria-labelledby="pathways-title">
-      <div class="section__header">
-        <h2 id="pathways-title" class="section__title">{% translate "Les parcours réguliers" %}</h2>
-        <p class="section__lead">{% translate "Huit voies d’entrée régulière, présentées avec leurs principales étapes. Chaque fiche est informative : la voie adaptée à votre situation se vérifie avec le questionnaire d’orientation et auprès des acteurs compétents." %}</p>
-      </div>
-      <ol class="pathway-list" data-pathways="{{ entries|length }}">
+<section class="chapter" aria-labelledby="pathways-title">
+  <div class="container chapter__inner">
+    {% translate "Les parcours réguliers" as pathways_title %}{% translate "Huit voies d’entrée régulière, présentées avec leurs principales étapes. Chaque fiche est informative : la voie adaptée à votre situation se vérifie avec le questionnaire d’orientation et auprès des acteurs compétents." as pathways_lead %}
+    {% include "pages/partials/_chapter_head.html" with title_id="pathways-title" title=pathways_title lead=pathways_lead only %}
+    <div class="chapter__body">
+      <ol class="registro registro--two pathway-register" data-pathways="{{ entries|length }}">
         {% for entry in entries %}
-        <li class="pathway-list__item{% if not entry.is_live %} pathway-list__item--pending{% endif %}" data-pathway="{{ entry.key }}">
-          <span class="pathway-list__num" aria-hidden="true"></span>
-          <h3 class="pathway-list__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>
-            <span class="pathway-list__icon icon--accent" aria-hidden="true">{% svg_icon entry.key|concept:"pathway"|default:entry.icon "icon icon--sm" %}</span>
-            {% if entry.url %}<a href="{{ entry.url }}">{{ entry.title }}</a>{% else %}{{ entry.title }}{% endif %}
-          </h3>
-          <p class="pathway-list__desc"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{{ entry.description }}</p>
-          {% if entry.url %}
-            <span class="pathway-list__arrow" aria-hidden="true">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span>
-          {% else %}
-            {% chip register="attesa" css_class="pathway-list__arrow" role="status" %}{% translate "Fiche détaillée en préparation" %}{% endchip %}
-          {% endif %}
+        <li class="registro__row{% if not entry.is_live %} registro__row--pending{% endif %}" data-pathway="{{ entry.key }}">
+          <h3 class="registro__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% if entry.url %}<a href="{{ entry.url }}">{{ entry.title }}</a>{% else %}{{ entry.title }}{% endif %}</h3>
+          <p class="registro__text"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{{ entry.description }}</p>
+          {% if not entry.url %}{% chip register="attesa" role="status" %}{% translate "Fiche détaillée en préparation" %}{% endchip %}{% endif %}
         </li>
         {% endfor %}
       </ol>
-    </section>
-
-    {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
-
-    <section class="notice notice--institutional" aria-labelledby="how-it-works-title" data-callout="how-it-works">
-      <span class="notice__icon" aria-hidden="true">{% svg_icon "ile-steps" "icon icon--lg" %}</span>
-      <h2 class="notice__title" id="how-it-works-title">{% translate "Comment ça marche" %}</h2>
-      <div class="notice__body"><p>{% locked "p3.persons.how_it_works" %}</p></div>
-    </section>
+    </div>
   </div>
+</section>
 
-  <aside class="layout-sidebar__aside stack stack--lg" aria-label="{% translate 'Ressources de l’Espace Personnes' %}">
-    {% include "pathways/_side_links.html" with links=links suffix="index" %}
-    {% include "pathways/_antifraud_callout.html" with links=links level=2 suffix="index" %}
-  </aside>
-</div>
+<section class="chapter" id="orientation" aria-labelledby="how-it-works-title" data-callout="how-it-works">
+  <div class="container chapter__inner">
+    {% translate "Comment ça marche" as how_title %}
+    {% include "pages/partials/_chapter_head.html" with title_id="how-it-works-title" title=how_title only %}
+    <div class="chapter__body">
+      {% if how %}
+      <div class="how-steps" data-locked="p3.persons.how_it_works">
+        <p class="visually-hidden"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{{ how.lead }}</p>
+        <ol class="linea linea--across how-steps__line" data-steps="{{ how.steps|length }}">
+          {% for step in how.steps %}
+          <li class="linea__step"><span class="linea__num" aria-hidden="true"></span><p class="linea__label linea__label--fragment"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{{ step }}{% if not forloop.last %}<span class="visually-hidden"> {{ how.arrow }}</span>{% endif %}</p></li>
+          {% endfor %}
+        </ol>
+        <p class="chapter__fine how-steps__caveat"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{{ how.caveat }}</p>
+      </div>
+      {% else %}
+      {% locked "p3.persons.how_it_works" "p" "chapter__statement" %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="chapter" aria-labelledby="space-links-title">
+  <div class="container chapter__inner">
+    {% translate "Dans l’Espace Personnes" as space_links_title %}
+    {% include "pages/partials/_chapter_head.html" with title_id="space-links-title" title=space_links_title only %}
+    <div class="chapter__body">
+      {% include "pathways/_space_links.html" with links=links %}
+      {% include "pathways/_antifraud_callout.html" with links=links level=3 suffix="index" %}
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+</section>
 {% endblock %}

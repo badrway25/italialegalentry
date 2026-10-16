@@ -1,0 +1,12 @@
+/* ============================================================================================
+   Espace Personnes — the regular pathways (index and sheets): the page sheet.
+   Design V5.4, W3-F1 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 1): a plain list of imports, written as they
+   resolve in the collected static tree (DS 2026 §2) — the page of the public interior (shared with the content pages),
+   W3-F1's own parts of it, the door card, then the pathways' own rules.
+   A later family adds its partial on a line of its own: W3-D's public passage «la linea», after the interior's.
+   ============================================================================================ */
+@import url("../css/v5/_pagina.css");
+@import url("../css/v5/_interior.css");
+@import url("../css/v5/_journey-passage.css");
+@import url("../css/v5/_porta.css");
+@import url("_pathways.css");

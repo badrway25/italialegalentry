@@ -228,22 +228,16 @@ DEMO_DOC_ROW = {
 
 
 def _demo_journey() -> list[dict]:
-    from portal.services import JOURNEY_STEPS
+    """A file at its second step, through the presenter the pages use (portal.services.journey_for) — the glyphs,
+    the thresholds and the states come from it, not from a copy; no date is invented."""
+    from types import SimpleNamespace
 
-    first_italy = next((i for i, (_s, side, _l) in enumerate(JOURNEY_STEPS) if side == "italy"), None)
-    return [
-        {
-            "label": label,
-            "side": side,
-            "is_current": index == 1,
-            "frontier": index == first_italy,
-            "detail": "",
-            "actor": "",
-            "state": "done" if index < 1 else "current" if index == 1 else "upcoming",
-            "reached_at": None,
-        }
-        for index, (_status, side, label) in enumerate(JOURNEY_STEPS)
-    ]
+    from portal.services import journey_for
+
+    steps = journey_for(SimpleNamespace(status="oriented"))
+    for step in steps:
+        step["reached_at"] = None
+    return steps
 
 
 def _demo_needs() -> list:
@@ -324,13 +318,6 @@ DEMO_BREADCRUMBS = [
     {"label": "Écosystème", "url": "#"},
     {"label": "Entreprises", "url": "#"},
     {"label": "Page courante", "url": ""},
-]
-
-DEMO_TIMELINE = [
-    {"label": "Dépôt", "text": "La demande est enregistrée."},
-    {"label": "Recevabilité", "text": "Contrôle des pièces."},
-    {"label": "Instruction", "text": "Examen au fond."},
-    {"label": "Décision", "text": "Notification au demandeur."},
 ]
 
 DEMO_META = [
@@ -540,7 +527,6 @@ def design_showcase(request):
             "tabs": DEMO_TABS,
             "accordion": DEMO_ACCORDION,
             "crumbs": DEMO_BREADCRUMBS,
-            "timeline": DEMO_TIMELINE,
             "meta_items": DEMO_META,
             "rows": DEMO_TABLE,
             "steps": DEMO_STEPS,

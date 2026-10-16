@@ -11,8 +11,16 @@
    glossary to a legal page downloads it once. Every page carries `lettura` in its body class: the rules that re-draw
    a component of main.css on these pages are scoped by it, the page's own blocks by their names.
 
+   The components the public interior's pages share — the trail, the head, the chapters' device, the register's rows,
+   D26's host, photograph and «who can help me» — are drawn once, for these pages and W3-F1's, in
+   static/css/v5/_pagina.css, which the page sheet imports before this partial (the owner's V5.8: one component, one
+   drawing; the review's m11 — consolidated by W3-F1 at its merge, 12 October 2026). What stays here is the content
+   pages' own: the head's end seat, glyph and contact line, the page index, the quiet chapter's space, the row of
+   links, the register's link colour, the tools, the pages' blocks, the rhythm of a chapter's body, the legal page and
+   the Arabic rules.
+
    The grammar is the public interior's (the home's chapters, W2-D; the doors', W3-F1), value for value, so that the
-   site reads as one:
+   site reads as one (the numbers name this partial's sections; 1 is the shared page's alone):
      1 · the trail             — the breadcrumbs at 13/20 on 24 px targets, the current page in ink;
      2 · the head              — the page's one header at the reading edge: the space's name, the h1 and the lead,
                                  verbatim; a page that is searched carries its search in the head's end seat;
@@ -37,67 +45,12 @@
    no literal colour, no gradient (the app-sheet token rule).
    ============================================================================================ */
 
-/* ---- 0 · three corners a screen ---------------------------------------------------------------------------- */
-.lettura {
-  --card-radius: var(--radius-md);
-}
-
-/* ---- 1 · the trail ------------------------------------------------------------------------------------------ */
-.lettura .breadcrumbs {
-  padding-block: var(--s-4) 0;
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-}
-
-.lettura .breadcrumbs__item {
-  color: var(--text-2);
-}
-
-.lettura .breadcrumbs__item + .breadcrumbs__item::before {
-  inline-size: 6px;
-  block-size: 6px;
-  border-color: var(--text-3);
-}
-
-/* a trail's link is a 24 px target (SP-8), its line still 20 px */
-.lettura .breadcrumbs__item a {
-  display: inline-block;
-  padding-block: 2px;
-  color: var(--text-2);
-  text-decoration: none;
-}
-
-@media (hover: hover) {
-  .lettura .breadcrumbs__item a:hover {
-    color: var(--text-1);
-    text-decoration: underline;
-  }
-}
-
-.lettura .breadcrumbs__item[aria-current] {
-  color: var(--text-1);
-  font-weight: var(--w-control);
-}
-
 /* ---- 2 · the head ------------------------------------------------------------------------------------------- */
-/* components/page_header.html and the heads these pages write themselves share one drawing: no rule under the head
-   (the chapter's hairline follows it), the space's name as a label, the h1 at 28/36 then 36/44, the lead at 17/28 then
-   20/28 — the interior's entrance (W3-F1) to the pixel. */
-.lettura .page-header {
-  margin-block-end: 0;
-  padding-block: var(--s-8) var(--s-12);
-  border-block-end: 0;
-}
-
+/* components/page_header.html and the heads these pages write themselves share one drawing with W3-F1's entrance —
+   the label, the h1, the lead: v5/_pagina.css §2. The label as written: main.css's running head sets the console's
+   in capitals (components.css §10). */
 .lettura .page-header__eyebrow {
-  margin: 0 0 var(--s-3);
-  font-family: var(--f-sans);
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  font-weight: var(--w-control);
-  letter-spacing: 0;
   text-transform: none;
-  color: var(--text-2);
 }
 
 .lettura .page-header__eyebrow a {
@@ -117,33 +70,6 @@
   color: var(--text-1);
 }
 
-.lettura .page-header__title {
-  max-inline-size: 20em;
-  margin: 0;
-  font-size: var(--t-band);
-  line-height: var(--t-band-lh);
-  font-weight: var(--w-title);
-  letter-spacing: var(--track-band);
-  color: var(--text-1);
-  text-wrap: balance;
-}
-
-/* a prescribed title written in capitals is tracked as every capital run is (TR rule 6) — on the Arabic page the run
-   in French inside the h1 (lettura.py `locked_title`) */
-.lettura .page-header__title--caps:not(:lang(ar)),
-.lettura .page-header__title--caps > :not(:lang(ar)) {
-  letter-spacing: var(--track-display-caps);
-}
-
-.lettura .page-header__lead {
-  max-inline-size: var(--measure-lead);
-  margin: var(--s-4) 0 0;
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
-  color: var(--text-2);
-  text-wrap: pretty;
-}
-
 /* a lead that is several blocks (a topic's introduction) keeps the lead's size and its own paragraphs */
 .lettura .page-header__lead > * {
   margin-block: 0 var(--s-3);
@@ -151,11 +77,6 @@
 
 .lettura .page-header__lead > :last-child {
   margin-block-end: 0;
-}
-
-.lettura .page-header__meta,
-.lettura .page-header__contact {
-  margin: var(--s-6) 0 0;
 }
 
 .lettura .page-header__contact {
@@ -190,25 +111,10 @@
 }
 
 @media (min-width: 48rem) {
-  .lettura .page-header {
-    padding-block: var(--s-10) var(--s-16);
-  }
-
-  .lettura .page-header__title {
-    font-size: var(--t-title);
-    line-height: var(--t-title-lh);
-    letter-spacing: var(--track-title);
-  }
-
   .lettura .page-header__glyph {
     inline-size: var(--icon-xl);
     block-size: var(--icon-xl);
     stroke-width: 1.67;
-  }
-
-  .lettura .page-header__lead {
-    font-size: var(--t-lead);
-    line-height: var(--t-lead-lh);
   }
 }
 
@@ -238,86 +144,13 @@
   }
 }
 
-/* ---- 3 · the chapters --------------------------------------------------------------------------------------- */
-.lettura .chapter {
-  padding-block: var(--s-12);
-}
-
-.lettura :is(.page-header, .chapter) + .chapter {
-  border-block-start: 1px solid var(--line-rhythm);
-}
-
-.chapter__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  row-gap: var(--s-8);
-}
-
-.chapter__head {
-  max-inline-size: var(--measure-lead);
-  margin: 0;
-}
-
-/* the mark: the sprite's `ile-steps`, pulled by its drawing's shares onto the reading edge and the head's first line,
-   16 px above the title (the home's chapter__mark) */
-.chapter__mark {
-  --mark: var(--icon-lg);
-  display: block;
-  inline-size: var(--mark);
-  block-size: var(--mark);
-  margin-block: calc(var(--mark) * -7 / 24) calc(var(--s-4) - var(--mark) * 5 / 24);
-  margin-inline-start: calc(var(--mark) * -3 / 24);
-  color: var(--text-1);
-}
-
-.chapter__title,
-.chapter__head > h2:not([class]) {
-  margin: 0;
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
-  font-weight: var(--w-title);
-  letter-spacing: var(--track-entry);
-  color: var(--text-1);
-  text-wrap: balance;
-}
-
-.chapter__lead {
-  margin: var(--s-3) 0 0;
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
-  color: var(--text-2);
-  text-wrap: pretty;
-}
-
-.chapter__body {
-  min-inline-size: 0;
-}
-
+/* ---- 3 · the chapters' own (the device, the head, the body's columns, the label: v5/_pagina.css §3) ---------- */
 /* the quiet chapter at a page's foot: a label, not a title, and no device */
 .lettura .chapter--quiet {
   padding-block: var(--s-8) var(--s-12);
 }
 
-.chapter__label {
-  margin: 0;
-  font-family: var(--f-sans);
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  font-weight: var(--w-control);
-  letter-spacing: 0;
-  color: var(--text-2);
-}
-
-/* a row of links under a body: they wrap, 24 px apart, each a 24 px target at least */
-.chapter__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2) var(--s-6);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
+/* a row of links under a body (v5/_pagina.css §3): each a 24 px target at least */
 .chapter__links a {
   display: inline-block;
   padding-block: 2px;
@@ -327,76 +160,15 @@
 }
 
 @media (min-width: 48rem) {
-  .lettura .chapter {
-    padding-block: var(--s-16);
-  }
-
   .lettura .chapter--quiet {
     padding-block: var(--s-10) var(--s-16);
   }
-
-  .chapter__title,
-  .chapter__head > h2:not([class]) {
-    font-size: var(--t-band);
-    line-height: var(--t-band-lh);
-    letter-spacing: var(--track-band);
-  }
 }
 
-@media (min-width: 75rem) {
-  .chapter__inner {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--s-6);
-  }
-
-  .chapter__head {
-    grid-column: 1 / span 4;
-    align-self: start;
-    position: sticky;
-    inset-block-start: calc(var(--header-h) + var(--s-8));
-  }
-
-  .chapter__body {
-    grid-column: 5 / span 8;
-  }
-
-  /* a chapter with no head (a page's single body) reads from the reading edge */
-  .chapter__inner > .chapter__body:only-child {
-    grid-column: 1 / span 8;
-  }
-
-  .chapter__head--quiet {
-    position: static;
-  }
-}
-
-/* ---- 4 · the register: rows on shared hairlines; the whole row is the target where it has one destination ---- */
-.registro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-block-start: 1px solid var(--line-structure);
-}
-
-.registro__row {
-  position: relative;
-  display: grid;
-  align-content: start;
-  gap: var(--s-1);
-  min-block-size: var(--row-min-h);
-  padding-block: var(--s-4) var(--s-5);
-  border-block-end: 1px solid var(--line-rhythm);
-}
-
+/* ---- 4 · the register's own: the whole row is the target where it has one destination (the rows: v5/_pagina.css
+        §4) ---- */
 .registro__title {
-  margin: 0;
-  font-size: var(--t-body);
-  line-height: 1.5rem;
-  font-weight: var(--w-title);
   letter-spacing: 0;
-  color: var(--text-1);
 }
 
 /* a title that is a link says so at rest — the link's colour (a finger finds no hover): the underline comes under the
@@ -412,14 +184,6 @@
   inset: 0;
 }
 
-.registro__text {
-  max-inline-size: var(--measure-small);
-  margin: 0;
-  font-size: var(--t-ui);
-  line-height: 1.5rem;
-  color: var(--text-2);
-}
-
 .registro__meta {
   margin: 0;
   font-size: var(--t-small);
@@ -432,11 +196,6 @@
 .registro__row :is(.registro__text, .registro__meta) a {
   position: relative;
   z-index: 1;
-}
-
-.registro__row > .chip {
-  justify-self: start;
-  margin-block-start: var(--s-2);
 }
 
 @media (hover: hover) {
@@ -454,13 +213,6 @@
 
 .registro--links .registro__row:focus-within {
   border-block-end-color: var(--line-structure);
-}
-
-@media (min-width: 48rem) {
-  .registro--two {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--s-6);
-  }
 }
 
 /* ---- 5 · the tools ------------------------------------------------------------------------------------------- */
@@ -1187,7 +939,8 @@
   letter-spacing: 0;
 }
 
-/* sources: an authority's link shows where it leads — the host, in the quiet ink, beside its name */
+/* sources: an authority's link shows where it leads — the host, in the quiet ink, beside its name (.autorita__host,
+   v5/_pagina.css §5) */
 .fonti {
   max-inline-size: var(--measure-body);
   margin: 0;
@@ -1201,54 +954,6 @@
   border-block-end: 1px solid var(--line-rhythm);
   font-size: var(--t-ui);
   line-height: 1.5rem;
-}
-
-.autorita__host {
-  display: inline-block;
-  margin-inline-start: var(--s-2);
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  color: var(--text-2);
-  direction: ltr;
-  unicode-bidi: isolate;
-}
-
-/* a photograph: its caption and its credit under it, never on it */
-.figura {
-  margin: 0;
-}
-
-.figura img {
-  display: block;
-  inline-size: 100%;
-  block-size: auto;
-  border-radius: var(--card-radius);
-  box-shadow: var(--passe-partout);
-}
-
-.figura figcaption {
-  max-inline-size: var(--measure-small);
-  margin-block-start: var(--s-2);
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  color: var(--text-2);
-}
-
-/* «who can help me»: the page's live line, on a hairline at the foot of the reading */
-.aiuto {
-  max-inline-size: var(--measure-body);
-  margin: 0;
-  padding-block-start: var(--s-4);
-  border-block-start: 1px solid var(--line-rhythm);
-  font-size: var(--t-ui);
-  line-height: 1.5rem;
-  color: var(--text-2);
-}
-
-/* its link is one box the height of the line (24 px: SP-8's floor under a fine pointer; the accessibility check's A3) */
-.aiuto a {
-  display: inline-block;
-  overflow-wrap: anywhere;
 }
 
 /* a note under a reading — what the text is (informative, general): quiet, at the small measure */
@@ -1340,7 +1045,7 @@
 /* ---- under a finger, a link that stands alone answers on 44 px (SP-8) without a taller line: the target grows, the
         page does not; the rows of links open to 20 px so that two targets never overlap -------------------------- */
 @media (pointer: coarse) {
-  .lettura :is(.breadcrumbs__list, .chapter__links, .page-index__list) {
+  .lettura :is(.chapter__links, .page-index__list) {
     row-gap: var(--s-5);
   }
 
@@ -1355,13 +1060,13 @@
   }
 
   /* each of these is a box of 24 px at least (its line, or its line and 2 px): 10 px above and below make 44, and a
-     word narrower than 44 px is widened to 44 about its middle (the accessibility check's A3: the trail, the glossary's
-     terms, the FAQ's links and its permalink, the consent's privacy link joined the list) */
-  .lettura :is(.breadcrumbs__item a, .chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a) {
+     word narrower than 44 px is widened to 44 about its middle (the accessibility check's A3: the glossary's terms, the
+     FAQ's links and its permalink, the consent's privacy link joined the list; the trail's: v5/_pagina.css §1) */
+  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a) {
     position: relative;
   }
 
-  .lettura :is(.breadcrumbs__item a, .chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a)::after {
+  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a)::after {
     content: "";
     position: absolute;
     inset-block: -10px;
@@ -1452,7 +1157,6 @@
     display: none;
   }
 
-  .chapter__head,
   .az-index {
     position: static;
   }

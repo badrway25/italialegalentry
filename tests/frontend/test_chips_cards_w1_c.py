@@ -116,6 +116,10 @@ def test_the_chip_is_drawn_by_one_sheet():
     placed = {
         "static/css/v4/workspace.css": {".doc-row__state, .doc-row__state .chip", ".seg__dot .chip__g", ".seg__link--empty .chip__g"},
         "apps/documents/static/documents/documents.css": {".doc-register__table td .chip + .t-caption", ".doc-version .entry__title .chip"},
+        # the public interior places a chip under a register row's words (the shared page of W3-F1's and W3-F2's pages,
+        # since W3-F1's budget pass) and the pathways' glossary tags at one height
+        "static/css/v5/_pagina.css": {".registro__row > .chip"},
+        "apps/pathways/static/pathways/_pathways.css": {".termes__list .tag"},
     }
     sheets = [p for p in CSS.rglob("*.css") if not {"dist", "dev"} & set(p.relative_to(CSS).parts)]
     sheets += list((ROOT / "apps").glob("*/static/**/*.css"))
@@ -297,9 +301,8 @@ def test_an_entry_keeps_its_room_a_second_action_its_target_and_a_wrapped_card_i
         for selector in re.findall(r"([^{}]+)\{", source):
             assert not re.search(r":(?:only|first|last|nth)-[\w-]+(?:\([^)]*\))?\s*>?\s*\*", selector), (sheet.name, selector)
     assert "margin-block-start: auto" in _block(css, ".card > :where(section, div):only-child > .card__meta")
-    # the two cards of «Formation» are written that way, and the showcase draws the case
-    training = _read(ROOT / "templates" / "pathways" / "training.html")
-    assert training.count('<li class="card training-phase"') == 2 and training.count('<p class="card__meta"><a class="link-arrow"') == 2
+    # the showcase draws the case («Formation», which first wrapped its two phases that way, draws them on «la linea»
+    # since W3-F1's second step: a sequence, not two boxes)
     assert 'data-sample="wrapped"' in _read(ROOT / "templates" / "dev" / "showcase.html")
 
 

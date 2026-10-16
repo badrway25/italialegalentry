@@ -79,8 +79,13 @@ def _pages(client, lang: str):
 
 
 def _french_sources(catalogues, lang: str) -> set[str]:
-    """French msgids whose translation differs from the source: seeing one of them on a page is a leak."""
-    return {e.msgid for e in catalogues[lang].values() if len(e.msgid) > 3 and e.msgstr[0] != e.msgid}
+    """French msgids whose translation differs from the source: seeing one of them on a page is a leak — unless the
+    same text is also one of the language's own translations, which the page shows rightly and the text alone cannot
+    tell apart (a homograph: the French «Close» of a request, une demande close, is the English «Close» of «Fermer»,
+    which the menu's sheet draws on every English page; three such strings in the catalogues, W2-C2's merge)."""
+    entries = catalogues[lang].values()
+    translations = {text for e in entries for text in e.msgstr.values() if text}
+    return {e.msgid for e in entries if len(e.msgid) > 3 and e.msgstr[0] != e.msgid} - translations
 
 
 # ---------------------------------------------------------------------------------------------

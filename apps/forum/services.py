@@ -189,12 +189,18 @@ def page_context(request, event: ForumEvent | None) -> dict:
     mode = event.effective_mode(now)
     is_permanent = mode == ForumMode.PERMANENT
     event_title = event.locked_text("header.title", lang)
+    permanent_title = _(PERMANENT_TITLE)
+    # the name stays in French where the translators have not given it yet (B2): the page then says which language
+    # it is in (WCAG 3.1.2) — on the h1 and on the trail's link of the registration pages
+    permanent_title_lang = "fr" if lang.split("-")[0] != "fr" and permanent_title == PERMANENT_TITLE else ""
     ctx.update(
         {
             "mode": mode,
             "is_permanent": is_permanent,
-            "permanent_title": _(PERMANENT_TITLE),
-            "page_title": _(PERMANENT_TITLE) if is_permanent else event_title,
+            "permanent_title": permanent_title,
+            "permanent_title_lang": permanent_title_lang,
+            "page_title": permanent_title if is_permanent else event_title,
+            "page_title_lang": permanent_title_lang if is_permanent else "",
             "event_title": event_title,
             "meta_description": event.locked_text("header.subtitle", lang),
             "registration_open": event.registration_is_open(now),

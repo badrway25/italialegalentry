@@ -37,6 +37,13 @@ def register_data(context) -> dict:
     return presenters.register_context(user, state_filter=state_filter_of(request))
 
 
+@register.simple_tag
+def deposit_rules() -> dict:
+    """The Dépôt's client guards read the server's own limits (design V5, W3-C): templates/documents/partials/depot.html
+    writes them on its form, where static/js/src/depot.js reads them — never a second copy of the rule in a script."""
+    return presenters.deposit_rules()
+
+
 @register.inclusion_tag("documents/partials/register.html", takes_context=True)
 def document_register(context):
     request = context.get("request")

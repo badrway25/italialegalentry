@@ -166,14 +166,29 @@ def test_the_panels_are_page_only_and_linked_by_the_pages_that_draw_them():
         # the tooltip component without `layer` draws the control's own CSS tip
         r'|\{%\s*include\s+"components/tooltip\.html"(?![^%]*\blayer=True)[^%]*%\}'
     )
+    # a partial drawn inside pages (W3-C's preview drawer and filter sheet, templates/documents/partials/) is linked
+    # when every template that includes it is — the link stays in the page's head, never in a fragment
+    templates = {path.relative_to(ROOT / "templates").as_posix(): path for path in (ROOT / "templates").rglob("*.html")}
+    texts = {name: _read(path) for name, path in templates.items()}
+    includers: dict[str, set[str]] = {}
+    for name, text in texts.items():
+        for included in re.findall(r'{%\s*include\s+"([^"]+)"', text):
+            includers.setdefault(included, set()).add(name)
+
+    def linked(name: str, seen: frozenset = frozenset()) -> bool:
+        if PANELS_LINK in texts[name]:
+            return True
+        parents = includers.get(name, set()) - seen
+        return bool(parents) and all(linked(parent, seen | {name}) for parent in parents)
+
     linking = set()
-    for template in (ROOT / "templates").rglob("*.html"):
+    for name, template in templates.items():
         if template.parent == COMPONENTS:
             continue
-        text = _read(template)
+        text = texts[name]
         if PANELS_LINK in text:
             linking.add(template.relative_to(ROOT).as_posix())
-        elif draws.search(text):
+        elif draws.search(text) and not linked(name):
             raise AssertionError(f"{template}: draws a page-only overlay part without linking {PANELS_LINK}")
     # today the board and the showcase; a family that adopts a panel adds its page (CONTRACT §1)
     assert {"templates/dev/designpreview/specimens/overlays.html", "templates/dev/showcase.html"} <= linking, linking
@@ -655,7 +670,7 @@ def test_the_console_drawer_is_a_modal_drawer_of_the_system_and_menu_its_link_op
         assert declaration in shape, f"the console's drawer keeps its own measures and night: {declaration}"
 
 
-def test_the_account_menu_is_the_systems_popover_in_the_console_and_v4s_details_in_the_letterhead():
+def test_the_account_menu_is_the_systems_popover_in_the_console_and_in_the_letterhead():
     menu = _read(COMPONENTS / "account_menu.html")
     assert (
         '<button class="account-menu__summary" type="button" popovertarget="{{ panel_id }}" '
@@ -666,29 +681,31 @@ def test_the_account_menu_is_the_systems_popover_in_the_console_and_v4s_details_
         'body_template="components/account_menu.html" %}' in menu
     )
     assert menu.count('class="overlay__item"') == 4 and '<button class="overlay__item" type="submit">' in menu
-    assert '<details class="account-menu" data-dropdown>' in menu, "the letterhead's face until W2-C2 (DS 2026 §10)"
+    # one face: the letterhead's seat and the phone sheet's foot moved onto the popover too (W2-C2), and design V4's
+    # <details> face left with v4/shell.css, the file
+    assert '<details class="account-menu"' not in menu and "<summary" not in menu
     assert '{% include "components/account_menu.html" with popover=True menu_id="console-account" %}' in _read(CHROME)
-    # the deletion map's row: components.css §8 left; what the details face still needs is v4/shell.css's last block
+    header = _read(ROOT / "templates" / "partials" / "header.html")
+    assert '{% include "components/account_menu.html" with popover=True menu_id="account-menu" %}' in header
+    assert 'with popover=True menu_id="account-menu-sheet"' in _read(ROOT / "templates" / "partials" / "main_nav.html")
+    # the deletion map's rows: components.css §8 left, then v4/shell.css (W2-C2)
     components = _read(CSS / "components.css")
     assert "8. Account menu" not in components and ".account-menu" not in components
-    legacy = _strip_comments(_read(CSS / "v4" / "shell.css"))
-    assert re.search(r'\.account-menu ul\.account-menu__list\[role="list"\] \{\s*position: absolute;', legacy)
+    assert not (CSS / "v4" / "shell.css").exists()
     # the trigger's base serves both faces: a button or a summary, the name cut by an ellipsis
     assert "font: inherit" in _block(".account-menu__summary") and "border: 0" in _block(".account-menu__summary")
     assert "text-overflow: ellipsis" in _block(".account-menu__name")
 
 
-def test_the_row_menu_is_the_systems_popover_named_by_its_tooltip():
+def test_the_register_row_opens_its_piece_in_the_systems_drawer():
+    """W2-A drew the row menu on the system's popover; «Mes pièces» V5.2 (W3-C) removed the row menu — the row is the
+    link, «Télécharger» and the deposits are the piece's (DOCUMENT_WORKSPACE D2) — and opens the piece in the system's
+    drawer, non-modal beside the list (retargeted by W3-C, intent kept: the register's overlay is the system's)."""
     row = _read(COMPONENTS / "document_row.html")
-    assert (
-        '<button class="doc-row__more" type="button" popovertarget="{{ menu_id }}" '
-        'aria-label="{% translate \'Ouvrir le menu de la pièce\' %}" data-tip="layer">' in row
-    )
-    assert (
-        '{% include "components/popover.html" with id=menu_id label=row.title '
-        'body_template="components/document_row.html" %}' in row
-    )
-    assert "doc-menu__item" not in row and row.count('class="overlay__item"') == 3
+    assert "doc-row__more" not in row and "popovertarget" not in row and "components/popover.html" not in row
+    drawer = _read(ROOT / "templates" / "documents" / "partials" / "piece_drawer.html")
+    assert 'class="overlay overlay--drawer doc-drawer"' in drawer
+    assert 'data-overlay="drawer" data-overlay-modal="none"' in drawer and "data-overlay-close" in drawer
     workspace = _read(CSS / "v4" / "workspace.css")
     assert ".doc-menu" not in workspace, "the deletion map's row: v4/workspace.css's row popover"
 
@@ -697,8 +714,9 @@ def test_main_js_keeps_no_dialog_and_a_dropdown_fallback_that_steps_aside():
     main = _read(MAIN_JS)
     assert "function initDialogs" not in main and "initDialogs()" not in main and "showModal" not in main
     assert "data-dialog" not in main
-    assert 'const mine = (details) => details.getAttribute("data-dropdown") !== "overlay";' in main
-    assert main.count("mine(") >= 5, "every handler of the fallback asks who owns the dropdown, at the event"
+    # the fallback served the letterhead's <details> account menu until shell.js imported overlay.js (W2-C2, as this
+    # family's hand-over asked): every page now loads the system, which owns every disclosure, so it left main.js
+    assert "function initDropdowns" not in main and "data-dropdown" not in main
     assert 'details.setAttribute("data-dropdown", "overlay");' in JS
     assert 'const DISCLOSURE = "details[data-dropdown]";' in JS
     # the open disclosure takes the Esc before the panel it stands in (DL54-69)

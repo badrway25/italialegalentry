@@ -1,13 +1,27 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+The deposit is closed to an account that has not accepted the Conditions (design V5, W3-C; DOCUMENT_WORKSPACE.md §11.2
+«gate»): the Dépôt's own gate — the sentence and the link that resolves it, in the dashed frame of a door that is
+shut, with the lock of the blocco register — never a greyed-out form; then the way back to the register. The same
+block the Dépôt draws in place when the server answers a deposit with this gate (documents/partials/depot.html).
+{% endcomment %}
 {% block page_title %}{% translate "Dépôt indisponible" %}{% endblock %}
 {% block meta_description %}{% translate "Dépôt de pièces indisponible." %}{% endblock %}
 {% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head doc-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Dépôt indisponible" %}</h1>
+  </div>
+</header>
+{% endblock %}
+
 {% block portal_content %}
-<h1 class="doc-page__title">{% translate "Dépôt indisponible" %}</h1>
+<div class="doc-piece">
 {% comment %}CONTENT_PENDING_LEGAL_REVIEW: the acceptance flow for the Conditions d’utilisation / Privacy Policy depends on the official Italian legal texts (gate G1).{% endcomment %}
-<p class="empty">
-  {% translate "Le dépôt de pièces est réservé aux comptes ayant accepté les Conditions d’utilisation et la Privacy Policy." %}
-  {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}
-</p>
-<p class="doc-piece__back"><a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a></p>
+<p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span>{% translate "Le dépôt de pièces est réservé aux comptes ayant accepté les Conditions d’utilisation et la Privacy Policy." %}
+  {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}</span></p>
+<p class="doc-aside"><a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a></p>
+</div>
 {% endblock %}

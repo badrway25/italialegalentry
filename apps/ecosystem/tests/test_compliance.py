@@ -62,7 +62,9 @@ def _assert_compliant(lang: str, path: str, html: str) -> None:
         assert marker not in html, (where, marker)
     for token in PROMISE_TOKENS:
         assert token not in lowered, (where, token)
-    assert '<main id="main-content"' in html and '<nav class="local-nav"' in html, where
+    # Design V5.4 (W3-F1): the interior's entrance is the page's one header; no side column (the doors are the chrome's)
+    assert '<main id="main-content"' in html and '<header class="ingresso"' in html, where
+    assert '<nav class="local-nav"' not in html, where
     assert '<nav class="breadcrumbs container"' in html, where
 
 
@@ -94,21 +96,15 @@ def test_editorial_note_is_rendered_escaped_and_tagged(get_html, seeded):
     assert "<p>Second paragraphe.</p>" in html
 
 
-def test_reveal_motion_never_leaves_a_block_hidden(get_html, seeded, phase3_open):
+def test_no_block_waits_for_a_scroll_to_be_seen(get_html, seeded, phase3_open):
     """
-    The design system hides ``.reveal`` blocks until they scroll into view. On these pages the only
-    ``.reveal`` elements are the timeline lists, and ecosystem.css keeps both of them visible from
-    the first paint (the pilot diagram animates its steps, never the list itself).
+    The design system hides ``.reveal`` blocks until they scroll into view. Design V5.4 (W3-F1): the spaces draw
+    their sequences on «la linea», still at load — no block of these pages carries ``.reveal`` any more.
     """
-    css = (APP / "static" / "ecosystem" / "ecosystem.css").read_text(encoding="utf-8")
-    for selector in ("html.js .ecosystem-moments .timeline.reveal {", "html.js .pilot-diagram .timeline.reveal {"):
-        rule = css.split(selector, 1)[1].split("}", 1)[0]
-        assert "opacity: 1;" in rule and "transform: none;" in rule, selector
     for path in [COMPANIES_PATH, *GATED_PATHS.values()]:
         html = get_html("fr", path)
         main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
-        revealed = re.findall(r'<(\w+) class="([^"]*\breveal\b[^"]*)"', main)
-        assert all(tag == "ol" and "timeline" in classes for tag, classes in revealed), (path, revealed)
+        assert re.findall(r'<(\w+) class="([^"]*\breveal\b[^"]*)"', main) == [], path
 
 
 # ---------------------------------------------------------------------------------------------
@@ -173,23 +169,43 @@ def test_ui_strings_are_wrapped_for_translation():
         assert leftovers == [], (path.name, leftovers[:5])
 
 
-def test_stylesheet_uses_tokens_logical_properties_and_reduced_motion():
-    css = (APP / "static" / "ecosystem" / "ecosystem.css").read_text(encoding="utf-8")
+def test_stylesheet_uses_tokens_logical_properties_and_no_motion():
+    """
+    Design V5.4 (W3-F1): the page sheet is a plain list of imports written in the collected tree (DS 2026 §2) — the
+    shared page of the public interior (static/css/v5/_pagina.css, the budget pass), W3-F1's own parts of the
+    interior's grammar (static/css/v5/_interior.css), the public passage «la linea» (static/css/v5/_journey-passage.css,
+    W3-D's — the w3-d merge), the door card (static/css/v5/_porta.css) and the spaces' own partial; read together, they
+    use tokens
+    only, logical properties only, and nothing moves (the sequences are drawn still).
+    """
+    sheet = (APP / "static" / "ecosystem" / "ecosystem.css").read_text(encoding="utf-8")
+    imports = re.findall(r'@import url\("([^"]+)"\);', sheet)
+    assert imports == [
+        "../css/v5/_pagina.css",
+        "../css/v5/_interior.css",
+        "../css/v5/_journey-passage.css",
+        "../css/v5/_porta.css",
+        "_spaces.css",
+    ], imports
+    css = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (
+            BASE / "static" / "css" / "v5" / "_pagina.css",
+            BASE / "static" / "css" / "v5" / "_interior.css",
+            BASE / "static" / "css" / "v5" / "_journey-passage.css",
+            BASE / "static" / "css" / "v5" / "_porta.css",
+            APP / "static" / "ecosystem" / "_spaces.css",
+        )
+    )
     assert re.findall(r"#[0-9a-fA-F]{3,8}\b", css) == [], "no hard-coded colour: tokens only"
     assert not re.search(r"\brgba?\(|\bhsla?\(", css)
     physical = re.findall(r"(?<![-\w])(?:margin|padding|border)-(?:left|right)\b|(?<![-\w])(?:left|right)\s*:", css)
     assert physical == [], physical
     assert "text-align: left" not in css and "text-align: right" not in css
-    assert "prefers-reduced-motion: no-preference" in css and "prefers-reduced-motion: reduce" in css
-    assert "decimal-leading-zero" in css, "the diagram is numbered 01–08"
-    assert not re.search(r"https?://", css) and "@import" not in css
+    assert "decimal-leading-zero" in css, "the sequences are numbered 01, 02 …"
+    assert "@keyframes" not in css and "animation" not in css and "opacity: 0;" not in css
+    assert not re.search(r"https?://", css)
     assert scan(css) == []
-    # Motion exists only inside the no-preference block and only when JavaScript is running.
-    outside = css.split("@media (prefers-reduced-motion: no-preference)")[0]
-    assert "opacity: 0;" not in outside, "nothing may be hidden outside the JS + no-preference block"
-    inside = css.split("@media (prefers-reduced-motion: no-preference)")[1].split("@media")[0]
-    hidden_rules = [rule for rule in inside.split("}") if "opacity: 0;" in rule]
-    assert hidden_rules and all("html.js" in rule for rule in hidden_rules)
 
 
 def test_stylesheet_is_served(client):

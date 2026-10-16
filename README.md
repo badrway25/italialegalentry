@@ -22,7 +22,8 @@ intendere.
 | `design-v5` | design V5 in sviluppo; confluisce in `main` solo dopo le revisioni previste |
 
 Lo stato di rilascio e ciò che manca per andare in produzione sono documentati in
-`docs/DEPLOYMENT_READINESS.md`, `docs/PREPROD_REPORT.md` e `docs/FINAL_REPORT.md`. Il repository non
+`docs/PREPROD_REPORT.md` e `docs/FINAL_REPORT.md`; la procedura di messa in produzione, la checklist e il
+rollback in `docs/deployment/`. Il repository non
 contiene credenziali né la configurazione di alcun ambiente di esercizio: tutto ciò che è specifico
 di un server arriva dal suo ambiente (vedi *Deployment*).
 
@@ -156,27 +157,33 @@ le misure di `docs/STAGING_PERFORMANCE.md`, con un database proprio.
 
 ## Variabili d'ambiente
 
-`.env.example` elenca **ogni** variabile letta da `config/settings/base.py` e `prod.py`, con valori di
-esempio innocui; `tests/test_env_example_is_complete.py` lo verifica in entrambe le direzioni (nulla
-di letto manca, nulla di dichiarato è ignorato). In sintesi:
+`.env.example` elenca **ogni** variabile letta dall'applicazione — impostazioni, codice, script e test —
+raggruppata e commentata (obbligatoria o no, default, effetto), con valori di esempio innocui; le variabili
+opzionali sono commentate, perché con django-environ un valore VUOTO non equivale a «non impostato». Il file
+d'ambiente del server si costruisce invece da `docs/deployment/production.env.example`.
+`tests/test_env_example_is_complete.py` verifica entrambi i file in entrambe le direzioni (nulla di letto
+manca, nulla di dichiarato è ignorato). In sintesi:
 
 | Variabile | Scopo |
 |---|---|
 | `DJANGO_SETTINGS_MODULE` | `config.settings.dev` (default di `manage.py`), `.test` (pytest), `.prod` |
 | `ILE_READ_ENV_FILE` | se leggere `.env`. Default sì, **tranne con le impostazioni di produzione**, dove il file è ignorato: un `.env` di sviluppo copiato su un server non indebolisce la configurazione, la *soddisfa* |
-| `DJANGO_SECRET_KEY` · `DJANGO_ALLOWED_HOSTS` · `DJANGO_CSRF_TRUSTED_ORIGINS` | **obbligatorie in produzione, senza default**: `prod.py` non si avvia se una manca. La chiave deve avere almeno 50 caratteri e 5 distinti |
+| `DJANGO_SECRET_KEY` · `DJANGO_ALLOWED_HOSTS` · `DJANGO_CSRF_TRUSTED_ORIGINS` · `DATABASE_URL` · `IP_HASH_SALT` | **obbligatorie in produzione, senza default**: `prod.py` non si avvia se una manca. La chiave deve avere almeno 50 caratteri e 5 distinti, il sale almeno 32; `*` fra gli host è rifiutato |
 | `DJANGO_DEBUG` | debug (spento in test e produzione) |
 | `DATABASE_URL` · `DB_CONN_MAX_AGE` | connessione PostgreSQL e durata del riuso (0 in sviluppo: `runserver` apre un thread per socket) |
-| `REDIS_URL` | cache opzionale; vuoto = cache in memoria locale |
+| `REDIS_URL` | cache; vuoto = cache in memoria locale. **Da lasciare vuota**: la libreria client Redis non è nei requisiti (`manage.py check` segnala `core.E001`) |
 | `SECURE_SSL_REDIRECT` · `SECURE_HSTS_SECONDS` · `ILE_ALLOW_INSECURE_PROD` | irrigidimento TLS; in produzione i default sono già quelli giusti e `prod.py` rifiuta valori più deboli, salvo l'escape hatch esplicito |
-| `BACKOFFICE_MFA_ENFORCED` | secondo fattore (TOTP) per chi legge i dati di altre persone; spento in locale, acceso per default in produzione |
+| `SECURE_HSTS_INCLUDE_SUBDOMAINS` · `SECURE_HSTS_PRELOAD` | direttive HSTS che riguardano TUTTI gli host del dominio; **obbligatorie in produzione, senza default**: 0 o 1, deciso per il dominio (0 finché i sottodomini non sono inventariati, `docs/deployment/`) |
+| `ALLAUTH_TRUSTED_PROXY_COUNT` | proxy davanti all'applicazione (produzione: 1): senza, dietro nginx i limiti di allauth contano tutti i visitatori come uno solo |
+| `BACKOFFICE_MFA_ENFORCED` | rende obbligatoria l'attivazione del secondo fattore (TOTP) per chi legge i dati di altre persone; spento in locale, acceso per default in produzione. Un dispositivo già attivato è chiesto a ogni sessione, qualunque sia il valore |
 | `IP_HASH_SALT` | sale dell'hash a senso unico degli IP: nessun indirizzo è mai registrato in chiaro |
 | `EMAIL_BACKEND` · `EMAIL_HOST` · `EMAIL_PORT` · `EMAIL_HOST_USER` · `EMAIL_HOST_PASSWORD` · `EMAIL_USE_TLS` · `DEFAULT_FROM_EMAIL` | posta in uscita (console in sviluppo) |
 | `NOTIFICATIONS_SEND_IMMEDIATELY` | invio durante la richiesta invece dell'outbox; comodo in sviluppo, sbagliato in produzione |
 | `PUBLIC_CONTACT_EMAIL` · `FORMS_DESTINATION_EMAIL` | contatto pubblico e unica destinazione di tutti i form |
 | `ILE_REFERENCE_DATE` | data di riferimento (ISO) per collaudare i gate datati; vuoto = orologio reale |
 | `ILE_VERSION_LABEL` | etichetta di versione nel piè di pagina e nel back-office |
-| `PRIVATE_MEDIA_ROOT` | cartella dei documenti privati, **fuori dalla radice web**; ogni download passa da una vista autorizzata |
+| `PRIVATE_MEDIA_ROOT` | cartella dei documenti privati, **fuori dalla radice web**; ogni download passa da una vista autorizzata. `prod.py` rifiuta di avviarsi se si sovrappone a una cartella servita |
+| `MEDIA_ROOT` | (solo `prod.py`) media pubblici fuori dal checkout, serviti da nginx sotto `/media/` |
 | `ILE_SEED_DEMONSTRATION_DATA` | se un seed può inventare persone (vedi sopra) |
 | `DOCUMENT_SCANNER` · `INTEGRATIONS_TRANSPORT` | agganci opzionali: scanner degli upload e trasporto degli eventi CRM (il default scrive solo nei log) |
 
@@ -296,22 +303,25 @@ porta: è pensata per la macchina di chi sviluppa e non va esposta da un server.
 
 ## Deployment — cenni
 
+La procedura completa — comandi esatti, nginx, systemd, TLS, cutover del dominio, backup e rollback — è in
+`docs/deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md`, con `PRODUCTION_CHECKLIST.md` e `ROLLBACK.md`.
+
 Il modulo di produzione è `config.settings.prod`. Due guardrail:
 
-- **non si avvia** senza `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS` e `DJANGO_CSRF_TRUSTED_ORIGINS`,
-  che non hanno default, e ignora `.env` (salvo `ILE_READ_ENV_FILE=1`): la configurazione viene
-  dall'ambiente del processo;
+- **non si avvia** senza `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`,
+  `DATABASE_URL` e `IP_HASH_SALT`, che non hanno default, e ignora `.env` (salvo `ILE_READ_ENV_FILE=1`):
+  la configurazione viene dall'ambiente del processo;
 - **rifiuta una configurazione indebolita** — redirect HTTPS spento, HSTS sotto un anno, chiave
   corta o poco varia, secondo fattore disattivato — salvo `ILE_ALLOW_INSECURE_PROD=1`, l'unico escape
   hatch, da mettere a verbale quando si usa.
 
 Il resto è Django ordinario: gunicorn (`config.wsgi:application`) dietro un reverse proxy che
 termina TLS e passa `X-Forwarded-Proto`, `collectstatic` servito da WhiteNoise, `PRIVATE_MEDIA_ROOT`
-su disco fuori dalla radice web, PostgreSQL 17, e i comandi periodici (`send_queued_emails`,
-`deliver_outbound_events`, `notifications_scan_deadlines`, `purge_expired_submissions`,
-`documents_purge_expired`, `purge_orientation_sessions`). Topologia di riferimento, checklist e stato
-in `docs/DEPLOYMENT.md` e `docs/DEPLOYMENT_READINESS.md`. Questo repository non descrive alcuna
-infrastruttura specifica.
+su disco fuori dalla radice web, PostgreSQL, e sette comandi periodici come timer systemd
+(`send_queued_emails`, `notifications_scan_deadlines`, `documents_refresh_requirements`,
+`documents_purge_expired --apply`, `purge_expired_submissions --apply`, `purge_orientation_sessions`,
+`clearsessions`). `docs/DEPLOYMENT.md` e `docs/DEPLOYMENT_READINESS.md` restano come storia. Questo
+repository non descrive alcuna infrastruttura specifica e non nomina alcun server.
 
 ## Struttura del repository
 
@@ -392,7 +402,8 @@ dimostrativa, marcandole come tali.
 | `docs/CRM_INTEGRATION_CONTRACT.md` | contratto di integrazione CRM |
 | `docs/IMAGE_LICENSES.md` | licenze di immagini e font |
 | `docs/CURRENT_SITE_AUDIT.md` · `docs/URL_MIGRATION_MAP.md` | audit del sito precedente e mappa dei redirect |
-| `docs/DEPLOYMENT.md` · `docs/DEPLOYMENT_READINESS.md` · `docs/STAGING_PERFORMANCE.md` | preparazione del deployment, prontezza, misure di staging |
+| `docs/deployment/` | **messa in produzione**: runbook, checklist di rilascio e di backup, rollback, modello del file d'ambiente |
+| `docs/DEPLOYMENT.md` · `docs/DEPLOYMENT_READINESS.md` · `docs/STAGING_PERFORMANCE.md` | preparazione del deployment e prontezza (storia, superati da `docs/deployment/`), misure di staging |
 | `docs/QA_REPORT.md` · `docs/PREPROD_REPORT.md` · `docs/FINAL_REPORT.md` · `docs/HUMAN_QA_CHECKLIST.md` | report di QA, pre-produzione e finale; verifiche umane richieste |
 
 ## Licenza

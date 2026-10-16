@@ -21,9 +21,9 @@ In Chromium (``-m browser``):
 * NO WAIT IS FOR EVER (the review's major): a submit answered in the page is at rest in the next task and can be
   sent again; an answer that is not a page — 204, a file nobody declared — leaves the control waiting, the second
   submit of a guarded form refused, and the lease ends the wait after 10 s, the guard lifted; a page that comes
-  back from the back/forward cache is at rest; without the state machine nothing waits;
+  back from the back/forward cache is at rest; without the state machine nothing waits and nothing refuses;
 * a form whose answer is a file (the account's export, `data-loader="none"`) never waits and loads no loader;
-  a submit control that is not a `.btn` (the account menu's logout) declares no state;
+  a submit control that is not a `.btn` (the console's sign-out controls) declares no state;
 * a link-styled submit (the real «Marquer comme lue» of an unread communication) waits without a key: `aria-busy`,
   its own face, nothing over its label;
 * under forced colours the release's room and ink layers are not displayed.
@@ -41,6 +41,8 @@ import pytest
 from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.test import Client
+from django.urls import reverse
+from django.utils import translation
 
 from accounts.signals import ENTRANCE_RELEASE_KEY
 
@@ -116,7 +118,12 @@ def test_the_arabic_console_carries_the_release_unmirrored(client, seeded, perso
 pytest_browser = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 
 LOGIN = 'form[data-single-submit] button[type="submit"]'
+#: The account's profile form — guarded (`data-single-submit`) since W3-F2's account pages, like every form of their
+#: frame.
 PROFILE = 'form:not([data-loader]) button[type="submit"].btn--primary'
+#: An unguarded form a person reaches: the help desk's request (one `.btn--primary`, no guard, no opt-out).
+DESK_PAGE = "/fr/espace-reserve/guichet/nouvelle-demande/"
+DESK = 'form[action$="/guichet/nouvelle-demande/"] button[type="submit"]'
 MARK_READ = 'form.portal-list__form button[type="submit"]'
 
 RELEASE_STATE = r"""() => {
@@ -263,15 +270,21 @@ LINK_PROBE = r"""(sel) => new Promise((resolve) => {
   button.click();
 })"""
 
-LOGOUT_PROBE = r"""() => new Promise((resolve) => {
-  const button = document.querySelector('form button.account-menu__link');
-  if (!button) return resolve({found: false});
-  window.addEventListener('submit', (event) => {
+#: Every sign-out control of the page — the forms that post to the sign-out — sent in turn (requestSubmit dispatches the
+#: submit at once; a window listener, after shell.js's hook, reads what the hook set and keeps the page).
+LOGOUT_PROBE = r"""(logout) => {
+  const seen = [];
+  const read = (event) => {
     event.preventDefault();
-    resolve({found: true, busy: button.classList.contains('is-busy'), ariaBusy: button.getAttribute('aria-busy')});
-  });
-  button.form.requestSubmit(button);
-})"""
+    const b = event.submitter;
+    seen.push({cls: b.className, btn: b.classList.contains('btn'), busy: b.classList.contains('is-busy'),
+               ariaBusy: b.getAttribute('aria-busy')});
+  };
+  window.addEventListener('submit', read);
+  document.querySelectorAll(`form[action="${logout}"] button[type="submit"]`).forEach((b) => b.form.requestSubmit(b));
+  window.removeEventListener('submit', read);
+  return seen;
+}"""
 
 FORCED_STATE = r"""() => {
   const host = [...document.querySelectorAll('[data-lume="release"]')].find((el) => el.getClientRects().length);
@@ -552,21 +565,25 @@ def test_a_submit_answered_in_the_page_is_at_rest_in_the_next_task(browser, live
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
 def test_a_wait_that_no_page_ends_is_a_lease(browser, live_server, seeded, person_user):
-    """The answer is not a page — 204 on the guarded login, a file nobody declared on the account's form: no event
-    tells a script, so the control waits, the guarded form refuses the second submit, and after SLOW_AFTER (10 s) the
-    form is at rest by itself and can be sent again. Before the fix it waited, announced and refused for ever."""
+    """The answer is not a page — 204 on the guarded login, a file nobody declared on an unguarded form (the help
+    desk's request): no event tells a script, so the control waits, the guarded form refuses the second submit, and
+    after SLOW_AFTER (10 s) the form is at rest by itself and can be sent again. Before the fix it waited, announced and
+    refused for ever. (The unguarded form was the account's profile form until W3-F2's account pages guarded it, as
+    every form of their frame: read as unguarded, it failed here; its guard is the next test's guarded case.)"""
     anonymous, signed_in = _context(browser, live_server), _context(browser, live_server, user=person_user)
-    login, account = anonymous.new_page(), signed_in.new_page()
+    login, desk = anonymous.new_page(), signed_in.new_page()
     login_posts = _answer_without_a_page(login)
-    _answer_without_a_page(account, kind="file")
+    _answer_without_a_page(desk, kind="file")
     login.goto(live_server.url + "/fr/compte/login/", wait_until="networkidle")
-    account.goto(live_server.url + "/fr/compte/profil/", wait_until="networkidle")
+    desk.goto(live_server.url + DESK_PAGE, wait_until="networkidle")
+    assert desk.evaluate("(sel) => document.querySelectorAll(sel).length", DESK) == 1
+    assert not desk.evaluate("(sel) => document.querySelector(sel).form.hasAttribute('data-single-submit')", DESK)
 
     _press(login, LOGIN)
     sent = {login: time.monotonic()}
-    with account.expect_download() as download:
-        _press(account, PROFILE)
-    sent[account] = time.monotonic()
+    with desk.expect_download() as download:
+        _press(desk, DESK)
+    sent[desk] = time.monotonic()
     assert download.value.suggested_filename == "answer.json"
     assert _eventually(login, lambda: len(login_posts) == 1), "the login was sent"
     waiting = login.evaluate(STATE, LOGIN)
@@ -574,19 +591,19 @@ def test_a_wait_that_no_page_ends_is_a_lease(browser, live_server, seeded, perso
     _press(login, LOGIN)
     login.wait_for_timeout(200)
     assert len(login_posts) == 1, "the guarded form refuses the second submit while it waits"
-    waiting = account.evaluate(STATE, PROFILE)
+    waiting = desk.evaluate(STATE, DESK)
     assert waiting == {"busy": True, "ariaBusy": "true", "ariaDisabled": None, "submitted": False, "focused": True}, (
         f"an unguarded form announces no refusal: {waiting}"
     )
-    assert account.url.endswith("/fr/compte/profil/"), "the page was not replaced"
+    assert desk.url.endswith(DESK_PAGE), "the page was not replaced"
 
     # the lease is SLOW_AFTER: 7 s after its submit each control still waits; then the rest comes by itself — waited
     # for, not dated (the lease runs from the moment loader.js took the submit), and never before 9 s
-    for page, selector in ((login, LOGIN), (account, PROFILE)):
+    for page, selector in ((login, LOGIN), (desk, DESK)):
         page.wait_for_timeout(max(0, int((sent[page] + 7.0 - time.monotonic()) * 1000)))
         if time.monotonic() - sent[page] < 8.5:  # a machine that stalled past the lease proves nothing either way
             assert page.evaluate(STATE, selector)["ariaBusy"] == "true", "the wait ended long before its lease"
-    for page, selector in ((login, LOGIN), (account, PROFILE)):
+    for page, selector in ((login, LOGIN), (desk, DESK)):
         page.wait_for_function(RESTED, arg=selector, timeout=max(1000, int((sent[page] + 25 - time.monotonic()) * 1000)))
         assert time.monotonic() - sent[page] >= 9.0, "the wait ended before its lease"
         rested = page.evaluate(STATE, selector)
@@ -625,16 +642,33 @@ def test_a_page_back_from_the_cache_is_at_rest(browser, live_server, seeded):
 
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
-def test_without_the_state_machine_nothing_waits(browser, live_server, seeded, person_user):
-    """If loader.js cannot be loaded nothing would ever end a wait: shell.js takes back what it set."""
+@pytest.mark.parametrize(
+    ("path", "selector", "guarded"),
+    [("/fr/compte/profil/", PROFILE, True), (DESK_PAGE, DESK, False)],
+    ids=["the account's guarded form", "the help desk's unguarded form"],
+)
+def test_without_the_state_machine_nothing_waits(browser, live_server, seeded, person_user, path, selector, guarded):
+    """If loader.js cannot be loaded nothing would ever end a wait: shell.js takes back what it set — and nothing
+    refuses for ever either: main.js's guard on a guarded form (the account's, since W3-F2) is lifted with the face.
+    Without that, the guarded form kept `data-submitted` and an `aria-disabled` that nothing would end (the integration
+    fix (d)). The guard's own state is read in the submit's task, so a guard never set cannot pass for one lifted."""
     context = _context(browser, live_server, user=person_user)
     page = context.new_page()
     posts = _answer_without_a_page(page, lose=("loader",))
-    page.goto(live_server.url + "/fr/compte/profil/", wait_until="networkidle")
-    _press(page, PROFILE)
+    page.goto(live_server.url + path, wait_until="networkidle")
+    guard = page.evaluate("(sel) => document.querySelector(sel).form.hasAttribute('data-single-submit')", selector)
+    assert guard is guarded, (path, guard)
+    page.evaluate(
+        """(sel) => { const b = document.querySelector(sel); window.__inTask = null;
+          window.addEventListener('submit', () => { window.__inTask = {submitted: b.form.hasAttribute('data-submitted'),
+            ariaDisabled: b.getAttribute('aria-disabled')}; }); }""",
+        selector,
+    )
+    _press(page, selector)
     assert _eventually(page, lambda: len(posts) == 1), "the form was sent"
-    page.wait_for_function(RESTED, arg=PROFILE, timeout=5000)
-    state = page.evaluate(STATE, PROFILE)
+    assert page.evaluate("() => window.__inTask") == {"submitted": guarded, "ariaDisabled": "true" if guarded else None}
+    page.wait_for_function(RESTED, arg=selector, timeout=5000)
+    state = page.evaluate(STATE, selector)
     assert {key: state[key] for key in AT_REST} == AT_REST, state
     context.close()
 
@@ -671,13 +705,22 @@ def test_a_form_whose_answer_is_a_file_never_waits_and_loads_no_loader(browser, 
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
 def test_a_submit_control_that_is_not_a_button_of_the_system_declares_no_state(browser, live_server, seeded, person_user):
-    """The account menu's logout is a plain button: v5/loader.css has no key to draw on it, so the hook sets no
-    class and no `aria-busy` — nothing the eye cannot see is announced."""
+    """The console's sign-out controls are not buttons of the system — the account popover's row (`overlay__item`, the
+    overlay system's popover) and the rail's own control (`rail__tool`), the drawer's copy of the rail with it: v5/
+    loader.css has no key to draw on them, so the hook sets no class and no `aria-busy` — nothing the eye cannot see is
+    announced. (The probe looked for `button.account-menu__link`, the account menu's design-V4 face, which W2-C2
+    retired for the popover: it found no control at all. The controls are now found by what they do — they post to the
+    sign-out — and each is checked to be no `.btn`, the premise.)"""
+    with translation.override("fr"):
+        logout = reverse("account_logout")
     context = _context(browser, live_server, user=person_user)
     page = context.new_page()
     page.goto(live_server.url + "/fr/espace-reserve/", wait_until="networkidle")
-    out = page.evaluate(LOGOUT_PROBE)
-    assert out == {"found": True, "busy": False, "ariaBusy": None}, out
+    out = page.evaluate(LOGOUT_PROBE, logout)
+    kinds = {control["cls"].split()[0] for control in out}
+    assert {"overlay__item", "rail__tool"} <= kinds, out
+    for control in out:
+        assert control == {"cls": control["cls"], "btn": False, "busy": False, "ariaBusy": None}, control
     context.close()
 
 

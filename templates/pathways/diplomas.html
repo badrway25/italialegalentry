@@ -1,59 +1,86 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
 Diplômes et titres étrangers (gate G3) — locked p3.diplomas.title / p3.diplomas.body (Implementation §3.9).
 The platform never states that it validates or evaluates diplomas itself: the step skeleton below is
 headings only (CONTENT_PENDING_LEGAL_REVIEW) derived from the wording of the locked text.
+
+Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/_interior.css, through pathways/pathways.css), the
+page as a chain of questions, one section device at the reading edge:
+  * the entrance: the space's name, the prescribed title (capitals, tracked) and body, the sheet's metadata row
+    (its nature, «being verified» — no glyph);
+  * how does it go? — the five moments on «la linea» down the reading edge, each station open and broken (its
+    details are still being verified), the Italian terms of the glossary under the station they belong to;
+  * who decides? — the authorities alone, said in words; then the ONE inset, the anti-fraud callout (the warning's
+    register);
+  * where else? — the space's other areas as a register (no side column: the chrome holds the doors);
+  * where do I start? — on the stone, the page's ONE action (the orientation questionnaire) and the live «who can
+    help me» line, as at the end of a pathway's sheet.
 {% endcomment %}
 {% block page_title %}{% locked "p3.diplomas.title" as title_text %}{{ title_text|striptags }} · {% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{% locked "p3.diplomas.body" as body_text %}{{ body_text|striptags }}{% endblock %}
-{% block body_class %}page-pathways page-pathways--diplomas{% endblock %}
+{% block body_class %}page-pathways page-pathways--diplomas interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
 {% locked_is_fallback "p3.diplomas.title" as title_fallback %}{% locked_lang "p3.diplomas.title" as title_lang %}
-<header class="page-header container">
-  <p class="page-header__eyebrow">{% translate "Espace Personnes" %}</p>
-  <h1 class="page-header__title"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% locked "p3.diplomas.title" %}</h1>
-  <p class="page-header__lead"{% if title_fallback %} lang="{{ title_lang }}"{% endif %}>{% locked "p3.diplomas.body" %}</p>
-</header>
+{% locked "p3.diplomas.title" as title_html %}{% locked "p3.diplomas.body" as body_html %}{% translate "Espace Personnes" as space_label %}
+{% if title_fallback %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=body_html lead_lang=title_lang meta_template="pathways/_review_meta.html" reviewed_at=None only %}
+{% else %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=body_html meta_template="pathways/_review_meta.html" reviewed_at=None only %}
+{% endif %}
 
-<div class="container layout-sidebar layout-sidebar--end">
-  <div class="stack stack--lg prose">
-    <section class="section section--flush-top section--tight" aria-labelledby="diploma-steps-title">
-      <div class="section__header">
-        <h2 id="diploma-steps-title" class="section__title">{% translate "Les démarches, étape par étape" %}</h2>
-        <p class="section__lead">{% translate "Structure générale des démarches. Les modalités précises dépendent du titre, du pays de délivrance et de l’usage prévu en Italie ; elles seront détaillées après vérification avec les acteurs compétents." %}</p>
-      </div>
-      <ol class="timeline" data-steps="{{ steps|length }}">
+<section class="chapter chapter--prose" id="demarches" aria-labelledby="diploma-steps-title">
+  <div class="container chapter__inner">
+    {% translate "Les démarches, étape par étape" as steps_title %}{% translate "Structure générale des démarches. Les modalités précises dépendent du titre, du pays de délivrance et de l’usage prévu en Italie ; elles seront détaillées après vérification avec les acteurs compétents." as steps_lead %}
+    {% include "pages/partials/_chapter_head.html" with title_id="diploma-steps-title" title=steps_title lead=steps_lead only %}
+    <div class="chapter__body">
+      <ol class="linea diploma-steps" data-steps="{{ steps|length }}">
         {% for step in steps %}
-        <li class="timeline__item{% if step.pending %} timeline__item--pending{% endif %}" id="etape-{{ step.id }}">
-          <span class="timeline__marker" aria-hidden="true"></span>
-          <div>
-            <h3 class="timeline__label">{{ step.label }}</h3>
-            {% if step.glossary %}
-              <ul class="list-reset cluster timeline__text">
-                {% for term in step.glossary %}<li>{% if term.url %}<a class="tag" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="tag" lang="it">{{ term.term }}</span>{% endif %}</li>{% endfor %}
-              </ul>
-            {% endif %}
-          </div>
+        <li class="linea__step{% if step.pending %} linea__step--pending{% endif %}" id="etape-{{ step.id }}">
+          <span class="linea__num" aria-hidden="true"></span>
+          <h3 class="linea__label">{{ step.label }}</h3>
+          {% if step.glossary %}
+          <ul class="linea__text termes__list">
+            {% for term in step.glossary %}<li>{% if term.url %}<a class="tag" href="{{ term.url }}" lang="it">{{ term.term }}</a>{% else %}<span class="tag" lang="it">{{ term.term }}</span>{% endif %}</li>{% endfor %}
+          </ul>
+          {% endif %}
         </li>
         {% endfor %}
       </ol>
-      <p class="text-small text-muted">{% translate "Les détails de chaque étape sont publiés au fur et à mesure de leur vérification avec les acteurs compétents." %}</p>
-    </section>
-
-    <section class="section section--tight section--rule" aria-labelledby="diploma-who-title">
-      <div class="section__header"><h2 id="diploma-who-title" class="section__title">{% translate "Qui décide ?" %}</h2></div>
-      <p>{% translate "Les décisions relatives aux diplômes et aux titres relèvent exclusivement des autorités et organismes compétents. Italy Legal Entry™ vous oriente sur les étapes et les interlocuteurs, sans intervenir dans la procédure." %}</p>
-    </section>
-
-    {% include "pathways/_orientation_cta.html" with links=links cta_id="orientation" %}
-    {% include "pathways/_metadata_row.html" with reviewed_at=None %}
+      <p class="chapter__fine">{% translate "Les détails de chaque étape sont publiés au fur et à mesure de leur vérification avec les acteurs compétents." %}</p>
+    </div>
   </div>
+</section>
 
-  <aside class="layout-sidebar__aside stack stack--lg" aria-label="{% translate 'Ressources de l’Espace Personnes' %}">
-    {% include "pathways/_side_links.html" with links=links suffix="diplomas" %}
-    {% include "pathways/_antifraud_callout.html" with links=links level=2 suffix="diplomas" %}
-  </aside>
-</div>
+<section class="chapter chapter--prose" id="qui-decide" aria-labelledby="diploma-who-title">
+  <div class="container chapter__inner">
+    {% translate "Qui décide ?" as who_title %}{% include "pages/partials/_chapter_head.html" with title_id="diploma-who-title" title=who_title only %}
+    <div class="chapter__body">
+      <p class="chapter__prose">{% translate "Les décisions relatives aux diplômes et aux titres relèvent exclusivement des autorités et organismes compétents. Italy Legal Entry™ vous oriente sur les étapes et les interlocuteurs, sans intervenir dans la procédure." %}</p>
+      {% include "pathways/_antifraud_callout.html" with links=links level=3 suffix="diplomas" %}
+    </div>
+  </div>
+</section>
+
+<section class="chapter" aria-labelledby="space-links-title">
+  <div class="container chapter__inner">
+    {% translate "Dans l’Espace Personnes" as space_links_title %}{% include "pages/partials/_chapter_head.html" with title_id="space-links-title" title=space_links_title only %}
+    <div class="chapter__body">
+      {% include "pathways/_space_links.html" with links=links current="diplomas" %}
+      <p class="chapter__more"><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter chapter--area" id="orientation" aria-labelledby="orientation-chapter-title">
+  <div class="container chapter__inner">
+    {% translate "Orientation" as orientation_title %}{% include "pages/partials/_chapter_head.html" with title_id="orientation-chapter-title" title=orientation_title only %}
+    <div class="chapter__body">
+      {% include "pathways/_orientation_action.html" with links=links %}
+      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+</section>
 {% endblock %}

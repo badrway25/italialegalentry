@@ -1,0 +1,191 @@
+/* ============================================================================================
+   THE FILES TABLE — design V5 (W3-C; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5: «keep the files table
+   below, named for what it is»; DOCUMENT_WORKSPACE.md §2.1, §10)
+   A partial (`_`): imported by the documents page sheet, never an output of its own.
+   Markup: the «Tous les fichiers de votre compte» and «Documents de mon organisation» sections of
+   templates/portal/documents.html, «Autres fichiers déposés» of templates/documents/index.html.
+
+   Below the register, the files themselves: a REAL table — the one right element for a list of files —, its
+   head in the console's caption type, the file's name the link that downloads it (its whole name, never an
+   ellipsis), rows divided by hairlines on one flat sheet. When the region it is given is too narrow for its
+   columns, each file becomes one item of a list — its name, then its facts on one muted line — by the region's
+   width (container `docfiles`), never a sideways scroll. The cells carry no `data-label`: portal.css's labelled
+   pop-in (`table:has(tbody [data-label])`, uppercase labels, 2 px navy rules) never reaches these tables.
+   Tokens only, logical properties only; no shadow, the sheet's 8 px corner.
+   ============================================================================================ */
+
+.doc-files {
+  display: grid;
+  gap: var(--s-3);
+  min-inline-size: 0;
+  container: docfiles / inline-size;
+}
+
+.doc-files__title {
+  margin: 0;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+:lang(ar) .doc-files__title {
+  letter-spacing: 0;
+}
+
+.doc-files__lead {
+  margin: 0;
+  max-inline-size: 72ch;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.doc-files__sheet {
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-sheet);
+  overflow: clip;
+}
+
+.doc-files__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+.doc-files__table :is(th, td) {
+  padding: var(--s-3) var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+  text-align: start;
+  vertical-align: top;
+}
+
+.doc-files__table thead th {
+  background-color: var(--surface-area);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-3);
+}
+
+.doc-files__table tbody tr:last-child :is(th, td) {
+  border-block-end: 0;
+}
+
+.doc-files__table tbody th {
+  font-weight: 400;
+}
+
+/* a file's name keeps its own order and wraps; it is never clipped (the person checks which file it is) */
+.doc-files__name {
+  display: block;
+  overflow-wrap: anywhere;
+  font-weight: var(--w-control);
+}
+
+.doc-files__link {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.doc-files__link:hover,
+.doc-files__link:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.doc-files__gloss {
+  display: block;
+  color: var(--text-2);
+}
+
+.doc-files__form {
+  display: inline;
+  margin: 0;
+}
+
+/* a file's link reaches 44 px of touch without a taller row */
+@media (pointer: coarse) {
+  .doc-files__link {
+    position: relative;
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+}
+
+/* narrower than its columns: one item a file (REVIEW m3: six blocks of four uppercase labels, ≈ 1 300 px at 390) —
+   the name, the link, on its own line with its glosses; then its facts on one muted line in the columns' order
+   («type · taille · date»), the act at the line's inline end; the register's hairline between files, no label (the
+   facts say what they are; the header row stays for assistive technology) */
+@container docfiles (max-width: 39.999rem) {
+  .doc-files__table thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .doc-files__table,
+  .doc-files__table tbody,
+  .doc-files__table :is(th, td) {
+    display: block;
+  }
+
+  .doc-files__table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    border-block-end: 1px solid var(--line-rhythm);
+  }
+
+  .doc-files__table tbody tr:last-child {
+    border-block-end: 0;
+  }
+
+  .doc-files__table tbody :is(th, td) {
+    padding: 0;
+    border: 0;
+  }
+
+  .doc-files__table tbody th {
+    flex: 1 0 100%;
+  }
+
+  .doc-files__table tbody td {
+    color: var(--text-2);
+  }
+
+  .doc-files__table tbody td + td::before {
+    content: "·";
+    margin-inline-end: var(--s-2);
+    color: var(--text-3);
+  }
+
+  .doc-files__table tbody td.doc-files__act {
+    margin-inline-start: auto;
+    color: inherit;
+  }
+
+  .doc-files__table tbody td.doc-files__act::before {
+    content: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .doc-files__sheet,
+  .doc-files__table :is(th, td),
+  .doc-files__table tbody tr {
+    border-color: CanvasText;
+  }
+}

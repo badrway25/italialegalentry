@@ -1,17 +1,24 @@
 {% load i18n %}{% comment %}
-Stepper / progress indicator for multi-step flows (orientation wizard).
-Contract: `steps` = list of str; `current` = 1-based index of the current step.
-Renders a semantic <ol> with aria-current="step" and a native <progress> (no inline styles: CSP).
+«LA SOGLIA» — THE PUBLIC PASSAGE, design V5 (W3-D: V5.4 plan §3.5 item 6, §1.18 D16), drawn by
+static/css/v5/_journey-passage.css — the site's ONE passage drawing, «la linea»: a real sequence on a level line, the
+numerals over open stations (an outline is open: nothing on this site settles a step for anyone), the words under them.
+Down the reading edge on a phone; across its column from 48rem when `across` is set. A semantic <ol>: the order is the
+list's, the numerals are CSS counters, decorative. A page that draws it imports the partial in its page sheet.
+
+A flow (a multi-step form) passes `current`: the steps behind it filled, its own item aria-current="step" and its
+rank in words under the passage. An explanation of how something works passes no `current`: it is not a progress.
+
+Contract: `steps` — a list of str, or of dicts {label | heading, text | body, pending, lang}; optional `current` (the
+1-based place of a flow), `label` (the list's accessible name), `lang`, `across` (True), `cols` (the stations of one
+row from 48rem, for the long passages).
 {% endcomment %}
-<div class="stepper-wrap">
-  <ol class="stepper" aria-label="{% translate 'Progression' %}">
-    {% for step in steps %}
-    <li class="stepper__item{% if forloop.counter < current %} stepper__item--done{% elif forloop.counter == current %} stepper__item--current{% endif %}"{% if forloop.counter == current %} aria-current="step"{% endif %} data-step-marker>
-      <span class="stepper__marker" aria-hidden="true"></span>
-      <span class="stepper__label">{{ step }}</span>
-    </li>
-    {% endfor %}
-  </ol>
-  <p class="progress-label"><span>{% blocktranslate with n=current total=steps|length %}Étape {{ n }} sur {{ total }}{% endblocktranslate %}</span></p>
-  <progress class="progress" value="{{ current }}" max="{{ steps|length }}" aria-hidden="true"></progress>
-</div>
+<ol class="linea{% if across %} linea--across{% endif %}" data-steps="{{ steps|length }}"{% if cols %} data-cols="{{ cols }}"{% endif %}{% if label %} aria-label="{{ label }}"{% elif current %} aria-label="{% translate 'Progression' %}"{% endif %}{% if lang %} lang="{{ lang }}"{% endif %}>
+  {% for step in steps %}
+  <li class="linea__step{% if step.pending %} linea__step--pending{% endif %}{% if current %}{% if forloop.counter < current %} linea__step--done{% elif forloop.counter == current %} linea__step--current{% endif %}{% endif %}"{% if current and forloop.counter == current %} aria-current="step"{% endif %}>
+    <span class="linea__num" aria-hidden="true"></span>
+    <p class="linea__label"{% if step.lang and step.lang != site.lang %} lang="{{ step.lang }}"{% endif %}>{% if step.label %}{{ step.label }}{% elif step.heading %}{{ step.heading }}{% else %}{{ step }}{% endif %}</p>
+    {% if step.text %}<p class="linea__text">{{ step.text }}</p>{% elif step.body %}<div class="linea__text"{% if step.lang and step.lang != site.lang %} lang="{{ step.lang }}"{% endif %}>{{ step.body|linebreaks }}</div>{% endif %}
+  </li>
+  {% endfor %}
+</ol>
+{% if current %}<p class="linea__rank">{% blocktranslate with n=current total=steps|length %}Étape {{ n }} sur {{ total }}{% endblocktranslate %}</p>{% endif %}

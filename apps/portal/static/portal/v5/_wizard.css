@@ -1,0 +1,351 @@
+/* ============================================================================================
+   «MA SITUATION» — THE GUIDED FORM, design V5 (W3-F1, step 2: v4/wizard.css leaves main.css — plan §2.3, the
+   deletion map; §3.5 item 1 «retiring v4/wizard.css»)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §1.3 (three corners a screen — the console's 4 · 8 · full: the panels 8,
+   the controls 4, the discs and nodes full; the V4 sheet drew five, the question's panel at 12, its field at 6, its
+   foot at 8), §1.4 (SH-2 hairlines before boxes, SH-5 glass has one seat — the two sticky bars, never a third —,
+   SH-8 one raised panel a screen, the glow retired: no light behind the question), §1.5 (an answer's mark answers
+   the person's own act, at once from the keyboard and under reduced motion), DL54-70 (the questionnaire's foot is
+   part of its page; its ONE act is «Continuer» — static/js/src/situation.js keeps one primary a screen: «Continuer»
+   while stepping, the submit on the last question).
+   A page-only partial (plan §2.3; the owner's V5.8): imported by apps/portal/static/portal/situation.css, the sheet
+   that templates/portal/situation.html alone links (the w3-d merge took it out of the shared console bundle) —
+   never by main.css nor console.css, never an output of its own. Markup — other families' templates, read as they
+   are: templates/portal/situation.html (W3-E), components/wizard_stepper.html (W3-D: the Stepper is drawn by
+   v5/_journey-stepper.css on the vocabulary of v5/_journey-nodes.css — the console's one rail drawing — which the
+   same sheet imports after this partial),
+   components/option_cards.html; situation.js shows one question at a time and keeps every field in the one post.
+
+     1 · the composition   the Stepper at the start of the row (3 of 12 from 64rem), the question in the middle
+                           (6 of 12) on the screen's ONE raised panel (8 px, level 2), the foot after both
+     2 · the count         the count of answers in words, under the Stepper (the Stepper itself: the journey's,
+                           v5/_journey-stepper.css)
+     3 · the question      its ordinal and its title in words, its reason; a text, date or number field is the plate
+                           «la lastra» of v5/field.css (4 px; typed text at 16 px — v5/base.css holds that size)
+     4 · the OptionCards   a plate (4 px, a hairline, no shadow) around the native input, the whole plate the target;
+                           chosen, the edge doubles in the primary's fill and the mark fills and carries the person's
+                           own check (O14: a check marks the person's own act, never a state)
+     5 · the foot          part of the page at every width, after a hairline: «Précédent», the position in words,
+                           «Continuer», the submit — the controls wrap, never squeeze, never stand over the form
+     6 · what we do not ask, the phone, forced colours, the script's first frame
+   The ring is v5/base.css's (plan §1.6) wherever the focused element is seen; the invisible input of a card lends it
+   to its card. Tokens of static/css/v5/tokens.css only (the console's «u» scale); logical properties only; nothing
+   animates at load, and no shadow ever does.
+   ============================================================================================ */
+
+/* ---- 1 · the composition ----------------------------------------------------------------------------- */
+.wiz {
+  display: grid;
+  gap: var(--s-6);
+  margin-block-start: var(--s-6);
+}
+
+.wiz__note {
+  max-inline-size: var(--measure-body);
+}
+
+@media (min-width: 64rem) {
+  .wiz {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    align-items: start;
+  }
+
+  .wiz__rail {
+    position: sticky;
+    inset-block-start: calc(var(--ctx-h) + var(--s-4));
+  }
+
+  .wiz__stage {
+    grid-column: 2;
+  }
+
+  .wiz__foot {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- 2 · the count — the Stepper (components/wizard_stepper.html) is the journey's: v5/_journey-stepper.css,
+        imported after this partial by portal/situation.css (the w3-d merge) ---------------------------------- */
+.wiz__count {
+  margin: var(--s-4) 0 0;
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* ---- 3 · the stage and the question -------------------------------------------------------------------- */
+.wiz__stage {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+}
+
+/* the screen's ONE raised panel: 8 px (the console's panel corner), a hairline, level 2 — drawn here, whatever the
+   legacy panel classes the markup also carries */
+.wiz__q {
+  position: relative;
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-sheet);
+  box-shadow: var(--shadow-2);
+}
+
+.wiz__ordinal {
+  margin: 0 0 var(--s-2);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.wiz__question,
+.opts__legend {
+  display: block;
+  margin: 0 0 var(--s-2);
+  padding: 0;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.wiz__help,
+.opts__help {
+  max-inline-size: var(--measure-body);
+  margin: 0 0 var(--s-4);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.opts__hint {
+  margin: calc(-1 * var(--s-2)) 0 var(--s-3);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* a text, date or number field: the plate of v5/field.css, at the width its answer needs */
+.wiz__field :is(input:not([type="checkbox"], [type="radio"]), select) {
+  inline-size: 100%;
+  max-inline-size: 22rem;
+  color: var(--text-1);
+}
+
+/* ---- 4 · the OptionCards (components/option_cards.html) ----------------------------------------------- */
+.opts {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.opts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: var(--s-3);
+}
+
+.opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--icon-lg) minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: center;
+  min-block-size: var(--control-lg);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--field-radius);
+  background-color: var(--field-bg);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color var(--motion-fast) var(--ease-enter),
+    background-color var(--motion-fast) var(--ease-enter);
+}
+
+@media (hover: hover) {
+  .opt:hover:not(:has(input:checked)) {
+    border-color: var(--field-edge-hover);
+  }
+}
+
+/* the native input stays the control: the whole card's size, invisible, focusable — and nothing beyond its card */
+.opt input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.opt input::after {
+  content: none;
+}
+
+.opt__mark {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--radius-full);
+  background-color: var(--field-bg);
+  color: var(--text-on-accent);
+}
+
+.opt input[type="checkbox"] + .opt__mark {
+  border-radius: var(--field-radius);
+}
+
+.opt__mark .icon {
+  inline-size: var(--icon-xs);
+  block-size: var(--icon-xs);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--motion-standard) var(--ease-enter),
+    transform var(--motion-standard) var(--ease-enter);
+}
+
+/* chosen: the edge doubles in the primary's fill, the mark fills and carries the person's own check */
+.opt:has(input:checked) {
+  border-color: var(--fill-primary);
+  background-color: var(--surface-selected);
+  box-shadow: inset 0 0 0 1px var(--fill-primary);
+}
+
+.opt:has(input:checked) .opt__mark {
+  border-color: var(--fill-primary-press);
+  background-color: var(--fill-primary);
+}
+
+.opt:has(input:checked) .opt__mark .icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* «Je ne sais pas encore» / «Non précisé» (value "") is the current value, not an answer: shown in the neutral
+   register, with no check — only a real answer wears the primary */
+.opt:has(input[value=""]:checked) {
+  border-color: var(--field-edge-hover);
+  background-color: var(--surface-area);
+  box-shadow: none;
+}
+
+.opt:has(input[value=""]:checked) .opt__mark {
+  border-color: var(--field-edge-hover);
+  background-color: var(--text-3);
+}
+
+.opt:has(input[value=""]:checked) .opt__mark .icon {
+  opacity: 0;
+}
+
+.opt:has(input:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* a question in error: every card's edge doubles in the refusal's ink, under the words that say why */
+.opts--error .opt {
+  border-color: var(--field-edge-invalid);
+  box-shadow: inset 0 0 0 1px var(--field-edge-invalid);
+}
+
+/* tier 0 (plan §1.5, R-07): asked from the keyboard, the change is there in the next frame */
+html[data-input="key"] :is(.opt, .opt__mark .icon) {
+  transition-duration: 0ms;
+}
+
+/* ---- 5 · the foot: part of the page at every width (DL54-70), after a hairline ------------------------ */
+.wiz__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  margin: var(--s-2) 0 0;
+  padding: var(--s-6) 0 0;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.wiz__foot-count {
+  margin-inline-start: auto;
+  white-space: nowrap;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.wiz__foot [data-wizard-submit] {
+  margin-inline-start: auto;
+}
+
+.wiz--guided .wiz__foot [data-wizard-submit] {
+  margin-inline-start: 0;
+}
+
+/* on a phone the one act takes the row: «Continuer» (or, on the last question, the submit) at full width; the
+   position and «Précédent» keep their own line above it */
+@media (max-width: 47.999rem) {
+  .wiz__foot > .btn--primary:not([hidden]) {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---- 6 · what we do not ask; the phone; forced colours; the script's first frame ---------------------- */
+.wiz__notask {
+  margin-block-start: var(--s-10);
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-sheet);
+  box-shadow: none;
+}
+
+.wiz__list {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-inline-start: 1.25em;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+.wiz__list li + li {
+  margin-block-start: var(--s-2);
+}
+
+@media (max-width: 63.999rem) {
+  .wiz__q {
+    padding: var(--s-5) var(--s-4);
+  }
+
+  .opts__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (forced-colors: active) {
+  .opt:has(input:checked) {
+    outline: 2px solid Highlight;
+  }
+}
+
+/* before the script arrives the questions after the first are not drawn, so the form does not collapse from eight
+   panels to one on a slow network (CLS); without script (html.no-js) every question stays */
+html.js .wiz:not(.wiz--guided) .wiz__q:not(:first-of-type) {
+  display: none;
+}

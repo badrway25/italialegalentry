@@ -1,0 +1,13 @@
+{% load i18n %}{% comment %}
+THE DELETION OF A LOOSE FILE ASKS FIRST — design V5 (W3-C; REVIEW m4): the body and the foot of the overlay system's
+alert dialog (its dialog component, `kind="alert"`), drawn once by templates/documents/index.html under «Autres
+fichiers déposés» — the page that links the panels' page-only sheet. A row's «Supprimer» opens it
+(`data-overlay-open`); static/js/src/console.js writes that file's name into the question and points the dialog's
+«Supprimer» at the row's form (its `form` attribute): the same POST as without script. «Annuler» is the safe answer —
+it takes the focus, Esc presses it, the scrim never closes an alert — and «Supprimer» is the garnet outline
+(`btn--danger`). Every word is the catalogue's: the account deletion's «Cette action est définitive.»; the file's name
+is the data.
+
+Contract: `overlay_part` — "body" or "actions" (the component includes this file for both).
+{% endcomment %}{% if overlay_part == "body" %}<p class="doc-files__ask" id="loose-delete-text"><span class="doc-files__name" dir="auto" data-doc-delete-name></span> {% translate "Cette action est définitive." %}</p>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close data-overlay-safe>{% translate "Annuler" %}</button>
+<button class="btn btn--danger" type="submit" data-doc-delete-go>{% translate "Supprimer" %}</button>{% endif %}

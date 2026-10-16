@@ -15,31 +15,69 @@ one tree, never on screen together:
   A section that is not a door (Projet) has a plain panel. One travelling indicator, «l'architrave».
   static/js/src/nav.js adds intent, the keyboard model, the scrim and the photographs' idle prefetch;
   without it a panel opens on hover and on focus-within (static/css/v5/chrome.css).
-* nav_variant "drawer" — today's drawer below 80rem (its move onto the overlay system is W2-C2's): a link
-  and a chevron toggle per section, the sub-links unfolding in place. Between 64 and 80rem the bar carries
-  the doors, so the drawer lists only what the bar does not (data-nav-door).
+* nav_variant "sheet" — THE SHEET below 80rem (plan §1.12 item 8, §1.14; W2-C2), included by header.html after the
+  letterhead, at the body's level (a trapped panel of the overlay system never sits in a stacking context): the
+  overlay system's modal drawer, opened by «Menu» (static/js/src/overlay.js — show(), aria-modal, the trap, the one
+  scrim, Esc, «Fermer», a link; the focus back on «Menu»). It owns its header line — the lock-up and «Fermer», on
+  the letterhead's own row; «Fermer» takes the first focus and holds «Menu», hidden, for one width — then the Fase 3
+  order: the languages (their names in their own language) → the four doors as 64 px rows on night discs, each
+  unfolding in place (an exclusive <details name>: the door's locked gloss, its entries, «Voir l’espace»; the current
+  section's door is open) → Forum · Projet → the search (the FAQ's, the one public search; only when that page is
+  public) → the primary → the anti-fraud line → the pinned foot on night: «la targa» (signed in, the account popover)
+  and the promoter — on the phone and on the side sheet from 48rem alike. The foot is not `on-inverse`: chrome.css
+  gives its own controls the night's ring, and the account menu that opens from it keeps the paper's. From 64rem the
+  doors are in the bar, so the sheet carries Forum · Projet · the languages · the search. Without the script «Menu»
+  is a link to the sheet, which shows in place (:target), and «Fermer» a link back.
 {% endcomment %}
-{% if nav_variant == "drawer" %}
-<ul class="main-nav__list">
-{% for item in menu %}
-  <li class="main-nav__item{% if forloop.last and item.children %} main-nav__item--end{% endif %}"{% if item.children %} data-nav-item{% endif %}{% if item.audience %} data-nav-door{% endif %}>
-    {% if item.url %}<a class="main-nav__link" href="{{ item.url }}" data-nav-link{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% else %}<span class="main-nav__label">{{ item.label }}</span>{% endif %}
-    {% if item.children %}
-    <button class="main-nav__toggle" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="{{ item.id }}-panel">
-      <span class="visually-hidden">{% blocktranslate with section=item.label %}Ouvrir le sous-menu « {{ section }} »{% endblocktranslate %}</span>{% svg_icon "chevron" "icon" %}
-    </button>
-    <div class="main-nav__panel" id="{{ item.id }}-panel" data-nav-panel>
-      <ul class="main-nav__sublist">
-        {% for child in item.children %}
-        <li><a class="main-nav__sublink" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}>{% svg_icon "chevron-end" "icon icon--flip-rtl" %}<span>{{ child.label }}</span></a></li>
-        {% endfor %}
-        {% if item.foot_url %}<li><a class="main-nav__sublink" href="{{ item.foot_url }}">{% svg_icon "shield-alert" "icon" %}<span>{% translate "Lire la page « Attention aux fraudes »" %}</span></a></li>{% endif %}
-      </ul>
-    </div>
-    {% endif %}
-  </li>
-{% endfor %}
-</ul>
+{% if nav_variant == "sheet" %}{% flag "reserved_area_public_link" as reserved_link %}
+<dialog class="overlay overlay--drawer nav-sheet" id="nav-sheet" data-overlay="drawer" aria-label="{% translate 'Menu' %}">
+  <div class="container nav-sheet__head">
+    <a class="brand brand--lockup" href="{% url 'pages:home' %}" aria-label="{{ site.project_name }} — {% translate 'accueil' %}">{% if site.settings and site.settings.use_logo_image and site.settings.logo %}<img class="brand__logo" src="{{ site.settings.logo.url }}" alt="{{ site.project_name }}" width="160" height="40">{% else %}{% brand_lockup %}{% endif %}</a>
+    <a class="nav-toggle" href="#site-header" data-overlay-close data-overlay-focus>{% svg_icon "close" "icon" %}<span class="nav-toggle__word"><span>{% translate "Fermer" %}</span><span class="nav-toggle__alt" aria-hidden="true">{% translate "Menu" %}</span></span></a>
+  </div>
+  <div class="nav-sheet__body">
+    {% include "components/language_segmented.html" with lang_names=True %}
+    <ul class="nav-sheet__list" role="list" data-accordion="single">
+    {% for item in menu %}
+      {% if item.is_section %}
+      <li class="nav-sheet__item{% if item.audience %} nav-sheet__item--door{% endif %}{% if item.after_doors %} nav-sheet__item--after-doors{% endif %}">
+        <details class="nav-sheet__door" name="nav-sheet-doors"{% if item.is_current %} open{% endif %}>
+          <summary class="nav-sheet__row"{% if item.is_current %} aria-current="true"{% endif %}>{% if item.icon %}<span class="portico__disc">{% svg_icon item.icon "icon" %}</span>{% else %}<span></span>{% endif %}<span>{{ item.label }}</span>{% svg_icon "chevron" "icon nav-sheet__chevron" %}</summary>
+          <div class="nav-sheet__panel">
+            {% if item.gloss %}<p class="nav-sheet__gloss"{% if item.gloss_lang %} lang="{{ item.gloss_lang }}" dir="ltr"{% endif %}>{{ item.gloss }}</p>{% endif %}
+            <ul class="portico__entries" role="list">
+              {% for child in item.children %}
+              <li class="portico__entry"><a class="portico__link" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}{% if child.description %} aria-describedby="{{ child.id }}-sheet-line"{% endif %}><span class="portico__title">{{ child.label }}</span>{% if child.description %}<span class="portico__line" id="{{ child.id }}-sheet-line" aria-hidden="true">{{ child.description }}</span>{% endif %}</a></li>
+              {% endfor %}
+            </ul>
+            {% if item.url %}<a class="portico__space" href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{% translate "Voir l’espace" %}</a>{% endif %}
+          </div>
+        </details>
+      </li>
+      {% elif item.url %}
+      <li class="nav-sheet__item{% if item.after_doors %} nav-sheet__item--after-doors{% endif %}"><a class="nav-sheet__row" href="{{ item.url }}"{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}><span class="nav-sheet__slot">{% if item.url_name == "forum:index" %}{% svg_icon "handshake" "icon" %}{% endif %}</span><span>{{ item.label }}</span></a></li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+    {% safe_url 'faq:index' as faq_url %}{% if faq_url %}
+    <form class="search-form nav-sheet__search" method="get" action="{{ faq_url }}" role="search" aria-label="{% translate 'Rechercher dans les questions fréquentes' %}">
+      <label class="search-form__label" for="nav-sheet-q">{% translate "Rechercher dans les questions fréquentes" %}</label>
+      <div class="search-form__row">
+        <input class="search-form__input" type="search" id="nav-sheet-q" name="q" maxlength="100" autocomplete="off" enterkeyhint="search">
+        <button class="btn btn--secondary" type="submit">{% translate "Rechercher" %}</button>
+      </div>
+    </form>{% endif %}
+    {% safe_url 'orientation:start' as orientation_url %}{% if orientation_url %}
+    <a class="btn btn--primary btn--lg btn--block btn--arrow nav-sheet__primary" href="{{ orientation_url }}">{% translate "Découvrir le questionnaire d’orientation" %}{% svg_icon "arrow" "icon btn__arrow icon--flip-rtl" %}</a>{% endif %}
+    {% safe_url 'pages:antifraud' as fraud_url %}{% if fraud_url %}
+    <p class="portico__foot nav-sheet__fraud">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ fraud_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></p>{% endif %}
+  </div>
+  <div class="nav-sheet__foot">
+    {% if user.is_authenticated %}{% include "components/account_menu.html" with popover=True menu_id="account-menu-sheet" %}
+    {% elif reserved_link and site.settings.reserved_area_enabled %}{% safe_url 'account_login' as login_url_sheet %}{% if login_url_sheet %}<a class="targa targa--night" href="{{ login_url_sheet }}">{% svg_icon "ile-key" "icon targa__key" %}<span>{% translate "Espace réservé" %}</span></a>{% endif %}
+    {% endif %}<p class="nav-sheet__promoter"><strong>{{ site.promoter }}</strong> — {% translate "promoteur du projet" %}</p>
+  </div>
+</dialog>
 {% else %}
 <ul class="main-nav__list" role="list">
 {% for item in menu %}

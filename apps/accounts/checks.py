@@ -27,8 +27,12 @@ def check_backoffice_mfa(app_configs, **kwargs):
             Warning(
                 "BACKOFFICE_MFA_ENFORCED is not true: accounts that can read another person's "
                 "case file — professional, authorised actor, operator, legal, editorial, "
-                "administration — can sign in with a password alone.",
-                hint="Set BACKOFFICE_MFA_ENFORCED=1 in production, once staff have enrolled a TOTP device.",
+                "administration — and have not enrolled a second factor can sign in with a password "
+                "alone (a device an account holds is asked for in every session whatever the setting says).",
+                hint=(
+                    "Set BACKOFFICE_MFA_ENFORCED=1 in production. No deployment needs it off first: an account "
+                    "without a device is sent to the enrolment page, which stays reachable."
+                ),
                 id="accounts.W001",
             )
         )

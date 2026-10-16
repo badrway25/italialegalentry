@@ -169,6 +169,83 @@ def test_the_drawer_traps_the_focus_and_keeps_its_shape_while_it_leaves(browser,
     context.close()
 
 
+#: The drawer as the system holds it, read once the next frames have run — the frame that brings the platform's
+#: `close` event of a dialog closed during the frame before.
+REOPENED = """async () => {
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  const d = document.getElementById('console-drawer'); const s = document.querySelector('.overlay-scrim');
+  return {open: d.open, modal: d.getAttribute('aria-modal'), inert: d.inert, scrim: Boolean(s && s.hasAttribute('data-open')),
+          behind: document.elementFromPoint(370, 400) === s, lock: document.documentElement.hasAttribute('data-overlay-lock'),
+          focus: d.contains(document.activeElement), expanded: document.getElementById('console-menu').getAttribute('aria-expanded')};
+}"""
+#: The trap, whole: drawn and modal, its scrim under it and in the press's way, the page locked, the focus inside.
+TRAP = {
+    "open": True,
+    "modal": "true",
+    "inert": False,
+    "scrim": True,
+    "behind": True,
+    "lock": True,
+    "focus": True,
+    "expanded": "true",
+}
+
+
+def test_a_drawer_closed_and_opened_again_within_a_frame_keeps_its_trap_and_a_press_on_the_scrim_closes_it(
+    browser, live_server, seeded, person
+):
+    """The integration fix (c) (docs/design-v5/QA/v54/intfix/NOTES.md). A dialog's `close` event is the platform's, and
+    it comes late — Chromium dispatches it with the next frame's events —, and the system settled every close it heard:
+    a drawer closed and opened again within one frame heard its first close while it was open again, and lost its trap
+    — the scrim, the lock and aria-modal gone, the panel made inert, the focus sent back to «Menu» — while it stayed
+    drawn over the page; a press on the dimmed page reached the page and the drawer stayed (W3-A's «Menu» test failed 2
+    runs in 3 on design-v5). Esc then Space pressed behind one frame, twelve times over; the same close and opening in
+    one task through the module's API; and a close by another script, not yet heard, before the system opens it again:
+    each time the drawer is the whole trap, a press on the scrim closes it, and the page is given back."""
+    context = _context(browser, live_server, person, 390, 844, touch=True)
+    page = context.new_page()
+    _at_rest(page, live_server, REQUESTS.format(lang="fr"))
+    closed = "dialog.console-drawer:not([open])"
+
+    def scrim_closes(how):
+        state = page.evaluate(REOPENED)
+        assert state == TRAP, (how, state)
+        page.mouse.click(370, 400)
+        page.wait_for_selector(closed, state="attached", timeout=2000)
+        assert page.evaluate(FOCUS)["id"] == "console-menu", (how, "the focus back on «Menu»")
+
+    page.focus("#console-menu")
+    for attempt in range(1, 13):
+        page.keyboard.press("Enter")
+        page.wait_for_selector("dialog.console-drawer[open]")
+        page.evaluate("() => new Promise((resolve) => requestAnimationFrame(() => resolve()))")
+        page.keyboard.press("Escape")  # the two keys land between two frames: the Esc's close is heard after Space
+        page.keyboard.press("Space")
+        scrim_closes(f"Esc then Space, attempt {attempt}")
+    assert not page.evaluate("document.documentElement.hasAttribute('data-overlay-lock')"), "the page is given back"
+
+    # the API in one task (a page that closes a panel and opens it again), then a close by another script that the
+    # system has not heard yet when it opens the panel again: the opening settles it first — its lock is not left behind
+    module = page.evaluate(
+        "() => document.querySelector('script[src*=\"js/dist/console.js\"]').src.replace('/console.js', '/overlay.js')"
+    )
+    for how, closing in (("the API, close then open", "m.close(d)"), ("another script's close", "d.close()")):
+        page.keyboard.press("Enter")
+        page.wait_for_selector("dialog.console-drawer[open]")
+        page.evaluate(
+            f"""async (url) => {{ const m = await import(url); const d = document.getElementById('console-drawer');
+              {closing}; m.open(d, {{opener: document.getElementById('console-menu')}}); }}""",
+            module,
+        )
+        scrim_closes(how)
+        page.wait_for_function("() => getComputedStyle(document.getElementById('console-drawer')).display === 'none'")
+        assert not page.evaluate("document.documentElement.hasAttribute('data-overlay-lock')"), (
+            how,
+            "the page given back",
+        )
+    context.close()
+
+
 # ---------------------------------------------------------------------------------------------- the drawer's focus, its tree
 
 DRAWER_VIEW = """() => { const a = document.activeElement; const d = document.getElementById('console-drawer');
@@ -335,17 +412,18 @@ def test_on_a_phone_the_account_popover_is_a_sheet_that_stays_a_menu(browser, li
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_a_menu_sheet_takes_the_whole_press_that_dismisses_it(browser, live_server, seeded, person, requirement, lang):
-    """The review's M1: above the row menu's sheet the page stays in sight, and the tap that dismisses the sheet lands
-    on the scrim, which holds the whole press — the search field is not focused (a phone's keyboard would rise), a
-    filter link is not followed —; the sheet says which piece it acts on."""
+    """The review's M1 — retargeted by W3-C, intent kept: the register's rows have no menu any more (DOCUMENT_WORKSPACE
+    D2), so the menu sheet is the account's, on the same «Mes pièces». Above it the page stays in sight, and the tap that
+    dismisses the sheet lands on the scrim, which holds the whole press: the strip's act does not open the piece, a run
+    of the register does not move the page."""
     context = _context(browser, live_server, person, 390, 844, touch=True)
     page = context.new_page()
     _at_rest(page, live_server, DOCUMENTS.format(lang=lang))
-    menu = f"#doc-menu-{requirement.pk}"
+    menu = "#console-account"
     url = page.url
 
     def open_menu():
-        page.tap(f"[popovertarget='doc-menu-{requirement.pk}']")
+        page.tap(".console-bar .account-menu__summary")
         page.wait_for_selector(f"{menu}:popover-open")
         _settled(page, menu)
 
@@ -358,62 +436,51 @@ def test_a_menu_sheet_takes_the_whole_press_that_dismisses_it(browser, live_serv
             [selector, menu],
         )
 
-    open_menu()
-    caption = page.evaluate(f"() => document.querySelector('{menu} .overlay__caption').textContent.trim()")
-    assert caption == requirement.title, "the sheet is headed by the piece's title"
-    field = centre("[data-doc-search]")
-    assert field, "the search field stands above the sheet"
-    page.touchscreen.tap(*field)
-    page.wait_for_timeout(400)
-    state = page.evaluate(
-        f"""() => ({{open: document.querySelector('{menu}').matches(':popover-open'),
-                     field: document.activeElement.matches('[data-doc-search]'),
-                     held: Boolean(document.querySelector('.overlay-scrim[data-held]'))}})"""
-    )
-    assert not state["open"] and not state["field"], ("the tap closed the menu and reached nothing", state)
-    assert not state["held"], "the scrim lets go of the page once its press has clicked"
-    open_menu()
-    link = centre("a.seg__link:not([aria-current])")
-    assert link, "a filter link stands above the sheet"
-    page.touchscreen.tap(*link)
-    page.wait_for_timeout(800)
-    assert page.url == url, "the filter link under the scrim was not followed"
-    assert not page.evaluate(f"() => document.querySelector('{menu}').matches(':popover-open')")
+    state = """(menu) => ({open: document.querySelector(menu).matches(':popover-open'),
+        drawer: Boolean(document.querySelector('#piece-drawer') && document.querySelector('#piece-drawer').open),
+        held: Boolean(document.querySelector('.overlay-scrim[data-held]'))})"""
+    for selector in (".reg__next-act a", "a.reg-run"):
+        open_menu()
+        target = centre(selector)
+        assert target, f"{selector} stands above the sheet"
+        page.touchscreen.tap(*target)
+        page.wait_for_timeout(600)
+        after = page.evaluate(state, menu)
+        assert not after["open"] and not after["drawer"], (
+            f"the tap closed the menu and reached nothing: {selector}",
+            after,
+        )
+        assert not after["held"], "the scrim lets go of the page once its press has clicked"
+        assert page.url == url, f"{selector} under the scrim was not followed"
     context.close()
 
 
-# ---------------------------------------------------------------------------------------------- the row menu
+# ---------------------------------------------------------------------------------------------- the register's row
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_row_menu_hangs_from_its_button_named_by_its_tooltip(
+def test_the_rows_piece_opens_in_the_systems_drawer_beside_the_list(
     browser, live_server, seeded, person, requirement, lang
 ):
+    """Retargeted by W3-C (intent kept: the register row's overlay is the system's, hangs on the right edge and gives
+    the focus back): «Mes pièces» V5.2 has no row menu (DOCUMENT_WORKSPACE D2); the row's title opens the piece in the
+    system's drawer — non-modal beside the list on desktop, at the inline end — and Esc gives the focus back."""
     context = _context(browser, live_server, person, 1440, 900)
     page = context.new_page()
     _at_rest(page, live_server, DOCUMENTS.format(lang=lang))
-    more = f"[popovertarget='doc-menu-{requirement.pk}']"
-    page.hover(more)
-    page.wait_for_timeout(150)
-    assert page.evaluate(TIP) is None, "the tooltip waits (400 ms)"
-    page.wait_for_function("() => document.querySelector('.tooltip:popover-open')", timeout=3000)
-    tip = page.evaluate(TIP)
-    name = page.get_attribute(more, "aria-label")
-    assert tip["text"] == name and tip["fits"], tip
-    page.click(more)
-    page.wait_for_selector(f"#doc-menu-{requirement.pk}:popover-open")
-    _settled(page, f"#doc-menu-{requirement.pk}")
-    assert page.evaluate(TIP) is None, "no tip while its menu is open"
-    menu, button = page.evaluate(BOX, f"#doc-menu-{requirement.pk}"), page.evaluate(BOX, more)
-    assert abs(menu["top"] - (button["b"] + 4)) <= 1.5, (menu, button)
+    page.click(f".doc-row__link[href='/documents/requirements/{requirement.pk}/']")
+    page.wait_for_function("() => document.querySelector('#piece-drawer').open")
+    _settled(page, "#piece-drawer")
+    drawer = page.evaluate(BOX, "#piece-drawer")
     if lang == "fr":
-        assert abs(menu["r"] - button["r"]) <= 1.5, (menu, button)
+        assert abs(drawer["r"] - 1440) <= 1.5 and abs(drawer["w"] - 420) <= 1.5, drawer
     else:
-        assert abs(menu["x"] - button["x"]) <= 1.5, (menu, button)
-    assert "overlay__item" in page.evaluate(FOCUS)["cls"]
+        assert abs(drawer["x"]) <= 1.5 and abs(drawer["w"] - 420) <= 1.5, drawer
+    assert page.evaluate("!document.querySelector('.overlay-scrim[data-open]')"), "beside the list: no scrim"
+    assert page.evaluate(FOCUS)["id"] == "piece-drawer-title", "a non-modal drawer takes its title"
     page.keyboard.press("Escape")
-    page.wait_for_selector(f"#doc-menu-{requirement.pk}", state="hidden")
-    assert "doc-row__more" in page.evaluate(FOCUS)["cls"], "the focus back on «⋮»"
+    page.wait_for_function("() => !document.querySelector('#piece-drawer').open")
+    assert "doc-row__link" in page.evaluate(FOCUS)["cls"], "the focus back on the row's title"
     context.close()
 
 

@@ -2,10 +2,10 @@
 Browser tests (Playwright, Chromium) of the four ecosystem spaces.
 
 Checks that need a real layout engine: no horizontal overflow at 390/800/1440 in LTR and RTL, the
-prescribed eight-step diagram laid out vertically on a phone and on one row on a desktop (mirrored
-in RTL), labels never clipped, nothing left hidden by the entrance motion (with JavaScript, without
-JavaScript and with a reduced-motion preference), no request outside the site and no CSP violation.
-Skipped when Chromium is not installed.
+prescribed eight-step sequence laid out vertically on a phone and on one row on a desktop (mirrored
+in RTL), labels never clipped, nothing left hidden (with JavaScript, without JavaScript and with a
+reduced-motion preference), no request outside the site and no CSP violation. Skipped when Chromium is
+not installed. Design V5.4 (W3-F1): the sequence stands on «la linea», still at load (no entrance motion).
 
 Gate G3 is opened through its flag only (no frozen clock: Playwright's event loop needs a running
 monotonic clock), so the live server answers the Phase 3 routes at the real current date.
@@ -24,7 +24,7 @@ pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 VIEWPORTS = {"phone": (390, 844), "tablet": (800, 1024), "desktop": (1440, 900)}
 PATHS = ("entreprises/", "institutions/", "universites-et-formation/", "projet-pilote/")
 PILOT = "projet-pilote/"
-STEP = ".pilot-diagram .timeline__item"
+STEP = ".pilot-diagram .linea__step"
 ALL_STEPS_OPAQUE = (
     "() => { const items = Array.from(document.querySelectorAll('" + STEP + "'));"
     " return items.length >= 8 && items.every(e => getComputedStyle(e).opacity === '1'); }"
@@ -64,7 +64,7 @@ def _page(browser, width, height, **options):
 
 
 def _boxes(page) -> list[dict]:
-    # Measure once the entrance motion is over: a step that is still sliding in reports a moving box.
+    # Measure once every station is laid out (the line is still at load: nothing slides in).
     page.locator(".pilot-diagram__figure").scroll_into_view_if_needed()
     page.wait_for_function(ALL_STEPS_SETTLED, timeout=8000)
     return page.evaluate(
@@ -103,7 +103,7 @@ def test_no_horizontal_overflow_and_nothing_left_hidden(browser, live_server, ph
             assert hidden == 0, (lang, viewport, path)
             # No block of the main column is wider than the viewport (long prescribed button labels).
             too_wide = page.evaluate(
-                "Array.from(document.querySelectorAll('main .btn, main .cta-panel, main .notice, main .timeline'))"
+                "Array.from(document.querySelectorAll('main .btn, main .card--action, main .notice, main .linea'))"
                 ".filter(e => e.getBoundingClientRect().width > document.documentElement.clientWidth).length"
             )
             assert too_wide == 0, (lang, viewport, path)
@@ -139,24 +139,24 @@ def test_pilot_diagram_is_one_mirrored_row_on_a_desktop(browser, live_server, ph
         assert lefts == sorted(lefts, reverse=(lang == "ar")), "reading order follows the writing direction"
         # Prescribed labels are never clipped nor hyphenated by the layout.
         clipped = page.evaluate(
-            "Array.from(document.querySelectorAll('.pilot-diagram .timeline__label'))"
+            "Array.from(document.querySelectorAll('.pilot-diagram .linea__label'))"
             ".filter(e => e.scrollWidth > e.clientWidth + 1).length"
         )
         assert clipped == 0
-        assert page.evaluate("getComputedStyle(document.querySelector('.pilot-diagram .timeline__label')).hyphens") in (
+        assert page.evaluate("getComputedStyle(document.querySelector('.pilot-diagram .linea__label')).hyphens") in (
             "manual",
             "none",
         )
         numerals = page.evaluate(
-            "Array.from(document.querySelectorAll('.pilot-diagram .timeline__marker'))"
+            "Array.from(document.querySelectorAll('.pilot-diagram .linea__num'))"
             ".map(e => getComputedStyle(e, '::before').content)"
         )
-        assert numerals[0] in ("counter(timeline, decimal-leading-zero)", '"01"'), numerals[0]
+        assert numerals[0] in ("counter(linea, decimal-leading-zero)", '"01"'), numerals[0]
     finally:
         context.close()
 
 
-def test_pilot_steps_settle_with_motion_and_are_never_left_hidden(browser, live_server, phase3_live):
+def test_pilot_steps_are_visible_at_once_and_never_left_hidden(browser, live_server, phase3_live):
     context, page = _page(browser, 1440, 900)
     try:
         page.goto(f"{live_server.url}/fr/{PILOT}", wait_until="networkidle")
@@ -188,7 +188,7 @@ def test_pages_work_without_javascript(browser, live_server, phase3_live, path):
         page.goto(f"{live_server.url}/fr/{path}", wait_until="load")
         assert page.locator("h1").is_visible()
         invisible = page.eval_on_selector_all(
-            "main .reveal, main .timeline__item, main .ecosystem-enum__item, main .cta-panel",
+            "main .reveal, main .linea__step, main .porta, main .card--action",
             "els => els.filter(e => getComputedStyle(e).opacity === '0' || getComputedStyle(e).visibility === 'hidden')"
             ".length",
         )
@@ -254,18 +254,18 @@ def test_french_fallback_keeps_its_punctuation_in_place_on_the_arabic_pages(brow
     try:
         page.goto(f"{live_server.url}/ar/entreprises/", wait_until="networkidle")
         for selector in (
-            "h1.page-header__title[lang='fr']",
-            "p.page-header__lead[lang='fr']",
+            "h1.ingresso__title[lang='fr']",
+            "p.ingresso__lead[lang='fr']",
             "blockquote[lang='fr']",
             "[data-block='recruitment-guarantee'] .notice[lang='fr']",
         ):
             assert _direction(page, selector) == "ltr", selector
-        assert _direction(page, ".ecosystem-layout") == "rtl"
-        assert _direction(page, ".local-nav") == "rtl"
+        assert _direction(page, "main .chapter__inner") == "rtl", "the layout stays mirrored"
+        assert page.locator("main .local-nav").count() == 0, "no side column (the doors are the chrome's)"
         # The closing question mark of the prescribed title sits AFTER the last word, not before it.
         question_mark_follows = page.evaluate(
             """() => {
-              const node = document.querySelector("h1.page-header__title").firstChild;
+              const node = document.querySelector("h1.ingresso__title").firstChild;
               const text = node.textContent;
               const at = text.lastIndexOf("?");
               const rect = (i) => { const r = document.createRange(); r.setStart(node, i); r.setEnd(node, i + 1);
@@ -279,12 +279,13 @@ def test_french_fallback_keeps_its_punctuation_in_place_on_the_arabic_pages(brow
         assert question_mark_follows
 
         page.goto(f"{live_server.url}/ar/institutions/", wait_until="networkidle")
-        assert _direction(page, ".page-header__lead span[lang='fr']") == "ltr"
-        assert _direction(page, "h1.page-header__title") == "rtl", "the translated title follows the page"
-        assert _direction(page, "ul.ecosystem-enum") == "rtl", "lists stay mirrored"
+        assert _direction(page, ".ingresso__lead span[lang='fr']") == "ltr"
+        assert _direction(page, "h1.ingresso__title") == "rtl", "the translated title follows the page"
+        assert _direction(page, "p.chapter__statement[lang='fr']") == "ltr", "the recipients' sentence keeps its own"
+        assert _direction(page, "ul.registro") == "rtl", "lists stay mirrored"
 
         page.goto(f"{live_server.url}/ar/{PILOT}", wait_until="networkidle")
-        assert _direction(page, "h1.page-header__title[lang='fr']") == "ltr"
-        assert _direction(page, ".pilot-diagram ol.timeline") == "rtl", "the diagram stays mirrored"
+        assert _direction(page, "h1.ingresso__title[lang='fr']") == "ltr"
+        assert _direction(page, ".pilot-diagram ol.linea") == "rtl", "the sequence stays mirrored"
     finally:
         context.close()

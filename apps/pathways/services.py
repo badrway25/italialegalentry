@@ -12,6 +12,7 @@ Espace Personnes — business logic (views stay thin).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from urllib.parse import urlsplit
 
 from django.conf import settings
 from django.utils import translation
@@ -19,7 +20,7 @@ from django.utils.translation import gettext_lazy as _
 
 from cms import locked_content
 from cms.translation import resolve
-from core import gates
+from core import gates, icons
 from pathways.models import (
     GENERIC_AUTHORITY_NAMES,
     Pathway,
@@ -59,17 +60,10 @@ def gated_pages_visible(request) -> tuple[bool, bool]:
 # Registry ↔ rows
 # --------------------------------------------------------------------------------------------
 
-# Editorial defaults for the icon of each pathway (ids of static/img/icons.svg; purely decorative).
-DEFAULT_ICONS: dict[str, str] = {
-    "salaried_work": "briefcase",
-    "skilled_work_eu_blue_card": "globe",
-    "training_in_origin_country": "handshake",
-    "study_and_training_in_italy": "university",
-    "family_reunification": "person",
-    "self_employment_entrepreneurship": "building",
-    "scientific_research": "search",
-    "other_regular_routes": "map-pin",
-}
+# Editorial defaults for the icon of each pathway: the registry's PATHWAY concept map (apps/core/icons.py, design V5
+# plan §1.7 — one concept, one glyph), so that no producer here names a V4 id any more (W1-B's review, m2: the V4 ids
+# `globe`, `handshake`, `search`, … read as other concepts, and `globe` is an alias that leaves with its last producer).
+DEFAULT_ICONS: dict[str, str] = dict(icons.PATHWAY)
 
 # Navigational association between a pathway and the locked glossary terms (p3.glossary.terms).
 # Only concepts literally named in the pathway's own locked description are added on top of the
@@ -141,6 +135,55 @@ def index_entries(at=None) -> list[IndexEntry]:
             )
         )
     return entries
+
+
+#: the separator of the locked «Comment ça marche» sentence, as the registry writes it
+ARROW = " → "
+
+
+@dataclass(frozen=True)
+class HowItWorks:
+    """
+    The locked «Comment ça marche» sentence (``p3.persons.how_it_works``) cut on its own separators for layout
+    (CREATIVE_DIRECTION_V5 law 8, owner decision D-U4): its opening words up to and including the colon, the four
+    steps between its arrows, and the caveat after the last step's full stop. Nothing is retyped: ``text`` — the lead,
+    the steps joined by the sentence's own « → », a space, the caveat — is the registry's sentence, character for
+    character (the template keeps the arrows as hidden text, so the list reads back whole).
+    """
+
+    lead: str
+    steps: tuple[str, ...]
+    caveat: str
+    lang: str  # the language attribute of the words on a page shown in another language, else ""
+
+    @property
+    def arrow(self) -> str:
+        """The separator's own sign, kept as hidden text between the stations."""
+        return ARROW.strip()
+
+    @property
+    def text(self) -> str:
+        return f"{self.lead}{ARROW.join(self.steps)} {self.caveat}"
+
+
+def how_it_works(lang: str | None = None) -> HowItWorks | None:
+    """The sentence cut for «la linea», or None when its shape is not the one the cut knows (then it stands whole)."""
+    lang = lang or _lang()
+    text, effective = locked_content.get("p3.persons.how_it_works", lang)
+    if not isinstance(text, str):
+        return None
+    head, colon, rest = text.partition(": ")
+    *steps, last = rest.split(ARROW)
+    stop = last.find(". ")
+    if not colon or len(steps) < 2 or stop < 0:
+        return None
+    cut = HowItWorks(
+        lead=head + colon,
+        steps=(*steps, last[: stop + 1]),
+        caveat=last[stop + 2 :],
+        lang=effective if effective != lang.split("-")[0] else "",
+    )
+    return cut if cut.text == text else None
 
 
 def get_live_pathway(key: str) -> Pathway | None:
@@ -254,7 +297,10 @@ def authorities(pathway: Pathway) -> list[dict]:
             # `lang`: language the name is written in (editors may set "it" for Italian office names);
             # CMS values default to the content source language, so templates can mark the fallback.
             lang = str(item.get("lang", "") or settings.CONTENT_FALLBACK_LANGUAGE)[:5]
-            out.append({"name": name, "url": url if url.startswith("https://") else "", "lang": lang})
+            url = url if url.startswith("https://") else ""
+            # `host`: where the link leads, shown beside it (design V5.4 D26: «an authority link's host made visible»)
+            host = (urlsplit(url).hostname or "").removeprefix("www.") if url else ""
+            out.append({"name": name, "url": url, "lang": lang, "host": host})
     return out
 
 
@@ -362,6 +408,7 @@ __all__ = [
     "DIPLOMA_STEPS",
     "GLOSSARY_TERMS_BY_PATHWAY",
     "DetailContext",
+    "HowItWorks",
     "IndexEntry",
     "PathwayDocument",
     "PathwayStep",
@@ -377,6 +424,7 @@ __all__ = [
     "get_live_pathway",
     "get_pathway_for_preview",
     "glossary_links",
+    "how_it_works",
     "index_entries",
     "phase3_open",
     "public_documents",

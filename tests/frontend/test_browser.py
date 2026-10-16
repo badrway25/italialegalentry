@@ -174,41 +174,35 @@ def test_mega_menu_is_keyboard_operable(browser, live_server, seeded, menu_rows)
 
 
 def test_mobile_drawer_and_language_switcher(browser, live_server, seeded, menu_rows):
+    """Below 80rem «Menu» opens the sheet — the overlay system's modal drawer (design V5, plan §1.12 item 8; W2-C2):
+    `aria-expanded` follows it, Esc closes it, and its languages are the four links of the institutional bar."""
     context, page = _page(browser, 360, 780)
     try:
         page.goto(live_server.url + "/fr/", wait_until="networkidle")
-        assert not page.locator("#nav-drawer").is_visible()
+        sheet = page.locator("#nav-sheet")
+        assert not sheet.is_visible()
         page.click("[data-nav-toggle]")
-        page.wait_for_timeout(300)
-        assert page.locator("#nav-drawer").is_visible()
+        page.wait_for_timeout(400)
+        assert sheet.is_visible()
         assert page.get_attribute("[data-nav-toggle]", "aria-expanded") == "true"
         page.keyboard.press("Escape")
-        page.wait_for_timeout(300)
+        page.wait_for_timeout(400)
         assert page.get_attribute("[data-nav-toggle]", "aria-expanded") == "false"
+        assert not sheet.is_visible()
 
-        # Language switcher: details opens, Escape closes, link goes to /ar/.
-        #
-        # Below 48rem the institutional bar is not drawn — the letterhead is 56px in total on a
-        # phone (docs/design-v2/DESIGN_SYSTEM_V2.md §4, §8.2) — and its contents, the promoter line,
-        # the reserved-area link and this switcher, are rendered at the top of the drawer instead.
-        # So on a phone the language is reached through the menu, which is where IND and
-        # Migrationsverket put it too. The drawer is opened first, and the switcher is addressed
-        # inside it: the one in the bar is still in the DOM at this width, and still display:none.
-        #
-        # That move is what exposed the Escape bug the assertion below now guards: one key press
-        # used to close the language list AND the menu around it, because the dropdown's handler
-        # did not stop the event reaching the drawer's handler on `document`.
-        drawer = page.locator("#nav-drawer")
+        # The language control. Below 48rem the institutional bar is not drawn — the letterhead is 56 px in all on a
+        # phone — and the sheet carries its controls instead, the languages first: four links, no dropdown, so Esc
+        # has one thing to close, the sheet itself (the guard of the old Escape bug, where one press closed the
+        # language list AND the menu around it).
         page.click("[data-nav-toggle]")
-        page.wait_for_timeout(300)
-        # Design V4: the drawer carries the segmented language control — four links, no dropdown,
-        # so Escape has one thing to close: the drawer itself.
-        assert drawer.locator(".lang-seg__link").count() == 4
+        page.wait_for_timeout(400)
+        assert sheet.locator(".lang-seg__link").count() == 4
         page.keyboard.press("Escape")
+        page.wait_for_timeout(400)
         assert page.get_attribute("[data-nav-toggle]", "aria-expanded") == "false"
         page.click("[data-nav-toggle]")
-        page.wait_for_timeout(300)
-        drawer.locator(".lang-seg__link[hreflang='ar']").click()
+        page.wait_for_timeout(400)
+        sheet.locator(".lang-seg__link[hreflang='ar']").click()
         page.wait_for_load_state("networkidle")
         assert page.url.endswith("/ar/")
         assert page.evaluate("document.documentElement.dir") == "rtl"

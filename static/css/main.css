@@ -21,10 +21,10 @@
 /* V4 — docs/design-v4/DESIGN_SYSTEM_V4.md. Loaded last: it keeps the V2 names and gives them the
    V4 values, so every earlier layer changes value without changing a line. */
 @import url("v4/tokens.css");
-@import url("v4/shell.css");
 @import url("v4/workspace.css");
 @import url("v4/hero.css");
-@import url("v4/wizard.css");
+/* v4/wizard.css («Ma situation»'s guided form) left the cascade with W3-F1: its rules are console-only now, a
+   partial of the console entry (apps/portal/static/portal/v5/_wizard.css). */
 /* V5 — docs/design-v5/V5_4_EXECUTION_PLAN.md §2.1, §2.3. Loaded last: v5 closes the cascade. The faces
    (static/fonts/v5-*, replacing fonts.css and the V4 woff2), the tokens, the aliases that give the
    V1 / V2 / V4 names their V5 values, and the base roles. Until a page's own family passes, it is
@@ -51,6 +51,6 @@
    entrance release is console-only (_loader-light.css, imported by the console entry). */
 @import url("v5/loader.css");
 /* The public chrome «Il portico» (plan §1.12, §2.3; W2-C1): the institutional bar, the letterhead, the navigation
-   and its door panels, «la targa», the drawer, the lock-up and the footer. It replaces v2/shell.css, components.css
-   §5–§7 and §25 and the chrome of v4/shell.css. */
+   and its door panels, «la targa», the sheet below 80rem, the lock-up and the footer. It replaces v2/shell.css,
+   components.css §5–§7 and §25 and v4/shell.css (the account menu's V4 face left with W2-C2's account popover). */
 @import url("v5/chrome.css");

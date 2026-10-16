@@ -122,6 +122,38 @@ names; DL54-02 … DL54-16 are §8.3's fifteen entries, in §8.3's order.
 | DL54-97 | 11 Oct 2026 | W3-F2, step 2: the error and account pages as built — one quiet page for every status in the interior's grammar; 400 and 500 self-sufficient (no database, no context processor, a bare fallback); the account pages in one frame on the public shell; allauth's elements keep their class names; the deletion behind its own page; no page of sessions, the CSRF page left for B1; the paths outside the slice; the service page type under its Wave-1 ceiling | §3.5 item 2; §1.3; §1.4; §1.8; §1.18 D26; §2.1; §2.3; DL54-15; V5.5 |
 | DL54-98 | 12 Oct 2026 | W3-F2, the fix pass: the door at rest on the error pages (the key out of the lock), in a page sheet of their own; every Latin head of an Arabic page on its cell's reading edge, a head's paragraph a box the width of its words; the refused newsletter on the system's summary; the profile's input purposes; the official Italian text left to right; three paths outside the slice; the page types' weights for the merge | §3.5 item 2; §1.4 SP-8; §1.16; §1.18 D26; §2.3; §2.6; CD §0, §1.4 law 5, §20; DS V5 PX21; V5.5; V5.8 |
 | DL54-99 | 12 Oct 2026 | Steward, the w3-f2 merge: the family's three entries renumbered DL54-96 … DL54-98 (add 19); the ten paths outside the slice assigned to w3-f2 in the manifest, DS 2026's slice named as written; the shared CSS gate of V5.8 passed with the shared payload lighter on every page type (`main.css` 42 152 → 41 464 B, −688 B; the console page types 50 893 → 50 205 B); the interior, login and home ceilings lowered to the measured totals (§2.6 item 3: 41 464, 46 325, 56 115 B), the console page types' kept; the content, account and error page types recorded with their page-only sheets (45 520, 43 890, 45 093 B), §2.6 item 5 not applied and said; DS 2026 §2's two stale figures regenerated; the capture report regenerated (12 captures of the area changed) | the owner's V5.8; V5_5 addendum 11 Oct 19:40; V5.5; §2.2; §2.3; §2.6 items 3 and 5; DL54-44; DL54-73; DL54-76; DL54-87; DL54-95; DL54-96 … DL54-98 |
+| DL54-100 | 12 Oct 2026 | W2-C2: the sheet below 80rem is the overlay system's modal drawer with its own head (the lock-up and «Fermer»), «Quiet» on a phone, the side sheet from 48rem mirrored in Arabic; the signed-in targa opens the system's account popover, the key alone named by the layer tip; W2-A's hand-overs taken (`initDropdowns`, the `<details>` face, `v4/shell.css`, V4's segmented track); the portico panel keeps W2-C1's adapter until the system has a disclosure primitive; no hole when the flags are off | §1.11; §1.12 items 6–8; §1.14; §3.4 item 5; DL54-88; DL54-89; DL54-94 |
+| DL54-101 | 12 Oct 2026 | W2-C2, the fix pass: the letterhead compact from 64rem (N11: ≥ 24 px to spare at 1024, French 42.8 px under a finger); every sheet ends on its night foot (amends DL54-100 item 1), the side sheet's 24 px margin; the foot not `on-inverse`, its menu's paper ring; the held scrim in `overlay.js` (a path outside the slice); one width for «Menu» and «Fermer»; the gloss, the seat's flex, the tap tint, the short viewport, the portico closed by any opening; the public pages' script recorded with the A/B (§2.6 exceeded until W4-B removes the Motion library); the gutter routed to W2-A | REVIEW M1, M2, m1–m7; A11Y_PERF M1–M3, m1; §1.6; §1.12; §2.2; §2.3; §2.6; DL54-93; DL54-100 |
+| DL54-102 | 12 Oct 2026 | Steward, the w2-c2 merge: the family's two entries renumbered DL54-100 and DL54-101 (add 4); the 17 paths outside the slice and three more found by the merge's runs assigned to w2-c2 in the manifest, six slices named as written; the shared CSS gate of V5.8 passed with the shared payload lighter on every page type (`main.css` 41 464 → 41 029 B, −435 B; the console page types 50 205 → 49 770 B); every ceiling lowered to the merged weight (the orchestrator's definitive ruling, 12 Oct 02:15), the console page types' 50 927 → 49 770 B; the public pages' script recorded again; the capture report regenerated (29 captures of the sheet changed) and DS 2026 §13 with it; three pins of what the family removed fixed (`main.js`'s header line and `test_static_assets`, `test_components_w1_c`, `test_page_integrity`'s homograph «Close»); design-v5's own failures handed over | the owner's V5.8 (the definitive ruling); V5.5; §2.2; §2.3; §2.6; DL54-87; DL54-94; DL54-95; DL54-99; DL54-100; DL54-101 |
+| DL54-103 | 11 Oct 2026 | W3-F1, step 1: the public interior as built — one grammar (`static/css/v5/_interior.css`, three page partials): the entrance «l'ingresso», the door card drawn «la porta» where no audience frame is left for a door's lead (§1.16), the home's chapters, the register, «la linea», D26's slots as layout; no side column; the index in the entrance, never sticky; one primary a page; the interior's cards fold their 8 into the chrome's 6 (three corners a screen); the universities' breakdown removed (RH-5); the pilot-flow illustration retired | V5.5; §3.5 item 1; §1.18 D26; §1.4; §1.3; §1.7; §1.16; CDV §19; `QA/v54/w3-f1/NOTES.md` |
+| DL54-104 | 11 Oct 2026 | W3-F1, step 1: the page sheets of the interior as plain import lists in the collected tree (two new: `pages/css/interior.css`, `pathways/pathways.css`; `pages.css` the home's alone), the legacy rules no page draws deleted, the page types' CSS as measured for the steward (door-persons and pathway-detail 943 B over the Wave-1 ceiling, one CSS request more), the paths outside the slice | V5.5; §2.2; §2.3; §2.6; DL54-15; DL54-77 |
+| DL54-105 | 11 Oct 2026 | W3-F1, step 2: orientation, the advice pages and the wizard as built — «Diplômes et titres» and «Formation» on the interior's grammar (their sequences on «la linea», the side column and the CTA band gone, the closing register and the one action on the stone); the questionnaire on the core components (the progress as a quiet register, plates around native controls, ONE primary first, the error wired and said in words, the focus on the new question after each step); the fraud warning an amber notice said three times, its page's text byte-identical under a visible title | V5.5; §3.5 item 1; §1.18 D26; §1.3; §1.4; §1.7; DL54-51; DL54-70; DL54-103 |
+| DL54-106 | 11 Oct 2026 | W3-F1, step 2: `v4/wizard.css` leaves main.css for the console partial `v5/_wizard.css` («Ma situation» at the console's three corners, one raised panel, no glow, no glass, its foot inside the page); the legacy layout rules no page draws deleted; the CSS as measured (`dist/main.css` 42 316 → 41 212 B gzip on every page type; the console page types 49 894 → 49 986, under their 50 086 ceiling; the orientation pages 43 659 → 45 533, 1 047 B over the interior's Wave-1 ceiling, recorded); the paths outside the slice | V5.5; §2.2; §2.3; §2.6; DL54-15; DL54-73; DL54-77; DL54-104 |
+| DL54-107 | 11 Oct 2026 | W3-F1, the fix pass: «la porta» carries the door's way in (on /parcours/ the questionnaire's action card, on /institutions/ and /universites-et-formation/ the prescribed button — each the page's one primary —, on /entreprises/ «Recueil des besoins» as a secondary); RH-3 met on /parcours/ («Comment ça marche» on «la linea», the locked sentence cut on its own arrows and read back whole), the needs form recorded outside the cadence, /forum/ and /le-projet/ on a phone waived until curated, captioned frames exist; the questionnaire says its place in words (no percentage) and holds «Commencer» in its entrance; the pilot's eight stations in a row from 90rem; SP-8's 24 / 44 px targets; French on an Arabic page says so; the door card's CSS loads only on the doors (`v5/_porta.css`); the page types' CSS for the merge step to record | V5.5; V5.8; `QA/v54/w3-f1/REVIEW.md`, `A11Y_PERF.md`; §1.4 RH-3, SP-8; §1.16; §1.18 D26; DL54-103 … DL54-106 |
+| DL54-108 | 12 Oct 2026 | W3-F1, the budget and consolidation pass: design-v5 at `v54/w3-f2` merged (this area's entries DL54-78 … DL54-82 → DL54-103 … DL54-107); one partial for the public interior's shared components, `static/css/v5/_pagina.css`, the first import of W3-F1's five page sheets and W3-F2's `cms/lettura.css` (the trail, the head, the chapters' device, the register's rows, D26's shared slots — drawn once; W3-F2's pages unchanged); the shared sheet sheds what the interior replaces (§9's and §10's re-drawn declarations, the orphan hero and local navigation, the verso and home plates, the zones' rail and margin, the sidebar layout; §18 to the home's sheet); a page sheet holds what its pages draw; `main.css` 41 464 → 39 111 B on every page; the persons page type recorded at its first page sheet (42 605 B), orientation 42 796 → 43 150 B, every other page type lighter; no LCP / first-render regression on the lane | V5.8 (the definitive ruling, 12 Oct 02:15); V5.5; W3-F2's review m11; DL54-99; `QA/v54/w3-f1/NOTES.md` «Budget and consolidation» |
+| DL54-109 | 12 Oct 2026 | Steward, the w3-f1 merge: the family's six entries renumbered DL54-103 … DL54-108 (after W2-C2's DL54-100 … DL54-102); the 31 paths outside the slice assigned (21 whole files, 10 slices) and four slices named as written; the shared CSS gate passed — `dist/main.css` 41 029 → 38 683 B on every page, the console page types 49 770 → 48 556 B —; every ceiling lowered to the merged weight; the public interior's five page types recorded as measured (the persons pages' first page sheet, orientation, the ecosystem doors, the Forum, the institutional pages); one semantic conflict with W2-C2's phone sheet fixed in two of the family's tests; the capture report unchanged | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.3, §2.6; DL54-102; DL54-103 … DL54-108 |
+| DL54-110 | 11 Oct 2026 | W3-C: «Mes pièces» V5.2 — the register strip (the page's one raised plane, its one primary with its piece and its date), one partition in three groups by whose move it is, the row as the link (six zones, no row menu, no «Consulter»), the filter in STATE_ORDER and its sheet, the files tables, the piece in the order of need | §3.5 item 5; §1.2; §1.15; DL54-78 … DL54-80 |
+| DL54-111 | 11 Oct 2026 | W3-C: F8 — the urgency ladder stops once a piece is filed; F13 — «En retard» `overdue` (azione), «Bientôt» `soon` (attesa) on the deadlines page | §1.2 «Deadlines»; the platform map F8, F13 |
+| DL54-112 | 11 Oct 2026 | W3-C: the three page partials (`_workspace`, `_table`, `_depot`) imported by the documents page sheet, never by `main.css` nor the console entry; the piece's page in the order of need, V4's case band not drawn there | §2.3; DS 2026 §2 |
+| DL54-113 | 11 Oct 2026 | W3-C: five paths outside the slice, each justified; the legacy register rules deleted from `main.css` (−1 332 B on every page); the documents page type's CSS as measured | §2.1; §2.2; §2.3; §2.6; DL54-15; DL54-73; DL54-85 |
+| DL54-114 | 11 Oct 2026 | W3-C, step 2: the Dépôt — one markup for the two roads; the eleven answers of the server composed in place on a JSON road (`X-ILE-Depot`, always a 200) that changes no rule; client guards read from the server's limits; no new word | §3.5 item 5; IP S7; DOCUMENT_WORKSPACE §11 |
+| DL54-115 | 11 Oct 2026 | W3-C, step 2: F13 on every page that draws a deadline register (the case file's checklist, dates and next step; the console's next action; the portal tables' late rows; the deadlines page's glyphs in the dashboard's grammar); `register.css`'s current-entry rules deleted, the rest still drawn by eight families; the shared payload flat (V5.8) | §1.2; §2.3; V5.8 |
+| DL54-116 | 12 Oct 2026 | W3-C, step 2: the preview drawer and the filter's sheet on the overlay system — the drawer non-modal beside the list on desktop and a modal sheet on a phone, its head at 0 ms from the row, its body the piece's own article seated by L3, `?état=` kept and `replaceState` on swaps; the filter's one control a link to the system's bottom sheet, its entries one partial; the register pages link the page-only overlay sheet; W2-A's row-menu pins retargeted | §1.14; §1.15 item 3; §3.5 item 5; W2-A CONTRACT §1–§6 |
+| DL54-117 | 12 Oct 2026 | W3-C, step 2: no state read through `:has()` — a row's and the Dépôt's keyboard focus from the input's modality (a focus in a row had re-styled the whole page, ≈ 650 elements a time on a phone), the register's re-layout after the drawer's first frame: the drawer's open and close p90 ≤ 184 ms at CPU × 4 (O7); `depot.js` brought back under the loader and motion rules | §1.14 O7; §1.5; DL54-89 |
+| DL54-118 | 12 Oct 2026 | W3-C, step 2: the paths outside the slice; the shared payload 50 893 → 49 620 B (the console page types, 1 307 B under the ceiling), the documents pages' own sheet 1 172 → 5 418 B and W2-A's page-only overlay sheet (2 071 B) on the register pages | §2.2; §2.3; §2.6; V5.8; DL54-87 |
+| DL54-119 | 12 Oct 2026 | W3-C, the fix pass: after a swap the drawer's close keeps the person's place (`history.scrollRestoration` manual while the drawer owns its entry; the focus on the shown piece's row — the native dialog had handed it to the first row opened); the open piece marked (`aria-current`, the selected state) and the press kept under the pointer across the re-layout; the strip's act steps down while the drawer shows its piece; one clock decides one deadline (`is_overdue` on `core.clock`); the caption, the files' list on a phone, the deletion's alert dialog, the loose answer, the size shown, the ledger marks consolidated, the runs' inset ring, «Télécharger»'s band, a refused file marks its field; shared CSS unchanged (49 620 B), documents.css 5 418 → 5 497 B | REVIEW M1–M3, m1–m7; A11Y_PERF 1–4; §1.14; §2.6; V5.8; DL54-116 |
+| DL54-120 | 12 Oct 2026 | Steward, the w3-c merge: the family's ten entries renumbered DL54-110 … DL54-119 (after W3-F1's DL54-103 … DL54-109); the 18 paths outside the slice assigned (6 whole files in two globs, 12 slices) and four slices named as written; the shared CSS gate passed — `dist/main.css` 38 683 → 37 324 B on every page, the console page types 48 556 → 47 200 B —; every ceiling lowered to the merged weight; the documents pages' two page types recorded through their own sheet (the piece, upload and gate pages 52 697 B; the two register pages 54 768 B, with W2-A's overlay-panels sheet); DS 2026 §2's two stale figures regenerated; the capture report unchanged; design-v5's own motion-gate failure unchanged | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.3, §2.6; DL54-102; DL54-109; DL54-110 … DL54-119 |
+| DL54-121 | 12 Oct 2026 | Steward, the devops merge: production readiness (V5.9) on design-v5 — the runbook, the checklist, the rollback, `.env.example` and the production settings, nothing deployed; the family «devops» registered in the manifest outside the waves (30 paths, 18 whole, 12 slices; the checker accepts its id); the pre-merge sync closed F-6 through W3-F2's self-sufficient 400 page and documented the V5 families' new test variables; no tag, no push; the owner's thirteen open questions | V5.9 §3–§17; V5.8; DL54-01; DL54-77; plan §2.2; `QA/v54/devops/NOTES.md` |
+| DL54-122 | 11 Oct 2026 | W3-D: a threshold is a place — a file in SELECTION stands on threshold A and on no step; `journey_for` gives each step its status, its state and the threshold it opens; the case file dates the threshold; SUSPENDED and CLOSED keep V4's first step until the trail is read | §3.5 item 6; §1.18 D16 (OJ2); JS §5.7, §7.3 |
+| DL54-123 | 11 Oct 2026 | W3-D: one rail drawing for the console — the dashboard's journey, the case file's journey and timeline, «Ma situation»'s Stepper on one vocabulary; the level line from 56rem of the component (the research's 46rem measured too narrow); the card and its native disclosure under it; one marker a column (the glyph); A′, no beads; still at load; no `journey-rail.js` | §3.5 item 6; §1.18 D16; §1.5; JS §5.3, §5.5, §7.1, §7.2 |
+| DL54-124 | 11 Oct 2026 | W3-D: one passage drawing for the public pages — «la linea» (W3-F1's grammar) homed in `_journey-passage.css` with `components/stepper.html`; the home's orientation steps drawn by it; the door pages after W3-F1's merge, the consolidation written down | §3.5 items 1 and 6; §1.18 D16; §2.3 |
+| DL54-125 | 11 Oct 2026 | W3-D: a date on the rail in tabular figures in the sans (ILE Mono keeps its one seat); «Ma situation» moves nothing at load | §1.1; §1.5; `QA/v54/w1-d/NOTES.md` (situation.js) |
+| DL54-126 | 11 Oct 2026 | W3-D: the paths outside the slice, each justified; the legacy rules deleted; the CSS as measured — the home page type lighter, the console page types over their ceiling, reported | §2.2; §2.3; §2.6; DL54-15; DL54-87 |
+| DL54-127 | 12 Oct 2026 | W3-D, the fix pass: the rail leaves the shared console bundle for a page-only sheet (`portal/journey.css`, linked by the four pages that draw a journey — the console page types 51 530 → 49 614 B, 1 313 B under design-v5's 50 927); «Mon parcours» draws the journey at its head; a SUSPENDED or CLOSED file has no current item and «Vous êtes ici» nowhere — the case file dates what its trail reached; the timeline newest first; the consolidation with W3-F1 waits for its merge | REVIEW M1–M4, m1–m6; A11Y_PERF findings 1–3; V5.8; DL54-87; DL54-122 |
+| DL54-128 | 12 Oct 2026 | W3-D, the integration pass: design-v5 merged at `v54/w3-f1`, then again after W3-C's merge and after the devops merge; one passage drawing — W3-F1's «la linea» homed in `_journey-passage.css` with `components/stepper.html` (the door pages and the home pixel-identical but for the rings' rim antialias); `components.css` §17, `timeline.html` and `_wizard.css`'s Stepper retired (grep-proved); «Ma situation»'s guided form out of the shared console bundle into its one page-only sheet; the rail drawing a vocabulary and two components so that each journey page loads only what it draws — the console page types 47 200 → 44 196 B against design-v5 after W3-C and the devops merge (`3d5351b`), every page type lighter; the design showcase links the journey's page sheets and, for the passage, the home's | REVIEW M4; NOTES «For W3-F1», «Integration pass»; the definitive CSS ruling (V5.8); DL54-87; DL54-109 |
+| DL54-129 | 15 Oct 2026 | Steward, the w3-d merge: the family's seven entries kept as numbered (DL54-122 … DL54-128 — the branch held design-v5's head); the 19 paths outside the slice assigned (one whole file, 18 slices), the four new sheets whole files, seven slices named as written; the shared CSS gate passed — `dist/main.css` 37 324 → 35 483 B on every page, the console page types 47 200 → 44 196 B —; every ceiling lowered to the merged weight; the journey's two page types recorded through their own sheet (a journey page 46 617 B, «Ma situation» 46 398 B); no surface key (the journey is drawn inside other families' page types); the capture report unchanged; design-v5's own motion-gate failure unchanged | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.3, §2.6; DL54-120; DL54-122 … DL54-128 |
+| DL54-130 | 15 Oct 2026 | Steward, the sec-f5 merge: F-5 closed on design-v5 — `/backoffice/login/` signs no one in (staff sign in through allauth and its MFA stage) and an account that holds a second factor presents it in every session before the back office, the reserved area, `/documents/` or allauth's pages that manage the factor, whatever `BACKOFFICE_MFA_ENFORCED` says; the independent review (SHIP_AFTER_FIXES, nothing blocking) and its four minor findings fixed before the merge; the family «sec-f5» registered in the manifest outside the waves (21 entries, 4 whole, 17 slices; the checker accepts `sec-f<n>`); no tag, no push, nothing deployed | V5.9 §6, §14–§17; DL54-121 item 7.1; checklist A-13; plan §2.2; `QA/v54/sec-f5/NOTES.md`, `REVIEW.md` |
+| DL54-131 | 16 Oct 2026 | Steward, integration checkpoint 3: the full suite on design-v5 after Wave 3's merges (W3-F1, W3-C, the DevOps readiness merge, W3-D; sec-f5 at the sync) — non-browser 5 058, then 5 108 passed (W3-D's three reds fixed, 954 passed around them), Chromium 507, then 519 passed, 0 errors —; the reds fixed at their root: the overlay's late settle (a console drawer reopened within one frame lost its trap and the scrim no longer closed it), the loader's guard left on for ever without loader.js, the overlay's own frame request outside motion.js's gate, SO_LINGER on Linux, a teardown deadlock in W3-C's drawer test, W3-D's showcase comment; DL54-112's «one importer» and `3093261`'s `@import` ban on the home's sheet superseded by what they protected; the review SHIP; the family «intfix» registered in the manifest outside the waves (12 entries, 1 whole, 11 slices; the checker accepts `intfix`); no stylesheet changed (the shared payload as DL54-129 left it); the tag `v54/checkpoint-3`; no push, nothing deployed | V5.5; V5.8 (definitive ruling); V5.9; DL54-77; DL54-102 item 10; DL54-112; DL54-128 item 4; plan §2.2; `QA/v54/intfix/NOTES.md`, `REVIEW.md` |
 
 ---
 
@@ -3763,3 +3795,1893 @@ orchestrator's reading below it) and the V5_5 addendum of 11 October 19:40; plan
 DL54-96 … DL54-98; `QA/v54/w3-f2/NOTES.md` «For the merge (the steward)» and «Merge step»; `QA/v54/w3-f2/A11Y_PERF.md`
 P1; the weights in `evidence/v54/w3-f2/merge/budget_gate.log`; the ownership checks in
 `evidence/v54/w3-f2/merge/ownership_before.log` and `ownership_after_wt.log`.
+
+## DL54-100 · 12 October 2026 · W2-C2: the sheet is the system's drawer with its own head; the targa's popover; the portico panel keeps its adapter until the system has a disclosure primitive
+
+**Decisions** (V5.5; plan §3.4 item 5, §1.12 item 8, §1.11, §1.14; `QA/v54/w2-c2/NOTES.md`). Written as
+DL54-96; renumbered DL54-100 at the merge (W3-F2's DL54-96 … DL54-99 reached design-v5 first).
+
+1. **The phone and tablet sheet is the overlay system's modal drawer** (`data-overlay="drawer"`, the navigation drawer
+   row of plan §1.14's table), not the bottom-sheet family: it opens from the screen's edge, not from the bottom, and it
+   owns its head line (the lock-up and «Fermer», which takes the first focus) in `chrome.css` §7 — so it draws nothing of
+   the page-only part (CONTRACT §1: the panels with a head of `dialog.html` / `sheet.html` / `drawer.html`), and every
+   public page keeps one stylesheet. Below 48rem it takes the screen «Quiet» (opacity, the body and the foot rise 12 px,
+   the drawer's clocks 320 / 200 ms, the head on the bar's row); from 48rem it slides in from the inline end.
+2. **O5 read on the contract** (§5: «drawers mirror, sheets do not»): the side sheet is a drawer, so in Arabic it comes
+   and goes by the left; the phone's rise is vertical and travels sideways in no language
+   (`tests/i18n/test_rtl_browser_w2_c2.py`).
+3. **The signed-in targa opens the system's account popover** (`components/account_menu.html` with `popover`), in the
+   seat and in the sheet's foot; the key alone is named by the shared top-layer tip (`data-tip="layer"`), refused
+   through `overlay:tip` from 100rem where the plate says its word — the control's own CSS tip is page-only since
+   DL54-94.
+4. **W2-A's hand-overs taken** once `shell.js` imports `overlay.js`: `main.js`'s `initDropdowns` fallback, the account
+   menu's `<details>` face and `v4/shell.css` (the file and its import) leave, with V4's segmented language track (no
+   caller left) — as W2-A's own comments asked.
+5. **The portico panel stays on W2-C1's adapter.** Plan §1.12 item 6 and RTD-m8 want the panel's scrim, dismissal and
+   focus from `overlay.js`; the contract's API opens kinds (dialog, alert, drawer, sheet, popover) and has no primitive
+   for a disclosure region. Bending the popover family to carry the panel breaks it: without anchor positioning the
+   module writes `left` / `top` on every popover (the panel hangs from the content width), its arrows wrap inside the
+   panel (the portico's ↑ returns to the door, ← → change door), the top layer and the UA popover rules take the
+   panel's geometry and its no-script hover, two auto popovers stack in the order they were shown (the leaving
+   panel's photograph must fade out above the arriving one), and the portico's scrim (below the letterhead, never
+   over the utility bar) is not the system's. The request is written to W2-A (`QA/v54/w2-c2/NOTES.md`, «For W2-A»); the switch is
+   W2-C2's follow-up once it exists.
+6. **No hole when the flags are off**: a signed-out end zone with nothing to seat is marked bare and, from 80rem, not
+   drawn — it took the row's gap and left the bar 16 px short of the column's edge (N13).
+
+**Source.** Plan §1.11, §1.12 items 6–8, §1.14, §3.4 item 5; surfaces.md §1.3 items 7–8, §1.4 N8 N9 N13 N14 N19, §4.4
+O2–O8; `QA/v54/w2-a/CONTRACT.md` §1–§6; DL54-88, DL54-89, DL54-94; `QA/v54/w2-c2/NOTES.md`;
+`tests/frontend/test_nav_sheet_w2_c2.py`, `test_browser_w2_c2.py`, `tests/i18n/test_rtl_browser_w2_c2.py`.
+
+## DL54-101 · 12 October 2026 · W2-C2, the fix pass: the letterhead compact from 64rem; every sheet ends on its night foot; the foot's menu keeps the paper's ring; the held scrim; the public pages' script recorded
+
+**Decisions** (the fix pass of the family's one review, `QA/v54/w2-c2/REVIEW.md`, and of its accessibility and
+performance check, `QA/v54/w2-c2/A11Y_PERF.md`; what was done and measured is the notes' «Review fixes»). Written
+as DL54-97; renumbered DL54-101 at the merge, its citations of the first step's entry (written DL54-96) read
+DL54-100.
+
+1. **The letterhead is compact from 64rem, not from 80rem** (REVIEW M1; N11 «one row, ≥ 24 px spare at 1024 px in
+   the longest language») — supersedes the full lock-up W2-C1 kept in the 64–80rem band. At 1024 the column is
+   944 px (927 beside a 17 px classic scrollbar) and the French row with the 38/20 lock-up needed 945 px under a
+   finger, where the plate and «Menu» are 44 px — on an iPad in landscape the letterhead drew two rows (129 px) — and
+   933 px on a fine pointer. The lock-up at the scrolled state's 32/17 gives back 44 px: French keeps 42.8 px under a
+   finger and 37.8 beside a 17 px scrollbar, English 52.2 / 47.2, signed out and in. One block now serves the bands
+   64–90rem (the lock-up, the 16 px gaps, the doors' 10 px padding, no chevron); the 64–80rem block keeps only the
+   doors. Trimming the doors' padding was the other way: it would have changed the bar's rhythm the 80–90rem band
+   already shares with this one.
+2. **Every sheet ends on its night foot — amends DL54-100 item 1** (REVIEW M2; plan §1.12 item 8: «the phone and
+   tablet sheet … the targa and the promoter sit in the pinned foot»). DL54-100 hid the foot from 48rem because «the
+   letterhead keeps its lock-up, la targa and the promoter»; the letterhead's targa stands at the inline end, where
+   the side sheet arrives, so the open menu offered no reserved-area entrance and ended on blank paper. From 48 to
+   80rem only the head's duplicate lock-up is hidden. The side sheet has its own margin, 24 px (`--grid-margin`
+   re-pointed in the sheet: a 371 px column at 768, the primary on one line — REVIEW m3).
+3. **The foot is not a night context; its controls carry the night's ring** (A11Y_PERF M2; plan §1.6). The account
+   menu that opens from the foot is a paper panel in the top layer that inherits from its trigger's ancestors: under
+   `.on-inverse` its focused rows drew the night's ring on white at 1.75 : 1 and its glyphs the night's ink. The foot
+   drops `on-inverse`; `.nav-sheet__foot :is(.targa, .account-menu__summary)` takes `--focus-ring-night` and
+   `--focus-halo-night` (tokens only — chrome.css holds no literal colour, `test_v5_tokens`); the menu draws the
+   paper's #1d8a93 (4.11 : 1) and #4a5a62 glyphs.
+4. **The public pages' script is recorded, not deferred** (A11Y_PERF M3, «fix or record»). Plan §2.3 puts
+   `overlay.js` in `shell.js`, so the overlay core is on every public page: the home 45 581 → 51 156 B gzip (the
+   check's 51 136 + this pass's 20), past §2.6's «a public page ≤ 45 KB» (46 080 B) by 5 076 B; a door page 38 006 →
+   43 579, the login 39 683 → 45 255; one more script request before `load` (the home 3 + 9 against the before set's
+   3 + 8, a door page 1 + 7 against 1 + 6: §2.6's request ratchet over by one); the console pages 913 B lighter.
+   Measured cost on the compressed twin, 216 traces, profile A, CPU × 4 (A11Y_PERF §3): pooled LCP 1 524 → 1 472 ms,
+   every cell within +50 ms (the Arabic home at 1440 +18 ms, n = 18), the LCP element unchanged, the first-render task
+   62.8 → 46.2 ms, the longest load task 136.6 → 124.6 ms, TBT 180.6 → 134.4 ms (pooled medians), CLS ≤ 0.025. A
+   dynamic import at idle (and at once on the first press of «Menu» or the account trigger) was weighed and refused:
+   the first press would race the chunk's fetch — a click shim and its replay, «Menu» a link until the module upgrades
+   it, the keyboard's first tip missed, the scrim made in the tap — on the phone's one navigation, for no measured
+   gain (V5.5: fix only real regressions). The largest share of the home's script is the Motion library's chunk
+   (26 611 B), which leaves with W4-B (plan §2.3); without it the home is ≈ 24.5 KB with the overlay core in. For the
+   orchestrator and the Performance Lead: the §2.6 line and the request ratchet stand exceeded by the plan's own §2.3
+   placement until then.
+5. **A press held on the scrim keeps its place** (A11Y_PERF M1), written in W2-A's `overlay.js` — a justified path
+   outside the slice (plan §2.2). The platform light-dismisses a menu sheet as a touch goes down; the touch's
+   compatibility mouse events and its click are hit-tested after `touchend`, and `syncScrim()` had already re-stacked
+   the scrim under the trapped phone sheet (z 51 → 49): the tap unfolded the door, followed Forum or switched the
+   language under the finger. `syncScrim()` leaves the z-index alone while `data-held` stands and `release()` re-syncs
+   it — so W2-A's DL54-93 item 1 («the page is never reached») now holds over a trapped panel too.
+6. **«Menu» and «Fermer» have one width below 48rem** (REVIEW m5): each holds both words in one centred grid cell,
+   the other hidden by its class (`.nav-toggle__alt`, `aria-hidden`; no rule selects `[aria-hidden]`, which the trap
+   writes — W2-A's guard); 6 px inside instead of 8 keeps the phone row's arithmetic (French 88.6 px, 0.9 px to spare
+   at 369, where «Fermer» used to run 5 px past the column). From 48rem the side sheet arrives with its own «Fermer»
+   and each button is as wide as its word.
+7. **The rest of the pass**: the unfolded door's gloss in the lede's voice, 15/24 in ink (REVIEW m4); the account
+   menu's wrapper a flex box in both seats (REVIEW m6: the trigger 2 px high in Arabic); no tap tint on the public
+   chrome's links, buttons and summaries (REVIEW m7); under 30rem of height the sheet scrolls as one under its sticky
+   head and the foot ends the list (A11Y_PERF m1: 78 % of a 320 × 256 viewport for the list, was 31 %); any
+   `overlay:open` closes an open door panel (REVIEW m2: WebKit's press focuses nothing, so the nav's focusout never
+   came) — the panel's switch to `overlay.js` stays open for W2-A's disclosure primitive (DL54-100 item 5); the scrim
+   and an inline-end drawer beside a classic scrollbar's gutter routed to W2-A (REVIEW m1; the notes' «For W2-A» 4).
+8. **The shared payload**: every page type +132 B gzip against the branch before the pass, −455 B against the base
+   (`main.css` 42 152 → 41 697); no page sheet changed; one path more outside the slice (`overlay.js`), for the merge
+   step to write into the manifest with the sixteen of the first step.
+
+**Source.** `QA/v54/w2-c2/REVIEW.md` M1, M2, m1–m7; `QA/v54/w2-c2/A11Y_PERF.md` M1–M3, m1; `QA/v54/w2-c2/NOTES.md`
+«Review fixes»; plan §1.6, §1.11, §1.12 items 6–9, §2.2, §2.3, §2.6; surfaces.md §1.4 N11, N13, N14; DL54-93,
+DL54-94, DL54-100; `tests/frontend/test_browser_w2_c2.py`, `tests/frontend/test_nav_sheet_w2_c2.py`,
+`tests/i18n/test_rtl_browser_w2_c2.py`.
+
+## DL54-102 · 12 October 2026 · Steward, the w2-c2 merge: the family's two entries renumbered, the 17 paths assigned, the shared CSS gate passed with the shared payload 435 B lighter on every page type, every ceiling lowered to the merged weight, the capture report regenerated, three pins of what the family removed fixed
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w2-c2` into design-v5 on 12 October 2026 —
+what the family's own entries and notes hand to the merge step: DL54-100, DL54-101; `QA/v54/w2-c2/NOTES.md`
+«Ownership», «What is left», «Review fixes» and its «For W2-A»).
+
+1. **The numbering.** design-v5 stood at `3780a7c` (the confidential-material docs commit, after W3-F2's shipped
+   note): W3-F2's entries and its merge's record had taken DL54-96 … DL54-99, so the sync with design-v5 (`63b5860`)
+   gave the family's two entries **DL54-100** and **DL54-101** (add 4). The second cited the first five times; those
+   citations follow (the index row, «amends DL54-100 item 1», «DL54-100 item 5», the sources), and the sentence that
+   called each number provisional now says what it was written as. The notes' closing section says how to read the
+   numbers written before (`eec0e7c`); the code, the tests, DS 2026 and ACCESSIBILITY.md cite none of them. This entry
+   is DL54-102.
+2. **Two conflicts, both areas' work kept.** The decision log: design-v5's entries (W3-F2's three and DL54-99), then
+   the family's two. `dist/main.css`: rebuilt — `static/css/dist` and `static/js/dist` deleted, `npm run build` — the
+   JS byte for byte the branch's (W3-F2 changed no script), the three page sheets W3-F2 added byte for byte
+   design-v5's. `components.css` and DS 2026 merged on their own; each is design-v5's plus exactly the family's diff
+   (checked line for line). Nothing of W3-F2's draws what W2-C2 removed: the account menu's callers all pass
+   `popover=True`, the language control's all pass `lang_names`, the self-sufficient error letterhead includes neither
+   the header nor the nav, and the partial W3-F2 deleted (`accounts/partials/account_menu.html`) is named by no file.
+3. **The 17 paths outside the slice are this area's in the manifest** (`2960180`). `scripts/check_ownership.py w2-c2
+   3780a7c` listed exactly the paths the family declares (the first step's sixteen and the fix pass's `overlay.js`);
+   each was read in the diff and found to be what it declares: `docs/ACCESSIBILITY.md` (the sheet's and the popover's
+   rows; 2.4.3 Conforme with G-11 closed, and the summary's counts that follow), `docs/qa/design/capture.py` (the
+   menu's geometry read on the sheet), `static/css/main.css` (the `v4/shell.css` import) and `static/css/v4/shell.css`
+   (deleted), `static/js/main.js` (`initDropdowns`, deleted), `static/js/src/overlay.js` (the held scrim: four lines,
+   A11Y_PERF M1; W2-A owns it from the merge), the V4 faces of `components/account_menu.html` and
+   `components/language_segmented.html` (deleted; no caller left), the showcase's two demos, and eight test files
+   whose assertions follow the sheet or the popover (no test removed; the drawer's assertions replaced by the sheet's).
+   Six slices named as written: `chrome.css`, `nav.js`, `header.html`, `components.css`, `test_design_docs.py`,
+   DS 2026. Three more paths came from the merge's own runs (item 9) and are assigned the same way. The check after
+   it: 6 inside, 29 slice, 19 generated, and the two steward-only paths the steward wrote (the manifest, the capture
+   report) — before: 17 outside; `--validate`: coherent, 25 families, 566 entries (20 added under w2-c2).
+4. **The shared CSS gate (the owner's V5.8) passes: the shared payload falls on every page type.** On the bundles
+   rebuilt from a clean `static/css/dist` and `static/js/dist`, `gzip.compress(data, 9)`
+   (`evidence/v54/w2-c2/merge/budget_gate.log`):
+
+   | Page type | design-v5 `3780a7c` | merged | change | ceiling before → after |
+   |---|---|---|---|---|
+   | an interior page (`main.css`) | 41 464 | 41 029 | −435 | 41 464 → **41 029** |
+   | console page types (`main` + `console` + `portal`) | 50 205 | 49 770 | −435 | 50 927 → **49 770** |
+   | «Mes pièces» (+ `documents.css`) | 51 377 | 50 942 | −435 | 52 099 → **50 942** |
+   | the company's dashboard (+ `companies.css`) | 51 078 | 50 643 | −435 | 51 800 → **50 643** |
+   | the login (+ `entrance.css`) | 46 325 | 45 890 | −435 | 46 325 → **45 890** |
+   | the home (+ `hero.css`, `pages.css`) | 56 115 | 55 680 | −435 | 56 115 → **55 680** |
+   | a content page (+ `cms/lettura.css`) | 45 520 | 45 085 | −435 | 45 520 → **45 085** |
+   | an account page (+ `cms/servizio.css`) | 43 890 | 43 455 | −435 | 43 890 → **43 455** |
+   | an error page (+ `cms/errori.css`) | 45 093 | 44 658 | −435 | 45 093 → **44 658** |
+
+   `dist/main.css` 41 464 → 41 029 B: `v4/shell.css` and the V4 drawer's rules out, V4's segmented language track out,
+   the sheet drawn on the portico's shared `.portico__*` rules, the fix pass's 132 B in (the family measured −455 B
+   against its own base; −435 B on the merged tree). Every page-only sheet — `core/overlay-panels.css` included, which
+   nothing of the family links — is byte for byte design-v5's; `console.css` and `portal.css` too. `dist/main.css`
+   stands 5 051 B under its 45 KB cap (46 080 B).
+5. **Every ceiling is lowered to the weight measured at this merge** — the orchestrator's definitive ruling under the
+   owner's V5.8 (12 October 02:15: «savings are locked in: after a merge, the merged weight is the new ceiling»; a page
+   type's total «ratchets down like the shared ceilings»), which supersedes plan §2.6 item 3's 1 KB margin that DL54-99
+   still applied. The console page types' ceiling, 50 927 B since DL54-87 item 3 and kept by DL54-99, is now **49 770 B**;
+   every row of the table above carries its new figure. A family that needs a shared rule pays for it with deletions.
+6. **The public pages' script, recorded again for the orchestrator** (DL54-101 item 4, A11Y_PERF M3). Plan §2.3 puts
+   `overlay.js` in `shell.js`, so the overlay core (6 476 B gzip) is on every public page: the home 51 156 B gzip of
+   script against §2.6's «a public page ≤ 45 KB» (46 080 B), a door page 43 579 B, one more script request before
+   `load`; the measured cost on the compressed twin is nil (pooled LCP 1 524 → 1 472 ms, the first-render task 62.8 →
+   46.2 ms, TBT 180.6 → 134.4 ms). The figure stands exceeded by the plan's own placement until W4-B removes the Motion
+   library's chunk (26 611 B). The merged JS is the branch's, byte for byte.
+7. **The capture report and the inventory.** `docs/qa/design/capture.py` (whose selectors now follow the sheet) on
+   lane 8 (8788, `ile_v5_l8`, DEBUG off, `--insecure`, one headless Chromium, exit 0): 43 captures, every one as
+   expected; 29 differ, all of them the sheet (`4577ed4`) — the menu open fills the screen from the top (G-02: 844 /
+   844 px at 390 × 844, 768 / 768 px at 1024 × 768; G-23: `top` 0, the key the script now records), the closed pages
+   below 80rem lay out the V4 drawer's hidden icons no more, the open sheet lays out its doors' discs, and without
+   script the letterhead holds its row only and sticks (G-04: 57 and 65 px); the 1440 captures are unchanged.
+   `scripts/regen_design_inventory.py` then found one stale figure, DS 2026 §13's icons laid out (995 → 865), and wrote
+   it (`3921d29`); §2's figures were current after the sync.
+8. **The tests.** On the branch after the sync, the manifest, the capture report and the figures,
+   `TEST_DATABASE_URL=…/test_ile_v5_l8`, one pytest and one browser at a time, every browser run behind the benchmark
+   lock, no run crashed (`evidence/v54/w2-c2/merge/tests_*.log`). **The named set, non-browser** — `test_cms_nav.py`,
+   `apps/cms`, `tests/compliance`, `test_overlays.py`, `test_overlays_console_w2_a.py`, `test_layout.py`, the two
+   bundle-current tests, `test_design_docs.py`, `test_static_pipeline.py`, `tests/security` (the sentinel test ran),
+   with the family's `test_nav_sheet_w2_c2.py`, `test_rtl_static.py`, W3-F2's two unit files, the ownership and
+   inventory scripts' tests and what the merge touched besides (`test_v5_tokens`, the comments' leak test,
+   `test_css_tokens_exist`, `test_loader_rules`, `test_static_assets`): **1 235 passed, 1 failed** (10 min 14 s) — the
+   failure a pin of what the family removed (item 9). **Widened** to every other non-browser file of
+   `tests/frontend` and `tests/i18n` (24 files), because that pin sat outside the named set: **727 passed, 2 xfailed,
+   5 failed** (6 min 49 s) — three the family's (item 9), two design-v5's own (item 10). After the fixes:
+   `test_static_assets` 39, `test_components_w1_c` 30, `test_page_integrity` 24, the overlay, sheet and ownership
+   files 160 and `test_design_docs` with the inventory script 46 — all passed. **Browser** (headless Chromium):
+   the family's `test_browser_w2_c2` and `test_rtl_browser_w2_c2`, the 320 px header test, W2-C1's
+   `test_browser_w2_c1`, `test_browser.py`, `test_rtl_browser_nav` — **58 passed**; W2-A's `test_overlays_browser_w2_a`,
+   `test_rtl_browser_overlays` and `test_overlays_console_browser_w2_a` with W3-A's two console browser files (the
+   scrim's press changed in `overlay.js`) — **107 passed, 1 failed** (item 10); `test_rtl_browser` with W3-F2's two
+   browser files — **39 passed**; W1-D's loader and reduced-motion files and W1-B's icons, which read the chrome —
+   **35 passed, 3 failed** (item 10). `ruff check .` clean; `makemigrations --check --dry-run`: no changes. The full
+   suite is the integration checkpoint's (V5.5).
+9. **Three pins of what the family removed, found by the merge's runs and fixed** (`0ac4c43`, `a52dddf`; the paths
+   assigned to w2-c2 as slices, the intents kept). `static/js/main.js`: the header line the family wrote («console.js
+   and shell.js import it») tripped `test_main_js_is_an_es_module_without_external_dependencies`, which refuses any
+   «import » in the file — reworded, a comment only (`main.js` is served as it is). `test_static_assets.py`: the same
+   test pinned the dropdown fallback the family deleted (`aria-expanded`, `Escape` in `main.js`) — they are read in
+   `overlay.js`, which owns the disclosures. `test_components_w1_c.py` read `v4/shell.css`, deleted — guarded by the
+   file's existence, as its own `v4/buttons.css` test is. `tests/i18n/test_page_integrity.py`: the sheet draws «Fermer»
+   on every page, «Close» in English, which is also the helpdesk's French source «Close» (`CLOSED`, une demande
+   close): the French-leak guards read the English word as a leak on every English page; a French msgid that is also
+   one of the language's own translations is no longer counted — three such homographs in the catalogues («Close»,
+   «note», «note interne»). design-v5 passes the same tests; none of the three files was in the family's run list.
+10. **Failures that are design-v5's own, handed over** — each reproduced on design-v5 at `3780a7c` the same way
+   (`evidence/v54/w2-c2/merge/tests_design-v5_*.log`, `tests_browser_console_menu_isolated.log`), so not this merge's: `test_chips_cards_w1_c.py::
+   test_the_chip_is_drawn_by_one_sheet` (W3-F2's `_lettura.css` styles `.registro__row > .chip`; for W3-F2 with W1-C's
+   one-sheet rule); `test_script_motion_gate.py::test_no_animate_or_frame_loop_outside_the_gate` (W2-A's
+   `overlay/extras.js` calls `requestAnimationFrame`; for W2-A with W1-D's gate); three of `test_loader_w1_d.py` (the
+   submit guard now marks `aria-disabled` and lets the submit through, and the logout probe looks for
+   `account-menu__link`, which the console's popover rows have not carried since W2-A and which no page carries after
+   this merge; for W1-D with W2-A); and W3-A's
+   `test_console_phone_browser_w3_a.py::test_menu_is_reached_in_three_keys_and_opens_a_drawer_that_holds_the_whole_rail`
+   — the press on the scrim after a keyboard reopen leaves the console drawer open: alone it failed 2 runs of 3 on the
+   branch and 2 of 3 on design-v5 (W2-A's intermittent defect, the one its merge saw once under load; cause not
+   established; for W2-A).
+11. **The worktree's `.env`** was a copy older than design-v5's (it lacked `ILE_CONFIDENTIAL_SENTINELS`, every other
+   value equal): refreshed from design-v5's before the tests, so the confidential-material sentinel test ran instead of
+   skipping. The file is ignored; nothing of it is committed.
+
+**Why.** Entries renumbered after design-v5's keep the log's one order; paths nobody holds would have no writer for the
+next family; the gate is read on the shared payload as V5.8 writes it, and a merged weight that becomes the ceiling
+keeps every family on the weight the product has.
+
+**Source.** The owner's V5.8 (`C:/tmp/ile_v5_council/directives/V5_8_CONTINUE_GITHUB_CSS_BUDGET.md`, the
+orchestrator's definitive ruling at its end) and V5.5; plan §2.2 (the manifest; merge step 3), §2.3, §2.6; DL54-87
+item 3; DL54-94; DL54-95 item 3; DL54-99; DL54-100; DL54-101; `QA/v54/w2-c2/NOTES.md` «Ownership», «Review fixes» and
+«Merge step»; `QA/v54/w2-c2/A11Y_PERF.md` M3; the weights in `evidence/v54/w2-c2/merge/budget_gate.log`; the ownership
+checks in `evidence/v54/w2-c2/merge/ownership_before.log`, `ownership_after_wt.log` and `ownership_after.log`; the
+capture run in `evidence/v54/w2-c2/merge/capture_run.log`; the test runs in `evidence/v54/w2-c2/merge/tests_*.log`.
+
+## DL54-103 · 11 October 2026 · W3-F1, step 1: the public interior as built
+
+**Decision.** Built by W3-F1 (step 1: the doors and the project pages — /parcours/ and its sheets, /entreprises/,
+/institutions/, /universites-et-formation/, /projet-pilote/, /forum/ with its registration pages, /le-projet/ and, on
+its base, /agami/, /reseau/, /contact/, /attention-aux-fraudes/, each with its ar twin) on plan §3.5 item 1, with these
+choices met during the build (plan §5.2):
+
+1. **One grammar for the interior**, `static/css/v5/_interior.css` (a page partial, never in `main.css`, §2.3) and three
+   page partials in `templates/pages/partials/` — `_ingresso.html` (the entrance), `_chapter_head.html` (the home's
+   section device), `_linea.html` (a real sequence on a level line, open stations). The home's chapter grammar under
+   the hero is the interior's: a head at the reading edge (four columns of twelve, sticky from 75rem), a body;
+   48 · 64 · 96 px; hairlines before boxes.
+2. **A door's lead is drawn where no frame is left** (§1.16). Every audience frame in the repository is that audience's
+   navbar-panel frame and its hero-entrance frame, and the panel is on every page; the V1–V4 library is retired (AUM
+   §7) and renders nowhere uncaptioned. The entrance's end seat holds «la porta»: the portico's door card (W2-C1) with
+   its photograph replaced by a drawing — the night plate, the brand's three steps lit in the door's tint (the night
+   plate is the arris's one seat, §1.4), the audience glyph once on the 36 px night disc (BI04), the accent as a 3 px
+   rule. Decorative; the stair never mirrors (Q8), the disc moves with the inline start. A curated, captioned
+   photograph takes the seat the day it exists (caption and credit under it, D26; the page's LCP image).
+3. **D26 as layout slots**: one inset (a notice), one action (the action card of `v5/card.css`: one primary a page — the
+   Forum in permanent mode makes the pilot's interest its primary, the pilot keeps the institutions' way as a
+   secondary), an authority's host beside its link (`pathways.services.authorities` returns it), a caption and a
+   credit under every photograph (a photograph renders only with its caption apparatus), «who can help me» with live
+   text only — «Besoin d'aide ? Écrivez-nous :» and the site's address (an existing catalogue string, translated);
+   the headings stay verbatim (the reader's questions are proposed in the notes for B1 item 7, never written).
+4. **No side column** on an interior page: the sibling spaces and pages are the chrome's doors; a page does not repeat
+   its chrome. The pathway pages keep «Dans l'Espace Personnes» as a closing register.
+5. **The index in the entrance, never sticky** («Sommaire de la page», an existing string): the pathway sheet's and the
+   Forum's V4 sticky bars are gone (W1-C's O2).
+6. **Three corners a screen** (§1.3, DL54-14): the chrome draws 6 on every screen, so the interior's cards and its plate
+   fold their 8 into that 6 (`.interior { --card-radius: var(--radius-md) }`) — 4 · 6 · full, measured ≤ 3 on every
+   capture (1440, 1366, 1024, 390, 360; fr and ar).
+7. **One thing once** (RH-5): the universities' presentational breakdown of the prescribed sentence (the same words a
+   screen below the lead) is removed; the Forum's sections, the programme and the tribune are said once each.
+8. **One diagram language** (CDV §19): `pilot-flow.svg` retired; the pilot's eight stations stand on «la linea» across
+   the column (four a row from 48rem, eight from 80rem). W3-D's passage may replace it with one import line.
+9. **What is being verified is said in words** on the «attesa» edge (a dashed rule at the reading edge), never a glyph
+   in a box (the editorial body keeps ≤ 6 icons, DL54-29 item 1); the Forum's two empty pages keep the empty state's
+   own glyph (W1-B: the handshake), drawn as the same row.
+
+**Why.** Plan §3.5 item 1 and §1.18 D26; V5.5 (one direction, built). The measures, the answers to the items handed by
+earlier areas and the headings proposed for B1 are in `docs/design-v5/QA/v54/w3-f1/NOTES.md`.
+
+**Source.** Plan §3.5 item 1; §1.18 D26; §1.4 RH-1 … RH-8, SH-1 … SH-9; §1.3; §1.7; §1.16; DESIGN_SYSTEM_V5 BI04, PX15,
+PX16, PX24; CREATIVE_DIRECTION_V5 §19; DL54-14; DL54-29; E/ = `C:/tmp/ile_v5_council/evidence/v54/w3-f1/`.
+
+## DL54-104 · 11 October 2026 · W3-F1, step 1: the interior's page sheets, the legacy rules deleted, the CSS as measured, the paths outside the slice
+
+**Decision.**
+
+1. **Page sheets as plain import lists, written in the collected tree** (DL54-77): `ecosystem/ecosystem.css`,
+   `forum/forum.css`, `pages/css/interior.css` (new — the institutional pages leave `pages.css`, which is the home's
+   alone and 722 B lighter), `pathways/pathways.css` (new — the pathway pages had no page sheet: one CSS request more
+   before `load` on the door-persons and pathway-detail page types). Each imports `css/v5/_interior.css` and its own
+   partial (`_spaces.css`, `_forum.css`, `_institutional.css`, `_pathways.css`), so that a later family adds one line.
+2. **The legacy rules no page draws any more are deleted** (§2.3, W3-F1's rows): `components.css` §24 `.section-nav*`,
+   §22 `.pagination__icon-prev` (dead since W1-B), `layout.css` `.section--muted`, `.section--inverse`,
+   `.container--wide/--narrow/--prose`; `dist/main.css` 42 472 → 42 316 B gzip. The rest of §9, §10, §18, §19, §24 and
+   of layout.css's editorial parts is still drawn by W3-F2's pages and the second step's two pages.
+3. **The page types' CSS, as measured** (gzip −9; for the steward to record — §2.6 item 5 under V5.5's performance rule,
+   as DL54-44 and DL54-76 did): home 57 132 → 56 254 · institutional pages 46 555 → 45 363 · ecosystem 44 404 → 45 488 ·
+   Forum 44 619 → 45 987 · **door-persons and pathway-detail 42 472 → 45 429, 943 B over the Wave-1 ceiling of 44 486**.
+   The interior's grammar is new CSS while the legacy page header, breadcrumbs and local navigation stay in
+   `main.css` for the pages that still draw them; `main.css` sheds them as W3-F2 and the second step move those pages.
+   No LCP or long-task measurement on 8782 in this step.
+4. **Paths outside the slice**, each justified (`QA/v54/w3-f1/NOTES.md` §6): the partial `static/css/v5/_interior.css`;
+   the new sheets and partials beside the owned ones; `apps/pathways/static/**`; `apps/pathways/services.py`
+   (`DEFAULT_ICONS` from the registry, the authorities' host); the app tests retargeted to the markup, their intent
+   kept; `tests/frontend/test_icons.py`'s floor of empty-state callers (25 → 21: the pathway sheet's four sections say
+   «being verified» in words); `static/img/illustrations/pilot-flow.svg` (deleted); DS 2026 §2.1 and §14.1.
+
+**Source.** Plan §2.2, §2.3, §2.6; DL54-15; DL54-44; DL54-76; DL54-77; V5.5 («fix only real regressions»).
+
+## DL54-105 · 11 October 2026 · W3-F1, step 2: orientation, the advice pages and the wizard as built
+
+**Decision.** Built by W3-F1 (step 2: /orientation/ — the questionnaire's first page, its steps, the pre-evaluation,
+the resume code —, /diplomes-et-titres/, /formation/, /attention-aux-fraudes/, each with its ar twin) on plan §3.5
+item 1, with these choices met during the build (plan §5.2):
+
+1. **The advice pages read like a pathway's sheet** (DL54-103): the entrance (the space's name, the prescribed title
+   and body, the sheet's metadata row without a glyph), one chapter per question, «Dans l'Espace Personnes» as the
+   closing register (the page leaves its own row out) and, last, the stone with the page's one action and the live
+   «who can help me» line. V4's side column, its CTA band and its two-glyph metadata row leave with their last
+   consumers (`_side_links.html`, `_orientation_cta.html`, `_metadata_row.html`).
+2. **A real sequence stands on «la linea»** (DL54-103 item 8): the five moments of the diplomas down the reading edge,
+   each station open and broken (its details are still being verified — said in words under the line), each
+   glossary term under the station it belongs to — V4's timeline squeezed the labels into letter-wide columns at 1440;
+   the two moments of «Formation» as two stations, each moment's word («Premier temps», «Second temps») in the
+   numeral's seat beside its open ring (the order is in the words), its title at the entry's size, its text at the
+   reading size and measure, its one way further. A phase is a record by DL54-55, but two phases in a row are a
+   sequence, and «several records in a row are a list, not a row of boxes» (v5/card.css): no card.
+3. **The fraud warning is a warning notice of the core components** (v5/notice.css — the amber register, its edge
+   broken): the anti-fraud entry's mark (`shield-alert`, the registry's), the prescribed title in the register's word
+   (its capitals tracked, TR rule 6), the broken rule — the kind said three times, never by colour; no red, no
+   alarm. On «Attention aux fraudes» the prescribed text stays byte-identical as the page's one inset, under a
+   visible title, «Votre protection» (an existing string, the entrance's label until now): with the page's h1 just
+   above, a hidden title left the notice saying its kind twice only. On the Arabic page the callout's French title is
+   a run inside a heading that keeps the page's direction, so it ends on the reading edge beside the mark.
+4. **The questionnaire on the core components**: the progress as a quiet register (the count in words over a 2 px
+   line on its hairline, filled from the reading edge — no pill, no movement); the question as the fieldset's legend;
+   «Plusieurs réponses possibles.» said before the choices and wired to the group; the choices as plates around the
+   native controls of v5/field.css (24 px; the whole plate the label's target, the control on top of it); an error
+   announced, wired to the group (`aria-describedby`, `aria-invalid`), said in words beside the refusal's mark
+   (`circle-alert`), the plates' edges doubled in the refusal's ink; ONE primary, «Continuer», first in the DOM (Enter
+   submits it), «Précédent» after it, after a hairline, part of the page — on a phone «Continuer» takes the row.
+5. **The keyboard model of a questionnaire that posts a page per answer** (wizard.js): a step reached from the
+   questionnaire itself (the referrer is one of its pages) puts the focus on the new question — the legend, a
+   programmatic target with no ring and no tab stop — instead of leaving it at the top of the document; a step opened
+   any other way keeps the browser's start.
+6. **The pre-evaluation keeps one inset**: the informational banner stands in the entrance under the h1 (the result
+   and what it is worth read together); the disclaimer joins the record's facts as the page's quiet note; the resume
+   code, shown once, keeps the warning's register (a one-time secret, not an editorial inset); the pathway family is a
+   register row whose prescribed title links its sheet — its description as written (DL54-103's decision 10).
+7. **On the Arabic page** a French question and a French choice read left to right and end on the reading edge —
+   the question as every French head of the interior, a choice beside its control; the help and the bodies keep their
+   own alignment.
+
+**Why.** Plan §3.5 item 1, §1.18 D26 (one inset, one action, «who can help me»), §1.4 (RH-5 one thing once; SP-8 the
+targets), §1.6, §1.7 (the six-icon ceiling), DL54-51 (tier 0), DL54-70 (the questionnaire's foot), DL54-103 (the
+interior's grammar); V5.5. The measures and the items answered are in `docs/design-v5/QA/v54/w3-f1/NOTES.md` (step 2).
+
+**Source.** Plan §3.5 item 1; §1.18 D26; §1.3; §1.4; §1.6; §1.7; DL54-51; DL54-55; DL54-70; DL54-103;
+E/ = `C:/tmp/ile_v5_council/evidence/v54/w3-f1/step2/`.
+
+## DL54-106 · 11 October 2026 · W3-F1, step 2: «Ma situation»'s guided form leaves main.css, the CSS as measured, the paths outside the slice
+
+**Decision.**
+
+1. **`v4/wizard.css` is retired** (plan §3.5 item 1, §2.3's W3-F1 row): «Ma situation»'s guided form is console-only,
+   so its rules leave the cascade every page loads and are rewritten on the V5 tokens as the console partial
+   `apps/portal/static/portal/v5/_wizard.css`, one import line in `portal/console.css` after the shell (plan §2.2:
+   «each Wave-3 family adds its own partial's import, through the steward»). The markup is other families' and is not
+   touched (`templates/portal/situation.html` W3-E, `components/wizard_stepper.html` W3-D, `option_cards.html`): the
+   Stepper's rules stand in the partial until the journey family redraws it.
+2. **Three corners a screen** (§1.3; W3-A counted five — the panel at 12, the field at 6, the foot at 8): the console's
+   4 · 8 · full — the question's panel and «Ce que nous ne demandons pas» at 8 (the console's panel, W3-B's), the
+   controls, the OptionCards and the date field at 4 (the plate of v5/field.css), the nodes and the discs full. One
+   raised panel (level 2); no light behind the question (the glow is retired); no glass on the foot (SH-5: the two
+   sticky bars are glass's one seat): the foot is part of the page at every width, after a hairline, its controls
+   wrapping (DL54-70) — on a phone the one act, «Continuer» (the submit on the last question, situation.js), takes
+   the row. The current node says itself in words and weight as well as by its ring; a chosen card by its doubled
+   edge and the person's own check (O14).
+3. **The legacy layout rules no page draws any more** since the two advice pages moved: `.section--rule`,
+   `.section--tight`, `.grid-auto`, `.layout-sidebar--end`, `.stack--sm`, `.stack--lg` (`layout.css` 9 296 → 8 795 B).
+   The rest of components.css §9, §10, §18, §19, §24 and of layout.css's editorial parts is still drawn by W3-F2's
+   pages, the home and the console.
+4. **The CSS as measured** (gzip −9, for the steward to record — §2.6 item 5 under V5.5's performance rule, as
+   DL54-104 did): `dist/main.css` 42 316 → **41 212** on every page type; door-persons and pathway-detail 45 430 →
+   **44 486** (at its Wave-1 ceiling: 943 B over before this step); institutional pages 45 364 → 44 266; ecosystem
+   45 489 → 44 385; Forum 46 093 → 44 989; home 56 254 → 55 150; the console page types 49 894 → **49 986**, under
+   their 50 086 ceiling (the guided form moves from main.css into the console entry); **the orientation pages 43 659 →
+   45 533**, 1 047 B over the interior's Wave-1 ceiling of 44 486 — they draw the interior's grammar now (the partial,
+   ≈ 3 KB) where V4 had a 1.3 KB sheet of their own; recorded, not traded against the pages (no LCP or long-task
+   measurement on 8782 in this step: the lane is not the production shape).
+5. **Paths outside the slice**, each justified (`QA/v54/w3-f1/NOTES.md`, step 2): `apps/portal/static/portal/v5/
+   _wizard.css` (new: the guided form's console-only home) and `apps/portal/static/portal/console.css` (its one
+   import line, through the steward); `apps/pathways/static/pathways/_pathways.css` (step 1's partial, extended);
+   two tests retargeted, their intent kept — `tests/frontend/test_console_shell_w3_a.py` (the import list accepts a
+   family's partial after the shell, as W3-B's branch writes it) and `tests/frontend/test_chips_cards_w1_c.py` (the
+   interior's chip and tag placements named; Formation no longer draws cards); the DS 2026 §2 table regenerated by
+   `scripts/regen_design_inventory.py` (the row of `v4/wizard.css` removed, the weights), as W2-D did.
+
+**Source.** Plan §1.3; §1.4 SH-2, SH-5, SH-8; §2.2; §2.3; §2.6; DL54-15; DL54-55; DL54-70; DL54-73; DL54-77; DL54-104;
+V5.5 («fix only real regressions»).
+
+## DL54-107 · 11 October 2026 · W3-F1, the fix pass: the door card carries the door's way in; RH-3 met on /parcours/, the needs form recorded outside it, two pages waived until their frames exist; the questionnaire says its place in words; the door card's CSS loads only on the doors
+
+**Decision.** The senior review (`QA/v54/w3-f1/REVIEW.md`: five majors, eight minors) and the accessibility and
+performance check (`QA/v54/w3-f1/A11Y_PERF.md`: one major, two minors), fixed in one pass (V5.5), each on the review's
+one direction:
+
+1. **«la porta» carries the door's way in** (M1). The end seat's plate keeps its night, its disc and its accent rule and
+   holds what the door offers first, where the portico's panel shows a photograph (`templates/pages/partials/
+   _via.html`): on /parcours/ the questionnaire's action card — its title, its sentence, «Commencer le questionnaire
+   d'orientation», the page's one primary; on /institutions/ and /universites-et-formation/ the prescribed button and
+   its one sentence, the page's one primary; on /entreprises/ the way to «Recueil des besoins» as a secondary — the
+   form's submit stays the one action. The drawn stair leaves (and with it m2, its Arabic collision). A curated,
+   captioned photograph takes the seat the day it exists (D26); the way in then stands under the lead. Measured
+   (`E/fix/measure/`): the door's control at 293–437 px at 1440 × 900 and 1366 × 768 on the four doors, fr and ar (the
+   review: 1.8–5.1 screens down); on phones at 490–617 px on /institutions/ and /universites-et-formation/, 697–710 px
+   on /entreprises/ and 779–885 px on /parcours/. There the locked lead runs ten to twelve lines at 360–390 px, so CD
+   §10's «primary within 560 px at 360 × 800», written for a lead of at most three lines, is not reached: the control
+   is not set above the lead, whose disclaimer («ces décisions relèvent exclusivement des autorités compétentes») is
+   read first.
+2. **RH-3** (M2). On /parcours/, «Comment ça marche» stands on «la linea»: the locked sentence cut on its own « → » into
+   four stations, its opening words kept as hidden text and its caveat under them (CD law 8; the owner’s D-U4 allows
+   the home the same split of the same text). Joined back, the words are the registry's sentence character for character; a
+   sentence of another shape stands whole (`pathways.services.how_it_works`). The largest stretch without a figure is
+   now 0.98 / 1.84 / 2.00 screens at 1440 / 390 / 360 (was 2.25 / 4.01). **Recorded outside RH-3's cadence:** the
+   needs form of /entreprises/, a task rather than reading — its six short single-line fields stand two by two from
+   64rem (≈ 290 px shorter); the stretch that remains is the form (3.15 / 4.23 screens). **Waived until curated,
+   captioned frames exist (§1.16):** /forum/ (prescribed prose; 3.99 / 6.18 screens) and /le-projet/ on a phone (2.85
+   at 390). The condition that lifts the waiver: the Image Art Director's curated, captioned frames for these slots;
+   a frame takes its seat with one partial.
+3. **The questionnaire says its place in words** (M3, FM12): «Question n sur N au maximum», the catalogue's string (it,
+   en, ar), is the visible count; no percentage, no `<progress>`; the quiet line stays; a test asserts that no «%» is
+   rendered in a step. **Its first page holds its action in the entrance** (M4): the inset «À lire avant de commencer»
+   under the lead, the action card in the end seat from 64rem («Commencer» at 342 / 370 px at 1440 × 900 /
+   1366 × 768; was 1 152 / 1 200), right after the inset on a phone (882 / 986 px at 390 × 844 / 360 × 800; was
+   1 512 / 1 644 — after the lead and the inset, which are read first), the three moments after it. **A step's head
+   is its compact title** (m5): the page's sentence is said once, on the first page; «Continuer» is inside the first
+   screen at 1440 × 900 (832–884 px); at 1366 × 768 the six-choice first question still sets «Continuer» 64 px under
+   the fold.
+4. **The pilot's eight stations stand in one row from 90rem** (M5), four a row below it: «ACCOMPAGNEMENT» no longer
+   breaks in its middle.
+5. **The minors.** The Forum's programme numbers its rows 01 … 08 unless every row has a time (CD §20), the first row's
+   words whole, «15h00 — Accueil et enregistrement» (m1). The entrance's index is one link a row at every width (m3).
+   «Destinataires» is the prescribed sentence as written, the chapter's body (m4; the presentational list and its
+   partial deleted). French on an Arabic page says so on its own element — the Forum's untranslated eyebrow and name,
+   the trail's link to it, /agami/'s question and answer (m6; A11Y finding 2). On the Arabic page a French lead keeps its
+   own start in a box on the reading edge no wider than its words, while heads still end on the reading edge (m7, the
+   interior's half; the home's lead is W2-D's, handed to the steward). The portico's double current marker is handed
+   to W2-C1 / W2-C2 (m8).
+6. **SP-8** (A11Y finding 1): the trail's links and the chapters' forward links are boxes on `--hit-min` (24 px) and on
+   `--hit-primary` (44 px) under a coarse pointer, with the «Termes utiles» tags and /contact/'s address; boxes, not
+   pseudo-targets, so two rows of links never overlap.
+7. **The door card's CSS loads only where a door is drawn** (V5.8: a surface's own CSS loads only where it is drawn):
+   `static/css/v5/_porta.css`, imported after the interior's grammar by the two door sheets alone
+   (`pathways/pathways.css`, `ecosystem/ecosystem.css`); «Comment ça marche»'s rules in `_pathways.css`. **The CSS as
+   measured** (gzip −9 of the bundles, per page type; the shared payload `dist/main.css` 41 203 → 41 203, unchanged):
+   persons 44 464 → 44 586 (100 over the interior's ceiling of 44 486); ecosystem 44 362 → 44 483 (under); Forum
+   44 970 → 44 671 (185 over); institutional 44 244 → 43 915; orientation 45 513 → 45 172 (686 over). Page-only sheets,
+   for the steward to record beside DL54-106's figures (A11Y finding 3). After design-v5's −646 B on `main.css` (W3-B),
+   only orientation stays over, by ≈ 40 B; W3-F2's deletions of the legacy page header, trail and local navigation
+   bring it under.
+8. **Paths outside the slice** (for the merge step's manifest): `static/css/v5/_porta.css` (new, beside
+   `_interior.css`); `apps/forum/services.py` and `apps/forum/views.py` (the Forum's untranslated name says its language
+   on the page and in the trail); `apps/pathways/views.py` (the cut sentence, `how`; `apps/pathways/services.py` was
+   already outside); `apps/pathways/tests/test_compliance.py` (a locked text cut for layout is read back whole).
+
+**Why.** V5.5 (implement → review once → fix → ship), on the review's one direction per item; V5.8 (the CSS budget). The
+measures, the runs and what is left are in `docs/design-v5/QA/v54/w3-f1/NOTES.md`, «Review fixes».
+
+**Source.** `QA/v54/w3-f1/REVIEW.md`; `QA/v54/w3-f1/A11Y_PERF.md`; plan §1.4 RH-3, SP-8; §1.16; §1.18 D26;
+CREATIVE_DIRECTION_V5 law 8, §10, §19, §20; DESIGN_SYSTEM_V5 §11 (FM12); DL54-103 … DL54-106; V5.8;
+E/ = `C:/tmp/ile_v5_council/evidence/v54/w3-f1/`.
+
+## DL54-108 · 12 October 2026 · W3-F1, the budget and consolidation pass: one partial for the public interior's shared components; the shared sheet sheds what the interior replaces; a page sheet holds what its pages draw; the page types as measured
+
+**Decisions** (the owner's V5.8 as the orchestrator's definitive ruling reads it, 12 October 02:15: the shared bundles
+never rise and ratchet down; page-only sheets for what a surface draws, measured, after reuse and deletion, with a
+performance sanity check; no duplicated component family — the family that merges second consolidates; V5.5):
+
+1. **The sync.** design-v5 at `v54/w3-f2` (`bfd2901`) merged into the branch (`76429f2`): `console.css`'s import list
+   in landing order (W3-B's dashboards, then this area's guided form), `layout.css`'s two deletions in one hunk
+   united, DS 2026 (§2 regenerated; §2.1 both families' rows; §10's `local_nav.html`, §10.1), this log (design-v5's
+   entries first, this area's five renumbered DL54-103 … DL54-107, the fix pass's index row added); `--rank-c-block`
+   labelled «riserva» (W2-A's `.section--c` and this area's `.section--tight` were its last consumers); the bundles
+   rebuilt from a clean dist.
+2. **One partial for the public interior's shared components** (rule 3; W3-F2's review m11). W3-F1's `_interior.css`
+   and W3-F2's `_lettura.css` drew the trail, the head, the chapters' device, the register's rows and D26's shared
+   slots (an authority's host, a photograph's caption and credit, «who can help me») value for value. They are drawn
+   once in `static/css/v5/_pagina.css`, the first import of `pathways/pathways.css`, `ecosystem/ecosystem.css`,
+   `forum/forum.css`, `pages/css/interior.css`, `orientation/wizard.css` and `cms/lettura.css`; each surface keeps only
+   its own parts in its own partial. The head is one drawing for the two vocabularies (W3-F1's entrance `.ingresso`,
+   W3-F2's `components/page_header.html`); a shared rule carries one selector and wins over main.css's legacy
+   components by order. W3-F2's twelve pages measured on the lane — every element's computed style and every pixel,
+   fr and ar, 1440 and 390 — are identical; W3-F1's pages take W3-F2's drawing where the two differed: the trail's
+   links are 24 px boxes whose target grows to 44 px under a finger (they were 44 px boxes at rest:
+   `--hit-min` still carries V4's 44 px through `v5/aliases.css`, so DL54-107 item 6's «boxes on `--hit-min` (24 px)»
+   were 44 px boxes — corrected here for the trail; the forward links keep their 44 px boxes), the help line's address
+   is one box, the quiet chapter's label is untracked. The service pages' sheet keeps its own trail and help line (the
+   account and error pages draw none of the rest: importing the shared page would load rules they never draw).
+3. **The shared sheet sheds what the interior replaces** — each rule proved unused (the templates, Python, JS and JSON
+   of the merged tree and the files the in-flight worktrees changed; a component template checked for its includers)
+   or re-drawn by every page that still draws its element: `components.css` §9 keeps the trail's skeleton (its box,
+   type, links, hover and current page are re-drawn by the shared page, the account pages and the console's bar);
+   §10 keeps the running head the console reads (capitals, case-sensitive forms); the legacy page header's box, title,
+   lead, meta and centred variant, the legacy hero (`components/hero.html`: no includer) and §24, the local navigation
+   (`components/local_nav.html`: no includer), leave; `register.css` loses the page header's capital titles (DS 2026
+   §3: `--track-caps-display` a «riserva»), the folio in the zones' rail, the gloss in the zones' margin, the verso and
+   home plates; `layout.css` the annotated block's reading column, the sidebar layout, the accent rule. Left, used:
+   §17 (the design showcase; W3-D retires it with its passage), §19 (the console's access point), the jurisdiction bar
+   (a component W2-D kept), the outcome's modifiers (composed in templates), the sequence's crossing (W3-D's branch).
+4. **A page sheet holds what its pages draw** (rule 2). `components.css` §18, the pathway list, goes to the home's
+   `pages.css` (its one consumer; the home already re-drew it and read of §18 only its titles' face and the stretched
+   link); the rules of `_interior.css` one surface alone draws go to that surface's partial (the wide chapter → the
+   spaces; the register whose rows name WHO → the institutional pages; a row's fragment, a row still being prepared,
+   what is still being verified → the pathways), each at the top of its partial. «la linea» stays in `_interior.css`
+   for W3-D, which moves it into its passage and imports it where it is drawn.
+5. **The CSS as measured** (gzip −9 of bundles rebuilt from a clean dist; design-v5 at `v54/w3-f2` → this pass):
+   `main.css` 41 464 → **39 111** (every page); the console page types 50 205 → 48 984, «Mes pièces» 51 377 → 50 156,
+   the company's dashboard 51 078 → 49 857; the login 46 325 → 43 972; the home 56 115 → 53 049; the content pages
+   45 520 → 43 212, the account pages 43 890 → 41 537, the error pages 45 093 → 42 740; the ecosystem doors 43 396 →
+   42 446, the Forum 43 611 → 42 605, the institutional pages 45 547 → 41 908; **the persons pages** (main.css alone →
+   + `pathways/pathways.css`, their first page sheet) 41 464 → **42 605**; **orientation** (+ `orientation/wizard.css`)
+   42 796 → **43 150**. The two page types that grow do so through their own page-only sheets, for what their pages
+   draw: the steward records them as measured (rule 2).
+6. **The performance sanity check** (the lane, dev server, uncompressed static; CPU ×4, 150 ms RTT, 1.6 Mbps; a fresh
+   context a load; blocks design-v5 · branch · branch · design-v5 · branch, n = 8 a cell a block; medians of the block
+   medians): LCP on the person door fr 1440 1 897 → 1 902 ms, a pathway sheet fr 412 1 935 → 1 922, orientation fr 412
+   1 937 → 1 912, the person door ar 412 2 097 → 2 134 (blocks 2 094 – 2 146 against 2 082 – 2 112); FCP equal or earlier
+   in every cell (the shared sheet 18 KB lighter uncompressed); the LCP element the entrance's lead on both trees. No
+   meaningful regression (V5.5).
+
+**Source.** V5.8 (the orchestrator's definitive ruling, 12 October 2026, 02:15); V5.5; `QA/v54/w3-f2/REVIEW.md` m11;
+DL54-99; DL54-103 … DL54-107; plan §2.3 (the deletion map); `QA/v54/w3-f1/NOTES.md` «Budget and consolidation» (the
+proofs, the comparisons, the measures, the paths outside the slice); E/ =
+`C:/tmp/ile_v5_council/evidence/v54/w3-f1/budget/`.
+
+## DL54-109 · 12 October 2026 · Steward, the w3-f1 merge: the family's six entries renumbered, the 31 paths assigned and four slices named as written, the shared CSS gate passed with the shared payload 2 346 B lighter on every page, every ceiling lowered to the merged weight, the public interior's five page types recorded
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w3-f1` into design-v5 on 12 October 2026 —
+what the family's own entries and notes hand to the merge step: DL54-103 … DL54-108; `QA/v54/w3-f1/NOTES.md` «Steward»
+and «Budget and consolidation» §30 – §34).
+
+1. **The numbering.** design-v5 stood at `8e13cd2` (W2-C2's shipped note): W2-C2's two entries and its merge's record
+   had taken DL54-100 … DL54-102 while the branch held DL54-100 … DL54-105 from its budget pass's sync, so the steward's
+   sync (`47f7343`) gave the family's six entries **DL54-103 … DL54-108** (add 3; their headings, their index rows and
+   their own cross-references — every DL54-100 … DL54-105 in their text was the family's own; the code, the tests, DS
+   2026 and the manifest cite none of the moved numbers); the notes' closing section says how to read the numbers
+   written before (`a8ebb27`). This entry is DL54-109.
+2. **Two conflicts, both areas' work kept.** DS 2026 §2's inventory rows — both hunks there: design-v5's rows (W2-C2's
+   prose and weight of `v5/chrome.css`), then `scripts/regen_design_inventory.py --write`, which renumbered the rows in
+   `main.css`'s order and took out `v4/wizard.css`'s row (no longer imported); the family had changed no row's prose
+   there. The decision log: design-v5's entries, then the family's. `static/css/components.css` and `main.css`'s import
+   list merged without a conflict and were read: the merged sheet is design-v5's less exactly the family's deletions
+   (§9's and §10's re-drawn rules, the legacy hero, §18, §24) and the branch's less exactly W2-C2's; the import list is
+   design-v5's without `v4/wizard.css`. `static/css/dist` and `static/js/dist` deleted and rebuilt (`npm run build`);
+   the JS byte for byte design-v5's but for the shared chunks' names, which follow the worktree — the family changed no
+   bundled script (`orientation/wizard.js` is an app file loaded as it is). **One semantic conflict**, green on each
+   branch and red on the sync, found by the targeted tests: W2-C2's phone sheet draws a primary of its own («Découvrir
+   le questionnaire d'orientation», `nav-sheet__primary`) earlier in the document than a page's content, and two of the
+   family's gated-door tests took the document's first primary for the page's prescribed button; they read it in `<main
+   id="main-content">` now, the intent kept (`78cb0de`).
+3. **The 31 paths outside the slice are this area's in the manifest** (`d4f4b40`). `scripts/check_ownership.py w3-f1
+   8e13cd2` listed exactly the paths the family declares — the earlier steward's 27 (NOTES §6, §16, §24 and «Steward»)
+   and the budget pass's four (§34) —; each was read in the diff and found to be what it declares. Whole files (21): the
+   page partials `static/css/v5/_interior.css`, `_pagina.css` (the public interior's shared components, drawn once for
+   W3-F1's and W3-F2's pages — V5.8 rule 3) and `_porta.css`; the page sheets and partials
+   `apps/pages/static/pages/css/{interior,_institutional}.css`, `apps/ecosystem/static/ecosystem/_spaces.css`,
+   `apps/forum/static/forum/_forum.css`, `apps/pathways/static/pathways/{pathways,_pathways}.css`; the console partial
+   `apps/portal/static/portal/v5/_wizard.css`; the retired `static/img/illustrations/pilot-flow.svg`; ten test files of
+   the pages the area owns. Slices (10): `apps/pathways/services.py` and `views.py`, `apps/forum/services.py` and
+   `views.py` (files no family held), `console.css`'s import line (W3-A's), W3-F2's `_lettura.css`, `lettura.css` and
+   `test_content_pages_w3_f2.py` (the consolidation), W1-C's chip test and W1-B's icon test. Four of the family's slices
+   named as written: `pages.css` (the pathway list's drawing, its one consumer's), `register.css` (the capitals of the
+   prescribed titles), `layout.css` (the editorial rules deleted, each proved unused) and DS 2026. The check after it:
+   75 inside, 27 slice, 24 generated, and the manifest itself, the one steward-only path (before: 31 outside);
+   `--validate`: coherent, 25 families, 597 entries.
+4. **The shared CSS gate (the owner's V5.8 and the orchestrator's definitive ruling of 12 October, 02:15) passes: the
+   shared bundles fall.** On the bundles rebuilt from a clean `static/css/dist` and `static/js/dist`,
+   `gzip.compress(data, 9)` (`evidence/v54/w3-f1/merge2/gate.log`):
+
+   | Page type | design-v5 `8e13cd2` | merged | change | ceiling before → after |
+   |---|---|---|---|---|
+   | every page, and an interior page with no sheet of its own (`main.css`) | 41 029 | 38 683 | −2 346 | 41 029 → **38 683** |
+   | console page types (`main` + `console` + `portal`) | 49 770 | 48 556 | −1 214 | 49 770 → **48 556** |
+   | «Mes pièces» (+ `documents.css`) | 50 942 | 49 728 | −1 214 | 50 942 → **49 728** |
+   | the company's dashboard (+ `companies.css`) | 50 643 | 49 429 | −1 214 | 50 643 → **49 429** |
+   | the login (+ `entrance.css`) | 45 890 | 43 544 | −2 346 | 45 890 → **43 544** |
+   | the home (+ `hero.css`, `pages.css`) | 55 680 | 52 621 | −3 059 | 55 680 → **52 621** |
+   | a content page (+ `cms/lettura.css`) | 45 085 | 42 784 | −2 301 | 45 085 → **42 784** |
+   | an account page (+ `cms/servizio.css`) | 43 455 | 41 109 | −2 346 | 43 455 → **41 109** |
+   | an error page (+ `cms/errori.css`) | 44 658 | 42 312 | −2 346 | 44 658 → **42 312** |
+   | **the persons pages** (`main.css` alone → + `pathways/pathways.css`, their first page sheet) | 41 029 | 42 177 | +1 148 | — → **42 177** (recorded) |
+   | the ecosystem doors (+ `ecosystem/ecosystem.css`) | 42 961 | 42 018 | −943 | — → **42 018** (recorded) |
+   | the Forum (+ `forum/forum.css`) | 43 176 | 42 177 | −999 | — → **42 177** (recorded) |
+   | the institutional pages (`pages.css` → `pages/css/interior.css`) | 45 112 | 41 480 | −3 632 | — → **41 480** (recorded) |
+   | **orientation** (+ `orientation/wizard.css`) | 42 361 | 42 722 | +361 | — → **42 722** (recorded) |
+
+   `dist/main.css` 41 029 → 38 683 B (−2 346 on every page): the legacy trail, page header, hero, local navigation and
+   pathway list of `components.css`, the editorial rules of `layout.css` and `register.css` that no template draws, and
+   `v4/wizard.css` (11.7 KB) leave the shared sheet — the last for the console partial `v5/_wizard.css`, so
+   `console.css` grows by 1 132 B and the console page types are 1 214 B lighter (DL54-106, DL54-108). `portal.css`,
+   `entrance.css`, `hero.css`, `documents.css`, `companies.css`, `servizio.css`, `errori.css` and
+   `core/overlay-panels.css` are byte for byte design-v5's; `pages.css` loses the institutional pages' rules and gains
+   the pathway list's drawing; `lettura.css` imports the shared page (+45 B). `dist/main.css` stands 7 397 B under its
+   45 KB cap (46 080 B).
+5. **Every ceiling is lowered to the weight measured at this merge** (the definitive ruling: «after a merge, the merged
+   weight is the new ceiling»; a page type's total «ratchets down like the shared ceilings»; DL54-102 item 5): every row
+   of the table that had a figure carries its new one. A family that needs a shared rule pays for it with deletions.
+6. **The public interior's five page types of this area are recorded as measured** — page-only sheets, where V5.8 puts a
+   surface's own CSS (rule 2). **The persons pages** (/parcours/, the pathway sheets, «Diplômes et titres», «Formation»)
+   loaded `main.css` alone and now load their first page sheet, `pathways/pathways.css` (3 494 B: the shared page, the
+   interior's own parts, the door card, the pathways' rules): **42 177 B**, +1 148 B on their own pages while every
+   other page type is lighter. **Orientation** grows through its own sheet (`orientation/wizard.css` 1 332 → 4 039 B:
+   its V4 sheet replaced by the interior's grammar and the questionnaire's rules): **42 722 B** (+361 B). The ecosystem
+   doors (**42 018 B**), the Forum (**42 177 B**) and the institutional pages (**41 480 B**, `pages.css` →
+   `pages/css/interior.css`) are lighter than before and recorded at their measured totals. Each grows, where it grows,
+   only through its own sheet, only for what its pages draw, after the reuse (the shared page) and the deletions above;
+   the performance sanity check is the family's (NOTES §31, the lane, CPU ×4, 150 ms RTT, n = 8 a cell in five blocks):
+   FCP equal or earlier in every cell, LCP within the series' spread (+37 ms at most, on the Arabic door) — no
+   meaningful LCP or first-render regression (V5.5). From this merge the five totals ratchet down like the others.
+7. **The capture report and the inventory.** `docs/qa/design/capture.py` on lane 7 (8787, `ile_v5_l7`, DEBUG off,
+   `--insecure`, one headless Chromium, exit 0): 43 captures, every one as expected, and the report the one design-v5
+   holds, byte for byte once its line ends are LF (the script writes CRLF; the committed file is kept, nothing to
+   commit) — the capture's pages (the home, the privacy page, the login, the 404) lose no figure the report records (the
+   status, the overflow, one h1, the direction, no external request, no empty icon, the drawer's and the header's
+   geometry, the focus after an invalid submit). `scripts/regen_design_inventory.py`: §2's rows renumbered and
+   `v4/wizard.css`'s row out in the sync itself; current after the manifest and the capture.
+8. **The tests.** On the branch after the sync, the manifest and the numbering note (`47f7343` … `a8ebb27`),
+   `TEST_DATABASE_URL=…/test_ile_v5_l7`, one pytest at a time, every browser run behind the benchmark lock, no lane
+   server of the steward's beside them: the area's targeted set without the browser — `tests/i18n`, `tests/compliance`,
+   `tests/security`, the orientation, ecosystem, pages and pathways apps, the Forum's public tests, «Ma situation»'s
+   view tests, the family's and W3-F2's unit files, `test_layout.py`, `test_design_docs.py`, the two bundle-current
+   tests, `test_static_pipeline.py` (a real `collectstatic`), O14, the chips' register, the icons, and what the merge
+   touched besides (W2-C2's sheet test, W1-C's chip and component tests, the CMS navigation, the overlays, the loader
+   rules, the console shell's tests and sheets, the template comments, the static assets, the chips' registry, the
+   tokens, the ownership and inventory scripts' tests) — **2 065 passed, 2 failed, 1 skipped** in 37 min 41 s: the two
+   failures were the semantic conflict of item 2, fixed (`78cb0de`; the file then 63 passed); the skip is the
+   confidential-material check without its private sentinel table (`ILE_CONFIDENTIAL_SENTINELS`), by design. The browser
+   set, five runs — the family's two files (23), the doors' and the home's (47), `tests/i18n`'s RTL files with W2-C2's
+   (47), W3-F2's two files and W3-A's questionnaire foot (17), W2-C2's browser file (25) — **159 passed**, no skip, no
+   crash. The full suite is the integration checkpoint's (V5.5).
+
+**Why.** Entries renumbered after design-v5's keep the log's one order; paths nobody holds would have no writer for the
+next family; the gate is read on the shared payload as V5.8 writes it, and a merged weight that becomes the ceiling
+keeps the savings for the product.
+
+**Source.** The owner's V5.8 (`C:/tmp/ile_v5_council/directives/V5_8_CONTINUE_GITHUB_CSS_BUDGET.md`, and the
+orchestrator's definitive ruling below it) and V5.5; plan §2.2 (the manifest; merge step 3), §2.3, §2.6; DL54-102 items
+4 and 5; DL54-99 items 4 – 6; DL54-103 … DL54-108; `QA/v54/w3-f1/NOTES.md` «Steward», «Budget and consolidation» and the
+closing numbering note; the weights in `evidence/v54/w3-f1/merge2/gate.log`; the ownership checks in
+`evidence/v54/w3-f1/merge2/ownership_before.log` and `ownership_after.log`.
+
+<!-- W3-C (12 October 2026): the family's ten entries, written as DL54-96 … DL54-105 on its branch (its step-1 entries first as DL54-82 … DL54-85), follow as DL54-110 … DL54-119 — after design-v5's DL54-109 (W3-F2's three entries and the record of their merge, W2-C2's two and theirs, W3-F1's six and theirs reached design-v5 first); renumbered at the steward's pre-merge sync (label w3-c-merge), content unchanged but for the cross-references between the ten. The family's notes, review and accessibility report keep the numbers they were written with: QA/v54/w3-c/NOTES.md «Merge step — the steward's note on numbering» says how to read them. -->
+
+## DL54-110 · 11 October 2026 · W3-C: «Mes pièces» V5.2 — the strip, one partition, the row as the link
+
+**Decision.** The register (`templates/documents/partials/register.html`, the same presenter and authorisation for
+`/fr/espace-reserve/mes-documents/` and `/documents/`) is the V5.2 comp, built on the shipped system (W3-A's frame,
+W3-B's grammar, W1-C's chip and fields), with the decisions the platform map gave the team (the platform map §5, O77;
+DOCUMENT_WORKSPACE §17):
+- **«Il registro» is a strip, the screen's ONE raised plane** (the action card's level, as the dashboard's NowPanel):
+  three runs — whose move it is — each a count at 20/28 (D7: never the stat card's 28 px numeral), one 16 px mark per
+  piece (the colour is the run, the shape is the state; counts alone above 24 pieces) and a link to its group (an
+  index, not a filter); then **the page's one primary with its piece and its date**, «Votre prochaine action» — T1's
+  piece (`cases.services.next_action(case, reader=user)`) when the reader answers for it, otherwise T1's precedence
+  over the open pieces the reader answers for, so the dashboard and «Mes pièces» name the same piece; «Aucune action
+  ne vous est demandée pour l’instant.» when nothing is the reader's; the locked count sentence closes it, verbatim.
+- **One partition, three groups** (D1): to act (an open piece the person answers for) · in hand (the rest that is
+  not settled) · settled (valid) — the strip's runs and the collection's groups are the same sets, drawn by one
+  function (`documents.presenters.register_groups`), the rule the dashboard's ledger already follows. The words are
+  the catalogue's — «À faire», «En cours», «Valide» — until B1 signs «À vous · En cours · Réglées» (D3, plan §1.18
+  D15); the glosses are not drawn.
+- **The row is the link** (D2 taken: no row menu): six zones on a subgrid and the note as the row's footer; the title's
+  link stretched over the row, above the chip, the actor, the date and the note and under the act — 0 dead probe
+  points of 42 (gate 0: 14 of 30); no «Consulter»; an act only on an OPEN piece the reader may file («Déposer la
+  pièce», «Remplacer la pièce»), described by the piece's title (W-3). A filed piece, one in review and a valid one
+  offer nothing on the row: a replacement is rare and waits on the piece's page — the settled row is the quiet one
+  (the research's F9).
+- **The Conditions gate promises no act its target cannot do** (W3-B's review, M1, carried over to W3-C): V4's row
+  offered «Accepter les Conditions», which opens the Conditions' page — «Page en cours de préparation», nothing to
+  accept: the acceptance flow waits on the legal texts (G1; `documents/terms_required.html`). The rows the gate blocks
+  say «Bloqué» beside the chip and offer no act; the strip's primary leads to the piece's page («Consulter») and says
+  why under the date, with the cause's `lock` — «Acceptation des Conditions d’utilisation requise.», the register row's
+  own words —, as the review asks of the dashboard's NowPanel. When the acceptance flow exists, the act returns to the
+  row with its real target.
+- **The filter** is the key to the marks, in `STATE_ORDER`; a state with no piece is a word, not a link («Autres
+  états» would be new copy: not drawn). Below 52rem of register: one 44 px control and a bottom sheet — K5, the
+  documents lane's phone (RS §3) —, a native `popover` until the overlay system lands (W2-A), «Fermer» always present.
+- **The search** is drawn in the card layout from thirteen pieces on (D9). **The layout follows the register's own
+  width** — six columns from 66rem, five with the actor under the title from 52rem, cards below — by a container
+  query, as the gate asks; DOCUMENT_WORKSPACE §16.6's cost (more layout work at CPU × 4) is in DL54-113's smoke.
+- **Variant B is not built** (D13). The files below stay a real table, named for what it is.
+
+**Measured** (lane 8789, the QA personas, fr / ar): the first card's title at 650 px at 390 × 844 and at 360 × 800
+(gate: ≤ 700; the first piece above the bottom bar at both); 0 dead probe points at 1440, 1280, 1100, 390, 360 in fr
+and ar; six columns at 1440, five at 1280 and 1100, cards at 768, 390, 360; the strip's primary and the rows' acts end
+on one x (1 339 px at 1440; mirrored in Arabic); corners 4 · 8 · full; one shadow value at rest; no animation at load;
+no horizontal overflow from 320 to 1440; 0 console errors, 0 CSP reports.
+
+**Source.** Plan §3.5 item 5, §1.2, §1.15; the platform map §3, §5; DOCUMENT_WORKSPACE §0, §6–§14, §17 (D1, D2, D7,
+D9, D13); RESEARCH_SYNTHESIS_V52 §3 K5; DL54-78 … DL54-80; `QA/v54/w3-c/NOTES.md`; `tests/frontend/test_documents_w3_c.py`,
+`tests/frontend/test_documents_browser_w3_c.py`.
+
+## DL54-111 · 11 October 2026 · W3-C: F8 and F13 — the ladder stops once a piece is filed; lateness speaks azione
+
+**Decision.**
+- **F8** (`documents.presenters.present_requirement`): a row's `urgency` runs only while its piece is OPEN (missing,
+  to replace, expired, not valid). Once it is filed, in review or valid, the date is drawn calm — the calendar, the
+  second ink, no word: the clock is no longer the person's. On the QA data a valid passport due in 18 days lost its
+  «upcoming» mark.
+- **F13** (`portal.services.present_deadline`): «En retard» goes out as `overdue` — azione: terracotta, a disc with
+  clock hands — and «Bientôt» as `soon` — attesa: amber, a dashed ring. Before, `error` and `warning` drew lateness in
+  a refusal's garnet, struck. `core.chips.KIND_REGISTER` already held both kinds (W1-C). The bridge's deadlines card
+  mapped `error` to `overdue` itself (W3-B, DL54-84): the mapping is now a no-op, harmless.
+
+Presenter changes only: no rule, state, permission or word changes.
+
+**Source.** Plan §1.2 «Deadlines» («Soon = attesa; overdue = azione. Red never means lateness»); the platform map's
+F13 and §6 item 0; DOCUMENT_WORKSPACE §3 F8, §9.1 item 2; the tests «a filed piece due tomorrow reads calm», «the
+deadlines page draws lateness in azione».
+
+## DL54-112 · 11 October 2026 · W3-C: page partials imported by the page sheet; the piece in the order of need
+
+**Decision.**
+- **The three partials of the document workspace** — `apps/portal/static/portal/v5/_workspace.css`, `_table.css`,
+  `_depot.css` — are imported by the documents page sheet (`apps/documents/static/documents/documents.css`, loaded by
+  the five documents pages), written in the collected tree (`../portal/v5/_x.css`, DS 2026 §2), never by `main.css`
+  nor by the console entry every console page loads: the register is drawn by two pages. W1-A's guard
+  (`tests/frontend/test_v5_tokens.py::test_the_console_partials_close_the_console_entry`) learns the rule: every console
+  partial has ONE importer — the console entry, or the page sheet of the pages that draw it.
+- **The piece's page** (`templates/documents/requirement_detail.html`) follows the order of need (DOCUMENT_WORKSPACE §12
+  item 2; W-6: V4 put the act last): the state with its rule and this piece's reason; the deposit while the piece is
+  open (`templates/documents/partials/depot.html`, after the deposits once it is filed, in review or valid); what is
+  asked; the source; the deposits, each «Télécharger» described by its version. Its head names the file by its
+  reference (ILE Mono): V4's case band (`portal/partials/case_header.html`) is not drawn on this page — on a phone it
+  took 200 px before the piece's state. The deposit's eleven answers composed in place (the Dépôt module, the JSON
+  answers of `views.py`) are the family's second step, with the preview drawer on the overlay system.
+
+**Source.** Plan §2.3 («Page-only CSS — never in main.css»; «Console-only CSS»), §3.5 item 5; DS 2026 §2;
+DOCUMENT_WORKSPACE §11, §12.
+
+## DL54-113 · 11 October 2026 · W3-C: paths outside the slice, the legacy rules deleted, the CSS weight
+
+**Paths outside the family's slice** (`scripts/check_ownership.py w3-c`), each for one reason, for the merge step to
+record:
+
+| Path | Owner | What, and why |
+|---|---|---|
+| `templates/documents/partials/depot.html` | none (new) | the piece's deposit, included twice by `requirement_detail.html` (open: under the state; settled: after the deposits) — one markup, drawn once |
+| `apps/documents/tests/test_requirement_views.py` | none | two V4 pins retargeted, intent kept: the register is a collection of rows and the row is the link (it pinned `doc-collection panel panel--l1`); one blocked ROW, counted on the rows — the strip's primary names the same piece |
+| `tests/frontend/test_v5_tokens.py` | W1-A | the console partials' guard: one importer each — the console entry, or the page sheet of the pages that draw it (DL54-112) |
+| `templates/dev/showcase.html` | W1-C / W1-P (the dev page) | loads the documents page sheet: its state filter and document row samples are drawn by the partials that left main.css; the row sample drops V4's panel classes |
+| `static/js/src/console.js` | W3-A (the slice «the preview drawer and the filter sheet» is W3-C's) | the register's search hides a group whose rows it hides (four lines inside the search block; W2-A's rewrite of the file touches neither them nor their neighbours) |
+
+**Inside shared files, beyond the slice's words:** `static/css/v4/workspace.css` — the deletion map's rows
+(SegmentedControl, search, DocumentCollection / Row / Card) with the row menu, their forced-colour and touch lines and
+the files table's rules of the portal page (`.files__*`, `.table__link`: their only consumer was «Mes pièces»); the
+sheet's header. `register.css`'s register and entry stay: academy, cases, companies, forum, glossary, helpdesk, the home
+and selection still draw them — the documents pages no longer do (§2.1: the last named consumer deletes). Panel and
+HealthStrip are no longer drawn by «Mes pièces»; the workspace head (`ws-head`) still is, as on the dashboard.
+
+**The weight** (gzip −9, Python's `gzip.compress(…, 9)`, DL54-73): `dist/main.css` 41 802 → 40 470 B (−1 332, every
+page of the site); `dist/portal/console.css` and `dist/portal/portal.css` unchanged. **The console page types' three
+sheets 50 768 → 49 436 B — 571 B under the ceiling of DL54-73 (50 007 B)**, where W3-B left them 761 B over. The
+documents pages' own sheet 1 172 → 4 623 B (+3 451: the register, the files table, the piece — the three page partials
+in the one bundle the five documents pages share, cached across them); the documents page type in all 51 940 →
+54 059 B (+2 119), 2 880 B over «the three sheets plus the page's own as it weighed at the w3-a merge». The bust rule's
+two remedies are taken — the superseded legacy rules deleted from main.css, the rules kept out of every other page as
+page partials —; under V5.5 («fix only real regressions») the lane's smoke (the notes: LCP, CLS, long tasks at CPU × 1
+and × 4) is the evidence, and the merge step records the documents page type's ceiling as measured.
+
+**Source.** Plan §2.1, §2.2, §2.3 (the deletion map), §2.6; DL54-15; DL54-73 item 3; DL54-85; `OWNERSHIP_V54.json`;
+`QA/v54/w3-c/NOTES.md`.
+
+## DL54-114 · 11 October 2026 · W3-C, step 2: the Dépôt — the eleven answers composed in place, on a JSON road that changes no rule
+
+**Decision.**
+- **One markup, two roads** (`templates/documents/partials/depot.html`): a required piece's Dépôt (the piece's page,
+  and the preview drawer's body) and the loose file's (`templates/documents/upload.html`). The layers of gate 0 are
+  kept — the native field (without script it is the whole Dépôt), the zone that keeps the real input inside it, the
+  client guards, a real `<progress>` — and «filed ≠ examined»: no verdict, no check; the success is the filed state's
+  own mark (ring and dot), drawing itself on the person's act only.
+- **The JSON road** (`apps/documents/views.py`, the slice «the Dépôt's JSON answers»; IP S7): the same form to the same
+  endpoints with `X-ILE-Depot: 1`; each answer goes out as `{answer, message, …}` — `filed` (with its version),
+  the chain's refusals on their field (`empty`, `too_large`, `extension`, `content_mismatch`, `image_invalid`,
+  `pdf_active_content`, `required`; a date already past on `expires_on`), `infected`, `throttled` (with its title),
+  `terms`, `refused` (a closed file). **Always a 200**: a refusal, the throttle and the gate are answers the Dépôt
+  composes, not failures of the request — and Chrome writes every 4xx of an XHR into the console as an error (the gate
+  counts console errors). The road without script is byte-for-byte the old one (redirect and message, the 429 page,
+  the Conditions page at 403). The header changes the answer's FORM, never the answer: the validation chain, the size
+  limit, the MIME and antivirus checks, the storage, the throttle and the permissions run the same lines; an intruder
+  meets the same 404 and a third party's piece the same 403 before any answer is composed (tests).
+- **Composed in place** (`static/js/src/depot.js`, imported by `console.js` where a Dépôt is drawn): a refusal stays on
+  the file's row (the double rule of «rifiuto», the server's sentence, the zone as the one way on); a date already past
+  under its field (W1-C's error grammar); the throttle as a notice, the file kept, «Déposer» the retry; the gate in
+  place of the form (the dashed frame of `terms_required.html`); a filing — and an antivirus refusal, which records a
+  version — as the piece read again, its answer under the new state, the focus on the state's heading. An answer that
+  is not the Dépôt's (a login page, a refusal page) reloads the page: nothing is sent twice behind the person's back.
+  The client guards read the server's own limits (`documents.presenters.deposit_rules` through the `documents_register`
+  tag): the allow-list, the size, the project's clock.
+- **Words**: none new. The server's sentences verbatim; the guards' sentences are the chain's (`REJECT_MESSAGES`); the
+  blocks (the throttle's notice, the error's, the server's, the gate, the filed line) are `<template>`s of the markup.
+  Where gate 0 had a word that is not live («Envoi interrompu», «Réessayer», «Choisir un autre fichier», «Relâchez pour
+  déposer», «Vérification du fichier»), the Dépôt says nothing new: the zone is the way to another file, «Déposer» the
+  retry, the L2 key the wait — the copy packet lists them.
+
+**Source.** Plan §3.5 item 5 («the Dépôt's 11 answers composed»), §1.9 (L2, L3); IP S7; DOCUMENT_WORKSPACE §11
+(11.1–11.3); CD §12; `tests/frontend/test_depot_w3_c.py`, `tests/frontend/test_depot_browser_w3_c.py`;
+`QA/v54/w3-c/NOTES.md` (step 2).
+
+## DL54-115 · 11 October 2026 · W3-C, step 2: F13 on every page that draws a deadline register; the register and the entry
+
+**Decision.**
+- **F13 beyond the deadlines page.** The case file's checklist (`.table__overdue`, `.table__row--overdue`), its date list
+  (`.dates__row--soon`, `--overdue`) and its next step's edge (`.ws-next--overdue`) — `static/css/v4/workspace.css` —
+  and the console's next action (`.next-action--soon`, `--overdue`) and the portal tables' late rows (`tr.is-overdue`)
+  — `apps/portal/static/portal/portal.css` — drew lateness with a refusal's garnet (`--err-700`, `--state-error-br`,
+  `--line-grad-err`). They take the deadline tokens the register and the dashboard draw: «soon» attesa, «overdue»
+  azione. A blocked step keeps its own edge. Colour only: no class, no markup, no word changes. The deadlines page's
+  dates (`templates/portal/partials/deadline_item.html`) carry the glyph of their register on their own line — alarm-clock
+  late, clock close by, the calendar otherwise (`portal.services.present_deadline` gives the row its `urgency`) — in the
+  dashboard's grammar of a date (`.db-due`, `_dashboard.css`, already on every console page): no new shared CSS.
+- **The shared payload stays flat** (the owner's V5.8: the console page types' 50 927 B are a hard ceiling). Step 2's
+  shared CSS, gzip −9: `dist/main.css` 40 470 → 40 472 B, `dist/portal/console.css` 7 012 B unchanged,
+  `dist/portal/portal.css` 1 954 → 1 958 B — +6 B on the console page types, after step 1's −1 332 B. The Dépôt's rules
+  live in the documents page sheet only (`dist/documents/documents.css` 4 672 → 5 547 B, the five documents pages).
+- **The deletion map's row «register.css's register and entry»** (plan §2.3): every rule of the section is still drawn
+  by eight page families (academy, cases, companies, forum governance, glossary, helpdesk, the home's pathways,
+  selection) and stays; the current entry's rules (`.entry[aria-current]`, and their forced-colour twin) leave — no page
+  marks an entry current since the documents register stopped drawing entries. The section's last consumers delete it
+  (§2.1: the last named consumer deletes).
+- **Paths outside the slice** (for the merge step): `static/css/v4/workspace.css` and `apps/portal/static/portal/portal.css`
+  (the F13 rules above: W3-E's and the console's legacy rules; the task names F13 «on every page that shows them»),
+  `templates/portal/partials/deadline_item.html` (W3-E's: the date's glyph and grammar, one line);
+  `apps/documents/templatetags/documents_register.py` (the `deposit_rules` tag, five lines); `static/js/src/depot.js`
+  (new, the Dépôt's module) and its import line in `static/js/src/console.js`; `docs/design/DESIGN_SYSTEM_2026.md`'s
+  `form_field.html` consumer line (the upload page now draws it through the Dépôt).
+
+**Source.** Plan §1.2 «Deadlines», §2.1, §2.3; the platform map F13, §6 item 0; `tests/frontend/test_depot_w3_c.py`
+(`test_lateness_is_never_drawn_with_a_refusals_colour_on_the_legacy_sheets`,
+`test_the_register_entry_keeps_only_what_a_page_still_draws`).
+
+## DL54-116 · 12 October 2026 · W3-C, step 2: the preview drawer and the filter's sheet, on the overlay system
+
+**Decision.**
+- **The preview drawer** (`templates/documents/partials/piece_drawer.html`, `static/js/src/piece-drawer.js` imported by
+  `console.js` where the register draws it): the overlay system's drawer (W2-A's contract, never a second mechanism),
+  `data-overlay-modal="none"` — beside the list on desktop, no scrim, the page usable, another row swapping the content
+  without replaying the slide; a modal sheet on a phone (`overlay.js`, ≤ 40rem: the scrim, `aria-modal`, the trap).
+  Opened by a plain press on a row's title, a row's act or the strip's act (a modified press keeps the link's own way;
+  without script the rows are links to the pieces' pages). **The head at 0 ms from the row** — the reference, the title
+  in its own language, the row's line (chip · actor · date) written into slots as words and attributes, nothing inserted
+  in the press's task —, the busy key after 400 ms; **the body is the piece's page itself** — its `<article>` fetched
+  from the piece's URL, no second template — seated by L3 on a piece's first arrival (`loader.js` `seat`, imported on
+  demand), swapped in place on a refresh; `[data-piece-head]` marks what the head already says, not drawn twice. While
+  it is open beside the list the workspace makes room (`data-drawer-beside`, written by the module once the drawer's
+  first frame is painted — the register's re-layout stays out of the press's frame —, never a document-wide `:has()`):
+  the register lays itself out by the width it is left, as its container query was built for.
+- **History** (plan §1.14): the first opening pushes the piece's URL (a reload lands on the full page); Back, Esc and
+  «Fermer» close it and the register's URL comes back with its `?état=`; a swap replaces the entry (`replaceState`); a
+  Forward onto a closed drawer's entry loads that piece's page. **Focus**: the title on opening (a non-modal drawer,
+  CONTRACT §4), the row's title on closing; a swap from the list leaves the focus in the list; a row's act or the strip's
+  act sends it to the Dépôt's field. «Télécharger» keeps the drawer open (`data-overlay-keep`: a download is not a page).
+  **RTL** (O5): the drawer mirrors — it stands on the left in Arabic; the sheets do not.
+- **The Dépôt inside the drawer** is the same module (DL54-114) with the drawer as the host of its live regions (an
+  announcement is never outside a modal sheet) and the drawer's own refresh: after a filing the piece is read again in
+  place AND the register behind it (`.doc-page` swapped: the strip, the row, the files; the search and the filter's
+  sheet wired again), the drawer's head and opener moved to the fresh row.
+- **The filter's sheet** (DOCUMENT_WORKSPACE §13): the card layout's one 44 px control is a link to the overlay system's
+  bottom sheet (`components/sheet.html` — the scrim, the grip, «Fermer», Esc; the focus on the current entry and back on
+  the control; without script it shows in place, `:target`). The entries are one partial
+  (`templates/documents/partials/state_filter.html`) drawn twice — the in-flow track and the sheet's body. The native
+  popover sheet, its motion and its forced-colour rule leave `_workspace.css`: the system draws them, once.
+- **The page-only sheet** (W2-A's CONTRACT §1, the owner's V5.8 budget): the two register pages link
+  `css/dist/core/overlay-panels.css` in their `extra_head` — the head / body anatomy of the drawer and the bottom sheet
+  are page-only since W2-A's budget fix; nothing of it reaches `main.css`. W2-A's guard learns that a partial drawn inside
+  pages (`templates/documents/partials/`) is linked when every template that includes it links the sheet — the link
+  stays in the page's head, never in a fragment.
+- **W2-A's row-menu pins**, retargeted with their intent kept (the register's overlay is the system's): W3-C removed the
+  row menu in step 1 (DOCUMENT_WORKSPACE D2), so `test_overlays.py`'s, `test_overlays_console_w2_a.py`'s and
+  `test_overlays_console_browser_w2_a.py`'s row-menu tests now hold the row opening its piece in the system's drawer.
+- **Corners**: at rest 4 · 8 · full on every documents screen; an open drawer or sheet adds its own 12 (plan §1.3: an
+  open overlay may add its one).
+
+**Source.** Plan §1.14 («Preview drawer», «History», O5, O7), §1.15 item 3 (`?état=`), §3.5 item 5; W2-A's CONTRACT.md
+§1–§6; DOCUMENT_WORKSPACE §12, §13; `tests/frontend/test_drawer_browser_w3_c.py`, `tests/frontend/test_documents_w3_c.py`,
+`tests/frontend/test_documents_browser_w3_c.py`, `tests/frontend/test_overlays.py`; `QA/v54/w3-c/NOTES.md` (step 2).
+
+## DL54-117 · 12 October 2026 · W3-C, step 2: no state read through `:has()` — the drawer's open and close under 200 ms
+
+**Decision.**
+- **Measured** (the lane's dev server, headless Chromium, CPU × 4, a fresh context per load, Event Timing — INP's
+  definition; n = 9 a cell): the drawer as the rehearsal left it opened at p90 232–296 ms and closed at p90 184–264 ms
+  (O7: ≤ 200). The traces named two costs. (1) **A focus that entered or left a row's title re-styled the whole page**
+  from `<body>` — ≈ 650 elements a time on «Mes pièces» at 390 (Blink's `:has()` invalidation,
+  `allDescendantsMightBeInvalid`), and the open paid it twice (the tap's focus, then the drawer's); 276 for the Dépôt's
+  field on a piece's page. The cause
+  was W3-C's own `.doc-row:has(.doc-row__link:focus-visible)` and `.doc-depot__zone:has(> input:focus-visible)`: with
+  them replaced, the same focus re-styles 4 elements. (2) **The register's re-layout** when the workspace made room.
+- **So**: the keyboard's focus in a row and in the Dépôt's zone is read from the input's modality —
+  `html[data-input="key"] .doc-row:focus-within`, `html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within`
+  (head.js's flag, as W2-C1 did for the header) —, the zone's wait from `[data-sending]`, which `depot.js` writes with the
+  controls' wait; the workspace makes room once the drawer's first frame is painted (`motion.js` `afterPaint`). A source
+  guard keeps the three partials' `:has()` free of states. **After**, on the merged branch: open p90 96–136 ms, close
+  p90 72–184 ms in the four cells (fr and ar, 1440 beside the list and 390 as a sheet); the filter's sheet open p90
+  120 / 104 ms, close 80 / 64 ms (fr / ar).
+- **The script rules the step had missed** (W1-D): `depot.js` imported `loader.js` statically and waited on a frame with
+  a bare `requestAnimationFrame` — `test_loader_rules` and `test_script_motion_gate` failed. The loader is now asked for
+  on demand (once a Dépôt is wired; its calls keep their order on one promise) and the live region's words follow its
+  clearing by a timer; the drawer asks for the loader when a piece is opened and seats the fragment only once it is
+  there (a fragment that arrives first simply stands: a seat begun after its rows were painted would hide them and
+  raise them again).
+- **Handed on, not W3-C's**: W1-C's `.form-field:has(… :focus-visible …)::after` and `.opt:has(input:focus-visible)`
+  (`main.css`) re-style ≈ 800 elements when the Dépôt's date field takes the focus on a phone — the same remedy
+  (`html[data-input="key"] .form-field:focus-within`) is W1-C's to make, every page at once.
+
+**Source.** Plan §1.14 (O7, the INP rule), §1.5 (the one motion gate), §1.6; W2-A's NOTES «INP»; DL54-89
+(`html:has(:focus-visible)` → `html[data-input="key"]`);
+`tests/frontend/test_depot_w3_c.py::test_no_documents_sheet_reads_a_focus_or_a_state_through_has`,
+`tests/frontend/test_depot_browser_w3_c.py::test_the_zone_takes_the_keyboards_ring_and_a_pointer_leaves_it_plain`;
+the evidence `C:/tmp/ile_v5_council/evidence/v54/w3-c/s2/inp9-*.json`.
+
+## DL54-118 · 12 October 2026 · W3-C, step 2: paths outside the slice; the CSS as measured
+
+**Decision.**
+- **Paths outside the slice**, each for the merge step to write into the manifest (DL54-113 and DL54-115 list
+  the earlier ones): `static/js/src/piece-drawer.js` (new: the drawer's module, imported by `console.js` where the
+  register draws the drawer — the slice names «the preview drawer and the filter sheet, on overlay.js»);
+  `templates/documents/partials/piece_drawer.html` and `state_filter.html` (new partials of the register, beside
+  `register.html`); `tests/frontend/test_overlays.py`, `test_overlays_console_w2_a.py`,
+  `test_overlays_console_browser_w2_a.py` (W2-A's row-menu pins retargeted, intent kept; the page-only guard taught
+  that a partial is linked through the pages that include it); `tests/frontend/test_state_chips_carry_a_register.py`
+  (W1-C's two pins of the filter's legend follow it into `state_filter.html`); `static/js/src/depot.js` again (the
+  loader on demand, the timer, `data-sending`).
+- **The shared payload** (the owner's V5.8; gzip −9 as the stewards weigh it, bundles rebuilt from a clean dist):
+  `dist/main.css` 42 152 → **40 876 B** (−1 276, every page type), `dist/portal/console.css` 6 809 B unchanged,
+  `dist/portal/portal.css` 1 932 → 1 935 B — **the console page types 50 893 → 49 620 B, 1 307 B under the ceiling of
+  50 927 B** (DL54-87 item 3); an interior page 42 152 → 40 876 B (ceiling 42 540). Nothing of the drawer, the sheet or
+  the Dépôt reaches a shared bundle.
+- **The documents pages' own sheets** (page-only, loaded by the five documents pages and the showcase):
+  `dist/documents/documents.css` 1 172 → 5 418 B; the register pages also link W2-A's page-only
+  `dist/core/overlay-panels.css` (2 071 B) for the drawer's and the sheet's anatomy.
+
+**Source.** Plan §2.2 (the manifest; the serialized files), §2.3, §2.6; the owner's V5.8 (11 October 2026, 19:40) and the
+orchestrator's reading; DL54-87 item 3; W2-A's CONTRACT §1, §7.
+
+## DL54-119 · 12 October 2026 · W3-C, the fix pass: the person's place after a swap; the open piece marked; one clock decides one deadline; the review's minors
+
+**Decision.**
+- **After a swap the drawer's close keeps the person's place** (REVIEW M1, A11Y_PERF finding 1). Two causes, two
+  remedies, both in `static/js/src/piece-drawer.js`: the register's history entry keeps no scroll of its own while the
+  drawer owns the next one (`history.scrollRestoration = "manual"`, set before the first push — the drawer's entry
+  inherits it — and given back once the traversal back to the register has landed, after its frame): the browser no
+  longer restores the page to where it stood at the first opening. And the focus goes back to the title of the row of
+  the piece SHOWN — `overlay:close`'s opener, which a swap moves — when it was inside the drawer (tracked by
+  `focusin` / `focusout`; the native close's own focusout comes with the drawer shut) or nowhere, never for a link that
+  leaves: the native `<dialog>`, shown once, hands the focus back to the element focused at its `show()` (the first row
+  opened) before `overlay.js`'s `settle()` looks, and then finds it outside the panel. Measured on the lane: closed by
+  «Fermer», Esc in the drawer, Esc in the list or Back, the page stays (1 028 → the same row at the same height, 561 once
+  the table is back) and the focus is on the shown piece's row, in view, fr and ar, 1440 and 1100.
+  **Carry-over to W2-A**: `settle()` should read whether the focus was inside the panel before `panel.close()`.
+- **The register says which piece is open, and the press stays under the pointer** (REVIEW M2). The row of the piece
+  shown holds `aria-current="true"` on its title and the selected state (`data-drawer-open`: the hover's surface and a
+  2 px `--accent-mark` rule on the reading edge — the rule the portico's current link carries; an outline in Highlight
+  under forced colours), moved on a swap, cleared on closing, written after the drawer's first frame like the
+  re-layout. The re-layout keeps the element the person is on where it stood: the pressed row's title on opening, the
+  focus (the shown piece's title) on closing — measured before the `data-drawer-beside` toggle, restored by an
+  instant scroll after it. DL54-116's decision (cards beside the drawer) is kept.
+- **The strip's act steps down while the drawer shows its piece** (REVIEW m2): the strip's next piece takes the open
+  row's state and its act becomes a secondary (`data-drawer-stepped` restores it); the drawer's «Déposer» is the one
+  primary in view.
+- **One clock decides one deadline** (REVIEW M3): `DocumentRequirement.is_overdue` and `ChecklistItem.is_overdue` read
+  `core.clock.today()` — as `due_urgency`, the deadlines page and the clock fix of 5 October do; T1 (`_open_obligations`)
+  and the case's progress read those properties. Production has one clock either way; on a lane or the preview a
+  piece due the day after the reference date is «Bientôt», never «En retard».
+- **The minors** (REVIEW m1, m3–m7; A11Y_PERF findings 2–4): the caption ends at «… sur … validées»; below 40rem of
+  their region the files are one item each (the name, then «type · taille · date» on one muted line, the act at the
+  inline end) and no cell carries `data-label` any more, so portal.css's labelled pop-in never reaches them; a loose
+  file's «Supprimer» opens the overlay system's alert dialog (the declarative opener — without script the form posts
+  at once; `console.js` names the file and points the dialog's «Supprimer», `btn--danger`, at the row's form); the loose
+  road's answer names the file and gives the zone back; the size shown never contradicts a refusal («0 ko», «10,1 Mo»);
+  the strip's marks are drawn by the dashboard's ledger rules (V5.8 rule 3, the second family consolidates); the runs'
+  ring is drawn inside the strip (`.reg a.reg-run:focus-visible`, above v4/workspace.css's 0-3-0 ring rule); «Télécharger»
+  carries a 44 px band under a coarse pointer; a refused file marks its field (`aria-invalid`, the refusal's id in its
+  description). The gate's inline link keeps WCAG 2.5.8's inline exception.
+- **Paths outside the slice**, for the merge step to write into the manifest: `apps/documents/models.py` and
+  `apps/cases/models.py` (M3: one line each, the project's clock); `templates/documents/partials/delete_confirm.html`
+  (new: the alert dialog's body and foot, beside the register's partials). `static/js/src/piece-drawer.js`,
+  `static/js/src/depot.js` and `templates/documents/partials/depot.html` are DL54-113's and DL54-118's.
+- **The weight** (gzip −9): the shared bundles unchanged — `dist/main.css` 40 876, `dist/portal/console.css` 6 809,
+  `dist/portal/portal.css` 1 935, the console page types **49 620 B**; the page-only `dist/documents/documents.css`
+  5 418 → **5 497 B** (+79: the files' list, the selected state, the band, the loose answer's name, less the ledger
+  marks' copy); JS `dist/piece-drawer.js` 2 358 → 3 044 B (under §2.6's 4 KB module row), `dist/console.js` 1 647 → 1 754 B,
+  the Dépôt's chunk 3 577 → 3 702 B.
+
+**Source.** `docs/design-v5/QA/v54/w3-c/REVIEW.md` (M1–M3, m1–m7), `A11Y_PERF.md` (findings 1–4); plan §1.14, §1.6,
+§2.6; the owner's V5.8; DL54-116; the evidence `C:/tmp/ile_v5_council/evidence/v54/w3-c/fix/`; the tests named in
+`docs/design-v5/QA/v54/w3-c/NOTES.md` «Review fixes».
+
+## DL54-120 · 12 October 2026 · Steward, the w3-c merge: the family's ten entries renumbered, the 18 paths assigned and four slices named as written, the shared CSS gate passed with the shared payload 1 359 B lighter on every page, every ceiling lowered to the merged weight, the documents pages' two page types recorded through their own sheet
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w3-c` into design-v5 on 12 October 2026 —
+what the family's own entries and notes hand to the merge step: DL54-113, DL54-115, DL54-118, DL54-119;
+`QA/v54/w3-c/NOTES.md` «For the merge step» (steps 1 and 2 and the fix pass); `QA/v54/w3-c/REVIEW.md` «For the merge
+step»).
+
+1. **The numbering.** design-v5 stood at `e806483` (W3-F1's shipped note): W3-F2's, W2-C2's and W3-F1's entries and the
+   records of their merges had taken DL54-96 … DL54-109 while the branch held DL54-96 … DL54-105, so the steward's sync
+   (`351b078`) gave the family's ten entries **DL54-110 … DL54-119** (add 14; their headings, their index rows and their
+   cross-references between the ten — every DL54-96 … DL54-105 in their text was the family's own; the code, the tests,
+   DS 2026 and the manifest cite none of the moved numbers). Checked after the resolution: the log without the family's
+   rows and block is design-v5's byte for byte, and the family's block with its numbers shifted back is the branch's.
+   The notes' closing section says how to read the numbers written before (`3863fad`). This entry is DL54-120.
+2. **Three conflicts, both areas' work kept.** The decision log (item 1). DS 2026 §2's inventory rows: design-v5's rows
+   (W3-F2's `components.css` prose, W2-C2's `chrome.css`, the `v4/shell.css` and `v4/wizard.css` rows gone), then the
+   `v4/workspace.css` row as the family wrote it — the one row of the table whose prose it changed, which design-v5 had
+   not touched since the merge base —, then `scripts/regen_design_inventory.py --write` (`register.css` 21.6 KB,
+   `v4/workspace.css` 33.6 KB; `ca6e0e7`). `static/css/dist` and `static/js/dist`: deleted and rebuilt (`npm run build`)
+   on the merged sources — every CSS bundle byte for byte design-v5's but `main.css`, `portal/portal.css` and
+   `documents/documents.css`; the JS design-v5's plus the family's scripts (`console.js`, `depot.js` with the Dépôt's
+   chunk, `piece-drawer.js`), the shared chunks' import order following this worktree's chunk names. `register.css`
+   (W3-F1's and the family's deletions in different hunks), the showcase and W2-A's two overlay test files merged on
+   their own and were read. No semantic conflict surfaced in the targeted runs (item 8).
+3. **The 18 paths outside the slice are this area's in the manifest** (`96e8b3d`). `scripts/check_ownership.py w3-c
+   e806483` listed exactly the paths the family declares (step 1's four, step 2's eleven, the fix pass's three); each
+   was read in the diff and found to be what it declares. Whole files: the register's and the piece's partials
+   `templates/documents/partials/{depot,piece_drawer,state_filter,delete_confirm}.html` and the two modules
+   `static/js/src/{depot,piece-drawer}.js`, imported on demand by `console.js` where a page draws them. Slices of files
+   no family held: `documents_register.py` (`deposit_rules`: the Dépôt reads the server's own limits),
+   `apps/documents/models.py` and `apps/cases/models.py` (`is_overdue` on `core.clock.today()`: one clock decides one
+   deadline, REVIEW M3), `apps/documents/tests/test_requirement_views.py` (the V4 register's pins retargeted). Slices of
+   files other families hold: `portal.css` (F13 on the deadline tokens, colour only), `deadline_item.html` (the date's
+   glyph in the dashboard's grammar; W3-E keeps the partial), the showcase (the documents sheet's link) and five test
+   files whose pins follow the register (no test removed). Four slices named as written: `console.js`,
+   `v4/workspace.css`, `register.css`, DS 2026. The `views.py` slice (the Dépôt's JSON answers) and the `services.py`
+   slice (the deadline kinds) were read: inside their words — the JSON road runs the same validation chain, size limit,
+   MIME and antivirus checks, throttle and permission checks as the form's road and changes only the form of the answer.
+   The check after it: 26 inside, 19 slice, 21 generated, and the manifest itself, the one steward-only path (before:
+   18 outside); `--validate`: coherent, 25 families, 611 entries.
+4. **The shared CSS gate (the owner's V5.8 and the orchestrator's definitive ruling of 12 October, 02:15) passes: the
+   shared bundles fall.** On the bundles rebuilt from a clean `static/css/dist` and `static/js/dist`,
+   `gzip.compress(data, 9)` (`evidence/v54/w3-c/merge/budget_gate_sync.log`, and `budget_gate_merged.log` on design-v5
+   after the merge):
+
+   | Page type | design-v5 `e806483` | merged | change | ceiling before → after |
+   |---|---|---|---|---|
+   | every page, and an interior page with no sheet of its own (`main.css`) | 38 683 | 37 324 | −1 359 | 38 683 → **37 324** |
+   | console page types (`main` + `console` + `portal`) | 48 556 | 47 200 | −1 356 | 48 556 → **47 200** |
+   | the company's dashboard (+ `companies.css`) | 49 429 | 48 073 | −1 356 | 49 429 → **48 073** |
+   | the login (+ `entrance.css`) | 43 544 | 42 185 | −1 359 | 43 544 → **42 185** |
+   | the home (+ `hero.css`, `pages.css`) | 52 621 | 51 262 | −1 359 | 52 621 → **51 262** |
+   | a content page (+ `cms/lettura.css`) | 42 784 | 41 425 | −1 359 | 42 784 → **41 425** |
+   | an account page (+ `cms/servizio.css`) | 41 109 | 39 750 | −1 359 | 41 109 → **39 750** |
+   | an error page (+ `cms/errori.css`) | 42 312 | 40 953 | −1 359 | 42 312 → **40 953** |
+   | the persons pages (+ `pathways/pathways.css`) | 42 177 | 40 818 | −1 359 | 42 177 → **40 818** |
+   | the ecosystem doors (+ `ecosystem/ecosystem.css`) | 42 018 | 40 659 | −1 359 | 42 018 → **40 659** |
+   | the Forum (+ `forum/forum.css`) | 42 177 | 40 818 | −1 359 | 42 177 → **40 818** |
+   | the institutional pages (+ `pages/css/interior.css`) | 41 480 | 40 121 | −1 359 | 41 480 → **40 121** |
+   | orientation (+ `orientation/wizard.css`) | 42 722 | 41 363 | −1 359 | 42 722 → **41 363** |
+   | **the piece, the loose upload and the Conditions gate** (+ `documents/documents.css`) | 49 728 | 52 697 | +2 969 | 49 728 → **52 697** (item 6) |
+   | **the two register pages** («Mes pièces», `/documents/`: + `documents.css` + `core/overlay-panels.css`) | 49 728 | 54 768 | +5 040 | — → **54 768** (recorded, item 6) |
+
+   `dist/main.css` 38 683 → 37 324 B (−1 359 on every page): the family's deletions — the documents' V4 rules of
+   `v4/workspace.css` (SegmentedControl, search, DocumentCollection / Row / Card with the row menu, their forced-colour
+   and touch lines, the portal files table's rules) and the current entry's rules of `register.css` (DL54-113,
+   DL54-115, DL54-118), each proved by grep at the family's steps; the documents pages draw their own from the page
+   sheet. `dist/portal/portal.css` 1 932 → 1 935 B (+3: F13 — «overdue» and «blocked» no longer share one
+   rule). `console.css` and every page sheet but `documents.css` byte for byte design-v5's. `dist/main.css` stands
+   8 756 B under its 45 KB cap (46 080 B).
+5. **Every ceiling is lowered to the weight measured at this merge** (the definitive ruling: «after a merge, the merged
+   weight is the new ceiling»; DL54-102 item 5, DL54-109 item 5): every row of the table carries its new figure. A family
+   that needs a shared rule pays for it with deletions.
+6. **The documents pages' two page types are recorded as measured — through their own page-only sheet** (V5.8 rule 2,
+   as DL54-109 item 6 did for orientation). `dist/documents/documents.css` 1 172 → 5 497 B: the three console partials
+   of the family (`_workspace.css`, `_table.css`, `_depot.css`, imported by the documents pages' sheet only, never by
+   `main.css` or the console entry) — what these pages draw: «il registro»'s strip and groups, the row as the link, the
+   files' list, the preview drawer's register side, the piece and the Dépôt. After reuse — the strip's marks are the
+   dashboard's ledger rules (REVIEW m7, V5.8 rule 3: the second family consolidates), the deadlines' dates the
+   dashboard's `.db-due`, the drawer's and the sheet's anatomy W2-A's own page-only `core/overlay-panels.css`, linked by
+   the two register pages only — and after deletion (`main.css` −1 359 B on every page above). The performance sanity
+   check is the family's one accessibility + performance check on the lane's compressed twin (`A11Y_PERF.md`: LCP
+   −112 … +28 ms against its merge base, the first-render task lower in every cell, CLS ≤ 0.0011, 188–384 ms earlier
+   than V4; the drawer's cold open p90 112–120 ms) and the fix pass's INP smoke (open median 72–80 ms, close ≤ 128 ms
+   at CPU × 4): no regression to fix under V5.5. **The piece, the loose upload and the Conditions gate** (`main` +
+   `console` + `portal` + `documents`): **52 697 B**, +2 969 B on their own pages. **The two register pages** (+
+   `overlay-panels.css`, 2 071 B): **54 768 B**, +5 040 B on their own pages. Both ratchet down from here; a family that
+   adds to `documents.css` first deletes. No component family is drawn twice: the family's partials share with W3-F2's
+   `_lettura.css` / `_servizio.css` and W2-C2's sheets only W1-C's components used in place (`.btn`, `.form-field`,
+   `.notice`, `.icon`).
+7. **The inventory and the capture report.** `scripts/regen_design_inventory.py` found two stale figures after the sync
+   and wrote them (`ca6e0e7`); on design-v5 after the merge the script is run again (the merged tree is the branch's). The capture report is unchanged: `capture.py` captures the home, the privacy
+   page, the login and the 404, none of which the family changes (its shared deletions are rules no page draws), as
+   DL54-87 item 5 said for W3-B — not regenerated.
+8. **The tests.** On the branch after the sync, the manifest, the figures and the notes (`3863fad`),
+   `TEST_DATABASE_URL=…/test_ile_v5_l9`, one pytest and one browser at a time, every run behind the benchmark lock, no
+   run crashed (`evidence/v54/w3-c/merge/tests_*.log`). **Non-browser** — `apps/documents`, `apps/portal`,
+   `apps/cases`, `tests/test_phase_console.py`, `tests/security` (the object-permission and authorisation audits; the
+   confidential-material sentinel test ran), `test_chips_registry`, `test_state_chips_carry_a_register`,
+   `test_o14_lint`, W2-A's `test_overlays` and `test_overlays_console_w2_a`, `test_design_docs`, the two bundle-current
+   tests, `test_static_pipeline` (a real `collectstatic` under the manifest storage), the family's `test_documents_w3_c`
+   and `test_depot_w3_c`, and what the merge touched besides (`test_v5_tokens`, `test_dashboard_w3_b`, W3-A's
+   `test_console_shell_w3_a` and `test_console_shell_stylesheets`, `test_loader_rules`, `test_css_tokens_exist`, the
+   comments' leak test, `test_rtl_static`, the ownership and inventory scripts' tests): **1 817 passed, 3 skipped** (the
+   intake suite's own: no legal rule in force), 0 failed (14 min 40 s). **Browser** (headless Chromium): the family's
+   `test_documents_browser_w3_c`, `test_depot_browser_w3_c` and `test_drawer_browser_w3_c` with
+   `apps/portal/tests/test_browser.py` — **63 passed** (3 min 15 s); W2-A's `test_overlays_browser_w2_a` and
+   `test_overlays_console_browser_w2_a`, `tests/i18n/test_rtl_browser_overlays.py` and `tests/i18n/test_rtl_browser.py`
+   — **67 passed** (6 min 16 s); 0 skipped, 0 failed. `ruff check .` (CI's lint step): all checks passed; `ruff format
+   --check` on the area's changed files finds two deviations, both design-v5's own lines (W2-C2's in
+   `test_overlays_console_w2_a.py`, an older one in `test_v5_tokens.py`), not changed; `makemigrations --check
+   --dry-run`: no changes. The full suite is the integration checkpoint's (V5.5).
+9. **Design-v5's own failures, unchanged by this merge.** `test_script_motion_gate.py::test_no_animate_or_frame_loop_outside_the_gate` fails on W2-A's
+   `overlay/extras.js` (`requestAnimationFrame`), exactly as on design-v5 (DL54-102 item 10; for W2-A with W1-D's gate)
+   — the family's two modules pass the gate. `test_chips_cards_w1_c.py::test_the_chip_is_drawn_by_one_sheet`, which
+   DL54-102 item 10 also listed, passes on the merged tree (the rule it named moved into W3-F1's `_pagina.css` before
+   this merge). Neither file is in the area's set; both were run for this record
+   (`tests_design-v5_own_failures.log`: 1 failed, 22 passed).
+10. **The worktree's `.env`** lacked `ILE_CONFIDENTIAL_SENTINELS` (every other value the lane's): the key was added from
+   design-v5's before the tests, the lane's database URLs kept, so the confidential-material sentinel test ran instead of
+   skipping. The file is ignored; nothing of it is committed.
+
+**Why.** Entries renumbered after design-v5's keep the log's one order; paths nobody holds would have no writer for the
+next family; the gate is read on the shared payload as V5.8 writes it, and the merged weight becomes every ceiling, so
+that the next family meets the weight the product has; a surface's own CSS lives in its own sheet, loaded only where it
+is drawn, and its page type is recorded at the weight it was measured at.
+
+**Source.** The owner's V5.8 (`C:/tmp/ile_v5_council/directives/V5_8_CONTINUE_GITHUB_CSS_BUDGET.md`, and the
+orchestrator's definitive ruling below it) and the V5_5 addenda of 11 October 19:40 and 12 October 01:30; plan §2.2
+(the manifest; merge steps 1–5), §2.3, §2.6; DL54-87 item 5; DL54-102 items 4 and 5; DL54-109 items 4–6;
+DL54-110 … DL54-119; `QA/v54/w3-c/NOTES.md` «For the merge step» and «Merge step — the steward's note on numbering»;
+`QA/v54/w3-c/REVIEW.md` «For the merge step»; `QA/v54/w3-c/A11Y_PERF.md`; the weights in
+`evidence/v54/w3-c/merge/budget_gate_sync.log`; the ownership checks in `evidence/v54/w3-c/merge/ownership_before.log`
+and `ownership_after_wt.log`; the tests in `evidence/v54/w3-c/merge/tests_*.log`.
+
+## DL54-121 · 12 October 2026 · Steward, the devops merge: production readiness (V5.9) on design-v5 — the family registered outside the waves, F-6 closed by W3-F2's error pages, nothing deployed
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-devops` into design-v5 on 12 October 2026 —
+the owner's V5.9 (`C:/tmp/ile_v5_council/directives/V5_9_DELIVERY_AND_PRODUCTION_READINESS.md`) with V5.8's
+LEGACY_REFERENCE_ONLY; what the lane hands to the merge: `QA/v54/devops/NOTES.md`, `REVIEW.md`, `VERIFY.md`).
+
+1. **What merged: the repository made deployable, nothing deployed.** The DevOps readiness lane of V5.9 §3 («a small
+   DevOps agent may prepare deployment readiness»): 18 commits `6484968` … `9f898e5` on design-v5 `1c03e3b` — the
+   implementation, a verification walk and a senior review (both SHIP_AFTER_FIXES, no P0), a fix pass that closed
+   every major and minor finding — and the merge step's eight commits. Thirty paths:
+   - `docs/deployment/` (new): `PRODUCTION_DEPLOYMENT_RUNBOOK.md` — Ubuntu 24.04 LTS on DigitalOcean from a validated
+     tag, steps 1–15 with exact commands (clone, tag checkout, virtual environment, `pip install -c
+     requirements/constraints.txt`, the root-only environment file, PostgreSQL with the password off the command line,
+     migrate → verify → rollback, `collectstatic`, public media and private documents, Gunicorn on a systemd socket,
+     nginx and its catch-all server, permissions, journald logging, the seven timers and the nightly encrypted backup,
+     restart, health checks), then static assets vs public media vs private documents, TLS, registrar transfer vs DNS
+     cutover, the cutover sequence, legacy, release tags and the three states; `PRODUCTION_CHECKLIST.md` (§A the release
+     gate of V5.9 §15 item by item with its evidence, and the go-live blockers; §B before deployment; §C the backup
+     before the cutover, restored elsewhere; §D the smoke test); `ROLLBACK.md`; `production.env.example` (the server's
+     environment file, placeholders only);
+   - `.env.example`: every variable the application reads — settings, code, scripts, tests, compose files — grouped,
+     one comment each, the optional ones commented out (under django-environ an empty value is a value:
+     `PRIVATE_MEDIA_ROOT=` used to put identity documents in the root of the checkout);
+   - `config/settings/prod.py` (V5.9 §6): `DATABASE_URL` and `IP_HASH_SALT` mandatory; `SECURE_HSTS_INCLUDE_SUBDOMAINS`
+     and `SECURE_HSTS_PRELOAD` from the environment with no default; `ALLAUTH_TRUSTED_PROXY_COUNT` (allauth's rate
+     limits behind nginx); `MEDIA_ROOT` outside the checkout; connection health checks; refused unless
+     `ILE_ALLOW_INSECURE_PROD=1`: a wildcard host, a published or short salt, a mail backend that does not deliver, an
+     unfilled `<...>` placeholder; refused even through the hatch: a `PRIVATE_MEDIA_ROOT` that overlaps a served
+     directory. `base.py`: an empty `PRIVATE_MEDIA_ROOT` means the default. `DEBUG` off, `ALLOWED_HOSTS` and
+     `CSRF_TRUSTED_ORIGINS` without a default, `SECURE_PROXY_SSL_HEADER`, the secure cookies, the structured logging and
+     the error handlers were verified as they stood;
+   - `apps/core/checks.py`: `core.E001` (`REDIS_URL` set although the Redis client library is not installed),
+     `core.W001` (a proxy trusted by Django and not by allauth), `core.W002` / `core.W003` (the mail placeholders);
+   - two code fixes the verification found: `companies_demo` refuses where demonstration data is not allowed, and
+     `rules.legal_ruleset` completes an existing legal source only where a field is empty, so the `seed_all` of a
+     release no longer reverts the legal referent's corrections;
+   - `requirements/constraints.txt`, the server's pinned closure (19 distributions);
+   - the tests: `tests/deployment/` (the runbook held to the code, the production checks, the private documents' one
+     exit, the error pages through the real handlers, the pinned closure), the refusal and completeness tests
+     extended, two app tests;
+   - `docs/DEPLOYMENT.md` and `docs/DEPLOYMENT_READINESS.md` marked superseded (their history kept), `README.md`'s
+     deployment pointers, and `docker-compose.staging.yml` passing the variables the production settings made
+     mandatory.
+2. **The hard limits, checked at the merge.** Nothing deployed; no production host contacted or resolved; no DNS,
+   domain or certificate operation; no package installed. The family's diff (4 791 added lines) was scanned in Python:
+   no IPv4 address but loopback, `0.0.0.0`, the documentation ranges and two public resolvers; no host or droplet
+   name of the production server; the live site's domain only in the existing guard sentence («no @… address until it
+   is activated», as `.env.example` and `base.py`'s `FORBIDDEN_EMAIL_DOMAIN` already say) — the new documents use
+   `example.com` / `<your-domain>`; no credential (the two strength-check fixtures are synthetic, the key's form already
+   at the base). No template, CSS or JS file: no bundle rebuilt, and V5.8's shared CSS gate is not concerned (the
+   bundles are design-v5's byte for byte).
+3. **The pre-merge sync, and what it changed on the branch.** design-v5 had moved from `1c03e3b` to `4ff9056` (W2-A,
+   W3-F2, W2-C2, W3-F1, W3-C and the documentation commit `3780a7c`); the syncs (`e3291a8`, `79135eb`, `b8e3ccf`) met no
+   conflict. Two consequences, resolved on the branch: (a) **F-6 is closed, by W3-F2** — W3-F2 draws the 400 and 500
+   pages without the request (`core.views._self_sufficient`, `9af0e1a`), so the unknown Host's strict xfail turned
+   XPASS(strict) and passed with `--runxfail`: the marker is gone, the test also checks that the page leaks nothing, and
+   checklist A-21, the runbook's catch-all paragraph and its known limits say so (`08fa8f2`); the catch-all server
+   stays. (b) The completeness rule (it reads the tests too) caught the V5 families' new test variables: `W3F2_SHOTS`,
+   `ILE_OVERLAY_SMOKE_ENGINES` and `PLAYWRIGHT_BROWSERS_PATH` are documented in the NOT FOR PRODUCTION section of
+   `.env.example`, and `LOCALAPPDATA`, Windows' own, joins the test's `SELF_SET` (`8c5542a`). The two later syncs
+   (`79135eb`, W3-F1; `b8e3ccf`, W3-C, under the lock) needed nothing more. The lane's notes record both («At the
+   merge», `a350423`).
+4. **The family «devops» is in the manifest, outside the waves** (`69a2920`). A family plan §3 does not name: `wave` 0
+   (as the steward's infrastructure), `steward` false, DL54-01's branch and worktree, no merge tag (V5.9's tags mark the
+   whole product after final QA). Eighteen entries — whole: `docs/deployment/**`, `docs/design-v5/QA/v54/devops/**`,
+   `tests/deployment/**`, `apps/core/checks.py`, `requirements/constraints.txt` and the two new app tests; slices:
+   `.env.example` (all but w1-0's `ILE_QA_PASSWORD` placeholder), `prod.py` (V5.9 §6's changes), `base.py`
+   (`PRIVATE_MEDIA_ROOT`), `apps/core/apps.py`, `companies_demo.py`, `apps/rules/seeds.py`,
+   `docker-compose.staging.yml`, `README.md`, the banners of the two superseded documents, and the two extended tests
+   (the completeness test: all but w1-0's guard). `scripts/check_ownership.py` accepts the id
+   (`steward|devops|w<wave>-<name>`) and its tests admit the families outside the waves, two tests added (`db01929`).
+   `check_ownership.py devops design-v5` before the steward's commits: 30 paths, 18 inside, 12 slice → PASS; each slice
+   was read in the diff and stays inside it (one line of w1-0's guard reads the example through the module's helper: the
+   same bytes). After them the steward's three paths join the list: the manifest (steward-only), the checker and its
+   tests (the steward's whole files). `--validate`: coherent, 26 families, 629 entries.
+5. **The tests**, `TEST_DATABASE_URL=…/ile_devops`, one pytest at a time, `-m "not browser"`, `-p no:randomly`. Before
+   the sync, the family's exposed set (`tests/deployment`, the completeness test, the refusal test): 97 passed, 1
+   xfailed (F-6). After the first sync and its two resolutions, the brief's list and the tests of everything the family
+   changed — `tests/security`, `tests/test_env_example_is_complete.py`, `tests/compliance`,
+   `tests/i18n/test_documentation.py`, `tests/frontend/test_design_docs.py`, `tests/frontend/test_static_pipeline.py`,
+   `tests/deployment`, `tests/test_check_ownership.py`, `tests/test_migration_drift.py` (`makemigrations --check`, V5.9
+   §7), `tests/test_demonstration_data_switch.py`, `apps/core`, `apps/companies`, `apps/rules`, `apps/documents`,
+   `apps/cms/tests/test_media_assets.py`: **752 passed** in 6 min 31 s, no skip, no xfail; after the second sync and the
+   steward's commits, 759 passed in 7 min 02 s. On the final branch (`b8e3ccf`, the third sync, under the lock), the
+   same list: **759 passed in 7 min 01 s, no skip, no xfail**. `ruff check` and `ruff format --check` clean on the 19
+   Python files the merge brings. The full suite stays the integration checkpoint's (V5.5) and CI's.
+6. **Not done here, on purpose.** No tag (V5.9 §14: `v5-release-candidate`, then the release tag, on one validated
+   commit after final QA); no restart of 8780; no change to v5-live; no push (the publication repository's next
+   checkpoint carries it, after its scans); no line in `CHANGELOG_V54.md` or `live_status.json` (devops is not a
+   preview surface — the static pipeline's merge, DL54-77, is the precedent). No CI change: installing CI's
+   requirements with `-c requirements/constraints.txt` would make CI run the server's versions — the steward's
+   `ci.yml`, left for its own change. Nothing deployed: the owner deploys and cuts over himself (V5.9 §17).
+7. **The owner's open questions** (the lane's notes, «Open questions for the owner», re-read at the merge; the twelfth,
+   F-6's template fix, is moot now that F-6 is closed):
+   1. **F-5, the back-office sign-in path — a go-live blocker.** `/backoffice/login/` accepts the password alone for
+      an account that has a TOTP device (Django's admin form has no MFA stage, and the middleware asks whether a device
+      is enrolled, not whether this session used it). The runbook closes the path at nginx (a redirect to allauth's
+      sign-in) as a mitigation; the fix belongs to the accounts lane. Who takes it, and is the recommended change
+      (staff sign in through allauth; the middleware requires the session's second factor) acceptable?
+   2. The release tag: `v2.0.0` (the version the platform already displays) or `v1.0.0` (the directive's example)? The
+      candidate is `v5-release-candidate`, then `-2`, never a moved tag.
+   3. The host names: the apex, `www` or both, and which is canonical; is a temporary validation host (a new
+      subdomain pointed at the droplet) acceptable?
+   4. HSTS: who inventories the domain's subdomains, and when may `includeSubDomains` be turned on? The preload list
+      is a separate decision.
+   5. The database: PostgreSQL 16 on the droplet (the runbook's default) or a DigitalOcean Managed PostgreSQL cluster
+      in an EU region? Development and CI run 17.
+   6. Python: run the suite once on 3.12 (Ubuntu 24.04's) before the release, or install 3.13 on the server?
+   7. SMTP: the provider, the sender domain (SPF, DKIM), and whether outbound SMTP is open from the droplet (2525 is a
+      common alternative).
+   8. Redis: accept rate limits counted per Gunicorn worker (up to three times the configured figure), or add the
+      Redis client library (a new dependency) and run Redis?
+   9. Backups: the off-server EU location, who holds the encryption key, a retention aligned with the privacy terms,
+      and DigitalOcean's droplet backups or snapshots?
+   10. Access logs: the runbook masks the client address; is a raw-IP log with a short retention wanted for incident
+       response?
+   11. Health: an endpoint that also checks the private storage and the mail queue — wanted?
+   13. Which server: the firewall and catch-all steps are for a fresh droplet; if the designated server already hosts
+       other sites, who owns its nginx `default_server` and its firewall?
+   14. EU hosting (CR-08): written confirmation of the region of the droplet, of the database and of the backups.
+
+**Why.** A family no plan section names still needs one writer per path, or the next family to touch these files would
+have none; the sync makes the merged branch the one that was tested; a defect another family's merge has closed is
+closed in the documents too, or the runbook would send the owner after a fault that no longer exists; and V5.9 keeps
+every step that touches a server, a domain, a certificate or a release tag for after final QA, and for the owner.
+
+**Source.** The owner's V5.9 §3–§18 and V5.8; DL54-01 (the ref names); DL54-77 (a merge that is not a preview
+surface); DL54 «How it is kept»; plan §2.2 (a file not in the manifest has no writer until the steward assigns it);
+`QA/v54/devops/NOTES.md` (with «Review fixes» and «At the merge»), `REVIEW.md`, `VERIFY.md`; the ownership checks and
+the test logs in `evidence/v54/devops/merge/`.
+
+## DL54-122 · 11 October 2026 · W3-D: a threshold is a place — SELECTION on threshold A
+
+**Decision.**
+- **A file in `SELECTION` («Phase gérée par un acteur autorisé») stands ON threshold A, and on no step** (plan §1.18
+  D16, OJ2). `portal.services.journey_for` mapped every status that is not a step to step 1: `seed-person`'s file read
+  «Phase gérée par un acteur autorisé» in its header while its journey said «Vous êtes ici · 1» (W3-B's notes).
+- **Each step now carries** its `status` (its glyph: `core.icons.JOURNEY`, through the registry), its `state` (done ·
+  current · upcoming) and, on the step a threshold opens, that `threshold`: its key (`a` before the administrative
+  procedure, `b` before the arrival), its caption (the site's own jurisdiction labels, `pages.services.
+  JURISDICTION_SEGMENTS`'s catalogue entries — no new copy), its own state, and, when the file stands on it, the file's
+  state in its own words. `is_current` and `frontier` keep their meaning for the callers that read them.
+- **The case file dates the threshold** (`cases.presenters.journey_with_dates` follows the presenter's states): the
+  steps before it carry their dates, the step after it none — even when the trail once reached it (the seed's trail
+  went to the administrative procedure and came back).
+- **SUSPENDED and CLOSED keep V4's first step.** Where a suspended file stopped, and the record a closed one became,
+  are in the audit trail, not in the status; the dashboard never shows them (`active_case`), the case file does. Left
+  for the family that reads the trail into the journey (the research's §7.3 contract).
+- `journey_for` lives in `apps/portal/services.py`; the manifest's W3-D slice names `apps/cases/services.py` — the
+  function was changed where it lives (DL54-126).
+
+**Source.** Plan §3.5 item 6 («`SELECTION` on threshold A»), §1.18 D16; `JOURNEY_SIGNATURE.md` §5.7, §7.3;
+`QA/v54/w3-b/NOTES.md` «Handed over»; `tests/frontend/test_journey_w3_d.py`.
+
+## DL54-123 · 11 October 2026 · W3-D: one rail drawing for the console
+
+**Decision.**
+- **One sheet draws every journey of the console**: `apps/portal/static/portal/v5/_journey-rail.css`, imported by
+  `console.css` after the dashboards — the dashboard's «Mon parcours» and the case file's journey
+  (`components/journey_rail.html`), the case file's timeline (`case_timeline.html`), «Ma situation»'s Stepper
+  (`wizard_stepper.html`). One vocabulary: behind the file a 10 px ink dot (never a check, O14), where it stands an
+  18 px laguna ring on a flat wash — a disc, not a shadow —, ahead a 12 px open ring; the line 2 px, laguna where the
+  file has been, the decorative hairline ahead; each item draws the stretch from its node to the next item's — no
+  gradient, no measure, no script; the grid mirrors it in Arabic.
+- **The level line from 56rem of the component's own width** (a container query; the research's 46rem). Measured on
+  the lane: at 46rem the eight columns of a file on threshold A came to 88 px and «Accompagnement» (110 px) left its
+  column; from 56rem a column is never under 108 px. Under 56rem — the phone, the tablet, a narrow column — **the
+  card and its disclosure**: what is true now (the current item's glyph and words, «Étape n sur 7» on a step, «Vous
+  êtes ici»), then the list behind the native `<details>` «Où j’en suis», closed, as a spine. At the wide width
+  `::details-content` lays the closed list out and the card and the summary leave; without it, the card and its
+  disclosure stay at every width — nothing is hidden. The case file draws the component `descriptive`: the spine at
+  every width.
+- **A threshold is a narrow column** (2rem; the whole column when the file stands on it) with its hairline across the
+  line and its caption over the heads of the steps it opens; «Maroc» and «Italie» are the line's two ends; every head
+  sits on the line's side of its row. «Vous êtes ici» has one place: the row that is the current item's alone.
+- **One marker a column (D16):** the phase glyph; no numeral (the public passage's); the holder on a row of its own
+  only when the presenter knows it — never today (A′, OJ1: the actors' mapping D9 is not signed). **No beads** (OJ3):
+  on the dashboard the pieces are «il registro» (W3-B, DL54-80), drawn once.
+- **Still at load.** No animation, no transition, no `will-change`: the drawing is its own still, the reduced-motion
+  state and the no-JS state. «Le relais» (one light, once, from where the file was last seen) needs a stored
+  last-seen position — a policy (class C, plan §7.2), not pursued in V5.4 — so the family ships **no
+  `journey-rail.js`**: the rail is complete without a script (the plan's slice keeps the file's name for the day the
+  relay is decided). W3-B's dashboard rule that stopped V4's line drawing itself left with V4's line.
+
+**Why.** «One passage and one rail drawing, never a third» (the gate): three components drawing positions on a line
+with three vocabularies would be three drawings. A container query decides by the space the rail really has (the
+dashboard at 1024 with the compact rail, a tablet, a phone), never by the viewport.
+
+**Source.** Plan §3.5 item 6, §1.18 D16, §1.5, §1.2 (O14), §7.2; `JOURNEY_SIGNATURE.md` §5.3, §5.5, §6.2, §7.1, §7.2;
+DL54-80; the lane's measures (`QA/v54/w3-d/NOTES.md`); `tests/frontend/test_journey_w3_d.py`,
+`tests/frontend/test_journey_browser_w3_d.py`.
+
+## DL54-124 · 11 October 2026 · W3-D: one passage drawing for the public pages
+
+**Decision.**
+- **The public passage is «la linea»**: a real sequence on a level line, the numerals over open stations (an outline
+  is open: nothing on this site settles a step for anyone), the words under them; down the reading edge on a phone,
+  across from 48rem as many columns as stations. W3-F1 drew it first for the door pages and named it the passage's
+  language; `static/css/v5/_journey-passage.css` (a page-only partial) is its home and `components/stepper.html` its
+  component — with what a passage needs beyond W3-F1's drawing: a flow's place (`current`: the steps behind filled in
+  ink, its own ring thicker in the primary, its rank in words) and the 16 px text below 64rem (RE-4).
+- **On the home** the orientation's four neutral steps (gate G3 closed) are drawn by it; `pages.css` imports the
+  partial (written in the collected tree); the home's `.sequence` rules and `register.css`'s shore crossing left with
+  their last consumer; `components.css` §16 (the V1 stepper) left with `stepper.html`'s redraw.
+- **The door pages wait for W3-F1's merge** (the plan's order: W3-F1 merges before W3-D). Then, in one step: the
+  `.linea` rules of `static/css/v5/_interior.css` §5 leave for `_journey-passage.css`; each page sheet that draws «la
+  linea» imports `../css/v5/_journey-passage.css` after `_interior.css`; `templates/pages/partials/_linea.html`
+  includes `components/stepper.html` (or its callers call it); `components.css` §17 and `components/timeline.html`
+  (then drawn by the showcase only) retire; `v5/_wizard.css`'s Stepper rules leave (the rail draws the Stepper).
+
+**Source.** Plan §3.5 items 1 and 6, §1.18 D16, §2.3 («`_journey-passage.css` → the page sheets of the pages that draw
+it»); W3-F1's `templates/pages/partials/_linea.html` comment and notes («W3-D may draw the public passage on these
+pages: one import line in a page sheet»); DL54-41.
+
+## DL54-125 · 11 October 2026 · W3-D: a date on the rail in the sans; «Ma situation» moves nothing at load
+
+**Decision.**
+- **A date on the rail is in tabular figures, in the sans** — the journey's and the timeline's: «ILE Mono» has one
+  seat, the references (`v5/base.css`, plan §1.1). The research set them in the mono; the foundation binds.
+- **«Ma situation» moves nothing at load.** The guided form's script gave the submit its secondary role after the
+  first paint and its six colour transitions played at every visit; `static/js/src/situation.js` applies that role
+  under `transition: none` in one style pass and restores the transition once the state has been painted (through
+  motion.js's `afterPaint`, the one gate). The file was in no family's slice beyond W1-D's motion gate, «until W3-D's
+  journey work takes the file» (W1-D's notes).
+
+**Source.** Plan §1.1 («ILE Mono for references»), §1.5 («the console has no entrance and no stagger at load»);
+`static/css/v5/base.css`; `QA/v54/w1-d/NOTES.md` (situation.js).
+
+## DL54-126 · 11 October 2026 · W3-D: the paths outside the slice; the deletions; the CSS as measured
+
+**Decision.**
+1. **Paths outside the slice**, each justified, for the merge step to write into the manifest:
+   `apps/portal/services.py` (`journey_for`, `JOURNEY_THRESHOLDS`, `_JOURNEY_POSITION`: where the function lives —
+   the slice's `apps/cases/services.py` names the wrong file); `apps/cases/presenters.py` (`journey_with_dates`: in no
+   slice); `apps/core/dev.py` (`_demo_journey`: the showcase's journey through the presenter, not a copy);
+   `static/js/src/situation.js` (DL54-125); `templates/pages/home/_orientation.html` (the passage on the home, W2-D's
+   chapter, through the serialized rule); `apps/pages/tests/test_home.py` (the two orientation tests follow the
+   markup, their intent kept); `tests/frontend/test_design_showcase.py` (W1-A's: the showcase's marker for the stepper
+   follows the passage's markup, `linea__step`). Inside shared files, beyond the slices' words: `v4/workspace.css` — the Timeline with
+   the JourneyRail (the case file's timeline is W3-D's component); `pages.css` — the home's `.sequence` rules with the
+   import line; `_dashboard.css` — W3-B's journey rule, removed as W3-B's notes asked; DS 2026 — §2's sentence on
+   `v4/workspace.css`, §2.1's rows of `pages.css` and `console.css`, §11.7's journey row, §12's keyframe sentences.
+2. **Deleted** (plan §2.3, W3-D's row): `components.css` §16 (19 → 18 sections); `v4/workspace.css`'s JourneyRail and
+   Timeline with `rail-draw`, `rail-draw-y`, `tl-light`; `register.css`'s shore crossing; the home's orientation rules.
+   Kept, because pages still draw them: `register.css`'s `.sequence` (W3-E's console pages) and `components.css` §17
+   (W3-F1's pages until its merge).
+3. **The CSS, gzip -9 of the committed bundles against design-v5** — see `QA/v54/w3-d/NOTES.md` «The weight».
+
+**Source.** Plan §2.2, §2.3, §2.6 items 3 and 5; DL54-15; DL54-87; `scripts/check_ownership.py w3-d design-v5`.
+
+## DL54-127 · 12 October 2026 · W3-D, the fix pass: the rail in a page-only sheet; «Mon parcours»; a file off the line
+
+**Decision.**
+1. **The rail is a page-only sheet** (the review's M1, the accessibility check's blocking finding; the owner's V5.8:
+   the shared ceilings are hard). `apps/portal/static/portal/v5/_journey-rail.css` leaves `console.css` for
+   `apps/portal/static/portal/journey.css` → `css/dist/portal/journey.css`, an import list like the console's entry,
+   linked after the shell's two sheets (`{{ block.super }}` in `extra_head`: the cascade position the rail held as
+   `console.css`'s last import) by the four pages that draw a journey — the dashboard and «Mon parcours» only when the
+   person has a file, the case file, «Ma situation». gzip -9 of the committed bundles: **the console page types (main +
+   console + portal) 51 530 → 49 614 B, 1 313 B under design-v5's 50 927** (DL54-87's ceiling); `main.css` 40 599 B
+   (design-v5 41 880); the journey's pages add their 2 688 B sheet. Requests: one stylesheet more on the four journey
+   pages only, inside W1-0's «before» counts.
+2. **«Mon parcours» draws the journey** (M2): the rail's «Mon parcours» entry wears the journey's glyph, and the page
+   now answers it — `components/journey_rail.html` at the page's head with `journey_for(active_case(user))` and the
+   dashboard's label «Où j’en suis» (no new copy), the pre-assessments under it; no file, no journey and no sheet.
+   `portal.services.pathways_page` gives `journey`; `templates/portal/pathways.html` (W3-E's slice) is a path outside
+   the slice, justified below.
+3. **A status with no place on the line has no current item** (M3; DL54-122's «V4's first step» superseded). SUSPENDED
+   and CLOSED: `journey_for` marks nothing current and nothing says «Vous êtes ici» — the header's chip says the state;
+   the card's «Vous êtes ici» belongs to the current item's branch, so a list with none says it nowhere. The case file
+   reads the trail (`cases.presenters.journey_with_dates`): the last place the file held on the line, from its
+   transitions in order, puts every step up to there behind it, dated where the trail knows the date, the item there
+   marked `stop` (`journey__step--stop` / `journey__threshold--stop`: the line is not travelled past it). The held node
+   of a suspended file waits for the trail contract (JS §7.3). `portal.services.journey_place` names a status's place.
+4. **The polish** — the timeline newest first, its first row lit, an assignment's actor not repeated when it is the
+   role its detail says (m1; `tl__row--last` → `tl__row--latest`); on a threshold the phone card is headed by the
+   threshold's caption (m5); the level line's last stretch runs from step 7 to the rail's end under «Italie», as the
+   spine carries it (m3); the closed `<details>` revealed at the wide width by both `content-visibility` and `display`
+   on `::details-content` (m6 — Safari and Firefox not installed here: to check before the owner's report); the
+   journey's lines take no pointer (`pointer-events: none`: a tap on the Stepper's line selects its question).
+5. **Not in this pass**: the consolidation with W3-F1 (M4 — `v54/w3-f1` is not on design-v5; the five steps stay
+   written in `QA/v54/w3-d/NOTES.md` «For W3-F1»); «Ma situation»'s counter (m4 — W3-E's view and template); the
+   inspector's focusable scroller (W3-E), the forced-colours current entry and `html:has(.console-drawer[open])` (W3-A /
+   W4-B) — handed over.
+6. **Paths outside the slice** (for the merge step to write into the manifest, with DL54-126's seven):
+   `apps/portal/static/portal/journey.css` (the journey's page-only entry: the slice names the partial, not an entry —
+   V5.8 asks for one); `templates/portal/dashboard.html` (W3-B's: the sheet's link, one line), `templates/cases/detail.html`
+   and `templates/portal/situation.html` (W3-E's: the sheet's link, one line each), `templates/portal/pathways.html`
+   (W3-E's: the link and the journey at the head — M2); `apps/portal/services.py` gains `pathways_page`'s `journey` (one
+   key) beside `journey_for`; `static/css/dist/portal/journey.css` is generated.
+
+**Source.** `QA/v54/w3-d/REVIEW.md` M1–M4, m1–m6; `QA/v54/w3-d/A11Y_PERF.md` findings 1–3 and «Seen on the way»;
+`QA/v54/w3-d/NOTES.md` «Review fixes»; the owner's V5.8 (11 October 2026); DL54-87; DL54-122; `tests/frontend/
+test_journey_w3_d.py`, `tests/frontend/test_journey_browser_w3_d.py`.
+
+## DL54-128 · 12 October 2026 · W3-D, the integration pass: one passage drawing; «Ma situation»'s one page-only sheet; each journey page loads only what it draws
+
+**Decision.**
+1. **The sync.** `v54/w3-f1` appeared on design-v5 at 07:01 (`a2644b0`, the W3-F1 steward's merge); this branch merged
+   design-v5 there (174 commits). Both areas' work kept: `pages.css`'s header, DS 2026 (§2's rows design-v5's,
+   regenerated; §2.1's `pages.css` and `console.css` rows; §10's `wizard_stepper.html` the rail's), the decision log
+   (design-v5's numbering), the bundles rebuilt from a clean dist. design-v5 then moved — W3-C's merge (DL54-110 …
+   DL54-120, «Mes pièces» as DS 2026 §11.8) and its shipped note, `4ff9056` — and this branch merged it again: the
+   union of the two families' deletions in `v4/workspace.css`, the journey's DS section §11.9. Then the devops merge
+   (`1a61a7c`, recorded as DL54-121; design-v5 `3d5351b`: production readiness — documents, settings and tests, no
+   stylesheet, template or script), merged a third time (15 October). This family's seven entries follow design-v5's
+   last: DL54-88 … DL54-93 of the first step and the fix pass are DL54-122 … DL54-127 and this entry DL54-128, their
+   cross-references with them.
+2. **One passage drawing** (the review's M4; the definitive ruling's rule 3: the family that merges second
+   consolidates). W3-F1's «la linea» (`static/css/v5/_interior.css` §5, its Arabic line, its forced colours) folds into
+   `static/css/v5/_journey-passage.css`, which drew the same grammar: the door pages, the advice pages, the
+   questionnaire and the home draw from one partial; their page sheets (`pathways.css`, `ecosystem.css`,
+   `orientation/wizard.css`) import it after `_interior.css`; `templates/pages/partials/_linea.html` includes
+   `components/stepper.html` (W3-F1's callers and contract kept, `current=None`: an explanation is never a progress);
+   a page's modifiers stay in its own partial (`_pathways.css`, `_spaces.css`, `orientation/wizard.css`) and qualify
+   the drawing without redrawing it. Where the two hands differed, the door pages are kept as W3-F1 drew them: W3-F1's
+   Arabic rule for a French station is homed; the passage's «16 px below 64rem» line (RE-4), never exercised on the
+   home (whose stations carry no text), is dropped so the stations' text stays 15 px as on the door pages. The ring is
+   open to its ground (no paper fill): on the home it sits on the BRAND gradient. Measured on the lane (156 captures,
+   fr / ar, 1440 / 390, normal and forced colours): the home, the Forum, the institutional pages and every console page
+   identical; the door pages identical but for their rings' rim antialias (40–124 pixels a page, ≤ 4/255 a channel).
+3. **Retired, with their proof** (a grep of every template, Python, JS and JSON file of design-v5 at `a2644b0`, of
+   this tree, and of the files each in-flight worktree changed — `v54-w3-c` and its trial, `v54-devops`; `v54-w3-e`
+   absent): `components.css` §17 and `components/timeline.html` (their last caller the design showcase's demo, with
+   `DEMO_TIMELINE`); the Stepper's rules of `apps/portal/static/portal/v5/_wizard.css` (§2, the phone row, the
+   forced-colours line: the rail draws it; its count stays the form's); DS 2026 §10.1's «Avanzamento» row
+   (`progress.progress`, gone with §16). Proved again after the third sync (design-v5 at `3d5351b`; in flight
+   `v54-w3-e`, `v54-intfix`, `v54-sec-f5`): no new user.
+4. **The shared payload paid for** (rules 1 and 2). «Ma situation»'s guided form (`v5/_wizard.css`) is that page's
+   alone: it leaves `console.css` (on every console page since W3-F1's merge) for a page-only sheet,
+   `apps/portal/static/portal/situation.css`, which only `templates/portal/situation.html` links, after the shell's
+   two sheets — the place in the cascade it held. And each journey page loads only what it draws: the console's one
+   rail drawing is a vocabulary and two components — `v5/_journey-nodes.css` (one line, three nodes, written once),
+   `v5/_journey-rail.css` (the journey and the timeline) and `v5/_journey-stepper.css` (the Stepper); `portal/journey.css`
+   = nodes + rail (the dashboard, «Mon parcours», the case file), `portal/situation.css` = the form + nodes + Stepper.
+   Each forced-colour rule keeps its selector's specificity; the console pages measured identical, normal and forced.
+   gzip -9 against design-v5 at `a2644b0`: `main.css` 38 683 → 37 030 B (every page); **the console page types (main +
+   console + portal) 48 556 → 45 740 B**; the journey pages 48 161 B (their sheet 2 421 B), «Ma situation» 47 942 B
+   (its sheet 2 202 B), every other page type lighter (−1 230 … −2 816 B). After the second sync, against design-v5
+   at `4ff9056`: `main.css` 37 324 → 35 483 B; **the console page types 47 200 → 44 196 B**; the journey pages
+   46 617 B, «Ma situation» 46 398 B, «Mes pièces» 52 697 → 49 693 B, every page type lighter (−583 … −3 004 B);
+   the same figures after the third sync, against design-v5 at `3d5351b`, on bundles rebuilt from a clean dist. No
+   page type grows: rule 2's performance check is not triggered. Requests: four stylesheets on the journey pages and
+   on «Ma situation» (the shell's three and the page's one), three on every other console page — as before this pass
+   for the journey pages, one fewer for «Ma situation» than its two page sheets would have made.
+5. **`tests/frontend/test_design_docs.py`'s token check** reads, for a partial, the custom properties of the partials
+   its entry imports before it (sibling imports only): the rail and the Stepper compose the vocabulary of
+   `_journey-nodes.css`, as the build composes them.
+6. **Paths outside the slice** (for the merge step, with DL54-126's and DL54-127's): `static/css/v5/_interior.css`,
+   `apps/portal/static/portal/v5/_wizard.css`, `templates/pages/partials/_linea.html`,
+   `templates/ecosystem/partials/pilot_flow.html` (one comment), `templates/components/timeline.html` (deleted),
+   `templates/dev/showcase.html`, `apps/core/dev.py`, `apps/portal/static/portal/console.css` (W3-F1's import line
+   out), `apps/portal/static/portal/situation.css` (new), `templates/portal/situation.html` (W3-E's: its one sheet),
+   `apps/portal/static/portal/v5/_journey-nodes.css` and `_journey-stepper.css` (new, W3-D's — the slice names
+   `_journey-rail.css`), `tests/frontend/test_interior_w3_f1.py`, `tests/frontend/test_orientation_w3_f1.py`,
+   `apps/ecosystem/tests/test_compliance.py`, `tests/frontend/test_design_docs.py`, `tests/frontend/test_design_showcase.py`;
+   generated: `static/css/dist/portal/situation.css`.
+7. **The design showcase draws the journey again** (found by the resumed verification, 15 October): it links
+   `portal/journey.css`, `portal/situation.css` and, for the passage, `pages/css/pages.css` (a partial is never an
+   output of its own; the home's sheet is the passage's one importer without a page grammar — its home rules find no
+   element there), as W2-A and W3-C link their page sheets; since the journey's CSS left `main.css` and `console.css`
+   its demos were bare (and, with the journey's sheet alone, its Stepper half drawn by the vocabulary). In the
+   product «Ma situation»'s sheet stays linked by that page alone (`templates/dev/` is never served without DEBUG;
+   the journey test says so of the product's templates). Development only; no page type's weight moves.
+
+**Source.** `QA/v54/w3-d/REVIEW.md` M4; `QA/v54/w3-d/NOTES.md` «For W3-F1» and «Integration pass»; the orchestrator's
+definitive CSS ruling (`directives/V5_8_CONTINUE_GITHUB_CSS_BUDGET.md`, last section); DL54-87; DL54-109;
+`tests/frontend/test_journey_w3_d.py`.
+
+## DL54-129 · 15 October 2026 · Steward, the w3-d merge: the family's seven entries kept as numbered, the 19 paths assigned and seven slices named as written, the shared CSS gate passed with `main.css` 1 841 B lighter on every page and the console page types 3 004 B lighter, every ceiling lowered to the merged weight, the journey's two page types recorded through their own sheet
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w3-d` into design-v5 on 15 October 2026 —
+what the family's entries and notes hand to the merge step: DL54-126 item 1, DL54-127 item 6, DL54-128 item 6;
+`QA/v54/w3-d/NOTES.md` «Paths outside the slice», «Integration pass — resumed» (the decision-log numbers, the weights,
+the tests) and «Handed to»; `QA/v54/w3-d/REVIEW.md` and `A11Y_PERF.md`, both SHIP_AFTER_FIXES, and `P0_RECHECK.md`,
+SHIP).
+
+1. **The order and the numbering.** The plan's order (§3.5 item 6: W3-D merges after W3-F1) was met: `v54/w3-f1` has
+   stood on design-v5 since 12 October. The steward took `DESIGN_V5_MERGE_LOCK` at 21:14:58 with design-v5 at
+   `3d5351b` (DL54-121, the devops record) — the branch's merge base: the family's third sync (`9237de4`, 15 October)
+   had merged it and numbered the family's seven entries **DL54-122 … DL54-128** after it, so `git merge design-v5` in
+   the branch said «Already up to date» and nothing was renumbered. Checked: the family's change to the log is
+   additive only (seven rows, seven entries, no line of design-v5's removed). This entry is DL54-129 (W3-E's branch
+   numbers its own from DL54-130).
+2. **No conflict.** The branch contained design-v5's head, so the merge into design-v5 (`--no-ff`) wrote no conflict.
+   `static/css/dist` and `static/js/dist` were deleted and rebuilt (`npm run build`) in the branch: byte for byte the
+   committed bundles. On design-v5 after the merge (`e35714c`, whose tree is the branch's: `git diff v54-w3-d e35714c`
+   is empty) the same rebuild (`cec9425`): the CSS byte for byte the branch's; the JS byte for byte design-v5's before
+   the merge but `situation.js`, the family's one script change — the branch's shared chunks and the entries that import
+   them differed only by their names, which follow the worktree's path.
+3. **The 19 paths outside the slice are this area's in the manifest** (`9b1fc84`). `scripts/check_ownership.py w3-d
+   design-v5` listed exactly the paths the family declares (DL54-126's seven, DL54-127's four, DL54-128's eight); each
+   was read in the diff and found to be what it declares. One whole file: `templates/components/timeline.html`
+   (retired with `components.css` §17, its last caller the showcase's demo). Eighteen slices: `apps/portal/services.py`
+   (the journey's presenter and `pathways_page`'s `journey` — the plan's slice names `apps/cases/services.py`, where
+   nothing changed, and its entry says so), `apps/cases/presenters.py` (`journey_with_dates`, `timeline`; no family
+   held it), `apps/core/dev.py` (the showcase's journey through the presenter), `static/js/src/situation.js` (still
+   at load), `templates/pages/home/_orientation.html` (the passage), the journey sheets' links in
+   `templates/cases/detail.html`, `templates/portal/dashboard.html`, `templates/portal/pathways.html` (with the journey
+   at its head) and «Ma situation»'s sheet in `templates/portal/situation.html`, the consolidation's
+   `static/css/v5/_interior.css` (§5 out), `templates/pages/partials/_linea.html` (an include of the one component),
+   `templates/ecosystem/partials/pilot_flow.html` (a comment), `templates/dev/showcase.html` (the links; the timeline's
+   demo out), and five test files whose pins follow (`apps/pages/tests/test_home.py`,
+   `tests/frontend/test_design_showcase.py`, W3-F1's `test_interior_w3_f1.py`, `test_orientation_w3_f1.py` and
+   `apps/ecosystem/tests/test_compliance.py` — no test removed). Whole files beside them: the family's four new sheets
+   (`portal/journey.css`, `portal/situation.css`, `v5/_journey-nodes.css`, `v5/_journey-stepper.css`), which the
+   import-line slice's glob had matched. Seven slices named as written: the page sheets' import lines (with `pages.css`'s
+   V4 sequence rules, `_dashboard.css`'s one journey rule and `_wizard.css`'s Stepper rules), `console.css`,
+   `components.css` §16–§17, `v4/workspace.css`, `register.css`, `test_design_docs.py`'s composition helpers, DS 2026;
+   a note on `apps/cases/services.py`. The check after it: 17 inside, 31 slice, 29 generated, and the manifest itself,
+   the one steward-only path (before: 19 outside); `--validate`: coherent, 26 families, 651 entries.
+4. **The shared CSS gate (the owner's V5.8 and the orchestrator's definitive ruling of 12 October, 02:15) passes: both
+   shared bundles fall and no page type grows.** On the bundles rebuilt from a clean `static/css/dist` and
+   `static/js/dist`, `gzip.compress(data, 9, mtime=0)` (`evidence/v54/w3-d/merge/budget_gate_branch.log`, and
+   `budget_gate_merged.log` on design-v5 after the merge):
+
+   | Page type | design-v5 `3d5351b` | merged | change | ceiling before → after |
+   |---|---|---|---|---|
+   | every page, and an interior page with no sheet of its own (`main.css`) | 37 324 | 35 483 | −1 841 | 37 324 → **35 483** |
+   | console page types (`main` + `console` + `portal`) | 47 200 | 44 196 | −3 004 | 47 200 → **44 196** |
+   | **a journey page** — the dashboard with a person's file, «Mon parcours» with a file, the case file (+ `portal/journey.css`) | 47 200 | 46 617 | −583 | — → **46 617** (recorded, item 6) |
+   | **«Ma situation»** (+ `portal/situation.css`) | 47 200 | 46 398 | −802 | — → **46 398** (recorded, item 6) |
+   | the company's dashboard (+ `companies.css`) | 48 073 | 45 069 | −3 004 | 48 073 → **45 069** |
+   | the help desk · the selection · the Academy (+ their sheets) | 48 075 · 48 285 · 47 818 | 45 071 · 45 281 · 44 814 | −3 004 | → **45 071 · 45 281 · 44 814** |
+   | the piece, the loose upload and the Conditions gate (+ `documents.css`) | 52 697 | 49 693 | −3 004 | 52 697 → **49 693** |
+   | the two register pages (+ `documents.css` + `core/overlay-panels.css`) | 54 768 | 51 764 | −3 004 | 54 768 → **51 764** |
+   | the login (+ `entrance.css`) | 42 185 | 40 344 | −1 841 | 42 185 → **40 344** |
+   | the home (+ `hero.css`, `pages.css`) | 51 262 | 49 844 | −1 418 | 51 262 → **49 844** |
+   | a content page · an account page · an error page (+ their `cms` sheet) | 41 425 · 39 750 · 40 953 | 39 584 · 37 909 · 39 112 | −1 841 | → **39 584 · 37 909 · 39 112** |
+   | the persons pages (+ `pathways.css`) · the ecosystem doors (+ `ecosystem.css`) | 40 818 · 40 659 | 39 068 · 38 910 | −1 750 · −1 749 | → **39 068 · 38 910** |
+   | the Forum (+ `forum.css`) · the institutional pages (+ `interior.css`) | 40 818 · 40 121 | 38 504 · 37 749 | −2 314 · −2 372 | → **38 504 · 37 749** |
+   | orientation (+ `orientation/wizard.css`) | 41 363 | 39 597 | −1 766 | 41 363 → **39 597** |
+
+   `dist/main.css` 37 324 → 35 483 B (−1 841 on every page): the family's deletions — `components.css` §16 (the V1
+   stepper and the progress bar) and §17 (the timeline), `v4/workspace.css`'s JourneyRail and Timeline with
+   `rail-draw`, `rail-draw-y` and `tl-light`, `register.css`'s shore crossing — each proved unused on design-v5 and in
+   flight (DL54-128 item 3). `dist/portal/console.css` 7 941 → 6 778 B: «Ma situation»'s guided form left it for that
+   page's own sheet. The page sheets that shed «la linea» fall (`forum.css` −473, `interior.css` −531); those that now
+   import the passage rise by its share (`pathways.css` +91, `ecosystem.css` +92, `orientation/wizard.css` +75,
+   `pages.css` +423 for the home's V4 sequence rules) — every one of their page types lighter than before.
+   `portal.css` and every other sheet byte for byte design-v5's.
+5. **Every ceiling is lowered to the weight measured at this merge** (the definitive ruling: «after a merge, the merged
+   weight is the new ceiling»; DL54-120 item 5): every row of the table carries its new figure. A family that needs a
+   shared rule pays for it with deletions.
+6. **The journey's two page types are recorded as measured — through their own page-only sheet** (V5.8 rule 2).
+   `dist/portal/journey.css` (2 421 B: the vocabulary `v5/_journey-nodes.css` and the rail `v5/_journey-rail.css` —
+   the dashboard's journey, the case file's spine and timeline, «Mon parcours»'s head), linked by
+   `portal/dashboard.html` (a person with a file), `portal/pathways.html` (with a file) and `cases/detail.html`;
+   `dist/portal/situation.css` (2 202 B: W3-F1's guided form, then the vocabulary and the Stepper), linked of the
+   product's templates by `portal/situation.html` alone (the DEBUG-only showcase links both). **A journey page: 46 617 B;
+   «Ma situation»: 46 398 B** — each lighter than the console page type it was on design-v5 (47 200 B), so rule 2's
+   performance check is not triggered; the family's accessibility + performance check and its P0 re-check stand for
+   the sheet (`A11Y_PERF.md`, `P0_RECHECK.md`). Requests: four stylesheets on those pages (the shell's three and the
+   page's one), three on every other console page. Both ratchet down from here.
+7. **No duplicate component family** (V5.8 rule 3): the family that merged second consolidated before its merge —
+   W3-F1's «la linea» folded into `static/css/v5/_journey-passage.css` (one passage drawing: the door pages, the
+   pathway sheets, the questionnaire and the home), the Stepper's rules out of W3-F1's `v5/_wizard.css` (one rail
+   drawing: the dashboard, the case file, «Mon parcours», «Ma situation»); the door pages measured identical but for
+   their rings' rim antialias (DL54-128 item 2).
+8. **The inventory and the capture report.** `scripts/regen_design_inventory.py`: current on the branch; on design-v5
+   after the merge, current as well (the merged tree is the branch's) — nothing to write.
+   The capture report is unchanged: `capture.py` records the home, the privacy page, the login and the 404 (icons, h1,
+   overflow, direction); the family's one change there is the home's orientation steps drawn on the passage, with no
+   icon and only while gate G3 is closed, and its shared deletions are rules none of those pages draws — not
+   regenerated, as DL54-87 item 5 and DL54-120 item 7 said for W3-B and W3-C.
+9. **The tests.** On the branch after the manifest (`9b1fc84`), `TEST_DATABASE_URL=…/test_ile_v5_l6`, one pytest and one
+   browser of the steward's at a time, every run behind the benchmark lock, no run crashed
+   (`evidence/v54/w3-d/merge/tests_*.log`). **Non-browser** (29 min 18 s) — `apps/cases`, `apps/portal`,
+   `tests/test_phase_console.py`, `tests/security` (the object-permission and authorisation audits; the
+   confidential-material sentinel test ran), `apps/orientation`, the home's `test_home.py`, `apps/ecosystem`,
+   `apps/pathways`, the family's `test_journey_w3_d`, W3-F1's `test_interior_w3_f1` and `test_orientation_w3_f1`,
+   `test_chips_cards_w1_c`, `test_script_motion_gate`, `test_design_docs`, the two bundle-current tests,
+   `test_static_pipeline` (a real `collectstatic` under the manifest storage), `test_design_showcase`, W3-A's
+   `test_console_shell_stylesheets` and `test_console_shell_w3_a`, `test_dashboard_w3_b`, `test_o14_lint`, `test_icons`,
+   the ownership and inventory scripts' tests: **1 404 passed, 3 skipped** (the intake suite's own: no legal rule in
+   force), 1 xfailed (the showcase's captions, an older marker), **1 failed — design-v5's own** (item 10). **Browser**
+   (headless Chromium, 11 min 17 s): the family's `test_journey_browser_w3_d`, W3-F1's `test_browser_w3_f1` and
+   `test_orientation_browser_w3_f1`, `apps/portal/tests/test_browser.py`, `tests/i18n/test_rtl_browser.py`,
+   `apps/ecosystem/tests/test_browser.py` and `apps/pages/tests/test_browser.py` (the home among them) — **113 passed**, 0
+   skipped, 0 failed. On design-v5 after the merge and the rebuild (`cec9425`): the bundle, docs, pipeline, ownership and
+   inventory tests, the family's own, the showcase, the chips and W3-F1's two import-list files — **297 passed**, 1 xfailed
+   (5 min 32 s). `ruff check .` (CI's lint step): all checks passed; `ruff format --check` on the area's changed Python
+   files finds one file, `tests/frontend/test_design_docs.py`, whose two deviations are design-v5's own lines (the same on
+   design-v5), not changed; `makemigrations --check --dry-run`: no changes; `manage.py check`: no issue; `git diff --check`
+   clean; no CR byte in a text file the branch changes. The full suite is the integration checkpoint's (V5.5).
+10. **Design-v5's own failure, unchanged by this merge.**
+   `test_script_motion_gate.py::test_no_animate_or_frame_loop_outside_the_gate` fails on W2-A's
+   `static/js/src/overlay/extras.js` (`window.requestAnimationFrame`), exactly as on design-v5 at `3d5351b` (DL54-102 item
+   10, DL54-120 item 9: `tests_design-v5_own_failure.log`, 1 failed, 5 passed); its fix is `v54-intfix`'s (`822b3ae`), not
+   yet on design-v5. The test stops at the first offending module, so its check was run over every module of both trees
+   (`motion_gate_all.py`, logged with it): one violation on each, that line, and no other — the family's modules,
+   `situation.js` among them, pass the gate.
+11. **`live_status.json`: the family row, no surface key.** The journey is drawn inside other families' page types: the
+   dashboards (v5 since W3-B), the home and the door pages (v5 since W2-D and W3-F1), and «Ma situation», «Mon
+   parcours» and the case file, whose pages W3-E completes (V4's Panel and workspace head on «Ma situation», the
+   results and the empty state of «Mon parcours», the case file's page) — so no page type's composition is completed
+   by this merge alone, as W3-A's and W2-A's merges said of their systems. The family row says what shipped; W3-E's
+   merge marks those three page types.
+
+**Why.** Entries numbered after design-v5's keep the log's one order; paths nobody holds would have no writer for the
+next family; the gate is read on the shared payload as V5.8 writes it, and the merged weight becomes every ceiling, so
+that the next family meets the weight the product has; a surface's own CSS lives in its own sheet, loaded only where it
+is drawn, and its page type is recorded at the weight it was measured at; the preview never says a page is V5 before
+its whole composition is.
+
+**Source.** The owner's V5.8 (`C:/tmp/ile_v5_council/directives/V5_8_CONTINUE_GITHUB_CSS_BUDGET.md`, and the
+orchestrator's definitive ruling below it) and the V5_5 addenda of 11 October 19:40 and 12 October 01:30; plan §2.2
+(the manifest; merge steps 1–5), §2.3, §2.6, §3.5 item 6; DL54-87 item 5; DL54-120; DL54-122 … DL54-128;
+`QA/v54/w3-d/NOTES.md`, `REVIEW.md`, `A11Y_PERF.md`, `P0_RECHECK.md`; the weights in
+`evidence/v54/w3-d/merge/budget_gate_branch.log`; the ownership checks in `evidence/v54/w3-d/merge/ownership_before.log`
+and `ownership_after_wt.log`; the tests in `evidence/v54/w3-d/merge/tests_*.log`.
+
+## DL54-130 · 15 October 2026 · Steward, the sec-f5 merge: F-5 closed on design-v5 — the back office's own sign-in signs no one in, a second factor an account holds is presented in every session; the family registered outside the waves; nothing deployed
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-sec-f5` into design-v5 on 15 October 2026 —
+the owner's V5.9 (`C:/tmp/ile_v5_council/directives/V5_9_DELIVERY_AND_PRODUCTION_READINESS.md`: never deploy, never
+touch production); what the lanes hand to the merge: `QA/v54/sec-f5/NOTES.md`, with «Review fixes» and «At the
+merge», and `REVIEW.md`).
+
+1. **What merged: the DevOps lane's go-live blocker F-5, fixed** (DL54-121 item 7.1; checklist A-13). With
+   `BACKOFFICE_MFA_ENFORCED=True`, an account holding a TOTP device reached `/backoffice/` on its password alone
+   through Django's admin sign-in form (the unfold site's own `login` view: no MFA stage, no rate limit), because the
+   policy asked whether a device was *enrolled*, never whether *this session* had presented it. Twelve commits
+   `9eef573` … `01609b1` on design-v5 `3d5351b` — the reproduction first, as a strict xfail (`9eef573`); the fix
+   (`1dd3185`, `a340bff`, `e6170d6`, `812e8ef`, `17c9dd9`); the lane's notes and the DevOps documents (`8d98992`); an
+   independent review; a fix pass for its four findings (`98b0067`, `a29e3cd`, `035da86`, `96ba940`); the notes and
+   the review (`01609b1`) — and the merge step's four commits on the branch. Twenty-two paths:
+   - **(a) the back office's own sign-in signs no one in** — `apps/accounts/admin_site.py`: `BackofficeAdminSite`,
+     unfold's site, whose `login` never reads the request body and never calls `authenticate` or `login`. Signed out
+     → allauth's sign-in, with a `next` that is a page of this back office or else its index (Django's
+     `url_has_allowed_host_and_scheme`, then a path under the index: no open redirect); signed in as an active staff
+     account → the page, or first the second factor; signed in otherwise → 403 (no form to sign in as another
+     account, no loop). Installed as the default admin site by `apps/accounts/admin_apps.py` (an `AdminConfig` in
+     place of `django.contrib.admin`, beside `unfold.apps.BasicAppConfig`); the lane diffed the registry (107 models)
+     and the 118 admin URL patterns against design-v5: identical.
+   - **(b) the policy asks about the session** — `accounts.services.second_factor_due`, for an account that reads
+     other people's data: **Enrol** as before (no TOTP device and the flag on → the activation page); **Present**,
+     new — the account HOLDS a second factor and this session has not presented one of its own authenticators
+     (allauth's `mfa` step in the session's authentication log, or a device the session has just enrolled through
+     allauth's own activation) → allauth's MFA re-authentication, then back, whatever the flag says. The flag makes
+     enrolment mandatory; allauth asks an enrolled account for its code at every sign-in anyway, so a signed-in session
+     without the step came through another door. Enforced at three points: `BackofficeMFAMiddleware` (the back
+     office; the reserved area and now `/documents/`, whose endpoints serve the reserved area's pieces outside its URL
+     prefix; allauth's pages that manage the factor, whose password re-authentication was the way round it — the
+     exemptions are now the exact sign-out routes, never a fragment anywhere in a path), the admin site's
+     `has_permission`, and `mfa_required_for_backoffice`.
+   - **the documents**: «the flag makes enrolment mandatory; a device the account holds is asked for in every
+     session» in `base.py`, `prod.py` (which cited a removed name), `.env.example`, `README.md`, `docs/SECURITY.md`,
+     `docs/security/PERMISSION_MODEL.md` and `accounts.W001`; DevOps's checklist A-13, runbook and notes say «fixed
+     by», with the test names; nginx's redirect of `/backoffice/login/` (runbook step 11) stays as a second layer.
+   - **the tests**: `apps/accounts/tests/test_backoffice_second_factor.py` (90 tests: every way into the back office
+     of the lane's table, and each review finding); `test_mfa_middleware.py` (its two assertions of the account-level
+     rule now require the session's step); the runbook test's docstring; the design preview's framing test, which
+     linked `/backoffice/login/` and now links the preview's own index (signed out, a back-office address ends at
+     allauth's sign-in, a page the frame may hold).
+2. **The review** (lane `sec-f5-review`, `QA/v54/sec-f5/REVIEW.md`, on `8d98992`): **SHIP_AFTER_FIXES, nothing
+   blocking — F-5 closed.** 143 of the reviewer's 144 attack tests held, among them a sweep of all 657 admin URL
+   patterns (GET, POST and HEAD; with the middleware and with the admin site alone; both values of the flag); the
+   same attacks reproduce F-5 on design-v5; rate limits, CSRF, no user enumeration, session rotation and the audit
+   trail did not regress. Four minor findings, each fixed with its tests by lane `sec-f5-fix2` before this merge:
+   (1) security — after a *password* re-authentication allauth resumes a suspended POST by calling the view itself,
+   past the middleware, so a session that never presented the factor could regenerate the owner's recovery codes (it
+   opened nothing, and those pages were open to everyone before the fix) → a session that owes the factor resumes
+   nothing on a password step (`98b0067`); (2) documents — `prod.py` cited the removed `EXEMPT_FRAGMENTS`, and several
+   places described the flag as switching the factor on or off (`96ba940`); (3) efficiency — the policy read the
+   account's authenticators at every `has_permission` call; now once per request, 8 → 2 of an admin list page's
+   queries (`035da86`); (4) tests — a documented helper no production code called; the policy now decides through it
+   (`a29e3cd`). The reviewer's whole suite on the fixed branch: 144 passed.
+3. **The other security properties and the hard limits, checked at the merge.** Rate limits: every sign-in is
+   allauth's (Django's admin form had none), and the one new door, the MFA re-authentication, is allauth's, limited.
+   CSRF: global and untouched. No user enumeration: the closed view answers every POST alike, whatever the account.
+   Session rotation: every sign-in still goes through Django's `login()`. Audit: every sign-in and failed sign-in is
+   still audited; the closed view authenticates no one. Nothing deployed; no server, DNS record or certificate
+   touched; no package added (allauth 65.19.4, Django 5.2.17, django-unfold 0.107.0, as installed); no password typed
+   into a real page — the tests' accounts use the test-only password of the existing auth tests. The family's diff
+   (1 989 added lines) scanned in Python: no IPv4 address but loopback (the documented local test database), no
+   production host or droplet name, no live domain, only `example.test` addresses, no credential but that test-only
+   password and one other marked «test-only».
+4. **The pre-merge sync**: design-v5 had moved from `3d5351b` to `fec37d3` (W3-D's merge, DL54-129, its shipped
+   note); the sync (`ddd468d`) met no conflict, and the two sides share no path (W3-D: templates, CSS, JS, presenters
+   and their tests; this family: accounts, settings, documents). No template, CSS or JS in the family: no bundle
+   rebuilt, and V5.8's shared CSS gate is not concerned (the bundles are design-v5's byte for byte). No test outside
+   `apps/accounts` creates an authenticator, so the Present rule meets no other family's tests.
+5. **The family «sec-f5» is in the manifest, outside the waves** (`93eff12`): wave 0 as devops, `steward` false,
+   DL54-01's branch and worktree, no merge tag. Twenty-one entries, each with its reason — whole: the admin site and
+   its `AdminConfig`, F-5's test module, `docs/design-v5/QA/v54/sec-f5/**`; slices: the policy in `middleware.py`,
+   `services.py`, `decorators.py`, `apps.py` (beside W1-D's receiver) and `checks.py` (four of them files no family
+   held), the updated assertions of `test_mfa_middleware.py` (beside W2-B's slice), the admin pair and the flag's
+   comment in `base.py`, the flag's words in `prod.py`, `.env.example` and `README.md` (beside devops's slices), the
+   A07 and §12.2 rows of `docs/SECURITY.md`, the paragraph and the L-10 row of `PERMISSION_MODEL.md`, F-5's lines in
+   four of devops's files (checklist A-13, the runbook, its notes, the runbook test's docstring) and the framing test
+   in W1-P's `test_design_preview.py`. `scripts/check_ownership.py` accepts the id `sec-f<n>` — the fix of a go-live
+   security finding, named after it; F-7's is in flight — and its id test holds five new cases (`814e005`).
+   `check_ownership.py sec-f5 design-v5` before the steward's commits: 22 paths, 5 inside, 17 slice → PASS; each
+   slice was read in the diff and stays inside it. After them the steward's three paths join the list: the manifest
+   (steward-only), the checker and its tests (the steward's whole files). `--validate`: coherent, 27 families, 672
+   entries.
+6. **The tests**, `TEST_DATABASE_URL=…/ile_v5_l4`, one pytest at a time, `-p no:randomly`, on the merged branch:
+   the merge brief's list — `tests/backoffice`, `apps/accounts`, `tests/security` (the production settings' refusals
+   among them), `tests/deployment` (`test_production_checks.py` among them), `tests/compliance`,
+   `tests/frontend/test_design_docs.py` — with the checker's tests, `tests/test_env_example_is_complete.py` and
+   `tests/test_migration_drift.py` (`makemigrations --check`, V5.9 §7): **574 passed in 12 min 12 s, no skip, no
+   xfail**. Then `tests/frontend/test_design_preview.py` and `tests/i18n/test_documentation.py` (`-m "not browser"`;
+   W3-D's merge changed the preview's `apps/core/dev.py`, and the family the preview's framing test): 307 passed; that
+   framing test in Chromium: 1 passed. `manage.py check`: no issue. `ruff check` and `ruff format --check`: clean on
+   the 15 Python files the merge brings. The logs are in `evidence/v54/sec-f5/merge/`.
+7. **Not done here, on purpose.** No tag (V5.9 §14: the release tags mark the whole product after final QA); no
+   restart of 8780; no change to v5-live; no push; no line in `CHANGELOG_V54.md` or `live_status.json` (not a preview
+   surface — DL54-77, DL54-121). The full suite stays the integration checkpoint's (V5.5) and CI's; on the server,
+   D-12 (the TOTP code asked before the back office opens) is the owner's check after his deployment. **main** (the V4
+   line) is the merge brief's next step, after the lock: a `cherry-pick -x` of the fix's ten code-and-test commits
+   (not the notes, manifest or decision-log commits), kept only if it applies cleanly and main's back-office,
+   accounts and security tests pass, aborted otherwise — the release comes from design-v5 either way. The lane's
+   observations for the owner stay decisions, not fixes: how long the proof lasts (the session — 8 hours after its
+   last write, the cookie ending with the browser), one password-change path instead of two, rate limits counted per
+   Gunicorn worker. **The number**: this entry takes DL54-130, design-v5's next free one. W3-E's branch had numbered
+   its twelve entries DL54-130 … DL54-141 (DL54-129 item 1); they follow this one at its sync, as W3-D's followed the
+   devops merge's DL54-121.
+
+**Why.** F-5 was the back office's go-live blocker: a second factor that a password alone can skip is no second
+factor. The fix closes both the door (the admin's own form) and the rule (the account asked about instead of the
+session) — either alone would have left the other open; and a family no plan section names still needs one writer
+per path, or the next change to these files would have none.
+
+**Source.** The owner's V5.9 §6 and §14–§17; DL54-121 (item 7.1: F-5 as the owner's first open question; the family
+outside the waves as precedent); DL54-01 (the ref names); DL54-77 (a merge that is not a preview surface); DL54 «How
+it is kept»; plan §2.2 (a file not in the manifest has no writer until the steward assigns it); checklist A-13;
+`QA/v54/devops/NOTES.md` (F-5); `QA/v54/sec-f5/NOTES.md` (with «Review fixes» and «At the merge»), `REVIEW.md`; the
+ownership checks and the test logs in `evidence/v54/sec-f5/merge/`.
+
+## DL54-131 · 16 October 2026 · Steward, integration checkpoint 3: the full suite on design-v5 after Wave 3's merges, its reds fixed at their root; the family «intfix» registered outside the waves; the tag `v54/checkpoint-3`
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-intfix` into design-v5 on 16 October 2026 —
+the owner's V5.5 («full regression only at important integration checkpoints»), V5.8's definitive ruling and V5.9
+(never deploy, never touch production); what the branch hands to the merge: `QA/v54/intfix/NOTES.md` — step 1, the
+checkpoint's two passes and «At the merge» — and `REVIEW.md`).
+
+1. **What the checkpoint is.** The full regression V5.5 keeps for the important integration points, run on design-v5
+   once Wave 3's queued merges had landed — W3-F1, W3-C and the DevOps readiness merge (DL54-109, DL54-120,
+   DL54-121), then W3-D's (DL54-129), which joined it during the first pass — with the steward's fixes for every red.
+   The branch `v54-intfix` was cut from design-v5 at `8e13cd2` (12 October) and merged design-v5 four times: `e6ecbde`
+   (at `a2644b0`), `aff19e7` (at `3d5351b`), `a059610` (at `fec37d3`) and `23600fc` (at `f447c28`, the sec-f5 merge
+   and DL54-130 — the pre-merge sync, under the lock). Every source merged without a conflict; the generated bundles
+   were rebuilt from a clean dist each time.
+2. **The full suite** (lane 3, `test_ile_v5_l3`, Chromium, `-p no:randomly`; NOTES «Checkpoint 3» and «second pass»):
+   - first pass, on `aff19e7` (design-v5 at `3d5351b` with step 1's fixes), a fresh test database: **5 058 passed, 0
+     failed**, 3 skipped, 2 xfailed (507 deselected) in 1 h 03 min 45 s; in Chromium **507 passed, 0 failed, 1 error**
+     (a teardown, item 4) in 55 min 11 s, then, on `d8fdc42`, **507 passed, 0 failed, 0 errors** in 49 min 38 s;
+   - second pass, on `a059610` (design-v5 at `fec37d3`, W3-D's merge), a fresh test database: 5 108 passed, **3
+     failed** — design-v5's own since W3-D's merge (item 5) —, 3 skipped, 2 xfailed (519 deselected) in 1 h 01 min 40
+     s; the three files fixed and their neighbours on `34c5471`: **954 passed, 0 failed**, 1 xfailed; in Chromium on
+     `34c5471`: **519 passed, 0 failed, 0 errors** in 52 min 23 s, with a teardown survey (a pytest plugin, kept as
+     evidence) that found no test leaving a request of the live server running;
+   - the skips are `apps/cases/tests/test_intake.py`'s three cases that need a legal rule in force (none is); the
+     xfails the two declared debts. No browser run crashed. Firefox and WebKit are not installed: Chromium only.
+3. **Step 1's four fixes** (12 October: the reds DL54-102 item 10 handed over, and CI's):
+   - (a) `31e3084` — `test_design_preview.py`'s reset test packed SO_LINGER as Windows' `struct linger` (two `u_short`);
+     Linux's is two `int` and refuses the short option with errno 22, as GitHub's runner did: `"HH"` on Windows, `"ii"`
+     elsewhere (proved in a `python:3.13-slim` container). What the test proves is unchanged;
+   - (b) `822b3ae` — W2-A's `overlay/extras.js` asked for a frame itself (`requestAnimationFrame`), against W1-D's rule
+     that only `motion.js` does (`test_script_motion_gate`): `overlay.js` imports `nextFrame` from `motion.js` and hands
+     it over in the core it installs (extras.js still imports nothing); one re-read per frame of resizes, as before;
+   - (c) `96b389d` — **a real bug of the overlay system**: on a console page at phone width, «Menu», Esc, then Space
+     within one frame, and a press on the scrim no longer closed the drawer (W3-A's «Menu» test failed 2 runs in 3 on
+     design-v5). A dialog's native `close` event comes late; settled again after the drawer had reopened, it took the
+     new opening's trap away (`aria-modal`, the scrim, the lock, the focus; the panel left `inert`). Two parts, both
+     needed: the late event settles only a dialog that is closed; `open()` settles a close it has not heard. The new
+     test `test_a_drawer_closed_and_opened_again_within_a_frame_keeps_its_trap_and_a_press_on_the_scrim_closes_it`
+     failed 4 runs of 4 before the fix and passed 10 of 10 after; the review served the chunk with either half undone
+     and the test failed each time;
+   - (d) `37dd8ad` — the loader: with `loader.js` lost, `shell.js` took back its face but main.js's double-submit guard
+     stayed (`data-submitted`, `aria-disabled` for ever — WCAG 4.1.3) on every `data-single-submit` form; the catch now
+     lifts it with the face. Two of `test_loader_w1_d.py`'s tests were stale — W3-F2 guarded the profile form and W2-C2
+     retired the account menu's V4 face, legitimately — and read today's markup, asserting as much or more;
+     `test_loader_rules.py` pins the release.
+4. **The checkpoint's own find** (`d8fdc42`): `test_drawer_browser_w3_c.py::test_a_modified_press_keeps_the_links_own_way`
+   closed its Ctrl+click tab still on `about:blank` while the live server went on rendering the piece's page in its
+   request's transaction; pytest-django's flush (`TRUNCATE`) deadlocked with it once in the first browser run. The test
+   now lets the tab load the link's own path before closing it (58 runs of 58 with no request in flight at its
+   return). No product code involved.
+5. **W3-D's three reds** (design-v5's own since its merge; reproduced on a pristine `fec37d3`):
+   - `f2f1e67` — a four-line `{# #}` in `templates/dev/showcase.html` rendered into the page (Django's `{# #}` is one
+     line): the same words in `{% comment %}` (development only);
+   - `71a3675` — `test_v5_tokens.py::test_the_console_partials_close_the_console_entry` gave each console partial ONE
+     importer (DL54-112); W3-D composes one vocabulary (`v5/_journey-nodes.css`) into two page sheets of the portal
+     (DL54-128 item 4). **Supersedes DL54-112's «one importer» rule** with what it protected: a partial is the console
+     entry's or page sheets', never both; the entry imports a partial once; and no product template, through its chain
+     of `{% extends %}`, links two sheets that import the same partial — mutations caught;
+   - `34c5471` — `apps/pages/tests/test_templates_static.py` banned any `@import` in the home's sheet (`3093261`, when the
+     sheet was served as written); the home links its bundle now, which inlines W3-D's passage partial. **Supersedes
+     `3093261`'s ban**: the source may import local `_` partials only, the bundle the home links holds no `@import`, and
+     the tokens, logical-properties, no-URL, no-`!important` and wording checks run on the imported partials too.
+6. **The review** (lane `intfix-review`, `REVIEW.md`, on `792dd9d`): **SHIP** — no P0, no major; each fix at its root;
+   no test weakened (the two corrections above follow a recorded decision, with written reasons); no family's design
+   touched. Its runs: 19 of 19 JS and 22 of 22 CSS bundles rebuilt byte for byte; 741 static tests passed (one
+   mtime-only red, m1, closed by this merge's clean rebuild); 162 browser tests passed. Four minors and two nits,
+   handed on (item 10).
+7. **The family «intfix» is in the manifest, outside the waves** (`1f4d63f`): wave 0 as devops and sec-f5, `steward`
+   false — its fixes are held to slices like any family's —, DL54-01's branch and worktree, no merge tag (this entry's
+   tag marks design-v5). Twelve entries, each with its reason: whole, `docs/design-v5/QA/v54/intfix/**`; slices, each
+   file staying its owner's — `overlay.js` and `overlay/extras.js` (W2-A's), `shell.js`'s catch (in W1-D's section),
+   the showcase's comment block, the SO_LINGER layout (W1-P's test), the drawer test's wait (W3-C's), the loader's
+   rule and three tests (W1-D's), the overlay's new test (W2-A's), the console partials' guard (W1-A's file, beside
+   W3-C's slice) and the home sheet's import rule (beside W1-B's and W2-D's slices). `scripts/check_ownership.py`
+   accepts the id `intfix` (`473aa20`, three id cases). `check_ownership.py intfix design-v5` before the steward's
+   commits: 37 paths, 2 inside, 11 slice, 24 generated → PASS, each slice read in the diff; after them the steward's
+   three paths join (the manifest, the checker and its test). `--validate`: coherent, 28 families, 684 entries.
+8. **The tests at the merge** (on `v54-intfix` after the sync, `1f4d63f`): the test files the branch changed and those
+   that cover its sources (the overlay's, the shell's and the showcase's), `test_design_docs`, `test_static_pipeline`,
+   both bundle-currency tests, `tests/security` and sec-f5's two test modules (the sync's newest code): **1 824 passed,
+   0 failed**, 1 xfailed (the showcase's declared debt) in 10 min 19 s; in Chromium the overlay and console browser
+   tests (the late settle's test and W3-A's «Menu» test among them), `apps/portal/tests/test_browser.py`, W2-C2's phone
+   menu, `test_loader_w1_d` and the browser tests of the files the branch changed (the drawer's; the preview's, sec-f5's
+   framing test among them): **200 passed, 0 failed, 0 errors** in 22 min 05 s, no crash; `manage.py check`,
+   `makemigrations --check --dry-run`, `ruff check .`: clean. On design-v5 after the merge and the rebuild (`7440612`):
+   both bundle-currency tests, the static pipeline, the overlay's and the loader's rules, the static assets, the motion
+   gate and the checker's tests — 166 passed.
+9. **The weight (V5.8).** No stylesheet changed: every `css/dist` bundle rebuilt from clean on design-v5 after the merge
+   is byte for byte the one before it, so the shared payload and every recorded page-type ceiling stand where DL54-129
+   put them (`main.css` 35 483 B on every page; the console page types 44 196 B). JS (gzip −9, design-v5's chunk names
+   after the rebuild): the overlay core chunk 6 476 → 6 520 B (19 456 → 19 546 B minified), the extras chunk 1 600 →
+   1 597 B, the `overlay.js` entry 143 → 153 B, the `shell.js` entry 1 164 → 1 212 B; every other entry and chunk the
+   same, the chunk names read as one — no product page fetches anything new (`motion.js`'s chunk is already in the graph
+   of every page that loads the overlay system); only the dev specimen board that loads `overlay.js` alone now fetches
+   the Motion chunk.
+10. **Left, and handed on.** The review's m2 and m3 to W1-D (shell.js's catch is the one release only while every
+   guarded form submits through a `.btn` — a static test of that premise, or the release on the early return too;
+   `initMisc`'s comment in `main.js` still names loader.js as the guard's only lifter), m4 to W2-A (a resize step in
+   the 400 % test, so fix (b)'s path has a behavioural test), n1 to the steward's next pass over `test_v5_tokens.py`
+   (cite DL54-128 item 4 for the third way not taken; say the chain check follows `{% extends %}` only). The review's
+   «seen on the way», not this branch's: a year of cache (`WHITENOISE_MAX_AGE`) on the three fixed-name scripts imported
+   from inside the bundles (`loader.js`, `depot.js`, `piece-drawer.js`) → the DevOps owners and W1-D; a live server
+   that can draw a port Chromium refuses → the test infrastructure. Not run: GitHub's runner on this tree, Firefox and
+   WebKit. main (the V4 line) untouched. No push; nothing deployed.
+11. **The record.** Merged with `--no-ff` (`6f89147`); both dist trees rebuilt from clean on design-v5 (`7440612`);
+   `regen_design_inventory.py`: the inventory tables and the counts are current, nothing to write; `CHANGELOG_V54.md`
+   gains an «integration checkpoint 3» line and `live_status.json` its date (no surface changes state: the checkpoint is
+   no preview surface — every page type keeps the state its family gave it); the annotated tag **`v54/checkpoint-3`**
+   goes on the commit that writes them; v5-live is then checked out at the tag and 8780 restarted as
+   `evidence/v54/SERVERS.md` says (`ile_v5`). **The number**: DL54-131, design-v5's next free one; W3-E's branch
+   numbered its entries from DL54-130 (DL54-130 item 7) and follows this one at its sync.
+
+**Why.** Wave 3's surfaces were merged one by one, each with its targeted tests and none with the whole suite: four reds
+had reached design-v5 (one a real overlay bug a person meets on a phone, one a refusal no one could end) and CI's hosted
+job was red. A checkpoint that runs everything, fixes each red where it starts — the product where the product was wrong,
+the test where the test was stale, with the reason written — and tags the result gives the owner a known-good point
+for the preview and for the next GitHub checkpoint.
+
+**Source.** The owner's V5.5 (5 October 2026: «full regression only at important integration checkpoints»), V5.8
+(definitive ruling, 12 October 02:15), V5.9; DL54-01; DL54-77 (the previous checkpoint); DL54-102 item 10 (the reds handed
+over); DL54-112; DL54-128 item 4; DL54-129; DL54-130; plan §2.2 (a file not in the manifest has no writer until the
+steward assigns it); `QA/v54/intfix/NOTES.md`, `REVIEW.md`; the logs and JUnit files in
+`C:/tmp/ile_v5_council/evidence/v54/intfix/` (`cp3_*`, `cp3_w3d_*`, `cp3_merge_*`).

@@ -5,63 +5,77 @@
   * p3.hero.body and the prescribed FAQ answer faq_who — only when gate G3 is open;
   * the trademark line: p1.trademark.mark + p1.trademark.words_fr (words_it on the Italian page).
 The connective sentences are neutral and state nothing beyond those texts. Never the registered sign.
+
+Design V5.4 (W3-F1): the entrance — the name drawn once, as the h1 (the wordmark's class keeps its one drawing,
+v5/base.css), the lead — then a chain of questions: what it is («En bref»), why, who carries it, which spaces make
+the ecosystem (a register: the audience glyph says which space, one per row), and the mark, quiet, at the end.
 {% endcomment %}
 {% block page_title %}{% translate "Le projet" %}{% endblock %}
 {% block page_header %}
-{# Same markup as components/page_header.html; written out so that only the lead (not the wordmark) carries the fallback lang. #}
-<header class="page-header container">
-  <p class="page-header__eyebrow">{% translate "Le projet" %}</p>
-  <h1 class="page-header__title">{% brand "page-header__wordmark" %}</h1>
-  {% if lead %}<p class="page-header__lead"{% if lead.lang %} lang="{{ lead.lang }}"{% endif %}>{{ lead }}</p>{% endif %}
-</header>
+{% translate "Le projet" as page_label %}{% brand "page-header__wordmark" as brand_html %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=brand_html lead=lead lead_lang=lead.lang photo=photo only %}
 {% endblock %}
 {% block page_body %}
-{% if photo %}
-<figure class="page-figure">
-  {% include "pages/partials/_picture.html" with photo=photo sizes="(min-width: 64rem) 52rem, 100vw" %}
-</figure>
-{% endif %}
-
 {% if presentation %}
-<section class="page-section" aria-labelledby="project-presentation-title">
-  <h2 class="page-section__title" id="project-presentation-title">{% translate "En bref" %}</h2>
-  <p class="page-section__lead"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
+<section class="chapter" aria-labelledby="project-presentation-title">
+  <div class="container chapter__inner">
+    {% translate "En bref" as brief_title %}{% include "pages/partials/_chapter_head.html" with title_id="project-presentation-title" title=brief_title only %}
+    <div class="chapter__body">
+      <p class="chapter__statement"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
+    </div>
+  </div>
 </section>
 {% endif %}
 
-<section class="page-section" aria-labelledby="project-why-title">
-  <h2 class="page-section__title" id="project-why-title"{% if why_title.lang %} lang="{{ why_title.lang }}"{% endif %}>{{ why_title }}</h2>
-  <p class="page-section__text"{% if why_body.lang %} lang="{{ why_body.lang }}"{% endif %} data-locked="p2.forum.why.body">{{ why_body }}</p>
+<section class="chapter" aria-labelledby="project-why-title">
+  <div class="container chapter__inner">
+    {% include "pages/partials/_chapter_head.html" with title_id="project-why-title" title=why_title title_lang=why_title.lang only %}
+    <div class="chapter__body">
+      <p class="page-section__text chapter__prose"{% if why_body.lang %} lang="{{ why_body.lang }}"{% endif %} data-locked="p2.forum.why.body">{{ why_body }}</p>
+    </div>
+  </div>
 </section>
 
-<section class="page-section" aria-labelledby="project-promoter-title">
-  <h2 class="page-section__title" id="project-promoter-title">{% translate "Qui porte le projet" %}</h2>
-  {% if promoter_quote %}
-  <p class="page-section__text"{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %} data-faq="{{ promoter_quote.key }}">{{ promoter_quote.answer }}</p>
-  {% else %}
-  <p class="page-section__text">{% blocktranslate with project=site.project_name promoter=promoter %}{{ project }} est promu par {{ promoter }}.{% endblocktranslate %}</p>
-  {% endif %}
-  {% if links.agami %}<p><a class="link-arrow" href="{{ links.agami }}">{% translate "En savoir plus sur le promoteur" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+<section class="chapter" aria-labelledby="project-promoter-title">
+  <div class="container chapter__inner">
+    {% translate "Qui porte le projet" as promoter_title %}{% include "pages/partials/_chapter_head.html" with title_id="project-promoter-title" title=promoter_title only %}
+    <div class="chapter__body">
+      {% if promoter_quote %}
+      <p class="page-section__text chapter__prose"{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %} data-faq="{{ promoter_quote.key }}">{{ promoter_quote.answer }}</p>
+      {% else %}
+      <p class="page-section__text chapter__prose">{% blocktranslate with project=site.project_name promoter=promoter %}{{ project }} est promu par {{ promoter }}.{% endblocktranslate %}</p>
+      {% endif %}
+      {% if links.agami %}<p class="chapter__more"><a class="link-arrow" href="{{ links.agami }}">{% translate "En savoir plus sur le promoteur" %}</a></p>{% endif %}
+    </div>
+  </div>
 </section>
 
 {% if spaces %}
-<section class="page-section" aria-labelledby="project-spaces-title">
-  <h2 class="page-section__title" id="project-spaces-title">{% translate "Les espaces de l’écosystème" %}</h2>
-  <ul class="page-links">
-    {% for space in spaces %}
-    <li class="page-links__item"><a class="page-links__link" href="{{ space.url }}"{% if space.label.lang %} lang="{{ space.label.lang }}"{% endif %}>{% svg_icon space.icon "icon page-links__icon" %}<span>{{ space.label }}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl page-links__arrow" %}</a></li>
-    {% endfor %}
-  </ul>
-  <p class="cluster page-section__more">
-    {% if links.orientation %}<a class="link-arrow" href="{{ links.orientation }}">{% translate "Questionnaire d’orientation" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-    {% if links.network %}<a class="link-arrow" href="{{ links.network }}">{% translate "Le réseau" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-    {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-  </p>
+<section class="chapter chapter--area" aria-labelledby="project-spaces-title">
+  <div class="container chapter__inner">
+    {% translate "Les espaces de l’écosystème" as spaces_title %}{% include "pages/partials/_chapter_head.html" with title_id="project-spaces-title" title=spaces_title only %}
+    <div class="chapter__body">
+      <ul class="registro registro--two registro--glyph page-links">
+        {% for space in spaces %}
+        <li class="registro__row page-links__item"><p class="registro__title">{% svg_icon space.icon "icon registro__glyph" %}<a class="page-links__link" href="{{ space.url }}"{% if space.label.lang %} lang="{{ space.label.lang }}"{% endif %}>{{ space.label }}</a></p></li>
+        {% endfor %}
+      </ul>
+      <p class="chapter__more chapter__links">
+        {% if links.orientation %}<a class="link-arrow" href="{{ links.orientation }}">{% translate "Questionnaire d’orientation" %}</a>{% endif %}
+        {% if links.network %}<a class="link-arrow" href="{{ links.network }}">{% translate "Le réseau" %}</a>{% endif %}
+        {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %}</a>{% endif %}
+      </p>
+    </div>
+  </div>
 </section>
 {% endif %}
 
-<section class="page-section page-section--quiet" aria-labelledby="project-mark-title">
-  <h2 class="page-section__title page-section__title--small" id="project-mark-title">{% translate "La marque" %}</h2>
-  <p class="page-trademark" data-trademark><span translate="no">{{ trademark_mark }}</span> — <span{% if trademark_words.lang %} lang="{{ trademark_words.lang }}"{% endif %}>{{ trademark_words }}</span></p>
+<section class="chapter chapter--quiet" aria-labelledby="project-mark-title">
+  <div class="container chapter__inner">
+    <div class="chapter__head chapter__head--quiet"><h2 class="chapter__label" id="project-mark-title">{% translate "La marque" %}</h2></div>
+    <div class="chapter__body">
+      <p class="page-trademark" data-trademark><span translate="no">{{ trademark_mark }}</span> — <span{% if trademark_words.lang %} lang="{{ trademark_words.lang }}"{% endif %}>{{ trademark_words }}</span></p>
+    </div>
+  </div>
 </section>
 {% endblock %}

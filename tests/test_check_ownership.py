@@ -96,16 +96,29 @@ def test_the_real_manifest_loads_and_is_written_in_lf():
     assert co.main(["--validate"]) == 0
 
 
+#: The families a later directive of the owner added outside plan §3's waves: ``devops``, V5.9's production
+#: readiness (the devops merge), ``sec-f5``, the fix of the DevOps lane's go-live finding F-5 (the sec-f5 merge),
+#: and ``intfix``, the steward's integration fixes at integration checkpoint 3 (the intfix merge). DL54-01's branch
+#: and worktree names; no merge tag of their own (the checkpoint's tag, v54/checkpoint-3, marks design-v5).
+OUTSIDE_THE_WAVES = {"devops", "sec-f5", "intfix"}
+
+
 def test_every_workflow_of_waves_1_to_4_has_a_family_with_the_dl54_names():
-    """Plan §3 lists 24 workflows `v54-<family>`; each is a family here, with DL54-01's branch and tags."""
+    """
+    Plan §3 lists 24 workflows `v54-<family>`; each is a family here, with DL54-01's branch and tags — beside the
+    steward and the families outside the waves, which keep DL54-01's branch and worktree names.
+    """
     workflows = re.findall(r"^\*\*\d+\. `v54-(w\d-[0-9a-z]+)`", _section_3(), flags=re.M)
     assert len(workflows) == 24, workflows
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    assert set(data["families"]) == {"steward", *workflows}
+    assert set(data["families"]) == {"steward", *workflows, *OUTSIDE_THE_WAVES}
     for fid, family in data["families"].items():
         if "branch" in family:
             assert family["branch"] == f"v54-{fid}"
             assert family["worktree"] == f"C:/tmp/ile_wt/v54-{fid}"
+            if fid in OUTSIDE_THE_WAVES:
+                assert "merge_tag" not in family and "checkpoint_tag" not in family, fid
+                continue
             assert family["merge_tag"] == f"v54/{fid}"
             assert family["checkpoint_tag"] == f"v54/{fid}-pre-propagation"
     text = MANIFEST.read_text(encoding="utf-8")
@@ -319,6 +332,7 @@ def test_a_delegated_family_passes_another_family_s_file_and_nothing_else(small)
         (lambda d: d["families"]["w1-a"].update(after=["w9-z"]), "unknown family"),
         (lambda d: d["families"]["w1-a"]["owns"].append({"glob": "package.json", "source": "t"}), "steward only"),
         (lambda d: d.update(schema="other"), "schema"),
+        (lambda d: d["families"].update(ops=d["families"].pop("w4-a")), "not a family id"),
     ],
 )
 def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, complaint):
@@ -328,6 +342,29 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
     path.write_bytes(json.dumps(data).encode("utf-8"))
     with pytest.raises(co.ManifestError, match=complaint):
         co.load_manifest(path)
+
+
+@pytest.mark.parametrize(
+    ("fid", "valid"),
+    [
+        ("steward", True),
+        ("w3-f2", True),
+        ("devops", True),
+        ("sec-f5", True),
+        ("sec-f7", True),
+        ("intfix", True),
+        ("ops", False),
+        ("w3f2", False),
+        ("devops-2", False),
+        ("sec-f", False),
+        ("sec-5", False),
+        ("sec-f5a", False),
+        ("intfix-2", False),
+        ("intfix3", False),
+    ],
+)
+def test_a_family_id_is_the_steward_a_wave_s_workflow_or_a_family_outside_the_waves(fid, valid):
+    assert bool(co.FAMILY_ID.fullmatch(fid)) is valid
 
 
 # --------------------------------------------------------------------------------------------- on a real history

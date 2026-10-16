@@ -198,15 +198,14 @@ def test_main_menu_tag_renders_in_template(client, seeded):
         url_name="legal:privacy",
     )
     html = client.get("/fr/privacy-policy/").content.decode()
-    # the drawer (below 80rem): a link and a chevron toggle per section
-    assert "data-nav-item" in html
-    assert 'aria-controls="nav-main-' in html
-    assert 'class="main-nav__sublink" href="/fr/privacy-policy/" aria-current="page"' in html
-    assert "Ouvrir le sous-menu « Projet »" in html
-    # «Il portico» (design V5, W2-C1): the same tree as disclosure buttons with their panels in the letterhead
+    # «Il portico» (design V5, W2-C1): the tree as disclosure buttons with their panels in the letterhead
     assert f'aria-controls="nav-main-{parent.id}-portico" data-portico-door aria-current="true"' in html
     assert f'id="nav-main-{parent.id}-portico" data-portico-panel' in html
-    assert 'class="portico__link" href="/fr/privacy-policy/" aria-current="page"' in html
+    # the sheet below 80rem (W2-C2): the same tree, each section a door unfolding in place — the current section's
+    # open and marked, its current entry marked — so the entry is drawn twice, once in each
+    assert '<details class="nav-sheet__door" name="nav-sheet-doors" open>' in html
+    assert '<summary class="nav-sheet__row" aria-current="true">' in html
+    assert html.count('class="portico__link" href="/fr/privacy-policy/" aria-current="page"') == 2
 
 
 def test_portico_gives_every_door_its_panel_from_live_content(seeded, legal_published, phase3_open):

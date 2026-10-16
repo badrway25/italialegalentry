@@ -1,0 +1,58 @@
+{% load i18n %}{% comment %}
+THE ENTRANCE «l'ingresso» — the one header of a page of the public interior (design V5.4, W3-F1;
+static/css/v5/_interior.css §2). The space's name, the h1 and the lead at the reading edge, verbatim; beside them, in
+the end seat:
+  * `photo` — a curated photograph of the space (cms.MediaAsset, publishable only with its caption apparatus): the
+    caption and the credit stand under it (D26), and it is the page's LCP image, never lazy. A door's way in then
+    moves under the lead;
+  * else, on a door (`audience` and a way in) — the door card «la porta», carrying the door's way in: the night
+    plate, the audience glyph once on the 36 px night disc, the door's accent as a 3 px rule along its foot (the
+    portico's door card, v5/chrome.css §5), and on it what the door offers first — its title, its sentence, its one
+    control (pages/partials/_via.html). The plate is the door's first task, never a picture standing in for one
+    (W3-F1's review M1: the drawn stair read as a photograph that failed to load, and the page's action sat screens
+    below);
+  * else `aside_template` — a template drawn in the seat with this partial's context (the questionnaire's action
+    card on its first page);
+  * else `index` — the page's «Sommaire de la page», for a page long enough to need one.
+
+Contract: `title` (safe; the h1), `title_lang`, `title_id`, `label` (the space's name), `label_suffix`, `label_lang`,
+`lead` (safe), `lead_lang`, `note` (one quiet line under the lead), `meta_template` (a template drawn under the lead,
+with this partial's context), `photo` (pages.services.Photo or ecosystem.services.Photo), `audience` (person · company
+· institution · university), the way in (`way_title`, `way_title_id`, `way_text`, `way_text_lang`, `way_label`,
+`way_url`, `way_jump`, `way_pending` — pages/partials/_via.html), `aside_template`, `index` (a list of {"url" or "id",
+"label", "lang"}).
+The prescribed texts arrive whole from the locked registry: nothing here alters a word.
+{% endcomment %}
+<header class="ingresso"{% if audience %} data-audience="{{ audience }}"{% endif %}>
+  <div class="container ingresso__inner">
+    <div class="ingresso__text">
+      {% if label %}<p class="ingresso__label"{% if label_lang %} lang="{{ label_lang }}"{% endif %}>{{ label }}{% if label_suffix %} {{ label_suffix }}{% endif %}</p>{% endif %}
+      <h1 class="ingresso__title{% if title|striptags|upper == title|striptags %} ingresso__title--caps{% endif %}"{% if title_id %} id="{{ title_id }}"{% endif %}{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h1>
+      {% if lead %}<p class="ingresso__lead"{% if lead_lang %} lang="{{ lead_lang }}"{% endif %}>{{ lead }}</p>{% endif %}
+      {% if note %}<p class="ingresso__note">{{ note }}</p>{% endif %}
+      {% if meta_template %}<div class="ingresso__meta">{% include meta_template %}</div>{% endif %}
+      {% if photo %}{% if way_url or way_pending %}<div class="ingresso__way via">{% include "pages/partials/_via.html" %}</div>{% endif %}{% endif %}
+    </div>
+    {% if photo %}
+    <figure class="ingresso__aside figura">
+      <picture>
+        {% firstof photo.webp_srcset photo.srcset as srcset %}{% if srcset %}<source type="image/webp" srcset="{{ srcset }}" sizes="(min-width: 64rem) 25rem, 100vw">{% endif %}
+        <img src="{{ photo.src }}" alt="{{ photo.alt }}"{% if photo.alt_lang %} lang="{{ photo.alt_lang }}"{% endif %} width="{{ photo.width }}" height="{{ photo.height }}" decoding="async" fetchpriority="high">
+      </picture>
+      <figcaption>{% if photo.caption %}{{ photo.caption }}{% endif %}{% if photo.place %} · {{ photo.place }}{% endif %}{% if photo.date %}, {{ photo.date|date:"j F Y" }}{% endif %}{% if photo.credit %} — {% translate "Photo" %} : {{ photo.credit }}{% endif %}</figcaption>
+    </figure>
+    {% elif audience and way_url or audience and way_pending %}
+    <div class="ingresso__aside porta via on-inverse" data-way="{{ audience }}">
+      <span class="porta__disc" aria-hidden="true">{% svg_icon audience|concept:"audience" "icon icon--md" %}</span>
+      {% include "pages/partials/_via.html" %}
+    </div>
+    {% elif aside_template %}
+    <div class="ingresso__aside">{% include aside_template %}</div>
+    {% elif index %}
+    <nav class="ingresso__aside sommaire" aria-labelledby="sommaire-title">
+      <p class="sommaire__title" id="sommaire-title">{% translate "Sommaire de la page" %}</p>
+      <ul class="sommaire__list">{% for item in index %}<li><a class="sommaire__link" href="{% if item.url %}{{ item.url }}{% else %}#{{ item.id }}{% endif %}"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.label }}</a></li>{% endfor %}</ul>
+    </nav>
+    {% endif %}
+  </div>
+</header>

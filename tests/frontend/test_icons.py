@@ -306,7 +306,9 @@ def test_the_empty_state_draws_its_space_or_the_neutral_mark_never_document_by_d
             assert name != "empty", f"{path}: the neutral mark is the default — pass nothing"
             assert icons.SYMBOLS[name].tier in (icons.CONCEPT, icons.IDENTITY), f"{path}: {name} is not a space's glyph"
             assert icons.MIN_SIZE[name] <= 24, f"{path}: {name} needs more than the empty state's 24 px seat"
-    assert callers >= 25, callers
+    # 21 + the Forum's two: the pathway sheet's four sections being verified say so in words on the «attesa» edge since
+    # W3-F1 (11 Oct 2026; a glyph in each would break the six-icon ceiling of its editorial body, DL54-29 item 1)
+    assert callers >= 21, callers
     # the pages the review named: each says which space is empty
     for template, symbol in (
         ("faq/index.html", "circle-help"),

@@ -2,108 +2,138 @@
 {% comment %}
 Forum Permanent sections, each rendered only when it has published rows (back-office driven).
 Empty sections are not rendered at all (no empty states on the public page).
+Design V5.4 (W3-F1): one chapter each; the records as a register (rows on shared hairlines, no box — several
+records in a row are a list); a document link names its format; a photograph ships with its caption and its credit.
 {% endcomment %}
 {% if outcomes %}
-<section class="forum-section forum-section--outcomes container" id="forum-outcomes" aria-labelledby="forum-outcomes-title">
-  <h2 class="forum-section__title" id="forum-outcomes-title">{% translate "Résultats" %}</h2>
-  <ul class="forum-cards">
-    {% for outcome in outcomes %}
-      <li class="forum-card"><h3 class="forum-card__title">{{ outcome.title }}</h3><div class="forum-card__body">{{ outcome.text|linebreaks }}</div></li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--outcomes" id="forum-outcomes" aria-labelledby="forum-outcomes-title">
+  <div class="container chapter__inner">
+    {% translate "Résultats" as outcomes_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-outcomes-title" title=outcomes_title only %}
+    <div class="chapter__body">
+      <ul class="registro forum-cards">
+        {% for outcome in outcomes %}
+          <li class="registro__row forum-card"><h3 class="registro__title forum-card__title">{{ outcome.title }}</h3><div class="registro__text forum-card__body">{{ outcome.text|linebreaks }}</div></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if interventions %}
-<section class="forum-section forum-section--interventions container" id="forum-interventions" aria-labelledby="forum-interventions-title">
-  <h2 class="forum-section__title" id="forum-interventions-title">{% translate "Interventions" %}</h2>
-  <ul class="forum-cards">
-    {% for item in interventions %}
-      <li class="forum-card">
-        <h3 class="forum-card__title">{{ item.title }}</h3>
-        {% if item.public_speaker_role %}<p class="forum-card__meta">{{ item.public_speaker_role }}{% if item.public_speaker_name %} — {{ item.public_speaker_name }}{% endif %}</p>{% endif %}
-        {% if item.abstract %}<div class="forum-card__body">{{ item.abstract|linebreaks }}</div>{% endif %}
-        {% if item.document and item.document.is_live %}<p><a class="forum-doc-link" href="{{ item.document.file.url }}" type="application/pdf">{{ item.document.title }} (PDF)</a></p>{% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--interventions" id="forum-interventions" aria-labelledby="forum-interventions-title">
+  <div class="container chapter__inner">
+    {% translate "Interventions" as interventions_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-interventions-title" title=interventions_title only %}
+    <div class="chapter__body">
+      <ul class="registro forum-cards">
+        {% for item in interventions %}
+          <li class="registro__row forum-card">
+            <h3 class="registro__title forum-card__title">{{ item.title }}</h3>
+            {% if item.public_speaker_role %}<p class="registro__text forum-card__meta">{{ item.public_speaker_role }}{% if item.public_speaker_name %} — {{ item.public_speaker_name }}{% endif %}</p>{% endif %}
+            {% if item.abstract %}<div class="registro__text forum-card__body">{{ item.abstract|linebreaks }}</div>{% endif %}
+            {% if item.document and item.document.is_live %}<p class="registro__text"><a class="forum-doc-link" href="{{ item.document.file.url }}" type="application/pdf">{{ item.document.title }} (PDF)</a></p>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if media_items %}
-<section class="forum-section forum-section--media container" id="forum-media" aria-labelledby="forum-media-title">
-  <h2 class="forum-section__title" id="forum-media-title">{% translate "Photos et vidéos" %}</h2>
-  <ul class="forum-gallery">
-    {% for media in media_items %}
-      <li class="forum-gallery__item">
-        <figure>
-          {% if media.kind == "video" %}
-            <video controls preload="metadata" src="{{ media.url }}" class="forum-gallery__video"></video>
-          {% else %}
-            <img src="{{ media.url }}" alt="{{ media.alt|default:'' }}" loading="lazy" class="forum-gallery__image">
-          {% endif %}
-          {% if media.caption or media.credit %}<figcaption>{{ media.caption }}{% if media.credit %} <span class="forum-gallery__credit">© {{ media.credit }}</span>{% endif %}</figcaption>{% endif %}
-        </figure>
-      </li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--media" id="forum-media" aria-labelledby="forum-media-title">
+  <div class="container chapter__inner">
+    {% translate "Photos et vidéos" as media_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-media-title" title=media_title only %}
+    <div class="chapter__body">
+      <ul class="forum-gallery">
+        {% for media in media_items %}
+          <li class="forum-gallery__item">
+            <figure class="figura">
+              {% if media.kind == "video" %}
+                <video controls preload="metadata" src="{{ media.url }}" class="forum-gallery__video"></video>
+              {% else %}
+                <img src="{{ media.url }}" alt="{{ media.alt|default:'' }}" loading="lazy" class="forum-gallery__image">
+              {% endif %}
+              <figcaption>{{ media.caption }}{% if media.credit %} <span class="forum-gallery__credit">© {{ media.credit }}</span>{% endif %}</figcaption>
+            </figure>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if documents %}
-<section class="forum-section forum-section--documents container" id="forum-documents" aria-labelledby="forum-documents-title">
-  <h2 class="forum-section__title" id="forum-documents-title">{% translate "Documents" %}</h2>
-  <ul class="forum-documents">
-    {% for document in documents %}
-      <li class="forum-documents__item">
-        <a class="forum-doc-link" href="{{ document.file.url }}" type="application/pdf">{{ document.title }} (PDF)</a>
-        {% if document.description %}<p class="forum-documents__desc">{{ document.description }}</p>{% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--documents" id="forum-documents" aria-labelledby="forum-documents-title">
+  <div class="container chapter__inner">
+    {% translate "Documents" as documents_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-documents-title" title=documents_title only %}
+    <div class="chapter__body">
+      <ul class="registro forum-documents">
+        {% for document in documents %}
+          <li class="registro__row forum-documents__item">
+            <p class="registro__title"><a class="forum-doc-link" href="{{ document.file.url }}" type="application/pdf">{{ document.title }} (PDF)</a></p>
+            {% if document.description %}<p class="registro__text forum-documents__desc">{{ document.description }}</p>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if agreements %}
-<section class="forum-section forum-section--agreements container" id="forum-agreements" aria-labelledby="forum-agreements-title">
-  <h2 class="forum-section__title" id="forum-agreements-title">{% translate "Accords et conventions" %}</h2>
-  <ul class="forum-cards">
-    {% for agreement in agreements %}
-      <li class="forum-card">
-        <p class="forum-card__eyebrow">{{ agreement.get_kind_display }}{% if agreement.signed_on %} · {{ agreement.signed_on|date:"d.m.Y" }}{% endif %}</p>
-        <h3 class="forum-card__title">{{ agreement.title }}</h3>
-        <p class="forum-card__meta">{{ agreement.parties }}</p>
-        {% if agreement.summary %}<div class="forum-card__body">{{ agreement.summary|linebreaks }}</div>{% endif %}
-        {% if agreement.document and agreement.document.is_live %}<p><a class="forum-doc-link" href="{{ agreement.document.file.url }}" type="application/pdf">{{ agreement.document.title }} (PDF)</a></p>{% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--agreements" id="forum-agreements" aria-labelledby="forum-agreements-title">
+  <div class="container chapter__inner">
+    {% translate "Accords et conventions" as agreements_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-agreements-title" title=agreements_title only %}
+    <div class="chapter__body">
+      <ul class="registro forum-cards">
+        {% for agreement in agreements %}
+          <li class="registro__row forum-card">
+            <p class="registro__text forum-card__eyebrow">{{ agreement.get_kind_display }}{% if agreement.signed_on %} · {{ agreement.signed_on|date:"d.m.Y" }}{% endif %}</p>
+            <h3 class="registro__title forum-card__title">{{ agreement.title }}</h3>
+            <p class="registro__text forum-card__meta">{{ agreement.parties }}</p>
+            {% if agreement.summary %}<div class="registro__text forum-card__body">{{ agreement.summary|linebreaks }}</div>{% endif %}
+            {% if agreement.document and agreement.document.is_live %}<p class="registro__text"><a class="forum-doc-link" href="{{ agreement.document.file.url }}" type="application/pdf">{{ agreement.document.title }} (PDF)</a></p>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if partners %}
-<section class="forum-section forum-section--partners container" id="forum-partners" aria-labelledby="forum-partners-title">
-  <h2 class="forum-section__title" id="forum-partners-title">{% translate "Partenaires" %}</h2>
-  <ul class="forum-partners">
-    {% for partner in partners %}
-      <li class="forum-partners__item"><img src="{{ partner.logo.file.url }}" alt="{{ partner.name }}" loading="lazy" width="{{ partner.logo.width|default:160 }}" height="{{ partner.logo.height|default:80 }}"></li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--partners" id="forum-partners" aria-labelledby="forum-partners-title">
+  <div class="container chapter__inner">
+    {% translate "Partenaires" as partners_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-partners-title" title=partners_title only %}
+    <div class="chapter__body">
+      <ul class="forum-partners">
+        {% for partner in partners %}
+          <li class="forum-partners__item"><img src="{{ partner.logo.file.url }}" alt="{{ partner.name }}" loading="lazy" width="{{ partner.logo.width|default:160 }}" height="{{ partner.logo.height|default:80 }}"></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}
 
 {% if next_events %}
-<section class="forum-section forum-section--next container" id="forum-next-events" aria-labelledby="forum-next-events-title">
-  <h2 class="forum-section__title" id="forum-next-events-title">{% translate "Prochains rendez-vous" %}</h2>
-  <ul class="forum-cards">
-    {% for next in next_events %}
-      <li class="forum-card">
-        <p class="forum-card__eyebrow"><time datetime="{{ next.date|date:'Y-m-d' }}">{{ next.date|date:"d.m.Y" }}</time>{% if next.place %} · {{ next.place }}{% endif %}</p>
-        <h3 class="forum-card__title">{% if next.internal_url %}<a href="{{ next.internal_url }}">{{ next.title }}</a>{% else %}{{ next.title }}{% endif %}</h3>
-        {% if next.description %}<div class="forum-card__body">{{ next.description|linebreaks }}</div>{% endif %}
-        {% if next.url and not next.internal_url %}<p class="forum-card__meta"><span class="forum-card__url">{{ next.url }}</span></p>{% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+<section class="chapter forum-section forum-section--next" id="forum-next-events" aria-labelledby="forum-next-events-title">
+  <div class="container chapter__inner">
+    {% translate "Prochains rendez-vous" as next_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-next-events-title" title=next_title only %}
+    <div class="chapter__body">
+      <ul class="registro forum-cards">
+        {% for next in next_events %}
+          <li class="registro__row forum-card">
+            <p class="registro__text forum-card__eyebrow"><time datetime="{{ next.date|date:'Y-m-d' }}">{{ next.date|date:"d.m.Y" }}</time>{% if next.place %} · {{ next.place }}{% endif %}</p>
+            <h3 class="registro__title forum-card__title">{% if next.internal_url %}<a href="{{ next.internal_url }}">{{ next.title }}</a>{% else %}{{ next.title }}{% endif %}</h3>
+            {% if next.description %}<div class="registro__text forum-card__body">{{ next.description|linebreaks }}</div>{% endif %}
+            {% if next.url and not next.internal_url %}<p class="registro__text forum-card__meta"><span class="forum-card__url">{{ next.url }}</span></p>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </section>
 {% endif %}

@@ -33,6 +33,7 @@ from __future__ import annotations
 import hashlib
 import itertools
 import math
+import posixpath
 import re
 from pathlib import Path
 
@@ -918,6 +919,24 @@ def test_the_brand_colours_are_declared_once_and_no_literal_colour_leaves_the_to
         assert literals == [], (sheet.name, literals)
 
 
+def _product_template_chains() -> dict[str, str]:
+    """Every product template (templates/dev/ is served under DEBUG only) with the text of its chain of
+    {% extends %}: what a page drawn from it can link. The project's templates before the apps' (Django's DIRS)."""
+    sources: dict[str, str] = {}
+    for root in (ROOT / "templates", *sorted((ROOT / "apps").glob("*/templates"))):
+        for path in sorted(root.rglob("*.html")):
+            sources.setdefault(path.relative_to(root).as_posix(), _read(path))
+
+    def chain(name: str, seen: tuple[str, ...] = ()) -> str:
+        text = sources.get(name, "")
+        parent = re.search(r"""\{%\s*extends\s+["']([^"']+)["']""", text)
+        if parent and parent.group(1) not in seen:
+            text += chain(parent.group(1), (*seen, name))
+        return text
+
+    return {name: chain(name) for name in sources if not name.startswith("dev/")}
+
+
 def test_the_console_partials_close_the_console_entry():
     """Plan §2.3 and §2.7: console-only V5 CSS lives in `_`-prefixed partials in apps/portal/static/portal/v5/, which
     the console entry imports and main.css never does; they close the entry as v5/* closes main.css — every one of them
@@ -929,7 +948,34 @@ def test_the_console_partials_close_the_console_entry():
     imports = re.findall(r'@import url\("([^"]+)"\)', css)
     partials = sorted(f"v5/{path.name}" for path in PORTAL_V5.glob("_*.css"))
     v5_imports = [name for name in imports if name.startswith("v5/")]
-    assert sorted(v5_imports) == partials, "every console partial is imported by the console entry"
+    # A console partial drawn by a few pages only is imported by THEIR page sheet, never by the console entry
+    # every page loads (W3-C, plan §3.5 item 5: «Mes pièces»' three, by apps/documents/static/documents/documents.css;
+    # DS 2026 §2). An import is read where the collected tree resolves it: ../portal/v5/_x.css from another app's
+    # sheet, v5/_x.css from the portal's own page sheets (W3-D: portal/journey.css, portal/situation.css).
+    page_imports: dict[str, list[str]] = {}
+    for sheet in sorted((ROOT / "apps").glob("*/static/**/*.css")):
+        if sheet.name.startswith("_") or "dist" in sheet.parts or sheet == CONSOLE_ENTRY:
+            continue
+        collected = "/".join(sheet.relative_to(ROOT / "apps").parts[2:])  # apps/<app>/static/<path> -> <path>
+        for target in re.findall(r'@import url\("([^"]+)"\)', _strip_comments(_read(sheet))):
+            resolved = posixpath.normpath(posixpath.join(posixpath.dirname(collected), target))
+            if re.fullmatch(r"portal/v5/_[a-z-]+\.css", resolved):
+                page_imports.setdefault(f"v5/{posixpath.basename(resolved)}", []).append(collected)
+    assert not set(v5_imports) & set(page_imports), "a partial is the console entry's or page sheets', never both"
+    assert len(set(v5_imports)) == len(v5_imports), "the console entry imports a partial once"
+    assert sorted(set(v5_imports) | set(page_imports)) == partials, (
+        "every console partial is imported by the console entry, or by the page sheets of the pages that draw it"
+    )
+    # DL54-112 gave each partial ONE importer; W3-D's journey composes one vocabulary, written once, into two page
+    # sheets — the rail's nodes, v5/_journey-nodes.css, in portal/journey.css and portal/situation.css (DL54-128 item
+    # 4). What «one importer» protected stays the rule: a page loads a partial once — no product template, its chain
+    # of {% extends %} included, links two sheets that import the same partial.
+    chains = _product_template_chains()
+    assert len(chains) > 50, len(chains)
+    for name, sheets in page_imports.items():
+        for template, text in chains.items():
+            together = [sheet for sheet in sheets if f"css/dist/{sheet}" in text]
+            assert len(together) <= 1, f"{template} loads {name} twice, through {together}"
     assert not any(name.startswith("v5/_") or "portal/v5/" in name for name in _cascade()), "never by main.css"
     if v5_imports:
         assert imports[-len(v5_imports) :] == v5_imports, "the V5 partials are the entry's last imports"

@@ -1,0 +1,9 @@
+{% comment %}
+THE LINE «la linea» — the site's one passage drawing (design V5.4: W3-F1 drew it for the door pages; W3-D's public
+passage is the same line). Since the w3-d merge its one markup is components/stepper.html and its one sheet
+static/css/v5/_journey-passage.css, which the page sheets of the pages that draw it import after _interior.css.
+This partial keeps W3-F1's callers and contract — `steps` (a list of str, or of dicts {label | heading, text |
+body, pending, lang}), optional `label` (the list's accessible name), `lang`, `across` (True), `cols` ("3" · "8":
+the stations of one row, from 48rem) — and never draws a flow's place: an explanation is not a progress, so
+`current` is not passed on, whatever the caller's context holds.
+{% endcomment %}{% include "components/stepper.html" with current=None %}

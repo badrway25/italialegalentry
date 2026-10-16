@@ -4,9 +4,8 @@
  * Every behaviour here enhances markup that already works without JavaScript:
  *  - (the public navigation moved to static/js/src/nav.js, bundled into shell.js: design V5 «Il portico»,
  *    V5.4 plan §1.12 and §2.2's slice of this file, W2-C1)
- *  - details-based dropdowns: Escape / outside click — a fallback for the pages that do not load the overlay
- *    system yet (static/js/src/overlay.js owns every dropdown, dialog, drawer, popover and tooltip of a page
- *    that does: V5.4 plan §1.14, W2-A)
+ *  - (the dropdowns, dialogs, drawers, popovers and tooltips are the overlay system's, static/js/src/overlay.js,
+ *    which every page loads — imported by console.js and shell.js: V5.4 plan §1.14, W2-A, W2-C2)
  *  - accordion (exclusive mode, a link opens its row), tabs (roving tabindex, one indicator), stepper
  *    (client-side panels)
  *  - reveal-on-scroll (never hides content when JS is off; honours prefers-reduced-motion)
@@ -31,53 +30,6 @@ function initFormErrorFocus() {
   if (!summary) return;
   summary.focus({ preventScroll: true });
   summary.scrollIntoView({ block: "center", behavior: REDUCED_MOTION.matches ? "auto" : "smooth" });
-}
-
-/* ------------------------------------------------------------------------ */
-/* 2. Details-based dropdowns — a FALLBACK (W2-A): the overlay system        */
-/*    (static/js/src/overlay.js) owns the dropdowns of every page that loads */
-/*    it — the console's — and marks each `data-dropdown="overlay"`, which   */
-/*    this function then leaves alone. It serves the pages that do not load  */
-/*    it yet: the letterhead's account menu, until W2-C2 moves it onto the   */
-/*    popover and shell.js imports overlay.js — and this function goes.      */
-/* ------------------------------------------------------------------------ */
-function initDropdowns() {
-  const dropdowns = qsa("details[data-dropdown]");
-  if (!dropdowns.length) return;
-  // overlay.js loads after this module (document order): who owns a dropdown is read at the event, not here
-  const mine = (details) => details.getAttribute("data-dropdown") !== "overlay";
-
-  dropdowns.forEach((details) => {
-    const summary = qs("summary", details);
-    details.addEventListener("toggle", () => {
-      if (!mine(details)) return;
-      if (details.open) {
-        dropdowns.forEach((d) => d !== details && mine(d) && d.removeAttribute("open"));
-        summary?.setAttribute("aria-expanded", "true");
-      } else {
-        summary?.setAttribute("aria-expanded", "false");
-      }
-    });
-    summary?.setAttribute("aria-expanded", details.open ? "true" : "false");
-    details.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && details.open && mine(details)) {
-        event.preventDefault();
-        // close this dropdown and stop: Escape dismisses the list, not a menu it may sit in
-        event.stopPropagation();
-        details.removeAttribute("open");
-        summary?.focus();
-      }
-    });
-    details.addEventListener("focusout", (event) => {
-      if (mine(details) && !details.contains(event.relatedTarget)) details.removeAttribute("open");
-    });
-  });
-
-  document.addEventListener("click", (event) => {
-    dropdowns.forEach((d) => {
-      if (d.open && mine(d) && !d.contains(event.target)) d.removeAttribute("open");
-    });
-  });
 }
 
 /* ------------------------------------------------------------------------ */
@@ -371,7 +323,6 @@ function initMisc() {
 /* ------------------------------------------------------------------------ */
 function init() {
   initFormErrorFocus();
-  initDropdowns();
   initAccordions();
   initTabs();
   initSteppers();

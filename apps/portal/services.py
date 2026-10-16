@@ -221,12 +221,19 @@ def deadlines_for(user):
 
 
 def present_deadline(deadline: Deadline, today=None) -> dict[str, Any]:
+    """
+    One date of the account, as the deadline registers draw it. Design V5, F13 (plan §1.2, the platform map's F13;
+    W3-C): a date past due speaks ``overdue`` — azione, terracotta, a disc with clock hands — and a date close by
+    ``soon`` — attesa, amber, the dashed ring. Before, «En retard» went out as ``error`` (rifiuto: struck, garnet —
+    the gesture that annuls an entry) and «Bientôt» as ``warning``: red never means lateness. The kinds reach the
+    chip through ``core.chips.KIND_REGISTER``; the words are unchanged.
+    """
     today = today or clock.today()
     badge_label, badge_kind = "", ""
     if deadline.is_overdue(today):
-        badge_label, badge_kind = _("En retard"), "error"
+        badge_label, badge_kind = _("En retard"), "overdue"
     elif deadline.is_soon(today):
-        badge_label, badge_kind = _("Bientôt"), "warning"
+        badge_label, badge_kind = _("Bientôt"), "soon"
     elif deadline.status == DeadlineStatus.DONE:
         badge_label, badge_kind = deadline.get_status_display(), "success"
     elif deadline.status == DeadlineStatus.CANCELLED:
@@ -241,6 +248,8 @@ def present_deadline(deadline: Deadline, today=None) -> dict[str, Any]:
         "source_note": deadline.source_note,
         "badge_label": badge_label,
         "badge_kind": badge_kind,
+        # the date's own glyph follows the same register (the DUE map: alarm-clock late, clock close by, calendar)
+        "urgency": badge_kind if badge_kind in ("overdue", "soon") else "",
         "is_open": deadline.is_open,
     }
 
@@ -506,7 +515,11 @@ def pathway_sessions(user, present_first: int | None = None) -> list[dict[str, A
 
 
 def pathways_page(user, page_number=None) -> dict[str, Any]:
-    """« Mon parcours »: paginate FIRST, then present only the sessions of the requested page."""
+    """
+    « Mon parcours »: where the person stands — the journey of their file, the dashboard's (``journey_for``; empty
+    without a file) — then the saved pre-assessments: paginate FIRST, then present only the sessions of the
+    requested page.
+    """
     try:
         module, sessions = _own_sessions(user)
         page_obj = paginate(sessions, page_number)
@@ -515,7 +528,12 @@ def pathways_page(user, page_number=None) -> dict[str, Any]:
     except SIBLING_ERRORS:
         log.exception("portal pathways unavailable", extra={"event": "portal.pathways_unavailable"})
         page_obj, available = paginate([], None), False
-    return {"page_obj": page_obj, "available": available, "orientation_url": safe_reverse("orientation:start")}
+    return {
+        "journey": journey_for(active_case(user)),
+        "page_obj": page_obj,
+        "available": available,
+        "orientation_url": safe_reverse("orientation:start"),
+    }
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1398,34 +1416,103 @@ JOURNEY_STEPS: tuple[tuple[str, str, object], ...] = (
 )
 
 
-def journey_for(case) -> list[dict]:
+#: The two thresholds of «La soglia» (V5.4 plan §1.18 D16; JOURNEY_SIGNATURE.md §5.1; the glyphs `stamp` and `ile-arch`
+#: are core.icons.JOURNEY's): where the jurisdiction changes — never a step of its own. A, the competent authorities,
+#: stands before the first step answered on the Italian side; B, the Italian territory, before the arrival. Each is
+#: captioned by the site's own jurisdiction label (pages.services.JURISDICTION_SEGMENTS: the same catalogue entries).
+JOURNEY_THRESHOLDS: dict[str, tuple[str, object]] = {
+    "admin_process": ("a", gettext_lazy("Autorités compétentes : décisions administratives")),
+    "entered": ("b", gettext_lazy("Territoire italien : accueil et inclusion")),
+}
+
+#: Where a file stands on the line, by its status: a step's index — or a threshold, half a step before the step it
+#: opens. A threshold is a PLACE (OJ2): SELECTION, the phase an authorised actor handles between the training and the
+#: administrative procedure, stands ON threshold A. A status with no place here (SUSPENDED, CLOSED) has none on the
+#: line: no item is current and nothing says «Vous êtes ici» — the header's chip says the state. How far such a file
+#: had come is in its audit trail, not in its status: the case file reads it (cases.presenters.journey_with_dates).
+_JOURNEY_POSITION: dict[str, float] = {
+    "draft": 0,
+    "oriented": 1,
+    "review_required": 1,
+    "training": 2,
+    "selection": 2.5,
+    "admin_process": 3,
+    "pre_departure": 4,
+    "entered": 5,
+    "post_entry": 6,
+}
+
+
+def journey_place(status) -> float | None:
+    """Where a status stands on the journey's line — a step's index, or a threshold's half step — or None: SUSPENDED
+    and CLOSED have no place on it."""
+    return _JOURNEY_POSITION.get(str(status))
+
+
+def _journey_state(place: float, position: float | None, stopped_at: float | None) -> str:
+    if position is None:
+        # off the line: what the trail says the file reached is behind it, the rest ahead — and nothing current
+        return "done" if stopped_at is not None and place <= stopped_at else "upcoming"
+    return "done" if place < position else "current" if place == position else "upcoming"
+
+
+def journey_for(case, *, stopped_at: float | None = None) -> list[dict]:
     """
     The case lifecycle rendered as a sequence, with the current step marked.
 
     A person asks "where am I", and the honest answer is a position in a named sequence — not a
     percentage, and not a state machine diagram.
+
+    Each step carries its own ``status`` (its glyph: ``core.icons.JOURNEY``), its ``state`` (done · current · upcoming)
+    and, on the step a threshold opens, that ``threshold``: its key, its caption, its own state, and — when the file
+    stands on it — the words of the file's state («Phase gérée par un acteur autorisé»). Then no step is current: the
+    threshold is (templates/components/journey_rail.html draws it as the list's current item).
+
+    A file whose status has no place on the line (SUSPENDED, CLOSED) has NO current item: nothing says «Vous êtes
+    ici», the header's chip says the state. ``stopped_at`` — the last place it held on the line, which only its trail
+    knows (``cases.presenters.journey_with_dates`` reads it) — puts every item up to that place behind it, the item
+    there marked ``stop`` (the line is not travelled past it); without it, every item is ahead. A file on the line
+    ignores it: its status says where it stands.
     """
     if case is None:
         return []
     from cases.models import CaseStatus
 
-    reached = {CaseStatus.DRAFT: 0, CaseStatus.ORIENTED: 1, CaseStatus.REVIEW_REQUIRED: 1}
-    for index, (status, _side, _label) in enumerate(JOURNEY_STEPS):
-        reached.setdefault(status, index)
-    current_index = reached.get(case.status, 0)
-    # The frontier MA→IT sits before the first step of the Italian side (design V4 JourneyRail).
+    position = journey_place(case.status)
+    if position is not None:
+        stopped_at = None
+    # The frontier MA→IT sits before the first step of the Italian side (design V4 JourneyRail): threshold A.
     first_italy = next((i for i, (_s, side, _l) in enumerate(JOURNEY_STEPS) if side == "italy"), None)
-    return [
-        {
-            "label": label,
-            "side": side,
-            "is_current": index == current_index,
-            "frontier": index == first_italy,
-            "detail": "",
-            "actor": "",
-        }
-        for index, (status, side, label) in enumerate(JOURNEY_STEPS)
-    ]
+    steps = []
+    for index, (status, side, label) in enumerate(JOURNEY_STEPS):
+        state = _journey_state(index, position, stopped_at)
+        threshold = None
+        if status in JOURNEY_THRESHOLDS:
+            key, caption = JOURNEY_THRESHOLDS[status]
+            gate = _journey_state(index - 0.5, position, stopped_at)
+            threshold = {
+                "key": key,
+                "caption": caption,
+                "state": gate,
+                "is_current": gate == "current",
+                "stop": stopped_at == index - 0.5,
+                "label": CaseStatus(case.status).label if gate == "current" else "",
+            }
+        steps.append(
+            {
+                "status": status,
+                "label": label,
+                "side": side,
+                "state": state,
+                "is_current": state == "current",
+                "stop": stopped_at == index,
+                "frontier": index == first_italy,
+                "threshold": threshold,
+                "detail": "",
+                "actor": "",
+            }
+        )
+    return steps
 
 
 def active_case(user):

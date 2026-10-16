@@ -1,17 +1,22 @@
 {% load i18n cms_nav %}{% main_menu as menu %}
 {% comment %}
-«Il portico» — the letterhead (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11, §1.12; W2-C1). Paper, sticky,
+«Il portico» — the letterhead (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11, §1.12; W2-C1, W2-C2). Paper, sticky,
 64 px → 56 px once the page has moved (glass only then, on a fine pointer, with no panel open). The
 official lock-up at the reading edge (docs/design-v2/BRAND_ASSETS.md §1, drawn by `brand_lockup`; a logo
 uploaded in the back-office still wins, as before — that switch is the client's, not the design's), the
 navigation bar (partials/main_nav.html: the owner's «Fase 3 — menu aperto», developed), and the end zone:
 «la targa», the reserved-area entrance, flat, in both states — the plate when signed out (only behind
-`reserved_area_public_link` + `reserved_area_enabled`; when they are off no hole is left), the account
-menu when signed in (its popover on the overlay system is W2-C2's) — and «Menu» below 80rem.
+`reserved_area_public_link` + `reserved_area_enabled`; when they are off no hole is left: the end zone is marked bare,
+and from 80rem, where «Menu» is not drawn either, it is not drawn at all — no empty gap; the key alone carries the
+overlay system's top-layer tooltip, its name, refused from 100rem where the plate says it), the account popover of
+the overlay system when signed in (W2-C2: components/account_menu.html with `popover`, the person's rows in a menu
+hung from the plate — Esc, a press outside, the focus leaving or a choice close it, the focus back on the plate) —
+and «Menu» below 80rem, a link to the sheet that the overlay system opens (static/js/src/overlay.js), and that
+shows in place without it; it holds «Fermer» too, hidden, so that below 48rem it is as wide as the sheet's «Fermer»
+drawn over it (chrome.css §7: one width per language, the longer word's).
 
-The menu tree is built once here and drawn twice: the bar, and the drawer below 80rem (today's drawer,
-kept working until W2-C2 moves it onto the overlay system). Below 48rem the institutional bar is not drawn,
-so the drawer carries its promoter, the entrance and the languages.
+The menu tree is built once here and drawn twice: the bar, and — after the letterhead, at the body's level, as
+a trapped panel of the overlay system must be — the sheet below 80rem (partials/main_nav.html, «sheet»).
 {% endcomment %}
 <header class="site-header" id="site-header">
   <div class="container site-header__inner">
@@ -25,34 +30,16 @@ so the drawer carries its promoter, the entrance and the languages.
     <nav class="main-nav" aria-label="{% translate 'Navigation principale' %}" data-portico>
       {% include "partials/main_nav.html" %}
     </nav>
-    <div class="site-header__end">
-      {% flag "reserved_area_public_link" as reserved_link %}
+    {% flag "reserved_area_public_link" as reserved_link %}{% safe_url 'account_login' as login_url %}
+    <div class="site-header__end{% if not user.is_authenticated %}{% if not reserved_link or not site.settings.reserved_area_enabled or not login_url %} site-header__end--bare{% endif %}{% endif %}">
       {% if user.is_authenticated %}
-        <div class="targa-seat">{% include "components/account_menu.html" %}</div>
-      {% elif reserved_link and site.settings.reserved_area_enabled %}
-        {% safe_url 'account_login' as login_url %}
-        {% if login_url %}<a class="targa" href="{{ login_url }}">{% svg_icon "ile-key" "icon targa__key" %}<span class="targa__label">{% translate "Espace réservé" %}</span><span class="targa__tip" aria-hidden="true">{% translate "Espace réservé" %}</span></a>{% endif %}
+        <div class="targa-seat">{% include "components/account_menu.html" with popover=True menu_id="account-menu" %}</div>
+      {% elif reserved_link and site.settings.reserved_area_enabled and login_url %}
+        {% translate "Espace réservé" as reserved_label %}<a class="targa" href="{{ login_url }}" aria-label="{{ reserved_label }}" data-tip="layer" data-tip-side="block-end">{% svg_icon "ile-key" "icon targa__key" %}<span class="targa__label">{{ reserved_label }}</span></a>
       {% endif %}
-      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="nav-drawer" aria-expanded="false">
-        {% svg_icon "menu" "icon icon--menu" %}{% svg_icon "close" "icon icon--close" %}<span>{% translate "Menu" %}</span>
-      </button>
-    </div>
-    <div class="nav-drawer" id="nav-drawer" data-nav-drawer>
-      <div class="drawer-utility">
-        <p class="drawer-utility__identity"><strong>{{ site.promoter }}</strong> — {% translate "promoteur du projet" %}</p>
-        {% if user.is_authenticated %}
-          {% include "components/account_menu.html" %}
-        {% elif reserved_link and site.settings.reserved_area_enabled %}
-          {% safe_url 'account_login' as login_url_drawer %}
-          {% if login_url_drawer %}<a class="targa targa--drawer drawer-utility__reserved" href="{{ login_url_drawer }}">{% svg_icon "ile-key" "icon targa__key" %}<span>{% translate "Espace réservé" %}</span></a>{% endif %}
-        {% endif %}
-        {% include "components/language_segmented.html" %}
-      </div>
-      <nav class="main-nav main-nav--drawer" aria-label="{% translate 'Menu' %}">
-        {% include "partials/main_nav.html" with nav_variant="drawer" %}
-      </nav>
+      <a class="nav-toggle" href="#nav-sheet" data-overlay-open data-nav-toggle>{% svg_icon "menu" "icon" %}<span class="nav-toggle__word"><span>{% translate "Menu" %}</span><span class="nav-toggle__alt" aria-hidden="true">{% translate "Fermer" %}</span></span></a>
     </div>
   </div>
-  <div class="nav-overlay" data-nav-overlay></div>
   <div class="portico-scrim" data-portico-scrim hidden></div>
 </header>
+{% include "partials/main_nav.html" with nav_variant="sheet" %}

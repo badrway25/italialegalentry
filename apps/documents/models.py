@@ -16,6 +16,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from cases.models import ResponsibleActor
+from core import clock
 from core.models import TimeStampedModel
 
 
@@ -331,7 +332,9 @@ class DocumentRequirement(TimeStampedModel):
 
     @property
     def is_overdue(self) -> bool:
-        return bool(self.due_date and self.is_open and self.due_date < timezone.localdate())
+        # the project's clock, as every deadline of the interface (requirements.due_urgency, the deadlines page): on a
+        # lane or the preview a reference date stands in for today, and one clock decides one deadline (REVIEW M3)
+        return bool(self.due_date and self.is_open and self.due_date < clock.today())
 
 
 class VersionDecision(models.TextChoices):

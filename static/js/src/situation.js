@@ -14,10 +14,12 @@
  *   hash         #q-<name> opens that question (the Stepper's links work without the script)
  *
  * Motion, the reduced-motion question and the frame wait come from motion.js: the one gate
- * (V5.4 plan §1.5, W1-D) — the setting, or the preview's html.rm flag.
+ * (V5.4 plan §1.5, W1-D) — the setting, or the preview's html.rm flag. Nothing moves at load (V5.4
+ * plan §1.5, W3-D): the first question is shown as it is, and the submit takes its role (secondary
+ * while stepping) without its colour transition.
  */
 
-import { animate, nextFrame, reducedMotion } from "./motion.js";
+import { afterPaint, animate, nextFrame, reducedMotion } from "./motion.js";
 
 const form = document.querySelector("[data-wizard]");
 if (form) {
@@ -38,6 +40,7 @@ if (form) {
   const submit = form.querySelector("[data-wizard-submit]");
   const show = (target, travel, focus) => {
     if (target < 0 || target >= steps.length || target === index) return;
+    const first = index < 0;
     const leaving = index >= 0 ? steps[index] : null;
     index = target;
     const arriving = steps[index];
@@ -58,8 +61,18 @@ if (form) {
     next.hidden = last;
     // One PRIMARY per screen: «Continuer» while stepping, the submit on the last question.
     if (submit) {
+      // At load the submit takes its role with no transition: the colour change is applied in one style pass
+      // under `transition: none`, which leaves once that state has been painted.
+      if (first) submit.style.transition = "none";
       submit.classList.toggle("btn--primary", last);
       submit.classList.toggle("btn--secondary", !last);
+      if (first) {
+        void getComputedStyle(submit).backgroundColor;
+        afterPaint().then(() => {
+          submit.style.removeProperty("transition");
+          if (!submit.getAttribute("style")) submit.removeAttribute("style");
+        });
+      }
     }
     if (position) position.textContent = `${index + 1} / ${steps.length}`;
     // The URL follows the question (the Stepper's links are anchors), without a history entry.

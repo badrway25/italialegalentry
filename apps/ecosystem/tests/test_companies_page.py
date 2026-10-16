@@ -39,25 +39,26 @@ def test_page_needs_no_database_row(get_html, db):
     assert not EcosystemSpace.objects.exists()
     html = get_html("fr", COMPANIES_PATH)
     assert TITLE in html and INTRO in html and QUOTE in html
-    assert 'class="ecosystem-photo"' not in html
+    assert 'class="ingresso__aside figura"' not in html, "no photograph without a curated, captioned asset"
+    assert 'class="ingresso__aside porta via on-inverse"' in html, "the company door's card instead (V5.4, W3-F1)"
 
 
 @pytest.mark.compliance
 def test_prescribed_texts_in_their_prescribed_places(get_html, seeded):
     html = get_html("fr", COMPANIES_PATH)
     assert html.count("<h1") == 1
-    assert re.search(r'<h1 class="page-header__title"[^>]*>' + re.escape(TITLE) + "</h1>", html)
-    assert re.search(r'<p class="page-header__lead"[^>]*>' + re.escape(INTRO) + "</p>", html)
-    quote = re.search(r'<blockquote class="blockquote-institutional"[^>]*>\s*<p>(.*?)</p>', html, flags=re.S)
+    assert re.search(r'<h1 class="ingresso__title[^"]*"[^>]*>' + re.escape(TITLE) + "</h1>", html)
+    assert re.search(r'<p class="ingresso__lead"[^>]*>' + re.escape(INTRO) + "</p>", html)
+    quote = re.search(r'<blockquote class="citazione"[^>]*>\s*<p>(.*?)</p>', html, flags=re.S)
     assert quote and quote.group(1) == QUOTE
 
 
 def test_fallback_language_is_marked_on_prescribed_texts(get_html, seeded):
     html = get_html("it", COMPANIES_PATH)
-    assert re.search(r'<h1 class="page-header__title" lang="fr">' + re.escape(TITLE), html)
-    assert re.search(r'<blockquote class="blockquote-institutional" lang="fr">', html)
+    assert re.search(r'<h1 class="ingresso__title[^"]*" lang="fr">' + re.escape(TITLE), html)
+    assert re.search(r'<blockquote class="citazione" lang="fr">', html)
     french = get_html("fr", COMPANIES_PATH)
-    assert '<h1 class="page-header__title">' in french, "no lang attribute when the page already is in French"
+    assert re.search(r'<h1 class="ingresso__title[^"]*">', french), "no lang attribute on a page already in French"
 
 
 @pytest.mark.compliance
@@ -77,8 +78,8 @@ def test_no_recruitment_wording_of_the_former_page(get_html, seeded, lang):
 def test_three_neutral_moments_are_an_ordered_list(get_html, seeded):
     html = get_html("fr", COMPANIES_PATH)
     section = html.split('id="demarche"', 1)[1].split("</section>", 1)[0]
-    assert section.count('<li class="timeline__item">') == 3
-    labels = re.findall(r'<p class="timeline__label">(.*?)</p>', section)
+    assert section.count('<li class="linea__step">') == 3
+    labels = re.findall(r'<p class="linea__label">(.*?)</p>', section)
     assert labels == [
         "Recueil des besoins",
         "Construction des parcours avec les acteurs compétents",
@@ -141,7 +142,7 @@ def test_head_requests_are_answered(client, seeded):
 
 def test_single_destination_note_uses_the_public_address(get_html, seeded):
     html = get_html("fr", COMPANIES_PATH)
-    note = html.split('class="ecosystem-form__destination', 1)[1].split("</p>", 1)[0]
+    note = html.split("ecosystem-form__destination", 1)[1].split("</p>", 1)[0]
     assert 'href="mailto:contact@agamieuromed.org"' in note
     emails = set(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}", html))
     assert emails == {"contact@agamieuromed.org"}
@@ -174,31 +175,35 @@ def test_phase3_adds_the_transparency_block_and_the_pilot_link(get_html, seeded,
     assert html.count("<h1") == 1 and TITLE in html and INTRO in html and QUOTE in html
 
 
-def test_local_navigation_lists_only_open_spaces(get_html, seeded):
+def test_sections_keep_their_anchors_and_no_gated_space_is_linked(get_html, seeded):
+    """Design V5.4 (W3-F1): no side column — the sibling spaces are the navigation's doors; the anchors stay."""
     html = get_html("fr", COMPANIES_PATH)
-    nav = html.split('<nav class="local-nav"', 1)[1].split("</nav>", 1)[0]
-    assert 'href="/fr/entreprises/" aria-current="page"' in nav
-    assert 'href="#formulaire"' in nav and 'href="#demarche"' in nav
-    assert "/fr/institutions/" not in nav
+    main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
+    assert '<nav class="local-nav"' not in main
+    assert 'id="demarche"' in main and 'id="formulaire"' in main
+    assert "/fr/institutions/" not in main and "/fr/projet-pilote/" not in main
 
 
-def test_local_navigation_after_phase3(get_html, seeded, phase3_open):
+def test_after_phase3_the_transparency_anchor_and_the_pilot_link(get_html, seeded, phase3_open):
     html = get_html("fr", COMPANIES_PATH)
-    nav = html.split('<nav class="local-nav"', 1)[1].split("</nav>", 1)[0]
-    for path in ("/fr/entreprises/", "/fr/institutions/", "/fr/universites-et-formation/", "/fr/projet-pilote/"):
-        assert f'href="{path}"' in nav
-    assert 'href="#transparence"' in nav
+    main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
+    assert 'id="transparence"' in main
+    related = main.split('class="chapter ecosystem-related"', 1)[1].split("</section>", 1)[0]
+    assert 'href="/fr/projet-pilote/"' in related and 'href="/fr/forum/"' in related
 
 
 def test_photograph_is_self_hosted_and_described(get_html, seeded, curated_photo):
     html = get_html("fr", COMPANIES_PATH)
-    figure = html.split('<figure class="ecosystem-photo">', 1)[1].split("</figure>", 1)[0]
+    figure = html.split('<figure class="ingresso__aside figura">', 1)[1].split("</figure>", 1)[0]
     assert 'type="image/webp"' in figure and "/static/img/photos/equipe-entreprise-960.webp 960w" in figure
     assert 'src="/static/img/photos/equipe-entreprise-1440.jpg"' in figure
     alt = re.search(r'alt="([^"]+)"', figure)
     assert alt and len(alt.group(1)) > 20
     assert "http" not in figure
-    italian = get_html("it", COMPANIES_PATH).split('<figure class="ecosystem-photo">', 1)[1].split("</figure>", 1)[0]
+    assert "<figcaption>" in figure, "a caption and a credit under every photograph (D26)"
+    assert 'fetchpriority="high"' in figure and 'loading="lazy"' not in figure, "the entrance's photograph is the LCP"
+    italian = get_html("it", COMPANIES_PATH).split('<figure class="ingresso__aside figura">', 1)[1]
+    italian = italian.split("</figure>", 1)[0]
     assert 'lang="fr"' in italian, "French alternative text is tagged while no Italian one exists"
 
 
@@ -219,5 +224,5 @@ def test_seo_head(get_html, seeded, curated_photo):
 def test_arabic_page_is_rtl(get_html, seeded):
     html = get_html("ar", COMPANIES_PATH)
     assert '<html lang="ar" dir="rtl"' in html
-    assert re.search(r'<h1 class="page-header__title" lang="fr">', html)
+    assert re.search(r'<h1 class="ingresso__title[^"]*" lang="fr">', html)
     assert html.count("<h1") == 1

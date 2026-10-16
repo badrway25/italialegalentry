@@ -72,6 +72,9 @@ def test_every_content_page_loads_the_one_page_sheet_and_carries_the_scope(name)
 def test_the_partial_is_page_only_css_imported_by_its_entry():
     entry = _read(ENTRY)
     assert '@import url("../css/v5/_lettura.css");' in entry, "the entry imports the partial from the collected tree"
+    # W3-F1's budget pass: the components the public interior's pages share are drawn once, in the shared page,
+    # imported before the partial (the review's m11; the owner's V5.8)
+    assert re.findall(r'@import url\("([^"]+)"\);', entry) == ["../css/v5/_pagina.css", "../css/v5/_lettura.css"]
     assert "_lettura.css" not in _read(ROOT / "static" / "css" / "main.css"), "page-only CSS never enters main.css"
     assert (ROOT / "static" / "css" / "dist" / "cms" / "lettura.css").is_file(), "npm run build:css"
 

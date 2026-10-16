@@ -7,7 +7,9 @@
 
      .folio         the rail device: ordinal, rule, running head, date
      .register      the entry list — replaces the card, everywhere
-     .sequence      the vertical timeline with the visible shore crossing
+     .sequence      the vertical list of a module's, a need's or a turn's stages (the console's
+                    secondary pages until W3-E redraws them; the journey's own drawings are design
+                    V5's «La soglia»: the public passage and the console's rail, W3-D)
      .jurisdiction  the jurisdiction bar — who is answerable for each phase
      .plate         the one full-bleed band per page
      .note          the margin apparatus where the legal caveats live
@@ -69,33 +71,6 @@
   letter-spacing: 0;
 }
 
-/* At lg+ the folio stands in the rail and becomes vertical. */
-@media (min-width: 75rem) {
-  .zones__rail > .folio {
-    display: block;
-    border-block-start: 0;
-    padding-block-start: 0;
-  }
-
-  .zones__rail > .folio .folio__ordinal {
-    display: block;
-    margin-block-end: var(--s-2);
-  }
-
-  .zones__rail > .folio .folio__head {
-    display: block;
-    border-block-start: 2px solid var(--rubric);
-    padding-block-start: var(--s-2);
-    max-inline-size: 14ch;
-  }
-
-  .zones__rail > .folio .folio__date {
-    display: block;
-    margin-inline-start: 0;
-    margin-block-start: var(--s-2);
-  }
-}
-
 /* ---- THE ENTRY AND THE REGISTER --------------------------------------------
    The atomic content object. It replaces the card everywhere.
 
@@ -106,6 +81,14 @@
 
    Rows may be unequal in height. They align on their top rule, never on a
    forced baseline grid.
+
+   Design V5 (W3-C, the deletion map's row «register.css's register and entry»):
+   the documents pages no longer draw these — «Mes pièces» is its own register
+   (apps/portal/static/portal/v5/_workspace.css). Every rule below is still
+   drawn by eight page families (academy, cases, companies, forum governance,
+   glossary, helpdesk, the home's pathways, selection) and stays; the current
+   entry's rules left with the documents register: no page marks an entry
+   current any more.
    -------------------------------------------------------------------------- */
 .register {
   list-style: none;
@@ -240,11 +223,6 @@
   color: var(--rubric);
 }
 
-.entry[aria-current="true"],
-.entry[aria-current="page"] {
-  border-inline-start-color: var(--rubric);
-}
-
 /* ---- THE SEQUENCE ----------------------------------------------------------
    Vertical, always. Never a row of circles joined by lines: the diagram this
    replaces ran its connector to the container edge after step 4 and stopped,
@@ -252,9 +230,9 @@
    nothing at all. A vertical list works at 320px unchanged, because it is a
    list.
 
-   The rule is --cooperation above the shore crossing and --navy below it, and
-   the crossing is a labelled hairline across the full width — a STRUCTURAL
-   mark, not a colour change, so it survives greyscale and forced colours.
+   The rule is --cooperation. (Its shore crossing — the --navy rule below a
+   labelled hairline — left with its last consumer, the home's orientation
+   steps, which design V5 draws on the public passage, W3-D.)
    -------------------------------------------------------------------------- */
 .sequence {
   list-style: none;
@@ -295,32 +273,6 @@
 .sequence__marker::before {
   counter-increment: step;
   content: counter(step, decimal-leading-zero);
-}
-
-/* Below the crossing, responsibility is on the Italian side. */
-.sequence__step--italy .sequence__marker {
-  border-inline-start-color: var(--navy);
-}
-
-.sequence__crossing {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  padding-block: var(--s-3);
-  border-block-start: 1px solid var(--rule-ink);
-  border-block-end: 1px solid var(--rule-ink);
-  font-family: var(--font-ui);
-  font-size: var(--t-folio-size);
-  font-weight: 600;
-  letter-spacing: var(--track-folio);
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
-  color: var(--ink-secondary);
-}
-
-:lang(ar) .sequence__crossing {
-  text-transform: none;
-  letter-spacing: 0;
 }
 
 .sequence__title {
@@ -489,34 +441,6 @@
   margin-block-end: var(--rank-a-after);
 }
 
-.plate--verso :is(h1, h2, h3, p, .t-plate, .t-title, .t-band) {
-  color: var(--paper-on-navy);
-}
-
-.plate--verso .t-gloss,
-.plate--verso .t-caption {
-  color: var(--paper-muted-on-navy);
-}
-
-.plate--verso .folio__head {
-  color: var(--paper-muted-on-navy);
-}
-
-/* --rubric-on-navy is a RULE colour and never a text colour: it measures 4.46:1 on navy, which
-   clears 3:1 for large text but not 4.5:1 — and the folio ordinal is 22px at xs and 24px at sm.
-   On the verso band the ordinal is paper; only the rule is rubric. */
-.plate--verso .folio {
-  border-color: var(--rubric-on-navy);
-}
-
-.plate--verso .folio__ordinal {
-  color: var(--paper-on-navy);
-}
-
-.plate--verso .folio__head {
-  border-color: var(--rubric-on-navy);
-}
-
 /* ---- THE MARGIN NOTE -------------------------------------------------------
    The device that reads as PUBLISHED rather than assembled, and where the legal
    apparatus lives: the source, the date, the caveat, the ruleset version, the
@@ -559,12 +483,6 @@
   border-block-start: 1px solid var(--rule-hair);
   padding-block-start: var(--s-2);
   margin-block-start: var(--s-4);
-}
-
-@media (min-width: 75rem) {
-  .zones__margin > .note:first-child {
-    margin-block-start: 0;
-  }
 }
 
 .note__marker {
@@ -689,9 +607,7 @@
   }
 
   .entry:hover,
-  .entry:focus-visible,
-  .entry[aria-current="true"],
-  .entry[aria-current="page"] {
+  .entry:focus-visible {
     border-inline-start-color: Highlight;
   }
 
@@ -730,51 +646,6 @@
   content: counter(folio, decimal-leading-zero);
 }
 
-/* ---- The home plate --------------------------------------------------------
-   The page's one ground change, and its only full-bleed moment. */
-.home-plate__inner {
-  padding-block: var(--s-4);
-}
-
-.home-plate__folio {
-  border-block-start-color: var(--rubric-on-navy);
-  margin-block-end: var(--s-6);
-}
-
-.home-plate__lead {
-  color: var(--paper-muted-on-navy);
-  max-inline-size: 48ch;
-  margin-block-start: var(--s-6);
-}
-
-.home-plate__body {
-  color: var(--paper-muted-on-navy);
-  max-inline-size: 56ch;
-  margin-block-start: var(--s-4);
-}
-
-.home-plate__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-4);
-  margin-block-start: var(--s-8);
-}
-
-/* On navy the primary button inverts: a filled navy button on navy would
-   disappear, and an outline-only pair would leave the flow's primary action
-   without a rank. The rank is preserved, the treatment is not. */
-.plate--verso .btn--primary {
-  background: var(--paper-on-navy);
-  color: var(--navy);
-  border-color: var(--paper-on-navy);
-}
-
-.plate--verso .btn--secondary {
-  color: var(--paper-on-navy);
-  border-color: var(--paper-muted-on-navy);
-  background: transparent;
-}
-
 /* An entrance's inline-end label is the prescribed CALL TO ACTION, not a
    responsible actor. It takes the same position and the same size, but not the
    actor's uppercase register: a reader must not mistake a button label for a
@@ -808,24 +679,4 @@
    how the Forum banner read before, at the visual weight of a cookie bar. */
 .plate:has(+ .home-banner) {
   margin-block-end: 0;
-}
-
-/* ---- Prescribed titles that arrive in capitals -----------------------------
-   Art direction A §3.5 makes capitalisation a CSS decision and moves every
-   shouted string back to sentence case. That rule cannot reach a title the
-   client prescribed in capitals and requires to be copied verbatim — changing
-   its case would alter prescribed text.
-
-   So it is TYPESET as a caps display line rather than left as a shout: the
-   caps-display tracking opens the letterfit, the optical size is the display
-   drawing, and the line stays on a display measure. This is the one place
-   capitals survive outside the folio register, and it is content, not style.
-   -------------------------------------------------------------------------- */
-.page-header__title:has(+ *),
-.page-header__title {
-  letter-spacing: var(--track-caps-display);
-}
-
-.page-header__title {
-  max-inline-size: 22ch;
 }

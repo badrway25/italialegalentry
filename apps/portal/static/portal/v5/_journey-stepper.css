@@ -1,0 +1,135 @@
+/* ============================================================================================
+   «LA SOGLIA» — «MA SITUATION»'S STEPPER, design V5 (W3-D)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 6 · §1.2 O14 (an answered question is a filled ink dot, never a
+   check) · §1.5 (nothing moves at load).
+
+   The guided form's Stepper (components/wizard_stepper.html) on the console's one rail drawing: this partial composes
+   the vocabulary of v5/_journey-nodes.css (one line, three nodes — imported before it), as v5/_journey-rail.css does
+   for the journey and the timeline. Answered = the ink dot, the question shown = the laguna ring on its wash (whether
+   answered or not), the others an open ring; the line a hairline (the questions are answered in any order, so it is
+   never «travelled»). A page-only partial (plan §2.3; the owner's V5.8): imported by
+   apps/portal/static/portal/situation.css — «Ma situation»'s one page-only sheet, after the guided form
+   (v5/_wizard.css, W3-F1) — never by main.css nor console.css, never an output of its own.
+   1 · the Stepper (a spine at the start of the row; under 64rem, the guided form's own break, a level row of nodes)
+   2 · forced colours
+   Tokens of static/css/v5/tokens.css only; logical properties only. Still at load: nothing moves. Corners: full (the
+   nodes) and 4 (a link's hover) — of the console's three.
+   ============================================================================================ */
+
+/* ---- 1 · The Stepper of «Ma situation»: the questions on the spine ----------------------------------------------- */
+/* each entry a link of 44 px at least, its node at the first line's height so that a two-line question keeps it */
+.wstep {
+  --node-y: 22px;
+  --nc: calc(var(--s-2) + var(--icon-lg) / 2);
+  display: grid;
+  gap: 0;
+}
+
+.wstep__item {
+  position: relative;
+}
+
+.wstep__link {
+  display: grid;
+  grid-template-columns: var(--icon-lg) minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: start;
+  min-block-size: var(--hit-primary);
+  padding: 12px var(--s-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+  text-decoration: none;
+  background: none;
+  transition: none;
+}
+
+.wstep__node {
+  justify-self: center;
+}
+
+@media (hover: hover) {
+  .wstep__link:hover {
+    background-color: var(--surface-hover);
+    color: var(--text-1);
+  }
+}
+
+.wstep__item--current .wstep__link {
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.wstep__item--done:not(.wstep__item--current) .wstep__link {
+  color: var(--text-1);
+}
+
+/* under 64rem (the guided form's own break, v5/_wizard.css): a level row of nodes — eight labelled entries would put
+   the first question under the fold; the question's own title names the step. One column a question, the line from
+   node to node along the row. */
+@media (max-width: 63.999rem) {
+  .wstep {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    max-inline-size: calc(8 * var(--hit-primary));
+  }
+
+  .wstep__link {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    min-inline-size: 0;
+    padding: 12px 0;
+  }
+
+  .wstep__item::before {
+    inset-block: calc(var(--node-y) - 1px) auto;
+    inset-inline-start: 50%;
+    inline-size: 100%;
+    block-size: 2px;
+  }
+
+  .wstep__label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---- 2 · Forced colours: the line and the nodes in system colours, the wash dropped ---------------------------- */
+@media (forced-colors: active) {
+  .wstep__item::before {
+    forced-color-adjust: none;
+    background: GrayText;
+    opacity: 1;
+  }
+
+  /* the nodes in system colours, each rule at its drawing's own weight so that it wins */
+  .wstep .wstep__node::after,
+  .wstep__item:not(.wstep__item--done) .wstep__node::after {
+    forced-color-adjust: none;
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .wstep__item--done .wstep__node::after {
+    background: CanvasText;
+  }
+
+  .wstep__item.wstep__item--current .wstep__node::after {
+    border-color: Highlight;
+    background: Canvas;
+  }
+
+  .wstep__item--current.wstep__item--done .wstep__node::after {
+    background: CanvasText content-box;
+  }
+
+  .wstep__node::before {
+    display: none;
+  }
+}

@@ -222,9 +222,10 @@ def test_authorities_drop_insecure_urls_and_blank_names():
     ]
     # `lang` tells the template which language the name is written in (I18N-08): an editor may set it,
     # otherwise the content source language applies.
+    # `host`: where a link leads, shown beside it (design V5.4 D26: an authority link's host made visible).
     assert services.authorities(p) == [
-        {"name": "Questura", "url": "", "lang": "fr"},
-        {"name": "Prefettura", "url": "https://example.invalid/", "lang": "it"},
+        {"name": "Questura", "url": "", "lang": "fr", "host": ""},
+        {"name": "Prefettura", "url": "https://example.invalid/", "lang": "it", "host": "example.invalid"},
     ]
 
 
