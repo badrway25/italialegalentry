@@ -29,7 +29,7 @@ Vincoli che nessuna dipendenza può violare:
 
 | Pacchetto | Versione | Licenza | Scopo | Peso misurato | Manutenzione |
 |---|---|---|---|---|---|
-| `motion` | 13.4.1 (fissata) | MIT | Animazione: `animate`, `scroll`, `inView`, `stagger`, `spring`, `hover`, `press`. Successore ufficiale di Framer Motion (motion.dev). Usato **senza React** dove basta. | Bundle reale `static/js/dist/motion.js` (le sette funzioni sopra + i due helper del progetto, tree-shaken con esbuild, minificato): **65,4 KB / 24,0 KB gzip**. Solo animate+scroll+inView+stagger: 62,8 / 23,1. `motion/mini` (solo `animate`, WAAPI): **9,7 KB / 3,9 KB gzip**. | Attiva: 13.4.1 pubblicata il 22–23 settembre 2026; repo motiondivision/motion. |
+| ~~`motion`~~ | — (era 13.4.1) | MIT | **Rimosso il 16 ottobre 2026 (design V5, W4-B; piano V5.4 §1.5 «Engine», §2.3).** I suoi ultimi chiamanti — il reveal `[data-reveal]` di `shell.js` (`inView`, `animate`, `stagger`) e il cambio di domanda di «Ma situation» (`animate`) — sono passati alla piattaforma: la Web Animations API attraverso il cancello di `static/js/src/motion.js` (`play()`), le transizioni CSS sui token; le molle restano come gemelle `linear()` in `static/css/v5/tokens.css`. `npm uninstall motion --package-lock-only` ha tolto anche `framer-motion`, `motion-dom`, `motion-utils` e `tslib`. | Il chunk che pesava 26,5 KB gzip su ogni pagina non esiste più: lo script della home 51 249 → 24 138 B gzip. | — |
 
 Punti d'ingresso verificati (`node --input-type=module`):
 
@@ -38,9 +38,9 @@ Punti d'ingresso verificati (`node --input-type=module`):
   quanto una lettura frettolosa della documentazione fa credere. La prima prova di bundle è
   fallita esattamente lì.
 
-Decisione d'uso: un solo modulo `static/js/src/motion.js` re-esporta ciò che il progetto usa,
-così ogni pagina importa dallo stesso posto e il registro sa cosa è in gioco. Nessun file importa
-`motion` direttamente.
+Decisione d'uso (fino al 16 ottobre 2026): un solo modulo `static/js/src/motion.js` ri-esportava ciò che il
+progetto usava, così ogni pagina importava dallo stesso posto e il registro sapeva cosa era in gioco. Da W4-B il
+frontend **non ha dipendenze di runtime**: `motion.js` è il cancello del moto e i suoi aiuti, sulla piattaforma.
 
 React e `motion/react`: **non installati**. Entrano solo con una isola che si giustifica per
 iscritto (§ 51 della direttiva: scopo, perché Django/vanilla non bastava, dimensione, entry

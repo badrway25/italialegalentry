@@ -76,10 +76,10 @@
   color: var(--text-2);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
 @media (hover: hover) and (pointer: fine) {
-  .overlay__close:hover { background-color: var(--surface-hover); color: var(--text-1); transition-timing-function: var(--ease-enter); }
+  .overlay__close:hover { background-color: var(--surface-hover); color: var(--text-1); }
 }
 .overlay__close:active { background-color: var(--surface-hover); color: var(--text-1); transition-duration: 0ms; }
 

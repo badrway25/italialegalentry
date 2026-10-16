@@ -174,6 +174,10 @@ names; DL54-02 … DL54-16 are §8.3's fifteen entries, in §8.3's order.
 | DL54-149 | 16 Oct 2026 | W3-E, step 3: the paths outside the slice; the CSS as measured — `main.css` 35 290 → 31 906 B on every page, the console page types 43 572 → 40 140 B; the case file 45 993 → 45 968 B, 48 039 B where it draws its dialogs (W2-A's page-only panels), recorded at its first own sheet; the load check | §2.2; §2.6; V5.8 «definitive ruling»; DL54-87 |
 | DL54-150 | 16 Oct 2026 | W3-E, the fix pass: the case file's first screen holds the next act (the journey in W3-D's compact forms, the dated history the feed's); the NowPanel's line drawn once, its act its alert dialog; the history's «Vous» for the person only; the family's irreversible closures (the guichet ×2, the selection) on the alert dialog, one dialog body; the registers' minors and the a11y check's six; the held file's reason drawn once at the sec-f7 merge; the shared bundles unchanged | REVIEW M1–M4, minors 1–11; A11Y_PERF 1–6; §1.14; §3.5 item 7; LA-9; DL54-64; DL54-145; DL54-146 |
 | DL54-151 | 16 Oct 2026 | Steward, the w3-e merge: the family's eighteen entries renumbered (DL54-133 … DL54-150, after design-v5's DL54-130 … DL54-132); the 33 paths outside the slice assigned (four whole-file entries, 27 slices) and the merge's one retargeted test (sec-f7's page test reads the case file's state dialog); two slices named as written; the shared CSS gate passed — `dist/main.css` 35 483 → 31 906 B on every page, the console page types 44 196 → 40 140 B —; every ceiling lowered to the merged weight; the area's page types recorded through their own sheets (a register page 43 015 B; the case file 46 391 B, 48 462 B where it draws its dialogs); nineteen surface keys v5; the capture report unchanged | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.3, §2.6; DL54-129; DL54-132; DL54-133 … DL54-150 |
+| DL54-152 | 16 Oct 2026 | Steward, the devops-2 merge: release hardening on design-v5 — every file a page loads a hashed, immutable name (`core.storage` rewrites the imports of `static/js/dist`; a plain name revalidated after a minute); a NUL byte in the path, the query string, a form field or the session cookie the project's 400, never a 500, with the security headers of every page; the browser tests' live server and the design preview's own server on a port Chromium accepts; the family's second pass in the manifest; nothing deployed (this index row written at the w4-b merge, DL54-154 item 1) | V5.9 §3; `QA/v54/devops/NOTES.md` (second pass), `REVIEW_2.md` |
+| DL54-153 | 16 Oct 2026 | W4-B, the motion audit (read first, `QA/v54/w4-b/AUDIT.md`): the Motion library leaves — «Ma situation»'s question change on the Web Animations API through motion.js's gate (same clocks, distance and order; the curve the token's), shell.js's reveal and components.css §29 / `initReveal` / `initCounters` gone (K17), `motion` and its parts out of the package files, the bundle test rewritten; the modules one entry alone imports inlined into it (one script request fewer); the rail's fold instant (R10, measured); the keyboard's tier 0 in the portico and on the skip link; the forced-colours current entry its own marker (W3-D's O2); the review's m2–m4 answered; after W4-B's own review and accessibility check, «Ma situation»'s change at once from the keyboard and whole after an interruption, the links' tier 0, `--ease-exit` back to its one role; the paths outside the slice, for the merge | §1.5 (tiers, R10, K17, «Engine», MS-O1/O2); §2.2; §2.3; §2.6; §3.6 item 2; DL54-101 item 4; `QA/v54/intfix/REVIEW.md` m2–m4; `QA/v54/w3-d/NOTES.md` «Handed to»; `QA/v54/w4-b/REVIEW.md`, `A11Y_PERF.md` |
+| DL54-154 | 16 Oct 2026 | Steward, the w4-b merge: W4-B's entry renumbered DL54-153 (after design-v5's DL54-132 … DL54-152); the two no-owner paths assigned as W4-B's slices (`scripts/build_frontend.mjs`'s `INLINED` list, `FRONTEND_DEPENDENCIES.md`'s `motion` row) and the dependency's removal in `package.json` and `package-lock.json` adopted as the steward's own write (plan §3.6 item 2), the two files the steward's whole; the shared CSS gate passed — `dist/main.css` 31 906 → 31 799 B on every page, the console page types 40 140 → 39 978 B —, every ceiling lowered to the merged weight; the home's script 51 249 → 24 138 B gzip, §2.6's 45 KB held on every page type; the family row in the status file, no surface key changed; DL54-152's missing index row added | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.6, §3.6 item 2; DL54-101; DL54-151; DL54-152; DL54-153 |
+| DL54-155 | 16 Oct 2026 | Steward, the w4-d merge (part 1): release engineering on design-v5 — CI's two runs on `ubuntu-24.04` (Python 3.12 · PostgreSQL 16, the production target: the server's major versions with its pinned closure; Python 3.13 · PostgreSQL 17, development), a step asserting both versions; the release of V5.10 named once in the runbook, the checklist and ROLLBACK.md (the annotated tag `v2.0.0` after the fast-forward; `pre-v5-main-2026-10` on `a3ac318` a reference point, never a server rollback; a downgrade a restore; the migration re-check that lists the files); one bar for PRODUCTION_READY; the go-live calendar verified, nothing to fix in code; the release notes drafted and assigned to w4-d; REVIEW_PART1's m4 kept out of the published tree; no tag, nothing deployed | V5.10; V5.9 §14–§17; plan §3.6 item 4; `QA/v54/w4-d/NOTES.md`, `REVIEW_PART1.md` |
 
 ---
 
@@ -6592,3 +6596,420 @@ integration checkpoint 3's review (`QA/v54/intfix/REVIEW.md`, «outside this bra
 manifest has no writer until the steward assigns it); `QA/v54/devops/NOTES.md` (with «Second pass», «Second pass —
 review fixes» and the steward's section), `REVIEW_2.md`; the ownership checks, the scan, the builds and the test logs in
 `C:/tmp/ile_v5_council/evidence/v54/devops/merge-2/`.
+
+## DL54-153 · 16 October 2026 · W4-B, the motion audit: the Motion library leaves; R10 enforced; the keyboard's tier 0 in the chrome; the reveals gone
+
+(Written as DL54-132 on the branch, after design-v5's DL54-131. design-v5 then gave DL54-132 to the sec-f7 record,
+DL54-133 … DL54-151 to W3-E and its merge and DL54-152 to the devops-2 merge: the steward renumbered this entry
+DL54-153 at the merge — the table row, this heading and the mentions of it in `QA/v54/w4-b/NOTES.md` and
+`A11Y_PERF.md`; DL54-154 item 1.)
+
+1. **The audit came first, read-only** (`docs/design-v5/QA/v54/w4-b/AUDIT.md`): every page type's motion — at load, on a
+   gesture, on scroll —, its tier, tokens and reduced-motion still, measured on lane 8 (68 loads, fr and ar, 1440 and
+   390, the setting on and off; an instrument recording every CSS transition and animation and every
+   `element.animate()`) and read from every sheet (249 declarations) and script. The tiers and their ceilings hold; one
+   indicator per page; nothing at load in the console but the entrance release; under the setting every overlay is one
+   80 ms opacity and nothing else moves; 0 animations and 0 `will-change` at rest. Five findings, fixed below — and four
+   lines it marked compliant that the review and the accessibility check measured otherwise (item 10; AUDIT.md §11).
+2. **The Motion library leaves (F2).** Its last callers were shell.js's reveal and «Ma situation»'s question change.
+   The change now runs on `play()` — the Web Animations API through the gate — with the clocks it had (the leaving
+   question's fade on `--motion-fast`, then the arriving one on `--motion-standard` from 16 px in the reading direction,
+   −16 px in Arabic) and with the token's curve, `--ease-enter`, where Motion had applied its own default: the call
+   passed `easing:`, Motion One's name, which Motion 13 ignores. Timing probe, frame by frame, at 1440 and 390, fr and
+   ar: leave 120 ms → arrive 200 ms, 331–349 ms in all (Motion's 336–352 ms); the arrival is front-loaded (opacity
+   0.93 at half time where Motion's ease-out gave 0.76 — the enter curve of MS-O1); and the one frame in which Motion
+   showed the arriving question at full opacity before animating it is gone. A curve is never typed in a script
+   (motion.js's contract): the curve became the token. `motion.js` keeps its whole contract (`reducedMotion`,
+   `withMotion`, `play`, `nextFrame`, `afterPaint`, `tween`, `settled`, `durationToken`, `easingToken`) and loses the
+   re-exports and the JS springs (their CSS `linear()` twins stay). `npm uninstall motion --package-lock-only
+   --ignore-scripts` — on the orchestrator's instruction for this area — removed `motion`, `framer-motion`,
+   `motion-dom`, `motion-utils` and `tslib` from `package.json` and `package-lock.json` without touching any
+   `node_modules`; `test_frontend_bundle_is_current.py`'s Motion-exports assertion is rewritten in the same commit (plan
+   §2.7): the helpers exported, no source importing the library, no package file declaring it, no bundle carrying its
+   code.
+3. **K17 — the reveals that hide text (F1)**: shell.js's `[data-reveal]` (Motion's `inView` + `animate` + `stagger`),
+   `components.css` §29 (`.reveal`, its stagger, its permanent `will-change`, its reduced-motion guard, and `.counter`)
+   and `main.js`'s `initReveal` and `initCounters` (a count-up on `requestAnimationFrame` outside the gate — W1-D's
+   hand-off) are deleted: no template, no CMS content (`ile_v5`, `ile_v5_l8`) and no page's DOM carried them, and a
+   failing script would have left their text at opacity 0. So shell.js's reveal is not ported: on design-v5 it moved
+   nothing on any page, and nothing moves after.
+4. **One script request fewer (W2-C1's A11Y_PERF item 5, handed to W4-B).** `scripts/build_frontend.mjs` no longer makes
+   an entry of a module one entry alone imports (`nav.js` → `shell.js`, `hero.js` → `home.js`): its code is inlined into
+   its importer instead of a chunk plus a stub nobody loads — plan §2.6's request ratchet, over by one since DL54-101,
+   holds again. With item 2: **the home 51 249 → 24 138 B gzip (9 → 7 script requests)**, a public page 43 674 → 16 781
+   (7 → 6), an entrance page 45 351 → 18 462, a console page 46 070 → 19 178, «Ma situation» 47 292 → 20 415 (gzip -9,
+   the steward's measure: the import closure of each page's entries + `main.js` + `head.js`, + `rail-pref.js` in the
+   console). §2.6's «a public page ≤ 45 KB» holds everywhere.
+5. **The rail folds at once (F3; plan §1.5 R10).** R10 ships the collapse instant «unless `contain: layout` brings it to
+   60 fps at CPU × 4»; W3-A had shipped a 200 ms transition of the rail's `inline-size` and of the page's
+   `padding-inline-start` — layout properties, re-laying the workspace on every frame. Measured (n = 5, the dashboard at
+   1440): at CPU × 1, 15 frames in 260 ms, gaps of 16.7 ms; at CPU × 4, 8 frames, gaps of 67–117 ms; with
+   `contain: layout` on the workspace and the rail, 9.5 frames, gaps of 50–117 ms. The two transitions leave
+   `_shell.css`; `console.js`'s `is-ready` (W3-E's file, in review) stays as a harmless hook.
+6. **The keyboard never animates the chrome (F4, F5; tier 0, R-07).** The portico had no `html[data-input="key"]` rule:
+   Esc after a pointer's opening ran the panel's 120 ms exit and the chevron's 200 ms turn, the arrows' indicator faded
+   120 ms. One rule in `chrome.css` zeroes the door word, the chevron, the panel, its photograph and the architrave from
+   the keyboard (a mouse movement gives the pointer its motion back). The skip link — reached only from the keyboard —
+   loses its 120 ms slide (V1 `base.css`).
+7. **The forced-colours current entry (W3-D's O2; WCAG 2.4.7).** The current page of the rail and of the phone bar drew
+   the focus ring's outline at rest: focusing it changed 0 pixels (fr and ar, 1440 and 390). Its marker is now its lit
+   Highlight disc and, in the rail, its word underlined (the bar's words stand on the screen's bottom edge, where an
+   underline is cut); focusing it changes 508–1 060 pixels.
+8. **The checkpoint review's minors.** m2: a static test that every guarded form submits through a `.btn`
+   (`tests/frontend/test_single_submit_w4_b.py`: the project's forms and their includes, allauth's button element,
+   allauth's own templates — a mutation to a plain button fails it) rather than a release on shell.js's early return,
+   which would give up the double-submit guard; m3: `initMisc`'s comment names shell.js's catch as the guard's other
+   lifter; m4: the 400 % overlay test gains its resize step (a separate test, both motion settings; with the re-read
+   removed both fail). W3-D's O3 measured: an `[open]` toggle in the console re-styles the disclosure's own 112
+   elements, with or without the remaining `html:has()` rules (574 elements on the page) — `html:has(.console-drawer[open])`
+   left with W2-A (`e5fa845`); nothing to fix.
+9. **Paths outside the slice, for the merge step to write into the manifest:** `package.json`, `package-lock.json`
+   (steward-only: the uninstall the orchestrator asked of this area); `scripts/build_frontend.mjs` (no owner: item 4,
+   handed by W2-C1 to «W4-B / the steward»); `docs/design-v2/FRONTEND_DEPENDENCIES.md` (no owner: the registry's row of
+   the dependency that left); and, through W4-B's delegation, `static/js/src/situation.js` (item 2),
+   `static/js/src/shell.js` (the reveal), `static/js/main.js`'s `initCounters` and `initMisc`'s comment (items 3, 8),
+   `static/css/v5/chrome.css` (items 6, 10), `static/css/base.css` (item 6), `apps/portal/static/portal/v5/_shell.css`
+   (items 5, 7, 10), `static/css/v5/base.css` (W1-A's) and `static/css/v5/overlays.css` and
+   `static/css/v5/_overlay-panels.css` (W2-A's) (item 10), `templates/base.html` (the comment that named Motion),
+   `docs/design/DESIGN_SYSTEM_2026.md` (§11.6, §12, §16; the figures by `regen_design_inventory.py`),
+   `docs/ACCESSIBILITY.md` (§7), and the tests that pinned what changed: `test_console_shell_w3_a.py`,
+   `test_console_shell_browser_w3_a.py` and `test_console_phone_browser_w3_a.py` (the rail's transition, the
+   forced-colours outline at rest), `test_design_docs.py` (the reduced-motion check and a runtime name),
+   `test_css_tokens_exist.py` (a runtime name), `test_overlays_browser_w2_a.py` (m4). `components.css` is in W3-E's diff
+   too (§23, far from §29): a trial merge of the two branches merges it without a conflict.
+10. **After the review and the accessibility check (`QA/v54/w4-b/REVIEW.md` m1–m4, `A11Y_PERF.md` findings 1–3;
+    one fix pass, V5.5).** Four lines the audit had marked compliant (AUDIT.md §11):
+    - **«Ma situation» from the keyboard (the check's major, the review's m1).** Enter or Space on «Continuer»,
+      «Précédent» or a Stepper link ran the pointer's 120 + 200 ms, and the focused question's ring showed ≈ 320 ms
+      after the key. `situation.js` now asks the input's modality beside the gate — `html[data-input="key"]`, which
+      head.js writes on the keydown, before the click — and creates no animation: the question swaps in the key's own
+      task with the focus and its ring on it, as under reduced motion. Pre-existing (the branch point animated the same
+      way through Motion), but this area rewrote that very animation.
+    - **An interruption (the review's m2, the check's finding 2).** A return within the 120 ms leaving fade
+      («Continuer» then «Précédent»; the Stepper's Q3 then Q1) left no question drawn and the focus on `body`: the first
+      change's late step hid the question the second had shown — the closure race design-v5 already had. Each change
+      now takes a turn (a generation token) and a late step whose turn has passed does nothing; a change asked while
+      another is in flight lands it first — its animations cancelled, no inline opacity left — and plays its own
+      arrival only. Measured: exactly one question, at opacity 1 and in place, no `style` attribute, the focus, the
+      counter and the Stepper on it — for the return, the Stepper's return, a double «Continuer» and a return during
+      the arrival (fr and ar, 1440 and 390).
+    - **Links (the review's m3, the check's finding 3).** Plain links had no keyboard rule: the console bar's trail ran
+      the links' 120 ms colour fade from Tab. One rule beside the links' transition in `v5/base.css`:
+      `html[data-input="key"] a { transition-duration: 0ms; }`. A 45-Tab walk of the dashboard and a 30-Tab walk of a
+      door page now start no transition (fr and ar).
+    - **The curves (the review's m4; MS-O1 / MS-O2).** Ten declarations kept the superseded council table's
+      `--ease-exit` — the portico's pointer exit, the menu items' and the close control's hover colours, the rail's rows,
+      tools and foot, the phone bar — where a small surface leaves on `--ease-enter` at 120 ms and the way into a hover
+      is `--ease-enter`. All ten swap; the two hover rules that only switched the curve back lose that clause. The
+      portico's exit no longer holds near-full opacity for its first ~40 ms: 0.27 at 33 ms. No sheet names `--ease-exit`
+      but the token files (no object crosses the view today), and `tests/frontend/test_motion_rules_w4_b.py` holds it.
+    The JS change weighs 145 B gzip on «Ma situation» only (20 415 → 20 560 B); the shared CSS goes down again
+    (`main.css` −6 B, the console page type −9 B gzip). Eight browser cases (the keyboard walk and the interruptions in
+    `test_motion_browser_w4_b.py`, the trail from Tab) and two static guards, each red on the previous tree.
+
+**Why.** The plan's Wave 4 motion lane: the tiers and rulings of §1.5 checked on the product as built, the Motion
+dependency removed «once unused», and the reveals that hide text removed (K17) — with the home's script back under
+§2.6's 45 KB, which DL54-101 had recorded as exceeded until this family.
+
+**Source.** Plan §1.5 (tiers, MS-O1/O2/O3/O4, R10, K17, «Engine»), §2.2, §2.3 (deletion map: §29, `initReveal`), §2.6,
+§2.7 (`test_frontend_bundle_is_current.py:45`), §3.6 item 2; DL54-101 item 4; DL54-102; `QA/v54/intfix/REVIEW.md` m2–m4;
+`QA/v54/w3-d/NOTES.md` «Handed to» (O2, O3); `QA/v54/w2-c1/A11Y_PERF.md` item 5; `QA/v54/w1-d/NOTES.md` (the counters);
+`QA/v54/w4-b/AUDIT.md`, `NOTES.md`, `REVIEW.md`, `A11Y_PERF.md`; evidence in `C:/tmp/ile_v5_council/evidence/v54/w4-b/`.
+
+## DL54-154 · 16 October 2026 · Steward, the w4-b merge: the motion audit on design-v5 — the Motion library out of every bundle and of the package files, W4-B's entry renumbered DL54-153, the four paths outside the slice assigned, both shared CSS bundles lower again, the home's script back under §2.6's 45 KB
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w4-b` into design-v5 on 16 October 2026 —
+what the family's entry and notes hand to the merge step: DL54-153 items 9 and 10; `QA/v54/w4-b/NOTES.md` §6, §7,
+«Review fixes» and «At the merge (for the steward)»; `QA/v54/w4-b/REVIEW.md` «For the merge step» and `A11Y_PERF.md`,
+both SHIP_AFTER_FIXES, every finding fixed in the family's one fix pass, V5.5).
+
+1. **The order and the numbering.** The steward took `DESIGN_V5_MERGE_LOCK` at 07:32:08 with design-v5 at `5bf2f90`
+   (the devops-2 record). The plan runs Wave 4 in sequence (§3.6; the manifest's `after` puts W4-A before W4-B); the
+   orchestrator launched W4-B on 16 October ahead of W4-A, beside W3-E, and asked for its merge first — W4-A, in
+   flight on lane 6 with no commit of its own yet, syncs with this one. The branch's merge base was `8ab5b89`
+   (integration checkpoint 3's status); design-v5 had since recorded the sec-f7 merge (DL54-132), W3-E and its merge
+   (DL54-133 … DL54-151) and the devops-2 merge (DL54-152), so the steward's sync (`d707d32`, 91 commits) gave the
+   family's one entry **DL54-153** — its heading, its index row and its own note; the six mentions of it in
+   `NOTES.md` and `A11Y_PERF.md` follow (`7e20cbf`), and the three that say design-v5's DL54-132 is sec-f7's stay as
+   written. Checked after the resolution: the log without the family's row and block is design-v5's byte for byte, and
+   the family's row and block with the number shifted back are the branch's but for that note. design-v5's index had
+   no row for DL54-152 (the devops-2 record wrote its block only): this entry adds it beside its own. This entry is
+   DL54-154.
+2. **Both areas kept.** The sync wrote three conflicts: the decision log (item 1); DS 2026 §2's inventory table,
+   generated — design-v5's side (W3-E removed the `v4/workspace.css` row), then `regen_design_inventory.py --write`
+   (`components.css` 14.9 KB and 9 sections: W4-B's §29 out of the sheet whose §23 W3-E rewrote; `v5/base.css` 7.9 KB;
+   `v5/chrome.css` 51.0 KB); and both dist trees (`merge=binary`), deleted and rebuilt with `npm run build` on the
+   merged sources — every bundle neither side conflicted on came out byte for byte the merge's. Four files merged on
+   their own and were read: `static/css/base.css` (W3-E's folio selectors cut; W4-B's skip-link transition gone),
+   `static/css/components.css` (W3-E's §23 empty state; W4-B's §29 deleted), W3-A's `test_console_shell_w3_a.py` and
+   `test_console_phone_browser_w3_a.py` (W3-E's header and action-bar cases beside W4-B's R10 and forced-colours
+   ones). No merged source imports the library or an export `motion.js` lost — every importer, W3-E's `console.js`
+   among them, reads `afterPaint`, `durationToken`, `easingToken`, `nextFrame`, `play`, `reducedMotion` or `settled` —;
+   no template, W3-E's new ones included, draws `.reveal` or `[data-reveal]`; devops-2's module storage rewrites the
+   imports of whatever entries the build writes, and its import-chain analysis passes on the new graph (item 6).
+3. **The four paths outside the slice**, each read in the diff and found to be what the family declares. Two are
+   this area's in the manifest (`bac3e12`), as slices of files no family held: `scripts/build_frontend.mjs` (the
+   `INLINED` list — a module one entry alone imports is inlined into it instead of becoming an entry: `nav.js` into
+   `shell.js`, `hero.js` into `home.js` — and the two comments it rewrote; W2-C1's A11Y_PERF item 5, handed to «W4-B /
+   the steward») and `docs/design-v2/FRONTEND_DEPENDENCIES.md` (the `motion` row and the «Decisione d'uso» paragraph:
+   the registry's own rule). The other two, `package.json` and `package-lock.json`, carry the dependency's removal,
+   which the plan gives the steward in this very merge (§3.6 item 2: «the `motion` dependency removed by the steward
+   once unused, with `test_frontend_bundle_is_current.py:45` rewritten in the same merge»): the area ran
+   `npm uninstall motion --package-lock-only --ignore-scripts` on the orchestrator's instruction, touching no
+   `node_modules`, and the steward adopts it as its own write — the lock read: `motion`, `framer-motion`, `motion-dom`,
+   `motion-utils` and `tslib` gone, no remaining package requiring any of them, the root without runtime
+   `dependencies`. They stay the steward's whole files with no family slice (`b113836`): the checker classifies a
+   steward-only path before any slice, so an entry there would change no verdict, and `tests/test_check_ownership.py`
+   pins «package.json: steward (whole file), steward only» — the slices first written for them in `bac3e12` broke that
+   pin in the targeted run (item 6) and were taken out. The check: before, 7 inside, 6 slice, 23 generated,
+   16 delegated, 2 outside, 2 steward-only; after, 7 inside, 8 slice, 23 generated, 16 delegated, and the three
+   steward-only paths the steward writes itself at this merge (the manifest, the two package files); 0 outside.
+   `--validate`: coherent, 29 families, 738 entries. design-v5's own `node_modules` still holds the five packages: no
+   build imports them, and this programme's standing rule allows no `npm ci` or `install` — they leave at the next
+   `npm ci`.
+4. **The shared CSS gate (the owner's V5.8 and the orchestrator's definitive ruling of 12 October, 02:15) passes:
+   both shared bundles fall again.** On the bundles rebuilt from a clean dist, `gzip.compress(data, 9, mtime=0)`,
+   each page type with the sheets its templates link — W4-B changes no page's list
+   (`evidence/v54/w4-b/merge/budget_gate_branch.log`; `budget_gate_merged.log` on design-v5 after the merge):
+
+   | Page type | design-v5 `5bf2f90` | merged | change |
+   |---|---|---|---|
+   | every page, and an interior page with no sheet of its own (`main.css`) | 31 906 | 31 799 | −107 |
+   | console page types (`main` + `console` + `portal`) | 40 140 | 39 978 | −162 |
+   | the case file · where it draws its dialogs (+ panels) | 46 391 · 48 462 | 46 229 · 48 289 | −162 · −173 |
+   | a register page · «Mon parcours» with a file | 43 015 · 45 436 | 42 853 · 45 274 | −162 |
+   | a journey page · «Ma situation» | 42 561 · 42 346 | 42 399 · 42 184 | −162 |
+   | a need's page · the help desk · the selection · the Academy | 43 204 · 43 277 · 43 478 · 43 207 | 43 042 · 43 115 · 43 316 · 43 045 | −162 |
+   | the help desk's and the selection's closures drawn (+ panels) | 45 348 · 45 549 | 45 175 · 45 376 | −173 |
+   | the piece, the loose upload, the gate · the documents' registers (+ panels) | 45 637 · 47 708 | 45 475 · 47 535 | −162 · −173 |
+   | the login · the home · a content page · an account page · an error page and the 503 | 36 767 · 46 267 · 36 007 · 34 332 · 35 535 | 36 660 · 46 160 · 35 900 · 34 225 · 35 428 | −107 |
+   | the persons pages · the doors · the Forum · the institutional pages · orientation | 35 491 · 35 333 · 34 927 · 34 172 · 36 020 | 35 384 · 35 226 · 34 820 · 34 065 · 35 913 | −107 |
+
+   `dist/main.css` −107 B (`components.css` §29 and its guard, the skip link's slide, the keyboard rules of the portico
+   and of the links, the curves back to their roles); `dist/portal/console.css` 7 189 → 7 134 B (the rail's two layout
+   transitions and their print silencer out; the forced-colours current marker); `core/overlay-panels.css`
+   (page-only) 2 071 → 2 060 B. **Every ceiling is lowered to the weight measured at this merge** (the ruling: «after a
+   merge, the merged weight is the new ceiling»): the merged column above.
+5. **The script budget (plan §2.6) holds on every page type again** (the steward's measure of DL54-101: the import
+   closure of the entries a page's template loads + `main.js` + `head.js`, + `rail-pref.js` in the console, gzip −9;
+   `evidence/v54/w4-b/merge/jsweigh.log`): the home 51 249 → **24 138 B** (9 → 7 script requests), a public page
+   43 674 → 16 781 (7 → 6), an entrance page 45 351 → 18 462 (8 → 7), a console page 46 060 → 19 168 (9 → 8), «Ma
+   situation» 47 282 → 20 537 (10 → 9). DL54-101's «the home over 45 KB until W4-B removes the library» is closed, and
+   the request ratchet over by one since DL54-101 holds.
+6. **The tests.** On the branch, `TEST_DATABASE_URL=…/test_ile_v5_l8`, one pytest and one browser of the steward's at a time,
+   the benchmark lock absent at every start, no run crashed (`evidence/v54/w4-b/merge/tests_*.log`). **Non-browser**
+   (15 min) — the merge brief's list: the motion gate, both bundle-current tests, the static pipeline (a real
+   `collectstatic` under the manifest storage), the loader's rules and W1-D's loader file, the entrance's two files and
+   the login form's, W2-A's overlay files, W2-C2's sheet and browser files, W3-D's journey, W3-A's shell files and the
+   console's stylesheets, the design docs, `apps/pages/tests`, `tests/security` (the confidential-material sentinel
+   test ran) —, with the family's two static files (`test_motion_rules_w4_b.py`, `test_single_submit_w4_b.py`), W1-D's
+   reduced motion, devops-2's `tests/deployment/test_static_caching.py` (a real `collectstatic` twice under the
+   production settings, and the import-chain analysis on the graph W4-B's build writes) and the checker's and the
+   inventory's tests: **846 passed, 1 failed** — `tests/test_check_ownership.py`'s pin «package.json: steward (whole
+   file), steward only», which the steward's own first manifest entries broke (item 3), fixed: the file **57 passed**;
+   0 skipped. **Browser** (headless Chromium, 32 min 33 s): the family's `test_motion_browser_w4_b.py`, W1-D's loader
+   and reduced-motion files, the entrance's files and `test_rtl_browser_entrance.py`, W2-A's two overlay files and
+   `test_rtl_browser_overlays.py`, W2-C2's sheet and browser files, W3-D's journey, W3-A's shell and phone files,
+   `tests/i18n/test_rtl_browser.py`, `apps/pages/tests` (the hero) — **310 passed**, 0 skipped, 0 failed. On design-v5
+   after the merge (`844e11f`) and its clean rebuild (byte for byte the merged bundles: no build commit): the bundle,
+   docs, motion-gate, ownership and inventory tests and the family's static files — **124 passed**. `ruff check .`: all
+   checks passed; `manage.py check`: no issue; `makemigrations --check --dry-run`: no changes; `git diff --check`
+   clean; no CR byte in a text file the branch changes; no inline style or script, no external URL, no secret in the
+   added lines. The full suite is the integration checkpoint's (V5.5).
+7. **`live_status.json`: the family row w4-b** — state v5, its review as the decision, the tag. No surface key
+   changes: every surface W4-B moved (the portico on every public page, «Ma situation»'s question change, the
+   console's rail and trail, the overlays' hovers, the forced-colours marker) was already `v5` at the tag of the family
+   that composed it, and W4-B composes no page — the surfaces keep their families' tags (DL54-151 item 10: the preview
+   says a page is V5 when its whole composition is). `CHANGELOG_V54.md`: the entry first.
+8. **The inventory and the capture report.** `regen_design_inventory.py`: current on the branch after the sync's
+   `--write` and on design-v5 after the merge. The capture report is not regenerated: `capture.py` records the icons,
+   the h1, the overflow and the direction of the home, the privacy page, the login and the 404, and W4-B changed motion
+   only.
+9. **Handed on** (`NOTES.md` §7 and «Left for others»; none of it holds the merge): **W4-D** — the legacy sweep:
+   `components/hero.html` (no template includes it), the `.entrance` / `.entrance__cta` rules of `components.css`,
+   `--duration-reveal`, `--reveal-distance` and `--reveal-index` in `_legacy-tokens.css`, `cms_nav.py`'s `hero_lines`,
+   `data-reveal-once` on `orientation/result.html`, the dead guard `html.js .page-home .reveal` of `pages.css`;
+   **W1-A** — `v5/tokens.css` l. 468 calls the springs the «CSS twins of motion.js» (the JS twins left); **W3-A** —
+   `console.js`'s `is-ready` and its header line on the rail's width, a hook without a transition now; **W4-C** — the
+   motion seen at speed by a person, Firefox and WebKit. The intfix review's «three dynamic-import entries with fixed
+   names under a one-year cache» (NOTES §7, for DevOps / W1-D) is met by the devops-2 merge (DL54-152: every file a
+   page loads a hashed, immutable name; a plain name revalidated after a minute).
+
+**Why.** An entry numbered after design-v5's keeps the log's one order; the dependency's removal is the steward's by
+the plan, so the steward reads it and owns it at the merge rather than reverting what the orchestrator asked of the
+area; paths nobody held get their writer with their reason; the gate is read on the shared payload as V5.8 writes it,
+and the merged weight becomes every ceiling; the preview names a family's work by its row when it composes no page.
+
+**Source.** Plan §1.5 («Engine», R10, K17), §2.2 (the serialized files: `package.json` and `package-lock.json` the
+steward only; merge steps 1–5), §2.6, §2.7, §3.6 item 2; the owner's V5.5 and V5.8 (and the definitive ruling below
+it); DL54-101; DL54-151; DL54-152; DL54-153; `QA/v54/w4-b/NOTES.md`, `REVIEW.md`, `A11Y_PERF.md`, `AUDIT.md`; the
+weights in `evidence/v54/w4-b/merge/budget_gate_*.log` and `jsweigh.log`; the ownership checks in
+`evidence/v54/w4-b/merge/ownership_*.log`; the tests in `evidence/v54/w4-b/merge/tests_*.log`.
+
+## DL54-155 · 16 October 2026 · Steward, the w4-d merge (part 1): release engineering on design-v5 — CI on the server's major versions beside the development stack, the release of V5.10 named once in the deployment documents, one bar for PRODUCTION_READY, the go-live calendar verified, the release notes drafted; no tag, nothing deployed
+
+**Decisions** (the steward's, for the infrastructure, at the merge of part 1 of `v54-w4-d` into design-v5 on 16 October
+2026). The briefs: the owner's V5.10 (the release decision, which the orchestrator carries out after the fourteen
+gates, never a family), V5.9 (never deploy; never touch a server, DNS, a domain or a certificate; never name the
+production server) and V5.5. What the lane hands to the merge: `QA/v54/w4-d/NOTES.md` («Part 1 — release
+engineering», «Part 1 — review fixes», «Part 1 — at the merge (the steward)») and `REVIEW_PART1.md`
+(SHIP_AFTER_FIXES). W4-D wrote no entry of its own on the branch, because four families append to this log in
+parallel; this entry records the part's decisions as well, as the lane's notes ask.
+
+1. **CI: one job, two runs — the production target and the development stack** (`4676ffd`, `ecd691f`, `db311e0`).
+   - **The runner.** `runs-on: ubuntu-24.04`, the server's release. `ubuntu-latest` moves to Ubuntu 26 from
+     19 October 2026 (GitHub's notice of 17 September).
+   - **The matrix.** One job, its id `test` unchanged, runs twice with `fail-fast: false`, each run on its own runner
+     and its own database: «Python 3.12 · PostgreSQL 16 (production target) — check · migrations · ruff · pytest»
+     and «Python 3.13 · PostgreSQL 17 (development) — …».
+   - **The install.** Both runs install `requirements/dev.txt` with `-c requirements/constraints.txt`, the set the
+     server installs (left open by DL54-121 item 6).
+   - **The version step.** A step after the install, «The interpreter and the database are the matrix's», asserts
+     the interpreter's minor version and the database's major, so each job's name is true. Both checks were run both
+     ways: 3.12.10 and 3.13.5 each pass with their own version and fail with the other; against PostgreSQL 17,
+     `PG_MAJOR=17` passes and `16` fails.
+   - **What the production-target run proves** (the comment, the runbook and checklist A-26 now say the same): the
+     server's major versions, with the pinned closure and its Linux wheels. It runs setup-python's CPython 3.12.x
+     and the Alpine image of PostgreSQL 16, not Ubuntu's own builds (the review's m2). The Debian image is not
+     taken: the server cluster's collation follows the droplet's locale, which is not known here, so neither image
+     is the server's build.
+   - **Proved before the change.** The constraints resolve with `dev.txt` for Linux CPython 3.12 and 3.13 (67
+     distributions each, the 19 pins kept, wheels only) and install in a throwaway 3.12 venv (`pip check` clean).
+     The 817 tracked sources compile under 3.12.10. `check`, `makemigrations --check` and a targeted suite (394
+     passed) run on 3.12.
+   - GitHub has no branch protection and no ruleset, so the new job names break no required check. A watcher of the
+     old name must follow (item 9).
+2. **The release, named once in the three deployment documents** (`d2e217b`, `579c01d`, `9c67417`, `cce5d9b`). The
+   runbook, the checklist and ROLLBACK.md now describe V5.10's release:
+   - **The release tag.** `v2.0.0`, annotated (the platform's own label «v2.0.0 — Fase 1»), on the commit GitHub's
+     `main` points to after the fast-forward promotion. There is no candidate tag (the candidate is named by its
+     SHA), and a tag is never moved.
+   - **The reference point.** `pre-v5-main-2026-10` on `a3ac318304beb4504134762bfa6e9c4e4ce600f1`, the pre-V5
+     platform. V5.10 calls it a «rollback/reference point»: it belongs to the repository's history and is never a
+     rollback target of the server, which never ran it. It predates F-5, F-7, F-8 and the NUL guard.
+   - **The checklist.** A-1 (the publication repository's design-v5 snapshot); A-2 (`ls-remote` of `main`,
+     `design-v5` and both tags with their `^{}` lines, no other tag; both CI runs green); A-27 (decided); C-7. The
+     `ILE_TAG` and `PREVIOUS_TAG` examples read `v2.0.0`.
+   - **ROLLBACK.md §7.** No migration differs today: the 39 numbered files of `a3ac318`'s tree and of design-v5 at
+     `0a8351b` are identical, byte for byte. The re-check on the release is
+     `git diff --name-status pre-v5-main-2026-10 v2.0.0 -- 'apps/*/migrations/*.py'`. The former pattern
+     `'apps/*/migrations/'` matched no file (the review's M1), so it printed nothing whatever the release held; the
+     runbook's step 15 preview had the same cause and was fixed with it. A downgrade is a restore of the verified
+     pre-migration dump, never a `migrate` backwards on live data.
+   - **The test.** `tests/deployment/test_release_tags_w4_d.py` holds the tag to the version label, and the three
+     documents to one release and one reference SHA. Every migration pattern in the documents must list the files
+     `git ls-files` lists. The tripwire holds the 39 files' blob ids at `0a8351b` (m3), and CI holds the production
+     target.
+3. **PRODUCTION_READY: one bar** (`e968e0d`; the review's M2). The runbook's *States* and checklist §A now state it
+   in the same words: **«A-1 … A-22 ticked with evidence on that commit, and each of A-23 … A-28 closed or accepted
+   in writing by the owner as open until go-live»**.
+   - The final handoff names each of A-23 … A-28 with its state. It also lists the parts of A-1 … A-22 that run on
+     the server or on the temporary host (A-8, A-10, A-11, A-13, A-14, A-15, A-16, A-21, A-22), which are the
+     owner's, at the deployment.
+   - The state's other conditions stand: the candidate is GitHub's `main` by fast-forward; `pre-v5-main-2026-10`
+     preserves `a3ac318`; `v2.0.0` is annotated on `main`'s commit; the handoff (V5.9 §17) is written.
+   - RELEASE_CANDIDATE: one design-v5 snapshot on GitHub, named by its SHA, on which the fourteen gates of V5.10
+     passed (the release notes' *Release gates*), with CI green on both runs.
+   - DEVELOPMENT_COMPLETE: every V5 family merged into design-v5, Wave 4 and F-8 included, and the full suite green
+     there.
+   - «GitHub pushed» is none of these.
+4. **The go-live calendar: nothing to fix in code** (`98ae0ad`, `0fe5b66`; plan §3.6 item 4).
+   - **What it lists.** `GO_LIVE_PHASE.md` lists everything that reads a date or a phase flag: G1 … G6, G11 and the
+     publication windows. G0, G7, G8, G10 and G12 read neither; G9 reads only the `analytics` default, which no
+     code reads (m5).
+   - **What a visitor sees** from 16 October to 15 December 2026: rendered on a fresh seed at five frozen moments,
+     French and Arabic, every internal link followed. There is no past-dated call to action, no countdown, no open
+     registration for the past event, and no phase that shows nothing.
+   - **The test.** `tests/compliance/test_go_live_calendar_w4_d.py` holds it, with a control that finds the
+     registration button while registration is open. The review confirmed it on a lane server under today's clock,
+     on the QA copy and on a fresh deployment.
+5. **The release notes, a draft** (`883b48c`, `a6b9dc2`). `docs/RELEASE_NOTES_v2.0.0.md` is now w4-d's whole file
+   (item 6).
+   - **What it holds.** What v2.0.0 is; the security and robustness work (F-8 «pending F-8's merge»); the weights,
+     before → after; pointers to the deployment documents; the owner's open decisions; the known limits; and the
+     fourteen V5.10 gates, «to be filled by the release-candidate validation».
+   - **The rule figure** is the seed's: 16 candidates over 15 sources, 11 drafted from the norm and 5 taken from the
+     previous platform (m1).
+   - **One paragraph is the owner's to word** (m4). It left the public notes; its substance goes to the
+     release-candidate report and the owner's handoff, not to a published file. A family's QA folder is published
+     with design-v5's snapshots, so the review's own description of m4 was shortened at the merge (`859c7d8`): its
+     finding, verdict and fix are kept.
+6. **The pre-merge sync and the manifest.** I took `DESIGN_V5_MERGE_LOCK` at 11:18:17, with design-v5 at
+   `0a8351b`.
+   - **The sync.** `0a8351b` is the branch's own base, so `git merge design-v5` printed «Already up to date». No
+     source changed on either side, so no bundle was rebuilt.
+   - **The manifest** (`331512d`). The release notes are now w4-d's whole file: no family held them. The six
+     delegated edits are w4-d slices, each read in the diff and staying inside it:
+     - `.github/workflows/ci.yml`, the steward's delegated edit (the file stays the steward's);
+     - devops's runbook, checklist and ROLLBACK.md;
+     - README's «Requisiti» line, beside devops's and sec-f5's slices;
+     - the release-gate assertion of `test_runbook_matches_the_code.py`.
+
+     The files other than ci.yml stay devops's. The family's note says the same, for part 2's merge.
+   - **The check.** `check_ownership.py w4-d design-v5`: 5 inside, 6 delegated, 1 outside → FAIL before; 6 inside,
+     6 slice → PASS with the extended manifest. After its commit, the manifest joins the diff as the steward's own
+     steward-only path. `--validate`: 29 families, 745 entries.
+7. **The scan and the tests.**
+   - **The scan** of the added lines (12 paths, 1 391 lines): no IPv4 address, no server name, no e-mail address, no
+     secret-like assignment or token. The only URLs are github.com (the repository's own address) and github.blog
+     (the runner notice). No CR, no NUL; `git diff --check` clean.
+   - No template, stylesheet or script changed, so V5.8's shared CSS payload is unchanged (`dist/main.css` 31 799 B
+     on every page, the console page types 39 978 B).
+   - **The tests** ran on the merged branch at `859c7d8`, which is the tree merged here apart from the notes; after
+     the merge, design-v5's tree is the branch's (`5f5b636`). `TEST_DATABASE_URL=…/ile_v5_l9`, `-p no:randomly`,
+     one pytest: **384 passed** in 4 min 18 s, none skipped, none failed
+     (`evidence/v54/w4-d/merge-1/tests_branch.log`):
+     - `tests/deployment` 99;
+     - `tests/security` 157 (the confidential-material guard ran with its private table);
+     - `test_design_docs.py` 40; the environment template 14; the checker's tests 57;
+     - both bundle-currency tests 10; the go-live calendar 3; the personal-data guard 4.
+   - **Also clean:** `manage.py check` (no issue) and `makemigrations --check --dry-run` (no changes), both on
+     `ile_v5_l9`, on the branch and again on design-v5 after the merge; `ruff check` and `ruff format --check` on
+     the branch's three test files. The full suite is the release-candidate validation's (V5.10 gate 6).
+8. **The record, and what is not done here, on purpose.**
+   - Merged with `--no-ff` (`ca7bf3f`). design-v5's tree is the branch's, and nothing was rebuilt.
+   - No tag: part 2 follows on the same branch, and the release tags (`pre-v5-main-2026-10`, `v2.0.0`) are the
+     orchestrator's, after the fourteen gates (V5.10).
+   - No push; no restart of 8780; no change to v5-live.
+   - No line in `CHANGELOG_V54.md` or `live_status.json`: this is not a preview surface (DL54-77, DL54-121, DL54-152
+     item 7).
+   - W4-C's measurement windows ran back to back, so the test runs took their turn through
+     `PERFORMANCE_BENCHMARK_LOCK`: taken atomically when free, released at the end.
+9. **Open, handed on** (none of it holds the merge):
+   - **F-3, real.** `core.gates`' `virtual_forum_enabled()` and `newsletter_enabled()` read the flag alone. The phase
+     console declares `depends_on=("legal_pages_available",)` for both and says a closed dependency blocks the flag.
+     Either a targeted fix lane before the release-candidate validation, with the fixtures `NOTES.md` lists, or the
+     report's outstanding list with its class (gate 12).
+   - **F-4.** The sign-in page invites a sign-up that G2 keeps closed (`templates/account/login.html`, W2-B's page,
+     after W4-A).
+   - **The stale rule count «13 / 3»** in `docs/platform/RULE_ENGINE_GOVERNANCE.md` (l. 233) and `docs/QA_REPORT.md`
+     (l. 266, a report dated 21 September 2026). Neither file has an owner, and both are outside this merge's diff:
+     for part 2's merge, with an assignment.
+   - **For the owner** (`NOTES.md` «For the owner»):
+     - the Forum's future-tense prescribed sentences after its event (F-1);
+     - `forum_permanent_mode` at the deployment (F-2);
+     - the Virtual Forum not before the legal pages;
+     - Phase 3's authorisation;
+     - GitHub's settings (wiki on, Dependabot off, secret scanning and push protection on).
+   - **The orchestrator's CI watch.** The job names changed; the id `test` did not. The first push runs two jobs in
+     parallel, and the release's commit needs both green (A-2, A-26).
+   - **Once `v2.0.0` exists.** ROLLBACK.md §7 reads «at `v2.0.0`», and the tripwire then holds the released files
+     only.
+   - **The leftover container `ile-w4d-pg16`** (never started, holding no port). Remove it with
+     `docker rm -f -v ile-w4d-pg16` when Docker answers; it was not touched at the merge, because Docker is shared.
+   - **W4-D part 2.** The deletion map's last row, the dead code and DS 2026 final; then the release notes' figures
+     and gates.
+
+**Why.**
+- CI runs on the server's major versions with the server's closure, so «it runs on 3.12» becomes a green run rather
+  than a compile.
+- The release has one name, one reference point and one restore rule in every document the owner deploys from.
+- The orchestrator's report and the owner's reading of PRODUCTION_READY must rest on the same evidence: one bar, in
+  the same words, in both documents.
+- A delegated edit recorded as a slice tells the next steward who wrote which part of a file.
+- A review file is published with the tree, so it does not carry what its own finding keeps out of it.
+
+**Source.** The owner's V5.10, V5.9 §14–§17 and V5.5. DL54-01; DL54-77; DL54-121 item 6; DL54-152; DL54-154. Plan
+§2.2 (a file not in the manifest has no writer until the steward assigns it) and §3.6 item 4. `QA/v54/w4-d/NOTES.md`,
+`REVIEW_PART1.md` and `GO_LIVE_PHASE.md`. The ownership checks, the scan and the test logs are in
+`C:/tmp/ile_v5_council/evidence/v54/w4-d/merge-1/`.

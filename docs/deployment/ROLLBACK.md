@@ -2,7 +2,9 @@
 
 > Companion of [`PRODUCTION_DEPLOYMENT_RUNBOOK.md`](PRODUCTION_DEPLOYMENT_RUNBOOK.md) (names, paths, `ile-manage`)
 > and [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md) (§C backup, §D smoke test). Written 12 October 2026 from
-> the repository; nothing in it has been run on a server.
+> the repository; nothing in it has been run on a server. Updated 16 October 2026 by W4-D (release engineering): the
+> previous tag's example (`v2.0.0`) and section 7, the pre-V5 reference tag `pre-v5-main-2026-10`; the same day, by its
+> review fixes: section 7's migration check (a pattern that lists the files) and V5.10's own words for the tag.
 
 A rollback is chosen, not improvised: decide which of the four below applies, write down the time, the running tag
 and the reason, then act.
@@ -13,6 +15,9 @@ and the reason, then act.
 | a new release breaks, its migrations were code-rollback-safe (section 1) or absent | **application to the previous tag** | [1](#1-application-rollback-to-the-previous-tag) |
 | a new release breaks and a migration removed or rewrote data | **database restore** from the verified pre-migration dump, then the previous tag | [2](#2-database-forward-only-and-what-that-means) · [3](#3-restore-the-database-from-the-verified-dump) |
 | files lost or damaged in the private or public storage | **storage restore**, together with the matching database | [4](#4-private-and-public-storage) |
+
+Going back to the platform before V5 — the tag `pre-v5-main-2026-10` — is none of the four: it was never deployed
+here, and returning to it is a new deployment decision, not a rollback ([7](#7-the-pre-v5-platform-pre-v5-main-2026-10)).
 
 Before any of them: `sudo ile-manage showmigrations` and `sudo git -C /srv/italylegalentry/app describe --tags` — know
 what is running (`sudo`: the checkout belongs to root, and git refuses another user's repository).
@@ -28,7 +33,7 @@ forms answer 500. A new unique constraint or unique index can refuse the previou
 out first:
 
 ```bash
-PREVIOUS_TAG=v5-release-candidate      # replace: the tag that ran before
+PREVIOUS_TAG=v2.0.0                    # replace: the tag that ran before (v2.0.0 at the first update after it)
 PREVIOUS_SHA=0000000000000000000000000000000000000000   # its SHA, from the previous handoff
 sudo git -C /srv/italylegalentry/app diff --name-only "refs/tags/$PREVIOUS_TAG" HEAD -- 'apps/*/migrations/*.py'
 # Nothing listed: code-only rollback. Files listed: read every operation. Only CreateModel, AddField with null=True
@@ -192,3 +197,34 @@ sections 1–4.
 
 After any rollback: write down the time, the tag before and after, the reason, the window of lost writes; tell the
 owner; drop the `*_failed_*` database and the `*.failed-*` directories once the failure is understood.
+
+## 7. The pre-V5 platform: `pre-v5-main-2026-10`
+
+`pre-v5-main-2026-10` is the tag that preserves GitHub's `main` as it was before the V5 release was promoted —
+`a3ac318304beb4504134762bfa6e9c4e4ce600f1`, the platform before V5 (runbook, *RELEASE TAGS*). The owner's directive
+V5.10 calls it «a rollback/reference point, not the final release tag»: a point of the repository's history, **never a
+rollback target of this server**:
+
+- **It was never deployed.** The first release this server runs is `v2.0.0`, so at the first deployment there is no
+  previous tag: the rollback is the DNS rollback (section 5). From the first update on, section 1 returns to the tag
+  that ran before — `v2.0.0` or a later one, never further back.
+- **It predates fixes this release ships**: the back-office sign-in that accepted a password alone (F-5, checklist
+  A-13), a person moving their own case file into operator states (F-7), what the back office let an operator read
+  and change (F-8), and the 500 a NUL byte caused (a 400 now, checklist A-21). Checked out on a server that holds real
+  data, it would re-open all of them. Returning to the pre-V5 platform would be a new deployment decision of the owner,
+  with its own release gate — not a rollback.
+- **The database.** No migration differs between the two today: the 39 migration files of `pre-v5-main-2026-10` and of
+  `design-v5` at `0a8351b` (16 October 2026) are identical, byte for byte, so the pre-V5 code would meet a schema it
+  knows. Check it again on the release — F-8 was still in flight —; this prints nothing when no migration differs, and
+  lists each one that does (the pattern names the files: git matches a pattern that holds a wildcard against the whole
+  path, so a directory written with a wildcard matches nothing):
+
+  ```bash
+  git diff --name-status pre-v5-main-2026-10 v2.0.0 -- 'apps/*/migrations/*.py'
+  ```
+
+  The rule stands regardless: **a downgrade is never a `migrate` backwards on live data.** Across a migration that is
+  not code-rollback-safe (section 1's list), the way back is the restore of the verified dump taken just before that
+  release's `migrate` (runbook step 15, item 4; section 3), accepting the loss of every write made since. At the first
+  deployment there is no such dump to return to: the database started empty (runbook step 6), and what is written
+  under `v2.0.0` stays on this server, under its protection, until the owner decides otherwise (section 5, item 4).

@@ -137,6 +137,14 @@
       "decision": "w3-e/REVIEW.md",
       "tag": "v54/w3-e",
       "date": "2026-10-16"
+    },
+    {
+      "key": "w4-b",
+      "title": "L’audit del moto — la libreria Motion lascia il prodotto (lo script della home 51 → 24 KB gzip, ogni pagina 27 KB e una richiesta in meno); ogni animazione passa dal cancello di motion.js, sotto il moto ridotto ogni pagina è ferma; nessun testo aspetta più un’apparizione (K17); il binario della console si ripiega all’istante (R10); dalla tastiera niente si anima — il portico, il link di salto, i link, il cambio di domanda di «Ma situation», che non lascia più la pagina vuota se lo si interrompe; nella console, al caricamento, si muove solo il rilascio dell’ingresso",
+      "state": "v5",
+      "decision": "w4-b/REVIEW.md",
+      "tag": "v54/w4-b",
+      "date": "2026-10-16"
     }
   ],
   "surfaces": {

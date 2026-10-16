@@ -15,9 +15,6 @@
   },
   "license": "UNLICENSED",
   "type": "commonjs",
-  "dependencies": {
-    "motion": "13.4.1"
-  },
   "devDependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/ibm-plex-sans": "^5.3.0",

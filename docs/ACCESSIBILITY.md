@@ -287,7 +287,8 @@ avrebbe raggiunto, senza il tragitto — ed è anche lo stato senza JavaScript. 
 2. **Nessuna rete di sicurezza universale.** La regola `* { transition-duration: 0.01ms !important; … }` di
    `static/css/components.css` §29 è stata rimossa: un `!important` universale copriva ogni transizione scritta fuori
    dai token e impediva di progettare lo stato. Ogni transizione e animazione è scritta sui token, quindi atterra
-   subito; restano due guardie mirate (`.reveal` visibile; il keyframe di `dialog` spento). Il portico (W2-C1) è
+   subito; le due guardie mirate che restavano non servono più: il keyframe del dialog V2 è uscito con W2-A, `.reveal`
+   e la sua sezione §29 con W4-B. Il portico (W2-C1) è
    una transizione: a movimento ridotto un'unica opacità di 80 ms, `--motion-reduced`, `v5/chrome.css` §9 — la
    dissolvenza che MS-O4 concede a un overlay. `static/css/base.css` porta `scroll-behavior` ad `auto`.
 3. **Un solo cancello per il moto via script.** In `static/js/src/motion.js`, `reducedMotion()` legge la preferenza
@@ -296,13 +297,17 @@ avrebbe raggiunto, senza il tragitto — ed è anche lo stato senza JavaScript. 
    `play()`, `nextFrame()`, `afterPaint()` e `tween()`, che chiedono prima al cancello e, sotto il moto ridotto, non
    creano nulla, non attendono nulla e lasciano lo stato finale. Nessuno script attende `transitionend` o
    `animationend` — una transizione da 0 s non emette l'evento, e l'attesa resterebbe appesa proprio sotto il moto
-   ridotto: `settled()` attende le animazioni davvero in corso, con un timeout. `static/js/main.js` (V1) legge ancora
-   la media query per `.reveal` e per i contatori, finché W4-B non li ritira.
+   ridotto: `settled()` attende le animazioni davvero in corso, con un timeout. `.reveal` e i contatori di
+   `static/js/main.js` (V1), che leggevano da sé la media query, sono usciti con W4-B, e con loro la libreria Motion:
+   nessuno script anima più fuori dal cancello.
 4. **La tastiera non anima** (R-07, livello 0). `static/js/head.js` scrive `html[data-input]`: `key` dopo un tasto di
    navigazione (Tab, frecce, Home / End, Pagina su / giù, Invio, Spazio, Esc, i tasti del menu contestuale,
    Ctrl / ⌘ K), `pointer` dopo una pressione o un movimento del mouse; assente fino al primo input, mai toccato dalla
    digitazione di testo. Ogni famiglia aggiunge la propria regola `html[data-input="key"] <selettore>
-   { transition-duration: 0ms; }` per i cambi di stato chiesti da tastiera.
+   { transition-duration: 0ms; }` per i cambi di stato chiesti da tastiera — i link la loro in `v5/base.css` (W4-B:
+   la traccia della console sfumava 120 ms dal Tab). Un moto che parte da uno script legge la stessa bandiera: chiesto
+   da tastiera, il cambio di domanda di «Ma situation» è lì subito, col fuoco e il suo anello sulla domanda
+   (`static/js/src/situation.js`).
 
 **La bandiera non è la prova.** `html.rm` dichiara esattamente l'elenco del blocco media (quando i due divergono il
 test stampa il blocco da incollare) e serve a chi rivede senza poter cambiare la preferenza; le prove di moto ridotto
@@ -325,9 +330,12 @@ Test: `tests/frontend/test_v5_tokens.py::test_reduced_motion_is_a_state_every_du
 `tests/frontend/test_rm_flag_parity.py::test_the_twin_is_the_media_block_and_nothing_else`,
 `tests/frontend/test_script_motion_gate.py::test_no_animate_or_frame_loop_outside_the_gate`,
 `tests/frontend/test_script_motion_gate.py::test_no_script_waits_on_a_transition_or_animation_event`,
-`tests/frontend/test_design_docs.py::test_focus_and_motion_claims_match_the_stylesheets` e, in Chromium,
-`tests/frontend/test_reduced_motion_w1_d.py` (`test_under_the_setting_nothing_moves_at_rest`,
-`test_head_js_writes_the_input_modality`).
+`tests/frontend/test_design_docs.py::test_focus_and_motion_claims_match_the_stylesheets`,
+`tests/frontend/test_motion_rules_w4_b.py::test_a_link_the_keyboard_focuses_takes_its_colour_at_once` e, in
+Chromium, `tests/frontend/test_reduced_motion_w1_d.py` (`test_under_the_setting_nothing_moves_at_rest`,
+`test_head_js_writes_the_input_modality`) e `tests/frontend/test_motion_browser_w4_b.py`
+(`test_a_change_the_keyboard_asks_for_is_there_at_once_with_the_focus_on_it`,
+`test_a_link_the_keyboard_focuses_takes_its_colour_at_once`).
 
 **Il loader «Lume» (8 ottobre 2026, W1-D; piano V5.4 §1.9).** Ogni livello ha il suo fermo, che è anche lo stato senza
 JavaScript: il marchio verbatim, la chiave occupata ferma e attenuata, le righe al loro posto. **1.4.11**: la chiave è

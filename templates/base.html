@@ -63,8 +63,9 @@ to find their next action.
 {% block site_footer %}{% include "partials/footer.html" %}{% endblock %}
 <script type="module" src="{% static 'js/main.js' %}"></script>
 {% comment %}
-Design V2 shell behaviour (header state on scroll, section reveals), bundled by esbuild from
-static/js/src/shell.js with Motion. Deferred by being a module; never inline (CSP script-src 'self').
+The one public entry (V5.4 plan §2.3): static/js/src/shell.js — the navigation, the overlay system, the password
+toggles, the submit's busy key — bundled by esbuild, with no animation library (W4-B). Deferred by being a module;
+never inline (CSP script-src 'self').
 {% endcomment %}
 <script type="module" src="{% static 'js/dist/shell.js' %}"></script>
 {% block extra_scripts %}{% endblock %}

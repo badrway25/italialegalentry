@@ -335,7 +335,7 @@ html {
   text-decoration: none;
   border-radius: var(--radius-sm);
   transform: translateY(-200%);
-  transition: transform var(--duration-fast) var(--ease-out);
+  /* no transition: only the keyboard reaches it, and the keyboard never animates (R-07, tier 0; W4-B) */
 }
 
 .skip-link:focus,

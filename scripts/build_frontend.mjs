@@ -27,10 +27,16 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = join(ROOT, "static", "js", "src");
 const DIST = join(ROOT, "static", "js", "dist");
 
-// One bundle per top-level source file. Shared code (the motion re-exports, helpers) lives in
-// subdirectories and is pulled into whichever bundles import it — a page loads what it uses.
+// One bundle per top-level source file. Shared code (the motion gate, helpers) lives in subdirectories or in
+// shared chunks and is pulled into whichever bundles import it — a page loads what it uses.
+// EXCEPT the modules that one entry alone imports, statically: as entries of their own their code went into a
+// chunk and a stub nobody loads, one more request before `load` on every page that loads their importer (the
+// request ratchet of plan §2.6). Not entries, they are inlined into that importer: nav.js into shell.js (every
+// public page; W2-C1's A11Y_PERF item 5), hero.js into home.js (the home) — W4-B. A module a second entry starts
+// importing simply becomes a shared chunk again. tests/frontend/test_frontend_bundle_is_current.py reads this list.
+const INLINED = new Set(["nav.js", "hero.js"]);
 const entryPoints = readdirSync(SRC)
-  .filter((name) => name.endsWith(".js"))
+  .filter((name) => name.endsWith(".js") && !INLINED.has(name))
   .map((name) => join(SRC, name));
 
 mkdirSync(DIST, { recursive: true });
@@ -40,9 +46,10 @@ const options = {
   outdir: DIST,
   bundle: true,
   format: "esm",
-  // One shared chunk for Motion. Without splitting every page-level bundle inlined the whole
-  // library — 25 + 23 KB gzip on the home page for shell.js + home.js, over the 45 KB budget for
-  // the same code twice. With it, Motion is one chunk fetched once and cached across pages.
+  // Shared chunks: without splitting every page-level bundle would inline what it shares with the others (the
+  // overlay system, the motion gate, the loader) — the same code twice on a page that loads two entries. With it,
+  // a shared module is one chunk fetched once and cached across pages. (Motion, the reason this was first set,
+  // left the dependencies with W4-B.)
   splitting: true,
   chunkNames: "chunks/[name]-[hash]",
   target: ["es2022"],

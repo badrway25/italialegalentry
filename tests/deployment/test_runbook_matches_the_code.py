@@ -496,5 +496,10 @@ def test_git_runs_as_root_and_timestamps_stay_lower_case():
 
 
 def test_the_release_gate_compares_the_tags_commit():
-    """Verification 8: for an annotated tag, `refs/tags/<tag>` is the tag object's SHA; `^{}` is the commit."""
-    assert '"refs/tags/<tag>^{}"' in CHECKLIST
+    """Verification 8: for an annotated tag, `refs/tags/<tag>` is the tag object's SHA; `^{}` is the commit.
+
+    W4-D, 16 October 2026: the release now has its name — the annotated tag `v2.0.0` on GitHub's `main` after the
+    promotion (the owner's directive V5.10) — so A-2 names it instead of the placeholder `<tag>`, and compares the
+    reference tag of the pre-V5 platform the same way (tests/deployment/test_release_tags_w4_d.py holds the rest)."""
+    assert '"refs/tags/v2.0.0^{}"' in CHECKLIST
+    assert '"refs/tags/pre-v5-main-2026-10^{}"' in CHECKLIST

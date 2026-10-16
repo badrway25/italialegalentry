@@ -69,6 +69,9 @@ a {
 @media (hover: hover) {
   a:hover { color: var(--accent-text-hover); text-decoration-thickness: 2px; }
 }
+/* tier 0 (plan §1.5, R-07; head.js: «each family writes its one rule»): a link the keyboard focuses takes its
+   colour at once — the console bar's trail ran its 120 ms fade from Tab (W4-B's review, m3) */
+html[data-input="key"] a { transition-duration: 0ms; }
 
 /* ---- the one focus system (plan §1.6) -------------------------------------------------------------
    :focus-visible only: a 2 px ring at a 2 px offset, following the element's own radius (the outline

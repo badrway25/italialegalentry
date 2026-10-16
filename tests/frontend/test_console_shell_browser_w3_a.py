@@ -708,14 +708,20 @@ def test_forced_colours_keep_the_edges_and_the_current_page(browser, live_server
     page = context.new_page()
     _at_rest(page, live_server, REQUESTS.format(lang="fr"))
     assert page.evaluate("matchMedia('(forced-colors: active)').matches")
-    forced = page.evaluate(
-        """() => { const rail = document.querySelector('nav.rail[data-rail]'); const item = rail.querySelector('[aria-current="page"]');
+    probe = """() => { const rail = document.querySelector('nav.rail[data-rail]'); const item = rail.querySelector('[aria-current="page"]');
           const s = getComputedStyle(item); const d = getComputedStyle(item.querySelector('.rail__disc'));
           return {outline: s.outlineStyle + ' ' + s.outlineWidth, edge: getComputedStyle(rail).borderInlineEndWidth,
+                  word: getComputedStyle(item.querySelector('.rail__label')).textDecorationLine,
                   foot: getComputedStyle(rail.querySelector('.rail__foot')).borderBlockStartWidth, disc: d.backgroundColor, canvas: getComputedStyle(rail).backgroundColor}; }"""
-    )
-    assert forced["outline"] == "solid 2px" and forced["edge"] == "1px" and forced["foot"] == "1px"
+    forced = page.evaluate(probe)
+    assert forced["edge"] == "1px" and forced["foot"] == "1px"
     assert forced["disc"] != forced["canvas"], "the current page keeps its disc, in the system's highlight"
+    # its own marker — the lit disc and the word underlined —, never the focus ring's outline at rest: the focus on the
+    # current page must still add something (WCAG 2.4.7; W3-D's O2, W4-B)
+    assert forced["outline"].startswith("none") and forced["word"] == "underline", forced
+    page.keyboard.press("Tab")  # the keyboard's modality
+    page.evaluate("document.querySelector('nav.rail[data-rail] [aria-current=\"page\"]').focus()")
+    assert page.evaluate(probe)["outline"] == "solid 2px", "the focus draws its ring on the current page"
     context.close()
 
 

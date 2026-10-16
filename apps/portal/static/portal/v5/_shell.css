@@ -225,7 +225,7 @@ body.console[data-rail="closed"] {
   line-height: var(--u-ui-lh);
   font-weight: var(--w-control);
   text-decoration: none;
-  transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
 
 .rail__disc {
@@ -313,7 +313,7 @@ body.console[data-rail="closed"] {
   border-radius: var(--radius-sm);
   color: var(--text-on-night-1);
   text-decoration: none;
-  transition: background-color var(--motion-fast) var(--ease-exit);
+  transition: background-color var(--motion-fast) var(--ease-enter);
 }
 
 a.rail__who:hover {
@@ -384,7 +384,7 @@ a.rail__who:hover {
   background: transparent;
   color: var(--rail-item-fg);
   cursor: pointer;
-  transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
 
 .rail__tool:hover {
@@ -443,7 +443,7 @@ a.rail__who:hover {
   font-weight: var(--w-control);
   list-style: none;
   cursor: pointer;
-  transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
 
 .rail__lang-summary::-webkit-details-marker {
@@ -1131,7 +1131,7 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
     text-decoration: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: color var(--motion-fast) var(--ease-exit);
+    transition: color var(--motion-fast) var(--ease-enter);
   }
 
   /* the air between two entries' words: 6 px on each side of an entry, inside its target. The air gives way
@@ -1167,7 +1167,7 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
     inline-size: var(--glyph-disc-md);
     block-size: var(--glyph-disc-md);
     border-radius: var(--radius-full);
-    transition: background-color var(--motion-fast) var(--ease-exit), color var(--motion-fast) var(--ease-exit);
+    transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
   }
 
   .console-bottom__disc .icon {
@@ -1595,10 +1595,14 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
     border-block-start: 1px solid CanvasText;
   }
 
-  .rail__item[aria-current="page"],
-  .console-bottom__item[aria-current="page"] {
-    outline: 2px solid Highlight;
-    outline-offset: -2px;
+  /* the current page: its disc lit in Highlight (below) and, in the rail, its word underlined — never the focus
+     ring's outline at rest, which drew the same pixels with or without the focus on the current entry (WCAG 2.4.7;
+     W3-D's O2, W4-B). The phone bar keeps the lit disc alone: its words stand on the screen's bottom edge, where an
+     underline is cut. */
+  .rail__item[aria-current="page"] .rail__label {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
   }
 
   .rail__item[aria-current="page"] .rail__disc,
@@ -1647,20 +1651,14 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
   }
 }
 
-/* The rail's width moves only on the person's own act, and only once the page is ready (console.js adds
-   `is-ready` after the first frame): a transition at first paint turned the stored preference into a layout
-   shift of 0.19 in one run out of three (gate C review, correction 3). Under reduced motion the token is 0 ms. */
-body.console.is-ready {
-  transition: padding-inline-start var(--motion-standard) var(--ease-layout);
-}
-
-body.is-ready .rail:not(.rail--drawer) {
-  transition: inline-size var(--motion-standard) var(--ease-layout);
-}
+/* The rail folds AT ONCE (V5.4 plan §1.5 R10 — «the rail collapse ships instant, unless contain: layout brings it to
+   60 fps at CPU × 4»; W4-B): the 200 ms transition of the rail's inline-size and of the page's padding-inline-start
+   re-laid the whole workspace on every frame — at CPU × 4, 8 frames in 260 ms with gaps of 67–117 ms, and 9.5 frames,
+   gaps of 50–117 ms, with `contain: layout` (docs/design-v5/QA/v54/w4-b/NOTES.md) — and only transform and opacity
+   animate. The fold is a state change on the person's own act, there in the next frame. */
 
 /* On paper the page is the page: no rail, no bar, no drawer, and none of the room the page keeps for them — given
-   back at once, not on a glide: the block stands after the transition it silences. A fixed bar is printed again
-   on every sheet. */
+   back at once. A fixed bar is printed again on every sheet. */
 @media print {
   body.console .rail,
   body.console .console-bar,
@@ -1673,9 +1671,5 @@ body.is-ready .rail:not(.rail--drawer) {
   body.console[data-rail] {
     padding-inline-start: 0;
     padding-block-end: 0;
-  }
-
-  body.console.is-ready {
-    transition: none;
   }
 }

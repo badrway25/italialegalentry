@@ -14,15 +14,13 @@
  *   form (submit)          a submitted form's button waits — L2 of the loader «Lume» (W1-D): `aria-busy`, and the
  *                          busy key where it has a place; the state machine is loader.js, imported on the first
  *                          submit and never before
- *   [data-reveal]          panel enter — sections arrive as sheets laid on a table, 320ms, --ease-enter, from
- *                          12px below, siblings staggered 40ms; reduced motion shows them complete, immediately
- *                          (W4-B's to retire with initReveal)
+ *
+ * No animation is written here — the busy key is a class, which v5/loader.css turns. The reveal of design V2
+ * ([data-reveal], the Motion library's inView + animate + stagger) left with W4-B: text never waits for a reveal
+ * (V5.4 plan §1.5 K17), and no page carried the attribute any more.
  */
 import "./overlay.js";
 import { initNavigation } from "./nav.js";
-import { animate, inView, stagger, withMotion } from "./motion.js";
-
-const EASE_ENTER = [0.25, 1, 0.5, 1];
 
 initNavigation();
 
@@ -131,47 +129,3 @@ window.addEventListener("pageshow", (event) => {
   returns += 1;
   [...faced].forEach(restFace);
 });
-
-/* 5. Reveals. Grouped by parent so siblings stagger; a late sibling below the first one's
-      viewport gets its own trigger, or it would arrive early and unseen. */
-const reveals = [...document.querySelectorAll("[data-reveal]")];
-const settleAll = () => reveals.forEach((el) => el.classList.add("is-in"));
-
-withMotion(() => {
-  const groups = new Map();
-  for (const el of reveals) {
-    const key = el.parentElement;
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(el);
-  }
-  for (const [, els] of groups) {
-    inView(
-      els[0],
-      () => {
-        const pending = els.filter((el) => !el.classList.contains("is-in"));
-        pending.forEach((el) => el.classList.add("is-in"));
-        animate(
-          pending,
-          { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0)"] },
-          { duration: 0.32, ease: EASE_ENTER, delay: stagger(0.04) },
-        );
-      },
-      { margin: "0px 0px -12% 0px" },
-    );
-    els.slice(1).forEach((el) =>
-      inView(
-        el,
-        () => {
-          if (el.classList.contains("is-in")) return;
-          el.classList.add("is-in");
-          animate(
-            el,
-            { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0)"] },
-            { duration: 0.32, ease: EASE_ENTER },
-          );
-        },
-        { margin: "0px 0px -8% 0px" },
-      ),
-    );
-  }
-}, settleAll);

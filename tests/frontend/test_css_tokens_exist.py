@@ -25,8 +25,9 @@ CSS_FILES = sorted(
 )
 DECLARATION = re.compile(r"(--[a-zA-Z0-9-]+)\s*:")
 REFERENCE = re.compile(r"var\(\s*(--[a-zA-Z0-9-]+)")
-# Set at run time by JavaScript or by a component modifier, never declared in a stylesheet.
-RUNTIME_PROPERTIES = {"--nav-drawer-top", "--reveal-index"}  # both set by static/js/main.js
+# Set at run time by JavaScript or by a component modifier, never declared in a stylesheet. (--reveal-index left with
+# components.css §29 and main.js's initReveal: W4-B.)
+RUNTIME_PROPERTIES = {"--nav-drawer-top"}
 
 
 def _defined_everywhere() -> set[str]:

@@ -416,8 +416,8 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
     opacity: 1;
     transform: none;
     transition:
-      opacity var(--motion-fast) var(--ease-exit),
-      transform var(--motion-fast) var(--ease-exit),
+      opacity var(--motion-fast) var(--ease-enter),
+      transform var(--motion-fast) var(--ease-enter),
       display var(--motion-fast) allow-discrete;
   }
   .main-nav__door[aria-expanded="true"] + .portico {
@@ -946,6 +946,10 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   .portico__photo { transition: opacity var(--motion-reduced) linear; }
   .main-nav__architrave, .lang-seg__list--names .lang-seg__link::after { transition: none; }
 }
+/* The keyboard never animates the portico (R-07, tier 0 — head.js: «each family writes its one rule»; W4-B's audit found
+   this one missing): opened by the arrows, closed by Esc or by Tab out of the bar, the door's word, its chevron, its
+   panel and the architrave's fade are there in the next frame. A mouse movement gives the pointer its motion back. */
+html[data-input="key"] .main-nav[data-portico] :is(.main-nav__link, .icon--chevron, .main-nav__architrave, .portico, .portico__photo) { transition: none; }
 @media (forced-colors: active) {
   .site-header, .utility-bar { border-block-end: 1px solid CanvasText; }
   .portico { border: 1px solid CanvasText; border-block-start: 0; }

@@ -119,14 +119,13 @@ def test_nothing_of_the_shell_loops_or_moves_at_load():
         for selector, _ in re.findall(r"([^{}]+)\{[^{}]*\banimation(?:-name)?:\s*([^;]+);", css)
     }
     assert animated == set(), animated
-    # the one layout transition — the rail's width — waits for the first frame and for the person's own act
-    moving = re.findall(r"([^{}]+)\{[^{}]*transition:\s*([^;]*(?:inline-size|padding)[^;]*);", css)
-    assert [" ".join(selector.split()) for selector, _ in moving] == [
-        "body.console.is-ready",
-        "body.is-ready .rail:not(.rail--drawer)",
-    ], moving
+    # no layout transition: the rail folds at once (V5.4 plan §1.5 R10, measured by W4-B — the transition of its
+    # inline-size and of the page's padding did not reach 60 fps at CPU x4, with or without `contain: layout`; only
+    # transform and opacity animate)
+    moving = re.findall(r"([^{}]+)\{[^{}]*transition:\s*([^;]*(?:inline-size|padding|width|margin)[^;]*);", css)
+    assert moving == [], moving
     for _selector, value in re.findall(r"([^{}]+)\{[^{}]*transition:\s*([^;]+);", css):
-        # `none` is no duration at all: it is how the print block silences the rail's glide
+        # `none` is no duration at all
         assert value == "none" or "var(--motion-" in value, (
             f"a duration that is not a token escapes reduced motion: {value}"
         )
@@ -845,8 +844,11 @@ def test_forced_colours_give_the_phone_s_bars_an_edge_and_the_bar_s_current_page
     forced = _block(_css(SHELL), "@media (forced-colors: active) {")
     assert "border-block-end: 1px solid CanvasText;" in _rule(forced, ".console-bar")
     assert "border-block-start: 1px solid CanvasText;" in _rule(forced, ".console-bottom")
-    current = _rule(forced, '.rail__item[aria-current="page"],\n  .console-bottom__item[aria-current="page"]')
-    assert "outline: 2px solid Highlight;" in current
+    # the current page's own marker — the lit disc below, and in the rail its word underlined — never the focus ring's
+    # outline at rest (WCAG 2.4.7: the focus on the current entry would add nothing; W3-D's O2, W4-B)
+    word = _rule(forced, '.rail__item[aria-current="page"] .rail__label')
+    assert "text-decoration: underline;" in word and "text-decoration-thickness: 2px;" in word
+    assert "outline" not in forced.replace("outline-offset", ""), "under forced colours the outline is the focus's alone"
     disc = _rule(
         forced,
         '.rail__item[aria-current="page"] .rail__disc,\n  .console-bottom__item[aria-current="page"] .console-bottom__disc',
@@ -865,11 +867,7 @@ def test_on_paper_the_page_is_the_page_no_rail_no_bar_no_drawer():
     assert "padding-inline-start: 0;" in room and "padding-block-end: 0;" in room, (
         "and the page gives back the room it kept for them"
     )
-    css = _css(SHELL)
-    assert "transition: none;" in _rule(printed, "body.console.is-ready"), "at once: nothing glides on its way to paper"
-    assert css.index("@media print {") > css.index("body.console.is-ready {\n  transition: padding-inline-start"), (
-        "the print block stands after the transition it silences: the two rules weigh the same"
-    )
+    assert "transition" not in printed, "at once: the fold has no transition left to silence on paper (R10, W4-B)"
     assert "!important" not in _css(SHELL), "by its own weight, never by force"
 
 

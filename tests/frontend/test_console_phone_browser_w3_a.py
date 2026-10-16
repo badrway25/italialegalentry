@@ -682,7 +682,9 @@ def test_forced_colours_keep_the_bars_edges_and_the_current_page(browser, live_s
         "the system's colours give the bars an edge"
     )
     lit = [item for item in chrome["bottom"]["items"] if item["current"]][0]
-    assert lit["outline"] == "solid 2px" and lit["discBg"] != chrome["bottom"]["bg"], lit
+    # the current page's marker is its lit disc — never the focus ring's outline at rest, so that the focus on it still
+    # adds its ring (WCAG 2.4.7; W3-D's O2, W4-B)
+    assert lit["outline"].startswith("none") and lit["discBg"] != chrome["bottom"]["bg"], lit
     stays = chrome["bar"]["box"]["h"] + chrome["bottom"]["box"]["h"]
     assert stays <= 120, stays
     page.click("#console-menu")

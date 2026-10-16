@@ -223,7 +223,7 @@ def _imported_sheet(sheet: Path, target: str) -> Path | None:
 
 
 def _component_custom_properties() -> set[str]:
-    names: set[str] = {"--reveal-index"}  # set from main.js, consumed by components.css
+    names: set[str] = set()
     for sheet in _cascade():
         names |= set(re.findall(r"(?<![\w-])(--[a-z0-9-]+)\s*:", _read(STATIC / "css" / sheet)))
     return names
@@ -914,12 +914,14 @@ def test_focus_and_motion_claims_match_the_stylesheets():
     # Reduced motion is a state, not a switch (V5.4 plan §1.5, W1-D; ACCESSIBILITY.md §7, DS 2026 §12): V1's
     # universal `0.01ms !important` rule left components.css; static/css/v5/tokens.css zeroes the duration tokens
     # every transition and animation is written with, and its twin html.rm is the preview's flag
-    # (test_rm_flag_parity.py); the smooth scroll of base.css yields to the setting on its own.
+    # (test_rm_flag_parity.py); the smooth scroll of base.css yields to the setting on its own. The block's last
+    # guard, `.reveal`'s, left with §29 (W4-B, K17): no reduced-motion block is left in components.css, and none may
+    # force a duration back.
     components = re.sub(r"/\*.*?\*/", "", _read(STATIC / "css" / "components.css"), flags=re.S)
-    assert (
-        "0.01ms" not in components
-        and "!important" not in components.split("@media (prefers-reduced-motion: reduce)", 1)[1]
-    )
+    assert "0.01ms" not in components
+    for block in components.split("@media (prefers-reduced-motion: reduce)")[1:]:
+        assert "!important" not in block, "no reduced-motion rule of components.css forces a duration"
+    assert ".reveal" not in components, "text never waits for a reveal (K17): §29 left with W4-B"
     reduced = _between(v5_tokens, "@media (prefers-reduced-motion: reduce) {", "\n}")
     for declaration in (
         "--motion-fast: 0ms",

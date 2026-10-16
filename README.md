@@ -85,7 +85,8 @@ fatto assente rende una condizione di regola **falsa, mai vera**.
 
 ## Requisiti
 
-- **Python 3.13** (`pyproject.toml` dichiara `>= 3.12`; il `Dockerfile` e la CI usano 3.13)
+- **Python 3.13** (`pyproject.toml` dichiara `>= 3.12`; il `Dockerfile` usa 3.13; la CI prova sia 3.12 con
+  PostgreSQL 16, il bersaglio di produzione — Ubuntu 24.04 LTS —, sia 3.13 con PostgreSQL 17)
 - **Docker** (Docker Desktop o Docker Engine) per PostgreSQL 17 tramite `docker compose`
 - **Node.js 18 o successivo** (LTS consigliata), solo per ricostruire i bundle del frontend
 - Git

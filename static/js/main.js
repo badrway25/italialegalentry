@@ -8,8 +8,8 @@
  *    which every page loads — imported by console.js and shell.js: V5.4 plan §1.14, W2-A, W2-C2)
  *  - accordion (exclusive mode, a link opens its row), tabs (roving tabindex, one indicator), stepper
  *    (client-side panels)
- *  - reveal-on-scroll (never hides content when JS is off; honours prefers-reduced-motion)
- *  - optional count-up counters
+ *  - (the reveal on scroll and the count-up counters left with W4-B: text never waits for a reveal, V5.4 plan
+ *    §1.5 K17, and neither had a page left to run on)
  *
  * Conventions: behaviours are attached through data-* attributes; no inline handlers
  * (CSP: script-src 'self'); all text stays in the HTML (translatable server-side).
@@ -191,78 +191,14 @@ function initSteppers() {
 }
 
 /* ------------------------------------------------------------------------ */
-/* 6. Reveal on scroll — additive only; reduced motion => visible at once     */
+/* 6. Reveal on scroll, 8. counters — gone with W4-B: text never waits for  */
+/*    a reveal (V5.4 plan §1.5 K17), and neither had a page left to run on. */
 /* ------------------------------------------------------------------------ */
-function initReveal() {
-  const targets = qsa(".reveal");
-  if (!targets.length) return;
-  const showAll = () => targets.forEach((el) => el.classList.add("is-visible"));
-  if (REDUCED_MOTION.matches || !("IntersectionObserver" in window)) {
-    showAll();
-    return;
-  }
-  qsa(".reveal--stagger").forEach((group) => {
-    Array.from(group.children).forEach((child, i) => child.style.setProperty("--reveal-index", String(Math.min(i, 8))));
-  });
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
-  );
-  targets.forEach((el) => observer.observe(el));
-  // Safety net: anything still hidden after 2.5 s becomes visible (e.g. print, zoom).
-  setTimeout(showAll, 2500);
-  REDUCED_MOTION.addEventListener("change", () => REDUCED_MOTION.matches && showAll());
-}
 
 /* ------------------------------------------------------------------------ */
 /* 7. Dialogs — the overlay system's (static/js/src/overlay.js, W2-A): the   */
 /*    `initDialogs` of design V1 left this file with its last caller.        */
 /* ------------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------------ */
-/* 8. Counters — count up once visible (optional; static value without JS)    */
-/* ------------------------------------------------------------------------ */
-function initCounters() {
-  const counters = qsa("[data-counter]");
-  if (!counters.length) return;
-  const run = (el) => {
-    const target = Number(el.dataset.counter);
-    if (!Number.isFinite(target) || REDUCED_MOTION.matches) {
-      el.textContent = el.dataset.counterFormat ? formatNumber(target) : String(target);
-      return;
-    }
-    const duration = 900;
-    const start = performance.now();
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = formatNumber(Math.round(target * eased));
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
-  const formatNumber = (n) => new Intl.NumberFormat(document.documentElement.lang || "fr").format(n);
-  if (!("IntersectionObserver" in window)) {
-    counters.forEach(run);
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        run(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  });
-  counters.forEach((el) => observer.observe(el));
-}
 
 /* ------------------------------------------------------------------------ */
 /* 9. Misc: "back" links, current-year, forms double-submit guard           */
@@ -281,7 +217,9 @@ function initMisc() {
   // replaces the page. The button is `aria-disabled`, never `disabled`: the focus stays where the person left
   // it, and the busy key v5/loader.css draws on `.is-busy` (set by shell.js in the same task) turns on it.
   // loader.js lifts the mark when the wait ends without a new page — «Réessayer», the lease of 10 s, a submit
-  // answered in the page; a page back from the cache is at rest again.
+  // answered in the page; shell.js's catch lifts it at once when loader.js cannot be loaded (nothing would end the
+  // wait: a refusal is never left announced); a page back from the cache is at rest again. Every guarded form
+  // submits through a `.btn`, the control shell.js hands to loader.js (tests/frontend/test_single_submit_w4_b.py).
   qsa("form[data-single-submit]").forEach((form) => {
     form.addEventListener("submit", (event) => {
       if (form.hasAttribute("data-submitted")) {
@@ -326,8 +264,6 @@ function init() {
   initAccordions();
   initTabs();
   initSteppers();
-  initReveal();
-  initCounters();
   initMisc();
 }
 

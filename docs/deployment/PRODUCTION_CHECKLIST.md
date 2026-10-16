@@ -5,7 +5,10 @@
 > checksum. «Should be fine» is not evidence. Written 12 October 2026; nothing in it has been run on a server.
 > Updated 16 October 2026 (the DevOps lane's second pass): A-21 and D-10 (the NUL-byte 400), A-22 and D-7 (every
 > static file a page loads cached by its hashed name); the same day, by its review fixes: A-21 and D-10 (what nginx
-> answers itself, the security headers of the 400).
+> answers itself, the security headers of the 400). Updated the same day by W4-D's release engineering: A-1, A-2 and
+> A-27 describe the real release (the annotated tag `v2.0.0` on GitHub's `main` after the promotion, the reference
+> tag `pre-v5-main-2026-10`), A-26 the CI run on Python 3.12 and PostgreSQL 16, C-7 the reference tag; and by its
+> review fixes: §A's one bar for PRODUCTION_READY (with §B's second line), A-26's wording (the major versions).
 
 - [A. Release gate](#a-release-gate) — the owner's list (directive V5.9 §15), item by item, with how to verify it
 - [B. Before the deployment](#b-before-the-deployment)
@@ -20,12 +23,16 @@ Commands written `python …` run in a development checkout with the project's v
 ## A. Release gate
 
 On **one commit** — the one that will be tagged — and nothing else. The project is called ready for server deployment
-only when every line is ticked (see *States* in the runbook).
+(PRODUCTION_READY, *States* in the runbook) on one bar only: **A-1 … A-22 ticked with evidence on that commit, and
+each of A-23 … A-28 closed or accepted in writing by the owner as open until go-live**; the final handoff names each of
+A-23 … A-28 with its state. The parts of A-1 … A-22 that run on the server or on the temporary host (`sudo ile-manage`,
+`<host>`) are the owner's, at the deployment (cutover step 3, §D): the bar counts the rest of each line, and the
+handoff lists those parts.
 
 | # | Item | How to verify | Evidence to write down |
 |---|---|---|---|
-| A-1 | **Clean Git status** | `git status --porcelain` prints nothing, in the integration checkout and in the publication repository; `git log -1` is the commit to tag | the SHA |
-| A-2 | **GitHub synchronised** | `git ls-remote https://github.com/badrway25/italialegalentry.git refs/heads/main "refs/tags/<tag>" "refs/tags/<tag>^{}"`: the `refs/heads/main` line and the `refs/tags/<tag>^{}` line show the SHA of A-1 — for an annotated tag the plain `refs/tags/<tag>` line is the tag object's own SHA, not the commit's; a lightweight tag has only the plain line, which is then the commit (checked on a local annotated tag, 12 October 2026). The CI run of that SHA is green on GitHub | the `ls-remote` output, the CI run's link |
+| A-1 | **Clean Git status** | `git status --porcelain` prints nothing, in the integration checkout (`design-v5`) and in the publication repository; the commit to release is the publication repository's `design-v5` snapshot that GitHub's `main` fast-forwards to (runbook, *RELEASE TAGS*): `git log -1` there prints it | the full SHA (40 hex digits) |
+| A-2 | **GitHub synchronised** | `git ls-remote https://github.com/badrway25/italialegalentry.git refs/heads/main refs/heads/design-v5 refs/tags/v2.0.0 "refs/tags/v2.0.0^{}" refs/tags/pre-v5-main-2026-10 "refs/tags/pre-v5-main-2026-10^{}"`: the `refs/heads/main` line and the `refs/tags/v2.0.0^{}` line show the SHA of A-1 — `v2.0.0` is annotated, so the plain `refs/tags/v2.0.0` line is the tag object's own SHA, not the commit's (a lightweight tag has only the plain line, which is then the commit; checked on a local annotated tag, 12 October 2026); `refs/heads/design-v5` shows the same SHA at the promotion (it may move on afterwards); the `pre-v5-main-2026-10` lines show `a3ac318304beb4504134762bfa6e9c4e4ce600f1` (its `^{}` line, if that tag is annotated); `git ls-remote --tags` lists those two tags and no other. Both runs of the CI workflow on that SHA are green on GitHub: Python 3.12 · PostgreSQL 16 (the production target) and Python 3.13 · PostgreSQL 17 | the `ls-remote` output, the two CI jobs' links |
 | A-3 | **Full test suite** | `TEST_DATABASE_URL=postgres://ile:ile-dev-password@127.0.0.1:5439/ile_t_release python -m pytest -m "not browser" -p no:randomly`, then the browser suite `python -m pytest -m browser` with the QA servers up | passed / failed / skipped / xfailed counts of both runs: **0 failed** |
 | A-4 | **Migrations clean** | `python manage.py makemigrations --check --dry-run` → «No changes detected» (also under `config.settings.prod`); `tests/test_migration_drift.py`; `migrate` on an **empty** scratch database under the production settings, then `migrate --check` exits 0 | the three outputs |
 | A-5 | **Django deploy checks** | `check --deploy --fail-level WARNING` under `config.settings.prod`, with generated placeholder values for the secrets and the rest as the production template sets it: with the template's `SECURE_HSTS_INCLUDE_SUBDOMAINS=0` / `SECURE_HSTS_PRELOAD=0`, **exactly** `security.W005` and `security.W021` and nothing else (exit 1 at that fail level — runbook step 7); with both set to `1`, no issue (exit 0). Held by `tests/deployment/test_production_checks.py::test_check_deploy_reports_only_w005_and_w021_with_the_template_hsts_values` and `::test_check_deploy_reports_no_issue_with_hsts_fully_on` | both outputs |
@@ -54,14 +61,15 @@ Go-live blockers that are **not code** (`docs/PREPROD_REPORT.md` §15) and decis
 | A-23 | Official Italian legal texts (the legal pages and the public forms stay closed until then); jurist review of the rules and verification of the fifteen sources; human review of the translations; a real screen-reader pass | owner, jurist, translators |
 | A-24 | EU hosting confirmed in writing: region of the droplet, of the database, **of the backups**; sub-processors; processing agreement (CR-08, `docs/DEPLOYMENT_READINESS.md` §3) | owner + provider |
 | A-25 | SMTP provider chosen, sender domain authorised (SPF, DKIM), outbound port open from the droplet (`sudo ile-manage sendtestemail <address>` arrives) | owner |
-| A-26 | The test suite run once on Python 3.12 (Ubuntu 24.04's interpreter) — or Python 3.13 installed on the server | team / owner |
-| A-27 | The release tag's name: `v2.0.0` (the version the platform already declares) or `v1.0.0` (runbook, *Release tags*) | owner |
+| A-26 | The test suite green on Python 3.12 with PostgreSQL 16 — the major versions of Ubuntu 24.04's interpreter and database (CI's builds of them, not Ubuntu's): the «production target» run of CI's matrix (`.github/workflows/ci.yml`, since 16 October 2026) on the release's commit, beside the Python 3.13 / PostgreSQL 17 run (A-2) | team (CI) |
+| A-27 | The release tag's name — **decided**: `v2.0.0`, annotated, the version the platform already declares (the owner's directive V5.10, 16 October 2026: «use the repository's established versioning convention»), with the reference tag `pre-v5-main-2026-10` on `a3ac318` and no candidate tag (runbook, *RELEASE TAGS*) | owner — decided; the orchestrator creates both tags after the release gates |
 | A-28 | **Backups running and restorable** (runbook step 10): the owner's backup key pair made, the private key and its passphrase stored offline twice; the off-server destination decided and configured; `italylegalentry-backup.timer` active and its last run «copied off the server»; **one off-server restore drill passed** (C-6) | owner |
 
 ## B. Before the deployment
 
 - [ ] The final handoff block is in hand: repository, tag, **SHA**, test results, migration state, open issues.
-- [ ] The release gate (A) is fully ticked on that SHA, or every open line is accepted by the owner in writing.
+- [ ] The release gate's bar (§A) holds on that SHA: the handoff names each of A-23 … A-28 closed or accepted in
+      writing as open until go-live, and the parts of A-1 … A-22 left for the server.
 - [ ] Ubuntu 24.04 LTS droplet in an **EU region**; SSH by key; a sudo user; nothing else listening on 80/443 — or,
       on an existing server, the other sites' nginx configuration and firewall reviewed (runbook steps 1 and 11).
 - [ ] SMTP credentials and the sender address ready (A-25).
@@ -103,7 +111,7 @@ A managed database: `ile-backup`'s `pg()` line reads the password from `/etc/ita
 | C-4 | Public media | `media-$TS.tar.gz.gpg` — the back-office uploads exist only here | C-6's file count = the `find` count above |
 | C-5 | Off-server copy | `ile-backup` copies the four `.gpg` files and `SHA256SUMS-$TS` through `/etc/italylegalentry/backup-offsite` (runbook step 10); until that exists, it ends with «NOT COPIED OFF THE SERVER» and those five files are copied by hand. `sha256sum -c "SHA256SUMS-$TS"` at the destination | location, `sha256sum -c` output |
 | C-6 | **Restore verification, elsewhere** | below — on a machine that is not the server and holds the private key | the «rows:» line, the file check, the two listings |
-| C-7 | Rollback point recorded | the running tag and SHA, the previous tag (none at the first deployment: the rollback is then DNS — `ROLLBACK.md` §5), the DNS records' current values (cutover step 5) | the three |
+| C-7 | Rollback point recorded | the running tag and SHA, the previous tag (none at the first deployment: the rollback is then DNS — `ROLLBACK.md` §5; `pre-v5-main-2026-10` is not a previous tag of this server, it was never deployed — `ROLLBACK.md` §7), the DNS records' current values (cutover step 5) | the three |
 
 C-6, on a machine that is not the server, holding the private key, with `gpg` and PostgreSQL 16 or later (a local or
 throwaway instance, as its superuser), in the directory the set was copied to:

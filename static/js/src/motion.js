@@ -16,12 +16,13 @@
  * a 0 s transition never fires its event, so a script waiting on one would hang exactly under reduced
  * motion. `settled()` waits on the animations really running, and gives up after a timeout.
  *
- * Motion (motion.dev) stays re-exported for the modules that still use it (shell.js, home.js) until
- * their families remove it; the dependency leaves in W4-B (plan §1.5 «Engine»: no new use).
+ * THE PLATFORM, NO LIBRARY (W4-B; plan §1.5 «Engine», §2.3): the Web Animations API through `play()`,
+ * CSS transitions on the tokens, an IntersectionObserver where something must wait to be seen, and a
+ * stagger written as a computed delay (`i * durationToken("--motion-stagger")`). Motion (motion.dev),
+ * re-exported here until its last callers — shell.js's reveal, «Ma situation»'s question — moved off it,
+ * left the dependencies with W4-B; its springs live on as the CSS `linear()` twins of v5/tokens.css
+ * (`--spring-soft`, `--spring-snappy`, `--spring-sheet`).
  */
-export { animate, scroll, inView, stagger, spring, hover, press } from "motion";
-import { spring } from "motion";
-
 const QUERY = "(prefers-reduced-motion: reduce)";
 const media = typeof matchMedia === "function" ? matchMedia(QUERY) : null;
 
@@ -122,13 +123,3 @@ export function durationToken(name, fallback = 0, element = document.documentEle
 export function easingToken(name, fallback = "linear", element = document.documentElement) {
   return getComputedStyle(element).getPropertyValue(name).trim() || fallback;
 }
-
-/**
- * The two springs of design V4 (docs/design-v4/DESIGN_SYSTEM_V4.md §7), ready to spread into an
- * `animate()` options object. SOFT stops just short of a bounce (ζ ≈ 0.93): layout, heights,
- * reorders. SNAPPY is exactly critical (ζ = 1): indicators, thumbs, anything that follows a
- * pointer or a selection. Nothing in the project springs with a damping below 25 — that is the
- * wobble the owner called «too much». Their CSS twins are the --spring-* tokens.
- */
-export const SPRING_SOFT = { type: spring, stiffness: 260, damping: 30 };
-export const SPRING_SNAPPY = { type: spring, stiffness: 400, damping: 40 };

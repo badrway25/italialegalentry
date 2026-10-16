@@ -563,6 +563,34 @@ def test_at_400_percent_a_scrolling_body_with_nothing_to_focus_is_a_stop(browser
         context.close()
 
 
+@pytest.mark.parametrize("motion", ["no-preference", "reduce"])
+def test_a_resize_makes_the_scrolling_body_a_stop_and_takes_it_back(browser, live_server, motion):
+    """The integration checkpoint's review, m4 (docs/design-v5/QA/v54/intfix/REVIEW.md; W4-B): the stop follows a resize
+    — a zoom — re-read once a frame, the frame asked of motion.js's gate (under reduced motion the gate answers at once).
+    Opened large, the alert's body holds its text without scrolling and is no stop; at 320 x 256 (400 %) it scrolls and
+    becomes one; back at the large size it scrolls no more and the stop is taken back."""
+    context = browser.new_context(viewport={"width": 1280, "height": 900}, reduced_motion=motion)
+    body = "document.querySelector('#ob-alert-fr .overlay__body')"
+    try:
+        page = context.new_page()
+        page.goto(f"{live_server.url}/overlay-board/", wait_until="networkidle")
+        _press_open(page, 'a[href="#ob-alert-fr"]')
+        page.wait_for_function("() => document.getElementById('ob-alert-fr').open")
+        _settle(page)
+        large = page.evaluate(f"() => [{body}.scrollHeight, {body}.clientHeight, {body}.getAttribute('tabindex')]")
+        assert large[0] <= large[1] + 1 and large[2] is None, ("large: the body does not scroll and is no stop", large)
+        page.set_viewport_size({"width": 320, "height": 256})
+        page.wait_for_function(f"() => {body}.getAttribute('tabindex') === '0'")
+        small = page.evaluate(f"() => [{body}.scrollHeight, {body}.clientHeight]")
+        assert small[0] > small[1] + 1, ("at 400 % the body scrolls", small)
+        assert _state(page, "ob-alert-fr")["open"], "the dialog stays open through the resize"
+        page.set_viewport_size({"width": 1280, "height": 900})
+        page.wait_for_function(f"() => !{body}.hasAttribute('tabindex')")
+        assert _state(page, "ob-alert-fr")["focusIn"], "the focus never left the dialog"
+    finally:
+        context.close()
+
+
 def test_the_api_opens_closes_toggles_and_says_why(board):
     page, _ = board
     result = page.evaluate(

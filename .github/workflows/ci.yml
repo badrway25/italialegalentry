@@ -1,10 +1,18 @@
 # Continuous integration — Italy Legal Entry
 #
 # Runs on every push and pull request to the two published branches. Everything here works on a
-# fresh checkout with no secret: the database is a throwaway PostgreSQL 17 service carrying the
+# fresh checkout with no secret: the database is a throwaway PostgreSQL service carrying the
 # same development credentials as docker-compose.yml, the production settings are never loaded,
 # and the only other variables are declared placeholders. The browser suite (marker `browser`,
 # Playwright) is excluded: it needs Chromium and runs locally. Nothing here deploys anything.
+#
+# The same job runs twice (the matrix below), each run on its own runner and its own database:
+# * the production target of docs/deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md — the server's major
+#   versions, Python 3.12 and PostgreSQL 16, the ones Ubuntu 24.04 LTS ships (the runbook's step 1);
+#   not Ubuntu's own builds: setup-python's CPython 3.12.x and the Alpine image of PostgreSQL 16;
+# * the development stack — Python 3.13 (the Dockerfile) and PostgreSQL 17 (docker-compose.yml).
+# The runner image is pinned to ubuntu-24.04, the server's release: `ubuntu-latest` moves to
+# Ubuntu 26 from 19 October 2026 (GitHub's notice), and a moving image would test neither.
 name: CI
 
 on:
@@ -22,15 +30,27 @@ concurrency:
 
 jobs:
   test:
-    name: check · migrations · ruff · pytest
-    runs-on: ubuntu-latest
+    name: "Python ${{ matrix.python }} · PostgreSQL ${{ matrix.postgres }} (${{ matrix.target }}) — check · migrations · ruff · pytest"
+    runs-on: ubuntu-24.04
     # ~4 500 non-browser tests against PostgreSQL took about 57 minutes in the fresh-clone rehearsal
     # (DL54-77); a ceiling, not a target.
     timeout-minutes: 90
 
+    strategy:
+      # Each run says something the other cannot: a failure on one must not cancel the other.
+      fail-fast: false
+      matrix:
+        include:
+          - target: production target
+            python: "3.12"
+            postgres: "16"
+          - target: development
+            python: "3.13"
+            postgres: "17"
+
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:${{ matrix.postgres }}-alpine
         env:
           POSTGRES_DB: ile
           POSTGRES_USER: ile
@@ -67,12 +87,25 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: requirements/*.txt
 
       - name: Install dependencies
-        run: python -m pip install -r requirements/dev.txt
+        # requirements/constraints.txt pins the whole closure of base.txt — the set the server
+        # installs (runbook steps 4 and 15) — so every run tests exactly that set; the tools of
+        # dev.txt that base.txt does not pull in are resolved around it.
+        run: python -m pip install -r requirements/dev.txt -c requirements/constraints.txt
+
+      - name: The interpreter and the database are the matrix's
+        # The job's name says which Python and which PostgreSQL it ran on; this step makes the name
+        # true: it fails if the interpreter is another minor version or the service another major.
+        env:
+          PY_VERSION: ${{ matrix.python }}
+          PG_MAJOR: ${{ matrix.postgres }}
+        run: |
+          python -c "import os, sys; v = '%d.%d' % sys.version_info[:2]; print('Python', sys.version.split()[0]); assert v == os.environ['PY_VERSION'], v"
+          python -c "import os, psycopg; v = psycopg.connect(os.environ['DATABASE_URL']).info.server_version // 10000; print('PostgreSQL', v); assert str(v) == os.environ['PG_MAJOR'], v"
 
       - name: Django system checks
         run: python manage.py check

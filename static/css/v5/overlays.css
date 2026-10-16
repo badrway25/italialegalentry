@@ -108,12 +108,12 @@
   text-align: start;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--motion-fast) var(--ease-exit);
+  transition: background-color var(--motion-fast) var(--ease-enter);
 }
 .overlay__item .icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--icon-default); }
 .overlay__item:focus-visible { outline-offset: -2px; }
 @media (hover: hover) and (pointer: fine) {
-  .overlay__item:hover { background-color: var(--surface-hover); transition-timing-function: var(--ease-enter); }
+  .overlay__item:hover { background-color: var(--surface-hover); }
 }
 .overlay__item:active { background-color: var(--surface-hover); transition-duration: 0ms; }
 .overlay__item[aria-current] { font-weight: var(--w-title); }

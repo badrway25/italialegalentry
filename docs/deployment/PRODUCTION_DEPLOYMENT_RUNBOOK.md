@@ -10,6 +10,12 @@
 > by its review fixes: what «Max post-process passes exceeded» means, the previous release's names, what nginx answers
 > itself, which forms the NUL guard reads.
 >
+> Updated on 16 October 2026 by W4-D (release engineering): CI runs the production target (Python 3.12, PostgreSQL
+> 16) beside the development stack; the release is the annotated tag `v2.0.0` on GitHub's `main` after the
+> promotion, with `pre-v5-main-2026-10` as the reference point of the pre-V5 platform (*RELEASE TAGS*, *States*;
+> `ROLLBACK.md` §7). The same day, by its review fixes: step 15's migration pattern, one bar for PRODUCTION_READY
+> (*States*, with checklist §A), and what CI's production-target run proves (the server's major versions).
+>
 > Companions: [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md) (release gate, backup before cutover, smoke test) ·
 > [`ROLLBACK.md`](ROLLBACK.md) · [`production.env.example`](production.env.example) (the server's environment file).
 > They supersede `docs/DEPLOYMENT.md` and `docs/DEPLOYMENT_READINESS.md`, which stay as history.
@@ -40,7 +46,7 @@
 | Component | What the repository actually uses | Where |
 |---|---|---|
 | Application | Django 5.2.17 LTS, modular monolith, server-rendered; WSGI entry `config.wsgi:application`, which defaults to `config.settings.prod` | `requirements/base.txt`, `config/wsgi.py` |
-| Python | `requires-python >= 3.12`; Ubuntu **24.04 LTS** ships 3.12 (22.04's 3.10 is too old). CI and the Dockerfile run 3.13 — see [Known limits](#known-limits-and-external-dependencies) | `pyproject.toml`, `.github/workflows/ci.yml` |
+| Python | `requires-python >= 3.12`; Ubuntu **24.04 LTS** ships 3.12 (22.04's 3.10 is too old). CI runs the suite twice on an `ubuntu-24.04` runner: Python 3.12 with PostgreSQL 16 — this server's major versions — and Python 3.13 with PostgreSQL 17 — development and the Dockerfile; see [Known limits](#known-limits-and-external-dependencies) | `pyproject.toml`, `.github/workflows/ci.yml` |
 | Database | PostgreSQL only, psycopg 3 binary wheel (no `libpq-dev`, no compiler), `DATABASE_URL`, `ATOMIC_REQUESTS`, connections reused 60 s with health checks | `config/settings/base.py`, `prod.py` |
 | Application server | Gunicorn 26.2 (sync workers), behind one reverse proxy | `requirements/base.txt` |
 | Static files | WhiteNoise middleware, `core.storage.CompressedManifestModulesStorage` — WhiteNoise's `CompressedManifestStaticFilesStorage` (hashed names, `.gz` siblings) with the ES modules' imports rewritten to the hashed names too: every file a page loads is a hashed name, cached `immutable`; a plain name is revalidated after 60 s ([step 8](#8-static-files-seeds-site-first-administrator)) — served **through Gunicorn**. The bundles (`static/css/dist`, `static/js/dist`) and the compiled catalogues (`locale/*/LC_MESSAGES/*.mo`) are committed: **no Node, no gettext on the server** | `base.py` `STORAGES`, `core/storage.py`, `tests/frontend/test_static_pipeline.py`, `tests/deployment/test_static_caching.py` |
@@ -84,7 +90,7 @@ Set these once in the SSH session; every command below reads them. **Replace the
 
 ```bash
 export ILE_DOMAIN=example.com              # the production host name, no scheme
-export ILE_TAG=v5-release-candidate        # the validated release tag from the handoff
+export ILE_TAG=v2.0.0                      # the release tag from the handoff (annotated: RELEASE TAGS)
 export ILE_SHA=0000000000000000000000000000000000000000   # the commit SHA the handoff gives for that tag
 export ILE_STAGING_HOST=                   # optional: temporary host name for validation before the cutover
 sudo -v                                    # cache sudo credentials before the multi-line blocks
@@ -144,7 +150,9 @@ needs to.
 ## 3. Code at the release tag
 
 The server always runs a **tag**, never a branch. The public repository's history is a sequence of clean snapshot
-commits (one per publication): the SHA to check is the one the handoff gives for the tag.
+commits (one per publication): the SHA to check is the one the handoff gives for the tag — the commit. `v2.0.0` is
+an annotated tag: after the checkout `HEAD` is its commit, while `git rev-parse refs/tags/v2.0.0` alone would print
+the tag object's own SHA.
 
 ```bash
 sudo git clone https://github.com/badrway25/italialegalentry.git /srv/italylegalentry/app
@@ -1008,7 +1016,7 @@ half-replaced package can keep a worker from booting at all. Meanwhile nginx ans
 
 ```bash
 sudo git -C /srv/italylegalentry/app fetch --tags
-sudo git -C /srv/italylegalentry/app diff --stat HEAD "refs/tags/$ILE_TAG" -- requirements/ 'apps/*/migrations/'
+sudo git -C /srv/italylegalentry/app diff --stat HEAD "refs/tags/$ILE_TAG" -- requirements/ 'apps/*/migrations/*.py'
 sudo /usr/local/sbin/ile-backup                     # encrypted, copied off the server (step 10)
 ```
 
@@ -1304,30 +1312,46 @@ mapping, minimisation and verification. This runbook contains none.
 
 ## RELEASE TAGS
 
-What the repository establishes: the platform labels itself with a semantic version — `v2.0.0 — Fase 1` is the
-default of both `ILE_VERSION_LABEL` (`config/settings/base.py`) and `SiteSettings.version_label`
-(`apps/core/models.py`, the value the footer shows), and `docs/DEPLOYMENT.md` gave `v2.0.0-phase1` as a tag example.
-No release tag exists yet; the local `v54/*` and `checkpoint/*` tags are internal milestones and are never published.
+The release is **`v2.0.0`**, an **annotated** tag on the commit GitHub's `main` points to once the validated release
+has been promoted. The name is the version the platform already declares — `v2.0.0 — Fase 1` is the default of both
+`ILE_VERSION_LABEL` (`config/settings/base.py`) and `SiteSettings.version_label` (`apps/core/models.py`, the value
+the footer shows) — so the tag, the footer and the handoff say the same thing (the owner's directive V5.10,
+16 October 2026: «use the repository's established versioning convention»; `docs/DEPLOYMENT.md` had given
+`v2.0.0-phase1` as an example).
 
-Recommendation:
+How the release reaches GitHub — the orchestrator's work, after the release gates; never the server's, never this
+runbook's:
 
-1. **Release candidate**: `v5-release-candidate` (the name of the owner's directive), created on the published
-   commit once the release gate passes on it. A second candidate is `v5-release-candidate-2` — a tag is **never moved
-   and never force-pushed**.
-2. **Release**: a semantic version on the validated candidate's commit. The platform already declares `v2.0.0`, so
-   `v2.0.0` keeps the tag, the footer label and the handoff saying the same thing; `v1.0.0` (the directive's example)
-   is the alternative if the owner prefers to count the new platform from one. The owner chooses — once.
-3. The server checks out the tag (`refs/tags/…`), never a branch, and compares `HEAD` with the SHA of the handoff
-   (step 3). Tags are created on the **published** snapshot commit, so that SHA is GitHub's.
-4. After deploying a release, set the label the footer shows: back-office → Site settings → version label.
+1. **The pre-V5 platform's reference point.** GitHub's `main` before the promotion,
+   `a3ac318304beb4504134762bfa6e9c4e4ce600f1`, is tagged **`pre-v5-main-2026-10`**, on GitHub and locally, and its
+   history is never modified. V5.10 calls it «a rollback/reference point, not the final release tag» — of the
+   repository's history: it is **not a release and not a rollback target of this server**, which never ran it, and it
+   predates the fixes of F-5, F-7, F-8 and the NUL-byte guard. [`ROLLBACK.md`](ROLLBACK.md) §7 says what going back to
+   it would mean, the database included.
+2. **The promotion.** `main` moves to the validated release — `design-v5`'s published snapshot — by a **fast-forward**
+   (`a3ac318` is the root of every `design-v5` snapshot): no force-push, no history rewrite. If `main` cannot
+   fast-forward, the promotion stops.
+3. **The release tag.** `v2.0.0`, annotated, on that commit, once the final verification has passed. It is the only
+   release tag: there is no `v5-release-candidate` tag — the candidate is named by its commit SHA in the
+   release-candidate report (V5.10: «one meaningful final release tag»). The local `v54/*` and `checkpoint/*` tags are
+   internal milestones and are never published.
+4. **A tag is never moved and never force-pushed.** A fix after `v2.0.0` is a new commit and a new tag (`v2.0.1`, …),
+   installed by [step 15](#15-updating-to-a-new-release).
+5. The server checks out the tag (`refs/tags/…`), never a branch, and compares `HEAD` with the SHA of the handoff
+   ([step 3](#3-code-at-the-release-tag)). That SHA is the **commit**: for an annotated tag, `git ls-remote` prints
+   `refs/tags/v2.0.0` — the tag object's own SHA — and `refs/tags/v2.0.0^{}` — the commit (checklist A-2).
+6. After deploying a release, the label the footer shows: `v2.0.0 — Fase 1` is already the default; for a later
+   release, back-office → Site settings → version label.
 
 ## States
 
+The three states of the owner's directive V5.9 (§14–§16), as the release of V5.10 applies them:
+
 | State | Applies when | What it does not mean |
 |---|---|---|
-| **DEVELOPMENT_COMPLETE** | every V5 family is merged, nothing is left to build, the full suite is green on the integration branch | not tagged, not validated, not deployable |
-| **RELEASE_CANDIDATE** | one commit, published to GitHub and tagged `v5-release-candidate`, on which the release gate's automated part passed (clean tree, synchronised, full suite, migrations clean, `check --deploy`, secret and personal-data scans) and final QA runs | not production-ready: the manual items and the go-live blockers may still be open |
-| **PRODUCTION_READY** | the candidate passed **every** item of the release gate (checklist §A) with evidence, the go-live blockers are closed or accepted by the owner in writing, the release tag exists, and the final handoff is written | not deployed: the owner deploys and cuts over |
+| **DEVELOPMENT_COMPLETE** | every V5 family is merged into `design-v5` — Wave 4 and F-8 included —, nothing is left to build, and the full suite is green on that branch | not validated, not tagged, not deployable |
+| **RELEASE_CANDIDATE** | one commit — `design-v5`'s published snapshot on GitHub, named by its SHA — on which the release-candidate validation passed: the fourteen gates of V5.10 (`docs/RELEASE_NOTES_v2.0.0.md`, *Release gates*), among them the release gate's automated part (clean tree, synchronised, full suite including the browser suite, migrations clean, `check --deploy`, secret and personal-data scans), CI green on both runs, the core flows smoke-tested and the preview serving that commit | not production-ready: GitHub's `main` has not moved, no tag exists yet, and the manual items may still be open |
+| **PRODUCTION_READY** | the candidate **is** GitHub's `main` (fast-forward), `pre-v5-main-2026-10` preserves `a3ac318`, the annotated tag `v2.0.0` is on `main`'s commit, the release gate's bar holds (checklist §A) — **A-1 … A-22 ticked with evidence on that commit, and each of A-23 … A-28 closed or accepted in writing by the owner as open until go-live** —, and the final handoff (V5.9 §17) is written, naming each of A-23 … A-28 with its state and the parts of A-1 … A-22 left for the server | not deployed: the owner deploys and cuts over, and the go-live waits on those of his items that gate it (the legal texts, EU hosting, SMTP, backups) |
 
 «GitHub pushed» is none of these.
 
@@ -1368,9 +1392,14 @@ Recommendation:
 - **Rate limits per worker** — with the local-memory cache, allauth's and the forms' limits are counted per Gunicorn
   worker: up to three times the configured figure. Shared counting needs Redis and its client library — a new
   dependency, the owner's decision.
-- **Python 3.12** — Ubuntu 24.04's interpreter; every source compiles under 3.12.10 and no 3.13-only library call is
-  used, but the test suite runs on 3.13 in CI. Run it once on 3.12 before the release, or install 3.13.
-- **PostgreSQL 16** on Ubuntu 24.04, 17 in development and CI; Django 5.2 supports both and the migrations contain
-  no raw SQL.
+- **Python 3.12** — Ubuntu 24.04's interpreter. Since 16 October 2026 CI runs the whole non-browser suite on that
+  version, against PostgreSQL 16, on an `ubuntu-24.04` runner — the «production target» run of
+  `.github/workflows/ci.yml`'s matrix, beside the Python 3.13 / PostgreSQL 17 run — and installs `requirements/dev.txt`
+  with `requirements/constraints.txt`, the set this server installs (step 4). The run proves the server's major
+  versions with that set and its Linux wheels, not Ubuntu's own builds: setup-python's CPython 3.12.x and the Alpine
+  image of PostgreSQL 16. The release's commit needs both runs green (checklist A-2, A-26). The browser suite
+  (Chromium) runs locally, on 3.13.
+- **PostgreSQL 16** on Ubuntu 24.04 and in CI's production-target run; 17 in development and in CI's other run.
+  Django 5.2 supports both and the migrations contain no raw SQL.
 - **The go-live blockers of `docs/PREPROD_REPORT.md` §15** — official Italian legal texts, jurist review of the rules,
   EU hosting confirmation, human review of the translations, a real screen-reader pass. None of them is code.

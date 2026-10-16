@@ -3579,6 +3579,16 @@
           "glob": "tests/**/test_*_w4_b.py",
           "source": "§2.2 serialized table («new tests go in new per-family files»)",
           "note": "test_layout_<family>.py, test_rtl_browser_<family>.py and any other new per-family test file"
+        },
+        {
+          "glob": "scripts/build_frontend.mjs",
+          "slice": "the INLINED list (nav.js into shell.js, hero.js into home.js: a module one entry alone imports is inlined, not an entry) and the two comments it rewrote (the entries, the shared chunks)",
+          "source": "steward assignment (w4-b merge, 16 Oct 2026): W2-C1's A11Y_PERF item 5, handed to «W4-B / the steward» — plan §2.6's request ratchet, over by one since DL54-101 (DL54-153 item 4); the file has no other owner"
+        },
+        {
+          "glob": "docs/design-v2/FRONTEND_DEPENDENCIES.md",
+          "slice": "the motion row (removed, with its date and its reason) and the «Decisione d'uso» paragraph that named the re-exports",
+          "source": "steward assignment (w4-b merge, 16 Oct 2026): the dependency registry's own rule — no row for a dependency that is not there — after the removal (DL54-153 item 2); the file has no other owner"
         }
       ]
     },
@@ -3630,7 +3640,7 @@
       ],
       "steward": false,
       "delegated": true,
-      "note": "Owns no files of its own beyond what is listed: each fix lands in the owning family's files (the manifest names them), through the steward. check_ownership.py passes such a path with a warning naming its owner; a path no family owns, or a steward-only path, still fails.",
+      "note": "Owns no files of its own beyond what is listed: each fix lands in the owning family's files (the manifest names them), through the steward. check_ownership.py passes such a path with a warning naming its owner; a path no family owns, or a steward-only path, still fails. Part 1 (release engineering) merged 16 October 2026 (DL54-155): the release notes assigned whole, and six slices recorded where its delegated edits landed — the steward's ci.yml, devops's three deployment documents and runbook test, README's «Requisiti» line; part 2 follows on the same branch.",
       "owns": [
         {
           "glob": "static/css/{base,layout,components,register}.css",
@@ -3673,6 +3683,40 @@
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
           "slice": "DS 2026 final (§3.6 item 4)",
           "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+        },
+        {
+          "glob": "docs/RELEASE_NOTES_v2.0.0.md",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026): the release notes of v2.0.0 — W4-D part 1 item 4, the draft; part 2 and the release-candidate validation fill its figures and its fourteen gates (DL54-155); a file no family held (REVIEW_PART1 «For the merge step» item 1)"
+        },
+        {
+          "glob": ".github/workflows/ci.yml",
+          "slice": "the matrix of W4-D part 1 item 1: the header comment's two runs and the pinned runner; the job's name; runs-on ubuntu-24.04; strategy (fail-fast off; the two include entries: the production target, Python 3.12 · PostgreSQL 16, and the development stack, Python 3.13 · PostgreSQL 17); the service image and setup-python's version from the matrix; the install with requirements/constraints.txt and its comment; the step «The interpreter and the database are the matrix's»",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026): the steward's file, edited by W4-D as the steward's delegate (plan §3.6 item 4; the constraints DL54-121 item 6 left to it; DL54-155); the file stays the steward's"
+        },
+        {
+          "glob": "docs/deployment/PRODUCTION_DEPLOYMENT_RUNBOOK.md",
+          "slice": "the release of V5.10 (W4-D part 1 items 1 and 2, and their review fixes): the header's W4-D note; §0's Python row; ILE_TAG's example (v2.0.0); step 3's sentence on the annotated tag; step 15's migration pattern ('apps/*/migrations/*.py'); «RELEASE TAGS»; «States» (one bar for PRODUCTION_READY, as checklist §A); «Known limits»' Python 3.12 and PostgreSQL 16 items",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "docs/deployment/PRODUCTION_CHECKLIST.md",
+          "slice": "the release of V5.10 (W4-D part 1 items 1 and 2, and their review fixes): the header's W4-D note; §A's bar for PRODUCTION_READY; A-1, A-2, A-26 and A-27; §B's second line; C-7",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "docs/deployment/ROLLBACK.md",
+          "slice": "the release of V5.10 (W4-D part 1 item 2, and its review fixes): the header's W4-D note; the line under the table (the reference tag is none of the four); PREVIOUS_TAG's example (v2.0.0); §7 «The pre-V5 platform: pre-v5-main-2026-10»",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026); the file stays devops's"
+        },
+        {
+          "glob": "README.md",
+          "slice": "the «Requisiti» Python line: what CI runs (3.12 with PostgreSQL 16, the production target; 3.13 with PostgreSQL 17)",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026): W4-D part 1 item 1; beside devops's and sec-f5's slices"
+        },
+        {
+          "glob": "tests/deployment/test_runbook_matches_the_code.py",
+          "slice": "test_the_release_gate_compares_the_tags_commit: its docstring and its two assertions (refs/tags/v2.0.0^{} and refs/tags/pre-v5-main-2026-10^{} in checklist A-2)",
+          "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026): W4-D part 1 item 2; the file stays devops's"
         }
       ]
     },
