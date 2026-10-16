@@ -3,6 +3,9 @@
 > Companion of [`PRODUCTION_DEPLOYMENT_RUNBOOK.md`](PRODUCTION_DEPLOYMENT_RUNBOOK.md) and [`ROLLBACK.md`](ROLLBACK.md).
 > A box is ticked only with its evidence written beside it — a command's output, a test count, a file name and its
 > checksum. «Should be fine» is not evidence. Written 12 October 2026; nothing in it has been run on a server.
+> Updated 16 October 2026 (the DevOps lane's second pass): A-21 and D-10 (the NUL-byte 400), A-22 and D-7 (every
+> static file a page loads cached by its hashed name); the same day, by its review fixes: A-21 and D-10 (what nginx
+> answers itself, the security headers of the 400).
 
 - [A. Release gate](#a-release-gate) — the owner's list (directive V5.9 §15), item by item, with how to verify it
 - [B. Before the deployment](#b-before-the-deployment)
@@ -41,8 +44,8 @@ only when every line is ticked (see *States* in the runbook).
 | A-18 | **Company** | `apps/companies/tests`, `apps/selection/tests`, `scripts/qa_company_journey.py` | outputs |
 | A-19 | **Academy** | `apps/academy/tests`; the catalogue and a training plan render for the right roles only | outputs |
 | A-20 | **Forum** | `apps/forum/tests`, `apps/community/tests`; the feature flags agree with the date (`phase3_public`, `forum_permanent_mode`, `virtual_forum` — back-office, phase console) | outputs, the flags' states |
-| A-21 | **Error pages** | `tests/deployment/test_error_pages_with_debug_off.py` (through the real handlers), `tests/frontend/test_layout.py`, `tests/frontend/test_429_w2_b.py`. A request whose `Host` is not allowed gets the 400 page: since W3-F2 the 400 and 500 pages are drawn without the request (`core.views._self_sufficient`), and `test_error_pages_with_debug_off.py` asserts it (the DevOps lane's F-6, a strict xfail until the devops merge, closed by W3-F2's merge `9af0e1a`). nginx's catch-all server (runbook step 11) still keeps such requests away from Django | outputs |
-| A-22 | **Performance sanity check** | on the temporary host, the method of `docs/STAGING_PERFORMANCE.md`: server time of `/fr/` and `/ar/` (`curl -o /dev/null -s -w '%{time_starttransfer}\n'`, median of 5), LCP and CLS of the home and the console on a phone profile, static files `immutable` and gzip; the shared CSS within its recorded ceilings (directive V5.8) | the figures |
+| A-21 | **Error pages** | `tests/deployment/test_error_pages_with_debug_off.py` (through the real handlers), `tests/frontend/test_layout.py`, `tests/frontend/test_429_w2_b.py`. A request whose `Host` is not allowed gets the 400 page: since W3-F2 the 400 and 500 pages are drawn without the request (`core.views._self_sufficient`), and `test_error_pages_with_debug_off.py` asserts it (the DevOps lane's F-6, a strict xfail until the devops merge, closed by W3-F2's merge `9af0e1a`). nginx's catch-all server (runbook step 11) still keeps such requests away from Django. A NUL byte in the query string, the session cookie or a form field gets the 400 page too, with the security headers of every page and no ERROR line — it was a 500 with a traceback until 16 October 2026 (gate 2's N-4): `tests/deployment/test_nul_bytes.py` (`cms.middleware.NulByteMiddleware`); behind nginx a NUL in the path gets nginx's own 400 and never reaches Django; on the server, D-10 | outputs |
+| A-22 | **Performance sanity check** | on the temporary host, the method of `docs/STAGING_PERFORMANCE.md`: server time of `/fr/` and `/ar/` (`curl -o /dev/null -s -w '%{time_starttransfer}\n'`, median of 5), LCP and CLS of the home and the console on a phone profile, every static file a page loads `immutable` — the ES modules its scripts import included (`tests/deployment/test_static_caching.py`, D-7) — and gzip; the shared CSS within its recorded ceilings (directive V5.8) | the figures |
 
 Go-live blockers that are **not code** (`docs/PREPROD_REPORT.md` §15) and decisions found by the DevOps pass:
 
@@ -142,9 +145,13 @@ curl -sI "$H/fr/" | grep -iE 'strict-transport|content-security|x-frame|x-conten
 for l in it fr en ar; do curl -s -o /dev/null -w "$l %{http_code}\n" "$H/$l/"; done      # D-5  four times 200
 curl -s "$H/ar/" | grep -o '<html[^>]*>'                                                 # D-6  dir="rtl"
 css=$(curl -s "$H/fr/" | grep -o '/static/css/dist/main\.[0-9a-f]*\.css' | head -n1); curl -sI "$H$css" | grep -i cache-control   # D-7  immutable
+js=$(curl -s "$H/fr/" | grep -o '/static/js/dist/shell\.[0-9a-f]*\.js' | head -n1); curl -s "$H$js" | grep -oE '(from|import) ?\(?"[^"]+"' | sort -u   # D-7  every import names a hashed file (.<12 hex digits>.js)
+curl -sI "$H/static/js/dist/shell.js" | grep -i cache-control                              # D-7  a plain name: max-age=60, public
 curl -s -o /dev/null -w '%{http_code}\n' "$H/media/"                                     # D-8  403 or 404: no listing
 curl -s "$H/sitemap.xml" | grep -m1 -o '<loc>[^<]*'; curl -s "$H/robots.txt" | tail -n 1   # D-9  the domain, https
 curl -s -o /dev/null -w '%{http_code}\n' "$H/fr/no-such-page/"; curl -s "$H/fr/no-such-page/" | grep -c Traceback   # D-10 404, then 0
+curl -s -o /dev/null -w '%{http_code}\n' "$H/fr/no-such-page%00/"                         # D-10 400, nginx's own: a NUL in the path never reaches Django
+curl -s -o /dev/null -w '%{http_code}\n' "$H/fr/?q=%00"; curl -s "$H/fr/?q=%00" | grep -c 'class="container error-page"'   # D-10 400, then 1: the project's page, never a 500
 curl -s -o /dev/null -w '%{http_code}\n' "$H/wp-json/"                                   # D-11 410 (legacy WordPress endpoint)
 ```
 

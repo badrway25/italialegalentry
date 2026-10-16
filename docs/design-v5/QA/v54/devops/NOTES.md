@@ -332,3 +332,369 @@ After both: `pytest tests/deployment tests/test_env_example_is_complete.py
 tests/security/test_production_settings_refuse_to_start.py` — 98 passed (before the sync: 97 passed, 1 xfailed).
 The merge, this family's entry in the ownership manifest and the steward's tests are recorded in
 `docs/design-v5/DECISION_LOG_V54.md` (the devops merge's entry).
+
+## Second pass (16 Oct)
+
+Lane `devops2-fix`, branch `v54-devops-2` (worktree `C:/tmp/ile_wt/v54-devops-2`, created from `design-v5` at
+`8ab5b89`), 16 October 2026. Brief: four items handed on by integration checkpoint 3's review
+(`QA/v54/intfix/REVIEW.md`, «outside this branch») and by gates 2–4 (N-4, then N-G), each reproduced first — a failing
+test or a measured probe — then fixed, then proved.
+
+**Hard limits kept.** Nothing deployed; no server, DNS record, domain or certificate touched or contacted; no
+production host named. No package installed, nothing downloaded. No secret in any file: the «production» values of the
+probes are the throwaway placeholders `tests/deployment` already uses, and the probes, settings and captures lived in a
+scratch directory outside the repository. One pytest at a time, on `ile_v5_l9` (its test database `test_ile_v5_l9`),
+`-p no:randomly`, never the full suite. The lane server ran on 127.0.0.1:8789 against `ile_v5_l9` only — never 8780,
+never `ile_v5` — and is stopped; the five sessions the browser proof opened for `qa-doc-person` (forced, no password
+typed) were ended by its sign-out, the first deleted (none left: checked). Other teams' files untouched: W3-E (the console's templates and CSS), W4-B
+(`static/js/src/**`, the JS dist), sec-f7 (`apps/cases`). The ownership manifest is the steward's: the paths this pass
+adds to the family are listed at the end.
+
+### 1. Stale scripts after a release — fixed
+
+**Root cause.** `config/settings/base.py` set `WHITENOISE_MAX_AGE = 31536000` at the bootstrap (17 September). WhiteNoise
+serves a name it recognises as hashed (through the manifest) `max-age=315360000, public, immutable` whatever that says,
+and every other name `max-age=<WHITENOISE_MAX_AGE>, public`. The templates link hashed names, but the bundles of
+`static/js/dist` are ES modules that import one another by relative specifiers, and the manifest storage rewrites a
+stylesheet's `url()` and `@import`, never a script's import: from a hashed entry the browser went on to request the
+chunks and the on-demand entries under their plain names — a year of cache on a URL whose content changes at the next
+release.
+
+**The facts, measured** on a real `collectstatic` under `config.settings.prod` (the runbook's environment, DEBUG off)
+into an empty temporary `STATIC_ROOT`: exit 0, 615 files copied, 1 449 post-processed — DL54-44's failure of 10 October
+(W1-D's console entry) is gone (DL54-77). Then the import graph followed from the templates' 31 entries (their hashed
+copies, as the browser receives them), each URL asked of WhiteNoise under the production settings: **48 files, 10 of
+them plain names served `max-age=31536000, public`** — the seven esbuild chunks (`chunk-ESWNIYP5`, `-MFQVK52T`,
+`-MVEBZ5U4`, `-OAT2KRBG`, `-OYVDETPU`, `-T6TU3QHP`, `extras-MMO4GKTU`) and the three entries imported on demand,
+`loader.js` (from `shell.js`, `piece-drawer.js` and `chunk-T6TU3QHP`), `depot.js` and `piece-drawer.js` (from
+`console.js`). The same in Chromium, on the lane server with the production settings (only what plain HTTP on loopback
+needs relaxed), home → console → `/documents/` → `/documents/upload/` → sign-out: 41 `/static/` requests, the same 10
+plain — the home's five chunks, `chunk-T6TU3QHP`, `extras-…` and `piece-drawer.js` on `/documents/`, `depot.js` and
+`loader.js` on the depot page.
+
+**Fix.** `apps/core/storage.py` — `CompressedManifestModulesStorage`, WhiteNoise's `CompressedManifestStaticFilesStorage`
+with Django's `support_js_module_import_aggregation`: `import … from "…"`, `export … from "…"`, `import "…"` and
+`import("…")` rewritten to the hashed names, as `url()` is — `base.py`'s `STORAGES` names it. And `WHITENOISE_MAX_AGE =
+60`: a plain name — the original copy collectstatic keeps beside each hashed one, linked by no page now — is revalidated
+after a minute. Why this one, of the brief's three:
+
+- a short max-age alone leaves the module names plain: a minute of staleness instead of a year, but a page opened before
+  a release still imports the next release's `loader.js` into its old shell, and every chunk is revalidated on every
+  visit;
+- content-hashed entry names belong to the build (`scripts/build_frontend.mjs`, `package.json`: W4-B's and the
+  steward's files) and to the templates, and Django would hash those names again;
+- the rewriting makes every file a page loads a hashed, immutable name, and one page load one release (the files of the
+  previous release stay collected: never `--clear`). The short max-age stays behind it, for whatever would escape it.
+
+What it asks, written in `core/storage.py` and the runbook's known limits: literal specifiers (a computed `import(x)`
+cannot be rewritten — the test refuses one in a module a page loads) and an acyclic module graph (a cycle has no hash
+fixed point: collectstatic stops with «Max post-process passes exceeded», at build time, in CI). Today's dist needed
+3 of the 5 extra passes Django allows. nginx serves no `/static/` (runbook step 11, held by a test): WhiteNoise makes the
+distinction; the runbook says what an nginx `location /static/` would have to do to keep it.
+
+**Proof.**
+
+| Check | Before | After |
+|---|---|---|
+| `tests/deployment/test_static_caching.py` — collectstatic under the production settings from an empty root; the graph walked from every `{% static %}` of every template (71 files with the design pages); every import of the 19 modules of `static/js/dist` (50 specifiers, 6 of them dynamic) the hashed name it resolves to; plain names ≤ 300 s | 3 of 4 fail: «10 of the 71 files … a plain name, «max-age=31536000, public»»; every specifier «served as './chunks/chunk-….js', not as the hashed …»; «31536000 > 300» | 4 passed |
+| The probe (48 files from the 31 non-design entries) | 10 plain, `max-age=31536000, public` | 48 hashed, `max-age=315360000, public, immutable` |
+| Chromium on the lane server, the same walk | 41 requests, 10 plain, a year | 41 requests, 0 plain, 0 not 200, 0 not immutable, 0 JS errors; the depot page itself requested `depot.c34d82a16457.js` and `loader.0b99e21f3c13.js`; `import()` of the rewritten loader specifier from the page: its 14 exports |
+| The rewritten text | — | only `}from"` → `} from "` (Django's template) and the URL; nothing else of the minified code changes (diffed on five modules) |
+| `tests/frontend/test_static_pipeline.py`, `test_css_bundle_is_current.py`, `test_frontend_bundle_is_current.py` | — | 11 passed (the steward's collectstatic runs base.py's storage, now this one) |
+
+`support_js_module_import_aggregation` reaches every `.js` collected, not only the dist: on the full tree it changed
+exactly 18 of the 19 modules of `static/js/dist` (the nineteenth imports nothing) and 11 sources of `static/js/src`,
+collected as they always were (their relative imports; a bare `"motion"` is left alone) — no third-party file: the
+admin's and Unfold's scripts hash as before. A future dependency whose script names a module that does
+not exist would stop collectstatic loudly — never a silent change: a match is rewritten only to the hashed copy of the
+file it names.
+
+### 2. The NUL-byte 500 — fixed
+
+**Where it first broke** (probe through the test client, DEBUG off, 16 October): PostgreSQL refuses a NUL in text and
+psycopg raises `DataError` before the query leaves; in a jsonb value, «unsupported Unicode escape sequence».
+
+| Vector | Before | After |
+|---|---|---|
+| path `/fr/nothing%00here/` (also `/fr/%00/`, `/%00`, `/fr/glossaire/a%00b/`, `/static/js/dist/loader.js%00`) | 500, ERROR + traceback: the 404 rendered, then `cms/middleware.py:52` → `:75` `lookup_redirect` | 400, one WARNING «Bad Request: /fr/nothing\x00here/» |
+| query string `/fr/actualites/?categorie=%00` | 500: the view, `news/views.py:62` → `news/services.py:51 category_by_slug` | 400 |
+| query string read by no view (`/fr/?x=%00`, `/?lang=%00`) | 200 / 302 | 400 |
+| form field read without a form: a case file's transition, NUL in its reason | 500: `cases/views.py:211` → `cases/services.py:155` → `audit/services.py:47 record` (jsonb) | 400 |
+| form field through a Django form (the sign-in) | 200, the form's message (`ProhibitNullCharactersValidator`) | 400 |
+| session cookie `sessionid="\000abcdefgh"` — found on the way: Python's cookie parser decodes the octal escape | 500: the session lookup | 400 |
+| CSRF or language cookie with a NUL | 200 (sanitised, ignored) | 200, untouched |
+
+**Fix.** `cms.middleware.NulByteMiddleware`, listed after `RequestIDMiddleware` and `LocaleMiddleware` (the page carries
+the request id and the visitor's language: `/ar/…%00` answers in Arabic, `dir="rtl"`), before CommonMiddleware, CSRF,
+the session's readers, the views and the redirect lookup. It looks at the decoded path, the raw query string (`%00` or
+the byte: parsing it would raise TooManyFieldsSent on a page that never reads its query), the session cookie, and a
+POST's form fields through `request.POST` (CsrfViewMiddleware parses it a few steps on anyway; an unreadable body is left
+to CSRF, which answers it as before). It never reads a file's bytes — a document holds NUL by nature and lives in
+`request.FILES` — nor a body that is not a form (the integrations API's JSON, behind its key: its view's). It returns the
+URLconf's `handler400` (W3-F2's self-sufficient page) instead of raising a SuspiciousOperation, which Django logs at
+ERROR with its traceback: a returned 400 is one WARNING line, the path escaped. `lookup_redirect` skips a NUL path as a
+second layer. In `cms/middleware.py`, the file the brief named; `core.middleware` would be the other natural home, should
+the steward prefer it.
+
+**Proof.** `tests/deployment/test_nul_bytes.py`: 15 of 17 failed before (every vector a 500 with an ERROR record), 17
+passed after — the path (5), the query string (4), a form field (urlencoded, a NUL in a field's name, multipart beside a
+file) through the stand-in view of `tests/deployment/nul_urls.py` (it looks the field up, as the views that store a
+posted value do — independent of sec-f7's in-flight `apps/cases`), the public sign-in form, the session cookie, the
+page's language, a file holding NUL bytes never refused (200), requests without NUL untouched (`%2500` is three
+characters), the lookup's second layer (0 queries), the guard's place in the chain. The probe's eighteen vectors after:
+every NUL vector 400 with one WARNING and no traceback.
+
+### 3. collectstatic and the deploy checks — no new warning since DL54-121
+
+`collectstatic --noinput` under `config.settings.prod`, empty `STATIC_ROOT`, the final code: exit 0, «615 static files
+copied …, 1449 post-processed», manifest 615 entries (the 19 modules of `static/js/dist` hashed), 834 `.gz`.
+
+`check --deploy --fail-level WARNING` under `config.settings.prod` with the runbook's environment (the placeholders of
+`tests/deployment/test_production_checks.py`, `DATABASE_URL` on `ile_v5_l9`):
+
+```
+=== template HSTS (0/0)
+SystemCheckError: System check identified some issues:
+
+WARNINGS:
+?: (security.W005) You have not set the SECURE_HSTS_INCLUDE_SUBDOMAINS setting to True. […]
+?: (security.W021) You have not set the SECURE_HSTS_PRELOAD setting to True. […]
+
+System check identified 2 issues (0 silenced).
+exit 1
+
+=== HSTS fully on (1/1)
+System check identified no issues (0 silenced).
+exit 0
+```
+
+Exactly DL54-121's: W005 and W021 while the template keeps both HSTS directives off, nothing with both on; the new
+storage and middleware add none. `manage.py check`: no issues; `makemigrations --check --dry-run`: «No changes
+detected».
+
+### 4. The browser suite's port flake — fixed
+
+**Root cause, measured.** pytest-django's `live_server` binds port 0: the operating system chooses. This workstation's
+dynamic range is 1024 + 64 511 (`netsh int ipv4 show dynamicport tcp`), and Windows hands those ports out in sequence
+(2 000 binds to port 0 on 127.0.0.1: 46 145 … 48 148, consecutive), so when the sequence passes the low thousands a live
+server lands wherever it is. Asked of the installed Chromium (Playwright's, 153) for every port from 1024 to 32767 but
+the 23 where something listened: it refuses **17** before connecting (`net::ERR_UNSAFE_PORT`) — 1719, 1720, 1723, 2049,
+3659, 4045, 5060, 5061, 6000, 6566, 6665–6669, 6697, 10080 — and none above 10080 (4190 and 6679, on some published lists,
+it opens). Reproduced: `--liveserver localhost:4045` → «Page.goto: net::ERR_UNSAFE_PORT at
+http://localhost:4045/fr/espace-reserve/mes-demandes/».
+
+**Fix.** `tests/live_server.py`, imported by the root `conftest.py` (so it holds for `tests/` and every `apps/*/tests`):
+a `live_server` fixture that is pytest-django's — the same `LiveServer` object, the same settings handling — whose
+thread draws the port with `SystemRandom` from 20000–32767 (above every refusal, below the default dynamic ranges of
+Linux, 32768–60999, and Windows, 49152–65535; this machine's Hyper-V exclusions include 29992–30091, inside it — a bind
+there fails with WSAEACCES and the next port is drawn: corrected after REVIEW_2 n3) and binds it: the bind is
+the test of freedom, so there is no window between choosing and using, and a port that is taken — another lane, an
+outgoing connection, a reservation — is skipped for the next draw (50 at most, then the error). Nothing is fixed, so two
+lanes never share a port. A `--liveserver` address or `DJANGO_LIVE_TEST_SERVER_ADDRESS` that names a port is honoured
+exactly (now documented in `.env.example`). A summary line names the port a run used — and says so when a given port is
+one Chromium refuses.
+
+**Proof.** `tests/test_live_server.py`, 7 passed: 500 draws all in range and clear of the 17; a taken port skipped for the
+next; every draw taken → an `OSError`, never a shared port; a named port honoured; the summary line; the fixture on a
+drawn port answering `/healthz/`; Chromium opening that port and refusing 4045 (marker `browser`). The browser files the
+brief named, `tests/frontend/test_overlays_console_browser_w2_a.py` + `apps/portal/tests/test_browser.py`: **23 passed**
+(3 min 15 s), «live server: http://localhost:27844 (a port drawn …)». Chromium answered no refusal on any of the
+12 765 ports of the range it was asked (three were listening).
+
+### Commands run on the final files
+
+| Command | Result |
+|---|---|
+| `pytest tests/deployment apps/cms tests/frontend/test_static_pipeline.py tests/frontend/test_css_bundle_is_current.py tests/frontend/test_frontend_bundle_is_current.py tests/test_env_example_is_complete.py tests/test_live_server.py -p no:randomly` | **153 passed** — `tests/deployment` 76 (22 new: 4 + 17 + 1), `apps/cms` 45, the static pipeline and bundles 11, the environment template 14, the live server 7 |
+| `pytest tests/security -p no:randomly -rs` (the confidential-material test with its sentinels, from the local environment) | **157 passed**, 0 skipped |
+| `pytest tests/frontend/test_design_docs.py` | 40 passed |
+| `pytest tests/test_env_example_is_complete.py`, before `DJANGO_LIVE_TEST_SERVER_ADDRESS` was documented | 1 failed («read by the code but absent from .env.example»), then 14 passed |
+| `pytest tests/frontend/test_overlays_console_browser_w2_a.py apps/portal/tests/test_browser.py` | 23 passed |
+| `manage.py check` · `makemigrations --check --dry-run` | no issues · «No changes detected» |
+| `ruff check .` · `ruff format --check` on the changed Python files | clean |
+| `bash -n` on every ```bash block of the three documents | 43 blocks, 0 errors |
+| `git merge-tree --write-tree design-v5 HEAD` (design-v5 at `11070b5`, after the sec-f7 merge) | no conflict |
+
+Commits of this pass, on `v54-devops-2`: `d62d256` item 1 (storage, max-age, test) · `fabc2d9` item 2 (guard, tests) ·
+`7785a2b` runbook, checklist and their test · `06397fb` item 4 (live server, tests) · `bfde9e2` `.env.example` ·
+`2c08123` the static probe never reads a database (`DATABASE_URL` at a dead address; 4 passed again) · `b3eac59` and
+this commit, these notes.
+
+### For the steward
+
+`scripts/check_ownership.py devops design-v5`: 13 paths — 6 inside, 2 slice, **5 outside** → FAIL until the manifest
+assigns them (the manifest is the steward's file; 14 paths and 7 inside once `REVIEW_2.md` was committed — REVIEW_2 n4;
+16 after the review fixes, «Second pass — review fixes» below). Proposed entries for the family «devops»:
+
+| Path | Whole or slice | Source |
+|---|---|---|
+| `apps/core/storage.py` | whole | second pass, item 1 |
+| `config/settings/base.py` | slice, extended: `STORAGES["staticfiles"]` and its comment, `WHITENOISE_MAX_AGE` and its comment, the `cms.middleware.NulByteMiddleware` entry of `MIDDLEWARE` and its comment | items 1 and 2 |
+| `apps/cms/middleware.py` | slice: the module docstring's last paragraph, `NUL`, `NulByteMiddleware`, `lookup_redirect`'s NUL lines, their imports | item 2 |
+| `conftest.py` (root) | slice: the docstring's live-server paragraph and the import of `tests.live_server` | item 4 |
+| `tests/live_server.py`, `tests/test_live_server.py` | whole | item 4 |
+
+Already the family's: `docs/deployment/**`, `tests/deployment/**` (two new tests and `nul_urls.py`), `.env.example`'s
+NOT FOR PRODUCTION section.
+
+### Open, not this lane's to close
+
+- **W4-B's dist** (Motion removed) is not on design-v5 yet: `tests/deployment/test_static_caching.py` walks whatever
+  dist is collected, so the merge that brings it runs the proof again — a cycle or a computed import there fails it, with
+  the file named.
+- **JSON bodies** with a NUL (the integrations API, behind its key) are left to their view; a probe there was not run.
+- Not exercised: nginx, Gunicorn, a server (Windows workstation); the browser suite as a whole (the brief: never the full
+  suite) — the two files above and the new browser test ran.
+
+## Second pass — review fixes
+
+Lane `devops2-fix2`, branch `v54-devops-2` (worktree `C:/tmp/ile_wt/v54-devops-2`), 16 October 2026, on `4849b06`.
+Brief: `REVIEW_2.md` — SHIP_AFTER_FIXES, one major, six minors, four nits. **The major and the six minors are fixed,
+each held by a test that fails before the fix; the four nits too.** m4's last step — the design preview's `_runserver`
+calling the new helper — is one line in W1-P's file, left to the steward (below). One more red, found on the way, is
+fixed: the design preview's landing test, broken by the guard since `fabc2d9`.
+
+**Hard limits kept.** Nothing deployed; no server, DNS record, domain or certificate touched or contacted; no production
+host named — the added lines hold no IPv4 address but 127.0.0.1, no host name, no secret-like token (scanned). No
+package installed, nothing downloaded. One pytest at a time on `test_ile_v5_l9`, `-p no:randomly`, never the full suite;
+no lane server was needed. Scratch probes and settings lived in the session's scratch directory, outside the repository.
+Other teams' files untouched: `git diff --stat design-v5...HEAD -- static/ templates/ apps/cases apps/portal` is empty.
+One file outside the family's paths changed, for the red above: `tests/frontend/test_design_preview.py` (W1-P's).
+
+| Finding | Change | Evidence |
+|---|---|---|
+| **M1** the guard read every POST's form: a multipart POST to the public webhook was a 500 | `cms.middleware.NulByteMiddleware`: the path, the query string and the session cookie stay in `__call__`, before every reader; a POST's form moves to `process_view` — the chain's first `process_view`, one step before `CsrfViewMiddleware.process_view` reads the same form — and is never read for a `csrf_exempt` view (the integrations API and the public webhook read their raw body; no such view stores a posted field). The review's prototype, plus the next row | `test_the_public_webhook_still_reads_its_body_after_a_multipart_post` (500 before, 401 after, no ERROR record); `test_a_csrf_exempt_view_keeps_its_raw_body_nul_or_not` (a csrf_exempt stand-in in `nul_urls.py`: 400 before, 200 after). The review's 34-vector probe (`review/test_nul_review.py`) run against this tree: 34 passed, every status equal to the review's «proposed» column, no ERROR record, CSP, X-Frame-Options and Permissions-Policy on every 400 |
+| **m1** TooManyFieldsSent on the webhook — and, found here, on every protected form | The same move frees the webhook. Beyond the prototype: a body Django will not parse (`UNPARSABLE`: `UnreadablePostError`, `MultiPartParserError`, `SuspiciousOperation` — TooManyFieldsSent, TooManyFilesSent, RequestDataTooBig —, `BadRequest`) is not the guard's to answer: `process_view` returns `None` and the next reader answers as without the guard. With the prototype alone, the sign-in form still answered a 250-field POST 400 with TooManyFieldsSent's ERROR line, for anyone without a CSRF cookie — CSRF answers 403 without reading the body | `test_a_webhook_body_of_more_fields_than_django_parses_is_still_the_webhook_s` (400 + ERROR before, 401 after); `test_a_body_django_will_not_parse_is_answered_as_without_the_guard[urlencoded, multipart]` (the sign-in with CSRF enforced: 400 + ERROR before, 403 after) |
+| **m2** the guard's 400 had no CSP, X-Frame-Options or Permissions-Policy | `config/settings/base.py`: `XFrameOptionsMiddleware`, `CSPMiddleware`, `BackofficeCSPMiddleware` and `ExtraSecurityHeadersMiddleware` right after `TextGZipMiddleware`, their order kept (django-csp below the gzip layer; the back office's relaxation after django-csp, so it runs first on the way out). Response hooks only; no template or code reads `request.csp_nonce`; more responses carry the headers, none fewer (the legacy 410s and the redirects now too) | `test_the_400_carries_the_security_headers_of_every_page`: the 400 answering a NUL in the path, the query string, the session cookie and a form carries the eight security headers of `/fr/`, with the same values (before: CSP, X-Frame-Options, Permissions-Policy, CORP and X-Permitted-Cross-Domain-Policies absent); the order test extended. The design preview's chain test (its frame exception listed after django-csp and X-Frame-Options) passes |
+| **m3** «Max post-process passes exceeded» is not only a cycle, and the passes follow the directory order | `core.storage`: Django's four module patterns on `static/js/dist` only — `MODULES = r"js[/\]dist[/\]*.js"`, because collectstatic's paths are `os.path.join`'s, a backslash on Windows — and `support_js_module_import_aggregation` off. The worst chain was `js/src/console.js → piece-drawer → depot → loader`, sources no page loads: worst case 3 → 2 of the 4 passes a name may take. The three sentences corrected (`core/storage.py`, runbook step 8, Known limits) | `test_no_directory_order_asks_django_for_more_passes_than_it_runs` computes the worst case over every directory order from the finders' files and the storage's own patterns, no collectstatic, in milliseconds: 2 (3 under the second pass's storage; W4-B's dist alone, by the review's script: 2). The model checked against the review's real collectstatic: `test_the_model_of_the_passes_agrees_with_django_on_a_chain_of_modules` — seven modules in one directory 5 > 4 (the review's run failed), six 4, down the directories 0, a cycle never |
+| **m4** the design preview's `dev_server` binds port 0 | `tests/live_server.py`: `bind_a_port_chromium_accepts(bind)` — draw, bind, the next draw on a taken or reserved port, the last error rather than a shared port — now used by the live server's thread, ready for `_runserver`. Measured on the way: two of Django's `WSGIServer`s with their default `allow_reuse_address=True` bind one port on Windows, so the caller passes `False`, as Django's live server does. Not done: the call in `_runserver` | `test_a_server_built_outside_live_server_binds_a_port_chromium_accepts`, `test_the_helper_skips_a_taken_port_and_never_shares_one`; the seven earlier live-server tests; 23 browser tests in Chromium on a drawn port (27680) |
+| **m5** no test collected twice into one root | `test_a_release_collected_over_the_previous_one_renames_what_changed_and_keeps_the_previous`: the bundles of `static/js/dist` alone (a copy), the production settings, a collect; `loader.js` changed in place with a later mtime; a second collect into the same root, no `--clear` | renamed: exactly `loader.js` and its five importers (`chunk-T6TU3QHP`, `depot`, `piece-drawer`, `shell`, `console`); every file of release N and its `.gz`, byte for byte; each release's graph holds its own hashed names only. Under the merge base's storage it fails: `loader.js` alone renamed |
+| **m6** the rewriting read every collected script | The restriction of m3. And a fast check of everything the storage rewrites | `test_the_module_patterns_read_the_bundles_of_static_js_dist_only` (the 19 bundles and nothing else, both separators); `test_no_script_outside_static_js_dist_is_rewritten_by_the_module_patterns` (the real collect: the 11 sources of `js/src` rewritten before, none after, no third-party script); `test_every_reference_the_storage_rewrites_names_a_collected_file` (none unresolved). The dist itself is unchanged: both storages collected and compared, the 19 bundles have the same names and the same bytes as under the second pass's storage, which Chromium imported in the review |
+| **n1** behind nginx a NUL in the path never reaches Django | Checklist D-10: the path line says the 400 is nginx's own; the query line greps the project's page (`class="container error-page"` → 1). A-21 and the runbook's Known limits say which layer answers which | `test_the_smoke_test_proves_the_nul_guard_where_nginx_lets_a_nul_through` (fails on the previous checklist) |
+| **n2** a previous release's hashed names are served `max-age=60` | Step 11 and the static table: `immutable` for a name of the current release; a plain name, or a previous release's hashed name, 60 s — its content never changes | read |
+| **n3** «outside this machine's Hyper-V exclusions» | §4 corrected: 29992–30091 lies inside the range (`netsh int ipv4 show excludedportrange protocol=tcp`, read again); a bind there fails with WSAEACCES and the next port is drawn — the helper's docstring says so | read |
+| **n4** the steward's counts | corrected in place; the final counts below | `check_ownership.py` |
+
+**Found on the way — fixed.** `test_the_landing_never_frames_what_is_not_a_page_of_this_site[/fr/\x00]`
+(`tests/frontend/test_design_preview.py`) had failed on this branch since the guard (`fabc2d9`): the landing's
+`?page=/fr/%00` is the product's 400 before the landing reads it, not the preview's own sealed page. Neither the second
+pass nor its review ran the design preview's tests. Checked on `4849b06` (fails), then fixed in the test: the NUL case
+is now `test_a_nul_byte_never_reaches_the_landing` (400, the project's page, nothing framed, nothing of the preview
+named); the preview's validator keeps its control-character case (`"/fr/ x"`). Every test was searched for `\x00`,
+`%00`, `\0` and `\u0000`: no other request carries a NUL (the rest are file bytes and unit tests of sanitisers).
+
+**A body Django will not parse, probed** (scratch harness, test client, DEBUG off): a NUL form posted to an unknown
+URL → 404 (nothing reads the form); a malformed multipart body, or 120 files, to the sign-in → 403 with CSRF enforced,
+200 without (the view finds no field); an urlencoded body declared latin-1 → 403 enforced, 400 and a WARNING without
+(the view's own parse, as before the guard); a PUT with a NUL → 200 (never parsed). No ERROR record in any. One
+difference with `design-v5` stays, by design: a multipart body Django refuses, from a client holding a CSRF cookie, now
+meets CSRF with the fields the failed parse left empty — 403 «CSRF token missing» instead of the 400 it had (with an
+ERROR line for the limits). The failed parse consumed the stream; the site's upload forms send one file each, and its
+text fields stay far below the 5 MB of `DATA_UPLOAD_MAX_MEMORY_SIZE`.
+
+**Commands run on the final files**
+
+| Command | Result |
+|---|---|
+| `pytest tests/deployment apps/cms tests/frontend/test_static_pipeline.py tests/frontend/test_css_bundle_is_current.py tests/frontend/test_frontend_bundle_is_current.py tests/test_env_example_is_complete.py tests/test_live_server.py -p no:randomly` | **168 passed** — the NOTES' set, 153 + 15 new (NUL bytes 6, static caching 6, runbook 1, live server 2) |
+| `pytest tests/security -p no:randomly -rs` (the confidential-material test with its sentinels) | **157 passed**, 0 skipped |
+| `pytest apps/integrations apps/core tests/backoffice/test_backoffice.py tests/compliance/test_public_pages.py apps/documents/tests/test_download.py apps/accounts tests/frontend/test_layout.py tests/frontend/test_429_w2_b.py tests/i18n/test_routing.py tests/frontend/test_design_docs.py -m "not browser" -p no:randomly` | **366 passed** — what the new middleware order reaches: MFA, layout, 429, routing, public pages, downloads, the API |
+| `pytest tests/frontend/test_design_preview.py -m "not browser" -p no:randomly` | **297 passed** (1 failed before the landing test's fix) |
+| `pytest tests/frontend/test_overlays_console_browser_w2_a.py apps/portal/tests/test_browser.py -p no:randomly` | **23 passed** in Chromium, the live server on a drawn port |
+| The review's NUL probe (34 vectors) against this tree | 34 passed; every status the review's «proposed» one |
+| collectstatic under the production settings with each storage, compared | 615 files copied, 1 449 post-processed, both; 11 names differ, all in `js/src`; `js/dist`: same names, same bytes |
+| `check --deploy --fail-level WARNING` under `config.settings.prod`, the runbook's placeholders, `DATABASE_URL` on `ile_v5_l9` | template HSTS: W005 and W021, exit 1; both on: «no issues», exit 0 — unchanged |
+| `manage.py check` · `makemigrations --check --dry-run` | no issues · «No changes detected» |
+| `ruff check .` · `ruff format --check` on the branch's changed Python files | clean |
+| `bash -n` on every ```bash block of the three documents | 43 blocks, 0 errors |
+
+Commits of this pass: `0596d94` the preview's landing test · `056bacc` the guard (M1, m1) and the header writers (m2) ·
+`36b65ea` the storage and its tests (m3, m5, m6) · `926be59` the port helper (m4) · `12fa21c` runbook and checklist
+(m3, m6, n1, n2, M1, m2) · this commit (n3, n4, this section). The message of `36b65ea` says «each new test failing on
+the storage it replaces»: true of the m5 and m6 tests; the worst-case and unresolved-reference checks pass under both
+storages — they hold what comes next.
+
+### For the steward (review fixes)
+
+`scripts/check_ownership.py devops design-v5`: **16 paths — 8 inside, 2 slice, 6 outside** → FAIL until the manifest
+assigns them: the five of the second pass («For the steward» above) and the design preview's test.
+
+| Path | Whole or slice | Source |
+|---|---|---|
+| `config/settings/base.py` | slice, extended again: the four header middlewares' place right after `TextGZipMiddleware` and their comment — besides `STORAGES["staticfiles"]`, `WHITENOISE_MAX_AGE` and the guard's entry (above) | m2 |
+| `apps/cms/middleware.py` | slice (above), now with `UNPARSABLE`, `process_view` and the docstring's paragraphs on them | M1, m1 |
+| `apps/core/storage.py`, `tests/live_server.py`, `tests/test_live_server.py` | whole (above) — now with `MODULES` and `bind_a_port_chromium_accepts` | m3, m4, m6 |
+| `tests/frontend/test_design_preview.py` | slice: `test_a_nul_byte_never_reaches_the_landing` and the `"/fr/\x00"` case it replaces in `test_the_landing_never_frames_what_is_not_a_page_of_this_site`; the file stays W1-P's | the guard's red, found here |
+
+m4, for W1-P or the steward: in `_runserver` (`tests/frontend/test_design_preview.py`), build the server through
+`tests.live_server.bind_a_port_chromium_accepts(lambda port: server_class(("127.0.0.1", port), WSGIRequestHandler,
+allow_reuse_address=False))`, `server_class` being the `type("WSGIServer", (socketserver.ThreadingMixIn, WSGIServer),
+{})` it builds today, instead of binding `("127.0.0.1", 0)`.
+
+### Open, not this lane's to close
+
+- m4's call in `_runserver` (above).
+- The full suite and the browser suite as a whole (the brief: never the full suite): the steward's checkpoint.
+- nginx, Gunicorn, a server: not run here (Windows workstation); the review measured nginx 1.24 in WSL.
+
+## At the merge (the steward, 16 October 2026) — second pass
+
+The steward's merge step (`devops2-merge`) on lane 9, under `C:/tmp/ile_locks/DESIGN_V5_MERGE_LOCK` — held by the W3-E
+merge when the step began (06:12), taken at 06:42:48 once that merge had released it:
+`TEST_DATABASE_URL=…/test_ile_v5_l9`, one pytest at a time, `-p no:randomly`; no lane server started, no persona used.
+Nothing deployed, nothing pushed; no server, DNS record, domain or certificate touched or contacted. Logs:
+`C:/tmp/ile_v5_council/evidence/v54/devops/merge-2/`.
+
+- **The sync** (`53b9695`). design-v5 had moved from `8ab5b89` to `a833403`: 69 commits — the sec-f7 merge and its
+  record DL54-132; `11070b5`, this family's `tests/deployment/test_private_documents_are_never_served.py`, fixed by the
+  orchestrator between the passes (GitHub's Linux runner could not create the runbook's private root, so the probe now
+  asks the same storage class at the same root whether it hands out a URL); the W3-E merge, its rebuild, DL54-151 and
+  its changelog line. `git merge --no-ff design-v5`: no conflict, and no path in common with this branch.
+- **The bundles.** The merge brought stylesheet sources (W3-E's sheets) and `static/js/src/console.js`, so both dist
+  trees were deleted and rebuilt from clean (`npm run build`; `node_modules` a junction to design-v5's):
+  `static/css/dist` byte for byte the committed tree; `static/js/dist` identical once esbuild's chunk names are read as
+  one (12 entries, 7 chunks; the names follow the worktree). design-v5's committed tree kept (`git checkout`), so the
+  merge brings no bundle. This family changes no stylesheet and no script: V5.8's shared CSS payload is not concerned.
+- **REVIEW_2 m4's last step** (`4b56576`, the lane's hand-over to the steward): the design preview's `_runserver` builds
+  its server through `tests.live_server.bind_a_port_chromium_accepts`, with `allow_reuse_address=False`, where it bound
+  `("127.0.0.1", 0)` — one helper call and its comment in W1-P's file, the recipe of the lane's notes and the review.
+  The dev-server outage, slot and SO_LINGER tests build their server there: `test_design_preview.py -m "not browser"`,
+  297 passed before and after the sync; its 17 browser tests below.
+- **Ownership** (`5a8415a`). The family keeps its id and DL54-01's branch name in the manifest; its note names the
+  second branch. `base.py`'s slice extended (`STORAGES["staticfiles"]`, `WHITENOISE_MAX_AGE`, the four security-header
+  middlewares' place right after `TextGZipMiddleware`, the guard's entry) and six entries added — whole:
+  `apps/core/storage.py`, `tests/live_server.py`, `tests/test_live_server.py`; slices: the guard in
+  `apps/cms/middleware.py` (`LegacyURLMiddleware` stays as it was, a file no family held), the root `conftest.py`'s
+  docstring paragraph and import, the design preview's NUL test and `_runserver`'s port (the file stays W1-P's). Each
+  slice read in the diff and staying inside it. `check_ownership.py devops design-v5`: 16 paths, 8 inside, 2 slice, 6
+  outside → FAIL before; **16 paths, 11 inside, 5 slice → PASS** with the extended manifest, before its commit (after it
+  the manifest joins the diff as the steward's own, steward-only path, as at the sec-f5 and sec-f7 merges);
+  `--validate`: **29 families, 736 entries**.
+- **Tests on the merged branch**:
+  - the brief's list, with the live-server tests and the design preview's file (`-m "not browser"`): **719 passed** in 5
+    min 56 s, no skip — `tests/deployment` 90, `tests/security` 157 (the confidential-material guard with its
+    sentinels), `apps/cms` 45, `test_static_pipeline.py` 3, both bundle-currency tests 8, `test_design_docs.py` 40,
+    `test_env_example_is_complete.py` 14, `tests/test_check_ownership.py` 57, `tests/test_live_server.py` 8,
+    `test_design_preview.py` 297;
+  - what the new middleware order reaches, with W3-E's pages, which meet it for the first time on this tree (`-m "not
+    browser"`): **401 passed** in 8 min 03 s — `apps/integrations` 45, `apps/accounts` 189,
+    `tests/backoffice/test_backoffice.py` 5, `tests/compliance/test_public_pages.py` 9,
+    `apps/documents/tests/test_download.py` 12, `tests/frontend/test_layout.py` 29, `test_429_w2_b.py` 7,
+    `tests/i18n/test_routing.py` 30, W3-E's `test_case_file_w3_e.py` 22, `apps/portal/tests/test_views.py` 35,
+    `apps/helpdesk/tests/test_views.py` 18;
+  - in Chromium, through the new live-server plumbing: **41 passed** in 3 min 40 s —
+    `tests/frontend/test_overlays_console_browser_w2_a.py` 15 and `apps/portal/tests/test_browser.py` 8, on
+    pytest-django's `live_server` through `tests/live_server.py` («live server: http://localhost:23662 (a port drawn by
+    tests/live_server.py, which Chromium accepts)»); `tests/test_live_server.py`'s Chromium test 1 (a drawn port opened,
+    4045 refused); the design preview's 17 (`dev_server` through `_runserver` and m4's helper, the archive's pages
+    through `live_server`) — with another lane's browser suite running beside it;
+  - `manage.py check`: no issue; `makemigrations --check --dry-run`: «No changes detected»; `ruff check .`: clean; `ruff
+    format --check` on the family's 11 Python files: clean; `bash -n` on the three documents' 46 ```bash blocks: 0
+    errors.
+- **Scan.** The family's 2 189 added lines (`design-v5...HEAD` before this section: 17 paths, the manifest among them):
+  no IPv4 address but 127.0.0.1, URLs on `localhost` only and one `https://<host…>` placeholder, `example.com` /
+  `example.test` addresses only, no credential, secret-like assignment or high-entropy token, no production host,
+  droplet name or live domain.
+
+The merge itself is recorded in `docs/design-v5/DECISION_LOG_V54.md` (DL54-152). No tag, no restart of 8780, no change
+to v5-live, no line in `CHANGELOG_V54.md` or `live_status.json` (devops is not a preview surface: DL54-77, DL54-121).

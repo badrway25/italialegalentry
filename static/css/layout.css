@@ -77,24 +77,8 @@
   background: var(--paper-deep);
 }
 
-.section--verso {
-  background: var(--navy);
-  color: var(--paper-on-navy);
-  border-block-start: 2px solid var(--navy);
-  border-block-end: 2px solid var(--rubric-on-navy);
-}
-
-.section--verso :is(h1, h2, h3, h4, .t-plate, .t-title, .t-band, .t-entry, .folio__head) {
-  color: inherit;
-}
-
-.section--verso :is(.t-muted, .t-gloss, .t-caption, .t-lead) {
-  color: var(--paper-muted-on-navy);
-}
-
-.section--verso a:not(.btn) {
-  color: inherit;
-}
+/* The night verso left with its last page, the case file's pre-assessment, whose text stood at 1.06 : 1 on it
+   (design V5, W3-E: the page's own ground). */
 
 .section__header {
   max-inline-size: var(--measure-lead);

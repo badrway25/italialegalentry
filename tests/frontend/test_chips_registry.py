@@ -49,6 +49,12 @@ PRODUCERS = {
     "selection.EvidenceStatus": ("selection.models", "EvidenceStatus"),
     "selection.SelectionStage": ("selection.models", "SelectionStage"),
     "community.InitiativeStatus": ("community.models", "InitiativeStatus"),
+    # the person's registers in the reserved area (W3-E): «Mes demandes» (two producers) and «Mes échéances»
+    "enquiries.SubmissionStatus": ("enquiries.models", "SubmissionStatus"),
+    "forum.RegistrationStatus": ("forum.models", "RegistrationStatus"),
+    "portal.DeadlineStatus": ("portal.models", "DeadlineStatus"),
+    # a training plan's state (W3-E's fix pass): «Mes formations» and the plan
+    "academy.PlanStatus": ("academy.models", "PlanStatus"),
 }
 
 #: The three selection producers return words from status_word(); their vocabulary is read from

@@ -54,9 +54,15 @@ serving = [
     for route, callback, args in walk(get_resolver().url_patterns)
     if getattr(callback, "__module__", "") == "django.views.static" and callback.__name__ == "serve"
 ]
-from documents.storage import private_storage
+from documents.storage import PrivateFileSystemStorage, private_root, private_storage
 try:
-    private_storage().url("1/x.pdf")
+    try:
+        storage = private_storage()
+    except OSError:
+        # private_storage() creates its root, and the runbook's root exists only on the server: where it cannot be
+        # created, the same class at the same root answers the question asked here — does it hand out a URL?
+        storage = PrivateFileSystemStorage(location=str(private_root()), base_url=None)
+    storage.url("1/x.pdf")
     url = "a URL was produced"
 except Exception as exc:
     url = type(exc).__name__
@@ -130,6 +136,18 @@ def test_under_the_production_settings_nothing_serves_the_private_root(layout):
     # In production Django serves no file from disk at all: public media is the reverse proxy's /media/ alias,
     # static files are WhiteNoise's, private documents are documents.views._serve's.
     assert report["serving"] == [], report["serving"]
+    _assert_private_is_never_served(report)
+
+
+def test_a_private_root_this_machine_cannot_create_still_has_no_url(tmp_path):
+    """
+    The runbook's directories exist only on the server, created there with their owner. On a CI runner /var/lib is not
+    writable (GitHub's Linux runner answered PermissionError where Windows had quietly created C:\\var\\lib), so the
+    probe asks the storage its question — does it hand out a URL? — whether or not the root can be created here.
+    """
+    blocker = tmp_path / "a-file"
+    blocker.write_text("not a directory", encoding="utf-8")
+    report = _probe(**PRODUCTION, MEDIA_ROOT=str(tmp_path / "media"), PRIVATE_MEDIA_ROOT=str(blocker / "private"))
     _assert_private_is_never_served(report)
 
 

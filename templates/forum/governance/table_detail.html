@@ -1,62 +1,55 @@
 {% extends "forum/governance/base_governance.html" %}{% load i18n %}
 {% comment %}
-One digital table: its subject, its referent and the proposals being elaborated there.
-
-The referent is named by ORGANISATION and only while their mandate is in force — `table.live_referent`
-returns None the day the mandate lapses, and the page then says so rather than keeping a stale name
-on screen. « Qui modère cette table » and « jusqu’à quand » are the same fact in this module.
+A thematic table — design V5 (W3-E step 2): the page's head (its title, its topic, its commission, state and dates on
+the head's line), who moderates it — the referent's organisation, its category and its mandate's period, as facts —, then the
+proposals worked here, each a row with its reference in ILE Mono and its state as a chip.
 {% endcomment %}
 {% block page_title %}{{ table.title_fr }}{% endblock %}
 {% block meta_description %}{% translate "Table thématique du Forum permanent : sujet, référent et propositions en élaboration." %}{% endblock %}
 
 {% block portal_header %}
-{% include "components/page_header.html" with title=table.title_fr lead=table.topic_fr eyebrow=commission.name_fr %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" dir="auto">{{ table.title_fr }}</h1>
+    {% if table.topic_fr %}<p class="ws-head__lead" dir="auto">{{ table.topic_fr }}</p>{% endif %}
+    <p class="reg-head__meta"><span>{{ commission.name_fr }}</span>{% chip table.status "forum.TableStatus" %}{{ table.get_status_display }}{% endchip %}<span>{% blocktranslate with date=table.opened_on|date:"d.m.Y" %}Ouverte le {{ date }}{% endblocktranslate %}</span>{% if table.closed_on %}<span>{% blocktranslate with date=table.closed_on|date:"d.m.Y" %}Clôturée le {{ date }}{% endblocktranslate %}</span>{% endif %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block governance_content %}
-<p class="gloss">
-  {% chip table.status "forum.TableStatus" %}{{ table.get_status_display }}{% endchip %}
-  <span>{% blocktranslate with date=table.opened_on|date:"d.m.Y" %}Ouverte le {{ date }}{% endblocktranslate %}</span>
-  {% if table.closed_on %}<span>{% blocktranslate with date=table.closed_on|date:"d.m.Y" %}Clôturée le {{ date }}{% endblocktranslate %}</span>{% endif %}
-</p>
-
-<section class="portal-section" aria-labelledby="referent-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Référent" %}</span></p>
-  <h2 class="portal__section-title" id="referent-title">{% translate "Qui modère cette table" %}</h2>
-  {% if referent %}
-  <p class="t-prose">
-    {{ referent.profile.display_label }} — {{ referent.profile.get_category_display }}
-    <br>
-    {% if referent.valid_until %}
-      {% blocktranslate with start=referent.valid_from|date:"d.m.Y" end=referent.valid_until|date:"d.m.Y" %}Mandat du {{ start }} au {{ end }}.{% endblocktranslate %}
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="referent-title">
+    <h2 class="db-h2 reg-sec__title" id="referent-title"><span>{% translate "Qui modère cette table" %}</span></h2>
+    {% if referent %}
+    <dl class="portal-facts">
+      <div class="portal-facts__row"><dt>{% translate "Organisation" %}</dt><dd dir="auto">{{ referent.profile.display_label }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Catégorie" %}</dt><dd>{{ referent.profile.get_category_display }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Mandat" %}</dt><dd>{% if referent.valid_until %}{% blocktranslate with start=referent.valid_from|date:"d.m.Y" end=referent.valid_until|date:"d.m.Y" %}Mandat du {{ start }} au {{ end }}.{% endblocktranslate %}{% else %}{% blocktranslate with start=referent.valid_from|date:"d.m.Y" %}Mandat ouvert depuis le {{ start }}, sans échéance fixée.{% endblocktranslate %}{% endif %}</dd></div>
+    </dl>
     {% else %}
-      {% blocktranslate with start=referent.valid_from|date:"d.m.Y" %}Mandat ouvert depuis le {{ start }}, sans échéance fixée.{% endblocktranslate %}
+    <p class="db-empty">{% translate "Cette table n’a pas de référent en fonction : le mandat précédent est échu ou n’a pas encore été ouvert par le secrétariat du Forum." %}</p>
     {% endif %}
-  </p>
-  {% else %}
-  <p class="empty">{% translate "Cette table n’a pas de référent en fonction : le mandat précédent est échu ou n’a pas encore été ouvert par le secrétariat du Forum." %}</p>
-  {% endif %}
-</section>
+  </section>
 
-<section class="portal-section" aria-labelledby="table-proposals-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Propositions" %}</span></p>
-  <h2 class="portal__section-title" id="table-proposals-title">{% translate "Les propositions élaborées ici" %}</h2>
-  {% if proposals %}
-  <ol class="register">
-    {% for proposal in proposals %}
-    <li class="register__item">
+  <section class="reg-sec" aria-labelledby="table-proposals-title">
+    <h2 class="db-h2 reg-sec__title" id="table-proposals-title">{% svg_icon "file-plus" "icon" %}<span>{% translate "Les propositions élaborées ici" %}</span></h2>
+    {% if proposals %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for proposal in proposals %}
       {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
-      {% if proposal_url %}<a class="entry" href="{{ proposal_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title">{{ proposal.title_fr }}</h3>
-        <span class="entry__gloss">{{ proposal.reference }}</span>
-        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
-      {% if proposal_url %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Aucune proposition rattachée à cette table pour l’instant." %}</p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if proposal_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if proposal_url %}<a class="reg-row__link" href="{{ proposal_url }}" dir="auto">{{ proposal.title_fr }}</a>{% else %}{{ proposal.title_fr }}{% endif %}</h3>
+          <p class="db-task__meta"><span class="reg-ref">{{ proposal.reference }}</span></p>
+        </div>
+        <div class="db-task__state">{% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune proposition rattachée à cette table pour l’instant." %}</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}

@@ -283,9 +283,7 @@ th,
 .pagination,
 .site-footer nav,
 .local-nav,
-.tabs,
-.folio__head,
-.folio__date {
+.tabs {
   font-family: var(--font-ui);
 }
 
@@ -295,9 +293,7 @@ th,
 td,
 th,
 time[datetime],
-.t-ref,
-.folio__ordinal,
-.entry__ordinal {
+.t-ref {
   font-variant-numeric: lining-nums tabular-nums;
 }
 

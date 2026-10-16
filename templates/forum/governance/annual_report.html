@@ -1,5 +1,9 @@
 {% extends "forum/governance/base_governance.html" %}{% load i18n %}
 {% comment %}
+Design V5 (W3-E step 2): the page's head (the relation's title, its edition, its state as a chip and its dates on the
+head's line), the draft's clause, then each assembled section under its head — facts, a register of columns, the
+retained proposals as a list —, the clause. The account of the relation follows.
+
 The annual relation — and the page that must not lie about where its numbers come from.
 
 Every figure below was ASSEMBLED by `governance_services.build_report_sections` from the edition,
@@ -19,38 +23,27 @@ day it was published, even after the data moves on.
 {% block meta_description %}{% translate "La relation annuelle du Forum permanent, assemblée à partir des commissions, des propositions retenues, des projets et du suivi." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Relation annuelle" as header_title %}
-{% include "components/page_header.html" with title=header_title lead=edition.title_fr eyebrow=edition.year %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Relation annuelle" %}</h1>
+    <p class="ws-head__lead">{{ edition.title_fr }}</p>
+    <p class="reg-head__meta"><span>{{ edition.year }}</span>{% if is_draft %}{% chip register="neutro" %}{% translate "projet" %}{% endchip %}{% else %}{% chip register="conforme" %}{% translate "publiée" %}{% endchip %}{% endif %}{% if report.generated_at %}<span>{% blocktranslate with date=report.generated_at|date:"d.m.Y" %}assemblée le {{ date }}{% endblocktranslate %}</span>{% endif %}{% if report.published_at %}<span>{% blocktranslate with date=report.published_at|date:"d.m.Y" %}publiée le {{ date }}{% endblocktranslate %}</span>{% endif %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block governance_content %}
-<p class="gloss">
-  {% if is_draft %}
-  {% chip register="neutro" %}{% translate "projet" %}{% endchip %}
-  {% else %}
-  {% chip register="conforme" %}{% translate "publiée" %}{% endchip %}
-  {% endif %}
-  {% if report.generated_at %}
-  <span>{% blocktranslate with date=report.generated_at|date:"d.m.Y" %}assemblée le {{ date }}{% endblocktranslate %}</span>
-  {% endif %}
-  {% if report.published_at %}
-  <span>{% blocktranslate with date=report.published_at|date:"d.m.Y" %}publiée le {{ date }}{% endblocktranslate %}</span>
-  {% endif %}
-</p>
-
+<div class="reg-page">
 {% if is_draft %}
-<p class="note">
-  {% translate "Cette relation est un projet : elle est réassemblée à partir des données à chaque génération et n’a pas encore été publiée par le secrétariat du Forum. Les chiffres qu’elle contient peuvent donc encore changer." %}
-</p>
+<p class="reg-note">{% translate "Cette relation est un projet : elle est réassemblée à partir des données à chaque génération et n’a pas encore été publiée par le secrétariat du Forum. Les chiffres qu’elle contient peuvent donc encore changer." %}</p>
 {% endif %}
 
 {% if sections %}
 {% for section in sections %}
 
 {% if section.key == 'edition' %}
-<section class="portal-section" aria-labelledby="section-edition-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Édition" %}</span></p>
-  <h2 class="portal__section-title" id="section-edition-title">{{ section.title }}</h2>
+<section class="reg-sec" aria-labelledby="section-edition-title">
+  <h2 class="db-h2 reg-sec__title" id="section-edition-title"><span>{{ section.title }}</span></h2>
   {% for row in section.rows %}
   <dl class="portal-facts">
     <div class="portal-facts__row"><dt>{% translate "Intitulé" %}</dt><dd>{{ row.title }}</dd></div>
@@ -59,16 +52,15 @@ day it was published, even after the data moves on.
     <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{{ row.status }}</dd></div>
   </dl>
   {% endfor %}
-  <p class="gloss">
+  <p class="db-line">
     {% blocktranslate with participants=section.summary.participants commissions=section.summary.commissions mandates=section.summary.mandates_live %}{{ participants }} organisation(s) participante(s), {{ commissions }} commission(s), {{ mandates }} mandat(s) en cours.{% endblocktranslate %}
   </p>
 </section>
 {% endif %}
 
 {% if section.key == 'commissions' %}
-<section class="portal-section" aria-labelledby="section-commissions-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Commissions" %}</span></p>
-  <h2 class="portal__section-title" id="section-commissions-title">{{ section.title }}</h2>
+<section class="reg-sec" aria-labelledby="section-commissions-title">
+  <h2 class="db-h2 reg-sec__title" id="section-commissions-title"><span>{{ section.title }}</span></h2>
   {% if section.rows %}
   <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-annual-report-1-{{ forloop.counter }}">
     <table class="data-table">
@@ -98,43 +90,35 @@ day it was published, even after the data moves on.
     </table>
   </div>
   {% else %}
-  <p class="empty">{% translate "Aucune commission n’est constituée pour cette édition." %}</p>
+  <p class="db-empty">{% translate "Aucune commission n’est constituée pour cette édition." %}</p>
   {% endif %}
 </section>
 {% endif %}
 
 {% if section.key == 'proposals' %}
-<section class="portal-section" aria-labelledby="section-proposals-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Propositions" %}</span></p>
-  <h2 class="portal__section-title" id="section-proposals-title">{{ section.title }}</h2>
-  <p class="gloss">
+<section class="reg-sec" aria-labelledby="section-proposals-title">
+  <h2 class="db-h2 reg-sec__title" id="section-proposals-title"><span>{{ section.title }}</span></h2>
+  <p class="db-line">
     {% blocktranslate with submitted=section.summary.submitted accepted=section.summary.accepted rejected=section.summary.rejected withdrawn=section.summary.withdrawn %}{{ submitted }} proposition(s) déposée(s) : {{ accepted }} retenue(s), {{ rejected }} écartée(s), {{ withdrawn }} retirée(s).{% endblocktranslate %}
   </p>
   {% if section.rows %}
-  <ol class="sources">
+  <ul class="db-list" role="list">
     {% for row in section.rows %}
-    {% comment %}
-    Exactly TWO grid children per row — the ordinal drawn by ::before and this span — or the
-    third one wraps under the ordinal column. Same constraint as the source list of an outcome.
-    {% endcomment %}
-    <li class="sources__item">
-      <span>
-        {{ row.title }} — {{ row.commission }}
-        <span class="sources__consulted">{{ row.reference }} · {{ row.proposer }}{% if row.decided_on %} · {{ row.decided_on }}{% endif %}</span>
-      </span>
+    <li class="db-list__row">
+      <span class="db-list__title" dir="auto">{{ row.title }} — {{ row.commission }}</span>
+      <span class="db-list__meta"><span class="reg-ref">{{ row.reference }}</span> · <span dir="auto">{{ row.proposer }}</span>{% if row.decided_on %} · {{ row.decided_on }}{% endif %}</span>
     </li>
     {% endfor %}
-  </ol>
+  </ul>
   {% else %}
-  <p class="empty">{% translate "Aucune proposition retenue sur cette édition. Les propositions sont décidées par les commissions ; la relation ne reprend que celles qui l’ont été." %}</p>
+  <p class="db-empty">{% translate "Aucune proposition retenue sur cette édition. Les propositions sont décidées par les commissions ; la relation ne reprend que celles qui l’ont été." %}</p>
   {% endif %}
 </section>
 {% endif %}
 
 {% if section.key == 'projects' %}
-<section class="portal-section" aria-labelledby="section-projects-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Projets" %}</span></p>
-  <h2 class="portal__section-title" id="section-projects-title">{{ section.title }}</h2>
+<section class="reg-sec" aria-labelledby="section-projects-title">
+  <h2 class="db-h2 reg-sec__title" id="section-projects-title"><span>{{ section.title }}</span></h2>
   {% if section.rows %}
   <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-annual-report-2-{{ forloop.counter }}">
     <table class="data-table">
@@ -165,15 +149,14 @@ day it was published, even after the data moves on.
     </table>
   </div>
   {% else %}
-  <p class="empty">{% translate "Aucun projet n’est issu des propositions retenues de cette édition." %}</p>
+  <p class="db-empty">{% translate "Aucun projet n’est issu des propositions retenues de cette édition." %}</p>
   {% endif %}
 </section>
 {% endif %}
 
 {% if section.key == 'monitoring' %}
-<section class="portal-section" aria-labelledby="section-monitoring-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivi" %}</span></p>
-  <h2 class="portal__section-title" id="section-monitoring-title">{{ section.title }}</h2>
+<section class="reg-sec" aria-labelledby="section-monitoring-title">
+  <h2 class="db-h2 reg-sec__title" id="section-monitoring-title"><span>{{ section.title }}</span></h2>
   {% if section.rows %}
   <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-annual-report-3-{{ forloop.counter }}">
     <table class="data-table">
@@ -200,24 +183,23 @@ day it was published, even after the data moves on.
   </div>
   {% endif %}
   {% if section.summary.projects_without_monitoring %}
-  <p class="gloss">
+  <p class="db-line">
     {% blocktranslate count counter=section.summary.projects_without_monitoring %}Un projet n’a fait l’objet d’aucun relevé de suivi.{% plural %}{{ counter }} projets n’ont fait l’objet d’aucun relevé de suivi.{% endblocktranslate %}
   </p>
   {% endif %}
   {% if not section.rows %}
-  <p class="empty">{% translate "Aucun relevé de suivi n’a été consigné. Un projet sans suivi ne peut pas alimenter la relation : c’est précisément ce que cette section est là pour rendre visible." %}</p>
+  <p class="db-empty">{% translate "Aucun relevé de suivi n’a été consigné. Un projet sans suivi ne peut pas alimenter la relation : c’est précisément ce que cette section est là pour rendre visible." %}</p>
   {% endif %}
 </section>
 {% endif %}
 
 {% endfor %}
 
-<p class="note">
-  {% translate "Cette relation est assemblée à partir des données de l’édition : éditions, commissions, propositions retenues, projets et relevés de suivi. Elle n’est pas rédigée : aucun chiffre n’y est saisi à la main et aucun indice n’y est calculé. Elle rend compte du travail des commissions ; elle n’emporte aucune décision." %}
-</p>
+<p class="reg-note">{% translate "Cette relation est assemblée à partir des données de l’édition : éditions, commissions, propositions retenues, projets et relevés de suivi. Elle n’est pas rédigée : aucun chiffre n’y est saisi à la main et aucun indice n’y est calculé. Elle rend compte du travail des commissions ; elle n’emporte aucune décision." %}</p>
 {% else %}
-<p class="empty">
+<p class="db-empty">
   {% translate "La relation de cette édition n’a pas encore été assemblée. Le secrétariat du Forum la génère à partir des commissions, des propositions retenues, des projets et des relevés de suivi." %}
 </p>
 {% endif %}
+</div>
 {% endblock %}

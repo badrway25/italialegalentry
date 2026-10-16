@@ -159,6 +159,37 @@ def test_no_web_server_alias_reaches_the_private_documents():
     assert not Path(private).is_relative_to(Path(media)) and not Path(media).is_relative_to(Path(private))
 
 
+def test_static_files_are_left_to_whitenoise_which_tells_a_hashed_name_from_a_plain_one():
+    """
+    nginx serves no /static/: WhiteNoise does, and decides each file's cache — a hashed name immutable for ten years, a
+    plain name WHITENOISE_MAX_AGE seconds (tests/deployment/test_static_caching.py runs it). One nginx `expires` on
+    /static/ would give both names one rule, and a long one on a plain name is the stale module the DevOps lane's second
+    pass removed. The runbook states both answers as the settings give them, and the gate runs the two tests.
+    """
+    base = (ROOT / "config" / "settings" / "base.py").read_text(encoding="utf-8")
+    assert '"staticfiles": {"BACKEND": "core.storage.CompressedManifestModulesStorage"}' in base
+    assert '"whitenoise.middleware.WhiteNoiseMiddleware"' in base
+    max_age = int(re.search(r"^WHITENOISE_MAX_AGE = (\d+)$", base, flags=re.MULTILINE).group(1))
+    assert max_age <= 300, max_age
+    assert not re.search(r"location\s+(?:[~^=*]+\s*)?/static", NGINX_SITE), "nginx must leave /static/ to WhiteNoise"
+    assert "max-age=315360000, public, immutable" in RUNBOOK
+    assert f"max-age={max_age}, public" in RUNBOOK and f"max-age={max_age}, public" in CHECKLIST
+    for test in ("tests/deployment/test_static_caching.py", "tests/deployment/test_nul_bytes.py"):
+        assert test in CHECKLIST, f"the release gate does not name {test}"
+
+
+def test_the_smoke_test_proves_the_nul_guard_where_nginx_lets_a_nul_through():
+    """
+    Behind nginx a `%00` in the path is nginx's own bare 400 and never reaches Django; a `%00` in the query string does
+    (measured with Ubuntu 24.04's nginx 1.24, REVIEW_2 n1). D-10 proves the guard on the query string — the project's
+    page, not only a status nginx can answer itself — and the runbook says which layer answers which.
+    """
+    d10 = [line for line in _bash_blocks(CHECKLIST).splitlines() if "# D-10" in line]
+    assert any("?q=%00" in line and "grep -c 'class=\"container error-page\"'" in line for line in d10), d10
+    assert any("%00/" in line and "nginx's own" in line for line in d10), d10
+    assert "nginx answers its own bare 400" in RUNBOOK
+
+
 def test_the_service_may_write_where_the_application_writes():
     paths = {_template_value("MEDIA_ROOT"), _template_value("PRIVATE_MEDIA_ROOT")}
     for unit in (SERVICE, JOB_SERVICE):

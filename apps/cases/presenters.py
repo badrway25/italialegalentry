@@ -1,8 +1,10 @@
 """
-Presenters of the case file page (design V4, CREATIVE_DIRECTION.md §3.6): what the page shows
-that the domain does not compute for it — the timeline of what happened, the date each step of
-the journey was reached, the checklist's health strip. Pure reads over the audit trail and the
-file; nothing here decides, counts a percentage, or names a person.
+Presenters of the case file page: what the page shows that the domain does not compute for it —
+the timeline of what happened and the date each step of the journey was reached (W3-D's journey
+«La soglia»). Pure reads over the audit trail and the file; nothing here decides, counts a
+percentage, or names a person. The checklist's rows, the NowPanel and the file's pieces are the
+console's presenters (portal.services.case_file, design V5 W3-E); the V4 health strip left with
+the checklist's table.
 """
 
 from __future__ import annotations
@@ -57,27 +59,44 @@ def events_for(case: CaseFile):
     ).order_by("created_at", "id")
 
 
-def timeline(case: CaseFile, *, limit: int = TIMELINE_LIMIT) -> list[dict]:
+def timeline(case: CaseFile, *, limit: int = TIMELINE_LIMIT, reader=None) -> list[dict]:
     """
     The file's events, newest first, the latest ``limit`` of them: where the file stands now
     heads the list (the inspector that holds it scrolls inside itself, and its first row is the
     one in view).
 
-    The actor is a TYPE, never a name: «Vous» for the person, the role held on the file for an
-    assignee, the project team for anybody else. A person's file is not the place to print the
-    name of the operator who touched it.
+    The actor is a TYPE, never a name: the person's acts are «Vous» for the person reading their
+    own file and «La personne» for anybody else — a mandated reader is never told that they did
+    what the person did (W3-E's review, M3: the feed is read from the audit trail, and «Vous»
+    named the wrong author) —, the role held on the file for an assignee, the project team for
+    anybody else. ``reader`` is the account the page is shown to; without one, nobody is «Vous».
+    A person's file is not the place to print the name of the operator who touched it.
+
+    A line's change names the line in its own words (the item the trail records, read from the
+    file's checklist: ``detail``, in the language the line is written in — ``detail_lang``), so
+    four «Ligne mise à jour» say which four lines; a line no longer on the file says nothing more.
     """
+    from django.utils import translation
+
     roles = {assignment.assignee_id: str(assignment.get_role_display()) for assignment in case.assignments.all()}
+    own = reader is not None and reader.pk == case.person_id
+    person = str(_("Vous")) if own else str(ResponsibleActor.PERSON.label)
+    lines = {item.pk: item for item in case.checklist.all()}
+    page_lang = (translation.get_language() or "fr").split("-")[0]
     rows: list[dict] = []
     for event in events_for(case).order_by("-created_at", "-id")[:limit]:
         meta = event.metadata or {}
-        chip_label, chip_register, detail = "", "", ""
+        chip_label, chip_register, detail, detail_lang = "", "", "", ""
         if event.action == "case.transition":
             chip_label = _label(CaseStatus, meta.get("to"))
             chip_register = register_for("cases.CaseStatus", meta.get("to"))
         elif event.action == "case.checklist.status":
             chip_label = _label(ChecklistStatus, meta.get("to"))
             chip_register = register_for("cases.ChecklistStatus", meta.get("to"))
+            line = lines.get(meta.get("item"))
+            if line is not None:
+                detail = line.requirement
+                detail_lang = line.language if line.language and line.language != page_lang else ""
         elif event.action == "case.assessment":
             detail = _label(AssessmentOutcome, meta.get("outcome"))
         elif event.action == "case.assigned":
@@ -85,7 +104,7 @@ def timeline(case: CaseFile, *, limit: int = TIMELINE_LIMIT) -> list[dict]:
         if event.actor_id is None:
             actor = ""
         elif event.actor_id == case.person_id:
-            actor = str(_("Vous"))
+            actor = person
         else:
             actor = roles.get(event.actor_id) or str(ResponsibleActor.PROJECT_TEAM.label)
         rows.append(
@@ -93,6 +112,7 @@ def timeline(case: CaseFile, *, limit: int = TIMELINE_LIMIT) -> list[dict]:
                 "when": event.created_at,
                 "title": str(_TITLES.get(event.action, event.action)),
                 "detail": detail,
+                "detail_lang": detail_lang,
                 "chip_label": chip_label,
                 "chip_register": chip_register,
                 "actor": actor,
@@ -142,28 +162,3 @@ def journey_with_dates(case: CaseFile) -> list[dict]:
         if step["threshold"] and step["threshold"]["is_current"]:
             step["threshold"]["reached_at"] = reached.get(str(case.status))
     return steps
-
-
-def checklist_health(checklist: list) -> dict | None:
-    """
-    The checklist as the HealthStrip reads it: one segment per status that has lines, in the
-    enum's order, with the status's register. ``None`` when there is nothing to draw.
-    """
-    rows = [item for item in checklist if item.status != ChecklistStatus.NOT_APPLICABLE]
-    if not rows:
-        return None
-    filters = []
-    for status in ChecklistStatus:
-        if status == ChecklistStatus.NOT_APPLICABLE:
-            continue
-        count = sum(1 for item in rows if item.status == status)
-        if count:
-            filters.append(
-                {
-                    "value": status.value,
-                    "label": str(status.label),
-                    "count": count,
-                    "register": register_for("cases.ChecklistStatus", status),
-                }
-            )
-    return {"counts": {"total": len(rows)}, "filters": filters}

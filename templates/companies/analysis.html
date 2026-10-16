@@ -1,6 +1,8 @@
-{% extends "companies/base_companies.html" %}{% load i18n %}
+{% extends "companies/base_companies.html" %}{% load i18n static %}
 {% comment %}
-TERRITORIAL AND SECTORAL ANALYSIS — counts only (REQ-B2B-05).
+TERRITORIAL AND SECTORAL ANALYSIS — counts only (REQ-B2B-05). A staff page: in design V5 (W3-E step 2) its chrome only
+— the page's head without an eyebrow, the sections' heads, the console's tables and the registers' clause; the staff's
+working screens as a whole are recorded as design debt (QA/v54/w3-e/NOTES.md).
 
 Not visible to a company: it aggregates the needs of every company. It shows counts, and nothing
 that could be turned back into a row — no company name, no need title, no identifier. Drafts and
@@ -12,16 +14,21 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
 {% block page_title %}{% translate "Analyse territoriale des besoins" %}{% endblock %}
 {% block meta_description %}{% translate "Les besoins exprimés, agrégés par territoire et par secteur." %}{% endblock %}
 
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+
 {% block portal_header %}
-{% translate "Analyse territoriale des besoins" as header_title %}
-{% translate "Les besoins exprimés, comptés par territoire et par secteur. Des effectifs, jamais des personnes." as header_lead %}
-{% include "components/page_header.html" with title=header_title lead=header_lead %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Analyse territoriale des besoins" %}</h1>
+    <p class="ws-head__lead">{% translate "Les besoins exprimés, comptés par territoire et par secteur. Des effectifs, jamais des personnes." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block companies_content %}
-<section class="portal-section" aria-labelledby="totals-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Ensemble" %}</span></p>
-  <h2 class="portal__section-title" id="totals-title">{% translate "Ce qui est compté" %}</h2>
+<div class="reg-page">
+<section class="reg-sec" aria-labelledby="totals-title">
+  <h2 class="db-h2 reg-sec__title" id="totals-title">{% svg_icon "map" "icon" %}<span>{% translate "Ce qui est compté" %}</span></h2>
   <dl class="portal-facts">
     <div class="portal-facts__row">
       <dt>{% translate "Besoins exprimés" %}</dt>
@@ -38,9 +45,8 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
   </dl>
 </section>
 
-<section class="portal-section" aria-labelledby="territory-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Territoires" %}</span></p>
-  <h2 class="portal__section-title" id="territory-title">{% translate "Par territoire" %}</h2>
+<section class="reg-sec" aria-labelledby="territory-title">
+  <h2 class="db-h2 reg-sec__title" id="territory-title"><span>{% translate "Par territoire" %}</span></h2>
   {% if aggregate.by_territory %}
   <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-1">
     <table class="data-table">
@@ -64,13 +70,12 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
     </table>
   </div>
   {% else %}
-  <p class="empty">{% translate "Aucun besoin transmis à ce jour : l’agrégation apparaîtra dès la première transmission." %}</p>
+  <p class="db-empty">{% translate "Aucun besoin transmis à ce jour : l’agrégation apparaîtra dès la première transmission." %}</p>
   {% endif %}
 </section>
 
-<section class="portal-section" aria-labelledby="sector-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Secteurs" %}</span></p>
-  <h2 class="portal__section-title" id="sector-title">{% translate "Par secteur" %}</h2>
+<section class="reg-sec" aria-labelledby="sector-title">
+  <h2 class="db-h2 reg-sec__title" id="sector-title"><span>{% translate "Par secteur" %}</span></h2>
   {% if aggregate.by_sector %}
   <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-2">
     <table class="data-table">
@@ -94,13 +99,12 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
     </table>
   </div>
   {% else %}
-  <p class="empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
+  <p class="db-empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
   {% endif %}
 </section>
 
-<section class="portal-section" aria-labelledby="status-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "États" %}</span></p>
-  <h2 class="portal__section-title" id="status-title">{% translate "Par état de traitement" %}</h2>
+<section class="reg-sec" aria-labelledby="status-title">
+  <h2 class="db-h2 reg-sec__title" id="status-title"><span>{% translate "Par état de traitement" %}</span></h2>
   {% if aggregate.by_status %}
   <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-3">
     <table class="data-table">
@@ -122,11 +126,11 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
     </table>
   </div>
   {% else %}
-  <p class="empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
+  <p class="db-empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
   {% endif %}
 </section>
 
-<p class="note">
-  {% translate "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, ni intitulé de besoin, ni identifiant, et elle ne compte aucune personne." %}
-</p>
+</div>
+
+<p class="reg-note">{% translate "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, ni intitulé de besoin, ni identifiant, et elle ne compte aucune personne." %}</p>
 {% endblock %}

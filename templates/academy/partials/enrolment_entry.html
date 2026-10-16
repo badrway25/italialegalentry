@@ -1,22 +1,16 @@
 {% load i18n %}{% comment %}
-One enrolment as a register entry. Contract: `row` (an Enrolment annotated with `modules_total`
-and `modules_attended` by ``academy.services.enrolments_for``).
+One enrolment as a row of the register — design V5 (W3-E step 2). Contract: `row` (an Enrolment annotated with
+`modules_total` and `modules_attended` by ``academy.services.enrolments_for``).
 
-The state is a WORD at the inline end, in the `.state` register, and the count of modules attended
-is written out. No bar, no percentage, no colour carrying meaning on its own.
+The course's title is the way to the follow-up's page, stretched over the row; on its line of facts, the body that
+delivers it and its domain, then the count of modules attended written out — and the day it ended. The state is a
+chip at the row's end: a word with its mark. No bar, no percentage, no colour carrying meaning on its own.
 {% endcomment %}
-<li class="register__item">
-  {% safe_url 'academy:enrolment' row.uuid as row_url %}
-  {% if row_url %}<a class="entry" href="{{ row_url }}">{% else %}<div class="entry">{% endif %}
-    <span class="entry__ordinal" aria-hidden="true"></span>
-    <h3 class="entry__title" lang="{{ row.course.text_language }}" dir="auto">{{ row.course.title }}</h3>
-    <span class="entry__gloss">
-      {{ row.course.provider.name }} · {{ row.course.get_course_type_display }}
-      <span class="t-caption">
-        {% blocktranslate with total=row.modules_total count n=row.modules_attended %}{{ n }} module suivi sur {{ total }}{% plural %}{{ n }} modules suivis sur {{ total }}{% endblocktranslate %}
-        {% if row.completed_at %} · {% blocktranslate with date=row.completed_at|date:"d.m.Y" %}terminé le {{ date }}{% endblocktranslate %}{% endif %}
-      </span>
-    </span>
-    {% chip row.status "academy.EnrolmentStatus" css_class="entry__actor" %}{{ row.get_status_display }}{% endchip %}
-  {% if row_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
+{% safe_url 'academy:enrolment' row.uuid as row_url %}
+<li class="db-task reg-row{% if row_url %} reg-row--link{% endif %}" data-enrolment="{{ row.uuid }}">
+  <div class="db-task__words">
+    <h3 class="db-task__title" lang="{{ row.course.text_language }}" dir="auto">{% if row_url %}<a class="reg-row__link" href="{{ row_url }}">{{ row.course.title }}</a>{% else %}{{ row.course.title }}{% endif %}</h3>
+    <p class="db-task__meta reg-row__meta"><span>{{ row.course.provider.name }}</span><span>{{ row.course.get_course_type_display }}</span><span>{% blocktranslate with total=row.modules_total count n=row.modules_attended %}{{ n }} module suivi sur {{ total }}{% plural %}{{ n }} modules suivis sur {{ total }}{% endblocktranslate %}</span>{% if row.completed_at %}<span>{% blocktranslate with date=row.completed_at|date:"d.m.Y" %}terminé le {{ date }}{% endblocktranslate %}</span>{% endif %}</p>
+  </div>
+  <div class="db-task__state">{% chip row.status "academy.EnrolmentStatus" %}{{ row.get_status_display }}{% endchip %}</div>
 </li>

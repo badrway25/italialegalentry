@@ -356,11 +356,15 @@ def test_the_dashboard_draws_the_rail_with_the_file_on_threshold_a(client, case,
     assert work.index("<h1") < work.index("db-now") < work.index('class="db-journey"'), "h1 → NowPanel → journey"
 
 
-def test_the_case_file_draws_the_descriptive_rail_and_the_timeline(client, case, person):
+def test_the_case_file_draws_the_compact_rail_and_the_timeline(client, case, person):
+    """The case file draws the journey in its compact forms, the dashboard's — the level line, or the card and its
+    disclosure — since W3-E's fix pass (its review's M1: the dated spine pushed the next act out of the first screen);
+    the dated history is the timeline's, beside it."""
     _status(case, "training")
     client.force_login(person)
     html = client.get(f"/fr/espace-reserve/dossiers/{case.reference}/").content.decode("utf-8")
-    assert '<ol class="journey journey--descriptive" aria-label="Où en est ce dossier">' in html
+    assert '<ol class="journey" aria-label="Où j’en suis">' in html and "journey--descriptive" not in html
+    assert '<div class="journey-now">' in html and '<details class="journey-fold">' in html
     assert html.count('aria-current="step"') == 1
     assert '<ol class="tl" role="list">' in html
     assert _sheets(html)[-1].endswith("css/dist/portal/journey.css"), "the journey's sheet, after the shell's two"
@@ -375,8 +379,9 @@ def test_the_case_file_of_a_file_off_the_line_says_here_nowhere(client, case, pe
     _status(case, status)
     client.force_login(person)
     html = client.get(f"/fr/espace-reserve/dossiers/{case.reference}/").content.decode("utf-8")
-    journey = html.split('<ol class="journey journey--descriptive"', 1)[1].split("</ol>", 1)[0]
-    assert "Vous êtes ici" not in journey and 'aria-current="step"' not in journey
+    rail = html.split('<div class="journey-rail">', 1)[1].split("</details>", 1)[0]
+    assert "Vous êtes ici" not in rail and 'aria-current="step"' not in rail, "neither the card nor the list says it"
+    journey = html.split('<ol class="journey"', 1)[1].split("</ol>", 1)[0]
     assert (
         journey.count("journey__step--done") == 3
         and "journey__step--3 journey__step--done journey__step--stop" in journey
@@ -563,6 +568,9 @@ def test_one_rail_drawing_and_one_passage_drawing_never_a_third():
         ("passage", "apps/orientation/static/orientation/wizard.css"),
         # not a drawing: the foundation's one rule that sets the legacy dates in the sans (ILE Mono's one seat)
         ("rail", "static/css/v5/base.css"),
+        # a page's modifier of the timeline (W3-E's fix pass): in the case file's side column the date heads its event,
+        # and an event's line in the other direction stands on the page's edge — columns and alignment, no drawing
+        ("rail", "apps/portal/static/portal/v5/_case.css"),
     }
     assert drawers <= partials | modifiers, sorted(drawers - partials - modifiers)
     # the drawing itself — the list, the station, its numeral and ring, the line, the Stepper's nodes and line — is
@@ -577,7 +585,10 @@ def test_one_rail_drawing_and_one_passage_drawing_never_a_third():
 
 
 def test_v4s_journey_drawing_left_with_its_consumers():
-    workspace = _css(ROOT / "static" / "css" / "v4" / "workspace.css")
+    # the JourneyRail and the Timeline left v4/workspace.css (W3-D), then the file left with the case file (W3-E, step 3):
+    # what console pages still drew of it is the console partial v5/_frame.css — no journey drawing there (retargeted)
+    assert not (ROOT / "static" / "css" / "v4" / "workspace.css").exists()
+    workspace = _css(ROOT / "apps" / "portal" / "static" / "portal" / "v5" / "_frame.css")
     assert ".journey" not in workspace and ".tl" not in workspace, (
         "the JourneyRail and the Timeline left v4/workspace.css"
     )

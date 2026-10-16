@@ -1,127 +1,120 @@
 {% extends "academy/base_academy.html" %}{% load i18n %}
 {% comment %}
-A training plan: where it comes from, which courses it recommends, and the competence comparison.
+A training plan — design V5 (W3-E step 2): where it comes from, which courses it recommends, and the competence
+comparison.
 
 Two things this page must never become:
 
 1. A gate. The plan is a RECOMMENDED path; every course it names is a course of the open catalogue
-   and is reachable without the plan. The wording says so, and the enrolment control on each row is
-   the same control as in the catalogue.
+   and is reachable without the plan. The wording says so, and each course's row leads to the same
+   page as in the catalogue.
 2. A score. The skill gap is a TABLE — required competence, current competence, gap, module,
-   expected outcome, and where the requirement comes from — with the gap written as a word. No
-   percentage, no ring, no "readiness" figure: nobody measured a percentage of a competence
+   expected outcome, and where the requirement comes from — with the gap written as a word (a chip).
+   No percentage, no ring, no "readiness" figure: nobody measured a percentage of a competence
    (REQ-EDU-07).
 
 When the reader is not the person concerned (a professional or operator holding a live assignment
 on the linked case), the enrolment state of each course is NOT shown: the plan is a path, the
-attendance record is personal.
+attendance record is personal — and the clause says so before anything else.
 {% endcomment %}
 {% block page_title %}{{ plan.title }}{% endblock %}
 {% block meta_description %}{% translate "Un parcours de formation conseillé." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Plan de formation" as header_eyebrow %}
-{% translate "Un parcours conseillé. Il n’est jamais une condition d’accès aux cours." as header_lead %}
-{% include "components/page_header.html" with title=plan.title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" dir="auto">{{ plan.title }}</h1>
+    <p class="ws-head__lead">{% translate "Un parcours conseillé. Il n’est jamais une condition d’accès aux cours." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block academy_content %}
-{% if not is_own %}
-{% comment %}
-The reader is not the person concerned. Saying so, in the margin apparatus and before anything
-else, is the whole difference between reading a record under a mandate and reading it because the
-screen let you: a professional must always be able to answer « whose record is this, and under
-what authority am I looking at it ».
-{% endcomment %}
-<p class="note">
-  {% translate "Ce parcours n’est pas le vôtre. Vous le consultez au titre de votre affectation sur le dossier cité ci-dessous, aussi longtemps qu’elle reste en cours. Le suivi des cours par la personne relève de son dossier personnel et n’est pas affiché ici." %}
-</p>
-{% endif %}
-<section class="portal-section" aria-labelledby="plan-facts-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Le plan" %}</span></p>
-  <h2 class="portal__section-title" id="plan-facts-title">{% translate "D’où vient ce parcours" %}</h2>
-  <dl class="portal-facts">
-    <div class="portal-facts__row"><dt>{% translate "Origine" %}</dt><dd>{{ plan.get_origin_display }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Référence de l’origine" %}</dt><dd>{% if plan.origin_reference %}{{ plan.origin_reference }}{% else %}—{% endif %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{{ plan.get_status_display }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Dossier lié" %}</dt><dd>{% if plan.case %}{{ plan.case.reference }}{% else %}—{% endif %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Établi le" %}</dt><dd><time datetime="{{ plan.created_at|date:'c' }}">{{ plan.created_at|date:"d.m.Y" }}</time></dd></div>
-  </dl>
-  {% if plan.note %}<p class="t-prose">{{ plan.note|linebreaksbr }}</p>{% endif %}
-</section>
+<div class="reg-page">
+  {% if not is_own %}
+  {% comment %}
+  The reader is not the person concerned. Saying so, before anything else, is the whole difference between reading a
+  record under a mandate and reading it because the screen let you: a professional must always be able to answer
+  « whose record is this, and under what authority am I looking at it ».
+  {% endcomment %}
+  <p class="reg-note">{% translate "Ce parcours n’est pas le vôtre. Vous le consultez au titre de votre affectation sur le dossier cité ci-dessous, aussi longtemps qu’elle reste en cours. Le suivi des cours par la personne relève de son dossier personnel et n’est pas affiché ici." %}</p>
+  {% endif %}
 
-<section class="portal-section" aria-labelledby="plan-courses-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Cours conseillés" %}</span></p>
-  <h2 class="portal__section-title" id="plan-courses-title">{% translate "Les cours du parcours" %}</h2>
-  {% if items %}
-  <ol class="register">
-    {% for row in items %}
-    <li class="register__item">
+  <section class="reg-sec" aria-labelledby="plan-facts-title">
+    <h2 class="db-h2 reg-sec__title" id="plan-facts-title">{% svg_icon "book-open" "icon" %}<span>{% translate "D’où vient ce parcours" %}</span></h2>
+    <dl class="portal-facts">
+      <div class="portal-facts__row"><dt>{% translate "Origine" %}</dt><dd>{{ plan.get_origin_display }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Référence de l’origine" %}</dt><dd>{% if plan.origin_reference %}<span class="reg-ref">{{ plan.origin_reference }}</span>{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% chip plan.status "academy.PlanStatus" %}{{ plan.get_status_display }}{% endchip %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Dossier lié" %}</dt><dd>{% if plan.case %}<span class="reg-ref">{{ plan.case.reference }}</span>{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Établi le" %}</dt><dd><time datetime="{{ plan.created_at|date:'c' }}">{{ plan.created_at|date:"d.m.Y" }}</time></dd></div>
+    </dl>
+    {% if plan.note %}<p class="reg-prose academy-plan-note">{{ plan.note|linebreaksbr }}</p>{% endif %}
+  </section>
+
+  <section class="reg-sec" aria-labelledby="plan-courses-title">
+    <h2 class="db-h2 reg-sec__title" id="plan-courses-title"><span>{% translate "Les cours du parcours" %}</span></h2>
+    {% if items %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for row in items %}
       {% safe_url 'academy:course' row.course.slug as course_url %}
-      {% if course_url %}<a class="entry" href="{{ course_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title" lang="{{ row.course.text_language }}" dir="auto">{{ row.course.title }}</h3>
-        <span class="entry__gloss">
-          {% if row.item.rationale %}{{ row.item.rationale }}{% else %}{{ row.course.summary }}{% endif %}
-          <span class="t-caption">
-            {{ row.course.provider.name }} · {% blocktranslate with hours=row.course.duration_hours %}{{ hours }} h{% endblocktranslate %}
-            {% if row.item.expected_outcome %} · {{ row.item.expected_outcome }}{% endif %}
-          </span>
-        </span>
-        {% if row.own and row.enrolment %}
-        {% chip row.enrolment.status "academy.EnrolmentStatus" css_class="entry__actor" %}{{ row.enrolment.get_status_display }}{% endchip %}
-        {% elif row.own %}
-        <span class="entry__cta">{% translate "ouvrir la fiche pour s’inscrire" %}</span>
-        {% else %}
-        <span class="entry__actor">{{ row.course.get_course_type_display }}</span>
-        {% endif %}
-      {% if course_url %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  <p class="t-caption">{% translate "Ces cours sont conseillés pour l’objectif décrit ci-dessus. Ils restent ouverts à toute personne, qu’elle suive ce plan ou non." %}</p>
-  {% else %}
-  <p class="empty">{% translate "Aucun cours n’a encore été rattaché à ce plan." %}</p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if course_url %} reg-row--link{% endif %}" data-course="{{ row.course.slug }}">
+        <div class="db-task__words">
+          <h3 class="db-task__title" lang="{{ row.course.text_language }}" dir="auto">{% if course_url %}<a class="reg-row__link" href="{{ course_url }}">{{ row.course.title }}</a>{% else %}{{ row.course.title }}{% endif %}</h3>
+          <p class="db-task__meta reg-row__text" dir="auto">{% if row.item.rationale %}{{ row.item.rationale }}{% else %}{{ row.course.summary }}{% endif %}</p>
+          <p class="db-task__meta reg-row__meta"><span>{{ row.course.provider.name }}</span><span>{% blocktranslate with hours=row.course.duration_hours %}{{ hours }} h{% endblocktranslate %}</span>{% if row.item.expected_outcome %}<span dir="auto">{{ row.item.expected_outcome }}</span>{% endif %}</p>
+        </div>
+        <div class="db-task__state">
+          {% if row.own and row.enrolment %}{% chip row.enrolment.status "academy.EnrolmentStatus" %}{{ row.enrolment.get_status_display }}{% endchip %}
+          {% elif row.own %}<span class="db-task__who">{% translate "ouvrir la fiche pour s’inscrire" %}</span>
+          {% else %}<span class="db-task__who">{{ row.course.get_course_type_display }}</span>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="reg-note">{% translate "Ces cours sont conseillés pour l’objectif décrit ci-dessus. Ils restent ouverts à toute personne, qu’elle suive ce plan ou non." %}</p>
+    {% else %}
+    <p class="db-empty">{% translate "Aucun cours n’a encore été rattaché à ce plan." %}</p>
+    {% endif %}
+  </section>
 
-<section class="portal-section" aria-labelledby="plan-gap-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Compétences" %}</span></p>
-  <h2 class="portal__section-title" id="plan-gap-title">{% translate "Ce qui est demandé, ce qui est acquis, ce qui manque" %}</h2>
-  {% if gap_rows %}
-  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="plan-gap-title">
-    <table class="data-table">
-      <caption class="visually-hidden">{% translate "Comparaison entre le niveau requis et le niveau actuel pour chaque compétence, avec le module correspondant et le résultat attendu" %}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{% translate "Compétence" %}</th>
-          <th scope="col">{% translate "Niveau requis" %}</th>
-          <th scope="col">{% translate "Niveau actuel" %}</th>
-          <th scope="col">{% translate "Écart" %}</th>
-          <th scope="col">{% translate "Module ou cours" %}</th>
-          <th scope="col">{% translate "Résultat attendu" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in gap_rows %}
-        <tr>
-          <th scope="row" data-label="{% translate 'Compétence' %}">
-            {{ row.competence.label }}
-            {% if row.source_note %}<span class="t-caption">{{ row.source_note }}</span>{% endif %}
-          </th>
-          <td data-label="{% translate 'Niveau requis' %}">{{ row.required }}</td>
-          <td data-label="{% translate 'Niveau actuel' %}">{{ row.current }}</td>
-          <td data-label="{% translate 'Écart' %}">{% chip row.gap_key "academy.gap" %}{{ row.gap }}{% endchip %}</td>
-          <td dir="auto" data-label="{% translate 'Module ou cours' %}">{% if row.module %}{{ row.module.title }}{% elif row.course %}{{ row.course.title }}{% else %}—{% endif %}</td>
-          <td data-label="{% translate 'Résultat attendu' %}">{% if row.expected_outcome %}{{ row.expected_outcome }}{% else %}—{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <p class="t-caption">{% translate "Les niveaux sont des repères pédagogiques décrits par des mots, jamais des scores. Cette comparaison n’évalue pas une personne et ne produit aucune décision." %}</p>
-  {% else %}
-  <p class="empty">{% translate "La comparaison des compétences sera renseignée avec l’organisme de formation ou le professionnel qui accompagne ce parcours." %}</p>
-  {% endif %}
-</section>
+  <section class="reg-sec" aria-labelledby="plan-gap-title">
+    <h2 class="db-h2 reg-sec__title" id="plan-gap-title"><span>{% translate "Ce qui est demandé, ce qui est acquis, ce qui manque" %}</span></h2>
+    {% if gap_rows %}
+    <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-plan-gap">
+      <table class="data-table data-table--wide">
+        <caption class="visually-hidden" id="t-plan-gap">{% translate "Comparaison entre le niveau requis et le niveau actuel pour chaque compétence, avec le module correspondant et le résultat attendu" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Compétence" %}</th>
+            <th scope="col">{% translate "Niveau requis" %}</th>
+            <th scope="col">{% translate "Niveau actuel" %}</th>
+            <th scope="col">{% translate "Écart" %}</th>
+            <th scope="col">{% translate "Module ou cours" %}</th>
+            <th scope="col">{% translate "Résultat attendu" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in gap_rows %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Compétence' %}">
+              {{ row.competence.label }}
+              {% if row.source_note %}<span class="t-caption">{{ row.source_note }}</span>{% endif %}
+            </th>
+            <td data-label="{% translate 'Niveau requis' %}">{{ row.required }}</td>
+            <td data-label="{% translate 'Niveau actuel' %}">{{ row.current }}</td>
+            <td data-label="{% translate 'Écart' %}">{% chip row.gap_key "academy.gap" %}{{ row.gap }}{% endchip %}</td>
+            <td dir="auto" data-label="{% translate 'Module ou cours' %}">{% if row.module %}{{ row.module.title }}{% elif row.course %}{{ row.course.title }}{% else %}—{% endif %}</td>
+            <td data-label="{% translate 'Résultat attendu' %}">{% if row.expected_outcome %}{{ row.expected_outcome }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="reg-note">{% translate "Les niveaux sont des repères pédagogiques décrits par des mots, jamais des scores. Cette comparaison n’évalue pas une personne et ne produit aucune décision." %}</p>
+    {% else %}
+    <p class="db-empty">{% translate "La comparaison des compétences sera renseignée avec l’organisme de formation ou le professionnel qui accompagne ce parcours." %}</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}

@@ -11,8 +11,10 @@ Contract: `now` = portal.services.now_panel(…) or company_now_panel(…) — v
 text_label (a label before the text, in the page's language — the takeover's «Origine :»), words (the record's own
 words: `lang` when the data holds their language, `dir` — "ltr"/"rtl", or "auto" when it does not), state (value,
 producer, label), due (date, urgency, word), responsible (actor, label, organisation), note, primary (label, url,
-method: "post" draws the act's own form, as the act's page does) / secondary (label, url), takeover, piece_id /
-need_ref (the obligation it draws, drawn nowhere else on the page; a need's reference is shown). Every word is the
+method: "post" draws the act's own form, as the act's page does; overlay: the act opens a dialog of the page — the
+overlay system's opener, `data-overlay-open`, no arrow: it goes nowhere) / secondary (label, url, overlay), takeover,
+piece_id / need_ref (the obligation it draws, drawn nowhere else on the page; a need's reference is shown), source
+(ref, title — the case file's checklist line: the text it rests on, its reference in ILE Mono; W3-E). Every word is the
 presenter's, from the catalogue; the title and the text pass the French-spacing filter (`typo`, W2-D: a no-break
 space inside « » and before : ; ! ?), never a prescribed text. The region is named by whose move it is and by the
 obligation (the eyebrow, then the h2).
@@ -25,7 +27,7 @@ obligation (the eyebrow, then the h2).
   <p class="db-now__eyebrow"><span class="db-now__disc" aria-hidden="true">{% svg_icon now.glyph "icon" %}</span><span id="db-now-eyebrow">{{ now.eyebrow }}</span></p>
   <h2 class="db-now__title" id="db-now-title"{% if now.words.lang %} lang="{{ now.words.lang }}"{% endif %}{% if now.words.dir %} dir="{{ now.words.dir }}"{% endif %}>{{ now.title|typo }}</h2>
   {% if now.text %}{% if now.text_label %}<p class="db-now__text"><span class="db-now__label">{{ now.text_label|typo }}</span> <span{% if now.words.lang %} lang="{{ now.words.lang }}"{% endif %}{% if now.words.dir %} dir="{{ now.words.dir }}"{% endif %}>{{ now.text|typo }}</span></p>{% else %}<p class="db-now__text"{% if now.words.lang %} lang="{{ now.words.lang }}"{% endif %}{% if now.words.dir %} dir="{{ now.words.dir }}"{% endif %}>{{ now.text|typo }}</p>{% endif %}{% endif %}
-  {% if now.state or now.due or now.responsible or now.need_ref %}
+  {% if now.state or now.due or now.responsible or now.need_ref or now.source %}
   <dl class="db-now__facts">
     {% if now.state %}
     <div class="db-now__fact"><dt>{% translate "État" %}</dt><dd>{% if now.state.producer == "documents.RequirementState" %}{% chip now.state.value "documents.RequirementState" %}{{ now.state.label }}{% endchip %}{% elif now.state.producer == "companies.NeedStatus" %}{% chip now.state.value "companies.NeedStatus" %}{{ now.state.label }}{% endchip %}{% else %}{% chip now.state.value "cases.ChecklistStatus" %}{{ now.state.label }}{% endchip %}{% endif %}</dd></div>
@@ -40,14 +42,17 @@ obligation (the eyebrow, then the h2).
     {% comment %} The glyph and its word hold together: a narrow fact wraps the word beside its disc, never under it. {% endcomment %}
     <div class="db-now__fact"><dt>{% translate "Responsable" %}</dt><dd><span class="db-now__who">{% include "components/glyph.html" with glyph=now.responsible.actor|actor_glyph size="sm" %}<span>{{ now.responsible.label }}{% if now.responsible.organisation %} — <span dir="auto">{{ now.responsible.organisation }}</span>{% endif %}</span></span></dd></div>
     {% endif %}
+    {% if now.source %}
+    <div class="db-now__fact"><dt>{% translate "Fondement" %}</dt><dd>{% if now.source.ref %}<span class="db-ref">{{ now.source.ref }}</span>{% else %}<span dir="auto">{{ now.source.title }}</span>{% endif %}</dd></div>
+    {% endif %}
   </dl>
   {% endif %}
   {% if now.note %}<p class="db-now__note">{{ now.note }}</p>{% endif %}
   {% if now.primary or now.secondary %}
   <div class="card__action db-now__act">
     {% comment %} ONE primary: the act's own form when the act is a POST (the need page's «Transmettre au projet»), else the link to the act's page — never both. {% endcomment %}
-    {% if now.primary.method == "post" %}<form class="db-now__form" method="post" action="{{ now.primary.url }}">{% csrf_token %}<button class="btn btn--primary btn--arrow" type="submit" data-now-primary>{{ now.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button></form>{% elif now.primary %}<a class="btn btn--primary btn--arrow" href="{{ now.primary.url }}" data-now-primary>{{ now.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-    {% if now.secondary %}<a class="btn btn--secondary" href="{{ now.secondary.url }}" aria-describedby="db-now-title">{{ now.secondary.label }}</a>{% endif %}
+    {% if now.primary.method == "post" %}<form class="db-now__form" method="post" action="{{ now.primary.url }}">{% csrf_token %}<button class="btn btn--primary btn--arrow" type="submit" data-now-primary>{{ now.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button></form>{% elif now.primary %}<a class="btn btn--primary{% if not now.primary.overlay %} btn--arrow{% endif %}" href="{{ now.primary.url }}"{% if now.primary.overlay %} data-overlay-open{% endif %} data-now-primary>{{ now.primary.label }}{% if not now.primary.overlay %} {% svg_icon "arrow" "icon icon--flip-rtl" %}{% endif %}</a>{% endif %}
+    {% if now.secondary %}<a class="btn btn--secondary" href="{{ now.secondary.url }}" aria-describedby="db-now-title"{% if now.secondary.overlay %} data-overlay-open{% endif %}>{{ now.secondary.label }}</a>{% endif %}
   </div>
   {% endif %}
 </section>

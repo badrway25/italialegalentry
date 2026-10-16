@@ -101,7 +101,8 @@ page is new copy.
         {% else %}{% translate "Vous — aucun intervenant n’est assigné à ce dossier" %}{% endif %}
       </dd></div>
     </dl>
-    {% if case.suspension_reason %}{% include "components/notice.html" with kind="warning" text=case.suspension_reason %}{% endif %}
+    {% comment %} A suspended file's reason is the NowPanel's text (sec-f7): drawn there, and only there. {% endcomment %}
+    {% if case.suspension_reason and now.variant != "suspended" %}{% include "components/notice.html" with kind="warning" text=case.suspension_reason %}{% endif %}
   </section>
   {% endif %}
 

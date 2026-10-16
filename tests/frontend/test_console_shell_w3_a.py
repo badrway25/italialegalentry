@@ -581,7 +581,11 @@ def test_the_rendered_shell_names_the_space_draws_the_foot_and_offers_the_two_sk
     # the level of the page is the bar's breadcrumb; the workspace opens with the page's one header
     assert 'class="breadcrumbs' in html.split('<header class="portal-bar console-bar"', 1)[1].split("</header>", 1)[0]
     workspace = html.split('<div class="console__workspace">', 1)[1]
-    assert workspace.lstrip().startswith('<header class="page-header'), "the page header is the frame's first block"
+    # the page's one header, whatever markup its family draws it with (the frame's rule, DL54-64): the person's registers
+    # draw the workspace head since W3-E (`.ws-head`), the modules' pages still `page_header.html`
+    assert re.match(r'<header class="(page-header|ws-head)\b', workspace.lstrip()), (
+        "the page header is the frame's first block"
+    )
 
 
 @pytest.mark.django_db

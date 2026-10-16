@@ -406,35 +406,66 @@
 }
 
 /* =========================================================================
-   23. Empty state
+   23. Empty state — design V5 (W3-E; DESIGN_SYSTEM_V5 §10.8 «EmptyState (page)»)
+   templates/components/empty_state.html: the domain's glyph in its 40 px toned disc, the title at 20/28 and 600,
+   one sentence, one action — at the reading edge, on a hairline. No dashed box and nothing centred: on V5 a broken
+   edge is the register of what is due («attesa»), and an empty list owes nothing. The component's own drawing,
+   for every page that includes it; V4's box (here and in v4/workspace.css) is gone. The pages that set the state
+   in their own composition still do, from their sheets (the interior's `.lettura`, the service pages', the Forum,
+   the home's news). Under forced colours the disc keeps an outline: a glyph paints no ground there (W1-B, DL54-34).
    ========================================================================= */
 .empty-state {
-  padding: var(--space-12) var(--space-6);
-  text-align: center;
-  color: var(--text-secondary);
-  border: var(--border-width) dashed var(--border-subtle);
-  border-radius: var(--radius-sm);
-  max-inline-size: var(--container-narrow);
-  margin-inline: auto;
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: var(--s-6) 0 0;
+  border-block-start: 1px solid var(--line-rhythm);
+  text-align: start;
 }
 
 .empty-state__icon {
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
-  margin: 0 auto var(--space-4);
-  color: var(--color-accent-600);
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  margin: 0 0 var(--s-2);
+  padding: var(--s-2);
+  box-sizing: content-box;
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-disc-fg);
 }
 
 .empty-state__title {
-  margin: 0 0 var(--space-2);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h4);
-  color: var(--text-strong);
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+:lang(ar) .empty-state__title {
+  letter-spacing: 0;
 }
 
 .empty-state__text {
-  margin: 0 auto var(--space-4);
-  max-inline-size: var(--measure-narrow);
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.empty-state > p:last-child:not(.empty-state__title, .empty-state__text) {
+  margin: var(--s-4) 0 0;
+}
+
+@media (forced-colors: active) {
+  .empty-state__icon {
+    outline: 1px solid CanvasText;
+  }
 }
 
 /* =========================================================================

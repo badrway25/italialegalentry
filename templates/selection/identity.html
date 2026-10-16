@@ -1,6 +1,6 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-THE IDENTITY, ONCE, AFTER AN EXPLICIT ACT.
+THE IDENTITY, ONCE, AFTER AN EXPLICIT ACT — design V5 (W3-E step 2), in the console's register grammar.
 
 Reaching this page is a POST: one deliberate act, one recorded access. By the time this template
 renders, ``selection.services.read_identity`` has already written the ``IdentityAccess`` row and the
@@ -11,72 +11,71 @@ The page states the four things that make the disclosure lawful, next to the dat
 consented, for what purpose, until when, and under which legal basis. They are not a footnote; they
 are the reason the reader is allowed to be looking at this at all.
 {% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/selection/selection.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/selection/selection.css' %}">{% endblock %}
 {% block page_title %}{% translate "Identité communiquée" %}{% endblock %}
 {% block meta_description %}{% translate "Identité communiquée sur consentement, pour une durée limitée." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Identité communiquée" as header_title %}
-{% comment %} Reworded: the previous sentence repeated prescribed text (legal.privacy.fr_courtesy). {% endcomment %}
-{% translate "La personne a consenti à cette communication, pour l’objet et jusqu’à l’échéance indiqués ci-dessous. Chacune de vos consultations lui est visible." as header_lead %}
-{% translate "Sélection autorisée" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Identité communiquée" %}</h1>
+    {% comment %} Reworded: the previous sentence repeated prescribed text (legal.privacy.fr_courtesy). {% endcomment %}
+    <p class="ws-head__lead">{% translate "La personne a consenti à cette communication, pour l’objet et jusqu’à l’échéance indiqués ci-dessous. Chacune de vos consultations lui est visible." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block portal_content %}
+<div class="reg-page">
+  {% include "selection/partials/responsible.html" with actor=process.actor mandate=process.mandate %}
 
-{% include "selection/partials/responsible.html" with actor=process.actor mandate=process.mandate %}
+  <section class="reg-sec" aria-labelledby="identity-data-title">
+    <h2 class="db-h2 reg-sec__title" id="identity-data-title">{% svg_icon "pen-line" "icon" %}<span>{% translate "Données communiquées" %}</span></h2>
+    {% comment %}A table is the one element allowed to exceed the column, and only inside its
+    own scroll container: the page body must never scroll sideways on a phone. The region is
+    focusable so a keyboard user can scroll it too.{% endcomment %}
+    <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Champs communiqués sur consentement" %}">
+    <table class="data-table">
+      <caption class="visually-hidden">{% translate "Champs communiqués sur consentement" %}</caption>
+      <thead>
+        <tr><th scope="col">{% translate "Champ" %}</th><th scope="col">{% translate "Valeur" %}</th></tr>
+      </thead>
+      <tbody>
+        {% for label, value in disclosed.items %}
+        <tr><th scope="row" data-label="{% translate 'Champ' %}">{{ label }}</th><td data-label="{% translate 'Valeur' %}" dir="auto">{{ value|default:"—" }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
 
-<section class="portal-section" aria-labelledby="identity-data-title">
-  <h2 class="portal__section-title" id="identity-data-title">{% translate "Données communiquées" %}</h2>
-  {% comment %}A table is the one element allowed to exceed the column, and only inside its
-  own scroll container: the page body must never scroll sideways on a phone. The region is
-  focusable so a keyboard user can scroll it too.{% endcomment %}
-  <div class="scroll-x" tabindex="0" role="region" aria-label="{% translate "Champs communiqués sur consentement" %}">
-  <table class="data-table">
-    <caption class="visually-hidden">{% translate "Champs communiqués sur consentement" %}</caption>
-    <thead>
-      <tr><th scope="col">{% translate "Champ" %}</th><th scope="col">{% translate "Valeur" %}</th></tr>
-    </thead>
-    <tbody>
-      {% for label, value in disclosed.items %}
-      <tr><th scope="row" data-label="{% translate 'Champ' %}">{{ label }}</th><td data-label="{% translate 'Valeur' %}">{{ value|default:"—" }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-</section>
+  <section class="reg-sec" aria-labelledby="identity-basis-title">
+    <h2 class="db-h2 reg-sec__title" id="identity-basis-title"><span>{% translate "Ce qui rend cette communication licite" %}</span></h2>
+    <dl class="portal-facts">
+      <div class="portal-facts__row">
+        <dt>{% translate "Finalité déclarée" %}</dt><dd dir="auto">{{ disclosure.purpose }}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Consentement enregistré le" %}</dt>
+        <dd>{{ disclosure.decided_at|date:"d.m.Y H:i" }}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Autorisation valable jusqu’au" %}</dt>
+        <dd>{{ disclosure.expires_at|date:"d.m.Y H:i" }}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Base juridique" %}</dt>
+        <dd>{% translate "Consentement de la personne concernée — RGPD art. 6§1 a)." %}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Consultations enregistrées" %}</dt>
+        <dd>{{ access_count }}</dd>
+      </div>
+    </dl>
 
-<section class="portal-section" aria-labelledby="identity-basis-title">
-  <h2 class="portal__section-title" id="identity-basis-title">{% translate "Ce qui rend cette communication licite" %}</h2>
-  <dl class="selection-facts">
-    <div class="selection-facts__row">
-      <dt class="t-folio">{% translate "Finalité déclarée" %}</dt><dd>{{ disclosure.purpose }}</dd>
-    </div>
-    <div class="selection-facts__row">
-      <dt class="t-folio">{% translate "Consentement enregistré le" %}</dt>
-      <dd>{{ disclosure.decided_at|date:"d.m.Y H:i" }}</dd>
-    </div>
-    <div class="selection-facts__row">
-      <dt class="t-folio">{% translate "Autorisation valable jusqu’au" %}</dt>
-      <dd>{{ disclosure.expires_at|date:"d.m.Y H:i" }}</dd>
-    </div>
-    <div class="selection-facts__row">
-      <dt class="t-folio">{% translate "Base juridique" %}</dt>
-      <dd>{% translate "Consentement de la personne concernée — RGPD art. 6§1 a)." %}</dd>
-    </div>
-    <div class="selection-facts__row">
-      <dt class="t-folio">{% translate "Consultations enregistrées" %}</dt>
-      <dd>{{ access_count }}</dd>
-    </div>
-  </dl>
+    <p class="reg-note">{% translate "Au-delà de la date indiquée, ou si la personne retire son autorisation, ces données ne sont plus accessibles ici — sans préavis et sans qu’une démarche soit nécessaire de sa part. Les conserver ailleurs au-delà de la finalité déclarée engagerait votre propre responsabilité de responsable de traitement." %}</p>
+  </section>
 
-  <p class="note">
-    {% translate "Au-delà de la date indiquée, ou si la personne retire son autorisation, ces données ne sont plus accessibles ici — sans préavis et sans qu’une démarche soit nécessaire de sa part. Les conserver ailleurs au-delà de la finalité déclarée engagerait votre propre responsabilité de responsable de traitement." %}
-  </p>
-</section>
-
-<p class="portal__actions">
-  <a class="btn btn--secondary" href="{% url 'selection:process' process.uuid %}">{% translate "Revenir au processus" %}</a>
-</p>
+  <p class="reg-acts"><a class="btn btn--secondary" href="{% url 'selection:process' process.uuid %}">{% translate "Revenir au processus" %}</a></p>
+</div>
 {% endblock %}

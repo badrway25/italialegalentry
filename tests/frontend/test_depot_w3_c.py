@@ -423,29 +423,27 @@ def _rule(css: str, selector: str) -> str:
 
 
 def test_lateness_is_never_drawn_with_a_refusals_colour_on_the_legacy_sheets():
-    workspace = (ROOT / "static" / "css" / "v4" / "workspace.css").read_text(encoding="utf-8")
+    """W3-E (step 3) retargeted this pin, intent kept: the V4 case file's checklist table, date list and next step left
+    with v4/workspace.css (the file), and the shell's next action with its partial (no page drew it) — the console's
+    table is the one legacy rule left that draws a late date, and it draws it azione, never with a refusal's colour."""
+    assert not (ROOT / "static" / "css" / "v4" / "workspace.css").exists()
     portal = (ROOT / "apps" / "portal" / "static" / "portal" / "portal.css").read_text(encoding="utf-8")
-    for css, selector in (
-        (workspace, ".ws-next--overdue::before {"),
-        (workspace, ".dates__row--overdue .dates__when {"),
-        (workspace, ".table__overdue {"),
-        (workspace, ".table__row--overdue th {"),
-        (portal, ".next-action--overdue .next-action__inner {"),
-        (portal, ".data-table tr.is-overdue th {"),
-    ):
-        rule = _rule(css, selector)
-        assert "--deadline-overdue-" in rule, selector
-        assert not re.search(r"--err-|--state-error|--line-grad-err|rifiuto", rule), selector
-    assert "--deadline-soon-" in _rule(workspace, ".dates__row--soon .dates__when {")
-    assert "--deadline-soon-" in _rule(portal, ".next-action--soon .next-action__inner {")
+    assert ".next-action--" not in portal and ".next-action__" not in portal
+    rule = _rule(portal, ".data-table tr.is-overdue th {")
+    assert "--deadline-overdue-" in rule
+    assert not re.search(r"--err-|--state-error|--line-grad-err|rifiuto", rule)
 
 
 def test_the_register_entry_keeps_only_what_a_page_still_draws():
     register = (ROOT / "static" / "css" / "register.css").read_text(encoding="utf-8")
     assert ".entry[aria-current" not in register, "no page marks an entry current any more"
     templates = "".join(path.read_text(encoding="utf-8") for path in (ROOT / "templates").rglob("*.html"))
-    for kept in ("register__item", "entry__ordinal", "entry__title", "entry__gloss", "entry__actor", "entry__cta"):
+    for kept in ("register__item", "entry__title", "entry__gloss", "entry__cta"):
         assert kept in register and kept in templates, kept
+    # the entry's ordinal and its responsible actor left with their last pages, the console's registers and the case
+    # file (W3-E, step 3: the registers' grammar) — retargeted, intent kept
+    for gone in ("entry__ordinal", "entry__actor"):
+        assert gone not in register and gone not in templates, gone
 
 
 def test_the_deadlines_page_draws_each_date_with_the_glyph_of_its_register(client, person):

@@ -1,10 +1,12 @@
 {% extends "academy/base_academy.html" %}{% load i18n %}
 {% comment %}
-One course: the facts, what it develops, what it is made of, what it does NOT do.
+One course — design V5 (W3-E step 2): the facts, what it develops, what it is made of, what it does NOT do.
 
-Order of the page: who delivers it and under what conditions (facts), then the one action, then
-the content. The enrolment control sits high because it is the only thing to do here, and it is a
-POST form — enrolling is a state change and never a link.
+The page's head carries the course's title and its summary in the course's own language, and at its reading end the
+page's ONE act — enrolling (a POST form: a state change, never a link), or the way to the follow-up once enrolled;
+the sentence that goes with it under it. Then the facts (who delivers it and under what conditions), the
+description at the reading size, the modules in order (the registers' sequence: each its place in ILE Mono, its
+kind and its length), what it develops (a table), its materials.
 
 No company appears on this page, there is no application form of any kind, and no wording suggests
 that the course leads to a job, a visa or a permit. What the page promises is what the domain can
@@ -14,115 +16,110 @@ deliver: a record of the sessions attended.
 {% block meta_description %}{{ course.summary }}{% endblock %}
 
 {% block portal_header %}
-{% translate "Academy" as header_eyebrow %}
-{% include "components/page_header.html" with title=course.title lead=course.summary eyebrow=header_eyebrow lang=course.text_language %}
+{% safe_url 'academy:enrol' course.slug as enrol_url %}
+{% if enrolment %}{% safe_url 'academy:enrolment' enrolment.uuid as enrolment_url %}{% endif %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" lang="{{ course.text_language }}" dir="auto">{{ course.title }}</h1>
+    <p class="ws-head__lead" lang="{{ course.text_language }}" dir="auto">{{ course.summary }}</p>
+    {% if enrolment %}<p class="reg-head__meta">{% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}</p>{% endif %}
+  </div>
+  {% if enrolment and enrolment_url %}
+  <div class="ws-head__action"><a class="btn btn--primary" href="{{ enrolment_url }}">{% translate "Ouvrir mon suivi" %}</a></div>
+  {% elif not enrolment and can_enrol and enrol_url %}
+  <form class="ws-head__action" method="post" action="{{ enrol_url }}">{% csrf_token %}
+    <button type="submit" class="btn btn--primary">{% translate "M’inscrire à ce cours" %}</button>
+    <p class="ws-head__action-note">{% translate "L’inscription est enregistrée immédiatement. Vous pouvez l’interrompre à tout moment." %}</p>
+  </form>
+  {% endif %}
+</header>
 {% endblock %}
 
 {% block academy_content %}
-{% safe_url 'academy:enrol' course.slug as enrol_url %}
-{% if enrolment %}{% safe_url 'academy:enrolment' enrolment.uuid as enrolment_url %}{% endif %}
-
-<section class="portal-section" aria-labelledby="course-facts-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Le cours" %}</span></p>
-  <h2 class="portal__section-title" id="course-facts-title">{% translate "Ce qu’il faut savoir" %}</h2>
-  <dl class="portal-facts">
-    <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}{% if course.provider.city %} — {{ course.provider.city }}{% endif %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Domaine" %}</dt><dd>{{ course.get_course_type_display }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Langue d’enseignement" %}</dt><dd>{{ course.get_language_display }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Modalité" %}</dt><dd>{{ course.get_course_format_display }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Durée" %}</dt><dd>{% blocktranslate with hours=course.duration_hours %}{{ hours }} heures{% endblocktranslate %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Version du programme" %}</dt><dd>v{{ course.version }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Condition d’accès" %}</dt><dd>{% if course.access_note %}{{ course.access_note }}{% else %}{% translate "Aucune. L’inscription est ouverte à toute personne disposant d’un compte." %}{% endif %}</dd></div>
-  </dl>
-
-  {% if enrolment %}
-    <p class="portal__summary">
-      {% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}
-    </p>
-    {% if enrolment_url %}
-    <p class="portal__actions"><a class="btn btn--primary" href="{{ enrolment_url }}">{% translate "Ouvrir mon suivi" %}</a></p>
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="course-facts-title">
+    <h2 class="db-h2 reg-sec__title" id="course-facts-title">{% svg_icon "book-open" "icon" %}<span>{% translate "Ce qu’il faut savoir" %}</span></h2>
+    <dl class="portal-facts">
+      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}{% if course.provider.city %} — {{ course.provider.city }}{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Domaine" %}</dt><dd>{{ course.get_course_type_display }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Langue d’enseignement" %}</dt><dd>{{ course.get_language_display }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Modalité" %}</dt><dd>{{ course.get_course_format_display }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Durée" %}</dt><dd>{% blocktranslate with hours=course.duration_hours %}{{ hours }} heures{% endblocktranslate %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Version du programme" %}</dt><dd>v{{ course.version }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Condition d’accès" %}</dt><dd>{% if course.access_note %}{{ course.access_note }}{% else %}{% translate "Aucune. L’inscription est ouverte à toute personne disposant d’un compte." %}{% endif %}</dd></div>
+    </dl>
+    {% if not enrolment and not can_enrol %}
+    <p class="db-empty academy-closed">{% translate "Ce cours n’est pas ouvert aux inscriptions pour le moment." %}</p>
     {% endif %}
-  {% elif can_enrol and enrol_url %}
-    <form method="post" action="{{ enrol_url }}" class="portal__actions">{% csrf_token %}
-      <button type="submit" class="btn btn--primary">{% translate "M’inscrire à ce cours" %}</button>
-    </form>
-    <p class="t-caption">{% translate "L’inscription est enregistrée immédiatement. Vous pouvez l’interrompre à tout moment." %}</p>
-  {% else %}
-    <p class="empty">{% translate "Ce cours n’est pas ouvert aux inscriptions pour le moment." %}</p>
+  </section>
+
+  {% if course.description %}
+  <section class="reg-sec" aria-labelledby="course-about-title">
+    <h2 class="db-h2 reg-sec__title" id="course-about-title"><span>{% translate "Ce que contient le cours" %}</span></h2>
+    <p class="reg-prose" lang="{{ course.text_language }}" dir="auto">{{ course.description|linebreaksbr }}</p>
+  </section>
   {% endif %}
-</section>
 
-{% if course.description %}
-<section class="portal-section" aria-labelledby="course-about-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Présentation" %}</span></p>
-  <h2 class="portal__section-title" id="course-about-title">{% translate "Ce que contient le cours" %}</h2>
-  <p class="t-prose" lang="{{ course.text_language }}" dir="auto">{{ course.description|linebreaksbr }}</p>
-</section>
-{% endif %}
+  <section class="reg-sec" aria-labelledby="course-modules-title">
+    <h2 class="db-h2 reg-sec__title" id="course-modules-title"><span>{% translate "Les modules, dans l’ordre" %}</span></h2>
+    {% if modules %}
+    <ol class="reg-steps">
+      {% for module in modules %}
+      <li class="reg-step">
+        <div class="reg-step__words" lang="{{ course.text_language }}" dir="auto">
+          <p class="reg-step__title">{{ module.title }}</p>
+          {% if module.summary %}<p class="reg-step__text">{{ module.summary }}</p>{% endif %}
+          <p class="reg-step__meta"><span>{{ module.get_kind_display }}</span><span>{% blocktranslate with minutes=module.duration_minutes %}{{ minutes }} min{% endblocktranslate %}</span></p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="db-empty">{% translate "Le programme détaillé est en cours de préparation par l’organisme." %}</p>
+    {% endif %}
+  </section>
 
-<section class="portal-section" aria-labelledby="course-modules-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Programme" %}</span></p>
-  <h2 class="portal__section-title" id="course-modules-title">{% translate "Les modules, dans l’ordre" %}</h2>
-  {% if modules %}
-  <ol class="sequence">
-    {% for module in modules %}
-    <li class="sequence__step">
-      <span class="sequence__marker" aria-hidden="true"></span>
-      <div lang="{{ course.text_language }}" dir="auto">
-        <p class="sequence__title">{{ module.title }}</p>
-        {% if module.summary %}<p class="sequence__body">{{ module.summary }}</p>{% endif %}
-        <span class="sequence__actor">{{ module.get_kind_display }} · {% blocktranslate with minutes=module.duration_minutes %}{{ minutes }} min{% endblocktranslate %}</span>
-      </div>
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Le programme détaillé est en cours de préparation par l’organisme." %}</p>
+  <section class="reg-sec" aria-labelledby="course-competences-title">
+    <h2 class="db-h2 reg-sec__title" id="course-competences-title"><span>{% translate "Ce que le cours permet de faire" %}</span></h2>
+    {% if competences %}
+    <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-course-detail-1">
+      <table class="data-table">
+        <caption id="t-course-detail-1" class="visually-hidden">{% translate "Compétences développées par le cours, niveau visé et résultat attendu" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Compétence" %}</th>
+            <th scope="col">{% translate "Niveau visé" %}</th>
+            <th scope="col">{% translate "Résultat attendu" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in competences %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Compétence' %}">{{ row.competence.label }}<span class="t-caption">{{ row.competence.get_area_display }}</span></th>
+            <td data-label="{% translate 'Niveau visé' %}">{{ row.get_level_reached_display }}</td>
+            <td data-label="{% translate 'Résultat attendu' %}">{% if row.expected_outcome %}{{ row.expected_outcome }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="db-empty">{% translate "Les compétences visées par ce cours n’ont pas encore été décrites par l’organisme." %}</p>
+    {% endif %}
+  </section>
+
+  {% if materials %}
+  <section class="reg-sec" aria-labelledby="course-materials-title">
+    <h2 class="db-h2 reg-sec__title" id="course-materials-title"><span>{% translate "Supports de formation" %}</span></h2>
+    <ul class="db-list" role="list">
+      {% for material in materials %}
+      <li class="db-list__row">
+        <span class="db-list__title" dir="auto">{{ material.title }}</span>
+        <span class="db-list__meta">{{ material.get_kind_display }}{% if material.source_title %} · {{ material.source_title }}{% endif %}{% if material.source_ref %} ({{ material.source_ref }}){% endif %}{% if material.note %} · {{ material.note }}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
   {% endif %}
-</section>
-
-<section class="portal-section" aria-labelledby="course-competences-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Compétences" %}</span></p>
-  <h2 class="portal__section-title" id="course-competences-title">{% translate "Ce que le cours permet de faire" %}</h2>
-  {% if competences %}
-  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-course-detail-1">
-    <table class="data-table">
-      <caption id="t-course-detail-1" class="visually-hidden">{% translate "Compétences développées par le cours, niveau visé et résultat attendu" %}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{% translate "Compétence" %}</th>
-          <th scope="col">{% translate "Niveau visé" %}</th>
-          <th scope="col">{% translate "Résultat attendu" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in competences %}
-        <tr>
-          <th scope="row" data-label="{% translate 'Compétence' %}">{{ row.competence.label }}<span class="t-caption">{{ row.competence.get_area_display }}</span></th>
-          <td data-label="{% translate 'Niveau visé' %}">{{ row.get_level_reached_display }}</td>
-          <td data-label="{% translate 'Résultat attendu' %}">{% if row.expected_outcome %}{{ row.expected_outcome }}{% else %}—{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <p class="empty">{% translate "Les compétences visées par ce cours n’ont pas encore été décrites par l’organisme." %}</p>
-  {% endif %}
-</section>
-
-{% if materials %}
-<section class="portal-section" aria-labelledby="course-materials-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Supports" %}</span></p>
-  <h2 class="portal__section-title" id="course-materials-title">{% translate "Supports de formation" %}</h2>
-  <ol class="sources">
-    {% for material in materials %}
-    <li class="sources__item">
-      {{ material.title }} — {{ material.get_kind_display }}{% if material.source_title %} · {{ material.source_title }}{% endif %}{% if material.source_ref %} ({{ material.source_ref }}){% endif %}
-      {% if material.note %}<span class="t-caption">{{ material.note }}</span>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-</section>
-{% endif %}
+</div>
 {% endblock %}

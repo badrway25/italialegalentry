@@ -1,0 +1,12 @@
+{% load i18n %}{% comment %}
+A LINE'S ROW MENU — the body of the overlay system's popover (templates/components/popover.html; W2-A), drawn by the
+case file (templates/cases/detail.html) for a line the reader may move (platform map C-5: the row's menu, never a
+column of selects). One act: «Nouvel état de cette ligne», which opens the line's alert dialog. It is a link to the
+dialog — without script the dialog shows in place (`:target`) — that declares the dialog it opens (`aria-haspopup`:
+choosing it does not close the menu by itself); static/js/src/console.js §2f opens the dialog with the row's «⋮» as
+its opener, so the focus comes back to the row when the dialog closes.
+
+Contract: `line` = one row of portal.services.case_lines (dialog_id); `overlay_part` = "body".
+{% endcomment %}<ul class="overlay__list" role="list">
+  <li><a class="overlay__item" href="#{{ line.dialog_id }}" aria-haspopup="dialog" data-line-state="{{ line.dialog_id }}">{% svg_icon "history" "icon" %}<span>{% translate "Nouvel état de cette ligne" %}</span></a></li>
+</ul>

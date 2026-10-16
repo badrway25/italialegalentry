@@ -1,41 +1,50 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+«MES DEMANDES» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.2; platform.md §3; W3-E). Every
+request transmitted from the account (portal.services.requests_for), newest first.
+
+The register's grammar: the page's head, the BAND — how many requests, in the bridge's own words —, then one row a
+request, in the dashboard's row grammar (`.db-task`): its subject in its own direction, its kind and its reference in
+ILE Mono (a ledger reference: «contact-3»), its state as a chip — the member's register through the registry
+(core.chips: a Forum registration's «forum.RegistrationStatus», the others' «enquiries.SubmissionStatus»), never a word
+painted by hand —, the day it was sent. The whole row is the way to the request (0 dead points); the table V4 drew
+(`account-table`) is gone with its columns.
+{% endcomment %}
 {% block page_title %}{% translate "Mes demandes" %}{% endblock %}
 {% block meta_description %}{% translate "Les demandes transmises depuis votre compte et leur état de traitement." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 {% block portal_header %}
-{% translate "Mes demandes" as header_title %}
-{% translate "Les demandes transmises depuis votre compte, de la plus récente à la plus ancienne. Vous seul pouvez les consulter ici." as header_lead %}
-{% translate "Espace réservé" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mes demandes" %}</h1>
+    <p class="ws-head__lead">{% translate "Les demandes transmises depuis votre compte, de la plus récente à la plus ancienne. Vous seul pouvez les consulter ici." %}</p>
+  </div>
+</header>
 {% endblock %}
 {% block portal_content %}
+<div class="reg-page">
 {% if page_obj.object_list %}
-<div class="scroll-x" tabindex="0" role="region" aria-label="{% translate 'Liste de vos demandes' %}">
-  <table class="account-table">
-    <caption class="visually-hidden">{% translate "Liste de vos demandes" %}</caption>
-    <thead>
-      <tr>
-        <th scope="col">{% translate "Demande" %}</th>
-        <th scope="col">{% translate "Type" %}</th>
-        <th scope="col">{% translate "Transmise le" %}</th>
-        <th scope="col">{% translate "État" %}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in page_obj %}
-      <tr>
-        <th scope="row" data-label="{% translate 'Demande' %}"><a href="{{ item.url }}">{{ item.title }}</a></th>
-        <td data-label="{% translate 'Type' %}">{{ item.kind_label }}</td>
-        <td data-label="{% translate 'Transmise le' %}"><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y" }}</time></td>
-        <td data-label="{% translate 'État' %}">{% include "components/badge.html" with label=item.status_label kind=item.status_kind %}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% include "components/pagination.html" with page_obj=page_obj %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count"><span class="reg-band__n">{{ page_obj.paginator.count }}</span> {% blocktranslate count n=page_obj.paginator.count %}demande transmise{% plural %}demandes transmises{% endblocktranslate %}</p>
+  </div>
+
+  <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Liste de vos demandes' %}">
+    {% for item in page_obj %}
+    <li class="db-task reg-row reg-row--link" data-request="{{ item.reference }}">
+      <div class="db-task__words">
+        <p class="db-task__title"><a class="reg-row__link" href="{{ item.url }}" dir="auto">{{ item.title }}</a></p>
+        <p class="db-task__meta reg-row__meta"><span>{{ item.kind_label }}</span><span class="reg-ref">{{ item.reference }}</span></p>
+      </div>
+      <div class="db-task__state">{% if item.is_registration %}{% chip item.status "forum.RegistrationStatus" %}{{ item.status_label }}{% endchip %}{% else %}{% chip item.status "enquiries.SubmissionStatus" %}{{ item.status_label }}{% endchip %}{% endif %}</div>
+      <div class="db-task__due"><span class="db-due"><span class="visually-hidden">{% translate "Transmise le" %} </span><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y" }}</time></span></div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% include "components/pagination.html" with page_obj=page_obj %}
 {% else %}
-{% translate "Aucune demande" as empty_title %}
-{% translate "Les demandes transmises depuis votre compte apparaîtront ici." as empty_text %}
-{% include "components/empty_state.html" with title=empty_title text=empty_text icon="send" %}
+  {% translate "Aucune demande" as empty_title %}
+  {% translate "Les demandes transmises depuis votre compte apparaîtront ici." as empty_text %}
+  {% include "components/empty_state.html" with title=empty_title text=empty_text icon="send" %}
 {% endif %}
+</div>
 {% endblock %}

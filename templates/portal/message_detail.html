@@ -1,33 +1,54 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-One communication addressed to the signed-in account (portal.services.get_own_message — 403 for
-anybody else). Plain text, auto-escaped. The sender's identity is never shown (data minimisation).
+ONE COMMUNICATION — «la lettera», design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §3.1 item 7; W3-E). One
+communication addressed to the signed-in account (portal.services.get_own_message — 404 for anybody else). Plain text,
+auto-escaped. The sender's identity is never shown (data minimisation): the sender is the project's team, and its mark.
+
+Drawn as a letter, because it is one: the subject is the page's title (its own direction); then the letter's head —
+the project's mark («ile-mark», the registry's glyph of the team as a sender), «L'équipe du projet», the date it was
+received and whether it was read, said in words —, a hairline, the text at the reading measure, the record it is about
+when that record is the reader's (portal.services.related_link), and the page's acts: «Marquer comme lue» while it is
+unread (the page's one primary), the way back. The screen has no rail of the journey and no register: what says ILE
+on it at rest is the mark at the letter's head, the date in the ledger's figures and the L2 key on the act's wait.
 {% endcomment %}
 {% block page_title %}{{ message.subject }}{% endblock %}
 {% block meta_description %}{% translate "Communication de l’équipe du projet." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 {% block portal_header %}
-{% translate "Communication" as header_eyebrow %}
-{% include "components/page_header.html" with title=message.subject eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" dir="auto">{{ message.subject }}</h1>
+  </div>
+</header>
 {% endblock %}
 {% block portal_content %}
-<dl class="meta-row">
-  <div class="meta-row__item">{% svg_icon "calendar" "icon" %}<dt>{% translate "Reçue le" %}</dt><dd><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time></dd></div>
-  <div class="meta-row__item">{% svg_icon "ile-mark" "icon" %}<dt>{% translate "De" %}</dt><dd>{% translate "L’équipe du projet" %}</dd></div>
-  <div class="meta-row__item">{% svg_icon "mail-open" "icon" %}<dt>{% translate "État" %}</dt><dd>{% if message.is_read %}{% translate "Lue" %}{% if message.read_at %} — <time datetime="{{ message.read_at|date:'c' }}">{{ message.read_at|date:"d.m.Y H:i" }}</time>{% endif %}{% else %}{% translate "Non lue" %}{% endif %}</dd></div>
-</dl>
+<div class="reg-page">
+<article class="reg-letter" aria-labelledby="letter-from">
+  <header class="reg-letter__head">
+    <span class="reg-letter__seal" aria-hidden="true">{% svg_icon "ile-mark" "icon" %}</span>
+    <div class="reg-letter__from">
+      <p class="reg-letter__who" id="letter-from"><span class="visually-hidden">{% translate "De" %} </span>{% translate "L’équipe du projet" %}</p>
+      <dl class="reg-letter__facts">
+        <div class="reg-letter__fact"><dt>{% translate "Reçue le" %}</dt><dd><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time></dd></div>
+        <div class="reg-letter__fact"><dt>{% translate "État" %}</dt><dd>{% if message.is_read %}{% translate "Lue" %}{% if message.read_at %} — <time datetime="{{ message.read_at|date:'c' }}">{{ message.read_at|date:"d.m.Y H:i" }}</time>{% endif %}{% else %}<span class="db-unread" aria-hidden="true"></span><span class="db-list__new">{% translate "Non lue" %}</span>{% endif %}</dd></div>
+      </dl>
+    </div>
+  </header>
 
-<div class="portal-message__body" dir="auto">{{ message.body|linebreaks }}</div>
+  <div class="reg-letter__body" dir="auto">{{ message.body|linebreaks }}</div>
 
-{% if related_link %}
-<p class="portal__actions"><a class="link-arrow" href="{{ related_link.url }}">{{ related_link.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-{% endif %}
+  {% if related_link %}
+  <p class="reg-letter__about"><a class="db-link" href="{{ related_link.url }}">{{ related_link.label }}{% svg_icon "chevron-end" "icon" %}</a></p>
+  {% endif %}
+</article>
 
-<div class="portal__actions">
+<div class="reg-acts">
   {% if not message.is_read %}
   <form method="post" action="{% url 'portal:message_read' message.pk %}">{% csrf_token %}
     <button class="btn btn--primary" type="submit">{% svg_icon "mail-open" "icon" %}{% translate "Marquer comme lue" %}</button>
   </form>
   {% endif %}
   <a class="btn btn--secondary" href="{% url 'portal:messages' %}">{% translate "Retour aux communications" %}</a>
+</div>
 </div>
 {% endblock %}

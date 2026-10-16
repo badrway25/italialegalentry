@@ -40,13 +40,29 @@ def _label(obj) -> str:
     return str(obj)
 
 
-def record(request=None, *, action: str, target=None, metadata: dict | None = None, actor=None) -> AuditEvent:
-    actor = actor or (getattr(request, "user", None) if request is not None else None)
+def record(
+    request=None,
+    *,
+    action: str,
+    target=None,
+    metadata: dict | None = None,
+    actor=None,
+    system: bool = False,
+) -> AuditEvent:
+    """
+    Write one audit event. Without an ``actor``, the request's user is the actor — unless ``system``: an act of the
+    platform itself, made inside somebody's request but by nobody (the orientation service moving a file after the
+    person's questionnaire: CASE_LIFECYCLE.md §4, «sistema»; sec-f7 REVIEW, finding 6). It is recorded with no actor
+    and labelled as the system's; the request's trace (its id, the hashed address) is kept.
+    """
+    if actor is None and request is not None and not system:
+        actor = getattr(request, "user", None)
     if actor is not None and not getattr(actor, "is_authenticated", False):
         actor = None
+    nobody = "system" if system else "anonymous"
     event = AuditEvent.objects.create(
         actor=actor,
-        actor_label=_label(actor) if actor else "anonymous",
+        actor_label=_label(actor) if actor else nobody,
         action=action,
         target_type=type(target).__name__ if target is not None else "",
         target_id=str(getattr(target, "pk", "") or "") if target is not None else "",
@@ -66,7 +82,7 @@ def record(request=None, *, action: str, target=None, metadata: dict | None = No
         action,
         extra={
             "event": action,
-            "actor": f"user:{actor.pk}" if actor is not None else "anonymous",
+            "actor": f"user:{actor.pk}" if actor is not None else nobody,
             "target": f"{event.target_type}:{event.target_id}" if event.target_type else "-",
         },
     )

@@ -190,18 +190,22 @@ def situation(request):
     else:
         form = SituationForm(profile=profile)
 
+    # Design V4 (§3.7): the Stepper fills a node per answered question — the profile's own ``answered()`` rule, plus the
+    # one question the rules do not read yet. One total for the person (W3-D's m4, W3-E): the counter under the Stepper
+    # counts the questions the page asks and the ones answered, as the Stepper's nodes and the foot's «1 / 8» do — it
+    # said «sur 7» (the fields the rules read) under eight nodes.
+    answered_fields = set(profile.answered()) | (
+        {"has_qualification_recognition"} if profile.has_qualification_recognition is not None else set()
+    )
     return _render(
         request,
         "portal/situation.html",
         {
             "form": form,
             "profile": profile,
-            "answered": profile.completeness,
-            "total": len(profile.PROFILE_FIELDS),
-            # Design V4 (§3.7): the Stepper fills a node per answered question — the profile's own
-            # ``answered()`` rule, plus the one question the rules do not read yet.
-            "answered_fields": set(profile.answered())
-            | ({"has_qualification_recognition"} if profile.has_qualification_recognition is not None else set()),
+            "answered": len(answered_fields),
+            "total": len(form.visible_fields()),
+            "answered_fields": answered_fields,
             "case": services.active_case(user),
         },
         _crumb(_("Ma situation")),

@@ -1,0 +1,36 @@
+{% load i18n %}{% comment %}
+THE FILE'S STATE, CHANGED IN A DIALOG — the body and the foot of the overlay system's alert dialog (its dialog
+component, `kind="alert"`; W2-A), drawn by the case file (templates/cases/detail.html) when
+the domain permits this reader a move (cases.services.transitions_available: the declared table, the object policy —
+and every check runs again in the view and the service). Platform map C-5 and C-6.
+
+  the body   the file — «Dossier», its reference in ILE Mono, its state as a chip —, then what a change is (the two are
+             the dialog's description); the moves as radios, each its state's chip, one required, none chosen in
+             advance; under the closure its consequence, said before the act — «Un dossier clôturé ne se rouvre pas : on
+             en ouvre un nouveau.» (the domain's own sentence, tied to its choice by `aria-describedby`); then «Motif»
+             with its rule as the field's help, tied to it (C-6: a condition is never in the label alone) — «La
+             suspension exige une motivation.», the domain's own words, which also refuse a suspension without one
+  the foot   «Annuler» — the safe answer, the focus at the opening, Esc —, then «Enregistrer l'état»
+
+Every word is the catalogue's. Contract: `case`; `transitions` = [(value, label)]; `overlay_part` — "body" or
+"actions" (the component includes this file for both).
+{% endcomment %}{% if overlay_part == "body" %}<form class="reg-dialog file-dialog" id="file-state-form" method="post" action="{% url 'cases:transition' case.reference %}">
+  {% csrf_token %}
+  <div class="file-dialog__about" id="file-state-text">
+    <p class="file-dialog__what"><span>{% translate "Dossier" %} <span class="reg-ref">{{ case.reference }}</span></span> {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}</p>
+    <p class="file-dialog__note">{% translate "Seules les évolutions permises par l’état actuel sont proposées. Chaque changement est enregistré." %}</p>
+  </div>
+  <fieldset class="reg-form__fieldset file-choices">
+    <legend>{% translate "Nouvel état" %}</legend>
+    {% for value, label in transitions %}
+    <div class="form-field__check"><input type="radio" id="file-state-{{ value }}" name="status" value="{{ value }}" required{% if value == "closed" %} aria-describedby="file-state-closed-help"{% endif %}><label for="file-state-{{ value }}">{% chip value "cases.CaseStatus" %}{{ label }}{% endchip %}</label></div>
+    {% if value == "closed" %}<p class="file-choices__hint" id="file-state-closed-help">{% translate "Un fascicolo concluso non si riapre: se ne apre uno nuovo." %}</p>{% endif %}
+    {% endfor %}
+  </fieldset>
+  <div class="form-field">
+    <label class="form-field__label" for="file-state-reason">{% translate "Motif" %}</label>
+    <input type="text" id="file-state-reason" name="reason" maxlength="500" aria-describedby="file-state-reason-help" autocomplete="off">
+    <p class="form-field__help" id="file-state-reason-help">{% translate "La sospensione richiede una motivazione." %}</p>
+  </div>
+</form>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close data-overlay-safe>{% translate "Annuler" %}</button>
+<button class="btn btn--primary" type="submit" form="file-state-form">{% translate "Enregistrer l’état" %}</button>{% endif %}

@@ -195,6 +195,10 @@ def needs(request):
         "portal_context": company.legal_name,
         "create_url": services.safe_reverse("companies:need_create"),
     }
+    # the register's counts are its filter, by who holds each need (design V5, W3-E: platform.md E-3)
+    from portal import services as portal_services
+
+    context.update(portal_services.needs_register(rows, request.GET.get("état", "")))
     return _render(request, "companies/needs.html", context, {"label": _("Mes besoins"), "url": ""})
 
 

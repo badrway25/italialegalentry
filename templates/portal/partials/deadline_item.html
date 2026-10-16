@@ -1,10 +1,26 @@
-{% load i18n %}{% comment %}Contract: `row` = portal.services.present_deadline(...). The date keeps its glyph on its own line of text — the glyph of its register (F13, design V5 W3-C: alarm-clock when late, clock when close by, the calendar otherwise), in the deadline tokens beside the chip that says it: the dashboard's own grammar of a date (`.db-due`, apps/portal/static/portal/v5/_dashboard.css, already on every console page — V5.8: no new shared CSS).{% endcomment %}
-<li class="portal-list__item">
-  <p class="portal-list__title" dir="auto">{{ row.title }}</p>
-  <p class="portal-list__meta">
-    <span class="db-due{% if row.urgency %} db-due--{{ row.urgency }}{% endif %}">{% svg_icon row.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ row.due_on|date:'c' }}">{{ row.due_on|date:"d.m.Y" }}</time></span> · {{ row.kind_label }}{% if not row.is_open %} · {{ row.status_label }}{% endif %}
-    {% if row.description %}<br><span dir="auto">{{ row.description|linebreaksbr }}</span>{% endif %}
-    {% if row.source_note %}<br><span>{% translate "Origine :" %} <span dir="auto">{{ row.source_note }}</span></span>{% endif %}
-  </p>
-  {% if row.badge_label %}<div class="portal-list__aside">{% include "components/badge.html" with label=row.badge_label kind=row.badge_kind %}</div>{% endif %}
+{% load i18n %}{% comment %}
+A DATE OF THE PERSON'S — one row of «Mes échéances», design V5 (W3-E; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7,
+§1.2; platform.md §3 «rows with the status chip»). The dashboard's row grammar (`.db-task`, apps/portal/static/portal/v5/
+_dashboard.css, on every console page): the words — the date's title as the team wrote it, isolated in its own
+direction, its kind, its description and its source —, then its state as a chip, then the date.
+
+The state, said once, as a chip: a date past due is azione («En retard»: terracotta, the disc with clock hands — red never
+means lateness), a date close by attesa («Bientôt»: amber, the dashed ring); a closed one says its member through the
+registry (core.chips «portal.DeadlineStatus»: «Terminée» is a fact, «Annulée» carries nothing). An open date further
+off has no chip: its date says it, under the section «À venir».
+
+The date keeps its glyph — the glyph of its register (F13, W3-C: alarm-clock when late, clock when close by, the
+calendar otherwise) — in the dashboard's grammar of a date (`.db-due`). Its distance in words («dans 9 jours», «en
+retard de 3 jours») is the owner's copy (B1 item 4): no live string says it, so the date is drawn alone.
+
+Contract: `row` = portal.services.present_deadline(...).
+{% endcomment %}<li class="db-task reg-row" data-deadline="{{ row.pk }}">
+  <div class="db-task__words">
+    <p class="db-task__title" id="deadline-{{ row.pk }}" dir="auto">{{ row.title }}</p>
+    <p class="db-task__meta">{{ row.kind_label }}</p>
+    {% if row.description %}<p class="db-task__meta reg-row__text" dir="auto">{{ row.description|linebreaksbr }}</p>{% endif %}
+    {% if row.source_note %}<p class="db-task__meta reg-row__source">{% translate "Origine :" %} <span dir="auto">{{ row.source_note }}</span></p>{% endif %}
+  </div>
+  <div class="db-task__state">{% if row.urgency == "overdue" %}{% chip register="azione" %}{% translate "En retard" %}{% endchip %}{% elif row.urgency == "soon" %}{% chip register="attesa" %}{% translate "Bientôt" %}{% endchip %}{% elif not row.is_open %}{% chip row.status "portal.DeadlineStatus" %}{{ row.status_label }}{% endchip %}{% endif %}</div>
+  <div class="db-task__due"><span class="db-due{% if row.urgency %} db-due--{{ row.urgency }}{% endif %}">{% svg_icon row.urgency|concept:"due"|default:"calendar" "icon" %}<span class="visually-hidden">{% translate "Échéance" %} </span><time datetime="{{ row.due_on|date:'Y-m-d' }}">{{ row.due_on|date:"d.m.Y" }}</time></span></div>
 </li>

@@ -1,5 +1,8 @@
 {% load i18n %}{% comment %}
-WHO IS ANSWERABLE — included on EVERY screen where a selection stage is visible.
+WHO IS ANSWERABLE — included on EVERY screen where a selection stage is visible. Design V5 (W3-E step 2): the
+registers' answerable party (apps/portal/static/portal/v5/_registers.css §12) — the authorised actor's glyph (the
+registry's ACTOR map, never a literal), the label of its role, the organisation's name, its facts on one line (its
+quality, its authorisation in ILE Mono, its jurisdiction, its validity as a chip and until when), the clause.
 
 Italy Legal Entry is never the intermediary. Search and selection are reserved activities and they
 belong to an authorised party who is named, whose authorisation has a reference, a jurisdiction and
@@ -9,40 +12,39 @@ A screen that shows a selection stage without saying whose act it is implies, by
 is the platform's. That omission is the defect: the previous platform had no authorised actor at
 all, and its own staff moved candidates between states.
 
-The band names an ORGANISATION and a FUNCTION, never a natural person.
+The band names an ORGANISATION and a FUNCTION, never a natural person. It is labelled by its visible words (the
+partial is drawn once per pending request on the person's panel: no id of its own to repeat).
 
 Contract: `actor` = a selection.AuthorizedActor, `mandate` (optional) = a SelectionMandate.
 {% endcomment %}
-<section class="responsible" aria-labelledby="responsible-title">
-  <p class="t-folio responsible__label" id="responsible-title">{% translate "Acteur responsable de cette phase" %}</p>
-  <p class="responsible__name">{{ actor.organisation.name }}</p>
-  <dl class="responsible__facts">
-    <div class="responsible__fact">
-      <dt class="t-folio">{% translate "Qualité" %}</dt>
+<section class="reg-party responsible" aria-label="{% translate 'Acteur responsable de cette phase' %}">
+  {% with glyph="authorised_actor"|actor_glyph %}<span class="reg-row__seal" aria-hidden="true">{% svg_icon glyph "icon" %}</span>{% endwith %}
+  <div class="reg-party__words">
+    <p class="reg-party__label">{% translate "Acteur responsable de cette phase" %}</p>
+    <p class="reg-party__name" dir="auto">{{ actor.organisation.name }}</p>
+  </div>
+  <dl class="reg-party__facts">
+    <div class="reg-party__fact">
+      <dt>{% translate "Qualité" %}</dt>
       <dd>{{ actor.get_actor_type_display }}</dd>
     </div>
-    <div class="responsible__fact">
-      <dt class="t-folio">{% translate "Autorisation" %}</dt>
-      <dd>{{ actor.authorisation_reference }}</dd>
+    <div class="reg-party__fact">
+      <dt>{% translate "Autorisation" %}</dt>
+      <dd><span class="reg-ref">{{ actor.authorisation_reference }}</span></dd>
     </div>
-    <div class="responsible__fact">
-      <dt class="t-folio">{% translate "Juridiction" %}</dt>
+    <div class="reg-party__fact">
+      <dt>{% translate "Juridiction" %}</dt>
       <dd>{{ actor.jurisdiction }}</dd>
     </div>
-    <div class="responsible__fact">
-      <dt class="t-folio">{% translate "Validité" %}</dt>
+    <div class="reg-party__fact">
+      <dt>{% translate "Validité" %}</dt>
       <dd>
-        {% chip actor.status_word "selection.actor" %}
-          {% if actor.status_word == 'valid' %}{% translate "En vigueur" %}
-          {% elif actor.status_word == 'expired' %}{% translate "Échue" %}
-          {% elif actor.status_word == 'suspended' %}{% translate "Suspendue" %}
-          {% else %}{% translate "Retirée" %}{% endif %}
-        {% endchip %}
-        <span class="t-caption">{% if actor.valid_until %}{% blocktranslate with date=actor.valid_until|date:"d.m.Y" %}jusqu’au {{ date }}{% endblocktranslate %}{% else %}{% translate "sans échéance inscrite" %}{% endif %}</span>
+        {% chip actor.status_word "selection.actor" %}{% if actor.status_word == 'valid' %}{% translate "En vigueur" %}{% elif actor.status_word == 'expired' %}{% translate "Échue" %}{% elif actor.status_word == 'suspended' %}{% translate "Suspendue" %}{% else %}{% translate "Retirée" %}{% endif %}{% endchip %}
+        <span>{% if actor.valid_until %}{% blocktranslate with date=actor.valid_until|date:"d.m.Y" %}jusqu’au {{ date }}{% endblocktranslate %}{% else %}{% translate "sans échéance inscrite" %}{% endif %}</span>
       </dd>
     </div>
   </dl>
-  <p class="note responsible__note">
+  <p class="reg-note">
     {% translate "Italy Legal Entry™ n’est pas l’intermédiaire de ce processus et ne prend aucune décision sur les personnes. La sélection est conduite par l’acteur autorisé nommé ci-dessus, sous sa responsabilité et dans les limites de son autorisation." %}
     {% if actor.scope_note %}<span class="responsible__scope">{{ actor.scope_note }}</span>{% endif %}
   </p>

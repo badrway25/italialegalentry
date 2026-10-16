@@ -1,0 +1,168 @@
+/* ============================================================================================
+   THE FRAME'S HEADS, THE ACTOR'S DISC, THE WORKSPACE'S RING — design V5, console only (W3-E step 3)
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §2.3 (the deletion map: «the rest of v4/workspace.css — the file», W3-E's
+   row) · §1.6 (one focus system) · §1.7 (the glyph discs). A console partial (`_`): imported last by
+   apps/portal/static/portal/console.css — never by main.css, never an output of its own.
+
+   What every console page still drew from the V4 workspace sheet once its families had redrawn their pages, moved here
+   with its values unchanged when that sheet left main.css (the case file, its last named consumer, redrew the rest):
+
+     1  the ContextHeader `.ctx` — the dashboards' and the case file's head (the title, its line of context, the
+        reference in ILE Mono); the company dashboard's eyebrow is W3-B's to retire
+     2  the workspace head `.ws-head` — the head of the console's secondary pages (W3-A's page frame,
+        apps/portal/static/portal/v5/_shell.css §4, sets its distance and its edge)
+     3  the actor's glyph disc `.glyph` — templates/components/glyph.html: the person, the company, the authority, the
+        appointed professional, the authorised actor, the project — never a photograph, never alone (the words beside)
+     4  the workspace's ring — one 2 px ring and its 2 px companion on every control of the frame (gate C round 2,
+        defect 14)
+
+   Last in the console's import list, after the shell and the dashboards: the shell's rules on these heads are the
+   frame's own and more specific, its focus rules are the chrome's (outside the frame), and the dashboards write no
+   focus rule — no tie changes hands. Specificities unchanged, so no main.css rule changes hands either (base.css's
+   focus system is 0-1-0; the ring is 0-3-0). Public pages no longer download these rules.
+   Tokens only, logical properties only.
+   ============================================================================================ */
+
+/* ---- 1 · The ContextHeader (DS §8.33) --------------------------------------------------------- */
+.ctx {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  padding-block-end: var(--s-4);
+}
+
+.ctx__greeting {
+  margin: 0 0 var(--s-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+}
+
+.ctx__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-title);
+  line-height: var(--u-title-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+}
+
+.ctx__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ctx__ref {
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  line-height: var(--u-ref-lh);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.ctx__eyebrow {
+  margin: 0 0 var(--s-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ---- 2 · The workspace head: the same measures, the title first -------------------------------- */
+.ws-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  margin-block-end: var(--s-6);
+}
+
+.ws-head__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-title);
+  line-height: var(--u-title-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+}
+
+.ws-head__lead {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--ink-2);
+  max-inline-size: 65ch;
+}
+
+.ws-head__action {
+  display: grid;
+  justify-items: end;
+  gap: var(--s-1);
+  flex: none;
+}
+
+.ws-head__action-note {
+  font-family: var(--f-sans);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  color: var(--ink-3);
+  max-inline-size: 28ch;
+  text-align: end;
+}
+
+/* ---- 3 · The actor's glyph disc (DS §8.6) ---------------------------------------------------------- */
+.glyph {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--glyph-disc-md);
+  block-size: var(--glyph-disc-md);
+  border-radius: var(--radius-full);
+  background: var(--min-1);
+  color: var(--ink-2);
+}
+
+.glyph--sm { inline-size: var(--glyph-disc-sm); block-size: var(--glyph-disc-sm); }
+.glyph--lg { inline-size: var(--glyph-disc-lg); block-size: var(--glyph-disc-lg); }
+
+.glyph__icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.glyph--sm .glyph__icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); } /* V5: a 16 px glyph in the 24 px disc — stamp, university and institution are clean from 16 px, not 14 (plan §1.7, IC §3.1) */
+.glyph--lg .glyph__icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+
+.glyph--dark {
+  background: var(--mid-3);
+  color: var(--on-dark-2);
+}
+
+.glyph--none {
+  background: transparent;
+  border: 1.5px dashed var(--hairline-strong);
+}
+
+/* ---- 4 · ONE ring, ONE companion on every control of the workspace (gate C round 2, defect 14): the
+   generic 5 px halo of the older sheets gives way to the cascade's 2 px companion. ---------- */
+.console__workspace :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible,
+.console__workspace .form-field input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus-visible,
+.console__workspace .form-field select:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-offset-color);
+}

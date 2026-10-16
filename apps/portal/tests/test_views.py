@@ -119,11 +119,12 @@ def test_requests_list_is_paginated(client, seeded, alice, make_contact_request)
         make_contact_request(alice, subject=f"Demande {i:02d}", message=f"Corps {i}")
     client.force_login(alice)
     first = _html(client, REQUESTS)
-    assert first.count("<tr>") == 1 + 10
+    # one row a request (design V5, W3-E: the register's rows, `data-request` — the table V4 drew is gone)
+    assert first.count('data-request="') == 10
     assert 'class="pagination"' in first and "Page 1 sur 3" in first and 'rel="next"' in first
     assert "Demande 22" in first and "Demande 00" not in first, "newest first"
     last = _html(client, REQUESTS + "?page=3")
-    assert last.count("<tr>") == 1 + 3 and "Demande 00" in last and 'rel="prev"' in last
+    assert last.count('data-request="') == 3 and "Demande 00" in last and 'rel="prev"' in last
     assert "Page 3 sur 3" in _html(client, REQUESTS + "?page=999")
     assert "Page 1 sur 3" in _html(client, REQUESTS + "?page=abc")
 

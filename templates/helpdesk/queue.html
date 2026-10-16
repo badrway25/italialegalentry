@@ -1,6 +1,8 @@
 {% extends "helpdesk/base_helpdesk.html" %}{% load i18n %}
 {% comment %}
-THE PROFESSIONAL'S REGISTER.
+THE PROFESSIONAL'S REGISTER — design V5 (W3-E step 2), the register's grammar: the page's head, the band (how many are
+still open), one row a mandate's request (its subject the way to its page, its reference in ILE Mono, since when it is
+in its state, until when the mandate runs; its state as a chip), the clause.
 
 Only what a mandate covers. There is no list of people, no search across requests and no way to
 reach a file that was not confided: the rows come from ``services.queue_for``, which is built on
@@ -12,44 +14,41 @@ No identity of the person is shown. A mandate is about a question and a file ref
 {% block meta_description %}{% translate "Les demandes du guichet numérique confiées à votre mandat." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Demandes qui me sont confiées" as header_title %}
-{% translate "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom." as header_lead %}
-{% include "components/page_header.html" with title=header_title lead=header_lead %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Demandes qui me sont confiées" %}</h1>
+    <p class="ws-head__lead">{% translate "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block portal_content %}
-<section class="portal-section" aria-labelledby="queue-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Mandats" %}</span></p>
-  <h2 class="portal__section-title" id="queue-title">{% translate "Ce qui m’a été confié" %}</h2>
+<div class="reg-page">
+{% if tickets %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count">{% blocktranslate count n=open_count %}{{ n }} demande ouverte.{% plural %}{{ n }} demandes ouvertes.{% endblocktranslate %}</p>
+  </div>
+{% endif %}
 
-  {% if tickets %}
-  <p class="portal__summary">{% blocktranslate count n=open_count %}{{ n }} demande ouverte.{% plural %}{{ n }} demandes ouvertes.{% endblocktranslate %}</p>
-  <ol class="register" aria-label="{% translate 'Demandes confiées à votre mandat' %}">
-    {% for ticket in tickets %}
-    <li class="register__item">
-      <a class="entry" href="{% url 'helpdesk:detail' uuid=ticket.uuid %}">
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <span class="entry__title">{{ ticket.subject }}</span>
-        <span class="entry__gloss">
-          <span class="t-ref">{{ ticket.reference }}</span>
-          — {% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}
-          {% if ticket.mandate_valid_until %} — {% blocktranslate with date=ticket.mandate_valid_until|date:"d.m.Y" %}mandat jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
-        </span>
-        <span class="entry__actor">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}</span>
-        {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
-      </a>
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">
-    {% translate "Aucune demande ne vous est confiée aujourd’hui. Une demande apparaît ici lorsqu’un mandat vous est enregistré, et disparaît le jour où ce mandat prend fin." %}
-  </p>
-  {% endif %}
-</section>
+  <section class="reg-sec" aria-labelledby="queue-title">
+    <h2 class="db-h2 reg-sec__title" id="queue-title">{% svg_icon "inbox" "icon" %}<span>{% translate "Ce qui m’a été confié" %}</span></h2>
+    {% if tickets %}
+    <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Demandes confiées à votre mandat' %}">
+      {% for ticket in tickets %}
+      <li class="db-task reg-row reg-row--link" data-ticket="{{ ticket.reference }}">
+        <div class="db-task__words">
+          <p class="db-task__title"><a class="reg-row__link" href="{% url 'helpdesk:detail' uuid=ticket.uuid %}" dir="auto">{{ ticket.subject }}</a></p>
+          <p class="db-task__meta reg-row__meta"><span class="reg-ref">{{ ticket.reference }}</span><span>{% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span>{% if ticket.mandate_valid_until %}<span>{% blocktranslate with date=ticket.mandate_valid_until|date:"d.m.Y" %}mandat jusqu’au {{ date }}{% endblocktranslate %}</span>{% endif %}</p>
+        </div>
+        <div class="db-task__state">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune demande ne vous est confiée aujourd’hui. Une demande apparaît ici lorsqu’un mandat vous est enregistré, et disparaît le jour où ce mandat prend fin." %}</p>
+    {% endif %}
+  </section>
+</div>
 
-<p class="note">
-  <span class="note__marker" aria-hidden="true">1</span>
-  {% translate "Votre accès à une demande cesse à l’expiration ou à la révocation du mandat. Vos notes professionnelles ne sont pas visibles par la personne ; seule une réponse transmise l’est." %}
-</p>
+<p class="reg-note">{% translate "Votre accès à une demande cesse à l’expiration ou à la révocation du mandat. Vos notes professionnelles ne sont pas visibles par la personne ; seule une réponse transmise l’est." %}</p>
 {% endblock %}

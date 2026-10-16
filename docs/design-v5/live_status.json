@@ -129,6 +129,14 @@
       "decision": "w3-d/REVIEW.md",
       "tag": "v54/w3-d",
       "date": "2026-10-15"
+    },
+    {
+      "key": "w3-e",
+      "title": "Il fascicolo e le pagine secondarie della console — i registri della persona (le richieste, le comunicazioni e la lettera, le scadenze, «Mes dossiers», la pre-valutazione, «Mon parcours», «Ma situation») e degli altri spazi (l’impresa oltre il cruscotto, i suoi conteggi come filtro; l’Academy; lo sportello; la selezione; la governance del Forum) in una sola grammatica sui filetti — la testa senza occhiello, la riga intera come link, le pastiglie dai loro produttori, chi risponde col suo glifo, la clausola —; il fascicolo nelle cinque domande in ordine, nel primo schermo: dove sta (il viaggio compatto), cosa ora (il NowPanel con l’unico primario, la prossima riga disegnata una volta), cosa manca, chi, cosa è cambiato; i cambi di stato dal menu «⋮» della riga e dal dialogo d’allerta del sistema degli overlay, come le chiusure irreversibili dello sportello e della selezione; v4/workspace.css fuori dalla cascata",
+      "state": "v5",
+      "decision": "w3-e/REVIEW.md",
+      "tag": "v54/w3-e",
+      "date": "2026-10-16"
     }
   ],
   "surfaces": {
@@ -355,6 +363,82 @@
     "document-upload-terms-required": {
       "state": "v5",
       "tag": "v54/w3-c"
+    },
+    "cases-index": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "case-file": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "situation": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "requests": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "request-detail": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "journey": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "journey-results": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "deadlines": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "messages": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "academy-catalogue": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "academy-course": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "academy-mine": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "academy-enrolment": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "helpdesk": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "helpdesk-detail": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "helpdesk-new": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "company-profile": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "company-needs": {
+      "state": "v5",
+      "tag": "v54/w3-e"
+    },
+    "company-need-form": {
+      "state": "v5",
+      "tag": "v54/w3-e"
     }
   }
 }

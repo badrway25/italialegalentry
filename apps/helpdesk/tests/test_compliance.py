@@ -174,6 +174,9 @@ def test_the_templates_use_the_register_and_never_a_card():
 
 def test_every_page_sits_on_the_platform_shell():
     for path in TEMPLATES.rglob("*.html"):
+        if path.parent.name == "partials":
+            # a fragment drawn inside a page (the closure's dialog, design V5 W3-E), never a page of its own
+            continue
         text = path.read_text(encoding="utf-8")
         if path.name == "base_helpdesk.html":
             assert 'extends "portal/base_portal.html"' in text

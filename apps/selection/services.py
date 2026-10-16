@@ -325,7 +325,9 @@ def open_process(
         request=request,
     )
     if case.status != CaseStatus.SELECTION:
-        case_services.transition(case, CaseStatus.SELECTION, actor=operator, request=request)
+        # In the authorised actor's capacity (the lifecycle's «Chi può» column): the case policy gives it no «change»
+        # on the file, so the case domain is told the move is the reserved activity it performs (CR-03).
+        case_services.transition(case, CaseStatus.SELECTION, actor=operator, request=request, as_authorised_actor=True)
 
     if with_default_evidence:
         for order, (requirement, responsible, detail) in enumerate(DEFAULT_EVIDENCE):
@@ -477,14 +479,16 @@ def conclude(
         _end_disclosure(disclosure, reason="process_concluded", by=operator, request=request)
 
     case = process.case
+    # The file leaves SELECTION while the mandate it was moved under still stands — the authorised actor's move (the
+    # lifecycle's «Chi può» column) — and only then does the assignment end.
+    if case.status == CaseStatus.SELECTION:
+        target = CaseStatus.ADMIN_PROCESS if outcome == SelectionOutcome.REFERRED_TO_PROCEDURE else CaseStatus.TRAINING
+        case_services.transition(case, target, actor=operator, request=request, as_authorised_actor=True)
+
     for assignment in case.assignments.filter(
         assignee=operator, role=AssignmentRole.AUTHORISED_ACTOR, revoked_at__isnull=True
     ):
         case_services.revoke_assignment(assignment, actor=operator, request=request)
-
-    if case.status == CaseStatus.SELECTION:
-        target = CaseStatus.ADMIN_PROCESS if outcome == SelectionOutcome.REFERRED_TO_PROCEDURE else CaseStatus.TRAINING
-        case_services.transition(case, target, actor=operator, request=request)
 
     record(
         request,

@@ -240,9 +240,13 @@ def present_deadline(deadline: Deadline, today=None) -> dict[str, Any]:
         badge_label, badge_kind = deadline.get_status_display(), "neutral"
     return {
         "obj": deadline,
+        "pk": deadline.pk,
         "title": deadline.title,
         "due_on": deadline.due_on,
         "kind_label": deadline.get_kind_display(),
+        # the member, for the chip of a date that is closed (core.chips «portal.DeadlineStatus»: done is a fact, a
+        # cancelled date carries nothing); an open one is said by its urgency, or by its date alone
+        "status": deadline.status,
         "status_label": deadline.get_status_display(),
         "description": deadline.description,
         "source_note": deadline.source_note,
@@ -255,12 +259,26 @@ def present_deadline(deadline: Deadline, today=None) -> dict[str, Any]:
 
 
 def deadlines_page(user) -> dict[str, Any]:
+    """
+    «Mes échéances» (design V5, W3-E): the open dates first — the late ones lead, being the earliest —, then the closed
+    ones, the latest first; and the register's band under the page's head: how many dates are still ahead and how many
+    are late, in the bridge's own words (``_deadlines_card``) — one count each, the late ones never counted twice.
+    """
     today = clock.today()
     rows = list(deadlines_for(user))
     open_rows = [present_deadline(d, today) for d in rows if d.is_open]
     closed_rows = [present_deadline(d, today) for d in rows if not d.is_open]
     closed_rows.sort(key=lambda r: r["due_on"], reverse=True)
-    return {"open_deadlines": open_rows, "closed_deadlines": closed_rows}
+    overdue = sum(1 for row in open_rows if row["urgency"] == "overdue")
+    ahead = len(open_rows) - overdue
+    return {
+        "open_deadlines": open_rows,
+        "closed_deadlines": closed_rows,
+        "ahead_count": ahead,
+        "ahead_label": ngettext("échéance à venir", "échéances à venir", ahead),
+        "overdue_count": overdue,
+        "overdue_label": (_("%(n)d en retard") % {"n": overdue}) if overdue else "",
+    }
 
 
 # ---------------------------------------------------------------------------------------------
@@ -345,6 +363,19 @@ class RequestItem:
     status_kind: str
     created_at: Any
     url: str
+    #: the member, for the chip (core.chips: «forum.RegistrationStatus» for a Forum registration, the enquiries'
+    #: «enquiries.SubmissionStatus» for the others) — the register is the member's, never the word's
+    status: str = ""
+
+    @property
+    def reference(self) -> str:
+        """The request's reference as the page has always said it — its kind and its number («contact-3»): a ledger
+        reference, drawn in ILE Mono."""
+        return f"{self.kind}-{self.pk}"
+
+    @property
+    def is_registration(self) -> bool:
+        return self.kind == "inscription-forum"
 
 
 def _present_request(obj, kind: RequestKind) -> RequestItem:
@@ -359,6 +390,7 @@ def _present_request(obj, kind: RequestKind) -> RequestItem:
         status_kind=STATUS_BADGES.get(status, "neutral"),
         created_at=obj.created_at,
         url=reverse("portal:request_detail", kwargs={"kind": kind.slug, "pk": obj.pk}),
+        status=str(status or ""),
     )
 
 
@@ -524,6 +556,8 @@ def pathways_page(user, page_number=None) -> dict[str, Any]:
         module, sessions = _own_sessions(user)
         page_obj = paginate(sessions, page_number)
         page_obj.object_list = [_present_session(session, module) for session in page_obj.object_list]
+        # the register's band (design V5, W3-E): every saved pre-assessment of the account, not this page's alone
+        page_obj.results_count = sum(1 for session in sessions if session.is_completed)
         available = True
     except SIBLING_ERRORS:
         log.exception("portal pathways unavailable", extra={"event": "portal.pathways_unavailable"})
@@ -1142,6 +1176,14 @@ class CardItem:
     badge_label: str = ""
     badge_kind: str = ""
     lang: str = ""
+    #: design V5 (W3-E step 2): the row's state as the CHIP draws it — through its producer, never a legacy `kind`
+    #: (templates/portal/partials/card.html; components/badge.html is retired on console pages): the member of a
+    #: request (``is_registration`` names its producer) or of a scan; a date's urgency (azione late, attesa close by)
+    chip_value: str = ""
+    is_registration: bool = False
+    urgency: str = ""
+    #: a communication not yet read: the dot, the weight and the word «Non lue» — never a chip, never a colour alone
+    unread: bool = False
 
 
 @dataclass
@@ -1161,6 +1203,9 @@ class Card:
     empty_text: str = ""
     empty_action_label: str = ""
     empty_action_url: str = ""
+    #: the register's own glyph when the registry's CARD map is not enough — the organisation register draws the
+    #: account's audience (an institution ≠ a university ≠ a company: platform.md §3), never the company's building
+    glyph: str = ""
 
 
 def _requests_card(user) -> Card:
@@ -1179,6 +1224,8 @@ def _requests_card(user) -> Card:
                 date=i.created_at,
                 badge_label=i.status_label,
                 badge_kind=i.status_kind,
+                chip_value=i.status,
+                is_registration=i.is_registration,
             )
             for i in items[:DASHBOARD_LATEST]
         ],
@@ -1236,8 +1283,11 @@ def _documents_card(user) -> Card:
                 title=d.original_name,
                 meta=d.get_kind_display(),
                 date=d.created_at,
-                badge_label=d.get_scan_status_display(),
+                # the chip's word, not the field's verbose label (one of them is a whole sentence), as on the person's
+                # dashboard (``_dashboard_documents``); the register is the scan's member (core.chips)
+                badge_label=_scan_chip(d.scan_status),
                 badge_kind=SCAN_BADGES.get(d.scan_status, "neutral"),
+                chip_value=d.scan_status,
             )
             for d in docs[:DASHBOARD_LATEST]
         ],
@@ -1264,6 +1314,7 @@ def _deadlines_card(user) -> Card:
                 # a date past due speaks azione on a dashboard, as on the person's (plan §1.2: terracotta, never the
                 # red of a refusal); the deadlines page keeps its own register (W3-C)
                 badge_kind="overdue" if presented["badge_kind"] == "error" else presented["badge_kind"],
+                urgency=presented["urgency"],
             )
         )
     return Card(
@@ -1301,6 +1352,7 @@ def _messages_card(user) -> Card:
                 date=m.created_at,
                 badge_label="" if m.is_read else _("Non lue"),
                 badge_kind="primary",
+                unread=not m.is_read,
             )
             for m in messages[:DASHBOARD_LATEST]
         ],
@@ -1311,20 +1363,34 @@ def _messages_card(user) -> Card:
     )
 
 
+def _organisation_glyph(user) -> str:
+    """The organisation register's glyph: the account's audience in the registry's AUDIENCE map — an institution's
+    `institution`, a university's `university`, a company's `building` — or the CARD map's when the account type has
+    none (a professional, an administrator)."""
+    account_type = getattr(user, "account_type", "")
+    if account_type not in ORGANISATION_ACCOUNT_TYPES:
+        return ""
+    try:
+        return icons.concept("audience", account_type)
+    except icons.UnknownIcon:  # pragma: no cover - the three organisation types are the registry's audiences
+        return ""
+
+
 def _organisation_card(user) -> Card:
     rows = organisations_for(user)
     return Card(
         key="organisation",
         title=_("Mon organisation"),
         icon="building",
+        glyph=_organisation_glyph(user),
         count=len(rows),
         count_label=ngettext("organisation rattachée", "organisations rattachées", len(rows)),
         items=[
             CardItem(
                 title=row["name"],
-                meta=" · ".join(part for part in (row["kind_label"], row["place"]) if part),
-                badge_label=row["role_label"],
-                badge_kind="info",
+                # the account's role in the organisation is a fact of the membership, not a state: a word of the
+                # row's line, never a chip (design V5, W3-E)
+                meta=" · ".join(part for part in (row["kind_label"], row["place"], row["role_label"]) if part),
             )
             for row in rows
         ],
@@ -1522,6 +1588,19 @@ def active_case(user):
     return CaseFile.objects.readable_by(user).filter(person=user).active().order_by("-created_at").first()
 
 
+def held_case(user):
+    """
+    The person's file when none is active (sec-f7): the latest SUSPENDED one — it can still move again —, else the
+    latest CLOSED one; None when the person has never had a file. The dashboard tells such a person the truth about it
+    instead of «pas encore de dossier» — ``active_case`` stays what its other callers need (the reassessment never
+    touches a suspended or closed file). Authorisation in the queryset, as always.
+    """
+    from cases.models import CaseFile, CaseStatus
+
+    files = CaseFile.objects.readable_by(user).filter(person=user).order_by("-created_at")
+    return files.filter(status=CaseStatus.SUSPENDED).first() or files.filter(status=CaseStatus.CLOSED).first()
+
+
 #: Scan status -> the seven user-visible document states of art direction A §13.3. The scanner
 #: reports on a file; the person needs to know what it means for their file, which is not the same
 #: question. Never a raw technical status in front of someone assembling a legal dossier.
@@ -1625,17 +1704,6 @@ def _due_word(urgency: str) -> str:
     """A due date's word beside its glyph and its date — «Bientôt», «En retard» — never a colour alone (plan §1.2:
     «soon» is attesa, «overdue» is azione); the catalogue's words of the deadlines page, nothing new."""
     return {"soon": _("Bientôt"), "overdue": _("En retard")}.get(urgency, "")
-
-
-def _with_meter(progress: dict | None) -> dict | None:
-    """The five-notch meter of the file panel (design V4 §3.4.2): one notch per element up to
-    eight, filled in the real proportion — the words beside it carry the exact count."""
-    if not progress:
-        return progress
-    total = progress.get("total") or 0
-    notches = min(total, 8) if total else 0
-    filled = round(progress.get("done", 0) / total * notches) if total else 0
-    return {**progress, "notches": range(notches), "filled": filled}
 
 
 #: How many of the file's pieces the dashboard lists — every piece the person must act on is listed, then the ones
@@ -1793,6 +1861,9 @@ NOW_YOURS = "yours"  # «à vous» — the next action is the person's
 NOW_THIRD = "third"  # «en attente d'un tiers» — it is in somebody else's hands
 NOW_NOTHING = "nothing"  # «rien à faire» — the file asks nothing of anybody now
 NOW_NO_CASE = "no-case"  # «pas encore de dossier» — the questionnaire opens the file
+#: A person whose latest file is held (sec-f7): the file's state, as the case file says it, and the way to the file.
+NOW_SUSPENDED = "suspended"  # «Dossier suspendu» — and why, in the words of whoever suspended it
+NOW_CLOSED = "closed"  # «Parcours clôturé» — a closed file does not reopen: the questionnaire opens a new one
 
 
 def _data_lang(lang: str) -> dict[str, str]:
@@ -1901,6 +1972,9 @@ def _now_base() -> dict[str, Any]:
         "piece_id": "",
         "need_ref": "",
         "deadline_pk": None,
+        # the case file's own (W3-E): the source a checklist line rests on, and the id the line's row would carry
+        "source": None,
+        "line_anchor": "",
     }
 
 
@@ -1915,12 +1989,15 @@ def now_panel(
     The variant says whose move it is: «à vous» (NOW_YOURS), «en attente d'un tiers» (NOW_THIRD), «rien à faire»
     (NOW_NOTHING — with whose hands the file is in, from the file's live ``assignments``), «pas encore de dossier»
     (NOW_NO_CASE); an overdue date takes the panel over (``takeover``): its title and its source note — under the
-    deadlines page's «Origine :» — are the team's own words, drawn in their own direction.
+    deadlines page's «Origine :» — are the team's own words, drawn in their own direction. A file that is suspended or
+    closed says so first (NOW_SUSPENDED, NOW_CLOSED: ``_held_now``) — the state is the frame everything else is read in.
     """
     from core.links import public_url
     from documents.requirements import due_urgency, state_label
 
     base = _now_base()
+    if case is not None and not case.is_active:
+        return _held_now(case)
     if takeover is not None:
         deadlines_url = public_url("portal:deadlines")
         return {
@@ -1999,6 +2076,48 @@ def now_panel(
     }
 
 
+def _held_now(case) -> dict[str, Any]:
+    """
+    The NowPanel of a person whose latest file is suspended or closed (sec-f7) — never «Vous n'avez pas encore de
+    dossier…»: the file's state in the case file's own words, and the way to the file. Suspended: «Dossier suspendu»
+    and the reason, as the case file pairs them (templates/cases/detail.html: its NowPanel, the reason drawn once) —
+    the reason in the words of whoever suspended it, their direction its own —, the file as the primary; nothing else
+    is offered: the questionnaire would open a second file beside it (``cases.intake.case_for_purpose`` reads the
+    active files only). Closed: the state's label and the domain's own sentence — a closed file does not reopen, a new
+    one is opened —, the questionnaire that opens it as the primary, the file, read-only, beside it. Every word the
+    catalogue's.
+    """
+    from cases.models import CaseStatus
+    from core.links import public_url
+
+    base = _now_base()
+    case_url = public_url("cases:detail", case.reference)
+    to_the_file = {"label": _("Votre dossier"), "url": case_url} if case_url else None
+    if case.status == CaseStatus.SUSPENDED:
+        reason = (case.suspension_reason or "").strip()
+        return {
+            **base,
+            "variant": NOW_SUSPENDED,
+            "eyebrow": _("Votre dossier"),
+            "glyph": icons.concept("nav", "cases"),
+            "title": _("Dossier suspendu"),
+            "text": reason,
+            "words": dict(_OWN_WORDS) if reason else base["words"],
+            "primary": to_the_file,
+        }
+    start = public_url("orientation:start")
+    return {
+        **base,
+        "variant": NOW_CLOSED,
+        "eyebrow": _("Votre dossier"),
+        "glyph": icons.concept("nav", "cases"),
+        "title": str(CaseStatus(case.status).label),
+        "text": _("Un fascicolo concluso non si riapre: se ne apre uno nuovo."),
+        "primary": {"label": _("Commencer le questionnaire"), "url": start} if start else None,
+        "secondary": to_the_file,
+    }
+
+
 def _safe_pieces(user, case, skip: str) -> dict:
     """The dashboard's pieces, or an honest empty region when the documents sibling changed under us."""
     try:
@@ -2008,6 +2127,251 @@ def _safe_pieces(user, case, skip: str) -> dict:
             "portal register unavailable", extra={"event": "portal.register_unavailable", "register": "pieces"}
         )
         return {}
+
+
+# ---- The case file (design V5, W3-E step 3) ------------------------------------------------------------------------
+#: The glyph of each section of the case file — the dashboard's own where the two pages draw the same thing, the
+#: registry's «history» for what happened to the file (one concept, one glyph: plan §1.7). «Qui intervient sur ce
+#: dossier» and the file's state carry their words alone: the registry names no concept for either.
+CASE_GLYPHS: dict[str, str] = {
+    "journey": DASHBOARD_GLYPHS["journey"],
+    "asked": DASHBOARD_GLYPHS["pieces"],
+    "history": "history",
+    "assessment": DASHBOARD_GLYPHS["assessment"],
+    "messages": DASHBOARD_GLYPHS["messages"],
+    "dates": DASHBOARD_GLYPHS["dates"],
+}
+
+
+def case_lines(user, case, checklist) -> list[dict[str, Any]]:
+    """
+    The file's checklist as the register's rows (the platform map's C-3: never a table) — each line its words in
+    their own language, its state as a chip, who answers for it, its date with its glyph and its word while the line
+    is open (F8: a settled line's date is drawn calm), its source in ILE Mono, and, when one of the file's pieces
+    satisfies it (``DocumentRequirement.checklist_item``) and the reader may read that piece, the way to the piece:
+    the line's title is then the row's link. ``can_change`` is the object policy's answer, asked per line by the view
+    (``cases.views.detail``): the row offers its menu only where the policy says yes, and the POST asks again. Reads
+    only: nothing here decides, counts a percentage or names a person.
+    """
+    from documents.requirements import due_urgency
+
+    pieces: dict[int, str] = {}
+    if checklist:
+        try:
+            from documents.models import DocumentRequirement
+
+            linked = list(
+                DocumentRequirement.objects.readable_by(user)
+                .filter(case=case, checklist_item_id__in=[item.pk for item in checklist])
+                .order_by("order", "title", "pk")
+                .values_list("checklist_item_id", "pk")
+            )
+        except SIBLING_ERRORS:
+            log.exception(
+                "portal register unavailable", extra={"event": "portal.register_unavailable", "register": "lines"}
+            )
+            linked = []
+        for item_id, pk in linked:
+            url = safe_reverse("documents:requirement", pk)
+            if url:
+                pieces.setdefault(item_id, url)
+    rows = []
+    for item in checklist:
+        urgency = due_urgency(item.due_date, overdue=item.is_overdue) if item.due_date and item.is_open else ""
+        anchor = f"line-{item.pk}"
+        rows.append(
+            {
+                "pk": item.pk,
+                # the row's id (the fragment the line's POST returns to, the NowPanel's act), its menu, its dialog
+                "anchor": anchor,
+                "menu_id": f"{anchor}-menu",
+                "dialog_id": f"{anchor}-state",
+                "title": item.requirement,
+                "detail": item.detail,
+                "words": _data_lang(item.language),
+                "state": item.status,
+                "state_label": item.get_status_display(),
+                "responsible_actor": item.responsible_actor,
+                "responsible": item.get_responsible_actor_display(),
+                "responsible_note": item.responsible_note,
+                "due_date": item.due_date,
+                "urgency": urgency,
+                "due_word": _due_word(urgency),
+                "source_ref": item.source_ref,
+                "source_title": item.source_title,
+                "piece_url": pieces.get(item.pk, ""),
+                "can_change": bool(getattr(item, "can_change", False)),
+                "is_open": item.is_open,
+            }
+        )
+    return rows
+
+
+def case_pieces(user, case, skip: str = "") -> dict[str, Any]:
+    """
+    The file's pieces as the case file draws them: «il registro» — the dashboard's ledger, the pieces grouped by whose
+    move it is (``documents.presenters.register_groups``: the register's own partition), each a mark of its state —,
+    then EVERY piece the reader may read, in the register's order (``documents.presenters.register_for_case``: the
+    register's own presenter and authorisation), each row the way to its piece and its act where the reader acts. The
+    NowPanel's piece (``skip``) is drawn there and only there: one piece, drawn once (W3-B's rule). ``{}`` when the
+    file has no piece the reader may read — or when the documents sibling changed under us (an honest empty region).
+    """
+    try:
+        from documents import presenters
+
+        register = presenters.register_for_case(user, case)
+        rows = register["rows"]
+        if not rows:
+            return {}
+        groups = presenters.register_groups(rows)
+    except SIBLING_ERRORS:
+        log.exception(
+            "portal register unavailable", extra={"event": "portal.register_unavailable", "register": "pieces"}
+        )
+        return {}
+    now = next((row for row in rows if skip and row["id"] == skip), None)
+    return {
+        "counts": register["counts"],
+        "groups": [
+            {"key": group["key"], "label": group["label"], "states": [row["state"] for row in group["rows"]]}
+            for group in groups
+            if group["rows"]
+        ],
+        "rows": [row for row in rows if row is not now],
+        "now": now,
+    }
+
+
+#: The NowPanel variants of a held file — a person's latest file that is suspended or closed (sec-f7: ``now_panel``
+#: draws the file's state and, suspended, its reason in the words of whoever suspended it).
+HELD_NOW_VARIANTS = (NOW_SUSPENDED, NOW_CLOSED)
+
+
+def _now_line(lines: list[dict[str, Any]], action) -> dict[str, Any] | None:
+    """The row of the checklist line the file's next action is about (``case_lines``), or None. ``next_action`` names
+    an obligation by its words, its date, its holder and its state (T1); an open line answers all four."""
+    if action is None or action.kind != "item":
+        return None
+    return next(
+        (
+            line
+            for line in lines
+            if line["is_open"]
+            and line["title"] == action.label
+            and line["due_date"] == action.due_date
+            and line["responsible_actor"] == action.responsible_actor
+            and line["state"] == action.state
+        ),
+        None,
+    )
+
+
+def _case_held_now(now: dict[str, Any], case, *, is_own: bool) -> dict[str, Any]:
+    """
+    A held file's NowPanel on its own page (sec-f7's variants): the state and, suspended, the reason — drawn there and
+    only there (DS 2026 §11.7: «the reason drawn once»; the page draws no notice of its own then) —, never a way to the
+    page one is on, and the person's act (the questionnaire that opens a new file) for the person only; a mandated
+    reader is not addressed as the file's owner («Votre dossier» is the person's word: «Dossier» says the subject).
+    """
+    from core.links import public_url
+
+    here = public_url("cases:detail", case.reference)
+    held = {**now}
+    for key in ("primary", "secondary"):
+        act = held.get(key)
+        if act and act.get("url") == here:
+            held[key] = None
+    if not is_own:
+        held.update({"eyebrow": _("Dossier"), "primary": None, "secondary": None})
+    return held
+
+
+def case_now_panel(user, case, action, *, piece=None, assignments=None, is_own=True, line=None) -> dict[str, Any]:
+    """
+    The case file's NowPanel: the dashboard's (``now_panel`` over the same one next action, T1 — so the dashboard, the
+    case and the documents name the same thing), with the corrections that are the case file's own:
+
+    * a checklist line has no page of its own — the case file holds it, and the NowPanel draws it there and only there
+      (``line``: the row of ``case_lines`` the action is about; «Exigences» skips it, as «Pièces du dossier» skips the
+      NowPanel's piece — one line, drawn once): its words, its state, its date, who answers for it with the team's
+      note, and the source it rests on. Its act is the line's own — «Nouvel état de cette ligne», which opens the
+      line's alert dialog on this page (``overlay``: the overlay system's opener) — where the reader may move the line
+      (the object policy's ``can_change``), and nothing where the reader may not: never a link that only scrolls;
+    * a mandated reader (a professional, an operator, an administrator) is told the file's next step in nobody's voice
+      — «Prochaine étape», whose it is in the facts —: «Votre prochaine action» and «Cette étape ne dépend pas de vous»
+      speak to the person, and the person's act is not the reader's to take: no primary — a piece stays readable
+      («Consulter»), a line the policy lets them move keeps its act, quietly (the secondary);
+    * a held file (sec-f7's variants): ``_case_held_now``.
+
+    No overdue date of the account takes it over here: the takeover is the dashboard's, for the account's own dates;
+    the case file speaks of the file.
+    """
+    now = now_panel(user, case, action, piece=piece, assignments=assignments)
+    if now.get("variant") in HELD_NOW_VARIANTS:
+        return _case_held_now(now, case, is_own=is_own)
+    if action is None:
+        return now
+    line_act = None
+    if action.kind == "item":
+        # the dashboard's «Continuer» leads to this page: here the act is the line's, or there is none
+        now["primary"] = None
+        if line is not None:
+            if now.get("responsible") and line["responsible_note"]:
+                now["responsible"] = {**now["responsible"], "organisation": line["responsible_note"]}
+            if line["source_ref"] or line["source_title"]:
+                now["source"] = {"ref": line["source_ref"], "title": line["source_title"]}
+            now["line_anchor"] = line["anchor"]
+            if line["can_change"]:
+                line_act = {"label": _("Nouvel état de cette ligne"), "url": f"#{line['dialog_id']}", "overlay": True}
+                now["primary"] = line_act if is_own else None
+    if not is_own:
+        secondary = line_act
+        if action.kind == "piece" and action.url:
+            secondary = {"label": _("Consulter"), "url": action.url}
+        now.update(
+            {
+                "variant": NOW_THIRD,
+                "eyebrow": _("Prochaine étape"),
+                "note": "",
+                "primary": None,
+                "secondary": secondary,
+            }
+        )
+    return now
+
+
+def case_file(user, case, checklist, action, responsible, *, is_own: bool) -> dict[str, Any]:
+    """
+    What the case file draws beyond the domain's own reads (design V5, W3-E step 3; templates/cases/detail.html): the
+    NowPanel, the checklist's rows, the file's pieces, the sections' glyphs, and whether a line offers its menu (its
+    dialog: the page then links the overlay system's page-only sheet). The NowPanel's line is drawn there only:
+    ``asked_lines`` are the rows «Exigences» draws — every line but that one (its count, «n sur m», stays the file's)
+    —, ``lines`` every line, for the dialogs (the NowPanel's act opens its line's). Presenter reads only — the
+    permissions, the state machine and the audit trail are the case module's, asked by the view.
+    """
+    pieces = case_pieces(user, case, skip=action.piece_id if action is not None else "")
+    lines = case_lines(user, case, checklist)
+    now = case_now_panel(
+        user,
+        case,
+        action,
+        piece=pieces.get("now"),
+        assignments=responsible,
+        is_own=is_own,
+        line=_now_line(lines, action),
+    )
+    drawn = now.get("line_anchor") or ""
+    return {
+        "now": now,
+        "lines": lines,
+        "asked_lines": [line for line in lines if line["anchor"] != drawn],
+        "lines_changeable": any(line["can_change"] for line in lines),
+        "pieces": pieces,
+        "glyphs": CASE_GLYPHS,
+        "documents_url": safe_reverse("portal:documents"),
+        "messages_url": safe_reverse("portal:messages"),
+        "deadlines_url": safe_reverse("portal:deadlines"),
+    }
 
 
 # ---- The company's dashboard (design V5, W3-B step 2) ---------------------------------------------------------
@@ -2090,14 +2454,11 @@ def company_now_panel(company, action, need=None, *, transmit: bool = False) -> 
     }
 
 
-def _company_needs(needs, skip=None) -> dict[str, Any]:
-    """
-    «Il registro» of the company's needs — by who holds them, as the person's pieces (O62: the colour is the group,
-    the shape is the state): to act (its drafts), in hand (transmitted, under review, taken over, on hold — the
-    project's or an actor's), closed (closed, withdrawn). The group words are the catalogue's: «À faire», «En cours»
-    (the checklist's own states, as on the person's dashboard) and «Clos» (the need's). Then the rows, in that order,
-    up to DASHBOARD_NEEDS — the need of the NowPanel (``skip``) is drawn there and only there.
-    """
+def _need_groups(needs) -> list[tuple[str, Any, list]]:
+    """The company's needs by who holds them — to act (its drafts), in hand (transmitted, under review, taken over, on
+    hold — the project's or an actor's), closed (closed, withdrawn) —, each group with its words, in that order. The
+    group words are the catalogue's: «À faire», «En cours» (the checklist's own states, as on the person's dashboard)
+    and «Clos» (the need's)."""
     from cases.models import ChecklistStatus
     from companies.models import NeedStatus
 
@@ -2105,17 +2466,48 @@ def _company_needs(needs, skip=None) -> dict[str, Any]:
     to_act = [need for need in needs if need.status == NeedStatus.DRAFT]
     settled = [need for need in needs if need.status in settled_states]
     in_hand = [need for need in needs if need.status != NeedStatus.DRAFT and need.status not in settled_states]
+    return [
+        ("to-act", ChecklistStatus.PENDING.label, to_act),
+        ("in-hand", ChecklistStatus.IN_PROGRESS.label, in_hand),
+        ("settled", NeedStatus.CLOSED.label, settled),
+    ]
+
+
+def _company_needs(needs, skip=None) -> dict[str, Any]:
+    """
+    «Il registro» of the company's needs — by who holds them, as the person's pieces (O62: the colour is the group,
+    the shape is the state; the groups of ``_need_groups``). Then the rows, in that order, up to DASHBOARD_NEEDS — the
+    need of the NowPanel (``skip``) is drawn there and only there.
+    """
+    grouped = _need_groups(needs)
     groups = [
         {"key": key, "label": label, "states": [need.status for need in members]}
-        for key, label, members in (
-            ("to-act", ChecklistStatus.PENDING.label, to_act),
-            ("in-hand", ChecklistStatus.IN_PROGRESS.label, in_hand),
-            ("settled", NeedStatus.CLOSED.label, settled),
-        )
+        for key, label, members in grouped
         if members
     ]
-    ordered = [need for need in to_act + in_hand + settled if need is not skip]
+    ordered = [need for _key, _label, members in grouped for need in members if need is not skip]
     return {"groups": groups, "rows": ordered[:DASHBOARD_NEEDS], "more": max(0, len(ordered) - DASHBOARD_NEEDS)}
+
+
+def needs_register(needs, group: str = "") -> dict[str, Any]:
+    """
+    «Mes besoins en compétences» (design V5, W3-E step 2; platform.md E-3: «the counts become the needs table's filter,
+    not tiles»): the dashboard's groups (``_need_groups``) as the register's filter — «Tous» and each group with its
+    count and the marks of its states, a group with no need a word —, then the rows of the chosen group (`?état=`), in
+    the register's order. An unknown group filters nothing. Read-only: ``companies.services.needs_of`` decides which
+    needs the account sees.
+    """
+    grouped = _need_groups(needs)
+    chosen = group if group in {key for key, _label, _members in grouped} else ""
+    return {
+        "needs_filters": [
+            {"key": key, "label": label, "count": len(members), "states": [need.status for need in members]}
+            for key, label, members in grouped
+        ],
+        "needs_total": len(needs),
+        "needs_group": chosen,
+        "needs_rows": [need for key, _label, members in grouped if not chosen or key == chosen for need in members],
+    }
 
 
 def company_dashboard(company, needs, action, *, user=None) -> dict[str, Any]:
@@ -2178,19 +2570,26 @@ def dashboard_context(user) -> dict[str, Any]:
     A person's dashboard (design V5, W3-B): the NowPanel (``now``) composed from the one next action (T1) and the
     account's dates; the journey; the file's facts; its pieces, each drawn once; the dates and the communications;
     what is secondary folds. The card grid is built only for the accounts that draw it (``bridge_cards``, F9).
+
+    A person whose latest file is suspended or closed (sec-f7) is told so — that file, its state and the way to it
+    (``held_case``, ``_held_now``) —, never «pas encore de dossier»: the file asks for no next action and no date takes
+    its panel over (the dates stay listed), and its journey is read from its trail (W3-D's ``journey_with_dates``: where
+    it stopped, nothing «here»).
     """
+    from cases import presenters as case_presenters
     from cases import services as case_services
 
     person = is_person_account(user)
-    case = active_case(user)
+    case = active_case(user) or held_case(user)
+    held = case is not None and not case.is_active
     assessment = case_services.latest_assessment(case) if case else None
-    action = case_services.next_action(case, reader=user) if case else None
+    action = case_services.next_action(case, reader=user) if case and not held else None
     responsible = case_services.responsible_for(case) if case else []
     progress = case_services.progress(case) if case else None
     deadlines = _safe_rows("deadlines", _dashboard_deadlines, user)
     space = None
     if person:
-        takeover = _overdue_deadline(deadlines, action)
+        takeover = None if held else _overdue_deadline(deadlines, action)
         pieces = _safe_pieces(user, case, "" if takeover or action is None else action.piece_id)
         now = now_panel(user, case, action, takeover=takeover, piece=pieces.get("now"), assignments=responsible)
         if takeover is not None:
@@ -2217,7 +2616,7 @@ def dashboard_context(user) -> dict[str, Any]:
         "next_action": action,
         "now": now,
         "space": space,
-        "journey": journey_for(case),
+        "journey": case_presenters.journey_with_dates(case) if held else journey_for(case),
         "assessment": _dashboard_assessment(legacy, assessment),
         "documents": _safe_rows("documents", _dashboard_documents, user),
         "pieces": pieces,

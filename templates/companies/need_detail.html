@@ -1,223 +1,199 @@
-{% extends "companies/base_companies.html" %}{% load i18n %}
+{% extends "companies/base_companies.html" %}{% load i18n static %}
 {% comment %}
-ONE NEED — the working page of the company.
+ONE NEED — the working page of the company, design V5 (W3-E step 2), in the console's register grammar (the registers'
+page sheet, then companies.css).
 
 It answers, in order: what is the state, who answers for it, what does the need say, what is still
 missing before it can be transmitted, and what happened so far. It contains no person, no count of
 persons and no link to one: the only name on this page is the name of the party ANSWERABLE for the
 need, which the company has a right to know and which is named by organisation or by role.
+
+  the head          the need's title in its own direction; its reference in ILE Mono, its state as a chip and since
+                    when; at its reading end the company's acts on it (modify; transmit — the one primary, a POST)
+  what is missing   a pending notice before transmission; the verification's sentence while the company is not
+                    verified; the withdrawal, a form of its own with its reason in view
+  the party         who answers for it: each live assignment's actor glyph, name, role, authorisation and validity —
+                    or, in words, that the project has not designated an actor yet
+  the post          what the need describes, as facts on hairlines
+  the skills        a table: the skill, its level as a tag, its note
+  the history       the registers' log: each change its state as a chip, its date, its note, who answered for it
+  the clause
 {% endcomment %}
 {% block page_title %}{{ need.title }}{% endblock %}
 {% block meta_description %}{% translate "Le détail d’un besoin exprimé par votre entreprise." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}">{% endblock %}
 
 {% block portal_header %}
-{% include "companies/partials/company_header.html" with company=company %}
-{% endblock %}
-
-{% block companies_content %}
-
-<section class="portal-section need-head" aria-labelledby="need-title">
-  <p class="folio">
-    <span class="folio__ordinal" aria-hidden="true"></span>
-    <span class="folio__head">{% translate "Besoin" %}</span>
-    <span class="folio__date t-ref">{{ need.reference }}</span>
-  </p>
-  <h1 class="portal__section-title" id="need-title" dir="auto">{{ need.title }}</h1>
-
-  <dl class="portal-facts">
-    <div class="portal-facts__row">
-      <dt>{% translate "État" %}</dt>
-      <dd>
-        {% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}
-        <span class="t-caption">{% blocktranslate with date=need.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span>
-      </dd>
-    </div>
-    <div class="portal-facts__row">
-      <dt>{% translate "Responsable" %}</dt>
-      <dd>
-        {% if responsible %}
-        <ul class="need-actors" role="list">
-          {% for actor in responsible %}
-          <li>
-            <span class="need-actors__name" dir="auto">{{ actor.name }}</span>
-            <span class="need-actors__role">{{ actor.role_label }}</span>
-            {% if actor.is_authorised_actor %}
-            <span class="need-actors__mandate t-caption">
-              {% blocktranslate with reference=actor.authorisation %}Autorisation {{ reference }}{% endblocktranslate %}{% if actor.valid_until %} — {% blocktranslate with date=actor.valid_until|date:"d.m.Y" %}valable jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
-            </span>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        {% comment %} Never « personne » : the honest answer is that the project has not designated an actor yet. {% endcomment %}
-        {% translate "Aucun intervenant désigné à ce jour. La désignation appartient à l’équipe du projet." %}
-        {% endif %}
-      </dd>
-    </div>
-    {% if need.hold_reason %}
-    <div class="portal-facts__row">
-      <dt>{% translate "Motif de l’attente" %}</dt>
-      <dd>{{ need.hold_reason }}</dd>
-    </div>
-    {% endif %}
-  </dl>
-
-  {% if missing %}
-  <p class="note need-missing">
-    <span class="t-folio">{% translate "Avant transmission" %}</span>
-    <span>{% translate "Il manque encore :" %} {{ missing|join:", " }}</span>
-  </p>
-  {% endif %}
-
-  {% if not company.is_verified and need.status == "draft" %}
-  <p class="note">
-    {% translate "La transmission d’un besoin est possible une fois la vérification de l’entreprise prononcée par l’équipe du projet. Vous pouvez préparer le besoin dès maintenant." %}
-  </p>
-  {% endif %}
-
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" id="need-title" dir="auto">{{ need.title }}</h1>
+    <p class="reg-head__meta"><span class="reg-ref">{{ need.reference }}</span>{% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}<span>{% blocktranslate with date=need.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span></p>
+  </div>
   {% if can_change or can_submit %}
-  <div class="companies-actions">
-    {% if can_change %}<a class="btn btn--secondary btn--sm" href="{% url 'companies:need_edit' need.reference %}">{% translate "Modifier le besoin" %}</a>{% endif %}
+  <div class="ws-head__action reg-acts">
+    {% if can_change %}<a class="btn btn--secondary" href="{% url 'companies:need_edit' need.reference %}">{% translate "Modifier le besoin" %}</a>{% endif %}
     {% if can_submit %}
-    <form method="post" action="{% url 'companies:need_submit' need.reference %}" class="companies-inline-form">
+    <form method="post" action="{% url 'companies:need_submit' need.reference %}">
       {% csrf_token %}
-      <button type="submit" class="btn btn--primary btn--sm">{% translate "Transmettre au projet" %}</button>
+      <button type="submit" class="btn btn--primary">{% translate "Transmettre au projet" %}</button>
     </form>
     {% endif %}
   </div>
   {% endif %}
+</header>
+{% endblock %}
+
+{% block companies_content %}
+<div class="reg-page">
+  {% if missing %}
+  {% translate "Avant transmission" as missing_title %}
+  {% translate "Il manque encore :" as missing_lead %}
+  {% with missing_text=missing|join:", " %}
+  {% include "components/notice.html" with kind="pending" title=missing_title text=missing_lead|add:" "|add:missing_text %}
+  {% endwith %}
+  {% endif %}
+
+  {% if not company.is_verified and need.status == "draft" %}
+  <p class="reg-note company-verification">{% translate "La transmission d’un besoin est possible une fois la vérification de l’entreprise prononcée par l’équipe du projet. Vous pouvez préparer le besoin dès maintenant." %}</p>
+  {% endif %}
+
+  {% comment %} WHO IS ANSWERABLE — never « personne »: when nobody is designated, the honest answer is that the project has not designated an actor yet. {% endcomment %}
+  <section class="reg-sec" aria-labelledby="need-responsible-title">
+    <h2 class="db-h2 reg-sec__title" id="need-responsible-title"><span>{% translate "Responsable" %}</span></h2>
+    {% with live=need.live_assignments %}
+    {% if live %}
+    {% for actor in live %}
+    <div class="reg-party need-party">
+      {% with glyph=actor.role|actor_glyph %}<span class="reg-row__seal" aria-hidden="true">{% if glyph %}{% svg_icon glyph "icon" %}{% endif %}</span>{% endwith %}
+      <div class="reg-party__words">
+        <p class="reg-party__label">{{ actor.get_role_display }}</p>
+        <p class="reg-party__name" dir="auto">{{ actor.display_name }}</p>
+      </div>
+      {% if actor.role == "authorised_actor" %}
+      <dl class="reg-party__facts">
+        <div class="reg-party__fact"><dt>{% translate "Autorisation" %}</dt><dd><span class="reg-ref">{{ actor.authorisation_reference }}</span></dd></div>
+        {% if actor.authorisation_valid_until %}<div class="reg-party__fact"><dt>{% translate "Validité" %}</dt><dd>{% blocktranslate with date=actor.authorisation_valid_until|date:"d.m.Y" %}valable jusqu’au {{ date }}{% endblocktranslate %}</dd></div>{% endif %}
+      </dl>
+      {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="db-empty">{% translate "Aucun intervenant désigné à ce jour. La désignation appartient à l’équipe du projet." %}</p>
+    {% endif %}
+    {% endwith %}
+    {% if need.hold_reason %}
+    <dl class="portal-facts need-hold">
+      <div class="portal-facts__row"><dt>{% translate "Motif de l’attente" %}</dt><dd dir="auto">{{ need.hold_reason }}</dd></div>
+    </dl>
+    {% endif %}
+  </section>
+
+  <section class="reg-sec" aria-labelledby="need-post-title">
+    <h2 class="db-h2 reg-sec__title" id="need-post-title"><span>{% translate "Ce que décrit le besoin" %}</span></h2>
+    <dl class="portal-facts need-facts">
+      <div class="portal-facts__row"><dt>{% translate "Territoire" %}</dt><dd>{% if need.territory %}{{ need.territory.label }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Lieu de travail" %}</dt><dd>{% if need.work_place %}{{ need.work_place }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Secteur" %}</dt><dd>{% if need.sector %}{{ need.sector.label }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Profil professionnel" %}</dt><dd dir="auto">{% if need.professional_profile %}{{ need.professional_profile }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Tâches confiées" %}</dt><dd dir="auto">{% if need.duties %}{{ need.duties|linebreaksbr }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Motif du besoin" %}</dt><dd dir="auto">{% if need.motivation %}{{ need.motivation|linebreaksbr }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Forme de l’engagement" %}</dt><dd>{% if need.engagement_type %}{{ need.get_engagement_type_display }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Nombre de profils" %}</dt><dd>{{ need.headcount }}</dd></div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Expérience" %}</dt>
+        <dd>{% if need.experience_years_min %}{% blocktranslate count n=need.experience_years_min %}{{ n }} année minimum{% plural %}{{ n }} années minimum{% endblocktranslate %}{% else %}{% translate "Pas une condition" %}{% endif %}{% if need.experience_note %}<span class="need-facts__note">{{ need.experience_note }}</span>{% endif %}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Langue" %}</dt>
+        <dd>{% if need.language_requirement %}{{ need.language_requirement }}{% else %}—{% endif %}{% if need.language_note %}<span class="need-facts__note">{{ need.language_note }}</span>{% endif %}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Formation à la sécurité" %}</dt>
+        <dd>{% if need.safety_training_required %}{% translate "Requise" %}{% else %}{% translate "Non requise pour ce poste" %}{% endif %}{% if need.safety_training_note %}<span class="need-facts__note">{{ need.safety_training_note }}</span>{% endif %}</dd>
+      </div>
+      <div class="portal-facts__row"><dt>{% translate "Besoins de formation" %}</dt><dd dir="auto">{% if need.training_needs %}{{ need.training_needs|linebreaksbr }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Calendrier" %}</dt>
+        <dd>{% if need.start_from %}<time datetime="{{ need.start_from|date:'Y-m-d' }}">{% blocktranslate with date=need.start_from|date:"d.m.Y" %}à partir du {{ date }}{% endblocktranslate %}</time>{% else %}—{% endif %}{% if need.timing_note %}<span class="need-facts__note">{{ need.timing_note }}</span>{% endif %}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="reg-sec" aria-labelledby="need-skills-title">
+    <h2 class="db-h2 reg-sec__title" id="need-skills-title"><span>{% translate "Compétences obligatoires et souhaitées" %}</span></h2>
+    {% if mandatory_skills or preferred_skills %}
+    <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-need-detail-2">
+      <table class="data-table">
+        <caption id="t-need-detail-2" class="visually-hidden">{% translate "Compétences attendues pour ce poste, par niveau d’exigence" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Compétence" %}</th>
+            <th scope="col">{% translate "Niveau d’exigence" %}</th>
+            <th scope="col">{% translate "Précision" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for skill in mandatory_skills %}
+          <tr>
+            <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
+            <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
+            <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+          {% for skill in preferred_skills %}
+          <tr>
+            <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
+            <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
+            <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="db-empty">
+      {% translate "Aucune compétence renseignée. Un besoin transmis en porte au moins une, obligatoire : c’est ce qui permet de construire un parcours de formation." %}
+      {% if can_change %}<a href="{% url 'companies:need_edit' need.reference %}">{% translate "Renseigner les compétences" %}</a>{% endif %}
+    </p>
+    {% endif %}
+  </section>
+
+  <section class="reg-sec" aria-labelledby="need-history-title">
+    <h2 class="db-h2 reg-sec__title" id="need-history-title">{% svg_icon "history" "icon" %}<span>{% translate "Ce qui s’est passé" %}</span></h2>
+    {% if events %}
+    <ol class="reg-steps reg-steps--log">
+      {% for event in events %}
+      <li class="reg-step">
+        <div class="reg-step__words">
+          <p class="reg-step__title">{% chip event.to_status "companies.NeedStatus" %}{{ event.get_to_status_display }}{% endchip %}<time class="need-event__date" datetime="{{ event.created_at|date:'c' }}">{{ event.created_at|date:"d.m.Y" }}</time></p>
+          {% if event.note %}<p class="reg-step__text" dir="auto">{{ event.note }}</p>{% endif %}
+        </div>
+        {% if event.responsible_label %}<div class="reg-step__end"><span class="db-task__who" dir="auto">{{ event.responsible_label }}</span></div>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="db-empty">{% translate "Les étapes de traitement de ce besoin apparaîtront ici." %}</p>
+    {% endif %}
+  </section>
 
   {% comment %}
-  Withdrawing is a consequential act and gets its own row, with its reason in view rather than
+  Withdrawing is a consequential act and gets its own form, with its reason in view rather than
   hidden behind a confirmation the reader would click through.
   {% endcomment %}
   {% if can_withdraw %}
-  <form method="post" action="{% url 'companies:need_withdraw' need.reference %}" class="companies-withdraw">
+  <form method="post" action="{% url 'companies:need_withdraw' need.reference %}" class="form reg-form">
     {% csrf_token %}
-    <label class="companies-withdraw__label" for="withdraw-reason">{% translate "Retirer ce besoin — motif (facultatif)" %}</label>
-    <div class="companies-inline-form">
-      <input class="form-control companies-inline-form__field" type="text" id="withdraw-reason" name="reason" maxlength="300">
-      <button type="submit" class="btn btn--secondary btn--sm">{% translate "Retirer le besoin" %}</button>
+    <p class="form-field">
+      <label class="form-field__label" for="withdraw-reason">{% translate "Retirer ce besoin — motif (facultatif)" %}</label>
+      <input type="text" id="withdraw-reason" name="reason" maxlength="300">
+    </p>
+    <div class="form__actions">
+      <button type="submit" class="btn btn--secondary">{% translate "Retirer le besoin" %}</button>
     </div>
   </form>
   {% endif %}
-</section>
+</div>
 
-<section class="portal-section" aria-labelledby="need-post-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Le poste" %}</span></p>
-  <h2 class="portal__section-title" id="need-post-title">{% translate "Ce que décrit le besoin" %}</h2>
-  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-need-detail-1">
-    <table class="data-table">
-      <caption id="t-need-detail-1" class="visually-hidden">{% translate "Les éléments du besoin" %}</caption>
-      <tbody>
-        <tr><th scope="row">{% translate "Territoire" %}</th><td>{% if need.territory %}{{ need.territory.label }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Lieu de travail" %}</th><td>{% if need.work_place %}{{ need.work_place }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Secteur" %}</th><td>{% if need.sector %}{{ need.sector.label }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Profil professionnel" %}</th><td dir="auto">{% if need.professional_profile %}{{ need.professional_profile }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Tâches confiées" %}</th><td dir="auto">{% if need.duties %}{{ need.duties|linebreaksbr }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Motif du besoin" %}</th><td dir="auto">{% if need.motivation %}{{ need.motivation|linebreaksbr }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Forme de l’engagement" %}</th><td>{% if need.engagement_type %}{{ need.get_engagement_type_display }}{% else %}—{% endif %}</td></tr>
-        <tr><th scope="row">{% translate "Nombre de profils" %}</th><td>{{ need.headcount }}</td></tr>
-        <tr>
-          <th scope="row">{% translate "Expérience" %}</th>
-          <td>
-            {% if need.experience_years_min %}{% blocktranslate count n=need.experience_years_min %}{{ n }} année minimum{% plural %}{{ n }} années minimum{% endblocktranslate %}{% else %}{% translate "Pas une condition" %}{% endif %}
-            {% if need.experience_note %}<span class="t-caption">{{ need.experience_note }}</span>{% endif %}
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">{% translate "Langue" %}</th>
-          <td>
-            {% if need.language_requirement %}{{ need.language_requirement }}{% else %}—{% endif %}
-            {% if need.language_note %}<span class="t-caption">{{ need.language_note }}</span>{% endif %}
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">{% translate "Formation à la sécurité" %}</th>
-          <td>
-            {% if need.safety_training_required %}{% translate "Requise" %}{% else %}{% translate "Non requise pour ce poste" %}{% endif %}
-            {% if need.safety_training_note %}<span class="t-caption">{{ need.safety_training_note }}</span>{% endif %}
-          </td>
-        </tr>
-        <tr><th scope="row">{% translate "Besoins de formation" %}</th><td dir="auto">{% if need.training_needs %}{{ need.training_needs|linebreaksbr }}{% else %}—{% endif %}</td></tr>
-        <tr>
-          <th scope="row">{% translate "Calendrier" %}</th>
-          <td>
-            {% if need.start_from %}<time datetime="{{ need.start_from|date:'Y-m-d' }}">{% blocktranslate with date=need.start_from|date:"d.m.Y" %}à partir du {{ date }}{% endblocktranslate %}</time>{% else %}—{% endif %}
-            {% if need.timing_note %}<span class="t-caption">{{ need.timing_note }}</span>{% endif %}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<section class="portal-section" aria-labelledby="need-skills-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Compétences" %}</span></p>
-  <h2 class="portal__section-title" id="need-skills-title">{% translate "Compétences obligatoires et souhaitées" %}</h2>
-  {% if mandatory_skills or preferred_skills %}
-  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-need-detail-2">
-    <table class="data-table">
-      <caption id="t-need-detail-2" class="visually-hidden">{% translate "Compétences attendues pour ce poste, par niveau d’exigence" %}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{% translate "Compétence" %}</th>
-          <th scope="col">{% translate "Niveau d’exigence" %}</th>
-          <th scope="col">{% translate "Précision" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for skill in mandatory_skills %}
-        <tr>
-          <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
-          <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
-          <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
-        </tr>
-        {% endfor %}
-        {% for skill in preferred_skills %}
-        <tr>
-          <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
-          <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
-          <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <p class="empty">
-    {% translate "Aucune compétence renseignée. Un besoin transmis en porte au moins une, obligatoire : c’est ce qui permet de construire un parcours de formation." %}
-    {% if can_change %}<a href="{% url 'companies:need_edit' need.reference %}">{% translate "Renseigner les compétences" %}</a>{% endif %}
-  </p>
-  {% endif %}
-</section>
-
-<section class="portal-section" aria-labelledby="need-history-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivi" %}</span></p>
-  <h2 class="portal__section-title" id="need-history-title">{% translate "Ce qui s’est passé" %}</h2>
-  {% if events %}
-  <ol class="sequence">
-    {% for event in events %}
-    <li class="sequence__step{% if forloop.last %} sequence__step--current{% endif %}">
-      <span class="sequence__marker" aria-hidden="true"></span>
-      <div>
-        <p class="sequence__title">
-          {% chip event.to_status "companies.NeedStatus" %}{{ event.get_to_status_display }}{% endchip %}
-          <time class="t-caption" datetime="{{ event.created_at|date:'c' }}">{{ event.created_at|date:"d.m.Y" }}</time>
-        </p>
-        {% if event.note %}<p class="sequence__body">{{ event.note }}</p>{% endif %}
-        {% if event.responsible_label %}<span class="sequence__actor" dir="auto">{{ event.responsible_label }}</span>{% endif %}
-      </div>
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Les étapes de traitement de ce besoin apparaîtront ici." %}</p>
-  {% endif %}
-</section>
-
-<p class="note">
-  {% translate "Italy Legal Entry ne sélectionne personne et ne présente aucune personne à une entreprise. Les activités de recherche et de sélection relèvent des soggetti autorizzati, nommés ci-dessus lorsqu’ils sont désignés." %}
-</p>
+<p class="reg-note">{% translate "Italy Legal Entry ne sélectionne personne et ne présente aucune personne à une entreprise. Les activités de recherche et de sélection relèvent des soggetti autorizzati, nommés ci-dessus lorsqu’ils sont désignés." %}</p>
 {% endblock %}

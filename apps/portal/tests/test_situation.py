@@ -193,6 +193,16 @@ class TestCompleteness:
         )
         assert profile.is_complete is True
 
+    def test_the_page_counts_one_total_the_questions_it_asks(self, signed_in, alice):
+        # W3-D's m4 (W3-E): the counter under the Stepper counts what the Stepper's nodes and the foot's «1 / 8» count
+        # — the questions the page asks; it said «sur 7» (the fields the rules read) under eight nodes
+        post(signed_in, nationality="MA", has_qualification_recognition="no")
+        response = signed_in.get(SITUATION)
+        asked = len(response.context["form"].visible_fields())
+        assert response.context["total"] == asked == 8
+        assert response.context["answered"] == 2, "the question the rules do not read yet is still a question answered"
+        assert f"2 question(s) renseignée(s) sur {asked}." in response.content.decode()
+
 
 class TestTheExportIncludesEverything:
     def test_the_personal_data_export_carries_the_situation(self, signed_in, alice):

@@ -139,37 +139,45 @@ def detail(request, reference: str):
     checklist = list(case.checklist.all().order_by("order", "id"))
     for item in checklist:
         item.can_change = can(request.user, "change", item)
-    # Design V4 (CREATIVE_DIRECTION.md §3.6): the page also reads the file's timeline from the audit
-    # trail, dates the journey's steps from it, and carries the person's communications and dates
-    # in its inspector — the same rows the dashboard shows, from the same helpers.
+    # Design V5 (W3-E; templates/cases/detail.html): the page reads the file's timeline from the audit trail and dates
+    # the journey's steps from it; the NowPanel, the checklist's rows and the file's pieces are the console's
+    # presenters (portal.services.case_file — reads only). The person's own communications and dates stand beside
+    # their file; a mandated reader is not shown theirs on somebody else's file.
     from cases import presenters
     from portal import services as portal_services
 
+    is_own = case.person_id == request.user.id
+    action = services.next_action(case, reader=request.user)
+    responsible = services.responsible_for(case)
     return _render(
         request,
         "cases/detail.html",
         {
             "case": case,
-            "is_own": case.person_id == request.user.id,
-            "progress": portal_services._with_meter(services.progress(case)),
-            "next_action": services.next_action(case, reader=request.user),
-            "responsible": services.responsible_for(case),
+            "is_own": is_own,
+            "progress": services.progress(case),
+            "next_action": action,
+            "responsible": responsible,
             "checklist": checklist,
-            "checklist_health": presenters.checklist_health(checklist),
-            # A column of dashes says nothing: the table shows a column only when a line fills it.
-            "checklist_columns": {
-                "source": any(item.source_ref or item.source_title for item in checklist),
-                "due": any(item.due_date for item in checklist),
-            },
             "assessment": assessment,
             "assessments": case.assessments.order_by("-assessed_at")[:10],
             "can_change": can(request.user, "change", case),
             "transitions": services.transitions_available(case, request.user),
             "journey": presenters.journey_with_dates(case),
-            "timeline": presenters.timeline(case),
-            "messages_list": portal_services._safe_rows("messages", portal_services._dashboard_messages, request.user),
-            "deadlines": portal_services._safe_rows("deadlines", portal_services._dashboard_deadlines, request.user),
+            # the person's acts are «Vous» for the person only: a mandated reader reads «La personne» (the review's M3)
+            "timeline": presenters.timeline(case, reader=request.user),
+            "messages_list": (
+                portal_services._safe_rows("messages", portal_services._dashboard_messages, request.user)
+                if is_own
+                else []
+            ),
+            "deadlines": (
+                portal_services._safe_rows("deadlines", portal_services._dashboard_deadlines, request.user)
+                if is_own
+                else []
+            ),
             "statuses": ChecklistStatus.choices,
+            **portal_services.case_file(request.user, case, checklist, action, responsible, is_own=is_own),
         },
         {"label": _("Dossiers"), "url": reverse("cases:index")},
         {"label": case.reference, "url": ""},
@@ -198,7 +206,8 @@ def set_item_status(request, reference: str, pk: int):
         messages.error(request, _message_of(exc))
     else:
         messages.success(request, _("La ligne a été mise à jour."))
-    return redirect("cases:detail", reference=case.reference)
+    # back to the line that changed (C-5: a page that returns to its top loses the reader's place)
+    return redirect(f"{reverse('cases:detail', args=[case.reference])}#line-{item.pk}")
 
 
 @case_view(methods=("POST",))

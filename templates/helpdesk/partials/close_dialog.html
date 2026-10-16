@@ -1,0 +1,25 @@
+{% load i18n %}{% comment %}
+CLOSING A REQUEST, IN A DIALOG — the body and the foot of the overlay system's alert dialog (its dialog component,
+`kind="alert"`; W2-A, CONTRACT §1–§4), drawn by the request's page (templates/helpdesk/detail.html — the page that links
+the panels' page-only sheet) for the person and the appointed professional, while the request is open. Closing is
+final: the family's one grammar for an irreversible act (the case file's closure, the selection's; the review's M4,
+plan §1.14 «staff consequence dialogs on the modal»).
+
+  the body   the consequence, said before the act — «Une demande close n'est pas rouverte : une nouvelle demande est
+             ouverte.» (the domain's own sentence, helpdesk.services; the dialog's description, `aria-describedby`) —,
+             then the reason's field (W1-C's, with its own help: who reads it)
+  the foot   «Annuler» — the safe answer: it takes the focus when the dialog opens, Esc presses it, the scrim never
+             closes an alert —, then «Clore définitivement», the form's submit (the `form` attribute: the foot is outside
+             the body's form), the garnet outline of an act that does not come back
+
+The form posts to the request's own view (helpdesk.views.close_request), which asks the policy again and records the
+closure through the service. Every word is the catalogue's.
+
+Contract: `ticket`; `close_form` (prefix «close»); `overlay_part` — "body" or "actions" (the component includes this
+file for both).
+{% endcomment %}{% if overlay_part == "body" %}<form class="form reg-dialog" id="desk-close-form" method="post" action="{% url 'helpdesk:close' uuid=ticket.uuid %}" novalidate>
+  {% csrf_token %}
+  <p class="reg-form__text" id="desk-close-text">{% translate "Une demande close n’est pas rouverte : une nouvelle demande est ouverte." %}</p>
+  {% include "components/form_field.html" with field=close_form.reason %}
+</form>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close data-overlay-safe>{% translate "Annuler" %}</button>
+<button class="btn btn--danger" type="submit" form="desk-close-form">{% translate "Clore définitivement" %}</button>{% endif %}

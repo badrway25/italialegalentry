@@ -1,36 +1,55 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-Deadlines of the signed-in account (portal.services.deadlines_page). Dates are entered by the team
-from a written source shown under « Origine » — the platform never computes a legal time-limit.
+«MES ÉCHÉANCES» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.2; platform.md §3; W3-E). The dates of
+the signed-in account (portal.services.deadlines_page), entered by the team from a written source shown under «Origine» —
+the platform never computes a legal time-limit.
+
+The register's grammar, the dashboard's and «Mes pièces»' own: the page's head (the title and its line of context — no
+eyebrow repeating the level the breadcrumb gives), then the BAND — how many dates are still ahead, how many are late, in
+the bridge's own words, each counted once —, then the dates by section, each a row with its state as a chip
+(portal/partials/deadline_item.html). One sheet of the page's own, linked here only (portal/registers.css; the owner's
+V5.8: never in the shared bundles).
 {% endcomment %}
 {% block page_title %}{% translate "Mes échéances" %}{% endblock %}
 {% block meta_description %}{% translate "Les dates qui vous ont été communiquées par l’équipe du projet." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 {% block portal_header %}
-{% translate "Mes échéances" as header_title %}
-{% translate "Les dates qui vous ont été communiquées par l’équipe. Ce rappel est informatif : seule la communication d’origine fait foi." as header_lead %}
-{% translate "Espace réservé" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mes échéances" %}</h1>
+    <p class="ws-head__lead">{% translate "Les dates qui vous ont été communiquées par l’équipe. Ce rappel est informatif : seule la communication d’origine fait foi." %}</p>
+  </div>
+</header>
 {% endblock %}
 {% block portal_content %}
-<section aria-labelledby="deadlines-open-title">
-  <h2 class="portal__section-title" id="deadlines-open-title">{% translate "À venir" %}</h2>
-  {% if open_deadlines %}
-  <ul class="portal-list">
-    {% for row in open_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
-  </ul>
-  {% else %}
-    {% translate "Aucune échéance" as empty_title %}
-    {% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." as empty_text %}
-    {% include "components/empty_state.html" with title=empty_title text=empty_text icon="calendar-clock" %}
-  {% endif %}
-</section>
+<div class="reg-page">
+{% if open_deadlines or closed_deadlines %}
+  <div class="db-ledger reg-band">
+    {% if ahead_count or not overdue_count %}<p class="db-ledger__total reg-band__count"><span class="reg-band__n">{{ ahead_count }}</span> {{ ahead_label }}</p>{% endif %}
+    {% if overdue_label %}<p class="reg-band__state">{% chip register="azione" %}{{ overdue_label }}{% endchip %}</p>{% endif %}
+  </div>
+{% endif %}
+
+  <section class="reg-sec" aria-labelledby="deadlines-open-title">
+    <h2 class="db-h2 reg-sec__title" id="deadlines-open-title">{% svg_icon "calendar-clock" "icon" %}<span>{% translate "À venir" %}</span></h2>
+    {% if open_deadlines %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for row in open_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
+    </ul>
+    {% else %}
+      {% translate "Aucune échéance" as empty_title %}
+      {% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." as empty_text %}
+      {% include "components/empty_state.html" with title=empty_title text=empty_text icon="calendar-clock" %}
+    {% endif %}
+  </section>
 
 {% if closed_deadlines %}
-<section aria-labelledby="deadlines-closed-title">
-  <h2 class="portal__section-title" id="deadlines-closed-title">{% translate "Terminées ou annulées" %}</h2>
-  <ul class="portal-list">
-    {% for row in closed_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
-  </ul>
-</section>
+  <section class="reg-sec" aria-labelledby="deadlines-closed-title">
+    <h2 class="db-h2 reg-sec__title" id="deadlines-closed-title">{% svg_icon "history" "icon" %}<span>{% translate "Terminées ou annulées" %}</span></h2>
+    <ul class="db-tasks reg-rows" role="list">
+      {% for row in closed_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
+    </ul>
+  </section>
 {% endif %}
+</div>
 {% endblock %}

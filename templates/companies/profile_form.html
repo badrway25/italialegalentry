@@ -1,31 +1,25 @@
-{% extends "companies/base_companies.html" %}{% load i18n %}
+{% extends "companies/base_companies.html" %}{% load i18n static %}
+{% comment %}
+Declaring the company, or modifying its identity — design V5 (W3-E step 2): ONE head, ONE h1 (the declaration had two:
+the page header's and the section's — W3-A's finding), its line of context; W1-C's form; the registers' clause.
+{% endcomment %}
 {% block page_title %}{% if is_creation %}{% translate "Déclarer mon entreprise" %}{% else %}{% translate "Modifier l’identité de l’entreprise" %}{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Déclarer l’identité de l’entreprise pour que l’équipe du projet puisse procéder à sa vérification." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 
 {% block portal_header %}
-{% if company %}
-{% include "companies/partials/company_header.html" with company=company %}
-{% else %}
-{% translate "Déclarer mon entreprise" as header_title %}
-{% translate "Le compte déclare ; le projet vérifie. Tant que la vérification n’est pas prononcée, vous pouvez préparer vos besoins sans pouvoir les transmettre." as header_lead %}
-{% include "components/page_header.html" with title=header_title lead=header_lead %}
-{% endif %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% if is_creation %}{% translate "Déclarer mon entreprise" %}{% else %}{% translate "Modifier l’identité de l’entreprise" %}{% endif %}</h1>
+    {% if is_creation %}<p class="ws-head__lead">{% translate "Le compte déclare ; le projet vérifie. Tant que la vérification n’est pas prononcée, vous pouvez préparer vos besoins sans pouvoir les transmettre." %}</p>{% endif %}
+    <p class="ws-head__lead">{% translate "Seuls les éléments qui rendent une vérification possible sont demandés : la personne morale, son immatriculation, son secteur et un référent identifié par sa fonction." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block companies_content %}
-<section class="portal-section" aria-labelledby="company-form-title">
-  <p class="folio">
-    <span class="folio__ordinal" aria-hidden="true"></span>
-    <span class="folio__head">{% if is_creation %}{% translate "Déclaration" %}{% else %}{% translate "Modification" %}{% endif %}</span>
-  </p>
-  <h1 class="portal__section-title" id="company-form-title">
-    {% if is_creation %}{% translate "L’identité de votre entreprise" %}{% else %}{% translate "Modifier l’identité" %}{% endif %}
-  </h1>
-  <p class="portal__summary">
-    {% translate "Seuls les éléments qui rendent une vérification possible sont demandés : la personne morale, son immatriculation, son secteur et un référent identifié par sa fonction." %}
-  </p>
-
-  <form method="post" class="form companies-form" novalidate>
+<div class="reg-page">
+  <form method="post" class="form" novalidate>
     {% csrf_token %}
     {% include "components/form_errors.html" with form=form %}
     <p class="form__required-note">{% translate "Les champs marqués d’un astérisque (*) sont obligatoires." %}</p>
@@ -66,9 +60,7 @@
       {% if not is_creation %}<a class="btn btn--secondary" href="{% url 'companies:profile' %}">{% translate "Annuler" %}</a>{% endif %}
     </div>
   </form>
+</div>
 
-  <p class="note">
-    {% translate "Les données du référent sont des données personnelles : elles servent à la vérification de l’entreprise et à la correspondance du projet, et à rien d’autre. Vous pouvez en demander la copie ou la rectification depuis votre compte." %}
-  </p>
-</section>
+<p class="reg-note">{% translate "Les données du référent sont des données personnelles : elles servent à la vérification de l’entreprise et à la correspondance du projet, et à rien d’autre. Vous pouvez en demander la copie ou la rectification depuis votre compte." %}</p>
 {% endblock %}

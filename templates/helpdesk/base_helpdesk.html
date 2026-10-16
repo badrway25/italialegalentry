@@ -4,9 +4,14 @@ The help desk sits on the PLATFORM shell (templates/portal/base_portal.html), ne
 one: the platform bar, the case header and the single next action are already the right frame for a
 request that has a state and somebody answerable for it.
 
-This intermediate template exists only to add the module's stylesheet without repeating the
+This intermediate template exists only to add the module's stylesheets without repeating the
 `extra_head` block on five pages. It EXTENDS the shell's block with `{{ block.super }}`: it used to
 re-add `portal.css` by hand, and when the console shell gained `console.css` the help desk silently
 lost it and rendered unstyled (found on 26/09/2026; tests/frontend/test_console_shell_stylesheets.py).
+
+Design V5 (W3-E step 2): the help desk draws in the console's register grammar — the registers' page sheet
+(portal/registers.css: the head, the band, the rows, the exchange, the answerable party, the forms of an act, the
+clause), then what the help desk draws beyond it (helpdesk/helpdesk.css). Both page-only, never a shared bundle (the
+owner's V5.8).
 {% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/helpdesk/helpdesk.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/helpdesk/helpdesk.css' %}">{% endblock %}

@@ -253,9 +253,11 @@ def test_closing_is_final_and_the_page_says_so(client, reserved_area_on, ticket,
 # The register renders the register, not cards
 # ---------------------------------------------------------------------------------------------
 def test_the_empty_register_is_a_hairline_and_a_sentence(client, reserved_area_on, person_user):
+    """Design V5 (W3-E step 2): the empty register is the console's one line — who fills it and when (the dashboards'
+    `db-empty`, under the section's head and its hairline) —, never a box, never a glyph in a disc."""
     login(client, person_user)
     page = client.get("/fr/espace-reserve/guichet/").content.decode()
-    assert 'class="empty"' in page
+    assert 'class="db-empty"' in page
     assert "empty-state__icon" not in page
     assert 'class="card' not in page
 
@@ -263,7 +265,8 @@ def test_the_empty_register_is_a_hairline_and_a_sentence(client, reserved_area_o
 def test_the_register_lists_the_state_as_a_word(client, reserved_area_on, ticket, person_user):
     login(client, person_user)
     page = client.get("/fr/espace-reserve/guichet/").content.decode()
-    assert 'class="register"' in page
+    # design V5 (W3-E step 2): the register's rows, each its state as a chip — a word with its mark
+    assert 'class="db-tasks reg-rows"' in page
     assert "Information seulement" in page
     assert ticket.reference in page
 

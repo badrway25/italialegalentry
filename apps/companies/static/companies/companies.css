@@ -1,231 +1,48 @@
 /* ============================================================================
-   ESPACE ENTREPRISE — an EXTENSION of the platform shell, not a second system.
+   ESPACE ENTREPRISE — the company's pages beyond its dashboard, design V5 (W3-E
+   step 2; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7).
 
-   Everything here is built from the tokens of static/css/tokens.css and the
-   devices of static/css/register.css (.folio, .register/.entry, .sequence,
-   .note, .state, .empty, .data-table). This file adds exactly three things the
-   person's workspace does not need:
+   The company's pages draw in the console's register grammar: the page's head,
+   the register's counts as its filter (E-3), the needs' rows (the dashboard's
+   row and its needs' columns), the answerable party, the history as the
+   registers' log, the forms of W1-C, the clause — the registers' page sheet,
+   apps/portal/static/portal/v5/_registers.css, linked first by each page. The
+   dashboard draws with the console's own sheet (v5/_dashboard.css, W3-B) and
+   links neither. The V1 devices this sheet carried — the company band on the
+   process ground with its navy rule, the answerable party inside a V1 register
+   entry, the actors' roles in tracked capitals, the missing items' pending rule
+   — left with that redraw (one identity per screen: the rail's space and the
+   page's subject).
 
-     .company-header    the company band, built like .case-header
-     .entry__responsible  the named answerable party inside a register entry
-     .need-actors       the responsible parties of one need
-
-   Structure is drawn with borders and ground changes, never with a painted
-   pseudo-element: a painted pseudo-element is repainted Canvas under Windows
-   High Contrast and the structure vanishes. The forced-colors layer at the end
-   restores the rules with system colours.
-
-   No card. No dashed empty state. No KPI grid. No box-shadow on content. No
-   radius above 2px. No gradient. No icon per row. No percentage meter. No
-   colour as the only carrier of a state.
+   What follows is only what a need's page draws beyond it. No card, no KPI
+   grid, no shadow on content, no gradient, no percentage meter, no colour as
+   the only carrier of a state. Tokens only, logical properties only.
    ========================================================================== */
 
-/* ---- THE COMPANY BAND ------------------------------------------------------
-   Stable while you move inside the workspace. On the process ground, because
-   this is a procedure and the ground change is what tells the reader so — the
-   same reasoning, and the same construction, as the case header.
-   -------------------------------------------------------------------------- */
-.company-header {
-  background: var(--paper-deep);
-  border-block-end: 2px solid var(--navy);
+/* the parties answerable for one need, one under the other: one hairline between two, never two */
+.need-party + .need-party {
+  border-block-start: 0;
 }
 
-.company-header__inner {
-  display: grid;
-  gap: var(--s-4);
-  padding-block: var(--s-6);
-}
-
-@media (min-width: 48rem) {
-  .company-header__inner {
-    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
-    gap: var(--s-8);
-    align-items: start;
-  }
-}
-
-.company-header__folio {
-  margin-block-end: var(--s-2);
-}
-
-.company-header__name {
-  font-family: var(--font-display);
-  font-size: var(--t-band-size);
-  line-height: var(--t-band-lh);
-  letter-spacing: var(--track-band);
-  color: var(--ink);
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.company-header__facts {
-  display: grid;
-  gap: var(--s-4);
-  margin: 0;
-}
-
-@media (min-width: 48rem) {
-  .company-header__facts {
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: var(--s-6);
-  }
-}
-
-.company-header__fact dt {
-  color: var(--ink-muted);
-  margin-block-end: var(--s-1);
-}
-
-.company-header__fact dd {
-  margin: 0;
-  font-family: var(--font-ui);
-  font-size: var(--t-ui-size);
-  line-height: var(--t-ui-lh);
-  color: var(--ink);
-}
-
-.company-header__note {
-  display: block;
-  margin-block-start: var(--s-1);
-  font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
-  color: var(--ink-secondary);
-  max-inline-size: var(--measure-note);
-}
-
-/* ---- THE ANSWERABLE PARTY INSIDE A REGISTER ENTRY --------------------------
-   « Who is responsible » is an acceptance criterion of this product, so it is
-   a label in the entry, at the inline end, under the state word — not a colour
-   and not an icon.
-   -------------------------------------------------------------------------- */
-.entry__responsible {
-  display: block;
-  margin-block-start: var(--s-1);
-  font-family: var(--font-ui);
-  font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink-muted);
-  white-space: normal;
-  max-inline-size: 22ch;
-}
-
-/* ---- THE RESPONSIBLE PARTIES OF ONE NEED ---------------------------------- */
-.need-actors {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.need-actors > li + li {
-  margin-block-start: var(--s-2);
-  border-block-start: 1px solid var(--rule-hair);
-  padding-block-start: var(--s-2);
-}
-
-.need-actors__name {
-  display: block;
-  font-family: var(--font-ui);
-  font-size: var(--t-ui-size);
-  line-height: var(--t-ui-lh);
-  color: var(--ink);
-}
-
-.need-actors__role {
-  display: block;
-  font-family: var(--font-ui);
-  font-size: var(--t-folio-size);
-  line-height: var(--t-folio-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-folio);
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
-  color: var(--ink-muted);
-}
-
-:lang(ar) .need-actors__role {
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.need-actors__mandate {
-  display: block;
-  color: var(--ink-secondary);
-}
-
-/* ---- THE NEED PAGE -------------------------------------------------------- */
-.need-head .portal-facts {
+/* the reason a need waits, under who answers for it */
+.need-hold {
   margin-block-start: var(--s-4);
 }
 
-.need-missing {
-  border-inline-start: 4px solid var(--state-pending-br);
-  padding-inline-start: var(--s-4);
-}
-
-.need-missing > span {
+/* a fact's own note, under its value */
+.need-facts__note {
   display: block;
+  margin-block-start: var(--s-1);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
 }
 
-/* ---- ACTIONS AND FORMS ---------------------------------------------------- */
-.companies-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-4);
-  margin-block-start: var(--s-6);
-}
-
-.companies-inline-form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-2);
-  margin: 0;
-}
-
-.companies-inline-form__field {
-  inline-size: min(100%, 20rem);
-}
-
-.companies-withdraw {
-  margin-block-start: var(--s-8);
-  border-block-start: 1px solid var(--rule-hair);
-  padding-block-start: var(--s-3);
-  max-inline-size: var(--width-form);
-}
-
-.companies-withdraw__label {
-  display: block;
-  font-family: var(--font-ui);
-  font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
-  color: var(--ink-secondary);
-  margin-block-end: var(--s-2);
-}
-
-.companies-form {
-  max-inline-size: var(--width-form);
-  margin-block-start: var(--s-6);
-}
-
-/* ---- FORCED COLOURS ------------------------------------------------------- */
-@media (forced-colors: active) {
-  .company-header {
-    border-block-end-color: CanvasText;
-  }
-
-  .need-actors > li + li {
-    border-block-start-color: CanvasText;
-  }
-
-  .need-missing {
-    border-inline-start-color: CanvasText;
-  }
-
-  .companies-withdraw {
-    border-block-start-color: CanvasText;
-  }
+/* a change of state's date, beside its chip */
+.need-event__date {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 400;
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
 }

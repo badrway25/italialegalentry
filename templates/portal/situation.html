@@ -1,11 +1,14 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-"Ma situation" — the facts the legal rules read, and nothing else. Design V4 (CREATIVE_DIRECTION.md
-§3.7): the same single form, saved in ONE post (the legal flow does not change, §89), drawn as a
-guided form — a Stepper of the questions at the start of the row, one question at a time on a
-level-2 panel in the middle, a sticky glass foot with «Précédent» · «Continuer» and the form's
-submit. Without JavaScript the questions simply follow each other; situation.js is a progressive
-enhancement (it hides the other questions, never the fields from the submission).
+"Ma situation" — the facts the legal rules read, and nothing else. Design V5 (W3-F1's guided form, W3-D's Stepper,
+W3-E's page): the same single form, saved in ONE post (the legal flow does not change, §89), drawn as a guided form —
+the Stepper of the questions at the start of the row, one question at a time on the screen's one raised panel in the
+middle, the foot part of the page after a hairline with «Précédent», the position and the page's ONE act. The act —
+«Continuer» while stepping, the form's submit on the last question (situation.js gives the submit its role) — is the
+phone's action bar below 64rem (`data-console-action`, the shell's O63 contract: where the bottom bar's entries stood,
+«Menu» kept at the reading end), within the thumb's reach; above it, the foot's end. Without JavaScript the questions
+simply follow each other and the act is the submit; situation.js is a progressive enhancement (it hides the other
+questions, never the fields from the submission).
 
 Two things this page must make visible, because both are promises the project has made:
 
@@ -59,7 +62,7 @@ guided form (W3-F1's v5/_wizard.css — the w3-d merge took it out of console.cs
 
   <div class="wiz__stage">
     {% for field in form.visible_fields %}
-    <section class="wiz__q panel panel--l2" id="q-{{ field.name }}" data-wizard-step="{{ forloop.counter }}" aria-labelledby="q-{{ field.name }}-title" tabindex="-1">
+    <section class="wiz__q" id="q-{{ field.name }}" data-wizard-step="{{ forloop.counter }}" aria-labelledby="q-{{ field.name }}-title" tabindex="-1">
       <p class="wiz__ordinal">{% blocktranslate with n=forloop.counter %}Question {{ n }}{% endblocktranslate %}</p>
       {% if field.field.widget.input_type == "radio" or field.field.widget.allow_multiple_selected %}
         {% include "components/option_cards.html" with field=field %}
@@ -79,21 +82,23 @@ guided form (W3-F1's v5/_wizard.css — the w3-d merge took it out of console.cs
   <div class="wiz__foot" data-wizard-foot>
     <button type="button" class="btn btn--secondary" data-wizard-prev hidden>{% translate "Précédent" %}</button>
     <span class="wiz__foot-count" data-wizard-position aria-live="polite"></span>
-    <button type="button" class="btn btn--primary btn--arrow" data-wizard-next hidden>{% translate "Continuer" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button>
-    <button type="submit" class="btn btn--primary" data-wizard-submit>{% translate "Enregistrer et recalculer" %}</button>
+    <div class="wiz__act" data-console-action>
+      <button type="button" class="btn btn--primary btn--arrow" data-wizard-next hidden>{% translate "Continuer" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button>
+      <button type="submit" class="btn btn--primary" data-wizard-submit>{% translate "Enregistrer et recalculer" %}</button>
+    </div>
   </div>
 </form>
 
-<section class="panel panel--l1 wiz__notask" aria-labelledby="notask-title">
-  <div class="panel__head">
-    <h2 class="panel__section" id="notask-title">{% translate "Ce que nous ne demandons pas" %}</h2>
+<section class="wiz__notask" aria-labelledby="notask-title">
+  <div class="db-sec__head">
+    <h2 class="db-h2" id="notask-title">{% translate "Ce que nous ne demandons pas" %}</h2>
   </div>
   <ul class="wiz__list">
     <li>{% translate "Aucun numéro de passeport ni de document d’identité n’est demandé ici." %}</li>
     <li>{% translate "Aucun nom d’établissement, de diplôme ni de note. Italy Legal Entry ne reconnaît aucun titre d’études : la reconnaissance relève des autorités compétentes." %}</li>
     <li>{% translate "Aucun nom d’entreprise. Une proposition d’emploi se déclare par oui ou par non." %}</li>
   </ul>
-  <p class="panel__actions"><a class="btn btn--link btn--sm" href="{% url 'accounts:profile' %}">{% translate "Voir, exporter ou supprimer l’ensemble de mes données" %}</a></p>
+  <p class="db-acts"><a class="btn btn--link btn--sm" href="{% url 'accounts:profile' %}">{% translate "Voir, exporter ou supprimer l’ensemble de mes données" %}</a></p>
 </section>
 {% endblock %}
 {% block extra_scripts %}{{ block.super }}

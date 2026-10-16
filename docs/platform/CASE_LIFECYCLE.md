@@ -118,6 +118,8 @@ descrive le transizioni possibili, non un obbligo.
 4. `SUSPENDED` richiede sempre una motivazione testuale.
 5. Un fascicolo `CLOSED` è in sola lettura. Si apre un nuovo fascicolo, non si riapre il vecchio.
 
+La colonna «Chi può» è dichiarata come dati in `cases.models.TRANSITION_ACTORS` e applicata da `cases.services.transition`, da cui `transitions_available` deriva i comandi offerti (F-7, ottobre 2026). L'amministratore vi compare solo dove la tabella lo nomina; le sole capacità che i dati aggiungono alla tabella, ciascuna con la sua ragione e in attesa di decisione, sono elencate in `cases.models.BEYOND_SECTION_4`.
+
 ## 5. Checklist
 
 Ogni voce di checklist ha:

@@ -2483,7 +2483,14 @@ def _runserver(handler=None):
     from django.core.handlers.wsgi import WSGIHandler
     from django.core.servers.basehttp import WSGIRequestHandler, WSGIServer
 
-    server = type("WSGIServer", (socketserver.ThreadingMixIn, WSGIServer), {})(("127.0.0.1", 0), WSGIRequestHandler)
+    from tests.live_server import bind_a_port_chromium_accepts
+
+    server_class = type("WSGIServer", (socketserver.ThreadingMixIn, WSGIServer), {})
+    # A port Chromium accepts, drawn and bound (tests/live_server.py), where port 0 let the operating system choose one
+    # it may refuse (net::ERR_UNSAFE_PORT; REVIEW_2 m4); without SO_REUSEADDR, so that the bind is the test of freedom.
+    server = bind_a_port_chromium_accepts(
+        lambda port: server_class(("127.0.0.1", port), WSGIRequestHandler, allow_reuse_address=False)
+    )
     server.daemon_threads = True
     server.set_app(handler or WSGIHandler())
     thread = threading.Thread(target=server.serve_forever, kwargs={"poll_interval": 0.05}, daemon=True)
@@ -3438,7 +3445,6 @@ def test_the_landing_frames_a_page_of_this_site(client, preview, page):
         "fr/",
         "/de/",
         "/fr/\\..\\",
-        "/fr/\x00",
         "/fr/ x",
         "/fr/" + "a" * 600,
         "http:/fr/",
@@ -3467,6 +3473,21 @@ def test_the_landing_never_frames_what_is_not_a_page_of_this_site(client, previe
     assert _frames(html) == []
     assert "La pagina chiesta non è una pagina di questo sito" in html
     assert f'<a href="{LANDING}">Torna alla home</a>' in html
+
+
+@pytest.mark.django_db
+def test_a_nul_byte_never_reaches_the_landing(client, preview):
+    """
+    A NUL in the query string is the product's own 400 before any view reads it (cms.middleware.NulByteMiddleware,
+    the DevOps lane's second pass, docs/design-v5/QA/v54/devops/NOTES.md): the landing never sees the page it asks
+    for, frames nothing and names nothing of the preview.
+    """
+    response = client.get(LANDING, {"page": "/fr/\x00"})
+    assert response.status_code == 400
+    html = response.content.decode()
+    assert _frames(html) == []
+    assert 'class="container error-page"' in html
+    assert "__design-v5" not in html and "designpreview" not in html
 
 
 @pytest.mark.django_db

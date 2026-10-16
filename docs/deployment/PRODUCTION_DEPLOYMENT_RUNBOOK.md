@@ -5,6 +5,11 @@
 > performs the deployment and the domain cutover himself (directive V5.9). No server was contacted, no DNS record
 > changed, no certificate issued. Where a statement depends on the code, the file is named.
 >
+> Updated on 16 October 2026 by the DevOps lane's second pass, from the repository again: what a browser caches
+> (step 8, step 11, the static section), the NUL-byte 400, and the known limits that follow from both; the same day,
+> by its review fixes: what «Max post-process passes exceeded» means, the previous release's names, what nginx answers
+> itself, which forms the NUL guard reads.
+>
 > Companions: [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md) (release gate, backup before cutover, smoke test) ·
 > [`ROLLBACK.md`](ROLLBACK.md) · [`production.env.example`](production.env.example) (the server's environment file).
 > They supersede `docs/DEPLOYMENT.md` and `docs/DEPLOYMENT_READINESS.md`, which stay as history.
@@ -38,7 +43,7 @@
 | Python | `requires-python >= 3.12`; Ubuntu **24.04 LTS** ships 3.12 (22.04's 3.10 is too old). CI and the Dockerfile run 3.13 — see [Known limits](#known-limits-and-external-dependencies) | `pyproject.toml`, `.github/workflows/ci.yml` |
 | Database | PostgreSQL only, psycopg 3 binary wheel (no `libpq-dev`, no compiler), `DATABASE_URL`, `ATOMIC_REQUESTS`, connections reused 60 s with health checks | `config/settings/base.py`, `prod.py` |
 | Application server | Gunicorn 26.2 (sync workers), behind one reverse proxy | `requirements/base.txt` |
-| Static files | WhiteNoise middleware, `CompressedManifestStaticFilesStorage` (hashed names, `.gz` siblings, immutable caching), served **through Gunicorn**. The bundles (`static/css/dist`, `static/js/dist`) and the compiled catalogues (`locale/*/LC_MESSAGES/*.mo`) are committed: **no Node, no gettext on the server** | `base.py` `STORAGES`, `tests/frontend/test_static_pipeline.py` |
+| Static files | WhiteNoise middleware, `core.storage.CompressedManifestModulesStorage` — WhiteNoise's `CompressedManifestStaticFilesStorage` (hashed names, `.gz` siblings) with the ES modules' imports rewritten to the hashed names too: every file a page loads is a hashed name, cached `immutable`; a plain name is revalidated after 60 s ([step 8](#8-static-files-seeds-site-first-administrator)) — served **through Gunicorn**. The bundles (`static/css/dist`, `static/js/dist`) and the compiled catalogues (`locale/*/LC_MESSAGES/*.mo`) are committed: **no Node, no gettext on the server** | `base.py` `STORAGES`, `core/storage.py`, `tests/frontend/test_static_pipeline.py`, `tests/deployment/test_static_caching.py` |
 | Public media | `MEDIA_ROOT` at `/media/`, served by **nginx** (Django serves it only with DEBUG on) | `config/urls.py`, `prod.py` |
 | Private documents | `PRIVATE_MEDIA_ROOT`, outside every served directory, delivered only by `documents.views._serve` after authorisation | `apps/documents/storage.py`, `views.py` |
 | Cache | Local memory. `REDIS_URL` must stay empty: the Redis client library is not in the requirements (check `core.E001`) | `base.py`, `apps/core/checks.py` |
@@ -340,6 +345,21 @@ sudo ile-manage shell -c "from django.contrib.sites.models import Site; Site.obj
   `<loc>` of `/sitemap.xml` reads `http://example.com/…` (verified locally). Set it again if the domain changes.
 - Keep the old static files: never `collectstatic --clear` — a rollback, and pages still open in browsers, reference
   the previous release's hashed names.
+- **What a browser keeps, and for how long.** Every file a page loads is a hashed name — the scripts and stylesheets
+  the templates link, the fonts and images the stylesheets name, and the ES modules each script imports (the shared
+  chunks, and the entries loaded on demand: `loader.js`, `depot.js`, `piece-drawer.js`), whose import specifiers
+  collectstatic rewrites to the hashed names (`core/storage.py`). WhiteNoise serves a hashed name
+  `max-age=315360000, public, immutable`: a release changes the names, so a returning browser never runs a previous
+  release's module, and a page opened before the release keeps importing its own release's files, which stay
+  collected. A plain name — the original copy collectstatic keeps beside each hashed one, linked by no page — is
+  `max-age=60, public` (`WHITENOISE_MAX_AGE`). Until 16 October 2026 the modules imported one another by plain names,
+  cached a year (`tests/deployment/test_static_caching.py` runs a real collectstatic under the production settings
+  and holds it). Only the bundles of `static/js/dist` are rewritten so; the sources of `static/js/src` are collected
+  as written, and no page loads them. If this collectstatic ever stops on «Max post-process passes exceeded», a chain
+  of imports in the dist is longer than Django's post-processing settles in this server's directory order (ext4 lists
+  a directory in hash order, a workstation's NTFS sorted), or two bundles import each other. The same test computes
+  the worst case over every order, so CI refuses such a dist first; the fix is in the build (`static/js/src`), never on
+  the server, and the failed run leaves the previous manifest and every file it names in place (Known limits).
 
 **First administrator.**
 
@@ -722,7 +742,13 @@ rsync over SSH.
 ## 11. nginx
 
 nginx terminates TLS, redirects HTTP to HTTPS, serves **public media** under `/media/`, and passes everything else —
-static files included, which WhiteNoise serves — to Gunicorn. **There is no location, alias or root for the private
+static files included, which WhiteNoise serves — to Gunicorn. WhiteNoise also decides how long a browser keeps each
+static file — a hashed name of the current release ten years, `immutable`; any other name 60 s: a plain name, or a
+previous release's hashed name, kept for the pages still open, whose content never changes ([step 8](#8-static-files-seeds-site-first-administrator))
+— so there is deliberately **no `location /static/`** here: one `expires` would give both kinds of name one rule, and a
+long one on a plain name brings back the stale module. Should `/static/` ever be served by nginx itself (an `alias` of
+the collected directory), it must keep the distinction: `expires max` with `immutable` only for a name that carries
+Django's twelve-hex-digit hash (`~ "\.[0-9a-f]{12}\.[A-Za-z0-9]+$"`), `expires 60s` for every other. **There is no location, alias or root for the private
 documents directory, and there must never be one** (not even an `internal` location for `X-Accel-Redirect`: the
 application streams private files itself, after authorisation). While the application is stopped — an update, a
 restore — nginx answers a static maintenance page with a 503 instead of its bare 502.
@@ -1034,7 +1060,7 @@ Verified against the code on 12 October 2026.
 |---|---|---|---|
 | What | the design's CSS and JS bundles, fonts, icons, images; the back-office's assets | the media library's photographs (`seed_all` copies them from `static/img/photos`), the Forum's public photos, videos and PDFs, the optional logo — uploaded by staff in the back-office, public by nature (`forum/validators.py`: «only public, non-personal material») | identity documents, contracts, diplomas a person files into their case (`documents` app) |
 | Where | sources `static/` and `apps/*/static/`; collected into `STATIC_ROOT` = `<checkout>/staticfiles` | `MEDIA_ROOT` = `/var/lib/italylegalentry/media` (`prod.py`, environment) | `PRIVATE_MEDIA_ROOT` = `/var/lib/italylegalentry/private`, one directory per owner, a `uuid4` name per file, mode `0600` (`documents/storage.py`, `services.py`) |
-| Served by | **Gunicorn through WhiteNoise** (`base.py` middleware and `STORAGES`): hashed names, `.gz` siblings, `Cache-Control: immutable` | **nginx**, `location /media/` with `alias` — Django serves `/media/` only when DEBUG is on (`config/urls.py`) | **only** `documents.views._serve`, after login, `documents.policies.require(user, "download", doc)` and `services.delivery_block`; as an attachment, `Cache-Control: private, no-store`, `Content-Security-Policy: default-src 'none'; sandbox`; every delivery audited (`documents.downloaded`) |
+| Served by | **Gunicorn through WhiteNoise** (`base.py` middleware and `STORAGES`, `core/storage.py`): every file a page loads is a hashed name — the ES modules' imports included — with a `.gz` sibling, `Cache-Control: max-age=315360000, public, immutable` for a name of the current release; a plain name, or a previous release's hashed name, `max-age=60, public` (step 8) | **nginx**, `location /media/` with `alias` — Django serves `/media/` only when DEBUG is on (`config/urls.py`) | **only** `documents.views._serve`, after login, `documents.policies.require(user, "download", doc)` and `services.delivery_block`; as an attachment, `Cache-Control: private, no-store`, `Content-Security-Policy: default-src 'none'; sandbox`; every delivery audited (`documents.downloaded`) |
 | URL | `/static/<path>.<hash>.<ext>` | `/media/<path>` | `/documents/<uuid>/` and `/documents/link/<signed, time-limited, account-bound token>/` — no file path appears in any URL |
 | Backup | no: rebuilt from the tag by `collectstatic` | **yes**: back-office uploads exist only here (the library photographs can be re-seeded) — nightly, encrypted (step 10) | **yes**: nightly with the database, encrypted to the owner's key before anything is written (step 10) |
 
@@ -1312,6 +1338,23 @@ Recommendation:
   office, the reserved area or a private document opens (`apps/accounts/tests/test_backoffice_second_factor.py`,
   `docs/design-v5/QA/v54/sec-f5/NOTES.md`). The proof lasts as long as the session — 8 hours after its last write,
   the cookie ending with the browser; asking the code again within a session is a policy decision, not made.
+- **Static modules** — every file a page loads is cached by its hashed name (step 8). That needs the import
+  specifiers of `static/js/dist` to be string literals and its chains of imports to stay short (`core/storage.py`):
+  each pass of Django's post-processing settles one more link of a chain it meets in the wrong order, that order
+  follows the directory listing — hash order on the server's ext4 — and a name that needs more than four passes, or a
+  cycle, stops `collectstatic` with «Max post-process passes exceeded». `tests/deployment/test_static_caching.py`
+  computes the worst case over every directory order (2 of the 4 today) and refuses a computed `import(x)`: with
+  `tests/frontend/test_static_pipeline.py`, at build time, in CI, never in front of a visitor. Only the dist is
+  rewritten — no third-party script is read for imports. Django calls its rewriting of module imports experimental
+  (4.2); the test reads the real minified dist.
+- **NUL bytes** — a NUL in the query string, the session cookie or a form posted to a page that CSRF protects is
+  answered with the project's 400 page, with the security headers of every page and one WARNING line
+  (`cms.middleware.NulByteMiddleware`, `tests/deployment/test_nul_bytes.py`); until 16 October 2026 it was a 500 and an
+  ERROR line with its traceback, one per request, for anyone (gate 2's N-4). Behind nginx a `%00` in the path never
+  reaches Django: nginx answers its own bare 400. The body of a `csrf_exempt` view — the integrations API, the public
+  webhook among them, which read their raw body — and a body that is not a form are left to their view; none stores a
+  posted field. A body Django will not parse (too many fields, too large, malformed) is answered as without the guard:
+  without its CSRF cookie, a 403.
 - **SMTP** — a provider is required; account e-mails are sent during the request. Outbound SMTP is restricted on
   many DigitalOcean accounts: confirm the provider's port is open from the droplet (`sendtestemail`) before the
   cutover; 2525 is a common alternative to 587. Implicit TLS (465) is not configurable.

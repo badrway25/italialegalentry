@@ -9,7 +9,8 @@ docs/design-v5/QA/v54/w3-d/NOTES.md). What a static test cannot see:
   more; opened, the list is the spine;
 * still at load, and a true still under reduced motion: nothing animates in the workspace — on the dashboard, the case
   file and «Ma situation»;
-* the case file's journey is the spine at every width, its latest timeline event lit;
+* the case file's journey is compact — the card and its disclosure where its column holds less than 56rem (W3-E's fix
+  pass: its review's M1) —, opened the spine, its latest timeline event lit;
 * «Ma situation»'s Stepper: the spine at the start of the row, a level row of nodes on a phone with the line between
   them;
 * forced colours: the nodes and the line in system colours, the wash dropped.
@@ -216,14 +217,24 @@ def test_nothing_moves_at_load_on_the_journeys_three_pages(browser, live_server,
             context.close()
 
 
-def test_the_case_file_journey_is_the_spine_and_its_latest_event_is_lit(browser, live_server, user_factory):
+def test_the_case_file_journey_is_compact_and_its_latest_event_is_lit(browser, live_server, user_factory):
+    """The case file draws the dashboard's compact journey (W3-E's fix pass, its review's M1: the dated spine pushed the
+    next act out of the first screen): at 1440 its column holds less than 56rem — the card, «Vous êtes ici», then the
+    disclosure, closed; opened, the list is the spine. The timeline's latest event is lit."""
     person, case = _person(user_factory, "soglia.case@example.test", "training")
     context, page, errors = _page(
         browser, live_server, person, f"/{{lang}}/espace-reserve/dossiers/{case.reference}/", "fr", 1440, 900
     )
     try:
+        card = page.evaluate(
+            """() => { const c = document.querySelector('.file-journey .journey-now');
+              return c ? {shown: getComputedStyle(c).display !== 'none', text: c.innerText,
+                          open: document.querySelector('.file-journey details').open} : null; }"""
+        )
+        assert card and card["shown"] and "Vous êtes ici" in card["text"] and card["open"] is False, card
+        page.locator(".file-journey .journey-fold__summary").click()
         drawn = page.evaluate(
-            """() => { const ol = document.querySelector('ol.journey--descriptive');
+            """() => { const ol = document.querySelector('.file-journey ol.journey');
               const xs = [...ol.querySelectorAll('.journey__node')].map((n) => Math.round(n.getBoundingClientRect().left));
               const last = document.querySelector('.tl__row--latest .tl__node');
               return {xs, current: ol.querySelector('[aria-current="step"]').className,
@@ -235,7 +246,7 @@ def test_the_case_file_journey_is_the_spine_and_its_latest_event_is_lit(browser,
         assert drawn["ring"] == "2px" and drawn["halo"] == "block", "the latest event: the ring on its wash"
         first = page.evaluate("() => document.querySelector('.tl > li').classList.contains('tl__row--latest')")
         assert first, "newest first: the lit event heads the timeline"
-        gaps = page.evaluate(GAPS_JS, [".journey--descriptive > .journey__step", ".journey__node", "y"])
+        gaps = page.evaluate(GAPS_JS, [".file-journey .journey > .journey__step", ".journey__node", "y"])
         assert all(gap is not None and gap <= 1.5 for gap in gaps[:2]), f"the line from node to node: {gaps}"
         assert errors == []
     finally:

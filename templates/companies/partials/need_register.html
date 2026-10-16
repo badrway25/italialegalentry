@@ -1,36 +1,29 @@
 {% load i18n %}{% comment %}
-THE NEEDS REGISTER — the entry list, which replaces the card everywhere.
+THE NEEDS REGISTER — design V5 (W3-E step 2): the company's needs as rows, on the dashboard's row (`.db-task`, its
+needs' columns `.db-tasks--needs`: the need · its state · who answers for it; apps/portal/static/portal/v5/_dashboard.css)
+and the registers' whole-row link (apps/portal/static/portal/v5/_registers.css): the need's title is the way to its
+page, stretched over the row.
 
-Each entry carries, at the inline end, the party ANSWERABLE for the need: that is not decoration,
-« qui est responsable » is an acceptance criterion of this product (ROLE_JOURNEYS §2, CR-03). When
-nobody has been designated yet the entry says so in words rather than leaving the slot blank, because
-a blank slot reads as « nobody is looking at it », which is not what it means.
+Each row carries, at its end, the party ANSWERABLE for the need — its actor's glyph (the registry's ACTOR map) and its
+name: that is not decoration, « qui est responsable » is an acceptance criterion of this product (ROLE_JOURNEYS §2,
+CR-03). When nobody has been designated yet the row says so in words, beside the dashed disc, rather than leaving the
+slot blank, because a blank slot reads as « nobody is looking at it », which is not what it means. A need in somebody
+else's hands reads one step quieter. It turns around the NEEDS, never around people: no candidate, no count of
+persons, no photograph.
 
 Contract: `needs` = an iterable of companies.models.CompanyNeed.
 {% endcomment %}
-<ol class="register">
+<ul class="db-tasks db-tasks--needs reg-needs" role="list">
   {% for need in needs %}
-  <li class="register__item">
-    <a class="entry" href="{% url 'companies:need_detail' need.reference %}">
-      <span class="entry__ordinal" aria-hidden="true"></span>
-      <span class="entry__title" dir="auto">{{ need.title }}</span>
-      <span class="entry__gloss">
-        <span class="t-ref">{{ need.reference }}</span>
-        · {% if need.territory %}{{ need.territory.label }}{% else %}{% translate "territoire à préciser" %}{% endif %}
-        · {% if need.sector %}{{ need.sector.label }}{% else %}{% translate "secteur à préciser" %}{% endif %}
-        · {% blocktranslate count n=need.headcount %}{{ n }} profil{% plural %}{{ n }} profils{% endblocktranslate %}
-      </span>
-      <span class="entry__actor">
-        {% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}
-        <span class="entry__responsible">
-          {% with live=need.live_assignments %}
-          {% if live %}{% for assignment in live %}{{ assignment.display_name }}{% if not forloop.last %} · {% endif %}{% endfor %}
-          {% else %}{% translate "aucun intervenant désigné" %}{% endif %}
-          {% endwith %}
-        </span>
-      </span>
-      {% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}
-    </a>
+  <li class="db-task reg-row reg-row--link{% if need.status != "draft" %} db-task--theirs{% endif %}" data-need="{{ need.reference }}">
+    <div class="db-task__words">
+      <p class="db-task__title"><a class="reg-row__link" href="{% url 'companies:need_detail' need.reference %}" dir="auto">{{ need.title }}</a></p>
+      <p class="db-task__meta reg-row__meta"><span class="db-ref">{{ need.reference }}</span><span>{% if need.territory %}{{ need.territory.label }}{% else %}{% translate "territoire à préciser" %}{% endif %}</span><span>{% if need.sector %}{{ need.sector.label }}{% else %}{% translate "secteur à préciser" %}{% endif %}</span><span>{% blocktranslate count n=need.headcount %}{{ n }} profil{% plural %}{{ n }} profils{% endblocktranslate %}</span><span>{% translate "Mis à jour le" %} <time datetime="{{ need.updated_at|date:'Y-m-d' }}">{{ need.updated_at|date:"d.m.Y" }}</time></span></p>
+    </div>
+    <div class="db-task__state">{% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}</div>
+    <div class="db-task__end">
+      {% with live=need.live_assignments %}{% if live %}{% for assignment in live %}<span class="db-task__who">{% include "components/glyph.html" with glyph=assignment.role|actor_glyph size="sm" %}<span dir="auto">{{ assignment.display_name }}</span></span>{% endfor %}{% else %}<span class="db-task__who">{% include "components/glyph.html" with glyph="" size="sm" %}<span>{% translate "aucun intervenant désigné" %}</span></span>{% endif %}{% endwith %}
+    </div>
   </li>
   {% endfor %}
-</ol>
+</ul>

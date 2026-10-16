@@ -98,9 +98,10 @@ def test_the_real_manifest_loads_and_is_written_in_lf():
 
 #: The families a later directive of the owner added outside plan §3's waves: ``devops``, V5.9's production
 #: readiness (the devops merge), ``sec-f5``, the fix of the DevOps lane's go-live finding F-5 (the sec-f5 merge),
-#: and ``intfix``, the steward's integration fixes at integration checkpoint 3 (the intfix merge). DL54-01's branch
-#: and worktree names; no merge tag of their own (the checkpoint's tag, v54/checkpoint-3, marks design-v5).
-OUTSIDE_THE_WAVES = {"devops", "sec-f5", "intfix"}
+#: ``intfix``, the steward's integration fixes at integration checkpoint 3 (the intfix merge), and ``sec-f7``, the
+#: fix of W3-D's review finding F-7, who may move a case file (the sec-f7 merge). DL54-01's branch and worktree
+#: names; no merge tag of their own (the checkpoint's tag, v54/checkpoint-3, marks design-v5).
+OUTSIDE_THE_WAVES = {"devops", "sec-f5", "intfix", "sec-f7"}
 
 
 def test_every_workflow_of_waves_1_to_4_has_a_family_with_the_dl54_names():

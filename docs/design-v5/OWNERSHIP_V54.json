@@ -3281,8 +3281,8 @@
         },
         {
           "glob": "apps/portal/services.py",
-          "slice": "its presenters for the secondary pages",
-          "source": "§2.2 serialized table (W3-A → W3-B → W3-C → W3-E)"
+          "slice": "its presenters for the secondary pages and the case file, as written: the deadlines' and the requests' presenters (present_deadline, deadlines_page, RequestItem, _present_request), pathways_page's count, the bridge's card presenters (CardItem, Card, the four card builders, _organisation_card, _organisation_glyph), the case file's (case_lines, case_pieces, _now_line, _case_held_now, case_now_panel, case_file, HELD_NOW_VARIANTS, _now_base's two keys), W3-B's _company_needs split into _need_groups (output unchanged) for needs_register; and the steward's merge line in sec-f7's _held_now docstring",
+          "source": "§2.2 serialized table (W3-A → W3-B → W3-C → W3-E); named as written at the w3-e merge (16 Oct 2026)"
         },
         {
           "glob": "apps/portal/static/portal/console.css",
@@ -3325,8 +3325,164 @@
         },
         {
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
-          "slice": "the prose of its pages' components (page_header, the case file)",
-          "source": "§3.1 item 12 («its DS 2026 prose sections updated»)"
+          "slice": "the prose of its pages' components and of what it retired, as written: §2.1's rows of the sheets it adds (portal/registers.css, portal/case.css, console.css's import list with v5/_frame.css) and deletes, §3's three reserves (--rubric-on-navy, --t-numeral-size, --t-numeral-lh), §8.2's note, §10's badge / empty_state / page_header / glyph / form_field lines and health_strip's section out, §11.10 (the case file), §12's note; §2's and §10's figures are the steward's, by scripts/regen_design_inventory.py",
+          "source": "§3.1 item 12 («its DS 2026 prose sections updated»); named as written at the w3-e merge (16 Oct 2026)"
+        },
+        {
+          "glob": "apps/portal/static/portal/{registers,case}.css",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the family's two page-only entries (the owner's V5.8 rule 2): portal/registers.css (imports v5/_registers.css; linked by the person's registers, the modules' pages, «Mes dossiers», the pre-assessment and the case file) and portal/case.css (imports v5/_case.css; linked by the case file alone) (DL54-138, DL54-149, DL54-150)"
+        },
+        {
+          "glob": "apps/portal/static/portal/v5/{_registers,_case}.css",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the registers' grammar (the clause, the sequence and the log, the exchange, the answerable party, the form of an act, the filter E-3, the dialogs' one body) and the case file's own CSS (the two columns, the rows' columns, the phone's row and bar, the feed in the side column) — partials of the two page-only entries (DL54-133, DL54-140, DL54-149, DL54-150)"
+        },
+        {
+          "glob": "apps/portal/static/portal/v5/_frame.css",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the console partial imported last by console.css: the ContextHeader, the workspace head, the actor's glyph disc and the frame's focus ring, moved with their values unchanged from v4/workspace.css when the file left the cascade with its last named consumer (the deletion map's last row; DL54-147)"
+        },
+        {
+          "glob": "templates/components/health_strip.html",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — retired (deleted) with its last consumer, the V4 case file — the HealthStrip and strip-fill left with v4/workspace.css —, its showcase sample removed (DL54-147, DL54-149)"
+        },
+        {
+          "glob": "apps/cases/presenters.py",
+          "slice": "timeline(case, reader=…): the person's acts «Vous» for the person reading their own file, «La personne» for anybody else, a line's change named in its own words (detail, detail_lang); the dead checklist_health out with the HealthStrip; the module docstring",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the review's M3 (a mandated reader was told «Vous» for the person's acts) and minor 5, on W3-D's presenter slice (DL54-149, DL54-150); journey_with_dates untouched"
+        },
+        {
+          "glob": "apps/cases/views.py",
+          "slice": "detail(): the page's context — portal.services.case_file's presenter reads, the timeline's reader, the person's own communications and dates for the person only (W3-B's two reader= arguments kept) — and set_item_status()'s redirect to the changed line's row (#line-<pk>)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the case file's redraw (C-5: the POST returns to its row; DL54-145, DL54-146, DL54-149) and the review's M3 (DL54-150); permissions, the state machine and the audit trail untouched; the file's other slice is W3-B's"
+        },
+        {
+          "glob": "apps/companies/views.py",
+          "slice": "needs(): the register's filter — portal.services.needs_register over the rows and ?état= (two lines)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the company's register, its counts its filter (platform.md E-3; DL54-141, DL54-144); the file's other slices are W3-A's and W3-B's"
+        },
+        {
+          "glob": "apps/core/chips.py",
+          "slice": "four producers in REGISTER: enquiries.SubmissionStatus, forum.RegistrationStatus, portal.DeadlineStatus (step 1) and academy.PlanStatus (the fix pass)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the person's registers and the Academy plan draw their states as chips through producers (plan §1.2; DL54-134, DL54-138, DL54-150); the file stays W1-C's"
+        },
+        {
+          "glob": "tests/frontend/test_chips_registry.py",
+          "slice": "PRODUCERS: the four producers' enums",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the registry's test follows its four new producers (DL54-134, DL54-150); the file stays W1-C's"
+        },
+        {
+          "glob": "apps/helpdesk/tests/test_compliance.py",
+          "slice": "test_every_page_sits_on_the_platform_shell: a fragment under partials/ (the closure's dialog) is not a page",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the guichet's closure on the overlay system's alert dialog (the review's M4; DL54-150); no family held the file"
+        },
+        {
+          "glob": "apps/helpdesk/tests/test_views.py",
+          "slice": "test_the_empty_register_is_a_hairline_and_a_sentence and test_the_register_lists_the_state_as_a_word: two pins of art direction A retargeted to the registers' grammar (db-empty, the register's rows), intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the guichet in the registers' grammar (DL54-140, DL54-144); no family held the file"
+        },
+        {
+          "glob": "apps/portal/tests/test_situation.py",
+          "slice": "TestCompleteness.test_the_page_counts_one_total_the_questions_it_asks (added)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — «Ma situation» counts one total (W3-D's m4; DL54-148, DL54-149); no family held the file"
+        },
+        {
+          "glob": "apps/portal/tests/test_views.py",
+          "slice": "test_requests_list_is_paginated: the rows counted on the register's rows (data-request), intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — «Mes demandes» drawn as a register (DL54-133, DL54-138); the file's other slice is W3-B's"
+        },
+        {
+          "glob": "apps/portal/views.py",
+          "slice": "situation(): «Ma situation»'s one total — answered and total counted over the questions the page asks (answered_fields, form.visible_fields())",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — W3-D's m4 (DL54-148, DL54-149); the file's other slice is W3-A's"
+        },
+        {
+          "glob": "apps/portal/static/portal/portal.css",
+          "slice": "the console's table on V5 (.data-table, the phone's labels in the head's type), the scroll rules moved from selection.css, and the dead rules deleted with their last pages (portal-columns, portal__actions, portal__summary, portal-table__note, the V1 sequence's current step, portal-list, portal-message, portal-result, the case band, the shell's next action, the pre-assessment's V1 section rhythm, title and folio counter), each with the comment that says where it went",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the registers' grammar on the console's secondary pages and the case file's redraw (DL54-138, DL54-144, DL54-149); the file's other slices are W2-A's, W3-A's, W3-B's, W3-C's and W3-D's"
+        },
+        {
+          "glob": "apps/portal/static/portal/v5/_wizard.css",
+          "slice": "§5: the act group (.wiz__act) and «Ma situation»'s phone action bar below 64rem",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — «Ma situation»'s one act is the phone's action bar (the shell's O63 contract; DL54-139); the file stays W3-F1's"
+        },
+        {
+          "glob": "static/css/base.css",
+          "slice": "the folio's and the entry ordinal's selectors cut from two lists (.folio__head, .folio__date, .folio__ordinal, .entry__ordinal)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — V1 devices whose last pages the family redrew, proved unused on design-v5 and in flight (W4-D's sweep, done for these rows; DL54-147, DL54-149); the file stays W4-D's"
+        },
+        {
+          "glob": "static/css/layout.css",
+          "slice": "the night verso (.section--verso and its three companions) deleted with its last page, the case file's pre-assessment; the comment that says so",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — a V1 device left without a reader (W4-D's sweep, done for this row; DL54-148, DL54-149); the file stays W4-D's"
+        },
+        {
+          "glob": "static/css/register.css",
+          "slice": "the folio (its section, the home's counter, its forced-colours line), the entry's ordinal and its responsible actor deleted with their last pages; the header's lines that say so",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — V1 devices left without a reader (W4-D's sweep, done for these rows; DL54-147, DL54-149); the file stays W4-D's"
+        },
+        {
+          "glob": "static/js/src/console.js",
+          "slice": "§2f, the case file's row menu (a line's alert dialog opened with the row's «⋮» as its opener; overlay.js's open in a second import line that keeps the pinned one), and §2c, the V4 compact context bar's script, deleted with its header",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the case file's state changes on the overlay system (C-5, C-6; DL54-146, DL54-149); the file stays W3-A's"
+        },
+        {
+          "glob": "templates/components/case_timeline.html",
+          "slice": "the actor «Vous» for the person reading their own file, «La personne» for anybody else; a line's words with their language and dir=\"auto\"; its contract (reader=, detail_lang)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the review's M3 and minor 5 (DL54-150); the file stays W3-D's"
+        },
+        {
+          "glob": "templates/dev/showcase.html",
+          "slice": "the HealthStrip's sample removed with components/health_strip.html (the heading «Ligne de pièce»); W3-D's link comment a block comment, words unchanged (the same change as intfix's)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the retirement of components/health_strip.html (DL54-149); the showcase's other slices are W1-B's, W1-C's, W2-A's, W2-C2's, W3-C's and W3-D's"
+        },
+        {
+          "glob": "tests/frontend/test_console_phone_browser_w3_a.py",
+          "slice": "test_the_questionnaire_s_one_act_is_the_phone_s_action_bar_and_its_foot_stays_in_the_page: the questionnaire's foot test rewritten to the action-bar contract — one bar at the bottom, «Menu» at its end, ≤ 120 px of chrome, the foot in the page —, intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — «Ma situation»'s phone action bar (DL54-139); the file stays W3-A's"
+        },
+        {
+          "glob": "tests/frontend/test_console_shell_w3_a.py",
+          "slice": "test_the_rendered_shell_names_the_space_draws_the_foot_and_offers_the_two_skip_links: the frame's first block may be the workspace head (.ws-head) as well as page_header.html",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the person's registers draw the workspace head (DL54-133, DL54-138); the file stays W3-A's"
+        },
+        {
+          "glob": "tests/frontend/test_dashboard_w3_b.py",
+          "slice": "test_the_company_dashboards_legacy_rules_left_the_v4_sheet_and_the_bridge_left_portal_css: the dashboards' legacy rules read on v5/_frame.css (v4/workspace.css gone), intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — v4/workspace.css left the cascade (DL54-147, DL54-149); the file stays W3-B's"
+        },
+        {
+          "glob": "tests/frontend/test_depot_w3_c.py",
+          "slice": "test_lateness_is_never_drawn_with_a_refusals_colour_on_the_legacy_sheets (the console table's one rule; v4/workspace.css and the next action gone) and test_the_register_entry_keeps_only_what_a_page_still_draws (entry__ordinal and entry__actor gone), intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — v4/workspace.css, the shell's next action and two V1 devices left with their last pages (DL54-147, DL54-149); the file stays W3-C's"
+        },
+        {
+          "glob": "tests/frontend/test_documents_w3_c.py",
+          "slice": "test_the_legacy_register_rules_left_main_css_cascade and test_the_runs_ring_is_drawn_inside_the_strip_above_the_workspaces_ring_rule: read on v5/_frame.css, intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the workspace's ring moved with v4/workspace.css's survivors to v5/_frame.css (DL54-147, DL54-149); the file stays W3-C's"
+        },
+        {
+          "glob": "tests/frontend/test_journey_browser_w3_d.py",
+          "slice": "test_the_case_file_journey_is_compact_and_its_latest_event_is_lit (was …_is_the_spine_…: the compact journey at 1440, opened the spine, the latest event lit) and the module docstring's line",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the review's M1 — the case file's journey in W3-D's compact forms (DL54-150); the file stays W3-D's"
+        },
+        {
+          "glob": "tests/frontend/test_journey_w3_d.py",
+          "slice": "test_the_case_file_draws_the_compact_rail_and_the_timeline (was …_descriptive_rail_…), test_the_case_file_of_a_file_off_the_line_says_here_nowhere, test_one_rail_drawing_and_one_passage_drawing_never_a_third (the case file's timeline modifier in v5/_case.css: columns and alignment, no drawing) and test_v4s_journey_drawing_left_with_its_consumers (read on v5/_frame.css), intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — the review's M1 and v4/workspace.css's retirement (DL54-147, DL54-150); the file stays W3-D's"
+        },
+        {
+          "glob": "tests/frontend/test_overlays.py",
+          "slice": "test_the_register_row_opens_its_piece_in_the_systems_drawer: v4/workspace.css's row popover gone with the file, intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — v4/workspace.css left the cascade (DL54-147); the file stays W2-A's"
+        },
+        {
+          "glob": "tests/i18n/test_rtl_static.py",
+          "slice": "test_the_project_stylesheets_are_found: the scanner's sheet list (v4/workspace.css gone, v5/_frame.css scanned)",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): justified extra path — v4/workspace.css left the cascade (DL54-147); the file stays W1-A's"
+        },
+        {
+          "glob": "apps/cases/tests/test_transition_actors.py",
+          "slice": "_moves_on_the_page (added) and its two readers — test_the_case_page_offers_exactly_what_its_view_accepts and test_the_administrator_neither_opens_nor_concludes_a_selection_from_the_case_page: the moves the case page offers read in the file's state dialog (the radios named status in #file-state-form) where they read V4's select options; the second asserts the closure is offered beside the absent move — intent kept",
+          "source": "steward assignment (w3-e merge, 16 Oct 2026): the semantic meeting of sec-f7 and W3-E found by the merge's targeted run — sec-f7's page test pinned the V4 case file's state form, which W3-E's case file draws as the overlay system's alert dialog (C-5; DL54-146, DL54-151); the file stays sec-f7's"
         }
       ]
     },
@@ -3529,7 +3685,7 @@
       "after": [],
       "steward": false,
       "delegated": false,
-      "note": "Assigned by the steward at the devops merge, 12 October 2026: a family outside plan §3's waves (wave 0, as the steward's infrastructure), launched under V5.9 §3 («a small DevOps agent may prepare deployment readiness») beside the V5 families, whose files it stays out of (templates, CSS, JS, their QA folders). No merge tag: V5.9's release tags mark the whole product after final QA (§14), not a family.",
+      "note": "Assigned by the steward at the devops merge, 12 October 2026: a family outside plan §3's waves (wave 0, as the steward's infrastructure), launched under V5.9 §3 («a small DevOps agent may prepare deployment readiness») beside the V5 families, whose files it stays out of (templates, CSS, JS, their QA folders). No merge tag: V5.9's release tags mark the whole product after final QA (§14), not a family. Second pass (branch v54-devops-2, worktree C:/tmp/ile_wt/v54-devops-2 — the family's second branch, not a new family; merged 16 October 2026): release hardening — the static files' storage and cache, the NUL-byte guard, the browser tests' live-server port; the base.py slice extended and six entries added at its merge (three whole: the storage and the live server's module and tests; three slices: the guard in cms/middleware.py, conftest.py's import, the design preview's test).",
       "owns": [
         {
           "glob": "docs/deployment/**",
@@ -3572,8 +3728,8 @@
         },
         {
           "glob": "config/settings/base.py",
-          "slice": "PRIVATE_MEDIA_ROOT: an empty value means the default directory (lane notes F-3)",
-          "source": "V5.9 §12; steward assignment (devops merge, 12 Oct 2026)"
+          "slice": "PRIVATE_MEDIA_ROOT: an empty value means the default directory (lane notes F-3); STORAGES[\"staticfiles\"] (core.storage.CompressedManifestModulesStorage) and its comment; WHITENOISE_MAX_AGE (60 s — a year until 16 October 2026) and its comment; in MIDDLEWARE, the place of the four security-header middlewares (XFrameOptionsMiddleware, CSPMiddleware, BackofficeCSPMiddleware, ExtraSecurityHeadersMiddleware, their order kept) right after TextGZipMiddleware with their comment, and the cms.middleware.NulByteMiddleware entry after LanguageCookieMiddleware with its comment",
+          "source": "V5.9 §12; steward assignment (devops merge, 12 Oct 2026); extended at the devops-2 merge, 16 Oct 2026: the lane notes' second pass, items 1 (the static files' storage and cache) and 2 (the NUL-byte guard's place), and its review fixes (REVIEW_2 m2: the guard's 400 carries the security headers of every page)"
         },
         {
           "glob": "apps/core/apps.py",
@@ -3614,6 +3770,35 @@
           "glob": "tests/test_env_example_is_complete.py",
           "slice": "the rule since 12 October 2026: three readers (the settings; the code, scripts and tests; the compose files) and two files (.env.example, docs/deployment/production.env.example), the other direction, the empty-value trap — all but w1-0's ILE_QA_PASSWORD exception and its guard",
           "source": "V5.9 §5; steward assignment (devops merge, 12 Oct 2026)"
+        },
+        {
+          "glob": "apps/core/storage.py",
+          "source": "steward assignment (devops-2 merge, 16 Oct 2026): the storage collectstatic writes the static files with — WhiteNoise's compressed manifest storage, the imports of the ES modules of static/js/dist rewritten to the hashed names (MODULES), so that every file a page loads is a hashed, immutable name (lane notes, second pass, item 1; REVIEW_2 m3, m6); held by tests/deployment/test_static_caching.py"
+        },
+        {
+          "glob": "apps/cms/middleware.py",
+          "slice": "NulByteMiddleware (the path, the query string and the session cookie in __call__; a POST's form in process_view, never for a csrf_exempt view; a body Django will not parse left to the next reader; the 400 through the URLconf's handler400), the constants NUL and UNPARSABLE and their imports, lookup_redirect's NUL lines (the second layer), the module docstring's last paragraph",
+          "source": "steward assignment (devops-2 merge, 16 Oct 2026): gate 2's N-4, carried by gates 3–4 as N-G — a NUL byte in the path, the query string, a form field or the session cookie answered with the project's 400 page, never a 500 and a traceback (lane notes, second pass, item 2; REVIEW_2 M1, m1); held by tests/deployment/test_nul_bytes.py",
+          "note": "LegacyURLMiddleware, the rest of the file, stays as it was: a file no family held before"
+        },
+        {
+          "glob": "conftest.py",
+          "slice": "the module docstring's live-server paragraph and the import of tests.live_server's live_server fixture and pytest_terminal_summary hook",
+          "source": "steward assignment (devops-2 merge, 16 Oct 2026): the browser tests' live server on a port Chromium accepts, for tests/ and every apps/*/tests (lane notes, second pass, item 4)",
+          "note": "the language reset, the rest of the file, stays as it was: a file no family held before"
+        },
+        {
+          "glob": "tests/live_server.py",
+          "source": "steward assignment (devops-2 merge, 16 Oct 2026): the browser tests' live server — pytest-django's fixture on a port drawn from 20000–32767 and bound, never one of the seventeen Chromium refuses (the W3-A run's 4045, net::ERR_UNSAFE_PORT), and bind_a_port_chromium_accepts for a server a test builds itself (lane notes, second pass, item 4; REVIEW_2 m4)"
+        },
+        {
+          "glob": "tests/test_live_server.py",
+          "source": "steward assignment (devops-2 merge, 16 Oct 2026): tests/live_server.py's tests — the draws in range and clear of Chromium's refusals, a taken or reserved port skipped, never a shared port, a named port honoured, the summary line, Chromium on a drawn port (lane notes, second pass, item 4; REVIEW_2 m4)"
+        },
+        {
+          "glob": "tests/frontend/test_design_preview.py",
+          "slice": "test_a_nul_byte_never_reaches_the_landing and the \"/fr/\\x00\" case it replaces in test_the_landing_never_frames_what_is_not_a_page_of_this_site; _runserver's server built through tests.live_server.bind_a_port_chromium_accepts (allow_reuse_address=False) instead of port 0, and its comment",
+          "source": "steward assignment (devops-2 merge, 16 Oct 2026): the NUL guard's 400 answers before the landing reads its page (lane notes, «Second pass — review fixes», found on the way); REVIEW_2 m4's last step, the design preview's own server on a port Chromium accepts, placed by the steward at the merge; the file stays w1-p's"
         }
       ]
     },
@@ -3801,6 +3986,85 @@
           "glob": "apps/pages/tests/test_templates_static.py",
           "slice": "test_stylesheet_uses_tokens_and_logical_properties_only: the home's sheet may import local `_` partials (written in the collected tree, found by the static finders), the tokens, logical-properties, no-URL, no-!important and wording checks run on each of them too, and the bundle the home links (css/dist/pages/css/pages.css) carries no @import",
           "source": "steward assignment (intfix merge, 16 Oct 2026): NOTES, second pass, item 3 (34c5471) — 3093261's @import ban moved onto the bundle the home links; beside w1-b's and w2-d's slices"
+        }
+      ]
+    },
+    "sec-f7": {
+      "title": "Security fix F-7: who may move a case file — the lifecycle's «Chi può» column enforced by the domain; the dashboard of a held file",
+      "wave": 0,
+      "plan": "the finding F-7 of W3-D's review (confirmed by the orchestrator on design-v5 fec37d3) — docs/platform/CASE_LIFECYCLE.md §4, the «Chi può» column and its rule 2 — and the same review's second item, W3-B's person dashboard telling a person whose file is suspended or closed «pas encore de dossier»; a security and domain-integrity fix under the owner's directives V5.5 and V5.9, not a workflow of plan §3",
+      "branch": "v54-sec-f7",
+      "worktree": "C:/tmp/ile_wt/v54-sec-f7",
+      "after": [],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the sec-f7 merge, 16 October 2026: a family outside plan §3's waves (wave 0, as devops, sec-f5 and intfix), launched for F-7 — a person could move their own file ORIENTED → ADMIN_PROCESS, ADMIN_PROCESS → PRE_DEPARTURE, PRE_DEPARTURE → ENTERED and TRAINING → SELECTION, because the domain checked the declared graph and the object policy but never WHO may make each move. It stays in the cases domain (the column as data and its enforcement, the back office's screens of a file and of an assignment), the selection service's two moves, the audit helper's system keyword, the person dashboard's presenter for a held file (one template condition), one paragraph of CASE_LIFECYCLE.md and of DS 2026 §11.7, and their tests; no CSS or JS. Whole files: what it created; slices: what it changed in files that were nobody's or another family's. No merge tag: V5.9's release tags mark the whole product after final QA (§14), not a family.",
+      "owns": [
+        {
+          "glob": "apps/cases/tests/test_transition_actors.py",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): F-7's tests — the reproductions (failing on fec37d3), §4's table read from the document against the data, every role in every state (what the case page offers = what transition accepts = the column), the authorised actor's path, the platform's path, audit and notifications unchanged, read-only CLOSED, CR-03, the back office (lane notes §7; REVIEW findings 1, 2, 3, 5, 6 and the CR-03 observation)"
+        },
+        {
+          "glob": "apps/portal/tests/test_held_file.py",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): the held file's tests — both held states in fr and ar (presenter and page), the precedence of an active file, the empty state kept for a person with no file, the overdue date kept in its list, another person's file never drawn, the reassessment unchanged, the closed file's own page (lane notes §4, §7)"
+        },
+        {
+          "glob": "apps/selection/tests/test_selection_exits.py",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): a selection whose authorised actor's assignment ended can still be concluded without a referral, the referral refused whole, nobody else on the way back, the administrator's way out (REVIEW finding 4)"
+        },
+        {
+          "glob": "docs/design-v5/QA/v54/sec-f7/**",
+          "source": "§5.1 step 1 (a family's reports: the lane's notes and the independent review); steward assignment (sec-f7 merge, 16 Oct 2026)"
+        },
+        {
+          "glob": "apps/cases/models.py",
+          "slice": "the «Chi può» column as data (F-7): the module docstring's invariant 1; TransitionActor, TRANSITION_ACTORS, SUSPEND_ACTORS, CLOSE_ACTORS, CLOSE_ACTORS_FROM, RESUME_ACTORS, BEYOND_SECTION_4 and transition_actors; CaseFile.has_valid_authorised_actor counting AUTHORISED_ACTOR assignments only (CR-03)",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): no family held these parts of the file; lane notes §2.1; REVIEW finding 1 and the CR-03 observation; beside w3-c's slice «ChecklistItem.is_overdue»"
+        },
+        {
+          "glob": "apps/cases/services.py",
+          "slice": "who may move a file (F-7): TransitionNotPermitted; transition's checks on the file's locked row (select_for_update(no_key=True), as_authorised_actor, the actor's permitted moves, _MOVED_FIELDS and _sync_moved_fields, the platform's move recorded as nobody's) and _refusal; the section «Who may move a file»: _CHANGE_CAPACITIES, _capacities, suspended_by, permitted_transitions, _authorised_actor_transitions; transitions_available computed from permitted_transitions, in the lifecycle's order; next_action's read-only guard (a closed file names no next action)",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): lane notes §2.2–§2.4 and §4; REVIEW findings 1, 3, 4, 5 and 6; beside w3-b's slice «T1, the unified next_action» (the guard stands at its head) and w3-d's «the SELECTION mapping in journey_for»"
+        },
+        {
+          "glob": "apps/cases/admin.py",
+          "slice": "the back office hands out no capacity (F-7): the module docstring's third paragraph; ASSIGNMENT_FIELDS; AssignmentInline shown, never edited (no add, change or delete); CaseFileAdmin's person and suspension_reason read-only and no add form; CaseAssignmentAdmin granting through services.assign and ending through services.revoke_assignment (fields, get_readonly_fields, has_change_permission, save_model)",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): no family held the file; REVIEW finding 2 (the lane notes' Q10)"
+        },
+        {
+          "glob": "apps/audit/services.py",
+          "slice": "record()'s system keyword and its docstring: an act of the platform inside somebody's request is recorded with no actor and labelled «system», the request's trace kept",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): no family held the file; REVIEW finding 6"
+        },
+        {
+          "glob": "apps/cases/tests/test_views.py",
+          "slice": "test_every_transition_is_audited: the owner's suspension audited (actor, from, to, reason) in place of a DRAFT → ORIENTED that §4 gives the system alone",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): no family held the file; lane notes §7"
+        },
+        {
+          "glob": "apps/portal/services.py",
+          "slice": "the held file (sec-f7): held_case; NOW_SUSPENDED, NOW_CLOSED and _held_now; now_panel's held branch and its docstring's sentence; dashboard_context's held file (active_case or held_case: no next action, no takeover, the journey from the trail through cases.presenters.journey_with_dates)",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): lane notes §4; beside w3-b's slice «the dashboard presenters, F9 included»"
+        },
+        {
+          "glob": "apps/selection/services.py",
+          "slice": "open_process's and conclude's moves of the file in the authorised actor's capacity (as_authorised_actor=True); conclude moves the file before it revokes the mandate's assignment",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): lane notes §2.3; beside w3-a's slice"
+        },
+        {
+          "glob": "templates/portal/dashboard.html",
+          "slice": "the «Dossier» section's suspension notice: drawn unless the NowPanel draws the reason (now.variant != \"suspended\"), and the one-line comment above it",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): lane notes §4 (the fix's one template change); the file stays w3-b's"
+        },
+        {
+          "glob": "docs/platform/CASE_LIFECYCLE.md",
+          "slice": "§4's paragraph after the rules: where the «Chi può» column is declared and enforced, the administrator only where the table names it, the departures listed in BEYOND_SECTION_4",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): no family held the file; REVIEW finding 1"
+        },
+        {
+          "glob": "docs/design/DESIGN_SYSTEM_2026.md",
+          "slice": "§11.7's NowPanel paragraph: «sei varianti» and the two held variants («Dossier suspendu», «Parcours clôturé»)",
+          "source": "steward assignment (sec-f7 merge, 16 Oct 2026): the lane notes' hand-over (§9), written by the steward at the merge; beside w3-b's slice «§11.7»"
         }
       ]
     }

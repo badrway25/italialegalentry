@@ -1,9 +1,23 @@
-{% extends "helpdesk/base_helpdesk.html" %}{% load i18n %}
+{% extends "helpdesk/base_helpdesk.html" %}{% load i18n static %}
 {% comment %}
-ONE REQUEST.
+ONE REQUEST — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §3.1 item 7; W3-E step 2), in the register's
+grammar (apps/portal/static/portal/v5/_registers.css).
 
 The page answers, in this order, the questions the client made acceptance criteria: where does this
 stand, what happens next, who is answerable, what has been said and when.
+
+  the head          the request's subject in its own direction, its state as a chip and since when
+  1 · the state     what happens next, in the module's words, and whether it depends on the person; the request's
+                    facts (its reference in ILE Mono — said once —, when it was opened, where it came from, its file)
+  2 · the party     who answers for it: the appointed professional's function under the actor's glyph, the mandate's
+                    object and its end — an ended mandate stays on the page, said by its word and the nullo chip
+  3 · the exchange  the turns, each headed by a FUNCTION (its actor's glyph: the person, the professional, the
+                    project's mark), a date and its kind; a professional's own note on the area's ground, with its word
+  4 · the acts      one form an act, each with its title and its sentence (W1-C's fields); closing, which does not
+                    come back, is one act on the page that opens the overlay system's alert dialog — the consequence
+                    said, the reason inside, «Annuler» the safe answer (the family's one grammar for it, as the case
+                    file's closure: the review's M4)
+  the clause
 
 Two absences are deliberate and are the design:
 
@@ -16,162 +30,163 @@ And one absence is the point of the whole module: there is no box that answers y
 the exchange below was typed by a human being who is answerable for it.
 {% endcomment %}
 {% block page_title %}{{ ticket.subject }}{% endblock %}
+{% comment %}The overlay system's page-only panels where the closure's dialog is drawn (W2-A, CONTRACT §1; the owner's V5.8).{% endcomment %}
+{% block extra_head %}{{ block.super }}{% if may_write %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Une demande adressée au guichet numérique, son état et son échange." %}{% endblock %}
 
 {% block portal_header %}
-{% include "components/page_header.html" with title=ticket.subject %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" dir="auto">{{ ticket.subject }}</h1>
+    <p class="reg-head__meta">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}<span>{% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span></p>
+  </div>
+</header>
 {% endblock %}
 
 {% block portal_content %}
-{% comment %} WHERE THIS STANDS — a word, a rule, and the sentence that follows from it. {% endcomment %}
-<section class="desk-state desk-state--{{ ticket.state_tone }}" aria-labelledby="desk-state-title">
-  <p class="t-folio">{% translate "État de la demande" %}</p>
-  <h2 class="desk-state__word" id="desk-state-title">{{ ticket.effective_status_display }}</h2>
-  <p class="desk-state__next">{{ next_step }}</p>
-  {% if not waits_on_person and ticket.is_open %}
-  <span class="desk-state__actor">{% translate "Cette étape ne dépend pas de vous" %}</span>
-  {% endif %}
-</section>
+<div class="reg-page">
+  {% comment %} 1 · WHERE THIS STANDS — what follows, and whether it waits on the person; then the request's facts. {% endcomment %}
+  <section class="reg-sec" aria-labelledby="desk-state-title">
+    <h2 class="db-h2 reg-sec__title" id="desk-state-title"><span>{% translate "État de la demande" %}</span></h2>
+    <p class="reg-prose">{{ next_step }}</p>
+    {% if not waits_on_person and ticket.is_open %}
+    <p class="db-line">{% translate "Cette étape ne dépend pas de vous" %}</p>
+    {% endif %}
+    <dl class="portal-facts desk-facts">
+      <div class="portal-facts__row">
+        <dt>{% translate "Référence" %}</dt>
+        <dd><span class="reg-ref">{{ ticket.reference }}</span></dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Ouverte le" %}</dt>
+        <dd><time datetime="{{ ticket.created_at|date:'c' }}">{{ ticket.created_at|date:"d.m.Y" }}</time></dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Origine" %}</dt>
+        <dd>{{ ticket.get_origin_display }}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Dossier concerné" %}</dt>
+        {% comment %} A dash for a null, never an empty cell. {% endcomment %}
+        <dd>{% if ticket.case %}<span class="reg-ref">{{ ticket.case.reference }}</span> — {{ ticket.case.get_purpose_display }}{% else %}—{% endif %}</dd>
+      </div>
+    </dl>
+  </section>
 
-<dl class="portal-facts">
-  <div class="portal-facts__row">
-    <dt>{% translate "Référence" %}</dt>
-    <dd class="t-ref">{{ ticket.reference }}</dd>
-  </div>
-  <div class="portal-facts__row">
-    <dt>{% translate "Ouverte le" %}</dt>
-    <dd><time datetime="{{ ticket.created_at|date:'c' }}">{{ ticket.created_at|date:"d.m.Y" }}</time></dd>
-  </div>
-  <div class="portal-facts__row">
-    <dt>{% translate "Origine" %}</dt>
-    <dd>{{ ticket.get_origin_display }}</dd>
-  </div>
-  <div class="portal-facts__row">
-    <dt>{% translate "Dossier concerné" %}</dt>
-    {% comment %} A dash for a null, never an empty cell. {% endcomment %}
-    <dd>{% if ticket.case %}<span class="t-ref">{{ ticket.case.reference }}</span> — {{ ticket.case.get_purpose_display }}{% else %}—{% endif %}</dd>
-  </div>
-  <div class="portal-facts__row">
-    <dt>{% translate "Dans cet état depuis" %}</dt>
-    <dd><time datetime="{{ ticket.status_since|date:'c' }}">{{ ticket.status_since|date:"d.m.Y" }}</time></dd>
-  </div>
-</dl>
-
-{% if ticket.assignee_role_label %}
-{% comment %}
-WHO IS ANSWERABLE. A function, a mandate and a validity — the same triplet the case file uses for an
-authorised actor, for the same reason: an assignment without a stated mandate and a date is a claim.
-{% endcomment %}
-<dl class="desk-mandate">
-  <dt>{% translate "Professionnel désigné" %}</dt>
-  <dd>{{ ticket.assignee_role_label }}</dd>
-  <dt>{% translate "Objet du mandat" %}</dt>
-  <dd>{{ ticket.mandate_note|default:"—" }}</dd>
-  <dt>{% translate "Mandat valable jusqu’au" %}</dt>
-  <dd>{% if ticket.mandate_valid_until %}<time datetime="{{ ticket.mandate_valid_until|date:'Y-m-d' }}">{{ ticket.mandate_valid_until|date:"d.m.Y" }}</time>{% else %}—{% endif %}</dd>
+  {% if ticket.assignee_role_label %}
   {% comment %}
+  2 · WHO IS ANSWERABLE. A function, a mandate and a validity — the same triplet the case file uses for an
+  authorised actor, for the same reason: an assignment without a stated mandate and a date is a claim.
   A mandate that has ended stays on the page — it is the record of who was answerable, and for how
-  long — but it is never shown as if it still ran. The word carries the fact; the tone only repeats it.
+  long — but it is never shown as if it still ran. The word carries the fact; the chip only repeats it.
   {% endcomment %}
-  {% if not ticket.mandate_is_live %}
-  <dt>{% translate "État du mandat" %}</dt>
-  <dd>{% chip register="nullo" %}{% translate "mandat terminé" %}{% endchip %} — {% translate "ce professionnel n’a plus accès à la demande." %}</dd>
+  <section class="reg-party" aria-labelledby="desk-mandate-title">
+    {% with glyph="professional"|actor_glyph %}<span class="reg-row__seal" aria-hidden="true">{% svg_icon glyph "icon" %}</span>{% endwith %}
+    <div class="reg-party__words">
+      <p class="reg-party__label" id="desk-mandate-title">{% translate "Professionnel désigné" %}</p>
+      <p class="reg-party__name">{{ ticket.assignee_role_label }}</p>
+    </div>
+    <dl class="reg-party__facts">
+      <div class="reg-party__fact"><dt>{% translate "Objet du mandat" %}</dt><dd dir="auto">{{ ticket.mandate_note|default:"—" }}</dd></div>
+      <div class="reg-party__fact"><dt>{% translate "Mandat valable jusqu’au" %}</dt><dd>{% if ticket.mandate_valid_until %}<time datetime="{{ ticket.mandate_valid_until|date:'Y-m-d' }}">{{ ticket.mandate_valid_until|date:"d.m.Y" }}</time>{% else %}—{% endif %}</dd></div>
+      {% if not ticket.mandate_is_live %}
+      <div class="reg-party__fact"><dt>{% translate "État du mandat" %}</dt><dd>{% chip register="nullo" %}{% translate "mandat terminé" %}{% endchip %} {% translate "ce professionnel n’a plus accès à la demande." %}</dd></div>
+      {% endif %}
+    </dl>
+  </section>
   {% endif %}
-</dl>
-{% endif %}
 
-{% comment %} THE EXCHANGE — a sequence of turns, each headed by a function and a date. {% endcomment %}
-<section class="portal-section" aria-labelledby="exchange-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Échange" %}</span></p>
-  <h2 class="portal__section-title" id="exchange-title">{% translate "Ce qui a été écrit, et par quelle fonction" %}</h2>
-  <ol class="sequence">
-    {% for message in exchange %}
-    <li class="sequence__step{% if message.is_internal %} sequence__step--internal{% endif %}">
-      <span class="sequence__marker" aria-hidden="true"></span>
-      <div>
-        <p class="exchange__head">
-          <span class="exchange__role">{{ message.get_author_role_display }}</span>
-          <time class="exchange__date" datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y" }}</time>
+  {% comment %} 3 · THE EXCHANGE — a sequence of turns, each headed by a function and a date. {% endcomment %}
+  <section class="reg-sec" aria-labelledby="exchange-title">
+    <h2 class="db-h2 reg-sec__title" id="exchange-title">{% svg_icon "history" "icon" %}<span>{% translate "Ce qui a été écrit, et par quelle fonction" %}</span></h2>
+    <ol class="reg-turns">
+      {% for message in exchange %}
+      <li class="reg-turn{% if message.is_internal %} reg-turn--internal{% endif %}">
+        <span class="reg-row__seal" aria-hidden="true">{% svg_icon message.author_role|actor_glyph "icon" %}</span>
+        <p class="reg-turn__head">
+          <span class="reg-turn__who">{{ message.get_author_role_display }}</span>
+          <time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y" }}</time>
           <span class="tag">{{ message.get_kind_display }}</span>
           {% if message.is_internal %}<span class="tag">{% translate "note interne" %}</span>{% endif %}
         </p>
-        <p class="exchange__body">{{ message.body|linebreaksbr }}</p>
-      </div>
-    </li>
-    {% endfor %}
-  </ol>
-</section>
+        <p class="reg-turn__body" dir="auto">{{ message.body|linebreaksbr }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
 
-{% if is_person and may_escalate %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:escalate' uuid=ticket.uuid %}">
-  {% csrf_token %}
-  <p class="desk-form__title">{% translate "Demander une vérification professionnelle" %}</p>
-  <p class="desk-state__next">{% translate "À utiliser lorsque votre situation dépasse ce que l’orientation peut établir. Un professionnel devra être désigné : un délai s’ensuit, et aucun résultat n’est promis." %}</p>
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--secondary">{% translate "Demander une vérification professionnelle" %}</button>
-  </div>
-</form>
-{% endif %}
+  {% comment %} 4 · THE ACTS — one form an act, its title and its sentence; the person's, then the professional's. {% endcomment %}
+  {% if is_person and may_escalate %}
+  <form class="form reg-form" method="post" action="{% url 'helpdesk:escalate' uuid=ticket.uuid %}" aria-labelledby="desk-escalate-title">
+    {% csrf_token %}
+    <h2 class="reg-form__title" id="desk-escalate-title">{% translate "Demander une vérification professionnelle" %}</h2>
+    <p class="reg-form__text">{% translate "À utiliser lorsque votre situation dépasse ce que l’orientation peut établir. Un professionnel devra être désigné : un délai s’ensuit, et aucun résultat n’est promis." %}</p>
+    <div class="form__actions">
+      <button type="submit" class="btn btn--secondary">{% translate "Demander une vérification professionnelle" %}</button>
+    </div>
+  </form>
+  {% endif %}
 
+  {% if may_write %}
+  <form class="form reg-form" method="post" action="{% url 'helpdesk:message' uuid=ticket.uuid %}" novalidate aria-labelledby="desk-message-title">
+    {% csrf_token %}
+    <h2 class="reg-form__title" id="desk-message-title">{% if is_assignee %}{% translate "Demander une précision à la personne" %}{% elif ticket.status == "needs_clarification" %}{% translate "Apporter la précision demandée" %}{% else %}{% translate "Ajouter un élément à ma demande" %}{% endif %}</h2>
+    {% include "components/form_field.html" with field=message_form.body %}
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button>
+    </div>
+  </form>
+  {% endif %}
+
+  {% if is_assignee %}
+  {% if may_take %}
+  <form class="form reg-form" method="post" action="{% url 'helpdesk:take' uuid=ticket.uuid %}" aria-labelledby="desk-take-title">
+    {% csrf_token %}
+    <h2 class="reg-form__title" id="desk-take-title">{% translate "Prise en charge" %}</h2>
+    <p class="reg-form__text">{% translate "Marquer la demande comme examinée par vous. La personne voit ce changement d’état." %}</p>
+    <div class="form__actions">
+      <button type="submit" class="btn btn--secondary">{% translate "Je prends la demande en charge" %}</button>
+    </div>
+  </form>
+  {% endif %}
+
+  {% if may_respond %}
+  <form class="form reg-form" method="post" action="{% url 'helpdesk:respond' uuid=ticket.uuid %}" novalidate aria-labelledby="desk-respond-title">
+    {% csrf_token %}
+    <h2 class="reg-form__title" id="desk-respond-title">{% translate "Réponse" %}</h2>
+    {% include "components/form_field.html" with field=response_form.body %}
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">{% translate "Transmettre la réponse" %}</button>
+    </div>
+  </form>
+  {% endif %}
+
+  {% if ticket.is_open %}
+  <form class="form reg-form" method="post" action="{% url 'helpdesk:note' uuid=ticket.uuid %}" novalidate aria-labelledby="desk-note-title">
+    {% csrf_token %}
+    <h2 class="reg-form__title" id="desk-note-title">{% translate "Note professionnelle (non visible par la personne)" %}</h2>
+    {% include "components/form_field.html" with field=note_form.body %}
+    <div class="form__actions">
+      <button type="submit" class="btn btn--secondary">{% translate "Enregistrer la note" %}</button>
+    </div>
+  </form>
+  {% endif %}
+  {% endif %}
+
+  {% if may_write %}
+  <section class="reg-form" aria-labelledby="desk-close-title">
+    <h2 class="reg-form__title" id="desk-close-title" tabindex="-1">{% translate "Clore la demande" %}</h2>
+    <p class="reg-form__text">{% translate "Une demande close n’est pas rouverte : une nouvelle demande est ouverte." %}</p>
+    <p class="reg-acts"><a class="btn btn--secondary" href="#desk-close-dialog" data-overlay-open>{% translate "Clore la demande" %}</a></p>
+  </section>
+  {% endif %}
+</div>
+
+<p class="reg-note">{% translate "Aucune réponse de ce guichet n’est produite par un système automatique, et aucune n’est une décision administrative. Chaque réponse porte la fonction de son auteur et sa date ; le nom de la personne qui répond n’est pas publié." %}</p>
+
+{% comment %} The closure's dialog — laid out once, opened by the act above (static/js/src/overlay.js); without script the link shows it in place {% endcomment %}
 {% if may_write %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:message' uuid=ticket.uuid %}" novalidate>
-  {% csrf_token %}
-  <p class="desk-form__title">{% if is_assignee %}{% translate "Demander une précision à la personne" %}{% elif ticket.status == "needs_clarification" %}{% translate "Apporter la précision demandée" %}{% else %}{% translate "Ajouter un élément à ma demande" %}{% endif %}</p>
-  {% include "components/form_field.html" with field=message_form.body %}
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--primary">{% translate "Enregistrer" %}</button>
-  </div>
-</form>
+{% translate "Clore la demande" as close_title %}
+{% include "components/dialog.html" with id="desk-close-dialog" kind="alert" glyph="history" title=close_title describedby="desk-close-text" body_template="helpdesk/partials/close_dialog.html" actions_template="helpdesk/partials/close_dialog.html" return_id="desk-close-title" %}
 {% endif %}
-
-{% if is_assignee %}
-{% if may_take %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:take' uuid=ticket.uuid %}">
-  {% csrf_token %}
-  <p class="desk-form__title">{% translate "Prise en charge" %}</p>
-  <p class="desk-state__next">{% translate "Marquer la demande comme examinée par vous. La personne voit ce changement d’état." %}</p>
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--secondary">{% translate "Je prends la demande en charge" %}</button>
-  </div>
-</form>
-{% endif %}
-
-{% if may_respond %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:respond' uuid=ticket.uuid %}" novalidate>
-  {% csrf_token %}
-  <p class="desk-form__title">{% translate "Réponse" %}</p>
-  {% include "components/form_field.html" with field=response_form.body %}
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--primary">{% translate "Transmettre la réponse" %}</button>
-  </div>
-</form>
-{% endif %}
-
-{% if ticket.is_open %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:note' uuid=ticket.uuid %}" novalidate>
-  {% csrf_token %}
-  <p class="desk-form__title">{% translate "Note professionnelle (non visible par la personne)" %}</p>
-  {% include "components/form_field.html" with field=note_form.body %}
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--secondary">{% translate "Enregistrer la note" %}</button>
-  </div>
-</form>
-{% endif %}
-{% endif %}
-
-{% if may_write %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:close' uuid=ticket.uuid %}" novalidate>
-  {% csrf_token %}
-  <p class="desk-form__title">{% translate "Clore la demande" %}</p>
-  {% include "components/form_field.html" with field=close_form.reason %}
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--secondary">{% translate "Clore définitivement" %}</button>
-  </div>
-</form>
-{% endif %}
-
-<p class="note">
-  <span class="note__marker" aria-hidden="true">1</span>
-  {% translate "Aucune réponse de ce guichet n’est produite par un système automatique, et aucune n’est une décision administrative. Chaque réponse porte la fonction de son auteur et sa date ; le nom de la personne qui répond n’est pas publié." %}
-</p>
 {% endblock %}

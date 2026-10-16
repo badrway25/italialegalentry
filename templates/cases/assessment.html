@@ -1,27 +1,49 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-One frozen pre-assessment, and the reasoning behind it.
+One frozen pre-assessment, and the reasoning behind it — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7;
+W3-E step 3): the registers' grammar of the console's secondary pages (apps/portal/static/portal/v5/_registers.css,
+the page sheet portal/registers.css) and the dashboard's outcome at the console's scale (v5/_dashboard.css).
 
 This is the page that answers "why was I told this", and it is the difference between an orientation
 and an oracle. It reads the SNAPSHOT, never the current rules: an outcome given in October must still
 explain itself in March, when the rules have moved on without it.
 
 Three things are shown, in this order, because that is the order in which a reader builds trust:
-  1. the outcome itself, in words, never as a decision
-  2. the RULES that produced it, each named and versioned
+  1. the outcome itself, in words, never as a decision — its rules version and date, then the clause
+  2. the RULES that produced it, each named and versioned (the registers' sequence: their order of application,
+     each place in ILE Mono), and the requirements found missing
   3. the SOURCES those rules stand on, numbered, with their precise references
+and then whether the result replays: a section on the page's own ground — never V1's night verso, whose text stood
+at 1.06 : 1 on the case's pre-assessment (W3-F1's finding) —, a divergence said as a warning.
+
+The head: «Pré-évaluation», then the file it belongs to — «Dossier», its reference in ILE Mono, its state — on the
+head's line of facts: the reference is context, not an eyebrow over the title (C-4). The outcome carries the glyph of
+its place on the journey — «La soglia»'s «Pré-évaluation et parcours possibles», the dashboard's and the case file's
+glyph for this section (plan §3.1 item 7: the screen's carrier at rest; the review's minor 10). The case band of the V4 shell
+is not drawn: the head says the file once. V1's folio labels and ordinals left with the redraw.
 
 An empty source list is stated rather than hidden. An outcome that cannot cite anything is still an
 honest outcome; one that quietly shows no sources invites the reader to assume they exist.
+Every word is the catalogue's.
 {% endcomment %}
 {% block page_title %}{% translate "Pré-évaluation" %}{% endblock %}
 {% block meta_description %}{% translate "Le détail de votre pré-évaluation : les règles appliquées et les textes sur lesquels elles reposent." %}{% endblock %}
+{% comment %}The registers' page-only sheet, after the shell's two (W3-E; the owner's V5.8).{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+
+{% block case_header %}{% endblock %}
 
 {% block portal_header %}
-{% include "components/page_header.html" with title=_("Pré-évaluation") eyebrow=case.reference %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Pré-évaluation" %}</h1>
+    <p class="reg-head__meta"><span>{% translate "Dossier" %} <span class="reg-ref">{{ case.reference }}</span></span>{% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block portal_content %}
+<div class="reg-page">
 
 {% if demonstration_ruleset %}
 {% comment %}
@@ -38,109 +60,98 @@ about this result after a real ruleset has replaced the demonstration one.
 {% include "components/notice.html" with kind="error" title=demo_title text=demo_text %}
 {% endif %}
 
-<div class="outcome outcome--{{ assessment.outcome }}">
-  <p class="outcome__kind">{{ assessment.get_outcome_display }}</p>
-  {% if assessment.rationale %}<p class="t-prose">{{ assessment.rationale }}</p>{% endif %}
-</div>
+  {% comment %} 1 · The outcome, in words — never a decision {% endcomment %}
+  <section class="db-assessment reg-sec" aria-label="{% translate 'Pré-évaluation' %}">
+    <div class="outcome outcome--{{ assessment.outcome }}">
+      <p class="outcome__kind reg-outcome">{% with glyph="oriented"|concept:"journey" %}{% svg_icon glyph "icon" %}{% endwith %}<span>{{ assessment.get_outcome_display }}</span></p>
+      {% if assessment.rationale %}<p class="db-assessment__text"><span dir="auto">{{ assessment.rationale }}</span></p>{% endif %}
+    </div>
+    <p class="db-line">
+      <span>{% translate "Jeu de règles" %} <span class="db-ref">v{{ assessment.ruleset_version }}</span></span>
+      <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
+    </p>
+    {% comment %}
+    The mandated designation — « pré-évaluation à caractère informatif » — must appear, but the SENTENCE
+    that carries it in the FAQ is prescribed text (p3.faq.items[2].answer). Retyping a prescribed text
+    lets it drift from the official version and puts it into the translation catalogues, which the
+    Implementation document forbids. So the designation is used and the surrounding wording is this
+    page's own.
+    {% endcomment %}
+    <p class="reg-note">{% blocktranslate %}Ce résultat est une pré-évaluation à caractère informatif. Il n’engage aucune autorité et ne préjuge d’aucune décision : seules les autorités compétentes décident.{% endblocktranslate %}</p>
+  </section>
 
-<p class="note">
-  <span class="t-folio">{% translate "Jeu de règles" %}</span>
-  <span class="t-ref">v{{ assessment.ruleset_version }}</span>
-  <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
-</p>
-
-{% comment %}
-The mandated designation — « pré-évaluation à caractère informatif » — must appear, but the SENTENCE
-that carries it in the FAQ is prescribed text (p3.faq.items[2].answer). Retyping a prescribed text
-lets it drift from the official version and puts it into the translation catalogues, which the
-Implementation document forbids. So the designation is used and the surrounding wording is this
-page's own.
-{% endcomment %}
-<p class="gloss">
-  {% blocktranslate %}Ce résultat est une pré-évaluation à caractère informatif. Il n’engage aucune autorité et ne préjuge d’aucune décision : seules les autorités compétentes décident.{% endblocktranslate %}
-</p>
-
-{# ---- the rules that fired ------------------------------------------------------------- #}
-<section class="portal-section" aria-labelledby="rules-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Règles appliquées" %}</span></p>
-  <h2 class="portal__section-title" id="rules-title">{% translate "Ce qui a produit ce résultat" %}</h2>
-
-  {% if applied_rules %}
-  <ol class="register">
-    {% for rule in applied_rules %}
-    <li class="register__item">
-      <span class="entry">
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <span class="entry__title">{{ rule.message }}</span>
-        <span class="entry__gloss"><span class="t-ref">{{ rule.rule_id }}</span> · v{{ rule.version }}</span>
-      </span>
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Aucune règle juridique en vigueur ne s’applique à ce parcours dans la plateforme. Ce résultat provient du questionnaire seul, qui oriente sans se fonder sur un texte précis." %}</p>
-  {% endif %}
-</section>
-
-{# ---- the requirements found missing ---------------------------------------------------- #}
-{% if missing %}
-<section class="portal-section" aria-labelledby="missing-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Exigences" %}</span></p>
-  <h2 class="portal__section-title" id="missing-title">{% translate "Ce qui manque encore" %}</h2>
-  <ol class="register">
-    {% for row in missing %}
-    <li class="register__item">
-      <span class="entry">
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <span class="entry__title">{{ row.requirement }}</span>
-        <span class="entry__gloss"><span class="t-ref">{{ row.rule_id }}</span></span>
-      </span>
-    </li>
-    {% endfor %}
-  </ol>
-  <p class="gloss">{% translate "Ces exigences figurent dans la liste des pièces de votre dossier, avec la personne ou l’institution responsable de chacune." %}</p>
-</section>
-{% endif %}
-
-{# ---- the sources ----------------------------------------------------------------------- #}
-<section class="portal-section" aria-labelledby="sources-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Fondements" %}</span></p>
-  <h2 class="portal__section-title" id="sources-title">{% translate "Les textes sur lesquels reposent ces règles" %}</h2>
-
-  {% if sources %}
-  <ol class="sources">
-    {% for source in sources %}
-    <li class="sources__item">
-      <span>
-        {% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}{{ source.title }}{% endif %}{% if source.reference %} — {{ source.reference }}{% endif %}
-        {% if source.consulted_on and not demonstration_ruleset %}<span class="sources__consulted">{% blocktranslate with date=source.consulted_on %}consultée le {{ date }}{% endblocktranslate %}</span>{% endif %}
-      </span>
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="note">{% translate "Aucune source n’est rattachée à ce résultat, parce qu’aucune règle en vigueur ne s’y applique. Nous préférons ne rien citer plutôt que citer approximativement." %}</p>
-  {% endif %}
-</section>
-
-{# ---- reproducibility --------------------------------------------------------------------- #}
-{% if reproduction %}
-<section class="portal-section section--verso" aria-labelledby="replay-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Vérification" %}</span></p>
-  <h2 class="portal__section-title" id="replay-title">{% translate "Ce résultat est reproductible" %}</h2>
-  <p class="t-prose">
-    {% if reproduction.matches %}
-      {% blocktranslate %}Le jeu de règles utilisé ce jour-là est conservé avec votre résultat. Réexécuté à l’instant sur vos mêmes réponses, il donne le même résultat : votre pré-évaluation peut être vérifiée, même après une modification des règles.{% endblocktranslate %}
+  {% comment %} 2 · The rules that fired, in their order of application {% endcomment %}
+  <section class="reg-sec" aria-labelledby="rules-title">
+    <h2 class="db-h2 reg-sec__title" id="rules-title"><span>{% translate "Ce qui a produit ce résultat" %}</span></h2>
+    {% if applied_rules %}
+    <ol class="reg-steps">
+      {% for rule in applied_rules %}
+      <li class="reg-step">
+        <div class="reg-step__words">
+          <p class="reg-step__title"><span dir="auto">{{ rule.message }}</span></p>
+          <p class="reg-step__meta"><span class="reg-ref">{{ rule.rule_id }}</span><span>v{{ rule.version }}</span></p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
     {% else %}
-      {% comment %}
-      Shown, not hidden. A divergence means the recorded outcome and the frozen ruleset disagree,
-      which is a defect the person is entitled to know about before acting on the result.
-      {% endcomment %}
-      {% blocktranslate %}La réexécution du jeu de règles conservé ne redonne pas le résultat enregistré. Cet écart est signalé à l’équipe du projet ; ne vous fondez pas sur ce résultat sans nous contacter.{% endblocktranslate %}
+    <p class="db-empty">{% translate "Aucune règle juridique en vigueur ne s’applique à ce parcours dans la plateforme. Ce résultat provient du questionnaire seul, qui oriente sans se fonder sur un texte précis." %}</p>
     {% endif %}
-  </p>
-</section>
-{% endif %}
+  </section>
 
-<p class="gloss"><a href="{% url 'cases:detail' case.reference %}">{% translate "Retour au dossier" %}</a></p>
+  {% if missing %}
+  <section class="reg-sec" aria-labelledby="missing-title">
+    <h2 class="db-h2 reg-sec__title" id="missing-title"><span>{% translate "Ce qui manque encore" %}</span></h2>
+    <ul class="reg-steps reg-steps--log">
+      {% for row in missing %}
+      <li class="reg-step">
+        <div class="reg-step__words">
+          <p class="reg-step__title"><span dir="auto">{{ row.requirement }}</span></p>
+          {% if row.rule_id %}<p class="reg-step__meta"><span class="reg-ref">{{ row.rule_id }}</span></p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="reg-note">{% translate "Ces exigences figurent dans la liste des pièces de votre dossier, avec la personne ou l’institution responsable de chacune." %}</p>
+  </section>
+  {% endif %}
+
+  {% comment %} 3 · The sources {% endcomment %}
+  <section class="reg-sec" aria-labelledby="sources-title">
+    <h2 class="db-h2 reg-sec__title" id="sources-title"><span>{% translate "Les textes sur lesquels reposent ces règles" %}</span></h2>
+    {% if sources %}
+    <ol class="sources">
+      {% for source in sources %}
+      <li class="sources__item">
+        <span>
+          {% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}{{ source.title }}{% endif %}{% if source.reference %} — {{ source.reference }}{% endif %}
+          {% if source.consulted_on and not demonstration_ruleset %}<span class="sources__consulted">{% blocktranslate with date=source.consulted_on %}consultée le {{ date }}{% endblocktranslate %}</span>{% endif %}
+        </span>
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune source n’est rattachée à ce résultat, parce qu’aucune règle en vigueur ne s’y applique. Nous préférons ne rien citer plutôt que citer approximativement." %}</p>
+    {% endif %}
+  </section>
+
+  {% comment %} Reproducibility: on the page's own ground, a divergence said as a warning {% endcomment %}
+  {% if reproduction %}
+  <section class="reg-sec" aria-labelledby="replay-title">
+    <h2 class="db-h2 reg-sec__title" id="replay-title"><span>{% translate "Ce résultat est reproductible" %}</span></h2>
+    {% if reproduction.matches %}
+    <p class="db-assessment__text">{% blocktranslate %}Le jeu de règles utilisé ce jour-là est conservé avec votre résultat. Réexécuté à l’instant sur vos mêmes réponses, il donne le même résultat : votre pré-évaluation peut être vérifiée, même après une modification des règles.{% endblocktranslate %}</p>
+    {% else %}
+    {% comment %}
+    Shown, not hidden. A divergence means the recorded outcome and the frozen ruleset disagree,
+    which is a defect the person is entitled to know about before acting on the result.
+    {% endcomment %}
+    {% blocktranslate asvar divergence %}La réexécution du jeu de règles conservé ne redonne pas le résultat enregistré. Cet écart est signalé à l’équipe du projet ; ne vous fondez pas sur ce résultat sans nous contacter.{% endblocktranslate %}
+    {% include "components/notice.html" with kind="warning" text=divergence %}
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <p class="reg-acts"><a class="db-link" href="{% url 'cases:detail' case.reference %}">{% translate "Retour au dossier" %}{% svg_icon "chevron-end" "icon" %}</a></p>
+</div>
 {% endblock %}

@@ -297,11 +297,25 @@ html[data-input="key"] :is(.opt, .opt__mark .icon) {
   margin-inline-start: 0;
 }
 
-/* on a phone the one act takes the row: «Continuer» (or, on the last question, the submit) at full width; the
-   position and «Précédent» keep their own line above it */
-@media (max-width: 47.999rem) {
-  .wiz__foot > .btn--primary:not([hidden]) {
-    flex: 1 1 100%;
+/* the page's one act and the save beside it, at the foot's end (W3-E: templates/portal/situation.html) */
+.wiz__act {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+}
+
+/* below 64rem the act is the phone's action bar (`data-console-action`, apps/portal/static/portal/v5/_shell.css: the
+   bottom bar's place, «Menu» kept): «Continuer» across the bar while stepping, the submit on the last question; the
+   position and «Précédent» stay in the page's foot. Two acts do not hold beside «Menu» — the save on the way waits for
+   the last question, which the Stepper reaches in one press */
+@media (max-width: 63.999rem) {
+  .wiz__act > .btn--secondary {
+    display: none;
+  }
+
+  .wiz__act > .btn:not([hidden]) {
+    flex: 1 1 auto;
   }
 }
 

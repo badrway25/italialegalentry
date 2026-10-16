@@ -1,26 +1,34 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-«Mon parcours» — where the person stands, then the account's saved orientation results.
+«MON PARCOURS» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 items 6 and 7; W3-D places the journey, W3-E draws
+the page): where the person stands, then the account's saved orientation results.
 
 The journey first, when the person has a file: «La soglia», the dashboard's own component and words
 (components/journey_rail.html with portal.services.journey_for(active_case) and the label «Où j’en suis»; W3-D,
 V5.4 plan §3.5 item 6) — the rail's «Mon parcours» entry wears the journey's glyph, and the page answers it. No file,
 no journey: the pre-assessments alone, as before.
 
-Then the saved orientation results (portal.services.pathway_sessions). Every result is an
-INFORMATIONAL pre-assessment: ruleset version, date, outcome and checklist are shown exactly as
-frozen by the orientation app. CONTENT_PENDING_LEGAL_REVIEW: outcome explanations and checklist
-items belong to the orientation rule set and stay under its review workflow — nothing is added here.
+Then the register's grammar: the band — how many pre-assessments the account holds, in the bridge's own words —, the
+notice of what a pre-assessment is worth, said once, then each saved result as a record on its hairline: its title (the
+outcome's, in its own language), its facts on W1-C's metadata row (date, rules version, state, the reference in ILE
+Mono — said once: a questionnaire still open is titled by it), the informational next steps, the locked disclaimer
+with its version, the way to the whole result. Every result
+is an INFORMATIONAL pre-assessment: ruleset version, date, outcome and checklist are shown exactly as frozen by the
+orientation app (portal.services.pathway_sessions). CONTENT_PENDING_LEGAL_REVIEW: outcome explanations and checklist items
+belong to the orientation rule set and stay under its review workflow — nothing is added here.
 {% endcomment %}
 {% block page_title %}{% translate "Mon parcours" %}{% endblock %}
 {% block meta_description %}{% translate "Vos pré-évaluations d’orientation enregistrées, à caractère informatif." %}{% endblock %}
-{% comment %}The journey's page-only sheet (W3-D; the owner's V5.8: never in the shared bundles), after the shell's two, where a journey is drawn.{% endcomment %}
-{% block extra_head %}{{ block.super }}{% if journey %}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endif %}{% endblock %}
+{% comment %}The page-only sheets after the shell's two (the owner's V5.8: never in the shared bundles): the registers' (W3-E), then the journey's where a journey is drawn — last (W3-D).{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">
+{% if journey %}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endif %}{% endblock %}
 {% block portal_header %}
-{% translate "Mon parcours" as header_title %}
-{% translate "Les pré-évaluations d’orientation enregistrées dans votre compte." as header_lead %}
-{% translate "Espace réservé" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mon parcours" %}</h1>
+    <p class="ws-head__lead">{% translate "Les pré-évaluations d’orientation enregistrées dans votre compte." %}</p>
+  </div>
+</header>
 {% endblock %}
 {% block portal_content %}
 {% if journey %}
@@ -29,53 +37,60 @@ items belong to the orientation rule set and stay under its review workflow — 
   {% include "components/journey_rail.html" with steps=journey label=journey_label %}
 </div>
 {% endif %}
-<div class="notice notice--info" role="note" data-result-kind="informational">
-  {% svg_icon "info" "icon notice__icon" %}
-  <p class="notice__title"><strong>{% translate "Pré-évaluation à caractère informatif" %}</strong></p>
-  <div class="notice__body"><p>{% translate "Ce résultat est une orientation fondée uniquement sur vos réponses. Il ne constitue pas une décision : chaque décision appartient exclusivement aux autorités compétentes." %}</p></div>
-</div>
+<div class="reg-page">
+{% if page_obj.results_count %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count"><span class="reg-band__n">{{ page_obj.results_count }}</span> {% blocktranslate count n=page_obj.results_count %}pré-évaluation enregistrée{% plural %}pré-évaluations enregistrées{% endblocktranslate %}</p>
+  </div>
+{% endif %}
+
+  <div class="notice notice--info" role="note" data-result-kind="informational">
+    {% svg_icon "info" "icon notice__icon" %}
+    <p class="notice__title"><strong>{% translate "Pré-évaluation à caractère informatif" %}</strong></p>
+    <div class="notice__body"><p>{% translate "Ce résultat est une orientation fondée uniquement sur vos réponses. Il ne constitue pas une décision : chaque décision appartient exclusivement aux autorités compétentes." %}</p></div>
+  </div>
 
 {% if not available %}
   {% translate "Cette rubrique est momentanément indisponible. Vos données ne sont pas affectées." as unavailable_text %}
   {% include "components/notice.html" with kind="pending" text=unavailable_text %}
 {% elif page_obj.object_list %}
-<div>
-  {% for row in page_obj %}
-  <article class="portal-result" aria-labelledby="result-{{ row.reference }}">
-    {% if row.result %}
-      <h2 class="portal-result__title" id="result-{{ row.reference }}"{% if row.result.lang %} lang="{{ row.result.lang }}"{% endif %}>{{ row.result.title }}</h2>
-    {% else %}
-      <h2 class="portal-result__title" id="result-{{ row.reference }}">{% translate "Questionnaire" %} {{ row.reference }}</h2>
-    {% endif %}
-    <dl class="meta-row">
-      <div class="meta-row__item">{% svg_icon "calendar" "icon" %}<dt>{% translate "Date" %}</dt><dd><time datetime="{{ row.date|date:'c' }}">{{ row.date|date:"d.m.Y" }}</time></dd></div>
-      <div class="meta-row__item">{% svg_icon "history" "icon" %}<dt>{% translate "Version des règles" %}</dt><dd>v{{ row.ruleset_version }}</dd></div>
-      <div class="meta-row__item">{% svg_icon "info" "icon" %}<dt>{% translate "État" %}</dt><dd>{{ row.status_label }}</dd></div>
-      <div class="meta-row__item">{% svg_icon "hash" "icon" %}<dt>{% translate "Référence" %}</dt><dd>{{ row.reference }}</dd></div>
-    </dl>
-    {% if row.result %}
-      {% if row.result.checklist_groups %}
-      <div class="portal-result__checklist">
-        <h3 class="portal__section-title">{% translate "Prochaines étapes à caractère informatif" %}</h3>
-        {% for group in row.result.checklist_groups %}
-        <h4>{{ group.label }}</h4>
-        <ul>
-          {% for entry in group.items %}<li{% if entry.lang %} lang="{{ entry.lang }}"{% endif %}>{{ entry.text }}</li>{% endfor %}
-        </ul>
-        {% endfor %}
-      </div>
+  <div class="reg-results">
+    {% for row in page_obj %}
+    <article class="reg-result" aria-labelledby="result-{{ row.reference }}">
+      {% if row.result %}
+        <h2 class="reg-result__title" id="result-{{ row.reference }}"{% if row.result.lang %} lang="{{ row.result.lang }}"{% endif %}>{{ row.result.title }}</h2>
+      {% else %}
+        <h2 class="reg-result__title" id="result-{{ row.reference }}">{% translate "Questionnaire" %} {{ row.reference }}</h2>
       {% endif %}
-      <aside class="notice notice--info" role="note">
-        {% svg_icon "info" "icon notice__icon" %}
-        <p class="notice__title"><strong>{% translate "Avertissement" %}</strong></p>
-        <div class="notice__body"><p>{% locked row.result.disclaimer_locked_key %}</p>{% if row.disclaimer_version %}<p>{% blocktranslate with version=row.disclaimer_version %}Version de l’avertissement : {{ version }}{% endblocktranslate %}</p>{% endif %}</div>
-      </aside>
-    {% endif %}
-    {% if row.url %}<p class="portal__actions"><a class="link-arrow" href="{{ row.url }}">{% if row.result %}{% translate "Voir la pré-évaluation complète" %}{% else %}{% translate "Reprendre le questionnaire" %}{% endif %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-  </article>
-  {% endfor %}
-</div>
-{% include "components/pagination.html" with page_obj=page_obj %}
+      <dl class="meta-row reg-result__facts">
+        <div class="meta-row__item">{% svg_icon "calendar" "icon" %}<dt>{% translate "Date" %}</dt><dd><time datetime="{{ row.date|date:'c' }}">{{ row.date|date:"d.m.Y" }}</time></dd></div>
+        <div class="meta-row__item">{% svg_icon "history" "icon" %}<dt>{% translate "Version des règles" %}</dt><dd>v{{ row.ruleset_version }}</dd></div>
+        <div class="meta-row__item">{% svg_icon "info" "icon" %}<dt>{% translate "État" %}</dt><dd>{{ row.status_label }}</dd></div>
+        {% if row.result %}<div class="meta-row__item">{% svg_icon "hash" "icon" %}<dt>{% translate "Référence" %}</dt><dd class="reg-ref">{{ row.reference }}</dd></div>{% endif %}
+      </dl>
+      {% if row.result %}
+        {% if row.result.checklist_groups %}
+        <div class="reg-result__steps">
+          <h3 class="reg-result__steps-title">{% translate "Prochaines étapes à caractère informatif" %}</h3>
+          {% for group in row.result.checklist_groups %}
+          <h4 class="reg-result__group">{{ group.label }}</h4>
+          <ul class="reg-result__list">
+            {% for entry in group.items %}<li{% if entry.lang %} lang="{{ entry.lang }}"{% endif %}>{{ entry.text }}</li>{% endfor %}
+          </ul>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <aside class="notice notice--info" role="note">
+          {% svg_icon "info" "icon notice__icon" %}
+          <p class="notice__title"><strong>{% translate "Avertissement" %}</strong></p>
+          <div class="notice__body"><p>{% locked row.result.disclaimer_locked_key %}</p>{% if row.disclaimer_version %}<p>{% blocktranslate with version=row.disclaimer_version %}Version de l’avertissement : {{ version }}{% endblocktranslate %}</p>{% endif %}</div>
+        </aside>
+      {% endif %}
+      {% if row.url %}<p class="reg-result__more"><a class="db-link" href="{{ row.url }}">{% if row.result %}{% translate "Voir la pré-évaluation complète" %}{% else %}{% translate "Reprendre le questionnaire" %}{% endif %}{% svg_icon "chevron-end" "icon" %}</a></p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% include "components/pagination.html" with page_obj=page_obj %}
 {% else %}
   {% translate "Aucune pré-évaluation enregistrée" as empty_title %}
   {% translate "Le questionnaire d’orientation vous indique, à titre informatif, une famille de parcours." as empty_text %}
@@ -84,6 +99,7 @@ items belong to the orientation rule set and stay under its review workflow — 
 {% endif %}
 
 {% if orientation_url and page_obj.object_list %}
-<p class="portal__actions"><a class="btn btn--secondary" href="{{ orientation_url }}">{% svg_icon "compass" "icon" %}{% translate "Recommencer l’orientation" %}</a></p>
+  <p class="reg-acts"><a class="btn btn--secondary" href="{{ orientation_url }}">{% svg_icon "compass" "icon" %}{% translate "Recommencer l’orientation" %}</a></p>
 {% endif %}
+</div>
 {% endblock %}

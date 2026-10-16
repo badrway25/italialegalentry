@@ -1,45 +1,59 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-One submission of the signed-in account (portal.services.get_own_request — 403 for anybody else).
-Shows what the person transmitted and the metadata of THEIR consent; never the internal notes,
-the technical fingerprints or anything about another person.
+ONE REQUEST — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.2; W3-E). One submission of the signed-in
+account (portal.services.get_own_request — 404 for anybody else). Shows what the person transmitted and the metadata of
+THEIR consent; never the internal notes, the technical fingerprints or anything about another person.
+
+The page's head says what the request is — its subject (its own direction), then its kind on the line under it (C-4:
+no eyebrow above the title) —; «Suivi» is W1-C's summary strip of its three facts — the state as a chip whose register
+is the member's (core.chips), the day it was sent, its reference in ILE Mono (said once) —; then what was transmitted
+and the consent, as facts on hairlines, each section under the dashboard's head (`.db-h2`) with its glyph: what
+happened in order, what was sent, the person's consent. The labels are UI strings (current language); only the VALUES are in the
+language of the submission.
 {% endcomment %}
 {% block page_title %}{{ item.title }}{% endblock %}
 {% block meta_description %}{% translate "Détail de votre demande et du consentement associé." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 {% block portal_header %}
-{% include "components/page_header.html" with title=item.title eyebrow=item.kind_label %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" dir="auto">{{ item.title }}</h1>
+    <p class="reg-head__meta">{{ item.kind_label }}</p>
+  </div>
+</header>
 {% endblock %}
 {% block portal_content %}
-<section aria-labelledby="request-status-title">
-  <h2 class="portal__section-title" id="request-status-title">{% translate "Suivi" %}</h2>
-  <dl class="portal-facts">
-    <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% include "components/badge.html" with label=item.status_label kind=item.status_kind %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Transmise le" %}</dt><dd><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y H:i" }}</time></dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Référence" %}</dt><dd>{{ item.kind }}-{{ item.pk }}</dd></div>
-  </dl>
-</section>
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="request-status-title">
+    <h2 class="db-h2 reg-sec__title" id="request-status-title">{% svg_icon "history" "icon" %}<span>{% translate "Suivi" %}</span></h2>
+    <dl class="summary reg-summary">
+      <div class="summary__item"><dt>{% translate "État" %}</dt><dd>{% if item.is_registration %}{% chip item.status "forum.RegistrationStatus" %}{{ item.status_label }}{% endchip %}{% else %}{% chip item.status "enquiries.SubmissionStatus" %}{{ item.status_label }}{% endchip %}{% endif %}</dd></div>
+      <div class="summary__item"><dt>{% translate "Transmise le" %}</dt><dd><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y H:i" }}</time></dd></div>
+      <div class="summary__item"><dt>{% translate "Référence" %}</dt><dd class="reg-ref">{{ item.reference }}</dd></div>
+    </dl>
+  </section>
 
-<section aria-labelledby="request-data-title">
-  <h2 class="portal__section-title" id="request-data-title">{% translate "Données transmises" %}</h2>
-  {% comment %}The labels are UI strings (current language); only the VALUES are in the language of the submission.{% endcomment %}
-  <dl class="portal-facts">
-    {% for label, value in rows %}
-    <div class="portal-facts__row"><dt>{{ label }}</dt><dd dir="auto"{% if language %} lang="{{ language }}"{% endif %}>{{ value }}</dd></div>
-    {% endfor %}
-  </dl>
-</section>
+  <section class="reg-sec" aria-labelledby="request-data-title">
+    <h2 class="db-h2 reg-sec__title" id="request-data-title">{% svg_icon "send" "icon" %}<span>{% translate "Données transmises" %}</span></h2>
+    <dl class="portal-facts">
+      {% for label, value in rows %}
+      <div class="portal-facts__row"><dt>{{ label }}</dt><dd dir="auto"{% if language %} lang="{{ language }}"{% endif %}>{{ value }}</dd></div>
+      {% endfor %}
+    </dl>
+  </section>
 
 {% if consent %}
-<section aria-labelledby="request-consent-title">
-  <h2 class="portal__section-title" id="request-consent-title">{% translate "Votre consentement" %}</h2>
-  <dl class="portal-facts">
-    <div class="portal-facts__row"><dt>{% translate "Finalité" %}</dt><dd>{{ consent.purpose }}</dd></div>
-    {% if consent.version %}<div class="portal-facts__row"><dt>{% translate "Version du texte accepté" %}</dt><dd>v{{ consent.version }}</dd></div>{% endif %}
-    {% if consent.given_at %}<div class="portal-facts__row"><dt>{% translate "Donné le" %}</dt><dd><time datetime="{{ consent.given_at|date:'c' }}">{{ consent.given_at|date:"d.m.Y H:i" }}</time></dd></div>{% endif %}
-    {% if consent.withdrawn_at %}<div class="portal-facts__row"><dt>{% translate "Retiré le" %}</dt><dd><time datetime="{{ consent.withdrawn_at|date:'c' }}">{{ consent.withdrawn_at|date:"d.m.Y H:i" }}</time></dd></div>{% endif %}
-  </dl>
-</section>
+  <section class="reg-sec" aria-labelledby="request-consent-title">
+    <h2 class="db-h2 reg-sec__title" id="request-consent-title">{% svg_icon "pen-line" "icon" %}<span>{% translate "Votre consentement" %}</span></h2>
+    <dl class="portal-facts">
+      <div class="portal-facts__row"><dt>{% translate "Finalité" %}</dt><dd>{{ consent.purpose }}</dd></div>
+      {% if consent.version %}<div class="portal-facts__row"><dt>{% translate "Version du texte accepté" %}</dt><dd>v{{ consent.version }}</dd></div>{% endif %}
+      {% if consent.given_at %}<div class="portal-facts__row"><dt>{% translate "Donné le" %}</dt><dd><time datetime="{{ consent.given_at|date:'c' }}">{{ consent.given_at|date:"d.m.Y H:i" }}</time></dd></div>{% endif %}
+      {% if consent.withdrawn_at %}<div class="portal-facts__row"><dt>{% translate "Retiré le" %}</dt><dd><time datetime="{{ consent.withdrawn_at|date:'c' }}">{{ consent.withdrawn_at|date:"d.m.Y H:i" }}</time></dd></div>{% endif %}
+    </dl>
+  </section>
 {% endif %}
 
-<p class="portal__actions"><a class="btn btn--secondary" href="{% url 'portal:requests' %}">{% translate "Retour à mes demandes" %}</a></p>
+  <p class="reg-acts"><a class="btn btn--secondary" href="{% url 'portal:requests' %}">{% translate "Retour à mes demandes" %}</a></p>
+</div>
 {% endblock %}

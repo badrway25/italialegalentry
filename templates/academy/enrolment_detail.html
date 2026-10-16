@@ -1,118 +1,118 @@
 {% extends "academy/base_academy.html" %}{% load i18n %}
 {% comment %}
-One training being followed: the facts, the record of attendance if it is finished, the modules in
-order with the single next one marked, and the two controls (interrupt / resume).
+One training being followed — design V5 (W3-E step 2): the facts, the record of attendance if it is finished, the
+modules in order with the single next one marked, and the two controls (interrupt / resume).
 
 The design decision that matters here: the sequence marks ONE current step — the first module not
-yet attended — and only that step carries a control. A screen with a "mark as attended" button on
-every row invites clicking through the course in ten seconds, which would make the attendance
-record worthless. One step at a time makes the record mean what it says.
+yet attended (`aria-current="step"`: its place in the accent's ink) — and only that step carries a control.
+A screen with a "mark as attended" button on every row invites clicking through the course in ten
+seconds, which would make the attendance record worthless. One step at a time makes the record mean
+what it says.
 
-The attendance record (`.attendance`) is drawn as a short document with its caveat attached, never
-as a badge and never in a colour that could read as an approval (REQ-EDU-05).
+The attendance record is drawn as a short document — its title, its reference in ILE Mono, its facts — with its
+caveat attached, the registers' clause: never a badge, never a seal and never in a colour that could read as an
+approval (REQ-EDU-05).
 {% endcomment %}
 {% block page_title %}{{ course.title }}{% endblock %}
 {% block meta_description %}{% translate "Votre suivi de formation." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Mon suivi" as header_eyebrow %}
-{% include "components/page_header.html" with title=course.title lead=course.summary eyebrow=header_eyebrow lang=course.text_language %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title" lang="{{ course.text_language }}" dir="auto">{{ course.title }}</h1>
+    <p class="ws-head__lead" lang="{{ course.text_language }}" dir="auto">{{ course.summary }}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block academy_content %}
 {% safe_url 'academy:course' course.slug as course_url %}
 {% safe_url 'academy:withdraw' enrolment.uuid as withdraw_url %}
 {% safe_url 'academy:resume' enrolment.uuid as resume_url %}
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="enrolment-facts-title">
+    <h2 class="db-h2 reg-sec__title" id="enrolment-facts-title">{% svg_icon "book-open" "icon" %}<span>{% translate "Où j’en suis dans ce cours" %}</span></h2>
+    <dl class="portal-facts">
+      <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{% blocktranslate with total=progress.total count n=progress.attended %}{{ n }} module sur {{ total }}{% plural %}{{ n }} modules sur {{ total }}{% endblocktranslate %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Inscrit le" %}</dt><dd><time datetime="{{ enrolment.enrolled_at|date:'c' }}">{{ enrolment.enrolled_at|date:"d.m.Y" }}</time></dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Version du programme suivie" %}</dt><dd>v{{ enrolment.course_version }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Fiche du cours" %}</dt><dd>{% if course_url %}<a class="db-link" href="{{ course_url }}">{% translate "Voir le programme complet" %}{% svg_icon "chevron-end" "icon" %}</a>{% else %}—{% endif %}</dd></div>
+    </dl>
+  </section>
 
-<section class="portal-section" aria-labelledby="enrolment-facts-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Suivi" %}</span></p>
-  <h2 class="portal__section-title" id="enrolment-facts-title">{% translate "Où j’en suis dans ce cours" %}</h2>
-  <dl class="portal-facts">
-    <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{% blocktranslate with total=progress.total count n=progress.attended %}{{ n }} module sur {{ total }}{% plural %}{{ n }} modules sur {{ total }}{% endblocktranslate %}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Inscrit le" %}</dt><dd><time datetime="{{ enrolment.enrolled_at|date:'c' }}">{{ enrolment.enrolled_at|date:"d.m.Y" }}</time></dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Version du programme suivie" %}</dt><dd>v{{ enrolment.course_version }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Fiche du cours" %}</dt><dd>{% if course_url %}<a href="{{ course_url }}">{% translate "Voir le programme complet" %}</a>{% else %}—{% endif %}</dd></div>
-  </dl>
-</section>
-
-{% if enrolment.is_completed %}
-<section class="attendance" aria-labelledby="attendance-title">
-  <p class="attendance__head" id="attendance-title">{% translate "Attestation de participation" %}</p>
-  <p class="attendance__reference">{{ enrolment.attendance_reference }}</p>
-  <dl class="portal-facts attendance__facts">
-    <div class="portal-facts__row"><dt>{% translate "Cours suivi" %}</dt><dd>{{ course.title }} (v{{ enrolment.course_version }})</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{{ progress.attended }} / {{ progress.total }}</dd></div>
-    <div class="portal-facts__row"><dt>{% translate "Dernier module suivi le" %}</dt><dd><time datetime="{{ enrolment.completed_at|date:'c' }}">{{ enrolment.completed_at|date:"d.m.Y" }}</time></dd></div>
-  </dl>
-  <p class="note">
-    {% translate "Ce document atteste uniquement la participation aux modules énumérés ci-dessus. Il n’est pas un titre, pas une qualification reconnue par un État, pas une autorisation d’exercer et pas une décision d’une autorité. Aucune démarche administrative n’en découle." %}
-  </p>
-</section>
-{% endif %}
-
-<section class="portal-section" aria-labelledby="enrolment-modules-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Modules" %}</span></p>
-  <h2 class="portal__section-title" id="enrolment-modules-title">{% translate "Le déroulé, module par module" %}</h2>
-  {% if rows %}
-  <ol class="sequence">
-    {% for row in rows %}
-    <li class="sequence__step{% if next_module and row.module.pk == next_module.pk %} sequence__step--current{% endif %}">
-      <span class="sequence__marker" aria-hidden="true"></span>
-      <div>
-        <p class="sequence__title">
-          {{ row.module.title }}
-          {% if row.attended %}{% chip register="conforme" %}{% translate "suivi" %}{% endchip %}{% endif %}
-        </p>
-        {% if row.module.summary %}<p class="sequence__body">{{ row.module.summary }}</p>{% endif %}
-        <span class="sequence__actor">
-          {{ row.module.get_kind_display }} · {% blocktranslate with minutes=row.module.duration_minutes %}{{ minutes }} min{% endblocktranslate %}
-          {% if row.attended_at %} · <time datetime="{{ row.attended_at|date:'c' }}">{{ row.attended_at|date:"d.m.Y" }}</time>{% endif %}
-        </span>
-        {% if not row.attended and can_change and next_module and row.module.pk == next_module.pk and enrolment.status != 'withdrawn' %}
-        {% safe_url 'academy:attend' enrolment.uuid row.module.pk as attend_url %}
-        {% if attend_url %}
-        <form class="module-form" method="post" action="{{ attend_url }}">{% csrf_token %}
-          <button type="submit" class="btn btn--secondary">{% translate "J’ai suivi ce module" %}</button>
-        </form>
-        {% endif %}
-        {% endif %}
-      </div>
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Le programme détaillé de ce cours n’a pas encore été publié par l’organisme." %}</p>
+  {% if enrolment.is_completed %}
+  <section class="reg-sec academy-attendance" aria-labelledby="attendance-title">
+    <h2 class="db-h2 reg-sec__title" id="attendance-title"><span>{% translate "Attestation de participation" %}</span></h2>
+    <p class="academy-attendance__ref">{{ enrolment.attendance_reference }}</p>
+    <dl class="portal-facts">
+      <div class="portal-facts__row"><dt>{% translate "Cours suivi" %}</dt><dd><span lang="{{ course.text_language }}" dir="auto">{{ course.title }}</span> (v{{ enrolment.course_version }})</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{{ progress.attended }} / {{ progress.total }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Dernier module suivi le" %}</dt><dd><time datetime="{{ enrolment.completed_at|date:'c' }}">{{ enrolment.completed_at|date:"d.m.Y" }}</time></dd></div>
+    </dl>
+    <p class="reg-note">{% translate "Ce document atteste uniquement la participation aux modules énumérés ci-dessus. Il n’est pas un titre, pas une qualification reconnue par un État, pas une autorisation d’exercer et pas une décision d’une autorité. Aucune démarche administrative n’en découle." %}</p>
+  </section>
   {% endif %}
-</section>
 
-{% if materials %}
-<section class="portal-section" aria-labelledby="enrolment-materials-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Supports" %}</span></p>
-  <h2 class="portal__section-title" id="enrolment-materials-title">{% translate "Supports de formation" %}</h2>
-  <ol class="sources">
-    {% for material in materials %}
-    <li class="sources__item">{{ material.title }} — {{ material.get_kind_display }}{% if material.source_title %} · {{ material.source_title }}{% endif %}</li>
-    {% endfor %}
-  </ol>
-</section>
-{% endif %}
+  <section class="reg-sec" aria-labelledby="enrolment-modules-title">
+    <h2 class="db-h2 reg-sec__title" id="enrolment-modules-title"><span>{% translate "Le déroulé, module par module" %}</span></h2>
+    {% if rows %}
+    <ol class="reg-steps">
+      {% for row in rows %}
+      <li class="reg-step"{% if next_module and row.module.pk == next_module.pk %} aria-current="step"{% endif %}>
+        <div class="reg-step__words">
+          <p class="reg-step__title"><span dir="auto">{{ row.module.title }}</span>{% if row.attended %}{% chip register="conforme" %}{% translate "suivi" %}{% endchip %}{% endif %}</p>
+          {% if row.module.summary %}<p class="reg-step__text" dir="auto">{{ row.module.summary }}</p>{% endif %}
+          <p class="reg-step__meta"><span>{{ row.module.get_kind_display }}</span><span>{% blocktranslate with minutes=row.module.duration_minutes %}{{ minutes }} min{% endblocktranslate %}</span>{% if row.attended_at %}<span><time datetime="{{ row.attended_at|date:'c' }}">{{ row.attended_at|date:"d.m.Y" }}</time></span>{% endif %}</p>
+          {% if not row.attended and can_change and next_module and row.module.pk == next_module.pk and enrolment.status != 'withdrawn' %}
+          {% safe_url 'academy:attend' enrolment.uuid row.module.pk as attend_url %}
+          {% if attend_url %}
+          <form class="reg-step__act" method="post" action="{{ attend_url }}">{% csrf_token %}
+            <button type="submit" class="btn btn--secondary">{% translate "J’ai suivi ce module" %}</button>
+          </form>
+          {% endif %}
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="db-empty">{% translate "Le programme détaillé de ce cours n’a pas encore été publié par l’organisme." %}</p>
+    {% endif %}
+  </section>
 
-{% if can_change %}
-<div class="academy-inline">
+  {% if materials %}
+  <section class="reg-sec" aria-labelledby="enrolment-materials-title">
+    <h2 class="db-h2 reg-sec__title" id="enrolment-materials-title"><span>{% translate "Supports de formation" %}</span></h2>
+    <ul class="db-list" role="list">
+      {% for material in materials %}
+      <li class="db-list__row">
+        <span class="db-list__title" dir="auto">{{ material.title }}</span>
+        <span class="db-list__meta">{{ material.get_kind_display }}{% if material.source_title %} · {{ material.source_title }}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if can_change %}
   {% if enrolment.status == 'withdrawn' and resume_url %}
-  <form method="post" action="{{ resume_url }}">{% csrf_token %}
-    <button type="submit" class="btn btn--primary">{% translate "Reprendre cette formation" %}</button>
-  </form>
-  <p class="t-caption">{% translate "Les modules déjà suivis sont conservés." %}</p>
+  <div class="reg-acts academy-acts">
+    <form method="post" action="{{ resume_url }}">{% csrf_token %}
+      <button type="submit" class="btn btn--primary">{% translate "Reprendre cette formation" %}</button>
+    </form>
+    <p class="db-line">{% translate "Les modules déjà suivis sont conservés." %}</p>
+  </div>
   {% elif not enrolment.is_completed and withdraw_url %}
-  <form method="post" action="{{ withdraw_url }}">{% csrf_token %}
-    <button type="submit" class="btn btn--secondary">{% translate "Interrompre cette formation" %}</button>
-  </form>
-  <p class="t-caption">{% translate "Interrompre n’efface rien et n’a aucune conséquence sur votre dossier : vous pourrez reprendre plus tard." %}</p>
+  <div class="reg-acts academy-acts">
+    <form method="post" action="{{ withdraw_url }}">{% csrf_token %}
+      <button type="submit" class="btn btn--secondary">{% translate "Interrompre cette formation" %}</button>
+    </form>
+    <p class="db-line">{% translate "Interrompre n’efface rien et n’a aucune conséquence sur votre dossier : vous pourrez reprendre plus tard." %}</p>
+  </div>
+  {% endif %}
   {% endif %}
 </div>
-{% endif %}
 {% endblock %}

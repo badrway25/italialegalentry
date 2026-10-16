@@ -33,6 +33,8 @@
  */
 import { afterPaint } from "./motion.js";
 import { close, isOpen } from "./overlay.js";
+// the case file's row menu opens a line's dialog with the row's «⋮» as its opener (§2f)
+import { open } from "./overlay.js";
 
 const KEY = "ile.rail";
 const WIDE = window.matchMedia("(min-width: 80rem)");
@@ -203,22 +205,23 @@ if (deletion) {
   });
 }
 
-/* 2c. The context bar (design V4 §3.6.1): the case file's header, once scrolled past, becomes a
-      compact glass bar under the console bar — title, chip, action. Shown by a class; the bar is
-      in the markup, hidden to assistive technology (its facts are the header's). */
-const ctx = document.querySelector("[data-ctx]");
-const ctxBar = document.querySelector("[data-ctx-bar]");
-if (ctx && ctxBar && "IntersectionObserver" in window) {
-  new IntersectionObserver(
-    ([entry]) => {
-      const on = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-      ctxBar.classList.toggle("is-on", on);
-      // The sticky heads below (the tables) sit under the bar while it is on.
-      document.body.classList.toggle("has-ctx-bar", on);
-    },
-    { threshold: 0 },
-  ).observe(ctx);
-}
+/* 2f. The case file's row menu (design V5, W3-E; the platform map's C-5): a line's «Nouvel état de cette ligne» — an
+      item of the overlay system's menu, a link to the line's alert dialog (templates/cases/partials/line_menu.html) —
+      opens the dialog with the row's «⋮» as its opener: the menu that held the item is gone when the dialog closes,
+      and the focus comes back to the row. The dialog first: the focus leaves the menu for it, so the menu's close
+      gives the focus back to nobody (closed first, it gave it to «⋮», whose tip opened in the middle of the menu's
+      own close). Without script the item shows the dialog in place. (The V4 case file's compact context bar, §2c,
+      left with its header: the case file has no sticky bar on a desk.) */
+document.addEventListener("click", (event) => {
+  const item = event.target instanceof Element ? event.target.closest("[data-line-state]") : null;
+  const dialog = item ? document.getElementById(item.getAttribute("data-line-state")) : null;
+  if (!dialog) return;
+  event.preventDefault();
+  const menu = item.closest("[popover]");
+  const trigger = menu ? document.querySelector(`[popovertarget="${menu.id}"]`) : null;
+  open(dialog, { opener: trigger || item });
+  if (menu) close(menu, { focus: false });
+});
 
 /* 3. The drawer — a modal drawer of the overlay system (data-overlay="drawer", from the reading edge). «Menu»
       and the drawer's close control are links (`#console-drawer`, `#main-content`): without script they still

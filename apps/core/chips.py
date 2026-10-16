@@ -204,6 +204,36 @@ REGISTER: dict[str, dict[str, str]] = {
         "active": "neutro",
         "closed": "neutro",
     },
+    # The person's own registers in the reserved area (design V5, W3-E; plan §3.5 item 7, §1.2): «Mes demandes» lists
+    # two producers — the enquiries' submissions and the Forum's registrations —, «Mes échéances» one. A date past due
+    # or close by is computed, not a member: the deadlines page says it with a register of its own (azione, attesa).
+    "enquiries.SubmissionStatus": {
+        "new": "neutro",  # received: a fact recorded, nobody judges it
+        "in_progress": "esame",  # the team has it in hand
+        "handled": "conforme",  # handled is a fact about the request, never a verdict on it
+        "archived": "nullo",  # archived: it carries nothing
+    },
+    "forum.RegistrationStatus": {
+        "pending": "esame",  # «Reçue»: the Forum's team confirms it — in somebody's hands
+        "confirmed": "conforme",
+        "cancelled": "nullo",
+        "attended": "conforme",  # an attendance fact
+    },
+    "portal.DeadlineStatus": {
+        "open": "attesa",  # something is due and is not late (late is azione, computed by the page)
+        "done": "conforme",
+        "cancelled": "nullo",  # withdrawn: it carries nothing
+    },
+    # A training plan's state (the Academy, W3-E's fix pass — the review's minor 9: drawn in plain words for want of a
+    # producer). A draft is not yet in force, as a draft file (attesa); a plan in force is a fact, nobody judges it; a
+    # completed one an attendance fact, never a verdict (academy.EnrolmentStatus's reading); an archived one carries
+    # nothing.
+    "academy.PlanStatus": {
+        "draft": "attesa",
+        "active": "neutro",
+        "completed": "conforme",
+        "archived": "nullo",
+    },
     # The stages of a selection process are positions, like the stages of a case file: a stage named
     # «… review» is where the process stands, not a piece in somebody's hands.
     "selection.SelectionStage": {

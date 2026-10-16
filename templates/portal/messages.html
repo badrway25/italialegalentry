@@ -1,44 +1,63 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-Inbox of the signed-in account (portal.services.inbox): staff-authored, read-only. The only action
-is « marquer comme lue » (POST, CSRF-protected, works without JavaScript).
+«COMMUNICATIONS» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.18 D17; platform.md §3; W3-E). The
+inbox of the signed-in account (portal.services.inbox): staff-authored, read-only. The only action is «Marquer comme
+lue» (POST, CSRF-protected, works without JavaScript).
+
+The register's grammar: the page's head, then the BAND — the one counter of the unread event, said once, in the page's
+own sentence (a live region: the page's one) —, then the communications, newest first. A row is the dashboard's row of
+a communication, whole: the project's mark as its sender (core.icons «ile-mark»: «Équipe du projet, as an actor or a
+sender» — every communication here is the team's, as the page's line says, and the mark says it on every row), the
+subject in its own
+direction, the date; an unread one says so three ways and never by colour — an ink dot, the heavier weight, the word
+«Non lue» —, and keeps its one act at the row's end. The whole row is the way to the communication; its act stands
+above that way. No counter on a row: the band holds the count, the rail its entry.
+
+The notification centre (a popover from the top bar, a sheet on phones — plan §3.5 item 3) is not built: it needs a
+view that returns its rows as an asynchronous fragment (W2-A's NOTES, «Handed to»). These rows are the ones it will draw.
 {% endcomment %}
 {% block page_title %}{% translate "Communications" %}{% endblock %}
 {% block meta_description %}{% translate "Les messages que l’équipe du projet vous a adressés." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 {% block portal_header %}
-{% translate "Communications" as header_title %}
-{% translate "Les messages que l’équipe du projet vous a adressés. Vous seul pouvez les lire ici." as header_lead %}
-{% translate "Espace réservé" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Communications" %}</h1>
+    <p class="ws-head__lead">{% translate "Les messages que l’équipe du projet vous a adressés. Vous seul pouvez les lire ici." %}</p>
+  </div>
+</header>
 {% endblock %}
 {% block portal_content %}
+<div class="reg-page">
 {% if page_obj.object_list %}
-<p class="portal__summary" data-unread="{{ unread_count }}">
-  {% if unread_count %}{% blocktranslate count n=unread_count %}{{ n }} communication non lue{% plural %}{{ n }} communications non lues{% endblocktranslate %}{% else %}{% translate "Toutes vos communications sont lues." %}{% endif %}
-</p>
-<ul class="portal-list">
-  {% for message in page_obj %}
-  <li class="portal-list__item{% if not message.is_read %} portal-list__item--unread{% endif %}">
-    <p class="portal-list__title" dir="auto"><a href="{% url 'portal:message_detail' message.pk %}">{{ message.subject }}</a></p>
-    <p class="portal-list__meta"><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time></p>
-    <div class="portal-list__aside">
-      {% if message.is_read %}
-        {% translate "Lue" as read_label %}{% include "components/badge.html" with label=read_label kind="neutral" %}
-      {% else %}
-        {% translate "Non lue" as unread_label %}{% include "components/badge.html" with label=unread_label kind="primary" %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count{% if unread_count %} reg-band__count--unread{% endif %}" role="status" data-unread="{{ unread_count }}">{% if unread_count %}<span class="db-unread" aria-hidden="true"></span>{% blocktranslate count n=unread_count %}{{ n }} communication non lue{% plural %}{{ n }} communications non lues{% endblocktranslate %}{% else %}{% translate "Toutes vos communications sont lues." %}{% endif %}</p>
+  </div>
+
+  <ul class="db-tasks reg-rows reg-rows--mail" role="list" aria-label="{% translate 'Communications' %}">
+    {% for message in page_obj %}
+    <li class="db-task reg-row reg-row--link{% if not message.is_read %} reg-row--unread{% endif %}">
+      <span class="reg-row__seal" aria-hidden="true">{% svg_icon "ile-mark" "icon" %}</span>
+      <div class="db-task__words">
+        <p class="db-task__title"><a class="reg-row__link" href="{% url 'portal:message_detail' message.pk %}" id="message-{{ message.pk }}">{% if not message.is_read %}<span class="db-unread" aria-hidden="true"></span>{% endif %}<span dir="auto">{{ message.subject }}</span></a></p>
+        <p class="db-task__meta reg-row__meta"><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time>{% if not message.is_read %}<span class="db-list__new">{% translate "Non lue" %}</span>{% endif %}</p>
+      </div>
+      <div class="db-task__end reg-row__act">
+        {% if not message.is_read %}
         <form class="portal-list__form" method="post" action="{% url 'portal:message_read' message.pk %}">{% csrf_token %}
           <input type="hidden" name="next" value="list">
           <button class="btn btn--link btn--sm" type="submit" aria-label="{% blocktranslate with subject=message.subject %}Marquer comme lue : {{ subject }}{% endblocktranslate %}">{% translate "Marquer comme lue" %}</button>
         </form>
-      {% endif %}
-    </div>
-  </li>
-  {% endfor %}
-</ul>
-{% include "components/pagination.html" with page_obj=page_obj %}
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% include "components/pagination.html" with page_obj=page_obj %}
 {% else %}
   {% translate "Aucune communication" as empty_title %}
   {% translate "Les messages que l’équipe vous adresse apparaîtront ici." as empty_text %}
   {% include "components/empty_state.html" with title=empty_title text=empty_text icon="mail" %}
 {% endif %}
+</div>
 {% endblock %}

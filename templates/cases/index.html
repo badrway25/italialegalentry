@@ -1,62 +1,68 @@
-{% extends "portal/base_portal.html" %}{% load i18n %}
+{% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-"Mes dossiers" — every case file the caller may read, from ONE queryset.
+«MES DOSSIERS» — every case file the caller may read, from ONE queryset (cases.views.index). Design V5 (docs/design-v5/
+V5_4_EXECUTION_PLAN.md §3.5 item 7; W3-E step 3): the registers' grammar of the console's secondary pages
+(apps/portal/static/portal/v5/_registers.css, the page sheet portal/registers.css).
 
-A person normally sees a single row. A professional or an operator sees the files they hold a live
-mandate for, and their own if they have one. There is deliberately no separate "professional view":
-a second page would mean a second authorisation rule, and the two would eventually disagree.
+A person normally sees a single row. A professional or an operator sees the files they hold a live mandate for, and
+their own if they have one. There is deliberately no separate "professional view": a second page would mean a second
+authorisation rule, and the two would eventually disagree.
 
-The rows are a register, not cards. A case file has an ordinal position in a list, a reference, an
-objective, a state with a date and a responsible actor — every one of those is a fact, and the
-register is the form that shows facts without dressing them up.
+  the head    the workspace head — the title and its line; no eyebrow repeating the level the breadcrumb gives
+  the clause  when a row is not the reader's: the mandate's terms, said once, above the rows
+  the rows    the dashboard's row (`.db-task`) in the registers' columns — the file (its objective, its reference in ILE
+              Mono, whose it is when it is entrusted, its count in words, its late lines in the dates' grammar — the
+              glyph and the words, azione), its state as a chip, the day it reached that state; the whole row the way
+              to the file
+  empty       one line naming how a file comes to exist, and the way to begin
+
+A case file is a fact with an objective, a reference, a state with a date and a responsible actor: no card, no tile,
+no percentage. Every word is the catalogue's.
 {% endcomment %}
 {% block page_title %}{% translate "Mes dossiers" %}{% endblock %}
 {% block meta_description %}{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}{% endblock %}
+{% comment %}The registers' page-only sheet, after the shell's two (W3-E; the owner's V5.8).{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 
 {% block portal_header %}
-{% include "components/page_header.html" with title=_("Mes dossiers") %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mes dossiers" %}</h1>
+    <p class="ws-head__lead">{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block portal_content %}
+<div class="reg-page">
 {% if rows %}
   {% if has_foreign %}
-  <p class="note">
-    {% blocktranslate %}Cette liste contient des dossiers qui ne sont pas les vôtres : ils vous sont confiés par un mandat daté. Chaque consultation est enregistrée.{% endblocktranslate %}
-  </p>
+  <p class="reg-note">{% blocktranslate %}Cette liste contient des dossiers qui ne sont pas les vôtres : ils vous sont confiés par un mandat daté. Chaque consultation est enregistrée.{% endblocktranslate %}</p>
   {% endif %}
 
-  <ol class="register">
+  <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Mes dossiers' %}">
     {% for row in rows %}
-    <li class="register__item">
-      <a class="entry" href="{% url 'cases:detail' row.case.reference %}">
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <span class="entry__title">
-          {{ row.case.get_purpose_display }}
-          <span class="t-ref">{{ row.case.reference }}</span>
-        </span>
-        <span class="entry__gloss">
-          {% if not row.is_own %}{% blocktranslate with name=row.case.person.get_full_name %}Dossier confié — {{ name }}{% endblocktranslate %} · {% endif %}
-          {% blocktranslate with done=row.progress.done total=row.progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}
-          {% if row.progress.overdue %} · {% blocktranslate count n=row.progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}{% endif %}
-        </span>
-        <span class="entry__actor">
-          {% chip row.case.status "cases.CaseStatus" %}{{ row.case.get_status_display }}{% endchip %}
-          <time datetime="{{ row.case.status_since|date:'Y-m-d' }}">{{ row.case.status_since|date:"d.m.Y" }}</time>
-        </span>
-      </a>
+    <li class="db-task reg-row reg-row--link" data-case="{{ row.case.reference }}">
+      <div class="db-task__words">
+        <p class="db-task__title"><a class="reg-row__link" href="{% url 'cases:detail' row.case.reference %}">{{ row.case.get_purpose_display }} <span class="reg-ref">{{ row.case.reference }}</span></a></p>
+        <p class="db-task__meta reg-row__meta">
+          {% if not row.is_own %}<span>{% blocktranslate with name=row.case.person.get_full_name %}Dossier confié — {{ name }}{% endblocktranslate %}</span>{% endif %}
+          <span>{% blocktranslate with done=row.progress.done total=row.progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}</span>
+          {% if row.progress.overdue %}<span class="db-due db-due--overdue">{% svg_icon "alarm-clock" "icon" %}{% blocktranslate count n=row.progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
+        </p>
+      </div>
+      <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.case.status "cases.CaseStatus" %}{{ row.case.get_status_display }}{% endchip %}</div>
+      <div class="db-task__due"><span class="db-due">{% blocktranslate with date=row.case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span></div>
     </li>
     {% endfor %}
-  </ol>
+  </ul>
 {% else %}
-  {% comment %}
-  One hairline and one sentence naming who fills this and when — never a dashed box with an icon.
-  The resolving action is inline, because a person reading "you have no file" needs to know how one
-  comes to exist, not to be told again on another page.
-  {% endcomment %}
-  <p class="empty">
+  {% comment %} One line naming how a file comes to exist — never a dashed box with an icon — and the way to begin. {% endcomment %}
+  <p class="db-empty">
     {% translate "Vous n’avez pas encore de dossier. Il s’en ouvre un lorsque vous terminez le questionnaire d’orientation, et il conserve alors votre résultat, votre liste de pièces et les personnes responsables de chaque étape." %}
     {% url 'orientation:start' as orientation_url %}
     {% if orientation_url %}<a href="{{ orientation_url }}">{% translate "Commencer l’orientation" %}</a>{% endif %}
   </p>
 {% endif %}
+</div>
 {% endblock %}

@@ -14,14 +14,16 @@ Regions, in this order (partials/portal_chrome.html draws the first three):
   2. the CONTEXT BAR — glass, sticky: the level of the page (the breadcrumb)
   3. below 64rem the BOTTOM BAR and the drawer
   4. the WORKSPACE — the page frame, max 1320: ONE page header (portal_header: the title, its line of context
-     and the page's one primary action at the reading end), the case header while inside a case, the ONE next
-     action, then the page's content — all on one start edge, 32 px from the rail (16 px on a phone)
+     and the page's one primary action at the reading end), then the page's content — all on one start edge, 32 px
+     from the rail (16 px on a phone). The V4 case band and the shell's next action left with the case file's
+     redraw (W3-E step 3): a page inside a case says its file in its own head, and the next action is the
+     NowPanel's (the dashboard, the case file); their two blocks stay, empty, for the pages that still name them
 
 Two skip links follow base.html's «Aller au contenu principal»: the rail from 64rem, «Menu» below it — where
 the navigation is the LAST Tab stop of the page (21 to 41 presses, the platform audit's S-2).
 
 Contract (every producer of a console page): `portal_nav` (portal.services.shell_navigation), `breadcrumbs`,
-`noindex`, and optionally `portal_context`, `case`, `next_action`. Blocks: `portal_header`, `portal_content`.
+`noindex`, and optionally `portal_context`. Blocks: `portal_header`, `portal_content`.
 {% endcomment %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/portal/portal.css' %}">
 <link rel="stylesheet" href="{% static 'css/dist/portal/console.css' %}">{% endblock %}
@@ -44,17 +46,8 @@ own file: the CSP allows no inline script): applied after the first frame it mov
 <div class="console__workspace">
 {% block portal_header %}{% endblock %}
 
-{% comment %}
-A page whose panels already carry the file's facts and the next step (the V4 dashboard) empties
-these two blocks; every other page inside a case keeps the header and the one priority.
-{% endcomment %}
-{% block case_header %}{% if case %}
-{% include "portal/partials/case_header.html" with case=case %}
-{% endif %}{% endblock %}
-
-{% block next_action_block %}{% if next_action %}
-{% include "portal/partials/next_action.html" with action=next_action %}
-{% endif %}{% endblock %}
+{% block case_header %}{% endblock %}
+{% block next_action_block %}{% endblock %}
 
 <div class="portal">
   <div class="portal__main">

@@ -1,141 +1,127 @@
 {% extends "forum/governance/base_governance.html" %}{% load i18n %}
 {% comment %}
-One commission: its tables, its members, its proposals, its projects.
-
-The MEMBERS table is the screen where FORUM_GOVERNANCE §5 is either kept or broken, so it is worth
-saying plainly what it renders: the organisation represented, the category, the capacity and the
-two dates of the mandate. There is no name column, no e-mail column and no « contacter » link,
-because `ForumProfile` holds none of those — the promise is kept by the schema, not by this
-template. `apps/forum/tests/test_governance_privacy.py` asserts it from both ends.
-
-The membership list is built from LIVE mandates only. A member whose mandate ran out last week is
-not listed: the list answers « who sits on this commission today », which is a different question
-from « who ever did », and the second one is the annual report's job.
+One commission — design V5 (W3-E step 2): the page's head (its name, its field, its edition and state on the head's
+line; at its reading end the member's act «Déposer une proposition»), the commission's governance as its clause,
+then its tables, its members and their mandates (a table: organisation, category, capacity, FROM and TO — no contact
+of any kind), its proposals and its projects — each register's rows on hairlines, their state as a chip.
 {% endcomment %}
 {% block page_title %}{{ commission.name_fr }}{% endblock %}
 {% block meta_description %}{% translate "Tables, membres, propositions et projets de la commission." %}{% endblock %}
 
 {% block portal_header %}
-{% include "components/page_header.html" with title=commission.name_fr lead=commission.scope_fr eyebrow=commission.edition.title_fr %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title reg-head__title">{{ commission.name_fr }}</h1>
+    {% if commission.scope_fr %}<p class="ws-head__lead">{{ commission.scope_fr }}</p>{% endif %}
+    <p class="reg-head__meta"><span>{{ commission.edition.title_fr }}</span>{% chip commission.status "forum.CommissionStatus" %}{{ commission.get_status_display }}{% endchip %}</p>
+  </div>
+  {% if may_propose %}
+  {% safe_url 'forum_governance:proposal_create' commission.key as propose_url %}
+  {% if propose_url %}<div class="ws-head__action"><a class="btn btn--secondary" href="{{ propose_url }}">{% translate "Déposer une proposition" %}</a></div>{% endif %}
+  {% endif %}
+</header>
 {% endblock %}
 
 {% block governance_content %}
-{% if commission.governance_fr %}<p class="note">{{ commission.governance_fr }}</p>{% endif %}
+<div class="reg-page">
+  {% if commission.governance_fr %}<p class="reg-note">{{ commission.governance_fr }}</p>{% endif %}
 
-<p class="gloss">
-  {% chip commission.status "forum.CommissionStatus" %}{{ commission.get_status_display }}{% endchip %}
-  {% if may_propose %}
-  {% safe_url 'forum_governance:proposal_create' commission.key as propose_url %}
-  {% if propose_url %}<a class="btn btn--secondary btn--sm" href="{{ propose_url }}">{% translate "Déposer une proposition" %}</a>{% endif %}
-  {% endif %}
-</p>
-
-<section class="portal-section" aria-labelledby="tables-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Tables" %}</span></p>
-  <h2 class="portal__section-title" id="tables-title">{% translate "Les tables thématiques" %}</h2>
-  {% if tables %}
-  <ol class="register">
-    {% for table in tables %}
-    <li class="register__item">
+  <section class="reg-sec" aria-labelledby="tables-title">
+    <h2 class="db-h2 reg-sec__title" id="tables-title"><span>{% translate "Les tables thématiques" %}</span></h2>
+    {% if tables %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for table in tables %}
       {% safe_url 'forum_governance:table_detail' commission.key table.key as table_url %}
-      {% if table_url %}<a class="entry" href="{{ table_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title">{{ table.title_fr }}</h3>
-        <span class="entry__gloss">
-          {% if table.topic_fr %}{{ table.topic_fr }}{% endif %}
-          {% if table.live_referent %}<br>{% blocktranslate with organisation=table.live_referent.profile.display_label %}Référent : {{ organisation }}{% endblocktranslate %}{% endif %}
-        </span>
-        {% chip table.status "forum.TableStatus" css_class="entry__actor" %}{{ table.get_status_display }}{% endchip %}
-      {% if table_url %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Aucune table n’est ouverte dans cette commission. Une table est ouverte par le référent de la commission lorsqu’un sujet est mûr pour être travaillé." %}</p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if table_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if table_url %}<a class="reg-row__link" href="{{ table_url }}">{{ table.title_fr }}</a>{% else %}{{ table.title_fr }}{% endif %}</h3>
+          {% if table.topic_fr %}<p class="db-task__meta reg-row__text">{{ table.topic_fr }}</p>{% endif %}
+          {% if table.live_referent %}<p class="db-task__meta">{% blocktranslate with organisation=table.live_referent.profile.display_label %}Référent : {{ organisation }}{% endblocktranslate %}</p>{% endif %}
+        </div>
+        <div class="db-task__state">{% chip table.status "forum.TableStatus" %}{{ table.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune table n’est ouverte dans cette commission. Une table est ouverte par le référent de la commission lorsqu’un sujet est mûr pour être travaillé." %}</p>
+    {% endif %}
+  </section>
 
-<section class="portal-section" aria-labelledby="members-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Composition" %}</span></p>
-  <h2 class="portal__section-title" id="members-title">{% translate "Les membres et leur mandat" %}</h2>
-  {% if members %}
-  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-commission-detail-1">
-    <table class="data-table">
-      <caption id="t-commission-detail-1" class="visually-hidden">{% translate "Organisations siégeant dans la commission, leur qualité et la période de leur mandat" %}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{% translate "Organisation" %}</th>
-          <th scope="col">{% translate "Catégorie" %}</th>
-          <th scope="col">{% translate "Qualité" %}</th>
-          <th scope="col">{% translate "Depuis le" %}</th>
-          <th scope="col">{% translate "Jusqu’au" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for member in members %}
-        <tr>
-          <th scope="row" data-label="{% translate 'Organisation' %}">
-            {{ member.organisation }}
-            {% if member.interests %}<span class="t-caption">{{ member.interests }}</span>{% endif %}
-          </th>
-          <td data-label="{% translate 'Catégorie' %}">{{ member.category }}</td>
-          <td data-label="{% translate 'Qualité' %}">{{ member.role }}</td>
-          <td data-label="{% translate 'Depuis le' %}"><time datetime="{{ member.valid_from|date:'Y-m-d' }}">{{ member.valid_from|date:"d.m.Y" }}</time></td>
-          <td data-label="{% translate 'Jusqu’au' %}">{% if member.valid_until %}<time datetime="{{ member.valid_until|date:'Y-m-d' }}">{{ member.valid_until|date:"d.m.Y" }}</time>{% else %}—{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <p class="note">
-    {% translate "La composition indique les organisations siégeant aujourd’hui, leur catégorie et la période de leur mandat. Elle ne comporte aucune coordonnée : le Forum n’est pas un répertoire de contacts." %}
-  </p>
-  {% else %}
-  <p class="empty">{% translate "Aucun mandat en cours dans cette commission. Les mandats sont ouverts par le secrétariat du Forum, pour une période déterminée." %}</p>
-  {% endif %}
-</section>
+  <section class="reg-sec" aria-labelledby="members-title">
+    <h2 class="db-h2 reg-sec__title" id="members-title"><span>{% translate "Les membres et leur mandat" %}</span></h2>
+    {% if members %}
+    <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-commission-detail-1">
+      <table class="data-table data-table--wide">
+        <caption id="t-commission-detail-1" class="visually-hidden">{% translate "Organisations siégeant dans la commission, leur qualité et la période de leur mandat" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Organisation" %}</th>
+            <th scope="col">{% translate "Catégorie" %}</th>
+            <th scope="col">{% translate "Qualité" %}</th>
+            <th scope="col">{% translate "Depuis le" %}</th>
+            <th scope="col">{% translate "Jusqu’au" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in members %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Organisation' %}">
+              <span dir="auto">{{ member.organisation }}</span>
+              {% if member.interests %}<span class="t-caption">{{ member.interests }}</span>{% endif %}
+            </th>
+            <td data-label="{% translate 'Catégorie' %}">{{ member.category }}</td>
+            <td data-label="{% translate 'Qualité' %}">{{ member.role }}</td>
+            <td data-label="{% translate 'Depuis le' %}"><time datetime="{{ member.valid_from|date:'Y-m-d' }}">{{ member.valid_from|date:"d.m.Y" }}</time></td>
+            <td data-label="{% translate 'Jusqu’au' %}">{% if member.valid_until %}<time datetime="{{ member.valid_until|date:'Y-m-d' }}">{{ member.valid_until|date:"d.m.Y" }}</time>{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="reg-note">{% translate "La composition indique les organisations siégeant aujourd’hui, leur catégorie et la période de leur mandat. Elle ne comporte aucune coordonnée : le Forum n’est pas un répertoire de contacts." %}</p>
+    {% else %}
+    <p class="db-empty">{% translate "Aucun mandat en cours dans cette commission. Les mandats sont ouverts par le secrétariat du Forum, pour une période déterminée." %}</p>
+    {% endif %}
+  </section>
 
-<section class="portal-section" aria-labelledby="proposals-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Propositions" %}</span></p>
-  <h2 class="portal__section-title" id="proposals-title">{% translate "Les propositions de la commission" %}</h2>
-  {% if proposals %}
-  <ol class="register">
-    {% for proposal in proposals %}
-    <li class="register__item">
+  <section class="reg-sec" aria-labelledby="proposals-title">
+    <h2 class="db-h2 reg-sec__title" id="proposals-title">{% svg_icon "file-plus" "icon" %}<span>{% translate "Les propositions de la commission" %}</span></h2>
+    {% if proposals %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for proposal in proposals %}
       {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
-      {% if proposal_url %}<a class="entry" href="{{ proposal_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title">{{ proposal.title_fr }}</h3>
-        <span class="entry__gloss">{{ proposal.reference }}{% if proposal.table %} — {{ proposal.table.title_fr }}{% endif %}</span>
-        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
-      {% if proposal_url %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Aucune proposition déposée dans cette commission. Les brouillons ne figurent ici qu’une fois déposés par leur auteur." %}</p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if proposal_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if proposal_url %}<a class="reg-row__link" href="{{ proposal_url }}" dir="auto">{{ proposal.title_fr }}</a>{% else %}{{ proposal.title_fr }}{% endif %}</h3>
+          <p class="db-task__meta reg-row__meta"><span class="reg-ref">{{ proposal.reference }}</span>{% if proposal.table %}<span>{{ proposal.table.title_fr }}</span>{% endif %}</p>
+        </div>
+        <div class="db-task__state">{% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune proposition déposée dans cette commission. Les brouillons ne figurent ici qu’une fois déposés par leur auteur." %}</p>
+    {% endif %}
+  </section>
 
-<section class="portal-section" aria-labelledby="commission-projects-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Projets" %}</span></p>
-  <h2 class="portal__section-title" id="commission-projects-title">{% translate "Les projets issus de la commission" %}</h2>
-  {% if projects %}
-  <ol class="register">
-    {% for project in projects %}
-    <li class="register__item">
+  <section class="reg-sec" aria-labelledby="commission-projects-title">
+    <h2 class="db-h2 reg-sec__title" id="commission-projects-title"><span>{% translate "Les projets issus de la commission" %}</span></h2>
+    {% if projects %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for project in projects %}
       {% safe_url 'forum_governance:project_detail' project.uuid as project_url %}
-      {% if project_url %}<a class="entry" href="{{ project_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title">{{ project.title_fr }}</h3>
-        <span class="entry__gloss">{% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}</span>
-        {% chip project.status "forum.ProjectStatus" css_class="entry__actor" %}{{ project.get_status_display }}{% endchip %}
-      {% if project_url %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">{% translate "Aucun projet pour l’instant. Un projet naît d’une proposition retenue : il porte un responsable, des partenaires et des jalons datés." %}</p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if project_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if project_url %}<a class="reg-row__link" href="{{ project_url }}" dir="auto">{{ project.title_fr }}</a>{% else %}{{ project.title_fr }}{% endif %}</h3>
+          <p class="db-task__meta">{% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}</p>
+        </div>
+        <div class="db-task__state">{% chip project.status "forum.ProjectStatus" %}{{ project.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucun projet pour l’instant. Un projet naît d’une proposition retenue : il porte un responsable, des partenaires et des jalons datés." %}</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}

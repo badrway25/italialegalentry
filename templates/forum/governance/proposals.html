@@ -1,82 +1,76 @@
 {% extends "forum/governance/base_governance.html" %}{% load i18n %}
 {% comment %}
-The proposals register: the caller's own first — including their drafts, which nobody else sees —
-then everything they may read across the commissions where they hold a live mandate.
-
-The split is not cosmetic. `ForumProposalQuerySet.readable_by` returns own proposals whatever their
-state and other people's only once they have left the drafting stage, so the two blocks below come
-from the same query and differ only in who wrote the row.
+The proposals — design V5 (W3-E step 2): the page's head, the member's own proposals as rows (the title the way to the
+proposal, stretched over the row; its reference in ILE Mono and its commission; its state as a chip), then every
+proposal the member may read, as a table (proposal, commission, state, since) — a register of columns.
 {% endcomment %}
 {% block page_title %}{% translate "Propositions" %}{% endblock %}
 {% block meta_description %}{% translate "Les propositions du Forum permanent que vous pouvez consulter." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Propositions" as header_title %}
-{% translate "Une proposition s’élabore dans une commission, se dépose, s’examine et se décide. Chaque décision est motivée." as header_lead %}
-{% translate "Forum permanent" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Propositions" %}</h1>
+    <p class="ws-head__lead">{% translate "Une proposition s’élabore dans une commission, se dépose, s’examine et se décide. Chaque décision est motivée." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block governance_content %}
-<section class="portal-section" aria-labelledby="mine-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Les miennes" %}</span></p>
-  <h2 class="portal__section-title" id="mine-title">{% translate "Mes propositions" %}</h2>
-  {% if mine %}
-  <ol class="register">
-    {% for proposal in mine %}
-    <li class="register__item">
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="mine-title">
+    <h2 class="db-h2 reg-sec__title" id="mine-title">{% svg_icon "file-plus" "icon" %}<span>{% translate "Mes propositions" %}</span></h2>
+    {% if mine %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for proposal in mine %}
       {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
-      {% if proposal_url %}<a class="entry" href="{{ proposal_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title">{{ proposal.title_fr }}</h3>
-        <span class="entry__gloss">{{ proposal.reference }} — {{ proposal.commission.name_fr }}</span>
-        {% chip proposal.status "forum.ProposalStatus" css_class="entry__actor" %}{{ proposal.get_status_display }}{% endchip %}
-      {% if proposal_url %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">
-    {% translate "Vous n’avez déposé aucune proposition. Ouvrez une commission dont vous êtes membre pour en rédiger une : elle reste un brouillon visible de vous seul jusqu’à son dépôt." %}
-  </p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if proposal_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if proposal_url %}<a class="reg-row__link" href="{{ proposal_url }}" dir="auto">{{ proposal.title_fr }}</a>{% else %}{{ proposal.title_fr }}{% endif %}</h3>
+          <p class="db-task__meta reg-row__meta"><span class="reg-ref">{{ proposal.reference }}</span><span>{{ proposal.commission.name_fr }}</span></p>
+        </div>
+        <div class="db-task__state">{% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Vous n’avez déposé aucune proposition. Ouvrez une commission dont vous êtes membre pour en rédiger une : elle reste un brouillon visible de vous seul jusqu’à son dépôt." %}</p>
+    {% endif %}
+  </section>
 
-<section class="portal-section" aria-labelledby="all-proposals-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Registre" %}</span></p>
-  <h2 class="portal__section-title" id="all-proposals-title">{% translate "Toutes les propositions que je peux consulter" %}</h2>
-  {% if proposals %}
-  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-proposals-1">
-    <table class="data-table">
-      <caption id="t-proposals-1" class="visually-hidden">{% translate "Propositions, leur commission, leur état et la date du dernier changement d’état" %}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{% translate "Proposition" %}</th>
-          <th scope="col">{% translate "Commission" %}</th>
-          <th scope="col">{% translate "État" %}</th>
-          <th scope="col">{% translate "Depuis le" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for proposal in proposals %}
-        <tr>
-          <th scope="row" data-label="{% translate 'Proposition' %}">
-            {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
-            {% if proposal_url %}<a href="{{ proposal_url }}">{{ proposal.title_fr }}</a>{% else %}{{ proposal.title_fr }}{% endif %}
-            <span class="t-caption">{{ proposal.reference }}</span>
-          </th>
-          <td data-label="{% translate 'Commission' %}">{{ proposal.commission.name_fr }}</td>
-          <td data-label="{% translate 'État' %}">{% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}</td>
-          <td data-label="{% translate 'Depuis le' %}"><time datetime="{{ proposal.status_since|date:'Y-m-d' }}">{{ proposal.status_since|date:"d.m.Y" }}</time></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <p class="empty">
-    {% translate "Aucune proposition ne vous est ouverte. Vous lisez les propositions déposées dans les commissions où vous détenez un mandat en cours." %}
-  </p>
-  {% endif %}
-</section>
+  <section class="reg-sec" aria-labelledby="all-proposals-title">
+    <h2 class="db-h2 reg-sec__title" id="all-proposals-title"><span>{% translate "Toutes les propositions que je peux consulter" %}</span></h2>
+    {% if proposals %}
+    <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-proposals-1">
+      <table class="data-table data-table--wide">
+        <caption id="t-proposals-1" class="visually-hidden">{% translate "Propositions, leur commission, leur état et la date du dernier changement d’état" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Proposition" %}</th>
+            <th scope="col">{% translate "Commission" %}</th>
+            <th scope="col">{% translate "État" %}</th>
+            <th scope="col">{% translate "Depuis le" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for proposal in proposals %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Proposition' %}">
+              {% safe_url 'forum_governance:proposal_detail' proposal.uuid as proposal_url %}
+              {% if proposal_url %}<a href="{{ proposal_url }}" dir="auto">{{ proposal.title_fr }}</a>{% else %}<span dir="auto">{{ proposal.title_fr }}</span>{% endif %}
+              <span class="t-caption reg-ref">{{ proposal.reference }}</span>
+            </th>
+            <td data-label="{% translate 'Commission' %}">{{ proposal.commission.name_fr }}</td>
+            <td data-label="{% translate 'État' %}">{% chip proposal.status "forum.ProposalStatus" %}{{ proposal.get_status_display }}{% endchip %}</td>
+            <td data-label="{% translate 'Depuis le' %}"><time datetime="{{ proposal.status_since|date:'Y-m-d' }}">{{ proposal.status_since|date:"d.m.Y" }}</time></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune proposition ne vous est ouverte. Vous lisez les propositions déposées dans les commissions où vous détenez un mandat en cours." %}</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}

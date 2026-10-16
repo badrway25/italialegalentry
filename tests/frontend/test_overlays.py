@@ -706,8 +706,8 @@ def test_the_register_row_opens_its_piece_in_the_systems_drawer():
     drawer = _read(ROOT / "templates" / "documents" / "partials" / "piece_drawer.html")
     assert 'class="overlay overlay--drawer doc-drawer"' in drawer
     assert 'data-overlay="drawer" data-overlay-modal="none"' in drawer and "data-overlay-close" in drawer
-    workspace = _read(CSS / "v4" / "workspace.css")
-    assert ".doc-menu" not in workspace, "the deletion map's row: v4/workspace.css's row popover"
+    # the deletion map's rows: v4/workspace.css's row popover (W2-A), then the file itself (W3-E, step 3 — retargeted)
+    assert not (CSS / "v4" / "workspace.css").exists(), "the deletion map's row: v4/workspace.css's row popover"
 
 
 def test_main_js_keeps_no_dialog_and_a_dropdown_fallback_that_steps_aside():

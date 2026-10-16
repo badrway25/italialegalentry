@@ -1,6 +1,8 @@
-{% extends "companies/base_companies.html" %}{% load i18n %}
+{% extends "companies/base_companies.html" %}{% load i18n static %}
 {% comment %}
-Creating or editing a need.
+Creating or editing a need — design V5 (W3-E step 2): the page's head (its title, the sentence on what a need
+describes), W1-C's form (v5/field.css: one group a fieldset with its legend, the actions after their hairline), the
+registers' clause.
 
 The form is grouped the way a company thinks about a post — where, what, how many, which skills,
 which language, which safety, when — and each group is a fieldset with its own legend, so the
@@ -13,24 +15,20 @@ direct age discrimination (Directive 2000/78/EC, D.lgs. 216/2003).
 {% block page_title %}{% if is_creation %}{% translate "Nouveau besoin" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Décrire un besoin en compétences : territoire, métier, tâches, compétences, langue, sécurité, calendrier." %}{% endblock %}
 
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+
 {% block portal_header %}
-{% include "companies/partials/company_header.html" with company=company %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% if is_creation %}{% translate "Exprimer un besoin en compétences" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}</h1>
+    <p class="ws-head__lead">{% translate "Décrivez le poste. Ne décrivez jamais la personne attendue : aucun critère d’âge, d’origine, de situation familiale ou de santé n’a sa place ici, et la plateforme les refuse." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block companies_content %}
-<section class="portal-section" aria-labelledby="need-form-title">
-  <p class="folio">
-    <span class="folio__ordinal" aria-hidden="true"></span>
-    <span class="folio__head">{% if is_creation %}{% translate "Nouveau besoin" %}{% else %}{% translate "Modification" %}{% endif %}</span>
-  </p>
-  <h1 class="portal__section-title" id="need-form-title">
-    {% if is_creation %}{% translate "Exprimer un besoin en compétences" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}
-  </h1>
-  <p class="portal__summary">
-    {% translate "Décrivez le poste. Ne décrivez jamais la personne attendue : aucun critère d’âge, d’origine, de situation familiale ou de santé n’a sa place ici, et la plateforme les refuse." %}
-  </p>
-
-  <form method="post" class="form companies-form" novalidate>
+<div class="reg-page">
+  <form method="post" class="form" novalidate>
     {% csrf_token %}
     {% include "components/form_errors.html" with form=form %}
     <p class="form__required-note">{% translate "Les champs marqués d’un astérisque (*) sont obligatoires." %}</p>
@@ -83,9 +81,7 @@ direct age discrimination (Directive 2000/78/EC, D.lgs. 216/2003).
       {% endif %}
     </div>
   </form>
+</div>
 
-  <p class="note">
-    {% translate "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée." %}
-  </p>
-</section>
+<p class="reg-note">{% translate "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée." %}</p>
 {% endblock %}

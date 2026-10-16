@@ -106,11 +106,24 @@ MIDDLEWARE = [
     # HTML compression, below WhiteNoise so static files (served precompressed) never reach it, and
     # above everything that writes the body or its headers (core.middleware.TextGZipMiddleware).
     "core.middleware.TextGZipMiddleware",
+    # The site's security headers, written on the way out of every response, the pages a middleware below answers
+    # itself included (the NUL-byte guard's 400, the legacy 410s, the redirects): X-Frame-Options, the CSP (the back
+    # office's relaxation after django-csp, so that it runs first on the way out), Permissions-Policy and the others.
+    # Response hooks only, below the gzip layer (tests/security/test_html_compression.py).
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "csp.middleware.CSPMiddleware",
+    # Relaxed policy for the staff-only back-office theme; the public policy stays strict.
+    "core.middleware.BackofficeCSPMiddleware",
+    "core.middleware.ExtraSecurityHeadersMiddleware",
     "core.middleware.RequestIDMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     # Keeps the language cookie aligned with the /<lang>/ prefix being read (I18N-05).
     "core.middleware.LanguageCookieMiddleware",
+    # A NUL byte in the path, the query string, a form field or the session cookie: the 400 page, in the visitor's
+    # language, with the request id and the security headers, before anything below reads the value (PostgreSQL refuses
+    # it: a 500 before). The form only for the views CSRF protects, where CSRF reads it (cms.middleware).
+    "cms.middleware.NulByteMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -121,11 +134,6 @@ MIDDLEWARE = [
     "accounts.middleware.BackofficeMFAMiddleware",
     # Old WordPress URLs: ?lang= redirects, 410 for WP endpoints, cms.Redirect rows on 404.
     "cms.middleware.LegacyURLMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "csp.middleware.CSPMiddleware",
-    # Relaxed policy for the staff-only back-office theme; the public policy stays strict.
-    "core.middleware.BackofficeCSPMiddleware",
-    "core.middleware.ExtraSecurityHeadersMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -266,9 +274,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", default="") or BASE_DIR / "private_media")
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    # WhiteNoise's compressed manifest storage, with the ES modules' imports rewritten to the hashed names as well
+    # (core.storage): every file a page loads is then a hashed name, cached as immutable.
+    "staticfiles": {"BACKEND": "core.storage.CompressedManifestModulesStorage"},
 }
-WHITENOISE_MAX_AGE = 31536000
+# The cache of a file whose name does NOT carry its hash. A hashed name is served `max-age=315360000, public,
+# immutable` whatever this says (WhiteNoise recognises it through the manifest); a plain name — the original copy
+# collectstatic keeps beside it — can change at the next release under the same URL, so it is revalidated after a
+# minute. It was a year until 16 October 2026, while the modules imported one another by plain names
+# (tests/deployment/test_static_caching.py).
+WHITENOISE_MAX_AGE = 60
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 200

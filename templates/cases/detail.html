@@ -1,321 +1,310 @@
 {% extends "portal/base_portal.html" %}{% load i18n static %}
 {% comment %}
-The case file — design V4 (CREATIVE_DIRECTION.md §3.6): a workspace split 8/4 from 80rem, the
-inspector in the tail below.
+THE CASE FILE — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.14, §1.2; the platform map §3 «Case
+file», C-3 · C-4 · C-5 · C-6; W3-E step 3), composed on what the platform families shipped: W3-A's page frame, W3-D's
+journey «La soglia», W3-B's NowPanel and sections, the registers' rows (the row is the way to its record: W3-C's
+grammar), W1-C's chips and fields, W2-A's overlay system. Rules: the console's (v5/_dashboard.css) and the page-only
+sheets linked below — the registers' grammar (portal/registers.css), the case file's own (portal/case.css: its two
+columns, its rows' columns, its dialogs' bodies, its phone bar), the journey's (portal/journey.css, last: W3-D).
 
-  ContextHeader   eyebrow «Dossier» + mono reference, the title, the meta row (objectif · state
-                  chip · responsible with glyph · the five-notch meter) and ONE primary action;
-                  once scrolled past, a compact glass bar (title · chip · action) sticks under the
-                  console bar (console.js, data-ctx-bar)
-  Column 8        the four questions of §48, in order: WHERE AM I → the descriptive JourneyRail
-                  (step · date reached · «Vous êtes ici» · frontier MA→IT) · WHAT COMES NEXT →
-                  «Prochaine étape» (level 2) · WHAT IS MISSING → the checklist as a semantic
-                  Table with its HealthStrip (state change through the page form, as before) ·
-                  WHO IS RESPONSIBLE → the intervenants with their glyph, reference and validity
-  Inspector 4     «Où en est votre demande» as a Timeline read from the audit trail (append-only,
-                  the last node lights up), the pre-assessment with its ruleset, date and sources
-                  link, the communications and the dates
-  Staff           «Faire évoluer l’état du dossier» last, only when a transition is permitted
-  Mobile          one column: journey first, inspector after the panels; the primary action in a
-                  sticky bar above the bottom navigation
+The five questions of a file, in order — the DOM's order too:
+  the head            «Dossier» and the reference in ILE Mono — the title says the level, no eyebrow repeats it (C-4)
+                      —, the objective, the state as a chip and since when. No action here: the page's ONE primary
+                      is the NowPanel's
+  1 · where am I      «Où en est ce dossier» — the journey in W3-D's compact forms, the dashboard's and «Mon
+                      parcours»'s: the level line where the column holds 56rem, else the card — what is true now —
+                      and the spine behind its disclosure, closed. Compact so that the first screen holds the next
+                      act (LA-9, the review's M1); the dated history is the feed's, beside it («Où en est votre
+                      demande»)
+  2 · what next       the NowPanel — the screen's ONE raised plane and its ONE primary (W3-B's partial over the file's
+                      one next action, T1; portal.services.case_now_panel). A line it is about is drawn there and only
+                      there — «Exigences» skips it, as «Pièces du dossier» skips its piece (the review's M2) —, with
+                      the source it rests on, and its act opens that line's alert dialog where the reader may move it;
+                      the wrapper carries the line's id (`#line-<pk>`: the POST returns to it, «Fermer» leads back to
+                      it). A mandated reader is told the file's next step in nobody's voice. On a phone the act is the
+                      page's action bar (the shell's O63 contract, `data-file-action-bar`), within the thumb's reach,
+                      «Menu» kept at the reading end
+  3 · what is asked   «Ce qui est demandé» — the checklist as the register's ROWS, never a table (C-3): each line its
+                      words, its source in ILE Mono, its state as a chip, its date with its glyph, who answers for it;
+                      a line one of the file's pieces satisfies is the way to that piece; the count «n sur m» is the
+                      file's, the NowPanel's line counted in it; then the file's pieces — «il registro» (the
+                      dashboard's ledger) and their rows, each the way to its piece, its act where the reader acts
+                      (the NowPanel's piece is drawn there only)
+  4 · who             «Qui intervient sur ce dossier» — each live mandate as the answerable party (the registers'):
+                      the role's glyph, the role and its organisation, its authorisation in ILE Mono, until when
+  5 · what changed    beside it from 80rem, under it before: «Où en est votre demande» (the audit trail, newest
+                      first: W3-D's timeline — its title is the owner's wording, B1 item 4), the pre-assessment, and,
+                      for the person, their communications and dates (a mandated reader's own are not theirs here)
+  the file's state    «Faire évoluer l'état du dossier», only where a move is permitted — one act opening a dialog
 
-Two things this page still refuses to do. It never shows a percentage: «4 sur 11 éléments
-complétés» is verifiable and a bar is not (the meter has one notch per element, filled in the real
-proportion, the words beside it). And it never offers a control the domain would refuse — the
-transition list is computed from the declared table and the object policy, so a control that is
-present works. Not built, and said: the <details> sections of §3.6.4 on the phone (a section that
-folds on one width and not on another is a second behaviour to learn) and the shared
-`view-transition-name` between the header and its bar (two elements would carry the same name at
-once, which the specification forbids).
+THE STATE CHANGES (C-5). A line the reader may move (the object policy, asked per line by the view) offers its row
+menu — «⋮», the overlay system's popover, named «Actions» and described by the line — with «Nouvel état de cette
+ligne», which opens the line's ALERT dialog: the line and its state named, the states it may move to as choices (the
+current one is not offered), the consequence said («Chaque changement est enregistré»), «Annuler» the safe answer
+that takes the focus — Esc presses it, the scrim never closes it —, the focus back on the row's «⋮» when it closes
+(static/js/src/console.js §2f: the menu that held the item is gone by then). The POST returns to the row
+(`#line-<pk>`), which takes the focus, and the page's status region says what changed. The file's state: the same
+dialog family, its choices the moves the domain permits this reader (cases.services.transitions_available), the
+closure's consequence under its choice, the suspension's rule under the reason field (C-6). No bulk edit: each change
+of a legal checklist is one audited act with its author. A control drawn is a control the policy allows, and every
+POST asks again — a hidden control is not a closed door. Without script each menu item and opener is a link that
+shows its dialog in place (`:target`), «Fermer» a link back to the row.
+
+One raised plane (the NowPanel) and its one shadow value; corners: the panel's 8, the controls' 4, the chips' and the
+discs' full (the dialogs' 12 only while one is open, over the scrim). Nothing moves at load. Never a percentage:
+«4 sur 11 éléments complétés» is verifiable and a bar is not. Every word is the catalogue's.
 {% endcomment %}
 {% block page_title %}{% blocktranslate with reference=case.reference %}Dossier {{ reference }}{% endblocktranslate %}{% endblock %}
 {% block meta_description %}{% translate "Votre dossier : parcours, pièces demandées, pré-évaluation et intervenants." %}{% endblock %}
-{% comment %}The journey's page-only sheet (W3-D; the owner's V5.8: never in the shared bundles), after the shell's two: the journey and the timeline.{% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endblock %}
+{% comment %}The page-only sheets, after the shell's two (the owner's V5.8: never in the shared bundles): the overlay system's panels where a dialog is drawn (W2-A, CONTRACT §1), the registers' grammar and the case file's own (W3-E), then the journey's — last (W3-D).{% endcomment %}
+{% block extra_head %}{{ block.super }}{% if lines_changeable or transitions %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">{% endif %}
+<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/portal/case.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endblock %}
 
 {% block case_header %}{% endblock %}
 {% block next_action_block %}{% endblock %}
 
 {% block portal_header %}
-<header class="ctx ctx--file" data-ctx>
+<header class="ctx db-head file-head">
   <div class="ctx__words">
-    <p class="ctx__eyebrow">{% translate "Dossier" %}</p>
     <h1 class="ctx__title">{% translate "Dossier" %} <span class="ctx__ref">{{ case.reference }}</span></h1>
     <p class="ctx__meta">
       <span>{{ case.get_purpose_display }}</span>
       {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
-      <span class="ctx__resp">
-        {% if responsible %}{% include "components/glyph.html" with glyph=responsible.0.role|actor_glyph size="sm" %}{{ responsible.0.get_role_display }}{% if responsible.0.organisation %} — {{ responsible.0.organisation.name }}{% endif %}
-        {% else %}{% include "components/glyph.html" with glyph="person" size="sm" %}{% translate "Vous" %}{% endif %}
-      </span>
-      {% if progress.total %}
-      <span class="ctx__progress">
-        <span class="meter" aria-hidden="true" data-meter>{% for _ in progress.notches %}<span class="meter__notch{% if forloop.counter <= progress.filled %} meter__notch--on{% endif %}"></span>{% endfor %}</span>
-        <span class="meter__words">{% blocktranslate with done=progress.done total=progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}</span>
-      </span>
-      {% endif %}
+      <span>{% blocktranslate with date=case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span>
     </p>
   </div>
-  {% if next_action and next_action.url %}
-  <div class="ctx__action">
-    <a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
-  </div>
-  {% endif %}
 </header>
-<div class="ctx-bar" data-ctx-bar aria-hidden="true">
-  <span class="ctx-bar__title">{% translate "Dossier" %} <span class="ctx__ref">{{ case.reference }}</span></span>
-  {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
-  {% if next_action and next_action.url %}<a class="btn btn--primary btn--sm btn--arrow ctx-bar__action" href="{{ next_action.url }}" tabindex="-1">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
-</div>
 {% endblock %}
 
 {% block portal_content %}
+<div class="file{% if now.primary %} file--bar{% endif %}">
 {% if not is_own %}
-<p class="note">
-  {% blocktranslate with name=case.person.get_full_name %}Ce dossier appartient à {{ name }}. Vous y accédez au titre d’un mandat daté, et chacune de vos consultations est enregistrée.{% endblocktranslate %}
-</p>
+  <p class="reg-note file__mandate">{% blocktranslate with name=case.person.get_full_name %}Ce dossier appartient à {{ name }}. Vous y accédez au titre d’un mandat daté, et chacune de vos consultations est enregistrée.{% endblocktranslate %}</p>
+{% endif %}
+{% comment %} A suspension's reason, drawn once: by the NowPanel where it says the held file (sec-f7, DS 2026 §11.7), else here {% endcomment %}
+{% if case.suspension_reason and now.variant != "suspended" %}
+  <div class="file__notice">{% include "components/notice.html" with kind="warning" text=case.suspension_reason %}</div>
 {% endif %}
 
-<div class="file-grid">
-<div class="file-grid__main">
+<div class="file__main">
 
-  {% comment %} 1. Where am I {% endcomment %}
-  <section class="panel panel--l1 file-journey" aria-labelledby="journey-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="journey-title">{% translate "Où en est ce dossier" %}</h2>
-    </div>
-    {% translate "Où en est ce dossier" as journey_label %}
-    {% include "components/journey_rail.html" with steps=journey descriptive=True label=journey_label %}
+  {% comment %} 1 · WHERE AM I — W3-D's journey in its compact forms (the level line, or the card and its disclosure); the person's disclosure says «Où j'en suis», a mandated reader's «Parcours» (nobody's voice) {% endcomment %}
+  <section class="db-journey file-journey" aria-labelledby="journey-title">
+    <h2 class="db-h2" id="journey-title">{% svg_icon glyphs.journey "icon" %}<span>{% translate "Où en est ce dossier" %}</span></h2>
+    {% if is_own %}{% translate "Où j’en suis" as journey_label %}{% else %}{% translate "Parcours" as journey_label %}{% endif %}
+    {% include "components/journey_rail.html" with steps=journey label=journey_label %}
   </section>
 
-  {% comment %} 2. What comes next {% endcomment %}
-  <section class="panel panel--l2 panel--edge ws-next{% if next_action %} ws-next--{{ next_action.urgency }}{% endif %}" aria-labelledby="ws-next-title">
-    {% if next_action %}
-    <p class="panel__eyebrow" id="ws-next-title">{% if next_action.is_for_someone_else %}{% translate "Prochaine étape" %}{% else %}{% translate "Votre prochaine action" %}{% endif %}</p>
-    <p class="panel__title">{{ next_action.label }}</p>
-    {% if next_action.detail %}<p class="panel__text">{{ next_action.detail }}</p>{% endif %}
-    <div class="resp">
-      {% include "components/glyph.html" with glyph=next_action.responsible_actor|actor_glyph size="sm" %}
-      <span class="resp__label">{% translate "Responsable" %}</span>
-      <span class="resp__actor">{{ next_action.get_responsible_display|default:next_action.responsible_actor }}</span>
-      {% if next_action.is_for_someone_else %}<span class="resp__note">{% translate "Cette étape ne dépend pas de vous." %}</span>{% endif %}
-    </div>
-    {% comment %} The action is the context header's, the bar's once scrolled, the phone's bar: not the panel's too. {% endcomment %}
-    {% else %}
-    <p class="panel__eyebrow" id="ws-next-title">{% translate "Prochaine étape" %}</p>
-    <p class="panel__text">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
-    {% endif %}
-  </section>
+  {% comment %} 2 · WHAT NEXT — the NowPanel, the one raised plane and its one primary; the line it draws keeps its id here {% endcomment %}
+  {% if now.line_anchor %}<div class="file-now" id="{{ now.line_anchor }}" tabindex="-1">{% include "portal/partials/now_panel.html" with now=now %}</div>{% else %}{% include "portal/partials/now_panel.html" with now=now %}{% endif %}
 
-  {% comment %} 3. What is missing {% endcomment %}
-  <section class="panel panel--l1 file-checklist" aria-labelledby="checklist-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="checklist-title">{% translate "Ce qui est demandé" %}</h2>
+  {% comment %} 3 · WHAT IS ASKED — the checklist as the register's rows (C-3), then the file's pieces {% endcomment %}
+  <section class="file-asked" aria-labelledby="asked-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="asked-title">{% svg_icon glyphs.asked "icon" %}<span>{% translate "Ce qui est demandé" %}</span></h2>
+      {% if is_own and pieces and documents_url %}<a class="db-link" href="{{ documents_url }}">{% translate "Voir mes documents" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
     </div>
-    {% if checklist %}
-    {% if checklist_health %}{% include "components/health_strip.html" with counts=checklist_health.counts filters=checklist_health.filters bare=True %}{% endif %}
-    <p class="panel__text">{% translate "Chaque ligne indique qui doit agir : toutes ne vous incombent pas." %}</p>
-    <div class="table-region">
-    <table class="table">
-      <caption id="t-detail-1" class="visually-hidden">{% translate "Pièces et démarches demandées dans ce dossier" %}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{% translate "Exigence" %}</th>
-          <th scope="col">{% translate "Responsable" %}</th>
-          {% if checklist_columns.source %}<th scope="col">{% translate "Fondement" %}</th>{% endif %}
-          {% if checklist_columns.due %}<th scope="col">{% translate "Échéance" %}</th>{% endif %}
-          <th scope="col">{% translate "État" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in checklist %}
-        <tr{% if item.is_overdue %} class="table__row--overdue"{% endif %}>
-          <th scope="row" data-label="{% translate 'Exigence' %}">
-            <span class="table__primary">{{ item.requirement }}</span>
-            {% if item.detail %}<span class="table__gloss">{{ item.detail }}</span>{% endif %}
-          </th>
-          <td data-label="{% translate 'Responsable' %}">
-            <span class="table__actor">{% include "components/glyph.html" with glyph=item.responsible_actor|actor_glyph size="sm" %}<span>{{ item.get_responsible_actor_display }}</span></span>
-            {% if item.responsible_note %}<span class="table__gloss">{{ item.responsible_note }}</span>{% endif %}
-          </td>
-          {% if checklist_columns.source %}
-          <td data-label="{% translate 'Fondement' %}">
-            {% if item.source_ref %}<span class="ctx__ref">{{ item.source_ref }}</span>
-            {% elif item.source_title %}{{ item.source_title }}
-            {% else %}<span class="table__none" aria-hidden="true">—</span>{% endif %}
-          </td>
-          {% endif %}
-          {% if checklist_columns.due %}
-          <td data-label="{% translate 'Échéance' %}">
-            {% if item.due_date %}<time datetime="{{ item.due_date|date:'Y-m-d' }}"{% if item.is_overdue %} class="table__overdue"{% endif %}>{{ item.due_date|date:"d.m.Y" }}</time>
-            {% else %}<span class="table__none" aria-hidden="true">—</span>{% endif %}
-          </td>
-          {% endif %}
-          <td data-label="{% translate 'État' %}">
-            {% chip item.status "cases.ChecklistStatus" %}{{ item.get_status_display }}{% endchip %}
-            {% if item.can_change %}
-            <form method="post" action="{% url 'cases:set_item_status' case.reference item.pk %}" class="table__form">
-              {% csrf_token %}
-              <label class="visually-hidden" for="status-{{ item.pk }}">{% translate "Nouvel état de cette ligne" %}</label>
-              <select class="table__select" id="status-{{ item.pk }}" name="status">
-                {% for value, label in statuses %}
-                <option value="{{ value }}"{% if value == item.status %} selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-              </select>
-              <button type="submit" class="btn btn--secondary btn--sm">{% translate "Mettre à jour" %}</button>
-            </form>
-            {% endif %}
-          </td>
-        </tr>
+    {% if lines or pieces %}
+    {% if lines %}
+    <div class="file-block">
+      <div class="file-block__head">
+        <h3 class="reg-sub">{% translate "Exigences" %}</h3>
+        {% if progress.total %}<p class="db-ledger__total">{% blocktranslate with done=progress.done total=progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}</p>{% endif %}
+      </div>
+      {% if asked_lines %}
+      <p class="db-line file-block__lead">{% translate "Chaque ligne indique qui doit agir : toutes ne vous incombent pas." %}</p>
+      <ul class="db-tasks file-rows" role="list">
+        {% for line in asked_lines %}
+        <li class="db-task reg-row file-row{% if line.piece_url %} reg-row--link{% endif %}{% if not line.can_change and line.responsible_actor != 'person' %} db-task--theirs{% endif %}" id="{{ line.anchor }}" tabindex="-1" data-line="{{ line.pk }}">
+          <div class="db-task__words">
+            <p class="db-task__title" id="{{ line.anchor }}-title"{% if line.words.lang %} lang="{{ line.words.lang }}" dir="{{ line.words.dir }}"{% endif %}>{% if line.piece_url %}<a class="reg-row__link" href="{{ line.piece_url }}">{{ line.title }}</a>{% else %}{{ line.title }}{% endif %}</p>
+            <p class="file-row__who"><span class="db-task__who"><span class="visually-hidden">{% translate "Responsable" %} </span>{% include "components/glyph.html" with glyph=line.responsible_actor|actor_glyph size="sm" %}<span>{{ line.responsible }}{% if line.responsible_note %} — <span class="file-row__note" dir="auto">{{ line.responsible_note }}</span>{% endif %}</span></span></p>
+            {% if line.detail %}<p class="db-task__meta"{% if line.words.lang %} lang="{{ line.words.lang }}" dir="{{ line.words.dir }}"{% else %} dir="auto"{% endif %}>{{ line.detail }}</p>{% endif %}
+            {% if line.source_ref or line.source_title %}<p class="db-task__meta reg-row__source"><span class="visually-hidden">{% translate "Fondement" %} </span>{% if line.source_ref %}<span class="reg-ref">{{ line.source_ref }}</span>{% else %}<span dir="auto">{{ line.source_title }}</span>{% endif %}</p>{% endif %}
+          </div>
+          <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip line.state "cases.ChecklistStatus" %}{{ line.state_label }}{% endchip %}</div>
+          <div class="db-task__due">{% if line.due_date %}<span class="db-due{% if line.urgency %} db-due--{{ line.urgency }}{% endif %}">{% svg_icon line.urgency|concept:"due"|default:"calendar" "icon" %}<span class="visually-hidden">{% translate "Échéance" %} </span><time datetime="{{ line.due_date|date:'Y-m-d' }}">{{ line.due_date|date:"d.m.Y" }}</time>{% if line.due_word %}<span class="db-due__word">{{ line.due_word }}</span>{% endif %}</span>{% endif %}</div>
+          <div class="db-task__end file-row__end">{% if line.can_change %}
+            <button class="btn btn--icon btn--ghost reg-row__act file-row__menu" type="button" id="{{ line.anchor }}-actions" popovertarget="{{ line.menu_id }}" aria-label="{% translate 'Actions' %}" aria-describedby="{{ line.anchor }}-title" data-tip="layer">{% svg_icon "ellipsis-vertical" "icon" %}</button>
+            {% include "components/popover.html" with id=line.menu_id label=line.title body_template="cases/partials/line_menu.html" %}
+          {% endif %}</div>
+        </li>
         {% endfor %}
-      </tbody>
-    </table>
+      </ul>
+      {% endif %}
     </div>
+    {% endif %}
+
+    {% if pieces %}
+    <div class="file-block">
+      <h3 class="reg-sub">{% translate "Pièces du dossier" %}</h3>
+      <div class="db-ledger">
+        <p class="db-ledger__total">{% blocktranslate count n=pieces.counts.total %}{{ n }} pièce demandée{% plural %}{{ n }} pièces demandées{% endblocktranslate %}</p>
+        <ul class="db-ledger__groups" role="list">
+          {% for group in pieces.groups %}
+          <li class="db-ledger__group db-ledger__group--{{ group.key }}"><span class="db-ledger__label">{{ group.label }} <span class="db-ledger__n">{{ group.states|length }}</span></span><span class="db-ledger__marks" aria-hidden="true">{% for state in group.states %}{% svg_icon state|chip_mark:"documents.RequirementState" "icon" %}{% endfor %}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% if pieces.rows %}
+      <ul class="db-tasks file-pieces" role="list" aria-label="{% translate 'Pièces demandées pour ce dossier' %}">
+        {% for row in pieces.rows %}
+        <li class="db-task reg-row reg-row--link{% if not row.act %} db-task--theirs{% endif %}" data-piece="{{ row.id }}">
+          <div class="db-task__words">
+            <p class="db-task__title" id="file-piece-{{ row.id }}"{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% endif %}><a class="reg-row__link" href="{{ row.detail_url }}">{{ row.title }}</a></p>
+            {% if row.detail %}<p class="db-task__meta"{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% else %} dir="auto"{% endif %}>{{ row.detail }}</p>{% endif %}
+          </div>
+          <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}{% if row.action_blocked %} <span class="file-row__blocked">{% translate "Bloqué" %}</span>{% endif %}</div>
+          <div class="db-task__due">{% if row.due_date %}<span class="db-due{% if row.urgency %} db-due--{{ row.urgency }}{% endif %}">{% svg_icon row.urgency|concept:"due"|default:"calendar" "icon" %}<span class="visually-hidden">{% translate "Échéance" %} </span><time datetime="{{ row.due_date|date:'Y-m-d' }}">{{ row.due_date|date:"d.m.Y" }}</time>{% if row.due_word %}<span class="db-due__word">{{ row.due_word }}</span>{% endif %}</span>{% endif %}</div>
+          <div class="db-task__end">{% if row.act %}<a class="btn btn--secondary btn--sm reg-row__act" href="{{ row.act.url }}" aria-describedby="file-piece-{{ row.id }}">{{ row.act.label }}</a>{% elif not is_own or not row.is_for_the_person %}<span class="db-task__who"><span class="visually-hidden">{% translate "Responsable" %} </span>{% include "components/glyph.html" with glyph=row.responsible_actor|actor_glyph size="sm" %}<span>{{ row.responsible }}</span></span>{% endif %}</div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endif %}
     {% else %}
-    <p class="empty">{% translate "Aucune pièce n’est encore demandée dans ce dossier. La liste se remplit à partir de votre pré-évaluation et des règles en vigueur." %}</p>
+    <p class="db-empty">{% translate "Aucune pièce n’est encore demandée dans ce dossier. La liste se remplit à partir de votre pré-évaluation et des règles en vigueur." %}</p>
     {% endif %}
   </section>
 
-  {% comment %} 4. Who is responsible {% endcomment %}
-  <section class="panel panel--l1 file-actors" aria-labelledby="actors-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="actors-title">{% translate "Qui intervient sur ce dossier" %}</h2>
-    </div>
+  {% comment %} 4 · WHO — every live mandate as the answerable party: a function and an organisation, never a person's name {% endcomment %}
+  <section class="reg-sec file-people" aria-labelledby="people-title">
+    <h2 class="db-h2 reg-sec__title" id="people-title"><span>{% translate "Qui intervient sur ce dossier" %}</span></h2>
     {% if responsible %}
-    <ul class="actors" role="list">
-      {% for assignment in responsible %}
-      <li class="actors__row">
-        {% include "components/glyph.html" with glyph=assignment.role|actor_glyph size="md" %}
-        <span class="actors__words">
-          <span class="actors__who">{{ assignment.get_role_display }}{% if assignment.organisation %} — {{ assignment.organisation.name }}{% endif %}</span>
-          <span class="actors__mandate">
-            {% if assignment.authorisation_reference %}{% blocktranslate with reference=assignment.authorisation_reference %}Autorisation {{ reference }}{% endblocktranslate %}{% endif %}
-            {% if assignment.authorisation_valid_until %} · {% blocktranslate with date=assignment.authorisation_valid_until|date:"d.m.Y" %}valable jusqu’au {{ date }}{% endblocktranslate %}{% endif %}
-          </span>
-        </span>
-      </li>
-      {% endfor %}
-    </ul>
+    {% for assignment in responsible %}
+    <div class="reg-party file-party">
+      <span class="reg-row__seal" aria-hidden="true">{% svg_icon assignment.role|actor_glyph|default:"ile-mark" "icon" %}</span>
+      <div class="reg-party__words">
+        {% if assignment.organisation %}<p class="reg-party__label">{{ assignment.get_role_display }}</p>
+        <p class="reg-party__name" dir="auto">{{ assignment.organisation.name }}</p>{% else %}<p class="reg-party__name">{{ assignment.get_role_display }}</p>{% endif %}
+      </div>
+      {% if assignment.authorisation_reference or assignment.authorisation_valid_until %}
+      <dl class="reg-party__facts">
+        {% if assignment.authorisation_reference %}<div class="reg-party__fact"><dt>{% translate "Autorisation" %}</dt><dd><span class="reg-ref">{{ assignment.authorisation_reference }}</span></dd></div>{% endif %}
+        {% if assignment.authorisation_valid_until %}<div class="reg-party__fact"><dt>{% translate "Validité" %}</dt><dd>{% blocktranslate with date=assignment.authorisation_valid_until|date:"d.m.Y" %}valable jusqu’au {{ date }}{% endblocktranslate %}</dd></div>{% endif %}
+      </dl>
+      {% endif %}
+    </div>
+    {% endfor %}
     {% else %}
     {% comment %} Never "nobody": the file is the person's own until somebody is assigned to it. {% endcomment %}
-    <p class="empty">{% translate "Aucun intervenant n’est assigné. Ce dossier reste le vôtre, et personne d’autre n’y a accès." %}</p>
+    <p class="db-empty">{% translate "Aucun intervenant n’est assigné. Ce dossier reste le vôtre, et personne d’autre n’y a accès." %}</p>
     {% endif %}
   </section>
 
-  {% comment %} Staff: the state of the file {% endcomment %}
+  {% comment %} THE FILE'S STATE — only where a move is permitted: one act, the overlay system's alert dialog {% endcomment %}
   {% if transitions %}
-  <section class="panel panel--l1 file-state" aria-labelledby="state-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="state-title">{% translate "Faire évoluer l’état du dossier" %}</h2>
-    </div>
-    <p class="panel__text">{% translate "Seules les évolutions permises par l’état actuel sont proposées. Chaque changement est enregistré." %}</p>
-    <form method="post" action="{% url 'cases:transition' case.reference %}" class="form file-state__form">
-      {% csrf_token %}
-      <div class="form-field">
-        <label class="form-field__label" for="case-status">{% translate "Nouvel état" %}</label>
-        <select id="case-status" name="status" required>
-          <option value="" selected disabled>{% translate "Nouvel état" %}</option>
-          {% for value, label in transitions %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
-        </select>
-      </div>
-      <div class="form-field">
-        <label class="form-field__label" for="case-reason">{% translate "Motif (obligatoire pour une suspension)" %}</label>
-        <input type="text" id="case-reason" name="reason" maxlength="500">
-      </div>
-      <p class="panel__actions"><button type="submit" class="btn btn--secondary">{% translate "Enregistrer l’état" %}</button></p>
-    </form>
+  <section class="reg-form file-state" aria-labelledby="state-title">
+    <h2 class="reg-form__title" id="state-title" tabindex="-1">{% translate "Faire évoluer l’état du dossier" %}</h2>
+    <p class="reg-form__text">{% translate "Seules les évolutions permises par l’état actuel sont proposées. Chaque changement est enregistré." %}</p>
+    <p class="reg-acts"><a class="btn btn--secondary" href="#file-state" data-overlay-open>{% translate "Nouvel état" %}</a></p>
   </section>
   {% endif %}
 
 </div>
 
-<aside class="file-grid__inspector" aria-label="{% translate 'Suivi du dossier' %}">
+{% comment %} 5 · WHAT CHANGED — the file's history, its pre-assessment, and the person's own communications and dates {% endcomment %}
+<aside class="file__side" aria-label="{% translate 'Suivi du dossier' %}">
 
-  <section class="panel panel--l1 file-timeline" aria-labelledby="timeline-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="timeline-title">{% translate "Où en est votre demande" %}</h2>
-    </div>
+  <section class="file-history" aria-labelledby="history-title">
+    <h2 class="db-h2" id="history-title">{% svg_icon glyphs.history "icon" %}<span>{% translate "Où en est votre demande" %}</span></h2>
     {% if timeline %}
     {% include "components/case_timeline.html" with rows=timeline %}
     {% else %}
-    <p class="empty">{% translate "Aucun événement n’est encore enregistré sur ce dossier." %}</p>
+    <p class="db-empty">{% translate "Aucun événement n’est encore enregistré sur ce dossier." %}</p>
     {% endif %}
   </section>
 
-  <section class="panel panel--l1 file-assessment" aria-labelledby="assessment-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="assessment-title">{% translate "Ce qui vous a été indiqué" %}</h2>
+  <section class="db-assessment file-assessment" aria-labelledby="assessment-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="assessment-title">{% svg_icon glyphs.assessment "icon" %}<span>{% translate "Ce qui vous a été indiqué" %}</span></h2>
     </div>
     {% if assessment %}
     <div class="outcome outcome--{{ assessment.outcome }}">
       <p class="outcome__kind">{{ assessment.get_outcome_display }}</p>
-      {% if assessment.rationale %}<p class="panel__text">{{ assessment.rationale }}</p>{% endif %}
+      {% if assessment.rationale %}<p class="db-assessment__text"><span dir="auto">{{ assessment.rationale }}</span></p>{% endif %}
     </div>
-    <p class="panel__meta">
-      <span>{% translate "Jeu de règles" %} <span class="ctx__ref">v{{ assessment.ruleset_version }}</span></span>
+    <p class="db-line">
+      <span>{% translate "Jeu de règles" %} <span class="db-ref">v{{ assessment.ruleset_version }}</span></span>
       <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
     </p>
-    <p class="panel__actions"><a class="btn btn--link btn--sm" href="{% url 'cases:assessment' case.reference assessment.pk %}">{% translate "Voir le détail et les fondements" %}</a></p>
+    <p class="file-assessment__more"><a class="db-link" href="{% url 'cases:assessment' case.reference assessment.pk %}">{% translate "Voir le détail et les fondements" %}{% svg_icon "chevron-end" "icon" %}</a></p>
     {% if assessments|length > 1 %}
-    <p class="gloss">{% translate "Les évaluations précédentes sont conservées : elles attestent de ce qui vous a été indiqué, et à quelle date." %}</p>
-    <ul class="dates" role="list">
+    <p class="db-line">{% translate "Les évaluations précédentes sont conservées : elles attestent de ce qui vous a été indiqué, et à quelle date." %}</p>
+    <ul class="db-list" role="list">
       {% for row in assessments %}
-      <li class="dates__row">
-        <span class="dates__when"><time datetime="{{ row.assessed_at|date:'Y-m-d' }}">{{ row.assessed_at|date:"d.m.Y" }}</time></span>
-        <a class="dates__what" href="{% url 'cases:assessment' case.reference row.pk %}">{{ row.get_outcome_display }}</a>
+      <li class="db-list__row">
+        <a class="db-list__link" href="{% url 'cases:assessment' case.reference row.pk %}"><span class="db-list__title">{{ row.get_outcome_display }}</span></a>
+        <span class="db-list__meta"><time datetime="{{ row.assessed_at|date:'Y-m-d' }}">{{ row.assessed_at|date:"d.m.Y" }}</time></span>
       </li>
       {% endfor %}
     </ul>
     {% endif %}
     {% else %}
-    <p class="empty">{% translate "Ce dossier n’a pas encore de pré-évaluation. Elle est produite lorsque vous terminez le questionnaire d’orientation." %}</p>
+    <p class="db-empty">{% translate "Ce dossier n’a pas encore de pré-évaluation. Elle est produite lorsque vous terminez le questionnaire d’orientation." %}</p>
     {% endif %}
   </section>
 
-  <section class="panel panel--l1 file-messages" aria-labelledby="messages-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="messages-title">{% translate "Communications" %}</h2>
+  {% if is_own %}
+  <section class="db-messages" aria-labelledby="messages-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="messages-title">{% svg_icon glyphs.messages "icon" %}<span>{% translate "Communications" %}</span></h2>
+      {% if messages_url and messages_list %}<a class="db-link" href="{{ messages_url }}">{% translate "Toutes mes communications" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
     </div>
     {% if messages_list %}
-    <ul class="threads" role="list">
+    <ul class="db-list" role="list">
       {% for message in messages_list %}
-      <li class="threads__row{% if message.is_unread %} threads__row--unread{% endif %}">
-        <a class="threads__link" href="{{ message.url }}">
-          <span class="threads__subject">{{ message.subject }}</span>
-          <span class="threads__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} {% chip register="neutro" %}{% translate "Nouveau" %}{% endchip %}{% endif %}</span>
-        </a>
+      <li class="db-list__row{% if message.is_unread %} db-list__row--unread{% endif %}">
+        <a class="db-list__link" href="{{ message.url }}">{% if message.is_unread %}<span class="db-unread" aria-hidden="true"></span>{% endif %}<span class="db-list__title" dir="auto">{{ message.subject }}</span></a>
+        <span class="db-list__meta"><time datetime="{{ message.date|date:'Y-m-d' }}">{{ message.date|date:"d.m.Y" }}</time>{% if message.is_unread %} · <span class="db-list__new">{% translate "Non lue" %}</span>{% endif %}</span>
       </li>
       {% endfor %}
     </ul>
     {% else %}
-    <p class="empty">{% translate "Les messages que l’équipe vous adresse apparaîtront ici." %}</p>
+    <p class="db-empty">{% translate "Les messages que l’équipe vous adresse apparaîtront ici." %}</p>
     {% endif %}
   </section>
 
-  <section class="panel panel--l1 file-dates" aria-labelledby="dates-title">
-    <div class="panel__head">
-      <h2 class="panel__section" id="dates-title">{% translate "Mes échéances" %}</h2>
+  <section class="db-dates" aria-labelledby="dates-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="dates-title">{% svg_icon glyphs.dates "icon" %}<span>{% translate "Mes échéances" %}</span></h2>
+      {% if deadlines_url and deadlines %}<a class="db-link" href="{{ deadlines_url }}">{% translate "Toutes mes échéances" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
     </div>
     {% if deadlines %}
-    <ul class="dates" role="list">
+    <ul class="db-list" role="list">
       {% for deadline in deadlines %}
-      <li class="dates__row{% if deadline.urgency %} dates__row--{{ deadline.urgency }}{% endif %}">
-        <span class="dates__when">{% svg_icon deadline.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ deadline.date|date:'Y-m-d' }}">{{ deadline.date|date:"d.m.Y" }}</time></span>
-        <span class="dates__what">{{ deadline.title }}</span>
+      <li class="db-list__row">
+        <span class="db-list__title" dir="auto">{{ deadline.title }}</span>
+        <span class="db-due{% if deadline.urgency %} db-due--{{ deadline.urgency }}{% endif %}">{% svg_icon deadline.urgency|concept:"due"|default:"calendar" "icon" %}<time datetime="{{ deadline.date|date:'Y-m-d' }}">{{ deadline.date|date:"d.m.Y" }}</time>{% if deadline.word %}<span class="db-due__word">{{ deadline.word }}</span>{% endif %}</span>
       </li>
       {% endfor %}
     </ul>
     {% else %}
-    <p class="empty">{% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." %}</p>
+    <p class="db-empty">{% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." %}</p>
     {% endif %}
   </section>
+  {% endif %}
 
 </aside>
 </div>
 
-{% if next_action and next_action.url %}
-<div class="file-action-bar" data-file-action-bar>
-  <a class="btn btn--primary btn--arrow" href="{{ next_action.url }}">{{ next_action.cta_label|default:_("Continuer") }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+{% comment %} The page's one act on a phone: the NowPanel's primary, where the bottom bar's entries stood (the shell's O63 contract) {% endcomment %}
+{% if now.primary %}
+<div class="file-bar" data-file-action-bar>
+  {% if now.primary.overlay %}<a class="btn btn--primary" href="{{ now.primary.url }}" data-overlay-open>{{ now.primary.label }}</a>{% else %}<a class="btn btn--primary btn--arrow" href="{{ now.primary.url }}">{{ now.primary.label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
 </div>
+{% endif %}
+
+{% comment %} The dialogs — laid out once, opened by their row's menu, the NowPanel's act (its line's) or the state's act (static/js/src/overlay.js) {% endcomment %}
+{% for line in lines %}{% if line.can_change %}
+{% translate "Nouvel état de cette ligne" as line_title %}
+{% include "components/dialog.html" with id=line.dialog_id kind="alert" glyph="history" title=line_title describedby=line.dialog_id|add:"-text" body_template="cases/partials/line_dialog.html" actions_template="cases/partials/line_dialog.html" return_id=line.anchor %}
+{% endif %}{% endfor %}
+{% if transitions %}
+{% translate "Faire évoluer l’état du dossier" as state_title %}
+{% include "components/dialog.html" with id="file-state" kind="alert" glyph="history" title=state_title describedby="file-state-text" body_template="cases/partials/state_dialog.html" actions_template="cases/partials/state_dialog.html" return_id="state-title" %}
 {% endif %}
 {% endblock %}

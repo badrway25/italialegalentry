@@ -1,0 +1,23 @@
+/* ============================================================================================
+   THE REGISTERS — the page sheet of the console's secondary pages, design V5 (W3-E; docs/design-v5/V5_4_EXECUTION_PLAN.md
+   §3.5 item 7, §2.3). Loaded in `extra_head` after the console's two sheets by the pages that draw the registers'
+   grammar: the person's — templates/portal/{deadlines,messages,message_detail,requests,request_detail,pathways}.html
+   (step 1) —, then the organisations' and the other spaces' (step 2): the company's pages beyond its dashboard
+   (templates/companies/{needs,need_detail,need_form,profile,profile_form,analysis}.html), the Academy
+   (academy/base_academy.html), the help desk (helpdesk/base_helpdesk.html), the selection (templates/selection/*.html)
+   and the Forum permanent (forum/governance/base_governance.html); a module's own sheet, when it draws beyond the
+   grammar, loads after this one. The owner's V5.8 (DL54-87, V5_8 «definitive ruling»): a surface's own CSS loads where
+   it is drawn — never in main.css, console.css or portal.css, which every console page pays for; one sheet for the
+   one grammar, so a reader moving between these pages fetches it once.
+
+   This sheet is the pages' IMPORT LIST and nothing else: the rules are a console partial (`_`-prefixed:
+   scripts/build_css.mjs bundles it into this entry and never builds it on its own, DL54-15). An import is written as
+   it resolves in the COLLECTED tree, from this sheet's collected path portal/registers.css (DS 2026 §2;
+   tests/frontend/test_static_pipeline.py).
+
+     v5/_registers.css   the head of a record, the band, the sections, the rows of the registers (on the
+                         dashboard's row grammar, apps/portal/static/portal/v5/_dashboard.css), the letter,
+                         the pre-assessments
+   ========================================================================================== */
+
+@import url("v5/_registers.css");

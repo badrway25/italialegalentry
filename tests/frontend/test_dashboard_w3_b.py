@@ -1014,8 +1014,15 @@ def test_the_consoles_empty_state_spans_the_main_column_again():
 
 
 def test_the_company_dashboards_legacy_rules_left_the_v4_sheet_and_the_bridge_left_portal_css():
+    # W3-E (step 3, the deletion map's last row) deleted v4/workspace.css; what console pages still drew of it — the
+    # ContextHeader, the workspace head, the glyph disc, the workspace's ring — is the console partial v5/_frame.css,
+    # and the dashboards' legacy rules came back in neither (retargeted by W3-E, intent kept)
+    assert not (ROOT / "static" / "css" / "v4" / "workspace.css").exists()
     workspace = re.sub(
-        r"/\*.*?\*/", "", (ROOT / "static" / "css" / "v4" / "workspace.css").read_text(encoding="utf-8"), flags=re.S
+        r"/\*.*?\*/",
+        "",
+        (ROOT / "apps" / "portal" / "static" / "portal" / "v5" / "_frame.css").read_text(encoding="utf-8"),
+        flags=re.S,
     )
     for selector in (
         ".ws-grid",

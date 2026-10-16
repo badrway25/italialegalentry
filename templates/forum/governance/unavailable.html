@@ -1,27 +1,34 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n static %}
 {% comment %}
-Rendered (HTTP 503) for EVERY route of the governance module while the `virtual_forum` gate is
-closed — to everyone, including a signed-in member of the secretariat and a staff account without
-superadmin. The reserved area answers the same way when its own kill switch is off
-(templates/portal/unavailable.html); this page follows that pattern, with the one difference that
-matters: the wording is honest about WHY. The module is not broken and it is not under maintenance,
-it has not opened yet, and saying « maintenance » about something that has never been available
-would be a small lie told at scale.
-
-No date is promised here. FORUM_GOVERNANCE §7 subordinates the gate to a decision and to the legal
-pages, not to a calendar entry, and this platform does not announce dates it does not control.
+Rendered (HTTP 503) to everyone while the gate `virtual_forum` is closed — design V5 (W3-E step 2; the reserved area's
+own page, templates/portal/unavailable.html, is its twin). A page of service in the error pages' grammar (W3-F2: one
+quiet page, what happened, what to do, the way on, «who can help me»; cms/errori.css and its markup, nothing of its
+own): the door at rest with the key OUT of the lock says it before the words do (errors/_door.html — the owner's door
+stage, static, never mirrored, decorative), the module's name stands in the label's seat where an error page names its
+status, the page's own sentences follow — « pas encore ouvert », never « maintenance »: this module has never been
+open —, then the one act (the Forum's public page, which stays open), the way on and the address. Nothing here is new
+copy.
 {% endcomment %}
 {% block page_title %}{% translate "Forum permanent" %}{% endblock %}
 {% block meta_description %}{% translate "L’espace de gouvernance du Forum permanent n’est pas encore ouvert." %}{% endblock %}
+{% block body_class %}page-error servizio{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/errori.css' %}">{% endblock %}
 {% block content %}
-{% translate "Forum permanent" as header_title %}
-{% include "components/page_header.html" with title=header_title %}
-<div class="container section section--flush-top">
-  {% translate "Espace momentanément indisponible" as notice_title %}
-  {% translate "L’espace de gouvernance du Forum permanent — commissions, tables, propositions, projets et relation annuelle — n’est pas encore ouvert aux participants. La page publique du Forum reste consultable." as notice_text %}
-  {% include "components/notice.html" with kind="pending" title=notice_title text=notice_text %}
-  {% safe_url 'forum:index' as forum_url %}
-  {% if forum_url %}<p><a href="{{ forum_url }}">{% translate "Consulter la page publique du Forum" %}</a></p>{% endif %}
-  <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-</div>
+<section class="container error-page" aria-labelledby="governance-unavailable-title">
+  {% include "errors/_door.html" %}
+  <div class="error-page__body">
+    <header class="error-page__head">
+      <p class="error-page__code">{% translate "Forum permanent" %}</p>
+      <h1 id="governance-unavailable-title" class="error-page__title">{% translate "Espace momentanément indisponible" %}</h1>
+      <p class="error-page__text">{% translate "L’espace de gouvernance du Forum permanent — commissions, tables, propositions, projets et relation annuelle — n’est pas encore ouvert aux participants. La page publique du Forum reste consultable." %}</p>
+    </header>
+    {% safe_url 'forum:index' as forum_url %}
+    {% if forum_url %}
+    <div class="error-page__actions">
+      <a class="btn btn--primary btn--arrow" href="{{ forum_url }}">{% translate "Consulter la page publique du Forum" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+    </div>
+    {% endif %}
+  </div>
+  {% include "errors/_way_on.html" %}
+</section>
 {% endblock %}

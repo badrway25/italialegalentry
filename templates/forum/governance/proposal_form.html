@@ -1,42 +1,36 @@
 {% extends "forum/governance/base_governance.html" %}{% load i18n %}
 {% comment %}
-Drafting a proposal inside ONE commission — the commission comes from the URL, never from the form,
-so a member of commission A cannot post into commission B by editing a hidden field.
-
-The page says what happens next before the form rather than after it: a proposal is saved as a
-draft, stays private to its author, and only moves when the author deposits it. Someone deciding how
-much to write is entitled to know who will read it, and when.
+Tabling a proposal — design V5 (W3-E step 2): the page's head (its title; the commission it is tabled in, said in the
+module's own sentence as the head's line), the clause on what a draft is, W1-C's form, the clause on personal data.
 {% endcomment %}
 {% block page_title %}{% translate "Nouvelle proposition" %}{% endblock %}
 {% block meta_description %}{% translate "Rédiger une proposition dans une commission du Forum permanent." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Nouvelle proposition" as header_title %}
-{% include "components/page_header.html" with title=header_title eyebrow=commission.name_fr %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Nouvelle proposition" %}</h1>
+    <p class="ws-head__lead">{% blocktranslate with commission=commission.name_fr %}Votre proposition sera rattachée à la commission « {{ commission }} ».{% endblocktranslate %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block governance_content %}
-<p class="gloss">
-  {% blocktranslate with commission=commission.name_fr %}Votre proposition sera rattachée à la commission « {{ commission }} ».{% endblocktranslate %}
-</p>
+<div class="reg-page">
+  <p class="reg-note">{% translate "Enregistrée, la proposition reste un brouillon : vous seul la voyez et vous pouvez encore la modifier. Elle devient visible des membres de la commission au moment où vous la déposez, et elle n’est plus modifiable ensuite — le texte examiné est celui qui a été déposé. La décision de la commission est toujours motivée." %}</p>
 
-<p class="note">
-  {% translate "Enregistrée, la proposition reste un brouillon : vous seul la voyez et vous pouvez encore la modifier. Elle devient visible des membres de la commission au moment où vous la déposez, et elle n’est plus modifiable ensuite — le texte examiné est celui qui a été déposé. La décision de la commission est toujours motivée." %}
-</p>
+  <form method="post" class="form" novalidate>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=form %}
+    {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">{% translate "Enregistrer le brouillon" %}</button>
+      {% safe_url 'forum_governance:commission_detail' commission.key as commission_url %}
+      {% if commission_url %}<a class="btn btn--secondary" href="{{ commission_url }}">{% translate "Revenir à la commission" %}</a>{% endif %}
+    </div>
+  </form>
 
-<form method="post" class="form" novalidate>
-  {% csrf_token %}
-  {% include "components/form_errors.html" with form=form %}
-  {% for field in form.visible_fields %}{% include "components/form_field.html" with field=field %}{% endfor %}
-  {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
-  <div class="form-actions">
-    <button type="submit" class="btn btn--primary">{% translate "Enregistrer le brouillon" %}</button>
-    {% safe_url 'forum_governance:commission_detail' commission.key as commission_url %}
-    {% if commission_url %}<a class="btn btn--secondary" href="{{ commission_url }}">{% translate "Revenir à la commission" %}</a>{% endif %}
-  </div>
-</form>
-
-<p class="note">
-  {% translate "N’indiquez dans le texte aucune donnée personnelle et aucun nom de personne physique : la proposition est lue par l’ensemble de la commission, puis citée dans la relation annuelle." %}
-</p>
+  <p class="reg-note">{% translate "N’indiquez dans le texte aucune donnée personnelle et aucun nom de personne physique : la proposition est lue par l’ensemble de la commission, puis citée dans la relation annuelle." %}</p>
+</div>
 {% endblock %}

@@ -9,7 +9,8 @@ docs/source-of-truth/PLATFORM_REQUIREMENTS_V2.md §6 for the requirements it sat
 Three invariants are enforced here rather than in the interface, because an interface can be
 bypassed and a requirement that is only drawn on a screen is not a requirement:
 
-1. A transition that is not declared in ``ALLOWED_TRANSITIONS`` is refused by the domain.
+1. A transition that is not declared in ``ALLOWED_TRANSITIONS`` is refused by the domain — and so is a declared one
+   made by somebody ``TRANSITION_ACTORS`` (the lifecycle's «Chi può» column) does not name.
 2. ``SELECTION`` is unreachable without a valid, unexpired authorised actor assigned to the case
    (Master Dossier §4: reserved activities belong to authorised parties; CR-03).
 3. A checklist item cannot be saved without a responsible actor. "Who is responsible" is the
@@ -92,6 +93,105 @@ def transitions_from(status: str) -> frozenset[str]:
     if status == CaseStatus.SUSPENDED:
         return frozenset(ACTIVE_STATUSES) | {CaseStatus.CLOSED}
     return declared
+
+
+class TransitionActor:
+    """
+    The capacities the «Chi può» column of docs/platform/CASE_LIFECYCLE.md §4 names — identifiers, never shown.
+
+    An assignee acts in the capacity of its ``AssignmentRole`` (the same four strings); the owner of the file as PERSON;
+    an administrator as ADMINISTRATOR; the platform itself as SYSTEM — ``services.transition`` called without an actor:
+    the orientation service's DRAFT → ORIENTED and ORIENTED → REVIEW_REQUIRED, the seeds.
+    """
+
+    PERSON = "person"
+    PROFESSIONAL = "professional"
+    AUTHORISED_ACTOR = "authorised_actor"
+    TRAINING_BODY = "training_body"
+    OPERATOR = "operator"
+    ADMINISTRATOR = "administrator"
+    SYSTEM = "system"
+
+
+_WHO = TransitionActor
+
+#: WHO may perform each transition ``ALLOWED_TRANSITIONS`` declares — the «Chi può» column of CASE_LIFECYCLE.md §4, as
+#: data (finding F-7). ``services.transition`` enforces it whenever it is given an actor, and
+#: ``services.transitions_available`` is computed from it, so the case page never offers a move the domain refuses.
+#: A row names EVERY capacity that may make the move, the administrator included — which §4 names on none of these
+#: rows, only on the three below the table (suspend, close, and lift a suspension as «superiore»): an administrator
+#: neither opens nor concludes a selection (CR-03: a reserved activity), nor claims an orientation or a professional
+#: review nobody ran (sec-f7 REVIEW, finding 1). The rows the graph declares and §4's table does not («not in §4»)
+#: are nobody's (rule 2), the platform's own path aside. ``BEYOND_SECTION_4`` lists, each with its reason, the
+#: capacities this data holds that §4 does not name — the owner's to confirm or remove (sec-f7 NOTES, Q1 and Q5).
+TRANSITION_ACTORS: dict[tuple[str, str], frozenset[str]] = {
+    (CaseStatus.DRAFT, CaseStatus.ORIENTED): frozenset({_WHO.SYSTEM}),
+    (CaseStatus.ORIENTED, CaseStatus.REVIEW_REQUIRED): frozenset({_WHO.SYSTEM, _WHO.OPERATOR}),
+    (CaseStatus.ORIENTED, CaseStatus.TRAINING): frozenset({_WHO.OPERATOR, _WHO.TRAINING_BODY}),
+    (CaseStatus.ORIENTED, CaseStatus.ADMIN_PROCESS): frozenset({_WHO.OPERATOR}),
+    (CaseStatus.REVIEW_REQUIRED, CaseStatus.ORIENTED): frozenset({_WHO.PROFESSIONAL}),
+    (CaseStatus.REVIEW_REQUIRED, CaseStatus.TRAINING): frozenset({_WHO.PROFESSIONAL}),
+    (CaseStatus.REVIEW_REQUIRED, CaseStatus.ADMIN_PROCESS): frozenset(),  # not in §4
+    (CaseStatus.TRAINING, CaseStatus.SELECTION): frozenset({_WHO.AUTHORISED_ACTOR}),
+    (CaseStatus.TRAINING, CaseStatus.ADMIN_PROCESS): frozenset(),  # not in §4
+    (CaseStatus.TRAINING, CaseStatus.ORIENTED): frozenset(),  # not in §4
+    (CaseStatus.SELECTION, CaseStatus.ADMIN_PROCESS): frozenset({_WHO.AUTHORISED_ACTOR}),
+    (CaseStatus.SELECTION, CaseStatus.TRAINING): frozenset({_WHO.AUTHORISED_ACTOR, _WHO.ADMINISTRATOR}),  # not in §4
+    (CaseStatus.ADMIN_PROCESS, CaseStatus.PRE_DEPARTURE): frozenset({_WHO.OPERATOR}),
+    (CaseStatus.ADMIN_PROCESS, CaseStatus.REVIEW_REQUIRED): frozenset(),  # not in §4
+    (CaseStatus.PRE_DEPARTURE, CaseStatus.ENTERED): frozenset({_WHO.OPERATOR}),
+    (CaseStatus.PRE_DEPARTURE, CaseStatus.ADMIN_PROCESS): frozenset(),  # not in §4
+    (CaseStatus.ENTERED, CaseStatus.POST_ENTRY): frozenset({_WHO.SYSTEM, _WHO.ADMINISTRATOR}),
+}
+
+#: «qualunque attivo → SUSPENDED: persona, operatore, amministratore». DRAFT → SUSPENDED («persona, operatore») is one
+#: of those moves: a move is open to every capacity that a row of §4 matching it names.
+SUSPEND_ACTORS: frozenset[str] = frozenset({_WHO.PERSON, _WHO.OPERATOR, _WHO.ADMINISTRATOR})
+#: «qualunque → CLOSED: persona, amministratore» — and «POST_ENTRY → CLOSED: operatore, persona».
+CLOSE_ACTORS: frozenset[str] = frozenset({_WHO.PERSON, _WHO.ADMINISTRATOR})
+CLOSE_ACTORS_FROM: dict[str, frozenset[str]] = {CaseStatus.POST_ENTRY: CLOSE_ACTORS | {_WHO.OPERATOR}}
+#: «SUSPENDED → stato precedente: chi ha sospeso, o superiore» — the superior is the administrator (sec-f7 NOTES, Q4);
+#: whoever suspended the file is a fact of its history this table cannot hold (``services.suspended_by``). §4 declares
+#: no other way out of SUSPENDED but CLOSED.
+RESUME_ACTORS: frozenset[str] = frozenset({_WHO.ADMINISTRATOR})
+
+#: Every capacity the data above holds that §4 does not name, with its reason — the only departures from the table.
+#: ``apps/cases/tests/test_transition_actors.py`` reads §4 from the document and checks that the data is the table plus
+#: exactly these. Each is the owner's to confirm (and §4 to gain) or to remove (sec-f7 NOTES, Q1 and Q5).
+BEYOND_SECTION_4: dict[tuple[str, str], tuple[frozenset[str], str]] = {
+    (CaseStatus.SELECTION, CaseStatus.TRAINING): (
+        frozenset({_WHO.AUTHORISED_ACTOR, _WHO.ADMINISTRATOR}),
+        "Not in §4. A selection that ends without a referral returns the file to its training pathway "
+        "(selection.services.conclude); and the administrator's way out of a selection that can no longer be "
+        "concluded (sec-f7 REVIEW, finding 4). The move asserts no outcome.",
+    ),
+    (CaseStatus.ENTERED, CaseStatus.POST_ENTRY): (
+        frozenset({_WHO.ADMINISTRATOR}),
+        "§4 names «sistema — automatica», and nothing performs the move: the administrator stands in for the missing "
+        "automation, so that a file whose entry is recorded can reach its accompaniment (sec-f7 NOTES, Q5).",
+    ),
+}
+
+
+def transition_actors(status: str, target: str, *, previous: str = "") -> frozenset[str]:
+    """
+    The capacities that may move a file from ``status`` to ``target`` — empty when the move is not declared at all,
+    and for a declared move nobody may make (a row §4 does not have).
+
+    Out of SUSPENDED, ``previous`` is the state the file was suspended from: the way back to it is the superior's
+    (``RESUME_ACTORS``) and, at runtime, whoever suspended the file — ``services.permitted_transitions`` reads that
+    from the audit trail («chi ha sospeso, o superiore»). Every other way out of SUSPENDED but CLOSED is nobody's:
+    §4 declares the way back to the previous state only.
+    """
+    if target not in transitions_from(status):
+        return frozenset()
+    if target == CaseStatus.CLOSED:
+        return CLOSE_ACTORS_FROM.get(status, CLOSE_ACTORS)
+    if target == CaseStatus.SUSPENDED:
+        return SUSPEND_ACTORS
+    if status == CaseStatus.SUSPENDED:
+        return RESUME_ACTORS if previous and target == previous else frozenset()
+    return TRANSITION_ACTORS.get((status, target), frozenset())
 
 
 class CasePurpose(models.TextChoices):
@@ -221,10 +321,16 @@ class CaseFile(TimeStampedModel):
         return target in self.allowed_transitions()
 
     def has_valid_authorised_actor(self) -> bool:
-        """True when a non-revoked assignment carries an authorisation valid today."""
+        """
+        True when a non-revoked AUTHORISED_ACTOR assignment carries an authorisation valid today (CR-03, §4 rule 1).
+
+        The role is part of it: an operator's or a professional's assignment that happens to carry a reference is not
+        an authorised actor (sec-f7 REVIEW, the CR-03 observation).
+        """
         today = timezone.localdate()
         return (
             self.assignments.filter(
+                role=AssignmentRole.AUTHORISED_ACTOR,
                 revoked_at__isnull=True,
                 authorisation_reference__gt="",
             )

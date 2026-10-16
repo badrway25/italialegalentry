@@ -1,45 +1,41 @@
 {% extends "forum/governance/base_governance.html" %}{% load i18n %}
 {% comment %}
-The commissions this account may open — and only those. The list comes from
-`Commission.objects.readable_by(user)`, so a commission the reader cannot open is not merely
-hidden here: it is absent from the query, and its detail page answers 404. The list and the detail
-page therefore always agree, which is what `test_governance_access.py` asserts route by route.
-
-One register, one row per commission, the state as a WORD at the inline end. No counters of
-members or proposals: a number a reader cannot click through to is decoration.
+The commissions a member can open — design V5 (W3-E step 2): the page's head, then the register — one row a
+commission, its name the way to its page (stretched over the row), its edition and its field, its state as a chip.
+Access follows a dated mandate: a commission without one does not appear, and the empty register says who opens it.
 {% endcomment %}
 {% block page_title %}{% translate "Commissions du Forum permanent" %}{% endblock %}
 {% block meta_description %}{% translate "Les commissions mixtes du Forum permanent que vous pouvez consulter." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Commissions" as header_title %}
-{% translate "Chaque priorité de l’édition est confiée à une commission mixte. Vous accédez à celles où vous détenez un mandat en cours." as header_lead %}
-{% translate "Forum permanent" as header_eyebrow %}
-{% include "components/page_header.html" with title=header_title lead=header_lead eyebrow=header_eyebrow %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Commissions" %}</h1>
+    <p class="ws-head__lead">{% translate "Chaque priorité de l’édition est confiée à une commission mixte. Vous accédez à celles où vous détenez un mandat en cours." %}</p>
+  </div>
+</header>
 {% endblock %}
 
 {% block governance_content %}
-<section class="portal-section" aria-labelledby="commissions-title">
-  <p class="folio"><span class="folio__ordinal" aria-hidden="true"></span><span class="folio__head">{% translate "Registre" %}</span></p>
-  <h2 class="portal__section-title" id="commissions-title">{% translate "Les commissions ouvertes à votre consultation" %}</h2>
-  {% if commissions %}
-  <ol class="register">
-    {% for commission in commissions %}
-    <li class="register__item">
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="commissions-title">
+    <h2 class="db-h2 reg-sec__title" id="commissions-title"><span>{% translate "Les commissions ouvertes à votre consultation" %}</span></h2>
+    {% if commissions %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for commission in commissions %}
       {% safe_url 'forum_governance:commission_detail' commission.key as commission_url %}
-      {% if commission_url %}<a class="entry" href="{{ commission_url }}">{% else %}<div class="entry">{% endif %}
-        <span class="entry__ordinal" aria-hidden="true"></span>
-        <h3 class="entry__title">{{ commission.name_fr }}</h3>
-        <span class="entry__gloss">{{ commission.edition.title_fr }}{% if commission.scope_fr %} — {{ commission.scope_fr }}{% endif %}</span>
-        {% chip commission.status "forum.CommissionStatus" css_class="entry__actor" %}{{ commission.get_status_display }}{% endchip %}
-      {% if commission_url %}</a>{% else %}</div>{% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% else %}
-  <p class="empty">
-    {% translate "Aucune commission ne vous est ouverte. L’accès suit un mandat daté : dès qu’un mandat est ouvert à votre nom par le secrétariat du Forum, la commission correspondante apparaît ici." %}
-  </p>
-  {% endif %}
-</section>
+      <li class="db-task reg-row{% if commission_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if commission_url %}<a class="reg-row__link" href="{{ commission_url }}">{{ commission.name_fr }}</a>{% else %}{{ commission.name_fr }}{% endif %}</h3>
+          <p class="db-task__meta">{{ commission.edition.title_fr }}{% if commission.scope_fr %} — {{ commission.scope_fr }}{% endif %}</p>
+        </div>
+        <div class="db-task__state">{% chip commission.status "forum.CommissionStatus" %}{{ commission.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune commission ne vous est ouverte. L’accès suit un mandat daté : dès qu’un mandat est ouvert à votre nom par le secrétariat du Forum, la commission correspondante apparaît ici." %}</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}

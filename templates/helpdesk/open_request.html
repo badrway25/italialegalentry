@@ -1,6 +1,9 @@
 {% extends "helpdesk/base_helpdesk.html" %}{% load i18n %}
 {% comment %}
-OPENING A REQUEST.
+OPENING A REQUEST — design V5 (W3-E step 2): the page's head, W1-C's form (v5/field.css: the fields, the actions after
+their hairline), the clause. The head's promise stands beside the person's own seal — the actor's glyph of the registry
+that heads the person's turns in the exchange the request opens (plan §3.1 item 7: what says ILE on this screen at rest;
+the review's minor 10).
 
 Four fields and a sentence saying what happens to what you write. The form explicitly asks NOT to
 send special-category data (GDPR art. 9), because the surest way not to hold it is not to collect
@@ -10,24 +13,26 @@ it, and because a person who does not know that will naturally write everything.
 {% block meta_description %}{% translate "Adresser une question au guichet numérique." %}{% endblock %}
 
 {% block portal_header %}
-{% translate "Ouvrir une demande" as header_title %}
-{% translate "Votre question est lue par une personne. Aucune réponse n’est produite automatiquement et aucun délai ne vous est promis avant qu’un professionnel ait été désigné." as header_lead %}
-{% include "components/page_header.html" with title=header_title lead=header_lead %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Ouvrir une demande" %}</h1>
+    <p class="ws-head__lead reg-promise">{% with glyph="person"|actor_glyph %}<span class="reg-row__seal" aria-hidden="true">{% svg_icon glyph "icon" %}</span>{% endwith %}<span>{% translate "Votre question est lue par une personne. Aucune réponse n’est produite automatiquement et aucun délai ne vous est promis avant qu’un professionnel ait été désigné." %}</span></p>
+  </div>
+</header>
 {% endblock %}
 
 {% block portal_content %}
-<form class="desk-form" method="post" action="{% url 'helpdesk:open' %}" novalidate>
-  {% csrf_token %}
-  {% include "components/form_errors.html" with form=form %}
-  {% for field in form %}{% include "components/form_field.html" with field=field %}{% endfor %}
-  <div class="desk-form__actions">
-    <button type="submit" class="btn btn--primary">{% translate "Enregistrer ma demande" %}</button>
-    <a class="btn btn--secondary" href="{% url 'helpdesk:requests' %}">{% translate "Annuler" %}</a>
-  </div>
-</form>
+<div class="reg-page">
+  <form class="form" method="post" action="{% url 'helpdesk:open' %}" novalidate>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=form %}
+    {% for field in form %}{% include "components/form_field.html" with field=field %}{% endfor %}
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">{% translate "Enregistrer ma demande" %}</button>
+      <a class="btn btn--secondary" href="{% url 'helpdesk:requests' %}">{% translate "Annuler" %}</a>
+    </div>
+  </form>
+</div>
 
-<p class="note">
-  <span class="note__marker" aria-hidden="true">1</span>
-  {% translate "Ce que vous écrivez est conservé avec votre demande et lu par le professionnel désigné, pour la durée de son mandat. Les opérateurs qui désignent les professionnels ne voient pas le texte de votre demande, et l’équipe éditoriale n’y a aucun accès." %}
-</p>
+<p class="reg-note">{% translate "Ce que vous écrivez est conservé avec votre demande et lu par le professionnel désigné, pour la durée de son mandat. Les opérateurs qui désignent les professionnels ne voient pas le texte de votre demande, et l’équipe éditoriale n’y a aucun accès." %}</p>
 {% endblock %}

@@ -1,14 +1,30 @@
-{% extends "base.html" %}{% load i18n %}
-{% comment %}Rendered (HTTP 503) while core.SiteSettings.reserved_area_enabled is switched off in the back-office.{% endcomment %}
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Rendered (HTTP 503) while core.SiteSettings.reserved_area_enabled is switched off in the back-office — design V5 (W3-E;
+docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7). A page of service in the error pages' grammar (W3-F2: one quiet
+page, what happened, what to do, the way on, «who can help me»; cms/errori.css and its markup, nothing of its own),
+because that is what it is: the reserved area's door is closed for a while. The door at rest says it before the words
+do — the owner's door stage with the key OUT of the lock, static, never mirrored, decorative (errors/_door.html) —, the
+space's name stands in the label's seat where an error page names its status, the page's own sentences follow, then the
+one primary (the home), the way on and the address. Nothing here is new copy.
+{% endcomment %}
 {% block page_title %}{% translate "Espace réservé" %}{% endblock %}
 {% block meta_description %}{% translate "L’espace réservé est momentanément indisponible." %}{% endblock %}
+{% block body_class %}page-error servizio{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/errori.css' %}">{% endblock %}
 {% block content %}
-{% translate "Espace réservé" as header_title %}
-{% include "components/page_header.html" with title=header_title %}
-<div class="container section section--flush-top">
-  {% translate "Espace momentanément indisponible" as notice_title %}
-  {% translate "L’espace réservé est temporairement fermé pour maintenance. Vos données sont conservées ; merci de réessayer plus tard." as notice_text %}
-  {% include "components/notice.html" with kind="pending" title=notice_title text=notice_text %}
-  <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-</div>
+<section class="container error-page" aria-labelledby="unavailable-title">
+  {% include "errors/_door.html" %}
+  <div class="error-page__body">
+    <header class="error-page__head">
+      <p class="error-page__code">{% translate "Espace réservé" %}</p>
+      <h1 id="unavailable-title" class="error-page__title">{% translate "Espace momentanément indisponible" %}</h1>
+      <p class="error-page__text">{% translate "L’espace réservé est temporairement fermé pour maintenance. Vos données sont conservées ; merci de réessayer plus tard." %}</p>
+    </header>
+    <div class="error-page__actions">
+      <a class="btn btn--primary btn--arrow" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+    </div>
+  </div>
+  {% include "errors/_way_on.html" %}
+</section>
 {% endblock %}

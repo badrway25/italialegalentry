@@ -854,21 +854,40 @@ def test_a_page_s_action_bar_takes_the_entries_place_and_menu_keeps_its_end(
     context.close()
 
 
-def test_the_questionnaire_s_foot_is_part_of_its_page_and_the_bar_keeps_its_entries(
+def test_the_questionnaire_s_one_act_is_the_phone_s_action_bar_and_its_foot_stays_in_the_page(
     browser, live_server, seeded, person_user
 ):
+    """W3-A left the questionnaire's foot in its page below 64rem, its ONE act a candidate for the action bar (DL54-70);
+    W3-E made it so: «Continuer» (the submit on the last question) is the page's bar, «Menu» keeps its end, the four
+    entries give their place, and «Précédent» and the position stay in the page's foot."""
     context = _context(browser, live_server, person_user)
     page = context.new_page()
     _at_rest(page, live_server, SITUATION.format(lang="fr"))
+    assert page.locator("[data-console-action]").count() == 1, "the questionnaire declares its phone action bar"
     chrome = page.evaluate(CHROME_JS)
-    assert len(chrome["bottom"]["items"]) == 5 and chrome["overflow"] <= 0, "the bar keeps its four entries and «Menu»"
+    assert chrome["overflow"] <= 0
+    assert [item["menu"] for item in chrome["bottom"]["items"]] == [True], (
+        "the four entries give their place: «Menu» alone"
+    )
+    bar = page.evaluate(
+        """() => { const b = document.querySelector('[data-console-action]'); const r = b.getBoundingClientRect(); const s = getComputedStyle(b);
+          const acts = [...b.querySelectorAll('button')].filter((c) => c.getBoundingClientRect().width > 0);
+          const a = acts[0].getBoundingClientRect();
+          return {position: s.position, bottom: r.bottom, left: r.left, right: r.right, height: r.height, vh: innerHeight,
+                  acts: acts.map((c) => c.textContent.trim()), act: {width: a.width, height: a.height}}; }"""
+    )
+    assert bar["position"] == "fixed" and bar["bottom"] == bar["vh"], bar
+    assert bar["left"] == 0 and bar["right"] == chrome["vw"], "one bar, edge to edge"
+    assert bar["acts"] == ["Continuer"], "ONE act on the bar while stepping: the save waits for the last question"
+    assert bar["act"]["height"] >= 44 and bar["act"]["width"] >= 240, "the page's one act fills the rest"
     foot = page.evaluate(
         """() => { const f = document.querySelector('[data-wizard-foot]'); const s = getComputedStyle(f); const r = f.getBoundingClientRect();
-          const kids = [...f.children].filter((c) => !c.hidden && c.getBoundingClientRect().width > 0).map((c) => c.getBoundingClientRect());
-          return {position: s.position, wrap: s.flexWrap, left: r.left, right: r.right, vw: document.documentElement.clientWidth,
+          const kids = [...f.children].filter((c) => !c.hidden && !c.matches('[data-console-action]') && c.getBoundingClientRect().width > 0)
+            .map((c) => c.getBoundingClientRect());
+          return {position: s.position, wrap: s.flexWrap,
                   inside: kids.every((k) => k.left >= r.left - 0.5 && k.right <= r.right + 0.5)}; }"""
     )
     assert foot["position"] == "static" and foot["wrap"] == "wrap" and foot["inside"], foot
-    stays = chrome["bar"]["box"]["h"] + chrome["bottom"]["box"]["h"]
+    stays = chrome["bar"]["box"]["h"] + bar["height"]
     assert stays <= 120, f"«Ma situation» kept 177 px of chrome while its form was on screen: {stays}"
     context.close()

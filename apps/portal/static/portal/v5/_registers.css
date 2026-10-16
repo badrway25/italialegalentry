@@ -1,0 +1,1116 @@
+/* ============================================================================================
+   THE REGISTERS — the console's secondary pages, design V5 (W3-E): the person's «Mes échéances», «Communications»,
+   «Mes demandes» and their records (step 1); the company's pages beyond its dashboard, the Academy, the help desk,
+   the selection and the Forum permanent (step 2) — one grammar, drawn once.
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.2 (the registers; «soon» attesa, «overdue» azione), §1.3
+   (corners), §1.4 (SH-2 hairlines before boxes, SH-8 one raised plane), §3.1 item 7 (what says ILE on a screen);
+   platform.md §3 («the register's header grammar», «rows with the status chip», «Non lue» as a word; E-3, the
+   counts as the register's filter).
+   A partial (`_`): imported by apps/portal/static/portal/registers.css, the page sheet those pages link — never
+   an output of its own, never in a shared bundle (the owner's V5.8).
+
+     1  the head of a record — its title in its own direction, its kind and its reference on one line
+     2  the reference: ILE Mono, its own order whatever the page's direction
+     3  the page's column, the band, the sections
+     4  the rows — the dashboard's row (`.db-task`, v5/_dashboard.css on every console page) given the registers'
+        columns; the whole row as the way to its record; a communication's seal and its unread state
+     5  a record's facts — W1-C's summary strip at the console's text size
+     6  the letter — one communication; 6b the pre-assessments of «Mon parcours»
+     7  the acts
+     9  the clause — what a record is not, at the foot of a page or a section
+    10  a sequence of steps — a course's modules, a process's phases, a need's history
+    11  the exchange — the turns of a request, each headed by a function and a date
+    12  the answerable party — who answers for a stage, a need, a request, under which authorisation
+    13  the form of an act — its title, its sentence, W1-C's fields and actions; the body of an act's alert dialog
+    14  the filter — the register's counts as the way to narrow it (E-3), never tiles; one row that scrolls on a phone
+     8  a phone, a finger, forced colours (last: it closes every section above)
+
+   One grammar with the dashboard and «Mes pièces»: the page's head, then the band (how many, in the bridge's words),
+   then rows on hairlines with their state as a chip — the chip is v5/chip.css's, the date's glyph and word the
+   dashboard's `.db-due`, the unread dot and word its `.db-unread` / `.db-list__new`: this sheet places them, it never
+   paints them again. No raised plane on these pages, no shadow; corners: the chips' full, the seal's disc, the
+   buttons' 4 — with the shell's, three. Nothing moves at load; a row's hover is its title's underline, at once.
+   Tokens only, logical properties only.
+   ============================================================================================ */
+
+/* ---- 1 · The head of a record ---------------------------------------------------------------- */
+/* the frame's distance from the head to the content (SP-5), as the ContextHeader's and «Mes pièces»' */
+.console__workspace > .reg-head {
+  margin-block-end: var(--s-8);
+}
+
+/* a record's own words for a title (a subject, a request): isolated in its own direction, its box hugs its words and
+   stands on the page's reading edge — a French subject on an Arabic page, at the frame's rule (DL54-64) */
+.reg-head__title[dir] {
+  inline-size: fit-content;
+  max-inline-size: min(44rem, 100%);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+/* wrapped, its lines stay on that edge too — the words' own end, which is the page's start: one rule for every title
+   in the other direction than the page — the head's, a row's (§4) —, a wrapped one never drifting to the far side
+   (the review's minor 6: a wrapped French subject stood left on an Arabic page, the dates' titles right) */
+:dir(rtl) :is(.reg-head__title, .reg-row .db-task__title):dir(ltr),
+:dir(ltr) :is(.reg-head__title, .reg-row .db-task__title):dir(rtl) {
+  text-align: end;
+}
+
+/* a head with two lines of context (a declaration: who declares, then what is asked), or a line of context and then
+the record's facts (its edition, its state) */
+.reg-head .ws-head__lead + .ws-head__lead {
+  margin-block-start: var(--s-2);
+}
+
+.reg-head .ws-head__lead + .reg-head__meta {
+  margin-block-start: var(--s-3);
+}
+
+.reg-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-3);
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+/* a promise said beside the seal of whom it is made to — the guichet's opening form: the person's own seal, the one that
+   heads their turns in the exchange the request opens */
+.reg-promise {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+/* the pre-assessment's outcome with the glyph of its place on the journey (the section's glyph on the dashboard and the
+   case file: «La soglia»'s «Pré-évaluation et parcours possibles») */
+.reg-outcome {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.reg-outcome .icon {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  color: var(--icon-muted);
+}
+
+/* ---- 2 · The reference: ILE Mono, the ledger's hand ------------------------------------------- */
+.reg-ref {
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  line-height: var(--u-ref-lh);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--text-2);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ---- 3 · The page's column, the band, the sections -------------------------------------------- */
+/* one column that never grows past the frame: a wide child (a table's scroll region, a long reference) overflows
+   inside itself, never widening its siblings past a phone's edge */
+.reg-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-10);
+  min-inline-size: 0;
+}
+
+/* the band: the register's count under the page's head, on the dashboard's ledger line (`.db-ledger`) — the figure
+   one step under the page's title (20/28, 500), never a stat card's numeral; a state worth saying beside it as a chip */
+.reg-band {
+  align-items: baseline;
+  margin-block-end: calc(-1 * var(--s-4));
+}
+
+.reg-band__count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s-2);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+}
+
+.reg-band__n {
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+/* the unread event, said once: the ink dot, the heavier weight, the words */
+.reg-band__count--unread {
+  align-items: center;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg-band__state {
+  margin: 0;
+}
+
+.reg-sec__title {
+  margin-block-end: var(--s-4);
+}
+
+/* a section's one sentence and its numbered sources hold the reading measure, as the page's other prose (on the
+   pre-assessment they ran at the column's 1 130 px, ≈ 160 characters a line) */
+.reg-sec > :is(.db-empty, .sources) {
+  max-inline-size: var(--measure-body);
+}
+
+/* blocks of one section, one under the other (an edition's row and its mandates; two editions) */
+.reg-stack {
+  display: grid;
+  gap: var(--s-4);
+  min-inline-size: 0;
+}
+
+.reg-stack + .reg-stack {
+  margin-block-start: var(--s-8);
+}
+
+/* a part of a section under its own words (the expected competences, the outcome, a request waiting): one step under
+   the section's head */
+.reg-sub {
+  margin: var(--s-6) 0 var(--s-3);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg-sub:first-child {
+  margin-block-start: 0;
+}
+
+/* a line of counts opening a section, right under its head (a project's milestones done) */
+.reg-sec__title + .db-line {
+  margin-block: 0 var(--s-4);
+}
+
+/* ---- 4 · The rows ------------------------------------------------------------------------------
+   The dashboard's row (64 px at least, hairlines between rows, no box), in the registers' columns: the words, the
+   state, the date — a communication: its seal, its words, its act. The first line of every cell on the title's
+   first line (the baseline: a tall row never floats its chip in its middle). */
+@media (min-width: 48rem) {
+  .reg-rows {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .reg-rows--mail {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+}
+
+.reg-rows > .reg-row {
+  align-items: baseline;
+}
+
+/* a communication's row is two lines beside its seal and its act: the three stand on the row's middle (a baseline
+   shared with a button's box would push the subject down, under its seal) */
+.reg-rows--mail > .reg-row {
+  align-items: center;
+}
+
+/* a record's own words in a direction only the text knows (dir="auto": a title, a description the team wrote) hug
+   their box, which then stands on the row's reading edge — a French title on an Arabic page, the dashboard's rule */
+.reg-row .db-task__title[dir],
+.reg-row .db-task__meta[dir] {
+  inline-size: fit-content;
+}
+
+.reg-row .db-task__title[dir] {
+  max-inline-size: 100%;
+}
+
+/* hugging its words never takes a line wider than its column: the measure, or the column on a phone */
+.reg-row .db-task__meta[dir] {
+  max-inline-size: min(100%, var(--measure-small));
+}
+
+/* a deadline's description and its source: the words the team wrote, at the row's quiet size */
+.reg-row__text,
+.reg-row__source {
+  margin-block-start: var(--s-1);
+}
+
+/* a row's line of facts: its parts one after the other, a quiet point between them */
+.reg-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-variant-numeric: var(--numeric-data);
+}
+
+/* the point stands BETWEEN two parts and never at a line's end or start (the review's minor 1: a wrapped line ended on
+   one): each part opens with its point, in a box the width of the gap, pulled into the gap before it; the first part of
+   every line pulls its point out of the line's box, which clips it (`overflow-x: clip`, both inline edges: the same in
+   both directions; the block axis stays visible). A part is a span of words — a state's chip stands in one of its own,
+   so no point is drawn inside its edge */
+.reg-row__meta,
+.reg-step__meta {
+  --meta-sep: calc(2 * var(--s-2) + 0.3em);
+  column-gap: var(--meta-sep);
+  overflow-x: clip;
+}
+
+.reg-row__meta > *,
+.reg-step__meta > * {
+  margin-inline-start: calc(-1 * var(--meta-sep));
+}
+
+.reg-row__meta > *::before,
+.reg-step__meta > *::before {
+  content: "·";
+  display: inline-block;
+  inline-size: var(--meta-sep);
+  text-align: center;
+  color: var(--text-3);
+}
+
+/* THE ROW IS THE WAY TO ITS RECORD: the title's link is stretched over the row (z 1), the row's own act above it
+   (z 2) — no point of the row is dead. Contact underlines the title, at once (a list read every day does not lift,
+   cast a shadow or scale); the keyboard's ring is the link's own. */
+.reg-row--link {
+  position: relative;
+}
+
+.reg-row__link {
+  border-radius: var(--radius-xs);
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.reg-row__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.reg-row__link:focus-visible {
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .reg-row--link:hover .reg-row__link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.reg-row__act {
+  position: relative;
+  z-index: 2;
+}
+
+.reg-row__act form {
+  margin: 0;
+}
+
+/* a communication: the project's mark as its sender — the registry's glyph of the team (`ile-mark`, at its 20 px
+   floor) on the toned disc of the console's glyphs —, its subject one step quieter once read */
+.reg-row__seal {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--glyph-disc-md);
+  block-size: var(--glyph-disc-md);
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-strong);
+}
+
+.reg-row__seal .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+.reg-rows--mail .db-task__title {
+  font-weight: var(--w-control);
+}
+
+.reg-rows--mail .reg-row__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+/* unread: the dot, the weight, the word «Non lue» — never a colour alone */
+.reg-rows--mail .reg-row--unread .db-task__title {
+  font-weight: var(--w-title);
+}
+
+/* ---- 5 · A record's facts: W1-C's summary strip, at the console's text size -------------------- */
+.reg-summary .summary__item > dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--s-6);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+}
+
+.reg-summary .reg-ref {
+  color: var(--text-1);
+}
+
+/* what the person transmitted is in the submission's own language and direction (dir="auto"): the value hugs its
+   words on the row's reading edge — a French name on an Arabic page stood at the far side of its row */
+.reg-page .portal-facts dd[dir] {
+  justify-self: start;
+}
+
+/* ---- 6 · The letter -----------------------------------------------------------------------------
+   One communication as the letter it is: its head — the team's mark as the sender's seal, the sender, when it came
+   and whether it was read —, a hairline, the text at the reading size and measure, the record it is about. Flat on
+   the page: no sheet, no shadow. */
+.reg-letter {
+  display: grid;
+  gap: var(--s-6);
+  max-inline-size: var(--measure-body);
+  min-inline-size: 0;
+}
+
+.reg-letter__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block-end: var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.reg-letter__seal {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--glyph-disc-lg);
+  block-size: var(--glyph-disc-lg);
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-strong);
+}
+
+.reg-letter__seal .icon {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+}
+
+.reg-letter__from {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.reg-letter__who {
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg-letter__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-4);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.reg-letter__fact {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--s-1);
+}
+
+.reg-letter__fact dt {
+  color: var(--text-3);
+}
+
+/* the label's colon is French punctuation written by the sheet, as the metadata row writes it (G-14) */
+.reg-letter__fact dt::after {
+  content: "\00a0:";
+}
+
+.reg-letter__fact dd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin: 0;
+}
+
+.reg-letter__body,
+.reg-prose {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.reg-letter__body p,
+.reg-prose p {
+  margin: 0 0 var(--s-4);
+}
+
+.reg-letter__body p:last-child,
+.reg-prose p:last-child {
+  margin-block-end: 0;
+}
+
+.reg-prose {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+}
+
+.reg-letter__about {
+  margin: 0;
+}
+
+/* ---- 6b · The pre-assessments of «Mon parcours» ----------------------------------------------------
+   Each saved result a record on its hairline: its title at the section's size (the outcome's own words, in their own
+   language), its facts on the metadata row, the informational next steps at the reading size, the locked disclaimer
+   (the notice component), the way to the whole result. */
+.reg-results {
+  display: grid;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.reg-result {
+  display: grid;
+  gap: var(--s-3);
+  min-inline-size: 0;
+  padding-block: var(--s-6);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.reg-result__title {
+  margin: 0;
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.reg-result__title[lang] {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+:lang(ar) .reg-result__title:not([lang]) {
+  letter-spacing: 0;
+}
+
+.reg-result__steps {
+  display: grid;
+  max-inline-size: var(--measure-body);
+}
+
+.reg-result__steps-title {
+  margin: var(--s-2) 0 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+/* a group of steps is named in words at the console's small size — not V1's folio label in tracked capitals, which
+   every `h4` still is (base.css) */
+.reg-result__group {
+  margin: var(--s-4) 0 var(--s-1);
+  font-family: var(--f-sans);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-title);
+  font-feature-settings: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-2);
+}
+
+.reg-result__list {
+  margin: 0;
+  padding-inline-start: var(--s-5);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+}
+
+.reg-result__list > li + li {
+  margin-block-start: var(--s-1);
+}
+
+.reg-result__more {
+  margin: 0;
+}
+
+/* ---- 7 · The acts ---------------------------------------------------------------------------- */
+.reg-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+}
+
+.reg-acts form {
+  margin: 0;
+}
+
+/* ---- 9 · The clause ------------------------------------------------------------------------------
+   What a record is not — never a decision, never a title, never a promise: the legal apparatus of a page, at its
+   foot or under the section it qualifies. One quiet paragraph after a hairline, at the console's small size and the
+   reading measure; the words are the clause's own (V1's `.note`, redrawn: no margin rail at 34ch, no marker). */
+.reg-note {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* a clause that closes the page stands the page's rhythm under its content */
+.reg-page + .reg-note {
+  margin-block-start: var(--s-10);
+}
+
+/* a clause under the content of its section — rows, a table, facts, which already end on their hairline — or under a
+   party's facts is a line of its own: no second hairline */
+.reg-sec > .reg-note,
+.reg-party > .reg-note {
+  margin-block-start: var(--s-4);
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* ---- 10 · A sequence of steps -----------------------------------------------------------------------
+   An order that matters — a course's modules, a process's phases, a need's history, a project's milestones: rows on
+   hairlines, each its place in ILE Mono (the ledger's hand, never a display numeral), its words, its state at the end
+   when it has one. The step a sequence is on carries `aria-current="step"`: its place in the accent's ink and the
+   title's weight — the word beside it says it too («Phase en cours depuis le …»). A history (`--log`) is not an
+   order to follow: its rows carry their date, not a place. */
+.reg-steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+  counter-reset: reg-step;
+}
+
+.reg-step {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  column-gap: var(--s-4);
+  align-items: baseline;
+  min-block-size: var(--s-16);
+  padding-block: var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.reg-step::before {
+  counter-increment: reg-step;
+  content: counter(reg-step, decimal-leading-zero);
+  font-family: var(--f-mono);
+  font-size: var(--u-ref);
+  line-height: var(--u-ui-lh);
+  color: var(--text-3);
+  direction: ltr;
+}
+
+.reg-steps--log > .reg-step {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.reg-steps--log > .reg-step::before {
+  content: none;
+}
+
+.reg-step__words {
+  display: grid;
+  gap: var(--s-1);
+  min-inline-size: 0;
+}
+
+.reg-step__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-3);
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg-step__text {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.reg-step__meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.reg-step__end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.reg-step[aria-current="step"]::before {
+  font-weight: var(--w-title);
+  color: var(--accent-text);
+}
+
+.reg-step__act {
+  margin: var(--s-2) 0 0;
+}
+
+/* ---- 11 · The exchange ----------------------------------------------------------------------------
+   The turns of a request, in order: each headed by WHO speaks — a function, never a person's name: its actor's glyph
+   (the registry's ACTOR map: the person, the appointed professional, the project's mark) on the toned disc of the
+   console's glyphs, the function, the date, what kind of turn it is — then what was written, at the reading size
+   and measure. A professional's own note sits on the area's ground, its word «note interne» beside its kind: it is
+   never mistaken for the shared exchange. */
+.reg-turns {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.reg-turn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-3);
+  row-gap: var(--s-2);
+  padding-block: var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.reg-turn__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-3);
+  min-block-size: var(--glyph-disc-md);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+.reg-turn__who {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg-turn__body {
+  grid-column: 2;
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.reg-turn--internal {
+  padding-inline: var(--s-4);
+  background-color: var(--surface-area);
+}
+
+/* ---- 12 · The answerable party ----------------------------------------------------------------------
+   Who answers for a stage, a need or a request, and under what: its actor's glyph on its disc, the label of its
+   role, its name (an organisation's, a function's — never a natural person's), its facts on one line (quality,
+   authorisation in ILE Mono, jurisdiction, validity as a chip), the clause that the platform is not the
+   intermediary. Flat between two hairlines: a fact about responsibility, not a card. */
+.reg-party {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-4);
+  row-gap: var(--s-3);
+  padding-block: var(--s-5);
+  border-block: 1px solid var(--line-rhythm);
+}
+
+.reg-party__words {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.reg-party__label {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.reg-party__name {
+  margin: 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.reg-party__facts,
+.reg-party > .reg-note {
+  grid-column: 2;
+}
+
+.reg-party__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+}
+
+.reg-party__fact {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.reg-party__fact dt {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-3);
+}
+
+.reg-party__fact dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+/* ---- 13 · The form of an act ---------------------------------------------------------------------------
+   An act here is a decision that is recorded: a form with its title and its sentence, W1-C's fields and its actions
+   (v5/field.css: `.form`, `.form-field`, `.form__actions`) — never a bare button in a row of links. The forms of one
+   page stand one after another, each opened by a hairline. */
+.reg-form {
+  display: grid;
+  gap: var(--s-2);
+  max-inline-size: var(--container-narrow);
+  margin: 0;
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.reg-form__title {
+  margin: 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.reg-form__text {
+  max-inline-size: var(--measure-body);
+  margin: 0 0 var(--s-2);
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+/* the body of an act's alert dialog (the overlay system's, `kind="alert"`): the consequence said, then the choices and
+   the fields, a field's gap between each — the case file's lines and state, the guichet's and the selection's closures
+   (one rule, drawn once; the case file adds what names its line) */
+.reg-dialog {
+  display: grid;
+  gap: var(--s-5);
+  max-inline-size: none;
+  margin: 0;
+}
+
+.reg-dialog :is(.form-field, .reg-form__fieldset, .reg-form__text) {
+  margin: 0;
+}
+
+.reg-form .form__actions {
+  margin-block-start: var(--s-2);
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* a fieldset of choices inside an act (the fields a disclosure asks for): its legend at the label's size */
+.reg-form__fieldset {
+  min-inline-size: 0;
+  margin: 0 0 var(--s-4);
+  padding: 0;
+  border: 0;
+}
+
+.reg-form__fieldset > legend {
+  margin-block-end: var(--s-2);
+  padding: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+/* the console's small size for the fields' help and the required note, as for every other small line of these pages:
+   13 px at a desk, 14 on a phone (the phone console's step up, W3-A's T4) — W1-C's public 13 px stood on the phone */
+.reg-page :is(.form-field__help, .form__required-note),
+.reg-dialog .form-field__help,
+.reg-head .ws-head__action-note {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+}
+
+.reg-form__check {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-primary);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+}
+
+/* ---- 14 · The filter ---------------------------------------------------------------------------------------
+   The register's counts as the way to narrow it (platform.md E-3: «the counts become the filter, not tiles»): one
+   line of links on a hairline, each its words and its count — and, for a register of states, the marks of the
+   states it gathers (the ledger's, coloured by the group) —, the chosen one in the ink with the tabs' one indicator
+   under it, `aria-current` in the markup. A link in the URL (`?état=`, `?domaine=`): shareable, no script. A group
+   with nothing in it is a word, not a link. */
+.reg-filter {
+  margin: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.reg-filter__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reg-filter__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-3);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.reg-filter__link[aria-current] {
+  color: var(--text-1);
+}
+
+.reg-filter__link[aria-current]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--s-3);
+  inset-block-end: -1px;
+  block-size: 2px;
+  background: var(--nav-indicator);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.reg-filter__link:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.reg-filter__link:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+.reg-filter__n {
+  font-weight: 400;
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
+}
+
+.reg-filter__link[aria-current] .reg-filter__n {
+  color: var(--text-2);
+}
+
+.reg-filter__link--empty {
+  color: var(--text-3);
+}
+
+/* the rows under their filter: the filter's hairline is their first, never a second one */
+.reg-filter + :is(.db-tasks, .reg-rows) {
+  border-block-start: 0;
+}
+
+/* under 52rem the filter is one row that scrolls along its hairline, the register's first row in reach (the platform
+   audit's F19: eight domains took five lines at 390): the cut-off entry says there is more; the keyboard's focus
+   brings an entry into view; the indicator stands on the row's last pixel, inside the scroll box that would clip it */
+@media (max-width: 51.999rem) {
+  .reg-filter__list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    padding-block-end: 1px;
+  }
+
+  .reg-filter__list > li {
+    flex: none;
+  }
+
+  .reg-filter__link {
+    white-space: nowrap;
+  }
+}
+
+/* ---- 8 · A phone, a finger, forced colours --------------------------------------------------------
+   Below 48rem the dashboard lays a row out in lines (the words across, then the state and the date); a
+   communication keeps its seal at the start of its words, its act under them. */
+@media (max-width: 47.999rem) {
+  .reg-rows--mail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reg-rows--mail > .reg-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-3);
+  }
+
+  .reg-rows--mail .reg-row__seal {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .reg-rows--mail .db-task__words,
+  .reg-rows--mail .reg-row__act {
+    grid-column: 2;
+  }
+
+  .reg-rows--mail .reg-row__act .btn {
+    inline-size: auto;
+  }
+
+  .reg-acts > *,
+  .reg-acts form .btn {
+    flex: 1 1 100%;
+    inline-size: 100%;
+  }
+
+  /* a head's acts take the head's line, and their buttons stack in it: the frame's `flex: none` kept the group at its
+     max-content — two buttons side by side, 365 px — and a draft need scrolled sideways at 320–375 (WCAG 1.4.10) */
+  .reg-head .ws-head__action {
+    flex: 1 1 100%;
+    min-inline-size: 0;
+  }
+
+  /* the state takes its cell's whole line: a chip's word never breaks in two beside the date */
+  .reg-summary .summary__item:first-child {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  /* a step's state goes under its words; its place keeps its column */
+  .reg-step {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .reg-step__end {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .reg-steps--log > .reg-step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reg-steps--log > .reg-step > .reg-step__end {
+    grid-column: 1;
+  }
+
+  /* a turn's text and a party's facts take the phone's whole width under their head */
+  .reg-turn__body,
+  .reg-party__facts,
+  .reg-party > .reg-note {
+    grid-column: 1 / -1;
+  }
+
+  .reg-form .form__actions > .btn {
+    flex: 1 1 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  .reg-row__seal,
+  .reg-letter__seal {
+    outline: 1px solid CanvasText;
+  }
+
+  /* the row's next line (its facts) is painted on a Canvas backplate that covered the bottom edge of the title link's
+     ring: room for the whole ring under the title (the a11y check's finding 3: 59 % of the ring drawn, 103 % with it) */
+  .reg-row .db-task__title {
+    margin-block-end: 6px;
+  }
+
+  .reg-filter__link[aria-current]::after {
+    background: Highlight;
+  }
+
+  .reg-turn--internal {
+    outline: 1px solid CanvasText;
+  }
+}

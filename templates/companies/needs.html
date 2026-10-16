@@ -1,33 +1,46 @@
-{% extends "companies/base_companies.html" %}{% load i18n %}
+{% extends "companies/base_companies.html" %}{% load i18n static %}
+{% comment %}
+«MES BESOINS EN COMPÉTENCES» — the company's register, design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7;
+platform.md §3, the company: «the four counts become the needs table's filter, not tiles» (E-3), «one rail» (S-5),
+«no bar chart» (E-4); W3-E step 2).
+
+The page's head — its title, its line of context, the page's one act («Nouveau besoin») at its reading end; then the
+register's counts AS ITS FILTER: «Tous» and the dashboard's groups by who holds each need — À faire, En cours, Clos
+(portal.services.needs_register over the dashboard's own grouping) —, each with its count and the marks of its states,
+the chosen one under the tabs' indicator; `?état=` in the URL, no script. Then the rows of the chosen group
+(companies/partials/need_register.html). No tile, no figure in large, no chart.
+{% endcomment %}
 {% block page_title %}{% translate "Mes besoins en compétences" %}{% endblock %}
 {% block meta_description %}{% translate "Les besoins exprimés par votre entreprise, leur état et l’intervenant responsable de chacun." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
 
 {% block portal_header %}
-{% include "companies/partials/company_header.html" with company=company as_heading=True %}
+<header class="ws-head reg-head">
+  <div class="ws-head__words">
+    <h1 class="ws-head__title">{% translate "Mes besoins en compétences" %}</h1>
+    <p class="ws-head__lead">{% translate "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste — jamais une personne — et porte l’état de son traitement ainsi que l’intervenant qui en répond." %}</p>
+  </div>
+  {% if can_manage and create_url %}<div class="ws-head__action"><a class="btn btn--primary" href="{{ create_url }}">{% translate "Nouveau besoin" %}</a></div>{% endif %}
+</header>
 {% endblock %}
 
 {% block companies_content %}
-<section class="portal-section" aria-labelledby="needs-title">
-  <p class="folio">
-    <span class="folio__ordinal" aria-hidden="true"></span>
-    <span class="folio__head">{% translate "Registre des besoins" %}</span>
-  </p>
-  <h2 class="portal__section-title" id="needs-title">{% translate "Mes besoins en compétences" %}</h2>
-  <p class="portal__summary">
-    {% translate "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste — jamais une personne — et porte l’état de son traitement ainsi que l’intervenant qui en répond." %}
-  </p>
-
-  {% if needs %}
-  {% include "companies/partials/need_register.html" with needs=needs %}
-  {% else %}
-  <p class="empty">
-    {% translate "Aucun besoin pour l’instant. Un besoin décrit le territoire, le métier, les tâches confiées, les compétences obligatoires et souhaitées, la langue, la sécurité et le calendrier." %}
-    {% if can_manage and create_url %}<a href="{{ create_url }}">{% translate "Créer un besoin" %}</a>{% endif %}
-  </p>
-  {% endif %}
-
-  {% if can_manage and create_url %}
-  <p class="companies-actions"><a class="btn btn--primary btn--sm" href="{{ create_url }}">{% translate "Nouveau besoin" %}</a></p>
-  {% endif %}
-</section>
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="needs-title">
+    <h2 class="db-h2 reg-sec__title" id="needs-title"><span>{% translate "Registre des besoins" %}</span></h2>
+    {% if needs %}
+    <nav class="reg-filter reg-filter--ledger" aria-label="{% translate 'Filtrer par état' %}">
+      <ul class="reg-filter__list" role="list">
+        <li><a class="reg-filter__link" href="{{ request.path }}"{% if not needs_group %} aria-current="true"{% endif %}>{% translate "Tous" %} <span class="reg-filter__n">{{ needs_total }}</span></a></li>
+        {% for f in needs_filters %}
+        <li class="db-ledger__group--{{ f.key }}">{% if f.count %}<a class="reg-filter__link" href="{{ request.path }}?état={{ f.key }}"{% if needs_group == f.key %} aria-current="true"{% endif %}>{% else %}<span class="reg-filter__link reg-filter__link--empty">{% endif %}<span class="db-ledger__marks" aria-hidden="true">{% for state in f.states %}{% svg_icon state|chip_mark:"companies.NeedStatus" "icon" %}{% endfor %}</span>{{ f.label }} <span class="reg-filter__n">{{ f.count }}</span>{% if f.count %}</a>{% else %}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </nav>
+    {% include "companies/partials/need_register.html" with needs=needs_rows %}
+    {% else %}
+    <p class="db-empty">{% translate "Aucun besoin pour l’instant. Un besoin décrit le territoire, le métier, les tâches confiées, les compétences obligatoires et souhaitées, la langue, la sécurité et le calendrier." %}</p>
+    {% endif %}
+  </section>
+</div>
 {% endblock %}

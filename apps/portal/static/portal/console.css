@@ -15,6 +15,9 @@
                                        bars and drawer (W3-A)
      v5/_dashboard.css                 the dashboards: the NowPanel, the file's facts, «il registro», the
                                        lists, what folds (W3-B)
+     v5/_frame.css                     the frame's heads (the ContextHeader, the workspace head), the actor's glyph
+                                       disc, the frame's focus ring — what every console page still drew from
+                                       v4/workspace.css when the case file redrew the rest (W3-E)
 
    Not here — each the CSS of the pages that draw it, in a page-only sheet linked after this one (the owner's V5.8,
    11 October 2026, and the orchestrator's definitive ruling of 12 October: the shared bundles never rise; a
@@ -40,3 +43,9 @@
 
 /* Design V5 — the dashboards (V5.4 plan §3.5 item 4; W3-B). After the shell: a dashboard is drawn inside its frame. */
 @import url("v5/_dashboard.css");
+
+/* Design V5 — the frame's heads, the actor's glyph disc and the frame's focus ring (W3-E, the deletion map's last row
+   of v4/workspace.css). After the shell and the dashboards: neither draws these heads, the disc or the ring at their
+   weight (the shell's rules on the heads are the frame's own, more specific; its focus rules are the chrome's, outside
+   the frame; the dashboards write no focus rule), so no tie changes hands. */
+@import url("v5/_frame.css");

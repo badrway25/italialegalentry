@@ -250,11 +250,19 @@ class TestTransitions:
         assert client.post(f"{detail_url(case)}etat/", {"status": CaseStatus.ORIENTED}).status_code == 404
 
     def test_every_transition_is_audited(self, client, owner, case):
+        """
+        A move the person may make (CASE_LIFECYCLE.md §4: «qualunque attivo → SUSPENDED: persona…») leaves its event.
+
+        DRAFT → ORIENTED used to stand here, made by the owner — but §4 gives it to the system alone (the orientation
+        service), and since finding F-7 the domain refuses it to the person (``test_transition_actors``).
+        """
         from audit.models import AuditEvent
 
         client.force_login(owner)
-        client.post(f"{detail_url(case)}etat/", {"status": CaseStatus.ORIENTED})
-        assert AuditEvent.objects.filter(action="case.transition").exists()
+        client.post(f"{detail_url(case)}etat/", {"status": CaseStatus.SUSPENDED, "reason": "En attente du passeport"})
+        event = AuditEvent.objects.get(action="case.transition", target_id=str(case.pk))
+        assert (event.metadata["from"], event.metadata["to"]) == (CaseStatus.DRAFT, CaseStatus.SUSPENDED)
+        assert event.metadata["reason"] == "En attente du passeport" and event.actor_id == owner.pk
 
 
 class TestTheEmptyState:

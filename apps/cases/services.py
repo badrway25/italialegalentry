@@ -34,6 +34,8 @@ from cases.models import (
     ChecklistItem,
     ChecklistStatus,
     PathwayAssessment,
+    TransitionActor,
+    transition_actors,
     transitions_from,
 )
 
@@ -42,6 +44,10 @@ logger = logging.getLogger("ile.cases")
 
 class TransitionRefused(ValidationError):
     """A state change the domain does not allow. Never downgrade this to a silent no-op."""
+
+
+class TransitionNotPermitted(TransitionRefused):
+    """A declared state change THIS actor may not make: the «Chi può» column (``cases.models.TRANSITION_ACTORS``)."""
 
 
 @dataclass(frozen=True)
@@ -112,25 +118,56 @@ def open_case(person, *, purpose: str, pathway_key: str = "", request=None) -> C
 # Transitions
 # ---------------------------------------------------------------------------------------------
 @transaction.atomic
-def transition(case: CaseFile, target: str, *, actor=None, reason: str = "", request=None) -> CaseFile:
+def transition(
+    case: CaseFile,
+    target: str,
+    *,
+    actor=None,
+    reason: str = "",
+    request=None,
+    as_authorised_actor: bool = False,
+) -> CaseFile:
     """
     Move ``case`` to ``target``, or refuse.
 
     Refusals are explicit exceptions rather than a return value, because a silently ignored
     transition would leave the interface showing a state the domain never reached.
+
+    WHO moves the file is part of the rule (CASE_LIFECYCLE.md §4, the «Chi può» column; finding F-7): when ``actor``
+    is given, the move must be one ``permitted_transitions`` gives that account — the object policy's «change» AND
+    the column's capacity for that row —, else ``TransitionNotPermitted``. ``actor=None`` is the platform's own path
+    (the orientation service's DRAFT → ORIENTED, the seeds): the column's SYSTEM rows, unchecked as before.
+
+    ``as_authorised_actor`` is the selection service's, and only its (``selection.services``): it moves a file into or
+    out of SELECTION for the authorised actor that holds the mandate (CR-03) — the column's rows for that capacity,
+    nothing else (``_authorised_actor_transitions``). The case's object policy gives an authorised actor no «change»
+    (it acts on the selection process, not on the file), so without the flag the same account is refused here, the
+    case page offers it no control and the case's transition view answers 403.
+
+    Every check runs on the file's row as it stands, locked until the move commits — never on the instance the caller
+    loaded, which another account may have moved since: WHO may move a file depends on where the file is, and a move
+    judged on a stale row would write its state over a newer one (sec-f7 REVIEW, finding 5). The caller's instance
+    is then told the row's state, moved or not.
     """
     if target not in CaseStatus.values:
         raise TransitionRefused(_("Stato non riconosciuto."))
-    if case.is_read_only:
+    # FOR NO KEY UPDATE: the lock a status write takes anyway, and one a row that merely references the file (an
+    # assignment written a moment before, in the same act) does not wait on.
+    row = CaseFile.objects.select_for_update(no_key=True).get(pk=case.pk)
+    _sync_moved_fields(case, row)
+    if row.is_read_only:
         raise TransitionRefused(_("Un fascicolo concluso non si riapre: se ne apre uno nuovo."))
-    if target == case.status:
+    if target == row.status:
         return case
-    if target not in transitions_from(case.status):
-        raise TransitionRefused(
-            _("Transizione non consentita da «%(from)s» a «%(to)s».")
-            % {"from": case.get_status_display(), "to": dict(CaseStatus.choices)[target]}
-        )
-    if target in REQUIRES_AUTHORISED_ACTOR and not case.has_valid_authorised_actor():
+    if target not in transitions_from(row.status):
+        raise TransitionRefused(_refusal(row, target))
+    if as_authorised_actor:
+        if actor is None or target not in _authorised_actor_transitions(row, actor):
+            raise TransitionNotPermitted(_refusal(row, target))
+    elif actor is not None and target not in permitted_transitions(row, actor):
+        # The domain's own sentence for a move it does not allow: refused for THIS actor, in words already translated.
+        raise TransitionNotPermitted(_refusal(row, target))
+    if target in REQUIRES_AUTHORISED_ACTOR and not row.has_valid_authorised_actor():
         # CR-03: reserved activities belong to authorised parties. No actor, no selection.
         raise TransitionRefused(
             _("La fase di selezione richiede un soggetto autorizzato assegnato e con autorizzazione valida.")
@@ -138,23 +175,25 @@ def transition(case: CaseFile, target: str, *, actor=None, reason: str = "", req
     if target == CaseStatus.SUSPENDED and not reason.strip():
         raise TransitionRefused(_("La sospensione richiede una motivazione."))
 
-    previous = case.status
-    case.previous_status = previous
-    case.status = target
-    case.status_since = timezone.now()
+    previous = row.status
+    row.previous_status = previous
+    row.status = target
+    row.status_since = timezone.now()
     if target == CaseStatus.SUSPENDED:
-        case.suspension_reason = reason.strip()
+        row.suspension_reason = reason.strip()
     elif previous == CaseStatus.SUSPENDED:
-        case.suspension_reason = ""
+        row.suspension_reason = ""
     if target == CaseStatus.CLOSED:
-        case.closed_at = timezone.now()
-    case.save(
-        update_fields=["previous_status", "status", "status_since", "suspension_reason", "closed_at", "updated_at"]
-    )
+        row.closed_at = timezone.now()
+    row.save(update_fields=_MOVED_FIELDS)
+    _sync_moved_fields(case, row)
 
     record(
         request,
         actor=actor,
+        # the platform's own path is nobody's act, even inside the person's request: §4 rule 3 asks the trail for the
+        # actor, and the orientation service's DRAFT → ORIENTED is «sistema» (sec-f7 REVIEW, finding 6)
+        system=actor is None,
         action="case.transition",
         target=case,
         metadata={"from": previous, "to": target, "reason": reason[:500]},
@@ -176,12 +215,159 @@ def transition(case: CaseFile, target: str, *, actor=None, reason: str = "", req
     return case
 
 
+#: The fields a move writes — and tells the caller's instance, from the row it was judged on.
+_MOVED_FIELDS = ["previous_status", "status", "status_since", "suspension_reason", "closed_at", "updated_at"]
+
+
+def _sync_moved_fields(case: CaseFile, row: CaseFile) -> None:
+    for name in _MOVED_FIELDS:
+        setattr(case, name, getattr(row, name))
+
+
 def resume(case: CaseFile, *, actor=None, request=None) -> CaseFile:
     """Leave SUSPENDED for the state the case was in before, or ORIENTED if that is unknown."""
     if case.status != CaseStatus.SUSPENDED:
         return case
     target = case.previous_status if case.previous_status in ACTIVE_STATUSES else CaseStatus.ORIENTED
     return transition(case, target, actor=actor, reason="", request=request)
+
+
+def _refusal(case: CaseFile, target: str) -> str:
+    return _("Transizione non consentita da «%(from)s» a «%(to)s».") % {
+        "from": case.get_status_display(),
+        "to": dict(CaseStatus.choices)[target],
+    }
+
+
+# ---------------------------------------------------------------------------------------------
+# Who may move a file (CASE_LIFECYCLE.md §4, the «Chi può» column — finding F-7)
+# ---------------------------------------------------------------------------------------------
+#: The capacities whose «change» on a file comes from ``cases.policies.case_policy``: the owner, a professional or an
+#: operator assignee, an administrator. The column also names the training body (ORIENTED → TRAINING) and the
+#: authorised actor (into and out of SELECTION); the policy gives neither «change» — an authorised actor acts on the
+#: selection process, not on the file; a training body reads training data only — and this fix widens nobody's access,
+#: so neither is granted anything on this path: the authorised actor moves a file through the selection service alone
+#: (``transition(..., as_authorised_actor=True)``), the training body not at all (sec-f7 NOTES: a question for the
+#: owner).
+_CHANGE_CAPACITIES: frozenset[str] = frozenset(
+    {TransitionActor.PERSON, TransitionActor.PROFESSIONAL, TransitionActor.OPERATOR, TransitionActor.ADMINISTRATOR}
+)
+
+
+def _capacities(case: CaseFile, user) -> frozenset[str]:
+    """
+    The capacities in which ``user`` stands towards ``case``, read the way ``cases.policies.case_policy`` reads them:
+    a superadmin is the ADMINISTRATOR (``accounts.permissions.can`` lets it do anything; the column gives it the
+    administrator's moves and no other); otherwise the owner is the PERSON, whatever else the account holds; otherwise
+    every live assignment's role; otherwise an administrator. ``case.assignments.all()`` like the policy, so the two
+    read the same rows.
+    """
+    from accounts import roles
+
+    if roles.is_superadmin(user):
+        return frozenset({TransitionActor.ADMINISTRATOR})
+    if case.person_id == user.id:
+        return frozenset({TransitionActor.PERSON})
+    live = frozenset(str(row.role) for row in case.assignments.all() if row.assignee_id == user.id and row.is_live)
+    if live:
+        return live
+    if roles.has_role(user, roles.ADMINISTRATOR):
+        return frozenset({TransitionActor.ADMINISTRATOR})
+    return frozenset()
+
+
+def suspended_by(case: CaseFile):
+    """
+    The id of the account that suspended ``case`` — the actor of the transition that brought it to SUSPENDED — or None.
+
+    Read from the audit trail rather than from a column of the file, because the trail is reliable for this: every
+    transition writes its event inside the same atomic block as the move (a status and its event commit together or not
+    at all), no screen edits or deletes an event (``audit.admin`` refuses all three) and no job purges them, and the
+    event names the account the move was made by. Only THIS suspension's event answers — written after the file
+    entered SUSPENDED (``status_since`` is set before the event is), from the state the file left — never an older
+    suspension's (sec-f7 REVIEW, finding 3). None when the file is not suspended, when the platform suspended it (no
+    actor), or when the trail holds no event for this suspension — a seeded or restored file, a row written by any
+    path but ``transition``, an account since deleted (the event's actor is SET_NULL): then only the administrator
+    lifts the suspension («o superiore»).
+    """
+    if case.status != CaseStatus.SUSPENDED:
+        return None
+    from audit.models import AuditEvent
+
+    event = (
+        AuditEvent.objects.filter(
+            target_type=CaseFile.__name__,
+            target_id=str(case.pk),
+            action="case.transition",
+            metadata__to=str(CaseStatus.SUSPENDED),
+            metadata__from=str(case.previous_status),
+            created_at__gte=case.status_since,
+        )
+        .order_by("-created_at", "-id")
+        .only("actor_id")
+        .first()
+    )
+    return event.actor_id if event is not None else None
+
+
+def permitted_transitions(case: CaseFile, user) -> frozenset[str]:
+    """
+    The states ``user`` may move ``case`` to: the object policy («change», ``cases.policies``) AND the «Chi può» column
+    for each declared row (``cases.models.transition_actors``) — never one without the other, so the fix narrows and
+    never widens anybody's access. The way back from SUSPENDED to the state it suspended is also open to the account
+    that suspended the file («chi ha sospeso, o superiore»: ``suspended_by``).
+
+    ``services.transition`` refuses whatever is not here, and ``transitions_available`` offers what is, minus the moves
+    a condition still blocks (CR-03's authorised actor): one rule, read twice.
+    """
+    from accounts.permissions import can
+
+    if user is None or case.is_read_only or not can(user, "change", case):
+        return frozenset()
+    capacities = _capacities(case, user) & _CHANGE_CAPACITIES
+    if not capacities:
+        return frozenset()
+    status = str(case.status)
+    resumes_to = case.previous_status if status == CaseStatus.SUSPENDED else ""
+    resumes_to = resumes_to if resumes_to in ACTIVE_STATUSES else ""
+    permitted = {
+        target
+        for target in transitions_from(status)
+        if capacities & transition_actors(status, target, previous=resumes_to)
+    }
+    if resumes_to and resumes_to not in permitted and suspended_by(case) == user.id:
+        permitted.add(resumes_to)
+    return frozenset(permitted)
+
+
+def _authorised_actor_transitions(case: CaseFile, user) -> frozenset[str]:
+    """
+    The moves the selection service makes for an authorised actor (``transition(..., as_authorised_actor=True)``): the
+    column's rows for that capacity — TRAINING → SELECTION, SELECTION → ADMIN_PROCESS or back to TRAINING — and only
+    for an account holding the authorised actor's role. WHICH authorised actor may act on WHICH process stays the
+    selection service's answer (a live operator of the actor: ``selection.services.is_operator``); CR-03's own check
+    still guards the way in.
+
+    The reserved act — into SELECTION, and out of it with a referral («esito positivo della selezione») — needs an
+    authorised actor's assignment standing on the file. The way back to the training pathway asserts no outcome: it
+    stays open once that assignment has been revoked while the process was open, or the file would stay in SELECTION
+    with nobody answerable for it (§4 rule 1) and the process could never be concluded (sec-f7 REVIEW, finding 4).
+    A fresh query, not ``case.assignments.all()``: the selection service assigns the actor a moment before it moves
+    the file, and a prefetched list would not hold that row yet.
+    """
+    from accounts import roles
+
+    if case.is_read_only or not roles.has_role(user, roles.AUTHORISED_ACTOR):
+        return frozenset()
+    status = str(case.status)
+    rows = frozenset(
+        target
+        for target in transitions_from(status)
+        if TransitionActor.AUTHORISED_ACTOR in transition_actors(status, target)
+    )
+    if case.assignments.filter(role=AssignmentRole.AUTHORISED_ACTOR, revoked_at__isnull=True).exists():
+        return rows
+    return rows & {CaseStatus.TRAINING} if status == CaseStatus.SELECTION else frozenset()
 
 
 # ---------------------------------------------------------------------------------------------
@@ -627,7 +813,13 @@ def next_action(case: CaseFile, *, reader=None) -> NextAction | None:
     person must act on comes first («open item the person must act on», IMPLEMENTATION_PLAN.md §2 T1), and when none
     is theirs the first of anybody's, so the page can say whose hands it is in. ``reader`` is the account the action
     is shown to: the pieces it may read are the ones considered (see ``_open_pieces``).
+
+    A closed file asks nothing of anybody (CASE_LIFECYCLE.md §4, rule 5: read-only; sec-f7): no next action on its
+    page, in the dossiers' list or on the documents register — a new file is opened instead. A suspended file still
+    names its obligations: the reason it waits is often one of them.
     """
+    if case.is_read_only:
+        return None
     assessment = latest_assessment(case)
     if assessment and assessment.is_blocking:
         return NextAction(
@@ -680,16 +872,19 @@ def transitions_available(case: CaseFile, user) -> list[tuple[str, str]]:
 
     Offering a control the domain will refuse is worse than offering none: the person clicks, is
     told no, and learns that the interface does not know what the system permits. So the list is
-    computed from the declared transition table and filtered by the object policy, and the same two
-    checks run again inside ``transition`` — a hidden control is not a closed door.
+    ``permitted_transitions`` — the declared transition table, the object policy AND the «Chi può»
+    column (F-7) — minus what CR-03 still blocks, and the same checks run again inside ``transition``
+    — a hidden control is not a closed door. In the lifecycle's order, so the control reads the same
+    on every visit.
     """
-    from accounts.permissions import can
-
-    if case.is_read_only or not can(user, "change", case):
+    permitted = permitted_transitions(case, user)
+    if not permitted:
         return []
     labels = dict(CaseStatus.choices)
     available = []
-    for target in transitions_from(case.status):
+    for target in CaseStatus.values:
+        if target not in permitted:
+            continue
         if target in REQUIRES_AUTHORISED_ACTOR and not case.has_valid_authorised_actor():
             continue
         available.append((target, str(labels[target])))

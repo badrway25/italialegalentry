@@ -453,7 +453,10 @@ def test_the_partials_hold_tokens_and_logical_properties_only(name):
 
 
 def test_the_legacy_register_rules_left_main_css_cascade():
-    workspace = (ROOT / "static" / "css" / "v4" / "workspace.css").read_text(encoding="utf-8")
+    # W3-E (step 3) deleted v4/workspace.css with the case file; what console pages still drew of it moved to the
+    # console partial v5/_frame.css (retargeted, intent kept: the register's legacy rules came back nowhere)
+    assert not (ROOT / "static" / "css" / "v4" / "workspace.css").exists()
+    workspace = (ROOT / "apps" / "portal" / "static" / "portal" / "v5" / "_frame.css").read_text(encoding="utf-8")
     for gone in (
         ".doc-row",
         ".doc-collection",
@@ -465,7 +468,8 @@ def test_the_legacy_register_rules_left_main_css_cascade():
         ".table__link",
     ):
         assert gone not in workspace, gone
-    assert "/* ---- HealthStrip" in workspace and "/* ---- ContextHeader" in workspace, "W3-E's consumers keep theirs"
+    assert "/* ---- 1 · The ContextHeader" in workspace, "the dashboards and the case file keep their head"
+    assert ".health__" not in workspace, "the HealthStrip left with its last consumer, the V4 case file"
 
 
 # ---- the preview drawer and the filter's sheet, on the overlay system (step 2) ------------------------------------------
@@ -644,7 +648,8 @@ def test_the_runs_ring_is_drawn_inside_the_strip_above_the_workspaces_ring_rule(
     v4/workspace.css's `.console__workspace :is(a, …):focus-visible` (0-3-0), which set the 2 px offset back."""
     workspace = (PARTIALS / "_workspace.css").read_text(encoding="utf-8")
     assert re.search(r"\.reg a\.reg-run:focus-visible \{\s*outline-offset: -4px;", workspace)
-    legacy = (ROOT / "static" / "css" / "v4" / "workspace.css").read_text(encoding="utf-8")
+    # the workspace's ring moved with W3-E (step 3) from v4/workspace.css to the console partial v5/_frame.css
+    legacy = (ROOT / "apps" / "portal" / "static" / "portal" / "v5" / "_frame.css").read_text(encoding="utf-8")
     assert ".console__workspace :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible" in legacy
 
 
