@@ -264,7 +264,8 @@ words after the event (F-1).
 The fourteen gates of the owner's directive V5.10, «before main moves». The result column is filled by the
 release-candidate validation, on one commit, with its evidence; the middle column says only where things stood when
 this draft was written. The validation ran on `4ffc22b` (27 October 2026) and, after its fixes, on `528bc5c` (28
-October); the commit after it adds only these notes.
+October); the commits after it add only these notes and a timing correction to two tests (GitHub's first CI run on
+the candidate counted, on one of its two jobs, a database backend that was leaving — the test now waits for it).
 
 | # | Gate (V5.10) | At this draft (16 October 2026; part 2, 27 October) | Result |
 |---|---|---|---|

@@ -2440,7 +2440,9 @@ def test_every_side_of_a_comparison_names_a_page_in_every_language():
 
 def _backends() -> int:
     """
-    PostgreSQL backends on this test database other than the one that asks — as they are now.
+    PostgreSQL client backends on this test database other than the one that asks — as they are now.
+    Client backends only: an autovacuum worker on this database is in ``pg_stat_activity`` too, and
+    GitHub's runner, after the suite's thousands of writes, had one there in the middle of a count.
 
     Inside a transaction PostgreSQL answers ``pg_stat_activity`` from the snapshot it took at the
     first question, and most tests here run inside one: asked twice, it would say twice what it
@@ -2452,7 +2454,8 @@ def _backends() -> int:
     with connection.cursor() as cursor:
         cursor.execute("select pg_stat_clear_snapshot()")
         cursor.execute(
-            "select count(*) from pg_stat_activity where datname = current_database() and pid <> pg_backend_pid()"
+            "select count(*) from pg_stat_activity where datname = current_database()"
+            " and backend_type = 'client backend' and pid <> pg_backend_pid()"
         )
         return cursor.fetchone()[0]
 
@@ -2466,6 +2469,30 @@ def _baseline() -> int:
     """
     gc.collect()
     return _backends()
+
+
+def _settled(expected: int, within: float = 3.0) -> int:
+    """
+    ``_backends()`` once a closed connection's backend has had time to leave. Closing a connection
+    ends the client's side at once; the server process exits a moment later, and until it has,
+    ``pg_stat_activity`` still lists it — on a loaded runner, long enough to be counted (GitHub's
+    Python 3.13 job, 28 October 2026). The count is asked again until it is ``expected`` or the
+    time is up, and the last answer is returned. A connection really left behind is not closed at
+    all and stays far longer than these seconds — unless the garbage collector finds its wrapper,
+    so the collector is held off while the count settles.
+    """
+    was_enabled = gc.isenabled()
+    gc.disable()
+    try:
+        deadline = time.monotonic() + within
+        count = _backends()
+        while count != expected and time.monotonic() < deadline:
+            time.sleep(0.05)
+            count = _backends()
+        return count
+    finally:
+        if was_enabled:
+            gc.enable()
 
 
 @contextlib.contextmanager
@@ -2646,8 +2673,8 @@ def test_a_burst_of_proof_requests_opens_no_connection_and_leaves_none_behind(pr
     try:
         with _runserver() as base:
             statuses = _burst(base, paths, total=120, concurrency=8)
-            during = _backends()
-        after = _backends()
+            during = _settled(before)
+        after = _settled(before)
     finally:
         connection_created.disconnect(remember)
     assert statuses == {200: 120}
@@ -2689,7 +2716,7 @@ def test_a_burst_on_pages_that_read_the_database_stays_under_the_ceiling(preview
             while not burst.done():
                 peak = max(peak, _backends() - before)
             statuses = burst.result()
-        after = _backends()
+        after = _settled(before)
     finally:
         connection_created.disconnect(remember)
     assert statuses == {200: 24, 404: 12}
@@ -2720,7 +2747,10 @@ def test_no_more_connections_than_the_ceiling_whatever_arrives(rf, monkeypatch):
         connection.ensure_connection()
         all_in.wait(timeout=20)
         with connection.cursor() as cursor:
-            cursor.execute("select count(*) from pg_stat_activity where datname = current_database()")
+            cursor.execute(
+                "select count(*) from pg_stat_activity"
+                " where datname = current_database() and backend_type = 'client backend'"
+            )
             counted.append(cursor.fetchone()[0])
         all_counted.wait(timeout=20)
         return HttpResponse("ok")
@@ -2739,7 +2769,7 @@ def test_no_more_connections_than_the_ceiling_whatever_arrives(rf, monkeypatch):
         statuses = list(pool.map(one, range(total)))
         assert statuses == [200] * total
         assert counted == [before + ceiling] * total, sorted(set(counted))
-        assert _backends() + 1 == before, "the threads are still alive, and hold nothing"
+        assert _settled(before - 1) + 1 == before, "the threads are still alive, and hold nothing"
 
 
 def test_the_ceiling_makes_a_request_wait_and_then_says_so_in_plain_words(rf, monkeypatch):
@@ -2976,8 +3006,8 @@ def test_a_client_that_resets_after_its_page_costs_the_server_no_slot(preview, m
         time.sleep(0.5)
         paths = [HUB, PICKER + "?variant=hb&lang=fr&phase=3", PROOF + "home/phase3.html"]
         assert _burst(base, paths, 9, 3) == {200: 9}
-        during = _backends()
-    assert during == before and _backends() == before, "the pages whose clients reset left connections behind"
+        during = _settled(before)
+    assert during == before and _settled(before) == before, "the pages whose clients reset left connections behind"
 
 
 @pytest.mark.django_db(transaction=True)
@@ -3017,7 +3047,7 @@ def test_a_client_that_withholds_its_body_costs_a_thread_never_a_slot(preview, m
             sock.close()
         time.sleep(0.5)
         assert _burst(base, [LANDING, INDEX], 6, 3) == {200: 6}
-    assert _backends() == before, "the withheld requests left connections behind"
+    assert _settled(before) == before, "the withheld requests left connections behind"
     source = (ROOT / "apps" / "designpreview" / "middleware.py").read_text(encoding="utf-8")
     assert source.index("_read_a_small_body(request)") < source.index("self.slots.acquire(timeout=WAIT_SECONDS)")
 
