@@ -14,15 +14,14 @@
 :where([lang]) { font-family: var(--f-sans); }
 
 /* ---- the type roles: 600 titles, 500 acts, 400 reads; tracking follows size and stops at 20 px --- */
-h1, h2, h3, .t-title, .t-band { font-weight: var(--w-title); }
+h1, h2, h3, .t-band { font-weight: var(--w-title); }
 h3 { letter-spacing: var(--track-entry); }
 /* the V2 home titles V4 set in the serif at 300 / 400 take the title weight of one voice; the door cards'
    titles are capitals in the locked copy itself, so they are tracked as every capital run is (TR rule 6) */
 .home-entrances .entry__title, .home-pilot .section__title { font-weight: var(--w-title); }
 .home-entrances .entry__title { letter-spacing: var(--track-display-caps); }
-.t-plate { font-weight: var(--w-display); letter-spacing: var(--track-display); }
 /* the lead is roman, 400 — the all-sans system keeps italics for the titles of acts (TR §3.B) */
-.t-lead, .lead { font-weight: var(--w-body); font-style: normal; }
+.lead { font-weight: var(--w-body); font-style: normal; }
 /* V1's caption is 13 px: it reads on the 20 px line, not on the 12 px caption's 16 */
 .t-caption, figcaption, small { line-height: var(--t-small-lh); }
 
@@ -46,7 +45,7 @@ h3 { letter-spacing: var(--track-entry); }
         timeline dates, chip counters and the inline button in the mono: they take the sans with tabular
         figures, so a page without a reference downloads no mono (the font budget, plan §2.6). The
         references keep it: .ctx__ref, .doc-workspace__ref, .error-page__ref, code, .t-ref. ---------- */
-:root :is(.site-footer__heading, .site-footer__bottom, .voyage__shore, .voyage__num, .btn--inline, .wiz__foot-count,
+:root :is(.site-footer__heading, .site-footer__bottom, .btn--inline, .wiz__foot-count,
           .doc-row__blocked, .journey__when, .tl__when) {
   font-family: var(--f-sans);
   font-variant-numeric: var(--numeric-data);
@@ -102,7 +101,7 @@ html[data-input="key"] a { transition-duration: 0ms; }
 
 /* ---- Arabic (Vazirmatn): titles 600 with no ×1.15, no tracking, leading 1.4; no capitals, no
         tracking on labels; emphasis by weight, never italic; references isolated left-to-right ----- */
-:lang(ar) :is(h1, h2, h3, .t-plate, .t-title, .t-band, .t-entry):not([translate="no"]) { letter-spacing: 0; line-height: var(--ar-title-lh); }
+:lang(ar) :is(h1, h2, h3, .t-band):not([translate="no"]) { letter-spacing: 0; line-height: var(--ar-title-lh); }
 :lang(ar) :is(h4, h5, h6, .t-folio, .eyebrow) { letter-spacing: 0; text-transform: none; }
 :lang(ar) :is(em, i) { font-style: normal; font-weight: var(--w-control); }
 :lang(ar) :is(code, kbd, samp, .t-ref) { direction: ltr; unicode-bidi: isolate; }

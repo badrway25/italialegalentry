@@ -98,10 +98,13 @@ def test_the_real_manifest_loads_and_is_written_in_lf():
 
 #: The families a later directive of the owner added outside plan §3's waves: ``devops``, V5.9's production
 #: readiness (the devops merge), ``sec-f5``, the fix of the DevOps lane's go-live finding F-5 (the sec-f5 merge),
-#: ``intfix``, the steward's integration fixes at integration checkpoint 3 (the intfix merge), and ``sec-f7``, the
-#: fix of W3-D's review finding F-7, who may move a case file (the sec-f7 merge). DL54-01's branch and worktree
-#: names; no merge tag of their own (the checkpoint's tag, v54/checkpoint-3, marks design-v5).
-OUTSIDE_THE_WAVES = {"devops", "sec-f5", "intfix", "sec-f7"}
+#: ``intfix``, the steward's integration fixes at integration checkpoint 3 (the intfix merge), ``sec-f7``, the
+#: fix of W3-D's review finding F-7, who may move a case file (the sec-f7 merge), and ``sec-f8``, the fix of F-8, the
+#: back office granting no more than the platform (the sec-f8 merge; V5.10's release blocker), and ``rc-fix``, the
+#: fixes of what the release candidate's validation found (the rc-fix merge). DL54-01's branch and worktree names; no
+#: merge tag of their own in the manifest (the checkpoint's tag, v54/checkpoint-3, and the rc-fix merge's v54/rc-fix
+#: mark design-v5).
+OUTSIDE_THE_WAVES = {"devops", "sec-f5", "intfix", "sec-f7", "sec-f8", "rc-fix"}
 
 
 def test_every_workflow_of_waves_1_to_4_has_a_family_with_the_dl54_names():
@@ -354,6 +357,7 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
         ("sec-f5", True),
         ("sec-f7", True),
         ("intfix", True),
+        ("rc-fix", True),
         ("ops", False),
         ("w3f2", False),
         ("devops-2", False),
@@ -362,6 +366,8 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
         ("sec-f5a", False),
         ("intfix-2", False),
         ("intfix3", False),
+        ("rc-fix-2", False),
+        ("rcfix", False),
     ],
 )
 def test_a_family_id_is_the_steward_a_wave_s_workflow_or_a_family_outside_the_waves(fid, valid):

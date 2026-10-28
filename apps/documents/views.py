@@ -22,6 +22,8 @@ the storage, the throttle and the permissions run the same lines on both roads.
 
 from __future__ import annotations
 
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -40,6 +42,8 @@ from core.views import error_429
 from documents import presenters, services
 from documents.forms import DocumentUploadForm, RequirementReviewForm, RequirementUploadForm
 from documents.models import DocumentRequirement, PrivateDocument
+
+log = logging.getLogger("ile.documents")
 
 UPLOAD_THROTTLE = {"limit": 30, "window_seconds": 3600}
 #: A compromised session should not be able to drain a case file in one sweep unnoticed.
@@ -310,6 +314,11 @@ def _serve(request, doc: PrivateDocument, *, via: str) -> FileResponse:
 
     A refusal is a 403 whatever its reason, and nothing about the reason reaches the client: an
     account must not be able to learn a file's scan status by comparing error messages.
+
+    A row whose stored file is gone is a 404 for an account both gates let through (a lost file is
+    not a server error), logged once as ``documents.file_missing`` with the document's id and
+    nothing else — never its name or its path. The file is opened only AFTER both gates, so an
+    account they refuse still gets its 403 and cannot learn whether the file exists.
     """
     require(request.user, "download", doc)
     # The second gate: a file may be readable to this account and still not be deliverable to it.
@@ -317,8 +326,13 @@ def _serve(request, doc: PrivateDocument, *, via: str) -> FileResponse:
     # ``presenters.present_version`` — so the page never draws a link this view would refuse.
     if services.delivery_block(doc, request.user):
         raise PermissionDenied
+    try:
+        stored = services.open_for_download(doc)
+    except FileNotFoundError:
+        log.warning("documents.file_missing document=%s", doc.pk)
+        raise Http404 from None
     response = FileResponse(
-        services.open_for_download(doc),
+        stored,
         as_attachment=True,
         filename=doc.original_name,
         content_type=doc.content_type,

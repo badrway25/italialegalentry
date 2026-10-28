@@ -15,6 +15,7 @@ html {
   text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-block-start: calc(var(--chrome-block-size) + var(--s-4));
+  scroll-padding-block-end: var(--s-2); /* a link focused at the screen's bottom edge keeps its whole ring (W4-C §6) */
   background: var(--paper);
   color-scheme: light;
 }

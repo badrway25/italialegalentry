@@ -432,8 +432,9 @@ def test_typed_text_is_16_px_and_the_controls_are_52(browser, live_server, seede
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.parametrize("lang", ["fr", "ar", "it", "en"])
-def test_the_action_is_in_the_first_viewport_of_a_small_phone(browser, live_server, seeded, lang):
-    """L5: 360 × 640, the four languages (the invitation is three lines in French, two elsewhere)."""
+def test_the_action_is_in_the_first_viewport_of_a_small_phone(browser, live_server, seeded, legal_published, lang):
+    """L5: 360 × 640, the four languages (the invitation is three lines in French, two elsewhere). The sign-up is open
+    (the legal pages published): the invitation is drawn only then since W4-D part 2 (F-4), and it is the tallest case."""
     context, page = _page(browser, 360, 640, touch=True)
     try:
         page.goto(f"{live_server.url}/{lang}/compte/login/", wait_until="networkidle")
@@ -538,12 +539,13 @@ def test_from_the_keyboard_the_address_is_followed_by_the_password(browser, live
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.parametrize("touch", [False, True])
-def test_every_target_of_the_form_has_its_size(browser, live_server, seeded, phase3_open, touch):
+def test_every_target_of_the_form_has_its_size(browser, live_server, seeded, phase3_open, legal_published, touch):
     """L2 / SP-8: 24 px is the floor; 44 px for the form's controls, and for every target under a finger — where the
     reset link's target grows upward, into the air between the two fields, and never lies over the password. The
     small links around the form (the check's A2): the help line's address is 44 px at every pointer (plan §1.13), the
     assurance's link 24 px and 44 under a finger, the invitation's link 44 under a finger — each a band around its
-    line, the line itself unmoved."""
+    line, the line itself unmoved. The sign-up is open (the legal pages published): the invitation is drawn only then since
+    W4-D part 2 (F-4, tests/frontend/test_login_invitation_w4_d.py)."""
     context, page = _page(browser, 390 if touch else 1440, 844 if touch else 900, touch=touch)
     try:
         page.goto(live_server.url + "/fr/compte/login/", wait_until="networkidle")

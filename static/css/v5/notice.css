@@ -74,6 +74,16 @@
 /* the sentence that stands in for a public form while its gate is closed */
 .form-unavailable { max-inline-size: var(--container-narrow); }
 
+/* a notice's address alone in its paragraph (`.email`: the go-live notice above, the pending legal page's) is one box
+   of its line and 2 px above and below, 44 px under a finger — it was its 20 px run, 23 in Arabic, under SP-8's floor
+   (the accessibility check's finding 1; W4-A: D3, drawn by the reading pages' sheet, is this rule now; the Forum's
+   closed registration keeps its own, forum/_forum.css, D6 — its link is a page's, not an address) */
+.notice__body .email { display: inline-block; padding-block: 2px; }
+@media (pointer: coarse) {
+  .notice__body .email { position: relative; }
+  .notice__body .email::after { content: ""; position: absolute; inset-block: -10px; inset-inline: 0; }
+}
+
 @media (forced-colors: active) {
   .notice, .alert { border: 1px solid CanvasText; border-inline-start-width: 3px; }
   .notice--warning, .notice--warn, .alert--warning { border-inline-start-style: dashed; }

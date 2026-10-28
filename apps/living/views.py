@@ -9,6 +9,7 @@ from django.utils import translation
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET
 
+from accounts.middleware import require_second_factor
 from core import gates
 from living import services
 from news.editorial import blocks
@@ -25,6 +26,8 @@ def _check_gate(request) -> bool:
     user = request.user
     wants_preview = request.GET.get("preview") == "1"
     if wants_preview and user.is_authenticated and user.is_staff and user.has_perm("living.view_livingtopic"):
+        # a staff preview of unpublished content: the second-factor policy first (accounts.middleware)
+        require_second_factor(request)
         return True
     raise Http404
 

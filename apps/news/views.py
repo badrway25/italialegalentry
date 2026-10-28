@@ -13,6 +13,7 @@ from django.utils import translation
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods, require_POST
 
+from accounts.middleware import require_second_factor
 from core import gates, throttle
 from news import services
 from news.editorial import blocks
@@ -79,6 +80,8 @@ def detail(request, slug: str):
         user = request.user
         if not (user.is_authenticated and user.is_staff and user.has_perm("news.view_article")):
             raise Http404
+        # a staff preview of an unpublished article: the second-factor policy first (accounts.middleware)
+        require_second_factor(request)
         preview = True
     texts = article.texts(lang)
     context = {

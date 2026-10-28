@@ -136,7 +136,7 @@ def test_the_sheet_keeps_the_fase_3_order(client, seeded, phase3_open, legal_pub
     )
     assert 'href="/fr/orientation/' in sheet
     assert "Découvrir le questionnaire d’orientation" in sheet
-    assert "Lire la page « Attention aux fraudes »" in sheet
+    assert "Lire la page «\u00a0Attention aux fraudes\u00a0»" in sheet  # through `typo` (W4-A, m2)
 
 
 def test_before_phase3_the_sheet_carries_no_closed_page(client, seeded):

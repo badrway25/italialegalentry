@@ -109,6 +109,15 @@
   margin: 0 0 var(--s-2);
 }
 
+/* nothing a person reads on a phone or a small tablet is under 16 px (RE-4, SP-7: a phone's reading text one step
+   up) — W3-D's own line, dropped at its integration pass to keep the door pages identical, restored by the mobile
+   sweep for every page that draws the passage (W4-A, D21) */
+@media (max-width: 63.999rem) {
+  .linea__text {
+    font-size: var(--t-body);
+  }
+}
+
 /* a station still being verified: its words in the quiet ink, its ring broken */
 .linea__step--pending .linea__label {
   color: var(--text-2);

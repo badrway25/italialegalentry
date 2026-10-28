@@ -199,24 +199,57 @@ def test_every_migration_pattern_the_documents_give_lists_the_migrations():
         assert not missing, f"{pattern!r} does not list {len(missing)} migration file(s), e.g. {missing[:2]}"
 
 
-def test_the_rollback_statement_about_the_migrations_is_still_true():
-    """ROLLBACK.md §7 says no migration differs between the reference tag and the release: the same files, byte for
-    byte. A migration added, edited or removed since makes that false: say in §7 what it changes for a return to
-    `pre-v5-main-2026-10` (section 1's list decides whether it is code-rollback-safe), then update the table above and
-    the count in the section. Once `v2.0.0` exists, §7 speaks «at `v2.0.0`» and this test holds only that no released
-    migration is edited or removed — a later one is the next release's business (section 1)."""
-    current = {
+def _migrations_in_the_checkout() -> dict[str, str]:
+    return {
         path.relative_to(ROOT).as_posix(): _blob_id(path.read_bytes())
         for path in (ROOT / "apps").glob("*/migrations/[0-9][0-9][0-9][0-9]_*.py")
     }
+
+
+def _released_migration_changes(current: dict[str, str]) -> dict[str, list[str]]:
+    """What ``current`` changed in the released migrations — the files ROLLBACK.md §7 speaks for."""
     written = MIGRATIONS_WHEN_WRITTEN
-    changes = {
+    return {
         "added": sorted(current.keys() - written.keys()),
         "removed": sorted(written.keys() - current.keys()),
         "edited": sorted(path for path in current.keys() & written.keys() if current[path] != written[path]),
     }
-    assert not any(changes.values()), f"ROLLBACK.md §7 was written for other migration files: {changes}"
-    assert f"the {len(written)} migration files of `pre-v5-main-2026-10`" in _flat(ROLLBACK)
+
+
+def test_the_rollback_statement_about_the_migrations_is_still_true():
+    """ROLLBACK.md §7 says no migration differs between the reference tag and the release, `v2.0.0`: the same files,
+    byte for byte. A released migration edited or removed since makes that false: say in §7 what it changes for a
+    return to `pre-v5-main-2026-10` (section 1's list decides whether it is code-rollback-safe), then update the table
+    above and the count in the section."""
+    changes = _released_migration_changes(_migrations_in_the_checkout())
+    broken = {kind: paths for kind, paths in changes.items() if kind != "added" and paths}
+    assert not broken, f"ROLLBACK.md §7 was written for other migration files: {broken}"
+    assert f"the {len(MIGRATIONS_WHEN_WRITTEN)} migration files of `pre-v5-main-2026-10`" in _flat(ROLLBACK)
+
+
+def test_a_new_migration_does_not_trip_the_rollback_statement_an_edited_or_removed_one_does():
+    """§7 speaks for the 39 released files (W4-D part 2, A6): a later migration is the next release's business
+    (section 1), so it must not fail the tripwire; an edited or a removed released file must, each by its name."""
+    released = dict(MIGRATIONS_WHEN_WRITTEN)
+    added = {**released, "apps/cases/migrations/0002_a_later_release.py": "0" * 40}
+    later = _released_migration_changes(added)
+    assert later["added"] == ["apps/cases/migrations/0002_a_later_release.py"]
+    assert not later["edited"] and not later["removed"], later
+    name = "apps/rules/migrations/0002_legalrule_approved_by_label_legalrule_provenance_and_more.py"
+    edited = {**released, name: _blob_id(b"# edited\n")}
+    assert _released_migration_changes(edited)["edited"] == [name]
+    removed = {path: blob for path, blob in released.items() if path != name}
+    assert _released_migration_changes(removed)["removed"] == [name]
+    renamed = {**removed, name.replace("0002_", "0002_renamed_"): released[name]}
+    assert _released_migration_changes(renamed)["removed"] == [name]
+    assert len(MIGRATIONS_WHEN_WRITTEN) == 39
+
+
+def test_the_rollback_statement_speaks_at_the_release():
+    """§7 states the migrations' identity at the release this candidate becomes — «at `v2.0.0`» —, not «today»."""
+    section_7 = _flat(_section(ROLLBACK, "## 7. The pre-V5 platform"))
+    assert "No migration differs between the two at `v2.0.0`" in section_7, section_7
+    assert "No migration differs between the two today" not in section_7
 
 
 def test_ci_runs_the_production_target_beside_the_development_stack():

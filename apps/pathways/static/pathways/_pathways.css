@@ -181,6 +181,25 @@
   margin-block-start: var(--s-4);
 }
 
+/* a passage's forward link stands alone in its paragraph: one box of its line's height at least, whatever lines its
+   words take (it was an inline run of 22 px glyph boxes); 44 px under a finger (SP-8; W4-A, D5) */
+.linea__more a {
+  display: inline-block;
+}
+
+@media (pointer: coarse) {
+  .linea__more a {
+    position: relative;
+  }
+
+  .linea__more a::after {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc(50% - var(--hit-primary) / 2));
+    inset-inline: 0;
+  }
+}
+
 /* ---- the anti-fraud callout: a warning notice of the core components (v5/notice.css) — its mark, its title in the
         register's word, its broken rule (W3-F1, step 2). The title is the notice's line, whatever its level. ---- */
 .antifraud-callout .notice__title {

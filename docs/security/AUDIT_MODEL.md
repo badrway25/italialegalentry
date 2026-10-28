@@ -371,6 +371,7 @@ lacuna T-25 del threat model.
 | `superadmin` | Sola lettura di tutto | **IMPLEMENTATO** |
 | DPO / revisore esterno | Sola lettura, accesso nominativo e a termine | **DESIGN ONLY** — non esiste un ruolo dedicato |
 | **La persona interessata** | La cronologia delle attività **sul proprio fascicolo** (chi ha visto, chi ha deciso, quando) | **DESIGN ONLY** — previsto da D2 §9 («cronologia attività» nel fascicolo). È anche la forma più concreta di trasparenza verso l'interessato |
+| `role:legal_approver` | Sola lettura della traccia delle regole giuridiche e delle loro fonti, ciò che revisiona — nient'altro | **IMPLEMENTATO** (F-8: fino a ottobre 2026 leggeva ogni evento) `apps/audit/admin.py` |
 | Tutti gli altri ruoli | Nessun accesso | **IMPLEMENTATO** (deny by default) |
 
 **La lettura dell'audit dovrebbe essere essa stessa tracciata** (`audit.read`, `audit.exported`),

@@ -134,7 +134,7 @@ def test_scheduled_rows_follow_clock(client, permanent_event):
         assert row.title in _page(client)
 
 
-def test_virtual_forum_teaser_gated(client, permanent_event, set_flag):
+def test_virtual_forum_teaser_gated(client, permanent_event, set_flag, legal_published):
     html = _page(client)
     assert 'data-gate="virtual-forum"' not in html
     assert locked_content.text("p3.virtual_forum.title", "fr") not in html
@@ -145,12 +145,12 @@ def test_virtual_forum_teaser_gated(client, permanent_event, set_flag):
     assert locked_content.text("p3.virtual_forum.button", "fr") in html
 
 
-def test_virtual_forum_teaser_not_in_event_mode(client, event, set_flag):
+def test_virtual_forum_teaser_not_in_event_mode(client, event, set_flag, legal_published):
     set_flag("virtual_forum", True)
     assert 'data-gate="virtual-forum"' not in _page(client)
 
 
-def test_permanent_mode_compliance_all_languages(client, permanent_event, set_flag):
+def test_permanent_mode_compliance_all_languages(client, permanent_event, set_flag, legal_published):
     set_flag("virtual_forum", True)
     for lang in ("fr", "it", "en", "ar"):
         html = _page(client, lang)

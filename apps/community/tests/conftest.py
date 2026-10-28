@@ -9,7 +9,8 @@ from tests.conftest import _clear_caches  # noqa: F401
 
 
 @pytest.fixture
-def flag_on(set_flag):
+def flag_on(set_flag, legal_published):  # noqa: F811
+    # G11 needs G1 as well as its flag since W4-D part 2 (F-3): the Virtual Forum opens with the legal pages.
     return set_flag("virtual_forum", True)
 
 

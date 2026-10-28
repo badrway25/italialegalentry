@@ -2,7 +2,8 @@
 {% comment %}
 «MON ENTREPRISE» — the identity as held, design V5 (W3-E step 2), in the console's register grammar: the page's head
 (its title, its line of context, the act «Modifier l'identité» at its reading end), the identity as facts on hairlines
-(the numbers in ILE Mono), then the verification — its state as a chip (a fact the project checked about the legal
+(the numbers in ILE Mono; a name or an address an isolate in the page's own value, its lines on the reading edge,
+wrapped or not — W4-A), then the verification — its state as a chip (a fact the project checked about the legal
 entity, never an approval of anyone), who decides it and when, the clause.
 {% endcomment %}
 {% block page_title %}{% translate "Mon entreprise" %}{% endblock %}
@@ -24,16 +25,16 @@ entity, never an approval of anyone), who decides it and when, the clause.
   <section class="reg-sec" aria-labelledby="identity-title">
     <h2 class="db-h2 reg-sec__title" id="identity-title">{% svg_icon "building" "icon" %}<span>{% translate "Identité de l’entreprise telle qu’enregistrée" %}</span></h2>
     <dl class="portal-facts">
-      <div class="portal-facts__row"><dt>{% translate "Dénomination légale" %}</dt><dd dir="auto">{{ company.legal_name }}</dd></div>
-      <div class="portal-facts__row"><dt>{% translate "Nom commercial" %}</dt><dd dir="auto">{% if company.trade_name %}{{ company.trade_name }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Dénomination légale" %}</dt><dd><span dir="auto">{{ company.legal_name }}</span></dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Nom commercial" %}</dt><dd>{% if company.trade_name %}<span dir="auto">{{ company.trade_name }}</span>{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Numéro d’immatriculation" %}</dt><dd>{% if company.registration_number %}<span class="reg-ref">{{ company.registration_number }}</span>{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Numéro de TVA" %}</dt><dd>{% if company.vat_number %}<span class="reg-ref">{{ company.vat_number }}</span>{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Secteur d’activité" %}</dt><dd>{% if company.sector %}{{ company.sector.label }}{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Taille" %}</dt><dd>{% if company.size %}{{ company.get_size_display }}{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Année de création" %}</dt><dd>{% if company.year_founded %}{{ company.year_founded }}{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Référent" %}</dt><dd><span dir="auto">{{ company.contact_name }}</span> — <span dir="auto">{{ company.contact_function }}</span></dd></div>
-      <div class="portal-facts__row"><dt>{% translate "Contact du référent" %}</dt><dd>{{ company.contact_email }}{% if company.contact_phone %} · {{ company.contact_phone }}{% endif %}</dd></div>
-      <div class="portal-facts__row"><dt>{% translate "Adresse" %}</dt><dd dir="auto">{% if company.display_address %}{{ company.display_address }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Contact du référent" %}</dt><dd><span dir="ltr">{{ company.contact_email }}</span>{% if company.contact_phone %} · <span dir="ltr">{{ company.contact_phone }}</span>{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Adresse" %}</dt><dd>{% if company.display_address %}<span dir="auto">{{ company.display_address }}</span>{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Site web" %}</dt><dd>{% if company.website %}<a href="{{ company.website }}" rel="noopener">{{ company.website }}</a>{% else %}—{% endif %}</dd></div>
     </dl>
   </section>

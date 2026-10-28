@@ -25,10 +25,13 @@ def test_block_hidden_when_flag_off(client, legal_published):
     assert 'id="newsletter"' not in html
 
 
-def test_block_shows_unavailable_notice_when_forms_gate_closed(client, newsletter_on):
+def test_block_hidden_while_the_legal_pages_are_unpublished_even_with_its_flag(client, newsletter_on):
+    # Before W4-D part 2 (F-3) the flag alone drew the block with G2's «forms closed» notice. The newsletter now needs
+    # the legal pages as well (its consent text lives there), and with them G2 is open: the notice's state is gone.
     html = client.get(INDEX).content.decode()
-    assert LABEL_TEXT in html
-    assert 'data-gate="forms-closed"' in html
+    assert LABEL_TEXT not in html
+    assert 'id="newsletter"' not in html
+    assert 'data-gate="forms-closed"' not in html
     assert 'action="/fr/actualites/lettre-d-information/"' not in html
 
 
@@ -143,10 +146,11 @@ def test_active_subscriber_is_not_mailed_again(client, newsletter_on, legal_publ
     assert ConsentRecord.objects.count() == 1
 
 
-def test_no_subscription_when_forms_gate_closed(client, newsletter_on, honeypot_ok):
+def test_no_subscription_while_the_legal_pages_are_unpublished_even_with_its_flag(client, newsletter_on, honeypot_ok):
+    # W4-D part 2 (F-3): with its flag on and the legal pages unpublished, the newsletter is closed — its endpoint
+    # answers as when the flag is off (G2's 403 can no longer be reached: the legal pages open both).
     r = client.post(SUBSCRIBE, {"email": "gated@example.test", "consent": "on", **honeypot_ok})
-    assert r.status_code == 403
-    assert 'data-gate="forms-closed"' in r.content.decode()
+    assert r.status_code == 404
     assert NewsletterSubscription.objects.count() == 0
     assert ConsentRecord.objects.count() == 0
     assert EmailOutbox.objects.count() == 0

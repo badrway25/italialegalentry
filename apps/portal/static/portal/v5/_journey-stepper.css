@@ -76,6 +76,14 @@
     max-inline-size: calc(8 * var(--hit-primary));
   }
 
+  /* a column narrower than 44 px under a finger (41 px at 360, 43 at 375: SP-8) — the row takes from the page's
+     gutters what it lacks, as much on both sides and never past the screen: eight 44 px columns from 360 (W4-A, D9);
+     40 at 320, where the gutters are spent. Through its rail: the list reset of the base sheet (`ol[role="list"]`)
+     outranks the class alone */
+  .wiz__rail .wstep {
+    margin-inline: max(calc(-1 * var(--page-pad)), min(0px, calc((100% - 8 * var(--hit-primary)) / 2)));
+  }
+
   .wstep__link {
     grid-template-columns: minmax(0, 1fr);
     justify-items: center;

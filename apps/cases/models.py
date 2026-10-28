@@ -474,6 +474,12 @@ class CaseAssignment(TimeStampedModel):
         return not (self.authorisation_valid_until and self.authorisation_valid_until < timezone.localdate())
 
     def clean(self) -> None:
+        # A CLOSED file is read-only (CASE_LIFECYCLE.md §4 rule 5): no new grant on it, read from the file's row as it
+        # stands, not from the caller's copy. Ending a grant stays possible — it takes access away (W4-D part 2, F-8's
+        # Q-8; tests/security/test_closed_file_assignment_w4_d.py).
+        closed = CaseFile.objects.filter(pk=self.case_id, status=CaseStatus.CLOSED)
+        if self._state.adding and self.case_id and closed.exists():
+            raise ValidationError({"case": _("Un fascicolo concluso non si riapre: se ne apre uno nuovo.")})
         if self.role == AssignmentRole.AUTHORISED_ACTOR and not self.authorisation_reference.strip():
             raise ValidationError(
                 {

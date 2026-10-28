@@ -3517,6 +3517,11 @@
           "glob": "tests/**/test_*_w4_a.py",
           "source": "§2.2 serialized table («new tests go in new per-family files»)",
           "note": "test_layout_<family>.py, test_rtl_browser_<family>.py and any other new per-family test file"
+        },
+        {
+          "glob": "static/css/dev/showcase.css",
+          "slice": "the showcase's phone layout only: the two-column grids' column (`.ds__two`, `.ds__cards`: minmax(0, 1fr)) and a sample table's scroll region (`.ds__section .table-region`, the containing block of its cells' hidden labels); no swatch or palette rule",
+          "source": "steward assignment (w4-a merge, 16 Oct 2026): justified extra path — D13 (the dev showcase 126–304 px wider than every phone, its start cut in Arabic; W3-D's hand-off, the review's m3); the file had no owner, and its palette (test_design_showcase's strict xfail) stays unassigned"
         }
       ]
     },
@@ -3621,6 +3626,11 @@
           "glob": "tests/**/test_*_w4_c.py",
           "source": "§2.2 serialized table («new tests go in new per-family files»)",
           "note": "test_layout_<family>.py, test_rtl_browser_<family>.py and any other new per-family test file"
+        },
+        {
+          "glob": "apps/accounts/profile_forms.py",
+          "slice": "SituationForm's two personal fields: their widgets' input purposes (the date of birth autocomplete bday, still typed date; the country of residence country-name), no logic",
+          "source": "steward assignment (w4-c merge, 16 Oct 2026): justified extra path — the review's M1 (WCAG 2.2 AA 1.3.5: «Ma situation» declared no input purpose, the class W3-F2 fixed on ProfileForm; DL54-159 item 7); W3-F2's slice of the file is ProfileForm's widgets, and no family held SituationForm's"
         }
       ]
     },
@@ -3717,6 +3727,146 @@
           "glob": "tests/deployment/test_runbook_matches_the_code.py",
           "slice": "test_the_release_gate_compares_the_tags_commit: its docstring and its two assertions (refs/tags/v2.0.0^{} and refs/tags/pre-v5-main-2026-10^{} in checklist A-2)",
           "source": "steward assignment (w4-d merge, part 1, 16 Oct 2026): W4-D part 1 item 2; the file stays devops's"
+        },
+        {
+          "glob": "apps/cases/intake.py",
+          "slice": "_sources_of (the pathway's sources read through PathwaySource's own fields, after the rules' sources, none without a rule in force), its call in open_case_from_session and reassess()'s sources",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A1 (a FieldError hidden by a logging guard on every assessment); a file no family held"
+        },
+        {
+          "glob": "apps/core/gates.py",
+          "slice": "virtual_forum_enabled (G11) and newsletter_enabled: each needs G1 as well as its flag, as core.phases' depends_on declares",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2 (part 1's F-3); a file no family held"
+        },
+        {
+          "glob": "apps/community/tests/conftest.py",
+          "slice": "the flag_on fixture: the legal pages published with the flag",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2's set-up; a file no family held"
+        },
+        {
+          "glob": "apps/community/tests/test_join.py",
+          "slice": "the join form's test while the legal pages are unpublished (the whole space closed, 404)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2: the state it tested became impossible; a file no family held"
+        },
+        {
+          "glob": "apps/forum/tests/conftest.py",
+          "slice": "the governance_open fixture: the legal pages published with the flag",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2's set-up; a file no family held"
+        },
+        {
+          "glob": "apps/forum/tests/test_governance_flag.py",
+          "slice": "test_opening_the_flag_opens_the_module: the legal pages in its control",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2's set-up; a file no family held"
+        },
+        {
+          "glob": "apps/news/tests/test_newsletter.py",
+          "slice": "the two tests of the forms-closed state with the flag on, now the legal pages unpublished (block hidden, endpoint 404)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2: the state they tested became impossible; a file no family held"
+        },
+        {
+          "glob": "docs/QA_REPORT.md",
+          "slice": "the «Regole giuridiche» row's counts (11 drafted + 5 legacy, none in force)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A5 (the counts follow the seed); a file no family held"
+        },
+        {
+          "glob": "docs/platform/RULE_ENGINE_GOVERNANCE.md",
+          "slice": "the «Revisione giuridica del contenuto» and «Copertura dei percorsi» rows' counts",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A5 (the counts follow the seed); a file no family held"
+        },
+        {
+          "glob": "apps/accounts/tests/test_second_factor_wherever_the_privilege_lives.py",
+          "slice": "the forum fixture: legal_published added",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2's set-up (G11 needs G1); the file stays W2-B's / sec-f8's"
+        },
+        {
+          "glob": "apps/cases/models.py",
+          "slice": "CaseAssignment.clean's refusal of a new grant on a CLOSED file",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A4 (F-8's Q-8, CASE_LIFECYCLE §4 rule 5); an existing msgid; the file stays its owners'"
+        },
+        {
+          "glob": "apps/cases/services.py",
+          "slice": "assign(): its docstring and the file row's lock before the grant",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A4; the file stays its owners'"
+        },
+        {
+          "glob": "apps/cms/templatetags/cms_nav.py",
+          "slice": "the hero_lines filter, deleted (no template read it)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B (the deletion map's proven-dead rows); the file stays W2-C1's"
+        },
+        {
+          "glob": "apps/forum/tests/test_forum_mode.py",
+          "slice": "three teaser and compliance tests: legal_published added",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2's set-up; the file stays W3-F1's"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/pages.css",
+          "slice": "the home's dead `.reveal` opacity rule, deleted",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B (no element carries .reveal since W4-B); the file stays W2-D's"
+        },
+        {
+          "glob": "apps/portal/static/portal/v5/_shell.css",
+          "slice": "the header comment's §6 line and its sentence on the rail's width (comments only)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 C (W4-B's hand-off: the transition it removed); the file stays W3-A's"
+        },
+        {
+          "glob": "docs/ACCESSIBILITY.md",
+          "slice": "1.1.1's and «Titoli»'s mentions of hero.html; G-13's and G-14's rows",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B and C (hero.html deleted; card.css's colon, W4-C's m3); beside W1-C's slice"
+        },
+        {
+          "glob": "static/css/v5/card.css",
+          "slice": "the meta row's colon: «:» closed up, the French no-break space under :lang(fr)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 C (W4-C's review m3, G-14); the file stays W1-C's"
+        },
+        {
+          "glob": "static/css/v5/tokens.css",
+          "slice": "the springs' comment (their JS twins left with motion.js)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 C, a comment only; the file stays W1-A's"
+        },
+        {
+          "glob": "static/js/src/console.js",
+          "slice": "the header comment's sentence on the rail's width and the is-ready comment (comments only)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 C (W4-B's hand-off); the file stays W3-A's"
+        },
+        {
+          "glob": "templates/account/login.html",
+          "slice": "the header comment's sentence on the withheld invitation",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A3 (F-4), a comment only; the file stays W2-B's"
+        },
+        {
+          "glob": "templates/allauth/elements/p.html",
+          "slice": "the sign-in page's invitation withheld while G2 is closed, and its comment",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A3 (F-4: an invitation to a closed sign-up); allauth's words, no new msgid; the file stays W3-F2's"
+        },
+        {
+          "glob": "templates/components/hero.html",
+          "slice": "the file, deleted (no template included it)",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B (the deletion map's proven-dead rows)"
+        },
+        {
+          "glob": "templates/orientation/result.html",
+          "slice": "the token notice's dead data-reveal-once attribute, removed",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B (its script left with W4-B); the file stays W3-F1's"
+        },
+        {
+          "glob": "tests/frontend/test_content_pages_w3_f2.py",
+          "slice": "test_a_prescribed_text_in_the_title_or_the_description_stays_text: legal_published added",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 A2's set-up; the file stays W3-F2's"
+        },
+        {
+          "glob": "tests/frontend/test_css_tokens_exist.py",
+          "slice": "RUNTIME_PROPERTIES emptied (--nav-drawer-top left the shim) and its comment",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B; the file stays W1-A's"
+        },
+        {
+          "glob": "tests/frontend/test_legacy_token_shim.py",
+          "slice": "the two ceilings lowered (138 tokens, 2 classes) and their comment; never raised",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): W4-D part 2 B (four dead names left; W4-A's twelve type classes); the file stays W1-A's"
+        },
+        {
+          "glob": "tests/frontend/test_entrance_form_w2_b.py",
+          "slice": "test_every_target_of_the_form_has_its_size and test_the_action_is_in_the_first_viewport_of_a_small_phone: legal_published added (the invitation they measure is drawn only while the sign-up is open) and their docstrings' sentence",
+          "source": "steward assignment (w4-d merge, part 2, 27 Oct 2026): the merge's browser run found both red after A3 (F-4: the sign-in's invitation withheld while G2 is closed) — the measured element was gone; the file stays W2-B's"
         }
       ]
     },
@@ -4109,6 +4259,259 @@
           "glob": "docs/design/DESIGN_SYSTEM_2026.md",
           "slice": "§11.7's NowPanel paragraph: «sei varianti» and the two held variants («Dossier suspendu», «Parcours clôturé»)",
           "source": "steward assignment (sec-f7 merge, 16 Oct 2026): the lane notes' hand-over (§9), written by the steward at the merge; beside w3-b's slice «§11.7»"
+        }
+      ]
+    },
+    "sec-f8": {
+      "title": "Security fix F-8: the back office grants no more than the platform — every screen with personal or case data asks the domain's policy and reads its readable_by rows; a staff privilege on a public path meets the second factor; the integrations API answers unexpected input with a controlled response",
+      "wave": 0,
+      "plan": "the finding F-8 of sec-f7's review («observation for the back-office hardening») and of GitHub checkpoint #3's adversary on design-v5 5bf2f90 — the back office (/backoffice/), a second way into personal data that the platform's object policies did not govern: role:operator listed and read every case file there, where docs/security/PERMISSION_MODEL.md §5.1 says «assigned» —, with what sec-f7 and sec-f5 left open (the checklist inline and its audit event, the administrator's branch on a CLOSED file, a second-factor perimeter defined by path) and DL54-152 item 8 (NUL bytes in the integrations API's JSON bodies); a release blocker under the owner's directive V5.10 of 16 October 2026 and a security fix under V5.5 and V5.9, not a workflow of plan §3",
+      "branch": "v54-sec-f8",
+      "worktree": "C:/tmp/ile_wt/v54-sec-f8",
+      "after": [],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the sec-f8 merge, 16 October 2026: a family outside plan §3's waves (wave 0, as devops, sec-f5, intfix and sec-f7), launched for F-8 — accounts.roles.ROLE_PERMISSIONS grants by application, never by row, and Django's admin answered the model permission alone, so role:operator read every case file, assignment and assessment in the back office and none on the platform, and other roles read or changed there what their policy refuses. It stays in the back office's screens and their shared base (core.admin_base: PolicyBoundAdminMixin, the hidden fields, the frozen account fields), the cases and rules policies, the second-factor policy's entry for a privilege outside the guarded paths and the public views' staff branches that call it, the integrations API's input handling, one section of PERMISSION_MODEL.md and one row of AUDIT_MODEL.md, and their tests; no template, CSS, JS or migration. Whole files: what it created; slices: what it changed in files that were nobody's or another family's. No merge tag: V5.9's release tags mark the whole product after final QA (§14), not a family.",
+      "owns": [
+        {
+          "glob": "apps/cases/tests/test_backoffice_follows_the_policy.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): F-8's case-file tests — the operator's screens read the domain's rows (an unassigned, revoked or expired assignment reads nothing; no file enumerated through the list, the search, the autocomplete, the change, history or delete pages), a CLOSED file read-only for everybody, a line's status moved through the domain with its case.checklist.status event, the responsible actor, the purpose and the pathway never rewritten, the operator's legitimate work (lane notes §3.2, §3.5, §4)"
+        },
+        {
+          "glob": "apps/accounts/tests/test_second_factor_wherever_the_privilege_lives.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): a staff privilege on a public path meets the second-factor policy — the virtual forum's moderators (reading and moderating), every preview of unpublished content, an unpublished article — and the source guard that names a future staff branch which forgets it (lane notes §3.3, §4)",
+          "note": "a new file; w2-b's slice «the allauth flows' tests» (apps/accounts/tests/**) also matches it"
+        },
+        {
+          "glob": "apps/integrations/tests/test_unexpected_input.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): the integrations API's unexpected input — a NUL, escaped or raw, in a signed body, the headers or the query string; malformed timestamps; non-ASCII signatures; a body nested 100 000 deep; impossible parameters; a lone surrogate (REVIEW F8R-4) — a controlled 4xx, nothing stored, the nonce not consumed; a clean body still accepted (lane notes §3.4, §4, §10)"
+        },
+        {
+          "glob": "apps/rules/tests/test_backoffice_follows_the_policy.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): the rule editor asks rules.policies — a view grant approves nothing, a legal editor puts nothing in force, the author never approves, the legal approver reads and never rewrites the text it approves, a new version needs «add» besides the policy (REVIEW F8R-1; lane notes §10)"
+        },
+        {
+          "glob": "tests/backoffice/test_screens_follow_the_policies.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): every other back-office screen with personal data follows its platform policy — documents, the help desk, public submissions, the virtual forum, the Forum's governance, notifications and the outbox, consents, the audit trail, orientation, integrations, accounts and the superuser-only screens —, and a view grant's actions neither offered nor executed (lane notes §3.2, §4)"
+        },
+        {
+          "glob": "tests/backoffice/test_a_hidden_field_is_no_filter.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): a field a screen hides is no filter and no search of its list — the subscription's tokens, the outbox's bodies for a view grant, a questionnaire's answers (REVIEW F8R-2; lane notes §10)"
+        },
+        {
+          "glob": "tests/backoffice/test_forms_name_no_account.py",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no back-office form, inline or list filter offers a choice among accounts to a role that may not read accounts (REVIEW F8R-3; lane notes §10)"
+        },
+        {
+          "glob": "docs/design-v5/QA/v54/sec-f8/**",
+          "source": "§5.1 step 1 (a family's reports: the lane's notes and the independent review); steward assignment (sec-f8 merge, 16 Oct 2026)"
+        },
+        {
+          "glob": "apps/core/admin_base.py",
+          "slice": "the back office asks the platform (F-8): may_read_accounts, account_fields, frozen_account_fields and with_frozen_account_fields; BaseModelAdmin's get_readonly_fields (the frozen account fields), get_list_filter (an account filter narrowed to the rows' own accounts), hidden_fields, _over_hidden_field, lookup_allowed and get_search_fields; PolicyBoundAdminMixin (policy_roles, object_policy, policy_admits, readable, get_queryset, object_admits and every has_*_permission); BaseTabularInline's and BaseStackedInline's get_readonly_fields",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.1; REVIEW F8R-2 and F8R-3 (lane notes §10)"
+        },
+        {
+          "glob": "apps/cases/admin.py",
+          "slice": "the back office reads and changes no more than the platform (F-8): the module docstring's F-8 paragraph; readable_files; ChecklistLineForm (a line's responsible actor disabled once the line exists); ChecklistInline's rules (may_change_lines and its add, change and delete permissions); AssignmentInline.get_queryset (readable_assignments); PolicyBoundAdminMixin, object_policy and readable on CaseFileAdmin, PathwayAssessmentAdmin and CaseAssignmentAdmin; CaseFileAdmin's purpose and pathway_key read-only, save_formset and save_checklist (a line's status through services.set_checklist_status); CaseAssignmentAdmin.get_readonly_fields through with_frozen_account_fields and its has_change_permission (the policy asked by the mixin; never a revoked assignment)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): lane notes §3.2, §3.5 and §10 (REVIEW F8R-3's class); beside sec-f7's slice «the back office hands out no capacity»"
+        },
+        {
+          "glob": "apps/cases/policies.py",
+          "slice": "a CLOSED file read-only for everybody (F-8): the module docstring's CaseFile line and its paragraph; case_policy's and checklist_policy's administrator «change» refused on a read-only file, «delete» kept; readable_assignments (assignment_policy's «view» as a queryset)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.2, §3.5 and §3.6; sec-f7 NOTES «The review's other observations stand»"
+        },
+        {
+          "glob": "apps/cases/tests/test_transition_actors.py",
+          "slice": "TestTheBackOffice's two retargeted tests — test_the_operator_cannot_take_over_another_files_assignment_and_move_that_file and test_the_operator_ends_no_assignment_there: another file's assignment is not found there (302 to the index, as an id never issued) where it answered 403; the operator reads its own assignment's screen and changes nothing on it — intent kept",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): lane notes §9; the file stays sec-f7's, beside w3-e's slice"
+        },
+        {
+          "glob": "apps/accounts/middleware.py",
+          "slice": "a privilege is not a path (F-8): the module docstring's paragraph; SecondFactorRequired, require_second_factor and BackofficeMFAMiddleware.process_exception (the perimeters' own redirects)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): lane notes §3.3; beside sec-f5's slice, whose rules, pages and exemptions are unchanged"
+        },
+        {
+          "glob": "apps/community/views.py",
+          "slice": "member_required's and index's moderator branch: require_second_factor before a moderator reads hidden and pending posts or moderates",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.3"
+        },
+        {
+          "glob": "apps/ecosystem/services.py",
+          "slice": "can_preview: a staff preview (?preview=1) meets require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.3"
+        },
+        {
+          "glob": "apps/pathways/services.py",
+          "slice": "can_preview: a staff preview (?preview=1) meets require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): lane notes §3.3; beside w3-f1's slice «the presentation of the pages it owns»"
+        },
+        {
+          "glob": "apps/pages/services.py",
+          "slice": "can_preview: a staff preview (?preview=1) meets require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): lane notes §3.3; beside w2-d's and w2-e's slices (the home page)"
+        },
+        {
+          "glob": "apps/faq/services.py",
+          "slice": "page_visible's staff branch (any staff account while the page is closed): require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.3"
+        },
+        {
+          "glob": "apps/glossary/services.py",
+          "slice": "page_visible's staff branch (any staff account while the page is closed): require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.3"
+        },
+        {
+          "glob": "apps/living/views.py",
+          "slice": "_check_gate's staff preview (?preview=1 with living.view_livingtopic): require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.3"
+        },
+        {
+          "glob": "apps/news/views.py",
+          "slice": "detail's unpublished article for a staff account (news.view_article): require_second_factor first",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.3"
+        },
+        {
+          "glob": "apps/audit/admin.py",
+          "slice": "the module docstring and AuditEventAdmin's rows (F-8): PolicyBoundAdminMixin, RULE_TRAIL and readable — the administration reads the whole trail, any other account the legal rules' trail only (AUDIT_MODEL §6.1)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.6 and §3.2"
+        },
+        {
+          "glob": "apps/community/admin.py",
+          "slice": "the virtual forum's screens are the moderators' (F-8): the module docstring; ModeratorsOnly (community.policies.MODERATOR_ROLES) on its nine screens; mark_trusted recorded row by row (community.membership.trusted)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.10 and §3.2"
+        },
+        {
+          "glob": "apps/consents/admin.py",
+          "slice": "the module docstring; withdraw_selected needs «change» and is recorded (consents.withdrawn); SUBSCRIPTION_TOKENS never displayed and never a filter (NewsletterSubscriptionAdmin's fields, readonly_fields and hidden_fields: the subscription read-only)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.8 and §3.2; REVIEW F8R-2"
+        },
+        {
+          "glob": "apps/documents/admin.py",
+          "slice": "the module docstring's F-8 paragraph; PrivateDocumentAdmin and DocumentRequirementAdmin policy-bound (object_policy; readable — no deleted document but for a superuser, DocumentRequirement.readable_by); the register's export recorded (documents.exported)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.2 and §3.2"
+        },
+        {
+          "glob": "apps/enquiries/admin.py",
+          "slice": "the module docstring's «Who» paragraph; PublicSubmissionAdmin policy-bound (enquiries.policies.BACKOFFICE_VIEW_ROLES, object_policy), its has_delete_permission a superuser's only; mark_handled and anonymise_selected need «change»",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.4 and §3.2"
+        },
+        {
+          "glob": "apps/forum/governance_admin.py",
+          "slice": "the module docstring's rule on who; AdministrationOnly (governance_policies.BACKOFFICE_VIEW_ROLES) on the governance module's eight screens",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.10 and §3.2"
+        },
+        {
+          "glob": "apps/helpdesk/admin.py",
+          "slice": "the module docstring's F-8 paragraph; HelpdeskTicketAdmin policy-bound (object_policy; readable through TicketQuerySet.readable_by)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.3 and §3.2"
+        },
+        {
+          "glob": "apps/integrations/admin.py",
+          "slice": "OutboundEventAdmin's requeue and cancel need «change» and are recorded (integrations.outbound.requeued, integrations.outbound.cancelled)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.11 and §3.2"
+        },
+        {
+          "glob": "apps/integrations/api.py",
+          "slice": "NUL, UNSTORABLE, carries_unstorable, storable and decode_json; parse_json_body through decode_json",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.4; REVIEW F8R-4"
+        },
+        {
+          "glob": "apps/integrations/views.py",
+          "slice": "the module docstring; _INTEGER and _int_param; _logged (the headers a refusal logs, without what the database cannot store); events_list's impossible date a 400; inbound_webhook's body through api.decode_json",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.4; REVIEW F8R-4"
+        },
+        {
+          "glob": "apps/integrations/webhooks.py",
+          "slice": "verify's header checks: _NONCE_RE matched whole and ASCII, _TIMESTAMP_RE (ASCII digits, at most 12), a non-ASCII signature «invalid_signature»",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §3.4"
+        },
+        {
+          "glob": "apps/notifications/admin.py",
+          "slice": "the module docstring; MessageReaders (portal.policies.BACKOFFICE_VIEW_ROLES) on its three screens; BODY_FIELDS shown and filtered only with «change» (get_fields, hidden_fields); resend and cancel need «change» and are recorded (notifications.outbox.resent, notifications.outbox.cancelled)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.7 and §3.2; REVIEW F8R-2"
+        },
+        {
+          "glob": "apps/orientation/admin.py",
+          "slice": "ANSWER_FIELDS, _without_answers and _hidden_answers; OrientationSessionAdmin's and OrientationResultAdmin's get_fields and hidden_fields — a questionnaire's answers shown to, and filtered by, a superuser only",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.9 and §3.2; REVIEW F8R-2"
+        },
+        {
+          "glob": "apps/rules/admin.py",
+          "slice": "the module docstring's F-8 paragraph; LegalSourceAdmin and LegalRuleAdmin policy-bound (object_policy); the workflow actions' permissions (has_submit_permission, has_approve_permission, has_activate_permission, has_retire_permission) and _run asking can(user, verb, rule) before services.transition; _rule_or_404 through the screen's own view test; new_version_view needing «add» besides the policy",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; REVIEW F8R-1; lane notes §10"
+        },
+        {
+          "glob": "apps/rules/policies.py",
+          "slice": "may_review (role:legal_approver), read by may_approve and by _legal_rule's activate and retire",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; REVIEW F8R-1"
+        },
+        {
+          "glob": "docs/security/PERMISSION_MODEL.md",
+          "slice": "§3.5 «Il back-office non concede più della piattaforma (F-8, ottobre 2026)» and its paragraph on the review's fixes",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): lane notes §9 and §10; beside sec-f5's slice"
+        },
+        {
+          "glob": "docs/security/AUDIT_MODEL.md",
+          "slice": "§6.1's role:legal_approver row (the legal rules' trail only)",
+          "source": "steward assignment (sec-f8 merge, 16 Oct 2026): no family held the file; lane notes §1.6 and §3.2"
+        }
+      ]
+    },
+    "rc-fix": {
+      "title": "The release candidate's fixes: what the validation of v2.0.0's candidate found — two gate failures (gate 6's stale allow-list, gate 12's Pillow advisories) and two P2s (a missing stored file answered 500, a stale row of the permission model)",
+      "wave": 0,
+      "plan": "the release-candidate validation of v2.0.0 (V5.10's fourteen gates, 28 October 2026: evidence/rc-v2.0.0/REGRESSION_NON_BROWSER.md, SECURITY.md, SMOKE.md), under V5.5's «implement, review once, fix, ship» — not a workflow of plan §3",
+      "branch": "v54-rc-fix",
+      "worktree": "C:/tmp/ile_wt/v54-rc-fix",
+      "after": [],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the rc-fix merge, 28 October 2026 (DL54-162): a family outside plan §3's waves (wave 0, as devops, sec-f5, intfix, sec-f7 and sec-f8), launched for the release candidate's findings. Slices only, each file staying its owner's: no template, CSS, JS or migration. No merge tag in the manifest: the annotated tag v54/rc-fix marks design-v5 after the merge, as v54/checkpoint-3 did for intfix.",
+      "owns": [
+        {
+          "glob": "docs/design-v5/QA/v54/rc-fix/**",
+          "source": "§5.1 step 1 (a family's reports: the fix's notes and the independent review, copied from the release-candidate evidence); steward assignment (rc-fix merge, 28 Oct 2026)"
+        },
+        {
+          "glob": "tests/frontend/test_icons.py",
+          "slice": "THINNER_RULES_WITH_AN_OWNER emptied and its comment (its last entry, components.css's .entrance__icon, went with §12 in 71fbd90)",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): gate 6 (REGRESSION_NON_BROWSER: the stale allow-list failed); the file stays w1-b's"
+        },
+        {
+          "glob": "requirements/base.txt",
+          "slice": "the Pillow pin, 13.0.0",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): gate 12 (pip-audit: 38 advisories against 12.3.0, all fixed in 13.0.0); a file no family held"
+        },
+        {
+          "glob": "requirements/constraints.txt",
+          "slice": "the pillow pin, 13.0.0",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): gate 12, the constraint beside base.txt's pin; the file stays devops's"
+        },
+        {
+          "glob": "apps/documents/views.py",
+          "slice": "_serve: a stored file gone is a 404 logged once as documents.file_missing (the id only), after the two permission gates (require, delivery_block)",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): SMOKE D1 (a missing stored file answered 500); the file stays w3-c's"
+        },
+        {
+          "glob": "apps/documents/tests/test_download.py",
+          "slice": "the five missing-file tests and their helpers (owner and signed link 404 with one log record and no audit event; a refused account the same 403 before and after; an infected file still 403; anonymous still to the sign-in)",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): SMOKE D1; a file no family held"
+        },
+        {
+          "glob": "docs/security/PERMISSION_MODEL.md",
+          "slice": "§1.3's row «L'amministratore non può concedersi il superadmin» (IMPLEMENTATO, citing §7.1 L-01 and its test) and §5.10's «Stato» paragraph (PARZIALE: the superadmin grant closed, is_staff still the owner's question Q-1)",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): SECURITY D-4 (a row stale since L-01 closed); the file stays sec-f5's and sec-f8's"
+        },
+        {
+          "glob": "scripts/check_ownership.py",
+          "slice": "FAMILY_ID admits «rc-fix» and its comment",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): the steward's write at the rc-fix merge (as the intfix merge's 473aa20); the file stays the steward's"
+        },
+        {
+          "glob": "tests/test_check_ownership.py",
+          "slice": "OUTSIDE_THE_WAVES holds rc-fix; the id rule's three cases",
+          "source": "steward assignment (rc-fix merge, 28 Oct 2026): the steward's write at the rc-fix merge; the file stays the steward's"
         }
       ]
     }

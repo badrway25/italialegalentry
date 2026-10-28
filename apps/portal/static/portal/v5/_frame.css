@@ -41,6 +41,13 @@
   color: var(--ink-2);
 }
 
+/* the head's words may shrink below their longest word: a name an organisation wrote with a word longer than the
+   column wraps inside it, the page never wider than the phone (W4-A, D18: the Arabic overflow probes) */
+.ctx__words,
+.ws-head__words {
+  min-inline-size: 0;
+}
+
 .ctx__title {
   margin: 0 0 var(--s-2);
   font-family: var(--f-sans);

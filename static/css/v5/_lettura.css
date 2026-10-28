@@ -782,9 +782,8 @@
   line-height: 1.5rem;
 }
 
-.form__privacy-link a {
-  display: inline-block;
-}
+/* its link: v5/_pagina.css (W4-A — the door pages' forms draw the consent too, without this sheet). The pending legal
+   page's address: v5/notice.css, with the go-live notice's (W4-A, D3) */
 
 .lettura .form__help {
   max-inline-size: 36rem;
@@ -1061,12 +1060,14 @@
 
   /* each of these is a box of 24 px at least (its line, or its line and 2 px): 10 px above and below make 44, and a
      word narrower than 44 px is widened to 44 about its middle (the accessibility check's A3: the glossary's terms, the
-     FAQ's links and its permalink, the consent's privacy link joined the list; the trail's: v5/_pagina.css §1) */
-  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a) {
+     FAQ's links and its permalink, the consent's privacy link joined the list; the trail's: v5/_pagina.css §1).
+     W4-A: the help line's link and the consent's privacy link left the list for v5/_pagina.css — every page that
+     draws them, the door pages' forms included (D2, D5) —, the pending legal notice's address for v5/notice.css (D3) */
+  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .page-header__contact a) {
     position: relative;
   }
 
-  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .aiuto a, .form__privacy-link a, .page-header__contact a)::after {
+  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .page-header__contact a)::after {
     content: "";
     position: absolute;
     inset-block: -10px;

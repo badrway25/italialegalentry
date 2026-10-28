@@ -383,15 +383,8 @@
   margin-block-start: var(--s-4);
 }
 
-.note__marker {
-  font-family: var(--font-ui);
-  font-size: 0.72em;
-  vertical-align: super;
-  line-height: 1;
-  color: var(--rubric);
-  font-weight: 600;
-  margin-inline-start: 0.1em;
-}
+/* the note's marker (.note__marker) left with its last page, «Mes pièces»' prescribed note (W3-C); no template names
+   it any more (W4-A's fix pass) */
 
 /* ---- THE SOURCE LIST -------------------------------------------------------
    The closing region of a rule outcome and of any page that states a legal
@@ -509,7 +502,6 @@
     border-inline-start-color: Highlight;
   }
 
-  .note__marker,
   .sources__item::before {
     color: CanvasText;
   }

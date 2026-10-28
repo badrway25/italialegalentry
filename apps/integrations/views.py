@@ -1,9 +1,16 @@
-"""API v1 views — thin: validation + envelope; logic in services / webhooks."""
+"""
+API v1 views — thin: validation + envelope; logic in services / webhooks.
+
+Unexpected input meets a controlled answer, never a 500 (finding F-8's API probe): a parameter that is not a plain
+number or a possible date is a 400; a webhook body that is not a JSON object this API accepts — invalid, nested deeper
+than the decoder recurses, or carrying a NUL or a lone surrogate, which the log's text and jsonb cannot store (the
+review of sec-f8, F8R-4) — is a 400 that consumes no nonce; the headers a refusal logs are written without either.
+"""
 
 from __future__ import annotations
 
-import json
 import logging
+import re
 
 from django.db import IntegrityError, transaction
 from django.http import Http404
@@ -30,11 +37,22 @@ def schema(request):
     return api.ok(request, SCHEMA)
 
 
+#: An integer parameter as a client writes one: ASCII digits, an optional minus, a length ``int`` always reads
+#: (``str.isdigit`` accepts «²», which ``int`` refuses, and Python refuses an integer string beyond 4 300 digits).
+_INTEGER = re.compile(r"-?[0-9]{1,20}", re.ASCII)
+
+
+def _logged(value: str, limit: int) -> str:
+    """A header's value as a refusal's log row keeps it: without what the database cannot store (a NUL, a lone
+    surrogate — ``api.storable``), bounded."""
+    return api.storable(value)[:limit]
+
+
 def _int_param(request, name: str, default: int, minimum: int, maximum: int) -> int:
     raw = request.GET.get(name)
     if raw is None or raw == "":
         return default
-    if not raw.lstrip("-").isdigit():
+    if not _INTEGER.fullmatch(raw):
         raise ApiError(400, "invalid_parameter", f"Parameter {name!r} must be an integer.")
     return max(minimum, min(int(raw), maximum))
 
@@ -49,7 +67,10 @@ def events_list(request):
         qs = qs.filter(status=status)
     since = request.GET.get("since")
     if since:
-        parsed = parse_datetime(since)
+        try:
+            parsed = parse_datetime(since)
+        except ValueError:  # well formed, impossible: «2026-02-30T10:00:00+01:00»
+            parsed = None
         if parsed is None:
             raise ApiError(400, "invalid_parameter", "Parameter 'since' must be an ISO-8601 date-time.")
         if parsed.tzinfo is None:
@@ -90,8 +111,8 @@ def inbound_webhook(request, system):
     log_row = InboundWebhookLog(
         system=verification.system,
         system_key=system[:40],
-        nonce=verification.nonce[:64],
-        timestamp=verification.timestamp[:32],
+        nonce=_logged(verification.nonce, 64),
+        timestamp=_logged(verification.timestamp, 32),
         signature_valid=verification.ok,
         request_id=getattr(request, "request_id", "")[:64],
     )
@@ -101,10 +122,7 @@ def inbound_webhook(request, system):
         log_row.save()
         _audit_webhook(request, "webhook.rejected", log_row)
         return api.error(request, 401, verification.code, "Webhook rejected.")
-    try:
-        payload = json.loads(body.decode("utf-8")) if body else {}
-    except (ValueError, UnicodeDecodeError):
-        payload = None
+    payload = api.decode_json(body) if body else {}
     if payload is None or not isinstance(payload, dict):
         log_row.signature_valid = False  # do not consume the nonce for a malformed body
         log_row.status_code = 400
@@ -122,8 +140,8 @@ def inbound_webhook(request, system):
         log_row = InboundWebhookLog.objects.create(
             system=verification.system,
             system_key=system[:40],
-            nonce=verification.nonce[:64],
-            timestamp=verification.timestamp[:32],
+            nonce=_logged(verification.nonce, 64),
+            timestamp=_logged(verification.timestamp, 32),
             signature_valid=False,
             status_code=401,
             error="replay",

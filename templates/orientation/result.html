@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n static orientation_tags %}
+{% extends "base.html" %}{% load i18n static orientation_tags pages_typo %}
 {% comment %}
 The pre-evaluation. Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/_interior.css, through
 orientation/wizard.css), the page as a chain of questions:
@@ -83,7 +83,7 @@ orientation/wizard.css), the page as a chain of questions:
           <h3 class="wizard-result__group-title">{{ group.label }}</h3>
           <ul class="wizard-result__list">
             {% for item in group.items %}<li{% if item.lang != site.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.text }}</li>{% endfor %}
-            {% if group.key == "warnings" and phase3_open %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></li>{% endif %}{% endif %}
+            {% if group.key == "warnings" and phase3_open %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}</a></li>{% endif %}{% endif %}
           </ul>
         </div>
         {% endfor %}
@@ -124,7 +124,7 @@ orientation/wizard.css), the page as a chain of questions:
     <div class="container chapter__inner">
       <div class="chapter__body">
         {% if reveal_token %}
-        <section class="notice notice--warning wizard-result__token" role="region" aria-labelledby="token-title" data-reveal-once="true">
+        <section class="notice notice--warning wizard-result__token" role="region" aria-labelledby="token-title">
           {% svg_icon "warning" "icon notice__icon" %}
           <h2 id="token-title" class="notice__title">{% translate "Votre code de reprise" %}</h2>
           <div class="notice__body">

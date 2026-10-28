@@ -2,6 +2,12 @@
 Read-only back-office listing of private documents. No file link for non-superusers; scan status
 can be set manually (audited) by users holding the change permission — the default scanner is a
 no-op, so a documented human review is the way a document becomes 'clean' in this deployment.
+
+The rows are those ``documents.policies`` lets the account read (finding F-8): for the administration
+every document that is not deleted — a deleted document is nobody's to read, and a superuser stays the
+last resort. The register's export is recorded in the audit trail. The model has no file field: a file
+leaves only through ``documents.views._serve`` (the policy, the delivery rule, the throttle, the audit
+event), the one link drawn here.
 """
 
 from __future__ import annotations
@@ -15,7 +21,9 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from core.admin_base import BaseModelAdmin, BaseTabularInline
+from accounts import roles
+from audit.services import record as audit_record
+from core.admin_base import BaseModelAdmin, BaseTabularInline, PolicyBoundAdminMixin
 from documents import services
 from documents.models import (
     DocumentRequirement,
@@ -63,7 +71,8 @@ class DeletedFilter(admin.SimpleListFilter):
 
 
 @admin.register(PrivateDocument)
-class PrivateDocumentAdmin(BaseModelAdmin):
+class PrivateDocumentAdmin(PolicyBoundAdminMixin, BaseModelAdmin):
+    object_policy = True
     list_display = (
         "original_name",
         "owner",
@@ -87,6 +96,9 @@ class PrivateDocumentAdmin(BaseModelAdmin):
         (_("Analyse et conservation"), {"fields": ("scan_status", "scanned_at", "retention_until", "deleted_at")}),
         (_("Audit"), {"fields": ("uploaded_ip_hash", "created_at", "updated_at")}),
     )
+
+    def readable(self, request, queryset):
+        return queryset if roles.is_superadmin(request.user) else queryset.alive()
 
     @admin.display(description=_("taille"), ordering="size")
     def size_display(self, obj):
@@ -161,6 +173,8 @@ class PrivateDocumentAdmin(BaseModelAdmin):
         writer.writerow(
             ["id", "owner", "organisation", "kind", "original_name", "size", "scan_status", "created_at", "deleted_at"]
         )
+        # a register of people's documents leaves the platform: recorded, like the enquiries' exports
+        audit_record(request, action="documents.exported", metadata={"count": queryset.count()})
         for doc in queryset.select_related("owner", "organisation"):
             writer.writerow(
                 [
@@ -204,7 +218,7 @@ class DocumentVersionInline(BaseTabularInline):
 
 
 @admin.register(DocumentRequirement)
-class DocumentRequirementAdmin(BaseModelAdmin):
+class DocumentRequirementAdmin(PolicyBoundAdminMixin, BaseModelAdmin):
     """
     Back-office view of what each case file still needs.
 
@@ -231,6 +245,11 @@ class DocumentRequirementAdmin(BaseModelAdmin):
         (_("Accès et audit"), {"fields": ("access_class", "created_at", "updated_at")}),
     )
     actions = ("refresh_states",)
+    object_policy = True
+
+    def readable(self, request, queryset):
+        # what the requirement's own queryset gives the account (the person, a live assignee, the administration)
+        return queryset.filter(pk__in=DocumentRequirement.objects.readable_by(request.user).values("pk"))
 
     @admin.action(description=_("Recalculer l’état (expiration, examen)"), permissions=["change"])
     def refresh_states(self, request, queryset):

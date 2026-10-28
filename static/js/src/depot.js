@@ -3,7 +3,9 @@
  * DOCUMENT_WORKSPACE.md §11): templates/documents/partials/depot.html, made a little more than a form.
  *
  * Without this module the Dépôt is complete: the browser's own file control, a real form post, the server's answer as
- * a page. With it, the SAME form goes to the SAME endpoint (apps/documents/views.py, header `X-ILE-Depot`), and the
+ * a page — with script but before this module (late, or lost), the frame keeps its drawing and a chosen file shows the
+ * browser's own control in it (_depot.css §2 bis), and a file chosen meanwhile is taken up when it arrives. With it,
+ * the SAME form goes to the SAME endpoint (apps/documents/views.py, header `X-ILE-Depot`), and the
  * server's answer — one of the eleven of §11.1 — is composed IN PLACE:
  *
  *   ready        a file is chosen and nothing is sent: its whole name in its own order, its type and size; choosing and
@@ -24,8 +26,9 @@
  * server decides where the person stands — nothing is ever sent twice behind their back.
  *
  * Two live regions, made once and kept outside whatever a refresh replaces, carry the announcements — at the start
- * (the chosen file) and at the end (the answer), assertive for a refusal (§11.2). The composed blocks themselves are
- * not live: nothing is read twice. Every word is the page's: the server's sentences, the form's data-* sentences and
+ * (the chosen file) and at the end (the answer), assertive for a refusal (§11.2); a new choice or a send empties both
+ * first, so neither keeps a sentence that no longer holds. The composed blocks themselves are not live: nothing is
+ * read twice. Every word is the page's: the server's sentences, the form's data-* sentences and
  * the <template>s of depot.html. CSP: no inline style, no string evaluated; motion is CSS on the person's act only
  * (the filed mark, _depot.css), still under reduced motion.
  *
@@ -130,6 +133,15 @@ function say(live, text, assertive = false) {
       region.textContent = text;
     }, SAY_AFTER),
   );
+}
+
+/** Both regions emptied, their pending words dropped: a new choice or a new send starts from silence, so a reader who
+ *  walks the page never meets the previous file's sentence beside a refusal of the new one (A11Y_PERF a1, W4-C). */
+function hush(live) {
+  [live.polite, live.assertive].forEach((region) => {
+    window.clearTimeout(saying.get(region));
+    region.textContent = "";
+  });
 }
 
 function describe(control, id, on) {
@@ -275,6 +287,7 @@ function wire(form, options) {
     input.removeAttribute("aria-invalid");
     if (row) delete row.dataset.state;
     if (answer) answer.replaceChildren();
+    hush(live);
   };
   const showFile = (file) => {
     if (!row) return;
@@ -388,6 +401,10 @@ function wire(form, options) {
     clear();
     send(file);
   });
+
+  // a file chosen before this module arrived — the frame showed the browser's own control meanwhile (_depot.css §2 bis)
+  // — is shown, guarded and said now, as if chosen this moment (W4-C's review, M2)
+  if (input.files && input.files.length) input.dispatchEvent(new Event("change"));
 
   function send(file) {
     const data = new FormData(form); // read before the controls are disabled

@@ -465,7 +465,8 @@ body.console { --f-serif: var(--f-sans); } /* the serif never reaches the consol
   --ease-sine: cubic-bezier(0.37, 0, 0.63, 1);
   --ease-turn: cubic-bezier(0.77, 0, 0.175, 1); /* the one key-turn curve: loader, login, hero (DL54-05) */
 
-  /* springs as CSS twins of motion.js (SOFT 260/30 ζ .93 · SNAPPY 400/40 ζ 1 · SHEET 200/27 ζ .955) */
+  /* springs, sampled as linear() curves (SOFT 260/30 ζ .93 · SNAPPY 400/40 ζ 1 · SHEET 200/27 ζ .955); their JS twins
+     left with motion.js (W4-B) */
   --spring-soft: linear(0, 0.049, 0.157, 0.288, 0.42, 0.539, 0.643, 0.728, 0.797, 0.851, 0.892, 0.923, 0.946, 0.963, 0.975, 0.984, 0.99, 0.994, 0.996, 0.998, 1);
   --spring-soft-duration: 430ms;
   --spring-snappy: linear(0, 0.081, 0.242, 0.412, 0.561, 0.681, 0.772, 0.84, 0.889, 0.924, 0.948, 0.965, 0.976, 0.984, 0.989, 0.993, 0.995, 0.997, 0.998, 0.999, 1);

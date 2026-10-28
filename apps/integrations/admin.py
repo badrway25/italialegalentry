@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from audit.services import record as audit_record
 from core.admin_base import BaseModelAdmin, BaseTabularInline
 from integrations.models import (
     ApiKey,
@@ -60,15 +61,18 @@ class OutboundEventAdmin(BaseModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    @admin.action(description=_("Rimetti in coda (falliti/annullati)"))
+    # A view grant never writes (finding F-8): both need «change», and each is recorded.
+    @admin.action(description=_("Rimetti in coda (falliti/annullati)"), permissions=["change"])
     def requeue(self, request, queryset):
         for event in queryset:
             requeue_event(event)
+            audit_record(request, action="integrations.outbound.requeued", target=event)
 
-    @admin.action(description=_("Annulla consegna"))
+    @admin.action(description=_("Annulla consegna"), permissions=["change"])
     def cancel(self, request, queryset):
         for event in queryset:
             cancel_event(event, reason=f"annullato dal back-office da {request.user}")
+            audit_record(request, action="integrations.outbound.cancelled", target=event)
 
 
 @admin.register(WebhookEndpoint)

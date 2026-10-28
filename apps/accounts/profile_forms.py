@@ -145,10 +145,13 @@ class SituationForm(PublicFormMixin, forms.Form):
     dressed up as a finding.
     """
 
+    # The two facts about the person whose purpose HTML names say what they are for (WCAG 2.2 AA, 1.3.5 «identify
+    # input purpose» — W4-C's review, M1), as ProfileForm's personal fields do (W3-F2's A2): the date of birth is
+    # `bday` (still typed `date`), the country of residence `country-name`. The nationality has no purpose token.
     date_of_birth = forms.DateField(
         label=_("Date de naissance"),
         required=False,
-        widget=forms.DateInput(attrs={"type": "date"}),
+        widget=forms.DateInput(attrs={"type": "date", "autocomplete": "bday"}),
         help_text=_("Certaines conditions d’entrée dépendent de l’âge. Les règles lisent l’âge, jamais la date."),
     )
     nationality = forms.CharField(
@@ -161,6 +164,7 @@ class SituationForm(PublicFormMixin, forms.Form):
         label=_("Pays de résidence actuel"),
         max_length=80,
         required=False,
+        widget=forms.TextInput(attrs={"autocomplete": "country-name"}),
         help_text=_("La démarche à suivre dépend du pays depuis lequel vous la commencez."),
     )
     education_level = forms.ChoiceField(

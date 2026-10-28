@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n static %}
+{% extends "base.html" %}{% load i18n static pages_typo %}
 {% comment %}
 Formation — two moments of one path (Implementation §3.8.5): before departure (neutral UI wording,
 CONTENT_PENDING_LEGAL_REVIEW, Annexe §5 nature: orientation/preparation, never an administrative approval)
@@ -38,7 +38,7 @@ a pathway's sheet. No card, no side column.
               <span class="notice__icon" aria-hidden="true">{% svg_icon "info" %}</span>
               <div class="notice__body"><p>{% translate "Les formations sont promues avec des organismes partenaires ; aucune attestation n’a valeur d’approbation administrative." %}</p></div>
             </div>
-            {% if origin_pathway_url %}<p class="linea__more"><a href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" %}</a></p>{% endif %}
+            {% if origin_pathway_url %}<p class="linea__more"><a href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" as origin_label %}{{ origin_label|typo }}</a></p>{% endif %}
           </div>
         </li>
         <li class="linea__step training-phase" id="apres-l-arrivee">
@@ -47,7 +47,7 @@ a pathway's sheet. No card, no side column.
           <h2 class="linea__label{% if after_title|striptags|upper == after_title|striptags %} linea__label--caps{% endif %}" id="training-after-title"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{{ after_title }}</h2>
           <div class="linea__text">
             {% locked "p3.training_after.body" "p" %}
-            {% if links.living %}<p class="linea__more"><a href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" %}</a></p>{% endif %}
+            {% if links.living %}<p class="linea__more"><a href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" as living_label %}{{ living_label|typo }}</a></p>{% endif %}
           </div>
         </li>
       </ol>

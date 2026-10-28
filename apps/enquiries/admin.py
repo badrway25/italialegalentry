@@ -4,6 +4,12 @@ Back-office for public submissions.
 Submission data is evidence: read-only. Staff edit only the workflow fields (status, notes,
 external reference, handled/last-contact). Actions: CSV export (UTF-8 BOM, consent version and
 timestamp), mark handled, anonymise (GDPR erasure), single-submission JSON export (portability).
+
+Who: the roles ``enquiries.policies`` names — staff, administration — whatever else holds the
+«enquiries» model permissions (finding F-8: role:operator read, changed, exported and anonymised every
+submission here, a policy that never names it). Nobody hard-deletes a submission: the erasure is the
+anonymisation, which keeps the consent's proof, and the policy grants «delete» to no role (a superuser
+stays the last resort).
 """
 
 from __future__ import annotations
@@ -14,11 +20,13 @@ from django.contrib import admin, messages
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 
+from accounts import roles
 from audit.services import record as audit_record
 from core import gates
-from core.admin_base import BaseModelAdmin
+from core.admin_base import BaseModelAdmin, PolicyBoundAdminMixin
 from enquiries import services
 from enquiries.models import CollaborationProposal, CompanyNeedsRequest, ContactRequest
+from enquiries.policies import BACKOFFICE_VIEW_ROLES
 
 WORKFLOW_FIELDS = ("status", "admin_notes", "external_reference", "handled_at", "handled_by", "last_contact_at")
 META_FIELDS = (
@@ -35,7 +43,9 @@ META_FIELDS = (
 )
 
 
-class PublicSubmissionAdmin(BaseModelAdmin):
+class PublicSubmissionAdmin(PolicyBoundAdminMixin, BaseModelAdmin):
+    policy_roles = BACKOFFICE_VIEW_ROLES
+    object_policy = True
     list_filter = ("status", "language")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
@@ -45,6 +55,10 @@ class PublicSubmissionAdmin(BaseModelAdmin):
 
     def has_add_permission(self, request):
         return False  # submissions only come from the public forms
+
+    def has_delete_permission(self, request, obj=None):
+        # the policy grants «delete» to nobody: refused on the list too, so no deletion is ever offered
+        return super().has_delete_permission(request, obj) and roles.is_superadmin(request.user)
 
     def get_readonly_fields(self, request, obj=None):
         base = list(super().get_readonly_fields(request, obj))
@@ -79,7 +93,7 @@ class PublicSubmissionAdmin(BaseModelAdmin):
         audit_record(request, action="enquiries.export_csv", metadata={"model": self.model._meta.label, "count": count})
         return response
 
-    @admin.action(description=_("Marquer comme traitée"))
+    @admin.action(description=_("Marquer comme traitée"), permissions=["change"])
     def mark_handled(self, request, queryset):
         handled = 0
         for obj in queryset:
@@ -87,7 +101,7 @@ class PublicSubmissionAdmin(BaseModelAdmin):
             handled += 1
         messages.success(request, _("%(n)d demande(s) marquée(s) comme traitée(s).") % {"n": handled})
 
-    @admin.action(description=_("Anonymiser (effacement RGPD — irréversible)"))
+    @admin.action(description=_("Anonymiser (effacement RGPD — irréversible)"), permissions=["change"])
     def anonymise_selected(self, request, queryset):
         done = 0
         for obj in queryset.filter(anonymised_at__isnull=True):

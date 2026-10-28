@@ -883,8 +883,11 @@ class TestTheBackOffice:
         client.force_login(operator)
         assert client.get(f"{INDEX}{other.reference}/").status_code == 404, "not its file"
         change = f"{BACKOFFICE}caseassignment/{row.pk}/change/"
-        response = _admin_post(client, change, {"assignee": str(operator.pk), "role": AssignmentRole.OPERATOR})
-        assert response.status_code == 403
+        # F-8 (sec-f8): another file's assignment is not even found there — the back office reads the assignment
+        # policy's rows (the assignee, the file's owner, the administration), and answers it as an id never issued
+        assert client.get(change)["Location"] == "/backoffice/"
+        response = client.post(change, {"assignee": str(operator.pk), "role": AssignmentRole.OPERATOR})
+        assert (response.status_code, response["Location"]) == (302, "/backoffice/")
         row.refresh_from_db()
         assert (row.assignee_id, row.role) == (back_office["trainer"].pk, AssignmentRole.TRAINING_BODY)
         assert client.get(f"{INDEX}{other.reference}/").status_code == 404
@@ -901,15 +904,22 @@ class TestTheBackOffice:
         assert case.suspension_reason == "En attente du passeport"
 
     def test_the_operator_ends_no_assignment_there(self, client, back_office):
-        """«Only administrators create or revoke outside the services» (``cases.policies``): the operator reads an
-        assignment's screen and changes nothing on it — not even its end."""
-        row = back_office["foreign_assignment"]
+        """«Only administrators create or revoke outside the services» (``cases.policies``): the operator reads its own
+        assignment's screen and changes nothing on it — not even its end. Another file's assignment it does not even
+        find (F-8, sec-f8: the back office reads the assignment policy's rows)."""
         client.force_login(back_office["operator"])
-        change = f"{BACKOFFICE}caseassignment/{row.pk}/change/"
-        assert 'name="revoked_at_0"' not in client.get(change).content.decode("utf-8")
+        own, foreign = back_office["own_assignment"], back_office["foreign_assignment"]
+        change = f"{BACKOFFICE}caseassignment/{own.pk}/change/"
+        page = client.get(change)
+        assert page.status_code == 200 and 'name="revoked_at_0"' not in page.content.decode("utf-8")
         assert client.post(change, {"revoked_at_0": "2026-10-16", "revoked_at_1": "10:00:00"}).status_code == 403
-        row.refresh_from_db()
-        assert row.revoked_at is None
+        change = f"{BACKOFFICE}caseassignment/{foreign.pk}/change/"
+        assert client.get(change)["Location"] == "/backoffice/"
+        response = client.post(change, {"revoked_at_0": "2026-10-16", "revoked_at_1": "10:00:00"})
+        assert (response.status_code, response["Location"]) == (302, "/backoffice/")
+        for row in (own, foreign):
+            row.refresh_from_db()
+            assert row.revoked_at is None
 
     def test_the_administrator_grants_an_assignment_through_the_domain(
         self, client, case, back_office, django_user_model

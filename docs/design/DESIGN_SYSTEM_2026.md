@@ -166,28 +166,28 @@ I pesi qui sotto sono quelli delle **sorgenti**, in ordine di cascata:
 | Ordine | File | Peso (non compresso, indicativo) | Contenuto |
 |---|---|---|---|
 | 1 | `tokens.css` | 11.3 KB | 105 custom property su `:root`, cinque fasce di breakpoint, override `:lang(ar)` / `[dir=rtl]`, override `prefers-reduced-motion` |
-| 2 | `_legacy-tokens.css` | 11.1 KB | **impalcatura di demolizione**, non design system: 142 nomi vecchi mappati sul nuovo sistema (undici adottati da V5 e usciti il 5 ottobre 2026), più 14 classi tipografiche legacy. Il file solo si accorcia (§17) |
-| 3 | `base.css` | 12.7 KB | reset, i dieci ruoli tipografici, cifre, skip link, `.prose`, helper bidi, stampa; link e focus sono passati a `v5/base.css` (W1-A, mappa delle cancellazioni del piano V5.4 §2.3) |
+| 2 | `_legacy-tokens.css` | 10.7 KB | **impalcatura di demolizione**, non design system: 138 nomi vecchi mappati sul nuovo sistema (undici adottati da V5 e usciti il 5 ottobre 2026, quattro non letti da nessuno usciti il 27 ottobre), più 2 classi tipografiche legacy (`.eyebrow`, `.numeral`: le altre dodici, morte, sono uscite con W4-A). Il file solo si accorcia (§17) |
+| 3 | `base.css` | 12.8 KB | reset, i dieci ruoli tipografici, cifre, skip link, `.prose`, helper bidi, stampa; link e focus sono passati a `v5/base.css` (W1-A, mappa delle cancellazioni del piano V5.4 §2.3) |
 | 4 | `layout.css` | 5.5 KB | contenitori, la griglia a tre zone, sezioni per rango, griglia editoriale, utility di composizione |
-| 5 | `components.css` | 14.9 KB | 9 sezioni numerate: icone → pattern di contenuto → overlay → motion (le §5–§7 della cromatura e la §25 del piè di pagina sono passate a `v5/chrome.css`, W2-C1; la §1 dei bottoni, la §3 delle pastiglie, la §4 delle notice, la §13 delle card, le §14–§15 di schede e accordion e le regole di campo della §20 a `v5/buttons.css`, `v5/chip.css`, `v5/notice.css`, `v5/card.css`, `v5/tabs.css` e `v5/field.css`, W1-C; la §8 del menu account e la §21 del dialog a `v5/overlays.css`, W2-A; il resto della §20 — il form di ricerca, l'indice alfabetico e le loro liste — e la §28 della pagina legale al partial di pagina `v5/_lettura.css`, che le pagine di contenuto caricano con `cms/lettura.css`, W3-F2; la §26 delle pagine d'errore, intera, e della §27 la cornice, la scheda e i pannelli delle pagine del conto al partial di pagina `v5/_servizio.css`, che le pagine del conto caricano con `cms/servizio.css` e le pagine d'errore con `cms/errori.css`, W3-F2 passo 2 — della §27 restano il secondo titolo che l'ingresso disegna e la tabella della console). **Non ancora migrato**: vive sui nomi dello shim |
+| 5 | `components.css` | 12.8 KB | 8 sezioni numerate: icone → pattern di contenuto → overlay → motion (le §5–§7 della cromatura e la §25 del piè di pagina sono passate a `v5/chrome.css`, W2-C1; la §1 dei bottoni, la §3 delle pastiglie, la §4 delle notice, la §13 delle card, le §14–§15 di schede e accordion e le regole di campo della §20 a `v5/buttons.css`, `v5/chip.css`, `v5/notice.css`, `v5/card.css`, `v5/tabs.css` e `v5/field.css`, W1-C; la §8 del menu account e la §21 del dialog a `v5/overlays.css`, W2-A; il resto della §20 — il form di ricerca, l'indice alfabetico e le loro liste — e la §28 della pagina legale al partial di pagina `v5/_lettura.css`, che le pagine di contenuto caricano con `cms/lettura.css`, W3-F2; la §26 delle pagine d'errore, intera, e della §27 la cornice, la scheda e i pannelli delle pagine del conto al partial di pagina `v5/_servizio.css`, che le pagine del conto caricano con `cms/servizio.css` e le pagine d'errore con `cms/errori.css`, W3-F2 passo 2 — della §27 restano il secondo titolo che l'ingresso disegna e la tabella della console). **Non ancora migrato**: vive sui nomi dello shim |
 | 6 | `register.css` | 17.6 KB | **il linguaggio grafico proprio** (§8): folio, registro ed entrata, sequenza, barra di giurisdizione, lastra e fascia verso, nota marginale, elenco delle fonti, esito, regione vuota, più il livello `@media (forced-colors: active)` |
 | 7 | `v2/tokens.css` | 6.1 KB | **design V2** (`docs/design-v2/DESIGN_SYSTEM_V2.md`): i token di «due rive, una porta» — due capitoli di superficie, un solo accento interattivo, tre voci tipografiche, quattro durate, tre curve |
 | 8 | `v2/bridge.css` | 2.4 KB | **impalcatura di migrazione, esiste per essere cancellata**: ripunta terreno, navy e rosso rubrica del sistema vecchio sui valori nuovi, così nessuna pagina resta a metà fra due direzioni finché la propagazione non è finita. Se ne va con `register.css` |
 | 9 | `v4/tokens.css` | 15.5 KB | **design V4** (`docs/design-v4/DESIGN_SYSTEM_V4.md`, dopo la direttiva del committente del 24/09/2026): i token di «il portico e la console», caricati **per ultimi con i nomi V2** — il navy evoluto dal marchio ufficiale, l'accento come famiglia con due gradienti, le ricette di sfondo, cinque profondità e sei ruoli d'ombra, cinque raggi, la superfamiglia Plex (`--font-ui`, `--font-ref` e `--font-mono` ripuntati), la scala della console `--u-*`, misure di layout e controlli, dieci livelli `z`, sei durate e tre curve (i nomi V2 sono alias). Ripete l'override sotto `md` e il moto ridotto perché un `:root` successivo vince su una media query precedente; non ridefinisce `--border-strong` / `--border-accent`, che nello shim sono colori (le linee sono `--line-*`) |
 | 10 | `v4/hero.css` | 4.4 KB | **ciò che resta di «il portico»: la pittura della porta** per `components/doorway.html` — oggi la sola pagina d'ingresso (`templates/allauth/layouts/entrance.html`): le fermate dei gradienti come classi, la fotografia, l'arco, la porta interna, la chiave, i tre gradini e le loro regole sotto colori forzati. L'hero V4 della home (capitolo IMMERSIVE, griglia 6/6, le quattro vie, la corrente, la legenda in vetro) è uscito con l'hero V5.4 (W2-D, 8 ottobre 2026): l'hero V5 è `templates/pages/home/_hero.html` col proprio foglio di pagina `apps/pages/static/pages/css/hero.css` (§2.1) e il modulo `static/js/src/hero.js`. Il file esce da `main.css` con `_door.css` di W2-B (il partial di static/css/v5/ che prende il palcoscenico come disegnato) |
 | 11 | `v5/fonts.css` | 6.1 KB | **design V5, tipo «Una voce»** (`docs/design-v5/V5_4_EXECUTION_PLAN.md` §1.1, §2.3; W1-A): cinque facce self-hosted — Host Grotesk variabile 400–700 e corsivo 400, «ILE Wordmark» (Newsreader 600, 11 code point), «ILE Mono» (il sottoinsieme di IBM Plex Mono rinominato), Vazirmatn variabile 400–700 — con `font-display: swap`, `unicode-range` e le facce di ripiego metriche (Segoe UI, Arial, Roboto; Georgia per il nome, Consolas per i riferimenti). Sostituisce `fonts.css` e i 26 woff2 di V4 (§6) |
-| 12 | `v5/tokens.css` | 62.2 KB | **design V5, i token** (`docs/design-v5/DESIGN_SYSTEM_V5.md` §2–§4 emendato dal piano V5.4 §1.1–§1.6, §1.8): primitive (carta, inchiostro, notte, laguna, i materiali degli stati con il lapis di «En examen» e nessun viola), semantica (superfici, testo, linee, accento, il fuoco, i registri, le scale `--t-*` a otto taglie e `--u-*`, cinque livelli d'ombra nel colore della notte, il vetro a 0.94, il moto), componenti; caricati **dopo** V4: chiudono la cascata, e ripetono gli override stretti e del moto ridotto dei nomi che dichiarano |
+| 12 | `v5/tokens.css` | 62.3 KB | **design V5, i token** (`docs/design-v5/DESIGN_SYSTEM_V5.md` §2–§4 emendato dal piano V5.4 §1.1–§1.6, §1.8): primitive (carta, inchiostro, notte, laguna, i materiali degli stati con il lapis di «En examen» e nessun viola), semantica (superfici, testo, linee, accento, il fuoco, i registri, le scale `--t-*` a otto taglie e `--u-*`, cinque livelli d'ombra nel colore della notte, il vetro a 0.94, il moto), componenti; caricati **dopo** V4: chiudono la cascata, e ripetono gli override stretti e del moto ridotto dei nomi che dichiarano |
 | 13 | `v5/aliases.css` | 8.2 KB | **design V5, gli alias** (DS V5 §13): i nomi V1 / V2 / V4 ripuntati sui valori V5 — architettura A, «in place, alias-first» (piano §2.1): ogni pagina cambia valore senza cambiare un template, ed è «V4 + fondation» finché la sua famiglia non passa. Una regressione si corregge qui, mai in un template |
-| 14 | `v5/base.css` | 7.9 KB | **design V5, i ruoli di base**: pesi e tracking dei titoli, il nome in «ILE Wordmark» ovunque compaia, «ILE Mono» al suo solo posto, i link nell'accento, **il sistema di fuoco unico** (§1.6: anello 2 px a 2 px, alone solo sui campi di testo, `Highlight` nei colori forzati), il testo digitato a 16 px, l'arabo (titoli 600 senza ×1.15, nessun maiuscolo, enfasi col peso), e la correzione «nessuna pagina peggiore» del controllo di consegna (la riga d'aiuto araba dell'ingresso sulla riga di 24 px; le due della barra console sul telefono — le etichette a 12 px, il titolo a 14 px con 8 px fra gli elementi — sono uscite con la barra, che W3-A ha ridisegnato: §11.6). Ultimo foglio della cascata, scritto per quella posizione |
-| 15 | `v5/buttons.css` | 14.9 KB | **design V5, i bottoni** (piano V5.4 §1.4 SH-9, §1.5, §1.8; W1-C): la lastra con l'API di proprietà ereditata da V3 (`--btn-fill`, `--btn-ink`, `--btn-edge` e i loro stati, `--btn-box-h`, `--btn-pad` e `--btn-pad-end`: nel margine finale la chiave del loader trova il suo posto, e la freccia vi toglie 4 px per la compensazione ottica); il primario **piatto** in laguna — nessun gradiente, nessuna luce, nessuna ombra: l'unico trattamento di firma è il CTA dell'hero —, il secondario su carta col bordo strutturale, soft, ghost (l'azione discreta, etichetta nell'accento), danger a contorno granata, icona di 40 px con area di 44; le taglie 36 · 44 · 52 dai token di controllo; le varianti in riga (`--link`, `--text`) e `.link-arrow`; **un solo gesto di pressione** (il riempimento di pressione e 1 px in giù a 0 ms, rilascio su `--spring-snappy`); disabled per colore e cursore, mai per opacità; la notte per contesto e `.btn--inverse` (il primario come lastra di carta); 44 px sotto un puntatore grossolano; su una pagina araba l'etichetta latina che va a capo resta centrata nella lastra (`base.css` la isola da sinistra a destra e la allineerebbe al suo inizio); da tastiera nessuna transizione (`html[data-input="key"]`, livello 0); gerarchia a bordi nei colori forzati. La faccia d'attesa è del loader (`v5/loader.css`: la chiave nel margine finale, ogni variante sulla propria superficie). Sostituisce `components.css` §1, il foglio V3 dei bottoni e `v4/buttons.css` |
-| 16 | `v5/field.css` | 19.4 KB | **design V5, i campi «la lastra»** (piano §1.4 SP-3, §1.6, §1.8, §1.13; W1-C): l'impalcatura del form (gruppi senza riquadro, legenda 20/28, azioni dopo un filetto); il campo — etichetta sopra 14/20 a 8 px, 24 px fra due campi, aiuto ed errori 13/20; il controllo come lastra — carta, filetto a 3:1, angoli di 4 px, nessuna ombra, 44 px in console e 52 px sulle pagine pubbliche, testo digitato a 16 px —, il select col gallone disegnato dall'inchiostro delle icone, il file (il suo bottone è un piccolo secondario: 36 px, 44 px sotto un puntatore grossolano), il campo password col comando mostra / nascondi; gli stati: hover, il filetto di 2 px che si disegna dal bordo di lettura al focus (subito da tastiera e a moto ridotto), invalido con bordo doppio, marca disegnata e parole, avviso, disabled, sola lettura, autofill; checkbox, radio e switch nativi disegnati dai token (24 px; 44 px di area sotto un puntatore grossolano); da tastiera il bordo, il comando mostra / nascondi e la spunta cambiano senza transizione (`html[data-input="key"]`, livello 0). Sostituisce le regole di campo di `components.css` §20 e il comando password di `v4/buttons.css` |
+| 14 | `v5/base.css` | 7.8 KB | **design V5, i ruoli di base**: pesi e tracking dei titoli, il nome in «ILE Wordmark» ovunque compaia, «ILE Mono» al suo solo posto, i link nell'accento, **il sistema di fuoco unico** (§1.6: anello 2 px a 2 px, alone solo sui campi di testo, `Highlight` nei colori forzati), il testo digitato a 16 px, l'arabo (titoli 600 senza ×1.15, nessun maiuscolo, enfasi col peso), e la correzione «nessuna pagina peggiore» del controllo di consegna (la riga d'aiuto araba dell'ingresso sulla riga di 24 px; le due della barra console sul telefono — le etichette a 12 px, il titolo a 14 px con 8 px fra gli elementi — sono uscite con la barra, che W3-A ha ridisegnato: §11.6). Ultimo foglio della cascata, scritto per quella posizione |
+| 15 | `v5/buttons.css` | 15.0 KB | **design V5, i bottoni** (piano V5.4 §1.4 SH-9, §1.5, §1.8; W1-C): la lastra con l'API di proprietà ereditata da V3 (`--btn-fill`, `--btn-ink`, `--btn-edge` e i loro stati, `--btn-box-h`, `--btn-pad` e `--btn-pad-end`: nel margine finale la chiave del loader trova il suo posto, e la freccia vi toglie 4 px per la compensazione ottica); il primario **piatto** in laguna — nessun gradiente, nessuna luce, nessuna ombra: l'unico trattamento di firma è il CTA dell'hero —, il secondario su carta col bordo strutturale, soft, ghost (l'azione discreta, etichetta nell'accento), danger a contorno granata, icona di 40 px con area di 44; le taglie 36 · 44 · 52 dai token di controllo; le varianti in riga (`--link`, `--text`) e `.link-arrow`; **un solo gesto di pressione** (il riempimento di pressione e 1 px in giù a 0 ms, rilascio su `--spring-snappy`); disabled per colore e cursore, mai per opacità; la notte per contesto e `.btn--inverse` (il primario come lastra di carta); 44 px sotto un puntatore grossolano; su una pagina araba l'etichetta latina che va a capo resta centrata nella lastra (`base.css` la isola da sinistra a destra e la allineerebbe al suo inizio); da tastiera nessuna transizione (`html[data-input="key"]`, livello 0); gerarchia a bordi nei colori forzati. La faccia d'attesa è del loader (`v5/loader.css`: la chiave nel margine finale, ogni variante sulla propria superficie). Sostituisce `components.css` §1, il foglio V3 dei bottoni e `v4/buttons.css` |
+| 16 | `v5/field.css` | 19.2 KB | **design V5, i campi «la lastra»** (piano §1.4 SP-3, §1.6, §1.8, §1.13; W1-C): l'impalcatura del form (gruppi senza riquadro, legenda 20/28, azioni dopo un filetto); il campo — etichetta sopra 14/20 a 8 px, 24 px fra due campi, aiuto ed errori 13/20; il controllo come lastra — carta, filetto a 3:1, angoli di 4 px, nessuna ombra, 44 px in console e 52 px sulle pagine pubbliche, testo digitato a 16 px —, il select col gallone disegnato dall'inchiostro delle icone, il file (il suo bottone è un piccolo secondario: 36 px, 44 px sotto un puntatore grossolano), il campo password col comando mostra / nascondi; gli stati: hover, il filetto di 2 px che si disegna dal bordo di lettura al focus (subito da tastiera e a moto ridotto), invalido con bordo doppio, marca disegnata e parole, avviso, disabled, sola lettura, autofill; checkbox, radio e switch nativi disegnati dai token (24 px; 44 px di area sotto un puntatore grossolano); da tastiera il bordo, il comando mostra / nascondi e la spunta cambiano senza transizione (`html[data-input="key"]`, livello 0). Sostituisce le regole di campo di `components.css` §20 e il comando password di `v4/buttons.css` |
 | 17 | `v5/chip.css` | 6.6 KB | **design V5, la pastiglia di stato «i cerchi»** (piano §1.2, §1.3, §1.8; W1-C): una marca, una parola e un bordo su un corpo tenue — lo stato detto tre volte senza colore: la parola, la **marca** del registro dallo sprite (cerchio aperto = in corso, pieno = risolto, il lucchetto per una dipendenza) e lo **stile del bordo** (pieno · tratteggiato per ciò che è dovuto · puntinato per ciò che non porta nulla). Otto registri da `data-register` (`apps/core/chips.py`), i cui token sono in `v5/tokens.css`, sulla carta, sul foglio e sulla notte: «conforme» è inchiostro e un disco pieno — nessun colore e nessuna spunta dice «approvato» (O14) —, «En examen» è lapis. Tre taglie esatte, 20 · 24 · 28 px, in ogni scrittura; la parola lunga va a capo, mai in una cella di tabella; la jauge di fase di un fascicolo in tre tacche; nessun hover né focus: uno stato non è un controllo. L'elemento ha un solo produttore, la coppia `chip` … `endchip` (`templates/components/chip.html`). Con essa `.tag`, l'etichetta di un termine — nessun registro, nessuna marca; 44 px di bersaglio sotto un puntatore grossolano quando è un link. Sostituisce `v3/chip.css`, la §3 di `components.css` e la pillola di `v4/workspace.css` |
-| 18 | `v5/card.css` | 8.0 KB | **design V5, le card per funzione** (piano §1.3, §1.4, §1.15; W1-C): tre funzioni, mai una scatola per tutto — la **scheda** `.card` (ciò che esiste e si legge: foglio e filetto, livello 1; con un link l'intera scheda è il bersaglio; più schede di seguito sono una lista, `.card--flat`), la scheda d'**azione** `.card--action` (la sola cosa da fare sullo schermo, e una sola azione: è il piano rialzato, livello 2, uno per schermo) e la striscia di **sintesi** `dl.summary` (celle su un solo foglio, parole e cifre a misura di testo). Nessuna card-cifra, nessuna griglia di card uguali, niente che si trascini o si nasconda: il sistema ordina per priorità, il secondario si ripiega con una disclosure nativa. Angolo `--radius-lg`; al contatto il filetto si rafforza e il titolo si sottolinea — nessuna ombra si anima. Con esse `.meta-row`, la riga di metadati. Sostituisce la §13 di `components.css` |
-| 19 | `v5/notice.css` | 4.2 KB | **design V5, le notice** (piano §1.2; W1-C): il messaggio sul lavaggio del suo registro, detto tre volte senza colore — la marca, il titolo, lo **stile** del filetto di 3 px al bordo di lettura: informazione in ardesia e attesa in lapis (pieno), fatto compiuto in **inchiostro** (pieno; nessun verde: nessun colore significa «approvato»), avvertenza in ambra (**tratteggiato**), errore in granata (**doppio**), nota istituzionale su carta col filetto oro; `.alert` per i messaggi di sessione. Sostituisce `components.css` §4 e la regola della notice di `v4/shell.css` |
+| 18 | `v5/card.css` | 8.2 KB | **design V5, le card per funzione** (piano §1.3, §1.4, §1.15; W1-C): tre funzioni, mai una scatola per tutto — la **scheda** `.card` (ciò che esiste e si legge: foglio e filetto, livello 1; con un link l'intera scheda è il bersaglio; più schede di seguito sono una lista, `.card--flat`), la scheda d'**azione** `.card--action` (la sola cosa da fare sullo schermo, e una sola azione: è il piano rialzato, livello 2, uno per schermo) e la striscia di **sintesi** `dl.summary` (celle su un solo foglio, parole e cifre a misura di testo). Nessuna card-cifra, nessuna griglia di card uguali, niente che si trascini o si nasconda: il sistema ordina per priorità, il secondario si ripiega con una disclosure nativa. Angolo `--radius-lg`; al contatto il filetto si rafforza e il titolo si sottolinea — nessuna ombra si anima. Con esse `.meta-row`, la riga di metadati. Sostituisce la §13 di `components.css` |
+| 19 | `v5/notice.css` | 4.9 KB | **design V5, le notice** (piano §1.2; W1-C): il messaggio sul lavaggio del suo registro, detto tre volte senza colore — la marca, il titolo, lo **stile** del filetto di 3 px al bordo di lettura: informazione in ardesia e attesa in lapis (pieno), fatto compiuto in **inchiostro** (pieno; nessun verde: nessun colore significa «approvato»), avvertenza in ambra (**tratteggiato**), errore in granata (**doppio**), nota istituzionale su carta col filetto oro; `.alert` per i messaggi di sessione. Sostituisce `components.css` §4 e la regola della notice di `v4/shell.css`. L'indirizzo di una notice, solo nel suo paragrafo (`.notice__body .email`: l'avviso dei moduli finché G2 è chiuso, la pagina legale in attesa), è una scatola della sua riga e 2 px, 44 px sotto il dito (W4-A) |
 | 20 | `v5/tabs.css` | 6.9 KB | **design V5, le schede e la disclosure** (piano §1.5 MS-O3; W1-C): le schede WAI-ARIA con **un solo indicatore**, che viaggia sotto l'etichetta scelta (solo `transform`: `--spring-snappy` sulle pagine pubbliche, `--ease-layout` in console; fermo da tastiera, al caricamento, al ridimensionamento e a moto ridotto) mentre il pannello arriva di 12 px dal lato del viaggio; pannelli impilati col proprio titolo senza script; l'accordion su `<details>`: filetti, riga di 56 px, gallone disegnato che ruota; da tastiera l'etichetta della scheda e il gallone cambiano senza transizione (`html[data-input="key"]`, livello 0). Sostituisce `components.css` §14 e §15 |
 | 21 | `v5/overlays.css` | 22.3 KB | **design V5, il sistema degli overlay** (piano V5.4 §1.14; W2-A; il contratto `docs/design-v5/QA/v54/w2-a/CONTRACT.md`): un solo sistema sugli elementi nativi — il dialog e l'alertdialog, il drawer, lo sheet dal basso, il popover / menu e il tooltip — con `static/js/src/overlay.js`. Un foglio di carta col filetto, la testa (il disco del glifo di una conseguenza, il titolo, «Fermer» a 44 px sempre presente), il corpo che scorre da sé, il piede appiccicoso; ombra 3 per il popover, 4 per i modali; lo scrim è l'unico `.overlay-scrim` (il `::backdrop` del pannello per l'opzione nativa), `--scrim-modal`, sola opacità, mai sfocato; angoli 4 · 8 · 12 (i due in alto di uno sheet, il bordo libero di un drawer). Il moto è una transizione nei due sensi — `@starting-style` all'entrata, `allow-discrete` su `display` e `overlay` all'uscita, nulla che dia forma al pannello sotto `[open]` —: il dialog dal centro (.96 → 1 in 320 ms, fuori in 120), il drawer «Slide» dal suo bordo (320 / 200, `--ease-layout` all'uscita, lo scrim con lui, un solo `--dir` per i due versi), lo sheet sulla molla dello sheet (550 / 200, 48 px di margine sotto il bordo, l'area sicura), il menu da 4 px dal suo comando (200 / 120, ancorato sul bordo finale del comando nel proprio verso), il tooltip dopo 400 ms (un gruppo caldo mostra il vicino subito, il ponte di 6 px lo rende raggiungibile, se ne va a 0 ms); da tastiera 0 ms (`html[data-input="key"]`, ultimo nel foglio); sotto il moto ridotto una sola opacità di `--motion-reduced`, nessuna trasformazione; il blocco dello scroll senza spostamento (`html[data-overlay-lock]`, `scrollbar-gutter: stable` dove la pagina aveva una barra); ≤ 40rem il dialog e il menu diventano sheet — il menu sopra l'unico scrim, che prende tutta la pressione che lo chiude, col suo nome in testa (`.overlay__caption`) —, nessun tooltip; colori forzati, puntatore grossolano, stampa. Sostituisce `components.css` §21. **Il foglio è condiviso** — ogni pagina lo carica — e porta ciò che ogni pagina può disegnare: il pannello col suo moto, l'unico scrim, il drawer (quello della console), il popover / menu (sheet sul telefono), il tooltip del livello superiore, il blocco dello scroll. I pannelli con una testa (il dialog e l'alertdialog, lo sheet e la sua maniglia, testa / corpo / piede di `dialog.html`, `sheet.html` e `drawer.html`), il `::backdrop` del modale nativo e il tooltip `::after` del controllo sono **solo di pagina**: il parziale `v5/_overlay-panels.css`, che l'ingresso `apps/core/static/core/overlay-panels.css` porta in `css/dist/core/overlay-panels.css` (§2.1), collegato soltanto dalle pagine che li disegnano (il bilancio CSS V5.8 del committente: i tetti condivisi sono rigidi; DL54-94) |
 | 22 | `v5/loader.css` | 11.5 KB | **design V5, il loader «Lume»** (piano V5.4 §1.9; DL54-07, DL54-08, DL54-09; W1-D): il marchio a strati nelle sue unità (`.sig`, `.sig__l`: la base, la stanza dietro la porta con la sua luce, la chiave d'oro col gemello d'inchiostro) con la primitiva del giro di chiave — un giro 0 → 360° sul proprio gambo, `--ease-turn`, mai tenuta specchiata — per l'ingresso del login, l'hero e il loader; la chiave occupata di ogni bottone d'invio (L2: `.btn.is-busy::after`, la maschera di `key.svg` nel colore del testo, al centro del padding di fine riga qualunque sia la taglia, un giro di `--motion-emphasized` poi tiene attenuata all'80 % — 3 : 1 sul suo fondo su ogni variante —, accesa alla risposta in pagina; nessuna chiave dove non ha posto: un bottone-link o un bottone-icona aspetta con `aria-busy` e resta com'è); la seduta delle righe di un frammento asincrono (L3: `[data-seat].is-seating`, 4 px in `--motion-standard`, scaglione `--motion-stagger`); lo stato di riposo dei due strati che il rilascio anima. Il rilascio stesso — la porta che si illumina sulla prima pagina della console dopo un accesso riuscito — è il parziale generato `v5/_loader-light.css` (`scripts/gen_loader_light.py`), importato dal solo ingresso della console. Solo token, solo proprietà logiche, nessun `will-change` |
-| 23 | `v5/chrome.css` | 51.0 KB | **design V5, la cromatura pubblica «Il portico»** (piano V5.4 §1.11, §1.12; W2-C1): la barra istituzionale a 32 px col promotore e le quattro lingue nominate; la testata 64 → 56 px (vetro solo scrollata, da 80rem, senza pannello aperto); la barra con le quattro porte come bottoni di disclosure, il filetto, Forum e Projet; «l'architrave», l'unico indicatore; i pannelli delle porte appesi alla larghezza del contenuto, 8 | 4 — la glossa, le voci su righe a filetto con la seconda riga viva, «Voir l'espace», il piede anti-frode, la fotografia a colori col glifo del pubblico; «la targa» nella zona finale della testata; il foglio sotto 80rem — il drawer modale del sistema di overlay, «Quiet» sul telefono, laterale da 48rem (W2-C2); il lock-up e il piè di pagina (§11). Sostituisce `v2/shell.css`, `components.css` §5–§7 e §25 e `v4/shell.css` |
+| 23 | `v5/chrome.css` | 51.8 KB | **design V5, la cromatura pubblica «Il portico»** (piano V5.4 §1.11, §1.12; W2-C1): la barra istituzionale a 32 px col promotore e le quattro lingue nominate; la testata 64 → 56 px (vetro solo scrollata, da 80rem, senza pannello aperto); la barra con le quattro porte come bottoni di disclosure, il filetto, Forum e Projet; «l'architrave», l'unico indicatore; i pannelli delle porte appesi alla larghezza del contenuto, 8 | 4 — la glossa, le voci su righe a filetto con la seconda riga viva, «Voir l'espace», il piede anti-frode, la fotografia a colori col glifo del pubblico; «la targa» nella zona finale della testata; il foglio sotto 80rem — il drawer modale del sistema di overlay, «Quiet» sul telefono, laterale da 48rem (W2-C2); il lock-up e il piè di pagina (§11). Sostituisce `v2/shell.css`, `components.css` §5–§7 e §25 e `v4/shell.css` |
 
 Convenzioni:
 
@@ -199,7 +199,7 @@ Convenzioni:
   stati (`-hover`, `-press`), `--btn-box-h`, `--btn-pad`, `--btn-pad-end`, `--notice-wash`, `--notice-word`, `--notice-rule`,
   `--field-draw`, `--tabs-x`, `--tabs-y`, `--tabs-w` e `--tabs-dir` (dichiarate in `v5/tabs.css` col loro valore
   senza script e scritte da `initTabs` sul widget),
-  `--timeline-line`, `--stack-gap`, `--reveal-index` (impostata da `main.js`),
+  `--timeline-line`, `--stack-gap`,
   `--portico-lead`, `--portico-h` e `--portico-scrim-top` (dichiarate in `v5/chrome.css` col loro valore senza
   script e scritte da `nav.js` sull'header, così ogni figlio le eredita: §11.5), gli orologi del sistema degli overlay
   `--overlay-in`, `--overlay-in-ease`, `--overlay-out`, `--overlay-out-ease`, `--overlay-scrim-in` e la sua posa chiusa
@@ -497,7 +497,7 @@ Nessun numero magico nei componenti: un livello o è in questa lista o non esist
 
 ### 3.18 CHROME — una sola misura, calcolata in CSS (`--chrome-*`)
 
-`--chrome-block-size` è calcolata in CSS da `--chrome-utility` più `--chrome-masthead` e oggi ha due consumatori: `scroll-padding-block-start` in `base.css` e `--nav-drawer-top` nello shim, cioè il bordo superiore del drawer. Il velo del drawer non la consuma ancora, ed è esattamente la causa di G-23. L'obiettivo è che nessun JavaScript scriva geometria su un elemento di cui hanno bisogno anche i suoi fratelli.
+`--chrome-block-size` è calcolata in CSS da `--chrome-utility` più `--chrome-masthead` e oggi ha un solo consumatore: `scroll-padding-block-start` in `base.css`. `--nav-drawer-top`, che la passava al bordo superiore del vecchio drawer, è uscito dallo shim il 27 ottobre 2026 (W4-D): il drawer di W2-A non la legge. L'obiettivo è che nessun JavaScript scriva geometria su un elemento di cui hanno bisogno anche i suoi fratelli.
 
 | Token | Valore | Risolto | Uso |
 |---|---|---|---|
@@ -1136,7 +1136,6 @@ Sei fasce nominate. I breakpoint sono decisioni di contenuto, non nomi di dispos
 | `48rem` | 768 | `md` | 12 colonne, gutter 24, margine 40; lastra 60/64, titolo 42/48, banda 32/40, ordinale 28/32; testata a 72 px; ranghi A e B a 64 px; griglia editoriale `.col-*`; `.entrances` a 2 colonne; stepper orizzontale; timeline 4 + 4; footer a 2 colonne; `.form-row--2` |
 | `56rem` | 896 | — | soglia locale di `.split` (testo / figura 7fr / 5fr) |
 | `64rem` | 1024 | — | (`.layout-sidebar`, uscito col suo ultimo consumatore — W3-F2, W3-F1 —, e la navigazione locale in colonna, uscita con le sue pagine), varianti `.lg:col-*`, footer a 4 colonne, `.hide-mobile` / `.hide-desktop`; **le quattro porte entrano nella testata** (pannelli senza fotografia; «Menu» porta Forum · Projet · lingue: §11.1) |
-| `72rem` | 1152 | — | `.entrances` a 4 colonne |
 | `75rem` | 1200 | `lg` | **il rail del folio diventa verticale** (176 px) e il contenitore si fissa a 1176 px; lastra 76/80, titolo 48/52, banda 36/44, ordinale 40/40; ranghi A e B a 96 px, C a 48 px, D a 32 px |
 | `80rem` | 1280 | — | **navigazione desktop** (le sei voci del portico e le fotografie dei pannelli al posto del drawer, bottone «Menu» nascosto), timeline a 8 in riga; fino a 90rem la testata è **compatta** — lock-up 32/17, gap 16, porte senza chevron — perché la colonna `lg` è 1096 px e le sei voci francesi col lock-up intero ne chiederebbero 1178 (§11.1) |
 | `90rem` | 1440 | `xl` | contenitore 1320 px, rail 200 px; lastra 88/92, titolo 52/56, banda 38/44, ordinale 44/44; la testata riprende lock-up 38/20, gap 24 e i chevron delle porte; la targa resta la sola chiave (§11.3) |
@@ -1719,7 +1718,7 @@ non dai suoi angoli.* Anche questo cancello non è ancora soddisfatto da `compon
 
 ## 10. Catalogo componenti (`templates/components/`)
 
-40 file. Ogni componente è un include Django senza logica di business: riceve variabili di contesto
+39 file. Ogni componente è un include Django senza logica di business: riceve variabili di contesto
 (`{% include "components/x.html" with a=… b=… %}`) e produce markup BEM stilato da `components.css`.
 
 **Stato del catalogo rispetto alla direzione A.** Due componenti sono già sul nuovo linguaggio:
@@ -1730,7 +1729,8 @@ ombre sono sparite, i raggi sono 2 px o 0, il verde di successo è diventato blu
 consuma nomi mappati dallo shim (§17). Il contratto di ciascuno, le sue garanzie di accessibilità e
 i suoi consumatori restano validi e sono documentati qui. Ciò che cambia con il resto della
 migrazione è il **numero** dei componenti: `card.html` e `pathway_list.html` convergono anch'essi
-sull'entrata (§8.4) e `hero.html` sulla lastra (§8.6). Finché quella migrazione non è fatta, questa
+sull'entrata (§8.4); `hero.html`, l'antenato della lastra (§8.6), è uscito senza consumatore (W4-D, 27 ottobre
+2026). Finché quella migrazione non è fatta, questa
 sezione descrive ciò che esiste, non ciò che si vorrebbe.
 
 Regole comuni:
@@ -1745,7 +1745,7 @@ Regole comuni:
 - «Usato in» elenca file presenti nell'albero di lavoro (il test verifica che esistano e che
   contengano l'include o il blocco CSS; «e almeno altri N» è un **minimo**, non un totale, così i
   template aggiunti dopo non lo rendono falso). Restano senza consumatore `accordion.html` (solo
-  markup diretto), `hero.html`, `institutional_banner.html`, `metadata_row.html` e
+  markup diretto), `institutional_banner.html`, `metadata_row.html` e
   `tabs.html`: per questi l'esempio è ricavato dal contratto ed è dichiarato come tale. I cinque
   componenti del sistema degli overlay — `dialog.html`, `drawer.html`, `popover.html`, `sheet.html`,
   `tooltip.html` (W2-A) — hanno per ora un solo consumatore, la tavola campione dell'anteprima
@@ -2233,8 +2233,8 @@ Regole comuni:
   (`__title`, `__gloss`, `__cta`, `__arrow`); dal 9 ottobre 2026 (V5.4, W2-D passo 3) le regole sono
   nel foglio di pagina della home, `apps/pages/static/pages/css/pages.css`, sui token V5
   (`v2/routes.css`, il «molo a zig-zag», è cancellato). Le regole `.entrances` e `.entrance` di
-  `components.css` non hanno più consumatori nella home (`.entrance` è oggi il layout d'ingresso di
-  `templates/allauth/layouts/entrance.html`) e vanno cancellate con la migrazione di quel file.
+  `components.css` (la sua §12), che nessun template disegnava più — l'ingresso è `.account-page--entrance` —,
+  sono uscite il 27 ottobre 2026 (W4-D).
 - **Contratto**: `entrances` (opzionale) = lista di 4 dict `{title, text, button, url, lang, actor}`; se
   omessa il componente rende i quattro blocchi prescritti dal registro (`p3.entrances.*`) con i link
   `pathways:index`, `ecosystem:companies`, `ecosystem:institutions`, `ecosystem:universities` (via
@@ -2335,34 +2335,6 @@ Regole comuni:
 ```django
 {% if not forms_open or not form %}
   {% include "components/form_unavailable.html" %}
-```
-
-#### `hero.html`
-
-- **Scopo**: apertura tipografica di pagina. **In uscita**: la direzione A conosce tre aperture — la
-  lastra (§8.6), il blocco titolo e la sola linea di folio — e `hero.html` è l'antenato della prima.
-- **Blocco CSS**: `.hero` (`__content`, `__eyebrow`, `__rule`, `__title`, `__subtitle`, `__body`,
-  `__actions`, `__figure`).
-- **Contratto**: `title` (obbligatorio); `eyebrow`, `subtitle`, `body`; `lang`; `primary_label` +
-  `primary_url`; `secondary_label` + `secondary_url`; `illustration` (percorso statico di un SVG
-  decorativo → layout `.split`); `variant`; `heading_level` (`"h1"` default, `"p"` quando la pagina ha
-  già il suo `h1`).
-- **Varianti**: `.hero--editorial` (default), `.hero--inverse` (navy, aggiunge `.on-inverse`, bottoni
-  `.btn--inverse`), `.hero--muted`, `.hero--compact`. Lo slot `__eyebrow` è **abolito** dalla
-  direzione: va sostituito dal folio. **Mai due lead**: la home respinta metteva due paragrafi
-  consecutivi che dicevano la stessa cosa in due caratteri e a due corpi.
-- **Accessibilità**: `<section aria-labelledby="hero-title">` — `id` fisso: **un solo hero per
-  pagina** (G-13); filetto `aria-hidden`; illustrazione `alt=""`, `loading="eager"`, dimensioni
-  esplicite (niente CLS); titolo limitato a 18ch.
-- **Usato in**: nessuna pagina — nessun `{% include %}`; dal primo passo di W3-F1 `templates/pathways/detail.html`
-  non usa più `.hero__figure` (l'immagine di un percorso è `.pathway-figure`). Le sue regole (`components.css` §10)
-  sono uscite col passo di bilancio di W3-F1 (12 ottobre 2026); il file resta, senza disegno, per W4-D. Fino al
-  5 ottobre 2026 anche `templates/pages/home/_hero.html` (markup diretto con le stesse classi): dall'8 ottobre l'hero
-  V5.4 ha le proprie classi (`.he`, `.he__*`, `.he-*`, in `apps/pages/static/pages/css/hero.css`).
-- **Esempio (dal contratto)**:
-
-```django
-{% include "components/hero.html" with title=hero.title subtitle=hero.subtitle lang=hero.lang primary_label=hero.button primary_url=hero.url variant="editorial" %}
 ```
 
 #### `institutional_banner.html`
@@ -2585,8 +2557,8 @@ Regole comuni:
 - **Contratto**: `items` = lista di dict `{label, value, icon, datetime (ISO → <time>), url}`.
 - **Varianti**: nessuna.
 - **Accessibilità**: `<dl>` con coppie `<dt>`/`<dd>`; date in `<time datetime>` (cifre tabulari da
-  `base.css`, §6.8). Il separatore « : » dopo `<dt>` è contenuto CSS con tipografia francese, non
-  localizzato (G-14).
+  `base.css`, §6.8). Il separatore dopo `<dt>` è contenuto CSS, non tradotto (G-14): « : » con lo
+  spazio francese sotto `:lang(fr)`, «:» attaccato alla parola nelle altre lingue (W4-D, 27 ottobre 2026).
 - **Usato in**: `templates/pathways/_review_meta.html` (markup diretto `.meta-row`, senza glifo: la natura e
   l'ultima verifica di una scheda dell'Espace Personnes, di «Diplômes et titres» e di «Formation», nell'ingresso).
   La riga con i suoi due glifi è uscita col secondo passo di W3-F1.
@@ -3854,8 +3826,8 @@ il `will-change` permanente e il timeout di sicurezza da 2.5 s), il `[data-revea
 funzioni `inView`, `animate` e `stagger` della libreria Motion), `initCounters()` e `.counter` sono **usciti** con W4-B
 (16 ottobre 2026; piano V5.4 §1.5 K17: il testo non aspetta mai una rivelazione). Nascondevano il contenuto finché uno
 script non lo mostrava — un'eccezione in un inizializzatore precedente lo avrebbe lasciato a `opacity: 0` per sempre —
-e nessuna pagina li portava più: né i template né i contenuti del CMS. `--duration-reveal` e `--reveal-distance`
-restano nello shim, a `0ms` e `0`, finché lo shim non esce (W4-D).
+e nessuna pagina li portava più: né i template né i contenuti del CMS. I tre nomi del reveal nello shim (durata,
+distanza, indice), che nessun foglio leggeva più, ne sono usciti il 27 ottobre 2026 (W4-D).
 
 **L'audit del moto (W4-B, 16 ottobre 2026; `docs/design-v5/QA/v54/w4-b/AUDIT.md`).** Ogni tipo di pagina misurato sul
 banco — 68 caricamenti, fr e ar, 1440 e 390, con e senza la preferenza —: i livelli del piano V5.4 §1.5 e i loro tetti
@@ -4328,9 +4300,9 @@ usciti dallo shim perché V5 li adotta con i suoi valori: `--radius-xs`, `--radi
 `--control-height` e `--control-height-sm` (44 e 36), i cinque nomi del fuoco (§7.5) e `--z-modal` (50); i tetti di
 `tests/frontend/test_legacy_token_shim.py` si sono abbassati con loro.
 
-**142 nomi** e 14 classi sono oggi nello shim. Ogni riga è un debito con un sostituto nominato, e
+**138 nomi** e 2 classi sono oggi nello shim. Ogni riga è un debito con un sostituto nominato, e
 il conto alla rovescia è tenuto da due file. `tests/frontend/test_legacy_token_shim.py` tiene i
-**tetti** — 142 token, 14 classi e 1 515 usi complessivi dei nomi ritirati in `static/css/`, nei
+**tetti** — 138 token, 2 classi e 1 515 usi complessivi dei nomi ritirati in `static/css/`, nei
 fogli delle app e nei template — più la regola che nessun file scritto dopo la redirezione parli
 la lingua vecchia; sono massimi, non obiettivi, e si abbassano nel commit stesso in cui una
 migrazione toglie delle voci. Il test
@@ -4522,7 +4494,6 @@ Le interlinee relative restano solo finché `components.css` non usa le coppie c
 | `--icon-size-lg` | `24px` | valore letterale, nessun token di destinazione |
 | `--utility-height` | `var(--chrome-utility)` | `--chrome-utility` |
 | `--header-height` | `var(--chrome-masthead)` | `--chrome-masthead` |
-| `--nav-drawer-top` | `var(--chrome-block-size)` | `--chrome-block-size` |
 
 **Focus**
 
@@ -4530,16 +4501,11 @@ I cinque nomi del fuoco — `--focus-ring-color`, `--focus-ring-inverse`, `--foc
 
 **Motion**
 
-`--duration-reveal` e `--reveal-distance` valgono già `0ms` e `0`: `.reveal` è cancellata dalla direzione e il suo azzeramento fa sì che nulla si animi mentre i template vengono ripuliti (§12).
-
 | Nome legacy | Risolve a | Nel nuovo sistema |
 |---|---|---|
 | `--duration-fast` | `var(--motion-fast)` | `--motion-fast` |
 | `--duration-base` | `var(--motion-base)` | `--motion-base` |
 | `--duration-slow` | `var(--motion-slow)` | `--motion-slow` |
-| `--duration-reveal` | `0ms` | valore letterale, nessun token di destinazione |
-| `--reveal-distance` | `0` | valore letterale, nessun token di destinazione |
-| `--reveal-index` | `0` | valore letterale, nessun token di destinazione |
 
 **I sei orfani, mappati il 21 settembre 2026**
 
@@ -4804,8 +4770,8 @@ riga «chiusa» resta in tabella con la data e l'evidenza della chiusura.
 | G-03 | alta (RTL) | stringhe d'identità latine non isolate in arabo: «™Italy Legal Entry» nel footer, promotore troncato all'inizio nella barra | `static/css/base.css`, `apps/cms/templatetags/cms_nav.py` | `dir="ltr"` nel tag `brand`, `<bdi>` su promotore e riga del ©, e divieto di `text-overflow: ellipsis` su testo d'identità (§15.5) |
 | G-04 | chiusa l'08/10/2026 (era alta) | senza JS, sotto 80rem, l'header sticky conteneva l'intero menu: **781 px**; a 390 × 844 restavano 63 px di pagina visibili, a 1024 × 768 nessuno | `static/css/v5/chrome.css` | fatto (W2-C1): l'header non sticky senza JS; dal foglio (W2-C2) la testata non contiene più il menu, che si mostra sul posto (`:target`) (§11.2) |
 | G-09 | chiusa il 21/09/2026 | le numerazioni decorative erano in bronzo a 3.83:1, sotto la soglia del testo | `static/css/tokens.css` | chiusa dalla redirezione: il bronzo non esiste più e gli ordinali sono in `--rubric`, 6.92:1 sulla carta — sicuri come testo a qualunque corpo (§5) |
-| G-13 | bassa | `id` derivato dal titolo in `cta_panel.html`; `id` fisso in `hero.html` | `templates/components/cta_panel.html`, `templates/components/hero.html` | accettare un parametro `id` |
-| G-14 | bassa | separatore « : » francese generato in CSS dopo `<dt>` in `.meta-row` | `static/css/v5/card.css` | spostare il separatore nel template, tradotto |
+| G-13 | bassa | `id` derivato dal titolo in `cta_panel.html` (l'`id` fisso di `hero.html` è uscito con il file, W4-D) | `templates/components/cta_panel.html` | accettare un parametro `id` |
+| G-14 | bassa | separatore « : » generato in CSS dopo `<dt>` in `.meta-row` (dal 27/10/2026 con lo spazio francese solo sotto `:lang(fr)`, W4-D) | `static/css/v5/card.css` | spostare il separatore nel template, tradotto |
 | G-15 | chiusa il 21/09/2026 | `--font-mono` nominava IBM Plex Mono, che non era self-hosted: il registro tecnico era il monospazio di sistema | `static/css/tokens.css` | chiusa dalla redirezione: `--font-ref` nomina Fira Mono, i cui due file sono in `static/fonts/`; dal 5 ottobre 2026 (design V5, W1-A) il ruolo è «ILE Mono», un file self-hosted dichiarato in `static/css/v5/fonts.css` (§6.2) |
 | G-16 | chiusa il 20/09/2026 | `docs/I18N_RTL.md` era citato dai CSS e dai cataloghi ma non esisteva | `docs/` | il documento è stato scritto: `docs/I18N_RTL.md` |
 | G-19 | chiusa il 09/10/2026 (era bassa) | le FAQ usano `.accordion__panel`, classe che il design system non definiva (il componente usa `.accordion__body`) | `static/css/v5/tabs.css` | fatto (W1-C): il foglio della disclosure definisce `.accordion__panel` come `.accordion__body` — misura di lettura, rientro della riga, 24 px prima del filetto |
@@ -4819,7 +4785,7 @@ riga «chiusa» resta in tabella con la data e l'evidenza della chiusura.
 | G-27 | chiusa il 21/09/2026 (era bassa) | `.plate--verso .folio__ordinal` dipingeva l'ordinale del folio in `--rubric-on-navy`, che vale 4.46:1 sul navy: sotto `md` il numerale è di 22–24 px, quindi non è testo grande e mancava la soglia di 4.5:1 per 0.04, contro la regola «solo filetto, mai testo» della direzione | `static/css/register.css` | fatto: dentro una fascia verso il numerale è `--paper-on-navy` e la rubrica su navy è rimasta il solo filetto; le cinque dichiarazioni che la consumano in `static/css/` sono tutte bordi (§5) |
 
 *Nota sul conto alla rovescia.* `tests/frontend/test_legacy_token_shim.py` esiste dal 21 settembre
-2026 e tiene i tetti: 142 token, 14 classi e 1 515 usi complessivi dei nomi ritirati in
+2026 e tiene i tetti: 138 token, 2 classi e 1 515 usi complessivi dei nomi ritirati in
 `static/css/`, nei fogli delle app e nei template. **Sono massimi, non obiettivi**: si abbassano nel
 commit stesso in cui una migrazione toglie delle voci, e non si alzano mai.
 `tests/frontend/test_legacy_token_shim.py::test_the_shim_is_gone` è la linea d'arrivo, dichiarata

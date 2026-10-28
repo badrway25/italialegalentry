@@ -19,7 +19,7 @@ words beside a drawn mark), the one primary «Reprendre» and the way to a new q
     <div class="chapter__body">
       <form method="post" action="{% url 'orientation:resume' %}" class="form wizard-resume__form" novalidate>
         {% csrf_token %}
-        {% if form.non_field_errors %}<div class="form-field__errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        {% include "components/form_errors.html" with form=form %}
         {% include "components/form_field.html" with field=form.token %}
         <div class="form__actions">
           <button type="submit" class="btn btn--primary btn--lg">{% translate "Reprendre" %}</button>

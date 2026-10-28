@@ -230,11 +230,11 @@ Aggiornato dopo l'implementazione di `apps/rules` (commit «feat(rules)»).
 
 | Punto | Stato | Perché conta |
 |---|---|---|
-| **Revisione giuridica del contenuto** | **APERTO** | **Nessuna regola è in vigore.** Il seed scrive candidate: 13 bozze redatte dalla norma e 3 candidate ereditate. Le undici che erano in vigore senza approvatore sono state riportate indietro dalla migrazione `rules.0002`, e il database ora rifiuta una regola approvata o in vigore senza approvatore registrato. Per vedere il motore funzionare in locale, `manage.py rules_activate_demonstration` percorre la catena vera con un approvatore dichiaratamente fittizio, e rifiuta di partire dove i dati dimostrativi non sono ammessi. |
+| **Revisione giuridica del contenuto** | **APERTO** | **Nessuna regola è in vigore.** Il seed scrive 16 candidate (`apps/rules/seeds.py`): 11 bozze redatte dalla norma e 5 candidate ereditate. Le undici che erano in vigore senza approvatore sono state riportate indietro dalla migrazione `rules.0002`, e il database ora rifiuta una regola approvata o in vigore senza approvatore registrato. Per vedere il motore funzionare in locale, `manage.py rules_activate_demonstration` percorre la catena vera con un approvatore dichiaratamente fittizio, e rifiuta di partire dove i dati dimostrativi non sono ammessi. |
 | **Data di consultazione delle fonti** | **APERTO** | Nessuna `consulted_on` è valorizzata: i riferimenti sono corretti ma non sono stati verificati alla fonte ufficiale in questa sede. La citazione si mostra senza data finché non lo sono. |
 | **5 regole in coda di revisione** | **ATTESO** | Sono inerti: il motore valuta solo ciò che è `ACTIVE`. La coda non è un arretrato, è il punto in cui il lavoro deve passare da chi costruisce a chi risponde. |
 | **art. 23 D.Lgs. 286/1998** | **ESCLUSO** | CR-07: citabile come norma di sistema, mai come titolo abilitante del progetto. Non è nel seed. |
-| **Copertura dei percorsi** | **PARZIALE** | 7 degli 8 percorsi hanno almeno una regola in vigore; `training_in_origin_country` ne ha una sola, in revisione, per la ragione sopra. |
+| **Copertura dei percorsi** | **PARZIALE** | 7 degli 8 percorsi hanno almeno una regola redatta dalla norma (nessuna è in vigore); `training_in_origin_country` ne ha una sola, in revisione, per la ragione sopra. |
 
 ### L'anteprima mostra al revisore la semantica che conta
 

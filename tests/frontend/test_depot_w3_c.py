@@ -410,8 +410,15 @@ def test_no_documents_sheet_reads_a_focus_or_a_state_through_has():
             for pseudo in (":focus", ":disabled", ":checked", ":hover"):
                 assert pseudo not in argument, f"{name}: :has({argument.strip()[:60]}…) — a state read through :has()"
     depot = (ROOT / "apps" / "portal" / "static" / "portal" / "v5" / "_depot.css").read_text(encoding="utf-8")
-    assert 'html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {' in depot
-    assert "[data-enhanced] .doc-depot__zone[data-sending] {" in depot
+    # the zone's drawing (and its keyboard ring) keyed on html.js, set in <head> before the first paint: no layout
+    # shift when depot.js arrives (W4-C); the waiting frame stays the script's own attribute
+    assert 'html.js[data-input="key"] .doc-depot__zone:focus-within {' in depot
+    # …and until depot.js has written [data-enhanced] (late, lost, console.js lost), a chosen file shows the browser's
+    # own control in the frame — the zone's one control, required, so :valid is a file chosen (W4-C's review, M2)
+    assert ".js [data-depot]:not([data-enhanced]) .doc-depot__zone > :valid {" in depot
+    assert ".js [data-depot]:not([data-enhanced]) .doc-depot__zone > :valid ~ * {" in depot
+    assert ".doc-depot [hidden] {" in depot, "every hidden part of the Dépôt, without the legacy base's global rule"
+    assert ".doc-depot__zone[data-sending] {" in depot
     script = (ROOT / "static" / "js" / "src" / "depot.js").read_text(encoding="utf-8")
     assert 'zone.setAttribute("data-sending", "")' in script and 'zone.removeAttribute("data-sending")' in script
 

@@ -196,7 +196,7 @@
     content: "";
     position: absolute;
     inset-block: min(0px, calc(50% - var(--hit-primary) / 2));
-    inset-inline: 0;
+    inset-inline: min(0px, calc(50% - var(--hit-primary) / 2)); /* a short word widened to 44 about its middle (W4-A, D11) */
   }
 }
 

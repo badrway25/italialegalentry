@@ -19,7 +19,10 @@ from dataclasses import dataclass
 from integrations import conf
 from integrations.models import ExternalSystem
 
-_NONCE_RE = re.compile(r"^[A-Za-z0-9_\-]{8,64}$")
+_NONCE_RE = re.compile(r"[A-Za-z0-9_\-]{8,64}", re.ASCII)
+#: Unix seconds as a client writes them. ``str.isdigit`` accepted «²» (which ``int`` refuses) and 5 000 digits (beyond
+#: Python's integer-string limit): each was a 500 before any signature was checked (finding F-8's API probe).
+_TIMESTAMP_RE = re.compile(r"[0-9]{1,12}", re.ASCII)
 
 
 @dataclass(frozen=True)
@@ -54,7 +57,7 @@ def verify(system_key: str, headers, body: bytes, *, now: float | None = None) -
     timestamp = (headers.get("X-Timestamp") or "").strip()
     nonce = (headers.get("X-Nonce") or "").strip()
     signature = (headers.get("X-Signature") or "").strip()
-    if not timestamp.isdigit() or not _NONCE_RE.match(nonce) or not signature.startswith("sha256="):
+    if not _TIMESTAMP_RE.fullmatch(timestamp) or not _NONCE_RE.fullmatch(nonce) or not signature.startswith("sha256="):
         return Verification(False, "malformed_headers", system, timestamp, nonce)
     current = now if now is not None else time.time()
     if abs(current - int(timestamp)) > conf.webhook_tolerance_seconds():
@@ -63,7 +66,8 @@ def verify(system_key: str, headers, body: bytes, *, now: float | None = None) -
     if secret is None:
         return Verification(False, "secret_not_configured", system, timestamp, nonce)
     expected = compute_signature(secret, timestamp, nonce, body)
-    if not hmac.compare_digest(expected, signature):
+    # ``compare_digest`` raises on a non-ASCII ``str``: such a signature is simply not this one
+    if not signature.isascii() or not hmac.compare_digest(expected, signature):
         return Verification(False, "invalid_signature", system, timestamp, nonce)
     return Verification(True, "", system, timestamp, nonce)
 

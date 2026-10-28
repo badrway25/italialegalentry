@@ -61,7 +61,7 @@ amministra le persone. Oggi:
 |---|---|
 | L'autore di una regola non la approva (D2 §4, REQ-RUL-10) | **DESIGN ONLY** — nessun workflow di approvazione esiste |
 | Il Legal/Rule Editor non ottiene privilegi di superadmin (REQ-IAM-10) | **DESIGN ONLY** — il ruolo non esiste |
-| L'amministratore non può concedersi il superadmin | **VIOLATA** — vedi §7, lacuna L-01 (T-04) |
+| L'amministratore non può concedersi il superadmin | **IMPLEMENTATO** — lacuna L-01 (T-04) chiusa, vedi §7.1: `UserAdmin` nasconde e rifiuta `is_superuser` e i gruppi protetti; prova `tests/security/test_privilege_escalation.py::test_an_administrator_cannot_grant_superuser_to_themselves` (e gli altri test del file) |
 | Il redattore di contenuti non accede ai fascicoli | **PARZIALE** — il ruolo non esiste come tale, il lavoro è su `role:staff` |
 | La pubblicazione di un testo legale è tracciata | **IMPLEMENTATO** — `legal.published` / `legal.unpublished` `apps/legal/services.py:69-83` |
 
@@ -248,6 +248,12 @@ Forum chiamano `require` prima di ogni azione.
 - l'accesso avviene solo da `/backoffice/` con MFA, presentata nella sessione (`apps/accounts/middleware.py`, `apps/accounts/admin_site.py`);
 - **ogni** azione va tracciata: oggi lo sono le scritture via admin `apps/audit/signals.py:12-24`,
   **non** le letture (vedi `AUDIT_MODEL.md` §3.2).
+
+### 3.5 Il back-office non concede più della piattaforma (F-8, ottobre 2026)
+
+Un permesso di modello apre una schermata del back-office, e `ROLE_PERMISSIONS` lo concede per applicazione, mai per riga: fino a F-8 `role:operator` elencava e apriva in `/backoffice/` ogni fascicolo, ogni assegnazione e ogni pre-valutazione che sulla piattaforma non vede, e altri ruoli leggevano o modificavano lì ciò che la loro policy nega. Ora ogni schermata con dati personali chiede anche la regola della piattaforma (`core.admin_base.PolicyBoundAdminMixin`): le righe vengono dalla stessa queryset (`readable_by`), ogni oggetto passa dalla stessa policy (`can`), la schermata si apre ai soli ruoli che la policy nomina. L'operatore vede i fascicoli di cui ha un'assegnazione viva, nessuna richiesta dello sportello (le assegna sulla piattaforma), nessuna richiesta pubblica; la moderazione del Forum Virtuale è dei moderatori, il modulo di governance del Forum dell'amministratore, il revisore giuridico legge la sola traccia di audit delle regole, le risposte al questionario restano del titolare; il superuser resta l'ultima risorsa (§3.4). Ciò che scrive il dominio è in sola lettura (finalità e percorso del fascicolo, responsabile di una voce di checklist); lo stato di una voce passa da `cases.services.set_checklist_status`, con il suo evento di audit; un fascicolo `CLOSED` è in sola lettura per tutti, amministratore e superuser compresi — la sola eccezione voluta è la cancellazione, che chiude un fascicolo per conservazione e non lo modifica. Un permesso di sola lettura non scrive mai (reinvio, annullamento, revoca di un consenso e rimessa in coda richiedono `change` e sono tracciati), nessun token di un interessato è mostrato, e un privilegio di staff esercitato su un percorso pubblico — moderazione, anteprime di contenuti non pubblicati — chiede il secondo fattore come il back-office (`accounts.middleware.require_second_factor`). Prove: `apps/cases/tests/test_backoffice_follows_the_policy.py`, `tests/backoffice/test_screens_follow_the_policies.py`, `apps/accounts/tests/test_second_factor_wherever_the_privilege_lives.py`; dettaglio e domande aperte in `docs/design-v5/QA/v54/sec-f8/NOTES.md`.
+
+Dopo la revisione indipendente (F8R-1…F8R-3): le azioni del flusso delle regole giuridiche chiedono `rules.policies` come ogni altro ingresso — approvare, mettere in vigore e ritirare sono del `role:legal_approver` (mai dell'autore), mai di un permesso di sola lettura né del redattore, e il revisore legge il testo che approva senza poterlo riscrivere; un campo che una schermata nasconde non è nemmeno un filtro né una ricerca della lista (`core.admin_base.BaseModelAdmin.hidden_fields`: i token di un iscritto, il corpo di un'e-mail per chi ha la sola lettura, le risposte al questionario); a chi non può aprire gli account nessun modulo e nessun filtro elenca un account — i campi che puntano a un account sono in sola lettura e li valorizza il flusso (l'autore alla creazione, il revisore con l'azione di revisione). Prove: `apps/rules/tests/test_backoffice_follows_the_policy.py`, `tests/backoffice/test_a_hidden_field_is_no_filter.py`, `tests/backoffice/test_forms_name_no_account.py`.
 
 ---
 
@@ -481,10 +487,13 @@ l'amministratore `apps/accounts/roles.py:72`; **non a livello di storage** (vedi
 | **Amministratore** | all | all **tranne** `is_superuser`, `is_staff`, `groups` | none | La cancellazione è anonimizzazione, non `DELETE` |
 | **Superadmin** | all | all, compresi i privilegi | none | Ogni concessione di privilegio è un evento di audit dedicato |
 
-**Stato**: **VIOLATO oggi.** `role:administrator` ha `accounts: change` `roles.py:71` e il `UserAdmin`
-espone `is_superuser`, `is_staff` e `groups` `apps/accounts/admin.py:37,44`: un amministratore può
-concedersi il superadmin (lacuna L-01, T-04). La riga «tranne» di questa matrice è il comportamento
-**richiesto**, non quello attuale.
+**Stato**: **PARZIALE.** La concessione del superadmin è chiusa (lacuna L-01, T-04, §7.1):
+`UserAdmin` nasconde e rifiuta `is_superuser`, toglie `role:superadmin` e `role:administrator` dalle
+scelte di `groups` e rende intoccabili gli account superuser (`apps/accounts/admin.py`, prova
+`tests/security/test_privilege_escalation.py`). Resta più largo della riga «tranne»: l'amministratore
+imposta ancora `is_staff` e i gruppi ordinari — è così che si creano gli account del personale —, una
+differenza documentata e lasciata alla decisione del titolare (domanda Q-1,
+`docs/design-v5/QA/v54/sec-f8/NOTES.md` §6).
 
 ### 5.11 `Consent`
 

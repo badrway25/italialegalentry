@@ -159,7 +159,9 @@ html:not([lang="ar"]) .lang-seg__link[hreflang="ar"] { font-family: var(--f-arab
    over an opaque panel would break the one surface. The ground is painted by ::before, never by the header
    itself: a backdrop-filter on the header would make it the containing block of the fixed drawer (G-02).
    ============================================================================================== */
-html:has(.site-header) { scroll-padding-block-start: calc(var(--header-h) + var(--s-4)); }
+/* what scrolls into view stops clear of the sticky letterhead at the top, and keeps its ring's room (2 + 2 px) at the
+   foot: a stop that Tab brings in from below stood on the screen's edge with its ring cut off (W4-B's O1; W4-A) */
+html:has(.site-header) { scroll-padding-block: calc(var(--header-h) + var(--s-4)) var(--s-2); }
 html { overflow-anchor: none; }   /* the 64 → 56 switch must not be answered by scroll anchoring (V4 gate A) */
 /* no smooth scroll on Tab (plan §1.12 item 5): while the input is the keyboard the page jumps to the next stop, so
    the ring lands with the key; the wheel is never smooth-scrolled and a pointer's anchor click keeps base.css's
@@ -207,6 +209,7 @@ html[data-input="key"] { scroll-behavior: auto; }
   align-items: center;
   flex: none;
   min-block-size: var(--hit-primary);
+  min-inline-size: var(--hit-primary); /* the mark alone at ≤ 20.5rem is 38 px wide (W4-A, D20) */
   color: var(--brand-navy);
   text-decoration: none;
 }
@@ -931,6 +934,13 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 :lang(ar) .site-footer__bottom { letter-spacing: 0; }
 .site-footer__bottom p { margin: 0; max-inline-size: none; }
 .site-footer__version { font-variant-numeric: var(--numeric-data); }
+/* under a finger every link of the colophon answers on 44 px (SP-8; W4-A, D1): the list's rows are the links' own
+   44 px, its gap folded into them — 24 px boxes on a 32 px pitch before —, and a short word («Projet», «تنبيه») is
+   44 px wide; the e-mail and the anti-fraud plate too */
+@media (pointer: coarse) {
+  .site-footer__list { gap: 0; }
+  .site-footer a { min-block-size: var(--hit-primary); min-inline-size: var(--hit-primary); }
+}
 
 /* ==============================================================================================
    9 · REDUCED MOTION, FORCED COLOURS, PRINT

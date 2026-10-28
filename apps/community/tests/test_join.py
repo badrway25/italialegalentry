@@ -19,14 +19,16 @@ def test_join_requires_login(client, seeded, flag_on):
     assert r.status_code == 302 and "/compte/login/" in r["Location"]
 
 
-def test_join_form_unavailable_while_forms_gated(client, seeded, flag_on, person_user):
+def test_join_form_unavailable_while_the_legal_pages_are_unpublished(client, seeded, set_flag, person_user):
+    # Before W4-D part 2 (F-3) the flag alone opened the Virtual Forum, and its join form showed G2's «forms closed»
+    # notice. G11 now needs the legal pages too, and they open G2 with it: the whole space stays closed instead.
+    set_flag("virtual_forum", True)
     client.force_login(person_user)
     r = client.get(JOIN)
-    assert r.status_code == 200
-    html = r.content.decode()
-    assert 'data-gate="forms-closed"' in html
-    assert 'name="consent"' not in html
+    assert r.status_code == 404
+    assert 'name="consent"' not in r.content.decode()
     r = client.post(JOIN, {"category": "company", "consent": "on"})
+    assert r.status_code == 404
     assert Membership.objects.count() == 0
 
 

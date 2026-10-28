@@ -31,7 +31,7 @@ the visibility choices as one group, off by default, the consent, the legal link
         {% include "components/form_field.html" with field=form.consent %}
         <p class="form__privacy-link community-join__legal">
           {% url 'legal:terms' as terms_url %}{% url 'legal:privacy' as privacy_url %}
-          <a href="{{ terms_url }}">{% translate "Conditions d’utilisation" %}</a> · <a href="{{ privacy_url }}">Privacy Policy</a>
+          <a href="{{ terms_url }}">{% translate "Conditions d’utilisation" %}</a> · <a href="{{ privacy_url }}" lang="en">Privacy Policy</a>
         </p>
         <div class="form__actions"><button type="submit" class="btn btn--primary">{% translate "Envoyer la demande" %}</button></div>
       </form>

@@ -95,7 +95,9 @@ def depositor(db, settings, tmp_path, user_factory):
     return person, pieces
 
 
-def _open(browser, live_server, user, path, lang="fr", width=1440, height=900, phone=False):
+def _open(browser, live_server, user, path, lang="fr", width=1440, height=900, phone=False, block=None):
+    """The page, signed in, with depot.js wired — or, with `block` (a URL pattern), that request aborted: the page as it
+    stands when the module is lost on the way (W4-C's review, M2), returned once the module's request has failed."""
     client = Client()
     client.force_login(user)
     options = {"viewport": {"width": width, "height": height}, "device_scale_factor": 1}
@@ -117,8 +119,20 @@ def _open(browser, live_server, user, path, lang="fr", width=1440, height=900, p
     errors = []
     page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
     page.on("pageerror", lambda error: errors.append(str(error)))
+    failed = []
+    if block:
+        context.route(block, lambda route: route.abort())
+        page.on("requestfailed", lambda request: failed.append(request.url))
     page.goto(live_server.url + path, wait_until="load")  # the session's first console page plays the release
+    failed.clear()
     page.goto(live_server.url + path, wait_until="load")
+    if block:
+        for _ in range(50):
+            if failed:
+                break
+            page.wait_for_timeout(100)
+        assert failed, f"{block} was never asked for"
+        return context, page, errors
     page.wait_for_function("document.querySelector('[data-depot]')?.hasAttribute('data-enhanced')")
     return context, page, errors
 
@@ -383,6 +397,128 @@ def test_a_refused_row_mirrors_and_nothing_overflows_from_320_to_430(browser, li
         )
         assert edge["rtl"] == (lang == "ar")
         assert (edge["right"] if edge["rtl"] else edge["left"]) == "double", edge
+        assert not errors and _csp(page) == [], (errors, _csp(page))
+    finally:
+        context.close()
+
+
+MODULE = "**/js/dist/depot.js"
+ZONE = """() => { const zone = document.querySelector('[data-depot-zone]'); const input = zone.querySelector('input[type=file]');
+  const box = input.getBoundingClientRect(); const frame = zone.getBoundingClientRect(); const seen = getComputedStyle(input);
+  const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+  const row = document.querySelector('[data-depot-file]');
+  return { enhanced: zone.closest('[data-depot]').hasAttribute('data-enhanced'),
+    js: document.documentElement.classList.contains('js'), required: input.required, valid: input.matches(':valid'),
+    file: input.files.length ? input.files[0].name : null, opacity: seen.opacity, visibility: seen.visibility,
+    onTop: hit === input, covers: box.width >= frame.width - 2 && box.height >= frame.height - 2,
+    title: getComputedStyle(zone.querySelector('.doc-depot__zone-title')).visibility,
+    mark: getComputedStyle(zone.querySelector('.doc-depot__zone-mark')).visibility, height: frame.height,
+    row: row.hidden, rowShown: getComputedStyle(row).display !== 'none',
+    name: document.querySelector('[data-depot-name]').textContent,
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth }; }"""
+
+
+@pytest.mark.parametrize(("lang", "width", "phone"), [("fr", 1440, False), ("ar", 390, True)])
+def test_without_its_module_a_chosen_file_shows_the_browsers_own_control_with_its_name(
+    browser, live_server, depositor, lang, width, phone
+):
+    """W4-C's review, M2: P1 draws the zone from the first paint (html.js, no layout shift), and html.js does not mean
+    that depot.js arrived — its module lost on the way left a silent picker: the input transparent over the frame, no
+    row, no name. With the module's request aborted, a chosen file now shows the browser's own control — its name
+    with it — on top of the frame, in the frame's box: nothing moves, nothing overflows, no inline style."""
+    person, _pieces = depositor
+    height = 844 if phone else 900
+    context, page, errors = _open(
+        browser,
+        live_server,
+        person,
+        "/documents/upload/",
+        lang=lang,
+        width=width,
+        height=height,
+        phone=phone,
+        block=MODULE,
+    )
+    try:
+        rest = page.evaluate(ZONE)
+        assert rest["js"] and not rest["enhanced"], rest
+        assert rest["opacity"] == "0" and rest["title"] == "visible", "P1's first frame: the frame's own words"
+        assert rest["required"] and not rest["valid"], "the field is required: :valid is a file chosen"
+        page.set_input_files("[data-depot] input[type=file]", _pdf("attestation-sans-module.pdf"))
+        page.wait_for_timeout(100)
+        chosen = page.evaluate(ZONE)
+        assert chosen["file"] == "attestation-sans-module.pdf" and chosen["valid"], chosen
+        assert chosen["opacity"] == "1" and chosen["visibility"] == "visible", "the browser's own control is painted"
+        assert chosen["onTop"] and chosen["covers"], "on top of the frame, the frame's whole box: it names the file"
+        assert chosen["title"] == "hidden" and chosen["mark"] == "hidden", "the frame's words give it their place"
+        assert chosen["height"] == rest["height"], ("the zone keeps its size", rest["height"], chosen["height"])
+        assert chosen["row"] and not chosen["rowShown"], "no module, no row: the control itself says the name"
+        assert chosen["overflow"] <= 0 and _csp(page) == [], (chosen["overflow"], _csp(page))
+        lost = ("depot.js", "dynamically imported module", "ERR_FAILED")
+        assert all(any(word in error for word in lost) for error in errors), errors
+    finally:
+        context.close()
+
+
+def test_a_file_chosen_before_the_module_arrives_is_taken_up_on_its_row(browser, live_server, depositor):
+    """The late module (W4-C's review, M2): a file chosen while depot.js is on its way shows the browser's own control
+    meanwhile; once the module arrives the file is shown, guarded and said on its row, as if chosen that moment — the
+    control is transparent again, the name never lost."""
+    person, _pieces = depositor
+    context, page, errors = _open(browser, live_server, person, "/documents/upload/")
+    held = []
+    try:
+        context.route(MODULE, lambda route: held.append(route))
+        page.goto(live_server.url + "/documents/upload/", wait_until="domcontentloaded")
+        page.wait_for_function(
+            "() => document.documentElement.classList.contains('js') && !!document.querySelector('[data-depot-zone]')"
+        )
+        for _ in range(50):
+            if held:
+                break
+            page.wait_for_timeout(100)
+        assert held, "the module is on its way"
+        page.set_input_files("[data-depot] input[type=file]", _pdf("attestation-en-chemin.pdf"))
+        page.wait_for_timeout(100)
+        waiting = page.evaluate(ZONE)
+        assert not waiting["enhanced"] and waiting["opacity"] == "1" and waiting["onTop"], waiting
+        held[0].continue_()
+        # an arrow function: a string expression that has to poll is evaluated in the page, which the CSP refuses
+        page.wait_for_function("() => document.querySelector('[data-depot]').hasAttribute('data-enhanced')")
+        page.wait_for_function("() => !document.querySelector('[data-depot-file]').hidden")
+        page.wait_for_function("() => document.querySelector('[data-depot-live=polite]')?.textContent")
+        taken = page.evaluate(ZONE)
+        live = page.evaluate("document.querySelector('[data-depot-live=polite]').textContent")
+        assert taken["name"] == "attestation-en-chemin.pdf" and taken["rowShown"], taken
+        assert taken["opacity"] == "0" and taken["title"] == "visible", "the enhanced zone again: its row says the file"
+        assert live.startswith("attestation-en-chemin.pdf — PDF"), live
+        assert not errors and _csp(page) == [], (errors, _csp(page))
+    finally:
+        context.close()
+
+
+def test_a_refused_choice_leaves_no_sentence_of_the_file_before_it(browser, live_server, depositor):
+    """A11Y_PERF a1 (W4-C): the polite region kept the previous file's sentence («….pdf — PDF · 1 ko») while the alert
+    said the refusal of the new one; a new choice now empties both regions first, and a valid one empties the alert."""
+    person, pieces = depositor
+    context, page, errors = _open(browser, live_server, person, f"/documents/requirements/{pieces['passport'].pk}/")
+    regions = (
+        "() => ['polite', 'assertive'].map((kind) => document.querySelector(`[data-depot-live=${kind}]`).textContent)"
+    )
+    try:
+        page.set_input_files("[data-depot] input[type=file]", _pdf("attestation-w4c.pdf"))
+        page.wait_for_function("() => document.querySelector('[data-depot-live=polite]').textContent")
+        page.set_input_files(
+            "[data-depot] input[type=file]",
+            {"name": "lettre.docx", "mimeType": "application/octet-stream", "buffer": b"PK"},
+        )
+        page.wait_for_function("() => document.querySelector('[data-depot-live=assertive]').textContent")
+        polite, assertive = page.evaluate(regions)
+        assert polite == "" and assertive.startswith("Format non accepté"), (polite, assertive)
+        page.set_input_files("[data-depot] input[type=file]", _pdf("attestation-w4c.pdf"))
+        page.wait_for_function("() => document.querySelector('[data-depot-live=polite]').textContent")
+        polite, assertive = page.evaluate(regions)
+        assert polite.startswith("attestation-w4c.pdf — PDF") and assertive == "", (polite, assertive)
         assert not errors and _csp(page) == [], (errors, _csp(page))
     finally:
         context.close()

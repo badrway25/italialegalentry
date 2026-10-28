@@ -9,14 +9,14 @@
 
    1 · the frame's measures      4 · the page frame: one page header, one start edge
    2 · the rail, three levels    5 · below 64rem, the rail laid flat: top bar, bottom bar, drawer
-   3 · the context bar           6 · states: forced colours, touch, paper, the width's one transition
+   3 · the context bar           6 · states: the bar's focus, forced colours, touch, paper
 
    Tokens only, logical properties only (in Arabic the rail stands at the right edge by itself). Corners: the
    shell draws 4 px (plates, rows, controls) and full (discs) — two of a console screen's three values, the
    third being the panels' 8 px (plan §1.3: at most three on a screen). No shadow: navigation never carries
    one (SH-2); from 64rem the bar is glass, the one seat of glass in the console (SH-5). Nothing here animates
-   at load: the rail's width moves on the person's own act, once the first frame is painted (§6), and the
-   drawer comes on the person's own press of «Menu».
+   at all: the rail's width changes at once on the person's own act (its transition left with W4-B's motion pass),
+   and the drawer comes on the person's own press of «Menu».
    ============================================================================================ */
 
 /* ---- 1 · The frame's measures -------------------------------------------------------------
@@ -799,29 +799,11 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
   letter-spacing: 0;
 }
 
-/* a page's title is the console's title whatever class its family's markup still carries: the documents
-   pages set theirs at the public 36 px (documents.css loads after this sheet — hence the frame's class) */
-.console__workspace :is(.doc-page__title, .doc-piece__title) {
-  font-size: var(--u-title);
-  line-height: var(--u-title-lh);
-  font-weight: var(--w-title);
-  letter-spacing: var(--track-band);
-}
-
-:lang(ar) .console__workspace :is(.doc-page__title, .doc-piece__title) {
-  letter-spacing: 0;
-  line-height: var(--ar-title-lh);
-}
-
 /* the ContextHeader and the workspace head already stand on the frame's edge at the title's size: the frame
    gives them the same distance to the content */
 .console__workspace > .ctx {
   padding-block-end: 0;
   margin-block-end: var(--s-8);
-}
-
-.console__workspace > .ctx + .portal .ws-grid:first-child {
-  margin-block-start: 0;
 }
 
 /* «Lo spigolo»: at most three corners a screen (plan §1.3; DL54-14). A console screen draws the shell's 4 px
@@ -1020,6 +1002,10 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* a record's own title takes its direction from its own first letter (W4-A, D16): a French course or a subject
+       written in French on an Arabic page, which carries no `lang`, is cut at its own end too — it lost its first
+       words; an Arabic title stays right to left */
+    unicode-bidi: plaintext;
   }
 
   /* a title written in another language than the page (a French course on an Arabic page) is cut at ITS OWN
@@ -1068,6 +1054,13 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
 
   .console-bar .account-menu__summary .icon:last-child {
     color: var(--text-on-night-3);
+  }
+
+  /* its ring is drawn inside its 44 px, as the bottom bar's entries' are: the button stands 2 px under the screen's
+     top, where a ring beyond its edge lost its top side and spilt onto the paper under the bar (the accessibility
+     check's finding 2 — W4-B's O1 on the console's bar; W4-A) */
+  .console-bar .account-menu__summary:focus-visible {
+    outline-offset: calc(-2 * var(--focus-ring-width));
   }
 
   /* -- the bottom bar: the rail's pages. Should the words ever ask for more than the row has — a screen under

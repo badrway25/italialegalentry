@@ -66,7 +66,7 @@ legal pages and the way back out.
 <footer class="portal-footer console__footer">
   <div class="portal-footer__inner">
     <p class="portal-footer__legal">
-      {% safe_url 'legal:privacy' as privacy_url %}{% if privacy_url %}<a href="{{ privacy_url }}">{% translate "Privacy Policy" %}</a>{% endif %}
+      {% safe_url 'legal:privacy' as privacy_url %}{% if privacy_url %}<a href="{{ privacy_url }}" lang="en">{% translate "Privacy Policy" %}</a>{% endif %}
       {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Conditions d’utilisation" %}</a>{% endif %}
       {% safe_url 'legal:disclaimer' as disclaimer_url %}{% if disclaimer_url %}<a href="{{ disclaimer_url }}">{% translate "Avertissement" %}</a>{% endif %}
     </p>

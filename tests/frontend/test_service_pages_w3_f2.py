@@ -401,7 +401,8 @@ def test_the_door_at_rest_is_static_never_mirrored_and_seated_by_the_errors_shee
     assert "--x: 429.333;" in key and "--y: 414.467;" in key and "transform: rotate(90deg);" in key
     for motion in ("animation", "transition", "@keyframes", "--door-frame", "--door-steps", "will-change"):
         assert motion not in css, motion
-    assert re.search(r"@media \(min-width: 64rem\) \{.*?\.error-page__door \{[^}]*grid-column: 9 / -1;", css, re.S)
+    # from 64rem — and, since W4-A (D12), on a phone on its side — the door takes the head's end seat
+    assert re.search(r"@media \(min-width: 64rem\)[^{]*\{.*?\.error-page__door \{[^}]*grid-column: 9 / -1;", css, re.S)
     assert '[dir="rtl"] .error-page__door' in css, "the arch pulled onto the reading edge in either direction"
     assert not re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(|gradient\(", css), "tokens only"
     assert not re.search(r"(?<![\w-])(margin|padding|border|inset)-(left|right)\s*:|(?<![\w-])(left|right)\s*:", css)
@@ -420,6 +421,27 @@ def test_the_profile_s_personal_fields_say_what_they_are_for(client, seeded, per
     assert re.search(r'<input type="tel" name="phone" autocomplete="tel" inputmode="tel"', main)
     assert re.search(r'<input type="text" name="country_of_residence" autocomplete="country-name"', main)
     assert re.search(r'<select name="preferred_language" autocomplete="language"', main)
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("lang", ["fr", "ar"])
+def test_the_situation_s_personal_facts_say_what_they_are_for(client, seeded, person_user, lang):
+    """WCAG 2.2 AA 1.3.5 on «Ma situation» (W4-C's review, M1), as the profile's fields above: the date of birth is
+    `bday` and stays typed `date`, the country of residence is `country-name` (the nationality has no token)."""
+    client.force_login(person_user)
+    response = client.get(f"/{lang}/espace-reserve/ma-situation/")
+    assert response.status_code == 200
+    main = _main(response.content.decode())
+
+    def tag(name: str) -> str:
+        found = re.findall(rf'<input\b[^>]*\bname="{name}"[^>]*>', main)
+        assert len(found) == 1, (name, found)
+        return found[0]
+
+    birthday = tag("date_of_birth")
+    assert 'type="date"' in birthday and 'autocomplete="bday"' in birthday, birthday
+    residence = tag("country_of_residence")
+    assert 'type="text"' in residence and 'autocomplete="country-name"' in residence, residence
 
 
 def test_the_partial_uses_tokens_only_and_logical_properties():

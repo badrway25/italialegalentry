@@ -573,30 +573,3 @@ def brand_words() -> str:
     if lang == "it":
         return locked_content.text("p1.trademark.words_it", "fr")
     return mark_safe("")  # noqa: S308 - empty string
-
-
-@register.filter
-def hero_lines(title) -> list[dict]:
-    """
-    The hero title as lines for the masked reveal — the text unchanged, only the breaks chosen.
-
-    The locked «ITALY LEGAL ENTRY™» breaks before its last word, as the direction draws it; a
-    longer interim title breaks near its middle at a space. A trailing ™ is returned apart so the
-    template can set it smaller. Never more than two lines: a third would push the doorway down.
-    """
-    text = str(title or "").strip()
-    tm = text.endswith("™")
-    if tm:
-        text = text[:-1].rstrip()
-    words = text.split()
-    if len(words) <= 2:
-        lines = [text]
-    elif len(words) <= 4:
-        lines = [" ".join(words[:-1]), words[-1]]
-    else:
-        half = max(1, round(len(words) / 2))
-        lines = [" ".join(words[:half]), " ".join(words[half:])]
-    out = [{"text": line, "tm": False} for line in lines if line]
-    if out and tm:
-        out[-1]["tm"] = True
-    return out

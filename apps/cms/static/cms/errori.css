@@ -52,8 +52,10 @@
 
 /* from 64rem one row of the page's twelve columns: what happened and what to do (`.error-page__body`, one block, so
    nothing in it stretches) in seven at the reading edge, the door in the end seat — its threshold on the actions' line
-   when the words are the taller, the words from the page's top when the door is */
-@media (min-width: 64rem) {
+   when the words are the taller, the words from the page's top when the door is. A phone on its side (from 48rem, under
+   30rem of height) takes the same row with its 7rem door: above the label the door put the title at the screen's
+   foot, half out (W4-A, D12) */
+@media (min-width: 64rem), (min-width: 48rem) and (max-height: 30rem) {
   .error-page {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -72,7 +74,6 @@
   }
 
   .error-page__door {
-    --door-w: 14rem;
     grid-row: 1;
     grid-column: 9 / -1;
     justify-self: end;
@@ -83,6 +84,12 @@
 
   [dir="rtl"] .error-page__door {
     margin-inline: var(--door-pull) 0; /* the page's left, the stage's inline start */
+  }
+}
+
+@media (min-width: 64rem) {
+  .error-page__door {
+    --door-w: 14rem;
   }
 }
 

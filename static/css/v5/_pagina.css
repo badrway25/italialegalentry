@@ -385,6 +385,28 @@
   overflow-wrap: anywhere;
 }
 
+/* a consent's privacy link stands alone in its paragraph: one box of its line's height whatever lines its words take
+   (the reading pages' forms and the door pages' — W4-A, D5: on the companies' page it was an inline run on two lines) */
+.form__privacy-link a {
+  display: inline-block;
+}
+
+/* under a finger both answer on 44 px, their line unchanged (SP-8; W4-A, D2, D5): 10 px above and below the box, a
+   word narrower than 44 px widened about its middle — on every page that draws them (the reading pages' list in
+   v5/_lettura.css held them for those pages alone; the doors and the interior pages had 24 px) */
+@media (pointer: coarse) {
+  :is(.aiuto, .form__privacy-link) a {
+    position: relative;
+  }
+
+  :is(.aiuto, .form__privacy-link) a::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: min(0px, calc((100% - var(--hit-primary)) / 2));
+  }
+}
+
 /* ---- 6 · print ------------------------------------------------------------------------------------------------- */
 @media print {
   .chapter__head {

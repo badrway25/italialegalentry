@@ -127,8 +127,9 @@ TODAY = timezone.localdate
 
 
 @pytest.fixture
-def governance_open(set_flag):  # noqa: F811 — shared fixture injected by name
-    """Open gate G11. Every governance test that touches a ROUTE needs this, and says so."""
+def governance_open(set_flag, legal_published):  # noqa: F811 — shared fixture injected by name
+    """Open gate G11 — its flag, and the legal pages it depends on (W4-D part 2, F-3). Every governance test that
+    touches a ROUTE needs this, and says so."""
     set_flag(gservices.GOVERNANCE_FLAG, True)
     flags.invalidate()
     return True

@@ -19,6 +19,11 @@ Three rules this back-office keeps:
 
 * **A participation profile shows no personal data**, in the back-office as everywhere else. There
   is nothing to hide: the model holds an organisation, a category and declared interests.
+
+And one rule on who (finding F-8): the module, read whole without a Forum profile, is the administrator's
+alone (``governance_policies.BACKOFFICE_VIEW_ROLES``; «role:staff is absent for the reason the case file
+records»). role:staff holds the «forum» model permissions for the public Forum's own screens, and until
+F-8 it read every profile, proposal and mandate here and granted mandates — a capacity on the platform.
 """
 
 from __future__ import annotations
@@ -26,7 +31,7 @@ from __future__ import annotations
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from core.admin_base import BaseModelAdmin, BaseTabularInline
+from core.admin_base import BaseModelAdmin, BaseTabularInline, PolicyBoundAdminMixin
 from forum.governance import (
     AnnualReport,
     Commission,
@@ -39,6 +44,14 @@ from forum.governance import (
     ProjectMilestone,
     Table,
 )
+from forum.governance_policies import BACKOFFICE_VIEW_ROLES
+
+
+class AdministrationOnly(PolicyBoundAdminMixin):
+    """The screen opens to the roles ``governance_policies`` names for the whole module (the administrator)."""
+
+    policy_roles = BACKOFFICE_VIEW_ROLES
+
 
 STATE_NOTE = _(
     "L’état se modifie par le cycle du Forum (dépôt, examen, décision), jamais directement : "
@@ -75,7 +88,7 @@ class MonitoringEntryInline(BaseTabularInline):
 
 
 @admin.register(ForumEdition)
-class ForumEditionAdmin(BaseModelAdmin):
+class ForumEditionAdmin(AdministrationOnly, BaseModelAdmin):
     list_display = ("title_fr", "year", "city", "status", "commission_count")
     list_filter = ("status", "year")
     search_fields = ("key", "title_fr", "city")
@@ -87,7 +100,7 @@ class ForumEditionAdmin(BaseModelAdmin):
 
 
 @admin.register(Commission)
-class CommissionAdmin(BaseModelAdmin):
+class CommissionAdmin(AdministrationOnly, BaseModelAdmin):
     list_display = ("name_fr", "edition", "key", "status", "order", "live_member_count")
     list_filter = ("edition", "status")
     search_fields = ("key", "name_fr", "scope_fr")
@@ -114,7 +127,7 @@ class CommissionAdmin(BaseModelAdmin):
 
 
 @admin.register(ForumProfile)
-class ForumProfileAdmin(BaseModelAdmin):
+class ForumProfileAdmin(AdministrationOnly, BaseModelAdmin):
     """No personal data is displayed because none is stored (FORUM_GOVERNANCE §5)."""
 
     list_display = ("display_label", "edition", "category", "role", "is_active", "joined_on")
@@ -128,7 +141,7 @@ class ForumProfileAdmin(BaseModelAdmin):
 
 
 @admin.register(CommissionMember)
-class CommissionMemberAdmin(BaseModelAdmin):
+class CommissionMemberAdmin(AdministrationOnly, BaseModelAdmin):
     list_display = ("profile", "commission", "role", "valid_from", "valid_until", "in_force")
     list_filter = ("commission", "role")
     search_fields = ("profile__organisation_label", "mandate_reference")
@@ -140,7 +153,7 @@ class CommissionMemberAdmin(BaseModelAdmin):
 
 
 @admin.register(Table)
-class TableAdmin(BaseModelAdmin):
+class TableAdmin(AdministrationOnly, BaseModelAdmin):
     list_display = ("title_fr", "commission", "status", "opened_on", "closed_on")
     list_filter = ("commission", "status")
     search_fields = ("key", "title_fr", "topic_fr")
@@ -148,7 +161,7 @@ class TableAdmin(BaseModelAdmin):
 
 
 @admin.register(ForumProposal)
-class ForumProposalAdmin(BaseModelAdmin):
+class ForumProposalAdmin(AdministrationOnly, BaseModelAdmin):
     list_display = ("reference", "title_fr", "commission", "status", "status_since")
     list_filter = ("commission", "status")
     search_fields = ("reference", "title_fr", "body_fr")
@@ -168,7 +181,7 @@ class ForumProposalAdmin(BaseModelAdmin):
 
 
 @admin.register(ForumProject)
-class ForumProjectAdmin(BaseModelAdmin):
+class ForumProjectAdmin(AdministrationOnly, BaseModelAdmin):
     list_display = ("title_fr", "commission", "lead", "status", "status_since")
     list_filter = ("commission", "status")
     search_fields = ("title_fr", "summary_fr", "partners_fr")
@@ -187,7 +200,7 @@ class ForumProjectAdmin(BaseModelAdmin):
 
 
 @admin.register(AnnualReport)
-class AnnualReportAdmin(BaseModelAdmin):
+class AnnualReportAdmin(AdministrationOnly, BaseModelAdmin):
     """
     The relation is assembled, not written: ``sections`` is ``editable=False`` and never appears in
     a form. What the back-office does here is publish it — and publishing freezes it.

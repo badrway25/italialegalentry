@@ -88,6 +88,14 @@
   font-weight: var(--w-control);
 }
 
+/* a name in the other direction than the page («diploma.pdf» on the Arabic page, «شهادة.pdf» on the French one:
+   `dir="auto"` turns its block) ends on the page's reading edge, with its gloss, its facts and the column's head — its
+   own start was the far side of the card and of the cell (W4-A's fix pass, the review's M1; the registers' head rule) */
+:dir(rtl) .doc-files__name:dir(ltr),
+:dir(ltr) .doc-files__name:dir(rtl) {
+  text-align: end;
+}
+
 .doc-files__link {
   color: var(--accent-text);
   text-decoration: none;
@@ -110,13 +118,21 @@
   margin: 0;
 }
 
-/* a file's link reaches 44 px of touch without a taller row */
+/* a file's link reaches 44 px of touch without a taller row; a loose file's act is 44 px wide about its middle —
+   «حذف» is a 31 px word in Arabic —, nothing moves (the icon buttons' own band, v5/buttons.css; W4-A's fix pass) */
 @media (pointer: coarse) {
   .doc-files__link {
     position: relative;
     display: inline-block;
     padding-block: 12px;
     margin-block: -12px;
+  }
+
+  .doc-files__act .btn::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: min(0px, calc(50% - var(--hit-primary) / 2));
   }
 }
 

@@ -230,7 +230,13 @@
   white-space: nowrap; /* the label and its colon stay on one line (review m8) */
 }
 
+/* the colon after the label: French sets it apart with a no-break space, the other languages close it up (W4-C's
+   review m3, docs/ACCESSIBILITY.md G-14; W4-D part 2) */
 .meta-row__item dt::after {
+  content: ":";
+}
+
+.meta-row__item dt:lang(fr)::after {
   content: "\00a0:";
 }
 

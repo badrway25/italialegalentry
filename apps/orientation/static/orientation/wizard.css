@@ -42,6 +42,25 @@
   line-height: 1.5rem;
 }
 
+/* the paragraph is its link: one box whatever lines its words take — 24 px a line, 48 on two (it was an inline run
+   of 20 px line boxes); 10 px more above and below under a finger, 44 px on one line (SP-8; W4-A, D4) */
+.wizard-intro__resume-link a {
+  display: inline-block;
+}
+
+@media (pointer: coarse) {
+  .wizard-intro__resume-link a {
+    position: relative;
+  }
+
+  .wizard-intro__resume-link a::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: 0;
+  }
+}
+
 /* the ONE inset under the entrance's lead, read before the action beside it (W3-F1's review M4) */
 .ingresso__meta > .wizard-disclaimer {
   max-inline-size: var(--measure-lead);

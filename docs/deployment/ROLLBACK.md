@@ -213,10 +213,11 @@ rollback target of this server**:
   and change (F-8), and the 500 a NUL byte caused (a 400 now, checklist A-21). Checked out on a server that holds real
   data, it would re-open all of them. Returning to the pre-V5 platform would be a new deployment decision of the owner,
   with its own release gate — not a rollback.
-- **The database.** No migration differs between the two today: the 39 migration files of `pre-v5-main-2026-10` and of
-  `design-v5` at `0a8351b` (16 October 2026) are identical, byte for byte, so the pre-V5 code would meet a schema it
-  knows. Check it again on the release — F-8 was still in flight —; this prints nothing when no migration differs, and
-  lists each one that does (the pattern names the files: git matches a pattern that holds a wildcard against the whole
+- **The database.** No migration differs between the two at `v2.0.0`: the 39 migration files of `pre-v5-main-2026-10`
+  and of the release are identical, byte for byte (checked on the release candidate after F-8, W4-B and W4-D, 27 October
+  2026; the release tests pin each file's content, so an edited or removed one fails them), and the pre-V5 code would
+  meet a schema it knows. A migration added by a later release is that release's business (section 1). To check it on
+  the tags themselves — this prints nothing when no migration differs, and lists each one that does (the pattern names the files: git matches a pattern that holds a wildcard against the whole
   path, so a directory written with a wildcard matches nothing):
 
   ```bash

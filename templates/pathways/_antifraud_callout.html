@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n pages_typo %}
 {% comment %}
 Anti-fraud callout (locked p3.antifraud.title / p3.antifraud.body — Implementation §3.8.1): prominent but calm.
 Contract: `links` (dict from pathways.services.related_links), optional `level` (2|3, heading level), `suffix` (unique id part).
@@ -15,6 +15,6 @@ page's: it ends on the reading edge, beside the mark.
   {% if level == 3 %}<h3{% else %}<h2{% endif %} class="notice__title{% if af_title|striptags|upper == af_title|striptags %} notice__title--caps{% endif %}" id="antifraud-title-{{ suffix|default:'main' }}">{{ af_title }}{% if level == 3 %}</h3>{% else %}</h2>{% endif %}
   <div class="notice__body">
     {% locked "p3.antifraud.body" "p" %}
-    {% if links.antifraud %}<p class="antifraud-callout__more"><a class="link-arrow" href="{{ links.antifraud }}">{% translate "Lire la page « Attention aux fraudes »" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    {% if links.antifraud %}<p class="antifraud-callout__more"><a class="link-arrow" href="{{ links.antifraud }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
   </div>
 </aside>

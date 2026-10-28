@@ -18,6 +18,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from accounts.middleware import require_second_factor
 from accounts.permissions import require
 from community import conf, services
 from community.forms import (
@@ -48,6 +49,9 @@ def member_required(view):
             return redirect_to_login(request.get_full_path())
         membership = services.membership_of(request.user)
         moderator = services.is_moderator(request.user)
+        if moderator:
+            # a moderator reads hidden and pending posts and moderates: a staff privilege, the second factor first
+            require_second_factor(request)
         if not moderator and (membership is None or membership.status != MembershipStatus.APPROVED):
             raise PermissionDenied
         request.community_membership = membership if (membership and membership.is_approved) else None
@@ -69,6 +73,8 @@ def index(request):
         return render(request, "community/landing.html", {"state": "anonymous", "breadcrumbs": _crumbs()})
     membership = services.membership_of(user)
     moderator = services.is_moderator(user)
+    if moderator:
+        require_second_factor(request)
     if not moderator and (membership is None or not membership.is_approved):
         state = "none" if membership is None else membership.status
         return render(

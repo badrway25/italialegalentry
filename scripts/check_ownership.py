@@ -48,8 +48,9 @@ SCHEMA = "ile-ownership-v54/1"
 #: of the owner added outside the waves — ``devops``, V5.9's production readiness (the devops merge),
 #: ``sec-f<n>``, the fix of a go-live security finding F-<n>, named after it (the sec-f5 merge: F-5), and
 #: ``intfix``, the steward's integration fixes at an integration checkpoint, V5.5's «full regression only at
-#: important integration checkpoints» (the intfix merge: checkpoint 3).
-FAMILY_ID = re.compile(r"steward|devops|intfix|sec-f[0-9]+|w[0-9]-[0-9a-z]+")
+#: important integration checkpoints» (the intfix merge: checkpoint 3), and ``rc-fix``, the fixes of what the
+#: release candidate's validation found (V5.10's gates; the rc-fix merge: v2.0.0's candidate).
+FAMILY_ID = re.compile(r"steward|devops|intfix|rc-fix|sec-f[0-9]+|w[0-9]-[0-9a-z]+")
 TOP_KEYS = {
     "schema",
     "title",
@@ -259,7 +260,7 @@ def validate_data(data: object) -> list[str]:
     for fid, raw in families.items():
         where = f"families.{fid}"
         if not FAMILY_ID.fullmatch(fid):
-            problems.append(f"{where}: not a family id (steward, devops, intfix, sec-f<n>, or w<wave>-<name>)")
+            problems.append(f"{where}: not a family id (steward, devops, intfix, rc-fix, sec-f<n>, or w<wave>-<name>)")
         if not isinstance(raw, dict):
             problems.append(f"{where}: must be an object")
             continue

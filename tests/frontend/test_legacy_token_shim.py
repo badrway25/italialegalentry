@@ -27,9 +27,11 @@ APPS = ROOT / "apps"
 #: The census taken when the shim was created, 21 September 2026 (153 tokens, 1 636 usages), lowered on
 #: 5 October 2026 when design V5 adopted eleven of its names — --radius-xs / -sm / -md, --control-height / -sm,
 #: the five --focus-ring-*, --z-modal (W1-A, V5.4 plan §2.3 and §2.7). These are CEILINGS.
-#: Lower them whenever a migration removes entries; never raise them.
-MAX_SHIM_TOKENS = 142
-MAX_SHIM_CLASSES = 14
+#: Lower them whenever a migration removes entries; never raise them. Lowered on 27 October 2026 (W4-D part 2): four
+#: names read by nothing left (--nav-drawer-top, --duration-reveal, --reveal-distance, --reveal-index), and the class
+#: ceiling follows W4-A's deletion of twelve dead type classes (.eyebrow and .numeral remain).
+MAX_SHIM_TOKENS = 138
+MAX_SHIM_CLASSES = 2
 MAX_LEGACY_USAGES = 1515
 
 #: Files whose job is to talk about the shim rather than to use it.

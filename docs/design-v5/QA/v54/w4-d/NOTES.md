@@ -281,3 +281,162 @@ Lane `w4d1-merge`, 16 October 2026, Opus 5.5: the steward's merge of part 1 into
    - I did not touch the leftover container `ile-w4d-pg16`: Docker is shared, and its removal stays as «Part 1 —
      review fixes» item 6 says.
    - F-3 stays open, as item 4 of the same list says.
+
+## Part 2 — integration readiness
+
+Implementer `w4d2-build`, 27 October 2026 (resumed after the machine's reboot: the cut build's uncommitted work —
+`apps/cases/intake.py`, the release-tag test, four new test files — read in `git diff`, kept, finished; one test file
+repaired, a byte string the cut had split across two lines). design-v5 at `96b6e96` was already the branch's base
+(«Already up to date»); W4-C's merge had not landed when this part ended (no `v54/w4-c` tag): its hand-offs are read on
+its branch (`v54-w4-c` at `46636b3`). Tests on `test_ile_v5_l9`, the lane server on 8789 (`ile_v5_l9`, reference date
+3 October 2026), one pytest and one Chromium at a time; the scratch is
+`C:/tmp/ile_v5_council/.work/w4-d/w4d2-build/` (lane.py, capture.py, the edit scripts, the captures).
+
+### A — fixes, each red first
+
+| # | Defect | Fix | Proof |
+|---|---|---|---|
+| A1 | The questionnaire's assessment lost the pathway's sources: `cases.intake._sources_of` read `PathwaySource` with `order_by("order", "id")` and `title_fr` / `reference` — fields the model never had; the `FieldError` was swallowed by an `except Exception` that only logged, on every completed questionnaire | the model's own fields (`title`, `url`, `publisher` → `authority`, `retrieved_at` → `consulted_on`; `reference` empty — a pathway source names no provision) in the model's order (`Meta.ordering`, the back office's inline), after the rules' sources, never `note` nor `added_by`; `reassess()` now cites the same sources (it cited the rules' alone). An outcome with no rule in force still cites none — the assessment page's and the dashboard's sentences say so, and the pathway's sources under «Les textes sur lesquels reposent ces règles» with no rule above them would claim a foundation the result does not have. The public pathway pages never show these rows (the model: «never published, traceability only»): there was no other reader to copy | `tests/test_assessment_sources_w4_d.py`: 4 red on the unfixed intake, 5 green (the assessment, its page — the order, the link, «consultée le», no note —, the reassessment, the no-rule DENY on both screens, no ERROR record from `ile.cases`) |
+| A1 hunt | every `except Exception` of apps/cases, rules, orientation, pathways, documents, portal, notifications | the seven suites (990 passed) under a recorder of every ERROR record emitted by those apps' non-test code (a positive control first: a forced `notify` failure is recorded). **12 records, all deliberate**: each comes from a test that injects the failure — the scanner down and an unknown scanner status (`documents/services.py` 222/225), a missing sibling app (`portal/services.py` 1419, twice), an unknown notification event (`notifications/services.py` 457), a failure opening the case after the questionnaire (`orientation/services.py` 427), and six replays of hand-written snapshots without a questionnaire spec (`cases/views.py` 263, `test_demonstration_notice.py` — the guard that keeps an unreplayable snapshot from hiding its assessment). The three guards that do not log were executed against `ile_v5_l9`: `documents/presenters.py` 274 (`next_action` for every case, owner and nobody: no failure), `documents/views.py` 114 (`portal.services.navigation` for every account: none), `notifications/services.py` 71 (the optional HTML body: no `.html` mail template exists, so only `TemplateDoesNotExist` is caught today — deliberate; narrowing it is a later choice). The guards kept as deliberate: `cases/intake.py` 164 and 288 (the questionnaire's result is never lost; 288 now under the A1 test), `cases/services.py` 915, `documents/services.py` 221 and 820, `portal/services.py` 162 and 2663, `notifications/services.py` 112 and 456, `orientation/services.py` 426, `rules/facts.py` 138, `cases/views.py` 262, `rules_activate_demonstration` 108 (collects the refusal text) | — |
+| A2 | F-3: `virtual_forum_enabled()` and `newsletter_enabled()` read their flags alone while the phase console declares `depends_on=("legal_pages_available",)` and says a closed dependency blocks the flag | both also require `legal_pages_available()` (`apps/core/gates.py`); G2's QA override opens the forms only. The tests that switch the flags on now publish the legal pages first: the community's `flag_on`, the second-factor test's `forum`, three Forum-mode tests, W3-F2's prescribed-text test. Two newsletter tests described a state that no longer exists (flag on, G2 closed — the legal pages now open both): rewritten to the new behaviour with every no-row assertion kept (the block is not drawn; the endpoint answers 404 as with the flag off) | `tests/compliance/test_gate_dependencies_w4_d.py` (DENY, ALLOW, the override, and «a gate the console says is blocked is closed» over `phases.GATES`) |
+| A3 | F-4: the sign-in invited to a sign-up G2 keeps closed | allauth's paragraph element (`templates/allauth/elements/p.html`) withholds `account/login`'s only paragraph while `gates.public_forms_enabled` is closed — the gate the account adapter's `is_open_for_signup` reads; allauth's words and form stay `block.super`; no word added; the login template's comment says so | `tests/frontend/test_login_invitation_w4_d.py`: fr and ar, both states, the override, the reset page's paragraph kept |
+| A4 | F-8's Q-8: `cases.services.assign` accepted a new assignment on a CLOSED file | refused (CASE_LIFECYCLE.md §4 rule 5) in `CaseAssignment.clean()` on a new row, reading the file's row as it stands — `assign()` locks it first (`select_for_update`) and its `full_clean` raises; the back office's add form shows the lifecycle's existing sentence on the case field («Un fascicolo concluso non si riapre: se ne apre uno nuovo.»). Narrowing only: ending an assignment on a closed file stays possible; a suspended file is assigned as before. Other callers: the selection opens a process only in its opening states (CLOSED is not one); the help desk's `assign` is its own service; the seeds assign open files. **Recorded as the owner's Q-8 answered by rule 5 — reversible if the owner decides otherwise** | `tests/security/test_closed_file_assignment_w4_d.py`: domain DENY (no row, no audit event, no notification), the stale caller's copy refused, ALLOW on an active and a suspended file, revoke still allowed, the back office for administrator and superuser (DENY with the sentence, ALLOW), the operator's 403 unchanged |
+| A5 | «13 / 3» rule candidates in RULE_ENGINE_GOVERNANCE.md and QA_REPORT.md | 16 = 11 drafted (`ACTIVE_RULES` at DRAFT) + 5 legacy (`REVIEW_RULES` at LEGACY_CANDIDATE), and the coverage row's «in vigore» (none is) → «redatta dalla norma» | `tests/test_rule_counts_in_documents_w4_d.py` counts from the database after `seed_all` (the release notes' line held to the same figures) |
+| A6 | ROLLBACK.md §7's tripwire counted files | the 39 released migrations' blob ids pinned: an edited or removed (or renamed) released migration fails, a new one does not; §7 now says «at `v2.0.0`» and that the release tests pin each file | `tests/deployment/test_release_tags_w4_d.py`: the tripwire, its self-test on synthetic trees, and the sentence |
+
+### B — the deletion map's last rows
+
+Deleted, each proved unused by `git grep` over templates, sources, scripts, CMS seeds and tests (docs excluded):
+`templates/components/hero.html` (no include; DS 2026 §10's section removed, G-13 narrowed, the count 40 → 39);
+`components.css` §12 whole — `.entrances` and every `.entrance*` rule (the home's entrances are `.register--entrances`
+/ `.entry`, the entrance pages `.account-page--entrance`; DS 2026's sentences and the 72rem breakpoint row that named
+them corrected); `--duration-reveal`, `--reveal-distance`, `--reveal-index` and `--nav-drawer-top` in
+`_legacy-tokens.css` (no `var()` reads them, no script sets them; DS 2026 §17's four rows removed, the shim's ceilings
+lowered — 142 → 138 tokens, and 14 → 2 classes, W4-A's twelve deleted type classes — with §2's and §17's counts;
+`test_css_tokens_exist.py`'s runtime set emptied); `cms_nav.hero_lines` (no template reads it); `data-reveal-once` on
+`orientation/result.html` (no script or sheet reads it); the dead `html.js .page-home .reveal` guard of `pages.css`;
+`v5/tokens.css`'s «CSS twins of motion.js» comment (the JS twins left with W4-B).
+
+**Measured**: `main.css` 31 637 → 31 231 B after the deletions (31 244 with part C's two rules), `pages.css` 3 797 →
+3 779; every page type lighter (the interior 31 244, the sign-in 36 105, the home 45 591, the console page types
+39 405, the company dashboard 39 594, «Mes pièces» 44 971 — `weigh_pages.py`). No script changed (the JS dist rebuilt
+identical). **Captures** (`capture.py`): the home, «Parcours», «Entreprises», the sign-in, the dashboard, a pathway and
+«Mon parcours» × fr, ar × 1440, 390 (touch) on the lane, the tree's bundles against `HEAD`'s, full page: **24 of 28
+identical**; the 4 that differ are the Arabic meta rows of part C's colon (intended, looked at); a second run of the
+same tree identical to the first.
+
+**Kept, recorded** (not proven dead, or deletion would be a refactor): `console.js`'s `is-ready` (no sheet reads it any
+more, but six browser test files wait on it as the console's readiness signal — its comment and `_shell.css`'s header,
+which still described the rail's width transition W4-B removed, corrected); W3-D's journey `descriptive` variant (its
+one consumer is the design showcase; removing it rewrites `:not(.journey--descriptive)` selectors in
+`_journey-rail.css` — specificity, so pixels); `components.css` §27's `.account-panel__title` and `.account-table` (live:
+allauth's h2, panel and table elements, `accounts/profile.html`, the showcase); `cta_panel.html` (the showcase's two
+specimens); `ecosystem.services.local_nav` (its result goes into the context as `local_nav_items`, which no template
+reads since W3-F1 — removing it takes the views' `sections` arguments and their msgids with it: a catalogue change, after
+the release); `timeline.html` (already gone, W3-D). The legacy token shim's migration not attempted
+(`test_legacy_token_shim.py::test_the_shim_is_gone` stays the xfail debt).
+
+### C — hand-offs
+
+- **W4-A**: DS 2026 §2's «14 classi tipografiche legacy» → 2 (`.eyebrow`, `.numeral`), with §17's figures and the
+  ceiling. **The 149 team-written French strings** beside « » : ; ? ! (W4-A's m2 remainder) are **recorded for after the
+  release**: each passes through the existing `typo` filter without a msgid change, but each changes the rendered line
+  (a no-break space) on its page, family by family, and needs its measure at 360 and 375 — not for the last build
+  before the candidate. The release notes' known limits say so.
+- **W4-C** (its branch's NOTES §6 and A11Y_SWEEP): **done** — `card.css`'s colon (its review's m3, G-14): «:» closed
+  up in every language, the French no-break space under `:lang(fr)` only (+13 B with the next item, paid by B); the
+  ring cut at the viewport's bottom edge: `scroll-padding-block-end: var(--s-2)` on the root (`base.css`). **Recorded**:
+  the letterhead's shift (diagnosed by W4-C: the menu's inline place moves, not its height — a navigation layout change
+  with its own measure, the first item after the release); the console drawer's brand-link ring at 390, the Academy
+  filter row's focus, the console footer's scroll padding above phone widths and the 24 px trail links under a mouse
+  are in files W4-C's merge is still bringing to design-v5: measured and fixed against W4-C's merged tree, not before
+  it; the overlay core's wiring on first use (a lead, not a defect).
+- **DS 2026** final pass: `regen_design_inventory.py --write` (§2 weights — `_legacy-tokens.css` 10.7, `components.css`
+  12.8 and 8 sections, `base.css` 12.8, `v5/card.css` 8.2, `v5/tokens.css` 62.3 KB —, §10's count) and the prose the
+  deletions made stale (§2 row 2, §7's `--chrome-block-size` paragraph, the breakpoint table, §8's entrances sentence,
+  §10's `hero.html`, §12's reveal sentence, §17, G-13, G-14); the check then reports every table current.
+
+### D — the release notes
+
+`docs/RELEASE_NOTES_v2.0.0.md`: the header (completed 27 October); §1's W4-A, W4-C and W4-D rows; F-8's paragraph from
+DL54-156 (no recipe) and part 2's four fixes (§2); the weights after W4-A and part 2 (§3); the deployment's F-3 line
+(§4); F-8's Q-1…Q-9 less Q-8 (§5); §6's two W4-C bullets written exactly as W4-C's branch writes them (so its merge
+meets the same text), the F-3/F-4 limit removed, the letterhead, the French typography and the shim added; §7's
+middle column brought to this date, its results left to the release-candidate validation. No mention of local
+infrastructure or of the confidential-material question. `GO_LIVE_PHASE.md`: F-3 and F-4 marked fixed.
+
+### For the owner
+
+- **Q-8 answered by CASE_LIFECYCLE §4 rule 5** (a CLOSED file takes no new assignment) — reversible if you decide
+  otherwise; F-8's other questions (Q-1…Q-7, Q-9) stand, listed in the release notes §5.
+- **Copy packet B1**: nothing added — the sign-in's invitation is withheld with allauth's words, the refusal reuses the
+  lifecycle's sentence.
+
+### For the team and the merge step
+
+- **Paths in no family's slice** (`check_ownership.py w4-d design-v5`: FAIL on 9 — assign them before the merge;
+  corrected by the review fixes, M2, from a first count of 6): `apps/cases/intake.py` (A1), `apps/core/gates.py` (A2),
+  `apps/community/tests/conftest.py`, `apps/community/tests/test_join.py`, `apps/forum/tests/conftest.py`,
+  `apps/forum/tests/test_governance_flag.py` and `apps/news/tests/test_newsletter.py` (A2's set-up and the states it
+  makes impossible), `docs/QA_REPORT.md` and `docs/platform/RULE_ENGINE_GOVERNANCE.md` (A5).
+- **Delegated** (each in its owner's file): `apps/cases/models.py` and `services.py` (A4), `apps/cms/templatetags/cms_nav.py`
+  (W2-C1), `apps/pages/static/pages/css/pages.css` (W2-D), `apps/portal/static/portal/v5/_shell.css` and
+  `static/js/src/console.js` (W3-A, comments only), `static/css/v5/card.css` and `tests/frontend/test_css_tokens_exist.py`,
+  `tests/frontend/test_legacy_token_shim.py` (W1-A, W1-C), `static/css/v5/tokens.css` (W1-A, a comment),
+  `templates/account/login.html` (W2-B, a comment), `templates/allauth/elements/p.html` (W3-F2), `templates/components/hero.html`
+  (deleted), `templates/orientation/result.html` and `apps/forum/tests/test_forum_mode.py` (W3-F1),
+  `apps/accounts/tests/test_second_factor_wherever_the_privilege_lives.py` (W2-B / sec-f8),
+  `tests/frontend/test_content_pages_w3_f2.py` (W3-F2), `docs/ACCESSIBILITY.md` (G-14's row; W1-C's slice).
+  Slices: ROLLBACK.md §7, DS 2026's final pass. Generated: `dist/main.css`, `dist/pages/css/pages.css`.
+- **W4-C's merge** met this branch on 27 October (review fixes, M1): clean, the release notes' §6 bullets identical,
+  DS 2026 §2's figures still «current».
+- The lane server on 8789 stopped and the minted session revoked at the end of this part.
+
+### Tests run (part 2)
+
+| Run | Result |
+|---|---|
+| `tests/test_assessment_sources_w4_d.py` on the unfixed intake, then fixed | 4 failed · 1 passed, then 5 passed |
+| `apps/cases` (after A1) | 203 passed, 3 skipped (the three standing intake skips: no rule in force on the seed) |
+| the seven suites of the A1 hunt (`-m "not browser"`, with the ERROR recorder; A4 included) | 990 passed, 3 skipped — 12 records, all deliberate (above). A first run had recorded nothing: the recorder's path pattern was broken; repaired, proved on a forced failure, run again |
+| the targeted set: `tests/compliance`, `tests/deployment`, `tests/security`, `apps/core`, `apps/community`, `apps/forum`, `apps/news`, `apps/accounts`, `apps/pages`, `apps/cms`, the new tests, `test_design_docs`, both bundle-currency tests, `test_static_pipeline`, `test_o14_lint`, `test_css_tokens_exist`, `test_legacy_token_shim`, `test_cms_nav`, W3-F2's content pages, W2-B's entrance files, the phase console, the inventory script | 1 525 passed, 26 failed, 1 xfailed (the shim's debt) — the failures were this part's own: Forum governance's fixture and its flag control, the join form's impossible state, the closed-file test (the refusal in the request's language; only a superuser grants in the back office), the tripwire's self-test, two doc mentions; fixed |
+| the failed files and their neighbours again (`apps/community`, `apps/forum`, `apps/news`, the closed-file and release-tag tests, `test_design_docs`, the inventory script) | 397 passed |
+| Chromium (`-m browser`): the home, W3-F2's content and service pages, the orientation, W3-F1's pages, the console shell, W1-C's components | 113 passed |
+| `manage.py check`, `makemigrations --check` (on `ile_v5_l9`), `ruff check` / `ruff format --check` on every touched Python file, `regen_design_inventory.py` | clean, no changes, clean, «current» |
+
+## Part 2 — review fixes
+
+Label `w4d2-fix`, 27 October 2026, Opus 5.5, from `REVIEW_PART2.md` (verdict SHIP_AFTER_FIXES: no P0, no P1, two major
+findings of the merge step, three minor). Tests on `test_ile_v5_l9`, one pytest at a time, `-p no:randomly`; no browser
+and no lane server were needed.
+
+| # | Finding | Done |
+|---|---|---|
+| M1 | the branch had not merged design-v5 since W4-C landed (`3ca6579`, DL54-160) | **fixed** — `git merge design-v5` (`267d29a`), clean. The release notes' header no longer waits for W4-C, its §1 row is dated 27 Oct with its QA folder, and §3's weight paragraph no longer says «no script changed after W4-B»: W4-C changed one, the console's shared chunk, 3 702 → 3 751 B compressed (measured on the committed bundles). `weigh_pages.py design-v5 HEAD` after the merge: `main.css` 31 637 → 31 244, the console page types 39 798 → 39 405, «Mes pièces» 45 362 → 44 969 (`documents.css` 5 564 on both sides); no ceiling raised. `regen_design_inventory.py`: «current» |
+| M2 | `check_ownership.py w4-d design-v5` reports 9 paths outside any slice; NOTES listed 6 | **fixed in NOTES** (Part 2, «For the team and the merge step»: the 9, with the three test files added). Assigning them in `OWNERSHIP_V54.json` is the steward's, before the merge |
+| m1 | the release notes said the pathway's sources are cited with their «publisher», which no template draws | **fixed** — «title, link and consultation date, the publisher kept in the record» (no new user-visible word) |
+| m2 | `cms_nav._row_visible` and `ContentBlock.requires_flag` read a raw flag: a menu row or block keyed `requires_flag="virtual_forum"` or `"newsletter"` would be drawn without the legal pages | **recorded for after the release** (no seed does this; `requires_gate` exists for it): map those two flag names to their gates in `_row_visible`, or tell editors to use `requires_gate` |
+| m3 | `community/admin.py`'s badge «Funzionalità disattivata (flag virtual_forum)» also shows when the flag is on and the legal pages are missing — the hint names the wrong cause | **left as is, recorded for copy packet B1** (admin-only, an existing msgid; a sentence naming G1 is new words) |
+
+**A test that failed once, by the clock only.** After the merge, `test_no_source_is_newer_than_its_bundle` failed:
+the checkout gave the merged sources a newer modification time than the committed bundles. `npm run build:js` rewrote
+the bundles byte for byte (`git status` clean afterwards), and the test passed. Nothing was stale.
+
+### For the owner (review fixes)
+
+- Nothing new to decide. Copy packet B1 gains one candidate: the Forum's back-office badge naming the legal pages (G1)
+  when they are what keeps the Forum closed (m3).
+
+### For the team and the merge step (review fixes)
+
+- The steward assigns the 9 paths of «For the team and the merge step» in `OWNERSHIP_V54.json` before the merge.
+- After the release: `cms_nav._row_visible` (W2-C1) and `ContentBlock.requires_flag` should resolve `virtual_forum` and
+  `newsletter` through their gates (m2).
+
+### Tests run (review fixes)
+
+| Run | Result |
+|---|---|
+| after the merge: the seven W4-D files, both bundle-currency tests, `test_design_docs`, `test_css_tokens_exist`, `test_legacy_token_shim` | 181 passed, 1 failed, 1 xfailed (the shim's debt) — the failure was the bundle clock above |
+| after `npm run build:js` (no byte changed): the bundle-currency test, `apps/community`, `apps/news`, `apps/forum` (`-m "not browser"`) | 334 passed |
+| `regen_design_inventory.py`; `check_ownership.py w4-d design-v5` | «current»; FAIL on the 9 paths the steward assigns (M2) |

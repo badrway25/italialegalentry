@@ -905,8 +905,18 @@ html[data-input="key"] .doc-row:focus-within {
   color: var(--text-2);
 }
 
-/* a stand-alone link keeps its line and gets an invisible 44 px band under a finger */
+/* each link one box of 24 px, SP-8's floor under a pointer (it was its 20 px line; W4-A, D7) */
+.doc-aside a {
+  padding-block: 2px;
+}
+
+/* a stand-alone link keeps its line and gets an invisible 44 px band under a finger; two links that wrap stand 20 px
+   apart, so that their bands meet and never overlap (8 px apart they overlapped by 12: W4-A, D7) */
 @media (pointer: coarse) {
+  .doc-aside {
+    row-gap: var(--s-5);
+  }
+
   .doc-aside a {
     position: relative;
   }

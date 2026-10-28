@@ -796,7 +796,9 @@ def test_the_company_dashboard_renders_in_arabic_with_the_name_on_the_reading_ed
     _need(company, "Soudure d’assemblage", "submitted")
     html = _company_page(client, user, "ar")
     assert '<html lang="ar" dir="rtl" class="no-js">' in html
-    assert '<h1 class="ctx__title" dir="auto">Société rtl S.r.l.</h1>' in html
+    # the name an isolate in the page's own h1: its lines on the reading edge, wrapped or not (W4-A's fix pass, the
+    # survey of the review's M1 — retargeted from `dir="auto"` on the h1, intent kept)
+    assert '<h1 class="ctx__title"><span dir="auto">Société rtl S.r.l.</span></h1>' in html
     assert re.search(r'<a href="[^"]+" dir="auto">Soudure d’assemblage</a>', html), "a need's title keeps its direction"
 
 

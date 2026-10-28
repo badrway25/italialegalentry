@@ -10,9 +10,10 @@ search over persons, no count of matching persons — and there is no route from
 exists in this application. No marketplace aesthetics.
 
 In this order — the DOM's too (h1 → NowPanel):
-  the page header      «Entreprise», the legal name as the h1, the verification as a WORD with its register (a fact
-                       the project checked about the legal entity, never an approval of anyone), sector, place. No
-                       action here: the primary is the NowPanel's
+  the page header      «Entreprise», the legal name as the h1 (an isolate in the page's own h1: the name keeps its order,
+                       and its lines, wrapped or not, stand on the page's reading edge — W4-A), the verification as a
+                       WORD with its register (a fact the project checked about the legal entity, never an approval of
+                       anyone), sector, place. No action here: the primary is the NowPanel's
   1 · the NowPanel     the ONE raised panel: the company's one next action — declare the company, complete or transmit
                        a need, express the first one — with its ONE primary; «en attente d'un tiers» while the project
                        team verifies the company or examines the needs (no primary); «rien à faire». The need it is
@@ -41,7 +42,7 @@ company in this application. Every word is the catalogue's: nothing on this page
 <header class="ctx db-head">
   <div class="ctx__words">
     <p class="ctx__eyebrow">{% translate "Entreprise" %}</p>
-    <h1 class="ctx__title" dir="auto">{{ company.legal_name }}</h1>
+    <h1 class="ctx__title"><span dir="auto">{{ company.legal_name }}</span></h1>
     <p class="ctx__meta">
       {% chip company.verification_status "accounts.VerificationStatus" %}{{ company.verification_label }}{% endchip %}
       {% if company.sector %}<span>{{ company.sector.label }}</span>{% endif %}

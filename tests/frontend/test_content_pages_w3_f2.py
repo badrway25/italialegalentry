@@ -161,7 +161,9 @@ def test_a_prescribed_title_shown_in_french_on_another_page_says_so():
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_a_prescribed_text_in_the_title_or_the_description_stays_text(client, seeded, phase3_open, set_flag, lang):
+def test_a_prescribed_text_in_the_title_or_the_description_stays_text(
+    client, seeded, phase3_open, legal_published, set_flag, lang
+):
     """Where the Forum Virtuel's prescribed words fall back to French (the Arabic page), the `locked` tag wraps them in
     `<span lang>`: written into <title> or into the description's attribute, the markup ended the attribute and the
     words spilled onto the top of the page. They go in as text."""

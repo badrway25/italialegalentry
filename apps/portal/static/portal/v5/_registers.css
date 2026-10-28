@@ -49,10 +49,16 @@
 }
 
 /* wrapped, its lines stay on that edge too — the words' own end, which is the page's start: one rule for every title
-   in the other direction than the page — the head's, a row's (§4) —, a wrapped one never drifting to the far side
-   (the review's minor 6: a wrapped French subject stood left on an Arabic page, the dates' titles right) */
-:dir(rtl) :is(.reg-head__title, .reg-row .db-task__title):dir(ltr),
-:dir(ltr) :is(.reg-head__title, .reg-row .db-task__title):dir(rtl) {
+   and every name in the other direction than the page — the head's, a row's (§4), a saved result's (§6b: its `lang`
+   turns it through main.css, not a `dir`, so `:dir()` missed it — W4-A's D23), an answerable party's (§12), a step's
+   words and who answers for it (§10: a need's history, a process's stages — as the file's history, _case.css), a
+   table's cell (a skill, an identity's value) —, a wrapped one never drifting to the far side (the review's minor 6:
+   a wrapped French subject stood left on an Arabic page, the dates' titles right; W4-A's fix pass, the review's M1: a
+   Latin organisation stood at the far side of its label, a skill at the far side of its column's head). A person's
+   own prose — a turn, a letter, a lead — keeps its own start (W3-F1's review, m7) */
+:dir(rtl) :is(.reg-head__title, .reg-row .db-task__title, .reg-party__name, .reg-step__text, .db-task__who, .data-table [dir]):dir(ltr),
+:dir(ltr) :is(.reg-head__title, .reg-row .db-task__title, .reg-party__name, .reg-step__text, .db-task__who, .data-table [dir]):dir(rtl),
+:dir(rtl) .reg-result__title:is([lang="fr"], [lang="it"], [lang="en"]) {
   text-align: end;
 }
 
@@ -277,6 +283,17 @@ the record's facts (its edition, its state) */
   color: var(--text-3);
 }
 
+/* a part in the other direction than its row — a reference or a date, left to right on an Arabic page (§2, main.css's
+   `time[datetime]`), a name in its own script (`dir="auto"`) — has its own start at the row's end: its point stood
+   after it (a «·» closing the line) and its pull on the far side (two points met before the next part). It keeps its
+   direction and lays its point and its pull on the row's side (W4-A's D22) */
+:is(.reg-row__meta, .reg-step__meta):dir(rtl) > :is(.reg-ref, time, :dir(ltr)),
+:is(.reg-row__meta, .reg-step__meta):dir(ltr) > :dir(rtl) {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-inline: 0 calc(-1 * var(--meta-sep));
+}
+
 /* THE ROW IS THE WAY TO ITS RECORD: the title's link is stretched over the row (z 1), the row's own act above it
    (z 2) — no point of the row is dead. Contact underlines the title, at once (a list read every day does not lift,
    cast a shadow or scale); the keyboard's ring is the link's own. */
@@ -366,6 +383,12 @@ the record's facts (its edition, its state) */
 
 .reg-summary .reg-ref {
   color: var(--text-1);
+}
+
+/* a reference reads left to right in every locale: on the Arabic page it stands on its cell's reading edge, as the
+   date beside it does (its own start was the far side — 260 px from its label at 1440; W4-A's fix pass) */
+.reg-summary .summary__item:dir(rtl) > .reg-ref {
+  justify-content: flex-end;
 }
 
 /* what the person transmitted is in the submission's own language and direction (dir="auto"): the value hugs its

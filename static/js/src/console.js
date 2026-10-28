@@ -2,8 +2,8 @@
  * The console shell (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.18 D06, §3.5 item 3; W3-A): the rail that
  * folds and remembers it, the word of a glyph that stands alone, its keyboard model, and the mobile drawer.
  *
- * No animation library here: what moves is the rail's width (a CSS transition on a token, on the
- * person's own act) and the overlays (the overlay system's transitions, static/css/v5/overlays.css). The
+ * No animation library here: the rail's width changes at once on the person's own act (its transition left
+ * with W4-B's motion pass), and what moves is the overlays (the overlay system's transitions, static/css/v5/overlays.css). The
  * current page is drawn by CSS on `aria-current` («il lume»); a page is a full navigation, so there is
  * nothing for it to travel between. Nothing moves at load.
  *
@@ -65,7 +65,8 @@ if (rail && toggle) {
   const stored = read();
   if (stored === "open" || stored === "closed") apply(stored, false);
   else apply(WIDE.matches ? "open" : "closed", false);
-  // The width transitions only after the first frame (`is-ready`, v5/_shell.css §6): never at load.
+  // `is-ready` marks the shell as drawn, after its first frame. No sheet reads it since the rail's width stopped
+  // transitioning (W4-B); the browser tests wait on it as the console's readiness signal, so it stays.
   afterPaint().then(() => document.body.classList.add("is-ready"));
 
   toggle.addEventListener("click", () => {
@@ -185,7 +186,9 @@ if (document.querySelector("[data-piece-drawer]")) {
 }
 
 /* 2d. The Dépôt (design V5, W3-C; DOCUMENT_WORKSPACE.md §11): where a page draws one — a piece's page, the upload
-      page — its module is imported, never before; without it the Dépôt is the browser's own form. */
+      page — its module is imported, never before; without it the Dépôt is the browser's own form: the frame is drawn
+      from the first paint (html.js), and until the module has arrived — late, or lost on the way — a chosen file shows
+      the browser's own control in it (_depot.css §2 bis; W4-C's review, M2). */
 if (document.querySelector("[data-depot-form]")) {
   import("./depot.js").then(({ initDepots }) => initDepots(document));
 }

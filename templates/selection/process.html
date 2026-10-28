@@ -199,7 +199,7 @@ per-row select is the staff's design debt, recorded in the family's notes); the 
       <tbody>
         {% for row in page.evidence %}
         <tr{% if row.is_overdue %} class="is-overdue"{% endif %}>
-          <th scope="row" data-label="{% translate 'Justificatif' %}">{{ row.requirement }}{% if row.detail %}<span class="t-caption">{{ row.detail }}</span>{% endif %}</th>
+          <th scope="row" data-label="{% translate 'Justificatif' %}"><span dir="auto">{{ row.requirement }}</span>{% if row.detail %}<span class="t-caption" dir="auto">{{ row.detail }}</span>{% endif %}</th>
           <td data-label="{% translate 'Responsable' %}">{{ row.get_responsible_actor_display }}</td>
           <td data-label="{% translate 'État' %}">{% chip row.status "selection.EvidenceStatus" %}{{ row.get_status_display }}{% endchip %}</td>
           <td data-label="{% translate 'Échéance' %}">{{ row.due_date|date:"d.m.Y"|default:"—" }}</td>
@@ -350,7 +350,7 @@ per-row select is the staff's design debt, recorded in the family's notes); the 
           <th scope="row" data-label="{% translate 'Date' %}">{{ event.created_at|date:"d.m.Y H:i" }}</th>
           <td data-label="{% translate 'Phase' %}">{{ event.get_to_stage_display }}</td>
           <td data-label="{% translate 'Acteur responsable' %}">{{ event.responsible_label }}</td>
-          <td data-label="{% translate 'Note' %}">{{ event.note|default:"—" }}</td>
+          <td data-label="{% translate 'Note' %}" dir="auto">{{ event.note|default:"—" }}</td>
         </tr>
         {% endfor %}
       </tbody>

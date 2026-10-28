@@ -75,6 +75,10 @@ def page_visible(request) -> tuple[bool, bool]:
         return True, False
     user = getattr(request, "user", None)
     if user is not None and user.is_authenticated and user.is_staff:
+        # a staff preview of unpublished content: the second-factor policy first (accounts.middleware)
+        from accounts.middleware import require_second_factor
+
+        require_second_factor(request)
         return True, True
     return False, False
 

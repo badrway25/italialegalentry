@@ -169,16 +169,24 @@
   max-width: 24rem;
 }
 
+/* one column on a phone that never grows past it: a sample's table scrolls inside its region instead of widening the
+   page (W4-A, D13 — the page was 126–304 px wider than every phone) */
 .ds__two {
   display: grid;
   gap: var(--s-10, 40px);
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .ds__cards {
   display: grid;
   gap: 20px;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ds__section .table-region {
+  position: relative; /* a visually hidden cell label (absolute) scrolls with its table instead of widening the page */
+  max-inline-size: 100%;
+  overflow-x: auto;
 }
 
 @media (min-width: 48rem) {

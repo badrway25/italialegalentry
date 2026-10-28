@@ -291,6 +291,25 @@ class RuleAdmin(BaseModelAdmin):
             return f"⚠ {exc}"
 
 
+#: A questionnaire's answers — the person's own (``orientation.policies``: a session and its result are their owner's,
+#: an anonymous one nobody's). The administration reads the SHAPE — reference, status, outcome, versions, dates — which is
+#: what an anonymisation on request and the statistics need; a superuser stays the last resort (finding F-8).
+ANSWER_FIELDS = ("state", "answers_snapshot")
+
+
+def _without_answers(request, fields):
+    if getattr(request.user, "is_superuser", False):
+        return fields
+    return [name for name in fields if name not in ANSWER_FIELDS]
+
+
+def _hidden_answers(request) -> frozenset[str]:
+    """The answers hidden from the page are no filter of the list either (F8R-2: ``?answers_snapshot__family=``)."""
+    if request is not None and getattr(request.user, "is_superuser", False):
+        return frozenset()
+    return frozenset(ANSWER_FIELDS)
+
+
 @admin.register(OrientationSession)
 class OrientationSessionAdmin(BaseModelAdmin):
     list_display = ("reference", "status", "ruleset", "language", "has_user", "created_at", "expires_at")
@@ -311,6 +330,12 @@ class OrientationSessionAdmin(BaseModelAdmin):
     )
     actions = ("anonymise_action",)
     search_fields = ("id",)
+
+    def get_fields(self, request, obj=None):
+        return _without_answers(request, super().get_fields(request, obj))
+
+    def hidden_fields(self, request):
+        return _hidden_answers(request)
 
     @admin.display(description=_("riferimento"))
     def reference(self, obj):
@@ -348,6 +373,12 @@ class OrientationResultAdmin(BaseModelAdmin):
         "created_at",
     )
     actions = ("export_statistics_csv",)
+
+    def get_fields(self, request, obj=None):
+        return _without_answers(request, super().get_fields(request, obj))
+
+    def hidden_fields(self, request):
+        return _hidden_answers(request)
 
     @admin.display(description=_("sessione"))
     def session_reference(self, obj):

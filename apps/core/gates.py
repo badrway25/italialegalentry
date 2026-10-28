@@ -61,12 +61,19 @@ def forum_permanent_mode() -> bool:
 
 
 def virtual_forum_enabled() -> bool:
-    """G11 — Virtual Forum behind a flag until after the Morocco forum."""
-    return flags.is_enabled("virtual_forum")
+    """G11 — Virtual Forum behind a flag until after the Morocco forum, and never before G1.
+
+    ``core.phases`` declares ``depends_on=("legal_pages_available",)`` and the phase console tells the administrator
+    that a closed dependency blocks the flag: the gate enforces it (W4-D part 2, F-3). An organisation publishes there
+    under participation rules the legal pages carry, and its «Créer un compte» leads to G2's sign-up.
+    """
+    return flags.is_enabled("virtual_forum") and legal_pages_available()
 
 
 def newsletter_enabled() -> bool:
-    return flags.is_enabled("newsletter")
+    """The newsletter's form and sending: its flag, and G1 — the consent text lives in the legal pages (``core.phases``
+    ``depends_on``; W4-D part 2, F-3). G2's QA override opens the forms only, never this."""
+    return flags.is_enabled("newsletter") and legal_pages_available()
 
 
 def snapshot() -> dict:

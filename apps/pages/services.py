@@ -846,9 +846,15 @@ def institutional_nav(current: str) -> list[dict]:
 
 
 def can_preview(request) -> bool:
-    """Back-office users may preview a gated page with ``?preview=1`` (rendered noindex)."""
+    """Back-office users may preview a gated page with ``?preview=1`` (rendered noindex) — once the session meets the
+    second-factor policy, as anywhere a staff privilege is exercised (``accounts.middleware.require_second_factor``)."""
     user = getattr(request, "user", None)
-    return bool(user is not None and user.is_authenticated and user.is_staff and request.GET.get("preview") == "1")
+    if not (user is not None and user.is_authenticated and user.is_staff and request.GET.get("preview") == "1"):
+        return False
+    from accounts.middleware import require_second_factor
+
+    require_second_factor(request)
+    return True
 
 
 def _page_seo(title: str, description: str, photo: Photo | None = None) -> dict:

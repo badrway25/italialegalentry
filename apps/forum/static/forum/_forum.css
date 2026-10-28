@@ -199,6 +199,32 @@
   background: var(--surface-area);
 }
 
+/* a video's controls never mirror: play, the timeline and the time read left to right on the Arabic page too
+   (plan §2.5; W4-A, D19) */
+.forum-gallery__video {
+  direction: ltr;
+}
+
+/* registration closed: the notice's one link stands alone in its paragraph — one box of 24 px (it was its 20 px
+   line), 44 px under a finger (SP-8; W4-A, D6) */
+[data-registration="closed"] .notice__body a {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+@media (pointer: coarse) {
+  [data-registration="closed"] .notice__body a {
+    position: relative;
+  }
+
+  [data-registration="closed"] .notice__body a::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: 0;
+  }
+}
+
 .forum-partners {
   display: flex;
   flex-wrap: wrap;

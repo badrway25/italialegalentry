@@ -1,4 +1,4 @@
-{% load i18n cms_nav %}{% if not menu %}{% main_menu as menu %}{% endif %}
+{% load i18n cms_nav pages_typo %}{% if not menu %}{% main_menu as menu %}{% endif %}
 {% comment %}
 Main navigation: cms.MenuItem rows for location "main" (fallback: the D-U3 structure in
 cms/templatetags/cms_nav.py, decorated there by `_portico()` with live content only). Two drawings of
@@ -70,7 +70,7 @@ one tree, never on screen together:
     {% safe_url 'orientation:start' as orientation_url %}{% if orientation_url %}
     <a class="btn btn--primary btn--lg btn--block btn--arrow nav-sheet__primary" href="{{ orientation_url }}">{% translate "Découvrir le questionnaire d’orientation" %}{% svg_icon "arrow" "icon btn__arrow icon--flip-rtl" %}</a>{% endif %}
     {% safe_url 'pages:antifraud' as fraud_url %}{% if fraud_url %}
-    <p class="portico__foot nav-sheet__fraud">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ fraud_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></p>{% endif %}
+    <p class="portico__foot nav-sheet__fraud">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ fraud_url }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}</a></p>{% endif %}
   </div>
   <div class="nav-sheet__foot">
     {% if user.is_authenticated %}{% include "components/account_menu.html" with popover=True menu_id="account-menu-sheet" %}
@@ -93,7 +93,7 @@ one tree, never on screen together:
           {% endfor %}
         </ul>
         {% if item.url %}<a class="portico__space" href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{% translate "Voir l’espace" %}</a>{% endif %}
-        {% if item.foot_url %}<p class="portico__foot">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ item.foot_url }}">{% translate "Lire la page « Attention aux fraudes »" %}</a></p>{% endif %}
+        {% if item.foot_url %}<p class="portico__foot">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ item.foot_url }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}</a></p>{% endif %}
       </div>
       {% if item.photo %}
       <div class="portico__field" aria-hidden="true">

@@ -99,11 +99,19 @@ def gate_open(key: str) -> bool:
 
 
 def can_preview(request) -> bool:
-    """Back-office users may preview gated pages with ``?preview=1`` (rendered with noindex)."""
+    """
+    Back-office users may preview gated pages with ``?preview=1`` (rendered with noindex) — once the session meets the
+    second-factor policy, as anywhere a staff privilege is exercised (``accounts.middleware.require_second_factor``).
+    """
     user = getattr(request, "user", None)
     if not (user is not None and user.is_authenticated and user.is_staff):
         return False
-    return request.GET.get("preview") == "1"
+    if request.GET.get("preview") != "1":
+        return False
+    from accounts.middleware import require_second_factor
+
+    require_second_factor(request)
+    return True
 
 
 def page_visible(request, key: str) -> tuple[bool, bool]:

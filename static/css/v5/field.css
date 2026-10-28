@@ -54,10 +54,6 @@ body:not(.console) { --field-h: var(--control-lg); }
   padding-block-start: var(--s-6);
   border-block-start: 1px solid var(--line-rhythm);
 }
-.form-row { display: grid; gap: 0 var(--s-6); }
-@media (min-width: 48rem) {
-  .form-row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 @media (max-width: 47.999rem) {
   .form__group, .form__fieldset { margin-block-end: var(--s-12); }
 }
@@ -205,7 +201,6 @@ html[data-input="key"] .form-field { --field-draw: 0ms; }
   border-color: var(--field-edge-invalid);
   box-shadow: inset 0 0 0 1px var(--field-edge-invalid), 0 0 0 5px var(--focus-halo);
 }
-.form-field :where(input, select, textarea).is-warning { border-color: var(--field-edge-warning); }
 .form-field__errors { padding: 0; list-style: none; font-weight: var(--w-control); color: var(--tone-rifiuto-text); }
 .form-field__error-list { margin: 0; padding: 0; list-style: none; }
 .form-field__errors li { display: grid; grid-template-columns: 1rem minmax(0, 1fr); gap: var(--s-2); }

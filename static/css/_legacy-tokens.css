@@ -151,7 +151,6 @@
   --icon-size-lg: 24px;
   --utility-height: var(--chrome-utility);
   --header-height: var(--chrome-masthead);
-  --nav-drawer-top: var(--chrome-block-size);
 
   /* ---- Focus: the five --focus-ring-* names left the shim — design V5's one focus system declares
      them (static/css/v5/tokens.css, aliases.css; V5.4 plan §1.6). ------------------------------ */
@@ -160,8 +159,6 @@
   --duration-fast: var(--motion-fast);
   --duration-base: var(--motion-base);
   --duration-slow: var(--motion-slow);
-  --duration-reveal: 0ms; /* .reveal is deleted; this keeps nothing animating */
-  --reveal-distance: 0;
   /* Consumed by components.css and declared by nothing, in this build and the one before it: each
      var() was falling back to its initial value, so transitions lost their easing, short centred
      text lost its cap, and the skip link, the dropdowns and the no-JS dialog lost their declared
@@ -171,7 +168,6 @@
   --z-below: -1;
   --z-dropdown: var(--z-header);
   --z-skiplink: var(--z-dialog);
-  --reveal-index: 0;
 
   /* ---- Buttons ----------------------------------------------------------- */
   --btn-bg: var(--navy);
@@ -226,33 +222,9 @@
   --measure-lead-legacy: var(--measure-lead);
 }
 
-.text-h4 {
-  font-family: var(--font-ui);
-  font-size: var(--t-folio-size);
-  line-height: var(--t-folio-lh);
-  font-weight: 600;
-}
-
-.text-small {
-  font-family: var(--font-ui);
-  font-size: var(--t-gloss-size);
-  line-height: var(--t-gloss-lh);
-}
-
-.text-caption {
-  font-family: var(--font-ui);
-  font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
-  color: var(--ink-muted);
-}
-
-.text-muted {
-  color: var(--ink-muted);
-}
-
-.text-secondary {
-  color: var(--ink-secondary);
-}
+/* the legacy type classes (.text-h4, .text-small, .text-caption, .text-muted, .text-secondary) left with their last
+   templates: no template, script or module of design-v5 or of a branch in flight names them (W4-A's fix pass, paying
+   for the notices' address in v5/notice.css under V5.8) */
 
 /* The eyebrow is abolished by the direction: the folio replaces it entirely.
    Until every template carries a folio, the class renders as the folio label

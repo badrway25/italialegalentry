@@ -332,9 +332,9 @@ def _sheets() -> list[Path]:
     return sorted(sheets)
 
 
-#: A rule that would draw a glyph thinner than the hand, kept visible with its owner until it goes: no markup draws
-#: it today (the V1 entrance of components.css §12 is W2-E's to delete).
-THINNER_RULES_WITH_AN_OWNER = {("static/css/components.css", ".entrance__icon")}
+#: A rule that would draw a glyph thinner than the hand, kept visible here with its owner until it goes. None is
+#: left: the last one went with its section (W4-D part 2, 71fbd90). A new entry needs an owner and a date to go.
+THINNER_RULES_WITH_AN_OWNER: set[tuple[str, str]] = set()
 
 
 def test_no_sheet_draws_a_glyph_with_a_thinner_hand_than_the_icon_rule():

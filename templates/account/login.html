@@ -4,7 +4,8 @@ THE SIGN-IN PAGE OF «IL VARCO» (design V5, V5.4 plan §1.13; W2-B). It EXTENDS
 (Django resolves the same name in the next template directory): the view, the form, the field names, the CSRF
 token, the redirect field and the passkey and sign-in-code blocks are `block.super` — allauth's, at the installed
 version, never a copy that could drift from it — and so are its words («Connexion», the invitation to register),
-which stay messages of allauth's catalogue. The page's hierarchy is drawn around it by
+which stay messages of allauth's catalogue; the invitation is withheld while the sign-up is closed (G2), by
+templates/allauth/elements/p.html (W4-D part 2, F-4). The page's hierarchy is drawn around it by
 templates/allauth/layouts/entrance.html (the eyebrow, the one title) and the allauth elements
 (templates/allauth/elements/): the fields «la lastra», the password's «forgotten password» link at the end of its
 label's row (templates/components/form_field.html; accounts.forms.LoginForm asks for it), one primary action.

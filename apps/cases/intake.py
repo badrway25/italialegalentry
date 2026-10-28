@@ -123,7 +123,7 @@ def open_case_from_session(session, *, request=None) -> CaseFile | None:
         applied_rules=_applied_rules(legal),
         missing_requirements=_missing_requirements(legal),
         rationale=result.result_text_fr or "",
-        sources=_sources_of(outcome, legal),
+        sources=_sources_of(pathway_key, legal),
         pathway_key=pathway_key,
         request=request,
     )
@@ -239,16 +239,23 @@ def _missing_requirements(legal) -> list[dict]:
     ]
 
 
-def _sources_of(outcome, legal=None) -> list[dict]:
+def _sources_of(pathway_key: str, legal=None) -> list[dict]:
     """
     The sources behind an outcome, in the order they were met.
 
     The legal rule engine supplies them: every rule in force carries at least one, and the service
-    refuses to put a rule in force without one. The pathway's own editorial references follow, and
-    duplicates are dropped on the reference, so the same norm cited twice appears once.
+    refuses to put a rule in force without one. The pathway's own primary sources follow — the rows
+    an editor recorded on the pathway in the back office (``pathways.PathwaySource``: its title, its
+    URL, its publisher, the day it was consulted), in the model's own order, the inline's — and
+    duplicates are dropped on the reference and the title, so the same text cited twice appears once.
+    A pathway source names no precise provision, so its ``reference`` stays empty rather than made up;
+    its internal note and the account that recorded it never leave the back office.
 
-    An outcome with no rule in force still shows no source. That remains the honest answer, and it is
-    now a statement about the review queue rather than about the architecture.
+    An outcome with no rule in force still shows no source, the pathway's included. The assessment
+    page's empty sentence and the dashboard's note both say why («… parce qu'aucune règle en vigueur
+    ne s'y applique»), and a pathway's sources listed under «Les textes sur lesquels reposent ces
+    règles» with no rule above them would claim a foundation the result does not have. That remains
+    the honest answer, and it is a statement about the review queue rather than about the architecture.
     """
     collected: list[dict] = []
     seen: set[tuple[str, str]] = set()
@@ -259,18 +266,29 @@ def _sources_of(outcome, legal=None) -> list[dict]:
             seen.add(key)
             collected.append(entry)
 
-    if legal is not None:
-        for source in legal.sources:
-            add(source)
+    if legal is None or not legal.findings:
+        return collected
+    for source in legal.sources:
+        add(source)
 
-    pathway_key = outcome.pathway_key or ""
     if pathway_key:
         try:
             from pathways.models import PathwaySource
 
-            for source in PathwaySource.objects.filter(pathway__key=pathway_key).order_by("order", "id")[:6]:
-                add({"title": source.title_fr, "reference": source.reference or "", "url": source.url or ""})
-        except Exception:  # noqa: BLE001 - a sibling app that is absent or changed must not break intake
+            for source in PathwaySource.objects.filter(pathway__key=pathway_key).order_by("id")[:6]:
+                add(
+                    {
+                        "title": source.title,
+                        "reference": "",
+                        "url": source.url,
+                        "authority": source.publisher,
+                        "consulted_on": source.retrieved_at.isoformat() if source.retrieved_at else "",
+                    }
+                )
+        except Exception:  # noqa: BLE001 - deliberate: the rules' sources stand without the pathway's
+            # Read through the model's own fields since W4-D (it read three that never existed, and
+            # this guard hid it on every assessment for a month): tests/test_assessment_sources_w4_d.py
+            # fails on any record logged here.
             logger.exception("pathway sources unavailable for %s", pathway_key)
     return collected
 
@@ -396,7 +414,7 @@ def reassess(case: CaseFile, *, request=None, reason: str = "situation_updated")
         applied_rules=applied,
         missing_requirements=_missing_requirements(legal),
         rationale=last.rationale,
-        sources=list(legal.sources),
+        sources=_sources_of(case.pathway_key, legal),
         pathway_key=case.pathway_key,
         request=request,
     )

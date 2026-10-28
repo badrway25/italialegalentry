@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import uuid
 
 import pytest
@@ -150,3 +151,77 @@ def test_both_delivery_routes_are_rate_bounded(client, owner, monkeypatch):
     # And the signed route shares the same counter rather than offering a fresh allowance.
     token = services.signed_download_token(doc, owner)
     assert client.get(f"/documents/link/{token}/").status_code == 429
+
+
+# --- A row whose stored file is gone (RC v2.0.0, SMOKE D1) -----------------------------------------------------
+
+
+def _lose_the_file(doc):
+    from documents.storage import private_storage
+
+    private_storage().delete(doc.relative_path)
+    assert not private_storage().exists(doc.relative_path)
+
+
+def _missing_records(caplog):
+    return [
+        r for r in caplog.records if r.name == "ile.documents" and r.getMessage().startswith("documents.file_missing")
+    ]
+
+
+def _without_per_request_tokens(html: bytes) -> bytes:
+    """The masked CSRF token and the CSP nonce change on every response; nothing else may."""
+    return re.sub(rb'(name="csrfmiddlewaretoken" value|nonce)="[^"]*"', rb'\1=""', html)
+
+
+def test_a_missing_file_is_a_404_for_the_owner_logged_with_the_id_only(client, owner, doc, caplog):
+    """A lost file was an unhandled FileNotFoundError, a 500. Now a 404, one warning, the id and nothing else."""
+    _lose_the_file(doc)
+    client.force_login(owner)
+    with caplog.at_level("WARNING", logger="ile.documents"):
+        r = client.get(_url(doc))
+    assert r.status_code == 404
+    [record] = _missing_records(caplog)
+    assert record.levelname == "WARNING"
+    assert record.getMessage() == f"documents.file_missing document={doc.pk}"
+    for private in (doc.original_name, doc.relative_path, owner.email):
+        assert private not in record.getMessage()
+    assert not AuditEvent.objects.filter(action="documents.downloaded").exists()
+
+
+def test_a_missing_file_is_a_404_on_the_signed_route_too(client, owner, doc, caplog):
+    _lose_the_file(doc)
+    client.force_login(owner)
+    token = services.signed_download_token(doc, owner)
+    with caplog.at_level("WARNING", logger="ile.documents"):
+        assert client.get(f"/documents/link/{token}/").status_code == 404
+    assert len(_missing_records(caplog)) == 1
+
+
+def test_a_missing_file_tells_a_refused_account_nothing(client, intruder, clean_doc, caplog):
+    """DENY as strong as ALLOW: the gates run before the file is opened, so a refused account gets the same 403
+    whether the file exists or not, and its request writes no file_missing record."""
+    client.force_login(intruder)
+    before = client.get(_url(clean_doc))
+    _lose_the_file(clean_doc)
+    with caplog.at_level("WARNING", logger="ile.documents"):
+        after = client.get(_url(clean_doc))
+    assert before.status_code == after.status_code == 403
+    assert _without_per_request_tokens(before.content) == _without_per_request_tokens(after.content)
+    assert _missing_records(caplog) == []
+
+
+def test_a_missing_file_does_not_bypass_the_delivery_gate(client, owner, doc, caplog):
+    """The owner may read an infected file's row but never receive it: still a 403, not a 404, when it is gone."""
+    services.apply_scan_result(doc, ScanStatus.INFECTED, note="test")
+    _lose_the_file(doc)
+    client.force_login(owner)
+    with caplog.at_level("WARNING", logger="ile.documents"):
+        assert client.get(_url(doc)).status_code == 403
+    assert _missing_records(caplog) == []
+
+
+def test_a_missing_file_still_sends_the_anonymous_to_the_sign_in(client, doc):
+    _lose_the_file(doc)
+    r = client.get(_url(doc))
+    assert r.status_code == 302 and "/compte/login/" in r["Location"]

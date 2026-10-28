@@ -263,7 +263,7 @@ Una seconda campagna, dopo che la fase funzionale era chiusa. Criterio diverso: 
 | Scansione della **cronologia Git**, non della working tree | 2131 blob, **0 indirizzi e-mail di terzi**, 0 documenti riservati, 0 credenziali |
 | Riscrittura della cronologia | due passate, copia probatoria fuori dal repository, ripristino **provato** |
 | Ambiente legacy di test | verificato in sola lettura; solo riferimento, non fa parte di questo repository (decisione della titolarità, 11 ottobre 2026); dettagli nel registro privato |
-| Regole giuridiche | **0 in vigore**; 13 bozze + 3 candidate ereditate; il database rifiuta una regola approvata senza approvatore |
+| Regole giuridiche | **0 in vigore**; 11 bozze + 5 candidate ereditate; il database rifiuta una regola approvata senza approvatore |
 | Audit di autorizzazione per forma d'attacco | **56 test**, dieci ruoli × sei forme |
 | Impostazioni di produzione | rifiutano l'avvio su TLS debole, chiave corta, **secondo fattore spento**, e ignorano un `.env` di sviluppo |
 | `manage.py check --deploy` con ambiente corretto | **nessun avviso** — prima ne aveva uno |

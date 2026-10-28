@@ -1,6 +1,16 @@
+"""
+Back-office of the virtual forum — the moderators' (finding F-8).
+
+``community.policies`` names the moderators: role:moderator, role:administrator, role:superadmin. Every screen here
+moderates or reads what only a moderator reads — every membership (with the name and the organisation a member chose
+not to show, REQ-FOR-06), every hidden or pending post, every report — so each opens to them alone, whatever else holds
+the «community» model permissions: until F-8 role:staff, which the policy does not name, moderated here.
+"""
+
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from audit.services import record as audit_record
 from community import services
 from community.models import (
     Attachment,
@@ -18,8 +28,15 @@ from community.models import (
     ReportStatus,
     Room,
 )
+from community.policies import MODERATOR_ROLES
 from core import gates
-from core.admin_base import BaseModelAdmin, BaseTabularInline
+from core.admin_base import BaseModelAdmin, BaseTabularInline, PolicyBoundAdminMixin
+
+
+class ModeratorsOnly(PolicyBoundAdminMixin):
+    """The screen opens to the moderators ``community.policies`` names, and to nobody else."""
+
+    policy_roles = MODERATOR_ROLES
 
 
 class FeatureBadgeMixin:
@@ -34,7 +51,7 @@ class FeatureBadgeMixin:
 
 
 @admin.register(Membership)
-class MembershipAdmin(FeatureBadgeMixin, BaseModelAdmin):
+class MembershipAdmin(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("id", "user", "category", "organisation", "status", "trusted", "show_name", "created_at")
     list_filter = ("status", "category", "trusted", "show_name", "show_organisation")
     search_fields = ("user__email", "organisation")
@@ -62,11 +79,15 @@ class MembershipAdmin(FeatureBadgeMixin, BaseModelAdmin):
 
     @admin.action(description=_("Segna come affidabile (salta la coda di moderazione)"))
     def mark_trusted(self, request, queryset):
-        queryset.update(trusted=True)
+        # a moderation act — the member's posts skip the queue from now on — so it is in the audit trail, row by row
+        for membership in queryset.filter(trusted=False):
+            membership.trusted = True
+            membership.save(update_fields=["trusted", "updated_at"])
+            audit_record(request, action="community.membership.trusted", target=membership)
 
 
 @admin.register(Room)
-class RoomAdmin(FeatureBadgeMixin, BaseModelAdmin):
+class RoomAdmin(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("name_fr", "slug", "kind", "is_moderated", "published", "order")
     list_filter = ("kind", "is_moderated", "published")
     list_editable = ("order", "published")
@@ -82,7 +103,7 @@ class PostInline(BaseTabularInline):
 
 
 @admin.register(Discussion)
-class DiscussionAdmin(FeatureBadgeMixin, BaseModelAdmin):
+class DiscussionAdmin(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("title", "room", "status", "pinned", "author", "last_activity_at", "created_at")
     list_filter = ("status", "pinned", "room")
     list_editable = ("pinned",)
@@ -112,7 +133,7 @@ class AttachmentInline(BaseTabularInline):
     fields = ("label", "document_uuid")
 
 
-class PostAdminBase(FeatureBadgeMixin, BaseModelAdmin):
+class PostAdminBase(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("id", "excerpt", "discussion", "author", "status", "created_at", "edited_at", "moderated_by")
     list_filter = ("status", "discussion__room")
     search_fields = ("body", "discussion__title")
@@ -157,7 +178,7 @@ class PendingPostAdmin(PostAdminBase):
 
 
 @admin.register(Report)
-class ReportAdmin(FeatureBadgeMixin, BaseModelAdmin):
+class ReportAdmin(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("id", "post", "reporter", "status", "created_at", "handled_by", "handled_at")
     list_filter = ("status",)
     search_fields = ("reason",)
@@ -185,7 +206,7 @@ class ReportAdmin(FeatureBadgeMixin, BaseModelAdmin):
 
 
 @admin.register(ModerationAction)
-class ModerationActionAdmin(BaseModelAdmin):
+class ModerationActionAdmin(ModeratorsOnly, BaseModelAdmin):
     list_display = ("created_at", "action", "moderator", "post", "discussion", "membership", "note")
     list_filter = ("action",)
     readonly_fields = [f.name for f in ModerationAction._meta.fields]
@@ -198,7 +219,7 @@ class ModerationActionAdmin(BaseModelAdmin):
 
 
 @admin.register(CalendarEntry)
-class CalendarEntryAdmin(FeatureBadgeMixin, BaseModelAdmin):
+class CalendarEntryAdmin(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("title", "room", "starts_at", "ends_at", "place", "published")
     list_filter = ("published", "room")
     list_editable = ("published",)
@@ -212,7 +233,7 @@ class CollaborationInline(BaseTabularInline):
 
 
 @admin.register(Initiative)
-class InitiativeAdmin(FeatureBadgeMixin, BaseModelAdmin):
+class InitiativeAdmin(ModeratorsOnly, FeatureBadgeMixin, BaseModelAdmin):
     list_display = ("title", "room", "status", "owner", "published", "created_at")
     list_filter = ("status", "published", "room")
     list_editable = ("published",)

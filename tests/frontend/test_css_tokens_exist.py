@@ -26,8 +26,9 @@ CSS_FILES = sorted(
 DECLARATION = re.compile(r"(--[a-zA-Z0-9-]+)\s*:")
 REFERENCE = re.compile(r"var\(\s*(--[a-zA-Z0-9-]+)")
 # Set at run time by JavaScript or by a component modifier, never declared in a stylesheet. (--reveal-index left with
-# components.css §29 and main.js's initReveal: W4-B.)
-RUNTIME_PROPERTIES = {"--nav-drawer-top"}
+# components.css §29 and main.js's initReveal: W4-B; --nav-drawer-top, read by nothing since W2-A's drawer, left the
+# shim with its declaration: W4-D part 2.)
+RUNTIME_PROPERTIES: set[str] = set()
 
 
 def _defined_everywhere() -> set[str]:

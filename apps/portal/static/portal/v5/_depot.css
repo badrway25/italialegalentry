@@ -138,9 +138,17 @@
 }
 
 /* ---- 2 bis · The zone that keeps the real input inside it (DOCUMENT_WORKSPACE §11.2) -------------------------
-   Without script: a dashed frame around the browser's own control and its formats. With script (`[data-enhanced]`,
-   static/js/src/depot.js): the input covers the frame, transparent — a press anywhere opens the picker, a file dropped
-   on it is the input's own —, and the frame says what it is: the glyph, «Déposer un fichier», the formats. */
+   Without script: a dashed frame around the browser's own control and its formats. With script: the input covers the
+   frame, transparent — a press anywhere opens the picker, a file dropped on it is the input's own —, and the frame
+   says what it is: the glyph, «Déposer un fichier», the formats. That drawing is keyed on `html.js` (static/js/head.js,
+   in <head>, before the first paint), not on the `[data-enhanced]` depot.js writes once its module has arrived: drawn
+   at its final size from the first frame, the zone no longer shrinks under the fields that follow it (W4-C: a layout
+   shift of 0.04–0.07 on every load of the upload page, 0.03 on a piece's page, on the twin 8782). What only the
+   script does — the chosen file's row, the guards, the transfer — stays depot.js's (`data-sending` below).
+   But `html.js` says only that a script ran, not that depot.js arrived: until `[data-enhanced]` is there — the module
+   late, lost on the way, console.js lost, a browser without modules — a chosen file shows the browser's own control in
+   the frame, its name included, in the place of the frame's words, the box unchanged (the rule after the enhanced
+   zone; W4-C's review, M2). The picker is never silent, and nothing moves. */
 .doc-depot__zone {
   position: relative;
   display: flex;
@@ -189,7 +197,7 @@
 }
 
 /* the enhanced zone: the input is the whole frame, its words are the frame's */
-[data-enhanced] .doc-depot__zone > input[type="file"] {
+.js .doc-depot__zone > input[type="file"] {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -201,23 +209,38 @@
   cursor: pointer;
 }
 
-[data-enhanced] .doc-depot__zone {
+.js .doc-depot__zone {
   flex-wrap: nowrap;
 }
 
-[data-enhanced] .doc-depot__zone-words {
+.js .doc-depot__zone-words {
   flex: 1;
 }
 
-[data-enhanced] .doc-depot__zone-title {
+.js .doc-depot__zone-title {
   display: block;
+}
+
+/* depot.js not there (yet): a chosen file shows the browser's own control where the frame's words were, set in by the
+   frame's own padding; the words keep their box, unpainted, so the zone keeps its size. `:valid` is the file input (the
+   zone's one control) with a file chosen — it is `required`. Once the module has written `[data-enhanced]` this never
+   matches (W4-C's review, M2). Paid in this sheet: the four `[hidden]` rules below are one, and the filed answer and
+   the state's heading take the one focus system's ring with no rule of their own (the page type stays under its
+   ceiling, V5.8) */
+.js [data-depot]:not([data-enhanced]) .doc-depot__zone > :valid {
+  padding: var(--s-4) var(--s-5) 0;
+  opacity: 1;
+}
+
+.js [data-depot]:not([data-enhanced]) .doc-depot__zone > :valid ~ * {
+  visibility: hidden;
 }
 
 /* the frame takes the input's focus ring and its hover; a file held above it lights it (solid laguna, the wash). The
    keyboard's focus is read from the input's modality (head.js) and the frame's own focus, never from a
    :has(:focus-visible): Blink re-styles the whole page from <body> for every focus that enters or leaves the subject's
    input (measured on the piece's page, 276 elements a time on a phone) — the field is the zone's only control */
-html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
+html.js[data-input="key"] .doc-depot__zone:focus-within {
   border-style: solid;
   border-color: var(--accent-mark);
   outline: var(--focus-ring-width) solid var(--focus-ring);
@@ -225,11 +248,11 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  [data-enhanced] .doc-depot__zone:hover {
+  .js .doc-depot__zone:hover {
     border-color: var(--accent-mark);
   }
 
-  [data-enhanced] .doc-depot__zone:hover .doc-depot__zone-mark {
+  .js .doc-depot__zone:hover .doc-depot__zone-mark {
     color: var(--accent-mark);
   }
 }
@@ -245,8 +268,9 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   color: var(--accent-mark);
 }
 
-/* while the deposit travels (depot.js writes `data-sending` with the controls' wait) */
-[data-enhanced] .doc-depot__zone[data-sending] {
+/* while the deposit travels (depot.js writes `data-sending` with the controls' wait — only the script writes it, so
+   the attribute alone says the script is there) */
+.doc-depot__zone[data-sending] {
   cursor: progress;
   opacity: 0.6;
 }
@@ -282,7 +306,10 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   border-block-end: 1px solid var(--line-rhythm);
 }
 
-.doc-depot__file[hidden] {
+/* whatever part of the Dépôt the script hides — the file's row, «Annuler», the transfer, the refusal, the formats once
+   the gate replaces the form — is hidden whatever display its own rule gives it: one rule, which does not lean on the
+   legacy base's global [hidden] (V1 base.css, on W4-D's deletion map) */
+.doc-depot [hidden] {
   display: none;
 }
 
@@ -325,20 +352,12 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   grid-row: 1 / span 2;
 }
 
-.doc-depot__abort[hidden] {
-  display: none;
-}
-
 .doc-depot__transfer {
   grid-column: 2 / -1;
   display: flex;
   align-items: center;
   gap: var(--s-3);
   margin-block-start: var(--s-2);
-}
-
-.doc-depot__transfer[hidden] {
-  display: none;
 }
 
 .doc-depot__progress {
@@ -395,10 +414,6 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   color: var(--tone-rifiuto-text);
 }
 
-.doc-depot__refusal[hidden] {
-  display: none;
-}
-
 .doc-depot__refusal .icon {
   flex: none;
   inline-size: var(--icon-sm);
@@ -451,14 +466,9 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   color: var(--text-1);
 }
 
-.doc-filed:focus {
-  outline: none;
-}
-
-.doc-filed:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
+/* focused by the script once composed (tabindex -1): the one focus system's ring on the keyboard's focus, none on a
+   pointer's (main.css :focus / :focus-visible; on a console page _frame.css's workspace ring, the same laguna) — the
+   rules that restated it here left with W4-C's review fix (M2's payment) */
 
 .doc-filed__words {
   display: flex;
@@ -471,6 +481,13 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   flex: 1 0 100%;
   font-weight: var(--w-control);
   overflow-wrap: anywhere;
+}
+
+/* … and, in the other direction than the page, on the page's reading edge with the sentence after it (W4-A's fix
+   pass, the review's M1: a Latin name stood at the far side of the Arabic answer) */
+:dir(rtl) .doc-filed__name:dir(ltr),
+:dir(ltr) .doc-filed__name:dir(rtl) {
+  text-align: end;
 }
 
 .doc-filed__mark {
@@ -524,14 +541,7 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   margin-block-start: var(--s-2);
 }
 
-.doc-piece__state .doc-piece__h2:focus {
-  outline: none;
-}
-
-.doc-piece__state .doc-piece__h2:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
+/* the state's heading, focused after a filing (tabindex -1), takes the focus system's ring as the filed answer does */
 
 /* ---- 3 · What is asked -------------------------------------------------------------------- */
 .doc-facts {
@@ -644,6 +654,11 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   text-align: end;
 }
 
+/* «Télécharger»: one box of 24 px, SP-8's floor under a pointer (it was its 20 px line; W4-A, D7) */
+.doc-version__get a {
+  padding-block: 2px;
+}
+
 /* the validity of a temporary link, said beside the link and not in a tooltip */
 .doc-version__ttl {
   color: var(--text-2);
@@ -739,7 +754,7 @@ html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
   }
 
   .doc-depot__zone.is-over,
-  html[data-input="key"] [data-enhanced] .doc-depot__zone:focus-within {
+  html.js[data-input="key"] .doc-depot__zone:focus-within {
     border-color: Highlight;
   }
 

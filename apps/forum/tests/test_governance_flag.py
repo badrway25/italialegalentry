@@ -129,8 +129,11 @@ def test_the_closed_response_is_noindex(client, every_route):
     assert response["X-Robots-Tag"] == "noindex, nofollow"
 
 
-def test_opening_the_flag_opens_the_module(client, every_route, secretariat, set_flag, governance_edition):
-    """The control: with the gate open the same routes answer, so the 503s above are the gate."""
+def test_opening_the_flag_opens_the_module(
+    client, every_route, secretariat, set_flag, legal_published, governance_edition
+):
+    """The control: with the gate open the same routes answer, so the 503s above are the gate. G11 opens with its
+    flag once the legal pages are published (W4-D part 2, F-3)."""
     set_flag(services.GOVERNANCE_FLAG, True)
     flags.invalidate()
     services.generate_annual_report(governance_edition, actor=secretariat.user)

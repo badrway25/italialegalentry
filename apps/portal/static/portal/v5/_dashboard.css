@@ -86,13 +86,6 @@
   }
 }
 
-/* the page header's h1 when it is a record's own name (the company's): its own direction, its box on the page's
-   reading edge — a Latin name on an Arabic page stood at the far side (dir="auto" sets the box's direction too) */
-.db-head .ctx__title[dir] {
-  inline-size: fit-content;
-  max-inline-size: 100%;
-}
-
 /* ---- 2 · The NowPanel: the screen's one raised plane, its one primary --------------------------------
    The action card of v5/card.css (the raised surface, no edge, shadow level 2). The eyebrow says whose move it is,
    the title names the piece, the facts say its state, its date and who answers for it, and the primary does it. */
@@ -845,9 +838,15 @@
 @media (pointer: coarse) {
   .db-link,
   .db-list__link,
-  .db-task__title a,
+  .db-task__title a {
+    min-block-size: var(--hit-primary);
+  }
+
+  /* the account's links 44 px both ways: «Profil» was 32 px wide (W4-A, D10); the box grows at its end, so the word
+     keeps the block's start edge with the line above it (centred, it stood 6 px in — the review's m1) */
   .db-account__links a {
     min-block-size: var(--hit-primary);
+    min-inline-size: var(--hit-primary);
   }
 
   .db-list__link {

@@ -13,6 +13,14 @@ an ordinary row:
 * **A version can be compared, and a rule can be tried before it binds anyone.** The diff shows what
   changed against the previous version, and the preview runs the rule against facts the reviewer
   types, so approval is an informed act rather than a signature.
+
+Who may do what is ``rules.policies``' answer, here as on every other entry point (finding F-8, review F8R-1): a
+workflow action is offered only to an account that may change rules here AND holds the role its verb names — submitting
+for review a drafter's (role:legal_editor), approving, putting in force and retiring role:legal_approver's — and each
+selected rule is asked ``can(user, verb, rule)`` before ``services.transition`` keeps its own refusals (the author never
+approves, nothing enters into force without a source). A rule's and a source's fields change only where the policy says
+«change» (a drafter, never a rule in force); a new version is a new row, so it needs «add» besides the policy. Before
+this, a view-only administrator approved and put a rule in force, and a legal editor approved another editor's rule.
 """
 
 from __future__ import annotations
@@ -29,8 +37,8 @@ from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 
 from accounts.permissions import can
-from core.admin_base import BaseModelAdmin
-from rules import services
+from core.admin_base import BaseModelAdmin, PolicyBoundAdminMixin
+from rules import policies, services
 from rules.engine import InvalidCondition, describe_condition, validate_condition
 from rules.models import LegalRule, LegalSource, ReviewStatus
 
@@ -59,7 +67,9 @@ STATUS_COLOURS = {
 
 
 @admin.register(LegalSource)
-class LegalSourceAdmin(BaseModelAdmin):
+class LegalSourceAdmin(PolicyBoundAdminMixin, BaseModelAdmin):
+    # A source changes where ``rules.policies`` says «change»: a drafter's (F-8, F8R-1).
+    object_policy = True
     list_display = ("title_fr", "reference", "authority", "consulted_on", "rule_count")
     search_fields = ("key", "title_fr", "title_it", "reference", "authority")
     list_filter = ("authority",)
@@ -76,7 +86,10 @@ class LegalSourceAdmin(BaseModelAdmin):
 
 
 @admin.register(LegalRule)
-class LegalRuleAdmin(BaseModelAdmin):
+class LegalRuleAdmin(PolicyBoundAdminMixin, BaseModelAdmin):
+    # A rule's page asks ``can(user, "view" | "change", rule)``: the legal approver reads a rule and never rewrites the
+    # text it approves; nobody changes a rule in force (F-8, F8R-1).
+    object_policy = True
     list_display = ("rule_id", "version", "pathway", "effect", "status_badge", "valid_from", "valid_to", "source_count")
     list_filter = ("review_status", "effect", "jurisdiction", "pathway")
     search_fields = ("rule_id", "message_fr", "requirement_fr", "pathway")
@@ -156,9 +169,31 @@ class LegalRuleAdmin(BaseModelAdmin):
         super().save_model(request, obj, form, change)
 
     # ------------------------------------------------------------------ workflow actions
-    def _run(self, request, queryset, target: str, done: str):
+    # Each action is offered (Django's ``permissions``) to an account that may change rules here AND holds the role
+    # its verb names in ``rules.policies``: «change» alone was every action for every holder of it, and an action
+    # declared without ``permissions`` was every action for a view grant (F-8, F8R-1).
+    def has_submit_permission(self, request) -> bool:
+        return self.has_change_permission(request) and policies.may_draft(request.user)
+
+    def has_approve_permission(self, request) -> bool:
+        return self.has_change_permission(request) and policies.may_review(request.user)
+
+    def has_activate_permission(self, request) -> bool:
+        return self.has_approve_permission(request)
+
+    def has_retire_permission(self, request) -> bool:
+        return self.has_approve_permission(request)
+
+    def _run(self, request, queryset, target: str, done: str, verb: str):
         moved, refused = 0, []
         for rule in queryset:
+            if not can(request.user, verb, rule):
+                # The policy answers each rule before the service moves it — the author's own rule, a rule in
+                # force for a drafter. The service's own message where it has one, the plain refusal otherwise.
+                author = verb == "approve" and rule.created_by_id == request.user.pk
+                denied = _("L'autore di una regola non può approvarla.") if author else _("Permesso negato.")
+                refused.append(f"{rule.rule_id} v{rule.version}: {denied}")
+                continue
             try:
                 services.transition(rule, target, actor=request.user, request=request)
                 moved += 1
@@ -169,21 +204,21 @@ class LegalRuleAdmin(BaseModelAdmin):
         for line in refused:
             self.message_user(request, line, messages.ERROR)
 
-    @admin.action(description=_("Invia in revisione giuridica"))
+    @admin.action(description=_("Invia in revisione giuridica"), permissions=["submit"])
     def action_submit_for_review(self, request, queryset):
-        self._run(request, queryset, ReviewStatus.LEGAL_REVIEW, str(_("Inviate in revisione")))
+        self._run(request, queryset, ReviewStatus.LEGAL_REVIEW, str(_("Inviate in revisione")), "submit")
 
-    @admin.action(description=_("Approva (richiede un revisore diverso dall'autore)"))
+    @admin.action(description=_("Approva (richiede un revisore diverso dall'autore)"), permissions=["approve"])
     def action_approve(self, request, queryset):
-        self._run(request, queryset, ReviewStatus.APPROVED, str(_("Approvate")))
+        self._run(request, queryset, ReviewStatus.APPROVED, str(_("Approvate")), "approve")
 
-    @admin.action(description=_("Metti in vigore"))
+    @admin.action(description=_("Metti in vigore"), permissions=["activate"])
     def action_activate(self, request, queryset):
-        self._run(request, queryset, ReviewStatus.ACTIVE, str(_("Messe in vigore")))
+        self._run(request, queryset, ReviewStatus.ACTIVE, str(_("Messe in vigore")), "activate")
 
-    @admin.action(description=_("Ritira"))
+    @admin.action(description=_("Ritira"), permissions=["retire"])
     def action_retire(self, request, queryset):
-        self._run(request, queryset, ReviewStatus.RETIRED, str(_("Ritirate")))
+        self._run(request, queryset, ReviewStatus.RETIRED, str(_("Ritirate")), "retire")
 
     # ------------------------------------------------------------------ extra views
     def get_urls(self):
@@ -208,7 +243,8 @@ class LegalRuleAdmin(BaseModelAdmin):
 
     def _rule_or_404(self, request, pk) -> LegalRule:
         rule = get_object_or_404(LegalRule, pk=pk)
-        if not can(request.user, "view", rule):
+        # The screen's own test — «view» here AND the policy's — not the policy alone (F-8, F8R-1).
+        if not self.has_view_permission(request, rule):
             raise PermissionDenied
         return rule
 
@@ -290,7 +326,9 @@ class LegalRuleAdmin(BaseModelAdmin):
 
     def new_version_view(self, request, pk):
         rule = self._rule_or_404(request, pk)
-        if not can(request.user, "new_version", rule):
+        # A new version is a new row: «add» here AND the policy (F-8, F8R-1) — the policy alone let a view-only
+        # administrator write one.
+        if not (self.has_add_permission(request) and can(request.user, "new_version", rule)):
             raise PermissionDenied
         if request.method != "POST":
             raise Http404

@@ -38,13 +38,6 @@
   text-align: start;
 }
 
-/* Reveal on scroll never makes content invisible on these pages: the opacity stays at 1 from the
-   first paint (long pages would otherwise hold below-the-fold blocks at opacity 0 until they are
-   scrolled into view). */
-html.js .page-home .reveal {
-  opacity: 1;
-}
-
 /* A prescribed fragment starts with a lower-case letter: presentation only, the text itself is
    never altered (the interim hero's description, the interim «what the platform does»). */
 .home-plate__fragment::first-letter,

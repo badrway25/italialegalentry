@@ -617,6 +617,9 @@ def assign(
     actor=None,
     request=None,
 ) -> CaseAssignment:
+    """Grant ``assignee`` a role on ``case``. Refused on a CLOSED file (``CaseAssignment.clean``, CASE_LIFECYCLE.md §4
+    rule 5): the file's row is locked first, so a closing that commits meanwhile is seen, not raced."""
+    CaseFile.objects.select_for_update().filter(pk=case.pk).exists()
     assignment = CaseAssignment(
         case=case,
         assignee=assignee,

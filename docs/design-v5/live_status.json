@@ -1,6 +1,6 @@
 {
   "schema": "ile-live-status-v54/1",
-  "updated": "2026-10-16",
+  "updated": "2026-10-28",
   "families": [
     {
       "key": "w1-p",
@@ -145,6 +145,38 @@
       "decision": "w4-b/REVIEW.md",
       "tag": "v54/w4-b",
       "date": "2026-10-16"
+    },
+    {
+      "key": "w4-a",
+      "title": "Telefono e arabo, ogni pagina — 106 stati di pagina × fr, ar × otto telefoni, 320 e il mouse: la cornice entro 120 px, nessun trabocco da 320 a 932, il primo oggetto nel primo schermo (le pagine d’errore col telefono di lato comprese), ogni bersaglio isolato 44 × 44 sotto un dito, i nomi nell’altra direzione sul bordo di lettura della pagina, il telefono e l’e-mail dell’impresa da sinistra a destra in arabo, i comandi del video del Forum mai specchiati, l’anello del fuoco non più tagliato dal bordo dello schermo (le pagine pubbliche, la barra della console); il CSS comune più leggero",
+      "state": "v5",
+      "decision": "w4-a/REVIEW.md",
+      "tag": "v54/w4-a",
+      "date": "2026-10-17"
+    },
+    {
+      "key": "w4-c",
+      "title": "Prestazioni e accessibilità, il consolidamento — ogni tipo di pagina misurato sul gemello compresso 8782 (78 tipi × fr, ar × 1440, 390, 4G lento e CPU × 4: LCP con la mediana più lenta a 1,5 s, ogni overlay aperto a freddo entro 120 ms, CLS nel budget ovunque — il caricamento di un documento da 0,04–0,07 a 0,000); i controlli critici d’accessibilità in francese e in arabo su 101 pagine (axe 0, ogni fermata della tastiera visibile e mai coperta, colori forzati, 400 %, spaziatura del testo): il modulo di ripresa del questionario dice i suoi errori come ogni altro, «Ma situation» dichiara lo scopo dei due campi personali, il Dépôt non resta muto se il suo modulo tarda o si perde, i nomi inglesi delle policy marcati in inglese",
+      "state": "v5",
+      "decision": "w4-c/REVIEW.md",
+      "tag": "v54/w4-c",
+      "date": "2026-10-27"
+    },
+    {
+      "key": "w4-d",
+      "title": "La prontezza all’integrazione, l’ultima costruzione prima del candidato al rilascio — la valutazione del questionario cita di nuovo le fonti del percorso (un errore nascosto le perdeva a ogni valutazione); il Forum virtuale e la newsletter si aprono solo con le pagine legali pubblicate; la pagina d’accesso invita a creare un conto solo mentre la registrazione è aperta; un fascicolo concluso non riceve nuove assegnazioni; i conteggi delle regole seguono il seed (16 candidate, nessuna in vigore); il codice morto rimasto tolto, il CSS comune più leggero (main.css 31 637 → 31 244 B); le note di rilascio della v2.0.0 complete per il candidato. La quarta ondata è conclusa",
+      "state": "v5",
+      "decision": "w4-d/REVIEW_PART2.md",
+      "tag": "v54/w4-d",
+      "date": "2026-10-27"
+    },
+    {
+      "key": "rc-fix",
+      "title": "Le correzioni del candidato al rilascio v2.0.0 — quello che la validazione ha trovato: una lista di eccezioni rimasta nei test delle icone svuotata; Pillow portato alla 13.0.0, che chiude le 38 vulnerabilità note della 12.3.0; un documento il cui file non c’è più risponde «non trovato» invece di un errore del server, sempre dopo i controlli dei permessi; il modello dei permessi aggiornato sul divieto per l’amministratore di concedersi il superadmin",
+      "state": "v5",
+      "decision": "rc-fix/REVIEW.md",
+      "tag": "v54/rc-fix",
+      "date": "2026-10-28"
     }
   ],
   "surfaces": {

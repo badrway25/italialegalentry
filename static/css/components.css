@@ -58,10 +58,6 @@
   stroke-width: 2;
 }
 
-.icon--accent {
-  color: var(--color-accent-600);
-}
-
 /* A glyph set in a line of text — an eyebrow — rather than in a flex row. The reset draws every svg as
    a block (base.css), which put the glyph on a line of its own above its words: here it sits on the
    line, centred on it, a quarter of an em from the word it marks. */
@@ -219,97 +215,6 @@
   font-size: var(--font-size-caption);
   font-style: normal;
   color: var(--text-muted);
-}
-
-/* =========================================================================
-   12. Four entrances (hero-level component) — exactly four, no boxes
-   ========================================================================= */
-.entrances {
-  display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: entrance;
-  border-block-start: var(--border-width) solid var(--border-subtle);
-}
-
-@media (min-width: 48rem) {
-  .entrances {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 72rem) {
-  .entrances {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.entrance {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-8) var(--space-6) var(--space-10);
-  border-block-end: var(--border-width) solid var(--border-hairline);
-  transition: background-color var(--duration-base) var(--ease-standard);
-}
-
-.entrance:first-child {
-  padding-inline-start: 0;
-}
-
-@media (min-width: 48rem) {
-  .entrance:nth-child(odd) {
-    padding-inline-start: 0;
-  }
-
-  .entrance:nth-child(even) {
-    border-inline-start: var(--border-width) solid var(--border-hairline);
-  }
-}
-
-@media (min-width: 72rem) {
-  .entrance:nth-child(n) {
-    padding-inline-start: var(--space-6);
-    border-inline-start: var(--border-width) solid var(--border-hairline);
-  }
-
-  .entrance:first-child {
-    padding-inline-start: 0;
-    border-inline-start: 0;
-  }
-
-  .entrance:last-child {
-    padding-inline-end: 0;
-  }
-}
-
-.entrance:hover,
-.entrance:focus-within {
-  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
-}
-
-.entrance__icon {
-  inline-size: 3.5rem;
-  block-size: 3.5rem;
-  color: var(--color-primary-900);
-  stroke-width: 1.1;
-}
-
-.entrance__cta .icon {
-  transition: translate var(--duration-base) var(--ease-out);
-}
-
-.entrance:hover .entrance__cta .icon,
-.entrance__cta:focus-visible .icon {
-  translate: 4px 0;
-}
-
-[dir="rtl"] .entrance:hover .entrance__cta .icon,
-[dir="rtl"] .entrance__cta:focus-visible .icon {
-  translate: -4px 0;
 }
 
 /* =========================================================================

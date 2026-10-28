@@ -43,6 +43,13 @@ And allauth's own way round a middleware is closed (``forget_what_a_password_ste
 re-authentication allauth RESUMES the POST it interrupted by calling the view itself, so no middleware runs on it.
 A session that owes the factor resumes nothing on a password step.
 
+And a privilege is not a path (finding F-8). A moderator moderates on the virtual forum's public pages; staff
+preview unpublished news, «living» sheets, FAQ, glossary and Phase 3 pages on the public site. Those branches decide,
+inside a view, that the account acts with a staff privilege — no path tells the middleware so — and each calls
+``require_second_factor`` before it acts: the same two rules, the same redirects, raised as ``SecondFactorRequired``
+and answered here (``process_exception``), so a public visitor's request is never touched and a staff account meets
+the rule wherever the privilege lives.
+
 Must be listed AFTER ``AuthenticationMiddleware`` (and allauth's ``AccountMiddleware``). Anonymous
 visitors are left alone — they meet the login page first. Signing out always stays reachable, and so
 does the TOTP activation page itself: an account that cannot leave and cannot enrol is an account that
@@ -152,6 +159,35 @@ def second_factor_response(request):
     return None
 
 
+class SecondFactorRequired(Exception):
+    """
+    A staff privilege was about to be exercised outside the guarded paths by a session that owes the second factor.
+
+    ``due`` is what the policy asks (``services.ENROL`` or ``services.PRESENT``). ``BackofficeMFAMiddleware`` answers it
+    with the redirect the guarded perimeters answer with.
+    """
+
+    def __init__(self, due: str):
+        super().__init__(due)
+        self.due = due
+
+
+def require_second_factor(request) -> None:
+    """
+    The second-factor policy where a staff privilege is exercised, whatever path the view lives on (finding F-8).
+
+    The guarded perimeters are paths: the back office, the reserved area, ``/documents/``. A privilege is not: a branch
+    of a public view that decides «this account acts as staff» — a moderator's powers on the virtual forum, a staff
+    preview of unpublished content — calls this before it acts. A session that owes the factor (``second_factor_due``:
+    enrol, or present the device the account holds) leaves through ``SecondFactorRequired``; the middleware sends it to
+    the activation page or to allauth's MFA re-authentication, and back to the page it asked for. An account the policy
+    does not cover, or a session that presented its factor, goes on unchanged.
+    """
+    due = services.second_factor_due(request, getattr(request, "user", None))
+    if due is not None:
+        raise SecondFactorRequired(due)
+
+
 def forget_what_a_password_step_must_not_resume(request) -> None:
     """
     On allauth's password re-authentication, drop the request allauth suspended if this session owes the factor.
@@ -186,6 +222,15 @@ class BackofficeMFAMiddleware:
         if response is not None:
             return response
         return self.get_response(request)
+
+    @staticmethod
+    def process_exception(request, exception):
+        """A privileged branch outside the guarded paths asked for the factor (``require_second_factor``)."""
+        if not isinstance(exception, SecondFactorRequired):
+            return None
+        if exception.due == services.ENROL:
+            return mfa_redirect(request)
+        return second_factor_redirect(request)
 
     @staticmethod
     def must_redirect(request) -> bool:

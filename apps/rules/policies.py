@@ -20,6 +20,16 @@ def may_draft(user) -> bool:
     return roles.has_role(user, roles.LEGAL_EDITOR, roles.ADMINISTRATOR)
 
 
+def may_review(user) -> bool:
+    """
+    The role that approves a rule, puts it in force and retires it: role:legal_approver.
+
+    The back office's workflow actions are offered on this answer (finding F-8): the rule editor asks the policy the
+    platform asks, never the model permission alone.
+    """
+    return roles.has_role(user, roles.LEGAL_APPROVER)
+
+
 def may_approve(user, rule: LegalRule) -> bool:
     """
     A legal approver, who is not the author.
@@ -27,7 +37,7 @@ def may_approve(user, rule: LegalRule) -> bool:
     The second half is the whole point. Without it the role separation is decorative: one account
     holding both hats produces a rule whose review records the same judgement twice.
     """
-    if not roles.has_role(user, roles.LEGAL_APPROVER):
+    if not may_review(user):
         return False
     return rule.created_by_id is None or rule.created_by_id != user.pk
 
@@ -47,7 +57,7 @@ def _legal_rule(user, action: str, obj: LegalRule) -> bool:
             return False
         return may_draft(user)
     if action in {"activate", "retire"}:
-        return roles.has_role(user, roles.LEGAL_APPROVER)
+        return may_review(user)
     if action == "new_version":
         return may_draft(user)
     return False

@@ -17,7 +17,7 @@ django-unfold==0.107.0
 fido2==2.2.1
 gunicorn==26.2.0
 packaging==26.3
-pillow==12.3.0
+pillow==13.0.0
 psycopg==3.3.5
 psycopg-binary==3.3.5
 pycparser==3.0

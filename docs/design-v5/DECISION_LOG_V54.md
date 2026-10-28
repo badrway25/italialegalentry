@@ -178,6 +178,13 @@ names; DL54-02 … DL54-16 are §8.3's fifteen entries, in §8.3's order.
 | DL54-153 | 16 Oct 2026 | W4-B, the motion audit (read first, `QA/v54/w4-b/AUDIT.md`): the Motion library leaves — «Ma situation»'s question change on the Web Animations API through motion.js's gate (same clocks, distance and order; the curve the token's), shell.js's reveal and components.css §29 / `initReveal` / `initCounters` gone (K17), `motion` and its parts out of the package files, the bundle test rewritten; the modules one entry alone imports inlined into it (one script request fewer); the rail's fold instant (R10, measured); the keyboard's tier 0 in the portico and on the skip link; the forced-colours current entry its own marker (W3-D's O2); the review's m2–m4 answered; after W4-B's own review and accessibility check, «Ma situation»'s change at once from the keyboard and whole after an interruption, the links' tier 0, `--ease-exit` back to its one role; the paths outside the slice, for the merge | §1.5 (tiers, R10, K17, «Engine», MS-O1/O2); §2.2; §2.3; §2.6; §3.6 item 2; DL54-101 item 4; `QA/v54/intfix/REVIEW.md` m2–m4; `QA/v54/w3-d/NOTES.md` «Handed to»; `QA/v54/w4-b/REVIEW.md`, `A11Y_PERF.md` |
 | DL54-154 | 16 Oct 2026 | Steward, the w4-b merge: W4-B's entry renumbered DL54-153 (after design-v5's DL54-132 … DL54-152); the two no-owner paths assigned as W4-B's slices (`scripts/build_frontend.mjs`'s `INLINED` list, `FRONTEND_DEPENDENCIES.md`'s `motion` row) and the dependency's removal in `package.json` and `package-lock.json` adopted as the steward's own write (plan §3.6 item 2), the two files the steward's whole; the shared CSS gate passed — `dist/main.css` 31 906 → 31 799 B on every page, the console page types 40 140 → 39 978 B —, every ceiling lowered to the merged weight; the home's script 51 249 → 24 138 B gzip, §2.6's 45 KB held on every page type; the family row in the status file, no surface key changed; DL54-152's missing index row added | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.6, §3.6 item 2; DL54-101; DL54-151; DL54-152; DL54-153 |
 | DL54-155 | 16 Oct 2026 | Steward, the w4-d merge (part 1): release engineering on design-v5 — CI's two runs on `ubuntu-24.04` (Python 3.12 · PostgreSQL 16, the production target: the server's major versions with its pinned closure; Python 3.13 · PostgreSQL 17, development), a step asserting both versions; the release of V5.10 named once in the runbook, the checklist and ROLLBACK.md (the annotated tag `v2.0.0` after the fast-forward; `pre-v5-main-2026-10` on `a3ac318` a reference point, never a server rollback; a downgrade a restore; the migration re-check that lists the files); one bar for PRODUCTION_READY; the go-live calendar verified, nothing to fix in code; the release notes drafted and assigned to w4-d; REVIEW_PART1's m4 kept out of the published tree; no tag, nothing deployed | V5.10; V5.9 §14–§17; plan §3.6 item 4; `QA/v54/w4-d/NOTES.md`, `REVIEW_PART1.md` |
+| DL54-156 | 16 Oct 2026 | Steward, the sec-f8 merge: F-8 closed on design-v5 — the back office grants no more than the platform (`core.admin_base.PolicyBoundAdminMixin`: the model permission AND the policy's roles AND the domain's `readable_by` rows AND `can` per object), so role:operator reads in `/backoffice/` only the case files it holds a live assignment on; every other screen with personal data on its platform policy (documents, the help desk, public submissions, the virtual forum, the Forum's governance, notifications and the outbox, consents, the audit trail, orientation, integrations, the legal rules' workflow); a CLOSED file read-only for everybody, a checklist line's status through the domain with its `case.checklist.status` event; a view grant never writes; a hidden field no filter, no account offered to a role that may not read accounts; a staff privilege on a public path (moderation, previews of unpublished content) meets the second factor; the integrations API's NUL bytes, lone surrogates and other unexpected input a controlled 4xx, never a 500; the audit's summary; the review SHIP_AFTER_FIXES, its four majors fixed before the merge; V5.10's list verified item by item on the merged branch, DENY and ALLOW; the family «sec-f8» registered outside the waves (38 entries, 8 whole, 30 slices); 2 243 + 1 018 tests passed (3 skipped), 55 in Chromium; nobody's access widened; the owner's questions Q-1…Q-9; no tag, no push, nothing deployed | V5.10; V5.9; V5.5; PERMISSION_MODEL §3.4, §3.5, §5; AUDIT_MODEL §6.1; DL54-130; DL54-132 item 11; DL54-152 item 8; plan §2.2; `QA/v54/sec-f8/NOTES.md`, `REVIEW.md` |
+| DL54-157 | 16 Oct 2026 | W4-A, the mobile + RTL sweep (`QA/v54/w4-a/SWEEP.md`, `NOTES.md`): 106 page states × fr, ar × eight phone viewports, 320 and a mouse, and the Arabic overflow probes, every capture looked at; twenty-two defects, twenty-one fixed in their owning families' files (one major: a phone number laid out right to left; two the re-sweep's look found in W3-E's registers: a reference's point closing an Arabic line, a result's French title at the far edge), the locked copy's breaks recorded for B1; SP-8 read with WCAG 2.5.8's inline exception; RE-4 restored for the passage's station words; a foreign title takes its own direction in the phone bar (`unicode-bidi: plaintext`); a phone on its side seats the error pages' door at the end; W4-B's O1 taken (a focus brought in from below keeps its whole ring on a phone); the shared payload down (main.css 31 799 → 31 716 B, the console page types 39 978 → 39 887); the fix pass (`NOTES.md` «Review fixes», item 10): a name in the other direction than the page on its reading edge (the review's M1 and its class), every notice's address 44 px under a finger (the go-live notice's included), the phone bar's account ring inside its box, «Profil» on its edge, main.css → 31 637 B and the console page types → 39 798 | plan §3.6 item 1, §1.4 SP-8, §1.12 N13 / N14 / N19, §2.5, §2.6; V5.5, V5.8; DL54-129 (W3-D's hand-off) |
+| DL54-158 | 17 Oct 2026 | Steward, the w4-a merge (a retry: the first attempt, 16 Oct, stopped at the tests with the shared database down; this one on the database bridge): W4-A's entry kept as DL54-157 (W4-C's branch, merging second, renumbers); the one path no family held assigned as W4-A's slice (`static/css/dev/showcase.css`'s phone layout; the palette unassigned), the 37 delegated paths read in their owners' files; the shared CSS gate passed — `dist/main.css` 31 799 → 31 637 B on every page, the console page types 39 978 → 39 798 B, every page type lighter —, every ceiling lowered to the merged weight; 2 028 + 335 tests passed on the branch (the ten browser files the outage had left included), 277 on design-v5 after the merge; the accessibility check's runner on the QA records under a finger (106 loads, nothing new); DS 2026 §2's six weights regenerated; the family row in the status file, no surface key changed | V5.8 (definitive ruling, 12 Oct 02:15); V5.5; plan §2.2, §2.6, §3.6 item 1; DL54-154; DL54-157; `QA/v54/w4-a/NOTES.md`, `REVIEW.md`, `A11Y_PERF.md` |
+| DL54-159 | 16 Oct 2026 | W4-C, the performance and accessibility consolidation: the accessibility critical checks on every page type (101 pages × fr, ar × 1440, 390: the AX tree, axe 4.13.0 from disk, the keyboard walk, pixel and non-text contrast, forced colours, 400 %, 1.4.12, every overlay opener, the tooltips, the forms' errors, Arabic's language of parts) — no WCAG 2.2 AA failure, 0 axe violation nodes on 404 views; F1, the questionnaire's resume form, says its errors through the shared summary; the performance sanity check on the twin 8782 serving the branch (78 page types × 4 cells × n = 5, profile A + CPU × 4) — LCP ≤ 1 508 ms everywhere, INP p90 ≤ 120 ms on seven overlays' cold opens, one evident CLS problem (the upload page, 0.042–0.071 on every load) fixed as P1 (the Dépôt's zone keyed on `html.js`: 0.000 at n = 9); the long tasks after the first paint the rest of the first layout; requests above W1-0's count only by V5.8's page sheets and the helpers chunk, HTTP/2 measured; no shared ceiling moved; WebKit and Firefox not run (no binary); the review fixes: «Ma situation»'s input purposes (1.3.5, missed by the sweep), P1's lost-module path (the browser's own control until `depot.js` arrives, paid in the page sheet: CLS 0.000), the policies' names `lang="en"`, four budget letters accepted as exceptions, the letterhead's shift and `card.css`'s colon to W4-D | plan §3.6 item 3, §2.6, §2.8, §1.6, §2.5; V5.5; V5.8; V5.9 §15; V5.10; DL54-151; DL54-153 … DL54-155; `QA/v54/w4-c/NOTES.md`, `A11Y_SWEEP.md`, `PERF.md`, `REVIEW.md`, `A11Y_PERF.md` |
+| DL54-160 | 27 Oct 2026 | Steward, the w4-c merge (attempt 3: the first stopped at the tests with the shared database down, 16 Oct; the second cut by the machine's reboot, 17 Oct; this one took over the second's lock, on the Docker database again): W4-C's entry renumbered DL54-159 after W4-A's two; `SituationForm`'s two widgets assigned as W4-C's slice; the shared CSS gate passed — `dist/main.css` 31 637 → 31 637 B, the console page types 39 798 → 39 798 B, `documents.css` 5 566 → 5 564 B —, every ceiling the merged weight; the targeted tests on the merged branch (941 passed + 311 in Chromium, no skip, no crash); `live_status.json`'s family row w4-c, no surface key changed; what is handed on to W4-D, the steward, W3-C / W3-E and W2-C1 | plan §2.2, §2.6, §3.6 item 3; V5.5; V5.8; V5.10; DL54-151; DL54-158; DL54-159; `QA/v54/w4-c/` |
+| DL54-161 | 27 Oct 2026 | Steward, the w4-d merge (part 2): integration readiness on design-v5 — the last build before the release candidate; the branch already synced (W4-C in, DL54-160), so no conflict and no entry renumbered (part 2 wrote none); its 27 paths assigned (nine in no family's slice, eighteen delegated, each as the slice where its fix landed) and one more the merge's own (W2-B's two sign-in measures, red after F-4, given the open sign-up); the shared CSS gate passed lighter — `main.css` 31 637 → 31 244 B, the console page types 39 798 → 39 405 B, every ceiling the merged weight; the targeted tests on the merged branch (1 816 passed + 247 in Chromium, the two red fixed: 69 passed); **Wave 4 is complete** — W4-A, W4-B, W4-C, W4-D merged; the next step is the release-candidate validation (V5.10's fourteen gates); no push, no public tag, nothing on main, nothing deployed | plan §2.2, §3.6 item 4; V5.5; V5.8; V5.9; V5.10; DL54-155; DL54-156; DL54-160; `QA/v54/w4-d/` |
+| DL54-162 | 28 Oct 2026 | Steward, the rc-fix merge: the release candidate v2.0.0's fixes on design-v5 — gate 6's stale allow-list emptied, gate 12's 38 Pillow advisories closed (12.3.0 → 13.0.0, the shared venv upgraded), a missing stored file a 404 after both permission gates instead of a 500 (SMOKE D1), PERMISSION_MODEL's superadmin row and §5.10 corrected (SECURITY D-4); the family `rc-fix` added (the checker's id, the manifest's nine entries); no conflict; no front-end source changed, the bundles rebuilt byte for byte; the targeted tests on the merged branch (815 passed, one mtime check green after the rebuild); pip-audit 0; tag `v54/rc-fix`; no push, no public tag, nothing on main, nothing deployed | V5.5; V5.9; V5.10; DL54-161; `QA/v54/rc-fix/` |
 
 ---
 
@@ -7013,3 +7020,729 @@ parallel; this entry records the part's decisions as well, as the lane's notes a
 §2.2 (a file not in the manifest has no writer until the steward assigns it) and §3.6 item 4. `QA/v54/w4-d/NOTES.md`,
 `REVIEW_PART1.md` and `GO_LIVE_PHASE.md`. The ownership checks, the scan and the test logs are in
 `C:/tmp/ile_v5_council/evidence/v54/w4-d/merge-1/`.
+
+## DL54-156 · 16 October 2026 · Steward, the sec-f8 merge: F-8 closed on design-v5 — the back office grants no more than the platform, every screen with personal or case data reading the domain's rows and asking its object policy; a staff privilege on a public path meets the second factor; the integrations API answers unexpected input with a controlled response; the family registered outside the waves; nothing deployed
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-sec-f8` into design-v5 on 16 October 2026).
+The briefs: the owner's V5.10 (F-8 a release blocker — the audit's scope not reduced, no access widened, every item of
+its list verified with DENY tests as strong as the ALLOW tests, by every F-8 agent, this merge included), V5.9 (never
+deploy, never touch production) and V5.5. What the lane hands to the merge: `QA/v54/sec-f8/NOTES.md` (§1 the audit,
+§3 the fix, §4 the list, §6 the owner's questions, §10 «Review fixes», §11 «At the merge») and `REVIEW.md`.
+
+1. **What merged: the finding F-8, fixed** (sec-f7's review, «observation for the back-office hardening»; GitHub
+   checkpoint #3's adversary, on design-v5 `5bf2f90`).
+   - **The defect.** The back office (`/backoffice/`, `accounts.admin_site.BackofficeAdminSite`, reached only after the
+     second factor since sec-f5) answered the model permission alone, and `accounts.roles.ROLE_PERMISSIONS` grants by
+     application, never by row. So role:operator, which holds the «cases» view and change permissions (seeded in
+     production by `seed_all`), listed and read every case file, assignment and assessment there, while
+     `cases.policies` and `CaseFileQuerySet.readable_by` give an unassigned operator nothing on the platform and
+     PERMISSION_MODEL §5.1 says «assigned». Other roles read or changed there what their own policy refuses (item 3).
+   - **Also in the brief, and closed.** The checklist inline editable on any file, a line's status changed there
+     writing no `case.checklist.status` (sec-f7 NOTES «Review fixes» 2; DL54-132 item 11); the policies' administrator
+     branch ignoring read-only, so an administrator changed a CLOSED file's lines (sec-f7 NOTES, «The review's other
+     observations stand»); the second-factor perimeter defined by path, so virtual-forum moderation and the staff
+     previews of unpublished content lived outside it (sec-f5 REVIEW, «Outside this fix»); NUL bytes in the
+     integrations API's JSON bodies, never probed (DL54-152 item 8).
+   - **The commits.** The audit before any change (`d192a4c`); the case screens (`fe1e595`); every other screen
+     (`6b62891`); the second-factor perimeter (`3123b09`); the API (`e1d01cc`); PERMISSION_MODEL §3.5 and AUDIT_MODEL
+     §6.1 (`668ca70`); the notes (`9c8dda4`); the independent review (`acc67c9`); its four findings fixed (`3458d2b`,
+     `8bbaca1`, `d7ffd9e`, `77a2876`) and the notes (`4e7fa78`); then the merge step's commits on the branch (the sync
+     `04a31b2`, the manifest `74bb365`, «At the merge»). 39 paths, with the manifest and the checker's test 41: no
+     template, stylesheet, script, migration or catalogue word.
+2. **The rule** — `core.admin_base.PolicyBoundAdminMixin`. A back-office screen needs the model permission AND the
+   platform's own rule: it opens only to the roles the model's policy names (`policy_roles`); it reads its rows through
+   the domain's `readable_by` (lists, counts, searches, filters, autocompletes, object, history and delete pages all read
+   from that queryset, so a row the account may not read is answered as an id never issued); and an object's page asks
+   `can(user, "view" | "change" | "delete", obj)` (`object_policy`). Each condition is necessary, so nobody gains
+   anything; a superuser passes every gate, as it passes every policy (PERMISSION_MODEL §3.4). The policies, not
+   narrower grants: one answer by construction, robust to a production group's stale permissions, and
+   `ROLE_PERMISSIONS` (sec-f5's area, PERMISSION_MODEL §2.1) untouched — the grants now inert in the back office are
+   listed for the owner (Q-2). Where no platform policy exists (the outbox, consents, the audit trail), the document
+   that governs the data decides. On every screen (the review's F8R-2 and F8R-3): a field the page hides is no filter
+   and no search of the list (`BaseModelAdmin.hidden_fields`, refused as Django refuses any lookup it does not allow),
+   and to an account that may not open the accounts screen no form, inline or list filter names an account (the account
+   fields read-only, set by the workflow; an account filter narrowed to the rows' own accounts).
+3. **The audit, summarised** (NOTES §1: the back office's registry — 166 rows — crossed with `ROLE_PERMISSIONS` and with
+   every policy registered in `accounts.permissions`; each screen that shows or changes personal or case data read,
+   facts as of `5bf2f90`):
+
+   | Area | Before (`5bf2f90`) | After |
+   |---|---|---|
+   | Case files — the file, its checklist, assignments and assessments | role:operator: every file, assignment and assessment (the questionnaire's answers with it); the purpose and the pathway editable on any file, CLOSED included; a line's status changed with no domain event; the responsible actor rewritable; the `case` autocomplete enumerating every reference | `readable_by` (the owner, a LIVE assignee, the administration) and `readable_assignments`; `can` per object; a CLOSED file read-only for everybody, a superuser included, and `case_policy` / `checklist_policy` refusing the administrator «change» there («delete» kept: retention); a line's status through `services.set_checklist_status` (`case.checklist.status`: who, line, from, to); purpose, pathway and a made line's responsible actor read-only; nobody acts on their own file there |
+   | Documents | consistent (no file field; the one link, a superuser's, is `documents:download` → `_serve`); the administrator listed deleted documents' metadata; the register's export unrecorded | the rows `documents.policies` lets the account read (no deleted document but for a superuser); `can` per object; the export recorded (`documents.exported`) |
+   | Help desk | role:operator: every request's shape, its file, assignee and mandate | `TicketQuerySet.readable_by`; the operator dispatches on the platform's register, the question deferred |
+   | Public submissions (three screens) | role:operator read, changed, exported and anonymised every submission; the administrator hard-deleted one, its consent proof with it | `enquiries.policies`' roles (staff, administration); `can` per object; no hard delete but a superuser's; the writing actions need «change» |
+   | Virtual forum (nine screens) | role:staff moderated and read every membership (the name and organisation a member chose not to show, REQ-FOR-06), hidden post and report | the moderators `community.policies` names; trusting a member recorded (`community.membership.trusted`) |
+   | Forum governance (eight screens) | role:staff read every profile, proposal and mandate and granted mandates | the administrator's (`governance_policies`); staff keeps the public Forum's screens |
+   | Notifications and the outbox | role:operator read every message; view grants read the bodies (a newsletter's bearer link included) and resent or cancelled mail | `portal.policies`' roles; the bodies only with «change»; resend and cancel need «change», each recorded |
+   | Consents and subscriptions | role:staff (view) recorded anyone's withdrawal; the subscriber's two bearer tokens displayed; the subscription's evidence editable | the withdrawal needs «change», recorded (`consents.withdrawn`); the tokens never displayed nor filterable; the subscription read-only |
+   | Audit trail | role:legal_approver read every event (sign-ins, addresses, every file's events) | the administration reads it whole; any other account the legal rules' trail only (AUDIT_MODEL §6.1 gains the row) |
+   | Orientation | the administrator read every questionnaire's answers, anonymous ones included | the answers a superuser's only, neither shown nor filterable; the shape, the anonymisation on request and the statistics stay |
+   | Integrations | a view grant requeued and cancelled outbound events | requeue and cancel need «change», each recorded |
+   | Legal rules (the review's F8R-1) | a view-only administrator approved a rule and put it in force; a legal editor approved another editor's rule; the approver rewrote the text it approved; a view grant wrote a new version by URL | each action offered to the role its verb names in `rules.policies` and each rule asked `can(user, verb, rule)` before the service; the approver reads, never rewrites; a new version needs «add» besides the policy |
+   | Accounts, portal messages, forum registrations, allauth's and MFA's screens, groups, selection / companies / Academy, API keys and logs | consistent (selection, companies and Academy a superuser's only: no role holds them) | access unchanged (every screen gains item 2's hidden-field and account-field rules); the administrator's accounts screen is the owner's question Q-1 |
+   | The second-factor perimeter | three paths (the back office, the reserved area, `/documents/`) | the privilege: `accounts.middleware.require_second_factor` in the virtual forum's moderator branch and in the seven staff previews of unpublished content (news, «living», FAQ, glossary, the ecosystem, the pathways, the institutional pages), answered by the middleware's `process_exception` with the perimeters' own redirects; a source guard names a future branch that forgets it |
+   | The integrations API | a 500 for NUL bytes, lone surrogates, non-ASCII signatures, malformed timestamps, impossible parameters and deep nesting | a controlled 4xx; nothing stored; the nonce not consumed; a clean body accepted |
+
+4. **The review** (lane `sec-f8-review`, `QA/v54/sec-f8/REVIEW.md`, on `9c8dda4`): **SHIP_AFTER_FIXES — the headline
+   defect fixed and holding**: the reviewer could not read or enumerate a case file, a document, an assignment, an
+   assessment, a help-desk request or a public submission the platform forbids (lists, searches by reference and by the
+   owner's address, five autocomplete fields, unfold's sidebar search, history and delete pages). Four MAJOR gaps inside
+   the audit's declared scope, each fixed by lane `sec-f8-fix2` before this merge with tests that failed on the code
+   before it: **F8R-1** the legal rules' workflow actions (`3458d2b`, 16 of 20); **F8R-2** a hidden field still a filter
+   of its list — a subscriber's token recoverable one predicate at a time (`8bbaca1`, 8 of 14); **F8R-3** editorial
+   forms listing every account's address to staff and content editors (`d7ffd9e`, 27 of 35); **F8R-4** a lone surrogate
+   in a signed webhook body a 500 (`77a2876`, 9 of the 11 new). The same classes were fixed beyond the letter (NOTES §10:
+   the approver's rewrites, the new-version URL, the diff and preview pages, a moderator handing a membership to another
+   account, `handled_by` and an assignment's assignee frozen for the roles that may not read accounts). The reviewer's
+   own suite: 71 passed after the fixes (49 passed, 22 failed before — the four findings' DENY tests).
+5. **V5.10's list, verified on the merged branch** (NOTES §11 names every test): each item has DENY and ALLOW tests in
+   the seven modules the fix created (212 tests: 73 of the first 132 and 60 of the review fixes' 80 failed on the code
+   before their fix, every failure a reproduction) and in the suites they stand beside, and every one passed in item 9's
+   runs —
+   - **case files** — assigned and scoped access, no enumeration, the view / change / delete boundaries
+     (`apps/cases/tests/test_backoffice_follows_the_policy.py`, sec-f7's two retargeted back-office tests);
+   - **documents** — object-level access, no unrelated document, the protected download (`TestDocuments`,
+     `tests/deployment/test_private_documents_are_never_served.py`, `apps/documents`);
+   - **accounts and person data** — the roles' screens, no form or filter naming an account, no hidden field read back
+     (`TestAccounts`, `test_forms_name_no_account.py`, `test_a_hidden_field_is_no_filter.py`);
+   - **requests, help desk, selection** — `TestTheHelpDesk`, `TestPublicSubmissions`, `TestSuperuserOnlyScreens`;
+   - **admin** — the closed file, the view grants' writes, the mandates, the hard delete, the tokens, the answers, the
+     legal rules' workflow (`TestAClosedFileIsReadOnlyForTheAdministratorToo`,
+     `apps/rules/tests/test_backoffice_follows_the_policy.py`);
+   - **audit** — the checklist's `case.checklist.status`, the new records, the legal approver's trail
+     (`TestTheAuditTrail`);
+   - **2FA** — six previews, an unpublished article, the moderators' reading and moderation POSTs, enrolment, and what
+     stays (`apps/accounts/tests/test_second_factor_wherever_the_privilege_lives.py`, sec-f5's
+     `test_backoffice_second_factor.py`);
+   - **the integrations API** — NUL and lone surrogates in body, headers and query string, malformed headers,
+     impossible parameters, deep nesting (`apps/integrations/tests/test_unexpected_input.py`,
+     `tests/deployment/test_nul_bytes.py`).
+6. **The other security properties, checked at the merge.** Nobody's access widened: the administrator role gains no
+   case screen (it holds no «cases» model permission and reads files on the platform), a superuser stays the last resort,
+   `ROLE_PERMISSIONS` is untouched. sec-f5's second factor: its two rules, its pages and its exemptions unchanged, now
+   also met where a staff privilege lives outside the guarded paths. sec-f7's «who may» table: unchanged, its back
+   office's capacities kept, two of its tests retargeted with their intent (another file's assignment is not found where
+   it answered 403). `readable_by`: read by the back office, never changed. Audit events: seven new actions recorded
+   (`consents.withdrawn`, `notifications.outbox.resent` and `.cancelled`, `integrations.outbound.requeued` and
+   `.cancelled`, `community.membership.trusted`, `documents.exported`), `case.checklist.status` now written from the
+   back office too, none removed. Rate limits, CSRF and CSP: untouched. No package added; personas only through minted
+   sessions; test-only passwords.
+7. **The pre-merge sync and the bundles** (`04a31b2`). design-v5 had moved from `5bf2f90` to `fad36e0`: 49 commits —
+   the W4-B merge, DL54-153, DL54-154, the changelog line and its note; the W4-D part 1 merge and DL54-155. No conflict
+   and no path in common; no Python module of `apps/` came with the sync. Both dist trees deleted and rebuilt from clean
+   on the branch: the 39 files byte for byte, the chunk names included, so the branch carries design-v5's bundles and
+   nothing is rebuilt on design-v5. **The weight (V5.8)**: no stylesheet changed — `main.css` 31 799 B on every page,
+   the console page types 39 978 B, every recorded ceiling where DL54-154 put it.
+8. **The family «sec-f8» is in the manifest, outside the waves** (`74bb365`): wave 0 as devops, sec-f5, intfix and
+   sec-f7, `steward` false, DL54-01's branch and worktree, no merge tag. 38 entries, each with its reason — 8 whole (the
+   seven new test modules, `docs/design-v5/QA/v54/sec-f8/**`) and 30 slices: the 24 files no family held (the admin
+   base, eleven admin modules, the cases and rules policies, the content apps' preview branches, the virtual forum's
+   views, the API's three modules, AUDIT_MODEL.md) and six files of five families — sec-f5's middleware and
+   PERMISSION_MODEL.md, sec-f7's case screens and its test module, W2-D's and W2-E's `pages/services.py`, W3-F1's
+   `pathways/services.py`. Each slice read in the diff and staying inside it. `check_ownership.py sec-f8 design-v5`
+   before the manifest's commit: 39 paths, 9 inside, 30 slice → PASS; after it the steward's two paths join (the
+   manifest, steward-only; the checker's test, the steward family's). `--validate`: coherent, 30 families, 783
+   entries.
+9. **The tests** on the merged branch (`74bb365`; the notes' commit after it changes a document only),
+   `TEST_DATABASE_URL=…/ile_v5_l7`, one pytest at a time, `-p no:randomly`, each run gated on
+   `PERFORMANCE_BENCHMARK_LOCK` (W4-C measured in between; logs in `evidence/v54/sec-f8/merge/`):
+   - **the merge brief's list: 2 243 passed, 3 skipped** in 39 min 48 s (`-m "not browser"`) — `apps/accounts` 205,
+     `apps/cases` 206, `apps/documents` 147, `apps/selection` 86, `apps/audit` 8, `apps/forum` 213,
+     `apps/integrations` 91, the content apps (`cms` 45, `news` 68, `living` 33, `faq` 41, `glossary` 52,
+     `ecosystem` 159, `pathways` 98, `pages` 319), `tests/backoffice` 112, `tests/security` 157 (the
+     confidential-material guard with its private table), `tests/deployment` 99, `test_design_docs.py` 40, the
+     checker's test 57 and both bundle-currency tests 10; the three skips are `apps/cases/tests/test_intake.py`'s
+     cases that need a legal rule in force (none is);
+   - **every other app the fix reached: 1 018 passed** in 12 min 7 s — `apps/rules` 120, `apps/community` 48,
+     `apps/helpdesk` 94, `apps/enquiries` 72, `apps/notifications` 95, `apps/orientation` 111, `apps/portal` 216,
+     `apps/companies` 99, `apps/academy` 81 and `apps/partners` 13 (their screens inherit the changed base class), the
+     migration drift 2, the phase console 8, the public pages' compliance 9 and the content pages' 50 (the virtual
+     forum's public page);
+   - **in Chromium**, the 55 browser tests of these suites (the ecosystem's pages, the home page, the person's
+     dashboard — W4-B's scripts and `base.html` beside this branch's server): **55 passed** in 6 min 51 s;
+   - the document and secret guards after the notes (the personal-data guard, the confidential-material guard, the QA
+     password's, `test_design_docs`, the checker's, the inventory's, the environment template's): 145 passed;
+   - `manage.py check`: no issue; `makemigrations --check --dry-run`: no changes; `ruff check .`: clean. On design-v5
+     after the merge (`f03bff4`, its tree the branch's): both bundle-currency tests, the checker's test and
+     `test_design_docs` — 107 passed; `manage.py check` and `makemigrations --check`: clean; `--validate` and
+     `regen_design_inventory.py`: current.
+10. **The record, and what is not done here, on purpose.** Merged with `--no-ff` (`f03bff4`); design-v5's tree is the
+   branch's, nothing rebuilt. No tag: V5.10's release tags are the orchestrator's, after the fourteen gates — this
+   merge meets gate 3 («F-8 complete and merged») and brings gate 4's last item, the API's handling of NUL and
+   unexpected input (F-5, F-7 and the NUL guard were merged before); the other gates are the release-candidate
+   validation's. No push; nothing on main; no restart of 8780; no change to v5-live; no line in
+   `CHANGELOG_V54.md` or `live_status.json` (not a preview surface — DL54-77, DL54-121, DL54-130, DL54-132). The
+   release notes' F-8 line («pending F-8's merge», `docs/RELEASE_NOTES_v2.0.0.md`, w4-d's whole file) is W4-D part 2's
+   to complete, with this entry's summary.
+11. **The owner's questions** (NOTES §6; none blocks the merge, each a decision, not a fix):
+   - **Q-1** — the administrator still makes staff accounts and sets any non-superuser's password, where PERMISSION_MODEL
+     §5.10 says «tranne `is_superuser`, `is_staff`, `groups`»: confirm (and §5.10 says so) or narrow to a superuser;
+   - **Q-2** — the grants now inert in the back office (role:operator's «enquiries», «notifications», «helpdesk»;
+     role:staff's «community» and the governance half of «forum»): the policies gain these roles, or `ROLE_PERMISSIONS`
+     loses the grants in a later clean-up;
+   - **Q-3** — deleted documents' metadata a superuser's only: should the administrator supervise retention there?
+   - **Q-4** — a line's responsible actor is set once: handing a line to another actor needs a domain service with its
+     audit event, which does not exist;
+   - **Q-5** — the administrator role holds no case screen (only a superuser grants or ends an assignment in the back
+     office): granting it would widen the back office within its policy — not done;
+   - **Q-6** — mail bodies hidden from role:staff, a view grant (it reads the team's messages in their own screen);
+   - **Q-7** — the administrator still changes a person's notification preferences (no policy governs them): keep, or
+     read-only;
+   - **Q-8** — `services.assign` does not refuse an assignment on a CLOSED file (it changes who reads the file, not the
+     file);
+   - **Q-9** — role:staff reads every consent record, which §5.11's matrix does not name: confirm or remove;
+   - and the team's decision NOTES §10 states for the owner: staff and content editors no longer pick an editorial
+     row's author or reviewer by hand — the workflow sets them (the creator, the review action), the administration
+     still chooses.
+
+   **The number**: DL54-156, design-v5's next free one.
+
+**Why.** Two authorities that are never compared will disagree, and the one that grants more wins: the back office's
+model permissions were a second door to the personal data the platform's policies guard. Making each screen ask the
+same queryset and the same policy the platform asks closes that door by construction, follows the owner's next policy
+decision without a second edit, and narrows only — no account gains a row or an action anywhere. A privilege keyed on a
+path leaves every privileged branch on another path outside it; keying the second factor on the privilege exercised
+puts moderation and previews under the same rule as the back office. An API that crashes on input it should refuse
+answers attackers with a 500 and a traceback; a controlled 400 that stores nothing answers them with nothing.
+
+**Source.** The owner's V5.10, V5.9 and V5.5. PERMISSION_MODEL §2.1, §3.4, §3.5, §5; AUDIT_MODEL §6.1; CASE_LIFECYCLE.md
+§4 rule 5; sec-f5's REVIEW («Outside this fix»); sec-f7's NOTES («Review fixes» 2, «The review's other observations
+stand»); DL54-01; DL54-77; DL54-121, DL54-130 and DL54-132 (families outside the waves); DL54-152 item 8; DL54-154;
+plan §2.2 (a file not in the manifest has no writer until the steward assigns it). `QA/v54/sec-f8/NOTES.md`,
+`REVIEW.md`. The ownership checks, the rebuild, the scan and the test logs are in
+`C:/tmp/ile_v5_council/evidence/v54/sec-f8/merge/`.
+
+## DL54-157 · 16 October 2026 · W4-A, the mobile + RTL sweep: twenty-two defects found on every page in a phone and in Arabic, twenty-one fixed where they live, the shared payload down
+
+(Numbered after design-v5's DL54-156 at the pre-merge sync — first written as DL54-155, which the w4-d merge took; the steward renumbers it at the merge if another entry lands first.)
+
+1. **The sweep came first, and was looked at** (`QA/v54/w4-a/SWEEP.md`): every surface of `live_status.json` by the
+   preview's registry, the organisations' bridge for each organisation type (an institution's and a university's accounts
+   created on the lane clone only — the census found none), the staff pages through the role accounts, the overlay
+   states, the product's error pages and the dev showcase: 106 page states × fr, ar × 360 / 375 / 390 / 412 / 430,
+   844 × 390, 932 × 430 and 390 × 640 under a finger, 320 for the overflow, 390 under a mouse, and in Arabic at 360 / 390 /
+   412 the overflow probes (O86): 1 818 probed loads and 212 contact sheets, each looked at. What holds everywhere: the
+   phone chrome ≤ 120 px (114 at most), no overflow on a product page from 320 to 932, the first object in the first
+   screen (the error pages in landscape apart), the overlay contract's edges, the flip list and nothing else mirrored, the
+   lock-up, the marks, the door stage, the steps, the references and the dates never mirrored.
+2. **SP-8 is read with WCAG 2.5.8's inline exception.** «Every target under a coarse pointer» is 44 × 44 for every
+   control, stand-alone link and list row; a link inside a sentence (a privacy link in a consent's text, the Conditions
+   in the upload gate's sentence) is the criterion's inline target and is counted apart, never widened over the lines
+   around it — as W3-C's gate link already was (`_depot.css`). A stand-alone link that wraps is one box (`inline-block`),
+   so that its target is its whole paragraph, not its line boxes.
+3. **RE-4 for the passage** (W3-D's hand-off, DL54-129): the station words read at 17 px below 64rem on every page that
+   draws «la linea» — W3-D's own line, dropped at its integration pass to keep the door pages identical to W3-F1's; the
+   door pages now follow the phone reading rule the plan sets (SP-7, RE-4), a design change W3-D named and left for the
+   mobile sweep.
+4. **A record's own title in the console's phone bar takes its own direction** (`unicode-bidi: plaintext` on
+   `.console-bar__title`): a French course or subject with no `lang` on an Arabic page is cut at its own end, as W3-A's
+   rule already did for a title that carries one — an Arabic title stays right to left.
+5. **A phone on its side seats the error pages' door at the end** (from 48rem under 30rem of height, the 64rem row with
+   the 7rem door): above the label it put the title at the foot of an 844 × 390 screen. W3-F2's test of the seat reads
+   «from 64rem» whatever the media query adds (intent kept).
+6. **The shared bundles pay for the new targets** (V5.8's definitive ruling): `main.css` 31 799 → 31 716 B gzip on every
+   page and the console page types 39 978 → 39 887, every page type lighter than design-v5's (so under every ceiling
+   DL54-154 lowered) — rules no template, view, script or stored text draws, proved by grep on design-v5 and on W4-C,
+   W4-D and sec-f8: `.form-row`, `.form-row--2`, `.is-warning`, `.t-title`, `.t-plate`, `.t-lead`, `.t-entry`,
+   `.voyage__shore`, `.voyage__num`, the documents' old title classes and the V4 grid's rule.
+7. **The re-sweep's look found two defects the first look had missed, both in W3-E's registers** (`v5/_registers.css`):
+   a meta row's part in the other direction than its row — a reference or a date, left to right on an Arabic page, a
+   name in its own script — hung its point and its pull on its own start, which is the row's end: a «·» closed the help
+   desk's and «Mes demandes»' lines and two points met on the staff queue's (`SWEEP.md`'s D22: the part lays both on the
+   row's side, `flex-direction: row-reverse`); a saved result's French title on «Mon parcours», two lines on a phone,
+   stood at the Arabic page's far edge — its `lang` turns it through main.css, not a `dir`, so the head rule of W3-E's
+   review minor 6 (`:dir()`) missed it (`SWEEP.md`'s D23: one selector added to that rule). The 25 page states that link
+   the registers' sheet were swept again and looked at; the sheet 2 875 → 2 946 B gzip, every register page type still
+   lighter than design-v5's. The same look recorded `SWEEP.md`'s D24 on the dev showcase (its copy carries no `lang` on
+   the Arabic page): a dev page, unchanged.
+8. **W4-B's O1 is taken** (handed to W4-A / W4-C in `QA/v54/w4-b/A11Y_PERF.md`): on a phone, a stop that Tab brings in
+   from below stood on the screen's edge with its 2 + 2 px ring cut off; the public pages' scroll padding keeps 8 px at
+   the foot as well as the letterhead's clearance at the top (`v5/chrome.css` §3) — 86 cut rings of 2 480 stops on every
+   public page state, fr and ar, at 390 and 360 → 0. Its 3 B are paid in `main.css` by writing the arrow link's inline
+   inset as its block one (`v5/buttons.css`: the same area). W4-B's O2 is D1 and D10; its rail tools at 36 px under a
+   mouse are W3-A's stated reading of SP-8 (44 under a finger), handed back unchanged.
+9. **Recorded, not changed:** the locked French copy's ordinary spaces beside «:» and inside «« »» break a line on a phone
+   (B1 item 8: drawing locked French with no-break spaces is the owner's and counsel's — `pages_typo.py`); real devices,
+   WebKit and Firefox (W4-C's cross-engine pass, O10); a video's controls left to right on the Forum (no video on the
+   lane: the rule is held by a test, not a capture).
+10. **The review's and the accessibility check's fixes** (w4-a-fix; `NOTES.md` «Review fixes»). A name in the other
+    direction than the page stands on the page's reading edge: the review's M1 (a file's name, an answerable party's) and
+    its class, found by a survey of every block that `dir="auto"` turns, read with the pages' own words and with each
+    one swapped into the other script — a step's words and who answers for it, a table's cell, a record's reference in
+    its summary, the company's own name in its head: W3-E's head rule extended, the company's name an isolate in the
+    page's own h1 (a box rule out of `console.css`), the selection's team-written sentences isolates (their period at
+    their end); a person's prose keeps its own start (W3-F1's m7). «Profil» on its block's start edge. A notice's address
+    is drawn once, in the notice's own sheet, 44 px under a finger — the go-live notice on every public form while G2 is
+    closed, D3 folded in —, paid by deleting dead legacy rules in `main.css`. The phone bar's account ring inside its box;
+    a loose file's act 44 px wide. The strings the review named through `typo`, the remaining team-authored lines recorded
+    for W4-D beside D14. `main.css` 31 716 → 31 637 B, the console page types 39 887 → 39 798, every page type lighter.
+    The ten browser files the outage had left ran green on a scratch PostgreSQL (the shared one still down); the
+    accessibility check's scripts on the QA data wait for it, for the merge step.
+
+**Source.** Plan §3.6 item 1, §1.4 (SP-7, SP-8), §1.12 (N13, N14, N19), §1.14, §2.5, §2.6; the owner's V5.5 and V5.8
+(and the definitive ruling below it); DL54-129; DL54-154; `QA/v54/w4-b/A11Y_PERF.md` (O1, O2);
+`QA/v54/w4-a/SWEEP.md`, `NOTES.md`; the evidence in `C:/tmp/ile_v5_council/evidence/v54/w4-a/` (`before/`, `after/`,
+`after2/`, `after3/`, `d22-before/`, `d22-after/`, `o1-before/`, `o1-final/`, `fix1/smoke/`, `weigh_final.txt`).
+
+## DL54-158 · 17 October 2026 · Steward, the w4-a merge: the mobile + RTL sweep on design-v5 — W4-A's entry kept as DL54-157, the one path no family held assigned, both shared CSS bundles lower again, every ceiling lowered to the merged weight
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w4-a` into design-v5 on 17 October 2026 —
+what the family's entry and notes hand to the merge step: DL54-157; `QA/v54/w4-a/NOTES.md` «Paths outside the slice —
+for the merge step» and «Review fixes»; `QA/v54/w4-a/REVIEW.md` and `A11Y_PERF.md`, both SHIP_AFTER_FIXES with no P0,
+every finding fixed in the family's one fix pass, V5.5).
+
+1. **Two attempts, one merge.** The first (label `w4-a-merge`, 16 October 22:16:38 – 22:48:23, under
+   `DESIGN_V5_MERGE_LOCK`) made steps 1–3 on the branch and stopped at the targeted tests: the shared PostgreSQL on
+   127.0.0.1:5439 did not answer (Docker Desktop stopped, the WSL service hung — the outage the w4-c merge met at 15:58
+   and the w4-a fix pass at 19:55 and 21:14). design-v5, v5-live and 8780 were left as they were and the lock released;
+   the branch kept its manifest commit. Since 23:19 the address is the database bridge (`evidence/v54/SERVERS.md`, «16
+   Oct 2026 — the database bridge»: a user-level PostgreSQL 17.2 with the same role and database names, `ile_v5`
+   replayed deterministically, `ile_v5_perf` and `ile_v5_l3` … `ile_v5_l9` its copies). The retry took the lock at
+   00:20:34 on 17 October, design-v5 still at `b06ea1e`, the branch at `fd338df`.
+2. **The sync and the numbering.** design-v5 `b06ea1e` is the branch's merge base (W4-A's pre-merge sync `71a96f9`
+   brought the w4-d part 1 and sec-f8 merges in): `git merge design-v5` said «Already up to date», no conflict, no
+   source rebuilt. design-v5's last entry is DL54-156, so W4-A's entry stays **DL54-157**, its heading's note and its
+   index row as the branch wrote them; this entry is DL54-158. W4-C's branch, cut at its own merge step by the same
+   outage, numbers its entries from DL54-157 too: its merge, now the second, renumbers them after this one.
+3. **The one path outside the slice** — `static/css/dev/showcase.css`, in no family's slice (`test_design_showcase`'s
+   strict xfail says the showcase has no owner; W3-D handed its overflow to «the steward / the showcase's owner»; the
+   review's m3) — is written into the manifest as W4-A's slice (`fd338df`): «the showcase's phone layout only: the
+   two-column grids' column (`.ds__two`, `.ds__cards`: `minmax(0, 1fr)`) and a sample table's scroll region
+   (`.ds__section .table-region`) — no swatch or palette rule»; the palette stays unassigned, so the strict xfail holds.
+   The check against the merge base: before, 5 inside, 1 slice, 13 generated, 37 delegated, 1 outside → FAIL; after, 5
+   inside, 2 slice, 13 generated, 37 delegated and the manifest itself (steward-only: this merge's own write), no family
+   path outside. `--validate`: coherent, 30 families, 784 entries. Each slice read in the diff: the decision log +73 /
+   −0 (DL54-157's block and index row, append-only), the showcase (two grid declarations, one region rule). The 37
+   delegated paths read as well — each is what DL54-157 and NOTES (§2, «Review fixes») declare, in its owner's file: CSS
+   (the targets under a finger and a pointer, the isolates' reading edges, the error page's seat on a phone on its side,
+   the passage's station words, the phone bar's title and ring), templates (isolates `<span dir="auto">` / `dir="ltr"`,
+   the team's strings through W2-D's `typo`), three retargeted assertions with their intent kept (W3-B's h1, W2-C2's
+   sheet string, W3-F2's door seat), and the dead rules deleted to pay for the new ones — `.text-h4` …
+   `.text-secondary`, `.note__marker`, `.icon--accent`, `.form-row`, `.form-row--2`, `.is-warning`, `.t-title`,
+   `.t-plate`, `.t-lead`, `.t-entry`, `.voyage__shore`, `.voyage__num`, the documents' old title classes, the V4 grid's
+   rule: re-checked by grep on the merged tree, no template, script, view or module names any of them. The 2 770 added
+   lines scanned: no external URL, no inline style or script, no address but `example.test` and the loopback, no secret,
+   no CR, no NUL; `git diff --check` clean.
+4. **The bundles.** On the branch, both dist trees deleted and rebuilt (`npm run build`): byte for byte the committed
+   trees, at both attempts. On design-v5 after the merge, the same: byte for byte the merged trees, no build commit
+   (design-v5 had no commit beyond the branch's merge base, so the merge's tree is the branch's own).
+5. **The shared CSS gate (the owner's V5.8 and the definitive ruling of 12 October, 02:15) passes: both shared bundles
+   fall again.** On the bundles rebuilt from a clean dist, `gzip.compress(data, 9, mtime=0)` per sheet, each page type
+   with the sheets its templates link — W4-A changes no page's list (`evidence/v54/w4-a/merge/budget_gate_branch.log`):
+
+   | Page type | design-v5 `b06ea1e` | merged | change |
+   |---|---|---|---|
+   | every page, and an interior page with no sheet of its own (`main.css`) | 31 799 | 31 637 | −162 |
+   | console page types (`main` + `console` + `portal`) | 39 978 | 39 798 | −180 |
+   | the company dashboard · «Mes pièces» · the documents' registers (+ panels) | 40 167 · 45 475 · 47 535 | 39 987 · 45 364 · 47 424 | −180 · −111 · −111 |
+   | a register page · «Mon parcours» with a file | 42 853 · 45 274 | 42 782 · 45 203 | −71 |
+   | a need's page · the help desk · its closure drawn · the selection · the Academy | 43 042 · 43 115 · 45 175 · 43 316 · 43 045 | 42 971 · 43 044 · 45 104 · 43 245 · 42 974 | −71 |
+   | the case file · where it draws its dialogs (+ panels) | 46 229 · 48 289 | 46 158 · 48 218 | −71 |
+   | a journey page · «Ma situation» | 42 399 · 42 184 | 42 219 · 42 041 | −180 · −143 |
+   | the login · the home · an error page | 36 660 · 46 160 · 35 428 | 36 498 · 46 002 · 35 284 | −162 · −158 · −144 |
+   | the persons' door · the doors · the Forum · orientation | 35 384 · 35 226 · 34 820 · 35 913 | 35 302 · 35 108 · 34 738 · 35 815 | −82 · −118 · −82 · −98 |
+   | the project pages · a reading page · a service page | 34 065 · 35 900 · 34 225 | 33 938 · 35 750 · 34 063 | −127 · −150 · −162 |
+
+   `dist/main.css` −162 B (the new targets and edges paid by the dead rules of item 3); `dist/portal/console.css` 7 134
+   → 7 116 B (out: the retired documents' title classes, the V4 grid's rule and the company head's box rule; in: the
+   phone bar's title direction and account ring, the head's words that may shrink, «Profil»'s 44 px); the page-only
+   sheets carry their surfaces' rules (`documents.css` 5 497 → 5 566, `registers.css` 2 875 → 2 984, `situation.css` 2
+   206 → 2 243; the sheets of the home, the doors, the project pages, the Forum, orientation, the reading pages and the
+   errors 4 to 80 B each) and every page type is lighter overall. **Every ceiling is lowered to the weight measured at
+   this merge** (the ruling: «after a merge, the merged weight is the new ceiling»): the merged column above.
+6. **The tests.** On the branch, `TEST_DATABASE_URL=…/test_ile_v5_l6` on the bridge, one pytest and one browser of the
+   steward's at a time, the benchmark lock absent at every start, no run crashed
+   (`evidence/v54/w4-a/merge/tests_*_lane.log`, each file's output in `test_out_lane/`). **Non-browser** (9 min 56 s):
+   the brief's list (both bundle-currency tests, the static pipeline, the design docs, O14's lint, `tests/security`,
+   `test_rtl_static`, W1-C's components, W3-E's case file, W3-F2's service pages), the checker's and the inventory's
+   tests, the showcase's, the static files of the families whose sheets the area changed (W1-C's chips, the legacy shim,
+   W2-A's overlays, W2-D's French typography, W3-A's shell, W3-B, W3-C, W3-D, W3-F1) and the apps whose templates it
+   changed (the help desk, the portal, companies, selection, the FAQ, orientation, pathways, the CMS, the Forum; the
+   cases' transition actors), the browser files' own non-browser tests included — **2 028 passed**, 2 xfailed (the
+   standing two: the showcase's palette, strict; the legacy shim's debt), 0 failed, 0 skipped. **Browser** (headless
+   Chromium, 31 min, file by file): the area's `test_mobile_rtl_w4_a.py` 32, `test_rtl_browser` 23,
+   `test_rtl_browser_overlays` 5, the 320 px header 5, W3-A's phone 29 and shell 35, W2-C1 12, W2-C2 25, W3-F1 12 and
+   its orientation 11, W3-D's journey 12, W3-B's dashboard 27, W3-C's documents 27, Dépôt 10 and drawer 18, W3-F2's
+   content pages 11 and service pages 5, `apps/portal` 8, `apps/pages` 28 — **335 passed**, 0 skipped, 0 failed
+   (`test_layout.py`, `test_nav_sheet_w2_c2.py` and `test_case_file_w3_e.py` hold no browser test and ran whole in the
+   non-browser run). Together **2 363 passed**: the ten browser files the outage had left to the merge step (NOTES §5,
+   the review's M2) green on the lane database at last. On design-v5 after the merge (`b067c7b`), its clean rebuild and
+   the inventory's rewrite (`442e41c`): both bundle-currency tests, the static pipeline, the design docs, the checker's
+   and the inventory's tests, the showcase's, the area's static half, O14's lint and `test_rtl_static` — **277 passed**,
+   1 xfailed (the showcase's), 0 failed. `manage.py check`: no issue; `makemigrations --check --dry-run`: no changes;
+   `ruff check .`: all checks passed. The full suite is the integration checkpoint's (V5.5).
+7. **`live_status.json`: the family row w4-a** — state v5, its review as the decision, the tag. No surface key changes:
+   W4-A composes no page, every fix landed in the owning family's file, and each surface it touched was already `v5`
+   at the tag of the family that composed it (DL54-154 item 7's precedent). `CHANGELOG_V54.md`: the entry first.
+8. **The inventory and the capture report.** `regen_design_inventory.py --write` on design-v5 after the merge: six of
+   DS 2026 §2's weights follow the tree (`_legacy-tokens.css` 11.1 → 10.9 KB, `components.css` 14.9 → 14.8,
+   `v5/base.css` 7.9 → 7.8, `v5/buttons.css` 14.9 → 15.0, `v5/field.css` 19.4 → 19.2, `v5/chrome.css` 51.0 → 51.8);
+   nothing needs a writer. The capture report is not regenerated: it records the home, the privacy page, the login and
+   the 404 at 390 × 844, 768 × 1024 and 1440 × 900 (status, overflow, h1, direction, external requests, empty icons, the
+   drawer's and the script-less header's geometry, the focus after an invalid submit), and W4-A's rules touch none of
+   those values — they apply under a coarse pointer, at ≤ 20.5rem, or on a phone on its side (`max-height: 30rem`), and
+   no page overflowed before or after (W4-A's sweep: none from 320 to 932).
+9. **What the bridge changed for the lane's records.** `ile_v5_l6` is a copy of the rebuilt `ile_v5` since 16 October
+   23:43: the two organisation accounts W4-A created on the lane clone (`w4a-institution@example.test`,
+   `w4a-university@example.test`) are gone with it, and `qa-company` is typed company there as on `ile_v5`. What NOTES
+   leaves to the merge step «once the database answers» was done on the bridge: the accessibility check's runner (copied
+   with its probe and axe-core 4.13.0 into the steward's folder, its own profile, one Chromium) on the lane 8786 served
+   from the branch on `ile_v5_l6`, under a finger, on the 14 signed-in page states of its list on the QA records —
+   qa-doc-person's dashboard, the console drawer, «Mes pièces» on both routes, the requirement `70d79bd5`, «Ma
+   situation», the file EE167596D4 and «Mes demandes»; qa-person's «Mon parcours», help desk and enrolment `32589170`;
+   qa-company's «Mon entreprise»; the professional's queue; the operator's dashboard — × fr, ar × 390 (the full pass),
+   360, 320 and 844 × 390 (`evidence/v54/w4-a/merge/a11y-qa/`): 106 loads, every one 200; no overflow; axe 0 violations;
+   the first object in the first screen everywhere; the chrome 114 px but on the professional's queue in Arabic, 120
+   (its bottom bar's labels on two lines — within §3.6 item 1's «phone chrome ≤ 120 px»; W3-A's bar, which W4-A did not
+   touch); every target 44 × 44 at 390 and 360, and at 320 only the two recorded exceptions (the Stepper's 40 px
+   columns; the dashboard's communication row, a 44 px box at a fractional offset, 43 by integer points); a ring on
+   every keyboard stop but three known ones — the date fields' ring drawn about 150 ms after the key (the check's false
+   alarm, `datefocus/`), the Dépôt's native file input under the zone that draws its ring, the console drawer's brand
+   ring 4 px over the screen's top (the same in the check's own run: W2-A's and W3-A's drawer, for W4-C) —; no animation
+   running under reduced motion; no contrast failure (the probe's one flag, «Ma situation»'s future Stepper nodes read
+   as text at 3.59 : 1, is a node's ring, which 1.4.11 holds to 3 : 1 and which passes — the labels are visually hidden
+   on a phone). The account ring of the fix pass's finding 2 is cut on no console page. Looked at on the Arabic captures
+   at 390: the professional's queue (D22, each meta row's point between its parts; the French titles on the reading
+   edge), «Mon parcours» (D23, the saved result's French title on the reading edge over two lines), the enrolment (D16,
+   the French course cut at its own end in the phone bar), «Mon entreprise» (the names on the reading edge; the
+   contact's left-to-right isolates, D8, read in the markup by the requests on 8780). The sessions were minted with
+   `Client.force_login` (no password) and revoked, the lane server stopped. Not re-run: the pointer pass at 1440 and the
+   performance comparison — no script changed, both shared bundles are lighter, and the check measured both on this code
+   (`A11Y_PERF.md`: CLS ≤ 0.0097, no long task introduced).
+10. **Handed on** (DL54-157 item 9; NOTES «What is left» and «Left, by design or handed on»; none of it holds the
+    merge): **the owner and counsel** — the locked French copy's ordinary spaces beside «:» and inside «« »» (D14, B1
+    item 8); **W4-D** — the 149 team-authored `{% translate %}` lines beside « » : ; ? ! to pass through `typo` (m2's
+    remainder), and its deletion map's version of `_legacy-tokens.css`, `components.css` and `register.css` stands over
+    the rules W4-A deleted there; the release notes' CSS table (`docs/RELEASE_NOTES_v2.0.0.md`, W4-D's file) still
+    quotes design-v5's weights before this merge (31 799, 39 978); **W4-C** — WebKit, Firefox and real devices (O10),
+    the Academy's filter row's focus (finding 3), the console's foot scroll padding above phone widths and the trail's
+    24 px under a mouse, and the console drawer's brand ring 4 px over the screen's top (item 9); **W3-A** — its rail
+    tools at 36 px under a mouse, its reading of SP-8 (W4-B's O2), unchanged; **W4-D (DS 2026 final)** — §2's prose of
+    `_legacy-tokens.css` still counts «14 classi tipografiche legacy» where two are left (`.eyebrow`, `.numeral`: W2-A
+    deleted seven, W4-A five; the weights are the script's, the prose the owning family's). By design, recorded: «Ma
+    situation»'s Stepper at 320 (40 px a column, the gutters spent), one glossary term in landscape at one scroll
+    position, the dev showcase's own samples under 44 px and its copy with no `lang` (D24).
+
+**Why.** An entry numbered after design-v5's keeps the log's one order; a path nobody held gets its writer with its
+reason, and the slice is drawn narrow enough that the showcase's palette keeps its open question; the gate is read on
+the shared payload as V5.8 writes it, and the merged weight becomes every ceiling; the preview names a family's work by
+its row when it composes no page.
+
+**Source.** Plan §1.4 (SP-7, SP-8), §1.12 (N13, N14, N19), §2.2 (merge steps 1–5), §2.5, §2.6, §3.6 item 1; the owner's
+V5.5 and V5.8 (and the definitive ruling below it); DL54-129; DL54-154; DL54-157; `QA/v54/w4-a/NOTES.md`, `REVIEW.md`,
+`A11Y_PERF.md`, `SWEEP.md`; `evidence/v54/SERVERS.md` («16 Oct 2026 — the database bridge»); the weights in
+`evidence/v54/w4-a/merge/budget_gate_*.log`; the ownership checks in `evidence/v54/w4-a/merge/ownership_*.log`; the
+tests in `evidence/v54/w4-a/merge/tests_*.log`.
+
+## DL54-159 · 16 October 2026 · W4-C, the performance and accessibility consolidation: the release gates' two checks on the candidate — no WCAG 2.2 AA failure; one evident CLS problem fixed; one form's errors said as every other's
+
+(Written as DL54-156 after design-v5's DL54-155, the W4-D part-1 merge. design-v5 gave that number to the sec-f8
+merge's record first, then DL54-157 and DL54-158 to W4-A's entry and its merge's record, so the steward
+renumbered this entry DL54-159 at the merge, with its row and its mentions in `QA/v54/w4-c/` — DL54-160.)
+
+1. **The accessibility critical checks (V5.9 §15), every page type, fr and ar, 1440 and 390** (`QA/v54/w4-c/A11Y_SWEEP.md`):
+   the 101 pages of the census by the preview's own registry — the 75 surface keys, the bridges of the four
+   organisation accounts (two lane-only accounts for the institution and the university, deleted at the end), the
+   staff's pages, the error pages, the open menu, a questionnaire step — read by passes that answer the plan's list: the
+   accessibility tree and axe-core 4.13.0 (already on disk), the keyboard walk at every stop (indicator, the ring
+   against its ground, 2.4.11, the skip link), contrast on the rendered pixels and non-text contrast, forced colours,
+   400 % at 1280 (320 × 256), 1.4.12, every overlay opener (focus in, Esc, focus back, axe inside the open panel), the
+   tooltips under the keyboard, the forms' errors, Arabic's language of parts. **0 axe violation nodes on 404 page
+   views; 11 444 Tab stops, every one indicated, none under a fixed layer; the lowest ring 3.44 : 1, the lowest text
+   5.19 : 1; 0 px of overflow at 400 %; every state distinguishable under forced colours (W3-D's O2 fixed by W4-B).**
+   The patterns the probes flag by construction were looked at once and are listed with their counts, not counted.
+   *As first written, «no WCAG 2.2 AA failure» missed one: «Ma situation» declared no input purpose for the date of
+   birth and the country of residence (1.3.5 — axe does not test it); fixed by the review fixes, item 7.*
+2. **F1 — one form said its errors differently** (`templates/orientation/resume.html`, W3-F1's slice, through the
+   steward): the questionnaire's resume form answered an invalid code with a bare `role="alert"` line present at load
+   and the focus on `<body>`; it now includes `components/form_errors.html` like every other form, so `main.js`'s
+   `initFormErrorFocus` lands the focus on the summary (re-checked fr and ar, 1440 and 390).
+3. **The performance sanity check on the twin 8782** (`QA/v54/w4-c/PERF.md`), serving this worktree (collectstatic into
+   the twin's own root; `settings_8782`; DEBUG off; `ile_v5_perf`; under the lock; returned to design-v5's tree at the
+   end): 78 page types × fr, ar × 1440 @1, 390 @2, profile A + CPU × 4, n = 5 cold loads per cell, interleaved (1 560
+   loads in nine windows). LCP: the slowest median 1 508 ms. INP: seven overlays' cold opens, p90 ≤ 120 ms (W2-A's
+   drawer «on the INP edge»: 112 ms on its own cell — no change needed). Long tasks after the first paint: the rest of
+   the first layout (style and layout, Arabic text shaping), lighter than V4's single first-render task on the same
+   pages. Requests above W1-0's count: V5.8's page sheets and esbuild's 394 B helpers chunk, no measured cost — HTTP/2
+   measured behind a local TLS proxy (Node's own `http2`): +8 ms LCP median, noise. W3-E's budget letter — keep the case
+   file's seven sheets.
+4. **P1 — the Dépôt's zone drawn at its final size from the first frame** (`apps/portal/static/portal/v5/_depot.css`,
+   W3-C, through the steward): the upload page shifted on every load (CLS 0.042–0.071, a flagship page: 0.05), a
+   piece's page 0.023–0.035 — the zone was the browser's own control until `depot.js`, a dynamic import, wrote
+   `[data-enhanced]`, then shrank under the fields after it. The enhanced drawing (and the zone's keyboard ring) is now
+   keyed on `html.js`, which `head.js` sets in `<head>` before the first paint; what only the script does stays its own
+   (`data-sending`). Re-measured on the twin at n = 9 per cell: **0.000** on all eight cells, LCP unchanged within
+   ±52 ms. No JS changed; documents.css 5 497 → 5 494 B gzip −9; the shared bundles untouched (`main.css` 31 799 B, the
+   console page types 39 978 B). *Its one regression — `html.js` is not `depot.js`: with the module lost, a chosen file
+   showed nothing — is fixed by the review fixes, item 7.*
+5. **What the sanity rule does not fix, and why** (V5.5: «fix only real regressions, serious blocks, important long
+   tasks, evident LCP/CLS problems»): the letterhead's intermittent shift on public pages (W3-F2's O1: 11 of 860 loads
+   above 0.03, medians ≤ 0.02 — for W4-D, not W2-C1, a closed family: item 7); the overlay core's wiring at load (up to
+   174 ms at CPU × 4 on a console phone page — a lead, not a defect); the module figure of the overlay core and the
+   Arabic console pages' fonts (accepted exceptions, item 7);
+   the ring cut at the viewport's bottom edge (not a failure; its one declaration goes into `main.css` and waits for
+   W4-D's sweep to pay it).
+6. **Not run, said**: Playwright WebKit and Firefox (no binary on this machine, none downloaded — W2-A's O10, W3-C's and
+   W3-D's m6, W4-B's «at speed» stay open for a machine that has them); no real device, no screen reader by a person.
+7. **The review fixes** (`QA/v54/w4-c/REVIEW.md` and `A11Y_PERF.md`, both SHIP_AFTER_FIXES; `NOTES.md` «Review
+   fixes»). **M1** — «Ma situation» says what its two personal facts are for: `SituationForm`'s date of birth
+   `autocomplete="bday"`, its country of residence `autocomplete="country-name"` (`apps/accounts/profile_forms.py`, a
+   delegated path; `0858927`). **M2** — P1's lost-module path: until `depot.js` has written `[data-enhanced]`, a chosen
+   file shows the browser's own control in the Dépôt's frame, its name with it, in the frame's box (`_depot.css`; one
+   CSS rule pair keyed on `:valid` — the field is required — that covers a lost or late module, a lost `console.js` and
+   a browser without modules, which the review's `.catch` would not), and a file chosen while the module travels is
+   taken up when it arrives (`depot.js`); paid in the page sheet (the Dépôt's four `[hidden]` rules one, four focus rules
+   that restated the focus system deleted): `documents.css` 5 494 → 5 496 B against design-v5's 5 497, the piece and the
+   upload 45 474 B against 45 475 B; CLS re-measured on a compressed build of the branch, 0.000 on every cell (`a3613b3`;
+   A11Y_PERF's a1 on the way: the live regions start from silence). **m2** — the policies' English names `lang="en"`
+   where they stand alone, the embedded runs read as proper names (docs/ACCESSIBILITY.md; `8bd1f1c`). **m4** —
+   accepted exceptions, none with a measured cost (LCP ≤ 1.6 s, INP ≤ 152 ms): the overlay core 6 523 B against 4 KB
+   per module; the Arabic console pages with ILE Mono 63 144 B of fonts against 56 KB; the entrance pages' one script
+   request over W1-0's count (esbuild's 394 B helpers chunk); the tasks after the first paint as the rest of the first
+   render (D27's letter) — also in the release notes' known limits. **m1** (the letterhead's shift, diagnosed: its
+   inline layout re-distributes when the faces swap in, FCP + 10–95 ms, its block size constant) and **m3**
+   (`card.css`'s French colon in every language, G-14) go to **W4-D** by name: both are `main.css` rules a deletion in
+   that bundle must pay (V5.8).
+
+**Why.** The owner's release gates name both checks; the plan gives them to W4-C on 8782 with §2.6's protocol, and V5.5
+narrows the performance one to a sanity check that fixes real defects only. A sweep that finds nothing to fix says so
+with its numbers; the one evident CLS problem and the one form that did not follow the product's own error pattern are
+fixed in their owners' files with no shared CSS added, so no ceiling moves.
+
+**Source.** Plan §2.6, §2.8, §3.6 item 3, §1.6, §2.5; the owner's V5.5, V5.8, V5.9 §15, V5.10; DL54-89, DL54-95,
+DL54-101, DL54-151, DL54-153, DL54-154, DL54-155; `QA/v54/w4-c/A11Y_SWEEP.md`, `PERF.md`, `NOTES.md`; the evidence in
+`C:/tmp/ile_v5_council/evidence/v54/w4-c/` (`a11y/`, `perf/`, `look/`).
+
+## DL54-160 · 27 October 2026 · Steward, the w4-c merge: the performance and accessibility consolidation on design-v5 — three attempts (an outage, a reboot), W4-C's entry renumbered DL54-159 after W4-A's two, SituationForm's two widgets assigned as W4-C's slice, the shared bundles unchanged, documents.css 2 B lighter
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w4-c` into design-v5 on 27 October 2026 —
+what the family's entry and notes hand to the merge step: DL54-159; `QA/v54/w4-c/NOTES.md` §7 and «Review fixes»
+(«For the merge step»); `QA/v54/w4-c/REVIEW.md` and `A11Y_PERF.md`, both SHIP_AFTER_FIXES with no P0, every major
+fixed in the family's one fix pass, V5.5).
+
+1. **Three attempts, one merge.** The first (label `w4-c-merge`, 16 October 16:00:20 – 16:50, under
+   `DESIGN_V5_MERGE_LOCK`, design-v5 at `b06ea1e`) made steps 1–3 on the branch — the sync `baae7de` (sec-f8's DL54-156
+   kept first, W4-C's entry renumbered DL54-157), its mentions `6c1d65b`, the manifest `8adb128` (item 3), a clean
+   rebuild byte for byte — and stopped at the targeted tests: the shared PostgreSQL on 127.0.0.1:5439 did not answer
+   (the Docker engine hung; the outage DL54-158 item 1 describes). design-v5, v5-live and 8780 were left as they were
+   and the lock released. Since 16 October 23:19 the address is the database bridge (`evidence/v54/SERVERS.md`, «16
+   Oct 2026 — the database bridge»). The retry waited on the lock while the w4-a merge held it (00:20:34 – 01:29:12)
+   and took it at 01:29:25, design-v5 at `96b6e96` (the w4-a merge `b067c7b`, its inventory, its record DL54-158, its
+   status and tag `v54/w4-a`, its shipped note), the branch at `8adb128`. Attempt 2 made the sync and the numbering (item 2), ran the non-browser targeted tests (941 passed) and was
+   cut during the browser series by the machine's reboot on 17 October 02:04, holding the lock; design-v5, v5-live and
+   8780 had not been touched. Since 27 October 19:40 127.0.0.1:5439 is the original Docker database again, the bridge
+   retired (`evidence/v54/SERVERS.md`, «27 Oct 2026»). Attempt 3 found the lock still held by attempt 2's line, design-v5
+   clean at `96b6e96` with no merge in progress (nothing had merged since), and took it over at 19:38:26 on 27 October;
+   the branch at `46636b3`, already synced (`git merge design-v5`: up to date), so items 2–3 stand as attempt 2 wrote
+   them and items 4–6 were measured again.
+2. **The sync and the numbering.** `git merge design-v5` (`cc9d9bc`) wrote two conflicts. The decision log: design-v5
+   had given DL54-157 to W4-A's entry and DL54-158 to the w4-a merge's record, so both are kept first and W4-C's entry
+   becomes **DL54-159** — its heading, its index row and its own note, which tells both renumberings; the log without
+   W4-C's row and block is design-v5's byte for byte, and W4-C's row and block with the number shifted back are the
+   branch's. `documents.css`, a generated bundle (`merge=binary`): rebuilt (item 5). Three paths both areas wrote
+   merged by themselves and were read: `_depot.css` (W4-A's two rules — a filed name in the other direction on the
+   page's reading edge, «Télécharger»'s 24 px box — beside P1's and M2's rules, no line in common), the manifest (W4-A's
+   `showcase.css` slice and W4-C's `SituationForm` slice, valid JSON), `test_service_pages_w3_f2.py` (W4-A's door-seat
+   assertion and W4-C's 1.3.5 test). The eleven mentions of the entry follow (`46636b3`: `NOTES.md` 3 — the two lines
+   that tell the numbering now name who took the numbers —, `PERF.md` 4, `REVIEW.md` 3, the manifest's w4-c slice
+   source 1); `NOTES.md`'s line that says the sec-f8 merge took DL54-156 stays as written. This entry is DL54-160.
+3. **Ownership.** One written line had no writer: `apps/accounts/profile_forms.py`'s `SituationForm` widgets (the
+   review's M1, WCAG 1.3.5) — W3-F2's slice of the file is ProfileForm's. It is a w4-c slice beside W3-F2's, with its
+   reason (`8adb128`, attempt 1). `check_ownership.py w4-c design-v5` on the family's own diff (`--head a2c9d03`, its
+   last commit before the syncs; 25 paths): 5 inside (the family's reports), 2 slice (the log, append-only; the form's
+   two widgets), 5 generated (`documents.css`, the Dépôt's chunk renamed, `depot.js`, `piece-drawer.js`), 13 delegated
+   — **PASS**. After the sync (26 paths): the same and the manifest, steward-only — this merge's own write (the slice
+   and its source's renumbering); 0 outside. Each slice read in the diff: the log +80 / −0 (W4-C's row and block), the
+   form (two `autocomplete` attributes and their comment, no logic). Each delegated path lies in its owner's whole file
+   or slice, as attempt 1 read it (`_depot.css`, `depot.js` and W3-C's two test files; `console.js` §2d's comment; the
+   questionnaire's resume page, W3-F1's; the footer, W2-C1's; the console's `base_portal.html`, W3-A's; the virtual
+   Forum's join form, W3-F2's; the Forum's privacy note, W3-F1's; `docs/ACCESSIBILITY.md`, W1-A's whole file; the
+   release notes, W4-D's; W3-F2's service-pages test). `--validate`: coherent, 30 families, 785 entries. The 1 757
+   added lines scanned: no address but the loopback and `example.test`, no secret, no CR; `git diff --check` clean.
+4. **The shared CSS gate (V5.8 and its definitive ruling) passes: the shared bundles do not move.** On the bundles
+   rebuilt from a clean dist, `gzip.compress(data, 9, mtime=0)` (`evidence/v54/w4-c/merge/attempt3/css_weights.log`, attempt 2's the same),
+   design-v5 `96b6e96` → merged: `dist/main.css` 31 637 → 31 637 B on every page; the console page types (`main` +
+   `console` + `portal`) 39 798 → 39 798 B; `dist/documents/documents.css` (page-only) 5 566 → 5 564 B, so the piece,
+   the loose upload and the gate 45 364 → 45 362 B and the documents' registers with their panels 47 424 → 47 422 B;
+   every other sheet and page type byte for byte. Every ceiling is the merged weight (only the documents' page types
+   move, by −2 B). §2.6's script budget holds: the Dépôt's chunk 3 702 → 3 751 B is loaded only where a page draws a
+   Dépôt (`depot.js`, `piece-drawer.js` and `console.js` the same weight); the home's script unchanged.
+5. **Bundles and inventory.** On the branch, both dist trees deleted and rebuilt (`npm run build`): byte for byte
+   design-v5's but `documents.css` and the Dépôt's chunk, the JS byte for byte the branch's; a second clean rebuild
+   left the tree unchanged. On design-v5 the merge `3ca6579`'s tree is the branch's byte for byte (no conflict: the branch was synced at `96b6e96`). `regen_design_inventory.py`: current on the branch and on design-v5 after the merge (no commit). The capture report
+   is not regenerated (`capture.py` records the home, the privacy page, the login and the 404 — status, overflow, h1,
+   direction, the icons, the header's geometry, the focus after an invalid submit —; W4-C changed none of them).
+6. **The tests.** On the merged branch at `46636b3`, lane 4 (`test_ile_v5_l4`, on the Docker database), one pytest and one
+   headless Chromium at a time: the targeted list (the non-browser files, `tests/security`, the design docs, the bundle
+   and pipeline gates, the touched apps' tests) **941 passed** in 18 min 44 s; the browser series (18 files) **311 passed**
+   in Chromium in 25 min 43 s; no failure, no skip, no crash (`attempt3/tests_*_a3.log`). The full suite is the next
+   integration checkpoint's.
+7. **`live_status.json`: the family row w4-c** — state v5, its review as the decision, the tag. No surface key
+   changes: W4-C composes no page; every surface it touched (the questionnaire's resume form, «Ma situation», the
+   Dépôt of a piece and of the loose upload, the public and console footers, the Forum's notes) was already v5 at the
+   tag of the family that composed it (DL54-151 item 10, DL54-154 item 7, DL54-158 item 7). `CHANGELOG_V54.md`: the
+   entry first.
+8. **Handed on** (`NOTES.md` §6 and «Review fixes»; none of it holds the merge): **W4-D** — the letterhead's
+   intermittent shift on public pages (diagnosed: the row re-distributes when the faces swap in, FCP + 10–95 ms; medians
+   ≤ 0.02), `card.css`'s French colon in every language (G-14), the ring cut at the viewport's bottom edge
+   (`scroll-padding-block-end`, paid by the legacy sweep's dead tokens), the overlay core's wiring at load (a lead,
+   not a defect); **the steward** — esbuild's 394 B helpers chunk, one script request over W1-0's count on the
+   entrance pages: not taken at this merge (no measured cost — LCP and HTTP/2 measured —, an accepted exception of
+   DL54-159 item 7; V5.5 fixes only real regressions); **W3-C / W3-E** — `lang="fr"` on records whose language is
+   known, when the content plumbing carries one; **W2-C1 / the steward** — «Formation» marks two doors
+   `aria-current`. **What DL54-158 item 10 hands to W4-C** arrived after W4-C's one fix pass and is not in this merge,
+   which adds no code of its own: the Academy's filter row's focus (W4-A's finding 3), the console's foot scroll padding
+   above phone widths and the trail's 24 px under a mouse, the console drawer's brand ring 4 px over the screen's top —
+   open, for the next pass the orchestrator sends. **Not run** — Playwright WebKit and Firefox (no binary on this
+   machine), a real phone, a screen reader by a person.
+
+**Why.** An entry numbered after design-v5's keeps the log's one order, whichever merge comes first; a delegated area
+writes in its owners' files and the merge reads each such write against its owner's slice, giving the one line nobody
+held its writer with its reason; the gate is read on the shared payload as V5.8 writes it, and the merged weight becomes
+every ceiling; the preview names a family's work by its row when it composes no page; a merge step adds no code of its
+own, so what reached the family after its fix pass waits for a pass of its own.
+
+**Source.** Plan §2.2 (merge steps 1–5; a file not in the manifest has no writer until the steward assigns it), §2.6,
+§2.7, §3.6 item 3; the owner's V5.5, V5.8 (and the definitive ruling below it), V5.9 §15, V5.10; DL54-151; DL54-154;
+DL54-156; DL54-157; DL54-158; DL54-159; `QA/v54/w4-c/NOTES.md`, `REVIEW.md`, `A11Y_PERF.md`, `A11Y_SWEEP.md`, `PERF.md`;
+`evidence/v54/SERVERS.md` («16 Oct 2026 — the database bridge»); the weights, the ownership checks, the builds and the
+tests in `C:/tmp/ile_v5_council/evidence/v54/w4-c/merge/attempt3/` and `tests_*_a3.log` one folder up (attempts 1 and 2 beside them); `evidence/v54/SERVERS.md` («27 Oct 2026»).
+
+## DL54-161 · 27 October 2026 · Steward, the w4-d merge (part 2): integration readiness on design-v5 — the last build before the release candidate; the paths a delegated area wrote assigned, the shared bundles lighter, two browser measures given the open sign-up; Wave 4 complete
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-w4-d` into design-v5 on 27 October 2026 —
+what the area's notes and review hand to the merge step: `QA/v54/w4-d/NOTES.md` «Part 2 — integration readiness» and
+«Part 2 — review fixes» («For the team and the merge step»); `QA/v54/w4-d/REVIEW_PART2.md`, SHIP_AFTER_FIXES with no P0
+and no P1, both majors and the cheap minors fixed in the one fix pass, V5.5).
+
+1. **One attempt, label `w4d2-merge`.** The tag `v54/w4-c` was on design-v5 at the start (DL54-160); the lock
+   `DESIGN_V5_MERGE_LOCK` was free and taken at 21:27:47, design-v5 clean at `6fddeaa` (W4-C's shipped note). The branch
+   at `0f3aded` already held design-v5 (`267d29a`, the review fixes' M1): `git merge design-v5` was up to date. No
+   conflict, so no decision-log entry to renumber — part 2 wrote none on its branch (four families appended in parallel):
+   this entry records it.
+2. **Ownership.** W4-D is a delegated area: it owns no file beyond its list, and each fix lands in its owners' files.
+   `check_ownership.py w4-d design-v5` found 9 paths in no family's slice and 18 delegated (`0a43091`): each is now a
+   w4-d slice in the manifest, named where the fix landed and why — the nine: `apps/cases/intake.py` (A1, the pathway's
+   sources), `apps/core/gates.py` (A2, G11 and the newsletter need G1), the five test files A2's set-up changed or whose
+   tested state it made impossible (`apps/community/tests/conftest.py`, `test_join.py`, `apps/forum/tests/conftest.py`,
+   `test_governance_flag.py`, `apps/news/tests/test_newsletter.py`), `docs/QA_REPORT.md` and
+   `docs/platform/RULE_ENGINE_GOVERNANCE.md` (A5's counts); the eighteen delegated as the notes list them (A4's model and
+   service, W2-C1's dead filter, W2-D's dead home rule, W3-A's comments, W1-A's and W1-C's sheet and tests, W2-B's and
+   W3-F2's sign-in templates, the hero component deleted, W3-F1's dead attribute and test, W3-F2's content-pages test,
+   sec-f8's fixture, `docs/ACCESSIBILITY.md`'s rows). On the area's own diff (`--head 0f3aded`): 13 inside, 29 slice,
+   2 generated — **PASS**. On the merged diff: the same, item 4's slice, and the manifest itself, steward-only, this
+   merge's own write. `--validate`: coherent, 30 families, 813 entries. The 1 300 added lines scanned: no address but the
+   loopback and `example.test`, no secret, no CR; `git diff --check` clean.
+3. **The shared CSS gate (V5.8) passes: the shared bundles get lighter.** Both dist trees deleted and rebuilt from clean
+   (`npm run build`): byte for byte the branch's. `gzip.compress(data, 9, mtime=0)`, design-v5 `6fddeaa` → merged:
+   `dist/main.css` **31 637 → 31 244 B** on every page; the console page types (`main` + `console` + `portal`) **39 798
+   → 39 405 B**; the home 46 002 → 45 591 B (`pages.css` 3 797 → 3 779 B); the login 36 498 → 36 105 B; «Mes pièces»
+   45 362 → 44 969 B; every other sheet byte for byte. Every ceiling is the merged weight. On design-v5 the merge
+   `7096b37`'s tree is the branch's byte for byte; `regen_design_inventory.py --write`: current (no commit).
+4. **The tests, and two red the merge fixed.** On the merged branch, `test_ile_v5_l9` on the Docker database, one pytest
+   and one headless Chromium at a time, `-p no:randomly`: the build's targeted list with `tests/security`,
+   `tests/deployment`, `tests/compliance`, `apps/cases`, the design docs, `test_check_ownership.py`, both bundle-currency
+   tests — **1 816 passed**, 3 skipped (the three standing intake skips: no rule in force on the seed), 1 xfailed (the
+   legacy shim's debt), 27 min; `manage.py check` clean, `makemigrations --check` no changes. The browser tests of the
+   pages whose sheets changed (the home, the content and service pages, the orientation, W3-F1's pages, the console
+   shell, W1-C's components, the phone and Arabic pass, the entrance, the narrowest header, RTL): **247 passed, 2
+   failed** — `test_entrance_form_w2_b.py::test_every_target_of_the_form_has_its_size[False|True]` measured the sign-in's
+   invitation, which part 2's A3 (F-4) withholds while G2 is closed: the element was gone. The two measures of the
+   invitation (that one and `test_the_action_is_in_the_first_viewport_of_a_small_phone`, which reads the invitation's
+   lines as its worst case) now take `legal_published` (`f18e91f`, assigned to w4-d as a slice of W2-B's file with its
+   reason): the entrance file and its RTL file **69 passed**. A test behind the product, not a product defect: the page
+   draws what F-4 decided. The full suite is the release-candidate validation's.
+5. **`live_status.json`: the family row w4-d** — state v5, its review as the decision, the tag. No surface key changes:
+   W4-D composes no page; what it touched (the sign-in's invitation, the Forum's and the newsletter's gates, the
+   assessment's sources, a closed file's assignment) lies on surfaces already v5 at the tags of the families that
+   composed them. `CHANGELOG_V54.md`: the entry first.
+6. **Wave 4 is complete.** W4-A (DL54-157, -158), W4-B (DL54-153, -154), W4-C (DL54-159, -160) and W4-D (part 1
+   DL54-155, part 2 this entry) are merged on design-v5, with F-8 (DL54-156) and the DevOps notes. What V5.10 asks next is
+   the release-candidate validation: its fourteen gates, the full suite, then the tag of the reference point, the
+   fast-forward of `main` and `v2.0.0` — none of which this merge does: no push, no public tag, nothing on `main`,
+   nothing deployed.
+7. **Handed on** (none of it holds the merge): **after the release** — `cms_nav._row_visible` (W2-C1) and
+   `ContentBlock.requires_flag` to resolve `virtual_forum` and `newsletter` through their gates (REVIEW_PART2 m2); the
+   letterhead's shift (a navigation layout change with its own measure); the 149 team-written French strings beside
+   « » : ; ? ! (each a no-break space on its page, measured at 360 and 375); the legacy token shim's migration (the
+   xfail stays the debt); W3-D's `descriptive` journey variant, `cta_panel.html`, `ecosystem.services.local_nav`.
+   **Copy packet B1** — the Forum's back-office badge naming the legal pages when they keep the Forum closed (m3).
+   **The owner** — F-8's Q-1…Q-7 and Q-9 (Q-8 answered by CASE_LIFECYCLE §4 rule 5, reversible); the Forum's mode and
+   its words after the launch event; the Virtual Forum not before the legal pages; phase 3's authorisation; the GitHub
+   settings (release notes §5). **Not run** — Playwright WebKit and Firefox (no binary on this machine), a real phone, a
+   screen reader by a person.
+
+**Why.** A delegated area writes in its owners' files: the merge gives each such write its slice and its reason, so the
+manifest says who wrote what; the gate is read on the shared payload as V5.8 writes it, and the merged weight becomes
+every ceiling; a merge step adds no code of its own, but a test its own run finds red because the product changed as
+decided is brought to the decision, in the owner's file, with the slice recorded; the wave ends when its last area is on
+design-v5, and what follows is the owner's validation, not a further build.
+
+**Source.** Plan §2.2 (merge steps 1–5), §2.6, §3.6 item 4; the owner's V5.5, V5.8, V5.9, V5.10; DL54-155; DL54-156;
+DL54-160; `QA/v54/w4-d/NOTES.md`, `REVIEW_PART2.md`, `GO_LIVE_PHASE.md`; `docs/RELEASE_NOTES_v2.0.0.md`; the weights and
+the test logs in `C:/tmp/ile_v5_council/evidence/v54/w4-d/merge-part2/`.
+
+## DL54-162 · 28 October 2026 · Steward, the rc-fix merge: the release candidate v2.0.0's two gate failures and two P2s fixed on design-v5; the family rc-fix recorded; the shared venv on Pillow 13
+
+**Decisions** (the steward's, for the infrastructure, at the merge of `v54-rc-fix` into design-v5 on 28 October 2026 —
+what the release-candidate validation found (`C:/tmp/ile_v5_council/evidence/rc-v2.0.0/`: REGRESSION_NON_BROWSER.md,
+REGRESSION_BROWSER.md, SECURITY.md, SMOKE.md), what the fix did (`QA/v54/rc-fix/NOTES.md`) and what its independent
+review said (`QA/v54/rc-fix/REVIEW.md`, APPROVE_WITH_NITS: three nits, no major, nothing for a second fix pass, V5.5).
+
+1. **One attempt, label `rc-fix-merge`.** The lock `DESIGN_V5_MERGE_LOCK` was free and taken at 00:37:00; design-v5
+   clean at `4ffc22b` (W4-D part 2's shipped note, tag `v54/w4-d`). The branch, cut from `4ffc22b`, already held
+   design-v5: `git merge design-v5` was up to date. No conflict, no decision-log entry to renumber (the fix wrote none).
+2. **What merged** — four commits, one per finding: **gate 6** (`257e42c`), `THINNER_RULES_WITH_AN_OWNER` in
+   `tests/frontend/test_icons.py` emptied — its last entry, components.css's `.entrance__icon`, left with §12 in
+   `71fbd90`; **gate 12** (`0013dfb`), Pillow 12.3.0 → **13.0.0** in `requirements/base.txt` and
+   `requirements/constraints.txt` — the 38 advisories pip-audit found against the pin are all fixed in 13.0.0, none of
+   13.0.0's breaking changes touches a call of the code base (the favicon script passes `sizes=`); **SMOKE D1**
+   (`b220af4`), `documents.views._serve` opens the stored file only after both gates (`require`, `delivery_block`): a
+   file gone is a 404 logged once as `documents.file_missing document=<id>` on `ile.documents` (the id only), so a
+   refused account keeps its 403 and learns nothing, with five tests; **SECURITY D-4** (`1533daf`), PERMISSION_MODEL
+   §1.3's row «L'amministratore non può concedersi il superadmin» IMPLEMENTATO citing §7.1 L-01 and its test, and §5.10's
+   «VIOLATO oggi», stale since L-01 closed, now PARZIALE (`is_staff` still the administrator's to set: owner question
+   Q-1). No template, CSS, JS or migration.
+3. **Ownership: a family outside the waves.** The checker's id rule admits `rc-fix` (`096b21a`, as the intfix merge's
+   `473aa20`; the id rule's test three cases, `OUTSIDE_THE_WAVES` names it). The manifest's family `rc-fix` (wave 0,
+   `f5be01f`) holds eight slices — each file staying its owner's: w1-b's `test_icons.py`, devops's constraints, w3-c's
+   `views.py`, sec-f5's and sec-f8's PERMISSION_MODEL, the steward's checker and its test — two of them in files no
+   family held (`requirements/base.txt`, `apps/documents/tests/test_download.py`), and its reports whole
+   (`QA/v54/rc-fix/**`, `cd7c75f`, copied byte for byte from the evidence so the preview serves the decision). No merge
+   tag in the manifest: `v54/rc-fix` marks design-v5, as `v54/checkpoint-3` did for intfix. `check_ownership.py rc-fix
+   4ffc22b --head 1533daf`: 6 slice — **PASS**; on the merged diff the manifest itself, steward-only, this merge's own
+   write. `--validate`: coherent, 31 families, 822 entries. Merge `6d4677a`.
+4. **The bundles.** No front-end source changed. `test_no_source_is_newer_than_its_bundle` was red on the merged branch
+   for a reason older than this merge: `static/js/src/console.js` was rewritten on disk at the w4-d merge (part 2's
+   comment-only change) while `dist/console.js` kept its 17 October date. `npm run build` on design-v5 rewrote both dist
+   trees **byte for byte** (git status clean, no commit): the mtime check green.
+5. **The tests.** On the merged design-v5, `test_ile_v5_l8` on the bridge database, one pytest, `-p no:randomly`:
+   `tests/frontend/test_icons.py`, `apps/documents`, `apps/cms`, `apps/core`, `apps/accounts`, `tests/security`,
+   `tests/deployment`, `test_check_ownership.py`, the design docs, both bundle-currency tests and the `.env.example`
+   check — **814 passed, 1 failed** (the mtime check, item 4), 10 min 46 s; after the rebuild the two bundle files **10
+   passed**. `manage.py check` clean, `makemigrations --check` no changes, `pip check` clean; **pip-audit** on
+   `requirements/constraints.txt`: no known vulnerabilities (38 before). Logs:
+   `C:/tmp/ile_v5_council/evidence/rc-v2.0.0/merge/`.
+6. **The shared venv** (`C:/tmp/italylegalentry/.venv`, which LANES.json calls read-only) **now holds Pillow 13.0.0**:
+   the fix installed it, as its task asked, for gate 12's proof. Every server on that venv runs Pillow 13 from its next
+   start; 8780 restarted on `v54/rc-fix` after this merge. A leftover `~il` folder in its site-packages (pip's rename
+   of the old build) is to be removed once no server on that venv still runs on the old build.
+7. **`live_status.json`: the family row rc-fix** — state v5, its review as the decision, the tag. No surface key
+   changes: the fixes compose no page. `CHANGELOG_V54.md`: the entry first.
+8. **Handed on** (none of it holds the merge): **CI** (ubuntu-24.04, Python 3.12 and 3.13) has not run on Pillow 13:
+   the full non-browser suite (gate 6) is re-run on the merged design-v5 before the release tag. The files that say
+   «Pillow 12.3(.0)» — `static/brand/v5/PROVENANCE.json`, `docs/design-v3/specs/imagery.md`, `hero-doorway.md`,
+   `docs/design-v4/gates/GATE_B_2026-09-25.md` — are records of what built or measured those derivatives: they stay as
+   written, the derivatives built with 12.3.0 and not rebuilt. **The owner** — Q-1 (`is_staff` settable by the
+   administrator). What V5.10 asks next is unchanged: the gates re-run, then the reference tag, `main`'s fast-forward
+   and `v2.0.0` — none of which this merge does: no push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** A finding of the release candidate is fixed on its own branch and merged like any family, so the manifest
+says who wrote what; a family outside the waves gets its id and its slices from the steward, each file staying its
+owner's; a red the merge's run finds that the merge did not cause is traced to its cause and cleared the cheapest
+honest way — here a rebuild that changed no byte; a change to the shared environment is written down where the next
+reader looks.
+
+**Source.** The owner's V5.5, V5.9, V5.10; DL54-161; `QA/v54/rc-fix/NOTES.md`, `REVIEW.md`; the release-candidate
+reports and the merge's logs in `C:/tmp/ile_v5_council/evidence/rc-v2.0.0/`.

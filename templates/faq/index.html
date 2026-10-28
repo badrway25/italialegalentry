@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n static %}
+{% extends "base.html" %}{% load i18n static pages_typo %}
 {% comment %}
 FAQ — Questions fréquentes (Phase 3, gate G3). Locked answers are rendered from the registry through
 faq.services (cms.locked_content); editors only add unlocked entries in the back-office.
@@ -35,7 +35,7 @@ the links that lead on, then «who can help me» in the page's live words.
       <input class="search-form__input" type="search" id="faq-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="faq-q-help">
       <button class="btn btn--primary btn--lg" type="submit">{% translate "Rechercher" %}</button>
     </div>
-    <p class="search-form__help" id="faq-q-help">{% translate "Saisissez un mot-clé, par exemple « visa » ou « diplôme »." %}</p>
+    {% translate "Saisissez un mot-clé, par exemple « visa » ou « diplôme »." as search_help %}<p class="search-form__help" id="faq-q-help">{{ search_help|typo }}</p>
     {% if is_search %}<p class="search-form__reset"><a href="{% url 'faq:index' %}">{% translate "Effacer la recherche et afficher toutes les questions" %}</a></p>{% endif %}
   </form>
 </header>
