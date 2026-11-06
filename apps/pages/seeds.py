@@ -7,7 +7,9 @@ Pages seeds — idempotent (safe on every deploy).
   The Phase 3 variant stores no text at all: ``p3.hero.*`` come from the registry, behind gate G3.
 * ``pages.home_sections``: the eleven homepage sections in the prescribed order (master brief §21).
 
-Existing rows are never overwritten: editors own order, activation, headings and introductions.
+Existing rows are never overwritten: editors own order, activation, headings and introductions. The one exception is
+the team's own words: a default the team has since rewritten (``content.SUPERSEDED_DEFAULTS``) is brought to its new
+text on a row that still holds the old seed word for word — a row nobody edited. An editor's text is never touched.
 """
 
 from __future__ import annotations
@@ -67,4 +69,12 @@ def seed_home_sections() -> str:
             },
         )
         created += int(was_created)
-    return f"{created} homepage section(s) created, {len(content.SECTION_DEFAULTS)} ensured"
+    refreshed = 0
+    for (key, name), superseded in content.SUPERSEDED_DEFAULTS.items():
+        default = content.SECTION_DEFAULTS_BY_KEY[key]
+        current = services.str_source(getattr(default, name.removesuffix("_fr")))
+        refreshed += HomeSection.objects.filter(key=key, **{f"{name}__in": superseded}).update(**{name: current})
+    return (
+        f"{created} homepage section(s) created, {len(content.SECTION_DEFAULTS)} ensured, "
+        f"{refreshed} untouched default(s) brought to the team's current text"
+    )

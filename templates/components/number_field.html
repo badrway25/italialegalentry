@@ -1,0 +1,17 @@
+{% load i18n ile_core %}{% comment %}
+THE NUMBER — a − / + stepper around the field (V5.12 W2, lane B; DECISIONS §5.9). `inputmode="numeric"`, no browser
+spinners (the page-only sheet hides them); the two buttons are 44 px targets with their own names, and they say the
+limits: at the minimum «−» is disabled, at the maximum «+». They are rendered `hidden` and shown by
+static/js/src/fieldcheck.js — without the script the field is the plain number input, typed. The value's limits are
+the server's (`min` / `max` from the field's validators) and so are the messages (`data-msg-low` / `data-msg-high`).
+Contract: `field` (a BoundField whose widget is a NumberInput), `ui`, optional `help`, `label_lang`.
+{% endcomment %}<div class="form-field{% if field.errors %} form-field--error{% endif %} form-field--number{% if field.field.required %} form-field--required{% else %} form-field--optional{% endif %}" id="wrap_{{ field.id_for_label }}" data-field data-number{% for key, text in ui.messages.items %} data-msg-{{ key }}="{{ text }}"{% endfor %}>
+  {% include "components/_field_label.html" with for_id=field.id_for_label label=field.label optional=ui.optional lang=label_lang %}
+  <div class="form-field__control number-field">
+    <button class="number-field__step" type="button" data-step="-1" aria-controls="{{ field.id_for_label }}" hidden>{% svg_icon "minus" "icon" %}<span class="visually-hidden">{% translate "Diminuer" %}</span></button>
+    {{ field }}
+    <button class="number-field__step" type="button" data-step="1" aria-controls="{{ field.id_for_label }}" hidden>{% svg_icon "plus" "icon" %}<span class="visually-hidden">{% translate "Augmenter" %}</span></button>
+  </div>
+  {% if help %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help }}</div>{% elif field.help_text %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</div>{% endif %}
+  {% include "components/_field_msg.html" with errors=field.errors error_id=field.auto_id|add:"_error" %}
+</div>

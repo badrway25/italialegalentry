@@ -1,0 +1,11 @@
+{% load i18n ile_forms %}{% comment %}
+THE RAIL OF A MULTI-STEP FORM (V5.15 W3, lane B) — the list of its steps beside the form from 64rem (the formwork's
+side, components/formwork_side.html). Without script it is the form's table of contents: a link to each step's
+fieldset. static/js/src/steps.js gives it the steps' states — done, current, to come — and makes the steps already
+reached a way back. Its name is a hidden span the nav is labelled by (round 2): a lang on the nav itself would mark
+the translated step labels inside it as French (WCAG 3.1.2). Contract: `steps` (from {% form_steps %}).
+{% endcomment %}<nav class="steps-rail" aria-labelledby="steps-rail-name" data-steps-rail><span id="steps-rail-name" hidden{% ui_lang "Étapes du formulaire" %}>{% translate 'Étapes du formulaire' %}</span>
+  <ol class="steps-rail__list">{% for step in steps %}
+    <li class="steps-rail__item" data-rail-step="{{ step.key }}"><a class="steps-rail__link" href="#etape-{{ step.key }}"><span class="steps-rail__tile" aria-hidden="true"><span class="steps-rail__n">{{ step.n }}</span></span><span class="steps-rail__label"{% if step.lang %} lang="{{ step.lang }}"{% endif %}>{{ step.label }}</span></a></li>{% endfor %}
+  </ol>
+</nav>

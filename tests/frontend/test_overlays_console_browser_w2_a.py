@@ -65,6 +65,19 @@ def browser():
 
 
 @pytest.fixture
+def academy_published(db, settings):
+    """A published course: the Academy is a page of the rail, its last (V5.12 DECISIONS §8 — hidden while 0 courses
+    are published; ``portal.services.academy_open``). ``seed_all`` publishes none where demonstration data is off."""
+    from django.core.management import call_command
+
+    from academy.models import Course
+
+    settings.ILE_SEED_DEMONSTRATION_DATA = True
+    call_command("seed_all", "--only", "academy", verbosity=0)
+    assert Course.objects.published().exists()
+
+
+@pytest.fixture
 def person(user_factory):
     return user_factory("w2a-b-person@example.test", role=roles.PERSON, full_name="Personne de test")
 
@@ -261,8 +274,10 @@ DRAWER_VIEW = """() => { const a = document.activeElement; const d = document.ge
 
 
 @pytest.mark.parametrize(("width", "height"), [(390, 844), (844, 390)])
-def test_the_drawer_brings_the_focused_entry_into_its_view(browser, live_server, seeded, superuser, width, height):
-    """A11Y_PERF M1: «Academy» is every rail's last page; on it the staff account's drawer opened with the focus on a
+def test_the_drawer_brings_the_focused_entry_into_its_view(
+    browser, live_server, seeded, academy_published, superuser, width, height
+):
+    """A11Y_PERF M1: «Academy» is every rail's last page once a course is published (DECISIONS §8); on it the staff account's drawer opened with the focus on a
     row out of the list's view (WCAG 2.4.7). The module moves the focus without scrolling the page and brings it into
     the drawer's own view — by the pointer and by the keyboard; and Shift+Tab across the wrap lands in view too."""
     for how in ("tap", "key"):
@@ -314,6 +329,14 @@ def test_the_page_behind_the_drawer_leaves_the_accessibility_tree(browser, live_
 
     before = landmarks()
     assert {"banner", "main", "contentinfo"} <= set(before), before
+    # what hides itself by its own markup before the drawer opens — the overlay system's scrim, and the Lume veil, a
+    # decorative body-level picture (components/lume_veil.html, V5.15 lane A; included by base.html) — is left as it
+    # is by overlay.js, which restores only what it hid
+    own = page.evaluate(
+        """() => [...document.body.children].filter((e) => e.getAttribute('aria-hidden') === 'true')
+          .map((e) => e.id || e.className.split(' ')[0] || e.tagName)"""
+    )
+    assert sorted(own) == ["lume-veil", "overlay-scrim"], own
     page.tap("#console-menu")
     page.wait_for_selector("dialog.console-drawer[open]")
     _settled(page, "dialog.console-drawer")
@@ -332,8 +355,11 @@ def test_the_page_behind_the_drawer_leaves_the_accessibility_tree(browser, live_
     page.wait_for_function("() => getComputedStyle(document.querySelector('dialog.console-drawer')).display === 'none'")
     assert landmarks() == before, "closed, the page is whole again"
     assert page.evaluate(
-        "() => [...document.body.children].filter((e) => e.getAttribute('aria-hidden') === 'true').every((e) => e.matches('.overlay-scrim, .tooltip'))"
+        "() => [...document.body.children].filter((e) => e.getAttribute('aria-hidden') === 'true').every((e) => e.matches('.overlay-scrim, .tooltip, .lume-veil'))"
     ), "only what hides itself stays hidden"
+    assert page.evaluate(
+        "() => { const v = document.querySelector('body > .lume-veil'); return !v.querySelector('a[href], button, input, select, textarea, [tabindex]') && getComputedStyle(v).pointerEvents === 'none'; }"
+    ), "the veil that stays hidden is the decorative picture: nothing in it to reach"
     assert page.evaluate(FOCUS)["id"] == "console-menu"
     cdp.detach()
     context.close()

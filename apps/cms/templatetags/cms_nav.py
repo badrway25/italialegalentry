@@ -21,6 +21,7 @@ hairline, Forum, Projet; «Actualités» moves into the Projet panel.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from django import template
@@ -28,14 +29,14 @@ from django.db.utils import DatabaseError, ProgrammingError
 from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
 from django.utils import translation
-from django.utils.html import format_html
+from django.utils.html import conditional_escape, format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from cms import locked_content
 from cms.models import MenuItem, MenuLocation
 from core import flags, gates
-from core.links import public_url
+from core.links import path_is_open, public_url
 
 register = template.Library()
 
@@ -61,6 +62,8 @@ class NavItem:
     photo: dict = field(default_factory=dict)
     foot_url: str = ""  # the anti-fraud page, drawn as the panel's one-line foot
     after_doors: bool = False  # the first item after the doors: the hairline stands before it
+    notice: str = ""  # a door's own space's legal line («… ne délivre pas de visas …»): whole, in the panel's foot
+    notice_lang: str = ""  # its lang attribute when the locked text is not yet in the page's language
 
 
 # ---------------------------------------------------------------------------------------------
@@ -74,6 +77,9 @@ _GATE_FUNCTIONS = {
     "newsletter": gates.newsletter_enabled,
     "legal_pages": gates.legal_pages_available,
     "public_forms": lambda: gates.public_forms_enabled().open,
+    "news_public": gates.news_public,
+    "forum_public": gates.forum_public,
+    "partners_public": gates.partners_public,
 }
 
 
@@ -88,13 +94,17 @@ def gate_open(name: str) -> bool:
 
 
 def resolve_url(url_name: str, url: str = "") -> str:
-    """Reverse ``url_name`` if possible; otherwise the manual ``url``; "" when nothing resolves."""
+    """Reverse ``url_name`` if possible; otherwise the manual ``url``; "" when nothing resolves — or when the
+    destination is a registered route whose gate is closed (``core.links.path_is_open``): a menu row typed in the
+    back-office never links to a page that answers 404, «Actualités» before its first article included (V5.12 §8)."""
     if url_name:
         try:
-            return reverse(url_name)
+            resolved = reverse(url_name)
         except NoReverseMatch:
             return ""
-    return url or ""
+    else:
+        resolved = url or ""
+    return resolved if resolved and path_is_open(resolved) else ""
 
 
 # ---------------------------------------------------------------------------------------------
@@ -188,30 +198,20 @@ _FOOT_ROUTE = "pages:antifraud"
 #: "locked-first" the first sentence of one. Shown only when short (≤ _SECOND_LINE_MAX, whole, never cut)
 #: and in the page's own language: a panel never mixes a French line into an Arabic list.
 _SECOND_LINES: dict[tuple[str, str], tuple[str, object]] = {
+    # the Personnes door: its own space's line is the panel's legal notice (below); its six entries stand as titles
+    # alone, all alike (V5.18 stabilisation, P-4): «Diplômes et titres» and «Vivre en Italie» have no short live
+    # sentence (their locked bodies run 268 and 245 characters, never cut), so Formation, FAQ and Glossaire no longer
+    # carry one either — a panel half described read as half filled
     ("person", "pathways:index"): ("locked-first", "p3.persons.intro"),
-    ("person", "pathways:training"): (
-        "ui-first",
-        _(
-            "Deux temps d’un même parcours : se préparer dans le pays d’origine, puis continuer à se former en "
-            "Italie. Les formations ont une finalité d’orientation et de préparation."
-        ),
-    ),
-    ("person", "faq:index"): (
-        "ui",
-        _(
-            "Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers "
-            "vers l’Italie."
-        ),
-    ),
-    ("person", "glossary:index"): (
-        "ui",
-        _("Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots."),
-    ),
     ("institution", "enquiries:institution_proposal"): (
         "ui",
         _("Présentez votre institution et votre proposition : chaque demande est lue par l’équipe du projet."),
     ),
     ("institution", "forum:index"): ("locked", "p2.forum.header.subtitle"),
+    # the Entreprises door: the pilot's line from the companies' page's row of «Pour aller plus loin»; the needs form's
+    # entry carries its title alone — its page's line («Signalez les besoins professionnels de votre entreprise.») is
+    # the opening of the door's own locked gloss just above it, so the panel said it twice (V5.18 §2, B3)
+    ("company", "ecosystem:pilot"): ("ui", _("Présentation du projet et de la séquence proposée.")),
     ("university", "enquiries:university_proposal"): (
         "ui",
         _("Présentez votre établissement et votre proposition : chaque demande est lue par l’équipe du projet."),
@@ -224,6 +224,7 @@ _SECOND_LINES: dict[tuple[str, str], tuple[str, object]] = {
         "ui",
         _("Orientation, formation avant le départ et accompagnement, avec les acteurs compétents."),
     ),
+    ("", "pages:agami"): ("ui", _("Le promoteur du projet")),  # the AGAMI page's first chapter head
     ("", "pages:network"): ("ui", _("Un projet construit avec les acteurs compétents, chacun dans son rôle.")),
     ("", "pages:contact"): ("ui", _("Une adresse unique pour toutes les demandes relatives au projet.")),
 }
@@ -245,8 +246,54 @@ def _slug(prefix: str, index: int) -> str:
     return f"{prefix}-{index}"
 
 
-def _mark_current(item: NavItem, path: str, lang: str) -> None:
+#: A page linked from two panels belongs to ONE section, so the row carries one aria-current (V5.15 round 1, label
+#: v515-c-improve1): the pilot is the project's (its breadcrumb is the project's, its head the mission's night band),
+#: even though the Entreprises panel links it; Formation is the Personnes space's, even though the Universités panel
+#: carries it as a task link. url name of the page → url name of its section.
+_OWNER_SECTION = {
+    "ecosystem:pilot": "pages:project",
+    "pathways:training": "pathways:index",
+    "pages:antifraud": "pathways:index",  # round 2 of W3 (m-6): the page's folio is «Espace Personnes»
+}
+
+
+def _owner_section(path: str) -> str:
+    """The URL of the one section that owns ``path`` when the page is linked from several panels; "" otherwise."""
+    for page, section in _OWNER_SECTION.items():
+        try:
+            if reverse(page) == path:
+                return reverse(section)
+        except NoReverseMatch:
+            continue
+    return ""
+
+
+def _one_current(items: list[NavItem], path: str, lang: str) -> None:
+    """A page that is a top-level item of the row is current there only (finishing round F1): on the Forum, the
+    Institutions door — whose panel lists the Forum — carries neither the architrave nor aria-current."""
+    top = {item.url for item in items if not item.is_section and item.url and item.is_current}
+    for item in items:
+        if not (item.is_section and any(child.is_current and child.url in top for child in item.children)):
+            continue
+        for child in item.children:
+            child.is_current = child.is_current and child.url not in top
+        own = bool(item.url) and item.url != f"/{lang}/" and path.startswith(item.url)
+        item.is_current = own or any(child.is_current for child in item.children)
+
+
+def _mark_current(item: NavItem, path: str, lang: str, owner: str = "") -> None:
     home = f"/{lang}/"
+    if owner and item.url != owner:
+        # another section's panel links the page: none of its rows is current
+        for child in item.children:
+            child.is_current = False
+        item.is_current = False
+        return
+    if owner and item.url == owner:
+        for child in item.children:
+            child.is_current = bool(child.url) and child.url == path
+        item.is_current = True
+        return
     for child in item.children:
         child.is_current = bool(child.url) and child.url == path
     if item.url:
@@ -382,8 +429,11 @@ def build_menu(location: str, lang: str | None = None, path: str = "") -> list[N
         if location == MenuLocation.MAIN:
             _portico(items, lang)
     if path:
+        with translation.override(lang):
+            owner = _owner_section(path)
         for item in items:
-            _mark_current(item, path, lang)
+            _mark_current(item, path, lang, owner)
+        _one_current(items, path, lang)
     return items
 
 
@@ -457,19 +507,40 @@ def _portico(items: list[NavItem], lang: str) -> None:
             )
             item.gloss, item.gloss_lang = str(text.value), text.lang
         for child in item.children:
+            own_space = bool(item.audience) and child.url_name == item.url_name
             if child.description:  # written in the back-office (French): only on the French page
                 if lang == locked_content.FALLBACK_LANGUAGE and len(child.description) <= _SECOND_LINE_MAX:
+                    if own_space:
+                        item.notice, child.description = child.description, ""
                     continue
                 child.description = ""
             source = _SECOND_LINES.get((item.audience, child.url_name)) or _SECOND_LINES.get(("", child.url_name))
             if not source:
                 continue
             text, text_lang = _live_line(source[0], source[1], lang, phase3)
+            if own_space and source[0].startswith("locked"):
+                # the door's own space's line is a LEGAL notice, not a second line (finishing round F1, M-2): it stands
+                # whole in the panel's foot on every page — in the locked French, said with lang="fr", until the
+                # prescribed text exists in the page's language (a gloss of the same door does the same)
+                if text and len(text) <= _SECOND_LINE_MAX:
+                    item.notice, item.notice_lang = text, text_lang
+                continue
             if text and not text_lang and len(text) <= _SECOND_LINE_MAX:
                 child.description = text
         is_door = bool(item.audience and item.is_section)
         item.after_doors = previous_was_door and not is_door
         previous_was_door = is_door
+
+
+_BRAND_RUN = re.compile(r"Italy Legal Entry™?")
+
+
+@register.filter
+def brand_bdi(text) -> str:
+    """A menu line with the brand isolated as one left-to-right run (finishing round F1, M-2): in an Arabic line the
+    Latin name and its ™ stay one unit — a line clamp never cuts between them and the bidi algorithm never reorders
+    the sentence around them (the round-3 review: the ar 375 sheet's line broke after the ™). Escapes first."""
+    return mark_safe(_BRAND_RUN.sub(lambda m: f'<bdi dir="ltr">{m.group(0)}</bdi>', str(conditional_escape(text))))
 
 
 # ---------------------------------------------------------------------------------------------

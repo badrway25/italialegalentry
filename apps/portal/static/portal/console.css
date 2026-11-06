@@ -18,6 +18,9 @@
      v5/_frame.css                     the frame's heads (the ContextHeader, the workspace head), the actor's glyph
                                        disc, the frame's focus ring — what every console page still drew from
                                        v4/workspace.css when the case file redrew the rest (W3-E)
+     v5/_motion.css                    the console's half of the loader «Lume» across a navigation: the tile's View
+                                       Transition name, the context bar's threshold line and word, the tile's key and
+                                       its arrival's light, their stills (V5.12 §4; DECISIONS §1 T1–T3; v512-a W1)
 
    Not here — each the CSS of the pages that draw it, in a page-only sheet linked after this one (the owner's V5.8,
    11 October 2026, and the orchestrator's definitive ruling of 12 October: the shared bundles never rise; a
@@ -49,3 +52,7 @@
    weight (the shell's rules on the heads are the frame's own, more specific; its focus rules are the chrome's, outside
    the frame; the dashboards write no focus rule), so no tie changes hands. */
 @import url("v5/_frame.css");
+
+/* V5.12 — the console's motion across a navigation (the Director's DECISIONS §1 T1–T3): last, because it only adds
+   states (html.is-departing, html.lume-arrive) and the View Transition's name to what the shell draws. */
+@import url("v5/_motion.css");

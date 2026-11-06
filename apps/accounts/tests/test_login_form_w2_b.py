@@ -198,7 +198,7 @@ def test_a_refusal_keeps_the_address_and_says_one_thing_for_both_causes(client, 
         assert 'class="form-field form-field--error' not in html
         assert f'id="{FORM_ERRORS_ID}"' in html and 'role="alert" tabindex="-1"' in html
         assert 'id="id_password_helptext"' in html, "the description's second id exists on the page"
-        assert re.search(r"<title>\s*Erreur — \s*Connexion\s*·", html), "the title says the error first (L4)"
+        assert re.search(r"<title>\s*Erreur — \s*Se connecter\s*·", html), "the title says the error first (L4)"
 
 
 def test_a_field_s_own_error_stays_on_the_field(client, seeded):
@@ -207,11 +207,13 @@ def test_a_field_s_own_error_stays_on_the_field(client, seeded):
     assert _attribute(login, "aria-invalid") == "true" and _attribute(login, "aria-describedby") == "id_login_error"
     assert _attribute(password, "aria-invalid") == "true"
     assert _attribute(password, "aria-describedby") == "id_password_helptext id_password_error"
-    assert 'id="id_login_error" role="alert"' in html and 'id="id_password_error" role="alert"' in html
+    # one announcement channel (V5.12 W2 review): the field's error sits in its polite row, not as a second alert
+    assert '<div class="form-field__errors" id="id_login_error">' in html
+    assert '<div class="form-field__errors" id="id_password_error">' in html
     assert html.count('class="form-field form-field--error') == 2
     summary = _summary(html)
     assert 'href="#id_login"' in html and 'href="#id_password"' in html, "the summary links to each field in error"
-    assert "Courriel" in summary and "Mot de passe" in summary
+    assert "Adresse e-mail" in summary and "Mot de passe" in summary  # the glossary's words (V5.12 D-11)
 
 
 def test_the_limit_on_failed_attempts_is_allauth_s_and_answers_in_the_form(client, seeded, verified_user):

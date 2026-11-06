@@ -107,17 +107,34 @@ def test_the_sheet_opens_and_closes_on_the_overlay_system(browser, live_server, 
         assert state["mainHidden"], "the page behind leaves the accessibility tree"
         assert state["lock"] is not None and state["scrollY"] == before["scrollY"], "held, not moved (O8)"
         assert state["scrollWidth"] == state["clientWidth"]
-        # the head line stands on the letterhead's row: the lock-up does not move, «Fermer» ends where «Menu» ends
+        # the head line stands on the letterhead's row: the lock-up does not move, «Fermer» ends where «Menu» ends.
+        # On the home the header's lock-up keeps the mark only and gives its words to the hero's H1 (Q1, «one name on
+        # the screen», apps/pages/static/pages/css/hero.css; 44252192). In French the sheet's head carries the whole
+        # name, its words growing after the mark; in Arabic the Latin wordmark is a left-to-right isolate (I18N-06) whose
+        # mark is its LEFT end, so drawn whole in the sheet's head it moved the mark ~183 px off the row's start: since
+        # V5.20 (v520-css, the final technical gate's RTL defect, group P's observation in QA/v518g/p/NOTES.md) the
+        # Arabic sheet's head keeps the bar's lock-up, the mark alone. Stronger than before: the mark does not move in
+        # either direction (it was asserted for French only).
         rows = page.evaluate(
             """() => {
               const r = (e) => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom].map(Math.round); };
               const s = document.getElementById('nav-sheet');
-              return {head: r(s.querySelector('.nav-sheet__head .brand')), bar: r(document.querySelector('.site-header__inner > .brand')),
+              const head = s.querySelector('.nav-sheet__head .brand'), bar = document.querySelector('.site-header__inner > .brand');
+              return {head: r(head), bar: r(bar), headMark: r(head.querySelector('.lock__mark')), barMark: r(bar.querySelector('.lock__mark')),
+                      barWords: bar.querySelector('.lock__text').getClientRects().length,
+                      headWords: head.querySelector('.lock__text').getClientRects().length,
                       fermer: r(s.querySelector('.nav-sheet__head .nav-toggle')), menu: r(document.querySelector('[data-nav-toggle]')),
                       rtl: document.documentElement.dir === 'rtl'};
             }"""
         )
-        assert rows["head"] == rows["bar"], rows
+        start = 2 if rows["rtl"] else 0
+        assert rows["head"][start] == rows["bar"][start] and rows["head"][1::2] == rows["bar"][1::2], rows
+        assert rows["headMark"] == rows["barMark"], rows
+        assert rows["barWords"] == 0, rows
+        if rows["rtl"]:
+            assert rows["headWords"] == 0 and rows["head"] == rows["bar"], rows  # the bar's row, the mark alone
+        else:
+            assert rows["headWords"] > 0, rows  # the words grow after the mark
         end = 0 if rows["rtl"] else 2
         assert abs(rows["fermer"][end] - rows["menu"][end]) <= 1 and rows["fermer"][1] == rows["menu"][1], rows
         # one width for «Menu» and «Fermer» (the longer word's): only the word and the glyph change (REVIEW m5)
@@ -140,6 +157,49 @@ def test_the_sheet_opens_and_closes_on_the_overlay_system(browser, live_server, 
         assert not page.evaluate(STATE_JS)["open"]
     finally:
         context.close()
+
+
+MARK_JS = """(sel) => {
+  const b = document.querySelector(sel);
+  if (!b || !b.getClientRects().length) return {drawn: false};
+  const m = b.querySelector('.lock__mark').getBoundingClientRect();
+  return {drawn: true, mark: [m.left, m.top, m.right, m.bottom].map(Math.round),
+          words: b.querySelector('.lock__text').getClientRects().length};
+}"""
+
+
+@pytest.mark.parametrize("lang", ["fr", "ar"])
+@pytest.mark.parametrize("path", ["", "le-projet/"])
+def test_the_brand_mark_holds_its_place_when_the_sheet_opens(browser, live_server, seeded, four_doors, lang, path):
+    """V5.20 (v520-css; group P's observation, docs/design-v5/QA/v518g/p/NOTES.md): opening «Menu» never moves the
+    brand's mark. On the Arabic home the sheet's head drew the whole Latin wordmark — a left-to-right isolate whose
+    mark is its left end — while the bar draws the mark alone (Q1), so the mark jumped about 183 px off the row's start;
+    and wherever both rows draw the mark alone (the Arabic home, every page at ≤ 20.5rem) the head's lock-up anchored
+    right-to-left in its 44 px box while the bar's anchors left-to-right (v5/motion.css): 6 px. Swept over the sheet's
+    widths, phone to tablet, both directions, on the home (the bar's mark alone) and on an inner page (the whole lock-up
+    in both rows). Below 48rem the sheet's head is the letterhead's row and its mark sits on the bar's; from 48rem the
+    side sheet's head draws no lock-up and the bar's mark, beside it, stays where it was."""
+    for width, height in ((320, 640), (360, 740), (390, 844), (430, 932), (768, 1024)):
+        context, page = _open(browser, width, height, has_touch=True)
+        try:
+            page.goto(f"{live_server.url}/{lang}/{path}", wait_until="load")
+            bar = page.evaluate(MARK_JS, ".site-header__inner > .brand")
+            page.tap(MENU)
+            page.wait_for_timeout(500)
+            head = page.evaluate(MARK_JS, f"{SHEET} .nav-sheet__head .brand")
+            after = page.evaluate(MARK_JS, ".site-header__inner > .brand")
+            where = (lang, path, width, bar, head, after)
+            assert bar["drawn"] and after["mark"] == bar["mark"], where
+            if width < 768:
+                assert head["drawn"] and head["mark"] == bar["mark"], where
+                if lang == "ar" or path:
+                    assert head["words"] == bar["words"], where  # the sheet's head is the bar's row
+                else:  # the French home: the words grow after the mark (none at ≤ 20.5rem, as everywhere)
+                    assert bar["words"] == 0 and (head["words"] > 0) == (width > 328), where
+            else:
+                assert not head["drawn"], where  # the side sheet: the letterhead keeps the lock-up beside it
+        finally:
+            context.close()
 
 
 def test_every_target_of_the_sheet_holds_44_px_under_a_finger(browser, live_server, seeded, four_doors):
@@ -179,9 +239,13 @@ def test_every_target_of_the_sheet_holds_44_px_under_a_finger(browser, live_serv
         panel = page.evaluate(
             """() => { const p = document.querySelectorAll('#nav-sheet details.nav-sheet__door')[1].querySelector('.nav-sheet__panel');
               return {gloss: !!p.querySelector('.nav-sheet__gloss'), entries: p.querySelectorAll('.portico__link').length,
-                      space: !!p.querySelector('.portico__space'), glyphs: p.querySelectorAll('svg').length}; }"""
+                      space: !!p.querySelector('.portico__space'), glyphs: p.querySelectorAll('svg').length,
+                      decorative: [...p.querySelectorAll('.portico__glyph')].every((g) => g.getAttribute('aria-hidden') === 'true')}; }"""
         )
-        assert panel["gloss"] and panel["entries"] >= 2 and panel["space"] and panel["glyphs"] == 0, panel
+        # finishing round F1 (v515-a, review round 3): each entry carries its destination's glyph, as the bar's panel
+        # does — one per entry, decorative (the title is the link's name), and nothing else drawn in the panel
+        assert panel["gloss"] and panel["entries"] >= 2 and panel["space"], panel
+        assert panel["glyphs"] == panel["entries"] and panel["decorative"], panel
     finally:
         context.close()
 
@@ -245,12 +309,18 @@ def test_reduced_motion_is_one_short_opacity_and_no_transform(browser, live_serv
 def test_from_64rem_the_sheet_carries_forum_projet_the_languages_and_the_search(
     browser, live_server, seeded, four_doors
 ):
-    """Plan §1.12 item 7, as W2-C1 built the band: the four doors in the bar, «Menu» for the rest — and, as every
-    sheet, the night foot with «la targa» (REVIEW M2: the letterhead's targa lies under the side sheet); a window
-    widened past 80rem puts the sheet away, and the focus lands on the letterhead."""
+    """V5.15 §1 (DL54-170) supersedes plan §1.12 item 7: from 64rem every item is in the one-row bar and «Menu» is not
+    drawn; below it (an iPad in portrait, 768 px) «Menu» opens the side sheet with the doors, Forum · Projet, the
+    languages and the search, and the night foot with «la targa» (REVIEW M2); a window widened past 64rem puts the
+    sheet away, and the focus lands on the letterhead."""
     context, page = _open(browser, 1024, 768)
     try:
         page.goto(f"{live_server.url}/fr/", wait_until="load")
+        bar = page.evaluate("""() => ({menu: getComputedStyle(document.querySelector('.site-header .nav-toggle')).display,
+          items: [...document.querySelectorAll('.main-nav__list > li')].filter((li) => li.getClientRects().length).length})""")
+        assert bar == {"menu": "none", "items": 6}, bar
+        page.set_viewport_size({"width": 768, "height": 1024})
+        page.wait_for_timeout(200)
         page.click(MENU)
         page.wait_for_timeout(450)
         shown = page.evaluate(
@@ -260,12 +330,12 @@ def test_from_64rem_the_sheet_carries_forum_projet_the_languages_and_the_search(
                       targa: v('.nav-sheet__foot .targa--night')}; }"""
         )
         assert shown == {
-            "doors": 0,
-            "rows": 2,
+            "doors": 4,
+            "rows": 6,
             "langs": 4,
             "search": 1,
-            "primary": 0,
-            "fraud": 0,
+            "primary": 1,
+            "fraud": 1,
             "foot": 1,
             "brand": 0,
             "targa": 1,
@@ -337,7 +407,7 @@ def test_the_key_alone_is_named_by_the_systems_top_layer_tooltip(browser, live_s
         page.goto(f"{live_server.url}/fr/", wait_until="load")
         targa = page.locator(".site-header__end > .targa")
         box = targa.bounding_box()
-        assert box["width"] == 32 and box["height"] == 32, box
+        assert box["width"] == 40 and box["height"] == 40, box  # V5.15 round 1: one 40 px night control (DL54-170)
         page.mouse.move(box["x"] + 16, box["y"] + 16)
         page.wait_for_timeout(150)
         assert page.evaluate(tip) is None, "nothing before the wait"
@@ -377,7 +447,9 @@ def test_the_flag_off_leaves_no_hole_in_the_letterhead(browser, live_server, see
       const s = getComputedStyle(inner), b = inner.getBoundingClientRect(), n = nav.getBoundingClientRect();
       const rtl = document.documentElement.dir === 'rtl';
       const edge = rtl ? b.left + parseFloat(s.paddingLeft) : b.right - parseFloat(s.paddingRight);
+      const z = document.querySelector('.site-header__end').getBoundingClientRect();
       return {targa: document.querySelectorAll('.targa').length, edge: Math.round(edge), navEnd: Math.round(rtl ? n.left : n.right),
+              zoneEnd: Math.round(rtl ? z.left : z.right),
               endZone: getComputedStyle(document.querySelector('.site-header__end')).display};
     }"""
     for width in (1280, 1440, 1920):
@@ -386,27 +458,32 @@ def test_the_flag_off_leaves_no_hole_in_the_letterhead(browser, live_server, see
             page.goto(f"{live_server.url}/{lang}/", wait_until="load")
             state = page.evaluate(edges)
             assert state["targa"] == 0, state
-            assert abs(state["navEnd"] - state["edge"]) <= 1, (width, state)
+            # V5.15: the end zone always holds the language switch (one row), so it ends on the column's edge: no hole
+            assert abs(state["zoneEnd"] - state["edge"]) <= 1, (width, state)
         finally:
             context.close()
 
 
 def test_no_photograph_on_a_phone_nor_with_save_data(browser, live_server, seeded, four_doors):
-    """N8: on a phone the sheet draws discs, never the doors' photographs — opened, every door unfolded — and from
-    80rem a Save-Data visitor gets none at idle either."""
+    """N8, as V5.15 §2 amends it (DL54-170, round 1: the four portico frames repeat the home's door tiles — «Do NOT
+    repeat the same image» —, so the menu shows a photograph only from a frame of its own, lane C's `menu_only`, and
+    there is none yet): opening the sheet fetches no photograph, nor does a door unfolded; and from 80rem a Save-Data
+    visitor gets none at idle either. When lane C's frames arrive, a door unfolded fetches its own one frame, at the
+    phone's size (the assertion below to restore then)."""
     context, page = _open(browser, 390, 844, has_touch=True)
     try:
         requests: list[str] = []
         page.on("request", lambda r: requests.append(r.url))
         page.goto(f"{live_server.url}/fr/", wait_until="load")
         page.tap(MENU)
-        page.wait_for_timeout(450)
+        page.wait_for_timeout(1200)
+        assert [u for u in requests if "/img/portico/" in u] == [], "the sheet opens with no photograph"
         doors = page.locator(f"{SHEET} details > summary")
-        for i in range(doors.count()):
-            doors.nth(i).tap()
-            page.wait_for_timeout(100)
-        page.wait_for_timeout(2500)
-        assert [u for u in requests if "/img/portico/" in u] == []
+        doors.nth(1).tap()
+        page.wait_for_timeout(1500)
+        fetched = [u for u in requests if "/img/portico/" in u]
+        assert fetched == [], "no frame the home already shows (V5.15 §2)"
+        assert page.locator(f"{SHEET} .nav-sheet__door[open] .nav-sheet__gloss").count() == 1, "the door unfolds its gloss"
     finally:
         context.close()
     context, page = _open(browser, 1440, 900)
@@ -463,7 +540,8 @@ def test_the_band_holds_one_row_with_24_px_to_spare_at_1024(
                     fit = page.evaluate(BAND_JS)
                     where = f"{lang} 1024 {'coarse' if touch else 'fine'} gutter {gutter} {'signed in' if signed_in else 'signed out'}"
                     assert fit["column"] == 944 - gutter, (where, fit)
-                    assert fit["items"] == 4 and fit["rows"] == 1 and fit["header"] <= 65, (where, fit)
+                    # V5.15 (DL54-170): all six items in the one row from 64rem
+                    assert fit["items"] == 6 and fit["rows"] == 1 and fit["header"] <= 65, (where, fit)
                     assert fit["spare"] >= 24, f"{fit['spare']} px to spare ({where}): {fit}"
             finally:
                 context.close()

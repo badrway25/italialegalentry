@@ -10,11 +10,17 @@ Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): the tr
 spaces are the navigation's doors («Il portico»), and a page does not repeat its chrome; each space ends on its own
 «Pour aller plus loin».
 Prescribed texts enter only through the locked registry ({% locked %} / services.locked_text).
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.3, §3.6–§3.8; lane P1 — Page Composition V2): below the approved entrance each space
+is a sequence of compositions of the library V2 (components/sezioni/*), one pattern a section, adjacent sections
+signed by different verbs (§5.2); the chapter device leaves the bodies. Each space links ONE page sheet of its own —
+`family_sheet`, ecosystem/<space key>.css: the family's sheet (ecosystem.css, unchanged) and the V2 partials that
+page draws, bundled — so a page carries only what it composes (§7.1, page-only sheets with their own budgets).
 {% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
 {% block body_class %}page-ecosystem page-ecosystem--{{ space_key }} interior{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/ecosystem/ecosystem.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static family_sheet|default:'css/dist/ecosystem/ecosystem.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
 {% block jsonld %}{% if jsonld %}<script type="application/ld+json">{{ jsonld }}</script>{% endif %}{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}

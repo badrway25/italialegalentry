@@ -12,6 +12,7 @@ from cms import locked_content
 from cms.forbidden import scan
 from orientation.models import OrientationSession
 from orientation.tests.conftest import walk
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = [pytest.mark.django_db, pytest.mark.compliance]
 
@@ -127,7 +128,8 @@ def test_question_pages_use_fieldset_legend_progressbar_and_help(client, active_
 
 def test_pages_load_only_self_hosted_resources(client, active_ruleset):
     for label, html in _rendered_pages(client):
-        externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', html) if "testserver" not in s]
+        checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+        externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', checked) if "testserver" not in s]
         assert not externals, (label, externals)
         assert "/static/css/dist/orientation/wizard.css" in html, label
         for src in re.findall(r'<script[^>]+src="([^"]+)"', html):

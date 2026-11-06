@@ -14,6 +14,7 @@ from faq.models import FAQCategory, FAQItem, FAQItemTranslation
 from faq.seeds import seed_locked_faq_items
 from glossary.seeds import seed_locked_terms
 from glossary.services import invalidate_link_map
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = pytest.mark.django_db
 
@@ -84,12 +85,17 @@ def test_page_structure_landmarks_headings_and_anchors(client, faq_seeded, phase
     assert form is not None and form["method"].lower() == "get"
     assert soup.find("label", attrs={"for": "faq-q"}) is not None
     assert soup.find("section", id="cat-general") is not None
-    details = soup.find_all("details", class_="faq-item")
-    assert len(details) == 9
-    for d in details:
-        assert d.find("summary") is not None and d.find("h3") is not None
-        assert d.find("time") is not None
-    assert "2026-09-14" in str(details[0])
+    # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the category is an explorer (L «l'indice», master–detail)
+    # — the nine questions as its index, each answer a panel; every panel stays in the page (the module only chooses
+    # which one shows), each with its question as an h3 and its date, its id the question's key (the permalinks)
+    index = soup.select(".faq-esploratore .indice__lista a.indice__voce")
+    panels = soup.select(".faq-esploratore section.indice__pannello")
+    assert len(index) == 9 and len(panels) == 9
+    assert [a["href"] for a in index] == [f"#{panel['id']}" for panel in panels]
+    assert [panel["id"] for panel in panels] == [e["key"] for e in registry.items()]
+    for panel in panels:
+        assert panel.find("h3") is not None and panel.find("time") is not None
+    assert "2026-09-14" in str(panels[0])
 
 
 def test_related_links_to_glossary_and_contextual_links(client, faq_seeded, phase3_open):
@@ -132,7 +138,9 @@ def test_search_lists_only_matching_items_and_no_jsonld(client, faq_seeded, phas
 
 def test_search_without_result_shows_empty_state(client, faq_seeded, phase3_open):
     html = client.get("/fr/faq/", {"q": "xyzzy-nothing"}).content.decode()
-    assert 'class="empty-state"' in html
+    # the empty state in its glyph tile since V5.15 W3 round 1 (DECISIONS §15 lane B; v515-b 9211d5fc,
+    # templates/components/empty_state.html): the class pair is the component's own
+    assert '<div class="empty-state empty-state--tile" role="status">' in html
     assert "0 résultat" in html
 
 
@@ -162,13 +170,17 @@ def test_jsonld_faqpage_lists_the_nine_published_items_only(client, faq_seeded, 
 # Languages (G10) and RTL
 # --------------------------------------------------------------------------------------------
 def test_other_languages_fall_back_to_french_with_lang_attr(client, faq_seeded, phase3_open):
+    # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the questions are the explorer's panels' headings
     for lang in ("it", "en", "ar"):
         soup = BeautifulSoup(client.get(f"/{lang}/faq/").content, "html.parser")
-        questions = soup.find_all("h3", class_="faq-item__question")
+        questions = soup.select(".faq-esploratore h3.indice__titolo")
         assert len(questions) == 9
         assert all(q.get("lang") == "fr" for q in questions), lang
+        answers = soup.select(".faq-esploratore p.faq-risposta")
+        assert len(answers) == 9 and all(a.get("lang") == "fr" for a in answers), lang
     soup_fr = BeautifulSoup(client.get("/fr/faq/").content, "html.parser")
-    assert all(q.get("lang") is None for q in soup_fr.find_all("h3", class_="faq-item__question"))
+    assert len(soup_fr.select(".faq-esploratore h3.indice__titolo")) == 9
+    assert all(q.get("lang") is None for q in soup_fr.select(".faq-esploratore h3.indice__titolo"))
 
 
 def test_published_translation_is_rendered_but_draft_is_not(client, faq_seeded, phase3_open):
@@ -217,7 +229,8 @@ def test_rendered_pages_pass_compliance_scan(client, faq_seeded, phase3_open):
             assert "Italy Legal Entry™" in html
             emails = set(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}", html))
             assert emails <= {"contact@agamieuromed.org"}, emails
-            externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', html) if "testserver" not in s]
+            checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+            externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', checked) if "testserver" not in s]
             assert not externals, externals
             assert "CONTENT_PENDING_LEGAL_REVIEW" not in html
 

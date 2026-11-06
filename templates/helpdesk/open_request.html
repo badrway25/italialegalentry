@@ -13,8 +13,10 @@ it, and because a person who does not know that will naturally write everything.
 {% block meta_description %}{% translate "Adresser une question au guichet numérique." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="register">
+  {% include "portal/partials/atrium_art.html" with figure="counter" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Ouvrir une demande" %}</h1>
     <p class="ws-head__lead reg-promise">{% with glyph="person"|actor_glyph %}<span class="reg-row__seal" aria-hidden="true">{% svg_icon glyph "icon" %}</span>{% endwith %}<span>{% translate "Votre question est lue par une personne. Aucune réponse n’est produite automatiquement et aucun délai ne vous est promis avant qu’un professionnel ait été désigné." %}</span></p>
   </div>

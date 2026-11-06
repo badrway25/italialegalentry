@@ -1,0 +1,130 @@
+{% comment %}
+THE ATRIUM'S DRAWING — V5.15 lane D («platform design energy»; portal/v5/_platform.css §1, in portal/platform.css). The
+console's page head is an ATRIUM: one grammar — a ground line, an ILE threshold (the door with its gold keyhole), the
+route that comes from the reading start to that door, the key's light that travels it once and, arriving, turns the
+keyhole a quarter — and, round 2, a FIGURE PER FAMILY of pages drawn in that grammar (V5.15 §3/§4: one system,
+different purposeful compositions), chosen by the include's `figure`:
+
+  route       the file (dashboard, case file, «Mes dossiers», «Mon parcours», «Ma situation», «Mes échéances»): the
+              journey's seven stations on the route, the file's own step lit in gold (`atrium_at`, the journey's rank:
+              portal.services.journey_at), the ones behind in lagoon; a pedimented portico at the end
+  counter     the Guichet and «Mes demandes»: one wide counter arch, its counter, two stations facing across it, the
+              hatch as the door
+  thresholds  the Academy: three thresholds rising step by step, the tallest holds the door
+  sheets      the documents: three sheets standing on the threshold of a portico
+  exchange    the communications: two porticoes, the route going from one to the other
+  seal        an organisation's space: the arcade of three arches, its seal (`atrium_seal`, the audience glyph) in the
+              central arch over the door
+  (default)   the arcade of three arches, the door in the middle one
+
+The drawing is set in a 300 × 200 box and FILLS ITS COLUMN'S HEIGHT (`xMaxYMax meet`; the column's own content does not
+size the head, the sheet contains it); the route's lead-in runs on beyond the box toward the words and is clipped at
+the column's edge. Each drawn stroke is measured on pathLength 1 so the sheet draws it with one dash at any size —
+which holds ONLY without `vector-effect: non-scaling-stroke` (round 1). On a phone the drawing gives way to the BAND
+(`atrium__band`): the route and its stations, the door at its end — the same story in one line, drawn on the
+eyebrow's row, from the space's name to the door (where the browser anchors it; else a row at the head's foot), with
+the FAMILY'S OWN MOTIF before the door (F1): the file's seven stations and its step (route), two facing stations over
+the counter (counter), three rising thresholds, two sheets, a second door (exchange), the seal's ring, two arches
+(the default). A station is drawn «done» only from the file's own data (`atrium_at`), never by default.
+
+Decorative: hidden from assistive technology, never focusable, never a word. Mirrored as a whole in Arabic by the sheet
+(the seal's glyph is mirrored back).
+{% endcomment %}{% load atrium %}<div class="atrium__art" aria-hidden="true" data-figure="{{ figure|default:'arcade' }}"><svg class="atrium__svg" viewBox="-60 0 360 200" focusable="false" preserveAspectRatio="xMaxYMax meet">
+  <g class="atrium__grid"><path d="M-600 14 H300 M-600 190 H300" pathLength="1"/></g>
+{% if figure == "route" %}
+  <g class="atrium__arcade">
+    <path d="M178 34 L236 10 L294 34" pathLength="1"/>
+    <path d="M182 42 H290" pathLength="1"/>
+    <path d="M192 190 V96 A44 44 0 0 1 280 96 V190" pathLength="1"/>
+    <path d="M186 190 V50 M286 190 V50" pathLength="1"/>
+  </g>
+  <path class="atrium__door" d="M216 190 V136 A20 20 0 0 1 256 136 V190" pathLength="1"/>
+  <path class="atrium__route" d="M-600 176 H156 C176 176 184 190 204 190 H236" pathLength="1"/>
+  <g class="atrium__stations" transform="translate(-36 0)">{% for _ in "1234567" %}<circle class="atrium__station{% if atrium_at %}{% if forloop.counter < atrium_at %} atrium__station--done{% elif forloop.counter == atrium_at %} atrium__station--here{% endif %}{% endif %}" cx="{% widthratio forloop.counter0 1 28 %}" cy="176" r="{% if forloop.counter == atrium_at %}6.5{% else %}3.5{% endif %}"/>{% endfor %}</g>
+  {% if atrium_at %}<g transform="translate(-36 0)"><circle class="atrium__halo" data-at="{{ atrium_at }}" cx="{% widthratio atrium_at|add:'-1' 1 28 %}" cy="176" r="10.5"/></g>{% endif %}
+  <path class="atrium__light" d="M-600 176 H156 C176 176 184 190 204 190 H236" pathLength="1"/>
+  <g class="atrium__keyhole"><circle class="atrium__key" cx="236" cy="158" r="4.5"/><path class="atrium__shaft" d="M236 162 V174"/></g>
+{% elif figure == "counter" %}
+  <g class="atrium__arcade">
+    <path d="M40 190 V108 A124 84 0 0 1 288 108 V190" pathLength="1"/>
+    <path d="M54 190 V112 A110 72 0 0 1 274 112 V190" pathLength="1"/>
+    <path d="M70 148 H258" pathLength="1"/>
+    <path d="M78 160 H250 M78 148 V190 M250 148 V190" pathLength="1"/>
+  </g>
+  <path class="atrium__door" d="M140 148 V112 A24 24 0 0 1 188 112 V148" pathLength="1"/>
+  <path class="atrium__route" d="M-600 190 H58 C66 190 64 148 74 148 H164" pathLength="1"/>
+  <g class="atrium__stations"><circle class="atrium__station atrium__station--done" cx="104" cy="134" r="5"/><circle class="atrium__station" cx="224" cy="134" r="5"/><circle class="atrium__station" cx="20" cy="190" r="3.5"/></g>
+  <path class="atrium__light" d="M-600 190 H58 C66 190 64 148 74 148 H164" pathLength="1"/>
+  <g class="atrium__keyhole"><circle class="atrium__key" cx="164" cy="122" r="4.5"/><path class="atrium__shaft" d="M164 126 V138"/></g>
+{% elif figure == "thresholds" %}
+  <g class="atrium__arcade">
+    <path d="M26 190 V170 H104 V148 H182 V126 H298" pathLength="1"/>
+    <path d="M40 170 V138 A24 24 0 0 1 88 138 V170" pathLength="1"/>
+    <path d="M116 148 V104 A28 28 0 0 1 172 104 V148" pathLength="1"/>
+    <path d="M196 126 V60 A42 42 0 0 1 280 60 V126" pathLength="1"/>
+  </g>
+  <path class="atrium__door" d="M218 126 V92 A20 20 0 0 1 258 92 V126" pathLength="1"/>
+  <path class="atrium__route" d="M-600 190 H26 V170 H104 V148 H182 V126 H238" pathLength="1"/>
+  <g class="atrium__stations"><circle class="atrium__station atrium__station--done" cx="26" cy="190" r="3.5"/><circle class="atrium__station atrium__station--done" cx="104" cy="170" r="3.5"/><circle class="atrium__station" cx="182" cy="148" r="3.5"/></g>
+  <path class="atrium__light" d="M-600 190 H26 V170 H104 V148 H182 V126 H238" pathLength="1"/>
+  <g class="atrium__keyhole"><circle class="atrium__key" cx="238" cy="104" r="4.5"/><path class="atrium__shaft" d="M238 108 V120"/></g>
+{% elif figure == "sheets" %}
+  <g class="atrium__arcade">
+    <path d="M160 26 H296" pathLength="1"/>
+    <path d="M168 190 V96 A62 62 0 0 1 292 96 V190" pathLength="1"/>
+    <path d="M30 190 V112 H72 L88 128 V190 M72 112 V128 H88" pathLength="1"/>
+    <path d="M64 190 V92 H108 L124 108 V190 M108 92 V108 H124" pathLength="1"/>
+    <path d="M78 120 H110 M78 132 H114 M78 144 H104" pathLength="1"/>
+    <path d="M104 190 V132 H138 L150 144 V190 M138 132 V144 H150" pathLength="1"/>
+  </g>
+  <path class="atrium__door" d="M206 190 V136 A24 24 0 0 1 254 136 V190" pathLength="1"/>
+  <path class="atrium__route" d="M-600 190 H230" pathLength="1"/>
+  <g class="atrium__stations"><circle class="atrium__station atrium__station--done" cx="14" cy="190" r="3.5"/><circle class="atrium__station" cx="160" cy="190" r="3.5"/></g>
+  <path class="atrium__light" d="M-600 190 H230" pathLength="1"/>
+  <g class="atrium__keyhole"><circle class="atrium__key" cx="230" cy="158" r="4.5"/><path class="atrium__shaft" d="M230 162 V174"/></g>
+{% elif figure == "exchange" %}
+  <g class="atrium__arcade">
+    <path d="M14 84 H102" pathLength="1"/>
+    <path d="M24 190 V122 A34 34 0 0 1 92 122 V190" pathLength="1"/>
+    <path d="M168 30 H296" pathLength="1"/>
+    <path d="M178 190 V94 A54 54 0 0 1 286 94 V190" pathLength="1"/>
+  </g>
+  <path class="atrium__door" d="M212 190 V138 A20 20 0 0 1 252 138 V190" pathLength="1"/>
+  <path class="atrium__route" d="M-600 190 H58 C100 190 108 152 140 152 C172 152 180 190 232 190" pathLength="1"/>
+  <g class="atrium__stations"><circle class="atrium__station atrium__station--done" cx="58" cy="190" r="3.5"/><circle class="atrium__station" cx="140" cy="152" r="4.5"/></g>
+  <path class="atrium__light" d="M-600 190 H58 C100 190 108 152 140 152 C172 152 180 190 232 190" pathLength="1"/>
+  <g class="atrium__keyhole"><circle class="atrium__key" cx="232" cy="160" r="4.5"/><path class="atrium__shaft" d="M232 164 V176"/></g>
+{% else %}
+  <g class="atrium__arcade">
+    <path d="M22 18 H298" pathLength="1"/>
+    <path d="M30 30 H290" pathLength="1"/>
+    <path d="M38 190 V108 A32 32 0 0 1 102 108 V190" pathLength="1"/>
+    <path d="M118 190 V92 A42 42 0 0 1 202 92 V190" pathLength="1"/>
+    <path d="M218 190 V108 A32 32 0 0 1 282 108 V190" pathLength="1"/>
+{% if figure == "seal" %}    <path d="M160 62 m-20 0 a20 20 0 1 0 40 0 a20 20 0 1 0 -40 0 M160 62 m-15 0 a15 15 0 1 0 30 0 a15 15 0 1 0 -30 0" pathLength="1"/>
+{% endif %}  </g>
+{% if figure == "seal" and atrium_seal %}  <g class="atrium__glyph">{% atrium_glyph atrium_seal 150 52 %}</g>
+{% endif %}  <path class="atrium__door" d="M140 190 V140 A20 20 0 0 1 180 140 V190" pathLength="1"/>
+  <path class="atrium__route" d="M-600 190 H160" pathLength="1"/>
+  <g class="atrium__stations"><circle class="atrium__station atrium__station--done" cx="14" cy="190" r="3.5"/><circle class="atrium__station" cx="70" cy="190" r="3.5"/></g>
+  <path class="atrium__light" d="M-600 190 H160" pathLength="1"/>
+  <g class="atrium__keyhole"><circle class="atrium__key" cx="160" cy="160" r="4.5"/><path class="atrium__shaft" d="M160 164 V176"/></g>
+{% endif %}
+</svg></div><div class="atrium__band" aria-hidden="true"><svg class="atrium__band-svg" viewBox="0 0 240 24" focusable="false" preserveAspectRatio="xMaxYMid meet">
+  <path class="atrium__band-ground" d="M-400 22 H240" pathLength="1"/>
+  <path class="atrium__band-route" d="M-400 18 H216" pathLength="1"/>
+{% if figure == "route" %}  <g class="atrium__band-stations" transform="translate(30 0)">{% for _ in "1234567" %}<circle class="atrium__station{% if atrium_at %}{% if forloop.counter < atrium_at %} atrium__station--done{% elif forloop.counter == atrium_at %} atrium__station--here{% endif %}{% endif %}" cx="{% widthratio forloop.counter0 1 24 %}" cy="18" r="{% if forloop.counter == atrium_at %}4.5{% else %}3{% endif %}"/>{% endfor %}</g>
+  {% if atrium_at %}<g transform="translate(30 0)"><circle class="atrium__halo" data-at="{{ atrium_at }}" cx="{% widthratio atrium_at|add:'-1' 1 24 %}" cy="18" r="6.5"/></g>{% endif %}
+{% else %}  <g class="atrium__band-stations"><circle class="atrium__station" cx="36" cy="18" r="3"/><circle class="atrium__station" cx="80" cy="18" r="3"/></g>
+{% if figure == "counter" %}  <path class="atrium__band-motif" d="M130 18 V10 H194 V18 M140 10 V18 M184 10 V18" pathLength="1"/>
+  <g class="atrium__band-stations"><circle class="atrium__station" cx="150" cy="5" r="3"/><circle class="atrium__station" cx="174" cy="5" r="3"/></g>
+{% elif figure == "thresholds" %}  <path class="atrium__band-motif" d="M120 18 V14 H146 V10 H172 V6 H198 V18" pathLength="1"/>
+{% elif figure == "sheets" %}  <path class="atrium__band-motif" d="M146 18 V7 H156 L161 12 V18 M156 7 V12 H161 M168 18 V3 H180 L185 8 V18 M180 3 V8 H185" pathLength="1"/>
+{% elif figure == "exchange" %}  <path class="atrium__band-motif" d="M150 22 V11 A10 10 0 0 1 170 11 V22" pathLength="1"/>
+{% elif figure == "seal" %}  <path class="atrium__band-motif" d="M168 11 m-8 0 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M168 11 m-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0" pathLength="1"/>
+{% else %}  <path class="atrium__band-motif" d="M140 22 V12 A7 7 0 0 1 154 12 V22 M166 22 V12 A7 7 0 0 1 180 12 V22" pathLength="1"/>
+{% endif %}{% endif %}
+  <path class="atrium__band-door" d="M206 22 V11 A10 10 0 0 1 226 11 V22" pathLength="1"/>
+  <circle class="atrium__key" cx="216" cy="13" r="2"/>
+  <path class="atrium__band-light" d="M-400 18 H216" pathLength="1"/>
+</svg></div>

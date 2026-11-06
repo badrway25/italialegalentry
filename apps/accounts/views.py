@@ -46,7 +46,10 @@ def profile(request):
         "form": form,
         "person_profile": person_profile,
         "memberships": services.memberships_of(user),
-        "roles": roles.role_labels(user),  # translated labels, never the technical « role:* » names
+        # «Rôles» is the back office's row: translated labels, never the technical « role:* » names. Anybody else is
+        # told the name of their space (V5.12 §11; Director's decisions §9): «Espace Personnes», never «Personne».
+        "roles": roles.role_labels(user) if roles.is_project_team(user) else [],
+        "space_label": roles.space_label(user),
         "has_totp": services.has_active_totp(user),
         "can_delete": services.can_request_deletion(user),
         "breadcrumbs": [{"label": _("Mon compte"), "url": ""}],

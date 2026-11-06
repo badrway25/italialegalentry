@@ -23,6 +23,13 @@ from portal.tests.conftest import *  # noqa: F401,F403 — seeded, alice, privat
 
 pytestmark = pytest.mark.django_db
 
+
+@pytest.fixture(autouse=True)
+def _an_academy_course_is_published(monkeypatch):
+    """The Academy is a page of the rail while a course is published (V5.12 DECISIONS §8; portal.services.academy_open,
+    tests/frontend/test_organisation_space_v512_d.py holds both sides): these tests read the rail with one."""
+    monkeypatch.setattr(services, "academy_open", lambda user: True)
+
 #: Every surface a signed-in person is meant to reach from the reserved area.
 EXPECTED_KEYS = {
     "dashboard",

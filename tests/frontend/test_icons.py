@@ -23,6 +23,11 @@ from core import icons
 
 ROOT = Path(__file__).resolve().parents[2]
 SPRITE = ROOT / "static" / "img" / "icons.svg"
+#: V5.12 W2 (DECISIONS §4, «Sprite split»): the domain concepts' own file; icons.SPRITE_OF says which holds a symbol.
+SPRITE_DOMAIN = ROOT / "static" / "img" / "icons-domain.svg"
+#: V5.22 (SECTION_SYSTEM_V2 §4.9, lane S): the third, page-only sprite — the ILE marks' T2 copies and the V5.22 glyphs.
+SPRITE_MARKS = ROOT / "static" / "img" / "icons-marks.svg"
+SPRITE_FILES = {icons.SPRITE: SPRITE, icons.SPRITE_DOMAIN: SPRITE_DOMAIN, icons.SPRITE_MARKS: SPRITE_MARKS}
 SOURCES = ROOT / "static" / "icons" / "src"
 #: The product's templates: the project tree and every app's; the dev-only pages (the showcase, the preview,
 #: the specimen boards) draw the sheet itself and are not the product.
@@ -38,12 +43,14 @@ LIBRARIES = re.compile(r"lucide|phosphor|heroicons|tabler|@radix-ui/react-icons"
 pytestmark = pytest.mark.compliance
 
 
-def _symbols() -> list[ET.Element]:
-    return list(ET.parse(SPRITE).getroot().iter(f"{NS}symbol"))
+def _symbols(part: str | None = None) -> list[ET.Element]:
+    """The symbols of one sprite (its static path), or of both, chrome first."""
+    parts = [part] if part else list(icons.SPRITES)
+    return [el for name in parts for el in ET.parse(SPRITE_FILES[name]).getroot().iter(f"{NS}symbol")]
 
 
-def _sprite_ids() -> list[str]:
-    return [el.get("id", "")[len("icon-") :] for el in _symbols()]
+def _sprite_ids(part: str | None = None) -> list[str]:
+    return [el.get("id", "")[len("icon-") :] for el in _symbols(part)]
 
 
 def _templates() -> list[Path]:
@@ -68,20 +75,57 @@ def _literals() -> list[tuple[Path, str, str]]:
 # ---------------------------------------------------------------------------------------------
 def test_the_registry_is_the_sprite():
     ids = _sprite_ids()
-    assert len(ids) == len(set(ids)), "a symbol twice"
-    assert ids == [*icons.SYMBOLS, *icons.LEGACY], "the sprite = the registry's symbols in its order, then the V4 aliases"
+    assert len(ids) == len(set(ids)), "a symbol twice, in one sprite or across the two"
+    for part in icons.SPRITES:
+        expected = [s for s in icons.SYMBOLS if icons.SPRITE_OF[s] == part]
+        expected += [a for a, t in icons.LEGACY.items() if icons.SPRITE_OF[t] == part]
+        assert _sprite_ids(part) == expected, f"{part} = its registry symbols in order, then its V4 aliases"
+    assert set(icons.SPRITE_OF) == set(icons.SYMBOLS) and set(icons.SPRITE_OF.values()) == set(icons.SPRITES)
+    assert icons.DOMAIN_SYMBOLS <= set(icons.SYMBOLS)
     assert not set(icons.LEGACY) & set(icons.SYMBOLS)
     assert set(icons.LEGACY.values()) <= set(icons.SYMBOLS)
     # The aliases that still have a producer, and no other (each leaves with its last one): `user` and `key`
     # left with the review's fix pass — an alias nobody emits is not kept «just in case».
     assert icons.LEGACY == {"home": "house", "list": "send", "globe": "languages"}
-    assert len(icons.SYMBOLS) == 110
+    # 110 after V5.12 W1; W2 vendored the twelve of DECISIONS §4 (briefcase-business came with W1)
+    # V5.15 W3 round 1 (lane B): the forms' three ILE drawings (ile-referent, ile-need, ile-review)
+    # V5.19 (lane v519-k): message-circle, the WhatsApp channel
+    # V5.22 (SECTION_SYSTEM_V2 §4.9 and §9.1 item 4, an approved owner/product decision; lane S): the thirteen ILE marks'
+    # T2 copies and seven Lucide glyphs for the V2 sections, all in the third sprite — the bijection checked above now
+    # covers three files instead of two (V5.20 strict rule: the count follows the decision, the invariant is unchanged)
+    assert len(icons.SYMBOLS) == 146
+    assert set(icons.MARKS_SYMBOLS) == {s for s in icons.SYMBOLS if icons.SPRITE_OF[s] == icons.SPRITE_MARKS}
+
+
+def test_the_chrome_sprite_holds_what_every_page_draws_and_the_domain_sprite_the_concepts():
+    """DECISIONS §4: chrome, utility, notice, status, audience and identity in icons.svg; pathways, living, forum,
+    journey and console concepts in icons-domain.svg. The chrome only ratchets down (below 31 049 B)."""
+    chrome = set(_sprite_ids(icons.SPRITE))
+    for tier_symbols in (
+        [s for s, sym in icons.SYMBOLS.items() if sym.tier in (icons.IDENTITY, icons.STATUS_TIER, icons.UTILITY)],
+        list(icons.AUDIENCE.values()),
+        list(icons.NOTICE.values()),
+        list(icons.STATUS.values()),
+        list(icons.ALERT.values()),
+    ):
+        assert set(tier_symbols) <= chrome, sorted(set(tier_symbols) - chrome)
+    domain = set(_sprite_ids(icons.SPRITE_DOMAIN))
+    for mapping in (icons.PATHWAY, icons.LIVING, icons.JOURNEY):
+        # the authority, the arrival and the university are audiences or identity: the chrome holds them
+        assert set(mapping.values()) - {"stamp", "ile-arch", "university"} <= domain, mapping
+    assert set(icons.CHAPTER.values()) - chrome - domain == set()
+    assert SPRITE.stat().st_size < icons.CHROME_SPRITE_MAX_BYTES == 31_049
 
 
 def test_the_sprite_is_strict_xml_clean_and_under_its_ceiling():
-    raw = SPRITE.read_bytes()
+    for path in SPRITE_FILES.values():
+        _assert_clean_sprite(path)
+
+
+def _assert_clean_sprite(path: Path) -> None:
+    raw = path.read_bytes()
     assert b"\r" not in raw, "LF bytes"
-    assert len(raw) <= icons.SPRITE_MAX_BYTES, (len(raw), icons.SPRITE_MAX_BYTES)
+    assert len(raw) <= icons.SPRITE_MAX_BYTES, (path.name, len(raw), icons.SPRITE_MAX_BYTES)
     text = raw.decode("utf-8")
     for comment in re.findall(r"<!--(.*?)-->", text, re.S):
         assert "--" not in comment, "«--» inside an XML comment discards the whole sprite (G-01)"
@@ -89,7 +133,7 @@ def test_the_sprite_is_strict_xml_clean_and_under_its_ceiling():
     assert not re.search(r"#[0-9a-fA-F]{3,8}\b", markup), "a literal colour"
     assert "<style" not in markup and "style=" not in markup
     assert "stroke-width" not in markup, "the stroke is the .icon rule's, never the sprite's"
-    for el in _symbols():
+    for el in ET.fromstring(raw).iter(f"{NS}symbol"):  # noqa: S314 - the repository's own build
         assert el.get("viewBox") == "0 0 24 24", el.get("id")
         children = list(el)
         assert children, f"{el.get('id')} is empty"
@@ -102,9 +146,22 @@ def test_the_sprite_is_strict_xml_clean_and_under_its_ceiling():
 
 
 def test_every_source_is_registered_names_its_origin_and_sits_on_the_24_grid():
+    # V5.22 (SECTION_SYSTEM_V2 §4.9 — an approved owner/product decision; lane S): the thirteen ILE marks are drawn once
+    # on the 48-unit grid in static/icons/marks/ (their sprite copy is that drawing at half size, by the build); every
+    # other symbol keeps its 24-grid source here. The bijection now spans both folders (V5.20 strict rule: the same
+    # invariant, every symbol one registered source, checked over one more folder)
+    marks = ROOT / "static" / "icons" / "marks"
     stems = {p.stem for p in SOURCES.glob("*.svg")}
-    assert stems == set(icons.SYMBOLS), (sorted(stems - set(icons.SYMBOLS)), sorted(set(icons.SYMBOLS) - stems))
+    mark_stems = {p.stem for p in marks.glob("*.svg")}
+    assert not stems & mark_stems, "a symbol has one source"
+    assert mark_stems == set(icons.MARK)
+    assert stems | mark_stems == set(icons.SYMBOLS), (sorted(stems - set(icons.SYMBOLS)), sorted(set(icons.SYMBOLS) - stems - mark_stems))
+    for sid in mark_stems:
+        text = (marks / f"{sid}.svg").read_bytes().decode("utf-8")
+        assert "\r" not in text and "ILE drawing" in text and 'viewBox="0 0 48 48"' in text, sid
     for sid, symbol in icons.SYMBOLS.items():
+        if sid in mark_stems:
+            continue
         raw = (SOURCES / f"{sid}.svg").read_bytes()
         assert b"\r" not in raw, sid
         text = raw.decode("utf-8")
@@ -142,7 +199,7 @@ def test_tiers_floors_flip_list_twins_and_check_bearing_are_consistent():
     assert icons.FLIP_RTL <= set(icons.SYMBOLS)
     for group in icons.TWINS:
         assert len(group) >= 2 and group <= set(icons.SYMBOLS), group
-    assert set(icons.CHECK_BEARING) == {"check", "circle-check", "badge-check", "vote"}
+    assert set(icons.CHECK_BEARING) == {"check", "circle-check", "badge-check", "vote", "list-checks", "shield-check"}
     assert icons.MIN_SIZE == {sid: s.floor for sid, s in icons.SYMBOLS.items()}
     for domain, mapping in icons.DOMAINS.items():
         assert set(mapping.values()) <= set(icons.SYMBOLS), domain
@@ -251,6 +308,7 @@ def test_the_rails_emit_the_registrys_symbol_for_every_entry(monkeypatch):
         "_identity_panel",
         lambda user: ("disclosures", "Communications d’identité", reverse("selection:disclosures")),
     )
+    monkeypatch.setattr(portal_services, "academy_open", lambda user: True)  # a published course: the ten (§8)
     rail = portal_services.navigation(object())
     assert {entry["key"] for entry in rail} == set(icons.NAV), "every key of the rail is in the registry, and back"
     for entry in rail:
@@ -307,18 +365,21 @@ def test_the_empty_state_draws_its_space_or_the_neutral_mark_never_document_by_d
             assert icons.SYMBOLS[name].tier in (icons.CONCEPT, icons.IDENTITY), f"{path}: {name} is not a space's glyph"
             assert icons.MIN_SIZE[name] <= 24, f"{path}: {name} needs more than the empty state's 24 px seat"
     # 21 + the Forum's two: the pathway sheet's four sections being verified say so in words on the «attesa» edge since
-    # W3-F1 (11 Oct 2026; a glyph in each would break the six-icon ceiling of its editorial body, DL54-29 item 1)
-    assert callers >= 21, callers
+    # W3-F1 (11 Oct 2026; a glyph in each would break the six-icon ceiling of its editorial body, DL54-29 item 1).
+    # 15 since V5.12 lane C's hide gates (W1, e677099 and 832a108): a surface with nothing to show is hidden, not drawn
+    # empty, so the «in preparation» branches of the FAQ, the glossary (each keeps its search's empty answer), the Forum,
+    # «Vivre en Italie» and its topic, the news and the partners left (the v512 W1 merge, the review's M1; DL54-164)
+    # 14 since V5.15 lane D's F1: the empty Communications register is the platform's calm panel (portal/messages
+    # .html, `.org-calm.reg-calm`: the two porticoes and the register's own words), no longer the generic empty state
+    assert callers >= 14, callers
     # the pages the review named: each says which space is empty
     for template, symbol in (
         ("faq/index.html", "circle-help"),
         ("glossary/index.html", "book-a"),
         ("news/index.html", "newspaper"),
         ("pages/home/_news.html", "newspaper"),
-        ("forum/index.html", "handshake"),
         ("forum/register.html", "handshake"),
-        ("living/index.html", "sprout"),
-    ):
+    ):  # forum/index.html and living/index.html draw no empty state since lane C's gates (V5.12 §13): hidden, not empty
         text = (ROOT / "templates" / template).read_text(encoding="utf-8")
         found = [re.search(r'\bicon="([a-z0-9-]*)"', a) for a in EMPTY_INCLUDE.findall(text)]
         assert found and all(m is not None and m.group(1) == symbol for m in found), (template, symbol)
@@ -385,11 +446,13 @@ def test_the_tag_resolves_aliases_enforces_the_flip_list_and_hashes_the_sprite()
         '{{ "soon"|concept:"due" }}|{{ "x"|concept:"no-such-domain" }}|{% svg_icon "close" "icon" "Fermer" %}'
     ).render(Context({}))
     parts = html.split("|")
-    digest = hashlib.sha256(SPRITE.read_bytes()).hexdigest()[:12]
+    digest = hashlib.sha256(SPRITE_DOMAIN.read_bytes()).hexdigest()[:12]
     assert parts[0] == (
-        f'<svg class="icon" aria-hidden="true" focusable="false"><use href="/static/img/icons.svg?v={digest}#icon-house">'
-        "</use></svg>"
-    ), "a V4 alias draws its V5 symbol (`home` is a house, as it always was), from the content-hashed sprite"
+        f'<svg class="icon" aria-hidden="true" focusable="false"><use href="/static/img/icons-domain.svg?v={digest}'
+        '#icon-house"></use></svg>'
+    ), "a V4 alias draws its V5 symbol (`home` is a house, as it always was), from its target's content-hashed sprite"
+    chrome = hashlib.sha256(SPRITE.read_bytes()).hexdigest()[:12]
+    assert f'href="/static/img/icons.svg?v={chrome}#icon-arrow"' in parts[1], "a chrome symbol, from the chrome sprite"
     assert 'class="icon icon--flip-rtl"' in parts[1], "a flip-list symbol carries the class"
     assert 'class="icon"' in parts[2] and "flip" not in parts[2], "and no other symbol does, whatever the call wrote"
     assert parts[3] == "" and parts[5] == "", "an empty or unknown name draws nothing"
@@ -432,3 +495,84 @@ def test_the_licences_file_names_every_donor_with_both_notices():
     for sid, symbol in icons.SYMBOLS.items():
         if symbol.donor:
             assert f"| `{sid}` | `{symbol.donor}` |" in text, sid
+
+
+# ---------------------------------------------------------------------------------------------
+# V5.12 §7 (W1, lane B): the journey's stair is the journey's; a chapter head draws its concept or nothing
+# ---------------------------------------------------------------------------------------------
+CHAPTER_TAG = re.compile(r'{%\s*chapter_mark\s+"([a-z0-9-]+)"')
+
+
+def test_ile_steps_is_the_journeys_mark_and_nothing_elses():
+    """The owner named it (V5.12 §7): `#icon-ile-steps` stood above 83 unrelated section titles on 35 public pages. The
+    stair says «Mon parcours» — the rail's entry and the dashboard's journey, both through NAV["pathways"] — and no
+    product template, no other concept map and no chapter head may draw it."""
+    users = [(domain, key) for domain, mapping in icons.DOMAINS.items() for key, sid in mapping.items() if sid == "ile-steps"]
+    assert users == [("nav", "pathways")], users
+    assert "ile-steps" not in icons.CHAPTER.values()
+    for path in _templates():
+        text = path.read_text(encoding="utf-8")
+        assert 'svg_icon "ile-steps"' not in text, f"{path}: the journey's stair as a literal"
+        assert not re.search(r'svg_icon\s+"[a-z0-9-]+"\s+"[^"]*chapter__mark', text), (
+            f"{path}: a chapter mark is the registry's ({{% chapter_mark %}}), never a literal"
+        )
+
+
+def test_every_chapter_anchor_names_a_concept_a_template_really_carries():
+    from partners.models import PartnerKind
+
+    assert set(icons.CHAPTER_OF.values()) <= set(icons.CHAPTER), "an anchor names a concept of CHAPTER"
+    assert not set(icons.CHAPTER_OF) & set(icons.CHAPTER), "an anchor is never also a concept's name"
+    corpus = "\n".join(path.read_text(encoding="utf-8") for path in _templates())
+    dynamic = {f"partners-group-{kind}" for kind in PartnerKind.values}
+    for anchor in icons.CHAPTER_OF:
+        if anchor in dynamic:
+            continue
+        assert re.search(rf'(?:title_id|id)="{re.escape(anchor)}"|chapter_mark "{re.escape(anchor)}"', corpus), (
+            f"{anchor}: no head carries this anchor any more — a dead entry"
+        )
+    used = set(icons.CHAPTER_OF.values()) | {key for key in CHAPTER_TAG.findall(corpus) if key in icons.CHAPTER}
+    assert used == set(icons.CHAPTER), sorted(set(icons.CHAPTER) - used)
+    # a literal head names a concept, a mapped anchor, its own anchor (which may say none), or the partners' prefix
+    for key in CHAPTER_TAG.findall(corpus):
+        assert (
+            key in icons.CHAPTER
+            or key in icons.CHAPTER_OF
+            or key == "partners-group-"
+            or re.fullmatch(r"[a-z]+(?:-[a-z]+)*-(?:heading|title)", key)
+        ), key
+
+
+def test_the_chapter_mark_tag_draws_the_concept_in_its_container_or_nothing():
+    """V5.22 (SECTION_SYSTEM_V2 §0 item 3, §4.1 rule 1, §4.10 — an approved owner/product decision; lane S): «the bare
+    24 px mark above a title is retired everywhere». The tag still resolves a section's concept through the registry —
+    drawn inside its caller's own container (the forms' glyph tiles pass their class) — and the bare mark (no class)
+    draws nothing; a chapter head draws no glyph at all, whatever concept its anchor names (V5.20 strict rule: stronger —
+    no head draws a glyph above its title, where it used to draw one)."""
+
+    def render(source: str) -> str:
+        return Template(source).render(Context({}))
+
+    assert "#icon-compass" in render('{% chapter_mark "orientation-chapter-title" "icon chapter__mark" %}')
+    assert "#icon-circle-help" in render('{% chapter_mark "faq" "icon chapter__mark" %}'), "a concept key as it is"
+    assert render('{% chapter_mark "network-presentation-title" "icon" %}') == "", "«En bref» says no concept"
+    assert render('{% chapter_mark "" "icon" %}') == ""
+    signpost = render('{% chapter_mark "pathways-title" "icon chapter__mark" %}')
+    assert 'class="icon chapter__mark icon--flip-rtl"' in signpost and 'aria-hidden="true"' in signpost
+    for bare in ('{% chapter_mark "orientation-chapter-title" %}', '{% chapter_mark "faq" %}'):
+        assert render(bare) == "", "the bare mark above a title is retired"
+    for head in (
+        '{% include "pages/partials/_chapter_head.html" with title_id="autorites-title" title="Autorités" only %}',
+        '{% include "pages/partials/_chapter_head.html" with title_id="x-title" title="X" chapter_concept="email" only %}',
+        '{% include "pages/partials/_chapter_head.html" with title_id="x-title" title="X" chapter_concept="email" tile=True only %}',
+    ):
+        out = render(head)
+        assert "<svg" not in out and "chapter__mark" not in out and "<h2" in out, out
+
+
+def test_the_company_needs_are_the_business_case_never_a_wrench():
+    assert icons.COMPANY_NAV["needs"] == "briefcase-business" and icons.CHAPTER["company-needs"] == "briefcase-business"
+    assert "wrench" not in icons.SYMBOLS and not (SOURCES / "wrench.svg").exists()
+    assert icons.SYMBOLS["briefcase-business"].donor == "briefcase-business"
+    licence = (ROOT / "static" / "icons" / "LICENSE-lucide.txt").read_bytes()
+    assert b"ISC License" in licence and b"Lucide Icons and Contributors" in licence and b"The MIT License" in licence

@@ -1,5 +1,6 @@
 /* ============================================================================================
-   FONTS V5 — type «Una voce» (W1-A; docs/design-v5/V5_4_EXECUTION_PLAN.md §1.1, §2.3)
+   FONTS V5 — type «Una voce» (W1-A; docs/design-v5/V5_4_EXECUTION_PLAN.md §1.1, §2.3) · Typography V2
+   (v524-t; V5.24 §11–§14, TYPOGRAPHY_V2 §3–§4.7, FINAL_DELIVERY_V2 R1): Readex Pro, the Arabic companion.
    Five self-hosted faces in six files (ILE Mono is split in two by unicode-range) and their
    metric-matched fallback faces. Nothing is fetched from another
    host. Sources, versions, the subsetting and renaming commands and the SHA-256 of every file:
@@ -7,7 +8,7 @@
    static/fonts/licenses/: OFL-HostGrotesk.txt · OFL-Newsreader.txt (the «ILE Wordmark» subset) ·
    OFL-IBMPlexMono.txt («ILE Mono»: a Modified Version of IBM Plex Mono, renamed because «Plex» is a
    Reserved Font Name; IBM's copyright notice is kept in the file and in the licence) ·
-   OFL-Vazirmatn.txt.
+   OFL-ReadexPro.txt (its Reserved Font Name «RevReading Lexend» is never used: the subset keeps «Readex Pro»).
    Rules: font-display swap everywhere; unicode-range as the typography council set it, so the Arabic
    file never loads on a Latin page and the Latin files never draw Arabic; a face downloads only when
    text needs it. base.html preloads the first screen's faces per script (§1.1 «Loading»).
@@ -47,7 +48,7 @@
    Two files with complementary ranges: the reference core (space, # + , - . / : _, the digits, the
    capitals, U+00A0 — what a case or document reference is made of, 2.6 KB) and the rest of the subset.
    A page whose references are digits and capitals downloads the core alone: the Arabic console holds
-   its font budget (V5.4 plan §2.6) with it. */
+   its font budget (TYPOGRAPHY_V2 §4.7) with it. */
 @font-face {
   font-family: "ILE Mono";
   font-style: normal;
@@ -65,16 +66,20 @@
   unicode-range: U+0021-0022, U+0024-002A, U+003B-0040, U+005B-005E, U+0060-007E, U+00A1-00FF, U+0131, U+0152-0153, U+0178, U+2000-206F, U+20AC, U+2116, U+2122, U+2212, U+2215;
 }
 
-/* ---- Vazirmatn — every Arabic role (variable wght 400–700) ------------------------------------
+/* ---- Readex Pro — every Arabic role (variable wght 400–700; Typography V2) ----------------------
+   Measured against Host Grotesk (TYPOGRAPHY_V2 §3): content area 1.25 em (the previous face 1.56), tooth 88 % of
+   Host's x-height (71 %), alef 106 % of its cap — the Arabic sits at the same size and colour as the
+   French beside it, on the Latin leadings (+0.1 on titles), in half the bytes (16 128 B). The Arabic
+   subset only: the digits and the Latin runs of an Arabic page are Host Grotesk's through the stack.
    U+0020 and U+00A0 are the file's own: an Arabic line never borrows its spaces from Host Grotesk, so a
-   late Latin face does not re-lay out the Arabic text (gate-0 round 3). PROVISIONAL until the Moroccan
-   reader's review (owner item B2); the build does not wait for it. */
+   late Latin face does not re-lay out the Arabic text (gate-0 round 3). The Arabic reader's review (owner
+   item B2) covers this face: the exhibit is the audit's comparison still. */
 @font-face {
-  font-family: "Vazirmatn";
+  font-family: "Readex Pro";
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: url("../../fonts/v5-vazirmatn-var-400-700-arabic.woff2") format("woff2");
+  src: url("../../fonts/v5-readex-pro-var-400-700-arabic.woff2") format("woff2");
   unicode-range: U+0020, U+00A0, U+0600-06FF, U+0750-077F, U+0870-08FF, U+200C-200F, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFC;
 }
 
@@ -108,12 +113,14 @@
   descent-override: 30%;
   line-gap-override: 0%;
 }
+/* recomputed for Readex Pro on the lane's Arabic sample (v524-t; FONTS_V5.md §4): Segoe UI's Arabic runs
+   7 % narrower than Readex Pro's and its box is Readex's typo metrics (1.0 / 0.25 em) un-scaled */
 @font-face {
   font-family: "ILE Arabic Fallback";
   src: local("Segoe UI"), local("SegoeUI");
-  size-adjust: 97.1%;
-  ascent-override: 105.6%;
-  descent-override: 55.3%;
+  size-adjust: 107.1%;
+  ascent-override: 93.3%;
+  descent-override: 23.3%;
   line-gap-override: 0%;
 }
 /* the name and the references (computed by W1-A on «ITALY LEGAL ENTRY» and on real references) */

@@ -8,6 +8,7 @@ from django.conf import settings
 from cms import locked_content
 from cms.forbidden import scan
 from living.catalogue import TOPIC_SLUGS
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = [pytest.mark.compliance, pytest.mark.django_db]
 
@@ -29,14 +30,17 @@ def living_pages(client, own_seeds, phase3_open, sheet_factory):
         slug="conformite",
         sources=[{"label": "Source officielle", "url": "https://www.salute.gov.it/"}],
     )
-    paths = ["vivre-en-italie/"] + [f"vivre-en-italie/{slug}/" for slug in TOPIC_SLUGS]
-    paths.append(sheet.get_absolute_url().split("/", 2)[2])
+    # V5.12 §8: a theme has a page only with a live, reviewed sheet — the sheet's own theme is the one rendered
+    paths = ["vivre-en-italie/", f"vivre-en-italie/{sheet.topic.slug}/", sheet.get_absolute_url().split("/", 2)[2]]
     pages = []
     for lang in LANGS:
         for path in paths:
             r = client.get(f"/{lang}/{path}")
             assert r.status_code == 200, (lang, path)
             pages.append((lang, path, r.content.decode()))
+        for slug in TOPIC_SLUGS:  # every other theme has no page at all
+            if slug != sheet.topic.slug:
+                assert client.get(f"/{lang}/vivre-en-italie/{slug}/").status_code == 404, (lang, slug)
     return pages
 
 
@@ -59,7 +63,8 @@ def test_no_forbidden_formulations_or_markers(living_pages):
 
 def test_no_external_resources(living_pages):
     for lang, path, html in living_pages:
-        srcs = re.findall(r'(?:src|href)="(https?://[^"]+)"', html)
+        checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+        srcs = re.findall(r'(?:src|href)="(https?://[^"]+)"', checked)
         externals = [s for s in srcs if "testserver" not in s and "localhost" not in s]
         assert externals in ([], ["https://www.salute.gov.it/"]), (lang, path, externals)
         emails = set(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}", html))

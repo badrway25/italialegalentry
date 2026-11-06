@@ -71,7 +71,9 @@ SECTION_DEFAULTS: tuple[SectionDefault, ...] = (
         SectionKey.PILOT,
         60,
         requires_gate="phase3_public",
-        intro=_("Des besoins des entreprises au suivi : la séquence du projet pilote, étape par étape."),
+        # V5.22 (SECTION_SYSTEM_V2 §3.1 S4): the panel shows the same gesture on two materials — the lead says what it
+        # shows; the pilot's sequence is said by the hero's path and on the pilot's own page (once)
+        intro=_("Le même geste, sur le cèdre et sur le marbre : deux savoir-faire, deux rives, un même projet."),
     ),
     SectionDefault(
         SectionKey.TRUST,
@@ -97,6 +99,16 @@ SECTION_DEFAULTS: tuple[SectionDefault, ...] = (
 )
 
 SECTION_DEFAULTS_BY_KEY: dict[str, SectionDefault] = {d.key: d for d in SECTION_DEFAULTS}
+
+#: A default the team has rewritten since it was seeded, per (section, field): the words the seed once wrote. A row
+#: that still holds them word for word was never edited — the seed brings it to the team's current default; a row an
+#: editor changed is never touched (pages.seeds). Plain strings, not msgids: they are compared, never shown.
+SUPERSEDED_DEFAULTS: dict[tuple[str, str], tuple[str, ...]] = {
+    # V5.22 (SECTION_SYSTEM_V2 §3.1 S4): the pilot's lead promised a sequence the panel does not draw
+    (SectionKey.PILOT, "intro_fr"): (
+        "Des besoins des entreprises au suivi : la séquence du projet pilote, étape par étape.",
+    ),
+}
 
 # Sections that render Phase 3 prescribed texts only: they stay hidden while gate G3 is closed,
 # whatever an editor types in ``requires_gate`` (defence in depth).
@@ -224,6 +236,16 @@ PATHWAY_FAMILIES: tuple = (
     _("Études et formation"),
     _("Famille"),
     _("Recherche"),
+)
+
+#: Each family's tile on the V2 home (V5.22 round 1, QA_ROUND1 m1): the registry's glyph (apps/core/icons.PATHWAY) of
+#: the regular pathway the family gathers, in the families' order — decorative, the word beside it names the family.
+PATHWAY_FAMILY_KEYS: tuple[str, ...] = (
+    "salaried_work",
+    "training_in_origin_country",
+    "study_and_training_in_italy",
+    "family_reunification",
+    "scientific_research",
 )
 
 # --------------------------------------------------------------------------------------------

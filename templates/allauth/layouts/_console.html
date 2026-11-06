@@ -1,0 +1,39 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+THE ACCOUNT PAGES IN THE CONSOLE (V5.12 W2, lane B; DECISIONS «Lane B»: «allauth/layouts/manage.html extends the
+console base for signed-in users with a space»). For a signed-in account whose reserved area is open
+(accounts.shell.frame), «Mon compte» — the profile, the security overview, the e-mail addresses, the password, the
+second factor — is drawn in the console it belongs to: the account's space's rail (the person's, or the company's),
+the context bar with the trail «<space> › Mon compte», the workspace, the console foot. Inside the workspace the
+account keeps its own grammar — the sections' list at the reading edge, the page beside it (allauth/layouts/base.html's
+`conto`, static/css/v5/_servizio.css through cms/servizio.css) — so allauth's elements and the product's pages draw
+the same here as in the public frame (an anonymous visitor's password reset, the reserved area switched off).
+The blocks are allauth/layouts/base.html's: `head_title`, `account_aside`, `content` / `body`, `account_help`,
+`extra_body`. The console's contract (`portal_nav`, `breadcrumbs`) is read from {% account_console %}.
+V5.18 P-2: the page's title is the console's page head — the account's ATRIUM (accounts/partials/account_head.html,
+lane D's drawing and sheet, portal/platform.css): the page says `account_in_console` to allauth's title element
+(allauth/elements/h1__manage.html) and to the product's pages, which draw their head through the same partial; the
+account's column rises into place as the console's do (portal/v5/_motion.css).
+{% endcomment %}
+{% block page_title %}{% block head_title %}{% endblock head_title %}{% endblock %}
+{% block meta_description %}{% translate "Espace réservé — accès au compte" %}{% endblock %}
+{% block body_class %}page-portal console page-account servizio{% endblock %}
+{% block extra_head %}{{ block.super }}<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="{% static 'css/dist/cms/servizio.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block chrome %}{% account_console as shell %}{% with portal_nav=shell.portal_nav breadcrumbs=shell.breadcrumbs %}{{ block.super }}{% endwith %}{% endblock %}
+{% block main_content %}
+<div class="console__workspace">
+  <div class="portal">
+    <div class="portal__main">
+      <div class="conto conto--console">
+        {% block account_aside %}{% endblock %}
+        <div class="conto__main">
+          {% with account_in_console=True %}{% block body %}{% block content %}{% endblock content %}{% endblock body %}{% endwith %}
+          {% block account_help %}<p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>{% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}
+{% block extra_scripts %}{{ block.super }}{% block extra_body %}{% endblock extra_body %}{% endblock %}

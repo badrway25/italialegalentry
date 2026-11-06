@@ -107,19 +107,35 @@ def test_arabic_pages_do_not_overflow_and_are_captured_with_their_ltr_twin(brows
 
 @pytest.mark.parametrize("width", list(WIDTHS))
 def test_every_arabic_public_page_fits_the_viewport(browser, site, width):
-    """Whole-site sweep (every registered public route, gates open): no horizontal overflow, exactly one h1."""
+    """Whole-site sweep (every registered public route, gates open): no horizontal overflow, exactly one h1.
+
+    Every route answers 200 except a page whose content is not there yet: DECISIONS §8 («complete or hide»; V5.12 §8 —
+    no page that only says «nothing published yet») makes the news, the partners and the Forum Virtuel answer 404
+    while their gate is closed (the seed publishes no article and no partner; the Forum Virtuel's flag is off). The
+    floor of 55 predated that rule; the exact set is asserted instead, read from the gates themselves."""
+    from core import gates
     from core.public_routes import all_routes
+
+    hidden_while_empty = {
+        "actualites/": gates.news_public,
+        "partenaires/": gates.partners_public,
+        "forum-virtuel/": gates.virtual_forum_enabled,
+    }
+    expected_hidden = {path for path, is_public in hidden_while_empty.items() if not is_public()}
+    assert expected_hidden == set(hidden_while_empty), "this fixture holds the three empty: each is a §8 404 here"
 
     context, page = _open(browser, width)
     try:
-        served, problems = 0, []
-        for route in all_routes():
+        statuses, problems = {}, []
+        routes = all_routes()
+        for route in routes:
             response = page.goto(site + f"/ar/{route.path}", wait_until="domcontentloaded")
-            served += response.status == 200
+            statuses[route.path] = response.status
             scroll_w, client_w = _overflow(page)
             if scroll_w > client_w or page.locator("h1").count() != 1:
                 problems.append((route.path, response.status, scroll_w, client_w, page.locator("h1").count()))
-        assert served >= 55, served
+        assert {path: code for path, code in statuses.items() if code != 200} == dict.fromkeys(expected_hidden, 404)
+        assert len(statuses) == len({route.path for route in routes}) >= 56, "every registered path visited"
         assert problems == []
     finally:
         context.close()
@@ -215,9 +231,13 @@ def test_header_breadcrumbs_and_arrows_are_mirrored_semantically(browser, site):
 
 
 def test_arabic_typefaces_are_applied_and_loaded(browser, site):
-    """Design V5, type «Una voce» (V5.4 plan §1.1): Vazirmatn draws every Arabic role — the interface on a
-    nav link and the reading text of the body — with Host Grotesk right behind it in the stack for the Latin
-    runs and the digits; both are preloaded on an Arabic page, and loaded."""
+    """Design V5, type «Una voce» (V5.4 plan §1.1) · Typography V2 (v524-t; V5.24 §11–§14, TYPOGRAPHY_V2 §3–§4.7,
+    FINAL_DELIVERY_V2 R1 — V5.20: the face and the body leading changed by decision; the invariants — one Arabic
+    face then Host Grotesk, both loaded, the system's leading, the budget — are the same or stronger): Readex
+    Pro draws every Arabic role — the interface on a nav link and the reading text of the body — with Host
+    Grotesk right behind it in the stack for the Latin runs and the digits; both are preloaded on an Arabic
+    page, and loaded; the body reads at 17/28, the Latin leading (Readex Pro's 1.25 em content area fits it;
+    Vazirmatn's 1.56 em needed 32); an Arabic public page fetches under 38 000 B of fonts (37 084 measured)."""
     context, page = _open(browser, 1440)
     try:
         page.goto(site + "/ar/", wait_until="networkidle")
@@ -226,16 +246,29 @@ def test_arabic_typefaces_are_applied_and_loaded(browser, site):
             return [family.strip().strip('"') for family in css.split(",")]
 
         nav = page.evaluate("getComputedStyle(document.querySelector('.main-nav__link')).fontFamily")
-        assert stack(nav)[:2] == ["Vazirmatn", "Host Grotesk"], nav
+        assert stack(nav)[:2] == ["Readex Pro", "Host Grotesk"], nav
         body = page.evaluate("getComputedStyle(document.body).fontFamily")
-        assert stack(body)[:2] == ["Vazirmatn", "Host Grotesk"], body
-        assert page.evaluate("document.fonts.ready.then(() => document.fonts.check('16px \"Vazirmatn\"', 'الرئيسية'))")
+        assert stack(body)[:2] == ["Readex Pro", "Host Grotesk"], body
+        assert page.evaluate("document.fonts.ready.then(() => document.fonts.check('16px \"Readex Pro\"', 'الرئيسية'))")
         loaded = page.evaluate("[...document.fonts].filter(f => f.status === 'loaded').map(f => f.family)")
-        assert "Vazirmatn" in loaded and "Host Grotesk" in loaded, loaded
-        for retired in ("Noto Naskh Arabic", "IBM Plex Sans Arabic"):
+        assert "Readex Pro" in loaded and "Host Grotesk" in loaded, loaded
+        loaded_files = page.evaluate(
+            "performance.getEntriesByType('resource').filter(e => e.name.endsWith('.woff2')).map(e => e.name.split('/').pop())"
+        )
+        assert any("readex" in f for f in loaded_files) and not any("vazirmatn" in f for f in loaded_files), loaded_files
+        for retired in ("Noto Naskh Arabic", "IBM Plex Sans Arabic", "Vazirmatn"):
             assert retired not in loaded, retired
-        # Naskh needs room for its diacritics: the leading opens, the size does not shrink.
-        assert page.evaluate("getComputedStyle(document.body).lineHeight") == "32px"
+        # one leading system (TYPOGRAPHY_V2 §4.5): the Arabic body on the Latin 17/28, and at the same size
+        assert page.evaluate("getComputedStyle(document.body).lineHeight") == "28px"
+        assert page.evaluate("getComputedStyle(document.body).fontSize") == "17px"
+        fetched = page.evaluate(
+            "performance.getEntriesByType('resource').filter(e => e.name.endsWith('.woff2'))"
+            ".reduce((n, e) => n + (e.encodedBodySize || e.transferSize || 0), 0)"
+        )
+        # the Arabic home fetches both mono files for the same folio labels (LIB's and HOME's burn-down): 47 044 B measured,
+        # recorded as the figure to burn down to the ceiling (never up; CLOSING ratchets it to the measure)
+        assert 0 < fetched <= 47_044, fetched
+        assert fetched <= 38_000 or any("mono" in f for f in loaded_files), (fetched, loaded_files)
     finally:
         context.close()
 
@@ -259,9 +292,15 @@ def test_arabic_form_is_right_aligned_and_latin_inputs_stay_ltr(browser, site):
                 )
                 assert style[0] == "ltr", (selector, style)
                 assert style[1] in ("end", "right"), (selector, style)
-        # Submitting the empty form shows the errors, translated, without breaking the layout.
-        page.locator("form[method='post'] [type='submit']").first.click()
+        # Submitting the empty form shows the errors, translated, without breaking the layout. V5.15 W3 (lane B): the
+        # form is asked in steps, and since round 1 the address never opens a step past the first incomplete one, so
+        # the locked button of the last step is not reachable on an empty form: the empty form is posted as it is
+        # (the server judges; its errors come back on the step that holds them).
+        page.goto(site + "/ar/entreprises/recueil-des-besoins/", wait_until="networkidle")
+        with page.expect_navigation():
+            page.locator("form[method='post'][data-steps]").first.evaluate("f => f.submit()")
         page.wait_for_load_state("networkidle")
+        assert page.locator(".form-field--error").count() >= 5
         scroll_w, client_w = _overflow(page)
         assert scroll_w <= client_w
         page.screenshot(path=str(QA_DIR / "form-errors-ar-390.png"), full_page=True)
@@ -274,9 +313,12 @@ def test_arabic_form_is_right_aligned_and_latin_inputs_stay_ltr(browser, site):
 
 
 def test_arabic_accordion_opens_with_its_question_at_the_inline_start(browser, site):
+    # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1, §3.17 AG-2; strict rule V5.20): the FAQ's rows are an explorer now (its Arabic
+    # reading edge: tests/frontend/test_content_pages_browser_w3_f2.py); the accordion stays on /agami/, the promoter's
+    # question under its text — the same accordion, measured there
     context, page = _open(browser, 1440)
     try:
-        page.goto(site + "/ar/faq/", wait_until="networkidle")
+        page.goto(site + "/ar/agami/", wait_until="networkidle")
         item = page.locator("details.accordion__item").first
         summary = item.locator("summary")
         assert item.evaluate("el => el.open") is False
@@ -284,7 +326,7 @@ def test_arabic_accordion_opens_with_its_question_at_the_inline_start(browser, s
         page.wait_for_timeout(250)
         assert item.evaluate("el => el.open") is True
         assert item.locator(".accordion__panel").is_visible()
-        summary_box, question_box = summary.bounding_box(), summary.locator("h3").bounding_box()
+        summary_box, question_box = summary.bounding_box(), summary.locator("#agami-faq-title").bounding_box()
         gap_right = (summary_box["x"] + summary_box["width"]) - (question_box["x"] + question_box["width"])
         gap_left = question_box["x"] - summary_box["x"]
         assert gap_right <= 8 and gap_right <= gap_left, "in RTL the question starts at the right edge"
@@ -447,10 +489,17 @@ def test_trademark_sign_stays_on_the_right_of_the_name_in_arabic_sentences(brows
 
 
 def test_trademark_sign_stays_on_the_right_of_the_name_in_every_wordmark(browser, site):
-    """I18N-06 (fixed): every {% brand %} wordmark — header and footer — is isolated left-to-right."""
-    found = _trademark_occurrences(browser, site, _TRADEMARK_PAGES[:1])
+    """I18N-06 (fixed): every {% brand %} wordmark — header and footer — is isolated left-to-right.
+
+    The header's and the footer's are counted on «Le projet»: on the home the header keeps the mark alone and gives
+    its words to the hero's H1 (Q1, «one name on the screen», apps/pages/static/pages/css/hero.css; 44252192), so the
+    home draws the footer's wordmark only — and that one must be right too."""
+    found = _trademark_occurrences(browser, site, _TRADEMARK_PAGES[:2])
     wordmarks = [item for item in found if item["wordmark"]]
-    assert len(wordmarks) >= 2, found
+    on_home = [item for item in wordmarks if item["path"] == "/ar/"]
+    on_page = [item for item in wordmarks if item["path"] == "/ar/le-projet/"]
+    assert len(on_page) >= 2, found
+    assert len(on_home) >= 1, found
     assert [item for item in wordmarks if not item["ok"]] == []
 
 

@@ -15,6 +15,10 @@
 > promotion, with `pre-v5-main-2026-10` as the reference point of the pre-V5 platform (*RELEASE TAGS*, *States*;
 > `ROLLBACK.md` §7). The same day, by its review fixes: step 15's migration pattern, one bar for PRODUCTION_READY
 > (*States*, with checklist §A), and what CI's production-target run proves (the server's major versions).
+> Updated 28 October 2026 by the privacy lane P2: *States* carries the status model of the owner's directive V5.16
+> §14, with checklist A-29 … A-33. Updated the same day by the privacy lane P3: *States* carries the status model of
+> directive V5.17 §2 (PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE, PRODUCTION_CONFIG_COMPLETE, PRODUCTION_READY),
+> which replaces V5.16's PRIVACY_CONTENT_COMPLETE.
 >
 > Companions: [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md) (release gate, backup before cutover, smoke test) ·
 > [`ROLLBACK.md`](ROLLBACK.md) · [`production.env.example`](production.env.example) (the server's environment file).
@@ -36,7 +40,7 @@
 - [DOMAIN: REGISTRAR TRANSFER vs DNS CUTOVER](#domain-registrar-transfer-vs-dns-cutover)
 - [DOMAIN CUTOVER SEQUENCE](#domain-cutover-sequence)
 - [LEGACY](#legacy)
-- [RELEASE TAGS](#release-tags) · [States: DEVELOPMENT_COMPLETE / RELEASE_CANDIDATE / PRODUCTION_READY](#states)
+- [RELEASE TAGS](#release-tags) · [States: DEVELOPMENT_COMPLETE / RELEASE_CANDIDATE / PRODUCT_COMPLETE / COMPLIANCE_REVIEW_COMPLETE / PRODUCTION_CONFIG_COMPLETE / PRODUCTION_READY](#states)
 - [Known limits and external dependencies](#known-limits-and-external-dependencies)
 
 ---
@@ -1345,13 +1349,28 @@ runbook's:
 
 ## States
 
-The three states of the owner's directive V5.9 (§14–§16), as the release of V5.10 applies them:
+The states of the owner's directive V5.9 (§14–§16), as the release of V5.10 applies them, and the status model of
+his directive V5.17 §2 (28 October 2026), which replaces V5.16's: «PRODUCT_COMPLETE = the local public site +
+platform are visually and functionally complete and accepted. COMPLIANCE_REVIEW_COMPLETE = privacy/legal matrices
+and unresolved governance decisions have been resolved. PRODUCTION_CONFIG_COMPLETE = actual
+DigitalOcean/email/backups/logging configuration is known and documented. PRODUCTION_READY = all three above are
+complete and release gates pass.» Do not conflate them.
+
+«DPIA / Article 9 / DPO / recipient classification / retention / production hosting configuration DO NOT block:
+PRODUCT_COMPLETE. They block: PRODUCTION_READY.» (V5.17) The compliance items (checklist A-31 … A-33) and the
+infrastructure facts (checklist A-30) do **not** block PRODUCT_COMPLETE; they block PRODUCTION_READY. The
+infrastructure values — the DigitalOcean region, the SMTP provider, the mailbox host, the backups, nginx's retention,
+the real logging — are not questions for the owner now (V5.17 §10): they are verified when the production server is
+prepared, as checklist A-30's items, and live only there.
 
 | State | Applies when | What it does not mean |
 |---|---|---|
 | **DEVELOPMENT_COMPLETE** | every V5 family is merged into `design-v5` — Wave 4 and F-8 included —, nothing is left to build, and the full suite is green on that branch | not validated, not tagged, not deployable |
 | **RELEASE_CANDIDATE** | one commit — `design-v5`'s published snapshot on GitHub, named by its SHA — on which the release-candidate validation passed: the fourteen gates of V5.10 (`docs/RELEASE_NOTES_v2.0.0.md`, *Release gates*), among them the release gate's automated part (clean tree, synchronised, full suite including the browser suite, migrations clean, `check --deploy`, secret and personal-data scans), CI green on both runs, the core flows smoke-tested and the preview serving that commit | not production-ready: GitHub's `main` has not moved, no tag exists yet, and the manual items may still be open |
-| **PRODUCTION_READY** | the candidate **is** GitHub's `main` (fast-forward), `pre-v5-main-2026-10` preserves `a3ac318`, the annotated tag `v2.0.0` is on `main`'s commit, the release gate's bar holds (checklist §A) — **A-1 … A-22 ticked with evidence on that commit, and each of A-23 … A-28 closed or accepted in writing by the owner as open until go-live** —, and the final handoff (V5.9 §17) is written, naming each of A-23 … A-28 with its state and the parts of A-1 … A-22 left for the server | not deployed: the owner deploys and cuts over, and the go-live waits on those of his items that gate it (the legal texts, EU hosting, SMTP, backups) |
+| **PRODUCT_COMPLETE** | the local public site and platform are visually and functionally complete and accepted (V5.17 §2): every family merged, the full suite green, the preview serving it and the owner's acceptance of what it shows. The privacy notice and cookie information exist as legal documents with their open fields classified; a flow may be complete in the preview and closed in production pending a legal gate (`docs/compliance/PREVIEW_VS_PRODUCTION.md`). **Not blocked by** checklist A-29 … A-33 | not compliance-reviewed, not configured for production, not production-ready |
+| **COMPLIANCE_REVIEW_COMPLETE** | the privacy/legal matrices and the unresolved governance decisions are resolved: no marker classed OWNER CONFIRMATION REQUIRED or LEGAL REVIEW REQUIRED remains (checklist A-33 — the controller, the bases, DPO status, recipient roles, retention policies), A-31 (art. 9) and A-32 (DPIA, `docs/compliance/DPIA.md`) closed, OF-11 accepted by the owner (`docs/compliance/OF11_ANNEXE_DEVIATIONS.md`) | the notice is not yet public: its PRODUCTION CONFIGURATION REQUIRED markers wait for the real infrastructure |
+| **PRODUCTION_CONFIG_COMPLETE** | the actual production configuration is known and documented (checklist A-30, verified when the server is prepared, never asked of the owner beforehand): DigitalOcean region of the droplet, database and storage; DPA accepted; the SMTP provider and the mailbox host; off-server backups and their retention; nginx, Gunicorn and application logging verified (minimisation, rotation, access, retention); the owner-confirmed WhatsApp number set (`ILE_WHATSAPP_NUMBER` in the environment file, or the back office's «numero WhatsApp»; never in the repository — V5.20); no marker classed PRODUCTION CONFIGURATION REQUIRED remains. It is verified on the infrastructure the owner creates, before the public cutover; the team never touches it | not production-ready on its own |
+| **PRODUCTION_READY** | PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE and PRODUCTION_CONFIG_COMPLETE all hold and the release gates pass, with the gate «PRIVACY NOTICE = VERIFIED AND PUBLIC» (checklist A-29), and the candidate **is** GitHub's `main` (fast-forward), `pre-v5-main-2026-10` preserves `a3ac318`, the annotated tag `v2.0.0` is on `main`'s commit, the release gate's bar holds (checklist §A) — **A-1 … A-22 ticked with evidence on that commit, and each of A-23 … A-28 closed or accepted in writing by the owner as open until go-live**, and **A-29 … A-33 closed** —, and the final handoff (V5.9 §17) is written, naming each of A-23 … A-28 with its state and the parts of A-1 … A-22 left for the server | not deployed: the owner deploys and cuts over, and the go-live waits on those of his items that gate it (the legal texts, EU hosting, SMTP, backups) |
 
 «GitHub pushed» is none of these.
 

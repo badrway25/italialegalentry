@@ -7,6 +7,13 @@ in RTL), labels never clipped, nothing left hidden (with JavaScript, without Jav
 reduced-motion preference), no request outside the site and no CSP violation. Skipped when Chromium is
 not installed. Design V5.4 (W3-F1): the sequence stands on «la linea», still at load (no entrance motion).
 
+V5.22 (SECTION_SYSTEM_V2 §3.3, §3.6–§3.8 — an approved owner/product decision; lane P1; V5.20 strict rule): the
+spaces' bodies are V2 sections. The sequence is «la linea V2» in PP-1 (`[data-diagram="pilot-sequence"]`, the route its
+own trigger: it may wait below the fold and draw once — its stations' boxes never move, only their lines and marks),
+from 80 rem one stepped row; the recruitment answer is EN-4's split paragraph, the recipients' sentence IN-1's plate,
+«Pour aller plus loin» «l'approdo»'s list, and each page links its own page sheet from the family's folder (the
+family's sheet bundled in it, §7.1). Every check keeps its invariant on that markup.
+
 Gate G3 is opened through its flag only (no frozen clock: Playwright's event loop needs a running
 monotonic clock), so the live server answers the Phase 3 routes at the real current date.
 """
@@ -24,7 +31,7 @@ pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 VIEWPORTS = {"phone": (390, 844), "tablet": (800, 1024), "desktop": (1440, 900)}
 PATHS = ("entreprises/", "institutions/", "universites-et-formation/", "projet-pilote/")
 PILOT = "projet-pilote/"
-STEP = ".pilot-diagram .linea__step"
+STEP = '[data-diagram="pilot-sequence"] .linea__step'
 ALL_STEPS_OPAQUE = (
     "() => { const items = Array.from(document.querySelectorAll('" + STEP + "'));"
     " return items.length >= 8 && items.every(e => getComputedStyle(e).opacity === '1'); }"
@@ -65,7 +72,7 @@ def _page(browser, width, height, **options):
 
 def _boxes(page) -> list[dict]:
     # Measure once every station is laid out (the line is still at load: nothing slides in).
-    page.locator(".pilot-diagram__figure").scroll_into_view_if_needed()
+    page.locator('[data-diagram="pilot-sequence"]').scroll_into_view_if_needed()
     page.wait_for_function(ALL_STEPS_SETTLED, timeout=8000)
     return page.evaluate(
         "Array.from(document.querySelectorAll('" + STEP + "')).map(e => {"
@@ -89,13 +96,16 @@ def test_no_horizontal_overflow_and_nothing_left_hidden(browser, live_server, ph
             assert page.evaluate("document.documentElement.dir") == ("rtl" if lang == "ar" else "ltr")
             assert page.evaluate("document.documentElement.classList.contains('js')")
             assert page.locator("h1").count() == 1
-            # A photograph ships only with its whole caption apparatus — place, date, a factual
+            # A curated photograph ships only with its whole caption apparatus — place, date, a factual
             # sentence, a credit — and no asset in the inherited library carries one. So these
             # pages carry themselves on type, which is the test art direction A set for itself.
-            # See tests/compliance/test_figure_caption.py for the rule itself.
-            figures = page.locator("figure").count()
-            captions = page.locator("figcaption").count()
-            assert figures == captions, (path, f"{figures} figure for {captions} figcaption")
+            # See tests/compliance/test_figure_caption.py for the rule itself. V5.24 §2 (FINAL_DELIVERY_V2.md
+            # §3.2 D6; V5.20): the slot registry's stock frames carry NO caption — a plate is captioned, a frame
+            # is not (the first rule as it was, the second new).
+            plates = page.locator("figure.figura").count()
+            plate_captions = page.locator("figure.figura figcaption").count()
+            assert plates == plate_captions, (path, f"{plates} plate for {plate_captions} figcaption")
+            assert page.locator("figure[data-slot] figcaption").count() == 0, (path, "a stock frame's credit")
             hidden = page.evaluate(
                 "Array.from(document.querySelectorAll('.reveal'))"
                 ".filter(e => getComputedStyle(e).opacity === '0').length"
@@ -139,16 +149,16 @@ def test_pilot_diagram_is_one_mirrored_row_on_a_desktop(browser, live_server, ph
         assert lefts == sorted(lefts, reverse=(lang == "ar")), "reading order follows the writing direction"
         # Prescribed labels are never clipped nor hyphenated by the layout.
         clipped = page.evaluate(
-            "Array.from(document.querySelectorAll('.pilot-diagram .linea__label'))"
+            "Array.from(document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__label'))"
             ".filter(e => e.scrollWidth > e.clientWidth + 1).length"
         )
         assert clipped == 0
-        assert page.evaluate("getComputedStyle(document.querySelector('.pilot-diagram .linea__label')).hyphens") in (
-            "manual",
-            "none",
+        hyphens = page.evaluate(
+            "getComputedStyle(document.querySelector('[data-diagram=\"pilot-sequence\"] .linea__label')).hyphens"
         )
+        assert hyphens in ("manual", "none")
         numerals = page.evaluate(
-            "Array.from(document.querySelectorAll('.pilot-diagram .linea__num'))"
+            "Array.from(document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__num'))"
             ".map(e => getComputedStyle(e, '::before').content)"
         )
         assert numerals[0] in ("counter(linea, decimal-leading-zero)", '"01"'), numerals[0]
@@ -160,7 +170,7 @@ def test_pilot_steps_are_visible_at_once_and_never_left_hidden(browser, live_ser
     context, page = _page(browser, 1440, 900)
     try:
         page.goto(f"{live_server.url}/fr/{PILOT}", wait_until="networkidle")
-        page.locator(".pilot-diagram__figure").scroll_into_view_if_needed()
+        page.locator('[data-diagram="pilot-sequence"]').scroll_into_view_if_needed()
         page.wait_for_function(ALL_STEPS_OPAQUE, timeout=6000)
         # The mandatory notice right after the diagram is visible as well.
         assert page.locator("[data-notice='pilot-not-authorised'] .notice").is_visible()
@@ -211,7 +221,9 @@ def test_pages_load_nothing_outside_the_site_and_raise_no_csp_violation(browser,
             page.goto(f"{live_server.url}/fr/{path}", wait_until="networkidle")
         externals = [u for u in requests if not u.startswith(live_server.url) and not u.startswith("data:")]
         assert externals == [], externals
-        assert any("/static/css/dist/ecosystem/ecosystem.css" in u for u in requests)
+        # each page its own page sheet from the family's folder, the family's sheet bundled in it (V5.22 §7.1)
+        for sheet in ("companies", "institutions", "universities", "pilot"):
+            assert any(f"/static/css/dist/ecosystem/{sheet}.css" in u for u in requests), sheet
         # No photograph is requested: an uncaptioned asset never becomes a Photo, so it reaches no
         # template. When a curated, captioned image ships, this assertion flips back to requiring
         # the responsive WebP derivative — and tests/compliance/test_figure_caption.py will say so.
@@ -257,7 +269,7 @@ def test_french_fallback_keeps_its_punctuation_in_place_on_the_arabic_pages(brow
             "h1.ingresso__title[lang='fr']",
             "p.ingresso__lead[lang='fr']",
             "blockquote[lang='fr']",
-            "[data-block='recruitment-guarantee'] .notice[lang='fr']",
+            "p.imprese-confine__risposta[data-faq][lang='fr']",
         ):
             assert _direction(page, selector) == "ltr", selector
         assert _direction(page, "main .chapter__inner") == "rtl", "the layout stays mirrored"
@@ -281,11 +293,12 @@ def test_french_fallback_keeps_its_punctuation_in_place_on_the_arabic_pages(brow
         page.goto(f"{live_server.url}/ar/institutions/", wait_until="networkidle")
         assert _direction(page, ".ingresso__lead span[lang='fr']") == "ltr"
         assert _direction(page, "h1.ingresso__title") == "rtl", "the translated title follows the page"
-        assert _direction(page, "p.chapter__statement[lang='fr']") == "ltr", "the recipients' sentence keeps its own"
-        assert _direction(page, "ul.registro") == "rtl", "lists stay mirrored"
+        assert _direction(page, "p.emiciclo__frase[lang='fr']") == "ltr", "the recipients' sentence keeps its own"
+        # V5.22 §3.7 IN-2: «Pour aller plus loin» is «l'approdo», a list of tiles, `ul.approdo__tessere`
+        assert _direction(page, "ul.approdo__tessere") == "rtl", "lists stay mirrored"
 
         page.goto(f"{live_server.url}/ar/{PILOT}", wait_until="networkidle")
         assert _direction(page, "h1.ingresso__title[lang='fr']") == "ltr"
-        assert _direction(page, ".pilot-diagram ol.linea") == "rtl", "the sequence stays mirrored"
+        assert _direction(page, '[data-diagram="pilot-sequence"] ol.linea') == "rtl", "the sequence stays mirrored"
     finally:
         context.close()

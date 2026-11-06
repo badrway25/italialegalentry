@@ -1,0 +1,915 @@
+{
+ "what": "V5 photographs, family «personnes» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "entrepot-allee-rayonnages",
+   "pexels_id": 29454379,
+   "photographer": "William Buzeichuk",
+   "photographer_url": "https://www.pexels.com/@web-buz",
+   "page": "https://www.pexels.com/photo/expansive-warehouse-aisle-filled-with-products-29454379/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Long aisle in a busy warehouse stacked with boxes and products on shelves.",
+   "original_px": [
+    6048,
+    8064
+   ],
+   "original_sha256": "a7fa7d0493e3c9af378c52e51ab94f27789456e791f3b90672b1f33d8df75056",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.3,
+      1.0,
+      0.8
+     ],
+     "crop_px": [
+      0,
+      2419,
+      6048,
+      6451
+     ],
+     "master_px": [
+      6048,
+      4032
+     ]
+    },
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.44,
+      1.0,
+      0.76
+     ],
+     "crop_px": [
+      13,
+      3548,
+      6035,
+      6129
+     ],
+     "master_px": [
+      6022,
+      2581
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; soft 0.4; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a logistics warehouse aisle in perspective between high pallet racking, empty; the cartons' printed labels are a few pixels high at every served width (720 / 1200 w), so nothing is legible; nobody",
+   "files": [
+    {
+     "file": "entrepot-allee-rayonnages-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 16614,
+     "budget": 30720,
+     "sha256": "57abf14e0b24781fd8a345ad2a330fb1291a71929e1b30e91982ac733f4871ad"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 26898,
+     "budget": 30720,
+     "sha256": "e1d8f1896f171b2683498488053930a54a93fc6f8956a9fdc23ecae88213439c"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-3x2-720.avif",
+     "ratio": "3x2",
+     "width": 720,
+     "height": 480,
+     "format": "avif",
+     "quality": 49,
+     "bytes": 29532,
+     "budget": 30720,
+     "sha256": "5453ca8b57907f4608a4ec07de2e4be2cc558258ed44b071edabacd4f33048f6"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-21x9-480.avif",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 11533,
+     "budget": 30720,
+     "sha256": "00387d89624c3ab2a87f2bfaf312af5e5842ce4f104e1912e086191266ef442c"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-21x9-480.webp",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 18632,
+     "budget": 30720,
+     "sha256": "ace418998396fdf44666105d22b269d9fd6530c4f9b1df1d2688f11ff9955469"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-21x9-720.avif",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 22868,
+     "budget": 30720,
+     "sha256": "df9cfc19c8f6f7491aa9d0e7762c2e6bd870a5ccfd1435b772c2379e8c6e6059"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-21x9-720.webp",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "webp",
+     "quality": 56,
+     "bytes": 29552,
+     "budget": 30720,
+     "sha256": "2485f00b775e85ec9839583faec90b5a33e0efd756cbf9638976bee584475902"
+    },
+    {
+     "file": "entrepot-allee-rayonnages-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 37,
+     "bytes": 30400,
+     "budget": 30720,
+     "sha256": "7de1bc4a7373c088674a900c8e0ebdc434d9e2ce711ecc6637feb3c3cf1370c6"
+    }
+   ],
+   "ceilings": {
+    "3x2": 30720,
+    "21x9": 30720
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "entrepot-allee-rayonnages-3x2-720.webp",
+    "entrepot-allee-rayonnages-21x9-1200.webp"
+   ],
+   "label": "v522-m-build"
+  },
+  {
+   "slug": "notes-cahier-livre",
+   "pexels_id": 6334273,
+   "photographer": "cottonbro studio",
+   "photographer_url": "https://www.pexels.com/@cottonbro",
+   "page": "https://www.pexels.com/photo/person-writing-on-notebook-6334273/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A person writing notes with a pen while studying an open book in a library setting.",
+   "original_px": [
+    4351,
+    2901
+   ],
+   "original_sha256": "89090ac6f7a18d28d9f9c813c82d9a9a8cef0f5b34521d0904bb2d460d697b7a",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.1,
+      0.14,
+      0.9,
+      0.94
+     ],
+     "crop_px": [
+      435,
+      406,
+      3916,
+      2727
+     ],
+     "master_px": [
+      3481,
+      2321
+     ]
+    },
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.02,
+      0.29,
+      0.98,
+      0.88
+     ],
+     "crop_px": [
+      179,
+      841,
+      4172,
+      2552
+     ],
+     "master_px": [
+      3993,
+      1711
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.655,
+      0.655,
+      0.87,
+      0.85
+     ],
+     "radius_px": 12,
+     "reason": "the handwritten figures and words on the notebook beyond the pen"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "at desk level: a hand writes in a ruled notebook with a white pen, an open book behind it, a second book at the edge; the face is above the frame (the collar at its top edge is above both crops, which start at y 0.14 and 0.29); the books' pages and covers carry nothing legible; the far handwriting is softened",
+   "files": [
+    {
+     "file": "notes-cahier-livre-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 5721,
+     "budget": 30720,
+     "sha256": "7daefdb959a438565bd98c395fa0bb527c0ac1384fe8fd2dba52772ce3d4a7e8"
+    },
+    {
+     "file": "notes-cahier-livre-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 7794,
+     "budget": 30720,
+     "sha256": "b2cf1951ab8343db5a18d02f8099765633e0d4e1436bec6ce3c77a0c26e098c5"
+    },
+    {
+     "file": "notes-cahier-livre-3x2-720.avif",
+     "ratio": "3x2",
+     "width": 720,
+     "height": 480,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 9549,
+     "budget": 30720,
+     "sha256": "315170706cd41e9d9a7fd943f7656abcd4082a1c620c8d18726f6101d191edeb"
+    },
+    {
+     "file": "notes-cahier-livre-3x2-720.webp",
+     "ratio": "3x2",
+     "width": 720,
+     "height": 480,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 12866,
+     "budget": 30720,
+     "sha256": "4415961e870aaed372dcb0a2926695e902f96b7f6960750c0d6715cfbf8b6b57"
+    },
+    {
+     "file": "notes-cahier-livre-21x9-480.avif",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 4599,
+     "budget": 30720,
+     "sha256": "8899527719a516115e3adcb9cb6267dcfa972be0c34f7d10bb0465b84be85db0"
+    },
+    {
+     "file": "notes-cahier-livre-21x9-480.webp",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 5902,
+     "budget": 30720,
+     "sha256": "62d5ce2b3661b2c3537d5a3777c89810fd56392268c4e8ee6b8cded27189cc15"
+    },
+    {
+     "file": "notes-cahier-livre-21x9-720.avif",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7523,
+     "budget": 30720,
+     "sha256": "8525a5d71ce3e9ff303eace57282140f89d36465f2766e87c2897f377c087209"
+    },
+    {
+     "file": "notes-cahier-livre-21x9-720.webp",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 9958,
+     "budget": 30720,
+     "sha256": "aff5be742f427eccb434c578a181859ee4bf8948b9eb562f6155e8440c66dbe2"
+    },
+    {
+     "file": "notes-cahier-livre-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 14652,
+     "budget": 30720,
+     "sha256": "546cf8df207f8698d3e222d04675dec8f0d34c42b6e802d9a4b8b0f5bd82daeb"
+    },
+    {
+     "file": "notes-cahier-livre-21x9-1200.webp",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 19444,
+     "budget": 30720,
+     "sha256": "b2609379ba4e250b8ff7d21eb044992911f624a363c138067e1d0e4d0b7e574e"
+    }
+   ],
+   "ceilings": {
+    "3x2": 30720,
+    "21x9": 30720
+   },
+   "webp_floor": 40,
+   "webp_not_built": [],
+   "label": "v522-m-improve1"
+  },
+  {
+   "slug": "personne-fenetre-dos",
+   "pexels_id": 7594198,
+   "photographer": "Mikhail Nilov",
+   "photographer_url": "https://www.pexels.com/@mikhail-nilov",
+   "page": "https://www.pexels.com/photo/back-view-of-a-man-in-white-long-sleeve-7594198/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Back view of a man sitting at a desk, wearing a white shirt, with a window view.",
+   "original_px": [
+    6000,
+    4000
+   ],
+   "original_sha256": "8e26c9b2b44a45ea24111a475f9f6d60b035150882a0d5c66bd0c3f04026621e",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.235,
+      0.0,
+      0.765,
+      1.0
+     ],
+     "crop_px": [
+      1410,
+      12,
+      4590,
+      3987
+     ],
+     "master_px": [
+      3180,
+      3975
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.05,
+      0.1,
+      0.95,
+      1.0
+     ],
+     "crop_px": [
+      300,
+      400,
+      5700,
+      4000
+     ],
+     "master_px": [
+      5400,
+      3600
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a man at a desk by a window, seen from behind; nothing legible on the desk",
+   "files": [
+    {
+     "file": "personne-fenetre-dos-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7653,
+     "budget": 61440,
+     "sha256": "56dea4810a99cc7ab9f74de4c85039b390853da22f1f0ec169812fa1c82659dd"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 9392,
+     "budget": 61440,
+     "sha256": "51e55d05ec9029363e13db99cb4e51985820a430eac0b073d354121c0e667bae"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13356,
+     "budget": 61440,
+     "sha256": "af0976016c722233a8de83f6bdc9b6fdb8419c85f1f1428af1c73a8292e2ca11"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 16992,
+     "budget": 61440,
+     "sha256": "5b80bb899e27e7e4b68ad64733c6b7a0711e9fbde47cd3707d1fe16f8b61b933"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 21079,
+     "budget": null,
+     "sha256": "a008cb406318fc409e9e8d4acf8a16dc8d04ca433c2b223a7a8e69b03425f44c"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 28566,
+     "budget": null,
+     "sha256": "993b733d70d0aa9935cf40da78f42500833a44fa5db4f3c59717a2865d8a1593"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 29995,
+     "budget": null,
+     "sha256": "4497ab2a483cae1fe1c60e1886709c81eda22c8e6cf3781e98cf29cc87193076"
+    },
+    {
+     "file": "personne-fenetre-dos-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 42104,
+     "budget": null,
+     "sha256": "25f9dcf141417e924e4ee0c09e6b6df25e9649ab93971c4967eca01ab78b216f"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 6215,
+     "budget": 61440,
+     "sha256": "79b66d7a27fb05e9161c1be97b66693801b2307a16f29c040089cf628579a523"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 8056,
+     "budget": 61440,
+     "sha256": "51f744de9d47dae8eba3ede6a07bc86c9827ecff3cbb8ad0e3365d40e3d726b7"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10992,
+     "budget": 61440,
+     "sha256": "e8a7cd65a4da2a73764973b12a2d675b1f71f366883d1b207ef8c2334710d40b"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 14066,
+     "budget": 61440,
+     "sha256": "ce753777bc1e63bff20bc5b75e40d7c93c5e12d6b80fc5cf42f92b3ac9772ac2"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 17444,
+     "budget": 61440,
+     "sha256": "694eb15fa4ab4bd0dc95935be61dce7b6ab272ef6300fc50f9e3614fbfdb5078"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22532,
+     "budget": 61440,
+     "sha256": "2c841517cdb27b8d2c5f2b6793c4e290b7c9997c66f861b84fae33072d1b82ca"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 23613,
+     "budget": null,
+     "sha256": "cef3aa82da143b072c7d74fdaf464b955e48e26a283ea3f03cae400dcc7daa6b"
+    },
+    {
+     "file": "personne-fenetre-dos-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 31888,
+     "budget": null,
+     "sha256": "791d6bd590a47a07456a9603c721344e06e6c0b9975f11dc347838e30636116f"
+    }
+   ]
+  },
+  {
+   "slug": "table-partagee-vue-haut",
+   "pexels_id": 27177298,
+   "photographer": "Helena Lopes",
+   "photographer_url": "https://www.pexels.com/@helenalopes",
+   "page": "https://www.pexels.com/photo/people-eating-appetizers-in-a-restaurant-27177298/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A lively Mediterranean meal with various dishes, showcasing hands reaching for olives and bread.",
+   "original_px": [
+    5472,
+    3648
+   ],
+   "original_sha256": "39f450362e8356588c5e7f37d55571499800b57853efa398bee5f43e962f3ec8",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.17,
+      0.81,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      657,
+      4432,
+      3612
+     ],
+     "master_px": [
+      4432,
+      2955
+     ]
+    },
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.2,
+      0.81,
+      0.733
+     ],
+     "crop_px": [
+      0,
+      752,
+      4432,
+      2651
+     ],
+     "master_px": [
+      4432,
+      1899
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; soft 0.4; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a shared table from straight above: bowls of olives, tomatoes, a dip and peanuts on an openwork wooden top; one hand holds out a spoon, the other holds the olive bowl; no face (the arms enter from the edges), no lettering, no brand; the glasses at the frame's top edge, the third hand there and the bread board at its right are outside both crops",
+   "files": [
+    {
+     "file": "table-partagee-vue-haut-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 18063,
+     "budget": 30720,
+     "sha256": "db982d77d542e8cbac38888a631a920ae62504c6444a8662b5f17fcc25356203"
+    },
+    {
+     "file": "table-partagee-vue-haut-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 71,
+     "bytes": 29518,
+     "budget": 30720,
+     "sha256": "dc853685dc35606cf179595f27ef36687988c01273b760e3bc4aa1d20699e865"
+    },
+    {
+     "file": "table-partagee-vue-haut-3x2-720.avif",
+     "ratio": "3x2",
+     "width": 720,
+     "height": 480,
+     "format": "avif",
+     "quality": 49,
+     "bytes": 28674,
+     "budget": 30720,
+     "sha256": "2cbe6e6dd53e776e1911a8c06e05290ab6c557572b2c956ca5765aeb3a0359c9"
+    },
+    {
+     "file": "table-partagee-vue-haut-21x9-480.avif",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 11031,
+     "budget": 30720,
+     "sha256": "fc734b7875715145f49279727ce11fee5b714f1f5031c201c58621dad8d5513b"
+    },
+    {
+     "file": "table-partagee-vue-haut-21x9-480.webp",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 18358,
+     "budget": 30720,
+     "sha256": "4c946a1f3a1e41c298065478e2d80857d5b5699f007dca7d0b9c26c81b9a738c"
+    },
+    {
+     "file": "table-partagee-vue-haut-21x9-720.avif",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 19120,
+     "budget": 30720,
+     "sha256": "fc62ed574d428cc01089c1a6fd598044e942dde5735d9c45813cfd4d2274bb13"
+    },
+    {
+     "file": "table-partagee-vue-haut-21x9-720.webp",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "webp",
+     "quality": 71,
+     "bytes": 30330,
+     "budget": 30720,
+     "sha256": "5b65512187d08ef0017cf29fe167630e4ce003670941990d51aad065ab063a60"
+    },
+    {
+     "file": "table-partagee-vue-haut-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 30470,
+     "budget": 30720,
+     "sha256": "b65bd0215a1968deb5bb157cbeabf43c8d02cd85c1d250ecc1f4cbb33fdb2cd8"
+    }
+   ],
+   "ceilings": {
+    "3x2": 30720,
+    "21x9": 30720
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "table-partagee-vue-haut-3x2-720.webp",
+    "table-partagee-vue-haut-21x9-1200.webp"
+   ],
+   "label": "v522-m-improve1"
+  },
+  {
+   "slug": "vignes-brume-aube",
+   "pexels_id": 9250930,
+   "photographer": "Walther Cardona Gabriela",
+   "photographer_url": "https://www.pexels.com/@gcwalther",
+   "page": "https://www.pexels.com/photo/orchard-trees-secured-with-a-net-9250930/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Beautiful vineyard landscape in foggy Guadalupe Valley, Baja California, Mexico.",
+   "original_px": [
+    5218,
+    3456
+   ],
+   "original_sha256": "4e04d98977d40f3c101faa4c7c4fadd0548b857bbb19c7a2ca8d6c70305ce89e",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      17,
+      0,
+      5201,
+      3456
+     ],
+     "master_px": [
+      5184,
+      3456
+     ]
+    },
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.24,
+      1.0,
+      0.887
+     ],
+     "crop_px": [
+      0,
+      829,
+      5218,
+      3065
+     ],
+     "master_px": [
+      5218,
+      2236
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; soft 0.6; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "netted vine rows running into a misty plain, a line of trees and hills behind; no person; a car and a mast lost in the haze are a few pixels wide; the alt names no place (stock is never documentary)",
+   "files": [
+    {
+     "file": "vignes-brume-aube-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10355,
+     "budget": 30720,
+     "sha256": "5fb17a49af5f77a84a785daae7994e0b95167fa58f7e79742098d75729822855"
+    },
+    {
+     "file": "vignes-brume-aube-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 15282,
+     "budget": 30720,
+     "sha256": "b8959ad60d856926863c82b0944872ad69ba4b2d750071abb1480299a6341782"
+    },
+    {
+     "file": "vignes-brume-aube-3x2-720.avif",
+     "ratio": "3x2",
+     "width": 720,
+     "height": 480,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 22525,
+     "budget": 30720,
+     "sha256": "bc9ccafb71b1549d15be144b5b5183b2c7c47da967493ec0d58aa9d8f8f50696"
+    },
+    {
+     "file": "vignes-brume-aube-3x2-720.webp",
+     "ratio": "3x2",
+     "width": 720,
+     "height": 480,
+     "format": "webp",
+     "quality": 65,
+     "bytes": 29840,
+     "budget": 30720,
+     "sha256": "9df88bc5e3b9989fa533b34483e276718d227d1486e8f714b8d09db278e4fde5"
+    },
+    {
+     "file": "vignes-brume-aube-21x9-480.avif",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 8727,
+     "budget": 30720,
+     "sha256": "56b2f09a0038760f645a637379f22de04a91eefd9cb7e693cfa09dc4285f6132"
+    },
+    {
+     "file": "vignes-brume-aube-21x9-480.webp",
+     "ratio": "21x9",
+     "width": 480,
+     "height": 206,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 12984,
+     "budget": 30720,
+     "sha256": "c1bca29ee45b2a6aff1fdfeab15d5e740db3438df082b1ccacb167fa389adc94"
+    },
+    {
+     "file": "vignes-brume-aube-21x9-720.avif",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 18568,
+     "budget": 30720,
+     "sha256": "0b8ac7dc2215196a4228bfa957a5f59710a6ca48c18323724b029032751d78ae"
+    },
+    {
+     "file": "vignes-brume-aube-21x9-720.webp",
+     "ratio": "21x9",
+     "width": 720,
+     "height": 309,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 29306,
+     "budget": 30720,
+     "sha256": "1052cb3dca7cc182214aa8cce757ba77a98ea1b546ab6dfc5741b14f12e17266"
+    },
+    {
+     "file": "vignes-brume-aube-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 40,
+     "bytes": 30239,
+     "budget": 30720,
+     "sha256": "21f05a89840ffcd4b415535f436f892de10f6cfc4603a91972a0107e850a7b00"
+    }
+   ],
+   "ceilings": {
+    "3x2": 30720,
+    "21x9": 30720
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "vignes-brume-aube-21x9-1200.webp"
+   ],
+   "label": "v522-m-build"
+  }
+ ]
+}

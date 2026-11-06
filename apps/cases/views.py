@@ -42,6 +42,7 @@ from django.views.decorators.http import require_http_methods
 from accounts.permissions import can, require
 from cases import services
 from cases.models import CaseFile, ChecklistItem, ChecklistStatus
+from core import special_category
 
 logger = logging.getLogger("ile.cases")
 
@@ -110,6 +111,11 @@ def index(request):
         .prefetch_related("assignments__assignee")
         .order_by("-status_since", "-created_at")
     )
+    from portal import services as portal_services
+
+    if not portal_services.shows_person_page(request.user, "cases") and not cases.exists():
+        # An organisation's or a company's «Espace réservé» has no case file of its own (V5.12 Q7): its dashboard.
+        return redirect("portal:dashboard")
     rows = []
     for case in cases:
         rows.append(
@@ -163,6 +169,8 @@ def detail(request, reference: str):
             "assessments": case.assessments.order_by("-assessed_at")[:10],
             "can_change": can(request.user, "change", case),
             "transitions": services.transitions_available(case, request.user),
+            # V5.17 §4 (R-SC-1): G-FREE under the reason, the case file's free text (S-05)
+            "free_text_guidance": special_category.FREE_TEXT_GUIDANCE,
             "journey": presenters.journey_with_dates(case),
             # the person's acts are «Vous» for the person only: a mandated reader reads «La personne» (the review's M3)
             "timeline": presenters.timeline(case, reader=request.user),

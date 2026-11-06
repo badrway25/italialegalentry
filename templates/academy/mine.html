@@ -15,8 +15,10 @@ offering the way back. An empty register is one sentence naming who fills it and
 {% block meta_description %}{% translate "Les formations que vous suivez, celles que vous avez suivies jusqu’au terme, et vos plans de formation." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="thresholds" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Mes formations" %}</h1>
     <p class="ws-head__lead">{% translate "Ce que vous suivez, ce que vous avez suivi, et les parcours qui vous sont conseillés." %}</p>
   </div>

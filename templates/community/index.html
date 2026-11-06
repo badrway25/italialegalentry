@@ -24,7 +24,7 @@ each row the way to its room — and a chapter for the next meetings.
 <section class="chapter community-rooms" aria-labelledby="rooms-heading">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "rooms-heading" %}
       <h2 class="chapter__title" id="rooms-heading">{% translate "Salles thématiques" %}</h2>
       {% if membership %}
       <p class="chapter__lead community-rooms__me">{% translate "Vous participez en tant que :" %} {{ membership.get_category_display }}{% if moderator %} — {% translate "modération" %}{% endif %}</p>
@@ -53,7 +53,7 @@ each row the way to its room — and a chapter for the next meetings.
 <section class="chapter community-agenda" aria-labelledby="agenda-heading">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "agenda-heading" %}
       <h2 class="chapter__title" id="agenda-heading">{% translate "Prochains rendez-vous" %}</h2>
     </div>
     <div class="chapter__body">

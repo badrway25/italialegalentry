@@ -9,7 +9,7 @@ imported by console.js where the register draws this element.
   the head   filled at 0 ms from the row the person pressed — «Pièce demandée» and the file's reference, the title,
              then the row's own line: the state's chip, the actor, the date (`data-piece-head` marks the same facts in
              the body, which the drawer does not draw twice); «Fermer», 44 px, always there; the busy key of a region
-             whose fragment is on its way, after the 400 ms the eye forgives
+             whose fragment is on its way, after the 400 ms the eye forgives, and the word at 1 s (T4 of «Lume»)
   the body   the piece's page itself — its <article>, fetched from the piece's URL — seated by L3 on its first
              arrival (loader.js `seat`): the state and its reason, the Dépôt while the piece is open (its answers
              composed in place, the drawer read again after a filing), what is asked, the source, the deposits
@@ -37,6 +37,7 @@ Contract: none — the register's rows and the strip carry what the head needs (
       </p>
     </div>
     {% include "components/busy_key.html" with css_class="doc-drawer__key" %}
+    {% comment %}The region's word (T4 of «Lume», static/js/src/lume/region.js): after 1 s of a reading that has not arrived, said once.{% endcomment %}<p class="doc-drawer__word" role="status" data-region-word="{% translate 'Chargement…' %}"></p>
     <a class="overlay__close" href="#main-content" data-overlay-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</a>
   </div>
   <div class="overlay__body doc-drawer__body" data-drawer-body></div>

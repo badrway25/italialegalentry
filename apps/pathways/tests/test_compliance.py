@@ -12,6 +12,7 @@ from django.conf import settings
 from cms.forbidden import scan
 from core.public_routes import all_routes
 from pathways.models import PATHWAY_KEYS
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = [pytest.mark.compliance, pytest.mark.django_db]
 
@@ -87,7 +88,8 @@ class TestRenderedPagesOpen:
 
     def test_no_external_resources(self, client, pathways_seeded, phase3_open):
         for lang, path, html in _iter_html(client, True):
-            urls = re.findall(r'(?:src|href)="(https?://[^"]+)"', html)
+            checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+            urls = re.findall(r'(?:src|href)="(https?://[^"]+)"', checked)
             externals = [u for u in urls if "testserver" not in u and "localhost" not in u]
             assert not externals, (lang, path, externals)
 
@@ -124,7 +126,9 @@ class TestRenderedPagesOpen:
         }
         #: a locked text the page cuts on its own separators for layout (CREATIVE_DIRECTION_V5 law 8): it is read whole
         #: in its element's text, never retyped
-        cut = {"p3.persons.how_it_works"}
+        # V5.22 (SECTION_SYSTEM_V2 §1 rule 6, §0.1 «la protezione», §3.9 F1; strict rule): the anti-fraud body and the
+        # training's body are re-composed at render too (spans on their own full stops) — read whole the same way
+        cut = {"p3.persons.how_it_works", "p3.antifraud.body", "p3.training_after.body"}
         for path, keys in placements.items():
             html = client.get(f"/fr/{path}").content.decode()
             for key in keys:

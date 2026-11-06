@@ -1,0 +1,488 @@
+/* ============================================================================================
+   SECTION SYSTEM V2 — the shell of every V2 section (design V5.22, SECTION_SYSTEM_V2 §1, §2.0, §4.3, §6; lane S).
+   A PAGE-ONLY partial: the family sheet of a page that draws a V2 section imports it, then the pattern partials it
+   uses (_sec-<pattern>.css) — never main.css. Markup: <section class="sez sez--<pattern>" data-sec="<pattern>"
+   data-ground="paper|stone|brand|night|photo" data-rhythm="strip|band|moment" aria-labelledby="…">, its head
+   templates/components/sezioni/_testa.html.
+
+     1 · the shell      one ground a section; two grounds of the same kind never touch (the page composes them);
+                        the three heights of a page — a strip, bands, one moment (§1 rule 5)
+     2 · the head       four roles: statement (--t-title-2, 28 → 36), process and router (--t-band, 24 → 28), panel (the
+                        label role — v5/base.css .t-label, Host Grotesk 13/16 600 +0.08 em, never the mono — and its
+                        48 px rule) — no 24 px glyph, never sticky; its rule draws once (the heads' shared punctuation,
+                        never a section's signature). Every size a step of tokens.css (V5.24 Typography V2, lane LIB):
+                        the Arabic leading and a French run's Latin leading on an Arabic page come from the tokens'
+                        :lang(ar) block and its Latin boundary — no descendant-form rule here (TYPOGRAPHY_V2 F-7)
+     3 · the containers T2 «tile» (a concept: 24 in 48, radius 6, its face a niche — the vault in shade, the floor in
+                        light, the seal's own recipe (v5/_sigillo.css §1; V5.24 BACKGROUND_MATERIAL_V2 §3.5) —, its
+                        threshold rule at the foot runs 40 % → 100 % when
+                        its owner is active, the glyph shifts 2 px along the reading direction) and T2a «disc» (an
+                        actor: full radius, a 1 px ring — the audience accent on night and photographs only); the
+                        body's arch seat (40 in 72 × 88 …) and its night face (v5/_sigillo.css holds the seat itself)
+     4 · the plates     raised paper on a ground, a 1 px edge, a PRE-PAINTED shadow layer (SH-4: a shadow never
+                        animates — its layer's opacity does); at most one --shadow-2 a first screen, the others --shadow-1
+     5 · type devices   the large keyword (600), the side annotation, the step numeral (the numeral role: Host Grotesk
+                        600, tabular, 36/40 — never the mono, TYPOGRAPHY_V2 F-3), the emphasised statement (§6.2); a
+                        French locked run on an RTL page in its own LTR box (§1 rule 6)
+   Tokens of static/css/v5/tokens.css only; logical properties only; the distances are --sez-* (§2.0).
+   ============================================================================================ */
+
+/* ---- 1 · the shell ---- */
+.sez {
+  --sez-slide: 8px;
+  --sez-drift: 24px;
+  --sez-gap: clamp(var(--s-8), 4vw, var(--s-12));
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip; /* a frame that bleeds to the viewport's edge never scrolls the page sideways */
+  padding-block: clamp(var(--s-16), 8vw, var(--s-24));
+  background: var(--sez-ground, transparent);
+}
+
+.sez[data-rhythm="strip"] {
+  padding-block: clamp(var(--s-8), 4vw, var(--s-12));
+}
+
+.sez[data-rhythm="moment"] {
+  min-block-size: min(100svh, 62rem);
+  display: grid;
+  align-content: center;
+}
+
+.sez[data-ground="paper"] { --sez-ground: var(--surface-page); }
+.sez[data-ground="stone"] { --sez-ground: var(--surface-area); }
+.sez[data-ground="brand"] { --sez-ground: var(--grad-brand); }
+
+.sez[data-ground="night"] {
+  --sez-ground: var(--mesh-dark), var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+/* the night's static grain, 4 %, never animated (§6.1) */
+.sez[data-ground="night"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("../../img/grain.svg");
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.sez__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sez-gap);
+}
+
+@media (min-width: 64rem) {
+  .sez__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* a V2 section's photograph takes its pattern's verb: lane A's scroll mask and zoom (M2) leave it — a frame that
+   develops (bw-scroll) keeps its colour's range */
+:root:not(.rm) .sez [data-reveal="mask"] > picture,
+:root:not(.rm) .sez [data-reveal="mask"]:not([data-grade="bw-scroll"]) > picture > img {
+  animation: none;
+}
+
+/* ---- 2 · the head ---- */
+.testa {
+  display: grid;
+  gap: var(--s-4);
+  max-inline-size: var(--measure-lead);
+  margin-block-end: var(--sez-gap);
+}
+
+.testa__rule {
+  display: block;
+  inline-size: var(--s-12);
+  block-size: 2px;
+  background: var(--accent-mark);
+}
+
+.testa__title {
+  margin: 0;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-title-2);
+  text-wrap: balance;
+  color: inherit;
+}
+
+.testa--process .testa__title,
+.testa--router .testa__title {
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  letter-spacing: var(--track-band);
+}
+
+.testa__lead {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--sez-ink-2, var(--text-2));
+}
+
+/* the panel's label: the label role by name (components/sezioni/_testa.html adds `t-label`; v5/base.css draws it —
+   Host Grotesk 13/16 600 +0.08 em, uppercase; 14/20 on phones and in Arabic, no capitals there), in the accent's ink,
+   its 48 px rule at the reading edge. The role's tokens are restated under the class for the two page templates that
+   name it without the role (home/_ecosystem_colophon.html, pathways/_tracciato.html: HOME's and PUB1's, LIB NOTES §4) —
+   never the capitals nor their feature setting (the role's); CLOSING drops the four lines once both carry `t-label` */
+.testa__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  font-size: var(--t-label);
+  line-height: var(--t-label-lh);
+  font-weight: var(--w-label);
+  letter-spacing: var(--track-label);
+  color: var(--accent-text);
+}
+
+.testa--router {
+  max-inline-size: none;
+}
+
+.testa--center {
+  justify-items: center;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.sez[data-ground="night"] {
+  --sez-ink-2: var(--text-on-night-2);
+}
+
+.sez[data-ground="night"] .testa__label {
+  color: var(--accent-night);
+}
+
+/* ---- 3 · T2 tile, T2a disc, the body seat ---- */
+.sez-tile {
+  --tile: 48px;
+  --tile-glyph: 24px;
+  position: relative;
+  isolation: isolate; /* a tile is a stacking context: a pattern's floor layer (::before, z −1) sits between its vault and its glyph */
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--tile);
+  block-size: var(--tile);
+  border-radius: var(--radius-md);
+  background: linear-gradient(var(--line-rhythm), var(--surface-raised) 85%); /* the niche: the glyph on --text-1 reads 12.9:1 on the vault */
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
+  color: var(--text-1);
+}
+
+.sez-tile .icon {
+  inline-size: var(--tile-glyph);
+  block-size: var(--tile-glyph);
+  transition: translate var(--sez-t, var(--motion-standard)) var(--ease-enter);
+}
+
+/* a tile that inks (data-verb="ink": a grid's tiles — V5.24 BACKGROUND_MATERIAL_V2 §3.4, in place of the settle) lights
+   its floor once as its section enters: the light's rules live with the pattern that draws the tile (v5/_sec-mosaico.css;
+   PUB1's plates in _index.css — §4.1's placement), never here: the shell is in every page sheet (R4 a) */
+
+/* the threshold rule at the foot: 40 % at rest, the whole foot when its owner is active */
+.sez-tile::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  background: var(--accent-mark);
+  scale: 0.4 1;
+  transform-origin: 0 50%;
+  transition: scale var(--sez-t, var(--motion-emphasized)) var(--ease-enter);
+}
+
+[dir="rtl"] .sez-tile::after {
+  transform-origin: 100% 50%;
+}
+
+.sez-tile--lg { --tile: 64px; --tile-glyph: 32px; }
+.sez-tile--sm { --tile: 40px; --tile-glyph: 20px; }
+
+.sez-disc {
+  --disc: 44px;
+  --disc-glyph: 20px;
+  --disc-ring: var(--line-structure);
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--disc);
+  block-size: var(--disc);
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 var(--disc-w, 1px) var(--disc-ring);
+  color: var(--text-1);
+  transition: box-shadow var(--sez-t, var(--motion-standard)) var(--ease-enter);
+}
+
+.sez-disc .icon {
+  inline-size: var(--disc-glyph);
+  block-size: var(--disc-glyph);
+}
+
+/* doors and panels: 64 px — the glyph at 32, never a 24-grid glyph scaled to 40 (§4.6) */
+.sez-disc--lg { --disc: 64px; --disc-glyph: 32px; }
+
+:is(.sez[data-ground="night"], .sez[data-ground="photo"], .on-inverse) .sez-disc {
+  background: var(--surface-night-sheet);
+  color: var(--text-on-night-1);
+}
+
+/* an actor's accent, named once (--aud): the disc's ring and a door's threshold read it, on night and photographs only */
+[data-audience="person"] { --aud: var(--aud-persona); }
+[data-audience="company"] { --aud: var(--aud-impresa); }
+[data-audience="institution"] { --aud: var(--aud-istituzione); }
+[data-audience="university"] { --aud: var(--aud-universita); }
+[data-audience="professional"] { --aud: var(--accent-night); }
+
+:is(.sez[data-ground="night"], .sez[data-ground="photo"], .on-inverse) [data-audience] .sez-disc { --disc-ring: var(--aud); }
+
+/* the owner is active: the tile's rule runs, its glyph shifts 2 px; the disc's ring thickens — hover equals focus */
+:is(a, button, [data-owner]):is(:hover, :focus-visible) .sez-tile::after,
+[aria-selected="true"] .sez-tile::after {
+  scale: 1 1;
+}
+
+:is(a, button, [data-owner]):is(:hover, :focus-visible) .sez-tile .icon {
+  translate: 2px 0;
+}
+
+[dir="rtl"] :is(a, button, [data-owner]):is(:hover, :focus-visible) .sez-tile .icon {
+  translate: -2px 0;
+}
+
+:is(a, button, [data-owner]):is(:hover, :focus-visible) .sez-disc,
+[aria-selected="true"] .sez-disc {
+  --disc-w: 2px;
+}
+
+/* the keyboard sees the final state at once (§4.1 rule 5): the tile, the disc and the key carry their own duration
+   (--sez-t), which their transitions — the tile's rule and glyph included — read. Three class-led selectors: the first
+   key of a page restyles the tiles, discs and keys, never every icon of the page, and no :is() subject is tried
+   against every element (v522-s2, lane H's INP request 2) */
+html[data-input="key"] .sez-tile,
+html[data-input="key"] .sez-disc,
+html[data-input="key"] .sg-g--key {
+  --sez-t: 0s;
+}
+
+/* the body seat: 40 in 72 × 88 from 80 rem, 36 in 64 × 78 to 64 rem, 32 in 56 × 68 below (v5/_sigillo.css: the seat,
+   whichever of the two sheets a page links first) */
+.sigillo.sigillo--body {
+  --sg-w: 72px;
+  --sg-h: 88px;
+  --sg-m: 40px;
+  --sg-sw: 2.4;
+}
+
+@media (max-width: 79.999rem) {
+  .sigillo.sigillo--body {
+    --sg-w: 64px;
+    --sg-h: 78px;
+    --sg-m: 36px;
+    --sg-sw: 2.333;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .sigillo.sigillo--body {
+    --sg-w: 56px;
+    --sg-h: 68px;
+    --sg-m: 32px;
+    --sg-sw: 2.625;
+  }
+}
+
+/* the night seat: its face and edge on the night, the oro threshold light — the one gold of a T1 (§4.3, §4.5) */
+.sigillo.sigillo--night,
+:is(.sez[data-ground="night"], [data-tone="night"], .on-inverse) .sigillo {
+  --sg-face: linear-gradient(180deg, var(--surface-night), var(--surface-night-sheet) 78%);
+  --sg-edge: var(--line-night-soft);
+  --sg-crown: color-mix(in srgb, var(--text-on-night-1) 14%, transparent);
+  box-shadow: inset 0 1px var(--sg-crown); /* the crown's 1 px highlight, where it reads: on the night */
+  --sg-sill: var(--line-night);
+  --sg-light: var(--p-oro-300);
+  --sg-rest: 14%;
+  --sg-lit: 28%;
+  --sg-tone: 0.18;
+  color: var(--text-on-night-1);
+}
+
+/* a mark's gesture turns about a point of its own drawing (transform-box: view-box, the initial value: the 48 grid) */
+.sg-g--needle { transform-origin: 24px 23px; }
+
+/* the key turns 90° about its bow on its own action (T5, §4.7 «Semantic turn»); never under reduced motion */
+.sg-g--key {
+  transform-origin: 24px 24px;
+  transition: rotate var(--sez-t, var(--motion-emphasized)) var(--ease-turn);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm) .sg-g--key {
+    rotate: calc(-90deg * var(--light, 0));
+  }
+}
+
+/* ---- 4 · the plates ---- */
+.sez-plate {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
+}
+
+/* the pre-painted shadow layer: its opacity moves, never the shadow */
+.sez-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: var(--shadow-1);
+  pointer-events: none;
+}
+
+.sez-plate--raised::after {
+  box-shadow: var(--shadow-2);
+}
+
+.sez[data-ground="night"] .sez-plate {
+  background: var(--surface-night-sheet);
+  box-shadow: inset 0 0 0 1px var(--line-night-soft);
+}
+
+/* a plate that opens something: its link stretched over it (the accessible name stays the link's own words), the focus
+   ring on the plate, and the depth under the hand — a 2 px lift and the pre-painted layer's deeper shadow (SH-4) */
+.sez-stretch {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sez-stretch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.sez-stretch:focus-visible {
+  outline: none;
+}
+
+.sez-plate:has(.sez-stretch:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.sez-plate:has(.sez-stretch):is(:hover, :focus-within)::after {
+  box-shadow: var(--shadow-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sez-plate:has(.sez-stretch) {
+    transition: translate var(--motion-standard) var(--ease-enter);
+  }
+
+  .sez-plate:has(.sez-stretch):hover {
+    translate: 0 -2px;
+  }
+}
+
+/* corner brackets as formwork marks (21st «Corner Frame» 35211, adapted): four 12 px corners in the structure's ink */
+.sez-squadre {
+  --sq: color-mix(in srgb, var(--line-structure) 55%, transparent);
+  background:
+    linear-gradient(var(--sq), var(--sq)) top left / 12px 1px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) top left / 1px 12px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) top right / 12px 1px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) top right / 1px 12px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) bottom left / 12px 1px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) bottom left / 1px 12px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) bottom right / 12px 1px no-repeat,
+    linear-gradient(var(--sq), var(--sq)) bottom right / 1px 12px no-repeat;
+}
+
+/* ---- 5 · type devices (§6.2) ---- */
+.sez-keyword {
+  display: block;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-title-2);
+}
+
+.sez-annotation {
+  max-inline-size: var(--measure-small);
+  font-size: var(--t-ui);
+  line-height: 1.5;
+  color: var(--sez-ink-2, var(--text-2));
+}
+
+.sez-numeral {
+  font-family: var(--f-sans);
+  font-size: var(--t-numeral-lg);
+  line-height: var(--t-numeral-lg-lh);
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
+  letter-spacing: 0;
+  color: var(--sez-ink-2, var(--text-2));
+}
+
+.sez-statement {
+  padding-inline-start: var(--s-5);
+  border-inline-start: 2px solid var(--accent-mark);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: 600;
+}
+
+.em-keyword {
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.sez[data-ground="night"] .em-keyword {
+  color: var(--text-on-night-1);
+}
+
+/* a French locked run on an RTL page: its own box, its own start (§1 rule 6) — a quotation plate, never a misaligned
+   paragraph */
+[dir="rtl"] .sez [lang="fr"]:not(html) {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+/* … except beside a marker: a card's or a panel's French words hang from the edge its numeral or node stands on, as a
+   station's label does in «la linea» (W3-F1's rule, v5/_journey-passage.css): one reading edge for the whole card; and
+   a section's French title stands under its head rule, on the reading edge */
+[dir="rtl"] .sez :is(.tracciato__carta, .flusso__lastra, .mosaico__tessera) [lang="fr"]:not(html),
+[dir="rtl"] .sez .testa__title[lang="fr"] {
+  text-align: end;
+}
+
+@media (forced-colors: active) {
+  :is(.sez-tile, .sez-disc, .sez-plate) {
+    box-shadow: none;
+    border: 1px solid CanvasText;
+  }
+
+  .sez-tile::after,
+  .sez-plate::after,
+  .sez[data-ground="night"]::before {
+    display: none;
+  }
+}

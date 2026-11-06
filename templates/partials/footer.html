@@ -1,7 +1,7 @@
-{% load i18n cms_nav %}{% footer_menu as footer_nav %}
+{% load i18n cms_nav legal_links %}{% footer_menu as footer_nav %}{% legal_links as legal_nav %}
 <footer class="site-footer on-inverse" id="site-footer">
   <div class="container">
-    <div class="site-footer__inner">
+    <div class="site-footer__inner{% if not legal_nav %} site-footer__inner--three{% endif %}">
       <div class="site-footer__col site-footer__col--identity">
         <p class="site-footer__brand">{% brand_lockup "dark" %}</p>
         <p class="site-footer__promoter">{{ site.promoter }}</p>
@@ -11,18 +11,22 @@
         not rendered here until that text is published.
         {% endcomment %}
         <p><a class="site-footer__email email" href="mailto:{{ site.contact_email }}">{% svg_icon "at-sign" "icon icon--sm" %}<span>{{ site.contact_email }}</span></a></p>
+        {% comment %} V5.19 (owner-confirmed; lane v519-k): the two telephone channels under the address, each with its own glyph and word — the Numero Verde a call, WhatsApp the messaging app; the numbers from site.channels, isolated left to right and unbroken (chrome.css «the colophon's channels»). {% endcomment %}
+        {% with freephone=site.channels.freephone whatsapp=site.channels.whatsapp %}{% if freephone or whatsapp %}<ul class="site-footer__channels" role="list">
+          {% if freephone %}{% blocktranslate trimmed asvar freephone_name with number=freephone.label %}Appeler le numéro vert {{ number }}{% endblocktranslate %}<li><a class="site-footer__channel" href="{{ freephone.tel_url }}" aria-label="{{ freephone_name }}">{% svg_icon "phone" "icon icon--md" %}<span>{% translate "Numéro vert" %} <bdi class="phone" dir="ltr">{{ freephone.label }}</bdi></span></a></li>{% endif %}
+          {% if whatsapp %}{% blocktranslate trimmed asvar whatsapp_name with number=whatsapp.label %}Contacter Italy Legal Entry sur WhatsApp au {{ number }}{% endblocktranslate %}<li><a class="site-footer__channel" href="{{ whatsapp.url }}" aria-label="{{ whatsapp_name }}">{% svg_icon "message-circle" "icon icon--md" %}<span>WhatsApp <bdi class="phone" dir="ltr">{{ whatsapp.label }}</bdi></span></a></li>{% endif %}
+        </ul>{% endif %}{% endwith %}
         {% brand_words as words %}{% if words %}<p class="site-footer__mark">{% brand "site-footer__wordmark-inline" %} — {{ words }}</p>{% endif %}
       </div>
+      {% comment %} Only the legal pages that are published (legal_links; V5.12 Q2, V5.14 §13): the privacy notice and the cookie information as soon as they are, the others with their verified Italian source — an unpublished page is absent, never «en cours de préparation»; with none, the column leaves and the grid reflows. {% endcomment %}
+      {% if legal_nav %}
       <nav class="site-footer__col site-footer__nav" aria-label="{% translate 'Informations légales' %}">
         <h2 class="site-footer__heading">{% translate "Informations légales" %}</h2>
         <ul class="site-footer__list">
-          <li><a href="{% url 'legal:notices' %}">{% translate "Mentions légales" %}</a></li>
-          <li><a href="{% url 'legal:privacy' %}" lang="en">Privacy Policy</a></li>
-          <li><a href="{% url 'legal:cookies' %}" lang="en">Cookie Policy</a></li>
-          <li><a href="{% url 'legal:terms' %}">{% translate "Conditions d’utilisation" %}</a></li>
-          <li><a href="{% url 'legal:disclaimer' %}">{% translate "Avertissement" %}</a></li>
+          {% for link in legal_nav %}<li><a href="{{ link.url }}"{% if link.lang %} lang="{{ link.lang }}"{% endif %}>{{ link.label }}</a></li>{% endfor %}
         </ul>
       </nav>
+      {% endif %}
       <nav class="site-footer__col site-footer__nav" aria-label="{% translate 'Navigation du site' %}">
         <h2 class="site-footer__heading">{% translate "Navigation" %}</h2>
         <ul class="site-footer__list">
@@ -33,14 +37,16 @@
       <div class="site-footer__col">
         <h2 class="site-footer__heading">{% translate "Le projet" %}</h2>
         <p>{% blocktranslate with project=site.project_name promoter=site.promoter %}{{ project }} est un écosystème d’information et d’orientation promu par {{ promoter }}.{% endblocktranslate %}</p>
+        {% comment %} The link's label is the glossary's «Attention aux fraudes / Attenzione alle frodi / Beware of fraud / احذروا الاحتيال» (V5.12 D-24); the locked heading stays on the section itself. {% endcomment %}
         {% if gates.phase3_public %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}
-        <a class="site-footer__antifraud" href="{{ antifraud_url }}">{% svg_icon "shield-alert" "icon" %}<span>{% locked "p3.antifraud.title" %}</span></a>
+        <a class="site-footer__antifraud" href="{{ antifraud_url }}">{% svg_icon "shield-alert" "icon" %}<span>{% translate "Attention aux fraudes" %}</span></a>
         {% endif %}{% endif %}
       </div>
     </div>
     <div class="site-footer__bottom">
       <p>© {% now "Y" %} {{ site.promoter }}</p>
-      <p class="site-footer__version">{{ site.version_label }}{% if site.content_verified_on %} — {% translate "contenus vérifiés le" %} <time datetime="{{ site.content_verified_on|date:'Y-m-d' }}">{{ site.content_verified_on|date:"d.m.Y" }}</time>{% endif %}</p>
+      {% comment %} The project's phase, from the phase gate (S1 p. 1; V5.12 D-17) — never the release number, which is the page's metadata. {% endcomment %}
+      <p class="site-footer__version">{% if gates.phase3_public %}{% translate "Phase 3" %}{% elif gates.forum_banner_visible or gates.forum_permanent_mode %}{% translate "Phase 2" %}{% else %}{% translate "Phase 1" %}{% endif %}{% if site.content_verified_on %} — {% translate "contenus vérifiés le" %} <time datetime="{{ site.content_verified_on|date:'Y-m-d' }}">{{ site.content_verified_on|date:"d.m.Y" }}</time>{% endif %}</p>
     </div>
   </div>
 </footer>

@@ -357,28 +357,51 @@ PUBLIC_TARGETS = (
     ("/fr/", ".site-footer a"),
     ("/ar/", ".site-footer a"),
     ("/fr/parcours/", ".aiuto a"),
-    ("/fr/entreprises/", ".aiuto a, .form__privacy-link a"),
-    ("/ar/entreprises/", ".form__privacy-link a"),
     ("/fr/orientation/", ".wizard-intro__resume-link a"),
-    ("/fr/formation/", ".linea__more a"),
+    # V5.22 (SECTION_SYSTEM_V2 §3.9 «la traversata» — an approved owner/product decision; lane P1; V5.20 strict rule):
+    # Formation's stand-alone links are each time's way further (`.traversata__altro a`), the old line's «.linea__more»
+    # left with its markup — the same floor measured on them (finger 282 × 56 and 232 × 44, pointer 56 and 28 px high)
+    ("/fr/formation/", ".traversata__altro a"),
     ("/fr/forum/inscription/", '[data-registration="closed"] .notice__body a'),
-    ("/ar/le-projet/", ".chapter__more > a.link-arrow"),
+    # V5.22 (SECTION_SYSTEM_V2 §3.2 LP-3; strict rule V5.20): the promoter's chapter is the story's last step — its
+    # one way on, «En savoir plus sur le promoteur», is the same stand-alone link under the step's own class
+    ("/ar/le-projet/", ".projet__oltre > a.link-arrow"),
+)
+#: … the companies' consent link, which since V5.15 lane B's Premium Forms (the steps engine, DL54-173) stands in the
+#: form's consent step: that step is `hidden` until it is reached, so the step that holds the link is painted as
+#: steps.js's goTo() paints a reached step (that one shown, the others hidden) before it is measured. The door page
+#: no longer draws an «aiuto» line.
+STEPPED_TARGETS = (
+    ("/fr/entreprises/", ".form__privacy-link a"),
+    ("/ar/entreprises/", ".form__privacy-link a"),
+    ("/fr/entreprises/recueil-des-besoins/", ".form__privacy-link a"),
 )
 #: … or not yet (a legal page says it is being prepared, with the address to write to; every public form is the
 #: go-live notice, with the same address — the accessibility check's finding 1)
+#: Since C-W3 M-2 (DECISIONS §16) an unpublished C/D legal page (condizioni, note legali, avvertenze) answers 404 to the
+#: public; the privacy and cookie pages stay public and say they are being prepared — the Arabic one is measured here
 PENDING_TARGETS = (
     ("/fr/privacy-policy/", ".legal-page__pending .notice__body a"),
-    ("/ar/condizioni-di-utilizzo/", ".legal-page__pending .notice__body a"),
+    ("/ar/privacy-policy/", ".legal-page__pending .notice__body a"),
+    ("/ar/cookie-policy/", ".legal-page__pending .notice__body a"),
     ("/fr/contact/formulaire/", ".form-unavailable .notice__body a"),
     ("/ar/entreprises/recueil-des-besoins/", ".form-unavailable .notice__body a"),
     ("/fr/entreprises/", ".form-unavailable .notice__body a"),
 )
 
 
-def _check_targets(page, live_server, targets, touch):
+#: the step that holds the target, shown as a reached step is (static/js/src/steps.js paint(): one step not hidden)
+REACH_STEP_JS = """(sel) => { const el = document.querySelector(sel); const step = el && el.closest('.form-step');
+  if (!step) return false; for (const s of step.closest('form').querySelectorAll('.form-step')) s.hidden = s !== step;
+  return true; }"""
+
+
+def _check_targets(page, live_server, targets, touch, stepped=False):
     for path, selector in targets:
         page.goto(live_server.url + path, wait_until="load")
         page.evaluate("document.fonts.ready")
+        if stepped:
+            assert page.evaluate(REACH_STEP_JS, selector), (path, selector, "the link stands in a step of the form")
         found = page.evaluate(HIT_JS, [selector, 1])
         assert found, (path, selector, "nothing to measure: the page no longer draws it")
         for target in found:
@@ -405,6 +428,12 @@ def test_every_stand_alone_link_answers_on_44px_under_a_finger_and_24_under_a_po
         _check_targets(page, live_server, PUBLIC_TARGETS, touch)
     finally:
         context.close()
+    context = _context(browser, live_server, 390, 844, touch)
+    page = context.new_page()
+    try:
+        _check_targets(page, live_server, STEPPED_TARGETS, touch, stepped=True)
+    finally:
+        context.close()
 
 
 @pytest.mark.browser
@@ -420,6 +449,8 @@ def test_a_notices_address_answers_on_its_targets_while_the_legal_texts_are_awai
     page = context.new_page()
     try:
         _check_targets(page, live_server, PENDING_TARGETS, touch)
+        for path in ("/ar/condizioni-di-utilizzo/", "/fr/note-legali/"):
+            assert page.goto(live_server.url + path, wait_until="load").status == 404, (path, "C-W3 M-2: not public")
     finally:
         context.close()
 

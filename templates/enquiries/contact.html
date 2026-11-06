@@ -18,19 +18,17 @@ edge, its mark and its words and wired with aria-describedby, never by colour al
     <p class="page-header__lead">{% translate "Pour toute question sur le projet, utilisez ce formulaire ou écrivez directement à l’adresse ci-dessous." %}</p>
     <p class="page-header__contact"><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   </header>
-  <section class="chapter enquiry-page__form" id="formulaire" aria-labelledby="contact-form-title">
-    <div class="container chapter__inner">
-      <div class="chapter__head">
-        {% svg_icon "ile-steps" "icon chapter__mark" %}
-        <h2 id="contact-form-title" class="chapter__title enquiry-page__form-title">{% translate "Votre message" %}</h2>
+  <section class="formwork-section enquiry-page__form" id="formulaire" aria-labelledby="contact-form-title">
+    <div class="container">
+      <div class="formwork-section__head">
+        <span class="glyph-tile glyph-tile--lg" aria-hidden="true">{% chapter_mark "contact-form-title" "icon chapter__mark" %}</span>
+        <h2 id="contact-form-title" class="formwork-section__title enquiry-page__form-title">{% translate "Votre message" %}</h2>
       </div>
-      <div class="chapter__body">
-        {% if not forms_open or not form %}
-          {% include "components/form_unavailable.html" %}
-        {% else %}
-          {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-contact" form_class="enquiry-form--contact" legend=_("Vos coordonnées et votre message") submit_label=_("Envoyer le message") %}
-        {% endif %}
-      </div>
+      {% if not forms_open or not form %}
+        {% include "components/form_unavailable.html" %}
+      {% else %}
+        {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-contact" form_class="enquiry-form--contact" legend=_("Vos coordonnées et votre message") submit_label=_("Envoyer le message") %}
+      {% endif %}
     </div>
   </section>
 </article>

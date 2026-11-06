@@ -1,0 +1,268 @@
+/* ============================================================================================
+   ESPACE UNIVERSITÉS ET FORMATION — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.8; lane P1). Page-only:
+   ecosystem/universities.css. U1, the page's moment — B «la filiera di formazione»: one route that leaves the reading
+   edge and descends through three station plates (before the departure, in Italy with the research branch, after the
+   arrival), their concept tiles its nodes, to the brand's arch — the page's one gold arrival — and the destination: the
+   campus frame (6/12 from 64 rem: the slot's own track, imagery.py), the last plate laid over its edge (layered).
+   Signature PATH PROGRESSION: the route draws down, the nodes settle in turn, the frame develops as the route
+   arrives; hovering or focusing a plate lights the route up to it. Adapted from 21st.dev (NOTES, provenance): «Metro
+   Map Image Gallery» 43148 (stations on a line, a branch leaving it, the hovered station lit and the others kept),
+   «Animated Roadmap» 8113 (milestones on one path, the path drawn as it enters) — refused: trains, autoplay, photo
+   bubbles, dialogs, statuses.
+   ============================================================================================ */
+
+.filiera {
+  --fil-c: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+}
+
+.filiera__stazioni {
+  position: relative;
+  display: grid;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a station: its node on the route at the reading edge, its plate beside it */
+.filiera__stazione {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--s-5);
+}
+
+/* the route: from this node down to the next one (the last: down to the arrival) */
+.filiera__stazione::before,
+.filiera__stazione::after {
+  content: "";
+  position: absolute;
+  inset-block: 52px calc(4px - var(--s-6));
+  inset-inline-start: 23px;
+  inline-size: 2px;
+  background: var(--fil-c);
+  transform-origin: 50% 0;
+}
+
+/* the light that answers a hovered or focused plate rides on the same segments */
+.filiera__stazione::after {
+  background: var(--accent-mark);
+  opacity: 0;
+  transition: opacity var(--motion-emphasized) var(--ease-enter);
+}
+
+.filiera__stazione:last-child::before,
+.filiera__stazione:last-child::after {
+  inset-block-end: calc(-1 * var(--s-12));
+}
+
+.filiera__nodo {
+  z-index: 1;
+}
+
+.filiera__lastra {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--s-6);
+}
+
+.filiera__kicker {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: var(--t-folio-lh);
+  color: var(--accent-text);
+}
+
+.filiera__titolo {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.filiera__titolo[lang="fr"]:not(:lang(ar)) {
+  text-wrap: balance;
+}
+
+.filiera__riga,
+.filiera__ramo-riga {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* a second way out of a plate, and the branch: above the plate's stretched link */
+.filiera__altro,
+.filiera__ramo {
+  position: relative;
+  z-index: 2;
+  margin: var(--s-2) 0 0;
+}
+
+/* the research pathway branches off «En Italie»: a dashed spur, its own tile, its own link */
+.filiera__ramo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: center;
+  margin-block-start: var(--s-3);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px dashed var(--line-structure);
+}
+
+.filiera__ramo .sez-tile {
+  grid-row: span 2;
+}
+
+.filiera__ramo-titolo {
+  margin: 0;
+  font-weight: var(--w-control);
+}
+
+/* the arrival: the brand's arch on the route's end, the page's one gold */
+.filiera__arrivo {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 48px;
+  block-size: 48px;
+  margin-block-start: calc(-1 * var(--s-2));
+  color: var(--text-1);
+  --sez-d: 780ms;
+}
+
+.filiera__arrivo::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 18px 10px color-mix(in oklab, var(--identity-light) 30%, transparent);
+}
+
+.filiera__arrivo .icon {
+  inline-size: 28px;
+  block-size: 28px;
+}
+
+.filiera__meta .foto {
+  margin: 0;
+}
+
+.filiera__nota {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.filiera__tutti {
+  margin: 0;
+}
+
+/* hover equals focus: the hovered plate's node lights, and the route up to it */
+.filiera__stazione:has(a:is(:hover, :focus-visible)) .filiera__nodo::after {
+  scale: 1 1;
+}
+
+.filiera__stazioni:has(> :nth-child(2) a:is(:hover, :focus-visible)) > :nth-child(1)::after,
+.filiera__stazioni:has(> :nth-child(3) a:is(:hover, :focus-visible)) > :nth-child(-n + 2)::after {
+  opacity: 1;
+}
+
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  .filiera__meta {
+    inline-size: 75%;
+    justify-self: end;
+  }
+}
+
+/* from 64 rem: the route in the first half, the destination in the second (the slot's 6/12 track) from the second
+   plate's line, the last plate laid 48 px over the frame's edge */
+@media (min-width: 64rem) {
+  .filiera {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    row-gap: var(--s-6);
+  }
+
+  /* the stations stand on the route's own rows (a subgrid: one row a station), so the destination can stand from the
+     second plate's line (QA_ROUND2 m1: set at the route's end it left the column's upper half empty paper, about
+     610 × 460 px at 1440): beside the second and the third plates, the last one laid over its edge as before */
+  .filiera__stazioni {
+    grid-column: 1 / span 6;
+    grid-row: 1 / span 3;
+    grid-template-rows: subgrid;
+  }
+
+  .filiera__arrivo {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .filiera__meta {
+    grid-column: 7 / -1;
+    grid-row: 2 / span 3;
+    align-self: start;
+  }
+
+  .filiera__nota {
+    grid-column: 2 / span 5;
+    grid-row: 4;
+    align-self: center;
+  }
+
+  .filiera__stazione:last-child .filiera__lastra {
+    position: relative;
+    z-index: 1;
+    margin-inline-end: calc(-1 * var(--s-12));
+  }
+
+  .filiera__stazione:last-child .filiera__lastra::after {
+    box-shadow: var(--shadow-2);
+  }
+}
+
+/* the stations' order, for the route's turn */
+.filiera__stazione:nth-child(2) { --fi-i: 1; }
+.filiera__stazione:nth-child(3) { --fi-i: 2; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the route draws down station by station; the frame develops as the route arrives */
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .filiera__stazione::before { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .filiera__stazione::before {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(var(--fi-i, 0) * 240ms) backwards;
+  }
+
+  /* the selector outweighs the library's rule that stills a V2 section's photograph (v5/_sezioni.css: `.sez
+     [data-reveal="mask"] > picture > img { animation: none }`), which kept the frame from developing (QA_ROUND1 m2) */
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .filiera__meta .foto > picture > img { filter: grayscale(1); }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .filiera__meta .foto > picture > img {
+    animation: sez-develop var(--motion-slow) var(--ease-enter) 900ms backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .filiera__arrivo::before { opacity: 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .filiera__arrivo::before {
+    animation: sez-layer var(--motion-slow) var(--ease-enter) 900ms backwards;
+  }
+}
+
+html[data-input="key"] .filiera__stazione::after {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .filiera__stazione::before {
+    background: CanvasText;
+  }
+
+  .filiera__stazione::after,
+  .filiera__arrivo::before {
+    display: none;
+  }
+}

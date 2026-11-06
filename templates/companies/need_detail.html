@@ -21,11 +21,13 @@ need, which the company has a right to know and which is named by organisation o
 {% endcomment %}
 {% block page_title %}{{ need.title }}{% endblock %}
 {% block meta_description %}{% translate "Le détail d’un besoin exprimé par votre entreprise." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="company">
+  {% include "portal/partials/atrium_art.html" with figure="seal" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title reg-head__title" id="need-title" dir="auto">{{ need.title }}</h1>
     <p class="reg-head__meta"><span class="reg-ref">{{ need.reference }}</span>{% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}<span>{% blocktranslate with date=need.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span></p>
   </div>
@@ -44,7 +46,7 @@ need, which the company has a right to know and which is named by organisation o
 {% endblock %}
 
 {% block companies_content %}
-<div class="reg-page">
+<div class="reg-page db-main">
   {% if missing %}
   {% translate "Avant transmission" as missing_title %}
   {% translate "Il manque encore :" as missing_lead %}

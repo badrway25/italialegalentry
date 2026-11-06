@@ -444,6 +444,17 @@ class ForumMedia(PublishableModel):
             return self.asset.alt(lang)
         return self.caption
 
+    @property
+    def attribution_required(self) -> bool:
+        """
+        The gallery's byline («© credit») renders only when the licence demands it (V5.24 §2, label v524-px):
+        a row drawn from the media library follows its asset (``cms.MediaAsset.attribution_required``, CC BY);
+        a file uploaded on the row itself is the event's own photograph or video — the team's material, no
+        licence record, no byline. A third party's file under an attribution licence enters through the
+        library, whose licence decides (docs/IMAGE_LICENSES.md §1.10).
+        """
+        return bool(self.asset_id) and self.asset.attribution_required
+
 
 class ForumDocument(PublishableModel):
     event = models.ForeignKey(ForumEvent, on_delete=models.CASCADE, related_name="documents")

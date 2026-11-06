@@ -48,7 +48,8 @@ def test_public_email_is_only_agami_address(client, seeded):
 
 
 @pytest.mark.django_db
-def test_five_legal_routes_are_distinct_pages(client, seeded):
+def test_five_legal_routes_are_distinct_pages(client, seeded, legal_published):
+    # the footer links each legal page once published (V5.12 Q2, V5.14 §13): the five are published here
     paths = ["privacy-policy/", "cookie-policy/", "note-legali/", "condizioni-di-utilizzo/", "avvertenze/"]
     bodies = []
     for path in paths:
@@ -71,9 +72,14 @@ def test_legal_pages_blocked_until_official_text(client, seeded):
 
 
 @pytest.mark.django_db
-def test_no_external_scripts_fonts_or_images(client, seeded):
+def test_no_external_scripts_fonts_or_images(client, seeded, whatsapp_channel):
+    from tests.conftest import whatsapp_link_set_aside
+
+    # V5.19 §7: the one outbound link the owner ordered, the WhatsApp channel's own wa.me URL — as a link (<a>) only,
+    # never a script, a stylesheet, a font or an image. V5.20: the configured channel's URL (tests/conftest.py), here
+    # Ofcom's fictional number, so that the link is drawn and the rule exercised wherever the suite runs.
     for lang, path, html in _iter_pages(client):
-        srcs = re.findall(r'(?:src|href)="(https?://[^"]+)"', html)
+        srcs = re.findall(r'(?:src|href)="(https?://[^"]+)"', whatsapp_link_set_aside(html))
         externals = [s for s in srcs if "testserver" not in s and "localhost" not in s]
         # mailto/hreflang absolute URLs point to testserver; anything else is forbidden.
         assert not externals, (lang, path, externals)

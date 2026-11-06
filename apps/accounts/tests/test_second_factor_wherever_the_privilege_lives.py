@@ -192,7 +192,14 @@ class TestWhatStays:
         assert client.get(f"{FORUM}discussions/{forum['discussion'].pk}/").status_code == 200, "a member reads"
 
     def test_a_staff_account_on_a_published_page_owes_nothing(self, client, people, phase3_open):
-        """No privilege, no factor: Phase 3 open, the FAQ is everybody's page."""
+        """No privilege, no factor: Phase 3 open, the FAQ is everybody's page (with a live question, V5.12 §8)."""
+        from cms.models import PublicationStatus
+        from faq.models import FAQCategory, FAQItem
+
+        category = FAQCategory.objects.create(slug="general", name_fr="Général")
+        FAQItem.objects.create(
+            key="horaires", category=category, question_fr="Q ?", answer_fr="A.", status=PublicationStatus.PUBLISHED
+        )
         _enrol_totp(people["staff"])
         client.force_login(people["staff"])
         assert client.get("/fr/faq/").status_code == 200

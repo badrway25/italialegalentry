@@ -45,7 +45,7 @@ def test_profile_edit_updates_user_and_person_profile(client, terms_user):
             "full_name": "  Alice   Martin-Bey ",
             "preferred_language": "it",
             "phone": "+39 041 123456",
-            "country_of_residence": "Maroc",
+            "country_of_residence": "MA",  # V5.12 W2: an ISO code from the CLDR list (the rules read ISO codes)
         },
     )
     assert r.status_code == 302
@@ -54,7 +54,7 @@ def test_profile_edit_updates_user_and_person_profile(client, terms_user):
     assert terms_user.preferred_language == "it"
     profile = PersonProfile.objects.get(user=terms_user)
     assert profile.phone == "+39 041 123456"
-    assert profile.country_of_residence == "Maroc"
+    assert profile.country_of_residence == "MA"
     event = AuditEvent.objects.get(action="account.profile_updated")
     assert event.actor_id == terms_user.pk
     assert set(event.metadata["fields"]) == {"full_name", "preferred_language", "phone", "country_of_residence"}

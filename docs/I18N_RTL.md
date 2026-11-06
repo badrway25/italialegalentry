@@ -218,12 +218,34 @@ i termini fondamentali sono anche in `tests/i18n/test_catalogues.py::test_glossa
 | Se déconnecter | Esci | Sign out | تسجيل الخروج |
 | Créer un compte | Crea un account | Create an account | إنشاء حساب |
 | Mon compte | Il mio account | My account | حسابي |
+| Adresse e-mail | Indirizzo e-mail | E-mail address | البريد الإلكتروني |
+| Mot de passe | Password | Password | كلمة المرور |
+| Espace Institutions | Area Istituzioni | Institutions Area | فضاء المؤسسات |
+| Coopération | Cooperazione | Cooperation | التعاون |
 | Tableau de bord | Pannello di riepilogo | Dashboard | لوحة المتابعة |
 | Mes demandes | Le mie richieste | My requests | طلباتي |
 | Mes documents | I miei documenti | My documents | وثائقي |
 | Mon parcours | Il mio percorso | My pathway | مساري |
 | Mes échéances | Le mie scadenze | My deadlines | آجالي |
 | Communications | Comunicazioni | Communications | المراسلات |
+| Échanges | Comunicazioni | Communications | التبادلات |
+| Espace Universités et Formation | Area Università e Formazione | Universities and Training Area | فضاء الجامعات والتكوين |
+| Espace entreprise | Area impresa | Enterprise area | فضاء الشركة |
+| Équipe du projet | Team del progetto | Project team | فريق المشروع |
+| Mon organisation | La mia organizzazione | My organisation | منظمتي |
+| Nature de l’organisme | Natura dell’organismo | Nature of the organisation | طبيعة الهيئة |
+| Votre rôle | Il suo ruolo | Your role | دوركم |
+| Votre espace | La sua area | Your area | فضاؤكم |
+| Le projet | Il progetto | The project | المشروع |
+| Ma situation | La mia situazione | My situation | وضعيتي |
+| Mes dossiers | I miei fascicoli | My case files | ملفاتي |
+| Dossier | Fascicolo | Case file | الملف |
+| Votre dossier | Il proprio fascicolo | Your case file | ملفكم |
+| Pièce demandée | Documento richiesto | Requested document | المستند المطلوب |
+| Guichet numérique | Sportello digitale | Digital helpdesk | الشباك الرقمي |
+| Avancement | Avanzamento | Progress | التقدم |
+| Où j’en suis | A che punto sono | Where I am | أين وصلت |
+| Sécurité du compte | Sicurezza dell’account | Account security | أمان الحساب |
 | Informations légales | Informazioni legali | Legal information | المعلومات القانونية |
 | Mentions légales | Note legali | Legal notice | الإشعارات القانونية |
 | Conditions d’utilisation | Condizioni di utilizzo | Terms of use | شروط الاستخدام |
@@ -242,6 +264,27 @@ i termini fondamentali sono anche in `tests/i18n/test_catalogues.py::test_glossa
 | Formulaire temporairement indisponible. | Modulo temporaneamente non disponibile. | Form temporarily unavailable. | النموذج غير متاح مؤقتًا. |
 | Page en cours de préparation. | Pagina in corso di preparazione. | Page under preparation. | الصفحة قيد الإعداد. |
 | Page introuvable | Pagina non trovata | Page not found | الصفحة غير موجودة |
+
+> **V5.12 (28 ottobre 2026) — PROVISIONAL, in attesa del committente e del legale (domanda Q3).** Le rese inglesi e
+> arabe dei termini dello spazio riservato introdotti dalla decisione del Direttore (§9) — «Espace Personnes» come nome
+> dello spazio della persona al posto della parola di ruolo «Personne», «La personne concernée / The individual
+> concerned / الشخص المعني», «Vous / Lei / You / أنتم» per il responsabile visto dalla persona stessa, «Fichier bloqué /
+> File blocked / ملف محظور», «Phase n / Fase n / المرحلة n» nel piè di pagina — sono proposte della squadra, non
+> traduzioni approvate. Non sostituiscono mai un testo bloccato.
+>
+> **V5.12 W2 (28 ottobre 2026) — PROVISIONAL (Q3).** Lo spazio delle organizzazioni (Q7) prende il nome degli spazi
+> pubblici («Espace Institutions», «Espace Universités et Formation») e la sezione «Coopération / Cooperazione /
+> Cooperation / التعاون» della sua barra. Le pagine dell'account dicono le parole di questo glossario e non quelle di
+> django-allauth: «Se connecter», «Créer un compte», «Adresse e-mail» (in inglese «E-mail address», in arabo
+> «البريد الإلكتروني», come nella decisione del Direttore §9), «Mot de passe»; i messaggi inglesi di allauth e dei
+> validatori di password di Django sono voci dei cataloghi del progetto (`apps/accounts/allauth_terms.py`), con
+> l'italiano nel registro del «Lei».
+
+> **V5.15 W3 (28 ottobre 2026) — PROVISIONAL (Q3).** Righe trascritte dal passaggio finale del catalogo della corsia D
+> (vocabolario della console e dello spazio delle organizzazioni, già nei cataloghi): diventano vincolanti. Due rese
+> corrette secondo la decisione del Direttore §9: la sezione «Échanges» della barra si chiama «Comunicazioni /
+> Communications / التبادلات» (in arabo la sezione non ripete più la voce «المراسلات»); «Votre rôle» in italiano è
+> «Il suo ruolo» (registro del «Lei», come «La sua area»).
 
 «Forum Vénétie–Maroc» resta tale in it / en; in arabo «منتدى Vénétie–Maroc» (nome proprio latino invariato).
 «Privacy Policy» e «Cookie Policy» restano in originale in ogni lingua, come sul sito.

@@ -11,8 +11,9 @@
  *             chip, the actor, the date — copied as words and attributes into the template's slots (nothing waits for
  *             the network, and nothing is inserted in the press's task: an insertion re-evaluates the console's
  *             document-wide :has() rules — ≈ 80 ms at CPU × 4 on «Mes pièces», measured)
- *   body      the piece's page fetched and its <article> taken whole: nothing for the first 400 ms, then the busy key
- *             turns in the head (L2's markup); on a piece's first arrival its parts are seated by L3 (loader.js `seat`),
+ *   body      the piece's page fetched and its <article> taken whole, as a REGION of «Lume» (T4, lume/region.js): nothing
+ *             for the first 400 ms, then the busy key turns in the head (L2's markup) and an empty body shows its still
+ *             shapes, the word at 1 s; on a piece's first arrival its parts are seated by L3 (loader.js `seat`),
  *             a refresh swaps in place; the Dépôt inside is wired with the drawer as the host of its live regions and
  *             the drawer's own refresh — after a filing the piece is read again in place AND the register behind it
  *             (its strip, its row, its files), the drawer's opener moved to the fresh row
@@ -37,13 +38,12 @@
  * No word here: every word is the page's. CSP: nothing evaluated, no inline style — classes and attributes only.
  */
 import { initDepots } from "./depot.js";
+import { region } from "./lume/region.js";
 import { afterPaint } from "./motion.js";
 import { initOverlays, isOpen, open } from "./overlay.js";
 
 /** What opens a piece in the drawer: a row's title, a row's act, the strip's act — inside the register only. */
 const OPENERS = ".doc-row__link, .doc-row__act a, .reg__next-act a";
-/** The eye forgives this long a wait (--motion-wait): the key shows only after it. */
-const WAIT = 400;
 /** L3 of «Lume» (loader.js `seat`) — never imported statically: shell.js loads the loader on demand (W1-D). Asked for
  *  when a piece is opened, it arrives long before the piece's page; a fragment that arrives first simply stands — a seat
  *  begun after its rows were painted would hide them and raise them again. */
@@ -75,11 +75,11 @@ export function initPieceDrawer() {
     due: drawer.querySelector("[data-drawer-due]"),
   };
   const body = drawer.querySelector("[data-drawer-body]");
+  const word = drawer.querySelector("[data-region-word]"); // the region's status line (T4: the word at 1 s)
   const workspace = document.querySelector(".console__workspace");
   let registerUrl = null; // the register's URL when the drawer first opened — its ?état= included
   let current = null; // the piece shown
   let controller = null; // the reading in flight
-  let busyTimer = 0;
 
   const absolute = (href) => new URL(href, window.location.href).href;
   const rowOf = (link) => {
@@ -254,26 +254,16 @@ export function initPieceDrawer() {
     if (drawer.open && !drawer.contains(event.relatedTarget)) focusInside = false;
   });
 
-  function busy(on) {
-    window.clearTimeout(busyTimer);
-    if (on) {
-      body.setAttribute("aria-busy", "true");
-      busyTimer = window.setTimeout(() => drawer.classList.add("is-busy"), WAIT);
-    } else {
-      body.removeAttribute("aria-busy");
-      drawer.classList.remove("is-busy");
-    }
-  }
-
   /** The piece read (again): its article in the body — seated on a piece's first arrival, swapped in place after. */
   async function load(url, { first = false, toDepot = false } = {}) {
     if (controller) controller.abort();
     controller = new AbortController();
     const { signal } = controller;
     if (first) body.replaceChildren();
-    busy(true);
     try {
-      const doc = await readArticle(url, signal);
+      // T4 of «Lume» (lume/region.js): after 400 ms the head's busy key and, on a first arrival, the body's still shapes
+      // (the console's _motion.css); the word at 1 s; nothing at all for a fast answer
+      const doc = await region(body, readArticle(url, signal), { host: drawer, status: word });
       const article = doc.querySelector("article.doc-piece");
       if (!article) throw new Error("no piece");
       const node = document.importNode(article, true);
@@ -293,8 +283,6 @@ export function initPieceDrawer() {
       // the piece could not be read here: its own page is the way
       window.location.assign(url);
       return null;
-    } finally {
-      if (!signal.aborted) busy(false);
     }
   }
 
@@ -314,6 +302,12 @@ export function initPieceDrawer() {
       const page = document.querySelector(".doc-page");
       if (!fresh || !page) return;
       const node = document.importNode(fresh, true);
+      // M11 (DECISIONS §2): the row whose state the answer changed says so — its chip cross-fades in, its reading-edge
+      // rule lights a moment (the console's _motion.css, on `data-changed`)
+      const before = new Map([...page.querySelectorAll(".doc-row[data-piece]")].map((row) => [row.dataset.piece, row.dataset.state]));
+      for (const row of node.querySelectorAll(".doc-row[data-piece]")) {
+        if (before.has(row.dataset.piece) && before.get(row.dataset.piece) !== row.dataset.state) row.setAttribute("data-changed", "");
+      }
       page.replaceWith(node);
       initOverlays(node); // the filter's sheet of the fresh page
       node.dispatchEvent(new CustomEvent("documents:refreshed", { bubbles: true })); // console.js: the search
@@ -372,8 +366,7 @@ export function initPieceDrawer() {
     const { reason, opener } = event.detail || {};
     const inside = focusInside;
     focusInside = false;
-    if (controller) controller.abort();
-    busy(false);
+    if (controller) controller.abort(); // the reading's region ends with it (lume/region.js)
     current = null;
     registerUrl = null;
     // the focus goes back to the title of the row of the piece shown (overlay.js's opener, which a swap moves) — not

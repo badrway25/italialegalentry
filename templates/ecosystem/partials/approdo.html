@@ -1,0 +1,30 @@
+{% load i18n %}{% comment %}
+K · «L'APPRODO» ON THE FOUR SPACES — the closing «Pour aller plus loin» band (design V5.22, SECTION_SYSTEM_V2 §0.1
+«Closing bands», §3.3 PP-3, §3.6 EN-5, §3.7 IN-2; lane P1). It is lane S's composition (components/sezioni/approdo.html,
+static/css/v5/_sec-strato.css): the same classes and the same order, on the stone, the page's motif drawn low as the
+bookend, one light sweep — with the one addition the spaces need, a tile that carries a drawing: the pilot's tile
+holds a miniature of its eight-station route (aria-hidden; E's «live diagram» principle, §3.6 EN-5). The Forum's tile
+is typographic on its night face (Q4: no photograph stands for the Forum); with it in the band no tile draws a glyph
+(the register's glyphs are all or none, §4.10), so the tiles speak by their type, their faces and the drawing.
+
+Contract: `title_id`, `title`, `motif` (the page's frontispiece motif), `pilot` (True: the pilot's tile, on the pages
+that are not the pilot's own), `links` (ecosystem.services.related_links).
+{% endcomment %}<div class="approdo">
+  {% include "components/sezioni/_testa.html" with role="router" %}
+  <ul class="approdo__tessere sez-seq" role="list" data-registro>
+    {% if links.forum %}{% locked "p2.forum.header.subtitle" as forum_subtitle %}<li class="approdo__tessera sez-plate approdo__tessera--forum" data-verb="depth">
+      <a class="approdo__link sez-stretch" href="{{ links.forum }}">{% translate "Le Forum Vénétie–Maroc" %}</a>
+      <p class="approdo__riga">{{ forum_subtitle }}</p>
+    </li>{% endif %}
+    {% if pilot and links.pilot %}{% locked "p3.pilot.title" as pilot_title %}<li class="approdo__tessera sez-plate approdo__tessera--rotta" data-verb="depth">
+      <a class="approdo__link sez-stretch" href="{{ links.pilot }}">{{ pilot_title }}</a>
+      <p class="approdo__riga">{% translate "Présentation du projet et de la séquence proposée." %}</p>
+      <svg class="approdo__rotta" viewBox="0 0 232 24" aria-hidden="true" focusable="false"><path class="approdo__rotta-linea" d="M6 15H226" pathLength="1" data-verb="stroke"/><g class="approdo__rotta-nodi"><circle cx="6" cy="15" r="3.5"/><circle cx="37" cy="15" r="3.5"/><circle cx="68" cy="15" r="3.5"/><circle cx="99" cy="15" r="3.5"/><circle cx="130" cy="15" r="3.5"/><path class="approdo__rotta-arco" d="M155 19v-7a6 6 0 0 1 12 0v7"/><circle cx="192" cy="15" r="3.5"/><circle cx="223" cy="15" r="3.5"/></g></svg>
+    </li>{% endif %}
+    {% if links.partners %}<li class="approdo__tessera sez-plate" data-verb="depth">
+      <a class="approdo__link sez-stretch" href="{{ links.partners }}">{% translate "Partenaires" %}</a>
+      <p class="approdo__riga">{% translate "Les organisations qui participent à l’écosystème." %}</p>
+    </li>{% endif %}
+  </ul>
+  {% if motif %}<div class="approdo__fondale" aria-hidden="true">{% with "pages/partials/motifs/_"|add:motif|add:".html" as motif_template %}{% include motif_template %}{% endwith %}</div>{% endif %}
+</div>

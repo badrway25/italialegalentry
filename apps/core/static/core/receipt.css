@@ -1,0 +1,7 @@
+/* ============================================================================
+   THE RECEIPT — a page-only entry (V5.15 W3, lane B, round 1; DECISIONS §5.15). Built by scripts/build_css.mjs to
+   static/css/dist/core/receipt.css and linked by templates/enquiries/done.html alone — out of core/forms.css, so the
+   form pages do not carry the receipt and the form sheet stays within its 6 KiB.
+   This sheet is an IMPORT LIST: the rules are the partial static/css/v5/_receipt.css (DS 2026 §2).
+   ========================================================================== */
+@import url("../css/v5/_receipt.css");

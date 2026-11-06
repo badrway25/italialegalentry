@@ -1,0 +1,96 @@
+/* ============================================================================================
+   CHOICE CARDS — partial (V5.12 W2, lane B; DECISIONS §5.6, M14; 21st.dev «Icon Card Radio Group» 28351, its
+   geometry only). The one drawing of a question answered by choosing: components/choice_cards.html (every radio
+   or checkbox group of the field partial, the sign-up's audiences) and the questionnaire's step
+   (templates/orientation/_step.html). Imported by v5/_form.css (core/forms.css) and orientation/wizard.css.
+   A <label> around the native input, invisible over its whole card; an optional glyph disc; the title and a line;
+   the person's own mark, the check, which scales from 0.8 to 1 as the edge and the tint change in 120 ms.
+   ============================================================================================ */
+@import url("_glyph.css");
+
+.choices { min-inline-size: 0; margin: 0 0 var(--s-6); padding: 0; border: 0; }
+.choices__legend {
+  margin-block-end: var(--s-2);
+  padding: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+.choices__help { margin: 0 0 var(--s-3); }
+.choices__hint { margin: 0 0 var(--s-3); font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
+/* the grid follows the form's own measure, not the viewport's: a card is never narrower than its words */
+.choices__grid { display: grid; gap: var(--s-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr)); }
+/* five audience cards (the sign-up): two columns, the fifth across both as a horizontal card — never an orphan */
+@media (min-width: 30rem) {
+  .choices__grid:has(> :nth-child(5):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .choices--glyphs .choices__grid > .choice:nth-child(5):last-child { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1fr) var(--icon-lg); align-items: center; column-gap: var(--s-4); }
+  .choices--glyphs .choices__grid > .choice:nth-child(5):last-child > .choice__body { grid-column: 2; grid-row: 1; }
+  .choices--glyphs .choices__grid > .choice:nth-child(5):last-child > .choice__mark { grid-column: 3; }
+}
+.choices__grid--3 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr)); }
+.choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--icon-lg);
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: var(--control-lg);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--field-radius);
+  background: var(--field-bg);
+  color: var(--text-1);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color var(--motion-fast) var(--ease-enter), background-color var(--motion-fast) var(--ease-enter), box-shadow var(--motion-fast) var(--ease-enter);
+}
+/* a card with a glyph stands up: the disc and the mark on its first line, the words under them on the whole width */
+.choices--glyphs .choice { grid-template-columns: minmax(0, 1fr) var(--icon-lg); align-items: start; row-gap: var(--s-3); padding-block: var(--s-4); }
+.choices--glyphs .choice__disc { grid-column: 1; grid-row: 1; }
+.choices--glyphs .choice__mark { grid-column: 2; grid-row: 1; }
+.choices--glyphs .choice__body { grid-column: 1 / -1; grid-row: 2; }
+/* the native input is the control: the whole card, invisible, focusable */
+.choice > input { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.choice > input::after { content: none; }
+/* the disc is the glyph tile (v5/_glyph.css, V5.15 W3): md, solid once its card is chosen */
+.choice__disc.glyph-tile { --gt: 2.5rem; --gi: 1.25rem; }
+.choice__body { display: grid; gap: var(--s-1); min-inline-size: 0; }
+.choice__title { font-size: var(--u-ui); line-height: var(--u-ui-lh); font-weight: var(--w-control); }
+.choice__desc { font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
+.choice__mark {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--radius-full);
+  background: var(--field-bg);
+  color: var(--text-on-accent);
+  transition: background-color var(--motion-fast) var(--ease-enter), border-color var(--motion-fast) var(--ease-enter);
+}
+.choice:has(> input[type="checkbox"]) .choice__mark { border-radius: var(--field-radius); }
+.choice__mark .icon { inline-size: var(--icon-xs); block-size: var(--icon-xs); opacity: 0; transform: scale(0.8); transition: opacity var(--motion-fast) var(--ease-enter), transform var(--motion-fast) var(--spring-snappy); }
+@media (hover: hover) { .choice:hover:not(:has(> input:checked, > input:disabled)) { border-color: var(--field-edge-hover); box-shadow: var(--shadow-2); } }
+.choice:has(> input:checked) { border-color: var(--fill-primary); background: linear-gradient(160deg, var(--surface-raised), var(--accent-wash)); box-shadow: inset 0 0 0 1px var(--fill-primary), 0 10px 24px -14px color-mix(in srgb, var(--fill-primary) 60%, transparent); }
+.choice:has(> input:checked) .choice__mark { border-color: var(--fill-primary-press); background: var(--fill-primary); }
+.choice:has(> input:checked) .choice__mark .icon { opacity: 1; transform: scale(1); }
+.choice:has(> input:checked) .choice__disc {
+  background: linear-gradient(160deg, var(--fill-primary-hover), var(--fill-primary) 70%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 18%, transparent), 0 8px 18px -8px color-mix(in srgb, var(--fill-primary) 70%, transparent);
+  color: var(--text-on-accent);
+}
+/* «Non précisé» (value "") is the current value, not an answer: neutral, no check */
+.choice:has(> input[value=""]:checked) { border-color: var(--field-edge-hover); background: var(--surface-area); box-shadow: none; }
+.choice:has(> input[value=""]:checked) .choice__mark { border-color: var(--field-edge-hover); background: var(--text-3); }
+.choice:has(> input[value=""]:checked) .choice__mark .icon { opacity: 0; }
+.choice:has(> input:focus-visible) { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+.choice:has(> input:disabled) { border-color: transparent; background: var(--field-bg-disabled); color: var(--field-text-disabled); cursor: not-allowed; }
+.choices--error .choice { border-color: var(--field-edge-invalid); }
+html[data-input="key"] :is(.choice, .choice__mark, .choice__mark .icon, .choice__disc) { transition-duration: 0ms; }
+
+@media (forced-colors: active) {
+  .choice:has(> input:checked) { border: 2px solid Highlight; }
+  .choice__mark .icon { forced-color-adjust: auto; }
+}

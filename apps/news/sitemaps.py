@@ -1,6 +1,7 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
+from core import gates
 from news.models import Article
 
 
@@ -10,7 +11,7 @@ class NewsIndexSitemap(Sitemap):
     i18n = True
 
     def items(self):
-        return ["news:index"]
+        return ["news:index"] if gates.news_public() else []
 
     def location(self, item):
         return reverse(item)

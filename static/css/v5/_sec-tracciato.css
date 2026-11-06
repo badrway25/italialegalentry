@@ -1,0 +1,279 @@
+/* ============================================================================================
+   B · «IL TRACCIATO» — the interactive journey, a route board (design V5.22, SECTION_SYSTEM_V2 §2 B; lane S). Page-only
+   (after v5/_sezioni.css and v5/_photo.css: the «select» frames). Markup: components/sezioni/tracciato.html.
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Wizard Steps» 23576 (the light comes from the side of
+   travel; the keyboard on the rail), «Growth Story Timeline» 28273 (the route fills as one advances). Refused: check
+   marks, completion, percentages (O14: nothing ticks a step for anyone). Signature PATH PROGRESSION.
+   ============================================================================================ */
+
+.tracciato {
+  --lane-line: color-mix(in srgb, var(--accent-mark) 40%, var(--line-rhythm));
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* the choice: native radios as chips — the focus visible on the chip; under the letterhead on a phone */
+.tracciato__scelta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  min-inline-size: 0; /* a fieldset's own minimum is its content's: the chips' row would widen the whole section */
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tracciato__legenda {
+  margin-block-end: var(--s-3);
+  font-weight: var(--w-control);
+}
+
+.tracciato__chip {
+  position: relative;
+  display: inline-flex;
+}
+
+.tracciato__chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+}
+
+.tracciato__chip span {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--hit-primary, 44px);
+  padding-inline: var(--s-4);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  font-size: var(--t-ui);
+  font-weight: var(--w-control);
+  white-space: nowrap;
+}
+
+.tracciato__chip input:checked + span {
+  border-color: var(--text-1);
+  background: var(--text-1);
+  color: var(--surface-raised);
+}
+
+.tracciato__chip input:focus-visible + span {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.tracciato__conto,
+.tracciato__origine p {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.tracciato__origine {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+
+.tracciato__corsie {
+  position: relative;
+  display: grid;
+  gap: var(--s-10);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the trunk: down the reading edge, from the origin through every lane */
+.tracciato__corsie::before {
+  content: "";
+  position: absolute;
+  inset-block: calc(-1 * var(--s-8)) 0;
+  inset-inline-start: 23px;
+  inline-size: 2px;
+  background: var(--lane-line);
+  transform-origin: 50% 0;
+}
+
+.tracciato__corsia {
+  --lane-ink: var(--text-1);
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+  padding-inline-start: var(--s-12);
+  color: var(--lane-ink); /* the choice is instant: its light and its frame carry the motion */
+}
+
+/* the lane's head: its name over its frame, hanging from the lane's rail as its cards do */
+.tracciato__testa {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  padding-block-start: var(--s-5);
+}
+
+/* the lane's rail: from the trunk across its head and along its cards, which hang from it; the light that travels it
+   once rides on it */
+.tracciato__linea {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 24px 0;
+  block-size: 2px;
+  overflow: hidden;
+  background: var(--lane-line);
+}
+
+.tracciato__linea::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  inline-size: 30%;
+  background: linear-gradient(90deg, transparent, var(--accent-mark), transparent);
+  translate: -110% 0;
+}
+
+.tracciato__corsia:has(.tracciato__carta:is(:hover, :focus-visible)) .tracciato__linea {
+  background: var(--accent-mark);
+}
+
+.tracciato__stazioni {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+  padding: var(--s-5) 0 0;
+  list-style: none;
+}
+
+.tracciato__carta {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* the station's marker: the numeral role (`t-numeral`, v5/base.css — Host Grotesk 600, tabular, 28/32; never the mono:
+   TYPOGRAPHY_V2 F-3, V5.24) in the register's second ink. The size, leading and weight are restated here for the board
+   that names the class without the role (pathways/_tracciato.html, lane PUB1 — LIB NOTES §4); the sans is inherited */
+.tracciato__num {
+  font-size: var(--t-numeral);
+  line-height: var(--t-numeral-lh);
+  font-weight: var(--w-title);
+  color: var(--text-2);
+}
+
+.tracciato__titolo {
+  font-weight: var(--w-title);
+}
+
+.tracciato__titolo,
+.tracciato__riga {
+  grid-column: 1 / -1;
+}
+
+.tracciato__freccia {
+  position: absolute;
+  inset-block-start: var(--s-4);
+  inset-inline-end: var(--s-4);
+}
+
+.tracciato__riga {
+  font-size: var(--t-ui);
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .tracciato__stazioni { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64rem) {
+  .tracciato__corsia {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    gap: var(--s-8);
+    align-items: start;
+  }
+
+  .tracciato__stazioni {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* a lane's three columns: a lone card keeps its own */
+  }
+}
+
+/* a phone: the choice stays under the letterhead (WCAG 2.4.11: html's scroll-padding keeps a focus clear of it) */
+@media (max-width: 47.999rem) {
+  .tracciato__scelta {
+    position: sticky;
+    inset-block-start: var(--header-h-scrolled);
+    z-index: 2;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-block: var(--s-2);
+    background: var(--surface-page);
+  }
+}
+
+/* ---- the choice, read by :has(:checked): the n-th radio after «all» names the n-th lane ---- */
+/* a lane chosen: every lane goes to --text-2, the chosen one comes back lit (up to five lanes) */
+.tracciato:has(.tracciato__chip:nth-of-type(n + 2) :checked) .tracciato__corsia {
+  --lane-ink: var(--text-2);
+}
+
+.tracciato:has(.tracciato__chip:nth-of-type(2) :checked) .tracciato__corsia:nth-child(1),
+.tracciato:has(.tracciato__chip:nth-of-type(3) :checked) .tracciato__corsia:nth-child(2),
+.tracciato:has(.tracciato__chip:nth-of-type(4) :checked) .tracciato__corsia:nth-child(3),
+.tracciato:has(.tracciato__chip:nth-of-type(5) :checked) .tracciato__corsia:nth-child(4),
+.tracciato:has(.tracciato__chip:nth-of-type(6) :checked) .tracciato__corsia:nth-child(5) {
+  --lane-ink: var(--text-1);
+  --lane-lit: 1;
+}
+
+.tracciato__corsia:is(:hover, :focus-within) [data-grade="select"] img,
+.tracciato:not(.tracciato--scelta) [data-grade="select"] img {
+  filter: none;
+}
+
+@container style(--lane-lit: 1) {
+  .tracciato__testa [data-grade="select"] img { filter: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .tracciato__corsie::before { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .tracciato__corsie::before {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) backwards;
+  }
+
+  /* the light travels the chosen lane once (a dash of the same line, --motion-route-light): the lane that becomes lit —
+     from the rail's start to its end, in the page's direction (the root's own [dir]: v522-s2, DL54-182 item 10 a) */
+  @container style(--lane-lit: 1) {
+    :root:not(.rm):not([data-input="key"]) .tracciato__linea::after {
+      animation: sez-run var(--motion-route-light) var(--ease-sine) backwards;
+    }
+
+    :root[dir="rtl"]:not(.rm):not([data-input="key"]) .tracciato__linea::after { animation-name: sez-run-rtl; }
+  }
+}
+
+@keyframes sez-run {
+  from { translate: -110% 0; }
+  to { translate: 360% 0; }
+}
+
+/* right to left the light's box stands at the rail's start, the right end: it waits beyond it, never inside the rail */
+[dir="rtl"] .tracciato__linea::after { translate: 110% 0; }
+
+@keyframes sez-run-rtl {
+  from { translate: 110% 0; }
+  to { translate: -360% 0; }
+}
+
+@media (forced-colors: active) {
+  .tracciato__corsie::before,
+  .tracciato__linea { background: CanvasText; }
+}

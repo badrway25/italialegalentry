@@ -123,6 +123,73 @@ PERSONAS: dict[str, Persona] = {
 }
 
 
+#: The owner's acceptance labels (V5.12 §12; Director's decisions §9 «Preview hub labels»): what each test access IS, in
+#: Italian — the preview's language — for the owner who approves the product with it. Keyed by the persona's key, so
+#: the five accounts the acceptance launcher adds (C:/tmp/ile_v5_council/servers/acceptance/run_8780.py) are named here
+#: too, whatever that script calls them. The technical key, the case file's reference and «dati fittizi» are the small
+#: grey metadata line under the label (``metadata``), never the label itself. Each: (label, what the owner sees).
+ACCEPTANCE: dict[str, tuple[str, str]] = {
+    "qa-doc-person": (
+        "Persona con fascicolo — documento da sostituire",
+        "Una persona che ha accettato le condizioni d’uso e segue il proprio fascicolo: un documento da sostituire, "
+        "le altre pièces depositate o in esame.",
+    ),
+    "qa-person": (
+        "Persona con fascicolo — condizioni d’uso da accettare",
+        "Una persona con un fascicolo aperto che non ha ancora accettato le condizioni d’uso: le pagine le chiedono "
+        "di accettarle prima di depositare.",
+    ),
+    "qa-fresh-person": (
+        "Persona appena registrata, senza fascicolo",
+        "Una persona appena registrata: il primo passo è il questionario di orientamento.",
+    ),
+    "qa-overdue-person": (
+        "Persona con fascicolo — un’azione in ritardo",
+        "Il passaporto che deve depositare è scaduto il 29.09.2026: il riquadro «Votre prochaine action» lo dice "
+        "«En retard».",
+    ),
+    "qa-waiting-person": (
+        "Persona con fascicolo — in attesa dell’autorità competente",
+        "Il fascicolo è in procedura amministrativa: il prossimo passo è dell’autorità competente, non della persona.",
+    ),
+    "qa-calm-person": (
+        "Persona con fascicolo — nulla da fare per ora",
+        "Un fascicolo attivo che per ora non chiede nulla alla persona.",
+    ),
+    "qa-company": (
+        "Impresa — Cantiere Adriatico",
+        "L’impresa e i suoi fabbisogni professionali in stati diversi: in bozza, trasmessi, presi in carico.",
+    ),
+    "qa-institution": (
+        "Istituzione — Comune di Valfiorita",
+        "Un’istituzione verificata: lo spazio riservato delle organizzazioni.",
+    ),
+    "qa-university": (
+        "Università / ente di formazione — Collina Verde",
+        "Un ente di formazione verificato: lo spazio riservato delle organizzazioni.",
+    ),
+}
+
+
+def label_of(persona: Persona) -> str:
+    """The owner's acceptance label of ``persona`` — ``ACCEPTANCE``'s, or the name it was declared with."""
+    return ACCEPTANCE.get(persona.key, (persona.name, ""))[0]
+
+
+def note_of(persona: Persona) -> str:
+    """What the owner sees with ``persona``, in one sentence — ``ACCEPTANCE``'s, or the note it was declared with."""
+    return ACCEPTANCE.get(persona.key, ("", persona.note))[1] or persona.note
+
+
+def metadata(persona: Persona) -> str:
+    """The small grey line under the label: the technical key, the case file's reference, «dati fittizi»."""
+    parts = [f"chiave {persona.key}"]
+    if persona.case:
+        parts.append(f"fascicolo {persona.case}")
+    parts.append("dati fittizi")
+    return " · ".join(parts)
+
+
 def allow_list() -> dict[str, str]:
     """Persona key → e-mail, from the preview block of dev.py."""
     return dict(getattr(settings, "ILE_DESIGN_PREVIEW_PERSONAS", {}) or {})
@@ -199,7 +266,7 @@ def _refuse(key: str, reason: str, sentence: str):
 
 def refusal(request, persona: str) -> HttpResponse:
     """The 403 a read-only persona meets: what was not done, and the way back, in plain words."""
-    name = PERSONAS[persona].name if persona in PERSONAS else "la persona"
+    name = label_of(PERSONAS[persona]) if persona in PERSONAS else "l’accesso di prova"
     text = (
         "Anteprima V5 — sola lettura.\n\n"
         f"Questa azione non è stata eseguita, e nulla è cambiato: «{name}» resta uguale per chi guarda dopo.\n\n"

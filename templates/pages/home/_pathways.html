@@ -1,44 +1,43 @@
 {% load i18n pages_typo %}{% comment %}
 6. REGULAR PATHWAYS OVERVIEW.
    * gate G3 open   → the eight prescribed pathways (titles + descriptions from p3.persons.pathways,
-     through pathways.services.index_entries) as a register of titled rows;
+     through pathways.services.index_entries);
    * gate G3 closed → neutral family labels only: no prescribed title, no description, no
      eligibility statement; everything points to the Espace Personnes.
 CONTENT_PENDING_LEGAL_REVIEW — the detailed sheets (eligibility, steps, documents) belong to the
 pathways app and to the legal reviewers; nothing of that kind is written here.
 
-Design V5.4 (W2-D step 3): a register in two columns, each title above its description and never
-smaller than it (17/24 at 600 over 15/24 — the titles were 13 px above 15 px descriptions). The eight
-are a catalogue, not a ranking: no numeral. The chapter's one forward link names the space once, at its
-foot; the running head that named it a second time is gone.
+V5.22 (SECTION_SYSTEM_V2 §3.1 S3, §2 L «l'indice»; lane H): a product surface, not a table. The title and its lead over
+two panes: from 64 rem an index of the eight — each row the registry's PATHWAY glyph (20 px) and the prescribed title,
+the selected one's 2 px marker gliding along the reading edge — beside the stage of the selected pathway: its tile (the
+glyph at 32 in 64), its title, its prescribed description, the way to its published sheet. The first is selected; the
+order is the locked order, never a ranking (no numeral). Below 64 rem eight disclosure rows, all closed at first, one
+open at a time. Every description stays in the page (components/sezioni/indice.html and sezioni/indice.js, lane S:
+the full ARIA tabs pattern; without script, eight anchors and eight panels in order). One index: the Arabic page reads
+the French rows in their own order (the mirrored two columns read them right column first). Gate closed: the neutral
+families as a still index — no stage, no destination — and the note of what comes.
 {% endcomment %}
-{% translate "Les parcours réguliers" as fallback_title %}
-<section class="chapter chapter--page home-pathways" id="{{ s.anchor }}" aria-labelledby="home-pathways-title" data-section="pathways">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_section_header.html" with title_id="home-pathways-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
-    <div class="chapter__body">
-      {% if d.pathway_items %}
-      <div class="home-pathways__list" data-pathways="{{ d.pathway_items|length }}">
-        {% include "components/pathway_list.html" with items=d.pathway_items %}
-      </div>
-      {% else %}
-      {% comment %}
-      The families are a closed list of legal pathway families with no destination yet: plain rows, no
-      arrow (there is nothing to open) and no numeral (they are not ranked).
-      {% endcomment %}
-      <ol class="register home-families" aria-label="{% translate 'Familles de parcours' %}">
-        {% for family in d.families %}
-        <li class="register__item">
-          <div class="entry">
-            <span class="entry__title"{% if family.lang %} lang="{{ family.lang }}"{% endif %}>{{ family }}</span>
-          </div>
-        </li>
-        {% endfor %}
-      </ol>
-      <p class="home-pathways__pending">{% translate "Les fiches détaillées des parcours seront publiées progressivement dans l’Espace Personnes." %}</p>
-      {% endif %}
-      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-      {% if d.index_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Voir l’Espace Personnes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+{% translate "Les parcours réguliers" as fallback_title %}{% translate "Parcours réguliers" as index_label %}
+<section class="sez sez--indice home-pathways" id="{{ s.anchor }}" aria-labelledby="home-pathways-title" data-section="pathways" data-sec="indice" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container">
+    {% if s.heading %}{% include "components/sezioni/_testa.html" with role="statement" title_id="home-pathways-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-pathways-title">{{ fallback_title }}</h2>{% endif %}
+    {% if d.pathway_stages %}
+    <div class="home-pathways__list" data-pathways="{{ d.pathway_stages|length }}">
+      {% include "components/sezioni/indice.html" with form="tabs" id="parcours" label=index_label items=d.pathway_stages only %}
     </div>
+    {% else %}
+    {% comment %}The families are a closed list of legal pathway families with no destination yet: still rows, no arrow (there is
+    nothing to open) and no numeral (they are not ranked). V5.22 round 1 (QA_ROUND1 m1; §1 rule 8, the same pattern in both
+    gate states): the index's own rows, laid across the band — each family its tile (the registry's glyph of the pathways
+    it gathers, decorative) beside its word, on the index's rule —, the note of what comes as the band's side annotation.{% endcomment %}
+    <div class="home-families__banda">
+    <ul class="indice__lista home-families sez-seq" role="list" aria-label="{% translate 'Familles de parcours' %}">
+      {% for family in d.families %}<li class="indice__riga"><span class="indice__voce"{% if family.label.lang %} lang="{{ family.label.lang }}"{% endif %}>{% if family.glyph %}<span class="sez-tile home-families__tessera" aria-hidden="true">{% svg_icon family.glyph "icon" %}</span>{% endif %}<span class="indice__nome" data-verb="ink">{{ family.label }}</span></span></li>{% endfor %}
+    </ul>
+    <p class="home-pathways__pending">{% translate "Les fiches détaillées des parcours seront publiées progressivement dans l’Espace Personnes." %}</p>
+    </div>
+    {% endif %}
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+    {% if d.index_url %}<p class="home-pathways__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Voir l’Espace Personnes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
   </div>
 </section>

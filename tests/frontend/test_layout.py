@@ -14,6 +14,8 @@ from pathlib import Path
 import pytest
 from django.contrib.staticfiles import finders
 
+from tests.conftest import whatsapp_link_set_aside
+
 ROOT = Path(__file__).resolve().parents[2]
 
 pytestmark = pytest.mark.django_db
@@ -27,7 +29,10 @@ def _get(client, path):
 
 
 def _external_urls(html: str) -> list[str]:
-    urls = re.findall(r'(?:src|href|content|action)="(https?://[^"]+)"', html)
+    # V5.19: the WhatsApp channel is a link the visitor follows, not a resource the page loads. V5.20: its URL is the
+    # configured channel's, set aside as an <a href> only (tests/conftest.py) — the same URL as a source, a content or
+    # an action still counts (the test-update rule: the number is configured outside the repository; stronger)
+    urls = re.findall(r'(?:src|href|content|action)="(https?://[^"]+)"', whatsapp_link_set_aside(html))
     return [u for u in urls if "testserver" not in u and "localhost" not in u]
 
 
@@ -48,12 +53,13 @@ def test_shell_landmarks_skip_link_and_single_h1(client, seeded, path):
     assert '<header class="site-header"' in html
     assert '<nav class="main-nav" aria-label=' in html
     assert '<footer class="site-footer' in html
-    assert 'class="utility-bar' in html
-    assert 'role="region" aria-label="Barre institutionnelle"' in html or 'role="region" aria-label=' in html
+    # V5.15 §1 (DECISIONS §15 lane A): ONE row — no institutional bar; its languages are the letterhead's switch
+    assert 'class="utility-bar' not in html
+    assert 'class="lang-switch" type="button" popovertarget="lang-menu"' in html and 'id="lang-menu"' in html
 
 
 @pytest.mark.parametrize("path", PAGES)
-def test_no_external_resources_or_inline_styles(client, seeded, path):
+def test_no_external_resources_or_inline_styles(client, seeded, whatsapp_channel, path):
     _response, html = _get(client, path)
     assert _external_urls(html) == [], path
     # CSP is style-src 'self' without unsafe-inline: no style attributes, no inline <script> code.
@@ -69,20 +75,21 @@ def test_html_lang_and_dir_attributes(client, seeded):
     assert " is-rtl" in ar and "is-rtl" not in fr
     # Each page preloads its first screen's faces, per script (design V5, V5.4 plan §1.1 «Loading»; PFR §0):
     # a Latin page Host Grotesk (every Latin role) and «ILE Wordmark» (the name in the letterhead) — two
-    # preloads; an Arabic page Vazirmatn, Host Grotesk for the Latin runs and the digits, and the wordmark —
-    # three (the budget of plan §2.6). Every preloaded file is one static/css/v5/fonts.css declares.
+    # preloads; an Arabic page Readex Pro (Typography V2, v524-t — V5.24 §11–§14, TYPOGRAPHY_V2 §4.6, FINAL_DELIVERY_V2
+    # R1; Vazirmatn before it), Host Grotesk for the Latin runs and the digits, and the wordmark — three
+    # (TYPOGRAPHY_V2 §4.7). Every preloaded file is one static/css/v5/fonts.css declares.
     preload = r'<link rel="preload" href="/static/fonts/([a-z0-9-]+\.woff2)" as="font" type="font/woff2" crossorigin>'
     assert re.findall(preload, fr) == ["v5-host-grotesk-var-400-700.woff2", "v5-ile-wordmark-600.woff2"]
     assert re.findall(preload, ar) == [
-        "v5-vazirmatn-var-400-700-arabic.woff2",
+        "v5-readex-pro-var-400-700-arabic.woff2",
         "v5-host-grotesk-var-400-700.woff2",
         "v5-ile-wordmark-600.woff2",
     ]
     faces = (ROOT / "static" / "css" / "v5" / "fonts.css").read_text(encoding="utf-8")
     for name in set(re.findall(preload, fr + ar)):
         assert f'url("../../fonts/{name}")' in faces, name
-    # A Latin page must not pull the Arabic face.
-    assert "vazirmatn" not in fr
+    # A Latin page must not pull the Arabic face (nor name the retired one).
+    assert "readex" not in fr and "vazirmatn" not in fr and "vazirmatn" not in ar
 
 
 def test_language_switcher_lists_every_language_with_hreflang(client, seeded):
@@ -93,7 +100,8 @@ def test_language_switcher_lists_every_language_with_hreflang(client, seeded):
     assert 'href="/ar/" lang="ar" hreflang="ar" dir="rtl"' in html
 
 
-def test_footer_has_five_distinct_legal_links_identity_and_version(client, seeded):
+def test_footer_has_five_distinct_legal_links_identity_and_version(client, seeded, legal_published):
+    # the five are linked once published (V5.12 Q2, V5.14 §13); unpublished, none is: test_organisation_space_v512_d
     _r, html = _get(client, "/fr/")
     for path in [
         "/fr/privacy-policy/",
@@ -255,6 +263,7 @@ def test_static_css_and_js_are_served_and_referenced(client, seeded):
         "js/main.js",
         "js/head.js",
         "img/icons.svg",
+        "img/icons-domain.svg",
         "img/favicon.svg",
         "img/og-default.png",
     ):
@@ -280,16 +289,16 @@ def test_fonts_css_references_only_local_files_that_exist():
     assert "googleapis" not in css and "gstatic" not in css and "http" not in css
     assert css.count("font-display: swap") == 6
     assert "unicode-range" in css
-    for family in ("Host Grotesk", "ILE Wordmark", "ILE Mono", "Vazirmatn"):
+    for family in ("Host Grotesk", "ILE Wordmark", "ILE Mono", "Readex Pro"):  # Typography V2 (v524-t)
         assert f'font-family: "{family}"' in css, family
-    for retired in ("IBM Plex", "Newsreader", "Noto Naskh", "Fira", "Source Serif", "Markazi"):
+    for retired in ("IBM Plex", "Newsreader", "Noto Naskh", "Fira", "Source Serif", "Markazi", "Vazirmatn"):
         assert f'font-family: "{retired}' not in css, retired
     licences = ROOT / "static" / "fonts" / "licenses"
     for name, holder in (
         ("OFL-HostGrotesk.txt", "The Host Grotesk Project Authors"),
         ("OFL-Newsreader.txt", "The Newsreader Project Authors"),
         ("OFL-IBMPlexMono.txt", 'IBM Corp. with Reserved Font Name "Plex"'),
-        ("OFL-Vazirmatn.txt", "The Vazirmatn Project Authors"),
+        ("OFL-ReadexPro.txt", "The Readex Pro Project Authors"),
     ):
         text = (licences / name).read_text(encoding="utf-8")
         assert holder in text and "SIL OPEN FONT LICENSE Version 1.1" in text, name

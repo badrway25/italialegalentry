@@ -1,4 +1,10 @@
-"""Thin gated views (G3 — phase3_public). Logic in ``living.services``."""
+"""Thin gated views (G3 — phase3_public). Logic in ``living.services``.
+
+V5.22 (SECTION_SYSTEM_V2 §3.15; lane P2): «Vivre en Italie» closes on E «pour s'installer», built only from what
+exists — the training after the arrival (its prescribed title), the two prescribed glossary terms everyone meets after
+the arrival (their prescribed definitions) and the FAQ. Q8: no theme card and no «coming soon»; reviewed themes take
+their place through the existing publication model.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +16,11 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET
 
 from accounts.middleware import require_second_factor
+from cms import locked_content
 from core import gates
+from core.links import public_url
+from glossary import services as glossary
+from glossary.views import where_to_meet
 from living import services
 from news.editorial import blocks
 
@@ -32,6 +42,41 @@ def _check_gate(request) -> bool:
     raise Http404
 
 
+#: the two prescribed terms of the glossary a newcomer meets after the arrival (§3.15 V2)
+SETTLE_TERMS = ("permesso_di_soggiorno", "codice_fiscale")
+
+
+def _settle(lang: str) -> dict:
+    """«Pour s'installer», two rows of one kind each (round 1, QA_ROUND1 M8 — an emptied lead tile above tiles of two
+    kinds): the two terms as the glossary's own dictionary cards (glossary/_entry.html: the Italian term, the prescribed
+    definition whole, «Où le rencontrer», the card's answer to the hand and the focus), then the two ways on as compact
+    route tiles — the training after the arrival (its prescribed title) and the FAQ."""
+    terms = []
+    if public_url("glossary:index"):
+        where = where_to_meet(lang)
+        live = {term.key: term for term in glossary.live_terms().filter(key__in=SETTLE_TERMS)}
+        for key in SETTLE_TERMS:
+            if key in live:
+                entry = glossary.entry_for(live[key], lang)
+                terms.append({"entry": entry, "chips": where.get(entry.key, [])})
+    routes = []
+    training = public_url("pathways:training")
+    if training:
+        title, effective = locked_content.get("p3.training_after.title", lang)
+        routes.append(
+            {
+                "href": f"{training}#apres-l-arrivee",
+                "title": title,
+                "title_lang": "" if effective == lang else effective,
+                "glyph": "presentation",
+            }
+        )
+    faq = public_url("faq:index")
+    if faq:
+        routes.append({"href": faq, "title": _("Questions fréquentes"), "glyph": "circle-help"})
+    return {"terms": terms, "routes": routes}
+
+
 @require_GET
 def index(request):
     preview = _check_gate(request)
@@ -39,6 +84,7 @@ def index(request):
     topics = list(services.public_topics())
     context = {
         "topics": [(topic, topic.texts(lang)) for topic in topics],
+        "settle": _settle(lang),
         "preview": preview,
         "noindex": preview,
         "breadcrumbs": [{"label": _("Vivre en Italie"), "url": ""}],

@@ -1,0 +1,34 @@
+{% load i18n ile_core ile_forms %}{% comment %}
+THE STEPS OF A FORM (V5.15 W3, lane B; DECISIONS §5.12) — the fields of a multi-step form, one fieldset per step,
+from `{% form_steps form as steps %}` (apps/core/templatetags/ile_forms.py). ALL the fields are in the page: without
+script the steps are a sequence of fieldsets and the form is exactly the same form; static/js/src/steps.js (fetched
+by fieldcheck.js where a `[data-steps]` form is) shows one step at a time, draws the progress rail (21st.dev «Wizard
+Steps» 23576, ported: square tiles, connectors that fill, the current label, the position said once, a panel that
+slides 22 px in the direction of travel), checks a step's fields before the next one, and opens the first step that
+came back with an error. The address keeps the step (`?etape=`), so the back button and a reload return to it.
+
+Each step's head: the step's glyph in its tile (the icon system's treatment, v5/_glyph.css), «Étape n sur N», its
+title. When the form asks for a review (`review`), the last step opens on it: what was typed, step by step, each
+with its «Modifier» (written by the script from the fields themselves; never a password).
+
+Round 2: the fields come as rows — a pair the form names (`steps_pairs`) shares a row, `.form-step__pair` — and a
+step's trailing optional fields may gather under a quiet sub-head (`steps_more`, `.form-step__more`), never reordered.
+
+The rails, the review and the navigation are painted by the steps' own sheet (core/steps.css, {% steps_assets %}).
+
+Contract: `steps` (the tag's list), optional `field_template` (default components/form_field.html), `review`
+(True → the review's seat in the last step), `privacy_url` (the privacy notice's link, written after the consent
+or the acknowledgement it belongs to).
+{% endcomment %}{% steps_assets %}{% with total=steps|length %}{% for step in steps %}
+<fieldset class="form-step" id="etape-{{ step.key }}" data-step="{{ step.key }}" data-step-label="{{ step.label }}"{% if step.lang %} data-step-lang="{{ step.lang }}"{% endif %}{% if step.errors %} data-step-errors{% endif %}>
+  <legend class="form-step__legend">
+    {% if step.glyph %}<span class="glyph-tile glyph-tile--md" aria-hidden="true">{% svg_icon step.glyph "icon" %}</span>{% endif %}
+    <span class="form-step__words"><span class="form-step__count">{% blocktranslate with n=step.n total=total %}Étape {{ n }} sur {{ total }}{% endblocktranslate %}</span><span class="form-step__title"{% if step.lang %} lang="{{ step.lang }}"{% endif %}>{{ step.label }}</span></span>
+  </legend>
+  <div class="form-step__body">
+    {% if review and forloop.last %}<div class="form-review" data-steps-review hidden></div>{% endif %}
+    {% for row in step.rows %}{% if row|length > 1 %}<div class="form-step__pair">{% endif %}{% for field in row %}{% include field_template|default:"components/form_field.html" with field=field minority=step.minority %}{% if privacy_url and field.name in "consent accept_terms" %}<p class="form__privacy-link form-step__privacy">{% svg_icon "shield" "icon" %}<a href="{{ privacy_url }}">{% translate "Consulter l’information sur le traitement des données personnelles (Privacy Policy)" %}</a></p>{% endif %}{% endfor %}{% if row|length > 1 %}</div>{% endif %}{% endfor %}
+    {% if step.more %}<div class="form-step__more" role="group" aria-labelledby="etape-{{ step.key }}-more"><p class="form-step__subhead" id="etape-{{ step.key }}-more"{% if step.more_lang %} lang="{{ step.more_lang }}"{% endif %}>{{ step.more_label }}</p>{% for row in step.more %}{% if row|length > 1 %}<div class="form-step__pair">{% endif %}{% for field in row %}{% include field_template|default:"components/form_field.html" with field=field minority=step.minority %}{% endfor %}{% if row|length > 1 %}</div>{% endif %}{% endfor %}</div>{% endif %}
+  </div>
+</fieldset>
+{% endfor %}{% endwith %}

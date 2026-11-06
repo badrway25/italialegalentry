@@ -260,7 +260,8 @@ def test_a_help_that_is_a_list_stays_inside_its_help(client, seeded, legal_publi
     element and the list outside the help's style (the signup, once its gate is open: the legal pages published)."""
     html = client.get("/fr/compte/signup/").content.decode()
     assert 'id="id_password1"' in html, "the registration is open in this test"
-    assert re.search(r'<div class="form-field__help" id="id_password1_helptext"><ul>.*?</ul></div>', html, re.S)
+    # V5.15 W3 (lane B): the rules are the live checklist, a list inside the help, its note and live line after it
+    assert re.search(r'<div class="form-field__help pw-rules" id="id_password1_helptext"><ul class="pw-rules__list"[^>]*>.*?</ul>.*?</div>', html, re.S)
     assert not re.search(r"<p[^>]*>\s*<ul", html)
     assert 'placeholder="' not in _focus(html), "the signup's labels are above its fields: no placeholder"
     assert "form-field__aside" not in html, "only a form that asks for it has a help beside its label"
@@ -268,14 +269,18 @@ def test_a_help_that_is_a_list_stays_inside_its_help(client, seeded, legal_publi
 
 def test_the_slot_and_the_help_in_the_component():
     body = _body(FIELD)
+    # V5.15 W3 (lane B): a password's rules come first, as the live checklist, inside the same help id
+    assert '{% if ui.rules %}<div class="form-field__help pw-rules" id="{{ field.auto_id }}_helptext"><ul class="pw-rules__list"' in body
     assert (
-        '{% if help %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help }}</div>'
+        '{% elif help %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help }}</div>'
         '{% elif field.help_text and field.field.help_beside_label %}<span class="form-field__aside" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>'
         '{% elif field.help_text %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</div>{% endif %}'
     ) in body
     assert "<p class=\"form-field__help\"" not in body
     control = body.index('<div class="form-field__control form-field__control--password')
-    assert control < body.index("form-field__aside") < body.index("form-field__errors"), "after the control, before the errors"
+    # V5.12 W2: the errors are the message row's (components/_field_msg.html), still after the slot
+    errors = body.index('include "components/_field_msg.html"')
+    assert control < body.index("form-field__aside") < errors, "after the control, before the errors"
 
 
 # ----------------------------------------------------------------------------------------- the sheet
@@ -351,7 +356,8 @@ def test_the_form_s_rules_move_nothing_and_read_tokens():
     assert not re.search(r"\.form-field[^{]*(input|select|textarea)[^{]*\{", sheet), "entrance.css draws no control"
     for declaration in ("min-block-size: var(--field-h)", "border-radius: var(--field-radius)", "background-color: var(--field-bg)"):
         assert declaration not in sheet, f"the plate is the system's: {declaration}"
-    assert ".varco .form:not(:has(.form-field:not(.form-field--required))) .form-field__required { display: none; }" in " ".join(form.split())
+    # V5.12 W2 (DECISIONS §5.3): no asterisk anywhere, so nothing to hide on an all-required form
+    assert "form-field__required" not in sheet
     assert "@supports (grid-template-rows: subgrid)" in form and ".page-entrance main:has(> .messages)" in form
 
 
@@ -709,7 +715,10 @@ def test_the_primary_is_flat_and_the_key_it_holds_is_the_key_that_turns(browser,
         assert busy["key"]["animation"] == "sig-turn" and busy["key"]["iterations"] == "1" and busy["key"]["opacity"] == "0.8", busy["key"]
         for name in ("w", "h", "end", "mask", "ground"):
             assert busy["key"][name] == key[name], f"the busy key is not the key at rest: {name} {key[name]} → {busy['key'][name]}"
-        assert busy["label"] == rest["label"] and busy["box"] == rest["box"], "nothing is laid out again: the label has not moved"
+        # to a tenth of a pixel (the v515-b merge: the merged tree measured the plate at 51.99997 px busy, 52 at rest)
+        assert [round(v, 1) for v in busy["label"] + busy["box"]] == [round(v, 1) for v in rest["label"] + rest["box"]], (
+            "nothing is laid out again: the label has not moved"
+        )
         page.wait_for_timeout(400)  # the press has been released on the slab's own transition
         held = page.evaluate(KEY, SUBMIT)
         assert held["shadow"] == "none" and held["image"] == "none" and held["fill"] == rest["fill"], "it waits on its own surface"
@@ -749,7 +758,8 @@ def test_a_refused_sign_in_is_said_once_and_no_field_is_blamed(browser, live_ser
                              gap: s.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom, login: f('id_login'), password: f('id_password'),
                              ring: getComputedStyle(s).outlineStyle}; }"""
             )
-            assert state["title"].startswith("Erreur — Connexion"), state["title"]
+            # allauth's «Sign In» in the glossary's words since V5.12 W2 (lane D, apps/accounts/allauth_terms.py)
+            assert state["title"].startswith("Erreur — Se connecter"), state["title"]
             assert state["role"] == "alert" and state["ring"] == "solid"
             assert state["items"] == 0 and state["list"] == "none", "a list of nothing takes no room and is not announced"
             assert state["gap"] <= 17, f"the summary ends {state['gap']:.0f} px under its sentence"
@@ -891,6 +901,9 @@ def test_a_password_the_control_can_show_is_never_spelled_nor_corrected(browser,
         context, page = _page(browser, 390 if touch else 1440, 844 if touch else 900, touch=touch)
         try:
             page.goto(live_server.url + path, wait_until="networkidle")
+            if "/signup/" in path:  # V5.15 W3: the sign-up asks «Qui êtes-vous ?» first; its passwords are step 2
+                page.locator(".choice").first.click()
+                page.locator(".steps-nav__next").click()
             fields = page.evaluate(SECRETS)
             assert len(fields) == count, (path, fields)
             for field in fields:

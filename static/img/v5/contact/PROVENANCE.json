@@ -1,0 +1,136 @@
+{
+ "what": "V5.12 photographs, family «contact» (DECISIONS §6): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "place-civique-palais",
+   "pexels_id": 14581980,
+   "photographer": "Serena Koi",
+   "photographer_url": "https://www.pexels.com/@serenakoi",
+   "page": "https://www.pexels.com/photo/people-walking-towards-a-building-14581980/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Scenic view of people walking in a historical public square in Treviso, Italy, with traditional architecture.",
+   "original_px": [
+    8256,
+    5504
+   ],
+   "original_sha256": "3dadcd3483a397bee412ac9e88f8d4d3f8a2bd95800c0bec92a9b7bb3cb76686",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      0,
+      8256,
+      5504
+     ],
+     "master_px": [
+      8256,
+      5504
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a civic square between two palazzi; five passers-by seen from behind, small, none identifiable (O55); the square, not a doorway, is the subject (O54); the alt names no city",
+   "files": [
+    {
+     "file": "place-civique-palais-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10292,
+     "budget": 61440,
+     "sha256": "d07c7adab3238b0e08f6c7c9233cee950c404a3f50f6c3493d1870d0b4f2a373"
+    },
+    {
+     "file": "place-civique-palais-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 14526,
+     "budget": 61440,
+     "sha256": "109b1167d01de157cba8242d7fb7e31cea834d5d5c0e1118ead8182d863a2ac8"
+    },
+    {
+     "file": "place-civique-palais-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 24459,
+     "budget": 61440,
+     "sha256": "84503333a1b3b1f1a699d9ee8510addbf085befa1e4c3df3ad33a09e6be6fb10"
+    },
+    {
+     "file": "place-civique-palais-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 34272,
+     "budget": 61440,
+     "sha256": "5164be1e150b56328e9447150b3e719f9b705c1750071542bdca4d0cdf52144d"
+    },
+    {
+     "file": "place-civique-palais-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 47949,
+     "budget": 61440,
+     "sha256": "5c84a078bb82b93daf908c38baa89913fa7508206091051448d928e6c0a6c197"
+    },
+    {
+     "file": "place-civique-palais-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 68,
+     "bytes": 61330,
+     "budget": 61440,
+     "sha256": "dba2f37063cbf06dd5c4732cc2bfb112dca488cbcf70e51d981af6a071a56701"
+    },
+    {
+     "file": "place-civique-palais-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 78604,
+     "budget": null,
+     "sha256": "75bbeff3a764f59c41f017d12f41793adc6f06aa6adc625778f6fd1451d4fcd8"
+    },
+    {
+     "file": "place-civique-palais-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 108114,
+     "budget": null,
+     "sha256": "724ac049886bb61e694aaa4cb962caeccce97cab310d9de2262035222941efe6"
+    }
+   ]
+  }
+ ]
+}

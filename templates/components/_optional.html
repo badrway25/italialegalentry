@@ -1,0 +1,4 @@
+{% load i18n %}{% comment %}
+«facultatif» after an optional field's label (V5.12 W2, DECISIONS §5.3): the minority is marked. Until the word has
+its translation, the French fallback says its language (lang="fr"), as every fallback of the site does.
+{% endcomment %}{% get_current_language as page_lang %}{% translate "facultatif" as word %}<span class="form-field__optional"{% if word == "facultatif" and page_lang|slice:":2" != "fr" %} lang="fr"{% endif %}>{{ word }}</span>

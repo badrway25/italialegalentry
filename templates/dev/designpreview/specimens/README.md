@@ -19,6 +19,7 @@ its own slice of `docs/design-v5/OWNERSHIP_V54.json`:
 | the chip board | W1-C | `chips.html` |
 | the button set | W1-C | `buttons.html` |
 | the field set | W1-C | `fields.html` |
+| the imagery test bench: V5.22's new frames and re-crops, each drawn alone by `{% photo %}` — a fixture of `tests/frontend/test_imagery_v522_m.py`, reachable by its URL and not listed in the preview's index | V5.22 lane M | `imagery.html` (its data sheets come from the `foto_scheda` tag of `pages_imagery`) |
 
 ## What a board's template may rely on
 

@@ -64,8 +64,42 @@ def _crumb(label) -> dict:
     return {"label": Truncator(str(label)).chars(CRUMB_MAX_CHARS), "url": ""}
 
 
+def person_page(key: str):
+    """
+    The person's pages (portal.services.PERSON_ONLY_PAGES: «Ma situation», «Mon parcours») send an account whose space
+    is an organisation's or a company's back to its dashboard (V5.12 Q7): an institution is never asked its date of
+    birth. Inside ``portal_view``, so the login, the cache and the kill switch come first.
+    """
+
+    def decorator(view):
+        @wraps(view)
+        def wrapped(request, *args, **kwargs):
+            if not services.shows_person_page(request.user, key):
+                return redirect("portal:dashboard")
+            return view(request, *args, **kwargs)
+
+        return wrapped
+
+    return decorator
+
+
+def organisation_only(view):
+    """A page of the organisation space alone («Mon organisation»): every other account goes to its dashboard."""
+
+    @wraps(view)
+    def wrapped(request, *args, **kwargs):
+        if not services.organisation_audience(request.user):
+            return redirect("portal:dashboard")
+        return view(request, *args, **kwargs)
+
+    return wrapped
+
+
 def _render(request, template: str, context: dict, *crumbs: dict):
-    root = {"label": _("Espace réservé"), "url": reverse("portal:dashboard")}
+    # The trail starts with the space's own name, the word at the rail's head and in the eyebrow (shell_space): «Espace
+    # réservé» for a person, «Espace Institutions» / «Espace Universités et Formation» for an organisation (V5.12 W2
+    # review; B's account shell does the same).
+    root = {"label": services.shell_space(request.user)["label"], "url": reverse("portal:dashboard")}
     if root["url"] == request.path:
         root["url"] = ""  # never a link to the page one is on
     context.update(
@@ -82,6 +116,14 @@ def _render(request, template: str, context: dict, *crumbs: dict):
 def dashboard(request):
     # The space's first page ends its trail on itself, as every other page does — «Espace réservé › Tableau de
     # bord», the word the rail lights — and not on the space's name (the W3-A review's m3).
+    if services.organisation_audience(request.user):
+        # An institution's, a university's, a training body's own dashboard (V5.12 Q7).
+        return _render(
+            request,
+            "portal/dashboard_organisation.html",
+            services.organisation_dashboard_context(request.user),
+            {"label": _("Tableau de bord"), "url": ""},
+        )
     return _render(
         request,
         "portal/dashboard.html",
@@ -109,6 +151,7 @@ def request_detail(request, kind: str, pk: int):
 
 
 @portal_view("pathways")
+@person_page("pathways")
 def pathways(request):
     context = services.pathways_page(request.user, request.GET.get("page"))
     return _render(request, "portal/pathways.html", context, {"label": _("Mon parcours"), "url": ""})
@@ -116,9 +159,19 @@ def pathways(request):
 
 @portal_view("documents")
 def documents(request):
+    if services.organisation_audience(request.user):
+        # The pieces register is a person's file; an organisation's documents are on «Mon organisation» (Q7).
+        return redirect("portal:organisation")
     context = services.documents_page(request.user)
     context["page_obj"] = services.paginate(context.pop("documents"), request.GET.get("page"), per_page=20)
     return _render(request, "portal/documents.html", context, {"label": _("Mes documents"), "url": ""})
+
+
+@portal_view("organisation")
+@organisation_only
+def organisation(request):
+    context = services.organisation_page(request.user)
+    return _render(request, "portal/organisation.html", context, {"label": _("Mon organisation"), "url": ""})
 
 
 @portal_view("deadlines")
@@ -157,6 +210,7 @@ def message_read(request, pk):
 
 
 @portal_view("situation", methods=("GET", "HEAD", "POST"))
+@person_page("situation")
 def situation(request):
     """
     What the person tells us about their circumstances — and what changes when they tell us.

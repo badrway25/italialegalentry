@@ -165,3 +165,94 @@ The files stay compliant in the repository history; they are *retired*, not *rej
 Formats: AVIF q ≈ 50 + WebP q ≈ 72 at 480 / 800 / 1200 / 1600 (+ 1920 for 21:9) + a JPEG 800 fallback; ≤ 90 KB at 1200 for 3:2 and 4:5, ≤ 120 KB at 1600 for 21:9; explicit `width`/`height` + `aspect-ratio` (CLS 0); `loading="lazy"` + `decoding="async"` below the fold; `fetchpriority="high"` only on the one LCP image of a page; the placeholder class (`.img-ph--night` / `.img-ph--paper`) from the manifest's average colour — no LQIP, no inline style. Pillow's built-in AVIF needs ≥ 11.3 in the repository's venv (not inspected).
 
 **Records to update when curated — after the owner's F15 ruling is written into `docs/IMAGE_LICENSES.md` §1 (O54), never before:** `scripts/fetch_images.py` (`CURATED` with crop and redaction boxes measured at full resolution; new fields `treatment`, `focus`, `ratios`; `REJECTED` with the reasons of `IMAGERY` §9); `static/img/photos/manifest.json` (author resolved through the Pexels API); `docs/IMAGE_LICENSES.md` §3 rows, §4 rejected rows, §5 gaps closed («formazione tecnica»: 9242821; «Italia contemporanea»: 38843185, 39768540; «collaborazione Italia–Marocco»: the diptych and «la marche»); a sibling `scripts/fetch_videos.py` for the three loops.
+
+---
+
+## 9. V5.12 — placements made (W2, lane C; DECISIONS §6)
+
+The rows of §2 that entered the site through the slot registry `apps/pages/imagery.py` (files and provenance in
+`static/img/v5/<family>/`, built by `tools/build_derivatives.py`; register rows in `docs/IMAGE_LICENSES.md` §3.1). Each
+frame passed the §6 check at full resolution in the build's crop; what the check changed is recorded here.
+
+| Slot | Frame | Placement | §6 check — outcome |
+|---|---|---|---|
+| `home.pilot.cedar` + `home.pilot.marble` | 30563520 · 6713855 | home «Projet pilote», the diptych «le même geste», B/W → colour as the band enters (static colour under reduced motion) | no lettering in the carving; the faces stay out of both 4:5 crops; the marble block is not a recognisable work |
+| `home.ecosystem` | 33543226 | home «Un écosystème institutionnel», beside the promoter | the lanyard badge and strap redacted; the handwriting on the papers blurred; no face in the frame |
+| `pathways.hero` | 7594198 | `/parcours/` entrance, LCP (4:5; 3:2 on a phone) | nothing legible on the desk, no logo on the laptop |
+| `companies.hero` | 7180823 | `/entreprises/` entrance, LCP (3:2) | the crop stops under the chin (O55); the caliper's mark and scale blurred; red −15 % saturation. **3:2 only**: the gesture is horizontal, a 4:5 cut lost the hand or the piece |
+| `institutions.hero` | 6949366 | `/institutions/` entrance, LCP (4:5; 3:2 on a phone) | the name cards are blank; the screens are off; no emblem |
+| `universities.hero` | 9489906 | `/universites-et-formation/` entrance, LCP (4:5; 3:2 on a phone) | **re-cropped to the reading room's end bay**: the two readers (identifiable at 1600 px) and the spiral stair (O54) are outside the crop |
+| `universities.exchange` | 31367507 | `/universites-et-formation/`, beside «Pour aller plus loin» | **every face is outside the crop** (three identifiable students in the full frame, O55): the exchange is told by the hands, a book and a folder; the book covers and the folder's lines blurred |
+
+Not placed in W2: the portico's four dedicated frames, `/orientation/`, `/formation/`, `/diplomes-et-titres/`,
+`/projet-pilote/`, `/le-projet/`, `/reseau/`, `/vivre-en-italie/` (wave W3). `/forum/` and `/agami/` stay without stock
+(owner Q4, Q5).
+
+## 10. V5.15 — placements made (W3, lane C; label v515-c-build)
+
+The imagery pass of V5.15 §5: each important public page that had no frame gets one, in one slot. Files and provenance in
+`static/img/v5/<family>/`; register rows in `docs/IMAGE_LICENSES.md` §3.3. Each frame passed the §6 check at full
+resolution in its build crop.
+
+| Slot | Frame | Placement | §6 check — outcome |
+|---|---|---|---|
+| `training.hero` | 5265332 | `/formation/` frontispiece, LCP (3:2) | the one face of the full frame (in profile) is above the crop; the jacket's brand mark blurred; the helmets' decals out of the crop. 3:2 only |
+| `training.after` | 15290006 | `/formation/`, under «Second temps»; B/W → colour as it enters | nobody in the frame; no lettering |
+| `diplomas.hero` | 4792286 | `/diplomes-et-titres/` frontispiece, LCP | nothing legible on the papers (the guide to documents, never the console) |
+| `pilot.plain` + `pilot.fields` | 11010756 + 36909829 | `/projet-pilote/` frontispiece: the diptych «two territories», the plain (LCP) and the fields a step lower | no person, no sign; the alts name no place (stock is never documentary) |
+| `project.hall` | 10323211 | `/le-projet/` frontispiece (night), LCP | the readers are small, seen from a gallery; the near readers of the frame's foot are below the crop |
+| `network.table` | 34632581 | `/reseau/` frontispiece (night), LCP | straight from above: tops of heads, no face |
+| `living.street` | 12900263 | `/vivre-en-italie/` band under the head, 21:9 (3:2 on a phone), LCP | the cars, their plates and the cyclist are below the crop; the house number blurred; the alt names no city |
+| `contact.square` | 14581980 | `/contact/` frontispiece, LCP | five passers-by from behind, small; the square, not a doorway, is the subject (O54) |
+| `companies.territory` | 5906831 | `/entreprises/`, a 21:9 band between «Trois temps» and the form | no person; the alt names no place |
+| `institutions.chamber` | 32266781 | `/institutions/`, beside the recipients' statement; B/W at rest, colour under the pointer or the focus | the flags and arms are above the crop; the printed sheet on the desk blurred |
+
+Not placed, on purpose: `/forum/` (Q4) and `/agami/` (Q5) keep no stock; FAQ, glossary, fraud and the legal pages stay
+type-led (their heads carry a drawn motif instead). The mega menu keeps the four dedicated portico frames (§3.2 of the
+register): lane A's redesign may draw them; none of them appears on a page.
+
+## 11. V5.22 — frames and re-crops prepared for the V2 compositions (lane M; labels v522-m-build, v522-m-improve1)
+
+SECTION_SYSTEM_V2 §8: seven new frames and four re-crops, each in ONE slot of `apps/pages/imagery.py` (files and
+provenance in `static/img/v5/<family>/`, register rows in `docs/IMAGE_LICENSES.md` §3.4). Lane M prepares them; the
+compositions that draw them belong to lanes H, P1 and P2, so a new slot appears on its page when that page is
+recomposed, and a re-crop that a V2 composition needs is a named **variant** of its slot (`{% photo "<key>" "<class>"
+variant="<name>" %}`): today's pages keep drawing the default rendering until their lane adopts the variant. Every frame
+passed the §6 check at full resolution in its build crops; what the check found is held by the crops themselves
+(`tests/compliance/test_imagery_v512.py::test_v522_the_full_resolution_check_holds_in_the_crops`). Per SECTION_SYSTEM_V2
+§8, no photographer's name is copied here: the credit is in `PROVENANCE.json` and in the caption.
+
+**Erratum (V5.24 §2, lane v524-px, 5 Nov 2026).** No credit is shown anywhere any more: `components/photo.html` draws no
+`<figcaption>` and no attribute replaces it, so «the credit shown» / «credit visible» in the rows below describe the
+V5.22 state, not the product. The author stays in the family's `PROVENANCE.json` only (`IMAGE_LICENSES.md` §3.5); the
+licence check (`test_every_slot_is_licensed_and_its_author_recorded`) still reads licence, author and page per slot; the
+production-facing guard is `tests/compliance/test_imagery_credits_v524.py`. A curated plate (`cms.MediaAsset`) keeps
+its caption and draws a byline only when its licence demands it (`attribution_required`; §1.10 of the licences).
+
+| Slot | Frame | Placement (lane) · ratios · `sizes` | Treatment | §6 check — outcome |
+|---|---|---|---|---|
+| `home.integrity.stone` | Pexels 11499083 | home S5 + S6, the K integrity band's ground (H) · 21:9 from 64 rem, 4:5 below · `100vw` | desaturated −35 % in the file; decorative (alt `""`), the credit shown | dressed courses in raking light, frontal; no opening, arch, step, door or window anywhere in the frame (O54); no mark or lettering; nobody. The faces' grain is softened (it weighed 2.5× the 21:9 ceiling): the courses, joints and light carry the ground under its 60 % veil |
+| `project.volumes` | Pexels 29976379 | Le projet, D panorama after «il racconto» (P2) · 21:9 / 16:9 (48–64 rem) / 4:5 · `(min-width: 48rem) 112vw, 100vw` (M22 scales the drifting image 1.12) | colour, cool grade | the spines' title labels end at y 0.35 of the frame: every crop starts at 0.37, so no title is in any crop and nothing is redacted; nobody; not the Universités reading room (another scale, another subject) |
+| `pathways.family.work` | Pexels 29454379 | Parcours PA-1, lane «Travail» (P1) · 3:2 at the lane head, 21:9 strip below · `(min-width: 64rem) 21vw, (min-width: 48rem) calc(100vw - 5rem), (min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)` | «select» | an empty aisle between pallet racks; the cartons' labels are a few pixels high at 720 and 1 200 w; no person |
+| `pathways.family.study` | Pexels 6334273 (round 1) | Parcours PA-1, lane «Études et formation» (P1) · as above | «select» | at desk level, not from above: a hand writes in a ruled notebook with a white pen, an open book behind it; warm (brown tweed, pink shirt, pale wood: mean saturation 49–54, so «select» visibly changes it); the face is above the frame (both crops start under the collar, y ≥ 0.14); the books carry nothing legible; the handwritten figures and words beyond the pen are softened by ONE box where the page already falls out of focus (no seam); the pen's line and the drawn arrows stay sharp. Replaces 6549915 (a second overhead tabletop beside «Famille», nearly neutral, with a redaction seam) |
+| `pathways.family.family` | Pexels 27177298 (round 1) | Parcours PA-1, lane «Famille» (P1) · as above | «select» | a shared table from straight above on an openwork wooden top: bowls of olives, tomatoes, a dip and peanuts; one hand holds out a spoon, the other holds the olive bowl; no face (the arms enter from the edges), no lettering, no brand; the glasses and a third hand at the top edge (y < 0.13) and the bread board at the right (x > 0.82) are outside both crops. Replaces 3184192 (the generic brunch table) |
+| `pathways.family.other` | Pexels 9250930 | Parcours PA-1, lane «Autres voies» (P1) · as above | «select» | netted vine rows in mist under trees and hills; no person; a car and a mast in the haze are a few pixels; the alt names no place (stock is never documentary); not the Entreprises greenhouses at dusk |
+| `training.before` | Pexels 34526423 | Formation F1 «la traversata», station 1 (P1) · 4:5 from 64 rem, 3:2 below · `(min-width: 90rem) 25rem, (min-width: 64rem) 28vw, (min-width: 48rem) 34rem, (min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)` | «develop» | hands wiring the control relays of an electrical training bench, between blue wire ducts and red leads; the face (x 0.17–0.27) is outside both crops, which start at x 0.30 (O55); a breaker's maker's logo and label, a miniature breaker's markings, the relays' model codes and terminal numbers and a CE label are erased by a median filter — the shapes stay crisp, so nothing reads as a blurred patch (a Gaussian blur did, in focus); the supply panel's lettering and the louvred window stay outside the crops; not the welding head nor the companies' calliper. Chosen over 34938452 (the same subject on a workbench), whose Pexels author is a company account: the caption would have printed a commercial brand under the frame |
+| `home.pilot.cedar` | Pexels 30563520 | home S4, D panorama «lo stesso gesto» (H) · variant `pannello`: 2:3 full-height panel from 64 rem, 3:2 band below · `(min-width: 64rem) 34vw, 100vw` | «develop» | re-crop: the 2:3 holds the chisel hand, the ringed hand and the carving; the 3:2 stops before the shirt's pocket; no face. The default 4:5 (today's diptych) is unchanged |
+| `home.pilot.marble` | Pexels 6713855 | as above (H) · variant `pannello` | «develop» | re-crop: the 2:3 panel from x 0.31 (round 1, QA M2) trims the thumb, never the blade — the blade's outer corner sits at 0.814 of the panel, so under S4's ~30 % × 82 vh cover the blade on the stone stays ≥ 6.8 % inside the drawn edge at 1024 × 768, ≥ 14 % at 1280 × 800 and 1440 × 900, 17.7 % at 1920 × 1080 (`evidence/v522/m/imp1_pilot_panels_cover_sim.json`); the whole frame as the 3:2 band; no face; the block is not a recognisable work |
+| `home.ecosystem` | Pexels 33543226 | home S7, A «la campata» under the arch (H) · variant `campata`: 4:3 from 64 rem, 3:2 below · `(min-width: 80rem) 57vw, (min-width: 64rem) 50vw, 100vw` | colour | re-crop 4:3: the red wall at the start edge leaves; the lanyard and handwriting redactions stay; no face |
+| `universities.exchange` | Pexels 31367507 | Universités U1, the filiera's destination (P1; drawn today on 6/12) · 3:2 · `(min-width: 100rem) 41.75rem, (min-width: 90rem) 38rem, (min-width: 75rem) 33.5rem, (min-width: 64rem) calc(50vw - 3.25rem), (min-width: 48rem) calc(100vw - 5rem), (min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)` (6/12 of the page container at each container step, the container's width below, its margin 24 px from 430 px and 20 px under). Round 1 corrects the value this row stated, and the real page's browser test made it exact: 45vw was right only near 1 040 px (8 px short at 1 199), 3 rem 8 px short under 430 px, 42 rem 4 px over at the 1 440 container; measured in headed Chromium at 12 widths, fr and ar, |drawn − sizes| ≤ 0.4 px (`evidence/v522/m/imp1_univ_sizes_steps.json`) | colour | re-crop: from x 0.58 (the book's edge is at 0.555) and y 0.44 (the lowest chin at 0.40) — the gesture and the folio case only; the three redactions of V5.12 are gone with what they covered (the covers read as censored objects at 768) |
+
+**Ceilings** (SECTION_SYSTEM_V2 §7.3; every AVIF width a rendering can serve): body 45 KB; band and panorama 60 KB at
+1 920 w; the 2:3 pilot panel 60 KB at 1 600 w; the family frame 30 KB (its 3:2 tops at 720 w, its 21:9 strip at 1 200 w);
+the K ground 60 KB at 21:9 and 40 KB at 4:5 (800 w). The WebP fallback, for a browser without AVIF, is held to the
+**same** ceiling (round 1: no allowance; §7.3 records none) and is not built at a width it cannot fit at q 40
+(`webp_not_built`), so that browser takes the next width down; the ground's and the panorama's phone 4:5 gain a 640 w
+step so that their fallback keeps two widths. **The board** `/__design-v5/specimens/imagery/` draws every frame
+through the product's `{% photo %}` at its V2 width (development only: a test fixture reachable by URL, not linked
+from the preview's index).
+
+**Contract for the composing lanes.** A slot's `sizes` is the width its V2 composition draws per the Director's anatomy
+(§2); a composition that draws another width states it with `{% photo … sizes="…" %}` (the tag's own argument, so
+`imagery.py` need not change). The home pilot and the ecosystem adopt their variants; once they do, their default crops
+(the pilot's 4:5) are no longer drawn and can be retired by a later imagery pass.

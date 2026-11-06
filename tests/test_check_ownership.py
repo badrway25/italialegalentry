@@ -103,8 +103,47 @@ def test_the_real_manifest_loads_and_is_written_in_lf():
 #: back office granting no more than the platform (the sec-f8 merge; V5.10's release blocker), and ``rc-fix``, the
 #: fixes of what the release candidate's validation found (the rc-fix merge). DL54-01's branch and worktree names; no
 #: merge tag of their own in the manifest (the checkpoint's tag, v54/checkpoint-3, and the rc-fix merge's v54/rc-fix
-#: mark design-v5).
-OUTSIDE_THE_WAVES = {"devops", "sec-f5", "intfix", "sec-f7", "sec-f8", "rc-fix"}
+#: mark design-v5), and ``v512-a`` … ``v512-d``, the four lanes of the owner's V5.12 remediation (the v512 W1 merge;
+#: their branches v512-<lane>-w1 are named in each family's note, the tag v512/w1 marks design-v5), and ``v514-p``,
+#: the privacy lane of the owner's V5.14 (the v514-p merge; branch v514-p in its note, the tag v514/privacy marks
+#: design-v5), and ``v516-p2``, the privacy classification lane of the owner's V5.16 (the v516-p2 merge; branch
+#: v516-p2 in its note, the tag v516/privacy-classification marks design-v5), and ``v517-p3``, the privacy governance
+#: correction lane of the owner's V5.17 (the v517-p3 merge; branch v517-p3 in its note, the tag v517/compliance
+#: marks design-v5), and ``v515-a``, lane A of the owner's V5.15 visual override, W3 (the v515-a merge; branch v515-a
+#: in its note, the tag v515/a marks design-v5), and ``v515-c``, lane C of the same W3 (the v515-c merge; branch v515-c
+#: in its note, the tag v515/c marks design-v5), and ``v515-b``, lane B of the same W3 (the v515-b merge; branch v515-b
+#: in its note, the tag v515/b marks design-v5), and ``v515-d``, lane D of the same W3 (the v515-d merge; branch v515-d
+#: in its note, the tag v515/d marks design-v5), and ``v518-a`` … ``v518-d``, the four lanes of the owner's V5.18
+#: stabilisation pass (the v518 stabilisation merge; branches v518-<lane> in each family's note, the tag
+#: v518/stabilisation marks design-v5), and ``v519-k``, the contact lane K of the owner's V5.19 (the v519-k merge;
+#: branch v519-k in its note, the tag v519/contact marks design-v5), and ``v518g-n``, ``v518g-c`` and ``v518g-p``,
+#: groups N, C and P of the owner's V5.18 green suite (the v518g merge; branches v518g-<group> in each family's note,
+#: the tag v518/green marks design-v5), and ``v520-wa``, ``v520-css`` and ``v520-fixv``, lanes WA, CSS and FIXV of the
+#: owner's V5.20 final technical gate (the v520 merge; branches v520-<lane> in each family's note, the tag v520/gate
+#: marks design-v5), and ``v522-m``, the imagery lane M of the owner's V5.22 composition remediation (the v522-m merge;
+#: branch v522-m in its note, the tag v522/m marks design-v5), and ``v522-s``, the section-system lane S of the same
+#: remediation (the v522-s merge; branch v522-s in its note, the tag v522/s marks design-v5), and ``v522-p1``, the page
+#: lane P1 of the same remediation, journeys and spaces (the v522-p1 merge; branch v522-p1 in its note, the tag v522/p1
+#: marks design-v5), and ``v522-s2``, the follow-up of lane S of the same remediation, its guards and the page lanes'
+#: merge conditions on its modules (the v522-s2 merge; branch v522-s2 in its note, the tag v522/s2 marks design-v5), and
+#: ``v522-h``, the homepage lane H of the same remediation, Homepage Composition V2 (the v522-h merge; branch v522-h in
+#: its note, the tag v522/h marks design-v5), and ``v522-p2``, the page lane P2 of the same remediation, system, trust
+#: and reading (the v522-p2 merge; branch v522-p2 in its note, the tag v522/p2 marks design-v5), and ``v524-px``, the
+#: imagery-attribution lane PX of the owner's V5.24 final delivery, first in the Director's merge order
+#: (FINAL_DELIVERY_V2.md R11; the v524-px merge; branch v524-px in its note, the tag v524/px marks design-v5), and
+#: ``v524-t``, the typography lane T of the same final delivery, second in the Director's merge order
+#: (FINAL_DELIVERY_V2.md R1, R11; the v524-t merge; branch v524-t in its note, the tag v524/t marks design-v5), and
+#: ``v524-lib``, the library lane LIB of the same final delivery, third in the Director's merge order
+#: (FINAL_DELIVERY_V2.md R3, R11, §3.3; the v524-lib merge; branch v524-lib in its note, the tag v524/lib marks
+#: design-v5).
+OUTSIDE_THE_WAVES = {
+    "devops", "sec-f5", "intfix", "sec-f7", "sec-f8", "rc-fix", "v512-a", "v512-b", "v512-c", "v512-d", "v514-p",
+    "v516-p2", "v517-p3", "v515-a", "v515-c", "v515-b", "v515-d", "v518-a", "v518-b", "v518-c", "v518-d",
+    "v519-k", "v518g-n", "v518g-c", "v518g-p",
+    "v520-wa", "v520-css", "v520-fixv",
+    "v522-m", "v522-s", "v522-p1", "v522-s2", "v522-h", "v522-p2",
+    "v524-px", "v524-t", "v524-lib",
+}
 
 
 def test_every_workflow_of_waves_1_to_4_has_a_family_with_the_dl54_names():
@@ -358,6 +397,46 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
         ("sec-f7", True),
         ("intfix", True),
         ("rc-fix", True),
+        ("v512-a", True),
+        ("v512-d", True),
+        ("v514-p", True),
+        ("v516-p2", True),
+        ("v517-p3", True),
+        ("v515-a", True),
+        ("v515-c", True),
+        ("v515-b", True),
+        ("v515-d", True),
+        ("v518-a", True),
+        ("v518-b", True),
+        ("v518-c", True),
+        ("v518-d", True),
+        ("v519-k", True),
+        ("v518g-n", True),
+        ("v518g-c", True),
+        ("v518g-p", True),
+        ("v520-wa", True),
+        ("v520-css", True),
+        ("v520-fixv", True),
+        ("v522-s", True),
+        ("v522-m", True),
+        ("v522-h", True),
+        ("v522-p1", True),
+        ("v522-p2", True),
+        ("v522-s2", True),
+        # V5.24 final delivery (FINAL_DELIVERY_V2.md R11; V5.20 cited: cases added, none changed): the nine lanes and
+        # the one fix round, from V5.24 on
+        ("v524-t", True),
+        ("v524-px", True),
+        ("v524-lib", True),
+        ("v524-home", True),
+        ("v524-pub1", True),
+        ("v524-pub2", True),
+        ("v524-plat", True),
+        ("v524-ar", True),
+        ("v524-closing", True),
+        ("v524-mfix", True),
+        ("v529-px", True),
+        ("v530-closing", True),
         ("ops", False),
         ("w3f2", False),
         ("devops-2", False),
@@ -368,9 +447,81 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
         ("intfix3", False),
         ("rc-fix-2", False),
         ("rcfix", False),
+        ("v512-e", False),
+        ("v512-a-w1", False),
+        ("v512a", False),
+        ("v514-q", False),
+        ("v514-pp", False),
+        ("v516-p1", False),
+        ("v516-p22", False),
+        ("v516-q2", False),
+        ("v519-j", False),
+        ("v519-kk", False),
+        ("v518g-a", False),
+        ("v518g-nn", False),
+        ("v518g", False),
+        ("v518gg-n", False),
+        ("v518-n", False),
+        ("v520-w", False),
+        ("v520-waa", False),
+        ("v520-cs", False),
+        ("v520-fix", False),
+        ("v520-fixvv", False),
+        ("v520-audit", False),
+        ("v520-merge", False),
+        ("v520wa", False),
+        ("v520g-wa", False),
+        ("v522-mm", False),
+        ("v522-m1", False),
+        ("v522-sh", False),
+        ("v522m", False),
+        ("v522g-m", False),
+        ("v522-merge", False),
+        ("v522-director", False),
+        ("v522-audit", False),
+        ("v521-p1", False),
+        ("v522-p0", False),
+        ("v522-p11", False),
+        ("v522-p1a", False),
+        ("v522p1", False),
+        ("v522-pp1", False),
+        ("v522g-p1", False),
+        ("v522-p1-merge", False),
+        ("v521-s2", False),
+        ("v522-s0", False),
+        ("v522-s1", False),
+        ("v522-s22", False),
+        ("v522-s2a", False),
+        ("v522s2", False),
+        ("v522-ss2", False),
+        ("v522g-s2", False),
+        ("v522-s2-merge", False),
+        ("v523-px", False),
+        ("v522-closing", False),
+        ("v524-pub", False),
+        ("v524-pub3", False),
+        ("v524-pub12", False),
+        ("v524-x", False),
+        ("v524-home2", False),
+        ("v524-t1", False),
+        ("v524px", False),
+        ("v524g-px", False),
+        ("v524-px-merge", False),
+        ("v524-closing-2", False),
+        ("v524-mfix2", False),
+        ("v524-director", False),
+        ("v524-matrix", False),
+        ("v524-gate", False),
     ],
 )
 def test_a_family_id_is_the_steward_a_wave_s_workflow_or_a_family_outside_the_waves(fid, valid):
+    """
+    Every form the checker's docstring names, and its near-misses. From V5.24 on the final-delivery lanes of
+    FINAL_DELIVERY_V2.md (R11: v5<nn>-t, -px, -lib, -home, -pub1, -pub2, -plat, -ar, -closing, and -mfix for the one
+    fix round of V5.27 §7) are admitted — the cases were added at the v524-px merge under V5.20's strict rule: no
+    existing case changed, the new ids asserted admitted and their near-misses (a lower directive number, a third
+    page lane, a suffix, a label) refused.
+    """
     assert bool(co.FAMILY_ID.fullmatch(fid)) is valid
 
 

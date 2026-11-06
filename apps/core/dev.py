@@ -211,7 +211,7 @@ DEMO_DOC_ROW = {
     "state_label": "Déposé",
     "state_css": "filed",
     "state_reason": "",
-    "responsible": "La personne",
+    "responsible": "Vous",
     "responsible_note": "",
     "responsible_glyph": "person",
     "due_date": None,

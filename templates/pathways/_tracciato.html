@@ -1,0 +1,50 @@
+{% load i18n pages_imagery %}{% comment %}
+PA-1 · «IL TRACCIATO DELLE FAMIGLIE» — the eight regular pathways as a route board (design V5.22, SECTION_SYSTEM_V2
+§3.4 PA-1; lane P1). Lane S's B «il tracciato» (components/sezioni/tracciato.html, static/css/v5/_sec-tracciato.css):
+the same classes and the same lanes, with what this page needs and the library's partial does not carry — a station
+whose sheet is not live yet stands without a link (never a link to a 404), the count line says how many pathways the
+chosen family holds (one sentence per family, CSS keeps the checked one, «all» without :has — the V5.12 filter's own
+lines), each station names its pathway and family for the guards, and each family frame takes the width the board
+really draws (`lane.frame_sizes`). The origin is the questionnaire, its link a secondary (the primary stays in the
+head). Each station's numeral is read with its title: the prescribed order is said, not only drawn (QA_ROUND1 m9).
+
+THE CHOICE (round 2, QA_ROUND2 M1; §0.1 and §2 B «nothing leaves the layout»): the board is the families' group — a
+fieldset whose legend names the five native radios. «Tous» stands in its chip; each family's radio stands at its own
+lane's head, and its chip is its label. The choice and its count line are one bar, sticky under the letterhead at
+every width. Choosing a family — by a tap on its chip anywhere in the board, or by the arrows from the keyboard — moves
+the focus to that family's radio, and the browser brings its lane under the bar (the radio's box is sized so that the
+lane lands there: pathways/_index.css), instantly from the keyboard and under reduced motion; nothing is folded, every
+station stays where it is, the chosen lane is lit and the others take the quiet ink; the count is read in the bar.
+No script: the browser's own focus does it.
+
+THE FORK (round 2, m9): two one-station lanes in a row (Famille, Autres voies) share the board's last row from 48 rem
+(`lane.fork`), so no row is left two thirds empty.
+
+Contract: `lanes` (pathways.services.route_board: key, label, frame_slot, frame_sizes, fork, stations), `counts`
+(family_counts), `orientation` (the questionnaire's address, or "" while it is not open).
+{% endcomment %}<fieldset class="tracciato tracciato--scelta percorsi-tracciato" data-pathways="8" data-families>
+  <legend class="tracciato__legenda">{% translate "Familles de parcours" %}</legend>
+  <div class="percorsi-scelta">
+    <div class="tracciato__scelta">
+      <label class="tracciato__chip"><input type="radio" name="pathway-family" id="family-all" value="all" checked><span>{% translate "Tous" %}</span></label>
+      {% for lane in lanes %}<label class="tracciato__chip" for="family-{{ lane.key }}"><span>{{ lane.label }}</span></label>{% endfor %}
+    </div>
+    <p class="tracciato__conto percorsi-conto" role="status" aria-live="polite">
+      <span class="percorsi-conto__riga" data-count="all">{% blocktranslate count n=counts.all %}{{ n }} parcours affiché{% plural %}{{ n }} parcours affichés{% endblocktranslate %}</span>
+      {% for lane in lanes %}<span class="percorsi-conto__riga" data-count="{{ lane.key }}">{% blocktranslate count n=lane.stations|length %}{{ n }} parcours affiché{% plural %}{{ n }} parcours affichés{% endblocktranslate %}</span>{% endfor %}
+    </p>
+  </div>
+  <div class="tracciato__origine"><span class="sez-tile" aria-hidden="true">{% svg_icon "compass" "icon" %}</span><p class="tracciato__origine-testo">{% translate "Identifiez la voie régulière à explorer" %}{% if orientation %} <a class="link-arrow" href="{{ orientation }}">{% translate "Commencer le questionnaire d’orientation" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a>{% endif %}</p></div>
+  <ol class="tracciato__corsie sez-seq" role="list">
+    {% for lane in lanes %}<li class="tracciato__corsia{% if lane.fork %} tracciato__corsia--{{ lane.fork }}{% endif %}" data-lane="{{ lane.key }}">
+      <input class="percorsi-via" type="radio" name="pathway-family" id="family-{{ lane.key }}" value="{{ lane.key }}">
+      <span class="tracciato__linea" data-verb="draw" aria-hidden="true"></span>
+      <div class="tracciato__testa"><p class="tracciato__nome testa__label">{{ lane.label }}</p>{% photo lane.frame_slot "tracciato__foto" sizes=lane.frame_sizes %}</div>
+      <div class="tracciato__percorso">
+        <ol class="tracciato__stazioni sez-seq" role="list" data-registro>
+          {% for item in lane.stations %}<li class="tracciato__stazione" data-pathway="{{ item.key }}" data-family="{{ lane.key }}">{% if item.url %}<a class="tracciato__carta" href="{{ item.url }}">{% else %}<div class="tracciato__carta tracciato__carta--attesa">{% endif %}<span class="tracciato__num">{{ item.num }}</span><span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="tracciato__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span><span class="tracciato__riga"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.line }}</span>{% if item.url %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span></a>{% else %}</div>{% endif %}</li>{% endfor %}
+        </ol>
+      </div>
+    </li>{% endfor %}
+  </ol>
+</fieldset>

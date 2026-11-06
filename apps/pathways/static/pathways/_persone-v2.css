@@ -1,0 +1,60 @@
+/* ============================================================================================
+   THE ESPACE PERSONNES, V2 — what its compositions share (design V5.22, SECTION_SYSTEM_V2 §3.4, §3.5, §3.9, §3.10;
+   lane P1). Page-only: imported by the space's page sheets (pathways/index.css, sheet.css, training.css,
+   diplomas.css) after the shell (v5/_sezioni.css) and the patterns they compose. Tokens of static/css/v5/tokens.css
+   only; logical properties only.
+   ============================================================================================ */
+
+/* ---- E «il mosaico» on the space's pages (PA-3, F2, D3): the lead's line is a prescribed fragment that starts in
+        lower case (its words unaltered: presentation only); on a phone the compact tiles are rows — the glyph tile at
+        the reading edge, the title and its line beside it (lane S's review, n2: a stack of tall cards is the
+        «online report with cards» image) ---- */
+.mosaico__riga::first-letter {
+  text-transform: uppercase;
+}
+
+@media (max-width: 47.999rem) {
+  .mosaico--grid .mosaico__tessera:not(.mosaico__tessera--lead) {
+    min-block-size: 0;
+    padding: var(--s-4) var(--s-5);
+  }
+
+  .mosaico--grid .mosaico__tessera:not(.mosaico__tessera--lead) .mosaico__parole {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-4);
+    align-items: center;
+  }
+
+  .mosaico--grid .mosaico__tessera:not(.mosaico__tessera--lead) .sez-tile {
+    grid-row: span 2;
+  }
+
+  .mosaico--grid .mosaico__tessera:not(.mosaico__tessera--lead) .mosaico__riga {
+    grid-column: 2;
+  }
+}
+
+/* the grid's foot: the live help line under the tiles */
+.mosaico__piede.aiuto {
+  margin-block-start: var(--s-8);
+}
+
+/* ---- K «la protezione» in its own band: the plate at its reading measure, the band's light on the stone ---- */
+.persone-protezione .protezione {
+  margin-inline: 0;
+}
+
+/* ---- Arabic: a label or a kicker in the page's language is never tracked nor set in ILE Mono (the letters of a word
+        join; a tracked Arabic word breaks apart) — the folio's own rule is for Latin runs ---- */
+:lang(ar) :is(.testa__label, .tracciato__nome, .traversata__kicker) {
+  font-family: var(--f-sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---- a French title beside its marker on an Arabic page: one line on the marker's edge, as a station's label in «la
+        linea» and a card's title (lane S's rule, extended to the milestones and the two times); a French paragraph
+        keeps its own box from its own start (§1 rule 6) ---- */
+[dir="rtl"] .sez :is(.filo__titolo, .traversata__titolo)[lang="fr"] {
+  text-align: end;
+}

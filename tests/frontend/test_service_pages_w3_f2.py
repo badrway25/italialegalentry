@@ -255,30 +255,43 @@ def _nav(html: str) -> str:
 
 
 ACCOUNT_PAGES = [
-    # (path, the section whose link is current, its aria-current, the trail's current words)
-    ("/fr/compte/profil/", "Profil", "page", "Mon compte"),
-    ("/fr/compte/profil/suppression/", "Profil", "true", "Supprimer mon compte"),
-    ("/fr/compte/email/", "Adresses e-mail", "page", "Adresses e-mail"),
-    ("/fr/compte/password/change/", "Mot de passe", "page", "Mot de passe"),
-    ("/fr/compte/2fa/", "Authentification à deux facteurs", "page", "Authentification à deux facteurs"),
-    ("/fr/compte/logout/", None, None, "Se déconnecter"),
+    # (path, the section whose link is current, its aria-current, the page's own words — its one heading —, the
+    # console trail's current crumb: the trail names the page, «Mon compte» the profile alone — V5.20, the rows of the
+    # deletion request and the sign-out restored as at 238dc1c, accounts.shell._page_label)
+    ("/fr/compte/profil/", "Profil", "page", "Mon compte", "Mon compte"),
+    ("/fr/compte/profil/suppression/", "Profil", "true", "Supprimer mon compte", "Supprimer mon compte"),
+    ("/fr/compte/email/", "Adresses e-mail", "page", "Adresses e-mail", "Adresses e-mail"),
+    ("/fr/compte/password/change/", "Mot de passe", "page", "Modifier le mot de passe", "Mot de passe"),
+    ("/fr/compte/2fa/", "Authentification à deux facteurs", "page", "Authentification à deux facteurs",
+     "Authentification à deux facteurs"),
+    ("/fr/compte/logout/", None, None, "Se déconnecter", "Se déconnecter"),
 ]
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(("path", "section", "current", "trail"), ACCOUNT_PAGES)
-def test_every_account_page_stands_in_one_frame(client, seeded, person_user, path, section, current, trail):
+@pytest.mark.parametrize(("path", "section", "current", "words", "trail"), ACCOUNT_PAGES)
+def test_every_account_page_stands_in_one_frame(client, seeded, person_user, path, section, current, words, trail):
+    """One frame for every account page. Since V5.12 W2 (lane B; DECISIONS «Lane B» acceptance 6, «/fr/compte/*
+    renders inside the console with the rail») a signed-in account whose reserved area is open draws them in the
+    console (allauth/layouts/_console.html, `request|account_frame` → accounts.shell.frame), the account's own grammar
+    — `conto`, its sections, servizio.css — inside the workspace; the trail is the console's «Espace réservé › Mon
+    compte [› the section]» (accounts.shell.console_context) and the page's own words are its one heading (V5.18 P-2,
+    the account's atrium). The public frame `container conto` stays for the anonymous visitor
+    (tests/frontend/test_account_shell_v512_b.py)."""
     client.force_login(person_user)
     response = client.get(path)
     html = response.content.decode()
     assert response.status_code == 200
-    assert 'class="container conto"' in html and "css/dist/cms/servizio.css" in html
+    assert '<div class="conto conto--console">' in html and "css/dist/cms/servizio.css" in html
+    assert 'id="console-rail"' in html and 'class="site-header' not in html, "the console's frame, not the public one"
+    assert 'class="container conto"' not in html, "one frame: never the public one inside the console"
     assert html.count("<h1") == 1 and 'name="robots" content="noindex' in html
+    assert re.search(rf"<h1\b[^>]*>{re.escape(words)}</h1>", html), "the page says what it is"
     nav = _nav(html)
     marked = re.findall(r'<a class="conto-nav__link" href="[^"]+" aria-current="(\w+)">([^<]+)</a>', nav)
     assert marked == ([(current, section)] if section else []), marked
-    crumbs = html.split('class="breadcrumbs container"', 1)[1].split("</nav>", 1)[0]
-    assert re.search(rf'aria-current="page"><span>{re.escape(trail)}</span>', crumbs), crumbs
+    crumbs = html.split('class="console-bar__crumbs"', 1)[1].split("</nav>", 1)[0]
+    assert re.search(rf'aria-current="page">\s*<span>{re.escape(trail)}</span>', crumbs), crumbs
     assert "Espace réservé" in crumbs, "the account belongs to the reserved area"
     assert _main(html).count("btn--primary") <= 1, "one primary at most"
     assert 'class="account-menu__list"' not in _main(html), "the header menu's class names never draw the page"
@@ -419,7 +432,9 @@ def test_the_profile_s_personal_fields_say_what_they_are_for(client, seeded, per
     main = _main(client.get("/fr/compte/profil/").content.decode())
     assert re.search(r'<input type="text" name="full_name" autocomplete="name"', main)
     assert re.search(r'<input type="tel" name="phone" autocomplete="tel" inputmode="tel"', main)
-    assert re.search(r'<input type="text" name="country_of_residence" autocomplete="country-name"', main)
+    # V5.12 W2 (DECISIONS §5.7): the country is the CLDR select (ISO code, the combobox over it) — its purpose token
+    # for a code is `country`
+    assert re.search(r'<select name="country_of_residence" autocomplete="country"', main)
     assert re.search(r'<select name="preferred_language" autocomplete="language"', main)
 
 
@@ -427,21 +442,24 @@ def test_the_profile_s_personal_fields_say_what_they_are_for(client, seeded, per
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_situation_s_personal_facts_say_what_they_are_for(client, seeded, person_user, lang):
     """WCAG 2.2 AA 1.3.5 on «Ma situation» (W4-C's review, M1), as the profile's fields above: the date of birth is
-    `bday` and stays typed `date`, the country of residence is `country-name` (the nationality has no token)."""
+    `bday` and stays typed `date`; the country of residence is the CLDR select since V5.12 W2 (DECISIONS §5.7,
+    751be04c: the ISO code, the combobox over it), whose purpose token for a code is `country` (the nationality has no
+    token)."""
     client.force_login(person_user)
     response = client.get(f"/{lang}/espace-reserve/ma-situation/")
     assert response.status_code == 200
     main = _main(response.content.decode())
 
-    def tag(name: str) -> str:
-        found = re.findall(rf'<input\b[^>]*\bname="{name}"[^>]*>', main)
+    def tag(name: str, element: str = "input") -> str:
+        found = re.findall(rf'<{element}\b[^>]*\bname="{name}"[^>]*>', main)
         assert len(found) == 1, (name, found)
         return found[0]
 
     birthday = tag("date_of_birth")
     assert 'type="date"' in birthday and 'autocomplete="bday"' in birthday, birthday
-    residence = tag("country_of_residence")
-    assert 'type="text"' in residence and 'autocomplete="country-name"' in residence, residence
+    residence = tag("country_of_residence", "select")
+    assert 'autocomplete="country"' in residence, residence
+    assert not re.findall(r'<input\b[^>]*\bname="country_of_residence"', main), "one control: the select"
 
 
 def test_the_partial_uses_tokens_only_and_logical_properties():

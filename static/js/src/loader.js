@@ -45,6 +45,8 @@
  * refusal that does not exist.
  */
 import { durationToken, settled } from "./motion.js";
+/** T4 — a region whose content is on its way (V5.12 §4; DECISIONS §1 T4): lume/region.js, re-exported here. */
+export { region } from "./lume/region.js";
 
 /** A busy face that has shown stays at least this long, so a quick answer never flickers (gate 0's floor). */
 export const MIN_SHOWN = 480;
@@ -245,12 +247,13 @@ export async function seat(container) {
  *  rest of the ARIA state, the engage of the host the form names, and the lease of the wait. `event` is the submit
  *  itself: a listener that runs after shell.js's may still cancel it — the answer is then given in the page — so
  *  it is read once its dispatch is over. */
-export function submitted(form, control, event) {
+export function submitted(form, control, event, veiled = false) {
   if (control) {
     busy(control, { refuses: form.hasAttribute("data-single-submit"), face: control.classList.contains("is-busy") });
   }
   const host = form.dataset.loaderHost ? document.getElementById(form.dataset.loaderHost) : null;
-  if (host) engage(host, { action: form.dataset.loaderAction || "", form });
+  // a submit the central veil carries (threshold.js: the sign-in's since V5.18 P12) does not engage the host too
+  if (host && !veiled) engage(host, { action: form.dataset.loaderAction || "", form });
   lease(form);
   if (event) {
     setTimeout(() => {

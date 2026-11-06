@@ -384,18 +384,24 @@ def test_the_cards_sit_on_their_levels_with_one_radius(browser, showcase):
         assert {c["title"] for c in cards} == {"20px"}
         assert level1 != level2 and "rgba(7, 18, 38" in level1 and "rgba(7, 18, 38" in level2, "the night's own colour"
 
-        # contact: the hairline strengthens and the title is underlined; the plane does not change
+        # contact: the hairline strengthens and the title is underlined. Since V5.15 lane A's motion language
+        # («M15 · cards lift under the hand», static/css/v5/_reveal.css, cb252091/b9098210) a link card under a fine
+        # pointer lifts 3 px onto level 3 — the one hover lift of the system, replacing SH-4's «no shadow moves».
         link = "#conteneurs .card--link:not(.card--flat)"
         page.hover(link)
-        page.wait_for_timeout(300)
+        page.wait_for_function("(s) => document.querySelector(s).getAnimations().length === 0", arg=link)
         hovered = page.evaluate(
             "(s) => { const c = document.querySelector(s); const cs = getComputedStyle(c);"
-            " return { edge: cs.borderTopColor, shadow: cs.boxShadow, line: getComputedStyle(c.querySelector('.card__title a')).textDecorationLine,"
+            " return { edge: cs.borderTopColor, shadow: cs.boxShadow, lift: cs.translate,"
+            " line: getComputedStyle(c.querySelector('.card__title a')).textDecorationLine,"
             " target: getComputedStyle(c.querySelector('.card__title a'), '::after').position }; }",
             link,
         )
         assert hovered["edge"] != opened["edge"] and hovered["line"] == "underline"
-        assert hovered["shadow"] == level1, "no shadow moves (SH-4)"
+        level3 = page.evaluate(SHADOW_JS, "--shadow-3")
+        assert level3 not in (level1, level2)
+        assert hovered["shadow"] == level3, "the card lifts onto level 3 under the hand (M15), and onto nothing else"
+        assert hovered["lift"] == "0px -3px", "by 3 px (M15)"
         assert hovered["target"] == "absolute", "one destination, one tab stop: the title's link covers the card"
     finally:
         context.close()

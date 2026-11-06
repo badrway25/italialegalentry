@@ -227,7 +227,8 @@ def _static_files() -> list[Path]:
 
 
 def test_every_icon_used_in_templates_exists_in_sprite():
-    sprite = (STATIC / "img" / "icons.svg").read_text(encoding="utf-8")
+    # V5.12 W2: the chrome sprite and the domain one
+    sprite = "".join((STATIC / "img" / n).read_text(encoding="utf-8") for n in ("icons.svg", "icons-domain.svg"))
     ids = set(re.findall(r'<symbol id="icon-([a-z0-9-]+)"', sprite))
     used = set()
     for path in _owned_template_files():

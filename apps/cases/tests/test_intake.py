@@ -5,12 +5,21 @@ This is the seam that makes the platform a product rather than a questionnaire: 
 §5 puts «Creazione del fascicolo e checklist» in the sequence, and REQ-PER-07 is the requirement.
 Everything here exercises the REAL path — the service the wizard calls on completion — not a
 hand-built fixture.
+
+The legal layer is read in its two states. Pre-production no rule is in force — no jurist has
+approved one (`manage.py rules_pending_review --strict`) — and that truth is asserted as such. The
+tests of what a rule in force does run on the seeded ruleset put in force FOR A DEMONSTRATION in
+the test database (``demonstration_rules_in_force``): before V5.20 they skipped wherever nothing
+was in force, which was every run.
 """
 
 from __future__ import annotations
 
+import io
+
 import pytest
 from django.contrib.sessions.backends.db import SessionStore
+from django.core.management import call_command
 
 from cases.models import AssessmentOutcome, CaseFile, CasePurpose, CaseStatus, ChecklistStatus, ResponsibleActor
 from orientation import services as orientation_services
@@ -27,6 +36,25 @@ def person(django_user_model):
     user = django_user_model.objects.create_user(email="intake@example.test", password="x")
     roles.assign_role(user, roles.PERSON)
     return user
+
+
+@pytest.fixture
+def demonstration_rules_in_force(seeded, settings):
+    """
+    The seeded legal ruleset in force FOR A DEMONSTRATION, in this test's database only: the product's
+    own ``manage.py rules_activate_demonstration`` walks every seeded rule through the real chain (four
+    eyes, verified sources) and stamps the approver «DIMOSTRAZIONE — nessun giurista ha approvato questa
+    regola» into every snapshot. The test settings refuse demonstration data (``ILE_SEED_DEMONSTRATION_DATA``
+    off), so the switch is opened for this test alone, as a local preview opens it.
+
+    V5.20 (the strict test-update rule: «skip tests unless the feature is genuinely unavailable in that
+    environment»): the rule engine is available in every environment; only the approval is missing
+    pre-production. The three tests below used to skip on «no rule in force», every run; they now run on
+    this ruleset and assert, and the pre-production state itself is asserted by
+    ``test_with_no_rule_in_force_the_assessment_applies_none_and_cites_nothing``.
+    """
+    settings.ILE_SEED_DEMONSTRATION_DATA = True
+    call_command("rules_activate_demonstration", stdout=io.StringIO())
 
 
 def run_questionnaire(person, rf=None):
@@ -119,7 +147,28 @@ def test_the_assessment_freezes_both_rulesets(person, seeded):
         assert rule.get("sources"), "a rule in force carries at least one source"
 
 
-def test_the_legal_layer_supplies_the_sources_the_questionnaire_cannot(person, seeded):
+def test_with_no_rule_in_force_the_assessment_applies_none_and_cites_nothing(person, seeded):
+    """
+    The pre-production truth: the seeded legal ruleset is not in force — every rule a draft or a
+    candidate, none approved by a jurist. The assessment then applies no rule, lists no missing
+    requirement and shows no source (the pathway's own included: _sources_of), its outcome is the
+    questionnaire's own, and no checklist line carries a legal reference. An empty source list is the
+    honest state, never a list borrowed from somewhere that cannot cite a provision.
+    """
+    from cases.intake import outcome_for
+    from rules.models import LegalRule, ReviewStatus
+
+    assert not LegalRule.objects.filter(review_status=ReviewStatus.ACTIVE).exists(), "no rule in force is seeded"
+    session = run_questionnaire(person)
+    case = CaseFile.objects.get(person=person)
+    assessment = case.assessments.latest("assessed_at")
+    assert assessment.applied_rules == [] and assessment.missing_requirements == [], assessment.applied_rules
+    assert assessment.sources == [], assessment.sources
+    assert assessment.outcome == outcome_for(session.result.outcome.key)
+    assert [item.requirement for item in case.checklist.all() if item.source_ref] == []
+
+
+def test_the_legal_layer_supplies_the_sources_the_questionnaire_cannot(person, demonstration_rules_in_force):
     """
     The numbered source list is what turns a questionnaire result into an institutional finding.
 
@@ -129,8 +178,7 @@ def test_the_legal_layer_supplies_the_sources_the_questionnaire_cannot(person, s
     """
     run_questionnaire(person)
     assessment = CaseFile.objects.get(person=person).assessments.latest("assessed_at")
-    if not assessment.applied_rules:
-        pytest.skip("no legal rule in force applies to the pathway this questionnaire run reached")
+    assert assessment.applied_rules, "the rules in force for this pathway apply to this questionnaire run"
     assert assessment.sources, "an outcome produced by rules in force must show its sources"
     for source in assessment.sources:
         assert source.get("reference"), "a citation without a precise reference cannot be checked"
@@ -201,12 +249,13 @@ def test_the_questionnaire_alone_never_claims_more_than_possible(person, seeded)
     }
 
 
-def test_an_outcome_stronger_than_possible_can_say_which_rule_made_it_so(person, seeded):
+def test_an_outcome_stronger_than_possible_can_say_which_rule_made_it_so(person, demonstration_rules_in_force):
     """No finding, no escalation. An outcome nobody can trace back to a rule is an oracle."""
     run_questionnaire(person)
     assessment = CaseFile.objects.get(person=person).assessments.latest("assessed_at")
-    if assessment.outcome in {AssessmentOutcome.POSSIBLE, AssessmentOutcome.REVIEW_REQUIRED}:
-        pytest.skip("this run did not reach an outcome stronger than the questionnaire's own")
+    assert assessment.outcome not in {AssessmentOutcome.POSSIBLE, AssessmentOutcome.REVIEW_REQUIRED}, (
+        "the rules in force for this pathway raise the outcome above the questionnaire's own"
+    )
     assert assessment.applied_rules, "a stronger outcome must name the rules that produced it"
     assert assessment.sources, "and those rules must carry their sources"
 
@@ -226,7 +275,7 @@ def test_the_recorded_outcome_is_the_stronger_of_the_two_layers(person, seeded):
     assert assessment.outcome == expected
 
 
-def test_a_legal_requirement_becomes_a_checklist_line_carrying_its_source(person, seeded):
+def test_a_legal_requirement_becomes_a_checklist_line_carrying_its_source(person, demonstration_rules_in_force):
     """
     A requirement a rule found missing must reach the person as something they can act on, with the
     provision behind it — not as an instruction with no author.
@@ -234,8 +283,7 @@ def test_a_legal_requirement_becomes_a_checklist_line_carrying_its_source(person
     run_questionnaire(person)
     case = CaseFile.objects.get(person=person)
     assessment = case.assessments.latest("assessed_at")
-    if not assessment.missing_requirements:
-        pytest.skip("no rule in force found a missing requirement for this pathway")
+    assert assessment.missing_requirements, "the rules in force for this pathway find a missing requirement"
     requirements = {item.requirement for item in case.checklist.all()}
     for missing in assessment.missing_requirements:
         assert missing["requirement"] in requirements

@@ -74,7 +74,7 @@ def test_rows_override_fallback_and_respect_visibility_flags_and_gates(seeded, s
         label_fr="Flag",
         label_it="Flag",
         label_en="Flag",
-        url_name="legal:terms",
+        url_name="pages:contact",  # an open route: the terms (category D) 404 until published (M-2)
         requires_flag="virtual_forum",
     )
     MenuItem.objects.create(
@@ -102,7 +102,7 @@ def test_rows_override_fallback_and_respect_visibility_flags_and_gates(seeded, s
         label_fr="Externe",
         label_it="Esterno",
         label_en="External",
-        url="/fr/avvertenze/",
+        url="/fr/privacy-policy/",  # an open route (the C/D legal pages 404 until published: M-2)
         open_in_new_tab=True,
     )
 
@@ -111,7 +111,7 @@ def test_rows_override_fallback_and_respect_visibility_flags_and_gates(seeded, s
     assert _labels(items[0].children) == ["Privacy"]
     assert items[0].children[0].is_current is True
     assert items[0].is_current is True
-    assert items[1].new_tab is True and items[1].url == "/fr/avvertenze/"
+    assert items[1].new_tab is True and items[1].url == "/fr/privacy-policy/"
 
     set_flag("virtual_forum", True)
     items = cms_nav.build_menu(MenuLocation.MAIN, lang="fr")
@@ -225,7 +225,13 @@ def test_portico_gives_every_door_its_panel_from_live_content(seeded, legal_publ
             assert child.url_name != cms_nav._FOOT_ROUTE
             assert len(child.description) <= cms_nav._SECOND_LINE_MAX
     assert items["Personnes"].foot_url.endswith("/attention-aux-fraudes/")
-    assert [bool(c.description) for c in items["Personnes"].children] == [True, False, True, False, True, True]
+    # the door's own space's line is its legal notice, in the foot, not a second line (finishing round F1, M-2)
+    # its six entries are titles alone, all alike (V5.18, P-4: two of them have no short live sentence)
+    assert [bool(c.description) for c in items["Personnes"].children] == [False] * 6
+    assert items["Personnes"].notice and items["Personnes"].notice_lang == ""
+    # the needs form's line repeated the door's gloss, word for word (V5.18 §2, B3): the entry is its title alone
+    assert [bool(c.description) for c in items["Entreprises"].children] == [False, True]
+    assert items["Entreprises"].gloss.startswith("Signalez les besoins professionnels de votre entreprise")
     assert [c.url_name for c in items["Institutions"].children] == ["enquiries:institution_proposal", "forum:index"]
     assert [c.label for c in items["Universités & Formation"].children] == [
         "Proposer un partenariat",
@@ -235,10 +241,12 @@ def test_portico_gives_every_door_its_panel_from_live_content(seeded, legal_publ
     assert forum.after_doors is True and not forum.is_section and not forum.audience
     assert project.is_section and not project.photo and not project.audience
     assert project.gloss == "Le projet, son promoteur et son réseau." and project.gloss_lang == ""
-    assert [c.label for c in project.children] == ["Italy Legal Entry", "AGAMI", "Réseau", "Actualités", "Contact"]
-    # the pages' own standfirsts, where one is short enough (AGAMI's first sentence is longer than the limit)
-    assert [bool(c.description) for c in project.children] == [True, False, True, True, True]
-    assert project.children[4].description == "Une adresse unique pour toutes les demandes relatives au projet."
+    # V5.12 §8 (the hide gates, W1-C): «Actualités» leaves the panel while no article is live (core.gates.news_public)
+    assert [c.label for c in project.children] == ["Italy Legal Entry", "AGAMI", "Réseau", "Contact"]
+    # the pages' own standfirsts, where one is short enough; AGAMI: its page's first chapter head (finishing round F1)
+    assert [bool(c.description) for c in project.children] == [True, True, True, True]
+    assert project.children[1].description == "Le promoteur du projet"
+    assert project.children[3].description == "Une adresse unique pour toutes les demandes relatives au projet."
 
 
 def test_portico_glosses_and_second_lines_carry_their_language(seeded, legal_published, phase3_open):
@@ -281,3 +289,23 @@ def test_portico_glosses_and_second_lines_carry_their_language(seeded, legal_pub
     # the French back-office line never reaches the Arabic list; the destination's own live Arabic sentence does
     # (the contact page's lead, in _SECOND_LINES), as the plan's precedence says: description_<lang>, then the live line
     assert ar.children[0].description != "Écrire à l’équipe." and arabic.search(ar.children[0].description)
+
+
+def test_portico_notice_stands_in_every_language_and_one_item_is_current(seeded, legal_published, phase3_open):
+    """Finishing round F1 (v515-a, M-2 and a minor): the Personnes door's legal notice («… ne délivre pas de visas …»)
+    is the panel's foot on every page — in the locked French, said with lang="fr", until the prescribed text is in the
+    page's language — never only on the French page; the brand in a line is one isolated LTR run; on the Forum, the
+    Forum's own item is current and the Institutions door, whose panel lists it, is not."""
+    fr = {item.audience or item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr")}
+    for lang in ("it", "en", "ar"):
+        person = {item.audience: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang=lang)}["person"]
+        assert person.notice, lang
+        assert person.notice_lang in ("", "fr"), lang
+        assert person.notice_lang == "fr" or person.notice != fr["person"].notice, lang
+        assert not person.children[0].description, "the notice is never drawn twice"
+    line = str(cms_nav.brand_bdi("Les réponses sur Italy Legal Entry™ et <b>les parcours</b>"))
+    assert '<bdi dir="ltr">Italy Legal Entry™</bdi>' in line and "&lt;b&gt;" in line, line
+    items = {item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr", path="/fr/forum/")}
+    assert items["forum:index"].is_current
+    assert not items["ecosystem:institutions"].is_current
+    assert not any(child.is_current for child in items["ecosystem:institutions"].children)

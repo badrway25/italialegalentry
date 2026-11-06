@@ -664,10 +664,14 @@ def test_under_the_setting_every_state_is_a_still(browser, live_server, seeded):
 
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
-def test_on_the_sign_in_s_submit_the_stage_s_key_turns_once_and_holds(browser, live_server, seeded):
+def test_on_the_sign_in_s_submit_the_central_veil_takes_the_page_and_the_door_rests(browser, live_server, seeded):
+    """V5.18 §4 (P12): login → platform is drawn by the central veil, «centred and branded», like every page change —
+    the door's engage is handed to it: the veil goes at the press, the door's key does not turn a second time beside
+    it, the button says it waits; from the keyboard, the still after --motion-wait, never a door engaged either."""
+    veil = "() => ({go: document.documentElement.classList.contains('lume-go'), departing: document.documentElement.classList.contains('is-departing')})"
     context, page = _page(browser)
     try:
-        # the answer is given at the network, never by a view: 204, so the page stays and the hold can be read
+        # the answer is given at the network, never by a view: 204, so the page stays and its state can be read
         page.route("**/*", lambda route: route.fulfill(status=204, body="") if route.request.method == "POST" else route.continue_())
         page.goto(live_server.url + "/fr/compte/login/", wait_until="networkidle")
         _click(page, "#id_login")
@@ -675,22 +679,24 @@ def test_on_the_sign_in_s_submit_the_stage_s_key_turns_once_and_holds(browser, l
         _click(page, "#id_password")
         page.keyboard.type("not-a-password", delay=5)
         page.locator(".varco .form__actions .btn--primary").click()
-        assert _eventually(page, lambda: page.evaluate(STAGE)["engaged"]), "the form names the stage, the loader engages it"
-        turn = page.evaluate(
-            """() => { const t = document.querySelector('#varco-door .sig__turn'); const a = t.getAnimations()[0];
-                 return {name: a && a.animationName, iterations: getComputedStyle(t).animationIterationCount,
-                         duration: getComputedStyle(t).animationDuration, busy: document.querySelector('.varco .form__actions .btn').getAttribute('aria-busy')}; }"""
-        )
-        assert turn == {"name": "sig-turn", "iterations": "1", "duration": "0.48s", "busy": "true"}, turn
-        page.wait_for_timeout(900)
-        held = page.evaluate(
-            """() => { const t = document.querySelector('#varco-door .sig__turn'); const a = t.getAnimations()[0];
-                 return {state: a && a.playState, matrix: getComputedStyle(t).transform, classes: [...document.querySelector('[data-varco-stage]').classList].filter((c) => c.startsWith('is-')).sort()}; }"""
-        )
-        assert held["state"] == "finished", "one turn, then the hold"
-        values = [float(n) for n in re.findall(r"-?[\d.]+(?:e-?\d+)?", held["matrix"].split("(", 1)[1])]
-        assert values[0] == pytest.approx(1, abs=1e-6), f"the key holds on the verbatim key, never mirrored: {held['matrix']}"
-        assert held["classes"] == ["is-frame", "is-held", "is-ways"], "the lights stay as the form left them"
+        assert _eventually(page, lambda: page.evaluate(veil)["go"]), "a pointer's sign-in draws the central veil at once"
+        page.wait_for_timeout(700)
+        state = page.evaluate(STAGE)
+        assert not state["engaged"], "the door's engage is handed to the veil: its key does not turn beside it"
+        assert page.evaluate("document.querySelector('.varco .form__actions .btn').getAttribute('aria-busy')") == "true"
+        assert state["classes"] == ["is-frame", "is-held", "is-ways"], "the lights stay as the form left them"
+
+        # from the keyboard: no veil at the press, the still once the wait passes --motion-wait — and no door engaged
+        page.goto(live_server.url + "/fr/compte/login/", wait_until="networkidle")
+        page.focus("#id_login")
+        page.keyboard.type("prenom.nom@example.com", delay=5)
+        page.focus("#id_password")
+        page.keyboard.type("not-a-password", delay=5)
+        page.keyboard.press("Enter")
+        page.wait_for_timeout(100)
+        assert page.evaluate(veil) == {"go": False, "departing": False}, "the keyboard's page change shows nothing at once"
+        assert _eventually(page, lambda: page.evaluate(veil)["departing"]), "…and the still once the wait is long"
+        assert not page.evaluate(STAGE)["engaged"]
 
         # another entrance form engages nothing
         page.goto(live_server.url + "/fr/compte/password/reset/", wait_until="networkidle")

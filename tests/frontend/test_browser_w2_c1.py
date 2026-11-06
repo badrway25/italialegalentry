@@ -267,7 +267,8 @@ def test_the_letterhead_holds_its_column_at_every_desktop_width(
                 assert fit["scrollWidth"] == fit["clientWidth"] and fit["outOfViewport"] == 0, (where, fit)
                 assert fit["seat"] is signed_in, (where, fit)
                 shown = fit["nameShown"] if signed_in else fit["label"]
-                assert shown is (width >= 1600), f"the label / the name is shown exactly from 100rem ({where}: {fit})"
+                # V5.15 (DL54-170): no institutional bar, one row — the plate says its word from 90rem (1440 px)
+                assert shown is (width >= 1440), f"the label / the name is shown exactly from 90rem ({where}: {fit})"
         finally:
             context.close()
 
@@ -294,8 +295,11 @@ def test_the_bar_wraps_under_text_spacing_and_never_clips(browser, live_server, 
 
 
 def test_the_photographs_follow_the_loading_policy(browser, live_server, seeded, four_doors):
-    """Nothing before `load`; the four at idle after it, from 80rem only; never on a phone (plan §1.12 item 4)."""
-    for width, height, expected_after_idle in ((1440, 900, 4), (1024, 768, 0), (390, 844, 0)):
+    """Nothing before `load`; never on a phone (plan §1.12 item 4). V5.15 §2 (DL54-170, round 1): the four portico
+    frames repeat the home's door tiles, so the panel draws no photograph until lane C gives the menu frames of its own
+    (`menu_only`) — none is fetched at any width; the policy (the four at idle from 80rem, at 640 px) returns with
+    them: restore (1440, 900, 4) then."""
+    for width, height, expected_after_idle in ((1440, 900, 0), (1024, 768, 0), (390, 844, 0)):
         context, page = _open(browser, width, height)
         try:
             requests: list[str] = []

@@ -55,9 +55,22 @@ def test_manual_override_switches_immediately(client, permanent_event):
     html = _page(client)
     assert PERMANENT_TITLE in html
     assert "PARTICIPEZ AU FORUM" not in html
-    # the presentation sections and the programme stay (no structural rewrite)
-    for key in ("who.title", "why.title", "what.title", "objectives.title", "audience.title", "programme.title"):
+    # the presentation sections stay (no structural rewrite)
+    for key in ("who.title", "why.title", "what.title", "objectives.title", "audience.title"):
         assert locked_content.text(f"p2.forum.{key}", "fr") in html
+    # V5.12 §8 / C9: the pre-event blocks are hidden, never reworded — the programme, its «being defined» note, the
+    # speakers and their «names published with the final programme»; and the page's index no longer points at them
+    for key in ("programme.note", "speakers.title", "speakers.body"):
+        assert locked_content.text(f"p2.forum.{key}", "fr") not in html, key
+    assert 'id="forum-programme"' not in html and 'href="#forum-programme"' not in html
+    assert 'id="forum-speakers"' not in html
+    assert "en cours de définition" not in html and "seront publiés" not in html
+
+
+def test_event_mode_keeps_the_programme_and_the_speakers(client, event):
+    html = _page(client)
+    assert 'id="forum-programme"' in html and 'href="#forum-programme"' in html
+    assert 'id="forum-speakers"' in html
 
 
 def test_registration_closed_in_permanent_mode(client, permanent_event, forms_open):

@@ -11,6 +11,8 @@ from django.utils.translation import gettext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
+from core.links import without_database
+
 
 @require_GET
 @never_cache
@@ -93,7 +95,8 @@ def _self_sufficient(request, status: int) -> HttpResponse:
         "request_id": getattr(request, "request_id", ""),
     }
     try:
-        body = loader.render_to_string(f"errors/{status}.html", context)
+        with without_database():  # a gated link (the Forum's live edition) is left out rather than read
+            body = loader.render_to_string(f"errors/{status}.html", context)
     except Exception:  # the page itself must never be the second failure
         body = _bare(status)
     return HttpResponse(body, status=status)

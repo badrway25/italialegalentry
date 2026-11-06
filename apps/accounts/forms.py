@@ -8,7 +8,8 @@ from django.utils.translation import gettext_lazy as _
 
 from accounts import roles
 from accounts.models import AccountType
-from core.forms import ConsentBooleanField, HoneypotFormMixin
+from core import icons
+from core.forms import AcknowledgementBooleanField, HoneypotFormMixin
 
 PUBLIC_ACCOUNT_TYPES = [
     (AccountType.PERSON, AccountType.PERSON.label),
@@ -17,6 +18,15 @@ PUBLIC_ACCOUNT_TYPES = [
     (AccountType.UNIVERSITY, AccountType.UNIVERSITY.label),
     (AccountType.PROFESSIONAL, AccountType.PROFESSIONAL.label),
 ]
+
+#: The glyph of each account type on the sign-up's cards: the registry's audiences, and the professional as an actor.
+_ACCOUNT_TYPE_GLYPHS = {
+    str(AccountType.PERSON): icons.AUDIENCE["person"],
+    str(AccountType.COMPANY): icons.AUDIENCE["company"],
+    str(AccountType.INSTITUTION): icons.AUDIENCE["institution"],
+    str(AccountType.UNIVERSITY): icons.AUDIENCE["university"],
+    str(AccountType.PROFESSIONAL): icons.ACTOR["professional"],
+}
 
 ROLE_BY_ACCOUNT_TYPE = {
     AccountType.PERSON: roles.PERSON,
@@ -154,14 +164,31 @@ class AuthenticateForm(AllauthAuthenticateForm):
 
 class SignupForm(HoneypotFormMixin, AllauthSignupForm):
     full_name = forms.CharField(label=_("Nome e cognome"), max_length=160)
-    account_type = forms.ChoiceField(label=_("Vi registrate come"), choices=PUBLIC_ACCOUNT_TYPES)
+    # V5.12 W2 (DECISIONS §5.6): the account type is chosen on the audiences' cards (components/choice_cards.html),
+    # each with its registry glyph — Persona ≠ Impresa ≠ Istituzione ≠ Università, the professional's case
+    account_type = forms.ChoiceField(
+        label=_("Vi registrate come"), choices=PUBLIC_ACCOUNT_TYPES, widget=forms.RadioSelect
+    )
     # CONTENT_PENDING_LEGAL_REVIEW: label wording (the document prescribes acceptance of the
     # Conditions d’utilisation and the Privacy Policy for reserved-area access, §3.8.7 / §3.10).
-    accept_terms = ConsentBooleanField(
+    # V5.16 §3 (category A, required): the team's wording acknowledges the notice («J’ai lu») and accepts the terms;
+    # it asks for no consent, and its error does not say «consent» (AcknowledgementBooleanField).
+    accept_terms = AcknowledgementBooleanField(
         label=_("J’ai lu la Privacy Policy et j’accepte les Conditions d’utilisation."),
     )
 
-    field_order = ["full_name", "email", "account_type", "password1", "password2", "accept_terms"]
+    field_order = ["account_type", "full_name", "email", "password1", "password2", "accept_terms"]
+    #: Two steps (V5.15 W3, lane B; DECISIONS §5.12): who the person is, on the audiences' cards, then the identity
+    #: and the password (static/js/src/steps.js; without script, the two in sequence — the same form).
+    steps = (
+        ("profil", _("Qui êtes-vous ?"), "circle-user-round", ("account_type",)),
+        (
+            "identite",
+            _("Identité et mot de passe"),
+            "ile-key",
+            ("full_name", "email", "password1", "password2", "accept_terms"),
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -172,6 +199,7 @@ class SignupForm(HoneypotFormMixin, AllauthSignupForm):
         # the name's input purpose (WCAG 2.2 AA, 1.3.5 — W2-B, review M3): a browser fills it, assistive technology
         # can say what it is for; the address says «email» and both passwords «new-password» (allauth's)
         self.fields["full_name"].widget.attrs["autocomplete"] = "name"
+        self.fields["account_type"].choice_glyphs = _ACCOUNT_TYPE_GLYPHS
 
     def clean(self):
         cleaned = super().clean()

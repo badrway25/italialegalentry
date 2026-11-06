@@ -11,6 +11,7 @@ from cms import locked_content
 from cms.forbidden import scan
 from cms.models import MediaAsset
 from forum.models import PartnerKind
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = pytest.mark.django_db
 
@@ -66,8 +67,18 @@ def test_sections_present_in_prescribed_order(client, event):
 
 
 def test_who_why_objectives_audience_bodies(client, event):
+    """V5.22 (SECTION_SYSTEM_V2 §3.16 FO1, FO2a, FO2b; strict rule V5.20): the four bodies are re-composed at render —
+    the opening clause and the last sentence set in place, the objectives cut on their own « ; » into stations, the
+    audience's actors set on a ring — each stays ONE element carrying its key, its text the registry's, whole, once."""
+    from bs4 import BeautifulSoup
+
     html = _page(client)
-    for key in ("who.body", "why.body", "objectives.body", "audience.body", "programme.note", "speakers.body"):
+    soup = BeautifulSoup(html, "html.parser")
+    for key in ("who.body", "why.body", "objectives.body", "audience.body"):
+        found = [el.get_text() for el in soup.select(f'[data-locked="p2.forum.{key}"]')]
+        assert found == [locked_content.text(f"p2.forum.{key}", "fr")], key
+    assert len(soup.select('[data-locked="p2.forum.objectives.body"] > li')) == 8  # the eight clauses, in order
+    for key in ("programme.note", "speakers.body"):
         assert _text(f"p2.forum.{key}") in html, key
 
 
@@ -223,9 +234,11 @@ def test_sitemap_lists_forum_page(client, event):
 
 
 def test_forum_routes_registered_as_public(event):
-    from core.public_routes import ungated_paths
+    from core.public_routes import all_routes, ungated_paths
 
-    assert {"forum/", "forum/inscription/", "forum/inscription/confirmation/"} <= set(ungated_paths())
+    assert {"forum/inscription/", "forum/inscription/confirmation/"} <= set(ungated_paths())
+    # V5.12 §8: the page itself is public behind its gate (a live edition), so no link outlives the edition
+    assert any(r.path == "forum/" and r.requires_gate == "forum_public" for r in all_routes())
 
 
 def test_no_forbidden_strings_or_external_resources(client, event):
@@ -233,16 +246,38 @@ def test_no_forbidden_strings_or_external_resources(client, event):
         html = _page(client, lang)
         assert not scan(html), lang
         assert "Italy Legal Entry™" in html
-        externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', html) if "testserver" not in s]
+        checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+        externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', checked) if "testserver" not in s]
         assert not externals, externals
 
 
-def test_page_without_event_renders_empty_state(client, db):
+def test_page_without_event_answers_404(client, db):
+    """V5.12 §8: no «page in preparation» — without a live edition there is no Forum page."""
     response = client.get("/fr/forum/")
-    assert response.status_code == 200
-    html = response.content.decode()
-    assert _text("p2.forum.header.title") in html
-    assert 'class="empty-state"' in html
+    assert response.status_code == 404
+    assert "en cours de préparation" not in response.content.decode()
+
+
+def test_without_event_no_link_leads_to_the_forum(client, db):
+    """The route carries its gate (core.gates.forum_public): the menu, the footer, the institutional pages and the
+    registration page's way back leave /forum/ out while it answers 404 — and bring it back with a live edition."""
+    from core import gates
+    from core.public_routes import gated_routes
+
+    assert ("forum", "forum/", "forum_public") in {(r.app, r.path, r.requires_gate) for r in gated_routes()}
+    assert gates.forum_public() is False
+    for lang in ("fr", "it", "en", "ar"):
+        for path in ("", "le-projet/", "reseau/", "agami/", "forum/inscription/"):
+            html = client.get(f"/{lang}/{path}").content.decode()
+            assert f'href="/{lang}/forum/"' not in html, (lang, path)
+
+
+def test_with_event_the_forum_link_comes_back(client, event):
+    from core import gates
+
+    assert gates.forum_public() is True
+    assert 'href="/fr/forum/"' in client.get("/fr/").content.decode()
+    assert client.get("/fr/forum/").status_code == 200
 
 
 def test_accessibility_landmarks(client, event):

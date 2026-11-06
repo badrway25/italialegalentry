@@ -1,4 +1,4 @@
-{% extends "companies/base_companies.html" %}{% load i18n %}
+{% extends "companies/base_companies.html" %}{% load i18n static %}
 {% comment %}
 THE COMPANY DASHBOARD — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 4, §1.15, §3.1 item 7; W3-B step 2),
 on the console's page frame (W3-A) and in the person's dashboard grammar: the same NowPanel, the same «registro», the
@@ -10,7 +10,8 @@ search over persons, no count of matching persons — and there is no route from
 exists in this application. No marketplace aesthetics.
 
 In this order — the DOM's too (h1 → NowPanel):
-  the page header      «Entreprise», the legal name as the h1 (an isolate in the page's own h1: the name keeps its order,
+  the page header      the atrium (V5.18 M-2: the space's seal, the space's name as its eyebrow, as on every page of
+                       the space and on the account's dashboard), the legal name as the h1 (an isolate in the page's own h1: the name keeps its order,
                        and its lines, wrapped or not, stand on the page's reading edge — W4-A), the verification as a
                        WORD with its register (a fact the project checked about the legal entity, never an approval of
                        anyone), sector, place. No action here: the primary is the NowPanel's
@@ -36,12 +37,14 @@ company in this application. Every word is the catalogue's: nothing on this page
 {% block meta_description %}{% translate "Vos besoins en compétences, l’identité de votre entreprise et vos communications." %}{% endblock %}
 
 {% block next_action_block %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
 {% if company %}
-<header class="ctx db-head">
+<header class="ctx db-head" data-atrium="company">
+  {% include "portal/partials/atrium_art.html" with figure="seal" %}
   <div class="ctx__words">
-    <p class="ctx__eyebrow">{% translate "Entreprise" %}</p>
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ctx__title"><span dir="auto">{{ company.legal_name }}</span></h1>
     <p class="ctx__meta">
       {% chip company.verification_status "accounts.VerificationStatus" %}{{ company.verification_label }}{% endchip %}
@@ -51,8 +54,10 @@ company in this application. Every word is the catalogue's: nothing on this page
   </div>
 </header>
 {% else %}
-<header class="ws-head db-head">
+<header class="ws-head db-head" data-atrium="company">
+  {% include "portal/partials/atrium_art.html" with figure="seal" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Espace entreprise" %}</h1>
     <p class="ws-head__lead">{% translate "Déclarez votre entreprise, puis exprimez vos besoins en compétences. Le projet recueille des besoins : il ne présente aucune personne et ne promet aucun résultat." %}</p>
   </div>

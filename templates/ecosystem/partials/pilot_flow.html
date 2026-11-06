@@ -1,17 +1,24 @@
-{% load i18n %}
-{% comment %}
-Projet Pilote — the prescribed sequence (p3.pilot.sequence) as the page's figure.
-Contract: `flow` = ecosystem.services.PilotFlow (steps with .label; the eight prescribed labels always come from the
-locked registry, in the prescribed order; optional editorial additions follow them).
-Design V5.4 (W3-F1): drawn on «la linea» (pages/partials/_linea.html → components/stepper.html, the site's one
-passage drawing: static/css/v5/_journey-passage.css, W3-D) — a semantic
-<ol>, numerals 01–08 over open stations on one level line: down the reading edge on a phone, four a row from 48rem,
-eight in a row from 90rem across the whole column (below it the seventh station's word broke in its middle, W3-F1's
-review M5); mirrored with the page in Arabic (the labels carry no punctuation); nothing moves, nothing is hidden without
-JavaScript. The V4 diagram's boxes and its illustration (img/illustrations/pilot-flow.svg) are retired
-(CREATIVE_DIRECTION_V5 §19).
-{% endcomment %}
-<div class="pilot-diagram__figure" data-diagram="pilot-sequence" data-steps="{{ flow.steps|length }}">
-  {% translate "Séquence proposée du projet pilote, étape par étape" as flow_label %}
-  {% include "pages/partials/_linea.html" with steps=flow.steps lang=flow.lang_attr label=flow_label across=True cols="8" %}
+{% load i18n %}{% comment %}
+Projet Pilote — PP-1 «il tracciato pilota», the page's moment (design V5.22, SECTION_SYSTEM_V2 §3.3; lane P1): the
+prescribed sequence (p3.pilot.sequence) on «la linea V2» (components/stepper.html size="large", lane S). The pilot's T1
+seal (`ile-pilota`, the body seat) stands beside the section's title, its sill on the title's line; the eight stations
+each draw their ILE Mono numeral, their concept tile (icons.PILOT_STATION — the register all or none, §4.10; station 6,
+`ile-arch`, the page's one gold arrival) and their locked capitals: from 80 rem one gently stepped row — the odd
+stations' words above the route, the even ones' below it, so two neighbours never share a line —, rows of four joined
+by a carriage return from 48 rem, down the reading edge below. The mandatory notice is the route's terminal status
+plate, directly under it — the route runs on past the last station and turns down into it —, in the «attesa» register
+(dashed edge), whole, never collapsible. The route is its own trigger (`data-sec`): a desktop's first screen holds the
+section's top, so the line still draws, station after station, when the route itself comes into view (S's runtime).
+Contract: `flow` (ecosystem.services.PilotFlow), `stations` (services.pilot_stations), `site`.
+{% endcomment %}{% translate "La séquence du projet pilote" as sequence_title %}{% translate "Séquence proposée du projet pilote, étape par étape" as flow_label %}
+<div class="pilota-rotta__capo">
+  {% include "components/sezioni/sigillo.html" with mark="ile-pilota" size="body" css_class="pilota-rotta__sigillo" only %}
+  {% include "components/sezioni/_testa.html" with role="process" title_id="sequence-header" title=sequence_title only %}
+</div>
+<div class="pilota-rotta__percorso" data-sec="linea" data-diagram="pilot-sequence" data-steps="{{ flow.steps|length }}">
+  {% include "components/stepper.html" with size="large" steps=stations across=True label=flow_label lang=flow.lang_attr site=site only %}
+  {% comment %}CONTENT_PENDING_LEGAL_REVIEW — mandatory notice (Implementation §3.6, note): the project is a proposal under construction; factual wording, no statute quoted, to be confirmed by the legal reviewer. The route's terminal plate: right after the stations, always visible.{% endcomment %}
+  <div class="pilota-rotta__stato" data-notice="pilot-not-authorised">
+    {% include "components/notice.html" with kind="warning" title=_("Un projet en cours de construction") text=_("Le projet pilote Vénétie–Maroc est présenté ici comme une proposition en cours de construction avec les interlocuteurs concernés. Cette présentation ne signifie pas qu’un canal d’entrée soit déjà autorisé ou opérationnel.") %}
+  </div>
 </div>

@@ -63,7 +63,8 @@ def test_the_register_shows_the_piece_its_state_and_who_is_answerable(client, ow
     assert r.status_code == 200
     assert requirement.title in body
     assert "Manquant" in body, "the word, not a colour"
-    assert str(ResponsibleActor.PERSON.label) in body
+    # who is answerable, as the file's own person reads it: «Vous» (V5.12 §11), never «La personne»
+    assert '<span class="doc-row__actor">Vous' in body
     # design V5 (W3-C): the register is a collection of rows in three groups, not a table — the row is the link
     assert 'class="doc-collection"' in body and 'class="doc-row"' in body and 'class="doc-row__link"' in body
 

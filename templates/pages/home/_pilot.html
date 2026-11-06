@@ -1,26 +1,45 @@
-{% load i18n pages_typo %}{% comment %}
+{% load i18n pages_typo pages_imagery locked_split %}{% comment %}
 7. PILOT / COOPERATION — Phase 3 only (pages.services.build_pilot returns nothing while G3 is
 closed). The title is prescribed (p3.pilot.title) and rendered verbatim; the full page belongs to the
 ecosystem app. The pilot is never presented as an already authorised entry channel — that is what the
 section note says when an editor writes one, and it stays.
 
-Design V5.4 (W2-D step 3): THE MOROCCO → ITALY MODEL IS SAID ONCE, IN THE HERO. The hero's path carries
-the stations of the pilot sequence from the origin's shore to the door, so this chapter no longer draws a
-second route between two shores under it (design V2's «voyage»: the same labels a second time, eight
-stations on a line that the reader had just followed). It is a statement on the night ground — the
-prescribed title, the section's sentence, one link — and the whole prescribed sequence stands where it
-belongs, on the pilot's own page (templates/ecosystem/partials/pilot_flow.html).
+THE MOROCCO → ITALY MODEL IS SAID ONCE, IN THE HERO: its path carries the stations of the pilot sequence, and the whole
+prescribed sequence stands on the pilot's own page (templates/ecosystem/partials/pilot_flow.html). This band draws no
+route.
+
+V5.22 (SECTION_SYSTEM_V2 §3.1 S4 «il panorama, lo stesso gesto», §2 D, develop variant; lane H): the page's MOMENT — a
+full-bleed night panel, about 82 vh from 64 rem. The diptych «le même geste» (V5.12, DECISIONS §6: a hand guiding a
+chisel through cedar, a hand guiding a chisel on marble — one gesture, two materials, nobody identifiable, no place
+named) becomes the band's two shores: the cedar's full-height panel at the reading edge, the marble's at the far edge
+(lane M's 2:3 re-crops, variant «pannello»; 3:2 bands below 64 rem). In the seam between them, the prescribed title at
+the display size, the team's lead — it says what the panel shows — and the one link; a gold thread (the en dash made
+visible, the hero's light continued: the gold budget's third use) runs the seam from top to bottom, behind and around
+the statement. The cedar develops first and the marble after it (v5/_reveal.css: «develop», the second frame's later
+range), the thread draws, the frames are revealed by no mask. Under a fine pointer a half lifts its veil. Credits
+visible, in their corners. Still: colour, the thread drawn. Phones: the two halves stacked with a level seam, the
+statement under them. The section's motion is the panel's own; it never moves a word.
+Round 1 (QA_ROUND1 m5): the two shores' names stay together — «VÉNÉTIE–MAROC» never breaks after its dash (a span set
+at render by cms.locked_split.emphasize, white-space: nowrap in pages.css; the title's text is the locked text itself).
 {% endcomment %}
-<section class="chapter chapter--dark home-pilot" id="{{ s.anchor }}" aria-labelledby="home-pilot-title" data-section="pilot">
-  <div class="container chapter__inner">
-    <div class="section__header chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
-      <h2 class="section__title" id="home-pilot-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
-    </div>
-    <div class="chapter__body">
-      {% if s.intro %}<p class="section__lead"{% if s.intro.lang %} lang="{{ s.intro.lang }}"{% endif %}>{{ s.intro|typo }}</p>{% endif %}
-      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-      {% if d.url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.url }}">{% translate "Découvrir le projet pilote" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+{% translate "Le même geste" as diptych_label %}
+<section class="sez sez--panorama home-pilot on-inverse" id="{{ s.anchor }}" aria-labelledby="home-pilot-title" data-section="pilot" data-sec="panorama" data-ground="night" data-rhythm="moment">
+  <div class="panorama panorama--coppia pilota">
+    <header class="pilota__testo">
+      <span class="pilota__filo" data-verb="draw-y" aria-hidden="true"></span>
+      <div class="pilota__corpo">
+        <h2 class="pilota__titolo" id="home-pilot-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title|emphasize:"VÉNÉTIE–MAROC" }}</h2>
+        {% if s.intro %}<p class="pilota__lead"{% if s.intro.lang %} lang="{{ s.intro.lang }}"{% endif %}>{{ s.intro|typo }}</p>{% endif %}
+        {% if s.note %}<p class="pilota__nota"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+        {% if d.url %}<p class="pilota__azione"><a class="link-arrow" href="{{ d.url }}">{% translate "Découvrir le projet pilote" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      </div>
+      <span class="pilota__filo pilota__filo--giu" data-verb="draw-y" aria-hidden="true"></span>
+    </header>
+    <div class="pilota__dittico" role="group" aria-label="{{ diptych_label }}">
+      <div class="panorama__quadro pilota__quadro">{% photo "home.pilot.cedar" "pilota__foto" variant="pannello" sizes="(min-width: 64rem) max(30vw, clamp(34rem, 82vh, 56rem) * 2 / 3), (min-width: 48rem) 50vw, 100vw" %}</div>
+      <span class="panorama__cucitura pilota__cucitura" data-verb="draw-y" aria-hidden="true"></span>
+      <span class="pilota__cucitura-piana" data-verb="draw" aria-hidden="true"></span>
+      <div class="panorama__quadro pilota__quadro">{% photo "home.pilot.marble" "pilota__foto pilota__foto--marmo" variant="pannello" sizes="(min-width: 64rem) max(30vw, clamp(34rem, 82vh, 56rem) * 2 / 3), (min-width: 48rem) 50vw, 100vw" %}</div>
     </div>
   </div>
 </section>

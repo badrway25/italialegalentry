@@ -8,7 +8,8 @@ kits ends a step with one. The gate-0 lint caught 8 of 11 planted HTML cases, 4 
 research's decision log, A5). This one catches every planted case, and is run on the product:
 
 * HTML — every product template, read as a tree: inside a STATUS CONTEXT (a `{% chip %}`, any element that carries
-  `data-register`, a badge, a filter's entry, the health strip, a journey or timeline node, a stepper, a rail, the
+  `data-register` — or `data-registro`, the section library's register of named entities (V5.22) —, a badge, a
+  filter's entry, the health strip, a journey or timeline node, a stepper, a rail, the
   ledger, an actor's disc) no check-bearing symbol of the sprite is drawn, at any depth, and no check character is
   written. A symbol named by a variable must come from a registry map, and the maps are held below.
 * CSS — every sheet people write and every bundle that ships: no check character in a `content`, anywhere; and a
@@ -114,8 +115,11 @@ class _Scan(HTMLParser):
         a = {key: value or "" for key, value in attrs}
         classes = a.get("class", "").split()
         own = None
-        if "data-register" in a:
-            own = f"{tag}[data-register]"
+        # the chip's register, and the library's own marker of a register of named entities (v522-s2: `data-registro`,
+        # never the chip's attribute — DL54-182 item 10 c): both are status contexts, as the chip's alone was
+        marker = next((name for name in ("data-register", "data-registro") if name in a), None)
+        if marker:
+            own = f"{tag}[{marker}]"
         else:
             hit = next((c for c in classes if STATUS_CLASS.match(c)), None)
             own = f"{tag}.{hit}" if hit else None
@@ -176,7 +180,7 @@ def html_findings(source: str) -> list[str]:
 SETTLED = re.compile(
     r"conforme|--(?:done|valid|success|completed?|approved|verified)(?![\w-])|\.is-(?:done|valid|complete|approved)(?![\w-])"
     r"|\[aria-checked|\.(?:chip|badge|state|seg|health|journey|tl|timeline|stepper|wstep|rail|ledger|meter|glyph)(?:__|--|[^\w-]|$)"
-    r"|\[data-register"
+    r"|\[data-regist(?:er|ro)"  # the chip's register, and the library's register of named entities (v522-s2)
 )
 #: The person's own act, drawn by the form sheet: a native control's tick is not a state.
 OWN_ACT = re.compile(r"input\[type=|:checked|\.opt(?:__|\b)|\.form-field|\.wizard__")
@@ -263,6 +267,10 @@ PLANTED_HTML = {
     "an image of a tick in a chip": '<span class="chip" data-register="conforme"><img src="/static/img/tick.png" alt="">Valide</span>',
     "a symbol chosen by a free variable in a chip": '{% chip register="conforme" %}{% svg_icon row.icon "icon" %}Valide{% endchip %}',
     "circle-check in a seal": '<span class="chip" data-register="conforme"><span class="seal"><use href="#icon-circle-check"></use></span>Acte</span>',
+    # v522-s2 (DL54-182 item 10 c): the library's register of named entities carries its own marker — still a status
+    # context, at any depth, its symbols registry-fed
+    "a check on a library register's station": '<ol class="linea linea--large" data-registro><li class="linea__step"><span class="sez-tile">{% svg_icon "list-checks" "icon" %}</span></li></ol>',
+    "a free variable on a library register": '<ul class="mosaico" role="list" data-registro><li><span class="sez-tile">{% svg_icon tile.icon "icon" %}</span></li></ul>',
 }
 CLEAN_HTML = {
     "a chosen option card": '<label class="opt" for="a"><input type="radio" id="a"><span class="opt__mark" aria-hidden="true">{% svg_icon "check" "icon" %}</span><span class="opt__title">Travail</span></label>',
@@ -279,6 +287,7 @@ PLANTED_CSS = {
     "an escaped check on a done step": '.stepper__item--done .stepper__marker::before { content: "\\2713"; }',
     "a heavy check, escaped and padded": '.list li::marker { content: "\\002714 "; }',
     "an image of a check on a register": '[data-register="conforme"]::before { background: url("../img/check.svg") no-repeat; }',
+    "an image of a check on a library register": '[data-registro] > li::before { background: url("../img/check.svg") no-repeat; }',
     "a data URI that draws the stroke": '.chip--valid::after { mask-image: url("data:image/svg+xml,%3Csvg%3E%3Cpath d=\'M20 6 9 17l-5-5\'/%3E%3C/svg%3E"); }',
     "a clipped tick on a valid state": '.state--valid::before { clip-path: polygon(11% 53%, 42% 83%, 91% 26%, 82% 19%, 42% 67%, 19% 45%); background: currentColor; }',
     "the two-edge tick": '.journey__step--done .journey__node::after { content: ""; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg); }',
@@ -362,7 +371,23 @@ def test_the_one_check_of_the_templates_is_the_persons_own_choice():
     for path in _templates():
         for name in literal.findall(path.read_text(encoding="utf-8")):
             drawn.setdefault(path.relative_to(ROOT).as_posix(), set()).add(name)
-    assert drawn == {"templates/components/option_cards.html": {"check"}}, drawn
+    # V5.12 W2 (DECISIONS §5.6): the chosen option card is the form system's choice card (option_cards.html is its
+    # alias) and the questionnaire's answers are the same cards; DECISIONS §4: the security overview's
+    # `shield-check` says a protection the person turned on (icons.CHECK_BEARING names that seat)
+    assert drawn == {
+        "templates/components/choice_cards.html": {"check"},
+        "templates/orientation/_step.html": {"check"},
+        "templates/accounts/profile.html": {"shield-check"},
+        # V5.18 P-2: the second factor's own page says the same protection, turned on, in its glyph tile
+        "templates/mfa/index.html": {"shield-check"},
+        # the Director's ruling, V5.18 green suite (v518g-n; DECISIONS §15 lane A, the letterhead's language popover,
+        # v515-a W3 cb252091): the tick beside the active language is the person's own choice in a menu
+        # (aria-current="true"), the option card's sense, never a state — seated here, and only on the active item
+        "templates/partials/header.html": {"check"},
+    }, drawn
+    header = (ROOT / "templates" / "partials" / "header.html").read_text(encoding="utf-8")
+    assert header.count('svg_icon "check"') == 1
+    assert '{% if l.active %}{% svg_icon "check" "icon lang-menu__check" %}{% endif %}' in header, "the chosen one only"
 
 
 def _sheets(*, bundles: bool) -> list[Path]:

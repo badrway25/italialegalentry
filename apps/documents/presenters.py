@@ -23,6 +23,8 @@ from django.utils.translation import gettext_lazy as _
 
 from accounts.permissions import can
 from cases.models import ChecklistStatus, ResponsibleActor
+from cases.presenters import responsible_label
+from core import special_category
 from documents import services
 from documents.models import OPEN_STATES, DocumentRequirement, RequirementState
 from documents.requirements import (
@@ -128,6 +130,8 @@ def present_requirement(requirement, *, user, with_versions: bool = False) -> di
     # One object-level answer per row, read three times below (``can`` costs queries on every call).
     may_file_here = can(user, "file", requirement)
     may_upload = services.user_may_upload(user)
+    # R-SC-1 (V5.17 §4): a special-category piece is not offered for filing while the switch is off (production)
+    special_category_closed = special_category.piece_closed(requirement)
     row = {
         "requirement": requirement,
         "id": str(requirement.pk),
@@ -143,7 +147,13 @@ def present_requirement(requirement, *, user, with_versions: bool = False) -> di
         "state_css": state_css(state),
         "state_rule": state_rule(state),
         "state_reason": state_reason(requirement, version, state),
-        "responsible": requirement.get_responsible_actor_display(),
+        # «Vous» to the file's person, «La personne concernée» to anybody else — never «La personne» (V5.12 §11);
+        # every caller reads the requirement with its case (``select_related("case")``): no query here
+        "responsible": responsible_label(
+            requirement.responsible_actor,
+            requirement.get_responsible_actor_display(),
+            own=requirement.case.person_id == getattr(user, "pk", None),
+        ),
         "responsible_actor": requirement.responsible_actor,
         "responsible_note": requirement.responsible_note,
         "responsible_glyph": ACTOR_GLYPHS.get(requirement.responsible_actor, ""),
@@ -163,7 +173,8 @@ def present_requirement(requirement, *, user, with_versions: bool = False) -> di
         # Authorised AND actually able: the Conditions gate is said ON THE ROW it blocks («Bloqué», art direction A
         # §13.3) and in the register's strip, never as a banner above an empty box (design V5, W3-C: no button that
         # promises an acceptance its target cannot make yet — the acceptance flow waits on the legal texts, G1).
-        "may_file": may_file_here and may_upload,
+        "may_file": may_file_here and may_upload and not special_category_closed,
+        "special_category_closed": special_category_closed,
         "consent_required": may_file_here and not may_upload,
         "may_review": can(user, "review", requirement) and version is not None,
         # BLOQUÉ belongs where something is actually blocked. A piece that is VALIDE needs nothing

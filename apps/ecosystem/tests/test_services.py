@@ -227,8 +227,19 @@ def test_related_links_after_phase3(seeded, phase3_open):
     assert links["pilot"] == "/fr/projet-pilote/"
     assert links["training"] == "/fr/formation/"
     assert links["pathways"] == "/fr/parcours/"
-    assert links["partners"] == "/fr/partenaires/"
+    assert links["partners"] == "", "V5.12 §8: the partners' page exists once a partner is authorised"
     assert links["faq"] == "/fr/faq/"
+    from cms.models import PublicationStatus
+    from partners.models import Partner, PartnerKind
+
+    Partner.objects.create(
+        name="Partenaire autorisé",
+        kind=PartnerKind.COMPANY,
+        authorized=True,
+        authorization_reference="e-mail",
+        status=PublicationStatus.PUBLISHED,
+    )
+    assert services.related_links()["partners"] == "/fr/partenaires/"
 
 
 def test_safe_reverse_returns_empty_string_for_missing_routes():

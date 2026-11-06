@@ -1,7 +1,11 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends request|account_frame %}
 {% comment %}
 allauth's management layout (the e-mail addresses, the password, the second factor, the sign-out's confirmation) and
-the product's account pages: the frame of allauth/layouts/base.html with the account's sections at its reading edge.
+the product's account pages (the profile and its security overview, the deletion request).
+V5.12 W2 (lane B): for a signed-in account whose reserved area is open the frame is the CONSOLE
+(allauth/layouts/_console.html: the space's rail, the context bar, the console foot); otherwise the public frame of
+allauth/layouts/base.html, as before — `request|account_frame` decides (accounts.shell). Both frames have the same
+blocks, so a page written for one draws in the other.
 allauth reads the layout's name from this file's path: its elements look for `<element>__manage.html` first
 (templates/allauth/elements/button__manage.html).
 {% endcomment %}

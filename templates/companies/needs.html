@@ -12,11 +12,13 @@ the chosen one under the tabs' indicator; `?état=` in the URL, no script. Then 
 {% endcomment %}
 {% block page_title %}{% translate "Mes besoins en compétences" %}{% endblock %}
 {% block meta_description %}{% translate "Les besoins exprimés par votre entreprise, leur état et l’intervenant responsable de chacun." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="company">
+  {% include "portal/partials/atrium_art.html" with figure="seal" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Mes besoins en compétences" %}</h1>
     <p class="ws-head__lead">{% translate "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste — jamais une personne — et porte l’état de son traitement ainsi que l’intervenant qui en répond." %}</p>
   </div>
@@ -25,7 +27,7 @@ the chosen one under the tabs' indicator; `?état=` in the URL, no script. Then 
 {% endblock %}
 
 {% block companies_content %}
-<div class="reg-page">
+<div class="reg-page db-main">
   <section class="reg-sec" aria-labelledby="needs-title">
     <h2 class="db-h2 reg-sec__title" id="needs-title"><span>{% translate "Registre des besoins" %}</span></h2>
     {% if needs %}

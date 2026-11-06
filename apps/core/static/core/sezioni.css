@@ -1,0 +1,25 @@
+/* ============================================================================================
+   The composition library V2 as ONE sheet (design V5.22, SECTION_SYSTEM_V2 §2, §9.1; lane S): the shell, the seat and
+   every pattern, bundled by scripts/build_css.mjs into static/css/dist/core/sezioni.css. It is the sheet of the
+   library's browser fixtures (tests/frontend/sezioni_fixtures.py) — never linked by a page of the site: a page imports
+   into its own family sheet the partials it composes (pages.css, interior.css, ecosystem.css, pathways.css,
+   lettura.css, forum.css), so it carries only what it draws (§7.1: page-only sheets with their own budgets).
+   ============================================================================================ */
+@import url("../css/v5/_sezioni.css");
+@import url("../css/v5/_materia.css"); /* V5.24 (lane LIB): the grounds' material and the seams, after the shell — the fixtures prove it; a page imports it into its own sheet */
+@import url("../css/v5/_sigillo.css");
+@import url("../css/v5/_photo.css");
+@import url("../css/v5/_journey-passage.css");
+@import url("../css/v5/_linea-v2.css");
+@import url("../css/v5/_sec-flusso.css");
+@import url("../css/v5/_sec-campata.css");
+@import url("../css/v5/_sec-boussole.css");
+@import url("../css/v5/_sec-tracciato.css");
+@import url("../css/v5/_sec-racconto.css");
+@import url("../css/v5/_sec-mosaico.css");
+@import url("../css/v5/_sec-mappa.css");
+@import url("../css/v5/_sec-emiciclo.css");
+@import url("../css/v5/_sec-filo.css");
+@import url("../css/v5/_sec-passaggio.css");
+@import url("../css/v5/_sec-strato.css");
+@import url("../css/v5/_sec-indice.css");

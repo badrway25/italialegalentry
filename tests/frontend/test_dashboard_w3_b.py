@@ -410,7 +410,11 @@ def test_the_bridge_keeps_its_cards(user_factory):
     company = user_factory("dash.company@example.test", role=roles.COMPANY, account_type=AccountType.COMPANY)
     context = services.dashboard_context(company)
     assert not context["is_person"] and context["now"] is None
-    assert [card.key for card in context["cards"]][:1] == ["requests"]
+    # V5.12 D-20: a register is kept only with rows; with none, the organisation stands alone and one calm line
+    assert [card.key for card in context["cards"]] == ["organisation"] and context["calm"]
+    services.send_message(recipient=company, subject="Bienvenue", body="Corps.")
+    context = services.dashboard_context(company)
+    assert [card.key for card in context["cards"]] == ["messages", "organisation"] and not context["calm"]
 
 
 def test_the_pieces_by_who_holds_them_the_persons_first_the_now_panels_piece_once(case, person):
@@ -886,7 +890,8 @@ def test_the_bridge_draws_its_registers_in_the_persons_grammar_and_claims_no_nex
     assert "card--action" not in work, "no raised plane"
     main = work.split('<div class="db-main">', 1)[1].split('<div class="db-side">', 1)[0]
     side = work.split('<div class="db-side">', 1)[1]
-    assert re.findall(r'data-card="(\w+)"', main) == ["deadlines", "messages", "requests", "documents"], (
+    # the organisation's own dashboard (V5.12 Q7): its registers with rows only (D-20), what is due first
+    assert re.findall(r'data-card="(\w+)"', main) == ["deadlines", "messages"], (
         "what is due and what came in first: the system orders priority"
     )
     assert re.findall(r'data-card="(\w+)"', side)[:1] == ["organisation"]
@@ -908,7 +913,11 @@ def test_the_bridge_for_a_university_says_each_empty_region_in_one_line(client, 
         "dash.university@example.test", role=roles.UNIVERSITY, account_type=AccountType.UNIVERSITY
     )
     work = _workspace(_page(client, university))
-    assert work.count('class="db-empty"') >= 5, "deadlines, messages, requests, documents, organisation: one line each"
+    # V5.12 D-20: no heading over «… apparaîtront ici» — one calm sentence for the registers, one line for the
+    # organisation not yet attached
+    assert "apparaîtront ici" not in work and 'data-card="requests"' not in work and 'data-card="messages"' not in work
+    assert "Aucune action ne vous est demandée pour l’instant." in work
+    assert work.count('class="db-empty"') == 1, "the organisation not yet attached: one line"
     assert "db-list__row" not in work and "data-count" not in work, "an empty region prints no figure"
 
 
@@ -920,9 +929,16 @@ def test_the_bridge_says_where_the_accounts_work_lives_in_the_rails_words(client
 
     company = user_factory("bridge.company@example.test", role=roles.COMPANY, account_type=AccountType.COMPANY)
     main = _workspace(_page(client, company)).split('<div class="db-main">', 1)[1]
-    assert main.lstrip().startswith(
-        f'<p class="db-space"><a class="db-link" href="{reverse("companies:dashboard")}">Espace entreprise'
-    )
+    # V5.15 lane D F1: a company with nothing due reads the platform's calm panel, whose ONE primary is that place —
+    # the same words, the same link, now the panel's action instead of a quiet line above it
+    if main.lstrip().startswith('<div class="org-calm"'):
+        calm = main.split('<div class="org-calm"', 1)[1].split("</div>", 1)[0]
+        assert f'<a class="btn btn--primary" href="{reverse("companies:dashboard")}">Espace entreprise' in calm
+        assert main.count("btn--primary") == 1
+    else:
+        assert main.lstrip().startswith(
+            f'<p class="db-space"><a class="db-link" href="{reverse("companies:dashboard")}">Espace entreprise'
+        )
     client.logout()
     actor = user_factory(
         "bridge.actor@example.test", role=roles.AUTHORISED_ACTOR, account_type=AccountType.PROFESSIONAL

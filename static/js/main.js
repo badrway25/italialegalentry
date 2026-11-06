@@ -98,6 +98,8 @@ function initTabs() {
     // rendered with its transition.
     const select = (index, { focus = false, travel = false } = {}) => {
       widget.classList.toggle("is-travelling", travel && index !== current);
+      // M7 (V5.12 §5; DECISIONS §2): the panel left gives its height to the one shown — tabs.css morphs from it
+      if (travel && index !== current && panels[current]) widget.style.setProperty("--tabs-from-h", `${panels[current].offsetHeight}px`);
       if (index !== current) {
         current = index;
         tabs.forEach((tab, i) => {

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from django.http import Http404
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
 from audit.services import record as audit_record
 from core import throttle
+from core.links import public_url
 from forum import services
 from forum.forms import ForumRegistrationForm
 
@@ -16,7 +17,7 @@ THROTTLE_SCOPE = "forum_register"
 
 
 def _breadcrumbs(page_title: str, extra: list[dict] | None = None, lang: str = "") -> list[dict]:
-    crumbs = [{"label": page_title, "url": reverse("forum:index"), "lang": lang}]
+    crumbs = [{"label": page_title, "url": public_url("forum:index"), "lang": lang}]
     if extra:
         crumbs.extend(extra)
     return crumbs
@@ -25,13 +26,15 @@ def _breadcrumbs(page_title: str, extra: list[dict] | None = None, lang: str = "
 def _base_context(request, event):
     ctx = services.page_context(request, event)
     ctx["breadcrumbs"] = _breadcrumbs(ctx["page_title"], lang=ctx.get("page_title_lang", ""))
-    ctx["index_url"] = reverse("forum:index")
+    ctx["index_url"] = public_url("forum:index")  # "" without a live edition: no «back» link to a 404
     return ctx
 
 
 @require_http_methods(["GET", "HEAD"])
 def index(request):
     event = services.current_event()
+    if event is None:  # V5.12 §8: no «page in preparation» — without a live edition there is no page
+        raise Http404
     ctx = _base_context(request, event)
     if event is not None and ctx["registration_open"] and ctx["forms_enabled"]:
         ctx["form"] = ForumRegistrationForm()

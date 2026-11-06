@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.contact import default_whatsapp_number, validate_international_number, validate_national_number
+
 
 class TimeStampedModel(models.Model):
     """Abstract base with creation/update timestamps used by every domain model."""
@@ -87,7 +89,33 @@ class SiteSettings(TimeStampedModel):
         default="contact@agamieuromed.org",
         validators=[validate_public_email],
     )
-    version_label = models.CharField(_("indicazione di versione (footer)"), max_length=60, default="v2.0.0 — Fase 1")
+    # V5.19 (owner-confirmed, 29 October 2026; lane v519-k): the two public telephone channels, stored here once —
+    # core.contact gives the templates their digits, label and links (site.channels); blank withdraws a channel.
+    # V5.20 (option B): the WhatsApp number's default is the environment's (ILE_WHATSAPP_NUMBER, blank unless set),
+    # read when the row is made — the owner-confirmed number is configured outside the repository.
+    freephone_number = models.CharField(
+        _("numero verde"),
+        max_length=20,
+        blank=True,
+        default=settings.ILE["FREEPHONE_NUMBER"],
+        validators=[validate_national_number],
+        help_text=_("Le sole cifre o con spazi: 800 xxx xxx. Il sito lo mostra come «800 xxx xxx»."),
+    )
+    whatsapp_number = models.CharField(
+        _("numero WhatsApp"),
+        max_length=20,
+        blank=True,
+        default=default_whatsapp_number,
+        validators=[validate_international_number],
+        help_text=_(
+            "In formato internazionale: +39 3xx xxx xxxx. Il link aperto è https://wa.me/ seguito dalle cifre."
+        ),
+    )
+    # V5.12 §11 (Director's decisions §8, D-17): the public footer no longer prints a version — it says the project's
+    # phase («Phase 3», from the phase gate: templates/partials/footer.html). The release's number is the platform's
+    # (settings.ILE["VERSION_LABEL"]) and belongs in the page's metadata, never in front of a visitor. The field stays
+    # for the back office's own note; blank by default.
+    version_label = models.CharField(_("indicazione di versione (footer)"), max_length=60, blank=True, default="")
     content_verified_on = models.DateField(_("contenuti verificati il"), null=True, blank=True)
     hosting_provider = models.CharField(
         _("prestatore di hosting"),

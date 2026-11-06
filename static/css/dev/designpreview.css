@@ -1611,6 +1611,32 @@
   color: var(--ink);
 }
 
+/* V5.12 §12: what the owner reads is a sentence; the key, the commit, the date and «dati fittizi» are one small grey
+   metadata line beside it (the build's commit, a news entry's date and tag, a family's key, a card's key). */
+.dp-strip__commit,
+.dp-strip__news-meta,
+.dp-family__key,
+.dp-card__key small {
+  font-family: var(--f-mono);
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  color: var(--ink-muted);
+}
+
+.dp-strip__news-line {
+  display: block;
+}
+
+.dp-strip__news-more > summary {
+  cursor: pointer;
+  color: var(--ink-muted);
+  font-size: var(--u-caption);
+}
+
+.dp-strip__news-more > p {
+  margin: var(--s-1) 0 0;
+}
+
 .dp-persona__key {
   display: block;
   font-family: var(--f-mono);
@@ -1719,9 +1745,16 @@
   display: none;
 }
 
+/* « di accettazione» leaves the eye below 120 rem, never the link's name: the home link reads «Italy Legal Entry™ —
+   Anteprima di accettazione» at every width (the 1 px box of «Italy Legal Entry™ — » below, review W1-P C8). */
 @media (max-width: 119.99rem) {
   .dp-strip__claim {
-    display: none;
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .dp-strip__who {
@@ -1736,7 +1769,7 @@
 }
 
 /* «Italy Legal Entry™ — » leaves the eye below 90 rem, never the link's name: the home link reads
-   «Italy Legal Entry™ — V5» down to 48 rem. An absolute box of 1 px takes no room in the row, so the
+   «Italy Legal Entry™ — Anteprima di accettazione» down to 48 rem. An absolute box of 1 px takes no room in the row, so the
    measured tiers do not move (review W1-P, accessibility r2 n1; CD condition C8). */
 @media (max-width: 89.99rem) {
   .dp-strip__ile {

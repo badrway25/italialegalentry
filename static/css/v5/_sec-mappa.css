@@ -1,0 +1,239 @@
+/* ============================================================================================
+   H · «LA MAPPA» — the interactive actor map, and «l'emiciclo» (design V5.22, SECTION_SYSTEM_V2 §2 H; lane S).
+   Page-only (after v5/_sezioni.css). Markup: components/sezioni/mappa.html; script static/js/src/sezioni/mappa.js.
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Nodes» 40282 and «Relay Hub Diagram» 40264 (the route from
+   the hub to the pointed or focused actor lights), «Fluid Hover Highlight» 39507 (a highlight that glides instead of
+   blinking). Refused: orbits, energy levels, isometric 3D. Signature RELATIONAL DRAW + GLIDE.
+   ============================================================================================ */
+
+.mappa {
+  display: grid;
+  gap: var(--sez-gap);
+  align-items: center;
+}
+
+.mappa__anello {
+  --r: 40%; /* the ring's radius, in the square's width */
+  position: relative;
+  justify-self: center;
+  inline-size: min(100%, 30rem);
+  aspect-ratio: 1;
+}
+
+.mappa__cerchio {
+  position: absolute;
+  inset: calc(50% - var(--r));
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.mappa__nodi {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mappa__nodo {
+  --a: calc(var(--i, 0) * 360deg / var(--n, 5) - 90deg);
+  position: absolute;
+  inset-block-start: calc(50% + sin(var(--a)) * var(--r));
+  inset-inline-start: calc(50% + cos(var(--a)) * var(--r));
+  translate: -50% -50%;
+}
+
+[dir="rtl"] .mappa__nodo {
+  translate: 50% -50%;
+}
+
+.mappa__nodo--hub {
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+}
+
+/* the nodes' places, --i of each actor and --n their count, are written by the module (mappa.js): without script the
+   map is its list — the hub, then the actors in a row, every entry under them */
+.mappa:not([data-sel]) .mappa__nodo:not(.mappa__nodo--hub) {
+  position: static;
+  translate: none;
+}
+
+.mappa:not([data-sel]) .mappa__nodi {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-4);
+}
+
+.mappa:not([data-sel]) :is(.mappa__cerchio, .mappa__raggio, .mappa__luce) {
+  display: none;
+}
+
+.mappa:not([data-sel]) .mappa__anello {
+  aspect-ratio: auto;
+}
+
+.mappa:not([data-sel]) .mappa__nodo--hub {
+  position: static;
+  translate: none;
+  inline-size: 100%;
+}
+
+.mappa__tasto {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-1);
+  min-inline-size: 44px;
+  color: inherit;
+  text-decoration: none;
+  text-align: center;
+}
+
+.mappa__nome {
+  max-inline-size: 9rem;
+  font-size: var(--t-ui);
+  line-height: 1.25;
+  font-weight: var(--w-control);
+}
+
+.mappa__tasto--hub .mappa__nome {
+  font-weight: var(--w-title);
+}
+
+.mappa__foto {
+  display: block;
+  inline-size: 7.5rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+}
+
+.mappa__foto img {
+  inline-size: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* the spokes: from the hub to each actor; the selected one draws in the accent */
+.mappa__raggio {
+  --a: calc(var(--i, 0) * 360deg / var(--n, 5) - 90deg);
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: calc(var(--r) - 3.5rem);
+  block-size: 1px;
+  background: color-mix(in srgb, currentColor 22%, transparent);
+  rotate: var(--a);
+  transform-origin: 0 50%;
+}
+
+/* Arabic: the ring mirrors (clockwise becomes counter-clockwise): the spoke turns about its inline-start, the hub */
+[dir="rtl"] .mappa__raggio { rotate: calc(-1 * var(--a)); transform-origin: 100% 50%; }
+
+.mappa__raggio[data-on] {
+  block-size: 2px;
+  background: var(--accent-mark);
+}
+
+/* the highlight: a ring that glides around the circle to the selected actor (--sel, written by the module) */
+.mappa__luce {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: var(--r);
+  block-size: 0;
+  rotate: calc(var(--sel, 0) * 360deg / var(--n, 5) - 90deg);
+  transform-origin: 0 0;
+  transition: rotate var(--spring-soft-duration) var(--spring-soft);
+  pointer-events: none;
+}
+
+[dir="rtl"] .mappa__luce { rotate: calc(90deg - var(--sel, 0) * 360deg / var(--n, 5)); transform-origin: 100% 0; }
+
+.mappa__luce::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: -32px;
+  inset-block-start: -32px;
+  inline-size: 64px;
+  block-size: 64px;
+  border: 2px solid var(--accent-mark);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  transition: opacity var(--motion-standard) var(--ease-enter);
+}
+
+.mappa[data-sel]:not([data-sel="hub"]) .mappa__luce::after {
+  opacity: 1;
+}
+
+/* the panels: stacked in one grid cell — the panel's height is the tallest's, no selection moves the page (CLS 0) */
+.mappa__pannelli {
+  display: grid;
+}
+
+.mappa__pannello {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  max-inline-size: var(--measure-body);
+}
+
+.mappa[data-sel] .mappa__pannello {
+  grid-area: 1 / 1;
+}
+
+.mappa[data-sel] .mappa__pannello:not([data-on]) {
+  visibility: hidden;
+}
+
+.mappa__testo {
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.mappa__azione { margin: 0; }
+
+@media (min-width: 64rem) {
+  .mappa {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: var(--s-16);
+  }
+}
+
+/* a phone where the ring is narrower than 300 px: the actors become a rail of glyph chips above the panel (the
+   module leaves the map in its list form there: mappa.js reads the ring's width) */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .mappa[data-moved] .mappa__pannello[data-on] {
+    animation: sez-cross var(--motion-emphasized) var(--ease-enter) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) .mappa__raggio[data-on] {
+    animation: sez-draw var(--motion-emphasized) var(--ease-enter) backwards;
+  }
+}
+
+@keyframes sez-cross {
+  from { clip-path: var(--reveal-from); }
+  to { clip-path: inset(0); }
+}
+
+@media print {
+  .mappa__pannello { visibility: visible !important; grid-area: auto !important; }
+}
+
+/* the keyboard's selection is instant: the highlight does not glide (§2 L, §4.1 rule 5) */
+html[data-input="key"] .mappa__luce,
+html[data-input="key"] .mappa__luce::after {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .mappa__cerchio { border-color: CanvasText; }
+  .mappa__raggio, .mappa__raggio[data-on] { background: CanvasText; }
+  .mappa__luce::after { border-color: Highlight; }
+}

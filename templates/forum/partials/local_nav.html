@@ -2,9 +2,13 @@
 {% comment %}
 The Forum page's index (design V5.4, W3-F1): «Sommaire de la page» in the entrance's end seat — the sections below,
 as anchors, on hairlines; below 64rem a row of links under the entrance's words. It replaces V4's sticky band of
-section links (a second sticky bar under the letterhead).
+section links (a second sticky bar under the letterhead). V5.12 §8 (W1-C): the programme's anchor only before the
+event — in permanent mode the pre-event programme and speakers are not drawn.
+V5.22 round 1 (QA_ROUND1 M9; lane P2): the index is the page's state — a scroll-spy (sezioni/spia.js, the glossary
+rail's runtime): the section being read is its current link (aria-current="location", announced on focus only); from
+64 rem it stands under the entrance's words, two columns of hairline rows, so the Forum's drawing has the end seat.
 {% endcomment %}
-<nav class="ingresso__aside sommaire forum-localnav" aria-labelledby="forum-sommaire-title">
+<nav class="ingresso__aside sommaire forum-localnav" aria-labelledby="forum-sommaire-title" data-sec-js="spia">
   <p class="sommaire__title" id="forum-sommaire-title">{% translate "Sommaire de la page" %}</p>
   <ul class="sommaire__list forum-localnav__list">
     <li><a class="sommaire__link" href="#forum-who">{% event_text event "who.title" %}</a></li>
@@ -12,12 +16,12 @@ section links (a second sticky bar under the letterhead).
     <li><a class="sommaire__link" href="#forum-what">{% event_text event "what.title" %}</a></li>
     <li><a class="sommaire__link" href="#forum-objectives">{% event_text event "objectives.title" %}</a></li>
     <li><a class="sommaire__link" href="#forum-audience">{% event_text event "audience.title" %}</a></li>
-    <li><a class="sommaire__link" href="#forum-programme">{% event_text event "programme.title" %}</a></li>
     {% if is_permanent %}
       {% if outcomes %}<li><a class="sommaire__link" href="#forum-outcomes">{% translate "Résultats" %}</a></li>{% endif %}
       {% if documents %}<li><a class="sommaire__link" href="#forum-documents">{% translate "Documents" %}</a></li>{% endif %}
       {% if next_events %}<li><a class="sommaire__link" href="#forum-next-events">{% translate "Prochains rendez-vous" %}</a></li>{% endif %}
     {% else %}
+      <li><a class="sommaire__link" href="#forum-programme">{% event_text event "programme.title" %}</a></li>
       <li><a class="sommaire__link" href="#forum-registration">{% event_text event "registration.title" %}</a></li>
     {% endif %}
   </ul>

@@ -57,3 +57,10 @@
    and its door panels, «la targa», the sheet below 80rem, the lock-up and the footer. It replaces v2/shell.css,
    components.css §5–§7 and §25 and v4/shell.css (the account menu's V4 face left with W2-C2's account popover). */
 @import url("v5/chrome.css");
+/* The motion that crosses a navigation (V5.12 §4, §5; the Director's DECISIONS §1 T1–T3): the cross-document View
+   Transition and the mark that travels, the threshold of a slow navigation in the band, the arrival's light, their
+   reduced-motion stills. After the chrome: it lays the mark over the lock-up and draws on the band's rule. */
+@import url("v5/motion.css");
+/* «Lume», the central loader (V5.15 §8–§14; DECISIONS §15 lane A): the veil, the doorway, the key's turn and the light
+   across a navigation, public site and platform — global brand infrastructure, so it is in the one shared sheet. */
+@import url("v5/lume.css");

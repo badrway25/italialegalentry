@@ -16,4 +16,6 @@ class ForumConfig(AppConfig):
         from forum.sitemaps import ForumSitemap
 
         register("forum", ForumSitemap)
-        register_public_paths("forum", ["forum/", "forum/inscription/", "forum/inscription/confirmation/"])
+        # V5.12 §8: the Forum page exists with a live edition (core.gates.forum_public); its link follows the gate
+        register_public_paths("forum", ["forum/"], requires_gate="forum_public")
+        register_public_paths("forum", ["forum/inscription/", "forum/inscription/confirmation/"])

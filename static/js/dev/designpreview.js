@@ -217,12 +217,8 @@
       var words = chip.querySelector("[data-dp-state-label]");
       if (words) {
         words.textContent = label;
-        /* «V4 + fondation» is French, «V5 — council-passed» is not (accessibility r2 m6'). */
-        if (state === "v5") {
-          words.removeAttribute("lang");
-        } else {
-          words.lang = "fr";
-        }
+        /* Both states are Italian, the preview's language (V5.12 §12: «Approvata in revisione» / «Da rifinire»). */
+        words.removeAttribute("lang");
       }
     }
     /* Signed out, on the sign-in: the way in without a password, and the page «Entrer» then opens. */
@@ -242,7 +238,7 @@
       field.value = next;
     });
     frame.title = name + " — " + label;
-    document.title = name + " · V5 dal vivo · Italy Legal Entry™";
+    document.title = name + " · Anteprima di accettazione · Italy Legal Entry™";
     forEach(document.querySelectorAll("a[data-dp-lang]"), function (link) {
       var code = link.getAttribute("data-dp-lang");
       link.hidden = langs.indexOf(code) === -1;

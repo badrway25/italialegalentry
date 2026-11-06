@@ -309,13 +309,16 @@ def test_the_rendered_filter_is_the_key_to_the_marks_in_the_registers_order(clie
     assert "icon-check" not in track, "O14: no check, the chosen entry included"
 
 
-def test_a_state_with_no_piece_is_a_word_not_a_link(client, case, person):
+def test_a_state_with_no_piece_is_folded_into_all(client, case, person):
+    """V5.15 W3 (lane B; DECISIONS §3 «Table with Filters»: zero-count filters folded into «Tous»): a state with no
+    piece is not offered at all — neither a link nor a dead word; «Tous» and the one state that has a piece remain."""
     _piece(case, "only")
     client.force_login(person)
     html = _html(client, PORTAL)
     track = html[html.index('class="seg ws-filters__seg"') :]
     track = track[: track.index("</nav>")]
-    assert track.count('class="seg__link seg__link--empty"') == 6 and track.count('<a class="seg__link"') == 2
+    assert track.count("seg__link--empty") == 0 and track.count('<a class="seg__link"') == 2
+    assert track.count('class="seg__item"') == 2
 
 
 # ---- the row is the link ---------------------------------------------------------------------------------------------
@@ -567,7 +570,8 @@ def test_the_drawers_script_carries_no_word_and_is_imported_where_the_register_d
 def test_inside_the_drawer_a_download_keeps_it_open_and_the_heads_facts_are_not_drawn_twice(client, dossier, person):
     client.force_login(person)
     html = _html(client, f"/documents/requirements/{dossier['filed'].pk}/")
-    assert re.search(r'<a href="/documents/link/[^"]+/" aria-describedby="version-1" data-overlay-keep>', html)
+    # V5.12 (the threshold of a navigation, static/js/src/lume/threshold.js): a file is not a page — `data-loader="none"`
+    assert re.search(r'<a href="/documents/link/[^"]+/" aria-describedby="version-1" data-overlay-keep data-loader="none">', html)
     workspace = (PARTIALS / "_workspace.css").read_text(encoding="utf-8")
     hidden = workspace[workspace.index(".doc-drawer [data-piece-head]") :]
     assert hidden[: hidden.index("}")].rstrip().endswith("display: none;")

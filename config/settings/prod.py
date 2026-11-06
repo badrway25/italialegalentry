@@ -199,3 +199,17 @@ for _label, _served in _served_directories():
 # Never, under any configuration. A production database holds real people; a seed that can
 # invent one is a seed that can be mistaken for the truth.
 ILE_SEED_DEMONSTRATION_DATA = False
+
+# Never, under any configuration (V5.14): a legal document that still carries an open field «[DA COMPLETARE …]» is
+# neither published nor shown in production (legal.models.open_fields_allowed, legal.services.publish).
+ILE_LEGAL_OPEN_FIELDS_ALLOWED = False
+
+# V5.17 §4 (R-SC-1): no flow that intentionally solicits special-category data (art. 9 GDPR) is offered in production
+# until an art. 9 condition is approved in writing (checklist A-31). Switching it on names that approval.
+ILE_SPECIAL_CATEGORY_FLOWS_ENABLED = env.bool("ILE_SPECIAL_CATEGORY_FLOWS_ENABLED", default=False)
+ILE_SPECIAL_CATEGORY_BASIS_REFERENCE = env("ILE_SPECIAL_CATEGORY_BASIS_REFERENCE", default="").strip()
+if ILE_SPECIAL_CATEGORY_FLOWS_ENABLED and not ILE_SPECIAL_CATEGORY_BASIS_REFERENCE:
+    raise ImproperlyConfigured(
+        "ILE_SPECIAL_CATEGORY_FLOWS_ENABLED is on without ILE_SPECIAL_CATEGORY_BASIS_REFERENCE: name the written "
+        "approval of the art. 9 condition (checklist A-31) or leave the special-category flows closed."
+    )

@@ -1,22 +1,33 @@
 {% load i18n cms_nav %}{% main_menu as menu %}
 {% comment %}
-«Il portico» — the letterhead (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11, §1.12; W2-C1, W2-C2). Paper, sticky,
-64 px → 56 px once the page has moved (glass only then, on a fine pointer, with no panel open). The
-official lock-up at the reading edge (docs/design-v2/BRAND_ASSETS.md §1, drawn by `brand_lockup`; a logo
-uploaded in the back-office still wins, as before — that switch is the client's, not the design's), the
-navigation bar (partials/main_nav.html: the owner's «Fase 3 — menu aperto», developed), and the end zone:
-«la targa», the reserved-area entrance, flat, in both states — the plate when signed out (only behind
-`reserved_area_public_link` + `reserved_area_enabled`; when they are off no hole is left: the end zone is marked bare,
-and from 80rem, where «Menu» is not drawn either, it is not drawn at all — no empty gap; the key alone carries the
-overlay system's top-layer tooltip, its name, refused from 100rem where the plate says it), the account popover of
-the overlay system when signed in (W2-C2: components/account_menu.html with `popover`, the person's rows in a menu
-hung from the plate — Esc, a press outside, the focus leaving or a choice close it, the focus back on the plate) —
-and «Menu» below 80rem, a link to the sheet that the overlay system opens (static/js/src/overlay.js), and that
-shows in place without it; it holds «Fermer» too, hidden, so that below 48rem it is as wide as the sheet's «Fermer»
-drawn over it (chrome.css §7: one width per language, the longer word's).
+«Il portico» — THE LETTERHEAD, ONE ROW (V5.15 §1, §2; DECISIONS §15 lane A; built on W2-C1/W2-C2's portico). At every
+desktop width it is one horizontal line: [ BRAND ] [ PRIMARY NAVIGATION ] [ LANGUAGE · ACCESS · PRIMARY ACTION ] — no
+institutional bar above it any more (its languages are the end zone's switch, its promoter line the panels' and the
+sheet's foot and the footer's), no second row, no stacked secondary navigation. Paper, sticky, 64 px → 56 px once the
+page has moved, glass and a soft shadow then.
 
-The menu tree is built once here and drawn twice: the bar, and — after the letterhead, at the body's level, as
-a trapped panel of the overlay system must be — the sheet below 80rem (partials/main_nav.html, «sheet»).
+* The brand: the official lock-up (docs/design-v2/BRAND_ASSETS.md §1, `brand_lockup`; a back-office logo still wins),
+  with the mark in layers laid over it (components/loader.html, `lock-sig`) — the one thing a View Transition carries
+  between two pages when no veil is drawn (from the keyboard, a language switch).
+* The navigation (partials/main_nav.html): four doors with their mega panels, a hairline, Forum, Projet — every item
+  in the row from 64rem, compressed (the lock-up 32/17, tighter gaps, no chevrons) below 90rem; one soft plate glides
+  under the pointer and one architrave marks the open or current item (static/js/src/nav.js).
+* The end zone: the LANGUAGE switch (the current language's code; a popover of the overlay system with the four names in
+  their own language — W2-A's contract; without script the popover opens natively) and the ACCESS, which is the row's
+  PRIMARY ACTION: «la targa» filled in night with its gold key and «Espace réservé» from 90rem (the key alone below,
+  its name in the top-layer tooltip; signed in, the account popover). Measured (QA/v515/a/NOTES.md): a third control —
+  «Commencer l’orientation», 228 px in French — never fits the 1 360 px column beside the six items; the orientation
+  questionnaire is the Personnes panel's highlighted destination at every desktop width, and the home's first action.
+* Below 64rem: the lock-up, the language switch (from 48rem) and «la targa», and «Menu», which opens the premium sheet —
+  a full-height layered drawer (partials/main_nav.html, «sheet»): its rows come in one after the other, a door unfolds
+  in place with its photograph, the foot holds the access on night.
+
+THE LOADER «LUME» is not drawn here any more: the central veil (components/lume_veil.html, included by base.html) is
+the transition, with its one status line. The mark in layers stays for the keyboard's and the language switch's page
+change. A logo uploaded in the back-office has no layers: it neither turns nor travels.
+
+The menu tree is built once here and drawn twice: the bar, and — after the letterhead, at the body's level, as a
+trapped panel of the overlay system must be — the sheet (partials/main_nav.html, «sheet»).
 {% endcomment %}
 <header class="site-header" id="site-header">
   <div class="container site-header__inner">
@@ -24,14 +35,22 @@ a trapped panel of the overlay system must be — the sheet below 80rem (partial
       {% if site.settings and site.settings.use_logo_image and site.settings.logo %}
         <img class="brand__logo" src="{{ site.settings.logo.url }}" alt="{{ site.project_name }}" width="160" height="40">
       {% else %}
-        {% brand_lockup %}
+        {% include "components/loader.html" with css_class="lock-sig" %}{% brand_lockup %}
       {% endif %}
     </a>
     <nav class="main-nav" aria-label="{% translate 'Navigation principale' %}" data-portico>
       {% include "partials/main_nav.html" %}
     </nav>
     {% flag "reserved_area_public_link" as reserved_link %}{% safe_url 'account_login' as login_url %}
-    <div class="site-header__end{% if not user.is_authenticated %}{% if not reserved_link or not site.settings.reserved_area_enabled or not login_url %} site-header__end--bare{% endif %}{% endif %}">
+    <div class="site-header__end">
+      {% translate "Choisir la langue" as lang_label %}{% for l in site.languages %}{% if l.active %}
+      <button class="lang-switch" type="button" popovertarget="lang-menu" aria-label="{{ l.name }} — {{ lang_label }}"><span class="lang-switch__code" lang="{{ l.code }}">{{ l.code }}</span>{% svg_icon "chevron" "icon lang-switch__chevron" %}</button>{% endif %}{% endfor %}
+      <div class="overlay overlay--popover lang-menu" id="lang-menu" data-overlay="popover" popover role="group" aria-label="{{ lang_label }}">
+        <p class="overlay__caption" aria-hidden="true">{{ lang_label }}</p>
+        <div class="overlay__body"><ul class="overlay__list" role="list">
+          {% for l in site.languages %}<li><a class="overlay__item lang-menu__item" href="{{ l.url }}" lang="{{ l.code }}" hreflang="{{ l.code }}" dir="{{ l.dir }}"{% if l.active %} aria-current="true"{% endif %}><span class="lang-menu__code" aria-hidden="true">{{ l.code }}</span><span>{{ l.name }}</span>{% if l.active %}{% svg_icon "check" "icon lang-menu__check" %}{% endif %}</a></li>
+          {% endfor %}</ul></div>
+      </div>
       {% if user.is_authenticated %}
         <div class="targa-seat">{% include "components/account_menu.html" with popover=True menu_id="account-menu" %}</div>
       {% elif reserved_link and site.settings.reserved_area_enabled and login_url %}

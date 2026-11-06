@@ -1,0 +1,16 @@
+{% load account_head %}{% comment %}
+THE ACCOUNT'S ATRIUM (V5.18 P-2, lane B): «Mon compte» and its pages in the console open on the console's own page
+head — lane D's atrium (portal/partials/atrium_art.html: the arcade of three arches, the door in the middle one; the
+space's name as the eyebrow; portal/platform.css), so the account reads as a room of the same building as the dashboard
+and the registers, not as a bare form. Drawn only in the console frame (`account_in_console`, set by
+allauth/layouts/_console.html); the public frame keeps its own title.
+Contract: `title` (the page's one h1), `lead` (optional). The drawing is decorative (aria-hidden), its motion is the
+atrium's (finite; the still under reduced motion).
+{% endcomment %}{% account_atrium as atrium_key %}<header class="ws-head acct-head" data-atrium="{{ atrium_key }}">
+  {% include "portal/partials/atrium_art.html" with figure="" %}
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{{ title }}</h1>
+    {% if lead %}<p class="ws-head__lead">{{ lead }}</p>{% endif %}
+  </div>
+</header>

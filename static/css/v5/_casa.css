@@ -1,0 +1,66 @@
+/* ============================================================================================
+   «LA CASA» — the home's grounds and threads (design V5.22, SECTION_SYSTEM_V2 §3.1, §6.1; lane H). A PAGE-ONLY partial
+   of the design system, imported by the home's sheet alone (apps/pages/static/pages/css/pages.css) — never main.css —,
+   as the console's grounds are v5/_platform-grounds.css: the material the home's composition is painted with, composed
+   of the tokens only (no literal colour; a ground's or a thread's light is the design system's, never a page sheet's).
+
+     H0 «la soglia»   the paper of the hero's foot fading into the orientation's wash over its last 96 px — no cut
+     S2               the wash's first light at the band's top (the fade's end, so the two grounds meet with no seam);
+                      the line that came down the hero's statement runs on in the route's bronze, turning to the route's
+                      own ink as it reaches the origin seal, its foot a 12 px corner into the seal's sill (round 1)
+     S1               a door's arch, pressed, hovered or focused, lit in its audience's accent (the shell's --aud, on
+                      the night seat: audience colours live on night only, §4.3)
+     S5               the stone veil deep under the band's head, so its words read on the stone as on paper, and light
+                      around the tablet, so the dressed courses read as stone, not as a grey murk (round 1, QA_ROUND1
+                      M1); the masonry fading into plain stone at the band's foot, where «la protezione» stands; a
+                      field of the tablet lit on its top joint under the hand and the focus
+   Logical properties only; nothing here moves.
+   ============================================================================================ */
+
+.page-home .home-orientation {
+  --sez-ground: linear-gradient(var(--accent-wash), transparent 14rem), var(--grad-brand);
+}
+
+@media (min-width: 64rem), (min-width: 40rem) and (min-height: 30.0625rem) {
+  .he:has(~ .home-orientation--soglia)::before {
+    background: linear-gradient(transparent, var(--accent-wash));
+  }
+
+  .home-orientation--soglia .orienta__soglia {
+    --soglia-ink: color-mix(in srgb, var(--accent-mark) 55%, var(--line-structure));
+    background: linear-gradient(var(--he-bronze) 35%, var(--soglia-ink)) 0 0 / 2px calc(100% - 12px) no-repeat;
+  }
+
+  .home-orientation--soglia .orienta__soglia::after {
+    content: "";
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inline-size: 12px;
+    block-size: 12px;
+    border: 0 solid var(--soglia-ink);
+    border-inline-start-width: 2px;
+    border-block-end-width: 2px;
+    border-end-start-radius: 12px;
+  }
+}
+
+.passaggio__lastra:has(.passaggio__porta:is(:hover, :focus-visible, :active)) .passaggio__arco {
+  stroke: var(--aud, var(--accent-night));
+}
+
+.page-home .home-trust .strato--foto::before {
+  background: linear-gradient(
+    color-mix(in srgb, var(--surface-area) 88%, transparent) 15rem,
+    color-mix(in srgb, var(--surface-area) 42%, transparent) 21rem
+  );
+}
+
+.page-home .integrita__fondo {
+  mask-image: linear-gradient(var(--surface-area) calc(100% - 12rem), transparent);
+}
+
+/* a trust field's lit edge: a 2 px accent line on its top joint under the hand and the focus alike (round 1) */
+.integrita__lastra:has(.sez-stretch:is(:hover, :focus-visible)) {
+  background: linear-gradient(var(--accent-mark), var(--accent-mark)) 0 0 / 100% 2px no-repeat;
+}

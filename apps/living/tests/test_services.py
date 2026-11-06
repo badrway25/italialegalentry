@@ -15,9 +15,9 @@ def test_public_topics_with_live_sheet_counts(topics, sheet_factory):
     sheet_factory("Draft", slug="d", status=PublicationStatus.DRAFT)
     LivingTopic.objects.filter(slug="ecole").update(status=PublicationStatus.DRAFT)
     result = {t.slug: t.sheet_count for t in services.public_topics()}
-    assert len(result) == 9 and "ecole" not in result
-    assert result["logement"] == 2
-    assert result["sante"] == 0
+    # V5.12 §8: only the themes with a live, reviewed sheet are public — health and the others are not
+    assert result == {"logement": 2}
+    assert services.public_topic("sante") is None
     assert services.public_topic("ecole") is None
     assert services.public_topic("logement").sheet_count == 2
 

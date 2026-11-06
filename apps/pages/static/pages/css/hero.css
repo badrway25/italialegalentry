@@ -162,10 +162,34 @@
   --he-stroke-md: 1.8;                             /* the 20 px glyphs' stroke */
 }
 
-/* ---- the statement: the promise IS the headline; the name is in the H1 for assistive technology and search ---- */
+/* ---- the statement: the H1 is the name, in sight (V5.12, the owner's Q1 answer: «Keep the visible H1 ITALY LEGAL ENTRY™»),
+        in the wordmark's face, navy, tracked as the lock-up; the promise is the large line under it ---- */
 .he__title { margin: 0; }
+.he__title--name { margin-block-end: var(--s-3); }
+.he__name {
+  display: block;
+  font-family: var(--f-wordmark);
+  font-weight: var(--w-wordmark);
+  font-synthesis: none;
+  text-transform: uppercase;
+  font-size: clamp(1.25rem, 1.02rem + 0.95vw, 1.875rem);
+  line-height: 1.1;
+  letter-spacing: 0.13em;
+  color: var(--brand-navy, var(--text-1));
+}
+/* one name on the screen: on the home the header's lock-up keeps the mark and gives its words to the hero's H1 (Q1) —
+   the link keeps its accessible name (aria-label «Italy Legal Entry™ — accueil») */
+.page-home .site-header .lock__text { display: none; }
+[dir="rtl"] .he .he__title > .he__name { text-align: end; }   /* the Latin name ends on the wall's start edge, as the promise does */
+/* V5.20 (v520-css; group P's observation, docs/design-v5/QA/v518g/p/NOTES.md): the phone sheet's head is the
+   letterhead's own row (W2-C2), so in Arabic it keeps the bar's lock-up on the home — the mark alone. The Latin
+   wordmark is a left-to-right isolate whose mark is its LEFT end: drawn in the sheet's head it carried the mark about
+   183 px off the row's start, where the bar draws it. In French the words grow after the mark without moving it, and
+   stay; from 48rem the side sheet's head draws no lock-up at all (v5/chrome.css). */
+[dir="rtl"] .page-home .nav-sheet__head .lock__text { display: none; }
 .he__promise {
   display: block;
+  margin: 0;
   max-inline-size: 13.9em;                         /* the promise's first line (13.5 em) always fits: two lines, broken at the comma */
   font-family: var(--f-sans);
   font-weight: 500;
@@ -181,7 +205,8 @@
    wall (a left-aligned paragraph started mid-wall); on phones and tablets its box is the page's width and it keeps its own
    alignment (eight lines of a paragraph are read from one edge) */
 [dir="rtl"] .he__promise[dir="ltr"], [dir="rtl"] .he__title[lang]:not([lang="ar"]) .he__promise, [dir="rtl"] :is(.he__eyebrow, .he__lead)[lang]:not([lang="ar"]) { text-align: end; }
-@media (min-width: 64rem) { [dir="rtl"] .he__body[lang]:not([lang="ar"]) { text-align: end; } }
+/* the description on the Arabic page: a French run is its own box hanging from the reading edge, left to right from its own
+   start (pages.css, the page's one rule for a French reading block — V5.22 §3.1 H0: never two alignments in one block) */
 /* the interim variant (gate G3 closed): an editorial eyebrow over the promise, a lead under it — the stations' voice */
 .he__eyebrow { margin: 0 0 var(--s-3); font-size: var(--t-folio); line-height: 1rem; font-weight: var(--w-control); letter-spacing: 0.04em; text-transform: uppercase; font-feature-settings: var(--feat-caps); color: var(--he-label); }
 .he__eyebrow:lang(ar) { letter-spacing: 0; }
@@ -407,11 +432,15 @@
     --chrome: calc(var(--utility-h) + var(--header-h) + 1px);
     --peek: 3rem;
     --hero-h: min(64rem, calc(100svh - var(--chrome) - var(--peek)));
+    /* the door is sized on the height the hero had under the institutional bar (2rem; one row since V5.15): the height the bar gave
+       back is air above the promise and the arch, never a larger door — so the wall keeps its four columns' measure (196 px at
+       1440 × 900) while the hero keeps its 48 px peek (V5.18 P8) */
+    --door-room: min(64rem, calc(100svh - var(--chrome) - 2rem - var(--peek)));
     /* the door: the largest stage the hero's height allows (40–80 px of night in all: 16 under it, the rest above), capped so that the niche stays ≤ 44 % */
-    --door-pad: clamp(1.25rem, calc((var(--hero-h) - 37.5rem) * 0.133 + 1.25rem), 2.5rem);
+    --door-pad: clamp(1.25rem, calc((var(--door-room) - 37.5rem) * 0.133 + 1.25rem), 2.5rem);
     --niche-pad: 0rem;                             /* no night beside the stage box: the arch itself stands 24 stage units inside it (≈ 35 px at 1440), which is the niche's air — the wall takes the rest (design M-2, M-3) */
     --niche-max: 44vw;
-    --stage-w: min(calc((var(--hero-h) - 2 * var(--door-pad)) * 368 / 456), calc(var(--niche-max) - var(--reveal-w) - 2 * var(--niche-pad)));
+    --stage-w: min(calc((var(--door-room) - 2 * var(--door-pad)) * 368 / 456), calc(var(--niche-max) - var(--reveal-w) - 2 * var(--niche-pad)));
     --stage-h: calc(var(--stage-w) * 456 / 368);
     --niche-w: clamp(36vw, calc(var(--stage-w) + var(--reveal-w) + 2 * var(--niche-pad)), var(--niche-max));
     --stage-x: calc(var(--reveal-w) + (var(--niche-w) - var(--reveal-w) - var(--stage-w)) / 2);   /* from the niche's start */
@@ -1136,6 +1165,28 @@
   .he + .home-entrances { padding-block-start: 0.875rem; }
   .he__body { padding-block: 0.75rem 2rem; font-size: 1.25rem; }   /* the foot: 32 px on phones */
 }
+/* ---- V5.22 (SECTION_SYSTEM_V2 §3.1 H0, «la soglia»): the hero's route continues beside the statement — a 2 px line in the
+   route's bronze, 12 px off the reading edge (the orientation seal's sill starts there: the line turns into it), from the
+   statement's first line to the hero's foot; drawn once as it enters (data-sec, the verb draw-y of v5/_reveal.css), at rest
+   under reduced motion. Where the orientation follows (the register of phones hidden) the paper fades into its wash over
+   the statement's last 96 px — no cut — and the 56 px foot is gone; on a phone the line ends on its node above the doors. */
+.he__soglia { position: absolute; z-index: 2; grid-row: bottom; grid-column: wall-start / wall-end; inset-block: 1.25rem 0; inset-inline-start: 0.25rem; inline-size: 2px; pointer-events: none; }
+.he__soglia-linea { display: block; block-size: 100%; background: var(--he-bronze); }
+/* round 1 (QA_ROUND1 M1 a): the line leaves from a station of the route — the hero's own node (a 9 px bronze ring filled
+   with the wall), at the statement's first line; the line draws down from it */
+.he__soglia::before { content: ""; position: absolute; z-index: 1; inset-block-start: -4px; inset-inline-start: -3.5px; inline-size: 5px; block-size: 5px; border: 2px solid var(--he-bronze); border-radius: 50%; background: var(--surface-page); }
+.he__soglia-linea::after { content: ""; position: absolute; inset-block-end: 0; inset-inline-start: -1.5px; inline-size: 5px; block-size: 5px; border-radius: 50%; background: var(--he-bronze); }
+@media (max-width: 47.999rem) { .he__body { padding-inline-start: 1rem; } }
+@media (min-width: 48rem) { .he__soglia { inset-inline-start: -12px; } }
+@media (min-width: 64rem) { .he__soglia { grid-column: body-start / full-end; } }
+@media (min-width: 64rem), (min-width: 40rem) and (min-height: 30.0625rem) {
+  .he:has(~ .home-orientation--soglia) .he__body { padding-block-end: 1.5rem; }
+  .he:has(~ .home-orientation--soglia)::before {   /* its paint, paper into the wash: v5/_casa.css */
+    content: ""; position: absolute; z-index: 1; inset: auto 0 0; block-size: 6rem; pointer-events: none;
+  }
+  .he:has(~ .home-orientation--soglia) .he__soglia-linea::after { content: none; }
+}
+@media (forced-colors: active) { .he__soglia-linea, .he__soglia-linea::after { background: CanvasText; forced-color-adjust: none; } .he__soglia::before { border-color: CanvasText; } }
 
 /* ---- reduced motion: the complete still — the settled hero (the door ajar, the photographs black-and-white, the path at rest);
    nothing plays (hero.js); the hand's states at 0 ms (the tokens) ---- */

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-formazione: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - training before and after: a small arch (before the departure) and the full doorway (after the arrival) on one sill, joined by a route with a node; the route draws from the first to the second, the node lights (n.6) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M30 42V31A4 4 0 0 1 38 31V42Z"/>
+  <path data-layer="arch" d="M5 42V34A5 5 0 0 1 15 34V42"/>
+  <path data-layer="arch" d="M24 42V30A10 10 0 0 1 44 30V42"/>
+  <path data-layer="arch" d="M30 42V31A4 4 0 0 1 38 31V42"/>
+  <path data-layer="route" d="M10 26C12 18 19 14 26.5 17.5"/>
+  <circle data-layer="mark" cx="17.4" cy="17.2" r="1.6"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

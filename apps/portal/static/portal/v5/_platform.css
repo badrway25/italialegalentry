@@ -1,0 +1,1498 @@
+/* ============================================================================================
+   THE PLATFORM'S DESIGN ENERGY — V5.15 lane D (the owner's creative override of 28 Oct 2026, §20: «the platform …
+   must not collapse into static rectangles»; DECISIONS §15 lane D). A partial: bundled into portal/platform.css, a
+   page-only entry linked by the console pages that draw what it styles (the dashboards, «Mon organisation», the
+   registers' pages) — never main.css, never the shared console bundle (the owner's V5.8: shared CSS only ratchets
+   down). Markup: templates/portal/dashboard.html, dashboard_organisation.html, organisation.html, requests.html,
+   messages.html, deadlines.html, partials/atrium_art.html.
+
+   1 · the atrium        the console's page head as one composition: a sheet of light paper on the frame, a hairline
+                         edge, two washes (the lagoon's, the key's gold), the drawing of a portico on the reading end
+                         (the door with its key, the route that reaches it). One system; the space tints it.
+   2 · the lattice       21st «Feature Overview Bento» (27082), adapted: a 1 px hairline lattice of mixed cells — the
+                         file's ring, its step, its facts; the dates (the next one set large) and the communications.
+                         No fabricated metric: every figure is a count the system holds.
+   3 · the NowPanel      the screen's one raised plane gets its edge of light and its depth on hover
+   4 · the organisation  its identity plate in the head, the calm state as a composed panel, «Le projet» as tiles
+   5 · the spotlight     21st «Spotlight» (35180), adapted: a soft light that follows a fine pointer across a cell
+                         (two custom properties written by js/dist/platform.js), and the edge nearest it
+   6 · motion            at load: the atrium's portico draws, the route draws and the key's light travels it once and
+                         rests at the door; the page's planes rise into place one after another (a step of 60 ms);
+                         the ring draws its arc. The envelope is finite (≤ 1.7 s); nothing is scroll-linked: then the
+                         page rests (its tests read it at rest, its pointer never chases a moving row).
+                         All on the duration tokens — 0 ms under reduced motion and under html.rm: the still is the
+                         drawing complete, the planes in place (V5.15 §14: a branded still, never nothing).
+   7 · states            touch, forced colours, paper
+
+   Tokens only, logical properties only; the drawing is mirrored as a whole in Arabic (the route comes from the
+   reading start). Transform, opacity and stroke offsets only: no layout moves (CLS 0).
+   ============================================================================================ */
+
+/* ---- 1 · The atrium ------------------------------------------------------------------------------------------ */
+/* One grid: the words on the reading start, the DRAWING IN ITS OWN COLUMN on the reading end (no word ever lies on it)
+   and, when the page's head carries one, the ACTION under the words (round 2: beside the drawing it narrowed it to a
+   15 rem sticker, and at 768–1279 it left an empty wash above a small drawing). The drawing FILLS ITS COLUMN'S
+   HEIGHT: its column never sizes the head (`contain: size`), it stretches over the head's rows, the drawing's box fits
+   it (`xMaxYMax meet`, 300 × 200) and the route's lead-in is clipped at the column's edge. The figure changes with the
+   family of pages (portal/partials/atrium_art.html). */
+[data-atrium] {
+  --atrium-wash: var(--p-laguna-50);
+  --atrium-ink: var(--line-structure);
+  --atrium-key: var(--identity-key);
+  --atrium-art-w: 26rem;
+  --atrium-sw: 1.25;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--atrium-art-w);
+  grid-template-areas: "words art";
+  column-gap: var(--s-8);
+  row-gap: var(--s-4);
+  align-items: end;
+  min-block-size: 8.5rem;
+  margin-block-end: var(--s-6);
+  padding: var(--s-5) var(--s-8) var(--s-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-rhythm);
+}
+
+/* the shell zeroes a ContextHeader's foot (`.console__workspace > .ctx`): the atrium is a sheet, its foot is its own */
+.console__workspace > [data-atrium] {
+  padding-block-end: var(--s-4);
+  margin-block-end: var(--s-6);
+}
+
+/* a head with its action (the Guichet's «Ouvrir une demande», a course's «M’inscrire»): the action under the words,
+   the drawing beside both — one composition, the drawing keeps its column at every width */
+[data-atrium]:has(> .ws-head__action) {
+  grid-template-areas: "words art" "action art";
+}
+
+[data-atrium] > .ws-head__action {
+  grid-area: action;
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  justify-self: start;
+  justify-items: start;
+}
+
+[data-atrium] > .ws-head__action .ws-head__action-note {
+  text-align: start;
+}
+
+/* the architect's grid, faint, fading out toward the words */
+[data-atrium]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-size: 32px 32px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* the key's hairline of light along the head's foot */
+[data-atrium]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--lume-line);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+[data-atrium="institution"] { --atrium-wash: color-mix(in srgb, var(--aud-istituzione) 70%, var(--p-carta-0)); }
+[data-atrium="university"] { --atrium-wash: color-mix(in srgb, var(--aud-universita) 55%, var(--p-carta-0)); }
+[data-atrium="company"] { --atrium-wash: color-mix(in srgb, var(--aud-impresa) 50%, var(--p-carta-0)); }
+[data-atrium="person"] { --atrium-wash: color-mix(in srgb, var(--aud-persona) 45%, var(--p-laguna-50)); }
+
+[data-atrium] > .ctx__words,
+[data-atrium] > .ws-head__words {
+  grid-area: words;
+  position: relative;
+  z-index: 1;
+  max-inline-size: 46rem;
+}
+
+.atrium__eyebrow,
+[data-atrium] .ctx__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-3);
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+[data-atrium] .atrium__eyebrow,
+[data-atrium] .ctx__eyebrow {
+  margin-block-end: var(--s-2);
+}
+
+/* the key's mark before the eyebrow: a short gold rule */
+.atrium__eyebrow::before,
+[data-atrium] .ctx__eyebrow::before {
+  content: "";
+  flex: none;
+  inline-size: var(--s-6);
+  block-size: 2px;
+  border-radius: var(--radius-full);
+  background: var(--atrium-key);
+}
+
+[data-atrium] .ctx__title,
+[data-atrium] .ws-head__title {
+  font-size: clamp(1.75rem, 1.45rem + 0.8vw, 2.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+[data-atrium] .ctx__greeting {
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+[data-atrium] .ws-head__lead,
+[data-atrium] .org-head__lead {
+  color: var(--text-2);
+}
+
+/* the drawing: its own column, bled to the head's top and reading end, as tall as the head's rows; it never sizes
+   them (`contain: size`); the route's lead-in beyond the drawing's box is clipped at the column's edge and fades in
+   from the words' side */
+.atrium__art {
+  grid-area: art;
+  grid-row: 1 / -1;
+  position: relative;
+  z-index: 0;
+  align-self: stretch;
+  contain: size;
+  overflow: hidden;
+  min-inline-size: 0;
+  margin-block-start: calc(-1 * var(--s-5));
+  margin-inline-end: calc(-1 * var(--s-8));
+  pointer-events: none;
+}
+
+[dir="rtl"] .atrium__art {
+  transform: scaleX(-1);
+}
+
+.atrium__svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.atrium__svg path,
+.atrium__svg circle,
+.atrium__band-svg path,
+.atrium__band-svg circle {
+  fill: none;
+}
+
+/* only the undashed strokes keep a screen width — a dashed one must stay on its pathLength (see atrium_art.html) */
+.atrium__grid path,
+.atrium__stations circle,
+.atrium__band-stations circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.atrium__grid path {
+  stroke: var(--line-rhythm);
+  stroke-width: 1;
+}
+
+/* the arcade at three quarters of the structure's ink (round 2: at 55 % it read as a faint sketch at 1440) */
+.atrium__arcade path {
+  stroke: color-mix(in srgb, var(--atrium-ink) 75%, transparent);
+  stroke-width: calc(1.25 * var(--atrium-sw));
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+}
+
+.atrium__door {
+  stroke: var(--text-1);
+  stroke-width: calc(1.5 * var(--atrium-sw));
+  stroke-dasharray: 1 1;
+}
+
+.atrium__route {
+  stroke: var(--accent-mark);
+  stroke-width: calc(1.5 * var(--atrium-sw));
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  opacity: 0.8;
+}
+
+/* the stations: ahead on paper, behind in lagoon, the file's own step in gold (the drawing sets it larger) */
+.atrium__stations circle,
+.atrium__band-stations circle {
+  fill: var(--p-carta-0);
+  stroke: var(--accent-mark);
+  stroke-width: 1.5;
+}
+
+.atrium__stations .atrium__station--done,
+.atrium__band-stations .atrium__station--done {
+  fill: var(--accent-mark);
+}
+
+.atrium__stations .atrium__station--here,
+.atrium__band-stations .atrium__station--here {
+  fill: var(--atrium-key);
+  stroke: var(--p-carta-0);
+  stroke-width: 2;
+}
+
+/* the file's own step is the drawing's most important datum (F1: a 7 px gold dot, the size of a lagoon one): it is
+   drawn larger, on a paper halo, inside a 1 px gold ring — and the ring answers when the key's light passes it */
+.atrium__halo {
+  fill: none;
+  stroke: var(--atrium-key);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.atrium__stations .atrium__station--here {
+  stroke-width: 3;
+}
+
+/* the key's light: a short gold stroke that travels the route once and is gone at the door — at rest it is not drawn
+   at all (opacity 0): no gold stub is left on the route */
+.atrium__light,
+.atrium__band-light {
+  stroke: var(--atrium-key);
+  stroke-width: calc(3 * var(--atrium-sw));
+  stroke-linecap: round;
+  stroke-dasharray: 0.08 1.2;
+  stroke-dashoffset: -1.1;
+  opacity: 0;
+}
+
+.atrium__svg .atrium__key,
+.atrium__band-svg .atrium__key {
+  fill: var(--atrium-key);
+}
+
+.atrium__shaft {
+  stroke: var(--atrium-key);
+  stroke-width: calc(3 * var(--atrium-sw));
+  stroke-linecap: round;
+}
+
+.atrium__keyhole {
+  transform-box: fill-box;
+  transform-origin: 50% 22%;
+}
+
+/* the seal's glyph in the central arch (an organisation's space): the audience's symbol in gold. In Arabic it is
+   mirrored back about its own centre by the tag (atrium_glyph: an SVG transform on a wrapper, in drawing units) —
+   never by a CSS transform on the <use>, whose fill-box Chromium resolves without the use's x/y (F2 review, M-1) */
+.atrium__glyph-icon {
+  color: var(--atrium-key);
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* the band (a phone): the route and its stations at the head's foot, the door at its end */
+.atrium__band {
+  display: none;
+}
+
+.atrium__band-ground {
+  stroke: var(--line-rhythm);
+  stroke-width: 1;
+}
+
+.atrium__band-route {
+  stroke: var(--accent-mark);
+  stroke-width: 1.5;
+  stroke-dasharray: 1 1;
+  opacity: 0.8;
+}
+
+.atrium__band-door {
+  stroke: var(--text-1);
+  stroke-width: 1.75;
+  stroke-dasharray: 1 1;
+}
+
+/* the band's figure (F1: the same seven stations on every family, the first one «done» without any data): the
+   family's motif before the door — two facing stations over the counter, three rising thresholds, two sheets, a
+   second door, the seal's ring — in the arcade's ink */
+.atrium__band-motif {
+  stroke: color-mix(in srgb, var(--atrium-ink) 90%, var(--text-1));
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+}
+
+/* the organisation's identity plate: its seal, its name */
+.atrium__plate {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-block: var(--s-1) var(--s-3);
+}
+
+.atrium__seal {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--s-10);
+  block-size: var(--s-10);
+  border-radius: var(--radius-full);
+  background: var(--surface-night);
+  color: var(--identity-key-night-text);
+  border: 3px solid var(--p-carta-0);
+  outline: 1px solid var(--line-rhythm);
+}
+
+.atrium__seal > .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+/* the space's locked presentation: in the head from 80rem; below, a disclosure under its word («Présentation») — the
+   text verbatim, only folded (the university head was 290 px at 390; F2: open at 1024–1279 its four lines made the
+   university's head 281–294 px and its seal stood at 0.54–0.56 of it) */
+.atrium__intro > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-block-size: 2.75rem;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 600;
+  color: var(--accent-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.atrium__intro > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* a disclosure's chevron points DOWN closed and UP open in every script (round 2: the logical inline border flipped
+   in Arabic while the rotation did not — the chevron pointed sideways, like a link's). The two borders draw an L whose
+   corner is at the inline end; the rotation turns that corner to the foot — the other way round in Arabic */
+.atrium__intro > summary::after {
+  content: "";
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  margin-inline-start: var(--s-1);
+  border-inline-end: 1.5px solid currentcolor;
+  border-block-end: 1.5px solid currentcolor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.atrium__intro[open] > summary::after {
+  transform: translateY(2px) rotate(225deg);
+}
+
+[dir="rtl"] .atrium__intro > summary::after {
+  transform: translateY(-2px) rotate(-45deg);
+}
+
+[dir="rtl"] .atrium__intro[open] > summary::after {
+  transform: translateY(2px) rotate(-225deg);
+}
+
+@supports selector(::details-content) {
+  @media (min-width: 80rem) {
+    .atrium__intro > summary {
+      display: none;
+    }
+
+    .atrium__intro::details-content {
+      content-visibility: visible;
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 79.99rem) {
+  /* 1024–1279: a narrower column, still wide enough that the drawing (1.8 : 1) stands at least 60 % of the head's
+     height on the tallest head (an organisation's, 257–270 px) */
+  [data-atrium] {
+    --atrium-art-w: 20rem;
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  /* 768–1023 (no rail beside the page, the words need the measure) */
+  [data-atrium] {
+    --atrium-art-w: 16rem;
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 79.99rem) {
+  /* the organisation's and the company's heads are the tallest (the name's plate, the folded presentation): the
+     seal's column takes 2 rem more so the drawing still stands ≥ 60 % of the head (F1: 0.54–0.59 at 768 and 1024) */
+  [data-atrium]:has(.atrium__intro),
+  [data-atrium="company"] {
+    --atrium-art-w: calc(var(--atrium-art-w-base, 20rem) + 2rem);
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  [data-atrium]:has(.atrium__intro),
+  [data-atrium="company"] {
+    --atrium-art-w-base: 16rem;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  /* a phone: the atrium is a band that bleeds into the 16 px gutter — its words keep the page's measure, its edge is
+     the band's top and foot only. The drawing gives way to the BAND (round 2: the 6 × 2 rem mark turned the keyhole
+     into a gold blob): the route and its stations along the head's foot, the door at its end, a row of its own. */
+  [data-atrium],
+  [data-atrium]:has(> .ws-head__action) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "words" "band";
+    row-gap: var(--s-2);
+    min-block-size: 0;
+    margin-inline: calc(-1 * var(--page-pad));
+    margin-block-end: var(--s-3);
+    padding: var(--s-2) var(--s-4) var(--s-1);
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  [data-atrium]:has(> .ws-head__action) {
+    grid-template-areas: "words" "action" "band";
+  }
+
+  [data-atrium] .ws-head__lead,
+  [data-atrium] .org-head__lead {
+    font-size: var(--u-small);
+    line-height: var(--u-small-lh);
+  }
+
+  .console__workspace > [data-atrium] {
+    padding-block-end: var(--s-1);
+    margin-block-end: var(--s-3);
+  }
+
+  [data-atrium] > .ctx__words,
+  [data-atrium] > .ws-head__words {
+    max-inline-size: none;
+  }
+
+  [data-atrium] .ctx__title,
+  [data-atrium] .ws-head__title {
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  .atrium__art {
+    display: none;
+  }
+
+  .atrium__band {
+    grid-area: band;
+    display: block;
+    position: relative;
+    z-index: 0;
+    block-size: 2rem;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  [dir="rtl"] .atrium__band {
+    transform: scaleX(-1);
+  }
+
+  .atrium__band-svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+
+  [data-atrium] > .ws-head__action {
+    justify-self: stretch;
+  }
+
+  /* where the browser anchors (Chromium ≥ 125), the band is drawn ON THE EYEBROW'S ROW — from the space's name to the
+     door, the head's reading end — and adds no height (the documents' first piece stays above the bottom bar);
+     elsewhere it keeps its row at the head's foot */
+  @supports (anchor-name: --atrium-eyebrow) {
+    [data-atrium],
+    [data-atrium]:has(> .ws-head__action) {
+      grid-template-areas: "words";
+      padding-block-end: var(--s-2);
+    }
+
+    [data-atrium]:has(> .ws-head__action) {
+      grid-template-areas: "words" "action";
+    }
+
+    [data-atrium] .atrium__eyebrow {
+      anchor-name: --atrium-eyebrow;
+      inline-size: fit-content;
+      /* the band keeps at least ~9 rem beside a long space's name (F2: «ESPACE UNIVERSITÉS ET FORMATION» wrapped at
+         360–375 and left the band 100 px, its seal and door 8 px glyphs) */
+      max-inline-size: calc(100% - 10rem);
+    }
+
+    .atrium__band {
+      position: absolute;
+      grid-area: auto;
+      inset-block-start: calc(anchor(--atrium-eyebrow center) - 0.75rem);
+      inset-inline-start: calc(anchor(--atrium-eyebrow end) + var(--s-3));
+      inset-inline-end: var(--s-4);
+      block-size: 1.5rem;
+    }
+  }
+}
+
+/* ---- 2 · The lattice ----------------------------------------------------------------------------------------- */
+.lattice__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--line-rhythm);
+  border: 1px solid var(--line-rhythm);
+}
+
+.lattice__cell {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: start;
+  gap: var(--s-1);
+  min-inline-size: 0;
+  padding: var(--s-5);
+  background: var(--surface-sheet);
+}
+
+.lattice__cell--wide {
+  grid-column: 1 / -1;
+}
+
+/* the ring or the step alone takes the row; in a narrow column (the side's four tracks, a phone) every cell does */
+.lattice__grid > div.lattice__cell:only-of-type {
+  grid-column: 1 / -1;
+}
+
+/* the file's lattice (round 1: the step cell repeated the journey drawn above it — it is gone): the ring beside the
+   file's facts, one row */
+.lattice__grid--file {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+.lattice__grid.lattice__grid--file > div.lattice__cell--ring,
+.lattice__grid--file > .lattice__cell--ring + .lattice__cell--wide {
+  grid-column: auto;
+}
+
+.lattice {
+  container-type: inline-size;
+}
+
+@container (max-width: 26rem) {
+  .lattice__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.lattice__label {
+  margin: 0;
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lattice__words {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.lattice__step {
+  margin: var(--s-1) 0 0;
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* a lattice of counts (the Academy's «Où j’en suis»): three cells, the count set large, its word above it */
+.lattice__grid--counts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+}
+
+.lattice__grid--counts > .lattice__cell {
+  grid-auto-flow: row;
+  align-content: space-between;
+  gap: var(--s-3);
+  min-block-size: 7rem;
+}
+
+.lattice__figure {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+@container (max-width: 26rem) {
+  .lattice__grid--counts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lattice__grid--counts > .lattice__cell {
+    min-block-size: 0;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lattice__figure {
+    font-size: 1.75rem;
+  }
+}
+
+/* a count that is a way on (the Academy's: round 2, the spotlight promised a link the cell did not hold): the word is
+   the link, its hit area the whole cell, its focus ring the cell's; the glyph in its squared container */
+.lattice__cell--link .lattice__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.lattice__glyph {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-rhythm);
+  color: var(--accent-mark);
+}
+
+.lattice__glyph > .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.lattice__go {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lattice__go::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* one focus ring, the cell's: the shell's link outline AND its 2 px paper halo (a box-shadow) must lose here (F1: the
+   outline won on specificity, two rings drawn; F2: the halo still drew a pale box around the label) */
+.lattice__go:focus-visible,
+.lattice__cell--link .lattice__go:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.lattice__cell--link:has(.lattice__go:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: -3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lattice__cell--link:hover .lattice__go {
+    color: var(--accent-text);
+  }
+}
+
+/* the ring: the checklist's two counts drawn as an arc (pathLength 100; the arc is the SVG's own attribute) */
+.lattice__cell--ring {
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: center;
+}
+
+.lattice__cell--ring > .ring-dial {
+  grid-row: 1 / span 2;
+}
+
+.ring {
+  inline-size: var(--s-16);
+  block-size: var(--s-16);
+  transform: rotate(-90deg);
+}
+
+[dir="rtl"] .ring {
+  transform: rotate(-90deg) scaleY(-1);
+}
+
+.ring__track,
+.ring__arc {
+  fill: none;
+  stroke-width: 5;
+}
+
+.ring__track {
+  stroke: var(--line-structure);
+  stroke-width: 1.5;
+}
+
+/* segmented, one segment per item of the checklist (2-unit gaps on pathLength 100: portal.services.progress_figure
+   gives the dash pair); above 12 items a continuous arc. Round 2: at «0 sur 5» five equal thick grey arcs still read
+   as the activity glyph — the undone segments are now a HAIRLINE track (1.5) on the rhythm's colour, the done ones the
+   full 5 in lagoon, and the count stands in the ring: a dial, never a spinner */
+.ring__seg {
+  fill: none;
+  stroke-width: 1.5;
+  stroke: var(--line-structure);
+}
+
+.ring__seg--done {
+  stroke-width: 5;
+  stroke: var(--accent-mark);
+}
+
+.ring-dial {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  grid-row: 1 / span 2;
+}
+
+.ring-dial > .ring {
+  grid-area: 1 / 1;
+}
+
+.ring-dial__count {
+  grid-area: 1 / 1;
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ring-dial__count > span {
+  color: var(--text-3);
+}
+
+.ring__arc {
+  stroke: var(--accent-mark);
+  stroke-linecap: round;
+}
+
+/* the journey's seven places as ticks: behind, here, ahead */
+.lattice__ticks {
+  display: flex;
+  gap: 3px;
+  margin-block-start: var(--s-3);
+}
+
+.lattice__tick {
+  flex: 1 1 0;
+  block-size: 4px;
+  border-radius: var(--radius-full);
+  background: var(--surface-area);
+}
+
+.lattice__tick--done {
+  background: var(--accent-mark);
+}
+
+.lattice__tick--here {
+  background: var(--identity-key);
+}
+
+/* the file's facts inside the lattice: the summary strip loses its own box and its padding — its items keep their
+   hairlines, the cell's edge clips the outer ones (the strip's own -1 px overlap) */
+.lattice .summary {
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface-sheet);
+}
+
+/* the side column: the dates, the communications — panels of one lattice */
+.db-side--lattice {
+  gap: 1px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--line-rhythm);
+  border: 1px solid var(--line-rhythm);
+}
+
+.db-side--lattice > * {
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  padding: var(--s-5);
+  background: var(--surface-sheet);
+}
+
+.db-side--lattice .db-list {
+  margin: 0;
+}
+
+/* the next date, set large: the panel's figure */
+.db-next {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-3);
+  color: var(--text-1);
+}
+
+.db-next__day {
+  font-family: var(--f-mono);
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.db-next__month {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.db-next--soon .db-next__day { color: var(--p-ambra-800); }
+.db-next--overdue .db-next__day { color: var(--p-cotto-800); }
+
+/* the calm cell: the dates' glyph on a disc, the calm sentence */
+.db-calm-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.db-calm-cell__mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--s-10);
+  block-size: var(--s-10);
+  border-radius: var(--radius-full);
+  background: var(--accent-wash);
+  color: var(--accent-mark);
+}
+
+.db-calm-cell .db-calm {
+  margin: 0;
+}
+
+/* ---- 3 · The NowPanel: its edge of light, its depth ----------------------------------------------------------- */
+.db-now {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.db-now::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 3px;
+  background: var(--lume-line);
+  pointer-events: none;
+}
+
+
+/* ---- 4 · The organisation ------------------------------------------------------------------------------------ */
+.org-calm {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-8);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-rhythm);
+}
+
+.org-calm__art {
+  inline-size: 15rem;
+  max-inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+[dir="rtl"] .org-calm__art {
+  transform: scaleX(-1);
+}
+
+/* dashed on pathLength 1, so never `vector-effect: non-scaling-stroke` (round 1: the porticoes were cut at rest); the
+   drawing is set at 1 : 1 (240 units in 15 rem), its widths are its own */
+.org-calm__arch,
+.org-calm__route {
+  fill: none;
+  stroke-dasharray: 1 1;
+}
+
+.org-calm__arch {
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+}
+
+.org-calm__route {
+  stroke: var(--accent-mark);
+  stroke-width: 1.5;
+}
+
+.org-calm__node {
+  fill: var(--p-carta-0);
+  stroke: var(--accent-mark);
+  stroke-width: 1.5;
+}
+
+.org-calm__node--key {
+  fill: var(--identity-key);
+  stroke: var(--identity-key);
+}
+
+.org-calm .org-calm__text {
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+/* the communications' empty register (F1: an icon, a heading and a sentence over ~500 px of nothing): the calm panel,
+   its two porticoes the exchange the page is for, the register's own sentence under the heading */
+.reg-calm {
+  justify-items: start;
+  padding-block: var(--s-10);
+}
+
+.reg-calm > .org-calm__text,
+.reg-calm > .reg-calm__lead {
+  margin: 0;
+}
+
+.reg-calm__lead {
+  max-inline-size: 38rem;
+  font-size: var(--u-body);
+  line-height: var(--u-body-lh);
+  color: var(--text-2);
+}
+
+/* «Le projet» as tiles: an index, the section's glyph in its container, the word, the way on */
+.org-refs--tiles .org-refs__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-3);
+  border: 0;
+}
+
+/* the tiles answer their OWN width, not the window's (round 2: below 1024 an odd last tile «05» stood alone in a two-track
+   grid — the rule lived in a 64 rem media query): one track in a narrow column, two from 34 rem — an odd last tile
+   then takes the row —, and on «Mon organisation»'s full measure four (three when there are three or five) */
+.org-refs--tiles {
+  container-type: inline-size;
+}
+
+@container (min-width: 34rem) {
+  .org-refs--tiles .org-refs__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .org-refs--tiles .org-refs__list > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@container (min-width: 60rem) {
+  .org-page .org-refs--tiles .org-refs__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .org-page .org-refs--tiles .org-refs__list > li:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .org-page .org-refs--tiles .org-refs__list:has(> li:nth-child(5):last-child),
+  .org-page .org-refs--tiles .org-refs__list:has(> li:nth-child(3):last-child) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* the main column's rows pack at the top (round 2: the column was stretched to the side column's height and its auto
+   rows shared the surplus — a ~70 px void under every section). The approved CTA is no longer a row of its own: it is
+   the identity sheet's foot action (F1) */
+.db--organisation > .db-main {
+  align-content: start;
+}
+
+/* the shell's flow rule gives a list after a heading 32 px above and below: inside a register the list sits on the
+   head's own 16 px, and nothing trails under its last row */
+.db--organisation .db-card > .db-list {
+  margin-block: 0;
+}
+
+
+/* «Le projet»'s head sits on the rhythm (round 1: a ~50 px orphan gap under the h2) */
+.org-refs--tiles {
+  align-content: start;
+  gap: var(--s-4);
+}
+
+.org-refs--tiles > .db-h2 {
+  margin: 0;
+}
+
+/* a flow rule of the shell gives a list after a heading 32 px: the tiles' list sits on the nav's own gap */
+.org-refs.org-refs--tiles > .org-refs__list {
+  margin-block: 0;
+}
+
+.org-refs--tiles .org-refs__link {
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  gap: var(--s-4);
+  font-weight: 500;
+}
+
+.org-refs--tiles .org-refs__disc {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+}
+
+.org-refs--tiles .org-refs__link {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-block-size: 4.5rem;
+  padding: var(--s-4) var(--s-5);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface-sheet);
+  border: 1px solid var(--line-rhythm);
+  transition: border-color var(--motion-standard) var(--ease-enter);
+}
+
+.org-refs__index {
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.org-refs--tiles .org-refs__disc {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-rhythm);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* the border's step and the spotlight — never a second raised plane (the NowPanel stays the only one) */
+  .org-refs--tiles .org-refs__link:hover {
+    border-color: var(--line-structure);
+  }
+}
+
+/* the identity sheet: one lattice cell, its seal on night */
+.org-id--lattice .org-id__sheet {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.org-id--lattice .org-id__disc {
+  background: var(--surface-night);
+  color: var(--identity-key-night-text);
+}
+
+/* «Mon organisation» (round 1: a 48 rem column left ~360 px dead at 1440): the page takes the workspace, the identity
+   sheet becomes a lattice — the seal and the name as its head, the facts as cells two by two, 1 px hairlines */
+.org-page[data-platform] {
+  max-inline-size: none;
+}
+
+/* the identity sheet's facts (F1: at 1024–1280 the dashboard's side card split words and dates — «Responsabl|e»,
+   «28.10.202|6» — its value track fallen to ~70 px beside an 11 rem label under `overflow-wrap: anywhere`). On every
+   page that draws the sheet the facts are a LATTICE OF CELLS, the label set as an eyebrow over its value, and the
+   number of columns is the sheet's own width's decision (a container query), never the viewport's: two cells a row
+   from 21 rem, one below. A value breaks only between words (`break-word`: a word longer than its whole cell, never
+   a short one); a date never breaks and is set in ILE Mono; a web address may still break anywhere. */
+.org-id--lattice {
+  container: org-id / inline-size;
+}
+
+.org-id--lattice .org-id__facts {
+  gap: 1px;
+  margin-block-start: var(--s-2);
+  overflow: hidden;
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-sm);
+  background: var(--line-rhythm);
+}
+
+.org-id--lattice .org-id__fact,
+.org-id--lattice .org-id__fact:last-child {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-1);
+  padding: var(--s-3) var(--s-4);
+  border: 0;
+  background: var(--surface-sheet);
+}
+
+.org-id--lattice .org-id__fact > dt {
+  font-size: var(--u-eyebrow);
+  line-height: var(--u-eyebrow-lh);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.org-id--lattice .org-id__fact > dd {
+  overflow-wrap: break-word;
+}
+
+.org-id--lattice .org-id__fact > dd a {
+  overflow-wrap: anywhere;
+}
+
+.org-id__fact time {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@container org-id (min-width: 21rem) {
+  .org-id--lattice .org-id__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .org-id--lattice .org-id__fact:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* the sheet's foot: the approved CTA (an organisation's) or the way to «Espace entreprise» (a company's) while
+   registers are drawn — the sheet's own action, full measure, never a lone small button between two sections (F1) */
+.org-id__act {
+  display: grid;
+  margin: 0;
+}
+
+.org-id__act > .btn {
+  justify-content: center;
+}
+
+/* a company's account line is the sheet's foot (F1): the same quiet line, inside the section, on its hairline */
+.org-id > .db-account--foot {
+  display: grid;
+  gap: var(--s-1);
+  padding-block-start: var(--s-3);
+}
+
+.org-id > .db-account--foot > * {
+  margin: 0;
+}
+
+/* the account's links are the line's own end (F1: the base sheet's `ul[role=list]` — a 32 px margin and a hairline —
+   outweighed `.db-account__links` and dropped them onto a ruled row of their own on every dashboard) */
+.db-account__links[role="list"] {
+  margin: 0;
+  border: 0;
+}
+
+/* ---- 5 · The spotlight (21st 35180, adapted) ----------------------------------------------------------------- */
+/* the light's place, declared here (the cell's centre) and written inline by js/dist/platform.js under a fine pointer */
+[data-spot] {
+  --spot-x: 50%;
+  --spot-y: 50%;
+}
+
+[data-spot]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--motion-emphasized) var(--ease-enter);
+  pointer-events: none;
+}
+
+/* the cells already draw their own ::after? none do: the spotlight owns it. The NowPanel's ::before is its edge. */
+html[data-input="pointer"] [data-spot].is-lit::after {
+  opacity: 1;
+}
+
+/* ---- 6 · Motion ---------------------------------------------------------------------------------------------- */
+@keyframes plat-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes plat-light {
+  0% { stroke-dashoffset: 0.1; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { stroke-dashoffset: -1.1; opacity: 0; }
+}
+
+/* the keyhole is not there before the light reaches it (round 2: drawn sideways for 1.1 s before its turn, a slow
+   first paint could show it so): it appears with the light, then turns */
+@keyframes plat-key {
+  0%, 60% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes plat-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes plat-ring {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes plat-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes plat-turn {
+  from { transform: rotate(-90deg); }
+  to { transform: none; }
+}
+
+/* F2: the station's pop and the ring's answer animate the individual «scale» property, never «transform» — a CSS
+   transform on an SVG element replaces its transform attribute while it runs (F1: every station popped 36 units off
+   its place and jumped back). The translate now sits on the parent <g> (atrium_art.html) and scale composes with it. */
+@keyframes plat-halo {
+  0% { opacity: 0; scale: 0.4; }
+  60% { opacity: 1; scale: 1.35; }
+  100% { opacity: 1; scale: 1; }
+}
+
+@keyframes plat-pop {
+  from { opacity: 0; scale: 0.6; }
+  to { opacity: 1; scale: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.rm) .atrium__arcade path {
+    animation: plat-draw var(--motion-draw) var(--ease-enter) backwards;
+  }
+
+  html:not(.rm) .atrium__arcade path:nth-child(2) { animation-delay: calc(var(--motion-stagger) * 1); }
+  html:not(.rm) .atrium__arcade path:nth-child(3) { animation-delay: calc(var(--motion-stagger) * 2); }
+  html:not(.rm) .atrium__arcade path:nth-child(4) { animation-delay: calc(var(--motion-stagger) * 3); }
+  html:not(.rm) .atrium__arcade path:nth-child(5) { animation-delay: calc(var(--motion-stagger) * 4); }
+  html:not(.rm) .atrium__arcade path:nth-child(n + 6) { animation-delay: calc(var(--motion-stagger) * 5); }
+
+  html:not(.rm) .atrium__door {
+    animation: plat-draw var(--motion-draw) var(--ease-enter) calc(var(--motion-stagger) * 5) backwards;
+  }
+
+  html:not(.rm) .atrium__route {
+    animation: plat-draw var(--motion-route-light) var(--ease-sine) backwards;
+  }
+
+  html:not(.rm) .atrium__light {
+    animation: plat-light var(--motion-route-light) var(--ease-turn) var(--motion-slow) backwards;
+  }
+
+  html:not(.rm) .atrium__key,
+  html:not(.rm) .atrium__shaft,
+  html:not(.rm) .atrium__glyph {
+    animation: plat-key calc(var(--motion-route-light) + var(--motion-slow)) var(--ease-enter) backwards;
+  }
+
+  /* the light arrives: the keyhole turns a quarter, once (the key's turn, after lane A's Lume — UNLOCK) */
+  html:not(.rm) .atrium__keyhole {
+    animation: plat-turn calc(var(--motion-fast) * 2) var(--ease-turn) calc(var(--motion-slow) + var(--motion-route-light) * 0.92) backwards;
+  }
+
+  html:not(.rm) .atrium__stations circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: plat-pop var(--motion-emphasized) var(--ease-enter) backwards;
+  }
+
+  html:not(.rm) .atrium__stations circle:nth-child(2) { animation-delay: calc(var(--motion-route-light) * 0.25); }
+  html:not(.rm) .atrium__stations circle:nth-child(3) { animation-delay: calc(var(--motion-route-light) * 0.5); }
+  html:not(.rm) .atrium__stations circle:nth-child(4) { animation-delay: calc(var(--motion-route-light) * 0.6); }
+  html:not(.rm) .atrium__stations circle:nth-child(5) { animation-delay: calc(var(--motion-route-light) * 0.7); }
+  html:not(.rm) .atrium__stations circle:nth-child(6) { animation-delay: calc(var(--motion-route-light) * 0.8); }
+  html:not(.rm) .atrium__stations circle:nth-child(7) { animation-delay: calc(var(--motion-route-light) * 0.9); }
+
+  /* the phone's band tells the same story at 40 px: the route draws, its stations come one by one, the light travels
+     to the door */
+  html:not(.rm) .atrium__band-route {
+    animation: plat-draw var(--motion-route-light) var(--ease-sine) backwards;
+  }
+
+  html:not(.rm) .atrium__band-door,
+  html:not(.rm) .atrium__band-motif {
+    animation: plat-draw var(--motion-draw) var(--ease-enter) backwards;
+  }
+
+  /* the «here» station's ring answers as the key's light passes it — a 150 ms beat inside the finite envelope; its
+     delay is the station's place on the route (data-at: the journey's rank) */
+  html:not(.rm) .atrium__halo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: plat-halo calc(var(--motion-fast) * 3) var(--ease-enter) calc(var(--motion-slow) + var(--motion-route-light) * var(--halo-at, 0.8)) backwards;
+  }
+
+  .atrium__halo[data-at="1"] { --halo-at: 0.68; }
+  .atrium__halo[data-at="2"] { --halo-at: 0.71; }
+  .atrium__halo[data-at="3"] { --halo-at: 0.75; }
+  .atrium__halo[data-at="4"] { --halo-at: 0.78; }
+  .atrium__halo[data-at="5"] { --halo-at: 0.81; }
+  .atrium__halo[data-at="6"] { --halo-at: 0.85; }
+  .atrium__halo[data-at="7"] { --halo-at: 0.88; }
+
+  html:not(.rm) .atrium__band-light {
+    animation: plat-light var(--motion-route-light) var(--ease-turn) var(--motion-slow) backwards;
+  }
+
+  html:not(.rm) .atrium__band-svg .atrium__key {
+    animation: plat-key calc(var(--motion-route-light) + var(--motion-slow)) var(--ease-enter) backwards;
+  }
+
+  html:not(.rm) .atrium__band-stations circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: plat-pop var(--motion-emphasized) var(--ease-enter) backwards;
+  }
+
+  html:not(.rm) .atrium__band-stations circle:nth-child(2) { animation-delay: calc(var(--motion-route-light) * 0.14); }
+  html:not(.rm) .atrium__band-stations circle:nth-child(3) { animation-delay: calc(var(--motion-route-light) * 0.28); }
+  html:not(.rm) .atrium__band-stations circle:nth-child(4) { animation-delay: calc(var(--motion-route-light) * 0.42); }
+  html:not(.rm) .atrium__band-stations circle:nth-child(5) { animation-delay: calc(var(--motion-route-light) * 0.56); }
+  html:not(.rm) .atrium__band-stations circle:nth-child(6) { animation-delay: calc(var(--motion-route-light) * 0.7); }
+  html:not(.rm) .atrium__band-stations circle:nth-child(7) { animation-delay: calc(var(--motion-route-light) * 0.84); }
+
+  /* the page's planes rise into place, one after another, under the words of the head (the h1 never fades) */
+  html:not(.rm) [data-platform] > .db-file,
+  html:not(.rm) [data-platform] > .db-side,
+  html:not(.rm) [data-platform] > .db-main,
+  html:not(.rm) [data-platform] .org-calm {
+    animation: plat-rise var(--motion-slow) var(--ease-enter) backwards;
+  }
+
+  html:not(.rm) [data-platform] > .db-file,
+  html:not(.rm) [data-platform] > .db-side { animation-delay: calc(var(--motion-stagger) * 2); }
+  html:not(.rm) [data-platform] .org-calm { animation-delay: calc(var(--motion-stagger) * 1); }
+
+  html:not(.rm) .ring__seg--done {
+    animation: plat-fade var(--motion-emphasized) var(--ease-enter) var(--motion-slow) backwards;
+  }
+
+  html:not(.rm) .ring__arc {
+    animation: plat-ring var(--motion-draw) var(--ease-enter) var(--motion-emphasized) backwards;
+  }
+
+  html:not(.rm) .org-calm__arch,
+  html:not(.rm) .org-calm__route {
+    animation: plat-draw var(--motion-draw) var(--ease-enter) var(--motion-emphasized) backwards;
+  }
+
+  html:not(.rm) .org-calm__route { animation-delay: calc(var(--motion-emphasized) + var(--motion-slow)); }
+}
+
+/* the keyboard never animates (R-07): a change asked from the keyboard is there in the next frame */
+html[data-input="key"] .org-refs--tiles .org-refs__link {
+  transition-duration: 0ms;
+}
+
+/* ---- 7 · States ---------------------------------------------------------------------------------------------- */
+@media (hover: none) {
+  [data-spot]::after {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-atrium],
+  .lattice__grid,
+  .db-side--lattice,
+  .org-calm,
+  .org-refs--tiles .org-refs__link {
+    border: 1px solid CanvasText;
+    box-shadow: none;
+    background: Canvas;
+  }
+
+  [data-atrium]::before,
+  [data-atrium]::after,
+  [data-spot]::after,
+  .db-now::before {
+    display: none;
+  }
+
+  .atrium__svg path,
+  .atrium__svg circle,
+  .ring__arc,
+  .ring__track,
+  .ring__seg--done {
+    stroke: CanvasText;
+  }
+
+  .ring__seg:not(.ring__seg--done) {
+    stroke: GrayText;
+  }
+
+  .lattice__tick { background: GrayText; }
+  .lattice__tick--done,
+  .lattice__tick--here { background: CanvasText; }
+}
+
+@media print {
+  .atrium__art,
+  [data-atrium]::before,
+  [data-atrium]::after,
+  .org-calm__art,
+  [data-spot]::after {
+    display: none;
+  }
+
+  [data-atrium],
+  .lattice__grid,
+  .db-side--lattice,
+  .org-calm {
+    background: none;
+    box-shadow: none;
+    border: 1px solid CanvasText;
+  }
+}

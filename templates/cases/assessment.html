@@ -29,13 +29,15 @@ Every word is the catalogue's.
 {% block page_title %}{% translate "Pré-évaluation" %}{% endblock %}
 {% block meta_description %}{% translate "Le détail de votre pré-évaluation : les règles appliquées et les textes sur lesquels elles reposent." %}{% endblock %}
 {% comment %}The registers' page-only sheet, after the shell's two (W3-E; the owner's V5.8).{% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block case_header %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="route" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Pré-évaluation" %}</h1>
     <p class="reg-head__meta"><span>{% translate "Dossier" %} <span class="reg-ref">{{ case.reference }}</span></span>{% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}</p>
   </div>
@@ -43,7 +45,7 @@ Every word is the catalogue's.
 {% endblock %}
 
 {% block portal_content %}
-<div class="reg-page">
+<div class="reg-page db-main">
 
 {% if demonstration_ruleset %}
 {% comment %}

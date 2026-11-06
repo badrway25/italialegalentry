@@ -47,10 +47,4 @@
   --rule-hair: var(--hairline);
   --rule-ink: var(--hairline-strong);
   --rule-order: var(--hairline-strong);
-
-  /* The old motion tokens carry the new values, so nothing animates on a
-     curve the system no longer allows. */
-  --motion-fast: 180ms;
-  --motion-base: 240ms;
-  --motion-slow: 320ms;
 }

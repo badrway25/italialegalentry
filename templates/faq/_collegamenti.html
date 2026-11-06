@@ -1,0 +1,1 @@
+{% comment %}An answer's related links as chips on the explorer's plate (V5.22 §3.13 Q1; lane P2). Contract: `entry`.{% endcomment %}{% for link in entry.links %}<a class="faq-chip" href="{{ link.url }}">{{ link.label }}{% svg_icon "arrow" "icon icon--sm" %}</a>{% endfor %}

@@ -252,7 +252,9 @@ def _capture_report() -> dict | None:
 
 
 def regen_icons(design: str, result: Result) -> str:
-    ids = set(re.findall(r'<symbol id="icon-([a-z0-9-]+)"', _read(STATIC / "img" / "icons.svg")))
+    # V5.12 W2: the chrome sprite and the domain one (scripts/build_icons.py); a tree without the second reads one
+    sprites = [STATIC / "img" / "icons.svg", STATIC / "img" / "icons-domain.svg"]
+    ids = {i for path in sprites if path.exists() for i in re.findall(r'<symbol id="icon-([a-z0-9-]+)"', _read(path))}
 
     def edit(listing: str) -> str:
         listed = re.findall(r"`([a-z0-9-]+)`", listing)

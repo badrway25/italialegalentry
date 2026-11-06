@@ -28,6 +28,7 @@ Contract (every producer of a console page): `portal_nav` (portal.services.shell
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/portal/portal.css' %}">
 <link rel="stylesheet" href="{% static 'css/dist/portal/console.css' %}">{% endblock %}
 {% block body_class %}page-portal console{% endblock %}
+{% block reveal_sheet %}{% endblock %}
 
 {% comment %}
 The rail's stored preference is applied BEFORE the rail is parsed (a classic, blocking script, its
@@ -62,16 +63,5 @@ The platform footer is one line, not the institutional footer with its four colu
 whole public navigation: someone inside their own file does not need the site map, they need the
 legal pages and the way back out.
 {% endcomment %}
-{% block site_footer %}
-<footer class="portal-footer console__footer">
-  <div class="portal-footer__inner">
-    <p class="portal-footer__legal">
-      {% safe_url 'legal:privacy' as privacy_url %}{% if privacy_url %}<a href="{{ privacy_url }}" lang="en">{% translate "Privacy Policy" %}</a>{% endif %}
-      {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Conditions d’utilisation" %}</a>{% endif %}
-      {% safe_url 'legal:disclaimer' as disclaimer_url %}{% if disclaimer_url %}<a href="{{ disclaimer_url }}">{% translate "Avertissement" %}</a>{% endif %}
-    </p>
-    <p class="portal-footer__contact">{{ site.contact_email }}</p>
-  </div>
-</footer>
-{% endblock %}
+{% block site_footer %}{% include "portal/partials/console_foot.html" %}{% endblock %}
 {% block extra_scripts %}<script type="module" src="{% static 'js/dist/console.js' %}"></script>{% endblock %}

@@ -7,7 +7,8 @@ step 2; orientation/wizard.css):
     its own;
   * the question is the fieldset's legend (focused after a swap, and after the wizard's own post: wizard.js);
   * «Plusieurs réponses possibles.» is said BEFORE the choices, and the group is described by it;
-  * the choices are plates around the native controls of v5/field.css (24 px; the whole plate is the target);
+  * the choices are the form system's choice cards (V5.12 W2; v5/_choice.css): the native input over its whole card,
+    the person's own check scaling in as the edge and the tint change (M14);
   * an error is wired to the group (aria-describedby, aria-invalid), announced (role="alert") and said in words
     beside a drawn mark, the plates' edges doubled in the refusal's ink — never colour alone;
   * ONE primary: «Continuer», first in the DOM so that Enter submits it (implicit submission); «Précédent» after it.
@@ -20,7 +21,7 @@ step 2; orientation/wizard.css):
     </div>
   </div>
 
-  <form method="post" action="{{ step_url }}" class="wizard__form" hx-post="{{ step_url }}" hx-target="#orientation-step" hx-swap="outerHTML" hx-push-url="true">
+  <form method="post" action="{{ step_url }}" class="wizard__form" hx-post="{{ step_url }}" hx-target="#orientation-step" hx-swap="outerHTML" hx-push-url="true" data-loader-action="pre-assessment">
     {% csrf_token %}
     <input type="hidden" name="question_key" value="{{ q.key }}">
     <fieldset class="wizard__fieldset"{% if error or q.type == 'multiple' %} aria-describedby="{% if q.type == 'multiple' %}answer-hint{% if error %} {% endif %}{% endif %}{% if error %}answer-error{% endif %}"{% endif %}{% if error %} aria-invalid="true"{% endif %}>
@@ -33,11 +34,13 @@ step 2; orientation/wizard.css):
       {% endif %}
       {% if q.type == "multiple" %}<p class="wizard__hint" id="answer-hint">{% translate "Plusieurs réponses possibles." %}</p>{% endif %}
       {% if error %}<p class="wizard__error" id="answer-error" role="alert">{% svg_icon "circle-alert" "icon wizard__error-mark" %}<span>{{ error }}</span></p>{% endif %}
-      <div class="wizard__choices">
+      <div class="choices__grid wizard__choices">
         {% for c in q.choices %}
-        <div class="wizard__choice">
+        {# a choice card of the form system (components/choice_cards.html's drawing, v5/_choice.css): the native input over the whole card, the person's own check #}
+        <div class="choice wizard__choice">
           <input class="wizard__input" type="{{ q.input_type }}" id="answer-{{ c.key }}" name="answer" value="{{ c.key }}"{% if q.input_type == "radio" %} required{% endif %}>
-          <label class="wizard__label" for="answer-{{ c.key }}"{% if c.lang != site.lang %} lang="{{ c.lang }}"{% endif %}>{{ c.label }}</label>
+          <label class="wizard__label choice__body" for="answer-{{ c.key }}"{% if c.lang != site.lang %} lang="{{ c.lang }}"{% endif %}><span class="choice__title">{{ c.label }}</span></label>
+          <span class="choice__mark" aria-hidden="true">{% svg_icon "check" "icon" %}</span>
         </div>
         {% endfor %}
       </div>

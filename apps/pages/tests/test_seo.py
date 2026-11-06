@@ -51,7 +51,9 @@ def test_home_jsonld_parses_and_makes_no_governmental_claim(request, page, seede
     assert organization["name"] == "AGAMI — Dialogo Giuridico Interculturale APS"
     assert organization["email"] == "contact@agamieuromed.org"
     assert organization["url"] == "http://testserver/fr/"
-    for absent in ("sameAs", "logo", "parentOrganization", "memberOf", "address", "telephone", "taxID", "vatID"):
+    # V5.19: the owner-confirmed Numero Verde on the existing node — no ContactPoint, no other new type
+    assert organization["telephone"] == "800 642 015"
+    for absent in ("sameAs", "logo", "parentOrganization", "memberOf", "address", "taxID", "vatID", "contactPoint"):
         assert absent not in organization, absent
 
     website = graph["WebSite"]

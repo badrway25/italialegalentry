@@ -1,4 +1,4 @@
-{% extends "pages/institutional_base.html" %}{% load i18n %}
+{% extends "pages/institutional_base.html" %}{% load i18n static %}
 {% comment %}
 /reseau/ — the actors of the ecosystem: persons, enterprises, institutions, universities and
 training bodies, professionals. Neutral translated descriptions (pages.content.NETWORK_ACTORS):
@@ -6,60 +6,45 @@ they only restate the list of actors that the prescribed presentation texts enum
 no power, role or promise to anyone. The prescribed p3.hero.body is quoted only when gate G3 is open.
 Partners: authorised ones only (gate G6) — names, never a logo without written authorisation.
 
-Design V5.4 (W3-F1): the entrance; «En bref»; the actors as a register — the actor's glyph says who (one per row,
-the registry's), the title, the text, the actor's page as the row's link; the partners, by name only.
+Design V5.22 (SECTION_SYSTEM_V2 §3.11; lane P2) — a system of actors, drawn once and operated once:
+  moment  the head IS the map (H «la mappa»): the night ring of the five actors around the shared table, its nodes the
+          map's controls, the entries docked in the head's reading column under the lead — «En bref» the hub's entry
+          (the old RE-1, moved), each actor's sentence, glyph and space (the old register RE-2, gone: words once). The
+          head is the interior's entrance «l'ingresso» (its classes, its band, its motif), written here because its
+          root carries the map's module (sezioni/mappa.js: tablist, roving tabindex, Arrows, Home, End, Escape);
+  strip   K «l'approdo» on stone: the Forum, the promoter (and the authorised partners, G6), the network's nodes drawn
+          low as the bookend.
+Page sheets apps/pages/static/pages/css/interior.css and the route sheet rete.css (+ _rete.css; round 2, QA_ROUND2 m5). Views: apps/pages/views.py builds the entries.
 {% endcomment %}
 {% block page_title %}{% translate "Le réseau" %}{% endblock %}
+{% block route_sheet %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/rete.css' %}">{% endblock %}
 {% block page_header %}
-{% translate "Le réseau" as page_title_text %}{% translate "L’écosystème" as page_label %}
-{% translate "Un projet construit avec les acteurs compétents, chacun dans son rôle." as page_lead %}
-{% include "pages/partials/_ingresso.html" with label=page_label title=page_title_text lead=page_lead photo=photo only %}
+{% translate "Les acteurs de l’écosystème" as map_label %}
+<header class="ingresso" data-fronte="network" data-compose="network" data-tone="night" data-sec-js="mappa" data-label="{{ map_label }}">
+  <div class="fronte__ground" aria-hidden="true">{% include "pages/partials/motifs/_network.html" %}</div>
+  <div class="container ingresso__inner">
+    <div class="ingresso__text">
+      <p class="ingresso__label">{% translate "L’écosystème" %}</p>
+      <h1 class="ingresso__title">{% translate "Le réseau" %}</h1>
+      <p class="ingresso__lead">{% translate "Un projet construit avec les acteurs compétents, chacun dans son rôle." %}</p>
+    </div>
+    {% include "pages/partials/fronte/_rete.html" %}
+    {% include "pages/partials/fronte/_rete_pannelli.html" %}
+  </div>
+</header>
 {% endblock %}
 {% block page_body %}
-{% if presentation %}
-<section class="chapter" aria-labelledby="network-presentation-title">
-  <div class="container chapter__inner">
-    {% translate "En bref" as brief_title %}{% include "pages/partials/_chapter_head.html" with title_id="network-presentation-title" title=brief_title only %}
-    <div class="chapter__body">
-      <p class="chapter__statement"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
-    </div>
-  </div>
-</section>
-{% endif %}
-
-<section class="chapter" aria-labelledby="network-actors-title">
-  <div class="container chapter__inner">
-    {% translate "Les acteurs de l’écosystème" as actors_title %}{% include "pages/partials/_chapter_head.html" with title_id="network-actors-title" title=actors_title only %}
-    <div class="chapter__body">
-      <ul class="registro registro--glyph actor-list" data-actors="{{ actors|length }}">
-        {% for actor in actors %}
-        <li class="registro__row actor-list__item" data-actor="{{ actor.key }}">
-          <h3 class="registro__title actor-list__title"{% if actor.title.lang %} lang="{{ actor.title.lang }}"{% endif %}>{% svg_icon actor.icon "icon registro__glyph" %}{% if actor.url %}<a href="{{ actor.url }}">{{ actor.title }}</a>{% else %}{{ actor.title }}{% endif %}</h3>
-          <p class="registro__text actor-list__text"{% if actor.text.lang %} lang="{{ actor.text.lang }}"{% endif %}>{{ actor.text }}</p>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="chapter chapter--area" aria-labelledby="network-partners-title">
-  <div class="container chapter__inner">
-    {% translate "Partenaires" as partners_title %}{% include "pages/partials/_chapter_head.html" with title_id="network-partners-title" title=partners_title only %}
-    <div class="chapter__body">
-      {% if partners %}
-      <ul class="registro registro--two registro--words" data-partners="{{ partners|length }}">
-        {% for card in partners %}<li class="registro__row"><p class="registro__title">{{ card.partner.name }}</p></li>{% endfor %}
-      </ul>
-      {% else %}
-      <p class="page-section__text chapter__prose" data-partners="0">{% translate "Les partenaires sont présentés au fur et à mesure de leurs autorisations écrites." %}</p>
-      {% endif %}
-      <p class="chapter__more chapter__links">
-        {% if links.partners %}<a class="link-arrow" href="{{ links.partners }}">{% translate "Voir les partenaires" %}</a>{% endif %}
-        {% if links.forum %}<a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %}</a>{% endif %}
-        {% if links.agami %}<a class="link-arrow" href="{{ links.agami }}">{% translate "Le promoteur" %}</a>{% endif %}
-      </p>
-    </div>
+{% comment %}V5.12 §8 (W1-C): the partners stand only with an authorised partner (core.gates.partners_public, G6) — never a
+sentence announcing partners to come; until then the Forum and the promoter close the page on their own.{% endcomment %}
+<section class="sez sez--approdo rete-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="network-partners-title">
+  <div class="container">
+    {% if partners %}{% translate "Partenaires" as partners_title %}{% else %}{% translate "Pour aller plus loin" as partners_title %}{% endif %}
+    {% include "components/sezioni/approdo.html" with title_id="network-partners-title" title=partners_title tiles=approdo motif="network" only %}
+    {% if partners %}
+    <ul class="registro registro--two registro--words rete-partner" data-partners="{{ partners|length }}">
+      {% for card in partners %}<li class="registro__row"><p class="registro__title">{{ card.partner.name }}</p></li>{% endfor %}
+    </ul>
+    {% endif %}
   </div>
 </section>
 {% endblock %}

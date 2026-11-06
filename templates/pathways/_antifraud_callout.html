@@ -12,7 +12,7 @@ page's: it ends on the reading edge, beside the mark.
 {% locked "p3.antifraud.title" as af_title %}
 <aside class="notice notice--warning antifraud-callout" aria-labelledby="antifraud-title-{{ suffix|default:'main' }}" data-callout="antifraud">
   {% svg_icon "shield-alert" "icon notice__icon" %}
-  {% if level == 3 %}<h3{% else %}<h2{% endif %} class="notice__title{% if af_title|striptags|upper == af_title|striptags %} notice__title--caps{% endif %}" id="antifraud-title-{{ suffix|default:'main' }}">{{ af_title }}{% if level == 3 %}</h3>{% else %}</h2>{% endif %}
+  {% if level == 3 %}<h3{% else %}<h2{% endif %} class="notice__title{% if af_title|striptags|upper == af_title|striptags and af_title|striptags|lower != af_title|striptags %} notice__title--caps{% endif %}" id="antifraud-title-{{ suffix|default:'main' }}">{{ af_title }}{% if level == 3 %}</h3>{% else %}</h2>{% endif %}
   <div class="notice__body">
     {% locked "p3.antifraud.body" "p" %}
     {% if links.antifraud %}<p class="antifraud-callout__more"><a class="link-arrow" href="{{ links.antifraud }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}

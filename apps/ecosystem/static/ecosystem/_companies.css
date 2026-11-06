@@ -1,0 +1,249 @@
+/* ============================================================================================
+   ESPACE ENTREPRISES — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.6; lane P1). Page-only:
+   ecosystem/companies.css. EN-1 is lane S's «il flusso» (the measured curve) under the prescribed quotation set as the
+   band's statement; EN-2 lane S's «il panorama»; EN-3 the preserved form (the family's own rules, ecosystem/
+   _spaces.css); EN-4 the split of one locked answer; EN-5 «l'approdo» (ecosystem/_spazi-v2.css). Adapted from 21st.dev
+   (NOTES, provenance): «Comparison Section» 26826 (two panels read side by side across one divider) — refused: the
+   crosses and ticks (a mark reads as a verdict, O14), green and red, the before/after switch.
+   ============================================================================================ */
+
+/* ---- EN-1 · the quotation opens the band: the statement at the title's size, its rule drawn at the reading edge ---- */
+.imprese-citazione {
+  position: relative;
+  max-inline-size: 58rem;
+  margin: 0 0 var(--s-12);
+  padding-inline-start: var(--s-8);
+}
+
+.imprese-citazione p {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, var(--t-title));
+  line-height: var(--t-title-lh);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+.imprese-citazione__regola {
+  position: absolute;
+  inset-block: var(--s-2);
+  inset-inline-start: 0;
+  inline-size: 3px;
+  background: var(--accent-mark);
+}
+
+/* the process caption sits under the statement, closer to its route */
+.imprese-demarche .testa {
+  margin-block-end: var(--s-8);
+}
+
+/* each moment's step marker (§2 F: «a numeral in ILE Mono at --t-title 36» — a station of a real sequence, never a
+   counter or a rank: the three moments' own order; round 2, QA_ROUND2 «Entreprises composition 4 → 4.5»): the panel
+   opens on its numeral, its label at 20/28, its text at the body's 17/28 */
+.imprese-demarche .flusso__tappe {
+  counter-reset: tempo;
+}
+
+.imprese-demarche .flusso__tappa {
+  counter-increment: tempo;
+}
+
+.imprese-demarche .flusso__lastra::before {
+  content: counter(tempo, decimal-leading-zero);
+  font-family: var(--f-mono);
+  font-size: var(--t-title);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-2);
+}
+
+.imprese-demarche .flusso__testo {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+/* from 80 rem the band reads statement → process on one line: the quotation on eight columns, the process's caption on
+   the other four, standing on the quotation's last line, the route under both — the head no longer a second block
+   stacked under the first, the right third of the band no longer empty */
+@media (min-width: 80rem) {
+  .imprese-demarche > .container {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    align-items: end;
+  }
+
+  .imprese-demarche > .container > * {
+    grid-column: 1 / -1;
+  }
+
+  .imprese-demarche > .container > .imprese-citazione {
+    grid-column: 1 / span 8;
+  }
+
+  .imprese-demarche > .container > .testa {
+    grid-column: 9 / -1;
+    margin-block-end: var(--s-12);
+  }
+}
+
+/* ---- EN-4 · the split: «Non.» large, what the platform does not do | a drawn divider | what it does ---- */
+.imprese-confine__risposta,
+.imprese-confine__intera {
+  position: relative;
+  max-inline-size: 64rem;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+.imprese-confine__risposta {
+  display: grid;
+  gap: var(--s-4) var(--s-16);
+}
+
+.imprese-confine__risposta .giu-1 {
+  font-size: var(--t-title);
+  line-height: var(--t-title-lh);
+  font-weight: 500;
+}
+
+/* the two halves at one ink and one weight: the boundary — what the platform never does — is the sentence that
+   matters most and never the quieter half (QA_ROUND1 m3: it was the secondary ink at 400 beside an emphasised half) */
+.imprese-confine__risposta :is(.giu-2, .giu-3) {
+  color: var(--text-1);
+  font-weight: var(--w-title);
+}
+
+.imprese-confine__risposta .giu-3 {
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-structure);
+}
+
+@media (min-width: 48rem) {
+  .imprese-confine__risposta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .imprese-confine__risposta .giu-1 {
+    grid-column: 1 / -1;
+  }
+
+  .imprese-confine__risposta .giu-3 {
+    padding-block-start: 0;
+    border: 0;
+  }
+
+  /* the divider: between the two halves, from the keyword's foot down — it draws (LINE DRAW) */
+  .imprese-confine__risposta::after {
+    content: "";
+    position: absolute;
+    inset-block: calc(var(--t-title-lh) + var(--s-4)) 0;
+    inset-inline-start: 50%;
+    inline-size: 1px;
+    background: var(--line-structure);
+    transform-origin: 50% 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .imprese-confine__risposta::after { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .imprese-confine__risposta::after {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) 120ms backwards;
+  }
+}
+
+.imprese-confine__faq {
+  margin: var(--s-8) 0 0;
+}
+
+@media (forced-colors: active) {
+  .imprese-citazione__regola,
+  .imprese-confine__risposta::after {
+    background: CanvasText;
+  }
+}
+
+/* ---- EN-3 · «Recueil des besoins», the preserved form (V5.22 §24): its chapter beside its sticky side panel — moved
+        here unchanged from the family's partial (ecosystem/_spaces.css, round 1), its one page's sheet ---- */
+/* the form's chapter: the side panel and the form are the chapter's own two columns (the shared page sheet's §3 places
+   .chapter__head on 1 / span 4, sticky, wherever it stands) */
+.ecosystem-form__side > * {
+  grid-column: 1 / -1;
+}
+
+/* the form on the stone: «la lastra» fields on their sheet, at the reading measure */
+.ecosystem-form .form {
+  max-inline-size: 40rem;
+}
+
+/* its six short single-line fields (the company, the sector, the seat, the contact, the e-mail, the telephone) two by
+   two from 64rem, the others across the form — about 300 px less of a task that is not reading (W3-F1's review M2;
+   the form's region stands outside RH-3's cadence, DL54) */
+@media (min-width: 64rem) {
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) > * {
+    grid-column: 1 / -1;
+  }
+
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) > .form-field:nth-of-type(-n+6) {
+    grid-column: auto;
+  }
+}
+
+/* the form beside its side-anchored panel: the chapter's head, the request's sentence and where it goes — sticky from
+   64 rem, so the reader filling the twelfth field still sees what the form is and who reads it */
+.ecosystem-form__side {
+  display: grid;
+  align-content: start;
+  gap: var(--s-6);
+  min-inline-size: 0;
+}
+
+.ecosystem-form__panel {
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: var(--measure-lead);
+  padding: var(--s-5) var(--s-6);
+  border-inline-start: 2px solid var(--accent-mark);
+  background: var(--surface-raised);
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+}
+
+[dir="rtl"] .ecosystem-form__panel {
+  border-radius: var(--card-radius) 0 0 var(--card-radius);
+}
+
+.ecosystem-form__panel-text {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.ecosystem-form__destination {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+@media (min-width: 64rem) {
+  .ecosystem-form__side {
+    grid-column: 1 / span 4;
+    position: sticky;
+    inset-block-start: calc(var(--header-h) + var(--s-8));
+    align-self: start;
+  }
+
+  .ecosystem-form__side .chapter__head {
+    position: static;
+  }
+}

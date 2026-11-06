@@ -1,4 +1,4 @@
-{% extends "pages/institutional_base.html" %}{% load i18n %}
+{% extends "pages/institutional_base.html" %}{% load i18n static %}
 {% comment %}
 /attention-aux-fraudes/ — Phase 3 page (gate G3: 404 while closed; staff preview is noindex).
 The page body IS the prescribed text: p3.antifraud.title (h1) and p3.antifraud.body, verbatim,
@@ -9,50 +9,48 @@ authorised yet, so none is published. The official links must be supplied in wri
 (which authority, which URL, in which languages) before an « official resources » list is added
 under the callout. Do not add embassy, police, ministry or portal links on the team's initiative.
 
-Design V5.4 (W3-F1): the entrance (the prescribed title as the h1, nothing above it); the prescribed text as the
-page's ONE inset — a warning notice of the core components (v5/notice.css), never colour alone: the anti-fraud
-entry's mark (`shield-alert`, once), its title «Votre protection» in the register's word, the warning's BROKEN rule;
-no red, no alarm — then where to report (the live address) and where to read about the regular ways (a register,
-no glyph).
+Design V5.4 (W3-F1) and V5.15 (v515-c-improve1): the prescribed title as the h1 under its folio «Espace Personnes», the
+prescribed text as the head's panel (pages/partials/fronte/_avviso.html) — the page's ONE inset; KEEP (V5.22 §3.18 AF0;
+the folio's seal is lane S's ile-scudo).
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.18; lane P2) — A «segnalare · informarsi», one band: at the reading edge the report
+plate (the sentence leads, the live address is the plate's action — the contact page's idiom, its at-sign disc — and
+an ink rule at the plate's reading edge draws: LINE DRAW); beside it the three ways to read about the regular routes
+as route tiles, the FAQ's tile carrying the prescribed question itself (STAGGER). Internal links only.
+Round 1 (QA_ROUND1 M6, M10): the report plate speaks the protection's idiom — its 3 px ink top rule is the sill of the
+`ile-scudo` mark, drawn at body scale (the mark itself: the head's folio is the page's one seal, §4.2), and the address
+answers the reader: its hover and its focus deepen the shield's keyhole and raise the light at its foot (§4.9 n° 9, the
+seal system's `data-azione`); the address never breaks (one line at every width, its size bound to the plate).
+Round 2 (QA_ROUND2 M7): the page answers its own question — the FAQ's way is a disclosure, the prescribed question
+opening the prescribed answer in place (once on the page, whole; the FAQ's permalink under it), the system's accordion;
+the address's response is seen: the keyhole fills and a light runs along the sill from the reading edge; in view at
+load (a desktop), the sill, the shield and the tiles' rules draw in the head's own sequence; the plate stands its own
+height, sticky beside the routes from 64 rem, its address under its sentence (no empty band inside it).
 {% endcomment %}
 {% block page_title %}{{ title }}{% endblock %}
+{% block route_sheet %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/frodi.css' %}">{% endblock %}
 {% block page_header %}
-{% include "pages/partials/_ingresso.html" with title=title title_lang=title.lang only %}
+{% translate "Espace Personnes" as page_label %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=title title_lang=title.lang body=body motif="legal" glyph="shield-alert" compose="notice" aside_template="pages/partials/fronte/_avviso.html" fronte_linked=True only %}
 {% endblock %}
 {% block page_body %}
-<section class="chapter chapter--inset" aria-labelledby="antifraud-inset-title">
-  <div class="container chapter__inner">
-    <div class="chapter__body">
-      <div class="antifraud-panel antifraud-panel--page notice notice--warning" data-callout="antifraud">
-        {% svg_icon "shield-alert" "icon notice__icon antifraud-panel__mark" %}
-        <h2 class="notice__title antifraud-panel__title" id="antifraud-inset-title">{% translate "Votre protection" %}</h2>
-        <div class="notice__body antifraud-panel__content">
-          <p class="antifraud-panel__body"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body }}</p>
-        </div>
-      </div>
-    </div>
+<div class="sez sez--frodi frodi" data-sec="frodi" data-ground="paper" data-rhythm="band">
+  <div class="container frodi__griglia">
+    <section class="frodi__segnala sez-plate" aria-labelledby="antifraud-report-title" data-sigillo-scope>
+      <span class="frodi__soglia" data-verb="draw" aria-hidden="true"></span>
+      <span class="frodi__scudo" data-verb="stroke" aria-hidden="true">{% include "components/sezioni/marks/_ile-scudo.html" %}</span>
+      <h2 class="frodi__titolo" id="antifraud-report-title">{% translate "Signaler une offre suspecte" %}</h2>
+      <p class="frodi__frase">{% translate "Si une offre vous paraît suspecte, vous pouvez la signaler à l’adresse suivante :" %}</p>
+      <p class="frodi__azione"><a class="frodi__indirizzo" href="mailto:{{ site.contact_email }}" data-azione><span class="sez-disc" aria-hidden="true" data-verb="node">{% svg_icon "at-sign" "icon" %}</span><span class="email">{{ site.contact_email }}</span></a></p>
+    </section>
+    <section class="frodi__vie" aria-labelledby="antifraud-more-title">
+      <h2 class="frodi__titolo" id="antifraud-more-title">{% translate "S’informer sur les voies régulières" %}</h2>
+      {% if links.faq and faq_question.answer %}<div class="accordion frodi__domanda sez-plate"><details class="accordion__item" id="frodi-domanda">
+        <summary class="accordion__summary"><span class="sez-tile" aria-hidden="true">{% svg_icon "circle-help" "icon" %}</span><span class="frodi__domanda-testo"{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %}>{{ faq_question.question }}</span></summary>
+        <div class="accordion__panel"><p{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %}>{{ faq_question.answer }}</p><p class="frodi__domanda-link"><a href="{{ links.faq }}">{% translate "Questions fréquentes" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p></div>
+      </details></div>{% endif %}
+      {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=route_tiles only %}
+    </section>
   </div>
-</section>
-
-<section class="chapter" aria-labelledby="antifraud-report-title">
-  <div class="container chapter__inner">
-    {% translate "Signaler une offre suspecte" as report_title %}{% include "pages/partials/_chapter_head.html" with title_id="antifraud-report-title" title=report_title only %}
-    <div class="chapter__body">
-      <p class="page-section__text chapter__prose">{% translate "Si une offre vous paraît suspecte, vous pouvez la signaler à l’adresse suivante :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-    </div>
-  </div>
-</section>
-
-<section class="chapter" aria-labelledby="antifraud-more-title">
-  <div class="container chapter__inner">
-    {% translate "S’informer sur les voies régulières" as more_title %}{% include "pages/partials/_chapter_head.html" with title_id="antifraud-more-title" title=more_title only %}
-    <div class="chapter__body">
-      <ul class="registro page-links">
-        {% if links.faq %}<li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ links.faq }}">{% translate "Questions fréquentes" %}</a></p>{% if faq_question %}<p class="registro__text"{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %} data-faq="{{ faq_question.key }}">{{ faq_question.question }}</p>{% endif %}</li>{% endif %}
-        {% if links.pathways %}<li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ links.pathways }}">{% translate "Espace Personnes : les parcours réguliers" %}</a></p></li>{% endif %}
-        {% if links.glossary %}<li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ links.glossary }}">{% translate "Glossaire des termes officiels" %}</a></p></li>{% endif %}
-      </ul>
-    </div>
-  </div>
-</section>
+</div>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% load pages_imagery %}{% comment %}
+I · «IL FILO» — the timeline, a progression read in order with a sticky rail (design V5.22, SECTION_SYSTEM_V2 §2 I;
+lane S): the steps of a sheet, two times, eight clauses — when the reader gains from knowing where they are.
+static/css/v5/_sec-filo.css; static/js/src/sezioni/spia.js (the rail).
+
+A vertical route with its milestones (a numeral at 36/40 in Host Grotesk 600 — the numeral role —, a T2 tile on the line,
+the heading at 20); from
+64 rem a sticky companion at the inline start — the page's «Sommaire» rail (3/12), its fill bound to the section's
+progress, its current item `aria-current="location"` (announced on focus, never on scroll). `crossing`: the two times
+of /formation/ — two columns joined by one horizontal line, a node at each end. Below 64 rem nothing is sticky: the
+route runs down the reading edge. Motion SCROLL PROGRESSION: the line advances as it is read, a node lights when the
+line reaches it. Still: the route drawn, every node lit.
+
+Contract: `milestones` — [{"id", "num", "glyph", "heading", "heading_lang", "body" (safe), "body_lang", "frame_slot"}];
+`level` (the milestones' heading level: 3 by default); `rail` — {"label", "items": [{"id", "label", "lang"}]} (the
+page's parts, by their anchors); `crossing` (True).
+{% endcomment %}<div class="filo{% if rail %} filo--rail{% endif %}{% if crossing %} filo--traversata{% endif %}"{% if rail %} data-sec-js="spia"{% endif %}>
+  {% if rail %}<nav class="filo__rail" aria-label="{{ rail.label }}"><ol class="filo__indice">{% for it in rail.items %}<li><a class="filo__voce" href="#{{ it.id }}"{% if it.lang %} lang="{{ it.lang }}"{% endif %}>{{ it.label }}</a></li>{% endfor %}</ol></nav>{% endif %}
+  <ol class="filo__linea" role="list" data-registro>
+    {% for item in milestones %}<li class="filo__tappa"{% if item.id %} id="{{ item.id }}"{% endif %}>
+      <span class="filo__num sez-numeral" aria-hidden="true">{% if item.num %}{{ item.num }}{% else %}{{ forloop.counter|stringformat:"02d" }}{% endif %}</span>
+      <span class="filo__nodo sez-tile sez-tile--sm" aria-hidden="true">{% if item.glyph %}{% svg_icon item.glyph "icon" %}{% endif %}</span>
+      <h{{ level|default:3 }} class="filo__titolo"{% if item.heading_lang %} lang="{{ item.heading_lang }}"{% endif %}>{{ item.heading }}</h{{ level|default:3 }}>
+      {% if item.body %}<div class="filo__corpo"{% if item.body_lang %} lang="{{ item.body_lang }}"{% endif %}>{{ item.body }}</div>{% endif %}
+      {% if item.frame_slot %}<div class="filo__foto">{% photo item.frame_slot "filo__frame" %}</div>{% endif %}
+    </li>{% endfor %}
+  </ol>
+</div>

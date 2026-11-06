@@ -4,7 +4,7 @@ from django.conf import settings
 from django.urls import translate_url
 from django.utils import translation
 
-from core import gates
+from core import contact, gates
 from core.models import SiteSettings
 
 
@@ -42,7 +42,11 @@ def site(request):
             "contact_email": (
                 site_settings.public_contact_email if site_settings else settings.ILE["PUBLIC_CONTACT_EMAIL"]
             ),
-            "version_label": (site_settings.version_label if site_settings else settings.ILE["VERSION_LABEL"]),
+            # V5.19: the public telephone channels — {"freephone", "whatsapp"}: digits, label, tel_url, url
+            # (core.contact)
+            "channels": contact.public_channels(site_settings),
+            # the release, for the page's metadata (`<meta name="generator">`) — never the footer, which says the phase
+            "version_label": ((site_settings.version_label if site_settings else "") or settings.ILE["VERSION_LABEL"]),
             "content_verified_on": (site_settings.content_verified_on if site_settings else None),
             "settings": site_settings,
             "lang": lang,

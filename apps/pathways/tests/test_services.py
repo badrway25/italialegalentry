@@ -234,15 +234,8 @@ def test_detail_context_shape():
     with translation.override("fr"):
         ctx = services.detail_context(p)
     assert ctx.title == "Travail salarié"
-    assert [s["id"] for s in ctx.sections] == [
-        "apercu",
-        "etapes",
-        "documentation",
-        "autorites",
-        "avertissements",
-        "ressources",
-        "orientation",
-    ]
+    # V5.12 §8: a chapter with nothing verified is not in the index — here no context, steps, documents or authorities
+    assert [s["id"] for s in ctx.sections] == ["avertissements", "ressources", "orientation"]
     assert ctx.is_training_in_origin_country is False
     assert ctx.eligibility == ""
 

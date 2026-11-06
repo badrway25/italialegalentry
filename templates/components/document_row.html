@@ -6,6 +6,11 @@ the row's footer on its full measure (the motive of a refusal, the reason a repl
 apps/portal/static/portal/v5/_workspace.css. Below 52rem of register the same markup is a card (placed by `order`):
 there is no second template for the phone.
 
+V5.15 W3 (lane B; DECISIONS §3 «File List Item» 28496): the piece's meta says its current FILE — its version and
+its size (filesizeformat, the reader's units); never its stored name: the register is not a file browser
+(apps/documents/tests/test_requirement_views.py). «Télécharger» stays on the piece's page and in its drawer: the row
+is the link, and a quiet row (filed, in review, valid) offers no second control (W3-C, W-3).
+
 THE ROW IS THE LINK. The title's link is stretched over the whole row, above the chip, the actor, the date and the
 note — every point of the row that shows its hover state opens the piece (gate 0 left 14 of 30 dead) — and under
 the act, the one other control. No row menu and no «Consulter»: «Télécharger» and the deposits are on the piece's
@@ -26,7 +31,7 @@ responsible_glyph, due_date, urgency, due_word, act {label, url, glyph, aria_lab
 {% endcomment %}<li class="doc-row" data-state="{{ row.state }}" data-piece="{{ row.id }}">
   <div class="doc-row__piece">
     <p class="doc-row__title" id="piece-{{ row.id }}"><a class="doc-row__link" href="{{ row.detail_url }}"{% if row.state_reason %} aria-describedby="note-{{ row.id }}"{% endif %}{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% endif %}>{{ row.title }}</a>{% if not row.mandatory %} <span class="doc-row__qualifier">{% translate "Facultative" %}</span>{% endif %}</p>
-    {% if row.current or row.health %}<p class="doc-row__meta">{% if row.current %}<span>{% blocktranslate with n=row.version_count %}version {{ n }}{% endblocktranslate %}</span>{% endif %}{% if row.health %}<span>{{ row.health }}</span>{% endif %}</p>{% endif %}
+    {% if row.current or row.health %}<p class="doc-row__meta">{% if row.current %}<span>{% blocktranslate with n=row.version_count %}version {{ n }}{% endblocktranslate %}</span>{% if row.current.size %}<span class="doc-row__size">{{ row.current.size|filesizeformat }}</span>{% endif %}{% endif %}{% if row.health %}<span>{{ row.health }}</span>{% endif %}</p>{% endif %}
   </div>
   <div class="doc-row__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}{% if row.action_blocked %} <span class="doc-row__blocked">{% translate "Bloqué" %}</span>{% endif %}</div>
   {% if row.state_reason %}<p class="doc-row__note{% if row.state == 'invalid' %} doc-row__note--refusal{% endif %}" id="note-{{ row.id }}">{% if row.state == 'invalid' %}{% svg_icon "circle-alert" "icon" %}{% else %}{% svg_icon "info" "icon" %}{% endif %}<span dir="auto">{{ row.state_reason }}</span></p>{% endif %}

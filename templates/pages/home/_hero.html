@@ -18,7 +18,7 @@ once on the compositor; the treads' twins, the spill, the aperture band, the blo
 only hero.js moves (transform and opacity). The first paint is the stage closed; the settled hero keeps the door AJAR
 (DL54-11; its revert: hero.css, the two 0.8). Nothing loops; nothing moves at rest.
 
-The information is in the HTML: one h1 (the name, visually hidden, and the visible promise), the two actions, an <ol>
+The information is in the HTML: one h1 (the name, visible since V5.12 Q1) and the promise under it, the two actions, an <ol>
 of stations, a <nav> of four links — each named by its word, described by its sentence and its call — and the locked
 description. The name is an English name in every language of the site: its span says so, as the header's lock-up
 does (cms_nav.brand_lockup) — it carried the locked text's language, and a French voice read it on the English page. The four photographs are black-and-white at rest and take colour under the light (DL54-12, here only).
@@ -57,10 +57,13 @@ is a change here (apps/pages/tests/test_browser.py holds it).
   terminal disc), the phone's rail and floor line (one route) and its spine; the compact desktop's string is each row's own.{% endcomment %}
   <div class="he-ground" aria-hidden="true"><span class="he-path he-path--wall"></span><span class="he-path he-path--night"></span><span class="he-rail"></span><span class="he-spine"></span><span class="he-spine-top"></span></div>
 
-  {% comment %}2 · THE STATEMENT — the one h1: the name for assistive technology and search, the promise in sight.{% endcomment %}
+  {% comment %}2 · THE STATEMENT — the one h1 is the name, VISIBLE (the owner's Q1 answer, 28 Oct 2026: keep the visible H1 —
+  the locked name, p3.hero.title — and never the product name twice one under the other), in the wordmark's face; the promise
+  is the line under it. On the home the header's lock-up shows the mark alone (hero.css): one name on the screen.{% endcomment %}
   <div class="he__statement">
     {% if d.variant == "phase3" %}
-    <h1 class="he__title" id="hero-title" data-hero-title><span class="visually-hidden he__name" id="hero-name" translate="no" dir="ltr" lang="en">{{ d.title }}</span> <span class="he__promise"{% if d.subtitle.lang %} lang="{{ d.subtitle.lang }}" dir="ltr"{% endif %}>{{ d.subtitle }}</span></h1>
+    <h1 class="he__title he__title--name" id="hero-title" data-hero-title><span class="he__name" id="hero-name" translate="no" dir="ltr" lang="en">{{ d.title }}</span></h1>
+    <p class="he__promise"{% if d.subtitle.lang %} lang="{{ d.subtitle.lang }}" dir="ltr"{% endif %}>{{ d.subtitle }}</p>
     {% else %}
     {% if d.eyebrow %}<p class="he__eyebrow"{% if d.eyebrow.lang %} lang="{{ d.eyebrow.lang }}"{% endif %}>{{ d.eyebrow }}</p>{% endif %}
     <h1 class="he__title" id="hero-title" data-hero-title{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}><span class="he__promise">{{ d.title }}</span></h1>
@@ -117,7 +120,10 @@ is a change here (apps/pages/tests/test_browser.py holds it).
   rail, corner and floor twins.{% endcomment %}
   <div class="he-lights" aria-hidden="true" data-lights><span class="he-route he-route--wall"></span><span class="he-route he-route--night"></span><span class="he-wipe he-wipe--wall" data-wipe="wall"><span class="he-wipe__bar"></span></span><span class="he-wipe he-wipe--night" data-wipe="night"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--maroc" data-corner="maroc"></span><span class="he-wipe he-wipe--spine" data-wipe="spine"><span class="he-wipe__bar"></span></span><span class="he-junction" data-junction></span><span class="he-wipe he-wipe--rail" data-wipe="rail"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--rail" data-corner="rail"></span><span class="he-wipe he-wipe--floor" data-wipe="floor"><span class="he-wipe__bar"></span></span></div>
 
-  {% comment %}7 · THE DESCRIPTION — the locked body: the hero's last row, whose first line is the fold.{% endcomment %}
-  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>{% endif %}
+  {% comment %}7 · THE DESCRIPTION — the locked body: the hero's last row, whose first line is the fold. V5.22 (SECTION_SYSTEM_V2 §3.1
+  H0, «la soglia»): the hero's route continues beside it — a 2 px line in the route's own bronze, at the reading edge, from the
+  statement's first line down into the orientation's band, where it becomes that band's route; it draws once as it enters (the
+  section runtime: data-sec, its verb draw-y), drawn at rest under reduced motion. Decorative; the statement is unchanged.{% endcomment %}
+  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p><span class="he__soglia" data-sec="soglia" aria-hidden="true"><span class="he__soglia-linea" data-verb="draw-y"></span></span>{% endif %}
 </section>
 {% endwith %}

@@ -64,13 +64,13 @@ def test_the_top_bar_s_account_is_the_systems_popover(client, seeded, person, la
     html = client.get(url).content.decode()
     bar = _bar(html)
     # named by the words it shows, then what it opens — two live strings (REVIEW m3; WCAG 2.5.3)
-    name = f"{person.get_short_name()} — {account_label}"
+    name = f"{person.get_full_name()} — {account_label}"  # the full name, never its first word (V5.12 §11)
     assert re.search(
         rf'<button class="account-menu__summary" type="button" popovertarget="console-account" '
         rf'aria-label="{re.escape(name)}">',
         bar,
-    ), "the trigger's name: «‹short name› — Mon compte»"
-    assert '<span class="account-menu__name">' in bar, "the short name, cut where its seat is short (overlays.css §9)"
+    ), "the trigger's name: «‹full name› — Mon compte»"
+    assert '<span class="account-menu__name">' in bar, "the full name, cut where its seat is short (overlays.css §9)"
     # as a phone sheet the menu says what it is: its name heads its rows, for the eye only (REVIEW M1)
     assert f'<p class="overlay__caption" aria-hidden="true">{account_label}</p>' in bar
     panel = bar.split('id="console-account"', 1)[1].split("</div>\n</div>", 1)[0]
@@ -95,7 +95,9 @@ def test_the_letterhead_holds_the_account_popover_since_w2_c2(client, seeded, pe
     # the targa's seat and the phone sheet's foot: the system's popover, never V4's <details> (W2-C2)
     assert "<details class=\"account-menu\"" not in html and "data-dropdown" not in html
     assert 'popovertarget="account-menu"' in html and 'popovertarget="account-menu-sheet"' in html
-    assert html.count('data-overlay="popover"') == 2 and 'popovertarget="console-account"' not in html
+    # the account popover in its two seats, and V5.15's language switch (one row: the languages are a popover too)
+    assert html.count('data-overlay="popover"') == 3 and 'id="lang-menu"' in html
+    assert 'popovertarget="console-account"' not in html
 
 
 def test_the_console_drawer_is_a_modal_drawer_of_the_system(client, seeded, person):

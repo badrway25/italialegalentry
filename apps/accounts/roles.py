@@ -57,6 +57,24 @@ ROLE_LABELS = {
     "role:superadmin": _("Administration générale"),
 }
 
+#: Who the account is, as the reserved area names it to the account itself — the rail's foot, the dashboard's
+#: account strip, the profile's «Votre espace» (V5.12 §11, Director's decisions §9). ``ROLE_LABELS`` stays the back
+#: office's vocabulary; this map is the visitor's. The one difference that matters: a person is never told that their
+#: role is «Personne / Persona / Person» — an identity word the binding glossary (docs/I18N_RTL.md §5) does not
+#: have — but the name of their space, «Espace Personnes / Area Persone / Individuals Area / فضاء الأفراد». The other
+#: words are the glossary's and the Implementation document's (S1 §2.1, §3.2, §3.4); EN and AR are PROVISIONAL
+#: pending the owner and counsel (Q3). The internal codes do not change, so no migration is needed.
+AUDIENCE_SPACE_LABELS = {
+    "role:person": _("Espace Personnes"),
+    "role:company": _("Entreprise"),
+    "role:institution": _("Institution"),
+    "role:university": _("Université ou organisme de formation"),
+    "role:professional": _("Professionnel"),
+    "role:authorised_actor": _("Acteur autorisé"),
+    "role:training_provider": _("Organisme de formation"),
+    "role:staff": _("Équipe du projet"),
+}
+
 ALL_ROLES = (
     PERSON,
     COMPANY,
@@ -115,6 +133,7 @@ def check_role_set(names) -> None:
                 _("Les rôles « %(a)s » et « %(b)s » ne peuvent pas être attribués au même compte.")
                 % {"a": ROLE_LABELS[first], "b": ROLE_LABELS[second]}
             )
+
 
 # (app_label, model) → permission codenames granted per role. Deny by default: unlisted = nothing.
 ROLE_PERMISSIONS: dict[str, dict[str, tuple[str, ...]]] = {
@@ -261,6 +280,48 @@ def is_backoffice(user) -> bool:
 
 def is_superadmin(user) -> bool:
     return bool(getattr(user, "is_superuser", False)) or has_role(user, SUPERADMIN)
+
+
+#: The order in which a role names the account to itself — the first that holds: a privilege is a group here whatever
+#: the account's type says, and the type defaults to «person». Then the type, for an account that holds no role yet.
+AUDIENCE_ORDER: tuple[str, ...] = (
+    INSTITUTION,
+    UNIVERSITY,
+    TRAINING_PROVIDER,
+    AUTHORISED_ACTOR,
+    PROFESSIONAL,
+    PERSON,
+    COMPANY,
+)
+AUDIENCE_BY_TYPE: dict[str, str] = {
+    "institution": INSTITUTION,
+    "university": UNIVERSITY,
+    "professional": PROFESSIONAL,
+    "person": PERSON,
+    "company": COMPANY,
+}
+
+
+def is_project_team(user, held: set[str] | frozenset[str] | None = None) -> bool:
+    """The project's own team: a back-office door (``is_staff``) or a back-office role."""
+    held = roles_of(user) if held is None else held
+    return bool(getattr(user, "is_staff", False) or set(held) & set(BACKOFFICE_ROLES))
+
+
+def audience_role(user, held: set[str] | frozenset[str] | None = None) -> str:
+    """The role that names the account to itself (``AUDIENCE_SPACE_LABELS``'s key) — STAFF for the project's team."""
+    held = roles_of(user) if held is None else held
+    if is_project_team(user, held):
+        return STAFF
+    for role in AUDIENCE_ORDER:
+        if role in held:
+            return role
+    return AUDIENCE_BY_TYPE.get(getattr(user, "account_type", ""), PERSON)
+
+
+def space_label(user, held: set[str] | frozenset[str] | None = None) -> str:
+    """«Espace Personnes», «Entreprise», «Institution» … — the visitor's word for who the account is, translated."""
+    return str(AUDIENCE_SPACE_LABELS[audience_role(user, held)])
 
 
 def role_labels(user) -> list[str]:

@@ -6,44 +6,24 @@ a public authority. When gate G3 is open the promoter is presented with the pres
 answer (faq_who); otherwise with a connective sentence stating only who promotes the project.
 CONTENT_PENDING_LEGAL_REVIEW — registered office, RUNTS number and tax code belong to the official
 « Mentions légales » (Allegato 1, not received): they are not published here.
+V5.12 §8 (W1-C): the partners stand only with an authorised partner (core.gates.partners_public, G6); until then the
+promoter stands alone — no sentence announces partners to come.
 
-Design V5.4 (W2-D step 3): two bays under one lintel — who promotes the project, and with whom. Each bay
-is named once, by its own label; the running head that named both a second time is gone.
+V5.22 (SECTION_SYSTEM_V2 §3.1 S7 «la campata, il colophon», §2 A, §0.1 «arched frame, no extra seal»; lane H): the title
+over an architectural split. On 7/12 at the reading edge, the working-table photograph (slot home.ecosystem: hands,
+annotated papers, the session's microphones; no face, the lanyard redacted) in lane M's 4:3 re-crop under the brand's
+arch on its sill — the arch is the section's icon, become the frame (the 24 px arch above the title is gone). On 5/12,
+the promoter's colophon: the label «Promoteur» in ILE Mono with its rule, the promoter's name at the title's size, the
+prescribed answer with «depuis 2011» and «Italie–Maroc» set in ink as keywords (emphasis only: the textContent is the
+answer itself), the partners when G6 allows them, and the link as a secondary button. Motion MASK: the photograph
+appears through the arch widening to the frame, settling from 1.06, then the connector draws into the colophon; the
+text never moves (components/sezioni/campata.html, lane S). Still: the framed photograph in colour, the connector drawn.
 {% endcomment %}
 {% translate "Un écosystème institutionnel" as fallback_title %}
-<section class="chapter chapter--page home-ecosystem" id="{{ s.anchor }}" aria-labelledby="home-ecosystem-title" data-section="ecosystem">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_section_header.html" with title_id="home-ecosystem-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
-    <div class="chapter__body">
-      <div class="home-ecosystem__grid">
-        <div class="home-ecosystem__promoter">
-          <p class="home-ecosystem__label">{% translate "Promoteur" %}</p>
-          <h3 class="home-ecosystem__name" translate="no">{{ d.promoter }}</h3>
-          {% if d.promoter_quote %}
-          <p class="home-ecosystem__text"{% if d.promoter_quote.lang %} lang="{{ d.promoter_quote.lang }}"{% endif %} data-faq="{{ d.promoter_quote.key }}">{{ d.promoter_quote.answer }}</p>
-          {% else %}
-          <p class="home-ecosystem__text">{% blocktranslate with project=site.project_name promoter=d.promoter %}{{ project }} est promu par {{ promoter }}.{% endblocktranslate %}</p>
-          {% endif %}
-          {% if d.agami_url %}<p class="home-ecosystem__more"><a class="link-arrow" href="{{ d.agami_url }}">{% translate "En savoir plus sur le promoteur" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-        </div>
-        <div class="home-ecosystem__partners">
-          <p class="home-ecosystem__label">{% translate "Partenaires" %}</p>
-          {% if d.partners %}
-          <ul class="home-ecosystem__list" data-partners="{{ d.partners|length }}">
-            {% for card in d.partners %}
-            <li class="home-ecosystem__partner">
-              {% if card.partner.logo_public %}<img class="home-ecosystem__logo" src="{{ card.partner.logo.file.url }}" alt="" width="{{ card.partner.logo.width|default:'160' }}" height="{{ card.partner.logo.height|default:'80' }}" loading="lazy" decoding="async">{% endif %}
-              <span class="home-ecosystem__partner-name">{{ card.partner.name }}</span>
-            </li>
-            {% endfor %}
-          </ul>
-          {% else %}
-          <p class="home-ecosystem__empty" data-partners="0">{% translate "Les partenaires sont présentés au fur et à mesure de leurs autorisations écrites." %}</p>
-          {% endif %}
-          {% if d.partners_url %}<p class="home-ecosystem__more"><a class="link-arrow" href="{{ d.partners_url }}">{% translate "Voir les partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-        </div>
-      </div>
-      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-    </div>
+<section class="sez sez--campata home-ecosystem" id="{{ s.anchor }}" aria-labelledby="home-ecosystem-title" data-section="ecosystem" data-sec="campata" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container">
+    {% if s.heading %}{% include "components/sezioni/_testa.html" with role="statement" title_id="home-ecosystem-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-ecosystem-title">{{ fallback_title }}</h2>{% endif %}
+    {% include "components/sezioni/campata.html" with side="start" wide=True frame="arch" media_template="pages/home/_ecosystem_frame.html" body_template="pages/home/_ecosystem_colophon.html" d=d site=site only %}
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
   </div>
 </section>

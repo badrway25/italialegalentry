@@ -191,7 +191,9 @@ def test_invalid_category_rejected(client, event, forms_open, registration_paylo
 def test_registration_page_without_event(client, db):
     response = client.get(REGISTER)
     assert response.status_code == 200
-    assert 'class="empty-state"' in response.content.decode()
+    # the empty state in its glyph tile since V5.15 W3 round 1 (DECISIONS §15 lane B; v515-b 9211d5fc,
+    # templates/components/empty_state.html): the class pair is the component's own
+    assert '<div class="empty-state empty-state--tile" role="status">' in response.content.decode()
 
 
 def test_registration_pages_compliance(client, event, forms_open):

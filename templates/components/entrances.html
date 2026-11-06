@@ -14,7 +14,35 @@ the four prescribed blocks are rendered from the locked registry (p3.entrances.*
 only do when gate G3 is open. `heading_level` = "h2" (default) or "h3". Links resolve through
 safe_url, so an entrance whose destination does not exist yet is shown without a link rather than
 hidden. The list carries no name of its own: the section that includes it is labelled by its title.
+
+V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §2 J «il passaggio»; lane H) — `rail=True` with `entrances` (each dict also carries
+`glyph`, the registry's audience glyph): the four DOORS on a phone, a native snap rail of four equal plates (78 % of the
+column, the next one peeking), the rail scrolling inside itself — static/css/v5/_sec-passaggio.css, the plates'
+interior pages.css. Each plate is one link: an arched seat on the night with its audience disc (T2a, the audience's
+accent ring), the prescribed question, the sentence and the call, every word visible at rest, as written. The arch's
+outline draws once as the rail enters (stroke, 60 ms apart). No arrows, no dots, no autoplay, no loop; Tab moves from
+plate to plate. Unranked (PX02): no numeral, no lead plate. Round 1 (QA_ROUND1 m6): the seat is a lunette — its arch
+rises the seat's whole height, so it reads as a doorway, never as a header band — and the call follows its sentence (the
+plates' common height gathers under the call, not above it).
+Final fix round (found with QA_ROUND3 m1's cause, pages/home/_ecosystem_frame.html): a stretched non-scaling stroke's dash
+is laid in device pixels, so on a 2× or 3× phone the lunette painted its far half first and drew as dashes. Its arch is
+drawn through its own mask instead — the same path, 12 user units wide, carrying the verb «stroke» in the drawing's user
+space (pathLength 0.99) —, so it grows as one line from its foot on every screen; each mask's id is its door's rank.
 {% endcomment %}
+{% if rail and entrances %}<div class="passaggio-rail">
+<ol class="passaggio sez-seq" role="list">
+  {% for e in entrances %}
+  <li class="passaggio__lastra" data-route="{{ e.actor }}" data-audience="{{ e.actor }}">
+    {% if e.url %}<a class="passaggio__porta" href="{{ e.url }}"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{% else %}<div class="passaggio__porta"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{% endif %}
+      <span class="passaggio__seggio on-inverse" aria-hidden="true"><svg class="passaggio__arco" viewBox="0 0 280 100" preserveAspectRatio="none" focusable="false" aria-hidden="true"><mask id="passaggio-arco-{{ forloop.counter }}" maskUnits="userSpaceOnUse" x="-10" y="-10" width="300" height="120" mask-type="alpha"><path data-verb="stroke" pathLength="0.99" stroke="currentColor" stroke-width="12" d="M1 100A139 99 0 0 1 279 100"/></mask><path mask="url(#passaggio-arco-{{ forloop.counter }})" vector-effect="non-scaling-stroke" d="M1 100A139 99 0 0 1 279 100"/></svg>{% if e.glyph %}<span class="sez-disc sez-disc--lg">{% svg_icon e.glyph "icon" %}</span>{% endif %}</span>
+      {% if heading_level == 'h3' %}<h3 class="passaggio__titolo">{{ e.title }}</h3>{% else %}<h2 class="passaggio__titolo">{{ e.title }}</h2>{% endif %}
+      <span class="passaggio__testo">{{ e.text }}</span>
+      {% if e.url %}<span class="passaggio__cta">{{ e.button }}{% svg_icon "arrow" "icon passaggio__freccia icon--flip-rtl" %}</span>{% endif %}
+    {% if e.url %}</a>{% else %}</div>{% endif %}
+  </li>
+  {% endfor %}
+</ol>
+</div>{% else %}
 {% if not entrances %}
   {% safe_url 'pathways:index' as u_person %}{% safe_url 'ecosystem:companies' as u_company %}{% safe_url 'ecosystem:institutions' as u_institution %}{% safe_url 'ecosystem:universities' as u_university %}
   {% locked_lang "p3.entrances.person.title" as locked_lang_code %}
@@ -60,4 +88,4 @@ hidden. The list carries no name of its own: the section that includes it is lab
     {% if u_university %}</a>{% else %}</div>{% endif %}
   </li>
 {% endif %}
-</ol>
+</ol>{% endif %}

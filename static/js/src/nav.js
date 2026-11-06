@@ -24,17 +24,21 @@
  *                    - «l'architrave», the one indicator: translateX + scaleX, the nearest item under the
  *                      pointer, no travel on its first placement, from the keyboard or under reduced motion;
  *                    - the layout the panels need and CSS cannot know: the entries' column starts at the first
- *                      door (--portico-lead, N2), one height for the four door panels (--portico-h, LA-7 — measured
- *                      when the width, the bar or the fonts change, not on the scrolled switch), the short panels
- *                      marked (.portico--short) so that their list closes with a hairline;
- *                    - the photographs: nothing before `load`; at idle after it, from 80rem, without Save-Data,
- *                      fetched once (N8); a panel opened before that fetches its own; the old one cross-fades.
+ *                      door (--portico-lead, N2); since review round 1 (v515-a-improve1) each door has its own
+ *                      height and a door change morphs the card from the old one's (--portico-from);
+ *                    - the photographs (a frame of the menu's own, lane C's `menu_only`): nothing before `load`; at
+ *                      idle after it, from 80rem, without Save-Data, fetched once (N8); a panel opened before that
+ *                      fetches its own.
  *                    The panel's open state, scrim, Esc, light dismissal and focus return are still this module's own
  *                    (W2-C1's adapter): the overlay system's contract (docs/design-v5/QA/v54/w2-a/CONTRACT.md) has no
  *                    primitive for a disclosure region yet — the portico family (surfaces PC03) is asked of W2-A
  *                    (docs/design-v5/QA/v54/w2-c2/NOTES.md, «For W2-A»); until the switch, any `overlay:open` of the
  *                    system puts the panel away.
- *   initSheet        the sheet below 80rem (W2-C2, plan §1.12 item 8): the overlay system's modal drawer — «Menu»
+ *   V5.15 (DECISIONS §15 lane A): every item is in the bar from 64rem (one row); «le piano», a soft plate, glides under
+ *                    the pointer from item to item (`glide`, transform and width, the snappy spring; never from the
+ *                    keyboard, never on a touch screen); a panel that replaces another takes its content from the side the
+ *                    pointer travelled (`data-from` start | end on the nav, 21st «Directional Menu» 36476's idea).
+ *   initSheet        the sheet below 64rem (80rem before V5.15) (W2-C2, plan §1.12 item 8): the overlay system's modal drawer — «Menu»
  *                    opens it, overlay.js holds the trap, the scrim, Esc, «Fermer», a link and the focus back on
  *                    «Menu» (CONTRACT §2–§4); its doors unfold in place with no script (an exclusive <details name>,
  *                    main.js's accordion where the name is not supported). Here only what the system cannot know:
@@ -84,6 +88,7 @@ function initPortico(header) {
   const doors = tops.filter((top) => top.hasAttribute("data-portico-door"));
   if (!doors.length) return;
   const architrave = nav.querySelector("[data-portico-architrave]");
+  const plate = nav.querySelector("[data-portico-plate]");
   const scrim = header.querySelector("[data-portico-scrim]");
   const panelOf = (door) => document.getElementById(door.getAttribute("aria-controls"));
   const doorOf = (panel) => doors.find((door) => panelOf(door) === panel) || null;
@@ -117,12 +122,27 @@ function initPortico(header) {
   }
   const rest = (jump) => place(openDoor() || current(), jump);
 
-  /* ---- the geometry CSS cannot know: where the first door's words start, one height for the doors ----
-     Two costs, kept apart (the family's a11y/perf check, finding 2): the lead is one rect and is re-read on every
-     change, the scrolled letterhead included (the lock-up may move the bar); the one height opens the four door
-     panels out of sight and is measured only when the inner's width, the bar or the fonts change — never on the
-     64 ↔ 56 switch, where it was a long task on every wheel crossing. */
-  let measuredAt = -1; /* the inner width the one height was measured at */
+  /* ---- le piano: the soft plate under the pointer (physical pixels, as the architrave) ---- */
+  function glide(target) {
+    if (!plate) return;
+    if (!target || !BAR.matches || !FINE.matches || !shown(target)) {
+      plate.classList.remove("is-on");
+      return;
+    }
+    const box = inner.getBoundingClientRect();
+    const r = target.getBoundingClientRect();
+    const first = !plate.classList.contains("is-on");
+    plate.classList.toggle("is-jump", first || reducedMotion());
+    plate.style.inlineSize = `${r.width.toFixed(2)}px`;
+    plate.style.transform = `translateX(${(r.left - box.left).toFixed(2)}px)`;
+    plate.classList.add("is-on");
+  }
+
+  /* ---- the geometry CSS cannot know: where the first door's words start (the plain panel's lede column) ----
+     One rect, re-read on every change, the scrolled letterhead included (the lock-up may move the bar). Review round 1
+     (v515-a-improve1): the doors no longer share one height — each panel has its own, and a door change morphs the
+     card from the old door's height (`--portico-from`, written in `open()`, chrome.css §5) — so nothing opens the
+     panels out of sight any more. */
   function lead() {
     const box = inner.getBoundingClientRect();
     const style = getComputedStyle(inner);
@@ -137,29 +157,9 @@ function initPortico(header) {
     }
     return box;
   }
-  function heights() {
-    // One height for the door panels: each is measured at its natural height, out of sight, in one frame — and
-    // leaves at once: without `is-instant` the panels' discrete `display` transition held them on screen 120 ms
-    // after the measure, long enough for the browser to fetch their lazy photographs, Save-Data or not (N8, W2-C2)
-    const instant = nav.classList.contains("is-instant");
-    nav.classList.add("is-measuring", "is-instant");
-    nav.style.setProperty("--portico-h", "auto");
-    const natural = photoDoors.map((door) => [panelOf(door), panelOf(door).offsetHeight]);
-    nav.classList.remove("is-measuring");
-    getComputedStyle(photoDoors.length ? panelOf(photoDoors[0]) : nav).display; // the closed pose, taken at once
-    nav.classList.toggle("is-instant", instant);
-    const height = Math.max(0, ...natural.map(([, h]) => h));
-    if (height) nav.style.setProperty("--portico-h", `${Math.ceil(height)}px`);
-    // A door whose own content ends well above the shared height (LA-7's 24 px) closes its list with a hairline.
-    for (const [panel, h] of natural) panel.classList.toggle("portico--short", height - h > 24);
-  }
-  function layout(force) {
+  function layout() {
     if (!BAR.matches) return;
-    const width = Math.round(lead().width);
-    if (force || width !== measuredAt) {
-      measuredAt = width;
-      heights();
-    }
+    lead();
     rest(true);
   }
 
@@ -207,11 +207,11 @@ function initPortico(header) {
     nav.classList.toggle("is-instant", instant);
     nav.classList.remove("is-switching", "is-first");
     if (was) {
-      const leaving = panelOf(was);
-      if (!instant && DESKTOP.matches && leaving.classList.contains("portico--door")) {
-        leaving.classList.add("is-leaving");
-        setTimeout(() => leaving.classList.remove("is-leaving"), 220);
-      }
+      const forward = doors.indexOf(door) > doors.indexOf(was);
+      nav.dataset.from = forward ? "end" : "start";
+      // the card morphs from the old door's height to the new one's (chrome.css §5 / _portico.css); the old door's
+      // plate is a drawing, not a photograph: nothing to cross-fade, it leaves with its panel
+      panelOf(door).style.setProperty("--portico-from", `${Math.round(panelOf(was).getBoundingClientRect().height)}px`);
       was.setAttribute("aria-expanded", "false");
       if (!instant) flag("is-switching", 260);
     } else if (how === "pointer" && firstPointerOpen && !instant) {
@@ -314,12 +314,14 @@ function initPortico(header) {
         }
         place(best, false);
       }
+      if (FINE.matches && nav.contains(event.target)) glide(event.target.closest(".main-nav__link"));
       samples.push({ ...point, t: performance.now() });
       if (samples.length > 8) samples = samples.slice(-8);
     },
     { passive: true },
   );
   nav.addEventListener("pointerleave", () => {
+    glide(null);
     if (!openDoor()) rest(false);
   });
   if (scrim) scrim.addEventListener("click", () => close(false));
@@ -426,7 +428,7 @@ function initPortico(header) {
     relayout(true);
   });
   DESKTOP.addEventListener("change", () => relayout(true));
-  addEventListener("resize", () => relayout(false), { passive: true }); /* the heights again only if the width moved */
+  addEventListener("resize", () => relayout(false), { passive: true }); /* the lead and the architrave */
   header.addEventListener("portico:layout", () => relayout(false)); /* the 64 ↔ 56 switch: the lead and the architrave */
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => relayout(true));
   const idle = () => (window.requestIdleCallback ? requestIdleCallback(warmAll, { timeout: 4000 }) : setTimeout(warmAll, 2000));
@@ -440,20 +442,20 @@ function initPortico(header) {
 function initTarga(header) {
   const targa = header.querySelector(".site-header__end > .targa[data-tip]");
   if (!targa) return;
-  const labelled = window.matchMedia("(min-width: 100rem)"); /* chrome.css §6: the plate's word from 100rem */
+  const labelled = window.matchMedia("(min-width: 90rem)"); /* chrome.css §6: the plate's word from 90rem (V5.15) */
   targa.addEventListener("overlay:tip", (event) => {
     if (labelled.matches) event.preventDefault();
   });
 }
 
-/* ---------------------------------------------------------------------------------- the sheet (< 80rem) */
+/* ---------------------------------------------------------------------------------- the sheet (< 64rem) */
 function initSheet(header) {
   const sheet = document.getElementById("nav-sheet");
   if (!sheet) return;
-  // past 80rem the sheet is not drawn and «Menu» neither: the sheet goes at once, and a focus that was in it lands on
-  // the letterhead's lock-up (overlay.js moves it only from inside the sheet)
-  DESKTOP.addEventListener("change", () => {
-    if (DESKTOP.matches) closeOverlay(sheet, { reason: "api", instant: true, focus: header.querySelector(".brand") });
+  // past 64rem the sheet is not drawn and «Menu» neither (every item is in the bar): the sheet goes at once, and a focus
+  // that was in it lands on the letterhead's lock-up (overlay.js moves it only from inside the sheet)
+  BAR.addEventListener("change", () => {
+    if (BAR.matches) closeOverlay(sheet, { reason: "api", instant: true, focus: header.querySelector(".brand") });
   });
 }
 

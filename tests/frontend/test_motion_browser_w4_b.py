@@ -333,6 +333,12 @@ def test_the_rail_folds_in_the_frame_of_the_press(browser, live_server, seeded, 
     context, page, errors = _console(browser, live_server, person_user, DASHBOARD, reduced=reduced)
     try:
         assert page.evaluate("document.querySelector('nav.rail[data-rail]').getBoundingClientRect().width") == 248
+        # V5.15 (DL54-170): the page's own arrival — the dashboard's blocks rising into place — settles first; what is
+        # measured below is the fold, as before
+        for _ in range(50):  # (CSP: no string evaluation, so a poll rather than wait_for_function)
+            if page.evaluate("() => document.getAnimations().every((a) => a.playState !== 'running')"):
+                break
+            page.wait_for_timeout(100)
         folded = page.evaluate(
             """() => { document.querySelector('[data-rail-toggle]').click();
                  const rail = document.querySelector('nav.rail[data-rail]');

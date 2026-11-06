@@ -31,11 +31,6 @@ body {
   min-block-size: 100dvh;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-display);
-  font-size: var(--t-prose-size);
-  line-height: var(--t-prose-lh);
-  font-variation-settings: "opsz" 18;
-  color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -90,9 +85,12 @@ ol {
   padding-inline-start: 1.25em;
 }
 
+/* a list that announces itself as a list (role="list") is drawn by its component: no bullets, no indent, no margin.
+   v512-a W2's dead-rule cut took `.list-reset` AND this rule's body, leaving these two selectors glued to `hr` — every
+   such list drew a hairline and 32 px above and below it (the letterhead 129 px tall, the console's bottom bar 101 px,
+   the glossary's letter index under it): restored in V5.15 W3 (lane A, DECISIONS §16). */
 ul[role="list"],
-ol[role="list"],
-.list-reset {
+ol[role="list"] {
   list-style: none;
   padding-inline-start: 0;
   margin: 0;
@@ -158,8 +156,9 @@ h6 {
   text-wrap: balance;
 }
 
-h1,
-.t-title {
+/* The type roles nobody wrote any more — .t-title, .t-prose, .t-lead, .t-gloss — and .list-reset left with V5.12 W2
+   (lane A): their bytes paid for the notices and the disclosure's height in main.css. */
+h1 {
   font-size: var(--t-title-size);
   line-height: var(--t-title-lh);
   font-variation-settings: "opsz" 48;
@@ -179,7 +178,6 @@ h3 {
   line-height: var(--t-entry-lh);
   font-weight: 500;
   font-variation-settings: "opsz" 24;
-  letter-spacing: var(--track-normal);
 }
 
 /* The fourth and last level is a folio label, not a smaller heading. The old
@@ -217,8 +215,7 @@ p:last-child {
 
 /* Running body — the serif. This is the direction's central move: the text is
    set in the reading face, not in the interface face. */
-body,
-.t-prose {
+body {
   font-family: var(--font-display);
   font-size: var(--t-prose-size);
   line-height: var(--t-prose-lh);
@@ -226,7 +223,6 @@ body,
   color: var(--ink);
 }
 
-.t-lead,
 .lead {
   font-family: var(--font-display);
   font-size: var(--t-lead-size);
@@ -236,26 +232,12 @@ body,
   max-inline-size: var(--measure-lead);
 }
 
-/* Secondary text inside an entry: the interface face, because it is a gloss. */
-.t-gloss {
-  font-family: var(--font-ui);
-  font-size: var(--t-gloss-size);
-  line-height: var(--t-gloss-lh);
-  color: var(--ink-secondary);
-  max-inline-size: var(--measure-gloss);
-}
-
 .t-caption,
 figcaption,
 small {
   font-family: var(--font-ui);
   font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
   color: var(--ink-muted);
-}
-
-.t-secondary {
-  color: var(--ink-secondary);
 }
 
 strong,
@@ -279,7 +261,6 @@ legend,
 th,
 .btn,
 .main-nav,
-.utility-bar,
 .breadcrumbs,
 .pagination,
 .site-footer nav,
@@ -505,7 +486,6 @@ html {
 
 /* ---- Print ---------------------------------------------------------------- */
 @media print {
-  .utility-bar,
   .site-header,
   .site-footer__nav,
   .skip-link,

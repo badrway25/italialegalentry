@@ -16,8 +16,8 @@ from django.utils.translation import gettext_lazy as _
 
 from cms import locked_content
 from consents.models import ConsentPurpose
-from consents.services import LOCKED_CONSENT_KEYS, REUSED_CONSENT_KEYS
-from core.forms import ConsentBooleanField, HoneypotFormMixin, PublicFormMixin
+from consents.services import ACKNOWLEDGEMENT_PURPOSES, LOCKED_CONSENT_KEYS, REUSED_CONSENT_KEYS, UI_CONSENT_TEXTS
+from core.forms import AcknowledgementBooleanField, ConsentBooleanField, HoneypotFormMixin, PublicFormMixin
 from enquiries.models import CollaborationProposal, CompanyNeedsRequest, ContactRequest
 
 SENSITIVE_DATA_HELP = _("Merci de ne pas indiquer de données sensibles (santé, origine, opinions, etc.) dans ce champ.")
@@ -29,7 +29,10 @@ def current_language() -> str:
 
 
 def consent_label(purpose: str) -> tuple[str, str]:
-    """(locked consent sentence, effective language) for a consent purpose."""
+    """(label, effective language) for a form's box: the locked consent sentence where one is prescribed, else the
+    team's acknowledgement (V5.16 §3), in French like the prescribed sentences (``ACKNOWLEDGEMENT_TEXT``)."""
+    if purpose in ACKNOWLEDGEMENT_PURPOSES:
+        return UI_CONSENT_TEXTS[purpose], "fr"
     key = LOCKED_CONSENT_KEYS.get(purpose) or REUSED_CONSENT_KEYS.get(purpose)
     return locked_content.get(key, current_language())
 
@@ -46,6 +49,8 @@ class PublicSubmissionForm(HoneypotFormMixin, PublicFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         lang = current_language()
+        if self.consent_purpose in ACKNOWLEDGEMENT_PURPOSES:  # category A, team wording: not a consent (V5.16 §3)
+            self.fields["consent"] = AcknowledgementBooleanField()
         sentence, effective = consent_label(self.consent_purpose)
         self.fields["consent"].label = sentence
         self.fields["consent"].label_lang = effective if effective != lang else ""
@@ -94,6 +99,49 @@ class CompanyNeedsForm(PublicSubmissionForm):
             "notes": forms.Textarea(attrs={"rows": 4}),
         }
         help_texts = {"notes": SENSITIVE_DATA_HELP}
+
+    #: Three steps (V5.15 W3, lane B; DECISIONS §5.12): the 14 prescribed fields keep their prescribed order — the
+    #: company and its referent, then the need — and the last step reviews them before the locked consent and the
+    #: locked button (static/js/src/steps.js; without script, the two groups and the consent in sequence).
+    steps = (
+        (
+            "entreprise",
+            _("L’entreprise et son référent"),
+            "ile-referent",
+            ("company_name", "sector", "headquarters", "contact_name_and_role", "email", "phone"),
+        ),
+        (
+            "besoin",
+            _("Le besoin"),
+            "ile-need",
+            (
+                "profiles_needed",
+                "indicative_headcount",
+                "qualifications_required",
+                "experience_required",
+                "language_requirements",
+                "training_needs",
+                "indicative_timeline",
+                "notes",
+            ),
+        ),
+        ("envoi", _("Vérification et envoi"), "ile-review", ("consent",)),
+    )
+    steps_review = True
+    #: Round 2 (V5.15 W3, lane B): the short fields paired by meaning where the prescribed order already sets them
+    #: side by side (the sector and the seat, the e-mail and the telephone) — the headcount and the timeline are not
+    #: next to each other in that order, so they are not paired; and «Le besoin» gathers its seven optional fields
+    #: under a quiet sub-head after the one it requires (components/form_steps.html).
+    #: F1: inside «Le besoin»'s details only like pairs with like — the two text areas the prescribed order already sets
+    #: side by side (the qualifications and the experience; the languages and the training); the headcount and the
+    #: timeline, single lines, stand alone at a short measure (no ragged row of a line beside a text area).
+    steps_pairs = (
+        ("sector", "headquarters"),
+        ("email", "phone"),
+        ("qualifications_required", "experience_required"),
+        ("language_requirements", "training_needs"),
+    )
+    steps_more = {"besoin": _("Précisions facultatives")}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

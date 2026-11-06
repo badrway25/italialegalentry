@@ -1,0 +1,143 @@
+title: Information sur le traitement des données personnelles
+notice: Traduction de courtoisie — la version italienne fait foi
+italian_link: Lire la version italienne, qui fait foi
+pending: traduction en attente de relecture juridique
+---
+Information fournie au sens des art. 13 et 14 du Règlement (UE) 2016/679 (« RGPD ») et du D.Lgs. 196/2003, tel que modifié par le D.Lgs. 101/2018, aux personnes qui consultent le site et à celles qui utilisent la plateforme Italy Legal Entry™. Elle décrit les traitements que le site et la plateforme effectuent dans leur configuration actuelle.
+
+## 1. Responsable du traitement
+
+Le responsable du traitement est AGAMI — Dialogo Giuridico Interculturale APS, association de promotion sociale inscrite au RUNTS (Rep. n° 149809), code fiscal 91036640240, dont le siège social est situé Via Sandrigo 29, 36061 Bassano del Grappa (VI), et le siège opérationnel Viale Giuseppe Mazzini 142, 00195 Rome. Le responsable peut être contacté à l’adresse contact@agamieuromed.org.
+
+[DA COMPLETARE — OF-01 — OWNER CONFIRMATION REQUIRED : AGAMI APS est le responsable pressenti ; le propriétaire confirme par écrit qu’AGAMI APS est le responsable du traitement pour Italy Legal Entry et que la dénomination, les sièges et l’adresse de contact sont à jour à la date de publication]
+
+## 2. Délégué à la protection des données
+
+[DA COMPLETARE — OF-08 — LEGAL REVIEW REQUIRED : DPO STATUS = TO BE CONFIRMED ; résultat de l’évaluation au titre de l’art. 37 RGPD : indiquer qu’aucun délégué à la protection des données n’est désigné ou, s’il est désigné, son nom et ses coordonnées]
+
+## 3. Données traitées, finalités et bases juridiques
+
+### 3.1 Navigation sur le site : journaux du serveur
+
+À chaque requête, le serveur qui publie le site enregistre : l’adresse IP de l’appareil sous forme réduite (pour une adresse IPv4, la dernière partie est remplacée par zéro ; pour une adresse IPv6, seuls les trois premiers groupes sont conservés), la date et l’heure, la méthode et le chemin de la page demandée sans les paramètres de l’adresse, le protocole, le code et la taille de la réponse, le temps de réponse, le nom du site demandé et un identifiant technique de la requête. Le journal ne contient ni le type de navigateur ni la page de provenance.
+
+Lorsque le serveur détecte une anomalie dans le traitement d’une requête, le journal des erreurs consigne l’adresse IP complète et la requête complète, y compris les éventuels paramètres de l’adresse. Les requêtes adressées au serveur sous un nom autre que celui du site sont refusées et consignées dans le journal standard du serveur, avec l’adresse IP complète, la requête complète, le type de navigateur et la page de provenance.
+
+L’application consigne dans le journal système du serveur les événements techniques et de sécurité avec des identifiants internes (par exemple le numéro du compte, jamais l’adresse e-mail) et, en cas d’erreur, le chemin de la page sans paramètres. Elle n’y consigne ni les adresses IP ni le contenu des formulaires.
+
+Finalités : fonctionnement du site, sécurité et diagnostic des dysfonctionnements. Base juridique : intérêt légitime du responsable à garantir la sécurité du site et à prévenir les abus (art. 6, par. 1, lett. f, RGPD). Les journaux du serveur font l’objet d’une rotation quotidienne et sont conservés 14 jours.
+
+[DA COMPLETARE — OF-05 — PRODUCTION CONFIGURATION REQUIRED : durée de conservation du journal système de l’application et rotation sur 14 jours des journaux du serveur, à vérifier sur le serveur de production]
+
+### 3.2 Sécurité et prévention des abus
+
+L’application ne conserve pas l’adresse IP en clair : elle en calcule une empreinte (fonction de hachage SHA-256 avec une clé secrète) et ne conserve que celle-ci. L’empreinte est une donnée pseudonymisée, non anonyme : la personne qui détient la clé peut vérifier si elle correspond à une adresse connue.
+
+Le journal de sécurité consigne, avec le compte concerné, la date, l’empreinte de l’adresse IP et un identifiant de la requête, les opérations significatives pour la sécurité : connexions à l’espace réservé et déconnexions, tentatives de connexion échouées (sans l’adresse e-mail saisie), attribution de rôles, téléchargement de documents, consultation de dossiers et les autres opérations sensibles.
+
+Pour limiter les tentatives répétées, le serveur garde en mémoire des compteurs de courte durée : pour la connexion, l’inscription et la récupération du mot de passe, ils sont associés à l’adresse IP ; pour la connexion, la récupération du mot de passe et la confirmation de l’adresse e-mail, également à une empreinte (hachage SHA-256) de l’adresse e-mail saisie ; pour la modification du mot de passe et de l’adresse e-mail, au compte. Ils expirent après une durée comprise entre 1 minute et 1 heure. Pour les formulaires publics, ils sont associés à l’empreinte de l’adresse IP et expirent après 10 minutes. Ces compteurs restent dans la mémoire du serveur et s’effacent à leur expiration.
+
+Finalité : protéger les comptes, les données et les services contre les accès non autorisés et les abus. Base juridique : intérêt légitime du responsable (art. 6, par. 1, lett. f, RGPD).
+
+[DA COMPLETARE — OF-06 — LEGAL REVIEW REQUIRED : durée de conservation du journal de sécurité, qui n’est aujourd’hui jamais effacé automatiquement]
+
+### 3.3 Espace réservé : compte, session et second facteur
+
+Pour le compte sont traités : l’adresse e-mail, les nom et prénom, la langue préférée, le type de compte, les dates d’inscription et de dernière connexion, l’acceptation des conditions ; dans le profil, le pays de résidence et le numéro de téléphone ; l’éventuelle organisation de rattachement et les données de vérification du compte. Le mot de passe n’est conservé que sous forme de hachage non réversible. Le second facteur d’authentification repose sur un code temporaire généré par une application d’authentification et sur des codes de récupération ; il est obligatoire pour le personnel et pour les rôles qui accèdent aux données d’autres personnes.
+
+Après la connexion, la session est conservée dans la base de données du serveur et expire 8 heures après sa dernière mise à jour ; les sessions expirées sont effacées chaque jour.
+
+Finalité : fournir l’espace réservé demandé et en protéger l’accès.
+
+[DA COMPLETARE — OF-10 — LEGAL REVIEW REQUIRED : base juridique de l’espace réservé (compte, second facteur, documents, dossiers, guichet, formation, sélection) et des copies de sauvegarde]
+
+Les données du compte sont conservées jusqu’à la suppression du compte, que l’utilisateur peut demander depuis la page de son profil ; la suppression rend anonymes les données du compte.
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED : règle de conservation applicable aux comptes inactifs, le cas échéant]
+
+### 3.4 Questionnaire d’orientation
+
+Le questionnaire d’orientation peut être rempli sans compte. Sont conservés les réponses, choisies parmi des options prédéfinies, la langue, l’empreinte de l’adresse IP, l’empreinte du code qui permet de reprendre le questionnaire et le résultat, avec les versions des règles appliquées.
+
+Finalité : répondre à la demande d’orientation. Base juridique : exécution de mesures précontractuelles prises à la demande de la personne concernée (art. 6, par. 1, lett. b, RGPD). Sans compte, les données du questionnaire sont effacées automatiquement après 30 jours ; si le questionnaire est rattaché à un compte, elles suivent la conservation du compte.
+
+### 3.5 Documents et dossiers dans l’espace réservé
+
+Dans l’espace réservé, l’utilisateur peut téléverser des documents (PDF, JPEG ou PNG), y compris des pièces d’identité, et suivre des dossiers, listes de contrôle, évaluations, messages, échéances, demandes au guichet, parcours de formation et de sélection. Pour chaque document sont conservés le fichier, son nom d’origine, son type, sa taille, une empreinte de son contenu, une description et l’empreinte de l’adresse IP depuis laquelle il a été téléversé.
+
+Les documents sont conservés sur le serveur hors de tout répertoire accessible depuis le web et ne se téléchargent que depuis l’espace réservé, par un lien personnel valable 10 minutes. Y accèdent l’utilisateur, le référent de son organisation et le personnel autorisé, dans les limites de leur rôle respectif. L’utilisateur est invité à ne pas insérer dans les champs libres des catégories particulières de données au sens de l’art. 9 du RGPD, non requises pour les finalités du service.
+
+Finalité : préparer la documentation du parcours demandé et en suivre les étapes. La base juridique est indiquée au point 3.3.
+
+[DA COMPLETARE — OF-13 — LEGAL REVIEW REQUIRED : SPECIAL CATEGORY LEGAL BASIS REQUIRED : condition de l’art. 9 RGPD pour les catégories particulières de données qui peuvent figurer dans les documents déposés et dans les champs libres de l’espace réservé]
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED : durée de conservation des documents, des dossiers, des messages, des échéances, des demandes au guichet, de la formation et de la sélection]
+
+### 3.6 Messages électroniques
+
+La plateforme envoie des messages de service : vérification de l’adresse e-mail, récupération du mot de passe et notifications. Pour chaque message, la base de données conserve une copie (destinataire, objet et texte) afin d’en gérer l’envoi et les éventuelles nouvelles tentatives. Les finalités et la base juridique sont celles du service qui a produit le message.
+
+[DA COMPLETARE — OF-03 — PRODUCTION CONFIGURATION REQUIRED : prestataire d’envoi des e-mails utilisé en production (dénomination, siège, accord au sens de l’art. 28 RGPD) et prestataire qui héberge la boîte contact@agamieuromed.org]
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED : durée de conservation des copies des messages, qui ne sont aujourd’hui jamais effacées automatiquement]
+
+### 3.7 Copies de sauvegarde
+
+Chaque nuit, une copie de sauvegarde chiffrée de la base de données et des documents téléversés est réalisée. Elle est conservée sur le serveur pendant 7 jours, et une copie hors du serveur est prévue. Finalités : continuité du service et restauration des données en cas de panne. La base juridique est indiquée au point 3.3.
+
+[DA COMPLETARE — OF-04 — PRODUCTION CONFIGURATION REQUIRED : lieu, prestataire et région des copies conservées hors du serveur, personnes qui peuvent y accéder et durée de leur conservation]
+
+### 3.8 Services non actifs
+
+Les formulaires publics de contact et de collaboration, l’inscription aux événements, la création de nouveaux comptes, la lettre d’information et le Forum virtuel ne sont pas actifs. Avant leur activation, la présente information sera mise à jour avec les données traitées, la base juridique et la durée de conservation de chacun. Les intégrations avec des systèmes externes de gestion des contacts ne sont pas actives.
+
+## 4. Caractère du recueil et processus décisionnels
+
+La communication des données demandées dans le questionnaire et dans l’espace réservé est facultative, mais sans les données indiquées comme nécessaires le service demandé ne peut être fourni. Les résultats restitués par la plateforme constituent des pré-évaluations à caractère exclusivement informatif : aucun traitement ne donne lieu à des décisions fondées uniquement sur un traitement automatisé produisant des effets juridiques sur la personne concernée au sens de l’art. 22 du RGPD, et toute décision administrative relève exclusivement des autorités publiques.
+
+## 5. Destinataires des données
+
+- le personnel du responsable et les personnes autorisées, chacun dans les limites de son rôle ;
+- le prestataire d’hébergement du site et de la plateforme, en qualité de sous-traitant au sens de l’art. 28 du RGPD (prestataire prévu : DigitalOcean) ;
+- le prestataire d’envoi des e-mails (point 3.6) ;
+- le prestataire qui conserve les copies de sauvegarde hors du serveur (point 3.7).
+
+[DA COMPLETARE — OF-12 — LEGAL REVIEW REQUIRED : qualité de chaque catégorie de destinataires internes et externes (rôles du personnel, opérateurs autorisés, organismes de formation, professionnels, entreprises) : sous-traitant, responsable autonome ou responsable conjoint]
+
+[DA COMPLETARE — OF-02 — PRODUCTION CONFIGURATION REQUIRED : acceptation de l’accord au sens de l’art. 28 RGPD (DPA) de DigitalOcean et liste des sous-traitants ultérieurs, à vérifier lors de la création de l’infrastructure de production]
+
+Les données ne font l’objet d’aucune diffusion. Les pages du site ne chargent aucune ressource de tiers (polices, scripts, images, cartes ou vidéos) ni aucun outil d’analyse : aucun tiers ne reçoit l’adresse IP des personnes qui consultent le site.
+
+## 6. Lieu du traitement et transferts
+
+[DA COMPLETARE — OF-02 — PRODUCTION CONFIGURATION REQUIRED : région DigitalOcean du serveur, de la base de données et des volumes, et éventuels transferts de données vers des pays tiers avec la garantie applicable (art. 44 et suivants RGPD), y compris pour l’envoi des e-mails (OF-03) et les copies de sauvegarde hors du serveur (OF-04), à vérifier sur l’infrastructure de production]
+
+Les utilisateurs accédant depuis le Royaume du Maroc bénéficient également, en tant que de besoin, des protections prévues par la loi marocaine n° 09-08 relative à la protection des personnes physiques à l’égard du traitement des données à caractère personnel.
+
+## 7. Durées de conservation : récapitulatif
+
+- journaux du serveur : 14 jours, avec rotation quotidienne ;
+- compteurs contre les abus : de 1 minute à 1 heure, en mémoire uniquement ;
+- sessions : 8 heures après la dernière mise à jour ;
+- questionnaire d’orientation sans compte : 30 jours ;
+- copies de sauvegarde sur le serveur : 7 jours ;
+- comptes : jusqu’à la suppression du compte ;
+- journal système de l’application, journal de sécurité, documents et dossiers, copies des messages, copies de sauvegarde hors du serveur : comme indiqué aux points 3.1, 3.2, 3.5, 3.6 et 3.7.
+
+## 8. Droits des personnes concernées
+
+Les personnes concernées peuvent exercer à tout moment les droits reconnus par les art. 15 à 22 du RGPD — accès, rectification, effacement, limitation du traitement, portabilité et opposition — en écrivant à contact@agamieuromed.org. Depuis l’espace réservé, elles peuvent en outre demander directement la suppression de leur compte.
+
+Reste sauf le droit d’introduire une réclamation auprès du Garante per la protezione dei dati personali au sens de l’art. 77 du RGPD (www.garanteprivacy.it).
+
+## 9. Mesures de sécurité
+
+Le site n’est servi que par une connexion chiffrée (HTTPS). L’accès du personnel et des rôles qui consultent les données d’autres personnes exige un second facteur d’authentification. Les adresses IP ne sont conservées que sous forme d’empreinte, les copies de sauvegarde sont chiffrées et les documents téléversés ne sont jamais servis directement depuis le web.
+
+## 10. Cookies et technologies de stockage
+
+Le site n’utilise que des cookies techniques propres et quelques espaces de stockage du navigateur pour l’état de l’interface. La liste complète, avec la finalité et la durée de chacun, figure dans l’Information sur les cookies et les technologies de stockage.
+
+## 11. Mises à jour
+
+La présente information est mise à jour lorsque les traitements changent. La version en vigueur est indiquée en tête de page et le responsable conserve chaque version publiée.

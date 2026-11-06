@@ -85,8 +85,9 @@ LANG_NAMES = {"fr": "Francese", "ar": "Arabo", "it": "Italiano", "en": "Inglese"
 
 STATE_V5 = "v5"
 STATE_V4 = "v4-fondation"
-#: The two states, in the plan's words (§4.1): a surface is one or the other.
-STATE_LABELS = {STATE_V5: "V5 — council-passed", STATE_V4: "V4 + fondation"}
+#: The two states, as the owner reads them (V5.12 §12; Director's decisions §9 «Preview hub labels»): a surface is one
+#: or the other. The steward's file keeps its own words (``v5`` / ``v4-fondation``); the owner is never shown them.
+STATE_LABELS = {STATE_V5: "Approvata in revisione", STATE_V4: "Da rifinire"}
 
 #: The frames the strip offers: the window itself, and a phone of 390 CSS pixels.
 FRAMES = ("desktop", "phone")
@@ -125,7 +126,7 @@ _LEGAL = "Testi legali"
 #: Every public page type, in the order the index lists them.
 PUBLIC_PAGES: tuple[Page, ...] = (
     Page("home", "La home", "pages:home", langs=LANGS_ALL, group=_ACCOUNT, key="home"),
-    Page("login", "L’accesso «Il varco»", "account_login", langs=LANGS_ALL, group=_ACCOUNT, key="login"),
+    Page("login", "L’accesso", "account_login", langs=LANGS_ALL, group=_ACCOUNT, key="login"),
     Page("signup", "La registrazione", "account_signup", group=_ACCOUNT, key="signup"),
     Page("password-reset", "La password dimenticata", "account_reset_password", group=_ACCOUNT, key="password-reset"),
     Page(
@@ -178,8 +179,16 @@ PUBLIC_PAGES: tuple[Page, ...] = (
         (("slug", "logement"),),
         group=_INFO,
         key="living-topic",
+        note="404 finché il tema non ha una scheda pubblicata (i temi restano nascosti: Q8)",
     ),
-    Page("news", "Le notizie", "news:index", group=_INFO, key="news-index"),
+    Page(
+        "news",
+        "Le notizie",
+        "news:index",
+        group=_INFO,
+        key="news-index",
+        note="404 finché nessuna notizia è pubblicata e la newsletter è chiusa",
+    ),
     Page("faq", "Le domande frequenti", "faq:index", group=_INFO, key="faq"),
     Page("glossary", "Il glossario", "glossary:index", group=_INFO, key="glossary-index"),
     Page(
@@ -190,7 +199,14 @@ PUBLIC_PAGES: tuple[Page, ...] = (
         group=_INFO,
         key="glossary-term",
     ),
-    Page("partners", "I partner", "partners:index", group=_INFO, key="partners"),
+    Page(
+        "partners",
+        "I partner",
+        "partners:index",
+        group=_INFO,
+        key="partners",
+        note="404 finché nessun partner è pubblicato con l’autorizzazione scritta (G6)",
+    ),
     # Not in the census: every path of the virtual forum answers 404 while its module is closed.
     Page(
         "community",
@@ -244,8 +260,14 @@ PERSONA_PAGES: dict[str, tuple[Page, ...]] = {
         Page("dashboard", "Tableau de bord", "portal:dashboard", key="dashboard-person"),
         Page("cases", "Mes dossiers", "cases:index", key="cases-index"),
         Page("case", "Le dossier EE167596D4", "cases:detail", (("reference", "EE167596D4"),), key="case-file"),
-        Page("documents", "Mes pièces", "portal:documents", key="documents-portal"),
-        Page("documents-app", "Mes pièces — /documents/", "documents:index", key="documents"),
+        Page("documents", "Mes documents", "portal:documents", key="documents-portal"),
+        Page(
+            "documents-app",
+            "Mes documents",
+            "documents:index",
+            key="documents",
+            note="il registro completo, fuori dal tableau de bord",
+        ),
         Page(
             "document-requirement",
             "Pièce demandée",
@@ -283,7 +305,7 @@ PERSONA_PAGES: dict[str, tuple[Page, ...]] = {
             note="condizioni non accettate",
         ),
         Page("case", "Le dossier E46E03B461", "cases:detail", (("reference", "E46E03B461"),), key="case-file"),
-        Page("documents", "Mes pièces", "portal:documents", key="documents-portal"),
+        Page("documents", "Mes documents", "portal:documents", key="documents-portal"),
         Page(
             "document-upload",
             "Déposer un fichier",
@@ -330,7 +352,7 @@ PERSONA_PAGES: dict[str, tuple[Page, ...]] = {
             key="dashboard-person-empty",
             note="senza fascicolo: gli stati vuoti",
         ),
-        Page("documents", "Mes pièces", "portal:documents", key="documents-portal"),
+        Page("documents", "Mes documents", "portal:documents", key="documents-portal"),
         Page("situation", "Ma situation", "portal:situation", key="situation"),
         Page("profile", "Profil", "accounts:profile", key="account-profile"),
     ),
@@ -380,6 +402,17 @@ OUTSIDE: tuple[tuple[str, str, str], ...] = (
     ("selection-workspace", "Lo spazio della selezione", "un attore autorizzato"),
     ("console-unavailable", "Il Forum permanente, chiuso (503)", "un professionista"),
 )
+
+
+#: The user-facing title of a surface wherever a page row declared outside this file names it otherwise — the acceptance
+#: launcher's own rows (C:/tmp/ile_v5_council/servers/acceptance/run_8780.py) still say «Mes pièces»: the product says
+#: «Mes documents» (the binding glossary, V5.12 §11). Keyed by the surface key.
+TITLES: dict[str, str] = {"documents-portal": "Mes documents", "login": "L’accesso"}
+
+
+def title_of(page: Page) -> str:
+    """The title the owner reads for ``page``: the product's own title for its surface."""
+    return TITLES.get(page.surface, page.title)
 
 
 def url_of(page: Page, lang: str) -> str:
@@ -591,7 +624,30 @@ def changelog(limit: int = 3) -> dict:
             lines.append(match.group(1).replace("**", "").replace("`", ""))
             if len(lines) == limit:
                 break
-    return {"path": path.as_posix(), "present": True, "lines": lines}
+    return {"path": path.as_posix(), "present": True, "lines": lines, "entries": [news_entry(line) for line in lines]}
+
+
+#: A sentence ends at its full stop, its question or exclamation mark, followed by a space and a capital — never at the
+#: point of «v2.0.0», «D.lgs.» or «1,5».
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[«\"(A-ZÀ-Ý])")
+
+
+_ISO_DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def news_entry(line: str) -> dict[str, str]:
+    """
+    One entry of «Novità» as the owner reads it (V5.12 §12; Director's decisions §9): ONE plain sentence — what
+    changed — and the rest behind a disclosure. The steward writes «date · tag · text»: the date and the tag are the
+    small grey metadata line, never the sentence.
+    """
+    parts = [part.strip() for part in line.split(" · ", 2)]
+    dated = len(parts) == 3 and _ISO_DAY.match(parts[0])
+    meta, text = ([*parts[:2]], parts[2]) if dated else ([], line.strip())
+    pieces = _SENTENCE_END.split(text, maxsplit=1)
+    summary = pieces[0].strip()
+    detail = pieces[1].strip() if len(pieces) > 1 else ""
+    return {"summary": summary, "detail": detail, "meta": " · ".join(meta)}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -770,11 +826,11 @@ def _known(status: dict, persona: str = "") -> tuple[dict[str, list], list[list[
             if not url:
                 continue
             path = url.split("?", 1)[0]
-            known.setdefault(path, [state, " ".join(page.langs), page.title])
+            known.setdefault(path, [state, " ".join(page.langs), title_of(page)])
             if page.kwargs:
                 regex = _pattern(path, [value for _name, value in page.kwargs])
                 if all(regex != seen[0] for seen in patterns):
-                    patterns.append([regex, state, page.title])
+                    patterns.append([regex, state, title_of(page)])
     return known, patterns
 
 
@@ -803,7 +859,7 @@ def quick_surfaces(status: dict, lang: str, frame: str, active: str = "") -> dic
         code = lang if lang in page.langs else page.langs[0]
         url = url_of(page, code)
         if url and all(item["url"] != url for item in public):
-            public.append({"title": page.title, "url": url, "lang": code, "landing": landing_url(url, frame, code)})
+            public.append({"title": title_of(page), "url": url, "lang": code, "landing": landing_url(url, frame, code)})
     allowed = personas.allow_list()
     groups: list[dict] = []
     for persona in personas.PERSONAS.values():
@@ -814,12 +870,14 @@ def quick_surfaces(status: dict, lang: str, frame: str, active: str = "") -> dic
             code = lang if lang in page.langs else page.langs[0]
             url = url_of(page, code)
             if url:
-                pages.append({"title": page.title, "url": url, "lang": code, "landing": landing_url(url, frame, code)})
+                pages.append(
+                    {"title": title_of(page), "url": url, "lang": code, "landing": landing_url(url, frame, code)}
+                )
         if pages:
             groups.append(
                 {
                     "key": persona.key,
-                    "name": persona.name,
+                    "name": personas.label_of(persona),
                     "inside": persona.key == active,
                     "allowed": persona.key in allowed,
                     "pages": pages,
@@ -886,15 +944,16 @@ def strip(request, page: str, frame: str, status: dict | None = None, lang: str 
         "personas": [
             {
                 "key": persona.key,
-                "name": persona.name,
-                "note": persona.note,
-                "opens": PERSONA_PAGES[persona.key][0].title if PERSONA_PAGES.get(persona.key) else "",
+                "name": personas.label_of(persona),
+                "note": personas.note_of(persona),
+                "meta": personas.metadata(persona),
+                "opens": title_of(PERSONA_PAGES[persona.key][0]) if PERSONA_PAGES.get(persona.key) else "",
                 "allowed": persona.key in allowed,
                 "inside": persona.key == active,
             }
             for persona in personas.PERSONAS.values()
         ],
-        "persona": personas.PERSONAS[active].name if active in personas.PERSONAS else active,
+        "persona": personas.label_of(personas.PERSONAS[active]) if active in personas.PERSONAS else active,
         "persona_key": active,
         "database": database,
         "database_allowed": personas.database_allowed(database),
@@ -926,7 +985,7 @@ def public_rows(status: dict) -> list[dict]:
             {
                 "slug": page.slug,
                 "key": page.surface,
-                "title": page.title,
+                "title": title_of(page),
                 "note": page.note,
                 "group": page.group,
                 "state": state,
@@ -969,7 +1028,7 @@ def persona_cards(request, status: dict) -> list[dict]:
                 {
                     "slug": page.slug,
                     "key": page.surface,
-                    "title": page.title,
+                    "title": title_of(page),
                     "note": page.note,
                     "state": state,
                     "label": STATE_LABELS[state],
@@ -983,8 +1042,9 @@ def persona_cards(request, status: dict) -> list[dict]:
         cards.append(
             {
                 "key": persona.key,
-                "name": persona.name,
-                "note": persona.note,
+                "name": personas.label_of(persona),
+                "note": personas.note_of(persona),
+                "meta": personas.metadata(persona),
                 "case": persona.case,
                 "opens": pages[0]["title"] if pages else "",
                 "allowed": persona.key in allowed,

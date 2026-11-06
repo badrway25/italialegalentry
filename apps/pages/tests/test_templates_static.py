@@ -24,9 +24,14 @@ JS = (ROOT / "static" / "js" / "src" / "home.js", ROOT / "static" / "js" / "src"
 # Design V5 (W1-B): the sprite's own ids — static/img/icons.svg is built from static/icons/src by
 # scripts/build_icons.py and named by apps/core/icons.py; a literal that is not a symbol fails here and in
 # tests/frontend/test_icons.py.
-AVAILABLE_ICONS = set(
-    re.findall(r'<symbol id="icon-([a-z0-9-]+)"', (ROOT / "static" / "img" / "icons.svg").read_text(encoding="utf-8"))
-)
+# V5.12 W2: two sprites — the chrome (icons.svg) and the domain concepts (icons-domain.svg).
+AVAILABLE_ICONS = {
+    name
+    for sprite in ("icons.svg", "icons-domain.svg")
+    for name in re.findall(
+        r'<symbol id="icon-([a-z0-9-]+)"', (ROOT / "static" / "img" / sprite).read_text(encoding="utf-8")
+    )
+}
 
 
 def _prescribed_sentences() -> list[str]:

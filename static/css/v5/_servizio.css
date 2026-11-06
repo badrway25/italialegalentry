@@ -194,9 +194,9 @@ html.no-js .js-only {
   }
 
   .error-page__title {
-    font-size: var(--t-title);
-    line-height: var(--t-title-lh);
-    letter-spacing: var(--track-title);
+    font-size: var(--t-title-2);
+    line-height: var(--t-title-2-lh);
+    letter-spacing: var(--track-title-2);
   }
 
   .error-page__text {
@@ -398,9 +398,9 @@ html.no-js .js-only {
 
 @media (min-width: 48rem) {
   .conto .account-page__title {
-    font-size: var(--t-title);
-    line-height: var(--t-title-lh);
-    letter-spacing: var(--track-title);
+    font-size: var(--t-title-2);
+    line-height: var(--t-title-2-lh);
+    letter-spacing: var(--track-title-2);
   }
 
   .conto .account-page__title + .account-page__text {
@@ -662,11 +662,12 @@ html.no-js .js-only {
   background: var(--surface-raised);
 }
 
-/* a secret or a recovery code is read character by character: the figures' face, never a proportional one */
+/* a secret or a recovery code is read character by character: tabular figures, tracked (V5.24, TYPOGRAPHY_V2 F-3: the
+   mono has one seat, the references; a TOTP secret is base32 — no 0/1/8/9 — and a recovery code omits l, o, 0 and 1,
+   so the sans tells every character apart) */
 .conto :is(#authenticator_secret, #recovery_codes) {
-  font-family: var(--f-mono);
   font-variant-numeric: var(--numeric-data);
-  letter-spacing: var(--track-folio);
+  letter-spacing: var(--track-label);
 }
 
 /* the notice that nobody may miss (the deletion's warning) at the reading measure */
@@ -815,11 +816,8 @@ html.no-js .js-only {
   }
 }
 
-/* Arabic titles: 600 with no tracking, leading 1.4 (the type system's Arabic rule); a label without tracking */
-.servizio :is(.error-page__title, .account-page__title, .account-panel__title, .empty-state__title):lang(ar) {
-  letter-spacing: 0;
-  line-height: var(--ar-title-lh);
-}
+/* Arabic titles: their leading and the absence of tracking come from the tokens' :lang(ar) block (TYPOGRAPHY_V2 §4.5;
+   V5.24): every title above reads --t-*-lh and --track-* — no rule of its own here */
 
 @media (forced-colors: active) {
   .conto-nav__link[aria-current]::after {

@@ -144,5 +144,9 @@ def academy_seeded(db):
     Academy catalogue and on nothing else, so it says what it means and fails for its own reasons.
     """
     from django.core.management import call_command
+    from django.test import override_settings
 
-    call_command("seed_all", "--only", "academy", verbosity=0)
+    # The catalogue is demonstration data (V5.12 §8): seeded only where demonstration data is allowed — never in a
+    # test run by default, so the fixture asks for it, and the tests that read it read the real seed, never nothing.
+    with override_settings(ILE_SEED_DEMONSTRATION_DATA=True):
+        call_command("seed_all", "--only", "academy", verbosity=0)

@@ -27,8 +27,17 @@ def _live_sheet_q(at=None) -> Q:
 
 
 def public_topics():
-    """Live topics annotated with the number of live, reviewed sheets (``sheet_count``)."""
-    return LivingTopic.objects.public().annotate(sheet_count=Count("sheets", filter=_live_sheet_q(), distinct=True))
+    """Live topics that carry at least one live, reviewed sheet, annotated with their number (``sheet_count``).
+
+    V5.12 §8 / §14: a theme without a reviewed sheet (health and the national health service among them) is not a
+    public surface — it is absent from the index, its page answers 404 and the sitemap leaves it out, until a sheet
+    passes its legal review (``LegalReviewStatus.REVIEWED``) and is published. No «sheets in preparation» page.
+    """
+    return (
+        LivingTopic.objects.public()
+        .annotate(sheet_count=Count("sheets", filter=_live_sheet_q(), distinct=True))
+        .filter(sheet_count__gt=0)
+    )
 
 
 def public_topic(slug: str) -> LivingTopic | None:

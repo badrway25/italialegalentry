@@ -1,0 +1,292 @@
+/* ============================================================================================
+   FORMATION — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.9; lane P1). Page-only: pathways/training.css.
+   F1 «la traversata» (I «il filo»'s crossing, composed here: two times, one line): from 64 rem the page's 12 columns,
+   each time 6 of them on a subgrid of columns AND rows — the two nodes on the crossing line, the two kickers, the two
+   titles (one size: m5), the two texts and the two frames each on one shared row —, the first time's frame on 4/12
+   with its legally required notice docked under it at the frame's width (QA_ROUND1 M5: beside it, on 2/12, the notice
+   was a 83–135 px column with words broken), the second's 6/12. Below 64 rem the line runs down the reading edge
+   through the two nodes, the notice under its frame. Under the hand or the focus a time answers: its node's threshold
+   runs, and the second time's sends the light along the crossing to Italy's arch. Signature LINE (scroll-linked, it
+   reverses with the scroll) + DEVELOP (lane A's bw-scroll: frame 1 as the line leaves it, frame 2 as it arrives).
+   Adapted from 21st.dev
+   (NOTES, provenance): «Lifeline» 32658 (milestones on a horizontal rail on a wide screen, a vertical one on a phone,
+   their photographs at the milestones) — refused: the scroll-scrubbed horizontal track, the lightbox, hover media.
+   ============================================================================================ */
+
+.traversata {
+  --tv-c: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
+  view-timeline: --traversata;
+  position: relative;
+  display: grid;
+  gap: var(--s-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the line down the reading edge (a phone, a tablet): from the first node to the second */
+.traversata::before {
+  content: "";
+  position: absolute;
+  inset-block: 24px 24px;
+  inset-inline-start: 23px;
+  inline-size: 2px;
+  background: var(--tv-c);
+  transform-origin: 50% 0;
+}
+
+.traversata__tempo {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: var(--s-5);
+  row-gap: var(--s-3);
+  align-content: start;
+}
+
+.traversata__tempo > :not(.traversata__nodo) {
+  grid-column: 2;
+}
+
+.traversata__nodo {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  z-index: 1;
+}
+
+/* Italy: the arch, the page's one gold arrival — a light at its sill */
+.traversata__nodo--arrivo::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  z-index: -1;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 20px 12px color-mix(in oklab, var(--identity-light) 32%, transparent);
+}
+
+.traversata__kicker {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-folio);
+  line-height: var(--t-folio-lh);
+  letter-spacing: 0.06em;
+  color: var(--accent-text);
+}
+
+.traversata__titolo {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+/* the two times' titles at one size (QA_ROUND1 m5): the locked capitals as written, tracked, at the band's 28 */
+.traversata__titolo--caps:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+/* a French block on an Arabic page (the locked title and body of the second time): one reading edge for the whole
+   block, its own start — a running text reads from its start (§1 rule 6; QA_ROUND1 m1) */
+[dir="rtl"] .traversata__tempo :is(.traversata__titolo, .traversata__corpo)[lang="fr"] {
+  text-align: start;
+}
+
+/* the French body keeps the Latin leading on the Arabic page (QA_ROUND2 m2: it took the Arabic 32 px at 17 px and read
+   double-spaced) */
+[dir="rtl"] .traversata__tempo .traversata__corpo[lang="fr"] {
+  line-height: 1.75rem;
+}
+
+/* a time answers the hand and the focus alike (§4.1 rule 5): its node's threshold runs to the whole foot, its glyph
+   shifts 2 px along the reading direction */
+.traversata__tempo:has(a:is(:hover, :focus-visible)) .traversata__nodo::after {
+  scale: 1 1;
+}
+
+.traversata__tempo:has(a:is(:hover, :focus-visible)) .traversata__nodo .icon {
+  translate: 2px 0;
+}
+
+[dir="rtl"] .traversata__tempo:has(a:is(:hover, :focus-visible)) .traversata__nodo .icon {
+  translate: -2px 0;
+}
+
+html[data-input="key"] .traversata__nodo .icon {
+  transition: none;
+}
+
+.traversata__testo {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  max-inline-size: 34rem;
+}
+
+.traversata__testo > * {
+  margin: 0;
+}
+
+/* the locked body whole: its first sentence set larger, in place (emphasis, not a cut — §6.2) */
+.traversata__corpo .ls-1 {
+  display: block;
+  margin-block-end: var(--s-3);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: 600;
+}
+
+.traversata__media {
+  display: grid;
+  gap: var(--s-4);
+  max-inline-size: 34rem;
+  margin-block-start: var(--s-3);
+}
+
+.traversata__media .foto {
+  margin: 0;
+}
+
+/* the first time's notice: a side annotation docked to its frame's edge, always visible */
+.traversata__nota {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-3);
+  padding-inline-start: var(--s-4);
+  border-inline-start: 2px solid var(--tone-esame-mark);
+  font-size: var(--t-ui);
+  line-height: 1.5;
+  color: var(--text-1);
+}
+
+.traversata__nota p {
+  margin: 0;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+.traversata__segno {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1.5px var(--tone-esame-mark);
+  color: var(--tone-esame-mark);
+}
+
+.traversata__segno .icon {
+  inline-size: 14px;
+  block-size: 14px;
+}
+
+/* from 64 rem: two columns, one crossing line from the origin's node to Italy's */
+@media (min-width: 64rem) {
+  .traversata {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--s-4) var(--s-6);
+  }
+
+  .traversata::before,
+  .traversata::after {
+    inset-block: 23px auto;
+    inset-inline: 48px calc(50% - var(--s-3));
+    inline-size: auto;
+    block-size: 2px;
+    transform-origin: 0 50%;
+  }
+
+  [dir="rtl"] .traversata::before,
+  [dir="rtl"] .traversata::after {
+    transform-origin: 100% 50%;
+  }
+
+  /* the crossing's light: under the hand or the focus on the second time, one light runs from the origin to Italy */
+  .traversata::after {
+    content: "";
+    position: absolute;
+    background: var(--accent-mark);
+    scale: 0 1;
+    transition: scale var(--motion-route-light) var(--ease-sine);
+  }
+
+  .traversata:has(.traversata__tempo:nth-child(2) a:is(:hover, :focus-visible))::after {
+    scale: 1 1;
+  }
+
+  /* a subgrid of columns and rows: the page's gutters (column-gap: normal) keep the frames' widths the 12 columns' own
+     (the sizes); the two nodes, kickers, titles, texts and frames each share a row */
+  .traversata__tempo {
+    grid-column: span 6;
+    grid-row: 1 / span 5;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    column-gap: normal;
+    row-gap: var(--s-4);
+  }
+
+  .traversata__tempo > *,
+  .traversata__tempo > :not(.traversata__nodo) {
+    grid-column: 1 / -1;
+  }
+
+  .traversata__nodo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .traversata__kicker {
+    margin-block-start: var(--s-4);
+  }
+
+  .traversata__media {
+    grid-template-columns: subgrid;
+    column-gap: normal;
+    align-self: start;
+    max-inline-size: none;
+  }
+
+  .traversata__media .foto {
+    grid-column: 1 / -1;
+  }
+
+  /* the first time: its frame on 4 of its columns, the notice docked under it at the frame's width — at least 18 rem
+     of words from 80 rem (measured: test_pages_browser_v522_p1) */
+  .traversata__tempo:first-child .traversata__media .foto,
+  .traversata__nota {
+    grid-column: 1 / span 4;
+  }
+}
+
+html[data-input="key"] .traversata::after {
+  transition: none;
+}
+
+/* the line advances with the reading (scroll-linked: it reverses with the scroll — §0.1 scrubbed progress) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not(.rm) .traversata::before {
+      animation: sez-draw-y linear both;
+      animation-timeline: --traversata;
+      animation-range: entry 30% cover 55%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+    :root:not(.rm) .traversata::before {
+      animation-name: sez-draw;
+      animation-range: entry 40% cover 50%;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .traversata::before {
+    background: CanvasText;
+  }
+
+  .traversata__nodo--arrivo::before,
+  .traversata::after {
+    display: none;
+  }
+}

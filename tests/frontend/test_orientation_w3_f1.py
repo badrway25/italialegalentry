@@ -33,6 +33,8 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.template.loader import render_to_string
 
+from core import icons
+
 pytestmark = pytest.mark.django_db
 
 ROOT = Path(settings.BASE_DIR)
@@ -100,18 +102,41 @@ def test_the_interior_grammar_one_entrance_one_h1_and_no_v4_layout(get, path):
 def test_one_primary_action_and_at_most_six_icons_in_the_body(get, path):
     main = _main(get(path))
     assert len(re.findall(r'class="btn btn--primary\b', main)) <= 1, path
-    body_icons = [name for name in ICON.findall(main) if name != "ile-steps"]
+    # the chapter heads' concept marks apart (V5.12 §7: they replaced the one stair; each is one head's, at most
+    # once per concept on a page — tests/frontend/test_icons.py)
+    heads = re.findall(r'<svg class="icon chapter__mark[^"]*"[^>]*><use href="[^"#]*#icon-([a-z0-9-]+)"', main)
+    body_icons = ICON.findall(main)
+    for name in heads:
+        body_icons.remove(name)
+    assert "ile-steps" not in body_icons, (path, "the journey's stair in a public body")
+    # V5.22 (SECTION_SYSTEM_V2 §4.10 — an approved owner/product decision; the rule lane S wrote into
+    # tests/frontend/test_interior_w3_f1.py, here for the two advice pages lane P1 composes, §3.9 and §3.10; V5.20
+    # strict rule): a register of named entities — the diplomas' five stations, the two times, the space's tiles —
+    # draws its glyphs all or none and counts as ONE register ([data-registro], the library's own marker since v522-s2,
+    # DL54-182 item 10 c; a chip's data-register read as before); every body icon is a registered symbol; the cap of
+    # six holds for the loose icons
+    registers = re.findall(r"<(\w+)[^>]*\bdata-registr(?:o|er)\b[^>]*>(.*?)</\1>", main, flags=re.S)
+    for _tag, register in registers:
+        items = re.findall(r"<li\b[^>]*>(.*?)</li>", register, flags=re.S)
+        with_glyph = [item for item in items if "#icon-" in item]
+        assert not with_glyph or len(with_glyph) == len(items), (path, "a register's glyphs: all or none")
+        for name in ICON.findall(register):
+            body_icons.remove(name)
+    assert set(body_icons) <= set(icons.SYMBOLS) | set(icons.LEGACY), (path, "a registered symbol")
     assert len(body_icons) <= 6, (path, body_icons)
 
 
 @pytest.mark.parametrize("path", ["/fr/diplomes-et-titres/", "/fr/formation/"])
 def test_the_advice_pages_end_on_the_one_action_and_say_who_can_help(get, path):
     soup = BeautifulSoup(_main(get(path)), "html.parser")
-    chapters = soup.select("section.chapter, div.chapter")
-    last = chapters[-1]
-    assert "chapter--area" in last["class"] and last.select_one('[data-action="orientation"]'), path
-    assert last.select_one('.aiuto a[href="mailto:contact@agamieuromed.org"]'), path
-    register = soup.select_one(".registro.registro--two")
+    # V5.22 (SECTION_SYSTEM_V2 §3.9 F2–F3, §3.10 D3–D4 — approved owner/product decisions; lane P1; V5.20 strict rule):
+    # the page ends on «la boussole», the orientation band — the questionnaire's one action, the help line with the
+    # public address beside it — and the space's links are lane S's E grid, which leaves the page's own tile out
+    last = soup.select("section.sez")[-1]
+    assert "sez--boussole" in last["class"] and last.get("data-action") == "orientation", path
+    assert last.select_one('a.btn--primary[href="/fr/orientation/"]'), path
+    assert last.select_one('.sez-annotation a[href="mailto:contact@agamieuromed.org"]'), path
+    register = soup.select_one(".mosaico.mosaico--grid")
     current = "/fr/diplomes-et-titres/" if "diplomes" in path else "/fr/formation/"
     assert not register.select_one(f'a[href="{current}"]'), (
         "the page leaves its own row out of «Dans l'Espace Personnes»"
@@ -120,41 +145,57 @@ def test_the_advice_pages_end_on_the_one_action_and_say_who_can_help(get, path):
 
 def test_the_diplomas_five_moments_stand_open_on_the_line_with_their_terms(get):
     soup = BeautifulSoup(_main(get("/fr/diplomes-et-titres/")), "html.parser")
-    line = soup.select_one("ol.linea.diploma-steps")
+    # V5.22 (SECTION_SYSTEM_V2 §3.10 D1 «le dossier, pièce par pièce» — an approved owner/product decision; lane P1;
+    # V5.20 strict rule): the five stations, each still being verified (its dashed node), each its anchor; an Italian
+    # term is the summary of its own station's disclosure — the locked definition opens in place (stations 1–2 carry
+    # none: nothing is invented)
+    line = soup.select_one("ol.dossier.diploma-steps")
     assert line["data-steps"] == "5"
     stations = line.select(":scope > li")
     assert len(stations) == 5
-    assert all("linea__step--pending" in li["class"] for li in stations), (
-        "each still being verified: an open, broken ring"
+    assert all("dossier__tappa--attesa" in li["class"] for li in stations), (
+        "each still being verified: an open, dashed node"
     )
     assert all(li["id"].startswith("etape-") for li in stations), "each station keeps its anchor"
-    terms = [tag for li in stations for tag in li.select(".termes__list .tag")]
-    assert len(terms) >= 3 and all(tag["lang"] == "it" for tag in terms), "each Italian term under its own station"
+    terms = [span for li in stations for span in li.select("details > summary > [lang]")]
+    assert len(terms) >= 3 and all(span["lang"] == "it" for span in terms), "each Italian term under its own station"
+    assert not stations[0].select("details") and not stations[1].select("details"), "nothing invented"
 
 
 def test_formation_draws_its_two_moments_on_the_line_and_no_card(get):
     soup = BeautifulSoup(_main(get("/fr/formation/")), "html.parser")
-    line = soup.select_one("ol.linea.linea--phases")
+    # V5.22 (SECTION_SYSTEM_V2 §3.9 F1 «la traversata» — an approved owner/product decision; lane P1; V5.20 strict
+    # rule): the two times on one crossing line, from the origin country's node to Italy's — the same two anchors,
+    # kickers and h2 titles, still a sequence and never two boxes
+    line = soup.select_one("ol.traversata")
     assert line["data-phases"] == "2"
     stations = line.select(":scope > li")
     assert [li["id"] for li in stations] == ["avant-le-depart", "apres-l-arrivee"]
-    assert [li.select_one(".linea__kicker").get_text(strip=True) for li in stations] == [
+    assert [li.select_one(".traversata__kicker").get_text(strip=True) for li in stations] == [
         "Premier temps",
         "Second temps",
     ]
-    assert [li.select_one("h2.linea__label") is not None for li in stations] == [True, True]
+    assert [li.select_one("h2.traversata__titolo") is not None for li in stations] == [True, True]
     assert not soup.select(".training-phase.card, .card__meta"), "a sequence, not two boxes"
 
 
 @pytest.mark.parametrize("path", CALLOUT_PAGES)
 def test_the_fraud_warning_is_an_amber_notice_said_three_times(get, path):
+    from cms import locked_content
+
     soup = BeautifulSoup(_main(get(path)), "html.parser")
     callout = soup.select_one('aside[data-callout="antifraud"]')
-    assert "notice--warning" in callout["class"] and "notice--institutional" not in callout["class"], path
-    marks = [use["href"].rsplit("#", 1)[1] for use in callout.select("svg.notice__icon use")]
-    assert marks == ["icon-shield-alert"], "the anti-fraud entry's mark, once"
-    title = callout.select_one(".notice__title")
+    # V5.22 (SECTION_SYSTEM_V2 §0.1 «one component, la protezione», §2 K, §3.4–§3.5, §3.9 F2b, §3.10 — approved
+    # owner/product decisions; lane S's partial; V5.20 strict rule): the warning is said three times still — its mark
+    # (the protection's T1 seal `ile-scudo`, once; ink only: the home's prescription forbids the alarm's amber), its
+    # kind in words (the locked title, a heading), its locked body whole and visible — never collapsed
+    assert "protezione" in callout["class"] and "notice--institutional" not in callout["class"], path
+    marks = [seal["data-mark"] for seal in callout.select(".sigillo")]
+    assert marks == ["ile-scudo"], "the anti-fraud entry's mark, once"
+    title = callout.select_one(".protezione__titolo")
     assert title.name in ("h2", "h3") and title.get_text(strip=True) == "ATTENTION AUX FRAUDES", "the kind in words"
+    body = callout.select_one('[data-locked="p3.antifraud.body"]')
+    assert body.get_text() == locked_content.text("p3.antifraud.body", "fr") and not callout.find_parent("details")
 
 
 def test_the_antifraud_page_keeps_its_text_under_a_visible_title(get):
@@ -304,6 +345,8 @@ def test_the_orientation_sheet_imports_the_interior_first_and_draws_on_tokens():
         "../css/v5/_pagina.css",
         "../css/v5/_interior.css",
         "../css/v5/_journey-passage.css",
+        # V5.12 W2 (DECISIONS §5.6): the choices are the form system's choice cards
+        "../css/v5/_choice.css",
     ]
     assert css.strip().startswith(
         '@import url("../css/v5/_pagina.css");\n@import url("../css/v5/_interior.css");\n'

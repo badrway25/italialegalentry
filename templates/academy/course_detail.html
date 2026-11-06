@@ -18,8 +18,10 @@ deliver: a record of the sessions attended.
 {% block portal_header %}
 {% safe_url 'academy:enrol' course.slug as enrol_url %}
 {% if enrolment %}{% safe_url 'academy:enrolment' enrolment.uuid as enrolment_url %}{% endif %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="thresholds" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title reg-head__title" lang="{{ course.text_language }}" dir="auto">{{ course.title }}</h1>
     <p class="ws-head__lead" lang="{{ course.text_language }}" dir="auto">{{ course.summary }}</p>
     {% if enrolment %}<p class="reg-head__meta">{% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}</p>{% endif %}

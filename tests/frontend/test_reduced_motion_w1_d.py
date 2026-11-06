@@ -10,7 +10,9 @@ test_script_motion_gate.py (script motion). Here, in Chromium, with the setting 
   with a universal ``!important`` any more. One thing is admitted, because it is the state MS-O4 designs: an overlay's
   fade — a transition of ``opacity`` alone, lasting exactly ``--motion-reduced`` (80 ms), with the discrete
   ``display`` / ``overlay`` companion that keeps the surface in place while it goes (the portico's panels and their
-  photographs, v5/chrome.css §9, W2-C1). Anything else that lasts, on any property, is a failure;
+  photographs, v5/chrome.css §9, W2-C1) — and, since V5.12 §4, the loader's stills (`lume-still`, `lume-fade`: one
+  opacity animation of exactly --motion-reduced, the lit mark the reduced-motion version keeps as branded feedback).
+  Anything else that lasts, on any property, is a failure;
 * without the setting the same pages do carry transitions, so the first check reads something;
 * the preview's flag html.rm, without the setting, gives the root the setting's duration tokens;
 * motion.js's helpers keep their contract in a page, from the built bundle: the gate reads the setting and the flag;
@@ -41,6 +43,7 @@ MOVING = r"""() => {
   const secs = (v) => v.split(',').map((x) => parseFloat(x) * (x.trim().endsWith('ms') ? 0.001 : 1));
   const reduced = secs(getComputedStyle(document.documentElement).getPropertyValue('--motion-reduced').trim() || '0s')[0];
   const FADE = new Set(['opacity', 'display', 'overlay']);
+  const STILLS = new Set(['lume-still', 'lume-fade']);
   const moving = [];
   const fades = [];
   for (const el of document.querySelectorAll('*')) {
@@ -56,10 +59,15 @@ MOVING = r"""() => {
           (fade ? fades : moving).push(name + ' transition ' + cs.transitionProperty + ' ' + cs.transitionDuration);
         }
       }
-      if (cs.animationName !== 'none' && secs(cs.animationDuration).some((v) => v > 0)) moving.push(name + ' animation ' + cs.animationName);
+      if (cs.animationName !== 'none' && secs(cs.animationDuration).some((v) => v > 0)) {
+        // V5.12 §4: the loader's stills keep branded feedback under the setting — one opacity animation of exactly
+        // --motion-reduced (lume-still: a lit mark held, then gone; lume-fade: a still that appears). Nothing moves.
+        const still = cs.animationName.split(',').every((n) => STILLS.has(n.trim())) && secs(cs.animationDuration).every((d) => Math.abs(d - reduced) < 1e-6);
+        (still ? fades : moving).push(name + ' animation ' + cs.animationName);
+      }
     }
   }
-  const running = document.getAnimations().filter((a) => a.playState === 'running').length;
+  const running = document.getAnimations().filter((a) => a.playState === 'running' && !STILLS.has(a.animationName)).length;
   return {moving, fades, running};
 }"""
 

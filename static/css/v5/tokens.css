@@ -5,7 +5,8 @@
    colours stay declared once, in static/css/v2/tokens.css (tests/frontend/test_v4_tokens.py) — and
    amended by the decisions of docs/design-v5/V5_4_EXECUTION_PLAN.md:
      §1.1 type «Una voce» (Host Grotesk for everything; «ILE Wordmark» for the name; «ILE Mono» for
-          references; Vazirmatn for Arabic; eight public sizes; the console one step up on phones);
+          references; the Arabic companion — Readex Pro since Typography V2, v524-t —; the twelve steps of V2
+          in place of the eight sizes; the console one step up on phones, the public roles too since V2);
      §1.2 colour: «En examen» in lapis (the nine wisteria primitives go), the information notice on
           the slate wash, broken edges at step 600, the hatch at α 0.78, the night marks re-solved,
           the pinned glass at α 0.94, «argento» for Istituzione, literals named (PLATFORM_COLORS C1–C9);
@@ -55,11 +56,8 @@
   /* laguna — the one interactive accent (V4 --accent*, unchanged) */
   --p-laguna-50: #d9eef0;
   --p-laguna-100: #c7e4e7;
-  --p-laguna-300: #a5e0e5;
-  --p-laguna-350: #8fd8de;
   --p-laguna-400: #7fd1d8; /* on night: 9.93 on notte-900 */
   --p-laguna-550: #1d8a93; /* focus ring: ≥ 3:1 on every paper */
-  --p-laguna-600: #15808a;
   --p-laguna-650: #12777f; /* mark, flat primary: 4.76 on carta-50 */
   --p-laguna-700: #0f6a72; /* text: 5.69 on carta-50 */
   --p-laguna-800: #0b555c; /* hover text: 7.67 */
@@ -79,7 +77,7 @@
   --p-deposito-25: #f3f5f8; --p-deposito-50: #eaeff4; --p-deposito-100: #dee5eb; --p-deposito-200: #b6bec7;
   --p-deposito-600: #586674; --p-deposito-800: #434f5c; --p-deposito-900: #2d3238; --p-deposito-300: #b2c1cf;
   --p-deposito-400: #93a3b2;
-  --p-ambra-25: #fdf4e6; --p-ambra-50: #ffeccf; --p-ambra-100: #fbe0b7; --p-ambra-200: #e2c394;
+  --p-ambra-25: #fdf4e6; --p-ambra-50: #ffeccf; --p-ambra-100: #fbe0b7;
   --p-ambra-600: #aa7600; --p-ambra-800: #694700; --p-ambra-900: #412e0c; --p-ambra-300: #dcba84; --p-ambra-400: #b37d03;
   --p-cotto-50: #ffe9e0; --p-cotto-100: #ffdbcc; --p-cotto-200: #e5b19b;
   --p-cotto-600: #aa4300; --p-cotto-800: #873300; --p-cotto-900: #47291b; --p-cotto-300: #edb096; --p-cotto-400: #f28452;
@@ -89,14 +87,12 @@
   --p-grafite-50: #e2e7eb; --p-grafite-100: #d8dde3; --p-grafite-200: #b1b8c0;
   --p-grafite-600: #353e49; --p-grafite-800: #242c35; --p-grafite-900: #2f3339; --p-grafite-300: #c2ccd6;
   --p-grafite-400: #c5d0dd;
-  --p-cenere-50: #f1f0ec; --p-cenere-100: #e8e7e2; --p-cenere-200: #d3d2cc;
+  --p-cenere-50: #f1f0ec; --p-cenere-100: #e8e7e2;
   --p-cenere-600: #7a868b; --p-cenere-800: #55646b; --p-cenere-900: #32322f; --p-cenere-300: #c1c0bc; --p-cenere-400: #858480;
 
   /* the four audience accents — night grounds and photographs only; never on paper */
-  --p-route-1: #7fd1d8;    /* 9.93 on notte-900 — equals --p-laguna-400 */
   --p-sabbia-300: #e6cdb0; /* 11.34 — Persona (O19, confirmed by PC C8) */
   --p-route-2: #8fbfe8;    /* 8.92 — Impresa */
-  --p-route-3: #aab7cc;    /* 8.56 — the V4 Istituzione, kept as a primitive */
   --p-argento-300: #d9dee6; /* 12.84 — «argento», Istituzione (PC C8): Impresa / Istituzione 0.047 → 0.131 */
   --p-route-4: #a8cfc0;    /* 10.21 — Università */
 
@@ -151,7 +147,6 @@
   --accent-text-hover: var(--p-laguna-800);
   --accent-mark: var(--p-laguna-650);
   --accent-night: var(--p-laguna-400);
-  --accent-night-fade: rgba(127, 209, 216, 0.14); /* C9: the laguna-400 wash on night, named */
   --accent-wash: var(--p-laguna-50);
   --accent-wash-2: var(--p-laguna-100);
 
@@ -162,8 +157,6 @@
   --focus-ring-night: var(--p-laguna-400);
   --focus-halo: rgba(29, 138, 147, 0.3);
   --focus-halo-night: rgba(127, 209, 216, 0.3);
-  --focus-ring-image-inner: var(--p-carta-0);
-  --focus-ring-image-outer: var(--p-notte-900);
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
 
@@ -175,7 +168,6 @@
   /* scrims and plates over a photograph — PC C6, kept as a rule: on --scrim-photo-aa only
      --text-on-night-1 holds AA; on --plate-night-photo (α 0.80) every night ink but --text-on-night-3 */
   --scrim-photo-aa: rgba(11, 26, 51, 0.64);
-  --scrim-photo-aaa: rgba(11, 26, 51, 0.76);
   --plate-night-photo: rgba(11, 26, 51, 0.8);
   --scrim-overlay: rgba(7, 18, 38, 0.32);     /* behind the portico panel */
   --scrim-modal: rgba(7, 18, 38, 0.6);        /* behind a modal / drawer — opacity only, no blur */
@@ -193,7 +185,6 @@
   --icon-muted: var(--text-3);
   --icon-strong: var(--text-1);
   --icon-interactive: var(--accent-mark);
-  --icon-status: currentColor;
   --icon-on-night: var(--text-on-night-2);
   --icon-on-night-strong: var(--text-on-night-1);
   --icon-on-night-muted: var(--text-on-night-3);
@@ -205,9 +196,6 @@
   /* patterns — the non-chromatic channel of strips, legends, ledgers (white over the mark).
      The hatch at α 0.78: the stripe reaches 3.04:1 on the amber mark (PC C4). */
   --pattern-hatch: repeating-linear-gradient(45deg, transparent 0 3px, rgba(255, 255, 255, 0.78) 3px 5px);
-  --pattern-dots: radial-gradient(circle, rgba(255, 255, 255, 0.6) 1.2px, transparent 1.5px);
-  --pattern-cross: repeating-linear-gradient(45deg, transparent 0 3px, rgba(255, 255, 255, 0.45) 3px 4px),
-                   repeating-linear-gradient(-45deg, transparent 0 3px, rgba(255, 255, 255, 0.45) 3px 4px);
 }
 
 /* the console: one step lighter paper under the same night chrome (O13) */
@@ -220,7 +208,7 @@ body.console {
 }
 
 /* night contexts flip focus, icons, indicators and lines (the product's existing context classes) */
-:is(.on-inverse, .rail, .tooltip, .site-footer, .hero, .chapter--dark, .chapter--night, .section--verso, .plate--verso) {
+:is(.on-inverse, .rail, .tooltip, .site-footer, .hero, .chapter--dark) {
   --focus-ring: var(--focus-ring-night);
   --focus-halo: var(--focus-halo-night);
   --icon-default: var(--icon-on-night);
@@ -309,97 +297,142 @@ body.console {
   --tone-nullo-night-mark: var(--p-cenere-400);
 }
 
-/* §3.3 Type — «Una voce» (plan §1.1). One family, Host Grotesk, for every Latin role, public and
-   console; the only serif on a page is the trademark name, always in «ILE Wordmark»; «ILE Mono» in its
-   one seat (references, hashes, rule versions); Vazirmatn for every Arabic role. The serif names stay
-   and resolve to the sans, so the V1–V4 consumers change face at once (DL54-10: TY-2, TY-3, CDV law 2's
-   serif clause and HET §0 item 9 are retired while B is the system). The Arabic stack carries the Latin
-   pair right after the Arabic face (gate-0 A6): its digits, spaces of Latin runs and names are Host's. */
+/* §3.3 Type — «Una voce» · Typography V2 (TYPOGRAPHY_V2 §4; V5.24 §11–§14; FINAL_DELIVERY_V2 R1, §3.1).
+   One family, Host Grotesk, for every Latin role, public and console; the only serif on a page is the
+   trademark name, always in «ILE Wordmark»; «ILE Mono» in its one seat (references, hashes, rule versions);
+   READEX PRO for every Arabic role at ratio 1.0 — the same steps, the same colour as the French beside it
+   (the previous Arabic face sat 15–20 % smaller on a 1.56 em content area and needed a second leading system;
+   Readex Pro's 1.25 em fits the Latin leadings, titles take +0.1). The serif names stay and resolve to the
+   sans (DL54-10). The Arabic stack carries the Latin pair right after the Arabic face (gate-0 A6): its
+   digits and Latin runs are Host's. Twelve steps, declared ONCE, here; every sheet reads a token
+   (tests/frontend/test_typography_v2.py); the legacy names kept below the twelve are aliases the lanes
+   burn down (TYPOGRAPHY_BURNDOWN) and CLOSING deletes. */
 :root {
   --f-sans-lat: "Host Grotesk", "ILE Sans Fallback", "ILE Sans Fallback Arial", "ILE Sans Fallback Android", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
-  --f-sans-ar: "Vazirmatn", "Host Grotesk", "ILE Arabic Fallback", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
-  --f-serif-lat: var(--f-sans-lat);
-  --f-serif-ar: var(--f-sans-ar);
+  --f-sans-ar: "Readex Pro", "Host Grotesk", "ILE Arabic Fallback", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
   --f-sans: var(--f-sans-lat);
   --f-serif: var(--f-sans-lat);
-  --f-mono: "ILE Mono", "ILE Mono Fallback", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --f-mono: "ILE Mono", "ILE Mono Fallback", ui-monospace, "Cascadia Mono", Consolas, monospace; /* references only:
+     code, kbd, pre, .t-ref, .ctx__ref, .doc-workspace__ref, .error-page__ref, .db-ref, .reg-ref — never a label, a
+     numeral or a kicker (TYPOGRAPHY_V2 F-3) */
   --f-wordmark: "ILE Wordmark", "ILE Wordmark Fallback", "Iowan Old Style", Georgia, serif; /* every rendering of
      the name: the {% brand %} and {% brand_lockup %} classes and the hero's name line (static/css/v5/base.css) */
   --f-arabic-sys: "Segoe UI", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif; /* the «ع» control on Latin pages */
 
   --numeric-data: lining-nums tabular-nums;
-  --numeric-ref: lining-nums tabular-nums slashed-zero;
   --feat-caps: "case" 1;
 
-  /* tracking follows size, the larger the tighter, and stops at 20 px: nothing smaller is tracked
-     but capitals (the console eyebrow, locked capital strings) */
-  --track-display: -0.026em;   /* 64 px; -0.02em under 48rem, where the display line is 40 px */
-  --track-plate: var(--track-display);
-  --track-title: -0.024em;     /* 36 px */
-  --track-band: -0.02em;       /* 28 px */
-  --track-entry: -0.012em;     /* 20 px */
+  /* tracking follows size, the larger the tighter, and stops at 20 px: below it only the label is tracked
+     (+0.08 em) and locked capital strings (+0.02 em at display size). Arabic zeroes every one of these (below) */
+  --track-display: -0.03em;    /* 44 → 64 */
+  --track-title: -0.028em;     /* title-1, 34 → 56 */
+  --track-title-2: -0.02em;    /* title-2, 28 → 36 */
+  --track-band: -0.016em;      /* 24 → 28 */
+  --track-entry: -0.012em;     /* 20 */
   --track-display-caps: 0.02em;
-  --track-eyebrow: 0.06em;
-  --track-folio: 0.06em;
+  --track-label: 0.08em;
+  --track-eyebrow: var(--track-label); --track-folio: var(--track-label); /* legacy names */
 
-  /* the public scale — eight sizes: 64 · 36 · 28 · 20 · 17 · 15 · 13 · 12; line-heights on the 4 px line */
-  --t-display: clamp(2.5rem, 1.94rem + 2.29vw, 4rem); --t-display-lh: 1.0625; /* 40 → 64 (390 → 1440) · 500 */
-  --t-plate: var(--t-display); --t-plate-lh: var(--t-display-lh);              /* no ninth size: the plate is the display */
-  --t-title: 2.25rem;     --t-title-lh: 2.75rem;   /* 36/44 · 600 · public H1 */
-  --t-band: 1.75rem;      --t-band-lh: 2.25rem;    /* 28/36 · 600 · section titles */
-  --t-entry: 1.25rem;     --t-entry-lh: 1.75rem;   /* 20/28 · 600 · entry and panel titles */
-  --t-lead: 1.25rem;      --t-lead-lh: 1.75rem;    /* 20/28 · 400 · roman (no italic lead) */
+  /* the public scale — twelve steps (TYPOGRAPHY_V2 §4.2): four fluid from 390 to 1440, eight fixed, every
+     fixed line-height on the 4 px line; nothing Latin under 12 px, nothing under 14 px on a phone or in Arabic */
+  --t-display: clamp(2.75rem, 2.05rem + 2.3vw, 4rem);   --t-display-lh: 1;     /* 44 → 64 · 600 · the hero statement, a seam title: one per page */
+  --t-title-1: clamp(2.125rem, 1.5rem + 2.4vw, 3.5rem); --t-title-1-lh: 1.08;  /* 34 → 56 · 600 · the page h1 */
+  --t-title-2: clamp(1.75rem, 1.2rem + 1.6vw, 2.25rem); --t-title-2-lh: 1.15;  /* 28 → 36 · 600 · section titles */
+  --t-band: clamp(1.5rem, 1.25rem + 0.8vw, 1.75rem);    --t-band-lh: 1.25;     /* 24 → 28 · 600 · sub-sections, process heads, plate titles */
+  --t-entry: 1.25rem;     --t-entry-lh: 1.75rem;   /* 20/28 · 600 · entry and panel titles, statements (with the 2 px rule) */
+  --t-lead: 1.25rem;      --t-lead-lh: 1.75rem;    /* 20/28 · 400 · --text-2 · the page header's lead only, ≤ 36rem; 22/32 from 64rem (below) */
   --t-body: 1.0625rem;    --t-body-lh: 1.75rem;    /* 17/28 · 400 · ≤ 36rem */
-  --t-ui: 0.9375rem;      --t-ui-lh: 1.25rem;      /* 15/20 · 500 */
-  --t-small: 0.8125rem;   --t-small-lh: 1.25rem;   /* 13/20 */
+  --t-ui: 0.9375rem;      --t-ui-lh: 1.25rem;      /* 15/20 · 500 · controls, nav, chips, annotations (annotation 1.5rem leading, ≤ 26rem) */
+  --t-small: 0.8125rem;   --t-small-lh: 1.25rem;   /* 13/20 · 400 · captions, credits, meta, breadcrumbs */
   --t-caption: 0.75rem;   --t-caption-lh: 1rem;    /* 12/16 · 500 · the floor: nothing Latin smaller */
-  --t-folio: 0.8125rem;   --t-folio-lh: 1rem;      /* 13/16 · ILE Mono · .06em */
+  --t-label: 0.8125rem;   --t-label-lh: 1rem;      /* 13/16 · 600 · +0.08em · uppercase · the institutional label (eyebrow, folio, kicker):
+                                                      Host Grotesk, never the mono; one per head, with its 32–48 px rule */
+  --t-numeral: 1.75rem;   --t-numeral-lh: 2rem;    /* 28/32 · 600 · tabular · step markers (rows) */
+  --t-numeral-lg: 2.25rem; --t-numeral-lg-lh: 2.5rem; /* 36/40 · 600 · tabular · stations */
   --t-field: 1rem;                                  /* typed text in every field, at every width (LG-1, TY-14) */
+  /* the eight-size scale's legacy names (SECTION_SYSTEM_V2 §6.2, superseded by erratum): aliases while the
+     sheets move to the twelve — the lanes burn them down, CLOSING deletes them */
+  --t-plate: var(--t-display);
+  --t-title: 2.25rem;     --t-title-lh: 2.75rem;   /* = title-2 at 1440, fixed as its consumers were set */
+  --t-folio: var(--t-label); --t-folio-lh: var(--t-label-lh);
   /* measures in rem, not ch — a ch measure gave 80 characters a line and shifted at the swap (TR C1) */
   --measure-body: 36rem;  /* at 17 px ≈ 70 characters */
   --measure-lead: 36rem;
-  --measure-small: 29rem; /* at 15 px */
+  --measure-small: 29rem; /* at 15 px; the annotation 26rem */
 
-  /* the console scale — the foundation's roles; the eyebrow rises from 11 to 12 px (TR C5) */
+  /* the console scale — product density stays (TYPOGRAPHY_V2 F-13); the eyebrow is the label role, the
+     numeral is 600, the workspace head's one clamp is promoted to a token */
   --u-title: 1.75rem;     --u-title-lh: 2.25rem;   /* 28/36 · 600 */
+  --u-title-lg: clamp(1.75rem, 1.45rem + 0.8vw, 2.25rem); /* 28 → 36 · 600 · the workspace head */
   --u-section: 1.25rem;   --u-section-lh: 1.75rem; /* 20/28 · 600 */
   --u-card: 1.0625rem;    --u-card-lh: 1.5rem;     /* 17/24 · 600 */
   --u-body: 0.9375rem;    --u-body-lh: 1.5rem;     /* 15/24 · 400 */
   --u-ui: 0.875rem;       --u-ui-lh: 1.25rem;      /* 14/20 · 500 */
   --u-small: 0.8125rem;   --u-small-lh: 1.25rem;   /* 13/20 */
   --u-caption: 0.75rem;   --u-caption-lh: 1rem;    /* 12/16 · 500 */
-  --u-eyebrow: 0.75rem;   --u-eyebrow-lh: 1rem;    /* 12/16 · 600 · uppercase · "case" · .06em */
-  --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 500 · tabular */
+  --u-eyebrow: 0.75rem;   --u-eyebrow-lh: 1rem;    /* 12/16 · the label role (600 · uppercase · "case" · --track-label); 13/20 on phones */
+  --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 600 · tabular */
   --u-ref: 0.8125rem;     --u-ref-lh: 1.25rem;     /* 13/20 · ILE Mono */
 
-  /* 500 acts, 400 reads, 600 titles (TR C4) */
-  --w-body: 400; --w-control: 500; --w-title: 600; --w-display: 500; --w-strong: 700; --w-wordmark: 600;
-  /* Arabic (Vazirmatn): titles 600 with no ×1.15 (it sits full on the em), leading 1.35–1.4; body 1.75;
-     console 1.7; never under 14 px */
-  --ar-title-lh: 1.4; --ar-body-lh: 1.75; --ar-console-lh: 1.7;
+  /* 400 reads · 500 acts · 600 intitles (display, titles, labels, keywords, statements, numerals, primary
+     calls) · 700 emphasis only (strong, a keyword inside a display line) — TYPOGRAPHY_V2 §4.3 */
+  --w-body: 400; --w-control: 500; --w-title: 600; --w-display: 600; --w-label: 600; --w-strong: 700; --w-wordmark: 600;
+  /* Arabic leading: the Latin title value + this (display 1.1, title-1 1.18, title-2 1.25, band 1.35); 0 on a
+     Latin page and inside a Latin run, so a sheet with a literal title leading writes
+     line-height: calc(1.15 + var(--ar-lh-plus)) once for both scripts */
+  --ar-lh-plus: 0;
+  --ar-title-lh: 1.25; --ar-body-lh: 1.65; /* the old Arabic trio's two surviving names (the console's was unread):
+     legacy aliases on the V2 values, burned down by their sheets */
 }
 body.console { --f-serif: var(--f-sans); } /* the serif never reaches the console (tested) */
-:lang(ar) {
-  --f-sans: var(--f-sans-ar);
-  --f-serif: var(--f-sans-ar);
-  /* never under 14 px in Arabic (DL A7, A25): the small roles of both scales re-pointed */
-  --t-small: 0.875rem; --t-caption: 0.875rem; --t-caption-lh: 1.25rem; --t-folio: 0.875rem;
-  --u-small: 0.875rem; --u-caption: 0.875rem; --u-caption-lh: 1.25rem; --u-eyebrow: 0.875rem; --u-eyebrow-lh: 1.25rem;
-}
-/* a French, Italian or English run on an Arabic page takes the Latin stacks back (gate-0 A6 bis):
-   static/css/v5/base.css re-resolves the family at every language boundary */
-:where(:root:lang(ar)) :where([lang="fr"], [lang="it"], [lang="en"]) { --f-sans: var(--f-sans-lat); --f-serif: var(--f-sans-lat); }
-/* the console one step up below 48 rem or under a coarse pointer (TR F2 «A+»: text under 14 px falls from
-   63–67 % to 29–33 %, no overflow) */
+/* the public roles one step up below 48 rem or under a coarse pointer (TYPOGRAPHY_V2 F-5: at 390 text ≤ 13 px
+   was 35–70 % of a public page): ui 16/24, small 14/20, caption 14/20, label 14/20 — nothing under 14 px on a phone
+   (V5.24 §13; the audit's 13 px caption raised to the gate's floor) — the buttons follow --t-ui, the primary call is
+   17/24 (buttons.css). The console keeps its own step-up (TR F2 «A+», product density), the eyebrow at 13/20. */
 @media (max-width: 47.999rem), (pointer: coarse) {
+  :root {
+    --t-ui: 1rem;            --t-ui-lh: 1.5rem;
+    --t-small: 0.875rem;     --t-small-lh: 1.25rem;
+    --t-caption: 0.875rem;   --t-caption-lh: 1.25rem;
+    --t-label: 0.875rem;     --t-label-lh: 1.25rem;
+  }
   body.console {
     --u-body: 1rem;          --u-body-lh: 1.5rem;
     --u-ui: 0.9375rem;       --u-ui-lh: 1.25rem;
     --u-small: 0.875rem;     --u-small-lh: 1.25rem;
     --u-caption: 0.8125rem;  --u-caption-lh: 1.25rem;
-    --u-eyebrow: 0.75rem;
+    --u-eyebrow: 0.8125rem;  --u-eyebrow-lh: 1.25rem;
     --u-ref: 0.875rem;
   }
+}
+/* Arabic (Readex Pro, TYPOGRAPHY_V2 §4.5): the same steps; never under 14 px (the small roles of both scales
+   re-pointed — DL A7, A25); titles +0.1 leading, entry and lead 20/32, body 17/28 as Latin; no tracking anywhere
+   (the tracking tokens zeroed, so every sheet's letter-spacing: var(--track-*) is right in both scripts).
+   :root:lang(ar) too: V1's static/css/tokens.css opens the prose and gloss leadings for Naskh at (0,2,0); the
+   same specificity, later, closes them on the V2 values. */
+:root:lang(ar), :lang(ar) {
+  --f-sans: var(--f-sans-ar);
+  --f-serif: var(--f-sans-ar);
+  --ar-lh-plus: 0.1;
+  --t-display-lh: 1.1; --t-title-1-lh: 1.18; --t-title-2-lh: 1.25; --t-band-lh: 1.35;
+  --t-entry-lh: 2rem; --t-lead-lh: 2rem;
+  --t-prose-lh: var(--t-body-lh); --t-gloss-lh: 1.5rem;
+  --t-small: 0.875rem; --t-caption: 0.875rem; --t-caption-lh: 1.25rem; --t-label: 0.875rem; --t-label-lh: 1.25rem;
+  --u-small: 0.875rem; --u-caption: 0.875rem; --u-caption-lh: 1.25rem; --u-eyebrow: 0.875rem; --u-eyebrow-lh: 1.25rem;
+  --track-display: 0; --track-title: 0; --track-title-2: 0; --track-band: 0; --track-entry: 0; --track-label: 0;
+}
+/* a French, Italian or English run on an Arabic page takes the Latin type back at its boundary (gate-0 A6 bis;
+   TYPOGRAPHY_V2 F-7): the stacks, the Latin leadings and the tracking — base.css re-resolves the family there */
+:where(:root:lang(ar)) :where([lang="fr"], [lang="it"], [lang="en"]) {
+  --f-sans: var(--f-sans-lat); --f-serif: var(--f-sans-lat);
+  --ar-lh-plus: 0;
+  --t-display-lh: 1; --t-title-1-lh: 1.08; --t-title-2-lh: 1.15; --t-band-lh: 1.25;
+  --t-entry-lh: 1.75rem; --t-lead-lh: 1.75rem;
+  --track-display: -0.03em; --track-title: -0.028em; --track-title-2: -0.02em; --track-band: -0.016em; --track-entry: -0.012em; --track-label: 0.08em;
+}
+/* the header's lead at 22/32 from 64 rem — one lead per page (TYPOGRAPHY_V2 F-9); the Latin run on an Arabic page too */
+@media (min-width: 64rem) {
+  :root, :where(:root:lang(ar)) :where([lang="fr"], [lang="it"], [lang="en"]) { --t-lead: 1.375rem; --t-lead-lh: 2rem; }
 }
 
 /* §3.4 Elevation, glass, materials (plan §1.4: SH-1 … SH-9) */
@@ -418,12 +451,10 @@ body.console { --f-serif: var(--f-sans); } /* the serif never reaches the consol
   --shadow-4-dark: 0 12px 24px -6px rgba(7, 18, 38, 0.32), 0 32px 64px -16px rgba(7, 18, 38, 0.6);
   --shadow-door: 0 40px 64px -32px rgba(7, 18, 38, 0.6);            /* the door only */
   --passe-partout: inset 0 0 0 1px rgba(21, 34, 42, 0.08);          /* images on paper */
-  --passe-partout-night: inset 0 0 0 1px rgba(238, 241, 246, 0.1);  /* C9: images on night, named */
 
   /* glass has one seat: the two sticky bars, once scrolled — blur 12 px, static, α 0.94 (PC C7: «Italy»
      over the night hero 3.79 → 4.61:1; the green letter holds 4.5 even over a black pixel) */
   --glass-light: rgba(251, 250, 248, 0.94);
-  --glass-light-over-dark: var(--glass-light);       /* retired as a second value (C7) */
   --plate-night: rgba(11, 26, 51, 0.72);             /* the solid night plate, NO blur: hero legend, login panel */
   --blur-nav: 12px;                                  /* the sticky bars only — static, never animated */
 
@@ -442,7 +473,7 @@ body.console { --f-serif: var(--f-sans); } /* the serif never reaches the consol
     radial-gradient(50% 50% at 100% 100%, rgba(63, 166, 175, 0.08), transparent 60%);
 }
 
-/* §3.5 Motion (plan §1.5: no duration added or changed) */
+/* §3.5 Motion (plan §1.5: no duration added or changed; V5.12 adds --lume-still, a hold, and --reveal-shift / --reveal-zoom, two distances) */
 :root {
   --motion-fast: 120ms;
   --motion-standard: 200ms;
@@ -457,6 +488,14 @@ body.console { --f-serif: var(--f-sans); } /* the serif never reaches the consol
   --motion-luce: 2200ms;
   --motion-wait: 400ms;          /* a threshold, not a duration */
   --motion-reduced: 80ms;        /* MS-O4: under reduced motion, overlays use one opacity and nothing else */
+  --lume-still: 1200ms;          /* V5.12 §4: the lit still of the loader under reduced motion — a hold, kept there */
+  --lume-t: 0ms;                 /* V5.15: the time a leaving page already spent on the veil's clock — head.js writes it on <html> */
+  --reveal-shift: 8px;           /* V5.12 §5 (DECISIONS §2): a reveal's travel — a mark, a list's glyph, a notice's entry */
+  --reveal-zoom: 1.06;           /* the photograph's settle under its mask (M2): 1.06 → 1 */
+  /* the threshold's light line (V5.12 §4, DECISIONS §1 T2): its head, the brightest point, at the reading end —
+     the angle is the root's, so an Arabic page draws it from the right */
+  --lume-line-to: 90deg;
+  --lume-line: linear-gradient(var(--lume-line-to), transparent, var(--identity-light) 60%, var(--p-oro-300));
 
   /* curves — no control point outside [0, 1] on y: no overshoot anywhere */
   --ease-enter: cubic-bezier(0.25, 1, 0.5, 1);
@@ -474,6 +513,7 @@ body.console { --f-serif: var(--f-sans); } /* the serif never reaches the consol
   --spring-sheet: linear(0, 0.059, 0.187, 0.333, 0.473, 0.595, 0.696, 0.776, 0.838, 0.884, 0.919, 0.943, 0.961, 0.974, 0.983, 0.989, 0.993, 0.995, 0.997, 0.998, 1);
   --spring-sheet-duration: 550ms;
 }
+[dir="rtl"] { --lume-line-to: 270deg; }
 /* reduced motion is a state (plan §1.5; W1-D's entry in DL54): every duration this file declares is zeroed again
    here — a top-level :root beats an earlier media query, so v4's block alone would lose — and with it every
    transition and animation written on a token lands at once, the key, the door and the light on their still
@@ -503,10 +543,10 @@ html.rm {
 :root {
   --container-lg: 1176px; --container-xl: 1320px; --container-xxl: 1440px;
   --page-pad: 32px;
-  --utility-h: 32px; --header-h: 64px; --header-h-scrolled: 56px;
+  --utility-h: 0px; --header-h: 64px; --header-h-scrolled: 56px; /* no bar above the letterhead since V5.15 (V5.18 P8) */
   --rail-w-compact: 80px; --rail-w-open: 248px;
   --ctx-h: 56px; --bottom-bar-h: 56px; --action-bar-h: 61px;
-  --workspace-max: 1320px; --inspector-w: 320px;
+  --workspace-max: 1320px;
   --drawer-w: 420px;
 
   /* sm 36 — fine pointer only: dense console toolbars, the segmented track · md 44 — the default, every
@@ -514,7 +554,6 @@ html.rm {
      CTA · icon 40 on a fine pointer, 44 on a coarse one · hit area: floor 24 on a fine pointer, 44 under a
      coarse pointer and for every primary (SP-8). W1-C applies them. */
   --control-sm: 36px; --control-md: 44px; --control-lg: 52px; --control-icon: 40px;
-  --hit-min: 24px;
   --hit-primary: 44px;
   --input-h: 44px; --textarea-min: 96px; --chip-h: 24px; --chip-h-s: 20px; --chip-h-l: 28px;
   --segmented-h: 36px; --rail-item-h: 44px; --row-min-h: 64px; --table-row-h: 48px; --drawer-row-h: 64px;
@@ -560,10 +599,8 @@ html.rm {
   --chip-pad-inline: 10px; --chip-gap: 6px; --chip-mark-size: 16px;
   --chip-hit: 44px;
   --chip-edge-width: 1px; --chip-edge-style: solid;
-  --chip-bg: var(--tone-neutro-bg); --chip-bg-hover: var(--tone-neutro-bg-hover);
+  --chip-bg: var(--tone-neutro-bg);
   --chip-edge: var(--tone-neutro-edge); --chip-mark: var(--tone-neutro-mark); --chip-text: var(--tone-neutro-text);
-  --chip-pattern: none; --chip-pattern-size: auto; --chip-fill-kind: solid;
-  --count-h: 18px;
 
   /* fields */
   --field-h: var(--input-h);
@@ -586,17 +623,15 @@ html.rm {
   --panel-raised-shadow: var(--shadow-2);
 
   /* overlays */
-  --popover-bg: var(--surface-raised); --popover-shadow: var(--shadow-3); --popover-radius: var(--radius-lg);
   --menu-row-h: 36px;
-  --dialog-radius: var(--radius-xl); --dialog-shadow: var(--shadow-4);
+  --dialog-radius: var(--radius-xl);
   --drawer-radius: var(--radius-xl);
   --tooltip-bg: var(--p-notte-800); --tooltip-fg: var(--text-on-night-1); --tooltip-delay: 400ms;
-  --toast-w: 360px; --toast-timeout: 6s;
+ --toast-timeout: 6s;
 
   /* public chrome */
   --nav-indicator: var(--accent-mark);
   --nav-indicator-night: var(--accent-night);
-  --panel-inset: var(--s-4);
   --panel-hover-intent: 120ms; --panel-grace: 250ms;
 
   /* console chrome */
@@ -605,7 +640,6 @@ html.rm {
   --rail-item-fg-current: var(--text-on-night-1);
   --rail-item-bg-hover: var(--surface-night-area);
   --rail-item-bg-current: var(--surface-night-sheet);
-  --rail-indicator: var(--accent-night);
   /* the rail list's scroll edge (W3-A's fix pass, the review's m1; portal/v5/_shell.css §2): the band of the
      night's sheet at the list's end while more follows, and the rail's own night that covers it at the end —
      named here because an app sheet draws no gradient (tests/frontend/test_design_docs.py) */
@@ -614,10 +648,6 @@ html.rm {
   --ctx-bg: var(--glass-light);
 
   /* loader and light */
-  --loader-thread: var(--accent-mark);
-  --loader-thread-night: var(--accent-night);
-  --loader-light: var(--identity-light);
-  --loader-light-night: var(--identity-light-night);
   --skeleton-bg: var(--surface-area);
   --skeleton-radius: var(--radius-sm);
 
@@ -626,10 +656,7 @@ html.rm {
   --journey-line-night: rgba(214, 226, 228, 0.35);
   --journey-line-travelled: var(--accent-mark);
   --journey-line-travelled-night: var(--accent-night);
-  --journey-light-head: var(--identity-light-night);
-  --journey-light-tail: var(--accent-night);
   --journey-threshold: var(--line-structure);
-  --journey-station-edge: 2px;
   --journey-station-done: var(--p-notte-50);
 
   /* nodes, deadlines, seal, notices (COLOUR §7) */
@@ -656,10 +683,8 @@ html.rm {
   --ledger-in-hand: var(--p-inchiostro-600);
   --ledger-settled: var(--p-inchiostro-900);
 }
-:is(.on-inverse, .rail, .tooltip, .site-footer, .hero, .chapter--dark, .chapter--night, .section--verso, .plate--verso) {
+:is(.on-inverse, .rail, .tooltip, .site-footer, .hero, .chapter--dark) {
   --nav-indicator: var(--nav-indicator-night);
-  --loader-thread: var(--loader-thread-night);
-  --loader-light: var(--loader-light-night);
   --journey-line: var(--journey-line-night);
   --journey-line-travelled: var(--journey-line-travelled-night);
 }
@@ -668,33 +693,31 @@ html.rm {
    a plain disc with no glyph · esame lapis · neutro slate · attesa amber, dashed · azione terracotta ·
    rifiuto garnet, struck · blocco graphite, `lock` · nullo ash, dotted */
 [data-register="conforme"] {
-  --chip-bg: var(--tone-conforme-bg); --chip-bg-hover: var(--tone-conforme-bg-hover);
+  --chip-bg: var(--tone-conforme-bg);
   --chip-edge: var(--tone-conforme-edge); --chip-mark: var(--tone-conforme-mark); --chip-text: var(--tone-conforme-text); }
 [data-register="esame"] {
-  --chip-bg: var(--tone-esame-bg); --chip-bg-hover: var(--tone-esame-bg-hover);
+  --chip-bg: var(--tone-esame-bg);
   --chip-edge: var(--tone-esame-edge); --chip-mark: var(--tone-esame-mark); --chip-text: var(--tone-esame-text); }
 [data-register="neutro"] {
-  --chip-bg: var(--tone-neutro-bg); --chip-bg-hover: var(--tone-neutro-bg-hover);
+  --chip-bg: var(--tone-neutro-bg);
   --chip-edge: var(--tone-neutro-edge); --chip-mark: var(--tone-neutro-mark); --chip-text: var(--tone-neutro-text); }
 [data-register="attesa"] {
-  --chip-bg: var(--tone-attesa-bg); --chip-bg-hover: var(--tone-attesa-bg-hover);
+  --chip-bg: var(--tone-attesa-bg);
   --chip-edge: var(--tone-attesa-edge); --chip-mark: var(--tone-attesa-mark); --chip-text: var(--tone-attesa-text);
-  --chip-edge-style: dashed; --chip-pattern: var(--pattern-hatch); }
+  --chip-edge-style: dashed; }
 [data-register="azione"] {
-  --chip-bg: var(--tone-azione-bg); --chip-bg-hover: var(--tone-azione-bg-hover);
+  --chip-bg: var(--tone-azione-bg);
   --chip-edge: var(--tone-azione-edge); --chip-mark: var(--tone-azione-mark); --chip-text: var(--tone-azione-text); }
 [data-register="rifiuto"] {
-  --chip-bg: var(--tone-rifiuto-bg); --chip-bg-hover: var(--tone-rifiuto-bg-hover);
-  --chip-edge: var(--tone-rifiuto-edge); --chip-mark: var(--tone-rifiuto-mark); --chip-text: var(--tone-rifiuto-text);
-  --chip-pattern: var(--pattern-dots); --chip-pattern-size: 5px 5px; }
+  --chip-bg: var(--tone-rifiuto-bg);
+  --chip-edge: var(--tone-rifiuto-edge); --chip-mark: var(--tone-rifiuto-mark); --chip-text: var(--tone-rifiuto-text); }
 [data-register="blocco"] {
-  --chip-bg: var(--tone-blocco-bg); --chip-bg-hover: var(--tone-blocco-bg-hover);
-  --chip-edge: var(--tone-blocco-edge); --chip-mark: var(--tone-blocco-mark); --chip-text: var(--tone-blocco-text);
-  --chip-pattern: var(--pattern-cross); }
+  --chip-bg: var(--tone-blocco-bg);
+  --chip-edge: var(--tone-blocco-edge); --chip-mark: var(--tone-blocco-mark); --chip-text: var(--tone-blocco-text); }
 [data-register="nullo"] {
-  --chip-bg: var(--tone-nullo-bg); --chip-bg-hover: var(--tone-nullo-bg-hover);
+  --chip-bg: var(--tone-nullo-bg);
   --chip-edge: var(--tone-nullo-edge); --chip-mark: var(--tone-nullo-mark); --chip-text: var(--tone-nullo-text);
-  --chip-edge-style: dotted; --chip-fill-kind: outline; }
+  --chip-edge-style: dotted; }
 
 :is(.on-inverse, .rail, .tooltip, .site-footer) [data-register="conforme"] {
   --chip-bg: var(--tone-conforme-night-bg); --chip-edge: var(--tone-conforme-night-mark);

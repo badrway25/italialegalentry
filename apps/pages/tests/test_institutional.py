@@ -23,6 +23,15 @@ def _faq_who() -> dict:
     return next(item for item in locked_content.get("p3.faq.items", "fr")[0] if item["key"] == "faq_who")
 
 
+def _locked_texts(html: str, key: str) -> list[str]:
+    """V5.22 (SECTION_SYSTEM_V2 §1 rule 6, §2.0 «Data»): a prescribed text recomposed at render — cut into spans on its
+    own separators, a few words set in place as emphasis — stands as ONE element carrying its key; that element's text,
+    its tags removed, is the registry's text character for character (never retyped, never printed twice)."""
+    from bs4 import BeautifulSoup
+
+    return [el.get_text() for el in BeautifulSoup(html, "html.parser").select(f'[data-locked="{key}"]')]
+
+
 @pytest.mark.parametrize("lang", LANGS)
 @pytest.mark.parametrize("path", PAGES)
 def test_institutional_pages_render_in_every_language(page, seeded, lang, path):
@@ -64,7 +73,10 @@ def test_arabic_institutional_page_is_rtl(page, seeded):
     _response, html = page("/ar/le-projet/")
     assert '<html lang="ar" dir="rtl"' in html
     assert 'data-locked="p2.forum.why.body"' in html
-    assert re.search(r'<p class="page-section__text chapter__prose" lang="fr" data-locked="p2.forum.why.body">', html)
+    # V5.22 (SECTION_SYSTEM_V2 §3.2 LP-2, strict rule V5.20): «Pourquoi» is a step of the story, its text one <p> cut
+    # on its own full stops — the paragraph keeps its French language on the Arabic page, its text the registry's
+    assert re.search(r'<p class="projet__perche" lang="fr" data-locked="p2.forum.why.body">', html)
+    assert _locked_texts(html, "p2.forum.why.body") == [text_of("p2.forum.why.body")]
 
 
 # ---- /le-projet/ --------------------------------------------------------------------------------
@@ -72,7 +84,9 @@ def test_project_page_is_assembled_from_prescribed_texts(page, seeded):
     _response, html = page("/fr/le-projet/")
     main = _main(html)
     assert escaped(text_of("p2.forum.why.title")) in main
-    assert escaped(text_of("p2.forum.why.body")) in main
+    # V5.22 (SECTION_SYSTEM_V2 §3.2 LP-2; strict rule V5.20): the text is cut at render into its three sentences — the
+    # one element that holds it carries the registry's text, whole, once
+    assert _locked_texts(main, "p2.forum.why.body") == [text_of("p2.forum.why.body")]
     # Phase 3 material stays out while the gate is closed.
     assert escaped(text_of("p3.hero.body")) not in main
     assert escaped(_faq_who()["answer"]) not in main
@@ -84,13 +98,16 @@ def test_project_page_adds_phase3_texts_when_open(page, seeded, phase3_open):
     main = _main(html)
     assert escaped(text_of("p3.hero.body")) in main
     assert escaped(_faq_who()["answer"]) in main
-    assert escaped(text_of("p2.forum.why.body")) in main
+    assert _locked_texts(main, "p2.forum.why.body") == [text_of("p2.forum.why.body")]  # V5.22 §3.2 LP-2 (above)
 
 
 def test_project_page_trademark_line(page, seeded):
     _response, fr = page("/fr/le-projet/")
     line = re.search(r"<p class=\"page-trademark\" data-trademark>(.*?)</p>", fr, re.S).group(1)
     assert text_of("p1.trademark.mark") in line
+    # I18N-06: the mark is a left-to-right isolate, so in Arabic «™» stays on the right of the name (v518g-p: the
+    # line's span had translate="no" alone and painted «™Italy Legal Entry» on /ar/le-projet/)
+    assert f'<span translate="no" dir="ltr" lang="en">{text_of("p1.trademark.mark")}</span>' in line
     assert text_of("p1.trademark.words_fr") in line
     _response, it = page("/it/le-projet/")
     line_it = re.search(r"<p class=\"page-trademark\" data-trademark>(.*?)</p>", it, re.S).group(1)
@@ -104,22 +121,55 @@ def test_project_page_trademark_line(page, seeded):
 
 
 # ---- /agami/ ------------------------------------------------------------------------------------
-def test_agami_page_uses_prescribed_texts_and_publishes_no_registry_data(page, seeded, phase3_open):
+def test_agami_page_shows_the_promoters_verified_identification_and_nothing_else(page, seeded, phase3_open):
+    """V5.23 — the owner's Q9 decision A (30 October 2026; SECTION_SYSTEM_V2 §11.1, §3.17 AG-3). Until then the page
+    published no registry data (they belonged to the unpublished «Mentions légales»): that expectation conflicts with
+    the owner's decision and is replaced (strict rule V5.20) by a stronger one — the association's verified public
+    identification stands on the page itself, every field the owner gave, each ONCE, from one source
+    (pages.identity), and NO other identifier; the page never links the unpublished legal notice."""
+    from django.conf import settings
+
+    from pages import identity
+
     _response, html = page("/fr/agami/")
     main = _main(html)
-    assert escaped(text_of("p2.forum.who.body")) in main
+    assert _locked_texts(main, "p2.forum.who.body") == [text_of("p2.forum.who.body")]  # V5.22 §3.17 AG-1: emphasis only
     assert escaped(_faq_who()["question"]) in main
     assert escaped(_faq_who()["answer"]) in main
-    # CONTENT_PENDING_LEGAL_REVIEW — identification data belong to the official Mentions légales.
-    for forbidden_data in ("RUNTS", "149809", "91036640240", "Bassano", "Codice fiscale", "Code fiscal"):
-        assert forbidden_data not in html, forbidden_data
-    assert 'href="/fr/note-legali/"' in main
+    plate = re.search(r'<section class="sez sez--strato agami-targa".*?</section>', main, re.S).group(0)
+    words = " ".join(re.sub(r"<[^>]+>", " ", plate).split())
+    fields = [
+        settings.ILE["PROMOTER"],
+        identity.LEGAL_FORM,
+        identity.TAX_CODE,
+        identity.RUNTS,
+        identity.REGISTRATION,
+        identity.REGISTERED_OFFICE["street"],
+        "36061 Bassano del Grappa (VI)",
+        identity.OPERATIONAL_OFFICE["street"],
+        "00195 Roma",
+        "contact@agamieuromed.org",
+        identity.WEBSITE,
+    ]
+    for field in fields:
+        assert field in words, field
+    for once in (identity.TAX_CODE, identity.RUNTS, identity.REGISTRATION, identity.REGISTERED_OFFICE["street"]):
+        assert main.count(escaped(once)) == 1, once
+    assert 'href="mailto:contact@agamieuromed.org"' in plate
+    # the website is a fact of the identification, never an outbound link (V5.19 §7: the one outbound link is WhatsApp)
+    assert not re.search(r'href="https?://', main)
+    # nothing the owner did not give: no trademark filing, no other register's form of a number
+    for other in ("019405072", "PR-261439", "Rep. n°", "Codice fiscale"):
+        assert other not in main, other
+    # V5.14 C/D (lane C's M-2; the steward, the v515-c merge): the unpublished official notices answer 404, so no link
+    assert 'href="/fr/note-legali/"' not in main
+    assert "Mentions légales" not in main
     assert "CONTENT_PENDING_LEGAL_REVIEW" not in html  # template comments never reach the visitor
 
 
 def test_agami_page_before_phase3_has_no_faq_text(page, seeded):
     _response, html = page("/fr/agami/")
-    assert escaped(text_of("p2.forum.who.body")) in html
+    assert _locked_texts(html, "p2.forum.who.body") == [text_of("p2.forum.who.body")]  # V5.22 §3.17 AG-1 (above)
     assert escaped(_faq_who()["answer"]) not in html
 
 
@@ -134,8 +184,11 @@ def test_network_page_lists_the_five_actors_and_links_the_spaces(page, seeded):
         "universities",
         "professionals",
     ]
-    for href in ("/fr/parcours/", "/fr/entreprises/recueil-des-besoins/", "/fr/partenaires/", "/fr/contact/"):
+    for href in ("/fr/parcours/", "/fr/entreprises/recueil-des-besoins/", "/fr/contact/"):
         assert f'href="{href}"' in main
+    # V5.12 §8: without an authorised partner, no partners' link and no «partners to come» sentence
+    assert 'href="/fr/partenaires/"' not in main and "au fur et à mesure" not in main
+    assert 'href="/fr/forum/"' in main and 'href="/fr/agami/"' in main
     assert escaped(text_of("p3.hero.body")) not in main
 
 
@@ -153,7 +206,7 @@ def test_network_page_shows_only_authorized_partners(page, seeded, partner_facto
 
 
 # ---- /contact/ ----------------------------------------------------------------------------------
-def test_contact_page_single_address_and_link_to_the_enquiries_form(page, seeded):
+def test_contact_page_single_address_and_link_to_the_enquiries_form(page, seeded, whatsapp_channel):
     _response, html = page("/fr/contact/")
     main = _main(html)
     assert 'href="mailto:contact@agamieuromed.org"' in main
@@ -162,9 +215,12 @@ def test_contact_page_single_address_and_link_to_the_enquiries_form(page, seeded
     # The form itself is owned by the enquiries app: nothing is re-implemented here.
     assert "<form" not in main
     assert "<input" not in main and "<textarea" not in main
-    # No invented phone number or postal address.
-    assert "tel:" not in main
-    assert not re.search(r"\+?\d[\d .]{8,}\d", re.sub(r"<[^>]+>", " ", main))
+    # V5.19: the owner's two telephone channels, and no other number (no invented one, no postal address). V5.20: the
+    # WhatsApp number is configured outside the repository — here Ofcom's fictional one (tests/conftest.py).
+    assert 'href="tel:800642015"' in main and f'href="{whatsapp_channel.url}"' in main
+    numbers = set(re.findall(r"\+?\d[\d .]{8,}\d", re.sub(r"<[^>]+>", " ", main)))
+    assert {n.strip() for n in numbers} == {"800 642 015", whatsapp_channel.label}, numbers
+    assert set(re.findall(r'href="tel:([^"]*)"', main)) == {"800642015"}
     # Gate G2 is closed (official legal texts missing): the visitor is told before clicking.
     assert 'data-gate="forms-closed"' in main
 

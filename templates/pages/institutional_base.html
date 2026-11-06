@@ -11,7 +11,7 @@ its chrome.
 {% endcomment %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
 {% block body_class %}page-institutional interior{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/interior.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/interior.css' %}">{% block route_sheet %}{% endblock %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% if is_preview %}

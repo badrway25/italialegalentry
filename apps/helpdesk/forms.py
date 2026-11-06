@@ -15,6 +15,8 @@ from __future__ import annotations
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from core import special_category
+
 BODY_MAX = 4000
 
 
@@ -77,6 +79,8 @@ class MessageForm(forms.Form):
         label=_("Votre message"),
         max_length=BODY_MAX,
         widget=forms.Textarea(attrs={"rows": 6}),
+        # V5.16 §5–§6, V5.17 §4 (R-SC-1): G-FREE; the request's own field already says it, in its words
+        help_text=special_category.FREE_TEXT_GUIDANCE,
     )
 
     def clean_body(self) -> str:

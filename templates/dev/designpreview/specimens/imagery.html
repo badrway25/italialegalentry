@@ -1,0 +1,92 @@
+{% load static i18n pages_imagery %}<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Specimen — banco di prova delle immagini</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/dev/specimen-imagery.css' %}">
+</head>
+<body class="sp spi">
+{% comment %}
+The imagery test bench of V5.22 (SECTION_SYSTEM_V2 §8; labels v522-m-build, v522-m-improve1). A development fixture,
+reachable by its URL only: it is not linked from the preview's index and it is not a page the owner reviews. Each new
+frame and each re-crop is drawn ALONE, on paper, by the product's own {% photo %} tag (apps/pages/imagery.py: the same
+<picture>, the same AVIF/WebP ladders, the same sizes), so tests/frontend/test_imagery_v522_m.py can check the art
+direction (the ratio each band takes), the browser's choice of file for the sizes it is given, and the lazy, boxed
+markup. It draws no composition: no ground, band, arch, route, label or treatment of its own — the pages that place the
+frames do that. Standalone (README of this folder): Italian chrome, nothing from the database, nothing inline.
+{% endcomment %}
+<header class="sp-head">
+  <p class="sp-eyebrow">Specimen · {{ board }} · solo sviluppo</p>
+  <h1 class="sp-title">Banco di prova delle immagini</h1>
+  <p class="sp-lead">Ogni fotogramma è disegnato da solo dal tag <code>photo</code>, con gli stessi <code>srcset</code> e <code>sizes</code> delle pagine, per verificare il rapporto preso a ogni larghezza, il file scelto dal browser e il caricamento differito. Non è una composizione: le pagine che collocano i fotogrammi li compongono. Licenza, provenienza e oscuramenti in <code>static/img/v5/&lt;famiglia&gt;/PROVENANCE.json</code>; i pesi sono gli AVIF serviti, ciascuno sotto il tetto del suo tipo.</p>
+</header>
+
+<section class="sp-section" aria-labelledby="spi-1">
+  <h2 class="sp-h2" id="spi-1"><code>home.integrity.stone</code> — home</h2>
+  <p class="sp-note">Conci di pietra squadrati in luce radente. Decorativo (alt vuoto), desaturato nel file; 21:9 da 64 rem, 4:5 sotto.</p>
+  <div class="spi-frame spi-frame--full">{% photo "home.integrity.stone" "spi-frame__photo" %}</div>
+  {% foto_scheda "home.integrity.stone" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-2">
+  <h2 class="sp-h2" id="spi-2"><code>home.pilot.cedar</code>, variante <code>pannello</code> — home</h2>
+  <p class="sp-note">2:3 a tutta altezza da 64 rem, 3:2 sotto. La resa predefinita dello slot (il 4:5 di oggi) non cambia.</p>
+  <div class="spi-frame spi-frame--third">{% photo "home.pilot.cedar" "spi-frame__photo" variant="pannello" %}</div>
+  {% foto_scheda "home.pilot.cedar" "pannello" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-3">
+  <h2 class="sp-h2" id="spi-3"><code>home.pilot.marble</code>, variante <code>pannello</code> — home</h2>
+  <p class="sp-note">2:3 a tutta altezza da 64 rem, l’intero fotogramma 3:2 sotto. Il ritaglio tiene il pugno, tutta la lama e il suo contatto con la pietra.</p>
+  <div class="spi-frame spi-frame--third">{% photo "home.pilot.marble" "spi-frame__photo" variant="pannello" %}</div>
+  {% foto_scheda "home.pilot.marble" "pannello" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-4">
+  <h2 class="sp-h2" id="spi-4"><code>home.ecosystem</code>, variante <code>campata</code> — home</h2>
+  <p class="sp-note">4:3 da 64 rem, il 3:2 di oggi sotto. Gli oscuramenti del cordino e della scrittura restano.</p>
+  <div class="spi-frame spi-frame--wide">{% photo "home.ecosystem" "spi-frame__photo" variant="campata" %}</div>
+  {% foto_scheda "home.ecosystem" "campata" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-5">
+  <h2 class="sp-h2" id="spi-5"><code>project.volumes</code> — <span lang="fr">Le projet</span></h2>
+  <p class="sp-note">Volumi rilegati in cuoio; ogni ritaglio parte sotto le etichette dei titoli. 21:9 da 64 rem, 16:9 da 48 rem, 4:5 sotto.</p>
+  <div class="spi-frame spi-frame--full">{% photo "project.volumes" "spi-frame__photo" %}</div>
+  {% foto_scheda "project.volumes" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-6">
+  <h2 class="sp-h2" id="spi-6"><code>pathways.family.*</code> — <span lang="fr">Parcours</span></h2>
+  <p class="sp-note">Quattro fotogrammi, uno per famiglia: 3:2 da 64 rem, striscia 21:9 sotto. Qui a colori, senza trattamento.</p>
+  <ul class="spi-sheet" role="list">
+    <li class="spi-sheet__cell">{% photo "pathways.family.work" "spi-frame__photo" %}</li>
+    <li class="spi-sheet__cell">{% photo "pathways.family.study" "spi-frame__photo" %}</li>
+    <li class="spi-sheet__cell">{% photo "pathways.family.family" "spi-frame__photo" %}</li>
+    <li class="spi-sheet__cell">{% photo "pathways.family.other" "spi-frame__photo" %}</li>
+  </ul>
+  {% foto_scheda "pathways.family.work" %}
+  {% foto_scheda "pathways.family.study" %}
+  {% foto_scheda "pathways.family.family" %}
+  {% foto_scheda "pathways.family.other" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-7">
+  <h2 class="sp-h2" id="spi-7"><code>training.before</code> — <span lang="fr">Formation</span></h2>
+  <p class="sp-note">Mani che cablano i relè di un banco didattico; i segni stampati cancellati da un filtro mediano. 4:5 da 64 rem, 3:2 sotto.</p>
+  <div class="spi-frame spi-frame--third">{% photo "training.before" "spi-frame__photo" %}</div>
+  {% foto_scheda "training.before" %}
+</section>
+
+<section class="sp-section" aria-labelledby="spi-8">
+  <h2 class="sp-h2" id="spi-8"><code>universities.exchange</code> — <span lang="fr">Universités</span></h2>
+  <p class="sp-note">Ritagliato sulle mani e sulla custodia, senza oscuramenti. È l’unico già in pagina: la verifica della larghezza disegnata si fa lì, sulla pagina vera.</p>
+  <div class="spi-frame spi-frame--half">{% photo "universities.exchange" "spi-frame__photo" %}</div>
+  {% foto_scheda "universities.exchange" %}
+</section>
+</body>
+</html>

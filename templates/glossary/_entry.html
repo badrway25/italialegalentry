@@ -1,7 +1,14 @@
-{% comment %}One term of the glossary's register (design V5.4, W3-F2): the Italian term at the reading edge — the heading of
-its definition and the way to its own page — and the definition beside it from 48rem. Contract: `entry`
-(glossary.services.GlossaryEntry).{% endcomment %}
-<div class="glossary-entry" id="{{ entry.key }}">
-  <dt class="glossary-entry__term" lang="{{ entry.term_lang }}"><a href="{{ entry.url }}">{{ entry.term }}</a></dt>
-  <dd class="glossary-entry__definition"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</dd>
-</div>
+{% load i18n %}{% comment %}One term of the glossary — a card of «il lessico» (design V5.22, SECTION_SYSTEM_V2 §3.14 G2; lane P2): the Italian term
+at the band's size, the card's heading and its link to the term's page (a stretched link: the card is the target, the
+name stays the term); the prescribed definition, whole, always visible (a glossary is read, not unfolded); «Où le
+rencontrer»: the pathways whose sheets name the term, as chips (links above the stretched one). A rule at the card's
+reading edge draws as the register enters. Contract: `card` ({"entry": glossary.services.GlossaryEntry, "chips":
+[{"label", "url", "lang"}], "letter": the letter its card opens in the register, or nothing}). Round 1 (QA_ROUND1 M7): a
+letter's first card carries the letter — its heading (h2, before the cards' h3), set large in the card's end corner
+as its marker, and the anchor of the thumb index (#lettre-X).{% endcomment %}<article class="lessico__carta sez-plate" id="{{ card.entry.key }}" aria-labelledby="{{ card.entry.key }}-term">
+  {% if card.letter %}<h2 class="lessico__lettera" id="lettre-{{ card.letter }}">{{ card.letter }}</h2>{% endif %}
+  <span class="lessico__regola" data-verb="draw-y" aria-hidden="true"></span>
+  <h3 class="glossary-entry__term lessico__termine" id="{{ card.entry.key }}-term" lang="{{ card.entry.term_lang }}"><a class="sez-stretch" href="{{ card.entry.url }}">{{ card.entry.term }}</a></h3>
+  <p class="lessico__definizione"{% if card.entry.is_fallback %} lang="{{ card.entry.lang }}"{% endif %}>{{ card.entry.definition }}</p>
+  {% if card.chips %}<div class="lessico__dove"><p class="lessico__etichetta">{% translate "Où le rencontrer" %}</p><ul class="lessico__chips" role="list">{% for chip in card.chips %}<li><a class="lessico__chip" href="{{ chip.url }}"{% if chip.lang %} lang="{{ chip.lang }}"{% endif %}>{{ chip.label }}</a></li>{% endfor %}</ul></div>{% endif %}
+</article>

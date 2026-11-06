@@ -1,20 +1,29 @@
 {% load pages_typo %}{% comment %}
 THE CHAPTER HEAD of the home (design V5.4, W2-D step 3 «the home around the hero»; DESIGN_SYSTEM_V5 PX04).
 
-One section device, at the reading edge: the mark's three steps as a small mark in ink — the sprite's identity
-glyph `ile-steps` (apps/core/icons.py: a stair profile, never mirrored; PX04's micro-mark) — then the title
-and, when the section has one, its lead. No eyebrow and no ordinal: five of the seven running heads this
-partial used to print said again what the title under them, or the link at the chapter's foot, already
-said, and a number in front of a chapter told the reader nothing (numerals are kept for real sequences).
-The mark is decorative; the anchor is the section's slug, so reordering the home from the back office
-never breaks a link to it.
+One section device, at the reading edge: the mark of the section's concept as a small mark in ink — the registry's
+CHAPTER map, from the section's anchor (V5.12 §7, W1: the orientation's compass, the pathways' signpost, the news'
+paper, the ecosystem's arch; a section that says no concept draws none, and none draws `ile-steps`, the journey's
+own mark) — then the title and, when the section has one, its lead. No eyebrow and no ordinal: five of the seven
+running heads this partial used to print said again what the title under them, or the link at the chapter's foot,
+already said, and a number in front of a chapter told the reader nothing (numerals are kept for real sequences).
+The mark is decorative; the anchor is the section's slug, so reordering the home from the back office never breaks
+a link to it.
+
+V5.22 (SECTION_SYSTEM_V2 §0 item 3, §4.1 rule 1; lane S): the bare mark above the title is retired — no glyph is stacked
+above a title, each theme a T1 seal inside its composition. On the home it leaves with lane H's V2 composition, not
+before: §9.7 «S never removes a legacy behaviour a not-yet-migrated page still uses», and H's own test_home.py asserts
+these marks until H recomposes the chapters. Since `{% chapter_mark %}` without a class draws nothing (V5.22), this head
+names its class, so the home keeps exactly the marks it had.
 
 Contract: `title_id`, `heading` / `intro` (pages.services.Text), `fallback_title` (str: the name of the
-section when an editor has blanked its heading — the outline keeps it, visually hidden). The heading and the
-intro are editorial (team-authored, never a prescribed text): they take the French spacing filter.
+section when an editor has blanked its heading — the outline keeps it, visually hidden), optional `chapter_concept` (a CHAPTER
+concept, for a head whose anchor does not say it), `tile` (V5.15 W3, lane B: True → the mark in its glyph tile,
+v5/_glyph.css — for a page whose sheet imports that partial). The heading and the intro are editorial (team-authored, never a
+prescribed text): they take the French spacing filter.
 {% endcomment %}
 <div class="section__header chapter__head">
-  {% if heading %}{% svg_icon "ile-steps" "icon chapter__mark" %}
+  {% if heading %}{% if tile %}{% chapter_mark chapter_concept|default:title_id "icon chapter__mark" as mark %}{% if mark %}<span class="glyph-tile glyph-tile--lg chapter__tile" aria-hidden="true">{{ mark }}</span>{% endif %}{% else %}{% chapter_mark chapter_concept|default:title_id "icon chapter__mark" %}{% endif %}
   <h2 class="section__title" id="{{ title_id }}"{% if heading.lang %} lang="{{ heading.lang }}"{% endif %}>{{ heading|typo }}</h2>{% else %}<h2 class="visually-hidden" id="{{ title_id }}">{{ fallback_title }}</h2>{% endif %}
   {% if intro %}<p class="section__lead"{% if intro.lang %} lang="{{ intro.lang }}"{% endif %}>{{ intro|typo }}</p>{% endif %}
 </div>

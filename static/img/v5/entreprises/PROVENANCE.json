@@ -1,0 +1,276 @@
+{
+ "what": "V5.12 photographs, family «entreprises» (DECISIONS §6): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "atelier-mesure-precision",
+   "pexels_id": 7180823,
+   "photographer": "Thirdman",
+   "photographer_url": "https://www.pexels.com/@thirdman",
+   "page": "https://www.pexels.com/photo/man-using-a-caliper-to-measure-an-item-in-a-workshop-7180823/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Close-up of a craftsman using a caliper for precise measurement in a workshop.",
+   "original_px": [
+    6720,
+    4480
+   ],
+   "original_sha256": "5699436cad870230057c2afd1b163c8bb589127e25a6257ba7342c10028d642f",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.08,
+      0.215,
+      0.92,
+      0.9
+     ],
+     "crop_px": [
+      1058,
+      963,
+      5662,
+      4032
+     ],
+     "master_px": [
+      4604,
+      3069
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.425,
+      0.47,
+      0.535,
+      0.565
+     ],
+     "radius_px": 12,
+     "reason": "the caliper's maker's mark and scale lettering"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); reds -15 % saturation; Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "the craftsman's hands, the caliper and the piece; the crop stops under the chin (O55); red sweater -15 % sat.; 3:2 only: the gesture is horizontal and a 4:5 cut loses either the hand or the piece",
+   "files": [
+    {
+     "file": "atelier-mesure-precision-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7375,
+     "budget": 61440,
+     "sha256": "08da2a04a468b06825afd95907dc0dbbb7dca6b4755a59df2894d2a2787dcfe9"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 9738,
+     "budget": 61440,
+     "sha256": "5a68467f5b14032650beeb0b020d40011d538ad7e33be42040507a295a69ab4b"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13370,
+     "budget": 61440,
+     "sha256": "a9df7e9c08821d86b1f2738d29a77c36a79de72c4ebf0a0acf0c6f505e80e467"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 17354,
+     "budget": 61440,
+     "sha256": "597ca5156697d3a7ac2113756733da8b0ae9d863fc7c45c7f183c14b27d654e7"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 21021,
+     "budget": 61440,
+     "sha256": "a500b3789a54190a875d5b2f9447144e1f23e92f3e329d1dbbdfc369e11b8f79"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 27712,
+     "budget": 61440,
+     "sha256": "2e47eb5e6c81fe22c04f15414dd4bf4c93e118c22e1d186d5ce33d5dbefb2aec"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 29842,
+     "budget": null,
+     "sha256": "c84e0cf64334defdab771abebf4427d2acd59608f480056e54288e988d6f6cd4"
+    },
+    {
+     "file": "atelier-mesure-precision-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 40232,
+     "budget": null,
+     "sha256": "302c53b25edc60e9e642cabeb555c3e0596f8d85a4c12a67747bba6ef7b7e1be"
+    }
+   ]
+  },
+  {
+   "slug": "serres-plaine-crepuscule",
+   "pexels_id": 5906831,
+   "photographer": "Serena Koi",
+   "photographer_url": "https://www.pexels.com/@serenakoi",
+   "page": "https://www.pexels.com/photo/farm-land-covered-with-plastic-5906831/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Beautiful greenhouses in the Rizza countryside under a serene sunrise sky.",
+   "original_px": [
+    8256,
+    5504
+   ],
+   "original_sha256": "fcd1ad3e4b6f2472bcf7889b97605cc16e929db7dd9b791c3d5484e534bd72d7",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.18,
+      1.0,
+      0.82
+     ],
+     "crop_px": [
+      18,
+      991,
+      8238,
+      4514
+     ],
+     "master_px": [
+      8220,
+      3523
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "greenhouse tunnels across a cultivated plain at dusk: the productive territory; nobody in the frame; the alt names no place",
+   "files": [
+    {
+     "file": "serres-plaine-crepuscule-21x9-800.avif",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 12950,
+     "budget": null,
+     "sha256": "0fd0834efd07fb800e77308c590995b398aebfffa24753df33cc6f4a7ab17935"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-800.webp",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 16036,
+     "budget": null,
+     "sha256": "9ab7e8c077e90041e17a302a796134b965f5f2cd2b28f4108c201c8337173127"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 26162,
+     "budget": 61440,
+     "sha256": "f138b7d48e2e50f05e67bfbc790594b729ab73797dc493a3766131ee7b039c84"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-1200.webp",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 32540,
+     "budget": 61440,
+     "sha256": "2bf433524606b7af0a936eb4d3756cc84942881ab43d7de4e5449b689713fe9a"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-1600.avif",
+     "ratio": "21x9",
+     "width": 1600,
+     "height": 686,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 44209,
+     "budget": 61440,
+     "sha256": "debc685223657df49ddc51f7675c496b9911699bafd1e3baea08659d4e1cd6bd"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-1600.webp",
+     "ratio": "21x9",
+     "width": 1600,
+     "height": 686,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 53626,
+     "budget": 61440,
+     "sha256": "57d40d49f2b9c3c6b548697a4bfc766bb0b84f1f39d4ae4bb4bbf45d8341f5da"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-1920.avif",
+     "ratio": "21x9",
+     "width": 1920,
+     "height": 823,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 60631,
+     "budget": null,
+     "sha256": "b8359eff7e55145844a9732072f39a956b29778ce775f6cf58222e8ed0415af2"
+    },
+    {
+     "file": "serres-plaine-crepuscule-21x9-1920.webp",
+     "ratio": "21x9",
+     "width": 1920,
+     "height": 823,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 74550,
+     "budget": null,
+     "sha256": "3caee2305e96d57a9b8e6dad419c52c5e55c17b403eced0137a3ea6264c7cfa6"
+    }
+   ]
+  }
+ ]
+}

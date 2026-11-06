@@ -23,6 +23,15 @@ DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=0)
 
 NOTIFICATIONS_SEND_IMMEDIATELY = True
 
+# V5.14: the preview shows the privacy and cookie drafts with their open fields «[DA COMPLETARE …]» highlighted, so
+# the owner sees exactly what is missing. Production never does (prod.py).
+ILE_LEGAL_OPEN_FIELDS_ALLOWED = DEBUG
+
+# V5.17 §5 (R-SC-1): the local preview demonstrates the whole platform with fictional data — PREVIEW CAPABILITY, not
+# PRODUCTION ENABLEMENT (docs/compliance/PREVIEW_VS_PRODUCTION.md). ILE_SPECIAL_CATEGORY_FLOWS_ENABLED=0 shows the
+# production state locally.
+ILE_SPECIAL_CATEGORY_FLOWS_ENABLED = env.bool("ILE_SPECIAL_CATEGORY_FLOWS_ENABLED", default=DEBUG)
+
 # ---------------------------------------------------------------------------
 # V5 live preview (apps/designpreview) — development only, opt-in per process.
 # /__design-v5/ — the live V5 product, its index, the persona switch and the

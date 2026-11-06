@@ -499,91 +499,8 @@
   padding-block: 2px;
 }
 
-/* THE GLOSSARY — one band for the register, a group a letter: the letter is the group's head (in sight while its terms
-   scroll, from 75rem); the terms a register, the term at the reading edge and its definition beside it from 48rem (a
-   dictionary's two columns), under it on a phone. Groups 40 px apart: one band, not eight. */
-.glossary__group + .glossary__group {
-  margin-block-start: var(--s-10);
-}
-
-@media (max-width: 74.999rem) {
-  .glossary__group {
-    row-gap: var(--s-3);
-  }
-}
-
-.glossary__letter {
-  margin: 0;
-  font-size: var(--t-band);
-  line-height: var(--t-band-lh);
-  font-weight: var(--w-title);
-  letter-spacing: 0;
-  color: var(--text-1);
-}
-
-.glossary__list {
-  margin: 0;
-  border-block-start: 1px solid var(--line-structure);
-}
-
-.glossary-entry {
-  display: grid;
-  gap: var(--s-1) var(--s-6);
-  padding-block: var(--s-4) var(--s-5);
-  border-block-end: 1px solid var(--line-rhythm);
-}
-
-/* one rule between two groups — the next group's opening rule: a group's last term leaves its closing hairline to it
-   (a closing hairline, a band, an opening rule drew two; the review's m5) */
-.glossary__list > .glossary-entry:last-child {
-  border-block-end: 0;
-}
-
-.glossary-entry__term {
-  margin: 0;
-  font-size: var(--t-body);
-  line-height: 1.5rem;
-  font-weight: var(--w-title);
-}
-
-/* the term is the heading of its definition and the only way to its page: a standalone target of 24 px at least */
-.glossary-entry__term a {
-  display: inline-block;
-  text-decoration-thickness: 1px;
-}
-
-.glossary-entry__definition {
-  max-inline-size: var(--measure-small);
-  margin: 0;
-  font-size: var(--t-ui);
-  line-height: 1.5rem;
-  color: var(--text-2);
-}
-
-@media (min-width: 48rem) {
-  .glossary__letter {
-    font-size: var(--t-title);
-    line-height: var(--t-title-lh);
-  }
-
-  .glossary-entry {
-    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
-  }
-}
-
-/* the term's own page: the definition at the lead's size, its facts and its related terms quiet under it */
-.glossary-term__definition {
-  max-inline-size: var(--measure-lead);
-  margin: 0;
-  font-size: var(--t-lead);
-  line-height: var(--t-lead-lh);
-  color: var(--text-1);
-}
-
-.glossary-term__related > * + *,
-.glossary-term__facts > * + * {
-  margin-block-start: var(--s-2);
-}
+/* THE GLOSSARY — V5.22 (SECTION_SYSTEM_V2 §3.14; lane P2): the register is «il lessico», term cards under their letters, and
+   the term page «la scheda» — apps/cms/static/cms/_lessico-v2.css. The two-column register and its sticky letters left. */
 
 /* THE NEWS (PX17) — the articles are records on shared hairlines (v5/card.css `.card--flat`): the facts, the title,
    the summary; a cover, when the article has one, at the row's end from 48rem and above the words on a phone */
@@ -791,13 +708,6 @@
   font-size: var(--t-ui);
   line-height: 1.5rem;
   color: var(--text-2);
-}
-
-/* the recipients of an institution's proposal, under the lead: the lead's second paragraph, one step quieter */
-.lettura .page-header__recipients {
-  margin-block-start: var(--s-3);
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
 }
 
 /* a prescribed quote (the companies' form page): the words whole at the lead's size, on the institutional rule */
@@ -1059,15 +969,17 @@
   }
 
   /* each of these is a box of 24 px at least (its line, or its line and 2 px): 10 px above and below make 44, and a
-     word narrower than 44 px is widened to 44 about its middle (the accessibility check's A3: the glossary's terms, the
-     FAQ's links and its permalink, the consent's privacy link joined the list; the trail's: v5/_pagina.css §1).
+     word narrower than 44 px is widened to 44 about its middle (the accessibility check's A3: the FAQ's links and its
+     permalink, the consent's privacy link joined the list; the trail's: v5/_pagina.css §1). V5.22 round 1: the glossary's
+     terms left it — a term is its card's stretched link (the card is the target), and `position: relative` here held
+     the stretch inside the term on a touch screen.
      W4-A: the help line's link and the consent's privacy link left the list for v5/_pagina.css — every page that
      draws them, the door pages' forms included (D2, D5) —, the pending legal notice's address for v5/notice.css (D3) */
-  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .page-header__contact a) {
+  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .search-form__reset a, .page-header__contact a) {
     position: relative;
   }
 
-  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .glossary-entry__term a, .search-form__reset a, .page-header__contact a)::after {
+  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .search-form__reset a, .page-header__contact a)::after {
     content: "";
     position: absolute;
     inset-block: -10px;
@@ -1077,7 +989,7 @@
 
 /* ---- 8 · Arabic, forced colours, print --------------------------------------------------------------------- */
 /* Arabic titles: 600 with no tracking, leading 1.4 (the type system's Arabic rule, restated above the page's own) */
-.lettura :is(.page-header__title, .chapter__title, .chapter__head > h2, .glossary__letter, .empty-state__title):lang(ar) {
+.lettura :is(.page-header__title, .chapter__title, .chapter__head > h2, .empty-state__title):lang(ar) {
   letter-spacing: 0;
   line-height: var(--ar-title-lh);
 }
@@ -1156,9 +1068,5 @@
   .page-header__aside,
   .lettura .pagination {
     display: none;
-  }
-
-  .az-index {
-    position: static;
   }
 }

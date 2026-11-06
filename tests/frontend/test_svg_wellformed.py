@@ -39,8 +39,12 @@ def test_every_icon_source_is_a_24_grid_drawing_that_names_its_origin():
 
 
 def test_icon_sprite_symbols_have_a_viewbox_and_content():
-    sprite = minidom.parse(str(STATIC / "img" / "icons.svg"))
-    symbols = sprite.getElementsByTagName("symbol")
+    # V5.12 W2: two sprites — the chrome and the domain concepts
+    symbols = [
+        symbol
+        for name in ("icons.svg", "icons-domain.svg")
+        for symbol in minidom.parse(str(STATIC / "img" / name)).getElementsByTagName("symbol")
+    ]
     assert len(symbols) >= 100
     for symbol in symbols:
         assert symbol.getAttribute("id").startswith("icon-")

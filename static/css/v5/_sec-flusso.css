@@ -1,0 +1,144 @@
+/* ============================================================================================
+   F · «IL FLUSSO» — «la linea V2» with a measured connector (design V5.22, SECTION_SYSTEM_V2 §2 F: «a curved or measured
+   connector between real boxes is an SVG overlay drawn by sezioni/flow.js»; lane S, round 1). Page-only (after
+   v5/_sezioni.css and v5/_linea-v2.css: the terminal plate and the arrival). Markup: components/sezioni/flusso.html.
+   Stage panels hung on one measured curve: each station's T2 tile a node on the line, its panel hanging under it by a
+   short rule; from 48 rem the stations stand in a row, every second one a step lower, so the line the module draws
+   through the nodes undulates over the panels and never passes behind a word; below, the nodes down the reading edge
+   and the line straight through them, each panel beside its node. The overlay sits in the wrapper, never in the list.
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Klyv Animated Beam» 38286 (a connector between real boxes,
+   re-measured; the light a dash of the same path), «How It Works» 19861 (stations on one curve). Refused: infinite
+   pulses, glow, rotated cards. Signature LINE DRAW: the curve draws once on its section's trigger and the nodes' rules
+   light as it reaches them; hovering or focusing the end call sends one light along it (the accent's — never gold on
+   hover, §4.5). Still: the curve drawn, every node lit.
+   ============================================================================================ */
+
+.flusso__campo {
+  position: relative;
+}
+
+.flusso__tappe {
+  display: grid;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a station: its node, and its panel hanging from it */
+.flusso__tappa {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-4);
+}
+
+.flusso__nodo {
+  z-index: 1;
+}
+
+.flusso__lastra {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--s-6);
+}
+
+.flusso__titolo {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.flusso__testo {
+  margin: 0;
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .flusso__tappe {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    padding-block-end: var(--s-12);
+  }
+
+  .flusso__tappa {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+  }
+
+  /* every second station a step lower: the line undulates through the nodes */
+  .flusso__tappa:nth-child(even) {
+    translate: 0 var(--s-12);
+  }
+
+  /* the hanger: from the node down to its panel */
+  .flusso__tappa::before {
+    content: "";
+    position: absolute;
+    inset-block: 48px auto;
+    inset-inline-start: 23px;
+    inline-size: 2px;
+    block-size: var(--s-6);
+    background: var(--line-structure);
+  }
+}
+
+/* the overlay: behind the nodes, the line through their centres, and its light */
+.flow__svg {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.flow__path,
+.flow__luce {
+  fill: none;
+  stroke-width: 2;
+}
+
+.flow__path {
+  stroke: color-mix(in srgb, var(--accent-mark) 55%, var(--line-structure));
+}
+
+.flow__luce {
+  stroke: var(--accent-mark);
+  stroke-dasharray: 0.1 1;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .flow__path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .flow__path {
+    animation: sez-stroke var(--motion-draw) var(--ease-sine) backwards;
+  }
+
+  /* each node's rule lights as the line reaches it */
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .flusso__nodo::after { scale: 0 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .flusso__nodo::after {
+    animation: sez-draw var(--motion-slow) var(--ease-enter) calc(var(--sez-i, 0) * 120ms + 300ms) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) .flusso:has(.flusso__arrivo .btn:is(:hover, :focus-visible)) .flow__luce {
+    animation: sez-luce var(--motion-route-light) var(--ease-sine);
+  }
+}
+
+.flusso__tappa:nth-child(2) { --sez-i: 1; }
+.flusso__tappa:nth-child(3) { --sez-i: 2; }
+.flusso__tappa:nth-child(n + 4) { --sez-i: 3; }
+
+@keyframes sez-luce {
+  from { opacity: 1; stroke-dashoffset: 0.1; }
+  to { opacity: 1; stroke-dashoffset: -1; }
+}
+
+@media (forced-colors: active) {
+  .flow__path,
+  .flusso__tappa::before { stroke: CanvasText; background: CanvasText; }
+  .flow__luce { display: none; }
+}

@@ -4,7 +4,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import Organisation
-from core import clock
+from core import clock, special_category
 from core.forms import PublicFormMixin
 from documents import services
 from documents.models import DocumentKind
@@ -37,6 +37,14 @@ class DocumentUploadForm(PublicFormMixin, forms.Form):
     def __init__(self, *args, user, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
+        # R-SC-1 (V5.17 §4; SPECIAL_CATEGORY_AUDIT S-01, T-1/T-2): with the switch off (production) the open «Autre
+        # document» is not offered and no kind is pre-selected; the guidance G-UPLOAD stands beside the kind always.
+        kind = self.fields["kind"]
+        kind.choices = special_category.loose_upload_kinds(DocumentKind.choices)
+        kind.help_text = special_category.UPLOAD_GUIDANCE
+        if not special_category.flows_enabled():
+            kind.initial = None
+            kind.choices = [("", "—"), *kind.choices]
         self.fields["organisation"].queryset = Organisation.objects.filter(memberships__user=user).distinct()
         self.validated_upload: services.ValidatedUpload | None = None
 

@@ -1,0 +1,11 @@
+/* ============================================================================
+   THE PLATFORM'S DESIGN ENERGY — page-only entry (V5.15 lane D)
+   Linked AFTER the console's shared sheets by the console pages that draw the atrium and the lattice
+   (templates/portal/dashboard.html, dashboard_organisation.html, organisation.html, requests.html, messages.html,
+   deadlines.html) — never main.css, never console.css (the owner's V5.8: the shared bundles never rise).
+   Its one partial: v5/_platform.css (the atrium, the lattice, the NowPanel's edge, the organisation's panels, the
+   spotlight, their motion and stills). Behaviour: static/js/src/platform.js (the spotlight's two properties).
+   ========================================================================== */
+@import url("v5/_platform.css");
+/* V5.18 (m-6): the grounds these pages are drawn on — the design system's images, one import after the app sheet */
+@import url("../css/v5/_platform-grounds.css");

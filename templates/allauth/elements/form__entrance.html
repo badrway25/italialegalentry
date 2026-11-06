@@ -8,7 +8,7 @@ static/js/src/shell.js hands the form to static/js/src/loader.js, and the stage'
 `login`) and the second factor's code (mfa/authenticate: the submit after which the console arrives, where the
 release plays); no other entrance form engages the stage, and a form without visible fields never does.
 {% endcomment %}
-<form class="form" method="{{ attrs.method }}" {% if attrs.action %}action="{{ attrs.action }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} novalidate data-single-submit{% if not attrs.no_visible_fields %}{% if "login" in attrs.tags or origin == "mfa/authenticate" %} data-loader-host="varco-door"{% endif %}{% endif %}>
+<form class="form" method="{{ attrs.method }}" {% if attrs.action %}action="{{ attrs.action }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} novalidate data-single-submit{% if not attrs.no_visible_fields %}{% if "login" in attrs.tags or origin == "mfa/authenticate" %} data-loader-host="varco-door"{% endif %}{% endif %}{% if attrs.form.steps %} data-steps{% include "components/_steps_msgs.html" %}{% endif %}>
   {% if attrs.form %}{% include "components/form_errors.html" with form=attrs.form %}{% endif %}
   {% slot body %}{% endslot %}
   {% if slots.actions %}<div class="form__actions">{% slot actions %}{% endslot %}</div>{% endif %}

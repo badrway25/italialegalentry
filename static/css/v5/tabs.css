@@ -20,6 +20,7 @@
   --tabs-y: 0px;
   --tabs-w: 0;
   --tabs-dir: 1;
+  --tabs-from-h: auto;
 }
 .tabs__list {
   position: relative;
@@ -88,14 +89,23 @@ html.js .tabs__panel-title {
 }
 /* the chosen panel comes 12 px from the side the indicator travelled from (--tabs-dir is 1 or -1, set by
    initTabs with the indicator), in the same 200 ms; nothing when the choice came from the keyboard */
-.tabs.is-travelling .tabs__panel { transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter); }
+/* M7 (V5.12 §5; DECISIONS §2, Tabs 35021): its height too, from the panel left (--tabs-from-h, measured by initTabs) to
+   its own (`interpolate-size`; elsewhere the height simply changes). The list wraps at every width, so no tab is ever
+   beyond an edge: the 21st.dev row's edge fades have nothing to say here */
+.tabs { interpolate-size: allow-keywords; }
+.tabs.is-travelling .tabs__panel { overflow: clip; transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter), block-size var(--motion-standard) var(--ease-layout); }
 @starting-style {
-  .tabs.is-travelling .tabs__panel { opacity: 0; transform: translateX(calc(var(--tabs-dir) * 12px)); }
+  .tabs.is-travelling .tabs__panel { opacity: 0; transform: translateX(calc(var(--tabs-dir) * 12px)); block-size: var(--tabs-from-h); }
 }
 
-/* ---- 2. The disclosure (accordion): hairlines, a 56 px row, a chevron that turns ------------------------ */
+/* ---- 2. The disclosure (accordion): hairlines, a 56 px row, a plus that folds to a minus, the open plate ---- */
 .accordion { border-block-start: 1px solid var(--line-rhythm); }
 .accordion__item { border-block-end: 1px solid var(--line-rhythm); }
+/* the open item stands on a tinted plate (V5.12 §5; DECISIONS §2 M6, §3 Accordion-09 27711): the plate bleeds past the
+   column by --s-3 on both sides, so the question keeps its section's edge (review m6). Public pages only: the console's
+   folds are panels of their own (_dashboard.css) */
+body:not(.console) .accordion__item { margin-inline: calc(-1 * var(--s-3)); padding-inline: var(--s-3); }
+body:not(.console) .accordion__item[open] { background-color: var(--surface-hover); }
 .accordion__summary {
   display: flex;
   align-items: center;
@@ -117,23 +127,25 @@ html.js .tabs__panel-title {
 .accordion__summary > :is(h2, h3, h4, p) { margin: 0; font: inherit; letter-spacing: inherit; }
 /* the mark is drawn, for every producer of the row: the legacy inline glyph gives way to it */
 .accordion__summary > .icon { display: none; }
+/* plus / minus, drawn (Accordion-09): two 1.5 px bars in the mark's colour; opening folds the upright one away */
 .accordion__summary::after {
   content: "";
   flex: none;
-  inline-size: 0.5rem;
-  block-size: 0.5rem;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
   margin-inline: var(--s-2);
-  border: solid var(--icon-default);
-  border-width: 0 1.5px 1.5px 0;
-  transform: translateY(-25%) rotate(45deg);
-  transition: transform var(--motion-standard) var(--ease-enter);
+  color: var(--icon-default);
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+  transition: background-size var(--motion-standard) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
-.accordion__item[open] > .accordion__summary::after { transform: translateY(25%) rotate(-135deg); }
+.accordion__item[open] > .accordion__summary::after { background-size: 100% 1.5px, 1.5px 0; }
 /* tier 0 (plan §1.5, R-07): a row opened and a tab chosen from the keyboard change in the next frame (the
    indicator and the panel travel for a pointer only: .is-travelling, set by initTabs) */
 html[data-input="key"] .tabs__tab,
 html[data-input="key"] .accordion__summary::after { transition-duration: 0ms; }
-@media (hover: hover) { .accordion__summary:hover::after { border-color: var(--icon-strong); } }
+@media (hover: hover) { .accordion__summary:hover::after { color: var(--icon-strong); } }
 /* the answer: the reading measure, the row's own inset, room before the next hairline (`__panel` is the name
    the FAQ's markup gives the same box) */
 .accordion__body,
@@ -142,5 +154,6 @@ html[data-input="key"] .accordion__summary::after { transition-duration: 0ms; }
 
 @media (forced-colors: active) {
   .tabs__tab[aria-selected="true"]::after, .tabs__list::after { background: Highlight; forced-color-adjust: none; }
-  .accordion__summary::after { border-color: CanvasText; }
+  .accordion__summary::after { forced-color-adjust: none; color: CanvasText; }
+  .accordion__item[open] { background-color: Canvas; }
 }

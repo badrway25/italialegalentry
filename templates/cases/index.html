@@ -22,11 +22,13 @@ no percentage. Every word is the catalogue's.
 {% block page_title %}{% translate "Mes dossiers" %}{% endblock %}
 {% block meta_description %}{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}{% endblock %}
 {% comment %}The registers' page-only sheet, after the shell's two (W3-E; the owner's V5.8).{% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="route" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Mes dossiers" %}</h1>
     <p class="ws-head__lead">{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}</p>
   </div>
@@ -47,11 +49,12 @@ no percentage. Every word is the catalogue's.
         <p class="db-task__title"><a class="reg-row__link" href="{% url 'cases:detail' row.case.reference %}">{{ row.case.get_purpose_display }} <span class="reg-ref">{{ row.case.reference }}</span></a></p>
         <p class="db-task__meta reg-row__meta">
           {% if not row.is_own %}<span>{% blocktranslate with name=row.case.person.get_full_name %}Dossier confié — {{ name }}{% endblocktranslate %}</span>{% endif %}
+          {% with step=row.case.get_person_status_parts.1 %}{% if step %}<span class="reg-row__step">{{ step }}</span>{% endif %}{% endwith %}
           <span>{% blocktranslate with done=row.progress.done total=row.progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}</span>
           {% if row.progress.overdue %}<span class="db-due db-due--overdue">{% svg_icon "alarm-clock" "icon" %}{% blocktranslate count n=row.progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
         </p>
       </div>
-      <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.case.status "cases.CaseStatus" %}{{ row.case.get_status_display }}{% endchip %}</div>
+      <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.case.status "cases.CaseStatus" %}{{ row.case.get_person_status_parts.0 }}{% endchip %}</div>
       <div class="db-task__due"><span class="db-due">{% blocktranslate with date=row.case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span></div>
     </li>
     {% endfor %}
@@ -66,3 +69,4 @@ no percentage. Every word is the catalogue's.
 {% endif %}
 </div>
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

@@ -1,0 +1,143 @@
+/* ============================================================================================
+   ATTENTION AUX FRAUDES V2 (design V5.22, SECTION_SYSTEM_V2 §3.18; lane P2) — a partial of interior.css.
+   A «segnalare · informarsi»: the report plate at the reading edge (5/12), the route tiles beside it (7/12, the
+   library's «il rimando» stacked). LINE DRAW (the plate's ink sill from the reading edge) + STAGGER (the tiles).
+   Ink only: no red, no amber, no alarm (the head's notice is the page's one warning).
+   Round 1 (QA_ROUND1 M6, M10): the plate speaks «la protezione»'s idiom — a 3 px ink top rule, the sill of the
+   `ile-scudo` mark at body scale (the mark itself; the head's folio is the page's one seal) — and answers the reader:
+   the address's hover and focus deepen the keyhole (the seal system's --light, v5/_sigillo.css). The plate stands the
+   row's full height, its address at its foot; the address never breaks: one line, its size bound to the plate (a size
+   container), the disc above it when the row is too short for both.
+   Round 2 (QA_ROUND2 M7): the plate stands its own height (sticky beside the routes from 64 rem), the address under
+   its sentence; the address's response is seen — the keyhole fills, a light runs along the sill from the reading edge;
+   the FAQ's way is the page's disclosure (the system's accordion on a plate); in view at load, the sill, the shield and
+   the tiles' rules draw in the head's own sequence (the section runtime draws a section in view at rest).
+   ============================================================================================ */
+.frodi__griglia {
+  --sez-i: 0; /* the stagger's rank, the library's .sez-seq numbering the tiles after the first */
+  display: grid;
+  gap: clamp(var(--s-8), 4vw, var(--s-12)); /* the section's gap (v5/_sezioni.css) */
+}
+
+.frodi__titolo {
+  margin: 0 0 var(--s-5);
+  font-size: clamp(1.5rem, 1.25rem + 0.8vw, var(--t-band));
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+.frodi__segnala {
+  --light: 0; /* the seal system's light at rest on the plate, its scope (v5/_sigillo.css raises it under the address) */
+  container-type: inline-size;
+  position: relative;
+  align-self: start;
+  margin-block-start: var(--s-6); /* the shield stands above the plate's top rule */
+  padding: var(--s-12) var(--s-8) var(--s-8);
+}
+
+/* the sill: the plate's 3 px ink top rule, drawn from the reading edge as the band enters; the address's light runs
+   along it from the reading edge (--light, the seal system's: hover equals focus) */
+.frodi__soglia {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--text-1);
+}
+
+.frodi__soglia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-mark);
+  scale: var(--light, 0) 1;
+  transform-origin: inherit;
+  transition: scale var(--motion-emphasized) var(--ease-enter);
+}
+
+/* the shield at body scale, standing on the sill at the reading edge; its keyhole deepens with the address (the seal
+   system's rule for ile-scudo: --light on the scope) */
+.frodi__scudo {
+  position: absolute;
+  inset-block-start: -42px; /* the drawing's sill (y 42 of 48) on the plate's rule, as in its seat */
+  inset-inline-start: var(--s-8);
+  color: var(--text-1);
+}
+
+.frodi__scudo .sigillo__mark {
+  --sg-m: 3rem;
+  --sg-sw: 2;
+  display: block;
+  margin: 0;
+}
+
+.frodi__scudo .sigillo__mark .sg-t { fill-opacity: calc(0.14 + 0.66 * var(--light, 0)); transition: fill-opacity var(--motion-emphasized) var(--ease-enter); }
+
+.frodi__frase {
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+/* the action under the sentence, on a hairline of its own: the message above, what to do under it */
+.frodi__azione { margin: 0; padding-block-start: var(--s-5); border-block-start: 1px solid var(--line-rhythm); }
+
+.frodi__indirizzo {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  min-block-size: var(--hit-primary);
+  font-size: clamp(1rem, 7cqi, var(--t-entry));
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.frodi__indirizzo .email { white-space: nowrap; }
+
+.frodi__indirizzo .sez-disc {
+  --disc: 48px;
+  --disc-glyph: 22px;
+}
+
+.frodi__indirizzo:is(:hover, :focus-visible) .sez-disc {
+  background: var(--accent-mark);
+  color: var(--surface-raised);
+}
+
+.frodi__indirizzo:is(:hover, :focus-visible) .email { text-decoration: underline; text-underline-offset: 0.2em; }
+
+.frodi .mosaico--rimando { grid-template-columns: minmax(0, 1fr); }
+
+/* the FAQ's way, a disclosure on a plate: the prescribed question with its glyph tile, its answer in place */
+.frodi__domanda { margin-block-end: var(--s-4); padding-inline: var(--s-3); border: 0; }
+.frodi__domanda .accordion__item { border: 0; border-radius: inherit; } /* the open plate's tint follows the plate's corners */
+.frodi__domanda .accordion__summary { justify-content: flex-start; min-block-size: 5rem; }
+.frodi__domanda-testo { flex: 1; }
+[dir="rtl"] .frodi__domanda-testo[lang] { text-align: end; } /* a French question ends on the Arabic reading edge */
+.frodi__domanda .accordion__panel { padding-inline-start: calc(48px + var(--s-4)); }
+.frodi__domanda .accordion__panel > p { margin: 0 0 var(--s-3); }
+.frodi__domanda:has([open]) .sez-tile { color: var(--accent-text); }
+.frodi__domanda-link a { display: inline-flex; align-items: center; gap: var(--s-2); min-block-size: var(--hit-min); font-weight: var(--w-control); }
+
+@media (min-width: 64rem) {
+  .frodi__griglia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--s-12); }
+  .frodi__segnala { position: sticky; inset-block-start: calc(var(--header-h-scrolled) + var(--s-12)); }
+}
+
+/* in view at load, the band's signature in the head's own sequence: the sill draws, the shield strokes, the tiles' rules
+   follow in turn (below the fold the section runtime plays the same verbs on its trigger) */
+@media (prefers-reduced-motion: no-preference) {
+  :root.js:not(.rm):not([data-input="key"]) .frodi:not([data-sec-state]) :is(.frodi__soglia, .mosaico__soglia) {
+    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(360ms + var(--sez-i, 0) * var(--motion-stagger)) backwards;
+  }
+
+  :root.js:not(.rm):not([data-input="key"]) .frodi:not([data-sec-state]) .frodi__scudo :is(.sg-a, .sg-m) {
+    animation: sez-stroke var(--motion-draw) var(--ease-sine) calc(600ms) backwards;
+  }
+}
+
+html[data-input="key"] :is(.frodi__indirizzo .sez-disc, .frodi__scudo .sg-t),
+html[data-input="key"] .frodi__soglia::after { transition: none; }

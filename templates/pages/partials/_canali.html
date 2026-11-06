@@ -1,0 +1,34 @@
+{% load i18n %}{% comment %}
+The contact page's telephone channels (V5.19, owner-confirmed 29 October 2026; lane v519-k): two plates side by side —
+the Numero Verde, a call (`phone`), and WhatsApp, a conversation in the messaging app (`message-circle`, its word
+«WhatsApp»; never drawn as a second ordinary number). The numbers come from the site's settings (site.channels,
+core.contact) and are the same in every language; each is isolated left to right (`<bdi dir="ltr">`, base.css
+`.phone`) so that an Arabic page never reorders its groups, and never breaks inside (nowrap). The link's accessible
+name is the act and the number («Appeler le numéro vert …»); the plate is one link of at least 44 px.
+Contract: `channels` (site.channels).
+{% endcomment %}{% with freephone=channels.freephone whatsapp=channels.whatsapp %}{% if freephone or whatsapp %}
+<ul class="canali" role="list">
+  {% if freephone %}<li class="canale canale--voce">
+    {% blocktranslate trimmed asvar freephone_name with number=freephone.label %}Appeler le numéro vert {{ number }}{% endblocktranslate %}
+    <a class="canale__link" href="{{ freephone.tel_url }}" aria-label="{{ freephone_name }}">
+      <span class="canale__disc" aria-hidden="true">{% svg_icon "phone" "icon" %}</span>
+      <span class="canale__body">
+        <span class="canale__kind">{% translate "Numéro vert" %}</span>
+        <bdi class="canale__number phone" dir="ltr">{{ freephone.label }}</bdi>
+        <span class="canale__act">{% translate "Appeler" %}</span>
+      </span>
+    </a>
+  </li>{% endif %}
+  {% if whatsapp %}<li class="canale canale--whatsapp">
+    {% blocktranslate trimmed asvar whatsapp_name with number=whatsapp.label %}Contacter Italy Legal Entry sur WhatsApp au {{ number }}{% endblocktranslate %}
+    <a class="canale__link" href="{{ whatsapp.url }}" aria-label="{{ whatsapp_name }}">
+      <span class="canale__disc" aria-hidden="true">{% svg_icon "message-circle" "icon" %}</span>
+      <span class="canale__body">
+        <span class="canale__kind">WhatsApp</span>
+        <bdi class="canale__number phone" dir="ltr">{{ whatsapp.label }}</bdi>
+        <span class="canale__act">{% translate "Écrire sur WhatsApp" %}</span>
+      </span>
+    </a>
+  </li>{% endif %}
+</ul>
+{% endif %}{% endwith %}

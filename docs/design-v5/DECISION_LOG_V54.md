@@ -185,6 +185,33 @@ names; DL54-02 … DL54-16 are §8.3's fifteen entries, in §8.3's order.
 | DL54-160 | 27 Oct 2026 | Steward, the w4-c merge (attempt 3: the first stopped at the tests with the shared database down, 16 Oct; the second cut by the machine's reboot, 17 Oct; this one took over the second's lock, on the Docker database again): W4-C's entry renumbered DL54-159 after W4-A's two; `SituationForm`'s two widgets assigned as W4-C's slice; the shared CSS gate passed — `dist/main.css` 31 637 → 31 637 B, the console page types 39 798 → 39 798 B, `documents.css` 5 566 → 5 564 B —, every ceiling the merged weight; the targeted tests on the merged branch (941 passed + 311 in Chromium, no skip, no crash); `live_status.json`'s family row w4-c, no surface key changed; what is handed on to W4-D, the steward, W3-C / W3-E and W2-C1 | plan §2.2, §2.6, §3.6 item 3; V5.5; V5.8; V5.10; DL54-151; DL54-158; DL54-159; `QA/v54/w4-c/` |
 | DL54-161 | 27 Oct 2026 | Steward, the w4-d merge (part 2): integration readiness on design-v5 — the last build before the release candidate; the branch already synced (W4-C in, DL54-160), so no conflict and no entry renumbered (part 2 wrote none); its 27 paths assigned (nine in no family's slice, eighteen delegated, each as the slice where its fix landed) and one more the merge's own (W2-B's two sign-in measures, red after F-4, given the open sign-up); the shared CSS gate passed lighter — `main.css` 31 637 → 31 244 B, the console page types 39 798 → 39 405 B, every ceiling the merged weight; the targeted tests on the merged branch (1 816 passed + 247 in Chromium, the two red fixed: 69 passed); **Wave 4 is complete** — W4-A, W4-B, W4-C, W4-D merged; the next step is the release-candidate validation (V5.10's fourteen gates); no push, no public tag, nothing on main, nothing deployed | plan §2.2, §3.6 item 4; V5.5; V5.8; V5.9; V5.10; DL54-155; DL54-156; DL54-160; `QA/v54/w4-d/` |
 | DL54-162 | 28 Oct 2026 | Steward, the rc-fix merge: the release candidate v2.0.0's fixes on design-v5 — gate 6's stale allow-list emptied, gate 12's 38 Pillow advisories closed (12.3.0 → 13.0.0, the shared venv upgraded), a missing stored file a 404 after both permission gates instead of a 500 (SMOKE D1), PERMISSION_MODEL's superadmin row and §5.10 corrected (SECURITY D-4); the family `rc-fix` added (the checker's id, the manifest's nine entries); no conflict; no front-end source changed, the bundles rebuilt byte for byte; the targeted tests on the merged branch (815 passed, one mtime check green after the rebuild); pip-audit 0; tag `v54/rc-fix`; no push, no public tag, nothing on main, nothing deployed | V5.5; V5.9; V5.10; DL54-161; `QA/v54/rc-fix/` |
+| DL54-163 | 28 Oct 2026 | V5.12, lane A W1 (v512-a): DL54-07, MS-O3 and K17 amended — the loader «Lume» across every navigation (V5.12 §4; the Director's DECISIONS C5, §1 T1–T3): the cross-document View Transition, the threshold of a navigation that has not committed in 400 ms on every public and console page, the release once per space per session with its 40 px plate, the reduced-motion lit still; the «never on a public page» rule of `components/loader.html` and `test_loader_rules` revoked | V5.12 §4, §5; DECISIONS C5, §1; DL54-07; plan §1.5 MS-O3, K17, §1.9 |
+| DL54-164 | 28 Oct 2026 | Steward, the v512 W1 merge: V5.12's first wave on design-v5 — lanes A → B → C → D merged with no textual conflict (the loader «Lume», the chapter-concept marks, the hide gates, the terminology and the preview data); the review's M2–M4 fixed in the lanes' fix commits, M1 and M5 at the merge (the outcome-bearing forms tagged, a download opts out, B's tests read C's gates); the families v512-a … v512-d recorded; the catalogue pass («Votre espace»); tag v512/w1 | V5.12; DECISIONS §1, §8, §9, §10.0, Waves; QA/v54/v512-w1/REVIEW.md |
+| DL54-165 | 28 Oct 2026 | Steward, the v514-p merge: V5.14's privacy lane on design-v5 — the privacy notice (A) and the cookie and technical-storage information (B) drafted from the processing this software verifiably performs, independent of Allegato 1, published on the preview through `legal.services.publish` (A with its open fields highlighted, a preview only); C and D stay unpublished, G1 unchanged; log minimisation LG-1; the family v514-p recorded; tag v514/privacy | V5.14; DECISIONS §12–§13; QA/v54/v514-p/REVIEW.md |
+| DL54-166 | 28 Oct 2026 | V5.12, lane A W2 (v512-a): the motion system across the product (V5.12 §5; the Director's DECISIONS §2 M1–M9, M11–M13, §1 T4): the page head's hairline drawn over, the photographs' mask, black and white → colour, the lists' marks and the public passage on scroll (`view()`), the journey's light on a page's first view, the notices (a success's toast that leaves by itself, the others stay), the disclosure's height and its open plate, the tabs' height, the scrim's 4 px blur, a document's changed state, the rail's plate across a navigation, the drawer's region; «nothing moves at load» (plan §1.5) and the scrim's «never a blur» amended | V5.12 §5; DECISIONS §2, §1 T4, §3; DL54-163; plan §1.5, §1.14 |
+| DL54-167 | 28 Oct 2026 | Steward, the v512 W2 merge: V5.12's second wave on design-v5 — lanes A, B and D merged (A → B → D; the motion system, the field system with the twelve symbols and the account shell, the organisation space with the console foot and the account glossary); **lane C held back** (the review's M-3, its photographs outside A's reveal and a second scroll mechanism, unresolved); the review's M-2 (Q2: unpublished C/D legal pages reachable) not done by any lane, handed on; the W2 entries of v512-a, v512-b, v512-d recorded; the catalogue pass (13 field-system msgids); tag v512/w2 | V5.12; DECISIONS §10.0, §12–§14, Waves; QA/v54/v512-w2/REVIEW.md |
+| DL54-168 | 28 Oct 2026 | Steward, the v516-p2 merge: V5.16's privacy classification on design-v5 — every open field of the privacy notice names its class (PRODUCTION CONFIGURATION / OWNER CONFIRMATION / LEGAL REVIEW REQUIRED; OF-13 art. 9), production still refuses any; the forms ask an acknowledgement, never a consent, in the team's wording (the prescribed sentences verbatim, LOCKED COPY — LEGAL REVIEW REQUIRED); the purpose, art. 9, DPO, DPIA and recipient-role assessments; the status model and checklist A-29 … A-33; the family v516-p2 recorded; tag v516/privacy-classification | V5.16; V5.14; QA/v54/v516-p2/REVIEW.md |
+| DL54-169 | 28 Oct 2026 | Steward, the v517-p3 merge: V5.17's privacy governance correction on design-v5 — the status model PRODUCT_COMPLETE / COMPLIANCE_REVIEW_COMPLETE / PRODUCTION_CONFIG_COMPLETE / PRODUCTION_READY; the DPIA prepared from known facts; R-SC-1 a real production control (special-category pieces closed in production, open in the preview); OF-11 kept open with both Annexe 1 deviations listed; the production privacy page renders no marker; the family v517-p3 recorded; tag v517/compliance | V5.17; V5.16; V5.14; QA/v54/v517-p3/REVIEW.md |
+| DL54-170 | 28 Oct 2026 | V5.15, lane A W3 (v515-a): the central loader «Lume» (a night veil, the doorway, the key's turn, the light, one 700 ms clock shared by the leaving and the arriving page) replaces W1's band line and word as the primary loader, on the public site and the platform; the letterhead becomes ONE row (no institutional bar; language, access and primary action in the end zone; every item in the bar from 64rem); the mega panel floats, changes content from the side travelled and carries a highlighted destination; the phone's sheet is a full-height layered sheet; the motion language (M15, M16, M19–M22, the platform's §20); DECISIONS §2 rule 1 amended for the page head and a section's heading; two budget exceptions measured (main.css, head.js) | V5.15 §1–§14, §20; DECISIONS §15, §16; DL54-163, DL54-166 |
+| DL54-171 | 29 Oct 2026 | Steward, the v515-a merge: V5.15's visual override W3, lane A, on design-v5 — Navbar Premium (the one-row letterhead in four languages), the portico mega menu and the phone sheet, the Global Central Lume Loader (the slow path handed on by phase), the public motion language and the console's pane-only veil; final scores 4 in all six families, no major; the family v515-a recorded; tag v515/a | V5.15; DECISIONS §15–§16; DL54-170; QA/v54/v515-a/REVIEW.md |
+| DL54-172 | 29 Oct 2026 | Steward, the v515-c merge: V5.15's visual override W3, lane C, on design-v5 — Premium Page Headers (the band «il frontespizio», a composed head per page), the Imagery Pass (licensed frames, B/W that develops), page-by-page art direction, section design and the head typography; final scores 4.5/4/4/4/4/4, no major; lane C's 22 msgids translated; the guards that follow its design, one Arabic overflow and two gated links fixed; the family v515-c recorded; tag v515/c | V5.15; DECISIONS §15–§16; QA/v54/v515-c/REVIEW.md |
+| DL54-173 | 29 Oct 2026 | Steward, the v515-b merge: V5.15's visual override W3, lane B, on design-v5 — Premium Forms (the public «Recueil des besoins» formwork, the steps engine and its review, the two-step sign-up and its password checklist, the console need, «Le besoin», the receipt), the Icon Visual System and the empty state; final scores 4 in all nine families, no major; lane B's 14 msgids translated; the contact form's doubled title fixed and the guards that follow its design; the family v515-b recorded; tag v515/b | V5.15; DECISIONS §15–§16; QA/v54/v515-b/REVIEW.md |
+| DL54-174 | 29 Oct 2026 | Steward, the v515-d merge: V5.15's visual override W3, lane D, on design-v5 — Platform Refinement (the console's atrium, a figure per page family and the phone band, the dashboard's lattice and dial, the company composed, the eyebrow as the space's name, a finite load envelope) and the Institution/University spaces (Q7: the identity sheet, the calm panel, the seal with its audience glyph); final scores 4 in all six families, no major; the three R-SC-1 guidance sentences made catalogue messages; the organisation's pages on the preview's persona strip; the family v515-d recorded; tag v515/d | V5.15; DECISIONS §15–§16; QA/v54/v515-d/REVIEW.md |
+| DL54-175 | 29 Oct 2026 | Steward, the v518 stabilisation merge: V5.18 §2's four lanes on design-v5, a → b → c → d (B1, B2, B3, P7, P8, P10, P11, P12, T1–T3, P-1, P-2, P-4, P-5, M-2, m-5, m-6, B-1, P-9 and the lanes' refixes); the integrated review's two blockers closed (the 2FA catalogue pass, 22 msgids; the preview's demonstration text rewritten on ile_v5); the families v518-a … v518-d recorded; tag v518/stabilisation | V5.18 §2; DECISIONS §10.0; QA/v54/v518/REVIEW.md |
+| DL54-176 | 29 Oct 2026 | Steward, the v519-k merge: V5.19's owner-confirmed contact channels on design-v5 — the Numero Verde 800 642 015 (`tel:800642015`) and WhatsApp — the owner-confirmed WhatsApp number (configured outside the repository, V5.19/V5.20), `https://wa.me/` followed by its digits — held once in SiteSettings and formatted by `core.contact`, on the contact page, the footer and the phone menu sheet, accessible names in it/fr/en/ar; the review's m-1 (Arabic label in name) and m-2 (neutral back-office examples) fixed; the id rule takes lane K; the family v519-k recorded; tag v519/contact | V5.19; DECISIONS §10.0; QA/v54/v519-k/REVIEW.md |
+| DL54-177 | 29 Oct 2026 | V5.18 green suite, group N (v518g-n): the non-browser half's 22 failures and ruff's 69 errors — the 400/500 drawn without reading a gate (core.links.without_database), main.css back under its ratchet by dead shared CSS (33 455 → 33 406 B), _fronte.css's 27 literal colours tokened; the Director's ruling on the language popover's tick (§15 lane A); seven stale tests to the owner-approved behaviour, same strength; ruff 0 | V5.12 §22; V5.8; DECISIONS §5.7, §9, §15; QA/v518g/n/NOTES.md |
+| DL54-178 | 30 Oct 2026 | Director's rulings, V5.18 green suite, group P (v518g-p): the V5.15 formwork is one composed object with its own designed corner set (12/8/6/4/999/6.4/1 px, `FORMWORK_CORNERS`), §1.3's three corners unchanged outside it — DL54-173's open guard closed; the page heads' photograph in its passe-partout and the fraud page's notice panel admitted by name as raised surfaces at rest (`ADMITTED_RAISED`), SH-8 standing for every other element | DECISIONS §15; V5.15; V5.18; DL54-172, DL54-173; QA/v518g/p/NOTES.md |
+| DL54-179 | 30 Oct 2026 | Steward, the v518g merge: V5.18's green suite on design-v5, n → c → p (the non-browser half and the CI Lint step, the console family, the public and RTL family), on top of lane K's v519-k; group P's rulings numbered DL54-178; the id rule takes a green-suite group; the families v518g-n, v518g-c and v518g-p recorded; the main.css ratchet re-seated at its measure, 33 530 B; ruff green; the regression's two reports as the decision; tag v518/green | V5.18; V5.12 §22; V5.8; DECISIONS §15; QA/v54/v518g/ |
+| DL54-180 | 30 Oct 2026 | Steward, the v520 merge: V5.20's final technical gate on design-v5, wa → css → fixv (the owner-confirmed WhatsApp number configured outside the repository, option B; main.css back under its budget by dead-rule removal, 32 718 B gzip -9, every main.css ceiling at the measure; the strict test-change audit's violations fixed in the product and their guards restored; the Arabic home's brand mark held); the steward's three files redacted; the id rule takes a final-gate lane; the families v520-wa, v520-css and v520-fixv recorded; the confidential-material guard green with the private table; supersedes DL54-178 and DL54-179 item 6; tag v520/gate | V5.20; V5.19; V5.18; V5.8; QA/v54/v520/TEST_CHANGE_AUDIT.md; QA/v520/ |
+| DL54-181 | 1 Nov 2026 | Steward, the v522-m merge: V5.22's composition remediation, lane M on design-v5 — Imagery V2 (seven new licensed frames, each in one slot: the home's dressed-stone ground, Le projet's bound volumes, the four Parcours family frames, Formation's first station; four re-crops: the home pilot's 2:3 panels, the ecosystem's 4:3, the campus frame without a redaction — the one change visible today, on Universités); every file under its §7.3 ceiling with no allowance, the V5.12 budget assertions restored with two cited exemptions; M before S (no file in common); the catalogue +7 −1 carried in the merge; the id rule takes V5.22's single-letter lanes; the family v522-m recorded; the first attempt cut by an account limit after the merge, the record completed on 1 November; the review's n1, n2 and n4 left open with their owners; tag v522/m | V5.22; V5.20; SECTION_SYSTEM_V2 §7.3, §8, §9; QA/v54/v522-m/REVIEW.md; QA/v522/m/ |
+| DL54-182 | 1 Nov 2026 | Steward, the v522-s merge: V5.22's composition remediation, lane S on design-v5 — Section System V2 foundation + Icon Treatment V2 + Motion Density V2 (the section runtime and its split modules, the motion vocabulary V2 with the M22 fix and the M21 accent, the composition library proved on 24 fixtures and composed on no page yet, thirteen ILE marks; visible today: the head folio become the page's T1 seal on seven page types, a typographic folio on four, the bare mark above a title retired except on the home, the login key); passed in round 2 with no page lower on any dimension than at fdd6e34; S after M (no file in common); no new string (the catalogue +0 −0); main.css 32 718 B, byte-identical; the family v522-s recorded; three of the lane's guards red on the merged tree and on its branch alone (an RTL twin, Lume's L3 attribute, the chip's register attribute: not merge-caused, handed to lane S before P1 and P2 compose those patterns); the review's six minors and three nits and the lane's requests left open with their owners; tag v522/s | V5.22; V5.20; SECTION_SYSTEM_V2 §2, §4, §5, §7, §9; QA/v54/v522-s/REVIEW.md; QA/v522/s/ |
+| DL54-183 | 2 Nov 2026 | Steward, the v522-p1 merge: V5.22's composition remediation, lane P1 on design-v5 — Page Composition V2, journeys and spaces (every body below the approved heads re-composed from lane S's library: Projet pilote's route with its terminal status plate and two arched doors, Parcours' route board of four family lanes with a choice that brings its lane under the bar, the eight pathway sheets' thread, rail, authorities' arc and terms in place, Entreprises' flow and split, Institutions' hemicycle, Universités' learning route, Formation's crossing, Diplômes' dossier beside «Qui décide ?»; the two form pages' compact heads); passed in round 3, every owned page ≥ 4 on all six dimensions, three cells half a point under their §10 targets; P1 before H (no file in common; H's third review not passed); the catalogue +5 −2 carried in the merge; main.css 32 718 B, byte-identical; the id rule takes v5<nn>-p1 from V5.22 on (v516-p1 still refused); the family v522-p1 recorded; lane S's three red guards now composed on real pages and the tag guard red since P1's recomposition (S's files, not merge-caused); the reviewer's m3 and m4 «before the merge» left to lane P1 with the other minors, the lane's deviations and requests; tag v522/p1 | V5.22; V5.20; SECTION_SYSTEM_V2 §3.3–§3.10, §7, §9, §10; QA/v54/v522-p1/REVIEW.md; QA/v522/p1/ |
+| DL54-184 | 2 Nov 2026 | Steward, the v522-s2 merge: V5.22's composition remediation, lane S's follow-up on design-v5 — the four guards red since the v522-s and v522-p1 merges fixed at the root in the product (the route board's light right to left, the hemicycle's own data-seggio in place of Lume's data-seat, the library's register marker data-registro in place of the chip's data-register, the tag guard's exact set: three guards unchanged, the fourth updated under V5.20's rule and stronger); lane P2's merge conditions MC-1…MC-3 in lane S's modules (the explorer's permalinks and hash, the scroll-spy's rows, the map's chosen entry on a phone); lane H's requests (the index glyph's 20 px, «la protezione»'s title in its own language, the credit's colon spaced in French only) and the first keyboard input's restyle at its root (the library's modality rules class-led, motion.css's one §5 INP rule: the first Tab back within 20 ms of the base on lane H's home); passed in round 1, 0 major, 6 minor routed to lanes H and P2, S-close and the Director; no page lower on any dimension; the catalogue +0 −0; main.css 32 716 B (−2); the id rule takes v5<nn>-s<n> (n 2–9) from V5.22 on; the family v522-s2 recorded with lane P1's eleven files as its slices; the four guards green on the merged tree, red on 269cf39; tag v522/s2 | V5.22; V5.20; SECTION_SYSTEM_V2 §2, §9.1, §9.7–§9.9; QA/v54/v522-s2/REVIEW.md; QA/v522/s2/ |
+| DL54-185 | 5 Nov 2026 | Steward, the v522-h merge: V5.22's composition remediation, lane H on design-v5 — Homepage Composition V2: every section of the home after the hero re-composed on lane S's library (the hero's foot «la soglia», the doors' phone rail «il passaggio», the orientation's route «la linea V2», the pathways' index and stage «l'indice», the pilot's night diptych «il panorama» with the team's new lead in the page's language, the trust plates «lo strato», the warning plate «la protezione», the promoter's arch «la campata», the reserved row), both gate states, Arabic the mirror with the pilot statement on one axis and one reading edge; the hero's first screen and every preserved family untouched; passed in the second final review (0 major, 6 minor carried or the steward's), 4.5 · 4.5 · 4 · 4 · 4.5 · 4.5 in fr, ar, it and en at 1440 and 390; the Director's ruling on F-M2 recorded in its words — the absolute budget of SECTION_SYSTEM_V2 §5.3 (INP ≤ 200 ms p75 on the compressed twin, paired, n ≥ 5) replaces «within 20 ms of the base»: the first Tab within it in all four cells, the desktop pointer after the keyboard over it on both trees and carried to S-close; the catalogue +0 −0 (the lane's entry on its branch); the home's five sheets 61 440 / 61 440 B, main.css 32 716 B untouched; lane S's two guards updated under V5.20 and stronger; the family v522-h recorded; the shared databases' untouched pilot lead brought to the team's text by the seed; tag v522/h | V5.22; V5.25; V5.26; V5.20; SECTION_SYSTEM_V2 §3.1, §5.3, §9.3, §9.7–§9.9; QA/v54/v522-h/REVIEW.md; QA/v522/h/ |
+| DL54-186 | 5 Nov 2026 | Steward, the v522-p2 merge: V5.22's composition remediation, lane P2 on design-v5 — Page Composition V2: system, trust and reading — Le projet, Réseau, Contact, FAQ, Glossaire and the term page, Vivre en Italie, Forum, AGAMI and Attention aux fraudes re-composed on lane S's library below their approved heads (the story «il racconto», the actor map «la mappa» on the head's ring, the channel board «il centralino», the FAQ explorer «l'indice», the lexicon and its letter rail, Vivre's panorama, the Forum's ring and line on the night, AGAMI's identity band and Q9's plate, the fraud page's routes); both contact channels unchanged, every locked text byte-identical, no preserved family touched beyond the three named exceptions; passed in the second final review (0 major, 3 minor none the lane's), every page ≥ 4 on the six dimensions (four cells half a point under their §10 target recorded); the Director's ruling on F-M2 as it reaches the lane (no script of P2's, v522/s2's measures stand, the residual S-close's); the catalogue the union with lane H's and the steward's sync pass (+10 −5, 3 702 msgids, 100 %); the five route sheets under their ceilings, the glossary family exactly at 54 272 B, main.css 32 716 B untouched; the shared guards updated under V5.20 and stronger; the family v522-p2 recorded; tag v522/p2 | V5.22; V5.23; V5.25; V5.26; V5.20; SECTION_SYSTEM_V2 §3.2, §3.11–§3.18, §5.3, §9.5, §9.7–§9.9; QA/v54/v522-p2/REVIEW.md; QA/v522/p2/ |
+| DL54-187 | 5 Nov 2026 | Steward, the v524-px merge: V5.24's final delivery, lane PX on design-v5 — Imagery V2 · credits: the 104 «Photo : … / Pexels» lines and chips leave every photograph of the product in four languages (the licence permits it; provenance stays internal), the frames unchanged in size and place, no empty caption box; components/photo.html without its figcaption, Picture.credit removed, the curated-asset path licence-aware (MediaAsset / ForumMedia / Photo.attribution_required, the one-condition byline guard), the production-facing test tests/compliance/test_imagery_credits_v524.py as the gate's Pexels-visible-label check, eleven shared test modules updated under V5.20 and stronger; the reviewer's targeted gate round 2 PASS on items 1–7 with no blocker (60 frames in 24 headed cells with 0 captions, 30 of 30 picture boxes identical to the base's, the crawl of 2 156 pages clean), imagery 4.5 on the four gate pages, the other dimensions not applicable (no composition change); the dist byte-identical to the base, main.css 32 716 B, catalogue +0 −0; the id rule admits the final-delivery lanes (R11); the family v524-px recorded; tag v524/px | V5.24 §2–§3, §23, §30; V5.25; V5.26 §4; V5.27 §6; V5.20; FINAL_DELIVERY_V2.md §0–§3.2, R2, R6, R9–R14; IMAGERY_ATTRIBUTION D1–D8; SECTION_SYSTEM_V2 §8, §9.7–§9.9; QA/v54/v524-px/REVIEW.md; QA/v524/px/ |
+| DL54-188 | 5 Nov 2026 | Steward, the v524-t merge: V5.24's final delivery, lane T on design-v5 — Typography V2, the shared type layer: Readex Pro replaces Vazirmatn for every Arabic role at ratio 1.0 (16 128 B in place of 32 228; the set 77 240 → 61 140 B; the Arabic fallback recomputed), the twelve steps declared once in tokens.css with the display line and the titles at 600 and −0.03 em, the label role (13/16 600 +0.08 em; 14/20 on phones and in Arabic) and the numeral role (sans 600 tabular), the public phone step-up (nothing under 14 px), the primary call 16/24 600, the Arabic type rules in the subject form with the Latin boundary, AR's M1 / M3 / C-1, the guard tests with the burn-down table (45 sheets) the other lanes empty, FONTS_V5 and the two design systems' sections; tokens.css and base.html:24–32 recorded as the §9.8 typography exception (R1); the reviewer's targeted gate PASS on items 1–6 with 0 blockers and 8 minors (1 098 + 4 passed, 118 headed frames, the hero's first screen pixel-identical at 1440 fr and its anchors unmoved, swap CLS ≤ 0.0015, axe 0); the six dimensions not re-scored (no composition change); main.css 32 716 → 32 695 B gzip -9, catalogue +0 −0; the family v524-t recorded; tag v524/t | V5.24 §11–§14, §30; V5.25; V5.26 §4; V5.27 §4, §6; V5.20; FINAL_DELIVERY_V2.md §0–§3.1, R1, R4 g, R6, R7, R9–R14; TYPOGRAPHY_V2 §3–§6; ARABIC_AUDIT M1, M3, C-1; SECTION_SYSTEM_V2 §6, §9.7–§9.9; QA/v54/v524-t/REVIEW.md; QA/v524/t/ |
+| DL54-189 | 6 Nov 2026 | Steward, the v524-lib merge: V5.24's final delivery, lane LIB on design-v5 — the library: material, transitions, faces, verbs, type roles: the new page-only partial static/css/v5/_materia.css (788 B gzip -9; tokens and mixes only, no motion of its own) with the four grounds' recipes — «pietra» and its masked drafting grid, «carta viva», «velatura», the brand wash — and the seam primitives under the Director's names (R3: «il raccordo», the first child of the band it enters, painted across the seam with its node on the entered band's head rule; «incastro», the doors 64 px over the photograph; the stills), the T2 tile's niche face on every page and its light in the mosaico sheet, «la protezione» on a drawing table (the field, the sill to the container's edge, the shield bookend at 30 % standing down by a container query), the grid's tiles that ink and light instead of settling, the library's type on the twelve steps (the label role by name on every panel head, the numeral role 28/32 · 36/40 with the across numeral 36/36, the keyword and the term title at 600, the frontispiece and the service sheet converted, the descendant Arabic rules gone), PX's thirteen credit rules deleted; the reviewer's targeted gate round 2 PASS on items 1–5 with 0 blockers and 9 minors (200 headed frames at 1440 · 1024 · 390 × fr · ar, the raccordo 193 against 235 and 0.0 px off the head rule, the incastro 64 px, the sill 344 px and the shield standing down at 1024 and on the sheets, axe 0, 1 603 + 124 passed with the base's six reds only); the six dimensions 4 on the three gate surfaces (no composition change); main.css 32 695 untouched, the home 61 415 ≤ 61 440, _sec-mosaico.css re-recorded at 1 355 (R4 f); catalogue +0 −0; the stale T merge lock taken over (DL54-188 left to the T steward's record); the family v524-lib recorded; tag v524/lib | V5.24 §7–§17, §11–§14, §30; V5.25; V5.26 §4–§8; V5.27 §6; V5.20; FINAL_DELIVERY_V2.md §0–§3.3, R3, R4 c/f, R6, R9–R14; BACKGROUND_MATERIAL_V2 §3, §4.1; TYPOGRAPHY_V2 §4.2, §6; SECTION_SYSTEM_V2 §5.3, §6, §9.7–§9.9; QA/v54/v524-lib/REVIEW.md; QA/v524/lib/ |
 
 ---
 
@@ -7746,3 +7773,3942 @@ reader looks.
 
 **Source.** The owner's V5.5, V5.9, V5.10; DL54-161; `QA/v54/rc-fix/NOTES.md`, `REVIEW.md`; the release-candidate
 reports and the merge's logs in `C:/tmp/ile_v5_council/evidence/rc-v2.0.0/`.
+
+## DL54-163 · 28 October 2026 · V5.12 lane A W1: the loader «Lume» across every navigation — DL54-07, MS-O3 and K17 amended
+
+**Decision.** The owner's V5.12 §4 («Implement the definitive Italy Legal Entry loading / transition experience across the
+real product … real page navigation transitions; first meaningful application load where required; async content …;
+transitions into major platform contexts») supersedes the SCOPE of three earlier rules; their reasons hold. The
+Director's DECISIONS (28 Oct 2026, C5 and §1) set the design, which lane A's wave W1 builds:
+
+1. **DL54-07 amended.** The mark no longer moves «once, at the entrance, across the page load» only. It moves on four
+   triggers, each gated by real latency or a real change of context, never by a fake delay:
+   * **T1 — every same-origin navigation:** a cross-document View Transition (`@view-transition { navigation: auto }`
+     under `prefers-reduced-motion: no-preference` only, `static/css/v5/motion.css`): the page cross-fades on opacity
+     alone (120 ms out, 200 ms in) and the mark — `ile-mark`: the letterhead's mark, the sign-in's door, the console's
+     tile — is the one thing that travels (320 ms, `--ease-layout`). Skipped from the keyboard, on the preview hub, under
+     html.rm; across a language switch the page fades and the mark keeps no name (it never travels across a mirror,
+     DL54-08). `static/js/head.js` sets these in `pageswap` / `pagereveal`;
+   * **T2 — «la soglia»:** a navigation (a link of the site, a submit) that has not committed within `--motion-wait`
+     (400 ms) lights a 2 px line on the band's rule (0 → 85 %, then held; never a loop, never a fake end), turns the
+     band's mark's key once (L1's engage) and, at 1 s, says «Chargement…» in the band's one `role="status"` line.
+     `static/js/src/lume/threshold.js` decides when; CSS draws. Never on a new tab, a download, a same-page anchor, a
+     form that opts out or engages its own host, an OUTCOME_BEARING form (DL54-09 holds: no lit doorway near a legal
+     answer), the preview hub or an error page. A lease of 10 s ends a wait no page ends;
+   * **T3 — the platform's contexts:** the release plays on the first console page after a sign-in AND on the first
+     page of each further space of the session (`accounts.signals.consume_space_release`), and the tile's 40 px plate
+     takes the light with it (`scripts/gen_loader_light.py`);
+   * the page reached after a threshold that showed plays the release's light alone, 600 ms (`html.lume-arrive`).
+2. **MS-O3 («nothing travels across a page load») amended:** content still never travels — the page change is an
+   opacity cross-fade —; the MARK travels, once per navigation, as the brand's thread from page to page.
+3. **K17 («text never waits for a reveal») holds:** the View Transition paints the new page under the old snapshot and
+   the cross-fade is over in 200 ms; no text is hidden while it waits.
+4. **Reduced motion keeps branded feedback** (V5.12 §4): no View Transition; the threshold shows its still — the line at
+   85 %, the key turned, the room lit — with one 80 ms opacity fade; the release shows the lit still for `--lume-still`
+   (1 200 ms, a hold kept under the setting) then one 80 ms fade. `--motion-reduced` is read by these opacity-only
+   ANIMATIONS as well as by the overlays' opacity transitions (MS-O4 extended to the mark; `test_v5_tokens` reads the
+   keyframes).
+5. **Revoked:** the «never on a public page» line of `templates/components/loader.html` and the matching allow-list of
+   `tests/frontend/test_loader_rules.py`, which now admits `templates/partials/header.html` (the letterhead's mark in
+   layers, laid over the lock-up's `<img>`). The console's ENTRANCE release stays console-only (`_loader-light.css`).
+
+**Budget.** `main.css` 31 244 → 31 233 B gzip (−11 B, measured at gzip -9 on the bundle): the shared additions
+(`v5/motion.css`, three tokens) are paid by deletions — 56 names of the legacy shim that nothing reads (138 → 82, §17 and
+the ceiling lowered with them), 37 dead declarations of `v4/tokens.css`, `v2/tokens.css` and `v5/aliases.css`, two dead
+rules. The console's half is a console partial (`portal/v5/_motion.css`). `shell.js` 3 785 → 4 359 B gzip (≤ 4 700).
+
+**Source.** V5.12 §4, §5, §18, §19; the Director's DECISIONS C5, §1 T1–T3, §2, §10 lane A; LANE_A A-01 … A-04;
+`docs/design-v5/QA/v512/a-w1/NOTES.md`.
+
+
+## DL54-164 · 28 October 2026 · Steward, the v512 W1 merge: V5.12's first wave on design-v5
+
+**Decisions** (the steward's, at the merge of `v512-a-w1`, `v512-b-w1`, `v512-c-w1` and `v512-d-w1` into design-v5 on 28
+October 2026 — the owner's V5.12 (`V5_12_PRODUCT_ACCEPTANCE_FAILED_REMEDIATION.md`), the Director's DECISIONS (§10.0
+ownership and merge order, the «Waves» table's W1 row) and the senior review of the integrated lanes
+(`QA/v54/v512-w1/REVIEW.md`, APPROVE_WITH_FIXES: five majors M1–M5, run on the lanes' first heads).
+
+1. **One attempt, label `v512-merge-w1`.** The lock `DESIGN_V5_MERGE_LOCK` was free and taken at 14:28; design-v5 clean
+   at `e047fae`, the four lanes' base. Merge order A → B → C → D (DECISIONS §10.0), each `--no-ff`; every branch held
+   design-v5 already, so no lane needed design-v5 merged in first, and no merge had a textual conflict. Lane A's entry
+   keeps its number, DL54-163 (no other lane wrote one); this entry is the next.
+2. **What merged.** **A** (`7891330`): the loader «Lume» across every navigation — the cross-document View Transition,
+   the threshold after 400 ms with its legend under the band's rule, the release once per space per session on the 40 px
+   plate, the reduced-motion lit still; the release in `<meta name="generator">`; `head.js` built and minified.
+   **B** (`2e63425`): the chapter mark says its section's concept (`icons.CHAPTER_OF`), the journey's stair is the
+   console's alone; «Mes besoins» draws `briefcase-business`, `wrench` leaves the sprite; the profile says «Votre
+   espace», not the account type; an attachment without a download is omitted. **C** (`832a108`): the hide gates —
+   living themes, pathways without a sheet, diplomas and training, news without a live article, partners, the Forum's
+   pre-event blocks and `/forum/` behind its own gate, the latent empty states; the chapter mark on the Lucide 2-unit
+   share. **D** (`8fa116e`): the terminology of DECISIONS §9 (the person's own words, «Lei» in Italian, the French
+   catalogue in French), «Chargement…» in every language, the footer's phase without the release, the Academy's
+   demonstration gate (`academy/0002`), `core/0002` (the version label blank), the hub's acceptance labels and its 404
+   rows annotated, `manage.py preview_data_clean`.
+3. **The review's majors.** M2 («Chargement…» French in it/en/ar), M3 (the profile's «Type de compte») and M4 (the hub's
+   three 404 links) were fixed by the lanes' fix commits before this merge (D `8fa116e`, B `2e63425`, D `8fa116e`).
+   **M1 and M5 are integration defects, fixed at the merge** (`0247292`), since neither is one lane's: M5's threshold
+   is lane A's, and withholding B or D would not have removed it. *M5*: `data-loader="none"` on a discussion
+   attachment's «Télécharger»; `data-loader-action` on the three outcome-bearing forms the product has —
+   `portal/situation.html` (`recalculate-situation`), `orientation/_step.html` (`pre-assessment`),
+   `documents/requirement_detail.html`'s review (`scan-verification`). **«eligibility» has no form today**: the name
+   stays reserved in `loader.js` and `threshold.js`. A test holds the four attributes
+   (`test_lume_v512_a.py::test_an_outcome_bearing_form_names_its_action_and_a_download_link_opts_out`). *M1*: B's tests
+   read what C's gates leave — the pathway sheet's index lists the chapters drawn and its «Documentation» mark is expected
+   only with its chapter (`test_interior_w3_f1`, `test_chapter_marks`); the empty-state floor is 15, not 21, and
+   `forum/index.html` and `living/index.html` leave its named pages (`test_icons`). No lane was held back.
+4. **Ownership.** The checker's id rule admits `v5<nn>-<lane>` (`v5[0-9]{2}-[a-d]`; the id rule's test five new cases,
+   `OUTSIDE_THE_WAVES` names the four). The manifest's families `v512-a` … `v512-d` (wave 0; branch, worktree and head in
+   each note, since DL54-01's names are `v54-<family>`): whole files what each created, slices what each changed in a file
+   another family or nobody held, and the merge's integration writes as slices of A's and B's. `check_ownership.py
+   v512-<lane> e047fae --head <lane head>`: **PASS** for the four; `--validate`: coherent, 35 families.
+5. **The bundles.** `npm run build` on the merged tree rewrote both dist trees byte for byte: nothing to commit.
+   `main.css` 31 192 → 31 149 B gzip; `shell.js` 3 785 → 4 368 B (≤ 4 700); `console.css` 7 116 → 7 771 B; `head.js` 919 →
+   924 B; `icons.svg` 31 049 → 30 878 B raw.
+6. **The catalogue pass** (`b4e5413`; D's role, run by the steward after the four merges, DECISIONS §10.0):
+   `scripts/i18n_audit.py --sync` (the repository's `makemessages`, no GNU gettext on this host) added the one msgid
+   missing, «Votre espace» (B's profile row): it **«La sua area»** — not D's proposed «Il suo spazio»: the glossary of
+   `docs/I18N_RTL.md` §5 renders «espace» as «area» (Area Persone, Area riservata) —, en «Your area», ar «فضاؤكم»
+   (provisional EN/AR labels, Q3); and dropped 97 msgids no source uses any more (C's removed «in preparation» states,
+   B's «Type de compte», earlier waves' leftovers). `--compile`: the audit at 100 % in it, en, ar, fr. No locked text
+   was translated.
+7. **The tests.** On the merged design-v5, `test_ile_v5_l8`, one pytest at a time, `-p no:randomly`, `-m "not browser"`:
+   every test file the four lanes touched, `apps/academy/tests`, the bundle-currency and static-pipeline tests, `tests/security`, `tests/compliance`, `tests/deployment` — **1 966 passed**, 1 xfailed (the legacy shim's debt), 30 min; then `test_design_docs.py`, `test_design_preview.py`, `test_check_ownership.py` and `tests/i18n` — 667 passed, **2 failed**, both merge-caused: DS 2026's `empty_state.html` entry still cited `templates/partners/index.html` and a floor of 15 (C's gates removed those includes), corrected (`e almeno altri 12`; `test_design_docs` 40 passed). In the browser (one Chromium, under the lock): `test_lume_v512_a`, `test_loader_w1_d`, `test_reduced_motion_w1_d` — 35 passed, 1 merge-caused failure fixed (A's late-navigation test expected «Chargement…» on `/ar/`, where D's catalogue now says «جارٍ التحميل…»; 2 passed after); `test_design_preview -m browser` — 15 passed, **2 failed, not merge-caused and left to lane D**: `static/js/dev/designpreview.js` still titles the window «… · V5 dal vivo · …» where D's templates now say «Anteprima di accettazione», and `test_the_home_link_keeps_its_name_between_48_and_90_rem` still looks for the strip's old name «Italy Legal Entry™ — V5». `manage.py check` clean; `makemigrations --check`: no changes.
+8. **The preview.** 8780 on `v512/w1` with the acceptance launcher; `ile_v5` migrated (`core/0002`, `academy/0002`)
+   and `preview_data_clean` run (dry run, then `--apply`) after reading it: it refuses any database but a preview's and
+   rewrites only the preview's synthetic rows. The checks (the four languages' homes, the hub, the nine personas' homes in fr and ar, the log) are the steward's report, `C:/tmp/ile_v5_council/.work/v512-merge-w1/verify_8780_w1.json`.
+9. **Handed on.** The owner's answers Q1–Q8 (DECISIONS §12, 28 Oct 11:35) bind W2 and W3; this wave applied the §11
+   defaults its lanes were briefed with. Requests the lanes left for W2: B's `document_row.html` download (W3) needs
+   `data-loader="none"`; D's organisation rails give institution and university their own space key (the release then
+   lights there); C's browser tests that read `/fr/partenaires/` and `/fr/actualites/` need a seeded article and partner
+   (`test_browser_w1_b.py`, `test_content_pages_browser_w3_f2.py`; not run here: browser); the «Institutions» door
+   marked current on `/forum/` (`cms_nav._mark_current`); the `qa-*@example.test` addresses still visible on the
+   account strip. No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** A wave's lanes merge in the order the Director fixed, each file staying its owner's; a defect born between two
+lanes is fixed at the merge, where both are visible, and written down as the merge's; a catalogue pass follows the four
+merges so every new string is in every language once.
+
+**Source.** The owner's V5.12; the Director's DECISIONS §1, §4, §8, §9, §10.0, §11, §12, Waves; DL54-163;
+`QA/v512/{a,b,c,d}-w1/NOTES.md`; `QA/v54/v512-w1/REVIEW.md` (copied byte for byte from
+`C:/tmp/ile_v5_council/evidence/v512/w1/REVIEW.md`).
+
+
+## DL54-165 · 28 October 2026 · Steward, the v514-p merge: V5.14's privacy and cookie information on design-v5
+
+**Decisions** (the steward's, at the merge of `v514-p` into design-v5 on 28 October 2026 — the owner's V5.14
+(`V5_14_PRIVACY_NOT_BLOCKED_BY_ALLEGATO_1.md`: privacy is not blocked by Allegato 1; categories A and B are written from
+the actual processing, C and D wait for their sources), the Director's DECISIONS §12–§13, and the privacy review of the
+lane (`QA/v54/v514-p/REVIEW.md`, APPROVE_WITH_FIXES: no major, seven minors, no tracking blocker).
+
+1. **One attempt, label `v514-p-merge`.** The lock `DESIGN_V5_MERGE_LOCK` was free and taken; design-v5 clean at
+   `6251475` (`v512/w1`), one commit beyond the lane's base `b4e5413`. design-v5 merged into `v514-p` first (`f4a056c`,
+   no conflict), then `v514-p` into design-v5 with `--no-ff`, no conflict. The review's seven minors were fixed by the
+   lane before the merge (`f54f34a`): B names unfold's `adminTheme` and says staff search history may hold what staff
+   typed; A states the e-mail-fingerprint and account-keyed abuse counters (1 min to 1 h); Django's default log
+   handlers detached; a published text edited outside `publish()` returns to DRAFT; the DENY tests fail instead of
+   skipping and cover HTTP in it and ar; `csrftoken` on every page once signed in; the requests for every collection
+   point.
+2. **What merged.** The privacy notice (A, `apps/legal/content/privacy/{it,fr,en,ar}.txt`) and the cookie and
+   technical-storage information (B, `…/cookies/…`), the Italian the master and FR/EN/AR courtesy translations that say
+   the Italian prevails; every sentence's evidence in `docs/legal/PRIVACY_NOTICE_SOURCES.md` and the audit
+   `docs/compliance/PRIVACY_PROCESSING_AUDIT.md`. The seed `legal.verified_processing_drafts` writes drafts only;
+   `publish()` (and `manage.py legal_publish`) refuses a text with an open field «[DA COMPLETARE …]» outside a preview
+   (`ILE_LEGAL_OPEN_FIELDS_ALLOWED`: `False` in base, `DEBUG` in dev, forced `False` in prod); `legal/0002`. The
+   logging filter `config/log_filters.py` redacts e-mail addresses in every line, message and traceback (LG-1). **No
+   PRIVACY TRACKING BLOCKER**: only technical cookies and storage, no third-party request, no consent banner.
+3. **Ownership.** The checker's id rule admits `v5<nn>-p`, V5.14's privacy lane (`[a-dp]`; three new cases in the id
+   rule's test; `OUTSIDE_THE_WAVES` names `v514-p`). The manifest's family `v514-p` (wave 0): whole files what it
+   created, slices what it changed in shared files (`apps/legal` models/services/views/admin/seeds,
+   `config/settings/{base,dev,prod}.py`, `templates/legal/document.html`, `tests/conftest.py`). `check_ownership.py
+   v514-p b4e5413 --head f54f34a`: **PASS** (21 inside, 10 slices, read); `--validate`: coherent, 36 families.
+4. **The catalogue pass.** `scripts/i18n_audit.py --sync`: +0 −0 in it, en, ar, fr (the lane added no msgid: the
+   legal texts are model content, the preview's open-field notice is Italian by design). Nothing to compile.
+5. **The tests.** On the merged design-v5, `test_ile_v5_l8`, one pytest at a time, `-p no:randomly`, `-m "not browser"`:
+   apps/legal, the ownership checker's test, test_design_docs and the lane's log test 137 passed; tests/compliance, tests/security, tests/deployment, the .env.example and migration-drift tests 367 passed; the 30 modules that use the shared legal_published fixture or the legal pages (backoffice, frontend navigation and content, i18n, accounts, community, ecosystem, enquiries, faq, forum, news, orientation, pages) 1 405 passed and 2 failed — test_cms_nav::test_portico_gives_every_door_its_panel_from_live_content («Actualités» expected, hidden by v512-c's news gate) and test_nav_sheet_w2_c2::test_signed_in_the_targa_seat_and_the_sheets_foot_hold_the_account_popover («— Mon compte» expected): both fail identically on 6251475 before this merge (--create-db), the v512 W1 lanes' tests, handed to lanes C and D for W2. `manage.py check` clean; `makemigrations --check`: no changes.
+6. **The preview.** 8780 on `v514/privacy` with the acceptance launcher; `ile_v5` migrated (`legal/0002`); the drafts
+   seeded (`seed_all --only legal.verified_processing_drafts`) and A and B published one by one through the product's
+   own path (`manage.py legal_publish privacy cookies`, as the preview's QA administrator): A shows its open fields
+   highlighted under the preview's notice — production refuses it until the owner answers them —, B has none. Notices,
+   terms and disclaimer (C/D) stay BLOCKED; G1 keeps every form that waits for Allegato 1 closed. The checks (the four
+   languages' homes, privacy and cookie pages in the four languages, the footer, the nine personas' homes, the log)
+   are the steward's report, `C:/tmp/ile_v5_council/.work/v514-p-merge/verify_8780_v514.json`.
+7. **Release gate (V5.14 §9) — not yet met.** «PRIVACY NOTICE = VERIFIED AND PUBLIC» needs the owner's open fields of
+   the audit §6: OF-01 (controller current), OF-02 (hosting: region, DPA, sub-processors, transfers), OF-03 (SMTP
+   provider; the mailbox's host), OF-04 (off-server backups), OF-05 (journald retention; logrotate on the real server),
+   OF-06 (audit-trail retention), OF-07 (platform retention), OF-08 (DPO), OF-10 (legal basis of the platform and the
+   backups; art. 9 data), OF-12 (recipients' roles); OF-09 before G2; OF-11 accepted by publishing. B is complete.
+8. **Handed on** (the lane's notes, «Requests to other lanes»): lane D — the footer links Privacy and Cookie
+   information through `document_available(kind)` and drops the unpublished C/D links; lane C — the legal routes gated
+   per document, G1 kept at all five documents, the production «privacy blocked» page not reading as work in progress;
+   the template owners — the privacy notice linked wherever personal data is collected (orientation wizard, sign-in,
+   sign-up, password reset, profile and its export and deletion, the document upload, the help-desk form); the runbook
+   — `access_log off;` in the catch-all server. TG-1 … TG-3 (audit §7) to their owners. No push, no public tag,
+   nothing on `main`, nothing deployed.
+
+**Why.** The owner separated what the software does (A, B: written from its code and configuration, public before
+go-live) from what depends on an authoritative source not yet received (C, D); a fact nobody verified is an open field
+the owner answers, never a sentence the lane writes.
+
+**Source.** The owner's V5.14; the Director's DECISIONS §12–§13; `QA/v514-p/NOTES.md`;
+`docs/compliance/PRIVACY_PROCESSING_AUDIT.md`; `docs/legal/PRIVACY_NOTICE_SOURCES.md`; `QA/v54/v514-p/REVIEW.md` (copied
+byte for byte from `C:/tmp/ile_v5_council/evidence/v514-privacy/REVIEW.md`).
+## DL54-166 · 28 October 2026 · V5.12 lane A W2: the motion system — plan §1.5's «still at load» and the scrim's «never a blur» amended
+
+**Decision.** The owner's V5.12 §5 («The homepage must not be the only dynamic page. The platform must also feel
+designed.») supersedes the SCOPE of the stills that plan §1.5 and W3-D set on the public passage and the console's
+journey (their own still at load) and of W2-A's scrim («opacity only, never a blur»). The Director's DECISIONS §2 set the
+system; lane A's wave W2 builds its W2 rows:
+
+1. **The reading of a public page** (a page-only sheet, `static/css/dist/core/reveal.css` from `static/css/v5/_reveal.css`,
+   linked by `templates/base.html` on public pages; main.css carries none of it): M1 the page head's hairline drawn over
+   once at load (a stroke that settles into the rule; the rule itself never leaves); M2 a photograph's mask
+   (`clip-path: inset()` from the reading edge) and its frame's settle (1.06 → 1); M3 black and white → colour under a fine
+   pointer or the focus (`[data-grade="bw"]`), as it enters for the pilot diptych and /formation/ (`bw-scroll`); M4 the
+   marks of a list rise 8 px as their rows enter, the six first a step apart; M5 the public passage's rings and lines as it
+   enters, and a flow's place on its first view in the session (`html.is-seen-passage` / `html.is-seen-journey`, `static/js/head.js`; the key `ile.seen` holds those two surface tokens, never a path — v512-a-fix-w2).
+   Scroll reveals are pure CSS (`animation-timeline: view()`) inside `@supports` and `(prefers-reduced-motion:
+   no-preference)`, never under html.rm; an element in view at load is at rest at load (no LCP is masked); no text is
+   hidden while it waits (K17 holds).
+2. **The console**: M5 the journey's travelled stretches light one after the other (120 ms each) and the current node
+   settles, on the page's first view in the session only (the journey's page sheet, `v5/_journey-rail.css` §8 — W3-D's
+   «still at load» amended for this one beat); in `apps/portal/static/portal/v5/_motion.css`: M11 the row whose
+   state a filing changed cross-fades its chip and lights its reading-edge rule; M13 the current row's plate is a View
+   Transition name (`rail-current`) and glides between rows across a navigation. M12 was already the buttons' own.
+3. **Shared** (main.css, paid in part by deletions of rules and names read by nothing — `.sequence`, four type roles,
+   `.list-reset`, two section aliases, `.icon--inline`, two notice aliases, `.btn--inline`, three V5 tokens and four
+   names of the legacy shim — `dist/main.css` 31 149 → 31 288 B gzip, inside DECISIONS' 31 414): M9 the session's notices
+   (`components/session_notice.html`, `static/js/src/notices.js`) — the kind's mark, «Fermer»; a success stands in a
+   toast region at the viewport's foot and leaves after 6 s (paused under the pointer, the focus, a hidden page) so its
+   going never moves the page; an error, a warning, an information stay until closed (WCAG 2.2.1); M6 the disclosure opens
+   its height (`interpolate-size`, `::details-content`), its open item on a tinted plate, plus / minus drawn; M7 the tabs'
+   height morph; M8 **the scrim's 4 px blur** (W2-A's «opacity only, never a blur» amended: the blur follows the scrim's
+   own clocks, none under reduced motion's opacity, none from the keyboard). The notices and the tabs move by
+   transitions from `@starting-style`, never by a keyframe with a var().
+4. **T4 — a region whose content is on its way** (`static/js/src/lume/region.js`, re-exported by `loader.js`): nothing for
+   400 ms, then `aria-busy` and the host's busy key (the drawer: also its still skeleton shapes), the word at 1 s, all
+   removed on arrival; wired to the preview drawer's reading and the Dépôt's page refresh after a filing (the upload's
+   real progress was already an XHR's).
+
+Reduced motion: the tokens are 0 ms (every time-based beat lands on its still) and the scroll reveals are not declared.
+The keyboard: durations 0. Nothing loops, nothing shakes, nothing pulses.
+
+**Source.** The owner's V5.12 §5; the Director's DECISIONS §2, §1 T4, §3, §10 lane A, Waves W2;
+`QA/v512/a-w2/NOTES.md`; `docs/design-v5/COMPONENT_PROVENANCE.md`.
+
+## DL54-167 · 28 October 2026 · Steward, the v512 W2 merge: V5.12's second wave on design-v5, lane C held back
+
+**Decisions** (the steward's, at the merge of `v512-a-w2`, `v512-b-w2` and `v512-d-w2` into design-v5 on 28 October
+2026 — the owner's V5.12, the Director's DECISIONS (§10.0 ownership and merge order, the «Waves» table's W2 row, §12–§14)
+and the senior review of the four integrated lanes (`QA/v54/v512-w2/REVIEW.md`, CHANGES_REQUIRED: five majors M-1…M-5,
+run on the lanes' first heads)).
+
+1. **One attempt, label `v512-merge-w2`.** The lock `DESIGN_V5_MERGE_LOCK` was free and taken; design-v5 clean at
+   `4d9ada5` (v514-p's status commit). The task named Q1–Q8 as unanswered; DECISIONS §12–§13 hold the owner's binding
+   answers, which the lanes and the review followed — this merge judges against §12 too.
+2. **Which lane merged.** The rule: a lane with an unresolved major does not merge. **M-1** (the console foot never
+   included) and **M-4** (`ile.seen` storing paths) were fixed by lane A's fix commits (`28e77fb`, `0be87a8`: the include
+   line; surface tokens `passage`/`journey`, never a path); **M-5** (the person dashboard's empty wall) by lane D's
+   `9417e92`. **M-3** — lane C's photographs (`figure.foto`) carry neither `data-reveal="mask"` nor `data-grade`, so A's
+   masked reveal and black-and-white reach no element, while `.foto--develop` runs a second scroll mechanism that ignores
+   `html.rm` — sits wholly in lane C's files (`templates/components/photo.html`, `static/css/v5/_photo.css`), and lane C's
+   fix commit `b7fe066` answered only a minor. **Lane C is not merged in W2**: the imagery pipeline, the new photographs
+   and the compositions of the home, institutions, universités, entreprises, parcours and Forum wait for C's M-3 fix (the
+   review's ≈10 lines) and merge with it. **M-2** (Q2: `/fr/note-legali/`, `/fr/condizioni-di-utilizzo/`, `/fr/avvertenze/`
+   answer 200 with «Page en cours de préparation»; `community/join.html`, `errors/_way_on.html`,
+   `enquiries/partials/form_shell.html`, the depot and `terms_required` still link legal:terms/privacy unconditionally)
+   belongs to no merged lane — `apps/legal` is lane P's, the templates C's, B's and D's — and is handed on, not done here.
+3. **The merges** (A → B → D, each `--no-ff`). **A** (`cb5a32b` → `6f4dd57`): up to date with design-v5, no conflict.
+   Between this merge and D's the shell includes `portal/partials/console_foot.html`, which only D's branch creates: the
+   intermediate commits `6f4dd57` and `315e9c8` answer 500 on console pages — no tag points at them. **B** (`462f26f`):
+   design-v5 merged into the branch first (`5ef62de`), two conflicts — `DESIGN_SYSTEM_2026.md` §10's count (A 40, B 45 →
+   **46**: 39, A's `session_notice`, B's six; C's `photo.html` not merged) and the binary `static/js/dist/piece-drawer.js`
+   (rebuilt with `npm run build`: only its chunk references) — then `315e9c8`. **D** (`9417e92`): design-v5 merged in with
+   no conflict, then `a3b6f25`. Lane A's entry keeps DL54-166 (renumbered by A's fix); this entry is the next.
+4. **Ownership** (`fbff360`). The families `v512-a`, `v512-b`, `v512-d` (recorded at W1) take their W2 entries: whole
+   files what each created, slices what each changed in another family's or nobody's file (B's request: its new
+   components, allauth layout, enquiries partial, orientation step and tests). `check_ownership.py v512-a 4d9ada5 --head
+   cb5a32b`, `v512-b 6251475 --head 462f26f`, `v512-d 4d9ada5 --head 9417e92`: **PASS** for the three; `--validate`:
+   coherent, 36 families. The merge's integration writes are slices of v512-b (item 7); the review's copy is the
+   steward's.
+5. **The bundles.** design-v5's `node_modules` was an empty folder; it is now a junction to the main checkout's installed
+   packages (as the lane worktrees have; no package installed). `npm run build` on the merged tree rewrote both dist trees
+   byte for byte: nothing to commit. `main.css` 31 140 → **31 345 B gzip** (A +148, B +57): inside DECISIONS' 31 414 cap,
+   above the wave's base — the strict «shared CSS only ratchets down» reading is the Director's call; A's named candidate
+   (register.css's unused `.jurisdiction` rules) conflicts with W2-E's note keeping that component. `portal/console.css`
+   7 759 → 8 122 B gzip; `shell.js` 4 381 B gzip; `icons.svg` 17 039 B raw (was 30 878).
+6. **The catalogue pass** (`1c22481`; D's role, run by the steward after the merges). `scripts/i18n_audit.py --sync` (the
+   repository's makemessages) added lane B's thirteen msgids and dropped two no source uses (the asterisk sentence, the
+   shell's inline «Privacy Policy»): «facultatif» it *facoltativo* · en *optional* · ar *اختياري*; the Caps Lock,
+   two-password, counter and combobox messages; Jour/Mois, Diminuer/Augmenter; vérifiée/à vérifier. EN and AR provisional
+   (Q3); the Italian in the glossary's words; no locked text translated. Lane D's own msgids were in its catalogues
+   already. `--compile`: 100 % in it, en, ar, fr (3 616 msgids).
+7. **The tests**, on the merged design-v5, `test_ile_v5_l8`, one pytest at a time, `-p no:randomly`. Non-browser: every
+   test file the three lanes touched, the design docs, the design preview, both bundle-currency files, the static assets
+   and pipeline, the icons, `tests/security`, `tests/compliance`, `tests/deployment`, `test_check_ownership.py` —
+   **1 698 passed**, 1 xfailed (the legacy shim's debt); then `tests/i18n`, `apps/legal`, `apps/portal`, `apps/accounts`,
+   `apps/core` — 719 passed, **1 failed, not merge-caused**:
+   `apps/portal/tests/test_views.py::test_dashboard_for_a_fresh_account_shows_empty_states_not_numbers` counts
+   `class="db-empty"` ≥ 3 where lane D's D-20 now draws one calm sentence (`db-empty db-calm`) — red on lane D's branch
+   alone; left to lane D. Browser (one Chromium, under the lock): the browser tests of the touched files plus W1's
+   carry-over files (§14) — 90 passed, 9 failed; each failure re-run on `4d9ada5`, on each lane alone and on A + D
+   without B:
+   - **pre-existing on 4d9ada5**: `test_arabic_mirrors_the_chrome_and_never_the_mark` (`.console-bar__tile img`, D's
+     note), left as found; W1's carry-over — `test_an_empty_state_draws_its_space_or_the_neutral_mark_with_the_one_hand`
+     and `test_under_forced_colours_every_icon_is_the_ink_of_its_text[light|dark]` read `/fr/partenaires/` and
+     `/fr/actualites/`, which lane C's gates close: **updated** (`e28fc2f`) to read the same marks where an empty state
+     still stands — the FAQ's search without a match (its own symbol, its disc) and the profile without an organisation
+     (the neutral mark) — no assertion dropped;
+   - **cross-lane, fixed at the merge** (`e28fc2f`): lane B's tests reading lane D's changes — the rail's `book-open`
+     drawn exactly when the Academy entry is there (V5.12 §8), the refused sign-in's title «Erreur — Se connecter»
+     (D's allauth glossary). 5 passed after;
+   - **lane A's, handed on** (red with A + D, green on D alone and on B alone; A cannot be run alone, its console pages
+     need D's partial): `test_the_device_s_safe_areas_pad_the_bars_and_the_drawer` (the phone's bottom bar 101 px for
+     66 + 34) and `test_the_letter_index_stays_under_the_letterhead_and_a_letter_lands_under_it[fr|ar]` (`/glossaire/`
+     at 1440: the index's top 57 px, the letterhead's bottom 122 px). Layout in A's sheets: lane A's to fix.
+   `manage.py check` clean; `makemigrations --check`: no changes. Logs: `C:/tmp/ile_v5_council/.work/v512-merge-w2/`.
+8. **`live_status.json`: the family row v512-w2**, its review as the decision, the tag; `CHANGELOG_V54.md`: the entry
+   first, in Italian, what the owner can now see and what is not in yet (the photographs, M-2).
+9. **Handed on.** *Lane C*: M-3 (the review's fix), then C merges with its W2 content; its requests (A's provenance rows,
+   P's Q2 404s) stand. *M-2* (Q2's 404 for unpublished C/D pages and the remaining unconditional legal links): lane P
+   (`apps/legal`) with C, B and D for their templates. *Lane A*: the two layout regressions of item 7; D's requested
+   `chrome.css` line (`.site-footer__inner--three`, review minor 6). *Lane D*: `test_views.py`'s stale floor. *The
+   orchestrator* (outside the repository): `Page("organisation", …)` in the 8780 launcher's `_org_pages()`; the
+   `qa-…@example.test` addresses and «(prova)» names in the preview data (review minors 16–17). No push, no public tag,
+   nothing on `main`, nothing deployed.
+
+**Why.** A wave merges what holds and waits for what does not: a lane whose major is open stays on its branch, so the
+preview never shows a half-fixed promise, and the others are not held for it; a stale guard that another lane's change
+made false is brought to the new truth at the merge, where both lanes are visible; a regression that belongs to one lane
+is traced, written down and returned to it.
+
+**Source.** The owner's V5.12, V5.14; the Director's DECISIONS §10.0, §12–§14, Waves; DL54-165, DL54-166;
+`QA/v512/{a,b,d}-w2/NOTES.md`; `QA/v54/v512-w2/REVIEW.md` (copied byte for byte from
+`C:/tmp/ile_v5_council/evidence/v512/w2/REVIEW.md`).
+
+
+## DL54-168 · 28 October 2026 · Steward, the v516-p2 merge: V5.16's privacy open fields classified, not blocking
+
+**Decisions** (the steward's, at the merge of `v516-p2` into design-v5 on 28 October 2026 — the owner's V5.16
+(`V5_16_PRIVACY_OPEN_FIELDS_CLASSIFY_DO_NOT_BLOCK.md`: the privacy open fields are classified and do not block the
+visual delivery; nothing is invented), with V5.14, and the lane's review (`QA/v54/v516-p2/REVIEW.md`,
+APPROVE_WITH_FIXES: one major, four minors).
+
+1. **One attempt, label `v516-p2-merge`.** The lock `DESIGN_V5_MERGE_LOCK` was held by the v512 W2 merge and taken at 20:20 once it was released; design-v5 clean at `1c83447` (`v512/w2`, DL54-167). design-v5 merged into `v516-p2` first (`2636999`): one conflict, `apps/accounts/forms.py's` imports — lane B's `core.icons` (the sign-up's audience cards) kept beside the lane's `AcknowledgementBooleanField`, whose `consent-checkbox` hook the new field partial keys on. The steward softened the notes' last «never Italy Legal Entry itself» (`10d4d57`) and recorded the family (`97f8080`); then `v516-p2` into design-v5 with `--no-ff` (`ece1eeb`), no conflict. No visual lane's file touched (footer, base, header, `gates.py`, static, portal templates); the only template is the preview notice of `templates/legal/document.html`, inside the slice.
+2. **The review's major is resolved before the merge** (`d928dd9`): no document states Italy Legal Entry's legal
+   status any more. `DPO_ASSESSMENT.md`, the OF-01 row of the audit, checklist A-33 and the class test's docstring say
+   that Italy Legal Entry is not substituted as controller unless the owner confirms it is a separate legal entity
+   (OF-01); the steward softened the last such phrase, in the lane's notes, at the merge. The four minors are fixed by
+   the lane (the reused consent row versioned before recording; art. 9 flows «MUST stay closed — not enforced in code
+   until R-SC-1; manual gate A-31»; `CONSENT_PURPOSES` exported and request R-ADM-1; the DPIA's four WP248 criteria).
+3. **What merged.** The privacy notice's markers in four languages read `[DA COMPLETARE — OF-nn — <CLASS>: …]`:
+   PRODUCTION CONFIGURATION REQUIRED (OF-02 … OF-05), OWNER CONFIRMATION REQUIRED (OF-01, AGAMI APS the candidate
+   controller), LEGAL REVIEW REQUIRED (OF-06, OF-07, OF-08 DPO STATUS = TO BE CONFIRMED, OF-10, OF-12, and OF-13, the
+   special-category basis); DigitalOcean named once as the intended provider only. `legal.models.OPEN_FIELD_CLASSES`,
+   the rendering's `data-open-field-class`, the preview notice and the back office list the fields by class; the
+   production guard is unchanged and refuses a marker of any class. The forms: `AcknowledgementBooleanField`
+   (required, never pre-ticked, Django's own required message) for every box in the team's wording; the two
+   prescribed «consent» sentences (`p1.companies.form.consent`, `p2.forum.registration.consent`) kept verbatim and
+   marked LOCKED COPY — LEGAL REVIEW REQUIRED, proposals P-1/P-2 for the legal lead in
+   `docs/compliance/FORMS_LEGAL_BASIS_UX.md` §3, both forms closed by G2; the newsletter's prescribed consent is a real
+   optional consent. The special-category guidance under the free texts (an existing translated message). Six
+   assessments in `docs/compliance/` (purpose matrix, art. 9 audit, DPO, DPIA, recipient roles, forms' legal basis);
+   the runbook's states PRODUCT_COMPLETE / PRIVACY_CONTENT_COMPLETE / PRODUCTION_CONFIG_COMPLETE / PRODUCTION_READY and
+   checklist A-29 … A-33 (closed, never accepted as open). No legal fact filled: every one is a classified marker.
+4. **Ownership.** The checker's id rule admits a later privacy lane `v5<nn>-p<n>` (`p[2-9]`; new cases in the id
+   rule's test; `OUTSIDE_THE_WAVES` names `v516-p2`). The manifest's family `v516-p2` (wave 0, after `v514-p`):
+   whole files what it created, slices what it changed in shared files. `check_ownership.py v516-p2`: **PASS**;
+   `--validate`: coherent.
+5. **The catalogue pass.** `scripts/i18n_audit.py --sync`: no new msgid (the lane reuses a translated message; the
+   acknowledgement's wording beyond it is requested from lane D, R-SC-5). Nothing to compile.
+6. **The tests.** On the merged design-v5, `test_ile_v5_l8`, one pytest at a time, `-p no:randomly`, `-m "not browser"`:
+   `tests/compliance tests/security tests/deployment` 362 passed; `apps/legal apps/consents tests/test_check_ownership.py tests/frontend/test_design_docs.py tests/i18n/test_catalogues.py` 206 passed; the forms' apps `apps/accounts apps/community apps/enquiries apps/helpdesk apps/forum apps/news apps/companies` 804 passed — 1372 passed, none failed or skipped (`apps/core` has no test package of its own; its forms are exercised by the forms' apps and `tests/compliance/test_forms_legal_basis_v516.py`). `manage.py check` clean; `makemigrations --check`: no changes.
+7. **The preview.** 8780 on `v516/privacy-classification` with the acceptance launcher (the previous log kept as
+   `srv8780.log.prev-v516`); the privacy drafts re-seeded and A re-published through the product's own path
+   (`seed_all --only legal.verified_processing_drafts`, `manage.py legal_publish privacy`): the preview shows each
+   open field with its class. The checks are the steward's report,
+   `C:/tmp/ile_v5_council/.work/v516-p2-merge/verify_8780_v516.json`.
+8. **Release gate — not met, and now explicit.** PRODUCTION_READY needs PRODUCT_COMPLETE, PRIVACY_CONTENT_COMPLETE
+   (A-29, A-31 … A-33: the owner's and the legal lead's answers) and PRODUCTION_CONFIG_COMPLETE (A-30). **R-SC-1 is a
+   PRODUCTION_READY blocker**: until a gate closes the reserved area's uploads and free texts to real data subjects,
+   no account is created for one (A-31).
+9. **Handed on** (the lane's notes, «Requests to other lanes»): R-SC-1 (lane C, `gates.py`, a
+   `special_category_basis` gate), R-SC-2 (lane A, the loose upload's note), R-SC-4 (G-FREE on the staff free
+   texts), R-SC-5 (lane D, `locale/`: G-FREE, G-UPLOAD, the acknowledgement after P-1/P-2), T-1 … T-5 to the documents
+   and notifications owners, R-ADM-1 (`apps/consents/admin.py`, sec-f8's slice: the withdrawal action acts on consent
+   purposes only). No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** V5.16: an open field is a question with an owner — the configuration, the owner's confirmation, or the legal
+review — and the visual delivery does not wait for it; production still refuses a notice that carries one.
+
+**Source.** The owner's V5.16 and V5.14; `QA/v516-p2/NOTES.md`; `docs/compliance/*.md`;
+`QA/v54/v516-p2/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v516-p2/REVIEW.md`).
+
+
+## DL54-169 · 28 October 2026 · Steward, the v517-p3 merge: V5.17's privacy governance correction
+
+**Decisions** (the steward's, at the merge of `v517-p3` into design-v5 on 28 October 2026 — the owner's V5.17
+(`V5_17_PRIVACY_GOVERNANCE_CORRECTION.md`: compliance and production configuration block PRODUCTION_READY, never
+PRODUCT_COMPLETE; Wave 3 keeps the priority), with V5.16 and V5.14, and the lane's review (`QA/v54/v517-p3/REVIEW.md`,
+APPROVE_WITH_FIXES: seven minors, no major).
+
+1. **One attempt, label `v517-p3-merge`.** The lock `DESIGN_V5_MERGE_LOCK` was free and taken at 23:43; design-v5
+   clean at `e580b41` (DL54-168), the lane's own base, so merging design-v5 into `v517-p3` had nothing to bring. The
+   steward fixed the cheap minors on the branch (`dd50179`), recorded the family, then merged with `--no-ff`
+   (`ee128f7`), no conflict. No visual lane's file touched (base, header, footer, `gates.py`, portal templates,
+   static); the one template, `templates/cases/partials/state_dialog.html` (w3-e's), carries a one-line slice: the
+   guidance appended to the reason field's help.
+2. **The review's minors.** Fixed: the bare stem «biometri» replaced by «données biométriques», «dati biometrici»,
+   «biometric data» («Passeport biométrique» and «Photo d'identité biométrique» stay open, recital 51); the guard
+   reads a requirement's code and title, never its detail (a detail says what NOT to send); the closed sentence is
+   said once after a refused post; the production privacy test says «the production switches», not prod.py; the
+   notes say the requirement Dépôt keeps its own note (G-UPLOAD is the loose upload's). Recorded, not built: the
+   residual risk of a special-category piece declared under a neutral title (`SPECIAL_CATEGORY_AUDIT.md` §3.1, DPIA
+   RK-2; follow-up R-P3-6 at `declare_requirement`); the checklist row of a closed piece (R-P3-5, the documents
+   owner's product decision).
+3. **What merged.** The states of V5.17 §2 in the runbook, checklist, release notes and compliance documents
+   (PRIVACY_CONTENT_COMPLETE replaced by COMPLIANCE_REVIEW_COMPLETE); A-29 … A-33 never block PRODUCT_COMPLETE; the
+   infrastructure values stay in checklist A-30, verified when the server is prepared (§10). `docs/compliance/DPIA.md`
+   in preparation (art. 35(7) structure from known facts, open facts classed); DPIA_NECESSITY's conclusion corrected
+   and A-32 points at it (§3). R-SC-1 (§4–§5): `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED` off in `base.py` and `prod.py`
+   (prod.py refuses it on without `ILE_SPECIAL_CATEGORY_BASIS_REFERENCE`), on in the preview; `core.special_category`
+   closes a piece that names a special-category document (not offered, refused by `documents.services.file_version`
+   whatever the road), keeps the loose upload to the named kinds, and serves G-FREE / G-UPLOAD in four languages; no
+   flow deleted from the local product, no «explicit consent» box; `docs/compliance/PREVIEW_VS_PRODUCTION.md`
+   separates PREVIEW CAPABILITY from PRODUCTION ENABLEMENT. OF-11 not closed: `OF11_ANNEXE_DEVIATIONS.md` lists both
+   deviations (§7). The production privacy page renders no marker, highlight, class or configuration question (§9).
+   OF-01 stays OWNER CONFIRMATION REQUIRED, DPO STATUS = TO BE CONFIRMED; no legal fact invented.
+4. **Ownership.** The id rule already admits `v517-p3`; `OUTSIDE_THE_WAVES` names it and the id rule's test admits
+   it. The manifest's family `v517-p3` (wave 0, after `v516-p2`): whole files what it created, slices what it changed
+   in shared files. `check_ownership.py v517-p3 e580b41 --head dd50179`: **PASS** (7 inside, 21 slice); `--validate`:
+   coherent, 38 families.
+5. **The catalogue pass.** `scripts/i18n_audit.py --sync`: no new msgid — the guard serves its three sentences from
+   its own four-language dictionaries until the catalogue owner turns them into messages (the msgids are listed in
+   `QA/v517-p3/NOTES.md`, request to lane D). Nothing to compile.
+6. **The tests.** On the merged design-v5, `test_ile_v5_l8`, `-p no:randomly`, `-m "not browser"`: `tests/compliance tests/security tests/deployment tests/test_check_ownership.py tests/frontend/test_design_docs.py apps/legal apps/core` 526 passed; `apps/documents apps/helpdesk apps/cases` 483 passed, 3 skipped (intake tests that need a legal rule in force; none is) — 1009 passed, none failed (`apps/core` has no test package of its own; the guard is exercised by `apps/documents/tests/test_special_category_v517.py`, 34).
+   `manage.py check` clean; `makemigrations --check`: no changes.
+7. **The preview.** 8780 on `v517/compliance` with the acceptance launcher (`servers/acceptance/run_8780.py`; the previous log kept as `srv8780.log.prev-v517`); `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED` on there (dev.py, DEBUG: the preview capability), so the special-category pieces stay offered in the preview. The checks are the steward's report, `C:/tmp/ile_v5_council/.work/v517-p3-merge/verify_8780_v517.json`.
+8. **Release gate — not met, and explicit.** PRODUCTION_READY needs PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE
+   (A-29, A-31 … A-33: the owner's and the legal review's answers, OF-11's acceptance) and PRODUCTION_CONFIG_COMPLETE
+   (A-30). No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** V5.17: a feature may be complete in the preview and closed in production pending a legal gate; the gate is
+a setting the production configuration cannot open without a written approval's reference.
+
+**Source.** The owner's V5.17, V5.16 and V5.14; `QA/v517-p3/NOTES.md`; `docs/compliance/*.md`;
+`QA/v54/v517-p3/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v517-p3/REVIEW.md`).
+
+## DL54-170 · 28 October 2026 · V5.15 lane A W3: the central loader «Lume», the one-row letterhead, the motion language
+
+(The steward renumbers at merge if another lane took the number.)
+
+**Decision.** The owner's V5.15 («The current loader is NOT what the owner requested. A gold line under the header is NOT
+the primary branded loader … a CENTRAL, FULL-PAGE, ELEGANT loader»; «DESKTOP REQUIREMENT: ONE SINGLE HORIZONTAL ROW»;
+«Build a REAL motion language across the site») supersedes the presentation of DL54-163 (W1's threshold in the band) and
+of the institutional bar (plan §1.11), and amends DECISIONS §2 rule 1 for two places. Lane A, with the Creative
+Director's authority for its families (DECISIONS §15):
+
+1. **«Lume», the central veil** — `templates/components/lume_veil.html`, included once by `base.html` on every page of the
+   public site and the platform; `static/css/v5/lume.css` (in main.css: global brand infrastructure). A pointer's
+   navigation (a click on a page of this site, a submit) begins it at once (`threshold.js` `go()`): the page dims under a
+   night veil with a light blur, the doorway comes in the portico's arches, the key TURNS once on its shaft (0 → 360°,
+   coming forward 1 → 1.6 → 1) and the next page — told the click's time by `head.js` before its first paint — continues
+   the same 700 ms clock: the light (the room lights, the light spills over the floor, the sill draws) and the resolve
+   (the stage opens towards the reader while the veil lifts). Nothing is held: no minimum display time, the navigation is
+   the browser's from the click, the veil takes no click and no key, Esc stops a pending navigation and puts it away,
+   back / forward clear it. A wait keeps the veil with the sill held at 85 % and says «Chargement…» once at 1 s, under the
+   stage. The keyboard's navigation draws nothing until 400 ms, then the still. Reduced motion: the branded still (the
+   lit doorway, the key at rest, the sill at 85 %) by one 80 ms fade; the arrival holds it 240 ms. The first page of a
+   session plays the whole clock once. W1's band line, the band's word, the console bar's line and word and the mark's
+   arrival light are removed; the View Transition stays only for the navigations the veil does not take (the sign-in's
+   door into the console, back / forward).
+2. **The letterhead, one row** — [brand] [primary navigation] [language · access · primary action] at every desktop width:
+   the institutional bar is no longer drawn (its four languages are the end zone's switch, a popover of the overlay
+   system; its promoter line is in the sheet's foot and the footer); all six items in the bar from 64rem (compact at every
+   width — the column stops at 1 360 px —, 14 px words below 80rem, the mark alone below 72rem); the access «la targa» is
+   the row's primary action, labelled and filled in night from 90rem; «Commencer l’orientation» is the person door's
+   highlighted destination (a third control never fits the row: 1 615 px needed in French, measured); glass and a soft shadow
+   once scrolled; one soft plate glides under the pointer (21st 21349). Measured: one row in fr · it · en · ar at 1024,
+   1280, 1366, 1440, 1512, 1600 and 1920, no overflow.
+3. **The mega panel** floats under the bar as a card (radius 16, hairline, shadow 4), takes its content from the side the
+   pointer travelled (21st 36476), opens its photograph with a mask; Projet keeps a plain panel (V5.15 §2: not an image in
+   every menu). **The phone's sheet**: a full-height layered sheet opened as a light from «Menu»'s corner (21st 27229), its
+   rows coming one after the other, a door unfolding with its photograph.
+4. **The motion language** (`static/css/v5/_reveal.css`, page-only; the console's `_motion.css`): M19 the page head in
+   sequence at load; M20 a section's heading and lines rising as they enter (`view()`); M15 cards lifting under the hand;
+   M21 the pointer's spotlight (`--mx`/`--my`, one passive listener in shell.js); M22 subtle parallax (`[data-parallax]`);
+   M16 a timeline's line drawn as it is read; the platform's blocks rising into place and its rows leaning under the hand
+   (V5.15 §20). **DECISIONS §2 rule 1 is amended** for the page head (its sequence is over 520 ms after the first paint, or
+   after the veil lifts) and a section's heading (at rest whenever it is already in view): V5.15 §6 asks for staggered
+   typography and section reveals; never under reduced motion or html.rm.
+5. **Budgets** — two measured exceptions recorded by the Director (lane A): `static/css/dist/main.css` 31 414 → ≤ 33 600 B
+   gzip (the veil is global brand infrastructure, on every page; paid in part by W1's band line and word, the arrival
+   light and the institutional bar, which left); `static/js/head.js` 1 000 → ≤ 1 250 B gzip (the veil's hand-off must run
+   before the first paint). shell.js ≤ 4 700 B, page-only sheets ≤ 6 KB, unchanged.
+
+**Carry-over (DECISIONS §16).** The list reset of `static/css/base.css` restored: v512-a W2's dead-rule cut had glued
+`ul[role=list]`, `ol[role=list]` to `hr`'s hairline and 32 px margins (the letterhead 129 px tall, the console's bottom bar
+101 px, the glossary's letter index under the letterhead). The Arabic tile test reads the layered mark W1 put in the tile.
+
+**Source.** The owner's V5.15 §1–§14, §20–§23; the Director's DECISIONS §15, §16; DL54-163, DL54-166;
+`QA/v515/a/NOTES.md`; `COMPONENT_PROVENANCE.md` (five V5.15 rows).
+
+**Round 1 improvements (v515-a-improve1, after the lane's first quality review).** (a) The veil's clock: the arrival
+continues from what the leaving page PAINTED (handed on in `pagehide`), ≥ 100 ms when a fast server's paint hold froze
+it and ≤ 440 ms, so ≥ 300 ms of the turn plays on visible frames; under the veil the cross-document View Transition is
+kept as a 140 ms dissolve of the root alone (no mark travels) instead of being skipped; the first page of a session
+plays the resolve alone (from 460 ms) and its head is never held (`--rise-wait` 0 — the LCP). (b) The key lifts
+(1 → 1.45), HOLDS forward while it turns 0 → 360° (90 → 400 ms), a specular light sweeps its face and its shadow
+swings with it, then it settles — no pulse; the stage takes 80 vw on a phone. (c) `--lume-w` on the root: the status
+line stands under the stage. (d) Between two console pages the veil covers the work pane only (the rail lit, a
+smaller doorway, no blur); entering a space keeps the full veil. (e) The mega panel: each door at its own height (a
+door change morphs the card, `interpolate-size`), three zones — the lede, the entries (two tiles for a short door),
+«la lunetta», the door's night plate as its highlighted destination; the four portico frames repeat the home's door
+tiles, so no photograph is shown until lane C gives the menu frames of its own (`menu_only`); the panel's rules left
+main.css for `core/portico.css`, linked with `media="(min-width: 64rem)"` (a phone never blocks on them; main.css
+33 565 → 33 152 B gzip). (f) The letterhead: the access a night control at every width (a 40 px square below 90rem),
+language, access and «Menu» one 40 px height, the compact bands in cascade order (they had been overridden), the
+wordmark from 70rem (the mark alone 64–70rem: measured, the French row cannot hold it at 1024). (g) The motion
+language keyed to the classes the pages carry (the registers' rows rise as they enter, the link rows lean, the door
+plate and the cards take the light in a ::before layer). DECISIONS §2 rule 1 is amended once more, bounded the same
+way, for a list's rows rising as the list enters (`view()`: at rest whenever already in view). The dead
+`partials/utility_bar.html` and its rules removed.
+
+**Round 2 improvements (v515-a-improve2, after the lane's second quality review).** (a) The click's dead frame: traced
+headed at 1440 (the stage bisected), the first frame of the veil cost 95–120 ms of raster — the halo's 96 px and 48 px
+blurred box-shadows above all — and the full-viewport backdrop blur 45–70 ms of compositing on that frame and every
+frame of the turn. Now the halo's glow is pre-drawn (radial gradients), the key's shadow a pre-drawn layer and its
+glint a still light (opacity only), the blur is gone (a denser night instead), and the veil is PRE-WARMED once the page
+is idle (`html.lume-warm`: laid out, its ground and stage rasterised at an imperceptible 0.002 opacity, `pointer-events:
+none` as ever): no leaving-page frame over 35–40 ms at 1× (390 and 1440), ≈ 45 ms at 4× CPU. (b) The hand-off: the
+leaving page counts the frames it painted and hands on the last one; the arrival starts at ≤ 150 ms of the clock, so
+≥ 250 ms of the turn play on visible frames (filmed: ≈ 11 frames of turn at 1440); past 150 ms the leaving page's key
+only crawls (≤ 40°), and a wait completes the turn and holds it. (c) The mega panel: every entry carries its
+destination's glyph on a tinted disc; a long door's entries are 64 px rows of one rhythm (title, one line); the door's
+own space's line — the legal notice — is never clamped, it stands whole in the panel's foot; a short door's two entries
+are door cards as tall as the lede (the glyph and the way forward at the top, the words at the foot); the lunetta of a
+short door no longer repeats the door's name; the card's one row fills it through a morph; the pale rule under the
+lunetta removed. (d) The motion language in TIME: `static/js/src/rise.js` (870 B gzip, public pages only) holds what is
+below the fold and lets it rise over 420 ms as it enters (40 ms apart, once) — chapters' heads, statements and prose,
+the registers, the trust statements, the pathways (whose rules draw in gold: the home's route), the Forum's programme
+(its timeline), the FAQ's questions, the glossary's entries, `[data-motion="rise"]`; the `view()` rises (which
+finished off-screen) are removed; nothing in view is ever held; reduced motion, html.rm, the keyboard and print see
+everything at rest. DECISIONS §2 rule 1's amendment is kept with the same bound (never what is in view). (e) The
+console's rail stays lit under the veil: neither the rail's plate nor the mark carries a View Transition name then.
+(f) The language switch below 90rem takes «Menu»'s 40 px hairline plate; the sheet's search shows «Rechercher» (its
+label keeps the long name).
+
+**Finishing round F1 (v515f-a-improve1, after the lane's third quality review).** (a) The slow path: the leaving page
+hands on a PHASE of the clock — the time painted, ≤ 150 ms, before a wait; 480 ms once a wait has begun, because that
+page turned the key itself (`lume-key-finish`, now 260 ms) and lit the room half — so the arrival continues from the
+turned key and the lighting room, never a second turn, never the light put out (filmed at fr 1440 with 1.5 s of latency:
+`--lume-t` 480 ms, the key at identity on every arrival frame). (b) The arrival's turn runs ≤ 120 ms behind the rest of
+its clock (`min(120ms, 480ms − --lume-t)`), so the arriving page's long first frame lands on the resting key: filmed, the
+turn from rest over ≈ 8–10 visible frames at fr 1440 and ar 390. (c) The pre-warmed veil leaves a hidden tab. (d) The
+mega panel: a long door's rows carry their line WHOLE (no ellipsis; the two columns share each grid row; below 80rem
+the title alone); a short door's entries are destination rows (glyph, title and whole line, the way forward) — no empty
+card, no clamp; Projet's entries carry their glyphs (the arch, the project team's mark and the authorised actor's through
+the registry, the news, the contact form) and AGAMI its line («Le promoteur du projet», its page's first chapter head);
+Entreprises' entries the two lines the companies' page sets beside the same links; the door's own legal notice stands
+in the foot on every page — the locked French, said with lang="fr", until the prescribed text exists in the page's
+language; the brand in a line is one isolated, unbroken LTR run (`brand_bdi`); the sheet's entries carry the panel's
+glyphs; on a page that is a top-level item (the Forum), only that item is current.
+
+
+## DL54-171 · 29 October 2026 · Steward, the v515-a merge: V5.15 W3 lane A (letterhead, mega menu, Lume, motion)
+
+**Decisions** (the steward's, at the merge of `v515-a` into design-v5 on 29 October 2026 — the owner's V5.15
+(`V5_15_PREMIUM_VISUAL_REMEDIATION_CREATIVE_OVERRIDE.md`, the bar of §26: ≥ 4/5 per family, no major), the
+Director's DECISIONS §15–§16 and §10.0, with V5.12, V5.13 and V5.17; the lane's own decision is DL54-170).
+
+1. **Two attempts, label `v515f-a-merge`.** The first took `DESIGN_V5_MERGE_LOCK` at 10:13 and landed the family,
+   the merge and the catalogue (`7170598`, `5f56542`, `79769f6`), then stopped during its test run; the second found
+   the lock free, took it at 10:57 and completed the missing steps only (the tests, this entry, the tag, the
+   preview). Design-v5
+   clean at `7f2a02d` (DL54-169), already the lane's base (the lane rebased on it, `0651bf4`), so merging design-v5
+   into `v515-a` brought nothing («Already up to date»). The steward recorded the family on the branch (`7170598`),
+   then merged with `--no-ff`, no conflict. The compliance guards are untouched: R-SC-1 (`core.special_category`,
+   `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED`) and the privacy publication guard are in no file of the lane's diff.
+2. **The finishing review** (`QA/v54/v515-a/REVIEW.md`, copied byte for byte from the evidence's `QA_FINISH1.md`,
+   head `6a54102`): every major of round 3 fixed — the slow path turns the key once and the light only grows
+   (`--lume-t` 480 ms once the leaving page has turned it), the arrival's turn lands after the long first frame,
+   the mega panel has no ellipsis, short doors are destination rows, glyphs on every entry, Projet's glyphs and
+   AGAMI's line, the legal notice in every language (the locked French with `lang="fr"` until translated), one
+   current item on a top-level page, the sheet's entries with the panel's glyphs. Scores: Navbar Premium 4, Mega
+   menu 4, Phone sheet 4, Global Lume Loader 4, Motion language (public) 4, Platform motion 4 — **minimum 4, no
+   major**. Recorded, not built by the steward (not merge-caused): N-1, the warm veil's ±1 RGB-level ghost
+   (`html.lume-warm` at opacity ≈ 0.002; the fix is to keep the pre-warm off the painted area); N-2, the Entreprises
+   lede and first row repeat a sentence, title-only rows look half-empty; N-3, Projet has no kicker and the AGAMI
+   glyph reads as a bar chart; N-4, head.js (2 B) and portico.css (7 B) have no budget headroom. Carry-overs for
+   lanes C and D: the dormant reveal hooks (`[data-reveal=mask]`, `[data-timeline]`), the French lede in the en/ar
+   panels, the Arabic FAQ and Forum titles in French (Q3).
+3. **Ownership.** The id rule already admits `v515-a` (`v5<nn>-<lane>`); its comment, `OUTSIDE_THE_WAVES` and the id
+   rule's test name it. The manifest's family `v515-a` (wave 0, after `v517-p3`): whole files what it created
+   (`_portico.css`, `lume.css`, `rise.js`, `lume_veil.html`, `_portico_glyph.html`, `core/portico.css`,
+   `test_lume_v515_a.py`, its NOTES), slices what it changed in shared files (base, header, main nav, portal chrome,
+   cms_nav, tokens, chrome, motion, the guards that follow the one-row letterhead). `check_ownership.py v515-a
+   7f2a02d --head 6a54102`: **PASS** (8 inside, 35 slice, 6 generated); `--validate`: coherent, 39 families.
+4. **Build and catalogue.** `npm run build` on the merged tree: dist identical to the committed one, nothing to
+   commit. `scripts/i18n_audit.py --sync` dropped the one msgid the lane left unused («Barre institutionnelle», the
+   removed utility bar's landmark) in the four catalogues; `--compile`: 3 615 msgids, 100 % in it/en/ar/fr, no
+   error. No new msgid; nothing machine-translated; no locked text touched.
+5. **The tests.** On the merged design-v5, database lane `test_ile_v5_l8`, `-p no:randomly`: the non-browser run (lane's 14 test files, test_design_docs, test_design_preview, the bundle-currency and static pipeline tests, test_icons, test_css_tokens_exist, tests/security, tests/compliance, tests/deployment, test_check_ownership) first ran with 51 failed and 9 errors, all but four of them a child process that could not start on the machine (0xC0000142, STATUS_DLL_INIT_FAILED: `git ls-files` and the production-settings subprocesses, under load from the other lanes); re-run alone: tests/security + tests/compliance + tests/deployment + test_check_ownership **437 passed**; the frontend set **435 passed** beside the four below. The browser files of the pages the lane changed (`-m browser`, under `CHROMIUM_LOCK` 11:35–11:49: test_lume_v515_a, test_lume_v512_a, test_browser_w2_c1/c2, test_console_phone_browser_w3_a, test_motion_browser_w4_b, test_nav_sheet_w2_c2, test_overlays_console_w2_a, test_motion_v512_a_w2, test_layout, test_loader_rules): **97 passed**.
+   One merge-caused failure fixed: `test_css_tokens_exist` (green at `7f2a02d`) refused `--rise-k` and
+   `--portico-from` in `_reveal.css` / `_portico.css` — both are written at run time (rise.js, nav.js's `open()`), so
+   they join the test's `RUNTIME_PROPERTIES` with their writer named; the guard still refuses any other undeclared
+   property. Two failures are **pre-existing on design-v5** (red at `7f2a02d` on a fresh database, already recorded
+   in the lane's NOTES), not fixed here: `test_cms_nav::test_portico_gives_every_door_its_panel_from_live_content`
+   (the Projet panel has no «Actualités» while gate G3 is closed) and
+   `test_nav_sheet_w2_c2::test_signed_in_the_targa_seat_and_the_sheets_foot_hold_the_account_popover` (the
+   account popover's «— Mon compte» label).
+   `manage.py check` clean; `makemigrations --check`: no changes.
+6. **The preview.** 8780 on `v515/a` with the acceptance launcher (`servers/acceptance/run_8780.py`; the previous log kept as `srv8780.log.prev-v515-a`); `ile_v5` migrated if a migration was pending. The checks (the four languages' homes, the hub with the tag on its strip, the nine personas' homes in fr and ar, the log without traceback) are the steward's report, `C:/tmp/ile_v5_council/.work/v515f-a-merge/verify_8780_v515a.json`.
+7. **Release gate — unchanged.** PRODUCTION_READY still needs PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE and
+   PRODUCTION_CONFIG_COMPLETE. No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** V5.15 §26: a family merges once it is at least 4/5 with no major; lane A reached it in the finishing round,
+and the remaining items are polish, recorded for the next round rather than fixed blind at the merge.
+
+**Source.** The owner's V5.15; DECISIONS §15–§16, §10.0; DL54-170; `QA/v515/a/NOTES.md`; `QA/v54/v515-a/REVIEW.md`
+(copied byte for byte from `C:/tmp/ile_v5_council/evidence/v515/a/QA_FINISH1.md`).
+
+
+## DL54-172 · 29 October 2026 · Steward, the v515-c merge: V5.15 W3 lane C (page headers, imagery, art direction)
+
+**Decisions** (the steward's, at the merge of `v515-c` into design-v5 on 29 October 2026 — the owner's V5.15
+(`V5_15_PREMIUM_VISUAL_REMEDIATION_CREATIVE_OVERRIDE.md`, the bar of §26: ≥ 4/5 per family, no major), the
+Director's DECISIONS §15–§16 and §10.0, with V5.12, V5.13 and V5.17; label `v515f-c-merge`).
+
+1. **The merge.** `DESIGN_V5_MERGE_LOCK` taken at 12:00 once the v515-a merge released it. The branch (`68597e8`,
+   cut from lane C's W2 branch `v512-c-w2`, so lane C's W2 imagery arrives with W3) took design-v5 twice: `10b268d`
+   (lane A) with two conflicts resolved by keeping both sides — `cms_nav._mark_current` keeps lane C's owner section
+   (a page linked from two panels belongs to one section) and lane A's `_one_current` runs after it; `test_cms_nav`'s
+   Projet panel keeps lane C's four rows (no «Actualités» while G3 is closed) with lane A's AGAMI standfirst — then
+   `d8502df` (lane A's status), no conflict. The family recorded on the branch, then `git merge --no-ff`. The
+   compliance guards are untouched: R-SC-1 (`core.special_category`, `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED`) and the
+   privacy publication guard are in no file of the lane's diff; lane C's M-2 (`apps/legal`) keeps the privacy notice
+   and the cookie information public and blocked as lane P left them, and puts only the substantive C/D pages behind
+   the `legal_pages` gate.
+2. **The finishing review** (`QA/v54/v515-c/REVIEW.md`, copied byte for byte from the evidence's `QA_FINISH1.md`,
+   head `68597e8`): round 3's major (the headed inspection that never ran) fixed — 512 headed loads in four
+   languages at eight widths, 0 horizontal scroll, 0 text overlaps, 0 running animations under reduced motion.
+   Scores: Page Headers 4.5, art direction 4, Imagery 4, Motion (lane C side) 4, Section design 4, Typography 4 —
+   **minimum 4, no major**. Its merge conditions: m-2 (the re-merge, cms_nav, the develop rule and the hairline) done
+   here (items 1, 4); D's four msgids done by this merge's catalogue pass (item 3); D's `legal_links` fix for
+   `depot.html` / `terms_required.html` is on `v515-d`, not yet merged — meanwhile those templates go through
+   `safe_url 'legal:terms'`, which is gate-aware (`core.links.public_url`): checked on the merged tree, it answers ""
+   while the terms are unpublished, so no link reaches the 404. Recorded, not built (not merge-caused): m-1, the head
+   action below the first screen at 768 and 360 on Parcours and Entreprises; m-3, French runs left-aligned under
+   right-aligned Arabic titles (lane D's catalogue/dir question); m-4, the in-page jump to `#formulaire` leaves focus
+   on `<body>` (lane B's form). Lighthouse on the collected, compressed build (m-10) was not run: no Lighthouse is
+   installed in this environment.
+3. **Catalogue.** `scripts/i18n_audit.py --sync` added lane C's 22 msgids: the 19 alternative texts of its licensed
+   frames (`apps/pages/imagery.py`), the diptych's group label «Le même geste», the pathway family «Autres voies» and
+   the count line «%(n)s parcours affiché(s)». Translated by the steward in it/en/ar — EN and AR provisional,
+   professional; the Arabic reviewed against the catalogue's own terms (سبيل for *voie*, مسار for *parcours*, التكوين for
+   *formation*) with its six plural forms. `--compile`: 3 637 msgids, 100 % in every language, no error. No locked text
+   touched; nothing machine-translated. This closes the review's merge blocker
+   `test_latin_text_on_arabic_pages_carries_its_own_lang_attribute`.
+4. **What the merge needed (fixed by the steward; each red after the merge and green at `d8502df`).**
+   (a) The head's hairline (lane A's M1) also meets the reading pages' band: `:is(.ingresso, .page-header,
+   .fronte-wrap):has(+ .chapter)` in its five places; its static and browser tests follow. (b) **A real defect:** in
+   Arabic the head photograph's passe-partout slid into register from the left (one keyframe for both directions) and
+   stood 20 px past the reading edge while it moved — a 1–2 px horizontal scroll on `/ar/entreprises/` and
+   `/ar/institutions/` at 390; a mirrored keyframe `fronte-register-rtl` under the same guards. (c) The home's trust
+   chapter and AGAMI linked the disclaimer and the official notices with a plain `reverse`, which lane C's gate now
+   answers with 404: both go through `public_url` (`test_no_open_page_links_to_a_closed_page`, four languages).
+   (d) Guards that follow lane C's design without weakening: the four doors' heads carry their photograph, so the way
+   in stands under the lead (the same first-screen bound and inline start); the home's pilot statement stands under its
+   head beside the diptych, and the registry's frames are the home's licensed photographs; Institutions' «Pour aller
+   plus loin» is `ul.approdi`; `_photo.css`'s one animated rule is the combined develop of a masked frame under lane
+   A's guards (lane A merged without adopting it, so it stays); the prescribed «why» title is no longer quoted in a
+   template comment; `photo.html` has its §10 entry in DESIGN_SYSTEM_2026 (48 components).
+5. **Ownership.** The id rule already admits `v515-c`; its comment, `OUTSIDE_THE_WAVES` and the id rule's test name it.
+   The family `v515-c` (wave 0, after `v515-a`): whole files what it created (the frontispiece partials and motifs,
+   `_fronte.css`, `_compose.css`, `_photo.css`, `fronte.css`, `imagery.py`, `pages_imagery.py`, the frames and their
+   PROVENANCE, `tools/build_derivatives.py`, its tests and notes), slices what it changed in shared files.
+   `check_ownership.py v515-c 7f2a02d --head 68597e8`: **PASS** (209 inside, 68 slice, 7 generated); `--validate`:
+   coherent, 40 families.
+6. **Build and tests.** `npm run build` after each CSS change (dist committed: `core/reveal.css`,
+   `pages/css/fronte.css`). On the merged design-v5, database lanes `test_ile_v5_l8c` (static) and `test_ile_v5_l8d`
+   (browser, under `CHROMIUM_LOCK`), `-p no:randomly`: the non-browser run (the lane's test files — test_frontispiece_v515_c, test_imagery_v512, test_page_integrity, test_cms_nav, test_interior_w3_f1, apps/pages, apps/pathways test_views, apps/ecosystem, apps/legal — with test_design_docs, test_design_preview, the CSS and JS bundle-currency tests, test_static_pipeline, test_static_assets, test_icons, test_layout, the static half of test_motion_v512_a_w2, tests/security, tests/compliance, tests/deployment, test_check_ownership) gave **1 744 passed, 7 failed**, the seven fixed as item 4 says (re-run: **312 passed**); `test_cms_nav` and `test_check_ownership` **87 passed** on the branch. The browser files of the pages the lane changed (`-m browser`, under `CHROMIUM_LOCK`: test_browser_v515_c, test_motion_v512_a_w2, test_browser_w3_f1, apps/pages test_browser, apps/ecosystem test_browser): first **15 failed, 53 passed**; after item 4 **61 passed, 7 failed** — the seven are red at `d8502df` too (pre-existing, not lane C's, not fixed here: test_no_overflow_and_three_corners_a_screen ×4 — the Parcours head's four stacked layers; test_the_trail_and_the_forward_links_stand_on_the_target_floor — «Accueil» at 24 px on Le projet; test_the_hero_holds_its_geometry — the 48 px peek; test_a_finger_on_the_tiles_scrolls_without_a_press — the home's light still animating).
+   `manage.py check` clean; `makemigrations --check`: no changes.
+7. **The preview.** 8780 on `v515/c` with the acceptance launcher (`servers/acceptance/run_8780.py`; the previous log kept as `srv8780.log.prev-v515-c`); `ile_v5` migrated if a migration was pending. The checks (the four languages' homes, lane C's fourteen pages in fr and ar with their band and frames, the hub with the tag on its strip, the nine personas' homes in fr and ar, the log without traceback) are the steward's report, `C:/tmp/ile_v5_council/.work/v515f-c-merge/verify_8780_v515c.json`.
+8. **Release gate — unchanged.** PRODUCTION_READY still needs PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE and
+   PRODUCTION_CONFIG_COMPLETE. No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** V5.15 §26: a family merges once it is at least 4/5 with no major; lane C reached it in the finishing round.
+What the merge broke is fixed here; what is polish stays recorded for the next round rather than fixed blind.
+
+**Source.** The owner's V5.15; DECISIONS §15–§16, §10.0; `QA/v515/c/NOTES.md`; `QA/v54/v515-c/REVIEW.md` (copied
+byte for byte from `C:/tmp/ile_v5_council/evidence/v515/c/QA_FINISH1.md`).
+
+
+## DL54-173 · 29 October 2026 · Steward, the v515-b merge: V5.15 W3 lane B (premium forms, icon visual system)
+
+**Decisions** (the steward's, at the merge of `v515-b` into design-v5 on 29 October 2026 — the owner's V5.15
+(`V5_15_PREMIUM_VISUAL_REMEDIATION_CREATIVE_OVERRIDE.md`, the bar of §26: ≥ 4/5 per family, no major), the
+Director's DECISIONS §15–§16 and §10.0, with V5.12, V5.13 and V5.17; label `v515f-b-merge`).
+
+1. **The merge.** No earlier attempt had landed anything (no `v515-b` commit on design-v5, no tag `v515/b`).
+   While lanes A and C held `DESIGN_V5_MERGE_LOCK`, design-v5 was merged into `v515-b` as it moved (`913eb51` after
+   the v515-a merge, `99b9a9c` and `d987821` after the v515-c merge and its browser fixes, `5f939d4` after its
+   status). The conflicts: DESIGN_SYSTEM_2026 §10's component count, taken from the regenerator
+   (`regen_design_inventory.py --write`: 53 files — lane A's `lume_veil.html`, lane C's `photo.html`, lane B's
+   five), and `templates/pages/partials/_chapter_head.html`, both sides kept on one `h2` (lane B's `tile`, the mark
+   in its glyph tile; lane C's capitals class, its comment without the prescribed title). The lock was taken at
+   13:57, the family recorded on the branch (`00b2ab7`), then `git merge --no-ff` into design-v5 (`7788ca3`), no
+   conflict. The compliance guards are untouched: R-SC-1 (`core.special_category`,
+   `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED`) and the privacy publication guard are in no file of the lane's diff.
+2. **The finishing review** (`QA/v54/v515-b/REVIEW.md`, copied byte for byte from the evidence's `QA_FINISH1.md`,
+   head `72aa93f`): every major of round 3 fixed — the notes' inherited hairline gone below 60rem, the Arabic
+   French-fallback heads on the reading edge, «Le besoin» like with like (pairs share top and bottom, singles at
+   20rem), the empty state the page's opening statement in the doorway. Scores: Formwork 4, Multi-step engine and
+   review 4, Sign-up and password checklist 4, Console need 4, «Le besoin» 4, Receipt 4, Icon Visual System 4, Empty
+   state 4, 21st adaptation 4 — **minimum 4, no major**. Its m-1 (the branch behind design-v5) is this merge.
+   Recorded, not built by the steward: m-2, the formwork on `/entreprises/` stops 112 px short of the container's
+   end edge at ≥ 75rem (lane B's); the Arabic public form's field labels still French where the catalogue has no
+   entry (lane D); in the content pages' grammar guard (red on design-v5 before the merge) the formwork adds its own
+   lines — the raised panel's shadow and corners at rest (the V5.15 design, which the W3-F2 guard predates: the
+   Director's to rule) and two 12 px texts in Arabic (`form-field__optional` at 1440, the steps head's tile word at
+   390: lane B's).
+3. **Ownership.** The id rule already admits `v515-b` (`v5<nn>-<lane>`); its comment, `OUTSIDE_THE_WAVES` and the id
+   rule's test name it. The manifest's family `v515-b` (wave 0, after `v515-c`): whole files what it created
+   (`_formwork.css`, `_steps.css`, `_glyph.css`, `_receipt.css`, `steps.js`, `steps-review.js`, the core sheets,
+   `form_steps.html`, `formwork_side.html`, `_steps_rail.html`, `_steps_msgs.html`, `_required.html`,
+   `test_forms_v515_b.py`, its NOTES), slices what it changed in shared files (the forms, `ile_forms`, the icons
+   registry and sprite, the field component, the enquiry and sign-up templates, the guards that follow).
+   `check_ownership.py v515-b 7f2a02d --head 72aa93f`: **PASS** (16 inside, 38 slice, 9 generated); `--validate`:
+   coherent, 41 families.
+4. **Build and catalogue.** `npm run build` on the merged tree: dist identical to the committed one; after the one
+   CSS fix below, `core/forms.css` only (5 496 B gzip, ≤ 6 KiB). `scripts/i18n_audit.py --sync` added lane B's 14
+   msgids and dropped the two it left unused («%%(n)s résultats.», «Il reste %%(n)s caractères.», now script words);
+   translated in it/en/ar — EN/AR provisional, Arabic reviewed, in the catalogue's own terms (الاحتياج, المنسق, the
+   formal plural; Italian impersonal, «fabbisogno», «referente»); this closes lane B's request to lane D. `--compile`:
+   3 649 msgids, 100 % in it/en/ar/fr, no error. No locked text touched; nothing machine-translated.
+5. **The tests.** On the merged design-v5, database lanes `test_ile_v5_l8b` (browser) and `test_ile_v5_l8b2`,
+   `-p no:randomly`: the lane's test files, test_design_docs, test_design_preview, the bundle-currency tests, the
+   static pipeline and assets, test_css_tokens_exist, test_icons, tests/i18n, tests/security, tests/compliance,
+   tests/deployment, test_check_ownership, test_regen_design_inventory — **1 503 passed, 16 failed**, every failure
+   red on design-v5 `0f99af5` before the merge (below); the browser files of the pages the lane changed
+   (test_forms_v515_b, test_entrance_form_w2_b, test_rtl_browser, test_browser_w1_b, test_content_pages_browser_w3_f2,
+   test_dashboard_browser_w3_b; `CHROMIUM_LOCK` held only while a browser ran) — **76 passed, 26 failed**, the same
+   26 red on design-v5 `d76bebd`. Fixed (`2811165`), red after the merge and green on design-v5: one product fix —
+   the contact form said its title twice again («Votre message», then the legend «Vos coordonnées et votre
+   message»; the review's m6), since lane B's formwork section left `_lettura.css`'s chapter rule behind, so
+   `v5/_formwork.css` keeps the first group's legend off the screen after a formwork section's head; and the guards
+   that follow lane B's documented contract without weakening — the receipt's «no check mark» read in `<main>` (lane
+   A's language popover ticks the current language), the main.css ratchet at design-v5's 33 448 B (identical with
+   lane B), the review waited for (steps-review.js is fetched on the last step), a field's own glyph counted as the
+   form's structure (/entreprises/ first held lane C's composition and lane B's form: 7 > 6), the password help as
+   the live checklist, the busy plate to a tenth of a pixel, the empty state's disc as its glyph tile's ground, the
+   console's empty state on the start edge at the reading measure with no surface (M3's intent). **Pre-existing on
+   design-v5, not fixed here:** the dashboards' first-viewport and bridge tests (22: lane A's `c-rise` at load), the
+   Arabic fit (2) and trademark tests, the content pages' grammar test, test_routing's ungated count (4: 23 < 25),
+   `_fronte.css` (`--spine-end` undefined, a physical property: 2), the ten `test_service_pages_w3_f2` cases (lane
+   B's NOTES §8). `manage.py check` clean; `makemigrations --check`: no changes.
+6. **The preview.** 8780 on `v515/b` with the acceptance launcher (`servers/acceptance/run_8780.py`; the previous log
+   kept as `srv8780.log.prev-v515-b`); `ile_v5` migrated if a migration was pending. The checks (the four languages'
+   homes, lane B's pages in fr and ar, the hub with the tag on its strip, the nine personas' homes in fr and ar, the
+   log without traceback) are the steward's report,
+   `C:/tmp/ile_v5_council/.work/v515f-b-merge/verify_8780_v515b.json`.
+7. **Release gate — unchanged.** PRODUCTION_READY still needs PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE and
+   PRODUCTION_CONFIG_COMPLETE. No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** V5.15 §26: a family merges once it is at least 4/5 with no major; lane B reached it in the finishing round.
+The suites that went red only when the lanes met are the steward's; what was red before the merge stays with its
+owner, recorded here.
+
+**Source.** The owner's V5.15; DECISIONS §15–§16, §10.0; `QA/v515/b/NOTES.md`; `QA/v54/v515-b/REVIEW.md` (copied
+byte for byte from `C:/tmp/ile_v5_council/evidence/v515/b/QA_FINISH1.md`).
+
+
+## DL54-174 · 29 October 2026 · Steward, the v515-d merge: V5.15 W3 lane D (platform refinement, institution/university)
+
+**Decisions** (the steward's, at the merge of `v515-d` into design-v5 on 29 October 2026 — the owner's V5.15
+(`V5_15_PREMIUM_VISUAL_REMEDIATION_CREATIVE_OVERRIDE.md`, the bar of §26: ≥ 4/5 per family, no major), the
+Director's DECISIONS §15–§16 and §10.0, with V5.12, V5.13 and V5.17; label `v515f-d-merge`).
+
+1. **The merge.** No earlier attempt had landed anything for lane D (no `v515-d` commit on design-v5, no tag
+   `v515/d`). design-v5's HEAD `9e65841` (after the v515-b merge's status) was already in the branch (`b7aef0b`,
+   the lane's finishing round), so no merge into the branch was needed. `DESIGN_V5_MERGE_LOCK` taken at 15:35, the
+   family recorded on the branch (`f3ebd30`), then `git merge --no-ff` into design-v5 (`08b9853`), no conflict. The
+   compliance guards are untouched by the lane: R-SC-1 (`core.special_category`, `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED`)
+   and the privacy publication guard are in no file of its diff; the steward's catalogue step below changes only how
+   R-SC-1's three sentences are served (gettext), never the switch, the closed pieces or the refusal.
+2. **The finishing review** (`QA/v54/v515-d/REVIEW.md`, copied byte for byte from the evidence's `QA_FINISH1.md`,
+   head `7f1afc9`): the F2 review's major M-1 fixed — in Arabic the seal's audience glyph stands in its seal (0.0–0.5
+   px from the ring's centre, not mirrored) on the university, institution and company dashboards, the company's
+   stray gold mark gone. Scores: atrium 4, dashboards and lattice 4, motion 4, Institution/University (Q7) 4,
+   coverage 4, terminology 4 — **minimum 4, no major**. Recorded, not built by the steward (the Director's or another
+   lane's): m-5, the locked «ESPACE RÉSERVÉ» h1 and the person-facing lead in French on the it/en/ar company and
+   fresh-person dashboards (`p3.reserved.*`, locked: Director §9); the it/en rail label equal to its one item
+   (Director §9); the Mon compte / 2FA atrium heads (lane B's files: the Director's assignment); which empty state
+   governs the platform registers, lane D's calm panel or lane B's surfaceless statement (Director and lane B — the
+   lane's resolution in w3-b's `test_dashboard_browser_w3_b.py` keeps both rules, lane B's untouched for
+   `.empty-state`; **confirmed by the steward** as the merge's resolution); the Circular Progress · 24462 provenance
+   row (lane A's `COMPONENT_PROVENANCE.md`).
+3. **The gradients rule — left red, for the Director.** `test_design_docs::test_conforming_app_stylesheets_use_only_design_tokens`
+   finds eleven `gradient(` in `apps/portal/static/portal/v5/_platform.css` (the atrium's wash, the grid's and the
+   figure's edge masks, the band, the spotlight, the NowPanel's edge): V5.15's brief, accepted by three reviews,
+   against DS 2026 §2.1's rule (no gradient in an app sheet). Neither way out is the steward's: moving them to
+   `:root` tokens would resolve `var(--atrium-wash)` and the space tints at the root, not on the atrium (a visual
+   change no review measured), and the «non conforme» list needs a gap of its own in the register. The guard is not
+   weakened; the test stays red on design-v5 until the Director rules (tokens in a `static/css/v5/` sheet, lane A, or
+   the sheet declared non conforming with its §2.1 row and gap).
+4. **Ownership.** The id rule already admits `v515-d` (`v5<nn>-<lane>`); its comment, `OUTSIDE_THE_WAVES` and the id
+   rule's test name it. The manifest's family `v515-d` (wave 0, after `v515-b`), base `9e65841` — design-v5 at the
+   merge, already in the branch, so the diff is the lane's own: whole files what it created (`_platform.css`,
+   `platform.css`, `platform.js`, `templatetags/atrium.py`, `atrium_art.html`, `atrium_eyebrow.html`,
+   `calm_art.html`, `test_platform_v515_d.py`, `test_platform_browser_v515_d.py`, its NOTES), slices what it changed in
+   shared files (the console, Academy, Guichet and case-file templates, `portal/services.py`, the catalogues, DS 2026,
+   I18N_RTL and the guards that follow, among them w1-b's `test_icons.py` floor, w3-b's dashboard tests and w3-d's
+   journey tests — the lane's NOTES §Ownership, confirmed). `check_ownership.py v515-d 9e65841 --head 7f1afc9`:
+   **PASS** (10 inside, 48 slice, 2 generated); `--validate`: coherent, 42 families.
+5. **Build and catalogue.** `npm run build` on the merged tree: dist identical to the committed one
+   (`portal/platform.css` 25.6 KB min, page-only; `js/dist/platform.js`). `scripts/i18n_audit.py --sync`: lane D adds
+   no msgid (its Guichet lead's split was already translated in it/en/ar, kept). As lane D's catalogue pass, the
+   steward took in the three R-SC-1 guidance sentences v517-p3 asked for (`QA/v517-p3/NOTES.md`): G-FREE, G-UPLOAD and
+   the closed piece — `core.special_category` serves them through `gettext_lazy` (the French text is the msgid), the
+   it/en/ar msgstr are lane P3's own renderings, kept in the module as the reference the tests read (EN/AR
+   provisional, Arabic reviewed: the formal plural, «الشباك الرقمي» as in the catalogue). `--compile`: 3 653 msgids,
+   100 % in it/en/ar/fr, no error. No locked text touched; nothing machine-translated (`0368ba4`;
+   test_special_category_v517 + tests/compliance: 131 passed).
+6. **The tests.** On the merged design-v5, database lanes `test_ile_v5_l8d` and `test_ile_v5_l8d_br` (browser),
+   `-p no:randomly`. Non-browser — the lane's test files (`test_platform_v515_d`, `test_held_file`, `test_views`,
+   `test_dashboard_w3_b`, `test_icons`, `test_journey_w3_d`), test_design_docs, test_design_preview, the bundle-currency
+   tests, the static pipeline and assets, tests/i18n's RTL-static, catalogue and UI-translation files, tests/security,
+   tests/deployment, test_check_ownership, test_special_category_v517 (tests/compliance separately, green):
+   **1 244 passed, 5 failed** — the gradients rule (3 above); `_fronte.css`'s physical property (pre-existing, DL54-173);
+   `test_views::test_requests_empty_state`, `test_views::test_pathways_empty_state_links_to_orientation_start` and
+   `test_journey_w3_d::test_one_rail_drawing_and_one_passage_drawing_never_a_third` (lane C's `_compose.css` passage),
+   red on design-v5 `9e65841` and on the lane's head `7f1afc9` alike (measured on a detached worktree, then removed).
+   Browser — the files of the pages the lane changed (`CHROMIUM_LOCK` held only while a browser ran, two sessions of
+   5 and 7 minutes, plus one comparison run): `test_platform_browser_v515_d.py` **26 passed**;
+   `test_dashboard_browser_w3_b`, `test_documents_browser_w3_c`, `test_drawer_browser_w3_c`, `test_journey_browser_w3_d`:
+   **56 passed, 28 failed** — the 22 of `test_dashboard_browser_w3_b` are design-v5's pre-existing set (18 × lane A's
+   `c-rise` at load in the first-viewport tests, 4 × the bridge's register order now that an organisation has its own
+   dashboard: DL54-173, the review's observation 4); the six of `test_journey_browser_w3_d` (the rail on threshold A, the phone's card and disclosure, «Mon parcours»'s head, fr and ar) are red identically on design-v5 `9e65841` before the merge (measured on a detached worktree under the lock, then removed). Nothing was red only because the lanes met, so the
+   steward fixed nothing. `manage.py check` clean; `makemigrations --check`: no changes.
+7. **The preview.** 8780 on `v515/d` with the acceptance launcher (`servers/acceptance/run_8780.py`; the previous log
+   kept as `srv8780.log.prev-v515-d`); lane D's request (its NOTES, §16): the organisations' own page «Mon
+   organisation» added to the institution's and the university's pages on the persona strip, the bridge row named
+   «Tableau de bord» (the launcher backed up first as `run_8780.py.bak-v515-d`; runtime only, no repository file). The
+   checks (the four languages' homes, the hub with the tag on its strip, the nine personas' homes in fr and ar, the
+   organisations' pages, the log without traceback) are the steward's report,
+   `C:/tmp/ile_v5_council/.work/v515f-d-merge/verify_8780_v515d.json`.
+8. **Release gate — unchanged.** PRODUCTION_READY still needs PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE and
+   PRODUCTION_CONFIG_COMPLETE. No push, no public tag, nothing on `main`, nothing deployed.
+
+**Why.** V5.15 §26: a family merges once it is at least 4/5 with no major; lane D reached it in the finishing round.
+The suites that went red only when the lanes met are the steward's; what was red before the merge stays with its
+owner, recorded here; a rule the lane's design contradicts is the Director's to decide, not the steward's to bend.
+
+**Source.** The owner's V5.15; DECISIONS §15–§16, §10.0; `QA/v515/d/NOTES.md`; `QA/v517-p3/NOTES.md`;
+`QA/v54/v515-d/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v515/d/QA_FINISH1.md`).
+
+
+## DL54-175 · 29 October 2026 · Steward, the v518 stabilisation merge: V5.18 §2, lanes A–D
+
+**Decisions** (the steward's, at the merge of `v518-a`, `v518-b`, `v518-c` and `v518-d` into design-v5 on 29 October
+2026 — the owner's V5.18 (`V5_18_FINAL_VISUAL_ACCEPTANCE_GATE.md`, §2: «Do not use stabilisation as an excuse for
+another broad redesign»), with V5.15, V5.12 and V5.17, the Director's DECISIONS §10.0; label `v518-merge`).
+
+1. **The merges.** `DESIGN_V5_MERGE_LOCK` taken at 20:28. Every branch started from design-v5 `238dc1c`. In order
+   a → b → c → d: design-v5 merged into the branch, the family recorded on the branch, `git merge --no-ff` into
+   design-v5. No production file conflicted. Four conflicts, all in test files where two lanes had fixed the same T3
+   guard, resolved as the integrated review measured them: `test_dashboard_browser_w3_b.py` (a×b, b×d) keeps lane B's
+   `MOVING_JS` and settle filter — lane D's `RISEN_JS`, redundant once lane A's rises fill backwards, is dropped, its
+   institution bridge order and lume-in wait kept; `apps/pages/tests/test_browser.py` (a×c, the tiles' «nothing
+   loops») keeps lane C's form; `test_browser_w3_f1.py` (a×c, the three corners) keeps lane A's composed opacity and
+   lane C's `.lume-veil` skip. Crossings confirmed as the lanes declared them: lanes A, B and D in w3-b's
+   `test_dashboard_browser_w3_b.py` (DL54-174's crossing; both empty-state rules kept, register by register), lanes A
+   and C in w3-f1's and w2-d's tests, lane B in lane D's `templates/portal/documents.html` and its account column's
+   `c-rise` written in `_conto-console.css` (fill `backwards`, the refix).
+2. **The integrated review** (`QA/v54/v518/REVIEW.md`, copied byte for byte from the evidence's
+   `INTEGRATED_REVIEW.md`): every finding the lanes claimed measured fixed in the integrated tree; verdict
+   FIXES_REQUIRED for two steward actions, both done here (3 and 4). Its polish items 1, 2, 3 and 5 were closed by
+   the lanes' refixes before this merge (the Arabic Parcours CTA inside 375 × 667 and the via title above its button,
+   lane C; the account column's fill, lane B; the case step chip on one line, lane D); item 4 by the resolution above.
+3. **Blocker 1 — the catalogue pass.** `scripts/i18n_audit.py --sync`: 22 msgids of `templates/mfa/index.html` in
+   it/en/ar/fr — lane B's six 2FA step sentences (its NOTES' renderings, verbatim) and the 16 allauth msgids the
+   override now draws from the project's catalogue (the steward's renderings: Italian «Lei», Arabic formal and
+   number-neutral where a count is shown, English sentence case; not allauth's own Arabic, which carries a broken
+   placeholder). `--compile`: 3 675 msgids, 100 % in it/en/ar/fr, no error. Nothing machine-translated, no locked text.
+4. **Blocker 2 — the preview's data.** `servers/acceptance/fix_preview_text_v518d.py` (lane D's, outside the
+   repository; it accepts only 127.0.0.1:5439/ile_v5 and matches only the two exact old values): dry run 3 + 1 rows,
+   `--apply` in one transaction — the three NeedEvent notes (pk 2, 4, 6) now the seed's sentences
+   (`DEMO_TRANSITION_NOTES`), the diploma's description «Diplôme ou titre de formation»; a second run finds 0.
+5. **Ownership.** The id rule already admits `v518-<lane>`; its comment, `OUTSIDE_THE_WAVES` and the id rule's test
+   name the four. Families `v518-a` … `v518-d` (wave 0, each after the previous, `v518-a` after `v515-d`), each with
+   design-v5 at its merge as base: whole files what the lane created, slices what it changed.
+   `check_ownership.py` PASS for each (a: 1 inside, 17 slice, 10 generated; b: 5 / 12 / 3; c: 1 / 6 / 1; d: 2 / 24 /
+   1); `--validate`: coherent, 46 families.
+6. **Build.** `npm run build` on the merged tree: the dist is identical to the committed one. `manage.py check`
+   clean; `makemigrations --check`: no changes.
+7. **The tests.** On the merged design-v5, database lanes `test_ile_v5_l8m` and `test_ile_v5_l8m_br` (browser), `-p no:randomly`. Non-browser — every test file the four lanes touched (`test_entrance_w2_b`, `test_loader_rules`, `test_loader_w1_d`, `test_lume_v512_a`, `test_o14_lint`, `test_cms_nav`, `test_frontispiece_v515_c`, `apps/portal` `test_views`, `test_nav_sheet_w2_c2`, `test_terminology_v512_d`), tests/i18n (the catalogues and routing), test_design_docs, test_design_preview, the bundle-currency test, the static pipeline, test_icons, test_check_ownership, tests/security, tests/compliance, tests/deployment, `test_dashboard_w3_b`, `test_platform_v515_d`, `test_account_shell_v512_b` and `apps/accounts`, `apps/documents`, `apps/companies`, `apps/cases`: **2 252 passed, 3 skipped, 1 failed** — `test_o14_lint::test_the_one_check_of_the_templates_is_the_persons_own_choice`, red on design-v5 before the merge for lane A's `templates/partials/header.html` `check` (the review's table; lane A's to seat or replace). `test_catalogues`: 53 passed (the four red cases of the review closed by 3). `test_design_docs` green (m-6: the grounds in `_platform-grounds.css`). Browser (`CHROMIUM_LOCK` label `v518-merge`, two sessions of 18 and 10 minutes): `test_dashboard_browser_w3_b`, `test_browser_w3_f1`, `apps/pages` `test_browser`, `test_platform_browser_v515_d` **105 passed** (the 18 c-rise and 4 bridge-order failures of DL54-174 gone); `test_content_pages_browser_w3_f2`, `test_entrance_w2_b`, `test_loader_w1_d`, `test_lume_v512_a`, `test_account_shell_v512_b`, `test_service_pages_browser_w3_f2`, `test_browser_w1_b` **65 passed, 1 failed** — `test_every_content_page_holds_the_grammar_in_both_directions`, the formwork pages' corner set (12/6/8/4/6.4 px on contact, recueil, collaboration), lane B's V5.15 design left for the Director (DL54-173), unchanged by this pass. Nothing was red only because the lanes met.
+8. **Left open (not the steward's).** The review's polish 6 — `RO-187264`, the preview company's registration
+   number (`apps/designpreview/preview_data.py`, v512-d W1's deliberate «plausible format», its NOTES l. 89), has the
+   shape of a Rovigo REA number; replacing it reverses that wave's decision and ile_v5's data, for the Director.
+   Polish 7 (the Arabic Institutions panel line), 8 (sector labels in French on en/ar: data) and 10 (information) stay
+   with their owners. The Director's rulings of DL54-173/174 stand (the formwork pages' corners; which empty state
+   governs the registers).
+9. **The preview.** 8780 on `v518/stabilisation` with the acceptance launcher (`servers/acceptance/run_8780.py`; the
+   previous log kept as `srv8780.log.prev-v518`); the checks are the steward's report,
+   `C:/tmp/ile_v5_council/.work/v518-merge/verify_8780_v518.json`.
+10. **Release gate — unchanged.** V5.18 §11: no main, no v2.0.0, no GitHub Release, nothing deployed until the owner
+    says PRODUCT ACCEPTED. No push, no public tag.
+
+**Why.** V5.18 §2: the stabilisation fixes the integrated candidate, nothing broader; the two blockers were catalogue
+and data actions the review assigned to the steward. What was red before the merge stays with its owner, recorded.
+
+**Source.** The owner's V5.18; DECISIONS §10.0; `QA/v518/a|b|c|d/NOTES.md`; `QA/v54/v518/REVIEW.md` (copied byte for
+byte from `C:/tmp/ile_v5_council/evidence/v518/INTEGRATED_REVIEW.md`).
+
+
+## DL54-176 · 29 October 2026 · Steward, the v519-k merge: V5.19, the owner-confirmed contact channels
+
+**Decisions** (the steward's, at the merge of `v519-k` into design-v5 on 29 October 2026 — the owner's V5.19
+(`V5_19_CONTACT_INFORMATION_OWNER_CONFIRMED.md`, part of the V5.18 final stabilisation), the Director's DECISIONS
+§10.0: lane K; the footer is lane D's and the contact page lane C's, edited as recorded slices by the owner's direct
+order; label `v519-k-merge`).
+
+1. **The values and their one place.** Numero Verde «800 642 015», `tel:800642015`; WhatsApp: the owner-confirmed
+   WhatsApp number (configured outside the repository, V5.19/V5.20), `https://wa.me/` followed by its digits (and its
+   `tel:` form, exposed, not drawn). Held in the existing `SiteSettings`
+   singleton (`freephone_number`, `whatsapp_number`, migration `core.0003`, defaults from `settings.ILE`), formatted
+   by `apps/core/contact.py`, exposed as `site.channels` by the context processor; no template writes a number
+   (tested). Surfaces: the contact page's channels chapter, the footer, the phone menu sheet below 80rem; the
+   Organization node's `telephone` (no new schema type). `+39 0000 000000` in `companies_demo.py` is the fictional
+   preview company's and stays (V5.19 §14). WhatsApp is Lucide `message-circle` (ISC) beside the word «WhatsApp»:
+   no brand glyph (Meta's guidelines; a CC0 copy carries no trademark licence), recorded in `ICON_LICENSES.md`. No
+   locked or prescribed text carries a contact line.
+2. **The review** (`QA/v54/v519-k/REVIEW.md`, copied byte for byte from the evidence's `v519-k/REVIEW.md`; at V5.20
+   its three sentences quoting the WhatsApp number redacted, `QA/v520/wa/NOTES.md`): APPROVE,
+   four minors and one note, on `e4b5ff7`. Fixed on the branch before the merge (`e60cfa3`): m-1, the Arabic
+   accessible name of the WhatsApp link now says «عبر WhatsApp», so it carries the visible word (WCAG 2.5.3;
+   `NAMES["ar"]` in the test follows); m-2, the back-office help texts and validator messages give neutral examples
+   («800 xxx xxx», «+39 3xx xxx xxxx») in `models.py`, migration 0003 and the four catalogues, so the real numbers live
+   only in their canonical place. m-3 accepted as the review did: `test_forms_v515_b`'s main.css gzip ceiling
+   33 448 → 33 600 B (+124 B for the footer and sheet channels; lane A's recorded V5.15 ceiling) — a ratchet
+   loosened, recorded here. m-4 (the migration's data step, redundant after AddField) and m-5 (the sheet's freephone
+   button shows the number only, its accessible name the whole meaning) need nothing.
+3. **The merge.** `DESIGN_V5_MERGE_LOCK` taken at 23:04. design-v5 was at `900372a`, the v518 steward merge's
+   record, already inside the branch: the v518 stabilisation merge landed before this one, so there was no conflict
+   and nothing of the v518 lanes to resolve. `git merge --no-ff` into design-v5. Migration `core.0003` applied on
+   ile_v5 from v5-live (the SiteSettings row holds the two confirmed values).
+4. **Ownership.** The id rule admits `v5<nn>-k` (the contact lane K; its comment, `OUTSIDE_THE_WAVES` and the id
+   rule's test name it; `v519-j` and `v519-kk` refused). Family `v519-k` (wave 0, after `v518-d`), base `900372a`,
+   head `e60cfa3`: 6 whole files (what it created), 31 slices (among them lane D's footer, lane C's contact page,
+   lane A's sheet and `chrome.css`), 2 generated. `check_ownership.py` PASS; `--validate`: coherent, 47 families.
+5. **Catalogues and checks.** `scripts/i18n_audit.py --sync --compile` on the merged tree: +0 −0 in it/en/ar/fr, the
+   `.mo` files byte-identical to the committed ones, audit OK. `manage.py check` clean; `makemigrations --check`: no
+   changes.
+6. **The tests.** On the merged design-v5, database lane `test_ile_v5_l8`, `-p no:randomly`. Non-browser — the lane's
+   files (`test_contact_channels_v519`, `test_institutional`, `test_seo`, `apps/core`, `tests/i18n/test_ui_translations`,
+   `test_forms_v515_b`, `test_icons`, `test_interior_w3_f1`, `test_layout`), `test_design_docs`, `test_design_preview`,
+   tests/security, tests/compliance, tests/deployment, `test_check_ownership`: **1 108 passed, 4 skipped (the gated `/xx/faq/` of this database), 1 failed** — the confidential-material guard of item 8 (before the steward fix of item 7, 2 failed). `manage.py check` and `makemigrations --check` clean. Browser (`CHROMIUM_LOCK` label
+   `v519-k-merge`): not run before this record — the lock was held by the V5.18 green-suite groups C and P from 23:06 to past midnight; the steward runs `test_browser_contact_channels_v519.py` and the contact and footer browser files after this record, and writes their result in `C:/tmp/ile_v5_council/workflows_v515/v519_merged.NOTE`.
+7. **The compliance guard, fixed by the steward.** `tests/compliance/test_public_pages.py::
+   test_no_external_scripts_fonts_or_images` counted every absolute `href`, so the owner's wa.me link (V5.19 §7)
+   failed it on every page. The guard now admits exactly the WhatsApp channel's URL from `core.contact` and only
+   inside an `<a>`; a script, stylesheet, font or image from anywhere else still fails it.
+8. **Open — the confidential-material guard (a blocker before any push).** With the private sentinel table
+   configured (`ILE_CONFIDENTIAL_SENTINELS`), `tests/security/test_confidential_material.py::
+   test_no_sentinel_text_in_tracked_files` fails: the WhatsApp number, in its international form without spaces,
+   is a row of that table («private mobile number»), so the five tracked files that write it in that form
+   (`apps/core/contact.py`, migration `core.0003`, `config/settings/base.py`, `apps/pages/tests/test_contact_channels_v519.py`,
+   `QA/v519-k/NOTES.md`) are offenders. The lane's review did not run tests/security with the table. The steward did
+   not weaken the guard, did not touch the private table and did not respell the number to slip past the pattern:
+   whether the owner-confirmed WhatsApp number may stand in the public repository (the owner updating his private
+   table), or must live only in the database and the environment, is the owner's decision. This record, the
+   changelog and live_status write the number only in its spaced display form. design-v5 is not to be pushed while
+   this test is red.
+9. **The preview.** The v518 stabilisation steward had already merged, so 8780 is not restarted here: the next
+   steward restarts it on design-v5 with the acceptance launcher. ile_v5 already holds the migration.
+10. **Release gate — unchanged.** V5.18 §11: no main, no v2.0.0, no GitHub Release, nothing deployed until the owner
+    says PRODUCT ACCEPTED. No push, no public tag.
+
+**Why.** V5.19 §3: one canonical place, every public surface reading it; §8 and WCAG 2.5.3 for m-1; m-2 keeps the
+real numbers out of copies that would age. Nothing broader than the owner's order.
+
+**Source.** The owner's V5.19; DECISIONS §10.0; `QA/v519-k/NOTES.md`; `QA/v54/v519-k/REVIEW.md` (copied byte for byte
+from `C:/tmp/ile_v5_council/evidence/v519-k/REVIEW.md`).
+
+
+## DL54-177 · 29 October 2026 · V5.18 green suite, group N (v518g-n): the non-browser half green, ruff green
+
+Number confirmed by the steward at the v518g merge (label `v518g-merge`, 30 October 2026): no other group of
+the green suite took 177.
+
+**Context.** The full regression of `v518/stabilisation` (`evidence/v518/REGRESSION_NONBROWSER.md`): 22 non-browser
+failures and 69 `ruff check` errors. V5.12 §22: the technical tests stay green. Group N was given all 22 failures
+and the lint. Branch `v518g-n` from design-v5 900372a, with design-v5 fd7368e merged in (lane K's v519-k, DL54-176).
+
+**Decided.**
+
+1. **Defects fixed at the root.**
+   - *The 400 and the 500 queried the database* (3 tests). The chain was `_way_on.html` → `{% safe_url 'forum:index' %}`
+     → `core.links.public_url` → `gates.forum_public` → `current_event()`. `core.links.without_database()` is a
+     context variable. While it is set, any named gate counts as closed and is not read. `core.views._self_sufficient`
+     renders the two pages inside it. The rule «never link to a page that answers 404» still holds: the Forum link is
+     left out of those two pages instead of being read. Every gate reads a table (a flag row, a live edition, a live
+     article), so a closed gate is the only answer that needs no database.
+   - *main.css 7 B over its ratchet* (2 tests). The fix keeps lane A's P8 and P11 and removes dead shared CSS,
+     with no visible loss:
+     - `.section--process` (retired from the home; `test_home` asserts it is gone);
+     - `.hide-mobile` (no producer anywhere);
+     - `.chapter--night`, `.section--verso` and `.plate--verso` from the two night-context `:is()` lists in
+       `v5/tokens.css` (the verso left with its last page, per layout.css's own comment).
+
+     The bundle went from 33 455 B to 33 406 B gzip -9, under the ceiling of 33 448. After lane K's merge it is
+     33 530 B, under lane K's recorded 33 600. No ratchet change was needed.
+   - *`_fronte.css`: 27 literal colours* (1 test). The guard is unchanged.
+     - Shadows `rgba(7, 18, 38, α)` became `color-mix(in srgb, var(--p-notte-950) α%, transparent)`. That is the
+       same colour.
+     - The two black shadows became the same night ink. tokens.css's shadow rule says «never black»; on a night
+       ground the difference cannot be seen.
+     - The mask stops `#000` became `var(--p-notte-950)`. A mask reads alpha only.
+     - `--fronte-grid` became `--line-night-soft` at 50 %, which is .07, the same value.
+     - `--fronte-light` became `--p-oro-300` at 14 %.
+     - The print ink became `--p-inchiostro-900`.
+
+     No token was added to tokens.css, so main.css does not move.
+2. **Ruling (the Director, DECISIONS §15 lane A; o14 lint).** The tick beside the active language in the
+   letterhead's language popover (v515-a W3, cb252091) marks the person's own choice in a menu
+   (`aria-current="true"`). That is the option card's meaning, not a state. It is seated in
+   `test_the_one_check_of_the_templates_is_the_persons_own_choice` and in `icons.CHECK_BEARING["check"]`. The test also
+   asserts that it is drawn once, and only on the active item. Replacing the glyph would have been a visual change
+   with no gain.
+3. **Stale tests updated with the same strength.** Each one cites the decision that changed the behaviour:
+   - the empty state's tile (V5.15 W3 lane B round 1, 9211d5fc): the full opening tag, `role="status"` included, in
+     faq, glossary and forum;
+   - allauth's invitation in the glossary's words (V5.12 lane D W2, DECISIONS §9, d6d5c6e5). The old needles matched
+     nothing, so the closed-gate test passed vacuously. It now tests again.
+   - the account pages in the console frame (V5.12 W2 lane B, DECISIONS «Lane B» acceptance 6). The test asserts the
+     console frame and that the public frame is absent. It also asserts the page's own words as its one heading and
+     the console trail's current crumb.
+   - the CLDR country select on «Ma situation» (DECISIONS §5.7, 751be04c): `autocomplete="country"`, one control;
+   - `static/css/v5/_compose.css` as a page modifier of the passage (DECISIONS §15 lane C, a7884261). The test's
+     «never a redrawing» check still runs over it.
+4. **ruff check: 69 → 0, plus lane K's 6 → 0.** C408, C416, UP031, UP033 and E741 are fixed. E501 is fixed by
+   wrapping. The touched files were formatted. No value changed: `tools/build_derivatives.py`'s module literals and
+   string constants were compared by AST before and after, and the only difference is the `%d` → f-string in one print.
+
+**Why.** V5.12 §22 says «technical tests remain green», and the V5.8 ruling says shared bundles ratchet down and
+quality is never cut. The guards were not loosened: each stale test asserts the new behaviour, which the owner
+approved. The two defects were in the product.
+
+**Source.** `docs/design-v5/QA/v518g/n/NOTES.md`; `evidence/v518/REGRESSION_NONBROWSER.md`; DECISIONS §5.7, §9, §15.
+
+
+## DL54-178 · 30 October 2026 · Director's rulings, V5.18 green suite, group P: the formwork's corners, the heads' raised surfaces
+
+(Numbered DL54-178 by the steward at the v518g merge, 30 October 2026, label `v518g-merge`; «DL54-G-P» on the
+branch before the merge.)
+
+**Decisions** (as the Director, per DECISIONS §15 — the owner's V5.15 override — and V5.18 / V5.12 §22 «technical
+tests remain green»; label `v518g-p`).
+
+1. **The formwork's corners (closes the guard DL54-173 left open).** The V5.15 Premium Forms formwork (lane B, scored
+   4, DL54-173) is ONE composed object with its own token-derived corner set: 12 px the frame and panel
+   (`--radius-xl`), 8 the consent box (`--radius-lg`), 6 the fields and step tiles (`--radius-md`), 4 the action
+   (`--radius-sm`), 999 the «optional» pill (`--radius-full`), 6.4 the 32 px glyph tile (0.2 × its side), 1 the 2 px
+   step bar's round ends. In `test_content_pages_browser_w3_f2`, corners inside `.formwork` must lie in exactly this
+   set (`FORMWORK_CORNERS`; a new value fails; a formwork page must draw its formwork); outside it, §1.3's three
+   corners with the targa apply unchanged.
+2. **Raised surfaces in a page head.** The head's photograph in its passe-partout (`[data-fronte] .ingresso__aside
+   .foto__img`, a 56 px drop) and the fraud page's notice standing as its head's panel on `--shadow-3`
+   (`[data-compose="notice"] .fronte-avviso .antifraud-panel`) are lane C's designed V5.15 head surfaces (DL54-172).
+   `test_orientation_browser_w3_f1` admits them BY NAME (`ADMITTED_RAISED`), as w3-f2's `V515_RAISED` already admits
+   `.foto__img` (V5.18 T3); SH-8 «no raised shadow at rest» stands for every other element.
+
+**Why.** Both guards predate a scored, merged, owner-mandated design. Removing the drop or flattening the formwork's
+set would be a visual redesign, which a green-suite step may not make. Pinning the designed set exactly, and
+admitting by name, keeps the guards as strict as before for anything new.
+
+**Source.** V5.15 §15; V5.18; DL54-172, DL54-173; `QA/v518g/p/NOTES.md`; the measures in
+`C:/tmp/ile_v5_council/.work/v518g-p/probe_formwork.json` and `probe_public.json`.
+
+
+## DL54-179 · 30 October 2026 · Steward, the v518g merge: V5.18's green suite, groups N, C and P
+
+**Decisions** (the steward's, at the merge of `v518g-n`, `v518g-c` and `v518g-p` into design-v5 on 30 October 2026 —
+the owner's V5.18 (`V5_18_FINAL_VISUAL_ACCEPTANCE_GATE.md`) and V5.12 §22 «technical tests remain green», the owner's
+V5.8 ruling «shared bundles ratchet down, never cut quality», the Director's DECISIONS §15; label `v518g-merge`).
+
+1. **Lane K first.** `workflows_v515/v519_merged.NOTE` was already present: lane K was merged (`fd7368e`, recorded at
+   `4817520`, DL54-176, tag v519/contact), so the three groups were merged on top of it. `DESIGN_V5_MERGE_LOCK` taken
+   at 00:37 with design-v5 at `4817520`.
+2. **The merges.** In order n → c → p: design-v5 merged into the branch, the family recorded on the branch,
+   `git merge --no-ff` into design-v5; each merge's tree is its branch's. No production file and no test file
+   conflicted: the groups' scopes did not cross (N the non-browser half and the lint, C the console family, P the
+   public and RTL family). The decision log conflicted twice, its index and its tail, resolved in number order:
+   group N's DL54-177 confirmed (no other group took it), group P's provisional «DL54-G-P» numbered **DL54-178**,
+   with its index row, in the group's notes and in the two guards that cite it (`FORMWORK_CORNERS`,
+   `ADMITTED_RAISED`). Group C needed no ruling.
+3. **Read before merging.** The slices' product changes, as the checker asks: `core.links.without_database()` and the
+   `with` around the 400/500 render in `core.views._self_sufficient` (N); the five removed shared selectors have no
+   producer in a template, a Python module, a script or a sheet (`.section--process`, `.hide-mobile`,
+   `.chapter--night`, `.section--verso`, `.plate--verso`; searched outside the tests); every literal colour of
+   `_fronte.css` became an equal token value (`--p-notte-950` is #071226 = rgb(7, 18, 38), `--p-oro-300` #dfc176,
+   `--line-night-soft` at 50 % = .07), the two black shadows becoming the night ink the one deliberate difference
+   (N); `_glyph.css:140` `both` → `backwards` (C); the trademark line's `dir="ltr" lang="en"` isolate in
+   `templates/pages/project.html` (P).
+4. **Ownership.** The id rule admits `v5<nn>g-<group>`, a group of a directive's green suite (n, c or p; its comment,
+   its message, `OUTSIDE_THE_WAVES` and the id rule's test name them; `v518g-a`, `v518g-nn`, `v518g`, `v518gg-n` and
+   `v518-n` refused). Families, wave 0, each with design-v5 at its merge as base: `v518g-n` (after `v519-k`; base
+   `4817520`, head `fc97f82`: 1 whole file, 34 slices, 2 generated), `v518g-c` (after `v518g-n`; base `474df55`, head
+   `ee782bc`: 1, 3, 3), `v518g-p` (after `v518g-c`; base `8bd7128`, head `74bdd35`: 1, 12, 0).
+   `check_ownership.py` PASS for each; `--validate`: coherent, 50 families.
+5. **Build, catalogues, checks.** `npm run build` after each merge and on the merged tree: the dist identical to the
+   committed one. `scripts/i18n_audit.py --sync --compile`: +0 −0, 3 688 msgids at 100 % in it/en/ar/fr, the `.mo`
+   files byte-identical, audit OK (no group added a msgid). `manage.py check` clean; `makemigrations --check`: no
+   changes; **`ruff check .`: all checks passed** — CI's Lint step, red at 69 errors on `v518/stabilisation`, is
+   green.
+6. **The main.css ratchet (V5.8).** The merged main.css is 33 530 B gzip -9 (Python's zlib 1.3.1, the deflate of
+   CI's zlib 1.3). Group N's dead shared CSS paid for lane K's channels, and groups C and P add nothing to the bundle,
+   so `test_forms_v515_b`'s two guards are re-seated from lane K's 33 600 to the measure, **33 530**: the shared bundle
+   ratchets down, as group N's notes left to the steward once the groups had merged. Lane A's V5.15 exception
+   ceiling of 33 600 (`test_lume_v515_a`, `test_motion_v512_a_w2`; DL54-170) is that exception's own bound and stays.
+7. **The tests** — on fresh clones of design-v5 at `2f95909`, and at `a071a9b` where said (no `.env`, the CI-style
+   environment of the regression: the CI placeholders, `ILE_CONFIDENTIAL_SENTINELS` unset, the dist touched),
+   `-p no:randomly --create-db`.
+      - **Non-browser** (`-m "not browser"`, 6 422 tests): a serial start on `test_ile_v5_l3`, which the machine's
+     load made too slow, then the remaining files in parallel parts, one pytest per lane (`test_ile_v5_l3`, `_l5`,
+     `_l6`, `_l7`): **6 392 passed, 8 skipped, 1 xfailed, 21 failed**. The 21 were one new failure, lane K's
+     integration, that no earlier run had covered: the apps' «no external resource» guards counted the owner's
+     WhatsApp link (`wa.me`, V5.19 §7), drawn by the footer and the phone's sheet, as an external resource —
+     `apps/ecosystem` `test_compliance` ×12 and one test each in `enquiries`, `faq`, `forum`, `glossary`, `living`,
+     `news`, `orientation`, `pages` (`test_home`) and `pathways`. Stale tests (V5.19 §7, DL54-176): `a071a9b` reads
+     each page through one helper, `tests.conftest.whatsapp_link_set_aside` — each `<a href>` to exactly
+     `core.contact`'s channel URL set aside; the same URL as a source, a srcset, a content or an action, and every
+     other external URL, still fail, as tests/compliance's guard has since DL54-176 item 7 — and leaves every
+     assertion unchanged. The ten files again, whole, at `a071a9b`: **205 passed**. The parts run at `2f95909` and
+     at `a071a9b` differ in those test files only; the product is the same. All 22 failures of the regression are
+     green.
+   - **Browser** (`-m browser`, lane `test_ile_v5_l4`, `CHROMIUM_LOCK` label `v518g-merge` from 00:57 to 03:15,
+     headless): **640 passed, 0 failed** (the regression: 594 passed, 41 failed), group P's guards of the heads'
+     raised surfaces among them, which read the computed shadows that group N's tokening now writes with
+     `color-mix()`.
+   - On this record, before the tag (CI-style clone): `test_design_docs`, `test_design_preview`,
+     `test_check_ownership`, tests/security and tests/compliance — green.
+8. **The confidential-material guard — the owner's decision, unchanged.** In the design-v5 worktree, with the
+   private sentinel table configured, `tests/security/test_confidential_material.py` is 16 passed, 1 failed:
+   `test_no_sentinel_text_in_tracked_files`, with exactly DL54-176's five files (`apps/core/contact.py`, migration
+   `core.0003`, `config/settings/base.py`, `apps/pages/tests/test_contact_channels_v519.py`, `QA/v519-k/NOTES.md`),
+   each matching the same row as at `4817520`: the merges added and hid nothing. Group N's wrapping of two of those
+   files left the number's form untouched. The steward did not weaken the guard, touch the private table or respell
+   the number. design-v5 is still not to be pushed while this test is red.
+9. **The decision documents.** `QA/v54/v518g/REGRESSION_NONBROWSER.md` and `REGRESSION_BROWSER.md`, copied byte
+   for byte from `C:/tmp/ile_v5_council/evidence/v518/`: the classification every group worked from (candidate
+   defect, stale test, ruling pending, each with its file and line).
+10. **Left open (not the steward's).** Group P's observation for the owner's review: on the Arabic home, opening the
+    phone menu moves the brand mark about 183 px to the left (the bar shows the mark alone, the sheet the whole Latin
+    wordmark from the same right edge); a design call for lane A, not changed, since a green-suite step makes no
+    redesign. `DESIGN_SYSTEM_V5.md:214` still quotes the historical night list with `.chapter--night` (group N's
+    notes). The integrated review's polish 1 (the Arabic Parcours CTA at 375 × 667) was already closed by lane C's
+    refix and is measured again by group P.
+11. **The preview.** 8780 restarted on `v518/green` with the acceptance launcher (`servers/acceptance/run_8780.py`;
+    v5-live checked out detached at the tag; ile_v5 needed no migration, `core.0003` was already applied; the
+    previous log kept as `srv8780.log.prev-v518g`); the checks are the steward's report,
+    `C:/tmp/ile_v5_council/.work/v518g-merge/verify_8780_v518g.json`.
+12. **Release gate — unchanged.** V5.18 §11: no main, no v2.0.0, no GitHub Release, nothing deployed until the owner
+    says PRODUCT ACCEPTED. No push, no public tag.
+
+**Why.** V5.12 §22: the technical tests stay green; V5.18: the green suite fixes what the regression found and
+nothing broader. The candidate defects were fixed in the product, the stale tests follow the owner-approved
+behaviour with the same strength, the two pending rulings were the Director's (DL54-177, DL54-178), and the shared
+bundle's ceiling follows its measure down.
+
+**Source.** The owner's V5.18 and V5.8; V5.12 §22; DECISIONS §15; `QA/v518g/n|c|p/NOTES.md`; DL54-177, DL54-178;
+`QA/v54/v518g/REGRESSION_NONBROWSER.md`, `REGRESSION_BROWSER.md` (copied byte for byte from
+`C:/tmp/ile_v5_council/evidence/v518/`).
+
+
+## DL54-180 · 30 October 2026 · Steward, the v520 merge: V5.20's final technical gate, lanes WA, CSS and FIXV
+
+**Decisions** (the steward's, at the merge of `v520-wa`, `v520-css` and `v520-fixv` into design-v5 on 30 October 2026 —
+the owner's V5.20 (`V5_20_FINAL_TECHNICAL_GATE_STRICT_TEST_RULE.md`: the strict test-update rule; the release blockers
+fixed in code), V5.19, V5.18 and V5.8; the strict test-change audit `QA/v54/v520/TEST_CHANGE_AUDIT.md`; label
+`v520-merge`). **Supersedes DL54-178** (both rulings) **and DL54-179 item 6.**
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 10:57 with design-v5 at `e2098dd` (`v518/green`). In
+   order wa → css → fixv: design-v5 merged into the branch, the family recorded on the branch, `git merge --no-ff`
+   into design-v5; each merge's tree is its branch's. No file conflicted. The one file two lanes changed,
+   `apps/pages/tests/test_contact_channels_v519.py`'s obsolete-number guard, keeps both changes — the configured
+   fictional channel (WA) and the FAQ opened for its case with its status asserted instead of skipped (FIXV): the
+   stronger form of each. The generated bundles were disjoint (CSS: `main.css` and the home's `hero.css`; FIXV: ten
+   page-only bundles).
+2. **The steward's three files.** Lane WA had redacted the owner-confirmed WhatsApp number from `live_status.json`,
+   `CHANGELOG_V54.md` and `OWNERSHIP_V54.json` on the orchestrator's order; the three are the steward's. Read first —
+   v519-k's title and its 37 slice descriptions, one changelog line, one live-status title: the redaction and nothing
+   else (every glob, family and top-level key unchanged) — then taken over byte for byte by the steward on design-v5
+   (`332fe6e`) before design-v5 was merged into the branch, so the lane's own diff holds no steward-only file and
+   `check_ownership.py v520-wa` passes. Lane WA also redacted DL54-176 in place — its index row, item 1, and item
+   2's note on the review copy — under the confidential-material policy: an edit in place made for the number
+   alone, which an append-only log otherwise never takes.
+3. **Read before merging** (the slices' product changes, as the checker asks). WA: `settings.ILE["WHATSAPP_NUMBER"]`
+   reads `ILE_WHATSAPP_NUMBER` with a blank default; `SiteSettings.whatsapp_number`'s default is the callable
+   `core.contact.default_whatsapp_number` (so `makemigrations` never writes a machine's number); migration `core.0003`
+   edited in place — never published — to AddField `""`, a data step that copies the environment's value into a blank
+   row only, and an AlterField to the callable (`sqlmigrate`: a no-op); the contact chapter titled by the channels it
+   holds, from existing msgids. CSS: 207 declarations a later declaration of the same selector and context always
+   beats, 24 declarations of 19 custom properties nothing reads, 2 rules no page can match; the two RTL rules
+   (`hero.css` keeps the Arabic home's sheet head to the bar's mark alone; `chrome.css` anchors the head's lock-up
+   left-to-right). FIXV: `accounts.shell._page_label`'s two labels (existing msgids); the page-only sheets' finite fills
+   `backwards`, their final states moved into their rules; the formwork's corners on the scale; `--fronte-print`
+   single-sourced; the glyph tile's under-shade on `--shadow-1-dark`. Every custom property FIXV's sheets read still
+   exists after CSS's cut (24 names, checked against the merged `main.css` or their own sheet).
+4. **Ownership.** The id rule admits `v5<nn>-wa`, `v5<nn>-css` and `v5<nn>-fixv`, the lanes of a directive's final
+   technical gate (its comment, its message, `OUTSIDE_THE_WAVES` and the id rule's test name them; `v520-w`,
+   `v520-waa`, `v520-cs`, `v520-fix`, `v520-fixvv`, `v520-audit`, `v520-merge`, `v520wa` and `v520g-wa` refused).
+   Families, wave 0, each with design-v5 at its merge as base: `v520-wa` (after `v518g-p`; base `332fe6e`, head
+   `87b9a01`: 1 whole file, 18 slices), `v520-css` (after `v520-wa`; base `e8cc8e5`, head `c359ff5`: 2, 16, 2
+   generated), `v520-fixv` (after `v520-css`; base `4c61328`, head `d54bb48`: 1, 21, 10 generated).
+   `check_ownership.py` PASS for each; `--validate`: coherent, 53 families.
+5. **Build, catalogues, checks** on the merged tree. `npm run build`, twice: the dist identical to the committed one —
+   reproducible, nothing to commit; `main.css` **32 718 B** gzip -9 (was 33 530; the base line 33 448).
+   `scripts/i18n_audit.py --sync --compile`: +0 −0, 3 688 msgids at 100 % in it/en/ar/fr, the `.mo` files
+   byte-identical (no lane added a msgid). `manage.py check`: no issues. `makemigrations --check --dry-run`: no changes,
+   with `ILE_WHATSAPP_NUMBER` unset and with it set (a fictional value). `ruff check .`: all checks passed.
+6. **The confidential-material guard: green.** With `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read
+   in-process only, no value printed or written), `tests/security/test_confidential_material.py`: **17 passed, 0
+   failed, 0 skipped** — DL54-179 item 8's red is closed: no tracked file holds the number in any form. The local
+   history still holds it in lane K's commits (never published); the local history is never pushed, publication goes
+   by a snapshot of a tree.
+7. **The test-change audit, answered.** V1, V2: the four `main.css` ceilings (`test_forms_v515_b` ×2,
+   `test_motion_v512_a_w2`, `test_lume_v515_a`) at the measure, 32 718 (CSS). V3, V4, V6–V9, V11, V12: the product
+   fixed and the guards restored, as at `238dc1c` or stronger (FIXV). V5: the brand mark holds in both directions
+   (CSS). V10, V13: the configured channel's link set aside as a link only, no test writes the number (WA).
+   **DL54-178 is superseded**: the formwork has no corner set of its own any more (it holds the scale, 12 · 6 · 999),
+   and the heads' admitted surfaces are pinned to their tokens, at most one raised per first screen. **DL54-179 item 6
+   is superseded**: lane A's exception ceiling of 33 600 is gone, all four guards read 32 718. DL54-177 (the o14 tick
+   on the active language) stands (the audit's O64); its [RT] wording now names the language menu
+   (`ICON_SEMANTIC_MAP.md`).
+8. **The tests on the merged tree** (`89634a6`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, one pytest per database lane):
+   - **Non-browser**, 60 paths — every module the three lanes changed or that reads a changed sheet, bundle,
+     document or guard; the ownership, design-document, budget, token, security, compliance, deployment and i18n
+     checks; the nine apps' «no external resource» guards — in two parts on two lanes. The 42 frontend, budget,
+     token, ownership and intake modules on `test_ile_v5_m20`: **2 119 passed, 1 xfailed** (the shim's finish line,
+     an older recorded debt), **1 skipped**, 0 failed — the run was stopped once the part was complete, and
+     pytest-django reorders the tests, so the skip's position does not name it; every file of the part that can skip
+     was run again alone, 0 skipped (the design documents, the ownership and the shim: 150 passed and the xfail; the
+     design preview, the intake and the frontispiece: 401 passed; the six that launch Chromium, under the lock: 106
+     passed). `tests/security`, `tests/compliance`, `tests/deployment`, `apps/pages/tests`, `tests/i18n` and the
+     rest on `test_ile_v5_m20d`: **1 261 passed, 1 skipped** (the environment-bound WhatsApp test, its reason
+     printed), 0 failed; the private-table test among the passed.
+   - **The configured number** (`ILE_WHATSAPP_NUMBER` set in-process to the preview's value, read from v5-live's
+     untracked `.env`, never printed; `test_ile_v5_m20c`): `test_contact_channels_v519`, `test_institutional` and the
+     confidential-material guard — **117 passed, 0 skipped**: the environment-bound test runs and passes.
+   - **Browser** (`-m browser`, `test_ile_v5_m20b`, `CHROMIUM_LOCK` label `v520-merge`, headless): the files the
+     three lanes changed — `test_browser_w2_c2`, `test_rtl_browser_w2_c2`, `test_header_fits_the_narrowest_viewport`,
+     `test_browser_contact_channels_v519`, `test_dashboard_browser_w3_b`, `test_orientation_browser_w3_f1` (11:17 to
+     11:27): **81 passed**; `test_content_pages_browser_w3_f2`, `apps/pages` `test_browser`, `test_browser_w3_f1`
+     (11:27 to 11:37): **61 passed**; 0 failed.
+   - The full suites, both halves, on a fresh copy are the final gate's (V5.20), after this merge.
+9. **Skips.** In a CI-style run two remain, each genuinely environment-bound and printing its reason: the private
+   sentinel table (`ILE_CONFIDENTIAL_SENTINELS`) and the configured WhatsApp number (`ILE_WHATSAPP_NUMBER`). The 3
+   intake «no rule in force» cases and the 4 `/xx/faq/` cases now run and assert.
+10. **Left open (not the steward's).** The owner's A/B answer on the number: option B stands until he answers (under A,
+    the setting's literal and the tests' constants come back; nothing else depends on B). Production: the owner sets
+    `ILE_WHATSAPP_NUMBER` in the server's environment file or types the number in the back office (checklist A-30);
+    until then the site shows the Numero Verde alone. The lanes' own notes: CSS's 70 documented custom properties that
+    nothing reads, V1's `tokens.css` and the documented V1 utilities kept (each needs a design-document amendment), and
+    the 36 console-only rules not moved (a route-specific split would change the cascade and weigh more); FIXV's fills
+    in `main.css`'s sources (the phone sheet's entrance, the loader's deliberate hold, `lume-in` / `lume-out`) and the
+    other heads' print drops and the step tile's gold ring outside the shadow hierarchy (the Director's to decide); the
+    two older xfails (the showcase's captions, the shim's finish line).
+11. **The preview.** 8780 restarted on `v520/gate` with the acceptance launcher (`servers/acceptance/run_8780.py`;
+    v5-live checked out detached at the tag, its untracked `.env` keeping `ILE_WHATSAPP_NUMBER` — present, and
+    ignored by git; ile_v5 needs no migration at this tree, `migrate --check` clean, `core.0003` already applied; the
+    previous log kept as `srv8780.log.prev-v520`); the checks — the four homes, the hub and its strip, the contact
+    page in four languages with both channels, the footer, the Arabic home's phone menu, the nine personas' homes,
+    the server log — are the steward's reports, `C:/tmp/ile_v5_council/.work/v520-merge/verify_8780_v520.json` and
+    `probe_ar_menu.json`.
+12. **Release gate — unchanged.** V5.20: «Do NOT freeze the candidate yet. Do NOT promote main. Do NOT create v2.0.0.
+    Do NOT deploy.» No push, no public tag. The final gate's fresh-copy run (both halves, lint, checks, migrations, the
+    build) follows this merge.
+
+**Why.** V5.20: a test changes only when an approved decision conflicts with it, and the real defects — the shared
+stylesheet over budget, the animations still applied after they end, the colours and shadows outside the tokens, the
+unexpected skips — are fixed in code. The three lanes did that; the merge keeps every guard at the strength the lanes
+left it, and the shared bundle's ceiling follows its measure down.
+
+**Source.** The owner's V5.20, V5.19, V5.18 and V5.8; `QA/v54/v520/TEST_CHANGE_AUDIT.md` (copied byte for byte from
+`C:/tmp/ile_v5_council/evidence/v520/`); `QA/v520/wa|css|fixv/NOTES.md`; DL54-176 … DL54-179.
+
+
+## DL54-181 · 1 November 2026 · Steward, the v522-m merge: V5.22 lane M, Imagery V2
+
+**Decisions** (the steward's, at the merge of `v522-m` into design-v5 on 31 October 2026 and its record on 1 November
+— the owner's V5.22 (`V5_22_EDITORIAL_PATTERN_SECTION_COMPOSITION_REMEDIATION.md` §14: more image presence, never a
+repeated image), the Director's SECTION_SYSTEM_V2 §7.3, §8, §9.2, §9.7 and §9.9, with V5.20's strict test-update
+rule and the standing constraints of V5.12–V5.21; label `v522-m-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 01:36 with design-v5 at `e4c6619`. Lane M merges
+   before lane S: the build workflow's first stage merges S and M each as soon as it passes its review, and M passed
+   first (S is in its improvement round). SECTION_SYSTEM_V2 §9.7's order S → M is a dependency order — the page lanes
+   H, P1 and P2 build on both — and the two lanes share no file (S's 115 paths and M's 131 paths since `8c0941c`: none in
+   common, checked), so S's merge takes design-v5 with M in it without a conflict. design-v5 merged into the branch
+   (`83c0f7f`, no conflict: design-v5 had added only SECTION_SYSTEM_V2 §11.1), the family recorded on the branch
+   (`248a20c`), the catalogue carried on the branch (`5168fec`, item 5), then `git merge --no-ff` into design-v5
+   (`fbfa4af`): the merge commit's tree holds the catalogue, so no commit of design-v5 lacks the seven new alt texts.
+   **The first attempt was cut** by the account's usage limit at 02:58 on 31 October, after `fbfa4af` and its first
+   test sessions on that tree (non-browser 1 952 passed and 1 skipped; browser 22 and 41 passed) and before the
+   records; the orchestrator removed its stale lock. The lock was retaken at 14:13 on 1 November with design-v5
+   still at `fbfa4af` — nothing had landed in between — for the steps left: the checks and the targeted tests again
+   on the merged tree at today's date (item 8), the confidential-material guard, the records, the tag and the
+   preview. The three commits of 31 October stand as they are; nothing was redone.
+2. **The review** (`QA/v54/v522-m/REVIEW.md`, copied byte for byte from the evidence's `QA_ROUND2.md`, head
+   `12976c3`): **passed in round 2**, no major. Round 1's two majors (M1, the strict test rule: a WebP allowance and
+   `universities.exchange` taken out of the V5.12 budget; M2, the marble panel cut on the gesture) and its five minors
+   are fixed, each verified by the reviewer — the unmodified V5.12 logic fails on exactly the 19 items of the three §7.3
+   kinds that contradict it, each held under its own ceiling in both formats with no allowance. The frame set scores
+   **4.0** against the bar of 4. The one page lane M visibly changes, Universités, scores composition 2.5, motion 2.5,
+   imagery 3.5, interaction 2, institutional quality 3.5, coherence 4 in fr, it, en and ar: its composition, motion and
+   interaction are lane P1's U1 «la filiera» (§3.8), which lane M may not build (§9.7). Of the review's four minors, n3
+   (the catalogue sync) is done by this merge (item 5); n1, n2 and n4 are not merge-caused and are recorded, not fixed
+   by the steward (item 10).
+3. **Read before merging** (the slices' product changes, as the checker asks). `apps/pages/imagery.py`: seven new
+   slots, all lazy (the stone `role="ground"`, decorative with `alt=""` and its credit; the four family frames
+   `treatment="select"`; the volumes with a 48–64 rem `mid` ratio); named variants (`pannello` for the two pilot halves,
+   `campata` for the ecosystem) adopted by `{% photo … variant=… %}`, and a per-use `sizes=`; `rendering()` (an unknown
+   variant raises, so a template typo fails loudly); `picture()`'s bands (wide, then the mid band when the slot has one,
+   then narrow); `_box()` reading the AVIF when a WebP width is not built; `universities.exchange`'s new alt and its exact
+   seven-step `sizes`. Every default rendering is unchanged, so nothing moves on today's pages but the campus frame.
+   `apps/pages/templatetags/pages_imagery.py`: the tag's `variant` and `sizes` arguments and the development-only
+   `foto_scheda` (escaped by `format_html`). `tools/build_derivatives.py`: the 2:3, 4:3 and 16:9 ratios, per-recipe
+   widths, each §7.3 kind's ceiling binding every AVIF **and** WebP width with no allowance (a WebP width that cannot fit
+   at q 40 is not built and is listed), `desat`, the cool tone, the `median` redaction, `keep` (a re-crop leaves the
+   published files byte-identical). `tests/compliance/test_imagery_v512.py`: the V5.12 assertions unchanged, two cited
+   exemption tables (`OWN_CEILING_V522`, `OWN_LADDER_V522`), each from the one assertion its §7.3 kind contradicts, a
+   guard that no V5.12 slot's own ratio is exempted, and the V5.22 invariants (16 new test functions, 26 cases). The test bench
+   (`templates/dev/designpreview/specimens/imagery.html`, `static/css/dev/specimen-imagery.css`) is a fixture of the
+   browser test, reachable by its URL only; `apps/designpreview/live.py` is not in the diff. `docs/IMAGE_LICENSES.md`
+   §3.4, `ASSET_USAGE_MATRIX.md` §11 and seven `PROVENANCE.json` files: a row per rendering, no photographer's name
+   copied outside the provenance and the caption (§8). **No preserved family is in the diff** (SECTION_SYSTEM_V2 §9.8:
+   the navbar, the mega menus, the mobile sheet and the footer, Lume, the premium forms, the contact channels'
+   architecture, the privacy and cookie pages, terminology, the organisation spaces, `base.html`, `tokens.css`,
+   `main.css`), and no compliance guard (R-SC-1, the privacy publication guard, the contact-channel and WhatsApp guards).
+4. **Ownership.** The id rule admits `v5<nn>-s`, `v5<nn>-m` and `v5<nn>-h`, the single-letter lanes of a directive's
+   composition remediation (its comment, `OUTSIDE_THE_WAVES` and the id rule's test name them; `v522-mm`, `v522-m1`,
+   `v522-sh`, `v522m`, `v522g-m`, `v522-merge`, `v522-director` and `v522-audit` refused). The page lanes are left to
+   their own merges: `p2` was already admitted (the privacy lanes' form), and `v516-p1` stays refused as the test has
+   it. The family `v522-m` (wave 0, after `v520-fixv`; base `e4c6619`, head `83c0f7f`): 110 whole files (the new frames,
+   `accueil/PROVENANCE.json`, the test bench and its sheet, `test_imagery_v522_m.py`, the notes) and 21 slices
+   (`imagery.py`, `pages_imagery.py`, `build_derivatives.py`, `test_imagery_v512.py`, six families' `PROVENANCE.json`,
+   the eight re-cut campus files, `IMAGE_LICENSES.md`, `ASSET_USAGE_MATRIX.md`, the specimens README).
+   `check_ownership.py v522-m e4c6619 --head 83c0f7f`: **PASS**; `--validate`: coherent, 54 families, 2 046 entries.
+5. **Build, catalogue, checks** on the merged tree. `npm run build`, twice: the dist identical to the committed one —
+   reproducible, nothing to commit (lane M changed no product stylesheet or script; its one sheet is development-only
+   and outside every bundle); `main.css` **32 718 B** gzip -9, unchanged. `scripts/i18n_audit.py --sync`: **+7 −1** in
+   it/en/ar/fr — the seven new alt texts in, the campus frame's V5.12 alt out (the round-0 alts of the two replaced
+   frames never reached the catalogue). The it/en/ar msgstr are the lane's professional renderings (`QA/v522/m/NOTES.md`
+   §6, §9.6), the msgids byte-identical to `imagery.py`; the Arabic reviewed by the steward (right to left, no Latin
+   run, no Arabic-Indic digit; أيادٍ, الملامِسات, the generic masculine for «personne»). `--compile`: 3 694 msgids, 100 % in
+   every language, the `.mo` files match their `.po`. No locked text touched; nothing machine-translated.
+   `manage.py check`: no issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and
+   with it set (a fictional value). `ruff check .` (ruff 0.16.8): all checks passed (`ruff format` would explode
+   `tests/test_check_ownership.py`'s grouped `OUTSIDE_THE_WAVES` set one name per line, as it would at the base; the
+   set keeps its style, and CI runs `ruff check`). The three ran again on 1 November on the same tree, CI-style,
+   with the same results.
+6. **The confidential-material guard: green.** With `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read
+   in-process only, no value printed or written), `tests/security/test_confidential_material.py` alone, CI-style, on
+   1 November: **17 passed, 0 failed, 0 skipped**; it passes again inside the non-browser run and the configured-number
+   run (item 8). The merge's 25 text files (of its 142 — 113 images and the four compiled catalogues besides) hold no
+   CR byte and the owner-confirmed number in no form (counted in-process, never printed).
+7. **The test changes, against V5.20's strict rule** (the merge itself changed none). The lane's:
+   `tests/compliance/test_imagery_v512.py` keeps `test_the_weights_hold_their_budget`'s V5.12 body and adds two tables,
+   each citing the one SECTION_SYSTEM_V2 §7.3 kind that contradicts one V5.12 assertion (`OWN_CEILING_V522`: the two
+   2:3 pilot panels and the ground's 4:5, from the limit only; `OWN_LADDER_V522`: the four family frames, from the
+   ladder only), every exempted file held under its own §7.3 ceiling in both formats with no allowance, a guard that no
+   V5.12 slot is exempted, and the V5.22 invariants — the reviewer ran the unmodified V5.12 logic on the files: it
+   fails on exactly those 19 items and on nothing else (all four V5.20 conditions met, the review's §1);
+   `tests/frontend/test_imagery_v522_m.py` is new. The steward's: `tests/test_check_ownership.py` (`248a20c`, +14 −1,
+   a comment line rewritten) adds `v522-m` to `OUTSIDE_THE_WAVES`, and three admitted ids and eight refused ones to the
+   id rule's table — no case removed or loosened, every older form as strict as before, after V5.22's lanes
+   (SECTION_SYSTEM_V2 §9).
+8. **The tests on the merged tree** (`fbfa4af`, all run again on 1 November; CI-style: the `.env` not read, CI's
+   placeholders, the private table configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases
+   on lane l8, one pytest at a time):
+   - **Non-browser**, 17 paths (14:20 to 15:17) — `tests/compliance` (the imagery budget and its exemptions, the
+     figure captions), `tests/security`, `tests/deployment`, `tests/i18n` (the catalogue +7 −1),
+     `tests/test_check_ownership.py`, the design-document, design-preview, bundle-currency, static-pipeline, icon,
+     frontispiece, interior and chapter-mark modules, `apps/pages/tests` (the registry and its tag),
+     `apps/ecosystem/tests` (Universités) and `apps/cms/tests/test_media_assets.py` (the licence register): **1 971
+     passed, 1 skipped**, 0 failed — the first attempt's set and the licence register's 19.
+   - **The configured number** (`ILE_WHATSAPP_NUMBER` set in-process to the preview's value, read from v5-live's
+     untracked `.env`, never printed; the log masked, with nothing to mask): `test_contact_channels_v519`,
+     `test_institutional` and the confidential-material guard — **117 passed, 0 skipped**: the environment-bound test
+     runs and passes.
+   - **Browser** (`-m browser`, headless, a Chromium lock slot per session, label `v522-m-merge`): session A (slot A,
+     15:21 to 15:29) — the lane's own `test_imagery_v522_m` (the bench and the real Universités page, drawn =
+     `sizes`), `test_browser_v515_c` (V5.15's imagery pass) and `apps/pages` `test_browser`: **50 passed**; session B
+     (slot A, 15:29 to 15:36) — `apps/ecosystem` `test_browser`, `test_browser_w3_f1` and
+     `test_content_pages_browser_w3_f2`, the pages whose frames the tag draws: **52 passed**; session C (slot B,
+     15:45 to 15:51) — `tests/i18n/test_rtl_browser.py` (the Arabic home and its two frames) and the design preview's
+     browser half: **40 passed**; 0 failed.
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css`
+     32 718 B gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files), the design
+     documents and the ownership checker; the tag is made only on green.
+   - The full suites, both halves, on a fresh copy belong to the next acceptance candidate's gate (V5.20; V5.22 §28),
+     after lanes S, H, P1, P2 and S-close.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`), which runs and passes where the number is configured (item 8). The
+   private-table test runs (the table configured). No xfail, no xpass. The non-browser run deselects its 111 browser
+   tests: 47 of them (`apps/pages`, `apps/ecosystem`) ran in sessions A and B, 40 (`tests/i18n/test_rtl_browser.py`,
+   the design preview's) in session C; the other 24 (`tests/i18n`'s entrance, navigation, overlay and W2-C2 right-to-
+   left files — the login, the navbar and the overlays, preserved families lane M does not touch) are the final gate's.
+10. **Left open (not the steward's).**
+    - **n1** (lane M's files under §9.7, so a lane-M follow-up before lane H draws the variant): the `campata` variant's
+      narrow 3:2 draws the V5.12 ladder up to 1 600 w (AVIF 49 206 B, WebP 70 778 B, over §7.3's 45 KB body ceiling),
+      which a 768 px tablet at DPR 2 takes. Not a regression — today's default rendering serves the same files — and
+      on no page until H draws S7. The review's fix: an optional width ladder on `Variant`, `campata`'s narrow 3:2
+      capped at 1 200 w, and `"3x2": 45 KB` in `CEILINGS_V522[("home.ecosystem", "campata")]`.
+    - **n2** (after S merges): `FAMILY_SIZES` restated from lane S's final route board (below 64 rem the lanes stand
+      48 px in from the trunk; from 64 rem the head is 3fr of the lane less its gap), and P1 asserting drawn = `sizes`
+      with `tests/frontend/test_imagery_v522_m.py::PROBE` on /xx/parcours/.
+    - **n4, a request to lane S, filed here:** S's `templates/components/sezioni/panorama.html` calls `{% photo %}`
+      without `variant` or `sizes`, so through it the home pilot would draw the default 4:5 halves, not the 2:3 panels.
+      S passes `variant` and `sizes` through to the tag, or H draws S4 with the tag in its own partial; `pannello`'s
+      `sizes` follows whichever geometry ships (the notes' `max(34vw, 54.67vh)` assumes ~30 % panels; S's
+      `.panorama--coppia` draws two ~50 % columns).
+    - Lane M's other requests stand (`QA/v522/m/NOTES.md` §7, §9.10). To S: render `treatment == "select"` (black and
+      white at rest, colour on the lane's state, hover or focus; colour under reduced motion) and keep `role ==
+      "ground"` unmasked (S's `photo.html` writes `data-reveal="mask"` on every non-eager frame). To H: the marble at
+      `object-position: 60% 50%` and the cedar at 40–50 %, physical in both directions — a photograph never mirrors —
+      and drawn = `sizes` asserted for the panels, the stone and `campata`. To P1: the probe on Parcours, Formation and
+      Universités; the campus destination drawn smaller at 768, where the gesture reads as a thumbs-up;
+      `training.before`'s tone against `training.after`. To P2: drawn = `sizes` for `project.volumes` (112vw from
+      48 rem under M22).
+    - The Director's (the review's notes): Le projet will show books twice (`project.hall`'s shelves and
+      `project.volumes`); the campus frame has lost its academic cue under §8.2's no-redaction rule. Candidates for a
+      later imagery pass: `pathways.family.work` (it reads as a retail warehouse), the `campata` 4:3 (a generic meeting
+      table), `universities.exchange`, and `project.volumes` (AVIF q 31 at 1 920 w).
+11. **The preview.** 8780 restarted on `v522/m` with the acceptance launcher (`servers/acceptance/run_8780.py`;
+    v5-live checked out detached at the tag, its untracked `.env` keeping `ILE_WHATSAPP_NUMBER` — present, and
+    ignored by git; ile_v5 needs no migration at this tree, `migrate --check` clean — lane M added none; the previous
+    log kept as `srv8780.log.prev-v522-m`); the checks — the four homes, the hub and its strip with the tag,
+    Universités in four languages (the re-cut files, the exact `sizes`, lazy, the alt in each language, never
+    mirrored in Arabic; headed at 1440 and 390 and under reduced motion), the imagery test bench by its URL and not in
+    the index, the contact page in four languages with both channels, the footer, the nine personas' homes, the server
+    log — are the steward's reports, `C:/tmp/ile_v5_council/.work/v522-m-merge/verify_8780_v522m.json` and
+    `headed_8780_v522m.json`.
+12. **Release gate — unchanged.** V5.22 §28: «Do not promote main. Do not create v2.0.0. Do not create a release. Do
+    not deploy.» No push, no public tag; `v522/m` is a local annotated tag. The next acceptance candidate needs lanes
+    S, H, P1, P2 and S-close.
+
+**Why.** V5.22 §14 asks for more image presence below the fold, never a repeated image; SECTION_SYSTEM_V2 §8 gives
+lane M the frames the V2 compositions need, and §9.2 lets it run beside S from the first day. The lane met its
+acceptance in round 2 with the V5.12 guards back at full strength; the merge carries its strings into the catalogue so
+that design-v5 stays green, and leaves every page untouched until the lane that recomposes it places its frames.
+
+**Source.** The owner's V5.22, V5.20 and V5.12–V5.21; SECTION_SYSTEM_V2 §7.3, §8, §9; `QA/v522/m/NOTES.md`;
+`QA/v54/v522-m/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v522/m/QA_ROUND2.md`); DL54-180.
+
+
+## DL54-182 · 1 November 2026 · Steward, the v522-s merge: V5.22 lane S, Section System V2 foundation + Icon Treatment V2 + Motion Density V2
+
+**Decisions** (the steward's, at the merge of `v522-s` into design-v5 on 1 November 2026 — the owner's V5.22
+(`V5_22_EDITORIAL_PATTERN_SECTION_COMPOSITION_REMEDIATION.md` §5–§8 and §15–§18: an internal composition library,
+larger integrated icons in contextual colour, purposeful icon motion, motion with variety), the Director's
+SECTION_SYSTEM_V2 §2, §4, §5, §7, §9.1, §9.7, §9.8 and §9.9, with V5.20's strict test-update rule and the standing
+constraints of V5.12–V5.21; label `v522-s-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 18:27 with design-v5 at `d8552b9` (DL54-181's record).
+   Lane S merges second: the build workflow's first stage merges S and M each as soon as it passes its review, and M
+   passed first (DL54-181). SECTION_SYSTEM_V2 §9.7's order S → M is a dependency order — the page lanes H, P1 and P2
+   build on both — and the two lanes share no file, so S takes design-v5 with M in it without a conflict. The lane had
+   already merged design-v5 into its branch twice, both without a conflict (`d4c9d8a`: lane M's merge `fbfa4af`;
+   `d9551f4`: the record `d8552b9`); nothing had landed on design-v5 since, so no further merge into the branch was
+   needed, and `d8552b9...d9551f4` is the lane's own diff (118 paths). The family recorded on the branch (`6121f79`,
+   item 4), the catalogue pass a no-op (item 5), then `git merge --no-ff` into design-v5 (`aadd91d`).
+2. **The review** (`QA/v54/v522-s/REVIEW.md`, copied byte for byte from the evidence's `QA_ROUND2.md`, head
+   `d9551f4`, 1 November 16:45–18:30): **passed in round 2**, 0 major, 6 minor, 3 nits. Round 1's three majors are
+   fixed, each re-measured with the reviewer's own probes — M1 (a tablist owning list items, axe critical/serious): 0
+   violations of any impact in 276 axe runs (192 fixture runs at four widths in fr and ar, 24 after interaction and
+   resizing, 60 on real pages); M2 («la linea V2»'s connectors scroll-linked at rest, the origin seal off its row, no
+   carriage return): every connector at scale 1, unclipped and driven by nothing in 48 probes at the eight widths, the
+   rows of four joined by a real carriage return, mirrored in Arabic; M3 (the head's call pushed below the first
+   screen by the seal): 374 rows before and after, the call never leaves the first screen (Entreprises 1280 × 720:
+   695 → 699 / 720; Parcours 1024 × 768: 744 → 748 / 768), the title +2 to +4 px from 48 rem, +12 px on a phone's door
+   head with the call 34 px or more inside the first screen (an accepted, recorded deviation), short phones (≤ 760 px
+   tall) a typographic folio. Of round 1's 13 minors, 11 are fixed; m10 (EN-3's retired briefcase) is the Director's,
+   m13 (LCP/CLS/INP on 8782) the Performance Lead's — the reviewer's proxy shows CLS 0 and an LCP delta that matches the
+   added bytes. The reviewer's 716 targeted and browser tests passed, none loosened. **Scores** (§26: composition,
+   motion, imagery, interaction, institutional quality, coherence; the bodies are unchanged, so the audits' numbers
+   stand, and §9.9's bar for lane S — no page lower on any dimension than at `fdd6e34` — is met): Parcours 3 · 2.5 ·
+   2.5 · 3 · 3.5 · 3.5 (the seal, the route line, the rings and the arrival on one axis in four languages at four
+   widths); the pathway sheet 2 · 2 · 1.5 · 2 · 3.5 · 3.5; Entreprises 3.5 · 3 · 3.5 · 3.5 · 4 · 3.5 (M22's drift live
+   from 48 rem); Institutions 3 · 3 · 3.5 · 2.5 · 3.5 · 3.5; Universités et formation 2.5 · 2.5 · 3.5 · 2 · 3.5 · 4
+   (`ile-sapere` ends the school-icon mismatch); Formation 3 · 3 · 3.5 · 2 · 3.5 · 4; Attention aux fraudes 3 · 2.5 · 2
+   · 2 · 4 · 4; Diplômes et titres 2 · 2.5 · 3 · 2 · 3.5 · 4; Contact 2.5 · 2.5 · 3 · 3 · 3.5 · 4 (channels untouched);
+   Réseau 2.5 · 2 · 2.5 · 2 · 3.5 · 3; AGAMI 2 · 2 · 2 · 1.5 · 3 · 3; FAQ 3 · 3 · 2 · 3.5 · 3.5 · 4; Le projet 2.5 · 2
+   · 2.5 · 2 · 3.5 · 3.5 (M21's light verified under a real mouse); the home 2.5 · 2.5 · 2.5 · 2 · 3.5 · 3 (2.5 in
+   Arabic), pixel-identical to `fdd6e34` (0 differing pixels in fr and ar at 1440 and 390, reduced motion; the home is
+   lane H's). The library on its 24 fixtures — what H, P1 and P2 will compose — 4 · 4 · 3.5 · 4 · 4 · 3.5 from 48 rem
+   and 3.5 · 4 · 3.5 · 4 · 4 · 3.5 below. The pages' own V5.22 targets (§10) are the composing lanes'.
+3. **Read before merging** (the slices' product changes, as the checker asks; every source file lane S's under §9.7).
+   - `static/js/src/rise.js`: the trigger contract — a `[data-sec]` section below the fold gets
+     `data-sec-state="wait"`, then `"in"` at 25 % of the section (of the viewport for a tall one) through one
+     IntersectionObserver, and is released on focus, hash change and print; nothing is written when calm (reduced
+     motion, `.rm`, keyboard input) — and the dynamic loader of the split chunks `sezioni/{indice,mappa,flow,spia,
+     racconto}.js`, loaded only when a `[data-sec-js]` asks; the chapter singles stay for the pages not yet migrated.
+   - `static/css/v5/_reveal.css`: the verbs (`data-verb`), the `.sez-seq` stagger and the seal's draw, every entrance
+     fill `backwards`, holds only under `no-preference`, no new duration or curve token; the M22 specificity fix (the
+     Entreprises band's image addressed at (0,4,0), its picture unmasked, the drift live from 48 rem); M21's pointer
+     light `--accent-mark` at 10 % on paper (gold stays on the night door plate); the panorama's motion (a photograph's
+     motion has one home: `_photo.css` animates nothing, as `apps/ecosystem/tests/test_compliance.py` requires).
+   - `static/css/v5/_photo.css` (the panorama's layout and the «select» grade) and `templates/components/photo.html`
+     (`data-grade="select"` for a slot whose treatment is `select`; every other rendering unchanged).
+   - `static/css/v5/_fronte.css`, `apps/pages/static/pages/css/fronte.css` (one import: `_sigillo.css`) and
+     `templates/pages/partials/_ingresso.html`: the folio's T1 seal through `folio_mark` (core.icons.FOLIO), the keys
+     `seal` and `compact` (the compact band P1 and P2 give the two form pages and the term page); the 18 px disc gone.
+   - `templates/pages/partials/_chapter_head.html` (no glyph above a title; `chapter_concept` and `tile` still
+     accepted and drawing nothing — no caller passes `tile`) and `_section_header.html` (the home's head names its
+     class, so the home draws exactly the marks it drew until lane H recomposes it).
+   - `templates/components/stepper.html` (`size="large"`: «la linea V2», whose `_linea-v2.css` is its own partial
+     after the passage, so the questionnaire's sheet stays under its ceiling).
+   - `apps/core/icons.py` (the third sprite in `SPRITES` / `SPRITE_OF`; `MARKS`, `MARK`, `FOLIO`, `PILOT_STATION`,
+     `COMPANY_MOMENT`, `RECIPIENT_SEAT`, `AUTHORITY_SEAT`, `SHEET_STEP`, `DIPLOMA_STEP`, `HOW_STEP`; the chapter
+     registry's misuse of the reserved area's key above public links ended — `CHAPTER["reserved-area"]` and
+     `CHAPTER_OF["space-links-title"]` removed, which only the retired bare mark read) and
+     `apps/core/templatetags/ile_core.py` (`{% chapter_mark %}` without a class draws nothing; the filters `mark_of`
+     and `folio_mark`).
+   - `scripts/build_icons.py` (the thirteen marks' inline partials and the sprite `static/img/icons-marks.svg`) and
+     `static/icons/src/` (seven Lucide 1.48.0 additions inside w1-b's glob — `calendar-sync`, `file-badge`,
+     `hand-helping`, `landmark`, `layers`, `map-pinned`, `waypoints` —, each with its licence row in
+     `ICON_LICENSES.md`).
+   - `apps/accounts/static/accounts/entrance.css`: one rule (§9.8 exception 1), the login eyebrow key at 20 px in
+     `--text-1` — no gold glyph on paper.
+   - The documents: `COMPONENT_PROVENANCE.md` (the V5.22 rows, the 21st.dev references taken and refused),
+     `DESIGN_SYSTEM_V5.md` §14, `ICON_LICENSES.md`, `docs/design/DESIGN_SYSTEM_2026.md` (the regenerated icon list).
+   - **No preserved family is in the diff** (SECTION_SYSTEM_V2 §9.8: the navbar, the mega menus, the mobile sheet and
+     the footer, Lume, the premium forms — their glyph tiles pass their class and are unchanged —, the contact
+     channels' architecture, the privacy and cookie pages, terminology, the organisation spaces, `base.html`,
+     `tokens.css`, `main.css`; the two named exceptions used are the login key and the folio seals), and no compliance
+     guard (R-SC-1, the privacy publication guard, the contact-channel and WhatsApp guards). `main.css`'s dist is
+     byte-identical to `d8552b9`. No new npm package.
+4. **Ownership.** The id rule already admits `v5<nn>-s` (`248a20c`, the v522-m merge, admitted `v522-s` with `v522-m`
+   and `v522-h`); `OUTSIDE_THE_WAVES` and its comment now name the lane (`tests/test_check_ownership.py`, +3 −2, the
+   comment's last line rewrapped; no case removed or loosened). The family `v522-s` (wave 0, after `v522-m`; base
+   `d8552b9`, head `d9551f4`): 71 whole files (the fifteen pattern and shell partials of `components/sezioni/` and the
+   thirteen marks' inline partials, the pattern sheets, `_sezioni.css`, `_sigillo.css` and `_linea-v2.css`, the
+   thirteen mark sources and the sprite, the five split modules, the locked-copy helpers and their filters, the
+   fixtures' bundle `core/sezioni.css`, the fixtures, the four new test modules and the notes), 33 slices (`rise.js`,
+   `_reveal.css`, `_photo.css`, `_fronte.css`, `fronte.css`, `photo.html`, `stepper.html`, the three head partials,
+   `icons.py`, `ile_core.py`, `build_icons.py`, `entrance.css`, the seven Lucide sources, the four documents and the
+   eight updated test modules) and 14 generated files (the dists of `entrance.css`, `core/reveal.css`,
+   `core/sezioni.css`, `fronte.css` and the four family sheets, `rise.js` and its five chunks).
+   `check_ownership.py v522-s d8552b9 --head d9551f4`: **PASS**; `--validate`: coherent, 55 families, 2 150 entries.
+5. **Build, catalogue, checks** on the merged tree. `npm run build`, twice: the dist identical to the committed one —
+   reproducible, nothing to commit. Measured (gzip -9): `main.css` **32 718 B**, byte-identical; `core/reveal.css`
+   3 549 / 6 144; `fronte.css` 6 141 / 6 144; `pages.css` 4 732, `interior.css` 4 148, `ecosystem.css` 5 421,
+   `pathways.css` 5 577 (12 288 · 11 264 · 11 264 · 11 264); `accounts/entrance.css` 4 845; `rise.js` 1 327 / 1 536;
+   `icons-marks.svg` 8 439 B raw / 16 384. `scripts/i18n_audit.py --sync`: **+0 −0** in it/en/ar/fr — lane S prints no
+   new string (the protection's link and the stepper's «Étape %(n)s sur %(total)s» are existing msgids; the fixtures'
+   samples live in the tests); `--compile`: the four `.mo` files byte-identical to the committed ones, 3 694 msgids,
+   100 % in every language. No locked text touched; nothing machine-translated. `manage.py check`: no issues.
+   `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and with a fictional value.
+   `ruff check .` (ruff 0.16.8): all checks passed (the review's n9: `ruff format` would reformat the lane's four own
+   test modules; CI runs `ruff check`).
+6. **The confidential-material guard: green.** With `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read
+   in-process only, no value printed or written), `tests/security/test_confidential_material.py` alone, CI-style, on
+   the merged tree (18:34–18:35): **17 passed, 0 failed, 0 skipped**; it passes again inside the non-browser run and
+   the configured-number run (item 8). The merge's 120 files — all text: no image, no compiled catalogue — hold no CR
+   byte and the owner-confirmed number in no form (counted in-process, never printed).
+7. **The test changes, against V5.20's strict rule** (the merge itself changed none of the lane's tests). The lane's
+   eight updated modules — `test_icons`, `test_chapter_marks`, `test_motion_v512_a_w2`, `test_interior_w3_f1`,
+   `test_frontispiece_v515_c`, `test_css_tokens_exist`, `test_design_docs`, `test_journey_w3_d` — each cite V5.22's
+   SECTION_SYSTEM_V2 in place: the old expectation contradicts an explicitly approved decision (§0 item 3, the bare
+   24 px mark above a title retired; §4's tiers, the third sprite and the register exemption; §5.1's verbs; §7.1's
+   per-sheet and per-page ceilings in place of a blanket 6 KB; §9.7's «S never removes a legacy behaviour a
+   not-yet-migrated page still uses»), the new behaviour is implemented, and the invariant is the same or stronger
+   (`test_chapter_marks` restores and asserts the home's V5.12 expectation, `HOME_EXPECTED`; the reviewer's §7.4: no
+   assertion loosened, no skip added, no timeout raised). `test_sezioni_v522_s.py`, `test_sezioni_browser_v522_s.py`,
+   `test_seal_heads_browser_v522_s.py`, `apps/cms/tests/test_locked_split.py` and the fixtures are new. The steward's:
+   `tests/test_check_ownership.py` (`6121f79`) names `v522-s` in `OUTSIDE_THE_WAVES` and its comment.
+8. **The tests on the merged tree** (`aadd91d`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l8, one pytest at a time):
+   - **Non-browser**, 46 paths (18:38 to 19:21) — `tests/security`, `tests/compliance`, `tests/deployment`,
+     `tests/i18n`, `tests/test_check_ownership.py`, `tests/test_regen_design_inventory.py`; the `tests/frontend` modules
+     that read a file lane S changed, found by a search of the test sources (the console's `c-rise` matches left out;
+     the chapter marks, the icons, the motion, the interior, the frontispiece, the tokens, the journey, the design
+     documents and preview, the showcase, the bundle currency, the static assets and pipeline, the SVG well-formedness,
+     the O14 lint, the loader rules, the state chips, the terminology, the entrance and its form, the console shell's
+     registry, the orientation, the RM-flag parity, the questionnaire's sheet, the lane's own); `apps/cms/tests`,
+     `apps/pages/tests`, `apps/ecosystem/tests`, `apps/pathways/tests`, `apps/glossary/tests`, `apps/faq/tests`,
+     `apps/community/tests`, `apps/living/tests`, `apps/news/tests`, `apps/partners/tests` (the pages whose heads or
+     chapter marks changed) and the two portal modules that read the icon registry: **3 908 passed, 3 failed, 1 skipped,
+     1 xfailed** (the DEBUG showcase captions, the recorded debt). **The three failures are lane S's own, not
+     merge-caused**: the same three fail on the lane's branch alone (`6121f79`, the reviewed tree plus the ownership
+     files: 3 failed in 0.93 s), and the merged tree is that tree (`aadd91d^{tree}` = `6121f79^{tree}`); at `d8552b9`
+     they pass (3 passed in 1.96 s, run read-only on v5-live's checkout of it, `git status` empty after). Neither the
+     lane's batches nor its two reviews ran these modules. They are listed with their fixes in item 10; the steward
+     fixed none of them (the files are lane S's, §9.7, and the guards stand under V5.20's rule).
+   - **The configured number** (`ILE_WHATSAPP_NUMBER` set in-process to the preview's value, read from v5-live's
+     untracked `.env`, never printed; the log masked, with nothing to mask): `test_contact_channels_v519`,
+     `test_institutional` and the confidential-material guard (19:25 to 19:29) — **117 passed, 0 skipped**: the
+     environment-bound test runs and passes.
+   - **Browser** (`-m browser`, headless, Chromium lock slot A per session, label `v522-s-merge`, each session under
+     seven minutes and released): session A (19:29 to 19:35) — the lane's `test_sezioni_browser_v522_s` (the 24
+     fixtures) and `test_seal_heads_browser_v522_s` (the heads' call and axis on the seeded site), the shell's
+     `test_browser` (no overflow, reveal never hides content) and `test_browser_v515_c` (the frames develop):
+     **47 passed**; session B (19:35 to 19:41) — `apps/pages` and `apps/ecosystem` `test_browser`,
+     `test_service_pages_browser_w3_f2`: **52 passed**; session C (19:41 to 19:47) — `test_browser_w3_f1`,
+     `test_content_pages_browser_w3_f2`, `test_journey_browser_w3_d`, `test_orientation_browser_w3_f1`: **56 passed**;
+     session D (19:47 to 19:52) — the browser cases of `test_motion_v512_a_w2` and `test_forms_v515_b`,
+     `test_motion_browser_w4_b`, `test_reduced_motion_w1_d`, `tests/i18n/test_rtl_browser.py`: **52 passed**;
+     session E (19:52 to 19:58) — the login's `test_entrance_w2_b`, `test_entrance_form_w2_b` and
+     `tests/i18n/test_rtl_browser_entrance.py` (the eyebrow key): **66 passed**; 0 failed.
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css`
+     32 718 B gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files), the design
+     documents and the ownership checker, with `test_mobile_rtl_w4_a` (the phones and RTL sweep, the passage's station
+     words) in the same browser session; the tag is made only on green.
+   - The full suites, both halves, on a fresh copy belong to the next acceptance candidate's gate (V5.20; V5.22 §28),
+     after lanes H, P1, P2 and S-close.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`), which runs and passes where the number is configured (item 8). The
+   private-table test runs (the table configured). One xfail, the recorded debt of the DEBUG showcase's captions
+   (`test_design_showcase`, strict); no xpass. The non-browser run deselects 172 browser tests: 143 of them ran in
+   sessions A–E, beside 130 of other browser modules (the lane's own two, the shell, the frames, the service,
+   content, interior, journey and orientation pages, the motion and reduced-motion files); the design preview's 17
+   run with the record's check; the other 12 (`tests/i18n`'s navigation, overlay and W2-C2 right-to-left files —
+   the navbar and the overlays, preserved families lane S does not touch) are the final gate's.
+10. **Left open (not the steward's).**
+    - **The three red guards (item 8), lane S's, first.** Red on the lane's branch alone (`6121f79`, the reviewed
+      `d9551f4` plus the ownership files) and green at `d8552b9`: the lane's files break three existing guards that
+      neither the lane's batches nor the reviews ran. Not merge-caused, so not fixed by the steward (the files are
+      lane S's under §9.7, and V5.20's rule leaves the guards as they are); none touches a page today, since no page
+      composes those patterns yet, but each must be green before P1 and P2 compose them and in any case before the
+      integrated V5.20 gate. **(a)** `tests/i18n/test_rtl_static.py::test_every_horizontal_shift_has_its_rtl_twin`:
+      `_sec-tracciato.css`'s `.tracciato__linea::after` (the lane's light, `translate: -110% 0`, run by `sez-run`
+      from −110 % to 360 %) has an RTL rule that only mirrors its symmetric gradient (`scale: -1 1`); in Arabic the
+      light's box stands at the inline start, the right end, so the shift leaves it inside the rail at rest — the
+      reviewer's own capture `qa2_fx_tracciato-ar_1440.png` shows a darker accent glow at 37–67 % of every lane's rail,
+      none in French — and the run travels the wrong way; a twin that reverses the shift and the run, inside the
+      sheet's ceiling. **(b)** `tests/frontend/test_loader_rules.py::test_l3_attaches_only_to_fragment_containers`:
+      `components/sezioni/mappa.html` (the hemicycle «l'emiciclo») renders `data-seat` on its seats and the
+      sentence's spans — Lume's L3 attribute, reserved for the fragment containers `loader.js` seats
+      (`[data-seat].is-seating`); an attribute of the pattern's own (`_sec-emiciclo.css` and the contract with it).
+      **(c)** `tests/frontend/test_state_chips_carry_a_register.py::test_data_register_is_written_by_the_partial_and_by_two_legends_only`:
+      eight of the lane's templates write the chip's `data-register` by hand as the register exemption's marker —
+      `components/stepper.html` (the large «linea»), `sezioni/approdo`, `filo`, `flusso`, `indice`, `mappa`,
+      `mosaico` and `tracciato`; either an attribute of their own, read by the O14 lint and the interior guard
+      (lane S's shared guards), or the Director's explicit ruling that §4.10's registers share the chip's attribute,
+      then the guard updated under V5.20's rule with an equal or stronger invariant, citing it.
+    - **The review's six minors and three nits**, none merge-caused. The patterns' partials and sheets are lane S's
+      (§9.7), so the composing lanes cannot change them; the review asks for n1 and n2 to be settled before P1 and P2
+      compose those patterns. **n1** — on Arabic pages a French run in a B card, an F panel, an E tile or a French
+      section title is end-aligned (`_sezioni.css`), against §1 rule 6 and §2 B: keep `text-align: end` for one-line
+      labels beside a marker and give multi-line runs their own start, or obtain the Director's amendment; correct the
+      static test's citation either way. **n2** — «il mosaico» below 48 rem is a stack of tall white cards (1 396 px at
+      390): set the compact tiles as rows, about 72–88 px each. **n3** — the T1 seat's face (`--sg-face`) departs from
+      §4.3 and reads heavy: §4.3's face with the 62 % border, or the deviation recorded with the Director. **n4** —
+      «la linea V2» hyphenates locked capitals at ≥ 80 rem («ACCOMPAGNE-» / «MENT»): `hyphens: manual` on caps labels,
+      the column gap or a tighter tracking there. **n5** — F's CSS (`_linea-v2.css` +1 226 B, `_sec-flusso.css` 868 B)
+      exceeds §2 F's «+ ≤ 1.2 KB»: the Director ratifies the 922 B ceiling, or the sheets fold. **n6** (m13 carried) —
+      LCP, CLS and INP of the real-page deltas on 8782 are the Performance Lead's, before the integrated V5.20 gate;
+      `fronte.css` keeps 3 B of headroom, so S-close ratchets it or finds bytes before the next seal-head change. The
+      nits: n7 (the carriage return's run appears before the route reaches the turn, mid-entrance), n8 (a 1 px seam
+      in the return's drop at 1024, invisible at 1×), n9 (`ruff format`).
+    - **The lane's requests** (`QA/v522/s/NOTES.md` §8, §10.6). To P1: EN-1 composes `components/sezioni/flusso.html`
+      (its steps from `ecosystem.services.company_moments()` with `icons.COMPANY_MOMENT`; `ecosystem.css` imports
+      `v5/_sec-flusso.css` after `v5/_linea-v2.css`; the section `data-sec="flusso"`); the PA-3, F2 and D3 grids put
+      the lead tile first (`lead: True`: without a frame the wide tile, with a `frame_slot` — develop — the framed
+      bento); PA-1's lanes pass their `frame_slot` (`pathways.family.*`). To H: the entrances' rail is
+      `<ol class="passaggio" role="list">`, the plates' interior styled in `pages.css`; when the V2 home replaces its
+      chapters, it retires their marks and updates `test_home.py`'s chapter test (S-close then removes the home
+      exception). To M: a 4:5 crop for `companies.territory` (until then the panorama draws a strip on phones). To H,
+      P1 and P2: a band that sweeps its light declares `data-verb="light"` on its own section. To the Performance Lead:
+      the 8782 measurement (`fronte.css` +633 B, `core/reveal.css` +1 170 B, `rise.js` +454 B against `fdd6e34`). To
+      the Director: m10 — EN-3's briefcase was a bare chapter mark retired by §0 item 3; S recommends accepting the
+      retirement, and P1 can give EN-3 the forms' tile idiom if preferred.
+    - **Lane M's requests to S that stay open** (DL54-181 item 10): `components/sezioni/panorama.html` calls
+      `{% photo %}` without `variant` or `sizes`, so through it the home pilot would draw the default 4:5 halves, not
+      the 2:3 panels — S passes them through, or H draws S4 with the tag in its own partial; and a `role == "ground"`
+      frame should stay unmasked (`photo.html` still writes `data-reveal="mask"` on every non-eager frame). The
+      «select» grade is rendered (item 3). Lane M's n2 (`FAMILY_SIZES` restated from S's final route board, P1
+      asserting drawn = `sizes` on /xx/parcours/) can start now that S is merged.
+11. **The preview.** After the tag, 8780 is restarted on `v522/s` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; ile_v5 needs no migration at this tree — lane S added none, `migrate --check` is run before
+    the start; the previous log kept as `srv8780.log.prev-v522-s`). The checks — the four homes, the hub and its strip
+    with the tag, the seven seal heads and the four typographic folios in four languages (the right ILE mark in the
+    small seat, its inline mark, no old disc, no bare chapter mark), the FAQ, Le projet and the login's key, the sheets
+    and scripts the heads load, the contact page in four languages with both channels, the footer, the nine personas'
+    homes, the server log; headed at 1440 and 390 in fr and ar, 1440 in it and en and under reduced motion — are the
+    steward's reports, `C:/tmp/ile_v5_council/.work/v522-s-merge/verify_8780_v522s.json` and
+    `headed_8780_v522s.json`.
+12. **Release gate — unchanged.** V5.22 §28: «Do not promote main. Do not create v2.0.0. Do not create a release. Do
+    not deploy.» No push, no public tag; `v522/s` is a local annotated tag. The next acceptance candidate needs lanes
+    H, P1, P2 and S-close.
+
+**Why.** V5.22 asks for compositions instead of the chapter device, for larger integrated icons in contextual colour,
+for purposeful icon motion and for motion with variety below the fold; SECTION_SYSTEM_V2 §9.1 gives lane S the
+foundation the page lanes compose with, first in the order of the dependencies. The lane met its acceptance in round 2
+— no page lower on any dimension than at `fdd6e34`, the library at axe 0 in every state, the heads' call inside the
+first screen — and the merge changes nothing else: what is visible today is the heads' seals and typographic folios,
+the retired bare marks, the login key and the two motion fixes; the library waits for lanes H, P1 and P2.
+
+**Source.** The owner's V5.22, V5.20 and V5.12–V5.21; SECTION_SYSTEM_V2 §2, §4, §5, §7, §9; `QA/v522/s/NOTES.md`;
+`QA/v54/v522-s/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v522/s/QA_ROUND2.md`); DL54-181.
+
+
+## DL54-183 · 2 November 2026 · Steward, the v522-p1 merge: V5.22 lane P1, Page Composition V2 — journeys and spaces
+
+**Decisions** (the steward's, at the merge of `v522-p1` into design-v5 on 2 November 2026 — the owner's V5.22
+(`V5_22_EDITORIAL_PATTERN_SECTION_COMPOSITION_REMEDIATION.md` §11–§14 and §19–§21: the premium language continued
+below the fold, a grammar per page — movement for Parcours, needs → process → outcome for Entreprises, collaboration
+structures for Institutions, progression for Universités and Formation —, more image presence, compositional
+typography, less text in one block), the Director's SECTION_SYSTEM_V2 §3.3–§3.10, §7, §9.4, §9.7, §9.8, §9.9 and §10,
+with V5.20's strict test-update rule and the standing constraints of V5.12–V5.21; label `v522-p1-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 09:37 with design-v5 at `22b0ddd` (DL54-182's record).
+   SECTION_SYSTEM_V2 §9.7 writes the order S → M → H → P1 → P2 → S-close; lane H's third review did not pass (2
+   major, 7 minor; its builder is in its next round) while P1 passed its third. As for S and M (DL54-181 item 1,
+   DL54-182 item 1), the order between H and P1 is one of dependencies, not of merges: both compose lane S's library,
+   and the two lanes share no file (P1's 67 paths and H's 28 since `22b0ddd`: none in common, checked), so P1 takes
+   design-v5 without H and H's merge will take it with P1 in it. The lane's base is `22b0ddd`, and design-v5 had not
+   moved: `git merge design-v5` into the branch answered «Already up to date», and `22b0ddd...2793da9` is the lane's
+   own diff (67 paths). The family recorded on the branch (`1315aef`, item 4), the catalogue carried on the branch
+   (`f0dcdd4`, item 5), then `git merge --no-ff` into design-v5 (`dba97fa`; its tree is `f0dcdd4`'s, so no commit of
+   design-v5 lacks the lane's five strings).
+2. **The review** (`QA/v54/v522-p1/REVIEW.md`, copied byte for byte from the evidence's `QA_ROUND3.md`, head
+   `2793da9`, 2 November 06:50–08:15): **passed in round 3**, 0 major, 9 minor. Round 2's two majors are fixed, each
+   re-measured with the reviewer's own probes — M1 (Parcours: a family chosen deep in the board folded it out of view):
+   116 choices (tap, click, arrows and no-JS; fr and ar; 360–1 440 px; up to 2 200 px into the board) each bring the
+   chosen lane 16–18 px under the sticky bar, the board's height and its eight stations unchanged, nothing leaving the
+   layout; M2 (the institutions' collaboration head below the bar): one annotation, the 108 × 54 hemicycle beside the
+   15/24 recipients sentence at every width, the formwork inside the first screen. The floor: 576 runs (18 URLs × four
+   languages × eight widths, reduced motion) with 0 px overflow, 0 script error and 0 hidden legal notice; 128 runs
+   with gate G3 closed (one Arabic overflow, m6, already on design-v5); axe 4.13 in 72 runs, 0 violations but the
+   preserved form's step-rail link under the sticky letterhead on Recueil fr 1440 (`target-size`, as in round 2); no
+   translateY + opacity entrance and no text held from opacity 0 in any P1 section; locked copy byte-identical; the
+   preserved families untouched; the budgets held. The reviewer's 1 239 non-browser tests ran with the nine declared
+   reds (item 8) and the lane's browser module 25/25. **Scores** (§26: composition, motion, imagery, interaction,
+   institutional quality, coherence): Projet pilote 4 · 4 · 4 · 4 · 4.5 · 4.5; Parcours 4.5 · 4 · 4.5 · 4.5 · 4.5 ·
+   4.5 (the choice now the page's best moment; measured in Chromium, m1); the eight pathway sheets 4 · 4 · 4 · 4 · 4.5
+   · 4.5; Entreprises 4 · 4 · 4.5 · 4 · 4.5 · 4.5; Institutions 4.5 · 4 · 4.5 · 4 · 4.5 · 4.5; Universités et
+   formation 4 · 4 · 4 · 4 · 4.5 · 4; Formation 4 · 4 · 4.5 · 4 · 4.5 · 4.5; Diplômes et titres 4.5 · 4 · 4 · 4 · 4.5 ·
+   4.5; the heads of Recueil des besoins 4 · 4 · 4 · n/a · 4.5 · 4.5, of the institutions' collaboration 4 · 4 · 4 ·
+   n/a · 4.5 · 4 and of the universities' 4 · 4 · 4 · n/a · 4.5 · 4.5 (the interaction is the preserved form's); the
+   interim Parcours (G3 closed) 4 · n/a · 4 · n/a · 4.5 · 4. Every cell reaches §9.9's bar (≥ 4). Against §10's page
+   targets three cells stand half a point under, recorded here and not hidden: Entreprises' composition (4 for 4.5:
+   EN-1's hangers, m4), Universités' coherence (4 for 4.5: the U1 kickers French on it/en/ar «until the catalogue
+   lands» — carried by this merge, item 5) and the institutions' collaboration head's coherence (4 for 4.5: the
+   Arabic note's 28 px start, m5); the reviewer passed the lane with them.
+3. **Read before merging** (the slices' product changes, as the checker asks; every file lane P1's under §9.7).
+   - `apps/ecosystem/services.py` (sec-f8's staff-preview gate and v512-c's hide gates untouched): the data the four
+     spaces' compositions draw — `pilot_stations` (the eight locked labels in order, `icons.PILOT_STATION`),
+     `pilot_doors` (the team sentence cut at its own full stop; whole under both doors where a translation does not cut
+     in two), `company_flow` (`icons.COMPANY_MOMENT`), `guarantee_split` (the prescribed answer as three spans of one
+     paragraph whose text is the answer, or `None` and the answer whole), `recipients_sentence` and `recipient_seats`
+     (the locked sentence's items as spans lighting their seats, every slice escaped, the sentence unwrapped when an
+     item is not found in order), `universities_route` and `DESTINATION_SIZES`; every word the registry's or a
+     catalogue msgid, cut by `cms.locked_split`, never retyped.
+   - `apps/ecosystem/views.py` (no owner until now): each space links its own page sheet (`family_sheet`,
+     `css/dist/ecosystem/<key>.css` — one stylesheet, as before) and the compositions' context.
+   - `apps/pathways/services.py` and `views.py`: the route board (`route_board`, the fork of the two one-station
+     lanes, `FAMILY_SIZES_V2` — lane M's n2 settled: every family frame drawn at its `sizes`), `how_steps`,
+     `space_tiles`, `sheet_milestones`, `glossary_terms`, `diploma_dossier`, the crossing's `sizes`; «la boussole» (the
+     questionnaire's action with its caution, or the sentence that it is not open yet, and the live help line from the
+     site's settings); `_gate` unchanged.
+   - The templates of `templates/ecosystem/` and `templates/pathways/` (two partials removed, `_orientation_action.html`
+     and `_space_links.html`; three added inside W3-F1's glob, `ecosystem/partials/approdo.html`, `emiciclo_nota.html`
+     and `pathways/_tracciato.html`) and the page-only sheets and partials of `apps/ecosystem/static/ecosystem/` and
+     `apps/pathways/static/pathways/` (the family partials `_spaces.css` and `_pathways.css` changed, the family
+     sheets' import lists kept).
+   - `templates/enquiries/company_needs.html` and `collaboration_proposal.html`: **the header block and `extra_head`
+     only** (§9.8 exception 2) — the compact frontispiece (`_ingresso.html` `compact=True`) with its seal, the locked
+     title and introduction through `{% locked %}` with their language, the recipients note beside the hemicycle
+     drawing when G3 is open, `fronte.css` linked (§7.2's recorded +1 request); the formwork section byte-identical.
+   - `apps/pathways/tests/conftest.py`: `strip_locked` reads inline spans through first, so a locked sentence cut into
+     spans still counts as locked text and never slips past the scan as team text.
+   - **No preserved family is in the diff** (§9.8: the navbar, the mega menus, the mobile sheet and the footer, Lume,
+     the premium forms — the two form bodies untouched —, the contact channels' architecture, the privacy and cookie
+     pages, terminology, the organisation spaces, `base.html`, `tokens.css`, `main.css`), and no compliance guard
+     (R-SC-1, the privacy publication guard, the contact-channel and WhatsApp guards). One awareness item from the lane:
+     on /parcours/ only, P1's page sheet extends html's `scroll-padding-block-start` by the sticky bar's reach
+     (`html:has(.percorsi-tracciato)`); `chrome.css` keeps the letterhead's value everywhere else, untouched.
+     `main.css`'s dist is byte-identical to `22b0ddd`. No JavaScript, image or npm package added.
+4. **Ownership.** The id rule did not admit `v522-p1`: `v5<nn>-p[2-9]?` is the privacy lanes' form (P, P2, P3), and
+   `v516-p1` is refused on purpose (the v522-m steward's note, 248a20c). It now takes `v5<nn>-p1` from V5.22 on
+   (`v5(?:2[2-9]|[3-9][0-9])-p1`), so `v516-p1` stays refused and no case changes (`scripts/check_ownership.py`: the
+   rule and its comment; `tests/test_check_ownership.py`: `v522-p1` and `v522-p2` added as valid, eight near-misses as
+   refused — `v521-p1`, `v522-p0`, `v522-p11`, `v522-p1a`, `v522p1`, `v522-pp1`, `v522g-p1`, `v522-p1-merge` —, no case
+   removed or loosened; `OUTSIDE_THE_WAVES` and its comment name the lane). The family `v522-p1` (wave 0, after
+   `v522-s`; base `22b0ddd`, head `2793da9`): 21 whole files (the eight page sheets and their ten partials — `_pilot`,
+   `_companies`, `_institutions`, `_universities`, `_spazi-v2`, `_index`, `_sheet`, `_training`, `_diplomas`,
+   `_persone-v2` —, the two new test modules and the notes), 36 slices (the two apps' services and views, the family
+   partials `_spaces.css` and `_pathways.css`, sixteen templates of the two families — two removed, three created
+   inside W3-F1's glob —, the two form pages' header blocks, twelve updated test modules and the conftest) and 10
+   generated files (the dists of the two family sheets and the eight page sheets).
+   `check_ownership.py v522-p1 22b0ddd --head 2793da9`: **PASS**; `--validate`: coherent, 56 families, 2 207 entries.
+5. **Build, catalogue, checks** on the merged tree. `npm run build`, twice: the dist identical to the committed one —
+   reproducible, nothing to commit. Measured (gzip -9): `main.css` **32 718 B**, byte-identical; the page sheets
+   `pathways/index.css` 10 099 / 10 240, `sheet.css` 9 676 / 10 240, `training.css` 8 759 / 9 728, `diplomas.css`
+   8 866 / 9 728, `ecosystem/pilot.css` 9 487 / 9 728, `companies.css` 8 682 / 9 216, `institutions.css` 8 365 /
+   9 216, `universities.css` 7 614 / 8 448 (the ceilings the lane recorded in `test_pages_v522_p1.py`, each inside
+   §7.1's 11 264 for the family); the family sheets `ecosystem.css` 4 977 and `pathways.css` 4 716; `fronte.css`
+   6 141 / 6 144 and `core/reveal.css` 3 549, unchanged; every page's total ≤ 56 320 (Parcours 55 500, the
+   reviewer's measure). `scripts/i18n_audit.py --sync`: **+5 −2** in it/en/ar/fr — the lane's five team strings (the
+   three kickers of «la filiera», «Avant le départ», «En Italie», «Après l’arrivée»; IN-1's hidden title
+   «Destinataires»; «Voir dans le glossaire») with the lane's professional it/en/ar renderings
+   (`evidence/v522/p1/catalogue/`, msgids byte-identical to their sources; NOTES §6), the Arabic reviewed
+   (right-to-left, no Latin run, no Arabic-Indic digit, the formal register, the catalogue's «مسرد المصطلحات» for the
+   glossary), the fr catalogue the sync's own French text; the two msgids the lane left unused dropped («Ce que la
+   plateforme fait, et ne fait pas», «Dont le parcours d’études et de formation, dans l’Espace Personnes.», found only
+   in the old copies of P1's two templates on the other lanes' branches); `--compile`: the four `.mo` files match
+   their `.po`, 3 697 msgids, 100 % in every language, no error. No locked text touched; nothing machine-translated.
+   `manage.py check`: no issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and
+   with a fictional value. `ruff check .` (ruff 0.16.8): all checks passed.
+6. **The confidential-material guard: green.** With `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read
+   in-process only, no value printed or written), `tests/security/test_confidential_material.py` alone, CI-style, on
+   the merged tree (09:46–09:47): **17 passed, 0 failed, 0 skipped**; it passes again inside the non-browser run and
+   the configured-number run (item 8). The merge's 76 added or changed files — 72 text files checked, the four
+   compiled catalogues skipped as binary — hold no CR byte and the owner-confirmed number in no form (counted
+   in-process, never printed); the two removed partials carry nothing.
+7. **The test changes, against V5.20's strict rule** (the merge itself changed none of the lane's tests). The lane's
+   twelve updated modules — `apps/ecosystem/tests/test_browser.py`, `test_companies_page.py`, `test_compliance.py`,
+   `test_gated_pages.py`; `apps/pathways/tests/test_views.py`, `test_compliance.py` and the conftest;
+   `tests/frontend/test_interior_w3_f1.py`, `test_orientation_w3_f1.py`, `test_browser_w3_f1.py`,
+   `test_browser_v515_c.py`, `test_mobile_rtl_w4_a.py` — each cite SECTION_SYSTEM_V2 in place (§0 item 3, the chapter
+   device leaves these bodies; §0.1 and §2 B, «nothing leaves the layout»; §1 rule 6, a locked text re-composed at
+   render and read whole in its element; §3.3–§3.10's compositions) or the review's finding: the old expectation
+   contradicts the approved composition, the new behaviour is implemented, and the invariant is the same or stronger
+   (the reviewer's strict-rule review in rounds 1, 2 and 3: all acceptable; no assertion loosened, no skip added, no
+   timeout raised — the added waits are new 60–150 ms pacing steps; the stronger cases: the pilot's capitals measured
+   word by word and box by box at four widths in four languages, the deep choice made after a wheel scroll at three
+   depths, the terms' targets 44 px under every pointer). `test_pages_v522_p1.py` and `test_pages_browser_v522_p1.py`
+   are new. The steward's: `tests/test_check_ownership.py` (`1315aef`), cases added and none changed (item 4).
+8. **The tests on the merged tree** (`dba97fa`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l8, one pytest at a time):
+   - **Non-browser**, 54 paths (09:48 to 10:37) — `tests/security`, `tests/compliance`, `tests/deployment`,
+     `tests/i18n` (the catalogues, the page integrity, the right-to-left static rules), `tests/test_check_ownership.py`,
+     `tests/test_regen_design_inventory.py`, the two W4-D document guards; `apps/ecosystem/tests`,
+     `apps/pathways/tests`, `apps/enquiries/tests` (the two form pages), `apps/orientation/tests`, `apps/cms/tests` (the
+     locked texts and the split equality), `apps/pages/tests`; and every `tests/frontend` module the lane touched or
+     that reads its pages or files, found by a search of the test sources (the lane's two, the interior, orientation,
+     mobile and RTL, frames and W3-F1 browser modules' static parts, the design documents, preview and showcase, the
+     bundle currency of CSS and JS, the static assets and pipeline, the icons, the journey, the chapter marks, the
+     section library, the frontispiece, the state chips and their registry, the O14 lint, the tokens, the motion rules,
+     the loader rules, the reduced-motion files, the script motion gate, the imagery, the forms, the components and
+     cards, the CMS navigation, the content pages, the terminology, the organisation spaces, the SVG well-formedness,
+     the RM-flag parity): **3 941 passed, 4 failed, 1 skipped, 1 xfailed** (the DEBUG showcase captions, the recorded
+     debt). The lane's five catalogue cases, red on its branch until the catalogue pass, are green. **The four failures
+     are not merge-caused**: the merged tree is the lane's branch tree (`dba97fa^{tree}` = `f0dcdd4^{tree}`), where the
+     same four fail (4 failed in 1.27 s); at `22b0ddd`, run read-only on v5-live's checkout of it (`git status` empty
+     after), three of them fail already and the fourth passes (3 failed, 1 passed in 2.97 s). The three are lane S's,
+     red since the v522-s merge (DL54-182 item 10):
+     `tests/i18n/test_rtl_static.py::test_every_horizontal_shift_has_its_rtl_twin` (`_sec-tracciato.css`),
+     `tests/frontend/test_loader_rules.py::test_l3_attaches_only_to_fragment_containers` (`sezioni/mappa.html`) and
+     `test_state_chips_carry_a_register.py::test_data_register_is_written_by_the_partial_and_by_two_legends_only`
+     (`sezioni/approdo.html`). The fourth,
+     `test_state_chips_carry_a_register.py::test_a_tag_is_a_term_and_carries_neither_a_register_nor_a_mark`, comes
+     with P1's recomposition (§3.5 PS-4 and §3.10 D1 turned the pathways' and the diplomas' term chips into
+     disclosures: five `class="tag"` templates remain under the guard's floor of nine, `pathways/detail.html` no
+     longer among them) — declared by the lane from its build on (NOTES §5, request 2) and by the reviewer in all
+     three rounds. All four are lane S's guards (§9.7, «the shared guard tests»); the steward changed none (item 10).
+   - **The configured number** (`ILE_WHATSAPP_NUMBER` set in-process to the preview's value, read from v5-live's
+     untracked `.env`, never printed; the log masked, with nothing to mask): `test_contact_channels_v519`,
+     `test_institutional` and the confidential-material guard (10:38 to 10:42) — **117 passed, 0 skipped**: the
+     environment-bound test runs and passes.
+   - **Browser** (`-m browser`, headless, Chromium lock slot A per session, label `v522-p1-merge`, each session under
+     nine minutes and released): session A (10:42 to 10:51) — the lane's `test_pages_browser_v522_p1` (the ten pages at
+     three widths in fr and ar, the deep choice, the frames at their `sizes`, the doors, the hemicycle note, the
+     numerals, the keyboard, no-JS, reduced motion), `apps/ecosystem/tests/test_browser.py`, `test_browser_w3_f1` and
+     lane M's `test_imagery_v522_m` (the campus frame and the family frames drawn at their `sizes`): **83 passed**;
+     session B (10:51 to 10:55) — `test_browser_v515_c` (the frames develop), `test_orientation_browser_w3_f1`,
+     `test_seal_heads_browser_v522_s` (the heads' call and axis), `test_reduced_motion_w1_d`,
+     `test_journey_browser_w3_d`: **39 passed**; session C (10:55 to 11:02) — `test_mobile_rtl_w4_a` (the phones and
+     right-to-left sweep), `test_content_pages_browser_w3_f2`, `tests/i18n/test_rtl_browser.py`,
+     `test_header_fits_the_narrowest_viewport`, `test_forms_v515_b` (the form pages, whose heads changed): **74
+     passed**; 0 failed.
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css`
+     32 718 B gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files and visits the
+     public doors), the design documents and the ownership checker; the tag is made only on green.
+   - The full suites, both halves, on a fresh copy belong to the next acceptance candidate's gate (V5.20; V5.22 §28),
+     after lanes H, P2 and S-close.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`), which runs and passes where the number is configured (item 8). The
+   private-table test runs (the table configured). One xfail, the recorded debt of the DEBUG showcase's captions
+   (`test_design_showcase`, strict); no xpass. The non-browser run deselects 226 browser tests: 153 of them ran in
+   sessions A–C, beside 43 of other browser modules (the orientation, seal-head, journey, content-page and narrowest-
+   header files); the design preview's 17 run with the record's check; the other 56 — the home and shell pages'
+   `apps/pages/tests/test_browser.py` (lane H's pages), four browser cases of `test_motion_v512_a_w2` (the platform's
+   question change) and `tests/i18n`'s entrance, navigation, overlay and W2-C2 right-to-left files (the login, the
+   navbar and the overlays: preserved families lane P1 does not touch) — are the final gate's.
+10. **Left open (not the steward's).**
+    - **The reviewer's two «before the merge» minors, first.** QA_ROUND3 asks for m3 and m4 before the merge, one rule
+      each in P1's own sheets: **m3**, four French runs in Arabic still at the Arabic leading (PA-2's `.come__testo`,
+      IN-1's `.emiciclo__frase` at 390, EN-4's French title, PS-2's `.decide__nome` — 20/32 against 20/28; the cards'
+      rule in `_index.css`, `_institutions.css`, `_companies.css` and `_sheet.css`, or S's request 14); **m4**, EN-1's
+      hangers of panels 01 and 03 ending 14–56 px short of their panels at ≥ 48 rem (`.imprese-demarche .flusso__tappa
+      { align-content: start; }` in `_companies.css`, or S in `_sec-flusso.css` for every user of «il flusso») — the
+      reason Entreprises' composition scores 4 against its 4.5 target. The workflow's merge step carries the reviewed
+      head `2793da9`; the steward fixes only what the merge breaks, and the files are lane P1's (§9.7): neither is
+      fixed here. They are lane P1's first items after this merge, each with the browser assertion the review found
+      missing (no test asserts the hangers or the Arabic leading of PA-2 and IN-1).
+    - **The red guards** (item 8): lane S's three, red on design-v5 since `aadd91d` (DL54-182 item 10: (a) the route
+      board's light without its RTL twin in `_sec-tracciato.css` — P1's page rule mirrors it on /parcours/, the
+      library's twin is still S's —, (b) Lume's L3 attribute `data-seat` in `sezioni/mappa.html`, (c) the chip's
+      `data-register` written by hand in the library's partials), now composed by P1 on real pages while still red;
+      and the tag guard `test_a_tag_is_a_term…`, red since P1's recomposition (request 2 to S: the pathways' and the
+      diplomas' term chips became disclosures, so five `class="tag"` templates remain under a floor of nine; the update
+      the lane asks for is the exact set of the remaining templates, the terms' disclosures carrying neither a register
+      nor a mark — an equal or stronger invariant, under V5.20's rule, citing §3.5 PS-4 and §3.10 D1). All four are
+      lane S's guards (§9.7); the steward changed none. Each must be green before the integrated V5.20 gate.
+    - **The review's other minors.** m1 (WebKit: a deep choice brings its lane under the bar where a tapped label
+      focuses its radio — Chromium; Safari and Firefox on macOS do not focus a radio on tap, so there the lane lights in
+      place and the count updates without scrolling, nothing ever folding: check on an iPhone before the owner's
+      walk-through; S's request 11 stays open for S-close as a progressive enhancement); m2 (the count line says «3
+      parcours affichés» while all eight stay displayed: a team string that says what the choice does, new msgids for
+      S-close's pass); m5 (the institutions' collaboration head in Arabic from 48 rem: the note's French lines start
+      28 px inside the lead's — S's request 13, an `.emiciclo-nota` rule in `_fronte.css`); m6 (the interim Parcours,
+      G3 closed, Arabic at 768–769 px: 10 px of horizontal overflow from the head's route node, already on design-v5 at
+      `22b0ddd` — S's head rule, or a page-only override by P1; ar 768 to be added to the interim checks); m7 (the
+      Parcours cards of one row with ragged bottoms from 48 rem, polish); m8 (from the keyboard on a phone the checked
+      chip can stay scrolled out of the chip row, a nit); m9 carried (the catalogue, done by this merge; S's reds and
+      the tag guard; Diplômes on a phone one definition open at a time).
+    - **The lane's deviations, for the Director** (NOTES §2): PP-1's seal beside the title rather than in the route's
+      first seat (the register's tiles all or none); PP-2 the pilot's moment and PP-1 a band; Diplômes on a phone one
+      definition open at a time (§3.10 asks all open; the native exclusive disclosure, no second markup, RH-5); the
+      approdo tiles typographic; the pathway terms without a chip.
+    - **The lane's requests** (NOTES §7 and R6). To S: 1 (`stepper.html`'s `origin_seal` drops station 1's tile), 2
+      (the tag guard, above), 4 (`test_design_docs`'s vocabulary does not let a page partial read the library's
+      documented properties `--sez-i`, `--aud`, `--sez-gap`), 5 (the route board's light in Arabic, the library's twin
+      — also S's red guard (a)), 6 (`.testa__label`'s tracking in Arabic), 8 (`panorama.html`'s credit under the
+      scrollbar on a 100vw band), 9 (`[dir="rtl"] .sez [lang="fr"]:not(html)` turns lists left-to-right), 13 (the
+      hemicycle note borrows main.css's `.meta-row__item`, `.chip__meter` and `.card__text`, so it follows any change of
+      their look: a dedicated `.emiciclo-nota` rule), 14 (a library rule giving French runs in right-to-left sections
+      the Latin leading, `[dir="rtl"] .sez [lang="fr"]`, for every lane at once); requests 7 and 11 are withdrawn (P1's
+      own compositions do both). To S-close: 3 (W4-A's D5 rule `.linea__more a`, drawn by no page, kept commented in
+      `_pathways.css` for the coverage-measured pass, with its guard line in `test_mobile_rtl_w4_a`), 10
+      (`templates/pathways/_antifraud_callout.html` is dead; DESIGN_SYSTEM_2026 §2.1 needs the eight page sheets' rows).
+      To S and the reviewers: 12 (a full-page capture replays every width-keyed entrance; judge motion in viewport
+      captures).
+    - **For lane P2 and its steward:** `tests/frontend/test_interior_w3_f1.py` and `test_mobile_rtl_w4_a.py` are in
+      both lanes' diffs (P1 changed only its own pages' assertions there, first in the merge order, §9.7 «Shared test
+      modules»), so P2's merge of design-v5 into its branch meets them. **For lane H:** no file in common.
+    - **For the Performance Lead:** LCP, CLS and INP of the P1 pages on 8782 (the reviewer's indicative lane-server
+      figures: LCP 0.78–1.20 s, CLS ≤ 0.0001 through load and scroll, a family choice's events 16–48 ms and 0 layout
+      shift, one long task on the Parcours load).
+11. **The preview.** After the tag, 8780 is restarted on `v522/p1` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; ile_v5 needs no migration at this tree — lane P1 added none, `migrate --check` is run before
+    the start; the previous log kept as `srv8780.log.prev-v522-p1`). The checks — the four homes, the hub and its strip
+    with the tag; lane P1's pages in four languages (Projet pilote, Parcours and its eight sheets, Entreprises,
+    Institutions, Universités et formation, Formation, Diplômes et titres: their V2 sections, no chapter head in the
+    body, each page's own sheet served, each composition's markers, the pilot's mandatory notice, the five new strings
+    in the page's language; the three form pages' compact heads with their forms); the contact page in four languages
+    with both channels, the footer, the nine personas' homes, the server log; headed at 1440 and 390 in fr and ar, at
+    1440 in it and en, and under reduced motion in fr and ar — a family chosen on the Parcours bar bringing its lane
+    under it — are the steward's reports, `C:/tmp/ile_v5_council/.work/v522-p1-merge/verify_8780_v522p1.json` and
+    `headed_8780_v522p1.json`.
+12. **Release gate — unchanged.** V5.22 §28: «Do not promote main. Do not create v2.0.0. Do not create a release. Do
+    not deploy.» No push, no public tag; `v522/p1` is a local annotated tag. The next acceptance candidate needs lanes
+    H, P2 and S-close.
+
+**Why.** V5.22 asks that the premium language continue below the fold — a page that would export to Word unchanged is
+not finished — with each page's own grammar; SECTION_SYSTEM_V2 §9.4 gives lane P1 the journeys and the spaces. The lane
+met its acceptance in round 3 — every owned page at 4 or more on all six dimensions, 0 overflow in 576 runs, axe clean
+in its sections, locked copy byte-identical, main.css untouched — and the merge changes nothing else: what is visible
+is the new bodies of Projet pilote, Parcours and its sheets, Entreprises, Institutions, Universités, Formation and
+Diplômes, and the two form pages' compact heads; the home waits for lane H, the system and reading pages for lane P2.
+
+**Source.** The owner's V5.22, V5.20 and V5.12–V5.21; SECTION_SYSTEM_V2 §3.3–§3.10, §7, §9, §10; `QA/v522/p1/NOTES.md`;
+`QA/v54/v522-p1/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v522/p1/QA_ROUND3.md`); DL54-182.
+
+
+## DL54-184 · 2 November 2026 · Steward, the v522-s2 merge: V5.22 lane S's follow-up — the four red guards, P2's merge conditions, lane H's requests
+
+**Decisions** (the steward's, at the merge of `v522-s2` into design-v5 on 2 November 2026 — the owner's V5.22
+(`V5_22_EDITORIAL_PATTERN_SECTION_COMPOSITION_REMEDIATION.md` §16–§17 and §22: meaningful motion without heavy global
+JS, keyboard use and RTL preserved), V5.20's strict test-update rule («fixed in code», never by loosening a guard), the
+Director's SECTION_SYSTEM_V2 §2, §9.1, §9.7, §9.8 and §9.9, the standing constraints of V5.12–V5.21, and the finish
+workflow's lane S follow-up — DL54-182 item 10, DL54-183 items 8 and 10, P2's QA_ROUND3 MC-1…MC-3, H's QA_ROUND3 M2 and
+NOTES §12.5; label `v522-s2-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 19:13 with design-v5 at `269cf39` (DL54-183's record).
+   SECTION_SYSTEM_V2 §9.7 writes the order S → M → H → P1 → P2 → S-close; the finish workflow puts lane S's follow-up
+   first, before the final reviews and the merges of lanes H and P2, because both need it: H's last major (M2, the
+   first keyboard input's INP) closes only with this branch's rules, and P2's merge conditions MC-1…MC-3 are lane S's
+   modules. The branch was cut from `269cf39` and design-v5 had not moved: `git merge design-v5` into the branch
+   answered «Already up to date», and `269cf39...5ae404c` is the lane's own diff (60 paths). The family recorded on the
+   branch (`7f95cbc`, item 4), the catalogue pass a no-op (item 5), then `git merge --no-ff` into design-v5
+   (`d8d1098`; its tree is `7f95cbc`'s).
+2. **The review** (`QA/v54/v522-s2/REVIEW.md`, copied byte for byte from the evidence's `finish/v522-s2-qa1.md`, head
+   `5ae404c`, 2 November 16:05–19:05): **passed in round 1**, 0 major, 6 minor, none in this branch's product (each
+   routed, item 10). Measured independently by the reviewer: the four guards **red on a tree of `269cf39` (4 failed)
+   and green on the branch** (627 passed in the guards and their readers), three unchanged and the fourth updated under
+   V5.20's rule and stronger (item 7); P2's merge conditions on P2's own pages with this branch (a scratch merge outside
+   the repository, P2's half and its register patch applied): MC-1, the FAQ's named answer open on arrival, from the
+   address bar and from the keyboard at 1440, 768 and 390 in fr and ar; MC-2, the glossary's 8 letters each lit when
+   followed at five widths and the Forum sommaire's 5 sections lit by a read-through; MC-3, Réseau's chosen actor's
+   entry brought into view at 390 and 768, the page still at 1440 — P2's own assertions on that tree 56 passed, 2 failed
+   (the Forum spy test counts a constant, m1); lane H's home with this branch: the eight index glyphs 20 × 20 px at
+   1440, 1280 and 1024 in fr and ar; «la protezione» in Arabic on one edge on five page types (title and body 572 / 572
+   px at 1440 down to 40 / 40 at 360; the base 1 127 / 572); the credit «Photo : …» with a no-break space in French
+   only; the elements restyled at the first key reproduced to the unit (the home 853 → 278 with this branch alone, lane
+   H's home 1 138 → 525 with it; Parcours 774 → 379; Institutions 462 → 170; Projet pilote 526 → 338; FAQ 369 → 138);
+   the first Tab and the first pointer after the keyboard on compressed twins (network A, CPU × 4, n = 12 a cell on the
+   home): the first Tab with this branch alone 28 to 48 ms under the base, on lane H's home with it −4 to +8 ms against
+   the base and the pointer after it 12 to 20 ms under (lane H alone +28 to +56 ms on both), every median and
+   Hodges–Lehmann shift ≤ +12 ms, one p75 at +24 ms (the branch alone, phone fr, pointer after the keyboard; the same
+   cell with lane H −24); the preserved families pixel-identical to the base (the
+   navbar 8/8, the mega menus but for the contact head's photo credit seen below a panel, the phone sheet 4/4, the
+   footer, the forms, login, privacy, cookie and orientation pages, the contact page but for its head photo's credit,
+   four persona spaces 8/8); 129 pages × 2 trees all 200, 352 sweep runs with 0 overflow and 0 console error, axe 4.13
+   in 44 runs with 0 violations, reduced motion, no-JS and keyboard walks equal to the base. **Scores** (§26:
+   composition, motion, imagery, interaction, institutional quality, coherence — the branch changes no composition, so
+   §9.9's bar for lane S is no page lower on any dimension than before; none is): the home with lane H 4.5 · 4.5 · 4 ·
+   4.5 · 4.5 · 4.5 in French (interaction 4 → 4.5: the first key's cost back at the base) and 4.5 · 4.5 · 4 · 4.5 · 4 ·
+   4.5 in Arabic (lane H's final review to confirm); Projet pilote 4 · 4 · 4 · 4 · 4.5 · 4.5; Parcours 4.5 · 4 · 4.5 ·
+   4.5 · 4.5 · 4.5; the pathway sheet 4 · 4 · 4 · 4 · 4.5 · 4.5; Entreprises 4 · 4 · 4.5 · 4 · 4.5 · 4.5; Institutions 4
+   · 4 · 4.5 · 4 · 4.5 · 4.5 (composition 4 against P1's reviewer's 4.5: the reviewer's own reading of a short page,
+   equal on the base and the branch); Universités et formation 4 · 4 · 4 · 4 · 4.5 · 4; Formation 4 · 4 · 4.5 · 4 · 4.5
+   · 4.5; Diplômes et titres 4.5 · 4 · 4 · 4 · 4.5 · 4.5; with lane P2's pages, FAQ 4 · 4 · 4 · 4.5 · 4.5 · 4.5
+   (interaction and coherence 4 → 4.5, MC-1), Glossaire 4 · 4 · 4 · 4 · 4 · 4 (interaction 3.5 → 4, MC-2), Forum 4 · 4
+   · 4 · 4 · 4.5 · 4 (interaction 3.5 → 4) and Réseau 4.5 · 4 · 4 · 4.5 · 4.5 · 4.5 (MC-3).
+3. **Read before merging** (the slices' product changes, as the checker asks).
+   - `static/css/v5/_sec-tracciato.css` — guard (a): right to left the light's box waits beyond the rail's start
+     (`[dir="rtl"] .tracciato__linea::after { translate: 110% 0 }`) and the lit lane runs `sez-run-rtl` (110 % →
+     −360 %), under `:root[dir="rtl"]` in the lit lane's container query; 1 418 / 1 434 B.
+   - `components/sezioni/mappa.html` and `_sec-emiciclo.css` — guard (b): the hemicycle pairs its seats and the locked
+     sentence's phrases through the pattern's own `data-seggio`, never Lume's L3 attribute `data-seat` (reserved for
+     the fragment containers `loader.js` seats). The contract's producer and reader are lane P1's —
+     `apps/ecosystem/services.py::recipients_sentence` (one f-string and its docstring) and `_institutions.css` (two
+     selectors) —: carried here so that the page never breaks, recorded as this family's slices (item 4).
+   - The library's register marker — guard (c): `data-registro` in eight library templates (`approdo`, `filo`,
+     `flusso`, `indice`, `mappa`, `mosaico`, `tracciato`, `stepper.html`) and eight of lane P1's
+     (`ecosystem/partials/approdo.html`, `ecosystem/universities.html`, `pathways/_tracciato.html`, `detail.html`,
+     `diplomas.html`, `index.html`, `index_interim.html`, `training.html`), one attribute token each, no visible
+     change; the chip's `data-register` is again the chip partial's and the two legends' alone.
+   - `static/js/src/sezioni/indice.js`, `spia.js`, `mappa.js` — P2's three request patches as P2's reviewer wrote them
+     (`spia.js.patch` normalised to LF): MC-1 (a phone opens the answer its address names, a same-document `hashchange`
+     selects or opens its answer, at once from the keyboard and under reduced motion), MC-2 (parts that share a row are
+     one stop, a followed link current at once), MC-3 (a chosen node whose entry stands below the screen brings it into
+     view); the built chunks inside their ceilings (indice 1 238 / 1 536, mappa 1 037 / 1 536, spia 806 / 1 024 B), the
+     three superseded chunks removed.
+   - Lane H's requests: `_sec-indice.css` (`.indice__glifo { flex: none }`, the ranks under `.indice__riga`);
+     `components/sezioni/protezione.html` and `_sec-strato.css` (the title carries its own language — `locked_text`,
+     its `locked_lang` when it falls back, the text byte for byte the locked title — and the plate's in-flow parts
+     share one 46 rem reading column); `components/photo.html` and `pages/partials/_ingresso.html` (the credit's
+     no-break space before the colon in French only; no msgid changes).
+   - The first keyboard input's restyle: `_sec-mosaico.css` (the universal subject `.mosaico *` → `.mosaico__soglia`
+     and `.mosaico__tessera`), `_reveal.css` (the stroke verb without its tag branch: a carrier holds the inherited dash
+     properties, its shapes follow; −23 B on `core/reveal.css`), `_sezioni.css` (three class-led selectors setting
+     `--sez-t: 0s`, read by the tile's glyph and rule, the disc and the key) — no whole-document restyle left on any
+     page measured.
+   - **The one preserved-family rule**: `static/css/v5/motion.css` §5, the disclosure's height — the rule
+     `[data-input="key"] .accordion__item::details-content { transition-duration: 0ms }` (Blink restyled the whole
+     document for it at the first key) is gone, the keyboard's condition now on the accordion's own interpolation rule,
+     `html:not([data-input="key"]) .accordion { interpolate-size: allow-keywords }`: from the keyboard the answer opens
+     and closes at once, for a pointer it still moves (the reviewer: FAQ 70 → 155 → 188 → 193 px for a pointer, 193 px
+     at 20 ms from the keyboard; the persona spaces' accordions pixel-identical). One residue, recorded for the
+     Director: on a keyboard close the discrete `content-visibility` flip keeps its 120 ms, invisible (the height is 0
+     and clipped) — every «custom property read by `::details-content`» form cost +6 to +9 B on `main.css`, over its
+     ratchet.
+   - `docs/design-v5/DESIGN_SYSTEM_V5.md` §14 names the library's marker.
+   - **No other preserved family is in the diff** (SECTION_SYSTEM_V2 §9.8: the navbar, the mega menus, the mobile
+     sheet and the footer, Lume, the premium forms, the contact channels' architecture, the privacy and cookie pages,
+     terminology, the organisation spaces, `base.html`, `tokens.css`), and no compliance guard (R-SC-1, the privacy
+     publication guard, the contact-channel and WhatsApp guards). No new JavaScript module, image, request or npm
+     package.
+4. **Ownership.** The id rule did not admit `v522-s2` (`v5<nn>-[hms]` takes one letter): it now takes `v5<nn>-s<n>`,
+   n from 2 to 9, from V5.22 on (`v5(?:2[2-9]|[3-9][0-9])-(?:p1|s[2-9])`), lane S keeping `v5<nn>-s`
+   (`scripts/check_ownership.py`: the rule and its comment; `tests/test_check_ownership.py`: `v522-s2` added as valid,
+   nine near-misses as refused — `v521-s2`, `v522-s0`, `v522-s1`, `v522-s22`, `v522-s2a`, `v522s2`, `v522-ss2`,
+   `v522g-s2`, `v522-s2-merge` —, no case removed or loosened; `OUTSIDE_THE_WAVES` and its comment name the lane). The
+   family `v522-s2` (wave 0, after `v522-p1`; base `269cf39`, head `5ae404c`): 3 whole files (the two new test modules
+   and the notes), 39 slices — lane S's seven sheets, three modules and eleven templates and partials, the five shared
+   guard modules, `DESIGN_SYSTEM_V5.md`, `motion.css` (its slice names the §5 rule alone) and lane P1's eleven files
+   (the eight templates, the producer, the sheet and `test_pages_v522_p1.py`: their slices name the contract renames,
+   one token or one assertion each) — and 18 generated files (eleven CSS dists, `rise.js` and six chunks, three of
+   them removed). `check_ownership.py v522-s2 269cf39 --head 5ae404c`: **PASS**; `--validate`: coherent, 57 families,
+   2 249 entries; `tests/test_check_ownership.py` on the branch: 135 passed.
+5. **Build, catalogue, checks** on the merged tree. `npm run build`, twice: the dist identical to the committed one (72
+   files) — reproducible, nothing to commit. Measured (gzip -9): `main.css` **32 716 B** (−2: the ratchet 32 718 held,
+   `motion.css`'s one rule the only change in it); `core/reveal.css` 3 526 / 6 144; `core/sezioni.css` 11 308;
+   `fronte.css` 6 141 / 6 144, unchanged; the page sheets that bundle the library `pathways/index.css` 10 117 / 10 240,
+   `sheet.css` 9 701 / 10 240, `training.css` 8 788 / 9 728, `diplomas.css` 8 895 / 9 728, `ecosystem/pilot.css`
+   9 508 / 9 728, `companies.css` 8 701 / 9 216, `institutions.css` 8 381 / 9 216, `universities.css` 7 630 / 8 448;
+   `rise.js` 1 325 / 1 536; every page's total under its ceiling (the builder's per-page sums, NOTES §5: −25 to +4 B a
+   page). `scripts/i18n_audit.py --sync`: **+0 −0** in it/en/ar/fr — the branch prints no new string (the credit's
+   colon is markup; the protection's title is the locked text); `--compile`: the four `.mo` files byte-identical to the
+   committed ones, 3 697 msgids, 100 % in every language. No locked text touched; nothing machine-translated.
+   `manage.py check`: no issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and
+   with a fictional value. `ruff check .` (ruff 0.16.8): all checks passed.
+6. **The confidential-material guard: green.** With `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read
+   in-process only, no value printed or written), `tests/security/test_confidential_material.py` alone, CI-style, on
+   the merged tree (19:18): **17 passed, 0 failed, 0 skipped**; it passes again inside the non-browser run and the
+   configured-number run (item 8). The merge's 63 paths — 60 added or changed text files checked (no image, no
+   compiled catalogue among them) — hold no CR byte and the owner-confirmed number in no form (counted in-process,
+   never printed); the three removed chunks carry nothing.
+7. **The test changes, against V5.20's strict rule** (the merge itself changed none of the lane's tests). The four
+   guards: (a) `test_every_horizontal_shift_has_its_rtl_twin` and (b) `test_l3_attaches_only_to_fragment_containers`
+   unchanged (no line of `test_rtl_static.py` or `test_loader_rules.py` in the diff), (c)
+   `test_data_register_is_written_by_the_partial_and_by_two_legends_only` unchanged — all three fixed in the product;
+   (d) `test_a_tag_is_a_term_and_carries_neither_a_register_nor_a_mark` updated and **stronger**: the floor of nine
+   became the exact set of the tags that remain (the community room 1, the company need 2, the helpdesk message 2 —
+   one tag more or less fails), and the terms, now the native disclosures of their locked definitions, are held to the
+   same invariant in their new form (no register of either kind, the word without a mark, the chevron beside it); the
+   old expectation contradicts SECTION_SYSTEM_V2 §3.5 PS-4 and §3.10 D1 (approved, composed by lane P1), cited in the
+   test with lane P1's request 2 and DL54-183 item 10. The guards' readers, each citing its reason: `test_o14_lint.py`
+   (a status context carries `data-register` or `data-registro`; two planted HTML cases and one CSS case for the new
+   marker — stronger), `test_interior_w3_f1.py` and `test_orientation_w3_f1.py` (the register reader reads both
+   markers — the same invariant), `test_pages_v522_p1.py` (six phrases and six seats pair through `data-seggio`, and no
+   element of the section carries `data-seat` — stronger), `test_motion_v512_a_w2.py` (the static assertion follows the
+   new mechanism — no `[data-input]` rule may end on `::details-content` — and the behaviour is proved in the browser
+   module: the same invariant). `test_sezioni_v522_s2.py` (30 source cases) and `test_sezioni_browser_v522_s2.py` (16
+   browser cases) are new; on a tree of `269cf39` with them copied in, 15 and 13 of them fail (the builder's NOTES
+   §6.3). The reviewer read every changed test under the rule (REVIEW §1): no assertion loosened, no skip added, no
+   timeout raised. The steward's: `tests/test_check_ownership.py` (`7f95cbc`), cases added and none changed (item 4).
+8. **The tests on the merged tree** (`d8d1098`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l8, one pytest per test
+   database):
+   - **The four guards, first** (19:19): on the merged tree **4 passed** —
+     `tests/i18n/test_rtl_static.py::test_every_horizontal_shift_has_its_rtl_twin`,
+     `tests/frontend/test_loader_rules.py::test_l3_attaches_only_to_fragment_containers`,
+     `test_state_chips_carry_a_register.py::test_data_register_is_written_by_the_partial_and_by_two_legends_only` and
+     `test_state_chips_carry_a_register.py::test_a_tag_is_a_term_and_carries_neither_a_register_nor_a_mark`; the same
+     four, read-only on v5-live's checkout of `269cf39` (design-v5 before the merge; `git status` empty after): **4
+     failed**. Red before, green after, three of them unchanged (item 7).
+   - **Non-browser**, 20 paths (19:20 to 20:16) — `tests/security`, `tests/compliance`, `tests/deployment`,
+     `tests/i18n`, the whole of `tests/frontend` (every guard of the library, the motion files, the budgets and
+     ceilings — `main.css`'s, the per-sheet and per-page ones of `test_frontispiece_v515_c`, `test_sezioni_v522_s` and
+     `test_pages_v522_p1` —, the bundle currency, the state chips and the O14 lint, the interior and orientation
+     guards, the chapter marks and the journey, the design documents, preview and showcase, the preserved families'
+     static guards), the W4-D document guards, `tests/test_check_ownership.py`, `tests/test_regen_design_inventory.py`,
+     `tests/test_env_example_is_complete.py`; `apps/cms/tests` (the locked texts and the split equality),
+     `apps/pages/tests`, `apps/ecosystem/tests`, `apps/pathways/tests`, `apps/glossary/tests`, `apps/faq/tests` (the
+     accordion), `apps/enquiries/tests`, `apps/orientation/tests` and the two portal modules that read the accordions
+     and the surfaces: **4 689 passed, 0 failed, 1 skipped, 2 xfailed** (the two recorded debts: the DEBUG showcase's
+     captions and the legacy token shim).
+   - **The configured number** (`ILE_WHATSAPP_NUMBER` set in-process to the preview's value, read from v5-live's
+     untracked `.env`, never printed; the log masked, with nothing to mask): `test_contact_channels_v519`,
+     `test_institutional` and the confidential-material guard (19:57 to 20:01) — **117 passed, 0 skipped**: the
+     environment-bound test runs and passes.
+   - **Browser** (`-m browser`, headless, one Chromium lock slot per session, label `v522-s2-merge/<session>`, each
+     session under 21 minutes and released): session A (19:21 to 19:30) — lane S's library and this branch's own modules
+     (`test_sezioni_browser_v522_s2`, `test_sezioni_browser_v522_s`, `test_seal_heads_browser_v522_s`),
+     `test_reduced_motion_w1_d`, `test_browser_v515_c`, the shell's `test_browser`: **70 passed**; session B (19:30 to
+     19:40) — lane P1's pages, which carry the contract renames (`test_pages_browser_v522_p1`,
+     `apps/ecosystem/tests/test_browser.py`, `test_browser_w3_f1`, `test_orientation_browser_w3_f1`,
+     `test_journey_browser_w3_d`) and lane M's `test_imagery_v522_m` (the credits): **106 passed**; session C (19:40 to
+     19:51) — `apps/pages/tests/test_browser.py`, `test_browser_w1_c` (the FAQ's rows and links),
+     `test_motion_browser_w4_b`, `tests/i18n/test_rtl_browser.py`, `test_browser_chips_w1_c`,
+     `test_service_pages_browser_w3_f2`: **95 passed**; session D (19:51 to 19:57) — `test_mobile_rtl_w4_a`,
+     `test_content_pages_browser_w3_f2`, the browser halves of `test_motion_v512_a_w2` (the disclosure from the keyboard
+     and for a pointer) and `test_forms_v515_b`, `test_header_fits_the_narrowest_viewport`: **55 passed**; sessions E
+     (20:18 to 20:37) and F (20:19 to 20:39), side by side, each in its own lock slot and on its own test database — the
+     preserved families' keyboard and overlay paths, since `motion.css` is one of them: E, the letterhead's overlays and
+     phone sheet (`test_overlays_browser_w2_a`, `test_browser_w2_c1`, `test_browser_w2_c2`, `tests/i18n`'s navigation,
+     overlay and W2-C2 right-to-left files), the contact channels' browser module, Lume (`test_lume_v512_a`,
+     `test_lume_v515_a`, `test_loader_w1_d`), `test_browser_w1_b` and the login (`test_entrance_w2_b`,
+     `test_entrance_form_w2_b`, `tests/i18n/test_rtl_browser_entrance.py`): **189 passed**; F, the platform — the
+     console's shell, phone and overlays, the dashboards, `test_platform_browser_v515_d`, the depot, the documents and
+     the drawer: **194 passed**; 0 failed.
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css`
+     32 716 B gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files and visits the
+     public doors), the design documents and the ownership checker; the tag is made only on green.
+   - The full suites, both halves, on a fresh copy belong to the next acceptance candidate's gate (V5.20; V5.22 §28),
+     after lanes H, P2 and S-close.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`), which runs and passes where the number is configured (item 8). The
+   private-table test runs (the table configured). Two xfails, the recorded debts (`test_design_showcase`'s captions,
+   strict, and `test_legacy_token_shim`, which passes only when the migration is finished); no xpass. The non-browser
+   run deselects the 726 browser tests of its paths: 709 of them ran in sessions A–F (every browser module of those
+   paths but the design preview's), and the design preview's 17 run with the record's check — none is left out.
+10. **Left open (not the steward's).**
+    - **The review's six minors**, none in this branch's product, each routed. **m1** — P2's new spy test
+      (`test_pages_browser_v522_p2.py::test_the_spy_lights_each_letter_followed_and_each_section_read`, from
+      `p2_with_lane_s.patch`) asserts `len(seen) == 5` for the Forum, while the test database's sommaire holds seven
+      links (the event before its date) and all seven light: compare with the sommaire's own link count before P2
+      merges (P2 or its steward). **m2** — P2's branch still writes the chip's `data-register` by hand in three
+      templates (`forum/partials/presentation.html`, `pages/partials/fronte/_rete_pannelli.html`,
+      `pages/partials/projet/_figura.html`) and reads it in three test lines: without
+      `evidence/v522/s2/requests/p2_data_registro.patch` guard (c) turns red again at P2's merge — a P2 merge condition,
+      with P2's half of the merge conditions (`p2_with_lane_s.patch`). **m3** — on lane H's home with this branch two
+      lane-S guards are red, `test_chapter_marks.py::test_no_public_page_draws_the_stair_nor_a_glyph_above_a_title…`
+      (`HOME_EXPECTED`) and
+      `test_journey_w3_d.py::test_the_home_draws_the_orientations_neutral_steps_on_the_public_passage`
+      (the old `stepper … across=True` include): H's declared merge conditions (its QA_ROUND3 m7, NOTES §12.5 item 6),
+      a cited V5.20 update for the V2 home of §3.1 before or with H's merge; neither is red on design-v5, whose home is
+      still the old one. **m4** — the ownership rows: done by this merge (item 4). **m5** — lane P1's page twin in
+      `_index.css` (`[dir="rtl"] .percorsi-tracciato .tracciato__linea::after` and its `sez-run-rtl`) now duplicates the
+      library's own: harmless, for S-close or lane P1. **m6** — the modality's last broad subjects (`_photo.css`'s and
+      `_sec-campata.css`'s `img`, `_sigillo.css`'s `:is()`, P1's `_pilot.css` `li`/`span`, P2's `_projet.css`
+      `.projet-racconto *`, the preserved `base.css` `a` and `main.css` field rules): INP is already within its target;
+      for S-close and the Director.
+    - **The lane's requests** (NOTES §8). To lane P1 (8.2): the first key's cost on its own sheets (`_pilot.css`'s
+      `li::after` and `[data-sec-state="wait"] .linea-v2 > ol > li…`, `_universities.css`'s `img`, `_index.css`'s and
+      `_training.css`'s `.icon` subjects — class-led forms, the pilot page first: 333 elements restyled at its first Tab
+      once the whole-document rules are gone) and the redundant twin (m5). To lane P2 (8.3): m1, m2 and `_projet.css`'s
+      universal subject. To lane H (8.4): nothing. To S-close (8.5): `_sigillo.css`'s `:is(.sez, .ingresso,
+      [data-sigillo-scope]):has(…)` as three selectors (H's request 3: 7 B over `fronte.css`'s 3 B of headroom), the two
+      `img` subjects (18 B on a home with 7 B left), `_reveal.css`'s other `:is()` subjects, and the two orphan chunks
+      `chunk-ESW3PKTX.js` and `chunk-RNCDCP3M.js` (unreferenced since v512-a W2). To the Director (8.6):
+      SECTION_SYSTEM_V2 §2 H writes the hemicycle's pairing as `:has([data-seat="n"]:hover)` — the example to amend to
+      `data-seggio`; the disclosure's 120 ms residue (item 3); and the preserved `base.css` rule
+      `html[data-input="key"] a { transition-duration: 0ms }` and `main.css`'s field rule, which the first key still
+      sends to every link and field — for a preserved-family pass measured against `main.css`'s ratchet.
+    - **The lane's deviations** (NOTES §9): H's request 3 and the two `img` subjects measured, not done (bytes); the
+      campata's settle and `sez-arch`'s `from` (H's §11.5 requests 1–2) outside this follow-up's brief; the keyboard's
+      condition for the accordion on its interpolation rule rather than a custom property read by `::details-content`
+      (every such form over `main.css`'s ratchet); lane P1's files carrying lane S's contract renames (recorded as
+      slices, item 4).
+    - **For lanes H and P2 and their stewards:** their final reviews take design-v5 with this merge in it. Lane H's
+      M2 is measured closed with this branch (REVIEW §4); its merge needs m3's cited update. Lane P2's merge needs its
+      half of MC-1…MC-3 (`p2_with_lane_s.patch`), `p2_data_registro.patch` (m2) and the spy test's count (m1), beside
+      QA_ROUND3's MC-4 and MC-5 (the catalogue union and the ownership rows).
+    - **For the Performance Lead:** LCP, CLS and INP on 8782 at the next candidate (the reviewer's twins: LCP medians
+      1.39–1.75 s on the home and 1.96–2.38 s on Parcours under network A, CLS ≤ 0.031).
+11. **The preview.** After the tag, 8780 is restarted on `v522/s2` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; ile_v5 needs no migration at this tree — the branch added none, `migrate --check` is run
+    before the start; the previous log kept as `srv8780.log.prev-v522-s2`). The checks — the four homes, the hub and its
+    strip with the tag, this record's decision document served by the hub; lane P1's pages in four languages as its
+    steward checked them, with this branch on them (the hemicycle's six seats and six phrases through `data-seggio` and
+    no `data-seat` on Institutions, the library's lists marked `data-registro`, «la protezione»'s title with `lang="fr"`
+    off French pages, the credits «Photo&nbsp;:» in French only, `rise.js` naming the three rebuilt chunks, each served,
+    the three superseded ones gone); the FAQ in four languages; the contact page in four languages with both channels,
+    the footer, the nine personas' homes, the server log; headed at 1440 and 390 in fr and ar, at 1440 in it and en, and
+    under reduced motion in fr and ar — «la protezione»'s title and body on one edge, the route board's light running
+    `sez-run` in French and `sez-run-rtl` in Arabic once a family is chosen, the FAQ's answer at its height at once from
+    the keyboard and moving for a pointer — are the steward's reports,
+    `C:/tmp/ile_v5_council/.work/v522-s2-merge/verify_8780_v522s2.json` and `headed_8780_v522s2.json`.
+12. **Release gate — unchanged.** V5.22 §28: «Do not promote main. Do not create v2.0.0. Do not create a release. Do
+    not deploy.» No push, no public tag; `v522/s2` is a local annotated tag. The next acceptance candidate needs lanes
+    H, P2 and S-close.
+
+**Why.** V5.20 asks that real defects be fixed in the product and that no guard be loosened to make a suite green; the
+four guards red on design-v5 since the v522-s and v522-p1 merges were lane S's (§9.7), and the page lanes' last
+findings that belong to lane S's modules — P2's merge conditions, H's first-key INP — had to land before their final
+reviews. The follow-up met its brief in round 1: the four guards green with the same or a stronger invariant, the three
+merge conditions proven on P2's pages, the first key's cost back at the base on lane H's home, no page lower on any
+dimension, the preserved families pixel-identical, `main.css` 2 B lighter; and the merge changes nothing else — what is
+visible today is small: «la protezione»'s French title on one edge with its body on Arabic pages, the French spacing of
+the photo credits, the route board's light right to left in Arabic, a keyboard user's disclosures opening at once.
+
+**Source.** The owner's V5.22, V5.20 and V5.12–V5.21; SECTION_SYSTEM_V2 §2, §9.1, §9.7–§9.9; `QA/v522/s2/NOTES.md`;
+`QA/v54/v522-s2/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v522/finish/v522-s2-qa1.md`);
+DL54-182, DL54-183.
+
+
+## DL54-185 · 5 November 2026 · Steward, the v522-h merge: V5.22 lane H — Homepage Composition V2; the Director's ruling on F-M2
+
+**Decisions** (the steward's, at the merge of `v522-h` into design-v5 on 5 November 2026 — the owner's V5.22
+(`V5_22_EDITORIAL_PATTERN_SECTION_COMPOSITION_REMEDIATION.md` §3, §23 and §27: every homepage section after the hero
+audited and recomposed, «VISIBLE IN PREVIEW: Homepage Composition V2»), V5.25 (final delivery mode: known defects only,
+targeted checks, «if all six dimensions are >= 4 and no blocker exists: MERGE», no new score loop), V5.26 (professional
+judgement), V5.20's strict test-update rule, the Director's SECTION_SYSTEM_V2 §3.1, §5.3, §9.3, §9.7, §9.8 and §9.9,
+the standing constraints of V5.12–V5.21, and the finish workflow's steward merge of lane H after lane S's follow-up
+(DL54-184 item 10, «for lanes H and P2 and their stewards»); label `v522-h-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 17:48 with design-v5 at `28fa9fa2` (`v522/s2`,
+   DL54-184's record). SECTION_SYSTEM_V2 §9.7 writes the order S → M → H → P1 → P2 → S-close; S, M, P1 and lane S's
+   follow-up are merged, so lane H is next, before lane P2 (whose second final review passed the same afternoon and
+   whose steward merges after this one). The lane had already merged design-v5 `28fa9fa2` into its branch on 3 November
+   (`0191e444`, no conflict: the lane's 28 files and design-v5's 122 have no file in common), rebuilt its dist on the
+   merged library (`7a8eecd9`), carried its catalogue entry (`aa640b08`) and answered the final review (`d5ba7c19`,
+   the head the reviewer measured); design-v5 had not moved since: `git merge design-v5` into the branch answered
+   «Already up to date», and `28fa9fa2...d5ba7c19` is the lane's own diff (38 paths). The family recorded on the branch
+   (`dc5ecb46`, item 4), the catalogue pass a no-op (item 5), then `git merge --no-ff` into design-v5 (`dc24fe84`; its
+   tree `9199fea4` is the branch's).
+2. **The review** (`QA/v54/v522-h/REVIEW.md`, copied byte for byte from the evidence's `finish/v522-h-final-qa2.md`,
+   head `d5ba7c19`, 5 November 16:15–17:40, the second final review — the first, `finish/v522-h-final-qa1.md` of
+   2 November, had NOT PASSED with 2 major and 6 minor, and the lane's improve round answered it, NOTES §14):
+   **PASSED, 0 major, 6 minor, all carried or the steward's.** Measured independently by the reviewer, headed
+   chromium-1234 on the branch served as it stands: **F-M1 fixed** — on `/ar/` the locked French pilot title, the Arabic
+   lead and the link stand **0.0 px** off the gold thread's axis at 1440, 1280 and 1024 and their right edges spread
+   **0.0 px** at 768, 430, 390, 375 and 360 (fr, it and en 0.0–0.1 px, one left edge below 64 rem); **F-m2 fixed** —
+   the lead's last line holds 2–7 words at the 8 widths in ar, fr, it and en; **F-m1 fixed** — gate G3 closed, the two
+   interim plates each at its own height (fr 164 / 272 px at 1440 and 1280, 192 / 356 at 1024, 144 / 288 at 390; ar
+   164 / 244, 192 / 272, 144 / 216), 0 px of empty plate under any last statement; **F-M2 judged under the Director's
+   ruling** (item 3); **F-m5** lane H's part done (the catalogue entry on the branch, lane S's two guards updated under
+   V5.20), the remainder the steward's (this entry); F-m3, F-m4, F-m6 carried, not lane H's files (item 10). The
+   sections' heights at 1440 are the first final review's to the pixel (fr 6 112, ar 6 103); overflow 0, no wide
+   element, 0 console errors, 0 hidden or ringless focus stop in 8 sweep runs (gate open and closed); axe-core 4.13 at
+   0 violations in 8 document runs and in every composed section; reduced motion (no `data-sec-state` written),
+   no-JS (8 / 8 panels, the four doors, the four plates, every locked text) and keyboard (31 / 34 stops in reading
+   order, the tablist's arrows, End and Home) pass; the clean-archive build reproduces the committed dist byte for
+   byte, twice; the diff since design-v5 names no preserved family and no locked registry; the configured contact
+   number in 0 tracked files and 0 lines of the diff. **Scores** (§26: composition, motion, imagery, interaction,
+   institutional quality, coherence): `/fr/`, `/ar/`, `/it/` and `/en/` at 1440 and 390 all **4.5 · 4.5 · 4 · 4 ·
+   4.5 · 4.5** — the Arabic coherence back from 4.0 to 4.5 (F-M1), imagery 4.0 (lane M's ecosystem frame, the stage
+   without an image), interaction 4.0 (the bar; the desktop pointer-after-keyboard residual, not lane H's to trim).
+   §9.9: items 1–6 PASS (6 with the residual of item 3 recorded), 7 the integrated tree's gate (not this review's),
+   8 the label, this merge. Verdict on the owner's question «a premium institutional legal-tech platform, not an
+   online report with cards?»: yes, in all four languages at every width — the Arabic page now included.
+3. **The Director's ruling on F-M2 (the first keyboard input's INP), recorded in its words.** The relative gate of the
+   first final review («within 20 ms of the base», F-M2; round 3's M2) **is replaced by the absolute budget of
+   SECTION_SYSTEM_V2 §5.3: first-Tab and first-pointer-after-keyboard INP ≤ 200 ms at p75 on the compressed twin,
+   desktop and phone, fr and ar, measured paired against the base with n ≥ 5; the residual trim is lane S's follow-up
+   (closing).** The reviewer's measure of record (REVIEW §7: the night run of 3 November 00:29–00:40 on an idle
+   machine, both lock slots, n = 12 a cell; network A, CPU × 4; the lane `d5ba7c19` against the base `28fa9fa2`, both
+   compressed twins on one database; the three daytime runs of 5 November read for their pairing only, the machine
+   busy with lane P2's final round): **the first Tab within the budget in all four cells** — the lane **160 · 176 ·
+   128 · 168 ms at p75** (desk fr, desk ar, phone fr, phone ar; the base 104 · 96 · 96 · 96), 24–72 ms under it; **the
+   first pointer input after the keyboard within the budget on the phone** (144 · 112 ms; the base 104 · 96) **and
+   over it on the desktop on both trees** — the lane 216 (fr) · 248 (ar) ms against the base's own 176 · 208, the
+   lane's share +32 · +24 ms (Hodges–Lehmann; +16 · +40 at the median). The base at `28fa9fa2` already misses that
+   cell in Arabic and sits 24 ms under it in French: holding lane H's merge would not bring it within budget.
+   Attribution (deterministic, the restyle counts of the lane's flip lab and the reviewer's traces, which agree): the
+   lane's home restyles 520 / 536 elements at the pointer flip against the base's 274 / 279; lane H's one class-led
+   modality rule names 9 of them (4 arrows, 4 arches, 1 photograph); the rest is the preserved `main.css` modality
+   rules (§9.8: `html[data-input="key"] a` on 115 links and `.btn` on 16 buttons — 12 links and 11 buttons more than
+   the base, every one a composed section's own call) and lane S's library (the vocabulary's
+   `:root:not([data-input="key"])` guards ≈ 150 elements, the keyboard tier's inherited `--sez-t` 39; NOTES §14.3's
+   table, route (a)). **Decision: under the ruling, §9.9 item 6 reads PASS with the residual recorded**; the desktop
+   pointer-after-keyboard cell is carried to S-close as F2-m1 with its numbers and its attribution (item 10). A note on
+   method, for every INP figure recorded in V5.22: the twin's absolutes are a night measure — a daytime figure without
+   the base twin's figure beside it says nothing, so every INP figure carries the base's.
+4. **Read before merging** (the slices' product changes, as the checker asks; the two new test modules, `_casa.css` and
+   the lane's notes are the family's whole files).
+   - `templates/pages/home/_*.html` — every section after the hero recomposed on lane S's library: H0 the hero's
+     foot «la soglia» (`_hero.html`: the line after the locked description, `data-sec="soglia"`, the verb `draw-y`,
+     `aria-hidden`; the first screen untouched, §9.8); S1 «il passaggio» (`_entrances.html` and the `rail` branch of
+     `components/entrances.html`: on a phone the four doors as a native snap rail of equal night plates, each one link,
+     the arch drawn once through its own mask; the plain list every other caller renders unchanged); S2 «la linea V2»
+     (`_orientation.html`: the one include of `components/stepper.html` with every V2 parameter, the route opening on
+     the orientation's T1 seal `ile-orienta`, the locked sentence cut at its own commas by
+     `pathways.services.how_it_works` and said whole once for assistive technology, the caveat or the closed gate's note
+     as the terminal, the call at the end); S3 «l'indice» (`_pathways.html`: the eight regular pathways as an index
+     beside a raised stage, the registry's glyph and the prescribed title, the locked order, no numeral; disclosure rows
+     on a phone; `pathway_list.html` left without a consumer); S4 «il panorama» (`_pilot.html`: the night column between
+     two 2:3 panels developing from black and white into colour, the gold thread, the title with its `lang`, the lead
+     in the page's language, one link); S5 «lo strato» (`_trust.html`: four plates, each a question with its «Non.» as
+     the keyword and the locked answer whole, each opening its FAQ entry); S6 «la protezione» (`_antifraud.html`: the
+     library's one warning plate with its seal `ile-scudo`, the locked body on its own full stops); S7 «la campata»
+     (`_ecosystem.html` with the new `_ecosystem_frame.html` and `_ecosystem_colophon.html`: the working table under
+     the arch beside the colophon); S8 the reserved row (`_reserved.html`: the T5 seal `ile-accesso` whose key turns a
+     quarter, «CONNEXION», the footer continuing the night); `_news.html` the V2 shell and a statement head. Every
+     locked text byte-identical (`test_locked_content`, the six-word guard, the split equality tests, item 8).
+   - `apps/pages/static/pages/css/pages.css` — rewritten for the V2 home: the library partials imported, the shell,
+     S1–S8 and their right-to-left twins (§7 the pilot: `[dir="rtl"] .page-home .pilota__titolo[lang] { text-align:
+     end }` and, inside the 64 rem block, `center`; `.pilota__lead { text-wrap: pretty }`; §8 `.strato__lastre--2 {
+     align-items: start }`; §4 the home's one modality rule, three class-led subjects, `transition-duration: 0s`);
+     page-only, **11 306 / 12 288 B** gzip -9. `hero.css` — H0 only: the line, its node, the paper's fade into the
+     orientation's wash; the Arabic page's French-description rule now `pages.css`'s; **10 899 / 11 264 B**.
+     `static/css/v5/_casa.css` (new, 66 lines) — the home's gradients and threads, tokens only (an app sheet may hold
+     no gradient).
+   - `apps/pages/services.py` — the sections' data: the doors' glyphs, the orientation's stations (the locked sentence
+     cut by `pathways.services.how_it_works`, read-only), the pathways' stages (the link only when the sheet is
+     published), the trust plates' FAQ permalinks, `SectionView.ground` and `_grounds()` (two light grounds never
+     touch, whatever the back office's order). `apps/pages/content.py` — the pilot's lead rewritten by the team
+     (SECTION_SYSTEM_V2 §3.1 S4: «Le même geste, sur le cèdre et sur le marbre : deux savoir-faire, deux rives, un même
+     projet.» in place of «Des besoins des entreprises au suivi : la séquence du projet pilote, étape par étape.»),
+     `SUPERSEDED_DEFAULTS`, `PATHWAY_FAMILY_KEYS`. `apps/pages/seeds.py` — `seed_home_sections` brings a row that still
+     holds a superseded default word for word to the team's current text; an editor's text is never touched (item 11:
+     the shared databases).
+   - `locale/**` — the pilot lead's catalogue entry, carried on the branch (`aa640b08`): +1 −1 in it/en/ar/fr, the
+     it/en/ar `msgstr` the lane's professional renderings («Lo stesso gesto, sul cedro e sul marmo: due saperi, due
+     sponde, un unico progetto.», «The same gesture, on cedar and on marble: two crafts, two shores, one project.»,
+     the Arabic reviewed: the formal register, the Arabic comma, no Latin run), the fr catalogue the sync's own French
+     text, the four `.mo` compiled from their `.po`; no locked text touched, nothing machine-translated.
+   - `docs/design/DESIGN_SYSTEM_2026.md` — the `pathway_list.html` entry: no consumer since V5.22, the example marked
+     historic, S-close named for the component's retirement with its dead rules.
+   - The tests: item 7.
+   - **No preserved family is in the diff** (SECTION_SYSTEM_V2 §9.8: the navbar, the mega menus, the mobile sheet and
+     the footer, Lume and `motion.css`, the premium forms, the contact channels' architecture, the privacy and cookie
+     pages, terminology, the organisation spaces, `base.html`, `tokens.css`, `main.css`, lane S's library and runtime),
+     and no compliance guard (R-SC-1, the privacy publication guard, the contact-channel and WhatsApp guards). The one
+     §9.8 exception the lane uses is its own, item 4 of the named exceptions: the home's footer junction by a page-only
+     rule in `pages.css`. No new JavaScript module, image, request or npm package.
+5. **Ownership.** The id rule already admits `v5<nn>-h` (`scripts/check_ownership.py` unchanged);
+   `tests/test_check_ownership.py`: `OUTSIDE_THE_WAVES` and its comment name the lane (one member added, no case
+   removed or loosened). The family `v522-h` (wave 0, after `v522-s2`; base `28fa9fa2`, head `d5ba7c19`): **4 whole
+   files** (`apps/pages/tests/test_home_v522_h.py`, `test_home_browser_v522_h.py`, `static/css/v5/_casa.css`,
+   `docs/design-v5/QA/v522/h/NOTES.md`), **32 slices** — the eleven home partials and `components/entrances.html`
+   (the `rail` branch), `_hero.html` and `hero.css` (the foot only), `pages.css`, `services.py`, `content.py`,
+   `seeds.py`, the lane's two shared test modules (`apps/pages/tests/test_home.py`, `test_browser.py`), lane S's two
+   guards and `test_french_typography_w2_d.py`, `DESIGN_SYSTEM_2026.md`, the eight `locale/**` files, and the two new
+   ecosystem partials (created inside w2-e's whole glob, so slices by the checker's rule) — and **2 generated** files
+   (the two dist sheets). `check_ownership.py v522-h 28fa9fa2 --head d5ba7c19`: 4 inside, 32 slice, 2 generated →
+   **PASS**; `--validate`: coherent, 58 families, 2 285 entries; `tests/test_check_ownership.py` on the branch:
+   **135 passed**.
+6. **Build, catalogue, checks** on the merged tree (`dc24fe84`). `npm run build`, twice (17:54): the dist identical
+   to the committed one (`git status` empty after each) — reproducible, nothing to commit. Measured (gzip -9):
+   `main.css` **32 716 B** (the ratchet 32 718 held; untouched by the lane), `core/portico.css` 2 993, `core/reveal.css`
+   3 526, `pages/css/hero.css` 10 899 / 11 264, `pages/css/pages.css` 11 306 / 12 288; **the home's five sheets
+   61 440 / 61 440 B — exactly at the ceiling, 0 B of headroom** (recorded as F2-m6, item 10); `home.js` 7 357 /
+   8 192, `rise.js` 1 325 / 1 536. `scripts/i18n_audit.py --sync`: **+0 −0** in it/en/ar/fr (the lane's one entry is
+   already on the branch); `--compile`: the four `.mo` files byte-identical to the committed ones, 3 697 msgids,
+   100 % in every language, no error. No locked text touched; nothing machine-translated. `manage.py check`: no
+   issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and with a fictional value
+   (the lane added no migration). `ruff check .` (ruff 0.16.8): all checks passed.
+7. **The confidential-material guard: green; the test changes, against V5.20's strict rule.** With
+   `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read in-process only, no value printed or written),
+   `tests/security/test_confidential_material.py` alone, CI-style, on the merged tree (17:55): **17 passed, 0 failed,
+   0 skipped**; it passes again inside the security set and the configured-number run (item 8). The merge's 40 paths —
+   36 added or changed text files checked (no image, no compiled catalogue among them) — hold no CR byte and the
+   owner-confirmed number in no form (counted in-process, never printed). The test changes (the merge itself changed
+   none of the lane's tests): lane S's two guards, updated on the branch as the final review's merge condition asked,
+   each citing V5.22 / SECTION_SYSTEM_V2 §3.1 and §4 and the strict rule — `tests/frontend/test_chapter_marks.py`
+   (*before:* the home skipped the «no bare mark» rule and only had to draw V5.12's two chapter marks `compass` and
+   `signpost`, which the V2 home no longer draws; *now:* the home is held to the rule every page holds — no stair, no
+   bare mark, no glyph above a title, one concept once — **and** its seals must be exactly `ile-orienta`, `ile-scudo`,
+   `ile-accesso`, in that order, each once, on `/fr/` and `/ar/`: stronger) and
+   `tests/frontend/test_journey_w3_d.py::test_the_home_draws_the_orientations_neutral_steps_on_the_public_passage`
+   (*before:* the pre-V2 include string; *now:* exactly one include of `components/stepper.html` with every V2
+   parameter and `only`, and still no `sequence__` class: stronger; two long lines re-wrapped);
+   `tests/frontend/test_french_typography_w2_d.py` (the pilot's new lead with its no-break space before the colon; the
+   trust answers and the anti-fraud body held to their element's `textContent`, character for character, in the V2
+   markup — the same invariant); the lane's own `apps/pages/tests/test_home.py` and `test_browser.py` (the home's
+   assertions follow the V2 composition, one browser test renamed, the rule cited where an old expectation conflicted
+   with the approved composition); the lane's new modules `test_home_v522_h.py` and `test_home_browser_v522_h.py`
+   (two static guards and one browser case over 8 widths × 4 languages added in the improve round: against the merged
+   tree's sheet, swapped in and restored byte for byte, the browser case fails at all 8 widths — it bites). The
+   reviewer read every changed test under the rule (REVIEW §5): no assertion loosened, no skip added, no timeout
+   raised. The steward's: `tests/test_check_ownership.py` (`dc5ecb46`), one set member and its comment, no case
+   changed (item 5).
+8. **The tests on the merged tree** (`dc24fe84`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l6, one pytest per test
+   database — V5.25 §7: the lane's targeted tests, the suites the reviewer ran at `d5ba7c19`, plus the steward's):
+   - **The home and lane H's own** (17:55 to 18:09, `test_ile_v5_l6ha`) — `apps/pages/tests/test_home_v522_h.py`,
+     `test_home.py`, `test_templates_static.py`, `test_prescribed_fragments.py`,
+     `tests/compliance/test_locked_content.py` (the locked checksums), `tests/frontend/test_french_typography_w2_d.py`,
+     `test_services.py`, `test_review2.py`,
+     `tests/frontend/test_frontispiece_v515_c.py` (the per-sheet and per-page ceilings — the home's five sheets at
+     61 440 / 61 440), `test_design_docs.py`, `test_css_bundle_is_current.py`, `test_static_pipeline.py`: **512 passed,
+     0 failed, 0 skipped** (the reviewer's 512).
+   - **The guards around the merge and the ownership checker** (17:56 to 18:07, `test_ile_v5_l6hb2`) —
+     `tests/frontend/test_chapter_marks.py` and `test_journey_w3_d.py` (lane S's two guards, green with their V5.20
+     updates), `tests/i18n/test_catalogues.py` (the lane's entry present, no simulated pass), `test_page_integrity.py`,
+     `test_rtl_static.py`, `test_locked_texts.py`, `tests/frontend/test_loader_rules.py`,
+     `test_state_chips_carry_a_register.py`, `test_o14_lint.py`, `test_sezioni_v522_s.py`, `test_sezioni_v522_s2.py`
+     (lane S's library and follow-up, with the home composed on them), `test_interior_w3_f1.py`,
+     `test_orientation_w3_f1.py`, `tests/compliance/test_imagery_v512.py`, `tests/test_check_ownership.py` (with the
+     family's rows): **873 passed, 0 failed, 0 skipped** (the reviewer's 738 and the checker's 135).
+   - **Security and contact** (18:05 to 18:08, `test_ile_v5_l6hd`) — `tests/security/test_confidential_material.py`,
+     `tests/compliance/test_no_personal_data_in_repository.py`, `apps/pages/tests/test_contact_channels_v519.py`,
+     `tests/compliance/test_phase3_texts_not_leaked.py`: **81 passed, 1 skipped** — the one environment-bound test
+     (item 9), which the next run covers.
+   - **The configured number** (18:08 to 18:13, `test_ile_v5_l6hc`; `ILE_WHATSAPP_NUMBER` set in-process to the
+     preview's value, read from v5-live's untracked `.env`, never printed; the log masked, with nothing to mask):
+     `test_contact_channels_v519`, `test_institutional` and the confidential-material guard — **117 passed,
+     0 skipped**: the environment-bound test runs and passes.
+   - **Browser** (`-m browser`, headless, Chromium lock slot A, label `v522-h-merge/br_home`, 17:56 to 18:06,
+     released; `test_ile_v5_l6hbr`) — `apps/pages/tests/test_home_browser_v522_h.py` (the lane's own, the 8 × 4 pilot
+     statement case included) and `apps/pages/tests/test_browser.py`: **69 passed, 0 failed** (the reviewer's 69).
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css`
+     32 716 B gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files and visits the
+     public doors), the design documents and the ownership checker; the tag is made only on green.
+   - The full suites, both halves, on a fresh copy belong to the next acceptance candidate's gate (V5.20; V5.22 §28;
+     V5.25 §7), after lane P2 and S-close.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`, `test_contact_channels_v519.py:365`), which runs and passes where the number
+   is configured (item 8). The private-table test runs (the table configured). No xfail among the targeted modules'
+   runs; no xpass. The lane added no skip and raised no timeout (item 7).
+10. **Left open (not the steward's).**
+    - **The review's six minors.** **F2-m1** — the first pointer input after the keyboard on the desktop twin over the
+      200 ms p75 budget on both trees (the lane 216 fr · 248 ar, the base 176 · 208; the lane's share +32 · +24 ms):
+      carried to **S-close by the ruling** (item 3), with its attribution — the preserved `main.css` modality rules
+      (115 links, 16 buttons under `html[data-input="key"]`; §9.8: a decision for after acceptance, or a class-led
+      subject if the Director opens it), lane S's vocabulary guards (≈ 150 elements) and keyboard tier (39, NOTES
+      §14.3 route (a)), lane H's one rule 9 elements; re-measured at night, both slots, n ≥ 9, the base's figures beside
+      the lane's. **F2-m2** (= F-m3, lane S / S-close) — «la protezione»'s locked anti-fraud body has plain spaces
+      inside its guillemets, so on phones a guillemet breaks from its word («« vendre / » un visa» at 390, «vous « /
+      vendre »» at 375 and 360): a no-wrap span around each «…» group through `locked_spans` in
+      `components/sezioni/protezione.html`, `textContent` byte-identical — one change serves every page with the
+      plate. **F2-m3** (= F-m4, the Director) — rhythm: the moment «il panorama» is 738 px (0.82 vh at 1440 × 900)
+      after the 1 515 px integrity band (§3.1 ≈ 82 vh; §1 rule 5 ≥ 1 viewport): a composition call, not a defect of the
+      round. **F2-m4** (= F-m6, S-close / the Director) — the orientation's caveat plate (`.linea__terminale`,
+      `_linea-v2.css`) on the Arabic page keeps its rule on the reading edge while its French line starts at the
+      plate's far end: the ruling S2's reviewer gave «la protezione»'s wide plates, or that plate's treatment.
+      **F2-m5** — the steward's merge steps: done by this merge (items 5, 6, 11). **F2-m6** — **the home's CSS total
+      sits exactly at its 61 440 B ceiling** (0 B headroom; `pages.css` has 982 B of its own, the page total none):
+      any later byte in `core/reveal.css`, `core/portico.css`, `hero.css` or `pages.css` on the home needs an
+      equivalent rewrite or a ceiling decision by the Director; the lane's equivalent rewrites of the improve round
+      (NOTES §14.4) show the method.
+    - **The lane's requests** (NOTES §14.8, §12.5 item 6, §11.5): to lane S / S-close, F-m3 and the route (a) table
+      of §14.3 if the Director opens the trim; the campata's settle cancelled by the shell and `sez-arch`'s `from`
+      keyframe; the 48 rem tabs hook; the `ol[lang]` direction; `.testa__label:lang(ar)`; a phone index entrance in
+      the library. To lane M: the ecosystem frame's softness (round 1's m9). To the Director: F-m4 and F-m6.
+    - **The lane's deviations** (NOTES §14.9): F-M2 closed by the ruling, not by the lane (its share measured as nil);
+      `text-align: match-parent` dropped for two explicit rules (Chromium 151 supports only the prefixed form); the
+      folded keyboard rule keeps `transition-duration: 0s`, not `transition: none` (the home's token guard); lane S's
+      two guards updated on this branch, not by lane S (the merge condition).
+    - **For lane P2's steward (next):** merge design-v5 with this merge into `v522-p2` first (lane H owns the shared
+      test modules `apps/pages/tests/test_services.py`, `test_templates_static.py`, `test_browser.py` and
+      `test_review2.py`, §9.7: P2's own assertions live in its own modules, and `apps/pages/content.py` and
+      `services.py` are read, not edited, by P2 — a conflict there is lane H's to settle); the catalogue union; P2's
+      three templates' `data-registro` (DL54-184 m2) and the spy test's count (m1); `seed_all` is not P2's.
+    - **For S-close:** beside F2-m1, F2-m2 and F2-m4, `pathway_list.html` and its dead rules (DESIGN_SYSTEM_2026 §),
+      the old home's unused sheets if any remain after P2, the orphan chunks and the `:is()` subjects of DL54-184
+      item 10.
+    - **For the Performance Lead:** LCP, CLS and INP on 8782 at the next candidate (the reviewer's night twins: LCP
+      medians 1.39–1.71 s on the home under network A, CLS ≤ 0.05; 8782 was down during the review and was not
+      started — the twins stood in for it, built as it is built).
+11. **The shared databases and the preview.** Before the restart, `manage.py seed_all --only pages.home_sections` with
+    the merged tree on the two shared databases, `ile_v5` (8780) and `ile_v5_perf` (8782): on each, «0 homepage
+    section(s) created, 11 ensured, **1 untouched default(s) brought to the team's current text**» — the pilot row
+    still held the seed's old lead word for word («Des besoins des entreprises au suivi : …») and now holds the
+    team's («Le même geste, sur le cèdre et sur le marbre : …», read back); no other row touched, an editor's text
+    never
+    (`SUPERSEDED_DEFAULTS`). After the tag, 8780 is restarted on `v522/h` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; ile_v5 needs no migration at this tree — the lane added none, `migrate --check` is run
+    before the start; the previous log kept as `srv8780.log.prev-v522-h`). The checks — the four homes, the hub and
+    its strip with the tag and the label «Homepage Composition V2», this record's decision document served by the hub;
+    the home in four languages as the preview serves it (200, the V2 sections and no chapter head, the three seals
+    `ile-orienta`, `ile-scudo`, `ile-accesso` in that order and each once, no bare mark, the home's five sheets linked
+    and served, the eight index rows, the four door plates, the reserved row, the pilot's lead in the page's language
+    with the locked French title marked `lang="fr"` off French pages and the old lead gone, Arabic right to left); the
+    other fifteen public doors in four languages → 200; the contact page in four languages with both channels, the
+    footer, the nine personas' homes in fr and ar, the server log (0 tracebacks, 0 5xx); headed chromium-1234 at 1440
+    and 390 in fr and ar, at 1440 in it and en, and under reduced motion in fr and ar — after a play-through, the
+    pilot statement's lines on one centre from 64 rem and one reading edge below, the lead's last line never one word,
+    the seals, the index's eight rows, the doors' four plates on a phone with no sideways scroll, no `data-sec-state`
+    written under reduced motion, one Tab setting `html[data-input="key"]`, overflow 0, 0 console errors — are the
+    steward's reports, `C:/tmp/ile_v5_council/.work/v522-h-merge/verify_8780_v522h.json` and
+    `headed_8780_v522h.json`, with the stills under `shots/`.
+12. **Release gate — unchanged.** V5.22 §28 and V5.25 §9: «Do not promote main. Do not create v2.0.0. Do not create a
+    release. Do not deploy.» No push, no public tag; `v522/h` is a local annotated tag. The next acceptance candidate
+    needs lane P2 and S-close, then V5.25 §3's one matrix and §7's one full technical gate on the integrated tree.
+
+**Why.** V5.25 ends the score loops: a lane whose six dimensions are at or above the bar and whose remaining findings
+no further round of its own could remove is merged, and lane H's second final review found exactly that — every
+defect of the first review the lane could close is closed and measured so, the Arabic home's moment on one alignment
+at every width, the compositions and verbs unchanged since the review that scored them. The first keyboard input is
+judged as the Director ruled, by the absolute budget rather than by a 20 ms margin over a base that is itself being
+recomposed: the first Tab is within it in every cell, the one cell over it (the desktop pointer after the keyboard) is
+over it on the base too and is lane S's to trim, so it is recorded with its numbers and carried, not held against the
+home. What the owner sees today is the whole homepage after the hero recomposed — the strongest expression of the
+design system V5.22 §23 asks for — in four languages, with its locked texts byte-identical and its budgets at, not
+over, their ceilings.
+
+**Source.** The owner's V5.22, V5.25, V5.26, V5.20 and V5.12–V5.21; SECTION_SYSTEM_V2 §3.1, §5.3, §9.3, §9.7–§9.9, §10;
+`QA/v522/h/NOTES.md` (§1–§14); `QA/v54/v522-h/REVIEW.md` (copied byte for byte from
+`C:/tmp/ile_v5_council/evidence/v522/finish/v522-h-final-qa2.md`); the Director's ruling on F-M2 as the finish
+workflow relayed it; DL54-184 item 10.
+
+
+## DL54-186 · 5 November 2026 · Steward, the v522-p2 merge: V5.22 lane P2 — Page Composition V2: system, trust and reading
+
+**Decisions** (the steward's, at the merge of `v522-p2` into design-v5 on 5 November 2026 — the owner's V5.22
+(`V5_22_EDITORIAL_PATTERN_SECTION_COMPOSITION_REMEDIATION.md` §12, §13 and §27: the second pass on Le projet, Réseau,
+Contact, FAQ, Glossaire, Vivre en Italie and the Forum, «VISIBLE IN PREVIEW: Page Composition V2»), V5.23 (Q9, AGAMI's
+identification block), V5.25 (final delivery mode: the second page group finished, known defects only, targeted checks,
+«if all six dimensions are >= 4 and no blocker exists: MERGE», no new score loop), V5.26 (professional judgement),
+V5.20's strict test-update rule, the Director's SECTION_SYSTEM_V2 §3.2, §3.11–§3.18, §5.3, §9.5, §9.7, §9.8 and §9.9,
+the standing constraints of V5.12–V5.21, and the finish workflow's steward merge of lane P2 after lane H (DL54-185 item
+10, «for lane P2's steward (next)»); label `v522-p2-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 18:36 with design-v5 at `01096804` (`v522/h`, DL54-185's
+   record). SECTION_SYSTEM_V2 §9.7 writes the order S → M → H → P1 → P2 → S-close; S, M, P1, lane S's follow-up and H
+   are merged, so lane P2 is next and S-close follows. The lane's branch stood at `6118d543` (the final improve round on
+   its merge `b995367f` of design-v5 `28fa9fa2`, the head the second final review measured); design-v5 had moved by lane
+   H's merge, so `git merge design-v5` into the branch came first (`9dd2ec4b`): one conflict, the catalogue — lane H's
+   +1 −1 and lane P2's +10 both appended at the end of the four `.po` — resolved as the union (design-v5's text first,
+   then the lane's ten blocks exactly as it appended them, every entry of both sides once, the four `.mo` recompiled),
+   no other file in common (lane H's 38 paths and the lane's 85 share only `locale/**`; `apps/pages/content.py` and
+   `services.py`, lane H's, are read by P2 and were never edited), the committed dist current on the merged tree (`npm
+   run build`, `git status` empty). Then the catalogue pass (`1c60149a`, item 6), the family recorded on the branch
+   (`37f6aa01`, item 5), and `git merge --no-ff` into design-v5 (`fd291ad3`; its tree `b45f8b0d` is the branch's).
+2. **The review** (`QA/v54/v522-p2/REVIEW.md`, copied byte for byte from the evidence's `finish/v522-p2-final-qa2.md`,
+   head `6118d543`, 5 November 16:15–17:30, the second final review — the first, `finish/v522-p2-final-qa1.md` of 2
+   November, had NOT PASSED with 1 major (the integration gate: three templates still wrote the bare `data-register`,
+   MC-1's P2 half not on the branch) and 6 minor, and the lane's final improve round answered it, NOTES FI.1–FI.10):
+   **PASSED, 0 major, 3 minor, none of them lane P2's to fix before the merge.** Measured independently by the reviewer,
+   headed chromium-1234 on the branch served as it stands (the branch *is* the integrated tree: `28fa9fa2` is its
+   ancestor): **M1 fixed** at the root — the three templates write the library's `data-registro` (Forum 1, Le projet 2,
+   Réseau 2; the bare marker 0), guard (c) and the three icon-count cases green (374 passed), MC-1's P2 half on the
+   branch — a phone's first paint shows the address's answer alone at `DOMContentLoaded`, **30 of 30** permalinks at
+   390/375/360 in fr and ar with **CLS 0**, 12 of 12 same-document steps followed, W1-C's step restored; **m1 fixed**
+   (P2's part) — a dictionary card answers the hand in place, the rail lights all eight letters in **24 of 24**
+   read-throughs (1440/1280/1024/768, fr/ar, the pointer in the margin or on either side of the register); **m2 fixed**
+   — AGAMI's identity band plays AG-1's signature in view at load in fr and ar (mask, colonnade stroke, connector; the
+   portico mirrored on the Arabic page, 1 pixel of 207 693 differing at rest); **m3 fixed** — the rows of the two V2
+   disclosures stand at opacity 1 from the first frame; **m4 traced**, inside the gate (item 10); m5 not reproduced in
+   40 runs; m6 lane S's. The targeted checks of V5.25 §2: the Réseau entry in view **40 of 40** at 430/390/375/360, the
+   Vivre seam **0 px** on one ground at 1440/1024/768/390, the Forum head's drawing on the title's line with **0 px²**
+   over the index, the sommaire 5 of 5; axe-core 4.13 **0 violations in 40 runs** (the six pages the round touched, at
+   rest and in their interactive states); locked copy **188 checks byte-identical** in fr/it/en/ar; both contact
+   channels unchanged in four languages (the configured number read in process, `tel:800642015`, `bdi dir="ltr"`);
+   budgets inside every ceiling, the glossary family exactly at its 54 272 B; the build reproducible, the committed dist
+   current. **Scores** (§26: composition, motion, imagery, interaction, institutional quality, coherence; round 1's
+   carried, the two cells a change affected re-read): Le projet 4.5 · 4 · 4.5 · 4 · 4.5 · 4.5; Réseau 4.5 · 4 · 4 · 4.5
+   · 4.5 · 4.5; Contact 4 · 4 · 4 · 4.5 · 4.5 · 4.5; FAQ 4 · 4 · 4 · 4.5 · 4.5 · 4.5; Glossaire 4 · 4 · 4 · **4.5** · 4
+   · 4; the term page 4 · 4 · 4 · 4 · 4.5 · 4.5; Vivre 4 · 4 · 4.5 · 4 · 4.5 · 4.5; Forum 4 · 4 · 4 · 4 · 4.5 · 4; AGAMI
+   4 · **4.5** · 4 · 4 · 4.5 · 4.5; Fraudes 4 · 4 · 4 · 4 · 4.5 · 4 — every dimension at or above the bar, four cells
+   half a point under their §10 target (Glossaire's institutional quality and coherence, the Forum's and the fraud
+   page's coherence) recorded since round 3. §9.9: items 1–7 PASS (7 the integrated tree's gate, green on the branch), 8
+   the label, this merge. Verdict on the owner's question «a premium institutional legal-tech platform, not an online
+   report with cards?»: yes for the ten pages. The three minors: m1 one of lane S's browser fixture tests red once under
+   load (a fixed 700 ms wait on a smooth scroll), green alone — lane S, S-close; m2 the Forum's phone LCP medians on the
+   shared machine (2 146 / 2 360 ms, three cold loads of twenty over 2.5 s, none when both slots were free) — for the
+   one exhaustive gate's reading; m3 `test_browser_w1_c.py` not `ruff format`-clean, pre-existing — recorded.
+3. **The Director's ruling on F-M2, as it reaches this lane.** DL54-185 item 3 records the ruling in its words: the
+   first keyboard input's INP is judged by **the absolute budget of SECTION_SYSTEM_V2 §5.3 — first-Tab and
+   first-pointer-after-keyboard INP ≤ 200 ms at p75 on the compressed twin, desktop and phone, fr and ar, measured
+   paired against the base with n ≥ 5 — in place of «within 20 ms of the base»; the residual trim is lane S's follow-up
+   (closing).** Lane P2 ships no script and changed none (the explorer, the map and the spy are lane S's modules); lane
+   S's `motion.css` INP rule and the class-led modality rules reached the branch with `28fa9fa2`, so the reviewer did
+   not re-measure INP (REVIEW §5): `v522/s2`'s first-input measures on the compressed twins stand for these pages, and
+   the one open cell (the desktop pointer after the keyboard, over the budget on both trees) is carried to S-close as
+   DL54-185's F2-m1, with the Director's remark on method — every INP figure recorded in V5.22 carries the base twin's
+   figure beside it. S2's request 8.3 third bullet (`_projet.css`'s `html[data-input="key"] :is(.projet-racconto *, …)`,
+   a universal subject the first key restyles the whole story for) is the lane's one share of that trim, recorded for
+   closing (item 10).
+4. **Read before merging** (the slices' product changes, as the checker asks; the lane's nineteen whole files are its
+   route sheets and partials, `identity.py`, `forum_v2.py`, its three test modules and its notes).
+   - `templates/pages/project.html` and `pages/partials/projet/_{bref,perche,figura,promotore}.html` — C «il racconto»:
+     the three chapters as the steps of one story beside one figure (its nodes a register, `data-registro`), «En bref»
+     while gate G3 is open, the locked «Pourquoi» cut at render into its three sentences by `locked_split` and said
+     whole once, the promoter's step ending on the same «En savoir plus sur le promoteur» (`.projet__oltre`); the four
+     arched doors on one sill; the panorama with its credit whole inside its frame; the capitals title tracked by its
+     kept anchor in `_projet.css`, never on an Arabic title.
+   - `templates/pages/network.html`, `pages/partials/fronte/_rete.html` and the new `_rete_pannelli.html` — H «la mappa»
+     in the head: the ring's five nodes are the map's controls (links to the actors' entries, the tablist once
+     `sezioni/mappa.js` runs: Arrows in the reading direction, Home, End, Escape; on a phone the chosen entry scrolled
+     into view, MC-3), the lines and circles drawn and `aria-hidden` as before, the register below gone (the words
+     once); «l'approdo».
+   - `templates/pages/contact.html`, `pages/partials/fronte/_contatto_azione.html`, `_canali.css`, `_contatto.css` — «il
+     centralino»: the channel board with the two plates inside it, **both channels unchanged** (the Numéro vert and the
+     configured WhatsApp number from `SiteSettings` / `ILE_WHATSAPP_NUMBER`, the links, the accessible names, `bdi
+     dir="ltr"`; §9.8), the board's heading naming the channels the settings hold, a wrapping row of two plates each at
+     least as wide as its own words, the disc's fill answering the keyboard as it answers the hand; the address the
+     head's one action with its caption, its anchor `contact-email-title` kept; the three doors.
+   - `templates/faq/index.html`, `_risposta.html`, `_collegamenti.html`, `_faq-v2.css`, `faq.css`; `apps/faq/views.py` —
+     L «l'indice»: the explorer (tabs from 64 rem, disclosure buttons below; ids = keys = permalinks; «Lien direct vers
+     cette question»), below 64 rem the first paint folding every answer but the one the address names
+     (`.indice__pannello:not(:target)`, under `.js` only — a no-JS reader sees every answer), the route tiles «il
+     rimando», a search's answers in their rows under the library's chapter head.
+   - `templates/glossary/{index,_entry,term}.html`, `_lessico-v2.css`, `lessico.css`; `apps/glossary/views.py` — the
+     letter rail at the reading edge beside «il lessico»'s term cards (one run of cards, the h3 in Italian, each
+     definition in its language; a card answers the hand in place — its letter fills, its rule runs, its shadow deepens
+     — without the library's 2 px lift, so `sezioni/spia.js` keeps the row one stop), «Où le rencontrer» from the
+     pathways' terms (`GLOSSARY_TERMS_BY_PATHWAY`, read-only); the term page's plate with its related rows held at
+     opacity 1.
+   - `templates/living/index.html`; `apps/living/views.py` — the Vivre head absorbed by its panorama (the LCP photograph
+     never masked; the moment's ground the band's, the seam 0 px), «Pour s’installer»'s tiles (the Formation anchor
+     `#apres-l-arrivee` kept by lane P1), Q8 (no unreviewed theme shown).
+   - `templates/forum/partials/{hero,presentation,cta_row,local_nav}.html`, `_forum.css`, `forum.css`;
+     `apps/forum/templatetags/forum_v2.py` — FO0 the head's drawing hung from the title's line; FO1 the statement's
+     light; FO2a «il filo» (the eight stations, the arrival mark); FO2b the nine actors' ring round the hub
+     (`data-registro`, mirrored in Arabic: each actor's offset the French one's opposite); FO3 the action plates on the
+     night with the seal system's light; the four locked bodies re-composed at render, each one element with its text
+     whole (Q4: the Forum's imagery drawn, no stock photograph, no invented content).
+   - `templates/pages/agami.html`, `pages/partials/agami/_colonnato.html`, `_agami.css`, `agami.css`;
+     `apps/pages/identity.py` — «la campata» identity band playing AG-1's signature in view at load (the plate's mask
+     from 360 ms, the colonnade's stroke from 680 ms, the connector from 1.56 s on a desktop; keyed
+     `:root.js:not(.rm):not([data-input="key"])`, `fill: backwards`; below the fold the runtime's trigger; the portico
+     mirrored on the Arabic page), «la targa» with the owner's verified identification (V5.23 Q9: every field once, no
+     other identifier, no outbound link, no notices link; Q5: no archive photograph), the promoter's question the
+     system's disclosure under its text, «l'approdo».
+   - `templates/pages/antifraud.html`, `_frodi.css`, `frodi.css` — the sill and the shield, the three routes, the report
+     plate; the locked question and answer once each; no authority or portal link.
+   - `apps/pages/views.py` — the pages' data (`_project_story`, `_doors`, `_dedicated_doors`, `_network_map`,
+     `_approdo`, `_antifraud_routes`, `_audience_glyph`; the identification block from `identity.py`); every glyph from
+     the registry. `templates/pages/institutional_base.html` — one hook, the block `route_sheet` between `interior.css`
+     and `fronte.css` (round 3's recorded deviation). `static/css/v5/_lettura.css` — the glossary rules nothing draws
+     and one dead rule out; `cms/lettura.css`, `forum/forum.css`, `pages/css/interior.css` — their import lists, still
+     nothing but imports; `_institutional.css` — dead rules out.
+   - `locale/**` — item 6. The tests — item 7.
+   - **No preserved family is in the diff** beyond the three named exceptions the lane holds (§9.8: 6 Réseau's head ring
+     made interactive, 7 the Vivre head absorbed by its panorama, 8 the Forum head's drawing): the navbar, the mega
+     menus, the mobile sheet and the footer, Lume and `motion.css`, the premium forms, the contact channels'
+     architecture (`apps/core/contact.py`, `SiteSettings`, the links, the names, `bdi`), the privacy and cookie pages,
+     terminology, the organisation spaces, `base.html`, `tokens.css`, `main.css`, lane S's library and runtime
+     (`sezioni/*.js`, `_sezioni.css`, `_reveal.css`, `rise.js`), the locked registry and its checksums — untouched (path
+     search, the reviewer's §7 and the steward's). No new JavaScript module, image, slot, request or npm package.
+5. **Ownership (MC-5).** The id rule already admits `v5<nn>-p<n>` — the privacy lanes' form, `v516-p2` and `v517-p3`
+   before it — so `scripts/check_ownership.py` is unchanged; `tests/test_check_ownership.py`: `OUTSIDE_THE_WAVES` and
+   its comment name the lane (one member added, no case removed or loosened). The family `v522-p2` (wave 0, after
+   `v522-h`; base `01096804`, head `1c60149a`): **19 whole files** (the five route sheets and their partials
+   `_faq-v2.css`, `_lessico-v2.css`, `_lettura-v2.css`, `_projet.css`, `_rete.css`, `_contatto.css`, `_agami.css`,
+   `_frodi.css`, `faq.css`, `lessico.css`, `rete.css`, `agami.css`, `frodi.css`; `apps/pages/identity.py`,
+   `apps/forum/templatetags/forum_v2.py`; `apps/pages/tests/test_interior_v522.py`,
+   `apps/forum/tests/test_forum_v522.py`, `tests/frontend/test_pages_browser_v522_p2.py`;
+   `docs/design-v5/QA/v522/p2/NOTES.md`), **58 slices** — the lane's templates and partials (the eight new partials
+   created inside w3-f1's and w3-f2's whole globs, so slices by the checker's rule), its four views, the shared reading
+   partial and the three entry sheets, `_canali.css`, `_institutional.css`, `_forum.css`, `institutional_base.html`'s
+   hook, the nine shared guard modules it changed under V5.20 (`test_browser_w1_c.py`,
+   `test_content_pages_browser_w3_f2.py`, `test_content_pages_w3_f2.py`, `test_frontispiece_v515_c.py`,
+   `test_interior_w3_f1.py`, `test_mobile_rtl_w4_a.py`, `test_motion_v512_a_w2.py`, `tests/i18n/test_rtl_browser.py`,
+   `test_ui_translations.py`), the five app test modules, the eight `locale/**` files — and **8 generated** files (the
+   eight dist sheets). `check_ownership.py v522-p2 01096804 --head 1c60149a`: 19 inside, 58 slice, 8 generated →
+   **PASS**; `--validate`: coherent, 59 families, 2 362 entries; `tests/test_check_ownership.py` on the branch: **135
+   passed**.
+6. **Build, catalogue, checks** on the merged tree (`fd291ad3`). `npm run build`, twice (18:48): the dist identical to
+   the committed one (`git status` empty after each) — reproducible, nothing to commit. Measured (gzip -9): `main.css`
+   **32 716 B** (the ratchet 32 718 held; untouched by the lane), `core/portico.css` 2 993, `core/reveal.css` 3 526,
+   `pages/css/fronte.css` 6 141; the lane's sheets `pages/css/interior.css` 8 827 / 11 264, `cms/lettura.css` 6 512 / 9
+   216, `forum/forum.css` 7 369 / 8 192, and the five route sheets `cms/faq.css` 1 935 / 2 048, `cms/lessico.css` 2 384
+   / 2 560, `pages/css/rete.css` 1 817 / 2 048, `pages/css/agami.css` 1 760 / 2 048, `pages/css/frodi.css` 1 200 / 1
+   536; the route totals Le projet and Contact 54 203 / 56 320, Réseau 56 020, AGAMI 55 963, Fraudes 55 403, FAQ 53 823
+   / 54 272, **Glossaire, the term page and Vivre 54 272 / 54 272 — exactly at the ceiling, 0 B of headroom** (recorded,
+   item 10); the home's five sheets 61 440 / 61 440 as DL54-185 left them. **The catalogue:** the union at the merge of
+   design-v5 (item 1: lane H's entry, then the lane's ten blocks — «Par téléphone, WhatsApp ou formulaire», «Par
+   téléphone ou formulaire», «Par WhatsApp ou formulaire», «Code fiscal», «Siège social», «Siège opérationnel», «Site
+   officiel», «Contact officiel», «Où le rencontrer», «Pour s’installer» — with the lane's professional it/en/ar
+   renderings, NOTES §7, the Arabic reviewed: the formal register, right to left, no Latin run but the channel's name
+   «واتساب», no Arabic-Indic digit), then `scripts/i18n_audit.py --sync` on the branch: **+0 −5** in it/en/ar/fr — the
+   five msgids the lane's sources no longer use dropped («La marque», «Par e-mail», «Par téléphone et WhatsApp», «Vous
+   n’avez pas trouvé de réponse ? Écrivez-nous :», «Les données d’identification de l’association relèvent des Mentions
+   légales du site.»), **+10 −5 over design-v5**; `--compile`: the four `.mo` match their `.po`, **3 702 msgids, 100 %**
+   in every language, no fuzzy, the audit OK; on the merged tree `--sync` +0 −0 and `--compile` byte-identical (`git
+   status` empty). No locked text touched (their Arabic pages carry `lang="fr"`); nothing machine-translated. `manage.py
+   check`: no issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and with a
+   fictional value (the lane added no migration). `ruff check .` (ruff 0.16.8): all checks passed.
+7. **The confidential-material guard: green; the test changes, against V5.20's strict rule.** With
+   `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read in-process only, no value printed or written),
+   `tests/security/test_confidential_material.py` passes CI-style on the merged tree, inside the security set and the
+   configured-number run (item 8). The merge's 87 paths — 83 added or changed text files checked (no image, no compiled
+   catalogue among them) — hold no CR byte and the owner-confirmed number in no form (counted in-process, never
+   printed); every text file of the merge `i/lf` in the index; `git diff --check` finds one new blank line at the end of
+   `_contatto.css` (a nit, item 10). The test changes (the merge itself changed none): the nine shared guard modules
+   updated on the branch, each citing V5.22 / SECTION_SYSTEM_V2 and the strict rule, each the same invariant or stronger
+   — `test_browser_w1_c.py` (*before:* a permalink opened a `<details>` row; *now:* a permalink followed from another
+   page lands on its answer in the explorer, selected and shown, the others not, **and** W1-C's same-document step is
+   back since `sezioni/indice.js` follows `hashchange`, the answers' floor 2 → 3; the drawn plus/minus measured where
+   the accordion stays, on `/agami/`: stronger), `test_content_pages_browser_w3_f2.py` (the V2 plates and tiles admitted
+   by name with their 1 px edge only; the letter index a rail from 64 rem; the FAQ's keyboard promise in both forms; the
+   explorer's French questions on the reading edge all required where the old rows were optional: stronger),
+   `test_content_pages_w3_f2.py` and `test_interior_w3_f1.py` (the exact import lists of `lettura.css`, `forum.css`,
+   `interior.css` and the five route sheets; the AGAMI question as the disclosure's summary; the contact address on 44
+   px at every pointer, not only under a finger; the approdo's Forum tile outside the all-or-none and required bare,
+   Q4), `test_frontispiece_v515_c.py` (the five route sheets' ceilings and the six route totals, new rows; the network
+   diagram's nodes as the map's five named links; the capitals title's tracking by its anchor),
+   `test_mobile_rtl_w4_a.py`, `test_motion_v512_a_w2.py`, `tests/i18n/test_rtl_browser.py`, `test_ui_translations.py`
+   (the same measures where they still stand: the story step's link, `/fr/orientation/`'s hairline and `/fr/agami/`'s
+   disclosure, the Arabic accordion on `/ar/agami/`, the plural heading under the library's chapter head); the five app
+   test modules (`test_views.py` of the FAQ and the glossary, `test_forum_page.py`, `test_contact_channels_v519.py` —
+   the board's heading in the board's words, no channel assertion weakened —, `test_institutional.py` — the AGAMI test
+   now asserts the owner's verified identification, every field once, no other identifier, no outbound link, in place of
+   «publishes no registry data», V5.23 Q9); the lane's own modules `test_interior_v522.py` (29 cases),
+   `test_forum_v522.py` (6) and `test_pages_browser_v522_p2.py` (15 cases, 54 parametrised; the three added in the final
+   round fail on the round's starting sheets, swapped in and restored byte for byte — they bite). The reviewer read
+   every changed test under the rule (REVIEW §4 «Nothing loosened»): no assertion loosened, no skip added, no timeout
+   raised. The steward's: `tests/test_check_ownership.py` (`37f6aa01`), one set member and its comment, no case changed
+   (item 5).
+8. **The tests on the merged tree** (`fd291ad3`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l6, one pytest per test
+   database — V5.25 §7: the lane's targeted tests, the suites the reviewer ran at `6118d543`, plus the steward's; the
+   four main runs side by side, so every timing below carries that load):
+   - **The guards around the merge and the lane's static modules** (18:50 to 19:05, `test_ile_v5_l6pa`) — the four
+     guards and their readers `tests/frontend/test_state_chips_carry_a_register.py`, `test_interior_w3_f1.py`,
+     `test_orientation_w3_f1.py`, `test_o14_lint.py` (the reviewer's 374 with the lane's `test_interior_v522.py` and
+     `test_forum_v522.py`), lane S's two guards `test_chapter_marks.py` and `test_journey_w3_d.py` (lane H's V5.20
+     updates, now with P2's pages), `tests/i18n/test_catalogues.py` (the union and the sync: no simulated pass),
+     `test_page_integrity.py`, `test_locked_texts.py`, `tests/frontend/test_loader_rules.py`, `test_sezioni_v522_s.py`,
+     `test_sezioni_v522_s2.py` (lane S's library and follow-up, with P2's pages composed on them),
+     `tests/compliance/test_imagery_v512.py`, `test_locked_content.py` (the locked checksums),
+     `tests/test_check_ownership.py` (with the family's rows): **793 passed, 0 failed, 0 skipped**.
+   - **The reviewer's targeted non-browser modules and the lane's apps** (18:50 to 19:08, `test_ile_v5_l6pb`) —
+     `tests/frontend/test_frontispiece_v515_c.py` (the per-sheet and per-page ceilings: the five route sheets, the
+     glossary family's three at 54 272 / 54 272), `test_css_bundle_is_current.py`, `test_content_pages_w3_f2.py`,
+     `tests/i18n/test_rtl_static.py`, `test_ui_translations.py`, `apps/faq`, `apps/glossary`, `apps/living`,
+     `apps/forum`, `apps/cms`, `apps/pages/tests/test_institutional.py`, `test_templates_static.py`,
+     `test_prescribed_fragments.py`, `test_services.py`, `test_review2.py` (lane H's shared modules, over the interior
+     pages too), `tests/frontend/test_french_typography_w2_d.py`, `test_design_docs.py`, `test_static_pipeline.py`, the
+     static halves of `test_mobile_rtl_w4_a.py` and `test_motion_v512_a_w2.py` (their 36 browser cases deselected, run
+     in batch 2): **1 156 passed, 0 failed, 0 skipped**.
+   - **Security and contact** (19:04 to 19:08, `test_ile_v5_l6pc`) — `tests/security/test_confidential_material.py`,
+     `tests/compliance/test_no_personal_data_in_repository.py`, `apps/pages/tests/test_contact_channels_v519.py`,
+     `tests/compliance/test_phase3_texts_not_leaked.py`: **81 passed, 1 skipped** — the one environment-bound test (item
+     9), which the next run covers.
+   - **The configured number** (19:05 to 19:11, `test_ile_v5_l6pd`; `ILE_WHATSAPP_NUMBER` set in-process to the
+     preview's value, read from v5-live's untracked `.env`, never printed; the log masked):
+     `test_contact_channels_v519`, `test_institutional` and the confidential-material guard — **117 passed, 0 skipped**:
+     the environment-bound test runs and passes.
+   - **Browser batch 1** (`-m browser`, headless, Chromium lock slot A, label `v522-p2-merge/br1`, 18:50 to 19:08,
+     released; `test_ile_v5_l6pbr1`; the configured number in-process, the log masked) —
+     `tests/frontend/test_pages_browser_v522_p2.py` (the lane's own: the Forum's ring, the map as a tablist, the
+     explorer's permalink and the phone's exclusive disclosures, the glossary rail and the card under the hand, AGAMI's
+     band at load, the rows that never wait, the ten pages at eight widths in fr and ar, reduced motion, no script),
+     `test_browser_w1_c.py` (W1-C's restored step) and `test_browser_contact_channels_v519.py` (the two channels in
+     Chromium): **68 passed, 0 failed** (the reviewer's 68).
+   - **Browser batch 2** (slot B, label `v522-p2-merge/br2`, 18:50 to 19:04, released; `test_ile_v5_l6pbr2`) — lane S's
+     checks on the merged pages `test_sezioni_browser_v522_s2.py`, `test_motion_v512_a_w2.py`,
+     `tests/i18n/test_rtl_browser.py`, `test_content_pages_browser_w3_f2.py` and `test_mobile_rtl_w4_a.py`: **88 passed,
+     0 failed** (the reviewer's 71 and the 17 browser cases of `test_mobile_rtl_w4_a.py`; lane S's fixture test that was
+     red once under load in the review, its m1, green here in fr and ar).
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css` 32 716 B
+     gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files and visits the
+     public doors), the design documents and the ownership checker, the browser half under a lock slot; the tag is made
+     only on green (the counts in the record's commit and the tag).
+   - The full suites, both halves, on a fresh copy belong to the next acceptance candidate's gate (V5.20; V5.22 §28;
+     V5.25 §7), after S-close.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`, `test_contact_channels_v519.py:365`), which runs and passes where the number
+   is configured (item 8). The private-table test runs (the table configured). No xfail among the targeted modules'
+   runs; no xpass. The lane added no skip and raised no timeout (item 7).
+10. **Left open (not the steward's).**
+    - **The review's three minors** (item 2) and the findings carried from the lane's rounds: **m4** — a FAQ arrival at
+      768 × 1024 on one of the first three questions shifts the rows under it in about two loads in five (≤ 0.055;
+      Chromium paints one frame at `readyState` «interactive» before `:target` matches, no CSS hook knows the address
+      before it; 30 of 30 clean at 390/375/360 and at 1440/1024) — inside the 0.1 gate, **for the Director** (NOTES
+      FI.6); **m6** — the register readers' regex in `test_interior_w3_f1.py:335` and `test_orientation_w3_f1.py:118`
+      reads `data-registr(?:o|er)` where `data-regist(?:ro|er)` is the intent — **lane S, S-close**; **m1's root** —
+      `spia.js` to group a row by its layout position rather than its transformed boxes, then the lexicon's cards may
+      take the library's 2 px lift back — **S-close**; **m5** — axe `target-size` «partially obscured» on the term page
+      at 1024 in one interactive state (it/en) — no action asked; **S2's request 8.3 third bullet** — `_projet.css`'s
+      universal keyboard subject on Le projet, the story's transitioning parts to be named one by one and measured on
+      the twins — **closing**; **round 3's m3** — the route sheets' extra request on Réseau, AGAMI and the fraud page
+      (NOTES F.5, the twin measurements) — **the Director**.
+    - **The §10 half-point gaps**: Glossaire's institutional quality and coherence 4 for 4.5, the Forum's coherence 4
+      for 4.5, the fraud page's coherence 4 for 4.5 — recorded since round 3, the Director's reading at the one matrix
+      (V5.25 §3).
+    - **The glossary family's CSS total sits exactly at its 54 272 B ceiling** (0 B headroom; `lessico.css` has 176 B of
+      its own, the page total none): any later byte on the glossary, the term page or Vivre needs a saving first —
+      S-close's ratchet, or a Vivre-only sheet.
+    - `tests/frontend/test_browser_w1_c.py` not `ruff format`-clean (two pre-existing long asserts; `ruff check` clean)
+      — left as it was; `_contatto.css` ends on a blank line (`git diff --check`) — a nit for S-close.
+    - **The lane's requests** (NOTES §9, R1.4, R2.6): to lane S — the `.indice__sigillo` specificity when `fronte.css`
+      loads after the page sheet, a `[lang]` row's mirrored marker in the library, a generic light-sweep paint for
+      `[data-verb~="light"]`, `apps/core/icons.py`'s `contact-email-title` anchor and `faq` concept kept alive by P2,
+      the panorama's credit inset while the frame widens, `spia.js` measuring x and width for a horizontal band; to lane
+      P1 — `#apres-l-arrivee` on `/formation/` kept («Pour s’installer» links to it); to the Performance Lead — LCP, CLS
+      and INP of the ten pages on 8782 at the next candidate (the reviewer's twin: the Forum's phone LCP medians 2 146 /
+      2 360 ms on today's shared machine, CLS 0 on 20 loads; §5.3 wants n ≥ 9 on 8782 at the one gate).
+    - **For S-close:** the old chapter system's cleanup after confirming nothing depends on it (V5.25 §6), the legacy
+      rise's hold on `.accordion` rows (P2's two `opacity: 1; translate: none` rules then moot), the dead rules the
+      coverage pass measures across `_pagina.css`, `_compose.css`, `_interior.css`, `_reveal.css`, `pages.css`,
+      `_lettura.css`, F2-m1, F2-m2 and F2-m4 of DL54-185, m6 and m1's root above, the catalogue's single pass, every
+      ceiling ratcheted to the measure, the `:is()` subjects of DL54-184 item 10.
+11. **The preview.** No shared database needed a seed or a migration at this tree (the lane added none; `migrate
+    --check` is run before the start). After the tag, 8780 is restarted on `v522/p2` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; the previous log kept as `srv8780.log.prev-v522-p2`). The checks — the four homes, the hub
+    and its strip with the tag and the label «Page Composition V2», this record's decision document served by the hub;
+    the lane's ten pages in four languages as the preview serves them (200, one h1, the V2 compositions in the body —
+    the story, doors and panorama; the map's controls and entries; the channel board and doors; the explorer and its
+    route tiles; the lexicon and its cards, the term's plate; Vivre's panorama and installer; the Forum's pair, line,
+    ring and plates; AGAMI's band, plate and approdo with the colonnade; the fraud page's sill, routes, report plate and
+    shield —, the library's `data-registro` where the lane writes it, each route sheet linked and served, Arabic right
+    to left); the other seven public doors in four languages → 200; the contact page in four languages with both
+    channels (the Numero Verde and the one WhatsApp link the environment configures, compared in process), the footer's
+    two channels on the contact page and the homes, the nine personas' homes in fr and ar, the server log (0 tracebacks,
+    0 5xx); headed chromium-1234 on the ten pages at 1440 and 390 in fr and ar, and under reduced motion at 1440 in fr
+    and ar on Le projet, the FAQ, the glossary, the Forum and AGAMI — after a play-through, the V2 sections and the
+    page's markers present, one h1, no chapter head, overflow 0 and no unclipped element wider than the page, no
+    `data-sec-state` written and no animation running under reduced motion, one Tab setting `html[data-input="key"]`, 0
+    console errors — are the steward's reports `C:/tmp/ile_v5_council/.work/v522-p2-merge/verify_8780_v522p2.json` and
+    `headed_8780_v522p2.json`, with the stills under `shots/`.
+12. **Release gate — unchanged.** V5.22 §28 and V5.25 §9: «Do not promote main. Do not create v2.0.0. Do not create a
+    release. Do not deploy.» No push, no public tag; `v522/p2` is a local annotated tag. Homepage V2 and the second page
+    group are merged (V5.25 §1); the next acceptance candidate needs S-close (the old chapter cleanup, §6), then V5.25
+    §3's one matrix and §7's one full technical gate on the integrated tree, and only then «FINAL V2 ACCEPTANCE READY»
+    with its SHA.
+
+**Why.** V5.25 ends the score loops: a lane whose six dimensions are at or above the bar and whose remaining findings no
+further round of its own could remove is merged, and lane P2's second final review found exactly that — the one major of
+the first review fixed at the root in the product (the library's marker, the phone's first paint), the four fixable
+minors fixed and measured, the three left none of the lane's. The catalogue conflict with lane H was a union, not a
+choice: both lanes appended their own strings, and the sync pass dropped only what no source uses any more. What the
+owner sees today is the second page group recomposed — Le projet, Réseau, Contact, FAQ, Glossaire, Vivre en Italie,
+Forum, AGAMI and Attention aux fraudes — in four languages, with the two contact channels exactly as V5.19 confirmed
+them, every locked text byte-identical, AGAMI's verified identification as V5.23 decided, and the budgets at, not over,
+their ceilings.
+
+**Source.** The owner's V5.22, V5.23, V5.25, V5.26, V5.20 and V5.12–V5.21; SECTION_SYSTEM_V2 §3.2, §3.11–§3.18, §5.3,
+§9.5, §9.7–§9.9, §10; `QA/v522/p2/NOTES.md` (§1–§10, the four rounds, FI.1–FI.10); `QA/v54/v522-p2/REVIEW.md` (copied
+byte for byte from `C:/tmp/ile_v5_council/evidence/v522/finish/v522-p2-final-qa2.md`); the Director's ruling on F-M2 as
+DL54-185 item 3 records it; DL54-185 item 10.
+
+
+## DL54-187 · 5 November 2026 · Steward, the v524-px merge: V5.24 lane PX — Imagery V2 · credits; the id rule for the final-delivery lanes (R11)
+
+**Decisions** (the steward's, at the merge of `v524-px` into design-v5 on 5 November 2026 — the owner's V5.24
+(`V5_24_FINAL_DELIVERY_ACCELERATION_ARABIC_TYPOGRAPHY.md` §2–§3: no visible «Pexels», «Photo by …», «Source: Pexels»
+under the product's imagery wherever the licence permits attribution-free use, provenance kept internal, «the
+user-facing product must NOT look like an image catalogue or stock-photo demo»; §23 a production-facing Pexels test; §30
+the gate's «Pexels-visible-label check»), V5.25 (final delivery mode: known defects, targeted checks, «if all six
+dimensions are >= 4 and no blocker exists: MERGE», no score loop), V5.26 §4 (tool → decision → implementation), V5.27 §6
+(real tool provenance), V5.20's strict test-update rule, the Director's `FINAL_DELIVERY_V2.md` §0 (nine lanes, the merge
+order PX → T → LIB → HOME → PUB1 → PUB2 → PLAT → AR → CLOSING), §1 (the family «Imagery V2 · credits»), §2 R2 (the
+credits leave), R4 (budgets never raised), R6, R9, R10, R11 (the family ids), R12, R13 (the steward model), R14 (the
+scope guard), §3.2 (lane PX), SECTION_SYSTEM_V2 §8, §9.7, §9.8 and §9.9, and the audit
+`evidence/v524/IMAGERY_ATTRIBUTION.md` D1–D8; label `v524-px-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 22:13 with design-v5 at `4bafcfa0` (`v522/p2`, DL54-186's
+   record; no lane server, both Chromium slots free). FINAL_DELIVERY_V2.md §0.5 writes the order PX → T → LIB → {HOME,
+   PUB1, PUB2, PLAT, AR} → CLOSING, so lane PX is the first merge of the final delivery and T follows. The lane's branch
+   stood at `2031bcb1`, one commit over design-v5's HEAD — the lane branched from the merged tree itself, so `git merge
+   design-v5` into the branch was already up to date: no conflict, no file in common to resolve, no dist to rebuild (the
+   lane touches no stylesheet), no catalogue to recompile (+0 −0). Then the steward's two commits on the branch —
+   `6069a1c8` the id rule (item 5, R11: before the family is recorded) and `94c24978` the family — and `git merge
+   --no-ff` into design-v5 (`39a64cc1`; its tree `e0365f18` is the branch's).
+2. **The review** (`QA/v54/v524-px/REVIEW.md`, copied byte for byte from the evidence's `evidence/v524/px/QA.md`: the
+   reviewer's targeted gate, round 2 on the committed head `2031bcb1`, 5 November 21:27–21:47; round 1, 20:41–21:02 on
+   the then-uncommitted tree, is kept beside it as `QA_round1_20h41_uncommitted-tree.md` — it had two blockers of
+   completeness, B1 the NOTES' §6–§7 unfilled and B2 no commit, and four minors, which the lane's improve round
+   answered, NOTES §10): **PASS on every gate item 1–7, no blocker.** Measured independently by the reviewer on the lane
+   server 8792, headed chromium-1234 under a slot and the audit's crawler: **60 frames in 24 cells** (the gate's four
+   pages and the Arabic twins of Entreprises and Institutions, 1440 × 900 and 390 × 844, motion on and reduced) with **0
+   `<figcaption>`, 0 `.foto__credit`, every figure's children exactly `[picture]`**; the `<picture>` box identical to
+   the base's in **30 of 30** lane/base pairs (companies.hero 608 × 405 and 335 × 189, companies.territory 1440 × 617
+   and 390 × 167, institutions.hero 503 × 628 and 335 × 223, institutions.chamber 1425 × 900 and 375 × 844,
+   pathways.hero 397 × 497 and 335 × 189, the four family frames 290 × 193 (other 282 × 188) and 295 × 127, project.hall
+   288 × 422 and 157 × 230, project.volumes 1440 × 617 and 390 × 488); **no empty caption box** — the figure's bottom on
+   the picture's in all 60 frames, against 48 px (fr) / 52 px (ar) of caption on the base's entrance frames and 28 px
+   under Parcours' four family frames; read on the stills, the 12 px «Photo : … / Pexels» line under Entreprises'
+   calliper frame gone, the 195 × 20 px credit chip in the hemicycle's night ground gone with the six-seat arc
+   unchanged, the 14 px Arabic caption at the Parcours entrance's foot gone with the family frames' category chips kept
+   (labels, not credits), Le projet's night frontispiece identical; the rendered crawl of **2 156 pages** (184 public +
+   1 972 signed-in through the nine personas) with 0 figcaptions, 0 slot credits, 0 attribute / script / comment hits
+   and only F5's two false positives in the visible text (the footer's «©», the glossary's «المصدر»); the source grep
+   clean but for `photo.html`'s own comment; every D6 row applied as written under V5.20 (item 7); `is_publishable`
+   unchanged, the registry's 26 slots with licence, author and page recorded; the specimen board's 11 frames uncaptioned
+   with their 11 data sheets; two identical builds, the dist byte-identical to design-v5's, `main.css` 32 716 B; locked
+   copy and both contact channels unchanged (compared in process); axe-core 4.13 on the changed sections 0 in 12 cells;
+   keyboard and reduced motion clean; 21 files LF. Minors m1 and m2 CLOSED (applied in the improve round, verified),
+   m3–m6 recorded (item 10). **Scores** (§26, V5.25 §5, R9): the lane changes no composition, motion, interaction or
+   type on any page — those dimensions are not applicable and stand at 4 by the harness rule, the pages keeping their
+   lanes' merge scores (Entreprises, Institutions and Parcours DL54-183/184, Le projet DL54-186); **imagery 4.5** on
+   `/fr/entreprises/`, `/fr/institutions/`, `/ar/parcours/` and `/fr/le-projet/` at 1440 and 390 — the stock-catalogue
+   signal gone, the frames at the same sizes and places. One remark of the steward's on the copy: the review's §5 reads
+   two stills before/after and names the two Pexels authors their captions carried; the copy is the evidence as written
+   (byte for byte, as every REVIEW.md), the repository's registers hold no photographer's name
+   (`test_v522_the_registers_hold_a_row_per_frame_and_no_person_s_name` green) and the product renders none — recorded
+   for CLOSING's docs pass (item 10).
+3. **The Director's ruling on F-M2, as it reaches this lane** (R6, in its words): the first keyboard input's INP is
+   judged by **the absolute budget of SECTION_SYSTEM_V2 §5.3 — first-Tab and first-pointer-after-keyboard INP ≤ 200 ms
+   at p75 on the compressed twin 8782, desktop and phone, fr and ar, paired against the base with n ≥ 5 — in place of
+   «within 20 ms of the base»; the residual trim is CLOSING's F2-m1**; if the desktop cell stays over on the base and
+   the tree alike after the trim, it is recorded as P2 with the base's figure beside it — not a release blocker, not a
+   P0/P1. Lane PX ships no script, changes no stylesheet and moves no element (the figure shrinks by its caption's
+   height and nothing else moves): the reviewer did not re-measure INP; DL54-185 item 3's first-input measures stand for
+   every page (the first Tab 160 · 176 · 128 · 168 ms, within the budget in all four cells; the desktop pointer after
+   the keyboard over it on both trees, 216 · 248 against the base's 176 · 208), carried to CLOSING. 8782 was not
+   switched by this merge.
+4. **Read before merging** (the slices' product changes, as the checker asks; the lane's two whole files are the
+   production-facing test and its notes).
+   - `templates/components/photo.html` — D1: the `<figcaption class="foto__credit">` and the now-unused `{% load i18n
+     %}` gone; the figure keeps `<picture>`, `data-slot`, `data-reveal`, `data-grade`; no `data-credit` / `data-author`
+     (nothing reads it; a name lives in one place, SECTION_SYSTEM_V2 §8); the comment's caption paragraph rewritten (no
+     caption, the licence, the record, the curated plate's byline rule, the test that holds it). `apps/pages/imagery.py`
+     — D2: `Picture.credit` and the `credit=` line of `picture()` removed with the unused `rec = record(slot)`;
+     `record()` and `provenance()` unchanged — licence, author and page stay recorded; the docstring and two comments
+     say no credit is rendered.
+   - The curated-asset path licence-aware (D4): `apps/cms/models.py` `MediaAsset.attribution_required` (a property — CC
+     BY 4.0 or `attribution=required` in `license_notes`; no migration; `is_publishable` untouched, the credit stays
+     recorded), `apps/forum/models.py` `ForumMedia.attribution_required` (a row drawn from the library follows its
+     asset; an uploaded file is the event's own material, no byline), `apps/pages/services.py` and
+     `apps/ecosystem/services.py` — the two two-line slices of §3.2 (`Photo.attribution_required: bool = False` on each
+     dataclass, set from the asset in both `Photo(...)` of `photo_from_asset` / `photo_for`; PX's as the first lane in
+     the merge order, HOME and PUB1 rebase on them), `templates/pages/partials/_ingresso.html:77` the guard `{% if
+     photo.credit and photo.attribution_required %}` (the French no-break colon of v522-s2 untouched),
+     `templates/news/detail.html:61` the same guard on the condition and the byline, the byline's colon taking v522-s2's
+     no-break form in French only (the review's m2; the lane database holds 0 articles and 0 CC BY assets, so no page
+     renders a byline today — the news app answers 404 on the preview). The three other caption templates are PUB1's and
+     PUB2's on this contract (item 10, m6).
+   - `docs/IMAGE_LICENSES.md` §1.3, new §1.10 (D8: an attribution-required image never enters the slot registry — a
+     curated `cc_by` MediaAsset, or a replacement through the pipeline), §3.1, §3.4, new §3.5 «V5.24 — i crediti
+     visibili rimossi»; `docs/design-v5/ASSET_USAGE_MATRIX.md` one erratum paragraph at the head of §11 — both without a
+     photographer's name. The tests — item 7.
+   - **No preserved family is in the diff** (SECTION_SYSTEM_V2 §9.8): the navbar, the mega menus, the mobile sheet and
+     the footer, Lume and `motion.css`, the premium forms, the contact channels' architecture, the privacy and cookie
+     pages, terminology, the organisation spaces and the portal, `base.html`, `tokens.css`, `main.css`, lane S's library
+     and runtime, the locked registry and its checksums — untouched (the 21 files: 4 product templates / models /
+     services, 2 slices, 11 test modules, 1 new test, 2 documents, the NOTES; the reviewer's §8 and the steward's path
+     search). No new JavaScript, image, slot, request, string, migration or npm package; no composition reopened (R9,
+     R14).
+5. **Ownership (R11, MC-5).** The id rule admitted none of the nine lanes: the steward's first commit on the branch
+   (`6069a1c8`, before the family is recorded, as R11 asks) extends `scripts/check_ownership.py` `FAMILY_ID` with one
+   alternative `|v5(?:2[4-9]|[3-9][0-9])-(?:t|px|lib|home|pub[12]|plat|ar|closing|mfix)` — the nine lanes of the
+   Director's plan and `mfix`, the one fix round V5.27 §7 foresees —, its docstring sentence («from V5.24 on, the
+   final-delivery lanes of this file», each lane named) and the refusal message; `tests/test_check_ownership.py` under
+   V5.20, cited in the test's docstring: no existing case changed, 12 ids asserted admitted (the nine lanes, `mfix`, two
+   later directive numbers) and 17 near-misses refused (`v523-px`, `v522-closing`, `pub`, `pub3`, `pub12`, `x`, `home2`,
+   `t1`, `v524px`, `v524g-px`, `px-merge`, `closing-2`, `mfix2`, `director`, `matrix`, `gate`). The family `v524-px`
+   (`94c24978`; wave 0, after `v522-p2`; base `4bafcfa0`, head `2031bcb1`; `OUTSIDE_THE_WAVES` and its comment name the
+   lane): **2 whole files** (`tests/compliance/test_imagery_credits_v524.py`, `docs/design-v5/QA/v524/px/NOTES.md`) and
+   **19 slices** — the caption template and the two bylines, the registry, the two models' property (files no family
+   owned until now), the two services' two-line slices, the eleven shared test modules under V5.20 (`test_imagery_v512`,
+   `test_figure_caption`, `test_interior_w3_f1`, `test_home`, `test_home_v522_h`, `apps/pages/tests/test_browser.py`,
+   `apps/ecosystem/tests/test_browser.py`, `test_sezioni_v522_s2` and its browser twin), the two documents — each slice
+   naming its part (NOTES §4's list) and the families whose file it stays; 0 generated. `check_ownership.py v524-px
+   4bafcfa0 --head 2031bcb1`: 2 inside, 19 slice → **PASS**; `--validate`: coherent, 60 families, 2 383 entries;
+   `tests/test_check_ownership.py` on the branch: **163 passed** (135 + the 28 new cases).
+6. **Build, catalogue, checks** on the merged tree (`39a64cc1`). `npm run build`, twice (22:21): exit 0, `git status`
+   empty after each, the two dist lists identical (77 files, the list's sha256 `57086b47…`), and `git diff 4bafcfa0 HEAD
+   -- static/css/dist static/js/dist` empty — **the dist is byte-identical to design-v5's base** (the lane touches no
+   stylesheet, D3). Measured (gzip -9): `main.css` **32 716 B** (R4 c's ratchet 32 716 held exactly),
+   `pages/css/pages.css` 11 306, `hero.css` 10 899, `fronte.css` 6 141, `interior.css` 8 827 / 11 264,
+   `core/sezioni.css` 11 308, `core/reveal.css` 3 526, `ecosystem/{ecosystem,companies,institutions,pilot}.css` 4 977 ·
+   8 701 · 8 381 · 9 508 / 9 728, `pathways/{pathways,index,diplomas,training,sheet}.css` 4 716 · 10 117 / 10 240 · 8
+   895 · 8 788 · 9 701, `cms/lettura.css` 6 512 / 9 216, `cms/faq.css` 1 935 / 2 048, `cms/lessico.css` 2 384 / 2 560,
+   `pages/css/rete.css` 1 817 / 2 048, `agami.css` 1 760 / 2 048, `frodi.css` 1 200 / 1 536, `forum/forum.css` 7 369 / 8
+   192 — every figure the base's; the home's five sheets 61 440 / 61 440 and the glossary family 54 272 / 54 272 as
+   DL54-185/186 left them. HTML −70 … −100 B per frame (the reviewer's §7: `/fr/` 129 422 → 129 083, `/ar/parcours/` 79
+   499 → 79 112, `/fr/entreprises/` 77 470 → 77 316). **The catalogue:** `scripts/i18n_audit.py --sync` on the merged
+   tree **+0 −0** in it/en/ar/fr (`msgid "Photo"` still used by `_ingresso.html`, `news/detail.html`,
+   `pathways/detail.html`, the Forum hero), `--compile` byte-identical (`git status -- locale` empty), the audit OK: **3
+   702 msgids, 100 %** in every language, no fuzzy; no locked text touched, nothing translated. `manage.py check`: no
+   issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER` unset and with a fictional value
+   (the two properties need no migration). `ruff check .` (ruff 0.16.8): all checks passed.
+7. **The confidential-material guard: green; the test changes, against V5.20's strict rule.** With
+   `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read in-process only, no value printed or written),
+   `tests/security/test_confidential_material.py` passes CI-style on the merged tree, in the security set and in the
+   configured-number run (item 8). The 24 paths of the merge hold no CR byte and the owner-confirmed number in no form
+   (counted in-process, never printed). **The lane's test changes** (every D6 row of the audit, each docstring citing
+   V5.24 §2, FINAL_DELIVERY_V2.md §3.2 D6 and V5.20; the reviewer's §4 re-read every row on the commit's diff):
+   `test_imagery_v512.py` — `test_every_slot_is_licensed_and_credited` renamed `…_and_its_author_recorded` with its five
+   assertions byte-identical; `…keeps_its_credit` → `…_and_its_author_stays_recorded` (the author recorded, no `credit`
+   attribute, the rendered tag with no figcaption and no «Pexels»: stronger); the lazy-figure test asserts no figcaption
+   and no «Pexels» (stronger); `test_figure_caption.py`, `test_interior_w3_f1.py`, `apps/pages/tests/test_home.py` — the
+   old «as many figcaptions as figures» becomes two invariants, every figure WITHOUT `data-slot` captioned and no
+   `figure[data-slot]` captioned or naming Pexels (the review's m1, the exact complement: stronger — a slot frame may no
+   longer hide a caption), plus the new `test_a_curated_asset_s_byline_follows_its_licence` (Pexels, Unsplash, CC0,
+   client, original → publishable and no byline; CC BY → byline; `other` + `attribution=required` → byline);
+   `apps/ecosystem/tests/test_browser.py` — `figure.figura` against `figure.figura figcaption`, plus `figure[data-slot]
+   figcaption` == 0; `apps/pages/tests/test_browser.py` — a comment only; `test_sezioni_v522_s2.py` — the colon rule's
+   source loop reads `_ingresso.html` and `news/detail.html` (m2) and asserts `photo.html` has no figcaption, the
+   rendered `&nbsp;:` assertion unchanged; `test_sezioni_browser_v522_s2.py` — the byline test retargeted to a CC BY
+   `MediaAsset` through `photo_from_asset` → `_ingresso.html` in the library's bare page, the same invariant (the French
+   no-break space before the colon, none in it/en/ar) plus `figure[data-slot] figcaption, .foto__credit` == 0;
+   `test_home_v522_h.py` — `"<figcaption" not in frame`. NEW `tests/compliance/test_imagery_credits_v524.py`
+   (`@pytest.mark.compliance`): the sources (no product template names Pexels, Unsplash, «Photo by», `pexels.com`,
+   `foto__credit`, `creditText` outside a comment; `photo.html` has no figcaption, no «credit», no «author»), the
+   rendered public site in four languages plus the 404 / 429 / 500 (no stock word in the visible text, no `<figcaption`
+   inside a `figure[data-slot]`, no attribute or JSON-LD naming a stock source), the rendered platform through the four
+   personas and an institution's and a university's organisation space (≥ 30 pages), the registry (`not hasattr(picture,
+   "credit")`; licence, author and page for every slot) — the gate's «Pexels-visible-label check» (V5.24 §23, §30). No
+   skip added, no timeout raised, no assertion dropped without a stronger replacement. The steward's:
+   `tests/test_check_ownership.py` (item 5), cases added, none changed.
+8. **The tests on the merged tree** (`39a64cc1`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l4, one pytest per test
+   database — R12; V5.25 §7: the lane's targeted gate, the suites the reviewer ran at `2031bcb1`, plus the steward's;
+   five runs side by side, so every timing below carries that load):
+   - **Set A — the lane's targeted gate** (22:22 → 22:33, `test_ile_v524_px_merge_a`): the six modules of §3.2 gate item
+     1 — `tests/compliance/test_imagery_v512.py`, `test_imagery_credits_v524.py` (the production-facing check over the
+     184 public pages, the error pages and the personas' platform pages), `test_figure_caption.py`,
+     `tests/frontend/test_interior_w3_f1.py`, `test_sezioni_v522_s2.py`, `apps/pages/tests/test_home.py`, `-m "not
+     browser"`: **257 passed, 0 failed, 0 skipped in 633 s** (the reviewer's 257).
+   - **Set B — the guards around the merge** (22:22 → 22:33, `_b`): `tests/test_check_ownership.py` (with the family's
+     rows and the new id cases), `tests/compliance/test_locked_content.py` (the locked checksums, byte-identical),
+     `test_public_pages.py`, `test_no_personal_data_in_repository.py`, `apps/pages/tests/test_home_v522_h.py`,
+     `apps/ecosystem/tests/test_companies_page.py` (the curated plate's caption, D6 «unchanged»), `apps/forum/tests`,
+     `apps/news/tests`, `apps/cms/tests` (the models that gained `attribution_required`),
+     `tests/i18n/test_catalogues.py` (the catalogue +0 −0), `tests/frontend/test_design_docs.py`,
+     `test_css_bundle_is_current.py`, `test_frontispiece_v515_c.py` (every per-sheet and per-page ceiling): **788
+     passed, 0 failed, 0 skipped in 645 s**.
+   - **Set C — security and contact** (22:23 → 22:28, `_c`): `tests/security/test_confidential_material.py`,
+     `apps/pages/tests/test_contact_channels_v519.py`, `tests/compliance/test_phase3_texts_not_leaked.py`,
+     `apps/pages/tests/test_institutional.py`: **122 passed, 1 skipped** — the one environment-bound test (item 9),
+     which the next run covers.
+   - **Set D — the configured number** (22:25 → 22:31, `_d`; `ILE_WHATSAPP_NUMBER` set in-process to the preview's
+     value, read from v5-live's untracked `.env`, never printed; the log masked, 0 occurrences left):
+     `test_contact_channels_v519`, `test_institutional` and the confidential-material guard — **117 passed, 0 skipped**:
+     the environment-bound test runs and passes.
+   - **The three browser twins** (`-m browser`, headless Chromium under `CHROMIUM_LOCK_A`, label
+     `v524-px-merge/br_twins`, 22:23 → 22:32, released; `_br`): `apps/ecosystem/tests/test_browser.py`,
+     `apps/pages/tests/test_browser.py`, `tests/frontend/test_sezioni_browser_v522_s2.py` (the byline on a CC BY asset,
+     the slot frames' 0 captions in Chromium): **63 passed, 0 failed in 533 s** (the reviewer's 63; the builder's
+     improve round had not re-run them — item 10).
+   - The runs write no dist and no catalogue: `git status` empty after them; `main.css` 32 716 B gzip -9 (item 6).
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — the design-preview module in both halves (the hub reads the steward's files and visits the
+     public doors), the design documents and the ownership checker, the browser half under a lock slot; the tag is made
+     only on green (the counts in the record's commit and the tag).
+   - The full suites, both halves, on a fresh copy belong to the ONE technical gate after CLOSING (V5.25 §7;
+     FINAL_DELIVERY_V2.md §5).
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`, `test_contact_channels_v519.py:367`), which runs and passes where the number
+   is configured (item 8, set D). The private-table test runs (the table configured). No xfail, no xpass among the runs.
+   The lane added no skip and raised no timeout (item 7).
+10. **Left open (not the steward's; carried with their owner lane or «after acceptance»).**
+   - **The review's minors.** **m3** — axe `target-size` (serious) after a 21-Tab keyboard pass, not at rest, on
+     `.approdo__link.sez-stretch[href$="projet-pilote/"]` (`/fr/entreprises/` 390) and `.site-footer__email`
+     (`/ar/institutions/` 390): the approdo band is P1/P2's and the footer a preserved family — **for the ONE matrix's
+     axe cells** (FINAL_DELIVERY_V2.md §4; R14). **m4** — the dead `.foto__credit` rules: 17 in the source sheets (14 +
+     2 lane rules + `static/css/dev/specimen-imagery.css:76`), bundled into 15 dist files, 0 in `main.css`, ≈ 2 371 B of
+     source — **LIB** (`_photo.css:34-40`, `:42-44`, `:144-152`; `_fronte.css:566-568`, `:638-640`, `:717-722`,
+     `:1014-1020`, `:1182-1184`, `:1269-1275`, `:1392-1400`; `_sec-strato.css:89-94`; `_compose.css:64-66`;
+     `_sec-mappa.css:120`), **PUB1** (`ecosystem/_institutions.css:47-56`), **HOME** (`pages.css:710`), **PUB2**
+     (`cms/_lessico-v2.css:376-383`), **CLOSING** (the dev sheet); each owner deletes and re-measures its bundling sheet
+     gzip -9 against its ceiling, only down (§9.7); `base.css:26` and `_pagina.css:363` stay (the curated plates).
+     **m5** — the m1 complement form («every figure without `data-slot` is captioned») in the three modules against
+     `templates/enquiries/company_needs.html:28` (`figure.blockquote`, no figcaption): safe today, no route list walks
+     `/fr/entreprises/recueil-des-besoins/`; a lane adding that route excludes `figure.blockquote` or scopes the rule to
+     `.figura` — **CLOSING's test pass**. **m6** — the contract's three remaining bylines:
+     `templates/pathways/detail.html:66` (**PUB1**) and `templates/forum/partials/hero.html:46` (« — Photo : {{ credit
+     }}», a plain-space colon) and `permanent_sections.html:57` («© {{ credit }}», **PUB2**) carry no
+     `attribution_required` guard yet — latent (0 publishable assets, 0 CC BY; the production test does not catch a
+     person's name by construction, F5), so a future Pexels-licensed curated plate on those surfaces would print its
+     author until the owners apply PX's guard `{% if …credit and …attribution_required %}` (and may take the no-break
+     colon with it); **the steward checks it at PUB1's and PUB2's gates**.
+   - **The builder's not_done** (NOTES §9–§10): the three browser twins the improve round did not re-run — **re-run here
+     on the merged tree, item 8**; the retired Unsplash library (73 files, ≈ 6.9 MB under `static/img/photos/`, renders
+     nowhere; D4 makes a future curation harmless) — **after acceptance**; the owner's door photograph's written rights
+     record (IMAGE_LICENSES §7.1, `static/brand/v5/PROVENANCE.json`, D22) — **the owner's go-live checklist**
+     (FINAL_DELIVERY_V2.md §6.3); the doc errata outside PX's two documents — `SECTION_SYSTEM_V2.md` §8's credit lines
+     (203, 316, 330, 793, 801, 875, 1774, 1892), `DESIGN_SYSTEM_2026.md:2953-2958` and `:4379-4384`, the H/P2 NOTES
+     lines — **CLOSING's docs pass**; the comments `_trust.html:15` and `_ecosystem_frame.html:10` — **HOME**; the
+     gate's command list to run `tests/compliance/test_imagery_credits_v524.py -m compliance` beside
+     `test_public_pages.py` (V5.24 §30) — **the ONE gate** (§5); the two Pexels author names the REVIEW copy's §5
+     carries (item 2) — **CLOSING's docs pass** may decide, the evidence stays as written;
+     `tests/test_check_ownership.py`'s `OUTSIDE_THE_WAVES` literal not `ruff format`-clean, pre-existing (`ruff check`
+     clean) — left as it was.
+   - **For the lanes that follow** (the contract PX offers, NOTES §4): `attribution_required` on `cms.MediaAsset`,
+     `forum.ForumMedia`, `pages.services.Photo`, `ecosystem.services.Photo`, and the guard form `{% if <asset>.credit
+     and <asset>.attribution_required %}`; T is next in the order (its branch `v524-t` rebases on this merge; the id
+     rule now admits it); HOME and PUB1 rebase on the two services' slices.
+11. **The preview.** No shared database needed a seed or a migration at this tree (the lane added none; `migrate
+    --check` is run before the start). After the tag, 8780 is restarted on `v524/px` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; the previous log kept as `srv8780.log.prev-v524-px`). The checks — the four homes, the hub
+    and its strip with the tag and the label «Imagery V2 · credits», this record's decision document served by the hub;
+    the 12 photographed routes in four languages as the preview serves them (200, one h1, the registry's 26 slot frames
+    present — 4 on the home, 2 on Projet pilote, 5 on Parcours, 2 each on Entreprises, Institutions and Universités, 3
+    on Formation, 1 on Diplômes, 2 on Le projet, 1 each on Réseau, Contact and Vivre — and none of them captioned, 0
+    `.foto__credit`, 0 `data-credit`, no «Pexels | Unsplash | Photo by» in the visible text or in an attribute, Arabic
+    right to left); the five public doors without a slot frame in four languages → 200 and clean; the contact page in
+    four languages with both channels (the Numero Verde and the one WhatsApp link the environment configures, compared
+    in process), the footer's two channels on the contact page and the homes, the nine personas' homes in fr and ar
+    (200, no stock word), the server log (0 tracebacks, 0 5xx); headed chromium-1234 under a slot on the gate's four
+    pages and their language twins at 1440 and 390, the home in fr and ar at 1440, and under reduced motion at 1440 in
+    fr and ar on Entreprises and Parcours — after a play-through, every slot frame's children exactly `[picture]`, 0
+    figcaptions, the figure's bottom on the picture's, 0 visible stock words, every plate (a figure without `data-slot`)
+    captioned, one h1, no chapter head, overflow 0 and no unclipped element wider than the page, no `data-sec-state`
+    written and no animation running under reduced motion, one Tab setting `html[data-input="key"]`, 0 console errors —
+    are the steward's reports `C:/tmp/ile_v5_council/.work/v524-px-merge/verify_8780_v524px.json` and
+    `headed_8780_v524px.json`, with the stills under `shots/`.
+12. **Release gate — unchanged.** V5.24 §32 and V5.25 §9: «Do not promote main. Do not create v2.0.0. Do not create a
+    release. Do not deploy.» No push, no public tag; `v524/px` is a local annotated tag. The merge order continues — T,
+    LIB, then HOME, PUB1, PUB2, PLAT and AR as each passes, then CLOSING —, then V5.25 §3's ONE matrix and §7's ONE full
+    technical gate on the integrated tree (FINAL_DELIVERY_V2.md §4–§5; the gate's command list carries
+    `test_imagery_credits_v524.py` as the Pexels-visible-label check), and only then «FINAL V2 ACCEPTANCE READY» with
+    its SHA.
+
+**Why.** V5.24 names the visible Pexels credits a defect to correct before the next acceptance candidate, and V5.25 ends
+the loops: a lane whose targeted gate passes with no blocker is merged. Lane PX's change is one line's removal and one
+licence rule: every photograph the product serves is Pexels License (attribution permitted, not required) or the
+owner's, no CC BY asset exists, so nothing is replaced and nothing is hidden illegally — the credit leaves, the
+provenance stays internal where it always was, and the curated-asset path learns to draw a byline only when a licence
+demands one. The reviewer measured what the owner will see — the same frames at the same sizes and places with no line
+and no chip under or on any of them, in four languages — and the guards that held the old credit now hold its absence
+more strictly. The steward's own change is the id rule the nine lanes need, made first so that every later merge of the
+order can record its family.
+
+**Source.** The owner's V5.24 (§2–§3, §23, §30, §32), V5.25, V5.26 §4, V5.27 §6, V5.20 and V5.12–V5.21;
+`FINAL_DELIVERY_V2.md` §0, §1, §2 (R2, R4, R6, R9–R14), §3.2, §4–§6; `evidence/v524/IMAGERY_ATTRIBUTION.md` D1–D8,
+F5–F7; SECTION_SYSTEM_V2 §5.3, §8, §9.7–§9.9, §10; `QA/v524/px/NOTES.md` (§0–§10); `QA/v54/v524-px/REVIEW.md` (copied
+byte for byte from `C:/tmp/ile_v5_council/evidence/v524/px/QA.md`); the steward's tools and logs under
+`C:/tmp/ile_v5_council/.work/v524-px-merge/`; DL54-185 item 3 (F-M2), DL54-186 item 12.
+
+
+## DL54-188 · 5 November 2026 · Steward, the v524-t merge: V5.24 lane T — Typography V2, the shared type layer; the §9.8 typography exception recorded (R1)
+
+**Decisions** (the steward's, at the merge of `v524-t` into design-v5 on 5 November 2026 — the owner's V5.24
+(`V5_24_FINAL_DELIVERY_ACCELERATION_ARABIC_TYPOGRAPHY.md` §11–§14: a targeted typography audit decided internally,
+«PREMIUM, MODERN, INSTITUTIONAL, TECHNOLOGICAL, ELEGANT, HIGHLY READABLE», the thin headings, the oversized leading, the
+dense small text and the Arabic size discrepancies gone, the platform typography product-oriented; §30 the gate; §32 no
+promotion), V5.25 (final delivery mode: known defects, targeted checks, «if all six dimensions are >= 4 and no blocker
+exists: MERGE», no score loop), V5.26 §4 (tool → decision → implementation), V5.27 §4 (Readex Pro as adopted, the
+rendered result verified) and §6 (real tool provenance), V5.20's strict test-update rule, the Director's
+`FINAL_DELIVERY_V2.md` §0 (nine lanes, the merge order PX → T → LIB → HOME → PUB1 → PUB2 → PLAT → AR → CLOSING), §1 (the
+family «Typography V2»), §2 R1 (Typography V2 adopted whole; `tokens.css` and `base.html:30-32` the §9.8 exception the
+steward records), R4 g (the font ceilings) and R4 c (`main.css` ≤ 32 716, never raised), R6, R7 (AR's three CSS items
+held by T), R9, R10, R11 (the family ids), R12, R13 (the steward model), R14 (the scope guard), §3.1 (lane T),
+SECTION_SYSTEM_V2 §6, §9.7, §9.8 and §9.9, and the audit `evidence/v524/TYPOGRAPHY_V2.md` §3–§6 with `ARABIC_AUDIT.md`
+M1, M3, C-1; labels `v524-t-merge` for the merge and `v524-t-record` for this record).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` taken at 23:00 with design-v5 at `8a7c76e0` (`v524/px`, DL54-187's
+   record; no lane server, both Chromium slots free). FINAL_DELIVERY_V2.md §0.5 writes the order PX → T → LIB → {HOME,
+   PUB1, PUB2, PLAT, AR} → CLOSING: PX is merged, so lane T is the second merge of the final delivery and LIB follows.
+   The lane's branch stood at `aeea4fe4`, one commit over its base `4bafcfa0` (`v522/p2`), the head the reviewer
+   measured; design-v5 had moved by lane PX's merge, so `git merge design-v5` into the branch came first (`9dbcf027`):
+   no conflict and no file in common (design-v5's 28 paths since the lane's base and the lane's 22 share nothing; lane
+   PX touches no stylesheet), the committed dist the build on the merged tree (`npm run build` with the installed
+   packages, twice: 77 dist files, the two lists identical, `git status` empty after each), the catalogue +0 −0 on both
+   sides, nothing to recompile. Then the family recorded on the branch (`b0fbab39`, item 5) and `git merge --no-ff` into
+   design-v5 (`554c82d2`; its tree `58f7979a` is the branch's). **The record follows LIB's merge because of the credit
+   outage:** the merge steward's run stopped after the merge and its tests, when the session's credits ran out, before
+   this record was written; lane LIB's steward removed the stale lock and merged LIB in the order (`c451b654`, DL54-189,
+   which reserved DL54-188 for this record), and this record was written afterwards from the merge steward's tools and
+   logs under `DESIGN_V5_MERGE_LOCK` taken at 08:05 on 6 November with design-v5 at `4e882904` (DL54-189's record; no
+   stale lock present), with no rebuild and no new typography review (V5.28 §3).
+2. **The review** (`QA/v54/v524-t/REVIEW.md`, copied byte for byte from the evidence's `evidence/v524/t/QA.md`: the
+   reviewer's targeted gate on the committed head `aeea4fe4`, 5 November 21:30–22:00; label `v524-t-qa`): **PASS on
+   every gate item 1–6, 0 blockers, 8 minors** (none requiring a change before the merge; item 10). Measured
+   independently by the reviewer on the lane server 8785, headed chromium-1234 under `CHROMIUM_LOCK_A` and the twin 8782
+   under `PERFORMANCE_BENCHMARK_LOCK`: (1) **1 098 passed, 0 failed, 0 skipped** on the lane database over the gate's
+   modules and the guards, **4 passed** in the browser slices; the burn-down table an equality over 45 listed sheets and
+   every unlisted one, its counting logic read and sound; (2) the shipped set **61 140 B in six files** (≤ 62 000;
+   Readex Pro 16 128 ≤ 18 000, Host Grotesk 19 208 ≤ 22 000, italic 14 096 ≤ 15 000, mono 9 960 ≤ 10 000, wordmark 1 748
+   ≤ 2 000), FONTS_V5 §1 bytes and SHA-256 in step, **Readex Pro fetched on every `/ar/` page and never on a `/fr/` one,
+   no Vazirmatn file, face, stack, preload or licence anywhere** (the word survives in three non-T comments —
+   CLOSING's); a Latin public page 20 956 B of fonts and an Arabic one 37 084 where no page sheet still seats the mono
+   (the home 30 916 / 47 044, Parcours, FAQ, AGAMI — the LIB / HOME / PUB rows); (3) the eye on **118 headed frames** at
+   1440 · 1024 · 390 × fr · ar over nine pages: every `h1` that reads the tokens 600 at −0.028 em (FAQ, Le projet,
+   AGAMI, Contact 56/60.48 at 1440, 34/36.72 at 390; the login 36/44; the console's `ctx__title` 600), the label role
+   live where its classes are read (Host Grotesk 12–13/16 600 +0.08 em; Arabic 14/20 Readex Pro, no capitals, no
+   tracking), the console's step chips tabular in the sans, Readex Pro at the French's size and colour on every page
+   with the Western digits on the Arabic line, **0 clipped Arabic descenders** in overflow-hidden boxes
+   (Range-vs-clipper over every Arabic text node), the French runs on `/ar/` at Latin leading where the element carries
+   the declaration, **the only text under 14 px on the seven public pages at 390 the lock-up's «™» glyph** (7.7 px — the
+   brand drawing), overflow 0 and 0 console / page errors in 54 loads, **the navbar's mega menu and the phone sheet
+   identical on base and lane** (panel 100,72 · 1240 × 346, six 77 px entries; the sheet 390 × 844, 34 links, 36 px
+   minimum target), the swap on 8782 with every face held 1.5 s **worst matched CLS 0.0015** (home 390; ≤ 0.01; the bare
+   cells up to 0.0039 — the recomputed fallback is load-bearing); (4) **the hero's first screen**: 1440 fr
+   **pixel-identical to the base** (0 of 167 elements moved, 0.0 %), 390 fr three text boxes grown by the phone step-up
+   (the secondary link 15 → 16, two station labels 13 → 14, the CTA 15 → 16 at 500) with no block anchor moved, 1440 and
+   390 ar the text boxes following Readex Pro's advance widths (the CTA 17 px wider, the secondary 30) with the
+   statement, the door, the nodes and the panels unmoved — the item's letter «weight and tracking only» amended in
+   substance (minor 1); (5) the Arabic reader's exhibit recorded (`evidence/v524/t/compare_1600.png` + the Arabic home
+   stills) for owner item B2; (6) `main.css` **32 695 B gzip -9** against the base's 32 716 — the ratchet held, no
+   ceiling raised. Also: every tool use ended in a product change (impeccable `typography.md` / `typeset.md`,
+   taste-skill, ui-ux-pro-max `google-fonts.csv`, fontTools — named by path in NOTES §3, R10 / V5.27 §6); locked copy
+   byte-identical; both contact channels unchanged (compared in process); no test loosened; reduced motion 0 running / 0
+   `data-sec-state`; one Tab sets `html[data-input="key"]`; axe-core 4.10.2 **0 violations in 16 runs**. **Scores**
+   (§26, V5.25 §5, R9): the lane changes no composition, motion, imagery or interaction on any page — those dimensions
+   are not applicable and stand at 4 by the harness rule, the pages keeping their lanes' merge scores (the home
+   DL54-185, Parcours DL54-183, FAQ, Le projet, AGAMI and Contact DL54-186); institutional 4–4.5 and coherence 4–4.5 on
+   the six gate pages as the review reads them (the FAQ's Arabic lead with the brand isolate unbroken, the console's
+   registers on one line) — no page under 4, no re-scoring.
+3. **The Director's ruling on F-M2, as it reaches this lane** (R6, in its words): the first keyboard input's INP is
+   judged by **the absolute budget of SECTION_SYSTEM_V2 §5.3 — first-Tab and first-pointer-after-keyboard INP ≤ 200 ms
+   at p75 on the compressed twin 8782, desktop and phone, fr and ar, paired against the base with n ≥ 5 — in place of
+   «within 20 ms of the base»; the residual trim is CLOSING's F2-m1**; if the desktop cell stays over on the base and
+   the tree alike after the trim, it is recorded as P2 with the base's figure beside it — not a release blocker, not a
+   P0/P1. Lane T ships no script and moves no block (the type layer alone; the reviewer's motion probe: the animations
+   in flight after the Tab identical on base and lane, 39 → 4 at rest on both trees); the reviewer did not re-measure
+   INP; DL54-185 item 3's first-input measures stand for every page (the first Tab 160 · 176 · 128 · 168 ms, within the
+   budget in all four cells; the desktop pointer after the keyboard over it on both trees, 216 · 248 against the base's
+   176 · 208), carried to CLOSING. 8782 was switched to the lane's tree by the builder and the reviewer for the swap-CLS
+   cells alone and stopped again; this merge did not switch it.
+4. **Read before merging** (the slices' product changes, as the checker asks; the lane's three whole files are the two
+   guard modules and its notes).
+   - `static/css/v5/tokens.css` §3.3 (the §9.8 exception, below) — the stacks on Readex Pro (`--f-sans-ar`;
+     `--f-serif-ar` and `--numeric-ref`, read nowhere, gone), the tracking set (`--track-display` −0.03 em,
+     `--track-title` −0.028, `--track-title-2` −0.02, `--track-band` −0.016, `--track-entry` −0.012, `--track-label`
+     +0.08), **the twelve steps declared once** (`--t-display` 44→64/1 · `--t-title-1` 34→56/1.08 · `--t-title-2`
+     28→36/1.15 · `--t-band` 24→28/1.25 · `--t-entry` 20/28 · `--t-lead` 20/28, 22/32 from 64 rem · `--t-body` 17/28 ·
+     `--t-ui` 15/20 · `--t-small` 13/20 · `--t-caption` 12/16 · `--t-label` 13/16 · `--t-numeral` 28/32,
+     `--t-numeral-lg` 36/40 · `--t-field` 16) with the legacy names (`--t-plate`, `--t-title` 36/44 fixed, `--t-folio`)
+     as aliases the lanes burn down, `--w-display: 600`, `--w-label: 600`, `--u-title-lg` for the workspace head (PLAT),
+     the public step-up under `(max-width: 47.999rem), (pointer: coarse)` (ui 16/24; small, caption and label 14/20; the
+     console's eyebrow 13/20), **the Arabic block** `:root:lang(ar), :lang(ar)` (ratio 1.0, `--ar-lh-plus: 0.1`, the
+     title leadings 1.1 / 1.18 / 1.25 / 1.35, entry and lead 20/32, body 17/28 — V1's 32 px Naskh leading closed at the
+     same specificity —, the 14 px floor, every `--track-*` 0) and **the Latin boundary** `:where(:root:lang(ar))
+     :where([lang="fr"], [lang="it"], [lang="en"])` restating the stacks, the leadings and the tracking (F-7); the
+     Vazirmatn trio aliased, not deleted (`--ar-title-lh`, `--ar-body-lh` on the V2 values — two preserved sheets read
+     them; `--ar-console-lh` gone); **25 never-read custom properties removed** to pay for the block (each proven unread
+     over every sheet, module, template, test and documented css block — the contrast pairs' `--tone-*-bg-hover` and
+     `--shadow-2-dark` restored after the first pass caught them). The motion, door, hero, console-chrome and spring
+     token blocks of the other families untouched.
+   - `static/css/v5/fonts.css` — the Readex Pro `@font-face` (variable 400–700, `font-display: swap`, Vazirmatn's
+     `unicode-range`) in Vazirmatn's place; **`ILE Arabic Fallback` recomputed** on the lane's Arabic sample with W1-A's
+     method: size-adjust 107.1 %, ascent 93.3 %, descent 23.3 %, gap 0 (Vazirmatn's 97.1 / 105.6 / 55.3).
+     `static/fonts/` — **`v5-readex-pro-var-400-700-arabic.woff2`** 16 128 B (SHA-256 `9669ea48…`) built from
+     `google/fonts` `ofl/readexpro` v1.205 by `evidence/v54/w1-a/tools/build_v5_fonts.py` extended (`fontTools.subset`
+     on the Arabic recipe with every layout feature, then `varLib.instancer` wght 400–700 and HEXP pinned 0, name IDs
+     0–6, 13, 14, `recalcTimestamp=False`, two builds one hash; 222 glyphs — the Arabic blocks and presentation forms,
+     never the digits or the Latin; 47 of the product's 48 Arabic code points, the 48th a bidi control) with
+     `licenses/OFL-ReadexPro.txt` (the Reserved Font Name declared and unused); **removed**
+     `v5-vazirmatn-var-400-700-arabic.woff2` (32 228 B) and `OFL-Vazirmatn.txt`. The set 77 240 → **61 140 B**, six
+     files.
+   - `static/css/v5/base.css` — **the label role** (`.t-label, .eyebrow`: the sans, `--t-label` / `--t-label-lh`,
+     `--w-label`, `--track-label`, uppercase, `"case"`) and **the numeral role** (`.t-numeral`: the sans, `--t-numeral`,
+     `--w-title`, tabular); the legacy mono re-pointing block trimmed to its tabular figures (its `font-family` line a
+     no-op since V5.22 — verified: no sheet seats the mono on those six classes), the dead `.home-pilot .section__title`
+     selector and the Vazirmatn help-line rule gone, the italic rule narrowed to the one class components.css still sets
+     italic; **the Arabic rules in the subject form** — `:is(h1 … h6, .t-band, .t-label, .t-folio,
+     .eyebrow):lang(ar):not([translate="no"]) { letter-spacing: 0; text-transform: none; }`, `:is(em, i):lang(ar)`,
+     `:is(code, kbd, samp, .t-ref):lang(ar)`; **AR's three items (R7)** — M1 `bdi[dir="ltr"]:not(.phone, .email) {
+     white-space: nowrap; }` (the brand isolate never breaks), M3 `[dir="rtl"] :is(a, button):is([lang="fr"],
+     [lang="it"], [lang="en"]) { unicode-bidi: isolate; }`, C-1 `[dir="rtl"] :is(h1, h2, h3, h4):has(>
+     [lang="fr"]:only-child) { direction: ltr; text-align: start; }`. `static/css/v5/buttons.css` — `.btn--primary`
+     **16/24 600** (`font-weight: var(--w-title)`), 17/24 under the step-up media; `.btn--upper` on `--track-label` with
+     its Arabic rule in the subject form.
+   - `templates/base.html` lines 24–32 (the §9.8 exception, below): the Arabic preload `{% if site.is_rtl %}` on the
+     Readex Pro file and the comment above it naming the face (the plan named 30–32; the stale comment three lines above
+     would have contradicted the href — NOTES §4 deviation 1); the preload count unchanged (two on a Latin page, three
+     on an Arabic one). `templates/errors/standalone.html:26` — the same href on the Arabic error page (the removed file
+     would otherwise 404 its preload: a regression of the lane's own change, fixed under R14; deviation 2).
+   - **The §9.8 exception «typography» (R1), recorded here by the steward:** `static/css/v5/tokens.css` and
+     `templates/base.html` are preserved files of SECTION_SYSTEM_V2 §9.8; lane T changes them for the type system alone
+     — the stacks, the twelve steps, the weights and tracking, the Arabic block and boundary, the preload href — and
+     nothing of the navbar, the mega menus, the phone sheet, Lume, `motion.css`, the premium forms, the contact
+     architecture, the privacy pages, terminology or the organisation spaces (the reviewer measured the mega menu and
+     the sheet identical on base and lane; the forms' typed text 16 px; Lume where it was). CLOSING writes the erratum
+     block into SECTION_SYSTEM_V2 §9.8 (the three recorded exceptions: this one, the platform's tokens — PLAT —, the
+     preserved first screen's weight through the tokens — HOME) and §6.2 («eight sizes, no ninth» and the Vazirmatn
+     rules superseded by the twelve steps and the Readex Pro block). **No other preserved family is in the diff:** no
+     page sheet, no library partial, no `main.css` import, no JavaScript, no string, no image, no slot, no migration, no
+     npm package; the locked registry and its checksums untouched; no composition reopened (R9, R14).
+   - **The contract the next lanes apply in their own sheets** (NOTES §4; the steward restates it here so the lanes read
+     it from the log): the token names above; every Arabic type rule in the subject form `.x:lang(ar)`; no
+     `var(--f-mono)` outside `code, kbd, pre, .t-ref, .ctx__ref, .doc-workspace__ref, .error-page__ref, .db-ref,
+     .reg-ref`; no `clamp()` in a `font-size`; `text-transform: uppercase` only through the label role; `--ar-lh-plus`
+     for a literal title leading; **the type declaration on the lang-bearing element, or the subject form on it** — the
+     Latin boundary is token-deep, not inheritance-deep (the review's minor 3: Le projet's statement declares
+     `line-height: var(--t-lead-lh)` on an Arabic wrapper and its French runs inherit the Arabic leading, 20/32 at 390).
+     The burn-down table `TYPOGRAPHY_BURNDOWN` (`tests/frontend/test_typography_v2.py`; 45 sheets, five counts each:
+     clamp · literal · mono seat · descendant-form Arabic rule · uppercase) is each lane's work list, an equality that
+     only goes down: **LIB** `_sezioni.css` 2·0·2·1·1, `_fronte.css` 6·2·0·1·1, `_sec-tracciato.css`, `_linea-v2.css`,
+     `_servizio.css` one mono seat each, `_glyph.css`, `_steps.css`, `field.css` one Arabic rule each, `_formwork.css`
+     0·1·0·4·1, `_receipt.css` 0·1·0·1·0, `_portico.css` ar 3 upper 2, `aliases.css` mono 2 (legacy names — CLOSING's
+     call); **HOME** `pages.css` 2·0·1·0·1, `hero.css` 3·3·0·0·4; **PUB1** `_index.css` 0·0·1·1·1, `_sheet.css`
+     0·0·1·1·1, `_diplomas.css` and `_training.css` 0·0·1·1·0, `_persone-v2.css` ar 1 upper 1, `_companies.css`
+     1·0·1·0·0, `_universities.css` mono 1, `_spazi-v2.css` ar 1; **PUB2** `_agami.css` 2·0·2·1·2, `_rete.css`
+     0·0·1·0·1, `_canali.css` 1·0·0·1·1, `_contatto.css` 1, `_frodi.css` 2, `_faq-v2.css` 0·0·1·0·1, `_lessico-v2.css`
+     2·0·0·1·0, `_forum.css` 1; **PLAT** `_platform.css` 1·2·5·0·3, `_shell.css` 0·1·0·3·0, `_dashboard.css`,
+     `_depot.css`, `_journey-rail.css`, `_table.css` ar 1 each, `_frame.css` upper 1, `_registers.css` 0·0·1·1·0,
+     `_workspace.css` 0·0·1·2·0, `portal.css` literal 1, `academy.css` mono 1; **the preserved families** (CLOSING
+     decides: a §9.8 exception or a recorded residue) `chrome.css` 0·6·0·5·3, `lume.css` ar 1 upper 1, `entrance.css` ar
+     2 (`--ar-title-lh`, `--ar-body-lh`), `wizard.css` ar 1 upper 1. The requests of NOTES §4 stand: HOME
+     (`.he-origin__call` 12 px literal under the Arabic floor on the seeded home; `.he-origin__word` 16/19.2 two lines
+     in Arabic; `.he__promise` and `.pilota__titolo` → `--t-display` / `--w-display`; the CTA's own 500 / 15 px), LIB
+     (`_fronte.css:194-198`, `_sezioni.css:147`; the `.testa__label` / `.ingresso__label` mono seats — why the home,
+     Parcours, FAQ, AGAMI and Entreprises still fetch the mono files), PUB2 (`_agami.css`'s Arabic registers in the
+     mono, 7 elements; `.racconto__titolo` 24/32 on `/ar/le-projet/`), PLAT (`--u-title-lg` declared; `--u-eyebrow`
+     tracking now +0.08 em through `--track-eyebrow` — confirm or re-pin), AR (M2 and the brand `bdi` in the catalogue
+     sentences are template items; the CSS waits for them), CLOSING (item 10).
+5. **Ownership (R11, MC-5).** The id rule already admits `v5<nn>-t` since the v524-px steward's commit `6069a1c8`
+   (FAMILY_ID's final-delivery alternative; `test_check_ownership.py`'s 12 admitted ids name it): no change to
+   `scripts/check_ownership.py`. The family `v524-t` (`b0fbab39` on the branch; wave 0, after `v524-px`; base
+   `8a7c76e0`, head `9dbcf027` — the lane's own diff over design-v5 after the branch's merge; `OUTSIDE_THE_WAVES` and
+   its comment name the lane): **3 whole files** (`tests/frontend/test_typography_v2.py`,
+   `tests/frontend/test_fonts_budget_v2.py`, `docs/design-v5/QA/v524/t/NOTES.md`) and **19 slices** — `tokens.css` and
+   `base.html` (W1-A's, the §9.8 exception), `fonts.css`, `base.css`, `buttons.css`, the two font files and the two
+   licences inside W1-A's `static/fonts/**` (two created, two removed), the error page's one line (W3-F2's file), the
+   seven re-pointed test slices (`test_v5_tokens.py`, `test_design_docs.py`, `test_layout.py`, `test_browser.py`,
+   `test_rtl_browser.py`, `test_rtl_static.py` — W1-A's font slices, LIB's module among them under §9.7's first-lane
+   rule), the three documents' sections (`FONTS_V5.md`, `DESIGN_SYSTEM_V5.md` §3.3 / §5, `DESIGN_SYSTEM_2026.md` §6 +
+   the three cells) — each slice naming its part (the review's minor 5 closed here) and the families whose file it
+   stays; **1 generated** (`static/css/dist/main.css`). `check_ownership.py v524-t 8a7c76e0 --head 9dbcf027`: 3 inside,
+   19 slice, 1 generated → **PASS**; `--validate`: coherent, **61 families, 2 405 entries**;
+   `tests/test_check_ownership.py` on the branch: **163 passed**.
+6. **Build, catalogue, checks** on the merged tree (`554c82d2`). `npm run build`, twice (23:07): exit 0, `git status`
+   empty after each, the two dist lists identical (77 files, the list's sha256 `7039b339…`); `git diff 8a7c76e0 HEAD --
+   static/css/dist static/js/dist` touches **`main.css` alone** (166 176 → 166 236 B minified; the lane's change).
+   Measured (gzip -9): `main.css` **32 695 B** (the ratchet 32 716 held with 21 B of air;
+   `test_frontispiece_v515_c.py`'s 32 718 holds; CLOSING ratchets to the measure), every other sheet at the base's
+   figure — `pages/css/pages.css` 11 306 / 12 288, `hero.css` 10 899 / 11 264, `fronte.css` 6 141 / 6 144,
+   `interior.css` 8 827 / 11 264, `core/sezioni.css` 11 308, `core/reveal.css` 3 526 / 6 144,
+   `ecosystem/{ecosystem,companies,institutions,pilot,universities}.css` 4 977 · 8 701 · 8 381 · 9 508 · 7 630,
+   `pathways/{pathways,index,diplomas,training,sheet}.css` 4 716 · 10 117 · 8 895 · 8 788 · 9 701, `cms/lettura.css` 6
+   512 / 9 216, `cms/faq.css` 1 935 / 2 048, `cms/lessico.css` 2 384 / 2 560, `pages/css/rete.css` 1 817 / 2 048,
+   `agami.css` 1 760 / 2 048, `frodi.css` 1 200 / 1 536, `forum/forum.css` 7 369 / 8 192; the page-type totals on the
+   sheets each page links (the form sheets apart, as the test sums them): the home 61 419 B (the figure DL54-189 reads
+   on this tree as LIB's base) and each other page type its DL54-187 figure less `main.css`'s 21 B, the other sheets
+   unchanged — every total 21 B under its DL54-187 figure, no ceiling moved. **The fonts:** the set **61 140 B** in six
+   files (≤ 62 000), every per-file ceiling held (item 2). **The catalogue:** `scripts/i18n_audit.py --sync` on the
+   merged tree **+0 −0** in it/en/ar/fr (`git status -- locale` empty; the lane adds no string), `--compile`
+   byte-identical, the audit OK: **3 702 msgids, 100 %** in every language, no fuzzy; no locked text touched, nothing
+   translated. `manage.py check`: no issues. `makemigrations --check --dry-run`: no changes, with `ILE_WHATSAPP_NUMBER`
+   unset and with a fictional value. `ruff check .` (ruff 0.16.8): all checks passed. The word «Vazirmatn» over
+   `static/fonts`, `fonts.css`, `tokens.css`, `base.css`, `buttons.css` and `templates`: **0**; over `static/css/v5`,
+   `apps`, `templates`, `scripts`: three comments outside T's files (`aliases.css`, `chrome.css`, `_fronte.css` —
+   CLOSING item b).
+7. **The confidential-material guard: green; the test changes, against V5.20's strict rule.** With
+   `ILE_CONFIDENTIAL_SENTINELS` naming the private table (read in-process only, no value printed or written),
+   `tests/security/test_confidential_material.py` passes CI-style on the merged tree, in the security set and in the
+   configured-number run (item 8). The 23 paths of the merge hold no CR byte but the binary font file and the
+   owner-confirmed number in no form (counted in-process, never printed). **The lane's test changes** (each docstring or
+   comment citing V5.24 §11–§14, TYPOGRAPHY_V2 §4 and FINAL_DELIVERY_V2 R1 / §3.1 under V5.20; the reviewer's §2 re-read
+   every re-pointed expectation): `test_v5_tokens.py` — twelve tests re-pointed on the new values with the same or a
+   stronger invariant (the scale test pins twelve values at two viewports; the floors test adds the label and the Arabic
+   block's form; the console step-up test is stronger — the eyebrow at 13 on phones; the faces and licences, the stacks,
+   the name and mono seats, the FONTS_V5 licence list); `test_design_docs.py` — the §6 phrase list names Readex Pro;
+   `test_layout.py` (the fonts slices) and `test_rtl_static.py` (one test) — the Arabic face and its preload by name,
+   the same invariants on Readex Pro (NOTES §4 deviation 3: both would have turned design-v5 red at T's merge; T merges
+   before LIB, §9.7's first-lane rule as PX's); the two browser slices
+   `test_browser.py::test_fonts_are_self_hosted_and_loaded` and
+   `test_rtl_browser.py::test_arabic_typefaces_are_applied_and_loaded` — no Readex Pro fetched on `/fr/`, Readex Pro
+   then Host on `/ar/`, the body at 17/28, the bytes fetched within the recorded figure (the home's 30 916 / 47 044 B —
+   measures to burn down, never ceilings raised): stronger. NEW `tests/frontend/test_typography_v2.py` (the twelve steps
+   declared once; the weight map and tracking; the step-up; the Arabic block and the Latin boundary; the label and
+   numeral roles; the subject form and M1 / M3 / C-1 in base.css; the primary call; `TYPOGRAPHY_BURNDOWN` over
+   `static/css/v5/**` and `apps/*/static/**` — equality, never up, no sheet listed that is clean and none clean that is
+   listed; the browser guards on the Arabic product with `ARABIC_PAGES` and `ARABIC_PAGES_BURNDOWN`); NEW
+   `tests/frontend/test_fonts_budget_v2.py` (the set ≤ 62 000 and the per-file ceilings; Readex Pro in Vazirmatn's place
+   with its licence; the subset's contents read from the WOFF2 directory as bytes — no fontTools, no skip; FONTS_V5 in
+   step). No skip added, no timeout raised, no assertion dropped without a stronger replacement. The steward's:
+   `tests/test_check_ownership.py` (item 5), the lane named, no case changed.
+8. **The tests on the merged tree** (`554c82d2`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases on lane l5, one pytest per test
+   database — R12; V5.25 §7: the lane's targeted gate, the guards the reviewer and the builder ran, plus the steward's;
+   the runs side by side, so every timing below carries that load):
+   - **Set A — the lane's targeted gate** (23:10 → 23:10, `test_ile_v524_t_merge_a`): the six modules of §3.1 gate item
+     1 — `tests/frontend/test_v5_tokens.py`, `test_typography_v2.py` (the burn-down equality over 45 sheets),
+     `test_fonts_budget_v2.py`, `test_design_docs.py`, `tests/i18n/test_catalogues.py`, `tests/i18n/test_rtl_static.py`,
+     `-m "not browser"`: **929 passed, 0 failed, 0 skipped in 18 s** (2 browser tests deselected).
+   - **Set B — the guards around the merge** (23:10 → 23:25, `_b`): `tests/test_check_ownership.py` (with the family's
+     rows), `tests/compliance/test_locked_content.py` (the locked checksums, byte-identical), `test_public_pages.py`,
+     `test_no_personal_data_in_repository.py`, `test_imagery_credits_v524.py` (lane PX's production-facing check, still
+     green with T's tree), `tests/frontend/test_layout.py` (the fonts slices), `test_css_bundle_is_current.py` (the
+     committed dist is the build), `test_frontispiece_v515_c.py` (every per-sheet and per-page ceiling, `main.css` ≤ 32
+     718), `test_forms_v515_b.py` (the preserved forms' budgets and typed text), `test_chips_cards_w1_c.py`,
+     `test_service_pages_w3_f2.py`, `apps/pages/tests/test_home.py` and `test_home_v522_h.py` (the home's composition on
+     the new tokens): **1 failed, 519 passed, 3 deselected, 5 errors** — the one red
+     `test_home_v522_h.py::test_final_round_the_arabic_titles_stand_against_their_glyphs_and_the_connector_on_its_rule`
+     (`re.search('--t-folio-lh: 1rem;', tokens.css)` → None: the literal is now T's alias of the label step), lane H's
+     module, a red of this merge carried by DL54-189 item 10 m2 (a) to HOME / CLOSING; the five errors at setup were
+     Windows process launches returning 0xC0000142 under the parallel runs' load (`git` in four fixtures of
+     `test_check_ownership.py` and `git ls-files` in `test_no_personal_data_in_repository.py`), not the tree's — re-run
+     by the record steward on the recorded tree (`test_ile_v524_trec`, with the lane's two guard modules): **318
+     passed** (163 + 4 + 147 + 4).
+   - **Set C — security and contact** (23:10 → 23:15, `_c`): `tests/security/test_confidential_material.py`,
+     `apps/pages/tests/test_contact_channels_v519.py`, `tests/compliance/test_phase3_texts_not_leaked.py`,
+     `apps/pages/tests/test_institutional.py`: **122 passed, 1 skipped** — the one environment-bound test (item 9),
+     which the next run covers.
+   - **Set D — the configured number** (→ 23:15, `_d`; `ILE_WHATSAPP_NUMBER` set in-process to the preview's value, read
+     from v5-live's untracked `.env`, never printed; the log masked, nothing in it to mask):
+     `test_contact_channels_v519`, `test_institutional` and the confidential-material guard — **117 passed, 0 skipped**:
+     the environment-bound test runs and passes.
+   - **The browser slices** (`-m browser`, headless Chromium through pytest under `CHROMIUM_LOCK_A`, label
+     `v524-t-merge/br_twins`, 23:10 → 23:11, released; `_br`):
+     `tests/frontend/test_browser.py::test_fonts_are_self_hosted_and_loaded`,
+     `tests/i18n/test_rtl_browser.py::test_arabic_typefaces_are_applied_and_loaded`,
+     `tests/frontend/test_typography_v2.py` (the Arabic guards at 1440 and 390: the face, the floor, the French leading,
+     no Arabic in the mono outside the burn-down pages): **4 passed, 146 deselected** (the reviewer's 4).
+   - The runs write no dist and no catalogue: `git status` empty after them; `main.css` 32 695 B gzip -9 (item 6).
+   - **What these sets did not see** (recorded from DL54-189 items 8 and 10 m2): LIB's steward's wider runs at the next
+     merge found six browser reds that are this merge's, beside set B's one —
+     `test_home_browser_v522_h.py::test_final_the_arabic_index_s_titles_…` × 3 (the S3 connector 2 px off centre under
+     T's 14/20 Arabic label; HOME's `pages.css`), `test_pages_browser_v522_p1.py::test_the_institutions_head_…[fr/ar]`
+     (16 px against the test's 15.5 cap: T's approved phone step-up; PUB1 / CLOSING) and
+     `apps/pages/tests/test_browser.py::test_the_interim_hero_on_a_phone_keeps_its_four_tiles_in_the_first_screen` (the
+     doors 9 px under the 360 × 640 fold; HOME; red on `554c82d2` and green on `8a7c76e0` in LIB's steward's two control
+     runs) — each traced to T's tokens there. §0.4's «every merge leaves design-v5 green» did not hold at this merge;
+     the reviewer's and the steward's sets held none of those browser modules. The seven are carried there with their
+     owners and the fix or the re-pointing spelled out; this record changes no test.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) is checked on the recorded
+     tree before the tag — `tests/frontend/test_design_docs.py` and the hub module's non-browser half
+     (`tests/frontend/test_design_preview.py`, which reads the steward's files) on `test_ile_v524_trec`, the lane's two
+     guard modules green there before the record; the tag is made only on green (the counts in the record's commit and
+     the tag). The hub's browser half visits the served preview, which this record does not restart: the next merge's.
+   - The full suites, both halves, on a fresh copy belong to the ONE technical gate after CLOSING (V5.25 §7;
+     FINAL_DELIVERY_V2.md §5).
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`, `test_contact_channels_v519.py:367`), which runs and passes where the number
+   is configured (item 8, set D). The private-table test runs (the table configured). No xfail, no xpass among the runs.
+   The lane added no skip and raised no timeout (item 7; the reviewer's 0 skipped on 1 098).
+10. **Left open (not the steward's; carried with their owner lane or «after acceptance»).**
+   - **The review's minors.** **m1** — gate (4)'s letter «weight and tracking only, ≤ 1 px» cannot be met at 390 and in
+     Arabic without contradicting item (3) «no text under 14 px on phones» and R1's face: only text-sized boxes change
+     (fr 390 +4 … 9 px widths, the secondary's arrow 9 px; ar 1440 the CTA 17 px wider, the secondary 30), block anchors
+     unmoved, 1440 fr pixel-identical — **the Director records the amendment for HOME's gate (3): «block anchors ≤ 1 px;
+     text boxes follow the adopted step-up and face»; HOME does not restate the hero's own 15 / 13 px at 390** (13 px
+     text back in the phone hero would contradict V5.24 §13). **m2** — the hero's statement is still 500: `hero.css`
+     sets `.he__promise` 500 / −0.028 em literally, so the owner's §1 promise arrives through the tokens where the
+     sheets read them (the pilot's title, the glossary's letters, every token-reading `h1`) and reaches the hero when
+     **HOME** applies `--t-display` / `--w-display` to `.he__promise` and `.pilota__titolo` and re-measures the first
+     screen with T merged (its §3.4 «type» row); `live_status`'s wording says so until HOME merges. **m3** — F-7's Latin
+     boundary is token-deep: where a sheet declares the leading on an Arabic ancestor of a `lang="fr"` run the French
+     inherits the Arabic leading (Le projet's statement, `_sec-racconto.css:81`): the contract paragraph is written in
+     item 4 for every lane; `ARABIC_PAGES_BURNDOWN["/ar/le-projet/"]`'s reason gains the statement at **CLOSING's** test
+     pass (the page is a LIB / PUB2 burn-down row already). **m4** — NOTES §5 and §7.1 say the persona pages fetch no
+     mono («20 956 / 37 084»): true of the need form only; the dashboard, the case file and documents fetch the mono
+     core for the reference seat, 23 644 / 39 772 B — within the ceilings 24 000 / 40 000; DESIGN_SYSTEM_2026 §6.3
+     repeats the 20 956 for the console — **CLOSING's docs pass** (docs only; no ceiling moves; the figures recorded
+     here as the true ones). **m5** — the slices outside §3.1's list (`test_layout.py`, `test_rtl_static.py`,
+     `standalone.html:26`, `base.html:24–27`, DESIGN_SYSTEM_2026 §2 rows 11 / 14 and the §3 cell) — **closed here**
+     (item 5). **m6** — DESIGN_SYSTEM_2026 §6 cites `evidence/v524/.work/v524-typo/shots/compare_1600.png`; the exhibit
+     is `C:/tmp/ile_v5_council/.work/v524-audit/v524-typo/shots/compare_1600.png` (copy
+     `evidence/v524/t/compare_1600.png`) — **CLOSING's docs pass**, one line. **m7** — a cosmetic indent in `tokens.css`
+     (` --toast-timeout: 6s;` one space short) — **CLOSING's token pass** (a rebuild for one byte is not worth it now).
+     **m8** — the name's `h1` tracking computes −0.028 em instead of −0.024 through `--track-title` (0 visible pixels;
+     the lock-up draws the name) — recorded so **HOME's** pixel diff does not flag it.
+   - **The builder's not_done** (NOTES §4, §9–§10): the §9.8 exception, the family and the id rule — **done here**
+     (items 4, 5); the page sheets' conversions (the burn-down table: clamps 24, literals 17, mono seats 26,
+     descendant-form Arabic rules 41, uppercase 27 over 45 sheets) — **LIB, HOME, PUB1, PUB2, PLAT**, each emptying its
+     rows (until then the home, Parcours, FAQ, AGAMI and Entreprises still fetch the mono files, 30 916 B fr / 47 044 B
+     ar on the home, and the pathway sheets' French `h1` / lead float in Arabic leading — LIB's `_fronte.css:194-198`,
+     `_sezioni.css:147`; AGAMI's Arabic registers in a mono system fallback — PUB2's `_agami.css`, visibly wrong, in
+     PUB2's table); the hero at fr 390 (four text boxes grown by the phone step-up) and in Arabic (Readex Pro's widths)
+     — **HOME** under m1's amended gate; `.he-origin__call` 12 px literal and `.he-origin__word` 16/19.2 — **HOME**; the
+     company dashboard's `h2.db-now__title` 20/25 two-line Arabic — **PLAT**; a 24/44 French statement on
+     `/ar/entreprises/` at 390 — **PUB1**; the five deviations from §3.1's file list — recorded as slices (item 5);
+     «Vazirmatn» as a word in three comments outside T's files (`aliases.css`, `chrome.css`, `_fronte.css`), the tests'
+     retired-name assertions, one test comment, one fixture text and the historical docs; SECTION_SYSTEM_V2 §6.2's
+     erratum; the legacy aliases (`--t-title`, `--t-plate`, `--t-folio`, `--track-eyebrow`, `--track-folio`,
+     `--ar-title-lh`, `--ar-body-lh`) to delete when the table is empty; the 25 removed tokens' mentions in
+     DESIGN_SYSTEM_V5 §3–§4; V1's dead `.t-plate` rule — **CLOSING**; the twin 8782's database `ile_v5_perf` was four
+     migrations behind the tree and was migrated forward under `settings_8782` for the CLS measure, 8782 stopped again —
+     **recorded for the Performance Lead** (SERVERS.md's «refresh after every merge»); the Arabic reader's review of
+     Readex Pro (owner item B2; the exhibit `evidence/v524/t/compare_1600.png` + the Arabic home stills) — **the owner's
+     side** (FINAL_DELIVERY_V2.md §6.2, not blocking); the preserved families' burn-down rows (`chrome.css`, `lume.css`,
+     `entrance.css`, `wizard.css`, `_portico.css`, `field.css`, `_formwork.css`, `_glyph.css`, `_steps.css`) —
+     **CLOSING** (a §9.8 exception or a recorded residue); the dev board's specimens still naming the eight-size scale —
+     **after acceptance**.
+   - **For the lanes that follow** (the contract T offers, item 4): LIB came next and is merged (`c451b654`, DL54-189:
+     its branch cut from this merge, T's token names taken in `_fronte.css`, `_sezioni.css`, `_servizio.css`,
+     `_sec-tracciato.css`, `_linea-v2.css`, its burn-down rows lowered as recorded there); HOME, PUB1, PUB2, PLAT rebase
+     and empty their rows; AR finds M1 / M3 / C-1 in `base.css` and writes its templates against them (`bdi[dir="ltr"]`
+     already matches `brand_bdi`'s output).
+11. **The preview.** This record restarts nothing (V5.28 §3; the next merge restarts 8780). The merge steward's run
+    stopped before its planned restart on `v524/t`, so its preview checks (`verify_8780_v524t.py`,
+    `headed_8780_v524t.py`) never ran and are not claimed. 8780 was restarted by LIB's steward on `v524/lib` (DL54-189
+    item 11), a tree that contains this merge: lane T's typography has reached the owner's preview with that restart,
+    and DL54-189's served checks are the ones that read it.
+12. **Release gate — unchanged.** V5.24 §32 and V5.25 §9: «Do not promote main. Do not create v2.0.0. Do not create a
+    release. Do not deploy.» No push, no public tag; `v524/t` is a local annotated tag, made on this record's commit and
+    naming the merge `554c82d2`. The merge order continues — LIB merged after this one (DL54-189), then HOME, PUB1,
+    PUB2, PLAT and AR as each passes, then CLOSING —, then V5.25 §3's ONE matrix and §7's ONE full technical gate on the
+    integrated tree (FINAL_DELIVERY_V2.md §4–§5; the matrix's automated cells carry the font rules — Readex Pro on
+    `/ar/` only, no Vazirmatn, the per-page font ceilings, no text under 14 px below 48 rem, every `lang="fr"` element
+    on `/ar/` at Latin leading), and only then «FINAL V2 ACCEPTANCE READY» with its SHA.
+
+**Why.** V5.24 names the typography a defect of the premium result — thin display lines, oversized leading, dense small
+text, an Arabic 15–20 % smaller than the French with clipped descenders — and asks the Typography Director to decide
+internally, not to offer faces; TYPOGRAPHY_V2 decided, the Director adopted it whole (R1), and V5.25 ends the loops: a
+lane whose targeted gate passes with no blocker is merged. Lane T's change is the shared layer alone — one Arabic face
+at the French's size, twelve steps declared once, two roles, one weight for what intitles, a floor of 14 px on phones,
+three Arabic rules the AR lane needs — so that every page lane converts its own sheet against one contract instead of
+each inventing a scale; the reviewer measured what the owner will see (the Arabic product at parity, the first screen
+unmoved where the composition is preserved, the navbar identical) and the guards that pin the system are an equality the
+lanes can only lower. The steward's own change is the family's record and the §9.8 exception the plan asked for, written
+here so that CLOSING's erratum has its source.
+
+**Source.** The owner's V5.24 (§11–§14, §30, §32), V5.25, V5.26 §4, V5.27 §4 and §6, V5.20 and V5.12–V5.21;
+`FINAL_DELIVERY_V2.md` §0, §1, §2 (R1, R4, R6, R7, R9–R14), §3.1, §4–§6; `evidence/v524/TYPOGRAPHY_V2.md` §3–§6;
+`evidence/v524/ARABIC_AUDIT.md` + `arabic/05_rtl_checklist_v2.md` M1, M3, C-1; SECTION_SYSTEM_V2 §5.3, §6, §9.7–§9.9,
+§10; `QA/v524/t/NOTES.md` (§1–§10); `QA/v54/v524-t/REVIEW.md` (copied byte for byte from
+`C:/tmp/ile_v5_council/evidence/v524/t/QA.md`); the steward's tools and logs under
+`C:/tmp/ile_v5_council/.work/v524-t-merge/`, the record steward's under `.work/v524-t-record/`; DL54-185 item 3 (F-M2),
+DL54-187 items 5 and 12, DL54-189 items 1, 8, 10 and 11.
+
+
+## DL54-189 · 6 November 2026 · Steward, the v524-lib merge: V5.24 lane LIB — the library: material, transitions, faces, verbs, type roles; the §9.8 library exception recorded (R3, §3.3); the stale T merge lock taken over
+
+**Decisions** (the steward's, at the merge of `v524-lib` into design-v5 on 6 November 2026 — the owner's V5.24
+(`V5_24_FINAL_DELIVERY_ACCELERATION_ARABIC_TYPOGRAPHY.md` §7–§10: sections no longer plain white rectangles, backgrounds
+more sophisticated and institutional — subtle architectural gradients, radial light, masked imagery, layered material,
+section-to-section tonal transitions, route lines crossing sections, overlapping frames —, no neon, no glass, no noise;
+§15–§17 icon faces integrated with depth and light, motion by content and never a fallback to fade-up; §11–§14 the type
+roles: compact institutional labels, quality numeric markers, no publication look; §30 the gate; §32 no promotion),
+V5.25 (final delivery mode: known defects, targeted checks, «if all six dimensions are >= 4 and no blocker exists:
+MERGE», no score loop), V5.26 §4–§8 (tool → decision → implementation; one reusable primitive for one shared behaviour;
+no component collage), V5.27 §6 (real tool provenance), V5.20's strict test-update rule, the Director's
+`FINAL_DELIVERY_V2.md` §0 (nine lanes, the merge order PX → T → LIB → HOME → PUB1 → PUB2 → PLAT → AR → CLOSING), §1 (the
+family «Section Background / Material V2» — LIB the primitives, HOME / PUB1 / PUB2 the placement), §2 R3 (Material V2.1
+adopted whole; the crossing primitive «il raccordo», never «varco»; `_materia.css` page-only, never `main.css`), R4 c
+(`main.css` ≤ 32 716, never raised) and R4 f (the library partials' ceilings re-recorded at measure + the audited
+increment, cited), R6, R9 (no 21st component), R10 (real tools), R11 (the family ids), R12, R13 (the steward model), R14
+(the scope guard), §3.3 (lane LIB: scope, files owned, budgets, tools, the reviewer's targeted gate), SECTION_SYSTEM_V2
+§5.1, §5.3, §6, §9.7, §9.8 and §9.9, and the audits `evidence/v524/BACKGROUND_MATERIAL_V2.md` §3.1, §3.2, §3.4, §3.5,
+§4.1 and `TYPOGRAPHY_V2.md` §4.2, §6 with lane T's contract (`QA/v524/t/NOTES.md` §4); label `v524-lib-merge`).
+
+1. **The lock and the order.** `DESIGN_V5_MERGE_LOCK` was found held by `v524-t-merge` since 23:00:54 on 5 November with
+   no process alive and no activity since 23:25 (its tools and logs under `.work/v524-t-merge/`): the T steward's run
+   was closed after its tests, with its merge `554c82d2` on design-v5 but its record unwritten — no DL54-188 entry, no
+   `v524/t` tag, `live_status.json` without the family «Typography V2», the preview 8780 still on `v524/px`
+   (`8a7c76e0`). The lock was taken over at 02:51 under R12's stale rule (> 40 min; the stale file kept as
+   `.work/v524-lib-merge/logs/DESIGN_V5_MERGE_LOCK.stale-v524-t-merge`), design-v5 at `554c82d2`, no lane server, both
+   Chromium slots free. FINAL_DELIVERY_V2.md §0.5 writes the order PX → T → LIB → {HOME, PUB1, PUB2, PLAT, AR} →
+   CLOSING: lane T's merge commit is on design-v5, so LIB is the third merge; T's record stays the T steward's (DL54-188
+   is reserved for it — the merge commit `554c82d2` cites that number — and this entry takes 189; item 10). The lane's
+   branch stood at `3e46c896`, one commit over its base `554c82d2` = design-v5's HEAD, the head the reviewer measured:
+   `git merge design-v5` into the branch was already up to date — no conflict, no file in common, no dist to rebuild
+   (the committed dist is the build, item 6), no catalogue to recompile (+0 −0). Then the family recorded on the branch
+   (`c2a38f42`, item 5) and `git merge --no-ff` into design-v5 (`c451b654`; its tree `0587fe8c` is the branch's).
+2. **The review** (`QA/v54/v524-lib/REVIEW.md`, copied byte for byte from the evidence's `evidence/v524/lib/QA.md`: the
+   reviewer's targeted gate, ROUND 2 on the committed head `3e46c896`, 6 November 02:05–02:40; round 1, 00:13–00:55 on
+   the build round's tree, was a FAIL with six blockers — B1 the home 61 470 > 61 440 with the tile's light in the
+   shell, B2 the raccordo never painted (every `.sez` isolates: a span hung under the leaving band was covered by the
+   next ground), B3 the shield behind the plate at 1024 and on the sheets, B4 the incastro inert, B5 the two new modules
+   red and lint red, B6 the home's hero line 4 px off the orientation seal's sill — all six closed by the lane's improve
+   round and re-verified one by one, NOTES §10 / QA.md §8): **PASS on every gate item 1–5, 0 blockers, 9 minors** (none
+   requiring a change before the merge; item 10). Measured independently by the reviewer on the lane server 8786 and in
+   headed chromium-1234 under `CHROMIUM_LOCK_A` (02:11–02:21, 200 frames at 1440 · 1024 · 390 × fr · ar, **0 console
+   errors, axe serious / critical 0**): (1) the six ground kinds and the three attributes read by the shell and
+   `_materia.css` alone, tokens and `color-mix` of tokens only, logical properties, no literal colour, no duration or
+   curve of its own, every verb rule under `no-preference` and `:root:not(.rm)` with a drawn still,
+   `test_rm_flag_parity.py` untouched, the RTL twins, `varco` 0 occurrences, `main.css` not an importer, LF files, two
+   identical builds equal to the committed dist; (2) the specimen board — **the raccordo painted across the seam (the
+   line's 4 px column 193 against the ground's 235 in all six cells and under `reduce`), its node 0.0 px off the entered
+   band's head rule (letter ≤ 2), drawing once 0.9 s after the band's own line and leaving `getAnimations()`, 2 × 48 ·
+   41 · 32 px; the incastro's first door 64 px over the band above; the pietra grid `48px 48px` masked `to left` / `to
+   right`; the carta viva light `at 0 0` / `at 100% 0`; the velatura 192 / 128 px and still; the niche face on every
+   tile; the mosaico's draw + ink + layer and no `sez-node`; `reduce` writing 0 `data-sec-state` and showing drawn
+   stills; the keyboard running nothing**; (3) «la protezione» on Parcours, the `salaried_work` sheet, Formation,
+   Diplômes and the home's S6 — at 1440 the sill 344 px from the plate's far edge to the container's and the shield low
+   on the far side at opacity 0.3 (1140–1332 fr / 92–284 ar, `overlap False`); at 1024 (a 929 / 945 px field, the sill
+   33 / 49 px) and on the sheet's 912 px column (the sill 16 px) the bookend `display: none` by the container query; on
+   phones the plate the whole field; the sill waiting at `scale 0 1` and drawing with `sez-draw` 0.9 s after the soglia
+   (the headless probe); the locked plate text byte-identical and rendered identically to the preview; (4) the type
+   roles — labels Host Grotesk 13/16 600 +0.08 em uppercase (14/20 and no capitals in Arabic), h1 56/60.48 and 56/66.08
+   in Arabic with a French h1 on an Arabic page at 1.08 (F-7 closed), the caps h1 36/41.4 +0.02 em, the testa titles
+   36/41.4 and 28/35 (Arabic +0.1 through the tokens), the numerals 28/32 and 36/40 in Host Grotesk / Readex Pro 600
+   with the across numeral 36/36, the «Non.» keyword 600, the Contact address 28/35, `.fronte__name` −0.03 em, no
+   `var(--f-mono)` and no descendant `:lang(ar)` rule in LIB's 23 sheets, T's burn-down rows for LIB's sheets emptied;
+   (5) the budgets — `_materia.css` 788 ≤ 800, the shell 2 382 (− 62), `_sec-strato.css` 1 557 ≤ 1 638,
+   `_sec-mosaico.css` 1 355 at its re-recorded letter (m1), `main.css` **32 695 ≤ 32 716**, the home **61 415 ≤ 61 440**
+   (the base 61 419), every route sheet under its ceiling, the reading pages and the Forum under 54 272. Also: locked
+   copy byte-identical (`test_locked_content.py` 76) and the rendered locked texts of ten pages identical between the
+   lane and the preview; both contact channels identical on `/fr/contact/` (digests compared in process, never printed);
+   0 msgids, 0 JS, 0 images, 0 migrations; every §9.8 file and family outside §3.3's list untouched by construction
+   (`git diff --stat` empty over the navbar, the mega menus, Lume, `motion.css`, the forms, the portal, `base.html`,
+   `tokens.css`, `main.css`, `base.css`, `buttons.css`, the cms, the locale, every page template); every tool use
+   verified against the diff (item 7). Tests by the reviewer: **1 603 + 124 passed**, the six reds the base's (m2), none
+   LIB's. **Scores** (§26 / §10, V5.25 §5, R9): composition · motion · imagery · interaction · institutional · coherence
+   **4 · 4 · 4 · 4 · 4 · 4** on the three gate surfaces — the specimen board, «la protezione» on its five pages, the
+   type roles across Parcours, the sheet, Entreprises, Le projet, FAQ, AGAMI, Forum, Contact, login, Formation, Diplômes
+   and the home — imagery and interaction not applicable (4 by the harness rule: a fixture board, no photograph, no
+   interaction changed); no composition changed in this lane, so the pages keep their lanes' merge scores (the home
+   DL54-185, Parcours and the P1 pages DL54-183, the P2 pages DL54-186); no re-scoring.
+3. **The Director's ruling on F-M2, as it reaches this lane** (R6, in its words): the first keyboard input's INP is
+   judged by **the absolute budget of SECTION_SYSTEM_V2 §5.3 — first-Tab and first-pointer-after-keyboard INP ≤ 200 ms
+   at p75 on the compressed twin 8782, desktop and phone, fr and ar, paired against the base with n ≥ 5 — in place of
+   «within 20 ms of the base»; the residual trim is CLOSING's F2-m1**; if the desktop cell stays over on the base and
+   the tree alike after the trim, it is recorded as P2 with the base's figure beside it — not a release blocker, not a
+   P0/P1. Lane LIB ships no script (`rise.js` and `sezioni/*.js` unchanged; the raccordo rides the existing `draw-y`
+   verb and the runtime already writes `data-sec-state`) and adds no animation of its own to `_materia.css`; the
+   reviewer did not re-measure INP; DL54-185 item 3's first-input measures stand for every page (the first Tab 160 · 176
+   · 128 · 168 ms, within the budget in all four cells; the desktop pointer after the keyboard over it on both trees,
+   216 · 248 against the base's 176 · 208), carried to CLOSING. 8782 was not switched by this merge.
+4. **Read before merging** (the slices' product changes, as the checker asks; the lane's four whole files are
+   `_materia.css`, the two guard modules and its notes).
+   - `static/css/v5/_sezioni.css` (the shell, lane S's) — `.testa__title` on `--t-title-2` / `--t-title-2-lh` /
+     `--track-title-2`, the process and router heads on `--t-band` / `--track-band`, the descendant rule `:is(:lang(ar),
+     [dir="rtl"]) .testa__title` deleted (the tokens' `:lang(ar)` block and its Latin boundary carry the Arabic leading
+     and a French title's Latin leading — F-7); `.testa__label` layout and ink only, the type the role's by name with
+     the role's four tokens restated as a net until HOME's colophon and PUB1's board carry `t-label` (NOTES §4 deviation
+     5; CLOSING drops the net); **the T2 tile's niche face** `linear-gradient(var(--line-rhythm), var(--surface-raised)
+     85%)` and `isolation: isolate` on `.sez-tile` (the glyph on `--text-1` over the darkest stop 12.9:1; the night face
+     unchanged); `.sez-keyword` 600 on `--t-title-2`; `.sez-numeral` the numeral role 36/40; the mono folio and the
+     clamps gone; 2 444 → 2 382 B gzip -9 — the light is NOT here (B1). `templates/components/sezioni/_testa.html`:
+     `class="testa__label t-label"`, the contract comment on the steps.
+   - `templates/components/sezioni/protezione.html` + `static/css/v5/_sec-strato.css` — **«la protezione» on a drawing
+     table**: the plate in the field `.protezione__campo` (position relative, grid, `container-type: inline-size`), the
+     sill `.protezione__davanzale` (`data-verb="draw"`, `--sez-d: var(--motion-draw)`: after the soglia) at
+     `inset-block-start: 68px`, `inset-inline: min(100%, 56rem) 0` — the plate's 3 px rule run on as 1 px of
+     `--line-structure` to the container's far edge, nothing on a phone where the plate is the whole field —, the
+     bookend `.sez-fondale` (aria-hidden) holding the `ile-scudo` mark partial as a line drawing (the
+     `.approdo__fondale` layer generalised: 12 rem low on the far side, `fill: none`, `stroke: var(--line-structure)`
+     0.375, `opacity: .3`, still, hidden under 64 rem) and `@container (max-width: 67.999rem) { .sez-fondale { display:
+     none } }` — the 56 rem plate + the 12 rem shield: the bookend stands down wherever the FIELD's free span is under
+     it (every phone, 1024, the sheets' 912 px column; B3); the «Non.» keyword (`.strato__corpo--parola .ls-1`) on
+     `--t-title-2` at 600, the term title at `--w-display` with `--track-display`, `.protezione__titolo` tracking
+     `--track-label`; the `.strato__fondo .foto__credit` rule gone; 1 423 → 1 557 B ≤ 1 638. The locked texts, their
+     keys and spans untouched; the caller's band takes `pietra` where its sheet imports the partial, `stone` otherwise —
+     the sill and the bookend draw on either.
+   - `templates/components/sezioni/mosaico.html` + `static/css/v5/_sec-mosaico.css` — the glyph tile's verb `ink` (a
+     disc's — `porte` or `disc` — stays `node`: BACKGROUND_MATERIAL_V2 §3.4, no «a square settles» three bands in a
+     row); **the tile's face light** where §4.1 placed it (B1 — the shell is bundled by every page sheet, the light
+     belongs to the pattern that has the behaviour, V5.26 §8): `.mosaico .sez-tile::before` the lit floor (`transparent
+     40%` → `--surface-raised`, `inset: 0`, `z-index: -1`, the radius inherited), `opacity: 0` in `wait`, `sez-layer`
+     over `--motion-standard` after `--motion-slow` + the sequence's stagger in `in`, under `prefers-reduced-motion:
+     no-preference` and `:root:not(.rm):not([data-input="key"])`, fill backwards; 1 203 → 1 355 B, the ceiling
+     re-recorded at the measure (R4 f; item 7). PUB1's «Comment ça marche» plates take the same three rules in
+     `_index.css` (their audited ≈ 80 B; NOTES §4).
+   - `static/css/v5/_materia.css` (NEW, page-only, after the shell, never `main.css`; 788 B gzip -9 ≤ 800; tokens and
+     `color-mix` of tokens only, logical properties, no duration, curve, animation or transition of its own) —
+     `.sez[data-ground="pietra"]`: `--surface-area` + a `::before` drafting grid (1 px `color-mix(in srgb,
+     var(--line-rhythm) 70%, transparent)` every 48 px, both axes) masked `to left` from the far side to 62 %
+     (`--p-notte-950` the opaque stop — a mask reads alpha, no literal colour), the `[dir="rtl"]` twin `to right`;
+     `.sez[data-ground="paper"][data-luce="origine"]`: `radial-gradient(60% 50% at 0 0, color-mix(in srgb,
+     var(--accent-mark) 10%, transparent), transparent 70%)` over `--surface-page`, RTL `at 100% 0`;
+     `.sez[data-sfuma="stone|paper|brand|night"]::after`: `block-size: 12rem` (8 rem under 48 rem),
+     `linear-gradient(transparent, var(--sez-next))`, `--sez-next` = `--surface-area` / `--surface-page` /
+     `--accent-wash` / `--surface-night`, `z-index: -1` (above a photograph, under the words), a still;
+     **`.sez-raccordo`** (`data-verb="draw-y"`, `aria-hidden`) — **the first child of the band it ENTERS** (R3 / §3.2
+     wrote `inset-block-end: calc(-1 * var(--sez-raccordo))` on the leaving section; every `.sez` isolates and a later
+     sibling paints over an earlier one, so a line hung under the leaving band's foot was covered by the next ground —
+     B2; fix B of the review, the Director's choice, robust for consecutive seams): `--sez-raccordo: clamp(var(--s-8),
+     4vw, var(--s-12))` — 48 px at 1440, 32 at 390, a strip's own padding so the node lands on the entered strip's head
+     rule at every width —, `inset-block-start: 0`, `inset-inline-start: var(--raccordo-x, 0)` (the page lane places it
+     on its route), 2 px `--line-structure`, `z-index: 1`, `--sez-d: var(--motion-draw)` (after the band's own line),
+     the 6 px `--accent-mark` node as `::after` on the line's end (the node is the line's tip — no second beat),
+     `.sez-raccordo--notte` (`--accent-night`, entering night), `.sez-raccordo--risale` (rising from a band into the one
+     above, `transform-origin: 0 100%`); `.sez[data-incastro]`: `margin-block-start: calc(-1 * var(--s-16))`,
+     `padding-block-start: 0` (B4: the band's own 96 px padding had sunk the first door 32 px under the seam),
+     `background: linear-gradient(transparent var(--s-16), var(--surface-area) 0)`, its children `position: relative;
+     z-index: 1`; `@media (forced-colors: active), print` hides the grid and the velatura, forced colours draw the
+     raccordo and its node in `CanvasText`. The one importer today: `apps/core/static/core/sezioni.css` (the fixtures'
+     bundle — the specimen board; a one-line deviation recorded, no ceiling by design, m8); the page lanes import it
+     into their route sheets after `_sezioni.css`.
+   - `static/css/v5/_sec-tracciato.css` + `components/sezioni/tracciato.html`, `_sec-filo.css` + `filo.html`,
+     `_linea-v2.css` — the numerals the numeral role: `.tracciato__num` with `t-numeral` in the template and size /
+     leading / weight restated for PUB1's board until `_tracciato.html` carries the class (28/32); `.filo__num` 28/32 in
+     flow, 36/40 beside the rail; the linea's station numeral on `--t-numeral` / `--t-numeral-lh` down the edge and on
+     `--t-numeral-lg` with `line-height: 1` across (36 in a 36 px line box — the grid's first row V5.22 composed the
+     marks, the route and lane H's hero line on; B6: at 36/40 the row grew 4 px and the hero line missed the orientation
+     seal's sill — `lineBottom − sealBottom` 0.0 again at 1440 and 1024, fr and ar), the route's inset and the carriage
+     return on `--t-numeral-lg`; every mono seat gone.
+   - `static/css/v5/_fronte.css` (lane C's frontispiece; the folio seals are §9.8's named exception 5, in LIB's owned
+     list) — the h1 on `--t-title-1` / `--t-title-1-lh` / `--track-title` and the descendant rule at lines 194–198
+     deleted; the caps h1 (the Forum's prescribed name, Parcours' and Entreprises' locked caps titles) on `--t-title-2`
+     + `--track-display-caps` (36 at 1440, 28 at 390; the 64 rem `2.5rem` literal gone); the compact title on
+     `--t-title-2`; the folio label on the role's tokens with `:lang(ar) { text-transform: none }` in the subject form
+     (its `uppercase` the one the burn-down still counts: `_ingresso.html` is PX's file, closed — CLOSING adds `t-label`
+     there, NOTES §4); the lead on `--t-lead-lh` (22/32 from 64 rem by the tokens), the words-first lead at ≥ 64 rem on
+     `--t-entry` (20/28 — a French lead on an Arabic page at a Latin leading, F-7), the route head's lead on `--t-body`
+     (17/28); the Contact address link's clamp → `--t-band`; `.fronte__name` `letter-spacing: var(--track-display)` and
+     nothing else (the name device's two clamps stay by R3.3's letter — the recorded residue); the lead's measure stays
+     38 rem (the audit's 36 would re-wrap every approved head: KEEP); the seven `.foto__credit` rules gone; the header's
+     stale «Vazirmatn». `_servizio.css` (W3-F2's): the account and error titles on `--t-title-2` from 48 rem, the
+     `:lang(ar)` title rule deleted, the TOTP secret and the recovery codes without the mono (`--numeric-data`,
+     `--track-label` — base32 and allauth's code set need no disambiguation).
+   - PX's contract (IMAGERY_ATTRIBUTION D1–D8; DL54-187 item 10 m4): the thirteen dead `.foto__credit` rules deleted —
+     `_photo.css` 3, `_fronte.css` 7, `_sec-strato.css` 1, `_compose.css` 1, `_sec-mappa.css` 1 — the five partials the
+     Director named; `_photo.css` 1 174 → 1 071, `_compose.css` 1 212 → 1 199, `_sec-mappa.css` 1 320 → 1 307 B.
+   - The two test slices under V5.20's strict rule, each cited and the same invariant or stronger:
+     `tests/frontend/test_sezioni_v522_s.py` (lane S's) — one line, `SHEET_CEILINGS["_sec-mosaico.css"]` 1 229 → 1 355,
+     re-recorded at the measure with the light in the sheet (R4 f; item 7); `tests/frontend/test_typography_v2.py` (lane
+     T's) — `TYPOGRAPHY_BURNDOWN`'s rows for `_sezioni.css`, `_sec-tracciato.css`, `_linea-v2.css`, `_servizio.css`
+     deleted (the equality → 0 measured) and `_fronte.css` 6·2·1·1 → `{"clamp": 2, "uppercase": 1}` (a lower equality,
+     the two residues named), `/ar/parcours/salaried_work/` moved from `ARABIC_PAGES_BURNDOWN` into `ARABIC_PAGES` (all
+     four Arabic guards hold there now: a stronger guard), the `le-projet` and `entreprises` rows reworded to their page
+     lane's residue (PUB2's `_projet.css:172`, PUB1's `_companies.css`). `docs/design-v5/COMPONENT_PROVENANCE.md`: the
+     V5.24 block — internal provenance per primitive (the atrium's drafting grid, the org-calm wash, the home's H0 fade,
+     the seams that draw with `draw-y`, the doors' arched tops, the arch seat's recipe), taken / not taken, the ILE
+     implementation; no 21st.dev component (R9).
+5. **Ownership (R11).** The id rule admits `v5<nn>-lib` since the v524-px steward's commit `6069a1c8` (R11's alternative
+   names the nine lanes): no change to `scripts/check_ownership.py`. The family **`v524-lib`** is recorded in
+   `OWNERSHIP_V54.json` on the branch (`c2a38f42`; `.work/v524-lib-merge/tools/assign_v524lib.py`): `after: ["v524-t"]`,
+   wave 0, **4 whole files** (`_materia.css`, the two guard modules, the notes) and **20 slices** in files that stay
+   another family's — lane S's library sheets and partials (`_sezioni.css`, `_sec-strato.css`, `_sec-mosaico.css`,
+   `_sec-tracciato.css`, `_sec-filo.css`, `_sec-mappa.css`, `_linea-v2.css`, the five templates), lane C's
+   `_fronte.css`, `_photo.css`, `_compose.css`, W3-F2's `_servizio.css`, the fixtures' bundle, lane S's ceilings module,
+   lane T's typography guard, the provenance document — each slice naming the product change (item 4); 18 dist files
+   generated. `check_ownership v524-lib 554c82d2 --head 3e46c896`: **4 inside, 20 slice, 18 generated → PASS** (the
+   slice warnings read, item 4); `--validate`: **coherent, 62 families, 2 429 entries**; `tests/test_check_ownership.py`
+   with `OUTSIDE_THE_WAVES` and its comment naming the lane: **163 passed** on the branch. **The §9.8 exception
+   recorded:** SECTION_SYSTEM_V2 §9.8 names lane S's library among the preserved families; FINAL_DELIVERY_V2.md §3.3
+   owns its sheets and partials to lane LIB for the material, the faces, the verbs and the type roles (R3, R1) — the
+   steward records this family's change as the §9.8 exception «the library: material and type roles», as DL54-188's
+   merge recorded tokens.css for typography; `_fronte.css` (the folio seals) is §9.8's named exception 5 and in §3.3's
+   owned list; no other §9.8 file or family is in the diff (item 2).
+6. **Build, catalogue, checks** on the merged tree (`c451b654`). `npm run build` with the installed packages, twice
+   (02:57): exit 0, **77 dist files, the two sha256 lists identical, `git status` empty after each — the committed dist
+   IS the build**; `main.css` **32 695 B gzip -9** (Python zlib level 9, as every recorded figure) against R4 c's 32 716
+   — untouched by construction (it imports none of the partials; `_materia.css`'s selectors absent from it); the home's
+   five sheets **61 415 ≤ 61 440** (main 32 695 + pages 11 302 + hero 10 899 + reveal 3 526 + portico 2 993; the base 61
+   419); the route sheets at the reviewer's figures (`pathways/index.css` 10 188 ≤ 10 240, `sheet.css` 9 695,
+   `training.css` 8 843, `diplomas.css` 8 950 ≤ 9 728, `ecosystem/pilot.css` 9 477 ≤ 9 728, `forum/forum.css` 7 303 ≤ 8
+   192, `pages/css/interior.css` 8 873 ≤ 11 264, `cms/lettura.css` 6 546 ≤ 9 216; the fixtures' bundle
+   `core/sezioni.css` 11 759, no ceiling). The catalogue: `scripts/i18n_audit.py --sync`, `--compile`, the audit — **3
+   702 msgids, 100 % in it / en / ar / fr, 0 fuzzy, 0 obsolete, OK; +0 −0; `git status` empty** (the four `.mo`
+   byte-identical: the lane adds no string, nothing to translate, no locked text touched). `manage.py check`: 0 issues;
+   `makemigrations --check --dry-run` with `ILE_WHATSAPP_NUMBER` unset and with a fictional value: «No changes
+   detected»; `ruff check .` (0.16.8): «All checks passed!».
+7. **Tests the lane changed — under V5.20's strict rule** (the four conditions, each cited in the module):
+   `test_sezioni_v522_s.py` one ceiling re-recorded at the measure (an approved decision: R4 f; implemented: the light
+   in the mosaico sheet; the same invariant — a ceiling the sheet holds and CLOSING ratchets; the reason in the
+   comment); `test_typography_v2.py` two slices (a lower equality; a page moved into the guarded list — stronger); the
+   two NEW modules `test_materia_v524_lib.py` (15: the grounds' ownership, the recipes as decided, the raccordo as
+   renamed, the incastro, the stills, the face and its contrast, the light's rules under §5.1, the head's label, the
+   protection, the type roles, the credits gone, the budgets) and `test_materia_browser_v524_lib.py` (14: the fixture
+   board through Playwright's `**/__fixture__/**` route — the raccordo waiting, drawing once after the band's line,
+   leaving `getAnimations()`, landing on the head rule within 2 px and READING THE PAINT, the bookend at 1440 and 1024,
+   the incastro ≥ 63 px, the mosaico verb without settle, `reduce` and the keyboard). No skip, no timeout raised
+   (`wait_for_function` keeps Playwright's default), no assertion loosened. **m1 recorded:** `_sec-mosaico.css` lands at
+   **1 355 B, + 152 against the audited «≈ 120»** (R4 f would read ≈ 1 323): the audited figure was an estimate made
+   against the shell's neighbours (the same block cost 70 B there), the reviewer measured every spelling 1 349–1 355 and
+   found nothing removable without a design change (the layer's corner) — within R4 f as a recorded, cited deviation
+   (NOTES §4 deviation 4); no route sheet or page total moves past its ceiling; CLOSING's ratchet pass keeps it at its
+   measure. **The tools, verified against the diff** (V5.26 §4, R10, V5.27 §6 — real names by path in NOTES §3; no
+   «design-critique», no «design-handoff», no 21st component): `impeccable` → the niche face on every T2 tile (the one
+   «identical card» tell left in every grid), the masked drafting grid (no side stripe, no frame), no glass / gradient
+   text / blurred field; `taste-skill` Rule 4 → one raised plate, the band structured by the sill and the bookend, no
+   second box; `figma:figma-use-motion` / `figma-implement-motion` → the raccordo's phases on the existing `draw-y` (the
+   band's line 0 → 900 ms, the raccordo 900 → 1 800, the node the line's tip), the light one step after the rule,
+   `--raccordo-x` the one parameter — and «validate one animation end to end» taken as the pixel proof in the improve
+   round; `find-animation-opportunities` → the four-question gate passing the raccordo, the tile's light and the sill's
+   draw and rejecting a parallax on the grid, a drift on the velatura, the bookend's stroke draw, hover motion on index
+   rows, a node lit apart from the line; `ui-ux-pro-max` → the bookend standing down by the FIELD's free span (a
+   container query, the system's own device in `_formwork.css`), the sill zero on a phone, the face measured for the
+   glyph.
+8. **The tests on the merged tree** (`c451b654`; CI-style: the `.env` not read, CI's placeholders, the private table
+   configured, `ILE_WHATSAPP_NUMBER` unset; `-p no:randomly`, fresh test databases `test_ile_v524_lib_merge_*`, one
+   pytest per test database — R12; headless Chromium one set at a time (the builder's parallel sets had lost 16 + 4
+   cases to «Target crashed» under three Chromium loads); the static sets side by side, so every timing below carries
+   that load, with other sessions' work on the machine):
+   - **Set A — the lane's gate modules and the guards around the merge** (`test_ile_v524_lib_merge_a`, 03:00 to 03:29):
+     `tests/frontend/test_materia_v524_lib.py`, `test_sezioni_v522_s.py`, `test_sezioni_v522_s2.py`,
+     `test_rm_flag_parity.py`, `tests/i18n/test_rtl_static.py`, `test_frontispiece_v515_c.py` (every page type under its
+     §7.1 total — the home 61 415), `test_pages_v522_p1.py` (the route sheets' ceilings), `test_typography_v2.py` (T's
+     burn-down with LIB's rows emptied), `test_v5_tokens.py`, `test_fonts_budget_v2.py`, `test_design_docs.py`,
+     `test_static_pipeline.py` (`collectstatic` under the production storage exits 0 — the builder's 0xC0000142 was a
+     process launch under the harness's close, not the product), `test_css_bundle_is_current.py`,
+     `tests/compliance/test_locked_content.py`, `test_imagery_credits_v524.py`, `test_imagery_v512.py`,
+     `apps/pages/tests/test_interior_v522.py`, `test_chapter_marks.py`, `test_journey_w3_d.py`, `test_layout.py`,
+     `test_motion_v512_a_w2.py`, `apps/pages/tests/test_home_v522_h.py`, `test_home.py`, `apps/pathways/tests`,
+     `tests/test_check_ownership.py` (with the family's rows; the four subprocess cases green),
+     `tests/i18n/test_catalogues.py`, `test_page_integrity.py`, `test_locked_texts.py`, `test_loader_rules.py`,
+     `test_state_chips_carry_a_register.py`, `test_o14_lint.py`, `test_interior_w3_f1.py`, `test_orientation_w3_f1.py`
+     (`-m "not browser"`): **1 failed, 2 129 passed, 6 deselected, 0 skipped** — the one red
+     `test_home_v522_h.py::test_final_round_the_arabic_titles_…`
+     (`re.search('--t-folio-lh: 1rem;', tokens.css)` → None: lane T's alias), **red on design-v5 `554c82d2` already**
+     (the reviewer's control run on the base; m2), lane H's module, not LIB's (item 10).
+   - **Set B — security and contact** (`test_ile_v524_lib_merge_b`, 02:59 to 03:02):
+     `tests/security/test_confidential_material.py`, `tests/compliance/test_no_personal_data_in_repository.py`,
+     `apps/pages/tests/test_contact_channels_v519.py`, `tests/compliance/test_phase3_texts_not_leaked.py`: **81 passed,
+     1 skipped** — the one environment-bound test (item 9), which the next run covers.
+   - **The configured number** (`test_ile_v524_lib_merge_d`, 03:02 to 03:08; `ILE_WHATSAPP_NUMBER` set in-process to the
+     preview's value, read from v5-live's untracked `.env`, never printed; the log masked):
+     `test_contact_channels_v519`, `test_institutional` and the confidential-material guard — **117 passed, 0 skipped**:
+     the
+     environment-bound test runs and passes.
+   - **Browser set 1** (`-m browser`, headless, no slot — R12; `test_ile_v524_lib_merge_br1`, 02:59 to 03:17):
+     `tests/frontend/test_materia_browser_v524_lib.py` (the lane's twin, 14), `test_sezioni_browser_v522_s.py` and
+     `test_seal_heads_browser_v522_s.py` (the library's own contracts, unchanged), `test_sezioni_browser_v522_s2.py`,
+     `test_pages_browser_v522_p1.py`, `apps/pages/tests/test_home_browser_v522_h.py` (incl.
+     `test_the_hero_line_runs_down_into_the_orientation_seal_sill[fr/ar]` — B6): **5 failed, 124 passed, 0 crashed (the
+     reviewer's 124 + 5)** — the five reds the
+     base's (m2): `test_the_institutions_head_…[fr/ar]` (`16 ≤ 15.5` at 390: T's phone step-up of the ui role) and
+     `test_final_the_arabic_index_s_titles_…[1440/1280/1024]` (the S3 connector `centre −2` in Arabic under T's 14/20
+     label); every LIB-relevant case green, the hero-line junction among them.
+   - **Browser set 2** (headless, after set 1; `test_ile_v524_lib_merge_br2`, 03:25 to 03:47):
+     `tests/i18n/test_rtl_browser.py`, `tests/frontend/test_browser.py`, `test_motion_v512_a_w2.py`,
+     `test_pages_browser_v522_p2.py`, `apps/pages/tests/test_browser.py`: **1 failed, 116 passed, 16 deselected — the
+     one red apps/pages/tests/test_browser.py::test_the_interim_hero_on_a_phone_keeps_its_four_tiles_in_the_first_screen
+     (at 360 × 640 the interim hero's lowest door 649.4 px against the 640 px fold), re-run alone on the merged tree
+     (the same figure), then as a control on the base tree 554c82d2 in the v524-t worktree (RED, the same figure) and on
+     the pre-T tree 8a7c76e0 in v5-live, read-only (GREEN): lane T's merge's, a seventh base red the two targeted
+     reviews had not listed — apps/pages/tests/test_browser.py was in neither set; item 10 (d)**; and the channels' twin
+     `tests/frontend/test_browser_contact_channels_v519.py` with the configured number in-process
+     (`test_ile_v524_lib_merge_dbr`, the log masked): **4 passed (the log masked, nothing to mask)**.
+   - `npm run build` once more after the runs: exit 0, the dist byte-identical (`git status` empty), `main.css` 32 695 B
+     gzip -9.
+   - **The record** (this entry, `live_status.json`, the changelog and the review's copy) checked on the recorded tree
+     before the tag — `tests/frontend/test_design_preview.py` in both halves (the hub reads the steward's files and
+     visits the public doors; the browser half headless), `test_design_docs.py` and the ownership checker's tests; the
+     tag is made only on green (the counts in the tag's message).
+   - **The merged tree carries exactly the base's reds — the six of m2 and a seventh found by this merge's wider browser
+     set — and no other** (item 10): all seven are lane T's merge's (the six recorded by the T reviewer and by this
+     lane's reviewer as m2; the seventh green on the pre-T tree and red on the base in the steward's control runs), and
+     §0.4's «every merge leaves design-v5 green» has not held since `554c82d2` — carried to the owners of the four
+     modules and to CLOSING with the re-pointing or the fix spelled out. The full suites, both halves, on a fresh copy
+     belong to the ONE technical gate (V5.25 §7; FINAL_DELIVERY_V2.md §5), after CLOSING.
+9. **Skips.** In the CI-style runs one remains, genuinely environment-bound and printing its reason: the configured
+   WhatsApp number (`ILE_WHATSAPP_NUMBER`, `test_contact_channels_v519.py:367`), which runs and passes where the number
+   is configured (item 8). The private-table test runs (the table configured). No xfail among the targeted modules'
+   runs; no xpass. The lane added no skip and raised no timeout (item 7).
+10. **Left open (not the steward's; carried with their owner lane or «after acceptance»).**
+   - **The review's minors.** **m1** the `_sec-mosaico.css` re-recording at 1 355 (+ 152 against ≈ 120) — recorded here
+     with the arithmetic (item 7); **CLOSING's ratchet pass**. **m2** the base's six reds, lane T's merge's, in lane H's
+     and P1's modules — the steward does not re-point another lane's assertions at this merge; each owner (or CLOSING)
+     does it under V5.20's four conditions, citing TYPOGRAPHY_V2 §4.2 and FINAL_DELIVERY_V2.md R1, and the re-pointing
+     is not the same for the three: (a) `test_home_v522_h.py:551` — a static regex on the literal `--t-folio-lh: 1rem;`,
+     now T's alias; the same invariant on T's tokens is `--t-label-lh: 1rem` with `--t-folio-lh: var(--t-label-lh)`
+     (**HOME / CLOSING**); (b) `test_home_browser_v522_h.py::test_final_the_arabic_index_s_titles_…` × 3 — the S3
+     connector reads `centre −2` on the Arabic home: `.campata__ponte { inset-block-start: calc(0.5rem - 0.5px) }`
+     centres on a 16 px label line while T's Arabic label is 14/20 — **a product defect of 2 px, not a test to re-point:
+     HOME's `pages.css` reads `calc(var(--t-label-lh) / 2 - .5px)`** (then the test holds as written); (c)
+     `test_pages_browser_v522_p1.py::test_the_institutions_head_…[fr/ar]` — the recipients' annotation 16 px on a phone
+     against the test's 15.5 cap: T's public step-up (ui 16/24 under 48 rem, an approved V5.24 §12 decision) — the cap
+     moves to the step-up's 16 under V5.20 (**PUB1 / CLOSING**); (d) **the seventh, found here:**
+     `apps/pages/tests/test_browser.py::test_the_interim_hero_on_a_phone_keeps_its_four_tiles_in_the_first_screen` — at
+     360 × 640 the interim hero's lowest door stands at 649.4 px against the 640 px fold (the senior review's M3 «4 / 4
+     tiles in the first screen»): identical on the base tree `554c82d2` and green on the pre-T tree `8a7c76e0` (the
+     steward's two control runs, `.work/v524-lib-merge/logs/br3_interim_*.log`) — HOME's `hero.css:211` `.he__eyebrow`
+     reads `--t-folio`, now T's alias of the label step with the phone step-up (14/20 under 48 rem), and the taller
+     statement pushes the doors 9 px under the smallest fold — **a product change for HOME** (the interim eyebrow's
+     phone size or the band's fold geometry under TYPOGRAPHY_V2 §4.2 / V5.24 §12), not a test to re-point; recorded for
+     **HOME / CLOSING** and the matrix's 360 cells. **m3** `fronte-halo` running at rest on the frontispieces after the
+     entrance (Parcours 1024, Formation and the FAQ 390, AGAMI and Entreprises 1440): the head motif's own light in
+     `_fronte.css`, pre-existing on the base (lane S's V5.22 head, a §9.8 named exception), outside LIB's tables (R14) —
+     **CLOSING / the ONE matrix's «0 animations at rest after a play-through» item decides** whether the halo is a
+     documented loop or ends on the still after its first cycle; a post-acceptance candidate. **m4** the mono still
+     rendered by other lanes' seats — `p.scheda-rail__titolo` (**PUB1** `_sheet.css`), `p.traversata__kicker` (**PUB1**
+     `_training.css`), `span.dossier__num` (**PUB1** `_diplomas.css`), `p.orienta__didascalia` (**HOME** `pages.css`),
+     AGAMI's `dt` and the Forum's eyebrow at 500 and its caps h1 at 36/44 (**PUB2** `_agami.css`, `hero.html`,
+     `forum/_forum.css`) — those lanes' rows of T's burn-down. **m5** text under 14 px on public phone pages, none
+     LIB's: the lock-up's «™» (T's recorded exception), the portico's eyebrow / kicker and overlay caption (the navbar,
+     a preserved family — T's `_portico.css` / `chrome.css` rows), Entreprises' form step tiles (`_steps.css`, the
+     preserved forms), the hero's station labels on the Arabic home at 1024 (**HOME**'s `hero.css` row) — **the
+     matrix**. **m6** the incastro lifts the band's FIRST content 64 px: on Le projet the doors must be the band's first
+     child or the head placed after them — a placement note for **PUB2** (NOTES §4 (c)'s spirit). **m7** a fixture with
+     a spacer would let the twin assert the sill's delay too — **CLOSING's test-strengthening candidate**, not a defect.
+     **m8** the fixtures' bundle has no ceiling — by design. **m9** the two files outside §3.3's letter — recorded by
+     the builder (deviations 11–12) and in the family's manifest entry (item 5).
+   - **The builder's not_done** (NOTES §7, §9, §10): the wider static and browser sets still in flight at the commit —
+     read: `imp_static_set.log` 2 failed / 1 444 passed / 4 errors and `imp_browser_set.log` 9 failed / 90 passed / 16
+     errors, where every red beyond m2 was a Windows process launch returning 0xC0000142 (the four
+     `test_check_ownership.py` fixtures' `git init`, `test_static_pipeline.py`'s `collectstatic`) or a Chromium «Target
+     crashed» / «Connection closed while reading from the driver» (the 16 `test_sezioni_browser_v522_s2.py` cases, four
+     `test_pages_browser_v522_p1.py` cases) under three Chromium loads at the harness's close — **every one green in the
+     reviewer's round 2 and again here (item 8)**; the `_sec-mosaico.css` ceiling at 1 355 against the Director's «1 203
+     + 120» — **acknowledged and recorded as m1 (item 7)**; PUB1's «Comment ça marche» plates (the three light rules
+     into `_index.css`, `data-verb="ink"` on their tiles) and `t-label` / `t-numeral` on `_tracciato.html` — **PUB1**;
+     the colophon's `t-label` and the S6 import of `_materia.css` for `pietra` — **HOME**; `_ingresso.html`'s `t-label`
+     with the six restated declarations of `_fronte.css` dropped, the shell's four-line label net and the three restated
+     numeral lines once HOME and PUB1 carry the roles, `.sez-keyword`'s coverage, the legacy aliases, the name device's
+     two clamps as a recorded residue — **CLOSING**; `/ar/le-projet/`'s French h2 leading (`_projet.css:172`) and the
+     20/32 French runs in the statement column — **PUB2**; the pathway sheets' `_sheet.css` descendant rule — **PUB1**;
+     the builder's older fr-pass frames beside the improve round's under `evidence/v524/lib/shots/` (the improve round's
+     dated 6 Nov 01:49–01:52, `headed_improve.json`) — evidence, left as written; the family's manifest entry — **done
+     here (item 5)**.
+   - **Lane T's record** (DL54-188): the T steward's run was closed after its merge (`554c82d2`) and its tests
+     (`.work/v524-t-merge/logs/set_a…d`, `br_twins`) without writing the record — the DL entry its `make_dl188.py`
+     prepared, `QA/v54/v524-t/REVIEW.md`, `live_status.json`'s «Typography V2» row, the changelog, the tag `v524/t`, the
+     preview restart. **Not LIB's: the orchestrator re-runs the T steward's record step** (its tools are in place; this
+     merge's tag `v524/lib` carries T's tree to the preview meanwhile, and `live_status.json` lists `v524-px` then
+     `v524-lib` until T's row is added). DL54-188 is reserved for it.
+   - **For the lanes that follow** (the contract LIB offers, NOTES §4 (c)): the attributes `data-ground="pietra"`,
+     `data-luce="origine"`, `data-sfuma="stone|paper|brand|night"`, `data-incastro`; the class `sez-raccordo` (+
+     `--risale`, `--notte`) with `data-verb="draw-y" aria-hidden="true"` and `--raccordo-x`, **placed as the FIRST CHILD
+     of the band the line enters** (before its `.container`), its length `--sez-raccordo` a strip's padding so the node
+     lands on a process or statement head's rule — a page lane landing on a PANEL head (the rule centred in the label's
+     line, 7–9 px lower) or on a band's deeper padding sets `--sez-raccordo` on its placement; the node `--accent-mark`
+     beside the head rule's start or on a structure line, never inside the 48 px gold rule; the import `@import
+     url("../css/v5/_materia.css")` after `_sezioni.css` in the route sheet, paid inside the page type's total (R4 a, d,
+     e). HOME, PUB1 and PUB2 rebase on this merge; `stone` and `pietra` are one kind for the adjacency rule.
+11. **The preview.** No shared database needed a seed or a migration at this tree (the lane added none; `migrate
+    --check` is run before the start). After the tag, 8780 is restarted on `v524/lib` with the acceptance launcher
+    (`servers/acceptance/run_8780.py`; v5-live checked out detached at the tag, its untracked `.env` keeping
+    `ILE_WHATSAPP_NUMBER`; the previous log kept as `srv8780.log.prev-v524-lib`) — the preview moves from `v524/px` to
+    this tree, so lane T's typography reaches the owner's eye with this restart as well. The checks — the four homes,
+    the hub and its strip with the tag and the label «Section Background / Material V2», this record's decision document
+    served by the hub; the 19 public pages that bundle a changed partial or stand as a public door, in four languages as
+    the preview serves them (200, one h1, Arabic right to left, Readex Pro preloaded on `/ar/` only; the protection's
+    field, sill and bookend on the home, Parcours, the sheet, Formation and Diplômes and on no other page; the label
+    role by name on every panel head the library draws, the numeral role on Parcours' board, the grid's tiles on `ink`
+    and the discs on `node`, 0 `.foto__credit`, 0 figcaption in a slot frame, 0 `varco`), the served `main.css` at 32
+    695 B gzip -9 and free of `_materia.css`'s selectors, the 18 route sheets that bundle a changed partial served at
+    the reviewer's figures; the contact page in four languages with both channels (the Numero Verde and the one WhatsApp
+    link the environment configures, compared in process), the footer's two channels on the contact page and the homes,
+    the nine personas' homes in fr and ar, the server log (0 tracebacks, 0 5xx); headed chromium-1234 under a slot
+    (label `v524-lib-merge/headed`, ≤ 25 min) on the twelve pages at 1440 and 390 in fr and ar, Parcours and the sheet
+    at 1024, and under reduced motion at 1440 in fr and ar on the home and Parcours — after a play-through: the field a
+    size container, the sill ≈ 344 px and the bookend low on the far side at opacity 0.3 and never over the plate at
+    1440 on the wide pages, standing down at 1024, on the sheet and on phones (the sill 0 there); every tile a niche
+    face and a stacking context; every panel label the role's 13/16 600 uppercase (14/20 on phones; Readex Pro 14/20
+    without capitals in Arabic), every numeral 600 in the sans, every frontispiece h1 600 at 56 / 36 (caps) at 1440 and
+    34 / 28 at 390, the «Non.» keyword 600, no LIB class in ILE Mono; one h1, overflow 0 and no unclipped element wider
+    than the page, no `data-sec-state` written and no animation running under reduced motion, one Tab setting
+    `html[data-input="key"]`, 0 console errors — are the steward's reports
+    `C:/tmp/ile_v5_council/.work/v524-lib-merge/verify_8780_v524lib.json` and `headed_8780_v524lib.json`, with the
+    stills under `shots/`.
+12. **Release gate — unchanged.** V5.24 §32 and V5.25 §9: «Do not promote main. Do not create v2.0.0. Do not create a
+    release. Do not deploy.» No push, no public tag; `v524/lib` is a local annotated tag. The merge order continues —
+    HOME, PUB1, PUB2, PLAT and AR as each passes (they rebase on this merge and import `_materia.css` into their route
+    sheets for the grounds and seams their tables place), then CLOSING —, then V5.25 §3's ONE matrix and §7's ONE full
+    technical gate on the integrated tree (FINAL_DELIVERY_V2.md §4–§5), and only then «FINAL V2 ACCEPTANCE READY» with
+    its SHA.
+
+**Why.** V5.24 names the plain white sections, the generic separators and the isolated rectangles a defect of the
+premium result and asks for material, light and seams that continue from one section into the next; V5.25 ends the
+loops: a lane whose targeted gate passes with no blocker is merged. Lane LIB's change is the library's alone — one
+page-only partial with four ground recipes and four seam primitives composed from the product's own tokens and from
+devices the product already drew (the atrium's grid, the home's fade, the lines that draw with `draw-y`, the arch seat's
+niche), the one tile face every grid repeats made a niche instead of a white square, the warning plate given a drawing
+table instead of a second box, the grid's tiles given a threshold instead of a settle, and every type rule in the
+library read from lane T's twelve steps — so that the page lanes place the material with an attribute and a class
+instead of each inventing a gradient. The reviewer measured what the owner will see once the pages place it — the
+raccordo painted across the seam and ending on the head rule, the doors over the photograph, the shield standing down
+exactly where it would hide behind the plate — and what the owner sees already on every page the library draws. The
+steward's own change is the family's record, the §9.8 exception for the library the plan asked for, and the stale lock
+taken over so that the order could continue with lane T's record left to its own steward.
+
+**Source.** The owner's V5.24 (§7–§17, §11–§14, §30, §32), V5.25, V5.26 §4–§8, V5.27 §6, V5.20 and V5.12–V5.21;
+`FINAL_DELIVERY_V2.md` §0, §1, §2 (R3, R4, R6, R9–R14), §3.3, §4–§6; `evidence/v524/BACKGROUND_MATERIAL_V2.md` §3, §4.1;
+`evidence/v524/TYPOGRAPHY_V2.md` §4.2, §6; SECTION_SYSTEM_V2 §5.1, §5.3, §6, §9.7–§9.9, §10; `QA/v524/lib/NOTES.md`
+(§0–§10); `QA/v54/v524-lib/REVIEW.md` (copied byte for byte from `C:/tmp/ile_v5_council/evidence/v524/lib/QA.md`, the
+reviewer's round 2); the steward's tools and logs under `C:/tmp/ile_v5_council/.work/v524-lib-merge/` (the stale lock as
+evidence in `logs/`); DL54-185 item 3 (F-M2), DL54-187 items 5 and 10, the v524-t merge commit `554c82d2` (DL54-188's
+number).

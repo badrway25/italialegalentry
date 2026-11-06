@@ -8,11 +8,13 @@ entity, never an approval of anyone), who decides it and when, the clause.
 {% endcomment %}
 {% block page_title %}{% translate "Mon entreprise" %}{% endblock %}
 {% block meta_description %}{% translate "L’identité de votre entreprise telle qu’elle est enregistrée, et son état de vérification." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="company">
+  {% include "portal/partials/atrium_art.html" with figure="seal" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Mon entreprise" %}</h1>
     <p class="ws-head__lead">{% translate "Ces éléments sont ceux qui rendent une vérification possible. Ils ne sont visibles que par les comptes rattachés à votre entreprise et par l’administration du projet." %}</p>
   </div>
@@ -21,7 +23,7 @@ entity, never an approval of anyone), who decides it and when, the clause.
 {% endblock %}
 
 {% block companies_content %}
-<div class="reg-page">
+<div class="reg-page db-main">
   <section class="reg-sec" aria-labelledby="identity-title">
     <h2 class="db-h2 reg-sec__title" id="identity-title">{% svg_icon "building" "icon" %}<span>{% translate "Identité de l’entreprise telle qu’enregistrée" %}</span></h2>
     <dl class="portal-facts">

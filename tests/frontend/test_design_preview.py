@@ -3373,8 +3373,8 @@ def test_the_landing_frames_the_live_home_once_under_the_strip(client, preview):
     frames = _frames(html)
     assert len(frames) == 1, frames
     assert 'src="/fr/"' in frames[0] and "data-dp-frame" in frames[0]
-    assert 'title="La home — V4 + fondation"' in frames[0]
-    assert "<title>La home · V5 dal vivo · Italy Legal Entry™</title>" in html, "the window names the page"
+    assert 'title="La home — Da rifinire"' in frames[0]
+    assert "<title>La home · Anteprima di accettazione · Italy Legal Entry™</title>" in html, "the window names the page"
     assert html.index('<header class="dp-strip"') < html.index("<iframe"), "the strip sits outside the page, above it"
     csp = _csp(response)
     assert "frame-src 'self'" in csp and "frame-ancestors 'none'" in csp
@@ -3387,13 +3387,14 @@ def test_the_landing_frames_the_live_home_once_under_the_strip(client, preview):
     # The strip: the name, the build, the state, the languages, the frame, the personas, the
     # changelog, the index, the page alone — and the way to the archive for the old anchors.
     for part in (
-        'title="Italy Legal Entry™ — V5, la migliore di oggi"',
-        '<span class="dp-strip__tag">v54/base</span> · <span class="dp-strip__commit">f11d131</span>',
-        '<span class="dp-strip__state dp-strip__state--v4-fondation" title="V4 + fondation" data-dp-state>',
+        'title="Italy Legal Entry™ — anteprima di accettazione"',
+        '<small class="dp-strip__commit">v54/base · f11d131</small>',  # the tag and the commit: grey metadata
+        'Versione del <time datetime="2026-10-05">5 ottobre 2026</time>',
+        '<span class="dp-strip__state dp-strip__state--v4-fondation" title="Da rifinire" data-dp-state>',
         '<span class="dp-hidden">Stato della pagina nella cornice: </span><span class="dp-strip__state-what" '
-        'aria-hidden="true">pagina:</span> <span class="dp-strip__state-label" data-dp-state-label lang="fr">V4 + fondation'
+        'aria-hidden="true">pagina:</span> <span class="dp-strip__state-label" data-dp-state-label>Da rifinire'
         "</span>",
-        '<summary class="dp-strip__summary">Personas</summary>',
+        '<summary class="dp-strip__summary">Accessi di prova</summary>',
         '<summary class="dp-strip__summary">Novità</summary>',
         '<p class="dp-strip__panel-title">Versione in uso</p>',
         "Cambiato dall’ultimo rapporto",
@@ -3407,7 +3408,7 @@ def test_the_landing_frames_the_live_home_once_under_the_strip(client, preview):
     for code, name in (("fr", "Francese"), ("ar", "Arabo"), ("it", "Italiano"), ("en", "Inglese")):
         assert f'hreflang="{code}" title="{name}" data-dp-lang="{code}"' in html, code
         assert f'>{code}<span class="dp-hidden"> — {name.lower()}</span></a>' in html, code
-    assert "Superfici V5" not in html, "no council-passed surface: no menu for them"
+    assert "Pagine approvate" not in html, "no approved surface: no menu for them"
     assert '<p class="dp-strip__state' not in html and '<p class="dp-strip__build' not in html, "words, not paragraphs"
     assert f'href="{LANDING}?page=/ar/" hreflang="ar"' in html
     assert f'href="{LANDING}?page=/fr/&amp;frame=phone" data-dp-frame-mode="phone"' in html
@@ -3547,7 +3548,7 @@ def test_a_page_of_the_documents_app_is_framed_in_the_language_it_was_asked_for(
     assert cookie.value == "ar" and cookie["httponly"] and cookie["samesite"] == "Lax"
     assert 'data-dp-lang="ar" aria-current="true"' in html
     assert f'href="{LANDING}?page=/documents/&amp;lang=fr" hreflang="fr"' in html
-    assert "<title>Mes pièces — /documents/ · V5 dal vivo · Italy Legal Entry™</title>" in html
+    assert "<title>Mes documents · Anteprima di accettazione · Italy Legal Entry™</title>" in html
     # Without ?lang=, the cookie the browser holds decides, and the landing sets nothing.
     client.cookies["ile_v5_language"] = "ar"
     response = client.get(LANDING, {"page": "/documents/"})
@@ -3604,41 +3605,41 @@ def test_the_strip_says_v5_only_where_the_steward_s_live_status_says_so(client, 
         html = client.get(LANDING, {"page": page}).content.decode()
         return re.search(r'data-dp-state-label(?: lang="fr")?>([^<]+)</span>', html).group(1)
 
-    assert state("/fr/") == "V4 + fondation"
+    assert state("/fr/") == "Da rifinire"
     _steward(tmp_path, "live_status.json", "{not json")
-    assert state("/fr/") == "V4 + fondation"
+    assert state("/fr/") == "Da rifinire"
     _steward(tmp_path, "live_status.json", json.dumps(["v5"]))
-    assert state("/fr/") == "V4 + fondation"
+    assert state("/fr/") == "Da rifinire"
     _steward(
         tmp_path,
         "live_status.json",
         json.dumps({"surfaces": {"home": "v5", "login": {"state": "v5"}, "faq": "V5", "news": "passed"}}),
     )
-    assert state("/fr/") == "V5 — council-passed"
-    assert state("/ar/") == "V5 — council-passed"
-    assert state("/en/compte/login/") == "V5 — council-passed"
-    assert state("/fr/faq/") == "V4 + fondation", "a state is the word «v5», nothing like it"
-    assert state("/fr/actualites/") == "V4 + fondation"
-    assert state("/fr/le-projet/") == "V4 + fondation"
+    assert state("/fr/") == "Approvata in revisione"
+    assert state("/ar/") == "Approvata in revisione"
+    assert state("/en/compte/login/") == "Approvata in revisione"
+    assert state("/fr/faq/") == "Da rifinire", "a state is the word «v5», nothing like it"
+    assert state("/fr/actualites/") == "Da rifinire"
+    assert state("/fr/le-projet/") == "Da rifinire"
     html = client.get(LANDING).content.decode()
     # One menu, «Superfici V5 · n», never a row of links (review W1-P M5) — and the same list again
     # in «Altro», which holds what the row does not below 80 rem.
     menu = html[html.index('<details class="dp-strip__menu dp-strip__menu--quick dp-strip__wide">') :]
     menu = menu[: menu.index("</details>")]
     assert (
-        '<summary class="dp-strip__summary">Superfici V5<span class="dp-hidden">:</span> '
+        '<summary class="dp-strip__summary">Pagine approvate<span class="dp-hidden">:</span> '
         '<span class="dp-strip__count">2</span><span class="dp-hidden"> pagine</span></summary>'
-    ) in menu, "«Superfici V5: 2 pagine» for assistive technology, the pill for the eye (a11y r2 n4)"
-    assert re.findall(r'<li><a href="[^"]+">([^<]+)</a></li>', menu) == ["La home", "L’accesso «Il varco»"]
+    ) in menu, "«Pagine approvate: 2 pagine» for assistive technology, the pill for the eye (a11y r2 n4)"
+    assert re.findall(r'<li><a href="[^"]+">([^<]+)</a></li>', menu) == ["La home", "L’accesso"]
     assert f'<li><a href="{LANDING}?page=/fr/compte/login/">' in menu
     altro = html[html.index('<details class="dp-strip__menu dp-strip__narrow">') :]
-    assert "Superfici V5 — hanno passato il consiglio" in altro[: altro.index("</details>")]
+    assert "Pagine approvate in revisione" in altro[: altro.index("</details>")]
     assert "dp-strip__state--v5" in html
     # The page's data block carries the same states, for the script that follows the frame.
     data = json.loads(re.search(r'<script id="dp-live-map" type="application/json">(.*?)</script>', html).group(1))
     assert data["pages"]["/fr/"] == ["v5", "fr ar it en", "La home"]
     assert data["pages"]["/fr/faq/"][0] == "v4-fondation" and data["pages"]["/fr/le-projet/"][1] == "fr ar"
-    assert data["labels"] == {"v5": "V5 — council-passed", "v4-fondation": "V4 + fondation"}
+    assert data["labels"] == {"v5": "Approvata in revisione", "v4-fondation": "Da rifinire"}
     assert data["fallback"] == "v4-fondation" and data["archive"] == ARCHIVE and data["landing"] == LANDING
     assert data["follow"] == "^/(?:it|fr|en|ar|documents)/" and data["persona"] == ""
 
@@ -3657,7 +3658,7 @@ def test_the_strip_carries_three_lines_of_the_steward_s_changelog_on_demand(clie
     html = client.get(LANDING).content.decode()
     news = html[html.index('<ul class="dp-strip__news" role="list">') :]
     news = news[: news.index("</ul>")]
-    assert re.findall(r"<li>([^<]+)</li>", news) == [
+    assert re.findall(r'<span class="dp-strip__news-line">([^<]+)</span>', news) == [
         "The foundation: Host Grotesk, Vazirmatn.",
         "Lo spigolo: 2 · 4 · 6 · 8 · 12.",
         "«En examen» in lapis.",
@@ -3677,9 +3678,10 @@ def test_the_strip_names_the_build_this_server_is_checked_out_at(client, preview
     assert '<time datetime="2026-10-05">5 ottobre 2026</time>' in html, "the date, in the menus, in words (UX r2 n8)"
     monkeypatch.setattr(live, "identity", lambda: {"tag": "", "branch": "v54-w1-p", "commit": "1a2b3c4", "date": ""})
     html = client.get(LANDING).content.decode()
-    assert '<span class="dp-strip__tag">ramo v54-w1-p</span> · <span class="dp-strip__commit">1a2b3c4</span>' in html
+    assert '<span class="dp-strip__tag">Versione in esame</span> <small class="dp-strip__commit">ramo v54-w1-p · 1a2b3c4</small>' in html
     monkeypatch.setattr(live, "identity", lambda: {"tag": "", "branch": "", "commit": "", "date": ""})
-    assert '<span class="dp-strip__tag">versione sconosciuta</span>' in client.get(LANDING).content.decode()
+    html = client.get(LANDING).content.decode()
+    assert '<span class="dp-strip__tag">Versione in esame</span>' in html and "dp-strip__commit" not in html
 
 
 def test_the_build_is_read_from_git_once_per_process(monkeypatch):
@@ -3771,7 +3773,7 @@ def test_the_index_groups_the_v4_fondation_pages_apart_open_until_one_passes(cli
 
     html = client.get(INDEX).content.decode()
     public = html[html.index('id="pubbliche"') : html.index('id="personas"')]
-    assert "Nessuna pagina pubblica ha ancora passato il consiglio: tutte sono qui sotto." in public
+    assert "Nessuna pagina pubblica è ancora approvata in revisione: tutte sono qui sotto." in public
     assert '<details class="dp-index__fold" open>' in public, "open while nothing has passed"
     fold = public[public.index('<details class="dp-index__fold" open>') :]
     assert f"{len(live.PUBLIC_PAGES)} pagine pubbliche" in fold
@@ -3788,8 +3790,8 @@ def test_the_index_groups_the_v4_fondation_pages_apart_open_until_one_passes(cli
     public = html[html.index('id="pubbliche"') : html.index('id="personas"')]
     passed, fold = public.split('<details class="dp-index__fold">', 1)
     assert '<li class="dp-row" id="p-home">' in passed and '<li class="dp-row" id="p-home">' not in fold
-    assert '<span class="dp-state dp-state--v5">V5 — council-passed</span>' in passed
-    assert "Nessuna pagina pubblica ha ancora passato il consiglio." not in public
+    assert '<span class="dp-state dp-state--v5">Approvata in revisione</span>' in passed
+    assert "Nessuna pagina pubblica è ancora approvata in revisione." not in public
 
 
 @pytest.mark.django_db
@@ -3802,11 +3804,12 @@ def test_the_index_offers_the_four_personas_and_never_a_staff_one(client, previe
     """
     html = client.get(INDEX).content.decode()
     cards = html[html.index('id="personas"') : html.index('id="stati"')]
-    assert re.findall(r'<h3 class="dp-card__name" lang="fr">([^<]+)</h3>', cards) == [
-        "Personne avec dossier",
-        "Personne, conditions non acceptées",
-        "Personne sans dossier",
-        "Entreprise — Cantiere Adriatico",
+    # the owner's acceptance labels, in Italian (V5.12 §12): never «Personne», never a key as the name
+    assert re.findall(r'<h3 class="dp-card__name">([^<]+)</h3>', cards) == [
+        "Persona con fascicolo — documento da sostituire",
+        "Persona con fascicolo — condizioni d’uso da accettare",
+        "Persona appena registrata, senza fascicolo",
+        "Impresa — Cantiere Adriatico",
     ]
     for key in ("qa-doc-person", "qa-person", "qa-fresh-person", "qa-company"):
         form = cards[cards.index(f'action="{ENTER}{key}/"') - 60 :]
@@ -3814,9 +3817,11 @@ def test_the_index_offers_the_four_personas_and_never_a_staff_one(client, previe
         assert 'method="post"' in form and 'name="csrfmiddlewaretoken"' in form, key
         assert '><span lang="fr">Entrer</span><span class="dp-hidden">' in form
     assert "qa-admin" not in html and "is_staff" not in html
-    assert "fascicolo <code>EE167596D4</code>" in cards and "fascicolo <code>E46E03B461</code>" in cards
-    assert '<span class="dp-card__opens">apre il suo <span lang="fr">Tableau de bord</span></span>' in cards
-    assert '<span class="dp-card__opens">apre il suo <span lang="fr">Espace entreprise</span></span>' in cards
+    # the key, the case file and «dati fittizi»: the small grey metadata line
+    assert "<small>chiave qa-doc-person · fascicolo EE167596D4 · dati fittizi</small>" in cards
+    assert "fascicolo E46E03B461" in cards
+    assert '<span class="dp-card__opens">apre «<span lang="fr">Tableau de bord</span>»</span>' in cards
+    assert '<span class="dp-card__opens">apre «<span lang="fr">Espace entreprise</span>»</span>' in cards
     # Nobody is inside: each page of a persona is a POST that enters it and opens that page (M3).
     for page in ("/fr/espace-reserve/", "/ar/espace-reserve/", "/fr/espace-reserve/dossiers/EE167596D4/"):
         assert f'<input type="hidden" name="page" value="{page}">' in cards, page
@@ -3824,23 +3829,23 @@ def test_the_index_offers_the_four_personas_and_never_a_staff_one(client, previe
     assert '<input type="hidden" name="page" value="/fr/espace-reserve/entreprise/mes-besoins/">' in cards
     assert 'Analyse territoriale</span> <span class="dp-card__aside">— 403 per questa impresa' in cards
     # The page types only a role account reaches stand apart, said once.
-    assert "<strong>Fuori dall’anteprima</strong> — nessuna persona per questi ruoli:" in cards
+    assert "<strong>Fuori dall’anteprima</strong> — nessun accesso di prova per questi ruoli:" in cards
     # The strip's menu holds the same four, and the database this server uses is said when a persona
     # would be refused on it.
     strip = html[html.index('<header class="dp-strip"') : html.index("</header>")]
     for key in ("qa-doc-person", "qa-person", "qa-fresh-person", "qa-company"):
         assert f'action="{ENTER}{key}/"' in strip
-    assert "qui le personas sono rifiutate" in html
+    assert "qui gli accessi di prova sono rifiutati" in html
 
 
 @pytest.mark.django_db
 def test_the_index_draws_the_families_from_the_steward_s_live_status(client, preview, tmp_path):
     html = client.get(INDEX).content.decode()
     assert (
-        'Nessuna superficie ha ancora passato il consiglio: per ora ogni pagina è «<span lang="fr">V4 + fondation</span>».'
+        "Nessuna pagina è ancora approvata in revisione: per ora ogni pagina è «Da rifinire»."
         in html
     )
-    assert "Nessuna famiglia ha ancora passato il consiglio." in html
+    assert "Nessun gruppo di lavori è ancora approvato in revisione." in html
     _steward(
         tmp_path,
         "live_status.json",
@@ -3877,7 +3882,9 @@ def test_the_index_draws_the_families_from_the_steward_s_live_status(client, pre
     html = client.get(INDEX).content.decode()
     board = html[html.index('id="famiglie"') : html.index('id="fondazione"')]
     passed, fold = board.split('<details class="dp-index__fold">', 1)
-    assert "<code>w1-a</code> Fondazione" in passed and "<code>w1-b</code>" in fold
+    assert '<p class="dp-family__name">Fondazione <span class="dp-state dp-state--v5">Approvata in revisione</span> '\
+        '<small class="dp-family__key">w1-a</small>' in passed
+    assert '<small class="dp-family__key">w1-b</small>' in fold, "the family's key: grey metadata, after its title"
     assert re.findall(r'<span class="dp-family__score">([^<]+)</span>', passed) == [
         "visivo 4",
         "premium 4,5",  # in Italian, as the index is
@@ -3886,13 +3893,13 @@ def test_the_index_draws_the_families_from_the_steward_s_live_status(client, pre
         "telefono 4",
         "coerenza 4",
     ]
-    assert f'<a href="{DECISIONS}w1-a/CD_DECISION.md">la decisione del CD</a>' in passed
+    assert f'<a href="{DECISIONS}w1-a/CD_DECISION.md">la decisione</a>' in passed
     assert "<code>v54/w1-a</code>" in passed and '<time datetime="2026-10-06">' in passed
     assert "no key" not in board
     assert 'Aggiornato il <time datetime="2026-10-06">' in board
     _steward(tmp_path, "live_status.json", "\x00garbage")
     assert (
-        'Il registro dello stato è illeggibile: per ora ogni pagina è «<span lang="fr">V4 + fondation</span>».'
+        "Il registro dello stato è illeggibile: per ora ogni pagina è «Da rifinire»."
         in client.get(INDEX).content.decode()
     )
 
@@ -4026,7 +4033,7 @@ def _cards(html: str) -> dict[str, str]:
     section = html[html.index('id="personas"') : html.index('id="stati"')]
     cards = {}
     for chunk in re.split(r'<li class="dp-card(?: dp-card--active)?">', section)[1:]:
-        key = re.search(r"<code>(qa-[a-z-]+)</code>", chunk).group(1)
+        key = re.search(r"chiave (qa-[a-z-]+)", chunk).group(1)
         cards[key] = chunk
     return cards
 
@@ -4258,7 +4265,7 @@ def test_signed_out_the_way_in_says_personas_and_entrer_opens_the_page_asked_for
     ``next``. One muted line beside the state says the way in, and each «Entrer» carries the page the
     sign-in was asked for — which the switch opens only when it is that persona's own.
     """
-    hint = '<span class="dp-strip__hint" data-dp-hint>Per entrare senza password: «Personas»</span>'
+    hint = '<span class="dp-strip__hint" data-dp-hint>Per entrare senza password: «Accessi di prova»</span>'
     asked = "/fr/espace-reserve/mes-echeances/"
     html = client.get(LANDING, {"page": asked}).content.decode()
     assert hint in html
@@ -4296,7 +4303,7 @@ def test_the_names_and_languages_the_owner_and_assistive_technology_read(client,
     Review W1-P, accessibility r2 n1–n4 and m6′ (CD condition C8): the home link keeps «Italy Legal
     Entry™ — V5» below 90 rem (the words leave the eye, never the name); «1:1» says what it does and
     is disabled until there is a desktop frame; forced colours keep a pressed toggle pressed;
-    «Superfici V5» says its count in words; «V4 + fondation» is French wherever it is the state.
+    «Pagine approvate» says its count in words; both states are Italian, the preview's language (V5.12 §12).
     """
     css = re.sub(
         r"/\*.*?\*/", "", (STATIC / "css" / "dev" / "designpreview.css").read_text(encoding="utf-8"), flags=re.S
@@ -4316,7 +4323,7 @@ def test_the_names_and_languages_the_owner_and_assistive_technology_read(client,
         '1:1<span class="dp-hidden"> — misura vera della cornice desktop</span></button>'
     ) in html
     html = client.get(LANDING).content.decode()
-    assert 'data-dp-state-label lang="fr">V4 + fondation</span>' in html
+    assert 'data-dp-state-label>Da rifinire</span>' in html
     _steward(
         tmp_path,
         "live_status.json",
@@ -4331,17 +4338,17 @@ def test_the_names_and_languages_the_owner_and_assistive_technology_read(client,
         ),
     )
     html = client.get(LANDING).content.decode()
-    assert "data-dp-state-label>V5 — council-passed</span>" in html
+    assert "data-dp-state-label>Approvata in revisione</span>" in html
     assert (
-        '<summary class="dp-strip__summary">Superfici V5<span class="dp-hidden">:</span> '
+        '<summary class="dp-strip__summary">Pagine approvate<span class="dp-hidden">:</span> '
         '<span class="dp-strip__count">1</span><span class="dp-hidden"> pagina</span></summary>'
     ) in html
     board = client.get(INDEX).content.decode()
     board = board[board.index('id="famiglie"') : board.index('id="fondazione"')]
-    assert '<span class="dp-state dp-state--v5">V5 — council-passed</span>' in board
-    assert '<span class="dp-state dp-state--v4-fondation" lang="fr">V4 + fondation</span>' in board
+    assert '<span class="dp-state dp-state--v5">Approvata in revisione</span>' in board
+    assert '<span class="dp-state dp-state--v4-fondation">Da rifinire</span>' in board
     script = (STATIC / "js" / "dev" / "designpreview.js").read_text(encoding="utf-8")
-    assert 'words.removeAttribute("lang");' in script and 'words.lang = "fr";' in script
+    assert 'words.removeAttribute("lang");' in script and 'words.lang = "fr";' not in script
     assert "trueSize.disabled = !held.frames.some(" in script
 
 
@@ -4373,13 +4380,13 @@ def test_the_index_says_one_in_the_singular_and_dates_in_words(client, preview, 
         ),
     )
     html = client.get(INDEX).content.decode()
-    assert "</span></span> 1 pagina pubblica</summary>" in html
-    assert "</span></span> 1 famiglia</summary>" in html
+    assert "Da rifinire</span> 1 pagina pubblica</summary>" in html
+    assert "Da rifinire</span> 1 gruppo di lavori</summary>" in html
     assert 'Aggiornato il <time datetime="2026-10-05">5 ottobre 2026</time>.' in html
     assert '<time datetime="2026-10-06">6 ottobre 2026</time>' in html
     public = html[html.index('id="pubbliche"') : html.index('id="personas"')]
     passed, fold = public.split('<details class="dp-index__fold">', 1)
-    assert passed.count('<span class="dp-state dp-state--v5">V5 — council-passed</span>') == passed.count(
+    assert passed.count('<span class="dp-state dp-state--v5">Approvata in revisione</span>') == passed.count(
         '<li class="dp-row"'
     )
     assert "dp-state" not in fold.split("</summary>", 1)[1]
@@ -4387,8 +4394,8 @@ def test_the_index_says_one_in_the_singular_and_dates_in_words(client, preview, 
     assert 'Aggiornato il <time datetime="domani">domani</time>.' in client.get(INDEX).content.decode()
     _steward(tmp_path, "live_status.json", json.dumps({"families": [{"key": "w1-b"}, {"key": "w1-c"}]}))
     html = client.get(INDEX).content.decode()
-    assert "</span></span> 2 famiglie</summary>" in html
-    assert f"</span></span> {len(live.PUBLIC_PAGES)} pagine pubbliche</summary>" in html
+    assert "Da rifinire</span> 2 gruppi di lavori</summary>" in html
+    assert f"Da rifinire</span> {len(live.PUBLIC_PAGES)} pagine pubbliche</summary>" in html
     css = re.sub(
         r"/\*.*?\*/", "", (STATIC / "css" / "dev" / "designpreview.css").read_text(encoding="utf-8"), flags=re.S
     )
@@ -4495,15 +4502,15 @@ def test_the_switch_signs_a_persona_in_read_only_and_logs_its_key_never_its_e_ma
     assert AuditEvent.objects.filter(action="auth.login", actor=accounts["qa-doc-person"]).exists()
     html = client.get(LANDING + "?page=/fr/espace-reserve/").content.decode()
     assert '<span class="dp-strip__dot" aria-hidden="true"></span>' in html
-    assert 'Dentro come «<span lang="fr">Personne avec dossier</span>»' in html
+    assert 'Dentro come «Persona con fascicolo — documento da sostituire»' in html
     assert '<button class="dp-persona__button" type="submit" lang="fr">Sortir</button>' in html
     # The summary says who is in, without a stray space; the list says «dentro» on that row (m6, m9).
-    assert '<span class="dp-hidden"> — dentro come </span><span lang="fr">Personne avec dossier</span>' in html
+    assert '<span class="dp-hidden"> — dentro come </span>Persona con fascicolo — documento da sostituire' in html
     strip = html[html.index('<header class="dp-strip"') : html.index("</header>")]
     row = strip[strip.index(f'action="{ENTER}qa-doc-person/"') :]
     row = row[: row.index("</form>")]
     assert '<span class="dp-persona__state">dentro</span>' in row and "Entrer" not in row
-    assert 'apre il suo <span lang="fr">Tableau de bord</span>' in row
+    assert 'apre «<span lang="fr">Tableau de bord</span>»' in row
     # The company persona opens the company's space; the language and the frame follow the strip.
     response = client.post(ENTER + "qa-company/", {"lang": "ar", "frame": "phone"})
     assert response["Location"] == LANDING + "?page=/ar/espace-reserve/entreprise/&frame=phone"
@@ -4688,7 +4695,7 @@ def test_a_persona_session_cannot_write_outside_the_preview(client, preview, acc
         assert response["Content-Type"] == "text/plain; charset=utf-8"
         assert text.startswith("Anteprima V5 — sola lettura.")
         assert (
-            "Questa azione non è stata eseguita, e nulla è cambiato: «Personne, conditions non acceptées» resta "
+            "Questa azione non è stata eseguita, e nulla è cambiato: «Persona con fascicolo — condizioni d’uso da accettare» resta "
             "uguale per chi guarda dopo."
         ) in text
         assert "«Indietro» del browser" in text and "«Sortir», nella barra in alto" in text
@@ -5609,9 +5616,9 @@ def test_the_strip_follows_the_page_the_frame_navigates_to(chromium, dev_server)
     try:
         page.goto(f"{dev_server}{LANDING}", wait_until="load")
         page.wait_for_function(
-            "() => document.querySelector('iframe[data-dp-frame]').title === 'La home — V4 + fondation'"
+            "() => document.querySelector('iframe[data-dp-frame]').title === 'La home — Da rifinire'"
         )
-        assert page.title() == "La home · V5 dal vivo · Italy Legal Entry™", "named after the page, not its path"
+        assert page.title() == "La home · Anteprima di accettazione · Italy Legal Entry™", "named after the page, not its path"
         frame = page.frame_locator("iframe[data-dp-frame]")
         with page.expect_event("framenavigated", predicate=lambda f: f.url.endswith("/fr/le-projet/")):
             page.evaluate(
@@ -5635,10 +5642,10 @@ def test_the_strip_follows_the_page_the_frame_navigates_to(chromium, dev_server)
             "langs": ["fr", "ar"],
             "ar": f"{LANDING}?page=/ar/le-projet/",
             "phone": f"{LANDING}?page=/fr/le-projet/&frame=phone",
-            "state": "V4 + fondation",
+            "state": "Da rifinire",
             "field": "fr",
-            "frameTitle": "Il progetto — V4 + fondation",
-            "windowTitle": "Il progetto · V5 dal vivo · Italy Legal Entry™",
+            "frameTitle": "Il progetto — Da rifinire",
+            "windowTitle": "Il progetto · Anteprima di accettazione · Italy Legal Entry™",
         }, seen
         # To the login: it and en come back.
         with page.expect_event("framenavigated", predicate=lambda f: f.url.endswith("/fr/compte/login/")):
@@ -5841,7 +5848,7 @@ def test_a_persona_enters_and_leaves_from_the_strip(chromium, dev_server, accoun
         page.wait_for_url(f"{dev_server}{LANDING}?page=/fr/espace-reserve/")
         page.wait_for_load_state("load")
         assert page.locator(".dp-strip__menu--personas .dp-strip__dot").count() == 1
-        assert "Personne avec dossier" in page.locator(".dp-strip__menu--personas > summary").inner_text()
+        assert "Persona con fascicolo — documento da sostituire" in page.locator(".dp-strip__menu--personas > summary").inner_text()
         assert page.evaluate(
             "() => document.querySelector('iframe[data-dp-frame]').contentWindow.location.pathname"
         ).startswith("/fr/espace-reserve/")
@@ -5951,7 +5958,7 @@ def test_the_product_s_own_sign_out_in_the_frame_ends_on_the_home_and_the_strip_
         seen = page.evaluate(_FRAMED)
         assert seen["path"] == "/fr/" and not seen["blocked"] and not seen["dot"], seen
         assert seen["violations"] == [] and refused == [], (seen, refused)
-        assert page.locator(".dp-strip__menu--personas > summary").inner_text().strip() == "Personas"
+        assert page.locator(".dp-strip__menu--personas > summary").inner_text().strip() == "Accessi di prova"
     finally:
         context.close()
 
@@ -6170,7 +6177,7 @@ def test_the_strip_never_outgrows_its_row_with_council_passed_surfaces(
             page.locator(".dp-strip__narrow > summary").click()
             assert (
                 page.locator(".dp-strip__narrow .dp-strip__panel")
-                .get_by_text("Superfici V5 — hanno passato il consiglio")
+                .get_by_text("Pagine approvate in revisione")
                 .is_visible()
             )
     finally:
@@ -6182,15 +6189,16 @@ def test_the_strip_never_outgrows_its_row_with_council_passed_surfaces(
 def test_the_home_link_keeps_its_name_between_48_and_90_rem(chromium, dev_server):
     """
     Review W1-P, accessibility r2 n1 (CD condition C8): from 48 to 90 rem the home link was named
-    «V5» alone — «Italy Legal Entry™ — » was ``display: none``. The words leave the eye, never the
-    link's name, and take no room in the row.
+    «V5» alone — «Italy Legal Entry™ — » was ``display: none``; V5.12's «di accettazione» was too, so the
+    name read «Italy Legal Entry™ — Anteprima». The words leave the eye, never the link's name, and take no
+    room in the row.
     """
     page = chromium.new_page(device_scale_factor=1)
     try:
         for width, height in ((800, 600), (1024, 768), (1280, 800), (1439, 900)):
             page.set_viewport_size({"width": width, "height": height})
             page.goto(f"{dev_server}{LANDING}", wait_until="load")
-            link = page.locator("[data-dp-strip]").get_by_role("link", name="Italy Legal Entry™ — V5", exact=True)
+            link = page.locator("[data-dp-strip]").get_by_role("link", name="Italy Legal Entry™ — Anteprima di accettazione", exact=True)
             assert link.count() == 1 and link.is_visible(), width
             box = page.evaluate(
                 "() => { const r = document.querySelector('.dp-strip__ile').getBoundingClientRect(); return [r.width, r.height]; }"
@@ -6254,7 +6262,7 @@ def test_the_preview_files_are_written_with_lf_line_endings():
         STATIC / "js" / "dev" / "designpreview.js",
         Path(__file__),
     ]
-    assert len(footprint) == 28, "ten modules of the app, fourteen templates, dev.py, a sheet, a script, this file"
+    assert len(footprint) == 29, "eleven modules of the app, fourteen templates, dev.py, a sheet, a script, this file"
     for path in footprint:
         assert b"\r" not in path.read_bytes(), path.name
 

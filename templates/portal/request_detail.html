@@ -13,10 +13,12 @@ language of the submission.
 {% endcomment %}
 {% block page_title %}{{ item.title }}{% endblock %}
 {% block meta_description %}{% translate "Détail de votre demande et du consentement associé." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="counter" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title reg-head__title" dir="auto">{{ item.title }}</h1>
     <p class="reg-head__meta">{{ item.kind_label }}</p>
   </div>
@@ -57,3 +59,4 @@ language of the submission.
   <p class="reg-acts"><a class="btn btn--secondary" href="{% url 'portal:requests' %}">{% translate "Retour à mes demandes" %}</a></p>
 </div>
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

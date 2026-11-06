@@ -2,8 +2,17 @@
 Academy seeds — a small, realistic, SYNTHETIC catalogue.
 
 Everything here is invented for demonstration. No provider is a real organisation (each one says so
-in its ``note``), no text is copied from the previous platform, and no personal data appears
-anywhere. The catalogue covers the seven families of the Master Dossier so the domain filter has
+in its ``note``, which only the back office shows; their names are realistic and fictional — the
+preview's «Valfiorita» and «Collina Verde» — so that the owner's acceptance pages read as a product,
+V5.12 §8), no text is copied from the previous platform, and no personal data appears anywhere.
+
+**Demonstration data, so gated** (V5.12 §8, Director's decisions: the Academy demo catalogue is
+HIDDEN): ``academy.catalogue`` runs only where ``demonstration_data_allowed()`` — never in production,
+where the runbook's ``seed_all`` used to publish these seven invented courses to every account. The
+data step ``academy/migrations/0002_unpublish_demonstration_catalogue.py`` unpublishes the rows an
+earlier deploy wrote, on an environment where the switch is off.
+
+The catalogue covers the seven families of the Master Dossier so the domain filter has
 something to filter, and one course is left in DRAFT so the "a person never sees an unpublished
 course" rule can be seen working as well as tested.
 
@@ -48,21 +57,21 @@ DEMO_NOTE = "Organisme fictif — données de démonstration."
 PROVIDERS = (
     {
         "slug": "centre-langue-exemple",
-        "name": "Centre de langue italienne (exemple)",
+        "name": "Centro linguistico Valfiorita",
         "kind": ProviderKind.TRAINING_BODY,
         "country": "Italie",
         "city": "Rovigo",
     },
     {
         "slug": "organisme-pro-exemple",
-        "name": "Organisme de formation professionnelle (exemple)",
+        "name": "Institut des métiers Oued Lakhdar",
         "kind": ProviderKind.TRAINING_BODY,
         "country": "Maroc",
         "city": "Casablanca",
     },
     {
         "slug": "universite-partenaire-exemple",
-        "name": "Université partenaire (exemple)",
+        "name": "Università Collina Verde",
         "kind": ProviderKind.UNIVERSITY,
         "country": "Italie",
         "city": "Padoue",
@@ -110,7 +119,7 @@ COURSES = (
             ("Révision et auto-évaluation", ModuleKind.REVIEW, 60),
         ),
         "materials": (
-            ("Livret de séances A1", MaterialKind.DOCUMENT, "Centre de langue italienne (exemple)", "Livret v1"),
+            ("Livret de séances A1", MaterialKind.DOCUMENT, "Centro linguistico Valfiorita", "Livret v1"),
             ("Enregistrements des dialogues", MaterialKind.RECORDING, "", ""),
         ),
         "competences": (
@@ -191,7 +200,7 @@ COURSES = (
             ("Atelier : repérer les risques d’un poste", ModuleKind.PRACTICE, 120),
         ),
         "materials": (
-            ("Affiches de signalisation commentées", MaterialKind.DOCUMENT, "Organisme de formation (exemple)", ""),
+            ("Affiches de signalisation commentées", MaterialKind.DOCUMENT, "Institut des métiers Oued Lakhdar", ""),
         ),
         "competences": (
             ("identifier-risques", CompetenceLevel.INTERMEDIATE, "Repérer et signaler un risque sur son poste."),
@@ -242,7 +251,7 @@ COURSES = (
             ("Révision", ModuleKind.REVIEW, 60),
         ),
         "materials": (
-            ("Fiches d’hygiène en atelier", MaterialKind.DOCUMENT, "Organisme de formation (exemple)", "Fiches v2"),
+            ("Fiches d’hygiène en atelier", MaterialKind.DOCUMENT, "Institut des métiers Oued Lakhdar", "Fiches v2"),
             ("Exercices de traçabilité", MaterialKind.EXERCISE, "", ""),
         ),
         "competences": (
@@ -294,6 +303,9 @@ COURSES = (
 
 @register_seed("academy.catalogue", order=70)
 def seed_catalogue() -> str:
+    if not demonstration_data_allowed():
+        # Invented providers and courses, shown to every account: demonstration data like any other.
+        return "academy demonstration catalogue skipped (synthetic data is not allowed here)"
     providers: dict[str, TrainingProvider] = {}
     for row in PROVIDERS:
         provider, _created = TrainingProvider.objects.get_or_create(
@@ -383,7 +395,7 @@ def seed_demo_plan() -> str:
         title=DEMO_PLAN_TITLE,
         defaults={
             "origin": PlanOrigin.COMPANY_NEED,
-            "origin_reference": "Besoin territorial FB-2026-014 (exemple)",
+            "origin_reference": "Besoin territorial FB-2026-014",
             "status": PlanStatus.ACTIVE,
             "note": (
                 "Ce plan est un parcours conseillé, établi à partir d’un besoin de compétences "
@@ -465,7 +477,7 @@ def seed_demo_plan() -> str:
                 "current_level": current,
                 "course": courses.get(course_slug),
                 "expected_outcome": outcome,
-                "source_note": "Besoin territorial FB-2026-014 (exemple)",
+                "source_note": "Besoin territorial FB-2026-014",
             },
         )
     return "demonstration training plan created for the reserved QA account"

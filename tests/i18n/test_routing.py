@@ -42,7 +42,11 @@ def test_settings_describe_the_four_language_architecture():
 @pytest.mark.parametrize("lang", LANGS)
 def test_every_ungated_public_route_renders_in_the_language(client, seeded, lang):
     paths = ungated_paths()
-    assert len(paths) >= 25
+    # V5.14 (apps/legal/apps.py): the three substantive legal pages left the ungated list for the legal-pages gate —
+    # 23 ungated routes stay, and those three are gated by exactly that gate, never dropped
+    assert len(paths) >= 23
+    legal = {route.path: route.requires_gate for route in gated_routes() if route.app == "legal"}
+    assert legal == dict.fromkeys(("note-legali/", "condizioni-di-utilizzo/", "avvertenze/"), "legal_pages"), legal
     for path in paths:
         response = client.get(f"/{lang}/{path}")
         assert response.status_code == 200, (lang, path, response.status_code)
@@ -53,7 +57,8 @@ def test_every_ungated_public_route_renders_in_the_language(client, seeded, lang
 @pytest.mark.parametrize("lang", LANGS)
 def test_every_phase3_route_renders_in_the_language_once_the_gate_opens(client, seeded, phase3_open, lang):
     routes = [route for route in gated_routes() if route.requires_gate == "phase3_public"]
-    assert len(routes) >= 30
+    # V5.12 §8: the ten «Vivre en Italie» themes left the registry (a theme's page exists only with a reviewed sheet)
+    assert len(routes) >= 27
     for route in routes:
         response = client.get(f"/{lang}/{route.path}")
         assert response.status_code == 200, (lang, route.path, response.status_code)

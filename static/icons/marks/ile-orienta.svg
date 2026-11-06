@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-orienta: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - orientation: the doorway, and in its toned opening a two-headed compass needle at 45 degrees, its north tip at the intrados; the needle settles once from -25 degrees (n.1) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M9 42V23A15 15 0 0 1 39 23V42Z"/>
+  <path data-layer="arch" d="M9 42V23A15 15 0 0 1 39 23V42"/>
+  <path data-layer="mark" data-group="needle" d="M33.2 13.8 26.4 25.4 14.8 32.2 21.6 20.6Z"/>
+  <path data-layer="mark" data-group="needle" d="M21.6 20.6 26.4 25.4"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

@@ -1,0 +1,143 @@
+/* ============================================================================================
+   ESPACE INSTITUTIONS — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.7; lane P1). Page-only:
+   ecosystem/institutions.css. IN-1, the page's moment: lane S's «l'emiciclo» (components/sezioni/mappa.html
+   layout="arc", v5/_sec-emiciclo.css) standing over the assembly hall's photograph — the frame is the section's
+   ground (its develop kept, lane A's bw-scroll), a night veil over its lower half, the six seats on their arc, the
+   locked sentence whole on its plate under the arc. Adapted from 21st.dev (NOTES, provenance): «MultiOrbitSemiCircle»
+   5180 (concentric half-tiers that carry their glyphs) — refused: the tooltips (no word behind a hover), the blurred
+   glow, the orbiting.
+   ============================================================================================ */
+
+.istituzioni-aula {
+  --sez-ink-2: var(--text-on-night-2);
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+/* the ground: the hall in full, under its veil — the veil darkens the lower half, where the words stand */
+.istituzioni-aula__fondo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+}
+
+.istituzioni-aula__fondo :is(.foto, picture, img) {
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+}
+
+.istituzioni-aula__fondo img {
+  object-fit: cover;
+  object-position: 50% 30%;
+  border-radius: 0;
+}
+
+.istituzioni-aula__fondo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* the hall stays legible at its top and goes to the night at its foot, where the sentence and the way out stand: a
+     uniform veil, then an inner shadow rising from the foot (no gradient in a page sheet: tokens only) */
+  background: color-mix(in srgb, var(--surface-night) 40%, transparent);
+  box-shadow: inset 0 -22rem 16rem -4rem var(--surface-night);
+}
+
+.istituzioni-aula__fondo .foto__credit {
+  position: absolute;
+  inset-block-start: var(--s-3);
+  inset-inline-end: var(--s-4);
+  z-index: 1;
+  margin: 0;
+  padding: 2px var(--s-2);
+  border-radius: var(--radius-sm);
+  background: var(--plate-night-photo);
+  color: var(--text-on-night-1);
+}
+
+.istituzioni-aula__palco {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-8);
+}
+
+/* the arc a step larger than the library's: the hall's width; the seats a step larger too, legible on the frame */
+/* the arc a step larger than the library's (the hall's width), never wider than the column with its end seats */
+.istituzioni-aula .emiciclo__seggi {
+  --r: min(18rem, calc(50vw - 3.5rem));
+}
+
+.istituzioni-aula .emiciclo .sez-disc {
+  --disc: 52px;
+  --disc-glyph: 24px;
+}
+
+/* the sentence on its plate (real text on an AA plate, never on the bare photograph), its own head in the accent */
+.istituzioni-aula .emiciclo__frase {
+  max-inline-size: 46rem;
+  padding: var(--s-6) var(--s-8);
+  border-radius: var(--radius-md);
+  background: var(--plate-night-photo);
+  box-shadow: inset 0 0 0 1px var(--line-night-soft);
+  text-wrap: balance;
+}
+
+.emiciclo__capo {
+  color: var(--accent-night);
+}
+
+.emiciclo__voce {
+  text-decoration: underline 1px transparent;
+  text-underline-offset: 0.3em;
+  transition: color var(--motion-standard) var(--ease-enter), text-decoration-color var(--motion-standard) var(--ease-enter);
+}
+
+/* a lit phrase: the accent's underline as well as its ink (the seat lights with it, v5/_sec-emiciclo.css) */
+.emiciclo:has(.emiciclo__seggio:hover) .emiciclo__voce[data-seggio],
+.emiciclo__voce:hover {
+  text-decoration-color: currentColor;
+}
+
+.emiciclo:has(.emiciclo__seggio:hover) .emiciclo__voce:not([data-seggio]:hover) {
+  text-decoration-color: transparent;
+}
+
+.istituzioni-aula .ecosystem-note {
+  max-inline-size: var(--measure-body);
+  color: var(--text-on-night-2);
+}
+
+.istituzioni-aula__piede {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-4);
+  text-align: center;
+}
+
+.istituzioni-aula__via {
+  margin: 0;
+}
+
+.istituzioni-aula__via .link-arrow {
+  color: var(--accent-night);
+  font-weight: var(--w-control);
+}
+
+.istituzioni-aula .aiuto {
+  border-color: var(--line-night-soft);
+}
+
+html[data-input="key"] .emiciclo__voce {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .istituzioni-aula__fondo::after {
+    display: none;
+  }
+
+  .istituzioni-aula .emiciclo__frase {
+    border: 1px solid CanvasText;
+  }
+}

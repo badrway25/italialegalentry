@@ -14,11 +14,13 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
 {% block page_title %}{% translate "Analyse territoriale des besoins" %}{% endblock %}
 {% block meta_description %}{% translate "Les besoins exprimés, agrégés par territoire et par secteur." %}{% endblock %}
 
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="company">
+  {% include "portal/partials/atrium_art.html" with figure="seal" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Analyse territoriale des besoins" %}</h1>
     <p class="ws-head__lead">{% translate "Les besoins exprimés, comptés par territoire et par secteur. Des effectifs, jamais des personnes." %}</p>
   </div>
@@ -26,7 +28,7 @@ No meter, no percentage, no chart. A headed table with a dash for a null, which 
 {% endblock %}
 
 {% block companies_content %}
-<div class="reg-page">
+<div class="reg-page db-main">
 <section class="reg-sec" aria-labelledby="totals-title">
   <h2 class="db-h2 reg-sec__title" id="totals-title">{% svg_icon "map" "icon" %}<span>{% translate "Ce qui est compté" %}</span></h2>
   <dl class="portal-facts">

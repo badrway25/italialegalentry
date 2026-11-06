@@ -28,6 +28,7 @@ from accounts.permissions import can
 from companies import services
 from companies.forms import CompanyNeedForm, CompanyProfileForm, WithdrawForm
 from companies.models import NeedStatus
+from core import icons
 
 CRUMB_MAX_CHARS = 60
 
@@ -74,6 +75,8 @@ def _render(request, template: str, context: dict, *crumbs: dict):
             ),
             "breadcrumbs": [root, *crumbs] if crumbs else [{**root, "url": ""}],
             "noindex": True,
+            # the atrium's seal on every page of the space (V5.18 M-2): the audience's glyph, as on the dashboard
+            "atrium_seal": icons.AUDIENCE["company"],
         }
     )
     return render(request, template, context)

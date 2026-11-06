@@ -7,6 +7,7 @@ from django.conf import settings
 
 from cms import locked_content
 from cms.forbidden import scan
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = [pytest.mark.compliance, pytest.mark.django_db]
 
@@ -56,7 +57,8 @@ def test_no_forbidden_formulations(news_pages):
 
 def test_no_external_resources(news_pages):
     for lang, path, html in news_pages:
-        srcs = re.findall(r'(?:src|href)="(https?://[^"]+)"', html)
+        checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+        srcs = re.findall(r'(?:src|href)="(https?://[^"]+)"', checked)
         externals = [s for s in srcs if "testserver" not in s and "localhost" not in s]
         # The only external URL allowed is the plain <a rel="noopener noreferrer"> source link in the body.
         assert externals in ([], ["https://www.normattiva.it/"]), (lang, path, externals)
@@ -74,7 +76,8 @@ def test_no_placeholder_markers_public(news_pages):
 def test_news_index_registered_as_public_route():
     from core.public_routes import all_routes
 
-    assert any(r.app == "news" and r.path == "actualites/" and not r.requires_gate for r in all_routes())
+    # V5.12 §8: registered behind its content gate — the page exists once one article is live
+    assert any(r.app == "news" and r.path == "actualites/" and r.requires_gate == "news_public" for r in all_routes())
 
 
 def test_newsletter_consent_is_separate_purpose():

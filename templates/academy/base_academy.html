@@ -16,7 +16,8 @@ Design V5 (W3-E step 2): the Academy draws in the console's register grammar —
 Academy draws beyond it (academy/academy.css). Both page-only, never a shared bundle (the owner's V5.8). Each page
 wraps its content in `.reg-page`; the caveat is the registers' clause.
 {% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/academy/academy.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/academy/academy.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}
 
 {% block portal_content %}
 {% block academy_content %}{% endblock %}

@@ -1,0 +1,20 @@
+{% comment %}
+A · «LA BOUSSOLE» — the shared closing «Orientation» band (design V5.22, SECTION_SYSTEM_V2 §2 A «Variant la boussole»;
+lane S): on 5/12 a drawn compass at display scale — the `ile-orienta` geometry, hairline rings, the north tip in the
+page's arrival gold; on 7/12 the action card, borderless on the brand wash: its title at 28, its text, the primary
+button, the help line as a side annotation. Signature SEMANTIC TURN: on entry the needle settles once from −25° to point
+at the button; hovering or focusing the button turns it 4° further. Still: the needle at rest, pointing at the button.
+static/css/v5/_sec-campata.css. The orientation card's caution («Les décisions relèvent des autorités compétentes»)
+is the caller's text and stays visible (§1 rule 7).
+
+Contract: `title_id`, `title`, `title_lang`, `text` (safe), `text_lang`, `action` ({"url", "label"}; or `pending` — the
+sentence a closed questionnaire shows instead), `help` (safe: the side annotation).
+{% endcomment %}<div class="boussole">
+  <div class="boussole__ago" aria-hidden="true"><svg viewBox="0 0 200 200" focusable="false"><g stroke-opacity=".45"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="72"/><path d="M100 4v12M100 184v12M4 100h12M184 100h12"/></g><path d="M70 150V112a30 30 0 0 1 60 0v38Z" fill="currentColor" fill-opacity=".1" stroke="none"/><path d="M70 150V112a30 30 0 0 1 60 0v38M58 150h84" stroke-width="1.5"/><g class="boussole__needle"><path class="b-north" d="M100 34l9 66h-18Z"/><path d="M91 100l9 66 9-66" stroke-width="1.5"/><circle cx="100" cy="100" r="3"/></g></svg></div>
+  <div class="boussole__carta">
+    <h2 class="boussole__titolo" id="{{ title_id }}"{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h2>
+    {% if text %}<p class="boussole__testo"{% if text_lang %} lang="{{ text_lang }}"{% endif %}>{{ text }}</p>{% endif %}
+    {% if action %}<p class="boussole__azione"><a class="btn btn--primary" href="{{ action.url }}" data-azione>{{ action.label }}</a></p>{% elif pending %}<p class="boussole__testo">{{ pending }}</p>{% endif %}
+    {% if help %}<p class="sez-annotation">{{ help }}</p>{% endif %}
+  </div>
+</div>

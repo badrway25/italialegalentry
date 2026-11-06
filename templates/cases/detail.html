@@ -1,4 +1,4 @@
-{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% extends "portal/base_portal.html" %}{% load i18n static atrium %}
 {% comment %}
 THE CASE FILE — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.14, §1.2; the platform map §3 «Case
 file», C-3 · C-4 · C-5 · C-6; W3-E step 3), composed on what the platform families shipped: W3-A's page frame, W3-D's
@@ -60,18 +60,21 @@ discs' full (the dialogs' 12 only while one is open, over the scrim). Nothing mo
 {% block extra_head %}{{ block.super }}{% if lines_changeable or transitions %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">{% endif %}
 <link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">
 <link rel="stylesheet" href="{% static 'css/dist/portal/case.css' %}">
-<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endblock %}
+<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block case_header %}{% endblock %}
 {% block next_action_block %}{% endblock %}
 
 {% block portal_header %}
-<header class="ctx db-head file-head">
+<header class="ctx db-head file-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="route" atrium_at=journey|journey_rank %}
   <div class="ctx__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ctx__title">{% translate "Dossier" %} <span class="ctx__ref">{{ case.reference }}</span></h1>
     <p class="ctx__meta">
       <span>{{ case.get_purpose_display }}</span>
-      {% chip case.status "cases.CaseStatus" %}{{ case.get_status_display }}{% endchip %}
+      {% with state=case.get_person_status_parts %}{% chip case.status "cases.CaseStatus" %}{{ state.0 }}{% endchip %}{% if state.1 %}<span class="ctx__step">{{ state.1 }}</span>{% endif %}{% endwith %}
       <span>{% blocktranslate with date=case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span>
     </p>
   </div>

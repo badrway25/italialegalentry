@@ -27,14 +27,15 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
 from django.utils import formats, translation
-from django.utils.translation import gettext
+from django.utils.translation import gettext, gettext_noop
 from django.utils.translation import gettext_lazy as _
 
 from cms import forbidden, locked_content
 from cms.models import HeroVariant, HomeHero, MediaAsset
 from cms.templatetags.cms_nav import gate_open
 from cms.translation import resolve
-from core import flags, gates
+from core import contact, flags, gates, icons
+from core.links import public_url
 from core.models import SiteSettings
 from pages import content, prescribed
 from pages.models import HomeSection, SectionKey
@@ -169,6 +170,9 @@ class Photo:
     date: object = None
     caption: str = ""
     credit: str = ""
+    #: V5.24 §2 (label v524-px): the byline is drawn only when the asset's licence demands it
+    #: (``cms.MediaAsset.attribution_required``); the credit itself stays recorded.
+    attribution_required: bool = False
 
 
 @lru_cache(maxsize=1)
@@ -238,6 +242,7 @@ def photo_from_asset(asset: MediaAsset | None, lang: str | None = None) -> Photo
                 date=asset.caption_date,
                 caption=asset.caption(lang),
                 credit=asset.credit,
+                attribution_required=asset.attribution_required,
             )
         except (KeyError, ValueError, ZeroDivisionError):  # incomplete manifest entry or missing static file
             log.info("Photo derivatives unavailable for asset %s; using the stored file.", asset.pk)
@@ -256,6 +261,7 @@ def photo_from_asset(asset: MediaAsset | None, lang: str | None = None) -> Photo
         date=asset.caption_date,
         caption=asset.caption(lang),
         credit=asset.credit,
+        attribution_required=asset.attribution_required,
     )
 
 
@@ -282,6 +288,7 @@ class SectionView:
     intro: Text = EMPTY
     note: Text = EMPTY
     data: dict = field(default_factory=dict)
+    ground: str = ""  # V5.22: the section's ground, resolved from its neighbours (_grounds)
 
 
 def _section_texts(row: HomeSection, lang: str) -> tuple[Text, Text, Text]:
@@ -489,40 +496,129 @@ def entrances(lang: str, phase3: bool) -> list[dict]:
 
 
 def build_entrances(ctx: BuildContext) -> dict | None:
-    return {"entrances": entrances(ctx.lang, ctx.phase3)}
+    items = entrances(ctx.lang, ctx.phase3)
+    for item in items:
+        # V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §4.2 T2a): each door plate seats its audience's disc — the registry's
+        # glyph of the actor, decorative (the question beside it names the audience)
+        item["glyph"] = icons.AUDIENCE.get(item["actor"], "")
+    return {"entrances": items}
 
 
 # ---- 5. Orientation --------------------------------------------------------------------------
 def build_orientation(ctx: BuildContext) -> dict | None:
+    """
+    The orientation's route, «la linea V2» (V5.22, SECTION_SYSTEM_V2 §3.1 S2): four stations on the route the hero's
+    line comes down into — station 1 the T1 seal of orientation (`ile-orienta`), stations 2 to 4 the registry's
+    tiles (icons.HOW_STEP: an informative pre-assessment, never a check; the training; the authorities' stamp).
+
+    * gate G3 open: the locked «Comment ça marche» sentence cut on its own separators by the owner-approved cut
+      (pathways.services.how_it_works, D-U4) — its lead the route's caption, its four steps the stations, its caveat
+      the route's terminal line; the whole sentence said once for a screen reader. A sentence whose shape the cut
+      does not know is set whole (``how_it_works`` without ``how``): nothing is retyped;
+    * gate G3 closed: the four neutral steps on the same route, the editorial note at its end.
+    """
     data: dict[str, Any] = {
         "url": safe_reverse("orientation:start"),
         "illustration": static("img/illustrations/orientation.svg"),
+        "how": None,
+        "whole": "",
+        "stations": [],
+        "stations_lang": "",
+        "terminal": "",
+        "end_action": None,
     }
+    glyphs = icons.HOW_STEP
     if ctx.phase3:
         data["how_it_works"] = locked("p3.persons.how_it_works", ctx.lang)
+        from pathways import services as pathway_services
+
+        cut = pathway_services.how_it_works(ctx.lang)
+        if cut is not None:
+            data.update(how=cut, whole=cut.text, stations_lang=cut.lang)
+            data["stations"] = [
+                {"label": step, "lang": cut.lang, "glyph": glyphs[i] if i < len(glyphs) else ""}
+                for i, step in enumerate(cut.steps)
+            ]
     else:
         steps = [ui(step) for step in content.ORIENTATION_STEPS]
         data["steps"] = [s.value for s in steps]
-        data["steps_lang"] = steps[0].lang if steps else ""
+        data["steps_lang"] = data["stations_lang"] = steps[0].lang if steps else ""
+        data["stations"] = [
+            {"label": s.value, "lang": s.lang, "glyph": glyphs[i] if i < len(glyphs) else ""}
+            for i, s in enumerate(steps)
+        ]
     return data
 
 
 # ---- 6. Regular pathways ---------------------------------------------------------------------
 def build_pathways(ctx: BuildContext) -> dict | None:
+    """
+    «L'indice» of the eight regular pathways (V5.22, SECTION_SYSTEM_V2 §3.1 S3): an index of eight rows — the registry's
+    PATHWAY glyph and the prescribed title — beside the stage of the selected one (its tile, its title, its prescribed
+    description and, for a published sheet, the way to it). The order is the locked order, never a ranking; every
+    description stays in the page (a hidden panel, a closed disclosure). With gate G3 closed, the neutral families
+    stand as a static index: no stage, no destination.
+    """
     index_url = safe_reverse("pathways:index")
     if not ctx.phase3:
-        families = [ui(label) for label in content.PATHWAY_FAMILIES]
+        families = [
+            {"label": ui(label), "glyph": icons.PATHWAY.get(key, "")}
+            for label, key in zip(content.PATHWAY_FAMILIES, content.PATHWAY_FAMILY_KEYS, strict=True)
+        ]
         return {"families": families, "index_url": index_url}
     from pathways import services as pathway_services
 
     list_lang = locked("p3.persons.pathways", ctx.lang).lang
+    entries = pathway_services.index_entries()
+    if not entries:
+        return None
     items = [
         {"title": entry.title, "text": entry.description, "url": entry.url or index_url, "lang": list_lang}
-        for entry in pathway_services.index_entries()
+        for entry in entries
     ]
-    if not items:
-        return None
-    return {"pathway_items": items, "index_url": index_url}
+    from django.utils.html import format_html
+
+    stages = []
+    for entry in entries:
+        anchor = f"parcours-{entry.key.replace('_', '-')}"
+        # the way to a published sheet only (an unpublished one has none: the section's foot link leads to the space),
+        # described by its panel's title — eight links of one name, each told apart by its pathway; said in the page's
+        # language (language of parts), or tagged as the French it falls back to. Round 2 (QA_ROUND2, institutional
+        # quality on it/en/ar): the product's own words for this way, the orientation result's «Consulter la page du
+        # parcours», already in the it/en/ar catalogues — the stage no longer waits for a new msgid
+        label = ui(gettext_noop("Consulter la page du parcours"))
+        link = (
+            format_html(
+                '<a class="btn btn--secondary" href="{}" aria-describedby="{}-title"{}>{}</a>',
+                entry.url,
+                anchor,
+                format_html(' lang="{}"', label.lang) if label.lang else "",
+                label,
+            )
+            if entry.url
+            else ""
+        )
+        stages.append(
+            {
+                "id": anchor,
+                # the prescribed title, whole, in a span the index's entrance inks (the verb «ink», 60 ms a row: the
+                # GLIDE's entry on every form of the index — a phone's disclosure rows too, QA_ROUND1 m2); its text is
+                # the title itself, character for character
+                "title": format_html('<span class="indice__parola" data-verb="ink">{}</span>', entry.title),
+                "title_lang": list_lang,
+                "glyph": icons.PATHWAY.get(entry.key, ""),
+                # the prescribed description carries its own language, never the stage's way to its sheet, which is
+                # said in the page's (QA_ROUND1 m4: language of parts, WCAG 3.1.2)
+                "body": format_html(
+                    '<p class="parcours__descrizione"{}>{}</p>',
+                    format_html(' lang="{}"', list_lang) if list_lang else "",
+                    entry.description,
+                ),
+                "body_lang": "",
+                "links": link,
+            }
+        )
+    return {"pathway_items": items, "pathway_stages": stages, "index_url": index_url}
 
 
 # ---- 7. Pilot project ------------------------------------------------------------------------
@@ -571,15 +667,23 @@ def jurisdiction_segments() -> list[dict]:
 
 
 def build_trust(ctx: BuildContext) -> dict | None:
+    """
+    The integrity band's four plates (V5.22, SECTION_SYSTEM_V2 §3.1 S5): each prescribed question opens its own entry on
+    the FAQ page (``/xx/faq/#<key>``, the permalinks the FAQ keeps), and its answer stands whole on the plate — the
+    answer's own first sentence, «Non.», set as the large keyword at render (cms.locked_split, the text unchanged).
+    """
     if ctx.phase3:
         quotes = [entry for entry in (faq_entry(key, ctx.lang) for key in content.TRUST_FAQ_KEYS) if entry]
         if not quotes:
             return None
-        return {"quotes": quotes, "faq_url": safe_reverse("faq:index"), "jurisdiction": jurisdiction_segments()}
+        faq_url = safe_reverse("faq:index")
+        for quote in quotes:
+            quote["href"] = f"{faq_url}#{quote['key']}" if faq_url else ""
+        return {"quotes": quotes, "faq_url": faq_url, "jurisdiction": jurisdiction_segments()}
     return {
         "does": [locked(key, ctx.lang) for key in content.TRUST_DOES_LOCKED_KEYS],
         "does_not": [ui(statement) for statement in content.TRUST_DOES_NOT],
-        "disclaimer_url": safe_reverse("legal:disclaimer"),
+        "disclaimer_url": public_url("legal:disclaimer"),  # gated while unpublished (V5.14 C/D, M-2)
         "jurisdiction": jurisdiction_segments(),
     }
 
@@ -627,7 +731,7 @@ def build_news(ctx: BuildContext) -> dict | None:
         # a chapter about nothing on the page that introduces the project (design V5.4, W2-D review fix, m4). The
         # news index keeps its own empty state; the partial keeps its empty row, so the revert is this condition.
         return None
-    return {"articles": articles, "index_url": safe_reverse("news:index")}
+    return {"articles": articles, "index_url": public_url("news:index")}
 
 
 # ---- 11. Institutional ecosystem -------------------------------------------------------------
@@ -643,7 +747,7 @@ def build_ecosystem(ctx: BuildContext) -> dict | None:
         "promoter_quote": faq_entry(content.PROMOTER_FAQ_KEY, ctx.lang) if ctx.phase3 else None,
         "partners": authorized_partner_cards(ctx.lang),
         "agami_url": safe_reverse("pages:agami"),
-        "partners_url": safe_reverse("partners:index"),
+        "partners_url": public_url("partners:index"),
     }
 
 
@@ -742,7 +846,85 @@ def home_sections(request) -> list[SectionView]:
             )
         )
     _say_once(views)
+    _route_ends(views)
+    _hand_off(views)
+    _grounds(views)
     return views
+
+
+#: Each section's ground on the V2 home (V5.22, SECTION_SYSTEM_V2 §3.1 «After V2»: grounds and signatures): the doors on
+#: stone, the orientation on the page's one brand wash, the pathways on paper, the pilot's panel and the reserved row on
+#: the night, the trust plates on the masonry photograph, «la protezione» on stone, the promoter on paper.
+SECTION_GROUNDS: dict[str, str] = {
+    SectionKey.BANNER: "stone",  # the Forum's notice is a band on the stone (pages.css §3), not a V2 section
+    SectionKey.ENTRANCES: "stone",
+    SectionKey.ORIENTATION: "brand",
+    SectionKey.PATHWAYS: "paper",
+    SectionKey.PILOT: "night",
+    SectionKey.TRUST: "photo",
+    SectionKey.ANTIFRAUD: "stone",
+    SectionKey.NEWS: "paper",
+    SectionKey.ECOSYSTEM: "paper",
+    SectionKey.RESERVED: "night",
+}
+
+
+def _grounds(views: list[SectionView]) -> None:
+    """Two grounds of one kind never touch (V5.22, SECTION_SYSTEM_V2 §1 rule 5, §6.1). The back office orders the home:
+    a section whose ground would repeat its neighbour's — paper after the hero's wall or after paper, stone after stone
+    (the news between «la protezione» and the promoter) — takes the other of the two light grounds. The night, the
+    wash and the photograph are the composition's own and never change."""
+    previous = "paper"  # the hero's wall
+    for view in views:
+        if view.key == SectionKey.HERO:
+            previous = "paper"
+            continue
+        ground = SECTION_GROUNDS.get(view.key, "paper")
+        if ground == previous and ground in ("paper", "stone"):
+            ground = "stone" if ground == "paper" else "paper"
+        view.ground = ground
+        previous = ground
+
+
+def _hand_off(views: list[SectionView]) -> None:
+    """The hero's hand (V5.22, SECTION_SYSTEM_V2 §3.1 H0 «la soglia»; round 1, QA_ROUND1 M1 a): the orientation takes
+    the hero's line on only when it comes right after the hero — the phone's doors between them excepted (they are drawn
+    on a phone only, where the line ends above them). Its band then follows the statement at the foot's own distance and
+    the line runs down its reading edge into the route's origin (pages.css, hero.css, v5/_casa.css:
+    `.home-orientation--soglia`)."""
+    keys = [view.key for view in views]
+    for i, view in enumerate(views):
+        if view.key != SectionKey.ORIENTATION:
+            continue
+        before = [key for key in keys[:i] if key != SectionKey.ENTRANCES]
+        follows = keys[i - 1] in (SectionKey.HERO, SectionKey.ENTRANCES) if i else False
+        view.data["soglia"] = bool(before) and before[-1] == SectionKey.HERO and follows
+
+
+def _route_ends(views: list[SectionView]) -> None:
+    """The orientation route's two ends (V5.22, SECTION_SYSTEM_V2 §3.1 S2): its terminal line — the locked caveat cut
+    from the sentence (drawn for the eye: the whole sentence is said once for a screen reader), or, with gate G3
+    closed, the section's editorial note in the French spacing — and the call at its end, which takes the page's one
+    arrival light. Built once the section's texts are resolved, each with its own language."""
+    from django.utils.html import format_html
+
+    from pages.templatetags.pages_typo import typo
+
+    for view in views:
+        if view.key != SectionKey.ORIENTATION:
+            continue
+        data = view.data
+        how = data.get("how")
+        if how is not None:
+            lang = format_html(' lang="{}"', how.lang) if how.lang else ""
+            data["terminal"] = format_html(
+                '<p class="orienta__avvertenza" aria-hidden="true"{}>{}</p>', lang, how.caveat
+            )
+        elif data.get("stations") and view.note:
+            lang = format_html(' lang="{}"', view.note.lang) if view.note.lang else ""
+            data["terminal"] = format_html('<p class="orienta__avvertenza"{}>{}</p>', lang, typo(str(view.note)))
+        if data.get("url"):
+            data["end_action"] = {"url": data["url"], "label": gettext("Commencer le questionnaire d’orientation")}
 
 
 def _say_once(views: list[SectionView]) -> None:
@@ -779,20 +961,27 @@ def home_jsonld(request, lang: str | None = None) -> dict:
     lang = lang or current_language()
     home_url = request.build_absolute_uri(reverse("pages:home"))
     try:
-        email = SiteSettings.load().public_contact_email
+        site_settings = SiteSettings.load()
+        email = site_settings.public_contact_email
     except Exception:  # pragma: no cover - before migrations
-        email = settings.ILE["PUBLIC_CONTACT_EMAIL"]
+        site_settings, email = None, settings.ILE["PUBLIC_CONTACT_EMAIL"]
     organization_id = f"{home_url}#promoter"
+    organization = {
+        "@type": "Organization",
+        "@id": organization_id,
+        "name": settings.ILE["PROMOTER"],
+        "url": home_url,
+        "email": email,
+    }
+    # V5.19: the existing node gains the confirmed telephone line (the Numero Verde, as the site writes it); no new
+    # type — WhatsApp is a messaging channel, which schema.org's Organization does not name.
+    freephone = contact.public_channels(site_settings)["freephone"]
+    if freephone is not None:
+        organization["telephone"] = freephone.label
     return {
         "@context": "https://schema.org",
         "@graph": [
-            {
-                "@type": "Organization",
-                "@id": organization_id,
-                "name": settings.ILE["PROMOTER"],
-                "url": home_url,
-                "email": email,
-            },
+            organization,
             {
                 "@type": "WebSite",
                 "@id": f"{home_url}#website",
@@ -869,7 +1058,8 @@ def space_links(lang: str, phase3: bool) -> list[dict]:
             continue
         url = entrance_url(actor.entrance, phase3)
         if url:
-            links.append({"label": ui(actor.link_label), "url": url, "icon": actor.icon})
+            # the space's one line (the network register's own sentence): the tile says what the space is for
+            links.append({"label": ui(actor.link_label), "url": url, "icon": actor.icon, "text": ui(actor.text)})
     return links
 
 
@@ -896,7 +1086,7 @@ def project_context(request) -> dict:
         "links": {
             "agami": safe_reverse("pages:agami"),
             "network": safe_reverse("pages:network"),
-            "forum": safe_reverse("forum:index"),
+            "forum": public_url("forum:index"),
             "orientation": safe_reverse("orientation:start"),
             "contact": safe_reverse("pages:contact"),
         },
@@ -919,9 +1109,9 @@ def agami_context(request) -> dict:
         "links": {
             "project": safe_reverse("pages:project"),
             "network": safe_reverse("pages:network"),
-            "partners": safe_reverse("partners:index"),
-            "forum": safe_reverse("forum:index"),
-            "notices": safe_reverse("legal:notices"),
+            "partners": public_url("partners:index"),
+            "forum": public_url("forum:index"),
+            "notices": public_url("legal:notices"),  # gated while unpublished (V5.14 C/D, M-2)
             "contact": safe_reverse("pages:contact"),
         },
         "photo": photo,
@@ -959,8 +1149,8 @@ def network_context(request) -> dict:
         "actors": actors,
         "partners": authorized_partner_cards(lang),
         "links": {
-            "partners": safe_reverse("partners:index"),
-            "forum": safe_reverse("forum:index"),
+            "partners": public_url("partners:index"),
+            "forum": public_url("forum:index"),
             "agami": safe_reverse("pages:agami"),
         },
         "photo": photo,
@@ -997,7 +1187,7 @@ def contact_context(request) -> dict:
             for item in dedicated
             if safe_reverse(item["url_name"])
         ],
-        "links": {"privacy": safe_reverse("legal:privacy"), "forum": safe_reverse("forum:index")},
+        "links": {"privacy": safe_reverse("legal:privacy"), "forum": public_url("forum:index")},
         "meta_description": str(description),
         "seo": _page_seo(str(ui(_("Contact"))), str(description)),
     }

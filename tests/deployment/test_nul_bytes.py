@@ -147,8 +147,9 @@ def test_a_file_holding_nul_bytes_is_never_refused(client_):
 
 def test_a_request_without_a_nul_byte_is_untouched(client_):
     assert client_.get("/fr/").status_code == 200
-    # `%2500` is the text «%00», three characters: nothing for PostgreSQL to refuse
-    assert client_.get("/fr/actualites/?q=%2500").status_code == 200
+    # `%2500` is the text «%00», three characters: nothing for PostgreSQL to refuse (on the home: the news' index
+    # answers 404 while no article is live, V5.12 §8)
+    assert client_.get("/fr/?q=%2500").status_code == 200
     # the sign-in form answers its own way (a 200 with the form's message), not with the 400
     assert client_.post("/fr/compte/login/", {"login": "nobody@example.test", "password": "x"}).status_code == 200
 

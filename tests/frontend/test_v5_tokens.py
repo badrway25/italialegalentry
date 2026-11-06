@@ -7,9 +7,11 @@ earlier layer ends up with, and `static/css/v5/aliases.css` gives the V1 / V2 / 
 — in main.css order, the last top-level `:root` declaration wins — and hold:
 
 * the order (v5 closes the cascade) and the five self-hosted faces of type «Una voce» (§1.1);
-* the type system: one family, the wordmark, ILE Mono, Vazirmatn; eight public sizes; line-heights on the
-  4 px line; nothing under 12 px Latin or 14 px Arabic; typed text 16 px; measures in rem; the console one
-  step up on phones;
+* the type system: one family, the wordmark, ILE Mono, Readex Pro (Typography V2, v524-t: V5.24 §11–§14,
+  TYPOGRAPHY_V2 §4, FINAL_DELIVERY_V2 R1 — the twelve steps replace the eight sizes, the Arabic companion
+  replaces Vazirmatn; the typography guards proper are tests/frontend/test_typography_v2.py and
+  test_fonts_budget_v2.py); line-heights on the 4 px line; nothing under 12 px Latin or 14 px Arabic; typed
+  text 16 px; measures in rem; the console one step up on phones;
 * colour (§1.2): «En examen» in lapis and no violet left; the broken edges and the hatch at 3 : 1; the night
   marks re-solved (0 of 28 pairs under 0.05 in any of four visions); the glass at α 0.94; ≥ 400 contrast
   pairs recomputed from the effective cascade, 0 below their minimum;
@@ -200,7 +202,7 @@ def test_v5_closes_the_cascade_and_reaches_the_browser_in_the_bundle():
     assert imports[first - 1].startswith("v4/"), "the V5 block follows the V4 layers it re-values"
     assert "fonts.css" not in imports
     bundle = _read(STATIC / "css" / "dist" / "main.css")
-    for family in ("Host Grotesk", "ILE Wordmark", "ILE Mono", "Vazirmatn"):
+    for family in ("Host Grotesk", "ILE Wordmark", "ILE Mono", "Readex Pro"):
         # esbuild drops the quotes of a family name it can leave bare
         assert re.search(r'@font-face\{font-family:"?' + re.escape(family) + r'"?;', bundle), family
     assert "{% static 'css/dist/main.css' %}" in _read(ROOT / "templates" / "base.html")
@@ -218,7 +220,7 @@ def test_the_five_faces_are_self_hosted_with_their_licences():
         assert (STATIC / "fonts" / url).exists(), url
         assert "font-display: swap" in face and "unicode-range" in face, family
         declared.setdefault(family, []).append(url)
-    assert sorted(declared) == ["Host Grotesk", "ILE Mono", "ILE Wordmark", "Vazirmatn"]
+    assert sorted(declared) == ["Host Grotesk", "ILE Mono", "ILE Wordmark", "Readex Pro"]  # Typography V2 (v524-t)
     assert len(declared["Host Grotesk"]) == 2, "roman variable 400–700 and italic 400"
     assert sorted(declared["ILE Mono"]) == ["v5-ile-mono-400-ext.woff2", "v5-ile-mono-400.woff2"]
     assert {p.name for p in (STATIC / "fonts").glob("*.woff2")} == {u for urls in declared.values() for u in urls}
@@ -229,7 +231,7 @@ def test_the_five_faces_are_self_hosted_with_their_licences():
         if "url(" not in face:
             assert "local(" in face and "size-adjust" in face and "ascent-override" in face, face
     licences = {p.name for p in (STATIC / "fonts" / "licenses").glob("*.txt")}
-    assert licences == {"OFL-HostGrotesk.txt", "OFL-Newsreader.txt", "OFL-IBMPlexMono.txt", "OFL-Vazirmatn.txt"}
+    assert licences == {"OFL-HostGrotesk.txt", "OFL-Newsreader.txt", "OFL-IBMPlexMono.txt", "OFL-ReadexPro.txt"}
     assert 'Reserved Font Name "Plex"' in _read(STATIC / "fonts" / "licenses" / "OFL-IBMPlexMono.txt")
     assert (ROOT / "docs" / "design-v5" / "FONTS_V5.md").exists()
 
@@ -257,12 +259,13 @@ def test_the_matched_fallbacks_cover_windows_apple_through_arial_and_android():
 # ---- the type system «Una voce» ---------------------------------------------------------------------
 
 
-def test_one_family_the_wordmark_ile_mono_and_vazirmatn():
+def test_one_family_the_wordmark_ile_mono_and_readex_pro():
+    """Typography V2 (v524-t; V5.20 strict rule: the old expectation conflicted with the approved decision V5.24 §11–§14 / TYPOGRAPHY_V2 §4 / FINAL_DELIVERY_V2 R1; the new behaviour is implemented; the invariant is the same or stronger): Readex Pro is the Arabic companion (TYPOGRAPHY_V2 §3)."""
     assert _token("--f-sans").startswith('"Host Grotesk", "ILE Sans Fallback"')
     assert _token("--f-serif") == _token("--f-sans"), "every serif role takes the sans (DL54-10)"
     assert _token("--f-mono").startswith('"ILE Mono", "ILE Mono Fallback"')
     assert _token("--f-wordmark").startswith('"ILE Wordmark", "ILE Wordmark Fallback"')
-    assert _token("--f-sans-ar").startswith('"Vazirmatn", "Host Grotesk", "ILE Arabic Fallback"')
+    assert _token("--f-sans-ar").startswith('"Readex Pro", "Host Grotesk", "ILE Arabic Fallback"')
     # the legacy names follow (static/css/v5/aliases.css)
     for legacy in ("--font-display", "--font-ui"):
         assert _token(legacy) == _token("--f-sans-lat"), legacy
@@ -271,7 +274,7 @@ def test_one_family_the_wordmark_ile_mono_and_vazirmatn():
     for legacy in ("--font-display-ar", "--font-ui-ar"):
         assert _token(legacy) == _token("--f-sans-ar"), legacy
     stacks = " ".join(_token(n) for n in ("--f-sans", "--f-serif", "--f-mono", "--f-wordmark", "--f-sans-ar"))
-    for retired in ("Plex", "Newsreader", "Naskh", "Fira", "Source Serif", "Markazi"):
+    for retired in ("Plex", "Newsreader", "Naskh", "Fira", "Source Serif", "Markazi", "Vazirmatn"):
         assert retired not in stacks, retired
 
 
@@ -290,37 +293,43 @@ def test_every_rendering_of_the_name_is_the_wordmark_and_ile_mono_has_one_seat()
     ):
         assert cls in name.group(1), cls
     assert "font-family: var(--f-wordmark)" in name.group(2) and "text-transform: uppercase" in name.group(2)
+    # Typography V2 (v524-t): no sheet seats the mono on the legacy labels any more, so base.css only keeps their
+    # tabular figures; the mono's one seat is the reference classes (tests/frontend/test_typography_v2.py)
     seat = re.search(r":root :is\((\.site-footer__heading[^)]*)\)\s*\{([^}]*)\}", base)
-    assert seat and "font-family: var(--f-sans)" in seat.group(2), "the legacy mono labels take the sans"
+    assert seat and "font-variant-numeric: var(--numeric-data)" in seat.group(2), "the legacy labels keep tabular figures"
+    assert "var(--f-mono)" not in base
 
 
-def test_the_public_scale_has_eight_sizes():
-    def px(name: str) -> float:
-        value = _token(name)
+def test_the_public_scale_is_the_twelve_steps_and_v1_lands_on_them():
+    """Typography V2 (v524-t; V5.20 strict rule: the old expectation conflicted with the approved decision V5.24 §11–§14 / TYPOGRAPHY_V2 §4 / FINAL_DELIVERY_V2 R1; the new behaviour is implemented; the invariant is the same or stronger): the eight sizes became the twelve steps of TYPOGRAPHY_V2 §4.2 (four fluid, eight fixed;
+    the steps themselves are held by test_typography_v2.py). Here: the fluid steps at 1440 are the old desktop sizes
+    (64 · 56 · 36 · 28), the fixed steps are the old fixed sizes plus the label and the numeral, and V1's roles
+    (static/css/v5/aliases.css) land on the steps — no thirteenth value anywhere."""
+
+    def px(name: str, viewport: int = 1440) -> float:
+        value = _resolve(_token(name))
         m = re.fullmatch(r"([0-9.]+)rem", value)
+        if m:
+            return float(m[1]) * 16
+        m = re.fullmatch(r"clamp\(([0-9.]+)rem, ([0-9.]+)rem \+ ([0-9.]+)vw, ([0-9.]+)rem\)", value)
         assert m, (name, value)
-        return float(m[1]) * 16
+        lo, a, b, hi = (float(x) for x in m.groups())
+        return round(min(max(lo * 16, a * 16 + b * viewport / 100), hi * 16), 2)
 
-    display = _token("--t-display")
-    m = re.fullmatch(r"clamp\(([0-9.]+)rem, [^,]+, ([0-9.]+)rem\)", display)
-    assert m and float(m[1]) * 16 == 40 and float(m[2]) * 16 == 64, display
-    sizes = {64.0, 40.0} | {
-        px(n)
-        for n in (
-            "--t-title",
-            "--t-band",
-            "--t-entry",
-            "--t-lead",
-            "--t-body",
-            "--t-ui",
-            "--t-small",
-            "--t-caption",
-            "--t-folio",
-        )
+    assert px("--t-display", 390) == 44 and px("--t-display") == 64
+    assert px("--t-title-1", 390) == 34 and px("--t-title-1") == 56
+    assert px("--t-title-2", 390) == 28 and px("--t-title-2") == 36
+    assert px("--t-band", 390) == 24 and px("--t-band") == 28
+    fixed = {
+        "--t-entry": 20, "--t-lead": 20, "--t-body": 17, "--t-ui": 15, "--t-small": 13, "--t-caption": 12,
+        "--t-label": 13, "--t-numeral": 28, "--t-numeral-lg": 36, "--t-field": 16,
     }
-    assert sizes - {40.0} == {64.0, 36.0, 28.0, 20.0, 17.0, 15.0, 13.0, 12.0}, sorted(sizes)
-    assert _token("--t-plate") == display, "no ninth size: the plate is the display"
-    # V1's ten roles land on the same eight
+    for name, size in fixed.items():
+        assert px(name) == size, name
+    # the legacy names are aliases of the steps (the lanes burn them down; CLOSING deletes them)
+    assert _token("--t-plate") == _token("--t-display") and _token("--t-folio") == _token("--t-label")
+    assert px("--t-title") == 36, "the legacy title name holds title-2's desktop size until its consumers move"
+    # V1's ten roles land on the steps
     v1 = {
         "--t-title-size": 36,
         "--t-band-size": 28,
@@ -334,7 +343,7 @@ def test_the_public_scale_has_eight_sizes():
     }
     for name, size in v1.items():
         assert px(name) == size, name
-    assert _token("--t-plate-size") == display
+    assert _resolve(_token("--t-plate-size")) == _resolve(_token("--t-display"))
 
 
 def test_line_heights_sit_on_the_4px_line():
@@ -353,12 +362,15 @@ def test_line_heights_sit_on_the_4px_line():
 
 
 def test_nothing_under_12px_latin_14px_arabic_and_typed_text_16px():
-    for name in ("--t-caption", "--t-small", "--t-folio", "--u-caption", "--u-small", "--u-eyebrow", "--u-ref"):
-        assert float(_token(name).removesuffix("rem")) * 16 >= 12, name
+    """Typography V2 (v524-t; V5.20 strict rule: the old expectation conflicted with the approved decision V5.24 §11–§14 / TYPOGRAPHY_V2 §4 / FINAL_DELIVERY_V2 R1; the new behaviour is implemented; the invariant is the same or stronger): the label joins the small roles; the Arabic block is `:root:lang(ar), :lang(ar)`
+    (V1's Naskh leadings closed at the same specificity); the phone step-up adds a 14 px floor for everyone
+    below 48 rem (test_typography_v2.py) — stronger than the 12 / 14 of W1-A."""
+    for name in ("--t-caption", "--t-small", "--t-label", "--u-caption", "--u-small", "--u-eyebrow", "--u-ref"):
+        assert float(_resolve(_token(name)).removesuffix("rem")) * 16 >= 12, name
     assert _token("--u-eyebrow") == "0.75rem", "the eyebrow rises from 11 to 12 px (TR C5)"
     v5 = _strip_comments(_read(V5 / "tokens.css"))
-    arabic = re.search(r"(?m)^:lang\(ar\)\s*\{([^}]*)\}", v5).group(1)
-    for name in ("--t-small", "--t-caption", "--t-folio", "--u-small", "--u-caption", "--u-eyebrow"):
+    arabic = re.search(r"(?m)^:root:lang\(ar\), :lang\(ar\)\s*\{([^}]*)\}", v5).group(1)
+    for name in ("--t-small", "--t-caption", "--t-label", "--u-small", "--u-caption", "--u-eyebrow"):
         value = re.search(re.escape(name) + r":\s*([0-9.]+)rem", arabic)
         assert value and float(value[1]) * 16 >= 14, name
     assert _token("--t-field") == "1rem"
@@ -367,12 +379,16 @@ def test_nothing_under_12px_latin_14px_arabic_and_typed_text_16px():
 
 
 def test_the_console_steps_up_below_48rem_and_under_a_coarse_pointer():
+    """Typography V2 (v524-t; V5.20 strict rule: the old expectation conflicted with the approved decision V5.24 §11–§14 / TYPOGRAPHY_V2 §4 / FINAL_DELIVERY_V2 R1; the new behaviour is implemented; the invariant is the same or stronger): the step-up block now carries the public roles too (:root, held by test_typography_v2.py) and
+    the console eyebrow, the label role, rises to 13/20 on phones (TYPOGRAPHY_V2 §4.2 «--u-eyebrow becomes the label
+    role at 12/16 (13 on phones)») — stronger: nothing of the console under 13 px on a phone."""
     v5 = _strip_comments(_read(V5 / "tokens.css"))
-    block = re.search(r"@media \(max-width: 47\.999rem\), \(pointer: coarse\)\s*\{\s*body\.console\s*\{([^}]*)\}", v5)
+    block = re.search(r"@media \(max-width: 47\.999rem\), \(pointer: coarse\)\s*\{.*?body\.console\s*\{([^}]*)\}", v5, flags=re.S)
     assert block, "no console step-up"
     steps = dict(re.findall(r"(--u-[a-z]+)\s*:\s*([^;]+);", block.group(1)))
     assert steps["--u-body"] == "1rem" and steps["--u-ui"] == "0.9375rem" and steps["--u-small"] == "0.875rem"
-    assert steps["--u-caption"] == "0.8125rem" and steps["--u-eyebrow"] == "0.75rem"
+    assert steps["--u-caption"] == "0.8125rem" and steps["--u-eyebrow"] == "0.8125rem"
+    assert steps["--u-ref"] == "0.875rem"
 
 
 def test_measures_are_in_rem():
@@ -399,7 +415,8 @@ def test_the_narrow_overrides_of_the_names_v5_declares_are_restated():
 #: Time-valued names that keep their value under reduced motion. Thresholds are not motion (RM-4): the tooltip
 #: still waits, a menu keeps its intent and its grace, a toast its time. --motion-reduced is the one 80 ms
 #: opacity an overlay may keep (MS-O4, RM-1). --motion-ambient is V4's loop: it plays only under no-preference
-#: (v4/hero.css) and leaves with that sheet (W2-D).
+#: (v4/hero.css) and leaves with that sheet (W2-D). --lume-still is a hold, not a movement: under reduced motion the
+#: loader «Lume» keeps its branded feedback as a lit still held that long (V5.12 §4; DECISIONS §1).
 REDUCED_MOTION_KEEPS = (
     "--motion-wait",
     "--tooltip-delay",
@@ -408,6 +425,7 @@ REDUCED_MOTION_KEEPS = (
     "--toast-timeout",
     "--motion-reduced",
     "--motion-ambient",
+    "--lume-still",
 )
 _REDUCED_BLOCK = r"@media \(prefers-reduced-motion: reduce\)\s*\{"
 
@@ -487,7 +505,15 @@ def test_no_sheet_forces_a_duration_and_motion_reduced_only_fades():
     only, by an opacity transition only (MS-O4, RM-1: «an 80 ms opacity ramp contains no movement»). The fade of a
     surface that leaves the display may carry its discrete companion — `display` or `overlay` with
     `allow-discrete`, for the same 80 ms (the portico, v5/chrome.css §9): a property that does not interpolate
-    keeps the surface in place while its opacity goes, and draws nothing of its own."""
+    keeps the surface in place while its opacity goes, and draws nothing of its own. The loader's stills (V5.12 §4:
+    the reduced-motion version keeps branded feedback) fade with an ANIMATION of the same 80 ms — a still that
+    appears with the page, or holds and then goes, has no state change for a transition to run on — and its
+    keyframes animate `opacity` and nothing else."""
+    opacity_only = set()
+    for sheet in _delivered_sheets():
+        for name, body in re.findall(r"@keyframes ([a-z0-9-]+)\s*\{(.*?)\n\}", _strip_comments(_read(sheet)), flags=re.S):
+            if set(re.findall(r"([a-z-]+)\s*:", body)) == {"opacity"}:
+                opacity_only.add(name)
     for sheet in _delivered_sheets():
         css = _strip_comments(_read(sheet))
         name = sheet.relative_to(ROOT).as_posix()
@@ -505,6 +531,9 @@ def test_no_sheet_forces_a_duration_and_motion_reduced_only_fades():
                     if prop in ("transition", "animation"):
                         parts = [part.strip() for part in value.split(",") if "var(--motion-reduced)" in part]
                         discrete = re.compile(r"(?:display|overlay) var\(--motion-reduced\)(?: [a-z-]+)* allow-discrete$")
+                        if prop == "animation":
+                            assert all(part.split()[0] in opacity_only for part in parts), f"{name}: {prop}: {value}"
+                            continue
                         fades = [part for part in parts if part.startswith("opacity ")]
                         rest = [part for part in parts if part not in fades]
                         assert fades, f"{name}: {prop}: {value}"
@@ -1014,7 +1043,7 @@ def test_fonts_v5_md_records_every_shipped_face_with_its_bytes_and_hash():
         ("Host Grotesk", "OFL-HostGrotesk.txt"),
         ("IBM Plex Mono", "OFL-IBMPlexMono.txt"),
         ("Newsreader", "OFL-Newsreader.txt"),
-        ("Vazirmatn", "OFL-Vazirmatn.txt"),
+        ("Readex Pro", "OFL-ReadexPro.txt"),  # Typography V2 (v524-t)
     ):
         prefix = re.search(re.escape(family) + r"\s+`([0-9a-f]{8})…`", doc)
         digest = hashlib.sha256((STATIC / "fonts" / "licenses" / text).read_bytes()).hexdigest()

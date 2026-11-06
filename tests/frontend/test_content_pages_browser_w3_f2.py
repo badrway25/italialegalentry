@@ -8,7 +8,9 @@ browser: what the sources cannot show (tests/frontend/test_content_pages_w3_f2.p
   no Arabic text under 14 px, typed text at 16 px;
 * an authority's link shows its host (D26);
 * the glossary's letter index stays under the letterhead while the register scrolls, from 48rem, and a letter
-  reached from it stands under it; the FAQ's disclosure opens and closes from the keyboard;
+  reached from it stands under it (V5.22: from 64 rem the index is a rail beside the cards — the letter lands under the
+  letterhead, beside the rail); the FAQ's answers open and close from the keyboard (V5.22: the explorer's tabs from
+  64 rem, its disclosure buttons below);
 * the review's fixes: on the Arabic pages every Latin head ends on its cell's reading edge — the glossary's Italian
   terms, the FAQ's French questions, the Forum Virtuel's French rooms (M2) — and a French lead stands on the reading
   edge, reading from its own start (m8); the letter band holds one line on a phone (m1); an enquiry form's first
@@ -35,11 +37,85 @@ pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 
 SHOTS = Path(os.environ["W3F2_SHOTS"]) if os.environ.get("W3F2_SHOTS") else None
 
-PROBE = r"""() => {
+#: The raised surfaces V5.15 designed after this guard was written (W3-F2 predates them; V5.15 §18 «shadow hierarchy …
+#: layered surfaces»), admitted BY NAME — and each with the shadow its decision drew, no other. V5.18 T3 had admitted
+#: them with ANY shadow; V5.20 (the strict test-update rule: the same or a stronger invariant) pins each one: the
+#: allowed values are read from the tokens in the element's own context (a probe beside it takes the expression), so
+#: a surface that draws another value fails, as does any shadow at rest on any other element. In order, the first
+#: selector an element matches is its rule:
+#:   * the search seat on the FAQ's and the Glossaire's band: a raised plate of frosted paper — a structural hairline
+#:     at 30 % and level 3 (lane C, Premium Page Headers, v5/_fronte.css «the search seat on the band»; DL54-172);
+#:   * the band's wide photograph on «Vivre en Italie», its print drop (lane C, v5/_fronte.css «the band's wide
+#:     photograph»; DL54-172) — the page heads' own material, pinned to its value (docs/design-v5/QA/v520/fixv);
+#:   * a photograph's passe-partout, the token (lane C, the Imagery Pass, v5/_photo.css; DL54-172);
+#:   * the public enquiry forms' formwork (lane B, Premium Forms, v5/_formwork.css, v5/_glyph.css, v5/_steps.css;
+#:     DL54-173): its grid on level 3; the panel's and the consent box's rhythm hairline; the glyph tiles' paper seal
+#:     (a rhythm hairline, a 1 px light inside the top edge, level 1's night twin under it) and their night seal in the
+#:     side; the steps' tiles — their hairline at rest, the gold hairline once done, the current one's gold ring.
+#:   * V5.22 (SECTION_SYSTEM_V2 §2 K «lo strato» — «raised plates: --surface-raised at --radius-md, a 1 px
+#:     --line-rhythm edge, a pre-painted shadow layer» — and §4.3 «Tile»; lane P2, the strict rule V5.20): the V2
+#:     library's plates and T2 tiles the reading pages now compose with (the FAQ's answer plate and route tiles, the
+#:     glossary's term cards and the term's plate, Vivre's lead plate and tiles), each with its 1 px edge only — on
+#:     paper and, for a plate, on night; a plate's shadow is its ::after layer (the element itself draws none), so a
+#:     plate or a tile that drew a box would fail, as would any other element.
+#: The trail's full-bleed ground is no longer a box-shadow (V5.18, P7): it needs no entry here.
+WIDE_PRINT = (
+    "0 2px 4px color-mix(in srgb, var(--p-notte-950) 6%, transparent), "
+    "0 32px 64px -28px color-mix(in srgb, var(--p-notte-950) 45%, transparent)"
+)
+PAPER_TILE = "inset 0 0 0 1px var(--line-rhythm), inset 0 1px 0 var(--surface-raised), var(--shadow-1-dark)"
+NIGHT_TILE = (
+    "inset 0 0 0 1px var(--line-night-soft, var(--line-night)), "
+    "inset 0 1px 0 color-mix(in srgb, var(--text-on-night-1) 8%, transparent)"
+)
+STEP_HAIRLINES = ["inset 0 0 0 1px var(--r-line)", "inset 0 0 0 1px var(--identity-key)"]
+V515_RAISED = [
+    (
+        ".fronte-wrap .search-form",
+        ["inset 0 0 0 1px color-mix(in srgb, var(--line-structure) 30%, transparent), var(--shadow-3)"],
+    ),
+    (".fronte__wide img", [WIDE_PRINT]),
+    (".foto__img", ["var(--passe-partout)"]),
+    (".formwork__grid", ["var(--shadow-3)"]),
+    (".formwork .formwork__panel", ["inset 0 0 0 1px var(--line-rhythm)"]),
+    (".formwork .form-field__check", ["inset 0 0 0 1px var(--line-rhythm)"]),
+    (".formwork .glyph-tile, .formwork-section__head > .glyph-tile", [PAPER_TILE, NIGHT_TILE]),
+    (
+        ".formwork .steps-rail__tile",
+        [
+            *STEP_HAIRLINES,
+            "0 0 0 4px color-mix(in srgb, var(--identity-key) 22%, transparent), "
+            "0 0 18px -2px color-mix(in srgb, var(--identity-key) 55%, transparent)",
+        ],
+    ),
+    (
+        ".formwork .steps-head__tile",
+        [*STEP_HAIRLINES, "0 0 0 3px color-mix(in srgb, var(--identity-key) 24%, transparent)"],
+    ),
+    (".sez-plate", ["inset 0 0 0 1px var(--line-rhythm)", "inset 0 0 0 1px var(--line-night-soft)"]),
+    (".sez-tile", ["inset 0 0 0 1px var(--line-rhythm)"]),
+]
+
+#: The three public pages that draw the enquiry forms' formwork (each must draw it). V5.20: its corners count with the
+#: page's like any other — §1.3's three with the targa over the whole <main>. DL54-178's own set for the formwork (seven
+#: values, two of them off the scale) had no owner decision; the formwork now holds the scale's xl · md · full.
+FORMWORK_PAGES = ("/contact/formulaire/", "/entreprises/recueil-des-besoins/", "/collaboration/institutions/")
+
+PROBE = r"""(raised) => {
   const main = document.querySelector('main');
   const out = {overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-               h1: document.querySelectorAll('h1').length, radii: [], shadows: [], icons: 0, small: [], fields: []};
+               h1: document.querySelectorAll('h1').length, radii: [], formwork: !!main.querySelector('.formwork'),
+               shadows: [], wrong: [], icons: 0, small: [], fields: []};
   const radii = new Set();
+  // an allowed shadow as the browser computes it where the element stands: a probe beside it takes the expression
+  const resolve = (el, expr) => {
+    const probe = document.createElement('i');
+    el.parentElement.appendChild(probe);
+    probe.style.boxShadow = expr;
+    const value = getComputedStyle(probe).boxShadow;
+    probe.remove();
+    return value;
+  };
   for (const el of main.querySelectorAll('*')) {
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
@@ -50,7 +126,13 @@ PROBE = r"""() => {
     for (const v of [cs.borderTopLeftRadius, cs.borderTopRightRadius, cs.borderBottomLeftRadius, cs.borderBottomRightRadius]) {
       if (drawn && v !== '0px') radii.add(v);
     }
-    if (cs.boxShadow !== 'none' && !el.matches('input, textarea, select, :focus')) out.shadows.push(el.className || el.tagName);
+    if (cs.boxShadow !== 'none' && !el.matches('input, textarea, select, :focus')) {
+      const rule = raised.find(([selector]) => el.matches(selector));
+      if (!rule) out.shadows.push(el.className || el.tagName);
+      else if (!rule[1].some((expr) => resolve(el, expr) === cs.boxShadow)) {
+        out.wrong.push(`${el.className || el.tagName} (${rule[0]}): ${cs.boxShadow}`);
+      }
+    }
     if (el.matches('svg.icon')) out.icons++;
     if ([...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) {
       const size = parseFloat(cs.fontSize);
@@ -272,7 +354,7 @@ def test_every_content_page_holds_the_grammar_in_both_directions(browser, site, 
                     if needs_member != member:
                         continue
                     response = page.goto(f"{site}/{lang}{path}", wait_until="networkidle")
-                    probe = page.evaluate(PROBE)
+                    probe = page.evaluate(PROBE, V515_RAISED)
                     where = f"{lang} {width} {path}{' (member)' if member else ''}"
                     if response.status != 200:
                         failures.append(f"{where}: HTTP {response.status}")
@@ -283,8 +365,12 @@ def test_every_content_page_holds_the_grammar_in_both_directions(browser, site, 
                     # the letterhead's targa draws 6 px on every screen: with it, three corner values at most (§1.3)
                     if len(set(probe["radii"]) | {"6px"}) > 3:
                         failures.append(f"{where}: corners {probe['radii']}")
+                    if path in FORMWORK_PAGES and not probe["formwork"]:
+                        failures.append(f"{where}: no formwork drawn")
                     if probe["shadows"]:
                         failures.append(f"{where}: shadows at rest on {probe['shadows'][:3]}")
+                    if probe["wrong"]:
+                        failures.append(f"{where}: an admitted surface off its value {probe['wrong'][:3]}")
                     if probe["icons"] > 6:
                         failures.append(f"{where}: {probe['icons']} glyphs in the editorial body")
                     if probe["small"]:
@@ -316,51 +402,84 @@ def test_an_authoritys_link_shows_its_host(browser, site, content):
         context.close()
 
 
+@pytest.mark.parametrize("width", [1440, 768])
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_letter_index_stays_under_the_letterhead_and_a_letter_lands_under_it(browser, site, lang):
-    context = browser.new_context(viewport={"width": 1440, "height": 900})
+def test_the_letter_index_stays_under_the_letterhead_and_a_letter_lands_under_it(browser, site, lang, width):
+    """From 48 rem the index stays glued under the letterhead while the register scrolls, and a letter reached from it
+    stands under it. V5.22 (SECTION_SYSTEM_V2 §3.14 G1; strict rule V5.20): from 64 rem the index is a thumb rail at
+    the reading edge, the cards beside it — it still stands at the letterhead's foot, and a letter reached from it lands
+    under the letterhead and beside the rail (no longer under a band: the rail covers no card); between 48 and 64 rem
+    it is the band of before, the letter landing under it."""
+    context = browser.new_context(viewport={"width": width, "height": 900})
     try:
         page = context.new_page()
         page.goto(f"{site}/{lang}/glossaire/", wait_until="networkidle")
         page.evaluate("window.scrollTo(0, 900)")
         page.wait_for_timeout(300)
         bar = page.evaluate("""() => { const r = document.querySelector('.az-index').getBoundingClientRect();
-            return {top: Math.round(r.top), bottom: r.bottom, header: Math.round(document.querySelector('.site-header').getBoundingClientRect().bottom)}; }""")
+            const cards = document.querySelector('.lessico__registro').getBoundingClientRect();
+            return {top: Math.round(r.top), bottom: r.bottom, left: r.left, right: r.right,
+                    cardsLeft: cards.left, cardsRight: cards.right,
+                    header: Math.round(document.querySelector('.site-header').getBoundingClientRect().bottom)}; }""")
         assert bar["top"] == bar["header"], bar
         page.locator(".az-index__link").nth(3).click()
         page.wait_for_timeout(600)
         landed = page.evaluate("""() => document.getElementById(location.hash.slice(1)).getBoundingClientRect().top""")
-        assert landed >= bar["bottom"], (landed, bar)
+        if width >= 1024:
+            beside = bar["right"] <= bar["cardsLeft"] if lang == "fr" else bar["left"] >= bar["cardsRight"]
+            assert beside, ("the rail stands beside the cards", bar)
+            assert landed >= bar["header"], (landed, bar)
+        else:
+            assert landed >= bar["bottom"], (landed, bar)
     finally:
         context.close()
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_faq_disclosure_opens_and_closes_from_the_keyboard(browser, site, lang):
+    """V5.22 (SECTION_SYSTEM_V2 §3.13 Q1, the L «l'indice» explorer; strict rule V5.20): the answers no longer unfold
+    as <details> rows. The same promise — every answer opens and closes from the keyboard — now holds in both forms:
+    from 64 rem the questions are tabs (the Arrows select the next question, its answer the one on screen); below 64 rem
+    each question's heading is its disclosure button (Enter opens it, Space closes it)."""
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     try:
         page = context.new_page()
         page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
-        page.focus("details.accordion__item > summary")
+        page.wait_for_selector(".faq-esploratore .indice[data-mode='tabs']")
+        page.focus(".faq-esploratore a.indice__voce[aria-selected='true']")
+        page.keyboard.press("ArrowDown")
+        page.wait_for_timeout(200)
+        second = page.locator(".faq-esploratore .indice__pannello").nth(1)
+        assert second.evaluate("p => p.hasAttribute('data-on')") and second.locator(".indice__corpo").is_visible()
+        assert not page.locator(".faq-esploratore .indice__pannello").first.locator(".indice__corpo").is_visible()
+    finally:
+        context.close()
+    context = browser.new_context(viewport={"width": 390, "height": 844})
+    try:
+        page = context.new_page()
+        page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
+        page.wait_for_selector(".faq-esploratore .indice[data-mode='disclosure']")
+        page.focus(".faq-esploratore .indice__apri")
         page.keyboard.press("Enter")
         page.wait_for_timeout(200)
-        first = page.locator("details.accordion__item").first
-        assert first.evaluate("d => d.open")
-        assert first.locator(".accordion__panel").is_visible()
+        first = page.locator(".faq-esploratore .indice__pannello").first
+        assert first.locator(".indice__apri").get_attribute("aria-expanded") == "true"
+        assert first.locator(".indice__corpo").is_visible()
         page.keyboard.press("Space")
         page.wait_for_timeout(200)
-        assert not first.evaluate("d => d.open")
+        assert first.locator(".indice__apri").get_attribute("aria-expanded") == "false"
+        assert not first.locator(".indice__corpo").is_visible()
     finally:
         context.close()
 
 
 #: where a head's words end, against its cell's reading edge: the right of the text's last box vs the cell's right (a
-#: FAQ question's cell is its row, the summary, inside its padding)
+#: FAQ question's cell is its row — the summary of a search's answer, the explorer's index row — inside its padding)
 ALIGN = r"""(selector) => [...document.querySelectorAll(selector)].map((el) => {
   const range = document.createRange();
   range.selectNodeContents(el);
   const right = Math.max(...[...range.getClientRects()].filter((r) => r.width > 0).map((r) => r.right));
-  const row = el.closest('summary');
+  const row = el.closest('summary, .indice__voce');
   const cell = row ? row.getBoundingClientRect().right - parseFloat(getComputedStyle(row).paddingRight)
                    : el.getBoundingClientRect().right;
   return {text: el.textContent.trim().slice(0, 32), gap: Math.round((cell - right) * 10) / 10};
@@ -376,10 +495,17 @@ def test_the_latin_heads_of_the_arabic_pages_end_on_the_reading_edge(browser, si
     try:
         context.add_cookies([_session(content["member"], site)])
         page = context.new_page()
+        # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the FAQ's questions are the explorer's — the answer
+        # plate's headings and, from 64 rem, the index's rows — and a search's answers keep their rows: all measured,
+        # all required (the FAQ is open here; before, its question rows were optional)
         for path, selector, required in (
             ("/ar/glossaire/", ".glossary-entry__term", True),
             ("/ar/forum-virtuel/", ".community-rooms__title[lang]", True),
-            ("/ar/faq/", ".faq-item__question[lang]", False),
+            ("/ar/faq/", ".faq-esploratore .indice__titolo[lang]", True),
+            *((("/ar/faq/", ".faq-esploratore .indice__voce[lang]", True),) if width >= 1024 else ()),
+            ("/ar/faq/?q=visa", ".faq-item__question[lang]", True),
+            # V5.22 lane P2 round 2 (QA_ROUND2 M5): the term page's h1, an Italian term in the page's direction
+            ("/ar/glossaire/nulla_osta/", ".ingresso__title", True),
         ):
             page.goto(site + path, wait_until="networkidle")
             heads = page.evaluate(ALIGN, selector)
@@ -387,10 +513,12 @@ def test_the_latin_heads_of_the_arabic_pages_end_on_the_reading_edge(browser, si
             off = [head for head in heads if abs(head["gap"]) > 1]
             assert off == [], (path, width, off)
         page.goto(f"{site}/ar/vivre-en-italie/", wait_until="networkidle")
+        # V5.22 lane P2 round 1 (QA_ROUND1 m10): Vivre's lead stands on the panorama's plate, which is no longer a page
+        # head (its words no longer wait in the head's rise) — the plate is the lead's cell; the same measures
         lead = page.evaluate(
             """() => { const p = document.querySelector('.page-header__lead[lang]');
                        if (!p) return null;
-                       const header = p.closest('.page-header'), cs = getComputedStyle(header);
+                       const header = p.closest('.page-header, .vivere-panorama__lastra'), cs = getComputedStyle(header);
                        const edge = header.getBoundingClientRect().right - parseFloat(cs.paddingRight);
                        const style = getComputedStyle(p);
                        return {gap: edge - p.getBoundingClientRect().right, align: style.textAlign,

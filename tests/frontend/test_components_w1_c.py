@@ -422,15 +422,18 @@ def test_a_password_keeps_its_room_for_the_control_on_an_arabic_page():
 
 
 def test_the_required_mark_never_stands_alone_on_a_line():
-    """A label that fills its line sent the asterisk to the next one, alone (the account pages at 1440 px, whose
-    own template has the same space). In this family's template a no-break space ties the mark to the label's
-    last word; the mark stays out of the accessible name (aria-hidden) and the control carries `required`."""
+    """V5.12 W2 (DECISIONS §5.3) dropped the asterisk: the minority is marked — «facultatif» after an optional
+    field's label — so no mark can stand alone on a line any more; the control still carries `required`."""
     template = _read(ROOT / "templates" / "components" / "form_field.html")
-    tied = (
-        '{% if field.field.required %}&nbsp;<span class="form-field__required" aria-hidden="true">*</span>{% endif %}'
-    )
-    assert template.count(tied) == 2, "the label above a control and the label beside a checkbox"
-    assert '%} <span class="form-field__required"' not in template
+    label = _read(ROOT / "templates" / "components" / "_field_label.html")
+    assert "form-field__required" not in template and "form-field__required" not in label
+    # V5.15 W3 (lane B, round 1): the minority is marked PER STEP — where the required fields are the minority they
+    # say «obligatoire» (a word in the label, never a mark alone), elsewhere the optional ones say «facultatif»
+    assert '{% elif optional %} {% include "components/_optional.html" %}' in label
+    assert '{% if not optional %} {% include "components/_required.html" %}' in label
+    required = _read(ROOT / "templates" / "components" / "_required.html")
+    assert '{% translate "obligatoire" as word %}' in required and "*" not in required.split("{% endcomment %}")[1]
+    assert '{% if ui.optional %} {% include "components/_optional.html" %}' in template, "the label beside a checkbox"
 
 
 def test_notices_speak_the_registers_and_never_by_colour_alone():
@@ -439,11 +442,11 @@ def test_notices_speak_the_registers_and_never_by_colour_alone():
     assert "var(--tone-conforme-bg)" in done and "var(--tone-conforme-mark)" in done, "a done thing is ink (O14)"
     for banned in ("--ok-", "--brand-green", "--cooperation", "--color-success", "--state-done", "green"):
         assert banned not in css, f"no colour ever means «approved»: {banned}"
-    assert "border-inline-start-style: dashed" in _block(css, ".notice--warning, .notice--warn, .alert--warning")
+    assert "border-inline-start-style: dashed" in _block(css, ".notice--warning, .alert--warning")
     assert "border-inline-start-style: double" in _block(css, ".notice--error, .alert--error")
     base = _block(css, ".notice, .alert")
     assert "border-inline-start: 3px solid var(--notice-rule)" in base and "var(--notice-info-bg)" in base
-    assert "var(--notice-pending-bg)" in _block(css, ".notice--pending, .alert--pending"), "«en examen» is lapis"
+    assert "var(--notice-pending-bg)" in _block(css, ".notice--pending"), "«en examen» is lapis"
     institutional = _block(css, ".notice--institutional")
     assert "var(--notice-institutional-rule)" in institutional and "var(--line-rhythm)" in institutional
     assert "box-shadow" not in css, "a sheet with a hairline, no shadow"
@@ -475,8 +478,10 @@ def test_one_indicator_moved_with_transform_alone():
 def test_the_disclosure_draws_its_own_mark_for_every_producer():
     css = _css("tabs.css")
     mark = _block(css, ".accordion__summary::after")
-    assert "border-width: 0 1.5px 1.5px 0" in mark and "rotate(45deg)" in mark
-    assert "rotate(-135deg)" in _block(css, ".accordion__item[open] > .accordion__summary::after")
+    # V5.12 W2 (DECISIONS §2 M6, Accordion-09 27711): a plus drawn with two 1.5 px bars, the upright one folding away
+    # when the question opens — the chevron's turn gave way to it (DL54-166)
+    assert "linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat" in mark and "rotate(" not in mark
+    assert "background-size: 100% 1.5px, 1.5px 0" in _block(css, ".accordion__item[open] > .accordion__summary::after")
     assert "display: none" in _block(css, ".accordion__summary > .icon"), "the legacy inline glyph gives way to it"
     assert "min-block-size: 3.5rem" in _block(css, ".accordion__summary")
     # the FAQ's markup names the answer `__panel` (G-19): both names are the same box
@@ -496,6 +501,12 @@ def test_nothing_loops_and_every_duration_is_a_token(name):
         assert all(t in ("0ms", "0s") for t in literal), (name, value)
         moved = [part.strip().split()[0] for part in value.split(",")]
         allowed = {"background-color", "border-color", "color", "translate", "transform", "opacity", "0ms"}
+        if name == "tabs.css" and value.strip().startswith("opacity var(--motion-standard) var(--ease-enter), transform"):
+            # V5.12 W2 (DECISIONS §2 M7, Tabs 35021, DL54-166): a pointer's tab change morphs the panels' height — the one
+            # layout transition, on the panel shown, from the panel left; the plus folds by its bars' size (M6)
+            allowed = allowed | {"block-size"}
+        if name == "tabs.css" and value.strip().startswith("background-size"):
+            allowed = allowed | {"background-size"}
         assert set(moved) <= allowed, (name, value)
     assert "will-change" not in css
 
@@ -590,7 +601,7 @@ def test_the_password_control_is_a_glyph_with_one_channel_and_the_help_can_hold_
     with translation.override("fr"):
         html = render_to_string("components/form_field.html", {"field": form["password"]})
     assert '<div class="form-field__help" id="id_password_helptext"><ul><li>' in html
-    assert '<div class="form-field__errors" id="id_password_error" role="alert"><ul class="form-field__error-list"><li>' in html
+    assert '<div class="form-field__errors" id="id_password_error"><ul class="form-field__error-list"><li>' in html
     toggle = re.search(r'<button class="form-field__toggle"[^>]*>(.*?)</button>', html, re.S)
     assert toggle and 'aria-pressed="false"' in toggle.group(0) and 'aria-controls="id_password"' in toggle.group(0)
     assert "data-label-hide" not in html, "one channel: the name does not flip"

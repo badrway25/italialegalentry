@@ -58,7 +58,7 @@ the sources with their hosts beside them (D26); the related articles as records;
         {% with image=article.hero_image %}
         <figure class="figura article__figure">
           <img class="article__image" src="{{ image.file.url }}" alt="{{ hero_alt }}"{% if image.width %} width="{{ image.width }}" height="{{ image.height }}"{% endif %} decoding="async">
-          {% if article.image_caption or image.caption_fr or image.caption_place or image.credit %}<figcaption class="article__caption">{% if article.image_caption %}{{ article.image_caption }}{% elif image.caption_fr %}<span{% if lang != "fr" %} lang="fr"{% endif %}>{{ image.caption_fr }}</span>{% endif %}{% if image.caption_place %} · {{ image.caption_place }}{% if image.caption_date %}, {{ image.caption_date|date:"d.m.Y" }}{% endif %}{% endif %}{% if image.credit %} — {% translate "Photo" %} : {{ image.credit }}{% endif %}</figcaption>{% endif %}
+          {% if article.image_caption or image.caption_fr or image.caption_place or image.credit and image.attribution_required %}<figcaption class="article__caption">{% if article.image_caption %}{{ article.image_caption }}{% elif image.caption_fr %}<span{% if lang != "fr" %} lang="fr"{% endif %}>{{ image.caption_fr }}</span>{% endif %}{% if image.caption_place %} · {{ image.caption_place }}{% if image.caption_date %}, {{ image.caption_date|date:"d.m.Y" }}{% endif %}{% endif %}{% if image.credit and image.attribution_required %} — {% get_current_language as credit_lang %}{% translate "Photo" %}{% if credit_lang == "fr" %}&nbsp;:{% else %}:{% endif %} {{ image.credit }}{% endif %}</figcaption>{% endif %}
         </figure>
         {% endwith %}
         {% endif %}
@@ -90,7 +90,7 @@ the sources with their hosts beside them (D26); the related articles as records;
 <section class="chapter related-articles" aria-labelledby="related-title">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "related-title" %}
       <h2 class="chapter__title" id="related-title">{% translate "À lire aussi" %}</h2>
     </div>
     <div class="chapter__body">

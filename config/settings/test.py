@@ -24,3 +24,7 @@ NOTIFICATIONS_SEND_IMMEDIATELY = True
 # Never manufacture people in a test run: the switch is derived from DEBUG at the moment
 # ``base`` is imported, and setting DEBUG=False above does not reach back to change it.
 ILE_SEED_DEMONSTRATION_DATA = False
+
+# V5.17 §5 (R-SC-1): the suite exercises the local product (the preview's capability). The production state is proved
+# by apps/documents/tests/test_special_category_v517.py, which switches it off and loads prod.py in a subprocess.
+ILE_SPECIAL_CATEGORY_FLOWS_ENABLED = True

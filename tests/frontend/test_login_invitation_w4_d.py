@@ -21,7 +21,10 @@ pytestmark = pytest.mark.django_db
 
 LOGIN = {"fr": "/fr/compte/login/", "ar": "/ar/compte/login/"}
 SIGNUP_PATH = "/compte/signup/"
-INVITATION = {"fr": "pas encore créé de compte", "ar": "إذا لم يكن لديك حساب"}
+#: allauth's invitation in the glossary's words since V5.12 lane D W2 (DECISIONS §9 terminology; d6d5c6e5,
+#: accounts.allauth_terms): «Vous n’avez pas encore de compte ? Créer un compte» / «ليس لديكم حساب بعد؟ إنشاء حساب».
+#: The old needles matched nothing any more, so the closed-gate test below passed without testing anything.
+INVITATION = {"fr": "Vous n’avez pas encore de compte ?", "ar": "ليس لديكم حساب بعد؟"}
 
 
 def _main(html: str) -> str:

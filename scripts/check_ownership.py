@@ -49,8 +49,36 @@ SCHEMA = "ile-ownership-v54/1"
 #: ``sec-f<n>``, the fix of a go-live security finding F-<n>, named after it (the sec-f5 merge: F-5), and
 #: ``intfix``, the steward's integration fixes at an integration checkpoint, V5.5's «full regression only at
 #: important integration checkpoints» (the intfix merge: checkpoint 3), and ``rc-fix``, the fixes of what the
-#: release candidate's validation found (V5.10's gates; the rc-fix merge: v2.0.0's candidate).
-FAMILY_ID = re.compile(r"steward|devops|intfix|rc-fix|sec-f[0-9]+|w[0-9]-[0-9a-z]+")
+#: release candidate's validation found (V5.10's gates; the rc-fix merge: v2.0.0's candidate), and ``v5<nn>-<lane>``,
+#: a lane A–D of a later remediation directive (V5.12's four lanes; the v512 W1 merge: v512-a … v512-d; V5.15's
+#: visual override, W3: the v515-a, v515-c, v515-b and v515-d merges; V5.18's stabilisation pass, the
+#: v518 stabilisation merge: v518-a … v518-d), or its contact lane K (V5.19's owner-confirmed contact
+#: channels; the v519-k merge: v519-k), or its
+#: privacy lane P (V5.14's privacy and cookie information; the v514-p merge: v514-p), or a later privacy lane
+#: P<n> (V5.16's privacy classification; the v516-p2 merge: v516-p2; V5.17's governance correction: v517-p3), and
+#: ``v5<nn>g-<group>``, a group of a directive's green suite (V5.18's, under V5.12 §22 «technical tests remain
+#: green»: group N the non-browser half and the lint, C the console family, P the public and RTL family; the v518g
+#: merge: v518g-n, v518g-c, v518g-p), and ``v5<nn>-wa``, ``v5<nn>-css`` and ``v5<nn>-fixv``, the lanes of a
+#: directive's final technical gate (V5.20's, under its strict test-update rule: wa the owner-confirmed WhatsApp
+#: number configured outside the repository, css the shared stylesheet back under its budget, fixv the test-change
+#: audit's violations fixed in the product; the v520 merge: v520-wa, v520-css, v520-fixv), and ``v5<nn>-s``,
+#: ``v5<nn>-m`` and ``v5<nn>-h``, the single-letter lanes of a directive's composition remediation (V5.22's,
+#: SECTION_SYSTEM_V2 §9: s the section system's foundation, m the imagery, h the homepage composition; the
+#: v522-m merge: v522-m), and ``v5<nn>-p1`` from V5.22 on, the page lane P1 of that remediation (SECTION_SYSTEM_V2
+#: §9.4, journeys and spaces; its lane P2 has the privacy lanes' ``v5<nn>-p<n>`` form; below V5.22 ``p1`` stays
+#: refused, as no privacy lane was P1; the v522-p1 merge: v522-p1), and ``v5<nn>-s<n>`` (n from 2 to 9) from
+#: V5.22 on, a follow-up of that remediation's section-system lane S (its guards and the merge conditions the
+#: page lanes set on its modules; lane S itself keeps ``v5<nn>-s``; the v522-s2 merge: v522-s2), and, from V5.24 on,
+#: the final-delivery lanes of this file — ``v5<nn>-t``, ``-px``, ``-lib``, ``-home``, ``-pub1``, ``-pub2``, ``-plat``,
+#: ``-ar``, ``-closing`` (the Director's FINAL_DELIVERY_V2.md §0 and R11: T typography, PX imagery attribution, LIB the
+#: library's material and transitions, HOME, PUB1, PUB2 and PLAT the professional pass per page, AR Arabic completeness,
+#: CLOSING the cleanup and the ratchets) and ``-mfix``, the one fix round after the matrix (V5.27 §7); the v524-px
+#: merge: v524-px.
+FAMILY_ID = re.compile(
+    r"steward|devops|intfix|rc-fix|sec-f[0-9]+|w[0-9]-[0-9a-z]+|v5[0-9]{2}-(?:[a-dk]|p[2-9]?)|v5[0-9]{2}g-[cnp]"
+    r"|v5[0-9]{2}-(?:wa|css|fixv)|v5[0-9]{2}-[hms]|v5(?:2[2-9]|[3-9][0-9])-(?:p1|s[2-9])"
+    r"|v5(?:2[4-9]|[3-9][0-9])-(?:t|px|lib|home|pub[12]|plat|ar|closing|mfix)"
+)
 TOP_KEYS = {
     "schema",
     "title",
@@ -260,7 +288,12 @@ def validate_data(data: object) -> list[str]:
     for fid, raw in families.items():
         where = f"families.{fid}"
         if not FAMILY_ID.fullmatch(fid):
-            problems.append(f"{where}: not a family id (steward, devops, intfix, rc-fix, sec-f<n>, or w<wave>-<name>)")
+            problems.append(
+                f"{where}: not a family id "
+                "(steward, devops, intfix, rc-fix, sec-f<n>, w<wave>-<name>, v5<nn>-<lane>, v5<nn>g-<group>, "
+                "v5<nn>-wa, v5<nn>-css, v5<nn>-fixv, or from V5.24 on a final-delivery lane v5<nn>-t, -px, -lib, "
+                "-home, -pub1, -pub2, -plat, -ar, -closing, -mfix)"
+            )
         if not isinstance(raw, dict):
             problems.append(f"{where}: must be an object")
             continue

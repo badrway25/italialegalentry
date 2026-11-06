@@ -35,8 +35,10 @@ the exchange below was typed by a human being who is answerable for it.
 {% block meta_description %}{% translate "Une demande adressée au guichet numérique, son état et son échange." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="register">
+  {% include "portal/partials/atrium_art.html" with figure="counter" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title reg-head__title" dir="auto">{{ ticket.subject }}</h1>
     <p class="reg-head__meta">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}<span>{% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span></p>
   </div>

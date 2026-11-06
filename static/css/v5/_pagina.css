@@ -190,15 +190,15 @@
   margin: 0;
 }
 
-/* the mark: the sprite's `ile-steps`, pulled by its drawing's shares onto the reading edge and the head's first line,
-   16 px above the title (the home's chapter__mark) */
+/* the mark: a Lucide-grid concept glyph (live area 2-22 of 24), its box pulled by the 2-unit share onto the reading
+   edge and the head's first line, 16 px above the title (the home's chapter__mark) */
 .chapter__mark {
   --mark: var(--icon-lg);
   display: block;
   inline-size: var(--mark);
   block-size: var(--mark);
-  margin-block: calc(var(--mark) * -7 / 24) calc(var(--s-4) - var(--mark) * 5 / 24);
-  margin-inline-start: calc(var(--mark) * -3 / 24);
+  margin-block: calc(var(--mark) * -2 / 24) calc(var(--s-4) - var(--mark) * 2 / 24);
+  margin-inline-start: calc(var(--mark) * -2 / 24);
   color: var(--text-1);
 }
 

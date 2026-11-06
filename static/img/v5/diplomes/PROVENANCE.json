@@ -1,0 +1,136 @@
+{
+ "what": "V5.12 photographs, family «diplomes» (DECISIONS §6): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "classeur-documents-ouvert",
+   "pexels_id": 4792286,
+   "photographer": "Anete Lusina",
+   "photographer_url": "https://www.pexels.com/@anete-lusina",
+   "page": "https://www.pexels.com/photo/briefcase-for-documents-placed-on-table-4792286/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "From above of briefcase for documents with papers placed on wooden table in daytime",
+   "original_px": [
+    6016,
+    4016
+   ],
+   "original_sha256": "9cfc35bf3d0225a35c2fa203bc4a0a3802fd7cff4eab077b997fb15d740088d1",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      3,
+      6016,
+      4014
+     ],
+     "master_px": [
+      6016,
+      4011
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "an open accordion case of papers on a wooden table, from above; nothing legible on the papers",
+   "files": [
+    {
+     "file": "classeur-documents-ouvert-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7283,
+     "budget": 61440,
+     "sha256": "8c09c41d8b71936d968767be2629114918792e78abb2e49819dd2ba98e840d22"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 11528,
+     "budget": 61440,
+     "sha256": "a3551092d8d44eb2cca3f675111ab4704d3356f6464efd92869c8ebcf395ca12"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 12768,
+     "budget": 61440,
+     "sha256": "a81567230eb5f7b5ed3d977af69b93b0a72f70179811c40f400fcde544c0b544"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22464,
+     "budget": 61440,
+     "sha256": "6afb8f62e5466a2118c1e06248be50d59c087b3315f0d62f9a3ae53cd3f3d587"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 21583,
+     "budget": 61440,
+     "sha256": "ec5e0ff4a3238822ba0d3e80a05e051f91436af1f934951bb889b92a33226f54"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 37214,
+     "budget": 61440,
+     "sha256": "4feb265fbd03a95b7bc6f7e6f6f8270d5605f292358c88c9fb958a9f45a33fb2"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 32205,
+     "budget": null,
+     "sha256": "514590351c8bf4a601231c3d9ebad28d282c33ea5588972592f216a8f6a60033"
+    },
+    {
+     "file": "classeur-documents-ouvert-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 54714,
+     "budget": null,
+     "sha256": "4e3867f20ac47f162f283fb6cad6f1db9f71c863ec7d8c4c54d9c16a8bdcd267"
+    }
+   ]
+  }
+ ]
+}

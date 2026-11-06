@@ -146,6 +146,15 @@ NEEDS: tuple[dict, ...] = (
 )
 
 
+#: The history line of each demonstration need's one transition: the sentence a project team would write at that step
+#: (V5.18 B-1: never the command's name, never «Démonstration» — the history is what the company reads).
+DEMO_TRANSITION_NOTES = {
+    NeedStatus.SUBMITTED: "Besoin transmis à l’équipe du projet.",
+    NeedStatus.UNDER_REVIEW: "Besoin reçu par l’équipe du projet ; son examen est en cours.",
+    NeedStatus.IN_PROGRESS: "Besoin pris en charge par l’acteur autorisé.",
+}
+
+
 class Command(BaseCommand):
     help = "Attach a synthetic demonstration company and its needs to an existing account."
 
@@ -265,7 +274,7 @@ class Command(BaseCommand):
                     need=need,
                     from_status=NeedStatus.DRAFT,
                     to_status=spec["status"],
-                    note="Démonstration : état positionné par la commande companies_demo.",
+                    note=DEMO_TRANSITION_NOTES[spec["status"]],
                     responsible_label="Équipe du projet",
                 )
             created_needs += 1

@@ -37,7 +37,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 
 from accounts.permissions import can, require
 from audit.services import record
-from core import throttle
+from core import special_category, throttle
 from core.views import error_429
 from documents import presenters, services
 from documents.forms import DocumentUploadForm, RequirementReviewForm, RequirementUploadForm
@@ -167,6 +167,14 @@ def _loose_documents(user):
 def requirement_detail(request, pk):
     requirement = _get_requirement(request.user, pk)
     row = presenters.present_requirement(requirement, user=request.user, with_versions=True)
+    if row["special_category_closed"] and can(request.user, "file", requirement):
+        # R-SC-1 (V5.17 §4): said once, calmly, where the Dépôt would have been offered — not twice when a refused
+        # post already queued the same sentence (the queue is read and kept: ``used`` reset)
+        queued = messages.get_messages(request)
+        already = any(str(item) == str(special_category.CLOSED_PIECE_NOTICE) for item in queued)
+        queued.used = False
+        if not already:
+            messages.info(request, special_category.CLOSED_PIECE_NOTICE)
     context = {
         "row": row,
         "case": requirement.case,
@@ -181,7 +189,7 @@ def requirement_detail(request, pk):
         _portal_shell(
             request,
             context,
-            {"label": _("Mes pièces"), "url": reverse("documents:index")},
+            {"label": _("Mes documents"), "url": reverse("documents:index")},
             {"label": requirement.title, "url": ""},
         ),
     )
@@ -220,7 +228,7 @@ def requirement_file(request, pk):
         return render(
             request,
             "documents/terms_required.html",
-            _portal_shell(request, {}, {"label": _("Mes pièces"), "url": reverse("documents:index")}),
+            _portal_shell(request, {}, {"label": _("Mes documents"), "url": reverse("documents:index")}),
             status=403,
         )
     if not throttle.allow(request, "documents_upload", **UPLOAD_THROTTLE):
@@ -403,7 +411,7 @@ def _expired_link_target(user, token: str) -> str:
 # Loose personal files (kept: nothing already uploaded may become unreachable)
 # ---------------------------------------------------------------------------------------------
 def _breadcrumb_register() -> dict:
-    return {"label": _("Mes pièces"), "url": reverse("documents:index")}
+    return {"label": _("Mes documents"), "url": reverse("documents:index")}
 
 
 @login_required

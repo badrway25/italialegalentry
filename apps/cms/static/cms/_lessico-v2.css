@@ -1,0 +1,492 @@
+/* ============================================================================================
+   «IL LESSICO» V2 — the glossary's, the term page's and Vivre en Italie's V5.22 compositions (design V5.22,
+   SECTION_SYSTEM_V2 §3.14–§3.15; lane P2): a partial of cms/lessico.css, their route sheet, linked after the reading
+   pages' shared sheet (cms/lettura.css). Markup: templates/glossary/{index,_entry,term}.html, templates/living/index.html.
+     2 · Glossaire — L, the scroll-spy rail (a thumb index from 64 rem, its indicator gliding: sezioni/spia.js) beside E
+         «il lessico» (term cards under their drawn letters, «Où le rencontrer»); the term page's K «la scheda»
+     3 · Vivre en Italie — the head's seal and its action; D «il panorama» of the LCP street (no mask, no fade: a scale
+         after the first paint, the drift, one light sweep as it leaves), the lead on an opaque paper plate; E «pour
+         s'installer»
+   Round 2 (QA_ROUND2 m5): out of the shared sheet into this route sheet (cms/_faq-v2.css says why).
+   Tokens only; logical properties; the words never wait.
+   ============================================================================================ */
+
+/* ---- 2 · Glossaire ---- */
+.lessico__griglia {
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* ONE register (round 1, QA_ROUND1 M7): the ten cards in one grid — two columns from 48 rem, three from 80 — a row's
+   cards one height. Final round (QA_ROUND3 m2): a card's term, definition and «Où le rencontrer» stand on its row's
+   three shared lines (a subgrid), so a row's definitions start together and its rules and chips align on one line under
+   the row's longest definition — the chips no longer drop to a short card's foot, and a card with fewer chips keeps
+   its room at its foot */
+.lessico__carte {
+  --sez-i: 0; /* the stagger's rank, the library's .sez-seq numbering the cards after the first */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* a phone's one column never wider than its band (this round's own sweep) */
+  gap: var(--s-4);
+}
+
+.lessico__carta {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  row-gap: var(--s-3);
+  align-items: start;
+  padding-block: var(--s-6);
+  padding-inline: var(--s-8) var(--s-6);
+}
+
+/* a letter's first card carries the letter, set large in its end corner: the register's heading for that letter and
+   the thumb index's anchor. Its box runs down the card's height (the letter stays at its top): the part sezioni/spia.js
+   watches is the card's band, so a letter followed from the rail — landing under the letterhead, above the spy's line —
+   still lights its row. Round 2 (QA_ROUND2 M6, §8.3 type-led imagery): the letter is DRAWN — outlined, as the term
+   page's initial — and lit: its stroke takes the accent as it crosses the reading line (scrubbed by the scroll, a row's
+   letters together: the row is one stop), and it fills under the hand or the focus of its card */
+.lessico__carta:has(> .lessico__lettera) { padding-inline-end: calc(min(var(--s-6), 3vw) + 2.75rem); } /* under 800 px
+   the letter's room gives up to 13 px of its margin, so a 360 px phone holds «Ricongiungimento» on one line (the
+   Arabic page sets the Italian term without the Latin pages' tightening: 231 px of word) */
+
+.lessico__lettera {
+  position: absolute;
+  inset-block: var(--s-4) 0;
+  inset-inline-end: var(--s-5);
+  margin: 0;
+  font-size: var(--t-display);
+  line-height: 1;
+  font-weight: 500;
+  color: var(--text-3);
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px currentColor;
+  transition: -webkit-text-fill-color var(--motion-standard) var(--ease-enter);
+}
+
+.lessico__carta:is(:hover, :focus-within) .lessico__lettera { -webkit-text-fill-color: var(--accent-text); }
+
+/* the card's rule at its reading edge — it draws as the register enters, by column; under the hand or the focus it
+   runs from 40 % to its full height, as a tile's threshold does (§4.2 T2) */
+.lessico__regola {
+  position: absolute;
+  inset-block: var(--s-6);
+  inset-inline-start: var(--s-4);
+  inline-size: 2px;
+  background: var(--accent-mark);
+  scale: 1 0.4;
+  transition: scale var(--motion-standard) var(--ease-enter);
+}
+
+.lessico__carta:is(:hover, :focus-within) .lessico__regola { scale: 1; }
+
+.lessico__termine {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  overflow-wrap: anywhere; /* a term longer than a phone's line breaks inside the card, never under its letter */
+}
+
+.lessico__definizione {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+.lessico__dove {
+  position: relative;
+  z-index: 2; /* above the card's stretched link: the chips are links of their own */
+  display: grid;
+  gap: var(--s-2);
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.lessico__etichetta,
+.scheda__etichetta {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+:lang(ar) :is(.lessico__etichetta, .scheda__etichetta) { font-size: var(--t-ui); line-height: var(--t-ui-lh); }
+
+:is(.lessico__chips, .scheda__chips) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a chip of «Où le rencontrer» (the FAQ's answers draw theirs in their own sheet: cms/_faq-v2.css); final round: its two
+   rules one — the same values, the bytes the register's subgrid and Vivre's seam needed */
+.lessico__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-min);
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: border-color var(--motion-standard) var(--ease-enter), color var(--motion-standard) var(--ease-enter);
+}
+
+.lessico__chip:is(:hover, :focus-visible) { border-color: var(--accent-mark); color: var(--accent-text); }
+
+@media (min-width: 48rem) {
+  .lessico__carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* from 64 rem the letter index is a thumb index at the reading edge, sticky under the letterhead; its indicator plate
+   glides to the letter being read (--spia-y, --spia-h: sezioni/spia.js) */
+@media (min-width: 64rem) {
+  .lessico__griglia {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    column-gap: var(--s-12);
+    align-items: start;
+  }
+
+  .lessico .az-index {
+    padding-block-start: var(--s-6);
+    border-block: 0;
+    background: none;
+  }
+
+  .lessico .az-index__list {
+    --spia-y: 0; /* sezioni/spia.js writes the letter in view's place and height inline, once it runs */
+    --spia-h: 0;
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0;
+    border-inline-start: 1px solid var(--line-rhythm);
+  }
+
+  .lessico .az-index__link {
+    justify-items: start;
+    padding-inline-start: var(--s-5);
+    font-size: var(--t-band);
+    line-height: var(--t-band-lh);
+    color: var(--text-3);
+    transition: color var(--motion-standard) var(--ease-enter);
+  }
+
+  /* the indicator: the rail's 2 px accent gliding to the letter being read */
+  .lessico .az-index__list[data-spia]::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -1px;
+    inline-size: 2px;
+    block-size: var(--spia-h);
+    background: var(--accent-mark);
+    translate: 0 var(--spia-y);
+    transition: translate var(--spring-soft-duration) var(--spring-soft);
+  }
+}
+
+/* the letter in view — and, with lane S's row stops (NOTES R2.6), the row's other letters */
+.lessico .az-index__link:is([aria-current], [data-spia-con]) { color: var(--accent-text); }
+
+@media (min-width: 80rem) {
+  .lessico__carte { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* the term page: the term at display size in the compact band, the definition plate on its shadow layer */
+.page-glossary-term .ingresso__title {
+  font-size: clamp(2.5rem, 1.5rem + 3vw, var(--t-display));
+  line-height: 1.05;
+}
+
+.scheda {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* the large outlined initial behind the plate: a drawing, aria-hidden — on the plate's free side, the page's end, in
+   both directions: on the Arabic page the letter takes the page's direction (main.css turns an Italian run left to
+   right, and its logical inset, resolved on the run's own direction, stood it behind the plate — round 1, M7) */
+.scheda__iniziale {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--s-16));
+  inset-inline-end: var(--s-4);
+  z-index: -1;
+  font-size: clamp(10rem, 22vw, 20rem);
+  line-height: 0.8;
+  font-weight: 600;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-structure);
+}
+
+.scheda__lastra {
+  display: grid;
+  gap: var(--s-5);
+  max-inline-size: 52rem;
+  padding: var(--s-8);
+}
+
+.scheda__regola {
+  display: block;
+  inline-size: var(--s-12);
+  block-size: 2px;
+  background: var(--accent-mark);
+}
+
+.scheda__definizione {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.scheda__fatti {
+  display: grid;
+  gap: var(--s-2);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  color: var(--text-2);
+}
+
+.scheda__fatti > * { margin: 0; }
+
+.scheda__legami {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.scheda__fila {
+  position: relative;
+  display: grid;
+  gap: var(--s-3);
+  padding-inline-start: var(--s-6);
+}
+
+/* the hairline that ties a row of chips to the plate — it draws as the band enters */
+.scheda__filo {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  background: var(--line-structure);
+  transform-origin: top;
+}
+
+.scheda__ritorno { margin: 0; }
+
+/* final improve round — two things that stay where they are drawn (one rule, the same values: the glossary family's
+   total has no byte to spare):
+   - the related terms' rows (the final review's m3; §1 rule 3, the words never wait): the legacy rise
+     (static/js/src/rise.js holds the rows of every `.accordion` below the fold, until S-close removes it) holds none of
+     them — on a phone they stood at opacity 0 until they entered; the band's motion is its plate's depth and its
+     hairlines' draw;
+   - a dictionary card under the hand (the final review's m1): it answers in place — its letter fills, its rule runs, its
+     shadow deepens — without the library's 2 px lift (v5/_sezioni.css), since sezioni/spia.js makes one stop of the
+     parts whose rendered tops are under 2 px apart: the card under a resting pointer left its row, and the rail never
+     lit that row's first letters in a read-through (C, L, P, Q at 1440). The root, a row grouped by its layout position,
+     is lane S's (S-close) */
+.scheda .accordion > [data-rise],
+.lessico__carta.sez-plate:hover { opacity: 1; translate: none; }
+
+@media (min-width: 64rem) {
+  .scheda__lastra { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s-10); }
+  .scheda__regola { grid-column: 1 / -1; }
+  .scheda__fatti { padding-inline-start: var(--s-6); border-inline-start: 1px solid var(--line-rhythm); }
+  .scheda__legami { grid-template-columns: repeat(2, minmax(0, 1fr)); max-inline-size: 52rem; }
+}
+
+/* ---- 3 · Vivre en Italie ---- */
+.vivere-testa__riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--s-4) var(--s-6);
+}
+
+.vivere-testa__riga .page-header__title { margin: 0; }
+
+/* the seal's door answers the band's action (round 2, QA_ROUND2 M8): its tone deepens and its threshold light pools
+   brighter with the seal system's light */
+/* the seal system's light at rest on the head's scope (v5/_sigillo.css raises it to 1 under the action) */
+.vivere-testa__header { --light: 0; }
+
+.vivere-testa__sigillo { --sg-lit: 48%; }
+
+.vivere-testa__sigillo .sg-t {
+  fill-opacity: calc(0.14 + 0.6 * var(--light, 0));
+  transition: fill-opacity var(--motion-emphasized) var(--ease-enter);
+}
+
+.vivere-testa__azione {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-primary);
+  margin-inline-start: auto;
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.vivere-testa__azione .icon { transition: translate var(--motion-standard) var(--ease-enter); } /* the chevron points down in both scripts */
+.vivere-testa__azione:is(:hover, :focus-visible) { text-decoration: underline; text-underline-offset: 0.2em; }
+.vivere-testa__azione:is(:hover, :focus-visible) .icon { translate: 0 3px; }
+
+/* final round (QA_ROUND3 m1): the moment meets its band — no paper strip under the frame (96 px at 1440, 64 at 390):
+   on a desktop the frame's foot is the band's edge; below 64 rem the lead's plate overlaps the frame and stands on the
+   band's stone, which begins at the frame's foot (the section's ground is the band's: templates/living/index.html) */
+.vivere-panorama { padding-block: 0; }
+
+/* the frame is the moment (60–82 vh): the section is as tall as it is */
+.vivere-panorama[data-rhythm="moment"] { min-block-size: 0; }
+
+.vivere-panorama__cornice {
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+}
+
+.vivere-panorama__quadro {
+  position: relative;
+  margin-inline: calc((100cqw - 100vw) / 2);
+  overflow: clip;
+}
+
+.vivere-panorama__quadro .foto { margin: 0; }
+
+.vivere-panorama__quadro img {
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 82vh;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vivere-panorama__quadro .foto__credit {
+  position: absolute;
+  inset-block-start: var(--s-2);
+  inset-inline-end: calc((100vw - 100cqw) / 2 + var(--s-3));
+  margin: 0;
+  padding: 2px var(--s-2);
+  border-radius: var(--radius-sm);
+  background: var(--plate-night-photo);
+  color: var(--text-on-night-1);
+}
+
+/* the light that crosses the façades once as the frame leaves the screen (scroll-linked: it reverses with the scroll);
+   its band is drawn in the markup (an SVG paint), the colour the token's */
+.vivere-panorama__luce {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  color: var(--surface-raised);
+  opacity: 0;
+}
+
+.vivere-panorama__lastra {
+  position: relative;
+  z-index: 1;
+  max-inline-size: 38rem;
+  margin: -40px var(--s-4) 0;
+  padding: var(--s-6) var(--s-8);
+}
+
+.vivere-panorama__lastra .page-header__lead {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+@media (min-width: 64rem) {
+  .vivere-panorama__quadro img { min-block-size: 60vh; }
+
+  .vivere-panorama__lastra {
+    position: absolute;
+    inset-block-end: var(--s-10);
+    inset-inline-start: 0;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the LCP's controlled scale (§3.15: 1.04 → 1 over 1 200 ms from the first paint; never a mask, never an opacity) —
+     on the photograph's own picture, inside its figure (round 1, QA_ROUND1 M8a: the selector named a picture the frame
+     does not hold, so it never ran); the drift (M22) moves the image inside it */
+  :root:not(.rm) .vivere-panorama__quadro .foto > picture {
+    display: block;
+    animation: vivere-scala var(--motion-route-light) var(--ease-enter) backwards;
+  }
+
+  @supports (animation-timeline: view()) {
+    :root:not(.rm) .vivere-panorama__luce {
+      animation: sez-sweep linear both;
+      animation-timeline: view();
+      animation-range: exit 5% exit 75%;
+    }
+  }
+
+  /* the seal draws in the head's own sequence (§4.9 n° 13): the roofline and the door, the sprout 300 ms later and rising
+     its 2 units, the door's tone last — as a frontispiece's seal does (v5/_reveal.css, «the seal's draw») */
+  :root:not(.rm):not([data-input="key"]) .vivere-testa__sigillo :is(.sg-a, .sg-m) { animation: sez-stroke var(--motion-draw) var(--ease-sine) calc(160ms + var(--sg-at, 0ms)) backwards; }
+  :root:not(.rm):not([data-input="key"]) .vivere-testa__sigillo .sg-m { --sg-at: 300ms; animation-duration: var(--motion-slow); }
+  :root:not(.rm):not([data-input="key"]) .vivere-testa__sigillo .sg-g--sprout { animation: sez-sprout var(--motion-slow) var(--ease-enter) calc(160ms + 900ms) backwards; }
+  /* the door's tone at 160 + 1 200 ms, written whole (the minifier leaves a calc of seconds it cannot fold exactly); one
+     block with the scale's since the final improve round — the bytes the related rows and the cards' rest needed */
+  :root:not(.rm):not([data-input="key"]) .vivere-testa__sigillo .sg-t { animation: sez-tone var(--motion-standard) var(--ease-enter) 1360ms backwards; }
+}
+
+@keyframes vivere-scala {
+  from { scale: 1.04; }
+}
+
+/* «pour s'installer» on stone: the two dictionary cards side by side from 48 rem, the two ways on under them */
+.vivere-installer__griglia { display: grid; gap: var(--s-6); }
+.vivere-installer__griglia .testa { margin: 0; }
+
+@media (min-width: 48rem) {
+  .vivere-installer .lessico__carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+[dir="rtl"] .scheda__iniziale[lang] { direction: rtl; }
+
+/* the register's two motions (round 2, QA_ROUND2 M6): in view at load (the section runtime then writes no state, and
+   S's STAGGER never played), its cards' reading-edge rules draw in the head's own sequence, column by column; and as the
+   reader scrolls, each letter lights while it crosses the reading line — scrubbed, so it reverses with the scroll */
+@media (prefers-reduced-motion: no-preference) {
+  :root.js:not(.rm):not([data-input="key"]) .lessico:not([data-sec-state]) .lessico__regola {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(320ms + var(--sez-i, 0) * var(--motion-stagger)) backwards;
+  }
+
+  @supports (animation-timeline: view()) {
+    :root:not(.rm) .lessico__lettera {
+      animation: lessico-luce linear both;
+      animation-timeline: view();
+      animation-range: cover 55vh cover 80vh;
+    }
+  }
+}
+
+@keyframes lessico-luce { 50% { color: var(--accent-mark); } }
+
+html[data-input="key"] :is(.lessico__chip, .lessico .az-index__link, .lessico__lettera, .lessico__regola, .vivere-testa__sigillo .sg-t, .vivere-testa__azione .icon),
+html[data-input="key"] .lessico .az-index__list::before {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .lessico .az-index__list[data-spia]::before { background: Highlight; }
+  .scheda__iniziale { display: none; }
+}

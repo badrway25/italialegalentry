@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-percorso: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - the regular pathways: three treads rising from the sill's start corner into the inner opening of an outer arch drawn as its arc only; the treads draw one after another (n.2) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M18 42V23A6 6 0 0 1 30 23V42Z"/>
+  <path data-layer="arch" d="M9 23A15 15 0 0 1 39 23"/>
+  <path data-layer="arch" d="M18 27V23A6 6 0 0 1 30 23V42"/>
+  <path data-layer="mark" d="M5 42V37H10"/>
+  <path data-layer="mark" d="M10 37V32H14"/>
+  <path data-layer="mark" d="M14 32V27H18"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

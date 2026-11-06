@@ -39,28 +39,52 @@ ROOT = Path(__file__).resolve().parents[2]
 CSS = ROOT / "static" / "css"
 LOADER_CSS = CSS / "v5" / "loader.css"
 LIGHT_CSS = CSS / "v5" / "_loader-light.css"
+MOTION_CSS = CSS / "v5" / "motion.css"
 TOKENS = CSS / "v5" / "tokens.css"
 LOADER_JS = ROOT / "static" / "js" / "src" / "loader.js"
 SHELL_JS = ROOT / "static" / "js" / "src" / "shell.js"
 MAIN_JS = ROOT / "static" / "js" / "main.js"
 COMPONENT = ROOT / "templates" / "components" / "loader.html"
 CHROME = ROOT / "templates" / "partials" / "portal_chrome.html"
+HEADER = ROOT / "templates" / "partials" / "header.html"
+THRESHOLD_JS = ROOT / "static" / "js" / "src" / "lume" / "threshold.js"
 MARK = ROOT / "static" / "brand" / "original" / "logo-mark.svg"
 
-#: The templates that may carry L1 markup (plan §1.9; RTE-m6): the console's chrome (the release), the entrance
-#: (the engage, wired by W2-B), the home hero (the rotating key, W2-D), and W1-D's specimen board.
+#: The templates that may carry L1 markup (plan §1.9; RTE-m6): the console's chrome (the release, and the tile's mark
+#: that a navigation's threshold turns), the entrance (the engage, wired by W2-B), the home hero (the rotating key,
+#: W2-D), W1-D's specimen board — and, since V5.12 §4 revoked «never on a public page» (DECISIONS C5; DL54
+#: amendment), the letterhead, whose mark the threshold of a navigation turns on every public page.
 L1_ALLOW_LIST = {
     "templates/partials/portal_chrome.html",
+    "templates/partials/header.html",
     "templates/allauth/layouts/entrance.html",
     "templates/pages/home/_hero.html",
     "templates/dev/designpreview/specimens/loader.html",
+    # V5.15 (DECISIONS §15 lane A): the central veil «Lume», on every page — the key that turns there is the brand's
+    "templates/components/lume_veil.html",
 }
 #: The actions on which L1 never plays (DL54-09): the situation's recalculation, the pre-assessment, an eligibility,
 #: a scan's verification — their templates keep L2 and L3.
 OUTCOME_BEARING = ("recalculate-situation", "pre-assessment", "eligibility", "scan-verification")
 OUTCOME_BEARING_TEMPLATES = ("templates/orientation/", "templates/cases/", "templates/documents/", "templates/pathways/")
 #: The duration tokens the loader moves on; each is zeroed under reduced motion (test_v5_tokens holds the block).
-DURATIONS = ("--motion-slow", "--motion-emphasized", "--motion-standard", "--motion-stagger", "--motion-fast", "--motion-door")
+#: --motion-draw is the threshold's light line (V5.12, DECISIONS §1 T2).
+DURATIONS = (
+    "--motion-slow",
+    "--motion-emphasized",
+    "--motion-standard",
+    "--motion-stagger",
+    "--motion-fast",
+    "--motion-door",
+)
+# V5.15 (DECISIONS §15 lane A): --motion-draw left the loader's sheets with the band's light line (the wait is the central
+# veil's sill now, v5/lume.css, held at 85 %); the token stays zeroed under reduced motion for the reading's draws.
+#: The one duration read under reduced motion only — the 80 ms fade of a still (MS-O4, extended to the mark by V5.12
+#: §4: «the reduced-motion version must retain branded feedback»); it keeps its value under the setting.
+REDUCED_ONLY = "--motion-reduced"
+#: The loader's sheets: the mark and its tiers (main.css), the console's release, the motion that crosses a navigation
+#: (main.css: the View Transition, the threshold, the arrival).
+LOADER_SHEETS = (LOADER_CSS, LIGHT_CSS, MOTION_CSS)
 
 
 def _read(path: Path) -> str:
@@ -92,6 +116,21 @@ def _ease_tokens() -> dict[str, str]:
         name: " ".join(value.split())
         for name, value in re.findall(r"(--ease-[a-z-]+)\s*:\s*([^;]+);", _css(TOKENS))
     }
+
+
+def _reduced_blocks(css: str) -> tuple[str, str]:
+    """(the bodies of the sheet's reduced-motion media blocks, the sheet without them), brace-matched."""
+    inside, outside, cursor = [], [], 0
+    for m in re.finditer(r"@media \(prefers-reduced-motion: reduce\)\s*\{", css):
+        depth, i = 1, m.end()
+        while depth and i < len(css):
+            depth += {"{": 1, "}": -1}.get(css[i], 0)
+            i += 1
+        outside.append(css[cursor : m.start()])
+        inside.append(css[m.end() : i - 1])
+        cursor = i
+    outside.append(css[cursor:])
+    return "".join(inside), "".join(outside)
 
 
 def _animations(css: str) -> list[tuple[str, str]]:
@@ -132,7 +171,7 @@ def test_the_generator_is_the_plan_s_phase():
 
 
 def test_nothing_loops_and_every_phase_shares_one_duration_token():
-    for path in (LOADER_CSS, LIGHT_CSS):
+    for path in LOADER_SHEETS:
         css = _css(path)
         assert "infinite" not in css, f"{path.name}: nothing loops"
         animations = _animations(css)
@@ -149,23 +188,34 @@ def test_nothing_loops_and_every_phase_shares_one_duration_token():
         assert "will-change" not in css, f"{path.name}: no will-change (plan §1.5; the layers are composited on their own)"
         for value in re.findall(r"(?<![\w-])transition\s*:\s*([^;]+);", css):
             assert "var(--motion-" in value and not re.search(r"\b\d+m?s\b", value), value
-    light = _css(LIGHT_CSS)
-    assert set(re.findall(r"var\((--motion-[a-z-]+)\)", light)) == {"--motion-door"}, "the release is one phase"
+    reduced, phase = _reduced_blocks(_css(LIGHT_CSS))
+    assert set(re.findall(r"var\((--motion-[a-z-]+)\)", phase)) == {"--motion-door"}, "the release is one phase"
+    assert set(re.findall(r"var\((--motion-[a-z-]+)\)", reduced)) == {REDUCED_ONLY}, "its still: one fade"
 
 
 def test_the_loader_s_durations_are_zeroed_under_reduced_motion():
     tokens = _css(TOKENS)
     reduced = tokens.split("@media (prefers-reduced-motion: reduce)", 1)[1].split("\n}", 1)[0]
-    used = set(re.findall(r"var\((--motion-[a-z-]+)\)", _css(LOADER_CSS) + _css(LIGHT_CSS)))
-    assert used == set(DURATIONS), used
+    sheets = "".join(_css(path) for path in LOADER_SHEETS)
+    used = set(re.findall(r"var\((--motion-[a-z-]+)\)", sheets))
+    assert used == {*DURATIONS, REDUCED_ONLY}, used
     for name in DURATIONS:
         assert f"{name}: 0ms" in reduced, f"{name} is not zeroed under reduced motion"
+    assert f"{REDUCED_ONLY}: 0ms" not in reduced and "--lume-still: 0ms" not in reduced, "the stills keep their time"
+    for path in LOADER_SHEETS:
+        inside, outside = _reduced_blocks(_css(path))
+        assert REDUCED_ONLY not in outside and "--lume-still" not in outside, f"{path.name}: a still's time outside its block"
+        for value in re.findall(r"(?<![\w-])animation\s*:\s*([^;]+);", inside):
+            assert value.startswith(("lume-fade ", "lume-still ")) and REDUCED_ONLY in value, (
+                f"{path.name}: under the setting only the stills' one fade ({value})"
+            )
+    assert re.search(r"--lume-still: 1200ms;", tokens), "the lit still is held 1 200 ms (DECISIONS §1)"
 
 
 def test_every_literal_curve_is_a_declared_ease_token():
     declared = set(_ease_tokens().values())
     assert "cubic-bezier(0.77, 0, 0.175, 1)" in declared, "the key-turn curve --ease-turn (DL54-05)"
-    for path in (LOADER_CSS, LIGHT_CSS):
+    for path in LOADER_SHEETS:
         css = _css(path)
         literals = re.findall(r"(?:cubic-bezier|linear)\([^)]*\)", css)
         for literal in literals:
@@ -204,20 +254,24 @@ def test_l3_attaches_only_to_fragment_containers():
     assert 'container.hasAttribute("data-seated")' in js, "a refresh swaps in place: the seat plays on the first arrival only"
 
 
-def test_the_release_s_seat_is_the_rail_mark_and_the_bar_mark_with_the_img_for_every_other_page():
+def test_the_release_s_seat_is_the_rail_mark_and_the_bar_mark_a_mark_in_layers_on_every_console_page():
+    """The two tiles carry the mark in layers on every console page (V5.12, DECISIONS §1 T2, T3): the threshold turns
+    its key and the View Transition lands on it; `release` only where the flag of the page's space says so."""
     chrome = _read(CHROME)
     assert "{% load i18n static cms_nav ile_core entrance %}" in chrome
-    assert "{% entrance_release as lume_release %}" in chrome
-    seats = re.findall(
-        r'{% if lume_release %}{% include "components/loader.html" with release=True %}{% else %}<img src="{% static \'brand/original/logo-mark.svg\' %}"',
-        chrome,
+    assert "{% with space=portal_nav.0.space %}{% entrance_release space.key as lume_release %}" in chrome, (
+        "the release is read once per space per session"
     )
-    assert len(seats) == 2, "the rail's tile and the top bar's tile, nothing else"
-    assert re.search(r'<span class="rail__tile" aria-hidden="true">{% if lume_release %}', chrome)
-    assert re.search(r'<a class="console-bar__tile"[^>]*>\s*{% if lume_release %}', chrome)
+    seat = '{% include "components/loader.html" with release=lume_release %}'
+    assert chrome.count(seat) == 2, "the rail's tile and the top bar's tile, nothing else"
+    assert f'<span class="rail__tile" aria-hidden="true">{seat}' in chrome
+    assert re.search(r'<a class="console-bar__tile"[^>]*>\s*' + re.escape(seat), chrome)
+    assert "release=True" not in chrome.split("{% endcomment %}", 1)[1], "never a release the session's flags did not grant"
     # the drawer's class list also carries the overlay system's classes (W2-A): anchor on its first class only
     drawer = chrome.split('<dialog class="console-drawer', 1)[1]
-    assert "lume_release" not in drawer and "logo-mark.svg" in drawer, "the drawer keeps its <img>"
+    assert "lume_release" not in drawer and "components/loader.html" not in drawer and "logo-mark.svg" in drawer, (
+        "the drawer keeps its <img>: one mark per seat, one View Transition name per page"
+    )
 
 
 def test_the_console_entry_imports_the_light_sheet_before_its_rules_and_main_css_never_does():
@@ -312,7 +366,9 @@ def test_no_wait_is_for_ever():
     shell = _read(SHELL_JS).split('window.addEventListener("pageshow"', 1)[1].split("});", 1)[0]
     assert "if (!event.persisted) return;" in shell and "[...faced].forEach(restFace);" in shell and "returns += 1;" in shell
     hook = _read(SHELL_JS).split('document.addEventListener("submit"', 1)[1].split('window.addEventListener("pageshow"', 1)[0]
-    assert "if (at === returns) loader.submitted(form, control, event);" in hook, "a submit from before a return is over"
+    assert "if (at === returns) loader.submitted(form, control, event, veiled);" in hook, "a submit from before a return is over"
+    # V5.18 §4 (P12): a submit the central veil carries — the sign-in's — does not engage its host as well
+    assert "if (host && !veiled) engage(host, {" in submitted, "the door's engage is handed to the veil"
     assert "if (control) restFace(control);" in hook.split(".catch(", 1)[1], "no state machine, no wait"
     # …and no refusal: main.js's guard on a data-single-submit form is lifted with the face (the integration fix (d):
     # the account's profile form is guarded since W3-F2, and without loader.js it refused for ever)
@@ -364,10 +420,13 @@ def test_a_form_whose_answer_does_not_replace_the_page_opts_out_of_the_busy_face
     assert 'if (form.dataset.loader === "none") return true;' in stays, "shell.js honours the opt-out"
     assert '=== "dialog"' in stays and '["", "_self"].includes(own("target"))' in stays, "a dialog's form and a form that opens elsewhere stay too"
     hook = shell.split('document.addEventListener("submit"', 1)[1]
-    asked = hook.index("if (staysOnPage(form, submitter)) return;")
+    assert "const stays = staysOnPage(form, submitter);" in hook
+    asked = hook.index("if (stays) return;")
     assert asked < hook.index('setAttribute("aria-busy", "true")') and asked < hook.index('import("./loader.js")'), (
         "before it sets or loads anything"
     )
+    threshold = hook.index("const veiled = submits(form, stays) && after(event);")
+    assert hook.index("const stays") < threshold < asked, "the threshold reads the same opt-out, before the hook returns"
     assert 'submitter.classList.contains("btn") ? submitter : null' in hook, "only a .btn waits"
     assert "if (!control && !form.dataset.loaderHost) return;" in hook, "nothing waits, nothing to engage: nothing loaded"
 

@@ -5,7 +5,7 @@ section's name, the title with the topic's glyph, once on the page (the icon reg
 own words, not the section's — a house beside «Vivre en Italie» read as «home»; the review's m10), a fallback title as
 a run of its own (`<span lang dir="ltr">`: the h1 keeps the page's direction and the glyph its seat), the introduction
 at the lead's size; the sheets as records on shared hairlines, each row the way to its sheet, its
-verification date when it has one — or, while they are being written, the empty page with the way back to the topics.
+verification date when it has one. A theme without a live, reviewed sheet has no page (V5.12 §8: it answers 404).
 {% endcomment %}
 {% block page_title %}{{ texts.title }} · {% translate "Vivre en Italie" %}{% endblock %}
 {% block meta_description %}{% if texts.body %}{{ texts.body|truncatechars:160 }}{% else %}{% blocktranslate with topic=texts.title %}Vivre en Italie — {{ topic }} : fiches pratiques pour accompagner l’intégration après l’entrée régulière.{% endblocktranslate %}{% endif %}{% endblock %}
@@ -32,7 +32,7 @@ verification date when it has one — or, while they are being written, the empt
 <section class="chapter living-sheets" aria-labelledby="living-sheets-title">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "living-sheets-title" %}
       <h2 class="chapter__title" id="living-sheets-title">{% translate "Fiches pratiques" %}</h2>
     </div>
     <div class="chapter__body">
@@ -46,13 +46,7 @@ verification date when it has one — or, while they are being written, the empt
         </li>
         {% endfor %}
       </ul>
-      {% else %}
-        {% translate "Fiches en préparation" as empty_title %}
-        {% translate "Les fiches pratiques de ce thème sont en cours de rédaction et de vérification. Elles seront publiées progressivement." as empty_text %}
-        {% url 'living:index' as index_url %}
-        {% translate "Voir tous les thèmes" as empty_action %}
-        {% include "components/empty_state.html" with title=empty_title text=empty_text action_label=empty_action action_url=index_url %}
-      {% endif %}
+      {% endif %}{# V5.12 §8: a theme without a live, reviewed sheet answers 404 (living.services.public_topics) #}
     </div>
   </div>
 </section>

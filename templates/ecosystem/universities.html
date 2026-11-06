@@ -1,11 +1,26 @@
-{% extends "ecosystem/_layout.html" %}{% load i18n %}
+{% extends "ecosystem/_layout.html" %}{% load i18n pages_imagery %}
 {% comment %}
 Espace Universités et Formation — PHASE 3 (Implementation §3.5): gated by G3 (404 while closed).
 Prescribed texts: p3.universities.intro (lead, verbatim) and p3.universities.button.
 The form is not re-implemented: the prescribed button links enquiries:university_proposal.
 CONTENT_PENDING_LEGAL_REVIEW — no programme, recognition, duration or attestation value is described.
 
-Design V5.4 (W3-F1): the entrance with the university door, the prescribed sentence whole as its lead, and the door's
+Design V5.12 (W2, lane C; DECISIONS §7): a 7 / 5 entrance with the reading-room photograph (slot
+«universities.hero», the LCP), the way in under the lead; then the campus photograph («universities.exchange») beside
+«Pour aller plus loin» as weighted tiles. The seven terms of the lead stay in the prescribed sentence (one locked
+sentence per language: never cut into chips by the team).
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.8; lane P1 — Page Composition V2), below the approved entrance (KEEP; its folio's
+seal is `ile-sapere`): U1, the page's moment — B «la filiera di formazione». A route leaves the reading edge and
+carries three station plates of the persons' learning path — before the departure, in Italy (the research pathway
+branching off it), after the arrival — each a team kicker over the locked title and its one locked line, each plate
+one link (a pathway sheet only while it is live; the first also reaches /formation/'s first time). Their tiles are the
+route's nodes (`earth`, `university` and `flask-conical` on the branch, `presentation`); the route ends on the arch,
+the page's one gold arrival, and the campus frame stands at its end as the destination (6/12 from 64 rem, its top
+under the last plate: layered), developing as the route arrives. The help line is the route's footnote. Hovering or
+focusing a plate lights the route up to it. PATH PROGRESSION + DEVELOP. Without script: plates in order, all lit.
+
+Before V5.12 (W3-F1): the entrance with the university door, the prescribed sentence whole as its lead, and the door's
 card carrying its way in — the prescribed button and its one sentence, the page's ONE action, in the first screen
 (W3-F1's review M1); the editorial note when there is one; where next, with the live «who can help me» line. The
 sentence is said once (RH-5): the presentational breakdown of its words into «Acteurs» and «Domaines» that followed
@@ -14,30 +29,43 @@ it — the same words a second time, a screen below — left the page with V4.
 {% block space_header %}
 {% locked "p3.universities.intro" as intro_html %}{% translate "Écosystème" as space_label %}{% translate "Espace Universités et Formation" as space_title %}
 {% locked "p3.universities.button" as button_label %}{% translate "Présentez votre établissement et votre proposition : chaque demande est lue par l’équipe du projet." as way_text %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=intro_html audience="university" photo=photo way_text=way_text way_label=button_label way_url=links.university_proposal only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=intro_html audience="university" photo=photo slot="universities.hero" way_text=way_text way_label=button_label way_url=links.university_proposal motif="learning" glyph="school" fronte_linked=True only %}
 {% endblock %}
 
 {% block space_main %}
 {% if note %}
-<div class="chapter ecosystem-note-chapter">
-  <div class="container chapter__inner">
-    <div class="chapter__body">{% include "ecosystem/partials/note.html" %}</div>
-  </div>
+<div class="sez universita-nota" data-ground="paper" data-rhythm="strip">
+  <div class="container">{% include "ecosystem/partials/note.html" %}</div>
 </div>
 {% endif %}
 
-<section class="chapter ecosystem-related" aria-labelledby="related-header">
-  <div class="container chapter__inner">
-    {% translate "Pour aller plus loin" as related_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="related-header" title=related_title only %}
-    <div class="chapter__body">
-      {% if links.training or links.pathways %}
-      <ul class="registro registro--two">
-        {% if links.training %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.training }}">{% translate "Formation : avant le départ et après l’arrivée" %}</a></h3><p class="registro__text">{% translate "Deux temps d’un même parcours, dans l’Espace Personnes." %}</p></li>{% endif %}
-        {% if links.pathways %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.pathways }}">{% translate "Les parcours réguliers" %}</a></h3><p class="registro__text">{% translate "Dont le parcours d’études et de formation, dans l’Espace Personnes." %}</p></li>{% endif %}
-      </ul>
-      {% endif %}
-      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+{% translate "Formation et mobilité régulière" as related_title %}
+<section id="filiere" class="sez sez--tracciato universita-filiera" data-sec="tracciato" data-ground="paper" data-rhythm="moment" aria-labelledby="related-header">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="process" title_id="related-header" title=related_title only %}
+    <div class="filiera">
+      <ol class="filiera__stazioni sez-seq" role="list" data-registro>
+        {% for item in route %}<li class="filiera__stazione">
+          <span class="filiera__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+          <div class="filiera__lastra sez-plate" data-verb="settle">
+            <p class="filiera__kicker">{{ item.kicker }}</p>
+            <h3 class="filiera__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{% if item.url %}<a class="filiera__link sez-stretch" href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
+            {% if item.line %}<p class="filiera__riga"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
+            {% if item.more %}<p class="filiera__altro"><a class="link-arrow" href="{{ item.more.url }}">{{ item.more.label }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+            {% if item.branch %}{% with entry=item.branch %}<div class="filiera__ramo">
+              <span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon entry.glyph "icon" %}</span>
+              <p class="filiera__ramo-titolo"{% if entry.lang %} lang="{{ entry.lang }}"{% endif %}>{% if entry.url %}<a class="link-arrow" href="{{ entry.url }}">{{ entry.title }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a>{% else %}{{ entry.title }}{% endif %}</p>
+              <p class="filiera__ramo-riga"{% if entry.lang %} lang="{{ entry.lang }}"{% endif %}>{{ entry.line }}</p>
+            </div>{% endwith %}{% endif %}
+          </div>
+        </li>{% endfor %}
+      </ol>
+      <span class="filiera__arrivo" data-verb="node" aria-hidden="true">{% svg_icon arrival "icon" %}</span>
+      <div class="filiera__meta">{% photo "universities.exchange" "filiera__foto" sizes=destination_sizes %}</div>
+      <div class="filiera__nota">
+        {% if links.pathways %}<p class="filiera__tutti"><a class="link-arrow" href="{{ links.pathways }}">{% translate "Tous les parcours réguliers" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+        <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      </div>
     </div>
   </div>
 </section>

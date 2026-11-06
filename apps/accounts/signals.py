@@ -14,6 +14,11 @@ the first console page consumes it, once, through ``{% entrance_release %}`` (ac
 → ``consume_entrance_release``). A refused sign-in never sends the signal, so the light says «it is open»
 only when it is (RTD-M6); a page reloaded or revisited finds the flag gone. The receiver is connected in
 ``AccountsConfig.ready`` with a ``dispatch_uid``, as the audit trail connects its own.
+
+Once per space (V5.12 §4 «transitions into major platform contexts»; the Director's DECISIONS §1 T3). The release
+plays again on the first page of each further space the session enters — the person's, the company's, the
+organisation spaces as they come: ``consume_space_release`` keeps the spaces already lit in the session
+(``LUME_SPACES_KEY``), and a new sign-in starts the list again with the space it lands in.
 """
 
 from django.dispatch import Signal
@@ -37,3 +42,25 @@ def consume_entrance_release(request) -> bool:
     if session is None:
         return False
     return bool(session.pop(ENTRANCE_RELEASE_KEY, False))
+
+#: The session key of the spaces whose first page has already played the release in this session.
+LUME_SPACES_KEY = "ile.lume_spaces"
+
+
+def consume_space_release(request, space: str = "") -> bool:
+    """
+    True on the first console page after a successful sign-in, and on the first page of each further space of the
+    session; False on every other page. ``space`` is the console's space key (``portal.services.SPACE_*``); without
+    one only the sign-in's release counts. Nothing is written to the session on a page whose space is known.
+    """
+    session = getattr(request, "session", None)
+    if session is None:
+        return False
+    entered = consume_entrance_release(request)
+    if not space:
+        return entered
+    seen = [] if entered else list(session.get(LUME_SPACES_KEY, []))
+    if space in seen:
+        return False
+    session[LUME_SPACES_KEY] = [*seen, space]
+    return True

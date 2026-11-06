@@ -1,0 +1,594 @@
+/* ============================================================================================
+   PARCOURS — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.4; lane P1). Page-only: pathways/index.css.
+   PA-1 is lane S's route board (v5/_sec-tracciato.css) with the page's own: the count line per family, a station not
+   live yet, the choice as one bar that brings its lane (round 2), the fork of the two one-station lanes (round 2), the
+   lanes' names on their frames, a phone's compact card, the Arabic light (the library's light starts inside the rail in
+   a right-to-left lane: here it waits outside it and runs right to left — handed to lane S for the library). PA-2: the
+   four step plates on the brand wash, their route, the caveat as its terminal plate. Adapted from 21st.dev (NOTES,
+   provenance): «Vertical How It Works Timeline» 26902 (numbered nodes, an icon a step, one rail) — refused: ticks,
+   completion.
+   ============================================================================================ */
+
+/* ---- PA-1 · the board is the families' group (pathways/_tracciato.html): a fieldset whose legend names the five
+        radios — «Tous» in its chip, each family's at its own lane's head —, none of a fieldset's own frame ---- */
+.percorsi-tracciato {
+  --percorsi-barra: 5.25rem; /* the bar's block size on a phone: the chips' row (44 px), the count (20 px), 2 × 8 px, 4 px */
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* ---- PA-1 · the count line: one sentence per family, the checked family's kept (the «all» sentence without :has) ---- */
+.percorsi-conto__riga:not([data-count="all"]),
+.percorsi-tracciato:has(.percorsi-via:checked) .percorsi-conto__riga[data-count="all"] {
+  display: none;
+}
+
+.percorsi-tracciato:has(#family-work:checked) .percorsi-conto__riga[data-count="work"],
+.percorsi-tracciato:has(#family-study:checked) .percorsi-conto__riga[data-count="study"],
+.percorsi-tracciato:has(#family-family:checked) .percorsi-conto__riga[data-count="family"],
+.percorsi-tracciato:has(#family-other:checked) .percorsi-conto__riga[data-count="other"] {
+  display: inline;
+}
+
+/* ---- PA-1 · THE CHOICE IS ONE BAR (QA_ROUND1 M3, QA_ROUND2 M1): the chips and the count line, sticky under the
+        letterhead at every width on their own ground, a hairline under them — the board's lanes pass beneath it, and
+        the choice and its result are read together wherever the reader is in the board ---- */
+.percorsi-scelta {
+  position: sticky;
+  inset-block-start: var(--header-h-scrolled);
+  z-index: 2;
+  display: grid;
+  gap: var(--s-1) var(--s-6);
+  margin-inline: calc(-1 * var(--grid-margin));
+  padding: var(--s-2) var(--grid-margin);
+  background: var(--surface-page);
+  box-shadow: 0 1px 0 var(--line-rhythm);
+}
+
+.percorsi-scelta .tracciato__conto {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+/* a family's chip is its radio's label: checked and ringed as its radio is (the library draws «Tous», whose radio is in
+   its chip) */
+.percorsi-tracciato:has(#family-work:checked) .tracciato__chip[for="family-work"] span,
+.percorsi-tracciato:has(#family-study:checked) .tracciato__chip[for="family-study"] span,
+.percorsi-tracciato:has(#family-family:checked) .tracciato__chip[for="family-family"] span,
+.percorsi-tracciato:has(#family-other:checked) .tracciato__chip[for="family-other"] span {
+  border-color: var(--text-1);
+  background: var(--text-1);
+  color: var(--surface-raised);
+}
+
+.percorsi-tracciato:has(#family-work:focus-visible) .tracciato__chip[for="family-work"] span,
+.percorsi-tracciato:has(#family-study:focus-visible) .tracciato__chip[for="family-study"] span,
+.percorsi-tracciato:has(#family-family:focus-visible) .tracciato__chip[for="family-family"] span,
+.percorsi-tracciato:has(#family-other:focus-visible) .tracciato__chip[for="family-other"] span,
+.tracciato__corsia:has(> .percorsi-via:focus-visible) .tracciato__nome {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.tracciato__chip {
+  cursor: pointer;
+}
+
+/* the page's reading area starts under the bar: on this page html's scroll-padding takes the bar's reach as well as the
+   letterhead's (v5/chrome.css sets the letterhead's), so whatever the browser brings into view — a card reached from the
+   keyboard, an anchor, a chosen lane — stands below the bar, never under it (WCAG 2.4.11) */
+html:has(.percorsi-tracciato) {
+  scroll-padding-block-start: calc(var(--header-h-scrolled) + 5.25rem + var(--s-4));
+}
+
+/* a family's radio at its lane's head: invisible and under no pointer (its chip carries the hand and the ring). When it
+   takes the focus — its chip tapped anywhere in the board, or the arrows from the keyboard —, the browser brings it into
+   view: its box starts at the lane's top and is exactly as tall as the reading area, so the lane's top lands right under
+   the bar whether the browser centres the box (it was out of sight) or aligns its nearer edge (it was partly in sight).
+   The browser's own focus, no script: instant from the keyboard and under reduced motion (html's scroll-behavior), and
+   nothing leaves the layout. */
+.percorsi-via {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  block-size: max(1px, calc(100svh - var(--header-h-scrolled) - var(--percorsi-barra) - var(--s-4) - var(--s-2) - 2px));
+  margin: 0;
+  border: 0;
+  appearance: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* the choice read by its radio: a family chosen, every lane takes the quiet ink and the chosen one comes back lit — its
+   frame develops and the light runs its rail (the library's --lane-lit) — never an opacity; nothing leaves the layout */
+.percorsi-tracciato:has(.percorsi-via:checked) .tracciato__corsia {
+  --lane-ink: var(--text-2);
+}
+
+.percorsi-tracciato .tracciato__corsia:has(> .percorsi-via:checked) {
+  --lane-ink: var(--text-1);
+  --lane-lit: 1;
+}
+
+/* a station whose sheet is not published yet: no link, its edge dashed, its words in the quiet ink */
+.tracciato__carta--attesa {
+  border-style: dashed;
+  color: var(--text-2);
+}
+
+/* ---- PA-1 · a lane's head: its name on a plate at its frame's top corner — the name and the picture read as one head,
+        at every width (round 2; a phone's since round 1) ---- */
+.percorsi-tracciato .tracciato__testa {
+  display: grid;
+}
+
+.percorsi-tracciato .tracciato__testa > * {
+  grid-area: 1 / 1;
+}
+
+.percorsi-tracciato .tracciato__testa:has(.tracciato__foto) .tracciato__nome {
+  z-index: 1;
+  align-self: start;
+  justify-self: start;
+  margin: var(--s-2);
+  padding: var(--s-1) var(--s-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+
+/* the lane's frame keeps its 3:2 at the lane's head and its strip below (lane M's art direction) */
+.percorsi-tracciato .tracciato__foto {
+  margin: 0;
+}
+
+/* the lane's light in a right-to-left lane: it waits beyond the rail's start and runs towards its end (round 2: the
+   page's direction is the root's own attribute — `:root[dir]`, never a descendant `[dir]` under :root, which matched
+   nothing and left the light running left to right) */
+[dir="rtl"] .percorsi-tracciato .tracciato__linea::after {
+  translate: 110% 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @container style(--lane-lit: 1) {
+    :root[dir="rtl"]:not(.rm):not([data-input="key"]) .percorsi-tracciato .tracciato__linea::after {
+      animation-name: sez-run-rtl;
+    }
+  }
+}
+
+@keyframes sez-run-rtl {
+  from { translate: 110% 0; }
+  to { translate: -360% 0; }
+}
+
+/* a French run in an Arabic card: its title and its description on ONE reading edge — the card's, beside the numeral
+   and the tile (§3.4 RTL: «numeral and French text share one reading edge»; §1 rule 6, one alignment per French box;
+   QA_ROUND1 m1: the title was flush right and the description flush left) */
+[dir="rtl"] .sez .percorsi-tracciato :is(.tracciato__titolo, .tracciato__riga)[lang="fr"] {
+  text-align: end;
+}
+
+/* ---- PA-1 · from 48 rem: the FORK — the two one-station lanes share the board's last row (round 2, QA_ROUND2 m9:
+        «Famille» and «Autres voies» each left two thirds of a row empty), the second continuing the first's rail
+        across the gap; from 64 rem the bar is one row, its count at its end ---- */
+@media (min-width: 48rem) {
+  .percorsi-tracciato .tracciato__corsie {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .percorsi-tracciato .tracciato__corsia {
+    grid-column: 1 / -1;
+  }
+
+  .percorsi-tracciato :is(.tracciato__corsia--start, .tracciato__corsia--end) {
+    grid-column: auto;
+  }
+
+  .percorsi-tracciato :is(.tracciato__corsia--start, .tracciato__corsia--end) .tracciato__stazioni {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* a three-station lane under its frame strip: its three cards on one row (two-up left the third alone beside an empty
+     half: the same «one card in an empty row» as m9, at a tablet's width) */
+  .percorsi-tracciato .tracciato__corsia:not(.tracciato__corsia--start, .tracciato__corsia--end):has(.tracciato__stazione:nth-child(3):last-child) .tracciato__stazioni {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .percorsi-tracciato .tracciato__corsia--end .tracciato__linea {
+    inset-inline-start: calc(-1 * var(--s-6));
+  }
+
+  /* a French run in an Arabic card keeps the Latin leading (QA_ROUND2 m2: it took the Arabic 32 px and read
+     double-spaced); a phone's card sets its own (below) */
+  [dir="rtl"] .percorsi-tracciato :is(.tracciato__titolo, .tracciato__riga)[lang="fr"] {
+    line-height: 1.75rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .percorsi-tracciato {
+    --percorsi-barra: 3.75rem; /* one row: the chips (44 px) and 2 × 8 px */
+  }
+
+  html:has(.percorsi-tracciato) {
+    scroll-padding-block-start: calc(var(--header-h-scrolled) + 3.75rem + var(--s-4));
+  }
+
+  .percorsi-scelta {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  /* the fork on the rows' own columns: the first of the pair is a head and one card (the rows' first two columns), the
+     second a frame one card wide and its card (their last two) — (content − 112) / 4 each, as the cards above */
+  .percorsi-tracciato .tracciato__corsie {
+    grid-template-columns: calc(50% + 2rem) minmax(0, 1fr);
+    column-gap: var(--s-3);
+  }
+
+  .percorsi-tracciato .tracciato__corsia--start {
+    grid-template-columns: calc((100% - 1.5rem) / 2) minmax(0, 1fr);
+  }
+
+  .percorsi-tracciato .tracciato__corsia--end {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-3);
+    padding-inline-start: 0;
+  }
+
+  .percorsi-tracciato .tracciato__corsia--end .tracciato__linea {
+    inset-inline-start: calc(-1 * var(--s-3));
+  }
+}
+
+/* ---- PA-1 · a phone: the legend kept for assistive technology and not printed (the chips say the families; printed,
+        it overprinted the board scrolling beneath); the chips' row scrolls inside the bar with no scrollbar drawn, its
+        far edge fading into the bar's ground (a shadow on the ground's own token: QA_ROUND2 m3), so a cut chip says
+        there is more; the board's measure; the compact card ---- */
+@media (max-width: 47.999rem) {
+  .percorsi-tracciato > .tracciato__legenda {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .percorsi-scelta .tracciato__scelta {
+    position: static;
+    padding: 0;
+    padding-inline-end: var(--s-8);
+    background: none;
+    scrollbar-width: none;
+  }
+
+  .percorsi-scelta::after {
+    content: "";
+    position: absolute;
+    inset-block-start: var(--s-2);
+    inset-inline-end: 0;
+    inline-size: var(--grid-margin);
+    block-size: var(--hit-primary, 44px);
+    background: var(--surface-page);
+    box-shadow: calc(-1 * var(--s-4)) 0 var(--s-4) var(--surface-page);
+    pointer-events: none;
+  }
+
+  [dir="rtl"] .percorsi-scelta::after {
+    box-shadow: var(--s-4) 0 var(--s-4) var(--surface-page);
+  }
+
+  /* the board's measure on a phone: the lanes nearer the trunk, the lanes closer together, the origin one line */
+  .percorsi-tracciato .tracciato__corsie {
+    gap: var(--s-8);
+  }
+
+  /* (the family frames' `sizes` follow: pathways.services.FAMILY_SIZES_V2) */
+  .percorsi-tracciato .tracciato__corsia {
+    padding-inline-start: var(--s-10);
+  }
+
+  .percorsi-tracciato .tracciato__origine {
+    gap: var(--s-3);
+  }
+
+  .percorsi-tracciato .tracciato__testa {
+    padding-block-start: var(--s-4);
+  }
+
+  /* the card is a row — numeral, tile and title on one line (the arrow at its end), the description under them, across
+     the card's whole width */
+  .percorsi-tracciato .tracciato__carta {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: var(--s-1) var(--s-3);
+    padding: var(--s-3) var(--s-4);
+  }
+
+  .percorsi-tracciato .tracciato__titolo {
+    grid-column: 3;
+    padding-inline-end: var(--s-6);
+    line-height: 1.4;
+  }
+
+  /* a French title on an Arabic card runs left to right: the arrow (at the card's end, the left) keeps its room on the
+     title's own start, never over its first letter */
+  [dir="rtl"] .percorsi-tracciato .tracciato__titolo[lang="fr"] {
+    padding-inline: var(--s-6) 0;
+  }
+
+  .percorsi-tracciato .tracciato__riga {
+    grid-column: 1 / -1;
+    line-height: 1.5;
+  }
+
+  .percorsi-tracciato .tracciato__freccia {
+    inset-block-start: var(--s-3);
+  }
+}
+
+/* the interim page's strip (gate G3 closed): its lead at the reading measure, never the container's (QA_ROUND1 m10) */
+.percorsi-attesa .testa__lead {
+  max-inline-size: var(--measure-lead);
+}
+
+/* ---- PA-2 · «Comment ça marche»: four step plates on one route, the caveat its terminal plate ---- */
+.come {
+  display: grid;
+  gap: var(--s-8);
+}
+
+.come__tappe {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: come;
+}
+
+/* the route: down the reading edge through the nodes on a phone, across their row from 48 rem */
+.come__tappe::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--s-6) var(--s-6);
+  inset-inline-start: calc(var(--s-5) + 23px);
+  inline-size: 2px;
+  background: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
+}
+
+.come__tappa {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-5);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface-raised) 80%, transparent);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
+}
+
+/* the step marker is a counter (01 …): the locked sentence's element holds the sentence's words and nothing else */
+.come__tappa {
+  counter-increment: come;
+}
+
+.come__num::before {
+  content: counter(come, decimal-leading-zero);
+}
+
+.come__num {
+  grid-column: 2;
+  font-family: var(--f-mono);
+  font-size: var(--t-band);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-2);
+}
+
+.come__nodo {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  z-index: 1;
+}
+
+.come__testo {
+  grid-column: 2;
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+/* the interim page's two moments (G3 closed): a title and its line in the plate */
+.come__titolo,
+.come__riga {
+  grid-column: 2;
+  margin: 0;
+}
+
+.come__titolo {
+  margin-block-start: var(--s-2);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.come__riga {
+  color: var(--text-2);
+}
+
+/* a fragment starts in lower case, as the sentence writes it: presentation only, its words unaltered */
+.come__testo::first-letter {
+  text-transform: uppercase;
+}
+
+/* a station that leads somewhere: the whole plate its target, its tile's rule lit under the hand or the focus */
+.come__link {
+  color: inherit;
+  text-decoration: underline 1px color-mix(in srgb, var(--accent-mark) 55%, transparent);
+  text-underline-offset: 0.25em;
+}
+
+.come__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.come__tappa:has(.come__link:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.come__link:focus-visible {
+  outline: none;
+}
+
+.come__tappa:has(.come__link:is(:hover, :focus-visible)) .sez-tile::after {
+  scale: 1 1;
+}
+
+.come__tappa:has(.come__link:is(:hover, :focus-visible)) .sez-tile .icon {
+  translate: 2px 0;
+}
+
+[dir="rtl"] .come__tappa:has(.come__link:is(:hover, :focus-visible)) .sez-tile .icon {
+  translate: -2px 0;
+}
+
+/* the caveat: the route's terminal plate, at body size, with its status mark — never small print */
+.come__avvertenza {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  max-inline-size: 46rem;
+  margin: 0;
+  padding: var(--s-4) var(--s-5);
+  border-inline-start: 3px solid var(--line-structure);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--surface-raised);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
+}
+
+[dir="rtl"] .come__avvertenza {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.come__segno {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1.5px var(--tone-esame-mark);
+  color: var(--tone-esame-mark);
+}
+
+.come__segno .icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+@media (min-width: 48rem) {
+  .come__tappe {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .come__tappe::before {
+    display: none;
+  }
+}
+
+@media (min-width: 64rem) {
+  .come__tappe {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--s-5);
+  }
+
+  .come__tappa {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-content: start;
+    row-gap: var(--s-4);
+    padding: var(--s-6);
+  }
+
+  .come__num,
+  .come__nodo,
+  .come__testo,
+  .come__titolo,
+  .come__riga {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .come__tappe--due {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .come__num {
+    font-size: var(--t-title);
+  }
+
+  /* the route across: from each plate's tile to the next plate, behind the plates' gap */
+  .come__tappa:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    inset-block-start: calc(var(--s-6) + var(--t-title) + var(--s-4) + 23px);
+    inset-inline: calc(var(--s-6) + 48px) calc(-1 * var(--s-5));
+    block-size: 2px;
+    background: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
+    transform-origin: 0 50%;
+  }
+
+  [dir="rtl"] .come__tappa:not(:last-child)::after {
+    transform-origin: 100% 50%;
+  }
+
+  /* the route light travels to the station under the hand or the focus (one segment after the other) */
+  .come__tappe:has(> :nth-child(2) .come__link:is(:hover, :focus-visible)) > :nth-child(1)::after,
+  .come__tappe:has(> :nth-child(3) .come__link:is(:hover, :focus-visible)) > :nth-child(-n + 2)::after {
+    background: var(--accent-mark);
+  }
+}
+
+/* the four plates' order, for the route's turn */
+.come__tappa:nth-child(2) { --co-i: 1; }
+.come__tappa:nth-child(3) { --co-i: 2; }
+.come__tappa:nth-child(4) { --co-i: 3; }
+
+/* STAGGER: the four plates' tiles settle in turn as the band enters, the route draws behind them (60 ms apart) */
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come__tappa::after { scale: 0 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come__tappa::after {
+    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--co-i, 0) * 60ms + 120ms) backwards;
+  }
+}
+
+html[data-input="key"] .come .sez-tile .icon {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .come__tappa {
+    border: 1px solid CanvasText;
+  }
+
+  .come__tappe::before,
+  .come__tappa::after {
+    background: CanvasText;
+  }
+}

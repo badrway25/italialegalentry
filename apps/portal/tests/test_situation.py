@@ -121,10 +121,11 @@ class TestSaving:
     def test_saving_is_audited_by_field_name_and_never_by_value(self, signed_in, alice):
         from audit.models import AuditEvent
 
-        post(signed_in, nationality="SECRET-VALUE-UNIQUE")
+        # V5.12 W2: the nationality is an ISO code chosen from the CLDR list; a value no list holds is refused
+        post(signed_in, nationality="TN")
         event = AuditEvent.objects.filter(action="account.situation_updated").latest("created_at")
         assert "nationality" in event.metadata["fields"]
-        assert "SECRET-VALUE-UNIQUE" not in str(event.metadata)
+        assert "TN" not in str(event.metadata)
 
     def test_an_unchanged_submission_records_no_audit_event(self, signed_in, alice):
         from audit.models import AuditEvent

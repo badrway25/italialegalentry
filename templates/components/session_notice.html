@@ -1,0 +1,6 @@
+{% load i18n %}{% comment %}
+One session message (templates/base.html's two regions; V5.12 §5, the Director's DECISIONS §2 M9): the kind's mark
+(core.icons.NOTICE through the `concept` filter — a success is the person's own act, done: circle-check), the words,
+and «Fermer», hidden until static/js/src/notices.js wires it (without script there is nothing to press). An error is
+role="alert" inside the region and is never dismissed for the person; `auto` (a success) leaves after 6 s.
+{% endcomment %}<div class="alert alert--{{ message.tags|default:'info' }}"{% if message.level_tag == 'error' %} role="alert"{% endif %}{% if auto %} data-notice-auto{% endif %}>{% svg_icon message.level_tag|concept:"notice"|default:"info" "icon notice__icon" %}<p class="alert__text">{{ message }}</p><button class="btn btn--icon alert__close" type="button" data-notice-close hidden aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</button></div>

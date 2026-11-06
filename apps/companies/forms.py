@@ -85,15 +85,30 @@ class CompanyProfileForm(StyledModelForm):
             "legal_name": forms.TextInput(attrs={"autocomplete": "organization", "maxlength": 200}),
             "contact_name": forms.TextInput(attrs={"autocomplete": "name", "maxlength": 160}),
             "contact_email": forms.EmailInput(attrs={"autocomplete": "email", "inputmode": "email"}),
-            "contact_phone": forms.TextInput(attrs={"type": "tel", "inputmode": "tel", "maxlength": 40}),
+            # V5.12 W2 (DECISIONS §5.16): every identity field says its purpose — organization, email, tel, the city
+            "contact_phone": forms.TextInput(
+                attrs={"type": "tel", "inputmode": "tel", "maxlength": 40, "autocomplete": "tel"}
+            ),
+            "contact_function": forms.TextInput(attrs={"autocomplete": "organization-title"}),
+            "address_line": forms.TextInput(attrs={"autocomplete": "address-line1"}),
+            "postal_code": forms.TextInput(attrs={"autocomplete": "postal-code"}),
+            "city": forms.TextInput(attrs={"autocomplete": "address-level2"}),
+            "province": forms.TextInput(attrs={"autocomplete": "address-level1"}),
             "year_founded": forms.NumberInput(attrs={"inputmode": "numeric", "min": 1800, "max": 2200}),
-            "country": forms.TextInput(attrs={"maxlength": 2, "autocomplete": "country"}),
+            # V5.12 W2 (DECISIONS §5.7): the two-letter code chosen from the CLDR list, a combobox over the select
+            "country": forms.Select(attrs={"autocomplete": "country"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["sector"].queryset = Sector.objects.active().ordered()
         self.fields["sector"].empty_label = _("— Choisir un secteur —")
+        if "country" in self.fields:
+            from django.utils import translation
+
+            from core import countries
+
+            self.fields["country"].widget.choices = countries.choices(translation.get_language() or "fr")
         for name in ("legal_name", "contact_name", "contact_function", "contact_email", "city"):
             self.fields[name].required = True
 
@@ -154,6 +169,47 @@ class CompanyNeedForm(StyledModelForm):
             "start_from": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         }
         help_texts = {"duties": SENSITIVE_DATA_HELP}
+
+    #: The four steps of the need and its review (V5.15 W3, lane B; DECISIONS §5.12): the groups the page already
+    #: drew as fieldsets — under the legends they already had («Le poste et son territoire», «Compétences attendues»:
+    #: translated words, kept), asked one at a time (static/js/src/steps.js; without script, the four in sequence). The
+    #: skills fields are this form's own (declared above): named here so that they stay in their step.
+    steps = (
+        (
+            "poste",
+            _("Le poste et son territoire"),
+            "ile-need",
+            (
+                "title",
+                "territory",
+                "work_place",
+                "sector",
+                "professional_profile",
+                "duties",
+                "motivation",
+                "engagement_type",
+                "headcount",
+            ),
+        ),
+        (
+            "competences",
+            _("Compétences attendues"),
+            "clipboard-list",
+            ("mandatory_skills", "preferred_skills", "experience_years_min", "experience_note"),
+        ),
+        (
+            "langue",
+            _("Langue et sécurité"),
+            "languages",
+            ("language_code", "language_level", "language_note", "safety_training_required", "safety_training_note"),
+        ),
+        ("calendrier", _("Formation et calendrier"), "presentation", ("training_needs", "start_from", "timing_note")),
+        ("verification", _("Vérification"), "ile-review", ()),
+    )
+    #: The last step opens on the review: what the company typed, step by step, each with its way back.
+    steps_review = True
+    #: Round 2: the language and its level share a row (two short selects, next to each other in the order).
+    steps_pairs = (("language_code", "language_level"),)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

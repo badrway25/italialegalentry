@@ -4,7 +4,20 @@
    resolve in the collected static tree (DS 2026 §2) — the page of the public interior (shared with the content pages),
    W3-F1's own parts of it, then these pages' own rules.
    They left pages.css, which is the home's alone now. A later family adds its partial on a line of its own.
+   V5.22 (SECTION_SYSTEM_V2 §3.2, §3.11, §3.12, §3.17, §3.18; lane P2): the composition library's shell and the patterns
+   these pages compose (C «il racconto», E «il mosaico», K «lo strato»; D's panorama is _photo.css's; A's splits are drawn by the pages' own partials, within the budget),
+   then each page's own partial — Réseau's, AGAMI's and the fraud page's in route sheets of their own (round 2,
+   QA_ROUND2 m5: pages/css/rete.css, agami.css, frodi.css, linked by those pages only).
    ============================================================================================ */
 @import url("../../css/v5/_pagina.css");
 @import url("../../css/v5/_interior.css");
+@import url("../../css/v5/_photo.css");
+@import url("../../css/v5/_compose.css");
+@import url("../../css/v5/_sezioni.css");
+@import url("../../css/v5/_sec-racconto.css");
+@import url("../../css/v5/_sec-mosaico.css");
+@import url("../../css/v5/_sec-strato.css");
 @import url("_institutional.css");
+@import url("_canali.css");
+@import url("_projet.css");
+@import url("_contatto.css");

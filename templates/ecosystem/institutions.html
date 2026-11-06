@@ -1,4 +1,4 @@
-{% extends "ecosystem/_layout.html" %}{% load i18n %}
+{% extends "ecosystem/_layout.html" %}{% load i18n pages_imagery %}
 {% comment %}
 Espace Institutions — PHASE 3 (Implementation §3.4): the route answers only while gate G3 is open
 (404 otherwise; staff preview with ?preview=1).
@@ -7,40 +7,53 @@ The recipients sentence is printed verbatim, as written, as the body of «Destin
 fragments, cut into rows, read as a list with typos; a register is kept for real lists).
 The form is not re-implemented: the prescribed button links enquiries:institution_proposal.
 
-Design V5.4 (W3-F1): the entrance with the institution door, whose card carries the door's way in — the prescribed
+Design V5.12 (W2, lane C; DECISIONS §7): a split entrance — the lead and the way in under it | the council-table
+photograph (imagery slot «institutions.hero», the page's LCP); the recipients sentence verbatim as the page's editorial
+statement (display size, the bronze rule at the reading edge: it is NOT cut into a list — the locked text is one
+sentence in four languages, and W3-F1's review m4 read its fragments as a list with typos); «Pour aller plus loin» as
+weighted tiles «gli approdi», the Forum on the night tile.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.7; lane P1 — Page Composition V2), below the approved entrance (KEEP):
+  * IN-1, the page's moment — H «l'emiciclo»: the assembly hall's photograph is the section's ground (it develops),
+    a night veil over its lower half; six glyph seats on an assembly arc drawn over it (aria-hidden; icons.
+    RECIPIENT_SEAT); the locked recipients sentence WHOLE on the plate under the arc, its own head «Destinataires :»
+    and its six items as spans (ecosystem.services.recipients_sentence: the textContent is the sentence); a hovered
+    seat or phrase lights both (CSS :has, no tab stop added: words once, RH-5). A visually hidden h2 keeps the outline
+    (the visible duplicate title is gone). The help line and the way to the form follow; the primary stays in the
+    head. RELATIONAL DRAW + DEVELOP;
+  * IN-2 — K «l'approdo»: the Forum's night tile (Q4), the pilot's tile with its route in miniature, the civic
+    colonnade low as the bookend; one light sweep.
+
+Before V5.12 (W3-F1): the entrance with the institution door, whose card carries the door's way in — the prescribed
 button and its one sentence, the page's ONE action, in the first screen (W3-F1's review M1); who the space addresses
 (the prescribed sentence) with the live «who can help me» line; where next.
 {% endcomment %}
 {% block space_header %}
 {% locked "p3.institutions.intro" as intro_html %}{% translate "Écosystème" as space_label %}{% translate "Espace Institutions" as space_title %}
 {% locked "p3.institutions.button" as button_label %}{% translate "Présentez votre institution et votre proposition : chaque demande est lue par l’équipe du projet." as way_text %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=intro_html audience="institution" photo=photo way_text=way_text way_label=button_label way_url=links.institution_proposal only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=intro_html audience="institution" photo=photo slot="institutions.hero" way_text=way_text way_label=button_label way_url=links.institution_proposal motif="civic" glyph="institution" fronte_linked=True only %}
 {% endblock %}
 
 {% block space_main %}
-<section id="destinataires" class="chapter" aria-labelledby="destinataires-title" data-block="recipients">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_chapter_head.html" with title_id="destinataires-title" title=recipients.label title_lang=recipients.source.lang_attr only %}
-    <div class="chapter__body">
-      {% include "ecosystem/partials/note.html" %}
-      {% locked "p3.institutions.recipients" "p" "chapter__statement" %}
+{% locked "p3.institutions.button" as button_label %}
+<section id="destinataires" class="sez sez--emiciclo istituzioni-aula" data-sec="emiciclo" data-ground="photo" data-rhythm="moment" aria-labelledby="destinataires-title" data-block="recipients">
+  <div class="istituzioni-aula__fondo">{% photo "institutions.chamber" "istituzioni-aula__foto" sizes="100vw" %}</div>
+  <div class="container istituzioni-aula__palco">
+    <h2 class="visually-hidden" id="destinataires-title">{% translate "Destinataires" %}</h2>
+    {% include "components/sezioni/mappa.html" with layout="arc" nodes=seats sentence=recipients_sentence sentence_lang=recipients.source.lang_attr only %}
+    {% include "ecosystem/partials/note.html" %}
+    <div class="istituzioni-aula__piede">
+      {% if links.institution_proposal %}<p class="istituzioni-aula__via"><a class="link-arrow" href="{{ links.institution_proposal }}">{{ button_label }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
       <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
     </div>
   </div>
 </section>
 
 {% if links.forum or links.pilot or links.partners %}
-<section class="chapter ecosystem-related" aria-labelledby="related-header">
-  <div class="container chapter__inner">
-    {% translate "Pour aller plus loin" as related_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="related-header" title=related_title only %}
-    <div class="chapter__body">
-      <ul class="registro registro--two">
-        {% if links.forum %}<li class="registro__row">{% locked "p2.forum.header.subtitle" as forum_subtitle %}<h3 class="registro__title"><a href="{{ links.forum }}">{% translate "Le Forum Vénétie–Maroc" %}</a></h3><p class="registro__text">{{ forum_subtitle }}</p></li>{% endif %}
-        {% if links.pilot %}<li class="registro__row">{% locked "p3.pilot.title" as pilot_title %}<h3 class="registro__title"><a href="{{ links.pilot }}">{{ pilot_title }}</a></h3><p class="registro__text">{% translate "Présentation du projet et de la séquence proposée." %}</p></li>{% endif %}
-        {% if links.partners %}<li class="registro__row"><h3 class="registro__title"><a href="{{ links.partners }}">{% translate "Partenaires" %}</a></h3><p class="registro__text">{% translate "Les organisations qui participent à l’écosystème." %}</p></li>{% endif %}
-      </ul>
-    </div>
+{% translate "Pour aller plus loin" as related_title %}
+<section class="sez sez--approdo ecosistema-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="related-header">
+  <div class="container">
+    {% include "ecosystem/partials/approdo.html" with title_id="related-header" title=related_title motif="civic" pilot=True %}
   </div>
 </section>
 {% endif %}

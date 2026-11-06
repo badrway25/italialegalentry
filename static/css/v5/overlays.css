@@ -145,7 +145,8 @@
 }
 
 /* the trap's scrim (overlay.js, the INP rule of plan §1.14): ONE element under the topmost trapped panel — or under a
-   menu shown as a phone sheet — --scrim-modal, opacity only, never a blur, on that panel's clocks (data-kind); it
+   menu shown as a phone sheet — --scrim-modal, its opacity and a 4 px blur of the page behind (V5.12 §5, DECISIONS §2
+   M8, amending «never a blur»: DL54-166), on that panel's clocks (data-kind); it
    takes the press that closes the panel, and every other press on the page. A press is the scrim's whole, pointerdown
    to click (`data-held`): a menu sheet is light-dismissed on the way up, and the scrim is still under the finger when
    the click comes, so the page behind is never reached */
@@ -159,10 +160,11 @@
   background: var(--scrim-modal);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--overlay-out) var(--overlay-out-ease);
+  transition: opacity var(--overlay-out) var(--overlay-out-ease), backdrop-filter var(--overlay-out) var(--overlay-out-ease);
 }
 .overlay-scrim[data-open] {
   opacity: 1;
+  backdrop-filter: blur(4px);
   pointer-events: auto;
   transition-duration: var(--overlay-in);
   transition-timing-function: var(--ease-enter);

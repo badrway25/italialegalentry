@@ -29,10 +29,19 @@ APPS = ROOT / "apps"
 #: the five --focus-ring-*, --z-modal (W1-A, V5.4 plan §2.3 and §2.7). These are CEILINGS.
 #: Lower them whenever a migration removes entries; never raise them. Lowered on 27 October 2026 (W4-D part 2): four
 #: names read by nothing left (--nav-drawer-top, --duration-reveal, --reveal-distance, --reveal-index), and the class
-#: ceiling follows W4-A's deletion of twelve dead type classes (.eyebrow and .numeral remain).
-MAX_SHIM_TOKENS = 138
-MAX_SHIM_CLASSES = 2
-MAX_LEGACY_USAGES = 1515
+#: ceiling follows W4-A's deletion of twelve dead type classes (.eyebrow and .numeral remain). Lowered on 28 October 2026
+#: (v512-a-fix-w1): the three --tracking-* names, read by nothing, paid for the loader's legend under the rule. Lowered
+#: on 28 October 2026 (v512-a-w2): four names read by nothing (--notice-bg / -fg, --measure-narrow, --z-below)
+#: paid for the notices and the disclosure's height in main.css. Lowered on 30 October 2026 (V5.20, v520-css: «shared
+#: stylesheet over budget» fixed by dead-rule removal, the main.css ratchet restored): twenty names left — thirteen
+#: read by nothing (--color-white, the --color-success / -info / -warning / -pending pairs, --container-max / -wide,
+#: --font-size-label / -button) and seven that a later layer declares after the shim, so their shim value never
+#: reached a page (--radius-pill, --utility-height, --header-height, --ease-standard, --z-dropdown, --z-skiplink,
+#: --font-mono) — with the dead .numeral class, and the usage ceiling set to the census (151 references, not the
+#: 1 515 of 21 September).
+MAX_SHIM_TOKENS = 55
+MAX_SHIM_CLASSES = 1
+MAX_LEGACY_USAGES = 151
 
 #: Files whose job is to talk about the shim rather than to use it.
 EXEMPT = {

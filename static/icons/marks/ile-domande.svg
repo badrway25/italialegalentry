@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-domande: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - the questions: the doorway whose inner opening continues into a question-mark hook, its dot on the sill; the dot last (n.11) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M9 42V23A15 15 0 0 1 39 23V42Z"/>
+  <path data-layer="arch" d="M9 42V23A15 15 0 0 1 39 23V42"/>
+  <path data-layer="mark" d="M18 27V23A6 6 0 0 1 30 23C30 27.5 24 28.5 24 33"/>
+  <circle data-layer="route" cx="24" cy="38.75" r="1"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

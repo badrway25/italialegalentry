@@ -601,8 +601,9 @@ def navigation(user, active: str = "", company: CompanyProfile | None = None) ->
         entries.append(("messages", _("Communications"), portal_messages))
     # The rail draws a glyph per entry and a title per group (rail_nav.html). The glyph is the icon
     # registry's (apps/core/icons.py COMPANY_NAV; design V5, V5.4 plan §1.7): one concept, one glyph —
-    # the needs are a wrench, the analysis a map; `briefcase` and `map-pin` keep the meaning they have
-    # everywhere else (the professional, a place). tests/frontend/test_icons.py holds every entry to it.
+    # the needs are the business case (V5.12 §7), the analysis a map; `briefcase` and `map-pin` keep
+    # the meaning they have everywhere else (the professional, a place).
+    # tests/frontend/test_icons.py holds every entry to it.
     group = str(_("Espace entreprise"))
     # The phone's bottom bar (CD §3.9): the four entries of the workspace, then «Menu».
     bottom = {"dashboard", "needs", "profile", "messages"}

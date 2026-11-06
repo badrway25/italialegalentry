@@ -30,7 +30,7 @@ Every word is the catalogue's. Contract: `case`; `transitions` = [(value, label)
   <div class="form-field">
     <label class="form-field__label" for="file-state-reason">{% translate "Motif" %}</label>
     <input type="text" id="file-state-reason" name="reason" maxlength="500" aria-describedby="file-state-reason-help" autocomplete="off">
-    <p class="form-field__help" id="file-state-reason-help">{% translate "La sospensione richiede una motivazione." %}</p>
+    <p class="form-field__help" id="file-state-reason-help">{% translate "La sospensione richiede una motivazione." %}{% if free_text_guidance %} {{ free_text_guidance }}{% endif %}</p>
   </div>
 </form>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close data-overlay-safe>{% translate "Annuler" %}</button>
 <button class="btn btn--primary" type="submit" form="file-state-form">{% translate "Enregistrer l’état" %}</button>{% endif %}

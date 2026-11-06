@@ -6,45 +6,51 @@ Only Phase 1 locked texts (p1.persons.replacement_1/2) and neutral UI strings: n
 Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): the entrance with the person door, whose card
 carries the door's way in — the questionnaire, the page's ONE action (W3-F1's review M1); how it works (the two
 moments on «la linea»), what comes next (the sheets, said in words; the address as the live «who can help me» line).
+
+Design V5.22 (SECTION_SYSTEM_V2 §9.4: «index_interim.html kept coherent»; lane P1): the interim page speaks the
+recomposed Parcours' language — its two moments as the step plates of «Comment ça marche» on the brand wash (the
+same composition as the open page's PA-2), then what comes next as a strip with the live help line.
+Its sheet (V5.22, one request): css/dist/pathways/index.css — the family's pathways/pathways.css, unchanged, then
+lane S's library and the page's own V2 partials (apps/pathways/static/pathways/index.css).
 {% endcomment %}
 {% block page_title %}{% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{% locked "p1.persons.replacement_1" as lead_text %}{% translate "Espace Personnes d’Italy Legal Entry™ :" %} {{ lead_text|striptags }}{% endblock %}
 {% block body_class %}page-pathways page-pathways--interim interior{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/index.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% translate "Italy Legal Entry™ pour les personnes" as space_label %}{% translate "Espace Personnes" as space_title %}{% locked "p1.persons.replacement_1" as lead_html %}
 {% translate "Identifiez la voie régulière à explorer" as way_title %}{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." as way_text %}{% translate "Commencer le questionnaire d’orientation" as way_label %}{% translate "Le questionnaire d’orientation sera disponible prochainement." as way_pending %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=lead_html audience="person" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=lead_html audience="person" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" fronte_linked=True only %}
 
-<section class="chapter" id="orientation" aria-labelledby="interim-how-title">
-  <div class="container chapter__inner">
-    {% translate "Comment ça marche" as how_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="interim-how-title" title=how_title only %}
-    <div class="chapter__body">
-      <ol class="linea linea--across" data-steps="2">
-        <li class="linea__step">
-          <span class="linea__num" aria-hidden="true"></span>
-          <h3 class="linea__label">{% translate "Orientation" %}</h3>
-          <p class="linea__text">{% translate "Répondez à quelques questions pour identifier les voies régulières à explorer, avec les étapes et la documentation généralement requises." %}</p>
+{% translate "Comment ça marche" as how_title %}
+<section class="sez sez--tracciato percorsi-come" id="orientation" data-sec="tracciato" data-ground="brand" data-rhythm="band" aria-labelledby="interim-how-title">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="process" title_id="interim-how-title" title=how_title only %}
+    <div class="come">
+      <ol class="come__tappe come__tappe--due sez-seq" role="list" data-registro data-steps="2">
+        <li class="come__tappa">
+          <span class="come__num" aria-hidden="true"></span>
+          <span class="come__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon "compass" "icon" %}</span>
+          <h3 class="come__titolo">{% translate "Orientation" %}</h3>
+          <p class="come__riga">{% translate "Répondez à quelques questions pour identifier les voies régulières à explorer, avec les étapes et la documentation généralement requises." %}</p>
         </li>
-        <li class="linea__step">
-          <span class="linea__num" aria-hidden="true"></span>
-          <h3 class="linea__label">{% translate "Accompagnement" %}</h3>
-          <p class="linea__text">{% locked "p1.persons.replacement_2" %}</p>
+        <li class="come__tappa">
+          <span class="come__num" aria-hidden="true"></span>
+          <span class="come__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon "hand-helping" "icon" %}</span>
+          <h3 class="come__titolo">{% translate "Accompagnement" %}</h3>
+          <p class="come__riga">{% locked "p1.persons.replacement_2" %}</p>
         </li>
       </ol>
     </div>
   </div>
 </section>
 
-<section class="chapter" aria-labelledby="interim-notice-title">
-  <div class="container chapter__inner">
-    {% translate "Fiches des parcours réguliers" as sheets_title %}{% translate "Les fiches détaillées des parcours réguliers vers l’Italie seront publiées progressivement dans cet espace. Aucun résultat administratif n’est promis : les décisions relèvent des autorités compétentes." as sheets_lead %}
-    {% include "pages/partials/_chapter_head.html" with title_id="interim-notice-title" title=sheets_title lead=sheets_lead only %}
-    <div class="chapter__body">
-      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-    </div>
+{% translate "Fiches des parcours réguliers" as sheets_title %}{% translate "Les fiches détaillées des parcours réguliers vers l’Italie seront publiées progressivement dans cet espace. Aucun résultat administratif n’est promis : les décisions relèvent des autorités compétentes." as sheets_lead %}
+<section class="sez percorsi-attesa" data-ground="paper" data-rhythm="strip" aria-labelledby="interim-notice-title">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="router" title_id="interim-notice-title" title=sheets_title lead=sheets_lead only %}
+    <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   </div>
 </section>
 {% endblock %}

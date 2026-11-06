@@ -114,7 +114,12 @@ def test_preview_keeps_links_inside_the_preview(client, seeded, staff_user, cura
 def test_institutions_prescribed_texts_and_button(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["institutions"])
     assert re.search(r'<p class="ingresso__lead">' + re.escape(_t("p3.institutions.intro")) + "</p>", html)
-    assert _t("p3.institutions.recipients") in html, "the recipients sentence is printed verbatim"
+    # V5.22 (SECTION_SYSTEM_V2 §3.7 IN-1; strict rule): the sentence stands whole in «l'emiciclo», its items spans —
+    # its element's text is the prescribed sentence, verbatim
+    from bs4 import BeautifulSoup
+
+    sentence = BeautifulSoup(html, "html.parser").select_one("#destinataires p.emiciclo__frase")
+    assert sentence.get_text("") == _t("p3.institutions.recipients"), "the recipients sentence is printed verbatim"
     # the page's own primary is read in its content: the chrome's phone sheet carries a primary of its own earlier in
     # the document (W2-C2's «Découvrir le questionnaire d'orientation», `nav-sheet__primary`)
     main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
@@ -130,24 +135,43 @@ def test_institutions_recipients_are_the_prescribed_sentence_as_written(get_html
     rows with their mixed initials («Régions» · «organismes publics» · «Chambres de Commerce» …), read as a list with
     typos; a register is kept for real lists. No hidden copy, no presentational list beside it.
     """
+    from bs4 import BeautifulSoup
+
     html = get_html("fr", GATED_PATHS["institutions"])
     block = html.split('data-block="recipients"', 1)[1].split("</section>", 1)[0]
-    assert re.search(r'<h2 class="chapter__title" id="destinataires-title">Destinataires</h2>', block)
-    assert '<p class="chapter__statement">' + _t("p3.institutions.recipients") + "</p>" in block
-    assert "visually-hidden" not in block and "ecosystem-enum" not in block and 'aria-hidden="true"><li' not in block
+    # V5.22 (SECTION_SYSTEM_V2 §3.7 IN-1 «l'emiciclo», §0.1 «words under the seats would print the locked sentence
+    # twice»; strict rule): the outline keeps a team heading, hidden (the visible duplicate «Destinataires» is gone);
+    # the sentence is the section's one visible text, whole, once — its items spans that light their seats; the seats
+    # are glyphs only (aria-hidden, no word): no copy, no presentational list of the words beside it
+    soup = BeautifulSoup(block, "html.parser")
+    heading = soup.select_one("h2#destinataires-title")
+    assert "visually-hidden" in heading["class"] and heading.get_text(strip=True) == "Destinataires"
+    sentences = soup.select("p.emiciclo__frase")
+    assert len(sentences) == 1 and sentences[0].get_text("") == _t("p3.institutions.recipients")
+    assert block.count(_t("p3.institutions.recipients")[:20]) <= 1
+    seats = soup.select("ol.emiciclo__seggi[aria-hidden='true'] > li")
+    assert len(seats) == 6 and not "".join(s.get_text(strip=True) for s in seats), "the seats carry no word"
+    assert "ecosystem-enum" not in block
 
 
 def test_institutions_secondary_links(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["institutions"])
-    related = html.split('class="chapter ecosystem-related"', 1)[1].split("</section>", 1)[0]
-    for href in ("/fr/forum/", "/fr/projet-pilote/", "/fr/partenaires/"):
+    # V5.22 (SECTION_SYSTEM_V2 §3.7 IN-2; strict rule): «Pour aller plus loin» is «l'approdo», the same destinations
+    related = html.split('class="sez sez--approdo ecosistema-approdo"', 1)[1].split("</section>", 1)[0]
+    for href in ("/fr/forum/", "/fr/projet-pilote/"):
         assert f'href="{href}"' in related
+    # V5.12 §8: no link to the partners' page while no partner is authorised in writing (it answers 404)
+    assert 'href="/fr/partenaires/"' not in html
 
 
 def test_institutions_fallback_language_marked(get_html, seeded, phase3_open):
     html = get_html("en", GATED_PATHS["institutions"])
     assert '<p class="ingresso__lead"><span lang="fr">' + _t("p3.institutions.intro") + "</span></p>" in html
-    assert '<p class="chapter__statement" lang="fr">' + _t("p3.institutions.recipients") + "</p>" in html
+    # V5.22 (SECTION_SYSTEM_V2 §3.7 IN-1; strict rule): the sentence's element in «l'emiciclo» says it is French
+    from bs4 import BeautifulSoup
+
+    sentence = BeautifulSoup(html, "html.parser").select_one("#destinataires p.emiciclo__frase")
+    assert sentence["lang"] == "fr" and sentence.get_text("") == _t("p3.institutions.recipients")
 
 
 # ---------------------------------------------------------------------------------------------
@@ -176,9 +200,12 @@ def test_universities_sentence_is_said_once(get_html, seeded, phase3_open):
 
 def test_universities_links_to_training_and_pathways(get_html, seeded, phase3_open):
     html = get_html("fr", GATED_PATHS["universities"])
-    related = html.split('class="chapter ecosystem-related"', 1)[1].split("</section>", 1)[0]
-    assert 'href="/fr/formation/"' in related
+    # V5.22 (SECTION_SYSTEM_V2 §3.8 U1 «la filiera»; strict rule): the route's stations lead to Formation's two times
+    # and the pathway sheets; its foot to the pathways' index — the same onward ways, and more
+    related = html.split('<section id="filiere"', 1)[1].split("</section>", 1)[0]
+    assert 'href="/fr/formation/#avant-le-depart"' in related and 'href="/fr/formation/#apres-l-arrivee"' in related
     assert 'href="/fr/parcours/"' in related
+    assert 'href="/fr/parcours/study_and_training_in_italy/"' in related
 
 
 # ---------------------------------------------------------------------------------------------
@@ -197,7 +224,9 @@ def test_pilot_sequence_has_the_eight_prescribed_steps_in_order(get_html, seeded
     html = get_html("fr", GATED_PATHS["pilot"])
     diagram = html.split('data-diagram="pilot-sequence"', 1)[1].split("</ol>", 1)[0]
     assert re.search(r"<ol class=\"linea[^\"]*\"[^>]* aria-label=", diagram), "ordered-list semantics"
-    labels = re.findall(r'<p class="linea__label">(.*?)</p>', diagram)
+    # V5.22 (SECTION_SYSTEM_V2 §3.3 PP-1 «la linea V2»; strict rule): a capitals label carries its tracking class and
+    # its ink verb — the words, the order and the count are the same
+    labels = re.findall(r'<p class="linea__label[^"]*"[^>]*>(.*?)</p>', diagram)
     assert labels == SEQUENCE
     assert 'data-steps="8"' in html
     assert "linea__text" not in diagram, "each step is a short prescribed label only"
@@ -208,7 +237,9 @@ def test_pilot_notice_follows_the_diagram_immediately(get_html, seeded, phase3_o
     after_diagram = html.split('data-diagram="pilot-sequence"', 1)[1].split("</ol>", 1)[1]
     # Only wrapper tags may sit in between: the very next content block must be the notice.
     wrappers = r'(?:\s*</div>|\s*<div class="container">)*\s*'
-    notice_open = '<div class="pilot-diagram__notice" data-notice="pilot-not-authorised">'
+    # V5.22 (SECTION_SYSTEM_V2 §3.3 PP-1; strict rule): the notice is the route's terminal status plate — still the
+    # very next block after the stations
+    notice_open = '<div class="pilota-rotta__stato" data-notice="pilot-not-authorised">'
     assert re.match(wrappers + re.escape(notice_open), after_diagram)
     notice = after_diagram.split('data-notice="pilot-not-authorised"', 1)[1].split("</section>", 1)[0]
     assert 'class="notice notice--warning"' in notice
@@ -264,7 +295,8 @@ def test_pilot_draws_its_sequence_on_the_line_and_no_illustration(get_html, seed
     """CREATIVE_DIRECTION_V5 §19: the pilot-flow illustration is retired; the sequence stands on «la linea» alone."""
     html = get_html("fr", GATED_PATHS["pilot"])
     assert "pilot-flow.svg" not in html and "pilot-diagram__illustration" not in html
-    assert 'class="linea linea--across"' in html
+    # V5.22 (SECTION_SYSTEM_V2 §3.3 PP-1; strict rule): «la linea V2», the same line evolved (components/stepper.html)
+    assert 'class="linea linea--large linea--across"' in html
 
 
 def test_pilot_additions_follow_the_prescribed_sequence_only_when_visible(get_html, seeded, phase3_open):
@@ -276,7 +308,7 @@ def test_pilot_additions_follow_the_prescribed_sequence_only_when_visible(get_ht
     PilotStep.objects.filter(order=9).update(is_visible=True)
     html = get_html("fr", GATED_PATHS["pilot"])
     diagram = html.split('data-diagram="pilot-sequence"', 1)[1].split("</ol>", 1)[0]
-    labels = re.findall(r'<p class="linea__label">(.*?)</p>', diagram)
+    labels = re.findall(r'<p class="linea__label[^"]*"[^>]*>(.*?)</p>', diagram)  # V5.22 §3.3 PP-1 (as above)
     assert labels == SEQUENCE + ["ÉVALUATION PARTAGÉE"]
 
 

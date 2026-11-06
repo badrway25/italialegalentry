@@ -18,7 +18,7 @@ public, the name, the place, the short description); no link, no logo wall. Whil
 <section class="chapter partners__group" aria-labelledby="partners-group-{{ group.kind }}">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "partners-group-"|add:group.kind %}
       <h2 id="partners-group-{{ group.kind }}" class="chapter__title partners__group-title">{{ group.label }}</h2>
     </div>
     <div class="chapter__body">
@@ -38,16 +38,6 @@ public, the name, the place, the short description); no link, no logo wall. Whil
   </div>
 </section>
   {% endfor %}
-{% else %}
-<section class="chapter partners" aria-label="{% translate 'Liste des partenaires' %}">
-  <div class="container chapter__inner">
-    <div class="chapter__body">
-      {% translate "Aucun partenaire n’est encore présenté." as empty_title %}
-      {% translate "Les partenaires seront présentés au fur et à mesure des autorisations." as empty_text %}
-      {% include "components/empty_state.html" with title=empty_title text=empty_text %}
-    </div>
-  </div>
-</section>
-{% endif %}
+{% endif %}{# V5.12 §8: without an authorised partner the page answers 404 (partners.views.index) — no empty wall #}
 {% endblock %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

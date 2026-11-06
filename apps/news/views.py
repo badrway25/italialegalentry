@@ -60,6 +60,8 @@ def _index_context(request, form: NewsletterForm | None = None) -> dict:
 
 @require_http_methods(["GET"])
 def index(request):
+    if not gates.news_public():  # V5.12 §8: no page that only says «nothing published yet»
+        raise Http404
     return render(request, "news/index.html", _index_context(request))
 
 
@@ -108,7 +110,7 @@ def detail(request, slug: str):
 
 @require_POST
 def newsletter_subscribe(request):
-    if not gates.newsletter_enabled():
+    if not gates.newsletter_enabled() or not gates.news_public():  # its form and its success page live on the index
         raise Http404
     if not gates.public_forms_enabled().open:
         # Gate G2 closed: nothing is persisted, nothing is sent (docs/LEGAL_AND_PUBLICATION_GATES.md).

@@ -97,6 +97,25 @@ def browser():
         instance.close()
 
 
+@pytest.fixture
+def academy_published(db, settings):
+    """A published course, so the Academy is a page of the rail (V5.12 DECISIONS §8: «the Academy rail entry is hidden
+    while 0 courses are published»; ``portal.services.academy_open``). ``seed_all`` publishes none where demonstration
+    data is off, and a person's rail is then nine. The geometry below measures a person's LONGEST rail — the ten, the
+    Academy last — so the tests that hold «the ten» publish the reviewed catalogue first (V5.18 green suite, group C)."""
+    from django.core.management import call_command
+
+    from academy.models import Course
+
+    settings.ILE_SEED_DEMONSTRATION_DATA = True
+    call_command("seed_all", "--only", "academy", verbosity=0)
+    assert Course.objects.published().exists()
+
+
+#: The keys of the rail's pages, in their order.
+RAIL_KEYS_JS = "() => [...document.querySelectorAll('nav.rail[data-rail] [data-rail-item]')].map((a) => a.dataset.key)"
+
+
 def _context(browser, live_server, user, width=1440, height=900, stored=None, **options):
     """A signed-in context. ``stored`` is the rail's stored choice ("open" / "closed"), written before any script."""
     client = Client()
@@ -128,7 +147,7 @@ def _at_rest(page, live_server, path):
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_at_1366_by_657_the_open_rail_of_a_person_holds_whole_and_its_foot_is_in_view(
-    browser, live_server, seeded, person_user, lang
+    browser, live_server, seeded, academy_published, person_user, lang
 ):
     context = _context(browser, live_server, person_user, 1366, 657)
     page = context.new_page()
@@ -136,6 +155,7 @@ def test_at_1366_by_657_the_open_rail_of_a_person_holds_whole_and_its_foot_is_in
     rail = page.evaluate(RAIL_JS)
     assert rail["state"] == "open" and rail["width"] == 248 and rail["expanded"] == "true", "open by default from 80rem"
     assert rail["count"] == 10 and rail["words"] == 10, "ten pages, glyph + word"
+    assert page.evaluate(RAIL_KEYS_JS)[-1] == "academy", "a published course: the Academy is the rail's last page (§8)"
     assert rail["rows"] == [40], "the density step of a short screen under a fine pointer (plan §1.8)"
     assert rail["scrollHeight"] <= rail["clientHeight"] and rail["clipped"] == 0, (
         f"nothing of a person's rail waits under a fold at 657 px: {rail['scrollHeight']} in {rail['clientHeight']}"
@@ -156,9 +176,32 @@ def test_at_1366_by_657_the_open_rail_of_a_person_holds_whole_and_its_foot_is_in
     context.close()
 
 
+def test_while_no_course_is_published_a_person_s_rail_has_no_academy_row(browser, live_server, seeded, person_user):
+    """V5.12 DECISIONS §8: the Academy entry is hidden while 0 courses are published — absent, never a catalogue that
+    says it is empty. The nine hold whole at 1366 × 657, the foot in view."""
+    context = _context(browser, live_server, person_user, 1366, 657)
+    page = context.new_page()
+    _at_rest(page, live_server, DASHBOARD.format(lang="fr"))
+    rail = page.evaluate(RAIL_JS)
+    assert page.evaluate(RAIL_KEYS_JS) == [
+        "dashboard",
+        "situation",
+        "pathways",
+        "cases",
+        "requests",
+        "documents",
+        "deadlines",
+        "messages",
+        "helpdesk",
+    ]
+    assert rail["count"] == rail["words"] == 9 and rail["clipped"] == 0 and rail["footBottom"] <= rail["vh"] + 0.5
+    assert page.locator("nav.rail--drawer [data-rail-item][data-key='academy']").count() == 0, "nor in the drawer"
+    context.close()
+
+
 @pytest.mark.parametrize("size", [(1366, 657), (1280, 720), (1536, 730)], ids=lambda s: f"{s[0]}x{s[1]}")
 def test_a_longer_rail_scrolls_under_its_pinned_foot_and_its_last_page_is_reached(
-    browser, live_server, seeded, user_factory, size
+    browser, live_server, seeded, academy_published, user_factory, size
 ):
     """The audit's three sizes, with an account whose rail holds a register more than a person's."""
     professional = user_factory("w3a-pro@example.test", role=roles.PROFESSIONAL, full_name="Professionnelle de test")
@@ -184,7 +227,7 @@ def test_a_longer_rail_scrolls_under_its_pinned_foot_and_its_last_page_is_reache
 
 
 def test_the_rail_is_open_from_80rem_compact_below_and_the_stored_choice_shifts_nothing(
-    browser, live_server, seeded, person_user
+    browser, live_server, seeded, academy_published, person_user
 ):
     # no stored choice: the width decides
     for width, state, measure in ((1440, "open", 248), (1280, "open", 248), (1100, "closed", 64)):
@@ -209,7 +252,7 @@ def test_the_rail_is_open_from_80rem_compact_below_and_the_stored_choice_shifts_
 
 
 def test_the_control_folds_the_rail_keeps_the_choice_and_the_glyph_column_stands_still(
-    browser, live_server, seeded, person_user
+    browser, live_server, seeded, academy_published, person_user
 ):
     context = _context(browser, live_server, person_user, 1440, 900)
     page = context.new_page()
@@ -385,7 +428,9 @@ def test_il_lume_marks_the_current_page_once_per_rail_copy_and_a_lone_glyph_show
     # compact, the account is a glyph: its word says the name and who the account is
     page.focus("nav.rail[data-rail] .rail__who")
     shown = page.evaluate(tip)
-    assert shown["on"] and shown["text"].endswith("— Personne") and shown["left"] >= 64 and shown["fits"], shown
+    # a person is told the name of their space, «Espace Personnes», never the role word «Personne» (V5.12 §11, the
+    # Director's decisions §9: roles.AUDIENCE_SPACE_LABELS — the rail's foot, the dashboard's strip, the profile)
+    assert shown["on"] and shown["text"].endswith("— Espace Personnes") and shown["left"] >= 64 and shown["fits"], shown
     context.close()
 
     arabic = _context(browser, live_server, person_user, 1440, 900, stored="closed")
@@ -431,8 +476,10 @@ def test_the_language_opens_above_its_control_by_the_languages_own_names(browser
 
 
 def test_the_shell_draws_two_corners_no_shadow_at_rest_and_one_edge_for_every_page_header(
-    browser, live_server, seeded, person_user
+    browser, live_server, seeded, legal_published, person_user
 ):
+    """The footer's legal line is drawn only for the published legal pages (V5.12 Q2 / V5.14 §13, D-16:
+    portal/partials/console_foot.html), so the edge of that line is measured with the legal pages published."""
     context = _context(browser, live_server, person_user, 1440, 900)
     page = context.new_page()
     _at_rest(page, live_server, REQUESTS.format(lang="fr"))
@@ -464,19 +511,28 @@ def test_the_shell_draws_two_corners_no_shadow_at_rest_and_one_edge_for_every_pa
             """() => { const h = document.querySelector('.console__workspace h1'); const r = h.getBoundingClientRect(); const s = getComputedStyle(h);
               const f = document.querySelector('.console__footer .portal-footer__legal').getBoundingClientRect();
               const w = getComputedStyle(document.querySelector('.console__workspace'));
+              const sheet = h.closest('[data-atrium]'); const a = sheet && getComputedStyle(sheet);
               return {x: Math.round(r.left), size: s.fontSize, line: s.lineHeight, weight: s.fontWeight, foot: Math.round(f.left),
+                      atrium: sheet ? [Math.round(sheet.getBoundingClientRect().left), parseFloat(a.borderInlineStartWidth) + parseFloat(a.paddingInlineStart)] : null,
                       pad: [w.paddingInlineStart, w.paddingBlockStart], crumb: Math.round(document.querySelector('.console-bar .breadcrumbs__list').getBoundingClientRect().left),
                       h1: document.querySelectorAll('h1').length}; }"""
         )
+    # V5.15 lane D (the owner's creative override of 28 Oct 2026, DECISIONS §15 lane D; portal/v5/_platform.css §1,
+    # «the atrium»): every console page's head is ONE composition, a sheet on the frame. The frame's start edge is
+    # still one — the sheet, the footer's line and the breadcrumbs at 280, 32 px from the rail —, and the title stands
+    # on the sheet's own inner edge (its 1 px hairline and its --s-8 padding: 280 + 33), at the atrium's one fluid
+    # size (clamp(1.75rem, 1.45rem + 0.8vw, 2.25rem): 34.72 px at 1440, line 1.12). One edge and one size for all five.
     for name, edge in edges.items():
         assert edge["h1"] == 1, name
-        assert (edge["x"], edge["foot"], edge["crumb"]) == (280, 280, 280), (
-            f"{name}: one start edge, 32 px from the rail: {edge}"
+        assert edge["atrium"] == [280, 33], f"{name}: the head is the atrium's sheet, on the frame's edge: {edge}"
+        assert (edge["x"], edge["foot"], edge["crumb"]) == (280 + 33, 280, 280), (
+            f"{name}: one start edge, 32 px from the rail; the title on the sheet's inner edge: {edge}"
         )
-        assert (edge["size"], edge["line"], edge["weight"]) == ("28px", "36px", "600"), (
-            f"{name}: the console's title: {edge}"
+        assert (edge["size"], round(float(edge["line"][:-2]), 2), edge["weight"]) == ("34.72px", 38.89, "600"), (
+            f"{name}: the atrium's title: {edge}"
         )
         assert edge["pad"] == ["32px", "32px"], name
+    assert len({(edge["x"], edge["size"], edge["line"]) for edge in edges.values()}) == 1, edges
     context.close()
 
 
@@ -516,7 +572,12 @@ def test_an_account_with_two_spaces_is_told_which_one_it_is_in_and_offered_the_o
         "ways": [["Espace entreprise", reverse("companies:dashboard")]],
         "who": "Entreprise",
     }
-    assert page.evaluate(RAIL_JS)["count"] == 10, "the other space is not a page of this rail"
+    # a company's «Espace réservé» holds no person's module (Q7: situation, pathway and case file are not its own —
+    # portal.services.PERSON_ONLY_PAGES) and no Academy while no course is published (DECISIONS §8): six pages, the
+    # other space a way at the rail's head, never one of its pages
+    assert page.evaluate(RAIL_KEYS_JS) == ["dashboard", "requests", "documents", "deadlines", "messages", "helpdesk"], (
+        "the other space is not a page of this rail"
+    )
     page.click("nav.rail[data-rail] .rail__switch")
     page.wait_for_load_state("networkidle")
     there = page.evaluate(head)
@@ -568,7 +629,11 @@ def test_an_institution_a_university_and_the_project_team_are_told_apart_at_the_
         assert rail["state"] == "open" and rail["footBottom"] <= rail["vh"] + 0.5 and rail["overflow"] <= 0, (who, rail)
         assert 0 <= foot["top"] and foot["bottom"] <= rail["vh"] + 0.5, "who the account is stays in view"
         if who != "staff":
-            assert rail["count"] == 10 and rail["clipped"] == 0, f"{who}: the ten, whole at 657 px"
+            # an institution's and a university's own organisation rail (V5.12 Q7, portal.services._organisation_rail):
+            # its dashboard, its organisation, what it asked, its communications — the dates only once the team has
+            # set one; no person's module
+            assert page.evaluate(RAIL_KEYS_JS) == ["dashboard", "organisation", "requests", "messages"], who
+            assert rail["clipped"] == 0 and rail["scrollHeight"] <= rail["clientHeight"], f"{who}: whole at 657 px"
         if foot["roleClipped"] or foot["nameClipped"]:
             assert foot["role"] in foot["label"] and foot["name"] in foot["label"], (
                 f"{who}: what the rail had to cut is said whole by the word beside the control: {foot}"
@@ -618,7 +683,7 @@ TEXT_SPACING = (
 
 @pytest.mark.parametrize("lang", ["fr", "it", "en", "ar"])
 def test_the_foot_s_last_row_holds_in_the_four_languages_and_wraps_rather_than_overlap(
-    browser, live_server, seeded, person_user, lang
+    browser, live_server, seeded, academy_published, person_user, lang
 ):
     """Measured on the lane: French and Arabic fitted with 0 px to spare and Italian was 8 px over — the chevron of
     «Italiano» lay on «Sito pubblico». One row in the four languages; under the user's own spacing the last word
@@ -663,7 +728,7 @@ def test_at_320_px_a_long_account_name_gives_way_to_the_title_never_to_the_viewp
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_identity_panel_is_drawn_in_its_section_for_the_account_somebody_has_asked(
-    browser, live_server, seeded, person_user, monkeypatch, lang
+    browser, live_server, seeded, academy_published, person_user, monkeypatch, lang
 ):
     """«Communications d’identité»: the last page of «Échanges», with the registry's consent glyph, lit on its own
     page; an eleventh row scrolls under the pinned foot at 657 px and is reached."""
@@ -800,11 +865,13 @@ def test_the_mark_takes_a_role_account_to_its_register_and_a_person_to_the_dashb
 
 
 def test_the_footer_s_legal_pages_are_targets_and_a_skip_link_s_ring_stays_inside_its_box(
-    browser, live_server, seeded, person_user
+    browser, live_server, seeded, legal_published, person_user
 ):
     """The accessibility check's M1, m1 and m2: the console footer drew its three legal pages 20 px tall — the only
     targets under SP-8's 24 px floor on a console page; where the rail is compact the skip link's night ring stood
-    on the paper; and under a finger the footer's pages and the account menu's rows are 44 px."""
+    on the paper; and under a finger the footer's pages and the account menu's rows are 44 px. Since D-16 (V5.12 lane D
+    W2) the footer draws the PUBLISHED legal pages — privacy, cookies, terms, disclaimer (V5.12 Q2 / V5.14 §13) — and
+    the contact address: measured with the four published, five targets."""
     links_js = (
         "() => [...document.querySelectorAll('.console__footer a')].map((a) => { const r = a.getBoundingClientRect();"
         " return [a.textContent.trim(), r.width, r.height]; })"
@@ -813,7 +880,7 @@ def test_the_footer_s_legal_pages_are_targets_and_a_skip_link_s_ring_stays_insid
     page = desk.new_page()
     _at_rest(page, live_server, REQUESTS.format(lang="fr"))
     links = page.evaluate(links_js)
-    assert len(links) == 3 and min(height for _name, _width, height in links) >= 24, links
+    assert len(links) == 5 and min(height for _name, _width, height in links) >= 24, links
     page.keyboard.press("Tab")
     page.keyboard.press("Tab")
     ring = page.evaluate(
@@ -828,7 +895,7 @@ def test_the_footer_s_legal_pages_are_targets_and_a_skip_link_s_ring_stays_insid
     page = phone.new_page()
     _at_rest(page, live_server, REQUESTS.format(lang="ar"))
     links = page.evaluate(links_js)
-    assert len(links) == 3 and all(width >= 44 and height >= 44 for _name, width, height in links), links
+    assert len(links) == 5 and all(width >= 44 and height >= 44 for _name, width, height in links), links
     page.tap(".console-bar .account-menu__summary")
     # the account's popover (the overlay system's, W2-A): its rows, 44 px under a finger
     rows = page.evaluate(

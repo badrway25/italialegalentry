@@ -12,14 +12,16 @@ a place at the bottom — a real table, named for what it is — so nothing alre
 
 Contract: `register` (documents.presenters.register_context), `loose_documents`, `may_upload`.
 {% endcomment %}
-{% block page_title %}{% translate "Mes pièces" %}{% endblock %}
+{% block page_title %}{% translate "Mes documents" %}{% endblock %}
 {% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head doc-head doc-head--register">
+<header class="ws-head doc-head doc-head--register" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="sheets" %}
   <div class="ws-head__words">
-    <h1 class="ws-head__title">{% translate "Mes pièces" %}</h1>
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Mes documents" %}</h1>
     <p class="ws-head__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
   </div>
 </header>
@@ -74,6 +76,8 @@ Without script the button posts its form at once, as it always has.
 </section>
 {% endif %}
 
+{% comment %} (V5.18 P-5) With nothing required, the empty register's tile carries the deposit: said once. {% endcomment %}
+{% if register.blocks or not may_upload %}
 <p class="doc-aside">
   {% if may_upload %}
   <a href="{% url 'documents:upload' %}">{% translate "Déposer un fichier hors exigence" %}</a>
@@ -81,7 +85,9 @@ Without script the button posts its form at once, as it always has.
   {% translate "Le dépôt de fichiers nécessite l’acceptation des Conditions d’utilisation." %}
   {% endif %}
 </p>
+{% endif %}
 </div>
 {% comment %} The preview drawer: beside the register on desktop, a sheet on a phone — outside the page it reads again. {% endcomment %}
 {% if register.blocks %}{% include "documents/partials/piece_drawer.html" %}{% endif %}
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

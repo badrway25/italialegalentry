@@ -21,10 +21,12 @@ belong to the orientation rule set and stay under its review workflow — nothin
 {% block meta_description %}{% translate "Vos pré-évaluations d’orientation enregistrées, à caractère informatif." %}{% endblock %}
 {% comment %}The page-only sheets after the shell's two (the owner's V5.8: never in the shared bundles): the registers' (W3-E), then the journey's where a journey is drawn — last (W3-D).{% endcomment %}
 {% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">
-{% if journey %}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endif %}{% endblock %}
+{% if journey %}<link rel="stylesheet" href="{% static 'css/dist/portal/journey.css' %}">{% endif %}<link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="route" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Mon parcours" %}</h1>
     <p class="ws-head__lead">{% translate "Les pré-évaluations d’orientation enregistrées dans votre compte." %}</p>
   </div>
@@ -103,3 +105,4 @@ belong to the orientation rule set and stay under its review workflow — nothin
 {% endif %}
 </div>
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

@@ -63,13 +63,32 @@ const options = {
   metafile: true,
 };
 
+// The one classic script: static/js/head.js, synchronous in <head> (render-blocking by design — it must hear the new
+// page's `pagereveal` before its first frame). Its source is static/js/src/head/head.js, commented; what base.html
+// loads is that file minified, not bundled, not an ES module (no import, no export: esbuild only strips and shortens).
+// Review v512-a-fix-w1: the commented source had grown to 4.9 KB raw, 2 067 B gzip, on every page's critical path.
+const headOptions = {
+  entryPoints: [join(SRC, "head", "head.js")],
+  outfile: join(ROOT, "static", "js", "head.js"),
+  bundle: false,
+  target: ["es2022"],
+  minify: true,
+  sourcemap: false, // the source is ten lines of plain JS beside it; a map would land outside the ignored dist
+  legalComments: "none",
+  banner: { js: "/* built from static/js/src/head/head.js by `npm run build:js` — edit the source */" },
+  logLevel: "info",
+};
+
 const watch = process.argv.includes("--watch");
 
 if (watch) {
   const ctx = await context(options);
   await ctx.watch();
+  const headCtx = await context(headOptions);
+  await headCtx.watch();
   console.log("watching static/js/src/ …");
 } else {
+  await build(headOptions);
   const result = await build(options);
   // The number that the budget in docs/design-v2/FRONTEND_DEPENDENCIES.md is written against.
   for (const [file, meta] of Object.entries(result.metafile.outputs)) {

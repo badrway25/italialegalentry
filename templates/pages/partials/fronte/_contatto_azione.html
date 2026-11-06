@@ -1,0 +1,9 @@
+{% load i18n %}{% comment %}
+The contact head's action (round 1 of W3, label v515-c-improve1): the one public address, large, under the lead — the
+page's first answer is the head's action. V5.22 (SECTION_SYSTEM_V2 §3.12 C0; lane P2): the address is said once in the
+body — the old chapter «Par e-mail» left, its sentence is the address's caption here and its anchor
+(#contact-email-title, apps/core/icons.py's registry) the address's. The link
+keeps the page's direction (in Arabic the disc stands on the reading edge); only the address is isolated left-to-right
+(base.css `.email`; round 2 of W3, m-4).
+{% endcomment %}<p class="fronte-azione" id="contact-email-title"><a class="fronte-azione__link" href="mailto:{{ contact_email }}"><span class="fronte-azione__disc" aria-hidden="true">{% svg_icon "at-sign" "icon" %}</span><span class="fronte-azione__text email">{{ contact_email }}</span></a></p>
+<p class="fronte-azione__nota">{% translate "Tous les formulaires du site sont acheminés vers cette adresse." %}</p>

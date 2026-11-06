@@ -27,8 +27,14 @@ DECLARATION = re.compile(r"(--[a-zA-Z0-9-]+)\s*:")
 REFERENCE = re.compile(r"var\(\s*(--[a-zA-Z0-9-]+)")
 # Set at run time by JavaScript or by a component modifier, never declared in a stylesheet. (--reveal-index left with
 # components.css §29 and main.js's initReveal: W4-B; --nav-drawer-top, read by nothing since W2-A's drawer, left the
-# shim with its declaration: W4-D part 2.)
-RUNTIME_PROPERTIES: set[str] = set()
+# shim with its declaration: W4-D part 2.) v515-a: --rise-k is written by rise.js on each rising row (its 40 ms
+# step), --portico-from by nav.js's open() on a door switch (the old panel's height the card morphs from).
+# V5.22 (SECTION_SYSTEM_V2 §2 H and §2 L «the rail» — approved owner/product decisions; lane S): the map's ring is laid
+# out by its module, so --n (the actors' count) and --sel (the selected actor) are written by sezioni/mappa.js; the
+# rail's lit segment, --spia-y and --spia-h, by sezioni/spia.js. Each reference carries a fallback for the still without
+# script. V5.20 strict rule: the same invariant — every name declared, or written at run time and named here with its
+# writer.
+RUNTIME_PROPERTIES: set[str] = {"--rise-k", "--portico-from", "--n", "--sel", "--spia-y", "--spia-h"}
 
 
 def _defined_everywhere() -> set[str]:

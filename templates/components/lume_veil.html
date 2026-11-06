@@ -1,0 +1,33 @@
+{% load i18n %}{% comment %}
+«LUME», THE CENTRAL LOADER — global brand infrastructure (V5.15 §8–§14; the Director's DECISIONS §15 lane A). Included
+once by templates/base.html, right after the skip link, on every page of the public site and of the platform; drawn by
+static/css/v5/lume.css, timed by static/js/src/lume/threshold.js (the leaving page) and static/js/src/head/head.js (the
+arriving page, before its first paint).
+
+The sequence — UNLOCK → ACCESS → TRANSITION:
+  a navigation begins (a pointer's click on a page of this site, a form's submit) → the page dims under a night veil
+  (a dense night, no blur: review round 2) → the ILE doorway appears at the centre, in its pool of light, inside the portico's arches → the
+  key ROTATES once on its shaft, coming forward as it turns, and settles → the light passes through the doorway (the
+  room lights, the light spills over the steps, the sill draws) → the destination resolves: the stage opens towards
+  the reader and the veil lifts off the new page.
+A fast navigation plays the whole envelope across the two pages (≈ 700 ms; the arriving page continues the leaving
+page's clock, `--lume-t`): no wait is added — the browser loads the next page from the first frame, and nothing here
+holds it. A slow one keeps the veil, the key turned and the sill held at 85 % until the page commits; at 1 s the
+status line says «Chargement…», once. Never: a new tab, a download, a same-page anchor, the keyboard's navigation
+(it gets the still only if the wait passes 400 ms), the preview hub, an error page.
+
+The picture is decorative (`aria-hidden`, no focusable element, `pointer-events: none` at every moment: it never
+takes a click, a key or the back button — Esc stops a pending navigation, static/js/src/lume/threshold.js). The state
+is said by the status line alone, outside the hidden picture. The mark is the verbatim mark in layers
+(components/loader.html): planes, door and steps never move; the key turns 0 → 360° on its shaft and ends verbatim.
+{% endcomment %}<div class="lume-veil" aria-hidden="true" data-lume-veil>
+  <div class="lume-veil__ground"></div>
+  <div class="lume-veil__stage">
+    <svg class="lume-veil__arches" viewBox="0 0 400 480" focusable="false"><path d="M40 470V190a160 160 0 0 1 320 0v280"/><path d="M78 470V196a122 122 0 0 1 244 0v274"/><path d="M116 470V204a84 84 0 0 1 168 0v266"/><path class="lume-veil__floor" d="M0 470h400"/></svg>
+    <span class="lume-veil__halo"></span>
+    <span class="lume-veil__spill"></span>
+    {% include "components/loader.html" with css_class="lume-veil__sig" %}
+    <span class="lume-veil__sill"></span>
+  </div>
+</div>
+<p class="lume-veil__word" role="status" data-lume-word="{% translate 'Chargement…' %}"></p>

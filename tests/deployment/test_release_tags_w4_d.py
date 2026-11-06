@@ -104,13 +104,17 @@ def _blob_id(data: bytes) -> str:
 
 
 def test_the_release_tag_is_the_version_the_platform_declares():
-    """The footer's label and the tag say the same thing: change one, and this test asks for the other."""
+    """
+    The platform's version label and the tag say the same thing: change one, and this test asks for the other. Since
+    V5.12 (Director's decisions §8, D-17) the label is the page's metadata, not the footer's: the back office's own
+    field defaults to nothing, so the settings' label is the one the platform declares.
+    """
     from core.models import SiteSettings
 
     base = (ROOT / "config" / "settings" / "base.py").read_text(encoding="utf-8")
     setting = re.search(r'"VERSION_LABEL": env\("ILE_VERSION_LABEL", default="([^"]+)"\)', base).group(1)
     model = SiteSettings._meta.get_field("version_label").default
-    assert setting == model, (setting, model)
+    assert model == "", model
     assert setting.split()[0] == RELEASE_TAG, setting
     assert f"export ILE_TAG={RELEASE_TAG} " in RUNBOOK
     release_tags = _section(RUNBOOK, "## RELEASE TAGS")

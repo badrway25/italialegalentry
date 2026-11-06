@@ -19,6 +19,12 @@ CONSENT_TEXT = locked_content.text("p3.news.newsletter_consent", "fr")
 LABEL_TEXT = locked_content.text("p3.news.newsletter_label", "fr")
 
 
+@pytest.fixture(autouse=True)
+def _one_live_article(article_factory):
+    """V5.12 §8 (core.gates.news_public): the index, and the newsletter's form on it, exist once one article is live."""
+    return article_factory("Visible", slug="visible")
+
+
 def test_block_hidden_when_flag_off(client, legal_published):
     html = client.get(INDEX).content.decode()
     assert LABEL_TEXT not in html

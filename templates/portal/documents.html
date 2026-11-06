@@ -16,14 +16,16 @@ Contract, from portal.views.documents / portal.services.documents_page: `availab
 `page_obj`, `organisation_documents`, `organisation_documents_limit`; the register comes from the register tag
 (documents.presenters).
 {% endcomment %}
-{% block page_title %}{% translate "Mes pièces" %}{% endblock %}
+{% block page_title %}{% translate "Mes documents" %}{% endblock %}
 {% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head doc-head doc-head--register">
+<header class="ws-head doc-head doc-head--register" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="sheets" %}
   <div class="ws-head__words">
-    <h1 class="ws-head__title">{% translate "Mes pièces" %}</h1>
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Mes documents" %}</h1>
     <p class="ws-head__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
   </div>
 </header>
@@ -111,7 +113,8 @@ says what it is («tous les fichiers»), never a second register.
 {% endif %}
 
 <p class="doc-aside">
-  {% if may_upload and upload_url %}<a href="{{ upload_url }}">{% translate "Déposer un fichier hors exigence" %}</a>{% endif %}
+  {% comment %} (V5.18 P-5) With nothing required, the empty register's tile carries this act: said once. {% endcomment %}
+  {% if may_upload and upload_url and register.blocks %}<a href="{{ upload_url }}">{% translate "Déposer un fichier hors exigence" %}</a>{% endif %}
   <a href="{% url 'documents:index' %}">{% translate "Registre complet" %}</a>
 </p>
 
@@ -129,3 +132,4 @@ says what it is («tous les fichiers»), never a second register.
 {% comment %} The preview drawer: beside the register on desktop, a sheet on a phone — outside the page it reads again. {% endcomment %}
 {% if available and register.blocks %}{% include "documents/partials/piece_drawer.html" %}{% endif %}
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

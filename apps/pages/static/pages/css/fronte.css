@@ -1,0 +1,8 @@
+/* ============================================================================================
+   The frontispiece «il frontespizio» (V5.15 §3/§4; label v515-c-build): the page sheet of the page header of every
+   important public page — linked by templates/pages/partials/_ingresso.html itself, right before the band, so every
+   page that draws the entrance (the doors, the project pages, the pathways, the Forum's register, orientation) gets
+   it, and main.css carries none of it. A plain list of imports, written as they resolve in the collected tree.
+   ============================================================================================ */
+@import url("../../css/v5/_fronte.css");
+@import url("../../css/v5/_sigillo.css");

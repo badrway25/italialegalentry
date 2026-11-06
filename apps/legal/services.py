@@ -2,12 +2,21 @@ from __future__ import annotations
 
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from core import clock
-from legal.models import LegalDocument, LegalDocumentVersion, LegalKind, LegalStatus
+from legal.models import (
+    VERIFIED_PROCESSING_KINDS,
+    LegalDocument,
+    LegalDocumentVersion,
+    LegalKind,
+    LegalStatus,
+    open_fields_allowed,
+)
 
 CACHE_KEY = "legal.all_published"
+DOCUMENT_CACHE_KEY = "legal.published.%s"
 
 
 def ensure_documents() -> int:
@@ -19,6 +28,11 @@ def ensure_documents() -> int:
 
 
 def all_official_pages_published() -> bool:
+    """Gate G1: ALL FIVE documents published — never only the privacy and cookie information (V5.14 §6).
+
+    The forms, sign-up, newsletter and Virtual Forum depend on the Allegato 1 pages (C, D) as well as on A and B,
+    so A and B public on their own keep every one of them closed.
+    """
     cached = cache.get(CACHE_KEY)
     if cached is not None:
         return cached
@@ -31,8 +45,24 @@ def all_official_pages_published() -> bool:
     return ok
 
 
+def document_available(kind: str) -> bool:
+    """One document published and showable (per-document gate: a link to it, a route that 404s without it)."""
+    key = DOCUMENT_CACHE_KEY % kind
+    cached = cache.get(key)
+    if cached is not None:
+        return cached
+    try:
+        doc = LegalDocument.objects.filter(kind=kind).first()
+        ok = bool(doc and doc.is_available)
+    except Exception:  # pragma: no cover - before migrations
+        ok = False
+    cache.set(key, ok, 30)
+    return ok
+
+
 def invalidate() -> None:
     cache.delete(CACHE_KEY)
+    cache.delete_many([DOCUMENT_CACHE_KEY % kind for kind in LegalKind.values])
 
 
 def get_document(kind: str) -> LegalDocument:
@@ -48,18 +78,33 @@ def publish(document: LegalDocument, user, request=None) -> LegalDocument:
         raise ValidationError(_("Impossibile pubblicare: il testo ufficiale italiano è assente."))
     if not document.source_reference.strip():
         raise ValidationError(_("Indicare il riferimento della fonte ufficiale (Allegato 1)."))
+    if document.open_fields() and not open_fields_allowed():
+        # Plain Italian, like the rest of the back office's legal screens: no new catalogue message.
+        # V5.16: by class — whatever the class (production configuration, owner confirmation, legal review), it refuses
+        listed = "; ".join(f"{label}: {', '.join(ids)}" for label, ids in document.open_field_classes())
+        raise ValidationError(
+            f"Impossibile pubblicare: il testo contiene ancora campi da completare ({listed}). "
+            "Sostituire ogni «[DA COMPLETARE …]», nel testo italiano e nelle traduzioni, con il dato verificato."
+        )
     now = clock.now()
     document.status = LegalStatus.PUBLISHED
     document.published_at = now
     document.published_by = user
     document.last_reviewed_at = document.last_reviewed_at or now
-    document.save()
+    if document.kind in VERIFIED_PROCESSING_KINDS and not document.effective_date:
+        document.effective_date = timezone.localdate(now)  # the date of the revision, shown in the page's head
+    document._publishing = True  # LegalDocument.save: this change of text is the publication itself
+    try:
+        document.save()
+    finally:
+        document._publishing = False
     LegalDocumentVersion.objects.get_or_create(
         document=document,
         version=document.version,
         defaults={
             "title_it": document.title_it,
             "body_it": document.body_it,
+            "translations": document.translations or {},
             "checksum": document.checksum,
             "published_at": now,
             "published_by": user,

@@ -76,6 +76,56 @@ def newsletter_enabled() -> bool:
     return flags.is_enabled("newsletter") and legal_pages_available()
 
 
+def news_public() -> bool:
+    """V5.12 §8 — «Actualités» exists in public only once it has something to say: at least one live article.
+
+    While no article is live, the index answers 404, the menu and footer leave its link out (``core.links`` reads the
+    route's gate) and the sitemap omits it. A page that only says «nothing published yet» is unfinished (V5.12 §13).
+    The open newsletter alone does not reopen it (DECISIONS §8: «at least one published item»): a news page with no
+    news is that page. Its form lives on the index alone, so the subscription waits for the first article too
+    (``news.views.newsletter_subscribe``) and never redirects to a 404.
+    """
+    from django.db.utils import DatabaseError
+
+    from news.models import Article
+
+    try:
+        return Article.objects.public().exists()
+    except DatabaseError:  # pragma: no cover - before migrations
+        return False
+
+
+def forum_public() -> bool:
+    """V5.12 §8 — «Forum Vénétie–Maroc» exists in public only with a live edition (``forum.services.current_event``).
+
+    Without one, ``/forum/`` answers 404 and, through the route's gate, the menu, the footer and every gate-aware
+    link (``core.links.public_url``) leave it out, so no link leads to a missing page.
+    """
+    from django.db.utils import DatabaseError
+
+    from forum.services import current_event
+
+    try:
+        return current_event() is not None
+    except DatabaseError:  # pragma: no cover - before migrations
+        return False
+
+
+def partners_public() -> bool:
+    """V5.12 §8 — «Partenaires» exists in public only with at least one partner live AND authorised in writing (G6).
+
+    Until then the index answers 404 and every «Voir les partenaires» link is left out: the promoter stands alone.
+    """
+    from django.db.utils import DatabaseError
+
+    from partners.models import Partner
+
+    try:
+        return Partner.objects.authorized().exists()
+    except DatabaseError:  # pragma: no cover - before migrations
+        return False
+
+
 def snapshot() -> dict:
     forms = public_forms_enabled()
     return {

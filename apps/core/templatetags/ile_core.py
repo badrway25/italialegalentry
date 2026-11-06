@@ -6,14 +6,21 @@ Built-in template tags (loaded automatically via TEMPLATES['OPTIONS']['builtins'
 {% locked_lang "key" %}           → effective language code of the locked text
 {% flag "key" as var %}           → boolean feature flag
 {% svg_icon "name" %}             → one symbol of the ILE sprite, through the registry apps/core/icons.py (a <use>
-                                    of static/img/icons.svg, served with its content hash; the closed flip list)
+                                    of static/img/icons.svg or icons-domain.svg — icons.SPRITE_OF — served with its
+                                    content hash; the closed flip list)
 {{ key|concept:"domain" }}        → the registry's symbol for a concept key (card, actor, nav, pathway, living, due…)
+{% chapter_mark title_id "cls" %} → the concept glyph of a section (icons.CHAPTER) inside its caller's container, or
+                                    nothing; without a class — the bare mark above a title — nothing (V5.22 §0.3)
+{{ key|mark_of }}                 → V5.22: an ILE mark's id from its id or its concept (icons.MARKS), "" when none
+{{ glyph|folio_mark }}            → V5.22: the T1 mark a head folio draws for its concept glyph (icons.FOLIO), or ""
 {{ actor|actor_glyph }}           → the glyph of a responsible actor, "" when unknown
 {% chip value "app.Enum" %}…{% endchip %} → THE status chip: its register and its mark from apps/core/chips.py
 {% chip register="neutro" %}…{% endchip %} → the same, for a state the template knows by its register
 {{ value|chip_mark:"app.Enum" }}  → the sprite symbol of a status mark, for a strip or a filter that draws it bare
 {% active "url_name" %}           → "is-active" when the current URL name matches
 {{ value|rtl_arrow }}             → mirrors →/← for RTL languages
+{% extends request|account_frame %} → an account page's layout: the console for a signed-in account (accounts.shell)
+{% account_console as shell %}    → the rail and the trail of an account page in the console
 """
 
 from __future__ import annotations
@@ -77,17 +84,18 @@ def flag(key: str) -> bool:
     return flags.is_enabled(key)
 
 
-@functools.lru_cache(maxsize=1)
-def _sprite_url() -> str:
+@functools.lru_cache(maxsize=4)
+def _sprite_url(sprite: str = icons.SPRITE) -> str:
     """
-    The sprite's URL with a content hash — ``?v=<sha256[:12]>`` of the file — so a new sprite is never drawn
+    A sprite's URL with a content hash — ``?v=<sha256[:12]>`` of the file — so a new sprite is never drawn
     from a cached one; unless the static storage already hashes the name (the manifest storage of production
-    and of the compressed twin), in which case that URL is the hash.
+    and of the compressed twin), in which case that URL is the hash. Two sprites since V5.12 W2 (DECISIONS §4):
+    ``icons.SPRITE_OF`` says which file holds a symbol, so each ``<use>`` points at its own.
     """
-    url = static(icons.SPRITE)
+    url = static(sprite)
     if re.search(r"\.[0-9a-f]{8,}\.svg$", url):
         return url
-    path = finders.find(icons.SPRITE)
+    path = finders.find(sprite)
     if not path:
         return url
     digest = hashlib.sha256(Path(path).read_bytes()).hexdigest()[:12]
@@ -117,7 +125,7 @@ def svg_icon(name: str, css_class: str = "icon", label: str = ""):
         '<svg class="{}"{} focusable="false"><use href="{}#icon-{}"></use></svg>',
         " ".join(classes),
         aria,
-        _sprite_url(),
+        _sprite_url(icons.SPRITE_OF[symbol]),
         symbol,
     )
 
@@ -133,6 +141,48 @@ def concept(key, domain: str) -> str:
         return icons.concept(domain, key)
     except icons.UnknownIcon:
         return ""
+
+
+@register.simple_tag
+def chapter_mark(key: str = "", css_class: str = ""):
+    """
+    The glyph of a section's concept (V5.12 §7), through the registry's CHAPTER map — ``{% chapter_mark title_id "icon
+    chapter__mark" %}`` with the section's anchor or a concept — drawn inside its caller's own container (the premium
+    forms' glyph tiles, V5.15 W3: preserved), and nothing when the section says no concept.
+
+    V5.22 (SECTION_SYSTEM_V2 §0 item 3, §4.1 rule 1, §4.10; lane S): the BARE mark — the tag without a class, a 24 px
+    glyph stacked above a title — is retired everywhere: it draws nothing. A theme is a T1 seal integrated in its
+    section's composition (components/sezioni/sigillo.html), or it is not drawn. CHAPTER / CHAPTER_OF stay the concept
+    registry.
+    """
+    if not css_class:
+        return ""
+    symbol = icons.chapter_glyph(key)
+    return svg_icon(symbol, css_class) if symbol else ""
+
+
+@register.filter
+def mark_of(key) -> str:
+    """
+    V5.22 (SECTION_SYSTEM_V2 §4.9–§4.10): the id of an ILE mark — ``{{ "orientation"|mark_of }}`` with a concept of
+    ``icons.MARKS``, or ``{{ "ile-scudo"|mark_of }}`` with the id itself — and "" for anything else, so a seat is drawn
+    for a registered mark or not at all (components/sezioni/sigillo.html).
+    """
+    key = str(key or "")
+    if key in icons.MARK:
+        return key
+    mark = icons.MARKS.get(key)
+    return mark.id if mark else ""
+
+
+@register.filter
+def folio_mark(glyph) -> str:
+    """
+    V5.22 (§0.1 «Folio seals in the heads»): the T1 mark the head folio's small seat draws for the concept glyph a page
+    passes its frontispiece (``icons.FOLIO``), or "" — then the folio is typographic: a Lucide disc in the folio's
+    seat would be the old device.
+    """
+    return icons.FOLIO.get(str(glyph or ""), "")
 
 
 @register.simple_tag
@@ -336,3 +386,21 @@ def badge_register(kind) -> str:
     from core import chips
 
     return chips.register_for_kind(kind)
+
+
+@register.filter
+def account_frame(request) -> str:
+    """The layout of an account page (V5.12 W2): the console's for a signed-in account whose reserved area is open,
+    the public one otherwise — ``{% extends request|account_frame %}`` in allauth/layouts/manage.html (accounts.shell).
+    A builtin filter, because ``{% extends %}`` must be a template's first tag and no ``{% load %}`` may precede it."""
+    from accounts import shell
+
+    return shell.frame(request)
+
+
+@register.simple_tag(takes_context=True)
+def account_console(context) -> dict:
+    """The rail and the trail of an account page in the console (accounts.shell.console_context)."""
+    from accounts import shell
+
+    return shell.console_context(context["request"])

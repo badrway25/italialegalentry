@@ -1,0 +1,151 @@
+/* The imagery test bench (design V5, V5.22; labels v522-m-build, v522-m-improve1) — development only. Loaded by
+   templates/dev/designpreview/specimens/imagery.html after css/dist/main.css (no motion sheet: the bench is still). It
+   draws each frame ALONE on paper, in a box sized in percentages of the page container (never in vw, so nothing ever
+   overflows the layout viewport, with or without a classic scrollbar), so tests/frontend/test_imagery_v522_m.py can
+   read the ratio each band takes and the file the browser chooses. It draws no composition and no treatment. Tokens
+   only, logical properties; nothing here reaches a product page. */
+
+.spi {
+  max-inline-size: none;
+  margin: 0;
+  padding: var(--s-8) 0;
+  background: var(--surface-page);
+  color: var(--text-1);
+}
+
+.spi > .sp-head,
+.spi .sp-section {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+.spi .sp-head {
+  margin-block-end: var(--s-12);
+}
+
+.spi .sp-section {
+  margin-block-end: var(--s-16);
+}
+
+.spi .sp-eyebrow {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-small);
+  color: var(--text-2);
+}
+
+.spi .sp-title {
+  margin: 0 0 var(--s-4);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+}
+
+.spi .sp-lead,
+.spi .sp-note {
+  max-inline-size: var(--measure-prose);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.spi .sp-h2 {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+/* the product's figure rules live in the page-only _photo.css, which the bench does not load: the same few here, so a
+   figure is exactly as wide as its box (a figure's UA margins would take 80 px off every frame) */
+.spi .foto {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.spi .foto picture {
+  display: block;
+}
+
+.spi .foto__img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.spi .foto__credit {
+  margin-block-start: var(--s-2);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  color: var(--text-2);
+}
+
+/* one frame per box: the full container below 64 rem; from 64 rem a share of the container that keeps each band's
+   file choice realistic (the bench measures the choice against the evaluated sizes, not against these boxes) */
+.spi-frame {
+  margin-block: var(--s-6);
+}
+
+@media (min-width: 64rem) {
+  .spi-frame--wide {
+    inline-size: 57%;
+  }
+
+  .spi-frame--half {
+    inline-size: 50%;
+  }
+
+  .spi-frame--third {
+    inline-size: 34%;
+  }
+}
+
+/* the four family frames as a contact sheet: one column below 64 rem, four across from 64 rem */
+.spi-sheet {
+  display: grid;
+  gap: var(--s-6);
+  margin: var(--s-6) 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 64rem) {
+  .spi-sheet {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+}
+
+/* the data sheet under each frame */
+.spi-scheda {
+  display: grid;
+  gap: var(--s-1);
+  margin-block: var(--s-3) var(--s-6);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.spi-scheda > div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--s-3);
+}
+
+.spi-scheda dt {
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.spi-scheda dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.spi-scheda__cap {
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}

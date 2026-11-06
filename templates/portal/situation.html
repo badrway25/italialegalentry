@@ -30,14 +30,16 @@ The Stepper's filled nodes are the same count, question by question — the prof
 {% block meta_description %}{% translate "Les informations que vous nous communiquez sur votre situation, et ce qu’elles servent à déterminer." %}{% endblock %}
 {% comment %}The page's one page-only sheet (the owner's V5.8: never in the shared bundles), after the shell's two: the
 guided form (W3-F1's v5/_wizard.css — the w3-d merge took it out of console.css) and its Stepper (W3-D).{% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/situation.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/situation.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block case_header %}{% endblock %}
 {% block next_action_block %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head">
+<header class="ws-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="route" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Ma situation" %}</h1>
     <p class="ws-head__lead">{% translate "Ces informations servent à une seule chose : déterminer quelles conditions d’entrée s’appliquent à votre projet. Chaque question indique ce qu’elle permet de vérifier. Aucune n’est obligatoire." %}</p>
   </div>
@@ -49,7 +51,7 @@ guided form (W3-F1's v5/_wizard.css — the w3-d merge took it out of console.cs
   {% blocktranslate %}Lorsque vous enregistrez cette page, votre orientation est recalculée à partir des règles en vigueur. Les résultats précédents sont conservés dans votre dossier : ils attestent de ce qui vous a été indiqué, et à quelle date.{% endblocktranslate %}
 </p>
 
-<form method="post" action="{% url 'portal:situation' %}" class="wiz" novalidate data-wizard>
+<form method="post" action="{% url 'portal:situation' %}" class="wiz" novalidate data-wizard data-loader-action="recalculate-situation">
   {% csrf_token %}
   {% include "components/form_errors.html" with form=form %}
 
@@ -101,5 +103,5 @@ guided form (W3-F1's v5/_wizard.css — the w3-d merge took it out of console.cs
   <p class="db-acts"><a class="btn btn--link btn--sm" href="{% url 'accounts:profile' %}">{% translate "Voir, exporter ou supprimer l’ensemble de mes données" %}</a></p>
 </section>
 {% endblock %}
-{% block extra_scripts %}{{ block.super }}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>
 <script type="module" src="{% static 'js/dist/situation.js' %}"></script>{% endblock %}

@@ -1,0 +1,137 @@
+/* ============================================================================================
+   «MON COMPTE» IN THE CONSOLE — V5.18 P-2 (lane B). A partial, imported by cms/servizio.css only (the account pages'
+   sheet) after v5/_servizio.css — never by cms/errori.css: the error pages draw no account. The console frame
+   (allauth/layouts/_console.html) links portal/platform.css for the atrium itself.
+   ============================================================================================ */
+
+/* ---- V5.18 P-2 · «Mon compte» in the console: the atrium, the column's rise, the second factor ------------------
+   The account's pages open on the console's page head — lane D's atrium (accounts/partials/account_head.html; its
+   sheet is portal/platform.css, linked by allauth/layouts/_console.html). Here it stands in the account's column,
+   beside the sections' list: the drawing keeps a narrower column so the words keep their measure. */
+.conto--console .conto__main > .acct-head {
+  --atrium-art-w: 14rem;
+  margin-block: 0;
+}
+
+@media (max-width: 79.99rem) {
+  .conto--console .conto__main > .acct-head {
+    --atrium-art-w: 11rem;
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .conto--console .conto__main > .acct-head {
+    --atrium-art-w: 12rem;
+  }
+}
+
+.conto--console .conto__main > .acct-head + * {
+  margin-block-start: var(--s-8);
+}
+
+/* the column rises into place as the console's do (portal/v5/_motion.css's c-rise: 420 ms, 12 px, a step of 60 ms;
+   the keyframes come with the console's sheet) — the head and its h1 never fade; never under reduced motion or html.rm */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.rm) .conto--console > .conto__main > :not(.acct-head) {
+    animation: c-rise 420ms cubic-bezier(0.25, 1, 0.5, 1) calc(var(--c-d, 0ms) + var(--rise-wait, 0ms)) backwards;
+  }
+
+  html:not(.rm) .conto--console > .conto__main > :nth-child(3) { --c-d: 60ms; }
+  html:not(.rm) .conto--console > .conto__main > :nth-child(n+4) { --c-d: 120ms; }
+}
+
+/* the second factor (templates/mfa/index.html; 21st «Enable 2FA Card», 5751, adapted): the security glyph in its tile
+   beside the block's title and its state chip, then — while the app is not active — three numbered steps on one
+   hairline route, the reading start's edge; mirrored by the logical properties alone */
+.conto .tfa__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+
+.conto .tfa__words {
+  min-inline-size: 0;
+}
+
+.conto .tfa__words > * {
+  margin: 0;
+}
+
+.conto .tfa__words > * + * {
+  margin-block-start: var(--s-2);
+}
+
+.conto .tfa__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+}
+
+.conto .tfa-steps {
+  display: grid;
+  margin: var(--s-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tfa-steps__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  column-gap: var(--s-4);
+  padding-block-end: var(--s-5);
+}
+
+.tfa-steps__step:last-child {
+  padding-block-end: 0;
+}
+
+/* the route between two steps: a hairline from one number to the next */
+.tfa-steps__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(0.875rem - 0.5px);
+  inset-block: 2.25rem var(--s-1);
+  inline-size: 1px;
+  background: var(--line-rhythm);
+}
+
+.tfa-steps__n {
+  display: grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  background: var(--surface-sheet);
+  font-size: var(--t-small);
+  font-weight: var(--w-title);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-1);
+}
+
+.tfa-steps__words > p {
+  margin: 0;
+}
+
+.tfa-steps__title {
+  padding-block-start: 0.1875rem;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.tfa-steps__text {
+  max-inline-size: var(--measure-body);
+  margin-block-start: var(--s-1);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+@media (forced-colors: active) {
+  .tfa-steps__n { border-color: CanvasText; }
+  .tfa-steps__step:not(:last-child)::after { background: CanvasText; }
+}

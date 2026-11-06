@@ -5,7 +5,9 @@ from __future__ import annotations
 import re
 
 import pytest
-from django.utils import timezone
+from django.utils import timezone, translation
+from django.utils.html import escape
+from django.utils.translation import gettext
 
 from core.models import SiteSettings
 from portal.tests.conftest import DASHBOARD, DEADLINES, DOCUMENTS, MESSAGES, PATHWAYS, REQUESTS
@@ -42,8 +44,14 @@ def test_dashboard_for_a_fresh_account_shows_empty_states_not_numbers(client, se
     html = _html(client, DASHBOARD)
     assert 'class="portal-cards"' not in html, "the Person dashboard is not a card grid"
     assert 'class="empty-state"' not in html, "no dashed box with a centred icon"
-    # design V5 (W3-B): an empty region is one line, `db-empty` — the dates, the communications, the Academy
-    assert html.count('class="db-empty"') >= 3
+    # design V5 (W3-B): an empty region is one line, `db-empty`. V5.12 D-20 (the empty-wall collapse): the dates and
+    # the communications, both empty, are no longer two heads over «… apparaîtront ici» but ONE calm sentence in
+    # their place; the Academy's fold keeps its own line.
+    assert 'class="db-empty db-calm"' in html
+    assert html.count("Aucune échéance ni communication pour l’instant.") == 1
+    assert "apparaîtront ici" not in html, "no head over an empty register"
+    assert 'id="db-dates-title"' not in html and 'id="db-messages-title"' not in html
+    assert html.count('class="db-empty') >= 2, "the calm line and the Academy's line"
     assert "data-count" not in html, "an empty region must not print a figure"
     assert 'data-card="organisation"' not in html
     assert "Alice ALPHA-UNIQUE" in html and alice.email in html
@@ -90,8 +98,12 @@ def test_staff_account_gets_the_backoffice_link(client, seeded, staff_user):
 def test_company_account_sees_its_organisation_card(client, seeded, company_a):
     user, organisation = company_a
     client.force_login(user)
-    card = _card(_html(client, DASHBOARD), "organisation")
-    assert organisation.name in card and "Rovigo" in card
+    # V5.15 lane D F1: a company's organisation is its identity sheet (the organisation's pattern), not a bridge card
+    match = re.search(
+        r'<section class="org-id[^"]*"[^>]*data-card="organisation".*?</section>', _html(client, DASHBOARD), re.S
+    )
+    assert match, "the company's identity sheet is drawn"
+    assert organisation.name in match.group(0) and "Rovigo" in match.group(0)
 
 
 def test_published_notice_is_shown_inside_the_portal_only(client, seeded, alice):
@@ -132,7 +144,8 @@ def test_requests_list_is_paginated(client, seeded, alice, make_contact_request)
 def test_requests_empty_state(client, seeded, alice):
     client.force_login(alice)
     html = _html(client, REQUESTS)
-    assert 'class="empty-state"' in html and "<table" not in html
+    # V5.15 W3 (lane B): the console's empty state is the ILE tile (components/empty_state.html)
+    assert 'class="empty-state empty-state--tile"' in html and "<table" not in html
 
 
 def test_request_detail_shows_own_data_and_consent_metadata(client, seeded, alice, make_company_request):
@@ -202,7 +215,7 @@ def test_pathways_result_date_is_the_rome_date_after_midnight(
 def test_pathways_empty_state_links_to_orientation_start(client, seeded, alice):
     client.force_login(alice)
     html = _html(client, PATHWAYS)
-    assert 'class="empty-state"' in html and 'href="/fr/orientation/"' in html
+    assert 'class="empty-state empty-state--tile"' in html and 'href="/fr/orientation/"' in html
 
 
 def test_pathways_renders_the_locked_disclaimer_from_the_registry(client, alice, completed_orientation):
@@ -330,7 +343,11 @@ def test_four_languages_render_with_correct_direction(client, seeded, alice, lan
         assert ('dir="rtl"' in html.split(">", 2)[1]) == (lang == "ar")
     dashboard = _html(client, DASHBOARD.replace("/fr/", f"/{lang}/", 1))
     if lang != "fr":
-        assert '<span lang="fr">ESPACE RÉSERVÉ</span>' in dashboard, "French fallback is marked with lang"
+        # V5.18 (P-3): the access point's prescribed French (p3.reserved.*, no official it/en/ar version) heads the page
+        # only in French; elsewhere the console's own translated head, never the French under a translated eyebrow
+        assert "ESPACE RÉSERVÉ" not in dashboard
+        with translation.override(lang):
+            assert f'<h1 class="ws-head__title">{escape(gettext("Tableau de bord"))}</h1>' in dashboard
 
 
 def test_kill_switch_renders_503_for_accounts_but_not_for_staff(client, seeded, alice, staff_user):

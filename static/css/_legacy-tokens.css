@@ -17,77 +17,48 @@
 
 :root {
   /* ---- Surfaces -> GROUND ------------------------------------------------ */
-  --surface-0: var(--paper); /* -> --paper */
   --surface-1: var(--paper); /* -> --paper */
   --surface-2: var(--paper-deep); /* -> --paper-deep */
-  --surface-3: var(--paper-edge); /* -> --paper-edge */
   --surface-inverse: var(--navy); /* -> --navy */
-  --surface-overlay: rgb(14 22 29 / 0.55);
-  --color-white: var(--surface-input); /* -> --surface-input */
 
   /* ---- Text -> INK ------------------------------------------------------- */
-  --text-body: var(--ink); /* -> --ink */
   --text-strong: var(--ink); /* -> --ink */
   --text-secondary: var(--ink-secondary); /* -> --ink-secondary */
   --text-muted: var(--ink-muted); /* -> --ink-muted */
-  --text-placeholder: var(--ink-muted); /* -> --ink-muted */
-  --text-brand: var(--navy); /* -> --navy */
   --text-on-inverse: var(--paper-on-navy); /* -> --paper-on-navy */
   --text-on-inverse-muted: var(--paper-muted-on-navy); /* -> --paper-muted-on-navy */
   /* Links are --ink with an underline, never a distinct link blue: the old
      #1e4a85 was simultaneously the link colour, a status colour and, within a
      hair, the structural navy. */
-  --text-link: var(--ink);
-  --text-link-hover: var(--navy);
 
   /* ---- Primary ramp -> STRUCTURE ----------------------------------------- */
-  --color-primary-50: var(--paper-deep);
   --color-primary-100: var(--paper-edge);
-  --color-primary-300: var(--rule-ink);
-  --color-primary-700: var(--navy);
-  --color-primary-800: var(--navy);
   --color-primary-900: var(--navy); /* -> --navy */
   --color-primary-950: var(--navy-deep); /* -> --navy-deep */
   --color-neutral-950: var(--ink);
-  --color-secondary-800: var(--cooperation); /* -> --cooperation */
 
   /* ---- Bronze -> ORDER --------------------------------------------------- */
   /* The single worst offender of the old system: one colour doing eight
      unrelated jobs across 38 declarations. Every one of them now resolves to
      the rubric, whose single job is ORDER, and each usage is re-examined as its
      file is migrated — several will lose their colour entirely. */
-  --color-accent-200: var(--rule-hair);
   --color-accent-600: var(--rubric);
   --color-accent-700: var(--rubric);
   --border-accent: var(--rubric);
 
   /* ---- State ------------------------------------------------------------- */
-  /* --color-success-* maps to the DONE triplet, which is blue, not green: no
-     colour on this site ever means "approved". */
-  --color-success-fg: var(--state-done-fg);
-  --color-success-bg: var(--state-done-bg);
-  --color-success-border: var(--state-done-br);
-  --color-info-fg: var(--state-info-fg);
-  --color-info-bg: var(--state-info-bg);
-  --color-info-border: var(--state-info-br);
-  --color-warning-fg: var(--state-warn-fg);
-  --color-warning-bg: var(--state-warn-bg);
-  --color-warning-border: var(--state-warn-br);
+  /* --color-success-*, --color-info-*, --color-warning-* and --color-pending-* left with V5.20 (v520-css, 30 October
+     2026): read by nothing. The DONE triplet «success» pointed at stays blue (tokens.css, §STATE): no colour on this
+     site ever means "approved". The error pair stays: docs/ACCESSIBILITY.md §6 names it. */
+  /* --notice-bg / -fg, --measure-narrow and --z-below left with V5.12 W2 (lane A, 28 October 2026): read by nothing,
+     named by no document. */
   --color-error-fg: var(--state-error-fg);
   --color-error-bg: var(--state-error-bg);
-  --color-error-border: var(--state-error-br);
-  --color-pending-fg: var(--state-pending-fg);
-  --color-pending-bg: var(--state-pending-bg);
-  --color-pending-border: var(--state-pending-br);
-  --notice-fg: var(--state-info-fg);
-  --notice-bg: var(--state-info-bg);
-  --notice-border: var(--state-info-br);
 
   /* ---- Borders -> RULES -------------------------------------------------- */
   --border-hairline: var(--rule-hair); /* -> --rule-hair */
   --border-subtle: var(--rule-hair); /* -> --rule-hair */
   --border-strong: var(--rule-ink); /* -> --rule-ink */
-  --border-inverse: var(--paper-muted-on-navy);
   --border-width: 1px;
   --border-width-strong: 2px;
 
@@ -101,25 +72,17 @@
   --space-8: var(--s-8);
   --space-10: var(--s-12);
   --space-12: var(--s-12);
-  --space-16: var(--s-16);
-  --space-20: var(--s-24);
-  --space-24: var(--s-24);
   --stack-gap: var(--s-4);
   --gutter: var(--grid-gutter);
-  /* Container ranks the old system declared and barely used. --container-max
-     froze at 1200px at every width above it; --container-wide existed and was
-     used for nothing structural. */
-  --container-max: var(--container);
-  --container-wide: var(--container);
+  /* Container ranks the old system declared and barely used: the «max» rank froze at 1200px at every width above it
+     and the «wide» one was used for nothing structural; both left with V5.20 (v520-css), read by nothing. */
   --container-narrow: 42rem;
-  --container-prose: 42rem;
   --section-gap: var(--rank-b-block);
 
   /* ---- Radius ------------------------------------------------------------ */
   /* --radius-xs / -sm / -md left the shim on 5 October 2026: design V5 adopts
-     them as its corner scale «Lo spigolo» (static/css/v5/tokens.css, W1-A). */
-  --radius-pill: var(--radius-control);
-  --forum-radius: 0;
+     them as its corner scale «Lo spigolo» (static/css/v5/tokens.css, W1-A). --radius-pill left with V5.20 (v520-css):
+     v4/tokens.css and v5/aliases.css declare it after this file, so the shim's value never reached a page. */
 
   /* ---- Elevation --------------------------------------------------------- */
   /* Elevation is none. The three old shadow tokens resolve to nothing so that
@@ -135,22 +98,12 @@
   --weight-medium: 500;
   --weight-semibold: 600;
   --leading-tight: 1.15;
-  --leading-heading: 1.2;
-  --leading-body: 1.6;
-  --leading-display: 1.05;
   --leading-relaxed: 1.65;
-  --tracking-normal: var(--track-normal);
-  --tracking-tight: var(--track-band);
-  --tracking-button: var(--track-normal);
-  --tracking-eyebrow: var(--track-folio);
 
   /* ---- Controls and chrome ----------------------------------------------- */
-  /* --control-height / -sm left the shim: static/css/v5/aliases.css points them at --control-md / -sm. */
+  /* --control-height / -sm left the shim: static/css/v5/aliases.css points them at --control-md / -sm. The letterhead's
+     two heights left with V5.20 (v520-css): v2/tokens.css and v4/tokens.css declare them after this file. */
   --icon-size: 20px;
-  --icon-size-sm: 16px;
-  --icon-size-lg: 24px;
-  --utility-height: var(--chrome-utility);
-  --header-height: var(--chrome-masthead);
 
   /* ---- Focus: the five --focus-ring-* names left the shim — design V5's one focus system declares
      them (static/css/v5/tokens.css, aliases.css; V5.4 plan §1.6). ------------------------------ */
@@ -159,37 +112,16 @@
   --duration-fast: var(--motion-fast);
   --duration-base: var(--motion-base);
   --duration-slow: var(--motion-slow);
-  /* Consumed by components.css and declared by nothing, in this build and the one before it: each
-     var() was falling back to its initial value, so transitions lost their easing, short centred
-     text lost its cap, and the skip link, the dropdowns and the no-JS dialog lost their declared
-     layer. Found by the design-system truthfulness pass, 21/09/2026. */
-  --ease-standard: var(--ease-out);
-  --measure-narrow: 42ch;
-  --z-below: -1;
-  --z-dropdown: var(--z-header);
-  --z-skiplink: var(--z-dialog);
+  /* Three names components.css read and nothing declared were mapped here on 21/09/2026 (the easing, the dropdowns'
+     and the skip link's layers); they left with V5.20 (v520-css): v2/tokens.css and v4/tokens.css declare all three
+     after this file, so the shim's values never reached a page. */
 
   /* ---- Buttons ----------------------------------------------------------- */
   --btn-bg: var(--navy);
-  --btn-fg: var(--paper-on-navy);
-  --btn-bg-hover: var(--navy-deep);
-  --btn-fg-hover: var(--paper-on-navy);
-  --btn-border: var(--navy);
 
   /* ---- Per-app locals that never belonged in an app stylesheet ----------- */
   /* apps/forum and apps/pathways each invented a private palette. They resolve
      to the system and the locals are deleted when those files are migrated. */
-  --forum-navy: var(--navy);
-  --forum-ink: var(--ink);
-  --forum-paper: var(--paper);
-  --forum-sand: var(--paper-deep);
-  --forum-line: var(--rule-hair);
-  --forum-muted: var(--ink-muted);
-  --forum-gold: var(--rubric);
-  --forum-gold-soft: var(--rule-hair);
-  --forum-space: var(--s-6);
-  --pilot-line: var(--rule-hair);
-  --pilot-node: var(--rubric);
   --timeline-line: var(--rule-hair);
 }
 
@@ -203,28 +135,19 @@
    ========================================================================== */
 
 :root {
-  --font-size-display: var(--t-plate-size);
-  --font-size-h1: var(--t-title-size);
-  --font-size-h2: var(--t-band-size);
   --font-size-h3: var(--t-entry-size);
   --font-size-h4: var(--t-folio-size);
-  --font-size-lead: var(--t-lead-size);
-  --font-size-body: var(--t-prose-size);
   --font-size-small: var(--t-gloss-size);
-  --font-size-legal: var(--t-gloss-size);
   --font-size-caption: var(--t-caption-size);
-  --font-size-label: var(--t-ui-size);
-  --font-size-button: var(--t-ui-size);
-  --font-size-eyebrow: var(--t-folio-size);
   --font-body: var(--font-ui);
-  --font-heading: var(--font-display);
-  --font-mono: var(--font-ref);
-  --measure-lead-legacy: var(--measure-lead);
+  /* the label and button sizes (read by nothing) and the mono family (v4/tokens.css and v5/aliases.css declare it
+     after this file) left with V5.20 (v520-css) */
 }
 
 /* the legacy type classes (.text-h4, .text-small, .text-caption, .text-muted, .text-secondary) left with their last
    templates: no template, script or module of design-v5 or of a branch in flight names them (W4-A's fix pass, paying
-   for the notices' address in v5/notice.css under V5.8) */
+   for the notices' address in v5/notice.css under V5.8); .numeral followed with V5.20 (v520-css): no template, script
+   or module names it any more */
 
 /* The eyebrow is abolished by the direction: the folio replaces it entirely.
    Until every template carries a folio, the class renders as the folio label
@@ -246,10 +169,4 @@
 :lang(ar) .eyebrow {
   text-transform: none;
   letter-spacing: 0;
-}
-
-.numeral {
-  font-family: var(--font-display);
-  font-variant-numeric: lining-nums tabular-nums;
-  color: var(--rubric);
 }

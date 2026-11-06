@@ -30,10 +30,10 @@ chrome's `{% with space=portal_nav.0.space %}`), `user` and `site.languages`.
 {% endif %}{% endfor %}{% elif part == "foot" %}
 <div class="rail__foot"{% if where == "rail" %} data-rail-foot{% endif %}>
   <div class="rail__account">
-    {% safe_url 'accounts:profile' as profile_url %}
-    <{% if profile_url %}a href="{{ profile_url }}"{% else %}span{% endif %} class="rail__who" data-rail-tip data-label="{{ user.get_full_name }}{% if space.who %} — {{ space.who }}{% endif %}">
+    {% safe_url 'accounts:profile' as profile_url %}{% translate "Mon compte" as account_label %}
+    <{% if profile_url %}a href="{{ profile_url }}"{% else %}span{% endif %} class="rail__who" data-rail-tip data-label="{{ user.full_name|default:account_label }}{% if space.who %} — {{ space.who }}{% endif %}">
       <span class="rail__who-disc" aria-hidden="true">{% if space.who_domain == "actor" %}{% svg_icon space.who_key|concept:"actor" "icon" %}{% elif space.who_key %}{% svg_icon space.who_key|concept:"audience" "icon" %}{% else %}{% svg_icon "circle-user-round" "icon" %}{% endif %}</span>
-      <span class="rail__who-words"><span class="rail__who-name" dir="auto">{{ user.get_full_name }}</span>{% if space.who %}<span class="rail__who-role">{{ space.who }}</span>{% endif %}{% if profile_url %}<span class="visually-hidden"> — {% translate "Profil" %}</span>{% endif %}</span>
+      <span class="rail__who-words"><span class="rail__who-name" dir="auto">{{ user.full_name|default:account_label }}</span>{% if space.who %}<span class="rail__who-role">{{ space.who }}</span>{% endif %}{% if profile_url %}<span class="visually-hidden"> — {% translate "Profil" %}</span>{% endif %}</span>
     </{% if profile_url %}a{% else %}span{% endif %}>
     {% safe_url 'account_logout' as logout_url %}{% if logout_url %}
     <form class="rail__signout" method="post" action="{{ logout_url }}">{% csrf_token %}

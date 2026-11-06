@@ -13,10 +13,12 @@ on it at rest is the mark at the letter's head, the date in the ledger's figures
 {% endcomment %}
 {% block page_title %}{{ message.subject }}{% endblock %}
 {% block meta_description %}{% translate "Communication de l’équipe du projet." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="exchange" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title reg-head__title" dir="auto">{{ message.subject }}</h1>
   </div>
 </header>
@@ -52,3 +54,4 @@ on it at rest is the mark at the letter's head, the date in the ledger's figures
 </div>
 </div>
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

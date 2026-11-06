@@ -1,1 +1,5 @@
-{% comment %}allauth `fields` element → every visible field through the design-system form_field component.{% endcomment %}{% for field in attrs.form %}{% include "components/form_field.html" with field=field %}{% endfor %}
+{% load ile_forms %}{% comment %}allauth `fields` element → every visible field through the design-system form_field component.
+V5.15 W3 (lane B; DECISIONS §5.12): a form that says its steps (accounts.forms.SignupForm: «Qui êtes-vous ?», then the
+identity and the password) is written as its steps (components/form_steps.html); the form element marks it
+`data-steps` (form__entrance.html) and static/js/src/steps.js asks one step at a time. Hidden fields stay outside.
+{% endcomment %}{% form_steps attrs.form as steps %}{% if steps %}{% for field in attrs.form.hidden_fields %}{{ field }}{% endfor %}{% for field in attrs.form %}{% if field.name == "website_url" %}{% include "components/form_field.html" with field=field %}{% endif %}{% endfor %}{% include "components/form_steps.html" with steps=steps %}{% else %}{% for field in attrs.form %}{% include "components/form_field.html" with field=field %}{% endfor %}{% endif %}

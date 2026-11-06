@@ -78,7 +78,10 @@ def test_a_real_sign_in_sets_the_release_and_the_first_console_page_consumes_it(
 
     second = client.get(response["Location"])
     html = second.content.decode()
-    assert RELEASE not in html and html.count(MARK_IMG) == 3, "every later page carries the <img>"
+    # V5.12 (DECISIONS §1 T2, T3): the two tiles carry the mark in layers at rest on every console page — the threshold
+    # of a navigation turns its key, the View Transition lands on it — and only the drawer keeps the <img>
+    assert RELEASE not in html and html.count(MARK_IMG) == 1, "every later page: no release, the drawer's <img>"
+    assert html.count('<span class="sig"') == 2, "the rail's tile and the top bar's tile, at rest"
 
 
 @pytest.mark.django_db
@@ -403,6 +406,12 @@ def test_the_release_plays_once_at_load_and_lands_on_the_rest(browser, live_serv
     early = page.evaluate(RELEASE_STATE)
     assert early["host"], "the first console page carries the release"
     assert early["names"] == ["lume-light-o", "lume-light-t", "lume-ink-o"], early
+    # V5.12 (DECISIONS §1 T3): the tile's plate takes the light on the same phase
+    plate = page.evaluate(
+        "() => { const t = [...document.querySelectorAll('.rail__tile, .console-bar__tile')].find(e => e.getClientRects().length && e.querySelector('[data-lume]'));"
+        " const p = getComputedStyle(t, '::before'); return [p.animationName, p.animationDuration]; }"
+    )
+    assert plate == ["lume-plate-o", "1.6s"], plate
     assert early["durations"] == ["1.6s, 1.6s", "1.6s"], early
     assert early["running"] == 3, "the three animations of the one phase run from the first paint"
     assert early["seat"] == ("rail__tile" if width >= 1024 else "console-bar__tile") and early["size"] == (24 if width >= 1024 else 20)
@@ -411,21 +420,38 @@ def test_the_release_plays_once_at_load_and_lands_on_the_rest(browser, live_serv
     assert late["running"] == 0 and late["lightOpacity"] == 0 and late["inkOpacity"] == 0, late
     page.goto(live_server.url + "/fr/espace-reserve/", wait_until="networkidle")
     assert page.evaluate('() => document.querySelectorAll(\'[data-lume="release"]\').length') == 0
-    # the rail's tile, the top bar's tile and the drawer's tile (a .rail__tile too, which always keeps the <img>)
-    assert page.evaluate("() => document.querySelectorAll('.rail__tile img, .console-bar__tile img').length") == 3
+    # V5.12: the rail's tile and the top bar's tile carry the mark in layers at rest; the drawer's tile (a .rail__tile
+    # too) keeps the <img>
+    assert page.evaluate("() => document.querySelectorAll('.rail__tile img, .console-bar__tile img').length") == 1
+    assert page.evaluate("() => document.querySelectorAll('.rail__tile > .sig, .console-bar__tile > .sig').length") == 2
     context.close()
 
 
 @pytest.mark.browser
 @pytest.mark.django_db(transaction=True)
-def test_under_the_setting_the_release_is_a_still(browser, live_server, seeded, person_user):
+def test_under_the_setting_the_release_is_a_lit_still(browser, live_server, seeded, person_user):
+    """V5.12 §4: the reduced-motion version keeps branded feedback. Under the setting the release is no longer the
+    plain mark at once: the lit still — the room lit, the key in ink, the plate lit — held --lume-still (1 200 ms),
+    then one --motion-reduced fade (80 ms, opacity only), and the verbatim mark."""
     context = _context(browser, live_server, motion="reduce", user=person_user)
     page = context.new_page()
-    page.goto(live_server.url + "/fr/espace-reserve/", wait_until="networkidle")
+    page.goto(live_server.url + "/fr/espace-reserve/", wait_until="commit")
+    page.wait_for_selector('[data-lume="release"]', state="attached")
+    page.wait_for_timeout(300)
     state = page.evaluate(RELEASE_STATE)
-    assert state["host"], "the markup is there: the still is the end state"
-    assert state["durations"] == ["0s, 0s", "0s"] and state["running"] == 0, state
-    assert state["lightOpacity"] == 0 and state["inkOpacity"] == 0, "the verbatim mark, without travel"
+    assert state["host"], "the markup is there"
+    assert state["names"] == ["lume-still", "lume-still"] and state["durations"] == ["0.08s", "0.08s"], state
+    assert state["lightOpacity"] == 1 and state["inkOpacity"] == 1, "the lit still, without travel"
+    plate = page.evaluate(
+        "() => { const t = [...document.querySelectorAll('.rail__tile, .console-bar__tile')].find(e => e.getClientRects().length && e.querySelector('[data-lume]'));"
+        " const p = getComputedStyle(t, '::before'); return [p.animationName, Number(p.opacity)]; }"
+    )
+    assert plate == ["lume-still", 1], "the plate takes the light too"
+    transform = page.evaluate("() => getComputedStyle([...document.querySelectorAll('[data-lume=\"release\"]')].find(e => e.getClientRects().length).querySelector('.sig__lume')).transform")
+    assert transform == "none", "the light is still: it does not grow"
+    page.wait_for_timeout(1300)
+    late = page.evaluate(RELEASE_STATE)
+    assert late["lightOpacity"] == 0 and late["inkOpacity"] == 0 and late["running"] == 0, late
     context.close()
 
 
@@ -493,8 +519,13 @@ def test_the_busy_key_reads_three_to_one_on_its_ground(browser, live_server, see
     page = context.new_page()
     _answer_without_a_page(page)
     page.goto(f"{live_server.url}/{lang}/compte/login/", wait_until="networkidle")
+    # the key is the ONE indicator where no veil is drawn — an outcome-bearing action keeps the button's key only
+    # (DL54-09). The sign-in itself is the central veil's since V5.18 §4 (P12), which dims the page over the key, so the
+    # specimen form is declared outcome-bearing here: the same button, the same ground, nothing over it
+    page.evaluate("""(s) => { document.querySelector(s).form.dataset.loaderAction = 'pre-assessment'; }""", LOGIN)
     _press(page, LOGIN)
     page.wait_for_timeout(700)  # past the turn: the key holds
+    assert not page.evaluate("document.documentElement.matches('.lume-go, .is-departing')"), "no veil over the key"
     assert page.evaluate(STATE, LOGIN)["busy"], "the control is waiting"
     box = page.locator(LOGIN).first.bounding_box()
     clip = {"x": box["x"], "y": box["y"], "width": box["width"], "height": box["height"]}

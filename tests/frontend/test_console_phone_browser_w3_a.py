@@ -409,7 +409,12 @@ def test_in_the_drawer_a_long_name_goes_on_a_second_line_never_under_an_ellipsis
     browser, live_server, seeded, user_factory, lang
 ):
     """The rail shows a name it had to cut whole in the word beside it; a drawer has no such word."""
-    user = user_factory("w3a-p-a-very-long-name-of-an-account@example.test", role=roles.PERSON)
+    # the account's NAME (V5.12 lane D W1: an account without a name reads «Mon compte», never its e-mail address)
+    user = user_factory(
+        "w3a-p-long@example.test",
+        role=roles.PERSON,
+        full_name="Fatima-Zahra Benkirane-Oulad Abdellah El Idrissi",
+    )
     context = _context(browser, live_server, user, 320, 640)
     page = context.new_page()
     _at_rest(page, live_server, REQUESTS.format(lang=lang))
@@ -421,7 +426,7 @@ def test_in_the_drawer_a_long_name_goes_on_a_second_line_never_under_an_ellipsis
           return {text: name.textContent.trim(), cut: name.scrollWidth > name.clientWidth + 1, lines: Math.round(r.height / parseFloat(getComputedStyle(name).lineHeight)),
                   inside: r.left >= box.left - 0.5 && r.right <= box.right + 0.5, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth}; }"""
     )
-    assert who["text"] == user.email and not who["cut"] and who["lines"] >= 2 and who["inside"], who
+    assert who["text"] == user.full_name and not who["cut"] and who["lines"] >= 2 and who["inside"], who
     drawer = page.evaluate(DRAWER_JS)
     assert not drawer["small"] and not drawer["outside"] and drawer["footBottom"] <= drawer["vh"] + 0.5, drawer
     context.close()
@@ -586,10 +591,17 @@ def test_arabic_mirrors_the_chrome_and_never_the_mark(browser, live_server, seed
     assert bar["tile"]["box"]["r"] == chrome["vw"] - 16, "the mark's tile at the reading edge: the right one"
     assert bar["account"]["box"]["x"] == 10 and bar["title"]["box"]["r"] < bar["tile"]["box"]["x"], bar
     assert bar["tile"]["mark"] == "none", "the mark is never mirrored: no transform on it, in any locale"
+    # since v512-a W1 the tile carries the mark in layers (components/loader.html, the key's layer the threshold
+    # turns), no longer the <img>: the host is left-to-right, untransformed, and every layer of it too (V5.15 W3)
     mark = page.evaluate(
-        "() => { const i = document.querySelector('.console-bar__tile img'); return [i.getAttribute('src').split('/').pop().split('.')[0], getComputedStyle(i).transform]; }"
+        """() => { const s = document.querySelector('.console-bar__tile .sig');
+          const layers = [s, ...s.querySelectorAll('.sig__l, .sig__l > svg')];
+          return [s.querySelector('.sig__base polygon').getAttribute('fill'), getComputedStyle(s).direction,
+                  layers.map((e) => getComputedStyle(e).transform).filter((t) => t !== 'none')]; }"""
     )
-    assert mark[0].startswith("logo-mark") and mark[1] == "none"
+    assert mark[0] == "#157A3C" and mark[1] == "ltr" and mark[2] == [], (
+        "the green plane on the left in Arabic too: the mark's layers are never mirrored"
+    )
     # the entrance release's seat is left-to-right in every locale (W1-D); the still mark is one file for all
     page.click("#console-menu")
     _drawer_at_rest(page)

@@ -1,0 +1,257 @@
+/* ============================================================================================
+   LE PROJET V2 (design V5.22, SECTION_SYSTEM_V2 §3.2; lane P2) — a partial of the institutional pages' sheet
+   (interior.css), after the library's (v5/_sezioni.css, _sec-racconto.css, _sec-mosaico.css, the panorama of
+   v5/_photo.css). Markup: templates/pages/project.html, pages/partials/projet/.
+
+     1 · the story's figure «il sistema»: the doorway on its sill, the five actors' discs on an arc, their spokes; its
+         three states keyed to the step being read (sezioni/racconto.js: data-step on the plate) — from 64 rem only;
+         below, under reduced motion, html.rm and without script it stands in its final drawing
+     2 · the steps' typography: «En bref» the page's thesis at the lead's size; «Pourquoi» in three levels — the problem,
+         the alternative, the principle set in place as the emphasised statement (one <p data-locked>, its own spans)
+     3 · the doors on stone (E «le porte»): two by two from 48 rem, four abreast from 64 rem; the way in with its arrow
+     4 · the foot strip: three ways on, then the trademark line
+   Tokens only; logical properties; the figure mirrors in Arabic (the plate's svg), its discs never flip.
+   ============================================================================================ */
+
+/* ---- 1 · the figure ---- */
+/* round 1 (QA_ROUND1 M4, m14): the plate is a size container and the figure the largest square inside its content
+   box — never wider than its plate (it spilled off it from 1366 down to 1024, and covered the steps at 1024). The
+   plate is square from 64 rem (capped by the viewport's height: min(32rem, 70vh), the pattern's), a 3:2 panel below
+   it — at 768 a 720 × 480 night panel with a 432 px drawing, no longer a strip holding a small one */
+.projet-racconto .racconto__figura {
+  container-type: size;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+}
+
+.sistema {
+  position: relative;
+  inline-size: min(100cqi, 100cqb);
+  aspect-ratio: 1;
+}
+
+.racconto__figura .sistema__disegno {
+  position: absolute;
+  inset: 0;
+  stroke-width: 1.5;
+}
+
+.sistema__suolo { stroke: var(--line-night-soft); }
+
+.sistema__improvvisati path {
+  stroke: var(--text-on-night-2);
+  stroke-dasharray: 5 9;
+}
+
+.sistema__improvvisati { opacity: 0.45; }
+
+.sistema__raggi path { stroke: color-mix(in srgb, var(--text-on-night-1) 34%, transparent); }
+
+.sistema__arco,
+.sistema__soglia {
+  stroke: var(--text-on-night-1);
+  stroke-width: 2;
+}
+
+.sistema__tono {
+  fill: var(--text-on-night-1);
+  fill-opacity: 0.12;
+  stroke: none;
+}
+
+.sistema__luce { stroke: none; }
+.sistema__luce-0 { stop-color: var(--p-oro-300); stop-opacity: 0.55; }
+.sistema__luce-1 { stop-color: var(--p-oro-300); stop-opacity: 0; }
+
+.sistema__rotta {
+  stroke: var(--accent-night);
+  stroke-width: 2.5;
+}
+
+.sistema__fondamenta path {
+  stroke: var(--accent-night);
+  stroke-width: 2;
+}
+
+.sistema__fondamenta path + path { opacity: 0.6; }
+
+.sistema__nodi {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sistema__nodo {
+  position: absolute;
+  translate: -50% -50%;
+}
+
+[dir="rtl"] .sistema__nodo { translate: 50% -50%; }
+
+.sistema__nodo--persons { inset-inline-start: 10.15%; inset-block-start: 51.75%; }
+.sistema__nodo--companies { inset-inline-start: 29.4%; inset-block-start: 26.75%; }
+.sistema__nodo--institutions { inset-inline-start: 50%; inset-block-start: 21.25%; }
+.sistema__nodo--universities { inset-inline-start: 70.6%; inset-block-start: 26.75%; }
+.sistema__nodo--professionals { inset-inline-start: 89.85%; inset-block-start: 51.75%; }
+
+.sistema .sez-disc {
+  --disc: 36px;
+  --disc-glyph: 18px;
+}
+
+/* the plate's drawing rule (v5/_sec-racconto.css) draws every svg at 2 px and mirrors it in Arabic: the discs' glyphs
+   keep the ILE hand (1.5 px) and their own orientation */
+.racconto__figura .sistema .icon { stroke-width: 1.5; }
+[dir="rtl"] .racconto__figura .sistema .icon { scale: none; }
+
+@media (min-width: 64rem) {
+  .projet-racconto .racconto__figura {
+    aspect-ratio: 1;
+    max-block-size: min(32rem, 70vh);
+  }
+
+  .sistema .sez-disc {
+    --disc: 44px;
+    --disc-glyph: 20px;
+  }
+
+  /* the states, only while the module drives the story (the still is the final drawing). The first state stands at
+     load, before a step reaches the middle of the screen (the module marks none active yet) */
+  .racconto[data-live]:not(:has([data-active])) .racconto__figura :is([data-from="2"], [data-from="3"]) {
+    opacity: 0.14;
+  }
+
+  /* a layer still to come: the route undrawn, the opening unlit, the foundation's courses undrawn */
+  .racconto[data-live]:not(:has([data-active])) .racconto__figura :is(.sistema__rotta, .sistema__fondamenta path):is([data-from="2"], [data-from="3"], [data-from="2"] *, [data-from="3"] *),
+  .racconto__figura[data-step="1"] :is(.sistema__rotta, .sistema__fondamenta path):is([data-from="2"], [data-from="3"], [data-from="2"] *, [data-from="3"] *),
+  .racconto__figura[data-step="2"] :is(.sistema__rotta, .sistema__fondamenta path):is([data-from="3"], [data-from="3"] *) {
+    stroke-dashoffset: 1;
+  }
+
+  .racconto[data-live]:not(:has([data-active])) .racconto__figura .sistema__luce:is([data-from="2"], [data-from="3"]),
+  .racconto__figura[data-step="1"] .sistema__luce:is([data-from="2"], [data-from="3"]),
+  .racconto__figura[data-step="2"] .sistema__luce[data-from="3"] {
+    opacity: 0;
+  }
+
+  .sistema :is(.sistema__rotta, .sistema__fondamenta path) { stroke-dasharray: 1; }
+
+  /* the route draws once the problem is said, the opening lights once the route arrives, the courses one by one */
+  .racconto[data-live] .sistema__rotta { transition-delay: 0ms, var(--motion-emphasized); }
+  .racconto[data-live] .sistema__luce { transition-delay: var(--motion-route-light), 0ms; }
+  .racconto[data-live] .sistema__fondamenta path { transition: stroke-dashoffset var(--motion-draw) var(--ease-sine); }
+  .racconto[data-live] .sistema__fondamenta path:nth-child(2) { transition-delay: calc(2 * var(--motion-stagger)); }
+  .racconto[data-live] .sistema__fondamenta path:nth-child(3) { transition-delay: calc(4 * var(--motion-stagger)); }
+
+  /* the system recedes while the route and the sill are told — never below a quiet ink: it stays the system */
+  .racconto[data-live] .sistema__nodi { transition: opacity var(--motion-slow) var(--ease-enter); }
+  .racconto[data-live] .racconto__figura:is([data-step="2"], [data-step="3"]) .sistema[data-bref] .sistema__nodi { opacity: 0.55; }
+}
+
+/* the improvised paths come forward as «Pourquoi» opens, then fall back to the ghost the route replaces */
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .racconto[data-live] .racconto__figura[data-step="2"] .sistema__improvvisati[data-from="2"],
+  :root:not(.rm):not([data-input="key"]) .racconto[data-live] .racconto__figura[data-step="1"] .sistema__improvvisati[data-from="1"] {
+    animation: sistema-improvvisato var(--motion-route-light) var(--ease-enter) backwards;
+  }
+}
+
+@keyframes sistema-improvvisato {
+  0% { opacity: 0.14; }
+  30% { opacity: 0.9; }
+  100% { opacity: 0.45; }
+}
+
+/* ---- 2 · the steps' typography ---- */
+/* F1 (finishing round, v5/_compose.css §5): the prescribed title written in capitals — «POURQUOI ITALY LEGAL ENTRY», the
+   story's second step — is tracked with the case features and, from 48 rem, stands one optical step under its
+   mixed-case neighbours (24/32 against 28/36); never on an Arabic title. The story's heading carries no class of its
+   own: its anchor (the chapter's, kept) names it. */
+.racconto .racconto__titolo[id="project-why-title"]:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+  font-feature-settings: var(--feat-caps);
+}
+
+@media (min-width: 48rem) {
+  .racconto .racconto__titolo[id="project-why-title"]:not(:lang(ar)) {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+
+.projet__enunciato {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  font-weight: 500;
+}
+
+.projet__perche { margin: 0; }
+
+.projet__perche .ls-1 { display: block; }
+
+.projet__perche .ls-2 {
+  display: block;
+  margin-block-start: var(--s-3);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.projet__perche .ls-3 {
+  display: block;
+  margin-block-start: var(--s-6);
+  padding-inline-start: var(--s-5);
+  border-inline-start: 2px solid var(--accent-mark);
+  font-weight: 600;
+}
+
+.projet__oltre { margin-block: var(--s-5) 0; }
+
+/* ---- 3 · the doors (and the contact page's: one drawing) ---- */
+.projet-porte .mosaico__riga {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+:is(.projet-porte, .contatto-porte) .mosaico__riga .icon {
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+:is(.projet-porte, .contatto-porte) .mosaico__tessera:is(:hover, :focus-within) .mosaico__riga .icon { translate: 3px 0; }
+[dir="rtl"] :is(.projet-porte, .contatto-porte) .mosaico__tessera:is(:hover, :focus-within) .mosaico__riga .icon { translate: -3px 0; }
+
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  .projet-porte .mosaico--porte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* round 1 (m6): a door's words start under its arch — a two-line name no longer lifts its disc and title off the row
+   (the library centres them vertically); the same on the contact page's doors */
+:is(.projet-porte, .contatto-porte) .mosaico__tessera { align-content: start; }
+
+/* ---- 4 · the foot strip ---- */
+.projet-piede__inner {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.projet-piede__vie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.projet-piede .page-trademark {
+  margin: 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+/* the keyboard path never animates (§2 L, §9.9; round 1 m9): the story's step inks and the figure's layers change at
+   once when the keys scroll the page, the doors' arrows at once on focus */
+html[data-input="key"] :is(.projet-racconto *, .projet-porte .mosaico__riga .icon, .contatto-porte .mosaico__riga .icon) { transition: none; }

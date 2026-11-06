@@ -58,15 +58,7 @@
   stroke-width: 2;
 }
 
-/* A glyph set in a line of text — an eyebrow — rather than in a flex row. The reset draws every svg as
-   a block (base.css), which put the glyph on a line of its own above its words: here it sits on the
-   line, centred on it, a quarter of an em from the word it marks. */
-.icon--inline {
-  display: inline-block;
-  vertical-align: middle;
-  margin-block-start: -0.15em; /* the eyebrow is set in capitals: their middle is above the x-height's */
-  margin-inline-end: 0.25em;
-}
+/* .icon--inline (a glyph set in a line of text) left with V5.12 W2 (lane A): no template wrote it any more. */
 
 /* Forced colours: an icon is the ink of the text beside it, and nothing else. A browser gives <svg>
    `forced-color-adjust: preserve-parent-color`, which follows the system palette only while the svg's

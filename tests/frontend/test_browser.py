@@ -231,6 +231,17 @@ def test_fonts_are_self_hosted_and_loaded(browser, live_server, seeded):
         )
         fonts = [u.rsplit("/", 1)[-1] for u in requests if u.endswith(".woff2")]
         assert fonts and all(name.startswith("v5-") for name in fonts), fonts
-        assert not any("vazirmatn" in name for name in fonts), "a Latin page never downloads the Arabic face"
+        # Typography V2 (v524-t; TYPOGRAPHY_V2 §4.7, FINAL_DELIVERY_V2 R4 g): the Arabic face is Readex Pro and a
+        # Latin page never downloads it; the bytes a Latin public page fetches stay under 22 000 (20 956 measured)
+        assert not any("readex" in name or "vazirmatn" in name for name in fonts), "a Latin page never downloads the Arabic face"
+        fetched = page.evaluate(
+            "performance.getEntriesByType('resource').filter(e => e.name.endsWith('.woff2'))"
+            ".reduce((n, e) => n + (e.encodedBodySize || e.transferSize || 0), 0)"
+        )
+        # the home still draws its labels in the mono (lane S's .testa__label, the folio of pages.css: TYPOGRAPHY_V2 F-3,
+        # the burn-down of LIB and HOME), so it fetches both mono files today: 30 916 B measured, recorded here as the
+        # figure to burn down to the ceiling (never up; CLOSING ratchets it to the measure)
+        assert 0 < fetched <= 30_916, (fetched, fonts)
+        assert fetched <= 22_000 or any("mono" in name for name in fonts), "over the ceiling without the mono: a new face"
     finally:
         context.close()

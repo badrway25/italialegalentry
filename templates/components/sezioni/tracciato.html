@@ -1,0 +1,37 @@
+{% load pages_imagery %}{% comment %}
+B · «IL TRACCIATO» — the interactive journey, a route board (design V5.22, SECTION_SYSTEM_V2 §2 B; lane S): several
+routes or stations to choose or explore, each station a destination of its own. static/css/v5/_sec-tracciato.css.
+
+An origin node at the reading edge, a trunk, lanes (one per family or phase) each on its rail from the trunk, its head
+(its name, then optionally its frame) and its station cards (the numeral, a T2 tile, the title, one line, the arrow;
+each card a link) hanging from the rail; a lone card keeps its column. A native radio
+group chooses a lane — read by :has(:checked), no script: nothing leaves the layout; the chosen lane's cards keep their
+full ink, the others go to --text-2 (never an opacity), its frame develops from black and white to colour and one light
+travels its line once. Hovering or focusing a card lights its lane's line. ≥ 64 rem lanes as rows, cards in a row;
+48–64 rem the lane's head on top, cards two-up; below, down the reading edge with the choice as a segmented bar.
+Motion PATH PROGRESSION. Still: every lane drawn, all frames in colour, the selection instant.
+
+Contract: `id` (unique prefix); `origin` — {"glyph", "title", "url", "link_label"} (the questionnaire: a T2 tile and its
+secondary link); `lanes` — [{"key", "label", "label_lang", "frame_slot" (treatment «select»), "stations": [{"num", "glyph",
+"title", "title_lang", "line", "line_lang", "url"}]}]; `control` — {"legend", "all" (the choice of every lane), "count"
+(the polite count line, as today)} (optional: without it every lane stands lit).
+{% endcomment %}<div class="tracciato{% if control %} tracciato--scelta{% endif %}">
+  {% if control %}<fieldset class="tracciato__scelta">
+    <legend class="tracciato__legenda">{{ control.legend }}</legend>
+    <label class="tracciato__chip"><input type="radio" name="{{ id }}-corsia" value="" checked><span>{{ control.all }}</span></label>
+    {% for lane in lanes %}<label class="tracciato__chip"><input type="radio" name="{{ id }}-corsia" value="{{ lane.key }}"><span{% if lane.label_lang %} lang="{{ lane.label_lang }}"{% endif %}>{{ lane.label }}</span></label>{% endfor %}
+  </fieldset>
+  {% if control.count %}<p class="tracciato__conto" aria-live="polite">{{ control.count }}</p>{% endif %}{% endif %}
+  {% if origin %}<div class="tracciato__origine"><span class="sez-tile" aria-hidden="true">{% svg_icon origin.glyph "icon" %}</span><p class="tracciato__origine-testo">{{ origin.title }}{% if origin.url %} <a class="link-arrow" href="{{ origin.url }}">{{ origin.link_label }}{% svg_icon "arrow" "icon icon--sm" %}</a>{% endif %}</p></div>{% endif %}
+  <ol class="tracciato__corsie sez-seq" role="list">
+    {% for lane in lanes %}<li class="tracciato__corsia" data-lane="{{ lane.key }}">
+      <span class="tracciato__linea" data-verb="draw" aria-hidden="true"></span>
+      <div class="tracciato__testa"><p class="tracciato__nome testa__label"{% if lane.label_lang %} lang="{{ lane.label_lang }}"{% endif %}>{{ lane.label }}</p>{% if lane.frame_slot %}{% photo lane.frame_slot "tracciato__foto" %}{% endif %}</div>
+      <div class="tracciato__percorso">
+        <ol class="tracciato__stazioni sez-seq" role="list" data-registro>
+          {% for item in lane.stations %}<li class="tracciato__stazione"><a class="tracciato__carta" href="{{ item.url }}"><span class="tracciato__num t-numeral" aria-hidden="true">{{ item.num }}</span>{% if item.glyph %}<span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="tracciato__titolo"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="tracciato__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span></a></li>{% endfor %}
+        </ol>
+      </div>
+    </li>{% endfor %}
+  </ol>
+</div>

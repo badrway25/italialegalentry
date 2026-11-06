@@ -1,0 +1,130 @@
+/* ============================================================================================
+   THE ARCH SEAT «il sigillo» — Icon Treatment V2, tiers T1 (a theme) and T5 (the identity), design V5.22
+   (SECTION_SYSTEM_V2 §4.2, §4.3, §4.4, §4.7, §4.10; lane S). A PAGE-ONLY partial: the frontispiece's sheet
+   (pages/css/fronte.css: the head folios, and every interior page links it) and the home's sheet import it — never
+   main.css. Markup: templates/components/sezioni/sigillo.html; the mark inside is the generated
+   components/sezioni/marks/_<id>.html (scripts/build_icons.py, from static/icons/marks/ on the 48-unit grid).
+
+     1 · the seat      a rectangle whose top is a full semicircle (radius = width / 2) standing on a sill that runs
+                       12 px past each side — the sill keeps the arch from reading as a headstone; its face paper or
+                       night, a 1 px edge (a border: forced colours keep it); on night a 1 px highlight inside
+                       the crown (v5/_sezioni.css — on paper the edge alone reads, round 1 m4);
+     2 · the mark      40 in 72 × 88 (from 80 rem), 36 in 64 × 78 (to 64 rem), 32 in 56 × 68 (below; and the small
+                       seat everywhere); 2 px at 40, 1.75 px at 32–36, square caps, mitre joins, currentColor; it
+                       stands on the seat's sill (its own sill is the seat's), its tone 14 %;
+     3 · the light     a radial light at the sill — paper: --accent-mark 10 % at rest, 22 % lit; night: oro 14 % →
+                       28 %, the one gold of a T1 — lit by the section's primary action (hover equals focus, :has()):
+                       a pre-painted layer's opacity, never an animated gradient;
+     4 · the draw      in v5/_reveal.css (the motion vocabulary V2, on every public page): once, the arch, then the
+                       mark, then the route, the tone last; the marks' own gestures. Here only the key's turn on its
+                       action, which is interaction, not entrance.
+   Tokens only; logical properties only; a mark never mirrors (§4.9).
+   ============================================================================================ */
+
+/* ---- 1 · the seat ---- */
+.sigillo {
+  --sg-w: 56px; /* the small seat (the head folios, «la protezione»): 32 in 56 × 68 at every width; the body seat's
+     steps (40 in 72 × 88, 36 in 64 × 78) and the night face are the body shell's, v5/_sezioni.css */
+  --sg-h: 68px;
+  --sg-m: 32px;
+  --sg-sw: 2.625; /* 1.75 px at 32 px: the stroke in the 48-unit drawing's own units */
+  /* a niche, not a card: the vault in shade (the decorative hairline's paper, carta-200), the floor in the raised
+     paper's light; with an edge firm enough, the seat reads at 1× (round 1, m4) */
+  --sg-face: linear-gradient(var(--line-rhythm), var(--surface-raised) 85%);
+  --sg-edge: color-mix(in srgb, var(--line-structure) 62%, transparent);
+  --sg-sill: var(--line-structure);
+  --sg-light: var(--accent-mark);
+  --sg-rest: 14%;
+  --sg-lit: 22%; /* the mark's tone: --sg-tone, 0.14 by default (§2 below), 0.18 on the night */
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: end center;
+  flex: none;
+  inline-size: var(--sg-w);
+  block-size: var(--sg-h);
+  border: 1px solid var(--sg-edge); /* a border, so forced colours keep the arch (§4.10) */
+  border-block-end: 0;
+  border-radius: var(--radius-full) var(--radius-full) 0 0; /* clamped to half the width: a full semicircle */
+  background: var(--sg-face);
+  color: var(--text-1);
+}
+
+/* the sill: 12 px past each side (13 from inside the edge) */
+.sigillo::after {
+  content: "";
+  position: absolute;
+  inset-inline: -13px;
+  inset-block-end: 0;
+  block-size: 1px;
+  background: var(--sg-sill);
+}
+
+/* ---- 3 · the light: at rest (::before) and lit (.sigillo__luce, a pre-painted layer) ---- */
+.sigillo::before,
+.sigillo__luce {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(80% 58% at 50% 100%, color-mix(in oklab, var(--sg-light) var(--sg-rest), transparent), transparent 74%);
+}
+
+.sigillo__luce {
+  --sg-rest: var(--sg-lit);
+  opacity: var(--light, 0);
+  transition: opacity var(--motion-emphasized) var(--ease-enter);
+}
+
+/* the section's primary action lights its seal — hover equals focus (§4.7 «Light response»): --light 0 → 1 on the
+   section, which the seal's light, the company's bay and the shield's keyhole (§4.9 n.3, n.9) and the key's turn read */
+:is(.sez, .ingresso, [data-sigillo-scope]):has(:is(.btn--primary, [data-azione]):is(:hover, :focus-visible)) {
+  --light: 1;
+}
+
+/* ---- 2 · the mark ---- */
+.sigillo__mark {
+  inline-size: var(--sg-m);
+  block-size: var(--sg-m);
+  margin-block-end: calc(var(--sg-m) * -6 / 48); /* the drawing's sill (y 42) on the seat's sill */
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--sg-sw);
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.sigillo .sg-s {
+  display: none;
+}
+
+.sg-t {
+  fill: currentColor;
+  fill-opacity: var(--sg-tone, 0.14);
+  stroke: none;
+}
+
+:is([data-mark="ile-impresa"], [data-mark="ile-scudo"]) .sg-t {
+  fill-opacity: calc(var(--sg-tone, 0.14) + 0.12 * var(--light, 0));
+}
+
+/* ---- 4 · the draw lives with the motion vocabulary V2 (v5/_reveal.css, «the seal's draw»): every public page loads
+   it, so a seal draws wherever it stands — a head at load, a body section on its trigger ---- */
+
+/* ---- forced colours, print ---- */
+/* the keyboard sees the lit state at once (§4.1 rule 5); the tone's deepening is a step with the light, never a fade */
+html[data-input="key"] .sigillo__luce {
+  transition: none;
+}
+
+/* forced colours: the browser draws the arch's border and the mark in the system's text, and drops the light layers
+   (gradients); the sill, a background, is kept in the system's text (§4.10) */
+@media (forced-colors: active) {
+  .sigillo::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}

@@ -201,12 +201,13 @@ def test_arabic_has_its_own_display_and_interface_pair():
     """
     Arabic is designed, not translated.
 
-    Design V5, type «Una voce» (V5.4 plan §1.1): Vazirmatn carries every Arabic role — titles at 600 with
-    no ×1.15, reading text, the console — the most coherent Arabic of the four systems measured (one
-    family, no Naskh beside a sans; TYPOGRAPHY_REVIEW §3.B). The Arabic stack holds the Latin pair right
-    after the Arabic face, so the digits and the Latin runs of an Arabic page are Host Grotesk's; and V1's
-    two family names, which tokens.css re-points on :root:lang(ar), follow the same stack through
-    static/css/v5/aliases.css. Provisional until the Moroccan reader's review (owner item B2).
+    Design V5, type «Una voce» (V5.4 plan §1.1) · Typography V2 (v524-t; V5.24 §11–§14, TYPOGRAPHY_V2 §3–§4,
+    FINAL_DELIVERY_V2 R1 — V5.20: the face changed by decision, the invariant is the same): Readex Pro carries
+    every Arabic role at ratio 1.0 — titles at 600, reading text, the console — one family, no Naskh beside a
+    sans. The Arabic stack holds the Latin pair right after the Arabic face, so the digits and the Latin runs
+    of an Arabic page are Host Grotesk's; and V1's two family names, which tokens.css re-points on
+    :root:lang(ar), follow the same stack through static/css/v5/aliases.css. The Arabic reader's review
+    (owner item B2) covers Readex Pro.
     """
     tokens = (ROOT / "static" / "css" / "tokens.css").read_text(encoding="utf-8")
     block = re.search(r":root:lang\(ar\),?[^{]*\{([^}]*)\}", tokens)
@@ -219,8 +220,8 @@ def test_arabic_has_its_own_display_and_interface_pair():
 
     v5 = _COMMENT.sub("", (ROOT / "static" / "css" / "v5" / "tokens.css").read_text(encoding="utf-8"))
     stack = re.search(r"--f-sans-ar:\s*([^;]+);", v5)
-    assert stack and stack.group(1).startswith('"Vazirmatn", "Host Grotesk"'), stack
-    arabic = re.search(r"(?m)^:lang\(ar\)\s*\{([^}]*)\}", v5)
+    assert stack and stack.group(1).startswith('"Readex Pro", "Host Grotesk"'), stack
+    arabic = re.search(r"(?m)^:root:lang\(ar\), :lang\(ar\)\s*\{([^}]*)\}", v5)
     assert (
         arabic and "--f-sans: var(--f-sans-ar)" in arabic.group(1) and "--f-serif: var(--f-sans-ar)" in arabic.group(1)
     )
@@ -228,8 +229,8 @@ def test_arabic_has_its_own_display_and_interface_pair():
     assert "--font-display-ar: var(--f-sans-ar)" in aliases and "--font-ui-ar: var(--f-sans-ar)" in aliases
 
     fonts = (ROOT / "static" / "css" / "v5" / "fonts.css").read_text(encoding="utf-8")
-    assert 'font-family: "Vazirmatn"' in fonts
-    for retired in ("Noto Naskh Arabic", "IBM Plex Sans Arabic", "Markazi Text"):
+    assert 'font-family: "Readex Pro"' in fonts
+    for retired in ("Noto Naskh Arabic", "IBM Plex Sans Arabic", "Markazi Text", "Vazirmatn"):
         assert f'font-family: "{retired}"' not in fonts, retired
     assert "http" not in fonts, "fonts are self-hosted (CSP self-only)"
 

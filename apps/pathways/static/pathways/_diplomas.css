@@ -1,0 +1,267 @@
+/* ============================================================================================
+   DIPLÔMES ET TITRES ÉTRANGERS — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.10; lane P1). Page-only:
+   pathways/diplomas.css. D1 + D2 «le dossier, pièce par pièce»: five stations down one route (F), the ones that hold a
+   locked definition open it in place one at a time (native exclusive <details>), «Qui décide ?» the sticky aside
+   (C) from 64 rem. Adapted from 21st.dev (NOTES, provenance): «Sticky Content Wrapper» 26064 (one side steps through
+   while the other stays pinned), «Vertical How It Works Timeline» 26902 (a dashed rail, numbered nodes, an icon a step),
+   «Timeline» 35051 (rows that expand in place, the connector drawing) — refused: the image swap, scroll snapping, the
+   check marks of completed steps (nothing ticks a step for anyone, O14).
+   ============================================================================================ */
+
+.dossier-campo {
+  display: grid;
+  gap: var(--s-12);
+}
+
+.dossier {
+  --ds-c: color-mix(in srgb, var(--accent-mark) 40%, var(--line-structure));
+  --sez-step: 120ms;
+  position: relative;
+  display: grid;
+  gap: var(--s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a station: its numeral over its node at the reading edge, its label beside, its plate under the label */
+.dossier__tappa {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: var(--s-5);
+  row-gap: var(--s-3);
+  align-items: center;
+}
+
+/* the route down the reading edge: from this node to the next — dashed: the steps' details are still being verified */
+.dossier__tappa:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-block: 52px calc(4px - var(--s-8));
+  inset-inline-start: 23px;
+  border-inline-start: 2px dashed var(--ds-c);
+  transform-origin: 50% 0;
+}
+
+/* the step marker: ILE Mono, tabular lining, the quiet ink (28 on a phone, 36 from 64 rem) */
+.dossier__num {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--f-mono);
+  font-size: var(--t-band);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-2);
+}
+
+.dossier__nodo {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
+  z-index: 1;
+}
+
+/* pending: the node's edge dashed, never by colour alone */
+.dossier__tappa--attesa .dossier__nodo {
+  box-shadow: none;
+  outline: 1px dashed var(--line-structure);
+  outline-offset: -1px;
+}
+
+.dossier__titolo {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.dossier__dettaglio {
+  grid-column: 2;
+}
+
+/* the term opens its definition: the summary is the control, its chevron turns */
+.dossier__voce {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-4);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  font-size: var(--t-ui);
+  font-weight: var(--w-control);
+  cursor: pointer;
+  list-style: none;
+}
+
+.dossier__voce::-webkit-details-marker {
+  display: none;
+}
+
+.dossier__dettaglio[open] > .dossier__voce {
+  border-color: var(--text-1);
+  background: var(--text-1);
+  color: var(--surface-raised);
+}
+
+.dossier__chevron {
+  transition: rotate var(--motion-standard) var(--ease-enter);
+}
+
+.dossier__dettaglio[open] .dossier__chevron {
+  rotate: 180deg;
+}
+
+.dossier__lastra {
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: 36rem;
+  margin-block-start: var(--s-3);
+  padding: var(--s-5) var(--s-6);
+}
+
+.dossier__definizione,
+.dossier__link {
+  margin: 0;
+}
+
+/* a locked French definition on the Arabic page keeps the Latin leading (QA_ROUND2 m2: the Arabic 32 px at 17 px read
+   double-spaced) */
+[dir="rtl"] .dossier__definizione[lang="fr"] {
+  line-height: 1.75rem;
+}
+
+/* «Qui décide ?»: a raised plate — the stamp, the question, the statement as an emphasised legal statement */
+.diplomi-decide {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  padding: var(--s-8) var(--s-6);
+  background: var(--surface-area);
+}
+
+.diplomi-decide__titolo {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+.diplomi-decide__testo {
+  margin: 0;
+  padding-inline-start: var(--s-5);
+  border-inline-start: 2px solid var(--accent-mark);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: 600;
+}
+
+/* from 64 rem: the process on columns 1–8, the aside on 9–12, sticky under the letterhead while the stations pass */
+@media (min-width: 64rem) {
+  .dossier-campo {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    align-items: start;
+  }
+
+  .dossier-campo__processo {
+    grid-column: 1 / span 8;
+  }
+
+  .diplomi-decide {
+    grid-column: 9 / -1;
+    position: sticky;
+    inset-block-start: calc(var(--header-h-scrolled, var(--header-h)) + var(--s-8));
+  }
+
+  .dossier__tappa {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .dossier__num {
+    font-size: var(--t-title);
+  }
+
+  .dossier__nodo {
+    --tile: 56px;
+    --tile-glyph: 28px;
+  }
+
+  .dossier__tappa:not(:last-child)::before {
+    inset-block-start: 60px;
+    inset-inline-start: 27px;
+  }
+}
+
+/* the status in words beside its shape (§3.10 D1: never by colour alone): a quiet caption in the meta-row voice under
+   the stations, its dashed ring the legend of their nodes */
+.dossier__didascalia {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: var(--s-8) 0 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  color: var(--text-2);
+}
+
+.dossier__anello {
+  flex: none;
+  inline-size: 14px;
+  block-size: 14px;
+  border: 2px dashed color-mix(in srgb, var(--accent-mark) 40%, var(--line-structure));
+  border-radius: var(--radius-full);
+}
+
+/* the five stations' order, for the route's turn */
+.dossier__tappa:nth-child(2) { --ds-i: 1; }
+.dossier__tappa:nth-child(3) { --ds-i: 2; }
+.dossier__tappa:nth-child(4) { --ds-i: 3; }
+.dossier__tappa:nth-child(5) { --ds-i: 4; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the route draws down, a station after the other (120 ms) */
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .dossier__tappa::before { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .dossier__tappa::before {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(var(--ds-i, 0) * 120ms) backwards;
+  }
+
+  /* a plate opens from its node's side (the reading edge): a clip-path, ≤ 320 ms — never from the keyboard */
+  :root:not(.rm):not([data-input="key"]) .dossier__dettaglio[open] .dossier__lastra {
+    animation: sez-mask var(--motion-emphasized) var(--ease-enter);
+  }
+
+  /* the stamp presses once as the aside enters: semantic, never repeated */
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .diplomi-decide__timbro {
+    animation: sez-timbro 200ms var(--ease-turn) 600ms backwards;
+  }
+}
+
+@keyframes sez-timbro {
+  from { scale: 1.04; }
+}
+
+html[data-input="key"] .dossier__chevron {
+  transition: none;
+}
+
+@media print {
+  .dossier__dettaglio:not([open]) > .dossier__lastra {
+    display: grid;
+  }
+}
+
+@media (forced-colors: active) {
+  .dossier__tappa:not(:last-child)::before {
+    background: CanvasText;
+  }
+
+  .dossier__dettaglio[open] > .dossier__voce {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+}

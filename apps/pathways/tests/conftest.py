@@ -51,8 +51,13 @@ def _iter_locked_strings(value):
 
 
 def strip_locked(html: str) -> str:
-    """Remove every locked (prescribed) text from rendered HTML so only team-written text remains."""
-    out = html
+    """Remove every locked (prescribed) text from rendered HTML so only team-written text remains.
+
+    V5.22 (SECTION_SYSTEM_V2 §1 rule 6; V5.20 strict rule): a locked text may be re-composed at render — cut into inline
+    spans on its own separators, its element's text the registry's — so the inline spans are read through first (a
+    span is inline: removing its tags joins no two blocks); the invariant is the same, and no prescribed sentence cut
+    into spans slips past the scan as «team text»."""
+    out = re.sub(r"</?span\b[^>]*>", "", html)
     for value in locked_content.LOCKED_TEXTS["fr"].values():
         for text in _iter_locked_strings(value):
             if len(text) < 12:

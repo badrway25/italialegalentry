@@ -21,16 +21,39 @@ def make(name, *, authorized=False, status=PublicationStatus.PUBLISHED, referenc
     )
 
 
-def test_empty_state_when_nothing_is_authorised(client, seeded):
+def test_no_page_and_no_link_while_nothing_is_authorised(client, seeded):
+    """V5.12 §8: no «partners to come» page — the index answers 404 and nothing links to it until a partner is
+    authorised in writing (G6); the home's ecosystem shows the promoter alone."""
+    from core import gates
+    from partners.sitemaps import PartnersSitemap
+
     make("Partenaire non autorisé", authorized=False)
-    r = client.get(URL)
-    html = r.content.decode()
-    assert r.status_code == 200
-    assert "Partenaire non autorisé" not in html
-    assert "Les partenaires seront présentés au fur et à mesure des autorisations." in html
-    # no fake/placeholder logo IN THE PAGE'S CONTENT: the footer that follows <main> carries the
-    # brand lock-up's <img>, which is not a partner logo
-    assert "<img" not in html.split('<main id="main-content"')[1].split("</main>")[0]
+    make("Autorisé mais brouillon", authorized=True, reference=REF, status=PublicationStatus.DRAFT)
+    assert gates.partners_public() is False
+    for lang in ("fr", "it", "en", "ar"):
+        assert client.get(f"/{lang}/partenaires/").status_code == 404, lang
+    assert PartnersSitemap().items() == []
+    for path in ("/fr/", "/fr/reseau/", "/fr/agami/", "/fr/institutions/", "/fr/projet-pilote/"):
+        response = client.get(path)
+        if response.status_code != 200:  # a Phase 3 page closed in this state
+            continue
+        html = response.content.decode()
+        assert 'href="/fr/partenaires/"' not in html, path
+        assert "au fur et à mesure" not in html, path
+    home = client.get("/fr/").content.decode()
+    assert "home-ecosystem__grid--single" in home and "home-ecosystem__partners" not in home
+
+
+def test_the_page_and_its_links_appear_with_an_authorised_partner(client, seeded):
+    from core import gates
+    from partners.sitemaps import PartnersSitemap
+
+    make("Partenaire autorisé", authorized=True, reference=REF)
+    assert gates.partners_public() is True
+    assert client.get(URL).status_code == 200
+    assert PartnersSitemap().items() == ["partners:index"]
+    home = client.get("/fr/").content.decode()
+    assert 'href="/fr/partenaires/"' in home and "home-ecosystem__grid--single" not in home
 
 
 def test_authorised_and_published_partner_is_listed(client, seeded):

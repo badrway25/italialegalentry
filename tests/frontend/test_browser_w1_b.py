@@ -84,6 +84,9 @@ def _session(user, site: str) -> dict:
     return {"name": settings.SESSION_COOKIE_NAME, "value": client.cookies[settings.SESSION_COOKIE_NAME].value, "url": site}
 
 
+FAQ_NO_MATCH = "/fr/faq/?q=zzqxwv"  # a search no question matches: the empty state with its own disc
+
+
 def _at_its_floor(icon: dict) -> bool:
     return icon["size"] + 0.01 >= icons.MIN_SIZE[icon["id"]]
 
@@ -93,7 +96,10 @@ def test_the_rail_the_bottom_bar_and_the_drawer_draw_the_registrys_symbols(brows
 
     entries = portal_services.navigation(person_user)
     expected = {entry["url"]: icons.NAV[entry["key"]] for entry in entries}
-    assert set(expected.values()) >= {"ile-steps", "folder", "document", "concierge-bell", "book-open"}
+    assert set(expected.values()) >= {"ile-steps", "folder", "document", "concierge-bell"}
+    # the Academy is a page of the rail only while a course is published or an enrolment exists (V5.12 §8, lane D
+    # W2): its symbol is drawn exactly when its entry is there
+    assert ("book-open" in expected.values()) == any(entry["key"] == "academy" for entry in entries)
     on_the_bar = {entry["url"] for entry in entries if entry["bottom"]}
 
     context = browser.new_context(viewport={"width": 1440, "height": 900}, device_scale_factor=1)
@@ -128,11 +134,16 @@ def test_the_rail_the_bottom_bar_and_the_drawer_draw_the_registrys_symbols(brows
         context.close()
 
 
-def test_an_empty_state_draws_its_space_or_the_neutral_mark_with_the_one_hand(browser, site):
+def test_an_empty_state_draws_its_space_or_the_neutral_mark_with_the_one_hand(browser, site, person_user):
+    # V5.12 W1's hide gates (lane C) close /partenaires/ and /actualites/ while no partner and no article is live, so
+    # their empty states are never drawn: the two marks are read where an empty state still stands — the FAQ's
+    # search without a match (its space's own symbol) and the profile of an account with no organisation (the
+    # neutral mark)
     context = browser.new_context(viewport={"width": 1440, "height": 900}, device_scale_factor=1)
     try:
+        context.add_cookies([_session(person_user, site)])
         page = context.new_page()
-        for path, symbol in (("/fr/partenaires/", icons.EMPTY_STATE), ("/fr/actualites/", "newspaper")):
+        for path, symbol in ((FAQ_NO_MATCH, "circle-help"), ("/fr/compte/profil/", icons.EMPTY_STATE)):
             page.goto(site + path, wait_until="networkidle")
             marks = [icon for icon in page.evaluate(ICONS_JS) if "empty-state__icon" in icon["cls"]]
             assert [icon["id"] for icon in marks] == [symbol], (path, marks)
@@ -157,11 +168,18 @@ def test_under_forced_colours_every_icon_is_the_ink_of_its_text(browser, site, s
             "the home has icons coloured by their own component: the check below has something to hold"
         )
         # the disc: an empty state's glyph on its own ground. The home drew one while it announced an empty news
-        # chapter; it draws that chapter only once an article is live (W2-D review fix, m4), so the disc is read
-        # where it stands — on the news' own page.
-        page.goto(site + "/fr/actualites/", wait_until="networkidle")
-        assert [icon for icon in page.evaluate(ICONS_JS) if icon["ground"] not in TRANSPARENT], (
-            "and one that paints its own disc (the news' empty state)"
+        # chapter; it draws that chapter only once an article is live (W2-D review fix, m4), and V5.12 W1's hide
+        # gates close the news' own page while no article is live, so the disc is read where an empty state still
+        # stands — the FAQ's search without a match.
+        page.goto(site + FAQ_NO_MATCH, wait_until="networkidle")
+        # V5.15 W3 (lane B; the v515-b merge): the empty state's glyph stands in its paper seal, the glyph tile that
+        # paints the ground (v5/_glyph.css) — the disc is the tile's, the icon inside it draws on no ground of its own
+        tiles = page.evaluate(
+            "() => [...document.querySelectorAll('.empty-state .glyph-tile')].map((t) => getComputedStyle(t).backgroundImage !== 'none'"
+            " || !['rgba(0, 0, 0, 0)', 'transparent'].includes(getComputedStyle(t).backgroundColor))"
+        )
+        assert [icon for icon in page.evaluate(ICONS_JS) if icon["ground"] not in TRANSPARENT] or any(tiles), (
+            "and one that paints its own disc (the FAQ's empty search)"
         )
     finally:
         plain.close()
@@ -178,9 +196,9 @@ def test_under_forced_colours_every_icon_is_the_ink_of_its_text(browser, site, s
         assert off == [], f"{len(off)} icon(s) keep an authored colour under forced colours: {off[:3]}"
         grounds = [icon for icon in drawn if icon["ground"] not in TRANSPARENT]
         assert grounds == [], f"an icon paints a ground of its own under forced colours: {grounds[:3]}"
-        page.goto(site + "/fr/actualites/", wait_until="networkidle")
+        page.goto(site + FAQ_NO_MATCH, wait_until="networkidle")
         discs = [icon for icon in page.evaluate(ICONS_JS) if "empty-state__icon" in icon["cls"]]
-        assert len(discs) == 1, "the news' empty state is on the page"
+        assert len(discs) == 1, "the FAQ's empty search is on the page"
         assert discs[0]["ground"] in TRANSPARENT and discs[0]["stroke"] == discs[0]["text"], discs[0]
     finally:
         forced.close()

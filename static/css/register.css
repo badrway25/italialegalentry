@@ -6,9 +6,6 @@
    is, not merely which category it belongs to.
 
      .register      the entry list — replaces the card, everywhere
-     .sequence      the vertical list of a module's, a need's or a turn's stages (the console's
-                    secondary pages until W3-E redraws them; the journey's own drawings are design
-                    V5's «La soglia»: the public passage and the console's rail, W3-D)
      .jurisdiction  the jurisdiction bar — who is answerable for each phase
      .plate         the one full-bleed band per page
      .note          the margin apparatus where the legal caveats live
@@ -121,91 +118,9 @@
   border-inline-start-color: var(--rubric);
 }
 
-/* ---- THE SEQUENCE ----------------------------------------------------------
-   Vertical, always. Never a row of circles joined by lines: the diagram this
-   replaces ran its connector to the container edge after step 4 and stopped,
-   so a reader had to jump down and back to reach step 5, and at 390px it meant
-   nothing at all. A vertical list works at 320px unchanged, because it is a
-   list.
-
-   The rule is --cooperation. (Its shore crossing — the --navy rule below a
-   labelled hairline — left with its last consumer, the home's orientation
-   steps, which design V5 draws on the public passage, W3-D.)
-   -------------------------------------------------------------------------- */
-.sequence {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  counter-reset: step;
-}
-
-.sequence__step {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--s-4);
-  padding-block: var(--s-4);
-  border-block-start: 1px solid var(--rule-hair);
-}
-
-.sequence__step:first-child {
-  border-block-start: 2px solid var(--navy);
-}
-
-.sequence__step:last-child {
-  border-block-end: 2px solid var(--navy);
-}
-
-/* The continuous rule with a tick per step. Drawn with a border on the marker
-   itself rather than a painted pseudo-element. */
-.sequence__marker {
-  min-inline-size: 3ch;
-  white-space: nowrap;
-  border-inline-start: 2px solid var(--cooperation);
-  padding-inline-start: var(--s-3);
-  font-family: var(--font-display);
-  font-size: var(--t-entry-size);
-  font-variant-numeric: lining-nums tabular-nums;
-  color: var(--rubric);
-}
-
-.sequence__marker::before {
-  counter-increment: step;
-  content: counter(step, decimal-leading-zero);
-}
-
-.sequence__title {
-  font-family: var(--font-display);
-  font-size: var(--t-entry-size);
-  line-height: var(--t-entry-lh);
-  font-weight: 500;
-  margin: 0 0 var(--s-1);
-}
-
-.sequence__body {
-  font-family: var(--font-ui);
-  font-size: var(--t-gloss-size);
-  line-height: var(--t-gloss-lh);
-  color: var(--ink-secondary);
-  max-inline-size: var(--measure-gloss);
-  margin: 0;
-}
-
-.sequence__actor {
-  display: block;
-  margin-block-start: var(--s-2);
-  font-family: var(--font-ui);
-  font-size: var(--t-folio-size);
-  font-weight: 600;
-  letter-spacing: var(--track-folio);
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
-  color: var(--ink-muted);
-}
-
-:lang(ar) .sequence__actor {
-  text-transform: none;
-  letter-spacing: 0;
-}
+/* THE SEQUENCE (the vertical list of a module's, a need's or a turn's stages) left with its last consumers, the console's
+   secondary pages, which W3-E redrew on the registers' grammar: no template draws `.sequence` any more (V5.12 W2, lane
+   A: its bytes paid for the notices and the disclosure's height in main.css). */
 
 /* ---- THE JURISDICTION BAR --------------------------------------------------
    The graft all four judges of the Design Council asked for independently, and
@@ -490,8 +405,6 @@
    -------------------------------------------------------------------------- */
 @media (forced-colors: active) {
   .register,
-  .sequence__step:first-child,
-  .sequence__step:last-child,
   .sources,
   .plate {
     border-color: CanvasText;

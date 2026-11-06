@@ -43,6 +43,7 @@ def _sample_paths() -> dict[str, str]:
         "pathways": PATHWAYS,
         "documents": DOCUMENTS,
         "deadlines": DEADLINES,
+        "organisation": "/fr/espace-reserve/mon-organisation/",
         "messages": MESSAGES,
         "message_detail": f"{MESSAGES}{some_uuid}/",
         "message_read": f"{MESSAGES}{some_uuid}/lu/",

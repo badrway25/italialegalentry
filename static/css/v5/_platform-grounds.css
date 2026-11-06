@@ -1,0 +1,77 @@
+/* ============================================================================================
+   THE PLATFORM'S GROUNDS — the images the console's atrium, lattice and organisation panels are drawn on
+   (V5.18 stabilisation, lane D, m-6). A partial of the design system, page-only: imported by
+   apps/portal/static/portal/platform.css right AFTER v5/_platform.css, never by main.css or console.css.
+
+   Why here and not in the app sheet: an app stylesheet draws no gradient (AGENT_CONVENTIONS §3,
+   tests/frontend/test_design_docs.py::test_conforming_app_stylesheets_use_only_design_tokens) — its images are the
+   design system's. Why not tokens in tokens.css: these images read values that only exist on the element that draws
+   them (the audience's wash, --atrium-wash; the pointer's position, --spot-x/--spot-y; the console's own area surface),
+   so a :root token cannot hold them; and tokens.css is in main.css, whose gzip budget has no room for a page-only
+   image (DL54-170: 33 600 B, «no further rise»).
+
+   Every stop is a v5 token; nothing here changes what V5.15 lane D drew: the same declarations, on the same
+   selectors, in the same order, one import later — so, as before, each wins over the app sheet's own rules for those
+   elements. The two planes the app sheet repaints for forced colours and for print (the atrium, the calm panel) keep
+   that repaint: their grounds are drawn on screen with forced colours off only.
+   ============================================================================================ */
+
+@media screen and (forced-colors: none) {
+  /* the atrium: the audience's wash at the reading end, the key's warm wash at its foot, on paper */
+  [data-atrium] {
+    background:
+      radial-gradient(70% 140% at 100% 0%, color-mix(in srgb, var(--atrium-wash) 85%, transparent), transparent 62%),
+      radial-gradient(42% 90% at 78% 110%, color-mix(in srgb, var(--identity-key) 12%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--p-carta-0), var(--p-carta-25));
+  }
+
+  /* the organisation's calm panel: the lagoon's wash at its reading end */
+  .org-calm {
+    background:
+      radial-gradient(60% 120% at 100% 0%, var(--accent-wash), transparent 70%),
+      var(--surface-sheet);
+  }
+}
+
+/* the architect's grid, faint, fading out toward the words */
+[data-atrium]::before {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--line-rhythm) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--line-rhythm) 70%, transparent) 1px, transparent 1px);
+  mask-image: linear-gradient(to left, black 0%, transparent 62%);
+}
+
+[dir="rtl"] [data-atrium]::before {
+  mask-image: linear-gradient(to right, black 0%, transparent 62%);
+}
+
+/* the drawing fades in from the words' side (the drawing is mirrored as a whole in Arabic) */
+.atrium__art {
+  mask-image: linear-gradient(to right, transparent 0%, black 16%);
+}
+
+@media (max-width: 47.99rem) {
+  .atrium__band {
+    mask-image: linear-gradient(to right, transparent 0%, black 12%);
+  }
+}
+
+/* the lattice's glyph tile and the organisation's tile disc: paper toward the console's area surface */
+.lattice__glyph,
+.org-refs--tiles .org-refs__disc {
+  background: linear-gradient(160deg, var(--p-carta-0), var(--surface-area));
+}
+
+/* the NowPanel's edge when its date is overdue: the light line in terracotta */
+.db-now--overdue::before {
+  background: linear-gradient(var(--lume-line-to), transparent, var(--p-cotto-600));
+}
+
+/* the spotlight under a fine pointer (static/js/src/platform.js sets --spot-x / --spot-y) */
+[data-spot]::after {
+  background: radial-gradient(
+    280px circle at var(--spot-x) var(--spot-y),
+    color-mix(in srgb, var(--p-laguna-400) 16%, transparent),
+    transparent 70%
+  );
+}

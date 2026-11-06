@@ -1,0 +1,29 @@
+{% load i18n locked_split pages_imagery %}{% comment %}
+The promoter's colophon in «la campata» (V5.22, lane H): the folio label and its rule, the name at the title's size (its
+two parts in two weights, Italian, left to right: pages_imagery.fronte_name), the prescribed answer with two ink
+keywords (cms.locked_split.emphasize: emphasis only), the authorised partners (G6), the link. The hooks
+home-ecosystem__grid--single / home-ecosystem__partners say whether partners stand (apps/partners/tests).
+{% endcomment %}<div class="colofone home-ecosystem__grid{% if not d.partners %} home-ecosystem__grid--single{% endif %}">
+  <p class="testa__label colofone__label"><span class="testa__rule" data-verb="draw" aria-hidden="true"></span>{% translate "Promoteur" %}</p>
+  <h3 class="colofone__nome" translate="no">{{ d.promoter|fronte_name }}</h3>
+  {% if d.promoter_quote %}
+  <p class="colofone__testo"{% if d.promoter_quote.lang %} lang="{{ d.promoter_quote.lang }}"{% endif %} data-faq="{{ d.promoter_quote.key }}">{{ d.promoter_quote.answer|emphasize:"depuis 2011|Italie–Maroc" }}</p>
+  {% else %}
+  <p class="colofone__testo">{% blocktranslate with project=site.project_name promoter=d.promoter %}{{ project }} est promu par {{ promoter }}.{% endblocktranslate %}</p>
+  {% endif %}
+  {% if d.partners %}
+  <div class="home-ecosystem__partners colofone__partner">
+    <p class="testa__label colofone__label">{% translate "Partenaires" %}</p>
+    <ul class="colofone__elenco" data-partners="{{ d.partners|length }}" role="list">
+      {% for card in d.partners %}
+      <li class="home-ecosystem__partner">
+        {% if card.partner.logo_public %}<img class="home-ecosystem__logo" src="{{ card.partner.logo.file.url }}" alt="" width="{{ card.partner.logo.width|default:'160' }}" height="{{ card.partner.logo.height|default:'80' }}" loading="lazy" decoding="async">{% endif %}
+        <span class="home-ecosystem__partner-name">{{ card.partner.name }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% if d.partners_url %}<p class="colofone__altro"><a class="link-arrow" href="{{ d.partners_url }}">{% translate "Voir les partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+  </div>
+  {% endif %}
+  {% if d.agami_url %}<p class="campata__azione"><a class="btn btn--secondary" href="{{ d.agami_url }}" data-azione>{% translate "En savoir plus sur le promoteur" %}</a></p>{% endif %}
+</div>

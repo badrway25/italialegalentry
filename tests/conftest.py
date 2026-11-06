@@ -11,11 +11,16 @@ Conventions for every agent:
   open). A test about a dated state freezes the clock: on the real one it expires with the date.
 * ``after_midnight_in_rome`` — freezes the clock at 00:30 Europe/Rome, when the UTC date is still
   yesterday's: what a page or a rule reads as «today» must be Rome's date, never the UTC one.
+* ``whatsapp_link_set_aside(html)`` — a page as the «no external resource» guards read it: the configured
+  WhatsApp channel's link set aside, nothing else (V5.19 §7; V5.20: the channel the site's settings hold).
+* ``whatsapp_channel`` — the WhatsApp channel configured with Ofcom's fictional +44 7700 900123, where the site
+  reads it (V5.20, option B: the owner-confirmed number is configured outside the repository, never in a test).
 """
 
 from __future__ import annotations
 
 import datetime as dt
+import re
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -120,6 +125,7 @@ def legal_published(db, superuser):
         doc.title_it = f"Test {kind}"
         doc.body_it = TEST_LEGAL_TEXT
         doc.source_reference = "TEST FIXTURE — non è l’Allegato 1"
+        doc.translations = {}  # V5.14: the seeded privacy/cookie translations (with open fields) go with the text
         doc.status = LegalStatus.DRAFT
         doc.save()
         docs.append(publish(doc, superuser))
@@ -182,3 +188,46 @@ def after_midnight_in_rome():
     with freeze_time(AFTER_MIDNIGHT_IN_ROME):
         flags.invalidate()
         yield AFTER_MIDNIGHT_IN_ROME
+
+
+#: Ofcom's drama-reserved fictional UK mobile: the range 07700 900000–900999 is never assigned to a subscriber. The
+#: WhatsApp channel of every test that draws one (V5.20, option B): the owner-confirmed number is configured outside
+#: the repository (the environment's ILE_WHATSAPP_NUMBER, the back office) and no file of the repository writes it.
+FICTIONAL_WHATSAPP_NUMBER = "+44 7700 900123"
+
+
+@pytest.fixture
+def whatsapp_channel(db, settings):
+    """
+    The WhatsApp channel, configured with FICTIONAL_WHATSAPP_NUMBER where the site reads it: the settings' value (the
+    environment's ILE_WHATSAPP_NUMBER: the default of a new settings row, and the fallback before migrations) and the
+    site's settings row (the back office) — whatever the machine's own environment holds. Returns core.contact's
+    channel (digits, label, tel_url, url).
+    """
+    from core.contact import whatsapp
+    from core.models import SiteSettings
+
+    settings.ILE = {**settings.ILE, "WHATSAPP_NUMBER": FICTIONAL_WHATSAPP_NUMBER}
+    row = SiteSettings.load()
+    row.whatsapp_number = FICTIONAL_WHATSAPP_NUMBER
+    row.save()
+    return whatsapp(FICTIONAL_WHATSAPP_NUMBER)
+
+
+def whatsapp_link_set_aside(html: str) -> str:
+    """
+    A page as the guards that forbid an external resource read it. V5.19 §7, the owner's order (DL54-176): the
+    WhatsApp channel's own wa.me URL is the one outbound link a public page draws (the contact page, the footer and the
+    phone's sheet). V5.20: the URL is the CONFIGURED channel's — the site's settings row, read as the context processor
+    reads it (``core.contact.public_channels(SiteSettings.load())``), never a number written here; nothing configured,
+    nothing is set aside. Only as a link: each ``<a href>`` to exactly that URL is set aside, so the same URL as a
+    source, a srcset, a meta content or a form action, and every other external URL, still fail the guard — the rule
+    of tests/compliance/test_public_pages.py since the v519-k merge, given to the apps' guards at the v518g merge.
+    """
+    from core.contact import public_channels
+    from core.models import SiteSettings
+
+    whatsapp = public_channels(SiteSettings.load())["whatsapp"]
+    if not whatsapp:
+        return html
+    return re.sub(rf'(<a\b[^>]*?\bhref="){re.escape(whatsapp.url)}"', r'\g<1>#whatsapp"', html)

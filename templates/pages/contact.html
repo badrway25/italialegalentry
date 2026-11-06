@@ -3,67 +3,67 @@
 /contact/ — one public address only: contact@agamieuromed.org (site.contact_email, gate G8).
 The contact form is NOT re-implemented here: this page links to the enquiries app, which owns the
 form, its consent, throttle, honeypot and the G2 gate (form unavailable while the official legal
-texts are missing). No phone number and no postal address are invented.
+texts are missing). No postal address is invented. The telephone channels are the owner's (V5.19, 29 October 2026):
+the Numero Verde and WhatsApp, from the site's settings (site.channels; pages/partials/_canali.html). The board's
+title names the channels the settings hold: a channel withdrawn (a blank number — V5.20: WhatsApp's is configured
+outside the repository) is not announced.
 CONTENT_PENDING_LEGAL_REVIEW — postal address / registered office: official « Mentions légales » only.
 
-Design V5.4 (W3-F1): the entrance; the address, large, as the page's first answer; the form as the page's ONE
-action; the dedicated forms as a register; the data note, quiet.
+Design V5.22 (SECTION_SYSTEM_V2 §3.12; lane P2) — the contact architecture unchanged (V5.19, V5.21 option B: the
+channels, their links and accessible names, <bdi dir="ltr">, the 44 px targets), only the composition changes:
+  head  «la carta» (KEEP): the address as the page's first answer, said once — the old «Par e-mail» chapter's sentence
+        is its caption now (pages/partials/fronte/_contatto_azione.html); the folio is typographic;
+  band  E «il centralino» on stone: ONE board — its title in its first row, the Numéro vert (wide), WhatsApp (its own
+        glyph and word, never a second ordinary number), the contact form's plate (with G2 closed the G2 notice stands in
+        the same plate, in the pending register), the privacy link as the board's legal foot, at the same visibility
+        (signature STAGGER: the discs' rings draw in turn; hover equals focus);
+  band  E «le porte» on paper: the three dedicated forms as night doors with their audiences' discs, joined by the hub
+        line that carries the title (signature LINE DRAW; a door's accent foot rule draws under the hand or the focus).
+Page sheet apps/pages/static/pages/css/interior.css (+ _canali.css, _contatto.css).
 {% endcomment %}
 {% block page_title %}{% translate "Contact" %}{% endblock %}
 {% block page_header %}
 {% translate "Contact" as page_title_text %}{% translate "Nous écrire" as page_label %}
 {% translate "Une adresse unique pour toutes les demandes relatives au projet." as page_lead %}
-{% include "pages/partials/_ingresso.html" with label=page_label title=page_title_text lead=page_lead only %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=page_title_text lead=page_lead motif="contact" glyph="map-pin" compose="contact" aside_template="pages/partials/fronte/_piano.html" meta_template="pages/partials/fronte/_contatto_azione.html" contact_email=site.contact_email fronte_linked=True only %}
 {% endblock %}
 {% block page_body %}
-<section class="chapter" aria-labelledby="contact-email-title">
-  <div class="container chapter__inner">
-    {% translate "Par e-mail" as email_title %}{% include "pages/partials/_chapter_head.html" with title_id="contact-email-title" title=email_title only %}
-    <div class="chapter__body">
-      <p class="contact-address"><a class="contact-address__link email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-      <p class="page-section__text chapter__prose">{% translate "Tous les formulaires du site sont acheminés vers cette adresse." %}</p>
+<section class="sez sez--centralino centralino-band" data-sec="centralino" data-ground="stone" data-rhythm="band" aria-labelledby="{% if site.channels.freephone or site.channels.whatsapp %}contact-voice-title{% else %}contact-board-title{% endif %}">
+  <div class="container">
+    <div class="centralino">
+      {% if site.channels.freephone and site.channels.whatsapp %}{% translate "Par téléphone, WhatsApp ou formulaire" as board_title %}{% elif site.channels.freephone %}{% translate "Par téléphone ou formulaire" as board_title %}{% elif site.channels.whatsapp %}{% translate "Par WhatsApp ou formulaire" as board_title %}{% else %}{% translate "Par le formulaire de contact" as board_title %}{% endif %}
+      <div class="centralino__testa">
+        {% if site.channels.freephone or site.channels.whatsapp %}{% include "components/sezioni/_testa.html" with role="router" title_id="contact-voice-title" title=board_title only %}{% else %}{% include "components/sezioni/_testa.html" with role="router" title_id="contact-board-title" title=board_title only %}{% endif %}
+      </div>
+      <div class="centralino__piano sez-seq">
+        {% include "pages/partials/_canali.html" with channels=site.channels only %}
+        <div class="canale canale--modulo{% if not forms_open %} canale--attesa{% endif %}">
+          <div class="canale__piastra">
+            <span class="canale__disc" aria-hidden="true">{% svg_icon "message-square-text" "icon" %}</span>
+            <div class="canale__body">
+              <p class="canale__kind">{% translate "Par le formulaire de contact" %}</p>
+              {% if not forms_open %}{# Gate G2 closed: the design-system notice used by every gated public form. #}{% include "components/form_unavailable.html" %}{% endif %}
+              {% if contact_form_url %}<p class="canale__azione"><a class="btn {% if forms_open %}btn--primary{% else %}btn--secondary{% endif %} btn--arrow" href="{{ contact_form_url }}">{% translate "Ouvrir le formulaire de contact" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+            </div>
+          </div>
+        </div>
+        {% if links.privacy %}
+        {# The sentence about data processing is prescribed wording (consent texts): only the link is shown here. #}
+        <p class="centralino__dati"><span class="centralino__dati-label">{% translate "Vos données" %}</span> <a class="link-arrow" href="{{ links.privacy }}">{% translate "Lire la Privacy Policy" %}{% svg_icon "arrow" "icon icon--sm" %}</a></p>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>
 
-<section class="chapter chapter--area" aria-labelledby="contact-form-title">
-  <div class="container chapter__inner">
-    {% translate "Par le formulaire de contact" as form_title %}{% include "pages/partials/_chapter_head.html" with title_id="contact-form-title" title=form_title only %}
-    <div class="chapter__body">
-      {% if not forms_open %}
-        {# Gate G2 closed: the design-system notice used by every gated public form. #}
-        {% include "components/form_unavailable.html" %}
-      {% endif %}
-      {% if contact_form_url %}
-      <p class="chapter__more"><a class="btn {% if forms_open %}btn--primary{% else %}btn--secondary{% endif %} btn--lg btn--arrow" href="{{ contact_form_url }}">{% translate "Ouvrir le formulaire de contact" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-      {% endif %}
+{% if dedicated_doors %}
+<section class="sez sez--porte contatto-porte" data-sec="porte" data-ground="paper" data-rhythm="band" aria-labelledby="contact-dedicated-title">
+  <div class="container">
+    <div class="contatto-porte__testa">
+      {% translate "Une demande précise ?" as dedicated_title %}<h2 class="contatto-porte__titolo" id="contact-dedicated-title">{{ dedicated_title }}</h2>
+      <span class="contatto-porte__linea" data-verb="draw" aria-hidden="true"></span>
     </div>
-  </div>
-</section>
-
-{% if dedicated_forms %}
-<section class="chapter" aria-labelledby="contact-dedicated-title">
-  <div class="container chapter__inner">
-    {% translate "Une demande précise ?" as dedicated_title %}{% include "pages/partials/_chapter_head.html" with title_id="contact-dedicated-title" title=dedicated_title only %}
-    <div class="chapter__body">
-      <ul class="registro registro--two page-links">
-        {% for item in dedicated_forms %}
-        <li class="registro__row page-links__item"><p class="registro__title"><a class="page-links__link" href="{{ item.url }}"{% if item.label.lang %} lang="{{ item.label.lang }}"{% endif %}>{{ item.label }}</a></p></li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-</section>
-{% endif %}
-
-{% if links.privacy %}
-<section class="chapter chapter--quiet" aria-labelledby="contact-data-title">
-  <div class="container chapter__inner">
-    <div class="chapter__head chapter__head--quiet"><h2 class="chapter__label" id="contact-data-title">{% translate "Vos données" %}</h2></div>
-    <div class="chapter__body">
-      {# The sentence about data processing is prescribed wording (consent texts): only the link is shown here. #}
-      <p class="chapter__more"><a class="link-arrow" href="{{ links.privacy }}">{% translate "Lire la Privacy Policy" %}</a></p>
-    </div>
+    {% include "components/sezioni/mosaico.html" with variant="porte" tiles=dedicated_doors only %}
   </div>
 </section>
 {% endif %}

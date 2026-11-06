@@ -6,7 +6,8 @@
    reference: the gate-0 foundation's components.css §6.
    Markup: templates/components/notice.html (kind, title, text, the kind's mark), components/form_errors.html,
    components/form_unavailable.html, allauth/elements/alert.html; `.alert` is the session message of
-   templates/base.html (no mark, no title: its words are the message).
+   templates/base.html (components/session_notice.html: its kind's mark, no title — its words are the message —,
+   «Fermer»; V5.12 W2).
    Never colour alone — a kind is said three times: the mark the markup gives it, the title in the register's
    word colour, and the STYLE of the 3 px rule at the reading edge: solid (a fact), dashed (a warning: the
    broken edge of «attesa»), double (an error: the two lines of «rifiuto»).
@@ -31,13 +32,36 @@
   font-size: var(--t-ui);
   line-height: 1.5rem;
 }
-.alert { display: block; }
 .messages { margin-block: var(--s-6) 0; }
+.messages:not(:has(.alert)) { display: none; }
+
+/* a session message (components/session_notice.html; V5.12 §5, DECISIONS §2 M9): its kind's mark, its words,
+   «Fermer» at the inline end once notices.js has wired it — one row, the mark on the words' first line */
+.alert { grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; }
+.alert > .notice__icon { grid-row: auto; }
+.alert__text { margin: 0; max-inline-size: var(--measure-body); }
+/* «Fermer» is the buttons' icon button (v5/buttons.css .btn--icon): its 40 px box sits in the 24 px line */
+.alert__close { margin-block: calc(-1 * var(--s-2)); margin-inline-end: calc(-1 * var(--s-3)); }
+
+/* the toast region: a success, at the viewport's foot on the inline end, over the page — its going never moves the
+   page (CLS). Placed by html.js (head.js, before the first paint): without script it is one more notice in the flow.
+   On a console phone it stands above the bottom bar. */
+html.js .messages--toast {
+  position: fixed;
+  inset-block-end: max(var(--s-6), env(safe-area-inset-bottom, 0px));
+  inset-inline-end: 0;
+  z-index: var(--z-toast);
+  inline-size: min(30rem, 100%); /* the container's auto margins resolve to 0 on a fixed box with one inset */
+}
+html.js .messages--toast .alert { margin-block: var(--s-3) 0; border: 1px solid var(--line-structure); border-inline-start: 3px solid var(--notice-rule); }
+@media (max-width: 63.999rem) {
+  html.js body.console .messages--toast { inset-block-end: calc(var(--bottom-bar-h) + var(--s-4) + env(safe-area-inset-bottom, 0px)); }
+}
 
 /* the registers */
 .notice--success, .alert--success { --notice-wash: var(--tone-conforme-bg); --notice-word: var(--tone-conforme-text); --notice-rule: var(--tone-conforme-mark); }
-.notice--pending, .alert--pending { --notice-wash: var(--notice-pending-bg); --notice-word: var(--notice-pending-text); --notice-rule: var(--notice-pending-edge); }
-.notice--warning, .notice--warn, .alert--warning {
+.notice--pending { --notice-wash: var(--notice-pending-bg); --notice-word: var(--notice-pending-text); --notice-rule: var(--notice-pending-edge); }
+.notice--warning, .alert--warning {
   --notice-wash: var(--notice-warning-bg);
   --notice-word: var(--notice-warning-text);
   --notice-rule: var(--notice-warning-edge);
@@ -86,6 +110,6 @@
 
 @media (forced-colors: active) {
   .notice, .alert { border: 1px solid CanvasText; border-inline-start-width: 3px; }
-  .notice--warning, .notice--warn, .alert--warning { border-inline-start-style: dashed; }
+  .notice--warning, .alert--warning { border-inline-start-style: dashed; }
   .notice--error, .alert--error { border-inline-start-style: double; }
 }

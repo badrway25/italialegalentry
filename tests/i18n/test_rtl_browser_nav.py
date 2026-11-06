@@ -2,8 +2,10 @@
 RTL check of «Il portico» (design V5, V5.4 plan §1.12 acceptance N19; W2-C1).
 
 Placed by script, so no static guard can see it (plan §2.5): in Arabic as in French, «l'architrave» — the one
-indicator — sits under the open door, the panel's entries column starts at the first door's inline start (N2), and
-the plain panel («Projet») hangs from the bar's inline end. Chromium at 1440 × 900 on the home, with the static
+indicator — sits under the open door; a door's panel floats on the letterhead's content box and holds its three zones
+in the reading direction — the lede, the entries, «la lunetta» (V5.15 lane A, DL54-170: this replaced W2-C1's N2,
+«the entries column starts at the first door's inline start»); and the plain panel («Projet») hangs from the bar's
+inline end. Chromium at 1440 × 900 on the home, with the static
 fallback menu (two doors before gate G3, four after it).
 """
 
@@ -68,13 +70,25 @@ def test_the_architrave_and_the_entries_follow_the_doors_in_both_directions(brow
         assert abs(arch["width"] - (box["width"] - 2 * pad)) <= 1.5, (lang, box, arch)
         assert abs(arch["y"] - (box["y"] + box["height"])) <= 2, (lang, box, arch)
 
-        # N2: the entries column starts at the first door's inline start, whichever door is open
-        first = doors.nth(0).bounding_box()
-        title = page.locator(f"#{door.get_attribute('aria-controls')} .portico__title").first.bounding_box()
-        if lang == "ar":
-            assert abs((first["x"] + first["width"] - pad) - (title["x"] + title["width"])) <= 1.5, (first, title)
-        else:
-            assert abs((first["x"] + pad) - title["x"]) <= 1.5, (first, title)
+        # the floating mega panel (V5.15 lane A, DL54-170, cb252091/b9098210; static/css/v5/_portico.css) in place of
+        # W2-C1's N2: three zones in the reading direction — the lede (eyebrow, gloss) on the panel's inline start, the
+        # entries a 32 px column gap after it, «la lunetta» flush on the inline end — mirrored, not re-ordered, in Arabic
+        zones = page.evaluate(
+            """(id) => { const p = document.getElementById(id); const R = (s) => { const b = p.querySelector(s).getBoundingClientRect();
+                 return {start: b.left, end: b.right}; };
+               const panel = p.getBoundingClientRect(); const rtl = document.documentElement.dir === 'rtl';
+               const flip = (z) => rtl ? {start: panel.right - z.end, end: panel.right - z.start} : {start: z.start - panel.left, end: z.end - panel.left};
+               return Object.fromEntries(['.portico__sheet', '.portico__eyebrow', '.portico__gloss', '.portico__entries', '.portico__lunetta']
+                 .map((s) => [s.slice(10), flip(R(s))]).concat([['width', panel.width]])); }""",
+            door.get_attribute("aria-controls"),
+        )
+        width = zones["width"]
+        assert abs(zones["sheet"]["start"] - 1) <= 1 and abs(zones["lunetta"]["end"] - (width - 1)) <= 1, (lang, zones)
+        assert abs(zones["sheet"]["end"] - zones["lunetta"]["start"]) <= 1, (lang, zones)
+        for lede in ("eyebrow", "gloss"):
+            assert abs(zones[lede]["start"] - zones["sheet"]["start"]) <= 1, (lang, lede, zones)
+        assert abs(zones["entries"]["start"] - (zones["gloss"]["end"] + 32)) <= 1.5, (lang, zones)
+        assert zones["entries"]["end"] <= zones["lunetta"]["start"] + 1, (lang, zones)
         panel = page.locator(f"#{door.get_attribute('aria-controls')}").bounding_box()
         edges = _content_edges(page)
         assert abs(panel["x"] - edges["left"]) <= 1 and abs(panel["x"] + panel["width"] - edges["right"]) <= 1, (panel, edges)

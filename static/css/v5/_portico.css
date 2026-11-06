@@ -1,0 +1,325 @@
+/* ============================================================================================
+   THE PORTICO PANEL, FROM 64rem — the bar's mega panel (V5.15 §1, §2; DECISIONS §15 lane A; built on W2-C1/W2-C2's
+   «Il portico», static/css/v5/chrome.css §5). A page sheet of the public chrome: apps/core/static/core/portico.css
+   imports it, templates/base.html links it with media="(min-width: 64rem)" after main.css on the public pages (the
+   console's pages have no portico), so a phone never waits for it (review round 1, v515-a-improve1: the shared
+   main.css ratchets down). What the bar's panel and the phone's sheet share — the entries, «Voir l'espace», the foot,
+   the disc — stays in chrome.css §5.
+
+   A door's panel: three zones at the door's own height — the lede (the door's name, its locked gloss, «Voir
+   l'espace»), the entries on two columns of hairline rows, «la lunetta» (the door's night plate: the portico's three
+   arches in gold, the door's glyph lit in the inner arch, its highlighted destination at the foot; the whole plate is
+   the link). A door change morphs the card to the new door's height (`interpolate-size`; nav.js writes
+   --portico-from), the content comes from the side the pointer travelled. Projet: a plain panel. Tokens only, logical
+   properties; the curves are the tokens'.
+   ============================================================================================ */
+@media (min-width: 64rem) {
+  .portico {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: var(--grid-margin);
+    z-index: 1;
+    grid-template-columns: minmax(0, 1fr);
+    margin-block-start: var(--s-2);   /* V5.15: the panel floats under the bar, a card of its own */
+    background: var(--surface-raised);
+    border: 1px solid var(--line-rhythm);
+    border-radius: 16px;
+    box-shadow: var(--shadow-4);
+    overflow: hidden;
+    opacity: 1;
+    transform: none;
+    interpolate-size: allow-keywords;   /* a door change morphs the card to the new door's own height */
+    transition:
+      opacity var(--motion-fast) var(--ease-enter),
+      transform var(--motion-fast) var(--ease-enter),
+      display var(--motion-fast) allow-discrete;
+  }
+  .main-nav__door[aria-expanded="true"] + .portico {
+    display: grid;
+    transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter);
+  }
+  @starting-style {
+    .main-nav__door[aria-expanded="true"] + .portico { opacity: 0; transform: translateY(-8px) scale(0.985); }
+  }
+  .main-nav__door[aria-expanded="false"] + .portico { opacity: 0; transform: translateY(-8px) scale(0.985); }
+  .portico { transform-origin: 50% 0; }
+  .main-nav.is-instant .portico,
+  .main-nav.is-instant .main-nav__door[aria-expanded="true"] + .portico,
+  .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico { transition: none; }
+  /* review round 1: EACH door has its own height (one shared height left Entreprises' two entries in a 550 px void);
+     a door change morphs the card from the old door's height (nav.js writes --portico-from) to the new one's */
+  .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico--door { transition: block-size var(--motion-emphasized) var(--ease-layout); }
+  @starting-style {
+    .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico--door { block-size: var(--portico-from, auto); }
+  }
+  /* no script: a panel opens on hover and on focus-within (NAVIGATION §4.8, four checks) */
+  html.no-js .main-nav__item--section:is(:hover, :focus-within) > .portico { display: grid; opacity: 1; transform: none; }
+
+  .portico__sheet {
+    display: grid;
+    grid-template-columns: var(--portico-lead) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    align-content: start;
+  }
+  .portico__gloss {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    padding: var(--s-8) var(--s-8) 0 var(--s-6);
+    max-inline-size: 22rem;
+    font-size: var(--t-entry);
+    line-height: var(--t-entry-lh);
+    font-weight: var(--w-body);
+    letter-spacing: var(--track-entry);
+    color: var(--text-1);
+    text-wrap: pretty;
+  }
+  :lang(ar) .portico__gloss { letter-spacing: 0; line-height: var(--ar-body-lh); }
+  .portico__space { grid-column: 1; grid-row: 2; align-self: start; justify-self: start; margin: var(--s-4) var(--s-8) var(--s-4) var(--s-6); }
+  .portico__entries { grid-column: 2; grid-row: 1 / span 2; padding: var(--s-5) var(--s-6) var(--s-5) 0; }
+  .portico__foot { grid-column: 1 / -1; grid-row: 3; padding: var(--s-3) var(--s-6); border-block-start: 1px solid var(--line-rhythm); }
+
+  /* ---- a door: three zones — the lede (name, gloss, «Voir l'espace»), the entries on two columns of hairline rows,
+     «la lunetta» (the door's night plate, its highlighted destination) — at the door's own height ---- */
+  /* the one row fills the card at every moment of a morph (review round 2: 120 ms into a switch the lunetta ended 47 px
+     above the card's foot) */
+  .portico--door { grid-template-columns: minmax(0, 1fr) clamp(15rem, 27%, 22rem); grid-template-rows: minmax(0, 1fr); min-block-size: 17rem; }
+  .portico--door .portico__sheet {
+    grid-template-columns: minmax(11rem, 0.72fr) minmax(0, 1.6fr);
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: var(--s-8);
+    padding-block-start: var(--s-6);
+  }
+  .portico__eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    padding-inline-start: var(--s-6);
+    font: var(--w-control) var(--t-caption) / var(--t-caption-lh) var(--f-sans);
+    letter-spacing: var(--track-eyebrow);
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  :lang(ar) .portico__eyebrow { letter-spacing: 0; text-transform: none; }
+  /* the lede at the body's size (review round 2: at 20 px it was the panel's tallest column and left a short door's
+     tiles over white) */
+  .portico--door .portico__gloss { grid-row: 2; padding: var(--s-2) 0 0 var(--s-6); font-size: var(--t-body); line-height: var(--t-body-lh); }
+  .portico--door .portico__space { grid-row: 3; margin: var(--s-4) 0 var(--s-6) var(--s-6); }
+  .portico--door .portico__entries {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    column-gap: var(--s-6);
+    padding: 0 var(--s-6) var(--s-6) 0;
+  }
+  .portico--door .portico__entry,
+  .portico--door .portico__entry + .portico__entry { border-block-start: 1px solid var(--line-rhythm); }
+  .portico--door .portico__foot { grid-row: 4; }
+  /* ONE row rhythm (finishing round F1, M-2): each entry a row of at least 76 px — its destination's glyph on a tinted
+     disc, the title, its line WHOLE (never an ellipsis: round 3 filmed «Deux temps d'un même parcours : …» cut at 30
+     characters); the two columns share each grid row, so a pair stands level whatever its lines; the glyph and the
+     title hang from the row's top. Below 80rem the title alone (a 1024 column holds no sentence) */
+  .portico__link { grid-template-columns: 36px minmax(0, 1fr); column-gap: var(--s-3); row-gap: 2px; align-content: center; }
+  .portico__link > :not(.portico__glyph) { grid-column: 2; }
+  .portico--door .portico__link { min-block-size: 76px; align-items: start; align-content: start; }
+  .portico--door .portico__title { padding-block-start: 6px; }
+  .portico__line { text-wrap: pretty; max-inline-size: none; }
+  .portico__glyph {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    display: grid;
+    place-items: center;
+    inline-size: 36px;
+    block-size: 36px;
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--field-tint, var(--surface-hover)) 14%, var(--surface-raised));
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--field-tint, var(--line-rhythm)) 22%, transparent);
+    color: var(--accent-text);
+    transition: background-color var(--motion-fast) var(--ease-enter), scale var(--motion-standard) var(--ease-enter);
+  }
+  .portico__glyph:empty { visibility: hidden; }
+  .portico__glyph .icon { inline-size: 20px; block-size: 20px; }
+  .portico__glyph .icon:has(use[href$="handshake"]) { inline-size: 24px; block-size: 24px; } /* its floor */
+  @media (hover: hover) and (pointer: fine) {
+    .portico .portico__link:hover .portico__glyph { background: var(--surface-night); color: var(--p-oro-300); scale: 1.06; }
+  }
+  /* the notice of the door's own space, whole, beside the anti-fraud foot */
+  .portico__notice {
+    grid-column: 2;
+    grid-row: 4;
+    display: flex;
+    align-items: start;
+    gap: var(--s-2);
+    margin: 0;
+    padding-block: var(--s-3);
+    padding-inline-end: var(--s-6);
+    border-block-start: 1px solid var(--line-rhythm);
+    font-size: var(--t-small);
+    line-height: var(--t-small-lh);
+    color: var(--text-2);
+    text-wrap: pretty;
+  }
+  .portico__notice .icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: 2px; color: var(--icon-default); }
+  .portico__sheet:has(> .portico__notice) > .portico__foot { grid-column: 1; }
+  /* a short door (two entries or fewer: Entreprises, Institutions, Universités): DESTINATION ROWS, one above the other
+     (finishing round F1, M-2: round 3's two 280 × 220 cards held ≈ 120 px of empty gradient, and a 3-line clamp cut
+     Institutions' line mid-promise) — the glyph on its disc, the title and its whole line, the way forward on a night
+     disc at the end; each row as tall as what it says */
+  .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__entries { grid-template-columns: minmax(0, 1fr); gap: var(--s-3); }
+  .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__entry { border: 0; }
+  .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link {
+    grid-template-columns: 44px minmax(0, 1fr) 32px;
+    column-gap: var(--s-4);
+    align-items: center;
+    min-block-size: 96px;
+    margin: 0;
+    padding: var(--s-4) var(--s-5);
+    border: 1px solid var(--line-rhythm);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--field-tint, var(--surface-hover)) 9%, var(--surface-raised)), var(--surface-raised) 70%);
+    transition: border-color var(--motion-fast) var(--ease-enter), translate var(--motion-standard) var(--ease-enter), box-shadow var(--motion-standard) var(--ease-enter);
+  }
+  .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__glyph { inline-size: 44px; block-size: 44px; }
+  .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__title { padding: 0; font-size: var(--t-entry); line-height: var(--t-entry-lh); text-wrap: balance; }
+  .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link::after {
+    content: "";
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    inline-size: 32px;
+    block-size: 32px;
+    border-radius: var(--radius-full);
+    background: var(--surface-night) var(--portico-arrow) center / 14px no-repeat;
+    transition: translate var(--motion-standard) var(--ease-enter);
+  }
+  [dir="rtl"] .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link::after { scale: -1 1; }
+  [dir="rtl"] .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link { background: linear-gradient(270deg, color-mix(in oklab, var(--field-tint, var(--surface-hover)) 9%, var(--surface-raised)), var(--surface-raised) 70%); }
+  .portico { --portico-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f4efe4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E"); }
+  @media (hover: hover) and (pointer: fine) {
+    .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link:hover { border-color: var(--line-structure); translate: 0 -2px; box-shadow: var(--shadow-2); }
+    .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link:hover::after { translate: 4px 0; }
+    [dir="rtl"] .portico--door:not(:has(.portico__entry:nth-child(3))) .portico__link:hover::after { translate: -4px 0; }
+  }
+  [dir="rtl"] .portico--door .portico__gloss { padding: var(--s-2) var(--s-6) 0 0; }
+  [dir="rtl"] .portico--door .portico__space { margin: var(--s-4) var(--s-6) var(--s-6) 0; }
+  [dir="rtl"] .portico--door .portico__entries { padding: 0 0 var(--s-6) var(--s-6); }
+
+  /* a plain panel (Projet): no plate, hung from the bar's inline end, as wide as its content */
+  .portico--plain {
+    inset-inline-start: auto;
+    inline-size: min(46rem, calc(100% - 2 * var(--grid-margin)));
+  }
+  .portico--plain .portico__sheet { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .portico--plain .portico__entries { padding-inline-start: 0; }
+  .portico--plain .portico__link { min-block-size: 64px; align-items: start; }
+  .portico--plain .portico__title { padding-block-start: 6px; }
+
+  /* content swap and first rise (pointer only; nav.js sets the class for one opening) */
+  .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico :is(.portico__sheet, .portico__lunetta-text, .portico__disc) {
+    transition: opacity var(--motion-standard) var(--ease-enter), translate var(--motion-emphasized) var(--ease-enter);
+  }
+  @starting-style {
+    .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico :is(.portico__sheet, .portico__lunetta-text, .portico__disc) { opacity: 0; }
+    /* the content comes from the side the pointer travelled (21st «Directional Menu» 36476: direction only) */
+    .main-nav.is-switching[data-from="start"] .main-nav__door[aria-expanded="true"] + .portico .portico__sheet { translate: -24px 0; }
+    .main-nav.is-switching[data-from="end"] .main-nav__door[aria-expanded="true"] + .portico .portico__sheet { translate: 24px 0; }
+    [dir="rtl"] .main-nav.is-switching[data-from="start"] .main-nav__door[aria-expanded="true"] + .portico .portico__sheet { translate: 24px 0; }
+    [dir="rtl"] .main-nav.is-switching[data-from="end"] .main-nav__door[aria-expanded="true"] + .portico .portico__sheet { translate: -24px 0; }
+  }
+  .main-nav.is-first .portico__entry { transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter); }
+  .main-nav.is-first .portico__entry:nth-child(2) { transition-delay: 30ms; }
+  .main-nav.is-first .portico__entry:nth-child(3) { transition-delay: 60ms; }
+  .main-nav.is-first .portico__entry:nth-child(4) { transition-delay: 90ms; }
+  .main-nav.is-first .portico__entry:nth-child(5) { transition-delay: 120ms; }
+  .main-nav.is-first .portico__entry:nth-child(n+6) { transition-delay: 150ms; }
+  @starting-style {
+    .main-nav.is-first .main-nav__door[aria-expanded="true"] + .portico .portico__entry { opacity: 0; transform: translateY(4px); }
+  }
+
+  /* ---- «la lunetta»: the door's night plate — the portico's three arches drawn in gold, the door's glyph lit in the
+     inner arch, its highlighted destination at the foot; the whole plate is the link. Solid night (review round 1: a
+     glass plate over white read as a disabled grey bar at 1024). The door's accent warms the light at its foot ---- */
+  .portico[data-audience="person"] { --field-tint: var(--aud-persona); }
+  .portico[data-audience="company"] { --field-tint: var(--aud-impresa); }
+  .portico[data-audience="institution"] { --field-tint: var(--aud-istituzione); }
+  .portico[data-audience="university"] { --field-tint: var(--aud-universita); }
+  .portico__lunetta {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-content: end;
+    grid-column: 2;
+    grid-row: 1;
+    min-block-size: 100%;
+    padding: var(--s-6);
+    overflow: hidden;
+    background:
+      radial-gradient(90% 60% at 50% 100%, color-mix(in oklab, var(--field-tint, var(--p-oro-300)) 26%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--surface-night-sheet), var(--surface-night) 55%, var(--surface-night-deep));
+    color: var(--text-on-night-1);
+    text-decoration: none;
+  }
+  .portico__arches {
+    position: absolute;
+    inset-inline: 6%;
+    inset-block: var(--s-6) 0;
+    z-index: -1;
+    inline-size: 88%;
+    block-size: calc(100% - var(--s-6));
+    fill: none;
+    stroke: color-mix(in oklab, var(--p-oro-300) 34%, transparent);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    transition: stroke var(--motion-slow) var(--ease-enter);
+  }
+  .portico__arches path:first-child { stroke: color-mix(in oklab, var(--p-oro-300) 14%, transparent); }
+  .portico__arches path:nth-child(2) { stroke: color-mix(in oklab, var(--p-oro-300) 22%, transparent); }
+  .portico__lunetta .portico__disc {
+    position: absolute;
+    inset-inline-start: calc(50% - 28px);
+    inset-block-start: 38%;
+    inline-size: 56px;
+    block-size: 56px;
+    background: var(--surface-night-sheet);
+    color: var(--p-oro-300);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--p-oro-300) 45%, transparent), 0 0 40px 6px color-mix(in oklab, var(--p-oro-300) 16%, transparent);
+    transition: box-shadow var(--motion-slow) var(--ease-enter), translate var(--motion-slow) var(--ease-enter);
+  }
+  .portico__lunetta .portico__disc .icon { inline-size: 26px; block-size: 26px; }
+  .portico__lunetta-text { position: relative; z-index: 1; display: grid; gap: 2px; }
+  .portico__kicker { font: var(--w-control) var(--t-caption) / var(--t-caption-lh) var(--f-sans); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--p-oro-300); }
+  :lang(ar) .portico__kicker { letter-spacing: 0; text-transform: none; }
+  .portico__feature-title { display: block; font: var(--w-title) var(--t-body) / 1.4 var(--f-sans); text-wrap: balance; }
+  .portico__feature-title .icon { display: inline-block; vertical-align: -0.15em; margin-inline-start: var(--s-2); inline-size: var(--icon-sm); block-size: var(--icon-sm); transition: translate var(--motion-standard) var(--ease-enter); }
+  @media (hover: hover) and (pointer: fine) {
+    .portico__feature:hover .portico__arches { stroke: color-mix(in oklab, var(--p-oro-300) 60%, transparent); }
+    .portico__feature:hover .portico__disc { translate: 0 -4px; box-shadow: 0 0 0 1px var(--p-oro-300), 0 0 56px 10px color-mix(in oklab, var(--p-oro-300) 26%, transparent); }
+    .portico__feature:hover .portico__feature-title .icon { translate: 4px 0; }
+    [dir="rtl"] .portico__feature:hover .portico__feature-title .icon { translate: -4px 0; }
+  }
+  .portico__feature:focus-visible { outline: 2px solid var(--p-oro-300); outline-offset: -4px; }
+  /* a frame of the menu's own (lane C, `menu_only`): under the plate's light, unmasked as the panel opens (M2) */
+  .portico__photo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--motion-standard) var(--ease-enter);
+  }
+  .portico__photo.is-loaded,
+  html.no-js .portico__photo { opacity: 0.62; }
+  .main-nav__door[aria-expanded="true"] + .portico .portico__photo { transition: opacity var(--motion-standard) var(--ease-enter), clip-path var(--motion-slow) var(--ease-enter), scale 900ms var(--ease-enter); clip-path: inset(0); scale: 1; }
+  @starting-style { .main-nav__door[aria-expanded="true"] + .portico .portico__photo { clip-path: inset(18% 0 0 0); scale: 1.06; } }
+}
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  .portico--door { grid-template-columns: minmax(0, 1fr) 14rem; }
+  .portico--door .portico__sheet { grid-template-columns: minmax(10rem, 0.7fr) minmax(0, 1.5fr); column-gap: var(--s-6); }
+  .portico--door .portico__entries { column-gap: var(--s-4); }
+  .portico--door .portico__title { font-size: var(--t-ui); }
+  .portico--door:has(.portico__entry:nth-child(3)) .portico__line { display: none; }
+  .portico--door .portico__link { min-block-size: 64px; }
+}

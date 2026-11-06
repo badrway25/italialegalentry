@@ -1,4 +1,4 @@
-{% extends "ecosystem/_layout.html" %}{% load i18n enquiries_tags %}
+{% extends "ecosystem/_layout.html" %}{% load i18n enquiries_tags pages_imagery %}
 {% comment %}
 Espace Entreprises — PHASE 1 (Implementation §1.1): online now, never gated, independent of gate G3.
 Replaces the former recruitment page: no ranking, no selection, no candidate profiles.
@@ -8,7 +8,25 @@ The form is NOT re-implemented here: {% company_needs_form %} (enquiries) render
 besoins » form, posting to enquiries:company_needs; while gate G2 is closed the same tag renders
 components/form_unavailable.html.
 
-Design V5.4 (W3-F1): the entrance with the company door, whose card carries the door's way in — its sentence (the
+Design V5.12 (W2, lane C; DECISIONS §7): the workshop photograph in the entrance (slot «companies.hero», 3:2, the
+LCP), the way in under the lead; «Trois temps» on the three-station linea under the prescribed quotation set as a
+pull-quote; the form beside a side-anchored panel (the chapter's head, the request's sentence and where it goes),
+sticky from 64 rem; «Pour aller plus loin» as weighted tiles.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.6; lane P1 — Page Composition V2), below the approved entrance (KEEP):
+  * EN-1 — F «il flusso»: the prescribed quotation opens the band as its statement (36/44, its rule drawn), then the
+    three moments (team strings, CONTENT_PENDING_LEGAL_REVIEW) as wide stage panels hung on ONE measured curve
+    (components/sezioni/flusso.html, sezioni/flow.js), their concept tiles the nodes (icons.COMPANY_MOMENT). PATH;
+  * EN-2 — D «il panorama»: the productive territory, the page's only drifting image, widening to full bleed;
+  * EN-3 — the form, preserved (V5.22 §24): its chapter, its sticky side panel, the canonical tag;
+  * EN-4 — A split of ONE locked answer: the question is the band's title, the answer's own «Non.» its large keyword,
+    the answer cut at its own colon into what the platform does not do | what it does — three spans of one paragraph
+    whose textContent is the answer — and a rule between them that draws. No mark (a slash or a tick reads as a
+    verdict); the FAQ link an arrow row. LINE;
+  * EN-5 — K «l'approdo»: the Forum's night tile (Q4), the pilot's tile with its route in miniature, the skyline low
+    as the bookend; one light sweep.
+
+Before V5.12 (W3-F1): the entrance with the company door, whose card carries the door's way in — its sentence (the
 door's own, as the portico's panel says it) and the way to «Recueil des besoins», in the first screen (W3-F1's review
 M1): a secondary, because the form's submit stays the page's ONE action; then a chain of questions — how does it work
 (the statement and the three moments on «la linea»), where do I start (the form, its six short single-line fields
@@ -20,65 +38,65 @@ two by two from 64rem), what the platform does and does not do (the ONE inset), 
 {% get_current_language as page_lang %}{% translate "Signalez les besoins professionnels de votre entreprise." as way_text %}
 {# the sentence keeps its language where the translators have not given it yet (WCAG 3.1.2; B2) #}
 {% if page_lang != "fr" and way_text == "Signalez les besoins professionnels de votre entreprise." %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo way_text=way_text way_text_lang="fr" way_label=way_label way_url="#formulaire" way_jump=True only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_text_lang="fr" way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" compose="skyline" words_first=True fronte_linked=True only %}
 {% else %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo way_text=way_text way_label=way_label way_url="#formulaire" way_jump=True only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" compose="skyline" words_first=True fronte_linked=True only %}
 {% endif %}
 {% endblock %}
 
 {% block space_main %}
-<section id="demarche" class="chapter ecosystem-moments" aria-labelledby="demarche-header">
-  <div class="container chapter__inner">
-    {% translate "Trois temps, une même démarche" as moments_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="demarche-header" title=moments_title only %}
-    <div class="chapter__body">
-      <blockquote class="citazione"{% if quote.lang_attr %} lang="{{ quote.lang_attr }}"{% endif %}><p>{{ quote.text }}</p></blockquote>
-      {% include "ecosystem/partials/note.html" %}
-      {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral UI wording limited to the vocabulary of the prescribed introduction; no procedure, no delay, no outcome is described.{% endcomment %}
-      {% translate "Les trois temps de la démarche" as moments_label %}
-      {% include "pages/partials/_linea.html" with steps=moments label=moments_label across=True cols="3" %}
-    </div>
+{% translate "Trois temps, une même démarche" as moments_title %}{% translate "Les trois temps de la démarche" as moments_label %}
+<section id="demarche" class="sez sez--flusso imprese-demarche" data-sec="flusso" data-ground="paper" data-rhythm="band" aria-labelledby="demarche-header">
+  <div class="container">
+    <blockquote class="imprese-citazione"{% if quote.lang_attr %} lang="{{ quote.lang_attr }}"{% endif %}><span class="imprese-citazione__regola" data-verb="draw-y" aria-hidden="true"></span><p>{{ quote.text }}</p></blockquote>
+    {% include "components/sezioni/_testa.html" with role="process" title_id="demarche-header" title=moments_title only %}
+    {% include "ecosystem/partials/note.html" %}
+    {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral UI wording limited to the vocabulary of the prescribed introduction; no procedure, no delay, no outcome is described.{% endcomment %}
+    {% include "components/sezioni/flusso.html" with steps=moments label=moments_label only %}
   </div>
 </section>
 
+<div class="sez sez--panorama imprese-territorio" data-sec="panorama" data-ground="paper" data-rhythm="band">
+  <div class="container">{% include "components/sezioni/panorama.html" with slot="companies.territory" only %}</div>
+</div>
+
 <section id="formulaire" class="chapter chapter--area ecosystem-form" aria-labelledby="formulaire-header">
   <div class="container chapter__inner">
-    {% translate "Recueil des besoins" as form_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="formulaire-header" title=form_title only %}
+    <div class="ecosystem-form__side">
+      {% translate "Recueil des besoins" as form_title %}
+      {% include "pages/partials/_chapter_head.html" with title_id="formulaire-header" title=form_title only %}
+      <div class="ecosystem-form__panel">
+        {% get_current_language as form_lang %}{% translate "Signalez les besoins professionnels de votre entreprise." as panel_text %}
+        <p class="ecosystem-form__panel-text"{% if form_lang != "fr" and panel_text == "Signalez les besoins professionnels de votre entreprise." %} lang="fr"{% endif %}>{{ panel_text }}</p>
+        <p class="ecosystem-form__destination">
+          {% translate "Toutes les demandes transmises par les formulaires du site parviennent à une adresse unique :" %}
+          <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
+        </p>
+      </div>
+    </div>
     <div class="chapter__body">
       {% company_needs_form %}
-      <p class="aiuto ecosystem-form__destination">
-        {% translate "Toutes les demandes transmises par les formulaires du site parviennent à une adresse unique :" %}
-        <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
-      </p>
     </div>
   </div>
 </section>
 
 {% if guarantee %}
-<section id="transparence" class="chapter ecosystem-guarantee" aria-labelledby="transparence-header" data-block="recruitment-guarantee">
-  <div class="container chapter__inner">
-    {% translate "Ce que la plateforme fait, et ne fait pas" as guarantee_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="transparence-header" title=guarantee_title only %}
-    <div class="chapter__body">
-      {% include "components/notice.html" with kind="institutional" icon="shield" title=guarantee.question text=guarantee.answer lang=guarantee.lang_attr %}
-      {% if guarantee.faq_url %}<p class="chapter__more"><a class="link-arrow" href="{{ guarantee.faq_url }}">{% translate "Toutes les questions fréquentes" %}</a></p>{% endif %}
-    </div>
+{% translate "Transparence" as guarantee_label %}
+<section id="transparence" class="sez sez--campata imprese-confine" data-sec="campata" data-ground="paper" data-rhythm="band" aria-labelledby="transparence-header" data-block="recruitment-guarantee">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="panel" label=guarantee_label title_id="transparence-header" title=guarantee.question title_lang=guarantee.lang_attr only %}
+    {% if guarantee_split %}<p class="imprese-confine__risposta" data-faq{% if guarantee.lang_attr %} lang="{{ guarantee.lang_attr }}"{% endif %}>{{ guarantee_split }}</p>
+    {% else %}<p class="imprese-confine__intera" data-faq{% if guarantee.lang_attr %} lang="{{ guarantee.lang_attr }}"{% endif %}>{{ guarantee.answer }}</p>{% endif %}
+    {% if guarantee.faq_url %}<p class="imprese-confine__faq"><a class="link-arrow" href="{{ guarantee.faq_url }}">{% translate "Toutes les questions fréquentes" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
   </div>
 </section>
 {% endif %}
 
 {% if links.forum or links.pilot %}
-<section class="chapter ecosystem-related" aria-labelledby="related-header">
-  <div class="container chapter__inner">
-    {% translate "Pour aller plus loin" as related_title %}
-    {% include "pages/partials/_chapter_head.html" with title_id="related-header" title=related_title only %}
-    <div class="chapter__body">
-      <ul class="registro registro--two">
-        {% if links.forum %}<li class="registro__row">{% locked "p2.forum.header.subtitle" as forum_subtitle %}<h3 class="registro__title"><a href="{{ links.forum }}">{% translate "Le Forum Vénétie–Maroc" %}</a></h3><p class="registro__text">{{ forum_subtitle }}</p></li>{% endif %}
-        {% if links.pilot %}<li class="registro__row">{% locked "p3.pilot.title" as pilot_title %}<h3 class="registro__title"><a href="{{ links.pilot }}">{{ pilot_title }}</a></h3><p class="registro__text">{% translate "Présentation du projet et de la séquence proposée." %}</p></li>{% endif %}
-      </ul>
-    </div>
+{% translate "Pour aller plus loin" as related_title %}
+<section class="sez sez--approdo ecosistema-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="related-header">
+  <div class="container">
+    {% include "ecosystem/partials/approdo.html" with title_id="related-header" title=related_title motif="economic" pilot=True %}
   </div>
 </section>
 {% endif %}

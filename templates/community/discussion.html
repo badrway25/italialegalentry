@@ -15,7 +15,7 @@ the reply's form a chapter of its own.
 <section class="chapter community-thread" aria-labelledby="thread-heading">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "thread-heading" %}
       <h2 class="chapter__title" id="thread-heading">{% translate "Messages" %}</h2>
     </div>
     <div class="chapter__body">
@@ -54,7 +54,7 @@ the reply's form a chapter of its own.
             {% if post.attachments.all %}
             <ul class="registro__text community-post__attachments">
               {% for attachment in post.attachments.all %}
-              <li>{{ attachment.label }}{% if attachment.document_uuid %} — {% url 'documents:download' attachment.document_uuid as download_url %}{% if download_url %}<a href="{{ download_url }}">{% translate "Télécharger" %}</a>{% else %}<span>{% translate "téléchargement bientôt disponible" %}</span>{% endif %}{% endif %}</li>
+              {% if attachment.document_uuid %}{% url 'documents:download' attachment.document_uuid as download_url %}{% if download_url %}<li>{{ attachment.label }} — <a href="{{ download_url }}" data-loader="none">{% translate "Télécharger" %}</a></li>{% endif %}{% endif %}
               {% endfor %}
             </ul>
             {% endif %}
@@ -90,7 +90,7 @@ the reply's form a chapter of its own.
 <section class="chapter community-compose" aria-labelledby="reply-heading">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "reply-heading" %}
       <h2 class="chapter__title" id="reply-heading">{% translate "Répondre" %}</h2>
     </div>
     <div class="chapter__body">

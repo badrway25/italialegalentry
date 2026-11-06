@@ -12,4 +12,5 @@ class PartnersConfig(AppConfig):
         from partners.sitemaps import PartnersSitemap
 
         register("partners", PartnersSitemap)
-        register_public_paths("partners", ["partenaires/"])
+        # V5.12 §8: the index exists once one partner is live and authorised in writing (core.gates.partners_public)
+        register_public_paths("partners", ["partenaires/"], requires_gate="partners_public")

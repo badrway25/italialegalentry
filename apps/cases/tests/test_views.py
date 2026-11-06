@@ -10,6 +10,7 @@ control the policy would refuse is neither offered nor honoured.
 from __future__ import annotations
 
 import datetime as dt
+import re
 
 import pytest
 
@@ -198,7 +199,10 @@ class TestTheChecklist:
         client.force_login(owner)
         body = client.get(detail_url(case)).content.decode()
         assert str(ResponsibleActor.AUTHORITY.label) in body
-        assert str(ResponsibleActor.PERSON.label) in body
+        # to the file's own person, the person is «Vous» (V5.12 §11; cases.presenters.responsible_label)
+        # the person's own line is the NowPanel's (drawn once): to the file's own person, «Vous»
+        assert re.search(r'<span class="db-now__who">.*?<span>Vous', body, re.S)
+        assert f"<span>{ResponsibleActor.PERSON.label}</span>" not in body
 
 
 class TestTransitions:

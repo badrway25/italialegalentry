@@ -13,6 +13,9 @@ collaboration forms linked back to ``/institutions/`` while that Phase 3 page wa
 
 from __future__ import annotations
 
+import contextlib
+import contextvars
+
 from django.conf import settings
 from django.urls import NoReverseMatch, reverse
 
@@ -27,13 +30,35 @@ _GATES = {
     "newsletter": gates.newsletter_enabled,
     "legal_pages": gates.legal_pages_available,
     "public_forms": lambda: gates.public_forms_enabled().open,
+    "news_public": gates.news_public,
+    "forum_public": gates.forum_public,
+    "partners_public": gates.partners_public,
 }
 
 
+# The 400 and the 500 are drawn without the database (core.views._self_sufficient): every gate reads a table (a flag
+# row, a live edition, a live article), so while they draw, a gated destination counts as closed — the page links
+# only to what needs no gate, and «never link to a page that answers 404» still holds (V5.18 regression, B2 16-18).
+_WITHOUT_DATABASE: contextvars.ContextVar[bool] = contextvars.ContextVar("ile_links_without_database", default=False)
+
+
+@contextlib.contextmanager
+def without_database():
+    """Within this block no gate is read: a gated route is treated as closed (the self-sufficient error pages)."""
+    token = _WITHOUT_DATABASE.set(True)
+    try:
+        yield
+    finally:
+        _WITHOUT_DATABASE.reset(token)
+
+
 def gate_is_open(name: str) -> bool:
-    """True for an empty name; named gates use core.gates; anything else is a feature-flag key."""
+    """True for an empty name; named gates use core.gates; anything else is a feature-flag key. Inside
+    ``without_database()`` a named gate is closed without being read."""
     if not name:
         return True
+    if _WITHOUT_DATABASE.get():
+        return False
     func = _GATES.get(name)
     return bool(func()) if func else flags.is_enabled(name)
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path("mon-parcours/", views.pathways, name="pathways"),
     path("mes-documents/", views.documents, name="documents"),
     path("mes-echeances/", views.deadlines, name="deadlines"),
+    path("mon-organisation/", views.organisation, name="organisation"),
     path("communications/", views.messages_list, name="messages"),
     path("communications/<uuid:pk>/", views.message_detail, name="message_detail"),
     path("communications/<uuid:pk>/lu/", views.message_read, name="message_read"),

@@ -88,8 +88,8 @@ def test_homepage_loads_nothing_outside_the_site(browser, live_server, seeded):
         assert any("/static/css/dist/pages/css/pages.css" in u for u in requests)
         # The only photographs requested are the hero's own (design V5.4, W2-D): the door's photograph — the one
         # preloaded, high-priority image — and the four audience photographs of static/img/photos/hero/, decorative
-        # (alt=""), never a <figure>, their provenance recorded. No other photograph: a <figure> without a
-        # <figcaption> is still a defect (art direction A §6.2).
+        # (alt=""), never a <figure>, their provenance recorded. No other photograph: a curated plate without its
+        # caption is still a defect (art direction A §6.2); a stock frame carries none (V5.24 §2).
         photos = [u for u in requests if "/static/img/photos/" in u]
         assert photos and all("/static/img/photos/hero/he-" in u for u in photos), photos
         assert len([u for u in requests if "/static/brand/v5/doorway-arch-" in u]) == 1, "the door, once"
@@ -139,13 +139,14 @@ def test_forum_banner_stays_without_javascript(browser, live_server, seeded, bef
         assert page.locator("[data-dismissible='forum-banner']").count() == 1, "the banner is up"
         assert page.locator("[data-banner='forum']").is_visible()
         assert not page.locator("[data-dismiss]").is_visible()
-        assert page.locator(".register--entrances .entry").count() == 4
+        # V5.22 (SECTION_SYSTEM_V2 §3.1 S1; V5.20 strict rule): the four doors are the plates of «il passaggio»
+        assert page.locator(".passaggio__porta").count() == 4
         # Without JavaScript the hero is its rested picture, and its four origins are the page's visible entrances at
-        # 1280: the register under the hero is not drawn there (the hero's review fix, W2-D, 9 October 2026 —
-        # hero.css), but its four piers stay in the document, the page's structure.
+        # 1280: the doors under the hero are not drawn there (the hero's review fix, W2-D, 9 October 2026 —
+        # hero.css), but they stay in the document, the page's structure.
         assert page.locator(".he-origin__link").count() == 4
         assert page.locator(".he-origin__link").first.is_visible()
-        assert not page.locator(".register--entrances").is_visible()
+        assert not page.locator(".home-entrances").is_visible()
     finally:
         context.close()
 
@@ -173,8 +174,10 @@ def test_the_four_entrances_are_a_quay_and_the_dark_chapters_are_deliberate(brow
     context, page = _page(browser, 1440, 900)
     try:
         page.goto(live_server.url + "/fr/", wait_until="networkidle")
+        # V5.22 (SECTION_SYSTEM_V2 §3.1 S1 «il passaggio»; V5.20 strict rule): the four doors are four plates,
+        # each one link
         piers = page.evaluate(
-            """() => Array.from(document.querySelectorAll('.register--entrances .entry')).map(e => {
+            """() => Array.from(document.querySelectorAll('.passaggio__porta')).map(e => {
                  const r = e.getBoundingClientRect();
                  return {top: Math.round(r.top), width: Math.round(r.width), link: e.tagName === 'A'};
                })"""
@@ -193,12 +196,14 @@ def test_the_four_entrances_are_a_quay_and_the_dark_chapters_are_deliberate(brow
         )
         assert len(glosses) == 4 and all(w > 100 for w in glosses), "the hero's four sentences are drawn on the desktop"
 
-        chapters = page.locator(".chapter--dark").count()
-        assert chapters <= 2, f"at most two midnight chapters on an immersive page, found {chapters}"
+        # V5.22 (SECTION_SYSTEM_V2 §1 rule 5: «one night band per page below the header (the home excepted: hero niche,
+        # pilot panorama, reserved row)»; V5.20 strict rule): the sections' night grounds, the same ceiling of two
+        chapters = page.locator(".sez[data-ground='night']").count()
+        assert chapters <= 2, f"at most two midnight bands on an immersive page, found {chapters}"
         # Since design V5.4 (W2-D) the hero is not a midnight chapter: a light wall with ONE night niche, the door's,
-        # at its end (HERO_FINAL.md §2); the midnight chapters of the page start under it.
-        first = page.evaluate("document.querySelector('.chapter--dark')?.getAttribute('data-section')")
-        assert first != "hero", "the hero is a light wall with a night niche, not a midnight chapter"
+        # at its end (HERO_FINAL.md §2); the midnight bands of the page start under it.
+        first = page.evaluate("document.querySelector(\".sez[data-ground='night']\")?.getAttribute('data-section')")
+        assert first != "hero", "the hero is a light wall with a night niche, not a midnight band"
         assert page.locator("[data-section='hero'] .he-niche").count() == 1
     finally:
         context.close()
@@ -206,18 +211,28 @@ def test_the_four_entrances_are_a_quay_and_the_dark_chapters_are_deliberate(brow
     context, page = _page(browser, 390, 844)
     try:
         page.goto(live_server.url + "/fr/", wait_until="networkidle")
-        tops = page.evaluate(
-            "Array.from(document.querySelectorAll('.register--entrances .entry'))"
-            ".map(e => Math.round(e.getBoundingClientRect().top))"
+        # V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §2 J — an approved decision; V5.20 strict rule): on a phone the four
+        # doors are one rail the thumb crosses — four equal plates on one line, in reading order, the next one
+        # peeking — and the rail scrolls inside itself: the page never does (the stacked rows took 822 px; the
+        # rail takes about 430)
+        rail = page.evaluate(
+            """() => { const ol = document.querySelector('.passaggio');
+              const plates = [...ol.querySelectorAll('.passaggio__porta')].map(e => e.getBoundingClientRect());
+              return {tops: plates.map(r => Math.round(r.top)), lefts: plates.map(r => Math.round(r.left)),
+                      widths: plates.map(r => Math.round(r.width)), scroll: ol.scrollWidth, client: ol.clientWidth,
+                      page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+                      height: Math.round(document.querySelector('.home-entrances').getBoundingClientRect().height),
+                      snap: getComputedStyle(ol).scrollSnapType}; }"""
         )
-        assert len(tops) == 4
-        assert len(set(tops)) == 4, "on a phone the quay stacks: four piers, four tops"
-        assert tops == sorted(tops)
-        # On a phone the hero's tiles carry words only (the brief's composition), so the register under the hero is the
-        # page's one copy of the four sentences, and it reads at 16 px (RE-4; the review's MOB-1).
+        assert len(rail["tops"]) == 4 and len(set(rail["tops"])) == 1, ("one line of four doors", rail)
+        assert rail["lefts"] == sorted(rail["lefts"]) and len(set(rail["widths"])) == 1, rail
+        assert rail["scroll"] > rail["client"] and rail["page"] <= 0 and rail["snap"].startswith("x"), rail
+        assert rail["height"] <= 520, ("the doors in about 430 px, not 822", rail["height"])
+        # On a phone the hero's tiles carry words only (the brief's composition), so the doors under the hero are the
+        # page's one copy of the four sentences, and they read at 16 px (RE-4; the review's MOB-1).
         shown = page.evaluate("getComputedStyle(document.querySelector('.home-entrances')).display")
         assert shown != "none"
-        gloss = page.evaluate("getComputedStyle(document.querySelector('.home-entrances .entry__gloss')).fontSize")
+        gloss = page.evaluate("getComputedStyle(document.querySelector('.home-entrances .passaggio__testo')).fontSize")
         assert gloss == "16px", gloss
         words = page.evaluate(
             "Array.from(document.querySelectorAll('.he-origin__word')).map(e => getComputedStyle(e).fontSize)"
@@ -338,7 +353,7 @@ _HERO_GEOMETRY = """() => {
     body: R(q('.he__body')),
     edges: {
       logo: start(q('.site-header .brand')), promise: start(q('.he__promise')), plate: start(q('.he-plate')),
-      body: start(q('.he__body')), chapter: start(q('.chapter:not(.home-entrances) .section__title')),
+      body: start(q('.he__body')), chapter: start(q('.sez:not(.home-entrances) .testa__title')),
     },
     lead: q('.he__lead') && {
       display: getComputedStyle(q('.he__lead')).display, size: getComputedStyle(q('.he__lead')).fontSize,
@@ -548,7 +563,18 @@ def test_a_finger_on_the_tiles_scrolls_without_a_press_and_taps_with_one(browser
         page.wait_for_function(f"() => {_PRESSED} && {_FLOWING}", timeout=3000)
         page.wait_for_function(f"() => !{_PRESSED}", timeout=3000)
         page.wait_for_function(f"() => !{_FLOWING}", timeout=4000)
-        assert page.evaluate("document.getAnimations().length") == 0, "the light ends by itself: nothing loops"
+        # V5.18 (T3): the page's scroll-driven reveals (lane A's ViewTimeline animations, one iteration each, bound to
+        # the scroll and not to time; V5.15 §6 «section reveals») stay attached for as long as their section exists;
+        # every time-based animation must be GONE — running, paused, or finished and still applied by its fill (V5.20:
+        # «animation remaining applied after completion» is a release blocker; a finite fill is `backwards`) — and
+        # nothing anywhere repeats forever
+        looping = page.evaluate("""() => document.getAnimations().filter((a) => {
+          const timed = !a.timeline || a.timeline instanceof DocumentTimeline;
+          const forever = a.effect && a.effect.getComputedTiming().iterations === Infinity;
+          return forever || timed;
+        }).map((a) => [a.animationName || a.constructor.name, a.playState,
+                       String(a.effect && a.effect.getComputedTiming().iterations)])""")
+        assert looping == [], ("the light ends by itself: nothing loops", looping)
 
         # 3 · the hero leaves the view and comes back: the short light once more, without a touch (M4)
         page.evaluate(_PAST_THE_HERO)
@@ -645,7 +671,7 @@ def test_phone_390_phase3_open_including_antifraud(browser, live_server, phase3_
             assert response.status == 200, (lang, path)
             _assert_fits(page, (lang, path))
         page.goto(live_server.url + f"/{lang}/", wait_until="networkidle")
-        assert page.locator(".register--entrances .entry").count() == 4
+        assert page.locator(".passaggio__porta").count() == 4  # V5.22 (V5.20 strict rule): the doors' plates
         assert page.locator("[data-section='antifraud']").is_visible()
         # The Morocco → Italy model is said once (W2-D step 3): the hero's path carries six stations — the origin's
         # shore, five steps of the prescribed sequence, the door — and the pilot chapter, which drew the eight
@@ -659,7 +685,7 @@ def test_phone_390_phase3_open_including_antifraud(browser, live_server, phase3_
         context.close()
 
 
-_CHAPTERS = """() => {
+_SECTIONS = """() => {
   const main = document.querySelector('main');
   const px = (el, p) => parseFloat(getComputedStyle(el)[p]);
   const R = (el) => {
@@ -676,41 +702,38 @@ _CHAPTERS = """() => {
   };
   const rtl = getComputedStyle(document.documentElement).direction === 'rtl';
   const start = (el) => (rtl ? R(el).r : R(el).x);
-  const chapters = Array.from(main.querySelectorAll(':scope > .chapter')).filter(shown);
+  const sections = Array.from(main.querySelectorAll(':scope > .sez')).filter(shown);
   // labels, links and buttons are not what a person reads: they are set at the interface sizes
-  const notReading = '.home-section__more, .home-ecosystem__label, .home-ecosystem__more, .gradino__actions, ' +
-    '.home-orientation__actions, .card__eyebrow';
+  const notReading = '.testa__label, .orienta__didascalia, .home-pathways__more, .integrita__azione, ' +
+    '.protezione__azione, .campata__azione, .pilota__azione, .home-news__more, .card__eyebrow, .linea__arrivo';
   return {
     rtl, vw: document.documentElement.clientWidth, vh: innerHeight, pageH: document.documentElement.scrollHeight,
-    chapters: chapters.map((c) => {
-      const title = c.querySelector('.section__title:not(.visually-hidden), .gradino__title');
-      const head = c.querySelector('.chapter__head, .gradino__head');
-      const body = c.querySelector('.chapter__body, .gradino__content');
+    sections: sections.map((s) => {
+      const head = s.querySelector('.testa');
       return {
-        key: c.dataset.section,
-        title: title ? px(title, 'fontSize') : null,
-        weight: title ? getComputedStyle(title).fontWeight : null,
-        head: head ? R(head) : null, body: body ? R(body) : null,
-        headStart: head ? start(head) : null, bodyStart: body ? start(body) : null,
+        key: s.dataset.section, pattern: s.dataset.sec || '', ground: s.dataset.ground || '',
+        headStart: head ? start(head) : null,
       };
     }),
-    // a row's title is never smaller than what it titles
+    // a title is never smaller than what it titles
     pairs: [
-      ['.home-pathways .pathway-list__title', '.home-pathways .pathway-list__desc'],
-      ['.home-trust__question', '.home-trust__answer'],
-      ['.home-entrances .entry__title', '.home-entrances .entry__gloss'],
-      ['.home-entrances .entry__title', '.home-entrances .entry__cta'],
+      ['.home-pathways .indice__titolo', '.home-pathways .parcours__descrizione'],
+      ['.integrita__domanda', '.integrita__risposta'],
+      ['.home-entrances .passaggio__titolo', '.home-entrances .passaggio__testo'],
+      ['.home-entrances .passaggio__titolo', '.home-entrances .passaggio__cta'],
     ].map(([a, b]) => [a, size(a), size(b)]),
-    // what a person reads in a chapter: the paragraphs and the glosses
-    reading: Array.from(main.querySelectorAll('.chapter p, .chapter .entry__gloss, .home-reserved p'))
-      .filter((e) => shown(e) && !e.closest('.he') && !e.matches(notReading))
+    // what a person reads under the hero: the paragraphs and the doors' sentences
+    reading: Array.from(main.querySelectorAll('.sez p, .sez .passaggio__testo, .sez li'))
+      .filter((e) => shown(e) && !e.closest('.he') && !e.closest('.visually-hidden') && !e.matches(notReading)
+        && !e.closest(notReading))
       .map((e) => px(e, 'fontSize')),
     // black and white rests in the hero only (DL54-12)
     grey: Array.from(main.querySelectorAll('*'))
       .filter((e) => !e.closest('.he') && /grayscale/.test(getComputedStyle(e).filter)).length,
+    // the imagery registry's frames are the home's photographs under the hero; nothing else is
     picturesUnderTheHero: Array.from(main.querySelectorAll('img, picture, video'))
-      .filter((e) => !e.closest('.he')).length,
-    frenchRuns: Array.from(main.querySelectorAll('.chapter [lang="fr"]'))
+      .filter((e) => !e.closest('.he') && !e.closest('.foto[data-slot]')).length,
+    frenchRuns: Array.from(main.querySelectorAll('.sez [lang="fr"]'))
       .filter((e) => shown(e) && e.matches('p, h2, h3'))
       .map((e) => getComputedStyle(e).direction),
   };
@@ -720,22 +743,21 @@ _CHAPTERS = """() => {
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_home_under_the_hero_is_one_system(browser, live_server, phase3_live, article_factory, lang):
     """
-    The chapters under the hero (design V5.4, W2-D step 3; docs/design-v5/QA/v54/w2-d/NOTES.md §8), on the real page,
-    Phase 3, every chapter published.
-
-    One object repeated: a band on its ground, a head at the reading edge, a body. On a desktop every body starts on
-    one line — the fifth column of twelve — the anti-fraud plate's paragraph included, and every head on the
-    container's edge; the titles are one size (28 px at 600). A row's title is never smaller than what it titles
-    (the pathways' titles were 13 px above 15 px descriptions, the questions 13 px above 17 px answers). On a phone
-    nothing a person reads is under 16 px. Black and white rests in the hero only: no greyscale and no photograph
-    under it. On the Arabic page the chapter mirrors, and a French run keeps its own direction. And the page is
-    short: at most eight screens at 1440 × 900 (the home was 7.4 screens with the route and the bar; it is 6.1).
+    The sections under the hero, on the real page, Phase 3, every section published — V5.22 (SECTION_SYSTEM_V2 §1, §3.1;
+    V5.20 strict rule: the old expectation, «one object repeated: a band, a head at the reading edge, a body on the
+    fifth column, titles one size», is the chapter device the owner's V5.22 rejected — §4 «stop the chapter visual
+    language» —, an approved decision). The system now: each section composed from ONE pattern of the library, a
+    signature its neighbour does not share (the integrity band's two halves are one band: §3.1 S5 + S6), two grounds of
+    one kind never touching, every head on the reading edge. What W2-D held stays held: a title is never smaller than
+    what it titles, nothing a person reads on a phone is under 16 px, black and white rests in the hero only and no
+    photograph under it but the registry's frames, a French run on the Arabic page reads left to right, and the home is
+    short — at most eight screens at 1440 × 900.
     """
 
-    # the news chapter is on the home once an article is live (the review fix, m4): one is published for this page
+    # the news section is on the home once an article is live (the review fix, m4): one is published for this page
     article_factory("Programme du Forum publié")
 
-    def chapters(width, height):
+    def sections(width, height):
         context = browser.new_context(
             viewport={"width": width, "height": height}, device_scale_factor=1, reduced_motion="reduce"
         )
@@ -743,25 +765,25 @@ def test_the_home_under_the_hero_is_one_system(browser, live_server, phase3_live
         try:
             page.goto(live_server.url + f"/{lang}/", wait_until="networkidle")
             fits = page.evaluate("[document.documentElement.scrollWidth, document.documentElement.clientWidth]")
-            return page.evaluate(_CHAPTERS), fits
+            return page.evaluate(_SECTIONS), fits
         finally:
             context.close()
 
-    g, fits = chapters(1440, 900)
+    g, fits = sections(1440, 900)
     assert fits[0] <= fits[1], fits
-    keys = [c["key"] for c in g["chapters"]]
-    assert keys == ["orientation", "pathways", "pilot", "trust", "antifraud", "news", "ecosystem"], keys
+    keys = [s["key"] for s in g["sections"]]
+    assert keys == ["orientation", "pathways", "pilot", "trust", "antifraud", "news", "ecosystem", "reserved"], keys
     assert g["rtl"] is (lang == "ar")
-    starts = {round(c["bodyStart"]) for c in g["chapters"]}
-    assert len(starts) == 1, (
-        "every chapter's body starts on one line",
-        [(c["key"], c["bodyStart"]) for c in g["chapters"]],
-    )
-    heads = {round(c["headStart"]) for c in g["chapters"] if c["key"] != "antifraud"}
-    assert len(heads) == 1, ("every chapter's head stands on the container's edge", heads)
-    assert {c["title"] for c in g["chapters"]} == {28.0} and {c["weight"] for c in g["chapters"]} == {"600"}
-    for c in g["chapters"]:
-        assert c["head"]["w"] < c["body"]["w"], (c["key"], "the head is the narrow column")
+    patterns = [s["pattern"] for s in g["sections"]]
+    assert patterns == ["linea", "indice", "panorama", "strato", "strato", "", "campata", "porta"], patterns
+    for before, after in zip(g["sections"], g["sections"][1:]):
+        one_band = (before["key"], after["key"]) == ("trust", "antifraud")
+        if not one_band:
+            assert before["ground"] != after["ground"], ("two grounds of one kind touch", before, after)
+            if before["pattern"] and after["pattern"]:
+                assert before["pattern"] != after["pattern"], ("two neighbours share a signature", before, after)
+    heads = {round(s["headStart"]) for s in g["sections"] if s["headStart"] is not None}
+    assert len(heads) == 1, ("every head stands on the reading edge", heads)
     for selector, title, text in g["pairs"]:
         if title is not None and text is not None:
             assert title >= text, (selector, title, text)
@@ -771,16 +793,12 @@ def test_the_home_under_the_hero_is_one_system(browser, live_server, phase3_live
         runs = g["frenchRuns"]
         assert runs and set(runs) == {"ltr"}, "a French run on the Arabic page reads left to right"
 
-    g, fits = chapters(390, 844)
+    g, fits = sections(390, 844)
     assert fits[0] <= fits[1], fits
-    assert [c["key"] for c in g["chapters"]][0] == "entrances", "on a phone the register opens the chapters"
+    assert [s["key"] for s in g["sections"]][0] == "entrances", "on a phone the doors open the sections"
     sizes = sorted(set(g["reading"]))
     assert sizes and sizes[0] >= 16, ("nothing a person reads on a phone is under 16 px", sizes)
     for selector, title, text in g["pairs"]:
         if title is not None and text is not None:
             assert title >= text, (selector, title, text)
-    for c in g["chapters"]:
-        if c["head"] and c["body"]:
-            stacked = c["body"]["y"] >= c["head"]["y"] + c["head"]["h"] - 1
-            assert stacked, (c["key"], "on a phone the head stands above its body")
     assert g["grey"] == 0 and g["picturesUnderTheHero"] == 0

@@ -6,17 +6,21 @@ from django.utils.translation import gettext_lazy as _
 from cms import locked_content
 from community import conf
 from community.models import ModerationActionKind, ParticipantCategory
-from core.forms import ConsentBooleanField, PublicFormMixin
+from core.forms import AcknowledgementBooleanField, PublicFormMixin, with_guidance
 
 
 class JoinForm(PublicFormMixin, forms.Form):
-    """Membership request: category (prescribed labels), optional organisation, visibility, consent."""
+    """Membership request: category (prescribed labels), optional organisation, visibility, acknowledgement.
+
+    V5.16 §3: the required box is the team's acknowledgement + acceptance of the Forum's terms (category A, not a
+    consent); the two visibility choices are the optional ones (category B) — separate, unticked, each on its own.
+    """
 
     category = forms.ChoiceField(choices=ParticipantCategory.choices)
     organisation = forms.CharField(max_length=200, required=False)
     show_name = forms.BooleanField(required=False, label=_("Afficher mon nom aux autres membres"))
     show_organisation = forms.BooleanField(required=False, label=_("Afficher mon organisme aux autres membres"))
-    consent = ConsentBooleanField()
+    consent = AcknowledgementBooleanField()
 
     def __init__(self, *args, consent_text: str = "", **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,7 +39,7 @@ class DiscussionForm(PublicFormMixin, forms.Form):
     body = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 6}),
         label=_("Votre message"),
-        help_text=_("Texte simple ; aucune donnée personnelle de tiers."),
+        help_text=with_guidance(_("Texte simple ; aucune donnée personnelle de tiers.")),  # V5.16 §5–§6
     )
 
     def __init__(self, *args, **kwargs):
@@ -50,7 +54,7 @@ class PostForm(PublicFormMixin, forms.Form):
     body = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}),
         label=_("Votre réponse"),
-        help_text=_("Texte simple ; aucune donnée personnelle de tiers."),
+        help_text=with_guidance(_("Texte simple ; aucune donnée personnelle de tiers.")),  # V5.16 §5–§6
     )
 
     def __init__(self, *args, **kwargs):

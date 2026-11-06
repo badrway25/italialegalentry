@@ -4,6 +4,8 @@ The Forum page (event mode, then the Forum Permanent). Design V5.4 (W3-F1 — th
 static/css/v5/_interior.css, loaded through forum/forum.css): the entrance on the night ground with the page's index,
 then the prescribed sections as a chain of chapters, the programme as a document, the tribune, the registration or
 the permanent sections, and the page's ONE action.
+V5.12 §8 / C9 (W1-C): in permanent mode (core.gates.forum_permanent_mode) the locked pre-event blocks — PROGRAMME and
+INTERVIENNENT, written before 2 October — are hidden, never reworded; the launch's dateline stays in the entrance.
 {% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
@@ -14,22 +16,14 @@ the permanent sections, and the page's ONE action.
 {% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" with breadcrumbs=breadcrumbs %}{% endblock %}
 {% block content %}
-{% if not event %}
-  {% locked "p2.forum.header.title" as forum_title %}
-  {% include "pages/partials/_ingresso.html" with title=forum_title title_id="forum-empty-title" only %}
-  <section class="chapter forum-empty" aria-labelledby="forum-empty-title">
-    <div class="container chapter__inner">
-      <div class="chapter__body">
-        {% include "components/empty_state.html" with title=_("Cette page est en cours de préparation.") text=_("Les informations sur le Forum seront publiées prochainement.") icon="handshake" %}
-      </div>
-    </div>
-  </section>
-{% else %}
+{% if event %}{# without a live edition the page answers 404 (forum.views.index): never «page in preparation» #}
   {% include "forum/partials/hero.html" %}
   <div class="forum-sections">
     {% include "forum/partials/presentation.html" %}
-    {% include "forum/partials/programme.html" %}
-    {% include "forum/partials/speakers.html" %}
+    {% if not is_permanent %}
+      {% include "forum/partials/programme.html" %}
+      {% include "forum/partials/speakers.html" %}
+    {% endif %}
     {% if is_permanent %}
       {% include "forum/partials/permanent_sections.html" %}
       {% include "forum/partials/virtual_forum_teaser.html" %}

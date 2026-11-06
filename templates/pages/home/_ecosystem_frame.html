@@ -1,0 +1,28 @@
+{% load pages_imagery %}{% comment %}
+The ecosystem's frame in «la campata» (V5.22, lane H): lane M's 4:3 rendering of home.ecosystem (variant «campata»),
+under the arch, with the width the split really draws (the arch stands whole in its columns: it never bleeds).
+
+Round 1 (QA_ROUND1 M1 e; SECTION_SYSTEM_V2 §3.1 S7 «the arch mask, the 1.04 → 1 settle, then the arch outline draws»):
+the arch RISES from its sill — the frame opens from a low segment of the arch up to its crown (the verb «mask», its first
+frame the arch's own aperture: pages.css), the photograph settles in it, and the doorway is drawn around it: the sill
+under the frame as the arch rises, 12 px past each side (§4.3: the sill keeps an arch from reading as a card), and the arch's outline,
+12 px out, from one foot over the crown to the other, standing on the sill's ends (the verb «stroke», each line once).
+The drawing is decorative; the photograph's credit stays under the frame, never masked (text never waits).
+
+Round 2 (QA_ROUND2 m1: «the outline draws as three or four dashes»): the drawing is stretched to the frame and keeps a 1 px
+line (vector-effect), and a non-scaling stroke's dash is laid in screen pixels — round 2 lengthened each line's one dash
+through its pathLength.
+
+Final fix round (QA_ROUND3 m1: «a detached piece of the far leg at 880–1023 px and from 1600 px»): that dash is laid in
+DEVICE pixels, so it shrinks with the screen's pixel ratio — 1/1.25 of itself on the reviewer's 125 % display, a half on a
+2× screen, a third on a 3× phone (measured under --force-device-scale-factor: at 2× the far half of the outline painted
+before the line began, at 3× it drew as dashes; the phone doors' lunettes the same, components/entrances.html). No
+pathLength holds for every screen. So the visible lines carry no dash at all: each is drawn THROUGH ITS OWN MASK, whose
+path — the same path, 12 user units wide, in the drawing's own user space — carries the verb «stroke» (pathLength 0.99:
+the one dash a hundredth longer than the line, so no sliver of a second one shows at the far end). A dash in user space
+scales with the drawing, never with the screen: at 1×, 2× and 3× the sill draws from its end (0–900 ms) and the outline
+from the foot on the reading edge, over the crown, to the other foot (600–1 500 ms), one line each, at the verb's own pace
+(pages.css: the outline's delay). The masks paint in the text's ink (mask-type alpha: only their opacity counts, never a
+literal colour); the outline's CSS path (pages.css, per width) shapes the mask's path and the line alike. At rest, under
+reduced motion, from the keyboard, in print and without script the masks are whole and both lines drawn.
+{% endcomment %}<div class="casa-arco" data-verb="mask">{% photo "home.ecosystem" "campata__foto" variant="campata" sizes="(min-width: 90rem) 43.96rem, (min-width: 80rem) 38.71rem, (min-width: 75rem) 32.75rem, (min-width: 64rem) calc(48vw - 2rem), (min-width: 48rem) calc(100vw - 4rem), calc(100vw - 2rem)" %}</div><svg class="casa-arco__disegno" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" stroke-width="1" overflow="visible" focusable="false" aria-hidden="true"><mask id="casa-arco-soglia" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120" mask-type="alpha"><path class="casa-arco__soglia" data-verb="stroke" pathLength="0.99" stroke="currentColor" stroke-width="12" d="M0 100H100"/></mask><mask id="casa-arco-profilo" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120" mask-type="alpha"><path class="casa-arco__profilo" data-verb="stroke" pathLength="0.99" stroke="currentColor" stroke-width="12" d="M0 100V41.5A50 41.5 0 0 1 100 41.5V100"/></mask><path mask="url(#casa-arco-soglia)" vector-effect="non-scaling-stroke" d="M0 100H100"/><path class="casa-arco__profilo" mask="url(#casa-arco-profilo)" vector-effect="non-scaling-stroke" d="M0 100V41.5A50 41.5 0 0 1 100 41.5V100"/></svg>

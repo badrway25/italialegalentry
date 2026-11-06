@@ -1,0 +1,14 @@
+{% load i18n ile_core ile_forms %}{% comment %}
+THE FORMWORK'S SIDE (V5.15 W3, lane B; DECISIONS §5.13) — beside a public form from 64rem, sticky: the steps' rail
+when the form has steps, then what the person should know before sending — what happens next (the sentence of the confirmation page)
+and the privacy notice. No new advice is written here: what not to send is said under the free texts, in the
+words V5.16 reviewed. Written AFTER the form in the source (the keyboard reaches the first field first, as on the
+entrance); v5/_formwork.css places it at the reading edge. Below 64rem it follows the form.
+Its name is a hidden span (never a lang on the aside: it holds translated words). Contract: optional `steps` (the rail), `privacy_url`, `no_after` (True → no «Après l’envoi», e.g. the sign-up).
+{% endcomment %}<aside class="formwork__side{% if not privacy_url and no_after %} formwork__side--rail{% endif %}"{% if privacy_url or not no_after %} aria-labelledby="formwork-side-name"{% endif %}>{% if privacy_url or not no_after %}<span id="formwork-side-name" hidden{% ui_lang "À savoir avant l’envoi" %}>{% translate "À savoir avant l’envoi" %}</span>{% endif %}
+  {% if steps %}{% include "components/_steps_rail.html" with steps=steps %}{% endif %}
+  {% if privacy_url or not no_after %}<ul class="formwork__notes" role="list">
+    {% if not no_after %}<li class="formwork__note"><span class="glyph-tile glyph-tile--sm" aria-hidden="true">{% svg_icon "send" "icon" %}</span><div><p class="formwork__note-title"{% ui_lang "Après l’envoi" %}>{% translate "Après l’envoi" %}</p><p class="formwork__note-text">{% translate "La transmission d’une demande ne constitue ni une candidature, ni un engagement, ni une garantie de résultat de la part d’Italy Legal Entry™." %}</p></div></li>{% endif %}
+    {% if privacy_url %}<li class="formwork__note"><span class="glyph-tile glyph-tile--sm" aria-hidden="true">{% svg_icon "shield" "icon" %}</span><div><p class="formwork__note-title"{% ui_lang "Vos données" %}>{% translate "Vos données" %}</p><p class="formwork__note-text"><a href="{{ privacy_url }}">{% translate "Lire la Privacy Policy" %}</a></p></div></li>{% endif %}
+  </ul>{% endif %}
+</aside>

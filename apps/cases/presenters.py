@@ -45,6 +45,19 @@ _TITLES = {
 }
 
 
+def responsible_label(actor: str, display, *, own: bool) -> str:
+    """
+    Who answers for a step or a piece, as the reader is told it (V5.12 §11; Director's decisions §9). The person is
+    never named by the role word «La personne» on their own next action: to the person themself it is «Vous»; to a
+    third party who reads the file (a professional, the project's team) it is «La personne concernée» — the wording the
+    documents' access rules already use (PROVISIONAL in EN/AR, Q3). Any other actor keeps its own label (``display``:
+    the model's ``get_…_display()``), which names an institution or a role, never a person.
+    """
+    if actor == ResponsibleActor.PERSON:
+        return str(_("Vous") if own else _("La personne concernée"))
+    return str(display)
+
+
 def _label(choices, value) -> str:
     """The translated label of an enum member, or the raw value when the trail predates the enum."""
     try:

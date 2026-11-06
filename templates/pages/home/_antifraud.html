@@ -3,26 +3,19 @@
 sensationalist (no red, no alarm icon, no capitals added). While gate G3 is closed NOTHING is rendered:
 no substitute text is invented.
 
-Design V5.4 (W2-D step 3; DESIGN_SYSTEM_V5 PX08 «il gradino»): the warning on a plate of its own — a raised
-sheet on the stone ground with an ink rule at the reading edge (ink, not a status colour: the tones name
-document states), the prescribed title beside the prescribed paragraph, whole and as written, at the
-reading measure (36 rem: it ran to 80 characters a line), and one link. Its sign is the registry's glyph of
-this warning (apps/core/icons.py, shield-alert: W1-B), the one the footer, the navigation's panels and the
-anti-fraud page put beside it: one sign for one warning.
+V5.22 (SECTION_SYSTEM_V2 §3.1 S5 + S6, §0.1 «one locked text gets one rendering», §2 K «la protezione»; lane H): the
+same plate on every page — components/sezioni/protezione.html (lane S): ink only, the 3 px ink top rule the sill of the
+`ile-scudo` seal at the reading edge, the locked title in its own capitals, the locked body in three typographic levels
+cut on its own full stops (one <p data-locked>, its textContent the body itself), «Lire la page…» a secondary button.
+Always visible, never collapsed. Its motion: the rule draws from the reading edge, the seal draws, the first sentence
+comes to its full ink. On the home it closes the integrity band when it follows the trust section — the band's one
+raised surface, on the same stone (pages.css, .home-trust + .home-antifraud); apart, it stands on its own stone.
+Round 1 (QA_ROUND1 M1 c): never centred — the plate hangs from the reading edge, under the tablet's own edge, at its own
+measure, as on every page.
 {% endcomment %}
-{% translate "Lire la page « Attention aux fraudes »" as fraud_page %}
-<section class="chapter chapter--area home-antifraud" id="{{ s.anchor }}" aria-labelledby="home-antifraud-title" data-section="antifraud">
-  <div class="container chapter__inner">
-    <div class="gradino">
-      <div class="gradino__head">
-        <span class="gradino__mark" aria-hidden="true">{% svg_icon "shield-alert" "icon" %}</span>
-        <h2 class="gradino__title" id="home-antifraud-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
-      </div>
-      <div class="gradino__content">
-        <p class="gradino__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>
-        {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-        {% if d.url %}<p class="gradino__actions"><a class="link-arrow" href="{{ d.url }}">{{ fraud_page|typo }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
-      </div>
-    </div>
+<section class="sez sez--strato home-antifraud" id="{{ s.anchor }}" aria-labelledby="protezione-title-home" data-section="antifraud" data-sec="strato" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container">
+    {% include "components/sezioni/protezione.html" with url=d.url level=2 suffix="home" only %}
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
   </div>
 </section>

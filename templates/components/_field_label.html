@@ -1,0 +1,7 @@
+{% load i18n %}{% comment %}
+The label of a field (V5.12 W2; DECISIONS §5.2–5.3): always visible above its control, and «facultatif» after it when
+the field is optional — the minority is marked; a required field carries no asterisk. Contract: `for_id`, `label`,
+optional `optional` (True for an optional field), `lang` (the label's language when the locked text is the fallback).
+Inside a step that marks its required fields (`minority` = "required", from {% form_steps %}; V5.15 W3 round 1) the
+required field says «obligatoire» and the optional ones say nothing — the minority, per step.
+{% endcomment %}<label class="form-field__label" for="{{ for_id }}"><span{% if lang %} lang="{{ lang }}"{% endif %}>{{ label }}</span>{% if minority == "required" %}{% if not optional %} {% include "components/_required.html" %}{% endif %}{% elif optional %} {% include "components/_optional.html" %}{% endif %}</label>

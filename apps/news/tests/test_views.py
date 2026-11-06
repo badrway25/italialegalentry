@@ -14,7 +14,44 @@ pytestmark = pytest.mark.django_db
 INDEX = "/fr/actualites/"
 
 
-def test_index_renders_neutral_heading_before_phase3(client, categories, before_phase3):
+def test_index_answers_404_while_no_article_is_live(client, categories, article_factory, phase3_open):
+    """V5.12 §8: no «nothing published yet» page — the index, its sitemap entry and its links wait for an article."""
+    from core import gates
+
+    article_factory("Brouillon", slug="brouillon", status=PublicationStatus.DRAFT)
+    assert gates.news_public() is False
+    for lang in ("fr", "it", "en", "ar"):
+        assert client.get(f"/{lang}/actualites/").status_code == 404, lang
+    assert NewsIndexSitemap().items() == []
+    home = client.get("/fr/").content.decode()
+    assert 'href="/fr/actualites/"' not in home, "neither the menu nor the footer links to it"
+    article_factory("Visible", slug="visible")
+    assert gates.news_public() is True
+    assert client.get(INDEX).status_code == 200
+    assert NewsIndexSitemap().items() == ["news:index"]
+    assert 'href="/fr/actualites/"' in client.get("/fr/").content.decode()
+
+
+def test_the_open_newsletter_alone_does_not_reopen_an_empty_news(client, categories, article_factory, monkeypatch):
+    """DECISIONS §8: «at least one published item». The open newsletter does not bring back a news page with no news;
+    its form and its success page live on the index, so the subscription waits for the first article as well."""
+    from core import gates
+
+    monkeypatch.setattr(gates, "newsletter_enabled", lambda: True)
+    assert gates.news_public() is False
+    assert client.get(INDEX).status_code == 404
+    assert client.post("/fr/actualites/lettre-d-information/", {"email": "a@example.test"}).status_code == 404
+    assert 'href="/fr/actualites/"' not in client.get("/fr/").content.decode()
+    article_factory("Visible", slug="visible")
+    r = client.get(INDEX)
+    assert r.status_code == 200
+    html = r.content.decode()
+    assert "Aucune actualité publiée" not in html and "seront publiées ici" not in html
+    assert 'class="chapter news-index"' in html
+
+
+def test_index_renders_neutral_heading_before_phase3(client, categories, article_factory, before_phase3):
+    article_factory("Visible", slug="visible")
     r = client.get(INDEX)
     assert r.status_code == 200
     html = r.content.decode()
@@ -22,10 +59,10 @@ def test_index_renders_neutral_heading_before_phase3(client, categories, before_
     assert "Actualités" in html
     assert "ACTUALITÉS" not in html, "locked Phase 3 header must not appear before the gate"
     assert "Nouveautés normatives" not in html
-    assert "Aucune actualité publiée" in html
 
 
-def test_index_renders_locked_texts_when_phase3_open(client, categories, phase3_open):
+def test_index_renders_locked_texts_when_phase3_open(client, categories, article_factory, phase3_open):
+    article_factory("Visible", slug="visible")
     html = client.get(INDEX).content.decode()
     assert "ACTUALITÉS" in html
     assert "Nouveautés normatives, échéances officielles, initiatives du Forum Permanent Vénétie–Maroc" in html

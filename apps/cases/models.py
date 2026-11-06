@@ -305,6 +305,35 @@ class CaseFile(TimeStampedModel):
         raise RuntimeError("could not allocate a unique case reference")
 
     # -- lifecycle ---------------------------------------------------------------------------
+    def get_person_status_display(self) -> str:
+        """
+        The file's state in the words of the person whose file it is (V5.12 §11; Director's decisions §9). DRAFT is a
+        workflow word — «Brouillon» on an active file that already holds filed documents — and stays in the back
+        office: the person reads the step it stands for on the journey, «Étape 1 sur 7 — Votre situation et votre
+        objectif» (portal.services.JOURNEY_STEPS, the same catalogue entries). Every other state keeps its label,
+        which already speaks of the journey («Orientation terminée», «Procédure administrative en cours» …).
+        """
+        word, step = self.get_person_status_parts()
+        return f"{word} — {step}" if step else word
+
+    def get_person_status_parts(self) -> tuple[str, str]:
+        """
+        The same state in two parts, for a page that draws it: the chip's word («Étape 1 sur 7», or the state's own
+        label) and the step's title, said beside the chip and never inside it («Votre situation et votre objectif»;
+        "" for every other state). V5.18 lane D: the whole sentence in the chip wrapped it to a two-line plate on a
+        phone (390/360, fr/it); the chip keeps one line, the title keeps every word (a chip's word is never cut).
+        """
+        if self.status == CaseStatus.DRAFT:
+            try:
+                from portal.services import JOURNEY_STEPS
+            except ImportError:  # the console is not installed: the state's own label
+                return str(self.get_status_display()), ""
+            for index, (status, _side, label) in enumerate(JOURNEY_STEPS, start=1):
+                if status == self.status:
+                    step = _("Étape %(n)s sur %(total)s") % {"n": index, "total": len(JOURNEY_STEPS)}
+                    return str(step), str(label)
+        return str(self.get_status_display()), ""
+
     @property
     def is_active(self) -> bool:
         return self.status in ACTIVE_STATUSES

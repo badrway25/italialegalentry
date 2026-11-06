@@ -116,6 +116,11 @@ counts, filters, runs, groups, marks, long, next, next_act, next_is_primary), st
   <p class="doc-note">{% svg_icon "info" "icon" %}<span>{% translate "L’état d’une pièce dit ce que le dossier a reçu, et rien de plus. Aucune ligne de ce registre ne vaut acceptation." %}</span></p>
 </div>
 {% else %}
-  {% comment %} One hairline and one sentence naming who fills the region and when. {% endcomment %}
-  <p class="ws-empty">{{ register.empty_text }}</p>
+  {% comment %} (V5.18 P-5) Nothing is required yet: the console's empty-state tile, as on «Mes demandes» and «Mes
+  échéances» — the documents glyph, the one sentence naming who fills the region and when, and the deposit outside a
+  requirement as its act when the account may deposit (`may_upload`, from the page or the register tag). The F1 tile
+  has no surface: never a dashed box (art direction A §14.4). {% endcomment %}
+  {% translate "Aucun document" as empty_title %}
+  {% if may_upload %}{% url "documents:upload" as empty_action_url %}{% translate "Déposer un fichier hors exigence" as empty_action %}{% endif %}
+  {% include "components/empty_state.html" with title=empty_title text=register.empty_text icon="document" action_label=empty_action action_url=empty_action_url %}
 {% endif %}

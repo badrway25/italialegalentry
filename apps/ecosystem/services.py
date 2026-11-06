@@ -23,12 +23,14 @@ from functools import lru_cache
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
+from django.utils.html import escape
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from cms import locked_content
+from cms import locked_content, locked_split
 from cms.translation import resolve
-from core import gates
+from core import gates, icons
+from core.links import public_url
 from ecosystem.models import GATE_PHASE3, PILOT_SEQUENCE_KEY, EcosystemSpace, PilotStep, SpaceKey
 
 log = logging.getLogger("ile.ecosystem")
@@ -193,6 +195,9 @@ class Photo:
     width: int
     height: int
     share_image: str  # path for og:image
+    #: V5.24 §2 (label v524-px): the entrance's caption draws a byline only when the asset's licence demands it
+    #: (``cms.MediaAsset.attribution_required``) — the same contract as ``pages.services.Photo``.
+    attribution_required: bool = False
 
 
 @dataclass(frozen=True)
@@ -278,12 +283,32 @@ def photo_for(space: EcosystemSpace | None, lang: str | None) -> Photo | None:
         if jpg:
             width = 1440
             height = round(width * entry["height"] / entry["width"]) if entry.get("width") else 960
-            return Photo(jpg, srcset, PHOTO_SIZES, alt, alt_lang, width, height, jpg)
+            return Photo(
+                jpg,
+                srcset,
+                PHOTO_SIZES,
+                alt,
+                alt_lang,
+                width,
+                height,
+                jpg,
+                attribution_required=asset.attribution_required,
+            )
     try:
         url = asset.file.url
     except ValueError:
         return None
-    return Photo(url, "", PHOTO_SIZES, alt, alt_lang, asset.width or 1440, asset.height or 960, url)
+    return Photo(
+        url,
+        "",
+        PHOTO_SIZES,
+        alt,
+        alt_lang,
+        asset.width or 1440,
+        asset.height or 960,
+        url,
+        attribution_required=asset.attribution_required,
+    )
 
 
 def _by_width(item: tuple[str, str]) -> int:
@@ -336,8 +361,8 @@ def related_links(*, preview: bool = False) -> dict[str, str]:
         "company_needs": safe_reverse("enquiries:company_needs"),
         "institution_proposal": safe_reverse("enquiries:institution_proposal"),
         "university_proposal": safe_reverse("enquiries:university_proposal"),
-        "forum": safe_reverse("forum:index"),
-        "partners": safe_reverse("partners:index"),
+        "forum": public_url("forum:index"),  # V5.12 §8: with a live edition
+        "partners": public_url("partners:index"),  # V5.12 §8: once a partner is authorised
         "pilot": space_url(SpaceKey.PILOT, preview=preview),
         "institutions": space_url(SpaceKey.INSTITUTIONS, preview=preview),
         "universities": space_url(SpaceKey.UNIVERSITIES, preview=preview),
@@ -444,6 +469,144 @@ def pilot_flow(lang: str | None) -> PilotFlow:
         additions_lang_attr="" if page_lang == fallback else fallback,
         locked_count=len(sequence),
     )
+
+
+# --------------------------------------------------------------------------------------------
+# V5.22 — Page Composition V2 (SECTION_SYSTEM_V2 §3.3, §3.6–§3.8; lane P1): the data the four spaces' compositions
+# draw. Every word is the registry's or a catalogue msgid, cut at render on its own separators (cms.locked_split: the
+# parts rebuild the text character for character, or there is no cut and the text stands whole) — never retyped. The
+# glyphs are the registry's (core.icons: PILOT_STATION, COMPANY_MOMENT, RECIPIENT_SEAT).
+# --------------------------------------------------------------------------------------------
+def pilot_stations(flow: PilotFlow) -> list[dict]:
+    """«la linea V2» of PP-1 (§3.3): each station its label — the locked eight in their order, then any editorial
+    addition — and its concept glyph (icons.PILOT_STATION, the eight drawn: a register's glyphs all or none, §4.10;
+    the page's T1 seal stands beside the section's title). `lang` only where the label's language is not the page's."""
+    stations = []
+    for index, step in enumerate(flow.steps):
+        glyph = icons.PILOT_STATION[index] if step.locked and index < len(icons.PILOT_STATION) else ""
+        stations.append(
+            {"label": step.label, "glyph": glyph, "lang": flow.lang_attr if step.locked else flow.additions_lang_attr}
+        )
+    return stations
+
+
+def pilot_doors() -> dict:
+    """PP-2 «due porte» (§3.3): the team sentence cut at its own full stop — the companies' half on the night door, the
+    institutions' on the paper one. A translation that does not cut in two stands whole under both doors."""
+    text = str(_("Entreprises : signalez vos besoins professionnels. Institutions : proposez une collaboration."))
+    glyphs = {"company_glyph": icons.AUDIENCE["company"], "institution_glyph": icons.AUDIENCE["institution"]}
+    parts = locked_split.sentences(text)
+    if not parts or len(parts) != 2:  # noqa: PLR2004 — two doors, two halves
+        return {"whole": text, **glyphs}
+    return {"company": parts[0].strip(), "institution": parts[1].strip(), **glyphs}
+
+
+def company_flow() -> list[dict]:
+    """EN-1 «il flusso» (§3.6): the three moments (team strings, CONTENT_PENDING_LEGAL_REVIEW) on their measured curve,
+    each with its registry glyph (icons.COMPANY_MOMENT)."""
+    return [
+        {"glyph": glyph, "label": moment["label"], "text": moment["text"]}
+        for glyph, moment in zip(icons.COMPANY_MOMENT, company_moments(), strict=True)
+    ]
+
+
+def guarantee_split(guarantee: Guarantee | None) -> SafeString | None:
+    """EN-4 (§3.6): the prescribed answer cut for the split — its own first word («Non.») as the large keyword, what the
+    platform does not do up to and including its colon, then what it does — three spans of ONE paragraph whose
+    textContent is the answer itself. None when the answer has no such shape (the template then prints it whole)."""
+    if guarantee is None:
+        return None
+    lead = locked_split.keyword(guarantee.answer)
+    if not lead:
+        return None
+    halves = locked_split.split(lead[1], ":")
+    if not halves or len(halves) != 2:  # noqa: PLR2004 — the colon cuts the answer in two
+        return None
+    parts = (lead[0], *halves)
+    if "".join(parts) != guarantee.answer:
+        return None
+    return locked_split.spans(parts, css="giu")
+
+
+def recipients_sentence(recipients: Enumeration) -> SafeString:
+    """IN-1 «l'emiciclo» (§3.7): the locked sentence whole, its own head («Destinataires :») and each enumerated item
+    as spans — the items carry the seat they light (data-seggio 1 … 6, the pattern's own attribute: components/sezioni/
+    mappa.html, v5/_sec-emiciclo.css; never Lume's L3 seat, DS 2026 §12 — v522-s2, DL54-182 item 10 b). The textContent
+    is the sentence itself; an item not found in order leaves the sentence unwrapped."""
+    text = recipients.source.text
+    head, colon, _rest = text.partition(":")
+    out, at = [], 0
+    if colon and recipients.label:
+        end = len(head) + len(colon)
+        out.append(f'<span class="emiciclo__capo">{escape(text[:end])}</span>')
+        at = end
+    for number, item in enumerate(recipients.items, start=1):
+        found = text.find(item, at)
+        if found < 0:
+            return escape(text)
+        out.append(escape(text[at:found]))
+        out.append(f'<span class="emiciclo__voce" data-seggio="{number}">{escape(item)}</span>')
+        at = found + len(item)
+    out.append(escape(text[at:]))
+    return mark_safe("".join(out))  # noqa: S308 — every slice is escaped here
+
+
+def recipient_seats(recipients: Enumeration) -> list[dict]:
+    """The hemicycle's seats: one a recipient, its glyph the registry's (icons.RECIPIENT_SEAT), never more seats than
+    the sentence names."""
+    return [{"glyph": glyph, "audience": "institution"} for glyph in icons.RECIPIENT_SEAT[: len(recipients.items)]]
+
+
+#: U1's arrival node: the brand's arch, the page's one gold arrival (§3.8, §4.5)
+ARRIVAL = "ile-arch"
+#: U1's destination frame (`universities.exchange`): the slot's own 6/12 track from 64 rem (imagery.py); from 48 to
+#: 64 rem three quarters of the container, smaller than the slot's full width (lane M's note, QA/v522/m §9.10: the
+#: gesture read at 768); the column below — the width the composition really draws, for the browser's choice
+DESTINATION_SIZES = (
+    "(min-width: 100rem) 41.75rem, (min-width: 90rem) 38rem, (min-width: 75rem) 33.5rem, "
+    "(min-width: 64rem) calc(50vw - 3.25rem), (min-width: 48rem) calc(75vw - 3.75rem), "
+    "(min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)"
+)
+
+
+def universities_route(lang: str | None, links: dict) -> list[dict]:
+    """U1 «la filiera di formazione» (§3.8): three stations of the persons' learning path — before the departure, in
+    Italy (the research pathway branching off), after the arrival — each with its team kicker, the locked title and
+    its one locked line, and its links (a pathway sheet only while it is live)."""
+    from pathways import services as pathways
+
+    page_lang = _page_lang(lang)
+    entries = {entry.key: entry for entry in pathways.index_entries()}
+    _pathways, pathways_lang = locked_content.get("p3.persons.pathways", page_lang)
+    entry_lang = "" if pathways_lang == page_lang else pathways_lang
+    after_title, after_lang = locked_content.get("p3.training_after.title", page_lang)
+    after_body, _body_lang = locked_content.get("p3.training_after.body", page_lang)
+    first = locked_split.sentences(after_body)
+    training = links.get("training", "")
+
+    def station(key: str) -> dict:
+        entry = entries[key]
+        return {"title": entry.title, "line": entry.description, "lang": entry_lang, "url": entry.url, "glyph": ""}
+
+    before = station("training_in_origin_country") | {
+        "kicker": _("Avant le départ"),
+        "glyph": "earth",
+        "more": {"url": f"{training}#avant-le-depart", "label": _("Formation avant le départ")} if training else None,
+    }
+    italy = station("study_and_training_in_italy") | {
+        "kicker": _("En Italie"),
+        "glyph": icons.PATHWAY["study_and_training_in_italy"],
+        "branch": station("scientific_research") | {"glyph": icons.PATHWAY["scientific_research"]},
+    }
+    after = {
+        "kicker": _("Après l’arrivée"),
+        "glyph": icons.PATHWAY["training_in_origin_country"],
+        "title": after_title,
+        "line": first[0].strip() if first else "",
+        "lang": "" if after_lang == page_lang else after_lang,
+        "url": f"{training}#apres-l-arrivee" if training else "",
+    }
+    return [before, italy, after]
 
 
 # --------------------------------------------------------------------------------------------

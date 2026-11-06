@@ -306,12 +306,44 @@ def test_the_filters_legend_draws_the_chips_own_mark():
     assert _render('{{ "blocco"|chip_mark }}|{{ ""|chip_mark }}') == "lock|st-neutro"
 
 
+#: The tags that remain (V5.22): the community room's highlight, the level asked of a competence (twice), the kind of a
+#: helpdesk message and its internal note — each written once per template line it occupies.
+TAGS = {
+    "templates/community/room.html": 1,
+    "templates/companies/need_detail.html": 2,
+    "templates/helpdesk/detail.html": 2,
+}
+#: The Italian terms that were tags under a pathway and a diploma's station, now the disclosures of their locked
+#: definitions (SECTION_SYSTEM_V2 §3.5 PS-4 and §3.10 D1, lane P1): the template and the summary's class.
+TERM_DISCLOSURES = {
+    "templates/pathways/detail.html": "indice__sommario",
+    "templates/pathways/diplomas.html": "dossier__voce",
+}
+
+
 def test_a_tag_is_a_term_and_carries_neither_a_register_nor_a_mark():
     """static/css/v5/chip.css §4: the glossary's words under a pathway, the level asked of a competence, the kind of
-    a message — terms, not states. They are written by hand, and say nothing a register says."""
-    found = []
+    a message — terms, not states. They are written by hand, and say nothing a register says.
+
+    V5.22 (SECTION_SYSTEM_V2 §3.5 PS-4 and §3.10 D1 — approved product decisions, composed by lane P1; V5.20 strict
+    rule, cited — lane P1's request 2, DL54-183 item 10, v522-s2): the pathway sheet's and the diplomas' Italian terms
+    are no longer tags but native disclosures of their locked definitions. The floor of nine became the exact set of
+    the tags that remain (stronger: one tag more or less fails), and the terms keep the invariant in their new form —
+    a term's disclosure carries no register (the chip's or the library's), and its word no mark: the chevron is the
+    disclosure's own control, beside the word, never on it."""
+    found: dict[str, int] = {}
     for path in _templates():
         for match in re.finditer(r'<(a|span)\b[^>]*\bclass="tag"[^>]*>(.*?)</\1>', _source(path), flags=re.S):
-            found.append(_rel(path))
+            found[_rel(path)] = found.get(_rel(path), 0) + 1
             assert "data-register" not in match.group(0) and "svg_icon" not in match.group(0), _rel(path)
-    assert len(found) >= 9 and {"templates/pathways/detail.html", "templates/companies/need_detail.html"} <= set(found)
+    assert found == TAGS, found
+    for rel, summary in TERM_DISCLOSURES.items():
+        text = _source(ROOT / rel)
+        terms = re.findall(rf'<summary class="{summary}"[^>]*>(.*?)</summary>', text, flags=re.S)
+        assert terms, (rel, "the terms are disclosures")
+        for term in terms:
+            assert "data-register" not in term and "data-registro" not in term, (rel, term)
+            word = re.fullmatch(
+                r'\s*<span[^>]*>(?P<word>.*?)</span>\s*\{% svg_icon "chevron" "[^"]*" %\}\s*', term, flags=re.S
+            )
+            assert word and "svg_icon" not in word.group("word"), (rel, "the word, then the disclosure's chevron", term)

@@ -24,14 +24,19 @@ pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 PAGES = ("/{lang}/parcours/", "/{lang}/entreprises/", "/{lang}/projet-pilote/", "/{lang}/forum/")
 
 #: the distinct radii of what is painted and on screen in the first viewport (an element with a ground, an edge, a
-#: shadow or an image); the skip link and other off-screen boxes do not count
+#: shadow or an image); the skip link and other off-screen boxes do not count, nor what is not seen: the opacity that
+#: counts is the one composed with its ancestors' (V5.18 T3: the loader's veil is kept laid out at rest, html.lume-warm,
+#: its ground at 0.002 — the halo inside it, 50 % 30.8 %, is no corner anyone sees). V5.20 (the test-change audit's
+#: note on O59): the veil is NOT skipped by name any more — the composed opacity already leaves the warm veil out, and a
+#: veil left standing over a page at rest is seen, so its corners count
 RADII_JS = """() => {
   const seen = new Set();
+  const seenOpacity = (el) => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity); return o; };
   for (const el of document.querySelectorAll('body *')) {
     const r = el.getBoundingClientRect();
     if (r.width <= 1 || r.height <= 1 || r.bottom <= 0 || r.top >= innerHeight || r.right <= 0 || r.left >= innerWidth) continue;
     const cs = getComputedStyle(el);
-    if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
+    if (cs.visibility === 'hidden' || cs.display === 'none' || seenOpacity(el) < 0.01) continue;
     const painted = cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.borderTopWidth !== '0px' || cs.boxShadow !== 'none' || el.tagName === 'IMG';
     const rad = cs.borderTopLeftRadius;
     if (painted && rad && rad !== '0px') seen.add(rad.includes('%') ? rad : String(Math.min(999, Math.round(parseFloat(rad)))));
@@ -82,7 +87,9 @@ def test_no_overflow_and_three_corners_a_screen(browser, live_server, seeded, ph
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-@pytest.mark.parametrize(("width", "height"), [(1440, 900), (390, 844)])
+@pytest.mark.parametrize(
+    ("width", "height"), [(1440, 900), (1024, 768), (768, 1024), (430, 932), (390, 844), (375, 667), (360, 740)]
+)
 def test_the_door_card_carries_its_way_in_the_first_screen_its_disc_at_the_inline_start(
     browser, live_server, seeded, phase3, lang, width, height
 ):
@@ -97,41 +104,54 @@ def test_the_door_card_carries_its_way_in_the_first_screen_its_disc_at_the_inlin
         ):
             page.goto(live_server.url + path.format(lang=lang), wait_until="load")
             page.evaluate("document.fonts.ready")
+            # V5.12/V5.15 lane C (the steward, the v515-c merge): the four doors' heads now carry their photograph
+            # (apps/pages/imagery.py), so the way in stands under the lead (`.ingresso__way`, _ingresso.html) and the
+            # night door card is drawn only on a head without one; the way's control is held to the same first screen
             geometry = page.evaluate("""() => {
-              const box = (el) => el.getBoundingClientRect();
-              const card = box(document.querySelector('.ingresso__aside.porta'));
+              const box = (el) => el && el.getBoundingClientRect();
+              const card = box(document.querySelector('.ingresso__aside.porta, .ingresso__way'));
+              const plate = !!document.querySelector('.ingresso__aside.porta');
               const disc = box(document.querySelector('.porta__disc'));
               const words = box(document.querySelector('.porta .porta__disc + *'));
-              const control = box(document.querySelector('.porta .via__action .btn'));
+              const control = box(document.querySelector(':is(.porta, .ingresso__way) .via__action .btn'));
+              const question = box(document.querySelector(':is(.porta, .ingresso__way) .via__title'));
               const head = box(document.querySelector('.chapter__head'));
               const body = box(document.querySelector('.chapter__body'));
-              return {discLeft: disc.left - card.left, discRight: card.right - disc.right,
-                      overlap: !(words.right <= disc.left || words.left >= disc.right),
-                      controlTop: control.top, controlInside: control.left >= card.left && control.right <= card.right,
-                      headLeft: head.left, bodyLeft: body.left, vh: innerHeight};
+              return {plate, discLeft: plate ? disc.left - card.left : null, discRight: plate ? card.right - disc.right : null,
+                      overlap: plate ? !(words.right <= disc.left || words.left >= disc.right) : false,
+                      startLeft: control.left - card.left, startRight: card.right - control.right,
+                      questionBottom: question ? question.bottom : null,
+                      controlTop: control.top, controlBottom: control.bottom, controlInside: control.left >= card.left - 1 && control.right <= card.right + 1,
+                      headLeft: head ? head.left : null, bodyLeft: body ? body.left : null, vh: innerHeight};
             }""")
             where = (path, lang, width)
             assert not geometry["overlap"], ("the disc and the way's words never meet", where)
             assert geometry["controlInside"], where
-            if width == 1440:
-                assert geometry["controlTop"] < geometry["vh"], ("the door's control in the first screen", where)
-            else:
-                assert geometry["controlTop"] < 1.25 * geometry["vh"], (
-                    "the door's control at the first screen's foot",
-                    where,
-                )
+            # V5.18 (B2): the whole control inside the first screen at every width — no longer «at its foot» (1.25 vh)
+            assert geometry["controlBottom"] <= geometry["vh"], (
+                "the door's control in the first screen",
+                where,
+                geometry["controlBottom"],
+                geometry["vh"],
+            )
+            # V5.18 integrated review (polish 2): the way's question stands above its control at every size — the
+            # title, the button and the sentence read in the document's order (WCAG 1.3.2 / 2.4.3)
+            if geometry["questionBottom"] is not None:
+                assert geometry["questionBottom"] <= geometry["controlTop"], ("the way's question before its control", where)
+            # the disc (on the plate) or the way's control (under the lead) at the inline start (BI04)
+            near, far = ("discRight", "discLeft") if geometry["plate"] else ("startRight", "startLeft")
+            mirrored = geometry["headLeft"] is not None and geometry["bodyLeft"] is not None and width == 1440
+            # a phone's way control spans its line (both margins 0): never nearer the inline end than the start
+            nearer = (lambda a, b: a < b) if geometry["plate"] or width == 1440 else (lambda a, b: a <= b)
             if lang == "ar":
-                assert geometry["discRight"] < geometry["discLeft"], (
-                    "the disc stands at the inline start (BI04)",
-                    where,
-                )
-                if width == 1440:
+                assert nearer(geometry[near], geometry[far]), ("the disc stands at the inline start (BI04)", where)
+                if mirrored:
                     assert geometry["headLeft"] > geometry["bodyLeft"], (
                         "the chapter's head at the reading edge, on the right"
                     )
             else:
-                assert geometry["discLeft"] < geometry["discRight"], where
-                if width == 1440:
+                assert nearer(geometry[far], geometry[near]), where
+                if mirrored:
                     assert geometry["headLeft"] < geometry["bodyLeft"]
     finally:
         context.close()
@@ -181,7 +201,12 @@ def test_the_trail_and_the_forward_links_stand_on_the_target_floor(browser, live
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_pilot_s_stations_never_break_a_word(browser, live_server, seeded, phase3, lang):
-    """The fix pass (M5): eight stations a row only from 90rem — below it «ACCOMPAGNEMENT» broke at 1280 and 1366."""
+    """The fix pass (M5): eight stations a row only from 90rem — below it «ACCOMPAGNEMENT» broke at 1280 and 1366.
+    V5.22 (SECTION_SYSTEM_V2 §3.3 PP-1: «≥ 80 rem: one gently stepped row» — an approved owner/product decision; lane
+    P1, QA_ROUND1 M1; V5.20 strict rule): from 80 rem the eight stand on one route, their capitals on alternate sides of
+    it so that two neighbours never share a line — the same invariant (every word whole at 1280, 1366 and 1440) on the
+    V2 markup, and the row's legibility measured as boxes that never meet, at least 16 px apart, in four languages
+    (tests/frontend/test_pages_browser_v522_p1.py::test_the_pilot_s_capitals_never_break_inside_a_word)."""
     context = browser.new_context(viewport={"width": 1280, "height": 800}, device_scale_factor=1)
     page = context.new_page()
     try:
@@ -189,7 +214,7 @@ def test_the_pilot_s_stations_never_break_a_word(browser, live_server, seeded, p
             page.set_viewport_size({"width": width, "height": 800})
             page.goto(live_server.url + f"/{lang}/projet-pilote/", wait_until="load")
             page.evaluate("document.fonts.ready")
-            broken = page.evaluate("""() => [...document.querySelectorAll('.pilot-diagram .linea__label')].filter((label) => {
+            broken = page.evaluate("""() => [...document.querySelectorAll('[data-diagram="pilot-sequence"] .linea__label')].filter((label) => {
               const node = label.firstChild; if (!node) return false;
               const text = node.textContent; let found = false;
               for (const m of text.matchAll(/[^\\s]+/g)) {
@@ -201,8 +226,17 @@ def test_the_pilot_s_stations_never_break_a_word(browser, live_server, seeded, p
             }).map((label) => label.textContent)""")
             assert not broken, (lang, width, broken)
             columns = page.evaluate(
-                "getComputedStyle(document.querySelector('.pilot-diagram .linea--across')).gridTemplateColumns.split(' ').length"
+                "getComputedStyle(document.querySelector('[data-diagram=\"pilot-sequence\"] .linea--across'))"
+                ".gridTemplateColumns.split(' ').length"
             )
-            assert columns == (8 if width >= 1440 else 4), (lang, width, columns)
+            assert columns == 8, (lang, width, columns)
+            # the stepped row: the odd stations' capitals above the route, the even ones' below it
+            sides = page.evaluate(
+                "[...document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__step')].map(li => {"
+                " const t = li.querySelector('.sez-tile').getBoundingClientRect();"
+                " const l = li.querySelector('.linea__label').getBoundingClientRect();"
+                " return l.bottom <= t.top ? 'above' : l.top >= t.bottom ? 'below' : 'beside'; })"
+            )
+            assert sides == ["above", "below"] * 4, (lang, width, sides)
     finally:
         context.close()

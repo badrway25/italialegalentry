@@ -38,6 +38,8 @@
  *     refresh   async (depot) → the piece's element read again, or null — default: the page's own piece, fetched
  *               and swapped (the preview drawer passes its body's and the register's)
  */
+import { region } from "./lume/region.js";
+
 /** L2 of «Lume» (static/js/src/loader.js) is never imported statically — shell.js loads it on demand (W1-D): a Dépôt
  *  asks for it once it is wired, so it is there by the time a file is sent; its calls keep their order (one promise). */
 let loaderModule = null;
@@ -221,9 +223,14 @@ async function refreshPage(depot) {
   const url = depot.dataset.depotPiece;
   if (!article || !url) return null;
   try {
-    const response = await fetch(url, { credentials: "same-origin", headers: { Accept: "text/html" } });
-    if (!response.ok) throw new Error(String(response.status));
-    const doc = new DOMParser().parseFromString(await response.text(), "text/html");
+    // a REGION of «Lume» (T4, lume/region.js): a slow reading lights the Dépôt's own submit key after 400 ms, the piece
+    // is aria-busy while it comes; a fast one shows nothing
+    const read = fetch(url, { credentials: "same-origin", headers: { Accept: "text/html" } }).then((answer) => {
+      if (!answer.ok) throw new Error(String(answer.status));
+      return answer.text();
+    });
+    const submit = depot.querySelector('button[type="submit"]');
+    const doc = new DOMParser().parseFromString(await region(article, read, { host: submit }), "text/html");
     const fresh = doc.querySelector("article.doc-piece");
     if (!fresh) throw new Error("no piece");
     const node = document.importNode(fresh, true);

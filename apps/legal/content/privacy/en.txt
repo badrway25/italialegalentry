@@ -1,0 +1,143 @@
+title: Personal data processing notice
+notice: Courtesy translation — the Italian version prevails
+italian_link: Read the Italian version, which prevails
+pending: translation pending legal review
+---
+This notice is given under Articles 13 and 14 of Regulation (EU) 2016/679 (the “GDPR”) and Legislative Decree 196/2003, as amended by Legislative Decree 101/2018, to visitors of the website and users of the Italy Legal Entry™ platform. It describes the processing that the website and the platform carry out in their current configuration.
+
+## 1. Data controller
+
+The data controller is AGAMI — Dialogo Giuridico Interculturale APS, an association for social promotion entered in the RUNTS (Rep. no. 149809), tax code 91036640240, with its registered office at Via Sandrigo 29, 36061 Bassano del Grappa (VI), and its operational office at Viale Giuseppe Mazzini 142, 00195 Rome. The controller can be contacted at contact@agamieuromed.org.
+
+[DA COMPLETARE — OF-01 — OWNER CONFIRMATION REQUIRED: AGAMI APS is the candidate controller; the owner confirms in writing that AGAMI APS is the data controller for Italy Legal Entry and that its name, offices and contact address are current on the publication date]
+
+## 2. Data protection officer
+
+[DA COMPLETARE — OF-08 — LEGAL REVIEW REQUIRED: DPO STATUS = TO BE CONFIRMED; outcome of the Article 37 GDPR assessment: state that no data protection officer is designated or, if one is designated, the officer’s name and contact details]
+
+## 3. Data processed, purposes and legal bases
+
+### 3.1 Browsing the website: server logs
+
+For every request, the server that publishes the website records: the device’s IP address in shortened form (for an IPv4 address the last part is replaced with zero; for an IPv6 address only the first three groups are kept), the date and time, the method and the path of the requested page without the address parameters, the protocol, the response code and size, the response time, the name of the site requested and a technical request identifier. The log does not contain the browser type or the referring page.
+
+When the server detects an anomaly while handling a request, the error log records the full IP address and the full request, including any address parameters. Requests sent to the server under a name other than the website’s are refused and recorded in the server’s standard log, with the full IP address, the full request, the browser type and the referring page.
+
+The application records technical and security events in the server’s system log with internal identifiers (for example the account number, never the e-mail address) and, in case of an error, the path of the page without parameters. It records neither IP addresses nor the content of forms there.
+
+Purposes: operating the website, security and diagnosing faults. Legal basis: the controller’s legitimate interest in keeping the website secure and preventing abuse (Article 6(1)(f) GDPR). The server logs are rotated daily and kept for 14 days.
+
+[DA COMPLETARE — OF-05 — PRODUCTION CONFIGURATION REQUIRED: retention period of the application’s system log and the 14-day rotation of the server logs, to be verified on the production server]
+
+### 3.2 Security and abuse prevention
+
+The application does not store the IP address in clear: it computes a fingerprint of it (an SHA-256 hash function with a secret key) and stores only that. The fingerprint is pseudonymised data, not anonymous data: whoever holds the key can check whether it matches a known address.
+
+The security log records, together with the account concerned, the date, the IP address fingerprint and a request identifier, the operations that matter for security: sign-ins to and sign-outs from the reserved area, failed sign-in attempts (without the e-mail address entered), role assignments, document downloads, case file views and other sensitive operations.
+
+To limit repeated attempts, the server keeps short-lived counters in memory: for sign-in, sign-up and password recovery they are tied to the IP address; for sign-in, password recovery and e-mail address confirmation, also to a fingerprint (SHA-256 hash) of the e-mail address entered; for password and e-mail address changes, to the account. They expire after a period between 1 minute and 1 hour. For public forms they are tied to the IP address fingerprint and expire after 10 minutes. These counters stay in the server’s memory and are erased when they expire.
+
+Purpose: protecting accounts, data and services against unauthorised access and abuse. Legal basis: the controller’s legitimate interest (Article 6(1)(f) GDPR).
+
+[DA COMPLETARE — OF-06 — LEGAL REVIEW REQUIRED: retention period of the security log, which is currently never deleted automatically]
+
+### 3.3 Reserved area: account, session and second factor
+
+For the account, the following are processed: e-mail address, first name and surname, preferred language, account type, sign-up and last sign-in dates, acceptance of the terms; in the profile, country of residence and telephone number; any organisation the account belongs to and the account verification data. The password is stored only as a non-reversible hash. The second authentication factor uses a time-based code generated by an authenticator app and recovery codes; it is mandatory for staff and for roles that access other people’s data.
+
+After sign-in, the session is stored in the server’s database and expires 8 hours after its last update; expired sessions are deleted every day.
+
+Purpose: providing the requested reserved area and protecting access to it.
+
+[DA COMPLETARE — OF-10 — LEGAL REVIEW REQUIRED: legal basis of the reserved area (account, second factor, documents, case files, help desk, training, selection) and of the backups]
+
+Account data are kept until the account is deleted, which users can request from their profile page; deletion anonymises the account data.
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED: retention rule for inactive accounts, if any]
+
+### 3.4 Orientation questionnaire
+
+The orientation questionnaire can be completed without an account. The following are stored: the answers, chosen from predefined options, the language, the IP address fingerprint, the fingerprint of the code that lets the questionnaire be resumed, and the result, with the versions of the rules applied.
+
+Purpose: answering the request for orientation. Legal basis: taking steps at the request of the data subject prior to entering into a contract (Article 6(1)(b) GDPR). Without an account, questionnaire data are deleted automatically after 30 days; if the questionnaire is linked to an account, they follow the account’s retention.
+
+### 3.5 Documents and case files in the reserved area
+
+In the reserved area, users can upload documents (PDF, JPEG or PNG), identity documents included, and follow case files, checklists, assessments, messages, deadlines, help-desk requests, and training and selection pathways. For each document, the file, its original name, type and size, a fingerprint of its content, a description and the fingerprint of the IP address it was uploaded from are stored.
+
+Documents are stored on the server outside every directory reachable from the web and can be downloaded only from the reserved area, through a personal link valid for 10 minutes. They are accessible to the user, the contact person of the user’s organisation and authorised staff, within the limits of their respective roles. Users are asked not to enter in free-text fields special categories of data within the meaning of Article 9 GDPR, which the service does not require.
+
+Purpose: preparing the documentation for the requested pathway and following its stages. The legal basis is given in section 3.3.
+
+[DA COMPLETARE — OF-13 — LEGAL REVIEW REQUIRED: SPECIAL CATEGORY LEGAL BASIS REQUIRED: the Article 9 GDPR condition for special categories of data that may appear in uploaded documents and in the free-text fields of the reserved area]
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED: retention period of documents, case files, messages, deadlines, help-desk requests, training and selection]
+
+### 3.6 E-mail messages
+
+The platform sends service messages: e-mail address verification, password recovery and notifications. For each message, the database keeps a copy (recipient, subject and text) to manage sending and any retries. The purposes and legal basis are those of the service that produced the message.
+
+[DA COMPLETARE — OF-03 — PRODUCTION CONFIGURATION REQUIRED: outgoing e-mail provider used in production (name, registered office, Article 28 GDPR agreement) and the provider hosting the contact@agamieuromed.org mailbox]
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED: retention period of the message copies, which are currently never deleted automatically]
+
+### 3.7 Backups
+
+Every night an encrypted backup of the database and of the uploaded documents is made. It is kept on the server for 7 days, and a copy outside the server is planned. Purposes: continuity of the service and restoring data after a failure. The legal basis is given in section 3.3.
+
+[DA COMPLETARE — OF-04 — PRODUCTION CONFIGURATION REQUIRED: location, provider and region of the copies kept outside the server, who can access them and how long they are kept]
+
+### 3.8 Services not in operation
+
+The public contact and collaboration forms, event registration, the creation of new accounts, the newsletter and the Virtual Forum are not in operation. Before they are activated, this notice will be updated with the data processed, the legal basis and the retention period of each. Integrations with external contact-management systems are not active.
+
+## 4. Whether providing data is required, and decision-making
+
+Providing the data requested in the questionnaire and in the reserved area is optional, but without the data marked as necessary the requested service cannot be provided. The results returned by the platform are pre-assessments for information only: no processing leads to decisions based solely on automated processing that produce legal effects on the data subject within the meaning of Article 22 GDPR, and every administrative decision rests exclusively with the public authorities.
+
+## 5. Recipients of the data
+
+- the controller’s staff and authorised persons, each within the limits of their role;
+- the provider of the hosting services of the website and the platform, as a processor under Article 28 GDPR (intended provider: DigitalOcean);
+- the outgoing e-mail provider (section 3.6);
+- the provider that keeps the backups outside the server (section 3.7).
+
+[DA COMPLETARE — OF-12 — LEGAL REVIEW REQUIRED: the role of each category of internal and external recipients (staff roles, authorised operators, training providers, professionals, companies): processor, independent controller or joint controller]
+
+[DA COMPLETARE — OF-02 — PRODUCTION CONFIGURATION REQUIRED: acceptance of DigitalOcean’s Article 28 GDPR agreement (DPA) and its list of sub-processors, to be verified when the production infrastructure is created]
+
+The data are not disseminated. The website’s pages load no third-party resources (fonts, scripts, images, maps or videos) and no analytics tools: no third party receives the IP address of website visitors.
+
+## 6. Place of processing and transfers
+
+[DA COMPLETARE — OF-02 — PRODUCTION CONFIGURATION REQUIRED: DigitalOcean region of the server, the database and the volumes, and any transfer of data to third countries with the applicable safeguard (Articles 44 et seq. GDPR), including for e-mail delivery (OF-03) and for the backups outside the server (OF-04), to be verified on the production infrastructure]
+
+Users accessing the website from the Kingdom of Morocco also benefit, where applicable, from the protections of Moroccan Law no. 09-08 on the protection of individuals with regard to the processing of personal data.
+
+## 7. Retention periods: summary
+
+- server logs: 14 days, rotated daily;
+- abuse-prevention counters: from 1 minute to 1 hour, in memory only;
+- sessions: 8 hours after the last update;
+- orientation questionnaire without an account: 30 days;
+- backups on the server: 7 days;
+- accounts: until the account is deleted;
+- the application’s system log, the security log, documents and case files, message copies, backups outside the server: as stated in sections 3.1, 3.2, 3.5, 3.6 and 3.7.
+
+## 8. Rights of data subjects
+
+Data subjects may exercise at any time the rights granted by Articles 15 to 22 GDPR — access, rectification, erasure, restriction of processing, portability and objection — by writing to contact@agamieuromed.org. From the reserved area, they can also request the deletion of their account directly.
+
+They also have the right to lodge a complaint with the Garante per la protezione dei dati personali under Article 77 GDPR (www.garanteprivacy.it).
+
+## 9. Security measures
+
+The website is served only over an encrypted connection (HTTPS). Access by staff and by roles that view other people’s data requires a second authentication factor. IP addresses are stored only as fingerprints, backups are encrypted and uploaded documents are never served directly from the web.
+
+## 10. Cookies and storage technologies
+
+The website uses only first-party technical cookies and a few browser storage entries for the state of the interface. The full list, with the purpose and duration of each, is in the Cookie and storage technologies notice.
+
+## 11. Updates
+
+This notice is updated when the processing changes. The version in force is shown at the top of the page, and the controller keeps every published version.

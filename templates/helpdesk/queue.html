@@ -14,8 +14,10 @@ No identity of the person is shown. A mandate is about a question and a file ref
 {% block meta_description %}{% translate "Les demandes du guichet numérique confiées à votre mandat." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="register">
+  {% include "portal/partials/atrium_art.html" with figure="counter" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Demandes qui me sont confiées" %}</h1>
     <p class="ws-head__lead">{% translate "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom." %}</p>
   </div>

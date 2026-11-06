@@ -35,6 +35,9 @@ def _render(
         "note": services.editorial_note(space, lang),
         "local_nav_items": services.local_nav(key, sections, preview=is_preview),
         "links": services.related_links(preview=is_preview),
+        # V5.22 (SECTION_SYSTEM_V2 §7.1, lane P1): each space links its own page sheet — the family's sheet and the
+        # V2 patterns that page composes, bundled (apps/ecosystem/static/ecosystem/<key>.css): one stylesheet, as before
+        "family_sheet": f"css/dist/ecosystem/{key}.css",
         "is_preview": is_preview,
         "noindex": is_preview,
         "seo": services.seo(title, description, photo),
@@ -69,8 +72,9 @@ def companies(request):
             "title": title,
             "intro": intro,
             "quote": services.locked_text("p1.companies.quote", lang),
-            "moments": services.company_moments(),
+            "moments": services.company_flow(),
             "guarantee": guarantee,
+            "guarantee_split": services.guarantee_split(guarantee),
         },
     )
 
@@ -90,7 +94,11 @@ def institutions(request):
             ("destinataires", recipients.label, recipients.source.lang_attr),
             ("collaboration", _("Proposer une collaboration")),
         ],
-        extra={"recipients": recipients},
+        extra={
+            "recipients": recipients,
+            "recipients_sentence": services.recipients_sentence(recipients),
+            "seats": services.recipient_seats(recipients),
+        },
     )
 
 
@@ -105,7 +113,12 @@ def universities(request):
         title=_("Espace Universités et Formation"),
         description=intro.source.text,
         sections=[("partenariat", _("Proposer un partenariat"))],
-        extra={"intro": intro},
+        extra={
+            "intro": intro,
+            "route": services.universities_route(lang, services.related_links()),
+            "arrival": services.ARRIVAL,
+            "destination_sizes": services.DESTINATION_SIZES,
+        },
     )
 
 
@@ -114,6 +127,7 @@ def pilot(request):
     lang = request.LANGUAGE_CODE
     title = services.locked_text("p3.pilot.title", lang)
     body = services.locked_text("p3.pilot.body", lang)
+    flow = services.pilot_flow(lang)
     return _render(
         request,
         SpaceKey.PILOT,
@@ -122,5 +136,11 @@ def pilot(request):
         title_lang=title.lang_attr,
         description=body.text,
         sections=[("sequence", _("La séquence")), ("participer", _("Participer"))],
-        extra={"title": title, "body": body, "flow": services.pilot_flow(lang)},
+        extra={
+            "title": title,
+            "body": body,
+            "flow": flow,
+            "stations": services.pilot_stations(flow),
+            "doors": services.pilot_doors(),
+        },
     )

@@ -36,6 +36,13 @@ def _registry_strings() -> list[str]:
     return found
 
 
+def _text_content(html: str, selector: str) -> list[str]:
+    """The text of each element the selector finds, as a reader gets it (the spans of a re-composed text joined)."""
+    from bs4 import BeautifulSoup
+
+    return [node.get_text() for node in BeautifulSoup(html, "html.parser").select(selector)]
+
+
 def test_the_no_break_space_is_u00a0_and_written_as_an_escape():
     """Host Grotesk carries no U+202F (plan §1.1): French uses U+00A0. In the source it is an escape — a literal
     no-break space is invisible, and the next editor's tool would turn it into a space."""
@@ -94,17 +101,23 @@ def test_escaping_is_left_to_the_template():
 def test_the_home_draws_its_own_strings_with_the_spaces_and_the_locked_copy_as_written(client, seeded, phase3_open):
     html = client.get("/fr/").content.decode("utf-8")
     main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
-    # team-authored: the pilot's sentence (a section intro) and the anti-fraud link (an interface string)
-    assert "au suivi\u00a0: la séquence du projet pilote" in main
+    # team-authored: the pilot's sentence (a section intro) and the anti-fraud link (an interface string).
+    # V5.22 (SECTION_SYSTEM_V2 §3.1 S4, an approved decision; V5.20 strict rule): the team rewrote the pilot's lead —
+    # it says what the panel shows — and the filter still gives its colon the no-break space
+    assert "sur le marbre\u00a0: deux savoir-faire" in main
     assert "Lire la page «\u00a0Attention aux fraudes\u00a0»" in main
     # prescribed: whole, with their ordinary spaces — the questions of the trust chapter, the warning, the sentence
-    # of the orientation chapter
+    # of the orientation chapter. V5.22 (§1 rule 6; strict rule): the texts the V2 home sets in typographic levels —
+    # each trust answer with its «Non.» as the keyword, the warning cut on its own full stops — are held to their
+    # element's textContent, character for character, as apps/pages/tests/test_home.py holds them
     faq = {item["key"]: item for item in locked_content.get("p3.faq.items", "fr")[0]}
     for key in ("faq_visas", "faq_recruitment_agency", "faq_preassessment_guarantee", "faq_diplomas"):
         assert " ?" in faq[key]["question"]
         assert escape(faq[key]["question"]) in main, key
-        assert escape(faq[key]["answer"]) in main, key
-    for key in ("p3.antifraud.body", "p3.persons.how_it_works", "p3.hero.body"):
+        assert _text_content(main, f'[data-faq="{key}"] .integrita__risposta') == [faq[key]["answer"]], key
+    body = locked_content.text("p3.antifraud.body", "fr")
+    assert _text_content(main, '[data-locked="p3.antifraud.body"]') == [body]
+    for key in ("p3.persons.how_it_works", "p3.hero.body"):
         assert str(escape(locked_content.text(key, "fr"))) in main, key
     # and no locked element of the page carries a no-break space the registry does not hold
     registry = "".join(_registry_strings())

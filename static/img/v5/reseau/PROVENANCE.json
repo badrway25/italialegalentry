@@ -1,0 +1,136 @@
+{
+ "what": "V5.12 photographs, family «reseau» (DECISIONS §6): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "table-commune-vue-haut",
+   "pexels_id": 34632581,
+   "photographer": "Jaykumar Bherwani",
+   "photographer_url": "https://www.pexels.com/@hashcode-error",
+   "page": "https://www.pexels.com/photo/top-view-of-students-studying-in-library-34632581/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Aerial view of a study group using laptops at a library table in Kingston, Ontario.",
+   "original_px": [
+    4000,
+    2666
+   ],
+   "original_sha256": "2458387d6da1468a26cf60b12df215f80fe3555b94e63f9831d12318ba0348c6",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      0,
+      3999,
+      2666
+     ],
+     "master_px": [
+      3999,
+      2666
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "one long shared table from straight above: laptops, papers, the tops of heads — no face (O55)",
+   "files": [
+    {
+     "file": "table-commune-vue-haut-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10468,
+     "budget": 61440,
+     "sha256": "6d3f7a5ee5bc4f77914c3b2ad603b008e249598310ce38fd814244f7b3e88ca7"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 14406,
+     "budget": 61440,
+     "sha256": "a76df1fbfa062a0ee6dbadddf217901b627d3b8f1024f6d0a8b9b42eef547f91"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 25306,
+     "budget": 61440,
+     "sha256": "acfba4e0e39efe6d23bc7f2fc9f1cdc9277a46bde5dbf07103d77cedbf1d8fe0"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 33060,
+     "budget": 61440,
+     "sha256": "220a07a189b262870b9691f71efc792b3f29eacde27087710fc4ecb525fab815"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 51896,
+     "budget": 61440,
+     "sha256": "b2721e3d7de596ccf9b45dc84ad590544e537ff8d073b2dea2d91b9306e0a617"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 68,
+     "bytes": 59036,
+     "budget": 61440,
+     "sha256": "36d80d33d1fdc6021b6dbba50a97f2b53f986b4903aa9b0116ae73a329340bf1"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 84931,
+     "budget": null,
+     "sha256": "767200864ace1df76ec08e71e0305a570701fc65ad58bd8eb2db29ed2660b856"
+    },
+    {
+     "file": "table-commune-vue-haut-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 108906,
+     "budget": null,
+     "sha256": "509908ff72874c44992cc6516fa2f50673d561e9703ebdecc4747d21e11dc21f"
+    }
+   ]
+  }
+ ]
+}

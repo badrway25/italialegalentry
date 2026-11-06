@@ -8,7 +8,7 @@ the primitive contract docs/design-v5/QA/v54/w2-a/CONTRACT.md) — fast, offline
   main.css, built as css/dist/core/overlay-panels.css and linked only by the pages that draw it (the owner's V5.8 CSS
   budget: the shared ceilings are hard) — the checks below read the two as the one system they are;
 * the anatomy's tokens: a paper sheet with a hairline edge; shadow 3 for a popover, 4 for the modal kinds; the scrim
-  --scrim-modal, opacity only, never a blur; corners 4 · 8 · 12, a sheet's top ones and a drawer's free edge's;
+  --scrim-modal, its opacity and (V5.12 W2, M8) a 4 px blur; corners 4 · 8 · 12, a sheet's top ones and a drawer's free edge's;
   «Fermer» 44 px for every pointer; a menu's rows 44 px under a coarse pointer;
 * the motion: transitions both ways (@starting-style in, `allow-discrete` on display and overlay out), no keyframes,
   every time a token or 0 ms, nothing that shapes a panel under [open] / :popover-open (B1); the clocks of §1.14 per
@@ -227,8 +227,10 @@ def test_one_paper_sheet_one_shadow_per_family_and_the_corners_of_lo_spigolo():
     assert "border-start-end-radius: var(--radius-xl)" in start and "border-end-end-radius: var(--radius-xl)" in start
     tip = _block('[data-tip]:not([data-tip="layer"])::after')
     assert "border-radius: var(--radius-sm)" in tip, "a tooltip's: 4"
-    # nothing lit, nothing blurred, no colour of its own: tokens only
-    assert "backdrop-filter" not in CSS_TEXT and "blur(" not in CSS_TEXT
+    # nothing lit, no colour of its own: tokens only; ONE blur, the scrim's 4 px under an open panel (V5.12 W2, DECISIONS
+    # §2 M8, DL54-166 — it amends W2-A's «never a blur»), on the scrim's own clocks
+    assert CSS_TEXT.count("blur(") == 1 and "backdrop-filter: blur(4px);" in _block(".overlay-scrim[data-open]")
+    assert "backdrop-filter" not in _block(".overlay-scrim").split("transition")[0], "no blur at rest"
     assert not re.findall(r"#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(", CSS_TEXT)
 
 
@@ -674,8 +676,10 @@ def test_the_account_menu_is_the_systems_popover_in_the_console_and_in_the_lette
     menu = _read(COMPONENTS / "account_menu.html")
     assert (
         '<button class="account-menu__summary" type="button" popovertarget="{{ panel_id }}" '
-        'aria-label="{{ user.get_short_name }} — {{ account_label }}">' in menu
+        'aria-label="{% if user.full_name %}{{ user.full_name }} — {% endif %}{{ account_label }}">' in menu
     ), "named by the words it shows, then what it opens (REVIEW m3, WCAG 2.5.3)"
+    assert "{{ user.full_name|default:account_label }}" in menu, "no name: «Mon compte», never the e-mail (V5.12 W1)"
+    assert "get_short_name" not in menu, "the full name, never its first word only (V5.12 §11)"
     assert (
         '{% include "components/popover.html" with id=panel_id label=account_label '
         'body_template="components/account_menu.html" %}' in menu

@@ -5,9 +5,18 @@ faq.services (cms.locked_content); editors only add unlocked entries in the back
 Accordion = native <details>/<summary> (works without JavaScript); search results are rendered open.
 
 Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): the head at the reading
-edge with the page's search in its end seat (the FAQ's one primary); a chapter a category — the section device (the
-mark's steps, the category's name) beside the system's disclosure (v5/tabs.css) from 75rem; the foot a quiet chapter:
-the links that lead on, then «who can help me» in the page's live words.
+edge with the page's search in its end seat (the FAQ's one primary) — KEEP (V5.22 §3.13 Q0).
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.13; lane P2):
+  moment  L «l'indice», the explorer (master–detail from 64 rem): the locked questions as the index (5/12), the active one
+          with its reading-edge marker; one answer plate (7/12) sticky under the letterhead — the answer at 20/28, its
+          links as chips, its date and permalink, the T1 «ile-domande» seal in its corner; the first question active at
+          load, the address follows the question (the permalinks and the home's trust links land on theirs); the fraud
+          question carries the protection's mark and an ink rule. The category's name is a small eyebrow while it is the
+          only one. Phones: each question discloses its answer, one at a time; without script every answer is listed.
+          Signature GLIDE (the marker glides, the answer crosses in; from the keyboard, at once) — sezioni/indice.js;
+  strip   E «il rimando» on stone: the glossary, the fraud page, the help question.
+A search's answer keeps the system's disclosures, open (faq/_item.html).
 {% endcomment %}
 {% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Questions fréquentes{% endblocktranslate %}{% else %}{% translate "Questions fréquentes" %}{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers vers l’Italie." %}{% endblock %}
@@ -17,6 +26,8 @@ the links that lead on, then «who can help me» in the page's live words.
 {% if is_preview %}
 <div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
 {% endif %}
+
+<div class="fronte-wrap" data-fronte="route"><div class="fronte__ground" aria-hidden="true">{% include "pages/partials/motifs/_route.html" %}</div>
 <header class="page-header page-header--seat container">
   <div class="page-header__text">
     <h1 class="page-header__title">{% translate "Questions fréquentes" %}</h1>
@@ -39,69 +50,44 @@ the links that lead on, then «who can help me» in the page's live words.
     {% if is_search %}<p class="search-form__reset"><a href="{% url 'faq:index' %}">{% translate "Effacer la recherche et afficher toutes les questions" %}</a></p>{% endif %}
   </form>
 </header>
+</div>
 
 {% if is_search %}
-<section class="chapter faq__results" aria-labelledby="faq-results-title">
-  <div class="container chapter__inner">
-    <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
-      <h2 id="faq-results-title">{% blocktranslate count counter=entries|length with q=query %}{{ counter }} résultat pour « {{ q }} »{% plural %}{{ counter }} résultats pour « {{ q }} »{% endblocktranslate %}</h2>
+<section class="sez faq-risultati" data-ground="paper" data-rhythm="band" aria-labelledby="faq-results-title">
+  <div class="container">
+    {% blocktranslate count counter=entries|length with q=query asvar results_title %}{{ counter }} résultat pour « {{ q }} »{% plural %}{{ counter }} résultats pour « {{ q }} »{% endblocktranslate %}
+    {% include "components/sezioni/_testa.html" with role="process" title_id="faq-results-title" title=results_title only %}
+    {% if entries %}
+    <div class="accordion faq-risultati__lista">
+      {% for entry in entries %}{% include "faq/_item.html" with entry=entry open=True %}{% endfor %}
     </div>
-    <div class="chapter__body">
-      {% if entries %}
-      <div class="accordion">
-        {% for entry in entries %}{% include "faq/_item.html" with entry=entry open=True %}{% endfor %}
-      </div>
-      {% else %}
-        {% url 'faq:index' as faq_index_url %}
-        {% include "components/empty_state.html" with title=_("Aucune question ne correspond à votre recherche.") text=_("Essayez un autre mot-clé ou parcourez toutes les questions par catégorie.") action_label=_("Voir toutes les questions") action_url=faq_index_url icon="circle-help" %}
-      {% endif %}
-    </div>
+    {% else %}
+      {% url 'faq:index' as faq_index_url %}
+      {% include "components/empty_state.html" with title=_("Aucune question ne correspond à votre recherche.") text=_("Essayez un autre mot-clé ou parcourez toutes les questions par catégorie.") action_label=_("Voir toutes les questions") action_url=faq_index_url icon="circle-help" %}
+    {% endif %}
   </div>
 </section>
 {% else %}
-  {% for group in groups %}
-<section class="chapter faq__category" id="{{ group.category.anchor }}" aria-labelledby="{{ group.category.anchor }}-title">
-  <div class="container chapter__inner">
-    <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
-      <h2 class="chapter__title" id="{{ group.category.anchor }}-title"{% if group.is_fallback %} lang="{{ group.lang }}"{% endif %}>{{ group.name }}</h2>
-    </div>
-    <div class="chapter__body">
-      <div class="accordion">
-        {% for entry in group.entries %}{% include "faq/_item.html" with entry=entry %}{% endfor %}
-      </div>
-    </div>
+  {% translate "Questions fréquentes" as index_label %}
+  {% for set in groups %}
+<section class="sez sez--indice faq-esploratore" data-sec="indice" data-ground="paper" data-rhythm="band" id="{{ set.group.category.anchor }}" aria-labelledby="{{ set.group.category.anchor }}-title">
+  <div class="container">
+    {# the head's concept (apps/core/icons.py CHAPTER «faq»): its bare mark is retired — the tag draws nothing, V5.22 §4.10; the answer plate's seal says it #}{% chapter_mark "faq" %}
+    <h2 class="faq-esploratore__categoria{% if not single_group %} faq-esploratore__categoria--titolo{% endif %}" id="{{ set.group.category.anchor }}-title"{% if set.group.is_fallback %} lang="{{ set.group.lang }}"{% endif %}><span class="testa__rule" aria-hidden="true"></span>{{ set.group.name }}</h2>
+    {% include "components/sezioni/indice.html" with form="explorer" id=set.group.category.anchor label=index_label items=set.items seal="ile-domande" only %}
   </div>
 </section>
-  {% empty %}
-<section class="chapter">
-  <div class="container chapter__inner">
-    <div class="chapter__body">
-      {% include "components/empty_state.html" with title=_("Les questions fréquentes sont en cours de préparation.") text=_("Cette page sera enrichie progressivement.") icon="circle-help" %}
-    </div>
-  </div>
-</section>
-  {% endfor %}
+  {% endfor %}{# V5.12 §8: without a live question the page answers 404 (faq.views.index) #}
 {% endif %}
 
-{% safe_url 'glossary:index' as glossary_url %}{% safe_url 'pages:antifraud' as antifraud_url %}{% safe_url 'pages:contact' as contact_url %}
-<aside class="chapter chapter--quiet faq__related" aria-labelledby="faq-related-title">
-  <div class="container chapter__inner">
-    <div class="chapter__head chapter__head--quiet">
-      <h2 class="chapter__label" id="faq-related-title">{% translate "Pour aller plus loin" %}</h2>
-    </div>
-    <div class="chapter__body">
-      {% if glossary_url or antifraud_url %}
-      <ul class="chapter__links">
-        {% if glossary_url %}<li><a href="{{ glossary_url }}">{% translate "Glossaire : les termes italiens expliqués" %}</a></li>{% endif %}
-        {% if antifraud_url %}<li><a href="{{ antifraud_url }}">{% translate "Attention aux fraudes" %}</a></li>{% endif %}
-      </ul>
-      {% endif %}
-      <p class="aiuto">{% if contact_url %}<a href="{{ contact_url }}">{% translate "Vous n’avez pas trouvé de réponse ? Contactez-nous" %}</a>{% else %}<a href="mailto:{{ site.contact_email }}">{% translate "Vous n’avez pas trouvé de réponse ? Écrivez-nous :" %} {{ site.contact_email }}</a>{% endif %}</p>
-    </div>
+{% if rimando %}
+<aside class="sez sez--rimando faq-rimando" data-sec="rimando" data-ground="stone" data-rhythm="strip" aria-labelledby="faq-related-title">
+  <div class="container">
+    {% translate "Pour aller plus loin" as related_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="faq-related-title" title=related_title only %}
+    {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=rimando only %}
   </div>
 </aside>
+{% endif %}
 {% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/faq.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">
 {% if faq_jsonld %}<script type="application/ld+json">{{ faq_jsonld }}</script>{% endif %}{% endblock %}

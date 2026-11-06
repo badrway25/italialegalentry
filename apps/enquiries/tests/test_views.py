@@ -220,7 +220,9 @@ def test_institution_proposal_sets_kind_and_purpose(client, seeded, legal_publis
     obj = CollaborationProposal.objects.get()
     assert obj.kind == ProposalKind.INSTITUTION
     assert obj.consent.purpose == "institution_proposal"
-    assert obj.consent.consent_text.locked_key == "p1.companies.form.consent"
+    # V5.16 §3: the team's acknowledgement, not the company form's reused consent sentence
+    assert obj.consent.consent_text.locked_key == ""
+    assert obj.consent.consent_text.text == "J’ai lu l’information sur le traitement des données personnelles."
     assert mail.outbox[0].to == [INBOX]
     assert "Université de Casablanca" in mail.outbox[0].body
 

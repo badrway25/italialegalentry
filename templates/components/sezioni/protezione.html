@@ -1,0 +1,36 @@
+{% load i18n locked_split pages_typo %}{% comment %}
+K · «LA PROTEZIONE» — the anti-fraud plate, one rendering of one locked text on every page (design V5.22,
+SECTION_SYSTEM_V2 §0.1 «Home anti-fraud + interior callouts», §2 K; lane S). static/css/v5/_sec-strato.css.
+
+Ink only, never red or amber (the home's prescription forbids an alarm register; amber stays for status notices). A
+raised plate whose 3 px ink top rule is the sill of the `ile-scudo` T1 seal (the small seat, 32 in 56 × 68) at the
+reading edge; the locked title in its own capitals; the locked body in three levels — sentence 1 at --t-entry 600,
+sentences 2–3 at --t-body, sentence 4 at --t-body 600 behind a 1 px rule — all spans of ONE <p data-locked>, cut on the
+text's own full stops (cms.locked_split: no cut, the text whole); «Lire la page…» a secondary button. The title and the
+body each carry their own language: a French run on an Arabic page is one left-to-right box per element, its lines
+starting on its own start, the seal and the sill on the plate's reading edge (§1 rule 6; v522-s2, lane H's m5). Legally required:
+always visible, never collapsed (§1 rule 7). Motion DEPTH: the plate settles over its shadow layer, its top rule draws
+from the reading edge, the seal draws, sentence 1 comes to its full ink. Still: everything at rest.
+
+V5.24 (BACKGROUND_MATERIAL_V2 §3.1, lane LIB): the band is a drawing table — the plate's 3 px rule runs on as a 1 px
+sill to the container's far edge (`.protezione__davanzale`, verb draw, after the soglia) and the shield is drawn low on
+the far side as the band's bookend (`.sez-fondale`, aria-hidden, still, 30 % of the structure's ink; where the field's
+free span beside the plate is under 12 rem — a field under 68 rem: phones, 1024, the sheets' column — the bookend stands
+down). The field `.protezione__campo` spans the container and measures itself (a size container).
+
+Contract: `url` (the anti-fraud page; none on that page itself), `level` (2 by default, 3 inside a section with its own
+h2), `suffix` (the heading's id suffix, when a page draws two). The caller wraps it in its band: <section class="sez
+sez--strato" data-sec="strato" data-ground="pietra"> … <div class="container"> (`stone` where the sheet does not import
+v5/_materia.css: the sill and the bookend draw on either).
+{% endcomment %}{% locked_text "p3.antifraud.title" as af_title %}{% locked_lang "p3.antifraud.title" as af_title_lang %}{% locked_is_fallback "p3.antifraud.title" as af_title_fallback %}{% locked_text "p3.antifraud.body" as af_body %}{% locked_lang "p3.antifraud.body" as af_lang %}{% locked_is_fallback "p3.antifraud.body" as af_fallback %}
+<div class="protezione__campo">
+<span class="protezione__davanzale" data-verb="draw" aria-hidden="true"></span>
+<aside class="protezione sez-plate sez-plate--raised" aria-labelledby="protezione-title-{{ suffix|default:'main' }}" data-verb="depth" data-callout="antifraud" data-sigillo-scope>
+  <span class="protezione__soglia" data-verb="draw" aria-hidden="true"></span>
+  {% include "components/sezioni/sigillo.html" with mark="ile-scudo" size="small" css_class="protezione__sigillo" only %}
+  <h{{ level|default:2 }} class="protezione__titolo" id="protezione-title-{{ suffix|default:'main' }}"{% if af_title_fallback %} lang="{{ af_title_lang }}"{% endif %}>{{ af_title }}</h{{ level|default:2 }}>
+  <p class="protezione__testo" data-locked="p3.antifraud.body"{% if af_fallback %} lang="{{ af_lang }}"{% endif %}>{{ af_body|locked_spans:"sentence" }}</p>
+  {% if url %}{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}<p class="protezione__azione"><a class="btn btn--secondary" href="{{ url }}" data-azione>{{ fraud_label|typo }}</a></p>{% endif %}
+</aside>
+<div class="sez-fondale" aria-hidden="true">{% include "components/sezioni/marks/_ile-scudo.html" %}</div>
+</div>

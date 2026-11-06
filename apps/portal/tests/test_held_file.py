@@ -96,7 +96,7 @@ def test_the_page_draws_the_held_file_and_never_the_empty_state(client, alice, c
         questionnaire_url = reverse("orientation:start")
     assert f'data-now="{state}"' in html and 'data-now="no-case"' not in html and DOOR not in html
     assert no_file_yet not in html
-    head = html.split('<header class="ctx db-head">', 1)[1].split("</header>", 1)[0]
+    head = html.split('<header class="ctx db-head"', 1)[1].split("</header>", 1)[0]
     assert case.reference in head and state_label in head, "the head's chip says the state"
     panel = html.split('class="card card--action db-now', 1)[1].split("</section>", 1)[0]
     assert panel.count("data-now-primary") == 1 and to_the_file in panel

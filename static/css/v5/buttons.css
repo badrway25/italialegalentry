@@ -74,13 +74,18 @@
 }
 
 /* ---- 2. Variants ------------------------------------------------------------------------------------ */
-/* PRIMARY — flat laguna, white label 5.29:1; hover 6.32, press 8.51. One per view. */
+/* PRIMARY — flat laguna, white label 5.29:1; hover 6.32, press 8.51. One per view. The primary call's type is
+   16/24 600 (17/24 on phones and under a coarse pointer, below): the one button that intitles its action
+   (TYPOGRAPHY_V2 §4.2, §5 — «primary calls 16/24 600; secondary 15/20 500»); every other variant reads --t-ui. */
 .btn--primary {
   --btn-fill: var(--fill-primary);
   --btn-fill-hover: var(--fill-primary-hover);
   --btn-fill-press: var(--fill-primary-press);
   --btn-ink: var(--text-on-accent);
   --btn-edge: var(--fill-primary-press);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
 }
 /* SECONDARY — paper, a structural edge (3.37:1), an ink label */
 .btn--secondary {
@@ -131,8 +136,8 @@
 /* the arrow's ink has 4 px of air on its exit side inside its 20 px box: the end padding comes down by 4 px, so
    the optical margins match (V3's measure) — and the loader's busy key keeps its air beside the arrow */
 .btn--arrow { --btn-pad-end: calc(var(--btn-pad, var(--btn-pad-md)) - 4px); }
-.btn--upper { font-size: var(--t-small); letter-spacing: var(--track-eyebrow); text-transform: uppercase; }
-:lang(ar) .btn--upper { letter-spacing: 0; text-transform: none; }
+.btn--upper { font-size: var(--t-small); letter-spacing: var(--track-label); text-transform: uppercase; }
+.btn--upper:lang(ar) { letter-spacing: 0; text-transform: none; }   /* the subject form: a French label keeps its capitals (TYPOGRAPHY_V2 F-7) */
 /* Arabic words are short: a boxed button keeps a floor, so a one-word action is not a 60 px chip */
 :lang(ar) :is(.btn--primary, .btn--secondary, .btn--danger) { min-inline-size: 7.5rem; }
 /* a locked French, Italian or English label on an Arabic page is isolated left to right by base.css, which also
@@ -266,6 +271,10 @@ body:not(.console) :is(.form__actions, .form-actions) > .btn:not(.btn--link, .bt
 /* 36 px is a fine-pointer size; a link button's line gets a 44 px box to be hit in */
 @media (pointer: coarse) {
   .btn--sm, .btn--link, .btn--text { --btn-box-h: var(--hit-primary); }
+}
+/* the public step-up (tokens.css, TYPOGRAPHY_V2 F-5): the buttons follow --t-ui to 16/24; the primary call to 17/24 */
+@media (max-width: 47.999rem), (pointer: coarse) {
+  .btn--primary { font-size: 1.0625rem; }
 }
 /* reduced motion: colour changes only — the durations are already 0 ms (v5/tokens.css) */
 @media (prefers-reduced-motion: reduce) {

@@ -8,11 +8,13 @@ téléversé.», and the antivirus sentence of a loose file.
 {% endcomment %}
 {% block page_title %}{% translate "Déposer un fichier" %}{% endblock %}
 {% block meta_description %}{% translate "Dépôt d’un fichier privé." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head doc-head">
+<header class="ws-head doc-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="sheets" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Déposer un fichier" %}</h1>
     <p class="ws-head__lead">{% translate "Ce fichier ne répondra à aucune pièce demandée. Pour déposer une pièce exigée par votre dossier, passez par sa ligne dans le registre." %}</p>
   </div>

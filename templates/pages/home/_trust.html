@@ -1,4 +1,4 @@
-{% load i18n pages_typo %}{% comment %}
+{% load i18n pages_typo pages_imagery locked_split %}{% comment %}
 8. TRUST / TRANSPARENCY — « ce que fait / ce que ne fait pas la plateforme », built only from
 prescribed material:
    * gate G3 open   → four prescribed FAQ entries (p3.faq.items: faq_visas, faq_recruitment_agency,
@@ -7,51 +7,62 @@ prescribed material:
      platform does — less the one the hero already shows as its description (pages.services._say_once:
      a sentence is printed once on the page) — and neutral statements mirroring the meaning of the
      official Disclaimer as what it does not do. No legal text is invented, no outcome is promised.
+The jurisdiction bar is not drawn on the home (the Morocco → Italy model is said once, by the hero's path); the
+component (components/jurisdiction.html) is kept.
 
-Design V5.4 (W2-D step 3): four questions and their answers in one column at the reading measure, kept
-open — the question on its own line, never smaller than its answer (17/24 at 600; the questions were 13 px
-above 17 px answers). Each text carries its own language: on the Arabic page the block stays on the reading
-edge and only the French lines run left to right.
-The jurisdiction bar that closed this chapter is not drawn on the home any more: its four stretches,
-from the country of origin to the Italian territory, were the page's third drawing of the Morocco →
-Italy model, under the hero's path and the pilot's route, and the words of this chapter say who answers
-for what four times over. The component (components/jurisdiction.html) is kept.
+V5.22 (SECTION_SYSTEM_V2 §3.1 S5 + S6 «lo strato, la banda dell'integrità», §2 K; lane H): the first half of the integrity
+band — on the masonry ground (slot home.integrity.stone: dressed stone courses, desaturated in the file, decorative)
+under a 60 % stone veil, drifting a little against the scroll, its credit in the corner. The title at the title's size
+and the lead over four raised plates, two by two from 64 rem: each the prescribed question — a link to its own entry on
+the FAQ page — then the answer whole, its own first sentence «Non.» set as the large keyword at render (cms.locked_split
+cuts on its own full stop; the textContent is the answer itself), a 2 px rule drawing under it as the plate settles.
+Ink only: «Non.» is the text's word, never a verdict colour, and no plate carries a tick or a cross (O14). Every answer
+stays wholly visible. «Toutes les questions fréquentes» is the band's secondary button. When «Attention aux fraudes»
+follows (the back office's order), the band goes on under it: «la protezione» stands on the same stone (pages.css,
+.home-trust + .home-antifraud); apart, each stands alone. Gate closed: the two interim lists as two plates, no keyword.
+
+Round 1 (QA_ROUND1 M1: «four equal white cards on a grey veil»): the four answers are ONE raised tablet set into the
+wall — four fields in the masonry's own running bond (5 | 7 over 7 | 5 from 64 rem: the joints never line up, as the
+courses behind them), the band's way to every question its plinth — on a ground whose stone reads as stone. The tablet
+settles once over its shadow layer; the «Non.» rules draw 60 ms apart; a field answers the hand and the focus with its
+light and its ring, never a lift (a slab does not float).
 {% endcomment %}
 {% translate "Ce que fait la plateforme, et ce qu’elle ne fait pas" as fallback_title %}
-<section class="chapter chapter--page home-trust" id="{{ s.anchor }}" aria-labelledby="home-trust-title" data-section="trust">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_section_header.html" with title_id="home-trust-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
-    <div class="chapter__body">
+<section class="sez sez--strato home-trust" id="{{ s.anchor }}" aria-labelledby="home-trust-title" data-section="trust" data-sec="strato" data-ground="photo" data-rhythm="band" data-verb="light">
+  <div class="strato strato--foto integrita">
+    <div class="strato__fondo integrita__fondo" data-parallax aria-hidden="true">{% photo "home.integrity.stone" "integrita__foto" %}</div>
+    <div class="container">
+      {% if s.heading %}{% include "components/sezioni/_testa.html" with role="statement" title_id="home-trust-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-trust-title">{{ fallback_title }}</h2>{% endif %}
       {% if d.quotes %}
-      <div class="home-trust__grid" data-trust="faq">
+      <div class="strato__lastre sez-plate sez-seq home-trust__grid integrita__tavola" data-trust="faq" data-verb="depth">
         {% for quote in d.quotes %}
-        <article class="home-trust__item" data-faq="{{ quote.key }}">
-          <h3 class="home-trust__question"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>{{ quote.question }}</h3>
-          <p class="home-trust__answer"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>{{ quote.answer }}</p>
+        <article class="strato__lastra integrita__lastra" data-faq="{{ quote.key }}"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>
+          <h3 class="strato__titolo integrita__domanda">{% if quote.href %}<a class="strato__link sez-stretch" href="{{ quote.href }}">{{ quote.question }}</a>{% else %}{{ quote.question }}{% endif %}</h3>
+          <p class="strato__corpo strato__corpo--parola integrita__risposta">{{ quote.answer|locked_spans:"keyword" }}</p>
         </article>
         {% endfor %}
+        {% if d.faq_url %}<p class="integrita__azione"><a class="btn btn--secondary" href="{{ d.faq_url }}">{% translate "Toutes les questions fréquentes" %}</a></p>{% endif %}
       </div>
       {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-      {% if d.faq_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.faq_url }}">{% translate "Toutes les questions fréquentes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
       {% else %}
-      <div class="home-trust__grid home-trust__grid--columns" data-trust="interim">
+      <div class="strato__lastre strato__lastre--2 sez-seq home-trust__grid home-trust__grid--columns" data-trust="interim">
         {% if d.does %}
-        <div class="home-trust__column">
-          <h3 class="home-trust__column-title">{% translate "Ce que fait la plateforme" %}</h3>
-          <ul class="home-trust__list">
+        <article class="strato__lastra sez-plate integrita__lastra home-trust__column" data-verb="depth">
+          <h3 class="strato__titolo integrita__domanda">{% translate "Ce que fait la plateforme" %}</h3>
+          <ul class="integrita__elenco" role="list">
             {% for statement in d.does %}<li class="home-trust__statement home-trust__statement--fragment"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}>{{ statement }}</li>{% endfor %}
           </ul>
-        </div>
+        </article>
         {% endif %}
-        <div class="home-trust__column">
-          <h3 class="home-trust__column-title">{% translate "Ce qu’elle ne fait pas" %}</h3>
-          <ul class="home-trust__list home-trust__list--not">
+        <article class="strato__lastra sez-plate integrita__lastra home-trust__column" data-verb="depth">
+          <h3 class="strato__titolo integrita__domanda">{% translate "Ce qu’elle ne fait pas" %}</h3>
+          <ul class="integrita__elenco" role="list">
             {% for statement in d.does_not %}<li class="home-trust__statement"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}>{{ statement|typo }}</li>{% endfor %}
           </ul>
-        </div>
+        </article>
       </div>
       {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-      {% if d.disclaimer_url %}<p class="home-section__more"><a class="link-arrow" href="{{ d.disclaimer_url }}">{% translate "Lire l’avertissement" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      {% if d.disclaimer_url %}<p class="integrita__azione"><a class="btn btn--secondary" href="{{ d.disclaimer_url }}">{% translate "Lire l’avertissement" %}</a></p>{% endif %}
       {% endif %}
     </div>
   </div>

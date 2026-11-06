@@ -251,62 +251,73 @@ Weakest pairs, stated (`COLOUR` §10): rifiuto/blocco marks under protanopia ΔE
 
 ### 3.3 Type
 
+Typography V2 (v524-t; V5.24 §11–§14, TYPOGRAPHY_V2 §4, FINAL_DELIVERY_V2 R1): one Latin family, Host Grotesk; the name in
+«ILE Wordmark»; «ILE Mono» on the reference classes alone; **Readex Pro for every Arabic role at ratio 1.0**, in Vazirmatn's
+place; **twelve steps declared once** in `static/css/v5/tokens.css` §3.3, every sheet reading a token
+(`tests/frontend/test_typography_v2.py` holds the discipline and the burn-down table of the sheets still on clamps, literals,
+the mono or descendant-form Arabic rules). The cascade's effective values (the ones `DESIGN_SYSTEM_2026.md` §6.1 repeats and
+`test_v5_tokens.py` checks):
+
 ```css
 :root {
-  --f-serif: "Source Serif 4", "ILE Serif Fallback", "ILE Serif Fallback Times", "Iowan Old Style", Georgia, "Times New Roman", serif;
-  --f-sans: "Host Grotesk", "ILE Sans Fallback", "ILE Sans Fallback Arial", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-  --f-wordmark: "ILE Wordmark", "Iowan Old Style", Georgia, serif; /* EVERY rendering of the trademark name: .lock__wm, .rail__wordmark,
-     the {% brand %} classes (hero H1, project H1, footer legal line). @font-face unicode-range = the 11 code points
-     of «ITALY LEGAL ENTRY™»; text-transform: uppercase where the locked text is mixed case. Never --f-serif. */
-  --f-serif-ar: "Markazi Text", "ILE Arabic Display Fallback", "Segoe UI", "Geeza Pro", "Noto Naskh Arabic", serif;
-  --f-sans-ar: "Vazirmatn", "ILE Arabic Fallback", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
-  --f-arabic-sys: "Segoe UI", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif; /* the «ع» control on Latin pages */
+  --f-sans-lat: "Host Grotesk", "ILE Sans Fallback", "ILE Sans Fallback Arial", "ILE Sans Fallback Android", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-sans-ar: "Readex Pro", "Host Grotesk", "ILE Arabic Fallback", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
+  --f-sans: var(--f-sans-lat);
+  --f-serif: var(--f-sans-lat);                 /* the serif names resolve to the sans (DL54-10) */
+  --f-mono: "ILE Mono", "ILE Mono Fallback", ui-monospace, "Cascadia Mono", Consolas, monospace; /* references only */
+  --f-wordmark: "ILE Wordmark", "ILE Wordmark Fallback", "Iowan Old Style", Georgia, serif;      /* EVERY rendering of the name */
+  --f-arabic-sys: "Segoe UI", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif;           /* the «ع» control on Latin pages */
 
   --numeric-data: lining-nums tabular-nums;
-  --numeric-ref: lining-nums tabular-nums slashed-zero;
   --feat-caps: "case" 1;
-  --track-display-caps: 0.02em; --track-display: -0.015em; --track-plate: -0.015em;
-  --track-title: -0.01em; --track-band: -0.005em; --track-eyebrow: 0.06em; --track-folio: 0.06em;
+  --track-display: -0.03em; --track-title: -0.028em; --track-title-2: -0.02em; --track-band: -0.016em; --track-entry: -0.012em;
+  --track-display-caps: 0.02em; --track-label: 0.08em;   /* tracking stops at 20 px: below it the label and locked capitals only */
 
-  /* portico scale */
-  --t-display: clamp(2.5rem, 1.4rem + 3.4vw, 4.5rem); --t-display-lh: 1;   /* 40 → 72 · serif 400 · the hero's promise line (D-U1 a) */
-  --t-engraved: clamp(2rem, 1.6rem + 1vw, 2.5rem); --t-engraved-lh: 1.1;    /* 32 → 40 · ILE Wordmark 600 · .08em · the hero H1 (the name) */
-  --t-interim: clamp(1.75rem, 1.5rem + 0.8vw, 2rem); --t-interim-lh: 1.15; /* 28 → 32 · serif 400 · the INTERIM hero title on phones (M7) */
-  --t-plate: 3rem;        --t-plate-lh: 3.25rem;   /* 48/52 · serif 400 */
-  --t-title: 2.375rem;    --t-title-lh: 2.75rem;   /* 38/44 · serif 400 · public H1 */
-  --t-band: 1.875rem;     --t-band-lh: 2.25rem;    /* 30/36 · serif 400 · section titles */
-  --t-entry: 1.375rem;    --t-entry-lh: 1.75rem;   /* 22/28 · sans 600 */
-  --t-lead: 1.25rem;      --t-lead-lh: 1.75rem;    /* 20/28 · serif italic 400 (gate §22.1) */
-  --t-body: 1.0625rem;    --t-body-lh: 1.75rem;    /* 17/28 · sans 400 · ≤ 65ch */
-  --t-ui: 0.9375rem;      --t-ui-lh: 1.25rem;      /* 15/20 · sans 500 */
-  --t-small: 0.875rem;    --t-small-lh: 1.25rem;   /* 14/20 */
-  --t-caption: 0.75rem;   --t-caption-lh: 1rem;    /* 12/16 · 500 */
-  --t-folio: 0.8125rem;   --t-folio-lh: 1rem;      /* 13/16 · mono · .06em */
-  --measure-body: 65ch; --measure-lead: 60ch;
+  /* the public scale — twelve steps: four fluid (390 → 1440), eight fixed on the 4 px line */
+  --t-display: clamp(2.75rem, 2.05rem + 2.3vw, 4rem);   --t-display-lh: 1;      /* 44 → 64 · 600 · the hero statement, a seam title */
+  --t-title-1: clamp(2.125rem, 1.5rem + 2.4vw, 3.5rem); --t-title-1-lh: 1.08;   /* 34 → 56 · 600 · the page h1 */
+  --t-title-2: clamp(1.75rem, 1.2rem + 1.6vw, 2.25rem); --t-title-2-lh: 1.15;   /* 28 → 36 · 600 · section titles */
+  --t-band: clamp(1.5rem, 1.25rem + 0.8vw, 1.75rem);    --t-band-lh: 1.25;      /* 24 → 28 · 600 · sub-sections, plate titles */
+  --t-entry: 1.25rem;     --t-entry-lh: 1.75rem;   /* 20/28 · 600 · entry and panel titles, statements */
+  --t-lead: 1.25rem;      --t-lead-lh: 1.75rem;    /* 20/28 · 400 · the header's lead only; 22/32 from 64rem */
+  --t-body: 1.0625rem;    --t-body-lh: 1.75rem;    /* 17/28 · 400 · ≤ 36rem */
+  --t-ui: 0.9375rem;      --t-ui-lh: 1.25rem;      /* 15/20 · 500 · controls, nav, chips, annotations */
+  --t-small: 0.8125rem;   --t-small-lh: 1.25rem;   /* 13/20 · captions, meta, breadcrumbs */
+  --t-caption: 0.75rem;   --t-caption-lh: 1rem;    /* 12/16 · 500 · the floor */
+  --t-label: 0.8125rem;   --t-label-lh: 1rem;      /* 13/16 · 600 · +0.08em · uppercase · the institutional label, never the mono */
+  --t-numeral: 1.75rem;   --t-numeral-lh: 2rem;    /* 28/32 · 600 · tabular · step markers */
+  --t-numeral-lg: 2.25rem; --t-numeral-lg-lh: 2.5rem; /* 36/40 · stations */
+  --t-field: 1rem;                                  /* typed text, every field, every width */
+  --t-plate: var(--t-display); --t-title: 2.25rem; --t-title-lh: 2.75rem; --t-folio: var(--t-label); --t-folio-lh: var(--t-label-lh); /* legacy names: burned down by the lanes */
+  --measure-body: 36rem; --measure-lead: 36rem; --measure-small: 29rem;
 
-  /* console scale (DS V4 numbers, unchanged) */
-  --u-title: 1.75rem;     --u-title-lh: 2.25rem;   /* 28/36 · 600 */
-  --u-section: 1.25rem;   --u-section-lh: 1.75rem; /* 20/28 · 600 */
-  --u-card: 1.0625rem;    --u-card-lh: 1.5rem;     /* 17/24 · 600 */
-  --u-body: 0.9375rem;    --u-body-lh: 1.5rem;     /* 15/24 · 400 */
-  --u-ui: 0.875rem;       --u-ui-lh: 1.25rem;      /* 14/20 · 500 */
-  --u-small: 0.8125rem;   --u-small-lh: 1.25rem;   /* 13/20 · lever 13.5px if the 1× laptop test fails */
-  --u-caption: 0.75rem;   --u-caption-lh: 1rem;    /* 12/16 · 500 */
-  --u-eyebrow: 0.6875rem; --u-eyebrow-lh: 1rem;    /* 11/16 · 600 · uppercase · "case" */
-  --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 500 · tabular */
-  --u-ref: 0.8125rem;     --u-ref-lh: 1.25rem;     /* 13/20 · mono */
+  /* the console scale — product density; the eyebrow is the label role, the numeral 600 */
+  --u-title: 1.75rem;     --u-title-lh: 2.25rem;   --u-title-lg: clamp(1.75rem, 1.45rem + 0.8vw, 2.25rem);
+  --u-section: 1.25rem;   --u-section-lh: 1.75rem;
+  --u-card: 1.0625rem;    --u-card-lh: 1.5rem;
+  --u-body: 0.9375rem;    --u-body-lh: 1.5rem;
+  --u-ui: 0.875rem;       --u-ui-lh: 1.25rem;
+  --u-small: 0.8125rem;   --u-small-lh: 1.25rem;
+  --u-caption: 0.75rem;   --u-caption-lh: 1rem;
+  --u-eyebrow: 0.75rem;   --u-eyebrow-lh: 1rem;    /* 12/16 · the label role · 13/20 on phones */
+  --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 600 · tabular */
+  --u-ref: 0.8125rem;     --u-ref-lh: 1.25rem;     /* 13/20 · ILE Mono */
 
-  --w-body: 400; --w-control: 500; --w-title: 600; --w-strong: 700; --w-serif: 400; --w-wordmark: 600;
-  --ar-display-factor: 1.15; --ar-body-lh: 1.75; --ar-console-lh: 1.7;
+  --w-body: 400; --w-control: 500; --w-title: 600; --w-display: 600; --w-label: 600; --w-strong: 700; --w-wordmark: 600;
+  --ar-lh-plus: 0;                                  /* 0.1 under :lang(ar): the Arabic titles' extra leading */
 }
-body.console { --f-serif: var(--f-sans); } /* the serif never reaches the console (tested) */
-:lang(ar) {
-  --f-serif: var(--f-serif-ar); --f-sans: var(--f-sans-ar);
-  --t-display: clamp(2.875rem, calc((1.4rem + 3.4vw) * 1.15), 5.175rem);
-  --t-plate: 3.45rem; --t-title: 2.73rem; --t-band: 2.156rem;
-}
+/* the public step-up below 48 rem or under a coarse pointer: ui 16/24, small 14/20, caption 14/20, label 14/20 — nothing under 14 px
+   on a phone; the console steps as before (body 16, ui 15, small 14, caption 13, eyebrow 13/20, ref 14) */
+/* :root:lang(ar), :lang(ar): the Arabic stack; --ar-lh-plus 0.1; display 1.1 · title-1 1.18 · title-2 1.25 · band 1.35; entry and lead
+   2rem; the small roles 14 px; every --track-* 0. The Latin boundary (:where(:root:lang(ar)) :where([lang="fr"], [lang="it"],
+   [lang="en"])) restates the Latin stack, leadings and tracking, so a French run on an Arabic page keeps its Latin type (F-7). */
+/* @media (min-width: 64rem): --t-lead 1.375rem / 2rem, for :root and the Latin run on an Arabic page alike */
 ```
+
+The Readex Pro face: `v5-readex-pro-var-400-700-arabic.woff2` (16 128 B; the Arabic blocks, the presentation forms, U+0020,
+U+00A0; `wght` 400–700, `HEXP` pinned at 0), metric fallback `ILE Arabic Fallback` = Segoe UI at 107.1 % / 93.3 % / 23.3 %
+(`docs/design-v5/FONTS_V5.md`). The shipped set is 61 140 B (≤ 62 000); a Latin public page fetches 20 956 B, an Arabic one
+37 084 B (`tests/frontend/test_fonts_budget_v2.py`).
 
 ### 3.4 Elevation, glass, materials
 
@@ -398,7 +409,7 @@ body.console { --f-serif: var(--f-sans); } /* the serif never reaches the consol
 :root {
   --container-lg: 1176px; --container-xl: 1320px; --container-xxl: 1440px;
   --page-pad: 32px;                  /* 16 px below 48rem */
-  --utility-h: 32px; --header-h: 64px; --header-h-scrolled: 56px;   /* 56 px below 48rem */
+  --utility-h: 0px; --header-h: 64px; --header-h-scrolled: 56px;   /* 56 px below 48rem; no bar above the letterhead since V5.15 (V5.18 P8) */
   --hero-peek: 2rem;                 /* phone: the next chapter shows 32 px — the first thing to give way on a small screen */
   --door-min-h-phone: 223px;         /* floor = today's door at 390 x 844; the gate uses today's door at EACH viewport (M7) */
   --hero-peek-desktop: 4rem;         /* desktop: ≥ 64 px */
@@ -568,24 +579,32 @@ Breakpoints (media queries cannot read custom properties; they are written liter
 
 ## 5. Type scale — usage
 
-| Token | Size / leading | Family · weight | Used by |
-|---|---|---|---|
-| `--t-display` | 40 → 72 / 1.0 | serif 400 | the hero's promise line (the locked subtitle, D-U1 option a) |
-| `--t-engraved` | 32 → 40 / 1.1 | **ILE Wordmark** 600, uppercase, .08em | the hero H1 — the name, in the same drawing as the lock-up (M1) |
-| `--t-interim` | 28 → 32 / 1.15 | serif 400 | the interim hero title on phones (M7) |
-| `--t-plate` | 48 / 52 | serif 400 | landing titles |
-| `--t-title` | 38 / 44 | serif 400 | public H1 |
-| `--t-band` | 30 / 36 | serif 400 | public section titles; the engraved H1 of option a uses 32–40 |
-| `--t-entry` | 22 / 28 | sans 600 | door titles (the portico panel's head line is serif 22/28) |
-| `--t-lead` | 20 / 28 | serif italic 400 (gate §22.1; fallback serif roman) | the hero lead, landing leads |
-| `--t-body` | 17 / 28 | sans 400 · ≤ 65 ch | public prose |
-| `--t-ui` | 15 / 20 | sans 500 | navigation, buttons (panel links: 15/24) |
-| `--t-small` | 14 / 20 | sans 400 | meta, help |
-| `--t-caption` | 12 / 16 | sans 500 | captions (the floor: nothing smaller) |
-| `--t-folio` | 13 / 16 | mono 400 · .06em | references in public pages |
-| `--u-title` … `--u-ref` | 28/36 · 20/28 · 17/24 · 15/24 · 14/20 · 13/20 · 12/16 · 11/16 · 28/32 · 13/20 | sans (mono for ref) | the console |
+Typography V2 (v524-t; TYPOGRAPHY_V2 §4.2, §5): twelve steps, one family per script, the weights 400 reads · 500 acts ·
+600 intitles · 700 emphasis only.
 
-Every line-height is a multiple of 4 px (existing test) — including the portico panel links (15/24, not the council's 15/22) and the compact rail labels (12/16, and 13/20 under `:lang(ar)`, not 11/14 — `RED_TEAM` m3). **The trademark name** is always `--f-wordmark`, whatever the size (lock-up 20, rail 12.5, engraved H1 32–40, footer legal line 14). Arabic: ×1.15 on display roles, body 1.75 / console 1.7, no uppercase, no tracking, `em` → weight 500 (no italic), Western digits.
+| Token | Size / leading (390 → 1440) | Family · weight | Used by |
+|---|---|---|---|
+| `--t-display` | 44 → 64 / 1.0 | sans 600, −0.03 em | the hero's statement, a seam title: once per page |
+| `--t-title-1` | 34 → 56 / 1.08 | sans 600, −0.028 em | the page `h1` (`[data-fronte] .ingresso__title`); the AGAMI name device keeps its own size and 700 |
+| `--t-title-2` | 28 → 36 / 1.15 | sans 600, −0.02 em | section titles (`.testa__title`), the compact header's `h1` |
+| `--t-band` | 24 → 28 / 1.25 | sans 600, −0.016 em | sub-sections, process heads, plate titles |
+| `--t-entry` | 20 / 28 | sans 600, −0.012 em | entry and panel titles, statements (with the 2 px rule) |
+| `--t-lead` | 20 / 28; 22 / 32 from 64rem | sans 400, `--text-2` | the page header's lead only, ≤ 36 rem — one lead per page (F-9); a section's supporting text is an annotation (15/24 500, ≤ 26 rem) or a statement |
+| `--t-body` | 17 / 28 | sans 400 · ≤ 36 rem | public prose |
+| `--t-ui` | 15 / 20 (16 / 24 on phones and under a coarse pointer) | sans 500 | navigation, controls, chips, annotations; buttons (`.btn--primary` 16 / 24 600, 17 on phones) |
+| `--t-small` | 13 / 20 (14 / 20 on phones) | sans 400 | captions, credits, meta, breadcrumbs |
+| `--t-caption` | 12 / 16 (14 / 20 on phones) | sans 500 | the floor: nothing Latin smaller |
+| `--t-label` | 13 / 16 (14 / 20 on phones; 14 / 20 in Arabic without capitals or tracking) | sans 600, +0.08 em, uppercase | the institutional label (`.t-label`, `.eyebrow`, V1's folio, the console eyebrow, the library's `.testa__label` / `.ingresso__label`, the kickers): never the mono; at most one per head |
+| `--t-numeral` · `--t-numeral-lg` | 28 / 32 · 36 / 40 | sans 600, tabular | step markers (`.t-numeral`, `.sez-numeral`, `.tracciato__num`) and stations: never the mono |
+| `--t-field` | 16 | — | typed text in every field |
+| `--u-title` … `--u-ref` | 28/36 (`--u-title-lg` 28 → 36) · 20/28 · 17/24 · 15/24 · 14/20 · 13/20 · 12/16 · 12/16 (the label role; 13/20 on phones) · 28/32 at 600 · 13/20 | sans (mono for ref) | the console, product density |
+
+Every fixed line-height is a multiple of 4 px (existing test); the fluid steps carry ratios. **The trademark name** is always
+`--f-wordmark`, whatever the size. **Arabic** (Readex Pro): the same steps at ratio 1.0; titles +0.1 of leading (display
+1.1, title-1 1.18, title-2 1.25, band 1.35), entry and lead 20/32, body 17/28 as Latin; no uppercase, no tracking, `em` →
+weight 500 (no italic), Western digits; every Arabic type rule in the subject form (`.x:lang(ar)`), the Latin leadings and
+tracking restated at the boundary of a `lang="fr"` run (F-7). **The legacy names** `--t-title` (36/44), `--t-folio` (= the
+label), `--t-plate` (= the display) are aliases the lanes burn down (`TYPOGRAPHY_BURNDOWN`); CLOSING deletes them.
 
 ---
 
@@ -959,3 +978,107 @@ Rules that are not tests but gates (`IMPLEMENTATION_PLAN.md` §3): gate 0's comp
 | `--grad-primary*`, `--grad-primary-dark*`, `--shadow-glow*` (V4) | `--fill-primary*`, `--fill-primary-night*`; no glow | **no** — flat fills; on night the paper plate (M3) |
 | `--glass-dark` (V4, hero legend) | `--plate-night` (no blur) | **no** (M3, m5) |
 | `--motion-ambient` 28 s | — | **deleted** (no loop on the home, M5) |
+
+## 14. V5.22 — Section System V2, Icon Treatment V2, Motion Density V2 (lane S)
+
+The decisions are `docs/design-v5/SECTION_SYSTEM_V2.md` (the Director, 30 Oct 2026); this section records what lane S
+built, where it lives and the rules a page lane composes with. (The Director's text calls it «DS V5 §13»; §13 of this
+document is the V4 → V5 alias map, so the record stands here.)
+
+### 14.1 The section shell and the library
+
+- A V2 section: `<section class="sez sez--<pattern>" data-sec="<pattern>" data-ground="paper|stone|brand|night|photo"
+  data-rhythm="strip|band|moment" aria-labelledby="…">`, its head `templates/components/sezioni/_testa.html` (roles
+  statement 36/44, process and router 28/36, panel: the ILE Mono folio and its 48 px rule) — no glyph above a title,
+  never sticky. Shell, grounds, T2 tile, T2a disc, plates, the stretched link and the type devices:
+  `static/css/v5/_sezioni.css` (page-only: every family sheet that composes a V2 section imports it first).
+- The patterns (each a partial, a page-only sheet, and a module only where interaction needs one): A `campata.html` +
+  `_sec-campata.css`, its variant «la boussole» `boussole.html` + `_sec-boussole.css`; B `tracciato.html` +
+  `_sec-tracciato.css`; C `racconto.html` + `_sec-racconto.css` + `sezioni/racconto.js`; D `panorama.html` + `.panorama`
+  in `_photo.css` (its widening in `_reveal.css`); E `mosaico.html` (grid · porte · rimando) + `_sec-mosaico.css`; F `components/stepper.html`
+  `size="large"` + `_journey-passage.css` V2 (+ `sezioni/flow.js` for a measured curve); H `mappa.html` (ring) +
+  `_sec-mappa.css` + `sezioni/mappa.js`, its variant «l'emiciclo» (`layout="arc"`) + `_sec-emiciclo.css`; I `filo.html` +
+  `_sec-filo.css` (+ `sezioni/spia.js` with a rail); J `_sec-passaggio.css` (the home's entrances, wired by lane H); K
+  `strato.html`, `protezione.html`, `approdo.html` + `_sec-strato.css`; L `indice.html` (tabs · explorer · disclosure)
+  + `_sec-indice.css` + `sezioni/indice.js`. G (a metric band) is not used: the project has no verified public metric.
+- The modules live in `static/js/src/sezioni/` (split chunks, never entries); `rise.js` imports one only when
+  `[data-sec-js~="<name>"]` is on the page. Each ≤ 1.5 KB gzip, no scroll listener, observers disconnected.
+- **Round 1** (label v522-s-improve1, after the senior review's QA_ROUND1):
+  - F's measured variant is its own partial, `components/sezioni/flusso.html` + `_sec-flusso.css` (≤ 0.9 KB): stage
+    panels hung on one curve — each station's T2 tile a node on the line, its panel hanging under it, every second
+    one a step lower from 48 rem; `sezioni/flow.js` draws the curve in the `[data-flow]` wrapper, never inside the list.
+    «La linea V2» stands drawn at rest (the V5.12 scroll-linked reveal never drives `.linea--large`); its origin seal
+    stands on the marks' row, its sill the route's first stretch; 48–80 rem rows of four join by a carriage return.
+  - E's grid: the lead first — without a frame the wide tile over the whole first row; with its frame the photograph
+    is the lead's ground under a raised plate of words and the compact tiles stand beside it (1 + 4 two by two,
+    1 + 3 stacked): no tile stretched empty, no cell left. The `kicker` key is gone.
+  - B: each lane on a rail from the trunk, its name over its frame; three columns, a lone card keeps its own.
+  - D: a band slot without its portrait crop is drawn on a phone as the strip it is, its plate under it, the moment's
+    height released.
+  - J: `<ol class="passaggio" role="list">`; while a plate holds the keyboard's focus it is the rail's one snap
+    position, so Tab brings the whole plate in (CSS only).
+  - L and H: while a list is a tablist its items step out of the tree (`role="none"`), and a panel's heading holds a
+    button only as a phone's disclosure.
+  - On an Arabic page a French run beside a marker (a station's card, a flow's panel, a mosaic tile) hangs from the
+    marker's edge, as «la linea»'s labels do (W3-F1), and a section's French title stands under its head rule on the
+    reading edge; a free French paragraph keeps its own start.
+  - The head folio: the seat rises into the band's top padding, so the title stands within 4 px of the disc's place;
+    on a phone's door head it stands 8 px under the trail and the title 12 px lower; on a short phone's door head
+    (≤ 760 px tall) the folio stays typographic. In forced colours the folio's rule (the seal's sill) is drawn.
+
+### 14.2 Icon Treatment V2 — the tiers
+
+| Tier | Container | Where | Sizes (glyph in container) |
+|---|---|---|---|
+| T1 seal | the arch seat (`components/sezioni/sigillo.html`, `_sigillo.css`; body steps in `_sezioni.css`) | a page's or a section's theme | body 40 in 72 × 88 · 36 in 64 × 78 · 32 in 56 × 68; small (head folios, «la protezione») 32 in 56 × 68 |
+| T5 identity | the arch seat | the key (`ile-accesso`, the reserved row), the login eyebrow key | 32 (reserved row) · 20 (login, `entrance.css`) · 16 (header, unchanged) |
+| T2 tile | `.sez-tile` (radius 6, the threshold rule at its foot) | a concept in a station, tile, plate, index | 24 in 48 · 22 in 44 · 20 in 40 · 32 in 64 (a stage) |
+| T2a disc | `.sez-disc` (full radius, 1 px ring; audience accents on night and photographs only) | an actor | 20 in 44 · 32 in 64 (a 24-grid glyph is never drawn at 40) |
+| T3 utility · T4 status | unchanged | arrows, chevrons · «i cerchi» | unchanged |
+
+- **The thirteen ILE marks** (`icons.MARKS`, concept → `Mark(id, tier, floor 32, motion)`): drawn once on the 48-unit grid
+  (`static/icons/marks/<id>.svg`, layers `arch`, `mark`, `route`, `tone`, `sill`); `scripts/build_icons.py` writes their
+  inline T1 partials (`templates/components/sezioni/marks/_<id>.html`, one `pathLength="1"` shape a stroke) and their
+  T2 copies into the page-only third sprite `static/img/icons-marks.svg` (≤ 16 KiB, with the seven Lucide glyphs V5.22
+  vendored). `icons.svg` and `icons-domain.svg` are untouched.
+- **The head folio** draws its T1 seal in the small seat when its concept has a mark (`icons.FOLIO`: Parcours and the
+  sheets `ile-percorso`, Entreprises `ile-impresa`, Institutions `ile-istituzione`, Universités `ile-sapere`, Formation
+  `ile-formazione`, Fraudes `ile-scudo`); the label's drawn rule is its sill. Elsewhere the folio is typographic.
+- **The bare 24 px mark above a title is retired**: `_chapter_head.html` draws none, and `{% chapter_mark %}` without
+  a class draws nothing (the forms' glyph tiles name theirs, §9.8). The home's `_section_header.html` keeps its concept
+  marks until lane H recomposes the chapters (§9.7: S never removes a legacy behaviour a not-yet-migrated page still
+  uses). `CHAPTER` / `CHAPTER_OF` stay the concept registry (`space-links-title` → none: the `ile-key` misuse ended).
+- **Colour by context** (tokens only): ink on paper; the night inks and the audience accents on night; never a brand
+  colour on an icon; **gold**: at most 2 elements a viewport at rest in a body, 0 added by hover — identity (the key),
+  one arrival a page (a route's end node or a T1's light on night), the home pilot's seam, the hero's route into H0.
+  The M21 pointer light is `--accent-mark` at 10 % on paper (oro only on the night door plate).
+- **The register exemption** (the ≤ 6 body icons of `tests/frontend/test_interior_w3_f1.py`): a register of named
+  entities — the PATHWAY index, the pilot's eight stations (`icons.PILOT_STATION`), the Forum's nine actors — draws its
+  glyphs all or none, and counts as one register, never as six loose icons. Its marker is the library's own
+  `data-registro` on the list (v522-s2): never the chip's `data-register`, which only `components/chip.html` and the two
+  legends write (`tests/frontend/test_state_chips_carry_a_register.py`); the O14 lint reads both as status contexts.
+- **Recorded choices** (`apps/core/icons.py`): `PILOT_STATION` (station 2 `layers`, 7 `hand-helping`, 8 `calendar-sync`),
+  `COMPANY_MOMENT` (`waypoints`), `RECIPIENT_SEAT` (communes `map-pinned`, labour bodies `hard-hat`, the partner
+  countries `earth`), `AUTHORITY_SEAT` (`landmark`), `SHEET_STEP`, `DIPLOMA_STEP`, `HOW_STEP`. O14 holds over a named
+  glyph: the pilot's station 4 and the sheet's milestone 4 («Préparation») take `clipboard-list`, the journey's
+  «preparing the departure», where SECTION_SYSTEM_V2 §3.3/§3.5 named `list-checks` (two ticks, CHECK_BEARING); a V2
+  sequence holds no check but the diplomas' seal `badge-check` (an authority's act).
+
+### 14.3 Motion Density V2 — the vocabulary
+
+One timing language (the `tokens.css` durations and curves — none added), many verbs: LINE DRAW (`draw`, `draw-y`,
+`stroke`), MASK REVEAL (`mask`, the arch's `arch`), COLOUR TRANSITION (`develop` on images, `ink` on text),
+DIRECTIONAL SLIDE (`slide`, ≤ 8 px), STAGGER (`.sez-seq`, 60 ms, ≤ 6), DEPTH (`settle`, `depth`: a pre-painted shadow
+layer's opacity, SH-4), LIGHT (`light`, one sweep), PATH PROGRESSION and LAYERING (the patterns' own), CONTROLLED SCALE
+(`zoom`, `node`), SEMANTIC TURN (the key, the needle). Markup: `data-verb` on the element that moves; the section
+runtime (`static/js/src/rise.js`) writes `data-sec-state` («wait» below the fold, «in» once a quarter shows); the
+keyframes run on «in» with fill `backwards` and leave `getAnimations()` when done; reduced motion, `html.rm`, the
+keyboard, no IntersectionObserver and no script write no state: every section is its designed still. Text never waits.
+`stroke` on a shape draws it; on a carrier (an svg, a g, a span round a mark) it draws the shapes inside, which inherit
+its dash. A rule that reads the input modality (`html[data-input]`) names a class of the library, never a universal
+subject, a shape's tag or the bare `.icon` — the first key of a page restyles what it names, not the document (v522-s2;
+the tile, the disc and the key carry `--sez-t`, which their transitions read; `tests/frontend/test_sezioni_v522_s2.py`).
+The hemicycle's seats and phrases pair through `data-seggio` (never Lume's L3 seat attribute).
+Scroll-scrubbed progress (C, I, the D widening, the J rail) sits in `@supports (animation-timeline)`, no-preference,
+`:root:not(.rm)`. The rise (`translateY + opacity`) survives only on plain lists and the pages not recomposed, until S-close.
+

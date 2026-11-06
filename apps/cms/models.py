@@ -308,6 +308,19 @@ class MediaAsset(TimeStampedModel):
             return True
         return bool(self.caption_fr and self.credit and self.caption_place and self.caption_date)
 
+    @property
+    def attribution_required(self) -> bool:
+        """
+        True when the licence demands a visible byline (CC BY 4.0) or the record asks for one
+        (``attribution=required`` in ``license_notes``); Pexels, Unsplash, CC0, the owner's and the
+        team's own material need none (V5.24 §2, label v524-px).
+
+        The credit stays RECORDED whatever the licence (``is_publishable`` still asks for it): the
+        plate's caption templates draw the byline only when this is True, so no stock credit reaches a
+        page and no attribution-required asset is ever hidden (docs/IMAGE_LICENSES.md §1.10).
+        """
+        return self.license == MediaLicense.CC_BY or "attribution=required" in (self.license_notes or "")
+
     def alt(self, lang: str) -> str:
         return getattr(self, f"alt_{lang.split('-')[0]}", "") or self.alt_fr
 

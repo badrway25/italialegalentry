@@ -1,70 +1,90 @@
-{% extends "pages/institutional_base.html" %}{% load i18n %}
+{% extends "pages/institutional_base.html" %}{% load i18n static pages_imagery locked_split %}
 {% comment %}
-/agami/ — the promoter. Prescribed texts only: p2.forum.who.body (Phase 2, already public) and, when
-gate G3 is open, the prescribed FAQ entry faq_who (question + answer, verbatim).
+/agami/ — the promoter. Prescribed texts: p2.forum.who.body (Phase 2, already public) and, when gate G3 is open, the
+prescribed FAQ entry faq_who (question + answer, verbatim). No institutional person is named and no logo of a public
+body is shown; no photograph (Q5: no AGAMI archive photograph).
 
-CONTENT_PENDING_LEGAL_REVIEW — the registered office(s), the RUNTS registration number and the tax
-code of the association belong to the official « Mentions légales » (Allegato 1 — Testi legali,
-BLOCKED_BY_MISSING_OFFICIAL_SOURCE). They are deliberately NOT published on this page; the page
-links to the Mentions légales route, which will carry them once the official text is received.
-No institutional person is named and no logo of a public body is shown.
+V5.23 (the owner's Q9 decision A, 30 October 2026; SECTION_SYSTEM_V2 §11.1): the page shows the association's verified
+public identification ITSELF — its name, legal form, tax code, RUNTS entry, registration decree, registered and
+operational offices, official contact and website, as the owner gave them, from ONE canonical source
+(apps/pages/identity.py; the name and the address are the site's own constants), and no other identifier. It never
+sends a visitor to the unpublished «Mentions légales» to identify the association; once they are published the plate
+links to them for more (links.notices), and stays understandable on its own.
 
-Design V5.4 (W3-F1): the entrance (the promoter's name as the h1), then the chapters — who it is, the prescribed
-question and its answer, how to identify and reach it («who can help me» is the address itself), where next.
-The question and its answer carry their language on their own elements (the h2 and the <p>), so that on a page in
-another language they are tagged (WCAG 3.1.2) and, on the Arabic page, read left to right and end where French ends:
-the interior's §7 and base.css key on the element's own attribute.
+CONTENT_PENDING_LEGAL_REVIEW — the official «Mentions légales» (Allegato 1 — Testi legali, Q2:
+BLOCKED_BY_MISSING_OFFICIAL_SOURCE) stay unpublished: the plate links them only once they are (links.notices).
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.17; lane P2):
+  head   «civic», the name composition (KEEP; the folio typographic);
+  band   A «la targa d'identità»: the colonnade drawn at the section's scale on its sill beside the promoter's text,
+         whole, its date and its name set in place (emphasis, never a cut); the near-identical FAQ answer a disclosure
+         under it, closed (both texts unchanged and in the page) — signature MASK, the colonnade's lines draw. Round 1
+         (QA_ROUND1 M10): a close crop — columns and entablature run off the plate, its sill continues into the text
+         column's foundation line, the light between the middle columns answers the promoter's question;
+  band   K «la targa» on night: the identification plate — the name and its legal form, the registers, the offices, the
+         official address as the plate's action and the website — signature DRAW + NODE (its label's rule draws,
+         the registers' and offices' marks set in sequence; round 1, QA_ROUND1 M10: its light sweep left — two
+         sweeps on one page were the same verb, the approdo keeps LIGHT);
+  strip  K «l'approdo» on stone: the project, the network, the Forum; the colonnade drawn low as the bookend.
+Page sheets apps/pages/static/pages/css/interior.css and the route sheet agami.css (+ _agami.css; round 2, QA_ROUND2 m5).
 {% endcomment %}
 {% block page_title %}{% translate "AGAMI, le promoteur" %}{% endblock %}
+{% block route_sheet %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/agami.css' %}">{% endblock %}
 {% block page_header %}
 {% translate "Le promoteur" as page_label %}
-{% include "pages/partials/_ingresso.html" with label=page_label title=promoter photo=photo only %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=promoter|fronte_name motif="civic" glyph="scale" compose="name" fronte_linked=True only %}
 {% endblock %}
 {% block page_body %}
-<section class="chapter" aria-labelledby="agami-who-title">
-  <div class="container chapter__inner">
-    {% translate "Le promoteur du projet" as who_title %}{% include "pages/partials/_chapter_head.html" with title_id="agami-who-title" title=who_title only %}
-    <div class="chapter__body">
-      <p class="page-section__text chapter__prose"{% if who_body.lang %} lang="{{ who_body.lang }}"{% endif %} data-locked="p2.forum.who.body">{{ who_body }}</p>
+<section class="sez sez--campata agami-identita" data-sec="campata" data-ground="paper" data-rhythm="band" aria-labelledby="agami-who-title">
+  <div class="container agami-identita__griglia">
+    <div class="agami-identita__lastra sez-squadre" data-verb="mask">{% include "pages/partials/agami/_colonnato.html" %}</div>
+    <div class="agami-identita__testo">
+      {% translate "Le promoteur du projet" as who_title %}{% include "components/sezioni/_testa.html" with role="statement" title_id="agami-who-title" title=who_title only %}
+      <p class="agami-identita__chi"{% if who_body.lang %} lang="{{ who_body.lang }}"{% endif %} data-locked="p2.forum.who.body">{{ who_body.value|emphasize:who_emphasis }}</p>
+      {% if promoter_quote %}
+      <div class="accordion agami-identita__fisarmonica"><details class="accordion__item agami-identita__domanda" id="agami-faq">
+        <summary class="accordion__summary" data-azione><span class="agami-identita__question" id="agami-faq-title"{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %}>{{ promoter_quote.question }}</span></summary>
+        <div class="accordion__panel"><p{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %} data-faq="{{ promoter_quote.key }}">{{ promoter_quote.answer }}</p></div>
+      </details></div>
+      {% endif %}
     </div>
   </div>
 </section>
 
-{% if promoter_quote %}
-<section class="chapter" aria-labelledby="agami-faq-title">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_chapter_head.html" with title_id="agami-faq-title" title=promoter_quote.question title_lang=promoter_quote.lang only %}
-    <div class="chapter__body">
-      <p class="page-section__text chapter__prose"{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %} data-faq="{{ promoter_quote.key }}">{{ promoter_quote.answer }}</p>
+<section class="sez sez--strato agami-targa" data-sec="strato" data-ground="night" data-rhythm="band" aria-labelledby="agami-contact-title">
+  <div class="container agami-id">
+    <div class="agami-id__identita">
+      <h2 class="agami-id__etichetta" id="agami-contact-title"><span class="testa__rule" data-verb="draw" aria-hidden="true"></span>{% translate "Identification et contact" %}</h2>
+      <p class="agami-id__nome" lang="it">{{ identification.name }}</p>
+      <p class="agami-id__forma" lang="it">{{ identification.legal_form }}</p>
+      <div class="agami-id__gruppi sez-seq">
+        <div class="agami-id__gruppo">
+          <span class="sez-tile" aria-hidden="true" data-verb="node">{% svg_icon "stamp" "icon" %}</span>
+          <dl class="agami-id__voci">
+            {% for row in identification.registers %}<div class="agami-id__voce"><dt{% if row.label_lang %} lang="{{ row.label_lang }}"{% endif %}>{{ row.label }}</dt><dd{% if row.lang %} lang="{{ row.lang }}"{% endif %}>{{ row.value }}</dd></div>{% endfor %}
+          </dl>
+        </div>
+        <div class="agami-id__gruppo">
+          <span class="sez-tile" aria-hidden="true" data-verb="node">{% svg_icon "map-pin" "icon" %}</span>
+          <dl class="agami-id__voci">
+            {% translate "Italie" as country %}{% for office in identification.offices %}<div class="agami-id__voce"><dt>{{ office.label }}</dt><dd><span class="agami-id__luogo" lang="it"><span class="agami-id__riga">{{ office.address.street }}</span><span class="visually-hidden">, </span><span class="agami-id__riga">{{ office.address.postcode }} {{ office.address.town }}{% if office.address.province %} ({{ office.address.province }}){% endif %}</span></span><span class="visually-hidden">, </span><span class="agami-id__riga">{{ country }}</span></dd></div>{% endfor %}
+          </dl>
+        </div>
+      </div>
     </div>
+    <dl class="agami-id__contatto">
+      <dt class="agami-id__etichetta-voce">{% translate "Contact officiel" %}</dt>
+      <dd class="agami-id__azione"><a class="agami-id__indirizzo" href="mailto:{{ site.contact_email }}"><span class="sez-disc" aria-hidden="true">{% svg_icon "at-sign" "icon" %}</span><span class="email">{{ site.contact_email }}</span></a></dd>
+      <dt class="agami-id__etichetta-voce">{{ identification.website.label }}</dt>
+      <dd class="agami-id__sito"><span class="email" lang="en" translate="no">{{ identification.website.host }}</span></dd>
+      {% if links.notices %}<dd class="agami-id__note"><a class="link-arrow" href="{{ links.notices }}">{% translate "Mentions légales" %}{% svg_icon "arrow" "icon icon--sm" %}</a></dd>{% endif %}
+    </dl>
   </div>
 </section>
-{% endif %}
 
-<section class="chapter chapter--area" aria-labelledby="agami-contact-title">
-  <div class="container chapter__inner">
-    {% translate "Identification et contact" as contact_title %}{% include "pages/partials/_chapter_head.html" with title_id="agami-contact-title" title=contact_title only %}
-    <div class="chapter__body">
-      <p class="page-section__text chapter__prose">{% translate "Les données d’identification de l’association relèvent des Mentions légales du site." %}</p>
-      <p class="chapter__more chapter__links">
-        {% if links.notices %}<a class="link-arrow" href="{{ links.notices }}">{% translate "Mentions légales" %}</a>{% endif %}
-        <a class="link-arrow email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="chapter" aria-labelledby="agami-more-title">
-  <div class="container chapter__inner">
-    {% translate "Pour aller plus loin" as more_title %}{% include "pages/partials/_chapter_head.html" with title_id="agami-more-title" title=more_title only %}
-    <div class="chapter__body">
-      <ul class="registro registro--two">
-        {% if links.project %}<li class="registro__row"><p class="registro__title"><a href="{{ links.project }}">{% translate "Le projet" %}</a></p></li>{% endif %}
-        {% if links.network %}<li class="registro__row"><p class="registro__title"><a href="{{ links.network }}">{% translate "Le réseau" %}</a></p></li>{% endif %}
-        {% if links.partners %}<li class="registro__row"><p class="registro__title"><a href="{{ links.partners }}">{% translate "Partenaires" %}</a></p></li>{% endif %}
-        {% if links.forum %}<li class="registro__row"><p class="registro__title"><a href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %}</a></p></li>{% endif %}
-      </ul>
-    </div>
+<section class="sez sez--approdo agami-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="agami-more-title">
+  <div class="container">
+    {% translate "Pour aller plus loin" as more_title %}{% include "components/sezioni/approdo.html" with title_id="agami-more-title" title=more_title tiles=approdo motif="civic" only %}
   </div>
 </section>
 {% endblock %}

@@ -23,6 +23,19 @@ last 0 ms and `fill-mode: both` lands every layer on its last keyframe — the r
 state without travel (plan §1.9). No `will-change`: the layers are a few pixels and Chromium composites an animated
 transform or opacity on its own (0 `compositeFailed` measured, QA/v54/w1-d/NOTES.md).
 
+THE PLATE TAKES THE LIGHT (V5.12 §4; the Director's DECISIONS §1 T3). Inside a 24 px glyph the light was a few
+pixels (the owner did not perceive it, LANE_A A-03): during the same phase the tile's 40 px paper plate — 32 px in the
+phone's top bar — takes the room's light too, a warm disc that fills the plate with a halo on the night around it,
+on the light's own beats (full while the doorway is lit, gone before the gold key is back). It plays wherever the
+release plays: the first console page after a sign-in, and the first page of each further space of the session
+(accounts.signals.consume_space_release).
+
+REDUCED MOTION KEEPS A BRANDED STILL (V5.12 §4). The phase is 0 ms there, so the release would land on its rest — the
+plain mark, no feedback at all (LANE_A A-04). Under the setting the lit still is shown instead: the room lit, the key
+in ink, the plate lit, held for --lume-still (1200 ms, a hold and not a movement: it keeps its value under the
+setting) and gone with one --motion-reduced fade. The `lume-still` keyframes are v5/motion.css's (main.css, which
+every console page loads before this sheet).
+
 WHY GENERATED. The beats are a table in milliseconds (BEATS below) and the curves are the tokens' literal values —
 `var()` inside @keyframes does not animate (DS 2026 §3.5) — turned into keyframe offsets with the token named beside
 each one. tests/frontend/test_loader_rules.py regenerates the sheet in memory and refuses a committed copy that differs,
@@ -62,7 +75,14 @@ BEATS: dict[str, dict[str, list[tuple]]] = {
     "lume-ink": {
         "opacity": [(0, "0"), (40, "0", ENTER), (240, "1"), (1000, "1", SINE), (1360, "0")],
     },
+    # the plate: lit once the light fills the room (240), out with the light's withdrawal, before the gold key is back
+    "lume-plate": {
+        "opacity": [(0, "0", ENTER), (240, "1"), (1000, "1", SINE), (1320, "0")],
+    },
 }
+
+#: The plate that takes the light: the tile that holds a releasing mark, drawn by its ::before under the mark.
+PLATE = ':is(.rail__tile, .console-bar__tile):has(> [data-lume="release"])'
 
 #: The seats, sized here because this sheet is the console's: the rail's tile (40 px, the mark at 24) and, below
 #: 64rem, the top bar's tile (32 px, the mark at 20) — the sizes console.css gives their <img>.
@@ -79,8 +99,9 @@ HEAD = f"""/* ==================================================================
    release=True, [data-lume="release"]; below 64rem the top bar's mark — plays once, across the page load: the light
    grows from the key's eye and fills the room behind the door, the key reads in ink against it, the picture holds,
    then the light withdraws into the eye and goes out: the verbatim mark. The planes, the door and the steps never
-   move; the light stays inside the door's interior; nothing loops; it plays once per session (the flag of
-   accounts.signals, consumed by the first console page). The rest state of the layers is declared in
+   move; the light stays inside the door's interior; nothing loops; it plays once per space per session
+   (accounts.signals.consume_space_release), and the tile's plate takes the light with it (V5.12 §4, DECISIONS §1 T3);
+   under reduced motion the lit still holds --lume-still, then fades. The rest state of the layers is declared in
    v5/loader.css; this sheet adds the one phase,
    {PHASE_TOKEN} ({PHASE_MS} ms; 0 ms under prefers-reduced-motion: reduce, where fill-mode: both lands every layer on
    its last keyframe — the rest — without travel). Curves are the tokens' literal values: var() inside @keyframes
@@ -124,10 +145,33 @@ def render() -> str:
     frames = []
     for name, tracks in BEATS.items():
         animations = ", ".join(f"{name}-{prop[0]} var({PHASE_TOKEN}) linear 1 both" for prop in tracks)
-        selector = layers[name]
-        out.append(f'[data-lume="release"] {selector},\n.sig.is-open {selector} {{ animation: {animations}; }}')
+        if name == "lume-plate":
+            out.append(f"{PLATE}::before {{ animation: {animations}; }}")
+        else:
+            selector = layers[name]
+            out.append(f'[data-lume="release"] {selector},\n.sig.is-open {selector} {{ animation: {animations}; }}')
         for prop, beats in tracks.items():
             frames.append(keyframes(name, prop, beats))
+    out.append("")
+    out.append(
+        "/* the plate: a warm disc on the tile's paper, a halo on the night around it; at rest it is not there */"
+    )
+    out.append(f"{PLATE} {{ position: relative; }}")
+    out.append(
+        f'{PLATE}::before {{ content: ""; position: absolute; inset: 0; border-radius: inherit; '
+        "background: radial-gradient(closest-side, var(--p-carta-0) 40%, var(--p-oro-300)); "
+        "box-shadow: 0 0 0 1px var(--p-oro-300), 0 0 18px 4px var(--door-frame-glow); "
+        "opacity: 0; pointer-events: none; }"
+    )
+    out.append("")
+    out.append("/* reduced motion: the lit still — room, ink key and plate lit — held --lume-still, then one fade */")
+    out.append("@media (prefers-reduced-motion: reduce) {")
+    out.append('  [data-lume="release"] .sig__lume { transform: none; }')
+    out.append(
+        f'  [data-lume="release"] :is(.sig__lume, .sig__face--ink),\n  {PLATE}::before '
+        "{ animation: lume-still var(--motion-reduced) linear var(--lume-still) 1 both; }"
+    )
+    out.append("}")
     out.append("")
     out.append("/* keyframes — milliseconds of the phase as percentages; the curve of each beat is the named token */")
     out.extend(frames)
@@ -139,6 +183,7 @@ def render() -> str:
     out.append("@media (forced-colors: active) {")
     out.append('  [data-lume="release"] :is(.sig__lume, .sig__face--ink),')
     out.append("  .sig.is-open :is(.sig__lume, .sig__face--ink) { animation: none; }")
+    out.append(f"  {PLATE}::before {{ display: none; }}")
     out.append("}")
     return "\n".join(out) + "\n"
 

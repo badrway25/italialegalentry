@@ -34,16 +34,12 @@
   --on-dark-3: var(--p-notte-400);
   --edge-dark: var(--line-night);
   --hairline-dark: var(--line-night-soft);
-  --surface-soft-dark: var(--accent-night-fade);
 
   /* ---- the accent (same hex) ----------------------------------------------------------------- */
   --accent: var(--p-laguna-700);
   --accent-2: var(--p-laguna-650);
-  --accent-3: var(--p-laguna-600);
   --accent-hover: var(--p-laguna-800);
   --accent-dark: var(--p-laguna-400);
-  --accent-dark-2: var(--p-laguna-350);
-  --accent-dark-hover: var(--p-laguna-300);
   --accent-ring: var(--p-laguna-550);
 
   /* ---- focus (plan §1.6): one ring; the halo belongs to text fields (static/css/v5/base.css) --- */
@@ -53,10 +49,6 @@
 
   /* ---- the four audiences on night: NOT the same — Persona on sand (O19), Istituzione «argento»
           (PC C8); the hero-final council's measured set wins if it records another (plan §1.2) ------ */
-  --route-1-dark: var(--aud-persona);
-  --route-2-dark: var(--aud-impresa);
-  --route-3-dark: var(--aud-istituzione);
-  --route-4-dark: var(--aud-universita);
 
   /* ---- states: NOT the same — garnet replaces the crude red, amber the brown, the bronze seal
           retires to the navy disc (DS §13). --pending-700 was a TEXT colour (6.7:1): it takes the
@@ -64,7 +56,6 @@
   --err-700: var(--tone-rifiuto-mark);
   --err-300: var(--tone-rifiuto-night-text);
   --err-100: var(--tone-rifiuto-bg);
-  --err-hover: var(--p-granata-800);
   --pending-700: var(--tone-attesa-text);
   --pending-300: var(--tone-attesa-night-text);
   --seal-600: var(--seal-disc);
@@ -88,8 +79,6 @@
   --state-pending-bg: var(--notice-pending-bg);
   --state-pending-br: var(--notice-pending-edge);
   /* the hatch and the dots of the HealthStrip: the V5 patterns (the hatch now at α 0.78, C4) */
-  --texture-hatch: var(--pattern-hatch);
-  --texture-dots: var(--pattern-dots);
 
   /* ---- materials: NOT the same — every primary flat (SH-9, DL54-13): the V4 gradients become one
           colour; on night the paper plate; no glow; glass only on the two sticky bars, so the V4
@@ -104,10 +93,8 @@
   --shadow-glow: 0 0 0 0 transparent;
   --shadow-glow-dark: 0 0 0 0 transparent;
   --accent-glow: transparent;
-  --glass-dark: var(--plate-night);
   --blur-panel: 0px;
   --blur-scrim: 0px;
-  --scrim: var(--scrim-modal);
   --shadow-surface: var(--shadow-4);
 
   /* ---- corners «Lo spigolo» (plan §1.3): buttons and fields on sm (4), the brand tile on md (6) ---- */

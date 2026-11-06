@@ -1,0 +1,395 @@
+/* ============================================================================================
+   PROJET PILOTE — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.3; lane P1). Page-only: ecosystem/pilot.css.
+   PP-1 «il tracciato pilota», the page's moment, is lane S's «la linea V2» (components/stepper.html size="large"); here
+   only the page's own: the seal beside the title, the route's terminal status plate across the route's width (the
+   stations' row, their capitals and the arrival's gold are modifiers of the one passage: ecosystem/_spaces.css, where
+   the family's modifiers of «la linea» stand). PP-2 «due porte», a band sized to its content: the head beside two true
+   arched doors — night and paper — standing on one sill (the brand's doorway, the `ile-pilota` mark at the scale of
+   the page), their thresholds lit in the audience's accent (LIGHT), raised under the hand or the focus alike.
+   Adapted from 21st.dev (NOTES, provenance): «Split Hero With Image Cards» 19078 (two inverted faces side by side,
+   each with its own call) — refused: avatars, social proof, image overlays.
+   ============================================================================================ */
+
+/* ---- PP-1 · the head: the pilot's T1 seal (the body seat) beside the title, its sill on the title's line ---- */
+.pilota-rotta__capo {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-6);
+  margin-block-end: clamp(var(--s-8), 4vw, var(--s-12)); /* the library's section gap (v5/_sezioni.css --sez-gap) */
+}
+
+.pilota-rotta__capo .testa {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin-block-end: 0;
+}
+
+.pilota-rotta__sigillo {
+  flex: none;
+  margin-inline-start: 12px; /* the sill runs 12 px past the seat: it starts on the column's edge */
+}
+
+/* ---- PP-1 · the route, then its terminal plate ---- */
+.pilota-rotta__percorso {
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* the status plate: the «attesa» register (the warning's amber, its dashed edge), at body size — the route's last
+   word, never collapsed. Below 80 rem a dashed drop from the route stands above it at the reading edge; from 80 rem the
+   route itself runs on past its last station and turns down into the plate's far corner (ecosystem/_spaces.css) */
+.pilota-rotta__stato {
+  position: relative;
+  padding-block-start: var(--s-6);
+}
+
+.pilota-rotta__stato::before {
+  content: "";
+  position: absolute;
+  inset-block: 0 calc(100% - var(--s-6));
+  inset-inline-start: 27px;
+  border-inline-start: 2px dashed var(--tone-attesa-edge);
+}
+
+.pilota-rotta__stato .notice {
+  margin: 0;
+  padding: var(--s-5) var(--s-6);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.pilota-rotta__stato .notice__title {
+  font-size: var(--t-body);
+}
+
+/* from 64 rem the plate spans the route: the status named on its own line's start, its words at their measure beside
+   it — the whole width of the route the notice speaks for, no empty half beside it (QA_ROUND1 M2 e) */
+@media (min-width: 64rem) {
+  .pilota-rotta__stato .notice {
+    grid-template-columns: auto minmax(0, 4fr) minmax(0, 7fr);
+    align-items: start;
+    column-gap: var(--s-3);
+    padding: var(--s-6) var(--s-8);
+  }
+
+  .pilota-rotta__stato .notice__icon {
+    grid-row: 1;
+  }
+
+  .pilota-rotta__stato .notice__title {
+    grid-column: 2;
+    grid-row: 1;
+    padding-inline-end: var(--s-8);
+    font-size: var(--t-entry);
+    line-height: var(--t-entry-lh);
+  }
+
+  .pilota-rotta__stato .notice__body {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+@media (min-width: 80rem) {
+  .pilota-rotta__stato::before {
+    display: none;
+  }
+}
+
+/* ---- PP-1 · station 6, the entry into Italy — the brand's arch, the page's one gold arrival (§3.3, §4.5): its node edged
+        in gold, its threshold rule run to the whole foot in gold, a gold light at its sill; the glyph keeps its ink
+        (gold is never a glyph on paper, §4.4). Written on the route's own structure: the passage's classes are
+        qualified in the family's one modifier sheet (ecosystem/_spaces.css), which moves nothing ---- */
+.pilota-rotta__percorso li:nth-child(6) .sez-tile {
+  box-shadow: inset 0 0 0 1.5px var(--identity-light);
+}
+
+.pilota-rotta__percorso li:nth-child(6) .sez-tile::after {
+  scale: 1 1;
+  background: var(--identity-light);
+}
+
+.pilota-rotta__percorso li:nth-child(6) .sez-tile::before {
+  content: "";
+  position: absolute;
+  inset: 22% 14% -4%;
+  z-index: -1;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 1.75rem 0.9rem color-mix(in oklab, var(--identity-light) 26%, transparent);
+  pointer-events: none;
+}
+
+.pilota-rotta__percorso li:nth-child(6) p {
+  font-weight: var(--w-title);
+}
+
+/* under the hand the route lights up to the station pointed at (the accent's light, never gold: §4.5) — a pointer's
+   gesture over a drawing that is not a control; every word stays at its full ink whatever the pointer does */
+@media (hover: hover) and (pointer: fine) {
+  .pilota-rotta__percorso ol > li::after {
+    transition: opacity var(--motion-standard) var(--ease-enter);
+  }
+
+  .pilota-rotta__percorso ol > li:has(~ li:hover)::after {
+    opacity: 1;
+  }
+
+  .pilota-rotta__percorso ol > li:hover .sez-tile::after {
+    scale: 1 1;
+  }
+}
+
+html[data-input="key"] .pilota-rotta__percorso ol > li::after {
+  transition: none;
+}
+
+/* the route is its own trigger (ecosystem/partials/pilot_flow.html: `data-sec` on the route): while it waits below the
+   fold, the section's own release — its seal, its head — leaves the route's verbs alone; once seen, the line draws
+   segment after segment (lane S's LINE DRAW, v5/_linea-v2.css), runs on past station 8 and turns down into the plate,
+   and the arrival's light comes when the line reaches station 6 */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="wait"] [data-verb],
+  :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="wait"] .linea-v2 > ol > li::before,
+  :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="wait"] .linea-v2 > ol > li > span::after {
+    animation: none;
+  }
+
+  :root:not(.rm):not([data-input="key"]) .pilota-rotta [data-sec-state="wait"] li:nth-child(6) .sez-tile::before {
+    opacity: 0;
+  }
+
+  :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="in"] li:nth-child(6) .sez-tile::before {
+    animation: sez-layer var(--motion-slow) var(--ease-enter) 1.4s backwards;
+  }
+}
+
+@media (forced-colors: active) {
+  .pilota-rotta__percorso li:nth-child(6) .sez-tile::before {
+    display: none;
+  }
+}
+
+/* ---- PP-2 · «due porte» ---- */
+.pilota-porte__campata {
+  display: grid;
+  gap: var(--s-8);
+}
+
+.pilota-porte__capo .testa {
+  margin-block-end: 0;
+}
+
+.pilota-porte__frase {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.pilota-porte__coppia {
+  position: relative;
+  display: grid;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the one sill both doors stand on, 12 px past each side: a doorway stands on its sill (§4.3 — the sill keeps an arch
+   from reading as a headstone); two arches across one sill are the pilot's own mark (`ile-pilota`) */
+.pilota-porte__coppia::after {
+  content: "";
+  position: absolute;
+  inset-inline: -12px;
+  inset-block-end: -2px;
+  block-size: 2px;
+  background: var(--line-structure);
+}
+
+/* the help line stands on the doors' sill: the sill is its rule (QA_ROUND2 m5 — the line's own hairline, 25 px under
+   the 2 px sill, read as a double rule) */
+.pilota-porte__aiuto {
+  margin: 0;
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* a door: a true arch — its crown a full semicircle (the radii clamp to half its width), its foot square on the sill —
+   sized to what it holds: its audience's disc in the crown, its half of the sentence at the springing line, its call */
+.porta-pilota {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  justify-items: center;
+  gap: var(--s-4);
+  max-inline-size: 30rem;
+  margin-inline: auto;
+  padding: 22% var(--s-6) var(--s-8);
+  border-radius: var(--radius-full) var(--radius-full) 0 0;
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
+  text-align: center;
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+/* the night door: «la porta riservata»'s own face (tokens.css --grad-brand-dark) */
+.porta-pilota--notte {
+  background: var(--grad-brand-dark);
+  box-shadow: inset 0 0 0 1px var(--line-night-soft);
+  color: var(--text-on-night-1);
+}
+
+/* the door's pre-painted raised layer: its opacity moves, never the shadow (SH-4) */
+.porta-pilota::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: var(--shadow-2);
+  opacity: 0;
+  transition: opacity var(--motion-emphasized) var(--ease-enter);
+}
+
+/* the threshold: a light that rises from the door's sill in its audience's accent (on the paper the accent's) — a
+   layer: the sill's middle as a hairline whose glow is cut at the sill and inside the door's sides (no gradient in a
+   page sheet: tokens only) */
+.porta-pilota::before {
+  content: "";
+  position: absolute;
+  inset: auto 22% 0;
+  z-index: -1;
+  block-size: 1px;
+  box-shadow: 0 0 4rem 2.5rem color-mix(in srgb, var(--accent-mark) 16%, transparent);
+  clip-path: inset(-12rem -30% 0);
+  opacity: 0.6;
+  transition: opacity var(--motion-emphasized) var(--ease-enter);
+}
+
+/* the companies' night door: the company accent (an audience accent lives on night only) */
+.porta-pilota--notte::before {
+  box-shadow: 0 0 4rem 2.5rem color-mix(in srgb, var(--aud-impresa) 26%, transparent);
+}
+
+/* the doors' order, for their thresholds' turn (the companies' first) */
+.porta-pilota:nth-child(2) {
+  --pp-i: 1;
+}
+
+.porta-pilota__testo {
+  max-inline-size: 20rem;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  text-wrap: balance;
+}
+
+/* the call under the words (a phone: the doors stacked, each its own height) */
+.porta-pilota__azione {
+  align-self: end;
+  margin: 0;
+}
+
+.porta-pilota__azione .btn {
+  white-space: normal;
+}
+
+/* hover equals focus (§4.1 rule 5, QA_ROUND1 m6): the door rises 2 px and its threshold comes to its full light, under
+   the hand or the keyboard's focus alike — the keyboard sees it at once */
+.porta-pilota:has(a:is(:hover, :focus-visible)) {
+  translate: 0 -2px;
+}
+
+.porta-pilota:has(a:is(:hover, :focus-visible))::after,
+.porta-pilota:has(a:is(:hover, :focus-visible))::before {
+  opacity: 1;
+}
+
+html[data-input="key"] .porta-pilota,
+html[data-input="key"] .porta-pilota::before,
+html[data-input="key"] .porta-pilota::after {
+  transition: none;
+}
+
+@media (min-width: 48rem) {
+  /* the pair at one height: two equal arches on the sill */
+  .pilota-porte__coppia {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .porta-pilota {
+    max-inline-size: none;
+    margin-inline: 0;
+  }
+
+  /* the two calls start on one line, right under their words (QA_ROUND2 m4: set at the door's foot, the institutions'
+     call — three lines at 768 — started 17 px above the companies'); the words take the same lines in both doors */
+  .porta-pilota__azione {
+    align-self: start;
+  }
+
+  .porta-pilota__testo {
+    min-block-size: 2lh;
+  }
+}
+
+/* from 80 rem the band is a span (A «la campata»): the head on four columns, the two doors on the other eight, the
+   help line under their sill */
+@media (min-width: 80rem) {
+  .pilota-porte__campata {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    row-gap: var(--s-6);
+  }
+
+  .pilota-porte__capo {
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    align-self: end;
+    padding-block-end: var(--s-8);
+  }
+
+  .pilota-porte__coppia,
+  .pilota-porte__aiuto {
+    grid-column: 5 / -1;
+  }
+
+  .pilota-porte__coppia {
+    padding-inline: var(--s-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .porta-pilota {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* on entry the two thresholds light, the primary's first (the list's order, 120 ms apart) */
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .porta-pilota::before {
+    opacity: 0;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .porta-pilota::before {
+    animation: sez-layer var(--motion-slow) var(--ease-enter) calc(240ms + var(--pp-i, 0) * 120ms) backwards;
+  }
+}
+
+@media (forced-colors: active) {
+  .porta-pilota {
+    border: 1px solid CanvasText;
+    border-block-end: 0;
+  }
+
+  .porta-pilota::before,
+  .porta-pilota::after {
+    display: none;
+  }
+
+  .pilota-porte__coppia::after {
+    background: CanvasText;
+  }
+}

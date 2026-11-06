@@ -13,5 +13,6 @@ class NewsConfig(AppConfig):
 
         register("news_index", NewsIndexSitemap)
         register("news", ArticleSitemap)
-        # The list page is always reachable: only its prescribed header/newsletter are gated (G3 / flag).
-        register_public_paths("news", ["actualites/"])
+        # V5.12 §8: the list page exists once one article is live (core.gates.news_public); its prescribed
+        # header and newsletter keep their own gates (G3 / flag).
+        register_public_paths("news", ["actualites/"], requires_gate="news_public")

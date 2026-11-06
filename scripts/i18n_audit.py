@@ -166,6 +166,30 @@ KEEP_AS_IS = re.compile(
     r"[A-Z][A-Z0-9_]{2,}|[\W\d_]*|%\([a-z_]+\)s|\{[a-z_]+\})$"
 )
 
+#: Messages of the ``fr`` catalogue that are spelt the same in Italian and in French — or are not words of either
+#: language — and therefore legitimately keep their msgid as their French text: ``unnormalised_source_msgids``.
+SAME_IN_FRENCH = frozenset(
+    {
+        "e-mail",
+        "origine",
+        "Origine",
+        "Forum Vénétie–Maroc",
+        "Audit",
+        "Logo (gate G6)",
+        "slug",
+        "logo",
+        "Hero",
+        "Menu",
+        "Gate",
+        "Flag",
+        "Academy",
+        "Antivirus",
+        "Back-office",
+        "%(hours)s h",
+        "%(minutes)s min",
+    }
+)
+
 #: Bidi rule of the Arabic catalogue. « ™ » is a neutral character: at the end of a Latin run inside a
 #: right-to-left sentence it takes the paragraph direction and is painted on the LEFT of the name
 #: (« ™Italy Legal Entry »). A LEFT-TO-RIGHT MARK (U+200E) right after it keeps the sign attached to the
@@ -604,6 +628,11 @@ def unnormalised_source_msgids(entries: list[Entry]) -> list[str]:
     French site without anybody noticing. Heuristic: a sentence (four words or more) that is identical in the
     French AND in the Italian catalogue was written in Italian — a French sentence never survives the Italian
     translation unchanged. Proper nouns, acronyms and the frozen ``KEEP_SOURCE`` texts are exempt.
+
+    Every length counts (V5.12 §11, Director's decisions §9 «Other text fixes»): the four-word floor this heuristic
+    had let «Nessun titolo dichiarato», «Istruzione secondaria» and «Post-laurea» reach the French «Ma situation», and
+    seventy short back-office labels the French back office. A word that is spelt the same in both languages is named
+    in ``SAME_IN_FRENCH`` — a decision, never a default.
     """
     italian_path = po_path("it")
     if not italian_path.exists():
@@ -614,7 +643,7 @@ def unnormalised_source_msgids(entries: list[Entry]) -> list[str]:
         if entry.obsolete or entry.is_header or entry.msgid in KEEP_SOURCE or KEEP_AS_IS.match(entry.msgid.strip()):
             continue
         twin = italian.get((entry.msgctxt, entry.msgid))
-        if twin is None or len(_words(entry.msgid)) < 4:
+        if twin is None or entry.msgid in SAME_IN_FRENCH:
             continue
         if entry.msgstr.get(0) == entry.msgid == twin.msgstr.get(0):
             found.append(entry.msgid)

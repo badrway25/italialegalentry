@@ -4511,14 +4511,6 @@ msgstr ""
 "Plusieurs voies régulières existent : le questionnaire d’orientation aide à "
 "identifier celles à explorer."
 
-#: .\apps\pages\content.py
-msgid ""
-"Des besoins des entreprises au suivi : la séquence du projet pilote, étape "
-"par étape."
-msgstr ""
-"Des besoins des entreprises au suivi : la séquence du projet pilote, étape "
-"par étape."
-
 #: .\apps\pages\content.py .\templates\pages\home\_trust.html
 msgid "Ce que fait la plateforme, et ce qu’elle ne fait pas"
 msgstr "Ce que fait la plateforme, et ce qu’elle ne fait pas"
@@ -5789,10 +5781,6 @@ msgid "Gérer"
 msgstr "Gérer"
 
 #: .\templates\accounts\profile.html
-msgid "Type de compte"
-msgstr "Type de compte"
-
-#: .\templates\accounts\profile.html
 msgid "Inscrit le"
 msgstr "Inscrit le"
 
@@ -5933,10 +5921,6 @@ msgstr "En attente de modération"
 #: .\templates\community\discussion.html
 msgid "Masqué"
 msgstr "Masqué"
-
-#: .\templates\community\discussion.html
-msgid "téléchargement bientôt disponible"
-msgstr "téléchargement bientôt disponible"
 
 #: .\templates\community\discussion.html
 msgid "Modifier"
@@ -6304,20 +6288,12 @@ msgid "Les trois temps de la démarche"
 msgstr "Les trois temps de la démarche"
 
 #: .\templates\ecosystem\companies.html
-msgid "Formulaire"
-msgstr "Formulaire"
-
-#: .\templates\ecosystem\companies.html
 msgid ""
 "Toutes les demandes transmises par les formulaires du site parviennent à une "
 "adresse unique :"
 msgstr ""
 "Toutes les demandes transmises par les formulaires du site parviennent à une "
 "adresse unique :"
-
-#: .\templates\ecosystem\companies.html
-msgid "Ce que la plateforme fait, et ne fait pas"
-msgstr "Ce que la plateforme fait, et ne fait pas"
 
 #: .\templates\ecosystem\companies.html .\templates\pages\home\_trust.html
 msgid "Toutes les questions fréquentes"
@@ -6374,10 +6350,6 @@ msgstr ""
 "Phase 3."
 
 #: .\templates\ecosystem\pilot.html
-msgid "Séquence proposée"
-msgstr "Séquence proposée"
-
-#: .\templates\ecosystem\pilot.html
 msgid "La séquence du projet pilote"
 msgstr "La séquence du projet pilote"
 
@@ -6408,14 +6380,6 @@ msgstr ""
 "une collaboration."
 
 #: .\templates\ecosystem\universities.html
-msgid "Acteurs"
-msgstr "Acteurs"
-
-#: .\templates\ecosystem\universities.html
-msgid "Domaines"
-msgstr "Domaines"
-
-#: .\templates\ecosystem\universities.html
 msgid ""
 "Présentez votre établissement et votre proposition : chaque demande est lue "
 "par l’équipe du projet."
@@ -6430,10 +6394,6 @@ msgstr "Formation : avant le départ et après l’arrivée"
 #: .\templates\ecosystem\universities.html
 msgid "Deux temps d’un même parcours, dans l’Espace Personnes."
 msgstr "Deux temps d’un même parcours, dans l’Espace Personnes."
-
-#: .\templates\ecosystem\universities.html
-msgid "Dont le parcours d’études et de formation, dans l’Espace Personnes."
-msgstr "Dont le parcours d’études et de formation, dans l’Espace Personnes."
 
 #: .\templates\enquiries\collaboration_proposal.html
 msgid ""
@@ -6502,10 +6462,6 @@ msgstr "Retour à la page précédente"
 #: .\templates\enquiries\partials\company_needs_form.html
 msgid "Votre entreprise et ses besoins"
 msgstr "Votre entreprise et ses besoins"
-
-#: .\templates\enquiries\partials\form_shell.html
-msgid "Les champs marqués d’un astérisque (*) sont obligatoires."
-msgstr "Les champs marqués d’un astérisque (*) sont obligatoires."
 
 #: .\templates\enquiries\partials\form_shell.html
 msgid "Données personnelles"
@@ -6700,32 +6656,12 @@ msgid "Catégories"
 msgstr "Catégories"
 
 #: .\templates\faq\index.html
-msgid "Les questions fréquentes sont en cours de préparation."
-msgstr "Les questions fréquentes sont en cours de préparation."
-
-#: .\templates\faq\index.html .\templates\glossary\index.html
-msgid "Cette page sera enrichie progressivement."
-msgstr "Cette page sera enrichie progressivement."
-
-#: .\templates\faq\index.html
 msgid "Glossaire : les termes italiens expliqués"
 msgstr "Glossaire : les termes italiens expliqués"
 
 #: .\templates\faq\index.html
 msgid "Vous n’avez pas trouvé de réponse ? Contactez-nous"
 msgstr "Vous n’avez pas trouvé de réponse ? Contactez-nous"
-
-#: .\templates\faq\index.html
-msgid "Vous n’avez pas trouvé de réponse ? Écrivez-nous :"
-msgstr "Vous n’avez pas trouvé de réponse ? Écrivez-nous :"
-
-#: .\templates\forum\index.html
-msgid "Cette page est en cours de préparation."
-msgstr "Cette page est en cours de préparation."
-
-#: .\templates\forum\index.html
-msgid "Les informations sur le Forum seront publiées prochainement."
-msgstr "Les informations sur le Forum seront publiées prochainement."
 
 #: .\templates\forum\partials\cta_row.html
 msgid "Participer et collaborer"
@@ -6746,10 +6682,6 @@ msgstr "Rencontre de lancement :"
 #: .\templates\forum\partials\hero.html
 msgid "Logos des institutions patronnes"
 msgstr "Logos des institutions patronnes"
-
-#: .\templates\forum\partials\local_nav.html
-msgid "Sections de la page"
-msgstr "Sections de la page"
 
 #: .\templates\forum\partials\local_nav.html
 #: .\templates\forum\partials\permanent_sections.html
@@ -6889,10 +6821,6 @@ msgid "Index alphabétique"
 msgstr "Index alphabétique"
 
 #: .\templates\glossary\index.html
-msgid "Le glossaire est en cours de préparation."
-msgstr "Le glossaire est en cours de préparation."
-
-#: .\templates\glossary\index.html
 msgid "Les parcours réguliers vers l’Italie"
 msgstr "Les parcours réguliers vers l’Italie"
 
@@ -6954,14 +6882,6 @@ msgid_plural "%(n)s fiches"
 msgstr[0] "%(n)s fiche"
 msgstr[1] "%(n)s fiches"
 
-#: .\templates\living\index.html .\templates\living\topic.html
-msgid "Fiches en préparation"
-msgstr "Fiches en préparation"
-
-#: .\templates\living\index.html
-msgid "Thèmes en préparation."
-msgstr "Thèmes en préparation."
-
 #: .\templates\living\sheet.html
 msgid "Publiée le"
 msgstr "Publiée le"
@@ -6998,18 +6918,6 @@ msgstr "Fiches pratiques"
 #: .\templates\living\topic.html
 msgid "Vérifiée le"
 msgstr "Vérifiée le"
-
-#: .\templates\living\topic.html
-msgid ""
-"Les fiches pratiques de ce thème sont en cours de rédaction et de "
-"vérification. Elles seront publiées progressivement."
-msgstr ""
-"Les fiches pratiques de ce thème sont en cours de rédaction et de "
-"vérification. Elles seront publiées progressivement."
-
-#: .\templates\living\topic.html
-msgid "Voir tous les thèmes"
-msgstr "Voir tous les thèmes"
 
 #: .\templates\news\_newsletter.html
 msgid ""
@@ -7083,14 +6991,6 @@ msgstr "Voir toutes les actualités"
 #: .\templates\news\index.html .\templates\pages\home\_news.html
 msgid "Aucune actualité publiée pour le moment."
 msgstr "Aucune actualité publiée pour le moment."
-
-#: .\templates\news\index.html
-msgid ""
-"Les nouveautés normatives, les échéances officielles et les activités de "
-"l’écosystème seront publiées ici."
-msgstr ""
-"Les nouveautés normatives, les échéances officielles et les activités de "
-"l’écosystème seront publiées ici."
 
 #: .\templates\notifications\email\enquiries_acknowledgement.txt
 msgid "Bonjour,"
@@ -7527,14 +7427,6 @@ msgstr "Le promoteur du projet"
 msgid "Identification et contact"
 msgstr "Identification et contact"
 
-#: .\templates\pages\agami.html
-msgid ""
-"Les données d’identification de l’association relèvent des Mentions légales "
-"du site."
-msgstr ""
-"Les données d’identification de l’association relèvent des Mentions légales "
-"du site."
-
 #: .\templates\pages\agami.html .\templates\partials\footer.html
 msgid "Mentions légales"
 msgstr "Mentions légales"
@@ -7572,10 +7464,6 @@ msgid "Une adresse unique pour toutes les demandes relatives au projet."
 msgstr "Une adresse unique pour toutes les demandes relatives au projet."
 
 #: .\templates\pages\contact.html
-msgid "Par e-mail"
-msgstr "Par e-mail"
-
-#: .\templates\pages\contact.html
 msgid "Tous les formulaires du site sont acheminés vers cette adresse."
 msgstr "Tous les formulaires du site sont acheminés vers cette adresse."
 
@@ -7600,10 +7488,6 @@ msgid "Masquer cette annonce"
 msgstr "Masquer cette annonce"
 
 #: .\templates\pages\home\_ecosystem.html
-msgid "Promoteur et partenaires"
-msgstr "Promoteur et partenaires"
-
-#: .\templates\pages\home\_ecosystem.html
 msgid "Promoteur"
 msgstr "Promoteur"
 
@@ -7617,24 +7501,12 @@ msgid "En savoir plus sur le promoteur"
 msgstr "En savoir plus sur le promoteur"
 
 #: .\templates\pages\home\_ecosystem.html .\templates\pages\network.html
-msgid ""
-"Les partenaires sont présentés au fur et à mesure de leurs autorisations "
-"écrites."
-msgstr ""
-"Les partenaires sont présentés au fur et à mesure de leurs autorisations "
-"écrites."
-
-#: .\templates\pages\home\_ecosystem.html .\templates\pages\network.html
 msgid "Voir les partenaires"
 msgstr "Voir les partenaires"
 
 #: .\templates\pages\home\_entrances.html .\templates\pages\network.html
 msgid "L’écosystème"
 msgstr "L’écosystème"
-
-#: .\templates\pages\home\_news.html
-msgid "Informations"
-msgstr "Informations"
 
 #: .\templates\pages\home\_news.html
 msgid "Les informations du projet seront publiées ici."
@@ -7666,10 +7538,6 @@ msgid "Voir l’Espace Personnes"
 msgstr "Voir l’Espace Personnes"
 
 #: .\templates\pages\home\_pilot.html
-msgid "Coopération"
-msgstr "Coopération"
-
-#: .\templates\pages\home\_pilot.html
 msgid "Séquence du projet pilote"
 msgstr "Séquence du projet pilote"
 
@@ -7697,10 +7565,6 @@ msgstr "Lire l’avertissement"
 msgid "Aperçu réservé à l’équipe : cette page n’est pas encore publique."
 msgstr "Aperçu réservé à l’équipe : cette page n’est pas encore publique."
 
-#: .\templates\pages\institutional_base.html
-msgid "Pages institutionnelles"
-msgstr "Pages institutionnelles"
-
 #: .\templates\pages\network.html
 msgid "Un projet construit avec les acteurs compétents, chacun dans son rôle."
 msgstr "Un projet construit avec les acteurs compétents, chacun dans son rôle."
@@ -7716,10 +7580,6 @@ msgstr "Les acteurs de l’écosystème"
 #: .\templates\pages\project.html
 msgid "Qui porte le projet"
 msgstr "Qui porte le projet"
-
-#: .\templates\pages\project.html
-msgid "La marque"
-msgstr "La marque"
 
 #: .\templates\partials\footer.html
 msgid "Informations légales"
@@ -7759,17 +7619,8 @@ msgid "Navigation principale"
 msgstr "Navigation principale"
 
 #: .\templates\partials\main_nav.html
-#, python-format
-msgid "Ouvrir le sous-menu « %(section)s »"
-msgstr "Ouvrir le sous-menu « %(section)s »"
-
-#: .\templates\partials\main_nav.html
 msgid "Voir l’espace"
 msgstr "Voir l’espace"
-
-#: .\templates\partials\utility_bar.html
-msgid "Barre institutionnelle"
-msgstr "Barre institutionnelle"
 
 #: .\templates\partials\utility_bar.html
 msgid "promoteur du projet"
@@ -7791,18 +7642,6 @@ msgstr ""
 "Les partenaires du projet sont présentés ici avec leur accord écrit, au fur "
 "et à mesure des autorisations."
 
-#: .\templates\partners\index.html
-msgid "Liste des partenaires"
-msgstr "Liste des partenaires"
-
-#: .\templates\partners\index.html
-msgid "Aucun partenaire n’est encore présenté."
-msgstr "Aucun partenaire n’est encore présenté."
-
-#: .\templates\partners\index.html
-msgid "Les partenaires seront présentés au fur et à mesure des autorisations."
-msgstr "Les partenaires seront présentés au fur et à mesure des autorisations."
-
 #: .\templates\pathways\_metadata_row.html
 msgid "Nature"
 msgstr "Nature"
@@ -7810,10 +7649,6 @@ msgstr "Nature"
 #: .\templates\pathways\_metadata_row.html
 msgid "Contenu informatif — les décisions relèvent des autorités compétentes"
 msgstr "Contenu informatif — les décisions relèvent des autorités compétentes"
-
-#: .\templates\pathways\_metadata_row.html
-msgid "contenus détaillés en cours de vérification"
-msgstr "contenus détaillés en cours de vérification"
 
 #: .\templates\pathways\_orientation_cta.html
 msgid "Identifiez la voie régulière à explorer"
@@ -7832,10 +7667,6 @@ msgstr ""
 #: .\templates\pathways\_orientation_cta.html
 msgid "Le questionnaire d’orientation sera disponible prochainement."
 msgstr "Le questionnaire d’orientation sera disponible prochainement."
-
-#: .\templates\pathways\_preview_notice.html
-msgid "cette page n’est pas encore publique (Phase 3)."
-msgstr "cette page n’est pas encore publique (Phase 3)."
 
 #: .\templates\pathways\_side_links.html
 msgid "Dans l’Espace Personnes"
@@ -7866,32 +7697,6 @@ msgstr ""
 "présenté comme déjà autorisé."
 
 #: .\templates\pathways\detail.html
-msgid "Contexte en cours de vérification"
-msgstr "Contexte en cours de vérification"
-
-#: .\templates\pathways\detail.html
-msgid ""
-"Les conditions générales de ce parcours seront décrites après vérification "
-"sur les sources officielles. Les décisions relèvent des autorités "
-"compétentes."
-msgstr ""
-"Les conditions générales de ce parcours seront décrites après vérification "
-"sur les sources officielles. Les décisions relèvent des autorités "
-"compétentes."
-
-#: .\templates\pathways\detail.html .\templates\pathways\diplomas.html
-msgid ""
-"Les détails de chaque étape sont publiés au fur et à mesure de leur "
-"vérification avec les acteurs compétents."
-msgstr ""
-"Les détails de chaque étape sont publiés au fur et à mesure de leur "
-"vérification avec les acteurs compétents."
-
-#: .\templates\pathways\detail.html
-msgid "Étapes en préparation"
-msgstr "Étapes en préparation"
-
-#: .\templates\pathways\detail.html
 msgid "Documentation généralement requise"
 msgstr "Documentation généralement requise"
 
@@ -7902,18 +7707,6 @@ msgid ""
 msgstr ""
 "Liste indicative : les documents effectivement demandés dépendent de votre "
 "situation et des indications des autorités compétentes."
-
-#: .\templates\pathways\detail.html
-msgid "Liste en cours de vérification"
-msgstr "Liste en cours de vérification"
-
-#: .\templates\pathways\detail.html
-msgid ""
-"La documentation généralement requise pour ce parcours sera publiée après "
-"vérification."
-msgstr ""
-"La documentation généralement requise pour ce parcours sera publiée après "
-"vérification."
 
 #: .\templates\pathways\detail.html
 msgid "Autorités et acteurs compétents"
@@ -7928,16 +7721,8 @@ msgstr ""
 "n’intervient pas auprès des autorités et ne délivre aucune autorisation."
 
 #: .\templates\pathways\detail.html
-msgid "Acteurs en cours d’identification"
-msgstr "Acteurs en cours d’identification"
-
-#: .\templates\pathways\detail.html
 msgid "Termes utiles"
 msgstr "Termes utiles"
-
-#: .\templates\pathways\detail.html
-msgid "Navigation entre les parcours"
-msgstr "Navigation entre les parcours"
 
 #: .\templates\pathways\detail.html
 msgid "Tous les parcours réguliers"
@@ -7946,16 +7731,6 @@ msgstr "Tous les parcours réguliers"
 #: .\templates\pathways\diplomas.html
 msgid "Les démarches, étape par étape"
 msgstr "Les démarches, étape par étape"
-
-#: .\templates\pathways\diplomas.html
-msgid ""
-"Structure générale des démarches. Les modalités précises dépendent du titre, "
-"du pays de délivrance et de l’usage prévu en Italie ; elles seront "
-"détaillées après vérification avec les acteurs compétents."
-msgstr ""
-"Structure générale des démarches. Les modalités précises dépendent du titre, "
-"du pays de délivrance et de l’usage prévu en Italie ; elles seront "
-"détaillées après vérification avec les acteurs compétents."
 
 #: .\templates\pathways\diplomas.html
 msgid "Qui décide ?"
@@ -7971,11 +7746,6 @@ msgstr ""
 "des autorités et organismes compétents. Italy Legal Entry™ vous oriente sur "
 "les étapes et les interlocuteurs, sans intervenir dans la procédure."
 
-#: .\templates\pathways\diplomas.html .\templates\pathways\index.html
-#: .\templates\pathways\training.html
-msgid "Ressources de l’Espace Personnes"
-msgstr "Ressources de l’Espace Personnes"
-
 #: .\templates\pathways\index.html
 msgid ""
 "Huit voies d’entrée régulière, présentées avec leurs principales étapes. "
@@ -7985,10 +7755,6 @@ msgstr ""
 "Huit voies d’entrée régulière, présentées avec leurs principales étapes. "
 "Chaque fiche est informative : la voie adaptée à votre situation se vérifie "
 "avec le questionnaire d’orientation et auprès des acteurs compétents."
-
-#: .\templates\pathways\index.html
-msgid "Fiche détaillée en préparation"
-msgstr "Fiche détaillée en préparation"
 
 #: .\templates\pathways\index.html .\templates\pathways\index_interim.html
 msgid "Comment ça marche"
@@ -8274,10 +8040,6 @@ msgstr ""
 #: .\templates\portal\requests.html
 msgid "Liste de vos demandes"
 msgstr "Liste de vos demandes"
-
-#: .\templates\portal\requests.html
-msgid "Demande"
-msgstr "Demande"
 
 #: .\templates\portal\unavailable.html
 msgid "L’espace réservé est momentanément indisponible."
@@ -8819,14 +8581,6 @@ msgstr "Territoire italien : accueil et inclusion"
 msgid "Répartition des responsabilités le long du parcours"
 msgstr "Répartition des responsabilités le long du parcours"
 
-#: .\templates\pages\home\_trust.html
-msgid "Les proportions indiquent les étapes du modèle, non une durée."
-msgstr "Les proportions indiquent les étapes du modèle, non une durée."
-
-#: .\templates\pages\home\_trust.html
-msgid "Qui répond de quoi"
-msgstr "Qui répond de quoi"
-
 #: .\apps\cms\models.py
 msgid "Chi ha realizzato l'immagine, nella forma richiesta dalla licenza."
 msgstr "Qui a réalisé l’image, dans la forme exigée par la licence."
@@ -8884,16 +8638,8 @@ msgid "Votre situation et votre objectif"
 msgstr "Votre situation et votre objectif"
 
 #: .\templates\partials\portal_chrome.html
-msgid "Compte et langue"
-msgstr "Compte et langue"
-
-#: .\templates\partials\portal_chrome.html
 msgid "Site public"
 msgstr "Site public"
-
-#: .\templates\portal\base_portal.html
-msgid "Privacy Policy"
-msgstr "Privacy Policy"
 
 #: .\templates\portal\dashboard.html
 msgid "Ce qui reste à faire, et par qui"
@@ -8906,10 +8652,6 @@ msgstr "Jeu de règles"
 #: .\templates\portal\dashboard.html
 msgid "Ne téléversez que les documents qui vous sont demandés dans le cadre de votre parcours : la liste apparaîtra ici avec l’état de chacun."
 msgstr "Ne téléversez que les documents qui vous sont demandés dans le cadre de votre parcours : la liste apparaîtra ici avec l’état de chacun."
-
-#: .\templates\portal\dashboard.html
-msgid "Nouveau"
-msgstr "Nouveau"
 
 #: .\templates\portal\dashboard.html
 msgid "Où j’en suis"
@@ -9451,7 +9193,7 @@ msgstr "Déclarées par la personne. La plateforme ne les vérifie pas et ne les
 
 #: .\apps\accounts\models.py
 msgid "Istruzione secondaria"
-msgstr "Istruzione secondaria"
+msgstr "Enseignement secondaire"
 
 #: .\apps\accounts\models.py
 msgid "Istruzione superiore (laurea o equivalente)"
@@ -9463,11 +9205,11 @@ msgstr "Les conditions d’entrée dépendent de la nationalité déclarée."
 
 #: .\apps\accounts\models.py
 msgid "Nessun titolo dichiarato"
-msgstr "Nessun titolo dichiarato"
+msgstr "Aucun titre déclaré"
 
 #: .\apps\accounts\models.py
 msgid "Post-laurea"
-msgstr "Post-laurea"
+msgstr "Post-universitaire"
 
 #: .\apps\accounts\models.py
 msgid "Riguarda una procedura conclusa presso le autorità competenti, non presso questa piattaforma."
@@ -9487,23 +9229,23 @@ msgstr "années d’expérience professionnelle"
 
 #: .\apps\accounts\models.py
 msgid "cittadinanza"
-msgstr "cittadinanza"
+msgstr "nationalité"
 
 #: .\apps\accounts\models.py
 msgid "data di nascita"
-msgstr "data di nascita"
+msgstr "date de naissance"
 
 #: .\apps\accounts\models.py
 msgid "lingue dichiarate"
-msgstr "lingue dichiarate"
+msgstr "langues déclarées"
 
 #: .\apps\accounts\models.py
 msgid "livello di studi"
-msgstr "livello di studi"
+msgstr "niveau d’études"
 
 #: .\apps\accounts\models.py
 msgid "profilo completato il"
-msgstr "profilo completato il"
+msgstr "profil complété le"
 
 #: .\apps\accounts\models.py
 msgid "proposta di lavoro in Italia"
@@ -11923,15 +11665,15 @@ msgstr "Votre accès à un dossier a pris fin.\n\nDossier : {case_reference}\nR�
 
 #: .\apps\notifications\models.py
 msgid "Account anonimizzato"
-msgstr "Account anonimizzato"
+msgstr "Compte anonymisé"
 
 #: .\apps\notifications\models.py
 msgid "Account disattivato"
-msgstr "Account disattivato"
+msgstr "Compte désactivé"
 
 #: .\apps\notifications\models.py
 msgid "Disattivata dalla persona"
-msgstr "Disattivata dalla persona"
+msgstr "Désactivée par la personne"
 
 #: .\apps\notifications\models.py
 msgid "Dominio non gestito dal progetto"
@@ -11947,11 +11689,11 @@ msgstr "La ligne que la personne lit dans l’espace réservé. Boîte de récep
 
 #: .\apps\notifications\models.py
 msgid "Nessun indirizzo utilizzabile"
-msgstr "Nessun indirizzo utilizzabile"
+msgstr "Aucune adresse utilisable"
 
 #: .\apps\notifications\models.py
 msgid "Spazio riservato"
-msgstr "Spazio riservato"
+msgstr "Espace réservé"
 
 #: .\apps\notifications\models.py
 msgid "Spazio riservato ed e-mail"
@@ -11963,19 +11705,19 @@ msgstr "Vide lorsque l’événement peut légitimement se répéter (p. ex. un 
 
 #: .\apps\notifications\models.py
 msgid "canale"
-msgstr "canale"
+msgstr "canal"
 
 #: .\apps\notifications\models.py
 msgid "chiave di unicità"
-msgstr "chiave di unicità"
+msgstr "clé d’unicité"
 
 #: .\apps\notifications\models.py
 msgid "comunicazione"
-msgstr "comunicazione"
+msgstr "communication"
 
 #: .\apps\notifications\models.py
 msgid "destinatario"
-msgstr "destinatario"
+msgstr "destinataire"
 
 #: .\apps\notifications\models.py
 msgid "e-mail non inviata perché"
@@ -11987,15 +11729,15 @@ msgstr "e-mail : accès et mandats"
 
 #: .\apps\notifications\models.py
 msgid "e-mail: documenti"
-msgstr "e-mail: documenti"
+msgstr "e-mail : documents"
 
 #: .\apps\notifications\models.py
 msgid "e-mail: messaggi dell'équipe"
-msgstr "e-mail: messaggi dell'équipe"
+msgstr "e-mail : messages de l’équipe"
 
 #: .\apps\notifications\models.py
 msgid "e-mail: scadenze"
-msgstr "e-mail: scadenze"
+msgstr "e-mail : échéances"
 
 #: .\apps\notifications\models.py
 msgid "e-mail: seguito del fascicolo"
@@ -12003,19 +11745,19 @@ msgstr "e-mail : suivi du dossier"
 
 #: .\apps\notifications\models.py
 msgid "evento"
-msgstr "evento"
+msgstr "événement"
 
 #: .\apps\notifications\models.py
 msgid "notifica"
-msgstr "notifica"
+msgstr "notification"
 
 #: .\apps\notifications\models.py
 msgid "notifiche"
-msgstr "notifiche"
+msgstr "notifications"
 
 #: .\apps\notifications\models.py
 msgid "preferenze di notifica"
-msgstr "preferenze di notifica"
+msgstr "préférences de notification"
 
 #: .\apps\portal\services.py .\apps\portal\views.py .\templates\portal\situation.html
 msgid "Ma situation"
@@ -12043,11 +11785,11 @@ msgstr "Approuver (exige un relecteur différent de l’auteur)"
 
 #: .\apps\rules\admin.py
 msgid "Approvate"
-msgstr "Approvate"
+msgstr "Approuvées"
 
 #: .\apps\rules\admin.py .\templates\admin\rules\legalrule\preview.html
 msgid "Condizione"
-msgstr "Condizione"
+msgstr "Condition"
 
 #: .\apps\rules\admin.py
 msgid "Confronta con la versione precedente"
@@ -12063,15 +11805,15 @@ msgstr "Version %(version)s créée à l’état de brouillon."
 
 #: .\apps\rules\admin.py .\templates\admin\rules\legalrule\preview.html
 msgid "Effetto"
-msgstr "Effetto"
+msgstr "Effet"
 
 #: .\apps\rules\admin.py
 msgid "Fonti e validità"
-msgstr "Fonti e validità"
+msgstr "Sources et validité"
 
 #: .\apps\rules\admin.py
 msgid "Interno"
-msgstr "Interno"
+msgstr "Interne"
 
 #: .\apps\rules\admin.py
 msgid "Invia in revisione giuridica"
@@ -12079,15 +11821,15 @@ msgstr "Envoyer en revue juridique"
 
 #: .\apps\rules\admin.py
 msgid "Inviate in revisione"
-msgstr "Inviate in revisione"
+msgstr "Envoyées en révision"
 
 #: .\apps\rules\admin.py
 msgid "Messe in vigore"
-msgstr "Messe in vigore"
+msgstr "Mises en vigueur"
 
 #: .\apps\rules\admin.py
 msgid "Metti in vigore"
-msgstr "Metti in vigore"
+msgstr "Mettre en vigueur"
 
 #: .\apps\rules\admin.py
 msgid "Prova della regola — %(rule)s"
@@ -12095,31 +11837,31 @@ msgstr "Essai de la règle — %(rule)s"
 
 #: .\apps\rules\admin.py
 msgid "Prova la regola"
-msgstr "Prova la regola"
+msgstr "Tester la règle"
 
 #: .\apps\rules\admin.py
 msgid "Provenienza"
-msgstr "Provenienza"
+msgstr "Provenance"
 
 #: .\apps\rules\admin.py
 msgid "Revisione"
-msgstr "Revisione"
+msgstr "Révision"
 
 #: .\apps\rules\admin.py
 msgid "Ritira"
-msgstr "Ritira"
+msgstr "Retirer"
 
 #: .\apps\rules\admin.py
 msgid "Ritirate"
-msgstr "Ritirate"
+msgstr "Retirées"
 
 #: .\apps\rules\admin.py
 msgid "azioni"
-msgstr "azioni"
+msgstr "actions"
 
 #: .\apps\rules\admin.py
 msgid "lettura della condizione"
-msgstr "lettura della condizione"
+msgstr "lecture de la condition"
 
 #: .\apps\rules\models.py
 msgid "Almeno una è obbligatoria per attivare la regola."
@@ -12151,11 +11893,11 @@ msgstr "Le texte affiché vit dans le système de traduction, non dans la règle
 
 #: .\apps\rules\models.py
 msgid "In revisione giuridica"
-msgstr "In revisione giuridica"
+msgstr "En révision juridique"
 
 #: .\apps\rules\models.py
 msgid "In vigore"
-msgstr "In vigore"
+msgstr "En vigueur"
 
 #: .\apps\rules\models.py
 msgid "La fine della validità precede l'inizio."
@@ -12171,7 +11913,7 @@ msgstr "Pour un effet « exigence manquante » : ce qui manque, en termes compr�
 
 #: .\apps\rules\models.py
 msgid "Ritirata"
-msgstr "Ritirata"
+msgstr "Retirée"
 
 #: .\apps\rules\models.py
 msgid "Solo se pubblico e stabile."
@@ -12191,43 +11933,43 @@ msgstr "Un effet « exigence manquante » doit dire ce qui manque."
 
 #: .\apps\rules\models.py
 msgid "approvata il"
-msgstr "approvata il"
+msgstr "approuvée le"
 
 #: .\apps\rules\models.py
 msgid "autorità o emittente"
-msgstr "autorità o emittente"
+msgstr "autorité ou émetteur"
 
 #: .\apps\rules\models.py
 msgid "chiave del messaggio"
-msgstr "chiave del messaggio"
+msgstr "clé du message"
 
 #: .\apps\rules\models.py
 msgid "condizione"
-msgstr "condizione"
+msgstr "condition"
 
 #: .\apps\rules\models.py
 msgid "consultata il"
-msgstr "consultata il"
+msgstr "consultée le"
 
 #: .\apps\rules\models.py
 msgid "effetto"
-msgstr "effetto"
+msgstr "effet"
 
 #: .\apps\rules\models.py
 msgid "fonte giuridica"
-msgstr "fonte giuridica"
+msgstr "source juridique"
 
 #: .\apps\rules\models.py
 msgid "fonti giuridiche"
-msgstr "fonti giuridiche"
+msgstr "sources juridiques"
 
 #: .\apps\rules\models.py
 msgid "identificativo"
-msgstr "identificativo"
+msgstr "identifiant"
 
 #: .\apps\rules\models.py
 msgid "in vigore dal"
-msgstr "in vigore dal"
+msgstr "en vigueur depuis le"
 
 #: .\apps\rules\models.py
 msgid "in vigore fino al"
@@ -12235,39 +11977,39 @@ msgstr "en vigueur jusqu’au"
 
 #: .\apps\rules\models.py
 msgid "messaggio (FR)"
-msgstr "messaggio (FR)"
+msgstr "message (FR)"
 
 #: .\apps\rules\models.py
 msgid "motivazione interna"
-msgstr "motivazione interna"
+msgstr "motivation interne"
 
 #: .\apps\rules\models.py
 msgid "nota interna"
-msgstr "nota interna"
+msgstr "note interne"
 
 #: .\apps\rules\models.py
 msgid "regola giuridica"
-msgstr "regola giuridica"
+msgstr "règle juridique"
 
 #: .\apps\rules\models.py
 msgid "regole giuridiche"
-msgstr "regole giuridiche"
+msgstr "règles juridiques"
 
 #: .\apps\rules\models.py
 msgid "requisito (FR)"
-msgstr "requisito (FR)"
+msgstr "exigence (FR)"
 
 #: .\apps\rules\models.py
 msgid "ritirata il"
-msgstr "ritirata il"
+msgstr "retirée le"
 
 #: .\apps\rules\models.py
 msgid "titolo (FR)"
-msgstr "titolo (FR)"
+msgstr "titre (FR)"
 
 #: .\apps\rules\models.py
 msgid "titolo (IT)"
-msgstr "titolo (IT)"
+msgstr "titre (IT)"
 
 #: .\apps\rules\services.py
 msgid "L'approvazione richiede un revisore identificato."
@@ -12947,17 +12689,9 @@ msgstr "Les cours disponibles"
 msgid "Les formations ouvertes à toute personne disposant d’un compte."
 msgstr "Les formations ouvertes à toute personne disposant d’un compte."
 
-#: .\templates\academy\catalogue.html .\templates\academy\enrolment_detail.html
-msgid "Mon suivi"
-msgstr "Mon suivi"
-
 #: .\templates\academy\catalogue.html
 msgid "Plans de formation"
 msgstr "Plans de formation"
-
-#: .\templates\academy\catalogue.html
-msgid "Plateforme"
-msgstr "Plateforme"
 
 #: .\templates\academy\catalogue.html
 msgid "Revenir au catalogue complet"
@@ -13015,10 +12749,6 @@ msgstr "Ce qu’il faut savoir"
 msgid "Compétence"
 msgstr "Compétence"
 
-#: .\templates\academy\course_detail.html .\templates\academy\plan_detail.html .\templates\companies\need_detail.html
-msgid "Compétences"
-msgstr "Compétences"
-
 #: .\templates\academy\course_detail.html
 msgid "Compétences développées par le cours, niveau visé et résultat attendu"
 msgstr "Compétences développées par le cours, niveau visé et résultat attendu"
@@ -13038,10 +12768,6 @@ msgstr "Durée"
 #: .\templates\academy\course_detail.html
 msgid "Langue d’enseignement"
 msgstr "Langue d’enseignement"
-
-#: .\templates\academy\course_detail.html
-msgid "Le cours"
-msgstr "Le cours"
 
 #: .\templates\academy\course_detail.html
 msgid "Le programme détaillé est en cours de préparation par l’organisme."
@@ -13079,17 +12805,9 @@ msgstr "Organisme"
 msgid "Ouvrir mon suivi"
 msgstr "Ouvrir mon suivi"
 
-#: .\templates\academy\course_detail.html
-msgid "Programme"
-msgstr "Programme"
-
 #: .\templates\academy\course_detail.html .\templates\academy\plan_detail.html
 msgid "Résultat attendu"
 msgstr "Résultat attendu"
-
-#: .\templates\academy\course_detail.html .\templates\academy\enrolment_detail.html
-msgid "Supports"
-msgstr "Supports"
 
 #: .\templates\academy\course_detail.html .\templates\academy\enrolment_detail.html
 msgid "Supports de formation"
@@ -13150,10 +12868,6 @@ msgid "Les modules déjà suivis sont conservés."
 msgstr "Les modules déjà suivis sont conservés."
 
 #: .\templates\academy\enrolment_detail.html
-msgid "Modules"
-msgstr "Modules"
-
-#: .\templates\academy\enrolment_detail.html
 msgid "Modules suivis"
 msgstr "Modules suivis"
 
@@ -13204,10 +12918,6 @@ msgid "Dossier %(reference)s"
 msgstr "Dossier %(reference)s"
 
 #: .\templates\academy\mine.html
-msgid "Interrompues"
-msgstr "Interrompues"
-
-#: .\templates\academy\mine.html
 msgid "Les formations interrompues"
 msgstr "Les formations interrompues"
 
@@ -13240,16 +12950,8 @@ msgid "Parcourir le catalogue"
 msgstr "Parcourir le catalogue"
 
 #: .\templates\academy\mine.html
-msgid "Plans"
-msgstr "Plans"
-
-#: .\templates\academy\mine.html
 msgid "Plans que je consulte au titre d’un mandat"
 msgstr "Plans que je consulte au titre d’un mandat"
-
-#: .\templates\academy\mine.html
-msgid "Suivies"
-msgstr "Suivies"
 
 #: .\templates\academy\mine.html
 msgid "Un plan de formation réunit les cours conseillés pour un objectif donné. Il peut venir de votre orientation, d’un professionnel ou d’un besoin de compétences recensé ; il ne conditionne jamais l’accès aux cours, qui restent ouverts à tous."
@@ -13298,10 +13000,6 @@ msgid "Comparaison entre le niveau requis et le niveau actuel pour chaque compé
 msgstr "Comparaison entre le niveau requis et le niveau actuel pour chaque compétence, avec le module correspondant et le résultat attendu"
 
 #: .\templates\academy\plan_detail.html
-msgid "Cours conseillés"
-msgstr "Cours conseillés"
-
-#: .\templates\academy\plan_detail.html
 msgid "Dossier lié"
 msgstr "Dossier lié"
 
@@ -13312,10 +13010,6 @@ msgstr "D’où vient ce parcours"
 #: .\templates\academy\plan_detail.html
 msgid "La comparaison des compétences sera renseignée avec l’organisme de formation ou le professionnel qui accompagne ce parcours."
 msgstr "La comparaison des compétences sera renseignée avec l’organisme de formation ou le professionnel qui accompagne ce parcours."
-
-#: .\templates\academy\plan_detail.html
-msgid "Le plan"
-msgstr "Le plan"
 
 #: .\templates\academy\plan_detail.html
 msgid "Les cours du parcours"
@@ -13367,11 +13061,11 @@ msgstr "Établi le"
 
 #: .\templates\admin\index.html
 msgid "Bloccato da"
-msgstr "Bloccato da"
+msgstr "Bloqué par"
 
 #: .\templates\admin\index.html
 msgid "Che cosa apre"
-msgstr "Che cosa apre"
+msgstr "Ce qu’il ouvre"
 
 #: .\templates\admin\index.html
 msgid "Che cosa apre ciascun gate, da che cosa dipende e perché esiste. Un gate bloccato da una dipendenza non si apre modificando il proprio flag."
@@ -13379,7 +13073,7 @@ msgstr "Ce que chaque verrou ouvre, ce dont il dépend et pourquoi il existe. Un
 
 #: .\templates\admin\index.html
 msgid "Console delle fasi"
-msgstr "Console delle fasi"
+msgstr "Console des phases"
 
 #: .\templates\admin\index.html
 msgid "Flag"
@@ -13395,7 +13089,7 @@ msgstr "aucun indicateur — dépend des contenus publiés"
 
 #: .\templates\admin\rules\legalrule\diff.html
 msgid "Campo"
-msgstr "Campo"
+msgstr "Champ"
 
 #: .\templates\admin\rules\legalrule\diff.html
 msgid "Differenze fra la versione %(old)s e la versione %(new)s."
@@ -13403,7 +13097,7 @@ msgstr "Différences entre la version %(old)s et la version %(new)s."
 
 #: .\templates\admin\rules\legalrule\diff.html
 msgid "Questa versione"
-msgstr "Questa versione"
+msgstr "Cette version"
 
 #: .\templates\admin\rules\legalrule\diff.html
 msgid "Questa è la prima versione della regola: non esiste una versione precedente con cui confrontarla."
@@ -13411,27 +13105,27 @@ msgstr "C’est la première version de la règle : il n’existe pas de version
 
 #: .\templates\admin\rules\legalrule\diff.html .\templates\admin\rules\legalrule\preview.html
 msgid "Torna alla regola"
-msgstr "Torna alla regola"
+msgstr "Retour à la règle"
 
 #: .\templates\admin\rules\legalrule\diff.html
 msgid "Versione precedente"
-msgstr "Versione precedente"
+msgstr "Version précédente"
 
 #: .\templates\admin\rules\legalrule\diff.html
 msgid "modificato"
-msgstr "modificato"
+msgstr "modifié"
 
 #: .\templates\admin\rules\legalrule\preview.html
 msgid "Esegui la prova"
-msgstr "Esegui la prova"
+msgstr "Lancer le test"
 
 #: .\templates\admin\rules\legalrule\preview.html
 msgid "Fatti (oggetto JSON)"
-msgstr "Fatti (oggetto JSON)"
+msgstr "Faits (objet JSON)"
 
 #: .\templates\admin\rules\legalrule\preview.html
 msgid "JSON non leggibile"
-msgstr "JSON non leggibile"
+msgstr "JSON illisible"
 
 #: .\templates\admin\rules\legalrule\preview.html
 msgid "La condizione non è valida"
@@ -13477,10 +13171,6 @@ msgstr "Ces exigences figurent dans la liste des pièces de votre dossier, avec 
 msgid "Exigences"
 msgstr "Exigences"
 
-#: .\templates\cases\assessment.html .\templates\portal\dashboard.html
-msgid "Fondements"
-msgstr "Fondements"
-
 #: .\templates\cases\assessment.html
 msgid "La réexécution du jeu de règles conservé ne redonne pas le résultat enregistré. Cet écart est signalé à l’équipe du projet ; ne vous fondez pas sur ce résultat sans nous contacter."
 msgstr "La réexécution du jeu de règles conservé ne redonne pas le résultat enregistré. Cet écart est signalé à l’équipe du projet ; ne vous fondez pas sur ce résultat sans nous contacter."
@@ -13501,14 +13191,6 @@ msgstr "Les textes sur lesquels reposent ces règles"
 msgid "Retour au dossier"
 msgstr "Retour au dossier"
 
-#: .\templates\cases\assessment.html
-msgid "Règles appliquées"
-msgstr "Règles appliquées"
-
-#: .\templates\cases\assessment.html .\templates\companies\dashboard.html .\templates\companies\partials\company_header.html .\templates\companies\profile.html
-msgid "Vérification"
-msgstr "Vérification"
-
 #: .\templates\cases\assessment.html .\templates\portal\dashboard.html
 msgid "consultée le %(date)s"
 msgstr "consultée le %(date)s"
@@ -13520,10 +13202,6 @@ msgstr "Aucun intervenant n’est assigné. Ce dossier reste le vôtre, et perso
 #: .\templates\cases\detail.html
 msgid "Aucune pièce n’est encore demandée dans ce dossier. La liste se remplit à partir de votre pré-évaluation et des règles en vigueur."
 msgstr "Aucune pièce n’est encore demandée dans ce dossier. La liste se remplit à partir de votre pré-évaluation et des règles en vigueur."
-
-#: .\templates\cases\detail.html .\templates\companies\need_detail.html
-msgid "Autorisation %(reference)s"
-msgstr "Autorisation %(reference)s"
 
 #: .\templates\cases\detail.html
 msgid "Ce dossier appartient à %(name)s. Vous y accédez au titre d’un mandat daté, et chacune de vos consultations est enregistrée."
@@ -13550,10 +13228,6 @@ msgid "Enregistrer l’état"
 msgstr "Enregistrer l’état"
 
 #: .\templates\cases\detail.html
-msgid "Exigence"
-msgstr "Exigence"
-
-#: .\templates\cases\detail.html
 msgid "Faire évoluer l’état du dossier"
 msgstr "Faire évoluer l’état du dossier"
 
@@ -13570,10 +13244,6 @@ msgid "Mettre à jour"
 msgstr "Mettre à jour"
 
 #: .\templates\cases\detail.html
-msgid "Motif (obligatoire pour une suspension)"
-msgstr "Motif (obligatoire pour une suspension)"
-
-#: .\templates\cases\detail.html
 msgid "Nouvel état de cette ligne"
 msgstr "Nouvel état de cette ligne"
 
@@ -13584,14 +13254,6 @@ msgstr "Où en est ce dossier"
 #: .\templates\cases\detail.html
 msgid "Parcours"
 msgstr "Parcours"
-
-#: .\templates\cases\detail.html
-msgid "Pièces et démarches demandées dans ce dossier"
-msgstr "Pièces et démarches demandées dans ce dossier"
-
-#: .\templates\cases\detail.html
-msgid "Pièces et démarches — tableau défilant horizontalement"
-msgstr "Pièces et démarches — tableau défilant horizontalement"
 
 #: .\templates\cases\detail.html
 msgid "Qui intervient sur ce dossier"
@@ -13658,10 +13320,6 @@ msgid "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, n
 msgstr "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, ni intitulé de besoin, ni identifiant, et elle ne compte aucune personne."
 
 #: .\templates\companies\analysis.html
-msgid "Ensemble"
-msgstr "Ensemble"
-
-#: .\templates\companies\analysis.html
 msgid "Les besoins exprimés, agrégés par territoire et par secteur."
 msgstr "Les besoins exprimés, agrégés par territoire et par secteur."
 
@@ -13705,29 +13363,13 @@ msgstr "Profils cumulés"
 msgid "Secteur"
 msgstr "Secteur"
 
-#: .\templates\companies\analysis.html
-msgid "Secteurs"
-msgstr "Secteurs"
-
 #: .\templates\companies\analysis.html .\templates\companies\need_detail.html
 msgid "Territoire"
 msgstr "Territoire"
 
 #: .\templates\companies\analysis.html
-msgid "Territoires"
-msgstr "Territoires"
-
-#: .\templates\companies\analysis.html
-msgid "États"
-msgstr "États"
-
-#: .\templates\companies\analysis.html
 msgid "États retenus"
 msgstr "États retenus"
-
-#: .\templates\companies\dashboard.html
-msgid "Créer mon premier besoin"
-msgstr "Créer mon premier besoin"
 
 #: .\templates\companies\dashboard.html
 msgid "Déclarez votre entreprise, puis exprimez vos besoins en compétences. Le projet recueille des besoins : il ne présente aucune personne et ne promet aucun résultat."
@@ -13736,10 +13378,6 @@ msgstr "Déclarez votre entreprise, puis exprimez vos besoins en compétences. L
 #: .\templates\companies\dashboard.html .\templates\companies\profile.html
 msgid "Dénomination légale"
 msgstr "Dénomination légale"
-
-#: .\templates\companies\dashboard.html .\templates\companies\profile.html .\templates\forum\governance\project_detail.html
-msgid "Identité"
-msgstr "Identité"
 
 #: .\templates\companies\dashboard.html
 msgid "Immatriculation"
@@ -13842,14 +13480,6 @@ msgstr "La transmission d’un besoin est possible une fois la vérification de 
 #: .\templates\companies\need_detail.html
 msgid "Le détail d’un besoin exprimé par votre entreprise."
 msgstr "Le détail d’un besoin exprimé par votre entreprise."
-
-#: .\templates\companies\need_detail.html
-msgid "Le poste"
-msgstr "Le poste"
-
-#: .\templates\companies\need_detail.html
-msgid "Les éléments du besoin"
-msgstr "Les éléments du besoin"
 
 #: .\templates\companies\need_detail.html
 msgid "Les étapes de traitement de ce besoin apparaîtront ici."
@@ -13955,10 +13585,6 @@ msgstr "Langue et sécurité"
 msgid "Le poste et son territoire"
 msgstr "Le poste et son territoire"
 
-#: .\templates\companies\need_form.html .\templates\companies\profile_form.html
-msgid "Modification"
-msgstr "Modification"
-
 #: .\templates\companies\need_form.html
 msgid "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée."
 msgstr "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée."
@@ -13980,26 +13606,12 @@ msgid "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste �
 msgstr "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste — jamais une personne — et porte l’état de son traitement ainsi que l’intervenant qui en répond."
 
 #: .\templates\companies\partials\company_header.html
-msgid "%(n)s besoin en cours"
-msgid_plural "%(n)s besoins en cours"
-msgstr[0] "%(n)s besoin en cours"
-msgstr[1] "%(n)s besoins en cours"
-
-#: .\templates\companies\partials\company_header.html
-msgid "Besoins ouverts"
-msgstr "Besoins ouverts"
-
-#: .\templates\companies\partials\company_header.html
 msgid "La transmission d’un besoin est possible une fois la vérification prononcée."
 msgstr "La transmission d’un besoin est possible une fois la vérification prononcée."
 
 #: .\templates\companies\partials\company_header.html
 msgid "Votre entreprise"
 msgstr "Votre entreprise"
-
-#: .\templates\companies\partials\company_header.html
-msgid "Établissement"
-msgstr "Établissement"
 
 #: .\templates\companies\partials\need_register.html
 msgid "%(n)s profil"
@@ -14080,10 +13692,6 @@ msgid "Secteur d’activité"
 msgstr "Secteur d’activité"
 
 #: .\templates\companies\profile_form.html
-msgid "Déclaration"
-msgstr "Déclaration"
-
-#: .\templates\companies\profile_form.html
 msgid "Déclarer l’entreprise"
 msgstr "Déclarer l’entreprise"
 
@@ -14106,10 +13714,6 @@ msgstr "Le référent"
 #: .\templates\companies\profile_form.html
 msgid "Les données du référent sont des données personnelles : elles servent à la vérification de l’entreprise et à la correspondance du projet, et à rien d’autre. Vous pouvez en demander la copie ou la rectification depuis votre compte."
 msgstr "Les données du référent sont des données personnelles : elles servent à la vérification de l’entreprise et à la correspondance du projet, et à rien d’autre. Vous pouvez en demander la copie ou la rectification depuis votre compte."
-
-#: .\templates\companies\profile_form.html
-msgid "L’identité de votre entreprise"
-msgstr "L’identité de votre entreprise"
 
 #: .\templates\companies\profile_form.html
 msgid "L’établissement"
@@ -14156,12 +13760,6 @@ msgid "Les pièces demandées dans votre dossier, leur état et la personne resp
 msgstr "Les pièces demandées dans votre dossier, leur état et la personne responsable."
 
 #: .\templates\documents\partials\register.html
-msgid "%(n)s en attente"
-msgid_plural "%(n)s en attente"
-msgstr[0] "%(n)s en attente"
-msgstr[1] "%(n)s en attente"
-
-#: .\templates\documents\partials\register.html
 msgid "%(n)s pièce demandée"
 msgid_plural "%(n)s pièces demandées"
 msgstr[0] "%(n)s pièce demandée"
@@ -14174,10 +13772,6 @@ msgstr "%(valid)s sur %(total)s validées"
 #: .\templates\documents\partials\register.html
 msgid "Acceptation des Conditions d’utilisation requise."
 msgstr "Acceptation des Conditions d’utilisation requise."
-
-#: .\templates\documents\partials\register.html
-msgid "Accepter les Conditions d’utilisation"
-msgstr "Accepter les Conditions d’utilisation"
 
 #: .\templates\documents\partials\register.html
 msgid "Consulter"
@@ -14230,10 +13824,6 @@ msgstr "Consulter la source"
 #: .\templates\documents\requirement_detail.html .\templates\documents\upload.html
 msgid "Déposer"
 msgstr "Déposer"
-
-#: .\templates\documents\requirement_detail.html
-msgid "Déposez la pièce ci-dessous."
-msgstr "Déposez la pièce ci-dessous."
 
 #: .\templates\documents\requirement_detail.html
 msgid "Déposée le"
@@ -14465,10 +14055,6 @@ msgstr "publiée"
 msgid "publiée le %(date)s"
 msgstr "publiée le %(date)s"
 
-#: .\templates\forum\governance\annual_report.html
-msgid "Édition"
-msgstr "Édition"
-
 #: .\templates\forum\governance\base_governance.html
 msgid "Le Forum permanent est un espace de coopération institutionnelle. Les propositions, les projets et les relevés de suivi qui y figurent engagent les organisations qui les déposent ; ils ne constituent ni une décision d’une autorité, ni un engagement sur une issue ou sur un délai. Les profils de participation indiquent l’organisation représentée, la catégorie et les intérêts déclarés : aucune coordonnée personnelle n’y est publiée."
 msgstr "Le Forum permanent est un espace de coopération institutionnelle. Les propositions, les projets et les relevés de suivi qui y figurent engagent les organisations qui les déposent ; ils ne constituent ni une décision d’une autorité, ni un engagement sur une issue ou sur un délai. Les profils de participation indiquent l’organisation représentée, la catégorie et les intérêts déclarés : aucune coordonnée personnelle n’y est publiée."
@@ -14488,10 +14074,6 @@ msgstr "Aucune proposition déposée dans cette commission. Les brouillons ne fi
 #: .\templates\forum\governance\commission_detail.html
 msgid "Aucune table n’est ouverte dans cette commission. Une table est ouverte par le référent de la commission lorsqu’un sujet est mûr pour être travaillé."
 msgstr "Aucune table n’est ouverte dans cette commission. Une table est ouverte par le référent de la commission lorsqu’un sujet est mûr pour être travaillé."
-
-#: .\templates\forum\governance\commission_detail.html
-msgid "Composition"
-msgstr "Composition"
 
 #: .\templates\forum\governance\commission_detail.html .\templates\forum\governance\participation.html .\templates\forum\governance\proposals.html
 msgid "Depuis le"
@@ -14565,10 +14147,6 @@ msgstr "Les commissions mixtes du Forum permanent que vous pouvez consulter."
 msgid "Les commissions ouvertes à votre consultation"
 msgstr "Les commissions ouvertes à votre consultation"
 
-#: .\templates\forum\governance\commissions.html .\templates\forum\governance\projects.html .\templates\forum\governance\proposals.html
-msgid "Registre"
-msgstr "Registre"
-
 #: .\templates\forum\governance\participation.html
 msgid "Aucun mandat en cours sur cette édition. Un mandat est ouvert par le secrétariat du Forum, pour une période déterminée."
 msgstr "Aucun mandat en cours sur cette édition. Un mandat est ouvert par le secrétariat du Forum, pour une période déterminée."
@@ -14620,10 +14198,6 @@ msgstr "Votre participation au Forum permanent : éditions, mandats en commissio
 #: .\templates\forum\governance\participation.html
 msgid "Vous ne participez à aucune édition du Forum permanent. Le secrétariat du Forum ouvre un profil de participation lorsqu’une organisation rejoint une édition."
 msgstr "Vous ne participez à aucune édition du Forum permanent. Le secrétariat du Forum ouvre un profil de participation lorsqu’une organisation rejoint une édition."
-
-#: .\templates\forum\governance\participation.html
-msgid "Éditions"
-msgstr "Éditions"
 
 #: .\templates\forum\governance\participation.html
 msgid "échu"
@@ -14724,10 +14298,6 @@ msgid "Ce que la commission a décidé"
 msgstr "Ce que la commission a décidé"
 
 #: .\templates\forum\governance\proposal_detail.html
-msgid "Décision"
-msgstr "Décision"
-
-#: .\templates\forum\governance\proposal_detail.html
 msgid "Décision consignée le %(date)s. Elle porte sur la proposition, jamais sur la situation d’une personne."
 msgstr "Décision consignée le %(date)s. Elle porte sur la proposition, jamais sur la situation d’une personne."
 
@@ -14752,10 +14322,6 @@ msgid "Le projet issu de cette proposition"
 msgstr "Le projet issu de cette proposition"
 
 #: .\templates\forum\governance\proposal_detail.html
-msgid "Proposant"
-msgstr "Proposant"
-
-#: .\templates\forum\governance\proposal_detail.html
 msgid "Proposition du Forum permanent : texte, état et décision motivée."
 msgstr "Proposition du Forum permanent : texte, état et décision motivée."
 
@@ -14766,10 +14332,6 @@ msgstr "Qui a déposé cette proposition"
 #: .\templates\forum\governance\proposal_detail.html
 msgid "Seules les transitions prévues par le cycle du Forum sont proposées ici, et seulement celles que votre mandat vous permet de demander. Une décision — retenir ou écarter — doit être motivée."
 msgstr "Seules les transitions prévues par le cycle du Forum sont proposées ici, et seulement celles que votre mandat vous permet de demander. Une décision — retenir ou écarter — doit être motivée."
-
-#: .\templates\forum\governance\proposal_detail.html
-msgid "Suite"
-msgstr "Suite"
 
 #: .\templates\forum\governance\proposal_detail.html
 msgid "Table"
@@ -14802,10 +14364,6 @@ msgstr "Votre proposition sera rattachée à la commission « %(commission)s ».
 #: .\templates\forum\governance\proposals.html
 msgid "Aucune proposition ne vous est ouverte. Vous lisez les propositions déposées dans les commissions où vous détenez un mandat en cours."
 msgstr "Aucune proposition ne vous est ouverte. Vous lisez les propositions déposées dans les commissions où vous détenez un mandat en cours."
-
-#: .\templates\forum\governance\proposals.html
-msgid "Les miennes"
-msgstr "Les miennes"
 
 #: .\templates\forum\governance\proposals.html
 msgid "Les propositions du Forum permanent que vous pouvez consulter."
@@ -14912,10 +14470,6 @@ msgid "Clore la demande"
 msgstr "Clore la demande"
 
 #: .\templates\helpdesk\detail.html
-msgid "Dans cet état depuis"
-msgstr "Dans cet état depuis"
-
-#: .\templates\helpdesk\detail.html
 msgid "Demander une précision à la personne"
 msgstr "Demander une précision à la personne"
 
@@ -14970,10 +14524,6 @@ msgstr "mandat terminé"
 #: .\templates\helpdesk\detail.html
 msgid "À utiliser lorsque votre situation dépasse ce que l’orientation peut établir. Un professionnel devra être désigné : un délai s’ensuit, et aucun résultat n’est promis."
 msgstr "À utiliser lorsque votre situation dépasse ce que l’orientation peut établir. Un professionnel devra être désigné : un délai s’ensuit, et aucun résultat n’est promis."
-
-#: .\templates\helpdesk\detail.html
-msgid "Échange"
-msgstr "Échange"
 
 #: .\templates\helpdesk\detail.html
 msgid "État de la demande"
@@ -15066,10 +14616,6 @@ msgid "Les demandes du guichet numérique confiées à votre mandat."
 msgstr "Les demandes du guichet numérique confiées à votre mandat."
 
 #: .\templates\helpdesk\queue.html
-msgid "Mandats"
-msgstr "Mandats"
-
-#: .\templates\helpdesk\queue.html
 msgid "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom."
 msgstr "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom."
 
@@ -15096,8 +14642,12 @@ msgid "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni tit
 msgstr "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni titre de séjour, ni autorisation, et aucune réponse reçue ici n’est une décision administrative."
 
 #: .\templates\helpdesk\requests.html
-msgid "Poser une question à une personne, pas à une machine. Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier."
-msgstr "Poser une question à une personne, pas à une machine. Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier."
+msgid "Poser une question à une personne, pas à une machine."
+msgstr "Poser une question à une personne, pas à une machine."
+
+#: .\templates\helpdesk\requests.html
+msgid "Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier."
+msgstr "Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier."
 
 #: .\templates\helpdesk\requests.html
 msgid "Vos demandes au guichet"
@@ -15755,10 +15305,6 @@ msgstr "échec d’analyse"
 msgid "Maroc"
 msgstr "Maroc"
 
-#: .\templates\pages\home\_pilot.html
-msgid "Vénétie"
-msgstr "Vénétie"
-
 #: .\apps\portal\services.py
 msgid "Mon rôle"
 msgstr "Mon rôle"
@@ -15770,14 +15316,6 @@ msgstr "Échanges"
 #: .\templates\components\form_field.html
 msgid "Afficher le mot de passe"
 msgstr "Afficher le mot de passe"
-
-#: .\templates\components\form_field.html
-msgid "Masquer le mot de passe"
-msgstr "Masquer le mot de passe"
-
-#: .\templates\partials\portal_chrome.html
-msgid "Réduire la navigation"
-msgstr "Réduire la navigation"
 
 #: .\templates\partials\portal_chrome.html
 msgid "Fermer le menu"
@@ -15905,14 +15443,6 @@ msgstr "Où en est votre demande"
 msgid "Navigation rapide"
 msgstr "Navigation rapide"
 
-#: .\templates\companies\partials\need_table.html
-msgid "Mes besoins en compétences — tableau"
-msgstr "Mes besoins en compétences — tableau"
-
-#: .\templates\components\document_row.html
-msgid "Accepter les Conditions"
-msgstr "Accepter les Conditions"
-
 #: .\templates\components\journey_rail.html
 msgid "Italie"
 msgstr "Italie"
@@ -15920,3 +15450,593 @@ msgstr "Italie"
 #: .\templates\documents\partials\register.html
 msgid "Pièces affichées :"
 msgstr "Pièces affichées :"
+
+#: .\apps\cases\presenters.py
+msgid "La personne concernée"
+msgstr "La personne concernée"
+
+#: .\apps\portal\services.py
+msgid "Fichier bloqué"
+msgstr "Fichier bloqué"
+
+#: .\templates\partials\footer.html
+msgid "Phase 1"
+msgstr "Phase 1"
+
+#: .\templates\partials\footer.html
+msgid "Phase 2"
+msgstr "Phase 2"
+
+#: .\templates\partials\footer.html
+msgid "Phase 3"
+msgstr "Phase 3"
+
+#: .\templates\partials\header.html
+#: .\templates\partials\portal_chrome.html
+msgid "Chargement…"
+msgstr "Chargement…"
+
+#: .\templates\accounts\profile.html
+msgid "Votre espace"
+msgstr "Votre espace"
+
+#: .\apps\portal\services.py
+msgid "Coopération"
+msgstr "Coopération"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Sign In"
+msgstr "Se connecter"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Sign Up"
+msgstr "Créer un compte"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Sign Out"
+msgstr "Se déconnecter"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "If you have not created an account yet, then please %(link)ssign up%(end_link)s first."
+msgstr "Vous n’avez pas encore de compte ? %(link)sCréer un compte%(end_link)s"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Already have an account? Then please %(link)ssign in%(end_link)s."
+msgstr "Vous avez déjà un compte ? %(link)sSe connecter%(end_link)s"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Remember Me"
+msgstr "Rester connecté"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email"
+msgstr "Adresse e-mail"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email address"
+msgstr "Adresse e-mail"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email (again)"
+msgstr "Adresse e-mail (confirmation)"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Password"
+msgstr "Mot de passe"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Password (again)"
+msgstr "Mot de passe (confirmation)"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Current Password"
+msgstr "Mot de passe actuel"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "New Password"
+msgstr "Nouveau mot de passe"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "New Password (again)"
+msgstr "Nouveau mot de passe (confirmation)"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Forgot your password?"
+msgstr "Mot de passe oublié ?"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Password Reset"
+msgstr "Réinitialisation du mot de passe"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Reset My Password"
+msgstr "Réinitialiser le mot de passe"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Forgotten your password? Enter your email address below, and we'll send you an email allowing you to reset it."
+msgstr "Mot de passe oublié ? Indiquez votre adresse e-mail : vous recevrez un e-mail pour le réinitialiser."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr "En cas de difficulté pour réinitialiser votre mot de passe, écrivez-nous."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Change Password"
+msgstr "Modifier le mot de passe"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Set Password"
+msgstr "Définir un mot de passe"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email Addresses"
+msgstr "Adresses e-mail"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Two-Factor Authentication"
+msgstr "Authentification à deux facteurs"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Activate Authenticator App"
+msgstr "Activer l’application d’authentification"
+
+#: .ppsccountsllauth_terms.py
+msgid "Your password can’t be too similar to your other personal information."
+msgstr "Le mot de passe ne doit pas trop ressembler à vos autres informations personnelles."
+
+#: .ppsccountsllauth_terms.py
+msgid "Your password can’t be a commonly used password."
+msgstr "Le mot de passe ne doit pas être un mot de passe courant."
+
+#: .ppsccountsllauth_terms.py
+msgid "Your password can’t be entirely numeric."
+msgstr "Le mot de passe ne doit pas être composé uniquement de chiffres."
+
+#: .ppsccountsllauth_terms.py
+#, python-format
+msgid "Your password must contain at least %(min_length)d character."
+msgid_plural "Your password must contain at least %(min_length)d characters."
+msgstr[0] "Le mot de passe doit contenir au moins %(min_length)d caractère."
+msgstr[1] "Le mot de passe doit contenir au moins %(min_length)d caractères."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Enter a valid email address."
+msgstr "Saisissez une adresse e-mail valide."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Utilisé uniquement pour le suivi de vos demandes."
+msgstr "Utilisé uniquement pour le suivi de vos demandes."
+
+#: .\templates\portal\dashboard.html
+msgid "Aucune échéance ni communication pour l’instant."
+msgstr "Aucune échéance ni communication pour l’instant."
+
+#: .\templates\accounts\profile.html
+msgid "vérifiée"
+msgstr "vérifiée"
+
+#: .\templates\accounts\profile.html
+msgid "à vérifier"
+msgstr "à vérifier"
+
+#: .\templates\components\_optional.html
+msgid "facultatif"
+msgstr "facultatif"
+
+#: .\templates\components\date_field.html
+msgid "Jour"
+msgstr "Jour"
+
+#: .\templates\components\date_field.html
+msgid "Mois"
+msgstr "Mois"
+
+#: .\templates\components\form_field.html
+msgid "Aucun résultat."
+msgstr "Aucun résultat."
+
+#: .\templates\components\form_field.html
+msgid "La touche Majuscules est activée."
+msgstr "La touche Majuscules est activée."
+
+#: .\templates\components\form_field.html
+msgid "Les deux mots de passe correspondent."
+msgstr "Les deux mots de passe correspondent."
+
+#: .\templates\components\form_field.html
+msgid "Les deux mots de passe ne correspondent pas."
+msgstr "Les deux mots de passe ne correspondent pas."
+
+#: .\templates\components\number_field.html
+msgid "Augmenter"
+msgstr "Augmenter"
+
+#: .\templates\components\number_field.html
+msgid "Diminuer"
+msgstr "Diminuer"
+
+#: .\apps\pages\imagery.py
+msgid "Autour d’une table de travail, des mains, des documents annotés et des micros de séance"
+msgstr "Autour d’une table de travail, des mains, des documents annotés et des micros de séance"
+
+#: .\apps\pages\imagery.py
+msgid "Dans un atelier de formation, une main tend la torche de soudage à une autre, au-dessus de l’étau"
+msgstr "Dans un atelier de formation, une main tend la torche de soudage à une autre, au-dessus de l’étau"
+
+#: .\apps\pages\imagery.py
+msgid "Dans un atelier, des mains mesurent une pièce au pied à coulisse"
+msgstr "Dans un atelier, des mains mesurent une pièce au pied à coulisse"
+
+#: .\apps\pages\imagery.py
+msgid "Des champs en fleurs au pied d’une chaîne de montagnes enneigées"
+msgstr "Des champs en fleurs au pied d’une chaîne de montagnes enneigées"
+
+#: .\apps\pages\imagery.py
+msgid "Des serres en tunnel à travers une plaine cultivée, au crépuscule"
+msgstr "Des serres en tunnel à travers une plaine cultivée, au crépuscule"
+
+#: .\apps\pages\imagery.py
+msgid "Les pupitres et les micros d’une salle d’assemblée, sièges vides"
+msgstr "Les pupitres et les micros d’une salle d’assemblée, sièges vides"
+
+#: .\apps\pages\imagery.py
+msgid "Un classeur à soufflets ouvert sur une table de bois, rempli de pièces rangées"
+msgstr "Un classeur à soufflets ouvert sur une table de bois, rempli de pièces rangées"
+
+#: .\apps\pages\imagery.py
+msgid "Une grande salle d’étude vue depuis une galerie : verrières, longues tables, lustres"
+msgstr "Une grande salle d’étude vue depuis une galerie : verrières, longues tables, lustres"
+
+#: .\apps\pages\imagery.py
+msgid "Une longue table partagée vue d’en haut : ordinateurs, carnets, papiers"
+msgstr "Une longue table partagée vue d’en haut : ordinateurs, carnets, papiers"
+
+#: .\apps\pages\imagery.py
+msgid "Une main guide un ciseau sur un bloc de marbre"
+msgstr "Une main guide un ciseau sur un bloc de marbre"
+
+#: .\apps\pages\imagery.py
+msgid "Une main guide un ciseau à bois dans une sculpture de cèdre aux motifs géométriques"
+msgstr "Une main guide un ciseau à bois dans une sculpture de cèdre aux motifs géométriques"
+
+#: .\apps\pages\imagery.py
+msgid "Une personne vue de dos, assise à son bureau devant une grande fenêtre"
+msgstr "Une personne vue de dos, assise à son bureau devant une grande fenêtre"
+
+#: .\apps\pages\imagery.py
+msgid "Une place pavée entre deux palais ; quelques passants s’éloignent"
+msgstr "Une place pavée entre deux palais ; quelques passants s’éloignent"
+
+#: .\apps\pages\imagery.py
+msgid "Une rangée de microscopes sur une paillasse claire"
+msgstr "Une rangée de microscopes sur une paillasse claire"
+
+#: .\apps\pages\imagery.py
+msgid "Une rangée de peupliers nus au bord d’une plaine labourée, dans la brume"
+msgstr "Une rangée de peupliers nus au bord d’une plaine labourée, dans la brume"
+
+#: .\apps\pages\imagery.py
+msgid "Une rue de façades enduites aux couleurs chaudes, volets et balcons fleuris"
+msgstr "Une rue de façades enduites aux couleurs chaudes, volets et balcons fleuris"
+
+#: .\apps\pages\imagery.py
+msgid "Une salle de lecture : bibliothèques vitrées, tables de bois et lumière des fenêtres"
+msgstr "Une salle de lecture : bibliothèques vitrées, tables de bois et lumière des fenêtres"
+
+#: .\apps\pages\imagery.py
+msgid "Une table de séance vide : micros, écrans éteints et chevalets sans nom"
+msgstr "Une table de séance vide : micros, écrans éteints et chevalets sans nom"
+
+#: .\templates\pages\home\_pilot.html
+msgid "Le même geste"
+msgstr "Le même geste"
+
+#: .\templates\pathways\index.html
+msgid "%(n)s parcours affiché"
+msgid_plural "%(n)s parcours affichés"
+msgstr[0] "%(n)s parcours affiché"
+msgstr[1] "%(n)s parcours affichés"
+
+#: .\templates\pathways\index.html
+msgid "Autres voies"
+msgstr "Autres voies"
+
+#: .\apps\accounts\forms.py
+msgid "Identité et mot de passe"
+msgstr "Identité et mot de passe"
+
+#: .\apps\accounts\forms.py
+msgid "Qui êtes-vous ?"
+msgstr "Qui êtes-vous ?"
+
+#: .\apps\companies\forms.py
+msgid "Vérification"
+msgstr "Vérification"
+
+#: .\apps\enquiries\forms.py
+msgid "Le besoin"
+msgstr "Le besoin"
+
+#: .\apps\enquiries\forms.py
+msgid "L’entreprise et son référent"
+msgstr "L’entreprise et son référent"
+
+#: .\apps\enquiries\forms.py
+msgid "Précisions facultatives"
+msgstr "Précisions facultatives"
+
+#: .\apps\enquiries\forms.py
+msgid "Vérification et envoi"
+msgstr "Vérification et envoi"
+
+#: .\templates\components\_steps_rail.html
+msgid "Étapes du formulaire"
+msgstr "Étapes du formulaire"
+
+#: .\templates\components\form_field.html
+msgid "Choisir un fichier"
+msgstr "Choisir un fichier"
+
+#: .\templates\components\form_field.html
+msgid "ou le déposer ici"
+msgstr "ou le déposer ici"
+
+#: .\templates\components\form_field.html
+msgid "pas encore respecté"
+msgstr "pas encore respecté"
+
+#: .\templates\components\form_field.html
+msgid "respecté"
+msgstr "respecté"
+
+#: .\templates\components\formwork_side.html
+msgid "Après l’envoi"
+msgstr "Après l’envoi"
+
+#: .\templates\components\formwork_side.html
+msgid "À savoir avant l’envoi"
+msgstr "À savoir avant l’envoi"
+
+#: .\apps\core\special_category.py
+msgid "Cette pièce ne se dépose pas sur la plateforme : elle relève des catégories particulières de données, que la plateforme ne reçoit pas. Pour savoir comment la transmettre, écrivez au Guichet numérique."
+msgstr "Cette pièce ne se dépose pas sur la plateforme : elle relève des catégories particulières de données, que la plateforme ne reçoit pas. Pour savoir comment la transmettre, écrivez au Guichet numérique."
+
+#: .\apps\core\special_category.py
+msgid "Ne déposez que les pièces nécessaires à votre démarche : aucun document médical ni aucun document qui révèle la santé, l’origine ethnique, les convictions, les opinions, l’appartenance syndicale, la vie sexuelle ou l’orientation sexuelle."
+msgstr "Ne déposez que les pièces nécessaires à votre démarche : aucun document médical ni aucun document qui révèle la santé, l’origine ethnique, les convictions, les opinions, l’appartenance syndicale, la vie sexuelle ou l’orientation sexuelle."
+
+#: .\apps\core\special_category.py
+msgid "N’indiquez pas de données sur la santé, l’origine ethnique, les convictions religieuses ou philosophiques, les opinions politiques, l’appartenance syndicale, la vie sexuelle ou l’orientation sexuelle : elles ne sont pas nécessaires ici."
+msgstr "N’indiquez pas de données sur la santé, l’origine ethnique, les convictions religieuses ou philosophiques, les opinions politiques, l’appartenance syndicale, la vie sexuelle ou l’orientation sexuelle : elles ne sont pas nécessaires ici."
+
+#: .\templates\mfa\index.html
+msgid "Activate"
+msgstr "Activer"
+
+#: .\templates\mfa\index.html
+msgid "Add"
+msgstr "Ajouter"
+
+#: .\templates\mfa\index.html
+msgid "An authenticator app is not active."
+msgstr "Aucune application d’authentification n’est active."
+
+#: .\templates\mfa\index.html
+msgid "Authentication using an authenticator app is active."
+msgstr "L’authentification par une application d’authentification est active."
+
+#: .\templates\mfa\index.html
+msgid "Authenticator App"
+msgstr "Application d’authentification"
+
+#: .\templates\mfa\index.html
+msgid "Deactivate"
+msgstr "Désactiver"
+
+#: .\templates\mfa\index.html
+msgid "Download"
+msgstr "Télécharger"
+
+#: .\templates\mfa\index.html
+msgid "Generate"
+msgstr "Générer"
+
+#: .\templates\mfa\index.html
+msgid "Installez une application d’authentification"
+msgstr "Installez une application d’authentification"
+
+#: .\templates\mfa\index.html
+msgid "La page d’activation affiche un code QR propre à votre compte : l’application l’enregistre."
+msgstr "La page d’activation affiche un code QR propre à votre compte : l’application l’enregistre."
+
+#: .\templates\mfa\index.html
+msgid "Le code affiché par l’application confirme l’activation."
+msgstr "Le code affiché par l’application confirme l’activation."
+
+#: .\templates\mfa\index.html
+msgid "Manage"
+msgstr "Gérer"
+
+#: .\templates\mfa\index.html
+msgid "No recovery codes set up."
+msgstr "Aucun code de récupération défini."
+
+#: .\templates\mfa\index.html
+msgid "No security keys have been added."
+msgstr "Aucune clé de sécurité n’a été ajoutée."
+
+#: .\templates\mfa\index.html
+msgid "Recovery Codes"
+msgstr "Codes de récupération"
+
+#: .\templates\mfa\index.html
+msgid "Saisissez le code"
+msgstr "Saisissez le code"
+
+#: .\templates\mfa\index.html
+msgid "Scannez le code QR"
+msgstr "Scannez le code QR"
+
+#: .\templates\mfa\index.html
+msgid "Security Keys"
+msgstr "Clés de sécurité"
+
+#: .\templates\mfa\index.html
+msgid "Sur votre téléphone, une application qui génère des codes à usage unique."
+msgstr "Sur votre téléphone, une application qui génère des codes à usage unique."
+
+#: .\templates\mfa\index.html
+msgid "There is %(unused_count)s out of %(total_count)s recovery codes available."
+msgid_plural "There are %(unused_count)s out of %(total_count)s recovery codes available."
+msgstr[0] "%(unused_count)s code de récupération disponible sur %(total_count)s."
+msgstr[1] "%(unused_count)s codes de récupération disponibles sur %(total_count)s."
+
+#: .\templates\mfa\index.html
+msgid "View"
+msgstr "Afficher"
+
+#: .\templates\mfa\index.html
+msgid "You have added %(count)s security key."
+msgid_plural "You have added %(count)s security keys."
+msgstr[0] "Vous avez ajouté %(count)s clé de sécurité."
+msgstr[1] "Vous avez ajouté %(count)s clés de sécurité."
+
+#: .\apps\core\contact.py
+msgid "Indicare il numero in formato internazionale, con il prefisso (es. +39 3xx xxx xxxx)."
+msgstr "Indiquez le numéro au format international, avec l’indicatif du pays (p. ex. +39 3xx xxx xxxx)."
+
+#: .\apps\core\contact.py
+msgid "Indicare un numero nazionale di 6–11 cifre (es. 800 xxx xxx)."
+msgstr "Indiquez un numéro national de 6 à 11 chiffres (p. ex. 800 xxx xxx)."
+
+#: .\apps\core\models.py
+msgid "In formato internazionale: +39 3xx xxx xxxx. Il link aperto è https://wa.me/ seguito dalle cifre."
+msgstr "Au format international : +39 3xx xxx xxxx. Le lien ouvert est https://wa.me/ suivi des chiffres."
+
+#: .\apps\core\models.py
+msgid "Le sole cifre o con spazi: 800 xxx xxx. Il sito lo mostra come «800 xxx xxx»."
+msgstr "Les chiffres seuls, ou avec des espaces : 800 xxx xxx. Le site l’affiche « 800 xxx xxx »."
+
+#: .\apps\core\models.py
+msgid "numero WhatsApp"
+msgstr "numéro WhatsApp"
+
+#: .\apps\core\models.py
+msgid "numero verde"
+msgstr "numéro vert"
+
+#: .\templates\pages\partials\_canali.html
+msgid "Appeler"
+msgstr "Appeler"
+
+#: .\templates\pages\partials\_canali.html .\templates\partials\footer.html .\templates\partials\main_nav.html
+msgid "Appeler le numéro vert %(number)s"
+msgstr "Appeler le numéro vert %(number)s"
+
+#: .\templates\pages\partials\_canali.html .\templates\partials\footer.html .\templates\partials\main_nav.html
+msgid "Contacter Italy Legal Entry sur WhatsApp au %(number)s"
+msgstr "Contacter Italy Legal Entry sur WhatsApp au %(number)s"
+
+#: .\templates\pages\partials\_canali.html .\templates\partials\footer.html
+msgid "Numéro vert"
+msgstr "Numéro vert"
+
+#: .\templates\pages\partials\_canali.html
+msgid "Écrire sur WhatsApp"
+msgstr "Écrire sur WhatsApp"
+
+#: .\templates\partials\main_nav.html
+msgid "Nous contacter"
+msgstr "Nous contacter"
+
+#: .\apps\pages\imagery.py
+msgid "Des mains câblent des contacteurs sur un tableau électrique, entre des goulottes bleues et des fils rouges"
+msgstr "Des mains câblent des contacteurs sur un tableau électrique, entre des goulottes bleues et des fils rouges"
+
+#: .\apps\pages\imagery.py
+msgid "Des rangées de vignes dans la brume, au pied d’une ligne de collines"
+msgstr "Des rangées de vignes dans la brume, au pied d’une ligne de collines"
+
+#: .\apps\pages\imagery.py
+msgid "Des volumes reliés en cuir, alignés sur un rayonnage : nervures et dorures des dos dans une lumière rasante"
+msgstr "Des volumes reliés en cuir, alignés sur un rayonnage : nervures et dorures des dos dans une lumière rasante"
+
+#: .\apps\pages\imagery.py
+msgid "Deux personnes en conversation : l’une accompagne sa parole d’un geste de la main, l’autre tient une pochette contre elle"
+msgstr "Deux personnes en conversation : l’une accompagne sa parole d’un geste de la main, l’autre tient une pochette contre elle"
+
+#: .\apps\pages\imagery.py
+msgid "Une allée d’entrepôt entre de hauts rayonnages chargés de cartons"
+msgstr "Une allée d’entrepôt entre de hauts rayonnages chargés de cartons"
+
+#: .\apps\pages\imagery.py
+msgid "Vue d’en haut, une table partagée : des mains se servent dans des bols d’olives et de tomates, sur un plateau de bois ajouré"
+msgstr "Vue d’en haut, une table partagée : des mains se servent dans des bols d’olives et de tomates, sur un plateau de bois ajouré"
+
+#: .\apps\pages\imagery.py
+msgid "À une table de travail, une main prend des notes au stylo dans un cahier, devant un livre ouvert"
+msgstr "À une table de travail, une main prend des notes au stylo dans un cahier, devant un livre ouvert"
+
+#: .\apps\ecosystem\services.py
+msgid "Après l’arrivée"
+msgstr "Après l’arrivée"
+
+#: .\apps\ecosystem\services.py
+msgid "Avant le départ"
+msgstr "Avant le départ"
+
+#: .\apps\ecosystem\services.py
+msgid "En Italie"
+msgstr "En Italie"
+
+#: .\templates\ecosystem\institutions.html
+msgid "Destinataires"
+msgstr "Destinataires"
+
+#: .\templates\pathways\detail.html .\templates\pathways\diplomas.html
+msgid "Voir dans le glossaire"
+msgstr "Voir dans le glossaire"
+
+#: .\apps\pages\content.py
+msgid "Le même geste, sur le cèdre et sur le marbre : deux savoir-faire, deux rives, un même projet."
+msgstr "Le même geste, sur le cèdre et sur le marbre : deux savoir-faire, deux rives, un même projet."
+
+#: .\templates\pages\contact.html
+msgid "Par téléphone, WhatsApp ou formulaire"
+msgstr "Par téléphone, WhatsApp ou formulaire"
+
+#: .\templates\pages\contact.html
+msgid "Par téléphone ou formulaire"
+msgstr "Par téléphone ou formulaire"
+
+#: .\templates\pages\contact.html
+msgid "Par WhatsApp ou formulaire"
+msgstr "Par WhatsApp ou formulaire"
+
+#: .\apps\pages\identity.py
+msgid "Code fiscal"
+msgstr "Code fiscal"
+
+#: .\apps\pages\identity.py
+msgid "Siège social"
+msgstr "Siège social"
+
+#: .\apps\pages\identity.py
+msgid "Siège opérationnel"
+msgstr "Siège opérationnel"
+
+#: .\apps\pages\identity.py
+msgid "Site officiel"
+msgstr "Site officiel"
+
+#: .\templates\pages\agami.html
+msgid "Contact officiel"
+msgstr "Contact officiel"
+
+#: .\templates\glossary\_entry.html
+msgid "Où le rencontrer"
+msgstr "Où le rencontrer"
+
+#: .\templates\living\index.html
+msgid "Pour s’installer"
+msgstr "Pour s’installer"

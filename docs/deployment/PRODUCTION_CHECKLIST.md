@@ -9,6 +9,14 @@
 > A-27 describe the real release (the annotated tag `v2.0.0` on GitHub's `main` after the promotion, the reference
 > tag `pre-v5-main-2026-10`), A-26 the CI run on Python 3.12 and PostgreSQL 16, C-7 the reference tag; and by its
 > review fixes: §A's one bar for PRODUCTION_READY (with §B's second line), A-26's wording (the major versions).
+> Updated 28 October 2026 by the privacy lane P2 (directive V5.16 §14): the status model of V5.16 (runbook
+> *States*), and A-29 … A-33 —
+> the privacy notice verified and public, the production configuration, the art. 9 position, the DPIA, the DPO and
+> recipient roles. They are closed, never accepted as open.
+> Updated 28 October 2026 by the privacy lane P3 (directive V5.17 §2, §3, §4, §10): the status model PRODUCT_COMPLETE /
+> COMPLIANCE_REVIEW_COMPLETE / PRODUCTION_CONFIG_COMPLETE / PRODUCTION_READY (it replaced V5.16's PRIVACY_CONTENT_COMPLETE);
+> A-29 … A-33 marked as **not blocking PRODUCT_COMPLETE**; A-30 holds the infrastructure values, verified
+> when the server is prepared; A-31 names the R-SC-1 control; A-32 points at the DPIA in preparation.
 
 - [A. Release gate](#a-release-gate) — the owner's list (directive V5.9 §15), item by item, with how to verify it
 - [B. Before the deployment](#b-before-the-deployment)
@@ -25,7 +33,12 @@ Commands written `python …` run in a development checkout with the project's v
 On **one commit** — the one that will be tagged — and nothing else. The project is called ready for server deployment
 (PRODUCTION_READY, *States* in the runbook) on one bar only: **A-1 … A-22 ticked with evidence on that commit, and
 each of A-23 … A-28 closed or accepted in writing by the owner as open until go-live**; the final handoff names each of
-A-23 … A-28 with its state. The parts of A-1 … A-22 that run on the server or on the temporary host (`sudo ile-manage`,
+A-23 … A-28 with its state. Since V5.16 (28 October 2026) the bar also needs **A-29 … A-33 closed** — they cannot be
+accepted as open: they are COMPLIANCE_REVIEW_COMPLETE and PRODUCTION_CONFIG_COMPLETE (runbook *States*), and A-29 is
+the gate «PRIVACY NOTICE = VERIFIED AND PUBLIC» (V5.14 §9). **None of A-29 … A-33 blocks PRODUCT_COMPLETE** (V5.17:
+«DPIA / Article 9 / DPO / recipient classification / retention / production hosting configuration DO NOT block:
+PRODUCT_COMPLETE. They block: PRODUCTION_READY.»).
+The parts of A-1 … A-22 that run on the server or on the temporary host (`sudo ile-manage`,
 `<host>`) are the owner's, at the deployment (cutover step 3, §D): the bar counts the rest of each line, and the
 handoff lists those parts.
 
@@ -64,6 +77,20 @@ Go-live blockers that are **not code** (`docs/PREPROD_REPORT.md` §15) and decis
 | A-26 | The test suite green on Python 3.12 with PostgreSQL 16 — the major versions of Ubuntu 24.04's interpreter and database (CI's builds of them, not Ubuntu's): the «production target» run of CI's matrix (`.github/workflows/ci.yml`, since 16 October 2026) on the release's commit, beside the Python 3.13 / PostgreSQL 17 run (A-2) | team (CI) |
 | A-27 | The release tag's name — **decided**: `v2.0.0`, annotated, the version the platform already declares (the owner's directive V5.10, 16 October 2026: «use the repository's established versioning convention»), with the reference tag `pre-v5-main-2026-10` on `a3ac318` and no candidate tag (runbook, *RELEASE TAGS*) | owner — decided; the orchestrator creates both tags after the release gates |
 | A-28 | **Backups running and restorable** (runbook step 10): the owner's backup key pair made, the private key and its passphrase stored offline twice; the off-server destination decided and configured; `italylegalentry-backup.timer` active and its last run «copied off the server»; **one off-server restore drill passed** (C-6) | owner |
+
+Privacy and production configuration (directives V5.16 and V5.17, 28 October 2026). Each one is **closed with its
+evidence**; none of them can be accepted as open; **none of them blocks PRODUCT_COMPLETE** — they block
+PRODUCTION_READY. A-30's values are not questions for the owner now (V5.17 §10): they are verified when the
+production server is prepared, and this checklist is the only place they live. The privacy notice's open fields carry the same classes: «[DA COMPLETARE —
+OF-nn — <class>: …]», and production refuses to publish the notice while one remains (`legal.services.publish`).
+
+| # | Item | State it completes | Whose | Evidence to write down |
+|---|---|---|---|---|
+| A-29 | **PRIVACY NOTICE = VERIFIED AND PUBLIC** (V5.14 §9): the privacy notice (A) and the cookie information (B) published through `legal_publish` / the back office, **no `[DA COMPLETARE` left** in the Italian text or a translation, footer and collection points linking them. A-29 closes only when A-30 … A-33 have filled the notice's fields | COMPLIANCE_REVIEW_COMPLETE **and** PRODUCTION_CONFIG_COMPLETE | owner, legal lead | `curl -s https://<host>/it/privacy-policy/ \| grep -c 'DA COMPLETARE'` → `0`; the published version number; the reviewer's name |
+| A-30 | **Production configuration verified on the real infrastructure** (V5.16 §1, §10, §12; V5.17 §10: verified when the production server is prepared, not asked beforehand) — the markers classed PRODUCTION CONFIGURATION REQUIRED: the DigitalOcean region of the droplet; the database and storage region; DigitalOcean's DPA accepted for the production account and its sub-processor list; the SMTP provider actually used and its DPA; the host of the contact@agamieuromed.org mailbox; the off-server backup provider, location and retention; nginx's log rotation on the server; journald's retention. **And the logging verification of §12**: on the server, what nginx (access log masked, error log, the catch-all server — lane P's LG-2/LG-3), Gunicorn (no access log: `--error-logfile -`) and the application (`journalctl -u italylegalentry`: no e-mail address, no query string) really log; minimisation, rotation, access restricted to root/`adm`, retention. Security logging is not weakened blindly. **And the owner-confirmed WhatsApp number** (V5.19; V5.20, option B): `ILE_WHATSAPP_NUMBER` in the server's environment file (international format) or the back office's «numero WhatsApp» — never in the repository; blank, the site draws no WhatsApp channel | PRODUCTION_CONFIG_COMPLETE | owner | the region names as the provider's console shows them; the DPA acceptance date; `cat /etc/logrotate.d/nginx`; `grep -E 'SystemMaxUse\|MaxRetentionSec' /etc/systemd/journald.conf`; a sample of each log, redacted; the contact page's WhatsApp link, `curl -s https://<host>/it/contact/ \| grep -o 'https://wa.me/[0-9]*' \| sort -u` → one URL |
+| A-31 | **SPECIAL CATEGORY LEGAL BASIS** (V5.16 §5): an art. 9 condition approved in writing for each flow of `docs/compliance/SPECIAL_CATEGORY_AUDIT.md` §1 marked «SPECIAL CATEGORY LEGAL BASIS REQUIRED», **or** those flows kept closed in production by the control R-SC-1 (V5.17 §4: `core.special_category`, `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED` off — prod.py refuses it on without `ILE_SPECIAL_CATEGORY_BASIS_REFERENCE`, the approval's reference; `docs/compliance/PREVIEW_VS_PRODUCTION.md`; `apps/documents/tests/test_special_category_v517.py`). The free texts that stay open carry the minimisation guidance; no «explicit consent» box stands in for a condition | COMPLIANCE_REVIEW_COMPLETE | legal lead, owner | the approval and its reference, or `ILE_SPECIAL_CATEGORY_FLOWS_ENABLED=0` in the server's environment file |
+| A-32 | **DPIA = PRODUCTION GATE** (V5.16 §8, V5.17 §3; `docs/compliance/DPIA_NECESSITY.md`): the DPIA prepared in [`docs/compliance/DPIA.md`](../compliance/DPIA.md) completed — its open facts (DPIA §9) filled, the controller's and legal review's sign-off, the DPO's advice if one is designated — and its measures applied, **unless** the legal review documents a reasoned conclusion that none is required | COMPLIANCE_REVIEW_COMPLETE | controller, legal lead | the DPIA's reference and date, or the conclusion |
+| A-33 | **Governance facts of the notice** (V5.16 §2, §4, §7, §9, §11) — the markers classed OWNER CONFIRMATION REQUIRED and LEGAL REVIEW REQUIRED: OF-01 the controller confirmed by the owner (AGAMI APS as the candidate; Italy Legal Entry not substituted as controller unless the owner confirms it is a separate legal entity); the legal bases (`docs/compliance/PROCESSING_PURPOSE_MATRIX.md`); DPO STATUS (`DPO_ASSESSMENT.md`); recipient roles and every processor's art. 28 arrangement (`RECIPIENT_ROLES_MATRIX.md`); the retention policies (audit trail, server logs, accounts, case files, documents, helpdesk, communications, copies of sent e-mail, backups) | COMPLIANCE_REVIEW_COMPLETE | owner, legal lead | each answer, written, with its date |
 
 ## B. Before the deployment
 

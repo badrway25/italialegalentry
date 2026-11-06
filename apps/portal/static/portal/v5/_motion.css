@@ -1,0 +1,214 @@
+/* ============================================================================
+   THE CONSOLE'S MOTION — the console's half of the loader «Lume» across a navigation (V5.12 §4; the Director's
+   DECISIONS §1 T1–T3), a partial of the console entry (apps/portal/static/portal/console.css), so the public pages
+   never carry it. The shared half — the cross-document View Transition, the letterhead's threshold, the keyframes
+   `lume-line`, `lume-arrive`, `lume-fade`, `lume-still`, `sig-turn` — is main.css's (static/css/v5/motion.css,
+   static/css/v5/loader.css), which every console page loads first.
+
+   · the View Transition's `ile-mark` lands on the tile that is drawn: the rail's from 64rem, the top bar's below
+     (one name per page; the drawer's tile, inside a closed <dialog>, is never captured). A language switch gives it
+     up (html.vt-lang): the mark never travels across a mirror;
+   · V5.15 (DECISIONS §15 lane A): the context bar's threshold — its line, its word, the tile's turning key — and the
+     tiles' arrival light left with the letterhead's: the wait and the page change are the central veil's
+     (v5/lume.css, base.html), on the platform as on the public site; under it the View Transition is skipped;
+   W2 (V5.12 §5; DECISIONS §2):
+   · M13 the rail's plate — `rail-current`: the current row's night plate is the View Transition's second name; across
+     a navigation inside the console it glides from the row left to the row reached (--motion-standard,
+     --ease-layout), the words cross-fading inside it. On a phone the bottom bar's current item carries it. A language
+     switch gives it up, as the mark;
+   · M5 the journey's light is the journey's own page sheet (v5/_journey-rail.css §8): the shared console bundle
+     carries no journey rule;
+   · M11 a document's state — after the Dépôt's filing the register is read again (static/js/src/piece-drawer.js) and
+     the row whose state changed is marked `data-changed`: its chip cross-fades in (2 × --motion-fast, 240 ms), then
+     its reading-edge rule lights (--motion-standard) and holds a moment before it goes back to the row's own state;
+   · M12 the next action's arrow (3 px under a fine pointer) is the buttons' own `.btn--arrow` (v5/buttons.css): the
+     dashboard's «Prochaine étape» already carries it — nothing is added here.
+   ========================================================================== */
+
+@media (min-width: 64rem) {
+  .rail__tile {
+    view-transition-name: ile-mark;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .console-bar__tile {
+    view-transition-name: ile-mark;
+  }
+}
+
+.vt-lang :is(.rail__tile, .console-bar__tile) {
+  view-transition-name: none;
+}
+
+/* ---- M13 · the rail's plate ------------------------------------------------------------------------------------ */
+
+@media (min-width: 64rem) {
+  .rail__item[aria-current="page"] {
+    view-transition-name: rail-current;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .console-bottom__item[aria-current="page"] {
+    view-transition-name: rail-current;
+  }
+}
+
+.vt-lang :is(.rail__item, .console-bottom__item)[aria-current="page"] {
+  view-transition-name: none;
+}
+
+/* under the central veil (V5.15, v5/lume.css) the rail stays LIT and still: no plate travels and no mark flies — a
+   named item leaves a hole where it stood while its group moves (review round 2: «Ma situation» missing at 540 ms,
+   half-drawn at 630 ms). Both pages drop the names: the leaving one under html.lume-go, the arriving one under
+   html.lume-in; the root's 140 ms dissolve is the only transition, and the rail is the same on both sides of it */
+:is(.lume-go, .lume-in) :is(.rail__item, .console-bottom__item)[aria-current="page"],
+:is(.lume-go, .lume-in) :is(.rail__tile, .console-bar__tile) {
+  view-transition-name: none;
+}
+
+::view-transition-group(rail-current) {
+  animation-duration: var(--motion-standard);
+  animation-timing-function: var(--ease-layout);
+}
+
+/* (V5.15, DECISIONS §15 lane A) W1's light line on the band's rule and the band's word are gone: «a gold line under
+   the header is NOT the primary branded loader» — the wait is carried by the central veil, its sill and its one status
+   line (v5/lume.css, components/lume_veil.html). */
+
+
+
+/* ---- M11 · a document's state changed ----------------------------------------------------------------------- */
+
+.doc-row {
+  --m11-x: 2px;
+}
+
+[dir="rtl"] .doc-row {
+  --m11-x: -2px;
+}
+
+.doc-row[data-changed] .doc-row__state {
+  animation: m11-chip calc(var(--motion-fast) * 2) var(--ease-enter) 1 backwards;
+}
+
+.doc-row[data-changed] {
+  animation: m11-rule calc(var(--motion-standard) * 5) linear calc(var(--motion-fast) * 2) 1 backwards;
+}
+
+@keyframes m11-chip {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes m11-rule {
+  0% {
+    box-shadow: inset 0 0 0 var(--accent-mark);
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); /* --ease-enter */
+  }
+
+  20%,
+  70% {
+    box-shadow: inset var(--m11-x) 0 0 var(--accent-mark);
+  }
+}
+
+@media (forced-colors: active) {
+  .doc-row[data-changed] {
+    animation: none;
+  }
+}
+
+/* ---- T4 · the drawer's reading, a region of «Lume» (static/js/src/lume/region.js) ---------------------------- */
+/* after 400 ms the head's key (_workspace.css) and, on a first arrival, the body's still shapes — a title and the
+   piece's plate, in the skeleton's wash (21st.dev Shapes Skeleton 29863: the shapes only, never a pulse); the word
+   at 1 s hangs under the head at the inline end */
+.doc-drawer__head {
+  position: relative;
+}
+
+.doc-drawer__word {
+  position: absolute;
+  inset-inline-end: var(--s-4);
+  inset-block-start: 100%;
+  margin: var(--s-2) 0 0;
+  font-size: var(--u-caption);
+  line-height: var(--u-caption-lh);
+  color: var(--text-2);
+  pointer-events: none;
+}
+
+.doc-drawer__word:empty {
+  display: none;
+}
+
+.doc-drawer.is-busy .doc-drawer__body:empty::before,
+.doc-drawer.is-busy .doc-drawer__body:empty::after {
+  content: "";
+  display: block;
+  inline-size: 55%;
+  block-size: var(--s-6);
+  border-radius: var(--skeleton-radius);
+  background: var(--skeleton-bg);
+}
+
+/* the second shape: the piece's plate under its title */
+.doc-drawer.is-busy .doc-drawer__body:empty::after {
+  inline-size: 100%;
+  block-size: 10rem;
+  margin-block-start: var(--s-6);
+}
+
+@media (forced-colors: active) {
+  .doc-drawer.is-busy .doc-drawer__body:empty::before,
+  .doc-drawer.is-busy .doc-drawer__body:empty::after {
+    border: 1px dashed GrayText;
+  }
+}
+
+/* ---- V5.15 §20 · the platform's composition comes alive (DECISIONS §15 lane A; CSS only, keyed on lane D's classes) --
+   The dashboard's and the organisation's blocks RISE into place at load, the main column first, then the side, 60 ms
+   apart (420 ms, 12 px — after the arrival's veil, --rise-wait); a row or a task LEANS 2 px towards its reading end
+   under a fine pointer, its ground tinted. Never under reduced motion or html.rm; the keyboard never waits. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.rm) :is(.db-main, .db-side, .org-main, .org-side) > * {
+    /* backwards, never both (V5.18): c-rise has a `from` only, so a forwards fill adds nothing to the end state, but
+       it kept the 420 ms rise IN EFFECT for ever — listed by getAnimations() long after it ended (the dashboards'
+       «nothing moving» guards), and a translate left on each block makes it a stacking context and the containing
+       block of what is absolutely placed inside it (the head's B1, the same cause) */
+    animation: c-rise 420ms cubic-bezier(0.25, 1, 0.5, 1) calc(var(--c-d, 0ms) + var(--rise-wait, 0ms)) backwards;
+  }
+
+  html:not(.rm) :is(.db-main, .org-main) > :nth-child(2) { --c-d: 60ms; }
+  html:not(.rm) :is(.db-main, .org-main) > :nth-child(3) { --c-d: 120ms; }
+  html:not(.rm) :is(.db-main, .org-main) > :nth-child(n+4) { --c-d: 180ms; }
+  html:not(.rm) :is(.db-side, .org-side) > * { --c-d: 140ms; }
+  html:not(.rm) :is(.db-side, .org-side) > :nth-child(n+2) { --c-d: 200ms; }
+  html.lume-in { --rise-wait: calc(520ms - var(--lume-t, 0ms)); }
+
+  @media (hover: hover) and (pointer: fine) {
+    :is(.db-list__row, .db-task, .reg-row__link, .org-refs__link) {
+      transition: translate var(--motion-standard) var(--ease-enter), background-color var(--motion-fast) var(--ease-enter);
+    }
+
+    :is(.db-list__row, .db-task, .reg-row__link, .org-refs__link):hover {
+      translate: 2px 0;
+      background-color: var(--surface-hover);
+    }
+
+    [dir="rtl"] :is(.db-list__row, .db-task, .reg-row__link, .org-refs__link):hover {
+      translate: -2px 0;
+    }
+
+    html[data-input="key"] :is(.db-list__row, .db-task, .reg-row__link, .org-refs__link) { transition: none; }
+  }
+}
+
+@keyframes c-rise {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}

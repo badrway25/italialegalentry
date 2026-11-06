@@ -35,7 +35,7 @@ class FeatureFlagAdmin(BaseModelAdmin):
 class SiteSettingsAdmin(BaseModelAdmin):
     fieldsets = (
         (_("Identità"), {"fields": ("site_name", "promoter_name", "logo", "use_logo_image")}),
-        (_("Contatti e versione"), {"fields": ("public_contact_email", "version_label", "content_verified_on")}),
+        (_("Contatti e versione"), {"fields": ("public_contact_email", "freephone_number", "whatsapp_number", "version_label", "content_verified_on")}),
         (_("Hosting (conferma richiesta dal documento §1.4)"), {"fields": ("hosting_provider", "hosting_location")}),
         (_("Area riservata"), {"fields": ("reserved_area_enabled",)}),
         (_("Audit"), {"fields": ("created_at", "updated_at")}),

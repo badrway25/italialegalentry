@@ -1,0 +1,4 @@
+{% load i18n %}{% comment %}One answer on the FAQ explorer's plate (V5.22, SECTION_SYSTEM_V2 §3.13 Q1; lane P2): the prescribed answer, whole, at
+the lead's size, its language on its own element (the date and the permalink below are the page's); then the date and
+the permalink. Contract: `entry` (faq.services.FAQEntry).{% endcomment %}<p class="faq-risposta"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.answer }}</p>
+<p class="faq-item__meta faq-risposta__meta"><span>{% translate "Mis à jour le" %} <time datetime="{{ entry.last_updated|date:'Y-m-d' }}">{{ entry.last_updated|date:"d.m.Y" }}</time></span> · <a class="faq-item__permalink" href="{% url 'faq:index' %}#{{ entry.key }}">{% translate "Lien direct vers cette question" %}</a></p>

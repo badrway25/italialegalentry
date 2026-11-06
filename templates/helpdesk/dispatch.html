@@ -21,8 +21,10 @@ JavaScript off (ADR-009).
 {% block meta_description %}{% translate "Les demandes du guichet en attente d’un professionnel." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="register">
+  {% include "portal/partials/atrium_art.html" with figure="counter" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Désignation des professionnels" %}</h1>
     <p class="ws-head__lead">{% translate "Les demandes en attente d’un mandat. Le texte des demandes n’est pas affiché ici : désigner un professionnel n’exige pas de lire la question posée." %}</p>
   </div>

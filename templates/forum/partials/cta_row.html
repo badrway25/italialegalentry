@@ -1,36 +1,36 @@
-{% load i18n forum_tags %}
+{% load i18n forum_tags forum_v2 %}
 {% comment %}
 Primary CTA anchors to the registration form (event mode, registrations open). Secondary CTAs
 (document §2.1 « Boutons secondaires ») point to the companies form and the collaboration form
 owned by the enquiries app — resolved with safe_url so the page renders while those routes land.
 
-Design V5.4 (W3-F1): «Participer et collaborer» as the page's ONE action — the action card (the raised panel of its
-screen): one primary (the registration while it is open, otherwise the pilot's interest), the other ways as
-secondaries; the live «who can help me» line under it.
+Design V5.22 (SECTION_SYSTEM_V2 §3.16 FO3; lane P2) — K «lo strato» on STONE (from the night: no night–paper–night
+sandwich above the footer, RH-8): two raised action plates, each with its audience's disc — the pilot's interest (the
+companies' needs form: `building`, the company's accent), the collaboration (`institution`) — the locked labels their
+title-buttons (each plate one link), the registration first while it is open; the live «who can help me» line as the
+foot; the Forum's mark drawn faint behind (aria-hidden). Signature DEPTH: the plates settle over their shadow layers.
+Round 1 (QA_ROUND1 M9c): a plate under the hand or the focus lights the faint mark behind (data-azione, §4.7).
 {% endcomment %}
-{% safe_url "enquiries:company_needs" as pilot_url %}{% safe_url "enquiries:institution_proposal" as collab_url %}
-<section class="chapter forum-action" id="forum-cta" aria-labelledby="forum-cta-title">
-  <div class="container chapter__inner">
-    {% translate "Participer et collaborer" as cta_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-cta-title" title=cta_title only %}
-    <div class="chapter__body">
-      <div class="card card--action action">
-        <p class="card__action forum-cta__actions">
-          {% if not is_permanent and registration_open %}
-            <a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a>
-          {% endif %}
-          {% if pilot_url %}
-            <a class="btn {% if is_permanent or not registration_open %}btn--primary{% else %}btn--secondary{% endif %} btn--lg" href="{{ pilot_url }}">{% event_text event "registration.button_secondary_pilot" %}</a>
-          {% else %}
-            <span class="btn btn--secondary btn--lg is-disabled" aria-disabled="true" data-pending-route="enquiries:company_needs">{% event_text event "registration.button_secondary_pilot" %}</span>
-          {% endif %}
-          {% if collab_url %}
-            <a class="btn btn--secondary btn--lg" href="{{ collab_url }}">{% event_text event "registration.button_secondary_collab" %}</a>
-          {% else %}
-            <span class="btn btn--secondary btn--lg is-disabled" aria-disabled="true" data-pending-route="enquiries:institution_proposal">{% event_text event "registration.button_secondary_collab" %}</span>
-          {% endif %}
-        </p>
-      </div>
-      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-    </div>
+{% safe_url "enquiries:company_needs" as pilot_url %}{% safe_url "enquiries:institution_proposal" as collab_url %}{% forum_mark as forum_mark_id %}
+<section class="sez sez--strato forum-azioni" data-sec="strato" data-ground="stone" data-rhythm="band" id="forum-cta" aria-labelledby="forum-cta-title">
+  <div class="container forum-azioni__inner">
+    <span class="forum-azioni__fondale" aria-hidden="true"><svg class="forum-luce" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><radialGradient id="forum-luce-azioni" cx="50%" cy="100%" r="50%"><stop offset="0"/><stop offset="1"/></radialGradient></defs><rect width="100" height="100" fill="url(#forum-luce-azioni)"/></svg>{% with "components/sezioni/marks/_"|add:forum_mark_id|add:".html" as faint_mark %}{% include faint_mark %}{% endwith %}</span>
+    {% translate "Participer et collaborer" as cta_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="forum-cta-title" title=cta_title only %}
+    {% if not is_permanent and registration_open %}
+    <p class="forum-azioni__registrazione"><a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a></p>
+    {% endif %}
+    <ul class="forum-azioni__lastre sez-seq" role="list">
+      <li class="forum-azioni__lastra sez-plate{% if is_permanent or not registration_open %} sez-plate--raised{% endif %}" data-audience="company" data-verb="depth">
+        <span class="sez-disc sez-disc--lg" aria-hidden="true">{% svg_icon "building" "icon" %}</span>
+        {% if pilot_url %}<a class="forum-azioni__link sez-stretch" data-azione href="{{ pilot_url }}">{% event_text event "registration.button_secondary_pilot" %}</a>{% else %}<span class="forum-azioni__link is-disabled" aria-disabled="true" data-pending-route="enquiries:company_needs">{% event_text event "registration.button_secondary_pilot" %}</span>{% endif %}
+        <span class="forum-azioni__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span>
+      </li>
+      <li class="forum-azioni__lastra sez-plate" data-audience="institution" data-verb="depth">
+        <span class="sez-disc sez-disc--lg" aria-hidden="true">{% svg_icon "institution" "icon" %}</span>
+        {% if collab_url %}<a class="forum-azioni__link sez-stretch" data-azione href="{{ collab_url }}">{% event_text event "registration.button_secondary_collab" %}</a>{% else %}<span class="forum-azioni__link is-disabled" aria-disabled="true" data-pending-route="enquiries:institution_proposal">{% event_text event "registration.button_secondary_collab" %}</span>{% endif %}
+        <span class="forum-azioni__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span>
+      </li>
+    </ul>
+    <p class="aiuto forum-azioni__aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
   </div>
 </section>

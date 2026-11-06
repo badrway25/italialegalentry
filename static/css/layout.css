@@ -64,19 +64,6 @@
   padding-block: var(--rank-b-block);
 }
 
-.section--d {
-  padding-block: var(--rank-d-block);
-}
-
-.section--flush-top {
-  padding-block-start: 0;
-}
-
-/* Ground changes ARE the composition: no page ships with a single ground. */
-.section--process {
-  background: var(--paper-deep);
-}
-
 /* The night verso left with its last page, the case file's pre-assessment, whose text stood at 1.06 : 1 on it
    (design V5, W3-E: the page's own ground). */
 
@@ -94,12 +81,6 @@
   font-family: var(--font-display);
   font-size: var(--t-lead-size);
   line-height: var(--t-lead-lh);
-}
-
-/* ---- Legacy section aliases (demolition scaffold) ------------------------- */
-.section__header--center {
-  margin-inline: auto;
-  text-align: center;
 }
 
 /* ---- Editorial grid (12 columns, collapses to 1 under 48rem) -------------- */
@@ -171,13 +152,6 @@
   border: 0;
   border-block-start: var(--border-width) solid var(--border-hairline);
   margin-block: var(--space-8);
-}
-
-/* ---- Responsive visibility ------------------------------------------------ */
-@media (max-width: 63.999rem) {
-  .hide-mobile {
-    display: none !important;
-  }
 }
 
 /* ---- Scroll container for wide content (tables, diagrams) ---------------- */

@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n static pages_typo %}
+{% extends "base.html" %}{% load i18n static pages_typo pages_imagery locked_split %}
 {% comment %}
 Formation — two moments of one path (Implementation §3.8.5): before departure (neutral UI wording,
 CONTENT_PENDING_LEGAL_REVIEW, Annexe §5 nature: orientation/preparation, never an administrative approval)
@@ -11,68 +11,85 @@ temps») beside its open ring, its title, its text at the reading size and measu
 first carries the page's notice (no attestation is an administrative approval); then the space's other areas with
 the ONE anti-fraud inset; on the stone, the page's ONE action and the live «who can help me» line, as at the end of
 a pathway's sheet. No card, no side column.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.9; lane P1 — Page Composition V2), below the approved head (KEEP: its seal
+`ile-formazione`, the «Nature» meta row):
+  * F1, the page's moment — I «la traversata»: the two times as two columns joined by one crossing line, from the
+    origin country (`earth`) to Italy (the arch, the page's one gold arrival); each column its kicker, its title, its
+    text and its way further, its frame under the line — the first time `training.before` (hands at a training bench),
+    its notice («… aucune attestation n'a valeur d'approbation administrative.») a side annotation docked to the
+    frame's edge, always visible; the second `training.after` (the microscopes), the locked body whole, its first
+    sentence set larger in place (emphasis, not a cut). Below 64 rem the line runs down the reading edge, each frame
+    after its text, the notice inline. LINE (scroll-linked) + DEVELOP: frame 1 develops as the line leaves it, frame 2
+    as it arrives;
+  * F2 — E «il mosaico»: the space's other areas, Diplômes the wide tile. STAGGER;
+  * F2b — K «la protezione», its own band on the stone. DEPTH;
+  * F3 — A «la boussole»: the questionnaire's action, its caution kept, the help line beside it. SEMANTIC TURN.
 {% endcomment %}
 {% block page_title %}{% translate "Formation : avant le départ et après l’arrivée" %} · {% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{% translate "Formation avant le départ et après l’arrivée : deux temps d’un même parcours régulier vers l’Italie." %}{% endblock %}
 {% block body_class %}page-pathways page-pathways--training interior{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/pathways.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/training.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
 {% translate "Espace Personnes" as space_label %}{% translate "Formation : avant le départ et après l’arrivée" as page_title %}{% translate "Deux temps d’un même parcours : se préparer dans le pays d’origine, puis continuer à se former en Italie. Les formations ont une finalité d’orientation et de préparation." as page_lead %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=page_lead meta_template="pathways/_review_meta.html" reviewed_at=None only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=page_lead meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="presentation" slot="training.hero" fronte_linked=True only %}
 
-<div class="chapter chapter--prose training">
-  <div class="container chapter__inner">
-    <div class="chapter__body">
-      {% locked_is_fallback "p3.training_after.title" as after_fallback %}{% locked_lang "p3.training_after.title" as after_lang %}{% locked "p3.training_after.title" as after_title %}
-      <ol class="linea linea--phases training-phases" data-phases="2">
-        <li class="linea__step training-phase" id="avant-le-depart">
-          <span class="linea__num" aria-hidden="true"></span>
-          <p class="linea__kicker">{% translate "Premier temps" %}</p>
-          <h2 class="linea__label" id="training-before-title">{% translate "Formation avant le départ" %}</h2>
-          <div class="linea__text">
-            {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral wording; no programme, duration or attestation value is described.{% endcomment %}
-            <p>{% translate "Avant le départ, des parcours de formation professionnelle et civico-linguistique peuvent être organisés dans le pays d’origine avec des organismes partenaires : langue italienne, connaissance de la vie en Italie, compétences utiles au parcours envisagé." %}</p>
-            <div class="notice notice--info" role="status" data-notice="training-before">
-              <span class="notice__icon" aria-hidden="true">{% svg_icon "info" %}</span>
-              <div class="notice__body"><p>{% translate "Les formations sont promues avec des organismes partenaires ; aucune attestation n’a valeur d’approbation administrative." %}</p></div>
-            </div>
-            {% if origin_pathway_url %}<p class="linea__more"><a href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" as origin_label %}{{ origin_label|typo }}</a></p>{% endif %}
+{% locked_is_fallback "p3.training_after.title" as after_fallback %}{% locked_lang "p3.training_after.title" as after_lang %}{% locked "p3.training_after.title" as after_title %}
+{% locked_text "p3.training_after.body" as after_body %}{% locked_lang "p3.training_after.body" as body_lang %}{% locked_is_fallback "p3.training_after.body" as body_fallback %}
+<div class="sez sez--filo formazione-traversata" data-sec="filo" data-ground="paper" data-rhythm="moment">
+  <div class="container">
+    <ol class="traversata" role="list" data-registro data-phases="2">
+      <li class="traversata__tempo" id="avant-le-depart">
+        <span class="traversata__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon "earth" "icon" %}</span>
+        <p class="traversata__kicker">{% translate "Premier temps" %}</p>
+        <h2 class="traversata__titolo" id="training-before-title">{% translate "Formation avant le départ" %}</h2>
+        <div class="traversata__testo">
+          {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral wording; no programme, duration or attestation value is described.{% endcomment %}
+          <p>{% translate "Avant le départ, des parcours de formation professionnelle et civico-linguistique peuvent être organisés dans le pays d’origine avec des organismes partenaires : langue italienne, connaissance de la vie en Italie, compétences utiles au parcours envisagé." %}</p>
+          {% if origin_pathway_url %}<p class="traversata__altro"><a class="link-arrow" href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" as origin_label %}{{ origin_label|typo }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+        </div>
+        <div class="traversata__media">
+          {% photo "training.before" "traversata__foto" sizes=before_sizes %}
+          <div class="traversata__nota" role="status" data-notice="training-before" data-verb="slide">
+            <span class="traversata__segno" aria-hidden="true">{% svg_icon "info" "icon" %}</span>
+            <p>{% translate "Les formations sont promues avec des organismes partenaires ; aucune attestation n’a valeur d’approbation administrative." %}</p>
           </div>
-        </li>
-        <li class="linea__step training-phase" id="apres-l-arrivee">
-          <span class="linea__num" aria-hidden="true"></span>
-          <p class="linea__kicker">{% translate "Second temps" %}</p>
-          <h2 class="linea__label{% if after_title|striptags|upper == after_title|striptags %} linea__label--caps{% endif %}" id="training-after-title"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{{ after_title }}</h2>
-          <div class="linea__text">
-            {% locked "p3.training_after.body" "p" %}
-            {% if links.living %}<p class="linea__more"><a href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" as living_label %}{{ living_label|typo }}</a></p>{% endif %}
-          </div>
-        </li>
-      </ol>
-    </div>
+        </div>
+      </li>
+      <li class="traversata__tempo" id="apres-l-arrivee">
+        <span class="traversata__nodo traversata__nodo--arrivo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon "ile-arch" "icon" %}</span>
+        <p class="traversata__kicker">{% translate "Second temps" %}</p>
+        <h2 class="traversata__titolo{% if after_title|striptags|upper == after_title|striptags and after_title|striptags|lower != after_title|striptags %} traversata__titolo--caps{% endif %}" id="training-after-title"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{{ after_title }}</h2>
+        <div class="traversata__testo">
+          <p class="traversata__corpo" data-locked="p3.training_after.body"{% if body_fallback %} lang="{{ body_lang }}"{% endif %}>{{ after_body|locked_spans:"sentence" }}</p>
+          {% if links.living %}<p class="traversata__altro"><a class="link-arrow" href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" as living_label %}{{ living_label|typo }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+        </div>
+        <div class="traversata__media">{% photo "training.after" "traversata__foto" sizes=after_sizes %}</div>
+      </li>
+    </ol>
   </div>
 </div>
 
-<section class="chapter" aria-labelledby="space-links-title">
-  <div class="container chapter__inner">
-    {% translate "Dans l’Espace Personnes" as space_links_title %}{% include "pages/partials/_chapter_head.html" with title_id="space-links-title" title=space_links_title only %}
-    <div class="chapter__body">
-      {% include "pathways/_space_links.html" with links=links current="training" %}
-      <p class="chapter__more"><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}</a></p>
-      {% include "pathways/_antifraud_callout.html" with links=links level=3 suffix="training" %}
-    </div>
+{% translate "Dans l’Espace Personnes" as space_links_title %}
+<section class="sez sez--mosaico persone-spazio" data-sec="mosaico" data-ground="paper" data-rhythm="band" aria-labelledby="space-links-title">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="router" title_id="space-links-title" title=space_links_title only %}
+    {% include "components/sezioni/mosaico.html" with variant="grid" tiles=tiles label=space_links_title only %}
+    <p class="persone-spazio__tutti"><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>
   </div>
 </section>
 
-<section class="chapter chapter--area" id="orientation" aria-labelledby="orientation-chapter-title">
-  <div class="container chapter__inner">
-    {% translate "Orientation" as orientation_title %}{% include "pages/partials/_chapter_head.html" with title_id="orientation-chapter-title" title=orientation_title only %}
-    <div class="chapter__body">
-      {% include "pathways/_orientation_action.html" with links=links %}
-      <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
-    </div>
+<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="stone" data-rhythm="band" aria-labelledby="protezione-title-training">
+  <div class="container">
+    {% include "components/sezioni/protezione.html" with url=links.antifraud level=2 suffix="training" only %}
+  </div>
+</section>
+
+<section id="orientation" class="sez sez--boussole persone-boussole" data-sec="boussole" data-ground="brand" data-rhythm="band" aria-labelledby="orientation-chapter-title" data-action="orientation">
+  <div class="container">
+    {% include "components/sezioni/boussole.html" with title_id="orientation-chapter-title" title=boussole.title text=boussole.text action=boussole.action pending=boussole.pending help=boussole.help only %}
   </div>
 </section>
 {% endblock %}

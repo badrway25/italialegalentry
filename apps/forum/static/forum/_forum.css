@@ -369,3 +369,534 @@
     color: CanvasText;
   }
 }
+
+/* ============================================================================================
+   V5.22 (SECTION_SYSTEM_V2 §3.16; lane P2): the Forum in compositions — no photograph (Q4, Q5): its images are drawn.
+     FO0  the head's drawing: the Forum's mark at display scale on the band's far side, its arch's light the page's
+          one arrival gold; drawn once in the head's sequence (v5/_reveal.css «the seal's draw»)
+     FO1  A, typographic: the opening clause at the band's size; the last sentence the emphasised statement; the
+          hairline between the two draws, one light crosses the statement
+     FO2a I: «what» sticky beside the objectives' eight clause-stations — the line advances as it is read
+     FO2b H on night: the audience's nine actors on a ring around the Forum (a constellation on a phone)
+     FO3  K on stone: two action plates over their shadow layers, the mark drawn faint behind
+   ============================================================================================ */
+.forum-titolo {
+  margin: 0 0 var(--s-5);
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, var(--t-band));
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  color: inherit;
+}
+
+.forum-titolo:not(:lang(ar)) { letter-spacing: 0.02em; }
+
+/* ---- FO0 ---- */
+.forum-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.forum-hero__disegno {
+  position: absolute;
+  inset-block-end: calc(-1 * var(--s-6));
+  inset-inline-end: calc(-1 * var(--s-8));
+  z-index: -1;
+  inline-size: min(70vw, 30rem);
+  pointer-events: none;
+}
+
+.forum-hero .forum-hero__marchio {
+  --sg-w: 100%;
+  --sg-h: auto;
+  --sg-m: 100%;
+  --sg-light: var(--identity-light-night);
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--text-on-night-1) 46%, transparent);
+}
+
+.forum-hero__marchio::after { content: none; }
+
+/* below 64 rem the drawing stands under the page's index, on the band's foot — never under its links (round 2,
+   QA_ROUND2 m2: at 768 and 390 it lay under the sommaire, 103 000 px² of overlap): its frame is the drawn band of the
+   mark alone (the cavea's crown, y 20 of its 48 units, to under its sill), its empty sky cropped, its sill on the band's
+   edge */
+@media (max-width: 63.999rem) {
+  .forum-hero { --fd: min(72vw, 22rem); display: grid; }
+
+  .forum-hero__disegno {
+    grid-row: 2;
+    position: relative;
+    inset: auto;
+    justify-self: end;
+    inline-size: var(--fd);
+    aspect-ratio: 2;
+    margin-block: var(--s-6) calc(-1 * var(--s-12));
+    margin-inline-end: max(var(--s-4), (100% - var(--container)) / 2);
+    overflow: clip;
+  }
+
+  .forum-hero__disegno .forum-hero__marchio { margin-block-start: calc(var(--fd) * -20 / 48); }
+}
+
+/* round 1 (QA_ROUND1 M9a): from 64 rem the drawing has the end seat — the page's image at display scale, its threshold
+   light at its arch (the page's arrival gold) — and the page's index stands under the entrance's words, two columns of
+   hairline rows (it hid the drawing in the seat: only arcs showed at the band's edge).
+   Final round (QA_ROUND3 m6): the drawing hangs from the title's line, a fixed distance from the head's top — no longer
+   centred on a height that can change after the first paint (the rest of the document arriving, a late face: one
+   throttled load moved it 44 px, CLS 0.019) — and its seat is a block (an inline seat stood on a line whose descent is
+   the face's); the head is at least as tall as its drawing asks, so the drawing is never cut by the band's edge however
+   little the head holds (and on a wide screen, where the head's words need less, the band keeps that height) */
+@media (min-width: 64rem) {
+  .forum-hero { --fd: min(32vw, 27rem); min-block-size: calc(var(--s-10) + var(--s-8) + var(--fd) + var(--s-12)); }
+  .forum-hero .ingresso__inner > :is(.ingresso__text, .forum-localnav) { grid-column: 1 / span 7; }
+  .forum-hero .ingresso__inner > .forum-localnav { grid-row: 2; }
+  .forum-hero .forum-localnav .sommaire__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-8); }
+
+  .forum-hero__disegno {
+    inset-block: calc(var(--s-10) + var(--s-8)) auto;
+    inset-inline-end: max(var(--s-6), (100% - var(--container)) / 2);
+    inline-size: var(--fd);
+  }
+
+  .forum-hero .forum-hero__marchio { display: grid; color: color-mix(in srgb, var(--text-on-night-1) 74%, transparent); }
+}
+
+/* the index as the page's state (sezioni/spia.js): the section being read is its current row — the night's accent and a
+   2 px rule at its reading edge; announced on focus only (aria-current); with lane S's row stops (NOTES R2.6) a pair
+   read side by side lights both its rows (data-spia-con) */
+.forum-localnav .sommaire__link { position: relative; transition: color var(--motion-standard) var(--ease-enter); }
+
+.forum-localnav .sommaire__link:is([aria-current], [data-spia-con]) { color: var(--accent-night); }
+
+.forum-localnav .sommaire__link:is([aria-current], [data-spia-con])::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--s-2);
+  inset-inline-start: calc(-1 * var(--s-3));
+  inline-size: 2px;
+  background: var(--accent-night);
+}
+
+html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
+.forum-hero__marchio .sg-s { display: inline; }
+.forum-hero__marchio .sigillo__mark { margin: 0; stroke-width: 1.5; }
+.forum-hero__marchio .sigillo__mark * { vector-effect: non-scaling-stroke; }
+
+/* ---- FO1 ---- */
+.forum-pair__inner {
+  display: grid;
+  gap: var(--s-12) var(--s-8);
+}
+
+.forum-pair__item { min-inline-size: 0; scroll-margin-block-start: var(--header-h); }
+
+:is(.forum-pair__chi, .forum-pair__perche) {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.forum-pair__chi .ls-1 {
+  display: block;
+  margin-block-end: var(--s-3);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: 500;
+}
+
+.forum-pair__perche .ls-3 {
+  position: relative;
+  display: block;
+  margin-block-start: var(--s-5);
+  padding-inline-start: var(--s-5);
+  border-inline-start: 2px solid var(--accent-mark);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: 600;
+  overflow: clip;
+}
+
+/* the light that passes across the statement's column once (its band is drawn in the markup: an SVG paint, the
+   colour the token's) */
+.forum-pair__item:has(> .forum-pair__luce) { position: relative; overflow: clip; }
+
+.forum-pair__luce {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  color: var(--accent-mark);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.forum-pair__divisore { display: none; }
+
+@media (min-width: 64rem) {
+  .forum-pair__inner { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .forum-pair__item:first-child { grid-column: 1 / span 6; grid-row: 1; }
+  .forum-pair__divisore + .forum-pair__item { grid-column: 8 / span 5; grid-row: 1; }
+
+  .forum-pair__divisore {
+    display: block;
+    grid-column: 7;
+    grid-row: 1;
+    justify-self: center;
+    inline-size: 1px;
+    background: var(--line-structure);
+    transform-origin: 50% 0;
+  }
+}
+
+/* in view at load: the hairline and the light belong to the head's sequence (once, after its draw) */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .forum-pair__divisore {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) var(--motion-slow) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) .forum-pair__luce {
+    animation: sez-sweep var(--motion-route-light) var(--ease-sine) var(--motion-draw) backwards;
+  }
+}
+
+/* ---- FO2a ---- */
+.forum-filo__griglia {
+  display: grid;
+  gap: var(--s-12);
+}
+
+:is(.forum-filo__cosa, .forum-filo__obiettivi) { min-inline-size: 0; scroll-margin-block-start: var(--header-h); }
+
+.forum-filo__prosa p {
+  max-inline-size: var(--measure-body);
+  margin: 0 0 var(--s-4);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.forum-obiettivi {
+  position: relative;
+  display: grid;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  view-timeline: --obiettivi;
+}
+
+/* the line down the reading edge, and its advance over it (scrubbed by the reading) */
+.forum-obiettivi::before,
+.forum-obiettivi::after {
+  content: "";
+  position: absolute;
+  inset-block: var(--s-3);
+  inset-inline-start: 11px;
+  inline-size: 2px;
+  background: var(--line-rhythm);
+}
+
+.forum-obiettivi::after {
+  background: var(--accent-mark);
+  transform-origin: 50% 0;
+}
+
+.forum-obiettivi__tappa {
+  position: relative;
+  padding-inline-start: var(--s-12);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+/* a station's node: it lights as the line reaches it */
+.forum-obiettivi__tappa::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 4px;
+  inset-block-start: 6px;
+  z-index: 1;
+  inline-size: 16px;
+  block-size: 16px;
+  border: 2px solid var(--accent-mark);
+  border-radius: var(--radius-full);
+  background: var(--surface-page);
+}
+
+/* the arrival: the Forum's mark on its tile, the page's one arrival light (gold at its foot, never on the glyph) */
+.forum-obiettivi__tappa--arrivo { font-weight: 600; }
+.forum-obiettivi__tappa--arrivo::before { content: none; }
+
+.forum-obiettivi__marchio {
+  position: absolute;
+  inset-inline-start: -8px;
+  inset-block-start: -6px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm), inset 0 -2px 0 var(--identity-light);
+  color: var(--text-1);
+}
+
+.forum-obiettivi__marchio .icon { inline-size: 20px; block-size: 20px; }
+
+@media (min-width: 64rem) {
+  .forum-filo__griglia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--s-16); align-items: start; }
+  .forum-filo__cosa { position: sticky; inset-block-start: calc(var(--header-h-scrolled) + var(--s-6)); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not(.rm) .forum-obiettivi::after {
+      animation: sez-draw-y linear both;
+      animation-timeline: --obiettivi;
+      animation-range: entry 35% exit 55%;
+    }
+
+    :root:not(.rm) .forum-obiettivi__tappa::before {
+      animation: forum-nodo linear both;
+      animation-timeline: view();
+      animation-range: entry 80% cover 50%;
+    }
+  }
+}
+
+@keyframes forum-nodo {
+  from { border-color: var(--line-structure); }
+}
+
+/* ---- FO2b ---- */
+.forum-uditorio__titolo { text-align: center; }
+
+/* the ring is the moment from 64 rem; below, the constellation is as tall as it is */
+@media (max-width: 63.999rem) {
+  .forum-uditorio[data-rhythm="moment"] { min-block-size: 0; }
+}
+
+.forum-anello {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--s-8);
+  margin-block-start: var(--s-8);
+}
+
+.forum-anello__raggi { display: none; }
+
+.forum-anello__frase {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4) var(--s-6);
+  inline-size: 100%;
+  margin: 0;
+}
+
+.forum-attore {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: 500;
+}
+
+.forum-attore__punto { color: var(--text-on-night-2); }
+
+.forum-attore .sez-disc { --disc: 40px; --disc-glyph: 20px; }
+
+@media (min-width: 64rem) {
+  .forum-anello {
+    display: block;
+    inline-size: min(100%, 62rem);
+    aspect-ratio: 16 / 9.5;
+    margin-inline: auto;
+  }
+
+  /* round 1 (QA_ROUND1 M9b): the ring is drawn on the box's own proportions (160 × 95, scaled uniformly), so the
+     spokes' draw is exact — under a non-scaling stroke the dash of `pathLength` left them dashed fragments in motion;
+     the actors stand on a drawn orbit and each spoke runs from the hub to its actor's place, under its name plate */
+  .forum-anello__raggi {
+    position: absolute;
+    inset: 0;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    fill: none;
+    stroke: color-mix(in srgb, var(--text-on-night-1) 38%, transparent);
+    stroke-width: 0.24;
+    stroke-linecap: round;
+  }
+
+  .forum-anello__orbita { stroke-width: 0.16; stroke-dasharray: 0.5 1.5; stroke-dashoffset: 0; opacity: 0.7; }
+  [dir="rtl"] .forum-anello__raggi { scale: -1 1; }
+  .forum-attore__nome { padding: 2px var(--s-2); border-radius: var(--radius-sm); background: var(--surface-night); }
+
+  .forum-anello__centro {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+  }
+
+  [dir="rtl"] .forum-anello__centro { translate: 50% -50%; }
+
+  .forum-anello__frase {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .forum-attore {
+    position: absolute;
+    flex-direction: column;
+    gap: var(--s-2);
+    max-inline-size: 12rem;
+    inset-inline-start: var(--x);
+    translate: -50% -50%;
+    font-size: var(--t-body);
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  /* the actors are the sentence's own French run (left to right, its punctuation in place): their offsets read in
+     its direction, so the Arabic page mirrors the ring (counter-clockwise) by the place itself, never by the
+     translate */
+  [dir="rtl"] .forum-anello__frase[lang]:not([lang="ar"]) .forum-attore { inset-inline-start: calc(100% - var(--x)); }
+  [dir="rtl"] .forum-attore { translate: -50% -50%; } /* the twin: a left-to-right run keeps its own centring */
+
+  .forum-attore--1 { --x: 50%; inset-block-start: 8%; }
+  .forum-attore--2 { --x: 75.7%; inset-block-start: 18%; }
+  .forum-attore--3 { --x: 89.4%; inset-block-start: 43.1%; }
+  .forum-attore--4 { --x: 84.6%; inset-block-start: 71%; }
+  .forum-attore--5 { --x: 63.7%; inset-block-start: 89.6%; }
+  .forum-attore--6 { --x: 36.3%; inset-block-start: 89.6%; }
+  .forum-attore--7 { --x: 15.4%; inset-block-start: 71%; }
+  .forum-attore--8 { --x: 10.6%; inset-block-start: 43.1%; }
+  .forum-attore--9 { --x: 24.3%; inset-block-start: 18%; }
+}
+
+/* ---- FO3 ---- */
+/* the band is the seal system's scope: its light rests at 0 until a plate is under the hand or the focus
+   (v5/_sigillo.css sets --light 1 on the section, §4.7 «Light response») */
+.forum-azioni { --light: 0; }
+
+.forum-azioni__inner {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: var(--s-6);
+}
+
+.forum-azioni .testa { margin-block-end: 0; }
+
+.forum-azioni__fondale {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--s-6));
+  inset-inline-end: 0;
+  z-index: -1;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* the page says its concept once by its seal (FO0's): the hub and this faint drawing are the mark's drawing itself */
+.forum-azioni__fondale .sigillo__mark {
+  --sg-m: 14rem;
+  --sg-sw: 1;
+  display: block;
+  margin: 0;
+  color: var(--line-structure);
+}
+
+:is(.forum-azioni__fondale, .forum-anello__centro) .sigillo__mark * { vector-effect: non-scaling-stroke; }
+
+/* the hub: the Forum's mark at display scale (it was 72 px in a one-viewport moment), its 2 px hand, the night's accent
+   light under its arch */
+.forum-anello__centro { display: grid; place-items: center; isolation: isolate; }
+
+@media (max-width: 63.999rem) {
+  .forum-anello__centro { position: relative; }
+}
+
+/* the lights are SVG paints in the markup (an app sheet holds tokens only, test_design_docs): their colour the token's */
+.forum-luce { position: absolute; z-index: -1; pointer-events: none; }
+.forum-luce stop { stop-color: var(--luce, var(--accent-night)); stop-opacity: 0; }
+.forum-luce stop:first-child { stop-opacity: 0.22; }
+.forum-anello__centro .forum-luce { inset: -35%; inline-size: 170%; block-size: 170%; }
+
+.forum-anello__centro .sigillo__mark {
+  --sg-m: clamp(6rem, 10vw, 9rem);
+  --sg-sw: 2;
+  display: block;
+  margin: 0;
+  color: color-mix(in srgb, var(--text-on-night-1) 86%, transparent);
+}
+
+/* the actions answer the reader: a plate under the hand or the focus lights the faint mark behind them (§4.7 «Light
+   response»: --light, the seal system's data-azione) */
+.forum-azioni__fondale .forum-luce {
+  --luce: var(--accent-mark);
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: var(--light, 0);
+  transition: opacity var(--motion-emphasized) var(--ease-enter);
+}
+
+html[data-input="key"] .forum-azioni__fondale .forum-luce { transition: none; }
+.forum-azioni__fondale .forum-luce stop:first-child { stop-opacity: 0.6; } /* under the drawing's 30 % */
+
+/* a clause's last word and its punctuation never part (round 1, m12) */
+.forum-obiettivi__coda { white-space: nowrap; }
+
+/* one alignment per French box on the Arabic page (§1 rule 6; round 1, m8): a column whose title is a French run is one
+   left-to-right box — the title on the same edge as its words, its list and its station line (it ended on the right
+   while they started on the left); an action's French label hangs from the reading edge beside its disc, on its own
+   start */
+[dir="rtl"] :is(.forum-pair__item, .forum-filo__cosa, .forum-filo__obiettivi):has(> h2 > span[lang]) { direction: ltr; }
+[dir="rtl"] .forum-azioni__link:has(> span[lang]) { justify-self: start; direction: ltr; text-align: start; }
+
+.forum-azioni__lastre {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-azioni__lastra {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-5);
+  padding: var(--s-6);
+}
+
+.forum-azioni__link {
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-title);
+  letter-spacing: 0.04em;
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.forum-azioni__freccia .icon { transition: translate var(--motion-standard) var(--ease-enter); }
+.forum-azioni__lastra:is(:hover, :focus-within) .forum-azioni__freccia .icon { translate: 3px 0; }
+[dir="rtl"] .forum-azioni__lastra:is(:hover, :focus-within) .forum-azioni__freccia .icon { translate: -3px 0; }
+
+.forum-azioni__registrazione,
+.forum-azioni__aiuto { margin: 0; }
+
+@media (min-width: 48rem) {
+  .forum-azioni__lastre { grid-template-columns: repeat(2, minmax(0, 1fr)); max-inline-size: 56rem; }
+}
+
+html[data-input="key"] .forum-azioni__freccia .icon { transition: none; }

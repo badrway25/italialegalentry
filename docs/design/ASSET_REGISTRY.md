@@ -115,7 +115,7 @@ distanza, sotto il minimo di WCAG 2.2 §2.5.8).
 
 | File | Righe | Ruolo |
 |---|---|---|
-| `static/js/head.js` | — | Toglie `no-js`, prima della pittura |
+| `static/js/head.js` | — | Toglie `no-js`, prima della pittura; costruito (minificato) da `static/js/src/head/head.js` con `npm run build:js` |
 | `static/js/main.js` | — | Navigazione, dialoghi, accordion |
 | `apps/orientation/static/orientation/wizard.js` | — | Miglioramenti del questionario |
 | `apps/pages/static/pages/js/home.js` | 41 | Homepage |

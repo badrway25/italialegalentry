@@ -42,6 +42,22 @@ def text_of(key: str) -> str:
 
 
 @pytest.fixture
+def faq_case_open(request, seeded):
+    """
+    For the case of a test parametrized with ``path="faq/"``: gate G3 open (``phase3_open``) on the seeded data,
+    whose locked FAQ items ``seed_all`` already holds — the FAQ is a public page once G3 opens, so a test that reads
+    every public page reads it too. Every other case is served as the seeded data serves it, gates as they are.
+
+    V5.20 (the strict test-update rule: «skip tests unless the feature is genuinely unavailable in that
+    environment»): /xx/faq/ answered 404 here, gate G3 being closed on the seeded data, and the case skipped as
+    «gated here» in every run; the FAQ can be opened in any environment, so the case now runs and asserts its 200.
+    """
+    callspec = getattr(request.node, "callspec", None)
+    if callspec is not None and callspec.params.get("path") == "faq/":
+        request.getfixturevalue("phase3_open")
+
+
+@pytest.fixture
 def page(client):
     """GET a path and return (response, decoded html)."""
 

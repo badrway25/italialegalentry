@@ -1,0 +1,172 @@
+/* ============================================================================================
+   THE FORM SYSTEM — page-only (V5.12 W2, lane B; DECISIONS §5, M10, M14). Partial of core/forms.css, which the
+   field partial brings once per response ({% form_assets %}, apps/core/templatetags/ile_forms.py): a page without
+   a form never loads it. The plate, the focus rule, the checkbox and the switch stay v5/field.css's (shared); this
+   sheet adds what a form page needs on top:
+     1. «facultatif» after the label (the minority is marked; no asterisk, §5.3)
+     2. the control's slots: a leading glyph, a trailing status (error · warning · confirmed · read-only)
+     3. the message row, 0fr → 1fr in 160 ms (M10), and the states warning / success / read-only
+     4. the character counter
+     5. the choice cards (§5.6, M14)
+     6. the combobox (§5.7)
+     7. the date in three segments (§5.8) and the number stepper (§5.9)
+   V5.15 W3 (lane B) adds two partials: _glyph.css (the ILE glyph tile, the icon system's treatment) and
+   _formwork.css (the panel, the steps, the rail, the review, the side, the plate inside it, the password checklist).
+   Tokens only; logical properties (RTL mirrors by itself); nothing loops, shakes or pulses; from the keyboard
+   (html[data-input="key"]) and under reduced motion (the motion tokens are 0 ms) every change is there at once.
+   ============================================================================================ */
+@import url("_choice.css");
+@import url("_formwork.css");
+
+/* ---- 1. «facultatif» ------------------------------------------------------------------------------------ */
+.form-field__optional {
+  margin-inline-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-body);
+  color: var(--text-2);
+}
+
+/* ---- 2. The control's slots ----------------------------------------------------------------------------- */
+.form-field__control { position: relative; }
+.form-field__glyph,
+.form-field__status .icon {
+  position: absolute;
+  inset-block-start: calc((var(--field-h) - var(--icon-md)) / 2);
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  pointer-events: none;
+}
+.form-field__glyph { inset-inline-start: calc((var(--field-h) - var(--icon-md)) / 2); color: var(--icon-muted); }
+.form-field__control--glyph > :is(input, select) { padding-inline-start: var(--field-h); }
+.form-field__status .icon { inset-inline-end: calc((var(--field-h) - var(--icon-md)) / 2); }
+.form-field__control:has(.form-field__status:not(:empty)) > :is(input, textarea) { padding-inline-end: var(--field-h); }
+.form-field__control > select ~ .form-field__status .icon { inset-inline-end: calc(var(--field-h) - 0.25rem); }
+.form-field--error .form-field__status { color: var(--field-edge-invalid); }
+.form-field--warning .form-field__status { color: var(--field-edge-warning); }
+.form-field--success .form-field__status { color: var(--accent-text); }
+.form-field--readonly .form-field__status { color: var(--icon-muted); }
+
+/* ---- 3. The message row and the states -------------------------------------------------------------------- */
+.form-field__msg {
+  order: 2;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 160ms var(--ease-layout);
+}
+.form-field__msg:has(.form-field__msg-in > *) { grid-template-rows: 1fr; }
+.form-field__msg-in { min-block-size: 0; overflow: hidden; }
+.form-field__count { order: 2; }
+.form-field__note {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  gap: var(--s-2);
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+}
+.form-field__note .icon { inline-size: 1rem; block-size: 1rem; margin-block-start: 2px; }
+.form-field__note--warning { color: var(--tone-attesa-text); }
+.form-field__note--success { color: var(--accent-text); }
+/* the edge says the state with its mark and its words; it changes in 120 ms (M10) */
+.form-field :where(input, select, textarea) { transition: border-color var(--motion-fast) var(--ease-enter), box-shadow var(--motion-fast) var(--ease-enter); }
+.form-field--warning :where(input:not([type="checkbox"], [type="radio"]), select, textarea) { border-color: var(--field-edge-warning); box-shadow: inset 0 0 0 1px var(--field-edge-warning); }
+.form-field--success :where(input:not([type="checkbox"], [type="radio"]), select, textarea) { border-color: var(--accent-text); }
+.form-field--readonly :where(input, textarea) { border-style: dashed; color: var(--text-2); }
+html[data-input="key"] .form-field__msg { transition-duration: 0ms; }
+@media (prefers-reduced-motion: reduce) { .form-field__msg { transition-duration: 0ms; } }
+
+/* ---- 4. The counter ------------------------------------------------------------------------------------- */
+.form-field__count {
+  align-self: flex-end;
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+.form-field--warning .form-field__count { color: var(--tone-attesa-text); }
+
+/* ---- 5. Choice cards: the partial v5/_choice.css, imported at the head of this sheet ----------------- */
+
+/* ---- 6. The combobox (static/js/src/combobox.js over the native select) --------------------------------- */
+.combo { position: relative; }
+.combo > select[data-combobox-native] { display: none; }
+/* the text field says it opens a list: the select's own chevron (v5/field.css), at the inline end */
+.form-field .combo__input {
+  padding-inline-end: var(--field-h);
+  background-image:
+    linear-gradient(45deg, transparent calc(50% - 1.1px), var(--icon-default) calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 1.1px)),
+    linear-gradient(135deg, transparent calc(50% - 1.1px), var(--icon-default) calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 1.1px));
+  background-repeat: no-repeat;
+  background-size: 5px 5px;
+  background-position: right calc((var(--field-h) - 1.25rem) / 2 + 5px) center, right calc((var(--field-h) - 1.25rem) / 2) center;
+}
+[dir="rtl"] .form-field .combo__input { background-position: left calc((var(--field-h) - 1.25rem) / 2) center, left calc((var(--field-h) - 1.25rem) / 2 + 5px) center; }
+.combo__list {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  inset-block-start: calc(100% + var(--s-1));
+  max-block-size: 18rem;
+  margin: 0;
+  padding: var(--s-1);
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--line-structure);
+  border-radius: var(--field-radius);
+  background: var(--surface-raised);
+  box-shadow: var(--card-shadow-hover);
+}
+.combo__list[hidden] { display: none; }
+.combo__option {
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--radius-xs);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--text-1);
+  cursor: pointer;
+}
+.combo__option[aria-selected="true"] { font-weight: var(--w-control); }
+.combo__option.is-active { background: var(--accent-wash); color: var(--accent-text-hover); }
+.combo__empty { padding: var(--s-2) var(--s-3); font-size: var(--t-small); color: var(--text-2); }
+
+/* ---- 7. The date in three segments; the number stepper ------------------------------------------------- */
+.date-field__segments { display: flex; flex-wrap: wrap; gap: var(--s-3); margin: 0; padding: 0; border: 0; min-inline-size: 0; }
+.date-field__segment { display: grid; gap: var(--s-1); }
+.date-field__segment label { font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
+.form-field .date-field__segment input { inline-size: 4.5rem; text-align: center; font-variant-numeric: tabular-nums; }
+.form-field .date-field__segment--year input { inline-size: 6rem; }
+/* round 1: the date's status mark is not drawn at the far end of its row (it floated away from the segments); the
+   message line under the segments carries the mark and the words */
+.date-field > .form-field__status { display: none; }
+.date-field > input[type="hidden"] + .form-field__status .icon { inset-block-start: auto; inset-block-end: calc((var(--field-h) - var(--icon-md)) / 2); }
+.number-field { display: flex; align-items: stretch; gap: var(--s-2); max-inline-size: 16rem; }
+.form-field .number-field > input { flex: 1; text-align: center; font-variant-numeric: tabular-nums; appearance: textfield; }
+.number-field > input::-webkit-inner-spin-button,
+.number-field > input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.number-field__step {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--field-h);
+  min-block-size: var(--field-h);
+  padding: 0;
+  border: 1px solid var(--line-structure);
+  border-radius: var(--field-radius);
+  background: var(--surface-sheet);
+  color: var(--accent-text);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-enter), border-color var(--motion-fast) var(--ease-enter);
+}
+.number-field__step[hidden] { display: none; }
+@media (hover: hover) { .number-field__step:hover:not(:disabled) { background: var(--surface-hover); border-color: var(--field-edge-hover); } }
+.number-field__step:disabled { color: var(--field-text-disabled); border-color: transparent; background: var(--field-bg-disabled); cursor: not-allowed; }
+.number-field__step:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+
+/* ---- forced colours ------------------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .combo__option.is-active { outline: 2px solid Highlight; }
+  .form-field--warning :where(input, select, textarea) { border-style: dashed; border-width: 2px; }
+}

@@ -14,6 +14,10 @@
  *   form (submit)          a submitted form's button waits — L2 of the loader «Lume» (W1-D): `aria-busy`, and the
  *                          busy key where it has a place; the state machine is loader.js, imported on the first
  *                          submit and never before
+ *   lume/threshold.js      «la soglia», T2 of the loader «Lume» (V5.12 §4; DECISIONS §1 T2): a navigation — a link
+ *                          of this site, a form's submit — that has not committed within --motion-wait lights the
+ *                          band's line, turns the mark's key and, at 1 s, says «Chargement…». Every page, the
+ *                          console's included (base.html loads this entry under console.js too)
  *
  * No animation is written here — the busy key is a class, which v5/loader.css turns. The reveal of design V2
  * ([data-reveal], the Motion library's inView + animate + stagger) left with W4-B: text never waits for a reveal
@@ -21,8 +25,30 @@
  */
 import "./overlay.js";
 import { initNavigation } from "./nav.js";
+import { after, initThreshold, submits } from "./lume/threshold.js";
 
 initNavigation();
+initThreshold();
+
+/* The session's messages (V5.12 §5; DECISIONS §2 M9): «Fermer» on each, a success's own clock — static/js/src/
+   notices.js, fetched only by a page that carries one (templates/base.html's `[data-notices]`). */
+if (document.querySelector("[data-notices]")) import("./notices.js");
+
+/* The spotlight (V5.15 §6; DECISIONS §15 lane A, M21): a card, a [data-spotlight] surface, the door plate, a link row lights where the pointer
+   is — this writes the pointer's place, v5/_reveal.css draws the light. A fine pointer only; one listener, passive. */
+if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  document.addEventListener(
+    "pointermove",
+    (event) => {
+      const surface = event.target instanceof Element && event.target.closest(".card--link,[data-spotlight],.porta,.entry,.page-links__link");
+      if (!surface) return;
+      const box = surface.getBoundingClientRect();
+      surface.style.setProperty("--mx", `${Math.round(event.clientX - box.left)}px`);
+      surface.style.setProperty("--my", `${Math.round(event.clientY - box.top)}px`);
+    },
+    { passive: true },
+  );
+}
 
 /* 3. Password fields show and hide themselves (design V4 §3.3; W1-C, review M2 and A10): a glyph in the
       plate's end swaps the input's type; its name is constant and aria-pressed is the one channel of the
@@ -102,7 +128,9 @@ document.addEventListener("submit", (event) => {
   if (!(form instanceof HTMLFormElement) || event.defaultPrevented) return;
   // the control that was pressed; a form sent with no submitter (requestSubmit()) falls back on its default button
   const submitter = event.submitter || form.querySelector('button[type="submit"], button:not([type])');
-  if (staysOnPage(form, submitter)) return;
+  const stays = staysOnPage(form, submitter);
+  const veiled = submits(form, stays) && after(event); // the threshold, once nothing has cancelled the submit
+  if (stays) return;
   // a <button>: an <input type="submit"> has no ::after for the key, and it is never another control's wait
   const control = submitter instanceof HTMLButtonElement && submitter.classList.contains("btn") ? submitter : null;
   if (control) {
@@ -114,7 +142,7 @@ document.addEventListener("submit", (event) => {
   const at = returns;
   import("./loader.js")
     .then((loader) => {
-      if (at === returns) loader.submitted(form, control, event);
+      if (at === returns) loader.submitted(form, control, event, veiled);
     })
     .catch(() => {
       if (control) restFace(control);

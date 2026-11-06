@@ -119,13 +119,14 @@ FRENCH_UI = [
 ]
 
 #: Latin-script text allowed inside the Arabic header and footer: proper nouns, the trademark, the two
-#: policy names kept in the original, the e-mail address, language endonyms and codes, the version label
+#: policy names kept in the original, the WhatsApp channel's name, the e-mail address, language endonyms and codes, the version label
 #: (an editorial SiteSettings value). Anything else in Latin script is an untranslated string.
 ARABIC_LATIN_ALLOWED = re.compile(
     # «Italy», «Legal», «Entry» on their own: the official lock-up sets the trademark's three words in
     # the three colours of the flag, one span each (v2/shell.css .lock__w1 / .lock__w3).
     r"Italy Legal Entry(?:™)?|Italy|Legal|Entry|AGAMI — Dialogo Giuridico Interculturale APS|AGAMI|Vénétie–Maroc|Privacy Policy|"
-    r"Cookie Policy|contact@agamieuromed\.org|Italiano|Français|English|\b(?:it|fr|en|ar)\b|v\d+\.\d+\.\d+ — Fase \d"
+    # V5.19: «WhatsApp», the channel's brand name beside its glyph (the link's accessible name says it too, WCAG 2.5.3)
+    r"Cookie Policy|WhatsApp|contact@agamieuromed\.org|Italiano|Français|English|\b(?:it|fr|en|ar)\b|v\d+\.\d+\.\d+ — Fase \d"
 )
 _LATIN_WORD = re.compile(r"[A-Za-zÀ-ÿ]{2,}")
 
@@ -144,7 +145,8 @@ def test_skip_link_header_and_navigation_are_translated(client, seeded, lang):
 
 
 @pytest.mark.parametrize("lang", TRANSLATED)
-def test_footer_headings_and_legal_links_are_translated(client, seeded, lang):
+def test_footer_headings_and_legal_links_are_translated(client, seeded, legal_published, lang):
+    # the legal column stands once its pages are published (V5.12 Q2, V5.14 §13)
     footer = region(client.get(f"/{lang}/").content.decode(), "footer")
     expected = EXPECTED[lang]
     headings = [re.sub(r"<[^>]+>", "", h).strip() for h in re.findall(r"<h2\b[^>]*>.*?</h2>", footer, re.S)]
@@ -222,8 +224,9 @@ def test_no_french_interface_string_leaks_into_the_arabic_header_and_footer(clie
 def test_latin_text_in_the_arabic_chrome_is_limited_to_proper_nouns(client, seeded, audit):
     """Every Latin-script node of the Arabic header/footer is a proper noun or a documented keep-source text."""
     html = client.get("/ar/").content.decode()
-    # The institutional bar ends where the header begins (since design V4 it carries no <details>).
-    utility = re.search(r'<div class="utility-bar.*?(?=<header\b)', html, re.S).group(0)
+    # V5.15: no institutional bar any more (one row) — its languages are in the header's end zone, read with it below.
+    assert 'class="utility-bar' not in html
+    utility = ""
     leaks = []
     for fragment in (utility, region(html, "header"), region(html, "footer")):
         for node in text_nodes(fragment):
@@ -253,7 +256,9 @@ def test_plural_sentence_is_rendered_through_the_template_tag(client, seeded, ph
     header = audit.header_fields(audit.parse_po(audit.po_path(lang)))["Plural-Forms"]
     index = gettext_module.c2py(header.split("plural=", 1)[1].rstrip(";"))(count)
     expected = entry.msgstr[index] % {"counter": count, "q": "Italy"}
-    heading = re.search(r'<h2 id="faq-results-title">(.*?)</h2>', response.content.decode(), re.S).group(1)
+    # V5.22 (SECTION_SYSTEM_V2 §3.13; strict rule V5.20): a search's answers are headed by the library's chapter head
+    # (components/sezioni/_testa.html: the h2 carries its class before its id) — the same heading, the same sentence
+    heading = re.search(r'<h2[^>]*\bid="faq-results-title"[^>]*>(.*?)</h2>', response.content.decode(), re.S).group(1)
     assert heading.strip() == expected
     assert "résultat" not in heading
 

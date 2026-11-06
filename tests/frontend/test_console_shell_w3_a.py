@@ -44,6 +44,14 @@ BASE = ROOT / "templates" / "portal" / "base_portal.html"
 RAIL_PREF = ROOT / "static" / "js" / "rail-pref.js"
 CONSOLE_JS = ROOT / "static" / "js" / "src" / "console.js"
 
+
+@pytest.fixture(autouse=True)
+def _an_academy_course_is_published(monkeypatch):
+    """The Academy is a page of the rail while a course is published (V5.12 DECISIONS §8; portal.services.academy_open,
+    tests/frontend/test_organisation_space_v512_d.py holds both sides): the ten are read with one."""
+    monkeypatch.setattr(services, "academy_open", lambda user: True)
+
+
 #: The ten destinations of «Espace réservé», in the rail's order (plan §1.18 D06: «the ten destinations are kept»).
 TEN = [
     "dashboard",
@@ -337,7 +345,11 @@ def test_a_role_s_registers_come_first_and_the_other_space_is_not_a_page(people)
         "a module a role cannot use is not shown"
     )
     company = services.shell_navigation(people["company"])
-    assert [entry["key"] for entry in company] == [*TEN, "company"]
+    # a company's «Espace réservé» has none of the person's own pages (V5.12 Q7 / D-08: portal.services.PERSON_ONLY_PAGES)
+    assert [entry["key"] for entry in company] == [
+        *(key for key in TEN if key not in services.PERSON_ONLY_PAGES),
+        "company",
+    ]
     way = company[-1]
     assert way["kind"] == services.KIND_SPACE and way["label"] == "Espace entreprise"
     assert way["url"] == reverse("companies:dashboard") and way["icon"] == icons.NAV["company"]
@@ -365,8 +377,9 @@ def test_the_company_space_keeps_the_module_s_entries_and_offers_the_way_back(pe
 @pytest.mark.django_db
 def test_who_the_account_is_follows_its_roles_then_its_type(people, user_factory):
     expected = {
-        "person": (icons.AUDIENCE["person"], "Personne"),
-        "bare": (icons.AUDIENCE["person"], "Personne"),
+        # the space's name, never the role word «Personne» (V5.12 §11; Director's decisions §9)
+        "person": (icons.AUDIENCE["person"], "Espace Personnes"),
+        "bare": (icons.AUDIENCE["person"], "Espace Personnes"),
         "company": (icons.AUDIENCE["company"], "Entreprise"),
         "professional": (icons.ACTOR["professional"], "Professionnel"),
         "operator": (icons.ACTOR["project_team"], "Équipe du projet"),
@@ -387,7 +400,7 @@ def test_who_the_account_is_follows_its_roles_then_its_type(people, user_factory
     # a role says more than the type, which defaults to «person»: the QA persona «personne avec dossier» is
     # typed `company` and holds the person's role — it is a person
     typed_company = user_factory("w3a-typed@example.test", role=roles.PERSON, account_type="company")
-    assert services.shell_space(typed_company)["who"] == "Personne"
+    assert services.shell_space(typed_company)["who"] == "Espace Personnes"
     typed_only = user_factory("w3a-typed-only@example.test", account_type="company")
     assert services.shell_space(typed_only)["who"] == "Entreprise"
 
@@ -395,7 +408,7 @@ def test_who_the_account_is_follows_its_roles_then_its_type(people, user_factory
 def test_the_builder_answers_a_stranger_without_a_query():
     """The icon registry's test calls the builder with ``object()``: no account, no role, no query."""
     plate = services.shell_space(object())
-    assert plate["who"] == "Personne" and plate["key"] == services.SPACE_PERSON
+    assert plate["who"] == "Espace Personnes" and plate["key"] == services.SPACE_PERSON
     assert services._role_entries(object()) == []
     assert services._bottom_keys(TEN) == frozenset({"dashboard", "documents", "messages", "cases"})
 
@@ -522,6 +535,10 @@ def test_the_same_keys_on_every_url_of_espace_reserve_and_the_current_page_marke
     ways = [entry["url"] for entry in services.shell_navigation(user) if entry["kind"] == services.KIND_SPACE]
     for name, active in RESERVED:
         response = client.get(reverse(name))
+        if active in services.PERSON_ONLY_PAGES and not services.shows_person_page(user, active):
+            # the person's own pages send a company's account to its dashboard (V5.12 Q7 / D-08)
+            assert response.status_code == 302 and response["Location"] == reverse("portal:dashboard"), (who, name)
+            continue
         assert response.status_code == 200, (who, name, response.status_code)
         assert [entry["key"] for entry in response.context["portal_nav"]] == [
             entry["key"] for entry in services.shell_navigation(user)
@@ -569,7 +586,7 @@ def test_the_rendered_shell_names_the_space_draws_the_foot_and_offers_the_two_sk
     )
     assert rail.count("rail__group--rule") == 1
     foot = html.split('<div class="rail__foot" data-rail-foot>', 1)[1].split('<header class="portal-bar', 1)[0]
-    assert f'href="{reverse("accounts:profile")}"' in foot and "icon-person" in foot and "Personne" in foot
+    assert f'href="{reverse("accounts:profile")}"' in foot and "icon-person" in foot and "Espace Personnes" in foot
     assert re.search(rf'<form class="rail__signout" method="post" action="{reverse("account_logout")}">', foot)
     assert "csrfmiddlewaretoken" in foot and "Se déconnecter" in foot
     assert re.findall(r'hreflang="([a-z]{2})"', foot) == ["it", "fr", "en", "ar"], (
@@ -1107,7 +1124,7 @@ def test_the_rendered_drawer_holds_the_whole_rail_and_its_foot(client, seeded, p
     ]
     foot = drawer.split('<div class="rail__foot">', 1)[1]
     assert "data-rail-foot" not in drawer and "data-rail-toggle" not in drawer, "the rail's own control is the rail's"
-    assert f'href="{reverse("accounts:profile")}"' in foot and "icon-person" in foot and "Personne" in foot
+    assert f'href="{reverse("accounts:profile")}"' in foot and "icon-person" in foot and "Espace Personnes" in foot
     assert re.search(rf'<form class="rail__signout" method="post" action="{reverse("account_logout")}">', foot)
     assert "csrfmiddlewaretoken" in foot and '<span class="rail__tool-word">Se déconnecter</span>' in foot
     assert re.findall(r'hreflang="([a-z]{2})"', foot) == ["it", "fr", "en", "ar"]

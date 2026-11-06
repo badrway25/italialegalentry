@@ -39,6 +39,40 @@ pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 
 DASHBOARD = "/{lang}/espace-reserve/"
 
+#: V5.15 (the owner's creative override, §20: the platform «must not collapse into static rectangles») gives every console
+#: page a FINITE load envelope (lane D's atrium draws, its planes rise; portal/v5/_platform.css): the page is read «at rest»
+#: once that envelope has ended. What the guards below still refuse is a motion that never ends — a loop, a scroll-linked
+#: timeline — and any motion of the journey on a return (M5), which «moving» keeps catching after the settle.
+#: V5.18 (T3): lane A's own load envelope, `c-rise` (the dashboard's and the organisation's blocks rising once, 420 ms,
+#: portal/v5/_motion.css), is admitted on the same terms — finite, waited for here, gone once it has ended (it fills
+#: backwards only, so an ended rise is no longer listed) and absent under reduced motion (the tests below).
+SETTLE_JS = """() => Promise.all(document.getAnimations()
+  .filter((a) => {
+    const el = a.effect && a.effect.target, t = a.effect && a.effect.getComputedTiming();
+    if (!el || !t || !Number.isFinite(t.endTime) || t.endTime > 2500) return false;
+    // V5.18 T3: the console's own finite rise (lane A's c-rise) is awaited too — once ended it leaves the list
+    if (a.animationName === 'c-rise') return true;
+    // lane D's envelope only — the atrium and the platform's planes; never the journey (M5 must stay still on a return)
+    return Boolean(el.closest('[data-atrium]') || (el.closest('[data-platform]') && !el.closest('.db-journey, .journey, .journey-now')));
+  })
+  .map((a) => a.finished.catch(() => null)))"""
+
+
+def _settle(page):
+    # the arrival's veil first (html.lume-in): while it stands, the rise waits on it (--rise-wait), and its end moves
+    # the rise's delay — an animation awaited before that would play again after it
+    page.wait_for_function("() => !document.documentElement.classList.contains('lume-in')", timeout=5000)
+    page.evaluate(SETTLE_JS)
+
+
+#: What «moving» counts at rest: EVERY animation in the workspace, c-rise included. V5.20 (the strict test-update rule;
+#: «animation remaining applied after completion» is a release blocker): V5.18 T3 had let a FINISHED c-rise through,
+#: for its `both` fill kept it in getAnimations() — the fill is `backwards` since lane A (portal/v5/_motion.css,
+#: v5/_conto-console.css), so an ended rise is gone from the list and one that stays applied after it ends fails here.
+MOVING_JS = """(ws) => document.getAnimations().filter((a) => a.effect && a.effect.target && ws.contains(a.effect.target))
+  .map((a) => a.animationName || a.transitionProperty || 'waapi')"""
+
+
 #: What the gate asks, read on the page at rest.
 GATE_JS = """() => {
   const vh = innerHeight;
@@ -59,6 +93,8 @@ GATE_JS = """() => {
     if (!shown(el)) continue;
     const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) continue;
     const v = getComputedStyle(el).borderTopLeftRadius;
+    // V5.20: a chip counts as the pill by its drawing, as every element does (V5.18 T3 had counted any `.chip` as the
+    // pill for the step chip that wrapped on a phone; lane D keeps that chip on one line since — test_terminology_v512_d)
     if (v && v !== '0px') radii.add(parseFloat(v) >= r.height / 2 - 0.5 || parseFloat(v) >= 100 ? 'full' : v);
   }
   const nr = now.getBoundingClientRect(), wr = document.querySelector('.db').getBoundingClientRect();
@@ -67,7 +103,7 @@ GATE_JS = """() => {
     titleBottom: title.getBoundingClientRect().bottom, dateBottom: date ? date.getBoundingClientRect().bottom : null,
     vh, shadows: [...shadows], raised, radii: [...radii],
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    moving: document.getAnimations().filter((a) => a.effect && a.effect.target && ws.contains(a.effect.target)).map((a) => a.animationName || a.transitionProperty || 'waapi'),
+    moving: (""" + MOVING_JS + """)(ws),
     nowStart: getComputedStyle(document.documentElement).direction === 'rtl' ? wr.right - nr.right : nr.left - wr.left,
   };
 }"""
@@ -135,6 +171,7 @@ def _page(browser, live_server, user, lang, width, height, phone=False, path=DAS
     url = live_server.url + path.format(lang=lang)
     page.goto(url, wait_until="load")  # the first console page of the session plays the entrance release
     page.goto(url, wait_until="load")
+    _settle(page)
     return context, page, errors
 
 
@@ -208,7 +245,7 @@ BRIDGE_JS = """() => {
     now: !!ws.querySelector('.db-now'), primaries: [...ws.querySelectorAll('.btn--primary')].filter(shown).length,
     shadows: [...shadows], sections: [...ws.querySelectorAll('[data-card]')].filter(shown).map((e) => e.dataset.card),
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    moving: document.getAnimations().filter((a) => a.effect && a.effect.target && ws.contains(a.effect.target)).length,
+    moving: (""" + MOVING_JS + """)(ws).length,
     offEdge: [...ws.querySelectorAll('.db-list__row > .db-list__title')].filter(shown).filter((t) => {
       const r = t.getBoundingClientRect(), row = t.parentElement.getBoundingClientRect();
       return getComputedStyle(document.documentElement).direction === 'rtl' ? row.right - r.right > 1 : r.left - row.left > 1;
@@ -345,7 +382,10 @@ def test_the_bridge_has_no_raised_plane_no_primary_and_flat_registers(
         bridge = page.evaluate(BRIDGE_JS)
         assert not bridge["now"] and bridge["primaries"] == 0, bridge
         assert bridge["shadows"] == [], f"no raised plane, no box on the bridge: {bridge['shadows']}"
-        assert bridge["sections"] == ["deadlines", "messages", "requests", "documents", "organisation"], bridge
+        # V5.12 Q7 / V5.15 lane D: an institution has its own dashboard (dashboard_organisation.html) — its registers
+        # drawn only with rows (D-20: no «… apparaîtront ici» heading over an empty «requests» or «documents»), the date
+        # and the communication this account holds, then its organisation's identity sheet
+        assert bridge["sections"] == ["deadlines", "messages", "organisation"], bridge
         assert bridge["overflow"] == 0 and bridge["moving"] == 0, bridge
         assert bridge["offEdge"] == [], f"a row's own words on the reading edge, whatever their script: {bridge}"
         assert errors == [], errors
@@ -382,21 +422,48 @@ def test_under_a_finger_a_list_link_is_44_px_with_its_date_tight_under_its_subje
         context.close()
 
 
-def test_the_consoles_empty_state_spans_the_main_column(browser, live_server, user_factory):
-    """The review's M3: «Communications» with nothing in it draws the console's empty state across the main column, on
-    its start edge — not the centred 42rem box the bridge's clean-up had left it in."""
+#: The console's empty registers and the state each one draws (V5.18, lane B — the w3-b ownership crossing of the
+#: v515-d merge, settled by name instead of by whichever class the page happens to carry): «Communications» is lane
+#: D's calm panel (.reg-calm, the platform's quiet surface: it spans the main column); «Mes demandes» and, since
+#: V5.18 P-5, «Mes documents» are lane B's empty-state tile (.empty-state, F1: the page's opening statement, no
+#: surface, on the main column's start edge at the reading measure). Each page is held to its own rule.
+EMPTY_REGISTERS = [
+    ("/{lang}/espace-reserve/communications/", "reg-calm"),
+    ("/{lang}/espace-reserve/mes-demandes/", "empty-state"),
+    ("/{lang}/espace-reserve/mes-documents/", "empty-state"),
+]
+
+
+@pytest.mark.parametrize(("path", "kind"), EMPTY_REGISTERS, ids=["communications", "requests", "documents"])
+def test_the_consoles_empty_state_spans_the_main_column(browser, live_server, user_factory, path, kind):
+    """The review's M3: an empty console register draws its empty state on the main column's start edge — not the
+    centred 42rem box the bridge's clean-up had left it in. Since V5.15 lane D F1 «Communications» draws the platform's
+    calm panel (.reg-calm), which spans the column; the registers that draw lane B's empty-state tile keep its rules."""
     person = user_factory("dash.empty@example.test", role=roles.PERSON, account_type=AccountType.PERSON)
     for lang in ("fr", "ar"):
-        context, page, errors = _page(
-            browser, live_server, person, lang, 1440, 900, path="/{lang}/espace-reserve/communications/"
-        )
+        context, page, errors = _page(browser, live_server, person, lang, 1440, 900, path=path)
         try:
+            # V5.15 W3 (lane B, F1; the v515-b merge): the empty state is the page's opening statement, no surface —
+            # it stands on the main column's start edge at the reading measure (max-inline-size 40rem), never a
+            # centred box; the start edge is the right one in Arabic
             boxes = page.evaluate(
                 "(() => { const m = document.querySelector('.portal__main').getBoundingClientRect(),"
-                " e = document.querySelector('.portal__main .empty-state').getBoundingClientRect();"
-                " return [Math.round(m.left), Math.round(m.width), Math.round(e.left), Math.round(e.width)]; })()"
+                " found = document.querySelectorAll('.portal__main :is(.empty-state, .reg-calm)'), el = found[0],"
+                " e = el.getBoundingClientRect(), s = getComputedStyle(el), rtl = document.dir === 'rtl';"
+                " return [Math.round(rtl ? m.right : m.left), Math.round(m.width), Math.round(rtl ? e.right : e.left),"
+                " Math.round(e.width), s.backgroundColor, s.borderTopWidth, el.classList.contains('reg-calm'),"
+                " found.length]; })()"
             )
-            assert abs(boxes[0] - boxes[2]) <= 1 and abs(boxes[1] - boxes[3]) <= 1, (lang, boxes)
+            assert boxes[7] == 1, (lang, path, "one empty state on the page", boxes)
+            assert boxes[6] is (kind == "reg-calm"), (lang, path, f"the register draws its {kind}", boxes)
+            assert abs(boxes[0] - boxes[2]) <= 1, (lang, path, "on the main column's start edge", boxes)
+            if kind == "reg-calm":
+                # the v515-d merge: on «Communications» the empty state is lane D's calm panel (the platform's quiet
+                # surface, its drawing and its lead at 38rem inside it) — it spans the main column
+                assert abs(boxes[1] - boxes[3]) <= 1, (lang, path, "the calm panel spans the main column", boxes)
+            else:
+                assert boxes[3] <= boxes[1] and (boxes[3] >= boxes[1] - 1 or boxes[3] <= 640), (lang, path, "the reading measure", boxes)
+                assert boxes[4] in ("rgba(0, 0, 0, 0)", "transparent") and boxes[5] == "0px", (lang, path, "no surface", boxes)
             assert errors == [], errors
         finally:
             context.close()

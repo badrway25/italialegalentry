@@ -93,7 +93,10 @@ def test_templates_have_no_forbidden_strings_inline_styles_handlers_or_external_
 
 
 def test_every_icon_used_exists_in_the_sprite():
-    sprite = (BASE_DIR / "static" / "img" / "icons.svg").read_text(encoding="utf-8")
+    # V5.12 W2: the chrome sprite and the domain one
+    sprite = "".join(
+        (BASE_DIR / "static" / "img" / name).read_text(encoding="utf-8") for name in ("icons.svg", "icons-domain.svg")
+    )
     ids = set(re.findall(r'<symbol id="icon-([a-z0-9-]+)"', sprite))
     used = set()
     for path in _template_files():

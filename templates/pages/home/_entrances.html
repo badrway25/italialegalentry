@@ -1,21 +1,22 @@
-{% load i18n %}{% comment %}
+{% load i18n pages_typo %}{% comment %}
 4. FOUR ECOSYSTEM ENTRANCES — exactly four, never a fifth equivalent box (Implementation §3.2).
 pages.services.entrances() supplies the prescribed p3.entrances.* texts when gate G3 is open and
 neutral translated labels otherwise.
 
-Design V5.4 (W2-D step 3): THE REGISTER UNDER THE HERO. Where the hero's four origins carry word, sentence
-and call at rest (the desktop, the tablets) this chapter is not drawn — hero.css holds that rule, because
-it follows the hero's own breakpoints. On phones the hero's tiles carry words only, and this register is
-the page's one copy of the four sentences: one frame of four rows, the prescribed title, its sentence and
-its call with the arrow beside the words. No ordinal and no landform glyph — the four are not ranked
-(DESIGN_SYSTEM_V5 PX02) — and no running head: the title says it.
+Where the hero's four origins carry word, sentence and call at rest (the desktop, the tablets) this section is not
+drawn — hero.css holds that rule, because it follows the hero's own breakpoints (UX-1). On phones the hero's tiles
+carry words only, and this is the page's one copy of the four sentences.
+
+V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §2 J «il passaggio»; lane H): the four DOORS in a rail the thumb crosses — four equal
+plates, each an arched seat with its audience's disc over the prescribed question, its sentence and its call (12 locked
+strings, as written), the next plate peeking; about 430 px where the register of rows took 822. On the stone, between
+the hero's paper and the orientation's wash: two grounds of one kind never touch. Its head is a router's (the title
+alone: the lead, which names the four once more between the hero's four and the plates, stays unsaid here).
 {% endcomment %}
 {% translate "Les quatre accès de l’écosystème" as fallback_title %}
-<section class="chapter chapter--page home-entrances" id="{{ s.anchor }}" aria-labelledby="home-entrances-title" data-section="entrances">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_section_header.html" with title_id="home-entrances-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
-    <div class="chapter__body">
-      {% include "components/entrances.html" with entrances=d.entrances heading_level="h3" %}
-    </div>
+<section class="sez sez--passaggio home-entrances" id="{{ s.anchor }}" aria-labelledby="home-entrances-title" data-section="entrances" data-sec="passaggio" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container">
+    {% if s.heading %}{% include "components/sezioni/_testa.html" with role="router" title_id="home-entrances-title" title=s.heading|typo title_lang=s.heading.lang only %}{% else %}<h2 class="visually-hidden" id="home-entrances-title">{{ fallback_title }}</h2>{% endif %}
+    {% include "components/entrances.html" with entrances=d.entrances heading_level="h3" rail=True %}
   </div>
 </section>

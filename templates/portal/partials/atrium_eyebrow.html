@@ -1,0 +1,7 @@
+{% load i18n atrium %}{% comment %}
+The atrium's eyebrow (V5.15 lane D): the space's name on its short gold rule, on EVERY atrium page — round 2: the SAME
+word as the account's dashboard, resolved from the account (portal.services.atrium_space_label through the `atrium`
+tag library), never the fallback «Espace réservé» a page without the rail's space used to show. `atrium_label`
+overrides it (a page that names a different space); the parameter's name is the partial's own, so nothing the page's
+context happens to hold under a common name can leak into it.
+{% endcomment %}{% atrium_space as atrium_space_word %}<p class="atrium__eyebrow">{% if atrium_label %}{{ atrium_label }}{% elif atrium_space_word %}{{ atrium_space_word }}{% else %}{% translate "Espace réservé" %}{% endif %}</p>

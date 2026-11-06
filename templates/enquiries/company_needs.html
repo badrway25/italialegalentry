@@ -4,6 +4,13 @@
 consent and button. Design V5.4 (W3-F2 — the content pages): the head at the reading edge (the space's name, the
 prescribed title and introduction, whole); the prescribed quote as the page's one inset, on its rule at the reading
 edge; the form a chapter — the section device beside it from 75rem — drawn by v5/field.css, its one primary.
+V5.15 W3 (lane B): the form section is THE FORMWORK (enquiries/partials/form_shell.html) — its head (the concept's
+tile, the title, the prescribed quote), then the panel asked in three steps and its sticky side.
+V5.22 (SECTION_SYSTEM_V2 §3.6 EN-H; lane P1, the header block only — the form is untouched): the head is the Espace
+Entreprises' band, compact — the frontispiece (pages/partials/_ingresso.html compact=True) on the paper, the skyline and
+its rising line at the far side, the T1 `ile-impresa` seal in the folio's place, the locked title and introduction —
+in at most half the first screen at 1440, so the formwork still starts in it. The page links the band's sheet
+(pages/css/fronte.css: +1 request, recorded).
 {% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
@@ -11,25 +18,20 @@ edge; the form a chapter — the section device beside it from 75rem — drawn b
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 <article class="enquiry-page enquiry-page--companies">
-  <header class="page-header container">
-    <p class="page-header__eyebrow">{% translate "Espace Entreprises" %}</p>
-    {% locked_title "p1.companies.title" %}
-    {% locked "p1.companies.intro" "p" "page-header__lead" %}
-  </header>
-  <section class="chapter enquiry-page__form" id="formulaire" aria-labelledby="company-needs-form-title">
-    <div class="container chapter__inner">
-      <div class="chapter__head">
-        {% svg_icon "ile-steps" "icon chapter__mark" %}
-        <h2 id="company-needs-form-title" class="chapter__title enquiry-page__form-title">{% translate "Recueil des besoins" %}</h2>
-      </div>
-      <div class="chapter__body">
+  {% translate "Espace Entreprises" as space_label %}{% locked "p1.companies.title" as title_html %}{% locked "p1.companies.intro" as intro_html %}{% locked_is_fallback "p1.companies.title" as title_fallback %}{% locked_lang "p1.companies.title" as title_lang %}
+  {% if title_fallback %}{% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=intro_html lead_lang=title_lang motif="economic" glyph="factory" compact=True fronte_linked=True only %}{% else %}{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=intro_html motif="economic" glyph="factory" compact=True fronte_linked=True only %}{% endif %}
+  <section class="formwork-section enquiry-page__form" id="formulaire" aria-labelledby="company-needs-form-title">
+    <div class="container">
+      <div class="formwork-section__head">
+        <span class="glyph-tile glyph-tile--lg" aria-hidden="true">{% chapter_mark "company-needs-form-title" "icon chapter__mark" %}</span>
+        <h2 id="company-needs-form-title" class="formwork-section__title enquiry-page__form-title">{% translate "Recueil des besoins" %}</h2>
         <figure class="blockquote blockquote--institutional enquiry-page__quote">
           {% locked "p1.companies.quote" "blockquote" "blockquote__text" %}
         </figure>
-        {% include "enquiries/partials/company_needs_form.html" %}
       </div>
+      {% include "enquiries/partials/company_needs_form.html" %}
     </div>
   </section>
 </article>
 {% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}

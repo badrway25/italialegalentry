@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-istituzione: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - institutions: a low 30 degree pediment over four columns, the central intercolumn the toned arch opening, on a stylobate line; the pediment first, then the columns 60 ms apart (n.4) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M18 39V30A6 6 0 0 1 30 30V39Z"/>
+  <path data-layer="arch" d="M5 19 24 8 43 19Z"/>
+  <path data-layer="arch" d="M7 22.5H41"/>
+  <path data-layer="mark" d="M8 26V39"/>
+  <path data-layer="mark" d="M18 26V39"/>
+  <path data-layer="mark" d="M30 26V39"/>
+  <path data-layer="mark" d="M40 26V39"/>
+  <path data-layer="route" d="M18 30A6 6 0 0 1 30 30M6 39H42"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

@@ -3,8 +3,8 @@ The account menu — the account POPOVER of the overlay system (design V5, V5.4 
 docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). Its rows: «Espace réservé», «Profil», «Sécurité du compte» and, after a
 rule, «Se déconnecter» — links resolved through safe_url, so the menu degrades gracefully while sibling apps are built.
 
-The trigger: a real button (`popovertarget`) — the person glyph, the short name, a chevron — named «‹short name› —
-Mon compte» (the words it shows first, WCAG 2.5.3, then what it opens: two live strings); its seat draws it
+The trigger: a real button (`popovertarget`) — the person glyph, the full name (truncated by its seat's CSS, never
+its first word only: V5.12 §11), a chevron — named «‹full name› — Mon compte» (the words it shows first, WCAG 2.5.3, then what it opens: two live strings); its seat draws it
 (v5/_shell.css in the console's top bar, below 48rem the glyph alone; v5/chrome.css in the letterhead's «targa» and
 at the foot of the phone's sheet). The panel: components/popover.html with these rows (`.overlay__item`, 36 px, 44
 under a finger), headed on a phone by «Mon compte». A press outside or Esc closes it natively;
@@ -29,9 +29,9 @@ Contract: `user`; `popover` (True: every caller says it); `menu_id` (the popover
     </form>
   </li>{% endif %}
 </ul>{% elif popover %}{% with panel_id=menu_id|default:"account-menu" %}{% translate "Mon compte" as account_label %}<div class="account-menu">
-  <button class="account-menu__summary" type="button" popovertarget="{{ panel_id }}" aria-label="{{ user.get_short_name }} — {{ account_label }}">
+  <button class="account-menu__summary" type="button" popovertarget="{{ panel_id }}" aria-label="{% if user.full_name %}{{ user.full_name }} — {% endif %}{{ account_label }}">
     {% svg_icon "circle-user-round" "icon icon--sm" %}
-    <span class="account-menu__name">{{ user.get_short_name }}</span>
+    <span class="account-menu__name">{{ user.full_name|default:account_label }}</span>
     {% svg_icon "chevron" "icon icon--sm" %}
   </button>
   {% include "components/popover.html" with id=panel_id label=account_label body_template="components/account_menu.html" %}

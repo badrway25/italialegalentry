@@ -613,3 +613,63 @@
     color: CanvasText;
   }
 }
+
+/* ---- 8 · M5, the journey's light on the first view (V5.12 §5; the Director's DECISIONS §2 M5, §3 Animated Roadmap
+   8113, Stepper-01 28546; DL54-166, which amends «still at load» above for this one beat) -----------------------------
+   «Mon parcours» (not the case file's descriptive spine): on its FIRST view in a session (html.is-seen-journey, set by
+   static/js/head.js before the first paint) the travelled stretches light one after the other from Morocco,
+   --motion-fast each (120 ms a stretch), then the node where the file stands settles on --spring-soft. Every other
+   view, reduced motion, html.rm and no script: the still above, at once. */
+
+.journey > :nth-child(2) { --m5-i: 1; }
+.journey > :nth-child(3) { --m5-i: 2; }
+.journey > :nth-child(4) { --m5-i: 3; }
+.journey > :nth-child(5) { --m5-i: 4; }
+.journey > :nth-child(6) { --m5-i: 5; }
+.journey > :nth-child(7) { --m5-i: 6; }
+.journey > :nth-child(8) { --m5-i: 7; }
+.journey > :nth-child(9) { --m5-i: 8; }
+.journey > :nth-child(n + 10) { --m5-i: 9; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not(.is-seen-journey) .journey:not(.journey--descriptive) > :is(.journey__shore--start, .journey__step--done, .journey__threshold--done)::before {
+    transform-origin: 50% 0;
+    animation: m5-down var(--motion-fast) var(--ease-enter) 1 backwards;
+    animation-delay: calc(var(--m5-i, 0) * var(--motion-fast));
+  }
+
+  :root:not(.rm):not(.is-seen-journey) .journey:not(.journey--descriptive) > :is(.journey__step--current, .journey__threshold--current) > .journey__node {
+    animation: m5-settle var(--motion-standard) var(--spring-soft) 1 backwards;
+    animation-delay: calc(var(--m5-i, 0) * var(--motion-fast));
+  }
+
+  @container journey (min-width: 56rem) {
+    :root:not(.rm):not(.is-seen-journey) .journey:not(.journey--descriptive) > :is(.journey__shore--start, .journey__step--done, .journey__threshold--done)::before {
+      transform-origin: 0 50%;
+      animation-name: m5-across;
+    }
+
+    :root:not(.rm):not(.is-seen-journey)[dir="rtl"] .journey:not(.journey--descriptive) > :is(.journey__shore--start, .journey__step--done, .journey__threshold--done)::before {
+      transform-origin: 100% 50%;
+    }
+  }
+}
+
+@keyframes m5-down {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes m5-across {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes m5-settle {
+  from {
+    opacity: 0;
+    scale: 0.8;
+  }
+}

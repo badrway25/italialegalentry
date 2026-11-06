@@ -1,0 +1,22 @@
+{% load i18n pages_imagery %}{% comment %}
+THE NETWORK DIAGRAM — the head of /reseau/ (V5.15 §4 «network, dialogue, institutional community»; round 1 of W3, label
+v515-c-improve1). The shared table seen from above is the centre, in a disc; the five actors of the ecosystem stand
+around it on one ring, each with its glyph and its name (pages.content.NETWORK_ACTORS), joined to the centre and to one
+another. Drawn by static/css/v5/_fronte.css §8 (positions on the ring, the order in which they arrive).
+
+V5.22 (SECTION_SYSTEM_V2 §3.11 RE-0 + RE-2, pattern H «la mappa» in the head; lane P2): at rest the ring looks as it did;
+its nodes are now the map's controls — anchors to the actors' entries docked in the head's reading column
+(pages/partials/fronte/_rete_pannelli.html), which sezioni/mappa.js upgrades to a tablist (the hub first: the shared
+table returns to «En bref» while gate G3 is open; Escape too). The lines and circles stay drawn and aria-hidden; the
+selected actor's spoke and its two neighbours' links draw in the night's accent, a ring of light glides around the
+circle to it (apps/pages/static/pages/css/_rete.css). Without script every entry is listed and a node is its link.
+Context: `map_entries` (apps/pages/views.py: the actors with their `audience` and ring index `i`), `presentation`.
+{% endcomment %}<div class="ingresso__aside fronte-rete" data-actors="{{ map_entries|length }}">
+  <svg class="fronte-rete__lines" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle class="m-faint" cx="50" cy="50" r="40"/><circle class="m-faint" cx="50" cy="50" r="48" stroke-dasharray=".6 1.6"/><path class="m-faint" d="M50 10 L88.04 37.64 L73.51 82.36 L26.49 82.36 L11.96 37.64 Z"/><path class="m-line rete__raggio rete__raggio--0" pathLength="1" d="M50 50 L50 10"/><path class="m-line rete__raggio rete__raggio--1" pathLength="1" d="M50 50 L88.04 37.64"/><path class="m-line rete__raggio rete__raggio--2" pathLength="1" d="M50 50 L73.51 82.36"/><path class="m-line rete__raggio rete__raggio--3" pathLength="1" d="M50 50 L26.49 82.36"/><path class="m-line rete__raggio rete__raggio--4" pathLength="1" d="M50 50 L11.96 37.64"/><g class="rete__lati"><path class="rete__lato rete__lato--0" pathLength="1" d="M50 10 L88.04 37.64"/><path class="rete__lato rete__lato--1" pathLength="1" d="M88.04 37.64 L73.51 82.36"/><path class="rete__lato rete__lato--2" pathLength="1" d="M73.51 82.36 L26.49 82.36"/><path class="rete__lato rete__lato--3" pathLength="1" d="M26.49 82.36 L11.96 37.64"/><path class="rete__lato rete__lato--4" pathLength="1" d="M11.96 37.64 L50 10"/></g></svg>
+  {% photo "network.table" "fronte-rete__centre" %}
+  <span class="fronte-rete__luce" aria-hidden="true"></span>
+  <ul class="fronte-rete__nodes mappa__nodi mappa__anello" role="list">
+    {% if presentation %}{% translate "En bref" as hub_name %}<li class="fronte-rete__hub"><a class="mappa__tasto fronte-rete__tasto--hub" id="rete-hub-tab" href="#rete-hub" data-i="0"><span class="visually-hidden">{{ hub_name }}</span></a></li>{% endif %}
+    {% for item in map_entries|slice:":5" %}<li class="fronte-rete__node fronte-rete__node--{{ item.i }}" data-audience="{{ item.audience }}"><a class="mappa__tasto fronte-rete__tasto" id="rete-{{ item.key }}-tab" href="#rete-{{ item.key }}" data-i="{{ item.i }}" data-node="{{ item.key }}"><span class="fronte-rete__disc">{% svg_icon item.glyph "icon" %}</span><span class="fronte-rete__name"{% if item.title.lang %} lang="{{ item.title.lang }}"{% endif %}>{{ item.title }}</span></a></li>{% endfor %}
+  </ul>
+</div>

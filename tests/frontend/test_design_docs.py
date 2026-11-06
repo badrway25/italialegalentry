@@ -574,8 +574,12 @@ def test_no_icon_svg_bakes_a_literal_colour_without_it_being_recorded():
     The sprite itself must be clean. The illustrations still bake the retired palette, which is why
     §14.1 marks all six for retirement or redrawing — the document has to say so, per file.
     """
-    sprite = _read(STATIC / "img" / "icons.svg")
-    assert not re.findall(r"#[0-9a-fA-F]{3,8}\b", sprite), "icons.svg bakes a literal colour"
+    # V5.12 W2: two sprites. V5.22 (SECTION_SYSTEM_V2 §4.9 — an approved owner/product decision; lane S): the third,
+    # page-only sprite of the V2 sections (img/icons-marks.svg) is held to the same rule (V5.20 strict rule: the same
+    # invariant over one more file)
+    for name in ("icons.svg", "icons-domain.svg", "icons-marks.svg"):
+        sprite = _read(STATIC / "img" / name)
+        assert not re.findall(r"#[0-9a-fA-F]{3,8}\b", sprite), f"{name} bakes a literal colour"
     section = _between(_design(), "### 14.1 ", "### 14.2 ")
     for path in sorted((STATIC / "img" / "illustrations").glob("*.svg")):
         if re.findall(r"#[0-9a-fA-F]{3,8}\b", _read(path)):
@@ -583,7 +587,10 @@ def test_no_icon_svg_bakes_a_literal_colour_without_it_being_recorded():
 
 
 def test_every_icon_id_is_listed_and_no_listed_icon_is_missing():
-    sprite = _read(STATIC / "img" / "icons.svg")
+    # V5.12 W2; V5.22 (SECTION_SYSTEM_V2 §4.9; lane S): the list names every symbol of the three sprites — the V2
+    # sections' page-only sprite (the thirteen ILE marks at T2 size, the seven V2 glyphs) included (V5.20 strict rule:
+    # the same bijection, over the third sprite the approved decision added)
+    sprite = "".join(_read(STATIC / "img" / name) for name in ("icons.svg", "icons-domain.svg", "icons-marks.svg"))
     ids = set(re.findall(r'<symbol id="icon-([a-z0-9-]+)"', sprite))
     listing = _between(_design(), "<!-- icon-list:start -->", "<!-- icon-list:end -->")
     listed = re.findall(r"`([a-z0-9-]+)`", listing)
@@ -612,7 +619,7 @@ def test_listed_font_files_exist_and_every_font_file_is_listed():
         "Host Grotesk",
         "ILE Wordmark",
         "ILE Mono",
-        "Vazirmatn",
+        "Readex Pro",  # Typography V2 (v524-t): the Arabic companion
         "unicode-range",
         "static/fonts/licenses/",
         "docs/design-v5/FONTS_V5.md",
@@ -958,9 +965,9 @@ def test_form_field_contract_matches_accessibility_doc():
     assert 'aria-invalid="true"' in field
     assert 'aria-describedby="id_email_helptext id_email_error"' in field
     assert 'id="id_email_helptext"' in field
-    assert '<div class="form-field__errors" id="id_email_error" role="alert"><ul class="form-field__error-list">' in field
+    assert '<div class="form-field__errors" id="id_email_error"><ul class="form-field__error-list">' in field
     assert '<div class="form-field__help" id="id_email_helptext">' in field
-    assert '<span class="form-field__required" aria-hidden="true">*</span>' in field
+    assert "form-field__required" not in field and "form-field--required" in field  # V5.12 W2: no asterisk
     ids = set(re.findall(r'\sid="([^"]+)"', field))
     for described in re.findall(r'aria-describedby="([^"]+)"', field):
         assert set(described.split()) <= ids, described
@@ -970,7 +977,8 @@ def test_form_field_contract_matches_accessibility_doc():
     documented = _between(_a11y(), "## 6. Contratto di accessibilità dei form", "## 7. ")
     for fragment in (
         'aria-describedby="id_email_helptext id_email_error"',
-        'id="id_email_error" role="alert"',
+        '<div class="form-field__msg" aria-live="polite" data-field-msg>',
+        '<div class="form-field__errors" id="id_email_error"><ul',
         'aria-invalid="true"',
         'aria-hidden="true">*</span>',
     ):
@@ -1102,14 +1110,15 @@ def test_icon_sprite_is_well_formed_xml():
     A double hyphen inside an XML comment made browsers draw no icon at all. The icon listing test reads
     the ids with a regular expression, so this one also checks that a real parser sees the same symbols.
     """
-    sprite = STATIC / "img" / "icons.svg"
     namespace = "{http://www.w3.org/2000/svg}"
-    symbols = list(ET.parse(sprite).getroot().iter(f"{namespace}symbol"))
-    parsed = {el.get("id") for el in symbols}
-    by_regex = {f"icon-{name}" for name in re.findall(r'<symbol id="icon-([a-z0-9-]+)"', _read(sprite))}
-    assert parsed and parsed == by_regex, sorted(parsed ^ by_regex)
-    for el in symbols:
-        assert el.get("viewBox") == "0 0 24 24", el.get("id")
+    for name in ("icons.svg", "icons-domain.svg"):  # V5.12 W2: two sprites, each parsed on its own
+        sprite = STATIC / "img" / name
+        symbols = list(ET.parse(sprite).getroot().iter(f"{namespace}symbol"))
+        parsed = {el.get("id") for el in symbols}
+        by_regex = {f"icon-{n}" for n in re.findall(r'<symbol id="icon-([a-z0-9-]+)"', _read(sprite))}
+        assert parsed and parsed == by_regex, sorted(parsed ^ by_regex)
+        for el in symbols:
+            assert el.get("viewBox") == "0 0 24 24", el.get("id")
 
 
 def test_sticky_header_does_not_trap_fixed_drawer():
@@ -1333,7 +1342,8 @@ def test_navigation_breakpoint_is_consistent_and_documented():
         flags=re.S,
     )
     assert drawer_block, "chrome.css no longer shows .nav-toggle in a max-width block"
-    assert 0 < float(threshold) - float(drawer_block.group(1)) < 0.01, (drawer_block.group(1), threshold)
+    # V5.15 (DL54-170): every item is in the one-row bar from BAR, so «Menu» and the drawer live below BAR, not DESKTOP
+    assert 0 < float(doors) - float(drawer_block.group(1)) < 0.01, (drawer_block.group(1), doors)
     # the sheet (W2-C2): the overlay system's modal drawer, which «Menu» opens
     assert 'href="#nav-sheet" data-overlay-open' in _read(ROOT / "templates" / "partials" / "header.html")
     assert 'data-overlay="drawer"' in _read(ROOT / "templates" / "partials" / "main_nav.html")
@@ -1342,7 +1352,7 @@ def test_navigation_breakpoint_is_consistent_and_documented():
 
     design, a11y = _design(), _a11y()
     assert f"### 11.1 «Il portico» (≥ {doors}rem; con la fotografia da {threshold}rem)" in design
-    assert f"### 11.2 Drawer (< {threshold}rem" in design
+    assert f"### 11.2 Drawer (< {doors}rem" in design
     breakpoints = _between(design, "### 7.2 ", "### 7.3 ")
     rows = {m.group(1): m.group(0) for m in re.finditer(r"^\| `([0-9.]+)rem` \|.*$", breakpoints, flags=re.M)}
     assert threshold in rows and doors in rows, f"§7.2 has no row for {threshold}rem or {doors}rem"
@@ -1356,7 +1366,7 @@ def test_navigation_breakpoint_is_consistent_and_documented():
     assert f"`max-width: {drawer_block.group(1)}rem` (drawer)" in breakpoints
     keyboard = _between(a11y, "## 3. Modello tastiera", "## 4. ")
     assert f"| «Il portico» (≥ {doors}rem" in keyboard
-    assert f"| Drawer (< {threshold}rem" in keyboard
+    assert f"| Drawer (< {doors}rem" in keyboard
 
 
 def test_documented_file_weights_are_roughly_true():
@@ -1386,7 +1396,11 @@ def test_base_template_stylesheet_links_match_the_documented_architecture():
     — they are IN the bundle (Gate A, 26/09/2026: 21 requests held the connections for 1.3 s)."""
     shell = _read(ROOT / "templates" / "base.html")
     applied = re.findall(r"<link rel=\"stylesheet\" href=\"\{% static '([^']+)' %\}\">", shell)
-    assert applied == ["css/dist/main.css"], applied
+    # the one bundle — and, since V5.12 W2 (DL54-166), the reading's page-only sheet of the public pages, in a block the
+    # console's base empties; §2 says so
+    assert applied == ["css/dist/main.css", "css/dist/core/reveal.css"], applied
+    assert "{% block reveal_sheet %}{% endblock %}" in _read(ROOT / "templates" / "portal" / "base_portal.html")
+    assert "css/dist/core/reveal.css" in _between(_design(), "## 2. Architettura CSS", "### 2.1 ")
     preloaded = re.findall(r"<link rel=\"preload\" href=\"\{% static 'css/([^']+)' %\}\" as=\"style\">", shell)
     assert preloaded == [], preloaded
     architecture = _between(_design(), "## 2. Architettura CSS", "### 2.1 ")

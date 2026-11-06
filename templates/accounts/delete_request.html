@@ -10,9 +10,11 @@ button leads here; the view checks the password, the box and the rate limit, and
 {% block head_title %}{% translate "Supprimer mon compte" %}{% endblock %}
 {% block meta_description %}{% translate "Demande de suppression du compte personnel." %}{% endblock %}
 {% block content %}
+{% if account_in_console %}{% include "accounts/partials/account_head.html" with title=_("Supprimer mon compte") lead="" %}{% else %}
 <header class="conto__head">
   <h1 class="account-page__title">{% translate "Supprimer mon compte" %}</h1>
 </header>
+{% endif %}
 {% include "components/notice.html" with kind="warning" title=_("Cette action est définitive.") text=_("Votre compte sera désactivé immédiatement. Vos données personnelles (nom, e-mail, téléphone, pays, appartenances, documents téléversés) seront anonymisées ou supprimées et vos consentements révoqués. Les enregistrements techniques nécessaires à la sécurité sont conservés sous forme pseudonymisée.") %}
 <form method="post" action="{% url 'accounts:delete_request' %}" class="form" novalidate data-single-submit>
   {% csrf_token %}

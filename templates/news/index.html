@@ -22,6 +22,7 @@ news (the review's m7).
   {% endif %}
 </header>
 
+{% if articles or category %}{# V5.12 §8: the page exists with a live article (core.gates.news_public); a category's empty answer keeps its way back #}
 <section class="chapter news-index" aria-label="{% translate 'Liste des articles' %}">
   <div class="container chapter__inner">
     <div class="chapter__body">
@@ -44,20 +45,15 @@ news (the review's m7).
       </div>
       {% include "components/pagination.html" with page_obj=page_obj query=query %}
       {% else %}
-        {% if category %}
           {% translate "Aucun article dans cette catégorie pour le moment." as empty_title %}
           {% url 'news:index' as index_url %}
           {% translate "Voir toutes les actualités" as empty_action %}
           {% include "components/empty_state.html" with title=empty_title action_label=empty_action action_url=index_url icon="newspaper" %}
-        {% else %}
-          {% translate "Aucune actualité publiée pour le moment." as empty_title %}
-          {% translate "Les nouveautés normatives, les échéances officielles et les activités de l’écosystème seront publiées ici." as empty_text %}
-          {% include "components/empty_state.html" with title=empty_title text=empty_text icon="newspaper" %}
-        {% endif %}
       {% endif %}
     </div>
   </div>
 </section>
+{% endif %}
 
 {% include "news/_newsletter.html" %}
 {% endblock %}

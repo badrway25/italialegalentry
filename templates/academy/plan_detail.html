@@ -21,8 +21,10 @@ attendance record is personal — and the clause says so before anything else.
 {% block meta_description %}{% translate "Un parcours de formation conseillé." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="person">
+  {% include "portal/partials/atrium_art.html" with figure="thresholds" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title reg-head__title" dir="auto">{{ plan.title }}</h1>
     <p class="ws-head__lead">{% translate "Un parcours conseillé. Il n’est jamais une condition d’accès aux cours." %}</p>
   </div>

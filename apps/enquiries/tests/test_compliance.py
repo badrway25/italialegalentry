@@ -17,6 +17,7 @@ from enquiries.tests.conftest import (
     company_payload,
     honeypot,
 )
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = [pytest.mark.django_db, pytest.mark.compliance]
 
@@ -52,7 +53,8 @@ def test_no_forbidden_formulations_gate_open(client, seeded, legal_published):
         assert scan(html) == [], (lang, path)
         assert "®" not in html
         assert set(EMAIL_RE.findall(html)) <= {"contact@agamieuromed.org"}, (lang, path)
-        assert not re.search(r'(?:src|href)="https?://(?!testserver)', html), (lang, path)
+        checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+        assert not re.search(r'(?:src|href)="https?://(?!testserver)', checked), (lang, path)
 
 
 def test_company_page_renders_every_locked_key_exactly(client, seeded, legal_published):

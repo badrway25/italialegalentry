@@ -4,27 +4,38 @@
    * gate G3 closed → a neutral four-step sequence + the editorial note reminding that the result is
      an informational pre-assessment and that decisions belong to the competent authorities.
 
-Design V5.4 (W2-D step 3): the page's one BRAND chapter — the question «where do I start?» answered
-beside its action. The prescribed sentence is set as the chapter's statement, whole and as written (its
-arrows are its own); the four neutral steps are a real sequence, so they keep their numerals: the public
-passage «la linea» (W3-D: components/stepper.html, static/css/v5/_journey-passage.css — the site's one
-passage drawing), down the reading edge at 320 px, four stations across from 48rem. It explains how the
-questionnaire works: no `current`, never a progress. No running head: the title names the questionnaire.
+V5.22 (SECTION_SYSTEM_V2 §3.1 S2 «la linea V2, la discesa», §2 F, §4.8 «Arch + route»; lane H): the route the hero's line
+comes down into. The title at the band's size and the lead above it; then the route itself — station 1 the T1 seal of
+orientation (`ile-orienta`), stations 2 to 4 the registry's tiles (icons.HOW_STEP), each with its numeral — and the
+caveat as the route's terminal line, always visible; the call at the route's end takes the page's one arrival light,
+and its hover or focus sends one light along the route (components/stepper.html size="large", lane S). The locked
+sentence is cut on its own separators by the owner-approved cut (pathways.services.how_it_works, D-U4) and said whole,
+once, for a screen reader: the drawn caption, stations and caveat are its image (aria-hidden). Never a progress: no
+current station, no tick (O14). Gate closed: the four neutral steps on the same route, the editorial note as its
+terminal line (pages.services._route_ends builds both ends). Where the hero's line arrives, it runs down the reading
+edge into the seal's sill (.orienta__soglia). The ground is the page's one brand wash, the brand's portico — the
+threshold's three arches, as the Lume stage draws them — at 6 % ink at its far edge.
+
+Round 1 (QA_ROUND1 M1 a, b): where the hero comes first the band takes the statement's hand — its head follows the
+statement at the foot's own distance, its lead beside its title, and the hero's line runs on without a break to the
+route's origin, its foot turning into the seal's sill (pages.css, v5/_casa.css). The origin seal stands at the body's
+size from 64 rem (40 in 72 × 88), on the raised paper of the wash; its needle's north half is filled, as a compass's is
+(the gradient defined in the portico's drawing, decorative: one definition for the page's one needle).
 {% endcomment %}
 {% translate "Le questionnaire d’orientation" as fallback_title %}
-<section class="chapter chapter--brand home-orientation" id="{{ s.anchor }}" aria-labelledby="home-orientation-title" data-section="orientation">
-  <div class="container chapter__inner">
-    {% include "pages/partials/_section_header.html" with title_id="home-orientation-title" heading=s.heading intro=s.intro fallback_title=fallback_title %}
-    <div class="chapter__body">
-      {% if d.how_it_works %}
-      <p class="home-orientation__how"{% if d.how_it_works.lang %} lang="{{ d.how_it_works.lang }}"{% endif %} data-locked="p3.persons.how_it_works">{{ d.how_it_works }}</p>
-      {% else %}
-      {% include "components/stepper.html" with steps=d.steps lang=d.steps_lang across=True %}
-      {% if s.note %}<p class="home-orientation__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
-      {% endif %}
-      {% if d.url %}
-      <p class="home-orientation__actions"><a class="btn btn--primary btn--arrow" href="{{ d.url }}">{% translate "Commencer le questionnaire d’orientation" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
-      {% endif %}
+<section class="sez sez--linea home-orientation{% if d.soglia %} home-orientation--soglia{% endif %}" id="{{ s.anchor }}" aria-labelledby="home-orientation-title" data-section="orientation" data-sec="linea" data-ground="brand" data-rhythm="band">
+  <svg class="orienta__portico" viewBox="0 0 400 480" preserveAspectRatio="xMidYMax meet" fill="none" stroke-width="1.5" focusable="false" aria-hidden="true">{% if d.stations %}<defs><linearGradient id="orienta-ago" x1="0" y1="1" x2="1" y2="0"><stop offset="0.5" stop-color="currentColor" stop-opacity="0"/><stop offset="0.5" stop-color="currentColor"/></linearGradient></defs>{% endif %}<path vector-effect="non-scaling-stroke" d="M40 470V190a160 160 0 0 1 320 0v280"/><path vector-effect="non-scaling-stroke" d="M78 470V196a122 122 0 0 1 244 0v274"/><path vector-effect="non-scaling-stroke" d="M116 470V204a84 84 0 0 1 168 0v266"/><path vector-effect="non-scaling-stroke" d="M0 470h400"/></svg>
+  <div class="container orienta">
+    <div class="orienta__capo">
+      {% if d.stations %}<span class="orienta__soglia" data-verb="draw-y" aria-hidden="true"></span>{% endif %}
+      {% if s.heading %}{% include "components/sezioni/_testa.html" with role="process" title_id="home-orientation-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-orientation-title">{{ fallback_title }}</h2>{% endif %}
+      {% if d.how %}<p class="orienta__didascalia" aria-hidden="true"{% if d.how.lang %} lang="{{ d.how.lang }}"{% endif %}>{{ d.how.lead }}</p>{% endif %}
     </div>
+    {% if d.stations %}
+    {% include "components/stepper.html" with size="large" steps=d.stations whole=d.whole lang=d.stations_lang across=True origin_seal="ile-orienta" terminal=d.terminal end_action=d.end_action only %}
+    {% elif d.how_it_works %}
+    <p class="orienta__intera"{% if d.how_it_works.lang %} lang="{{ d.how_it_works.lang }}"{% endif %} data-locked="p3.persons.how_it_works">{{ d.how_it_works }}</p>
+    {% if d.end_action %}<p class="linea__arrivo"><a class="btn btn--primary" href="{{ d.end_action.url }}" data-azione>{{ d.end_action.label }}</a></p>{% endif %}
+    {% endif %}
   </div>
 </section>

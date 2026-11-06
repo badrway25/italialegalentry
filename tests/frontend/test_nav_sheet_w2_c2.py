@@ -19,6 +19,8 @@ from pathlib import Path
 
 import pytest
 
+from accounts import roles
+
 ROOT = Path(__file__).resolve().parents[2]
 CHROME = ROOT / "static" / "css" / "v5" / "chrome.css"
 NAV_JS = ROOT / "static" / "js" / "src" / "nav.js"
@@ -123,7 +125,11 @@ def test_the_sheet_keeps_the_fase_3_order(client, seeded, phase3_open, legal_pub
     assert sheet.count('name="nav-sheet-doors"') == 5
     assert 'data-accordion="single"' in sheet
     assert sheet.count('<span class="portico__disc">') == 4
-    assert sheet.count("#icon-handshake") == 1
+    # the Forum's row carries its glyph; since finishing round F1 the doors' entries carry their destinations' glyphs as
+    # the bar's panel does — the Institutions door lists the Forum, with the same glyph: the Forum twice, never another
+    assert sheet.count("#icon-handshake") == 2
+    assert re.search(r'<span class="nav-sheet__slot"><svg[^>]*><use href="[^"]*#icon-handshake">', sheet)
+    assert re.search(r'<span class="portico__glyph" aria-hidden="true"><svg[^>]*><use href="[^"]*#icon-handshake">', sheet)
     # the languages by their own names, never «ع»
     for name in ("Italiano", "Français", "English", "العربية"):
         assert name in sheet
@@ -161,7 +167,8 @@ def test_every_id_of_the_page_is_unique_with_the_bar_and_the_sheet_drawn(client,
             assert ids[ref] == 1, ref
 
 
-def test_signed_in_the_targa_seat_and_the_sheets_foot_hold_the_account_popover(client, seeded, person_user):
+def test_signed_in_the_targa_seat_and_the_sheets_foot_hold_the_account_popover(client, seeded, user_factory):
+    person_user = user_factory("person.named@example.test", role=roles.PERSON, full_name="Personne Essai")
     client.force_login(person_user)
     html = _get(client, "/fr/")
     header = html[html.index('<header class="site-header"') : html.index("</header>")]
@@ -174,10 +181,23 @@ def test_signed_in_the_targa_seat_and_the_sheets_foot_hold_the_account_popover(c
     )
     foot = sheet[sheet.index("nav-sheet__foot") :]
     assert 'popovertarget="account-menu-sheet"' in foot and 'id="account-menu-sheet"' in foot
-    assert re.search(r'aria-label="[^"]+ — Mon compte"', seat)
+    # named by the words it shows first, then what it opens (V5.12 §11: the full name, never its first word)
+    assert 'aria-label="Personne Essai — Mon compte"' in seat
     assert 'action="/fr/compte/logout/"' in seat and 'action="/fr/compte/logout/"' in foot
     # design V4's <details> face left with the move: no disclosure menu on a public page
     assert "data-dropdown" not in html and "account-menu__list" not in html
+
+
+def test_a_nameless_account_names_its_popover_by_what_it_opens_alone(client, seeded, person_user):
+    """An account without a name shows «Mon compte» on its button: the name is the words it shows, so with none the
+    label is not prefixed by an empty name or a dash (WCAG 2.5.3: the accessible name begins with the visible one)."""
+    client.force_login(person_user)
+    html = _get(client, "/fr/")
+    header = html[html.index('<header class="site-header"') : html.index("</header>")]
+    seat = header[header.index('class="targa-seat"') :]
+    assert 'popovertarget="account-menu" aria-label="Mon compte"' in seat
+    assert '<span class="account-menu__name">Mon compte</span>' in seat
+    assert " — Mon compte" not in seat
 
 
 def test_the_flag_off_leaves_no_targa_in_the_sheet_and_no_hole(client, seeded, set_flag):
@@ -236,7 +256,8 @@ def test_the_overlay_system_is_on_every_public_page_and_the_old_scripts_left():
     # «la targa»'s key alone: the system's top-layer tip names it; nav.js only refuses it where the plate says its word
     targa = nav[nav.index("function initTarga") :]
     targa = targa[: targa.index("\n}\n")]
-    assert '"overlay:tip"' in targa and "event.preventDefault()" in targa and "(min-width: 100rem)" in targa
+    # V5.15: the plate says its word from 90rem (the institutional bar left: one row, measured)
+    assert '"overlay:tip"' in targa and "event.preventDefault()" in targa and "(min-width: 90rem)" in targa
     assert "function initDropdowns" not in main and "initDropdowns()" not in main
 
 
@@ -244,8 +265,8 @@ def test_the_review_fixes_hold_in_the_sources():
     """The fix pass of the family's review and accessibility check (docs/design-v5/QA/v54/w2-c2/NOTES.md «Review fixes»),
     on the sources: what the browser tests measure, held where a refactor would undo it."""
     chrome = _read(CHROME)
-    # M1: the 64–80rem band draws the lock-up at the compact 32/17, as the laptop band does
-    band = re.search(r"@media \(min-width: 64rem\) and \(max-width: 89\.999rem\) \{(.*?)\n\}", chrome, re.S)
+    # M1: the 64–80rem band draws the lock-up at the compact 32/17, as the laptop band does (V5.15: to 100rem, one row)
+    band = re.search(r"@media \(min-width: 64rem\) \{\n  \.site-header__inner \{ gap: var\(--s-4\); \}(.*?)\n\}", chrome, re.S)
     assert band and ".site-header .lock__wm { font-size: 17px; }" in band.group(1)
     assert ".site-header .lock__mark { inline-size: 32px; block-size: 32px; }" in band.group(1)
     # M2: from 48rem the side sheet keeps its foot — only the head's lock-up goes; m3: its own 24 px margin
@@ -270,7 +291,7 @@ def test_the_review_fixes_hold_in_the_sources():
     assert ":is(.targa-seat, .nav-sheet__foot) .account-menu { display: flex; }" in chrome
     # m7: no browser tint on a press anywhere in the public chrome
     assert (
-        ":is(.site-header, .utility-bar, .nav-sheet) :is(a, button, summary) { -webkit-tap-highlight-color: transparent; }"
+        ":is(.site-header, .nav-sheet) :is(a, button, summary) { -webkit-tap-highlight-color: transparent; }"
         in chrome
     )
     # A11Y_PERF m1: a short viewport does not pin the foot; a focused stop never stands under the sticky head

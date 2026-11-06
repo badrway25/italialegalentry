@@ -74,7 +74,26 @@ def test_the_partial_is_page_only_css_imported_by_its_entry():
     assert '@import url("../css/v5/_lettura.css");' in entry, "the entry imports the partial from the collected tree"
     # W3-F1's budget pass: the components the public interior's pages share are drawn once, in the shared page,
     # imported before the partial (the review's m11; the owner's V5.8)
-    assert re.findall(r'@import url\("([^"]+)"\);', entry) == ["../css/v5/_pagina.css", "../css/v5/_lettura.css"]
+    # V5.22 (SECTION_SYSTEM_V2 §3.13–§3.15, lane S's request §8; lane P2, strict rule V5.20): the library's shell and
+    # the pattern every reading page composes (E) before the partial, what the area's V2 compositions share after it;
+    # lane P2 round 2 (QA_ROUND2 m5; the owner's V5.22 «route-specific bundles with their own recorded budgets»): each
+    # page's own compositions are its route sheet's — the FAQ's with L «l'indice», the glossary's, the term page's and
+    # Vivre's — linked after this one by those pages only (apps/pages/tests/test_interior_v522.py holds where)
+    assert re.findall(r'@import url\("([^"]+)"\);', entry) == [
+        "../css/v5/_pagina.css",
+        "../css/v5/_sezioni.css",
+        "../css/v5/_sec-mosaico.css",
+        "../css/v5/_lettura.css",
+        "_lettura-v2.css",
+    ]
+    for route, imports in (
+        ("faq.css", ["../css/v5/_sec-indice.css", "_faq-v2.css"]),
+        ("lessico.css", ["_lessico-v2.css"]),
+    ):
+        assert re.findall(r'@import url\("([^"]+)"\);', _read(ENTRY.parent / route)) == imports, route
+        assert (ROOT / "static" / "css" / "dist" / "cms" / route).is_file(), "npm run build:css"
+    for partial in ("_lettura-v2.css", "_faq-v2.css", "_lessico-v2.css"):
+        assert partial not in _read(ROOT / "static" / "css" / "main.css"), "page-only CSS never enters main.css"
     assert "_lettura.css" not in _read(ROOT / "static" / "css" / "main.css"), "page-only CSS never enters main.css"
     assert (ROOT / "static" / "css" / "dist" / "cms" / "lettura.css").is_file(), "npm run build:css"
 
@@ -191,6 +210,7 @@ def test_a_refused_newsletter_opens_on_the_system_s_summary(client, seeded, lega
     import time
 
     set_flag("newsletter", True)
+    _one_live_article()
     response = client.post(
         f"/{lang}/actualites/lettre-d-information/",
         {"email": "refus@example.test", "website_url": "", "form_started_at": str(int(time.time()) - 30)},
@@ -216,14 +236,45 @@ def test_a_refused_newsletter_opens_on_the_system_s_summary(client, seeded, lega
         assert f'<span lang="{form.consent_language}">' in summary.group(1)
 
 
+def _one_live_article():
+    """V5.12 §8 (core.gates.news_public): the news index, and the newsletter's form on it, exist once one article is live."""
+    from django.utils import timezone
+
+    from cms.models import PublicationStatus
+    from news.models import Article, NewsCategory
+
+    return Article.objects.create(
+        slug="lettre-visible",
+        title_fr="Article visible",
+        category=NewsCategory.objects.first(),
+        status=PublicationStatus.PUBLISHED,
+        published_at=timezone.now(),
+    )
+
+
 @pytest.mark.django_db
 def test_the_news_filter_is_drawn_only_where_it_filters(client, seeded, phase3_open):
-    """The review's m7: over an empty news no filter; over a category's empty answer it stays (its way back)."""
-    from news.models import NewsCategory
+    """The review's m7: over an empty news no filter; over a category's empty answer it stays (its way back).
+    V5.12 §8: an empty news has no page at all (404) — the filter is read over a news with one live article."""
+    from django.utils import timezone
 
+    from cms.models import PublicationStatus
+    from news.models import Article, NewsCategory
+
+    assert client.get("/fr/actualites/").status_code == 404, "no empty news page"
+    categories = list(NewsCategory.objects.all())
+    if len(categories) < 2:
+        return
+    Article.objects.create(
+        slug="filtre",
+        title_fr="Article du filtre",
+        category=categories[0],
+        status=PublicationStatus.PUBLISHED,
+        published_at=timezone.now(),
+    )
     main = _main(client.get("/fr/actualites/").content.decode())
-    assert 'class="filter-bar"' not in main and 'class="empty-state' in main, "no filter over an empty news"
-    category = NewsCategory.objects.first()
+    assert 'class="filter-bar"' in main, "over the articles, the filter"
+    category = categories[1]
     if category is not None:
         main = _main(client.get(f"/fr/actualites/?categorie={category.slug}").content.decode())
         assert 'class="filter-bar"' in main, "a category's empty answer keeps the way back to every article"
@@ -262,6 +313,7 @@ def test_the_newsletter_s_answers_lead_on_and_say_who_can_help(client, seeded, l
     from consents.models import NewsletterSubscription
 
     set_flag("newsletter", True)
+    _one_live_article()
     client.post(
         "/fr/actualites/lettre-d-information/",
         {
@@ -286,7 +338,24 @@ def test_the_newsletter_s_answers_lead_on_and_say_who_can_help(client, seeded, l
 
 @pytest.mark.django_db
 def test_a_topic_s_glyph_stands_with_its_title(client, seeded, phase3_open):
-    """The review's m10: beside the eyebrow «Vivre en Italie» a house read as «home» for the section."""
+    """The review's m10: beside the eyebrow «Vivre en Italie» a house read as «home» for the section. V5.12 §8: a theme
+    has a page only with a live, reviewed sheet — one is published for the reading."""
+    from django.utils import timezone
+
+    from cms.models import PublicationStatus
+    from living.models import LegalReviewStatus, LivingSheet, LivingTopic
+
+    LivingSheet.objects.create(
+        topic=LivingTopic.objects.get(slug="logement"),
+        slug="lecture",
+        title_fr="Fiche",
+        summary_fr="Résumé.",
+        body_fr="Texte.",
+        status=PublicationStatus.PUBLISHED,
+        published_at=timezone.now(),
+        legal_review=LegalReviewStatus.REVIEWED,
+        last_reviewed_at=timezone.now(),
+    )
     html = _main(client.get("/fr/vivre-en-italie/logement/").content.decode())
     h1 = re.search(r"<h1 class=\"page-header__title\">(.*?)</h1>", html, re.S).group(1)
     assert '<svg class="icon page-header__glyph" aria-hidden="true"' in h1

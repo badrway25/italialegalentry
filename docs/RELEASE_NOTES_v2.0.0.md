@@ -224,6 +224,16 @@ server, the database and the backups (CR-08).
 **The go-live phase** (`GO_LIVE_PHASE.md`): the authorisation of Phase 3; the Forum's permanent mode (F-2) and its
 words after the event (F-1).
 
+**Privacy and the states** (directives V5.14, V5.16 and V5.17, 28 October 2026; added after the release): the
+privacy notice and the cookie information are legal documents whose open fields are classified — PRODUCTION
+CONFIGURATION REQUIRED, OWNER CONFIRMATION REQUIRED, LEGAL REVIEW REQUIRED — and production refuses to publish the
+notice while one remains. «Production-ready» now means the four states of the runbook's *States* (V5.17 §2):
+PRODUCT_COMPLETE, COMPLIANCE_REVIEW_COMPLETE, PRODUCTION_CONFIG_COMPLETE and PRODUCTION_READY, with checklist
+A-29 … A-33, none of which blocks PRODUCT_COMPLETE (`docs/compliance/`: the purpose matrix, the art. 9 audit, the DPO
+assessment, the DPIA in preparation, the recipient roles, preview vs production, the OF-11 deviations). The flows that
+intentionally solicit special-category data are closed in production by R-SC-1 (`ILE_SPECIAL_CATEGORY_FLOWS_ENABLED`,
+off) and stay complete in the preview.
+
 ## 6. Known limits
 
 - **Browsers and devices.** The browser suite and every family's checks ran in Chromium (headless). Safari/WebKit and

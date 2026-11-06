@@ -1,0 +1,271 @@
+{
+ "what": "V5 photographs, family «ecosysteme» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "table-travail-institutions",
+   "pexels_id": 33543226,
+   "photographer": "Emre Gokceoglu",
+   "photographer_url": "https://www.pexels.com/@0ldpikes",
+   "page": "https://www.pexels.com/photo/business-meeting-discussion-panel-in-ankara-33543226/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Close-up of professionals discussing documents at a business meeting in Ankara, Turkey.",
+   "original_px": [
+    7728,
+    5152
+   ],
+   "original_sha256": "b95b7924de9bdf080f241a2e2039f1a682ec029b6970b2b3f63dd0d638771600",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      0,
+      7728,
+      5152
+     ],
+     "master_px": [
+      7728,
+      5152
+     ]
+    },
+    {
+     "ratio": "4x3",
+     "crop_fraction": [
+      0.111,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      858,
+      0,
+      7728,
+      5152
+     ],
+     "master_px": [
+      6870,
+      5152
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.625,
+      0.395,
+      0.68,
+      0.505
+     ],
+     "radius_px": 40,
+     "reason": "the lanyard badge (mark and name)"
+    },
+    {
+     "box_fraction": [
+      0.655,
+      0.0,
+      0.74,
+      0.42
+     ],
+     "radius_px": 40,
+     "reason": "the lanyard's printed strap"
+    },
+    {
+     "box_fraction": [
+      0.04,
+      0.52,
+      0.48,
+      0.68
+     ],
+     "radius_px": 22,
+     "reason": "legible handwriting on the papers"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "hands and documents around a working table; no face in the frame",
+   "files": [
+    {
+     "file": "table-travail-institutions-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10627,
+     "budget": 46080,
+     "sha256": "2b06f9b3e30e3cc2a6f94a4f60517856d8c6ea64a95595f97492f1562877bc92"
+    },
+    {
+     "file": "table-travail-institutions-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 15688,
+     "budget": 46080,
+     "sha256": "75855e6361a5366a3e9fec7183c419b1be89c375f30a48f1870896d566923969"
+    },
+    {
+     "file": "table-travail-institutions-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 20664,
+     "budget": 46080,
+     "sha256": "ee7b5321f0858fd2b238a1c5ba07bf3f708b44c3712a2d86788ff6986e0c4feb"
+    },
+    {
+     "file": "table-travail-institutions-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 29930,
+     "budget": 46080,
+     "sha256": "8b85ee7844b8ac300db2916640db0330ef91bafb9194ae659a7f1975683d6634"
+    },
+    {
+     "file": "table-travail-institutions-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 34673,
+     "budget": 46080,
+     "sha256": "5261c6dca4c2de97b45ccdd50358127f99c3bdb8dc8bbb08b0a1f2b10b19c5a2"
+    },
+    {
+     "file": "table-travail-institutions-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 68,
+     "bytes": 45836,
+     "budget": 46080,
+     "sha256": "a1a6209066c4705f919d7764390c31016cf6966f6a362f726039e187ee221151"
+    },
+    {
+     "file": "table-travail-institutions-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 49206,
+     "budget": null,
+     "sha256": "5142340a95227c611359ee75991890380af2dbebcec730f1d1330a33988a12c9"
+    },
+    {
+     "file": "table-travail-institutions-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 70778,
+     "budget": null,
+     "sha256": "5fc2f43392e450b362053a861549eb6f8dfc13937aab5e4f07c26a61ab46cc27"
+    },
+    {
+     "file": "table-travail-institutions-4x3-480.avif",
+     "ratio": "4x3",
+     "width": 480,
+     "height": 360,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10761,
+     "budget": 46080,
+     "sha256": "e5d9c3d7727ab0336945f57778f384a5a4938a29e6d959d6bf70359cd23762b7"
+    },
+    {
+     "file": "table-travail-institutions-4x3-480.webp",
+     "ratio": "4x3",
+     "width": 480,
+     "height": 360,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 15948,
+     "budget": 46080,
+     "sha256": "6d7ff25110cdb5629db210c035bc2a11da4d75e3e3dd864661648aacdae587ad"
+    },
+    {
+     "file": "table-travail-institutions-4x3-800.avif",
+     "ratio": "4x3",
+     "width": 800,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 21439,
+     "budget": 46080,
+     "sha256": "55dfd59cf339b81ee825cc5531feca3cdce09fcb02187f176d72fef93a0d8db0"
+    },
+    {
+     "file": "table-travail-institutions-4x3-800.webp",
+     "ratio": "4x3",
+     "width": 800,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 29826,
+     "budget": 46080,
+     "sha256": "36e32a9a231fce2baaaafaae856deadbf3d06f9710fc0f2b623e3f2bf9782e04"
+    },
+    {
+     "file": "table-travail-institutions-4x3-1200.avif",
+     "ratio": "4x3",
+     "width": 1200,
+     "height": 900,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 35268,
+     "budget": 46080,
+     "sha256": "72a88154898b2df4ea89898e01d8080a1fd1b0251639c804198e14daa758c84c"
+    },
+    {
+     "file": "table-travail-institutions-4x3-1200.webp",
+     "ratio": "4x3",
+     "width": 1200,
+     "height": 900,
+     "format": "webp",
+     "quality": 65,
+     "bytes": 44592,
+     "budget": 46080,
+     "sha256": "a00547057d640cfd7492dd40dbd63aa075de13579019889109b4b47c0c86c8f6"
+    },
+    {
+     "file": "table-travail-institutions-4x3-1600.avif",
+     "ratio": "4x3",
+     "width": 1600,
+     "height": 1200,
+     "format": "avif",
+     "quality": 49,
+     "bytes": 45033,
+     "budget": 46080,
+     "sha256": "e61d853a002b777808831fc110667c56780b63a956e44e949176b020d6eda807"
+    }
+   ],
+   "ceilings": {
+    "4x3": 46080
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "table-travail-institutions-4x3-1600.webp"
+   ],
+   "label": "v522-m-build"
+  }
+ ]
+}

@@ -35,9 +35,37 @@ PAGES = (
 SITUATION = "/{lang}/espace-reserve/ma-situation/"
 
 #: what is painted and on screen in the first viewport: its distinct radii (a circle counted once) and the shadows
-#: of level 3 or more (a blur of 40 px or more: --shadow-3 and --shadow-4)
-FIRST_SCREEN_JS = """() => {
-  const radii = new Set(); let raised = 0;
+#: of level 3 or more (a blur of 40 px or more: --shadow-3 and --shadow-4), whatever colour function the browser writes
+#: them with (V5.20: a drop drawn with color-mix() computes as `color(srgb …)`, which the parse missed — the page heads'
+#: drops went uncounted). The page heads' raised surfaces that V5.15 lane C designed after this guard (Premium Page
+#: Headers / the Imagery Pass, DL54-172; V5.15 §18 «shadow hierarchy … layered surfaces») are the only places a raised
+#: shadow may stand at rest, each pinned to its token (V5.20, the strict test-update rule: V5.18 T3 / DL54-178 had
+#: admitted them with ANY shadow; the value is now read from the token in the element's own context and any other
+#: value fails), and at most one of them on a first screen:
+#:   * the head's photograph in its passe-partout: the print's drop, 56 px under the print (v5/_fronte.css
+#:     --fronte-print, once for the two head photographs that drew it as two literal copies), on «Diplômes et titres»;
+#:   * the fraud page's one notice standing as its head's panel: level 3 (v5/_fronte.css «notice: the page's one notice
+#:     is the head's panel»), on «Attention aux fraudes».
+#: Any other raised surface at rest still fails.
+ADMITTED_RAISED = [
+    ("[data-fronte] .ingresso__aside .foto__img", ["var(--fronte-print)"]),
+    ('[data-compose="notice"] .fronte-avviso .antifraud-panel', ["var(--shadow-3)"]),
+]
+FIRST_SCREEN_JS = """(admitted) => {
+  admitted = admitted || [];  // evaluated without an argument, Playwright passes null
+  const radii = new Set(); let raised = 0, named = 0; const wrong = [];
+  const resolve = (el, expr) => {
+    const probe = document.createElement('i');
+    el.parentElement.appendChild(probe);
+    probe.style.boxShadow = expr;
+    const value = getComputedStyle(probe).boxShadow;
+    probe.remove();
+    return value;
+  };
+  const isRaised = (shadow) => shadow.split(/,(?![^(]*\\))/).some((part) => {
+    const px = part.replace(/(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\\([^)]*\\)/g, '').trim().split(/\\s+/).map(parseFloat);
+    return px.length >= 3 && px[2] >= 40;
+  });
   for (const el of document.querySelectorAll('body *')) {
     const r = el.getBoundingClientRect();
     if (r.width <= 1 || r.height <= 1 || r.bottom <= 0 || r.top >= innerHeight || r.right <= 0 || r.left >= innerWidth) continue;
@@ -49,14 +77,13 @@ FIRST_SCREEN_JS = """() => {
       const px = parseFloat(rad);
       radii.add(rad.includes('%') || px >= Math.min(r.width, r.height) / 2 ? 'full' : String(Math.round(px)));
     }
-    if (cs.boxShadow !== 'none') {
-      for (const part of cs.boxShadow.split(/,(?![^(]*\\))/)) {
-        const px = part.replace(/rgba?\\([^)]*\\)/, '').trim().split(/\\s+/).map(parseFloat);
-        if (px.length >= 3 && px[2] >= 40) { raised += 1; break; }
-      }
-    }
+    if (cs.boxShadow === 'none') continue;
+    const rule = admitted.find(([selector]) => el.matches(selector));
+    if (!rule) { if (isRaised(cs.boxShadow)) raised += 1; continue; }
+    if (!rule[1].some((expr) => resolve(el, expr) === cs.boxShadow)) wrong.push(`${rule[0]}: ${cs.boxShadow}`);
+    else if (isRaised(cs.boxShadow)) named += 1;
   }
-  return {radii: [...radii].sort(), raised,
+  return {radii: [...radii].sort(), raised, named, wrong,
           overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth};
 }"""
 
@@ -110,7 +137,8 @@ def test_no_overflow_three_corners_and_no_raised_shadow_at_rest(
         for path in PAGES:
             page.goto(live_server.url + path.format(lang=lang), wait_until="load")
             visited.append(path)
-            measure = page.evaluate(FIRST_SCREEN_JS)
+            measure = page.evaluate(FIRST_SCREEN_JS, ADMITTED_RAISED)
+            assert measure["wrong"] == [] and measure["named"] <= 1, (path, lang, width, measure)
             assert measure["overflow"] <= 0 and len(measure["radii"]) <= 3 and measure["raised"] == 0, (
                 path,
                 lang,

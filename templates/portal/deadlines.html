@@ -12,10 +12,12 @@ V5.8: never in the shared bundles).
 {% endcomment %}
 {% block page_title %}{% translate "Mes échéances" %}{% endblock %}
 {% block meta_description %}{% translate "Les dates qui vous ont été communiquées par l’équipe du projet." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="register">
+  {% include "portal/partials/atrium_art.html" with figure="route" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Mes échéances" %}</h1>
     <p class="ws-head__lead">{% translate "Les dates qui vous ont été communiquées par l’équipe. Ce rappel est informatif : seule la communication d’origine fait foi." %}</p>
   </div>
@@ -53,3 +55,4 @@ V5.8: never in the shared bundles).
 {% endif %}
 </div>
 {% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

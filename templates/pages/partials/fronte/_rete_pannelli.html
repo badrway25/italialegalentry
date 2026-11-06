@@ -1,0 +1,19 @@
+{% load i18n %}{% comment %}
+THE NETWORK MAP'S ENTRIES — docked in the head's reading column of /reseau/ (V5.22, SECTION_SYSTEM_V2 §3.11 RE-1 + RE-2,
+pattern H «la mappa»; lane P2): the hub's entry is «En bref» (p3.hero.body, whole, only while gate G3 is open — exactly
+what RE-1 rendered), then the five actors, each its glyph in a T2a disc (its audience's ring), its name, its sentence
+(pages.content.NETWORK_ACTORS, team strings) and its space. sezioni/mappa.js makes them tabpanels stacked in one grid
+cell (the tallest sets the height: no selection moves the page); without script every entry is listed, in order, and
+the ring's nodes are links to them (:target). Context: `map_entries`, `presentation`.
+{% endcomment %}<div class="rete__pannelli" data-registro>
+  {% if presentation %}<section class="rete__pannello rete__pannello--hub" id="rete-hub" aria-labelledby="rete-hub-title">
+    <h2 class="rete__etichetta" id="rete-hub-title">{% translate "En bref" %}</h2>
+    <p class="rete__enunciato"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
+  </section>{% endif %}
+  {% for item in map_entries %}<section class="rete__pannello" id="rete-{{ item.key }}" aria-labelledby="rete-{{ item.key }}-title" data-actor="{{ item.key }}" data-audience="{{ item.audience }}">
+    <span class="sez-disc sez-disc--lg" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+    <h2 class="rete__titolo" id="rete-{{ item.key }}-title"{% if item.title.lang %} lang="{{ item.title.lang }}"{% endif %}>{{ item.title }}</h2>
+    <p class="rete__testo"{% if item.text.lang %} lang="{{ item.text.lang }}"{% endif %}>{{ item.text }}</p>
+    {% if item.url %}<p class="rete__azione"><a class="link-arrow" href="{{ item.url }}"{% if item.link_label.lang %} lang="{{ item.link_label.lang }}"{% endif %}>{{ item.link_label }}{% svg_icon "arrow" "icon icon--sm" %}</a></p>{% endif %}
+  </section>{% endfor %}
+</div>

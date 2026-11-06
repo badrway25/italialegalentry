@@ -40,6 +40,25 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 
+
+#: V5.15 (the owner's creative override, §20: the platform «must not collapse into static rectangles») gives every console
+#: page a FINITE load envelope (lane D's atrium draws, its planes rise; portal/v5/_platform.css): the page is read «at rest»
+#: once that envelope has ended. What the guards below still refuse is a motion that never ends — a loop, a scroll-linked
+#: timeline — and any motion of the journey on a return (M5), which «moving» keeps catching after the settle.
+SETTLE_JS = """() => Promise.all(document.getAnimations()
+  .filter((a) => {
+    const el = a.effect && a.effect.target, t = a.effect && a.effect.getComputedTiming();
+    if (!el || !t || !Number.isFinite(t.endTime) || t.endTime > 2500) return false;
+    // lane D's envelope only — the atrium and the platform's planes; never the journey (M5 must stay still on a return)
+    return Boolean(el.closest('[data-atrium]') || (el.closest('[data-platform]') && !el.closest('.db-journey, .journey, .journey-now')));
+  })
+  .map((a) => a.finished.catch(() => null)))"""
+
+
+def _settle(page):
+    page.evaluate(SETTLE_JS)
+
+
 PORTAL = "/{lang}/espace-reserve/mes-documents/"
 MINIMAL_PDF = (
     b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n"
@@ -155,6 +174,7 @@ def _open(browser, live_server, user, lang="fr", width=1440, height=900, phone=F
     page.wait_for_function(
         "() => document.querySelector('[data-piece-drawer]')?.hasAttribute('data-piece-drawer-ready')"
     )
+    _settle(page)
     return context, page, errors
 
 

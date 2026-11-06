@@ -21,6 +21,22 @@ VIRTUAL_FORUM = "/fr/forum-virtuel/"
 NEWS = "/fr/actualites/"
 
 
+def _one_live_article():
+    """V5.12 §8 (core.gates.news_public): the news index, and the newsletter's form on it, exist once one article is live."""
+    from django.utils import timezone
+
+    from cms.models import PublicationStatus
+    from news.models import Article, NewsCategory
+
+    return Article.objects.create(
+        slug="lettre-visible",
+        title_fr="Article visible",
+        category=NewsCategory.objects.first(),
+        status=PublicationStatus.PUBLISHED,
+        published_at=timezone.now(),
+    )
+
+
 # ---------------------------------------------------------------------------------------------
 # DENY: the flag alone opens nothing while the legal pages are not published
 # ---------------------------------------------------------------------------------------------
@@ -63,6 +79,7 @@ def test_the_newsletter_opens_with_its_flag_once_the_legal_pages_are_published(
 ):
     set_flag("newsletter", True)
     assert gates.newsletter_enabled() is True
+    _one_live_article()
     html = client.get(NEWS).content.decode()
     assert 'id="newsletter"' in html
     assert 'action="/fr/actualites/lettre-d-information/"' in html, "the form is drawn: G2 is open with the pages"

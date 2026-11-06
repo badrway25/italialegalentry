@@ -4,7 +4,7 @@
    docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11 (la targa), §1.12 (the navbar: the owner's «Fase 3 — menu
    aperto», developed), §1.5 (motion), §1.6 (focus); the gate-0 comp C:/tmp/ile_v5_council/proof/home/
    phase3-menu.html; NAVIGATION.md §4 (the mechanics kept from N-A: intent, keys, one indicator).
-   Markup: templates/partials/{utility_bar,header,main_nav,footer}.html. Behaviour: static/js/src/nav.js.
+   Markup: templates/partials/{header,main_nav,footer}.html. Behaviour: static/js/src/nav.js.
    Loaded LAST by static/css/main.css (plan §2.3); it supersedes components.css §5–§7 and §25, v2/shell.css and
    v4/shell.css's chrome, which left the cascade in the same merge (plan §2.3, the deletion map).
    Tokens only (layers 2 and 3 of v5/tokens.css): no literal colour, logical properties throughout; the one
@@ -22,7 +22,6 @@
 /* ---- custom properties set at run time by nav.js (declared here with their no-script values) ---------- */
 .site-header {
   --portico-lead: 19rem;         /* the panel's lede column = from the lock-up's start to the first door's */
-  --portico-h: auto;             /* one height for the four door panels (LA-7: within 24 px) */
   --portico-scrim-top: 0px;      /* where the scrim starts: the letterhead's foot, never over the utility bar */
 }
 
@@ -59,39 +58,43 @@
 @media (forced-colors: active) { .lock__wm, .lock__wm .lock__w1, .lock__wm .lock__w3 { color: CanvasText; } }
 
 /* ==============================================================================================
-   2 · THE INSTITUTIONAL BAR — 32 px, night, not sticky: the promoter at the reading edge, the four languages
-   at the other end, named in their own language (§1.11; DL A25). A night context: the ring, the icons and
-   the lines are re-pointed here as tokens.css re-points them in the other night contexts.
+   2 · THE LANGUAGE SWITCH (V5.15 §1; DECISIONS §15 lane A) — the institutional bar is gone (one row): the letterhead's
+   end zone carries the current language's code on a quiet plate, and a popover of the overlay system (W2-A: Esc, a
+   press outside, the arrows, the focus back) lists the four names in their own language, the current one checked.
    ============================================================================================== */
-.utility-bar {
-  --focus-ring: var(--focus-ring-night);
-  --focus-halo: var(--focus-halo-night);
-  --icon-default: var(--icon-on-night);
-  min-block-size: var(--utility-h);
-  background: var(--surface-night);
-  color: var(--text-on-night-2);
-  font-family: var(--f-sans);
-  font-size: var(--t-caption);
-  line-height: var(--t-caption-lh);
-  font-weight: var(--w-control);
-}
-.utility-bar__inner {
-  display: flex;
+.lang-switch {
+  display: none;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--s-6);
-  min-block-size: var(--utility-h);
+  gap: 4px;
+  min-block-size: 40px;
+  padding-inline: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-1);
+  font: var(--w-title) var(--t-small) / 1 var(--f-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;   /* the code is written lowercase (it, fr, en, ar) and drawn in capitals */
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-enter), border-color var(--motion-fast) var(--ease-enter);
 }
-.utility-bar__identity {
-  margin: 0;
-  min-inline-size: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;   /* the promoter's own line only, and only below the measure that holds it whole */
+.lang-switch .icon { inline-size: var(--icon-xs); block-size: var(--icon-xs); color: var(--icon-muted); transition: transform var(--motion-standard) var(--ease-layout); }
+.lang-switch:has(+ .lang-menu:popover-open) { background: var(--surface-hover); border-color: var(--line-rhythm); }
+.lang-switch:has(+ .lang-menu:popover-open) .icon { transform: rotate(180deg); }
+@media (hover: hover) and (pointer: fine) { .lang-switch:hover { background: var(--surface-hover); border-color: var(--line-rhythm); } }
+@media (min-width: 48rem) { .lang-switch { display: inline-flex; } }
+@media (min-width: 48rem) and (max-width: 89.999rem) {
+  /* review round 2: the code alone reads as a label beside the filled key — it takes «Menu»'s 40 px hairline plate */
+  .lang-switch { justify-content: center; min-inline-size: 40px; padding-inline: 6px; border-color: var(--line-structure); background: var(--surface-raised); }
+  .lang-switch .icon { display: none; }
 }
-.utility-bar__identity strong { color: var(--text-on-night-1); font-weight: var(--w-title); }
-.utility-bar__actions { display: flex; align-items: center; gap: var(--s-5); flex: none; }
-@media (max-width: 47.999rem) { .utility-bar { display: none; } }
+@media (pointer: coarse) { .lang-switch { min-block-size: var(--hit-primary); min-inline-size: var(--hit-primary); justify-content: center; } }
+.lang-menu { min-inline-size: 13rem; }
+.lang-menu__item { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; align-items: center; }
+.lang-menu__code { font: var(--w-title) var(--t-caption) / 1 var(--f-sans-lat); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.lang-menu__item[aria-current] { color: var(--text-1); font-weight: var(--w-title); }
+.lang-menu__check { inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--accent-text); }
+html:not([lang="ar"]) .lang-menu__item[hreflang="ar"] { font-family: var(--f-arabic-sys); }
 
 /* the language control, one drawing (components/language_segmented.html): four names, a drawn dot between them (a
    screen reader does not read «middle dot» three times), one 2 px line under the current one, which also answers
@@ -146,7 +149,6 @@
 /* «العربية» on a page that is not Arabic: the system's face draws it rather than fetching Vazirmatn (52 KB) */
 html:not([lang="ar"]) .lang-seg__link[hreflang="ar"] { font-family: var(--f-arabic-sys); }
 @media (pointer: coarse) {
-  .utility-bar__inner { min-block-size: var(--hit-primary); }
   .lang-seg__list--names .lang-seg__link { min-block-size: var(--hit-primary); min-inline-size: var(--hit-primary); justify-content: center; }
 }
 
@@ -226,13 +228,16 @@ html[data-input="key"] { scroll-behavior: auto; }
   .site-header.is-scrolled .lock__mark { inline-size: 32px; block-size: 32px; }
   .site-header.is-scrolled .lock__wm { font-size: 17px; }
 }
-@media (min-width: 80rem) and (hover: hover) and (pointer: fine) {
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
   .site-header.is-scrolled:not(.has-portico)::before {
     background: var(--glass-light);
-    -webkit-backdrop-filter: blur(var(--blur-nav));
-    backdrop-filter: blur(var(--blur-nav));
+    -webkit-backdrop-filter: blur(var(--blur-nav)) saturate(1.2);
+    backdrop-filter: blur(var(--blur-nav)) saturate(1.2);
   }
 }
+/* once the page has moved the bar floats: its hairline gives way to a soft shadow (V5.15 §1 «subtle depth») */
+.site-header { transition: box-shadow var(--motion-standard) var(--ease-enter), border-color var(--motion-standard) var(--ease-enter); }
+.site-header.is-scrolled { border-block-end-color: transparent; box-shadow: 0 1px 0 var(--line-rhythm), var(--shadow-2); }
 
 /* ==============================================================================================
    4 · THE BAR — four doors as disclosure buttons, a hairline, Forum, Projet (D-U3). 15/20 500 in text-2,
@@ -277,7 +282,19 @@ html[data-input="key"] { scroll-behavior: auto; }
 .main-nav[data-portico] .main-nav__link[aria-expanded="true"] .icon--chevron { transform: rotate(180deg); }
 .main-nav[data-portico] .main-nav__link:is([aria-current], [aria-expanded="true"]) { color: var(--text-1); }
 @media (hover: hover) and (pointer: fine) { .main-nav[data-portico] .main-nav__link:hover { color: var(--text-1); } }
-.main-nav[data-portico] .main-nav__link:focus-visible { outline-offset: -4px; }
+/* the keyboard's ring takes the plate's shape: the plate's radius, 36 px tall, inside the bar (review round 1: a square
+   1.6 px outline taller than the hover plate) */
+html:not(.no-js) .main-nav[data-portico] .main-nav__link:focus-visible { outline: none; box-shadow: none; }
+html:not(.no-js) .main-nav[data-portico] .main-nav__link:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset-inline: 2px;
+  inset-block: calc(50% - 16px);
+  border-radius: var(--radius-lg);
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+  pointer-events: none;
+}
 .site-header.is-scrolled .main-nav[data-portico] .main-nav__link { min-block-size: var(--header-h-scrolled); }
 /* the hairline between the doors and Forum · Projet (D-U3) — a border, so forced colours keep it */
 .main-nav__item--after-doors { margin-inline-start: var(--s-3); }
@@ -315,8 +332,27 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 .main-nav__architrave.is-jump { transition: opacity var(--motion-fast) linear; }
 
 @media (min-width: 64rem) {
-  .site-header .main-nav[data-portico] { display: flex; align-items: stretch; margin-inline-start: auto; align-self: stretch; }
+  .site-header .main-nav[data-portico] { display: flex; align-items: stretch; justify-content: center; flex: 1 1 auto; min-inline-size: 0; align-self: stretch; }
 }
+/* the plate: one soft ground that glides under the pointer from item to item (nav.js places it with the architrave;
+   transform only). Never on a touch screen, never from the keyboard (the ring is the keyboard's) */
+.main-nav__plate {
+  position: absolute;
+  inset: 50% auto auto 0;   /* physical, as the architrave: nav.js measures from the inner box's left edge */
+  z-index: -1;
+  inline-size: 1px;
+  block-size: 36px;
+  margin-block-start: -18px;
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--text-1) 5.5%, transparent);
+  transform-origin: 0 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--spring-snappy-duration) var(--spring-snappy), inline-size var(--spring-snappy-duration) var(--spring-snappy), opacity var(--motion-fast) linear;
+}
+.main-nav__plate.is-on { opacity: 1; }
+.main-nav__plate.is-jump { transition: opacity var(--motion-fast) linear; }
+.site-header__inner > .main-nav { position: static; }
 /* 64–90rem, the compact letterhead: the lock-up at 32/17 (the scrolled state's size), 16 px gaps, the doors without
    their chevrons. 80–90rem, the laptop band: the column is 1096 px (DS 2026 §7.2, lg) and the six French items beside
    the full lock-up need 1178; compact, the row needs fr 1029 · en 1028 · it 1002 · ar 914 (measured, W2-C1's
@@ -325,15 +361,34 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
    the French row needed 945 under a finger (the plate and «Menu» 44 px: an iPad in landscape drew two rows); compact,
    ≥ 24 px are left in fr · en · it · ar, signed out and in, under a finger and beside the scrollbar (N11; measured,
    W2-C2's E/fix/probe-band-after*.json) */
-@media (min-width: 64rem) and (max-width: 89.999rem) {
+/* V5.15, one row at every desktop width (measured, docs/design-v5/QA/v515/a/NOTES.md): the letterhead is compact at
+   every width from 64rem (the column stops at 1 360 px: the full lock-up and the chevrons beside the six French items,
+   the language and the access need 1 375); below 80rem the bar's words are 14 px; below 72rem the lock-up is its mark alone (the name is the mark's
+   accessible name, and returns from 72rem at 14 px) */
+/* review round 1 (v515-a-improve1), measured in fr · it · en · ar (QA/v515/a/NOTES.md, «Round 1 improvements»): the
+   bands were written before the generic 64rem rule, which overrode their 14 px wordmark and 8 px items — the
+   compact lock-up never applied. Now in cascade order: the generic rule, then the bands. Below 90rem the language is
+   a 40 px square (its code alone) beside the access's 40 px night square; the items 8 px apart; below 80rem the words
+   and the wordmark 14 px; the wordmark from 70rem (1120 px: ≥ 24 px to spare beside a 17 px scrollbar under a finger,
+   in French); 64–70rem the mark alone, its items given the room the name would take */
+@media (min-width: 64rem) {
   .site-header__inner { gap: var(--s-4); }
   .site-header .lock__mark { inline-size: 32px; block-size: 32px; }
   .site-header .lock__wm { font-size: 17px; }
   .main-nav[data-portico] .main-nav__link { padding-inline: 10px; }
   .main-nav[data-portico] .main-nav__link .icon--chevron { display: none; }
 }
+@media (min-width: 64rem) and (max-width: 89.999rem) {
+  .main-nav[data-portico] .main-nav__link { padding-inline: 8px; }
+}
 @media (min-width: 64rem) and (max-width: 79.999rem) {
-  .main-nav[data-portico] .main-nav__item:not(.main-nav__item--door) { display: none; }
+  .main-nav[data-portico] .main-nav__link { font-size: 0.875rem; }
+  .site-header .lock__wm { font-size: 14px; }
+  .site-header__inner { gap: var(--s-3); }
+}
+@media (min-width: 64rem) and (max-width: 69.999rem) {
+  .site-header .brand--lockup .lock__text { display: none; }
+  .main-nav[data-portico] .main-nav__link { padding-inline: 12px; }
 }
 
 /* ==============================================================================================
@@ -348,6 +403,10 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
    opacity (.is-switching); on the first pointer open per page the entries rise 4 px, 30 ms apart (.is-first);
    the photographs cross-fade by opacity in 200 ms (.is-leaving). Reduced motion: one 80 ms opacity.
    Closed panels are display: none, so their lazy photographs are never fetched before nav.js asks (N8).
+   V5.15 review round 1 (v515-a-improve1) SUPERSEDES the bar's panel above: each door at its own height (a door change
+   morphs the card), three zones — the lede, the entries (two tiles for a short door), «la lunetta», the door's night
+   plate and highlighted destination — in static/css/v5/_portico.css, linked from 64rem only. What stays here is what
+   the panel and the phone's sheet share.
    ============================================================================================== */
 .portico { display: none; }
 /* the entries, «Voir l'espace», the anti-fraud foot and the audience disc are drawn the same in the bar's panel and
@@ -402,164 +461,9 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   color: var(--text-on-night-1);
 }
 .portico__disc .icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
-@media (min-width: 64rem) {
-  .portico {
-    position: absolute;
-    inset-block-start: 100%;
-    inset-inline: var(--grid-margin);
-    z-index: 1;
-    grid-template-columns: minmax(0, 1fr);
-    min-block-size: var(--portico-h);
-    margin-block-start: 1px;   /* under the header's hairline: the line runs on into the panel's top edge */
-    background: var(--surface-raised);
-    border-end-start-radius: var(--radius-xl);
-    border-end-end-radius: var(--radius-xl);
-    box-shadow: var(--shadow-3);
-    overflow: hidden;
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity var(--motion-fast) var(--ease-enter),
-      transform var(--motion-fast) var(--ease-enter),
-      display var(--motion-fast) allow-discrete;
-  }
-  .main-nav__door[aria-expanded="true"] + .portico {
-    display: grid;
-    transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter);
-  }
-  @starting-style {
-    .main-nav__door[aria-expanded="true"] + .portico { opacity: 0; transform: translateY(-8px); }
-  }
-  .main-nav__door[aria-expanded="false"] + .portico { opacity: 0; transform: translateY(-8px); }
-  .main-nav.is-instant .portico,
-  .main-nav.is-instant .main-nav__door[aria-expanded="true"] + .portico,
-  .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico { transition: none; }
-  /* nav.js measures the door panels' natural heights once, out of sight, in one frame */
-  .main-nav.is-measuring .portico--door { display: grid; visibility: hidden; min-block-size: 0; transition: none; }
-  /* …without their photographs: a lazy image that gets a box is fetched, Save-Data or not (N8, measured by W2-C2: the
-     four came right after `load` with Save-Data on). The field adds no height — its photograph is absolute */
-  .main-nav.is-measuring .portico__field { display: none; }
-  /* no script: a panel opens on hover and on focus-within (NAVIGATION §4.8, four checks) */
-  html.no-js .main-nav__item--section:is(:hover, :focus-within) > .portico { display: grid; opacity: 1; transform: none; }
-
-  .portico__sheet {
-    display: grid;
-    grid-template-columns: var(--portico-lead) minmax(0, 1fr);
-    grid-template-rows: auto 1fr auto;
-    align-content: start;
-  }
-  .portico__gloss {
-    grid-column: 1;
-    grid-row: 1;
-    margin: 0;
-    padding: var(--s-8) var(--s-8) 0 var(--s-6);
-    max-inline-size: 22rem;
-    font-size: var(--t-entry);
-    line-height: var(--t-entry-lh);
-    font-weight: var(--w-body);
-    letter-spacing: var(--track-entry);
-    color: var(--text-1);
-    text-wrap: pretty;
-  }
-  :lang(ar) .portico__gloss { letter-spacing: 0; line-height: var(--ar-body-lh); }
-  /* «Voir l'espace» directly under the gloss, as the comp kept it at the end of the sentence: the lede is one block
-     — the gloss, then the link — and the paper below reads as the grid's air, not as a missing column */
-  .portico__space { grid-column: 1; grid-row: 2; align-self: start; justify-self: start; margin: var(--s-4) var(--s-8) var(--s-4) var(--s-6); }
-  .portico__entries { grid-column: 2; grid-row: 1 / span 2; padding: var(--s-5) var(--s-6) var(--s-5) 0; }
-  /* a short list ends instead of trailing off: nav.js marks the door panels whose own content stops well above
-     the shared height (LA-7's 24 px), and their last row closes with a hairline; the full panel's list is closed
-     by the foot's hairline already */
-  .portico--short .portico__entry:last-child { border-block-end: 1px solid var(--line-rhythm); }
-  .portico__foot { grid-column: 1 / -1; grid-row: 3; padding: var(--s-3) var(--s-6); border-block-start: 1px solid var(--line-rhythm); }
-
-  /* the photograph's field: hidden until 80rem (the 1024 band opens the panel without it) */
-  .portico__field { display: none; }
-
-  /* a plain panel (Projet): no photograph, hung from the bar's inline end, as wide as its content */
-  .portico--plain {
-    inset-inline-start: auto;
-    inline-size: min(46rem, calc(100% - 2 * var(--grid-margin)));
-    min-block-size: 0;
-  }
-  .portico--plain .portico__sheet { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
-  .portico--plain .portico__entries { padding-inline-start: 0; }
-
-  /* content swap and first rise (pointer only; nav.js sets the class for one opening) */
-  .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico .portico__sheet {
-    transition: opacity var(--motion-fast) var(--ease-enter);
-  }
-  @starting-style {
-    .main-nav.is-switching .main-nav__door[aria-expanded="true"] + .portico .portico__sheet { opacity: 0; }
-  }
-  .main-nav.is-first .portico__entry { transition: opacity var(--motion-standard) var(--ease-enter), transform var(--motion-standard) var(--ease-enter); }
-  .main-nav.is-first .portico__entry:nth-child(2) { transition-delay: 30ms; }
-  .main-nav.is-first .portico__entry:nth-child(3) { transition-delay: 60ms; }
-  .main-nav.is-first .portico__entry:nth-child(4) { transition-delay: 90ms; }
-  .main-nav.is-first .portico__entry:nth-child(5) { transition-delay: 120ms; }
-  .main-nav.is-first .portico__entry:nth-child(n+6) { transition-delay: 150ms; }
-  @starting-style {
-    .main-nav.is-first .main-nav__door[aria-expanded="true"] + .portico .portico__entry { opacity: 0; transform: translateY(4px); }
-  }
-}
-
-@media (min-width: 80rem) {
-  .portico--door { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
-  .portico--door .portico__field {
-    position: relative;
-    display: block;
-    grid-column: 2;
-    grid-row: 1;
-    contain: paint;   /* the cross-fade never repaints the text beside it (HE_MOTION_SCORE B4) */
-    /* while the photograph arrives: a warm mid-grey near the four graded frames' average (≈ #8a7b72) */
-    background: color-mix(in oklab, var(--text-2) 50%, var(--aud-persona));
-    border-end-end-radius: var(--radius-xl);
-  }
-  [dir="rtl"] .portico--door .portico__field { border-end-end-radius: 0; border-end-start-radius: var(--radius-xl); }
-  .portico[data-audience="person"] { --field-tint: var(--aud-persona); }
-  .portico[data-audience="company"] { --field-tint: var(--aud-impresa); }
-  .portico[data-audience="institution"] { --field-tint: var(--aud-istituzione); }
-  .portico[data-audience="university"] { --field-tint: var(--aud-universita); }
-  .portico__photo {
-    position: absolute;
-    inset: 0;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity var(--motion-standard) var(--ease-enter);
-  }
-  .portico__photo.is-loaded,
-  html.no-js .portico__photo { opacity: 1; }
-  /* the door's accent as a 3 px rule along the photograph's foot, and its audience glyph once (≥ 20 px on a
-     36 px night disc) at the bottom-start corner: the panel reads as the door card, opened */
-  .portico__field::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    inset-block-end: 0;
-    block-size: 3px;
-    background: var(--field-tint, var(--accent-night));
-  }
-  .portico__field .portico__disc {
-    position: absolute;
-    inset-inline-start: var(--s-5);
-    inset-block-end: var(--s-5);
-    box-shadow: 0 0 0 1px var(--line-night-soft), var(--shadow-2-dark);
-  }
-  /* the door changes: the old photograph fades out over the new panel while its text has already gone */
-  .main-nav .main-nav__door + .portico.is-leaving {
-    display: grid;
-    z-index: 2;
-    pointer-events: none;
-    background: transparent;
-    box-shadow: none;
-    transition: none;
-    opacity: 1;
-    transform: none;
-  }
-  .portico.is-leaving .portico__sheet { visibility: hidden; }
-  .portico.is-leaving .portico__field { opacity: 0; transition: opacity var(--motion-standard) var(--ease-layout); }
-}
+/* the bar's panel itself — from 64rem, where the bar carries the doors — is drawn by static/css/v5/_portico.css, a sheet
+   linked by base.html with media="(min-width: 64rem)" on the public pages: a phone never blocks its first paint on the
+   desktop's mega panel (review round 1, v515-a-improve1: main.css had 35 B of headroom) */
 
 /* the scrim: only for a click, a tap or the keyboard (never a hover), from the letterhead's foot down —
    never over the institutional bar (A11Y M3); opacity only, no blur */
@@ -589,14 +493,28 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 .main-nav[data-portico] ~ .site-header__end { margin-inline-start: 0; }
 /* signed out with the flags off there is nothing to seat (header.html marks the zone bare): from 80rem, where «Menu» is
    not drawn either, the zone is not drawn, so the row's gap does not leave a hole at the bar's end (§1.11; N13) */
-@media (min-width: 80rem) { .site-header__end--bare { display: none; } }
 @media (max-width: 63.999rem) { .main-nav[data-portico] ~ .site-header__end { margin-inline-start: auto; } }
+/* V5.15: «la targa» is the row's primary action at every width it is drawn in the letterhead — filled in night, the gold
+   key; the words from 90rem, the key alone on a 40 px night square below (review round 1: an outlined 32 px box below
+   90rem made the primary action change form across widths). Language, access and «Menu» share one 40 px height (44 under
+   a finger); signed in, the account's trigger takes the same night control */
+.site-header__end > .targa,
+.targa-seat .account-menu__summary { background: var(--surface-night); border-color: var(--surface-night); color: var(--text-on-night-1); }
+.targa-seat .account-menu__summary .icon { color: inherit; }
+.site-header__end > .targa .targa__key { color: var(--identity-key-night-text); }
+@media (hover: hover) and (pointer: fine) {
+  .site-header__end > .targa:hover,
+  .targa-seat .account-menu__summary:hover { background: var(--surface-night-sheet); border-color: var(--surface-night-sheet); }
+}
+@media (min-width: 48rem) and (pointer: fine) {
+  .site-header .nav-toggle { min-block-size: 40px; }
+}
 .targa {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  min-block-size: 32px;
+  min-block-size: 40px;
   padding-inline: var(--s-3);
   border: 1px solid var(--line-structure);
   border-radius: var(--radius-md);
@@ -624,22 +542,21 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 /* signed in: the account popover's trigger takes the plate's drawing — the person glyph in ink like the words
    (gold is the key's ornament, not a person's); the menu hangs from it on its inline end (overlays.css) */
 .targa-seat .account-menu__summary {
-  min-block-size: 32px;
+  min-block-size: 40px;
   padding-inline: var(--s-3);
   border: 1px solid var(--line-structure);
   border-radius: var(--radius-md);
-  color: var(--text-1);
   font-size: var(--t-small);
 }
 /* the name beside the glyph from 100rem: at most 6rem — the room the six French items leave at 100rem — then an
    ellipsis; a longer name is whole in the accessible name */
 .targa-seat .account-menu__name { max-inline-size: 6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-@media (hover: hover) and (pointer: fine) { .targa-seat .account-menu__summary:hover { background: var(--surface-hover); } }
+
 /* below 100rem the key alone, 32 × 32 (≥ 24 on a fine pointer), 44 under a coarse one; signed in, the person
    glyph alone on the same plate, the name visually hidden (it stays the summary's accessible name), no chevron */
-@media (min-width: 48rem) and (max-width: 99.999rem) {
+@media (min-width: 48rem) and (max-width: 89.999rem) {
   .site-header__end > .targa,
-  .targa-seat .account-menu__summary { justify-content: center; inline-size: 32px; padding: 0; gap: 0; }
+  .targa-seat .account-menu__summary { justify-content: center; inline-size: 40px; padding: 0; gap: 0; }
   .site-header__end > .targa .targa__label,
   .targa-seat .account-menu__name {
     position: absolute;
@@ -705,7 +622,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 @media (min-width: 48rem) { .nav-toggle__alt { display: none; } }
 /* a link that plays a button: it keeps its ink under the pointer and tints its plate, as «la targa» does */
 @media (hover: hover) and (pointer: fine) { .nav-toggle:hover { color: var(--text-1); background: var(--surface-hover); } }
-@media (max-width: 79.999rem) {
+@media (max-width: 63.999rem) {
   .nav-toggle { display: inline-flex; }
 }
 .nav-sheet__head {
@@ -717,6 +634,9 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   border-block-end: 1px solid var(--line-rhythm);
 }
 .nav-sheet__head > .nav-toggle { margin-inline-start: auto; }
+/* the head's lock-up anchors as the letterhead's (v5/motion.css: the anchor is ltr, as the lock-up is), so a mark
+   alone — the home's in Arabic, every page's at ≤ 20.5rem — sits in its 44 px box where the bar's does (V5.20, v520-css) */
+.nav-sheet__head > .brand--lockup { direction: ltr; }
 .nav-sheet__body {
   flex: 1 1 auto;
   min-block-size: 0;
@@ -734,6 +654,9 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   font-size: var(--t-ui);
 }
 .nav-sheet .lang-seg__list { flex-wrap: wrap; }
+/* the sheet is a finger's surface at every pointer: its four names stand on the 44 px floor, as under a coarse
+   pointer in the bar (V5.18 P11) */
+.nav-sheet .lang-seg__list--names .lang-seg__link { min-block-size: var(--hit-primary); min-inline-size: var(--hit-primary); justify-content: center; }
 .nav-sheet__list { margin: 0; padding: 0; list-style: none; }
 .nav-sheet__item + .nav-sheet__item { border-block-start: 1px solid var(--line-rhythm); }
 /* Forum · Projet after the doors, under a structure line — the bar's hairline between them */
@@ -753,7 +676,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   cursor: pointer;
 }
 .nav-sheet__row::-webkit-details-marker { display: none; }
-.nav-sheet__item--door .nav-sheet__row { min-block-size: var(--drawer-row-h); font-size: var(--t-body); line-height: var(--u-card-lh); }
+.nav-sheet__item--door .nav-sheet__row { min-block-size: var(--drawer-row-h); }
 .nav-sheet__slot { display: grid; place-items: center; color: var(--icon-default); }
 .nav-sheet__slot .icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
 .nav-sheet__chevron {
@@ -768,7 +691,68 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
    in ink and a step above the entries' second lines, as the bar's panel sets it: the door card, opened */
 .nav-sheet__panel { padding-block: 0 var(--s-4); padding-inline: calc(36px + var(--s-3)) 0; }
 .nav-sheet__gloss { margin: 0 0 var(--s-2); color: var(--text-1); font-size: var(--t-ui); line-height: 1.5rem; text-wrap: pretty; }
+/* the entries carry the bar panel's glyphs (finishing round F1): 20 px on a 32 px tinted disc; the legal notice under them */
+.nav-sheet__panel .portico__link { grid-template-columns: 32px minmax(0, 1fr); column-gap: var(--s-3); }
+.nav-sheet__panel .portico__link > :not(.portico__glyph) { grid-column: 2; }
+.nav-sheet__panel .portico__glyph { grid-row: 1 / span 2; display: grid; place-items: center; inline-size: 32px; block-size: 32px; border-radius: var(--radius-md); background: var(--surface-hover); color: var(--accent-text); }
+.nav-sheet__panel .portico__glyph:empty { visibility: hidden; }
+.nav-sheet__panel .portico__glyph .icon { inline-size: 20px; block-size: 20px; }
+.nav-sheet__notice { align-items: start; margin-block: var(--s-2); }
+/* the brand in a line (brand_bdi: one isolated LTR run) never breaks across two lines — «Italy» on one, «Legal Entry™» on the next */
+:is(.portico__line, .portico__notice, .portico__foot) bdi { white-space: nowrap; }
+/* the search: ONE field — its glyph inside at the start, an icon submit inside at the end; the label is the field's
+   accessible name, read and not drawn (review round 1: a long visible label, an empty box and a separate button read as
+   a default form) */
 .nav-sheet__search { margin: var(--s-6) 0 var(--s-4); }
+.nav-sheet__search .search-form__label {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.nav-sheet__field { position: relative; display: block; }
+.nav-sheet__field .search-form__input {
+  min-block-size: var(--hit-primary);
+  padding-inline: 44px 52px;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-page);
+}
+.nav-sheet__field-glyph {
+  position: absolute;
+  inset-inline-start: 16px;
+  inset-block-start: calc(50% - 9px);
+  inline-size: 18px;
+  block-size: 18px;
+  color: var(--icon-muted);
+  pointer-events: none;
+}
+.nav-sheet__field-go {
+  position: absolute;
+  inset-inline-end: 4px;
+  inset-block-start: calc(50% - 18px);
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-enter);
+}
+.nav-sheet__field-go .icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+@media (hover: hover) and (pointer: fine) { .nav-sheet__field-go:hover { background: var(--surface-night-sheet); } }
+@media (pointer: coarse) {
+  .nav-sheet__field .search-form__input { min-block-size: 52px; }
+  .nav-sheet__field-go { inline-size: var(--hit-primary); block-size: var(--hit-primary); inset-block-start: calc(50% - var(--hit-primary) / 2); }
+}
 .nav-sheet__fraud { margin-block-start: var(--s-3); }
 .nav-sheet__fraud a { min-block-size: var(--hit-primary); }
 /* the foot, pinned on night — the institutional bar's ground, which a phone does not draw. The night's ring is set on
@@ -832,6 +816,49 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   .nav-sheet { --grid-margin: var(--s-6); }
   .nav-sheet__head > .brand { display: none; }
 }
+/* V5.15 (§1 «a premium full-height or layered navigation drawer/sheet … NOT a collapsed Bootstrap menu»; 21st
+   «Immersive Full Screen Navigation» 27229, adapted): the doors in the display voice, 20 px, on their night discs; the
+   rows come in one after the other as the sheet opens (40 ms apart, 12 px, the first eight); a door unfolds with its
+   photograph, unmasked from its foot; the phone's sheet opens as a light from the «Menu» corner (a clip-path circle).
+   Reduced motion: none of it — the overlay system's one 80 ms opacity. */
+.nav-sheet__item--door .nav-sheet__row { font-size: 1.25rem; line-height: 1.75rem; font-weight: var(--w-control); letter-spacing: -0.01em; }
+:lang(ar) .nav-sheet__item--door .nav-sheet__row { letter-spacing: 0; }
+.nav-sheet__item--door .portico__disc { box-shadow: var(--shadow-1-dark); }
+[open] > .nav-sheet__row .portico__disc { background: var(--brand-gold); color: var(--surface-night); }
+.nav-sheet__photo {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  margin-block: var(--s-1) var(--s-4);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--text-2) 40%, var(--surface-page));
+}
+.nav-sheet__panel { padding-inline: calc(36px + var(--s-3)) 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .nav-sheet__door[open] .nav-sheet__photo { animation: sheet-photo 520ms cubic-bezier(0.25, 1, 0.5, 1) both; }
+  /* the rows come in one after the other, 40 ms apart, after the light has opened most of the sheet (review round 1:
+     the reveal and the stagger were over ≈ 60 ms after the first frame, the layering barely felt) */
+  .nav-sheet[open] .nav-sheet__item { animation: sheet-row 440ms cubic-bezier(0.25, 1, 0.5, 1) 90ms both; }
+  .nav-sheet[open] .nav-sheet__item:nth-child(2) { animation-delay: 130ms; }
+  .nav-sheet[open] .nav-sheet__item:nth-child(3) { animation-delay: 170ms; }
+  .nav-sheet[open] .nav-sheet__item:nth-child(4) { animation-delay: 210ms; }
+  .nav-sheet[open] .nav-sheet__item:nth-child(5) { animation-delay: 250ms; }
+  .nav-sheet[open] .nav-sheet__item:nth-child(n+6) { animation-delay: 290ms; }
+  .nav-sheet[open] :is(.nav-sheet__search, .nav-sheet__primary) { animation: sheet-row 440ms cubic-bezier(0.25, 1, 0.5, 1) 330ms both; }
+  html[data-input="key"] .nav-sheet[open] :is(.nav-sheet__item, .nav-sheet__photo, .nav-sheet__search, .nav-sheet__primary),
+  html.rm .nav-sheet[open] :is(.nav-sheet__item, .nav-sheet__photo, .nav-sheet__search, .nav-sheet__primary) { animation: none; }
+}
+@media (max-width: 47.999rem) and (prefers-reduced-motion: no-preference) {
+  .nav-sheet[open] { animation: sheet-light 300ms cubic-bezier(0.55, 0, 0.25, 1) both; }
+  [dir="rtl"] .nav-sheet[open] { animation-name: sheet-light-rtl; }
+  html[data-input="key"] .nav-sheet[open], html.rm .nav-sheet[open] { animation: none; }
+}
+@keyframes sheet-row { from { opacity: 0; translate: 0 12px; } }
+@keyframes sheet-photo { from { clip-path: inset(30% 0 0 0 round 8px); scale: 1.04; } to { clip-path: inset(0 round 8px); scale: 1; } }
+@keyframes sheet-light { from { clip-path: circle(0 at calc(100% - 44px) 28px); } to { clip-path: circle(150% at calc(100% - 44px) 28px); } }
+@keyframes sheet-light-rtl { from { clip-path: circle(0 at 44px 28px); } to { clip-path: circle(150% at 44px 28px); } }
 @media (min-width: 64rem) {
   .nav-sheet__item--door, .nav-sheet__primary, .nav-sheet__fraud { display: none; }
 }
@@ -844,7 +871,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   .nav-sheet__body { flex: none; overflow: visible; }
 }
 /* a press shows the chrome's own state, never the browser's tint (Android's; only .btn cleared it) */
-:is(.site-header, .utility-bar, .nav-sheet) :is(a, button, summary) { -webkit-tap-highlight-color: transparent; }
+:is(.site-header, .nav-sheet) :is(a, button, summary) { -webkit-tap-highlight-color: transparent; }
 /* ≤ 23rem (368 px): the word «Menu» becomes screen-reader only — the lock-up does not reflow, by design; from 369 px
    the name (227.5), 12 px and the button with its words (88.6 in French, the longest) hold in the column's 329 px */
 @media (max-width: 23rem) {
@@ -941,6 +968,39 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   .site-footer__list { gap: 0; }
   .site-footer a { min-block-size: var(--hit-primary); min-inline-size: var(--hit-primary); }
 }
+/* the colophon's channels (V5.19, lane v519-k): the Numero Verde and WhatsApp under the address, each its glyph and
+   its word; the number left to right and never broken (base.css `.phone` isolates it on an Arabic page). Two classes:
+   base.css `ul[role="list"]` (0,1,1) would take the margin otherwise */
+.site-footer .site-footer__channels { display: grid; gap: var(--s-1); margin: calc(-1 * var(--s-1)) 0 var(--s-4); padding: 0; list-style: none; }
+/* the telephone's ILE drawing has a 20 px floor (apps/core/icons.py): both channel glyphs are drawn at it */
+.site-footer .site-footer__channel .icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+.site-footer__channel .phone { white-space: nowrap; color: var(--text-on-night-1); font-variant-numeric: var(--numeric-data); }
+@media (pointer: coarse) { .site-footer .site-footer__channels { gap: 0; } }
+/* the sheet's channels: two plates side by side, first in the pinned foot — the night's own outline, 44 px, the
+   number unbroken; the Numero Verde dials, WhatsApp opens the app */
+.nav-sheet__channels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
+.nav-sheet__channel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-3);
+  border: 1px solid var(--line-night);
+  border-radius: var(--radius-md);
+  color: var(--text-on-night-1);
+  font-size: var(--t-ui);
+  font-weight: var(--w-control);
+  text-decoration: none;
+  white-space: nowrap;
+  --focus-ring: var(--focus-ring-night);
+  --focus-halo: var(--focus-halo-night);
+}
+.nav-sheet__channel .icon { flex: none; inline-size: var(--icon-md); block-size: var(--icon-md); color: var(--brand-gold); }
+.nav-sheet__channel .phone { font-variant-numeric: var(--numeric-data); }
+@media (hover: hover) and (pointer: fine) {
+  .nav-sheet__channel:hover { background: var(--surface-night-sheet); border-color: var(--text-on-night-2); }
+}
 
 /* ==============================================================================================
    9 · REDUCED MOTION, FORCED COLOURS, PRINT
@@ -961,11 +1021,11 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
    panel and the architrave's fade are there in the next frame. A mouse movement gives the pointer its motion back. */
 html[data-input="key"] .main-nav[data-portico] :is(.main-nav__link, .icon--chevron, .main-nav__architrave, .portico, .portico__photo) { transition: none; }
 @media (forced-colors: active) {
-  .site-header, .utility-bar { border-block-end: 1px solid CanvasText; }
+  .site-header { border-block-end: 1px solid CanvasText; }
   .portico { border: 1px solid CanvasText; border-block-start: 0; }
   .main-nav__architrave, .lang-seg__list--names .lang-seg__link::after { background: Highlight; forced-color-adjust: none; }
   .portico__link[aria-current] { outline: 2px solid Highlight; }
-  .targa, .account-menu__summary, .nav-toggle { border-color: ButtonText; }
+  .targa, .account-menu__summary, .nav-toggle, .nav-sheet__channel { border-color: ButtonText; }
   /* the sheet's pinned foot loses its night: a line keeps it apart from the list that scrolls under it */
   .nav-sheet__foot { border-block-start: 1px solid CanvasText; }
   .targa__key, .targa-seat .account-menu__summary .icon:first-child { color: CanvasText; }
@@ -974,6 +1034,6 @@ html[data-input="key"] .main-nav[data-portico] :is(.main-nav__link, .icon--chevr
   .main-nav__item--after-doors > .main-nav__link::before { border-color: CanvasText; }
 }
 @media print {
-  .utility-bar, .main-nav, .site-header__end, .portico-scrim { display: none !important; }
+  .main-nav, .site-header__end, .portico-scrim { display: none !important; }
   .site-header { position: static; }
 }

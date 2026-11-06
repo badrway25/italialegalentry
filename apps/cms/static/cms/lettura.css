@@ -7,6 +7,12 @@
    trail, the head, the chapters, the register, D26's shared slots — drawn once for these pages and W3-F1's), then the
    partial's (static/css/v5/_lettura.css). The imports are written as they resolve in the collected tree:
    cms/lettura.css → css/v5/_pagina.css, css/v5/_lettura.css (DS 2026 §2).
+   V5.22 (SECTION_SYSTEM_V2 §3.13–§3.15; lane P2): the composition library's shell and the pattern every reading page
+   composes (E «il mosaico»), then what the area's V2 compositions share (_lettura-v2.css); each page's own compositions
+   are its route sheet's (round 2, QA_ROUND2 m5): cms/faq.css (with L «l'indice»), cms/lessico.css.
    ============================================================================================ */
 @import url("../css/v5/_pagina.css");
+@import url("../css/v5/_sezioni.css");
+@import url("../css/v5/_sec-mosaico.css");
 @import url("../css/v5/_lettura.css");
+@import url("_lettura-v2.css");

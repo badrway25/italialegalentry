@@ -110,7 +110,7 @@ def test_fallback_markup_never_leaks_into_head_or_attributes(open_site, lang):
         seen += 1
         assert _markup_problems(page) == [], (lang, path)
         assert page.count("<head>") == 1 and page.count("</head>") == 1, (lang, path)
-    assert seen >= 55
+    assert seen >= 54  # V5.12 §8: news, partners and the ten living themes answer 404 while they have no content
 
 
 def test_the_markup_detector_sees_a_span_inside_an_attribute():
@@ -189,10 +189,16 @@ def test_blocked_legal_page_titles_follow_the_page_language(client, seeded, cata
     import time, so the <h1> and <title> of the blocked legal pages were frozen in the language active when
     the URLconf was first imported (French) on the it / en / ar sites. The titles are now lazy.
     """
+    from django.test import override_settings
+
     for lang in TRANSLATED:
         for path, msgid in LEGAL_TITLE_MSGIDS.items():
             expected = catalogues[lang][(None, msgid)].msgstr[0]
-            page = client.get(f"/{lang}/{path}").content.decode()
+            # Q2 / the W2 review's M-2 (V5.15 W3): an unpublished substantive page is a 404 for the public; its
+            # blocked title is read where it is still drawn — the preview (open fields allowed)
+            assert client.get(f"/{lang}/{path}").status_code == 404, (lang, path)
+            with override_settings(ILE_LEGAL_OPEN_FIELDS_ALLOWED=True):
+                page = client.get(f"/{lang}/{path}").content.decode()
             title = re.search(r"<h1\b[^>]*>(.*?)</h1>", region(page, "main"), re.S).group(1)
             assert html_module.unescape(re.sub(r"<[^>]+>", "", title)).strip() == expected, (lang, path)
             assert html_module.unescape(re.search(r"<title>(.*?)</title>", page, re.S).group(1)).startswith(expected)
@@ -247,12 +253,16 @@ def test_the_leak_detector_sees_an_untranslated_string(catalogues):
 
 
 def test_profile_page_shows_no_technical_role_identifier(open_site, person_user, catalogues):
-    """I18N-09 (fixed 20/09/2026 by accounts): « Rôles » listed the group names (« role:person »)."""
+    """
+    I18N-09 (fixed 20/09/2026 by accounts): « Rôles » listed the group names (« role:person »). V5.12 §11 (Director's
+    decisions §9): a person's profile has no «Rôles» row at all — the role word «Personne» is the back office's; the
+    person is told the name of their space (accounts.roles.space_label).
+    """
     open_site.force_login(person_user)
     for lang in TRANSLATED:
         main = region(open_site.get(f"/{lang}/compte/profil/").content.decode(), "main")
         assert "role:" not in main, lang
-        assert catalogues[lang][(None, "Personne")].msgstr[0] in main, lang
+        assert f"<dt>{catalogues[lang][(None, 'Rôles')].msgstr[0]}</dt>" not in main, lang
 
 
 # ---------------------------------------------------------------------------------------------

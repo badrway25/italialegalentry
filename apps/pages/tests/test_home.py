@@ -6,14 +6,16 @@ import datetime as dt
 import re
 
 import pytest
+from django.conf import settings
 from freezegun import freeze_time
 
 from cms import locked_content
 from cms.forbidden import scan
 from cms.models import PublicationStatus
-from core import flags
+from core import flags, icons
 from pages.models import HomeSection, HomeSectionTranslation, SectionKey
 from pages.tests.conftest import LANGS, PHASE3_HOME_KEYS, escaped, section_order, text_of
+from tests.conftest import whatsapp_link_set_aside
 
 
 def h1_text(html: str) -> str:
@@ -67,21 +69,25 @@ def test_arabic_home_is_rtl_and_marks_french_fallback(page, seeded, phase3_open)
     _response, html = page("/ar/")
     assert '<html lang="ar" dir="rtl"' in html
     assert " is-rtl" in html
-    # Prescribed texts have no official Arabic version: French, explicitly tagged — in the V5 hero the h1 holds the
-    # name (visually hidden) and the promise, each a locked text in its own span. The promise carries the fallback
-    # marker; the name is an English name on every page and says so, as the header's lock-up does (a11y F10).
-    assert re.search(r'<span class="visually-hidden he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
-    assert '<span class="he__promise" lang="fr" dir="ltr">' in html
-    assert 'class="gradino__body" lang="fr"' in html
+    # Prescribed texts have no official Arabic version: French, explicitly tagged — in the V5 hero the h1 is the name,
+    # visible (V5.12, the owner's Q1 answer), and the promise is the line under it, each a locked text. The promise
+    # carries the fallback marker; the name is an English name on every page and says so, as the header's lock-up does
+    # (a11y F10).
+    assert re.search(r'<span class="he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
+    assert '<p class="he__promise" lang="fr" dir="ltr">' in html
+    # V5.22 (SECTION_SYSTEM_V2 §0.1, §2 K «la protezione»; V5.20 strict rule): the anti-fraud body is one rendering of
+    # one locked text on every page — «la protezione», lane S — and its French fallback is tagged as it always was
+    assert '<p class="protezione__testo" data-locked="p3.antifraud.body" lang="fr">' in html
 
 
 def test_french_home_has_no_fallback_lang_attributes_on_locked_texts(page, seeded, phase3_open):
     _response, html = page("/fr/")
     # the name's own language is not a fallback marker: «Italy Legal Entry» is English on the French page too
-    assert re.search(r'<span class="visually-hidden he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
-    assert not re.search(r'<h1 class="he__title"[^>]* lang="', html)
-    assert '<span class="he__promise">' in html
-    assert 'class="gradino__body">' in html
+    assert re.search(r'<span class="he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
+    assert not re.search(r'<h1 class="he__title[^"]*"[^>]* lang="', html)
+    assert '<p class="he__promise">' in html
+    # V5.22 (§0.1, «la protezione»; V5.20 strict rule): the same marker-free body, on the one anti-fraud plate
+    assert '<p class="protezione__testo" data-locked="p3.antifraud.body">' in html
 
 
 def test_heading_outline_is_logical(page, seeded, phase3_open):
@@ -97,7 +103,8 @@ def test_home_has_no_inline_style_or_external_resource(page, seeded, phase3_open
     _response, html = page("/fr/")
     assert not re.search(r"<[a-z][^>]*\sstyle=", html)
     assert not re.search(r"\son[a-z]+=\"", html)
-    urls = re.findall(r'(?:src|href|srcset|content|action)="(https?://[^"]+)"', html)
+    checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+    urls = re.findall(r'(?:src|href|srcset|content|action)="(https?://[^"]+)"', checked)
     assert [u for u in urls if "testserver" not in u] == []
     assert 'href="/static/css/dist/pages/css/pages.css"' in html
     assert 'href="/static/css/dist/pages/css/hero.css"' in html
@@ -124,13 +131,15 @@ def test_phase3_hero_renders_exact_prescribed_texts(page, seeded, phase3_open):
     _response, html = page("/fr/")
     assert 'data-hero-variant="phase3"' in html
     hero = html.split('data-section="hero"', 1)[1].split("</section>", 1)[0]
-    # The V5 hero's one h1: the locked name (visually hidden, for assistive technology and search) and the locked
-    # promise in sight — each whole, character for character (HERO_FINAL.md §2.1; plan §1.17 «one brand expression»).
-    name = re.search(r'<span class="visually-hidden he__name"[^>]*>(.*?)</span>', hero, flags=re.S).group(1)
-    promise = re.search(r'<span class="he__promise"[^>]*>(.*?)</span>', hero, flags=re.S).group(1)
+    # The V5 hero's one h1 is the locked name, VISIBLE (V5.12, the owner's Q1 answer: «Keep the visible H1 ITALY LEGAL
+    # ENTRY™ … do not solve this by hiding the main title from sighted users»); the locked promise is the line under it
+    # — each whole, character for character (HERO_FINAL.md §2.1; plan §1.17 «one brand expression»).
+    name = re.search(r'<span class="he__name"[^>]*>(.*?)</span>', hero, flags=re.S).group(1)
+    promise = re.search(r'<p class="he__promise"[^>]*>(.*?)</p>', hero, flags=re.S).group(1)
     assert name.strip() == escaped(text_of("p3.hero.title"))
     assert promise.strip() == escaped(text_of("p3.hero.subtitle"))
-    assert h1_text(hero) == f"{text_of('p3.hero.title')} {text_of('p3.hero.subtitle')}"
+    assert h1_text(hero) == text_of("p3.hero.title")
+    assert "visually-hidden he__name" not in hero
     assert escaped(text_of("p3.hero.body")) in hero
     assert "Un écosystème pour les parcours réguliers" not in hero
     # The path's stations: the shore, then the pilot sequence's second to sixth steps — whole, in their prescribed
@@ -151,10 +160,16 @@ def test_date_alone_does_not_switch_the_hero(page, seeded, set_flag):
     assert escaped(text_of("p3.hero.subtitle")) not in html
 
 
-def test_no_figure_ships_without_its_caption(page, seeded):
+def test_a_plate_is_captioned_and_a_stock_frame_is_not(page, seeded):
     """
     Art direction A §6.2: a <figure> without a <figcaption> is a defect, and the caption must carry
     place, date, one factual sentence and a credit.
+
+    V5.24 §2 (FINAL_DELIVERY_V2.md §3.2 D6; strict rule V5.20): the stock frames of the slot registry render no
+    caption any more (the Pexels License requires no attribution; the author stays in PROVENANCE.json), so the
+    count becomes two invariants — a curated plate (`figure.figura`) is captioned, a stock frame
+    (`figure[data-slot]`) is not — the first as it was, the second new. v524-px-improve (the reviewer's m1; V5.20,
+    stronger): the first is held on every figure that is NOT a stock frame, the exact complement of the second.
 
     This is the rule that makes anonymous stock photography structurally impossible rather than
     merely discouraged. The library inherited from the previous build does not pass it — six
@@ -163,9 +178,11 @@ def test_no_figure_ships_without_its_caption(page, seeded):
     direction requires the site to be recognisable with no photographs at all.
     """
     _response, html = page("/fr/")
-    figures = html.count("<figure")
-    captions = html.count("<figcaption")
-    assert figures == captions, f"{figures} <figure> for {captions} <figcaption>"
+    for attrs, body in re.findall(r"<figure\b([^>]*)>(.*?)</figure>", html, flags=re.S):
+        if "data-slot=" not in attrs:
+            assert "<figcaption" in body, "a curated plate ships with its caption"
+        if "data-slot=" in attrs:
+            assert "<figcaption" not in body and "Pexels" not in body, "a stock frame carries no credit"
 
 
 def test_the_hero_carries_the_owners_doorway_and_no_uncaptioned_figure(page, seeded):
@@ -322,10 +339,33 @@ def test_before_phase3_date_even_with_flag_enabled(page, seeded, before_phase3):
     assert 'data-section="pilot"' not in html
 
 
+#: the locked texts the V2 home re-composes at render (V5.22, SECTION_SYSTEM_V2 §1 rule 6): set in typographic levels by
+#: spans cut on their own separators — the anti-fraud body on its full stops («la protezione»), each trust answer's
+#: «Non.» as the large keyword, the promoter's answer with two ink keywords — so the text runs in the page as the
+#: element's textContent, character for character (cms.locked_split), not as one unbroken string of the source.
+#: V5.22 round 1 (QA_ROUND1 m5; §1 rule 6, an approved decision: a locked text is re-composed at render by spans; V5.20
+#: strict rule): the pilot's title keeps «VÉNÉTIE–MAROC» on one line by a render-time span (cms.locked_split.emphasize)
+#: — held to its heading's textContent, exactly the locked title: the same text, now checked as the whole element
+RECOMPOSED = {"p3.antifraud.body", "p3.pilot.title"}
+
+
+def _text_content(html: str, selector: str) -> list[str]:
+    from bs4 import BeautifulSoup
+
+    return [node.get_text() for node in BeautifulSoup(html, "html.parser").select(selector)]
+
+
 def test_phase3_prescribed_texts_present_when_open(page, seeded, phase3_open):
+    """Every Phase 3 text of the home is on the page, verbatim. V5.22 (V5.20 strict rule): a text the V2 home sets in
+    typographic levels is held to its element's textContent — exactly the locked text, each split checked whole —, the
+    others to the unbroken string as before."""
     _response, html = page("/fr/")
     for key in PHASE3_HOME_KEYS:
+        if key in RECOMPOSED:
+            continue
         assert escaped(text_of(key)) in html, key
+    assert _text_content(html, '[data-locked="p3.antifraud.body"]') == [text_of("p3.antifraud.body")]
+    assert _text_content(html, "#home-pilot-title") == [text_of("p3.pilot.title")]
     from cms import locked_content
 
     # The pilot sequence is on the page where the hero's path carries it (its second to sixth steps, after the
@@ -336,8 +376,11 @@ def test_phase3_prescribed_texts_present_when_open(page, seeded, phase3_open):
         assert escaped(pathway["title"]) in html
         assert escaped(pathway["description"]) in html
     faq = {item["key"]: item for item in locked_content.get("p3.faq.items", "fr")[0]}
-    for key in ("faq_visas", "faq_recruitment_agency", "faq_preassessment_guarantee", "faq_diplomas", "faq_who"):
-        assert escaped(faq[key]["answer"]) in html, key
+    for key in ("faq_visas", "faq_recruitment_agency", "faq_preassessment_guarantee", "faq_diplomas"):
+        # the plate's answer: «Non.» the keyword, the rest after it — one <p>, its text the answer itself
+        assert _text_content(html, f'[data-faq="{key}"] .integrita__risposta') == [faq[key]["answer"]], key
+        assert _text_content(html, f'[data-faq="{key}"] .ls-1') == ["Non. "], key
+    assert _text_content(html, '[data-faq="faq_who"]') == [faq["faq_who"]["answer"]]
 
 
 @pytest.mark.parametrize("state", ["closed", "open"])
@@ -357,33 +400,37 @@ def test_forbidden_formulations_scan_is_clean(request, page, seeded, state):
 # Four entrances — exactly four, in both states
 # ---------------------------------------------------------------------------------------------
 def _entrances(html: str) -> list[str]:
-    block = html.split('<ol class="register register--entrances', 1)[1].split("</ol>", 1)[0]
-    # since V2 the <li> carries its route: <li class="register__item" data-route="person">
-    return block.split('<li class="register__item"')[1:]
+    # V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §2 J «il passaggio»; V5.20 strict rule): the four doors are the plates of a
+    # phone's rail — an <ol class="passaggio">, each <li> its route and its audience
+    block = html.split('<ol class="passaggio', 1)[1].split("</ol>", 1)[0]
+    return block.split('<li class="passaggio__lastra"')[1:]
 
 
 def test_exactly_four_entrances_gate_closed(page, seeded):
     _response, html = page("/fr/")
-    assert html.count('<ol class="register register--entrances') == 1
+    assert html.count('<ol class="passaggio') == 1
     items = _entrances(html)
     assert len(items) == 4
-    titles = [re.search(r'class="entry__title"[^>]*>([^<]+)<', item).group(1) for item in items]
+    titles = [re.search(r'class="passaggio__titolo"[^>]*>([^<]+)<', item).group(1) for item in items]
     assert titles == ["Personnes", "Entreprises", "Institutions", "Universités et organismes de formation"]
-    targets = [re.search(r'class="entry" href="([^"]+)"', item).group(1) for item in items]
+    targets = [re.search(r'class="passaggio__porta" href="([^"]+)"', item).group(1) for item in items]
     assert targets == [
         "/fr/parcours/",
         "/fr/entreprises/recueil-des-besoins/",
         "/fr/collaboration/institutions/",
         "/fr/collaboration/universites-formation/",
     ]
-    # The four line drawings are retired with the cards that carried them: "a section of identical
-    # cards" and "every card containing an icon" at once, on the four most important links of the
-    # site. Design V5.4 (W2-D step 3) retires what replaced them too: the four are never ranked, so no
-    # ordinal 01–04, and no landform glyph nobody could decode — each row is its title, its sentence and
-    # its call, with one arrow beside the call's words.
+    # The four line drawings are retired with the cards that carried them, and the four are never ranked: no ordinal
+    # 01–04, no landform glyph nobody could decode, one arrow beside the call's words. V5.22 (SECTION_SYSTEM_V2 §3.1 S1,
+    # §4.2 T2a — an approved decision; V5.20 strict rule): each door's arched seat holds its AUDIENCE's disc — the
+    # registry's glyph of that actor and no other, decorative —, so a plate names its door twice over, never a rank.
     assert not any("entrance-" in item and ".svg" in item for item in items)
-    assert not any("entry__ordinal" in item or "route__glyph" in item for item in items)
-    assert all(item.count("#icon-arrow") == 1 and 'class="entry__cta"' in item for item in items)
+    assert not any("entry__ordinal" in item or "route__glyph" in item or "linea__num" in item for item in items)
+    assert all(item.count("#icon-arrow") == 1 and 'class="passaggio__cta"' in item for item in items)
+    for item, actor in zip(items, ("person", "company", "institution", "university")):
+        glyphs = re.findall(r'#icon-([a-z0-9-]+)"', item)
+        assert glyphs == [icons.AUDIENCE[actor], "arrow"], (actor, glyphs)
+        assert 'class="passaggio__seggio on-inverse" aria-hidden="true"' in item
 
 
 def test_exactly_four_entrances_phase3_open_with_prescribed_texts(page, seeded, phase3_open):
@@ -394,14 +441,15 @@ def test_exactly_four_entrances_phase3_open_with_prescribed_texts(page, seeded, 
         assert escaped(text_of(f"p3.entrances.{actor}.title")) in item
         assert escaped(text_of(f"p3.entrances.{actor}.text")) in item
         assert escaped(text_of(f"p3.entrances.{actor}.button")) in item
-        assert 'class="entry" href="/fr/' in item  # every entrance resolves to a page
+        assert 'class="passaggio__porta" href="/fr/' in item  # every entrance resolves to a page
     assert "/fr/parcours/" in items[0]
 
 
 def test_entrances_are_h3_under_the_section_h2(page, seeded):
     _response, html = page("/fr/")
-    assert '<h2 class="section__title" id="home-entrances-title">' in html
-    assert html.count('<h3 class="entry__title"') == 4
+    # V5.22 (V5.20 strict rule): the V2 head (components/sezioni/_testa.html) and the doors' titles — the same outline
+    assert '<h2 class="testa__title" id="home-entrances-title">' in html
+    assert html.count('<h3 class="passaggio__titolo"') == 4
 
 
 # ---------------------------------------------------------------------------------------------
@@ -453,9 +501,17 @@ def test_banner_sets_no_cookie(before_the_forum, client, seeded):
 def test_orientation_gate_closed_uses_neutral_stepper_and_disclaimer(page, seeded):
     _response, html = page("/fr/")
     block = html.split('data-section="orientation"', 1)[1].split("</section>", 1)[0]
-    # the four neutral steps on the public passage «la linea» (W3-D: components/stepper.html), across from 48rem
+    # the four neutral steps on the public passage (W3-D: components/stepper.html), across from 48rem — V5.22
+    # (SECTION_SYSTEM_V2 §3.1 S2 «gate closed: the neutral four steps on the same route», §1 rule 8; V5.20 strict rule):
+    # the passage evolved, «la linea V2» (size="large"), the same pattern in both gate states: station 1 the T1 seal
+    # of orientation, stations 2 to 4 the registry's tiles, the editorial note as the route's terminal line
     assert block.count('class="linea__step') == 4
-    assert '<ol class="linea linea--across"' in block
+    assert '<ol class="linea linea--large linea--across"' in block
+    assert block.count('class="sigillo sigillo--small" data-mark="ile-orienta"') == 1
+    tiles = re.findall(
+        r'<span class="sez-tile" data-verb="node"><svg class="icon"[^>]*><use href="[^"#]*#icon-([a-z-]+)"', block
+    )
+    assert tiles == list(icons.HOW_STEP[1:])
     assert "aria-current" not in block and "linea__rank" not in block  # an explanation, not a progress state
     assert "pré-évaluation à caractère informatif" in block
     assert "autorités compétentes" in block
@@ -463,16 +519,36 @@ def test_orientation_gate_closed_uses_neutral_stepper_and_disclaimer(page, seede
 
 
 def test_orientation_phase3_uses_the_prescribed_sentence(page, seeded, phase3_open):
+    """V5.22 (SECTION_SYSTEM_V2 §3.1 S2, §2 F; V5.20 strict rule — the old expectation, the sentence set whole and no
+    passage, conflicts with the approved decision to draw it as «la linea V2»): the locked sentence is cut on its own
+    separators by the owner-approved cut (D-U4, pathways.services.how_it_works, which returns None unless the parts
+    rebuild it character for character) — its lead the caption, its four steps the stations, its caveat the terminal
+    line — and it is said ONCE, whole, for a screen reader, the drawn parts hidden from it. Stronger than before: the
+    whole sentence is present once, and every drawn part is exactly a part of it."""
+    from pathways.services import how_it_works
+
     _response, html = page("/fr/")
     block = html.split('data-section="orientation"', 1)[1].split("</section>", 1)[0]
-    assert escaped(text_of("p3.persons.how_it_works")) in block
-    assert 'class="linea' not in block and 'class="sequence' not in block
+    sentence = text_of("p3.persons.how_it_works")
+    assert block.count(escaped(sentence)) == 1
+    assert f'<p class="visually-hidden">{escaped(sentence)}</p>' in block
+    cut = how_it_works("fr")
+    assert cut is not None and cut.text == sentence
+    assert re.search(r'<ol class="linea linea--large linea--across"[^>]* aria-hidden="true"', block)
+    labels = re.findall(r'<p class="linea__label" data-verb="ink">([^<]+)</p>', block)
+    assert labels == [escaped(step) for step in cut.steps]
+    assert f'<p class="orienta__didascalia" aria-hidden="true">{escaped(cut.lead)}</p>' in block
+    assert f'<p class="orienta__avvertenza" aria-hidden="true">{escaped(cut.caveat)}</p>' in block
+    assert "aria-current" not in block and 'class="sequence' not in block
 
 
 def test_pathways_gate_closed_shows_neutral_families_only(page, seeded):
     _response, html = page("/fr/")
     block = html.split('data-section="pathways"', 1)[1].split("</section>", 1)[0]
-    assert block.count('class="register__item"') == 5
+    # V5.22 (SECTION_SYSTEM_V2 §3.1 S3 «gate closed: the neutral families as a static index (no stage, no
+    # destination)»; V5.20 strict rule): the five families as still rows of the index — no stage, no tab, no link
+    assert block.count('class="indice__riga"') == 5
+    assert 'class="indice__palco' not in block and 'data-sec-js="indice"' not in block
     assert 'class="pathway-list"' not in block
     assert 'href="/fr/parcours/"' in block
     from cms import locked_content
@@ -483,9 +559,23 @@ def test_pathways_gate_closed_shows_neutral_families_only(page, seeded):
 
 def test_pathways_phase3_lists_the_eight_prescribed_pathways(page, seeded, phase3_open):
     _response, html = page("/fr/")
-    block = html.split('data-section="pathways"', 1)[1].split("</section>", 1)[0]
+    # the stage's panels are <section>s of their own: the block runs to the next section of the page
+    block = html.split('data-section="pathways"', 1)[1].split("data-section=", 1)[0]
     assert 'data-pathways="8"' in block
-    assert block.count('class="pathway-list__item"') == 8
+    # V5.22 (SECTION_SYSTEM_V2 §3.1 S3, §2 L «l'indice»; V5.20 strict rule): eight rows of the index, each the
+    # registry's PATHWAY glyph and the prescribed title, and eight panels on the stage, in the locked order (never a
+    # ranking) — every description in the page
+    entries = locked_content.get("p3.persons.pathways", "fr")[0]
+    rows = re.findall(r'<a class="indice__voce" id="parcours-([a-z-]+)-tab" href="#parcours-\1"', block)
+    assert len(rows) == 8 and [row.replace("-", "_") for row in rows] == [entry["key"] for entry in entries]
+    assert block.count('<section class="indice__pannello"') == 8
+    glyphs = re.findall(
+        r'<span class="indice__glifo" aria-hidden="true"><svg class="icon"[^>]*><use href="[^"#]*#icon-([a-z-]+)"',
+        block,
+    )
+    assert glyphs == [icons.PATHWAY[entry["key"]] for entry in entries]
+    for entry in entries:
+        assert escaped(entry["description"]) in block
 
 
 def test_trust_gate_closed_uses_phase1_fragments_and_neutral_statements(page, seeded):
@@ -497,8 +587,10 @@ def test_trust_gate_closed_uses_phase1_fragments_and_neutral_statements(page, se
     assert escaped(text_of("p1.persons.replacement_1")) not in block
     assert html.count(escaped(text_of("p1.persons.replacement_1"))) == 1
     assert escaped(text_of("p1.persons.replacement_2")) in block
-    assert block.count('class="home-trust__column"') == 2
-    assert 'href="/fr/avvertenze/"' in block
+    # V5.22 (SECTION_SYSTEM_V2 §3.1 S5 «gate closed: the interim two lists become two plates»; V5.20 strict rule)
+    assert len(re.findall(r'<article class="[^"]*\bhome-trust__column\b', block)) == 2
+    # V5.14 C/D (lane C's M-2; the steward, the v515-c merge): the unpublished disclaimer answers 404, so no link to it
+    assert 'href="/fr/avvertenze/"' not in block
 
 
 def test_trust_phase3_quotes_four_prescribed_faq_entries(page, seeded, phase3_open):
@@ -524,11 +616,15 @@ def test_antifraud_callout_links_the_page_when_open(page, seeded, phase3_open):
     _response, html = page("/fr/")
     block = html.split('data-section="antifraud"', 1)[1].split("</section>", 1)[0]
     assert escaped(text_of("p3.antifraud.title")) in block
-    assert escaped(text_of("p3.antifraud.body")) in block
+    # V5.22 (§1 rule 6, «la protezione»; V5.20 strict rule): the body in three levels — its element's text is the
+    # locked body itself, character for character
+    assert _text_content(block, '[data-locked="p3.antifraud.body"]') == [text_of("p3.antifraud.body")]
     assert 'href="/fr/attention-aux-fraudes/"' in block
-    # one sign for one warning: the registry's glyph of «Attention aux fraudes» (apps/core/icons.py), the one the
-    # footer and the navigation's panels draw beside it — never the account-security shield
-    assert block.count("#icon-shield-alert") == 1 and '#icon-shield"' not in block
+    # one sign for one warning — V5.22 (SECTION_SYSTEM_V2 §0.1 «one locked text gets one rendering», §4.9 n.9; V5.20
+    # strict rule): «la protezione», the same plate on every page, signs the warning with its T1 seal `ile-scudo`, once;
+    # never the account-security shield, and no second, bare glyph beside it
+    assert block.count('<span class="sigillo sigillo--small protezione__sigillo" data-mark="ile-scudo"') == 1
+    assert '#icon-shield"' not in block and "#icon-shield-alert" not in block
 
 
 def test_gate_cannot_be_bypassed_from_the_back_office(before_the_forum, page, seeded):
@@ -558,13 +654,12 @@ def test_news_section_hidden_in_phase3_too_while_no_article_is_live(page, seeded
     """The review fix (design V5.4, W2-D, m4): with gate G3 open the home announced an empty chapter — «Actualités»,
     then «Aucune actualité publiée pour le moment» — between the warning and the promoter. The chapter is on the home
     once an article is live, in either gate state; the news' own page keeps its empty state, which says which space
-    is empty (DL54-33: the news' glyph, never the documents')."""
+    is empty (DL54-33: the news' glyph, never the documents'). V5.12 §8: the news' own page no longer keeps an empty
+    state — it answers 404 until an article is live, and nothing links to it."""
     _response, html = page("/fr/")
     assert 'data-section="news"' not in html
     assert "Aucune actualité publiée" not in html
-    _response, index = page("/fr/actualites/")
-    block = index.split('class="empty-state"', 1)[1].split("</div>", 1)[0]
-    assert "#icon-newspaper" in block and "#icon-document" not in block and "#icon-empty" not in block
+    assert 'href="/fr/actualites/"' not in html
 
 
 def test_news_section_appears_in_phase3_once_an_article_is_published(page, seeded, phase3_open, article_factory):
@@ -616,13 +711,19 @@ def test_news_translation_only_when_published(page, seeded, phase3_open, article
 # ---------------------------------------------------------------------------------------------
 # Ecosystem, reserved area
 # ---------------------------------------------------------------------------------------------
-def test_ecosystem_shows_promoter_and_sober_empty_state(page, seeded):
+def test_ecosystem_shows_the_promoter_alone_without_an_authorised_partner(page, seeded):
+    """V5.12 §8: no «partners presented as they authorise» sentence and no link to an empty partners' page — the
+    promoter's bay stands alone, at the full width."""
     _response, html = page("/fr/")
     block = html.split('data-section="ecosystem"', 1)[1].split("</section>", 1)[0]
     assert "AGAMI — Dialogo Giuridico Interculturale APS" in block
-    assert 'data-partners="0"' in block
-    assert 'href="/fr/agami/"' in block and 'href="/fr/partenaires/"' in block
-    assert "<img" not in block  # no logo, authorised or not, without a written authorisation
+    assert "home-ecosystem__grid--single" in block and "home-ecosystem__partners" not in block
+    assert "au fur et à mesure" not in block
+    assert 'href="/fr/agami/"' in block and 'href="/fr/partenaires/"' not in block
+    # no logo, authorised or not, without a written authorisation: the bay's one image is the V5.12 working-table
+    # photograph (slot «home.ecosystem», DECISIONS §6), no credit (V5.24 §2)
+    assert block.count("<img") == 1 and 'data-slot="home.ecosystem"' in block
+    assert "home-ecosystem__logo" not in block
 
 
 def test_ecosystem_lists_only_authorized_partners(page, seeded, partner_factory):
@@ -642,8 +743,11 @@ def test_reserved_panel_needs_phase3_and_flag(page, seeded, set_flag, phase3_ope
         assert escaped(text_of(key)) in block
     assert 'href="/fr/compte/login/"' in block
     assert section_order(html)[-1] == "reserved"  # secondary: last, never protagonist
-    # the row's sign is the key of the mark (the sprite's identity glyph), never a padlock
-    assert block.count("#icon-ile-key") == 1 and "#icon-lock" not in block
+    # the row's sign is the key of the mark, never a padlock — V5.22 (SECTION_SYSTEM_V2 §3.1 S8, §4.2 T5; V5.20 strict
+    # rule): the T5 `ile-accesso`, the key standing in the doorway's opening, in its night arch seat, once
+    seat = '<span class="sigillo sigillo--small sigillo--night home-reserved__sigillo" data-mark="ile-accesso"'
+    assert block.count(seat) == 1
+    assert "#icon-lock" not in block and "#icon-ile-key" not in block
     set_flag("reserved_area_public_link", False)
     _response, html = page("/fr/")
     assert 'data-section="reserved"' not in html
@@ -692,18 +796,29 @@ def test_the_morocco_italy_model_is_said_once_by_the_heros_path(page, seeded, ph
     for step in sequence:
         assert escaped(step) not in below, step
     pilot = html.split('data-section="pilot"', 1)[1].split("</section>", 1)[0]
-    assert escaped(text_of("p3.pilot.title")) in pilot
+    # V5.22 round 1 (QA_ROUND1 m5, §1 rule 6; V5.20 strict rule): the title is re-composed by a render-time span — held
+    # to its heading's textContent, exactly the locked title
+    assert _text_content(pilot, "#home-pilot-title") == [text_of("p3.pilot.title")]
     assert "<ol" not in pilot and "<li" not in pilot
     assert pilot.count("<a ") == 1 and 'href="/' + lang + "/" in pilot
 
 
+#: the T1 seals the V2 home draws (V5.22, SECTION_SYSTEM_V2 §3.1, §4.2, §4.8): the orientation's at its route's origin
+#: (gate G3 open or closed: the same route), «la protezione»'s on its rule, the reserved row's key — each once a page
+HOME_SEALS = {"closed": ["ile-orienta"], "open": ["ile-orienta", "ile-scudo", "ile-accesso"]}
+
+
 @pytest.mark.parametrize("state", ["closed", "open"])
-def test_the_chapters_carry_one_section_device_and_no_running_head(request, page, seeded, state):
+def test_the_sections_open_with_one_head_and_no_glyph_above_a_title(request, page, seeded, state):
     """
-    Every chapter under the hero opens the same way: the mark (the sprite's `ile-steps`, decorative), its title, its
-    lead. No folio, no ordinal and no eyebrow: five of the seven running heads repeated the title under them or the
-    link at the chapter's foot. Numerals are kept for the one real sequence (the neutral steps of the orientation
-    while the gate is closed).
+    V5.22 (SECTION_SYSTEM_V2 §0 item 3, §2.0 «Head roles», §4.1 rule 1 — the owner's V5.22 §6: «the current tiny
+    icons placed above headings are not visually strong enough»; V5.20 strict rule: the old expectation, one concept
+    mark above each chapter title, conflicts with that approved decision): under the hero no section draws a glyph
+    above its title. Each opens with the V2 head (components/sezioni/_testa.html: its drawn rule, its title, its lead),
+    and a section's theme, when it has one, is a T1 seal INSIDE its composition — the orientation's at its route's
+    origin, «la protezione»'s on its rule, the key in the reserved row —, each once, never the journey's stair. What
+    V5.12 and W2-D held stays held: no folio, ordinal or eyebrow, numerals for the one real sequence only, every
+    forward link with its one arrow mirrored on the Arabic page, every drawing decorative.
     """
     if state == "open":
         request.getfixturevalue("phase3_open")
@@ -711,15 +826,21 @@ def test_the_chapters_carry_one_section_device_and_no_running_head(request, page
     below = _under_the_hero(html)
     for gone in ('class="folio', "folio__ordinal", 'class="eyebrow"', "entry__ordinal", "section--process"):
         assert gone not in below, gone
-    titled = re.findall(r'<h2 class="section__title" id="home-([a-z]+)-title"', below)
-    assert titled, "the chapters have their titles"
-    # the mark is the sprite's identity glyph, through the registry's tag: decorative, never mirrored
-    marks = re.findall(
-        r'<svg class="icon chapter__mark" aria-hidden="true" focusable="false"><use href="[^"]+#icon-([a-z-]+)">', below
-    )
-    assert marks == ["ile-steps"] * len(titled), "one mark per titled chapter, never two"
-    assert below.count("chapter__mark") == len(titled) and "<path" not in below, "no drawing outside the sprite"
-    # every chapter's forward link carries one arrow, mirrored on the Arabic page by its class
+    for gone in ("chapter__mark", "chapter__head", 'class="section__title"', 'class="chapter '):
+        assert gone not in below, (gone, "the chapter device leaves the home")
+    titled = re.findall(r'<h2 class="testa__title" id="home-([a-z]+)-title"', below)
+    assert titled, "the sections have their heads"
+    for head in re.findall(r'<div class="testa testa--[a-z]+">(.*?)</h2>', below, flags=re.S):
+        assert "<svg" not in head and "sigillo" not in head, "no glyph stacked above a title"
+    seals = re.findall(r'<span class="sigillo [^"]*" data-mark="([a-z-]+)"', below)
+    assert seals == HOME_SEALS[state], seals
+    assert "ile-steps" not in below, "the stair is the journey's (V5.12 §7)"
+    numerals = re.findall(r'<span class="linea__num" aria-hidden="true"></span>', below)
+    assert len(numerals) == 4, "numerals mark the one real sequence: the orientation's four stations"
+    # every inline drawing under the hero is decorative — the seals' marks, the portico, the doors' arches, the threads
+    for svg in re.findall(r"<svg\b[^>]*>", below):
+        assert 'aria-hidden="true"' in svg, svg
+    # every section's forward link carries one arrow, mirrored on the Arabic page by its class
     for link in re.findall(r'<a class="link-arrow"[^>]*>.*?</a>', below, flags=re.S):
         assert link.count("#icon-arrow") == 1 and "icon--flip-rtl" in link, link
 
@@ -740,8 +861,11 @@ def test_a_sentence_the_hero_shows_is_given_back_when_the_hero_says_something_el
 @pytest.mark.parametrize("state", ["closed", "open"])
 def test_black_and_white_rests_only_in_the_hero(request, page, seeded, state):
     """
-    DL54-12: the four audience photographs rest in black and white in the hero, and nowhere else. The chapters
-    under the hero ship no photograph today (a partner's authorised logo apart), and their sheet sets no filter.
+    DL54-12: the four audience photographs rest in black and white in the hero, and nowhere else at rest. V5.12
+    (DECISIONS §6) adds three V5 frames under the hero — the pilot's diptych and the ecosystem's table — drawn only
+    through the slot registry ({% photo %}): the diptych alone «develops» from black and white to colour as it enters
+    the view (v5/_photo.css, a scroll-driven animation: colour at rest once in view, and from the start under reduced
+    motion); the home's own sheet still sets no filter.
     """
     from pathlib import Path
 
@@ -749,7 +873,25 @@ def test_black_and_white_rests_only_in_the_hero(request, page, seeded, state):
         request.getfixturevalue("phase3_open")
     _response, html = page("/fr/")
     below = _under_the_hero(html)
-    assert "<img" not in below and "<picture" not in below
+    pictures = re.findall(r'<figure class="foto[^"]*" data-slot="([^"]+)"([^>]*)>', below)
+    assert below.count("<picture") == len(pictures)
+    slots = {slot for slot, _attrs in pictures}
+    # V5.22 (SECTION_SYSTEM_V2 §8 «Treatments», §8.1; V5.20 strict rule, the set extended as the Director's §8 asks,
+    # citing V5.22 §14): the integrity band's ground — dressed stone, desaturated IN THE FILE, decorative, never a CSS
+    # grayscale — joins the three frames; the invariant stands: black and white rests only in the hero
+    assert slots <= {"home.pilot.cedar", "home.pilot.marble", "home.ecosystem", "home.integrity.stone"}, slots
+    assert not [attrs for slot, attrs in pictures if slot == "home.integrity.stone" and "data-grade" in attrs]
+    # the W2 review's M-3: the black-and-white rest is lane A's one mechanism (data-grade, v5/_reveal.css), on the
+    # diptych only; every frame under the hero is masked as it enters (data-reveal="mask")
+    assert {slot for slot, attrs in pictures if 'data-grade="bw-scroll"' in attrs} <= {
+        "home.pilot.cedar",
+        "home.pilot.marble",
+    }
+    assert all('data-reveal="mask"' in attrs for _slot, attrs in pictures)
+    reveal_sheet = (Path(__file__).resolve().parents[3] / "static" / "css" / "v5" / "_reveal.css").read_text(
+        encoding="utf-8"
+    )
+    assert "prefers-reduced-motion: no-preference" in reveal_sheet and 'html.rm [data-grade|="bw"] img' in reveal_sheet
     root = Path(__file__).resolve().parents[3]
     sheet = (root / "apps" / "pages" / "static" / "pages" / "css" / "pages.css").read_text(encoding="utf-8")
     assert "filter" not in re.sub(r"/\*.*?\*/", "", sheet, flags=re.S)
@@ -782,9 +924,10 @@ def test_unpublished_section_is_not_rendered(page, seeded):
 def test_editor_heading_is_rendered_and_tagged_french_elsewhere(page, seeded):
     HomeSection.objects.filter(key=SectionKey.TRUST).update(heading_fr="Notre engagement de transparence")
     _response, fr = page("/fr/")
-    assert '<h2 class="section__title" id="home-trust-title">Notre engagement de transparence</h2>' in fr
+    # V5.22 (V5.20 strict rule): the V2 head (components/sezioni/_testa.html) — the same title, tagged French elsewhere
+    assert '<h2 class="testa__title" id="home-trust-title">Notre engagement de transparence</h2>' in fr
     _response, it = page("/it/")
-    assert '<h2 class="section__title" id="home-trust-title" lang="fr">Notre engagement de transparence</h2>' in it
+    assert '<h2 class="testa__title" id="home-trust-title" lang="fr">Notre engagement de transparence</h2>' in it
 
 
 def test_only_published_section_translations_are_rendered(page, seeded):
@@ -799,7 +942,7 @@ def test_only_published_section_translations_are_rendered(page, seeded):
     row.heading, row.status = "Cosa fa la piattaforma", TranslationStatus.PUBLISHED
     row.save()
     _response, html = page("/it/")
-    assert '<h2 class="section__title" id="home-trust-title">Cosa fa la piattaforma</h2>' in html
+    assert '<h2 class="testa__title" id="home-trust-title">Cosa fa la piattaforma</h2>' in html  # V5.22: the V2 head
 
 
 def test_blank_heading_keeps_an_accessible_section_title(page, seeded):
@@ -821,11 +964,23 @@ def test_homepage_works_before_the_sections_are_seeded(page, db):
     assert response.status_code == 200
     assert html.count("<h1") == 1
     assert section_order(html)[0] == "hero"
-    block = html.split('<ol class="register register--entrances', 1)[1].split("</ol>", 1)[0]
-    assert block.count('<li class="register__item"') == 4
+    # V5.22 (V5.20 strict rule): the four doors on their rail (S1 «il passaggio»)
+    block = html.split('<ol class="passaggio', 1)[1].split("</ol>", 1)[0]
+    assert block.count('<li class="passaggio__lastra"') == 4
 
 
 def test_homepage_query_budget(client, seeded, django_assert_max_num_queries):
     client.get("/fr/")  # warm the flag / settings caches
     with django_assert_max_num_queries(30):
         client.get("/fr/")
+
+
+def test_the_home_shows_the_name_once(page, seeded, phase3_open):
+    """V5.12 Q1: the hero's H1 is the visible name, so on the home the header's lock-up keeps the mark alone (its link
+    keeps its accessible name): one name on the screen, never the wordmark twice one under the other."""
+    _response, html = page("/fr/")
+    assert (
+        'class="brand brand--lockup"' in html and "aria-label=" in html.split('class="brand brand--lockup"', 1)[1][:200]
+    )
+    css = (settings.BASE_DIR / "static" / "css" / "dist" / "pages" / "css" / "hero.css").read_text(encoding="utf-8")
+    assert ".page-home .site-header .lock__text{display:none}" in css

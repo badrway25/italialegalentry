@@ -40,7 +40,9 @@ def test_page_needs_no_database_row(get_html, db):
     html = get_html("fr", COMPANIES_PATH)
     assert TITLE in html and INTRO in html and QUOTE in html
     assert 'class="ingresso__aside figura"' not in html, "no photograph without a curated, captioned asset"
-    assert 'class="ingresso__aside porta via on-inverse"' in html, "the company door's card instead (V5.4, W3-F1)"
+    # V5.12 (DECISIONS §6/§7): the space's art-directed photograph instead (slot «companies.hero», credited), the way
+    # in under the lead; a curated, captioned asset of the back office still takes precedence (below)
+    assert 'data-slot="companies.hero"' in html and 'class="ingresso__way via"' in html
 
 
 @pytest.mark.compliance
@@ -49,14 +51,18 @@ def test_prescribed_texts_in_their_prescribed_places(get_html, seeded):
     assert html.count("<h1") == 1
     assert re.search(r'<h1 class="ingresso__title[^"]*"[^>]*>' + re.escape(TITLE) + "</h1>", html)
     assert re.search(r'<p class="ingresso__lead"[^>]*>' + re.escape(INTRO) + "</p>", html)
-    quote = re.search(r'<blockquote class="citazione"[^>]*>\s*<p>(.*?)</p>', html, flags=re.S)
+    # V5.22 (SECTION_SYSTEM_V2 §3.6 EN-1, an approved owner/product decision; V5.20 strict rule): the quotation opens
+    # «Trois temps» as the band's statement (its own blockquote, its rule a drawn span) — the same text, whole, in its
+    # own paragraph
+    quote = re.search(r'<blockquote class="imprese-citazione"[^>]*>.*?<p>(.*?)</p>', html, flags=re.S)
     assert quote and quote.group(1) == QUOTE
 
 
 def test_fallback_language_is_marked_on_prescribed_texts(get_html, seeded):
     html = get_html("it", COMPANIES_PATH)
     assert re.search(r'<h1 class="ingresso__title[^"]*" lang="fr">' + re.escape(TITLE), html)
-    assert re.search(r'<blockquote class="citazione" lang="fr">', html)
+    # V5.22 §3.6 EN-1 (strict rule): the quotation's blockquote is the flow's statement; its language still marked
+    assert re.search(r'<blockquote class="imprese-citazione" lang="fr">', html)
     french = get_html("fr", COMPANIES_PATH)
     assert re.search(r'<h1 class="ingresso__title[^"]*">', french), "no lang attribute on a page already in French"
 
@@ -78,8 +84,11 @@ def test_no_recruitment_wording_of_the_former_page(get_html, seeded, lang):
 def test_three_neutral_moments_are_an_ordered_list(get_html, seeded):
     html = get_html("fr", COMPANIES_PATH)
     section = html.split('id="demarche"', 1)[1].split("</section>", 1)[0]
-    assert section.count('<li class="linea__step">') == 3
-    labels = re.findall(r'<p class="linea__label">(.*?)</p>', section)
+    # V5.22 (SECTION_SYSTEM_V2 §3.6 EN-1; strict rule): the three moments are «il flusso»'s stations — an ordered list,
+    # one heading each, in their order, on one measured curve
+    assert re.search(r'<ol class="flusso__tappe" role="list"[^>]*data-steps="3"', section)
+    assert section.count('<li class="flusso__tappa">') == 3
+    labels = re.findall(r'<h3 class="flusso__titolo">(.*?)</h3>', section)
     assert labels == [
         "Recueil des besoins",
         "Construction des parcours avec les acteurs compétents",
@@ -167,7 +176,12 @@ def test_phase3_adds_the_transparency_block_and_the_pilot_link(get_html, seeded,
     html = get_html("fr", COMPANIES_PATH)
     block = html.split('data-block="recruitment-guarantee"', 1)[1].split("</section>", 1)[0]
     assert FAQ_ENTRY["question"] in block
-    assert FAQ_ENTRY["answer"] in block
+    # V5.22 (SECTION_SYSTEM_V2 §3.6 EN-4; strict rule): the answer is cut at its own «Non.» and colon into the split's
+    # spans — read in its one paragraph's text, it is the prescribed answer, character for character
+    from bs4 import BeautifulSoup
+
+    answer = BeautifulSoup(block, "html.parser").select_one("p[data-faq]")
+    assert answer.get_text("") == FAQ_ENTRY["answer"]
     assert 'href="/fr/faq/#faq_recruitment_agency"' in block
     assert 'href="/fr/projet-pilote/"' in html
     assert locked_content.text("p3.pilot.title", "fr") in html
@@ -188,7 +202,8 @@ def test_after_phase3_the_transparency_anchor_and_the_pilot_link(get_html, seede
     html = get_html("fr", COMPANIES_PATH)
     main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
     assert 'id="transparence"' in main
-    related = main.split('class="chapter ecosystem-related"', 1)[1].split("</section>", 1)[0]
+    # V5.22 (SECTION_SYSTEM_V2 §3.6 EN-5; strict rule): «Pour aller plus loin» is «l'approdo», the same destinations
+    related = main.split('class="sez sez--approdo ecosistema-approdo"', 1)[1].split("</section>", 1)[0]
     assert 'href="/fr/projet-pilote/"' in related and 'href="/fr/forum/"' in related
 
 

@@ -1,0 +1,7 @@
+/* ============================================================================================
+   AGAMI'S ROUTE SHEET (design V5.22, SECTION_SYSTEM_V2 §3.17, V5.23 Q9; lane P2, round 2 — QA_ROUND2 m5): linked on
+   /agami/ only, between the institutional pages' shared sheet (pages/css/interior.css) and the frontispiece's — so no
+   other page downloads the identity's and the identification's compositions (the owner's V5.22 standing constraint:
+   page-only sheets, route-specific bundles with their own recorded budgets).
+   ============================================================================================ */
+@import url("_agami.css");

@@ -174,7 +174,7 @@ def test_every_step_has_a_glyph_in_the_registry_and_no_numeral_or_actor_is_inven
     assert [icons.concept("journey", step["status"]) for step in steps] == [
         "compass",
         "signpost",
-        "book-open",
+        "presentation",  # V5.12 W2 (DECISIONS §4): training is `presentation`; `book-open` is the Academy's alone
         "scroll-text",
         "clipboard-list",
         "building-2",
@@ -349,7 +349,7 @@ def test_the_dashboard_draws_the_rail_with_the_file_on_threshold_a(client, case,
     _status(case, "selection")
     client.force_login(person)
     html = client.get(DASHBOARD.format(lang="fr")).content.decode("utf-8")
-    journey = html.split('<section class="db-journey"', 1)[1].split("</section>", 1)[0]
+    journey = re.split(r'<section(?: data-rise)? class="db-journey"', html, maxsplit=1)[1].split("</section>", 1)[0]
     assert '<ol class="journey journey--on-a" aria-label="Où j’en suis">' in journey
     assert journey.count('aria-current="step"') == 1 and "journey__threshold--current" in journey
     work = html.split('class="console__workspace"', 1)[1]
@@ -392,8 +392,12 @@ PATHWAYS = "/{lang}/espace-reserve/mon-parcours/"
 
 
 def _sheets(html: str) -> list[str]:
+    """The head's sheets, without V5.15 lane D's platform sheet (portal/platform.css: the atrium and the lattice,
+    linked last by every console page that draws them) — the journey's and the situation's order is read before it."""
     head = html.split("</head>", 1)[0]
-    return re.findall(r'<link rel="stylesheet" href="([^"]+)"', head)
+    return [
+        s for s in re.findall(r'<link rel="stylesheet" href="([^"]+)"', head) if not s.endswith("portal/platform.css")
+    ]
 
 
 def test_mon_parcours_draws_the_dashboards_journey_at_its_head_when_the_person_has_a_file(client, case, person):
@@ -422,8 +426,19 @@ def test_without_a_file_no_page_draws_a_journey_or_loads_its_sheet(client, perso
 
 
 def test_the_home_draws_the_orientations_neutral_steps_on_the_public_passage():
+    """The home's orientation is drawn on the public passage, across, and never on the old sequence's classes.
+
+    V5.22 lane H (SECTION_SYSTEM_V2 §3.1 S2 «la linea V2, la discesa»; V5.20 strict rule, label v522-h-final-improve):
+    the include the home used before V5.22 (`steps=d.steps lang=d.steps_lang across=True`) conflicts with the approved
+    V5.22 decision — the same passage, large, its route opening on the orientation's T1 seal, the caveat (or, gate
+    closed, the neutral note) its terminal line, the call at its end, the template's context isolated. The invariant is
+    the same and pinned tighter: the one include, with every V2 parameter, and no `sequence__` class."""
     source = (ROOT / "templates" / "pages" / "home" / "_orientation.html").read_text(encoding="utf-8")
-    assert '{% include "components/stepper.html" with steps=d.steps lang=d.steps_lang across=True %}' in source
+    assert source.count('{% include "components/stepper.html"') == 1
+    assert (
+        '{% include "components/stepper.html" with size="large" steps=d.stations whole=d.whole lang=d.stations_lang '
+        'across=True origin_seal="ile-orienta" terminal=d.terminal end_action=d.end_action only %}'
+    ) in source
     assert "sequence__" not in source
 
 
@@ -442,6 +457,12 @@ def test_the_passage_shows_a_flows_place_and_an_explanation_shows_none():
 @pytest.mark.parametrize("sheet", [NODES, RAIL, STEPPER, PASSAGE], ids=["nodes", "rail", "stepper", "passage"])
 def test_each_drawing_is_still_at_load_on_tokens_and_logical_properties(sheet):
     css = _css(sheet)
+    if sheet == RAIL:
+        # V5.12 W2 (DECISIONS §2 M5, DL54-166): the one beat the rail plays — its travelled stretches on a page's FIRST
+        # view in a session — is its §8, gated by no-preference, html.rm and html.is-seen-journey; the drawing above stays still
+        css, motion = css.split("@media (prefers-reduced-motion: no-preference)", 1)
+        assert ":root:not(.rm):not(.is-seen-journey) .journey:not(.journey--descriptive)" in motion
+        assert "infinite" not in motion and "will-change" not in motion
     assert "@keyframes" not in css and "animation" not in css and "will-change" not in css, "still at load"
     assert set(re.findall(r"(?<![\w-])transition:\s*([^;]+);", css)) <= {"none"}, "nothing moves"
     assert not re.search(r"#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(|gradient\(", css), "tokens only"
@@ -571,6 +592,18 @@ def test_one_rail_drawing_and_one_passage_drawing_never_a_third():
         # a page's modifier of the timeline (W3-E's fix pass): in the case file's side column the date heads its event,
         # and an event's line in the other direction stands on the page's edge — columns and alignment, no drawing
         ("rail", "apps/portal/static/portal/v5/_case.css"),
+        # not a drawing: the reading's motion (V5.12 W2, DECISIONS §2 M5) — the passage's rings and lines enter, a flow's
+        # place lights on the first view; it qualifies the drawing's transform and opacity, never its geometry
+        ("passage", "static/css/v5/_reveal.css"),
+        # a page's modifier of the passage (V5.15 W3, DECISIONS §15 lane C, «a composed head per page» and section
+        # design; v515-c-improve2 a7884261): «Formation»'s two phases set side by side from 64rem, the phase's text
+        # freed from the passage's measure in its column — layout, never the drawing (the check below still holds)
+        ("passage", "static/css/v5/_compose.css"),
+        # a page's modifier of the passage (V5.22, SECTION_SYSTEM_V2 §2 F — an approved owner/product decision; lane S):
+        # «la linea V2», the large passage of a real sequence, its own partial after the passage so the questionnaire's
+        # sheet does not carry it; every rule is qualified `.linea--large` or names the variant's own parts, and the
+        # check below holds it to never redrawing the passage (V5.20 strict rule: the same invariant, one more modifier)
+        ("passage", "static/css/v5/_linea-v2.css"),
     }
     assert drawers <= partials | modifiers, sorted(drawers - partials - modifiers)
     # the drawing itself — the list, the station, its numeral and ring, the line, the Stepper's nodes and line — is
@@ -620,7 +653,9 @@ def test_v4s_journey_drawing_left_with_its_consumers():
         assert "_journey-passage" not in _css(ROOT / "apps" / sheet), f"{sheet} draws no «la linea»"
     register = _css(ROOT / "static" / "css" / "register.css")
     assert ".sequence__crossing" not in register and ".sequence__step--italy" not in register
-    assert ".sequence__step" in register, "the sequence stays for its console consumers until W3-E redraws them"
+    assert ".sequence" not in register, (
+        "the sequence left with its last consumers (W3-E; its bytes paid V5.12 W2's motion)"
+    )
     bundle = (ROOT / "static" / "css" / "dist" / "main.css").read_text(encoding="utf-8")
     for keyframes in ("rail-draw", "rail-draw-y", "tl-light"):
         assert f"@keyframes {keyframes}" not in bundle, keyframes

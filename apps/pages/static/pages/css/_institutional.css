@@ -3,55 +3,8 @@
    pages/css/interior.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only; logical properties.
    ============================================================================================ */
 
-/* ---- from the interior's grammar (v5/_interior.css), drawn by these pages alone: the register whose rows name WHO, which /reseau/ and /le-projet/ alone draw (W3-F1's budget pass, 12 October 2026: a page sheet holds what its pages draw) ---- */
-/* a register whose rows each name WHO (an audience, an actor): the registry's glyph says it, once a row, in ink */
-.registro--glyph .registro__title {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--s-3);
-}
-
-.registro__glyph {
-  flex: none;
-  inline-size: var(--icon-md);
-  block-size: var(--icon-md);
-  margin-block-start: 2px;
-  color: var(--text-1);
-}
-
-.registro--glyph .registro__text {
-  padding-inline-start: calc(var(--icon-md) + var(--s-3));
-}
-
-
-/* ---- Contact: the one address, large — the page's first answer ------------------------------------------ */
-.contact-address {
-  margin: 0;
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
-  font-weight: var(--w-title);
-}
-
-.contact-address__link {
-  overflow-wrap: anywhere;
-}
-
-/* under a finger the address answers on 44 px (SP-8) */
-@media (pointer: coarse) {
-  .contact-address__link {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: var(--hit-primary);
-  }
-}
-
-@media (min-width: 48rem) {
-  .contact-address {
-    font-size: var(--t-band);
-    line-height: var(--t-band-lh);
-    letter-spacing: var(--track-band);
-  }
-}
+/* V5.22 (SECTION_SYSTEM_V2 §3.2, §3.11, §3.12; lane P2): the register of actors (/reseau/, /le-projet/) and the
+   contact page's address chapter are recomposed (the map, the doors, the head's caption): their rules left with them. */
 
 /* ---- Le projet: the trademark line, quiet ------------------------------------------------------------- */
 .page-trademark {

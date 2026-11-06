@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-referent: ILE drawing (Italy Legal Entry) - the person who answers for the company, standing in its doorway: one figure (round 2) -->
+  <path fill="currentColor" fill-opacity=".18" stroke="none" d="M5 21V10.5a7 7 0 0 1 14 0V21Z"/>
+  <path d="M5 21V10.5a7 7 0 0 1 14 0V21M14.25 10.75a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 0 1 4.5 0ZM8.25 21v-1.75a3.75 3.75 0 0 1 7.5 0V21M2.5 21h19"/>
+</svg>

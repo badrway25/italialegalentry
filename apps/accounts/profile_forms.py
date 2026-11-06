@@ -44,6 +44,33 @@ class LanguageSelect(forms.Select):
 _PHONE_RE = re.compile(r"^\+?[0-9 ().-]{6,40}$")
 
 
+class CountryField(forms.ChoiceField):
+    """
+    A country, chosen from the CLDR list in the visitor's language (V5.12 W2, DECISIONS §5.7): the stored value is the
+    ISO 3166-1 alpha-2 code — what the rules engine reads (rules.engine: ``nationality`` and ``residence_country`` are
+    ISO codes) — and the long list is a combobox over the native select (static/js/src/combobox.js). A value saved by
+    the earlier free-text field is read back by its name in any of the four languages (core.countries.match).
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("choices", _country_choices)
+        super().__init__(*args, **kwargs)
+
+
+def _country_choices():
+    from django.utils import translation
+
+    from core import countries
+
+    return [("", "—"), *countries.choices(translation.get_language() or "fr")]
+
+
+def _country_initial(value: str) -> str:
+    from core import countries
+
+    return countries.match(value)
+
+
 class ProfileForm(PublicFormMixin, forms.Form):
     # Each personal field says what it is for (WCAG 2.2 AA, 1.3.5 «identify input purpose» — W3-F2's accessibility
     # check, A2), as SignupForm's name does: a browser can fill it, assistive technology can name it. The telephone is
@@ -64,14 +91,15 @@ class ProfileForm(PublicFormMixin, forms.Form):
         label=_("Téléphone"),
         max_length=40,
         required=False,
+        # V5.12 W2: «facultatif» is the label's tag now; the help's own «Facultatif —» stays until lane D's catalogue
+        # pass gives the shorter sentence its translations (requested in docs/design-v5/QA/v512/b-w2/NOTES.md)
         help_text=_("Facultatif — utilisé uniquement pour le suivi de vos demandes."),
         widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel", "inputmode": "tel"}),
     )
-    country_of_residence = forms.CharField(
+    country_of_residence = CountryField(
         label=_("Pays de résidence"),
-        max_length=80,
         required=False,
-        widget=forms.TextInput(attrs={"autocomplete": "country-name"}),
+        widget=forms.Select(attrs={"autocomplete": "country"}),
     )
 
     def __init__(self, *args, user=None, profile=None, **kwargs):
@@ -81,7 +109,7 @@ class ProfileForm(PublicFormMixin, forms.Form):
             self.fields["preferred_language"].initial = user.preferred_language
         if profile is not None and not self.is_bound:
             self.fields["phone"].initial = profile.phone
-            self.fields["country_of_residence"].initial = profile.country_of_residence
+            self.fields["country_of_residence"].initial = _country_initial(profile.country_of_residence)
 
     def clean_phone(self) -> str:
         value = (self.cleaned_data.get("phone") or "").strip()
@@ -147,24 +175,23 @@ class SituationForm(PublicFormMixin, forms.Form):
 
     # The two facts about the person whose purpose HTML names say what they are for (WCAG 2.2 AA, 1.3.5 «identify
     # input purpose» — W4-C's review, M1), as ProfileForm's personal fields do (W3-F2's A2): the date of birth is
-    # `bday` (still typed `date`), the country of residence `country-name`. The nationality has no purpose token.
+    # `bday` (still typed `date`), the country of residence `country` (an ISO code since V5.12 W2).
+    # The nationality has no purpose token.
     date_of_birth = forms.DateField(
         label=_("Date de naissance"),
         required=False,
         widget=forms.DateInput(attrs={"type": "date", "autocomplete": "bday"}),
         help_text=_("Certaines conditions d’entrée dépendent de l’âge. Les règles lisent l’âge, jamais la date."),
     )
-    nationality = forms.CharField(
+    nationality = CountryField(
         label=_("Nationalité"),
-        max_length=80,
         required=False,
         help_text=_("Les conditions d’entrée dépendent de la nationalité déclarée."),
     )
-    country_of_residence = forms.CharField(
+    country_of_residence = CountryField(
         label=_("Pays de résidence actuel"),
-        max_length=80,
         required=False,
-        widget=forms.TextInput(attrs={"autocomplete": "country-name"}),
+        widget=forms.Select(attrs={"autocomplete": "country"}),
         help_text=_("La démarche à suivre dépend du pays depuis lequel vous la commencez."),
     )
     education_level = forms.ChoiceField(
@@ -214,8 +241,8 @@ class SituationForm(PublicFormMixin, forms.Form):
         self.fields["education_level"].choices = [("", _("Non précisé")), *EducationLevel.choices]
         if profile is not None and not self.is_bound:
             self.fields["date_of_birth"].initial = profile.date_of_birth
-            self.fields["nationality"].initial = profile.nationality
-            self.fields["country_of_residence"].initial = profile.country_of_residence
+            self.fields["nationality"].initial = _country_initial(profile.nationality)
+            self.fields["country_of_residence"].initial = _country_initial(profile.country_of_residence)
             self.fields["education_level"].initial = profile.education_level
             self.fields["years_of_experience"].initial = profile.years_of_experience
             self.fields["languages"].initial = list(profile.languages or [])

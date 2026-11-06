@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- briefcase-business: Lucide "briefcase-business" 1.48.0 (ISC), under the ILE treatment: docs/design-v5/ICON_LICENSES.md -->
+  <rect fill="currentColor" fill-opacity=".12" stroke="none" width="20" height="14" x="2" y="6" rx="2"/>
+  <path d="M11.5 11.5h1v1h-1Z"/>
+  <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+  <path d="M22 13a18.15 18.15 0 0 1-20 0"/>
+  <rect width="20" height="14" x="2" y="6" rx="2"/>
+</svg>

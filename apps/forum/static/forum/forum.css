@@ -4,7 +4,10 @@
    resolve in the collected static tree (DS 2026 §2) — the page of the public interior (shared with the content pages),
    W3-F1's own parts of it, then the Forum's own rules.
    The Forum Permanent's governance pages live in the console and load nothing from here.
+   V5.22 (SECTION_SYSTEM_V2 §3.16; lane P2): the composition library's shell and the arch seat, before the Forum's own.
    ============================================================================================ */
 @import url("../css/v5/_pagina.css");
 @import url("../css/v5/_interior.css");
+@import url("../css/v5/_sezioni.css");
+@import url("../css/v5/_sigillo.css");
 @import url("_forum.css");

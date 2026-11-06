@@ -310,6 +310,12 @@ ILE = {
     "PROMOTER": "AGAMI — Dialogo Giuridico Interculturale APS",
     "PUBLIC_CONTACT_EMAIL": env("PUBLIC_CONTACT_EMAIL", default="contact@agamieuromed.org"),
     "FORMS_DESTINATION_EMAIL": env("FORMS_DESTINATION_EMAIL", default="contact@agamieuromed.org"),
+    # V5.19 (owner-confirmed, 29 October 2026): the public telephone channels — the defaults of SiteSettings and the
+    # fallback before migrations; the templates read them through core.contact (site.channels), never from here.
+    "FREEPHONE_NUMBER": "800642015",
+    # V5.20 (option B): the owner-confirmed WhatsApp number is configured outside the repository — the server's
+    # environment file or the back office (SiteSettings.whatsapp_number); blank, the channel is withdrawn.
+    "WHATSAPP_NUMBER": env("ILE_WHATSAPP_NUMBER", default=""),
     "FORBIDDEN_EMAIL_DOMAIN": "legalitalentry.it",
     "REFERENCE_DATE_OVERRIDE": env("ILE_REFERENCE_DATE", default=""),
     "PHASE1_DEADLINE": dt.date(2026, 9, 17),
@@ -322,6 +328,16 @@ ILE = {
     "CONTENT_FALLBACK_LANGUAGE": CONTENT_FALLBACK_LANGUAGE,
     "RETENTION_MONTHS_FORMS": 24,  # from the legal texts (Annexe 1 §7) — never invent other durations
 }
+
+#: V5.14 — whether a legal document that still carries an open field «[DA COMPLETARE …]» may be published and shown.
+#: Only a preview (dev.py) allows it, to show the owner what is missing; prod.py forces False (legal.models).
+ILE_LEGAL_OPEN_FIELDS_ALLOWED = False
+
+#: V5.17 §4 (R-SC-1, lane v517-p3) — whether the flows that intentionally solicit special-category data (art. 9 GDPR)
+#: are offered: the filing of a special-category piece, the loose upload's open «Autre document» (core.special_category,
+#: docs/compliance/PREVIEW_VS_PRODUCTION.md). Off unless an environment switches it on; prod.py needs the written
+#: approval's reference to do so.
+ILE_SPECIAL_CATEGORY_FLOWS_ENABLED = False
 
 # Feature flags: defaults used when no DB row exists (see core.flags). Dates are Europe/Rome.
 #: Whether a seed may create SYNTHETIC records that resemble real ones — a demonstration account, a
@@ -452,20 +468,30 @@ UNFOLD = {
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "filters": {"request_id": {"()": "core.logging.RequestIDFilter"}},
+    # V5.14 §5 (privacy audit LG-1): no e-mail address in a log line, message or traceback (config/log_filters.py).
+    "filters": {
+        "request_id": {"()": "core.logging.RequestIDFilter"},
+        "redact_personal_data": {"()": "config.log_filters.RedactPersonalDataFilter"},
+    },
     "formatters": {
-        "structured": {"()": "core.logging.StructuredFormatter"},
-        "plain": {"format": "%(levelname)s %(name)s [%(request_id)s] %(message)s"},
+        "structured": {"()": "config.log_filters.RedactingStructuredFormatter"},
+        "plain": {
+            "class": "config.log_filters.RedactingFormatter",
+            "format": "%(levelname)s %(name)s [%(request_id)s] %(message)s",
+        },
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "filters": ["request_id"],
+            "filters": ["request_id", "redact_personal_data"],
             "formatter": "plain",
         },
     },
     "root": {"handlers": ["console"], "level": "INFO"},
     "loggers": {
+        # Detaches Django's DEFAULT_LOGGING handlers (its DEBUG-only console, mail_admins): without this, under DEBUG
+        # every django.request / django.security line printed a second time, unredacted (V5.14 review, LG-1).
+        "django": {"handlers": [], "level": "INFO", "propagate": True},
         "django.security": {"level": "WARNING", "propagate": True},
         "ile.security": {"level": "INFO", "propagate": True},
         "ile.audit": {"level": "INFO", "propagate": True},

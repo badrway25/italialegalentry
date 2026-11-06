@@ -29,6 +29,7 @@
 @import url("../css/v5/_pagina.css");
 @import url("../css/v5/_interior.css");
 @import url("../css/v5/_journey-passage.css");
+@import url("../css/v5/_choice.css");
 
 /* ---- 1 · the start ------------------------------------------------------------------------------ */
 /* a moment's words that the source writes as a fragment (lower case first): presentation only, the words stay */
@@ -261,78 +262,23 @@
   color: var(--tone-rifiuto-mark);
 }
 
-/* the choices: plates around the native controls of v5/field.css (24 px), the whole plate the target */
-.wizard__choices {
-  display: grid;
-  gap: var(--s-2);
-}
+/* the choices: the form system's choice cards (v5/_choice.css, imported above; V5.12 W2, DECISIONS §5.6 — the
+   questionnaire's `wizard__choice` and the console's OptionCard are one drawing now): the native input over its whole
+   card, the person's own check that scales in, the edge and the tint in 120 ms */
+.wizard__choices { grid-template-columns: minmax(0, 1fr); }
+.wizard__label { font-size: var(--t-body); line-height: 1.5rem; cursor: pointer; }
+/* here the label is the input's sibling (the step's markup): the label's target covers the card, the input under it
+   keeps the focus and the keyboard — one press anywhere on the card chooses */
+.wizard__choice > .wizard__input { pointer-events: none; }
+.wizard__label::after { content: ""; position: absolute; inset: 0; }
 
-.wizard__choice {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.5rem minmax(0, 1fr);
-  align-items: start;
-  gap: var(--s-3);
-  padding: var(--s-4);
-  border: 1px solid var(--field-edge);
-  border-radius: var(--field-radius);
-  background-color: var(--field-bg);
-  transition:
-    border-color var(--motion-fast) var(--ease-enter),
-    background-color var(--motion-fast) var(--ease-enter);
-}
-
-/* the control stays on top of its plate's target: a press on it is its own */
-.wizard__input {
-  z-index: 1;
-  margin: 0;
-}
-
-.wizard__label {
-  font-size: var(--t-body);
-  line-height: 1.5rem;
-  color: var(--text-1);
-  cursor: pointer;
-}
-
-/* the label's target covers its plate: one press anywhere on it chooses */
-.wizard__label::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-@media (hover: hover) {
-  .wizard__choice:hover:not(:has(.wizard__input:checked)) {
-    border-color: var(--field-edge-hover);
-  }
-}
-
-/* chosen: the edge doubles in the primary's fill, the control carries the person's own mark — not colour alone */
-.wizard__choice:has(.wizard__input:checked) {
-  border-color: var(--fill-primary);
-  background-color: var(--surface-selected);
-  box-shadow: inset 0 0 0 1px var(--fill-primary);
-}
-
-/* the ring is the plate's: the control it holds draws none of its own */
-.wizard__choice:has(.wizard__input:focus-visible) {
-  outline: var(--focus-ring-width) solid var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
-
-.wizard__input:focus-visible {
-  outline: none;
-}
-
-/* a group in error: every plate's edge doubles in the refusal's ink, under the words that say why */
-.wizard__fieldset[aria-invalid="true"] .wizard__choice:not(:has(.wizard__input:checked)) {
+/* a group in error: every card's edge doubles in the refusal's ink, under the words that say why */
+.wizard__fieldset[aria-invalid="true"] .wizard__choice:not(:has(> input:checked)) {
   border-color: var(--field-edge-invalid);
   box-shadow: inset 0 0 0 1px var(--field-edge-invalid);
 }
 
 /* tier 0 (plan §1.5, R-07): asked from the keyboard, the change is there in the next frame */
-html[data-input="key"] .wizard__choice,
 html[data-input="key"] .wizard__help-toggle::after {
   transition-duration: 0ms;
 }
@@ -521,11 +467,6 @@ html[data-input="key"] .wizard__help-toggle::after {
 
   .wizard__choice {
     border-color: CanvasText;
-  }
-
-  .wizard__choice:has(.wizard__input:checked) {
-    border-color: Highlight;
-    outline: 2px solid Highlight;
   }
 
   .wizard-result__group--warnings {

@@ -3784,7 +3784,7 @@ msgstr "الرابط رقم %(n)d: مفاتيح غير مسموح بها (%(keys
 #: .\apps\news\forms.py .\templates\accounts\profile.html
 #: .\templates\allauth\layouts\manage.html
 msgid "Adresse e-mail"
-msgstr "عنوان البريد الإلكتروني"
+msgstr "البريد الإلكتروني"
 
 #: .\apps\news\models.py
 msgid "catégorie d’actualité"
@@ -4415,13 +4415,6 @@ msgid ""
 "identifier celles à explorer."
 msgstr ""
 "توجد عدة سبل نظامية: يساعد استبيان التوجيه على تحديد تلك التي يمكن استكشافها."
-
-#: .\apps\pages\content.py
-msgid ""
-"Des besoins des entreprises au suivi : la séquence du projet pilote, étape "
-"par étape."
-msgstr ""
-"من احتياجات الشركات إلى المتابعة: تسلسل المشروع التجريبي، مرحلة بمرحلة."
 
 #: .\apps\pages\content.py .\templates\pages\home\_trust.html
 msgid "Ce que fait la plateforme, et ce qu’elle ne fait pas"
@@ -5667,10 +5660,6 @@ msgid "Gérer"
 msgstr "إدارة"
 
 #: .\templates\accounts\profile.html
-msgid "Type de compte"
-msgstr "نوع الحساب"
-
-#: .\templates\accounts\profile.html
 msgid "Inscrit le"
 msgstr "تاريخ التسجيل"
 
@@ -5811,10 +5800,6 @@ msgstr "في انتظار الإشراف"
 #: .\templates\community\discussion.html
 msgid "Masqué"
 msgstr "مخفي"
-
-#: .\templates\community\discussion.html
-msgid "téléchargement bientôt disponible"
-msgstr "التنزيل متاح قريبًا"
 
 #: .\templates\community\discussion.html
 msgid "Modifier"
@@ -6171,18 +6156,10 @@ msgid "Les trois temps de la démarche"
 msgstr "المراحل الثلاث للمنهجية"
 
 #: .\templates\ecosystem\companies.html
-msgid "Formulaire"
-msgstr "النموذج"
-
-#: .\templates\ecosystem\companies.html
 msgid ""
 "Toutes les demandes transmises par les formulaires du site parviennent à une "
 "adresse unique :"
 msgstr "تصل جميع الطلبات المُرسَلة عبر نماذج الموقع إلى عنوان واحد:"
-
-#: .\templates\ecosystem\companies.html
-msgid "Ce que la plateforme fait, et ne fait pas"
-msgstr "ما تقوم به المنصة وما لا تقوم به"
 
 #: .\templates\ecosystem\companies.html .\templates\pages\home\_trust.html
 msgid "Toutes les questions fréquentes"
@@ -6235,10 +6212,6 @@ msgid ""
 msgstr "هذه الصفحة ليست عمومية بعد: ستصبح كذلك عند افتتاح المرحلة 3."
 
 #: .\templates\ecosystem\pilot.html
-msgid "Séquence proposée"
-msgstr "التسلسل المقترح"
-
-#: .\templates\ecosystem\pilot.html
 msgid "La séquence du projet pilote"
 msgstr "تسلسل المشروع التجريبي"
 
@@ -6266,14 +6239,6 @@ msgid ""
 msgstr "الشركات: أبلغوا عن احتياجاتكم المهنية. المؤسسات: اقترحوا تعاونًا."
 
 #: .\templates\ecosystem\universities.html
-msgid "Acteurs"
-msgstr "الفاعلون"
-
-#: .\templates\ecosystem\universities.html
-msgid "Domaines"
-msgstr "المجالات"
-
-#: .\templates\ecosystem\universities.html
 msgid ""
 "Présentez votre établissement et votre proposition : chaque demande est lue "
 "par l’équipe du projet."
@@ -6286,10 +6251,6 @@ msgstr "التكوين: قبل المغادرة وبعد الوصول"
 #: .\templates\ecosystem\universities.html
 msgid "Deux temps d’un même parcours, dans l’Espace Personnes."
 msgstr "مرحلتان من مسار واحد، في فضاء الأفراد."
-
-#: .\templates\ecosystem\universities.html
-msgid "Dont le parcours d’études et de formation, dans l’Espace Personnes."
-msgstr "ومن ضمنها مسار الدراسة والتكوين، في فضاء الأفراد."
 
 #: .\templates\enquiries\collaboration_proposal.html
 msgid ""
@@ -6356,10 +6317,6 @@ msgstr "العودة إلى الصفحة السابقة"
 #: .\templates\enquiries\partials\company_needs_form.html
 msgid "Votre entreprise et ses besoins"
 msgstr "شركتكم واحتياجاتها"
-
-#: .\templates\enquiries\partials\form_shell.html
-msgid "Les champs marqués d’un astérisque (*) sont obligatoires."
-msgstr "الحقول المشار إليها بعلامة النجمة (*) إلزامية."
 
 #: .\templates\enquiries\partials\form_shell.html
 msgid "Données personnelles"
@@ -6547,32 +6504,12 @@ msgid "Catégories"
 msgstr "الفئات"
 
 #: .\templates\faq\index.html
-msgid "Les questions fréquentes sont en cours de préparation."
-msgstr "الأسئلة الشائعة قيد الإعداد."
-
-#: .\templates\faq\index.html .\templates\glossary\index.html
-msgid "Cette page sera enrichie progressivement."
-msgstr "ستُغنى هذه الصفحة تدريجيًا."
-
-#: .\templates\faq\index.html
 msgid "Glossaire : les termes italiens expliqués"
 msgstr "مسرد المصطلحات: شرح المصطلحات الإيطالية"
 
 #: .\templates\faq\index.html
 msgid "Vous n’avez pas trouvé de réponse ? Contactez-nous"
 msgstr "لم تجدوا جوابًا؟ اتصلوا بنا"
-
-#: .\templates\faq\index.html
-msgid "Vous n’avez pas trouvé de réponse ? Écrivez-nous :"
-msgstr "لم تجدوا جوابًا؟ راسلونا:"
-
-#: .\templates\forum\index.html
-msgid "Cette page est en cours de préparation."
-msgstr "هذه الصفحة قيد الإعداد."
-
-#: .\templates\forum\index.html
-msgid "Les informations sur le Forum seront publiées prochainement."
-msgstr "ستُنشر المعلومات المتعلقة بالمنتدى قريبًا."
 
 #: .\templates\forum\partials\cta_row.html
 msgid "Participer et collaborer"
@@ -6593,10 +6530,6 @@ msgstr "لقاء الانطلاق:"
 #: .\templates\forum\partials\hero.html
 msgid "Logos des institutions patronnes"
 msgstr "شعارات المؤسسات الراعية"
-
-#: .\templates\forum\partials\local_nav.html
-msgid "Sections de la page"
-msgstr "أقسام الصفحة"
 
 #: .\templates\forum\partials\local_nav.html
 #: .\templates\forum\partials\permanent_sections.html
@@ -6735,10 +6668,6 @@ msgid "Index alphabétique"
 msgstr "الفهرس الأبجدي"
 
 #: .\templates\glossary\index.html
-msgid "Le glossaire est en cours de préparation."
-msgstr "مسرد المصطلحات قيد الإعداد."
-
-#: .\templates\glossary\index.html
 msgid "Les parcours réguliers vers l’Italie"
 msgstr "المسارات النظامية نحو إيطاليا"
 
@@ -6803,14 +6732,6 @@ msgstr[3] "%(n)s بطاقات"
 msgstr[4] "%(n)s بطاقة"
 msgstr[5] "%(n)s بطاقة"
 
-#: .\templates\living\index.html .\templates\living\topic.html
-msgid "Fiches en préparation"
-msgstr "بطاقات قيد الإعداد"
-
-#: .\templates\living\index.html
-msgid "Thèmes en préparation."
-msgstr "مواضيع قيد الإعداد."
-
 #: .\templates\living\sheet.html
 msgid "Publiée le"
 msgstr "تاريخ النشر"
@@ -6843,16 +6764,6 @@ msgstr "بطاقات عملية"
 #: .\templates\living\topic.html
 msgid "Vérifiée le"
 msgstr "تاريخ التحقق"
-
-#: .\templates\living\topic.html
-msgid ""
-"Les fiches pratiques de ce thème sont en cours de rédaction et de "
-"vérification. Elles seront publiées progressivement."
-msgstr "البطاقات العملية لهذا الموضوع قيد التحرير والتحقق. وستُنشر تدريجيًا."
-
-#: .\templates\living\topic.html
-msgid "Voir tous les thèmes"
-msgstr "عرض جميع المواضيع"
 
 #: .\templates\news\_newsletter.html
 msgid ""
@@ -6924,12 +6835,6 @@ msgstr "عرض جميع الأخبار"
 #: .\templates\news\index.html .\templates\pages\home\_news.html
 msgid "Aucune actualité publiée pour le moment."
 msgstr "لا توجد أخبار منشورة في الوقت الحالي."
-
-#: .\templates\news\index.html
-msgid ""
-"Les nouveautés normatives, les échéances officielles et les activités de "
-"l’écosystème seront publiées ici."
-msgstr "ستُنشر هنا المستجدات التنظيمية والآجال الرسمية وأنشطة المنظومة."
 
 #: .\templates\notifications\email\enquiries_acknowledgement.txt
 msgid "Bonjour,"
@@ -7348,12 +7253,6 @@ msgstr "الجهة المبادِرة بالمشروع"
 msgid "Identification et contact"
 msgstr "التعريف والاتصال"
 
-#: .\templates\pages\agami.html
-msgid ""
-"Les données d’identification de l’association relèvent des Mentions légales "
-"du site."
-msgstr "ترد بيانات التعريف بالجمعية في الإشعارات القانونية للموقع."
-
 #: .\templates\pages\agami.html .\templates\partials\footer.html
 msgid "Mentions légales"
 msgstr "الإشعارات القانونية"
@@ -7389,10 +7288,6 @@ msgid "Une adresse unique pour toutes les demandes relatives au projet."
 msgstr "عنوان واحد لجميع الطلبات المتعلقة بالمشروع."
 
 #: .\templates\pages\contact.html
-msgid "Par e-mail"
-msgstr "عبر البريد الإلكتروني"
-
-#: .\templates\pages\contact.html
 msgid "Tous les formulaires du site sont acheminés vers cette adresse."
 msgstr "تُوجَّه جميع نماذج الموقع إلى هذا العنوان."
 
@@ -7417,10 +7312,6 @@ msgid "Masquer cette annonce"
 msgstr "إخفاء هذا الإعلان"
 
 #: .\templates\pages\home\_ecosystem.html
-msgid "Promoteur et partenaires"
-msgstr "الجهة المبادِرة والشركاء"
-
-#: .\templates\pages\home\_ecosystem.html
 msgid "Promoteur"
 msgstr "الجهة المبادِرة"
 
@@ -7434,22 +7325,12 @@ msgid "En savoir plus sur le promoteur"
 msgstr "معرفة المزيد عن الجهة المبادِرة"
 
 #: .\templates\pages\home\_ecosystem.html .\templates\pages\network.html
-msgid ""
-"Les partenaires sont présentés au fur et à mesure de leurs autorisations "
-"écrites."
-msgstr "يُقدَّم الشركاء تباعًا بحسب ورود تراخيصهم الكتابية."
-
-#: .\templates\pages\home\_ecosystem.html .\templates\pages\network.html
 msgid "Voir les partenaires"
 msgstr "عرض الشركاء"
 
 #: .\templates\pages\home\_entrances.html .\templates\pages\network.html
 msgid "L’écosystème"
 msgstr "المنظومة"
-
-#: .\templates\pages\home\_news.html
-msgid "Informations"
-msgstr "معلومات"
 
 #: .\templates\pages\home\_news.html
 msgid "Les informations du projet seront publiées ici."
@@ -7479,10 +7360,6 @@ msgid "Voir l’Espace Personnes"
 msgstr "عرض فضاء الأفراد"
 
 #: .\templates\pages\home\_pilot.html
-msgid "Coopération"
-msgstr "التعاون"
-
-#: .\templates\pages\home\_pilot.html
 msgid "Séquence du projet pilote"
 msgstr "تسلسل المشروع التجريبي"
 
@@ -7510,10 +7387,6 @@ msgstr "قراءة التنبيه"
 msgid "Aperçu réservé à l’équipe : cette page n’est pas encore publique."
 msgstr "معاينة مخصصة للفريق: هذه الصفحة ليست عمومية بعد."
 
-#: .\templates\pages\institutional_base.html
-msgid "Pages institutionnelles"
-msgstr "الصفحات المؤسسية"
-
 #: .\templates\pages\network.html
 msgid "Un projet construit avec les acteurs compétents, chacun dans son rôle."
 msgstr "مشروع يُبنى مع الفاعلين المختصين، كلٌّ في دوره."
@@ -7529,10 +7402,6 @@ msgstr "الفاعلون في المنظومة"
 #: .\templates\pages\project.html
 msgid "Qui porte le projet"
 msgstr "من يشرف على المشروع"
-
-#: .\templates\pages\project.html
-msgid "La marque"
-msgstr "العلامة"
 
 #: .\templates\partials\footer.html
 msgid "Informations légales"
@@ -7570,17 +7439,8 @@ msgid "Navigation principale"
 msgstr "التنقل الرئيسي"
 
 #: .\templates\partials\main_nav.html
-#, python-format
-msgid "Ouvrir le sous-menu « %(section)s »"
-msgstr "فتح القائمة الفرعية «%(section)s»"
-
-#: .\templates\partials\main_nav.html
 msgid "Voir l’espace"
 msgstr "عرض الفضاء"
-
-#: .\templates\partials\utility_bar.html
-msgid "Barre institutionnelle"
-msgstr "الشريط المؤسسي"
 
 #: .\templates\partials\utility_bar.html
 msgid "promoteur du projet"
@@ -7600,18 +7460,6 @@ msgid ""
 "et à mesure des autorisations."
 msgstr "يُقدَّم شركاء المشروع هنا بموافقتهم الكتابية، تباعًا بحسب ورود التراخيص."
 
-#: .\templates\partners\index.html
-msgid "Liste des partenaires"
-msgstr "قائمة الشركاء"
-
-#: .\templates\partners\index.html
-msgid "Aucun partenaire n’est encore présenté."
-msgstr "لم يُقدَّم أي شريك بعد."
-
-#: .\templates\partners\index.html
-msgid "Les partenaires seront présentés au fur et à mesure des autorisations."
-msgstr "سيُقدَّم الشركاء تباعًا بحسب ورود التراخيص."
-
 #: .\templates\pathways\_metadata_row.html
 msgid "Nature"
 msgstr "الطبيعة"
@@ -7619,10 +7467,6 @@ msgstr "الطبيعة"
 #: .\templates\pathways\_metadata_row.html
 msgid "Contenu informatif — les décisions relèvent des autorités compétentes"
 msgstr "محتوى إعلامي — القرارات من اختصاص السلطات المختصة"
-
-#: .\templates\pathways\_metadata_row.html
-msgid "contenus détaillés en cours de vérification"
-msgstr "المحتويات المفصّلة قيد التحقق"
 
 #: .\templates\pathways\_orientation_cta.html
 msgid "Identifiez la voie régulière à explorer"
@@ -7640,10 +7484,6 @@ msgstr ""
 #: .\templates\pathways\_orientation_cta.html
 msgid "Le questionnaire d’orientation sera disponible prochainement."
 msgstr "سيكون استبيان التوجيه متاحًا قريبًا."
-
-#: .\templates\pathways\_preview_notice.html
-msgid "cette page n’est pas encore publique (Phase 3)."
-msgstr "هذه الصفحة ليست عمومية بعد (المرحلة 3)."
 
 #: .\templates\pathways\_side_links.html
 msgid "Dans l’Espace Personnes"
@@ -7673,29 +7513,6 @@ msgstr ""
 "مسار قيد البناء مع الفاعلين المختصين؛ ولا تُقدَّم أي قناة على أنها مرخَّصة بالفعل."
 
 #: .\templates\pathways\detail.html
-msgid "Contexte en cours de vérification"
-msgstr "السياق قيد التحقق"
-
-#: .\templates\pathways\detail.html
-msgid ""
-"Les conditions générales de ce parcours seront décrites après vérification "
-"sur les sources officielles. Les décisions relèvent des autorités "
-"compétentes."
-msgstr ""
-"ستُوصَف الشروط العامة لهذا المسار بعد التحقق منها في المصادر الرسمية. "
-"والقرارات من اختصاص السلطات المختصة."
-
-#: .\templates\pathways\detail.html .\templates\pathways\diplomas.html
-msgid ""
-"Les détails de chaque étape sont publiés au fur et à mesure de leur "
-"vérification avec les acteurs compétents."
-msgstr "تُنشر تفاصيل كل خطوة تباعًا بحسب التحقق منها مع الفاعلين المختصين."
-
-#: .\templates\pathways\detail.html
-msgid "Étapes en préparation"
-msgstr "خطوات قيد الإعداد"
-
-#: .\templates\pathways\detail.html
 msgid "Documentation généralement requise"
 msgstr "الوثائق المطلوبة عادةً"
 
@@ -7706,16 +7523,6 @@ msgid ""
 msgstr ""
 "قائمة إرشادية: تتوقف الوثائق المطلوبة فعليًا على وضعيتكم وعلى توجيهات السلطات "
 "المختصة."
-
-#: .\templates\pathways\detail.html
-msgid "Liste en cours de vérification"
-msgstr "القائمة قيد التحقق"
-
-#: .\templates\pathways\detail.html
-msgid ""
-"La documentation généralement requise pour ce parcours sera publiée après "
-"vérification."
-msgstr "ستُنشر الوثائق المطلوبة عادةً لهذا المسار بعد التحقق."
 
 #: .\templates\pathways\detail.html
 msgid "Autorités et acteurs compétents"
@@ -7730,16 +7537,8 @@ msgstr ""
 "السلطات ولا تمنح أي ترخيص."
 
 #: .\templates\pathways\detail.html
-msgid "Acteurs en cours d’identification"
-msgstr "الفاعلون قيد التحديد"
-
-#: .\templates\pathways\detail.html
 msgid "Termes utiles"
 msgstr "مصطلحات مفيدة"
-
-#: .\templates\pathways\detail.html
-msgid "Navigation entre les parcours"
-msgstr "التنقل بين المسارات"
 
 #: .\templates\pathways\detail.html
 msgid "Tous les parcours réguliers"
@@ -7748,15 +7547,6 @@ msgstr "جميع المسارات النظامية"
 #: .\templates\pathways\diplomas.html
 msgid "Les démarches, étape par étape"
 msgstr "الإجراءات، خطوة بخطوة"
-
-#: .\templates\pathways\diplomas.html
-msgid ""
-"Structure générale des démarches. Les modalités précises dépendent du titre, "
-"du pays de délivrance et de l’usage prévu en Italie ; elles seront "
-"détaillées après vérification avec les acteurs compétents."
-msgstr ""
-"البنية العامة للإجراءات. تتوقف الكيفيات الدقيقة على المؤهل وبلد الإصدار "
-"والاستعمال المزمع في إيطاليا؛ وستُفصَّل بعد التحقق منها مع الفاعلين المختصين."
 
 #: .\templates\pathways\diplomas.html
 msgid "Qui décide ?"
@@ -7772,11 +7562,6 @@ msgstr ""
 "حصرًا. توجّهكم Italy Legal Entry™‎ بشأن الخطوات والجهات التي يمكن مخاطبتها، دون "
 "التدخل في المسطرة."
 
-#: .\templates\pathways\diplomas.html .\templates\pathways\index.html
-#: .\templates\pathways\training.html
-msgid "Ressources de l’Espace Personnes"
-msgstr "موارد فضاء الأفراد"
-
 #: .\templates\pathways\index.html
 msgid ""
 "Huit voies d’entrée régulière, présentées avec leurs principales étapes. "
@@ -7786,10 +7571,6 @@ msgstr ""
 "ثمانية سبل للدخول النظامي، معروضة مع خطواتها الرئيسية. كل بطاقة ذات طابع "
 "إعلامي: يُتحقَّق من السبيل الملائم لوضعيتكم بواسطة استبيان التوجيه ولدى "
 "الفاعلين المختصين."
-
-#: .\templates\pathways\index.html
-msgid "Fiche détaillée en préparation"
-msgstr "بطاقة مفصّلة قيد الإعداد"
 
 #: .\templates\pathways\index.html .\templates\pathways\index_interim.html
 msgid "Comment ça marche"
@@ -8067,10 +7848,6 @@ msgstr ""
 #: .\templates\portal\requests.html
 msgid "Liste de vos demandes"
 msgstr "قائمة طلباتكم"
-
-#: .\templates\portal\requests.html
-msgid "Demande"
-msgstr "الطلب"
 
 #: .\templates\portal\unavailable.html
 msgid "L’espace réservé est momentanément indisponible."
@@ -8611,14 +8388,6 @@ msgstr "التراب الإيطالي: الاستقبال والإدماج"
 msgid "Répartition des responsabilités le long du parcours"
 msgstr "توزيع المسؤوليات على امتداد المسار"
 
-#: .\templates\pages\home\_trust.html
-msgid "Les proportions indiquent les étapes du modèle, non une durée."
-msgstr "تشير النسب إلى مراحل النموذج، لا إلى مدة زمنية."
-
-#: .\templates\pages\home\_trust.html
-msgid "Qui répond de quoi"
-msgstr "مَن المسؤول عن ماذا"
-
 #: .\apps\cms\models.py
 msgid "Chi ha realizzato l'immagine, nella forma richiesta dalla licenza."
 msgstr "مَن أنجز الصورة، بالصيغة التي يقتضيها الترخيص."
@@ -8676,16 +8445,8 @@ msgid "Votre situation et votre objectif"
 msgstr "وضعيتكم وهدفكم"
 
 #: .\templates\partials\portal_chrome.html
-msgid "Compte et langue"
-msgstr "الحساب واللغة"
-
-#: .\templates\partials\portal_chrome.html
 msgid "Site public"
 msgstr "الموقع العام"
-
-#: .\templates\portal\base_portal.html
-msgid "Privacy Policy"
-msgstr "Privacy Policy"
 
 #: .\templates\portal\dashboard.html
 msgid "Ce qui reste à faire, et par qui"
@@ -8698,10 +8459,6 @@ msgstr "مجموعة القواعد"
 #: .\templates\portal\dashboard.html
 msgid "Ne téléversez que les documents qui vous sont demandés dans le cadre de votre parcours : la liste apparaîtra ici avec l’état de chacun."
 msgstr "لا ترفعوا إلا الوثائق المطلوبة منكم في إطار مساركم: ستظهر القائمة هنا مع حالة كل واحدة منها."
-
-#: .\templates\portal\dashboard.html
-msgid "Nouveau"
-msgstr "جديد"
 
 #: .\templates\portal\dashboard.html
 msgid "Où j’en suis"
@@ -12755,17 +12512,9 @@ msgstr "الدورات المتاحة"
 msgid "Les formations ouvertes à toute personne disposant d’un compte."
 msgstr "التكوينات المفتوحة لكل من يتوفر على حساب."
 
-#: .\templates\academy\catalogue.html .\templates\academy\enrolment_detail.html
-msgid "Mon suivi"
-msgstr "متابعتي"
-
 #: .\templates\academy\catalogue.html
 msgid "Plans de formation"
 msgstr "خطط التكوين"
-
-#: .\templates\academy\catalogue.html
-msgid "Plateforme"
-msgstr "المنصة"
 
 #: .\templates\academy\catalogue.html
 msgid "Revenir au catalogue complet"
@@ -12823,10 +12572,6 @@ msgstr "ما ينبغي معرفته"
 msgid "Compétence"
 msgstr "الكفاءة"
 
-#: .\templates\academy\course_detail.html .\templates\academy\plan_detail.html .\templates\companies\need_detail.html
-msgid "Compétences"
-msgstr "الكفاءات"
-
 #: .\templates\academy\course_detail.html
 msgid "Compétences développées par le cours, niveau visé et résultat attendu"
 msgstr "الكفاءات التي تنميها الدورة، والمستوى المستهدَف، والنتيجة المنتظرة"
@@ -12846,10 +12591,6 @@ msgstr "المدة"
 #: .\templates\academy\course_detail.html
 msgid "Langue d’enseignement"
 msgstr "لغة التدريس"
-
-#: .\templates\academy\course_detail.html
-msgid "Le cours"
-msgstr "الدورة"
 
 #: .\templates\academy\course_detail.html
 msgid "Le programme détaillé est en cours de préparation par l’organisme."
@@ -12887,17 +12628,9 @@ msgstr "الهيئة"
 msgid "Ouvrir mon suivi"
 msgstr "فتح متابعتي"
 
-#: .\templates\academy\course_detail.html
-msgid "Programme"
-msgstr "البرنامج"
-
 #: .\templates\academy\course_detail.html .\templates\academy\plan_detail.html
 msgid "Résultat attendu"
 msgstr "النتيجة المنتظرة"
-
-#: .\templates\academy\course_detail.html .\templates\academy\enrolment_detail.html
-msgid "Supports"
-msgstr "الدعامات"
 
 #: .\templates\academy\course_detail.html .\templates\academy\enrolment_detail.html
 msgid "Supports de formation"
@@ -12962,10 +12695,6 @@ msgid "Les modules déjà suivis sont conservés."
 msgstr "تُحفظ الوحدات المتابَعة سلفًا."
 
 #: .\templates\academy\enrolment_detail.html
-msgid "Modules"
-msgstr "الوحدات"
-
-#: .\templates\academy\enrolment_detail.html
 msgid "Modules suivis"
 msgstr "الوحدات المتابَعة"
 
@@ -13020,10 +12749,6 @@ msgid "Dossier %(reference)s"
 msgstr "الملف %(reference)s"
 
 #: .\templates\academy\mine.html
-msgid "Interrompues"
-msgstr "متوقفة"
-
-#: .\templates\academy\mine.html
 msgid "Les formations interrompues"
 msgstr "التكوينات المتوقفة"
 
@@ -13056,16 +12781,8 @@ msgid "Parcourir le catalogue"
 msgstr "تصفح الفهرس"
 
 #: .\templates\academy\mine.html
-msgid "Plans"
-msgstr "الخطط"
-
-#: .\templates\academy\mine.html
 msgid "Plans que je consulte au titre d’un mandat"
 msgstr "الخطط التي أطّلع عليها بحكم انتداب"
-
-#: .\templates\academy\mine.html
-msgid "Suivies"
-msgstr "متابَعة"
 
 #: .\templates\academy\mine.html
 msgid "Un plan de formation réunit les cours conseillés pour un objectif donné. Il peut venir de votre orientation, d’un professionnel ou d’un besoin de compétences recensé ; il ne conditionne jamais l’accès aux cours, qui restent ouverts à tous."
@@ -13118,10 +12835,6 @@ msgid "Comparaison entre le niveau requis et le niveau actuel pour chaque compé
 msgstr "مقارنة بين المستوى المطلوب والمستوى الحالي لكل كفاءة، مع الوحدة المقابلة والنتيجة المنتظرة"
 
 #: .\templates\academy\plan_detail.html
-msgid "Cours conseillés"
-msgstr "الدورات الموصى بها"
-
-#: .\templates\academy\plan_detail.html
 msgid "Dossier lié"
 msgstr "الملف المرتبط"
 
@@ -13132,10 +12845,6 @@ msgstr "من أين يأتي هذا المسار"
 #: .\templates\academy\plan_detail.html
 msgid "La comparaison des compétences sera renseignée avec l’organisme de formation ou le professionnel qui accompagne ce parcours."
 msgstr "ستُملأ مقارنة الكفاءات مع هيئة التكوين أو المهني الذي يواكب هذا المسار."
-
-#: .\templates\academy\plan_detail.html
-msgid "Le plan"
-msgstr "الخطة"
 
 #: .\templates\academy\plan_detail.html
 msgid "Les cours du parcours"
@@ -13297,10 +13006,6 @@ msgstr "ترد هذه المتطلبات في لائحة مستندات ملفك
 msgid "Exigences"
 msgstr "المتطلبات"
 
-#: .\templates\cases\assessment.html .\templates\portal\dashboard.html
-msgid "Fondements"
-msgstr "الأسس"
-
 #: .\templates\cases\assessment.html
 msgid "La réexécution du jeu de règles conservé ne redonne pas le résultat enregistré. Cet écart est signalé à l’équipe du projet ; ne vous fondez pas sur ce résultat sans nous contacter."
 msgstr "إعادة تنفيذ مجموعة القواعد المحفوظة لا تعطي النتيجة المسجَّلة. وقد أُبلغ فريق المشروع بهذا الفارق؛ فلا تعتمدوا على هذه النتيجة دون الاتصال بنا."
@@ -13321,14 +13026,6 @@ msgstr "النصوص التي تستند إليها هذه القواعد"
 msgid "Retour au dossier"
 msgstr "العودة إلى الملف"
 
-#: .\templates\cases\assessment.html
-msgid "Règles appliquées"
-msgstr "القواعد المطبَّقة"
-
-#: .\templates\cases\assessment.html .\templates\companies\dashboard.html .\templates\companies\partials\company_header.html .\templates\companies\profile.html
-msgid "Vérification"
-msgstr "التحقق"
-
 #: .\templates\cases\assessment.html .\templates\portal\dashboard.html
 msgid "consultée le %(date)s"
 msgstr "تم الاطلاع عليه في %(date)s"
@@ -13340,10 +13037,6 @@ msgstr "لم يُسنَد أي فاعل. ويبقى هذا الملف ملفكم
 #: .\templates\cases\detail.html
 msgid "Aucune pièce n’est encore demandée dans ce dossier. La liste se remplit à partir de votre pré-évaluation et des règles en vigueur."
 msgstr "لم يُطلب بعد أي مستند في هذا الملف. وتُملأ اللائحة انطلاقًا من تقييمكم الأولي ومن القواعد السارية."
-
-#: .\templates\cases\detail.html .\templates\companies\need_detail.html
-msgid "Autorisation %(reference)s"
-msgstr "الإذن %(reference)s"
 
 #: .\templates\cases\detail.html
 msgid "Ce dossier appartient à %(name)s. Vous y accédez au titre d’un mandat daté, et chacune de vos consultations est enregistrée."
@@ -13370,10 +13063,6 @@ msgid "Enregistrer l’état"
 msgstr "حفظ الحالة"
 
 #: .\templates\cases\detail.html
-msgid "Exigence"
-msgstr "المتطلَّب"
-
-#: .\templates\cases\detail.html
 msgid "Faire évoluer l’état du dossier"
 msgstr "تطوير حالة الملف"
 
@@ -13390,10 +13079,6 @@ msgid "Mettre à jour"
 msgstr "تحديث"
 
 #: .\templates\cases\detail.html
-msgid "Motif (obligatoire pour une suspension)"
-msgstr "السبب (إلزامي في حالة الإيقاف)"
-
-#: .\templates\cases\detail.html
 msgid "Nouvel état de cette ligne"
 msgstr "الحالة الجديدة لهذا السطر"
 
@@ -13404,14 +13089,6 @@ msgstr "أين وصل هذا الملف"
 #: .\templates\cases\detail.html
 msgid "Parcours"
 msgstr "المسار"
-
-#: .\templates\cases\detail.html
-msgid "Pièces et démarches demandées dans ce dossier"
-msgstr "المستندات والإجراءات المطلوبة في هذا الملف"
-
-#: .\templates\cases\detail.html
-msgid "Pièces et démarches — tableau défilant horizontalement"
-msgstr "المستندات والإجراءات — جدول قابل للتمرير أفقيًا"
 
 #: .\templates\cases\detail.html
 msgid "Qui intervient sur ce dossier"
@@ -13478,10 +13155,6 @@ msgid "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, n
 msgstr "تجمّع هذه الصفحة الاحتياجات. ولا تتضمن اسم شركة، ولا عنوان احتياج، ولا معرِّفًا، ولا تحتسب أي شخص."
 
 #: .\templates\companies\analysis.html
-msgid "Ensemble"
-msgstr "المجموع"
-
-#: .\templates\companies\analysis.html
 msgid "Les besoins exprimés, agrégés par territoire et par secteur."
 msgstr "الاحتياجات المعبَّر عنها، مجمَّعة حسب المجال الترابي وحسب القطاع."
 
@@ -13525,29 +13198,13 @@ msgstr "مجموع المناصب"
 msgid "Secteur"
 msgstr "القطاع"
 
-#: .\templates\companies\analysis.html
-msgid "Secteurs"
-msgstr "القطاعات"
-
 #: .\templates\companies\analysis.html .\templates\companies\need_detail.html
 msgid "Territoire"
 msgstr "المجال الترابي"
 
 #: .\templates\companies\analysis.html
-msgid "Territoires"
-msgstr "المجالات الترابية"
-
-#: .\templates\companies\analysis.html
-msgid "États"
-msgstr "الحالات"
-
-#: .\templates\companies\analysis.html
 msgid "États retenus"
 msgstr "الحالات المعتمَدة"
-
-#: .\templates\companies\dashboard.html
-msgid "Créer mon premier besoin"
-msgstr "إنشاء أول احتياج لي"
 
 #: .\templates\companies\dashboard.html
 msgid "Déclarez votre entreprise, puis exprimez vos besoins en compétences. Le projet recueille des besoins : il ne présente aucune personne et ne promet aucun résultat."
@@ -13556,10 +13213,6 @@ msgstr "صرّحوا بشركتكم، ثم عبّروا عن احتياجاتك�
 #: .\templates\companies\dashboard.html .\templates\companies\profile.html
 msgid "Dénomination légale"
 msgstr "التسمية القانونية"
-
-#: .\templates\companies\dashboard.html .\templates\companies\profile.html .\templates\forum\governance\project_detail.html
-msgid "Identité"
-msgstr "الهوية"
 
 #: .\templates\companies\dashboard.html
 msgid "Immatriculation"
@@ -13668,14 +13321,6 @@ msgid "Le détail d’un besoin exprimé par votre entreprise."
 msgstr "تفاصيل احتياج عبّرت عنه شركتكم."
 
 #: .\templates\companies\need_detail.html
-msgid "Le poste"
-msgstr "المنصب"
-
-#: .\templates\companies\need_detail.html
-msgid "Les éléments du besoin"
-msgstr "عناصر الاحتياج"
-
-#: .\templates\companies\need_detail.html
 msgid "Les étapes de traitement de ce besoin apparaîtront ici."
 msgstr "ستظهر هنا مراحل معالجة هذا الاحتياج."
 
@@ -13779,10 +13424,6 @@ msgstr "اللغة والسلامة"
 msgid "Le poste et son territoire"
 msgstr "المنصب ومجاله الترابي"
 
-#: .\templates\companies\need_form.html .\templates\companies\profile_form.html
-msgid "Modification"
-msgstr "التعديل"
-
 #: .\templates\companies\need_form.html
 msgid "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée."
 msgstr "يبقى الاحتياج المُنشأ مسودة. ولا يُرسل إلى المشروع إلا عندما تقررون ذلك، وشريطة أن يكون قد تم التحقق من الشركة."
@@ -13804,30 +13445,12 @@ msgid "Une entreprise crée et suit plusieurs besoins. Chacun décrit un poste �
 msgstr "تنشئ الشركة عدة احتياجات وتتابعها. ويصف كل احتياج منصبًا — لا شخصًا أبدًا — ويحمل حالة معالجته والفاعل المسؤول عنه."
 
 #: .\templates\companies\partials\company_header.html
-msgid "%(n)s besoin en cours"
-msgid_plural "%(n)s besoins en cours"
-msgstr[0] "لا احتياجات جارية"
-msgstr[1] "احتياج واحد جارٍ"
-msgstr[2] "احتياجان جاريان"
-msgstr[3] "%(n)s احتياجات جارية"
-msgstr[4] "%(n)s احتياجًا جاريًا"
-msgstr[5] "%(n)s احتياج جارٍ"
-
-#: .\templates\companies\partials\company_header.html
-msgid "Besoins ouverts"
-msgstr "الاحتياجات المفتوحة"
-
-#: .\templates\companies\partials\company_header.html
 msgid "La transmission d’un besoin est possible une fois la vérification prononcée."
 msgstr "يصبح إرسال الاحتياج ممكنًا بمجرد صدور التحقق."
 
 #: .\templates\companies\partials\company_header.html
 msgid "Votre entreprise"
 msgstr "شركتكم"
-
-#: .\templates\companies\partials\company_header.html
-msgid "Établissement"
-msgstr "المقر"
 
 #: .\templates\companies\partials\need_register.html
 msgid "%(n)s profil"
@@ -13912,10 +13535,6 @@ msgid "Secteur d’activité"
 msgstr "قطاع النشاط"
 
 #: .\templates\companies\profile_form.html
-msgid "Déclaration"
-msgstr "التصريح"
-
-#: .\templates\companies\profile_form.html
 msgid "Déclarer l’entreprise"
 msgstr "التصريح بالشركة"
 
@@ -13938,10 +13557,6 @@ msgstr "المنسق"
 #: .\templates\companies\profile_form.html
 msgid "Les données du référent sont des données personnelles : elles servent à la vérification de l’entreprise et à la correspondance du projet, et à rien d’autre. Vous pouvez en demander la copie ou la rectification depuis votre compte."
 msgstr "معطيات المنسق معطيات شخصية: تُستعمل للتحقق من الشركة ولمراسلات المشروع، ولا لشيء آخر. ويمكنكم طلب نسخة منها أو تصحيحها من حسابكم."
-
-#: .\templates\companies\profile_form.html
-msgid "L’identité de votre entreprise"
-msgstr "هوية شركتكم"
 
 #: .\templates\companies\profile_form.html
 msgid "L’établissement"
@@ -13988,16 +13603,6 @@ msgid "Les pièces demandées dans votre dossier, leur état et la personne resp
 msgstr "المستندات المطلوبة في ملفكم، وحالتها، والشخص المسؤول."
 
 #: .\templates\documents\partials\register.html
-msgid "%(n)s en attente"
-msgid_plural "%(n)s en attente"
-msgstr[0] "لا شيء في الانتظار"
-msgstr[1] "واحد في الانتظار"
-msgstr[2] "اثنان في الانتظار"
-msgstr[3] "%(n)s في الانتظار"
-msgstr[4] "%(n)s عنصرًا في الانتظار"
-msgstr[5] "%(n)s عنصر في الانتظار"
-
-#: .\templates\documents\partials\register.html
 msgid "%(n)s pièce demandée"
 msgid_plural "%(n)s pièces demandées"
 msgstr[0] "لا مستندات مطلوبة"
@@ -14014,10 +13619,6 @@ msgstr "%(valid)s مقبولة من أصل %(total)s"
 #: .\templates\documents\partials\register.html
 msgid "Acceptation des Conditions d’utilisation requise."
 msgstr "يلزم قبول شروط الاستخدام."
-
-#: .\templates\documents\partials\register.html
-msgid "Accepter les Conditions d’utilisation"
-msgstr "قبول شروط الاستخدام"
 
 #: .\templates\documents\partials\register.html
 msgid "Consulter"
@@ -14070,10 +13671,6 @@ msgstr "الاطلاع على المصدر"
 #: .\templates\documents\requirement_detail.html .\templates\documents\upload.html
 msgid "Déposer"
 msgstr "إيداع"
-
-#: .\templates\documents\requirement_detail.html
-msgid "Déposez la pièce ci-dessous."
-msgstr "أودعوا المستند أدناه."
 
 #: .\templates\documents\requirement_detail.html
 msgid "Déposée le"
@@ -14309,10 +13906,6 @@ msgstr "منشور"
 msgid "publiée le %(date)s"
 msgstr "نُشر في %(date)s"
 
-#: .\templates\forum\governance\annual_report.html
-msgid "Édition"
-msgstr "الدورة"
-
 #: .\templates\forum\governance\base_governance.html
 msgid "Le Forum permanent est un espace de coopération institutionnelle. Les propositions, les projets et les relevés de suivi qui y figurent engagent les organisations qui les déposent ; ils ne constituent ni une décision d’une autorité, ni un engagement sur une issue ou sur un délai. Les profils de participation indiquent l’organisation représentée, la catégorie et les intérêts déclarés : aucune coordonnée personnelle n’y est publiée."
 msgstr "المنتدى الدائم فضاء للتعاون المؤسسي. والمقترحات والمشاريع وكشوف التتبع الواردة فيه تُلزم المنظمات التي تودعها؛ وهي ليست قرارًا صادرًا عن سلطة ولا التزامًا بمآل أو بأجل. وتبيّن ملفات المشاركة المنظمة الممثَّلة والفئة والاهتمامات المصرَّح بها: ولا تُنشر فيها أي بيانات اتصال شخصية."
@@ -14332,10 +13925,6 @@ msgstr "لا مقترح مودَع في هذه اللجنة. ولا ترد ال�
 #: .\templates\forum\governance\commission_detail.html
 msgid "Aucune table n’est ouverte dans cette commission. Une table est ouverte par le référent de la commission lorsqu’un sujet est mûr pour être travaillé."
 msgstr "لا مائدة مفتوحة في هذه اللجنة. ويفتح منسق اللجنة مائدة عندما ينضج موضوع للاشتغال عليه."
-
-#: .\templates\forum\governance\commission_detail.html
-msgid "Composition"
-msgstr "التركيبة"
 
 #: .\templates\forum\governance\commission_detail.html .\templates\forum\governance\participation.html .\templates\forum\governance\proposals.html
 msgid "Depuis le"
@@ -14409,10 +13998,6 @@ msgstr "اللجان المشتركة للمنتدى الدائم التي يم�
 msgid "Les commissions ouvertes à votre consultation"
 msgstr "اللجان المفتوحة لاطلاعكم"
 
-#: .\templates\forum\governance\commissions.html .\templates\forum\governance\projects.html .\templates\forum\governance\proposals.html
-msgid "Registre"
-msgstr "السجل"
-
 #: .\templates\forum\governance\participation.html
 msgid "Aucun mandat en cours sur cette édition. Un mandat est ouvert par le secrétariat du Forum, pour une période déterminée."
 msgstr "لا انتداب جارٍ في هذه الدورة. وتفتح كتابة المنتدى الانتداب لفترة محددة."
@@ -14464,10 +14049,6 @@ msgstr "مشاركتكم في المنتدى الدائم: الدورات، وا
 #: .\templates\forum\governance\participation.html
 msgid "Vous ne participez à aucune édition du Forum permanent. Le secrétariat du Forum ouvre un profil de participation lorsqu’une organisation rejoint une édition."
 msgstr "لا تشاركون في أي دورة من دورات المنتدى الدائم. وتفتح كتابة المنتدى ملف مشاركة عندما تنضم منظمة إلى دورة."
-
-#: .\templates\forum\governance\participation.html
-msgid "Éditions"
-msgstr "الدورات"
 
 #: .\templates\forum\governance\participation.html
 msgid "échu"
@@ -14572,10 +14153,6 @@ msgid "Ce que la commission a décidé"
 msgstr "ما قررته اللجنة"
 
 #: .\templates\forum\governance\proposal_detail.html
-msgid "Décision"
-msgstr "القرار"
-
-#: .\templates\forum\governance\proposal_detail.html
 msgid "Décision consignée le %(date)s. Elle porte sur la proposition, jamais sur la situation d’une personne."
 msgstr "قرار مسجَّل في %(date)s. ويتعلق بالمقترح، لا بوضعية شخص أبدًا."
 
@@ -14600,10 +14177,6 @@ msgid "Le projet issu de cette proposition"
 msgstr "المشروع المنبثق عن هذا المقترح"
 
 #: .\templates\forum\governance\proposal_detail.html
-msgid "Proposant"
-msgstr "صاحب المقترح"
-
-#: .\templates\forum\governance\proposal_detail.html
 msgid "Proposition du Forum permanent : texte, état et décision motivée."
 msgstr "مقترح المنتدى الدائم: النص، والحالة، والقرار المعلَّل."
 
@@ -14614,10 +14187,6 @@ msgstr "من أودع هذا المقترح"
 #: .\templates\forum\governance\proposal_detail.html
 msgid "Seules les transitions prévues par le cycle du Forum sont proposées ici, et seulement celles que votre mandat vous permet de demander. Une décision — retenir ou écarter — doit être motivée."
 msgstr "لا تُقترح هنا سوى الانتقالات المنصوص عليها في دورة المنتدى، وفقط تلك التي يتيح لكم انتدابكم طلبها. وكل قرار — قبول أو استبعاد — يجب أن يكون معلَّلًا."
-
-#: .\templates\forum\governance\proposal_detail.html
-msgid "Suite"
-msgstr "التتمة"
 
 #: .\templates\forum\governance\proposal_detail.html
 msgid "Table"
@@ -14650,10 +14219,6 @@ msgstr "سيُربط مقترحكم باللجنة «%(commission)s»."
 #: .\templates\forum\governance\proposals.html
 msgid "Aucune proposition ne vous est ouverte. Vous lisez les propositions déposées dans les commissions où vous détenez un mandat en cours."
 msgstr "لا مقترح مفتوح لكم. فأنتم تقرؤون المقترحات المودَعة في اللجان التي تحملون فيها انتدابًا جاريًا."
-
-#: .\templates\forum\governance\proposals.html
-msgid "Les miennes"
-msgstr "الخاصة بي"
 
 #: .\templates\forum\governance\proposals.html
 msgid "Les propositions du Forum permanent que vous pouvez consulter."
@@ -14760,10 +14325,6 @@ msgid "Clore la demande"
 msgstr "إغلاق الطلب"
 
 #: .\templates\helpdesk\detail.html
-msgid "Dans cet état depuis"
-msgstr "في هذه الحالة منذ"
-
-#: .\templates\helpdesk\detail.html
 msgid "Demander une précision à la personne"
 msgstr "طلب توضيح من الفرد"
 
@@ -14818,10 +14379,6 @@ msgstr "انتداب منتهٍ"
 #: .\templates\helpdesk\detail.html
 msgid "À utiliser lorsque votre situation dépasse ce que l’orientation peut établir. Un professionnel devra être désigné : un délai s’ensuit, et aucun résultat n’est promis."
 msgstr "يُستعمل عندما تتجاوز وضعيتكم ما يمكن للتوجيه أن يحدده. ويجب عندئذ تعيين مهني: ويترتب على ذلك أجل، ولا يُوعَد بأي نتيجة."
-
-#: .\templates\helpdesk\detail.html
-msgid "Échange"
-msgstr "التبادل"
 
 #: .\templates\helpdesk\detail.html
 msgid "État de la demande"
@@ -14918,10 +14475,6 @@ msgid "Les demandes du guichet numérique confiées à votre mandat."
 msgstr "طلبات الشباك الرقمي المعهودة إلى انتدابكم."
 
 #: .\templates\helpdesk\queue.html
-msgid "Mandats"
-msgstr "الانتدابات"
-
-#: .\templates\helpdesk\queue.html
 msgid "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom."
 msgstr "الطلبات التي تلقيتموها بموجب انتداب فقط، طيلة مدة هذا الانتداب. وكل جواب ترسلونه مؤرَّخ ومنسوب إلى وظيفتكم، لا إلى اسمكم أبدًا."
 
@@ -14952,8 +14505,12 @@ msgid "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni tit
 msgstr "الشباك الرقمي يوجّه ويُرسل. وهو لا يسلّم تأشيرة، ولا سند إقامة، ولا إذنًا، وليس أي جواب يُتلقى هنا قرارًا إداريًا."
 
 #: .\templates\helpdesk\requests.html
-msgid "Poser une question à une personne, pas à une machine. Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier."
-msgstr "طرح سؤال على شخص، لا على آلة. ولا يُنتَج أي جواب آليًا: فعندما تتجاوز وضعيتكم ما يمكن للتوجيه أن يحدده، يُعهد بالطلب إلى مهني معيَّن، تُقيَّد وظيفته وتاريخ جوابه في الملف."
+msgid "Poser une question à une personne, pas à une machine."
+msgstr "طرح سؤال على شخص، لا على آلة."
+
+#: .\templates\helpdesk\requests.html
+msgid "Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier."
+msgstr "ولا يُنتَج أي جواب آليًا: فعندما تتجاوز وضعيتكم ما يمكن للتوجيه أن يحدده، يُعهد بالطلب إلى مهني معيَّن، تُقيَّد وظيفته وتاريخ جوابه في الملف."
 
 #: .\templates\helpdesk\requests.html
 msgid "Vos demandes au guichet"
@@ -15627,29 +15184,17 @@ msgstr "فشل الفحص"
 msgid "Maroc"
 msgstr "المغرب"
 
-#: .\templates\pages\home\_pilot.html
-msgid "Vénétie"
-msgstr "فينيتو"
-
 #: .\apps\portal\services.py
 msgid "Mon rôle"
 msgstr "دوري"
 
 #: .\apps\portal\services.py
 msgid "Échanges"
-msgstr "المراسلات"
+msgstr "التبادلات"
 
 #: .\templates\components\form_field.html
 msgid "Afficher le mot de passe"
 msgstr "إظهار كلمة المرور"
-
-#: .\templates\components\form_field.html
-msgid "Masquer le mot de passe"
-msgstr "إخفاء كلمة المرور"
-
-#: .\templates\partials\portal_chrome.html
-msgid "Réduire la navigation"
-msgstr "طيّ قائمة التنقل"
 
 #: .\templates\partials\portal_chrome.html
 msgid "Fermer le menu"
@@ -15789,14 +15334,6 @@ msgstr "أين وصل طلبكم"
 msgid "Navigation rapide"
 msgstr "تنقّل سريع"
 
-#: .\templates\companies\partials\need_table.html
-msgid "Mes besoins en compétences — tableau"
-msgstr "احتياجاتي من الكفاءات — جدول"
-
-#: .\templates\components\document_row.html
-msgid "Accepter les Conditions"
-msgstr "قبول الشروط"
-
 #: .\templates\components\journey_rail.html
 msgid "Italie"
 msgstr "إيطاليا"
@@ -15804,3 +15341,609 @@ msgstr "إيطاليا"
 #: .\templates\documents\partials\register.html
 msgid "Pièces affichées :"
 msgstr "المستندات المعروضة:"
+
+#: .\apps\cases\presenters.py
+msgid "La personne concernée"
+msgstr "الشخص المعني"
+
+#: .\apps\portal\services.py
+msgid "Fichier bloqué"
+msgstr "ملف محظور"
+
+#: .\templates\partials\footer.html
+msgid "Phase 1"
+msgstr "المرحلة 1"
+
+#: .\templates\partials\footer.html
+msgid "Phase 2"
+msgstr "المرحلة 2"
+
+#: .\templates\partials\footer.html
+msgid "Phase 3"
+msgstr "المرحلة 3"
+
+#: .\templates\partials\header.html
+#: .\templates\partials\portal_chrome.html
+msgid "Chargement…"
+msgstr "جارٍ التحميل…"
+
+#: .\templates\accounts\profile.html
+msgid "Votre espace"
+msgstr "فضاؤكم"
+
+#: .\apps\portal\services.py
+msgid "Coopération"
+msgstr "التعاون"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Sign In"
+msgstr "تسجيل الدخول"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Sign Up"
+msgstr "إنشاء حساب"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Sign Out"
+msgstr "تسجيل الخروج"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "If you have not created an account yet, then please %(link)ssign up%(end_link)s first."
+msgstr "ليس لديكم حساب بعد؟ %(link)sإنشاء حساب%(end_link)s"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Already have an account? Then please %(link)ssign in%(end_link)s."
+msgstr "لديكم حساب بالفعل؟ %(link)sتسجيل الدخول%(end_link)s"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Remember Me"
+msgstr "البقاء متصلًا"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email address"
+msgstr "البريد الإلكتروني"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email (again)"
+msgstr "البريد الإلكتروني (تأكيد)"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Password"
+msgstr "كلمة المرور"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Password (again)"
+msgstr "كلمة المرور (تأكيد)"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Current Password"
+msgstr "كلمة المرور الحالية"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "New Password"
+msgstr "كلمة المرور الجديدة"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "New Password (again)"
+msgstr "كلمة المرور الجديدة (تأكيد)"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Forgot your password?"
+msgstr "هل نسيتم كلمة المرور؟"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Password Reset"
+msgstr "إعادة تعيين كلمة المرور"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Reset My Password"
+msgstr "إعادة تعيين كلمة المرور"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Forgotten your password? Enter your email address below, and we'll send you an email allowing you to reset it."
+msgstr "هل نسيتم كلمة المرور؟ أدخلوا عنوان بريدكم الإلكتروني وستتلقون رسالة لإعادة تعيينها."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr "إذا واجهتم صعوبة في إعادة تعيين كلمة المرور، راسلونا."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Change Password"
+msgstr "تغيير كلمة المرور"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Set Password"
+msgstr "تعيين كلمة مرور"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Email Addresses"
+msgstr "عناوين البريد الإلكتروني"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Two-Factor Authentication"
+msgstr "المصادقة الثنائية"
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Activate Authenticator App"
+msgstr "تفعيل تطبيق المصادقة"
+
+#: .ppsccountsllauth_terms.py
+msgid "Your password can’t be too similar to your other personal information."
+msgstr "يجب ألّا تشبه كلمة المرور معلوماتكم الشخصية الأخرى."
+
+#: .ppsccountsllauth_terms.py
+msgid "Your password can’t be a commonly used password."
+msgstr "يجب ألّا تكون كلمة المرور شائعة الاستخدام."
+
+#: .ppsccountsllauth_terms.py
+msgid "Your password can’t be entirely numeric."
+msgstr "يجب ألّا تتكوّن كلمة المرور من أرقام فقط."
+
+#: .ppsccountsllauth_terms.py
+#, python-format
+msgid "Your password must contain at least %(min_length)d character."
+msgid_plural "Your password must contain at least %(min_length)d characters."
+msgstr[0] "يجب ألّا يقلّ طول كلمة المرور عن %(min_length)d من الأحرف."
+msgstr[1] "يجب ألّا يقلّ طول كلمة المرور عن %(min_length)d من الأحرف."
+msgstr[2] "يجب ألّا يقلّ طول كلمة المرور عن %(min_length)d من الأحرف."
+msgstr[3] "يجب ألّا يقلّ طول كلمة المرور عن %(min_length)d من الأحرف."
+msgstr[4] "يجب ألّا يقلّ طول كلمة المرور عن %(min_length)d من الأحرف."
+msgstr[5] "يجب ألّا يقلّ طول كلمة المرور عن %(min_length)d من الأحرف."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Enter a valid email address."
+msgstr "يُرجى إدخال عنوان بريد إلكتروني صالح."
+
+#: .\apps\accounts\allauth_terms.py
+msgid "Utilisé uniquement pour le suivi de vos demandes."
+msgstr "يُستخدم فقط لمتابعة طلباتكم."
+
+#: .\templates\portal\dashboard.html
+msgid "Aucune échéance ni communication pour l’instant."
+msgstr "لا توجد آجال ولا مراسلات في الوقت الحالي."
+
+#: .\templates\accounts\profile.html
+msgid "vérifiée"
+msgstr "مُتحقَّق منه"
+
+#: .\templates\accounts\profile.html
+msgid "à vérifier"
+msgstr "بانتظار التحقق"
+
+#: .\templates\components\_optional.html
+msgid "facultatif"
+msgstr "اختياري"
+
+#: .\templates\components\date_field.html
+msgid "Jour"
+msgstr "اليوم"
+
+#: .\templates\components\date_field.html
+msgid "Mois"
+msgstr "الشهر"
+
+#: .\templates\components\form_field.html
+msgid "Aucun résultat."
+msgstr "لا توجد نتائج."
+
+#: .\templates\components\form_field.html
+msgid "La touche Majuscules est activée."
+msgstr "مفتاح الأحرف الكبيرة مُفعَّل."
+
+#: .\templates\components\form_field.html
+msgid "Les deux mots de passe correspondent."
+msgstr "كلمتا المرور متطابقتان."
+
+#: .\templates\components\form_field.html
+msgid "Les deux mots de passe ne correspondent pas."
+msgstr "كلمتا المرور غير متطابقتين."
+
+#: .\templates\components\number_field.html
+msgid "Augmenter"
+msgstr "زيادة"
+
+#: .\templates\components\number_field.html
+msgid "Diminuer"
+msgstr "إنقاص"
+
+#: .\apps\pages\imagery.py
+msgid "Autour d’une table de travail, des mains, des documents annotés et des micros de séance"
+msgstr "حول طاولة عمل: أيادٍ ووثائق عليها ملاحظات وميكروفونات اجتماع"
+
+#: .\apps\pages\imagery.py
+msgid "Dans un atelier de formation, une main tend la torche de soudage à une autre, au-dessus de l’étau"
+msgstr "في ورشة تكوين، يدٌ تناول شعلة اللحام ليدٍ أخرى فوق الملزمة"
+
+#: .\apps\pages\imagery.py
+msgid "Dans un atelier, des mains mesurent une pièce au pied à coulisse"
+msgstr "في ورشة، أيادٍ تقيس قطعةً بالقدمة ذات الورنية"
+
+#: .\apps\pages\imagery.py
+msgid "Des champs en fleurs au pied d’une chaîne de montagnes enneigées"
+msgstr "حقول مزهرة عند سفح سلسلة جبال مكسوّة بالثلج"
+
+#: .\apps\pages\imagery.py
+msgid "Des serres en tunnel à travers une plaine cultivée, au crépuscule"
+msgstr "دفيئات نفقية تمتد عبر سهل مزروع عند الغسق"
+
+#: .\apps\pages\imagery.py
+msgid "Les pupitres et les micros d’une salle d’assemblée, sièges vides"
+msgstr "مكاتب قاعة اجتماعات وميكروفوناتها، والمقاعد خالية"
+
+#: .\apps\pages\imagery.py
+msgid "Un classeur à soufflets ouvert sur une table de bois, rempli de pièces rangées"
+msgstr "حافظة أوراق منفاخية مفتوحة على طاولة خشبية، مليئة بوثائق مرتّبة"
+
+#: .\apps\pages\imagery.py
+msgid "Une grande salle d’étude vue depuis une galerie : verrières, longues tables, lustres"
+msgstr "قاعة دراسة كبيرة تُرى من رواق: سقوف زجاجية وطاولات طويلة وثريات"
+
+#: .\apps\pages\imagery.py
+msgid "Une longue table partagée vue d’en haut : ordinateurs, carnets, papiers"
+msgstr "طاولة طويلة مشتركة تُرى من الأعلى: حواسيب ودفاتر وأوراق"
+
+#: .\apps\pages\imagery.py
+msgid "Une main guide un ciseau sur un bloc de marbre"
+msgstr "يدٌ توجّه إزميلًا على كتلة من الرخام"
+
+#: .\apps\pages\imagery.py
+msgid "Une main guide un ciseau à bois dans une sculpture de cèdre aux motifs géométriques"
+msgstr "يدٌ توجّه إزميل نجارة في منحوتة من خشب الأرز ذات زخارف هندسية"
+
+#: .\apps\pages\imagery.py
+msgid "Une personne vue de dos, assise à son bureau devant une grande fenêtre"
+msgstr "شخص يُرى من الخلف، جالس إلى مكتبه أمام نافذة كبيرة"
+
+#: .\apps\pages\imagery.py
+msgid "Une place pavée entre deux palais ; quelques passants s’éloignent"
+msgstr "ساحة مرصوفة بين قصرين؛ بعض المارّة يبتعدون"
+
+#: .\apps\pages\imagery.py
+msgid "Une rangée de microscopes sur une paillasse claire"
+msgstr "صفّ من المجاهر على منضدة مختبر فاتحة اللون"
+
+#: .\apps\pages\imagery.py
+msgid "Une rangée de peupliers nus au bord d’une plaine labourée, dans la brume"
+msgstr "صفّ من أشجار الحور العارية على طرف سهل محروث، في الضباب"
+
+#: .\apps\pages\imagery.py
+msgid "Une rue de façades enduites aux couleurs chaudes, volets et balcons fleuris"
+msgstr "شارع بواجهات مطليّة بألوان دافئة، ونوافذ بمصاريع وشرفات مزهرة"
+
+#: .\apps\pages\imagery.py
+msgid "Une salle de lecture : bibliothèques vitrées, tables de bois et lumière des fenêtres"
+msgstr "قاعة مطالعة: خزائن كتب زجاجية وطاولات خشبية وضوء النوافذ"
+
+#: .\apps\pages\imagery.py
+msgid "Une table de séance vide : micros, écrans éteints et chevalets sans nom"
+msgstr "طاولة اجتماعات خالية: ميكروفونات وشاشات مطفأة وبطاقات أسماء فارغة"
+
+#: .\templates\pages\home\_pilot.html
+msgid "Le même geste"
+msgstr "الحركة نفسها"
+
+#: .\templates\pathways\index.html
+msgid "%(n)s parcours affiché"
+msgid_plural "%(n)s parcours affichés"
+msgstr[0] "لا يُعرض أي مسار"
+msgstr[1] "مسار واحد معروض"
+msgstr[2] "مساران معروضان"
+msgstr[3] "%(n)s مسارات معروضة"
+msgstr[4] "%(n)s مسارًا معروضًا"
+msgstr[5] "%(n)s مسار معروض"
+
+#: .\templates\pathways\index.html
+msgid "Autres voies"
+msgstr "سبل أخرى"
+
+#: .\apps\accounts\forms.py
+msgid "Identité et mot de passe"
+msgstr "الهوية وكلمة المرور"
+
+#: .\apps\accounts\forms.py
+msgid "Qui êtes-vous ?"
+msgstr "من أنتم؟"
+
+#: .\apps\companies\forms.py
+msgid "Vérification"
+msgstr "المراجعة"
+
+#: .\apps\enquiries\forms.py
+msgid "Le besoin"
+msgstr "الاحتياج"
+
+#: .\apps\enquiries\forms.py
+msgid "L’entreprise et son référent"
+msgstr "الشركة ومنسقها"
+
+#: .\apps\enquiries\forms.py
+msgid "Précisions facultatives"
+msgstr "تفاصيل اختيارية"
+
+#: .\apps\enquiries\forms.py
+msgid "Vérification et envoi"
+msgstr "المراجعة والإرسال"
+
+#: .\templates\components\_steps_rail.html
+msgid "Étapes du formulaire"
+msgstr "خطوات الاستمارة"
+
+#: .\templates\components\form_field.html
+msgid "Choisir un fichier"
+msgstr "اختيار ملف"
+
+#: .\templates\components\form_field.html
+msgid "ou le déposer ici"
+msgstr "أو إفلاته هنا"
+
+#: .\templates\components\form_field.html
+msgid "pas encore respecté"
+msgstr "لم يُستوفَ بعد"
+
+#: .\templates\components\form_field.html
+msgid "respecté"
+msgstr "مستوفى"
+
+#: .\templates\components\formwork_side.html
+msgid "Après l’envoi"
+msgstr "بعد الإرسال"
+
+#: .\templates\components\formwork_side.html
+msgid "À savoir avant l’envoi"
+msgstr "ما ينبغي معرفته قبل الإرسال"
+
+#: .\apps\core\special_category.py
+msgid "Cette pièce ne se dépose pas sur la plateforme : elle relève des catégories particulières de données, que la plateforme ne reçoit pas. Pour savoir comment la transmettre, écrivez au Guichet numérique."
+msgstr "لا تُحمَّل هذه الوثيقة على المنصة: فهي من الفئات الخاصة من البيانات التي لا تتلقاها المنصة. لمعرفة طريقة إرسالها، راسلوا الشباك الرقمي."
+
+#: .\apps\core\special_category.py
+msgid "Ne déposez que les pièces nécessaires à votre démarche : aucun document médical ni aucun document qui révèle la santé, l’origine ethnique, les convictions, les opinions, l’appartenance syndicale, la vie sexuelle ou l’orientation sexuelle."
+msgstr "لا تحمِّلوا إلا الوثائق اللازمة لملفكم: لا وثائق طبية، ولا أي وثيقة تكشف عن الصحة أو الأصل العرقي أو المعتقدات أو الآراء أو الانتماء النقابي أو الحياة الجنسية أو التوجه الجنسي."
+
+#: .\apps\core\special_category.py
+msgid "N’indiquez pas de données sur la santé, l’origine ethnique, les convictions religieuses ou philosophiques, les opinions politiques, l’appartenance syndicale, la vie sexuelle ou l’orientation sexuelle : elles ne sont pas nécessaires ici."
+msgstr "لا تذكروا هنا بيانات عن الصحة أو الأصل العرقي أو المعتقدات الدينية أو الفلسفية أو الآراء السياسية أو الانتماء النقابي أو الحياة الجنسية أو التوجه الجنسي: فهي غير ضرورية."
+
+#: .\templates\mfa\index.html
+msgid "Activate"
+msgstr "تفعيل"
+
+#: .\templates\mfa\index.html
+msgid "Add"
+msgstr "إضافة"
+
+#: .\templates\mfa\index.html
+msgid "An authenticator app is not active."
+msgstr "لا يوجد تطبيق مصادقة مفعّل."
+
+#: .\templates\mfa\index.html
+msgid "Authentication using an authenticator app is active."
+msgstr "المصادقة عبر تطبيق المصادقة مفعّلة."
+
+#: .\templates\mfa\index.html
+msgid "Authenticator App"
+msgstr "تطبيق المصادقة"
+
+#: .\templates\mfa\index.html
+msgid "Deactivate"
+msgstr "إلغاء التفعيل"
+
+#: .\templates\mfa\index.html
+msgid "Download"
+msgstr "تنزيل"
+
+#: .\templates\mfa\index.html
+msgid "Generate"
+msgstr "إنشاء"
+
+#: .\templates\mfa\index.html
+msgid "Installez une application d’authentification"
+msgstr "ثبّتوا تطبيقًا للمصادقة"
+
+#: .\templates\mfa\index.html
+msgid "La page d’activation affiche un code QR propre à votre compte : l’application l’enregistre."
+msgstr "تعرض صفحة التفعيل رمز QR خاصًّا بحسابكم: يحفظه التطبيق."
+
+#: .\templates\mfa\index.html
+msgid "Le code affiché par l’application confirme l’activation."
+msgstr "يؤكّد الرمز الذي يعرضه التطبيق التفعيل."
+
+#: .\templates\mfa\index.html
+msgid "Manage"
+msgstr "إدارة"
+
+#: .\templates\mfa\index.html
+msgid "No recovery codes set up."
+msgstr "لا توجد رموز استرداد مُعدّة."
+
+#: .\templates\mfa\index.html
+msgid "No security keys have been added."
+msgstr "لم تُضَف أي مفاتيح أمان."
+
+#: .\templates\mfa\index.html
+msgid "Recovery Codes"
+msgstr "رموز الاسترداد"
+
+#: .\templates\mfa\index.html
+msgid "Saisissez le code"
+msgstr "أدخلوا الرمز"
+
+#: .\templates\mfa\index.html
+msgid "Scannez le code QR"
+msgstr "امسحوا رمز QR"
+
+#: .\templates\mfa\index.html
+msgid "Security Keys"
+msgstr "مفاتيح الأمان"
+
+#: .\templates\mfa\index.html
+msgid "Sur votre téléphone, une application qui génère des codes à usage unique."
+msgstr "على هاتفكم، تطبيق يولّد رموزًا صالحة لاستعمال واحد."
+
+#: .\templates\mfa\index.html
+msgid "There is %(unused_count)s out of %(total_count)s recovery codes available."
+msgid_plural "There are %(unused_count)s out of %(total_count)s recovery codes available."
+msgstr[0] "رموز الاسترداد المتاحة: %(unused_count)s من %(total_count)s."
+msgstr[1] "رموز الاسترداد المتاحة: %(unused_count)s من %(total_count)s."
+msgstr[2] "رموز الاسترداد المتاحة: %(unused_count)s من %(total_count)s."
+msgstr[3] "رموز الاسترداد المتاحة: %(unused_count)s من %(total_count)s."
+msgstr[4] "رموز الاسترداد المتاحة: %(unused_count)s من %(total_count)s."
+msgstr[5] "رموز الاسترداد المتاحة: %(unused_count)s من %(total_count)s."
+
+#: .\templates\mfa\index.html
+msgid "View"
+msgstr "عرض"
+
+#: .\templates\mfa\index.html
+msgid "You have added %(count)s security key."
+msgid_plural "You have added %(count)s security keys."
+msgstr[0] "مفاتيح الأمان المضافة: %(count)s."
+msgstr[1] "مفاتيح الأمان المضافة: %(count)s."
+msgstr[2] "مفاتيح الأمان المضافة: %(count)s."
+msgstr[3] "مفاتيح الأمان المضافة: %(count)s."
+msgstr[4] "مفاتيح الأمان المضافة: %(count)s."
+msgstr[5] "مفاتيح الأمان المضافة: %(count)s."
+
+#: .\apps\core\contact.py
+msgid "Indicare il numero in formato internazionale, con il prefisso (es. +39 3xx xxx xxxx)."
+msgstr "يُرجى إدخال الرقم بالصيغة الدولية مع رمز البلد (مثلاً +39 3xx xxx xxxx)."
+
+#: .\apps\core\contact.py
+msgid "Indicare un numero nazionale di 6–11 cifre (es. 800 xxx xxx)."
+msgstr "يُرجى إدخال رقم وطني من 6 إلى 11 رقماً (مثلاً 800 xxx xxx)."
+
+#: .\apps\core\models.py
+msgid "In formato internazionale: +39 3xx xxx xxxx. Il link aperto è https://wa.me/ seguito dalle cifre."
+msgstr "بالصيغة الدولية: +39 3xx xxx xxxx. الرابط الذي يُفتح هو https://wa.me/ متبوعاً بالأرقام."
+
+#: .\apps\core\models.py
+msgid "Le sole cifre o con spazi: 800 xxx xxx. Il sito lo mostra come «800 xxx xxx»."
+msgstr "الأرقام وحدها أو مع مسافات: 800 xxx xxx. يعرضه الموقع هكذا: «800 xxx xxx»."
+
+#: .\apps\core\models.py
+msgid "numero WhatsApp"
+msgstr "رقم واتساب"
+
+#: .\apps\core\models.py
+msgid "numero verde"
+msgstr "الرقم المجاني"
+
+#: .\templates\pages\partials\_canali.html
+msgid "Appeler"
+msgstr "اتصال"
+
+#: .\templates\pages\partials\_canali.html .\templates\partials\footer.html .\templates\partials\main_nav.html
+msgid "Appeler le numéro vert %(number)s"
+msgstr "الاتصال بالرقم المجاني %(number)s"
+
+#: .\templates\pages\partials\_canali.html .\templates\partials\footer.html .\templates\partials\main_nav.html
+msgid "Contacter Italy Legal Entry sur WhatsApp au %(number)s"
+msgstr "التواصل مع Italy Legal Entry عبر WhatsApp على الرقم %(number)s"
+
+#: .\templates\pages\partials\_canali.html .\templates\partials\footer.html
+msgid "Numéro vert"
+msgstr "الرقم المجاني"
+
+#: .\templates\pages\partials\_canali.html
+msgid "Écrire sur WhatsApp"
+msgstr "المراسلة عبر واتساب"
+
+#: .\templates\partials\main_nav.html
+msgid "Nous contacter"
+msgstr "التواصل معنا"
+
+#: .\apps\pages\imagery.py
+msgid "Des mains câblent des contacteurs sur un tableau électrique, entre des goulottes bleues et des fils rouges"
+msgstr "يدان توصّلان أسلاك الملامِسات في لوحة كهربائية، بين مجاري أسلاك زرقاء وأسلاك حمراء"
+
+#: .\apps\pages\imagery.py
+msgid "Des rangées de vignes dans la brume, au pied d’une ligne de collines"
+msgstr "صفوف من الكروم في الضباب عند سفح سلسلة من التلال"
+
+#: .\apps\pages\imagery.py
+msgid "Des volumes reliés en cuir, alignés sur un rayonnage : nervures et dorures des dos dans une lumière rasante"
+msgstr "مجلّدات مكسوّة بالجلد مصفوفة على رف: أضلاع كعوبها وزخارفها المذهّبة تحت ضوء جانبي مائل"
+
+#: .\apps\pages\imagery.py
+msgid "Deux personnes en conversation : l’une accompagne sa parole d’un geste de la main, l’autre tient une pochette contre elle"
+msgstr "شخصان يتحادثان: أحدهما يرافق كلامه بإشارة من يده، والآخر يضمّ حافظة أوراق إليه"
+
+#: .\apps\pages\imagery.py
+msgid "Une allée d’entrepôt entre de hauts rayonnages chargés de cartons"
+msgstr "ممرّ في مستودع بين رفوف عالية محمّلة بالصناديق الكرتونية"
+
+#: .\apps\pages\imagery.py
+msgid "Vue d’en haut, une table partagée : des mains se servent dans des bols d’olives et de tomates, sur un plateau de bois ajouré"
+msgstr "مائدة مشتركة من منظر علوي: أيادٍ تتناول من أوعية الزيتون والطماطم، فوق سطح خشبي مخرّم"
+
+#: .\apps\pages\imagery.py
+msgid "À une table de travail, une main prend des notes au stylo dans un cahier, devant un livre ouvert"
+msgstr "على طاولة عمل، يدٌ تدوّن ملاحظات بالقلم في دفتر، أمام كتاب مفتوح"
+
+#: .\apps\ecosystem\services.py
+msgid "Après l’arrivée"
+msgstr "بعد الوصول"
+
+#: .\apps\ecosystem\services.py
+msgid "Avant le départ"
+msgstr "قبل المغادرة"
+
+#: .\apps\ecosystem\services.py
+msgid "En Italie"
+msgstr "في إيطاليا"
+
+#: .\templates\ecosystem\institutions.html
+msgid "Destinataires"
+msgstr "الجهات المستهدفة"
+
+#: .\templates\pathways\detail.html .\templates\pathways\diplomas.html
+msgid "Voir dans le glossaire"
+msgstr "انظر في مسرد المصطلحات"
+
+#: .\apps\pages\content.py
+msgid "Le même geste, sur le cèdre et sur le marbre : deux savoir-faire, deux rives, un même projet."
+msgstr "الحركة نفسها، على خشب الأرز وعلى الرخام: حرفتان، وضفّتان، ومشروع واحد."
+
+#: .\templates\pages\contact.html
+msgid "Par téléphone, WhatsApp ou formulaire"
+msgstr "عبر الهاتف أو واتساب أو النموذج"
+
+#: .\templates\pages\contact.html
+msgid "Par téléphone ou formulaire"
+msgstr "عبر الهاتف أو النموذج"
+
+#: .\templates\pages\contact.html
+msgid "Par WhatsApp ou formulaire"
+msgstr "عبر واتساب أو النموذج"
+
+#: .\apps\pages\identity.py
+msgid "Code fiscal"
+msgstr "الرمز الضريبي"
+
+#: .\apps\pages\identity.py
+msgid "Siège social"
+msgstr "المقر القانوني"
+
+#: .\apps\pages\identity.py
+msgid "Siège opérationnel"
+msgstr "المقر التشغيلي"
+
+#: .\apps\pages\identity.py
+msgid "Site officiel"
+msgstr "الموقع الرسمي"
+
+#: .\templates\pages\agami.html
+msgid "Contact officiel"
+msgstr "جهة الاتصال الرسمية"
+
+#: .\templates\glossary\_entry.html
+msgid "Où le rencontrer"
+msgstr "أين ستصادفه"
+
+#: .\templates\living\index.html
+msgid "Pour s’installer"
+msgstr "للاستقرار"

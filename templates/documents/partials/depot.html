@@ -1,4 +1,4 @@
-{% load i18n documents_register %}{% comment %}
+{% load i18n documents_register legal_links %}{% comment %}
 THE DÉPÔT — the deposit of a file, design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5; DOCUMENT_WORKSPACE.md
 §11; W3-C). One markup for the two roads:
   · a REQUIRED PIECE (`row` given) — included twice by templates/documents/requirement_detail.html and drawn once: under
@@ -75,9 +75,9 @@ piece's road.
   <template data-depot-block="error">{% include "components/notice.html" with kind="error" text=error_text %}</template>
   {% translate "Une erreur technique est survenue. Nos équipes en ont été informées ; vous pouvez réessayer dans quelques instants." as server_text %}
   <template data-depot-block="server">{% include "components/notice.html" with kind="error" text=server_text %}</template>
-  <template data-depot-block="gate"><p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span><span data-depot-gate-text></span> {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}</span></p></template>
+  <template data-depot-block="gate"><p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span><span data-depot-gate-text></span> {% legal_links "terms" as terms_links %}{% for terms in terms_links %}<a href="{{ terms.url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endfor %}</span></p></template>
   <template data-depot-block="filed"><p class="doc-filed"><span class="doc-filed__mark" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle class="doc-filed__ring" cx="12" cy="12" r="8.75" pathLength="1"/><circle class="doc-filed__dot" cx="12" cy="12" r="2.6"/></svg></span><span class="doc-filed__words">{% if not row %}<span class="doc-filed__name" dir="auto" data-depot-filed-name hidden></span> {% endif %}<span data-depot-filed-text></span>{% if not row %} <a href="{% url 'documents:index' %}">{% translate "Retour au registre des pièces" %}</a>{% endif %}</span></p></template>
 </section>
 {% elif row.consent_required %}
-<p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span>{% translate "Le dépôt d’une pièce nécessite l’acceptation des Conditions d’utilisation." %} {% safe_url 'legal:terms' as terms_url %}{% if terms_url %}<a href="{{ terms_url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endif %}</span></p>
+<p class="doc-depot__gate">{% svg_icon "lock" "icon" %}<span>{% translate "Le dépôt d’une pièce nécessite l’acceptation des Conditions d’utilisation." %} {% legal_links "terms" as terms_links %}{% for terms in terms_links %}<a href="{{ terms.url }}">{% translate "Lire les Conditions d’utilisation" %}</a>{% endfor %}</span></p>
 {% endif %}

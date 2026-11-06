@@ -39,7 +39,7 @@ from django.utils.translation import gettext_lazy as _
 from PIL import Image
 
 from audit.services import record
-from core import clock
+from core import clock, special_category
 from core.privacy import hashed_client_ip
 from documents.models import (
     AccessClass,
@@ -538,6 +538,9 @@ def file_version(
         raise RequirementRefused(_("Ce dossier est clos : aucune pièce ne peut plus y être déposée."))
     if not user_may_upload(user):
         raise RequirementRefused(_("Le dépôt de pièces nécessite l’acceptation des Conditions d’utilisation."))
+    if special_category.piece_closed(requirement):
+        # R-SC-1 (V5.17 §4): no special-category piece is received while the switch is off (production)
+        raise RequirementRefused(special_category.CLOSED_PIECE_NOTICE, code=special_category.REFUSAL_CODE)
 
     document = store_upload(
         user,

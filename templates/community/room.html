@@ -13,7 +13,7 @@ as a chip of its register, the pinned ones first — with the pagination; the ne
 <section class="chapter community-discussions" aria-labelledby="discussions-heading">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "discussions-heading" %}
       <h2 class="chapter__title" id="discussions-heading">{% translate "Discussions" %}</h2>
       {% if room.is_moderated %}<p class="chapter__lead community-discussions__note">{% translate "Salle modérée : les premiers messages des nouveaux membres sont publiés après vérification." %}</p>{% endif %}
     </div>
@@ -46,7 +46,7 @@ as a chip of its register, the pinned ones first — with the pagination; the ne
 <section class="chapter community-compose" aria-labelledby="compose-heading">
   <div class="container chapter__inner">
     <div class="chapter__head">
-      {% svg_icon "ile-steps" "icon chapter__mark" %}
+      {% chapter_mark "compose-heading" %}
       <h2 class="chapter__title" id="compose-heading">{% translate "Nouvelle discussion" %}</h2>
     </div>
     <div class="chapter__body">

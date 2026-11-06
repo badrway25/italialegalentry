@@ -22,10 +22,12 @@ naming who fills it and when, never a box. The clause closes the page.
 {% block meta_description %}{% translate "Vos demandes au guichet numérique, leur état et la suite prévue." %}{% endblock %}
 
 {% block portal_header %}
-<header class="ws-head reg-head">
+<header class="ws-head reg-head" data-atrium="register">
+  {% include "portal/partials/atrium_art.html" with figure="counter" %}
   <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
     <h1 class="ws-head__title">{% translate "Guichet numérique" %}</h1>
-    <p class="ws-head__lead">{% translate "Poser une question à une personne, pas à une machine. Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier." %}</p>
+    <p class="ws-head__lead">{% translate "Poser une question à une personne, pas à une machine." %}</p>
   </div>
   <div class="ws-head__action"><a class="btn btn--primary" href="{% url 'helpdesk:open' %}">{% translate "Ouvrir une demande" %}</a></div>
 </header>
@@ -60,5 +62,5 @@ naming who fills it and when, never a box. The clause closes the page.
   </section>
 </div>
 
-<p class="reg-note">{% translate "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni titre de séjour, ni autorisation, et aucune réponse reçue ici n’est une décision administrative." %}</p>
+<p class="reg-note">{% translate "Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier." %} {% translate "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni titre de séjour, ni autorisation, et aucune réponse reçue ici n’est une décision administrative." %}</p>
 {% endblock %}

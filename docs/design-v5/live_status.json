@@ -1,6 +1,6 @@
 {
   "schema": "ile-live-status-v54/1",
-  "updated": "2026-10-28",
+  "updated": "2026-11-06",
   "families": [
     {
       "key": "w1-p",
@@ -177,6 +177,182 @@
       "decision": "rc-fix/REVIEW.md",
       "tag": "v54/rc-fix",
       "date": "2026-10-28"
+    },
+    {
+      "key": "v512-w1",
+      "title": "V5.12, prima ondata: il caricatore «Lume» in ogni navigazione (la dissolvenza fra le pagine, la linea dorata e «Caricamento…» quando una pagina tarda, la tessera che si illumina all’ingresso), le icone dei capitoli secondo il loro argomento, nessun «in preparazione» sulle pagine pubbliche, le parole della persona nella console e nel profilo, i dati dell’anteprima realistici",
+      "state": "v5",
+      "decision": "v512-w1/REVIEW.md",
+      "tag": "v512/w1",
+      "date": "2026-10-28"
+    },
+    {
+      "key": "v514-p",
+      "title": "V5.14, privacy: l’informativa privacy e l’informativa sui cookie scritte dal trattamento reale del software, indipendenti dall’Allegato 1, pubblicate nell’anteprima (la privacy con i campi «DA COMPLETARE» per il titolare); solo cookie tecnici, nessun banner; nessun indirizzo e-mail nei registri",
+      "state": "v5",
+      "decision": "v514-p/REVIEW.md",
+      "tag": "v514/privacy",
+      "date": "2026-10-28"
+    },
+    {
+      "key": "v512-w2",
+      "title": "V5.12, seconda ondata (senza le immagini, che restano per la prossima): il movimento in tutto il sito e nella console (le sezioni che si rivelano leggendo, la luce del percorso, gli avvisi con «Chiudi» e il messaggio di conferma che si ritira da solo, le schede e le domande che si aprono con dolcezza), i moduli nuovi (nessun asterisco ma «facoltativo» dove serve, il messaggio sotto il campo, la data in tre caselle, la ricerca nei paesi, le scelte come schede con la loro icona), dodici icone nuove, «Il mio account» dentro la console con la pagina «Sicurezza dell’account», lo spazio proprio di Istituzioni e Università, il piè di pagina della console con solo le pagine legali pubblicate",
+      "state": "v5",
+      "decision": "v512-w2/REVIEW.md",
+      "tag": "v512/w2",
+      "date": "2026-10-28"
+    },
+    {
+      "key": "v516-p2",
+      "title": "V5.16, privacy: i campi «DA COMPLETARE» dell’informativa classificati (configurazione della produzione, conferma del titolare, revisione legale), nessuno inventato; nei moduli una presa visione, non un consenso; le frasi prescritte intatte e segnalate; le valutazioni su finalità, dati particolari, DPO, DPIA e destinatari",
+      "state": "v5",
+      "decision": "v516-p2/REVIEW.md",
+      "tag": "v516/privacy-classification",
+      "date": "2026-10-28"
+    },
+    {
+      "key": "v517-p3",
+      "title": "V5.17, privacy: in produzione i documenti con dati particolari restano chiusi (aperti nell’anteprima), avvisi di minimizzazione in quattro lingue; DPIA preparata con i fatti noti; le due differenze dall’Allegato 1 elencate, OF-11 resta aperto; nuovo modello di stato (PRODUCT_COMPLETE … PRODUCTION_READY)",
+      "state": "v5",
+      "decision": "v517-p3/REVIEW.md",
+      "tag": "v517/compliance",
+      "date": "2026-10-28"
+    },
+    {
+      "key": "v515-a",
+      "title": "V5.15, testata e movimento: la testata su una riga in quattro lingue, il menu a pannelli con un’icona per ogni voce e le frasi intere, il menu del telefono con le stesse icone, «Lume» (il caricamento centrale: la chiave gira una volta, la luce cresce), le sezioni pubbliche che salgono leggere, la colonna della console accesa e ferma",
+      "state": "v5",
+      "decision": "v515-a/REVIEW.md",
+      "tag": "v515/a",
+      "date": "2026-10-29"
+    },
+    {
+      "key": "v515-c",
+      "title": "V5.15, testate e fotografie: una testata composta per ogni pagina pubblica (il percorso, la rete, la targa dei contatti, l’arco, il profilo delle imprese, l’avviso), specchiata in arabo; le fotografie con licenza che passano dal bianco e nero al colore, i crediti leggibili; la Formazione con testo e immagine affiancati",
+      "state": "v5",
+      "decision": "v515-c/REVIEW.md",
+      "tag": "v515/c",
+      "date": "2026-10-29"
+    },
+    {
+      "key": "v515-b",
+      "title": "V5.15, moduli e icone: la «Raccolta dei fabbisogni» un passo alla volta con la colonna dei passi e il riepilogo finale, la registrazione in due passi con le regole della password che si spuntano, la richiesta delle imprese nella console in quattro passi; le icone in un sigillo di carta, le pagine vuote che si aprono con un arco, specchiate in arabo",
+      "state": "v5",
+      "decision": "v515-b/REVIEW.md",
+      "tag": "v515/b",
+      "date": "2026-10-29"
+    },
+    {
+      "key": "v515-d",
+      "title": "V5.15, lo spazio riservato e le organizzazioni: una testata disegnata per ogni famiglia di pagine (il percorso con la propria tappa accesa, lo sportello, i gradini, i fogli, lo scambio, il sigillo), il quadrante dell’avanzamento e la griglia dei fatti, il cruscotto delle istituzioni, delle università e dell’impresa con la scheda e il sigillo; specchiato in arabo, fermo con il movimento ridotto",
+      "state": "v5",
+      "decision": "v515-d/REVIEW.md",
+      "tag": "v515/d",
+      "date": "2026-10-29"
+    },
+    {
+      "key": "v518",
+      "title": "V5.18, la stabilizzazione: la bussola del Percorso al suo posto, il pulsante delle testate nella prima schermata, il menu Imprese senza la frase ripetuta, Lume dall’accesso allo spazio riservato, le pagine del conto e la doppia autenticazione nella testata della console (tre passi, tradotti), «Mes documents» vuoto chiaro, le pagine dell’impresa con la loro testata, la tappa su una riga, i testi di prova corretti",
+      "state": "v5",
+      "decision": "v518/REVIEW.md",
+      "tag": "v518/stabilisation",
+      "date": "2026-10-29"
+    },
+    {
+      "key": "v519-k",
+      "title": "V5.19, i recapiti confermati dal proprietario: il Numero Verde 800 642 015 e WhatsApp (il numero confermato dal proprietario, configurato fuori dal repository, V5.19/V5.20), scritti una sola volta nelle impostazioni del sito, nella pagina Contatti, nel piè di pagina e nel menu del telefono, con i nomi accessibili in italiano, francese, inglese e arabo; in arabo i numeri restano da sinistra a destra",
+      "state": "v5",
+      "decision": "v519-k/REVIEW.md",
+      "tag": "v519/contact",
+      "date": "2026-10-29"
+    },
+    {
+      "key": "v518g",
+      "title": "V5.18, la suite tecnica di nuovo verde: le pagine di errore 400 e 500 si mostrano anche quando la banca dati non risponde, il foglio di stile comune torna sotto il suo tetto (33 530 byte compressi), i colori delle testate vengono tutti dal sistema, in arabo il ™ della pagina «Il progetto» resta a destra del nome; i test rimasti indietro seguono le decisioni approvate con la stessa severità; il controllo del codice (ruff) senza errori",
+      "state": "v5",
+      "decision": "v518g/REGRESSION_NONBROWSER.md",
+      "tag": "v518/green",
+      "date": "2026-10-30"
+    },
+    {
+      "key": "v520",
+      "title": "V5.20, il controllo tecnico finale: il numero WhatsApp confermato dal proprietario è configurato fuori dal repository (nell'ambiente del server o nel back office) e il sito continua a mostrarlo; il foglio di stile comune torna sotto il suo tetto togliendo solo regole che nessuna pagina usava (32 718 byte compressi, nessun cambiamento visibile); in arabo il marchio resta al suo posto quando si apre il menu del telefono; i test cambiati negli ultimi giorni rispettano la regola stretta del proprietario: le animazioni finite non restano applicate, gli angoli dei moduli seguono la scala, le ombre ammesse vengono dai token, nessun test saltato dove la funzione si può attivare",
+      "state": "v5",
+      "decision": "v520/TEST_CHANGE_AUDIT.md",
+      "tag": "v520/gate",
+      "date": "2026-10-30"
+    },
+    {
+      "key": "v522-m",
+      "title": "V5.22, le nuove fotografie: oggi si vede la foto del campus nella pagina «Università e formazione», nella sezione «Per approfondire», ritagliata sulle mani delle due persone che parlano, senza più le copertine sfocate che sembravano censurate; pronte, con licenza e provenienza registrate, altre sette fotografie (la pietra squadrata della pagina iniziale, i volumi rilegati del «Progetto», le quattro immagini delle famiglie di percorsi, le mani al banco elettrico della «Formazione») e i nuovi ritagli delle mani del progetto pilota e del tavolo dell’ecosistema, che compariranno quando le pagine saranno ricomposte; nessuna foto ripetuta, nessuna persona riconoscibile, descrizioni tradotte in italiano, inglese e arabo",
+      "state": "v5",
+      "decision": "v522-m/REVIEW.md",
+      "tag": "v522/m",
+      "date": "2026-11-01"
+    },
+    {
+      "key": "v522-s",
+      "title": "Section System V2 · Icon Treatment V2 · Motion Density V2 (V5.22), la base del nuovo sistema delle sezioni: oggi si vede nelle testate delle pagine — accanto all’etichetta in alto, il vecchio dischetto con l’icona è diventato un piccolo sigillo ad arco con il simbolo disegnato per Italy Legal Entry (la pagina dei percorsi dell’Area Persone e ogni scheda di percorso, Imprese, Istituzioni, Università e formazione, Formazione, Attenzione alle frodi), che si disegna una volta all’apertura; un’etichetta solo tipografica in Diplomi e titoli, Contatti, Rete e AGAMI; nessuna piccola icona isolata sopra i titoli delle sezioni interne; la foto della pagina Imprese che scorre lenta nella sua cornice; la chiave della pagina di accesso all’Area riservata più grande e leggibile; pronta la libreria delle nuove composizioni che ricomporranno la pagina iniziale e le altre pagine",
+      "state": "v5",
+      "decision": "v522-s/REVIEW.md",
+      "tag": "v522/s",
+      "date": "2026-11-01"
+    },
+    {
+      "key": "v522-p1",
+      "title": "Page Composition V2 (V5.22), i percorsi e gli spazi: sotto le testate, sezioni nuove al posto dei vecchi capitoli di solo testo — nel Progetto pilota le otto tappe su una linea che si disegna, l’avviso sullo stato del progetto come piastra finale del percorso e due porte ad arco sulla stessa soglia; nella pagina dei percorsi dell’Area Persone quattro corsie di famiglie con le loro fotografie e una scelta che porta la corsia scelta sotto la barra senza nascondere nulla; nelle schede di percorso l’indice a lato, il filo delle tappe, l’arco delle autorità competenti e i termini italiani che si aprono sul posto; in Imprese i tre momenti numerati, la fascia del territorio e la risposta sulla trasparenza su due lati; in Istituzioni l’emiciclo dei destinatari; in Università e formazione le tre tappe verso il campus; in Formazione i due momenti su un’unica linea; in Diplomi e titoli il fascicolo accanto a «Chi decide?»; una testata compatta per i due moduli, che restano identici",
+      "state": "v5",
+      "decision": "v522-p1/REVIEW.md",
+      "tag": "v522/p1",
+      "date": "2026-11-02"
+    },
+    {
+      "key": "v522-s2",
+      "title": "Section System V2, il completamento della base (V5.22): i quattro controlli automatici rimasti rossi dopo le fasi precedenti tornano verdi, corretti nel prodotto e non allentati; in arabo la piccola luce delle corsie dei percorsi aspetta all’inizio della linea e scorre da destra a sinistra, e il titolo francese di «La protezione» sta sullo stesso margine del suo testo; i crediti delle fotografie hanno lo spazio prima dei due punti solo in francese; da tastiera le risposte si aprono subito e il primo tasto pesa molto meno sulla pagina; pronte nei componenti comuni le correzioni chieste dalle pagine della prossima fase (domande frequenti, glossario, Forum, Rete)",
+      "state": "v5",
+      "decision": "v522-s2/REVIEW.md",
+      "tag": "v522/s2",
+      "date": "2026-11-02"
+    },
+    {
+      "key": "v522-h",
+      "title": "Homepage Composition V2 (V5.22): la pagina iniziale ricomposta per intero sotto l’intestazione, che resta com’era — una linea sottile color bronzo scende dall’enunciato nella fascia dell’orientamento e si apre sul suo sigillo, con le quattro tappe in fila e l’avvertenza a chiudere il percorso; gli otto percorsi regolari come un indice accanto al suo palco; il progetto pilota tra due pannelli notturni, il cedro e il marmo, che prendono colore, con la nuova frase guida nella lingua della pagina; le quattro domande su ciò che la piattaforma fa e non fa come targhe, ognuna con il suo «Non.» e la risposta integrale; la targa di avvertenza con il suo sigillo; il promotore sotto l’arco accanto al colofone; la riga riservata con la chiave che gira; sul telefono le quattro porte come una fila di targhe da sfogliare; in arabo l’enunciato del pilota su un solo asse e un solo margine; nessun testo vincolato cambiato, nessuna famiglia preservata toccata",
+      "state": "v5",
+      "decision": "v522-h/REVIEW.md",
+      "tag": "v522/h",
+      "date": "2026-11-05"
+    },
+    {
+      "key": "v522-p2",
+      "title": "Page Composition V2 (V5.22), il sistema, la fiducia e la lettura: sotto le testate, che restano com’erano, le nove pagine del secondo gruppo ricomposte sulla libreria delle sezioni — «Le projet» come un racconto in tre tappe accanto a una sola figura, con quattro porte ad arco e il panorama; «Réseau» come una mappa degli attori sull’anello della testata, ogni voce si apre sul posto; «Contact» come un centralino, i due canali (numero verde e WhatsApp) invariati accanto al modulo; le domande frequenti come un esploratore — l’indice delle domande e la risposta a fianco, ogni domanda con il suo collegamento diretto; il glossario con la barra delle lettere accanto alle schede dei termini e «Où le rencontrer», la pagina del termine con le voci collegate; «Vivre en Italie» con la testata assorbita dal panorama e le piastre «Pour s’installer»; il Forum con il disegno sulla linea del titolo, il filo delle tappe, l’anello dei nove attori e le due piastre d’azione sul notturno (tutto disegnato, nessuna fotografia di repertorio); AGAMI con la fascia d’identità che si disegna all’apertura e la targa con l’identificazione verificata dal titolare, nient’altro; «Attention aux fraudes» con la soglia, lo scudo e le tre vie; nessun testo vincolato cambiato, nessuna famiglia preservata toccata",
+      "state": "v5",
+      "decision": "v522-p2/REVIEW.md",
+      "tag": "v522/p2",
+      "date": "2026-11-05"
+    },
+    {
+      "key": "v524-px",
+      "title": "Imagery V2 · credits (V5.24): le righe di credito «Photo : … / Pexels» — 104 righe e targhette su 26 fotografie in quattro lingue — non compaiono più sotto o sopra nessuna fotografia del sito; le cornici restano identiche per dimensione e posizione, senza riquadro vuoto al posto della didascalia; la licenza Pexels non richiede attribuzione e la provenienza di ogni immagine (licenza, autore, pagina di origine) resta registrata nei documenti interni del progetto; le lastre curate con didascalia mostrano l’autore solo quando la licenza lo esige; un controllo di produzione impedisce che un credito di repertorio torni visibile su una pagina pubblica o in uno spazio riservato; nessun foglio di stile toccato, nessun testo vincolato cambiato, nessuna famiglia preservata toccata",
+      "state": "v5",
+      "decision": "v524-px/REVIEW.md",
+      "tag": "v524/px",
+      "date": "2026-11-05"
+    },
+    {
+      "key": "v524-t",
+      "title": "Typography V2 (V5.24): lo strato condiviso dei caratteri — l’arabo passa da Vazirmatn a Readex Pro alla stessa dimensione e nello stesso colore del francese (niente più arabo del 15–20 % più piccolo, niente discendenti tagliate nei pulsanti e nelle etichette, niente titoli francesi che galleggiano nell’interlinea araba), con la metà dei byte (16 128 invece di 32 228; il set dei caratteri 77 240 → 61 140 byte); una sola scala di dodici passi dichiarata una volta nei token, la riga di display e i titoli a peso 600 (si vede ovunque i fogli leggono i token: il titolo del pilota, le lettere del glossario, i titoli delle pagine; la frase dell’hero segue quando la sua lane applica il contratto); il ruolo etichetta e il ruolo numerale nel carattere sans; sui telefoni nessun testo sotto i 14 px nelle pagine pubbliche e il pulsante primario a 17 px; le tre regole arabe della lane AR (il marchio non si spezza, i link latini isolati, i titoli interamente francesi sul bordo francese); nessun foglio di pagina toccato (le etichette in monospazio e i numerali delle pagine seguono con le lane LIB, HOME, PUB1, PUB2, PLAT); foglio condiviso 32 716 → 32 695 byte; nessun testo vincolato cambiato, barra, menu, caricamento, moduli, canali di contatto e privacy non toccati",
+      "state": "v5",
+      "decision": "v524-t/REVIEW.md",
+      "tag": "v524/t",
+      "date": "2026-11-05"
+    },
+    {
+      "key": "v524-lib",
+      "title": "Section Background / Material V2 (V5.24), la libreria: il materiale delle sezioni e le loro cuciture — quattro ricette di sfondo composte dai token (la «pietra» con la sua griglia da disegno che sfuma verso la targa, la «carta viva» con una sola luce all’angolo d’origine, la «velatura» che continua un’immagine nel fondo seguente, il lavaggio del marchio) e le cuciture fra una fascia e l’altra (il «raccordo»: la linea del percorso che attraversa la giuntura e si ferma con il suo nodo sulla riga di testa della fascia in cui entra; l’«incastro»: le porte ad arco che salgono di 64 px sopra la fotografia; la sfumatura; il taglio), pronte per le pagine, che le collocano con le proprie lane (home, gruppi di pagine). Quello che si vede già oggi su ogni pagina che usa la libreria: la faccia di ogni tessera con glifo diventa una nicchia (la volta in ombra, il pavimento in luce) al posto del quadrato bianco; la targa «Attention aux fraudes» sta su un tavolo da disegno — la sua riga continua come un davanzale fino al bordo del contenitore e lo scudo è disegnato in basso sul lato lontano al 30 % (si ritira dove non ha spazio accanto alla targa: telefoni, 1024, la colonna delle schede); le griglie di tessere non «si posano» più come quadrati: la riga si disegna, il glifo si inchiostra, il pavimento si accende; le etichette dei pannelli e i numerali (le tappe delle schede, le stazioni) in Host Grotesk 600 — Readex Pro in arabo — al posto del monospazio, i titoli delle testate, dei frontespizi, del conto e degli errori sui dodici passi; nessuna composizione di pagina spostata, nessun testo vincolato cambiato, il foglio condiviso intatto a 32 695 byte, la home a 61 415 byte sotto il suo tetto; barra, menu, caricamento, moduli, canali di contatto, privacy e spazi riservati non toccati",
+      "state": "v5",
+      "decision": "v524-lib/REVIEW.md",
+      "tag": "v524/lib",
+      "date": "2026-11-06"
     }
   ],
   "surfaces": {

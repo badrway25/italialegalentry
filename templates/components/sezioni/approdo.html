@@ -1,0 +1,23 @@
+{% comment %}
+K · «L'APPRODO» — the closing «Pour aller plus loin» band (design V5.22, SECTION_SYSTEM_V2 §0.1 «Closing bands», §2 K;
+lane S): on stone — a night band above the night footer would make a night–paper–night sandwich. Weighted tiles: the
+Forum's typographic on a night face (Q4: no photograph stands for the Forum), the others raised paper with their T2 or
+T2a glyph; the page's motif drawn low at 30 % as a bookend (the frontispiece's own drawing, pages/partials/motifs/).
+static/css/v5/_sec-strato.css. Motion: DEPTH (the tiles settle over their shadow layers, 60 ms apart) and one LIGHT
+sweep across the band as it enters. Still: the tiles at rest.
+
+Contract: `title_id`, `title`, `title_lang`; `tiles` — [{"href", "title", "title_lang", "line", "line_lang", "glyph"
+(a registry symbol), "disc" (True: an actor's disc, T2a), "audience", "forum" (True: the Forum's night tile)}];
+`motif` (a frontispiece motif: mission, civic, economic, network, learning, route, contact, legal, territory).
+The caller wraps it: <section class="sez sez--approdo" data-sec="approdo" data-ground="stone" data-verb="light">.
+{% endcomment %}<div class="approdo">
+  {% include "components/sezioni/_testa.html" with role="router" %}
+  <ul class="approdo__tessere sez-seq" role="list" data-registro>
+    {% for item in tiles %}<li class="approdo__tessera sez-plate{% if item.forum %} approdo__tessera--forum{% endif %}"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %} data-verb="depth">
+      {% if item.glyph and not item.forum %}<span class="{% if item.disc %}sez-disc{% else %}sez-tile{% endif %}" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}
+      <a class="approdo__link sez-stretch" href="{{ item.href }}"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</a>
+      {% if item.line %}<p class="approdo__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
+    </li>{% endfor %}
+  </ul>
+  {% if motif %}<div class="approdo__fondale" aria-hidden="true">{% with "pages/partials/motifs/_"|add:motif|add:".html" as motif_template %}{% include motif_template %}{% endwith %}</div>{% endif %}
+</div>

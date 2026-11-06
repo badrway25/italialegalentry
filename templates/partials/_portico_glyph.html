@@ -1,0 +1,11 @@
+{% load ile_core %}{% comment %}
+The glyph of a door panel's entry (V5.15 §2, §16; v515-a review round 2, M-2): each destination its own semantic mark of
+the sprite, drawn on a small tinted disc beside its title, so that a short door's tiles and a long door's rows read as
+destinations and never as empty wireframe cards. One meaning per symbol, as apps/core/icons.py records it (Voies
+régulières `signpost`, Diplômes et titres `award`, training `presentation`, Vivre en Italie `sprout`, the questions
+`circle-help`, the glossary `book-a`, the companies' needs `briefcase-business`, the pilot's workplaces `factory`, a
+request sent `send`, the Forum `handshake`; finishing round F1, the Projet panel: the project itself the brand's arch
+`ile-arch`, its promoter the project team's and the network of competent actors the authorised actor's, both
+through the registry's ACTOR map (`ile-mark`, `badge-dot`), the news `newspaper`, the contact form `message-square-text`); an entry whose route is not listed
+here draws no glyph and keeps its title alone. Decorative: the title is the link's name.
+{% endcomment %}{% with u=child.url_name %}{% if u == "pathways:index" %}{% svg_icon "signpost" "icon" %}{% elif u == "pathways:diplomas" %}{% svg_icon "award" "icon" %}{% elif u == "pathways:training" %}{% svg_icon "presentation" "icon" %}{% elif u == "living:index" %}{% svg_icon "sprout" "icon" %}{% elif u == "faq:index" %}{% svg_icon "circle-help" "icon" %}{% elif u == "glossary:index" %}{% svg_icon "book-a" "icon" %}{% elif u == "enquiries:company_needs" %}{% svg_icon "briefcase-business" "icon" %}{% elif u == "ecosystem:pilot" %}{% svg_icon "factory" "icon" %}{% elif u == "enquiries:institution_proposal" or u == "enquiries:university_proposal" %}{% svg_icon "send" "icon" %}{% elif u == "forum:index" %}{% svg_icon "handshake" "icon" %}{% elif u == "pages:project" %}{% svg_icon "ile-arch" "icon" %}{% elif u == "pages:agami" %}{% svg_icon "project_team"|actor_glyph "icon" %}{% elif u == "pages:network" %}{% svg_icon "authorised_actor"|actor_glyph "icon" %}{% elif u == "news:index" %}{% svg_icon "newspaper" "icon" %}{% elif u == "pages:contact" %}{% svg_icon "message-square-text" "icon" %}{% endif %}{% endwith %}

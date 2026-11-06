@@ -1,46 +1,72 @@
-{% load i18n forum_tags %}
+{% load i18n forum_tags forum_v2 locked_split %}
 {% comment %}
-Sections in the order prescribed by the document §2.1 — every text is a locked key.
-Design V5.4 (W3-F1): one chapter each, one section device at the reading edge (the prescribed title, capitals in the
-copy), the prescribed body at the reading measure — the first as the page's statement, «why» on the stone ground (the
-page's ground changes every two or three chapters, RH-2).
+Sections in the order prescribed by the document §2.1 — every text is a locked key, verbatim, said once.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.16 FO1, FO2a, FO2b; lane P2) — the Forum in compositions, never a report's columns;
+no photograph (Q4: no stock as the Forum; Q5: no archive): its images are drawn.
+  FO1   A, typographic: «QUI SOMMES-NOUS» — the paragraph's opening clause (up to its first comma, cut at render) at
+        the band's size, the rest at the body's; «POURQUOI ITALY LEGAL ENTRY» — the paragraph's last sentence set in
+        place as the emphasised statement (a 2 px rule at its reading edge), never duplicated as a pull-quote; a
+        hairline between the two draws top to bottom in the head's sequence, one light crosses the statement;
+  FO2a  I «dal dialogo ai progetti»: «QU'EST-CE QUE LE FORUM» (its three paragraphs) sticky beside «OBJECTIFS» as a
+        line of eight clause-stations — the ONE locked sentence cut on its own « ; », in order, its punctuation kept:
+        the stations read top to bottom read the sentence; the arrival, the last clause, carries the ile-forum mark and
+        the page's one arrival light (SCROLL PROGRESSION: the line advances as it is read);
+  FO2b  H on a night plate, the page's moment: «À QUI S'ADRESSE-T-IL» — the nine actors of the locked sentence are its
+        own spans set on a ring around the Forum, clockwise in the sentence's order (counter-clockwise in Arabic), the
+        punctuation kept in the night's second ink; the four that name an ILE audience carry its disc; no link inside
+        the sentence (RELATIONAL DRAW + SETTLE). A phone reads a vertical constellation.
+Without a cut that rebuilds its text, a text stands whole (forum_v2). The anchors and the page index are unchanged.
 {% endcomment %}
-<section class="chapter forum-section forum-section--intro" id="forum-who" aria-labelledby="forum-who-title">
-  <div class="container chapter__inner">
-    {% event_text event "who.title" as who_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-who-title" title=who_title only %}
-    <div class="chapter__body">{% event_text event "who.body" "p" "chapter__statement forum-section__body forum-lead" %}</div>
-  </div>
-</section>
-
-<section class="chapter chapter--area forum-section forum-section--accent" id="forum-why" aria-labelledby="forum-why-title">
-  <div class="container chapter__inner">
-    {% event_text event "why.title" as why_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-why-title" title=why_title only %}
-    <div class="chapter__body">{% event_text event "why.body" "p" "chapter__prose forum-section__body" %}</div>
-  </div>
-</section>
-
-<section class="chapter forum-section" id="forum-what" aria-labelledby="forum-what-title">
-  <div class="container chapter__inner">
-    {% event_text event "what.title" as what_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-what-title" title=what_title only %}
-    {% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
-    <div class="chapter__body">
-      <div class="chapter__prose forum-section__body forum-prose"{% if what_lang != site.lang %} lang="{{ what_lang }}"{% endif %}>
-        {% for paragraph in what_paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
-      </div>
+{% event_text event "who.title" as who_title %}{% event_text event "why.title" as why_title %}
+{% forum_raw event "who.body" as who_text %}{% forum_raw_lang event "who.body" as who_lang %}
+{% forum_raw event "why.body" as why_text %}{% forum_raw_lang event "why.body" as why_lang %}
+<section class="sez sez--campata forum-pair" data-ground="paper" data-rhythm="band" aria-labelledby="forum-who-title forum-why-title">
+  <div class="container forum-pair__inner">
+    <div class="forum-pair__item" id="forum-who">
+      <h2 class="forum-titolo" id="forum-who-title">{{ who_title }}</h2>
+      <p class="forum-pair__chi"{% if who_lang %} lang="{{ who_lang }}"{% endif %} data-locked="p2.forum.who.body">{{ who_text|locked_spans:"clause" }}</p>
+    </div>
+    <span class="forum-pair__divisore" aria-hidden="true"></span>
+    <div class="forum-pair__item" id="forum-why">
+      <svg class="forum-pair__luce" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="forum-luce" x1="0" y1="0" x2="1" y2="0.18"><stop offset="0.3" stop-color="currentColor" stop-opacity="0"/><stop offset="0.5" stop-color="currentColor" stop-opacity="0.12"/><stop offset="0.7" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs><rect width="100" height="100" fill="url(#forum-luce)"/></svg>
+      <h2 class="forum-titolo" id="forum-why-title">{{ why_title }}</h2>
+      <p class="forum-pair__perche"{% if why_lang %} lang="{{ why_lang }}"{% endif %} data-locked="p2.forum.why.body">{{ why_text|locked_spans:"sentence" }}</p>
     </div>
   </div>
 </section>
 
-<section class="chapter forum-section forum-section--objectives" id="forum-objectives" aria-labelledby="forum-objectives-title">
-  <div class="container chapter__inner">
-    {% event_text event "objectives.title" as objectives_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-objectives-title" title=objectives_title only %}
-    <div class="chapter__body">{% event_text event "objectives.body" "p" "chapter__prose forum-section__body forum-objectives" %}</div>
+{% event_text event "what.title" as what_title %}{% event_text event "objectives.title" as objectives_title %}
+{% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
+{% forum_mark as objectives_mark %}{% forum_raw event "objectives.body" as objectives_text %}{% forum_raw_lang event "objectives.body" as objectives_lang %}
+<section class="sez sez--filo forum-filo" data-sec="filo" data-ground="paper" data-rhythm="band" aria-labelledby="forum-what-title">
+  <div class="container forum-filo__griglia">
+    <div class="forum-filo__cosa" id="forum-what">
+      <h2 class="forum-titolo" id="forum-what-title">{{ what_title }}</h2>
+      <div class="forum-filo__prosa"{% if what_lang != site.lang %} lang="{{ what_lang }}"{% endif %}>
+        {% for paragraph in what_paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="forum-filo__obiettivi" id="forum-objectives">
+      <h2 class="forum-titolo" id="forum-objectives-title">{{ objectives_title }}</h2>
+      {% with clauses=objectives_text|forum_clauses %}{% if clauses %}<ol class="forum-obiettivi" role="list" data-locked="p2.forum.objectives.body"{% if objectives_lang %} lang="{{ objectives_lang }}"{% endif %}>{% for clause in clauses %}<li class="forum-obiettivi__tappa{% if forloop.last %} forum-obiettivi__tappa--arrivo{% endif %}">{% if forloop.last %}<span class="forum-obiettivi__marchio" aria-hidden="true">{% svg_icon objectives_mark "icon" %}</span>{% endif %}{{ clause|forum_coda }}</li>{% endfor %}</ol>{% else %}<p class="forum-obiettivi__intero"{% if objectives_lang %} lang="{{ objectives_lang }}"{% endif %} data-locked="p2.forum.objectives.body">{{ objectives_text }}</p>{% endif %}{% endwith %}
+    </div>
   </div>
 </section>
 
-<section class="chapter forum-section" id="forum-audience" aria-labelledby="forum-audience-title">
-  <div class="container chapter__inner">
-    {% event_text event "audience.title" as audience_title %}{% include "pages/partials/_chapter_head.html" with title_id="forum-audience-title" title=audience_title only %}
-    <div class="chapter__body">{% event_text event "audience.body" "p" "chapter__prose forum-section__body" %}</div>
+{% event_text event "audience.title" as audience_title %}
+{% forum_raw event "audience.body" as audience_text %}{% forum_raw_lang event "audience.body" as audience_lang %}
+<section class="sez sez--mappa forum-uditorio" data-sec="mappa" data-ground="night" data-rhythm="moment" id="forum-audience" aria-labelledby="forum-audience-title">
+  <div class="container">
+    <h2 class="forum-titolo forum-uditorio__titolo" id="forum-audience-title">{{ audience_title }}</h2>
+    {% with actors=audience_text|forum_actors %}{% if actors %}
+    <div class="forum-anello" data-actors="{{ actors|length }}">
+      <svg class="forum-anello__raggi" viewBox="0 0 160 95" aria-hidden="true" focusable="false" data-verb="stroke"><ellipse class="forum-anello__orbita" cx="80" cy="47.5" rx="64" ry="40"/><path class="forum-anello__raggio" pathLength="1" d="M80.00 33.93 80.00 7.60"/><path class="forum-anello__raggio" pathLength="1" d="M93.98 37.16 121.12 17.10"/><path class="forum-anello__raggio" pathLength="1" d="M101.43 45.27 143.04 40.95"/><path class="forum-anello__raggio" pathLength="1" d="M98.82 54.28 135.36 67.45"/><path class="forum-anello__raggio" pathLength="1" d="M87.45 60.29 101.92 85.12"/><path class="forum-anello__raggio" pathLength="1" d="M72.55 60.29 58.08 85.12"/><path class="forum-anello__raggio" pathLength="1" d="M61.18 54.28 24.64 67.45"/><path class="forum-anello__raggio" pathLength="1" d="M58.57 45.27 16.96 40.95"/><path class="forum-anello__raggio" pathLength="1" d="M66.02 37.16 38.88 17.10"/></svg>
+      <span class="forum-anello__centro" aria-hidden="true"><svg class="forum-luce" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><radialGradient id="forum-luce-hub" cx="50%" cy="50%" r="50%"><stop offset="0"/><stop offset="1"/></radialGradient></defs><rect width="100" height="100" fill="url(#forum-luce-hub)"/></svg>{% with "components/sezioni/marks/_"|add:objectives_mark|add:".html" as hub_mark %}{% include hub_mark %}{% endwith %}</span>
+      <p class="forum-anello__frase sez-seq"{% if audience_lang %} lang="{{ audience_lang }}"{% endif %} data-locked="p2.forum.audience.body" data-registro>{% for item in actors %}<span class="forum-attore forum-attore--{{ item.n }}"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}>{% if item.glyph %}<span class="sez-disc" data-verb="node" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="forum-attore__nome">{{ item.words }}<span class="forum-attore__punto">{{ item.punct }}</span></span></span>{% endfor %}</p>
+    </div>
+    {% else %}
+    <p class="forum-anello__intero"{% if audience_lang %} lang="{{ audience_lang }}"{% endif %} data-locked="p2.forum.audience.body">{{ audience_text }}</p>
+    {% endif %}{% endwith %}
   </div>
 </section>

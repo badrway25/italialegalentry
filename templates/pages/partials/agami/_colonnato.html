@@ -1,0 +1,25 @@
+{% comment %}
+AGAMI — the identity's drawn plate (V5.22, SECTION_SYSTEM_V2 §3.17 AG-1, pattern A; lane P2): the head's colonnade
+(pages/partials/motifs/_civic.html) taken at the section's scale — round 1 (QA_ROUND1 M10): no longer the whole temple
+centred in a square (the head's pictogram again), but a close crop of the portico, as a photograph of it would be: the
+entablature and the columns run off the plate (the drawing covers its plate, `slice`, anchored on its foot), the
+pediment's slopes leave through the top, the stylobate is the plate's foot and its sill continues out of the plate into
+the text column as the split's connector (apps/pages/static/pages/css/_agami.css). The central intercolumniation holds
+the threshold light, which answers the band's one action (the promoter's question: hovered, focused or open). No
+words, no photograph (Q5), aria-hidden. The lines draw once as the band enters (`stroke`); the plate opens from the
+reading edge (`mask`). Strokes in the drawing's own units: it scales uniformly, so the draw's dash is exact.
+{% endcomment %}<svg class="colonnato" viewBox="0 0 480 400" preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true" data-verb="stroke">
+  <defs><radialGradient id="colonnato-luce" cx="50%" cy="100%" r="80%"><stop class="colonnato__luce-0" offset="0"/><stop class="colonnato__luce-1" offset="1"/></radialGradient></defs>
+  <path class="colonnato__tono" d="M-20 48 240 -92 500 48Z"/>
+  <rect class="colonnato__luce" x="198" y="150" width="84" height="250" fill="url(#colonnato-luce)"/>
+  <path class="colonnato__linea" pathLength="1" d="M-20 48 240 -92 500 48"/>
+  <path class="colonnato__linea" pathLength="1" d="M-20 48H500M-20 64H500M-20 96H500M-20 128H500"/>
+  <path class="colonnato__fine" pathLength="1" d="M10 64V96M50 64V96M100 64V96M140 64V96M200 64V96M240 64V96M280 64V96M340 64V96M380 64V96M430 64V96M470 64V96"/>
+  <path class="colonnato__linea" pathLength="1" d="M-6 128V150H66V128M2 150V383M58 383V150"/>
+  <path class="colonnato__linea" pathLength="1" d="M134 128V150H206V128M142 150V383M198 383V150"/>
+  <path class="colonnato__linea" pathLength="1" d="M274 128V150H346V128M282 150V383M338 383V150"/>
+  <path class="colonnato__linea" pathLength="1" d="M414 128V150H486V128M422 150V383M478 383V150"/>
+  <path class="colonnato__fine" pathLength="1" d="M16 158V375M30 158V375M44 158V375M156 158V375M170 158V375M184 158V375M296 158V375M310 158V375M324 158V375M436 158V375M450 158V375M464 158V375"/>
+  <path class="colonnato__linea" pathLength="1" d="M-8 383H68M132 383H208M272 383H348M412 383H488"/>
+  <path class="colonnato__soglia" pathLength="1" d="M-20 399H500"/>
+</svg>

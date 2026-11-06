@@ -13,6 +13,7 @@ from cms.models import PublicationStatus, TranslationStatus
 from glossary import registry
 from glossary.models import Term, TermTranslation
 from glossary.seeds import seed_locked_terms
+from tests.conftest import whatsapp_link_set_aside
 
 pytestmark = pytest.mark.django_db
 
@@ -76,20 +77,35 @@ def test_alphabetical_index_lists_only_letters_with_terms(client, glossary_seede
     nav = soup.find("nav", class_="az-index")
     letters = [a.get_text(strip=True) for a in nav.find_all("a")]
     assert letters == ["C", "D", "L", "N", "P", "Q", "R", "V"]
+    # V5.22 round 1 (SECTION_SYSTEM_V2 §3.14 G2, QA_ROUND1 M7; strict rule V5.20): the register is ONE run of cards —
+    # each letter's anchor is its heading, set in the letter's first card (it was a section a letter: eight groups for
+    # ten terms left a sparse column); every letter that has terms still has its anchor, and the index reaches it
     for letter in letters:
-        assert soup.find("section", id=f"lettre-{letter}") is not None
+        anchor = soup.find(id=f"lettre-{letter}")
+        assert anchor is not None and anchor.name == "h2" and anchor.get_text() == letter
+        assert anchor.find_parent("article", class_="lessico__carta") is not None
     assert len(soup.find_all("h1")) == 1
     assert soup.find("form", attrs={"role": "search"})["method"].lower() == "get"
     assert soup.find("label", attrs={"for": "glossary-q"}) is not None
-    dts = soup.select("dl.glossary__list dt")
-    assert len(dts) == 10 and all(dt.get("lang") == "it" for dt in dts)
+    # V5.22 (SECTION_SYSTEM_V2 §3.14 G2; strict rule V5.20): the register is «il lessico» — a term card a term, the
+    # Italian term the card's heading (in Italian), the card's id the term's key
+    terms = soup.select(".lessico__carta h3.glossary-entry__term")
+    assert len(terms) == 10 and all(term.get("lang") == "it" for term in terms)
+    assert len(soup.select(".lessico__carta[id]")) == 10
     assert 'href="/fr/faq/"' in str(soup)
 
 
 def test_terms_are_sorted_alphabetically_inside_letters(client, glossary_seeded, phase3_open):
     soup = BeautifulSoup(client.get("/fr/glossaire/").content, "html.parser")
-    section = soup.find("section", id="lettre-C")
-    assert [dt.get_text(strip=True) for dt in section.find_all("dt")] == ["Carta blu UE", "Codice fiscale"]
+    # V5.22 (SECTION_SYSTEM_V2 §3.14 G2; strict rule V5.20) and round 1 (QA_ROUND1 M7): one run of cards in the
+    # letters' order — a letter's terms are the cards from its anchor's card up to the next letter's, in order
+    cards = soup.select(".lessico__registro .lessico__carta")
+    marks = [card.select_one("h2.lessico__lettera") for card in cards]
+    start = next(i for i, mark in enumerate(marks) if mark is not None and mark["id"] == "lettre-C")
+    end = next((i for i in range(start + 1, len(cards)) if marks[i] is not None), len(cards))
+    terms = [card.select_one("h3.glossary-entry__term").get_text(strip=True) for card in cards]
+    assert terms[start:end] == ["Carta blu UE", "Codice fiscale"]
+    assert terms == sorted(terms, key=str.casefold), "the register reads in the alphabet's order"
 
 
 # --------------------------------------------------------------------------------------------
@@ -101,7 +117,11 @@ def test_permalink_is_stable_and_shows_definition_related_and_metadata(client, g
     assert response.status_code == 200
     soup = BeautifulSoup(response.content, "html.parser")
     h1 = soup.find("h1")
-    assert h1.get_text(strip=True) == "Visto d’ingresso" and h1.get("lang") == "it"
+    # V5.22 lane P2 round 2 (QA_ROUND2 M5; strict rule V5.20 — the h1 itself carried lang="it" and, a left-to-right
+    # block, stood far from the Arabic page's reading edge): the term is still marked Italian, as the run the h1 holds;
+    # the h1 takes the page's direction
+    assert h1.get_text(strip=True) == "Visto d’ingresso" and not h1.has_attr("lang")
+    assert h1.select_one("span[lang='it']").get_text() == "Visto d’ingresso"
     assert registry.term("visto_ingresso")["definition"] in str(soup)
     related = [a["href"] for a in soup.select(".glossary-term__related-list a")]
     assert "/fr/glossaire/permesso_di_soggiorno/" in related
@@ -142,7 +162,9 @@ def test_search_lists_only_matching_terms_and_no_jsonld(client, glossary_seeded,
 
 def test_search_without_result_shows_empty_state(client, glossary_seeded, phase3_open):
     html = client.get("/fr/glossaire/", {"q": "xyzzy-nothing"}).content.decode()
-    assert 'class="empty-state"' in html
+    # the empty state in its glyph tile since V5.15 W3 round 1 (DECISIONS §15 lane B; v515-b 9211d5fc,
+    # templates/components/empty_state.html): the class pair is the component's own
+    assert '<div class="empty-state empty-state--tile" role="status">' in html
     assert "0 terme" in html
 
 
@@ -168,12 +190,14 @@ def test_jsonld_defined_term_set_on_index_and_defined_term_on_permalink(client, 
 def test_other_languages_fall_back_to_french_with_lang_attr(client, glossary_seeded, phase3_open):
     for lang in ("it", "en", "ar"):
         soup = BeautifulSoup(client.get(f"/{lang}/glossaire/").content, "html.parser")
-        dds = soup.select("dl.glossary__list dd")
+        # V5.22 (SECTION_SYSTEM_V2 §3.14 G2; strict rule V5.20): each card's definition, its language its own
+        dds = soup.select(".lessico__carta p.lessico__definizione")
         assert len(dds) == 10 and all(dd.get("lang") == "fr" for dd in dds), lang
         detail = BeautifulSoup(client.get(f"/{lang}/glossaire/codice_fiscale/").content, "html.parser")
         assert detail.find("p", class_="glossary-term__definition").get("lang") == "fr"
     soup_fr = BeautifulSoup(client.get("/fr/glossaire/").content, "html.parser")
-    assert all(dd.get("lang") is None for dd in soup_fr.select("dl.glossary__list dd"))
+    assert len(soup_fr.select(".lessico__carta p.lessico__definizione")) == 10
+    assert all(dd.get("lang") is None for dd in soup_fr.select(".lessico__carta p.lessico__definizione"))
 
 
 def test_published_translation_is_rendered_but_draft_is_not(client, glossary_seeded, phase3_open):
@@ -191,7 +215,8 @@ def test_published_translation_is_rendered_but_draft_is_not(client, glossary_see
     soup = BeautifulSoup(client.get("/en/glossaire/codice_fiscale/").content, "html.parser")
     definition = soup.find("p", class_="glossary-term__definition")
     assert definition.get_text(strip=True) == "Official EN definition." and definition.get("lang") is None
-    assert soup.find("h1").get("lang") == "it"
+    # V5.22 lane P2 round 2 (QA_ROUND2 M5; strict rule V5.20): the term stays marked Italian — the run inside the h1
+    assert soup.find("h1").select_one("span[lang='it']") is not None
 
 
 def test_arabic_is_rtl_and_renders(client_ar, glossary_seeded, phase3_open):
@@ -217,7 +242,8 @@ def test_rendered_pages_pass_compliance_scan(client, glossary_seeded, phase3_ope
             assert "Italy Legal Entry™" in html
             emails = set(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}", html))
             assert emails <= {"contact@agamieuromed.org"}, emails
-            externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', html) if "testserver" not in s]
+            checked = whatsapp_link_set_aside(html)  # V5.19 §7: the owner's WhatsApp link only, as a link
+            externals = [s for s in re.findall(r'(?:src|href)="(https?://[^"]+)"', checked) if "testserver" not in s]
             assert not externals, externals
             assert "CONTENT_PENDING_LEGAL_REVIEW" not in html
 
