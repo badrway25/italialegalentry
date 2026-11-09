@@ -17,6 +17,8 @@ Section System V2, Icon Treatment V2, Motion Density V2 — the foundation of V5
 from __future__ import annotations
 
 import gzip
+import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -34,26 +36,34 @@ PARTIALS = ROOT / "templates" / "components" / "sezioni" / "marks"
 DIST_JS = ROOT / "static" / "js" / "dist"
 SRC_JS = ROOT / "static" / "js" / "src"
 #: §2 / §7 ceilings of the pattern sheets, gzip -9 of each partial minified alone (1 KB = 1 024 B)
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 SHEET_CEILINGS = {
-    "_sec-campata.css": 1_229, "_sec-tracciato.css": 1_434, "_sec-racconto.css": 1_229,
+    "_sec-campata.css": 973, "_sec-tracciato.css": 1_420, "_sec-racconto.css": 915,
     # v524-lib (FINAL_DELIVERY_V2 R4 f, §3.3; BACKGROUND_MATERIAL_V2 §3.4, §4.1): the tile's face light — the layer, its
     # wait and in rules — lives in the mosaico sheet as the audit placed it (the shell is in every page sheet, R4 a):
     # 1 203 → 1 355 measured (the audited «≈ 120» was an estimate: the same block cost 70 B among the shell's neighbours and
     # costs 152 B alone here; no declaration can go — the layer's corner, its context, its first frame); re-recorded at the
     # measure, never up; no route sheet or page total moves past its ceiling (QA/v524/lib/NOTES.md §6, §10)
     "_sec-mosaico.css": 1_355,
-    "_sec-mappa.css": 1_434, "_sec-filo.css": 1_024, "_sec-passaggio.css": 614, "_sec-strato.css": 1_638,
-    "_sec-indice.css": 1_434,
+    "_sec-mappa.css": 1_307, "_sec-filo.css": 1_012, "_sec-passaggio.css": 611,
+    # V5.29 (stream SYS; V5.20: stronger — the two sheets' ceilings lowered to what they now hold, the two new parts each
+    # with its own): «lo strato» and «l'indice» split so the home bundles what it draws — the plates and «la protezione»
+    # (_sec-lastre.css), the list, the tabs and the phone's disclosure (_sec-indice-base.css); the strato sheet (the
+    # landing, the address and term plates) and the index sheet (the explorer, the native disclosure) import them
+    "_sec-strato.css": 654, "_sec-lastre.css": 1_253, "_sec-indice.css": 524, "_sec-indice-base.css": 1_207,
     # the two variants with page-only partials of their own (lane S): «la boussole» (A) and «l'emiciclo» (H)
-    "_sec-boussole.css": 716, "_sec-emiciclo.css": 716,
+    "_sec-boussole.css": 651, "_sec-emiciclo.css": 661,
     # round 1 (QA_ROUND1 m2): F's measured variant «il flusso» — a page-only partial of its own, after the passage V2,
     # only where a curve joins real boxes (EN-1): a new sheet, a new ceiling (0.9 KB)
-    "_sec-flusso.css": 922,
+    "_sec-flusso.css": 868,
 }
 #: §2 D and F: what the panorama adds to _photo.css and the passage V2 (_linea-v2.css) adds to the passage, gzip -9
-INCREMENTS = {("_photo.css", "panorama"): 716, ("_journey-passage.css", "_linea-v2.css"): 1_229}
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet — the review's minor): recorded at their measure (716 → 576,
+#: 1 229 → 1 225), only down.
+INCREMENTS = {("_photo.css", "panorama"): 576, ("_journey-passage.css", "_linea-v2.css"): 1_225}
 #: §7.2 ceilings of the section runtime and its modules (gzip -9 of the built files)
-JS_CEILINGS = {"rise.js": 1_536, "indice": 1_536, "mappa": 1_536, "flow": 1_331, "spia": 1_024, "racconto": 922}
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
+JS_CEILINGS = {"rise.js": 1_286, "indice": 1_536, "mappa": 1_536, "spia": 1_024, "racconto": 922}
 
 
 def _read(path: Path) -> str:
@@ -68,12 +78,27 @@ def _gz(data: bytes) -> int:
     return len(gzip.compress(data, 9))
 
 
+#: The build's record of each budgeted text minified alone by esbuild (scripts/build_css.mjs, writeMeasures).
+#: v524-cifix (V5.20 strict rule; FINAL_DELIVERY_V2 R4 — the budgets are gzip -9 of each partial minified alone): these
+#: measures ran node_modules/esbuild in the test, and CI installs no Node — it must not rebuild dist (DL54-77) — so 14
+#: budgets were red on every runner. The minified text is now part of the committed dist, held to the build by the
+#: deterministic-build gate; each entry carries the SHA-256 of the exact text it minified, and a measure whose hash is
+#: not the current source's fails here (a sheet edited without `npm run build:css`). Same figure, same ceilings, and one
+#: more invariant than before: the committed dist is the build of these sources.
+MEASURES = ROOT / "static" / "css" / "dist" / "measures.json"
+
+
+def _measure(name: str, text: str) -> int:
+    """gzip -9 of `text` minified alone, read from the build's record under `name` once its hash is `text`'s."""
+    record = json.loads(MEASURES.read_bytes().decode("utf-8"))["measures"]
+    assert name in record, f"{name}: not in static/css/dist/measures.json — run `npm run build:css`"
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    assert record[name]["sha256"] == digest, f"{name}: the record is not the current source's — run `npm run build:css`"
+    return _gz(record[name]["minified"].encode("utf-8"))
+
+
 def _minified_gz(path: Path) -> int:
-    esbuild = ROOT / "node_modules" / "esbuild" / "bin" / "esbuild"
-    out = subprocess.run(  # noqa: S603 — the repository's own esbuild on its own sheet
-        ["node", str(esbuild), str(path), "--loader:.css=css", "--minify"], capture_output=True, check=True, cwd=ROOT
-    ).stdout
-    return _gz(out)
+    return _measure(path.relative_to(ROOT / "static").as_posix(), _read(path))
 
 
 # ---------------------------------------------------------------------------------------------- the ILE marks
@@ -228,9 +253,11 @@ def test_the_section_runtime_writes_no_state_when_calm_and_loads_modules_on_dema
     rise = _read(SRC_JS / "rise.js")
     assert 'section.dataset.secState = "wait"' in rise and 'section.dataset.secState = "in"' in rise
     assert "if (calm()) return;" in rise.split("export function initSections", 1)[1][:200]
-    for name in ("indice", "mappa", "flow", "spia", "racconto"):
+    for name in ("indice", "mappa", "spia", "racconto"):
         assert f'{name}: () => import("./sezioni/{name}.js")' in rise
         assert not (SRC_JS / f"{name}.js").exists(), "a module is a split chunk, never an entry"
+    # V5.30 Fast Visual Variety Correction §5, §7 ENTREPRISES (V5.20 strict rule): the measured curve left with its module
+    assert "sezioni/flow.js" not in rise and not (SRC_JS / "sezioni" / "flow.js").exists()
     assert "addEventListener(\"scroll\"" not in rise and "requestAnimationFrame" not in rise
     for module in (SRC_JS / "sezioni").glob("*.js"):
         code = _read(module)
@@ -280,27 +307,34 @@ def test_each_pattern_sheet_under_its_ceiling(sheet):
     assert _minified_gz(V5 / sheet) <= SHEET_CEILINGS[sheet], sheet
 
 
-def _minified(source: str) -> bytes:
-    esbuild = ROOT / "node_modules" / "esbuild" / "bin" / "esbuild"
-    return subprocess.run(  # noqa: S603 — the repository's own esbuild
-        ["node", str(esbuild), "--loader=css", "--minify"], input=source.encode(), capture_output=True, check=True, cwd=ROOT
-    ).stdout
+def test_every_pattern_sheet_has_a_ceiling_and_a_measure():
+    """v524-cifix: the build records every `_sec-*.css` (scripts/build_css.mjs) and each one has its ceiling here — a new
+    pattern sheet is never an unbudgeted one, and the record is never a stale list."""
+    sheets = sorted(p.name for p in V5.glob("_sec-*.css"))
+    assert sheets == sorted(SHEET_CEILINGS), sheets
+    record = json.loads(MEASURES.read_bytes().decode("utf-8"))["measures"]
+    assert sorted(name for name in record if name.startswith("css/v5/_sec-")) == [f"css/v5/{s}" for s in sheets]
 
 
 def test_the_panorama_and_the_passage_v2_add_no_more_than_their_ceilings():
     photo = _read(V5 / "_photo.css")
     before = photo[: photo.rfind("/* ====", 0, photo.index("V5.22 (SECTION_SYSTEM_V2 §2 D"))]
-    assert _gz(_minified(photo)) - _gz(_minified(before)) <= INCREMENTS[("_photo.css", "panorama")]
+    panorama = _measure("css/v5/_photo.css", photo) - _measure("css/v5/_photo.css before the panorama", before)
+    assert panorama <= INCREMENTS[("_photo.css", "panorama")]
     passage = _read(V5 / "_journey-passage.css")
     assert "LA LINEA V2" not in passage, "the questionnaire's sheet imports the passage: V2 is its own partial"
     both = passage + _read(V5 / "_linea-v2.css")
-    assert _gz(_minified(both)) - _gz(_minified(passage)) <= INCREMENTS[("_journey-passage.css", "_linea-v2.css")]
+    linea = _measure("css/v5/_journey-passage.css + css/v5/_linea-v2.css", both) - _measure(
+        "css/v5/_journey-passage.css", passage
+    )
+    assert linea <= INCREMENTS[("_journey-passage.css", "_linea-v2.css")]
 
 
 def test_the_section_runtime_and_its_modules_under_their_ceilings():
     assert _gz((DIST_JS / "rise.js").read_bytes()) <= JS_CEILINGS["rise.js"]
     chunks = list((DIST_JS / "chunks").glob("*.js"))
-    for name in ("indice", "mappa", "flow", "spia", "racconto"):
+    assert not [c for c in chunks if c.name.startswith("flow-")], "V5.30 VARIETY §5: the curve's module left no chunk"
+    for name in ("indice", "mappa", "spia", "racconto"):
         built = [c for c in chunks if c.name.startswith(f"{name}-")]
         assert len(built) == 1, (name, "one split chunk")
         assert _gz(built[0].read_bytes()) <= JS_CEILINGS[name], name
@@ -310,17 +344,18 @@ def test_the_section_runtime_and_its_modules_under_their_ceilings():
 # ---------------------------------------------------------------------------------------------- round 1 (v522-s-improve1)
 
 
-def test_the_measured_flow_draws_its_overlay_in_a_wrapper_never_in_the_list():
-    """F «il flusso» (QA_ROUND1 m2): sezioni/flow.js prepends its SVG to the [data-flow] element — a wrapper around the
-    list, never the list itself (an <ol> holds <li> only); the stations are the registry's company moments' glyphs."""
+def test_the_flow_is_one_panel_with_no_measured_overlay():
+    """F «il flusso». V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «process panels» (V5.20 strict rule; this decision
+    replaces «the measured flow draws its overlay in a wrapper»): no script draws over it; the list stands in its field,
+    each moment a cell with the registry's company moment's glyph, the end call kept."""
     html = Template(
         '{% include "components/sezioni/flusso.html" with steps=steps end_action=action %}'
     ).render(Context({"steps": [{"glyph": g, "label": f"Temps {i}"} for i, g in enumerate(icons.COMPANY_MOMENT)],
                       "action": {"url": "#", "label": "Agir"}}))
-    assert re.search(r'<div class="flusso__campo" data-flow>\s*<ol class="flusso__tappe"', html), html[:400]
-    assert not re.search(r"<ol[^>]*data-flow", html), "the list is never the overlay's parent"
-    assert html.count("data-flow-node") == len(icons.COMPANY_MOMENT)
-    assert 'data-sec-js="flow"' in html and "data-azione" in html
+    assert re.search(r'<div class="flusso__campo">\s*<ol class="flusso__tappe"', html), html[:400]
+    assert "data-flow" not in html and "data-sec-js" not in html
+    assert html.count('<li class="flusso__tappa">') == len(icons.COMPANY_MOMENT)
+    assert html.count("flusso__nodo sez-tile") == len(icons.COMPANY_MOMENT) and "data-azione" in html
 
 
 def test_a_french_run_beside_a_marker_hangs_from_its_edge_on_an_arabic_page():

@@ -288,7 +288,11 @@ def test_il_lume_on_the_bar_is_the_rail_s_lit_disc(browser, live_server, seeded,
     current = [item for item in items if item["current"]]
     assert [item["key"] for item in current] == ["dashboard"]
     lit, others = current[0], [item for item in items if not item["current"]]
-    assert lit["discBg"] == "rgb(255, 255, 255)" and lit["glyph"] == "rgb(21, 34, 42)", (
+    # the glyph in the approved ink: V5.29 §5 / §8 (stream SYS, accepted by the owner on 6 Nov 19:36) re-valued the
+    # primary text role, #15222a → --p-inchiostro-900 #222f3d, no near-black (c8d9f0e1) — V5.20, restated by the
+    # v524-closing steward as lane CLOSING restated the rail's twin (test_console_shell_browser_w3_a; a red carried from
+    # SYS, identical on the base 88caed4a): the same invariant at the approved value
+    assert lit["discBg"] == "rgb(255, 255, 255)" and lit["glyph"] == "rgb(34, 47, 61)", (
         "the lit paper disc, the glyph in ink"
     )
     assert float(lit["radius"].rstrip("px")) >= 16, "a disc"

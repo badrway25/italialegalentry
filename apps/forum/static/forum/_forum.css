@@ -329,13 +329,6 @@
   margin-block-start: var(--s-3);
 }
 
-/* the actions of the one card wrap, 12 px apart; on a phone each takes the line */
-.forum-cta__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-}
-
 @media (max-width: 47.999rem) {
   .forum-form {
     padding: var(--s-4);
@@ -359,7 +352,6 @@
 }
 
 @media print {
-  .forum-action,
   .forum-hero__actions {
     display: none;
   }
@@ -382,7 +374,7 @@
    ============================================================================================ */
 .forum-titolo {
   margin: 0 0 var(--s-5);
-  font-size: clamp(1.375rem, 1.2rem + 0.6vw, var(--t-band));
+  font-size: var(--t-band); /* the band step, 24 → 28 (V5.24 Typography V2: no clamp of a sheet's own) */
   line-height: var(--t-band-lh);
   font-weight: var(--w-title);
   color: inherit;
@@ -507,7 +499,7 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
   margin-block-end: var(--s-3);
   font-size: var(--t-band);
   line-height: var(--t-band-lh);
-  font-weight: 500;
+  font-weight: var(--w-title);
 }
 
 .forum-pair__perche .ls-3 {
@@ -518,22 +510,8 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
   border-inline-start: 2px solid var(--accent-mark);
   font-size: var(--t-entry);
   line-height: var(--t-entry-lh);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   overflow: clip;
-}
-
-/* the light that passes across the statement's column once (its band is drawn in the markup: an SVG paint, the
-   colour the token's) */
-.forum-pair__item:has(> .forum-pair__luce) { position: relative; overflow: clip; }
-
-.forum-pair__luce {
-  position: absolute;
-  inset: 0;
-  inline-size: 100%;
-  block-size: 100%;
-  color: var(--accent-mark);
-  opacity: 0;
-  pointer-events: none;
 }
 
 .forum-pair__divisore { display: none; }
@@ -560,9 +538,6 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
     animation: sez-draw-y var(--motion-draw) var(--ease-sine) var(--motion-slow) backwards;
   }
 
-  :root:not(.rm):not([data-input="key"]) .forum-pair__luce {
-    animation: sez-sweep var(--motion-route-light) var(--ease-sine) var(--motion-draw) backwards;
-  }
 }
 
 /* ---- FO2a ---- */
@@ -628,7 +603,7 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
 }
 
 /* the arrival: the Forum's mark on its tile, the page's one arrival light (gold at its foot, never on the glyph) */
-.forum-obiettivi__tappa--arrivo { font-weight: 600; }
+.forum-obiettivi__tappa--arrivo { font-weight: var(--w-strong); }
 .forum-obiettivi__tappa--arrivo::before { content: none; }
 
 .forum-obiettivi__marchio {
@@ -651,6 +626,33 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
 @media (min-width: 64rem) {
   .forum-filo__griglia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--s-16); align-items: start; }
   .forum-filo__cosa { position: sticky; inset-block-start: calc(var(--header-h-scrolled) + var(--s-6)); }
+}
+
+/* ---- «il raccordo» A → I (V5.24, BACKGROUND_MATERIAL_V2 §3.2, §5.2; FINAL_DELIVERY_V2 §3.6, R3): the stations' line starts in
+   the pair's foot. The primitive is v5/_materia.css's (.sez-raccordo, the FIRST CHILD of the band it enters, the draw-y verb
+   after the band's own line, its 6 px node); this page places it: the line rises a strip's measure (48 px; 32 on phones)
+   into the pair's foot and runs down the band's own padding to its HEAD LINE, where the node lands — on the reading edge,
+   where the statement's gold rule stood (below 64 rem), or, from 64 rem, on the objectives' station axis: the second
+   column's start plus the station rings' 11 px, computed from the layout's own tokens (the container, its margin, the
+   grid's 5 : 7 and its 64 px gap), so it mirrors in Arabic by itself. There, the objectives' title steps onto the
+   stations' text axis (48 px, the clauses' own indent) and the grey route line runs up from the first station to the
+   node: ONE line from the pair's foot to the arrival — a raccordo, then the route. Nothing moves but the draw; no
+   duration or curve of this sheet's (figma-use-motion: the primitive's --motion-draw on --ease-sine, --sez-d after the
+   band's line — one beat, one direction, from the band above into this one) ---- */
+.forum-filo > .sez-raccordo {
+  --risalita: clamp(var(--s-8), 4vw, var(--s-12));
+  --sez-raccordo: calc(var(--risalita) + clamp(var(--s-16), 8vw, var(--s-24)));
+  inset-inline-start: calc((100% - min(100%, var(--container))) / 2 + var(--grid-margin)); /* the route's x: a sheet never declares the page parameter --raccordo-x (test_css_tokens_exist) */
+  inset-block-start: calc(-1 * var(--risalita));
+}
+
+@media (min-width: 64rem) {
+  .forum-filo > .sez-raccordo {
+    inset-inline-start: calc((100% - min(100%, var(--container))) / 2 + var(--grid-margin) + (min(100%, var(--container)) - 2 * var(--grid-margin) - var(--s-16)) * 5 / 12 + var(--s-16) + 11px);
+  }
+
+  .forum-filo__obiettivi > .forum-titolo { padding-inline-start: var(--s-12); }
+  .forum-obiettivi::before { inset-block-start: calc(-1 * (var(--t-band) * var(--t-band-lh) + var(--s-5))); }
 }
 
 @supports (animation-timeline: view()) {
@@ -705,7 +707,7 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
   gap: var(--s-3);
   font-size: var(--t-ui);
   line-height: var(--t-ui-lh);
-  font-weight: 500;
+  font-weight: var(--w-control);
 }
 
 .forum-attore__punto { color: var(--text-on-night-2); }
@@ -769,8 +771,14 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
   /* the actors are the sentence's own French run (left to right, its punctuation in place): their offsets read in
      its direction, so the Arabic page mirrors the ring (counter-clockwise) by the place itself, never by the
      translate */
-  [dir="rtl"] .forum-anello__frase[lang]:not([lang="ar"]) .forum-attore { inset-inline-start: calc(100% - var(--x)); }
-  [dir="rtl"] .forum-attore { translate: -50% -50%; } /* the twin: a left-to-right run keeps its own centring */
+  [dir="rtl"] .forum-anello__frase[lang]:not([lang="ar"]) .forum-attore {
+    inset-inline-start: calc(100% - var(--x));
+    translate: -50% -50%; /* the twin: a left-to-right run keeps its own centring */
+  }
+
+  /* V5.27 / R7′ (the v524-pub2 steward): the sentence in its provisional Arabic is a right-to-left run — the place
+     reads from the right (inset-inline-start), so the centring turns with it, as the hub's own (translate is physical) */
+  [dir="rtl"] .forum-attore { translate: 50% -50%; }
 
   .forum-attore--1 { --x: 50%; inset-block-start: 8%; }
   .forum-attore--2 { --x: 75.7%; inset-block-start: 18%; }
@@ -797,25 +805,7 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
 
 .forum-azioni .testa { margin-block-end: 0; }
 
-.forum-azioni__fondale {
-  position: absolute;
-  inset-block-start: calc(-1 * var(--s-6));
-  inset-inline-end: 0;
-  z-index: -1;
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-/* the page says its concept once by its seal (FO0's): the hub and this faint drawing are the mark's drawing itself */
-.forum-azioni__fondale .sigillo__mark {
-  --sg-m: 14rem;
-  --sg-sw: 1;
-  display: block;
-  margin: 0;
-  color: var(--line-structure);
-}
-
-:is(.forum-azioni__fondale, .forum-anello__centro) .sigillo__mark * { vector-effect: non-scaling-stroke; }
+.forum-anello__centro .sigillo__mark * { vector-effect: non-scaling-stroke; }
 
 /* the hub: the Forum's mark at display scale (it was 72 px in a one-viewport moment), its 2 px hand, the night's accent
    light under its arch */
@@ -827,7 +817,7 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
 
 /* the lights are SVG paints in the markup (an app sheet holds tokens only, test_design_docs): their colour the token's */
 .forum-luce { position: absolute; z-index: -1; pointer-events: none; }
-.forum-luce stop { stop-color: var(--luce, var(--accent-night)); stop-opacity: 0; }
+.forum-luce stop { stop-color: var(--accent-night); stop-opacity: 0; } /* V5.30: the hub's one light (the actions' faint mark and its own light left) */
 .forum-luce stop:first-child { stop-opacity: 0.22; }
 .forum-anello__centro .forum-luce { inset: -35%; inline-size: 170%; block-size: 170%; }
 
@@ -839,19 +829,6 @@ html[data-input="key"] .forum-localnav .sommaire__link { transition: none; }
   color: color-mix(in srgb, var(--text-on-night-1) 86%, transparent);
 }
 
-/* the actions answer the reader: a plate under the hand or the focus lights the faint mark behind them (§4.7 «Light
-   response»: --light, the seal system's data-azione) */
-.forum-azioni__fondale .forum-luce {
-  --luce: var(--accent-mark);
-  inset: 0;
-  inline-size: 100%;
-  block-size: 100%;
-  opacity: var(--light, 0);
-  transition: opacity var(--motion-emphasized) var(--ease-enter);
-}
-
-html[data-input="key"] .forum-azioni__fondale .forum-luce { transition: none; }
-.forum-azioni__fondale .forum-luce stop:first-child { stop-opacity: 0.6; } /* under the drawing's 30 % */
 
 /* a clause's last word and its punctuation never part (round 1, m12) */
 .forum-obiettivi__coda { white-space: nowrap; }

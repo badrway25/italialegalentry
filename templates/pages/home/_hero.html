@@ -120,10 +120,8 @@ is a change here (apps/pages/tests/test_browser.py holds it).
   rail, corner and floor twins.{% endcomment %}
   <div class="he-lights" aria-hidden="true" data-lights><span class="he-route he-route--wall"></span><span class="he-route he-route--night"></span><span class="he-wipe he-wipe--wall" data-wipe="wall"><span class="he-wipe__bar"></span></span><span class="he-wipe he-wipe--night" data-wipe="night"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--maroc" data-corner="maroc"></span><span class="he-wipe he-wipe--spine" data-wipe="spine"><span class="he-wipe__bar"></span></span><span class="he-junction" data-junction></span><span class="he-wipe he-wipe--rail" data-wipe="rail"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--rail" data-corner="rail"></span><span class="he-wipe he-wipe--floor" data-wipe="floor"><span class="he-wipe__bar"></span></span></div>
 
-  {% comment %}7 · THE DESCRIPTION — the locked body: the hero's last row, whose first line is the fold. V5.22 (SECTION_SYSTEM_V2 §3.1
-  H0, «la soglia»): the hero's route continues beside it — a 2 px line in the route's own bronze, at the reading edge, from the
-  statement's first line down into the orientation's band, where it becomes that band's route; it draws once as it enters (the
-  section runtime: data-sec, its verb draw-y), drawn at rest under reduced motion. Decorative; the statement is unchanged.{% endcomment %}
-  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p><span class="he__soglia" data-sec="soglia" aria-hidden="true"><span class="he__soglia-linea" data-verb="draw-y"></span></span>{% endif %}
+  {% comment %}7 · THE DESCRIPTION — the locked body: the hero's last row, whose first line is the fold. V5.30 VARIETY §5: no line leaves it for the band below, the hero's foot fades into
+  the orientation's wash.{% endcomment %}
+  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>{% endif %}
 </section>
 {% endwith %}

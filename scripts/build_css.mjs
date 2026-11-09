@@ -31,13 +31,21 @@
  *     collectstatic builds), which is where ManifestStaticFilesStorage resolves and hashes them.
  *     url(#…) (SVG fragments) and data: URLs are left alone.
  *
+ * The size budgets of the page-only partials (the pattern sheets, the shell, the material) are gzip -9 of
+ * each partial MINIFIED ALONE — a figure only esbuild can produce, and CI installs no Node (it would rebuild
+ * dist). So the build writes those minified texts to static/css/dist/measures.json, each with the SHA-256
+ * of the exact text it minified: the tests gzip the recorded text against the same ceilings and refuse a
+ * record whose hash is not the current source's (tests/frontend/test_sezioni_v522_s.py; V5.20,
+ * FINAL_DELIVERY_V2 R4). The record is part of dist, so the deterministic-build gate holds it to the build.
+ *
  * static/css/dist/ is versioned, like static/js/dist/: the production host runs collectstatic, not
  * Node. tests/frontend/test_css_bundle_is_current.py refuses a dist older than its sources and one
  * that lost a source's custom properties or kept a comment.
  */
 
-import { build, context } from "esbuild";
-import { existsSync, readdirSync, statSync, mkdirSync } from "node:fs";
+import { build, context, transform, version } from "esbuild";
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync, readFileSync, statSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve, dirname, relative, isAbsolute, sep, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -149,4 +157,37 @@ if (watch) {
       if (file.endsWith(".css")) console.log(`${relative(ROOT, file).split(sep).join("/")}  ${(meta.bytes / 1024).toFixed(1)} KB (min)`);
     }
   }
+  await writeMeasures();
+}
+
+/** The texts whose minified-alone size is a budget (see the header): every pattern sheet `_sec-*.css`, the
+ *  shell, the material, and the two increments of SECTION_SYSTEM_V2 §2 D and F — the photograph sheet before
+ *  its panorama, and the passage with the passage V2 after it. Each name is the static path(s) it reads; the
+ *  tests rebuild the same text and compare its SHA-256 before they read the minified figure. */
+async function writeMeasures() {
+  const v5 = join(STATIC, "css", "v5");
+  const read = (name) => readFileSync(join(v5, name), "utf8");
+  const texts = {};
+  const sheets = readdirSync(v5).filter((name) => /^_sec-.*\.css$/.test(name));
+  for (const name of [...sheets, "_materia.css", "_sezioni.css"]) texts[`css/v5/${name}`] = read(name);
+  const photo = read("_photo.css");
+  const panorama = photo.indexOf("V5.22 (SECTION_SYSTEM_V2 §2 D");
+  if (panorama < 0) throw new Error("_photo.css lost its panorama banner: the §2 D measure has no boundary");
+  texts["css/v5/_photo.css"] = photo;
+  texts["css/v5/_photo.css before the panorama"] = photo.slice(0, photo.lastIndexOf("/* ====", panorama));
+  const passage = read("_journey-passage.css");
+  texts["css/v5/_journey-passage.css"] = passage;
+  texts["css/v5/_journey-passage.css + css/v5/_linea-v2.css"] = passage + read("_linea-v2.css");
+  const measures = {};
+  for (const name of Object.keys(texts).sort()) {
+    const { code } = await transform(texts[name], { loader: "css", minify: true });
+    measures[name] = { sha256: createHash("sha256").update(texts[name], "utf8").digest("hex"), minified: code };
+  }
+  const record = {
+    about: "gzip -9 of each text minified alone, for the size budgets CI measures without Node — scripts/build_css.mjs",
+    esbuild: version,
+    measures,
+  };
+  writeFileSync(join(DIST, "measures.json"), `${JSON.stringify(record, null, 1)}\n`);
+  console.log(`static/css/dist/measures.json  ${Object.keys(measures).length} measures`);
 }

@@ -57,6 +57,40 @@
 @media (max-width: 20.5rem) { .lock__text { display: none; } }
 @media (forced-colors: active) { .lock__wm, .lock__wm .lock__w1, .lock__wm .lock__w3 { color: CanvasText; } }
 
+/* THE KEY'S TURN (V5.29 «layout & brand refinement» §3; CLOSING, V5.29 09:41 item 1: CSS only — nav.js's initBrandKey
+   (WAAPI) left shell.js, which is back under 4 700 B). The key alone, inside the letterhead's layered mark — the
+   wordmark and the rest of the mark still — turns once: a 16° counter-turn (the preparation), the turn about its shaft
+   (loader.css's 50 % origin, DL54-08) 4° past, the settle on the verbatim mark; --motion-key on --ease-enter, then
+   --ease-turn, then --ease-enter (the tokens' literal curves: var() is not read inside a keyframe, DS 2026 §3.5). It
+   plays at the brand's reveal (the page's first style, @starting-style) and on the brand's hover or keyboard focus;
+   never a loop; never under reduced motion (no-preference and :root:not(.rm) only; --motion-key is zeroed there too).
+   ONE TURN AT A TIME, ALWAYS A WHOLE ONE — the animate skill's interruption rule (a keyframe restarts from zero if it is
+   fired twice in a second): the trigger is a latch, --lock-turn, on at once and off --motion-key after the pointer or
+   the focus has left (the overlay panels' --tip-warm idiom, v5/_overlay-panels.css), held by the layered mark — which
+   has no transition of its own — never by the link, whose colour transition and keyboard tier 0 stay as they were; the
+   turn plays while the latch is on (a style query, as the route board's lit lane, v5/_sec-tracciato.css). A pass of the
+   pointer plays the whole turn, a second pass during it does not restart it; the fill is `backwards`, so nothing stays
+   applied after the turn (V5.20) and at rest getAnimations() is empty. A browser without container style queries keeps
+   the key still: the reduced-motion state. */
+@property --lock-turn {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@keyframes brand-key {
+  14% { transform: rotateY(-16deg); animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1); }
+  80% { transform: rotateY(364deg); animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); }
+  to { transform: rotateY(360deg); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm) .site-header .lock-sig { transition-property: --lock-turn; transition-delay: var(--motion-key); }
+  @starting-style { :root:not(.rm) .site-header .lock-sig { --lock-turn: 1; } }
+  :root:not(.rm) .site-header .brand:is(:hover, :focus-visible) .lock-sig { --lock-turn: 1; transition-delay: 0ms; }
+  @container style(--lock-turn: 1) {
+    .site-header .lock-sig .sig__turn { animation: brand-key var(--motion-key) var(--ease-enter) 1 backwards; }
+  }
+}
+
 /* ==============================================================================================
    2 · THE LANGUAGE SWITCH (V5.15 §1; DECISIONS §15 lane A) — the institutional bar is gone (one row): the letterhead's
    end zone carries the current language's code on a quiet plate, and a popover of the overlay system (W2-A: Esc, a
@@ -200,6 +234,7 @@ html[data-input="key"] { scroll-behavior: auto; }
   background: var(--surface-sheet);
 }
 .site-header__inner {
+  max-inline-size: var(--site-shell-max);   /* V5.29: the shell, wider than the content's column (v5/tokens.css §3.6) */
   position: relative;   /* the panels hang from the content width (N1), not from the viewport */
   display: flex;
   align-items: center;
@@ -216,17 +251,23 @@ html[data-input="key"] { scroll-behavior: auto; }
   text-decoration: none;
 }
 .brand__logo { block-size: 2.5rem; inline-size: auto; }
-/* a phone: the lock-up (227.5 px at 14 px) and «Menu» share the row — 12 px between them, 6 px inside the button,
-   which is as wide as its longer word (§7) — so the name stays on screen from 329 px and the button never leaves the
-   column (measured 320 · 329 · 340 · 360 · 369 · 375 · 390, fr · it · en · ar) */
-@media (max-width: 47.999rem) { .site-header__inner { gap: var(--s-3); } }
+/* a phone: the lock-up (227.5 px at 14 px) and «Menu» share the row — 8 px between them at least (the end zone
+   stands on the column's end, so the air is what the row leaves: 9.7 px at 369 in French, 15.7 at 375), 6 px inside
+   the button, which is as wide as its longer word (§7; 91.9 px in French at the phone's 16 px, Typography V2) — so
+   the name stays on screen from 329 px and the button never leaves the column (measured 320 · 329 · 340 · 360 · 368 ·
+   369 · 375 · 390, fr · it · en · ar; CLOSING, V5.29 item 3: the 12 px minimum left «Fermer» 2.3 px past at 369) */
+@media (max-width: 47.999rem) { .site-header__inner { gap: var(--s-2); } }
 @media (min-width: 48rem) {
   .site-header.is-scrolled { margin-block-end: calc(var(--header-h) - var(--header-h-scrolled)); }
   .site-header.is-scrolled .site-header__inner { min-block-size: var(--header-h-scrolled); }
 }
+/* V5.29 «layout & brand refinement» §3: from 80rem the lock-up one step up in the wider shell, at rest AND scrolled: the
+   bar keeps one brand and one width in both states. V5.30 §5 (the owner: «still not prominent enough» — a small optical
+   step, the header's 64 px and its one row unchanged): 40/21, the verbatim ratio of 38/20, from 80rem (the layers over
+   the mark follow, v5/motion.css). (0,3,0): over the compact band below, which stays 64–80rem's */
 @media (min-width: 80rem) {
-  .site-header.is-scrolled .lock__mark { inline-size: 32px; block-size: 32px; }
-  .site-header.is-scrolled .lock__wm { font-size: 17px; }
+  .site-header .brand .lock__mark { inline-size: 40px; block-size: 40px; }
+  .site-header .brand .lock__wm { font-size: 21px; }
 }
 @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
   .site-header.is-scrolled:not(.has-portico)::before {
@@ -456,7 +497,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   place-items: center;
   inline-size: 36px;
   block-size: 36px;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   background: var(--surface-night);
   color: var(--text-on-night-1);
 }
@@ -811,10 +852,14 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   [data-instant] > :is(.nav-sheet__body, .nav-sheet__foot) { transition-duration: 0ms; }
 }
 /* the side sheet: its own margin, 24 px (the page's 40 left it a 339 px column, narrower than a phone's), and its head
-   without the lock-up the letterhead keeps beside it; its foot stays — the letterhead's targa lies under the sheet */
+   without the lock-up the letterhead keeps beside it; its foot stays — the letterhead's targa lies under the sheet.
+   Its primary is a block, its words centred: the large button's 24 px sides step down to the medium's 20, so the
+   French call holds one line in the 371 px column under a finger, where the phone step-up sets it at 17 px (373.5 px
+   with the large sides; CLOSING, V5.29 item 3) */
 @media (min-width: 48rem) {
   .nav-sheet { --grid-margin: var(--s-6); }
   .nav-sheet__head > .brand { display: none; }
+  .nav-sheet__primary { --btn-pad: var(--btn-pad-md); }
 }
 /* V5.15 (§1 «a premium full-height or layered navigation drawer/sheet … NOT a collapsed Bootstrap menu»; 21st
    «Immersive Full Screen Navigation» 27229, adapted): the doors in the display voice, 20 px, on their night discs; the
@@ -822,7 +867,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
    photograph, unmasked from its foot; the phone's sheet opens as a light from the «Menu» corner (a clip-path circle).
    Reduced motion: none of it — the overlay system's one 80 ms opacity. */
 .nav-sheet__item--door .nav-sheet__row { font-size: 1.25rem; line-height: 1.75rem; font-weight: var(--w-control); letter-spacing: -0.01em; }
-:lang(ar) .nav-sheet__item--door .nav-sheet__row { letter-spacing: 0; }
+.nav-sheet__item--door .nav-sheet__row:lang(ar) { letter-spacing: 0; }
 .nav-sheet__item--door .portico__disc { box-shadow: var(--shadow-1-dark); }
 [open] > .nav-sheet__row .portico__disc { background: var(--brand-gold); color: var(--surface-night); }
 .nav-sheet__photo {
@@ -873,7 +918,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 /* a press shows the chrome's own state, never the browser's tint (Android's; only .btn cleared it) */
 :is(.site-header, .nav-sheet) :is(a, button, summary) { -webkit-tap-highlight-color: transparent; }
 /* ≤ 23rem (368 px): the word «Menu» becomes screen-reader only — the lock-up does not reflow, by design; from 369 px
-   the name (227.5), 12 px and the button with its words (88.6 in French, the longest) hold in the column's 329 px */
+   the name (227.5), 8 px and the button with its words (91.9 in French, the longest) hold in the column's 329 px */
 @media (max-width: 23rem) {
   .nav-toggle > span {
     position: absolute;
@@ -892,11 +937,14 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
 /* ==============================================================================================
    8 · THE FOOTER — the colophon strip on the deepest night (moved from v2/shell.css and components.css §25)
    ============================================================================================== */
+/* V5.30 §6 (the container roles): the colophon stands on the letterhead's shell (--shell-wide) — the footer's brand and
+   columns start on the header's edge; compact: a 40 px band, the long navigation in two columns from 64rem */
 .site-footer {
+  --container: var(--shell-wide);
   --focus-ring: var(--focus-ring-night);
   --icon-default: var(--icon-on-night);
   margin-block-start: var(--s-20);
-  padding-block: var(--s-12);
+  padding-block: var(--s-10);
   background: var(--surface-night-deep);
   color: var(--text-on-night-2);
   font-family: var(--f-sans);
@@ -910,7 +958,10 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   align-items: start;
 }
 @media (min-width: 48rem) { .site-footer__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-8); } }
-@media (min-width: 64rem) { .site-footer__inner { grid-template-columns: 1.4fr 1fr 1fr 1.2fr; } }
+@media (min-width: 64rem) {
+  .site-footer__inner { grid-template-columns: 1.5fr 1fr 1.6fr 1.3fr; }
+  .site-footer__list:has(> :nth-child(5)) { grid-template-columns: 1fr 1fr; column-gap: var(--s-8); }
+}
 .site-footer__brand { margin: 0 0 var(--s-4); }
 .site-footer__promoter { color: var(--text-on-night-1); }
 .site-footer__mark { font-size: var(--t-small); color: var(--text-on-night-2); }
@@ -923,7 +974,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   text-transform: uppercase;
   color: var(--text-on-night-3);
 }
-:lang(ar) .site-footer__heading { letter-spacing: 0; text-transform: none; }
+.site-footer__heading:lang(ar) { letter-spacing: 0; text-transform: none; }
 .site-footer__list { display: grid; gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
 .site-footer a,
 .site-footer a:visited {
@@ -958,7 +1009,7 @@ html.no-js .main-nav[data-portico] .main-nav__link:is([aria-current], :hover, :f
   letter-spacing: 0.04em;
   color: var(--text-on-night-3);
 }
-:lang(ar) .site-footer__bottom { letter-spacing: 0; }
+.site-footer__bottom:lang(ar) { letter-spacing: 0; }
 .site-footer__bottom p { margin: 0; max-inline-size: none; }
 .site-footer__version { font-variant-numeric: var(--numeric-data); }
 /* under a finger every link of the colophon answers on 44 px (SP-8; W4-A, D1): the list's rows are the links' own

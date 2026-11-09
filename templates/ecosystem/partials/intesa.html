@@ -1,0 +1,47 @@
+{% comment %}
+«L'intesa» — THE ITALY + MOROCCO PRIMITIVE (V5.29 §15–§17, lane PUB1; generalised by V5.30 §7, stream A: one reusable
+visual primitive with contextual variants, never a bespoke drawing per page). One decorative composition, aria-hidden, no
+text: very large, cropped forms derived from the two flags, layered BEHIND the content of the band that includes it —
+Italy's green · white · red as three soft vertical fields at the reading edge (the white is the paper itself), Morocco's
+red as a broad soft field at the far edge with the green pentagram as one fine line. The colours are the tokens'
+(static/css/v5/_intesa.css paints every fill and stop), never a pasted flag, never a photograph, never a waving motion.
+In Arabic the PLACEMENT mirrors (the fields change sides with the reading edge) but the FLAGS NEVER DO: no transform on
+either drawing or any ancestor, the Italian green stays at the hoist (the drawing's left), the pentagram upright (the
+owner's correction, V5.29, 6 Nov 13:12 — asserted on /ar/ by tests/frontend/test_pages_browser_v524_pub1.py and
+tests/frontend/test_intesa_browser_v530.py). Motion: one slow mask reveal from each outer edge inward (the library's
+reveal-mask on --motion-luce), a still composition under reduced motion.
+
+THE INCLUDE (the band that carries it must be a stacking context: every .sez isolates; a head wraps itself in
+<div class="intesa-campo">):
+    {% include "ecosystem/partials/intesa.html" with id="<unique prefix>" variant="<variant>" night=<True|False> only %}
+  `id`       — a unique prefix for the gradients' and the filter's ids (two grounds on one page never share one);
+  `variant`  — "campo" (the default: a head's or a closing band's ground — the fields at the band's two edges, meeting
+               around its words: the Institutions collaboration head, the Institutions, Réseau and AGAMI closing bands);
+               "atmosfera" (a section's broad atmospheric field — larger, partially cropped, Morocco's field centred on
+               the far edge, integrated with the band's photograph: the home's cooperation moment);
+               "pannello" (inside one contained panel or card — the fields measured on the panel, clipped by its corner);
+  `night`    — True on a night ground (the fields screened into the night instead of multiplied into the paper).
+THE SHEETS: the page's sheet imports static/css/v5/_intesa.css (the primitive, «campo», «pannello», the night modifier) —
+from an app sheet `@import url("../css/v5/_intesa.css");` — and, for «atmosfera» only, v5/_intesa-atmosfera.css after it.
+The band keeps its words' contrast (measured ≥ 4.5 : 1 in the browser tests): the fields fade toward the content.
+{% endcomment %}
+<div class="intesa intesa--{{ variant|default:'campo' }}{% if night %} intesa--notte{% endif %}" data-intesa aria-hidden="true">
+  <svg class="intesa__italia" data-flag="it" viewBox="0 0 300 800" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="{{ id }}-it-v" x1="0" y1="0" x2="0" y2="1"><stop class="intesa__stop-verde" offset="0" stop-opacity="0.3"/><stop class="intesa__stop-verde" offset="0.16" stop-opacity="1"/><stop class="intesa__stop-verde" offset="0.6" stop-opacity="0.55"/><stop class="intesa__stop-verde" offset="1" stop-opacity="0"/></linearGradient>
+      <linearGradient id="{{ id }}-it-r" x1="0" y1="0" x2="0" y2="1"><stop class="intesa__stop-rosso" offset="0" stop-opacity="0.3"/><stop class="intesa__stop-rosso" offset="0.16" stop-opacity="1"/><stop class="intesa__stop-rosso" offset="0.6" stop-opacity="0.55"/><stop class="intesa__stop-rosso" offset="1" stop-opacity="0"/></linearGradient>
+      <filter id="{{ id }}-soft" x="-20%" y="-5%" width="140%" height="110%"><feGaussianBlur stdDeviation="7"/></filter>
+    </defs>
+    <g filter="url(#{{ id }}-soft)">
+      <rect class="intesa__campo" data-band="verde" x="0" y="0" width="100" height="800" fill="url(#{{ id }}-it-v)"/>
+      <rect class="intesa__campo" data-band="rosso" x="200" y="0" width="100" height="800" fill="url(#{{ id }}-it-r)"/>
+    </g>
+  </svg>
+  <svg class="intesa__marocco" data-flag="ma" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="{{ id }}-ma-r" cx="0.5" cy="0.5" r="0.5"><stop class="intesa__stop-rosso" offset="0" stop-opacity="1"/><stop class="intesa__stop-rosso" offset="0.6" stop-opacity="0.6"/><stop class="intesa__stop-rosso" offset="1" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect class="intesa__campo" data-band="rosso" x="0" y="0" width="600" height="600" fill="url(#{{ id }}-ma-r)"/>
+    <polygon class="intesa__stella" points="300,130 405.8,455.6 128.8,254.4 471.2,254.4 194.2,455.6" vector-effect="non-scaling-stroke"/>
+  </svg>
+</div>

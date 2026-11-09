@@ -67,7 +67,7 @@ What it does, file by file:
   `# + , - . / : _`, the digits, the capitals, U+00A0: what a case or document reference is made of (EE167596D4) — and
   **the rest** (lower case, the other punctuation, Latin-1, the typographic marks), with complementary `unicode-range`s in
   `static/css/v5/fonts.css`. A page whose references are digits and capitals downloads 2 688 bytes of mono instead of
-  9 116. Since V2 the mono has one seat — `code`, `kbd`, `pre`, `.t-ref`, `.ctx__ref`, `.doc-workspace__ref`,
+  9 116. Since V2 the mono has one seat — `code`, `kbd`, `pre`, `.t-ref`, `.ctx__ref`, `.ws-case__ref`,
   `.error-page__ref`, `.db-ref`, `.reg-ref` (TYPOGRAPHY_V2 F-3; `tests/frontend/test_typography_v2.py`): the labels and
   step numbers that still drew it on six public pages are the lanes' burn-down, and a public page then downloads no mono.
 - **«ILE Wordmark»**: a byte copy. Newsreader declares no Reserved Font Name.

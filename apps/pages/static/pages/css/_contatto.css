@@ -85,7 +85,7 @@
   }
 }
 
-/* ---- 3 · the doors on their line ---- */
+/* ---- 3 · the doors ---- */
 .contatto-porte .container {
   position: relative;
   display: grid;
@@ -94,18 +94,9 @@
 
 .contatto-porte__titolo {
   margin: 0;
-  font-size: clamp(1.5rem, 1.25rem + 0.8vw, var(--t-band));
+  font-size: var(--t-band);
   line-height: var(--t-band-lh);
   font-weight: var(--w-title);
-}
-
-/* the hub line: under the title on a phone, the doors' common threshold from 64 rem — it draws from the reading edge */
-.contatto-porte__linea {
-  display: block;
-  inline-size: 100%;
-  block-size: 2px;
-  margin-block-start: var(--s-4);
-  background: var(--accent-mark);
 }
 
 .contatto-porte .mosaico--porte .mosaico__tessera {
@@ -118,7 +109,23 @@
   line-height: var(--t-body-lh);
 }
 
-.contatto-porte .mosaico__riga .icon { color: var(--accent-night); } /* its shift under the hand: _projet.css §3 */
+/* the door's way in: its arrow shifts under the hand or the focus, in the night's accent; the words start under the arch
+   (one drawing with Le projet's doors — _projet.css §3 draws the same for its own, since V5.24 each page's sheet is its own) */
+.contatto-porte .mosaico__riga {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.contatto-porte .mosaico__riga .icon {
+  color: var(--accent-night);
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+.contatto-porte .mosaico__tessera:is(:hover, :focus-within) .mosaico__riga .icon { translate: 3px 0; }
+[dir="rtl"] .contatto-porte .mosaico__tessera:is(:hover, :focus-within) .mosaico__riga .icon { translate: -3px 0; }
+.contatto-porte .mosaico__tessera { align-content: start; }
+html[data-input="key"] .contatto-porte .mosaico__riga .icon { transition: none; }
 
 @media (min-width: 48rem) and (max-width: 63.999rem) {
   .contatto-porte .mosaico--porte { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -127,18 +134,8 @@
 @media (min-width: 64rem) {
   .contatto-porte .container {
     grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
-    align-items: end;
+    align-items: start;
     column-gap: var(--s-8);
-  }
-
-  .contatto-porte__testa { padding-block-end: var(--s-6); }
-
-  .contatto-porte__linea {
-    position: absolute;
-    inset-inline: var(--grid-margin, var(--s-4));
-    inset-block-end: 0;
-    inline-size: auto;
-    margin: 0;
   }
 }
 

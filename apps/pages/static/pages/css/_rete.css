@@ -174,14 +174,10 @@
 .rete__pannello--hub { grid-template-columns: minmax(0, 1fr); }
 .rete__pannello--hub > * { grid-column: 1; }
 
+/* the hub entry's label: the label role (`t-label`, v5/base.css — V5.24 Typography V2 F-3: the Arabic glyphs no longer in
+   the mono's system fallback), in the night's accent */
 .rete__etichetta {
   margin: 0;
-  font-family: var(--f-mono);
-  font-size: var(--t-folio);
-  line-height: var(--t-folio-lh);
-  font-weight: var(--w-control);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--accent-night);
 }
 

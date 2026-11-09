@@ -233,7 +233,7 @@
   grid-column: 2 / -1;
 }
 
-:lang(ar) :is(.journey__shore, .journey__gate) {
+:is(.journey__shore, .journey__gate):lang(ar) {
   letter-spacing: 0;
 }
 

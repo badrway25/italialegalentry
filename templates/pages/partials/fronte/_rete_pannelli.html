@@ -7,7 +7,7 @@ cell (the tallest sets the height: no selection moves the page); without script 
 the ring's nodes are links to them (:target). Context: `map_entries`, `presentation`.
 {% endcomment %}<div class="rete__pannelli" data-registro>
   {% if presentation %}<section class="rete__pannello rete__pannello--hub" id="rete-hub" aria-labelledby="rete-hub-title">
-    <h2 class="rete__etichetta" id="rete-hub-title">{% translate "En bref" %}</h2>
+    <h2 class="rete__etichetta t-label" id="rete-hub-title">{% translate "En bref" %}</h2>
     <p class="rete__enunciato"{% if presentation.lang %} lang="{{ presentation.lang }}"{% endif %} data-locked="p3.hero.body">{{ presentation }}</p>
   </section>{% endif %}
   {% for item in map_entries %}<section class="rete__pannello" id="rete-{{ item.key }}" aria-labelledby="rete-{{ item.key }}-title" data-actor="{{ item.key }}" data-audience="{{ item.audience }}">

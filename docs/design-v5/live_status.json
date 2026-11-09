@@ -1,6 +1,6 @@
 {
   "schema": "ile-live-status-v54/1",
-  "updated": "2026-11-06",
+  "updated": "2026-11-08",
   "families": [
     {
       "key": "w1-p",
@@ -353,6 +353,110 @@
       "decision": "v524-lib/REVIEW.md",
       "tag": "v524/lib",
       "date": "2026-11-06"
+    },
+    {
+      "key": "v524-ar",
+      "title": "Arabic Complete (V5.24, decisione del titolare V5.27): il prodotto arabo secondo la politica ibrida — i testi di interfaccia vincolati (139) in un arabo professionale provvisorio, in attesa di revisione linguistica e legale; i testi sostanziali in francese identificati sulla propria pagina e sostituiti altrove da una riga araba che indica dove leggerli; i testi giuridici con l’italiano che fa fede; i nomi ufficiali invariati; settori, regioni, documenti richiesti e il fornitore «Équipe du projet» nella lingua di chi legge; «Privacy Policy» isolata sul login; nessun testo vincolato francese modificato, nessun CSS, nessun JS",
+      "state": "v5",
+      "decision": "v524-ar/REVIEW.md",
+      "tag": "v524/ar",
+      "date": "2026-11-06"
+    },
+    {
+      "key": "v524-home",
+      "title": "Page Composition V2 · professional pass — la homepage (V5.24): le fasce passano l’una nell’altra attraverso un materiale (la sfumatura nella pietra, la linea d’oro che scende nella notte, la velatura sul mosaico, la pietra lavorata sotto l’avviso, la luce sotto l’arco del promotore); l’intestazione resta com’era, con il peso e la spaziatura del titolo presi dai token; nessun testo nuovo",
+      "state": "v5",
+      "decision": "v524-sys/REVIEW.md",
+      "tag": "v524/sys",
+      "date": "2026-11-06"
+    },
+    {
+      "key": "v524-sys",
+      "title": "Visual System V5.29 — il sistema visivo condiviso: un inchiostro blu notte al posto del quasi nero, otto ruoli di colore del testo, titoli più leggeri (500), lastre con una superficie illuminata e un’ombra morbida, sfondi con una luce architettonica, icone su un fondo laguna con l’inchiostro secondo l’importanza, «la protezione» come una fascia compatta e discreta; il testo vincolato intatto; nessun testo nuovo",
+      "state": "v5",
+      "decision": "v524-sys/REVIEW.md",
+      "tag": "v524/sys",
+      "date": "2026-11-06"
+    },
+    {
+      "key": "v524-pub1",
+      "title": "Page Composition V2 · professional pass — percorsi e spazi (V5.24 + V5.29): Parcours, le otto schede, il progetto pilota, Imprese, Istituzioni, Università, Formazione, Diplomi; le fasce passano l’una nell’altra attraverso un materiale (la linea della rotta che scende nella fascia seguente, la velatura sotto l’emiciclo, la sfumatura sopra la filiera), le tappe delle schede sulla pietra, la sequenza del pilota sul lavaggio del marchio; «l’intesa», lo sfondo Italia + Marocco dello Spazio Istituzioni, discreto e mai specchiato; in arabo i titoli dei percorsi in arabo, i testi sostanziali francesi identificati sulla loro pagina; un solo testo nuovo (it / en / ar)",
+      "state": "v5",
+      "decision": "v524-pub1/REVIEW.md",
+      "tag": "v524/pub1",
+      "date": "2026-11-06"
+    },
+    {
+      "key": "v524-pub2",
+      "title": "Page Composition V2 · professional pass — sistema, fiducia e lettura (V5.24 + V5.29): le domande frequenti, il glossario e la pagina del termine, il Forum, AGAMI, Attention aux fraudes sulla pietra, «il rimando» sulla carta, il raccordo del Forum, l’incastro delle porte di Le projet; le domande frequenti con un segno per domanda, l’inchiostro per stato, l’apertura coreografata, la ricerca vuota accanto all’intero registro; in arabo le domande, i percorsi, il programma e le funzioni del Forum in arabo, le risposte, il testo antifrode e le definizioni identificati sulla loro pagina; due testi nuovi (it / en / ar)",
+      "state": "v5",
+      "decision": "v524-pub2/REVIEW.md",
+      "tag": "v524/pub2",
+      "date": "2026-11-07"
+    },
+    {
+      "key": "v524-brand",
+      "title": "Layout & Brand Refinement (V5.29): la testata su una cornice più larga (la colonna dei contenuti più 10rem, margini di 40 px a 1440), i moduli pubblici allineati a essa con i campi su due colonne, il marchio un poco più grande, la sola chiave del simbolo che gira una volta all’apertura e al passaggio del mouse o del fuoco, ferma con il movimento ridotto; il disegno del logo invariato; nessun testo nuovo",
+      "state": "v5",
+      "decision": "v524-brand/REVIEW.md",
+      "tag": "v524/brand",
+      "date": "2026-11-07"
+    },
+    {
+      "key": "v524-plat",
+      "title": "Typography V2 · la piattaforma (V5.24 + V5.29): negli spazi riservati le etichette sopra i titoli nel ruolo di etichetta, il testo introduttivo su una misura più corta, le cifre dei cruscotti nel carattere dei numeri, l’arabo in Readex Pro alla stessa misura del francese; titoli a peso 500 e inchiostri dai ruoli del testo, mai nero pesante; nessun cambiamento di composizione, materiali, moduli o icone",
+      "state": "v5",
+      "decision": "v524-plat/REVIEW.md",
+      "tag": "v524/plat",
+      "date": "2026-11-07"
+    },
+    {
+      "key": "v524-closing",
+      "title": "Cleanup (V5.24 + V5.29, la chiusura): tolte le regole di stile che nessuna pagina usa più, dopo una misura in Chromium su ogni pagina, in francese e in arabo, sul telefono e sullo schermo largo — nessuna differenza visibile, salvo le icone grandi riportate al tratto comune di 1,5 px; la comparsa dal basso tolta dove era l’unico movimento rimasto; la chiave del marchio gira con il solo foglio di stile (shell.js 4 648 byte, sotto 4 700); il foglio comune a 32 105 byte, 611 sotto il limite di 32 716; il francese non intenzionale nelle pagine arabe a zero, con la tabella dei residui chiusa; ogni limite di peso alla misura; il catalogo delle traduzioni al 100 %; HANDOFF_V2.md per chi continuerà il lavoro",
+      "state": "v5",
+      "decision": "v524-closing/REVIEW.md",
+      "tag": "v524/closing",
+      "date": "2026-11-07"
+    },
+    {
+      "key": "v530-agami",
+      "title": "AGAMI (V5.30): la pagina è ora istituzionale e autentica — il logo ufficiale accanto al nome, il riquadro «En bref» con il ruolo, la targa d’identificazione aperta dal sigillo con i dati richiesti, la fascia «Entre l’Italie et le Maroc» con il motto pubblicato da AGAMI sul fondo Italia + Marocco; nessuna fotografia, perché tutte mostrano persone riconoscibili",
+      "state": "v5",
+      "decision": "v530-agami/REVIEW.md",
+      "tag": "v530/agami",
+      "date": "2026-11-08"
+    },
+    {
+      "key": "v530-plat",
+      "title": "Piattaforma (V5.30): Comunicazioni, Mes documents e Mes dossiers hanno ricerca, filtri in un pannello laterale, etichette dei filtri attivi e ordinamento, sempre sui dati dell’account; il ritiro di una richiesta chiede conferma; i cruscotti della persona e dell’impresa mostrano l’attività recente; la barra dei filtri resta a portata sotto la barra della console",
+      "state": "v5",
+      "decision": "v530-plat/REVIEW.md",
+      "tag": "v530/plat",
+      "date": "2026-11-08"
+    },
+    {
+      "key": "v530-art",
+      "title": "Direzione artistica pubblica (V5.30): meno archi e linee geometriche, un motivo dominante per sezione, più fotografia e materia; il marchio nella testata è più presente, i contenitori e il piè di pagina seguono un solo sistema di larghezze; il modulo di Entreprises non è più coperto dalla sua testata; Italia + Marocco è un solo elemento grafico più presente, sulla home, in Istituzioni, Réseau e AGAMI, e le bandiere non sono mai specchiate in arabo",
+      "state": "v5",
+      "decision": "v530-art/REVIEW.md",
+      "tag": "v530/art",
+      "date": "2026-11-08"
+    },
+    {
+      "key": "v530-integ",
+      "title": "Revisione d’integrazione (V5.30): una sola revisione delle tre correnti insieme; il consenso francese della newsletter nelle pagine arabe ora dichiara di essere il testo sorgente, come tutti gli altri",
+      "state": "v5",
+      "decision": "v530-integ/REVIEW.md",
+      "tag": "v530/integ",
+      "date": "2026-11-08"
+    },
+    {
+      "key": "v530-sys",
+      "title": "Varietà visiva (V5.30): archi, curve e linee decorative restano solo dove significano qualcosa (Hero, Lume, la porta riservata, Parcours, Réseau); ogni famiglia di pagine ha la sua composizione — pannello di processo in Entreprises, foto e attori in Institutions, schede con la foto del campus in Università e Formazione; le icone stanno in tessere, non in dischi",
+      "state": "v5",
+      "decision": "v530-sys/REVIEW.md",
+      "tag": "v530/sys",
+      "date": "2026-11-08"
     }
   ],
   "surfaces": {

@@ -319,8 +319,9 @@ l’Italie», «Forum Vénétie–Maroc», «%(project)s est promu par %(promote
   - A generic light-sweep paint for `[data-verb~="light"]` would let page sheets drop their own (§6).
   - `apps/core/icons.py`: the `contact-email-title` anchor and the `faq` concept are kept alive by P2 (§6); retire
     them if the registry should follow V2's removals.
-  - The panorama's credit inset while the frame widens; `spia.js` measures `--spia-y` only (a horizontal band would
-    need x and width).
+  - `spia.js` measures `--spia-y` only (a horizontal band would need x and width). (This line named the panorama's
+    credit inset before: credits removed by v524 (V5.24 §2) — lane PX, IMAGERY_ATTRIBUTION D5; the rule left
+    `_lessico-v2.css` with lane PUB2.)
 - **P1**: keep `#apres-l-arrivee` on `/formation/` («Pour s'installer» links to it); if the pilot page's approdo
   meets the same all-or-none guard, P2's exemption in `test_interior_w3_f1.py` covers it.
 - **Steward**: ownership rows for the new files (`apps/pages/identity.py`, `apps/forum/templatetags/forum_v2.py`,

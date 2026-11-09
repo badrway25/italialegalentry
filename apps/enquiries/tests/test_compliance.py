@@ -72,13 +72,32 @@ def test_company_page_renders_every_locked_key_exactly(client, seeded, legal_pub
     assert html.count("<h1") == 1
 
 
-@pytest.mark.parametrize("lang", ["it", "en", "ar"])
+@pytest.mark.parametrize("lang", ["it", "en"])
 def test_fallback_french_marked_with_lang_attribute(client, seeded, legal_published, lang):
     html = client.get(f"/{lang}/entreprises/recueil-des-besoins/").content.decode()
     title = locked_content.text("p1.companies.title", "fr")
     assert f'lang="fr">{title}' in html
     first_label = locked_content.get("p1.companies.form.fields", "fr")[0][0]
     assert f'<span lang="fr">{first_label}</span>' in html
+    assert html.count("<h1") == 1
+
+
+def test_arabic_form_renders_the_compositional_texts_and_keeps_the_consent_identified(client, seeded, legal_published):
+    """V5.27 (FINAL_DELIVERY_V2 R7′; lane AR): on /ar/ the title and the field labels are compositional texts and read
+    in provisional Arabic (no ``lang="fr"``); the consent sentence is a substantive text whose French stands on its own
+    page, isolated as French — the same invariant as above (the fallback is marked), with the owner's split of the two
+    classes."""
+    from cms import locked_renderings
+
+    html = client.get("/ar/entreprises/recueil-des-besoins/").content.decode()
+    title = locked_content.text("p1.companies.title", "fr")
+    assert title not in html
+    assert locked_renderings.rendering("p1.companies.title") in html
+    first_label = locked_content.get("p1.companies.form.fields", "fr")[0][0]
+    assert first_label not in html
+    assert locked_renderings.rendering("p1.companies.form.fields[0]") in html
+    consent = locked_content.text("p1.companies.form.consent", "fr")
+    assert f'lang="fr">{consent}' in html or f'lang="fr" dir="ltr">{consent}' in html, "the consent stays French"
     assert html.count("<h1") == 1
 
 

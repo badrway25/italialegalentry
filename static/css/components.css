@@ -134,54 +134,6 @@
 /* =========================================================================
    11. Institutional banner (event notice — quiet, configurable, not a popup)
    ========================================================================= */
-.institutional-banner {
-  background: var(--surface-2);
-  border-block: var(--border-width) solid var(--border-hairline);
-}
-
-.institutional-banner__inner {
-  display: grid;
-  gap: var(--space-4) var(--space-8);
-  padding-block: var(--space-6);
-  align-items: center;
-}
-
-@media (min-width: 64rem) {
-  .institutional-banner__inner {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
-}
-
-.institutional-banner__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--font-size-h3);
-  font-weight: var(--weight-medium);
-  color: var(--color-primary-900);
-  letter-spacing: 0.02em;
-}
-
-.institutional-banner__meta {
-  margin: var(--space-1) 0 0;
-  font-size: var(--font-size-caption);
-  color: var(--color-accent-700);
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.04em;
-}
-
-.institutional-banner__quote {
-  margin: 0;
-  font-family: var(--font-display);
-  font-style: italic;
-  color: var(--text-secondary);
-  padding-inline-start: var(--space-4);
-  border-inline-start: 2px solid var(--color-accent-600);
-}
-
-.institutional-banner__actions {
-  display: flex;
-  gap: var(--space-3);
-}
 
 /* Institutional quote (p1.companies.quote) */
 .blockquote-institutional {

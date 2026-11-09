@@ -191,7 +191,9 @@ def test_the_protection_s_title_carries_its_own_language(lang):
 
 
 def test_an_index_glyph_never_shrinks_and_the_ranks_are_filed_under_the_row():
-    css = re.sub(r"/\*.*?\*/", "", _read(V5 / "_sec-indice.css"), flags=re.S)
+    # V5.29 (stream SYS; V5.20: the same invariant): «l'indice» is two sheets — the base (the list, the tabs, the phone's
+    # disclosure) that the home bundles alone, and the whole index importing it; the rules are read across both
+    css = re.sub(r"/\*.*?\*/", "", _read(V5 / "_sec-indice-base.css") + _read(V5 / "_sec-indice.css"), flags=re.S)
     assert re.search(r"\.indice__glifo \{\s*flex: none;\s*\}", css)
     assert ".indice__lista > :nth-child" not in css
     assert all(f".indice__riga:nth-child({n}) {{ --sez-i: {n - 1}; }}" in css for n in (2, 3, 4, 5))

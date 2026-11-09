@@ -73,7 +73,7 @@ offering the way back. An empty register is one sentence naming who fills it and
       <li class="db-task reg-row{% if plan_url %} reg-row--link{% endif %}" data-plan="{{ plan.uuid }}">
         <div class="db-task__words">
           <h3 class="db-task__title" dir="auto">{% if plan_url %}<a class="reg-row__link" href="{{ plan_url }}">{{ plan.title }}</a>{% else %}{{ plan.title }}{% endif %}</h3>
-          <p class="db-task__meta reg-row__meta"><span>{{ plan.get_origin_display }}</span>{% if plan.origin_reference %}<span class="reg-ref">{{ plan.origin_reference }}</span>{% endif %}<span>{% blocktranslate count n=plan.item_count %}{{ n }} cours conseillé{% plural %}{{ n }} cours conseillés{% endblocktranslate %}</span></p>
+          <p class="db-task__meta reg-row__meta"><span>{{ plan.get_origin_display }}</span>{% if plan.origin_reference %}<span dir="auto">{{ plan.origin_reference }}</span>{% endif %}<span>{% blocktranslate count n=plan.item_count %}{{ n }} cours conseillé{% plural %}{{ n }} cours conseillés{% endblocktranslate %}</span></p>
           <p class="db-task__meta">{% translate "parcours conseillé, jamais une condition d’accès" %}</p>
         </div>
         <div class="db-task__state">{% chip plan.status "academy.PlanStatus" %}{{ plan.get_status_display }}{% endchip %}</div>

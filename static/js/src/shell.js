@@ -40,7 +40,7 @@ if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
   document.addEventListener(
     "pointermove",
     (event) => {
-      const surface = event.target instanceof Element && event.target.closest(".card--link,[data-spotlight],.porta,.entry,.page-links__link");
+      const surface = event.target instanceof Element && event.target.closest(".card--link,[data-spotlight],.porta,.entry");
       if (!surface) return;
       const box = surface.getBoundingClientRect();
       surface.style.setProperty("--mx", `${Math.round(event.clientX - box.left)}px`);

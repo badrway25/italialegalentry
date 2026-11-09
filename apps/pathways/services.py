@@ -23,6 +23,7 @@ from cms.translation import resolve
 from core import gates, icons
 from pathways.models import (
     GENERIC_AUTHORITY_NAMES,
+    LOCKED_PATHWAYS_KEY,
     Pathway,
     PathwayDocument,
     PathwayStep,
@@ -143,25 +144,57 @@ class IndexEntry:
     url: str
     is_live: bool
     family: str = "other"  # the /parcours/ filter's family (PATHWAY_FAMILIES)
+    #: read in a page's language (``index_entries(lang=…)``): the language attribute each part needs ("" when the
+    #: words are the page's), and whether the description stands in its hidden form (V5.27 / R7′: a substantive
+    #: French text quoted off its own sheet on /ar/ — the seam then gives the pointer line)
+    title_lang: str = ""
+    description_lang: str = ""
+    description_hidden: bool = False
 
 
-def index_entries(at=None) -> list[IndexEntry]:
-    """Always the eight locked pathways in the prescribed order; detail links only when live."""
+def _entry_part(subkey: str, lang: str) -> tuple[str, str]:
+    """One part of a prescribed pathway in the page's language (``locked_content.get`` by its sub-key: the title's
+    provisional Arabic, the description's French source or its pointer line) with the ``lang`` attribute it needs."""
+    value, effective = locked_content.get(subkey, lang)
+    return str(value), ("" if effective == lang else effective)
+
+
+def index_entries(at=None, lang: str | None = None) -> list[IndexEntry]:
+    """Always the eight locked pathways in the prescribed order; detail links only when live.
+
+    ``lang`` given (the Parcours board, the Universités stations — lane PUB1's readers, V5.27 / R7′): the title and the
+    description are read by their sub-keys in that language, each with its own ``lang`` attribute; ``lang`` None: the
+    registry's French read, as the home's reader still composes it (its lane converts it; the glossary's chips read
+    the sub-keys since the v524-pub2 merge)."""
+    from cms import locked_renderings
+
     rows = {p.key: p for p in Pathway.objects.all()}
     entries: list[IndexEntry] = []
     for position, entry in enumerate(locked_pathway_entries(), start=1):
         row = rows.get(entry["key"])
         live = bool(row and row.is_live(at))
+        title, description = entry["title"], entry["description"]
+        parts: dict = {}
+        if lang:
+            base = f"{LOCKED_PATHWAYS_KEY}[{position - 1}]"
+            title, title_lang = _entry_part(f"{base}.title", lang)
+            description, description_lang = _entry_part(f"{base}.description", lang)
+            parts = {
+                "title_lang": title_lang,
+                "description_lang": description_lang,
+                "description_hidden": locked_renderings.is_hidden(f"{base}.description", lang),
+            }
         entries.append(
             IndexEntry(
                 key=entry["key"],
                 order=position,
-                title=entry["title"],
-                description=entry["description"],
+                title=title,
+                description=description,
                 icon=(row.icon if row and row.icon else DEFAULT_ICONS.get(entry["key"], "")),
                 url=_safe_reverse("pathways:detail", key=entry["key"]) if live else "",
                 is_live=live,
                 family=FAMILY_OF.get(entry["key"], "other"),
+                **parts,
             )
         )
     return entries
@@ -316,7 +349,17 @@ def eligibility_context(pathway: Pathway, lang: str | None = None) -> tuple[str,
     return _translated(pathway, "eligibility_context_fr", "eligibility_context", lang)
 
 
-def authorities(pathway: Pathway) -> list[dict]:
+#: the generic designation the seed writes in French (a phrase of the locked visa definition; models.
+#: GENERIC_AUTHORITY_NAMES): on a page of another language the catalogue names it in that language (V5.27 / R7′: no
+#: team-set French on /ar/); the Italian offices (Questura, Prefettura, Sportello Unico) keep their Italian names
+GENERIC_AUTHORITY_LABELS: dict[str, object] = {
+    "représentations diplomatiques et consulaires italiennes": _(
+        "représentations diplomatiques et consulaires italiennes"
+    ),
+}
+
+
+def authorities(pathway: Pathway, page_lang: str | None = None) -> list[dict]:
     out = []
     for item in pathway.authorities or []:
         if not isinstance(item, dict):
@@ -327,6 +370,8 @@ def authorities(pathway: Pathway) -> list[dict]:
             # `lang`: language the name is written in (editors may set "it" for Italian office names);
             # CMS values default to the content source language, so templates can mark the fallback.
             lang = str(item.get("lang", "") or settings.CONTENT_FALLBACK_LANGUAGE)[:5]
+            if page_lang and page_lang != lang and lang == "fr" and name in GENERIC_AUTHORITY_LABELS:
+                name, lang = str(GENERIC_AUTHORITY_LABELS[name]), page_lang
             url = url if url.startswith("https://") else ""
             # `host`: where the link leads, shown beside it (design V5.4 D26: «an authority link's host made visible»)
             host = (urlsplit(url).hostname or "").removeprefix("www.") if url else ""
@@ -348,6 +393,11 @@ class DetailContext:
     glossary: list[dict]
     is_training_in_origin_country: bool
     sections: list[dict] = field(default_factory=list)
+    #: V5.27 / R7′: the title and the description read by their sub-keys in the page's language — the ``lang``
+    #: attribute each needs ("" when the words are the page's) and the description's sub-key (its caption on /ar/)
+    title_lang: str = ""
+    description_lang: str = ""
+    description_key: str = ""
 
 
 DETAIL_SECTIONS: tuple[tuple[str, str], ...] = (
@@ -364,18 +414,25 @@ DETAIL_SECTIONS: tuple[tuple[str, str], ...] = (
 def detail_context(pathway: Pathway, lang: str | None = None) -> DetailContext:
     lang = lang or _lang()
     eligibility, eligibility_lang = eligibility_context(pathway, lang)
+    keys = [entry["key"] for entry in locked_pathway_entries()]
+    base = f"{LOCKED_PATHWAYS_KEY}[{keys.index(pathway.key)}]" if pathway.key in keys else ""
+    title, title_lang = _entry_part(f"{base}.title", lang) if base else (pathway.title, "")
+    description, description_lang = _entry_part(f"{base}.description", lang) if base else (pathway.description, "")
     context = DetailContext(
         pathway=pathway,
-        title=pathway.title,
-        description=pathway.description,
+        title=title,
+        description=description,
         eligibility=eligibility,
         eligibility_lang=eligibility_lang,
         steps=public_steps(pathway, lang),
         documents=public_documents(pathway, lang),
         warnings=public_warnings(pathway, lang),
-        authorities=authorities(pathway),
+        authorities=authorities(pathway, lang),
         glossary=glossary_links(pathway.key),
         is_training_in_origin_country=pathway.key == "training_in_origin_country",
+        title_lang=title_lang,
+        description_lang=description_lang,
+        description_key=f"{base}.description" if base else "",
     )
     # V5.12 §8 (W1-C): a chapter with nothing verified to say is not drawn, and the page's index does not name it —
     # never «being verified». The overview stands with its context, or with the training-in-origin-country notice
@@ -469,26 +526,33 @@ FAMILY_SIZES_FORK_END = (
 )
 
 
-#: F1 «la traversata» (§3.9): the width each frame is drawn at (its two nodes, the origin country's `earth` and Italy's
-#: `ile-arch`, are the template's own two symbols), exact at every step: from 64 rem on the page's 12 columns (24 px
-#: gutters; the container's content 1 360 / 1 240 / 1 096 px, 100vw − 80 below 75 rem) the first time's frame 4/12
-#: (its notice on the 2/12 beside it) and the second's 6/12; below, the text column's width (the node's 48 px and its
-#: 20 px gap taken from the page's margins 24 / 20 px), at the 34 rem measure once the column is wider
+#: F1 «la traversata» (§3.9, V5.30 VARIETY §7): the width each frame is drawn at (its two tiles, the origin country's
+#: `earth` and Italy's `ile-arch`, are the template's own two symbols), exact at every step: from 64 rem half the
+#: page's container (its content 1 360 / 1 240 / 1 096 px, 100vw − 80 below 75 rem; 24 px gutter) less the card's 24 px
+#: padding; below, the container less the same padding
 TRAVERSATA_BEFORE_SIZES = (
-    "(min-width: 100rem) 27.3333rem, (min-width: 90rem) 24.8333rem, (min-width: 75rem) 21.8333rem, "
-    "(min-width: 64rem) calc(33.3333vw - 2.6667rem), (min-width: 41.25rem) 34rem, "
-    "(min-width: 26.875rem) calc(100vw - 7.25rem), calc(100vw - 6.75rem)"
+    "(min-width: 100rem) 38.75rem, (min-width: 90rem) 35rem, (min-width: 75rem) 30.5rem, "
+    "(min-width: 64rem) calc(50vw - 6.25rem), (min-width: 48rem) calc(100vw - 8rem), "
+    "(min-width: 26.875rem) calc(100vw - 6rem), calc(100vw - 5.5rem)"
 )
-TRAVERSATA_AFTER_SIZES = (
-    "(min-width: 100rem) 41.75rem, (min-width: 90rem) 38rem, (min-width: 75rem) 33.5rem, "
-    "(min-width: 64rem) calc(50vw - 3.25rem), (min-width: 41.25rem) 34rem, "
-    "(min-width: 26.875rem) calc(100vw - 7.25rem), calc(100vw - 6.75rem)"
-)
+TRAVERSATA_AFTER_SIZES = TRAVERSATA_BEFORE_SIZES
+
+
+def station_line(entry: IndexEntry) -> str:
+    """A station's line: the pathway's description — or, where the description stands in its hidden form (V5.27 /
+    R7′, /ar/), nothing on a station that links its sheet (the link is the pointer: the sheet carries the French
+    source with its caption; a pointer line on every station would only repeat the titles) and the pointer line on a
+    station that does not link it yet."""
+    if entry.description_hidden and entry.url:
+        return ""
+    return entry.description
 
 
 def route_board(entries: list[IndexEntry], lang_attr: str = "") -> list[dict]:
     """PA-1 «il tracciato delle famiglie»: the eight locked pathways on their family's lane, in the prescribed order
-    (the numerals say it), each station its PATHWAY glyph; a station links its sheet only while the sheet is live."""
+    (the numerals say it), each station its PATHWAY glyph; a station links its sheet only while the sheet is live.
+    Entries read in the page's language (``index_entries(lang=…)``) carry their own ``lang`` attributes; otherwise
+    ``lang_attr`` marks both parts."""
     lanes = []
     for family, _keys in PATHWAY_FAMILIES:
         stations = [
@@ -497,9 +561,10 @@ def route_board(entries: list[IndexEntry], lang_attr: str = "") -> list[dict]:
                 "num": f"{entry.order:02d}",
                 "glyph": entry.icon,
                 "title": entry.title,
-                "line": entry.description,
+                "line": station_line(entry),
                 "url": entry.url,
-                "lang": lang_attr,
+                "lang": entry.title_lang or lang_attr,
+                "line_lang": entry.description_lang or lang_attr,
             }
             for entry in entries
             if entry.family == family

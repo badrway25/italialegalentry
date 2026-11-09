@@ -12,11 +12,18 @@ from __future__ import annotations
 from django import forms
 from django.conf import settings
 from django.utils import translation
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from cms import locked_content
 from consents.models import ConsentPurpose
-from consents.services import ACKNOWLEDGEMENT_PURPOSES, LOCKED_CONSENT_KEYS, REUSED_CONSENT_KEYS, UI_CONSENT_TEXTS
+from consents.services import (
+    ACKNOWLEDGEMENT_PURPOSES,
+    ACKNOWLEDGEMENT_SOURCE_KEY,
+    LOCKED_CONSENT_KEYS,
+    REUSED_CONSENT_KEYS,
+    UI_CONSENT_TEXTS,
+)
 from core.forms import AcknowledgementBooleanField, ConsentBooleanField, HoneypotFormMixin, PublicFormMixin
 from enquiries.models import CollaborationProposal, CompanyNeedsRequest, ContactRequest
 
@@ -37,6 +44,22 @@ def consent_label(purpose: str) -> tuple[str, str]:
     return locked_content.get(key, current_language())
 
 
+def consent_caption(purpose: str, lang: str, effective: str) -> str:
+    """V5.27 / R7′ (3), FINAL_DELIVERY_V2 §3.9: on a page of another language the box's French wording is identified
+    source material — the prescribed consent on its own form, or the team's acknowledgement whose words open it
+    (``ACKNOWLEDGEMENT_SOURCE_KEY``) on the form it belongs to — by the one identification caption of the locked layer
+    (the label role, «the source text in French; the Arabic translation pending validation»); "" on a page in the
+    wording's own language and wherever the policy draws no caption (Italian, English keep today's rendering). The words
+    of the box are never translated: the record keeps the French it shows."""
+    if effective == lang:
+        return ""
+    from cms import locked_renderings
+
+    key = LOCKED_CONSENT_KEYS.get(purpose) or REUSED_CONSENT_KEYS.get(purpose) or ACKNOWLEDGEMENT_SOURCE_KEY
+    text = locked_renderings.caption_text(key, lang)
+    return format_html('<p class="t-label locked-caption" data-locked-caption="{}">{}</p>', key, text) if text else ""
+
+
 class PublicSubmissionForm(HoneypotFormMixin, PublicFormMixin, forms.ModelForm):
     """
     Common behaviour: consent field, locked consent label with ``label_lang`` marker when the
@@ -54,6 +77,9 @@ class PublicSubmissionForm(HoneypotFormMixin, PublicFormMixin, forms.ModelForm):
         sentence, effective = consent_label(self.consent_purpose)
         self.fields["consent"].label = sentence
         self.fields["consent"].label_lang = effective if effective != lang else ""
+        caption = consent_caption(self.consent_purpose, lang, effective)
+        if caption:  # the preserved form's body is otherwise unchanged: the caption is the box's help text
+            self.fields["consent"].help_text = caption
         for name, field in self.fields.items():
             if name in HONEYPOT_FIELDS or name == "consent":
                 continue

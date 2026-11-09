@@ -342,7 +342,17 @@ def test_four_languages_render_with_correct_direction(client, seeded, alice, lan
         assert f'<html lang="{lang}"' in html
         assert ('dir="rtl"' in html.split(">", 2)[1]) == (lang == "ar")
     dashboard = _html(client, DASHBOARD.replace("/fr/", f"/{lang}/", 1))
-    if lang != "fr":
+    if lang == "ar":
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): p3.reserved.* are
+        # compositional texts (C-UI) — on /ar/ their provisional Arabic renderings head the page in the page's language;
+        # still never the French under a translated eyebrow
+        from cms import locked_renderings
+
+        assert "ESPACE RÉSERVÉ" not in dashboard
+        title = escape(locked_renderings.rendering("p3.reserved.title"))
+        assert f'<h1 class="ws-head__title">{title}</h1>' in dashboard
+        assert escape(locked_renderings.rendering("p3.reserved.body")) in dashboard
+    elif lang != "fr":
         # V5.18 (P-3): the access point's prescribed French (p3.reserved.*, no official it/en/ar version) heads the page
         # only in French; elsewhere the console's own translated head, never the French under a translated eyebrow
         assert "ESPACE RÉSERVÉ" not in dashboard

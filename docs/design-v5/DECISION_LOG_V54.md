@@ -212,6 +212,23 @@ names; DL54-02 … DL54-16 are §8.3's fifteen entries, in §8.3's order.
 | DL54-187 | 5 Nov 2026 | Steward, the v524-px merge: V5.24's final delivery, lane PX on design-v5 — Imagery V2 · credits: the 104 «Photo : … / Pexels» lines and chips leave every photograph of the product in four languages (the licence permits it; provenance stays internal), the frames unchanged in size and place, no empty caption box; components/photo.html without its figcaption, Picture.credit removed, the curated-asset path licence-aware (MediaAsset / ForumMedia / Photo.attribution_required, the one-condition byline guard), the production-facing test tests/compliance/test_imagery_credits_v524.py as the gate's Pexels-visible-label check, eleven shared test modules updated under V5.20 and stronger; the reviewer's targeted gate round 2 PASS on items 1–7 with no blocker (60 frames in 24 headed cells with 0 captions, 30 of 30 picture boxes identical to the base's, the crawl of 2 156 pages clean), imagery 4.5 on the four gate pages, the other dimensions not applicable (no composition change); the dist byte-identical to the base, main.css 32 716 B, catalogue +0 −0; the id rule admits the final-delivery lanes (R11); the family v524-px recorded; tag v524/px | V5.24 §2–§3, §23, §30; V5.25; V5.26 §4; V5.27 §6; V5.20; FINAL_DELIVERY_V2.md §0–§3.2, R2, R6, R9–R14; IMAGERY_ATTRIBUTION D1–D8; SECTION_SYSTEM_V2 §8, §9.7–§9.9; QA/v54/v524-px/REVIEW.md; QA/v524/px/ |
 | DL54-188 | 5 Nov 2026 | Steward, the v524-t merge: V5.24's final delivery, lane T on design-v5 — Typography V2, the shared type layer: Readex Pro replaces Vazirmatn for every Arabic role at ratio 1.0 (16 128 B in place of 32 228; the set 77 240 → 61 140 B; the Arabic fallback recomputed), the twelve steps declared once in tokens.css with the display line and the titles at 600 and −0.03 em, the label role (13/16 600 +0.08 em; 14/20 on phones and in Arabic) and the numeral role (sans 600 tabular), the public phone step-up (nothing under 14 px), the primary call 16/24 600, the Arabic type rules in the subject form with the Latin boundary, AR's M1 / M3 / C-1, the guard tests with the burn-down table (45 sheets) the other lanes empty, FONTS_V5 and the two design systems' sections; tokens.css and base.html:24–32 recorded as the §9.8 typography exception (R1); the reviewer's targeted gate PASS on items 1–6 with 0 blockers and 8 minors (1 098 + 4 passed, 118 headed frames, the hero's first screen pixel-identical at 1440 fr and its anchors unmoved, swap CLS ≤ 0.0015, axe 0); the six dimensions not re-scored (no composition change); main.css 32 716 → 32 695 B gzip -9, catalogue +0 −0; the family v524-t recorded; tag v524/t | V5.24 §11–§14, §30; V5.25; V5.26 §4; V5.27 §4, §6; V5.20; FINAL_DELIVERY_V2.md §0–§3.1, R1, R4 g, R6, R7, R9–R14; TYPOGRAPHY_V2 §3–§6; ARABIC_AUDIT M1, M3, C-1; SECTION_SYSTEM_V2 §6, §9.7–§9.9; QA/v54/v524-t/REVIEW.md; QA/v524/t/ |
 | DL54-189 | 6 Nov 2026 | Steward, the v524-lib merge: V5.24's final delivery, lane LIB on design-v5 — the library: material, transitions, faces, verbs, type roles: the new page-only partial static/css/v5/_materia.css (788 B gzip -9; tokens and mixes only, no motion of its own) with the four grounds' recipes — «pietra» and its masked drafting grid, «carta viva», «velatura», the brand wash — and the seam primitives under the Director's names (R3: «il raccordo», the first child of the band it enters, painted across the seam with its node on the entered band's head rule; «incastro», the doors 64 px over the photograph; the stills), the T2 tile's niche face on every page and its light in the mosaico sheet, «la protezione» on a drawing table (the field, the sill to the container's edge, the shield bookend at 30 % standing down by a container query), the grid's tiles that ink and light instead of settling, the library's type on the twelve steps (the label role by name on every panel head, the numeral role 28/32 · 36/40 with the across numeral 36/36, the keyword and the term title at 600, the frontispiece and the service sheet converted, the descendant Arabic rules gone), PX's thirteen credit rules deleted; the reviewer's targeted gate round 2 PASS on items 1–5 with 0 blockers and 9 minors (200 headed frames at 1440 · 1024 · 390 × fr · ar, the raccordo 193 against 235 and 0.0 px off the head rule, the incastro 64 px, the sill 344 px and the shield standing down at 1024 and on the sheets, axe 0, 1 603 + 124 passed with the base's six reds only); the six dimensions 4 on the three gate surfaces (no composition change); main.css 32 695 untouched, the home 61 415 ≤ 61 440, _sec-mosaico.css re-recorded at 1 355 (R4 f); catalogue +0 −0; the stale T merge lock taken over (DL54-188 left to the T steward's record); the family v524-lib recorded; tag v524/lib | V5.24 §7–§17, §11–§14, §30; V5.25; V5.26 §4–§8; V5.27 §6; V5.20; FINAL_DELIVERY_V2.md §0–§3.3, R3, R4 c/f, R6, R9–R14; BACKGROUND_MATERIAL_V2 §3, §4.1; TYPOGRAPHY_V2 §4.2, §6; SECTION_SYSTEM_V2 §5.3, §6, §9.7–§9.9; QA/v54/v524-lib/REVIEW.md; QA/v524/lib/ |
+| DL54-190 | 6 Nov 2026 | Steward fix v524-cifix on design-v5 — the 18 CI reds of the published snapshot (run 42183151924, py3.12 and py3.13: 7 069 passed, 18 failed) fixed without loosening a test: (a) 14 minified-alone size budgets read from the build's hash-checked record static/css/dist/measures.json instead of running node_modules/esbuild (CI has no Node), the same ceilings; (b) the custom-property guard reads code, not comments, and names the page's parameter --raccordo-x with its fallback rule; (c) the fluid steps exactly Typography V2's four, the prose fixed; (d) the colophon connector on the label role's token (CSS fix: the .5rem literal stood 2 px above the Arabic rule — DL54-189 m2's three Arabic browser reds green) and its test on that invariant; the CI-like clone 7 103 passed, 0 failed |
+| DL54-191 | 6 Nov 2026 | Steward, the v524-ar merge (V5.28 wave A): V5.24's final delivery, lane AR on design-v5 — Arabic Complete under the owner's final Arabic decision V5.27 (the hybrid policy, R7′): every locked key classified (C-UI 139 provisional professional Arabic renderings, C-SUBST-FR 34, C-SUBST-IT 59 texts over 6 keys, C-OFFICIAL 17) beside the registry (French and checksums byte-identical); the team's data seed; sectors, regions, requested documents and the project-team provider in the reader's language; +44 msgids, 100 %; the review FAIL 2 blockers → the one fix round → PASS, scores 4; eight existing tests amended by the steward under V5.20 (R7′); the family v524-ar; tag v524/ar | V5.24 §18–§22; V5.27; V5.28; V5.29; V5.20; FINAL_DELIVERY_V2.md §3.8, R7′, R11, R14; QA/v54/v524-ar/REVIEW.md; QA/v524/ar/ |
+| DL54-192 | 6 Nov 2026 | Steward, the v524-home merge (through v524-sys): V5.24's final delivery, lane HOME — the homepage's professional pass: the seams on LIB's material (sfumatura, raccordo, velatura, pietra, carta viva), T's contract, PX's contract, the 360 px fold; the first screen's weight through the tokens as the §9.8 exception (R1, §3.4 gate 3); the home total closed by SYS (61 328 ≤ 61 440); the family v524-home; no tag of its own | FINAL_DELIVERY_V2.md §3.4, R1, R3, R4 d, R11, R14; V5.28; V5.20; QA/v524/home/NOTES.md |
+| DL54-193 | 6 Nov 2026 | Steward, the v524-sys merge: the owner's V5.29 shared visual system — the ink re-valued with eight text roles, the weight map one step down, the grounds' light, the plate material, the icon tile, «la protezione» one compact band; the §9.8 exception «V5.29 the shared visual system»; review FAIL (B1, the seam test) → the one fix round → the owner's ruling ACCEPTED (19:36), the three proofs verified; the id rule admits -sys; the family v524-sys; tag v524/sys | V5.29 §1–§9, §18–§19 and the 19:36 ruling; V5.28; V5.20; FINAL_DELIVERY_V2.md R1, R11, R14; QA/v54/v524-sys/REVIEW.md; QA/v529/sys/NOTES.md |
+| DL54-194 | 6 Nov 2026 | Steward, the v524-pub1 merge: V5.24's final delivery, lane PUB1 — journeys and spaces (the raccordi, the come plates' verb, the sheets' steps on stone, the pilot's wash, the démarche on stone, the velatura, the sfumatura, Formation's order) with the owner's V5.29 «l'intesa»; the eight route sheets' ceilings recorded at 11 264 (R4 b); review PASS; PUB1's Arabic burn-down 32 → 0 (+1 msgid), the Diplômes raccordo re-landed on SYS's compact band; the family v524-pub1; tag v524/pub1 | FINAL_DELIVERY_V2.md §3.5, R4 b, R5, R7′, R11, R14; V5.29 §15–§17 and the 21:25 note; V5.28; V5.20; QA/v54/v524-pub1/REVIEW.md; QA/v524/pub1/NOTES.md |
+| DL54-195 | 7 Nov 2026 | Steward, the v524-pub2 merge: V5.24's final delivery, lane PUB2 — system, trust and reading (the FAQ, the glossary and the term band, the Forum's filo and raccordo, AGAMI, Fraudes on stone; «il rimando» on paper; Le projet's incastro on its route sheet) with the owner's V5.29 FAQ; review PASS; PUB2's Arabic burn-down 26 → 0 (catalogue +2 −2, KEEP_SOURCE empty), the Forum ring's RTL centring; the family v524-pub2; tag v524/pub2 | FINAL_DELIVERY_V2.md §3.6, R4 a, R4 e, R7′, R11, R14; V5.29 §10–§13 and the 21:25 note; V5.28; V5.20; QA/v54/v524-pub2/REVIEW.md; QA/v524/pub2/NOTES.md |
+| DL54-196 | 7 Nov 2026 | Steward, the v524-brand merge: the owner's V5.29 «small layout & brand refinement» — one horizontal system of three related widths (the content's column unchanged, the letterhead's shell, the form's band on it), the formwork's two field columns, the lock-up 36/19 from 80rem, the key's one turn (reveal, hover, focus; static under reduced motion); review PASS after one fix round; shell.js re-recorded 4 866 (V5.20); the id rule admits -brand; the family v524-brand; tag v524/brand | V5.29 «SMALL LAYOUT & BRAND REFINEMENT»; V5.28 addenda 3–5; V5.20; QA/v54/v524-brand/REVIEW.md |
+| DL54-197 | 7 Nov 2026 | Steward, the v524-plat merge: V5.24's final delivery, lane PLAT — the platform, typography only (the console eyebrow on the label role, the lead on --measure-small, the numerals on --u-numeral, the Arabic console on Readex Pro; V5.29's typography and colour tokens, §9.8's exception recorded; AR's W3.2 call); review PASS, no fix round; 0 strings; the family v524-plat; tag v524/plat | FINAL_DELIVERY_V2.md §3.7, R8, R11, R14; V5.29; V5.28; V5.20; QA/v54/v524-plat/REVIEW.md; QA/v524/plat/NOTES.md |
+| DL54-198 | 7 Nov 2026 | Steward, the v524-closing merge: V5.24's final delivery, lane CLOSING — cleanup, ratchets, catalogue, handoff with the owner's V5.29 closing gate corrections (30 coverage-dead rules out; the fade-up no page's default; the brand key's turn in CSS, shell.js 4 648 ≤ 4 700; main.css 32 105, 611 B under 32 716; the Arabic burn-down closed, KEEP_SOURCE empty; the carried reds 0; every ceiling at its measure; the catalogue −1 msgid, 100 %); review FAIL → the one improve round → PASS; the design inventory regenerated; the family v524-closing; tag v524/closing | FINAL_DELIVERY_V2.md §3.9, R6, R11, R13, R14; V5.29 «CLOSING GATE CORRECTIONS»; V5.28; V5.20; QA/v54/v524-closing/REVIEW.md; QA/v524/closing/NOTES.md |
+| DL54-199 | 8 Nov 2026 | Steward, the v530-agami merge: V5.30 stream B — the official logo and seal, the role panel, the identification plate, the relationship band; no photograph (identifiable people, a recorded material deviation) |
+| DL54-200 | 8 Nov 2026 | Steward, the v530-plat merge: V5.30 stream C — one whitelisted filter toolkit on Communications, Mes documents and Mes dossiers, the withdrawal's confirm, recent activity on the dashboards, the console's mono subset; the list's bar sticky under the console bar |
+| DL54-201 | 8 Nov 2026 | Steward, the v530-art merge: V5.30 stream A — quiet defaults for the shared composition, plates instead of doors, the home's sequence, the lock-up 40/21, the container roles and the footer, the Entreprises form, the Italy + Morocco primitive generalised; AGAMI on the primitive |
+| DL54-202 | 8 Nov 2026 | Steward, the v530-integ merge: V5.30's one integration round — the Arabic newsletter consent identified by the locked layer's caption (the V5.29 matrix's last blocker); the seal's tile on the targa's corner (a fourth radius otherwise, the three-corner rule), its weight repaid by a rule that never applied |
+| DL54-203 | 8 Nov 2026 | V5.30 on design-v5: the art direction, AGAMI, the platform's list toolkit and the integration round merged from v530; the final matrix and the fresh-clone gate measure this tree |
+| DL54-204 | 8 Nov 2026 | V5.30's fix round after the gates: the fresh-clone gate's one genuine red, a second table of Réseau's route sheet, restated under V5.20 citing V5.30 §7; no product file changed; the gate restarts on this tree |
+| DL54-205 | 8 Nov 2026 | Steward, the v530-sys merge: V5.30 Fast Visual Variety Correction — arches and decorative lines reduced to their signature moments, each page family its own composition, the shared primitives first; tests restated under V5.20 with the correction cited, two frame-width invariants kept by correcting the product |
+| DL54-206 | 8 Nov 2026 | V5.30's bounded correction at the fresh-clone gate: two reds older than the visual correction, a template comment and a test anchor; nothing rendered changed |
 
 ---
 
@@ -11712,3 +11729,250 @@ taken over so that the order could continue with lane T's record left to its own
 reviewer's round 2); the steward's tools and logs under `C:/tmp/ile_v5_council/.work/v524-lib-merge/` (the stale lock as
 evidence in `logs/`); DL54-185 item 3 (F-M2), DL54-187 items 5 and 10, the v524-t merge commit `554c82d2` (DL54-188's
 number).
+
+## DL54-190 · 6 November 2026 · Steward fix v524-cifix: the 18 CI reds of the published design-v5 snapshot
+
+**Decisions** (the steward's, at the merge of `v524-cifix` into design-v5 on 6 November 2026 — the owner's V5.28
+recovery fast track and V5.20's strict test rule: a defect is fixed in the code; a test changes only where its old
+expectation conflicts with an approved decision, with the same or a stronger invariant and its reason cited; nothing
+loosened, skipped or xfailed, no ceiling raised).
+
+1. **The reds.** The backup snapshot of design-v5 at `f8b8ed4a` (CI run 42183151924, both jobs of
+   `.github/workflows/ci.yml`) failed 18 tests, 7 069 passed. Reproduced first in a CI-like clone (`git clone --no-local`,
+   no `node_modules`, no `.env`, ci.yml's placeholder environment, PostgreSQL on 5439): the same 18, nothing else.
+2. **(a) 14 size budgets needed a bundler CI does not have.** `tests/frontend/test_sezioni_v522_s.py` (the 12 pattern
+   sheets and the §2 D/F increments) and `test_materia_v524_lib.py` (the material, the shell, the mosaico) ran
+   `node_modules/esbuild` in the test; CI installs no Node, deliberately (it would rebuild dist, DL54-77). The measure is
+   kept — gzip -9 of each text minified alone — and moved to where CI can read it: `scripts/build_css.mjs` writes
+   `static/css/dist/measures.json`, each budgeted text minified by esbuild's own transform (byte-identical to the CLI the
+   tests ran, all 55 v5 partials compared) with the SHA-256 of the exact text it minified. The tests gzip the recorded
+   text against the **same ceilings** (every figure equal to the old measure, 611 … 2 382; the mosaico 1 355 at its
+   ceiling) and refuse a record whose hash is not the current source's — a sheet saved without `npm run build:css` now
+   fails on CI, which it never could before; the record is part of dist, so the deterministic-build gate holds it to the
+   build. One test added: every `_sec-*.css` has its ceiling and its measure (V5.20; FINAL_DELIVERY_V2 R4).
+3. **(b) The custom-property guard.** `--track-` was not CSS: the guard read `var(--track-*)` out of a tokens.css
+   comment. The guard's parser reads code only, for references and for definitions (a name written in a comment no
+   longer counts as defined — stronger; nothing else moved). `--raccordo-x` is a real page parameter (DL54-189: the page
+   places il raccordo with `style="--raccordo-x: …"`, the sheet reads it with its `0` fallback): named in
+   `PAGE_PARAMETERS`, with a new test that each one is read with its fallback everywhere and declared by no sheet.
+   No CSS change.
+4. **(c) The fluid steps.** `test_prose_size_never_changes_across_breakpoints` held V5.4's one fluid size; Typography V2
+   (approved: V5.24 §11–§14, FINAL_DELIVERY_V2 R1, TYPOGRAPHY_V2 §4.2) declares four. Restated: the fluid steps are
+   exactly `--t-band`, `--t-display`, `--t-title-1`, `--t-title-2` (equality), each a `clamp()`; the prose steps
+   (`--t-prose-size`, `--t-prose-lh`, `--t-body`, `--t-body-lh`) never change at a breakpoint and resolve to a fixed
+   length (the prose line and the fixed-length check are new).
+5. **(d) The colophon's connector — a real defect.** Lane H's test read the literal `--t-folio-lh: 1rem;`; since lane T
+   the folio is the label role, 16 px in Latin and 20 px in Arabic and under a coarse pointer, and the connector's
+   `calc(0.5rem - 0.5px)` stood 2 px above the Arabic rule — the three Arabic reds of
+   `test_home_browser_v522_h.py::test_final_the_arabic_index_s_titles_…` in DL54-189 m2. Fixed in `pages.css`:
+   `calc(var(--t-label-lh) / 2 - 0.5px)` (+4 B gzip -9 on the home's sheet: the home 61 419 ≤ 61 440). The static test
+   asserts the invariant on the tokens: the connector is half the label role's line less half a pixel, the colophon's
+   folio is `.testa__label` and keeps the role's line. The browser twin: 8 passed (fr and ar, every width).
+6. **The other known reds (DL54-189 m2).** Of «the base's six reds» the static one is (d) and three are (d)'s browser
+   twin, now green. Left, not in these four groups: `test_pages_browser_v522_p1.py::test_the_institutions_head_…[fr/ar]`
+   (16 px on a phone against a 15.5 cap — T's public phone step-up; lane P1's module, for P1 / CLOSING under V5.20),
+   and «the base's seventh», the interim hero's doors 9 px under the 360 × 640 fold — HOME's lane is fixing it.
+7. **The family.** `v524-cifix` in `OWNERSHIP_V54.json` (the record whole, the rest slices); `scripts/check_ownership.py`
+   admits `-cifix` (R11; cases added to its test, none changed); the steward's commit adds the family to the test's
+   `OUTSIDE_THE_WAVES`, as every family outside the waves before it. On the merged tree: the docs, preview, ownership and
+   the four groups' modules 894 + 170 passed after that line.
+
+**Checks.** In the CI-like clone at the branch head: `manage.py check` clean, `makemigrations --check` no changes, ruff 0,
+`python -m pytest -m "not browser" -p no:randomly --create-db` **7 103 passed, 0 failed**, 2 skipped, 2 xfailed. The
+build run twice, identical, the committed dist the build (only `pages.css` and the new record differ from the base;
+`main.css` untouched).
+
+**Source.** V5.28 (`V5_28_RECOVERY_FAST_TRACK.md`, addenda 2–3), V5.20; FINAL_DELIVERY_V2 R1, R4, R11;
+`evidence/v524/TYPOGRAPHY_V2.md` §4.2, §4.5; DL54-189 m2; CI run 42183151924.
+
+
+## DL54-191 · 6 November 2026 · Steward merge v524-ar: Arabic Complete under the owner's final Arabic decision V5.27
+
+1. **What changed.** Lane AR (V5.28 wave A; FINAL_DELIVERY_V2 §3.8, R7′): V5.27's hybrid policy beside the registry
+   (`LOCKED_TEXTS` and checksums byte-identical) — C-UI 139, C-SUBST-FR 34, C-SUBST-IT 59 over 6 keys, C-OFFICIAL 17
+   (register, dev index); the team seed; taxonomy, requirements, provider in the reader's language; +44 msgids.
+2. **Review.** Round 1 FAIL (B1, B2) → one fix round → PASS, six dimensions 4; QA/v54/v524-ar/REVIEW.md = QA.md byte
+   for byte + the final verdict verbatim.
+3. **Steward.** design-v5 into the branch, no conflict; family v524-ar (13 whole, 44 slices; 64 families coherent);
+   `--no-ff`. 28 tests that held the pre-V5.27 French amended under V5.20 (R7′ or W5.3 cited); fixed as the lane's
+   regressions: the /ar/ hemicycle's six seats («، », the cutter), the newsletter consent on its POST page, a hex digest
+   read as French by the detector.
+4. **Checks.** check, makemigrations, ruff, i18n_audit 0, 100 %; builds identical; checksums equal; confidential 17;
+   non-browser full run 7 171 + all 17 reds fixed; Arabic browser modules 746: 5 base reds, 9 carried; /ar/ crawl 1440 ·
+   390: French runs only C-OFFICIAL, allowlisted or burn-down, save the Forum eyebrow.
+5. **Carried.** Burn-down 65 (HOME 2, PUB1 32, PUB2 26, CLOSING 5), KEEP_SOURCE 3 (CLOSING empties both); Forum eyebrow,
+   Forum ring mirror → PUB2; Parcours lead ring, 768 overflow → PUB1; colophon box → HOME/SYS; course data → after.
+
+
+## DL54-192 · 6 November 2026 · Steward merge v524-home (through v524-sys): the homepage's professional pass
+
+1. **What changed.** Lane HOME (FINAL_DELIVERY_V2 §3.4): the seams on LIB's material — S2 → S3 sfumatura 6 rem, S3
+   stone with the raccordo 32 px into the night, S4 → S5 velatura, S6 pietra, S7 carta viva at the arch's sill; T's
+   contract in the home's sheets; PX's contract; the 360 × 640 fold; the inner stations' glint restored; 0 strings.
+2. **§9.8 exception (R1, §3.4 gate 3).** The first screen's weight and tracking move through the tokens only
+   (`.he__promise` on `--w-display` / `--track-display`, the primary call's 600 from `.btn--primary`); row 0 KEEP.
+3. **Budget.** HOME's 292 B over 61 440 closed by SYS's V5.29 compaction (home 61 328); no ceiling raised.
+4. **Steward.** Family v524-home (3 whole, 15 slices), check_ownership PASS on 4f0a5105...560021e5; merged into
+   design-v5 with v524-sys (SYS was cut from HOME's head); no tag of its own. Checks: DL54-193.
+5. **Carried.** `_antifraud.html`'s header comment still describes V5.24's sill and bookend (CLOSING); the home-only
+   material cut and the shared partials' splits (LIB / CLOSING); `--he-step` retired by SYS; the keyboard tier's reveal
+   and header animations (library, after acceptance).
+
+
+## DL54-193 · 6 November 2026 · Steward merge v524-sys: V5.29 the shared visual system
+
+1. **What changed.** Stream SYS (V5.29 §1–§9, §18–§19): the ink re-valued (#222f3d, slate #4e5b68) with eight text
+   roles; the weight map one step down (titles 500, strong 600); the grounds' one architectural light; the plate a
+   layered material; the icon tile's vault and ink by importance (stretched-link plates too); «la protezione» one
+   compact trust band, sill and bookend retired; `he__body` at 48 rem; the strato / indice sheets split; 0 strings.
+2. **§9.8 exception «V5.29 the shared visual system».** tokens.css, base.css and the library partials (`_sezioni`,
+   `_sec-strato`, `_sec-indice`, the new `_sec-lastre`, `_sec-indice-base`, `_squadre`); main.css 32 714 ≤ 32 716, home
+   61 328 ≤ 61 440, two ceilings lowered, none raised.
+3. **Review.** FAIL, 1 blocker (B1, the seam test) → the one fix round → owner ruling 19:36 «ACCEPTED»; the three proofs
+   verified, the test asserts the band present and the sill / bookend ABSENT (V5.29 §4); QA/v54/v524-sys/REVIEW.md.
+4. **Checks.** Id rule `-sys` (+7 cases); families v524-home, v524-sys PASS, 66 coherent; `--no-ff`; builds identical;
+   i18n +0 −0, 100 %; check, makemigrations, ruff 0 (three long lines rewrapped); confidential 17; targeted 1 485 +
+   browser 25 passed (the seam test, the home and protection modules fr + ar, the Arabic type cases).
+5. **Carried.** Protection columns cut mid-sentence, `.he-station__label` near-black, the `<aside>` landmark → CLOSING;
+   FAQ question flush at 390 → PUB2; literal 600s in PUB1 / PLAT / forum / projet sheets → their owners (NOTES §3).
+
+
+## DL54-194 · 6 November 2026 · Steward merge v524-pub1: journeys and spaces, with V5.29 «l'intesa»
+
+1. **What changed.** Lane PUB1 (FINAL_DELIVERY_V2 §3.5): the Parcours board's raccordo and the come plates' verb; the
+   sheets' steps on stone with the raccordo into the night arc; the pilot's route on the wash; the démarche on stone;
+   the Institutions velatura; the filiera's sfumatura; Formation's order; the Diplômes raccordo into pietra; T's and
+   PX's contracts; V5.29 §15–§17 «l'intesa» (Italy + Morocco, aria-hidden, the flags never mirrored, still under RM).
+2. **Budgets · review.** Route sheets recorded at the §7.1 letter 11 264 (R4 b, V5.20); page totals ≤ 56 320; main.css
+   32 714 ≤ 32 716; 0 JS. Review PASS, 0 blockers, no fix round — QA/v54/v524-pub1/REVIEW.md (+ the verdict verbatim).
+3. **Steward.** PUB1's ARABIC_BURNDOWN rows 32 → 0 (65 → 33; V5.29 note 21:25): titles by sub-key, captions on the
+   French sources on their own pages, hidden lines off their sheet, the authority designation +1 msgid (it/en/ar),
+   the Entreprises line as cms_nav's (KEEP_SOURCE −1); the caption set on its lead (the fold kept); the Diplômes
+   raccordo re-landed on SYS's compact band; three Arabic browser asserts amended under V5.20 citing R7′ / V5.29 §4.
+4. **Checks.** check_ownership PASS, 67 coherent; `--no-ff`; i18n 100 %, 0 fuzzy; check, makemigrations, ruff 0;
+   confidential 17; targeted 1 306 + browser 64 passed on the merged tree (static shards 850 + 456 after the reruns,
+   the lane's browser module and P1's, the seal heads, ecosystem's Arabic); 4 typography errors red on the base too.
+5. **Carried (after acceptance).** Pentagram on the temple line; phone fields; colour tokens; ratchet (CLOSING).
+
+
+## DL54-195 · 7 November 2026 · Steward merge v524-pub2: system, trust and reading, with the V5.29 FAQ
+
+1. **What changed.** Lane PUB2 (FINAL_DELIVERY_V2 §3.6): the FAQ explorer, the glossary register, the term band, the
+   Forum's filo, AGAMI's targa and the fraud band on stone, «il rimando» on paper; the Forum raccordo; Le projet's
+   incastro on its own route sheet (R4 a); T's, PX's, AR's contracts; V5.29 §10–§13 the FAQ (one glyph per question,
+   the ink by state, the open choreography, the empty search beside the register).
+2. **Budgets · review.** faq.css 2 207, projet.css 2 222 (V5.20); forum 7 866, lessico 2 351; review PASS, no fix round.
+3. **Steward.** PUB2's ARABIC_BURNDOWN rows 26 → 0 (33 → 7): the FAQ questions, the glossary chips, the Forum
+   programme and roles, the trademark words by sub-key; captions on the FAQ answers, the Fraudes body and the
+   definitions (one grid item with them); a definition off its page the pointer line; the Forum ring's RTL centring
+   (the carried test green); catalogue +2 −2, KEEP_SOURCE empty; indice.html recorded as a slice; l5 refreshed.
+4. **Checks.** check_ownership PASS, 68 coherent; `--no-ff`; builds identical; i18n 100 %, 0 fuzzy; check,
+   makemigrations, ruff 0; confidential 17; Arabic completeness + renderings + catalogues 111; targeted 1 822 + the
+   six amended under V5.20 (116) + browser 71 passed; 8 home reds identical on the base 31f5ceff (HOME / CLOSING).
+5. **Carried.** test_icons' thinner hand (SYS / CLOSING); the FAQ «?» wrap, the phone permalink before the font swap,
+   the FAQ stage's height, the doors' drawing in the library (after acceptance); ARABIC_BURNDOWN's 7 (HOME, CLOSING).
+
+## DL54-196 · 7 November 2026 · Steward merge v524-brand: V5.29 small layout & brand refinement
+
+1. **What changed.** `--content-wide` (the container, unchanged), `--site-shell-max` (the column + 10rem, the letterhead's
+   inner; 40 px gutters at 1440) and `--form-wide` (the form's band on the shell): the formwork 1 136 → 1 345 px at 1440,
+   two field columns from 36rem, its side beside from 56rem; the lock-up 36/19 from 80rem, the same scrolled; the key
+   alone turns once (nav.js `initBrandKey`, WAAPI through `play()`), never under reduced motion; 0 strings.
+2. **Fix round.** Round 1 widened the column itself; the targeted tests showed every composition and image `sizes`
+   measured on it moving (the home's door, the route board's frames): the column stays, the shell and the form widen.
+3. **Budgets · tests.** main.css 32 712 ≤ 32 716 (unread custom properties out); shell.js 4 694 → 4 866 re-recorded
+   under V5.20 citing V5.29 §3; the formwork's measure test and the hero's geometry test amended under V5.20.
+4. **Checks.** check_ownership PASS, 69 coherent; `--no-ff`; builds identical; check, makemigrations, ruff 0;
+   confidential 17; headed review fr + ar: 0 overflow, axe 0 serious, the key idle at rest; targeted 1 964 passed,
+   9 reds identical on the base 2fff9380 (home integrita, the side sheet, the phone row, PUB2's FAQ heads).
+
+
+## DL54-197 · 7 November 2026 · Steward merge v524-plat: the platform, typography only
+
+1. **What changed.** Lane PLAT (FINAL_DELIVERY_V2 §3.7, R8): the console eyebrow and fact labels on the label role
+   (t-label), the leads on --measure-small, the workspace title on --u-title-lg, the numerals on --u-numeral (refs in
+   the mono), every portal :lang(ar) rule in the subject form on Readex Pro; V5.29's literal weights on the role tokens,
+   --ink on the text roles; AR's W3.2 call. §9.8's exception: typography and colour tokens on the platform (R8, V5.29).
+2. **Budgets · review.** console 7 969, platform 4 998, registers 2 960, journey 2 726, documents 5 531 (each ≤ its
+   measure); 0 JS, 0 strings, no migration; review PASS (five pages, 0 blockers), no fix round.
+3. **Checks.** design-v5 merged into the branch first (no conflict); check_ownership PASS, 70 coherent; `--no-ff`;
+   builds identical; i18n 100 %, 0 fuzzy, +0 −0; check, makemigrations, ruff 0; confidential 17; targeted 1 050 passed,
+   1 red (Lume, the base's); Arabic completeness + renderings + lane modules 136 (the /ar/ reserved area, case file and
+   documents crawled): 0 unintended French, no steward fix.
+4. **Carried.** Lume's glyph ink test (SYS / CLOSING); the /ar/ requirement crumb in the record's French (AR /
+   CLOSING); the NowPanel passport line (AR, after acceptance); three portal burn-down residues and academy's
+   .academy-attendance__ref (CLOSING); the shell's 12 px labels, the 390 eyebrow wrap, the atrium over the eyebrow in
+   /ar/ Mon organisation (after acceptance); the 8782 INP / CLS measure (the gate).
+
+
+## DL54-198 · 7 November 2026 · Steward merge v524-closing: cleanup, ratchets, catalogue, handoff (V5.29 closing gate)
+
+1. **What changed.** Lane CLOSING (FINAL_DELIVERY_V2 §3.9; V5.29 09:41 items 1–6): 30 coverage-dead rules out; the
+   fade-up no page's default; the brand key's turn in CSS; the 45 V2 values a later layer re-declares and two dead
+   components out of main.css; the Arabic burn-down at zero and deleted; the carried reds fixed (A) or restated (B).
+2. **Review · budgets.** FAIL on f9b70cfa (8 blockers) → the one improve round (ff0e3067) → PASS. shell.js 4 648 ≤ 4 700
+   (ceiling restored); main.css 32 105, 611 B under 32 716; rise.js 1 286; the 68 named ceilings at their measure.
+3. **Checks.** Two steward-only drafts returned on the branch; check_ownership PASS (3 · 73 · 28), 71 coherent; --no-ff;
+   builds identical = the dist; i18n +0 −0, 3 745, 100 %; check, makemigrations, ruff 0; confidential 17; non-browser
+   7 389 passed, 0 failed, 2 environment-bound skips, 1 standing xfail; browser suite headless 586 + 632 passed, 4 reds;
+   Arabic 58 passed, the rendered /ar/ crawl 1440 · 390: 0 unintended French, 0 overflow, every page RTL.
+4. **Steward (V5.20, class B; each re-run green).** The /ar/ French-run floor (the home now Arabic), the chips' and the
+   phone bar's ink (SYS #222f3d), the door card read mid-entrance; the design inventory regenerated; one profile path.
+5. **Carried.** F2-m1 (R6) → the matrix's INP cells: first Tab ≤ 200 ms in four cells; desktop pointer after keyboard
+   216 · 248 against the base's 176 · 208 — P2 with the base's figure beside it. After acceptance: m3–m5, V1 tokens'
+   86 re-declared values, 79 unread properties, V1 layout helpers, JURISDICTION_SEGMENTS, the style-query fallback.
+
+## DL54-199 · 8 November 2026 · Steward merge v530-agami: AGAMI, brand and content assets
+
+1. **What changed.** Stream B (V5.30 §8, the owner's closure of 8 Nov: no identifiable third-party photograph without confirmed rights): the official logo and round seal re-encoded through the derivative builder (static/brand/agami, PROVENANCE.json, no EXIF / XMP / ICC, never cropped, mirrored or upscaled), the head's composed seat, «En bref», the plate headed by the seal with every Q9 field unchanged, «Entre l'Italie et le Maroc» with AGAMI's published motto.
+2. **Material deviation.** No photo sequence: every available frame shows identifiable people. The logo and the seal are the page's images.
+3. **Checks.** Stream head 89c345e4: 277 targeted passed; headed Chromium fr + ar at 1440 / 1024 / 390: overflow 0, one h1, console 0, axe 0, reduced motion 0 animations, 7 keyboard stops with rings, the band's worst contrast 8.78 : 1. Merged tree: 678 passed.
+4. **Ceilings (V5.20, citing V5.30 §7–§8).** pages/css/agami.css 1 778 → 2 015 at the stream, 2 166 at the v530-art merge (the one primitive v5/_intesa.css replacing ecosystem/_intesa.css); interior (promoter) total 54 472.
+
+## DL54-200 · 8 November 2026 · Steward merge v530-plat: the platform's list toolkit
+
+1. **What changed.** Stream C (V5.30 §10–§14): apps/portal/listing.py (ListSpec: only its own keys read, each value checked against its whitelist), components/listing/*, portal/listing.css, static/js/dist/listing.js; a destructive confirm on a need's withdrawal; «Activité récente» from existing history; the calm panel; the console's mono seats on the base subset (the V5.29 matrix's font blocker). No migration, no new permission. The existing overlay system is the modal and drawer primitive.
+2. **The closure's one fix.** The stream's recovery found the sticky bar without effect: `.lst` now stands directly under the console bar and above the rows' stretched links (`--z-sticky`), the table head's rule retired; test_on_a_desk_the_bar_stays_in_reach_directly_under_the_console_bar asserts it (this test first caught the rows painting over the bar).
+3. **Checks.** The stopped review's own runs on the stream head before the fix: browser modules 110 passed, batch 1 076 passed. After the fix: listing modules 31 passed. Merged tree: 678 passed.
+4. **Deferred, recorded in the stream's NOTES §0.** Saved views, bulk actions, the needs register, the help desk queue, Academy / Forum lists, the notification centre.
+
+## DL54-201 · 8 November 2026 · Steward merge v530-art: the public art direction
+
+1. **What changed.** Stream A (V5.30 PUBLIC 1–7): the shared composition's quiet defaults (the seal a niche tile, the arch an opt-in; the head's grid, offset frame and closing bookend out), plates instead of doors, the home's sequence rebalanced, the lock-up 40/21 from 80 rem, the container roles in v5/tokens.css §3.6, the footer on them, the Entreprises form's band (the V5.29 matrix's form blocker); the Italy + Morocco primitive generalised (v5/_intesa.css, v5/_intesa-atmosfera.css: campo, atmosfera, pannello, night), on the home's cooperation moment and Réseau; never mirrored.
+2. **Budgets.** main.css 32 084 ≤ 32 716; shell.js 4 648 ≤ 4 700. Ceilings re-recorded (V5.20, citing V5.30 §7, stream NOTES §6): pages.css 11 239 → 11 626, rete.css 1 761 → 2 384, institutions.css 9 007 → 9 041, home total 60 708 → 61 074, Réseau total 54 218 → 54 553.
+3. **Checks.** Headed Chromium, 46 cells: overflow 0, console 0; the form blocker 0 overlap at 1440 / 1280 / 1024 fr + ar; reduced motion 0 animations; the home's words ≥ 4.5 : 1 on the field. The four remaining modules passed; the home's seams test restated under V5.20 citing V5.30 §2 (the arch and its sill's light retired, the frame plain). Merged tree: 486 of 489 passed, the three reds read and closed in the integration round (Réseau's route-sheet table restated under V5.20 citing V5.30 §7; the glossary spy's click timed out once and passed on re-run; the ownership test read the manifest after the steward's commit during that run and passes on the head).
+4. **Steward.** AGAMI's closing band joined the one primitive (default «campo»); its sheet's ceiling re-recorded at the measure.
+
+## DL54-202 · 8 November 2026 · Steward merge v530-integ: the one integration round
+
+1. **The review.** Headed Chromium on v530 + the fix (lane 8798, gates open), public and platform, 1440 / 1024 / 390, fr + ar: 66 public and 42 platform cells (HTTP, overflow, h1, console, failed requests, flag transforms: 0 findings), axe serious/critical 0 on 36 cells; 8 drawer cells modal, focus contained, Esc closes, focus returned.
+2. **The V5.29 baseline's blockers.** The Entreprises form (stream A), the console's mono subset (stream C), the Arabic newsletter consent (this round) — none reproducible.
+3. **The fix.** apps/news/forms.py: the box's help text is the locked layer's caption (consent_caption, as the enquiry forms); apps/news/tests/test_compliance.py holds it, stronger under V5.20 citing V5.27 §3. The art stream's browser batch found the seal's 8 px tile a fourth corner on the FAQ, a glossary entry and the two enquiry-form pages: the tile now stands on 6 px, the targa's corner present on every page. That cost Réseau's total 3 B over its ceiling: repaid by removing `[data-compose="name"] .fronte__motif`, which never applied (AGAMI's head draws no motif at any of nine measured widths). No ceiling raised. The batch's other reds: the two seam assertions restated at d9190f23, a side-sheet timing sample and one net::ERR_NETWORK_IO_SUSPENDED while the machine was loaded; both pass alone on the merged code
+4. **Verification.** The failures re-run on the fix branch: 11 passed; page-weight and bundle guards: 98 passed.
+
+## DL54-203 · 8 November 2026 · V5.30 on design-v5
+
+1. **The merge.** `v530` (DL54-199 to DL54-202) with `--no-ff`. The build ran twice and matched byte for byte; 3 785 messages at 100 % in every language; check, migrations and lint clean.
+2. **Budgets.** main.css and shell.js inside 32 716 B and 4 700 B. Every page-weight ceiling holds.
+3. **Closure mode.** The separate stream reviews did not complete (a network outage, then the owner's closure: no new agent). Each stream's REVIEW.md says what ran instead. The final matrix and the fresh-clone gate follow on this tree; their records are outside the repository until the owner's verdict.
+
+## DL54-204 · 8 November 2026 · Steward fix v530-mfix: the gate's genuine red
+
+1. **The red.** The fresh-clone gate on `v530/land` failed `tests/frontend/test_interior_w3_f1.py::test_page_sheets_are_plain_import_lists_in_the_collected_tree` for `apps/pages/static/pages/css/rete.css`: its table still listed `_rete.css` alone. V5.30 §7 draws the Italy + Morocco primitive under Réseau's closing band, and the sheet imports `_intesa.css` for it. DL54-202 restated the other table of that route sheet (`apps/pages/tests/test_interior_v522.py`), not this one; the integration round's targeted runs did not include this module.
+2. **The correction.** The table records both imports, under V5.20 citing V5.30 §7. The invariant is unchanged and exact: a page sheet is a plain list of imports, nothing but imports. No product file changed, so the final matrix on `v530/land` stands for this tree.
+3. **The gate.** The serial run was stopped at this red. The fresh-clone gate restarts on this tree; its record stays outside the repository until the owner's verdict.
+
+## DL54-205 · 8 November 2026 · Steward merge v530-sys: the Fast Visual Variety Correction
+
+1. **The decision.** The owner's V5.30 Fast Visual Variety Correction: the site read as an architecture studio's. Shared primitives first, then one composition per page family; no council, no new version family.
+2. **What changed.** Icon containers are tiles; only a panel head keeps its rule; the origin seal has no arch. Home: panel, photographs, no thread. Entreprises: one process panel, `sezioni/flow.js` and its chunk removed. Institutions: a split with actor tiles. Universités: the frame at its own 3:2, compact cards beside it. Formation: two raised cards. Sheet, diplomas, Vivre, Forum, Contact, Projet: decorative lines and drawings removed. No new string, no migration. QA/v54/v530-sys/REVIEW.md lists what stays on purpose.
+3. **A genuine invariant kept.** `test_the_live_campus_frame_is_drawn_at_the_width_its_sizes_states` and `test_every_composed_frame_is_drawn_at_the_width_its_sizes_states` failed on a cover-cropped frame. They were not touched: the frame went back to its own 3:2 and `DESTINATION_SIZES` states the column it draws.
+4. **Tests.** Assertions on removed drawings are restated under V5.20, each citing the correction and asserting the absence and that the content remains; none skipped, xfailed or loosened. Reds already on `v530/mfix` and corrected here: the home's reserved seat, the sections' head and glyph (closed, open), the AGAMI translators' comments naming the domain, the Italy and Morocco drawings outside the decorative rule.
+5. **Budgets.** main.css and shell.js inside 32 716 B and 4 700 B; no page-weight ceiling raised.
+6. **Limits.** 21st.dev: search and pattern metadata only, no code pasted. `figma-use-motion` not used (no Figma file). The final matrix and the fresh-clone gate follow on the merged tree; their records stay outside the repository until the owner's verdict.
+
+## DL54-206 · 8 November 2026 · Steward fix v530-cifix: the gate's two older reds
+
+1. **The reds.** The fresh-clone gate's non-browser half on `v530/sys`: 7 467 passed, 2 failed, both older than the visual correction. `test_no_six_word_fragment_of_a_prescribed_text_in_the_sources[…/agami/_in_breve.html]`: a template comment quoted a prescribed phrase. `test_the_side_lattice_sets_the_next_date_large_and_keeps_the_list`: its anchor closed the class attribute, and the V5.30 platform stream gives the panel a `db-side--tall` modifier when recent activity stands beside it.
+2. **The corrections.** The comment cites the registry key and no longer quotes the phrase; the test is untouched. The test's anchor stops at the class name, under V5.20 citing V5.30 §13: the same invariant on the same panel. Nothing rendered changed.
+3. **The gate.** It continues on this tree; its record stays outside the repository until the owner's verdict.

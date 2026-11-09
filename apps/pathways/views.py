@@ -18,15 +18,6 @@ def _crumbs(*items: tuple) -> list[dict]:
     return [{"label": i[0], "url": i[1], "lang": i[2] if len(i) > 2 else ""} for i in items]
 
 
-def _fallback_lang() -> str:
-    """Language attribute of a prescribed French text on a page displayed in another language."""
-    from django.conf import settings
-    from django.utils import translation
-
-    current = (translation.get_language() or settings.LANGUAGE_CODE).split("-")[0]
-    return settings.CONTENT_FALLBACK_LANGUAGE if current != settings.CONTENT_FALLBACK_LANGUAGE else ""
-
-
 def _page_lang() -> str:
     from django.conf import settings
     from django.utils import translation
@@ -81,7 +72,7 @@ def index(request):
             "breadcrumbs": _crumbs((_("Espace Personnes"), "")),
         }
         return render(request, "pathways/index_interim.html", context)
-    entries = services.index_entries()
+    entries = services.index_entries(lang=_page_lang())  # V5.27 / R7′: each part by its sub-key (the board's stations)
     how = services.how_it_works()
     context = {
         "entries": entries,
@@ -89,7 +80,7 @@ def index(request):
         "how": how,
         "links": links,
         # V5.22 (SECTION_SYSTEM_V2 §3.4; lane P1): the route board, the how-it-works stations, the space's grid
-        "lanes": services.route_board(entries, _fallback_lang()),
+        "lanes": services.route_board(entries),  # each station carries its own lang (V5.27 / R7′)
         "how_steps": services.how_steps(how, links),
         "tiles": services.space_tiles(links),
         "is_preview": is_preview,
@@ -120,7 +111,7 @@ def detail(request, key: str):
         "boussole": _boussole(request, links),
         "is_preview": is_preview,
         "noindex": is_preview,
-        "breadcrumbs": _crumbs((_("Espace Personnes"), reverse("pathways:index")), (ctx.title, "", _fallback_lang())),
+        "breadcrumbs": _crumbs((_("Espace Personnes"), reverse("pathways:index")), (ctx.title, "", ctx.title_lang)),
     }
     return render(request, "pathways/detail.html", context)
 

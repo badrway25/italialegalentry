@@ -14,17 +14,21 @@ pull-quote; the form beside a side-anchored panel (the chapter's head, the reque
 sticky from 64 rem; «Pour aller plus loin» as weighted tiles.
 
 Design V5.22 (SECTION_SYSTEM_V2 §3.6; lane P1 — Page Composition V2), below the approved entrance (KEEP):
-  * EN-1 — F «il flusso»: the prescribed quotation opens the band as its statement (36/44, its rule drawn), then the
-    three moments (team strings, CONTENT_PENDING_LEGAL_REVIEW) as wide stage panels hung on ONE measured curve
-    (components/sezioni/flusso.html, sezioni/flow.js), their concept tiles the nodes (icons.COMPANY_MOMENT). PATH;
+  * EN-1 — F «il flusso»: the prescribed quotation opens the band as its statement (36/44), then the
+    three moments (team strings, CONTENT_PENDING_LEGAL_REVIEW) as the cells of ONE raised panel
+    (components/sezioni/flusso.html, V5.30 VARIETY §7), their concept tiles the marks (icons.COMPANY_MOMENT);
   * EN-2 — D «il panorama»: the productive territory, the page's only drifting image, widening to full bleed;
   * EN-3 — the form, preserved (V5.22 §24): its chapter, its sticky side panel, the canonical tag;
   * EN-4 — A split of ONE locked answer: the question is the band's title, the answer's own «Non.» its large keyword,
     the answer cut at its own colon into what the platform does not do | what it does — three spans of one paragraph
     whose textContent is the answer — and a rule between them that draws. No mark (a slash or a tick reads as a
     verdict); the FAQ link an arrow row. LINE;
-  * EN-5 — K «l'approdo»: the Forum's night tile (Q4), the pilot's tile with its route in miniature, the skyline low
+  * EN-5 — K «l'approdo»: the Forum's night tile (Q4), the pilot's tile, the skyline low
     as the bookend; one light sweep.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.3, §5.3; lane PUB1 — the ground, 0 bytes; the compositions
+KEPT): «la démarche» stands on stone — the quotation and its panel read on it, and the head's
+paper no longer touches the body's: paper → stone → paper (the panorama) → stone (the form) → paper → stone, a strict
+alternation. No material recipe on this page: its sheet does not import v5/_materia.css (a page carries only what it draws).
 
 Before V5.12 (W3-F1): the entrance with the company door, whose card carries the door's way in — its sentence (the
 door's own, as the portico's panel says it) and the way to «Recueil des besoins», in the first screen (W3-F1's review
@@ -35,20 +39,21 @@ two by two from 64rem), what the platform does and does not do (the ONE inset), 
 {% endcomment %}
 {% block space_header %}
 {% translate "Espace Entreprises" as space_label %}{% translate "Recueil des besoins" as way_label %}
-{% get_current_language as page_lang %}{% translate "Signalez les besoins professionnels de votre entreprise." as way_text %}
-{# the sentence keeps its language where the translators have not given it yet (WCAG 3.1.2; B2) #}
-{% if page_lang != "fr" and way_text == "Signalez les besoins professionnels de votre entreprise." %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_text_lang="fr" way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" compose="skyline" words_first=True fronte_linked=True only %}
+{% comment %}V5.27 / R7′ (the v524-pub1 steward): the way line is the mega-menu's reviewed line (lane AR's W1.1), no longer
+a truncation of p3.entrances.company.text; the fr-fallback branch stays for a catalogue without it (WCAG 3.1.2){% endcomment %}
+{% get_current_language as page_lang %}{% translate "Faites connaître les métiers et les compétences dont votre entreprise a besoin." as way_text %}
+{% if page_lang != "fr" and way_text == "Faites connaître les métiers et les compétences dont votre entreprise a besoin." %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_text_lang="fr" way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" words_first=True fronte_linked=True only %}
 {% else %}
-{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" compose="skyline" words_first=True fronte_linked=True only %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" words_first=True fronte_linked=True only %}
 {% endif %}
 {% endblock %}
 
 {% block space_main %}
 {% translate "Trois temps, une même démarche" as moments_title %}{% translate "Les trois temps de la démarche" as moments_label %}
-<section id="demarche" class="sez sez--flusso imprese-demarche" data-sec="flusso" data-ground="paper" data-rhythm="band" aria-labelledby="demarche-header">
+<section id="demarche" class="sez sez--flusso imprese-demarche" data-sec="flusso" data-ground="stone" data-rhythm="band" aria-labelledby="demarche-header">
   <div class="container">
-    <blockquote class="imprese-citazione"{% if quote.lang_attr %} lang="{{ quote.lang_attr }}"{% endif %}><span class="imprese-citazione__regola" data-verb="draw-y" aria-hidden="true"></span><p>{{ quote.text }}</p></blockquote>
+    <blockquote class="imprese-citazione"{% if quote.lang_attr %} lang="{{ quote.lang_attr }}"{% endif %}><p>{{ quote.text }}</p></blockquote>
     {% include "components/sezioni/_testa.html" with role="process" title_id="demarche-header" title=moments_title only %}
     {% include "ecosystem/partials/note.html" %}
     {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral UI wording limited to the vocabulary of the prescribed introduction; no procedure, no delay, no outcome is described.{% endcomment %}
@@ -66,8 +71,8 @@ two by two from 64rem), what the platform does and does not do (the ONE inset), 
       {% translate "Recueil des besoins" as form_title %}
       {% include "pages/partials/_chapter_head.html" with title_id="formulaire-header" title=form_title only %}
       <div class="ecosystem-form__panel">
-        {% get_current_language as form_lang %}{% translate "Signalez les besoins professionnels de votre entreprise." as panel_text %}
-        <p class="ecosystem-form__panel-text"{% if form_lang != "fr" and panel_text == "Signalez les besoins professionnels de votre entreprise." %} lang="fr"{% endif %}>{{ panel_text }}</p>
+        {% get_current_language as form_lang %}{% translate "Faites connaître les métiers et les compétences dont votre entreprise a besoin." as panel_text %}
+        <p class="ecosystem-form__panel-text"{% if form_lang != "fr" and panel_text == "Faites connaître les métiers et les compétences dont votre entreprise a besoin." %} lang="fr"{% endif %}>{{ panel_text }}</p>
         <p class="ecosystem-form__destination">
           {% translate "Toutes les demandes transmises par les formulaires du site parviennent à une adresse unique :" %}
           <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>

@@ -8,6 +8,9 @@
    these pages compose (C «il racconto», E «il mosaico», K «lo strato»; D's panorama is _photo.css's; A's splits are drawn by the pages' own partials, within the budget),
    then each page's own partial — Réseau's, AGAMI's and the fraud page's in route sheets of their own (round 2,
    QA_ROUND2 m5: pages/css/rete.css, agami.css, frodi.css, linked by those pages only).
+   V5.24 (FINAL_DELIVERY_V2 §3.6, R4 a; lane PUB2): Le projet's partial left for its own route sheet too (pages/css/projet.css,
+   with the library's material partial for the incastro) — the Réseau and AGAMI pages stood 407 and 464 B under their 56 320 B letter, which
+   the material partial on this shared sheet would have passed; every interior page is lighter by Le projet's rules.
    ============================================================================================ */
 @import url("../../css/v5/_pagina.css");
 @import url("../../css/v5/_interior.css");
@@ -19,5 +22,4 @@
 @import url("../../css/v5/_sec-strato.css");
 @import url("_institutional.css");
 @import url("_canali.css");
-@import url("_projet.css");
 @import url("_contatto.css");

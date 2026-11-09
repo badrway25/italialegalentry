@@ -43,10 +43,19 @@ def test_editorial_drops_forbidden_formulations():
 
 
 def test_locked_helper_reports_the_effective_language():
+    """V5.27 (FINAL_DELIVERY_V2 R7′; lane AR): the anti-fraud TITLE is a compositional text and reads in provisional
+    Arabic on /ar/ (no language attribute); the BODY is a substantive text whose French stands, said with ``lang="fr"``
+    — the helper reports the effective language in both cases, and the French source is the registry's, byte for
+    byte."""
     with translation.override("ar"):
-        text = services.locked("p3.antifraud.title")
-    assert text.value == locked_content.text("p3.antifraud.title", "fr")
-    assert text.lang == "fr"
+        title = services.locked("p3.antifraud.title")
+        body = services.locked("p3.antifraud.body")
+    assert title.lang == "" and title.value != locked_content.text("p3.antifraud.title", "fr")
+    assert body.value == locked_content.text("p3.antifraud.body", "fr")
+    assert body.lang == "fr"
+    with translation.override("it"):
+        assert services.locked("p3.antifraud.title").value == locked_content.text("p3.antifraud.title", "fr")
+        assert services.locked("p3.antifraud.title").lang == "fr"
     with translation.override("fr"):
         assert services.locked("p3.antifraud.title").lang == ""
 

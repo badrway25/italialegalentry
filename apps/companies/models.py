@@ -38,6 +38,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from core.models import TimeStampedModel
 
@@ -87,21 +88,61 @@ class TaxonomyQuerySet(models.QuerySet):
         return self.order_by("order", "label_fr")
 
 
+#: the seeded labels (apps/companies/seeds.py SECTORS / TERRITORIES), as the catalogue knows them: a taxonomy row
+#: keeps its French source in the database, and ``taxonomy_label`` asks the catalogue for it first (V5.24 §4–§5,
+#: the Arabic completeness audit's W3.1; lane AR) — so an Italian, English or Arabic reader sees the sector in the
+#: page's language. A row an editor adds later falls back to its ``label_it`` (Italian) and to the French source.
+#: Listed here so the catalogue sync keeps the 25 entries (``scripts/i18n_audit.py`` reads gettext calls, not data).
+TAXONOMY_LABELS: tuple = (
+    pgettext_lazy("companies taxonomy", "Agroalimentaire et transformation"),
+    pgettext_lazy("companies taxonomy", "Agriculture et travaux saisonniers"),
+    pgettext_lazy("companies taxonomy", "Bâtiment et travaux publics"),
+    pgettext_lazy("companies taxonomy", "Métallurgie et mécanique"),
+    pgettext_lazy("companies taxonomy", "Logistique et transport"),
+    pgettext_lazy("companies taxonomy", "Hôtellerie, restauration et tourisme"),
+    pgettext_lazy("companies taxonomy", "Santé et services à la personne"),
+    pgettext_lazy("companies taxonomy", "Textile et cuir"),
+    pgettext_lazy("companies taxonomy", "Énergie et environnement"),
+    pgettext_lazy("companies taxonomy", "Numérique et services"),
+    pgettext_lazy("companies taxonomy", "Artisanat"),
+    pgettext_lazy("companies taxonomy", "Autre secteur"),
+    pgettext_lazy("companies taxonomy", "Vénétie"),
+    pgettext_lazy("companies taxonomy", "Lombardie"),
+    pgettext_lazy("companies taxonomy", "Émilie-Romagne"),
+    pgettext_lazy("companies taxonomy", "Piémont"),
+    pgettext_lazy("companies taxonomy", "Frioul-Vénétie Julienne"),
+    pgettext_lazy("companies taxonomy", "Trentin-Haut-Adige"),
+    pgettext_lazy("companies taxonomy", "Toscane"),
+    pgettext_lazy("companies taxonomy", "Marches"),
+    pgettext_lazy("companies taxonomy", "Latium"),
+    pgettext_lazy("companies taxonomy", "Campanie"),
+    pgettext_lazy("companies taxonomy", "Pouilles"),
+    pgettext_lazy("companies taxonomy", "Sicile"),
+    pgettext_lazy("companies taxonomy", "Autre région italienne"),
+)
+
+
 def taxonomy_label(row) -> str:
     """
     The label of a taxonomy row in the reading language, falling back to the French source.
 
     The Italian labels are seeded and editable in the back-office but were reaching no screen: every
-    template printed ``label_fr``, so an Italian reader was shown a French sector. A taxonomy row is
-    editorial content, not a msgid, so it is not translated through the catalogues; the fallback is
-    the French source, which is this project's source language.
+    template printed ``label_fr``, so an Italian reader was shown a French sector. The French source stays the
+    row's key: the row's own Italian (an editor's) is asked first, then the catalogue
+    (``pgettext("companies taxonomy", …)`` — translated when it differs from the source, the pattern of
+    ``rules.services.displayed``), then the French source, which is this project's source language.
     """
-    from django.utils.translation import get_language
+    from django.utils.translation import get_language, pgettext
 
     language = (get_language() or "").split("-")[0]
+    source = str(getattr(row, "label_fr", "") or "")
     if language == "it" and getattr(row, "label_it", ""):
-        return row.label_it
-    return row.label_fr
+        return row.label_it  # the back-office's own Italian wins: an editor's change is never overridden
+    if language and language != "fr" and source:
+        translated = pgettext("companies taxonomy", source)
+        if translated != source:
+            return translated
+    return source
 
 
 class Sector(TimeStampedModel):
@@ -121,7 +162,8 @@ class Sector(TimeStampedModel):
         ordering = ["order", "label_fr"]
 
     def __str__(self) -> str:
-        return self.label_fr
+        # a ModelChoiceField prints __str__: the form's options read the label in the page's language (v524-ar-fix B2)
+        return taxonomy_label(self)
 
     @property
     def label(self) -> str:
@@ -146,7 +188,8 @@ class Territory(TimeStampedModel):
         ordering = ["order", "label_fr"]
 
     def __str__(self) -> str:
-        return self.label_fr
+        # a ModelChoiceField prints __str__: the form's options read the label in the page's language (v524-ar-fix B2)
+        return taxonomy_label(self)
 
     @property
     def label(self) -> str:

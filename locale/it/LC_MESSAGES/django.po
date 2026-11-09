@@ -570,10 +570,6 @@ msgid "Entreprises"
 msgstr "Imprese"
 
 #: .\apps\cms\templatetags\cms_nav.py
-msgid "Signalez les besoins professionnels de votre entreprise."
-msgstr "Signalez les besoins professionnels de votre entreprise."
-
-#: .\apps\cms\templatetags\cms_nav.py
 msgid "Besoins professionnels"
 msgstr "Fabbisogni professionali"
 
@@ -6657,10 +6653,6 @@ msgid "Participer et collaborer"
 msgstr "Partecipare e collaborare"
 
 #: .\templates\forum\partials\hero.html
-msgid "Espace permanent de dialogue et de coopération"
-msgstr "Espace permanent de dialogue et de coopération"
-
-#: .\templates\forum\partials\hero.html
 msgid "Événement institutionnel"
 msgstr "Evento istituzionale"
 
@@ -6890,13 +6882,6 @@ msgstr ""
 #: .\templates\living\sheet.html
 msgid "Retour au thème"
 msgstr "Torna al tema"
-
-#: .\templates\living\topic.html
-#, python-format
-msgid ""
-"Vivre en Italie — %(topic)s : fiches pratiques pour accompagner "
-"l’intégration après l’entrée régulière."
-msgstr "Vivre en Italie — %(topic)s : fiches pratiques pour accompagner l’intégration après l’entrée régulière."
 
 #: .\templates\living\topic.html
 msgid "Fiches pratiques"
@@ -8562,10 +8547,6 @@ msgstr "Paese di origine: formazione e preparazione"
 #: .\apps\pages\services.py
 msgid "Territoire italien : accueil et inclusion"
 msgstr "Territorio italiano: accoglienza e inclusione"
-
-#: .\templates\components\jurisdiction.html
-msgid "Répartition des responsabilités le long du parcours"
-msgstr "Ripartizione delle responsabilità lungo il percorso"
 
 #: .\apps\cms\models.py
 msgid "Chi ha realizzato l'immagine, nella forma richiesta dalla licenza."
@@ -16026,3 +16007,397 @@ msgstr "Dove lo si incontra"
 #: .\templates\living\index.html
 msgid "Pour s’installer"
 msgstr "Per stabilirsi"
+
+#: .\apps\cms\locked_renderings.py
+msgctxt "locked caption"
+msgid "Texte italien faisant foi — traduction arabe en cours de validation."
+msgstr "Testo italiano facente fede — traduzione araba in corso di validazione."
+
+#: .\apps\cms\locked_renderings.py
+msgctxt "locked caption"
+msgid "Texte source en français sur la page « %(page)s » — traduction arabe en cours de validation."
+msgstr "Testo sorgente in francese nella pagina «%(page)s» — traduzione araba in corso di validazione."
+
+#: .\apps\cms\locked_renderings.py
+msgctxt "locked caption"
+msgid "Texte source en français — traduction arabe en cours de validation."
+msgstr "Testo sorgente in francese — traduzione araba in corso di validazione."
+
+#: .\apps\cms\templatetags\cms_nav.py
+msgid "Faites connaître les métiers et les compétences dont votre entreprise a besoin."
+msgstr "Fate conoscere i mestieri e le competenze di cui la vostra impresa ha bisogno."
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Agriculture et travaux saisonniers"
+msgstr "Agricoltura e lavori stagionali"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Agroalimentaire et transformation"
+msgstr "Agroalimentare e trasformazione"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Artisanat"
+msgstr "Artigianato"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Autre région italienne"
+msgstr "Altra regione italiana"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Autre secteur"
+msgstr "Altro settore"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Bâtiment et travaux publics"
+msgstr "Edilizia e opere pubbliche"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Campanie"
+msgstr "Campania"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Frioul-Vénétie Julienne"
+msgstr "Friuli-Venezia Giulia"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Hôtellerie, restauration et tourisme"
+msgstr "Turismo, alberghi e ristorazione"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Latium"
+msgstr "Lazio"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Logistique et transport"
+msgstr "Logistica e trasporti"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Lombardie"
+msgstr "Lombardia"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Marches"
+msgstr "Marche"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Métallurgie et mécanique"
+msgstr "Metallurgia e meccanica"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Numérique et services"
+msgstr "Digitale e servizi"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Piémont"
+msgstr "Piemonte"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Pouilles"
+msgstr "Puglia"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Santé et services à la personne"
+msgstr "Sanità e servizi alla persona"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Sicile"
+msgstr "Sicilia"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Textile et cuir"
+msgstr "Tessile e pelletteria"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Toscane"
+msgstr "Toscana"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Trentin-Haut-Adige"
+msgstr "Trentino-Alto Adige"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Vénétie"
+msgstr "Veneto"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Émilie-Romagne"
+msgstr "Emilia-Romagna"
+
+#: .\apps\companies\models.py
+msgctxt "companies taxonomy"
+msgid "Énergie et environnement"
+msgstr "Energia e ambiente"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Acte d’état civil légalisé"
+msgstr "Atto di stato civile legalizzato"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Attestation de niveau de langue"
+msgstr "Attestato di livello linguistico"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Copie complète, toutes pages. La déclaration de valeur peut être demandée ensuite."
+msgstr "Copia completa, tutte le pagine. La dichiarazione di valore può essere richiesta in seguito."
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Diplôme ou titre de formation"
+msgstr "Diploma o titolo di formazione"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Délivré par le Sportello unico. Cette pièce ne dépend pas de vous."
+msgstr "Rilasciato dallo Sportello unico. Questo documento non dipende da Lei."
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Délivré par l’autorité compétente du pays de résidence."
+msgstr "Rilasciato dall’autorità competente del paese di residenza."
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Délivrée par l’organisme de formation à l’issue du parcours."
+msgstr "Rilasciato dall’organismo di formazione al termine del percorso."
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Extrait de casier judiciaire"
+msgstr "Certificato del casellario giudiziale"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Nulla osta au travail"
+msgstr "Nulla osta al lavoro"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Pages d’identité uniquement. La validité doit couvrir la durée du séjour envisagé."
+msgstr "Solo le pagine dei dati identificativi. La validità deve coprire la durata del soggiorno previsto."
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Passeport en cours de validité"
+msgstr "Passaporto in corso di validità"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Proposition de contrat de travail"
+msgstr "Proposta di contratto di lavoro"
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Traduction assermentée si l’acte n’est pas rédigé dans une langue acceptée."
+msgstr "Traduzione giurata se l’atto non è redatto in una lingua accettata."
+
+#: .\apps\documents\services.py
+msgctxt "document requirement"
+msgid "Établie par l’entreprise. Ce n’est pas une promesse d’embauche ni une garantie de résultat."
+msgstr "Redatta dall’impresa. Non è una promessa di assunzione né una garanzia di risultato."
+
+#: .\templates\account\login.html
+msgid "Lire la %(policy)s"
+msgstr "Leggere la %(policy)s"
+
+#: .\apps\pathways\services.py
+msgid "représentations diplomatiques et consulaires italiennes"
+msgstr "rappresentanze diplomatiche e consolari italiane"
+
+#: .\templates\forum\partials\hero.html
+msgid "Dialogue institutionnel permanent"
+msgstr "Dialogo istituzionale permanente"
+
+#: .\templates\living\topic.html
+#, python-format
+msgid "Vivre en Italie — %(topic)s : repères pratiques pour s’installer et vivre au quotidien en Italie."
+msgstr "Vivere in Italia — %(topic)s: riferimenti pratici per stabilirsi e per la vita quotidiana in Italia."
+
+#: .\apps\pages\imagery.py
+msgid "Logo officiel d’AGAMI Research Center : une balance de la justice traversée par un ruban aux couleurs de l’Italie et du Maroc"
+msgstr "Logo ufficiale di AGAMI Research Center: una bilancia della giustizia attraversata da un nastro con i colori dell’Italia e del Marocco"
+
+#: .\templates\pages\agami.html
+msgid "Du dialogue juridique à la coopération internationale"
+msgstr "Dal dialogo giuridico alla cooperazione internazionale"
+
+#: .\templates\pages\agami.html
+msgid "Entre l’Italie et le Maroc"
+msgstr "Tra l’Italia e il Marocco"
+
+#: .\templates\pages\agami.html
+msgid "« Connaître ses racines pour construire des ponts entre les cultures, les ordres juridiques et les générations. »"
+msgstr "«Conoscere le proprie radici per costruire ponti tra culture, ordinamenti e generazioni.»"
+
+#: .\templates\pages\partials\agami\_in_breve.html
+msgid "Active depuis"
+msgstr "Attiva dal"
+
+#: .\templates\pages\partials\agami\_in_breve.html
+msgid "Dialogue juridique"
+msgstr "Dialogo giuridico"
+
+#: .\templates\pages\partials\agami\_in_breve.html
+msgid "Promoteur de"
+msgstr "Promotore di"
+
+#: .\apps\cases\lists.py
+msgid "Confiés"
+msgstr "Affidati"
+
+#: .\apps\cases\lists.py
+msgid "Dernier changement d’état"
+msgstr "Ultimo cambio di stato"
+
+#: .\apps\cases\lists.py
+msgid "Le mien"
+msgstr "Il mio"
+
+#: .\apps\cases\lists.py
+msgid "Ouverts le plus récemment"
+msgstr "Aperti più di recente"
+
+#: .\apps\cases\lists.py
+msgid "Rechercher un dossier"
+msgstr "Cerca un fascicolo"
+
+#: .\apps\portal\lists.py
+msgid "Les plus lourds d’abord"
+msgstr "Prima i più pesanti"
+
+#: .\apps\portal\lists.py
+msgid "Lues"
+msgstr "Lette"
+
+#: .\apps\portal\lists.py
+msgid "Nom de A à Z"
+msgstr "Nome dalla A alla Z"
+
+#: .\apps\portal\lists.py
+msgid "Non lues"
+msgstr "Non lette"
+
+#: .\apps\portal\lists.py
+msgid "Non lues d’abord"
+msgstr "Prima le non lette"
+
+#: .\apps\portal\lists.py
+msgid "Plus anciennes d’abord"
+msgstr "Prima le meno recenti"
+
+#: .\apps\portal\lists.py
+msgid "Plus anciens d’abord"
+msgstr "Prima i meno recenti"
+
+#: .\apps\portal\lists.py
+msgid "Plus récentes d’abord"
+msgstr "Prima le più recenti"
+
+#: .\apps\portal\lists.py
+msgid "Plus récents d’abord"
+msgstr "Prima i più recenti"
+
+#: .\apps\portal\lists.py
+msgid "Période"
+msgstr "Periodo"
+
+#: .\apps\portal\lists.py
+msgid "Rechercher dans vos communications"
+msgstr "Cerca nelle tue comunicazioni"
+
+#: .\apps\portal\lists.py
+msgid "Rechercher un fichier"
+msgstr "Cerca un file"
+
+#: .\templates\companies\dashboard.html .\templates\portal\dashboard.html
+msgid "Activité récente"
+msgstr "Attività recente"
+
+#: .\templates\companies\partials\withdraw_dialog.html
+msgid "Un besoin retiré n’est pas rouvert : un nouveau besoin peut être créé."
+msgstr "Un fabbisogno ritirato non viene riaperto: se ne può creare uno nuovo."
+
+#: .\templates\components\listing\drawer.html .\templates\components\listing\toolbar.html
+msgid "Filtres"
+msgstr "Filtri"
+
+#: .\templates\components\listing\empty.html
+msgid "Aucun résultat"
+msgstr "Nessun risultato"
+
+#: .\templates\components\listing\empty.html
+msgid "Aucun élément ne correspond à ces critères. Modifiez-les, ou effacez-les pour retrouver toute la liste."
+msgstr "Nessun elemento corrisponde a questi criteri. Modificali, oppure cancellali per ritrovare l’intero elenco."
+
+#: .\templates\components\listing\empty.html .\templates\components\listing\filters.html .\templates\components\listing\toolbar.html
+msgid "Tout effacer"
+msgstr "Cancella tutto"
+
+#: .\templates\components\listing\filters.html
+msgid "Afficher les résultats"
+msgstr "Mostra i risultati"
+
+#: .\templates\components\listing\filters.html
+msgid "Au"
+msgstr "Al"
+
+#: .\templates\components\listing\filters.html
+msgid "Du"
+msgstr "Dal"
+
+#: .\templates\components\listing\toolbar.html
+msgid "%(n)s résultat"
+msgid_plural "%(n)s résultats"
+msgstr[0] "%(n)s risultato"
+msgstr[1] "%(n)s risultati"
+
+#: .\templates\components\listing\toolbar.html
+msgid "Filtres en vigueur"
+msgstr "Filtri attivi"
+
+#: .\templates\components\listing\toolbar.html
+msgid "Retirer le filtre %(field)s %(value)s"
+msgstr "Rimuovi il filtro %(field)s %(value)s"
+
+#: .\templates\components\listing\toolbar.html
+msgid "Trier par"
+msgstr "Ordina per"
+
+#: .\templates\components\listing\toolbar.html
+msgid "en vigueur :"
+msgstr "attivi:"
+
+#: .\templates\portal\dashboard.html
+msgid "Tout l’historique"
+msgstr "Tutta la cronologia"
+
+#: .\apps\portal\listing.py
+msgid "Votre recherche"
+msgstr "La tua ricerca"
+

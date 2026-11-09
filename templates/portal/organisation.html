@@ -16,7 +16,7 @@ no form of its own. Rules: portal/organisation.css (page-only). Every word is th
 <header class="ws-head org-head" data-atrium="{{ audience|default:'institution' }}">
   {% include "portal/partials/atrium_art.html" with figure="seal" atrium_seal=audience_glyph %}
   <div class="ws-head__words">
-    <p class="ctx__eyebrow atrium__eyebrow">{{ space_label }}</p>
+    <p class="ctx__eyebrow atrium__eyebrow t-label">{{ space_label }}</p>
     <h1 class="ws-head__title">{% translate "Mon organisation" %}</h1>
     <p class="ws-head__lead">{% translate "Le rattachement de votre compte à une organisation est effectué par l’équipe du projet." %}</p>
   </div>
@@ -31,12 +31,12 @@ no form of its own. Rules: portal/organisation.css (page-only). Every word is th
       <span class="org-id__disc" aria-hidden="true">{% svg_icon audience_glyph "icon" %}</span>
       <h2 class="org-id__name" id="org-{{ forloop.counter }}-name" dir="auto">{{ organisation.name }}</h2>
       <dl class="org-id__facts">
-        <div class="org-id__fact"><dt>{% translate "Nature de l’organisme" %}</dt><dd>{{ organisation.kind_label }}</dd></div>
-        {% if organisation.city %}<div class="org-id__fact"><dt>{% translate "Ville" %}</dt><dd dir="auto">{{ organisation.city }}</dd></div>{% endif %}
-        {% if organisation.country %}<div class="org-id__fact"><dt>{% translate "Pays" %}</dt><dd dir="auto">{{ organisation.country }}</dd></div>{% endif %}
-        {% if organisation.website %}<div class="org-id__fact"><dt>{% translate "Site web" %}</dt><dd><a href="{{ organisation.website }}" rel="noopener" dir="ltr">{{ organisation.website }}</a></dd></div>{% endif %}
-        <div class="org-id__fact"><dt>{% translate "Votre rôle" %}</dt><dd>{{ organisation.role_label }}</dd></div>
-        <div class="org-id__fact"><dt>{% translate "Depuis le" %}</dt><dd><time datetime="{{ organisation.since|date:'Y-m-d' }}">{{ organisation.since|date:"d.m.Y" }}</time></dd></div>
+        <div class="org-id__fact"><dt class="t-label">{% translate "Nature de l’organisme" %}</dt><dd>{{ organisation.kind_label }}</dd></div>
+        {% if organisation.city %}<div class="org-id__fact"><dt class="t-label">{% translate "Ville" %}</dt><dd dir="auto">{{ organisation.city }}</dd></div>{% endif %}
+        {% if organisation.country %}<div class="org-id__fact"><dt class="t-label">{% translate "Pays" %}</dt><dd dir="auto">{{ organisation.country }}</dd></div>{% endif %}
+        {% if organisation.website %}<div class="org-id__fact"><dt class="t-label">{% translate "Site web" %}</dt><dd><a href="{{ organisation.website }}" rel="noopener" dir="ltr">{{ organisation.website }}</a></dd></div>{% endif %}
+        <div class="org-id__fact"><dt class="t-label">{% translate "Votre rôle" %}</dt><dd>{{ organisation.role_label }}</dd></div>
+        <div class="org-id__fact"><dt class="t-label">{% translate "Depuis le" %}</dt><dd><time datetime="{{ organisation.since|date:'Y-m-d' }}">{{ organisation.since|date:"d.m.Y" }}</time></dd></div>
       </dl>
     </div>
   </section>

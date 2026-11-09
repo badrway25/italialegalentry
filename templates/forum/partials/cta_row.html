@@ -8,13 +8,13 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.16 FO3; lane P2) — K «lo strato» on STON
 sandwich above the footer, RH-8): two raised action plates, each with its audience's disc — the pilot's interest (the
 companies' needs form: `building`, the company's accent), the collaboration (`institution`) — the locked labels their
 title-buttons (each plate one link), the registration first while it is open; the live «who can help me» line as the
-foot; the Forum's mark drawn faint behind (aria-hidden). Signature DEPTH: the plates settle over their shadow layers.
-Round 1 (QA_ROUND1 M9c): a plate under the hand or the focus lights the faint mark behind (data-azione, §4.7).
+foot. Signature DEPTH: the plates settle over their shadow layers. V5.30 (the owner's «geometry saturation»: the head's
+hemicycle repeated at the page's foot): the Forum's mark no longer stands faint behind the plates — the hub of «À qui
+s'adresse-t-il ?» draws it once below the head's; the plates' depth is the band's language.
 {% endcomment %}
 {% safe_url "enquiries:company_needs" as pilot_url %}{% safe_url "enquiries:institution_proposal" as collab_url %}{% forum_mark as forum_mark_id %}
 <section class="sez sez--strato forum-azioni" data-sec="strato" data-ground="stone" data-rhythm="band" id="forum-cta" aria-labelledby="forum-cta-title">
   <div class="container forum-azioni__inner">
-    <span class="forum-azioni__fondale" aria-hidden="true"><svg class="forum-luce" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><radialGradient id="forum-luce-azioni" cx="50%" cy="100%" r="50%"><stop offset="0"/><stop offset="1"/></radialGradient></defs><rect width="100" height="100" fill="url(#forum-luce-azioni)"/></svg>{% with "components/sezioni/marks/_"|add:forum_mark_id|add:".html" as faint_mark %}{% include faint_mark %}{% endwith %}</span>
     {% translate "Participer et collaborer" as cta_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="forum-cta-title" title=cta_title only %}
     {% if not is_permanent and registration_open %}
     <p class="forum-azioni__registrazione"><a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a></p>

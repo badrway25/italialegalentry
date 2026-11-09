@@ -1,0 +1,10 @@
+/* ============================================================================================
+   LE PROJET'S ROUTE SHEET (design V5.24, BACKGROUND_MATERIAL_V2 §3.2, §5.2; FINAL_DELIVERY_V2 §3.6, R3, R4 a; lane PUB2): linked
+   on /le-projet/ only, between the institutional pages' shared sheet (pages/css/interior.css) and the frontispiece's — the
+   material partial (the grounds' recipes and the seam primitives: here «l'incastro», the doors' arched tops over the
+   volumes) and the page's own compositions (the story's figure, the statement column, the doors, the foot strip), which
+   the other institutional pages no longer download (the owner's V5.22 standing constraint: page-only sheets,
+   route-specific bundles with their own recorded budgets; R4 a: no page total raised).
+   ============================================================================================ */
+@import url("../../css/v5/_materia.css");
+@import url("_projet.css");

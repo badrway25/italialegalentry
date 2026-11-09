@@ -15,47 +15,26 @@
    (v4/tokens.css, v5/) re-declares in the same context never reached a page and
    left this file — the shadows, the three voices, the line heights and the
    tracking, three space steps, the curves, two radii, the letterhead's heights
-   and their narrow override. What stays is what no later layer declares, and
-   the values apps/core/dev.py prints under the design showcase's swatches.
+   and their narrow override.
+   V5.29 09:41 item 2 (CLOSING, 7 November 2026): the 45 values v520 kept for the
+   design showcase's captions left too — the mineral and midnight palettes, the
+   accent, the error, seal and pending steps, the eleven type sizes and the six
+   durations: v5/aliases.css, v5/tokens.css and v4/tokens.css re-declare every one
+   of them, so none ever reached a page, and apps/core/dev.py now prints the value
+   the swatch paints (the effective cascade), not this layer's. What stays is what
+   no later layer declares: the success steps, the official brand, the routes, the
+   responsible actors, the night's strong hairline and the chrome's height.
    ========================================================================== */
 
 :root {
-  /* ---- MINERAL — the reading chapter ------------------------------------ */
-  --min-0: #f4f3f0; /* canvas */
-  --min-1: #ecebe6; /* area: institutional bar, section grounds, navigation rail */
-  --min-2: #fbfaf8; /* sheet: cards, panels, header */
-  --min-3: #ffffff; /* elevated: popover, menu */
-  --ink: #15222a;   /* 14.62:1 on --min-0 */
-  --ink-2: #4a5a62; /*  6.46:1 */
-  --ink-3: #55646b; /*  5.48:1 — folio, captions */
-  --hairline: #d3d2cc;        /* 1px rhythm, informative */
-  --hairline-strong: #7a868b; /* 3.37:1 — a component boundary */
+  /* ---- MINERAL, MIDNIGHT, THE ACCENT, the error / seal / pending steps: valued by
+     v5/aliases.css and v5/tokens.css since design V5 (the showcase prints those) - */
 
   /* ---- MIDNIGHT — the immersive chapter --------------------------------- */
-  --mid-0: #0a151c; /* utility, footer */
-  --mid-1: #0e1b23; /* canvas: hero, process, platform bar */
-  --mid-2: #14242e; /* area */
-  --mid-3: #1b2f3a; /* sheet */
-  --mid-4: #223a46; /* elevated */
-  --on-dark: #eef2f1;   /* 15.51:1 on --mid-1 */
-  --on-dark-2: #b7c3c4; /*  9.68:1 */
-  --on-dark-3: #8fa0a3; /*  6.44:1 */
   --hairline-dark-strong: rgba(214, 226, 228, 0.28);
-
-  /* ---- THE ACCENT — one, in two luminosities ---------------------------- */
-  --accent: #0f6a72;       /* 5.69:1 on --min-0, 6.05:1 on --min-2 */
-  --accent-hover: #0b555c;
-  --accent-dark: #7fd1d8;  /* 10.01:1 on --mid-1 */
-  --accent-ring: #1d8a93;  /* 3.70:1 on --min-0 — focus ring, UI strokes */
-  --accent-wash: #d9eef0;
-
-  /* ---- TERRITORY — graphics only ---------------------------------------- */
 
   /* ---- SEMANTIC — never a brand colour ---------------------------------- */
   --ok-700: #1e7a4d;   --ok-100: #dcefe4;   --ok-300: #7ccfa0;   /* regular, done, valid */
-  --err-700: #b3261e;  --err-100: #f6dedc;                       /* error only */
-  --seal-600: #8c6d4b; --seal-100: #efe6da; --seal-300: #c7a77e; /* bronze: seals only */
-  --pending-700: #705434; /* 6.7:1 on --min-0 — «en attente» */
 
   /* ---- OFFICIAL BRAND — never altered, never used elsewhere ------------- */
   --brand-green: #157a3c; /* 5.19:1 on --min-2 */
@@ -73,29 +52,8 @@
   --owner-authority: #8c6d4b;
   --owner-territory: #2f6b5c;
 
-  /* ---- TYPE — the sizes the design showcase prints ---------------------- */
-
-  /* Eleven sizes on a 4px grid. The display size is fluid only inside the hero;
-     everything else steps. */
-  --t-display: clamp(3.25rem, 2rem + 5.2vw, 6.25rem); /* 52 → 100 */
-  --t-plate: 4rem; /* 64/64 */
-  --t-title: 3rem; /* 48/52 */
-  --t-band: 2rem; /* 32/36 */
-  --t-entry: 1.375rem; /* 22/28 */
-  --t-lead: 1.25rem; /* 20/28 */
-  --t-body: 1.0625rem; /* 17/28 */
-  --t-ui: 0.9375rem; /* 15/20 */
-  --t-small: 0.875rem; /* 14/20 */
-  --t-folio: 0.8125rem; /* 13/16, mono */
-  --t-caption: 0.75rem; /* 12/16 */
-
-  /* ---- MOTION — one entrance, one exit, one standard; four durations ---- */
-  --motion-instant: 120ms;
-  --motion-fast: 180ms;
-  --motion-base: 240ms;
-  --motion-slow: 320ms;
-  --motion-draw: 900ms;     /* the one immersive trace (hero arch, route) */
-  --motion-ambient: 28s;    /* the one living object per page: the tide */
+  /* ---- TYPE and MOTION: the twelve steps and the durations are v5/tokens.css's
+     (Typography V2), the V4 names v4/tokens.css's — the showcase prints those -- */
 
   /* ---- LAYOUT ------------------------------------------------------------ */
   --chrome-height: calc(var(--utility-height) + var(--header-height));

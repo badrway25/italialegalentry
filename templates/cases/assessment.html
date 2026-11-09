@@ -69,7 +69,7 @@ about this result after a real ruleset has replaced the demonstration one.
       {% if assessment.rationale %}<p class="db-assessment__text"><span dir="auto">{{ assessment.rationale }}</span></p>{% endif %}
     </div>
     <p class="db-line">
-      <span>{% translate "Jeu de règles" %} <span class="db-ref">v{{ assessment.ruleset_version }}</span></span>
+      <span>{% translate "Jeu de règles" %} v{{ assessment.ruleset_version }}</span>
       <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
     </p>
     {% comment %}

@@ -604,6 +604,10 @@ def test_one_rail_drawing_and_one_passage_drawing_never_a_third():
         # sheet does not carry it; every rule is qualified `.linea--large` or names the variant's own parts, and the
         # check below holds it to never redrawing the passage (V5.20 strict rule: the same invariant, one more modifier)
         ("passage", "static/css/v5/_linea-v2.css"),
+        # a page's modifier of the passage (V5.30 Fast Visual Variety Correction §7 HOME — an approved owner decision): the
+        # home's orientation sets its four stations as the cells of one panel, every rule qualified by the band, and the
+        # check below holds it to never redrawing the passage (V5.20 strict rule: the same invariant, one more modifier)
+        ("passage", "apps/pages/static/pages/css/pages.css"),
     }
     assert drawers <= partials | modifiers, sorted(drawers - partials - modifiers)
     # the drawing itself — the list, the station, its numeral and ring, the line, the Stepper's nodes and line — is

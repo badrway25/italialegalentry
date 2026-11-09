@@ -27,17 +27,28 @@ pytestmark = pytest.mark.compliance
 
 #: Per-file ceilings (TYPOGRAPHY_V2 §4.7): variable sans ≤ 22 KB, italic ≤ 15 KB, Arabic ≤ 18 KB, the two mono files
 #: ≤ 10 KB together, the wordmark ≤ 2 KB; the set ≤ 62 000 B (61 140 measured).
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 FILE_CEILINGS = {
-    "v5-host-grotesk-var-400-700.woff2": 22_000,
-    "v5-host-grotesk-400-italic.woff2": 15_000,
-    "v5-readex-pro-var-400-700-arabic.woff2": 18_000,
-    "v5-ile-wordmark-600.woff2": 2_000,
+    "v5-host-grotesk-var-400-700.woff2": 19_208,
+    "v5-host-grotesk-400-italic.woff2": 14_096,
+    "v5-readex-pro-var-400-700-arabic.woff2": 16_128,
+    "v5-ile-wordmark-600.woff2": 1_748,
 }
 MONO_FILES = ("v5-ile-mono-400.woff2", "v5-ile-mono-400-ext.woff2")
-SET_CEILING = 62_000
-#: Per-page encoded bytes the browser fetches (read by the browser tests): Latin public, Latin console, Arabic public,
-#: Arabic console.
-PAGE_CEILINGS = {"latin_public": 22_000, "latin_console": 24_000, "arabic_public": 38_000, "arabic_console": 40_000}
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
+SET_CEILING = 61_140
+#: Per-page encoded bytes the browser fetches: Latin public, Latin console, Arabic public, Arabic console — the
+#: TYPOGRAPHY_V2 §4.7 letters 22 000 · 24 000 · 38 000 · 40 000. CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet —
+#: the review's minor): measured in Chromium on v524-closing (headless; the woff2 resources' encoded bytes, as the two
+#: browser tests read them; /fr/ /fr/parcours/ /fr/faq/ /fr/entreprises/ /fr/collaboration/institutions/
+#: /fr/glossaire/ and their Arabic twins, a person's /espace-reserve/ in both) and recorded at the measure, only down:
+#: a public page fetches Host Grotesk and the wordmark, an Arabic one Readex Pro too, a console page the mono as well.
+PAGE_CEILINGS = {"latin_public": 20_956, "latin_console": 23_644, "arabic_public": 37_084, "arabic_console": 39_772}
+
+
+def test_the_page_ceilings_stand_under_the_letters_of_typography_v2():
+    assert PAGE_CEILINGS["latin_public"] <= 22_000 and PAGE_CEILINGS["latin_console"] <= 24_000
+    assert PAGE_CEILINGS["arabic_public"] <= 38_000 and PAGE_CEILINGS["arabic_console"] <= 40_000
 
 
 def test_the_shipped_set_is_six_files_under_62_kb_and_each_file_under_its_ceiling():
@@ -45,7 +56,7 @@ def test_the_shipped_set_is_six_files_under_62_kb_and_each_file_under_its_ceilin
     assert set(files) == set(FILE_CEILINGS) | set(MONO_FILES), sorted(files)
     for name, ceiling in FILE_CEILINGS.items():
         assert files[name] <= ceiling, (name, files[name], ceiling)
-    assert sum(files[name] for name in MONO_FILES) <= 10_000
+    assert sum(files[name] for name in MONO_FILES) <= 9_960
     assert sum(files.values()) <= SET_CEILING, sum(files.values())
 
 

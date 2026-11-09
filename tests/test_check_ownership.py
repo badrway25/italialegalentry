@@ -135,6 +135,21 @@ def test_the_real_manifest_loads_and_is_written_in_lf():
 #: (FINAL_DELIVERY_V2.md R1, R11; the v524-t merge; branch v524-t in its note, the tag v524/t marks design-v5), and
 #: ``v524-lib``, the library lane LIB of the same final delivery, third in the Director's merge order
 #: (FINAL_DELIVERY_V2.md R3, R11, §3.3; the v524-lib merge; branch v524-lib in its note, the tag v524/lib marks
+#: design-v5), and ``v524-ar``, the Arabic completeness lane AR of the same final delivery under the owner's Arabic
+#: decision V5.27 (FINAL_DELIVERY_V2.md R7', R11, §3.8; the v524-ar merge; branch v524-ar in its note, the tag v524/ar
+#: marks design-v5), and ``v524-home``, the homepage lane HOME of the same final delivery (FINAL_DELIVERY_V2.md §3.4,
+#: R11; merged through branch v524-sys, no tag of its own), and ``v524-sys``, the owner's V5.29 shared visual system
+#: stream (V5.29 §1–§9, §18–§19; the v524-sys merge; branch v524-sys in its note, the tag v524/sys marks design-v5), and
+#: ``v524-pub1``, the journeys-and-spaces lane PUB1 of the same final delivery with the owner's V5.29 «l'intesa»
+#: (FINAL_DELIVERY_V2.md §3.5, R11; the v524-pub1 merge; branch v524-pub1 in its note, the tag v524/pub1 marks
+#: design-v5), and ``v524-pub2``, the system-trust-and-reading lane PUB2 of the same final delivery with the owner's
+#: V5.29 FAQ (FINAL_DELIVERY_V2.md §3.6, R11; the v524-pub2 merge; branch v524-pub2 in its note, the tag v524/pub2 marks
+#: design-v5), and ``v524-brand``, the owner's V5.29 «small layout & brand refinement» stream (the shell, the forms, the
+#: lock-up and its key; the v524-brand merge; branch v524-brand in its note, the tag v524/brand marks design-v5), and
+#: ``v524-plat``, the platform lane PLAT of the same final delivery, typography only (FINAL_DELIVERY_V2.md §3.7, R8,
+#: R11; the v524-plat merge; branch v524-plat in its note, the tag v524/plat marks design-v5), and ``v524-closing``, the
+#: cleanup lane CLOSING of the same final delivery, with the owner's V5.29 closing gate corrections
+#: (FINAL_DELIVERY_V2.md §3.9, R11; the v524-closing merge; branch v524-closing in its note, the tag v524/closing marks
 #: design-v5).
 OUTSIDE_THE_WAVES = {
     "devops", "sec-f5", "intfix", "sec-f7", "sec-f8", "rc-fix", "v512-a", "v512-b", "v512-c", "v512-d", "v514-p",
@@ -142,7 +157,9 @@ OUTSIDE_THE_WAVES = {
     "v519-k", "v518g-n", "v518g-c", "v518g-p",
     "v520-wa", "v520-css", "v520-fixv",
     "v522-m", "v522-s", "v522-p1", "v522-s2", "v522-h", "v522-p2",
-    "v524-px", "v524-t", "v524-lib",
+    "v524-px", "v524-t", "v524-lib", "v524-cifix", "v524-ar", "v524-home", "v524-sys",
+    "v524-pub1", "v524-pub2", "v524-brand", "v524-plat", "v524-closing",
+    "v530-agami", "v530-plat", "v530-art", "v530-integ", "v530-mfix", "v530-sys", "v530-cifix",
 }
 
 
@@ -437,6 +454,26 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
         ("v524-mfix", True),
         ("v529-px", True),
         ("v530-closing", True),
+        # the v524-cifix merge (V5.20 cited: cases added, none changed): the CI fix of the published branch, and its
+        # near-misses
+        ("v524-cifix", True),
+        ("v531-cifix", True),
+        # the v524-sys merge (V5.20 cited: cases added, none changed; V5.29, the owner's shared visual system stream):
+        # the stream's id, and its near-misses
+        ("v524-sys", True),
+        ("v529-sys", True),
+        # the v524-brand merge (V5.20 cited: cases added, none changed; V5.29, the owner's layout & brand refinement): the
+        # stream's id, and its near-misses
+        ("v524-brand", True),
+        ("v529-brand", True),
+        # the V5.30 streams (V5.20 cited: cases added, none changed; V5.30, the owner's final art direction + platform
+        # pass): public art direction, AGAMI, the one integration round, the landing on design-v5, and their near-misses
+        ("v530-art", True),
+        ("v530-agami", True),
+        ("v530-integ", True),
+        ("v530-land", True),
+        ("v530-artx", False),
+        ("v530-agam", False),
         ("ops", False),
         ("w3f2", False),
         ("devops-2", False),
@@ -512,6 +549,21 @@ def test_a_manifest_that_contradicts_itself_does_not_load(tmp_path, damage, comp
         ("v524-director", False),
         ("v524-matrix", False),
         ("v524-gate", False),
+        ("v523-cifix", False),
+        ("v524-cifix2", False),
+        ("v524cifix", False),
+        ("v524-ci", False),
+        ("v524g-cifix", False),
+        ("v523-sys", False),
+        ("v524-sys2", False),
+        ("v524-system", False),
+        ("v524-sy", False),
+        ("v524sys", False),
+        ("v523-brand", False),
+        ("v524-brand2", False),
+        ("v524-branding", False),
+        ("v524-bran", False),
+        ("v524brand", False),
     ],
 )
 def test_a_family_id_is_the_steward_a_wave_s_workflow_or_a_family_outside_the_waves(fid, valid):

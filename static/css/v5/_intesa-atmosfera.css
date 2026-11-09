@@ -1,0 +1,37 @@
+/* «l'intesa» (v5/_intesa.css, V5.30 §7): the variant «atmosfera» — a PAGE-ONLY partial imported AFTER v5/_intesa.css by the sheet
+   whose page draws it; markup and API: templates/ecosystem/partials/intesa.html */
+
+/* «atmosfera» — a section's broad field: Italy wider, its fields softened at both ends; Morocco's field larger, its centre
+   near the band's far lower corner — the band's photograph stands over its near half, the field and the pentagram's arms
+   show around the frame's corner and are cropped by the band */
+.intesa--atmosfera {
+  --it-w: clamp(8rem, 18vw, 18rem);
+  --it-o: 0.28;
+  --ma: clamp(26rem, 56vw, 54rem);
+  --ma-o: 0.32;
+  --ma-star: 0.5;
+}
+
+.intesa--atmosfera .intesa__italia {
+  mask-image: linear-gradient(to right, var(--p-notte-950) 50%, transparent), linear-gradient(transparent, var(--p-notte-950) 14%, var(--p-notte-950) 86%, transparent);
+  mask-composite: intersect;
+}
+
+[dir="rtl"] .intesa--atmosfera .intesa__italia {
+  mask-image: linear-gradient(to left, var(--p-notte-950) 50%, transparent), linear-gradient(transparent, var(--p-notte-950) 14%, var(--p-notte-950) 86%, transparent);
+}
+
+.intesa--atmosfera .intesa__marocco {
+  inset-block-end: calc(var(--ma) * -0.3);
+  inset-inline-end: calc(var(--ma) * -0.4);
+}
+
+/* below the split (64 rem) the field stands under the words: the variant's fields as light as the primitive's on a phone;
+   Italy a step under it, this variant's band being wider — in Arabic the lead starts on its red (4.5 : 1 is the rule,
+   measured under the glyphs at every width: at .3 a tablet's lead had 3.82, at .2 a phone's 4.48) */
+@media (max-width: 63.999rem) {
+  .intesa--atmosfera {
+    --it-o: 0.18;
+    --ma-o: 0.14;
+  }
+}

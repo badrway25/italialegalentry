@@ -44,14 +44,15 @@
   transform-origin: 50% 0;
 }
 
-/* the step marker: ILE Mono, tabular lining, the quiet ink (28 on a phone, 36 from 64 rem) */
+/* the step marker: the numeral role (TYPOGRAPHY_V2 F-3; V5.24 — the sans at 600, tabular, never the mono), the quiet ink
+   (28 on a phone, 36 from 64 rem), its box its size */
 .dossier__num {
   grid-column: 2;
   grid-row: 1;
-  font-family: var(--f-mono);
-  font-size: var(--t-band);
+  font-size: var(--t-numeral);
   line-height: 1;
-  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
   color: var(--text-2);
 }
 
@@ -128,10 +129,20 @@
   margin: 0;
 }
 
-/* a locked French definition on the Arabic page keeps the Latin leading (QA_ROUND2 m2: the Arabic 32 px at 17 px read
-   double-spaced) */
-[dir="rtl"] .dossier__definizione[lang="fr"] {
-  line-height: 1.75rem;
+/* ---- V5.24 · the dossier → «la protezione» (BACKGROUND_MATERIAL_V2 §3.2, §5.3; FINAL_DELIVERY_V2 R3, §3.5): «il raccordo»
+        continues the dossier's route across the seam into the pietra band, from its top edge down to the plate's 2 px
+        rule — since V5.29 §4 the compact trust band: the strip's padding, the rule at the plate's top edge, no seal
+        stand (the v524-pub1 steward; LIB NOTES §4 c) — on the route's own x: the node's centre, 23 px into the reading
+        edge (27 from 64 rem, the 56 px tile) ---- */
+.persone-protezione > .sez-raccordo {
+  --sez-raccordo: clamp(var(--s-8), 4vw, var(--s-12));
+  inset-inline-start: calc(var(--bordo-lettura) + 23px);
+}
+
+@media (min-width: 64rem) {
+  .persone-protezione > .sez-raccordo {
+    inset-inline-start: calc(var(--bordo-lettura) + 27px);
+  }
 }
 
 /* «Qui décide ?»: a raised plate — the stamp, the question, the statement as an emphasised legal statement */
@@ -182,7 +193,7 @@
   }
 
   .dossier__num {
-    font-size: var(--t-title);
+    font-size: var(--t-numeral-lg);
   }
 
   .dossier__nodo {

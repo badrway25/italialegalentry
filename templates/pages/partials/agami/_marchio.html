@@ -1,0 +1,7 @@
+{% comment %}
+One of AGAMI's marks (V5.30 §8; label v530-agami-build) — the promoter's own official logo, from pages.imagery.MARKS
+(static/brand/agami/PROVENANCE.json): AVIF then WebP, explicit box (CLS 0). Drawn WHOLE: never cropped, recoloured or
+mirrored — in Arabic too, its ribbon's national colours never are (V5.29, the owner's correction of 6 Nov 13:12). The head's
+frame is the page's one LCP image (eager, fetchpriority=high); the seal is lazy. No caption, no credit: the promoter's own
+asset. Contract: `m` (pages.imagery.mark), `cls`.
+{% endcomment %}<picture class="{{ cls }}" data-mark="{{ m.key }}"><source type="image/avif" srcset="{{ m.avif }}" sizes="{{ m.sizes }}" width="{{ m.width }}" height="{{ m.height }}"><source type="image/webp" srcset="{{ m.webp }}" sizes="{{ m.sizes }}" width="{{ m.width }}" height="{{ m.height }}"><img src="{{ m.src }}" srcset="{{ m.webp }}" sizes="{{ m.sizes }}" width="{{ m.width }}" height="{{ m.height }}" alt="{{ m.alt }}"{% if m.alt_lang %} lang="{{ m.alt_lang }}"{% endif %}{% if m.eager %} fetchpriority="high" decoding="async"{% else %} loading="lazy" decoding="async"{% endif %}></picture>

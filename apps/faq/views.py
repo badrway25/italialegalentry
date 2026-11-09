@@ -20,6 +20,25 @@ from faq import services
 #: the fraud question carries the protection's mark and an ink rule at its reading edge (§3.13 Q1)
 FRAUD_KEY = "faq_guaranteed_visa_offer"
 
+#: V5.29 §10–§13 (lane PUB2): each prescribed question says its subject by one glyph of the registry
+#: (apps/core/icons.py), drawn in the library's T2 tile (.sez-tile--sm, stream SYS) — never one icon twice
+#: (tests/frontend/test_faq_v529_pub2.py). An editor's question outside the register draws no glyph.
+GLYPHS = {
+    "faq_visas": "stamp",  # the visa: an act of the competent authority
+    "faq_recruitment_agency": "briefcase",  # work and its intermediaries
+    "faq_preassessment_guarantee": "compass",  # eligibility / orientation
+    "faq_decreto_flussi": "book-text",  # a legal source
+    "faq_diplomas": "university",  # diplomas and their recognition
+    "faq_prior_refusal": "signpost",  # the pathway after a refusal
+    "faq_who": "institution",  # who stands behind the platform
+    "faq_data_protection": "lock",  # security: the data under lock (no second shield beside fraud)
+    FRAUD_KEY: "ile-scudo",  # fraud: the protection's own mark
+}
+
+
+def glyph(key: str) -> str:
+    return GLYPHS.get(key, "")
+
 
 def _url(name: str) -> str:
     """A cross-app link, empty when the page is gated shut (core.links.public_url: never a link to a 404)."""
@@ -35,8 +54,8 @@ def _explorer_items(group, request) -> list[dict]:
             {
                 "id": entry.key,
                 "title": entry.question,
-                "title_lang": entry.lang if entry.is_fallback else "",
-                "glyph": "ile-scudo" if entry.key == FRAUD_KEY else "",
+                "title_lang": entry.question_lang if entry.question_is_fallback else "",
+                "glyph": glyph(entry.key),
                 "marked": entry.key == FRAUD_KEY,
                 "body": render_to_string("faq/_risposta.html", {"entry": entry}, request),
                 "links": render_to_string("faq/_collegamenti.html", {"entry": entry}, request) if entry.links else "",
@@ -73,10 +92,18 @@ def index(request):
         raise Http404
     lang = translation.get_language() or settings.LANGUAGE_CODE
     query = services.normalise_query(request.GET.get("q"))
+    suggestions = []
     if query:
         entries = services.entries_for(services.search_items(query), lang)
         groups = []
         jsonld = ""
+        if not entries:
+            # V5.29 §13 (a strong empty search): every question stays one step away — the register's questions as
+            # links to their permalinks, each with its glyph, beside the empty state
+            suggestions = [
+                {"entry": entry, "glyph": glyph(entry.key)}
+                for entry in services.entries_for(services.live_items(), lang)
+            ]
     else:
         entries = services.entries_for(services.live_items(), lang)
         groups = services.group_entries(entries, lang)
@@ -86,6 +113,8 @@ def index(request):
         "query": query,
         "is_search": bool(query),
         "entries": entries,
+        "results": [{"entry": entry, "glyph": glyph(entry.key)} for entry in entries] if query else [],
+        "suggestions": suggestions,
         "groups": [{"group": g, "items": _explorer_items(g, request)} for g in groups],
         "single_group": len(groups) == 1,
         "rimando": _rimando(request),

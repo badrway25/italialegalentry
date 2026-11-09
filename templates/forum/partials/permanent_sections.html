@@ -54,7 +54,7 @@ records in a row are a list); a document link names its format; a photograph shi
               {% else %}
                 <img src="{{ media.url }}" alt="{{ media.alt|default:'' }}" loading="lazy" class="forum-gallery__image">
               {% endif %}
-              <figcaption>{{ media.caption }}{% if media.credit %} <span class="forum-gallery__credit">© {{ media.credit }}</span>{% endif %}</figcaption>
+              <figcaption>{{ media.caption }}{% if media.attribution_required %} <span class="forum-gallery__credit">© {{ media.credit }}</span>{% endif %}</figcaption>
             </figure>
           </li>
         {% endfor %}

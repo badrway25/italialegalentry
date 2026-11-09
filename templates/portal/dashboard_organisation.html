@@ -33,7 +33,7 @@ No NowPanel, no journey, no file, no pieces, no questionnaire: an organisation h
 <header class="ctx db-head org-head" data-atrium="{{ audience }}">
   {% include "portal/partials/atrium_art.html" with figure="seal" atrium_seal=audience_glyph %}
   <div class="ctx__words">
-    <p class="ctx__eyebrow atrium__eyebrow">{{ space_label }}</p>
+    <p class="ctx__eyebrow atrium__eyebrow t-label">{{ space_label }}</p>
     <h1 class="ctx__title">{% translate "Tableau de bord" %}</h1>
     {% if organisation_name %}<p class="org-head__name atrium__plate"><span class="atrium__seal" aria-hidden="true">{% svg_icon audience_glyph "icon" %}</span><span dir="auto">{{ organisation_name }}</span></p>{% endif %}
     {% comment %} The space's locked presentation, verbatim: in the head from 80rem (F2: at 1024–1279 the university's four lines
@@ -50,8 +50,8 @@ No NowPanel, no journey, no file, no pieces, no questionnaire: an organisation h
     {% for card in registers %}{% include "portal/partials/card.html" with card=card %}{% endfor %}
     {% if calm %}
     <div class="org-calm" data-spot>
-      {% comment %} The calm state is a composed panel, not a stray line: two porticoes joined by one route — the cooperation the space is for (decorative). {% endcomment %}
-      {% include "portal/partials/calm_art.html" %}
+      {% comment %} The calm state is a composed panel, not a stray line: the space's seal in its disc (decorative; V5.30 product-first — no more porticoes). {% endcomment %}
+      {% include "portal/partials/calm_art.html" with calm_glyph=audience_glyph %}
       <p class="org-calm__text">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
       {% if action %}<p class="org-calm__act"><a class="btn btn--primary" href="{{ action.url }}">{% if audience == "university" %}{% locked "p3.entrances.university.button" %}{% else %}{% locked "p3.entrances.institution.button" %}{% endif %}</a></p>{% endif %}
     </div>
@@ -86,11 +86,11 @@ No NowPanel, no journey, no file, no pieces, no questionnaire: an organisation h
         <span class="org-id__disc" aria-hidden="true">{% svg_icon audience_glyph "icon" %}</span>
         <p class="org-id__name" dir="auto">{{ organisation.name }}</p>
         <dl class="org-id__facts">
-          <div class="org-id__fact"><dt>{% translate "Nature de l’organisme" %}</dt><dd>{{ organisation.kind_label }}</dd></div>
-          {% if organisation.city %}<div class="org-id__fact"><dt>{% translate "Ville" %}</dt><dd dir="auto">{{ organisation.city }}</dd></div>{% endif %}
-          {% if organisation.country %}<div class="org-id__fact"><dt>{% translate "Pays" %}</dt><dd dir="auto">{{ organisation.country }}</dd></div>{% endif %}
-          <div class="org-id__fact"><dt>{% translate "Votre rôle" %}</dt><dd>{{ organisation.role_label }}</dd></div>
-          <div class="org-id__fact"><dt>{% translate "Depuis le" %}</dt><dd><time datetime="{{ organisation.since|date:'Y-m-d' }}">{{ organisation.since|date:"d.m.Y" }}</time></dd></div>
+          <div class="org-id__fact"><dt class="t-label">{% translate "Nature de l’organisme" %}</dt><dd>{{ organisation.kind_label }}</dd></div>
+          {% if organisation.city %}<div class="org-id__fact"><dt class="t-label">{% translate "Ville" %}</dt><dd dir="auto">{{ organisation.city }}</dd></div>{% endif %}
+          {% if organisation.country %}<div class="org-id__fact"><dt class="t-label">{% translate "Pays" %}</dt><dd dir="auto">{{ organisation.country }}</dd></div>{% endif %}
+          <div class="org-id__fact"><dt class="t-label">{% translate "Votre rôle" %}</dt><dd>{{ organisation.role_label }}</dd></div>
+          <div class="org-id__fact"><dt class="t-label">{% translate "Depuis le" %}</dt><dd><time datetime="{{ organisation.since|date:'Y-m-d' }}">{{ organisation.since|date:"d.m.Y" }}</time></dd></div>
         </dl>
       </div>
       {% empty %}

@@ -166,7 +166,8 @@ def test_the_cut_never_retypes_the_sentence():
         cut = services.how_it_works(lang)
         assert cut is not None and cut.text == locked_content.get("p3.persons.how_it_works", lang)[0]
         assert len(cut.steps) == 4 and cut.lead.endswith(": ")
-        assert cut.lang == ("" if lang == "fr" else "fr")
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the Arabic is the provisional rendering, in the page's language
+        assert cut.lang == ("" if lang in ("fr", "ar") else "fr")
 
 
 def test_the_programme_numbers_its_rows_when_not_every_row_has_a_time(interior):
@@ -211,7 +212,11 @@ def test_french_on_an_arabic_page_says_so(client, seeded, phase3_open, legal_pub
     event.mode_override = ModeOverride.PERMANENT
     event.save()
     forum = BeautifulSoup(client.get("/ar/forum/").content, "html.parser")
-    assert forum.select_one(".forum-hero__eyebrow").get("lang") == "fr"
+    # FINAL_DELIVERY_V2 §3.6 / ARABIC_AUDIT W1.2 (V5.20, the steward's amendment at the v524-pub2 merge): the eyebrow is
+    # a team string of its own, translated (the catalogue's Arabic) — it reads Arabic with no lang of its own, where it
+    # was the locked paragraph's French clause marked lang="fr" (stronger: no French at all)
+    eyebrow = forum.select_one(".forum-hero__eyebrow")
+    assert not eyebrow.get("lang") and re.search(r"[\u0600-\u06ff]", eyebrow.get_text())
     assert forum.select_one("h1.forum-hero__title").get("lang") == "fr"
     register = BeautifulSoup(client.get("/ar/forum/inscription/").content, "html.parser")
     assert register.select_one('.breadcrumbs a[href="/ar/forum/"] span[lang="fr"]')
@@ -220,8 +225,24 @@ def test_french_on_an_arabic_page_says_so(client, seeded, phase3_open, legal_pub
     agami = BeautifulSoup(client.get("/ar/agami/").content, "html.parser")
     # V5.22 (SECTION_SYSTEM_V2 §3.17 AG-2; strict rule V5.20): the FAQ's near-identical answer is a disclosure row under
     # the promoter's text, no longer a chapter — its question the disclosure's summary, still carrying its language
-    assert agami.select_one("details summary #agami-faq-title")["lang"] == "fr"
-    assert agami.select_one("p[data-faq]")["lang"] == "fr"
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the FAQ's question is
+    # compositional (C-UI) and reads Arabic; its answer is substantive (C-SUBST-FR) and this is not its page — the
+    # Arabic pointer line in its place; neither says French
+    from django.utils import translation
+
+    from cms import locked_content, locked_renderings
+
+    arabic = re.compile(r"[\u0600-\u06ff]")
+    question = agami.select_one("details summary #agami-faq-title")
+    assert not question.get("lang") and arabic.search(question.get_text())
+    answer = agami.select_one("p[data-faq]")
+    entries = locked_content.LOCKED_TEXTS["fr"]["p3.faq.items"]
+    index = next(i for i, item in enumerate(entries) if item["key"] == answer["data-faq"])
+    subkey = f"p3.faq.items[{index}].answer"
+    assert locked_renderings.treatment(subkey) == "C-SUBST-FR"
+    with translation.override("ar"):
+        pointer = str(locked_renderings.pointer_line(subkey))
+    assert not answer.get("lang") and answer.get_text().strip() == pointer
 
 
 #: the area's template folders (plan §3.5 item 1, «Owns»)
@@ -456,6 +477,9 @@ def test_the_pathway_sheet_has_its_index_in_the_entrance_and_no_sticky_bar(clien
                 "../css/v5/_interior.css",
                 "../css/v5/_sezioni.css",
                 "../css/v5/_sigillo.css",
+                # FINAL_DELIVERY_V2 §3.6, R3 (lane PUB2; V5.20, the steward's amendment at the v524-pub2 merge): the
+                # library's material partial for the Forum raccordo — still nothing but imports
+                "../css/v5/_materia.css",
                 "_forum.css",
             ],
         ),
@@ -474,16 +498,19 @@ def test_the_pathway_sheet_has_its_index_in_the_entrance_and_no_sticky_bar(clien
                 "../../css/v5/_sec-strato.css",
                 "_institutional.css",
                 "_canali.css",  # V5.19 (lane v519-k): the contact page's telephone channels
-                "_projet.css",
+                # FINAL_DELIVERY_V2 §3.6, R4 a (lane PUB2; V5.20, the steward's amendment at the v524-pub2 merge): Le
+                # projet's partial on its own route sheet (below) with the material partial, linked by that page only
                 "_contatto.css",
                 # V5.22 lane P2 round 2 (QA_ROUND2 m5; the owner's V5.22 «route-specific bundles with their own recorded
                 # budgets»; strict rule V5.20): Réseau's, AGAMI's and the fraud page's partials are their route sheets'
                 # (below), linked by those pages only — still nothing but imports
             ],
         ),
-        ("apps/pages/static/pages/css/rete.css", ["_rete.css"]),
+        # V5.20, citing V5.30 §7: the Italy + Morocco primitive under Réseau's closing band joins its sheet, once
+        ("apps/pages/static/pages/css/rete.css", ["../../css/v5/_intesa.css", "_rete.css"]),
         ("apps/pages/static/pages/css/agami.css", ["_agami.css"]),
         ("apps/pages/static/pages/css/frodi.css", ["_frodi.css"]),
+        ("apps/pages/static/pages/css/projet.css", ["../../css/v5/_materia.css", "_projet.css"]),
         ("apps/cms/static/cms/faq.css", ["../css/v5/_sec-indice.css", "_faq-v2.css"]),
         ("apps/cms/static/cms/lessico.css", ["_lessico-v2.css"]),
         (

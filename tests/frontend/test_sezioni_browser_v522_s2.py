@@ -338,7 +338,16 @@ def test_the_protection_s_french_title_is_one_left_to_right_box_on_the_body_s_ed
                 edges = page.evaluate("""() => { const range = (el) => { const r = document.createRange(); r.selectNodeContents(el);
                     return r.getClientRects()[0]; };
                     const t = document.querySelector('.protezione__titolo'), b = document.querySelector('.protezione__testo .ls-1');
-                    return {dir: getComputedStyle(t).direction, title: range(t).left, body: range(b).left}; }""")
+                    return {dir: getComputedStyle(t).direction, title: range(t).left, body: range(b).left,
+                            titleEnd: range(t).right,
+                            bodyEnd: document.querySelector('.protezione__testo').getBoundingClientRect().right}; }""")
+                if key == "protezione-ar":
+                    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): on /ar/ the
+                    # title is its provisional Arabic rendering, right to left, and starts on the body's own edge (the
+                    # right one); the body is the Arabic pointer line on a product page, the source French here
+                    assert edges["dir"] == "rtl", (key, width, edges)
+                    assert abs(edges["titleEnd"] - edges["bodyEnd"]) <= 1, (key, width, "one start", edges)
+                    continue
                 assert edges["dir"] == "ltr", (key, width, edges)
                 assert abs(edges["title"] - edges["body"]) <= 1, (key, width, "one start", edges)
         finally:

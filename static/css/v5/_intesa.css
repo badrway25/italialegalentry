@@ -1,0 +1,167 @@
+/* ============================================================================================
+   «L'INTESA» — THE ITALY + MOROCCO PRIMITIVE (V5.29 §15–§17, lane PUB1; generalised by V5.30 §7, stream A: ONE reusable
+   visual primitive with contextual variants, a stronger presence — larger, partially cropped, layered behind content,
+   atmospheric — and still secondary to the words). A PAGE-ONLY partial of the design system: imported by the page sheets
+   that draw it (ecosystem/intesa.css — the Institutions collaboration head —, ecosystem/institutions.css, pages/css/
+   pages.css — the home's cooperation moment —, pages/css/rete.css — Réseau), never main.css.
+   Markup and the include's API: templates/ecosystem/partials/intesa.html (`id`, `variant` campo · atmosfera · pannello,
+   `night`). This partial is the primitive, its default variant «campo», the panel variant «pannello» and the night modifier;
+   the broad «atmosfera» is a partial of its own (v5/_intesa-atmosfera.css), imported after this one by the sheet whose
+   page draws it — a page carries only what it draws.
+   Very large, cropped forms derived from the two flags, at the band's two edges, meeting around the content: Italy's three
+   vertical fields at the reading edge (the white is the paper), fading toward the words; Morocco's red as a broad soft field
+   at the far edge with the green pentagram as one fine line. Tokens and colour mixes of tokens only; multiplied into the
+   paper (screened into a night), so dark ink stays dark (the words' contrast measured in the browser tests). The PLACEMENT
+   follows the reading edge (logical insets; the reveal's clip mirrored); the FLAGS are never mirrored: no transform on
+   either drawing or any ancestor (V5.29, the owner's correction of 6 Nov 13:12).
+   ============================================================================================ */
+
+.intesa-campo {
+  position: relative;
+  isolation: isolate;
+}
+
+.intesa {
+  /* the two flags' colours from the palette: the cooperation green (the Morocco side's own token), lifted toward the
+     lagoon for Italy's brighter green; the reds a mix of the garnet and the terracotta — Italy's a touch warmer */
+  --intesa-verde-it: color-mix(in oklab, var(--cooperation), var(--p-laguna-550) 30%);
+  --intesa-rosso-it: color-mix(in oklab, var(--p-granata-600), var(--p-cotto-600) 45%);
+  --intesa-rosso-ma: color-mix(in oklab, var(--p-granata-600), var(--p-cotto-600) 25%);
+  --intesa-verde-ma: var(--cooperation);
+  /* the variant's measures (V5.30: the default «campo» one step up from V5.29's 7 vw / 36 vw at .2 / .22) */
+  --it-w: clamp(6rem, 12vw, 11rem);
+  --it-o: 0.26;
+  --ma: clamp(22rem, 44vw, 42rem);
+  --ma-o: 0.28;
+  --ma-star: 0.42;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: clip;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* on a section band the composition stands behind the content, on the band's ground (every .sez isolates) */
+.sez > .intesa {
+  z-index: -1;
+}
+
+.intesa svg {
+  position: absolute;
+  display: block;
+  overflow: visible;
+}
+
+/* Italy at the reading edge, its three fields fading toward the words (a mask reads alpha only: the night ink stands for
+   «opaque»; the mask is no transform — the drawing keeps its hoist on the left in either direction) */
+.intesa__italia {
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--it-w);
+  block-size: 100%;
+  opacity: var(--it-o);
+  mask-image: linear-gradient(to right, var(--p-notte-950) 50%, transparent);
+}
+
+[dir="rtl"] .intesa__italia {
+  mask-image: linear-gradient(to left, var(--p-notte-950) 50%, transparent);
+}
+
+/* Morocco at the far edge's foot, its centre on the band's lower corner: a quarter of the field and of the star shows,
+   the rest cropped by the band — never a whole emblem */
+.intesa__marocco {
+  inset-block-end: calc(var(--ma) * -0.4);
+  inset-inline-end: calc(var(--ma) * -0.5 + var(--s-8));
+  inline-size: var(--ma);
+  block-size: var(--ma);
+}
+
+.intesa__stop-verde {
+  stop-color: var(--intesa-verde-it);
+}
+
+.intesa__stop-rosso {
+  stop-color: var(--intesa-rosso-it);
+}
+
+.intesa__marocco .intesa__stop-rosso {
+  stop-color: var(--intesa-rosso-ma);
+}
+
+.intesa__marocco .intesa__campo {
+  opacity: var(--ma-o);
+}
+
+.intesa__stella {
+  fill: none;
+  stroke: var(--intesa-verde-ma);
+  stroke-width: 1.5px;
+  stroke-linejoin: miter;
+  opacity: var(--ma-star);
+}
+
+/* «pannello» — inside one contained panel (its own stacking context, its corner clipping): the fields measured on it */
+.intesa--pannello {
+  --it-w: 24%;
+  --ma: max(70%, 16rem);
+}
+
+.intesa--pannello .intesa__marocco {
+  inset-block-end: auto;
+  inset-block-start: 38%;
+  block-size: auto;
+  aspect-ratio: 1;
+}
+
+/* on a night ground the fields are screened into the night, a step lighter */
+.intesa--notte {
+  --it-o: 0.2;
+  --ma-o: 0.22;
+  --ma-star: 0.5;
+  mix-blend-mode: screen;
+}
+
+/* the one motion: each drawing revealed from its outer edge inward, slowly, once (the library's reveal-mask, core/
+   reveal.css, no fill: it leaves getAnimations() at rest) — at load in a head, on its band's own trigger on a section
+   band (rise.js's wait / in: a band below the fold reveals when it arrives). --motion-luce is 0 ms under reduced motion
+   and the rules stand only without it, where no state is written: a still composition */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.rm) .intesa-campo > .intesa svg,
+  html:not(.rm) .sez[data-sec-state="in"] > .intesa svg {
+    animation: reveal-mask var(--motion-luce) var(--ease-enter);
+  }
+
+  html:not(.rm) .sez[data-sec-state="wait"] > .intesa svg {
+    clip-path: var(--reveal-from);
+  }
+
+  html:not(.rm) .intesa__italia,
+  html[dir="rtl"]:not(.rm) .intesa__marocco {
+    --reveal-from: inset(0 100% 0 0);
+  }
+
+  html:not(.rm) .intesa__marocco,
+  html[dir="rtl"]:not(.rm) .intesa__italia {
+    --reveal-from: inset(0 0 0 100%);
+  }
+}
+
+/* on a phone the far corner stands under the words (4.5:1 measured): Morocco keeps its red field, lighter, and the
+   pentagram's line stands down — never a line through a sentence */
+@media (max-width: 47.999rem) {
+  .intesa {
+    --it-o: 0.2;
+    --ma-o: 0.14;
+  }
+
+  .intesa__stella {
+    visibility: hidden;
+  }
+}
+
+@media (forced-colors: active), print {
+  .intesa {
+    display: none;
+  }
+}

@@ -15,7 +15,7 @@
    parent's already-resolved stack. :where(): any rule that names its own family still wins. */
 :where([lang]) { font-family: var(--f-sans); }
 
-/* ---- the type roles: 600 titles, 500 acts, 400 reads; tracking follows size and stops at 20 px --- */
+/* ---- the type roles: 500 titles and acts, 400 reads (V5.29: one step down); tracking follows size and stops at 20 px --- */
 h1, h2, h3, .t-band { font-weight: var(--w-title); }
 h3 { letter-spacing: var(--track-entry); }
 /* the doors' titles are capitals in the locked copy itself, so they are tracked as every capital run is (TR rule 6) */
@@ -63,7 +63,7 @@ h3 { letter-spacing: var(--track-entry); }
 }
 
 /* ---- «ILE Mono» has one seat: references, hashes, rule versions (plan §1.1; TYPOGRAPHY_V2 F-3: code, kbd, pre,
-        .t-ref, .ctx__ref, .doc-workspace__ref, .error-page__ref, .db-ref, .reg-ref — the class list the guard
+        .t-ref, .ctx__ref, .ws-case__ref, .error-page__ref, .db-ref, .reg-ref — the class list the guard
         holds). The legacy footer labels, the questionnaire's count, journey and timeline dates and the blocked
         row's note read the body's sans already (no sheet sets the mono on them since V5.22); they keep the
         tabular figures a date or a counter wants. ------------------------------------------------- */
@@ -75,7 +75,6 @@ h3 { letter-spacing: var(--track-entry); }
 /* ---- italics are kept for the titles of acts cited in sources (plan §1.1: never on the portico).
         The institutional banner's quote is set italic by components.css: roman here, so a public page
         downloads no italic (14 KB). `:root body` lifts the rule over the app sheets that load after main.css. */
-:root body .institutional-banner__quote { font-style: normal; }
 
 /* ---- links: the one interactive accent; underlined at rest in running text ---------------------- */
 a {

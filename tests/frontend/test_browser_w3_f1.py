@@ -86,6 +86,20 @@ def test_no_overflow_and_three_corners_a_screen(browser, live_server, seeded, ph
         context.close()
 
 
+#: V5.20 (the v524-closing steward): the door head's FINITE entrance — the frontispiece's rise-in (the head's text 14 px
+#: up in ≈ 500 ms), its rule and its register — awaited before the head's geometry is read, the repository's settle idiom
+#: (test_dashboard_browser_w3_b.SETTLE_JS); the ground's endless drift is not awaited; a finished rise leaves the list
+HEAD_SETTLE_JS = """() => Promise.all(document.getAnimations()
+  .filter((a) => {
+    const el = a.effect && a.effect.target, t = a.effect && a.effect.getComputedTiming();
+    return Boolean(el && t && Number.isFinite(t.endTime) && t.endTime <= 2500 && el.closest('.ingresso'));
+  })
+  .map((a) => a.finished.catch(() => null)))"""
+#: the way's control in the entrance's first frame (before the settle): its top, and the first screen's height
+CONTROL_TOP_JS = """() => ({top: document.querySelector(':is(.porta, .ingresso__way) .via__action .btn').getBoundingClientRect().top,
+  vh: innerHeight})"""
+
+
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 @pytest.mark.parametrize(
     ("width", "height"), [(1440, 900), (1024, 768), (768, 1024), (430, 932), (390, 844), (375, 667), (360, 740)]
@@ -104,6 +118,17 @@ def test_the_door_card_carries_its_way_in_the_first_screen_its_disc_at_the_inlin
         ):
             page.goto(live_server.url + path.format(lang=lang), wait_until="load")
             page.evaluate("document.fonts.ready")
+            # V5.20, restated by the v524-closing steward (a red carried from the base 88caed4a, [375-667-ar] reading the
+            # control 14 px low): the head is measured AT REST, as its sibling guard of the same fold measures it
+            # (test_seal_heads_browser_v522_s, reduced motion) — the frontispiece's entrance (V5.15 lane C) was in
+            # flight when it was read, and since the owner's V5.27 hybrid policy (R7′) captions the French lead on its
+            # own Arabic page (the v524-pub1 steward, 1d9f28a1) the Arabic Parcours head keeps 1.8 px at 375 × 667 at
+            # rest. The invariant, unchanged, on the settled head (the whole control inside the first screen, every
+            # assertion below), and one more in flight: the way's control shows from the entrance's first frame
+            entering = page.evaluate(CONTROL_TOP_JS)
+            assert entering["top"] <= entering["vh"], ("the way in shows from the entrance's first frame", path, lang, width)
+            page.wait_for_function("() => !document.documentElement.classList.contains('lume-in')", timeout=5000)
+            page.evaluate(HEAD_SETTLE_JS)
             # V5.12/V5.15 lane C (the steward, the v515-c merge): the four doors' heads now carry their photograph
             # (apps/pages/imagery.py), so the way in stands under the lead (`.ingresso__way`, _ingresso.html) and the
             # night door card is drawn only on a head without one; the way's control is held to the same first screen

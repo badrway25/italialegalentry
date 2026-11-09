@@ -12,8 +12,11 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.11; lane P2) — a system of actors, drawn o
           (the old RE-1, moved), each actor's sentence, glyph and space (the old register RE-2, gone: words once). The
           head is the interior's entrance «l'ingresso» (its classes, its band, its motif), written here because its
           root carries the map's module (sezioni/mappa.js: tablist, roving tabindex, Arrows, Home, End, Escape);
-  strip   K «l'approdo» on stone: the Forum, the promoter (and the authorised partners, G6), the network's nodes drawn
-          low as the bookend.
+  strip   K «l'approdo» on stone: the Forum, the promoter (and the authorised partners, G6). V5.30 (the owner's
+          «geometry saturation» and §7; stream A): the network's nodes no longer repeat as a bookend (the ring is the
+          head's); the band stands on «l'intesa», the Italy + Morocco primitive (ecosystem/partials/intesa.html, campo:
+          Italy's fields at the reading edge, Morocco's at the far corner, around the Forum Vénétie–Maroc and the
+          promoter), aria-hidden, the flags never mirrored, a still under reduced motion.
 Page sheets apps/pages/static/pages/css/interior.css and the route sheet rete.css (+ _rete.css; round 2, QA_ROUND2 m5). Views: apps/pages/views.py builds the entries.
 {% endcomment %}
 {% block page_title %}{% translate "Le réseau" %}{% endblock %}
@@ -37,6 +40,7 @@ Page sheets apps/pages/static/pages/css/interior.css and the route sheet rete.cs
 {% comment %}V5.12 §8 (W1-C): the partners stand only with an authorised partner (core.gates.partners_public, G6) — never a
 sentence announcing partners to come; until then the Forum and the promoter close the page on their own.{% endcomment %}
 <section class="sez sez--approdo rete-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="network-partners-title">
+  {% include "ecosystem/partials/intesa.html" with id="intesa-rete" only %}
   <div class="container">
     {% if partners %}{% translate "Partenaires" as partners_title %}{% else %}{% translate "Pour aller plus loin" as partners_title %}{% endif %}
     {% include "components/sezioni/approdo.html" with title_id="network-partners-title" title=partners_title tiles=approdo motif="network" only %}

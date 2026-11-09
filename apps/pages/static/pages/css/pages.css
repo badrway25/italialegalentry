@@ -7,11 +7,11 @@
    device seven times: under the approved hero each section is composed from ONE pattern of the composition
    library (lane S, static/css/v5/_sezioni.css and the _sec-* partials imported below), chosen for its content,
    each with its own motion signature on the one timing language, no two neighbours alike:
-     H0 «la soglia»      the hero's route continues beside its statement into the orientation (hero.css)   LINE
+     H0 «la soglia»      the hero's foot fades into the orientation's wash, no line (V5.30 VARIETY §5)      —
      S1 «il passaggio»   the four doors in a rail the thumb crosses (phones)                                  SLIDE
-     S2 «la linea V2»    the questionnaire's route, from the seal of orientation to the call               LINE
+     S2 «la linea V2»    the questionnaire's four steps on one panel beside its head (V5.30 VARIETY §7)     —
      S3 «l'indice»       the eight regular pathways: an index and its stage                                GLIDE
-     S4 «il panorama»    the pilot: the same gesture on two shores, a gold thread in the seam               DEVELOP
+     S4 «il panorama»    the pilot: the same gesture on two shores                                          DEVELOP
      S5+S6 «lo strato»   the integrity band: one tablet set in the dressed stone, then «la protezione»      DEPTH
      S7 «la campata»     the promoter's colophon beside the working table under the brand's arch           MASK
      S8 the reserved row  the key in its night seat, turning on its own action                            TURN
@@ -22,6 +22,11 @@
    The passage «la linea» (v5/_journey-passage.css, W3-D) and «la linea V2» after it (v5/_linea-v2.css), the
    photograph (v5/_photo.css), the shell and the seat (v5/_sezioni.css, v5/_sigillo.css) and the pattern
    partials — page-only partials, imported here as they resolve in the COLLECTED tree (DS 2026 §2).
+
+   V5.24 (BACKGROUND_MATERIAL_V2 §3, §5.1; TYPOGRAPHY_V2 §4.2, §6; FINAL_DELIVERY_V2 §3.4; lane HOME): the material
+   partial v5/_materia.css (the grounds' recipes and the seams' primitives, lane LIB) imported before «la casa», which
+   places them — S3 on stone, S6 on «pietra», the sfumatura, the raccordo, the velatura and the sill's light; the type
+   on the twelve steps (the label role by name, the display weight through the tokens); no credit rule (V5.24 §2).
    ========================================================================== */
 
 @import url("../../css/v5/_journey-passage.css");
@@ -30,9 +35,12 @@
 @import url("../../css/v5/_sezioni.css");
 @import url("../../css/v5/_sigillo.css");
 @import url("../../css/v5/_sec-passaggio.css");
-@import url("../../css/v5/_sec-indice.css");
-@import url("../../css/v5/_sec-strato.css");
+@import url("../../css/v5/_sec-indice-base.css"); /* V5.29: the tabs only — the explorer and the native disclosure are the FAQ's and the sheets' */
+@import url("../../css/v5/_sec-lastre.css"); /* V5.29: the plates and «la protezione» only — the home draws no landing, address or term plate */
 @import url("../../css/v5/_sec-campata.css");
+@import url("../../css/v5/_materia.css");
+@import url("../../css/v5/_intesa.css"); /* V5.30 §7: the Italy + Morocco primitive … */
+@import url("../../css/v5/_intesa-atmosfera.css"); /* … in its «atmosfera»: the cooperation moment's ground */
 @import url("../../css/v5/_casa.css");
 
 /* ============================================================================
@@ -62,7 +70,7 @@
 .home-plate__fragment::first-letter,
 .home-trust__statement--fragment::first-letter,
 .parcours__descrizione::first-letter {
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 /* ============================================================================
@@ -96,9 +104,6 @@
     max-inline-size: none;
   }
 
-  .page-home :is(.testa--statement, .testa--process) .testa__rule {
-    grid-column: 1 / -1;
-  }
 
   .page-home :is(.testa--statement, .testa--process) .testa__lead {
     max-inline-size: var(--measure-lead);
@@ -142,12 +147,6 @@
   border-block: 1px solid var(--line-rhythm);
 }
 
-.home-banner .forum-banner {
-  background: transparent;
-  color: inherit;
-  border: 0;
-}
-
 .home-banner .forum-banner__inner {
   display: grid;
   gap: var(--s-4) var(--s-8);
@@ -159,10 +158,8 @@
 .home-banner .forum-banner__title {
   margin: 0;
   font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
   font-weight: var(--w-title);
   letter-spacing: var(--track-display-caps);
-  color: var(--text-1);
 }
 
 .home-banner .forum-banner__meta {
@@ -178,13 +175,7 @@
   margin: var(--s-3) 0 0;
   padding-inline-start: var(--s-4);
   border-inline-start: 1px solid var(--line-structure);
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
   color: var(--text-2);
-}
-
-.home-banner .forum-banner__action {
-  margin: 0;
 }
 
 @media (min-width: 64rem) {
@@ -372,25 +363,20 @@ html[data-input="key"] .campata__media .foto__img {
 }
 
 /* ============================================================================
-   5 · S2 «la linea V2, la discesa» — the orientation's route on the page's one brand wash. Its top stands in the
-       wash's first light, so the hero's foot fades into it with no seam (hero.css); the brand's portico — the
-       threshold's three arches, as the Lume stage draws them — at 6 % ink at the far edge. Where the hero's line
-       arrives it runs down the reading edge, 12 px off it, from the band's top into the origin seal's sill
-       (.orienta__soglia, the verb draw-y): the route continues.
+   5 · S2 «la linea V2» — the orientation on the page's one brand wash: its head at the reading edge, its four
+       steps on one panel beside it. Its top stands in the wash's first light, so the hero's foot fades into it with
+       no seam (hero.css).
    ========================================================================== */
 .page-home .home-orientation {
   overflow: clip; /* its ground, the wash's first light at the top, is v5/_casa.css's */
 }
 
+/* V5.30 (the owner's «geometry saturation»): the portico's three arches left the band; the drawing's element holds the
+   needle's one gradient only (pages/home/_orientation.html) — out of the flow, no box */
 .orienta__portico {
   position: absolute;
-  z-index: -1;
-  inset-block-end: 0;
-  inset-inline-end: max(var(--page-pad), calc((100% - var(--container)) / 2));
-  block-size: min(88%, 30rem);
-  inline-size: auto;
-  stroke: color-mix(in srgb, var(--text-1) 6%, transparent);
-  pointer-events: none;
+  inline-size: 0;
+  block-size: 0;
 }
 
 .orienta__capo {
@@ -402,13 +388,10 @@ html[data-input="key"] .campata__media .foto__img {
   margin-block-end: 0;
 }
 
-/* the sentence's own opening words, the route's caption («Comment ça marche :»): drawn for the eye, said whole once */
+/* the sentence's own opening words, the route's caption («Comment ça marche :»): drawn for the eye, said whole once —
+   the label role by name (`t-label`, v5/base.css: Host Grotesk 13/16 600; V5.24 TYPOGRAPHY_V2 F-3 / F-4), in the accent */
 .orienta__didascalia {
   margin: var(--s-6) 0 0;
-  font-family: var(--f-mono);
-  font-size: var(--t-ui);
-  line-height: var(--t-ui-lh);
-  letter-spacing: 0.02em;
   color: var(--accent-text);
 }
 
@@ -436,12 +419,6 @@ html[data-input="key"] .campata__media .foto__img {
   text-align: start;
 }
 
-.orienta__avvertenza {
-  margin: 0;
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
-}
-
 .orienta__intera {
   max-inline-size: var(--measure-lead);
   margin: 0 0 var(--s-8);
@@ -449,115 +426,115 @@ html[data-input="key"] .campata__media .foto__img {
   line-height: var(--t-lead-lh);
 }
 
-.orienta__soglia {
-  display: none;
+/* V5.30 VARIETY §3, §7 HOME (the owner: «route only where meaningful … bento/material panels»; 21st.dev's «How It Works»
+   panels and ui-ux-pro-max's bento pattern, in this system's own terms): the door above is the page's arch, so this band
+   speaks another language — its head at the reading edge, beside it one raised panel of four numbered cells, no route
+   line, no arch. The stepper's markup is unchanged: the list stays aria-hidden under the whole sentence. The lattice is
+   the list's own 1 px gap over the hairline's paint, so it holds at 1 and 2 columns in either direction. */
+.home-orientation--soglia {
+  padding-block-start: var(--s-6);
 }
 
-/* Where the hero comes first the band TAKES THE STATEMENT'S HAND (round 1, QA_ROUND1 M1 a: «a paragraph beside a hairline,
-   then about 150 px of empty wash»): its head follows the statement at the foot's own distance — the hero's 24 px and
-   the band's 24 px — and the line runs on beside it without a break, down the reading edge to the route's origin, where
-   its foot TURNS into the seal's sill (a 12 px corner, the hero's own radius): one line from the statement's first word
-   to the route. The seal's sill then starts at the seal's own edge, so the corner is the only way into it. */
-@media (min-width: 64rem), (min-width: 40rem) and (min-height: 30.0625rem) {
-  .home-orientation--soglia {
-    --orienta-top: var(--s-6);
-    padding-block-start: var(--orienta-top);
-  }
-
-  .home-orientation--soglia .orienta__soglia {
-    --y: calc(var(--t-title) + var(--s-2) + 68px);
-    display: block;
-    position: absolute;
-    inset-inline-start: -12px;
-    inset-block: calc(-1 * var(--orienta-top)) calc(-1 * (var(--s-8) + var(--y)));
-    inline-size: 2px; /* its ink, bronze into the route's own, and its corner are v5/_casa.css's */
-  }
-
-  .home-orientation--soglia li:first-child .sigillo::after {
-    inset-inline-start: -1px;
-  }
+.home-orientation .linea--large {
+  display: grid;
+  gap: 1px;
+  overflow: clip;
+  border-radius: var(--card-radius);
+  background: var(--line-rhythm);
+  box-shadow: 0 0 0 1px var(--line-rhythm), var(--shadow-1);
 }
 
-/* 40–48 rem (the doors hidden, the route down the reading edge): the band's column steps 16 px in, as the hero's
-   statement does, so the line that left the statement 4 px off the pad meets the seal's sill */
-@media (max-width: 47.999rem) and (min-width: 40rem) and (min-height: 30.0625rem) {
-  .home-orientation--soglia .container {
-    padding-inline-start: calc(var(--page-pad) + 1rem);
-  }
-
-  .home-orientation--soglia .orienta__soglia {
-    --y: 68px;
-  }
+.home-orientation .linea--large > :not(:last-child)::before,
+.home-orientation .linea--large > :not(:last-child)::after,
+.home-orientation .linea--large .linea__step--ritorno :is(.linea__num, .linea__segno)::after {
+  content: none;
 }
 
-/* the route's origin at the body's size from 64 rem (§3.1 S2: 40 in 72 × 88; round 1, QA_ROUND1 M1 b — the small seat read
-   as a headstone): the seat on the brand wash in the raised paper (§4.4 «brand wash: --surface-raised»), its edge
-   the route's ink, its light the accent's; the route's marks row and column are the seat's */
-.home-orientation .linea-v2 .sigillo {
-  --sg-face: var(--surface-raised);
-  --sg-edge: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
+.home-orientation .linea--large .linea__step,
+.home-orientation .linea--large.linea--across .linea__step {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: var(--s-4);
+  padding: var(--s-6);
+  background: var(--surface-raised);
 }
 
-@media (min-width: 64rem) {
-  .home-orientation .linea-v2 ol:has(.sigillo) {
-    --lv-col: 72px;
-    --lv-mh: 88px;
-  }
-
-  .home-orientation .linea-v2 li:has(.sigillo) {
-    --lv-tile: 72px;
-    --lv-h: 88px;
-  }
-
-  .home-orientation .linea-v2 .sigillo {
-    --sg-w: 72px;
-    --sg-h: 88px;
-    --sg-m: 40px;
-    --sg-sw: 2.4;
-  }
-
-  .home-orientation--soglia .orienta__soglia {
-    --y: calc(var(--t-title) + var(--s-2) + 88px);
-  }
+.home-orientation .linea--large .linea__segno,
+.home-orientation .linea--large.linea--across .linea__segno {
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: flex-start;
+  align-self: start;
 }
 
-/* (the route's parts are named through «la linea V2»'s own block, .linea-v2, and their elements: the passage's
-   classes are the passage's partials' alone — tests/frontend/test_journey_w3_d.py)
-   the needle's north half filled, as a compass's is (QA_ROUND1 M1 b: the outline alone read as a leaf) — the ink of the
-   mark, from the page's one gradient (pages/home/_orientation.html); it turns with the needle as the mark settles */
-.home-orientation .sg-g--needle .sg-m0 {
-  fill: url("#orienta-ago");
+.home-orientation .linea--large .linea__num::before,
+.home-orientation .linea--large.linea--across .linea__num::before {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  font-size: var(--t-numeral-lg);
+  line-height: 1;
+  color: var(--text-2);
 }
 
-/* 48–64 rem: four stations across columns of about 150 px — the labels at the body's size, so they hold in three lines
-   (QA_ROUND1 m8: four to five lines at 768) */
-@media (min-width: 48rem) and (max-width: 63.999rem) {
-  .home-orientation .linea-v2 li > p {
-    font-size: var(--t-body);
-    line-height: var(--t-body-lh);
-  }
+.home-orientation .linea--large .linea__label,
+.home-orientation .linea--large.linea--across .linea__label {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
-/* the end call's light along the route, made visible (QA_ROUND1 m3: the accent over the accent): a 4 px pass of the
-   accent's full ink over the route's 2 px, a station after the other (the library's flash, v5/_linea-v2.css) */
-.home-orientation .linea-v2 li:not(:last-child)::after {
-  --lv-c: var(--accent-text);
-  inline-size: 4px;
-  margin-inline-start: -1px;
+.home-orientation .linea__segno .sigillo {
+  --sg-w: 48px;
+  --sg-m: 28px;
 }
 
 @media (min-width: 48rem) {
-  .home-orientation .linea-v2 li:not(:last-child)::after {
-    inline-size: auto;
-    block-size: 4px;
-    margin: -1px 0 0;
+  .home-orientation .linea--large.linea--across {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+    column-gap: 1px;
   }
 }
 
-/* ============================================================================
-   6 · S3 «l'indice» — the eight regular pathways: the stage a raised sheet beside the index (from 64 rem, the tabs);
-       below, eight disclosure rows (sezioni/indice.js). Gate closed: the neutral families as a still index.
-   ========================================================================== */
+@media (min-width: 64rem) {
+  .orienta {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--s-16);
+    align-items: start;
+  }
+
+  .orienta > * {
+    grid-column: 2;
+  }
+
+  .orienta > .orienta__capo {
+    display: contents;
+  }
+
+  .orienta__capo > .testa {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  .orienta__capo > .orienta__didascalia {
+    grid-column: 2;
+    margin-block: 0 var(--s-3);
+  }
+
+  .page-home .orienta__capo .testa--process:has(.testa__lead) {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-4);
+  }
+}
+
+@media (forced-colors: active) {
+  .home-orientation .linea--large .linea__step {
+    border: 1px solid CanvasText;
+  }
+}
+
 /* a paper band between the wash and the night: tighter than the bands around it, so the page's heights differ (round 1,
    QA_ROUND1 M1 f: «six bands of 629–893 px with no height contrast») */
 .page-home .home-pathways,
@@ -707,10 +684,6 @@ html[data-input="key"] .campata__media .foto__img {
   transition: opacity var(--motion-slow) var(--ease-enter);
 }
 
-.pilota__quadro .foto__credit {
-  z-index: 1;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .pilota__quadro:hover::after {
     opacity: 0;
@@ -737,7 +710,6 @@ html[data-input="key"] .campata__media .foto__img {
 }
 
 .pilota__titolo:lang(ar) {
-  line-height: 1.4;
   letter-spacing: 0;
 }
 
@@ -781,28 +753,9 @@ html[data-input="key"] .campata__media .foto__img {
 }
 
 /* the threads in the seam (from 64 rem) and between the halves (below), gold: the home pilot's seam (§4.5) */
-.pilota__filo,
-.pilota__cucitura {
-  display: none;
-}
-
-.pilota__cucitura-piana {
-  display: block;
-  block-size: 2px;
-  background: var(--identity-light);
-}
-
 @media (min-width: 48rem) {
   .pilota__dittico {
-    grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr);
-  }
-
-  .pilota__cucitura {
-    display: block;
-  }
-
-  .pilota__cucitura-piana {
-    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .pilota__testo {
@@ -826,10 +779,6 @@ html[data-input="key"] .campata__media .foto__img {
     grid-column: 3;
   }
 
-  .pilota__cucitura {
-    display: none;
-  }
-
   .pilota__quadro :is(.foto, picture),
   .page-home .pilota__quadro img {
     block-size: 100%;
@@ -842,6 +791,7 @@ html[data-input="key"] .campata__media .foto__img {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 0 var(--s-8);
     text-align: center;
   }
@@ -859,17 +809,6 @@ html[data-input="key"] .campata__media .foto__img {
     text-align: center;
   }
 
-  .pilota__filo {
-    display: block;
-    flex: 1 1 0;
-    inline-size: 2px;
-    min-block-size: var(--s-8);
-    background: var(--identity-light);
-  }
-
-  .pilota__filo--giu {
-    --sez-d: 700ms;
-  }
 }
 
 /* ============================================================================
@@ -971,20 +910,11 @@ html[data-input="key"] .campata__media .foto__img {
 .integrita__elenco {
   display: grid;
   gap: var(--s-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
 }
 
 .integrita__elenco > li {
   padding-inline-start: var(--s-4);
   border-inline-start: 2px solid var(--line-structure);
-}
-
-.integrita__azione {
-  margin-block: var(--s-8) 0;
 }
 
 .home-trust:has(+ .home-antifraud) .integrita {
@@ -1000,84 +930,25 @@ html[data-input="key"] .campata__media .foto__img {
    and plate of the page: the plate of every page, at its own measure, closing the integrity band */
 
 /* ============================================================================
-   9 · S7 «la campata, il colophon» — the promoter beside the working table under the brand's arch
+   9 · S7 «la campata, il colophon» — V5.30 (the owner's «geometry saturation» and §7; stream A): the home's
+   COOPERATION MOMENT. The arch, its rise, its sill and its drawn outline left the frame (the hero's doors are the page's
+   door). The working-table photograph stands in a plain frame at the far edge, INSIDE its columns (no bleed: the band's
+   Italy + Morocco field «l'intesa», atmosfera, shows beyond it and under its near half — v5/_intesa.css), on the card's
+   corner and one soft depth; it opens from its outer edge and settles as every plain campata frame does (the library's
+   mask verb, v5/_sec-campata.css). The library's 1 px connector stands down here: the field is the band's one motif.
    ========================================================================== */
-/* THE ARCH RISES FROM ITS SILL (round 1, QA_ROUND1 M1 e; §3.1 S7 — pages/home/_ecosystem_frame.html): the frame's corners
-   are the arch's own (its picture clips the photograph to the arch, never to a card's radius, so the foot stands square
-   on the sill); the photograph opens from a low segment of the arch up to its crown (the verb «mask», its first frame
-   the arch's aperture) and settles from 1.04 in it while the sill draws under it, then the arch's outline around it,
-   12 px out, standing on the sill's ends. The library's own «arch» verb on the media box has no first frame (sez-arch:
-   «to» only) and flips its clip at mid-course: here its course is spent before it starts (a delay of minus its own
-   duration, the vocabulary's --sez-d), so it never draws — the frame's own mask carries the rise; and its settle on the
-   photograph is cancelled by the shell's rule for a masked photograph (v5/_sezioni.css): the settle is the photograph's
-   own transition, 1.04 → 1 over --motion-draw — both a request to lane S (NOTES, round 1) */
-.home-ecosystem .campata__media {
-  --sez-d: -900ms;
-}
-
-.casa-arco {
-  --sez-d: 0ms;
-}
-
-.home-ecosystem .campata__foto {
-  --card-radius: 50% 50% 0 0 / min(50cqi, 40%) min(50cqi, 40%) 0 0;
-}
-
-/* the rise and the settle on the line's own curve (--ease-sine): on the entering curve the arch was open in a tenth of
-   its course, too soon to be seen rising */
-.home-ecosystem .casa-arco {
-  --reveal-from: inset(42% 0 0 0 round 50% 50% 0 0 / 20% 20% 0 0);
-  --ease-enter: var(--ease-sine);
+.home-ecosystem .campata {
+  --bleed-s: 0;
+  --bleed-e: 0;
 }
 
 .home-ecosystem .campata__media img {
-  --reveal-zoom: 1.04;
-  transition: scale var(--motion-draw) var(--ease-sine);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
 }
 
-/* the doorway's drawing starts from the trigger (the media box's spent delay is not its own): the sill at once, the
-   outline 600 ms later — each line drawn through its own mask, a dash in the drawing's user space that no screen's pixel
-   ratio can shorten (final fix round, QA_ROUND3 m1: pages/home/_ecosystem_frame.html) */
-.casa-arco__disegno {
-  position: absolute;
-  inset-block-start: -12px;
-  inset-inline-start: -12px;
-  inline-size: calc(100% + 24px);
-  max-inline-size: none;
-  block-size: calc(66.667cqw + 12px);
-  stroke: var(--line-structure);
-  --sez-d: 0ms;
-}
-
-.casa-arco__profilo {
-  --sez-d: 600ms;
-  d: path("M0 100V43A50 43 0 0 1 100 43V100");
-}
-
-/* the Arabic page draws the doorway from its own reading edge: the symmetrical drawing turned over */
-[dir="rtl"] .casa-arco__disegno {
-  scale: -1 1;
-}
-
-@media (min-width: 64rem) {
-  .casa-arco__disegno {
-    block-size: calc(75cqw + 12px);
-  }
-
-  .casa-arco__profilo {
-    d: path("M0 100V41.5A50 41.5 0 0 1 100 41.5V100");
-  }
-}
-
-/* a phone at 360: the library flattens the arch to a segment (v5/_sec-campata.css); the frame and its outline follow */
-@media (max-width: 25rem) {
-  .home-ecosystem .campata__foto {
-    --card-radius: 50% 50% 0 0 / 24% 24% 0 0;
-  }
-
-  .casa-arco__profilo {
-    d: path("M0 100V28A50 28 0 0 1 100 28V100");
-  }
+.home-ecosystem .campata__ponte {
+  display: none;
 }
 
 .colofone {
@@ -1089,25 +960,12 @@ html[data-input="key"] .campata__media .foto__img {
   margin: 0;
 }
 
-/* the connector into the text column runs ON the folio's rule (final fix round, QA_ROUND3 m2: it stood 6 px above the
-   rule it leads into, two broken lines): its 1 px on the 2 px rule's centre line — half the folio's line (--t-folio-lh,
-   1rem: .5rem, so it follows the reader's own font size) less half its own pixel. The home's one connector (page-only) */
-.campata__ponte {
-  inset-block-start: calc(0.5rem - 0.5px);
-}
-
-/* the folio on the Arabic page (round 1, QA_ROUND1 M2 c): Arabic is never tracked nor set in a Latin monospace — the
-   folio keeps its rule and its accent in the page's own face (the library's .testa__label: a request to lane S) */
-.colofone__label:lang(ar) {
-  font-family: var(--f-sans);
-  letter-spacing: 0;
-  text-transform: none;
-}
-
+/* the label is the label role by name (`t-label` on the colophon's labels, V5.24 TYPOGRAPHY_V2 F-4): its Arabic — the
+   page's face, no tracking, no capitals — is the role's own rule (v5/base.css), as round 1 (QA_ROUND1 M2 c) asked */
 .colofone__nome {
-  font-size: var(--t-title);
-  line-height: var(--t-title-lh);
-  letter-spacing: -0.012em;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-title-2);
 }
 
 /* the name, Italian and left to right in its two parts (pages_imagery.fronte_name: lang="it" dir="ltr"), starts on its own
@@ -1125,11 +983,6 @@ html[data-input="key"] .campata__media .foto__img {
   font-weight: var(--w-control);
   letter-spacing: 0;
   color: var(--text-2);
-}
-
-.colofone__testo {
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
 }
 
 .colofone__partner {
@@ -1197,7 +1050,7 @@ html[data-input="key"] .campata__media .foto__img {
   margin: 0;
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
-  letter-spacing: var(--track-eyebrow);
+  letter-spacing: var(--track-label);
 }
 
 /* the Arabic page (round 2, QA_ROUND2 M1 a: from 64 rem the French title stood at the column's far end, its sentence at
@@ -1237,7 +1090,6 @@ html[data-input="key"] .campata__media .foto__img {
 }
 
 .home-news .card {
-  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
@@ -1254,35 +1106,18 @@ html[data-input="key"] .campata__media .foto__img {
 
 .home-news .card__eyebrow {
   grid-area: eyebrow;
-  margin: 0;
-  font-size: var(--t-small);
   line-height: var(--t-small-lh);
   font-weight: var(--w-control);
   letter-spacing: 0;
-  text-transform: none;
-  color: var(--text-2);
 }
 
 .home-news .card__meta {
   grid-area: meta;
-  margin: 0;
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  font-variant-numeric: var(--numeric-data);
-  color: var(--text-3);
 }
 
 .home-news .card__title {
   grid-area: title;
-  margin: 0;
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
   font-weight: var(--w-title);
-}
-
-.home-news .card__title a {
-  color: var(--text-1);
-  text-decoration: none;
 }
 
 .home-news .card__title a:hover {
@@ -1291,11 +1126,6 @@ html[data-input="key"] .campata__media .foto__img {
 
 .home-news .card__text {
   grid-area: text;
-  max-inline-size: var(--measure-small);
-  margin: 0;
-  font-size: var(--t-ui);
-  line-height: 1.5rem;
-  color: var(--text-2);
 }
 
 /* ---- the reading text of a row is 16 px below 64rem (RE-4: nothing a person reads on a phone or a small tablet
@@ -1328,19 +1158,11 @@ html[data-input="key"] .campata__media .foto__img {
   }
 }
 
-/* ---- forced colours: a ground is gone, its band keeps its edge as a rule; the threads and the seat keep the
+/* ---- forced colours: a ground is gone, its band keeps its edge as a rule; the seat keeps the
         system's text ------------------------------------------------------------------------------------ */
 @media (forced-colors: active) {
   .page-home .sez {
     border-block-start: 1px solid CanvasText;
-  }
-
-  .orienta__soglia,
-  .pilota__filo,
-  .pilota__cucitura,
-  .pilota__cucitura-piana {
-    forced-color-adjust: none;
-    background: CanvasText;
   }
 
   .passaggio__seggio {

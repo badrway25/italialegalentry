@@ -1,4 +1,4 @@
-{% extends "pages/institutional_base.html" %}{% load i18n cms_nav %}
+{% extends "pages/institutional_base.html" %}{% load i18n static cms_nav %}
 {% comment %}
 /le-projet/ — what Italy Legal Entry™ is. Assembled ONLY from prescribed texts:
   * p2.forum.why.title / p2.forum.why.body (Phase 2, already public on the Forum page);
@@ -17,9 +17,16 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.2; lane P2) — the system vision told visua
   band    E «le porte»: the four spaces as equal night doors on stone, unranked (PX02) — the actor's name and the
           space's way in; the actors' sentences stay on /reseau/ (signature STAGGER; the door widens under the hand);
   strip   the foot: the questionnaire, the network and the Forum, then the trademark line, quiet and always visible.
-Page sheet apps/pages/static/pages/css/interior.css (+ _projet.css). Views: apps/pages/views.py builds the steps.
+V5.24 (BACKGROUND_MATERIAL_V2 §3.2, §5.2; FINAL_DELIVERY_V2 §3.6, R3; lane PUB2): D → E is «l'incastro» — the panorama's
+frame ends on the seam (no paper under it) and the doors' band starts 64 px up with its stone painted from 64 px down
+(data-incastro, v5/_materia.css), so the four arched tops stand over the volumes; the band's head is the outline's
+(hidden): the doors name their spaces themselves. The page links its own route sheet pages/css/projet.css
+(_materia.css + _projet.css) between interior.css and fronte.css — the material partial reaches this page alone and the
+other institutional pages stop downloading Le projet's compositions (R4 a: no interior total raised).
+Page sheets apps/pages/static/pages/css/interior.css and the route sheet projet.css. Views: apps/pages/views.py builds the steps.
 {% endcomment %}
 {% block page_title %}{% translate "Le projet" %}{% endblock %}
+{% block route_sheet %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/projet.css' %}">{% endblock %}
 {% block page_header %}
 {% translate "Le projet" as page_label %}{% brand "page-header__wordmark" as brand_html %}
 {% include "pages/partials/_ingresso.html" with label=page_label title=brand_html lead=lead lead_lang=lead.lang motif="mission" tone="night" compose="arch" aside_template="pages/partials/fronte/_arco.html" fronte_linked=True only %}
@@ -36,9 +43,10 @@ Page sheet apps/pages/static/pages/css/interior.css (+ _projet.css). Views: apps
 </div>
 
 {% if doors %}
-<section class="sez sez--porte projet-porte" data-sec="porte" data-ground="stone" data-rhythm="band" aria-labelledby="project-spaces-title">
+<section class="sez sez--porte projet-porte" data-sec="porte" data-ground="stone" data-rhythm="band" data-incastro aria-labelledby="project-spaces-title">
   <div class="container">
-    {% translate "Les espaces de l’écosystème" as spaces_title %}{% include "components/sezioni/_testa.html" with role="router" center=True title_id="project-spaces-title" title=spaces_title only %}
+    {# V5.24 incastro: the doors are the band's first content, so their arched tops stand over the photograph; the section's name stays for the outline (a visually hidden h2, the library's `hidden` contract) — four doors that each name their space need no visible head #}
+    {% translate "Les espaces de l’écosystème" as spaces_title %}{% include "components/sezioni/_testa.html" with role="router" center=True hidden=True title_id="project-spaces-title" title=spaces_title only %}
     {% include "components/sezioni/mosaico.html" with variant="porte" tiles=doors only %}
   </div>
 </section>

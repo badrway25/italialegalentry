@@ -606,6 +606,13 @@ _TEXT = (
     "--text-1",
     "--text-2",
     "--text-3",
+    # V5.29 (owner, 6 Nov 2026; stream SYS; V5.20: a stronger invariant — the new semantic roles held on every paper too;
+    # inverse, interactive and status are the system's --text-on-night-1, --accent-text and --notice-*-text, held here)
+    "--text-primary",
+    "--text-secondary",
+    "--text-muted",
+    "--text-legal",
+    "--text-accent",
     "--accent-text",
     "--accent-text-hover",
     *(f"--tone-{r}-text" for r in REGISTERS),

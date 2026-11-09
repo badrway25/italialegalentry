@@ -73,11 +73,15 @@ SCHEMA = "ile-ownership-v54/1"
 #: ``-ar``, ``-closing`` (the Director's FINAL_DELIVERY_V2.md §0 and R11: T typography, PX imagery attribution, LIB the
 #: library's material and transitions, HOME, PUB1, PUB2 and PLAT the professional pass per page, AR Arabic completeness,
 #: CLOSING the cleanup and the ratchets) and ``-mfix``, the one fix round after the matrix (V5.27 §7); the v524-px
-#: merge: v524-px.
+#: merge: v524-px; and ``-cifix``, the steward's fix of the published branch's CI reds (V5.28; the v524-cifix merge);
+#: and ``-sys``, the owner's V5.29 shared visual system stream (the ink roles, the weight map, the grounds, the plate,
+#: the icon tile, the compact «la protezione»; the v524-sys merge); and ``-brand``, the owner's V5.29 «small layout &
+#: brand refinement» stream (the shell's three related widths, the forms, the lock-up and its key; the v524-brand
+#: merge).
 FAMILY_ID = re.compile(
     r"steward|devops|intfix|rc-fix|sec-f[0-9]+|w[0-9]-[0-9a-z]+|v5[0-9]{2}-(?:[a-dk]|p[2-9]?)|v5[0-9]{2}g-[cnp]"
     r"|v5[0-9]{2}-(?:wa|css|fixv)|v5[0-9]{2}-[hms]|v5(?:2[2-9]|[3-9][0-9])-(?:p1|s[2-9])"
-    r"|v5(?:2[4-9]|[3-9][0-9])-(?:t|px|lib|home|pub[12]|plat|ar|closing|mfix)"
+    r"|v5(?:2[4-9]|[3-9][0-9])-(?:t|px|lib|home|pub[12]|plat|ar|closing|mfix|cifix|sys|brand|art|agami|integ|land)"
 )
 TOP_KEYS = {
     "schema",
@@ -292,7 +296,7 @@ def validate_data(data: object) -> list[str]:
                 f"{where}: not a family id "
                 "(steward, devops, intfix, rc-fix, sec-f<n>, w<wave>-<name>, v5<nn>-<lane>, v5<nn>g-<group>, "
                 "v5<nn>-wa, v5<nn>-css, v5<nn>-fixv, or from V5.24 on a final-delivery lane v5<nn>-t, -px, -lib, "
-                "-home, -pub1, -pub2, -plat, -ar, -closing, -mfix)"
+                "-home, -pub1, -pub2, -plat, -ar, -closing, -mfix, -cifix, -sys, -brand, -art, -agami, -integ, -land)"
             )
         if not isinstance(raw, dict):
             problems.append(f"{where}: must be an object")

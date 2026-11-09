@@ -197,7 +197,12 @@ def test_the_page_says_it_once_in_words_written_by_the_template():
     assert "visibility: hidden;" in _rule(css, ".site-header .lock-sig + .lock .lock__mark"), "one mark is seen, not two"
     lume = _css(ROOT / "static" / "css" / "v5" / "lume.css")
     assert "display: none;" in _rule(lume, ".lume-veil__word:empty")
-    assert "letter-spacing: 0;" in _rule(lume, ":lang(ar) .lume-veil__word")
+    # Typography V2 (FINAL_DELIVERY_V2 R1, TYPOGRAPHY_V2: every Arabic type rule in the subject form ``.x:lang(ar)``;
+    # V5.20, lane CLOSING §3.9 c): the veil's word is read in the subject form, the same invariant (no tracking in
+    # Arabic) — tools/probe_subject.py proved both selectors match the same elements on every Arabic page at 1440 and
+    # 390 (CLOSING NOTES §3); the descendant form is gone, so it cannot return beside it
+    assert "letter-spacing: 0;" in _rule(lume, ".lume-veil__word:lang(ar)")
+    assert not re.search(r":lang\(ar\)\s+\.lume-veil__word", lume), "the Arabic rule is written once, in the subject form"
 
 def test_head_js_is_served_minified_from_its_source():
     """Review v512-a-fix-w1: the render-blocking head script is the build of its commented source."""

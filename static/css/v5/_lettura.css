@@ -221,7 +221,7 @@
 .lettura .search-form {
   display: grid;
   gap: var(--s-2);
-  max-inline-size: 36rem;
+  max-inline-size: var(--content-narrow); /* V5.30 §6: the reading role, never a local width */
   margin: 0;
 }
 
@@ -647,7 +647,7 @@
 }
 
 .community-moderation {
-  max-inline-size: 36rem;
+  max-inline-size: var(--content-narrow); /* V5.30 §6: the reading role, never a local width */
   padding-block-start: var(--s-4);
   border-block-start: 1px dashed var(--line-structure);
 }
@@ -673,7 +673,7 @@
    in a chapter's body, the privacy link of their consent, and the honeypot's place (never shown, never focused) */
 .lettura .chapter__body > .form,
 .lettura .chapter__body > form {
-  max-inline-size: 36rem;
+  max-inline-size: var(--content-narrow); /* V5.30 §6: the reading role, never a local width */
 }
 
 /* an enquiry form's first group is its chapter's own subject: the chapter's title says it on the screen, once; the
@@ -703,7 +703,7 @@
    page's address: v5/notice.css, with the go-live notice's (W4-A, D3) */
 
 .lettura .form__help {
-  max-inline-size: 36rem;
+  max-inline-size: var(--content-narrow); /* V5.30 §6: the reading role, never a local width */
   margin: 0 0 var(--s-2);
   font-size: var(--t-ui);
   line-height: 1.5rem;

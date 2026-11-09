@@ -43,7 +43,7 @@ obligation (the eyebrow, then the h2).
     <div class="db-now__fact"><dt>{% translate "Responsable" %}</dt><dd><span class="db-now__who">{% include "components/glyph.html" with glyph=now.responsible.actor|actor_glyph size="sm" %}<span>{{ now.responsible.label }}{% if now.responsible.organisation %} — <span dir="auto">{{ now.responsible.organisation }}</span>{% endif %}</span></span></dd></div>
     {% endif %}
     {% if now.source %}
-    <div class="db-now__fact"><dt>{% translate "Fondement" %}</dt><dd>{% if now.source.ref %}<span class="db-ref">{{ now.source.ref }}</span>{% else %}<span dir="auto">{{ now.source.title }}</span>{% endif %}</dd></div>
+    <div class="db-now__fact"><dt>{% translate "Fondement" %}</dt><dd>{% if now.source.ref %}<span dir="ltr">{{ now.source.ref }}</span>{% else %}<span dir="auto">{{ now.source.title }}</span>{% endif %}</dd></div>
     {% endif %}
   </dl>
   {% endif %}

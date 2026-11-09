@@ -51,10 +51,14 @@ def test_the_project_is_one_story_beside_one_figure(page, seeded, phase3_open):
         "project-promoter-title",
     ]
     figure = story.select_one(".racconto__figura")
-    assert figure["aria-hidden"] == "true" and figure.select_one(".sistema")
-    # the five actors' nodes: one register (§4.10), every node its registry glyph
+    # V5.30 Fast Visual Variety Correction §5, §11 (V5.20 strict rule; a material panel, no drawing): the arch with
+    # its rays
+    # and its foundations is gone, the figure is the five actors named on a night panel
+    assert figure["aria-hidden"] == "true" and not figure.select(".sistema, .sistema__rotta, .sistema__fondamenta")
+    # the five actors' nodes: one register (§4.10), every node its registry glyph and now its name
     nodes = figure.select("ul.sistema__nodi[data-registro] > li.sistema__nodo")
     assert len(nodes) == 5 and all(node.select_one("svg use") for node in nodes)
+    assert all(node.select_one(".sistema__nome").get_text(strip=True) for node in nodes)
     # the three chapters' prescribed texts, each one element, whole
     assert _locked(main, "p3.hero.body") == [text_of("p3.hero.body")]
     assert _locked(main, "p2.forum.why.body") == [text_of("p2.forum.why.body")]
@@ -64,9 +68,8 @@ def test_the_project_is_one_story_beside_one_figure(page, seeded, phase3_open):
         ["ls", "ls-2"],
         ["ls", "ls-3"],
     ]
-    # the figure's states follow the steps: «Pourquoi» is step 2 while «En bref» stands
-    assert figure.select_one(".sistema__rotta")["data-from"] == "2"
-    assert figure.select_one(".sistema__fondamenta")["data-from"] == "3"
+    # no layer of the figure waits for a step (V5.30, as above): the words change, the panel stands
+    assert not figure.select("[data-from]")
 
 
 def test_without_phase3_the_story_starts_at_pourquoi(page, seeded):
@@ -75,11 +78,10 @@ def test_without_phase3_the_story_starts_at_pourquoi(page, seeded):
     steps = main.select("section.racconto__passo")
     assert [s["id"] for s in steps] == ["project-why", "project-promoter"]
     assert _locked(main, "p3.hero.body") == []
+    # V5.30 Fast Visual Variety Correction §5, §11 (V5.20 strict rule): the panel is the same whichever step opens
+    # the story
     figure = main.select_one(".racconto__figura")
-    assert (
-        figure.select_one(".sistema__rotta")["data-from"] == "1"
-        and figure.select_one(".sistema__fondamenta")["data-from"] == "2"
-    )
+    assert not figure.select("[data-from]") and len(figure.select("li.sistema__nodo")) == 5
 
 
 @pytest.mark.parametrize("lang", LANGS)
@@ -202,7 +204,13 @@ def test_the_promoter_page_identity_and_plate(page, seeded, phase3_open, lang):
     _response, html = page(f"/{lang}/agami/")
     main = _main(html)
     identita = main.select_one('section.agami-identita[data-sec="campata"]')
-    assert identita.select_one('.agami-identita__lastra[data-verb~="mask"] svg.colonnato[aria-hidden="true"]')
+    # V5.30 §8 (the owner's final art direction, an approved decision; strict rule V5.20): the plate masked from the
+    # reading edge holds «En bref», the role panel of verified facts, instead of the drawn colonnade — the same plate,
+    # revealed the same way, now with content; and the band draws nothing (stronger: no temple returns unnoticed). The
+    # official logo stands in the head's composed seat (tests/compliance/test_agami_assets_v530.py holds both)
+    plate = identita.select_one('.agami-identita__lastra[data-verb~="mask"]')
+    assert plate is not None and len(plate.select("dl.agami-breve > .agami-breve__voce")) == 3
+    assert not identita.select("svg"), "the identity band draws no colonnade (V5.30 §8)"
     assert _locked(main, "p2.forum.who.body") == [locked_content.get("p2.forum.who.body", lang)[0]]
     # the FAQ's near-identical answer: a disclosure under the text, closed, its words unchanged
     disclosure = identita.select_one("details.agami-identita__domanda")
@@ -403,7 +411,22 @@ def test_living_opens_on_its_panorama_and_closes_on_what_exists(page, seeded, ph
     terms = {t["key"]: t for t in locked_content.get("p3.glossary.terms", "fr")[0]}
     for card in cards:
         assert card.select_one("a.sez-stretch")["href"] == f"/{lang}/glossaire/{card['id']}/"
-        assert card.select_one("p.lessico__definizione").get_text() == terms[card["id"]]["definition"]
+        definition = card.select_one("p.lessico__definizione")
+        if lang != "ar":
+            assert definition.get_text() == terms[card["id"]]["definition"]
+            continue
+        # V5.27 / FINAL_DELIVERY_V2 R7′ (V5.20, the steward's amendment at the v524-pub2 merge): a definition is
+        # substantive (C-SUBST-FR) and this is not its page — on /ar/ the card says, in Arabic, where its words stand
+        # (the pointer line, exactly), and no French run is drawn (stronger than the French it read)
+        from django.utils import translation
+
+        from cms import locked_renderings
+
+        index = [t["key"] for t in locked_content.get("p3.glossary.terms", "fr")[0]].index(card["id"])
+        with translation.override("ar"):
+            pointer = str(locked_renderings.pointer_line(f"p3.glossary.terms[{index}].definition"))
+        assert definition.get_text() == pointer and definition.get("lang") is None
+        assert terms[card["id"]]["definition"] not in card.get_text()
     hrefs = [a["href"] for a in band.select("ul.mosaico--rimando > li a")]
     assert hrefs[0].endswith("/formation/#apres-l-arrivee") and hrefs[-1] == f"/{lang}/faq/" and len(hrefs) == 2
     assert main.select_one(".vivere-panorama__lastra.page-header") is None
@@ -415,13 +438,20 @@ def test_living_opens_on_its_panorama_and_closes_on_what_exists(page, seeded, ph
 #: round 2 (QA_ROUND2 m5; the owner's V5.22 standing constraint «page-only sheets / route-specific bundles with their
 #: own recorded budgets»; strict rule V5.20 — the family's partials were all in the two shared sheets): a page's own
 #: compositions are its route sheet's, linked by that page only, between its shared sheet and the frontispiece's
+#: V5.24 lane PUB2 (FINAL_DELIVERY_V2 §3.6, R4 a; V5.20 — the same invariant on one more sheet): Le projet's
+#: partial left the shared interior sheet for a route sheet of its own, with the material partial
+#: (v5/_materia.css) for the incastro — the Réseau and AGAMI pages stood 407 and 464 B under their 56 320 B
+#: letter, which the material on the shared sheet would have passed; every other institutional page is
+#: lighter by Le projet's compositions
 ROUTE_SHEETS = {
     "apps/cms/static/cms/faq.css": (["../css/v5/_sec-indice.css", "_faq-v2.css"], ["faq/index.html"]),
+    "apps/pages/static/pages/css/projet.css": (["../../css/v5/_materia.css", "_projet.css"], ["pages/project.html"]),
     "apps/cms/static/cms/lessico.css": (
         ["_lessico-v2.css"],
         ["glossary/index.html", "glossary/term.html", "living/index.html"],
     ),
-    "apps/pages/static/pages/css/rete.css": (["_rete.css"], ["pages/network.html"]),
+    # V5.20, citing V5.30 §7: the Italy + Morocco primitive under Réseau's closing band joins its route sheet, once
+    "apps/pages/static/pages/css/rete.css": (["../../css/v5/_intesa.css", "_rete.css"], ["pages/network.html"]),
     "apps/pages/static/pages/css/agami.css": (["_agami.css"], ["pages/agami.html"]),
     "apps/pages/static/pages/css/frodi.css": (["_frodi.css"], ["pages/antifraud.html"]),
 }
@@ -441,8 +471,12 @@ def test_the_family_sheets_import_the_library_and_their_partials_never_main_css(
     ):
         assert partial not in main_css
     interior = (ROOT / "apps" / "pages" / "static" / "pages" / "css" / "interior.css").read_text(encoding="utf-8")
-    for partial in ("_sezioni.css", "_sec-racconto.css", "_sec-mosaico.css", "_sec-strato.css", "_projet.css"):
+    for partial in ("_sezioni.css", "_sec-racconto.css", "_sec-mosaico.css", "_sec-strato.css"):
         assert partial in interior, partial
+    # V5.24 (FINAL_DELIVERY_V2 §3.6, R3, R4 a): the material partial is page-only and reaches the institutional pages
+    # through Le projet's route sheet alone; _projet.css left the shared sheet with it (ROUTE_SHEETS checks its imports)
+    assert "_materia.css" not in interior and "_projet.css" not in interior
+    assert "_materia.css" not in main_css
     lettura = (ROOT / "apps" / "cms" / "static" / "cms" / "lettura.css").read_text(encoding="utf-8")
     for partial in ("_sezioni.css", "_sec-mosaico.css", "_lettura-v2.css"):
         assert partial in lettura, partial
@@ -470,6 +504,7 @@ def test_the_family_sheets_import_the_library_and_their_partials_never_main_css(
         ("/fr/reseau/", "pages/css/rete.css"),
         ("/fr/agami/", "pages/css/agami.css"),
         ("/fr/attention-aux-fraudes/", "pages/css/frodi.css"),
+        ("/fr/le-projet/", "pages/css/projet.css"),  # V5.24 lane PUB2
     ],
 )
 def test_a_route_sheet_sits_between_its_shared_sheet_and_the_frontispiece_s(page, seeded, phase3_open, path, sheet):

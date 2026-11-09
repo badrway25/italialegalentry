@@ -281,10 +281,6 @@
   .chapter__inner > .chapter__body:only-child {
     grid-column: 1 / span 8;
   }
-
-  .chapter__head--quiet {
-    position: static;
-  }
 }
 
 /* ---- 4 · the register: rows on shared hairlines --------------------------------------------------------------- */

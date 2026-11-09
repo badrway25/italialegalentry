@@ -53,7 +53,7 @@ Then «Où j'en suis»: the person's follow-up in W1-C's summary strip, the way 
         <div class="db-task__words">
           <h3 class="db-task__title" lang="{{ course.text_language }}" dir="auto">{% if course_url %}<a class="reg-row__link" href="{{ course_url }}">{{ course.title }}</a>{% else %}{{ course.title }}{% endif %}</h3>
           <p class="db-task__meta reg-row__text" lang="{{ course.text_language }}" dir="auto">{{ course.summary }}</p>
-          <p class="db-task__meta reg-row__meta"><span>{{ course.provider.name }}</span><span>{{ course.get_course_type_display }}</span><span>{{ course.get_course_format_display }}</span><span>{% blocktranslate with hours=course.duration_hours %}{{ hours }} h{% endblocktranslate %}</span><span>{% blocktranslate count modules=course.modules_count %}{{ modules }} module{% plural %}{{ modules }} modules{% endblocktranslate %}</span><span>{% blocktranslate with language=course.get_language_display %}enseigné en {{ language }}{% endblocktranslate %}</span></p>
+          <p class="db-task__meta reg-row__meta"><span>{{ course.provider.display_name }}</span><span>{{ course.get_course_type_display }}</span><span>{{ course.get_course_format_display }}</span><span>{% blocktranslate with hours=course.duration_hours %}{{ hours }} h{% endblocktranslate %}</span><span>{% blocktranslate count modules=course.modules_count %}{{ modules }} module{% plural %}{{ modules }} modules{% endblocktranslate %}</span><span>{% blocktranslate with language=course.get_language_display %}enseigné en {{ language }}{% endblocktranslate %}</span></p>
         </div>
         <div class="db-task__state">{% if course.id in enrolled_ids %}{% chip register="conforme" %}{% translate "déjà inscrit" %}{% endchip %}{% endif %}</div>
       </li>

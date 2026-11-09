@@ -167,15 +167,16 @@
   .mosaico--grid:has(> :nth-child(4):last-child) .mosaico__tessera--lead:has(.mosaico__foto) { grid-row: span 3; }
 }
 
-/* ---- «le porte»: equal door plates, arched tops, night faces, audience discs ---- */
+/* ---- «le porte»: equal night plates, audience discs — V5.30 (the owner's «geometry saturation»: repeated door forms):
+   material plates on the card's corner, no longer arched doors; the hero's doors are the brand's door ---- */
 .mosaico--porte .mosaico__tessera {
   justify-items: center;
   align-content: center;
   text-align: center;
   min-block-size: 15rem;
-  padding: var(--s-12) var(--s-5) var(--s-8);
+  padding: var(--s-8) var(--s-5);
   border-color: var(--line-night-soft);
-  border-radius: 50% 50% var(--radius-sm) var(--radius-sm) / 5rem 5rem var(--radius-sm) var(--radius-sm);
+  border-radius: var(--radius-lg);
   background: linear-gradient(180deg, var(--surface-night-sheet), var(--surface-night));
   color: var(--text-on-night-1);
 }

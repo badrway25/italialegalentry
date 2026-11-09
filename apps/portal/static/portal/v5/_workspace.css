@@ -91,10 +91,6 @@
   color: var(--text-1);
 }
 
-:lang(ar) .ws-case__title {
-  letter-spacing: 0;
-}
-
 /* the reference: ILE Mono, its own order whatever the page's direction */
 .ws-case__ref {
   display: inline-flex;
@@ -282,10 +278,6 @@ a.reg-run:active {
   letter-spacing: var(--track-entry);
   color: var(--text-1);
   overflow-wrap: anywhere;
-}
-
-:lang(ar) .reg__next-title {
-  letter-spacing: 0;
 }
 
 .reg__next-due {

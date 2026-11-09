@@ -105,7 +105,7 @@ PROBE = r"""(raised) => {
   const main = document.querySelector('main');
   const out = {overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
                h1: document.querySelectorAll('h1').length, radii: [], formwork: !!main.querySelector('.formwork'),
-               shadows: [], wrong: [], icons: 0, small: [], fields: []};
+               shadows: [], wrong: [], icons: 0, explorer: 0, small: [], fields: []};
   const radii = new Set();
   // an allowed shadow as the browser computes it where the element stands: a probe beside it takes the expression
   const resolve = (el, expr) => {
@@ -133,7 +133,10 @@ PROBE = r"""(raised) => {
         out.wrong.push(`${el.className || el.tagName} (${rule[0]}): ${cs.boxShadow}`);
       }
     }
-    if (el.matches('svg.icon')) out.icons++;
+    // V5.29 §10–§13 (the owner's FAQ, an approved decision; V5.20): the explorer gives each question its semantic
+    // glyph on its tile — those tiles are the explorer's, counted apart; every other glyph keeps the body's cap
+    if (el.matches('svg.icon') && el.closest('.faq-esploratore') && el.closest('.sez-tile')) out.explorer++;
+    else if (el.matches('svg.icon')) out.icons++;
     if ([...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) {
       const size = parseFloat(cs.fontSize);
       const arabic = (el.closest('[lang]') || document.documentElement).getAttribute('lang') === 'ar';
@@ -373,6 +376,7 @@ def test_every_content_page_holds_the_grammar_in_both_directions(browser, site, 
                         failures.append(f"{where}: an admitted surface off its value {probe['wrong'][:3]}")
                     if probe["icons"] > 6:
                         failures.append(f"{where}: {probe['icons']} glyphs in the editorial body")
+
                     if probe["small"]:
                         failures.append(f"{where}: text too small {probe['small'][:3]}")
                     if any(size != "16px" for size in probe["fields"]):
@@ -501,9 +505,11 @@ def test_the_latin_heads_of_the_arabic_pages_end_on_the_reading_edge(browser, si
         for path, selector, required in (
             ("/ar/glossaire/", ".glossary-entry__term", True),
             ("/ar/forum-virtuel/", ".community-rooms__title[lang]", True),
-            ("/ar/faq/", ".faq-esploratore .indice__titolo[lang]", True),
-            *((("/ar/faq/", ".faq-esploratore .indice__voce[lang]", True),) if width >= 1024 else ()),
-            ("/ar/faq/?q=visa", ".faq-item__question[lang]", True),
+            # V5.27 / R7′ (the v524-pub2 steward; V5.20, an approved decision): the FAQ questions read their provisional
+            # Arabic — a question left in another language is still measured, none is required any more
+            ("/ar/faq/", ".faq-esploratore .indice__titolo[lang]", False),
+            *((("/ar/faq/", ".faq-esploratore .indice__voce[lang]", False),) if width >= 1024 else ()),
+            ("/ar/faq/?q=visa", ".faq-item__question[lang]", False),
             # V5.22 lane P2 round 2 (QA_ROUND2 M5): the term page's h1, an Italian term in the page's direction
             ("/ar/glossaire/nulla_osta/", ".ingresso__title", True),
         ):

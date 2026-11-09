@@ -265,40 +265,47 @@ def test_french_fallback_keeps_its_punctuation_in_place_on_the_arabic_pages(brow
     context, page = _page(browser, 1440, 900)
     try:
         page.goto(f"{live_server.url}/ar/entreprises/", wait_until="networkidle")
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the title, the intro and
+        # the quotation are compositional (C-UI) and the FAQ's answer is substantive off its page (the Arabic pointer
+        # line) — every block reads Arabic, right to left, inside no French run
         for selector in (
-            "h1.ingresso__title[lang='fr']",
-            "p.ingresso__lead[lang='fr']",
-            "blockquote[lang='fr']",
-            "p.imprese-confine__risposta[data-faq][lang='fr']",
+            "h1.ingresso__title",
+            "p.ingresso__lead",
+            "blockquote",
+            "p[data-faq]",  # the pointer line stands whole (imprese-confine__intera): it has no question to answer
         ):
-            assert _direction(page, selector) == "ltr", selector
+            assert _direction(page, selector) == "rtl", selector
+            assert page.eval_on_selector(selector, "e => e.closest('[lang=\"fr\"]') === null"), selector
         assert _direction(page, "main .chapter__inner") == "rtl", "the layout stays mirrored"
         assert page.locator("main .local-nav").count() == 0, "no side column (the doors are the chrome's)"
-        # The closing question mark of the prescribed title sits AFTER the last word, not before it.
+        # The closing question mark of the title sits AFTER the last word in reading order — on /ar/ the Arabic «؟», at
+        # the left of the last letter (V5.27 R7′, the steward's amendment at the v524-ar merge)
         question_mark_follows = page.evaluate(
             """() => {
               const node = document.querySelector("h1.ingresso__title").firstChild;
               const text = node.textContent;
-              const at = text.lastIndexOf("?");
+              const at = text.lastIndexOf("؟");
               const rect = (i) => { const r = document.createRange(); r.setStart(node, i); r.setEnd(node, i + 1);
                                     return r.getBoundingClientRect(); };
               let letter = at - 1;
               while (letter > 0 && !text[letter].trim()) letter -= 1;
               const mark = rect(at), last = rect(letter);
-              return Math.abs(mark.top - last.top) > 4 || mark.left >= last.right - 1;
+              return at > 0 && (Math.abs(mark.top - last.top) > 4 || mark.right <= last.left + 1);
             }"""
         )
         assert question_mark_follows
 
         page.goto(f"{live_server.url}/ar/institutions/", wait_until="networkidle")
-        assert _direction(page, ".ingresso__lead span[lang='fr']") == "ltr"
+        # V5.27 R7′ (the steward's amendment): the intro and the recipients are their provisional Arabic (C-UI)
+        assert _direction(page, ".ingresso__lead") == "rtl"
         assert _direction(page, "h1.ingresso__title") == "rtl", "the translated title follows the page"
-        assert _direction(page, "p.emiciclo__frase[lang='fr']") == "ltr", "the recipients' sentence keeps its own"
+        assert _direction(page, "p.emiciclo__frase") == "rtl", "the recipients' sentence in the page's language"
         # V5.22 §3.7 IN-2: «Pour aller plus loin» is «l'approdo», a list of tiles, `ul.approdo__tessere`
         assert _direction(page, "ul.approdo__tessere") == "rtl", "lists stay mirrored"
 
         page.goto(f"{live_server.url}/ar/{PILOT}", wait_until="networkidle")
-        assert _direction(page, "h1.ingresso__title[lang='fr']") == "ltr"
+        # V5.27 R7′ (the steward's amendment): the pilot's title is its provisional Arabic (C-UI)
+        assert _direction(page, "h1.ingresso__title") == "rtl"
         assert _direction(page, '[data-diagram="pilot-sequence"] ol.linea') == "rtl", "the sequence stays mirrored"
     finally:
         context.close()

@@ -117,7 +117,6 @@
   --track-plate: -0.02em;
   --track-title: -0.015em;
   --track-band: -0.01em;
-  --track-normal: 0;
   --track-folio: 0.08em; /* the only tracked-caps register in the system */
   --track-caps-display: 0.03em; /* a caps plate, at most once per page */
 
@@ -143,7 +142,6 @@
   --rank-d-block: var(--s-6);
 
   /* ---- GRID ------------------------------------------------------------- */
-  --grid-columns: 4;
   --grid-gutter: 12px;
   --grid-margin: 20px;
   --container: 100%;
@@ -195,7 +193,6 @@
 /* ---- sm 430–767 ---------------------------------------------------------- */
 @media (min-width: 26.875rem) {
   :root {
-    --grid-columns: 6;
     --grid-gutter: 16px;
     --grid-margin: 24px;
     --t-plate-size: 46px;
@@ -210,7 +207,6 @@
 /* ---- md 768–1199 --------------------------------------------------------- */
 @media (min-width: 48rem) {
   :root {
-    --grid-columns: 12;
     --grid-gutter: 24px;
     --grid-margin: 40px;
     --t-plate-size: 60px;

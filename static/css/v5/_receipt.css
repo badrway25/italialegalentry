@@ -44,9 +44,9 @@
 html.rm .receipt__ring, html.rm .receipt__dot { animation: none; }
 @media (prefers-reduced-motion: reduce) { .receipt__ring, .receipt__dot { animation: none; } }
 .receipt__title { margin: 0; font-size: var(--t-title); line-height: var(--t-title-lh, 1.2); font-weight: var(--w-title); letter-spacing: var(--track-title); color: var(--text-1); text-wrap: balance; }
-:lang(ar) .receipt__title { letter-spacing: 0; }
+.receipt__title:lang(ar) { letter-spacing: 0; }
 .receipt__body { padding-block-start: var(--s-6); border-block-start: 1px solid var(--line-rhythm); color: var(--text-2); }
-.receipt__body p { margin: 0; max-inline-size: var(--measure-body, 38rem); font-size: var(--t-lead, 1.125rem); line-height: 1.6; }
+.receipt__body p { margin: 0; max-inline-size: var(--measure-body, 38rem); font-size: var(--t-lead); line-height: 1.6; }
 
 /* the request's route: three stops on a line; the first reached (the filed mark's gold), the others to come */
 .receipt__route { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: var(--s-5) var(--s-5) var(--s-4); list-style: none; border-radius: var(--radius-lg); background: var(--surface-sheet); box-shadow: inset 0 0 0 1px var(--line-rhythm); }

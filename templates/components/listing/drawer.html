@@ -1,0 +1,5 @@
+{% load i18n %}{% comment %}
+THE LIST'S DRAWER — where a page draws the bar (toolbar.html) with filters to offer, it draws this once, outside the list
+it narrows: the overlay system's drawer component (modal, from the inline end) holding
+filters.html's form and foot. V5.30, stream C; docs/design-v5/QA/v530/plat/NOTES.md §1. Contract: `listing`.
+{% endcomment %}{% if listing.show and listing.has_filters %}{% translate "Filtres" as filters_title %}{% with drawer_id=listing.id|add:"-filters" %}{% include "components/drawer.html" with id=drawer_id title=filters_title body_template="components/listing/filters.html" actions_template="components/listing/filters.html" %}{% endwith %}{% endif %}

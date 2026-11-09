@@ -122,7 +122,9 @@ def test_every_atrium_page_says_its_space_in_the_eyebrow(client, alice, path):
     html = response.content.decode("utf-8")
     head = _head(html)
     assert "data-atrium=" in head and re.search(r'<div class="atrium__art" aria-hidden="true" data-figure="\w+">', head)
-    assert '<p class="atrium__eyebrow">Espace Personnes</p>' in head, "the dashboard's word, not «Espace réservé»"
+    # v524-plat (V5.20; V5.24 §11–§14; TYPOGRAPHY_V2 F-4; FINAL_DELIVERY_V2 §3.7): the eyebrow carries the label role by
+    # name — the same word, and the role
+    assert '<p class="atrium__eyebrow t-label">Espace Personnes</p>' in head, "the dashboard's word, not the fallback"
     assert html.count("<h1") == 1
     assert html.count("css/dist/portal/platform.css") == 1
 
@@ -143,7 +145,8 @@ ATRIUM_PAGES = [
 
 
 def _eyebrow(head):
-    match = re.search(r'<p class="(?:ctx__eyebrow )?atrium__eyebrow">([^<]+)</p>', head)
+    # v524-plat (V5.20; TYPOGRAPHY_V2 F-4; FINAL_DELIVERY_V2 §3.7): the eyebrow is the label role by name (`t-label`)
+    match = re.search(r'<p class="(?:ctx__eyebrow )?atrium__eyebrow t-label">([^<]+)</p>', head)
     assert match, "the head has its eyebrow"
     return match.group(1)
 
@@ -364,7 +367,9 @@ def test_the_side_lattice_sets_the_next_date_large_and_keeps_the_list(client, al
     make_message(alice, subject="Convocation Alice")
     client.force_login(alice)
     html = _html(client)
-    side = html.split('<div class="db-side db-side--lattice"', 1)[1]
+    # V5.20 strict rule, V5.30 §13 (the role dashboards' recent activity): the panel may carry db-side--tall beside its
+    # own class, so the anchor stops at the class name; the same invariant on the same panel
+    side = html.split('<div class="db-side db-side--lattice', 1)[1]
     nxt = side.split('<p class="db-next', 1)[1].split("</p>", 1)[0]
     assert 'aria-hidden="true"' in nxt, "the large date is decorative: the list says it"
     assert "Dépôt Alice" in side and "Rendez-vous Alice" in side and "Convocation Alice" in side
@@ -409,6 +414,18 @@ def test_the_organisations_presentation_is_folded_verbatim_under_its_word(client
         word = translation.gettext("Présentation")
     assert f'<details class="atrium__intro"><summary>{word}</summary>' in head
     text = locked_content.text("p3.institutions.intro", lang)
+    if lang == "ar":
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): a compositional text
+        # (C-UI) — its provisional Arabic rendering, drawn by {% locked %} with the brand's run as one LTR unit (bdi);
+        # the same rendering, once, never retyped
+        from django.template import engines
+
+        from cms import locked_renderings
+
+        assert text == locked_renderings.rendering("p3.institutions.intro")
+        with translation.override(lang):
+            text = engines["django"].from_string('{% locked "p3.institutions.intro" %}').render({})
+        assert '<bdi dir="ltr">' in text
     assert head.count(text) == 1 and html.count(text) == 1, "the locked text, once, never retyped"
 
 
@@ -629,7 +646,9 @@ def test_the_identity_sheets_facts_never_split_a_word():
     dd = re.search(r"\n\.org-id--lattice \.org-id__fact > dd \{([^}]*)\}", css).group(1)
     assert "overflow-wrap: break-word;" in dd
     time = re.search(r"\n\.org-id__fact time \{([^}]*)\}", css).group(1)
-    assert "white-space: nowrap;" in time and "var(--f-mono)" in time
+    # v524-plat (V5.20; V5.24 §11–§14; TYPOGRAPHY_V2 F-3; FINAL_DELIVERY_V2 §3.7, R8 «refs stay in the mono»): a date
+    # is not a reference — the sans with tabular figures; the invariant (a date never splits) stays
+    assert "white-space: nowrap;" in time and "var(--numeric-data)" in time and "var(--f-mono)" not in time
 
 
 def test_the_deposits_gate_links_the_terms_only_when_they_are_published():

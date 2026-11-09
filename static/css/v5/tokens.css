@@ -37,11 +37,12 @@
   --p-carta-150: #e3e2dd;
   --p-carta-200: #d3d2cc;
 
-  /* inchiostro — the ink (V2 --ink*, unchanged) */
+  /* inchiostro — the ink. V5.29 (owner, 6 Nov 2026: «too much black»; stream SYS): no near-black — a deep institutional
+     ink tinted toward the night, a refined slate, a muted slate (ratios on carta-50; the role ≥ 4.5 on every paper) */
   --p-inchiostro-400: #7a868b; /* 3.37:1 on carta-50: a component edge, never text */
-  --p-inchiostro-500: #55646b; /* 5.48 */
-  --p-inchiostro-600: #4a5a62; /* 6.46 */
-  --p-inchiostro-900: #15222a; /* 14.62 */
+  --p-inchiostro-500: #56626e; /* 5.62 */
+  --p-inchiostro-600: #4e5b68; /* 6.27 */
+  --p-inchiostro-900: #222f3d; /* 12.27 */
 
   /* notte — the night, evolved from --brand-navy (V4 --mid-*, unchanged) */
   --p-notte-950: #071226;
@@ -122,7 +123,7 @@
   --surface-sheet: var(--p-carta-25);
   --surface-raised: var(--p-carta-0);
   --surface-disabled: var(--p-carta-150);
-  --surface-hover: #f2f4f3;              /* 4 % laguna in carta-25, frozen (ink 14.69) */
+  --surface-hover: #f2f4f3;              /* 4 % laguna in carta-25, frozen (ink 12.33) */
   --surface-selected: var(--p-laguna-50);
   --surface-night: var(--p-notte-900);
   --surface-night-deep: var(--p-notte-950);
@@ -130,9 +131,21 @@
   --surface-night-sheet: var(--p-notte-800);
   --surface-night-raised: var(--p-notte-700);
 
+  /* V5.29 (owner: «too much black … semantic text roles»; stream SYS): the text roles. primary reads and titles,
+     secondary explains, muted annotates, legal carries a locked or regulatory text (the warm ash ink, 11.6 : 1), accent
+     is the bronze of the route (a word, never a body, 6.40); the V5 names every sheet reads are the same primitives, so
+     every sheet inherits the re-inked values. The other roles are already named by the system and are not doubled
+     (main.css's ratchet): inverse = --text-on-night-1, interactive = --accent-text, status = --notice-{info, pending,
+     warning, error}-text — each held by the pairs test on its grounds */
+  --text-primary: var(--p-inchiostro-900);
+  --text-secondary: var(--p-inchiostro-600);
+  --text-muted: var(--p-inchiostro-500);
+  --text-legal: var(--p-cenere-900);
+  --text-accent: var(--he-bronze);
   --text-1: var(--p-inchiostro-900);
   --text-2: var(--p-inchiostro-600);
   --text-3: var(--p-inchiostro-500);
+
   --text-on-night-1: var(--p-notte-50);
   --text-on-night-2: var(--p-notte-200);
   --text-on-night-3: var(--p-notte-400);
@@ -313,7 +326,7 @@ body.console {
   --f-sans: var(--f-sans-lat);
   --f-serif: var(--f-sans-lat);
   --f-mono: "ILE Mono", "ILE Mono Fallback", ui-monospace, "Cascadia Mono", Consolas, monospace; /* references only:
-     code, kbd, pre, .t-ref, .ctx__ref, .doc-workspace__ref, .error-page__ref, .db-ref, .reg-ref — never a label, a
+     code, kbd, pre, .t-ref, .ctx__ref, .ws-case__ref, .error-page__ref, .db-ref, .reg-ref — never a label, a
      numeral or a kicker (TYPOGRAPHY_V2 F-3) */
   --f-wordmark: "ILE Wordmark", "ILE Wordmark Fallback", "Iowan Old Style", Georgia, serif; /* every rendering of
      the name: the {% brand %} and {% brand_lockup %} classes and the hero's name line (static/css/v5/base.css) */
@@ -374,9 +387,11 @@ body.console {
   --u-numeral: 1.75rem;   --u-numeral-lh: 2rem;    /* 28/32 · 600 · tabular */
   --u-ref: 0.8125rem;     --u-ref-lh: 1.25rem;     /* 13/20 · ILE Mono */
 
-  /* 400 reads · 500 acts · 600 intitles (display, titles, labels, keywords, statements, numerals, primary
-     calls) · 700 emphasis only (strong, a keyword inside a display line) — TYPOGRAPHY_V2 §4.3 */
-  --w-body: 400; --w-control: 500; --w-title: 600; --w-display: 600; --w-label: 600; --w-strong: 700; --w-wordmark: 600;
+  /* 400 reads · 500 acts and intitles (display, titles, labels, keywords, statements, numerals, primary calls) · 600
+     emphasis only (strong, a keyword inside a display line). V5.29 (owner, 6 Nov 2026: «font weight too heavy … not bold
+     hierarchy»; stream SYS): one step down from TYPOGRAPHY_V2 §4.3's 600 / 700 — the hierarchy is carried by the twelve
+     steps' size, the tracking by size and the ink roles, the weight only parts reading from naming */
+  --w-body: 400; --w-control: 500; --w-title: 500; --w-display: 500; --w-label: 500; --w-strong: 600; --w-wordmark: 600;
   /* Arabic leading: the Latin title value + this (display 1.1, title-1 1.18, title-2 1.25, band 1.35); 0 on a
      Latin page and inside a Latin run, so a sheet with a literal title leading writes
      line-height: calc(1.15 + var(--ar-lh-plus)) once for both scripts */
@@ -539,12 +554,28 @@ html.rm {
   --spring-soft-duration: 0ms; --spring-snappy-duration: 0ms; --spring-sheet-duration: 0ms;
 }
 
-/* §3.6 Layout, controls (plan §1.8), icons, layers */
+/* §3.6 Layout, controls (plan §1.8), icons, layers. THE SHELL (V5.29 «layout & brand refinement»): ONE horizontal system
+   of three related widths — the content's column (--content-wide, the container: 1176 · 1320 · 1440 px from 75 · 90 ·
+   100rem, which every composition and image `sizes` is measured on, unchanged), the letterhead's shell (the column and
+   80 px of breath each side, capped by the viewport less the --grid-margin gutters: 40 px at 1440, never the edge) and
+   the premium form, which stands on the shell (--form-wide, v5/_formwork.css). The scrolled letterhead is the same box.
+   V5.30 §6 — THE CONTAINER ROLES, one system, each width with its reason (stream A's container audit, docs/design-v5/QA/
+   v530/art/NOTES.md §4):
+     shell-wide        --shell-wide (= --site-shell-max): the letterhead AND the colophon — the header and the footer share
+                       one inner edge, the column and 80 px of breath each side, capped by the gutters;
+     content-standard  --content-wide: every section's column (the container), on which compositions and image `sizes`
+                       are measured — a band's words and plates stand on it;
+     content-narrow    --content-narrow (= --measure-body, ≈ 70 characters at 17 px): the reading and legal measure — a
+                       text never stands wider than it, whatever its band (reading width is not structural width);
+     form-wide         --form-wide: the premium form and its band, on the shell (v5/_formwork.css);
+     media-wide        an image band leaves the column for the full bleed (the panorama, a deliberate immersive break) or
+                       stays inside the column (a split's frame) — never an accidental third width. */
 :root {
-  --container-lg: 1176px; --container-xl: 1320px; --container-xxl: 1440px;
+  --content-wide: var(--container); --site-shell-max: calc(var(--content-wide) + 10rem); --form-wide: var(--site-shell-max);
+  --shell-wide: var(--site-shell-max); --content-narrow: var(--measure-body);
   --page-pad: 32px;
   --utility-h: 0px; --header-h: 64px; --header-h-scrolled: 56px; /* no bar above the letterhead since V5.15 (V5.18 P8) */
-  --rail-w-compact: 80px; --rail-w-open: 248px;
+  --rail-w-open: 248px;
   --ctx-h: 56px; --bottom-bar-h: 56px; --action-bar-h: 61px;
   --workspace-max: 1320px;
   --drawer-w: 420px;
@@ -556,7 +587,7 @@ html.rm {
   --control-sm: 36px; --control-md: 44px; --control-lg: 52px; --control-icon: 40px;
   --hit-primary: 44px;
   --input-h: 44px; --textarea-min: 96px; --chip-h: 24px; --chip-h-s: 20px; --chip-h-l: 28px;
-  --segmented-h: 36px; --rail-item-h: 44px; --row-min-h: 64px; --table-row-h: 48px; --drawer-row-h: 64px;
+  --segmented-h: 36px; --rail-item-h: 44px; --row-min-h: 64px; --drawer-row-h: 64px;
 
   --icon-xs: 14px; --icon-sm: 16px; --icon-md: 20px; --icon-lg: 24px; --icon-xl: 32px; --icon-hero: 48px;
   --glyph-disc-sm: 24px; --glyph-disc-md: 32px; --glyph-disc-lg: 40px;
@@ -817,7 +848,6 @@ html.rm {
   --he-arch-ring: conic-gradient(from 210.604deg, rgba(195, 154, 43, 0) 0deg, rgba(195, 154, 43, 0.55) 26.728deg, rgb(195, 154, 43) 52.268deg, rgb(255, 240, 204) 59.396deg, transparent 59.396deg);
   --he-arch-ring-mask: radial-gradient(closest-side, transparent calc(100% - 3.6px), #000 calc(100% - 3px), #000 calc(100% - 0.4px), transparent 100%);
   --he-arch-streak: linear-gradient(to bottom, rgba(195, 154, 43, 0) 0%, rgba(195, 154, 43, 0.55) 45%, rgb(195, 154, 43) 88%, rgb(255, 240, 204) 100%);
-  --he-step: var(--p-laguna-400);             /* the treads, in the stage's own laguna at .95 / .80 / .66 */
   --he-tread-face: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 42%, rgba(7, 18, 38, 0.1));
   --he-tread-edge: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 1px 0 var(--p-laguna-800), 0 2px 0 rgba(4, 11, 25, 0.45);   /* nosing, riser, its shadow */
   --he-tread-lit: linear-gradient(to bottom, #fff6da, #e8ca7c);

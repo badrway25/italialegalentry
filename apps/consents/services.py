@@ -31,6 +31,10 @@ RETIRED_REUSE_KEY = "p1.companies.form.consent"
 #: first half of a locked sentence, so the catalogue's locked-fragment rule keeps it out of the .po files until the
 #: legal lead approves it with P-1/P-2 (FORMS_LEGAL_BASIS_UX.md §3) and lane D adds its translations.
 ACKNOWLEDGEMENT_TEXT = "J’ai lu l’information sur le traitement des données personnelles."
+#: the prescribed sentence whose opening clause the acknowledgement's words are (V5.27 / R7′: on an Arabic page the
+#: acknowledgement is identified source material by that text's caption, on the forms it belongs to —
+#: cms.locked_renderings.DERIVED_ROUTES; enquiries.forms.consent_caption)
+ACKNOWLEDGEMENT_SOURCE_KEY = "p1.companies.form.consent"
 ACKNOWLEDGEMENT_PURPOSES = (
     ConsentPurpose.INSTITUTION_PROPOSAL,
     ConsentPurpose.UNIVERSITY_PROPOSAL,

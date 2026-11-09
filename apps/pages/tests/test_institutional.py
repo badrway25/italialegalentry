@@ -75,8 +75,12 @@ def test_arabic_institutional_page_is_rtl(page, seeded):
     assert 'data-locked="p2.forum.why.body"' in html
     # V5.22 (SECTION_SYSTEM_V2 §3.2 LP-2, strict rule V5.20): «Pourquoi» is a step of the story, its text one <p> cut
     # on its own full stops — the paragraph keeps its French language on the Arabic page, its text the registry's
-    assert re.search(r'<p class="projet__perche" lang="fr" data-locked="p2.forum.why.body">', html)
-    assert _locked_texts(html, "p2.forum.why.body") == [text_of("p2.forum.why.body")]
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): «Pourquoi» is
+    # compositional (C-UI) — its provisional Arabic rendering in the page's language, the same one element
+    from cms import locked_renderings
+
+    assert re.search(r'<p class="projet__perche" data-locked="p2.forum.why.body">', html)
+    assert _locked_texts(html, "p2.forum.why.body") == [locked_renderings.rendering("p2.forum.why.body")]
 
 
 # ---- /le-projet/ --------------------------------------------------------------------------------
@@ -252,6 +256,14 @@ def test_antifraud_is_200_with_exact_locked_text_when_open(page, seeded, phase3_
     assert html.count("<h1") == 1
     main = _main(html)
     title, body = escaped(text_of("p3.antifraud.title")), escaped(text_of("p3.antifraud.body"))
+    if lang == "ar":
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the title is compositional
+        # (C-UI) — its provisional Arabic rendering; the body is substantive (C-SUBST-FR) and this is its page: the
+        # French, verbatim, said with lang="fr"
+        from cms import locked_renderings
+
+        title = escaped(locked_renderings.rendering("p3.antifraud.title"))
+        assert 'lang="fr" data-locked="p3.antifraud.body"' in main
     assert re.search(rf'<h1 class="ingresso__title[^"]*"[^>]*>{re.escape(title)}</h1>', main)
     assert re.search(
         rf'<p class="antifraud-panel__body"[^>]*data-locked="p3.antifraud.body">{re.escape(body)}</p>', main

@@ -37,7 +37,7 @@ approval (REQ-EDU-05).
     <dl class="portal-facts">
       <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% chip enrolment.status "academy.EnrolmentStatus" %}{{ enrolment.get_status_display }}{% endchip %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{% blocktranslate with total=progress.total count n=progress.attended %}{{ n }} module sur {{ total }}{% plural %}{{ n }} modules sur {{ total }}{% endblocktranslate %}</dd></div>
-      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.display_name }}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Inscrit le" %}</dt><dd><time datetime="{{ enrolment.enrolled_at|date:'c' }}">{{ enrolment.enrolled_at|date:"d.m.Y" }}</time></dd></div>
       <div class="portal-facts__row"><dt>{% translate "Version du programme suivie" %}</dt><dd>v{{ enrolment.course_version }}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Fiche du cours" %}</dt><dd>{% if course_url %}<a class="db-link" href="{{ course_url }}">{% translate "Voir le programme complet" %}{% svg_icon "chevron-end" "icon" %}</a>{% else %}—{% endif %}</dd></div>
@@ -50,7 +50,7 @@ approval (REQ-EDU-05).
     <p class="academy-attendance__ref">{{ enrolment.attendance_reference }}</p>
     <dl class="portal-facts">
       <div class="portal-facts__row"><dt>{% translate "Cours suivi" %}</dt><dd><span lang="{{ course.text_language }}" dir="auto">{{ course.title }}</span> (v{{ enrolment.course_version }})</dd></div>
-      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.display_name }}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Modules suivis" %}</dt><dd>{{ progress.attended }} / {{ progress.total }}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Dernier module suivi le" %}</dt><dd><time datetime="{{ enrolment.completed_at|date:'c' }}">{{ enrolment.completed_at|date:"d.m.Y" }}</time></dd></div>
     </dl>

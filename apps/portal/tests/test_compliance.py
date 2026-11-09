@@ -52,7 +52,15 @@ def test_access_point_partial_renders_title_body_and_button_for_anonymous_visito
     assert 'href="/fr/compte/login/?next=/fr/espace-reserve/"' in html
     with translation.override("ar"):
         html_ar = render_to_string("portal/partials/access_point.html", {"user": request.user}, request=request)
-    assert html_ar.count('lang="fr"') == 3, "official French wording, marked as such, until a translation is approved"
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the three texts are
+    # compositional (C-UI) — on /ar/ their provisional Arabic renderings, escaped, with no French run left
+    from cms import locked_renderings
+
+    for key in RESERVED_KEYS:
+        assert locked_renderings.treatment(key) == "C-UI", key
+        assert escape(locked_renderings.rendering(key)) in html_ar, key
+        assert escape(locked_content.text(key, "fr")) not in html_ar, key
+    assert html_ar.count('lang="fr"') == 0, "the provisional Arabic rendering, never the French under an Arabic page"
 
 
 @pytest.mark.django_db

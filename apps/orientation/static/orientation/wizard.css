@@ -167,7 +167,7 @@
   text-wrap: balance;
 }
 
-:lang(ar) .wizard__question:not(:lang(fr)) {
+.wizard__question:lang(ar):not(:lang(fr)) {
   letter-spacing: 0;
 }
 

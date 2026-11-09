@@ -1,0 +1,13 @@
+{% load i18n %}{% comment %}
+«En bref» — AGAMI's role panel on the identity band's raised plate (V5.30 §8; label v530-agami-build): verified facts only,
+each from ILE's tracked copy — promoter of Italy Legal Entry™ (faq_who; the page's description) and of the Forum Vénétie–Maroc
+(p2.forum.who.body), the legal dialogue between Italy and Morocco and the year 2011 (both
+p2.forum.who.body). No other fact, no figure, no identifier (the Q9 fields stand in the identification plate only). The
+project's name is the site's constant (™ always), isolated so its ™ stays at the name's end on the Arabic page (bdi);
+the Forum's name its catalogue string; the year a numeral.
+{% endcomment %}<p class="agami-breve__etichetta t-label"><span class="testa__rule" data-verb="draw" aria-hidden="true"></span>{% translate "En bref" %}</p>
+<dl class="agami-breve">
+  <div class="agami-breve__voce"><dt class="t-label">{% translate "Promoteur de" %}</dt><dd><span class="agami-breve__valore" translate="no"><bdi>{{ site.project_name }}</bdi></span><span class="agami-breve__valore">{% translate "Forum Vénétie–Maroc" %}</span></dd></div>
+  <div class="agami-breve__voce"><dt class="t-label">{% translate "Dialogue juridique" %}</dt><dd><span class="agami-breve__valore">{% translate "Italie" %} – {% translate "Maroc" %}</span></dd></div>
+  <div class="agami-breve__voce"><dt class="t-label">{% translate "Active depuis" %}</dt><dd><span class="agami-breve__valore agami-breve__anno">2011</span></dd></div>
+</dl>

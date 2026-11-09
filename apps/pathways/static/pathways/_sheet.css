@@ -21,20 +21,11 @@
         Orientation (§3.5 PS-1), the part in view marked by the spy (sezioni/spia.js). The rail spans the body's rows
         without taking a row of its own, and only its plate takes the pointer. Below 64 rem it is not drawn
         (v5/_sec-filo.css): the head's «Sommaire» stays. ---- */
+/* the rail's title in the label role (`t-label`, v5/base.css: Host Grotesk 13/16 600 +0.08 em, uppercase; 14/20 and no
+   capitals in Arabic — V5.24 Typography V2, never the mono), in the accent's ink */
 .scheda-rail__titolo {
   margin: 0 0 var(--s-3);
-  font-family: var(--f-mono);
-  font-size: var(--t-folio);
-  line-height: var(--t-folio-lh);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--accent-text);
-}
-
-:lang(ar) .scheda-rail__titolo {
-  font-family: var(--f-sans);
-  letter-spacing: 0;
-  text-transform: none;
 }
 
 @media (min-width: 64rem) {
@@ -98,7 +89,23 @@
 }
 
 
-/* ---- PS-2 · «chi decide»: the authorities' seats on an arc, Italy Legal Entry™ outside it ---- */
+/* ---- V5.24 · the filo → the night (BACKGROUND_MATERIAL_V2 §3.2, §5.3; FINAL_DELIVERY_V2 R3, §3.5): «il raccordo» in the
+        night's ink continues the filo's line across the seam, from the night band's top edge down to its head rule — the
+        band's own padding is its length (a band, not a strip: the primitive's 48 px would end mid-padding; LIB NOTES §4 c)
+        — on the filo line's own x: 19 px into the reading edge, into the body's second column from 64 rem (the three
+        columns the rail stands on, the gap) ---- */
+.scheda-decide > .sez-raccordo {
+  --sez-raccordo: clamp(var(--s-16), 8vw, var(--s-24));
+  inset-inline-start: calc(var(--bordo-lettura) + 19px);
+}
+
+@media (min-width: 64rem) {
+  .scheda-decide > .sez-raccordo {
+    inset-inline-start: calc(var(--bordo-lettura) + (min(100%, var(--container)) - 2 * var(--grid-margin) - var(--s-6)) * 3 / 12 + var(--s-6) + 19px);
+  }
+}
+
+/* ---- PS-2 · «chi decide» (V5.30 VARIETY §5: no arc): the authorities' seats, one plate each, Italy Legal Entry™ outside them ---- */
 .decide {
   display: grid;
   gap: var(--s-10);
@@ -106,7 +113,6 @@
 
 .decide__arco {
   --n: 4;
-  --rise: clamp(2.5rem, 6vw, 4.5rem);
   position: relative;
   display: grid;
   gap: var(--s-5);
@@ -125,6 +131,10 @@
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: var(--s-4);
+  padding: var(--s-5);
+  border-radius: var(--card-radius);
+  background: var(--surface-night-sheet);
+  box-shadow: inset 0 0 0 1px var(--line-night-soft);
 }
 
 .decide__seggio .sez-disc {
@@ -149,7 +159,7 @@
   color: var(--text-on-night-2);
 }
 
-/* Italy Legal Entry™: a dotted node outside the arc, never lit, its caption the lead that says what it does not do */
+/* Italy Legal Entry™: a dotted node outside the seats, never lit, its caption the lead that says what it does not do */
 .decide__ile {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -164,7 +174,7 @@
   inline-size: 52px;
   block-size: 52px;
   border: 1.5px dashed var(--line-night);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   color: var(--text-on-night-3);
 }
 
@@ -180,59 +190,22 @@
   color: var(--text-on-night-2);
 }
 
-/* from 48 rem: the seats in a row on a half tier — first and last on the floor, the others raised along the arc —, the
-   arc drawn through their discs, the node of Italy Legal Entry™ on the floor beneath it, outside */
+/* from 48 rem: the seats in a row, one plate each */
 @media (min-width: 48rem) {
   .decide__arco {
     grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-    column-gap: var(--s-6);
-    padding-block-start: var(--rise);
+    column-gap: var(--s-4);
   }
 
-  /* the half ellipse through the discs' centres: from the first column's centre to the last's, the floor at the
-     floor seats' centre (26 px: half the 52 px disc), its crown a rise above */
-  .decide__arco::before {
-    content: "";
-    position: absolute;
-    inset-block-start: 26px;
-    inset-inline: calc((100% - (var(--n) - 1) * var(--s-6)) / var(--n) / 2);
-    block-size: var(--rise);
-    border: 1px solid color-mix(in srgb, var(--text-on-night-1) 32%, transparent);
-    border-block-end: 0;
-    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  }
-
-  /* each seat raised to the arc at its column's centre: x from −1 (the first) to 1 (the last), lifted √(1 − x²) */
   .decide__seggio {
-    --x: calc((2 * var(--i, 0) - (var(--n) - 1)) / (var(--n) - 1));
     grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
     align-content: start;
-    text-align: center;
-    translate: 0 calc(-1 * sqrt(1 - pow(var(--x), 2)) * var(--rise));
+    align-items: start;
   }
-
-  /* on an Arabic page a French name keeps its own direction and the seat's centre, as the Italian ones do */
-  [dir="rtl"] .decide__nome[lang] {
-    text-align: center;
-  }
-
-  .decide__seggio:nth-child(2) { --i: 1; }
-  .decide__seggio:nth-child(3) { --i: 2; }
-  .decide__seggio:nth-child(4) { --i: 3; }
-  .decide__seggio:nth-child(5) { --i: 4; }
-  .decide__seggio:nth-child(6) { --i: 5; }
 
   .decide__seggio .sez-disc {
     --disc: 52px;
     --disc-glyph: 24px;
-  }
-
-  .decide__ile {
-    justify-self: center;
-    justify-items: center;
-    grid-template-columns: minmax(0, 1fr);
-    text-align: center;
   }
 }
 
@@ -336,7 +309,7 @@
 }
 
 @media (forced-colors: active) {
-  .decide__arco::before {
-    border-color: CanvasText;
+  .decide__seggio {
+    border: 1px solid CanvasText;
   }
 }

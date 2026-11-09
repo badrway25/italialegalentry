@@ -13,10 +13,17 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.13; lane P2):
           links as chips, its date and permalink, the T1 «ile-domande» seal in its corner; the first question active at
           load, the address follows the question (the permalinks and the home's trust links land on theirs); the fraud
           question carries the protection's mark and an ink rule. The category's name is a small eyebrow while it is the
-          only one. Phones: each question discloses its answer, one at a time; without script every answer is listed.
+          only one — the label role (`t-label`, V5.24 Typography V2). Phones: each question discloses its answer, one at a time; without script every answer is listed.
           Signature GLIDE (the marker glides, the answer crosses in; from the keyboard, at once) — sezioni/indice.js;
-  strip   E «il rimando» on stone: the glossary, the fraud page, the help question.
+  strip   E «il rimando»: the glossary, the fraud page, the help question.
+V5.24 (BACKGROUND_MATERIAL_V2 §3.3, §5.2; FINAL_DELIVERY_V2 §3.6; lane PUB2): the explorer on STONE — the white answer
+sheet and the index rows on stone read as a sheet on a desk, the cut from the paper head is then real —, «il rimando» on
+PAPER before the night footer (0 B: attributes only).
 A search's answer keeps the system's disclosures, open (faq/_item.html).
+V5.29 §10–§13 (lane PUB2, the FAQ the priority): every question says its subject by one glyph in the library's small
+tile (faq.views.GLYPHS: no icon twice) — the index rows, the phone's question rows, a search's answers; a search with
+no answer is a stone band with the empty state beside the whole register of questions, each one step from its
+permalink (cms/_faq-v2.css).
 {% endcomment %}
 {% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Questions fréquentes{% endblocktranslate %}{% else %}{% translate "Questions fréquentes" %}{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers vers l’Italie." %}{% endblock %}
@@ -53,27 +60,37 @@ A search's answer keeps the system's disclosures, open (faq/_item.html).
 </div>
 
 {% if is_search %}
-<section class="sez faq-risultati" data-ground="paper" data-rhythm="band" aria-labelledby="faq-results-title">
+<section class="sez faq-risultati" data-ground="stone" data-rhythm="band" aria-labelledby="faq-results-title">
   <div class="container">
     {% blocktranslate count counter=entries|length with q=query asvar results_title %}{{ counter }} résultat pour « {{ q }} »{% plural %}{{ counter }} résultats pour « {{ q }} »{% endblocktranslate %}
     {% include "components/sezioni/_testa.html" with role="process" title_id="faq-results-title" title=results_title only %}
     {% if entries %}
     <div class="accordion faq-risultati__lista">
-      {% for entry in entries %}{% include "faq/_item.html" with entry=entry open=True %}{% endfor %}
+      {% for result in results %}{% include "faq/_item.html" with entry=result.entry glyph=result.glyph open=True %}{% endfor %}
     </div>
     {% else %}
       {% url 'faq:index' as faq_index_url %}
+    <div class="faq-vuoto">
       {% include "components/empty_state.html" with title=_("Aucune question ne correspond à votre recherche.") text=_("Essayez un autre mot-clé ou parcourez toutes les questions par catégorie.") action_label=_("Voir toutes les questions") action_url=faq_index_url icon="circle-help" %}
+      {% if suggestions %}{% translate "Questions fréquentes" as index_label %}
+      <nav class="faq-vuoto__indice sez-plate" aria-labelledby="faq-index-title">
+        <h3 class="faq-vuoto__titolo t-label" id="faq-index-title">{{ index_label }}</h3>
+        <ul class="faq-vuoto__lista" role="list">
+          {% for suggestion in suggestions %}<li><a class="faq-vuoto__voce" href="{{ faq_index_url }}#{{ suggestion.entry.key }}"{% if suggestion.entry.question_is_fallback %} lang="{{ suggestion.entry.question_lang }}"{% endif %}>{% if suggestion.glyph %}<span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon suggestion.glyph "icon" %}</span>{% endif %}<span>{{ suggestion.entry.question }}</span></a></li>{% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
     {% endif %}
   </div>
 </section>
 {% else %}
   {% translate "Questions fréquentes" as index_label %}
   {% for set in groups %}
-<section class="sez sez--indice faq-esploratore" data-sec="indice" data-ground="paper" data-rhythm="band" id="{{ set.group.category.anchor }}" aria-labelledby="{{ set.group.category.anchor }}-title">
+<section class="sez sez--indice faq-esploratore" data-sec="indice" data-ground="stone" data-rhythm="band" id="{{ set.group.category.anchor }}" aria-labelledby="{{ set.group.category.anchor }}-title">
   <div class="container">
     {# the head's concept (apps/core/icons.py CHAPTER «faq»): its bare mark is retired — the tag draws nothing, V5.22 §4.10; the answer plate's seal says it #}{% chapter_mark "faq" %}
-    <h2 class="faq-esploratore__categoria{% if not single_group %} faq-esploratore__categoria--titolo{% endif %}" id="{{ set.group.category.anchor }}-title"{% if set.group.is_fallback %} lang="{{ set.group.lang }}"{% endif %}><span class="testa__rule" aria-hidden="true"></span>{{ set.group.name }}</h2>
+    <h2 class="faq-esploratore__categoria{% if not single_group %} faq-esploratore__categoria--titolo{% else %} t-label{% endif %}" id="{{ set.group.category.anchor }}-title"{% if set.group.is_fallback %} lang="{{ set.group.lang }}"{% endif %}><span class="testa__rule" aria-hidden="true"></span>{{ set.group.name }}</h2>
     {% include "components/sezioni/indice.html" with form="explorer" id=set.group.category.anchor label=index_label items=set.items seal="ile-domande" only %}
   </div>
 </section>
@@ -81,7 +98,7 @@ A search's answer keeps the system's disclosures, open (faq/_item.html).
 {% endif %}
 
 {% if rimando %}
-<aside class="sez sez--rimando faq-rimando" data-sec="rimando" data-ground="stone" data-rhythm="strip" aria-labelledby="faq-related-title">
+<aside class="sez sez--rimando faq-rimando" data-sec="rimando" data-ground="paper" data-rhythm="strip" aria-labelledby="faq-related-title">
   <div class="container">
     {% translate "Pour aller plus loin" as related_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="faq-related-title" title=related_title only %}
     {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=rimando only %}

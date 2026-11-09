@@ -289,6 +289,7 @@ class SectionView:
     note: Text = EMPTY
     data: dict = field(default_factory=dict)
     ground: str = ""  # V5.22: the section's ground, resolved from its neighbours (_grounds)
+    sfuma: str = ""  # V5.24: the ground the section's foot dissolves into («sfumatura», the orientation only; _grounds)
 
 
 def _section_texts(row: HomeSection, lang: str) -> tuple[Text, Text, Text]:
@@ -568,12 +569,14 @@ def build_pathways(ctx: BuildContext) -> dict | None:
         return {"families": families, "index_url": index_url}
     from pathways import services as pathway_services
 
-    list_lang = locked("p3.persons.pathways", ctx.lang).lang
-    entries = pathway_services.index_entries()
+    # V5.27 / R7′ (FINAL_DELIVERY_V2 §3.9, AR NOTES §4 «HOME»): the titles and the descriptions read by their sub-keys
+    # in the page's language — the titles' provisional Arabic on /ar/, the description's pointer line off its own page
+    # (the sheet carries the French source with its caption) — each part with its own `lang` when it is not the page's
+    entries = pathway_services.index_entries(lang=ctx.lang)
     if not entries:
         return None
     items = [
-        {"title": entry.title, "text": entry.description, "url": entry.url or index_url, "lang": list_lang}
+        {"title": entry.title, "text": entry.description, "url": entry.url or index_url, "lang": entry.title_lang}
         for entry in entries
     ]
     from django.utils.html import format_html
@@ -605,13 +608,13 @@ def build_pathways(ctx: BuildContext) -> dict | None:
                 # GLIDE's entry on every form of the index — a phone's disclosure rows too, QA_ROUND1 m2); its text is
                 # the title itself, character for character
                 "title": format_html('<span class="indice__parola" data-verb="ink">{}</span>', entry.title),
-                "title_lang": list_lang,
+                "title_lang": entry.title_lang,
                 "glyph": icons.PATHWAY.get(entry.key, ""),
                 # the prescribed description carries its own language, never the stage's way to its sheet, which is
                 # said in the page's (QA_ROUND1 m4: language of parts, WCAG 3.1.2)
                 "body": format_html(
                     '<p class="parcours__descrizione"{}>{}</p>',
-                    format_html(' lang="{}"', list_lang) if list_lang else "",
+                    format_html(' lang="{}"', entry.description_lang) if entry.description_lang else "",
                     entry.description,
                 ),
                 "body_lang": "",
@@ -645,11 +648,12 @@ def faq_entry(key: str, lang: str) -> dict | None:
     return None
 
 
-#: The four stretches of the model and who answers for each. This is the data behind the
-#: jurisdiction bar (components/jurisdiction.html), the one device all four Design Council judges
-#: asked for independently. ``share`` is a RELATIVE weight for the four stretches, not a duration
-#: and not a measured quantity — the caption beside the bar says so, because a bar that looks like a
-#: timeline while meaning something else is worse than no bar.
+#: The four stretches of the model and who answers for each. This was the data behind the
+#: jurisdiction bar, the one device all four Design Council judges asked for independently — its component and
+#: rules left with V5.29 09:41 item 2 (CLOSING: no template had included it since 9 Oct 2026, DL54-41); the
+#: data stays in the trust chapter's context, read by nothing (a post-acceptance candidate). ``share`` is a
+#: RELATIVE weight for the four stretches, not a duration and not a measured quantity — the caption beside the
+#: bar said so, because a bar that looks like a timeline while meaning something else is worse than no bar.
 #:
 #: The owners are deliberately named as functions, never as organisations: "les autorités
 #: compétentes", not a ministry. The platform's own stretch is the smallest one, and that is the
@@ -852,38 +856,57 @@ def home_sections(request) -> list[SectionView]:
     return views
 
 
-#: Each section's ground on the V2 home (V5.22, SECTION_SYSTEM_V2 §3.1 «After V2»: grounds and signatures): the doors on
-#: stone, the orientation on the page's one brand wash, the pathways on paper, the pilot's panel and the reserved row on
-#: the night, the trust plates on the masonry photograph, «la protezione» on stone, the promoter on paper.
+#: Each section's ground on the V2 home (V5.22, SECTION_SYSTEM_V2 §3.1 «After V2»: grounds and signatures; V5.24
+#: BACKGROUND_MATERIAL_V2 §3.3, §5.1 — FINAL_DELIVERY_V2 §3.4): the doors on stone, the orientation on the page's one
+#: brand wash, the pathways' index and its stage sheet on stone (a sheet on a desk, not a white card on off-white), the
+#: pilot's panel and the reserved row on the night, the trust plates on the masonry photograph, «la protezione» on the
+#: dressed stone «pietra» (the drawing table of v5/_materia.css: the grid, the sill, the shield bookend), the promoter
+#: on paper.
 SECTION_GROUNDS: dict[str, str] = {
     SectionKey.BANNER: "stone",  # the Forum's notice is a band on the stone (pages.css §3), not a V2 section
     SectionKey.ENTRANCES: "stone",
     SectionKey.ORIENTATION: "brand",
-    SectionKey.PATHWAYS: "paper",
+    SectionKey.PATHWAYS: "stone",
     SectionKey.PILOT: "night",
     SectionKey.TRUST: "photo",
-    SectionKey.ANTIFRAUD: "stone",
+    SectionKey.ANTIFRAUD: "pietra",
     SectionKey.NEWS: "paper",
     SectionKey.ECOSYSTEM: "paper",
     SectionKey.RESERVED: "night",
 }
 
+#: The light grounds by KIND: stone and pietra are one kind for the adjacency rule (the same colour;
+#: BACKGROUND_MATERIAL_V2 §3.3 «stone and pietra count as ONE kind for adjacency; pietra never touches stone»); paper is
+#: the other.
+LIGHT_KIND: dict[str, str] = {"paper": "paper", "stone": "stone", "pietra": "stone"}
+
 
 def _grounds(views: list[SectionView]) -> None:
-    """Two grounds of one kind never touch (V5.22, SECTION_SYSTEM_V2 §1 rule 5, §6.1). The back office orders the home:
-    a section whose ground would repeat its neighbour's — paper after the hero's wall or after paper, stone after stone
-    (the news between «la protezione» and the promoter) — takes the other of the two light grounds. The night, the
-    wash and the photograph are the composition's own and never change."""
+    """Two grounds of one kind never touch (V5.22, SECTION_SYSTEM_V2 §1 rule 5, §6.1; V5.24 BACKGROUND_MATERIAL_V2
+    §3.3). The back office orders the home: a section whose ground would repeat its neighbour's KIND — paper after the
+    hero's wall or after paper, stone or pietra after stone or pietra (the news between «la protezione» and the
+    promoter) — takes the other of the two light kinds (paper, or stone). The night, the wash and the photograph are the
+    composition's own and never change. The seams the Director named (FINAL_DELIVERY_V2 §3.4) follow the resolved
+    grounds: the orientation's wash dissolves over its last 6 rem into the light ground that follows it (`sfuma`: the
+    velatura of v5/_materia.css at the sfumatura's height, _casa.css), and the pilot's gold seam begins above the night
+    only where a light band precedes it (`data["raccordo"]`: the raccordo primitive, drawn as the panel's first
+    child)."""
     previous = "paper"  # the hero's wall
     for view in views:
         if view.key == SectionKey.HERO:
             previous = "paper"
             continue
         ground = SECTION_GROUNDS.get(view.key, "paper")
-        if ground == previous and ground in ("paper", "stone"):
-            ground = "stone" if ground == "paper" else "paper"
+        kind = LIGHT_KIND.get(ground)
+        if kind and kind == LIGHT_KIND.get(previous):
+            ground = "stone" if kind == "paper" else "paper"
         view.ground = ground
+        if view.key == SectionKey.PILOT:
+            view.data["raccordo"] = previous in LIGHT_KIND
         previous = ground
+    for before, after in zip(views, views[1:], strict=False):
+        if before.key == SectionKey.ORIENTATION and after.ground in LIGHT_KIND:
+            before.sfuma = LIGHT_KIND[after.ground]
 
 
 def _hand_off(views: list[SectionView]) -> None:
@@ -1077,10 +1100,12 @@ def project_context(request) -> dict:
         "promoter_quote": faq_entry(content.PROMOTER_FAQ_KEY, lang) if phase3 else None,
         "promoter": settings.ILE["PROMOTER"],
         "trademark_mark": locked_content.text("p1.trademark.mark", "fr"),
+        # V5.27 / R7′ (the v524-pub2 steward): the words in the page's language through the registry's door — the
+        # provisional Arabic on /ar/ (C-UI), the French elsewhere but on the Italian page (its official words)
         "trademark_words": (
             Text(locked_content.text("p1.trademark.words_it", "fr"), "")
             if lang == "it"
-            else Text(locked_content.text("p1.trademark.words_fr", "fr"), "" if lang == "fr" else "fr")
+            else locked("p1.trademark.words_fr", lang)
         ),
         "spaces": space_links(lang, phase3),
         "links": {

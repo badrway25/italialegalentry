@@ -32,9 +32,18 @@ def test_text_when_flag_on_for_anonymous(client, seeded, flag_on):
 
 
 def test_locked_text_falls_back_to_french_with_lang_attr(client, seeded, flag_on):
-    html = client.get("/ar/forum-virtuel/").content.decode()
+    """Italian and English keep the French source with its language attribute; on /ar/ the virtual Forum's title, body
+    and button are compositional texts rendered in provisional Arabic (V5.27, FINAL_DELIVERY_V2 R7′; lane AR) — no
+    French body."""
+    from cms import locked_renderings
+
+    html = client.get("/it/forum-virtuel/").content.decode()
     assert 'lang="fr"' in html
     assert locked_content.text("p3.virtual_forum.body", "fr") in html
+    arabic = client.get("/ar/forum-virtuel/").content.decode()
+    assert locked_content.text("p3.virtual_forum.body", "fr") not in arabic
+    assert locked_renderings.rendering("p3.virtual_forum.body") in arabic
+    assert locked_renderings.rendering("p3.virtual_forum.button") in arabic
 
 
 def test_logged_in_without_membership_sees_join_cta(client, seeded, flag_on, person_user):

@@ -265,9 +265,11 @@ def test_arabic_typefaces_are_applied_and_loaded(browser, site):
             "performance.getEntriesByType('resource').filter(e => e.name.endsWith('.woff2'))"
             ".reduce((n, e) => n + (e.encodedBodySize || e.transferSize || 0), 0)"
         )
-        # the Arabic home fetches both mono files for the same folio labels (LIB's and HOME's burn-down): 47 044 B measured,
-        # recorded as the figure to burn down to the ceiling (never up; CLOSING ratchets it to the measure)
-        assert 0 < fetched <= 47_044, fetched
+        # the Arabic home fetched both mono files for the same folio labels (LIB's and HOME's burn-down): 47 044 B measured,
+        # recorded as the figure to burn down to the ceiling (never up; CLOSING ratchets it to the measure).
+        # CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): measured in Chromium on v524-closing — Readex Pro, Host
+        # Grotesk and the wordmark, 37 084 B (test_fonts_budget_v2.PAGE_CEILINGS["arabic_public"]): 47 044 → 37 084
+        assert 0 < fetched <= 37_084, fetched
         assert fetched <= 38_000 or any("mono" in f for f in loaded_files), (fetched, loaded_files)
     finally:
         context.close()
@@ -381,9 +383,26 @@ def test_french_fallback_blocks_are_isolated_left_to_right_on_arabic_pages(brows
     full stop of a prescribed sentence stays at its end.
     """
     found = _fallback_elements(browser, site)
-    assert len(found) >= 20, "the pages render prescribed French texts"
-    assert {item["path"] for item in found} == set(_FALLBACK_PAGES)
+    # V5.20, restated by the v524-closing steward (the owner's V5.27 hybrid policy, FINAL_DELIVERY_V2 R7′; V5.29's 21:25
+    # note and 09:41 item 4: the burn-down at zero): the floor «at least 20 runs» counted the French these five pages
+    # showed before the policy reached the home — since lane CLOSING burned HOME's two rows the home's pathway index
+    # reads Arabic, and the pages show 16 runs, each one a text the policy keeps in its source language. A count of
+    # French on Arabic pages is no quantity to keep up (unintended French = 0, V5.27 §3); the probe's non-vacuity is
+    # asserted page by page and kind by kind instead (stronger: a bare count could be met on one page) — every page
+    # renders its kept runs, both forms the consent sentence (C-SUBST-FR on its forms), the Forum its prescribed title
+    # (C-OFFICIAL), the FAQ every answer of the registry on its own page (C-SUBST-FR) — and every run is isolated
+    # left-to-right: the invariant, unchanged
+    from cms import locked_content
+
+    by_page = {path: [item for item in found if item["path"] == path] for path in _FALLBACK_PAGES}
+    assert {item["path"] for item in found} == set(_FALLBACK_PAGES), {p: len(items) for p, items in by_page.items()}
     assert [item for item in found if item["tag"] == "label"], "the Arabic forms render the locked consent sentence"
+    for form in ("/ar/entreprises/", "/ar/entreprises/recueil-des-besoins/"):
+        assert [item for item in by_page[form] if item["tag"] == "label"], (form, "the locked consent sentence")
+    assert [item for item in by_page["/ar/forum/"] if item["tag"] == "h1"], "the Forum's prescribed title, isolated"
+    faq_items, _effective = locked_content.get("p3.faq.items", "fr")
+    answers = [item for item in by_page["/ar/faq/"] if item["tag"] == "p"]
+    assert len(answers) == len(faq_items), ("every FAQ answer, in its source language on its own page", len(answers))
     assert [item for item in found if item["direction"] != "ltr"] == []
 
 

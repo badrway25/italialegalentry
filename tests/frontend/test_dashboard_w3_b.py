@@ -524,12 +524,32 @@ def test_the_four_now_panel_variants_are_composed(client, person, variant):
 
 
 def test_a_french_record_keeps_its_language_and_direction_on_an_arabic_page(client, case, person):
-    _piece(case, "acte", due=_days(9), title="Acte d’état civil légalisé")
+    """V5.27 (FINAL_DELIVERY_V2 R7′, W3.2 ``documents.services.displayed_text``; V5.20, the steward's amendment at the
+    v524-ar merge): a French record the catalogue has no rendering for keeps its language and direction on an Arabic
+    page, isolated (``lang="fr" dir="ltr"``); a requirement the catalogue renders reads in Arabic, with no French run."""
+    _piece(case, "propre", due=_days(9), title="Attestation rédigée par le cabinet Rossi")
     html = _page(client, person, "ar")
     assert re.search(
-        r'<h2 class="db-now__title" id="db-now-title" lang="fr" dir="ltr">Acte d’état civil légalisé</h2>', html
+        r'<h2 class="db-now__title" id="db-now-title" lang="fr" dir="ltr">Attestation rédigée par le cabinet Rossi</h2>',
+        html,
     )
     assert '<html lang="ar" dir="rtl" class="no-js">' in html
+
+
+def test_a_catalogued_requirement_reads_in_arabic_on_an_arabic_page(client, case, person):
+    """V5.27 (R7′, W3.2; the steward's amendment at the v524-ar merge, a stronger invariant than the French it replaced):
+    the seeded requirement «Acte d’état civil légalisé» is the catalogue's ``document requirement`` rendering on /ar/,
+    said in the page's language (no ``lang`` / ``dir``), never its French source."""
+    from django.utils import translation
+    from django.utils.translation import pgettext
+
+    _piece(case, "acte", due=_days(9), title="Acte d’état civil légalisé")
+    html = _page(client, person, "ar")
+    with translation.override("ar"):
+        rendered = pgettext("document requirement", "Acte d’état civil légalisé")
+    assert rendered != "Acte d’état civil légalisé"
+    assert f'<h2 class="db-now__title" id="db-now-title">{rendered}</h2>' in html
+    assert "Acte d’état civil légalisé" not in html
 
 
 def _msgids(source: str) -> set[str]:

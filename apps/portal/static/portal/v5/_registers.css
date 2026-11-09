@@ -129,7 +129,8 @@ the record's facts (its edition, its state) */
 }
 
 /* the band: the register's count under the page's head, on the dashboard's ledger line (`.db-ledger`) — the figure
-   one step under the page's title (20/28, 500), never a stat card's numeral; a state worth saying beside it as a chip */
+   one step under the page's title (20/28, at the numeral's 600 — TYPOGRAPHY_V2 §4.3), never a stat card's numeral; a
+   state worth saying beside it as a chip */
 .reg-band {
   align-items: baseline;
   margin-block-end: calc(-1 * var(--s-4));
@@ -147,7 +148,7 @@ the record's facts (its edition, its state) */
 .reg-band__n {
   font-size: var(--u-section);
   line-height: var(--u-section-lh);
-  font-weight: var(--w-control);
+  font-weight: var(--w-title);
   font-variant-numeric: var(--numeric-data);
   color: var(--text-1);
 }
@@ -277,6 +278,7 @@ the record's facts (its edition, its state) */
 .reg-row__meta > *::before,
 .reg-step__meta > *::before {
   content: "·";
+  font-family: var(--f-sans); /* never the mono of a reference it opens: «·» lies outside ILE Mono's base subset (V5.30 B3) */
   display: inline-block;
   inline-size: var(--meta-sep);
   text-align: center;
@@ -539,10 +541,6 @@ the record's facts (its edition, its state) */
   max-inline-size: 100%;
 }
 
-:lang(ar) .reg-result__title:not([lang]) {
-  letter-spacing: 0;
-}
-
 .reg-result__steps {
   display: grid;
   max-inline-size: var(--measure-body);
@@ -655,9 +653,10 @@ the record's facts (its edition, its state) */
 .reg-step::before {
   counter-increment: reg-step;
   content: counter(reg-step, decimal-leading-zero);
-  font-family: var(--f-mono);
-  font-size: var(--u-ref);
+  font-size: var(--u-small); /* the step marker in the sans, 600, tabular — the numeral role at the list's size (F-3) */
   line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
   color: var(--text-3);
   direction: ltr;
 }

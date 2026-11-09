@@ -157,7 +157,8 @@ class Enumeration:
     items: tuple[str, ...]  # part after the colon cut on , ;
 
 
-_SEPARATORS = re.compile(r"[;,]")
+#: «;» and «,» — and their Arabic forms «؛» «،», which a provisional Arabic rendering writes (V5.27, the v524-ar merge)
+_SEPARATORS = re.compile(r"[;,؛،]")
 _WORD = re.compile(r"[^\s,;:.]+")
 
 
@@ -557,14 +558,12 @@ def recipient_seats(recipients: Enumeration) -> list[dict]:
     return [{"glyph": glyph, "audience": "institution"} for glyph in icons.RECIPIENT_SEAT[: len(recipients.items)]]
 
 
-#: U1's arrival node: the brand's arch, the page's one gold arrival (§3.8, §4.5)
-ARRIVAL = "ile-arch"
-#: U1's destination frame (`universities.exchange`): the slot's own 6/12 track from 64 rem (imagery.py); from 48 to
-#: 64 rem three quarters of the container, smaller than the slot's full width (lane M's note, QA/v522/m §9.10: the
-#: gesture read at 768); the column below — the width the composition really draws, for the browser's choice
+#: U1's campus frame (`universities.exchange`), at its own 3:2: from 64 rem six thirteenths of the container less the
+#: 2 rem gap (V5.30 VARIETY §7; 85, 77.5 and 68.5 rem containers, 100vw − 80 below 75 rem); down to 48 rem 100vw − 80;
+#: the column below — the width the composition really draws, for the browser's choice
 DESTINATION_SIZES = (
-    "(min-width: 100rem) 41.75rem, (min-width: 90rem) 38rem, (min-width: 75rem) 33.5rem, "
-    "(min-width: 64rem) calc(50vw - 3.25rem), (min-width: 48rem) calc(75vw - 3.75rem), "
+    "(min-width: 100rem) 38.3077rem, (min-width: 90rem) 34.8462rem, (min-width: 75rem) 30.6923rem, "
+    "(min-width: 64rem) calc(46.1538vw - 3.2308rem), (min-width: 48rem) calc(100vw - 5rem), "
     "(min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)"
 )
 
@@ -576,17 +575,24 @@ def universities_route(lang: str | None, links: dict) -> list[dict]:
     from pathways import services as pathways
 
     page_lang = _page_lang(lang)
-    entries = {entry.key: entry for entry in pathways.index_entries()}
-    _pathways, pathways_lang = locked_content.get("p3.persons.pathways", page_lang)
-    entry_lang = "" if pathways_lang == page_lang else pathways_lang
+    # V5.27 / R7′: each station's title and line by their sub-keys, each with its own lang (the title's provisional
+    # Arabic on /ar/; the description hidden off its sheet — pathways.services.station_line)
+    entries = {entry.key: entry for entry in pathways.index_entries(lang=page_lang)}
     after_title, after_lang = locked_content.get("p3.training_after.title", page_lang)
-    after_body, _body_lang = locked_content.get("p3.training_after.body", page_lang)
+    after_body, body_lang = locked_content.get("p3.training_after.body", page_lang)
     first = locked_split.sentences(after_body)
     training = links.get("training", "")
 
     def station(key: str) -> dict:
         entry = entries[key]
-        return {"title": entry.title, "line": entry.description, "lang": entry_lang, "url": entry.url, "glyph": ""}
+        return {
+            "title": entry.title,
+            "line": pathways.station_line(entry),
+            "lang": entry.title_lang,
+            "line_lang": entry.description_lang,
+            "url": entry.url,
+            "glyph": "",
+        }
 
     before = station("training_in_origin_country") | {
         "kicker": _("Avant le départ"),
@@ -604,6 +610,7 @@ def universities_route(lang: str | None, links: dict) -> list[dict]:
         "title": after_title,
         "line": first[0].strip() if first else "",
         "lang": "" if after_lang == page_lang else after_lang,
+        "line_lang": "" if body_lang == page_lang else body_lang,
         "url": f"{training}#apres-l-arrivee" if training else "",
     }
     return [before, italy, after]

@@ -21,9 +21,10 @@
                         body's arch seat (40 in 72 × 88 …) and its night face (v5/_sigillo.css holds the seat itself)
      4 · the plates     raised paper on a ground, a 1 px edge, a PRE-PAINTED shadow layer (SH-4: a shadow never
                         animates — its layer's opacity does); at most one --shadow-2 a first screen, the others --shadow-1
-     5 · type devices   the large keyword (600), the side annotation, the step numeral (the numeral role: Host Grotesk
-                        600, tabular, 36/40 — never the mono, TYPOGRAPHY_V2 F-3), the emphasised statement (§6.2); a
-                        French locked run on an RTL page in its own LTR box (§1 rule 6)
+     5 · type devices   the large keyword (the title weight), the side annotation, the step numeral (the numeral role:
+                        Host Grotesk at the title weight, tabular, 36/40 — never the mono, TYPOGRAPHY_V2 F-3); a French
+                        locked run on an RTL page in its own LTR box (§1 rule 6). V5.29 (stream SYS): the emphasised
+                        statement (a 2 px side stripe, used by no template) left the library
    Tokens of static/css/v5/tokens.css only; logical properties only; the distances are --sez-* (§2.0).
    ============================================================================================ */
 
@@ -50,8 +51,13 @@
 }
 
 .sez[data-ground="paper"] { --sez-ground: var(--surface-page); }
-.sez[data-ground="stone"] { --sez-ground: var(--surface-area); }
-.sez[data-ground="brand"] { --sez-ground: var(--grad-brand); }
+/* V5.29 (owner: «weak backgrounds … repetitive flat beige»; stream SYS): the stone and the brand wash are lit — one soft
+   architectural light from the band's head on the reading side (the sheet's paper fading out by 70 % of its run), the
+   ground's own tone under it; pietra keeps its drafting grid (the material partial), the night its grain, paper stays plain */
+.sez { --sez-luce: radial-gradient(70% 60% at 14% 0, var(--surface-sheet), transparent 70%); }
+[dir="rtl"] .sez { --sez-luce: radial-gradient(70% 60% at 86% 0, var(--surface-sheet), transparent 70%); }
+.sez[data-ground="stone"] { --sez-ground: var(--sez-luce), var(--surface-area); }
+.sez[data-ground="brand"] { --sez-ground: var(--sez-luce), var(--grad-brand); }
 
 .sez[data-ground="night"] {
   --sez-ground: var(--mesh-dark), var(--surface-night);
@@ -69,17 +75,7 @@
   pointer-events: none;
 }
 
-.sez__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--sez-gap);
-}
-
-@media (min-width: 64rem) {
-  .sez__grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-}
+/* V5.29 (stream SYS): the shell's 12-column `.sez__grid` left — no template, page or script draws it */
 
 /* a V2 section's photograph takes its pattern's verb: lane A's scroll mask and zoom (M2) leave it — a frame that
    develops (bw-scroll) keeps its colour's range */
@@ -174,9 +170,13 @@
   inline-size: var(--tile);
   block-size: var(--tile);
   border-radius: var(--radius-md);
-  background: linear-gradient(var(--line-rhythm), var(--surface-raised) 85%); /* the niche: the glyph on --text-1 reads 12.9:1 on the vault */
+  /* V5.29 (owner: «icons … same colour everywhere, weak optical sizing, inconsistent containers»; stream SYS): the niche's
+     vault in the laguna's first light (not a grey box); the glyph's ink by importance — the slate at rest, the
+     interactive laguna on a door or panel tile (lg) and whenever its owner is hovered, focused or selected (≥ 5 : 1 on
+     the vault either way) */
+  background: linear-gradient(color-mix(in srgb, var(--accent-wash) 55%, var(--surface-raised)), var(--surface-raised) 85%);
   box-shadow: inset 0 0 0 1px var(--line-rhythm);
-  color: var(--text-1);
+  color: var(--tile-ink, var(--text-2));
 }
 
 .sez-tile .icon {
@@ -207,8 +207,11 @@
   transform-origin: 100% 50%;
 }
 
-.sez-tile--lg { --tile: 64px; --tile-glyph: 32px; }
+.sez-tile--lg { --tile: 64px; --tile-glyph: 32px; --tile-ink: var(--accent-text); }
 .sez-tile--sm { --tile: 40px; --tile-glyph: 20px; }
+/* the optical size: the sprite's strokes are non-scaling (components.css §2), so the large tile keeps the one hand's
+   1.5 px drawn (nothing thinner, tests/frontend/test_icons.py); the small one thickens to 1.75 */
+.sez-tile--sm .icon { stroke-width: 1.75; }
 
 .sez-disc {
   --disc: 44px;
@@ -219,7 +222,7 @@
   flex: none;
   inline-size: var(--disc);
   block-size: var(--disc);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md); /* V5.30 VARIETY §1 («circular containers»): an icon's seat has the tile's corner; the name stays */
   background: var(--surface-raised);
   box-shadow: inset 0 0 0 var(--disc-w, 1px) var(--disc-ring);
   color: var(--text-1);
@@ -249,6 +252,14 @@
 :is(.sez[data-ground="night"], .sez[data-ground="photo"], .on-inverse) [data-audience] .sez-disc { --disc-ring: var(--aud); }
 
 /* the owner is active: the tile's rule runs, its glyph shifts 2 px; the disc's ring thickens — hover equals focus */
+:is(a, button, [data-owner]):is(:hover, :focus-visible) .sez-tile,
+[aria-selected="true"] .sez-tile {
+  --tile-ink: var(--accent-text);
+}
+
+/* a stretched-link plate: the tile is the link's sibling, so the plate carries the owner's state (V5.29 review) */
+.sez-plate:has(.sez-stretch:is(:hover, :focus-visible)) { --tile-ink: var(--accent-text); }
+
 :is(a, button, [data-owner]):is(:hover, :focus-visible) .sez-tile::after,
 [aria-selected="true"] .sez-tile::after {
   scale: 1 1;
@@ -335,11 +346,14 @@ html[data-input="key"] .sg-g--key {
 }
 
 /* ---- 4 · the plates ---- */
+/* V5.29 (owner: «generic rectangles … layered material, subtle depth»; stream SYS): the plate is a material, not a box —
+   a face lit from above (the raised paper settling into the sheet's warmer tone at its foot), its 1 px edge, and under it
+   two shadows in the night's own colour: the contact line and a long, soft, low ambient that lifts it off its ground */
 .sez-plate {
   position: relative;
   isolation: isolate;
   border-radius: var(--radius-md);
-  background: var(--surface-raised);
+  background: linear-gradient(var(--surface-raised) 45%, var(--surface-sheet));
   box-shadow: inset 0 0 0 1px var(--line-rhythm);
 }
 
@@ -350,7 +364,7 @@ html[data-input="key"] .sg-g--key {
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-1), 0 24px 40px -28px color-mix(in srgb, var(--p-notte-950) 34%, transparent);
   pointer-events: none;
 }
 
@@ -401,19 +415,9 @@ html[data-input="key"] .sg-g--key {
   }
 }
 
-/* corner brackets as formwork marks (21st «Corner Frame» 35211, adapted): four 12 px corners in the structure's ink */
-.sez-squadre {
-  --sq: color-mix(in srgb, var(--line-structure) 55%, transparent);
-  background:
-    linear-gradient(var(--sq), var(--sq)) top left / 12px 1px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) top left / 1px 12px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) top right / 12px 1px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) top right / 1px 12px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) bottom left / 12px 1px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) bottom left / 1px 12px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) bottom right / 12px 1px no-repeat,
-    linear-gradient(var(--sq), var(--sq)) bottom right / 1px 12px no-repeat;
-}
+/* V5.29 (stream SYS): the corner brackets (`.sez-squadre`, 21st «Corner Frame» 35211, adapted) are drawn by one page only —
+   AGAMI's identity plate —, so they moved to a partial of their own that AGAMI's partial imports (v5/_squadre.css): the
+   library's every importer paid ≈ 110 B for one plate */
 
 /* ---- 5 · type devices (§6.2) ---- */
 .sez-keyword {
@@ -441,16 +445,8 @@ html[data-input="key"] .sg-g--key {
   color: var(--sez-ink-2, var(--text-2));
 }
 
-.sez-statement {
-  padding-inline-start: var(--s-5);
-  border-inline-start: 2px solid var(--accent-mark);
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
-  font-weight: 600;
-}
-
 .em-keyword {
-  font-weight: 600;
+  font-weight: var(--w-strong);
   color: var(--text-1);
 }
 

@@ -5,8 +5,12 @@ the same classes and the same lanes, with what this page needs and the library's
 whose sheet is not live yet stands without a link (never a link to a 404), the count line says how many pathways the
 chosen family holds (one sentence per family, CSS keeps the checked one, «all» without :has — the V5.12 filter's own
 lines), each station names its pathway and family for the guards, and each family frame takes the width the board
-really draws (`lane.frame_sizes`). The origin is the questionnaire, its link a secondary (the primary stays in the
+really draws (`lane.frame_sizes`). V5.27 / R7′ (the v524-pub1 steward): the title and the line carry their own `lang`; on /ar/
+the title is the provisional Arabic and the description, hidden off its sheet, is not drawn on a station that links
+the sheet (pathways.services.station_line). The origin is the questionnaire, its link a secondary (the primary stays in the
 head). Each station's numeral is read with its title: the prescribed order is said, not only drawn (QA_ROUND1 m9).
+V5.24 (Typography V2; lane PUB1): the lane's name carries the label role (`t-label`) and the station's numeral the
+numeral role (`t-numeral`) — the library's roles by name (LIB NOTES §4), never the mono.
 
 THE CHOICE (round 2, QA_ROUND2 M1; §0.1 and §2 B «nothing leaves the layout»): the board is the families' group — a
 fieldset whose legend names the five native radios. «Tous» stands in its chip; each family's radio stands at its own
@@ -39,10 +43,10 @@ Contract: `lanes` (pathways.services.route_board: key, label, frame_slot, frame_
     {% for lane in lanes %}<li class="tracciato__corsia{% if lane.fork %} tracciato__corsia--{{ lane.fork }}{% endif %}" data-lane="{{ lane.key }}">
       <input class="percorsi-via" type="radio" name="pathway-family" id="family-{{ lane.key }}" value="{{ lane.key }}">
       <span class="tracciato__linea" data-verb="draw" aria-hidden="true"></span>
-      <div class="tracciato__testa"><p class="tracciato__nome testa__label">{{ lane.label }}</p>{% photo lane.frame_slot "tracciato__foto" sizes=lane.frame_sizes %}</div>
+      <div class="tracciato__testa"><p class="tracciato__nome testa__label t-label">{{ lane.label }}</p>{% photo lane.frame_slot "tracciato__foto" sizes=lane.frame_sizes %}</div>
       <div class="tracciato__percorso">
         <ol class="tracciato__stazioni sez-seq" role="list" data-registro>
-          {% for item in lane.stations %}<li class="tracciato__stazione" data-pathway="{{ item.key }}" data-family="{{ lane.key }}">{% if item.url %}<a class="tracciato__carta" href="{{ item.url }}">{% else %}<div class="tracciato__carta tracciato__carta--attesa">{% endif %}<span class="tracciato__num">{{ item.num }}</span><span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="tracciato__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span><span class="tracciato__riga"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.line }}</span>{% if item.url %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span></a>{% else %}</div>{% endif %}</li>{% endfor %}
+          {% for item in lane.stations %}<li class="tracciato__stazione" data-pathway="{{ item.key }}" data-family="{{ lane.key }}">{% if item.url %}<a class="tracciato__carta" href="{{ item.url }}">{% else %}<div class="tracciato__carta tracciato__carta--attesa">{% endif %}<span class="tracciato__num t-numeral">{{ item.num }}</span><span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="tracciato__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="tracciato__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}{% if item.url %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span></a>{% else %}</div>{% endif %}</li>{% endfor %}
         </ol>
       </div>
     </li>{% endfor %}

@@ -21,7 +21,7 @@ need, which the company has a right to know and which is named by organisation o
 {% endcomment %}
 {% block page_title %}{{ need.title }}{% endblock %}
 {% block meta_description %}{% translate "Le détail d’un besoin exprimé par votre entreprise." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if can_withdraw %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">{% endif %}{% endblock %}
 
 {% block portal_header %}
 <header class="ws-head reg-head" data-atrium="company">
@@ -180,22 +180,19 @@ need, which the company has a right to know and which is named by organisation o
   </section>
 
   {% comment %}
-  Withdrawing is a consequential act and gets its own form, with its reason in view rather than
-  hidden behind a confirmation the reader would click through.
+  Withdrawing is a consequential act that does not come back (WITHDRAWN is terminal). V5.30 §10: the destructive-action
+  treatment with a confirm step — the overlay system's alert dialog, the help desk closure's grammar
+  (companies/partials/withdraw_dialog.html): the opener here, styled as what it is; in the dialog the need named, the
+  consequence, the reason's field in view, «Annuler» the safe answer, the garnet outline last. Without script the opener
+  shows the same form in place (:target).
   {% endcomment %}
   {% if can_withdraw %}
-  <form method="post" action="{% url 'companies:need_withdraw' need.reference %}" class="form reg-form">
-    {% csrf_token %}
-    <p class="form-field">
-      <label class="form-field__label" for="withdraw-reason">{% translate "Retirer ce besoin — motif (facultatif)" %}</label>
-      <input type="text" id="withdraw-reason" name="reason" maxlength="300">
-    </p>
-    <div class="form__actions">
-      <button type="submit" class="btn btn--secondary">{% translate "Retirer le besoin" %}</button>
-    </div>
-  </form>
+  <div class="form__actions">
+    <a class="btn btn--danger" href="#need-withdraw-dialog" data-overlay-open>{% translate "Retirer le besoin" %}</a>
+  </div>
   {% endif %}
 </div>
 
 <p class="reg-note">{% translate "Italy Legal Entry ne sélectionne personne et ne présente aucune personne à une entreprise. Les activités de recherche et de sélection relèvent des soggetti autorizzati, nommés ci-dessus lorsqu’ils sont désignés." %}</p>
+{% if can_withdraw %}{% translate "Retirer le besoin" as withdraw_title %}{% include "components/dialog.html" with id="need-withdraw-dialog" kind="alert" title=withdraw_title describedby="need-withdraw-text" body_template="companies/partials/withdraw_dialog.html" actions_template="companies/partials/withdraw_dialog.html" return_id="main-content" %}{% endif %}
 {% endblock %}

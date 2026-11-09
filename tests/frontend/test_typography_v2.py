@@ -82,7 +82,7 @@ TOKEN_FONT_SIZE = re.compile(r"var\(--(t|u)-[a-z0-9-]+(?:-size)?\)")
 #: The reference classes ILE Mono draws (TYPOGRAPHY_V2 F-3): a `var(--f-mono)` rule whose selector names only these
 #: (or the elements code/kbd/pre/samp) is the mono's one seat; any other is a folio to burn down.
 MONO_SEAT = re.compile(
-    r"^(?:\s*(?:code|kbd|pre|samp|\.t-ref|\.ctx__ref|\.doc-workspace__ref|\.error-page__ref|\.db-ref|\.reg-ref)"
+    r"^(?:\s*(?:code|kbd|pre|samp|\.t-ref|\.ctx__ref|\.ws-case__ref|\.error-page__ref|\.db-ref|\.reg-ref)"
     r"(?:\s*[:>\s][^,]*)?\s*,?)+$"
 )
 TYPE_PROPERTY = re.compile(r"(?<![\w-])(line-height|letter-spacing|font-size)\s*:")
@@ -134,77 +134,150 @@ def measure(path: Path) -> dict[str, int]:
     return counts
 
 
-#: The burn-down table — measured on the tree at v524-t's merge (FINAL_DELIVERY_V2 §3.1: «which every other lane
-#: empties for its own sheets and CLOSING asserts empty»). Keys are the sheets' repository paths; a count that is not
-#: listed is 0. tokens.css is never listed (its clamps ARE the scale); static/css/v5/base.css, buttons.css and
-#: fonts.css are clean by construction (lane T's).
-TYPOGRAPHY_BURNDOWN: dict[str, dict[str, int]] = {  # measured 5 Nov 2026 on 4bafcfa0 + T (NOTES.md §5)
-    "apps/academy/static/academy/academy.css": {"mono": 1},
-    "apps/accounts/static/accounts/entrance.css": {"ar_descendant": 2},
-    "apps/cms/static/cms/_faq-v2.css": {"mono": 1, "uppercase": 1},
-    "apps/cms/static/cms/_lessico-v2.css": {"clamp": 2, "ar_descendant": 1},
-    "apps/ecosystem/static/ecosystem/_companies.css": {"clamp": 1, "mono": 1},
-    "apps/ecosystem/static/ecosystem/_spazi-v2.css": {"ar_descendant": 1},
-    "apps/ecosystem/static/ecosystem/_universities.css": {"mono": 1},
-    "apps/forum/static/forum/_forum.css": {"clamp": 1},
-    "apps/orientation/static/orientation/wizard.css": {"ar_descendant": 1, "uppercase": 1},
-    "apps/pages/static/pages/css/_agami.css": {"clamp": 2, "mono": 2, "ar_descendant": 1, "uppercase": 2},
-    "apps/pages/static/pages/css/_canali.css": {"clamp": 1, "ar_descendant": 1, "uppercase": 1},
-    "apps/pages/static/pages/css/_contatto.css": {"clamp": 1},
-    "apps/pages/static/pages/css/_frodi.css": {"clamp": 2},
-    "apps/pages/static/pages/css/_rete.css": {"mono": 1, "uppercase": 1},
-    "apps/pages/static/pages/css/hero.css": {"clamp": 3, "literal": 3, "uppercase": 4},
-    "apps/pages/static/pages/css/pages.css": {"clamp": 2, "mono": 1, "uppercase": 1},
-    "apps/pathways/static/pathways/_diplomas.css": {"mono": 1, "ar_descendant": 1},
-    "apps/pathways/static/pathways/_index.css": {"mono": 1, "ar_descendant": 1, "uppercase": 1},
-    "apps/pathways/static/pathways/_persone-v2.css": {"ar_descendant": 1, "uppercase": 1},
-    "apps/pathways/static/pathways/_sheet.css": {"mono": 1, "ar_descendant": 1, "uppercase": 1},
-    "apps/pathways/static/pathways/_training.css": {"mono": 1, "ar_descendant": 1},
-    "apps/portal/static/portal/portal.css": {"literal": 1},
-    "apps/portal/static/portal/v5/_dashboard.css": {"ar_descendant": 1},
-    "apps/portal/static/portal/v5/_depot.css": {"ar_descendant": 1},
-    "apps/portal/static/portal/v5/_frame.css": {"uppercase": 1},
-    "apps/portal/static/portal/v5/_journey-rail.css": {"ar_descendant": 1},
-    "apps/portal/static/portal/v5/_platform.css": {"clamp": 1, "literal": 2, "mono": 5, "uppercase": 3},
-    "apps/portal/static/portal/v5/_registers.css": {"mono": 1, "ar_descendant": 1},
-    "apps/portal/static/portal/v5/_shell.css": {"literal": 1, "ar_descendant": 3},
-    "apps/portal/static/portal/v5/_table.css": {"ar_descendant": 1},
-    "apps/portal/static/portal/v5/_workspace.css": {"mono": 1, "ar_descendant": 2},
-    "static/css/v5/_formwork.css": {"literal": 1, "ar_descendant": 4, "uppercase": 1},
-    # v524-lib (FINAL_DELIVERY_V2 §3.3, gate 4; TYPOGRAPHY_V2 §6): the frontispiece converted — what stays is the AGAMI name
-    # device's two clamps (R3.3 «.fronte__name takes --track-display and nothing else») and the folio label's uppercase,
-    # restated through the role's tokens until pages/partials/_ingresso.html (lane PX's file) carries `t-label` (LIB NOTES §4)
-    "static/css/v5/_fronte.css": {"clamp": 2, "uppercase": 1},
-    "static/css/v5/_glyph.css": {"ar_descendant": 1},
-    "static/css/v5/_portico.css": {"ar_descendant": 3, "uppercase": 2},
-    "static/css/v5/_receipt.css": {"literal": 1, "ar_descendant": 1},
-    "static/css/v5/_steps.css": {"ar_descendant": 1},
-    "static/css/v5/aliases.css": {"mono": 2},
-    "static/css/v5/chrome.css": {"literal": 6, "ar_descendant": 5, "uppercase": 3},
-    "static/css/v5/field.css": {"ar_descendant": 1},
-    "static/css/v5/lume.css": {"ar_descendant": 1, "uppercase": 1},
+def residues(path: Path) -> list[tuple[str, str]]:
+    """Every rule of a sheet the five disciplines count, as (discipline, selector) — once per count, so the list's length
+    per discipline is `measure()`'s figure (a `font-size` per value, a `var(--f-mono)` per use, an Arabic rule per
+    selector of its list)."""
+    out: list[tuple[str, str]] = []
+    for selector, body in _rules(path.read_text(encoding="utf-8")):
+        sel = " ".join(re.sub(r"@import[^;]*;", "", selector).split())
+        for value in re.findall(r"(?<![\w-])font-size\s*:\s*([^;}]+)", body):
+            value = " ".join(value.replace("!important", "").split())
+            if re.search(r"\b(clamp|min|max)\(", value):
+                out.append(("clamp", sel))
+            elif not TOKEN_FONT_SIZE.search(value) and value not in SCALE_REM and value != "inherit":
+                out.append(("literal", sel))
+        if "var(--f-mono)" in body and not MONO_SEAT.match(" ".join(selector.split())):
+            out += [("mono", sel)] * body.count("var(--f-mono)")
+        if TYPE_PROPERTY.search(body):
+            for part in selector.split(","):
+                if ARABIC_DESCENDANT.search(part.strip()):
+                    out.append(("ar_descendant", " ".join(part.split())))
+        if re.search(r"text-transform\s*:\s*uppercase", body) and not any(a in selector for a in UPPERCASE_ALLOWED):
+            out.append(("uppercase", sel))
+    return out
+
+
+#: T's burn-down table is CLOSED (FINAL_DELIVERY_V2 §3.9 c: «T's TYPOGRAPHY_BURNDOWN asserted empty and the table
+#: deleted»). Every lane emptied its own rows; lane CLOSING converted the last descendant-form Arabic rules to the subject
+#: form wherever the subject form matches exactly the same elements on every Arabic page (entrance 2, wizard 1,
+#: formwork 4, glyph 1, portico 3, receipt 1, steps 1, chrome 3, field 1, lume 1 — QA/v524/closing/NOTES.md §3, the
+#: probe) and dropped two dead fallbacks (`var(--t-lead, 1.125rem)`, `var(--u-eyebrow, 0.75rem)`: both tokens are
+#: declared on :root). What is left is not a burn-down: it is the CLOSED REGISTER of the decided exceptions — each a
+#: §9.8 exception of a preserved family (SECTION_SYSTEM_V2 §9.8: the first screen, the letterhead / lock-up, Lume, the
+#: forms, the platform) or a recorded residue with its reason, as T's table asked CLOSING to decide (T NOTES §4,
+#: HOME / LIB / PUB1 / PLAT NOTES §4). The register is stronger than the table it replaces (V5.20: same invariant or
+#: stronger): it names each RULE, not a count per sheet — a new rule of any discipline in any sheet fails, a register
+#: entry whose rule is gone fails, and an entry is only ever deleted (never added) after this file.
+TYPOGRAPHY_EXCEPTIONS: dict[str, dict[tuple[str, str], str]] = {
+    "apps/academy/static/academy/academy.css": {
+        ("mono", ".academy-attendance__ref"): "a reference (the mono's seat by meaning); its class is outside the seat list "
+        "and the template carries no `t-ref` — recorded residue (PLAT NOTES §4)",
+    },
+    "apps/orientation/static/orientation/wizard.css": {
+        ("uppercase", ".linea__text--fragment::first-letter"): "the sentence-initial capital of a fragment the source writes "
+        "lower-case: a typographic convention, not a label — recorded residue (as PUB1's two)",
+    },
+    "apps/pages/static/pages/css/hero.css": {
+        ("clamp", ".he__name"): "the preserved first screen's name device (§9.8; HOME NOTES §5)",
+        ("uppercase", ".he__name"): "the wordmark's capitals on the first screen (§9.8)",
+        ("literal", ".he__promise"): "the hero's fluid fit `--promise-fs` (§9.8; HOME NOTES §5)",
+        ("uppercase", ".he__eyebrow"): "the first screen's label register (§9.8; HOME NOTES §5)",
+        ("uppercase", ".he-station__label"): "the first screen's label register (§9.8)",
+        ("uppercase", ".he-origin__call"): "the first screen's label register (§9.8)",
+        ("literal", ".he-origin__gloss"): "the hero's fluid fit `--gloss-fs` (§9.8)",
+        ("literal", ".he-origin__word .he-origin__end"): "`font-size: 0` hides the arrow's glue — not a size (§9.8)",
+        ("clamp", ".he__body"): "the description's fluid size, the fold's peek (§9.8; HOME NOTES §5)",
+    },
+    "apps/pages/static/pages/css/pages.css": {
+        ("clamp", ".pilota__titolo"): "the pilot title fitted to its seam's column (`min(--t-display, the column / 8.6)`): the "
+        "locked «VÉNÉTIE–MAROC» never breaks — recorded residue (HOME NOTES §5); two rules, one per seam width",
+    },
+    "apps/pathways/static/pathways/_index.css": {
+        ("uppercase", ".come__testo::first-letter"): "the sentence-initial capital of a locked fragment — recorded residue "
+        "(PUB1 NOTES §4)",
+    },
+    "apps/pathways/static/pathways/_persone-v2.css": {
+        ("uppercase", ".mosaico__riga::first-letter"): "the sentence-initial capital of a locked fragment — recorded "
+        "residue (PUB1 NOTES §4)",
+    },
+    "apps/portal/static/portal/v5/_platform.css": {
+        ("uppercase", ".lattice__label"): "the platform's label restates the capitals until templates/academy/catalogue.html "
+        "carries `t-label` (PLAT NOTES §4; R8: the platform a preserved family)",
+    },
+    "apps/portal/static/portal/v5/_shell.css": {
+        ("literal", ".rail__wordmark"): "the brand lock-up's size in the rail, 12.5 px (R1: «ILE Wordmark and the lock-up "
+        "untouched»)",
+    },
+    "static/css/v5/_formwork.css": {
+        ("uppercase", ".form-step__count"): "the preserved forms' step counter in the label's capitals (§9.8 forms); the "
+        "template is the preserved form's",
+    },
+    "static/css/v5/_fronte.css": {
+        ("uppercase", "[data-fronte] .ingresso__label"): "the folio label restates the role's capitals; the role's size, "
+        "leading, weight and tracking are its tokens already (LIB NOTES §4 item 6) — recorded residue",
+        ("clamp", ".fronte__name"): "AGAMI's name device: the Director's letter (R3.3; LIB NOTES §4 item 4)",
+        ("clamp", ".fronte__name-rest"): "AGAMI's name device: the Director's letter (R3.3; LIB NOTES §4 item 4)",
+    },
+    "static/css/v5/_portico.css": {
+        ("uppercase", ".portico__eyebrow"): "the entrance's portico label (§9.8: the login / sign-up entrance preserved)",
+        ("uppercase", ".portico__kicker"): "the entrance's portico kicker (§9.8)",
+    },
+    "static/css/v5/aliases.css": {
+        ("mono", ":root"): "`--font-ref` / `--font-mono`: the legacy aliases of the one mono token — a token, not a seat",
+    },
+    "static/css/v5/chrome.css": {
+        ("literal", ".lock__wm"): "the lock-up's wordmark sizes (R1: «ILE Wordmark and the lock-up untouched»; §9.8 the "
+        "letterhead); two rules, at rest and on phones",
+        ("literal", ".lock__wm .lock__tm"): "the ™ at 0.55 em of the wordmark (R1, the lock-up)",
+        ("ar_descendant", ":lang(ar) .lock__wm"): "the wordmark is English (`lang=\"en\"`) inside the Arabic header: the "
+        "subject form would not reach it (the probe: 366 elements differ) — the lock-up's own Arabic rule (R1, §9.8)",
+        ("uppercase", ".lang-switch"): "the language switch's codes (FR · IT · EN · AR): locked capitals (§9.8 the navbar)",
+        ("uppercase", ".lang-menu__code"): "the language codes (§9.8 the navbar)",
+        ("ar_descendant", ":lang(ar) .lang-seg__link"): "each language link is in its own language (`lang=\"it\"`, `\"fr\"`, "
+        "`\"en\"`) inside the Arabic header: the subject form would not reach it (the probe) — §9.8 the navbar",
+        ("literal", ".site-header .brand .lock__wm"): "the letterhead's lock-up 36/19 from 80rem (V5.29 brand refinement, DL54-196)",
+        ("literal", ".site-header .lock__wm"): "the letterhead's lock-up sizes (V5.29 brand refinement; §9.8); two rules",
+        ("uppercase", ".site-footer__heading"): "the footer's headings in the label's capitals (§9.8 the letterhead / footer)",
+    },
+    "static/css/v5/lume.css": {
+        ("uppercase", ".lume-veil__word"): "Lume's veil word (§9.8: Lume preserved)",
+    },
+}
+#: how many times each registered rule is counted (a rule written twice, a token used twice in one body)
+_TWICE = {
+    ("static/css/v5/aliases.css", ("mono", ":root")): 2,
+    ("static/css/v5/chrome.css", ("literal", ".lock__wm")): 2,
+    ("static/css/v5/chrome.css", ("literal", ".site-header .lock__wm")): 2,
+    ("apps/pages/static/pages/css/pages.css", ("clamp", ".pilota__titolo")): 2,
 }
 
 
-def test_tokens_css_is_never_in_the_burn_down_table_and_the_table_names_real_sheets():
-    assert "static/css/v5/tokens.css" not in TYPOGRAPHY_BURNDOWN
-    for sheet in TYPOGRAPHY_BURNDOWN:
+def test_the_exception_register_names_real_sheets_and_never_tokens_css():
+    assert "static/css/v5/tokens.css" not in TYPOGRAPHY_EXCEPTIONS
+    for sheet, entries in TYPOGRAPHY_EXCEPTIONS.items():
         assert (ROOT / sheet).exists(), sheet
-        assert all(v > 0 for v in TYPOGRAPHY_BURNDOWN[sheet].values()), (sheet, "a zero is deleted, not listed")
+        assert entries and all(reason.strip() for reason in entries.values()), (sheet, "every entry carries its reason")
 
 
 @pytest.mark.parametrize("path", _sheets(), ids=_rel)
-def test_the_burn_down_table_equals_the_measured_counts(path: Path):
-    """Equality, not a ceiling: a lane that cleans a sheet lowers its row — the table is the work list, and it only
-    goes down (FINAL_DELIVERY_V2 §3.1, §3.3 gate 4, §3.5–§3.7 «T's burn-down emptied for these sheets»)."""
+def test_every_counted_rule_is_a_registered_exception(path: Path):
+    """Equality, rule by rule: what the five disciplines count in a sheet is exactly its register's entries (each as
+    many times as `_TWICE` says) — a new clamp, literal, mono, descendant-form Arabic rule or eyebrow anywhere fails, and
+    so does an entry whose rule is gone (FINAL_DELIVERY_V2 §3.9 c; the register only shrinks)."""
     if path == TOKENS:
         return
-    measured = {k: v for k, v in measure(path).items() if v}
-    recorded = TYPOGRAPHY_BURNDOWN.get(_rel(path), {})
-    assert measured == recorded, (
-        f"{_rel(path)}: measured {measured}, recorded {recorded} — a sheet converted to the twelve steps lowers its row "
-        f"(V5.20: cite TYPOGRAPHY_V2 §4.2 / F-3 / F-4 / F-7); a sheet may never rise"
+    rel = _rel(path)
+    measured = sorted(residues(path))
+    recorded = sorted(
+        entry for entry in TYPOGRAPHY_EXCEPTIONS.get(rel, {}) for _ in range(_TWICE.get((rel, entry), 1))
     )
+    assert measured == recorded, (
+        f"{rel}: counted {measured}, registered {recorded} — convert the rule to the twelve steps / the roles / the subject "
+        f"form (TYPOGRAPHY_V2 §4.2, F-3, F-4, F-7); the register never grows"
+    )
+    counts = {k: v for k, v in measure(path).items() if v}
+    assert sum(counts.values()) == len(measured), (rel, counts, measured)
 
 
 def test_the_shared_layer_is_clean():
@@ -299,8 +372,12 @@ def test_the_weight_map_tracking_and_measures():
     for body in _root_blocks(TOKENS.read_text(encoding="utf-8")):
         declared.update(_declarations(body))
     assert declared["--w-body"] == "400" and declared["--w-control"] == "500"
-    assert declared["--w-title"] == "600" and declared["--w-display"] == "600"
-    assert declared["--w-label"] == "600" and declared["--w-strong"] == "700"
+    # V5.29 (owner, 6 Nov 2026: «font weight too heavy … hierarchy by weight + size + spacing + colour, not bold
+    # hierarchy» — an explicit owner decision; stream SYS; V5.20: the same invariant, re-valued — one weight map, four
+    # values, nothing intitles above 500 and the one emphasis at 600, never 700)
+    assert declared["--w-title"] == "500" and declared["--w-display"] == "500"
+    assert declared["--w-label"] == "500" and declared["--w-strong"] == "600"
+    assert "700" not in {declared[n] for n in ("--w-body", "--w-control", "--w-title", "--w-display", "--w-label", "--w-strong")}
     assert declared["--track-display"] == "-0.03em" and declared["--track-title"] == "-0.028em"
     assert declared["--track-title-2"] == "-0.02em" and declared["--track-band"] == "-0.016em"
     assert declared["--track-entry"] == "-0.012em" and declared["--track-label"] == "0.08em"
@@ -518,14 +595,16 @@ ARABIC_PAGES = (
     "/ar/forum/",
     "/ar/attention-aux-fraudes/",
     "/ar/parcours/salaried_work/",  # v524-lib: the frontispiece on the steps (the French h1 at 1.08, the lead 22/32), the numerals in the sans
+    "/ar/le-projet/",  # v524-pub2: the caps h2 at 24/30, the French statement with its own lead leading (F-7), the column at 36 rem
+    "/ar/agami/",  # v524-pub2: the registers' labels in the label role — Readex Pro 14/20, no mono fallback (F-3)
 )
 #: Pages whose findings belong to another lane's burn-down (measured 5 Nov 2026 on 4bafcfa0 + T, lane server 8785; the
 #: full crawl is docs/design-v5/QA/v524/t/NOTES.md §6): the lane that converts the sheet moves its page into ARABIC_PAGES.
 ARABIC_PAGES_BURNDOWN = {
-    "/ar/": "HOME — hero.css: .he-origin__call 12 px literal (Arabic calls under the 14 px floor on the seeded home), .he-origin__word 16/19.2 on two lines",
-    "/ar/le-projet/": "PUB2 — _projet.css:172 .racconto__titolo[id=project-why-title] (a French h2 of 24 px at 32 px; the library's title reads --t-band-lh)",
+    # v524-home (FINAL_DELIVERY_V2 §3.4; V5.20: the base's row, narrowed — HOME's own findings are fixed: the origin calls
+    # on --t-caption, the phone word at 1.3 em in Arabic, an Arabic promise at 1.35; what is left is not in HOME's files)
+    "/ar/": "LIB / T — the library's .testa__title on --t-title-2-lh, 1.25 in Arabic (tokens.css): 28/35 on two lines at 390 (the trust band's title)",
     "/ar/entreprises/": "PUB1 — _companies.css: the companies' statement at 44 px (24/44 at 390); the library's .testa__title reads --t-title-2-lh since v524-lib",
-    "/ar/agami/": "PUB2 — _agami.css: .agami-id__etichetta(-voce) and dt in ILE Mono (F-3: Arabic in a system fallback)",
 }
 
 

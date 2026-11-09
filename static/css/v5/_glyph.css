@@ -152,7 +152,7 @@ html.rm .empty-state--tile > .glyph-tile::after { animation: none; }
   letter-spacing: var(--track-entry);
   color: var(--text-1);
 }
-:lang(ar) .empty-state.empty-state--tile .empty-state__title { letter-spacing: 0; }
+.empty-state.empty-state--tile .empty-state__title:lang(ar) { letter-spacing: 0; }
 .empty-state.empty-state--tile .empty-state__text { max-inline-size: var(--measure-small, 34rem); font-size: var(--t-ui); line-height: 1.5rem; color: var(--text-2); }
 .empty-state--tile > p:last-child:has(.btn) { margin-block-start: var(--s-4); }
 @media (max-width: 29.999rem) {

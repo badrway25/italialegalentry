@@ -150,6 +150,24 @@ company in this application. Every word is the catalogue's: nothing on this page
       <p class="db-empty">{% translate "Les messages que l’équipe du projet adresse à votre compte apparaîtront ici." %}</p>
       {% endif %}
     </section>
+    {% comment %} ACTIVITÉ RÉCENTE (V5.30, stream C) — the latest events of the company's needs, from each need's own
+    history (companies.NeedEvent via portal.services._company_activity): the need, its new state as a chip, the day; each
+    row opens its need. In the communications' list grammar; nothing invented — no event, no section. {% endcomment %}
+    {% if activity %}
+    <section class="db-messages db-activity" aria-labelledby="db-activity-title">
+      <div class="db-sec__head">
+        <h2 class="db-h2" id="db-activity-title">{% svg_icon "history" "icon" %}<span>{% translate "Activité récente" %}</span></h2>
+      </div>
+      <ul class="db-list" role="list">
+        {% for event in activity %}
+        <li class="db-list__row">
+          <a class="db-list__link" href="{{ event.url }}"><span class="db-list__title" dir="auto">{{ event.title }}</span></a>
+          <span class="db-list__meta">{% chip event.status "companies.NeedStatus" %}{{ event.status_label }}{% endchip %} <time datetime="{{ event.when|date:'c' }}">{{ event.when|date:"d.m.Y" }}</time></span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
   </div>
 
 </div>

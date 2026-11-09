@@ -18,10 +18,13 @@ files get edited.
 
 Two things here are deliberate and worth keeping:
 
-1.  **The swatch values are read from ``static/css/v2/tokens.css``, not copied.** A showcase that
-    re-declares the palette in Python is a second source of truth, and it drifts. This one parses
-    the stylesheet on each request (dev only, one small file) so the hex printed under a swatch is
-    the hex the browser paints.
+1.  **The swatch values are read from the stylesheets, not copied.** A showcase that re-declares
+    the palette in Python is a second source of truth, and it drifts. This one parses the sheets
+    ``static/css/main.css`` imports on each request (dev only), in their order — the last top-level
+    ``:root`` declaration of a name wins, and a ``var()`` is followed to its value — so the hex
+    printed under a swatch is the hex the browser paints. (It read ``static/css/v2/tokens.css``
+    alone until CLOSING, V5.29 09:41 item 2: V4 and V5 re-value most of the V2 names, so 14 of the
+    44 captions named a hex no page painted; those V2 values left the sheet.)
 
 2.  **The page checks its own coverage.** CSP is ``style-src 'self'``: no ``style=""`` attribute
     can carry a colour, so every swatch needs a rule in ``static/css/dev/showcase.css``. Without a
@@ -44,7 +47,7 @@ from django.utils.safestring import mark_safe
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
-TOKENS_CSS = Path(settings.BASE_DIR) / "static" / "css" / "v2" / "tokens.css"
+MAIN_CSS = Path(settings.BASE_DIR) / "static" / "css" / "main.css"
 SHOWCASE_CSS = Path(settings.BASE_DIR) / "static" / "css" / "dev" / "showcase.css"
 
 _COMMENT = re.compile(r"/\*.*?\*/", re.DOTALL)
@@ -55,6 +58,11 @@ _COMMENT = re.compile(r"/\*.*?\*/", re.DOTALL)
 # and only the CAPTION came from this parser. tests/frontend/test_design_showcase.py caught it.
 _DECL = re.compile(r"(--[a-z0-9-]+)\s*:\s*([^;{}]+);", re.IGNORECASE)
 _SWATCH_RULE = re.compile(r'\[data-swatch="([a-z0-9-]+)"\]', re.IGNORECASE)
+_IMPORT = re.compile(r'@import url\("([^"]+)"\)')
+#: A top-level :root block: the base value is what the showcase describes, not the override a media
+#: query applies at one viewport (a block inside @media is indented, so `^:root` does not match it).
+_ROOT_BLOCK = re.compile(r"^:root\s*\{(.*?)^\}", re.MULTILINE | re.DOTALL)
+_VAR = re.compile(r"var\(\s*(--[a-z0-9-]+)\s*(?:,[^()]*)?\)", re.IGNORECASE)
 
 # Colour groups, in the order the design system introduces them. Names only: the values come from
 # the stylesheet.
@@ -436,17 +444,30 @@ class ShowcaseForm(forms.Form):
 
 
 def read_tokens() -> dict[str, str]:
+    """Every custom property of the cascade every page loads, with the value the browser paints: the
+    top-level ``:root`` blocks of the sheets main.css imports, in order (the last declaration of a name
+    wins), each ``var()`` followed to its value."""
     try:
-        css = TOKENS_CSS.read_text(encoding="utf-8")
+        sheets = _IMPORT.findall(MAIN_CSS.read_text(encoding="utf-8"))
     except OSError:  # pragma: no cover — the file is versioned
         return {}
-    css = _COMMENT.sub(" ", css)
-    tokens: dict[str, str] = {}
-    # First declaration wins: the base `:root` value is what the showcase describes, not the
-    # override a media query applies at one viewport.
-    for name, value in _DECL.findall(css):
-        tokens.setdefault(name, value.strip())
-    return tokens
+    declared: dict[str, str] = {}
+    for sheet in sheets:
+        try:
+            css = _COMMENT.sub("", (MAIN_CSS.parent / sheet).read_text(encoding="utf-8"))
+        except OSError:  # pragma: no cover — every imported sheet is versioned
+            continue
+        for block in _ROOT_BLOCK.findall(css):
+            declared.update({name: " ".join(value.split()) for name, value in _DECL.findall(block)})
+
+    def painted(name: str) -> str:
+        value, seen = declared[name], {name}
+        while (match := _VAR.fullmatch(value)) and match.group(1) in declared and match.group(1) not in seen:
+            seen.add(match.group(1))
+            value = declared[match.group(1)]
+        return value
+
+    return {name: painted(name) for name in declared}
 
 
 def covered_swatches() -> set[str]:

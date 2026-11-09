@@ -112,10 +112,16 @@ def test_the_budgets_hold():
     # (DL54-170, docs/design-v5/QA/v515/a/NOTES.md): 31 414 → 33 600 B gzip at most, no further rise
     # V5.20: ratchet restored by dead-rule removal (v520-css, 30 October 2026: the declarations a later layer of the
     # same context re-declares and the custom properties nothing reads left the token layers; the shim shrank) — 33 530
-    # → 32 718 B, the measure; the veil stays in the shared sheet
-    assert _gz(DIST / "main.css") <= 32_718, "main.css gzip ≤ 32 718 B (V5.20: ratchet restored by dead-rule removal)"
+    # → 32 657 B → 32 105 B (CLOSING, V5.29 09:41 item 2: the headroom under the hard 32 716), the measure; the veil stays in the shared sheet
+    assert _gz(DIST / "main.css") <= 32_105, "main.css gzip ≤ 32 105 B (V5.20: ratchet restored by dead-rule removal)"
     assert _gz(DIST / "core" / "reveal.css") <= 6 * 1024, "a page-only sheet ≤ 6 KB gzip"
-    assert _gz(JS_DIST / "shell.js") <= 4_700, "shell.js gzip ≤ 4 700 B"
+    # V5.29 («layout & brand refinement» §3, the owner's 6 Nov 2026): the lock-up's key turns once at the brand's reveal
+    # and on its hover or focus. The brand steward re-recorded shell.js at 4 866 B for its WAAPI turn; the owner's
+    # CLOSING gate (V5.29 09:41 item 1) did not accept it: «restore the test ceiling to 4 700 … never raise the
+    # budget». CLOSING moved the turn to the stylesheet (motion.css §6, CSS only) and took the dead shell code out
+    # (the layout flag nothing read, the nav's unread class, a spotlight selector no template draws): 4 866 → 4 648 B,
+    # under the ceiling restored to 4 700 B
+    assert _gz(JS_DIST / "shell.js") <= 4_700, "shell.js gzip ≤ 4 700 B (V5.29 09:41 item 1)"
     assert _gz(JS_DIST / "notices.js") <= 1_536, "the notices' module ≤ 1.5 KB gzip (LANE_A §3, Toast 24297)"
 
 

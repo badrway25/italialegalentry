@@ -22,7 +22,7 @@ no percentage. Every word is the catalogue's.
 {% block page_title %}{% translate "Mes dossiers" %}{% endblock %}
 {% block meta_description %}{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}{% endblock %}
 {% comment %}The registers' page-only sheet, after the shell's two (W3-E; the owner's V5.8).{% endcomment %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
 
 {% block portal_header %}
 <header class="ws-head reg-head" data-atrium="person">
@@ -37,10 +37,14 @@ no percentage. Every word is the catalogue's.
 
 {% block portal_content %}
 <div class="reg-page">
-{% if rows %}
+{% if cases_total %}
   {% if has_foreign %}
   <p class="reg-note">{% blocktranslate %}Cette liste contient des dossiers qui ne sont pas les vôtres : ils vous sont confiés par un mandat daté. Chaque consultation est enregistrée.{% endblocktranslate %}</p>
   {% endif %}
+  {% comment %} V5.30 (stream C): the platform's list toolkit — a state, an objective, whose file, a search, three orders
+  (components/listing/; cases.lists) — drawn from two files on: a person's single file needs none. {% endcomment %}
+  {% include "components/listing/toolbar.html" %}
+  {% if rows %}
 
   <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Mes dossiers' %}">
     {% for row in rows %}
@@ -59,6 +63,7 @@ no percentage. Every word is the catalogue's.
     </li>
     {% endfor %}
   </ul>
+  {% else %}{% include "components/listing/empty.html" %}{% endif %}
 {% else %}
   {% comment %} One line naming how a file comes to exist — never a dashed box with an icon — and the way to begin. {% endcomment %}
   <p class="db-empty">
@@ -68,5 +73,6 @@ no percentage. Every word is the catalogue's.
   </p>
 {% endif %}
 </div>
+{% include "components/listing/drawer.html" %}
 {% endblock %}
-{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

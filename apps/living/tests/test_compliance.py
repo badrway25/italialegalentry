@@ -46,7 +46,16 @@ def living_pages(client, own_seeds, phase3_open, sheet_factory):
 
 def test_locked_living_texts_rendered_verbatim(living_pages):
     for lang, path, html in living_pages:
-        if path == "vivre-en-italie/":
+        if path == "vivre-en-italie/" and lang == "ar":
+            # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the title and the
+            # body are compositional (C-UI) — their provisional Arabic renderings, never the French
+            from cms import locked_renderings
+
+            for key in ("p3.living.title", "p3.living.body"):
+                assert locked_renderings.treatment(key) == "C-UI", key
+                assert locked_renderings.rendering(key) in html, (lang, path, key)
+                assert locked_content.text(key, "fr") not in html, (lang, path, key)
+        elif path == "vivre-en-italie/":
             assert locked_content.text("p3.living.title", "fr") in html, (lang, path)
             assert locked_content.text("p3.living.body", "fr") in html, (lang, path)
             if lang != "fr":

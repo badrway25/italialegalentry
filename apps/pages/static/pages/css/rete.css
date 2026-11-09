@@ -3,4 +3,5 @@
    only, between the institutional pages' shared sheet (pages/css/interior.css) and the frontispiece's — the map in the
    head and the approdo's compositions are this page's alone.
    ============================================================================================ */
+@import url("../../css/v5/_intesa.css"); /* V5.30 §7: the Italy + Morocco primitive under the closing band */
 @import url("_rete.css");

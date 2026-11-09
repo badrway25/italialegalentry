@@ -31,7 +31,7 @@ language of the submission.
     <dl class="summary reg-summary">
       <div class="summary__item"><dt>{% translate "État" %}</dt><dd>{% if item.is_registration %}{% chip item.status "forum.RegistrationStatus" %}{{ item.status_label }}{% endchip %}{% else %}{% chip item.status "enquiries.SubmissionStatus" %}{{ item.status_label }}{% endchip %}{% endif %}</dd></div>
       <div class="summary__item"><dt>{% translate "Transmise le" %}</dt><dd><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y H:i" }}</time></dd></div>
-      <div class="summary__item"><dt>{% translate "Référence" %}</dt><dd class="reg-ref">{{ item.reference }}</dd></div>
+      <div class="summary__item"><dt>{% translate "Référence" %}</dt><dd class="reg-ref">{{ item.reference|upper }}</dd></div>
     </dl>
   </section>
 

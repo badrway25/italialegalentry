@@ -156,7 +156,22 @@ def test_the_page_only_sheets_hold_the_rest():
     wizard = _css("apps/orientation/static/orientation/wizard.css")
     assert re.search(r"\.wizard-intro__resume-link a \{\s*display: inline-block;", wizard)
     pathways = _css("apps/pathways/static/pathways/_pathways.css")
-    assert re.search(r"\.linea__more a \{\s*display: inline-block;", pathways)
+    # D5's passage link — V5.22 (SECTION_SYSTEM_V2 §3.9 «la traversata», lane P1: an approved decision, cited at
+    # PUBLIC_TARGETS below) and V5.24 (FINAL_DELIVERY_V2 §3.9 a, lane CLOSING's coverage report,
+    # evidence/v524/closing/coverage_report.json; V5.20): the old line's «.linea__more» left with its markup, and its rule
+    # (kept for this pass, «which retires the rule and its guard») left with it — unused in all 2 034 scenarios, produced
+    # by no live file. The stand-alone link's floor is the shared arrow link's, which Formation's way-further links wear:
+    # an inline box that answers on 44 px under a finger, measured in the browser at PUBLIC_TARGETS
+    assert "linea__more" not in pathways, "the retired line's rule does not come back"
+    live = [*(ROOT / "templates").rglob("*.html"), *(ROOT / "static" / "js" / "src").rglob("*.js")]
+    live += [path for path in (ROOT / "apps").rglob("*.py") if "tests" not in path.parts]
+    assert not [path for path in live if "linea__more" in path.read_text(encoding="utf-8")], "no live file draws it"
+    training = (ROOT / "templates" / "pathways" / "training.html").read_text(encoding="utf-8")
+    assert training.count('<p class="traversata__altro"><a class="link-arrow" href=') == 2, "each way further"
+    buttons = _css("static/css/v5/buttons.css")
+    assert re.search(r"\n\.link-arrow \{\s*display: inline-flex;", buttons), "an inline box, not a bare run of text"
+    coarse = re.search(r"@media \(pointer: coarse\) \{\s*\.link-arrow \{ position: relative; \}\s*\.link-arrow::after \{([^}]*)\}", buttons)
+    assert coarse and "inset-block: min(0px, calc(50% - var(--hit-primary) / 2));" in coarse.group(1), "44 px to the finger"
     forum = _css("apps/forum/static/forum/_forum.css")
     assert re.search(r"\.forum-gallery__video \{\s*direction: ltr;", forum), "a video's controls never mirror"
     assert '[data-registration="closed"] .notice__body a::after' in forum

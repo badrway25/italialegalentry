@@ -1,36 +1,7 @@
 {% comment %}
-LE PROJET — the story's one figure «il sistema» (design V5.22, SECTION_SYSTEM_V2 §3.2 LP-1 + LP-2 + LP-3, pattern C
-«il racconto»; lane P2). Drawn inside the sticky night plate of components/sezioni/racconto.html (aria-hidden there:
-the three steps' words carry the content). The brand doorway enlarged on its sill, the five actors of the ecosystem as
-T2a discs in their audience accents on an arc above it, their spokes to the door; its states follow the step being
-read (sezioni/racconto.js writes `data-step` on the plate, apps/pages/static/pages/css/_projet.css draws them):
-  1 · «En bref» — the whole system drawn;
-  2 · «Pourquoi» — the grey broken paths of the improvised channels, then the regular route drawing to the door, then
-      the opening lighting (the page's one arrival gold, on night);
-  3 · «Qui porte le projet» — the doorway's sill and its foundation courses light under the arch: the promoter carries
-      the project; it is no authority.
-Below 64 rem, under reduced motion, html.rm and without script the figure stands in its final drawing.
-Context (apps/pages/views.py): `fig_why`, `fig_who` — the step numbers of «Pourquoi» and «Qui porte» (1 and 2 while
-gate G3 keeps «En bref» out); `fig_nodes` — the five actors [{key, glyph, audience}]; `fig_bref` — «En bref» is drawn.
-The figure mirrors in Arabic (the plate's svg); its discs are placed by logical insets and never flip.
-{% endcomment %}<div class="sistema on-inverse"{% if fig_bref %} data-bref{% endif %}>
-  <svg class="sistema__disegno" viewBox="0 0 400 400" focusable="false" aria-hidden="true">
-    <defs>
-      <radialGradient id="sistema-luce" cx="50%" cy="72%" r="66%"><stop class="sistema__luce-0" offset="0"/><stop class="sistema__luce-1" offset="1"/></radialGradient>
-      <clipPath id="sistema-vano"><path d="M176 320V244A24 24 0 0 1 224 244V320Z"/></clipPath>
-    </defs>
-    <path class="sistema__suolo" d="M12 320H388"/>
-    <g class="sistema__improvvisati" data-from="{{ fig_why }}"><path d="M18 248 60 272 48 298 86 318"/><path d="M382 258 344 282 358 304 320 318"/><path d="M88 394 122 364 106 350"/><path d="M314 394 286 368 302 354"/></g>
-    <g class="sistema__raggi"><path pathLength="1" d="M40.6 207 141.6 230.4"/><path pathLength="1" d="M117.5 107 169 192.6"/><path pathLength="1" d="M200 85V184"/><path pathLength="1" d="M282.5 107 231 192.6"/><path pathLength="1" d="M359.4 207 258.4 230.4"/></g>
-    <g class="sistema__porta" data-verb="stroke">
-      <path class="sistema__tono" d="M176 320V244A24 24 0 0 1 224 244V320Z"/>
-      <rect class="sistema__luce" data-from="{{ fig_why }}" clip-path="url(#sistema-vano)" x="176" y="200" width="48" height="120" fill="url(#sistema-luce)"/>
-      <path class="sistema__arco" pathLength="1" d="M140 320V244A60 60 0 0 1 260 244V320"/>
-      <path class="sistema__arco" pathLength="1" d="M176 320V244A24 24 0 0 1 224 244V320"/>
-      <path class="sistema__soglia" pathLength="1" d="M108 320H292"/>
-    </g>
-    <path class="sistema__rotta" data-from="{{ fig_why }}" pathLength="1" d="M20 372C100 372 166 354 200 320V262"/>
-    <g class="sistema__fondamenta" data-from="{{ fig_who }}"><path pathLength="1" d="M108 320H292"/><path pathLength="1" d="M126 332H274"/><path pathLength="1" d="M144 344H256"/></g>
-  </svg>
-  <ul class="sistema__nodi" data-registro>{% for item in fig_nodes %}<li class="sistema__nodo sistema__nodo--{{ item.key }}" data-audience="{{ item.audience }}"><span class="sez-disc">{% svg_icon item.glyph "icon" %}</span></li>{% endfor %}</ul>
-</div>
+LE PROJET — the story's one figure «il sistema» (design V5.22, SECTION_SYSTEM_V2 §3.2 LP-1 + LP-2 + LP-3, pattern C «il
+racconto»; lane P2), recomposed by V5.30 VARIETY §5, §11 (the doorway, its spokes and its arcs were decorative drawing): on
+the sticky night plate of components/sezioni/racconto.html (aria-hidden there: the steps' words carry the content), the
+five actors of the ecosystem, each a tile and its name (apps/pages/static/pages/css/_projet.css).
+Context (apps/pages/views.py): `fig_nodes` — the five actors [{key, glyph, audience, label}].
+{% endcomment %}<ul class="sistema__nodi" data-registro>{% for item in fig_nodes %}<li class="sistema__nodo sistema__nodo--{{ item.key }}" data-audience="{{ item.audience }}"><span class="sez-disc">{% svg_icon item.glyph "icon" %}</span><span class="sistema__nome">{{ item.label }}</span></li>{% endfor %}</ul>

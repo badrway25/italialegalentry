@@ -6,7 +6,8 @@
    is, not merely which category it belongs to.
 
      .register      the entry list — replaces the card, everywhere
-     .jurisdiction  the jurisdiction bar — who is answerable for each phase
+     (.jurisdiction, the jurisdiction bar, left with its component: V5.29 09:41 item 2, CLOSING — no template
+     had included it since 9 October 2026, DL54-41)
      .plate         the one full-bleed band per page
      .note          the margin apparatus where the legal caveats live
 
@@ -132,111 +133,14 @@
    owner is carried by a HATCH PATTERN as well as a colour, so the bar is
    readable in greyscale, under forced colours and by a colour-blind reader.
    -------------------------------------------------------------------------- */
-.jurisdiction {
-  margin-block: var(--s-6);
-}
-
-.jurisdiction__bar {
-  display: flex;
-  block-size: 20px;
-  border: 1px solid var(--rule-ink);
-}
-
-.jurisdiction__segment {
-  flex: 1 1 auto;
-  border-inline-end: 1px solid var(--rule-ink);
-}
 
 /* The relative width of a stretch. A data attribute rather than an inline style:
    the public CSP is self-only with no unsafe-inline, so a style attribute would
    be dropped in production and every segment would render equal. */
-.jurisdiction__segment[data-share="1"] {
-  flex-grow: 1;
-}
-
-.jurisdiction__segment[data-share="2"] {
-  flex-grow: 2;
-}
-
-.jurisdiction__segment[data-share="3"] {
-  flex-grow: 3;
-}
-
-.jurisdiction__segment[data-share="4"] {
-  flex-grow: 4;
-}
-
-.jurisdiction__segment[data-share="5"] {
-  flex-grow: 5;
-}
-
-.jurisdiction__segment[data-share="6"] {
-  flex-grow: 6;
-}
-
-.jurisdiction__segment:last-child {
-  border-inline-end: 0;
-}
 
 /* Four owners, four textures. The repeating-linear-gradient here is a HATCH,
    not a decorative gradient: it encodes the owner and it is the fallback for a
    reader who cannot use the colour. */
-.jurisdiction__segment--morocco {
-  background: var(--paper-edge);
-  background-image: repeating-linear-gradient(
-    45deg,
-    var(--cooperation) 0 1px,
-    transparent 1px 6px
-  );
-}
-
-.jurisdiction__segment--italy {
-  background: var(--paper-edge);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--navy) 0 1px,
-    transparent 1px 6px
-  );
-}
-
-.jurisdiction__segment--platform {
-  background: var(--paper-edge);
-}
-
-.jurisdiction__segment--authority {
-  background: var(--paper-edge);
-  background-image: repeating-linear-gradient(
-    90deg,
-    var(--ink) 0 1px,
-    transparent 1px 4px
-  );
-}
-
-.jurisdiction__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3) var(--s-6);
-  margin-block-start: var(--s-3);
-  padding: 0;
-  list-style: none;
-  font-family: var(--font-ui);
-  font-size: var(--t-caption-size);
-  line-height: var(--t-caption-lh);
-  color: var(--ink-secondary);
-}
-
-.jurisdiction__key {
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-}
-
-.jurisdiction__swatch {
-  inline-size: 16px;
-  block-size: 12px;
-  border: 1px solid var(--rule-ink);
-  flex: none;
-}
 
 /* ---- THE PLATE AND THE VERSO BAND ------------------------------------------
    Full bleed, exactly once per page, never twice. Either a photograph at 2:1
@@ -421,12 +325,6 @@
 
   /* The hatch is a background image and is dropped: the legend's words and the
      segment borders carry the meaning on their own. */
-  .jurisdiction__segment,
-  .jurisdiction__swatch {
-    background: Canvas;
-    border-color: CanvasText;
-    forced-color-adjust: none;
-  }
 
   .outcome {
     border-inline-start-color: CanvasText;
@@ -450,14 +348,6 @@
 /* A register row with no destination carries no underline: nothing opens. */
 .entry:not(a) .entry__title {
   text-decoration: none;
-}
-
-.jurisdiction__title {
-  margin-block-end: var(--s-3);
-}
-
-.jurisdiction__caption {
-  margin-block-start: var(--s-2);
 }
 
 /* An institutional notice that follows the plate is ATTACHED to it: the

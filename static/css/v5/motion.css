@@ -122,8 +122,8 @@ html.lume-in::view-transition-new(root) {
 }
 
 @media (min-width: 80rem) {
-  .site-header.is-scrolled .lock-sig {
-    --sig-size: 32px;
+  .site-header .lock-sig {
+    --sig-size: 40px;
   }
 }
 

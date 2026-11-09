@@ -10,26 +10,21 @@
    ============================================================================================ */
 
 /* ---- 1 · FAQ ---- */
+/* the category's name while it is the only one: the label role (`t-label`, v5/base.css — Host Grotesk 13/16 600 +0.08 em;
+   V5.24 Typography V2 F-4: the mono folio retired), in the accent, with its 48 px rule; several categories: a band title */
 .faq-esploratore__categoria {
   display: flex;
   align-items: center;
   gap: var(--s-3);
   margin: 0 0 var(--s-8);
-  font-family: var(--f-mono);
-  font-size: var(--t-folio);
-  line-height: var(--t-folio-lh);
-  font-weight: var(--w-control);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--accent-text);
 }
 
 .faq-esploratore__categoria--titolo {
-  font-family: var(--f-sans);
   font-size: var(--t-band);
   line-height: var(--t-band-lh);
-  letter-spacing: 0;
-  text-transform: none;
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
   color: var(--text-1);
 }
 
@@ -60,6 +55,7 @@
     align-items: center;
     min-block-size: var(--hit-primary, 44px);
     padding-inline-end: 27px;
+    gap: var(--s-3);
     font-size: var(--t-entry);
     line-height: var(--t-entry-lh);
   }
@@ -78,9 +74,10 @@ html:has(.faq-esploratore) { scroll-padding-block-start: calc(var(--header-h-scr
 }
 
 /* the review's M2 on the explorer (W3-F2; §1 rule 6 «beside a marker»): on the Arabic page a French question ends on
-   the reading edge — its index row (the marker glides on that edge) and the answer plate's heading; the answer itself
+   the reading edge — its index row (the marker glides on that edge; V5.29: its tile the row's first, on that edge,
+   the words beside it) and the answer plate's heading; the answer itself
    reads from its own start, as a body does (v5/_sezioni.css) */
-[dir="rtl"] .faq-esploratore .indice__voce[lang] { justify-content: flex-end; text-align: end; padding-inline: var(--s-2) var(--s-4); }
+[dir="rtl"] .faq-esploratore .indice__voce[lang] { flex-direction: row-reverse; text-align: end; padding-inline: var(--s-2) var(--s-4); }
 [dir="rtl"] .faq-esploratore .indice__voce[lang]::before { inset-inline: auto 0; }
 [dir="rtl"] .faq-esploratore .indice__titolo[lang] { text-align: end; }
 
@@ -126,3 +123,86 @@ html:has(.faq-esploratore) { scroll-padding-block-start: calc(var(--header-h-scr
 }
 
 .faq-chip:is(:hover, :focus-visible) { border-color: var(--accent-mark); color: var(--accent-text); }
+
+/* ---- V5.29 §10–§13 (lane PUB2): the question's glyph, its title, its open state, the empty search ----
+   One glyph per question (faq.views.GLYPHS) in the library's small tile (v5/_sezioni.css: the vault, the ink by
+   importance, the foot rule that runs when its owner is active). The index's question at rest in the secondary ink, the
+   primary under the pointer, the laguna when chosen — the row then a quiet face and its divider the structure line; the
+   stage's heading carries no tile beside the seal (one concept); on a phone the heading is the row and keeps it. Opening
+   a question: the tile inks and its rule runs, the divider deepens, the answer comes in (240 ms, ease-out) — from the
+   keyboard and under reduced motion, at once. */
+.faq-esploratore .indice__voce {
+  gap: var(--s-4);
+  color: var(--text-2);
+  transition: color var(--motion-standard) var(--ease-enter);
+}
+
+:is(.faq-esploratore .indice__voce, .faq-vuoto__voce):hover { color: var(--text-1); }
+
+.faq-esploratore .indice__voce[aria-selected="true"] {
+  border-block-end-color: var(--line-structure);
+  background-color: color-mix(in srgb, var(--surface-raised) 60%, transparent);
+  color: var(--accent-text);
+}
+
+.faq-esploratore .indice__voce:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+html[data-input="key"] .faq-esploratore .indice__voce { transition: none; }
+
+@media (min-width: 64rem) {
+  .faq-esploratore .indice__titolo > .sez-tile { display: none; }
+}
+
+@media (max-width: 63.999rem) {
+  .faq-esploratore .indice__palco { padding-inline: var(--s-3); }
+}
+
+.faq-esploratore .indice__pannello[data-on] { border-block-end-color: var(--line-structure); }
+
+:is(.indice__apri[aria-expanded="true"], .faq-item[open] > summary) .sez-tile { --tile-ink: var(--accent-text); }
+:is(.indice__apri[aria-expanded="true"], .faq-item[open] > summary) .sez-tile::after { scale: 1 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .faq-esploratore .indice__pannello[data-on]:has(.indice__apri:focus) .indice__corpo {
+    animation: faq-svela var(--motion-standard) var(--ease-enter) backwards;
+  }
+}
+
+@keyframes faq-svela {
+  from { opacity: 0; translate: 0 -6px; }
+}
+
+/* a search's answers: the tile before the question, the question the row's measure */
+.faq-item__question { flex: 1; }
+
+/* the empty search: the state beside the whole register, each question one step from its permalink */
+.faq-vuoto {
+  display: grid;
+  gap: var(--s-8);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .faq-vuoto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+}
+
+.faq-vuoto__indice { padding: var(--s-6); }
+
+.faq-vuoto__titolo { margin: 0 0 var(--s-3); color: var(--accent-text); }
+
+.faq-vuoto__lista { margin: 0; padding: 0; list-style: none; }
+
+.faq-vuoto__voce {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-block-size: 56px;
+  border-block-end: 1px solid var(--line-rhythm);
+  color: var(--text-2);
+  font-weight: var(--w-control);
+  text-decoration: none;
+}
+

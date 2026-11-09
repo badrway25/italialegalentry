@@ -8,7 +8,10 @@ sweep across the band as it enters. Still: the tiles at rest.
 
 Contract: `title_id`, `title`, `title_lang`; `tiles` — [{"href", "title", "title_lang", "line", "line_lang", "glyph"
 (a registry symbol), "disc" (True: an actor's disc, T2a), "audience", "forum" (True: the Forum's night tile)}];
-`motif` (a frontispiece motif: mission, civic, economic, network, learning, route, contact, legal, territory).
+`motif` (a frontispiece motif, kept in the callers' contracts and drawn no more). V5.30 (the owner's «geometry
+saturation»: the head's drawing repeated at the page's foot was the repetition itself): the bookend left the library — the
+band is its tiles on the stone, or the ground the page lays under it (the Italy–Morocco «intesa», ecosystem/partials/
+intesa.html).
 The caller wraps it: <section class="sez sez--approdo" data-sec="approdo" data-ground="stone" data-verb="light">.
 {% endcomment %}<div class="approdo">
   {% include "components/sezioni/_testa.html" with role="router" %}
@@ -19,5 +22,4 @@ The caller wraps it: <section class="sez sez--approdo" data-sec="approdo" data-g
       {% if item.line %}<p class="approdo__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
     </li>{% endfor %}
   </ul>
-  {% if motif %}<div class="approdo__fondale" aria-hidden="true">{% with "pages/partials/motifs/_"|add:motif|add:".html" as motif_template %}{% include motif_template %}{% endwith %}</div>{% endif %}
 </div>

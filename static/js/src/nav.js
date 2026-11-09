@@ -47,6 +47,9 @@
  *                    the wait, the keyboard's focus, Esc and a press are overlay.js's); from 100rem the plate says its
  *                    name, so its tip is refused (the system's cancelable `overlay:tip`). The signed-in seat's account
  *                    menu is the system's popover (components/account_menu.html): nothing of it is this module's.
+ *   The lock-up's key (V5.29 «layout & brand refinement» §3) is the stylesheet's alone since CLOSING (V5.29 09:41
+ *                    item 1, «CSS-only where possible»): static/css/v5/chrome.css §1 — the turn at the brand's reveal and
+ *                    on its hover or focus, one at a time, never under reduced motion. Nothing of it is this module's.
  */
 
 import { nextFrame, reducedMotion } from "./motion.js";
@@ -155,7 +158,6 @@ function initPortico(header) {
         : r.left + pad - (box.left + (parseFloat(style.paddingInlineStart) || 0));
       if (value > 120) nav.style.setProperty("--portico-lead", `${Math.round(value)}px`);
     }
-    return box;
   }
   function layout() {
     if (!BAR.matches) return;
@@ -411,31 +413,26 @@ function initPortico(header) {
   document.addEventListener("overlay:open", () => close(false));
 
   /* ---- widths, fonts, the scrolled letterhead ---- */
-  let asked = 0; // the layout requests so far: only the last one of a frame measures
-  let forced = false;
-  const relayout = (force) => {
-    forced = forced || force === true;
+  let asked = 0; // the layout requests so far: only the last one of a frame measures (layout() takes no
+  // argument: the «forced» flag it was once handed was read by nothing — CLOSING, V5.29 09:41 item 1, dead code out)
+  const relayout = () => {
     const mine = ++asked;
     nextFrame().then(() => {
-      if (mine !== asked) return;
-      const full = forced;
-      forced = false;
-      layout(full);
+      if (mine === asked) layout();
     });
   };
   BAR.addEventListener("change", () => {
     close(false);
-    relayout(true);
+    relayout();
   });
-  DESKTOP.addEventListener("change", () => relayout(true));
-  addEventListener("resize", () => relayout(false), { passive: true }); /* the lead and the architrave */
-  header.addEventListener("portico:layout", () => relayout(false)); /* the 64 ↔ 56 switch: the lead and the architrave */
-  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => relayout(true));
+  DESKTOP.addEventListener("change", relayout);
+  addEventListener("resize", relayout, { passive: true }); /* the lead and the architrave */
+  header.addEventListener("portico:layout", relayout); /* the 64 ↔ 56 switch: the lead and the architrave */
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(relayout);
   const idle = () => (window.requestIdleCallback ? requestIdleCallback(warmAll, { timeout: 4000 }) : setTimeout(warmAll, 2000));
   if (document.readyState === "complete") idle();
   else addEventListener("load", idle, { once: true });
-  nav.classList.add("is-enhanced");
-  relayout(true);
+  relayout();
 }
 
 /* ---------------------------------------------------------------------------------- «la targa» */

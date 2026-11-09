@@ -5014,6 +5014,7 @@ def test_the_dev_assets_are_loaded_only_by_the_dev_templates():
         "_build.html",
         "_changelog.html",
         "_family.html",
+        "_locked_keys.html",  # V5.27 R7′ (f): the locked keys' internal listing (lane AR; the v524-ar merge, V5.20)
         "_personas.html",
         "_quick.html",
         "_row.html",
@@ -6262,7 +6263,8 @@ def test_the_preview_files_are_written_with_lf_line_endings():
         STATIC / "js" / "dev" / "designpreview.js",
         Path(__file__),
     ]
-    assert len(footprint) == 29, "eleven modules of the app, fourteen templates, dev.py, a sheet, a script, this file"
+    # V5.27 R7′ (f) (the v524-ar merge, V5.20): the fifteenth template is the locked keys' listing
+    assert len(footprint) == 30, "eleven modules of the app, fifteen templates, dev.py, a sheet, a script, this file"
     for path in footprint:
         assert b"\r" not in path.read_bytes(), path.name
 

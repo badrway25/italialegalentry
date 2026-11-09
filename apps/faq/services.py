@@ -19,9 +19,11 @@ from dataclasses import dataclass
 from django.conf import settings
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import Q
+from django.utils.html import format_html
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from cms import locked_content
 from cms.models import TranslationStatus
 from cms.translation import resolve
 from core import gates
@@ -57,6 +59,11 @@ class RelatedLink:
 
 @dataclass(frozen=True)
 class FAQEntry:
+    """One question and its answer in the page's language. ``lang`` / ``is_fallback`` are the ANSWER's; V5.27 / R7′
+    (the v524-pub2 steward): a prescribed entry reads its two texts by sub-key, so on /ar/ the question is the
+    provisional Arabic (``question_lang`` "ar") while the answer is the French source on the FAQ page, preceded by its
+    identification caption (``answer_key``: the sub-key ``{% locked_caption %}`` reads; "" for an editor's entry)."""
+
     item: FAQItem
     key: str
     question: str
@@ -65,6 +72,9 @@ class FAQEntry:
     is_fallback: bool
     last_updated: dt.date
     links: tuple[RelatedLink, ...]
+    question_lang: str = ""
+    question_is_fallback: bool = False
+    answer_key: str = ""
 
 
 @dataclass(frozen=True)
@@ -149,6 +159,22 @@ def _glossary_term_is_live(slug: str) -> bool:
     return slug in link_map()
 
 
+#: A proper name kept in its own language inside a translated label (V5.24 Arabic Complete, ARABIC_AUDIT
+#: 02_class_b_wraps W5.3): «Privacy Policy» is the notice's title in every catalogue, so the Arabic sentence
+#: «قراءة Privacy Policy» holds it as an isolated left-to-right English run — as the footer's and the login's
+#: links do.
+_OWN_LANGUAGE_RUNS = (("Privacy Policy", "en"),)
+
+
+def _label_html(label: str):
+    text = str(label)
+    for run, lang in _OWN_LANGUAGE_RUNS:
+        if run in text:
+            before, _, after = text.partition(run)
+            return format_html('{}<span lang="{}" dir="ltr">{}</span>{}', before, lang, run, after)
+    return text
+
+
 def context_links(key: str) -> tuple[RelatedLink, ...]:
     links = []
     for label, url_name, kwargs in CONTEXT_LINKS.get(key, ()):
@@ -156,24 +182,58 @@ def context_links(key: str) -> tuple[RelatedLink, ...]:
             continue
         url = _safe_reverse(url_name, kwargs)
         if url:
-            links.append(RelatedLink(str(label), url))
+            links.append(RelatedLink(_label_html(label), url))
     return tuple(links)
+
+
+def _registry_index(key: str) -> int | None:
+    for index, registry_key in enumerate(registry.keys()):
+        if registry_key == key:
+            return index
+    return None
 
 
 def entry_for(item: FAQItem, lang: str) -> FAQEntry:
     lang = (lang or settings.LANGUAGE_CODE).split("-")[0]
     fallback_lang = settings.CONTENT_FALLBACK_LANGUAGE
+    row, effective, _is_fb = resolve(item, lang)
+    if row is not None and effective == lang and lang != fallback_lang:
+        return FAQEntry(
+            item,
+            item.key,
+            row.question,
+            row.answer,
+            lang,
+            False,
+            item.last_updated,
+            context_links(item.key),
+            question_lang=lang,
+        )
+    index = _registry_index(item.key) if item.is_locked else None
+    if index is not None:
+        # Prescribed wording comes from the registry, never from the (mirrored) DB columns — each text by its sub-key,
+        # in the language the Arabic policy gives it (cms.locked_renderings; V5.27 / R7′, the v524-pub2 steward)
+        answer_key = f"{registry.REGISTRY_KEY}[{index}].answer"
+        question, question_lang = locked_content.get(f"{registry.REGISTRY_KEY}[{index}].question", lang)
+        answer, answer_lang = locked_content.get(answer_key, lang)
+        return FAQEntry(
+            item,
+            item.key,
+            str(question),
+            str(answer),
+            answer_lang,
+            answer_lang != lang,
+            item.last_updated,
+            context_links(item.key),
+            question_lang=question_lang,
+            question_is_fallback=question_lang != lang,
+            answer_key=answer_key,
+        )
     if item.is_locked:
-        # Prescribed wording comes from the registry, never from the (mirrored) DB columns.
         prescribed = item.registry_entry() or {"question": item.question_fr, "answer": item.answer_fr}
         question_src, answer_src = prescribed["question"], prescribed["answer"]
     else:
         question_src, answer_src = item.question_fr, item.answer_fr
-    row, effective, _is_fb = resolve(item, lang)
-    if row is not None and effective == lang and lang != fallback_lang:
-        return FAQEntry(
-            item, item.key, row.question, row.answer, lang, False, item.last_updated, context_links(item.key)
-        )
     return FAQEntry(
         item,
         item.key,
@@ -183,6 +243,8 @@ def entry_for(item: FAQItem, lang: str) -> FAQEntry:
         lang != fallback_lang,
         item.last_updated,
         context_links(item.key),
+        question_lang=fallback_lang,
+        question_is_fallback=lang != fallback_lang,
     )
 
 
@@ -226,7 +288,7 @@ def faq_jsonld(entries: list[FAQEntry], lang: str) -> dict:
             {
                 "@type": "Question",
                 "name": entry.question,
-                "inLanguage": entry.lang,
+                "inLanguage": entry.question_lang or entry.lang,
                 "acceptedAnswer": {"@type": "Answer", "text": entry.answer, "inLanguage": entry.lang},
             }
             for entry in entries

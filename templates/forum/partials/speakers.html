@@ -3,7 +3,9 @@
 INTERVIENNENT — only institutional functions. A person's name appears ONLY when the record is
 authorised in writing AND the site-wide flag forum_speaker_names_authorized is on (gate G5).
 Design V5.4 (W3-F1; DESIGN_SYSTEM_V5 PX16 «the tribune»): the roles as a register of two columns — the function
-over the name and the organisation, when they are published; no photograph, no box.
+over the name and the organisation, when they are published; no photograph, no box. V5.27 / R7′ (the v524-pub2
+steward): each function carries its own language (forum.services.public_speakers: a seeded, unedited function in the
+page's language — the provisional Arabic on /ar/), no longer one lang="fr" on the register.
 {% endcomment %}
 <section class="chapter forum-section forum-section--speakers" id="forum-speakers" aria-labelledby="forum-speakers-title">
   <div class="container chapter__inner">
@@ -11,12 +13,12 @@ over the name and the organisation, when they are published; no photograph, no b
     <div class="chapter__body">
       {% event_text event "speakers.body" "p" "chapter__prose forum-section__body" %}
       {% if speakers %}
-        <ul class="registro registro--two registro--words forum-speakers" lang="fr">
+        <ul class="registro registro--two registro--words forum-speakers">
           {% for speaker in speakers %}
             <li class="registro__row forum-speakers__item">
-              <span class="registro__title forum-speakers__role">{{ speaker.role_label }}</span>
+              <span class="registro__title forum-speakers__role"{% if speaker.role_lang %} lang="{{ speaker.role_lang }}"{% endif %}>{{ speaker.role_label }}</span>
               {% if speaker.person_name %}<span class="registro__text forum-speakers__name">{{ speaker.person_name }}</span>{% endif %}
-              {% if speaker.organisation %}<span class="registro__text forum-speakers__org">{{ speaker.organisation }}</span>{% endif %}
+              {% if speaker.organisation %}<span class="registro__text forum-speakers__org"{% if speaker.organisation_lang %} lang="{{ speaker.organisation_lang }}"{% endif %}>{{ speaker.organisation }}</span>{% endif %}
             </li>
           {% endfor %}
         </ul>

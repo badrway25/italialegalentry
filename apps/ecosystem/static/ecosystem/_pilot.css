@@ -195,17 +195,6 @@ html[data-input="key"] .pilota-rotta__percorso ol > li::after {
   list-style: none;
 }
 
-/* the one sill both doors stand on, 12 px past each side: a doorway stands on its sill (§4.3 — the sill keeps an arch
-   from reading as a headstone); two arches across one sill are the pilot's own mark (`ile-pilota`) */
-.pilota-porte__coppia::after {
-  content: "";
-  position: absolute;
-  inset-inline: -12px;
-  inset-block-end: -2px;
-  block-size: 2px;
-  background: var(--line-structure);
-}
-
 /* the help line stands on the doors' sill: the sill is its rule (QA_ROUND2 m5 — the line's own hairline, 25 px under
    the 2 px sill, read as a double rule) */
 .pilota-porte__aiuto {
@@ -214,8 +203,8 @@ html[data-input="key"] .pilota-rotta__percorso ol > li::after {
   border-block-start: 0;
 }
 
-/* a door: a true arch — its crown a full semicircle (the radii clamp to half its width), its foot square on the sill —
-   sized to what it holds: its audience's disc in the crown, its half of the sentence at the springing line, its call */
+/* a door: V5.30 (the owner's «geometry saturation»: repeated door forms) — a material plate on the card's corner, no
+   longer an arch on a sill; sized to what it holds: its audience's disc, its half of the sentence, its call */
 .porta-pilota {
   position: relative;
   isolation: isolate;
@@ -225,8 +214,8 @@ html[data-input="key"] .pilota-rotta__percorso ol > li::after {
   gap: var(--s-4);
   max-inline-size: 30rem;
   margin-inline: auto;
-  padding: 22% var(--s-6) var(--s-8);
-  border-radius: var(--radius-full) var(--radius-full) 0 0;
+  padding: var(--s-8) var(--s-6);
+  border-radius: var(--radius-lg);
   background: var(--surface-raised);
   box-shadow: inset 0 0 0 1px var(--line-rhythm);
   text-align: center;
@@ -314,7 +303,7 @@ html[data-input="key"] .porta-pilota::after {
 }
 
 @media (min-width: 48rem) {
-  /* the pair at one height: two equal arches on the sill */
+  /* the pair at one height: two equal plates */
   .pilota-porte__coppia {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -381,15 +370,10 @@ html[data-input="key"] .porta-pilota::after {
 @media (forced-colors: active) {
   .porta-pilota {
     border: 1px solid CanvasText;
-    border-block-end: 0;
   }
 
   .porta-pilota::before,
   .porta-pilota::after {
     display: none;
-  }
-
-  .pilota-porte__coppia::after {
-    background: CanvasText;
   }
 }

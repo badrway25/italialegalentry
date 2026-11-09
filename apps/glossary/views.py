@@ -28,14 +28,15 @@ def _lang() -> str:
 def where_to_meet(lang: str) -> dict[str, list[dict]]:
     """Term key → the pathways whose sheets name it (live sheets only: a chip is a link), each with its prescribed title
     (French on the other pages: it says so); a general term (the visa, the residence permit, the tax code — every
-    pathway's) leads to the pathways' index instead."""
-    title_lang = "" if lang.split("-")[0] == "fr" else "fr"
+    pathway's) leads to the pathways' index instead. V5.27 / R7′ (the v524-pub2 steward): the title read by its sub-key
+    in the page's language (``index_entries(lang=…)``: the provisional Arabic on /ar/), its ``lang`` when not the
+    page's."""
     found: dict[str, list[dict]] = {}
-    for entry in index_entries():
+    for entry in index_entries(lang=lang.split("-")[0]):
         if not entry.url:
             continue
         for key in GLOSSARY_TERMS_BY_PATHWAY.get(entry.key, ()):
-            found.setdefault(key, []).append({"label": entry.title, "url": entry.url, "lang": title_lang})
+            found.setdefault(key, []).append({"label": entry.title, "url": entry.url, "lang": entry.title_lang})
     index_url = public_url("pathways:index")
     if index_url:
         for key in GENERAL_GLOSSARY_TERMS:
@@ -66,6 +67,7 @@ def _related(entries) -> list[dict]:
             "title_lang": rel.term_lang,
             "body": rel.definition,
             "body_lang": rel.lang if rel.is_fallback else "",
+            "body_key": rel.definition_key,  # the caption's sub-key (V5.27 / R7′; "" for an editor's term)
             "links": format_html(
                 '<a class="link-arrow" href="{}" lang="{}">{}{}</a>',
                 rel.url,

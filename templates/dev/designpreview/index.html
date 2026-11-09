@@ -48,6 +48,7 @@ A standalone document: it holds frames, and base.css hides every iframe (_styles
       <a href="#personas">Accessi di prova</a>
       <a href="#stati">Da verificare senza accesso</a>
       <a href="#famiglie">Avanzamento dei lavori</a>
+      <a href="#testi-bloccati">Testi prescritti</a>
       <a href="#fondazione">Tavole del sistema visivo</a>
       <a href="#v4">Confronto con la versione precedente</a>
       <a href="#archivio">Archivio delle proposte</a>
@@ -112,6 +113,8 @@ A standalone document: it holds frames, and base.css hides every iframe (_styles
       <p class="dp-index__keys">{% for key in surface_keys %}<code>{{ key }}</code>{% if not forloop.last %} · {% endif %}{% endfor %}</p>
     </details>
   </section>
+
+  {% include "dev/designpreview/_locked_keys.html" %}
 
   <section class="dp-index__section" id="fondazione" aria-labelledby="h-fondazione">
     <h2 class="dp-index__h2" id="h-fondazione">Tavole del sistema visivo</h2>

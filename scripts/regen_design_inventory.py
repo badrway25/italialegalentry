@@ -252,8 +252,11 @@ def _capture_report() -> dict | None:
 
 
 def regen_icons(design: str, result: Result) -> str:
-    # V5.12 W2: the chrome sprite and the domain one (scripts/build_icons.py); a tree without the second reads one
-    sprites = [STATIC / "img" / "icons.svg", STATIC / "img" / "icons-domain.svg"]
+    # V5.12 W2: the chrome sprite and the domain one (scripts/build_icons.py); a tree without the second reads one.
+    # V5.22 (SECTION_SYSTEM_V2 §4.9, lane S): the V2 sections' page-only sprite of the ILE marks is the third — the list
+    # names every symbol of the three, as tests/frontend/test_design_docs.py's bijection reads them (the steward's
+    # regeneration at the v524-closing merge: two sprites read made 20 listed marks «not in the sprite», 149 → 129)
+    sprites = [STATIC / "img" / "icons.svg", STATIC / "img" / "icons-domain.svg", STATIC / "img" / "icons-marks.svg"]
     ids = {i for path in sprites if path.exists() for i in re.findall(r'<symbol id="icon-([a-z0-9-]+)"', _read(path))}
 
     def edit(listing: str) -> str:

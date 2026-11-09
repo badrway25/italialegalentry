@@ -1,0 +1,21 @@
+{% comment %}
+The prescribed texts under the Arabic policy (V5.27 «ARABIC OWNER DECISION — FINAL»; FINAL_DELIVERY_V2 R7′ (f); lane AR):
+every text of the registry with its class and its status — internal, for the acceptance preview only. C-UI texts carry a
+PROVISIONAL Arabic rendering pending the language / legal review; C-SUBST-FR texts stand in French on their own page and are
+hidden elsewhere until validated; C-SUBST-IT texts are shown by the legal pages in their Italian authoritative version;
+C-OFFICIAL names stay in the original. Rendered by designpreview.views.index; data from cms.locked_renderings.board_rows().
+Contract: `locked_rows` (the rows), `locked_counts` ({c_ui|c_subst_fr|c_subst_it|c_official: count}).
+{% endcomment %}<section class="dp-index__section" id="testi-bloccati" aria-labelledby="h-testi-bloccati">
+  <h2 class="dp-index__h2" id="h-testi-bloccati">Testi prescritti — la politica araba (V5.27)</h2>
+  <p class="dp-index__lead">Ogni testo del registro con la sua classe e il suo stato. <strong>C-UI</strong>: resa araba professionale <em>provvisoria</em>, in attesa della revisione linguistica e legale ({{ locked_counts.c_ui }}). <strong>C-SUBST-FR</strong>: testo sorgente francese, identificato sulla propria pagina e nascosto altrove fino alla validazione ({{ locked_counts.c_subst_fr }}). <strong>C-SUBST-IT</strong>: testo italiano facente fede, mostrato e identificato dalle pagine legali ({{ locked_counts.c_subst_it }}). <strong>C-OFFICIAL</strong>: nomi e titoli ufficiali tenuti nell’originale ({{ locked_counts.c_official }}). Il francese del registro non cambia di una lettera; i checksum restano quelli.</p>
+  <details class="dp-index__fold">
+    <summary>Il registro, chiave per chiave ({{ locked_rows|length }} testi)</summary>
+    <table class="dp-table">
+      <thead><tr><th scope="col">Chiave</th><th scope="col">Classe</th><th scope="col">Stato</th><th scope="col">Pagina sorgente</th><th scope="col">Resa</th></tr></thead>
+      <tbody>
+        {% for row in locked_rows %}<tr><td><code>{{ row.key }}</code></td><td>{{ row.treatment }}</td><td>{{ row.status }}</td><td>{{ row.routes|default:"—" }}</td><td>{% if row.rendered %}araba, provvisoria{% else %}—{% endif %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+</section>

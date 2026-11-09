@@ -13,6 +13,10 @@ The page links the band's sheet (pages/css/fronte.css: +1 request, recorded).
 Round 2 (QA_ROUND2 M2): the prescribed introduction carries its own language (`lead_lang`, the registry's), so on an
 Arabic page the lead is a French box like the recipients' note, both on one edge; the note one annotation, the drawing
 beside its words.
+V5.29 §15–§17 (lane PUB1, the header block only — the form is untouched): an institution's head stands in «l'intesa», the
+Italy + Morocco ground (ecosystem/partials/intesa.html, aria-hidden; ecosystem/intesa.css, +1 request, an institution's page
+only): Italy's three vertical fields at the reading edge, Morocco's red field and fine green pentagram at the far edge,
+meeting around the head's words; the flags never mirrored in Arabic, a still under reduced motion.
 {% endcomment %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
@@ -22,7 +26,9 @@ beside its words.
 <article class="enquiry-page enquiry-page--collaboration" data-kind="{{ kind }}">
   {% if kind == "university" %}{% translate "Espace Universités et Formation" as space_label %}{% else %}{% translate "Espace Institutions" as space_label %}{% endif %}
   {% if phase3_public %}{% if kind == "university" %}{% locked "p3.universities.intro" as lead_html %}{% locked_lang "p3.universities.intro" as lead_lang %}{% else %}{% locked "p3.institutions.intro" as lead_html %}{% locked_lang "p3.institutions.intro" as lead_lang %}{% endif %}{% else %}{% comment %}CONTENT_PENDING_LEGAL_REVIEW — no prescribed introduction exists for this page before Phase 3; the locked p3.institutions.* / p3.universities.* texts render automatically once gate G3 opens.{% endcomment %}{% translate "Institutions, universités et organismes de formation : présentez votre proposition de collaboration dans le cadre du projet Italy Legal Entry™. Elle sera examinée par l’équipe du projet, qui vous recontactera si nécessaire." as lead_html %}{% endif %}
+  {% if kind != "university" %}<div class="intesa-campo">{% include "ecosystem/partials/intesa.html" with id="intesa-testa" only %}{% endif %}
   {% if kind == "university" %}{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=lead_html lead_lang=lead_lang motif="learning" seal="ile-sapere" compact=True fronte_linked=True only %}{% elif phase3_public %}{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=lead_html lead_lang=lead_lang motif="civic" seal="ile-istituzione" aside_template="ecosystem/partials/emiciclo_nota.html" compact=True fronte_linked=True only %}{% else %}{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=lead_html motif="civic" seal="ile-istituzione" compact=True fronte_linked=True only %}{% endif %}
+  {% if kind != "university" %}</div>{% endif %}
   <section class="formwork-section enquiry-page__form" id="formulaire" aria-labelledby="collaboration-form-title">
     <div class="container">
       <div class="formwork-section__head">
@@ -38,4 +44,4 @@ beside its words.
   </section>
 </article>
 {% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% if kind != "university" %}<link rel="stylesheet" href="{% static 'css/dist/ecosystem/intesa.css' %}">{% endif %}{% endblock %}

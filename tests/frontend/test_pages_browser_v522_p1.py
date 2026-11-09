@@ -528,22 +528,23 @@ def test_an_arabic_page_keeps_its_french_titles_on_their_marker_s_edge(browser, 
             "[...document.querySelectorAll('.tracciato__nome')].map(el => getComputedStyle(el).letterSpacing)"
         )
         assert len(labels) == 4 and all(value in ("normal", "0px") for value in labels), labels
-        # QA_ROUND1 m1: a station card's French title and line share ONE edge — the card's, beside its numeral
-        edges = page.evaluate(
+        # V5.20, FINAL_DELIVERY_V2 R7′ / V5.27 cited (the v524-pub1 steward): the Arabic board reads each pathway's title
+        # in its provisional Arabic and, the description hidden off its sheet, draws no line on a station that links the
+        # sheet — so no French run is left in a card (stronger than QA_ROUND2 m2's 28 px French leading, which had none
+        # left to read), and QA_ROUND1 m1's «one edge» reads across the eight cards: every title starts at the same
+        # distance from its card's reading (right) edge, beside its numeral
+        cards = page.evaluate(
             "[...document.querySelectorAll('.tracciato__carta')].map(card => {"
-            " const end = el => { const r = document.createRange(); r.selectNodeContents(el);"
-            " return Math.max(...[...r.getClientRects()].map(x => x.right)); };"
-            " return Math.round(Math.abs(end(card.querySelector('.tracciato__titolo'))"
-            " - end(card.querySelector('.tracciato__riga')))); })"
+            " const r = document.createRange(); r.selectNodeContents(card.querySelector('.tracciato__titolo'));"
+            " const right = Math.max(...[...r.getClientRects()].map(x => x.right));"
+            " return {inset: Math.round(card.getBoundingClientRect().right - right), link: card.tagName === 'A',"
+            " french: card.querySelectorAll('[lang=\"fr\"]').length, lines: card.querySelectorAll('.tracciato__riga').length};"
+            " })"
         )
-        assert len(edges) == 8 and max(edges) <= 2, edges
-        # QA_ROUND2 m2: a French run in an Arabic card keeps the Latin leading (28 px, as on the French page), never the
-        # Arabic 32 px that read double-spaced
-        leading = page.evaluate(
-            "[...document.querySelectorAll('.tracciato__carta :is(.tracciato__titolo, .tracciato__riga)[lang=\"fr\"]')]"
-            ".map(el => getComputedStyle(el).lineHeight)"
-        )
-        assert len(leading) == 16 and set(leading) == {"28px"}, leading
+        insets = [card["inset"] for card in cards]
+        assert len(cards) == 8 and max(insets) - min(insets) <= 2, cards
+        assert all(card["french"] == 0 for card in cards), cards
+        assert all(card["lines"] == 0 for card in cards if card["link"]), cards
         # the pilot's route runs with the page, station 1 on the reading edge, though its list carries the labels'
         # lang="fr" (the library's French-run rule would turn the list itself left-to-right)
         page.goto(f"{live_server.url}/ar/projet-pilote/", wait_until="load")
@@ -557,13 +558,13 @@ def test_an_arabic_page_keeps_its_french_titles_on_their_marker_s_edge(browser, 
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_institutions_head_sets_its_recipients_as_one_annotation_beside_the_hemicycle(
-    browser, live_server, open_pages, lang
-):
-    """QA_ROUND2 M2 (SECTION_SYSTEM_V2 §3.7 IN-H «the locked recipients sentence becomes a side annotation beside a small
-    six-seat hemicycle drawing»; §4.1 no glyph stacked above its words; §1 rule 6): at 1440 and 390 the drawing stands
-    beside the sentence, at its drawn size, never above it; the sentence is an annotation (15 px), not a second lead;
-    in Arabic the lead and the note are French boxes hanging from the same reading edge, the drawing on it."""
+def test_the_institutions_head_sets_its_recipients_as_one_annotation(browser, live_server, open_pages, lang):
+    """QA_ROUND2 M2 (SECTION_SYSTEM_V2 §3.7 IN-H «the locked recipients sentence becomes a side annotation»; §1 rule 6),
+    restated under V5.20 for V5.30 Fast Visual Variety Correction §7 INSTITUTIONS («Do not make every institutional
+    relationship an arc»): the small six-seat hemicycle is gone; at 1440 and 390 the sentence is an annotation (15 px), not
+    a second lead; in Arabic the lead and the note hang from the same reading edge — since V5.27 / FINAL_DELIVERY_V2 R7′
+    (V5.20, the v524-pub1 steward) both in the page's Arabic (the C-UI renderings), right to left, where they were French
+    boxes."""
     for width, height in ((1440, 900), (390, 844)):
         context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion="reduce")
         page = context.new_page()
@@ -571,24 +572,21 @@ def test_the_institutions_head_sets_its_recipients_as_one_annotation_beside_the_
             page.goto(f"{live_server.url}/{lang}/collaboration/institutions/", wait_until="load")
             state = page.evaluate("""() => {
               const box = el => el.getBoundingClientRect();
-              const svg = box(document.querySelector('.emiciclo-nota__disegno'));
               const p = document.querySelector('.emiciclo-nota__frase');
               const lead = document.querySelector('header.ingresso .ingresso__lead');
-              return {svg: [svg.left, svg.top, svg.right, svg.bottom, svg.width], p: [box(p).left, box(p).top, box(p).right, box(p).bottom],
+              return {drawing: document.querySelectorAll('.emiciclo-nota__disegno, .emiciclo-nota svg').length,
                       font: parseFloat(getComputedStyle(p).fontSize), leadFont: parseFloat(getComputedStyle(lead).fontSize),
                       leadBox: [box(lead).left, box(lead).right], noteBox: [box(p.closest('.emiciclo-nota')).left, box(p.closest('.emiciclo-nota')).right],
                       dirs: [getComputedStyle(lead).direction, getComputedStyle(p).direction], form: box(document.querySelector('#formulaire')).top};
             }""")
             where = (lang, width, state)
-            svg, para = state["svg"], state["p"]
-            assert svg[4] >= 96, where  # the drawing at its drawn size
-            assert svg[1] < para[3] and para[1] < svg[3], where  # side by side: they share a row
-            assert svg[2] <= para[0] + 1 if lang == "fr" else para[2] <= svg[0] + 1, (
-                where
-            )  # the drawing at the reading edge
-            assert state["font"] <= 15.5 < state["leadFont"], where  # an annotation, not a second lead
+            assert state["drawing"] == 0, where
+            # an annotation, not a second lead — V5.24 (TYPOGRAPHY_V2 §4.2: the ui step 15, 16 under 48 rem by the phone
+            # step-up; FINAL_DELIVERY_V2 §3.5; V5.20 strict rule): the same invariant, exact — the annotation IS the ui step,
+            # and under the lead (the 15.5 cap predates T's step-up and read a phone's 16 px as a second lead)
+            assert state["font"] == (16 if width == 390 else 15) < state["leadFont"], where
             if lang == "ar":
-                assert state["dirs"] == ["ltr", "ltr"], where  # two French boxes, each from its own start
+                assert state["dirs"] == ["rtl", "rtl"], where  # the page's Arabic (R7′ C-UI), never a French box
                 assert abs(state["leadBox"][1] - state["noteBox"][1]) <= 2, where  # hanging from one reading edge
             if width == 1440:
                 assert state["form"] < height, where  # the formwork still starts in the first screen
@@ -615,34 +613,35 @@ def test_the_pilot_doors_calls_start_on_one_line_and_the_sill_is_their_only_rule
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_campus_frame_stands_from_the_second_plate_and_the_last_plate_lies_over_it(
-    browser, live_server, open_pages, lang
-):
-    """QA_ROUND2 m1 (SECTION_SYSTEM_V2 §3.8 U1): from 64 rem the destination frame stands from the second plate's line
-    beside the route — no longer at the route's end under an empty half column — and the last plate is still laid over
-    its edge."""
-    context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
-    page = context.new_page()
-    try:
-        page.goto(f"{live_server.url}/{lang}/universites-et-formation/", wait_until="load")
-        state = page.evaluate("""() => {
-          const frame = document.querySelector('.filiera__meta').getBoundingClientRect();
-          const plates = [...document.querySelectorAll('.filiera__lastra')].map(p => p.getBoundingClientRect());
-          return {frame: [frame.left, frame.top, frame.right, frame.bottom],
-                  plates: plates.map(r => [r.left, r.top, r.right, r.bottom]), rtl: document.dir === 'rtl'};
-        }""")
-        frame, plates = state["frame"], state["plates"]
-        assert len(plates) == 3 and abs(frame[1] - plates[1][1]) <= 2, state  # from the second plate's line
-        last = plates[2]
-        assert frame[1] < last[3] and last[1] < frame[3], state  # beside the last plate
-        assert last[0] < frame[2] if state["rtl"] else last[2] > frame[0], state  # the last plate laid over its edge
-    finally:
-        context.close()
+def test_the_campus_frame_and_the_note_stand_beside_the_three_cards(browser, live_server, open_pages, lang):
+    """V5.30 Fast Visual Variety Correction §7 UNIVERSITÉS, «campus imagery, stations/cards» (V5.20 strict rule; this decision
+    replaces QA_ROUND2 m1, the last plate laid over the frame's edge): at 1440 and 1024 the frame stands at the reading edge
+    with the band's note under it, its top on the first card's, and each card stands wholly beside it, none over it."""
+    for width, height in ((1440, 900), (1024, 768)):
+        context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion="reduce")
+        page = context.new_page()
+        try:
+            page.goto(f"{live_server.url}/{lang}/universites-et-formation/", wait_until="load")
+            state = page.evaluate("""() => {
+              const box = (e) => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom]; };
+              return {frame: box(document.querySelector('.filiera__meta')), note: box(document.querySelector('.filiera__nota')),
+                      plates: [...document.querySelectorAll('.filiera__lastra')].map(box), rtl: document.dir === 'rtl'};
+            }""")
+            frame, note, plates = state["frame"], state["note"], state["plates"]
+            assert len(plates) == 3, state
+            assert abs(frame[1] - plates[0][1]) <= 2, state  # the first card's top
+            assert note[1] >= frame[3] and abs(note[0] - frame[0]) <= 1 and abs(note[2] - frame[2]) <= 1, state
+            for plate in plates:
+                assert plate[2] <= frame[0] + 0.5 if state["rtl"] else plate[0] >= frame[2] - 0.5, state  # never over it
+        finally:
+            context.close()
 
 
 def test_the_companies_three_moments_open_on_their_numerals(browser, live_server, open_pages):
     """Round 2 (SECTION_SYSTEM_V2 §2 F, a station's ILE Mono numeral at 36; §3.6 EN-1): each of the three moments opens on
-    its numeral, the moments' own order, and from 80 rem the process's caption stands beside the quotation."""
+    its numeral, the moments' own order. V5.30 Fast Visual Variety Correction §7 ENTREPRISES (V5.20 strict rule; it stood
+    beside the quotation from 80 rem, two blocks at unequal sizes): the process's title stands under the quotation, on its
+    panel."""
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
     page = context.new_page()
     try:
@@ -652,10 +651,11 @@ def test_the_companies_three_moments_open_on_their_numerals(browser, live_server
             const cs = getComputedStyle(p, '::before'); return [cs.content, cs.fontSize]; });
           const quote = document.querySelector('.imprese-citazione').getBoundingClientRect();
           const head = document.querySelector('.imprese-demarche .testa').getBoundingClientRect();
-          return {marks, beside: head.left >= quote.right && head.top < quote.bottom};
+          const panel = document.querySelector('.imprese-demarche .flusso').getBoundingClientRect();
+          return {marks, under: head.top >= quote.bottom - 1 && panel.top >= head.bottom - 1};
         }""")
         assert [mark[1] for mark in state["marks"]] == ["36px"] * 3, state
         assert all(mark[0].startswith("counter(") for mark in state["marks"]), state
-        assert state["beside"], state
+        assert state["under"], state
     finally:
         context.close()

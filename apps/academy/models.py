@@ -83,6 +83,28 @@ class TrainingProvider(TimeStampedModel):
     def __str__(self) -> str:
         return self.name
 
+    @property
+    def display_name(self):
+        """
+        The provider's name as the catalogue, the course page, the enrolment and the plan print it (V5.24 §4–§5, the
+        Arabic completeness audit's W3.3; lane AR): the project team's own entry — ``kind == PROJECT``, seeded as
+        «Équipe du projet Italy Legal Entry» — is said in the reader's language, the team's words from the catalogue and
+        the brand as one left-to-right run (the trademark, ``p1.trademark.mark``, never retyped); every other provider
+        keeps the name it registered under.
+        """
+        if self.kind != ProviderKind.PROJECT:
+            return self.name
+        from django.utils.html import format_html
+        from django.utils.translation import gettext
+
+        from cms import locked_content
+
+        return format_html(
+            '{} <span translate="no" dir="ltr" lang="en">{}</span>',
+            gettext("Équipe du projet"),
+            locked_content.text("p1.trademark.mark", "fr"),
+        )
+
 
 # =================================================================================================
 # Courses

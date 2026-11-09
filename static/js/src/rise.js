@@ -8,7 +8,7 @@
  * 18 px low and transparent until it enters (IntersectionObserver), then it RISES over 420 ms by itself, the blocks
  * that enter together 40 ms apart, once.
  *
- * WHAT RISES: a chapter's head, statement and prose; the rows of the lists the pages draw (the registers, the trust
+ * WHAT RISES (before CLOSING; see below): a chapter's head, statement and prose; the rows of the lists the pages draw (the registers, the trust
  * statements, the pathways, the Forum's programme, the FAQ's questions, the glossary's entries, the living topics, the
  * pages' link lists) and the children of lane C's `[data-motion="rise"]` blocks. A pathway row and a programme row also
  * DRAW their rule in gold as they rise (the home's route, the Forum's timeline: v5/_reveal.css).
@@ -17,6 +17,13 @@
  * at, and the LCP is never held; anything inside the page head or the home's hero (their own sequence); everything
  * under reduced motion, under the preview's html.rm, from the keyboard (R-07: the keyboard never animates — a focus
  * inside a held block shows it at once), without IntersectionObserver, without script, in print.
+ *
+ * V5.24 — CLOSING (FINAL_DELIVERY_V2 §3.9 b; SECTION_SYSTEM_V2 §5.1 «translateY + opacity is never a section's motion
+ * again»): the fade-up is no page's default any more. A page without a V2 section (the legal pages, the CMS reading
+ * templates, published news, the partners' register, the questionnaire), where it was the only motion left, draws
+ * everything at rest; a chapter's head, statement and prose never rise (the companies' #formulaire chapter head among
+ * them — its form body is the preserved form's, unchanged); what is left is the rise of the rows of plain lists INSIDE a
+ * page composed of V2 sections (the glossary's and AGAMI's disclosures, the register rows, the programme).
  *
  * V5.22 — THE SECTION RUNTIME (SECTION_SYSTEM_V2 §2.0, lane S). The rise above stays for the rows of plain lists and the
  * pages not recomposed yet (S-close removes it); a V2 section ([data-sec]) is signed by its pattern's own verbs
@@ -45,7 +52,6 @@ const GROUPS = [
   ".glossary__list",
   "[data-motion='rise']",
 ].join(",");
-const SINGLES = "main :is(.chapter__head, .chapter__statement, .chapter__prose, .home-section__more)";
 const OWN_SEQUENCE = ".page-header, .ingresso, .he, [data-stagger], dialog, [hidden]";
 /** The blocks of one batch, 40 ms apart; the ninth and later share the eighth's delay. */
 const MAX_STEP = 8;
@@ -63,12 +69,11 @@ function show(element) {
 }
 
 export function initRise() {
-  if (calm()) return;
+  if (calm() || !document.querySelector("[data-sec]")) return;
   const items = new Set();
   document.querySelectorAll(GROUPS).forEach((group) => {
     for (const child of group.children) items.add(child);
   });
-  document.querySelectorAll(SINGLES).forEach((element) => items.add(element));
   const fold = window.innerHeight * 0.92;
   // read every place first, then write: one layout, one style pass
   const held = [...items].filter((element) => {
@@ -106,7 +111,6 @@ export function initRise() {
 const MODULES = {
   indice: () => import("./sezioni/indice.js"),
   mappa: () => import("./sezioni/mappa.js"),
-  flow: () => import("./sezioni/flow.js"),
   spia: () => import("./sezioni/spia.js"),
   racconto: () => import("./sezioni/racconto.js"),
 };

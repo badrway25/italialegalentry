@@ -25,6 +25,12 @@ its seal `ile-percorso` at the spine's top, its gold arrival):
     with its status mark, never small print. STAGGER, the route light under the hand;
   * PA-3 — E «il mosaico»: the space's other areas, Formation the wide tile, the help line the grid's foot. STAGGER;
   * then «la protezione», the anti-fraud plate, as its own band on the stone (p3.antifraud.*). DEPTH.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.2–§3.4, §5.3; lane PUB1 — the material pass; the
+composition KEPT): the head → board seam takes «il raccordo» — the board's trunk rises 48 px into the head's foot, the
+span the board's first child (v5/_materia.css, --risale; its x on the trunk, _index.css); the «Comment ça marche» plates
+drop the settle — the tile's foot rule draws, its glyph inks, its floor lights (_index.css §PA-2); E «Dans l'Espace
+Personnes» is «carta viva» (data-luce="origine": one radial light at the band's origin corner); K «la protezione» stands
+on «pietra» (the drafting grid on the far side, the shield bookend, the sill). The page sheet imports v5/_materia.css.
 
 Before V5.12: Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): the entrance with the person door, whose card
 carries the door's way in — the questionnaire, the page's ONE action, in the first screen (W3-F1's review M1); then
@@ -45,16 +51,20 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/i
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
 {% locked_is_fallback "p3.persons.title" as title_fallback %}{% locked_lang "p3.persons.title" as title_lang %}
+{% locked_is_fallback "p3.persons.intro" as intro_fallback %}{% locked_lang "p3.persons.intro" as intro_lang %}{% locked_caption "p3.persons.intro" as intro_caption %}
 {% locked "p3.persons.title" as title_html %}{% locked "p3.persons.intro" as intro_html %}{% translate "Espace Personnes" as space_label %}
 {% translate "Identifiez la voie régulière à explorer" as way_title %}{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." as way_text %}{% translate "Commencer le questionnaire d’orientation" as way_label %}{% translate "Le questionnaire d’orientation sera disponible prochainement." as way_pending %}
 {% if title_fallback %}
 {% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=intro_html lead_lang=title_lang audience="person" slot="pathways.hero" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
+{% elif intro_fallback %}{# V5.27 / R7′ (/ar/): the title in its provisional Arabic, the intro the French source with its caption #}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=intro_html lead_lang=intro_lang lead_caption=intro_caption audience="person" slot="pathways.hero" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
 {% else %}
 {% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=intro_html audience="person" slot="pathways.hero" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
 {% endif %}
 
 {% translate "Les parcours réguliers" as pathways_title %}{% translate "Huit voies d’entrée régulière, présentées avec leurs principales étapes. Chaque fiche est informative : la voie adaptée à votre situation se vérifie avec le questionnaire d’orientation et auprès des acteurs compétents." as pathways_lead %}
 <section class="sez sez--tracciato percorsi-famiglie" data-sec="tracciato" data-ground="paper" data-rhythm="moment" aria-labelledby="pathways-title">
+  <span class="sez-raccordo sez-raccordo--risale" data-verb="draw-y" aria-hidden="true"></span>
   <div class="container">
     {% include "components/sezioni/_testa.html" with role="statement" title_id="pathways-title" title=pathways_title lead=pathways_lead only %}
     {% include "pathways/_tracciato.html" with lanes=lanes counts=family_counts orientation=links.orientation only %}
@@ -71,7 +81,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/i
       <ol class="come__tappe sez-seq" role="list" data-registro data-steps="{{ how_steps|length }}">
         {% for item in how_steps %}<li class="come__tappa{% if item.url %} come__tappa--via{% endif %}">
           <span class="come__num" aria-hidden="true"></span>
-          <span class="come__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+          <span class="come__nodo sez-tile" data-verb="ink" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
           <p class="come__testo"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{% if item.url %}<a class="come__link" href="{{ item.url }}">{{ item.text }}</a>{% else %}{{ item.text }}{% endif %}{% if not item.last %}<span class="visually-hidden"> {{ how.arrow }}</span>{% endif %}</p>
         </li>{% endfor %}
       </ol>
@@ -84,7 +94,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/i
 </section>
 
 {% translate "Dans l’Espace Personnes" as space_links_title %}
-<section class="sez sez--mosaico percorsi-spazio" data-sec="mosaico" data-ground="paper" data-rhythm="band" aria-labelledby="space-links-title">
+<section class="sez sez--mosaico percorsi-spazio" data-sec="mosaico" data-ground="paper" data-luce="origine" data-rhythm="band" aria-labelledby="space-links-title">
   <div class="container">
     {% include "components/sezioni/_testa.html" with role="router" title_id="space-links-title" title=space_links_title only %}
     {% include "components/sezioni/mosaico.html" with variant="grid" tiles=tiles label=space_links_title only %}
@@ -92,7 +102,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/i
   </div>
 </section>
 
-<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="stone" data-rhythm="band" aria-labelledby="protezione-title-index">
+<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="pietra" data-rhythm="band" aria-labelledby="protezione-title-index">
   <div class="container">
     {% include "components/sezioni/protezione.html" with url=links.antifraud level=2 suffix="index" only %}
   </div>

@@ -175,11 +175,30 @@ def test_every_line_height_is_a_multiple_of_four():
     assert offenders == [], offenders
 
 
+#: TYPOGRAPHY_V2 §4.2 (approved: V5.24 §11–§14, FINAL_DELIVERY_V2 R1): the four fluid steps — the display line and the
+#: three title steps; every other step is fixed.
+FLUID_STEPS = ["--t-band", "--t-display", "--t-title-1", "--t-title-2"]
+#: the prose: running text, the same size and line at every width
+PROSE_STEPS = ("--t-prose-size", "--t-prose-lh", "--t-body", "--t-body-lh")
+
+
+def _resolved(tokens: dict[str, str], value: str) -> str:
+    for _ in range(10):  # aliases resolve in a few steps; a cycle would leave a var() and fail below
+        value = re.sub(r"var\((--[a-z0-9-]+)\)", lambda m: tokens.get(m.group(1), m.group(0)), value)
+    return value
+
+
 def test_prose_size_never_changes_across_breakpoints():
     """
     Fluid interpolation is what flattened the previous hierarchy: the heading-to-prose ratio fell
-    from 1.62 at 1920 to 1.35 at 390. Prose does not move at all, in any layer of the cascade. Design V5
-    (V5.4 plan §1.1) keeps one fluid size and one only: the display line, clamp 40 → 64.
+    from 1.62 at 1920 to 1.35 at 390. Prose does not move at all, in any layer of the cascade.
+
+    v524-cifix (V5.20 strict rule; the old expectation conflicted with an approved decision): Design V5 kept ONE fluid
+    size (V5.4 plan §1.1, the display line); Typography V2 — approved, V5.24 §11–§14, FINAL_DELIVERY_V2 R1,
+    TYPOGRAPHY_V2 §4.2 — declares FOUR, the display line and the three title steps, «clamp() only here». The invariant
+    is restated on the decision and made stronger: the prose steps never change at a breakpoint (as before, with the
+    prose line added) and resolve to a fixed length, no clamp() nor viewport unit (new); the fluid steps are EXACTLY
+    the declared set (equality, never ≥), and a fluid step is a clamp(), never a bare viewport unit (new).
     """
     imports = re.findall(r'@import url\("([^"]+)"\)', (STATIC / "css" / "main.css").read_text(encoding="utf-8"))
     for sheet in imports:
@@ -190,11 +209,16 @@ def test_prose_size_never_changes_across_breakpoints():
                 depth += {"{": 1, "}": -1}.get(code[end], 0)
                 end += 1
             block = code[start:end]
-            for name in ("--t-prose-size:", "--t-body:", "--t-body-lh:"):
-                assert name not in block, f"{sheet}: prose size must not change at a breakpoint ({name})"
+            for name in PROSE_STEPS:
+                assert f"{name}:" not in block, f"{sheet}: prose size must not change at a breakpoint ({name})"
     tokens = _tokens()
-    fluid = sorted(name for name, value in tokens.items() if name.startswith("--t-") and "clamp(" in value)
-    assert fluid == ["--t-display"], fluid
+    for name in PROSE_STEPS:
+        value = _resolved(tokens, tokens[name])
+        assert re.fullmatch(r"\d+(\.\d+)?(rem|px)", value), (name, value)
+    fluid = sorted(name for name, value in tokens.items() if name.startswith("--t-") and ("clamp(" in value or "vw" in value))
+    assert fluid == FLUID_STEPS, fluid
+    for name in FLUID_STEPS:
+        assert tokens[name].startswith("clamp(") and tokens[name].endswith(")"), (name, tokens[name])
 
 
 @pytest.mark.parametrize("label, fg, bg, minimum", CONTRAST_PAIRS, ids=[p[0] for p in CONTRAST_PAIRS])

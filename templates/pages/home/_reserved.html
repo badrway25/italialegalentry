@@ -26,7 +26,7 @@ button, so the key turns where the eye already is; the words hang from the readi
         <p class="home-reserved__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>
       </div>
       <div class="home-reserved__porta">
-        {% include "components/sezioni/sigillo.html" with mark="ile-accesso" size="small" night=True css_class="home-reserved__sigillo" only %}
+        {% include "components/sezioni/sigillo.html" with mark="ile-accesso" size="small" arch=True night=True css_class="home-reserved__sigillo" only %}
         <a class="btn btn--secondary home-reserved__button" href="{{ d.url }}"{% if d.button.lang %} lang="{{ d.button.lang }}"{% endif %} data-azione>{{ d.button }}</a>
       </div>
     </div>

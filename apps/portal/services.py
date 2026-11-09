@@ -645,17 +645,25 @@ def may_upload(user) -> bool:
     return bool(helper(user)) if callable(helper) else False
 
 
-def documents_page(user) -> dict[str, Any]:
-    """Own documents (+ those of an organisation the account is responsible for); upload entry point."""
+def documents_page(user, narrow=None) -> dict[str, Any]:
+    """Own documents (+ those of an organisation the account is responsible for); upload entry point.
+
+    `narrow` (V5.30, the platform's list toolkit: portal.lists.FILES) narrows and orders the account's own files — the
+    queryset scoped here, returned as `documents_scoped` for the toolkit's counts and choices; never the organisation's
+    files.
+    """
+    scoped = None
     try:
-        own = [_present_document(d, own=True) for d in documents_for(user)]
+        scoped = documents_for(user)
+        own = [_present_document(d, own=True) for d in (narrow(scoped) if narrow else scoped)]
         shared = organisation_documents_for(user)
         available = True
     except SIBLING_ERRORS:
         log.exception("portal documents unavailable", extra={"event": "portal.documents_unavailable"})
-        own, shared, available = [], [], False
+        own, shared, available, scoped = [], [], False, None
     return {
         "documents": own,
+        "documents_scoped": scoped,
         "organisation_documents": shared,
         "organisation_documents_limit": ORGANISATION_DOCUMENTS_LIMIT
         if len(shared) >= ORGANISATION_DOCUMENTS_LIMIT
@@ -2038,7 +2046,25 @@ DASHBOARD_GLYPHS: dict[str, str] = {
     "academy": icons.concept("nav", "academy"),
     "assessment": icons.concept("journey", "oriented"),
     "deposits": "history",
+    "activity": "history",
 }
+
+#: «Activité récente» (V5.30, stream C: the role dashboards show recent activity «only from existing audit / history
+#: data»): the person's file's latest events, read from the audit trail by the case file's own presenter
+#: (cases.presenters.timeline — the actor a type, never a name), the whole history one link away on the file.
+DASHBOARD_ACTIVITY = 3
+
+
+def _dashboard_activity(user, case) -> list[dict]:
+    if case is None:
+        return []
+    try:
+        from cases import presenters as case_presenters
+
+        return case_presenters.timeline(case, limit=DASHBOARD_ACTIVITY, reader=user)
+    except SIBLING_ERRORS:
+        log.exception("portal dashboard activity unavailable", extra={"event": "portal.activity_unavailable"})
+        return []
 
 
 # ---- The NowPanel: the person's dashboard's one raised panel, chosen by the system --------------------------
@@ -2350,6 +2376,7 @@ def case_lines(user, case, checklist, *, own: bool | None = None) -> list[dict[s
     """
     from cases import presenters as case_presenters
     from documents.requirements import due_urgency
+    from documents.services import displayed_text
 
     if own is None:
         own = getattr(case, "person_id", None) == getattr(user, "pk", object())
@@ -2377,6 +2404,14 @@ def case_lines(user, case, checklist, *, own: bool | None = None) -> list[dict[s
     for item in checklist:
         urgency = due_urgency(item.due_date, overdue=item.is_overdue) if item.due_date and item.is_open else ""
         anchor = f"line-{item.pk}"
+        # lane AR's W3.2 (FINAL_DELIVERY_V2 §3.7, §3.8; documents.services.displayed_text): the line's words through
+        # the reader's catalogue when an entry exists — the row is then in the page's language and carries no lang /
+        # dir of its own; otherwise the record's words, isolated in the record's language. The title and the detail
+        # share one lang / dir in the templates: a line whose detail has no entry keeps both in the record's words
+        title, title_lang = displayed_text(item.requirement, item.language)
+        detail, detail_lang = displayed_text(item.detail, item.language)
+        if item.detail and detail_lang != title_lang:
+            title, detail, title_lang = item.requirement, item.detail, item.language
         rows.append(
             {
                 "pk": item.pk,
@@ -2384,9 +2419,9 @@ def case_lines(user, case, checklist, *, own: bool | None = None) -> list[dict[s
                 "anchor": anchor,
                 "menu_id": f"{anchor}-menu",
                 "dialog_id": f"{anchor}-state",
-                "title": item.requirement,
-                "detail": item.detail,
-                "words": _data_lang(item.language),
+                "title": title,
+                "detail": detail,
+                "words": _data_lang(title_lang),
                 "state": item.status,
                 "state_label": item.get_status_display(),
                 "responsible_actor": item.responsible_actor,
@@ -2727,8 +2762,41 @@ def company_dashboard(company, needs, action, *, user=None) -> dict[str, Any]:
     return {
         "now": company_now_panel(company, action, need, transmit=transmit),
         "needs_ledger": _company_needs(needs, skip=need) if needs else {},
+        "activity": _company_activity(needs),
         "glyphs": COMPANY_GLYPHS,
     }
+
+
+def _company_activity(needs) -> list[dict[str, Any]]:
+    """
+    The company's «Activité récente» (V5.30, stream C — recent activity «only from existing audit / history data»):
+    the latest events of ITS needs — `needs` is the list the company app already scoped (companies.services.needs_of) —
+    read from companies.NeedEvent, the company's own copy of each need's history: a state, a date, the need it moved,
+    a party named by organisation or role, never a person. Newest first, the dashboard's three; each row opens its need.
+    """
+    if not needs:
+        return []
+    try:
+        from companies.models import NeedEvent
+
+        events = list(
+            NeedEvent.objects.filter(need__in=needs)
+            .select_related("need")
+            .order_by("-created_at", "-id")[:DASHBOARD_ACTIVITY]
+        )
+    except SIBLING_ERRORS:
+        log.exception("company dashboard activity unavailable", extra={"event": "portal.company_activity_unavailable"})
+        return []
+    return [
+        {
+            "when": event.created_at,
+            "title": event.need.title,
+            "status": event.to_status,
+            "status_label": event.get_to_status_display(),
+            "url": safe_reverse("companies:need_detail", event.need.reference),
+        }
+        for event in events
+    ]
 
 
 #: Two figures and the word between them — «0 sur 5», «0 من 5», «0 of 5» — kept on one line.
@@ -2906,6 +2974,7 @@ def dashboard_context(user) -> dict[str, Any]:
         "assessment": _dashboard_assessment(legacy, assessment),
         "documents": _safe_rows("documents", _dashboard_documents, user),
         "pieces": pieces,
+        "activity": _dashboard_activity(user, case) if person else [],
         "academy": _safe_rows("academy", _dashboard_academy, user),
         "messages_list": messages_list,
         "deadlines": deadlines,

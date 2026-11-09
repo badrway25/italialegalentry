@@ -17,6 +17,12 @@ no photograph (Q4: no stock as the Forum; Q5: no archive): its images are drawn.
         punctuation kept in the night's second ink; the four that name an ILE audience carry its disc; no link inside
         the sentence (RELATIONAL DRAW + SETTLE). A phone reads a vertical constellation.
 Without a cut that rebuilds its text, a text stands whole (forum_v2). The anchors and the page index are unchanged.
+V5.24 (BACKGROUND_MATERIAL_V2 §3.2, §3.3, §5.2; FINAL_DELIVERY_V2 §3.6, R3; lane PUB2): FO2a stands on STONE (night → paper
+→ stone → night → stone: the paper → paper touch goes), and the seam A → I is «il raccordo» — the stations' line starts in
+the pair's foot: a 2 px structure line, the FIRST CHILD of the band it enters (v5/_materia.css), rises 48 px (32 on
+phones) into the pair and runs down to the band's head line, where its node lands; from 64 rem it stands on the
+objectives' station axis (the title moved onto the stations' text axis, the grey route line run up to the node), below
+it on the reading edge where the statement's rule stood (forum/_forum.css). It draws once, after the band's own line.
 {% endcomment %}
 {% event_text event "who.title" as who_title %}{% event_text event "why.title" as why_title %}
 {% forum_raw event "who.body" as who_text %}{% forum_raw_lang event "who.body" as who_lang %}
@@ -29,7 +35,6 @@ Without a cut that rebuilds its text, a text stands whole (forum_v2). The anchor
     </div>
     <span class="forum-pair__divisore" aria-hidden="true"></span>
     <div class="forum-pair__item" id="forum-why">
-      <svg class="forum-pair__luce" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="forum-luce" x1="0" y1="0" x2="1" y2="0.18"><stop offset="0.3" stop-color="currentColor" stop-opacity="0"/><stop offset="0.5" stop-color="currentColor" stop-opacity="0.12"/><stop offset="0.7" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs><rect width="100" height="100" fill="url(#forum-luce)"/></svg>
       <h2 class="forum-titolo" id="forum-why-title">{{ why_title }}</h2>
       <p class="forum-pair__perche"{% if why_lang %} lang="{{ why_lang }}"{% endif %} data-locked="p2.forum.why.body">{{ why_text|locked_spans:"sentence" }}</p>
     </div>
@@ -39,7 +44,7 @@ Without a cut that rebuilds its text, a text stands whole (forum_v2). The anchor
 {% event_text event "what.title" as what_title %}{% event_text event "objectives.title" as objectives_title %}
 {% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
 {% forum_mark as objectives_mark %}{% forum_raw event "objectives.body" as objectives_text %}{% forum_raw_lang event "objectives.body" as objectives_lang %}
-<section class="sez sez--filo forum-filo" data-sec="filo" data-ground="paper" data-rhythm="band" aria-labelledby="forum-what-title">
+<section class="sez sez--filo forum-filo" data-sec="filo" data-ground="stone" data-rhythm="band" aria-labelledby="forum-what-title">
   <div class="container forum-filo__griglia">
     <div class="forum-filo__cosa" id="forum-what">
       <h2 class="forum-titolo" id="forum-what-title">{{ what_title }}</h2>

@@ -14,12 +14,6 @@
    Logical properties only; tokens only; motion under no-preference and never on html.rm.
    ============================================================================================ */
 
-/* ---- 1 · the editorial split ------------------------------------------------------------------------------- */
-.destinataires__photo {
-  margin-block-start: var(--s-8);
-  max-inline-size: 34rem;
-}
-
 @media (min-width: 64rem) {
   .destinataires .chapter__body {
     display: grid;
@@ -31,27 +25,6 @@
   .destinataires .chapter__body > * {
     grid-column: 1;
   }
-
-  .destinataires .chapter__body > .destinataires__photo {
-    grid-column: 2;
-    grid-row: 1 / span 4;
-    margin-block-start: var(--s-6);
-  }
-}
-
-/* ---- 2 · the photographic band ----------------------------------------------------------------------------- */
-.bande-foto {
-  padding-block: 0 var(--s-12);
-  background: linear-gradient(180deg, transparent 0 40%, var(--surface-area) 40% 100%);
-}
-
-.bande-foto__frame img {
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-4);
-}
-
-.bande-foto + .chapter {
-  border-block-start: 0;
 }
 
 /* ---- 3 · the second time ----------------------------------------------------------------------------------- */
@@ -111,25 +84,6 @@
 .spazi .page-links__link {
   color: var(--text-1);
   text-decoration: none;
-}
-
-.spazi .registro__text.spazi__text {
-  max-inline-size: 34em;
-  padding-inline-start: 0;
-  margin: var(--s-2) 0 0;
-  font-size: var(--t-ui);
-  line-height: 1.5;
-  color: var(--text-2);
-}
-
-.spazi .registro__glyph {
-  box-sizing: content-box;
-  inline-size: 22px;
-  block-size: 22px;
-  padding: 13px;
-  border-radius: var(--radius-full);
-  color: var(--accent-mark);
-  background: var(--accent-wash);
 }
 
 /* the whole tile is the link's target */

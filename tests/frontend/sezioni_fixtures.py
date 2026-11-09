@@ -235,9 +235,9 @@ PASSAGGIO = (
     '<p{% if e.lang %} lang="{{ e.lang }}"{% endif %}><span class="link-arrow">{{ e.button }}</span></p>'
     '</li>{% endfor %}</ol></div>'
 )
-#: F · «il flusso» — the measured connector (components/sezioni/flusso.html, sezioni/flow.js through the nodes'
-#: [data-flow-node]): Entreprises EN-1's three moments (team strings of apps/ecosystem/services.py, glyphs
-#: icons.COMPANY_MOMENT), their panels hung on one curve, the terminal plate and the end call under it
+#: F · «il flusso» — one panel (components/sezioni/flusso.html, V5.30 Fast Visual Variety Correction §7): Entreprises EN-1's
+#: three moments (team strings of apps/ecosystem/services.py, glyphs icons.COMPANY_MOMENT) as its cells, the terminal plate
+#: and the end call under it
 FLUSSO = (
     '{% include "components/sezioni/flusso.html" with steps=moments terminal=terminal end_action=campata_action %}'
 )

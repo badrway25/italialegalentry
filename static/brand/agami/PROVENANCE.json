@@ -1,0 +1,185 @@
+{
+ "what": "The promoter's own marks (V5.30 §8; label v530-agami-build): AGAMI's official logo, served by the AGAMI page (templates/pages/agami.html); registered in apps/pages/imagery.py (MARKS).",
+ "builder": "tools/build_derivatives.py --marks (originals outside the repository: the AGAMI website project, read-only; never hotlinked)",
+ "policy": "AGAMI's own published institutional assets: no third party's licence, no visible credit. Drawn whole: never cropped, graded, recoloured or mirrored (in Arabic too: the ribbon's national colours are never mirrored). Metadata, XMP and ICC stripped. No photograph of a person; no person named. The checks: docs/design-v5/QA/v530/agami/PROVENANCE.md; tests/compliance/test_agami_assets_v530.py.",
+ "marks": [
+  {
+   "slug": "agami-insegna",
+   "kind": "logo",
+   "form": "framed",
+   "what": "the official logo, framed form: the scales of justice crossed by a ribbon in the colours of Italy and Morocco, the word mark AGAMI Research Center, the motto line, Italia · Marocco · Mediterraneo and the Arabic line, inside its own navy frame, on white",
+   "source": "AGAMI website project, file foto/logo-agami2.png",
+   "published": "https://agamieuromed.org/ (the same mark in the site's header, footer and seal forms)",
+   "rights": "AGAMI's own published institutional asset (the promoter's official logo); no third party's licence, no visible credit",
+   "original_px": [
+    2172,
+    724
+   ],
+   "original_mode": "RGB",
+   "original_sha256": "3794ec059078c38a848bf62c7ba068e9e3ef777c57eb2c32987fbd2ef9e78e8d",
+   "treatment": "none of the photographic grade: never cropped, recoloured or upscaled; Lanczos down to each width; AVIF (speed 4, 4:4:4) + WebP (method 6); EXIF, XMP and ICC left out",
+   "ceiling": 61440,
+   "files": [
+    {
+     "file": "agami-insegna-480.avif",
+     "width": 480,
+     "height": 160,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 9414,
+     "budget": 61440,
+     "sha256": "0c054459e8000f6a7d813bd29a759d9874cbd9adffe6508e5140ffe4cbf0bd27"
+    },
+    {
+     "file": "agami-insegna-480.webp",
+     "width": 480,
+     "height": 160,
+     "format": "webp",
+     "quality": 82,
+     "bytes": 14204,
+     "budget": 61440,
+     "sha256": "05b3b30fcaeeccae463e4cba8d7794c3ae001c1e6b1bcf76c2e3c0d84ef7f1e3"
+    },
+    {
+     "file": "agami-insegna-800.avif",
+     "width": 800,
+     "height": 267,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 16753,
+     "budget": 61440,
+     "sha256": "d8456718cd505a5e2e9fd999b5416fd5074026e833f2808dc24bc4f7e708a1b3"
+    },
+    {
+     "file": "agami-insegna-800.webp",
+     "width": 800,
+     "height": 267,
+     "format": "webp",
+     "quality": 82,
+     "bytes": 27656,
+     "budget": 61440,
+     "sha256": "cb697edc51ae01d449674f65108acb06f39cdb9db1347016eb8a55f6398fb822"
+    },
+    {
+     "file": "agami-insegna-1200.avif",
+     "width": 1200,
+     "height": 400,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 28649,
+     "budget": 61440,
+     "sha256": "3b7d6b5ea8c18018b37619488e9aad5a07898d6df8f708ab3807a3383bc435c1"
+    },
+    {
+     "file": "agami-insegna-1200.webp",
+     "width": 1200,
+     "height": 400,
+     "format": "webp",
+     "quality": 82,
+     "bytes": 44204,
+     "budget": 61440,
+     "sha256": "6c4988511237a838a3b08658dd5454d9fa5b55061a30e9d44ac964950acbde63"
+    },
+    {
+     "file": "agami-insegna-1600.avif",
+     "width": 1600,
+     "height": 533,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 43340,
+     "budget": 61440,
+     "sha256": "3c1cf46f7fb927382b3da5cc7b88098a03a65625a3ae56a827f8b38b6f8a2da4"
+    },
+    {
+     "file": "agami-insegna-1600.webp",
+     "width": 1600,
+     "height": 533,
+     "format": "webp",
+     "quality": 80,
+     "bytes": 58974,
+     "budget": 61440,
+     "sha256": "2bf4eb8ba73d85dd36220ad2072b5dc150b529492139ba3f62488a4f3decacd3"
+    }
+   ]
+  },
+  {
+   "slug": "agami-sigillo",
+   "kind": "logo",
+   "form": "seal",
+   "what": "the official logo, round seal form, on transparency",
+   "source": "AGAMI website project, file core/static/core/img/brand/agami-admin-logo.png",
+   "published": "https://agamieuromed.org/ (the site's round mark, logo-agami-mark)",
+   "rights": "AGAMI's own published institutional asset (the promoter's official logo); no third party's licence, no visible credit",
+   "original_px": [
+    353,
+    356
+   ],
+   "original_mode": "RGBA",
+   "original_sha256": "4549480b81754aca62e5884b980b027a334cc942ee3f5709cf471219b907ffd6",
+   "treatment": "none of the photographic grade: never cropped, recoloured or upscaled; Lanczos down to each width; AVIF (speed 4, 4:4:4) + WebP (method 6), the alpha kept; EXIF, XMP and ICC left out",
+   "ceiling": 30720,
+   "files": [
+    {
+     "file": "agami-sigillo-176.avif",
+     "width": 176,
+     "height": 177,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 8522,
+     "budget": 30720,
+     "sha256": "654dba81ce155ae8c14d2275606e1dd2612a00b3b1c0ddee6ae1e5ceef21491e"
+    },
+    {
+     "file": "agami-sigillo-176.webp",
+     "width": 176,
+     "height": 177,
+     "format": "webp",
+     "quality": 82,
+     "bytes": 12174,
+     "budget": 30720,
+     "sha256": "6e58863acbf8febd9554fa2b8673f8e7352a27b19d186bd7e43d96d5264d44ed"
+    },
+    {
+     "file": "agami-sigillo-264.avif",
+     "width": 264,
+     "height": 266,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 14022,
+     "budget": 30720,
+     "sha256": "4b4547e2c756a5a940055c1c3d16293aabf4b5fed483f64b0a10732dcdc81d10"
+    },
+    {
+     "file": "agami-sigillo-264.webp",
+     "width": 264,
+     "height": 266,
+     "format": "webp",
+     "quality": 82,
+     "bytes": 21418,
+     "budget": 30720,
+     "sha256": "24a268033c8dd35467bf2157a191d85c55f49d15b8bd7380d73fd74c61a1b6a9"
+    },
+    {
+     "file": "agami-sigillo-353.avif",
+     "width": 353,
+     "height": 356,
+     "format": "avif",
+     "quality": 60,
+     "bytes": 16050,
+     "budget": 30720,
+     "sha256": "562a6f3d9dc891f1ed42ce80944f81670eab5c0d56673b60aee8e14ca5631eab"
+    },
+    {
+     "file": "agami-sigillo-353.webp",
+     "width": 353,
+     "height": 356,
+     "format": "webp",
+     "quality": 82,
+     "bytes": 26628,
+     "budget": 30720,
+     "sha256": "23542730d5ff0f79b7d7197c0f6509fe1e67084f09ad7671e2f1ae70f9967440"
+    }
+   ]
+  }
+ ]
+}

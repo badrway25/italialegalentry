@@ -2,12 +2,14 @@
 THE NOTICE AS THE HEAD'S PANEL — /attention-aux-fraudes/ (round 1 of W3, label v515-c-improve1): the prescribed text
 (p3.antifraud.body, verbatim) moves from the first chapter into the band, beside the prescribed title; the same warning
 notice of the core components (v5/notice.css), its mark once, its title «Votre protection», no red, no alarm.
+V5.27 / R7′ (the v524-pub2 steward): on /ar/ the body is the French source on its own page, preceded by its
+identification caption ({% locked_caption %}: "" on a page whose language the text is written in).
 {% endcomment %}<div class="ingresso__aside fronte-avviso">
   <div class="antifraud-panel antifraud-panel--page notice notice--warning" data-callout="antifraud">
     {% svg_icon "shield-alert" "icon notice__icon antifraud-panel__mark" %}
     <h2 class="notice__title antifraud-panel__title" id="antifraud-inset-title">{% translate "Votre protection" %}</h2>
     <div class="notice__body antifraud-panel__content">
-      <p class="antifraud-panel__body"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body }}</p>
+      {% locked_caption "p3.antifraud.body" %}<p class="antifraud-panel__body"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body }}</p>
     </div>
   </div>
 </div>

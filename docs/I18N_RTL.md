@@ -286,6 +286,21 @@ i termini fondamentali sono anche in `tests/i18n/test_catalogues.py::test_glossa
 > Communications / التبادلات» (in arabo la sezione non ripete più la voce «المراسلات»); «Votre rôle» in italiano è
 > «Il suo ruolo» (registro del «Lei», come «La sua area»).
 
+> **V5.24 / V5.27 (6 novembre 2026, corsia AR) — estensioni terminologiche.** «Équipe du projet» (il fornitore
+> dell'Academy di tipo progetto, `TrainingProvider.display_name`, seguito dal marchio in un'unica sequenza
+> sinistra-destra) = «Team del progetto» / «Project team» / «فريق المشروع». La didascalia d'identificazione di un testo
+> prescritto mostrato nella sua lingua sorgente (`msgctxt "locked caption"`): «Texte source en français — traduction
+> arabe en cours de validation.» = «Testo sorgente in francese — traduzione araba in corso di validazione.» / «Source
+> text in French — Arabic translation pending validation.» / «النص المصدر بالفرنسية — الترجمة العربية قيد التحقق.»;
+> per il testo italiano facente fede «النص الإيطالي المعتمد — الترجمة العربية قيد التحقق.»; la riga di rimando del
+> blocco nascosto fuori dalla sua pagina «النص المصدر بالفرنسية على صفحة «…» — الترجمة العربية قيد التحقق.». La
+> descrizione del mega-menu «Entreprises» riformulata (W1.1): «Faites connaître les métiers et les compétences dont
+> votre entreprise a besoin.» = «أعلِمونا بالمهن والكفاءات التي تحتاجها شركتكم.». I settori e le regioni delle
+> imprese (`pgettext("companies taxonomy", …)`) e i documenti richiesti (`pgettext("document requirement", …)`) sono
+> voci di catalogo con contesto. Le rese arabe provvisorie dei testi prescritti compositivi (C-UI) non sono voci di
+> catalogo: stanno in `apps/cms/locked_renderings.py`, accanto al registro, con lo stato interno «PROVISIONAL — PENDING
+> LANGUAGE/LEGAL REVIEW» (registro: `docs/design-v5/QA/v524/ar/LOCKED_BLOCKS_REGISTER.md`).
+
 «Forum Vénétie–Maroc» resta tale in it / en; in arabo «منتدى Vénétie–Maroc» (nome proprio latino invariato).
 «Privacy Policy» e «Cookie Policy» restano in originale in ogni lingua, come sul sito.
 
@@ -472,7 +487,7 @@ dei punti elenco in fallback latino è stato corretto il 20/09/2026 ed è regist
 
 | ID | Gravità | Difetto | Owner / file | Correzione richiesta | Test |
 |---|---|---|---|---|---|
-| I18N-04 | bassa | Tre msgid derivati da testi prescritti restano francesi in ogni lingua (`KEEP_SOURCE` in `scripts/i18n_audit.py`): descrizione del mega-menu «Entreprises» (`apps/cms/templatetags/cms_nav.py`), occhiello del Forum (`templates/forum/partials/hero.html`), meta description di `templates/living/topic.html` | owner dei rispettivi file | riformulare la stringa o renderla dal registro con `{% locked %}` (che aggiunge `lang="fr"`) | `tests/i18n/test_catalogues.py::test_locked_derived_msgids_are_never_translated` |
+| I18N-04 | bassa | Tre msgid derivati da testi prescritti restano francesi in ogni lingua (`KEEP_SOURCE` in `scripts/i18n_audit.py`). V5.24 W1.1 (6/11/2026, corsia AR): la descrizione del mega-menu «Entreprises» (`apps/cms/templatetags/cms_nav.py`) è riformulata e non è più derivata; la stessa frase resta però letterale in `templates/ecosystem/companies.html` (riga d'accesso e pannello del modulo). Restano: quella frase, l'occhiello del Forum (`templates/forum/partials/hero.html`), la meta description di `templates/living/topic.html` | PUB1 (`ecosystem/companies.html`), PUB2 (`forum/partials/hero.html`, `living/topic.html`) | riformulare la stringa o renderla dal registro con `{% locked %}`; poi la riga di `KEEP_SOURCE` va tolta | `tests/i18n/test_catalogues.py::test_locked_derived_msgids_are_never_translated`; su /ar/ `tests/i18n/test_arabic_completeness.py` (righe del burn-down di `tests/i18n/arabic_allowlist.py`) |
 
 Limiti noti (non difetti):
 

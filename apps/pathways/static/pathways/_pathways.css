@@ -25,27 +25,6 @@
   padding-block-end: var(--s-12);
 }
 
-/* W4-A, D5 — a passage's forward link stands alone in its paragraph: one box of its line's height at least; 44 px
-   under a finger (SP-8). V5.22: no page of the family draws «la linea»'s forward link any more (§3.5 PS-1 «il filo»,
-   §3.9 F1 «la traversata», §3.10 D1 «il dossier»); the rule stays, pinned by tests/frontend/test_mobile_rtl_w4_a.py,
-   for S-close's coverage-measured dead-rule pass (SECTION_SYSTEM_V2 §9.6), which retires the rule and its guard. */
-.linea__more a {
-  display: inline-block;
-}
-
-@media (pointer: coarse) {
-  .linea__more a {
-    position: relative;
-  }
-
-  .linea__more a::after {
-    content: "";
-    position: absolute;
-    inset-block: min(0px, calc(50% - var(--hit-primary) / 2));
-    inset-inline: 0;
-  }
-}
-
 .pathway-figure .figura,
 .pathway-figure__img {
   max-inline-size: 48rem;

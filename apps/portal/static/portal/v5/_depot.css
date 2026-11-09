@@ -33,10 +33,6 @@
   color: var(--text-1);
 }
 
-:lang(ar) .doc-piece__h2 {
-  letter-spacing: 0;
-}
-
 /* ---- 1 · The state: the word, its rule, this piece's reason --------------------------------- */
 .doc-piece__state {
   display: grid;

@@ -46,7 +46,7 @@ attendance record is personal — and the clause says so before anything else.
     <h2 class="db-h2 reg-sec__title" id="plan-facts-title">{% svg_icon "book-open" "icon" %}<span>{% translate "D’où vient ce parcours" %}</span></h2>
     <dl class="portal-facts">
       <div class="portal-facts__row"><dt>{% translate "Origine" %}</dt><dd>{{ plan.get_origin_display }}</dd></div>
-      <div class="portal-facts__row"><dt>{% translate "Référence de l’origine" %}</dt><dd>{% if plan.origin_reference %}<span class="reg-ref">{{ plan.origin_reference }}</span>{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Référence de l’origine" %}</dt><dd>{% if plan.origin_reference %}<span dir="auto">{{ plan.origin_reference }}</span>{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "État" %}</dt><dd>{% chip plan.status "academy.PlanStatus" %}{{ plan.get_status_display }}{% endchip %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Dossier lié" %}</dt><dd>{% if plan.case %}<span class="reg-ref">{{ plan.case.reference }}</span>{% else %}—{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Établi le" %}</dt><dd><time datetime="{{ plan.created_at|date:'c' }}">{{ plan.created_at|date:"d.m.Y" }}</time></dd></div>
@@ -64,7 +64,7 @@ attendance record is personal — and the clause says so before anything else.
         <div class="db-task__words">
           <h3 class="db-task__title" lang="{{ row.course.text_language }}" dir="auto">{% if course_url %}<a class="reg-row__link" href="{{ course_url }}">{{ row.course.title }}</a>{% else %}{{ row.course.title }}{% endif %}</h3>
           <p class="db-task__meta reg-row__text" dir="auto">{% if row.item.rationale %}{{ row.item.rationale }}{% else %}{{ row.course.summary }}{% endif %}</p>
-          <p class="db-task__meta reg-row__meta"><span>{{ row.course.provider.name }}</span><span>{% blocktranslate with hours=row.course.duration_hours %}{{ hours }} h{% endblocktranslate %}</span>{% if row.item.expected_outcome %}<span dir="auto">{{ row.item.expected_outcome }}</span>{% endif %}</p>
+          <p class="db-task__meta reg-row__meta"><span>{{ row.course.provider.display_name }}</span><span>{% blocktranslate with hours=row.course.duration_hours %}{{ hours }} h{% endblocktranslate %}</span>{% if row.item.expected_outcome %}<span dir="auto">{{ row.item.expected_outcome }}</span>{% endif %}</p>
         </div>
         <div class="db-task__state">
           {% if row.own and row.enrolment %}{% chip row.enrolment.status "academy.EnrolmentStatus" %}{{ row.enrolment.get_status_display }}{% endchip %}

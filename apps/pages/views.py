@@ -23,7 +23,7 @@ from django.views.decorators.http import require_safe
 from cms import locked_content
 from core import gates, icons
 from core.templatetags.ile_core import svg_icon
-from pages import content, identity, services
+from pages import content, identity, imagery, services
 
 #: an actor of the ecosystem → its audience accent (static/css/v5/_sezioni.css: --aud)
 AUDIENCE_OF = {
@@ -108,14 +108,15 @@ def _project_story(request, context: dict) -> dict:
             "body": render_to_string("pages/partials/projet/_promotore.html", context, request),
         }
     )
-    bref = bool(context["presentation"])
     return {
         "story": steps,
-        "fig_bref": bref,
-        "fig_why": 2 if bref else 1,
-        "fig_who": 3 if bref else 2,
         "fig_nodes": [
-            {"key": actor.key, "glyph": _audience_glyph(AUDIENCE_OF[actor.key]), "audience": AUDIENCE_OF[actor.key]}
+            {
+                "key": actor.key,
+                "glyph": _audience_glyph(AUDIENCE_OF[actor.key]),
+                "audience": AUDIENCE_OF[actor.key],
+                "label": actor.title,
+            }
             for actor in content.NETWORK_ACTORS
         ],
         "doors": _doors(context["phase3"]),
@@ -251,6 +252,9 @@ def agami(request):
             # prescribed text (emphasis, never a cut: a needle not in the text is ignored — cms.locked_split.emphasize)
             "who_emphasis": "depuis 2011|l’Italie et le Maroc",
             "approdo": _approdo(context["links"], partners=True, project=True),
+            # V5.30 §8: the promoter's own marks (pages.imagery.MARKS) — the head's framed logo, the plate's seal
+            "insegna": imagery.mark("agami.insegna"),
+            "sigillo": imagery.mark("agami.sigillo"),
         }
     )
     return render(request, "pages/agami.html", context)

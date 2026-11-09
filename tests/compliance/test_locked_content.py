@@ -70,9 +70,34 @@ def test_forum_categories_are_prescribed():
 
 
 def test_fallback_to_french_for_other_languages():
-    value, lang = locked_content.get("p3.antifraud.title", "ar")
-    assert lang == "fr"
-    assert value == "ATTENTION AUX FRAUDES"
+    """Italian and English fall back to the French source; so does Arabic for a substantive block (outside a request, as on
+    its own page) and for an official name — V5.27 (FINAL_DELIVERY_V2 R7′; lane AR, V5.20's rule): the anti-fraud TITLE, a
+    compositional text, answers its provisional Arabic rendering on /ar/ since the owner's decision; the French of the
+    registry is byte-identical in every case (``test_checksum_file_matches_registry``)."""
+    from cms import locked_renderings
+
+    for lang in ("it", "en"):
+        value, effective = locked_content.get("p3.antifraud.title", lang)
+        assert effective == "fr" and value == "ATTENTION AUX FRAUDES", lang
+    value, effective = locked_content.get("p3.antifraud.body", "ar")
+    assert effective == "fr" and value == locked_content.LOCKED_TEXTS["fr"]["p3.antifraud.body"]
+    value, effective = locked_content.get("p1.trademark.mark", "ar")
+    assert effective == "fr" and value == "Italy Legal Entry™"
+    value, effective = locked_content.get("p3.antifraud.title", "ar")
+    assert effective == "ar" and value == locked_renderings.AR["p3.antifraud.title"]
+    assert locked_content.get("p3.antifraud.title", "fr") == ("ATTENTION AUX FRAUDES", "fr")
+
+
+def test_the_arabic_policy_never_changes_the_registry():
+    """V5.27 / R7′ (b): the renderings live beside the registry; LOCKED_TEXTS, the checksums and every French read are
+    what they were — a sub-key read returns the registry's own text."""
+    from cms import locked_renderings
+
+    assert set(locked_content.LOCKED_TEXTS) == {"fr"}, "no language table was added by the policy"
+    for subkey, french in locked_renderings.leaves():
+        assert locked_content.get(subkey, "fr") == (french, "fr"), subkey
+    stored = json.loads(CHECKSUM_FILE.read_text(encoding="utf-8"))
+    assert locked_content.checksums("fr") == stored["fr"]
 
 
 def test_no_registered_mark_in_locked_content():

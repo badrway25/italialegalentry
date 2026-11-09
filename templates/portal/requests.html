@@ -35,7 +35,7 @@ painted by hand —, the day it was sent. The whole row is the way to the reques
     <li class="db-task reg-row reg-row--link" data-request="{{ item.reference }}">
       <div class="db-task__words">
         <p class="db-task__title"><a class="reg-row__link" href="{{ item.url }}" dir="auto">{{ item.title }}</a></p>
-        <p class="db-task__meta reg-row__meta"><span>{{ item.kind_label }}</span><span class="reg-ref">{{ item.reference }}</span></p>
+        <p class="db-task__meta reg-row__meta"><span>{{ item.kind_label }}</span><span class="reg-ref">{{ item.reference|upper }}</span></p>
       </div>
       <div class="db-task__state">{% if item.is_registration %}{% chip item.status "forum.RegistrationStatus" %}{{ item.status_label }}{% endchip %}{% else %}{% chip item.status "enquiries.SubmissionStatus" %}{{ item.status_label }}{% endchip %}{% endif %}</div>
       <div class="db-task__due"><span class="db-due"><span class="visually-hidden">{% translate "Transmise le" %} </span><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y" }}</time></span></div>

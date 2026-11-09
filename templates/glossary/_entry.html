@@ -5,10 +5,12 @@ rencontrer»: the pathways whose sheets name the term, as chips (links above the
 reading edge draws as the register enters. Contract: `card` ({"entry": glossary.services.GlossaryEntry, "chips":
 [{"label", "url", "lang"}], "letter": the letter its card opens in the register, or nothing}). Round 1 (QA_ROUND1 M7): a
 letter's first card carries the letter — its heading (h2, before the cards' h3), set large in the card's end corner
-as its marker, and the anchor of the thumb index (#lettre-X).{% endcomment %}<article class="lessico__carta sez-plate" id="{{ card.entry.key }}" aria-labelledby="{{ card.entry.key }}-term">
+as its marker, and the anchor of the thumb index (#lettre-X). V5.27 / R7′ (the v524-pub2 steward): a French definition on
+an Arabic page is preceded by its identification caption (`card.entry.definition_key`) — the two one grid item
+(.lessico__fonte), so the card keeps its three subgrid lines.{% endcomment %}<article class="lessico__carta sez-plate" id="{{ card.entry.key }}" aria-labelledby="{{ card.entry.key }}-term">
   {% if card.letter %}<h2 class="lessico__lettera" id="lettre-{{ card.letter }}">{{ card.letter }}</h2>{% endif %}
   <span class="lessico__regola" data-verb="draw-y" aria-hidden="true"></span>
   <h3 class="glossary-entry__term lessico__termine" id="{{ card.entry.key }}-term" lang="{{ card.entry.term_lang }}"><a class="sez-stretch" href="{{ card.entry.url }}">{{ card.entry.term }}</a></h3>
-  <p class="lessico__definizione"{% if card.entry.is_fallback %} lang="{{ card.entry.lang }}"{% endif %}>{{ card.entry.definition }}</p>
+  {% if card.entry.definition_key %}{% locked_caption card.entry.definition_key as caption %}{% endif %}{% if caption %}<div class="lessico__fonte">{{ caption }}{% endif %}<p class="lessico__definizione"{% if card.entry.is_fallback %} lang="{{ card.entry.lang }}"{% endif %}>{{ card.entry.definition }}</p>{% if caption %}</div>{% endif %}
   {% if card.chips %}<div class="lessico__dove"><p class="lessico__etichetta">{% translate "Où le rencontrer" %}</p><ul class="lessico__chips" role="list">{% for chip in card.chips %}<li><a class="lessico__chip" href="{{ chip.url }}"{% if chip.lang %} lang="{{ chip.lang }}"{% endif %}>{{ chip.label }}</a></li>{% endfor %}</ul></div>{% endif %}
 </article>

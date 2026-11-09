@@ -176,8 +176,8 @@ def test_budgets():
     # left it at 33 530 B with lane K's channels — the ratchet is re-seated at that measure
     # V5.20: ratchet restored by dead-rule removal (v520-css, 30 October 2026: the declarations a later layer of the
     # same context re-declares and the custom properties nothing reads left the token layers; the shim shrank) — 33 530
-    # → 32 718 B, the measure
-    assert gz(STATIC / "css" / "dist" / "main.css") <= 32_718
+    # → 32 657 B → 32 105 B (CLOSING, V5.29 09:41 item 2: the headroom under the hard 32 716), the measure
+    assert gz(STATIC / "css" / "dist" / "main.css") <= 32_105
 
 
 def test_the_new_sheets_are_logical_and_honour_reduced_motion():
@@ -280,8 +280,8 @@ def test_the_empty_state_brings_its_sheet_once_and_main_css_does_not_rise():
     # V5.18 green suite (the v518g merge, DL54-179; V5.8: a shared bundle ratchets down): 33 530 B, the measure
     # V5.20: ratchet restored by dead-rule removal (v520-css, 30 October 2026: the declarations a later layer of the
     # same context re-declares and the custom properties nothing reads left the token layers; the shim shrank) — 33 530
-    # → 32 718 B, the measure
-    assert gz(STATIC / "css" / "dist" / "main.css") <= 32_718
+    # → 32 657 B → 32 105 B (CLOSING, V5.29 09:41 item 2: the headroom under the hard 32 716), the measure
+    assert gz(STATIC / "css" / "dist" / "main.css") <= 32_105
 
 
 # ---- round 1 (v515-b-improve1) -----------------------------------------------------------------------------------
@@ -401,7 +401,14 @@ def test_the_short_fields_pair_by_meaning_and_the_details_gather_under_a_sub_hea
 def test_the_composition_is_one_measure_and_the_console_side_is_paper():
     formwork = (STATIC / "css" / "v5" / "_formwork.css").read_text(encoding="utf-8")
     steps = (STATIC / "css" / "v5" / "_steps.css").read_text(encoding="utf-8")
-    assert "--measure: 46rem" in formwork and "> :not(.steps-head) { max-inline-size: var(--measure); }" in formwork
+    # V5.29 («layout & brand refinement» §1, the owner's 6 Nov 2026): the formwork is the shell's width (--form-wide,
+    # v5/tokens.css — the letterhead's and the content's one system, never a width of its own), its measure 60rem
+    # (46rem left the wider paper half empty) and its fields on two columns from 36rem, a line field one cell — the
+    # same one measure, held where the steps' rule, the fields, the review and the actions end
+    assert "--measure: 60rem" in formwork and "> :not(.steps-head) { max-inline-size: var(--measure); }" in formwork
+    assert "max-inline-size: var(--form-wide);" in formwork and "71rem" not in formwork, "one horizontal system"
+    assert ".formwork :is(.form-step__body, .form-step__pair) { grid-template-columns: repeat(2, minmax(0, 1fr)); }" in formwork
+    assert ".formwork .form-step__body > .form-field--text { grid-column: 1; }" in formwork, "a line field is never stretched"
     assert "max-inline-size: 30rem" not in formwork, "one measure per step (no ragged edge)"
     assert ".formwork__side:not(:has(.formwork__notes)) { display: none; }" in formwork, "no empty night band"
     assert ".formwork--console .formwork__side { border-radius: var(--radius-xl); background: var(--surface-sheet);" in steps

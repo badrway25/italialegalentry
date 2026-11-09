@@ -37,7 +37,6 @@
 
   /* ---- the accent (same hex) ----------------------------------------------------------------- */
   --accent: var(--p-laguna-700);
-  --accent-2: var(--p-laguna-650);
   --accent-hover: var(--p-laguna-800);
   --accent-dark: var(--p-laguna-400);
   --accent-ring: var(--p-laguna-550);
@@ -92,7 +91,6 @@
   --grad-primary-dark-press: linear-gradient(var(--fill-primary-night-press), var(--fill-primary-night-press));
   --shadow-glow: 0 0 0 0 transparent;
   --shadow-glow-dark: 0 0 0 0 transparent;
-  --accent-glow: transparent;
   --blur-panel: 0px;
   --blur-scrim: 0px;
   --shadow-surface: var(--shadow-4);
@@ -132,7 +130,6 @@
   --t-caption-size: var(--t-small);
   --t-ui-size: var(--t-ui);
   --t-folio-size: var(--t-small);
-  --t-numeral-size: var(--u-numeral);
   --t-numeral-lh: var(--u-numeral-lh);
   --track-caps-display: var(--track-display-caps);
   /* measures in rem (TR C1) */

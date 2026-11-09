@@ -22,6 +22,7 @@ from django.urls import reverse
 from django.utils.safestring import SafeString, mark_safe
 from django.utils.text import Truncator
 
+from cms import locked_content
 from cms.models import TranslationStatus
 from cms.translation import resolve
 from core import gates
@@ -51,6 +52,10 @@ class GlossaryEntry:
     initial: str
     source: str
     last_reviewed_at: dt.datetime | None
+    #: V5.27 / R7′ (the v524-pub2 steward): a prescribed definition's sub-key (``p3.glossary.terms[<n>].definition``),
+    #: read by it in the page's language — on /ar/ the French source on the glossary's pages, preceded by its
+    #: identification caption (``{% locked_caption %}``), the pointer line elsewhere; "" for an editor's term
+    definition_key: str = ""
 
 
 @dataclass(frozen=True)
@@ -133,6 +138,13 @@ def prescribed_texts(term: Term) -> tuple[str, str]:
     return term.term, term.definition_fr
 
 
+def _registry_index(key: str) -> int | None:
+    for index, registry_key in enumerate(registry.keys()):
+        if registry_key == key:
+            return index
+    return None
+
+
 def entry_for(term: Term, lang: str) -> GlossaryEntry:
     lang = (lang or settings.LANGUAGE_CODE).split("-")[0]
     fallback_lang = settings.CONTENT_FALLBACK_LANGUAGE
@@ -154,6 +166,24 @@ def entry_for(term: Term, lang: str) -> GlossaryEntry:
             initial_letter(label),
             term.source,
             term.last_reviewed_at,
+        )
+    index = _registry_index(term.key) if term.is_locked and term.registry_entry() is not None else None
+    if index is not None:
+        definition_key = f"{registry.REGISTRY_KEY}[{index}].definition"
+        definition, definition_lang = locked_content.get(definition_key, lang)
+        return GlossaryEntry(
+            term,
+            term.key,
+            label,
+            "it",
+            str(definition),
+            definition_lang,
+            definition_lang != lang,
+            url,
+            initial_letter(label),
+            term.source,
+            term.last_reviewed_at,
+            definition_key=definition_key,
         )
     return GlossaryEntry(
         term,

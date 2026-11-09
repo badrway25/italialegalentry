@@ -35,6 +35,18 @@ V5.22 (SECTION_SYSTEM_V2 §7.3, §8; label v522-m-build). A recipe may carry:
     "tone"      "cool" — the grade's warm highlights turned slightly cool (Le projet's bound volumes);
     "keep"      ratios already built and committed that a rebuild must leave byte-identical (a re-crop adds a
                 ratio to an existing slug: --only <slug> rebuilds the other ratios only).
+
+V5.30 §8 (label v530-agami-build) - THE PROMOTER'S OWN MARKS, not photographs:
+
+    python tools/build_derivatives.py --marks --originals <the AGAMI website project's root> [--check]
+
+AGAMI's official logo in two of its published forms (MARKS below), re-encoded through the same encoders WITHOUT the
+photographic grade, never cropped, recoloured or upscaled - a mark keeps its colours, its ribbon's national colours
+included: AVIF in 4:4:4 (a thin red, green or gold stroke never bleeds) and WebP, the alpha kept where the original has
+one, every metadata block (EXIF, XMP, ICC) left out. Each width is held to its mark's ceiling, AVIF and WebP alike.
+Writes static/brand/agami/<slug>-<width>.{avif,webp} and static/brand/agami/PROVENANCE.json (the source as a file name
+inside the AGAMI project and its public page, its hash, the rights basis); apps/pages/imagery.py reads it (MARKS). The
+AGAMI project is read-only and only its image folders are read; nothing else of it enters this repository.
 """
 
 from __future__ import annotations
@@ -749,7 +761,7 @@ def write_provenance(family: str, photos: list[dict]) -> None:
 
 
 def check() -> int:
-    bad = 0
+    bad = check_marks()
     for prov in sorted(OUT.glob("*/PROVENANCE.json")):
         for photo in json.loads(prov.read_bytes().decode("utf-8"))["photos"]:
             for f in photo["files"]:
@@ -761,17 +773,177 @@ def check() -> int:
     return 1 if bad else 0
 
 
+# ------------------------------------------------------------------ V5.30 §8: the promoter's own marks
+#: label v530-agami-build. The originals are AGAMI's own published institutional assets (the official logo); the
+#: AGAMI website project (read-only) holds the best originals: the framed logo at 2 172 px (agamieuromed.org serves
+#: the same mark, header and footer forms, at 615 and 1 100 px) and the round seal, lossless (the website's
+#: logo-agami-mark is the same seal, re-compressed). Never a photograph of a person: the project's portraits are a third
+#: party's personal data and its round-table photographs show identifiable people - neither enters (PROVENANCE.md).
+MARKS_OUT = ROOT / "static" / "brand" / "agami"
+MARK_AVIF_Q, MARK_AVIF_FLOOR, MARK_WEBP_Q, MARK_WEBP_FLOOR = 60, 40, 82, 60
+MARKS: list[dict] = [
+    {
+        "slug": "agami-insegna",
+        "form": "framed",
+        "source": "foto/logo-agami2.png",
+        "published": "https://agamieuromed.org/ (the same mark in the site's header, footer and seal forms)",
+        # the head's frame of /agami/, the page's LCP candidate: the landing LCP budget of DECISIONS §6 on every width
+        "widths": (480, 800, 1200, 1600),
+        "ceiling": 60 * 1024,
+        "what": "the official logo, framed form: the scales of justice crossed by a ribbon in the colours of Italy and "
+        "Morocco, the word mark AGAMI Research Center, the motto line, Italia · Marocco · Mediterraneo and the Arabic "
+        "line, inside its own navy frame, on white",
+    },
+    {
+        "slug": "agami-sigillo",
+        "form": "seal",
+        "source": "core/static/core/img/brand/agami-admin-logo.png",
+        "published": "https://agamieuromed.org/ (the site's round mark, logo-agami-mark)",
+        # the identification plate's seal: drawn at 5.5 rem, so 176 / 264 px for 2x / 3x and the original's own width
+        "widths": (176, 264, 353),
+        "ceiling": 30 * 1024,
+        "what": "the official logo, round seal form, on transparency",
+    },
+]
+
+
+def _clean_mark(img: Image.Image) -> Image.Image:
+    """A fresh image of the same mode (RGB, or RGBA where the original has an alpha): no metadata, no ICC, no XMP."""
+    out = Image.new(img.mode, img.size)
+    out.paste(img)
+    return out
+
+
+def encode_mark(img: Image.Image, fmt: str, q: int) -> bytes:
+    buf = io.BytesIO()
+    if fmt == "avif":
+        _clean_mark(img).save(buf, "AVIF", quality=q, speed=4, subsampling="4:4:4")
+    else:
+        _clean_mark(img).save(buf, "WEBP", quality=q, method=6)
+    return buf.getvalue()
+
+
+def fit_mark(img: Image.Image, fmt: str, limit: int) -> tuple[bytes, int]:
+    q, floor = (MARK_AVIF_Q, MARK_AVIF_FLOOR) if fmt == "avif" else (MARK_WEBP_Q, MARK_WEBP_FLOOR)
+    data = encode_mark(img, fmt, q)
+    while len(data) > limit:
+        q -= 2
+        if q < floor:
+            raise SystemExit(f"cannot fit {img.size} {fmt} under {limit} B above q{floor}")
+        data = encode_mark(img, fmt, q)
+    return data, q
+
+
+def find_mark_original(relative: str, dirs: list[Path]) -> Path:
+    for d in dirs:
+        p = d / relative
+        if p.exists():
+            return p
+    raise SystemExit(f"original {relative} not found under the --originals directories")
+
+
+def build_mark(recipe: dict, dirs: list[Path]) -> dict:
+    src = find_mark_original(recipe["source"], dirs)
+    original = Image.open(src)
+    original.load()
+    has_alpha = original.mode in ("RGBA", "LA") or (original.mode == "P" and "transparency" in original.info)
+    master = original.convert("RGBA" if has_alpha else "RGB")
+    W, H = master.size
+    MARKS_OUT.mkdir(parents=True, exist_ok=True)
+    files = []
+    for width in recipe["widths"]:
+        if width > W:
+            continue  # never upscaled
+        height = round(width * H / W)
+        d = master if width == W else master.resize((width, height), Image.LANCZOS)
+        for fmt in ("avif", "webp"):
+            data, q = fit_mark(d, fmt, recipe["ceiling"])
+            name = f"{recipe['slug']}-{width}.{fmt}"
+            (MARKS_OUT / name).write_bytes(data)
+            files.append(
+                {
+                    "file": name,
+                    "width": width,
+                    "height": height,
+                    "format": fmt,
+                    "quality": q,
+                    "bytes": len(data),
+                    "budget": recipe["ceiling"],
+                    "sha256": hashlib.sha256(data).hexdigest(),
+                }
+            )
+            print(f"  {name:<34} {len(data):>7} B  q{q}  (ceiling {recipe['ceiling']})")
+    return {
+        "slug": recipe["slug"],
+        "kind": "logo",
+        "form": recipe["form"],
+        "what": recipe["what"],
+        "source": f"AGAMI website project, file {recipe['source']}",
+        "published": recipe["published"],
+        "rights": "AGAMI's own published institutional asset (the promoter's official logo); no third party's licence, "
+        "no visible credit",
+        "original_px": [W, H],
+        "original_mode": original.mode,
+        "original_sha256": hashlib.sha256(src.read_bytes()).hexdigest(),
+        "treatment": "none of the photographic grade: never cropped, recoloured or upscaled; Lanczos down to each "
+        "width; AVIF (speed 4, 4:4:4) + WebP (method 6)"
+        + (", the alpha kept" if has_alpha else "")
+        + "; EXIF, XMP and ICC left out",
+        "ceiling": recipe["ceiling"],
+        "files": files,
+    }
+
+
+def write_marks_provenance(marks: list[dict]) -> None:
+    doc = {
+        "what": "The promoter's own marks (V5.30 §8; label v530-agami-build): AGAMI's official logo, served by the "
+        "AGAMI page (templates/pages/agami.html); registered in apps/pages/imagery.py (MARKS).",
+        "builder": "tools/build_derivatives.py --marks (originals outside the repository: the AGAMI website project, "
+        "read-only; never hotlinked)",
+        "policy": "AGAMI's own published institutional assets: no third party's licence, no visible credit. Drawn "
+        "whole: never cropped, graded, recoloured or mirrored (in Arabic too: the ribbon's national colours are never "
+        "mirrored). Metadata, XMP and ICC stripped. No photograph of a person; no person named. The checks: "
+        "docs/design-v5/QA/v530/agami/PROVENANCE.md; tests/compliance/test_agami_assets_v530.py.",
+        "marks": sorted(marks, key=lambda m: m["slug"]),
+    }
+    (MARKS_OUT / "PROVENANCE.json").write_bytes((json.dumps(doc, indent=1, ensure_ascii=False) + "\n").encode("utf-8"))
+
+
+def check_marks() -> int:
+    path = MARKS_OUT / "PROVENANCE.json"
+    if not path.exists():
+        return 0
+    bad = 0
+    for m in json.loads(path.read_bytes().decode("utf-8"))["marks"]:
+        for f in m["files"]:
+            p = MARKS_OUT / f["file"]
+            if not p.exists() or hashlib.sha256(p.read_bytes()).hexdigest() != f["sha256"]:
+                print("MISMATCH", p)
+                bad += 1
+    return bad
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--originals", action="append", default=[], help="a directory holding <pexels id>.jpg (+ .json)")
     ap.add_argument("--only", nargs="*", help="only these slugs")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--marks", action="store_true", help="V5.30 §8: build the promoter's marks (MARKS) instead")
     a = ap.parse_args()
     if a.check:
         return check()
     dirs = [Path(d) for d in a.originals]
     if not dirs:
         ap.error("--originals is required")
+    if a.marks:
+        built = []
+        for recipe in MARKS:
+            if a.only and recipe["slug"] not in a.only:
+                continue
+            print("marks", recipe["slug"], flush=True)
+            built.append(build_mark(recipe, dirs))
+        write_marks_provenance(built)
+        return 0
     for recipe in RECIPES:
         if a.only and recipe["slug"] not in a.only:
             continue

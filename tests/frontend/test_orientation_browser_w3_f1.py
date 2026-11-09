@@ -254,8 +254,11 @@ def test_a_french_question_and_its_choices_end_on_the_reading_edge_in_arabic(
         _start(page, live_server.url, "ar")
         styles = page.evaluate("""() => [document.querySelector('#wizard-question'), document.querySelector('.wizard__label')]
             .map((el) => [el.getAttribute('lang'), getComputedStyle(el).direction, getComputedStyle(el).textAlign])""")
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge) and V5.24 W2 (the team's seed): the
+        # question and its choices are the seeded Arabic, in the page's language — right to left, ending on the
+        # reading edge's far side as Arabic does (their start is the reading edge)
         for lang, direction, align in styles:
-            assert lang == "fr" and direction == "ltr" and align in ("end", "right"), styles
+            assert lang is None and direction == "rtl" and align in ("start", "right"), styles
         bar, fill = (
             page.locator(".wizard__progress-bar").bounding_box(),
             page.locator(".wizard__progress-fill").bounding_box(),

@@ -288,35 +288,31 @@ def test_la_linea_stands_drawn_at_rest_in_view_at_load_and_from_the_keyboard(bro
             ctx.close()
 
 
-FLOW = """() => {
-  const svg = document.querySelector('.flow__svg'), box = svg.getBoundingClientRect();
-  const nodes = [...document.querySelectorAll('[data-flow-node]')].map(n => { const r = n.getBoundingClientRect();
-    return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
-  const path = svg.querySelector('.flow__path'), d = path.getAttribute('d') || '';
-  const pts = (d.match(/-?[0-9.]+/g) || []).map(Number);
-  return {inList: !!svg.closest('ol, ul'), wrapper: svg.parentElement.hasAttribute('data-flow'),
-          curves: (d.match(/C/g) || []).length, first: pts.slice(0, 2), last: pts.slice(-2), nodes,
-          length: path.getTotalLength()};
-}"""
+FLOW = """() => ({
+  overlay: document.querySelectorAll('.flow__svg, .flow__path, [data-flow], [data-flow-node]').length,
+  nodes: [...document.querySelectorAll('.flusso__tappa .flusso__nodo')].map(n => n.getBoundingClientRect().left),
+  tops: [...document.querySelectorAll('.flusso__tappa')].map(c => c.getBoundingClientRect().top),
+})"""
 
 
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_measured_flow_runs_one_curve_through_every_node(browser, live_server, lang):
+def test_the_flow_is_one_panel_read_in_order_with_no_overlay(browser, live_server, lang):
+    """F «il flusso». V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «process panels» (V5.20 strict rule; this decision
+    replaces the measured curve through every node): nothing is drawn over the panel; the route still runs in the reading
+    direction, its cells in a row from 48 rem, stacked in their order below."""
     pages = {f"flusso-{lang}": fx.page("flusso", lang)}
     for width in (1440, 768, 390):
         ctx, page = _open(browser, live_server, pages, width)
         try:
             _go(page, live_server, f"flusso-{lang}")
-            page.wait_for_selector(".flow__svg .flow__path[d]", state="attached")
             flow = page.evaluate(FLOW)
-            assert flow["wrapper"] and not flow["inList"], (width, "the overlay stands in its wrapper, never in the list")
-            assert flow["curves"] == len(flow["nodes"]) - 1 and flow["length"] > 0, (width, flow)
-            for got, want in ((flow["first"], flow["nodes"][0]), (flow["last"], flow["nodes"][-1])):
-                assert abs(got[0] - want[0]) <= 1.5 and abs(got[1] - want[1]) <= 1.5, (width, got, want)
+            assert flow["overlay"] == 0 and len(flow["nodes"]) >= 2, (width, flow)
             if width >= 768:
-                first, last = flow["nodes"][0][0], flow["nodes"][-1][0]
+                first, last = flow["nodes"][0], flow["nodes"][-1]
                 assert (first > last) if lang == "ar" else (first < last), (width, "the route runs in the reading direction")
+            else:
+                assert flow["tops"] == sorted(flow["tops"]) and flow["tops"][0] < flow["tops"][-1], (width, flow)
         finally:
             ctx.close()
 

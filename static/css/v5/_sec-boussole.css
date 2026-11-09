@@ -1,53 +1,20 @@
 /* ============================================================================================
-   A · «LA BOUSSOLE» — the shared closing «Orientation» band, the variant of «la campata» (design V5.22,
-   SECTION_SYSTEM_V2 §2 A «Variant la boussole»; lane S). Page-only: the sheets of the pages that close on it (the
-   pathway sheets, Formation, Diplômes). Markup: components/sezioni/boussole.html. On 5/12 the `ile-orienta` geometry
-   at display scale, hairline rings, the north tip in the page's arrival gold; on 7/12 the action card on the brand
-   wash. Signature SEMANTIC TURN: the needle settles once from −25° to point at the button; its hover turns it 4° more
-   (focus alike; at once from the keyboard, never under reduced motion — §4.1 rule 5, §4.7).
+   A · «LA BOUSSOLE» — the shared closing «Orientation» band (design V5.22, SECTION_SYSTEM_V2 §2 A; lane S), recomposed by
+   V5.30 VARIETY §5, §11: no compass; the words and the one action on a raised plate, the action at the far edge from
+   64 rem. Page-only: the sheets of the pages that close on it (the pathway sheets, Formation, Diplômes). Markup:
+   components/sezioni/boussole.html.
    ============================================================================================ */
 
 .boussole {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--sez-gap);
-  align-items: center;
-}
-
-.boussole__ago {
-  justify-self: center;
-  inline-size: min(200px, 56vw);
-  aspect-ratio: 1;
-  color: var(--text-1);
-}
-
-.boussole__ago svg {
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  overflow: visible;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-
-.boussole__ago .b-north { fill: var(--identity-light); stroke: none; } /* the page's one arrival gold */
-
-/* the needle points at the action: towards the inline end, where the card stands; its hover turns it 4° further */
-.boussole { --dir: 1; }
-[dir="rtl"] .boussole { --dir: -1; }
-
-.boussole__needle {
-  transform-box: view-box;
-  transform-origin: 100px 100px;
-  rotate: calc((62deg + var(--turn, 0deg)) * var(--dir));
+  padding: var(--s-8);
+  border-radius: var(--card-radius);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
 }
 
 .boussole__carta {
   display: grid;
   gap: var(--s-4);
-  max-inline-size: var(--measure-body);
 }
 
 .boussole__titolo {
@@ -56,23 +23,34 @@
   font-weight: var(--w-title);
 }
 
-@media (min-width: 64rem) {
-  .boussole { grid-template-columns: 5fr 7fr; }
-  .boussole__ago { inline-size: 200px; }
-}
-
 .boussole__carta > * {
   margin: 0;
+  max-inline-size: var(--measure-body);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  :root:not(.rm) .boussole:has(.btn:is(:hover, :focus-visible)) { --turn: 4deg; }
-  :root:not(.rm):not([data-input="key"]) .boussole__needle { transition: rotate var(--motion-emphasized) var(--spring-soft); }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .boussole__needle {
-    animation: sez-needle-in var(--motion-slow) var(--spring-soft) 300ms backwards;
+@media (min-width: 64rem) {
+  .boussole {
+    padding: var(--s-10) var(--s-12);
+  }
+
+  .boussole__carta {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--s-12);
+    align-items: center;
+  }
+
+  .boussole__carta > * {
+    grid-column: 1;
+  }
+
+  .boussole__carta > .boussole__azione {
+    grid-column: 2;
+    grid-row: 1 / span 3;
   }
 }
 
-@keyframes sez-needle-in {
-  from { rotate: calc(37deg * var(--dir)); }
+@media (forced-colors: active) {
+  .boussole {
+    border: 1px solid CanvasText;
+  }
 }

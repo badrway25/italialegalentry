@@ -41,6 +41,8 @@ V5 = ROOT / "static" / "css" / "v5"
 MATERIA = V5 / "_materia.css"
 SEZIONI = V5 / "_sezioni.css"
 STRATO = V5 / "_sec-strato.css"
+#: V5.29 (stream SYS): the plates and «la protezione», split from the strato sheet, which imports it
+LASTRE = V5 / "_sec-lastre.css"
 MOSAICO = V5 / "_sec-mosaico.css"
 SEZ_TPL = ROOT / "templates" / "components" / "sezioni"
 
@@ -53,7 +55,7 @@ MATERIAL_ATTRIBUTES = ("data-luce", "data-sfuma", "data-incastro")
 LIB_SHEETS = (
     "_materia.css", "_sezioni.css", "_sigillo.css", "_sec-boussole.css", "_sec-campata.css", "_sec-emiciclo.css",
     "_sec-filo.css", "_sec-flusso.css", "_sec-indice.css", "_sec-mappa.css", "_sec-mosaico.css", "_sec-passaggio.css",
-    "_sec-racconto.css", "_sec-strato.css", "_sec-tracciato.css", "_reveal.css", "_photo.css", "_journey-passage.css",
+    "_sec-racconto.css", "_sec-strato.css", "_sec-tracciato.css", "_sec-lastre.css", "_sec-indice-base.css", "_reveal.css", "_photo.css", "_journey-passage.css",
     "_linea-v2.css", "_servizio.css", "_fronte.css", "_compose.css", "_porta.css",
 )
 #: T's burn-down residue the Director's letter leaves in _fronte.css: the AGAMI name device's two clamps («.fronte__name
@@ -128,13 +130,26 @@ def test_the_six_ground_kinds_and_the_material_attributes_are_painted_by_the_she
     assert attribute_users == {"_materia.css"}, attribute_users
 
 
+#: v524-pub2 (FINAL_DELIVERY_V2 §3.6, R4 a; V5.20 — the same invariant, «the material after the shell», on a route sheet
+#: that stands UNDER a shared sheet's shell): Le projet's pages/css/projet.css imports the material without the shell,
+#: because the page links the institutional pages' shared sheet (interior.css, which carries the shell) before it — the
+#: rendered order is apps/pages/tests/test_interior_v522.py::test_a_route_sheet_sits_between_its_shared_sheet_and_the_frontispiece_s
+ROUTE_SHEETS_UNDER_A_SHELL = {"projet.css": ROOT / "apps" / "pages" / "static" / "pages" / "css" / "interior.css"}
+
+
 def test_materia_is_a_page_only_partial_never_in_main_css():
     main = _read(ROOT / "static" / "css" / "main.css")
     assert "_materia" not in main
     assert MATERIA.name.startswith("_"), "a partial, never a build entry"
     for sheet in _sheets():
-        if "_materia" in _read(sheet) and sheet != MATERIA:
-            text = _read(sheet)
+        # the imports, never a comment naming the partial (v524-pub2: the sheets that explain where the material lives)
+        if "_materia" in _css(sheet) and sheet != MATERIA:
+            text = _css(sheet)
+            if sheet.name in ROUTE_SHEETS_UNDER_A_SHELL:
+                shell = _css(ROUTE_SHEETS_UNDER_A_SHELL[sheet.name])
+                assert "_sezioni.css" in shell and "_materia.css" not in shell, (sheet.name, "the shell on the shared sheet")
+                assert "_sezioni.css" not in text, (sheet.name, "the shell once, on the shared sheet")
+                continue
             assert text.index("_sezioni.css") < text.index("_materia.css"), (sheet.name, "the material after the shell")
 
 
@@ -236,10 +251,18 @@ def test_the_stills_under_forced_colours_and_in_print():
 
 
 def test_the_tile_s_face_is_a_niche_and_keeps_the_glyph_legible():
+    # V5.29 (owner: «icons … same colour everywhere … inconsistent containers»; stream SYS; V5.20: stronger — two inks,
+    # each held on the vault's darkest stop): the vault in the laguna's first light, the glyph's ink by importance
     tile = _rule(SEZIONI, ".sez-tile")
-    assert "background: linear-gradient(var(--line-rhythm), var(--surface-raised) 85%)" in tile
-    ratio = _contrast(_colour("--text-1"), _colour("--line-rhythm"))
-    assert ratio >= 4.5, ratio  # 12.9:1 measured on the vault's darkest stop
+    vault = "color-mix(in srgb, var(--accent-wash) 55%, var(--surface-raised))"
+    assert f"background: linear-gradient({vault}, var(--surface-raised) 85%)" in tile
+    assert "color: var(--tile-ink, var(--text-2))" in tile
+    assert "--tile-ink: var(--accent-text)" in _rule(SEZIONI, ".sez-tile--lg")
+    wash, white = _colour("--accent-wash").lstrip("#"), _colour("--surface-raised").lstrip("#")
+    darkest = "#" + "".join(f"{round(int(wash[i:i + 2], 16) * 0.55 + int(white[i:i + 2], 16) * 0.45):02x}" for i in (0, 2, 4))
+    for ink in ("--text-2", "--accent-text"):
+        ratio = _contrast(_colour(ink), darkest)
+        assert ratio >= 4.5, (ink, ratio)  # the slate 5.9 and the laguna 5.1 on the vault's darkest stop
 
 
 def _state_rules(path: Path) -> list[tuple[str, str]]:
@@ -307,32 +330,35 @@ def test_the_head_s_label_is_the_label_role_by_name_and_its_title_reads_the_step
 # ---------------------------------------------------------------------------------------------- the protection
 
 
-def test_the_protection_stands_on_a_drawing_table_with_its_sill_and_its_bookend_and_keeps_its_text():
+def test_the_protection_is_one_compact_trust_band_and_keeps_its_text_whole():
+    """V5.29 (owner, 6 Nov 2026: «protezione__campo too dominant … ONE global refined compact treatment … never dominates
+    a page» — an explicit owner decision; stream SYS; V5.20: the invariants kept or made stronger — the locked text whole,
+    visible, never collapsed, its seal once, its band's one field; V5.24's drawing table (the sill to the container's
+    edge, the far shield) left with the size it gave the band): the seal at the reading edge beside the label-role
+    title and the body in the legal ink, two columns from 64 rem, the call at the far end, a plain plate."""
     html = Template('{% include "components/sezioni/protezione.html" with url="#" %}').render(Context({}))
-    assert html.index('class="protezione__campo"') < html.index('class="protezione__davanzale" data-verb="draw" aria-hidden="true"') < html.index("<aside")
-    assert 'data-callout="antifraud"' in html and "data-sigillo-scope" in html and 'data-locked="p3.antifraud.body"' in html
-    fondale = html.rsplit('class="sez-fondale" aria-hidden="true"', 1)[1]
-    assert 'data-mark="ile-scudo"' in fondale and "<svg" in fondale, "the shield, drawn low on the far side"
     assert html.count("protezione__campo") == 1 and html.strip().endswith("</div>")
-    field = _rule(STRATO, ".protezione__campo")
-    assert "position: relative" in field and "display: grid" in field
-    assert "container-type: inline-size" in field, "the field measures itself (B3)"
-    sill = _rule(STRATO, ".protezione__davanzale")
-    assert "--sez-d: var(--motion-draw)" in sill and "inset-block-start: 68px" in sill and "block-size: 1px" in sill
-    assert "inset-inline: min(100%, 56rem) 0" in sill and "background: var(--line-structure)" in sill
-    layer = _rule(STRATO, ".approdo__fondale,\n.sez-fondale".replace("\n", " "))
-    assert "block-size: 12rem" in layer and "z-index: -1" in layer and "inset: auto 0 calc(-1 * var(--s-12))" in layer
-    ink = _rule(STRATO, ".approdo__fondale .fronte__motif, .sez-fondale > svg")
-    assert "opacity: 0.3" in ink and "stroke: var(--line-structure)" in ink
-    shield = _rule(STRATO, ".sez-fondale > svg")
-    assert "inline-size: 12rem" in shield and "margin-inline-start: auto" in shield and "fill: none" in shield
-    css = _css(STRATO)
-    # B3: the bookend stands down wherever the field's free span beside the 56 rem plate is under its 12 rem — a field
-    # under 68 rem (every phone, 1024, the sheets' 912 px column), not a viewport under 64 rem (stronger: V5.25 §2's 1024
-    # and the sheets were failing the «nothing over the plate» letter)
-    assert re.search(r"@container \(max-width: 67\.999rem\) \{\s*\.sez-fondale \{ display: none; \}", css), "a wide field's device"
-    assert "63.999rem" not in css, "the viewport media gave way to the container query"
-    assert "foto__credit" not in css
+    assert html.index('class="protezione__campo"') < html.index("<aside")
+    assert 'data-callout="antifraud"' in html and "data-sigillo-scope" in html and 'data-locked="p3.antifraud.body"' in html
+    assert "<details" not in html and " hidden" not in html, "legally required: always visible, never collapsed"
+    assert "protezione__davanzale" not in html and "sez-fondale" not in html and "sez-plate--raised" not in html
+    assert html.count('class="sigillo ') == 1, "the seal, once"
+    assert '@import url("_sec-lastre.css");' in _read(STRATO), "every importer of the strato sheet keeps the band"
+    css = _css(LASTRE)
+    assert "@container" not in css and "davanzale" not in css and "sez-fondale" not in css
+    plate = _rule(LASTRE, ".protezione")
+    assert "display: grid" in plate and re.search(r"@media \(min-width: 48rem\) \{\s*\.protezione \{\s*grid-template-columns: auto minmax\(0, 1fr\);", css)
+    assert "max-inline-size" not in plate and "margin-block-start" not in plate, "the band spans its field, no stand"
+    assert "color-mix(in srgb, var(--accent-wash) 30%, var(--surface-raised))" in plate, "a restrained tint"
+    title = _rule(LASTRE, ".protezione__titolo")
+    assert "font-size: var(--t-label)" in title and "font-weight: var(--w-label)" in title and "color: var(--text-legal)" in title
+    body = _rule(LASTRE, ".protezione__testo")
+    assert "font-size: var(--t-small)" in body and "color: var(--text-legal)" in body
+    assert re.search(r"@media \(min-width: 64rem\) \{[^@]*\.protezione__testo \{\s*columns: 2;", css), "two columns on a desktop"
+    assert re.search(r"\.protezione__testo \.ls-1 \{\s*column-span: all;", css), "the first sentence across both"
+    seal = _rule(LASTRE, ".protezione__sigillo")
+    assert "--sg-w: 44px" in seal and "--sg-h: 54px" in seal and "position" not in seal, "in the band's flow, one size down"
+    assert "padding-block: clamp(var(--s-8), 4vw, var(--s-12))" in _rule(LASTRE, ".sez:has(> .container > .protezione__campo:only-child)")
 
 
 # ---------------------------------------------------------------------------------------------- the type roles in the library
@@ -374,7 +400,7 @@ def test_the_numerals_are_the_sans_at_600_tabular_and_the_keyword_and_the_term_t
     assert "font-size: var(--t-numeral);" in filo and "font-size: var(--t-numeral-lg); line-height: var(--t-numeral-lg-lh)" in filo
     keyword = _rule(SEZIONI, ".sez-keyword")
     assert "font-weight: var(--w-title)" in keyword and "font-size: var(--t-title-2)" in keyword
-    parola = _rule(STRATO, ".strato__corpo--parola .ls-1")
+    parola = _rule(LASTRE, ".strato__corpo--parola .ls-1")
     assert "font-weight: var(--w-title)" in parola and "font-size: var(--t-title-2)" in parola
     scheda = _rule(STRATO, ".strato__lastra--scheda .strato__titolo")
     assert "font-weight: var(--w-display)" in scheda and "letter-spacing: var(--track-display)" in scheda
@@ -393,6 +419,8 @@ def test_no_credit_rule_is_left_in_the_library_s_sheets():
 
 
 def test_materia_under_its_ceiling_and_the_shell_within_its_audited_increment():
+    # v524-cifix (V5.20; FINAL_DELIVERY_V2 R4): the minified-alone figures are read from the build's record in the
+    # committed dist (static/css/dist/measures.json, hash-checked against the source) — CI has no Node; same ceilings
     assert _minified_gz(MATERIA) <= 800, "R4 f / §3.3: ≤ 800 B gzip -9 per importing sheet (788 measured)"
     # the shell: 2 444 B on 554c82d2; + the niche face (audited ≈ 45) + the label's safety net (four lines) − the mono folio
     # and the clamps: 2 382 measured (the light's home is the mosaico sheet — B1: the shell is in every page sheet and the

@@ -10,7 +10,7 @@ after the diagram says so in factual UI wording (it is NOT a prescribed text and
 Design V5.22 (SECTION_SYSTEM_V2 §3.3; lane P1 — Page Composition V2). Below the approved diptych head (KEEP):
   * PP-1, the page's moment — F «il tracciato pilota» (ecosystem/partials/pilot_flow.html): the pilot's T1 seal
     (`ile-pilota`, the body seat) beside the section's title; the eight prescribed stations on «la linea V2»
-    (components/stepper.html size="large"), each its ILE Mono numeral, its concept tile (icons.PILOT_STATION, all eight:
+    (components/stepper.html size="large"), each its numeral, its concept tile (icons.PILOT_STATION, all eight:
     §4.10's register rule) and its locked capitals; station 6, `ile-arch`, the page's one gold arrival — its node edged
     and lit in gold, the light coming when the line reaches it. From 80 rem one gently stepped row: the words of two
     neighbours never share a line (the odd stations' above the route, the even ones' below it, the numerals at the
@@ -26,6 +26,11 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.3; lane P1 — Page Composition V2). Below t
   * PP-3 — K «l'approdo» on the stone after a paper gap: its one tile, the Forum, typographic on its night face (Q4),
     laid across the band beside the head — never a lone card in half an empty strip; the mission motif low as the
     bookend, one light sweep (ecosystem/partials/approdo.html).
+Design V5.24 (FINAL_DELIVERY_V2 §3.5, R5; BACKGROUND_MATERIAL_V2 §3.3, §5.3; lane PUB1 — the grounds and rhythm, 0 bytes;
+the compositions KEPT): the route stands on the page's one wash (brand — as the home's S2: the seal's light on it, the
+amber status plate the route's terminal plate standing on the wash) as a band (content-bound: a two-row route is no
+moment — recorded, R5); the doors stand on paper, their sill under them; the approdo stays stone: night → brand → paper
+→ stone, no two grounds of one kind touching.
 {% endcomment %}
 {% block space_header %}
 {% translate "Projet pilote" as space_label %}
@@ -33,7 +38,7 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.3; lane P1 — Page Composition V2). Below t
 {% endblock %}
 
 {% block space_lead %}
-<section id="sequence" class="sez sez--linea pilota-rotta" data-sec="linea" data-ground="paper" data-rhythm="moment" aria-labelledby="sequence-header">
+<section id="sequence" class="sez sez--linea pilota-rotta" data-sec="linea" data-ground="brand" data-rhythm="band" aria-labelledby="sequence-header">
   <div class="container">
     {% include "ecosystem/partials/pilot_flow.html" %}
     {% include "ecosystem/partials/note.html" %}
@@ -44,7 +49,7 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.3; lane P1 — Page Composition V2). Below t
 {% block space_main %}
 {% translate "Participer à la construction du projet" as action_title %}
 {% locked "p2.forum.registration.button_secondary_pilot" as interest_label %}{% locked "p3.institutions.button" as institution_label %}
-<section id="participer" class="sez sez--porte pilota-porte" data-sec="porte" data-ground="stone" data-rhythm="band" aria-labelledby="participer-title">
+<section id="participer" class="sez sez--porte pilota-porte" data-sec="porte" data-ground="paper" data-rhythm="band" aria-labelledby="participer-title">
   <div class="container pilota-porte__campata">
     <div class="pilota-porte__capo">
       {% include "components/sezioni/_testa.html" with role="router" title_id="participer-title" title=action_title only %}

@@ -253,9 +253,18 @@ def test_portico_glosses_and_second_lines_carry_their_language(seeded, legal_pub
     """On an Arabic page a prescribed French gloss says lang="fr" (and is drawn LTR in its run), a translated
     gloss is in the page's language and says nothing, and a second line is shown only in the page's own language —
     a panel never mixes a French line into an Arabic list."""
+    from cms import locked_renderings
+
     arabic = re.compile(r"[\u0600-\u06ff]")
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the person door's prescribed
+    # gloss is a compositional text (C-UI) — on /ar/ its provisional Arabic rendering, in the page's language; on /it/
+    # (no official version) the prescribed French, said with lang="fr", as before
+    italian = {item.audience: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="it")}
+    assert italian["person"].gloss and italian["person"].gloss_lang == "fr"
     items = {item.audience or item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="ar")}
-    assert items["person"].gloss and items["person"].gloss_lang == "fr"
+    assert locked_renderings.treatment("p3.entrances.person.text") == "C-UI"
+    assert items["person"].gloss == locked_renderings.rendering("p3.entrances.person.text")
+    assert arabic.search(items["person"].gloss) and items["person"].gloss_lang == ""
     assert arabic.search(items["pages:project"].gloss) and items["pages:project"].gloss_lang == ""
     lines = [c.description for item in items.values() for c in item.children if c.description]
     assert lines and all(arabic.search(line) for line in lines), lines
@@ -296,13 +305,26 @@ def test_portico_notice_stands_in_every_language_and_one_item_is_current(seeded,
     is the panel's foot on every page — in the locked French, said with lang="fr", until the prescribed text is in the
     page's language — never only on the French page; the brand in a line is one isolated LTR run; on the Forum, the
     Forum's own item is current and the Institutions door, whose panel lists it, is not."""
+    from cms import locked_renderings
+
     fr = {item.audience or item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr")}
-    for lang in ("it", "en", "ar"):
+    for lang in ("it", "en"):
         person = {item.audience: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang=lang)}["person"]
         assert person.notice, lang
         assert person.notice_lang in ("", "fr"), lang
         assert person.notice_lang == "fr" or person.notice != fr["person"].notice, lang
         assert not person.children[0].description, "the notice is never drawn twice"
+    # V5.27 (FINAL_DELIVERY_V2 R7′ (3); V5.27 §2 «hiding is preferable to mixed-language content»; V5.20, the
+    # steward's amendment at the v524-ar merge): the notice is a substantive text pending its Arabic validation
+    # (C-SUBST-FR) — an Arabic menu does not say it at all, neither its French nor a pointer; its own page carries it,
+    # identified
+    assert locked_renderings.treatment("p3.persons.intro") == "C-SUBST-FR"
+    assert not locked_renderings.menu_notice_allowed("p3.persons.intro", "ar")
+    menu_ar = cms_nav.build_menu(MenuLocation.MAIN, lang="ar")
+    person = {item.audience: item for item in menu_ar}["person"]
+    assert person.notice == "" and person.notice_lang == ""
+    assert not person.children[0].description, "the notice is never drawn twice"
+    assert all(fr["person"].notice not in (item.notice, item.gloss) for item in menu_ar)
     line = str(cms_nav.brand_bdi("Les réponses sur Italy Legal Entry™ et <b>les parcours</b>"))
     assert '<bdi dir="ltr">Italy Legal Entry™</bdi>' in line and "&lt;b&gt;" in line, line
     items = {item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr", path="/fr/forum/")}

@@ -74,10 +74,20 @@ def test_arabic_home_is_rtl_and_marks_french_fallback(page, seeded, phase3_open)
     # carries the fallback marker; the name is an English name on every page and says so, as the header's lock-up does
     # (a11y F10).
     assert re.search(r'<span class="he__name" id="hero-name" translate="no" dir="ltr" lang="en">', html)
-    assert '<p class="he__promise" lang="fr" dir="ltr">' in html
-    # V5.22 (SECTION_SYSTEM_V2 §0.1, §2 K «la protezione»; V5.20 strict rule): the anti-fraud body is one rendering of
-    # one locked text on every page — «la protezione», lane S — and its French fallback is tagged as it always was
-    assert '<p class="protezione__testo" data-locked="p3.antifraud.body" lang="fr">' in html
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the promise is compositional
+    # (C-UI) — its provisional Arabic rendering, in the page's language; the anti-fraud body is substantive
+    # (C-SUBST-FR) and the home is not its page — «la protezione» carries the Arabic pointer line, no French run
+    from cms import locked_renderings
+
+    promise = locked_renderings.rendering("p3.hero.subtitle")
+    assert f'<p class="he__promise">{escaped(promise)}</p>' in html
+    from django.utils import translation
+
+    assert locked_renderings.treatment("p3.antifraud.body") == "C-SUBST-FR"
+    with translation.override("ar"):
+        pointer = str(locked_renderings.pointer_line("p3.antifraud.body"))
+    assert pointer != text_of("p3.antifraud.body")
+    assert f'<p class="protezione__testo" data-locked="p3.antifraud.body">{escaped(pointer)}</p>' in html
 
 
 def test_french_home_has_no_fallback_lang_attributes_on_locked_texts(page, seeded, phase3_open):
@@ -537,7 +547,10 @@ def test_orientation_phase3_uses_the_prescribed_sentence(page, seeded, phase3_op
     assert re.search(r'<ol class="linea linea--large linea--across"[^>]* aria-hidden="true"', block)
     labels = re.findall(r'<p class="linea__label" data-verb="ink">([^<]+)</p>', block)
     assert labels == [escaped(step) for step in cut.steps]
-    assert f'<p class="orienta__didascalia" aria-hidden="true">{escaped(cut.lead)}</p>' in block
+    # V5.24 (TYPOGRAPHY_V2 F-3 / F-4; FINAL_DELIVERY_V2 §3.4, V5.20 strict rule): the caption is the label role by
+    # name — the same part of the sentence, drawn for the eye only, no longer the home's one mono folio (stronger: the
+    # role is asserted)
+    assert f'<p class="orienta__didascalia t-label" aria-hidden="true">{escaped(cut.lead)}</p>' in block
     assert f'<p class="orienta__avvertenza" aria-hidden="true">{escaped(cut.caveat)}</p>' in block
     assert "aria-current" not in block and 'class="sequence' not in block
 
@@ -744,8 +757,14 @@ def test_reserved_panel_needs_phase3_and_flag(page, seeded, set_flag, phase3_ope
     assert 'href="/fr/compte/login/"' in block
     assert section_order(html)[-1] == "reserved"  # secondary: last, never protagonist
     # the row's sign is the key of the mark, never a padlock — V5.22 (SECTION_SYSTEM_V2 §3.1 S8, §4.2 T5; V5.20 strict
-    # rule): the T5 `ile-accesso`, the key standing in the doorway's opening, in its night arch seat, once
-    seat = '<span class="sigillo sigillo--small sigillo--night home-reserved__sigillo" data-mark="ile-accesso"'
+    # rule): the T5 `ile-accesso`, the key standing in the doorway's opening, in its night arch seat, once. V5.30
+    # stream A
+    # (the owner's «geometry saturation»; V5.20 strict rule: the same seat, now named): the seat is a quiet tile unless
+    # the caller asks for the arch, and this row, one of the brand's two bookends, asks for it
+    seat = (
+        '<span class="sigillo sigillo--small sigillo--arco sigillo--night home-reserved__sigillo" '
+        'data-mark="ile-accesso"'
+    )
     assert block.count(seat) == 1
     assert "#icon-lock" not in block and "#icon-ile-key" not in block
     set_flag("reserved_area_public_link", False)
@@ -798,7 +817,10 @@ def test_the_morocco_italy_model_is_said_once_by_the_heros_path(page, seeded, ph
     pilot = html.split('data-section="pilot"', 1)[1].split("</section>", 1)[0]
     # V5.22 round 1 (QA_ROUND1 m5, §1 rule 6; V5.20 strict rule): the title is re-composed by a render-time span — held
     # to its heading's textContent, exactly the locked title
-    assert _text_content(pilot, "#home-pilot-title") == [text_of("p3.pilot.title")]
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the Arabic title is its
+    # provisional rendering, held the same way
+    expected = locked_content.get("p3.pilot.title", lang)[0] if lang == "ar" else text_of("p3.pilot.title")
+    assert _text_content(pilot, "#home-pilot-title") == [expected]
     assert "<ol" not in pilot and "<li" not in pilot
     assert pilot.count("<a ") == 1 and 'href="/' + lang + "/" in pilot
 

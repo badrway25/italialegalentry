@@ -30,10 +30,6 @@
   color: var(--text-1);
 }
 
-:lang(ar) .doc-files__title {
-  letter-spacing: 0;
-}
-
 .doc-files__lead {
   margin: 0;
   max-inline-size: 72ch;

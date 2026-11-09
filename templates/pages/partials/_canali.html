@@ -13,7 +13,7 @@ Contract: `channels` (site.channels).
     <a class="canale__link" href="{{ freephone.tel_url }}" aria-label="{{ freephone_name }}">
       <span class="canale__disc" aria-hidden="true">{% svg_icon "phone" "icon" %}</span>
       <span class="canale__body">
-        <span class="canale__kind">{% translate "Numéro vert" %}</span>
+        <span class="canale__kind t-label">{% translate "Numéro vert" %}</span>
         <bdi class="canale__number phone" dir="ltr">{{ freephone.label }}</bdi>
         <span class="canale__act">{% translate "Appeler" %}</span>
       </span>
@@ -24,7 +24,7 @@ Contract: `channels` (site.channels).
     <a class="canale__link" href="{{ whatsapp.url }}" aria-label="{{ whatsapp_name }}">
       <span class="canale__disc" aria-hidden="true">{% svg_icon "message-circle" "icon" %}</span>
       <span class="canale__body">
-        <span class="canale__kind">WhatsApp</span>
+        <span class="canale__kind t-label">WhatsApp</span>
         <bdi class="canale__number phone" dir="ltr">{{ whatsapp.label }}</bdi>
         <span class="canale__act">{% translate "Écrire sur WhatsApp" %}</span>
       </span>

@@ -423,12 +423,19 @@ def test_the_hero_holds_its_geometry(browser, live_server, phase3_live):
     # where the wall caps the niche: its columns are the minimum, 192 px — «Universités & Formation →» needs 187.5 px
     # of column to keep its arrow on its line, and a classic scrollbar (which this browser does not draw) takes 2 px of
     # each column, because the cap is read in vw and the grid in %: at 188 px the word took two lines under one.
+    # V5.29 («layout & brand refinement» §2, the owner's 6 Nov 2026; amended under V5.20): the letterhead stands on the
+    # wider shell (--site-shell-max, the column + 10rem), so the logo starts OUTSIDE the page's column — at least 80 px
+    # out, never closer than the 40 px gutter to the window. The hero still stands on the page's column: the promise,
+    # the first plate, the description and the chapter under it share ONE edge, the column's (the chapter's head), as
+    # they shared the logo's when the logo stood on the column.
     for lang in ("fr", "ar"):
         for width, height in ((1536, 864), (1536, 960), (1920, 1080)):
             g, cell = still(width, height, lang), (lang, width, height)
-            edge = g["edges"]["logo"]
+            edge = g["edges"]["chapter"]
             assert edge > 100, cell
-            for name in ("promise", "plate", "body", "chapter"):
+            logo = g["edges"]["logo"]
+            assert 38.5 <= logo <= edge - 79, (cell, "the logo stands on the shell, out of the column", g["edges"])
+            for name in ("promise", "plate", "body"):
                 assert abs(g["edges"][name] - edge) <= 1.5, (cell, name, g["edges"])
             far = g["niche"]["x"] if g["rtl"] else g["vw"] - g["niche"]["r"]
             assert abs(far) <= 1, (cell, "the niche keeps the far edge of the window")
@@ -446,7 +453,8 @@ def test_the_hero_holds_its_geometry(browser, live_server, phase3_live):
     for width, height in ((1440, 900), (1280, 800)):
         g = still(width, height)
         assert abs(g["promise"]["x"] - 32) <= 1, (width, "the wall still takes the page")
-        assert abs(g["edges"]["body"] - g["edges"]["logo"]) <= 1.5, (width, g["edges"])
+        # V5.29 §2: the logo on the shell's 40 px gutter, out of the column the description and the chapter share
+        assert abs(g["edges"]["logo"] - 40) <= 1.5 and g["edges"]["logo"] < g["edges"]["body"] - 40, (width, g["edges"])
         assert abs(g["edges"]["body"] - g["edges"]["chapter"]) <= 1.5, (width, g["edges"])
         assert max(g["glossTops"]) - min(g["glossTops"]) <= 1, (width, "the four sentences share a line")
 
@@ -706,6 +714,9 @@ _SECTIONS = """() => {
   // labels, links and buttons are not what a person reads: they are set at the interface sizes
   const notReading = '.testa__label, .orienta__didascalia, .home-pathways__more, .integrita__azione, ' +
     '.protezione__azione, .campata__azione, .pilota__azione, .home-news__more, .card__eyebrow, .linea__arrivo';
+  // V5.29 §4 (stream SYS, the owner's compact trust band — an approved decision; V5.20): «la protezione»'s body is
+  // secondary copy at the small step in the legal ink; held apart at the system's floor (14 px), never under it
+  const compact = '.protezione__testo';
   return {
     rtl, vw: document.documentElement.clientWidth, vh: innerHeight, pageH: document.documentElement.scrollHeight,
     sections: sections.map((s) => {
@@ -718,15 +729,28 @@ _SECTIONS = """() => {
     // a title is never smaller than what it titles
     pairs: [
       ['.home-pathways .indice__titolo', '.home-pathways .parcours__descrizione'],
-      ['.integrita__domanda', '.integrita__risposta'],
       ['.home-entrances .passaggio__titolo', '.home-entrances .passaggio__testo'],
       ['.home-entrances .passaggio__titolo', '.home-entrances .passaggio__cta'],
     ].map(([a, b]) => [a, size(a), size(b)]),
+    // V5.29 (stream SYS, _sec-lastre.css): the plate's QUESTION is the quiet line and the answer the strong one — the
+    // question at the ui step (--t-ui, the phone step-up included), never larger than its answer, at the act's
+    // weight (500) at most
+    quiet: [['.integrita__domanda', '.integrita__risposta']].map(([a, b]) => {
+      const q = main.querySelector(a), r = main.querySelector(b);
+      const probe = document.createElement('span');
+      probe.style.fontSize = 'var(--t-ui)';
+      main.appendChild(probe);
+      const ui = px(probe, 'fontSize');
+      probe.remove();
+      const weight = (el) => el && Number(getComputedStyle(el).fontWeight);
+      return [a, size(a), size(b), ui, weight(q), weight(r)];
+    }),
     // what a person reads under the hero: the paragraphs and the doors' sentences
     reading: Array.from(main.querySelectorAll('.sez p, .sez .passaggio__testo, .sez li'))
       .filter((e) => shown(e) && !e.closest('.he') && !e.closest('.visually-hidden') && !e.matches(notReading)
-        && !e.closest(notReading))
+        && !e.closest(notReading) && !e.matches(compact))
       .map((e) => px(e, 'fontSize')),
+    compact: Array.from(main.querySelectorAll(compact)).filter(shown).map((e) => px(e, 'fontSize')),
     // black and white rests in the hero only (DL54-12)
     grey: Array.from(main.querySelectorAll('*'))
       .filter((e) => !e.closest('.he') && /grayscale/.test(getComputedStyle(e).filter)).length,
@@ -749,7 +773,11 @@ def test_the_home_under_the_hero_is_one_system(browser, live_server, phase3_live
     language» —, an approved decision). The system now: each section composed from ONE pattern of the library, a
     signature its neighbour does not share (the integrity band's two halves are one band: §3.1 S5 + S6), two grounds of
     one kind never touching, every head on the reading edge. What W2-D held stays held: a title is never smaller than
-    what it titles, nothing a person reads on a phone is under 16 px, black and white rests in the hero only and no
+    what it titles — except the trust plates' question, which V5.29's shared system made the quiet line (its own
+    assertion: the question at exactly the ui step, never larger than its answer, at the act's weight at most; V5.20,
+    an approved
+    decision, cited to V5.29 §6 and the SYS review) —,
+    nothing a person reads on a phone is under 16 px, black and white rests in the hero only and no
     photograph under it but the registry's frames, a French run on the Arabic page reads left to right, and the home is
     short — at most eight screens at 1440 × 900.
     """
@@ -787,18 +815,27 @@ def test_the_home_under_the_hero_is_one_system(browser, live_server, phase3_live
     for selector, title, text in g["pairs"]:
         if title is not None and text is not None:
             assert title >= text, (selector, title, text)
+    for selector, question, answer, ui, q_weight, a_weight in g["quiet"]:
+        quiet = question == ui and question <= answer and q_weight <= 500
+        assert quiet, (selector, question, answer, ui, q_weight, a_weight)
     assert g["grey"] == 0 and g["picturesUnderTheHero"] == 0
     assert g["pageH"] <= 8 * g["vh"], (g["pageH"], "a short home: at most eight screens at 1440 × 900")
     if lang == "ar":
         runs = g["frenchRuns"]
-        assert runs and set(runs) == {"ltr"}, "a French run on the Arabic page reads left to right"
+        # V5.27 / R7′ (V5.20, an approved decision): the compositional texts read Arabic and the substantive ones are
+        # hidden off their page, so the home may hold no French run at all — any that remains reads left to right
+        assert set(runs) <= {"ltr"}, "a French run on the Arabic page reads left to right"
 
     g, fits = sections(390, 844)
     assert fits[0] <= fits[1], fits
     assert [s["key"] for s in g["sections"]][0] == "entrances", "on a phone the doors open the sections"
     sizes = sorted(set(g["reading"]))
     assert sizes and sizes[0] >= 16, ("nothing a person reads on a phone is under 16 px", sizes)
+    assert g["compact"] and min(g["compact"]) >= 14, ("the compact trust band at the system's floor", g["compact"])
     for selector, title, text in g["pairs"]:
         if title is not None and text is not None:
             assert title >= text, (selector, title, text)
+    for selector, question, answer, ui, q_weight, a_weight in g["quiet"]:
+        quiet = question == ui and question <= answer and q_weight <= 500
+        assert quiet, (selector, question, answer, ui, q_weight, a_weight)
     assert g["grey"] == 0 and g["picturesUnderTheHero"] == 0

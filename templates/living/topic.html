@@ -8,7 +8,7 @@ at the lead's size; the sheets as records on shared hairlines, each row the way 
 verification date when it has one. A theme without a live, reviewed sheet has no page (V5.12 §8: it answers 404).
 {% endcomment %}
 {% block page_title %}{{ texts.title }} · {% translate "Vivre en Italie" %}{% endblock %}
-{% block meta_description %}{% if texts.body %}{{ texts.body|truncatechars:160 }}{% else %}{% blocktranslate with topic=texts.title %}Vivre en Italie — {{ topic }} : fiches pratiques pour accompagner l’intégration après l’entrée régulière.{% endblocktranslate %}{% endif %}{% endblock %}
+{% block meta_description %}{% if texts.body %}{{ texts.body|truncatechars:160 }}{% else %}{% blocktranslate with topic=texts.title %}Vivre en Italie — {{ topic }} : repères pratiques pour s’installer et vivre au quotidien en Italie.{% endblocktranslate %}{% endif %}{% endblock %}
 {% block body_class %}page-living-topic lettura{% endblock %}
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}

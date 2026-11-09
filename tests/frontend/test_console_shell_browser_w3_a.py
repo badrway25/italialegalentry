@@ -369,11 +369,20 @@ def test_il_lume_marks_the_current_page_once_per_rail_copy_and_a_lone_glyph_show
             weight: getComputedStyle(item).fontWeight, bar: getComputedStyle(item, '::before').content,
             otherDiscs: [...new Set(others.map((o) => getComputedStyle(o.querySelector('.rail__disc')).backgroundColor))],
             otherWeights: [...new Set(others.map((o) => getComputedStyle(o).fontWeight))],
-            tile: getComputedStyle(rail.querySelector('.rail__tile')).backgroundColor}; }"""
+            tile: getComputedStyle(rail.querySelector('.rail__tile')).backgroundColor,
+            ink: (() => { const s = document.createElement('span'); s.style.color = 'var(--text-1)'; rail.appendChild(s);
+                          const c = getComputedStyle(s).color; s.remove(); return c; })(),
+            title: (() => { const s = document.createElement('span'); s.style.fontWeight = 'var(--w-title)'; rail.appendChild(s);
+                            const w = getComputedStyle(s).fontWeight; s.remove(); return w; })()}; }"""
     )
     assert (lume["count"], lume["drawer"], lume["key"]) == (1, 1, "requests"), "once per rail copy"
     assert lume["disc"] == lume["tile"] == "rgb(255, 255, 255)", "the lit paper disc is the tile's own material"
-    assert lume["glyph"] == "rgb(21, 34, 42)" and lume["weight"] == "600" and lume["plate"] != "rgba(0, 0, 0, 0)"
+    # V5.29 (stream SYS, the owner's text roles — an approved decision; V5.20): the glyph is the primary text role's
+    # ink, read from the token (the night-blue ink since V5.29, rgb(34, 47, 61)), never a dark literal
+    assert lume["glyph"] == lume["ink"] == "rgb(34, 47, 61)"
+    # the current item at the title role's weight, read from the token (V5.29: --w-title 500 on the platform, lane PLAT,
+    # an approved decision; V5.20) — and still a step above the others only where the role says so
+    assert lume["weight"] == lume["title"] and lume["plate"] != "rgba(0, 0, 0, 0)"
     assert lume["bar"] == "none", "no bar at the edge"
     assert lume["otherDiscs"] == ["rgba(0, 0, 0, 0)"] and lume["otherWeights"] == ["500"]
 
@@ -528,7 +537,11 @@ def test_the_shell_draws_two_corners_no_shadow_at_rest_and_one_edge_for_every_pa
         assert (edge["x"], edge["foot"], edge["crumb"]) == (280 + 33, 280, 280), (
             f"{name}: one start edge, 32 px from the rail; the title on the sheet's inner edge: {edge}"
         )
-        assert (edge["size"], round(float(edge["line"][:-2]), 2), edge["weight"]) == ("34.72px", 38.89, "600"), (
+        # v524-plat (V5.20; amended citing V5.29 §5–§6, the owner's «font weight too heavy … not bold hierarchy», and
+        # stream SYS's contract item for PLAT in QA/v529/sys/NOTES.md §3; FINAL_DELIVERY_V2 §3.7): the title's literal
+        # 600 now reads the title role `--w-title`, 500 in SYS's map — the same one size, line and weight for all five
+        # heads, the weight the role's and never the bold step
+        assert (edge["size"], round(float(edge["line"][:-2]), 2), edge["weight"]) == ("34.72px", 38.89, "500"), (
             f"{name}: the atrium's title: {edge}"
         )
         assert edge["pad"] == ["32px", "32px"], name

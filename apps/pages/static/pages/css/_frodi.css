@@ -21,7 +21,7 @@
 
 .frodi__titolo {
   margin: 0 0 var(--s-5);
-  font-size: clamp(1.5rem, 1.25rem + 0.8vw, var(--t-band));
+  font-size: var(--t-band);
   line-height: var(--t-band-lh);
   font-weight: var(--w-title);
 }
@@ -88,11 +88,15 @@
   align-items: center;
   gap: var(--s-3) var(--s-4);
   min-block-size: var(--hit-primary);
-  font-size: clamp(1rem, 7cqi, var(--t-entry));
-  line-height: var(--t-entry-lh);
+  font-size: var(--t-body); /* the step the plate holds on one line (V5.24 Typography V2: by container query, no clamp) */
+  line-height: var(--t-body-lh);
   font-weight: var(--w-title);
   color: var(--text-1);
   text-decoration: none;
+}
+
+@container (min-width: 18rem) {
+  .frodi__indirizzo { font-size: var(--t-entry); line-height: var(--t-entry-lh); }
 }
 
 .frodi__indirizzo .email { white-space: nowrap; }

@@ -1,0 +1,41 @@
+{% load i18n %}{% comment %}
+THE LIST'S BAR — the platform's list toolkit (V5.30, stream C; docs/design-v5/QA/v530/plat/NOTES.md §1; the spec and
+its contract: apps/portal/listing.py `ListSpec.context`). Drawn above a list that has something to narrow (two rows or
+more, or a narrowing in force: `listing.show`):
+
+  the bar     ONE GET form — the main search (its own label, the magnifier its submit), the whitelisted sort, «Filtres»
+              (a link to the drawer, `data-overlay-open`: the overlay system's drawer from the inline end; without
+              script the drawer shows in place, :target) with the count of the filters in force; the drawer's choices
+              ride along as hidden fields, so a search keeps them
+  the state   once something narrows the list: the result count (a status), one chip per criterion — its field in the
+              quiet ink, its value in its own direction, a link that removes it (named «Retirer le filtre …») —, and
+              «Tout effacer»; chips wrap, never clipped (ui-ux-pro-max «Chip Collection Reflow»)
+Without static/js/src/listing.js everything works: the sort applies with the search's submit; with it, the sort applies
+when chosen and empty fields stay out of the URL. Rules: portal/listing.css (the page links it). Every word is the
+catalogue's; the values are the records' or the person's own search, escaped.
+
+Contract: `listing` (ListSpec.context).
+{% endcomment %}{% if listing.show %}<div class="lst" data-listing>
+  <form class="lst__bar" method="get" action="{{ listing.path }}" role="search" data-listing-form>
+    {% for key, value in listing.kept %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+    {% for key, value in listing.bar_hidden %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+    {% if listing.search %}<div class="lst__search">
+      <label class="visually-hidden" for="{{ listing.id }}-q">{{ listing.search_label }}</label>
+      <input class="input lst__q" type="search" id="{{ listing.id }}-q" name="q" value="{{ listing.query }}" maxlength="80" placeholder="{{ listing.search_label }}" autocomplete="off" enterkeyhint="search">
+      <button class="lst__go" type="submit" aria-label="{% translate 'Rechercher' %}">{% svg_icon "search" "icon" %}</button>
+    </div>{% endif %}
+    <div class="lst__tools">
+      {% if listing.sorts|length > 1 %}<label class="lst__sort">{% svg_icon "arrow-down-up" "icon" %}<span class="visually-hidden">{% translate "Trier par" %}</span>
+        <select class="lst__select" name="tri" data-listing-sort>{% for sort in listing.sorts %}<option value="{{ sort.key }}"{% if sort.selected %} selected{% endif %}>{{ sort.label }}</option>{% endfor %}</select>
+      </label>{% endif %}
+      {% if listing.has_filters %}<a class="lst__open" href="#{{ listing.id }}-filters" data-overlay-open>{% svg_icon "list-filter" "icon" %}<span>{% translate "Filtres" %}</span>{% if listing.filter_count %}<span class="lst__n"><span class="visually-hidden">{% translate "en vigueur :" %} </span>{{ listing.filter_count }}</span>{% endif %}</a>{% endif %}
+    </div>
+  </form>
+  {% if listing.narrowed %}<div class="lst__state">
+    <p class="lst__found" role="status">{% blocktranslate count n=listing.count %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</p>
+    <ul class="lst__chips" role="list" aria-label="{% translate 'Filtres en vigueur' %}">
+      {% for chip in listing.chips %}<li class="lst__chip"><span class="lst__field">{{ chip.label }}</span> <span class="lst__value" dir="auto">{{ chip.value }}</span><a class="lst__x" href="{{ chip.remove }}" aria-label="{% blocktranslate with field=chip.label value=chip.value %}Retirer le filtre {{ field }} {{ value }}{% endblocktranslate %}">{% svg_icon "close" "icon" %}</a></li>{% endfor %}
+    </ul>
+    <a class="lst__clear" href="{{ listing.clear_url }}">{% translate "Tout effacer" %}</a>
+  </div>{% endif %}
+</div>{% endif %}

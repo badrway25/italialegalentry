@@ -15,12 +15,12 @@ arch) drawn at display scale on the band's far side, once in the head's sequence
 arch (the page's one arrival gold): the page without a photograph has its image (Q4). Decorative, aria-hidden.
 {% endcomment %}
 <header class="ingresso ingresso--night forum-hero{% if event.hero_image %} forum-hero--with-image{% endif %}" id="forum-top">
-  {% forum_mark as forum_mark_id %}<div class="forum-hero__disegno" aria-hidden="true">{% include "components/sezioni/sigillo.html" with mark=forum_mark_id size="body" night=True css_class="forum-hero__marchio" only %}</div>
+  {% forum_mark as forum_mark_id %}<div class="forum-hero__disegno" aria-hidden="true">{% include "components/sezioni/sigillo.html" with mark=forum_mark_id size="body" arch=True night=True css_class="forum-hero__marchio" only %}</div>
   <div class="container ingresso__inner">
     <div class="ingresso__text forum-hero__text">
-      {% if is_permanent %}{% translate "Espace permanent de dialogue et de coopération" as eyebrow %}{% else %}{% translate "Événement institutionnel" as eyebrow %}{% endif %}{% get_current_language as page_lang %}
-      {# a UI string the translators have not given yet stays in French: it says so (WCAG 3.1.2; B2) #}
-      <p class="ingresso__label forum-hero__eyebrow"{% if page_lang != "fr" and eyebrow == "Espace permanent de dialogue et de coopération" %} lang="fr"{% endif %}>{{ eyebrow }}</p>
+      {% if is_permanent %}{% translate "Dialogue institutionnel permanent" as eyebrow %}{% else %}{% translate "Événement institutionnel" as eyebrow %}{% endif %}
+      {# V5.24 Arabic Complete (ARABIC_AUDIT 02_class_b_wraps W1.2): a team UI string of its own, no longer the locked paragraph's opening clause — translated like every label (fragments ar/it/en.po §A), so the French branch is gone #}
+      <p class="ingresso__label forum-hero__eyebrow">{{ eyebrow }}</p>
       {% if is_permanent %}
         <h1 class="ingresso__title ingresso__title--caps forum-hero__title"{% if permanent_title_lang %} lang="{{ permanent_title_lang }}"{% endif %}>{{ permanent_title }}</h1>
         {% event_text event "header.subtitle" "p" "ingresso__lead forum-hero__subtitle" %}
@@ -47,7 +47,7 @@ arch (the page's one arrival gold): the page without a photograph has its image 
         {% else %}
         <figure class="figura forum-hero__figure">
           <img src="{{ event.hero_image.file.url }}" alt="{{ hero_image_alt }}" width="{{ event.hero_image.width|default:960 }}" height="{{ event.hero_image.height|default:640 }}" decoding="async">
-          <figcaption lang="fr">{{ event.hero_image.caption_fr }}{% if event.hero_image.caption_place %} · {{ event.hero_image.caption_place }}{% endif %}{% if event.hero_image.caption_date %}, {{ event.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if event.hero_image.credit %} — {% translate "Photo" %} : {{ event.hero_image.credit }}{% endif %}</figcaption>
+          <figcaption lang="fr">{{ event.hero_image.caption_fr }}{% if event.hero_image.caption_place %} · {{ event.hero_image.caption_place }}{% endif %}{% if event.hero_image.caption_date %}, {{ event.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if event.hero_image.attribution_required %} — {% translate "Photo" %} : {{ event.hero_image.credit }}{% endif %}</figcaption>
         </figure>
         {% endif %}
       {% endif %}

@@ -246,7 +246,7 @@ html.lume-warm .lume-veil__stage {
   pointer-events: none;
 }
 
-:lang(ar) .lume-veil__word {
+.lume-veil__word:lang(ar) {
   letter-spacing: 0;
   text-transform: none;
 }

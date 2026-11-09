@@ -7,6 +7,11 @@
    four step plates on the brand wash, their route, the caveat as its terminal plate. Adapted from 21st.dev (NOTES,
    provenance): «Vertical How It Works Timeline» 26902 (numbered nodes, an icon a step, one rail) — refused: ticks,
    completion.
+   V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.2, §3.4; TYPOGRAPHY_V2 §4.2, §6; lane PUB1): the head → board
+   seam's «raccordo» placed on the trunk (--raccordo-x; the primitive is the library's material sheet); the PA-2 plates' tiles ink and
+   light instead of settling (the mosaico's light in the page sheet's idiom); the step marker on the numeral role (Host
+   Grotesk 600, tabular — never the mono); the French runs' leading on an Arabic page comes from the tokens' Latin
+   boundary (F-7: no descendant-form rule here).
    ============================================================================================ */
 
 /* ---- PA-1 · the board is the families' group (pathways/_tracciato.html): a fieldset whose legend names the five
@@ -201,12 +206,6 @@ html:has(.percorsi-tracciato) {
   .percorsi-tracciato .tracciato__corsia--end .tracciato__linea {
     inset-inline-start: calc(-1 * var(--s-6));
   }
-
-  /* a French run in an Arabic card keeps the Latin leading (QA_ROUND2 m2: it took the Arabic 32 px and read
-     double-spaced); a phone's card sets its own (below) */
-  [dir="rtl"] .percorsi-tracciato :is(.tracciato__titolo, .tracciato__riga)[lang="fr"] {
-    line-height: 1.75rem;
-  }
 }
 
 @media (min-width: 64rem) {
@@ -386,12 +385,14 @@ html:has(.percorsi-tracciato) {
   content: counter(come, decimal-leading-zero);
 }
 
+/* the numeral role (TYPOGRAPHY_V2 F-3; V5.24): the sans at 600, tabular — 28 on a phone, 36 from 64 rem —, its box its
+   size (a solo numeral: the route across reads the same step below) */
 .come__num {
   grid-column: 2;
-  font-family: var(--f-mono);
-  font-size: var(--t-band);
+  font-size: var(--t-numeral);
   line-height: 1;
-  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
   color: var(--text-2);
 }
 
@@ -540,14 +541,14 @@ html:has(.percorsi-tracciato) {
   }
 
   .come__num {
-    font-size: var(--t-title);
+    font-size: var(--t-numeral-lg);
   }
 
   /* the route across: from each plate's tile to the next plate, behind the plates' gap */
   .come__tappa:not(:last-child)::after {
     content: "";
     position: absolute;
-    inset-block-start: calc(var(--s-6) + var(--t-title) + var(--s-4) + 23px);
+    inset-block-start: calc(var(--s-6) + var(--t-numeral-lg) + var(--s-4) + 23px);
     inset-inline: calc(var(--s-6) + 48px) calc(-1 * var(--s-5));
     block-size: 2px;
     background: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
@@ -570,11 +571,52 @@ html:has(.percorsi-tracciato) {
 .come__tappa:nth-child(3) { --co-i: 2; }
 .come__tappa:nth-child(4) { --co-i: 3; }
 
-/* STAGGER: the four plates' tiles settle in turn as the band enters, the route draws behind them (60 ms apart) */
+/* STAGGER: the route draws behind the plates as the band enters (60 ms apart) */
 @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
   :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come__tappa::after { scale: 0 1; }
   :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come__tappa::after {
     animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--co-i, 0) * 60ms + 120ms) backwards;
+  }
+}
+
+/* V5.24 (BACKGROUND_MATERIAL_V2 §3.4 PA-2; lane PUB1): the plates' tiles no longer settle («the square pops»): each tile's
+   foot rule draws to its resting 40 %, its glyph inks (the verb on the tile, pathways/index.html) and the niche's floor
+   lights once, one step after the rule, 60 ms apart — a threshold. The light is the mosaico's (v5/_sec-mosaico.css) in
+   the page sheet's idiom: an inner shadow in the plate's token rising from the tile's foot, no gradient in a page sheet */
+.come .sez-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: inset 0 -1.75rem 0.75rem -0.25rem var(--surface-raised);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come .sez-tile::before { opacity: 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come .sez-tile::before {
+    animation: sez-layer var(--motion-standard) var(--ease-enter) calc(var(--motion-slow) + var(--co-i, 0) * var(--motion-stagger)) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come .sez-tile::after { scale: 0 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come .sez-tile::after {
+    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--co-i, 0) * var(--motion-stagger)) backwards;
+  }
+}
+
+/* ---- V5.24 · the head → the board (BACKGROUND_MATERIAL_V2 §3.2; FINAL_DELIVERY_V2 R3, §3.5): «il raccordo» rises from the
+        board 48 px into the head's foot — the route leaves the head (the span the board's first child; the library's material sheet
+        --risale; the reading edge: _persone-v2.css). Its x: on a phone the trunk's line, 23 px into the reading edge; from
+        48 rem the head draws its journey spine on the seal's axis (v5/_fronte.css: 27 px) and the raccordo stands 17 px
+        under the spine's arrival disc — it continues THAT line, the one the eye is on; the trunk begins its own course at
+        the origin tile 600 px lower, 4 px aside (two passed compositions; the seam joins the nearer) ---- */
+.percorsi-famiglie > .sez-raccordo {
+  inset-inline-start: calc(var(--bordo-lettura) + 23px);
+}
+
+@media (min-width: 48rem) {
+  .percorsi-famiglie > .sez-raccordo {
+    inset-inline-start: calc(var(--bordo-lettura) + 27px);
   }
 }
 

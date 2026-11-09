@@ -34,8 +34,10 @@ from django.core import signing
 from django.core.exceptions import ValidationError
 from django.core.signing import BadSignature
 from django.db import models, transaction
+from django.utils import translation
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext, pgettext_lazy
 from PIL import Image
 
 from audit.services import record
@@ -258,6 +260,61 @@ def run_pending_scans(limit: int = 100) -> dict[str, int]:
 # ---------------------------------------------------------------------------------------------
 # Life-cycle
 # ---------------------------------------------------------------------------------------------
+#: The seeded pieces' titles and details (apps/documents/seeds.py REQUIREMENTS), as the catalogue knows them: a required
+#: piece keeps the French it was declared in (``DocumentRequirement.language``), and ``displayed_text`` asks the
+#: catalogue for it first (V5.24 §4–§5, the Arabic completeness audit's W3.2; lane AR), so the person's dashboard, the
+#: case file and «Mes documents» name the piece in the reader's language. A piece an operator declares by hand keeps its
+#: own words and its own language. Listed here so the catalogue sync keeps the 14 entries (``scripts/i18n_audit.py``
+#: reads gettext calls, not data); ``tests`` hold the list and the seeds together.
+REQUIREMENT_TEXTS: tuple = (
+    pgettext_lazy("document requirement", "Passeport en cours de validité"),
+    pgettext_lazy(
+        "document requirement",
+        "Pages d’identité uniquement. La validité doit couvrir la durée du séjour envisagé.",
+    ),
+    pgettext_lazy("document requirement", "Acte d’état civil légalisé"),
+    pgettext_lazy(
+        "document requirement",
+        "Traduction assermentée si l’acte n’est pas rédigé dans une langue acceptée.",
+    ),
+    pgettext_lazy("document requirement", "Extrait de casier judiciaire"),
+    pgettext_lazy("document requirement", "Délivré par l’autorité compétente du pays de résidence."),
+    pgettext_lazy("document requirement", "Diplôme ou titre de formation"),
+    pgettext_lazy(
+        "document requirement",
+        "Copie complète, toutes pages. La déclaration de valeur peut être demandée ensuite.",
+    ),
+    pgettext_lazy("document requirement", "Attestation de niveau de langue"),
+    pgettext_lazy("document requirement", "Délivrée par l’organisme de formation à l’issue du parcours."),
+    pgettext_lazy("document requirement", "Proposition de contrat de travail"),
+    pgettext_lazy(
+        "document requirement",
+        "Établie par l’entreprise. Ce n’est pas une promesse d’embauche ni une garantie de résultat.",
+    ),
+    pgettext_lazy("document requirement", "Nulla osta au travail"),
+    pgettext_lazy("document requirement", "Délivré par le Sportello unico. Cette pièce ne dépend pas de vous."),
+)
+
+
+def displayed_text(text: str, language: str = "fr") -> tuple[str, str]:
+    """
+    ``(the words as shown, the language they are in)`` for a piece's title or detail stored in ``language``: the
+    catalogue's rendering when the reader's language differs and has one (``pgettext("document requirement", …)``,
+    translated when it differs from the source — the pattern of ``rules.services.displayed``), else the stored words in
+    their own language, which the templates then isolate (``lang`` / ``dir``).
+    """
+    source = str(text or "")
+    language = (language or "fr").split("-")[0]
+    if not source:
+        return source, language
+    current = (translation.get_language() or "fr").split("-")[0]
+    if current != language:
+        found = pgettext("document requirement", source)
+        if found != source:
+            return found, current
+    return source, language
+
+
 def user_may_upload(user) -> bool:
     """Uploads are inside the reserved area: active account that accepted the Conditions."""
     return bool(getattr(user, "is_authenticated", False) and user.is_active and user.terms_accepted_at)

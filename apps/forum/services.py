@@ -88,15 +88,48 @@ class PublicSpeaker:
     role_label: str
     person_name: str
     organisation: str
+    #: the ``lang`` attribute each part needs on the page ("" = the page's language; V5.27 / R7′)
+    role_lang: str = ""
+    organisation_lang: str = ""
 
 
-def public_speakers(event: ForumEvent) -> list[PublicSpeaker]:
-    """Functions always; names (and organisation) only with both authorisations (gate G5)."""
+def _page_lang(lang: str | None) -> str:
+    return (lang or translation.get_language() or settings.LANGUAGE_CODE).split("-")[0]
+
+
+def _seed_line(event: ForumEvent, suffix: str, index: int | None, current: str, lang: str) -> tuple[str, str]:
+    """A seeded row's words in the page's language (V5.27 / R7′, the v524-pub2 steward): while the row still says the
+    prescribed line it was seeded from (``p2.forum.<suffix>[index]``), the registry's door gives it — the provisional
+    Arabic on /ar/ (C-UI); a row the back-office has reworded keeps its own words, in French.
+    → (text, lang attribute)."""
+    french_attr = "" if lang == "fr" else "fr"
+    if index is None:
+        return current, french_attr
+    try:
+        prescribed, _lang = locked_content.get(event.locked_key(suffix), "fr")
+        if index >= len(prescribed) or " ".join(str(prescribed[index]).split()) != " ".join(current.split()):
+            return current, french_attr
+        value, effective = locked_content.get(f"{event.locked_key(suffix)}[{index}]", lang)
+    except locked_content.LockedContentMissing:
+        return current, french_attr
+    return str(value), ("" if effective == lang else effective)
+
+
+def public_speakers(event: ForumEvent, lang: str | None = None) -> list[PublicSpeaker]:
+    """Functions always; names (and organisation) only with both authorisations (gate G5). A seeded function reads in
+    the page's language while unedited (``_seed_line``); the organisation is the back-office's French."""
+    lang = _page_lang(lang)
     site_flag = speaker_names_visible()
     out: list[PublicSpeaker] = []
     for role in event.speaker_roles.filter(is_visible=True):
         name = role.public_name(site_flag)
-        out.append(PublicSpeaker(role.role_label_fr, name, role.organisation if name else ""))
+        if role.is_locked_seed:
+            label, label_lang = _seed_line(event, "speakers.roles", role.locked_index, role.role_label_fr, lang)
+        else:
+            label, label_lang = role.role_label_fr, ("" if lang == "fr" else "fr")
+        organisation = role.organisation if name else ""
+        organisation_lang = "" if not organisation or lang == "fr" else "fr"
+        out.append(PublicSpeaker(label, name, organisation, label_lang, organisation_lang))
     return out
 
 
@@ -107,8 +140,31 @@ def public_partners(event: ForumEvent, kind: str | None = None) -> list[ForumPar
     return [p for p in qs if p.is_public]
 
 
-def programme(event: ForumEvent) -> list[ForumProgramItem]:
-    return list(event.programme_items.filter(is_visible=True))
+def programme(event: ForumEvent, lang: str | None = None) -> list[ForumProgramItem]:
+    """The visible rows, each with its words in the page's language (V5.27 / R7′, the v524-pub2 steward): ``line_text``
+    (the row as the programme writes it), ``line_time`` / ``line_title`` (the timed form), ``line_lang`` (the row's
+    lang attribute) and ``description_lang`` — a seeded, unedited row reads the registry's line by its sub-key (the
+    provisional Arabic on /ar/), any other row its own French words."""
+    lang = _page_lang(lang)
+    french_attr = "" if lang == "fr" else "fr"
+    rows = list(event.programme_items.filter(is_visible=True))
+    for item in rows:
+        item.line_time, item.line_title, item.line_text = item.time_label, item.title_fr, str(item)
+        item.line_lang = item.description_lang = french_attr
+        if not item.is_locked_seed:
+            continue
+        text, text_lang = _seed_line(event, "programme.items", item.locked_index, str(item), lang)
+        if text == str(item):
+            continue
+        item.line_text, item.line_lang = text, text_lang
+        item.line_time, item.line_title = "", text
+        if " — " in text:
+            head, tail = text.split(" — ", 1)
+            if head.strip() and head.strip()[0].isdigit():
+                item.line_time, item.line_title = head.strip(), tail.strip()
+        # the back-office's description stays French: its own lang inside a row that reads the page's language
+        item.description_lang = "" if text_lang == "fr" or lang == "fr" else "fr"
+    return rows
 
 
 def permanent_sections(event: ForumEvent, now: dt.datetime | None = None) -> dict:
@@ -204,8 +260,8 @@ def page_context(request, event: ForumEvent | None) -> dict:
             "event_title": event_title,
             "meta_description": event.locked_text("header.subtitle", lang),
             "registration_open": event.registration_is_open(now),
-            "programme": programme(event),
-            "speakers": public_speakers(event),
+            "programme": programme(event, lang),
+            "speakers": public_speakers(event, lang),
             "patron_partners": public_partners(event, PartnerKind.PATRON),
             "hero_image_alt": event.hero_image.alt(lang) if event.hero_image_id else "",
             "jsonld": "" if is_permanent else jsonld_event(event, request),

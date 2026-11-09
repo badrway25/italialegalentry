@@ -92,13 +92,13 @@
    the route's ink and weight, so the route visibly starts from it */
 .linea--large:has(.sigillo) {
   --lv-col: 56px;
-  --lv-mh: 68px;
+  --lv-mh: 56px;
 }
 
 .linea--large > :has(.sigillo) {
   --lv-tile: 56px;
-  --lv-h: 68px;
-  --lv-o: 0px;
+  --lv-h: 56px;
+  --lv-o: 4px;
 }
 
 .linea--large .sigillo::after {

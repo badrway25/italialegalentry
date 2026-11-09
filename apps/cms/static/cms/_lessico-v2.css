@@ -56,7 +56,7 @@
   margin: 0;
   font-size: var(--t-display);
   line-height: 1;
-  font-weight: 500;
+  font-weight: var(--w-display); /* 600 — the family's display weight (V5.24 Typography V2) */
   color: var(--text-3);
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 1.5px currentColor;
@@ -94,6 +94,11 @@
   color: var(--text-2);
 }
 
+/* V5.27 / R7′ (the v524-pub2 steward): a French definition on an Arabic page and its identification caption are one
+   grid item — the card's subgrid line, the plate's first column — the caption a label's step above the words */
+:is(.lessico__fonte, .scheda__fonte) { display: grid; gap: var(--s-1); }
+:is(.lessico__fonte, .scheda__fonte) > .locked-caption { margin: 0; }
+
 .lessico__dove {
   position: relative;
   z-index: 2; /* above the card's stretched link: the chips are links of their own */
@@ -112,7 +117,7 @@
   color: var(--text-2);
 }
 
-:lang(ar) :is(.lessico__etichetta, .scheda__etichetta) { font-size: var(--t-ui); line-height: var(--t-ui-lh); }
+:is(.lessico__etichetta, .scheda__etichetta):lang(ar) { font-size: var(--t-ui); line-height: var(--t-ui-lh); }
 
 :is(.lessico__chips, .scheda__chips) {
   display: flex;
@@ -201,10 +206,13 @@
   .lessico__carte { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-/* the term page: the term at display size in the compact band, the definition plate on its shadow layer */
-.page-glossary-term .ingresso__title {
-  font-size: clamp(2.5rem, 1.5rem + 3vw, var(--t-display));
-  line-height: 1.05;
+/* the term page: the term at display size in the compact band (the scale's step — V5.24 Typography V2 §5: «the seam or
+   term title once below the header»; an Italian run keeps its Latin leading on the Arabic page through the tokens'
+   boundary), the definition plate on its shadow layer */
+.page-glossary-term [data-fronte][data-compact] .ingresso__title { /* over the compact head's title-2 (v5/_fronte.css, which loads after this sheet) */
+  font-size: var(--t-display);
+  line-height: var(--t-display-lh);
+  letter-spacing: var(--track-display);
 }
 
 .scheda {
@@ -222,9 +230,9 @@
   inset-block-start: calc(-1 * var(--s-16));
   inset-inline-end: var(--s-4);
   z-index: -1;
-  font-size: clamp(10rem, 22vw, 20rem);
+  font-size: calc(var(--t-display) * 4.5); /* a drawing on the scale: four and a half display steps (198 → 288 px), no clamp of its own */
   line-height: 0.8;
-  font-weight: 600;
+  font-weight: var(--w-display);
   color: transparent;
   -webkit-text-stroke: 1.5px var(--line-structure);
 }
@@ -315,6 +323,11 @@
 
 .vivere-testa__riga .page-header__title { margin: 0; }
 
+[data-fronte] .vivere-testa__riga .page-header__title--caps:not(:lang(ar)) {
+  font-size: var(--t-title-1);
+  line-height: var(--t-title-1-lh);
+}
+
 /* the seal's door answers the band's action (round 2, QA_ROUND2 M8): its tone deepens and its threshold light pools
    brighter with the seal system's light */
 /* the seal system's light at rest on the head's scope (v5/_sigillo.css raises it to 1 under the action) */
@@ -373,28 +386,6 @@
   box-shadow: none;
 }
 
-.vivere-panorama__quadro .foto__credit {
-  position: absolute;
-  inset-block-start: var(--s-2);
-  inset-inline-end: calc((100vw - 100cqw) / 2 + var(--s-3));
-  margin: 0;
-  padding: 2px var(--s-2);
-  border-radius: var(--radius-sm);
-  background: var(--plate-night-photo);
-  color: var(--text-on-night-1);
-}
-
-/* the light that crosses the façades once as the frame leaves the screen (scroll-linked: it reverses with the scroll);
-   its band is drawn in the markup (an SVG paint), the colour the token's */
-.vivere-panorama__luce {
-  position: absolute;
-  inset: 0;
-  inline-size: 100%;
-  block-size: 100%;
-  color: var(--surface-raised);
-  opacity: 0;
-}
-
 .vivere-panorama__lastra {
   position: relative;
   z-index: 1;
@@ -428,14 +419,6 @@
   :root:not(.rm) .vivere-panorama__quadro .foto > picture {
     display: block;
     animation: vivere-scala var(--motion-route-light) var(--ease-enter) backwards;
-  }
-
-  @supports (animation-timeline: view()) {
-    :root:not(.rm) .vivere-panorama__luce {
-      animation: sez-sweep linear both;
-      animation-timeline: view();
-      animation-range: exit 5% exit 75%;
-    }
   }
 
   /* the seal draws in the head's own sequence (§4.9 n° 13): the roofline and the door, the sprout 300 ms later and rising

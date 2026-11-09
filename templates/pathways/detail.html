@@ -14,7 +14,7 @@ index, one section device at the reading edge, the reading text at its measure:
   * «Ressources»: the useful terms (one row of tags of one height), the space's other areas;
   * «Orientation»: the page's ONE action, and the live «who can help me» line.
 Design V5.22 (SECTION_SYSTEM_V2 §3.5; lane P1 — Page Composition V2). The sheets are type-led (DECISIONS §6): their
-imagery is drawn — the timeline, the authority arc, the compass. Below the approved head (KEEP: the folio's seal
+imagery is typographic — the timeline, the authorities' plates, the orientation's plate (V5.30 VARIETY §5). Below the approved head (KEEP: the folio's seal
 `ile-percorso`, the locked title and description, the nature line, the «Sommaire» — which becomes the page's sticky
 rail from 64 rem):
   * the page's rail («Sommaire de la page», QA_ROUND1 M4): from 64 rem ONE sticky index at the reading edge for the
@@ -24,7 +24,7 @@ rail from 64 rem):
   * PS-1, the page's moment — I «il filo» (components/sezioni/filo.html): the steps as milestones (the CMS seed
     headings, pending: headings only, nothing invented), each its numeral and its concept tile (icons.SHEET_STEP).
     SCROLL PROGRESSION;
-  * PS-2 — «chi decide» on the night: the competent authorities as seats on an arc (the registry's building, neutral
+  * PS-2 — «chi decide» on the night: the competent authorities as a row of plates (V5.30 VARIETY §5: no arc) (the registry's building, neutral
     ink, each name in its own language, its host beside a link — D26), Italy Legal Entry™ drawn OUTSIDE the arc as a
     dotted node that never lights, captioned by the lead that says it intervenes with no authority. The drawing says
     ILE is not an authority. RELATIONAL DRAW;
@@ -32,7 +32,12 @@ rail from 64 rem):
   * PS-4 — L, definitions in place: each useful Italian term opens its locked definition (p3.glossary.terms, verbatim)
     with its way to the glossary (native exclusive <details>); the space's other areas a compact row. MASK / height;
   * PS-5 — A «la boussole» on the brand wash: the questionnaire's action, its caution kept, the help line beside it.
-    SEMANTIC TURN.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5, R5; BACKGROUND_MATERIAL_V2 §3.2, §3.3, §5.3; lane PUB1 — the material pass; the
+compositions KEPT): «Étapes» stands on stone as a band (five one-line milestones are content-bound: nothing on a sheet is
+tall enough for a moment — recorded, R5), so the head's paper no longer touches the body's; «la protezione» stands on «pietra»; a
+documentation band, when a sheet has one, is paper (two stones never touch). The rail's title is the label role. The
+curated figure's byline follows the licence (`attribution_required`, lane PX's contract: no stock credit on the product).
+The page sheet imports v5/_materia.css.
 V5.12 §8 (W1-C): a chapter with nothing verified to say is not drawn, and the index above does not name it
 (pathways.services.detail_context: `d.sections`) — no «being verified» placeholder in the release. The overview
 stands with its context or with the training-in-origin-country notice, which is legally required and kept verbatim.
@@ -46,14 +51,11 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
 {% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
-{% locked_is_fallback "p3.persons.pathways" as entries_fallback %}{% locked_lang "p3.persons.pathways" as entries_lang %}
+{% locked_caption d.description_key as description_caption %}
 {% translate "Parcours régulier" as order_label %}
 <div class="pathway-entrance" data-pathway="{{ pathway.key }}">{% with order_suffix=pathway.order|stringformat:"s"|add:"/8" %}
-{% if entries_fallback %}
-{% include "pages/partials/_ingresso.html" with label=order_label label_suffix=order_suffix title=d.title title_lang=entries_lang lead=d.description lead_lang=entries_lang meta_template="pathways/_review_meta.html" reviewed_at=pathway.last_reviewed_at index=d.sections motif="route" glyph="signpost" fronte_linked=True only %}
-{% else %}
-{% include "pages/partials/_ingresso.html" with label=order_label label_suffix=order_suffix title=d.title lead=d.description meta_template="pathways/_review_meta.html" reviewed_at=pathway.last_reviewed_at index=d.sections motif="route" glyph="signpost" fronte_linked=True only %}
-{% endif %}{% endwith %}
+{# V5.27 / R7′ (the v524-pub1 steward): the title and the description each in the language the seam gives them #}
+{% include "pages/partials/_ingresso.html" with label=order_label label_suffix=order_suffix title=d.title title_lang=d.title_lang lead=d.description lead_lang=d.description_lang lead_caption=description_caption meta_template="pathways/_review_meta.html" reviewed_at=pathway.last_reviewed_at index=d.sections motif="route" glyph="signpost" fronte_linked=True only %}{% endwith %}
 </div>
 
 {% if pathway.hero_image and pathway.hero_image.is_publishable %}
@@ -63,7 +65,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
   {% else %}
   <figure class="figura">
     <img src="{{ pathway.hero_image.file.url }}" alt="{{ pathway.hero_image.alt_fr }}" lang="fr" width="{{ pathway.hero_image.width }}" height="{{ pathway.hero_image.height }}" loading="lazy" decoding="async">
-    <figcaption lang="fr">{{ pathway.hero_image.caption_fr }}{% if pathway.hero_image.caption_place %} · {{ pathway.hero_image.caption_place }}{% endif %}{% if pathway.hero_image.caption_date %}, {{ pathway.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if pathway.hero_image.credit %} — {% translate "Photo" %} : {{ pathway.hero_image.credit }}{% endif %}</figcaption>
+    <figcaption lang="fr">{{ pathway.hero_image.caption_fr }}{% if pathway.hero_image.caption_place %} · {{ pathway.hero_image.caption_place }}{% endif %}{% if pathway.hero_image.caption_date %}, {{ pathway.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if pathway.hero_image.credit and pathway.hero_image.attribution_required %} — {% translate "Photo" %} : {{ pathway.hero_image.credit }}{% endif %}</figcaption>
   </figure>
   {% endif %}
 </div>
@@ -73,7 +75,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
 <div class="scheda-corpo">
 <nav class="filo__rail scheda-rail" aria-labelledby="rail-title" data-sec-js="spia">
   <div class="container scheda-rail__campo"><div class="scheda-rail__lastra">
-    <p class="scheda-rail__titolo" id="rail-title">{{ rail_label }}</p>
+    <p class="scheda-rail__titolo t-label" id="rail-title">{{ rail_label }}</p>
     <ol class="filo__indice">{% for item in d.sections %}<li><a class="filo__voce" href="#{{ item.id }}"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.label }}</a></li>{% endfor %}</ol>
   </div></div>
 </nav>
@@ -100,7 +102,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
 
 {% if d.steps %}
 {% translate "Étapes" as etapes_title %}
-<section id="etapes" class="sez sez--filo scheda-filo" data-sec="filo" data-ground="paper" data-rhythm="moment" aria-labelledby="etapes-title">
+<section id="etapes" class="sez sez--filo scheda-filo" data-sec="filo" data-ground="stone" data-rhythm="band" aria-labelledby="etapes-title">
   <div class="container">
     {% include "components/sezioni/_testa.html" with role="statement" title_id="etapes-title" title=etapes_title only %}
     <div class="filo">
@@ -119,7 +121,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
 
 {% if d.documents %}
 {% translate "Documentation généralement requise" as doc_title %}{% translate "Liste indicative : les documents effectivement demandés dépendent de votre situation et des indications des autorités compétentes." as doc_lead %}
-<section id="documentation" class="sez scheda-documenti" data-ground="stone" data-rhythm="band" aria-labelledby="documentation-title">
+<section id="documentation" class="sez scheda-documenti" data-ground="paper" data-rhythm="band" aria-labelledby="documentation-title">
   <div class="container">
     {% include "components/sezioni/_testa.html" with role="process" title_id="documentation-title" title=doc_title lead=doc_lead only %}
     <ul class="scheda-documenti__lista" role="list">
@@ -154,7 +156,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
 </section>
 {% endif %}
 
-<section id="avertissements" class="sez sez--strato persone-protezione" data-sec="strato" data-ground="stone" data-rhythm="band" aria-labelledby="protezione-title-detail">
+<section id="avertissements" class="sez sez--strato persone-protezione" data-sec="strato" data-ground="pietra" data-rhythm="band" aria-labelledby="protezione-title-detail">
   <div class="container">
     {% include "components/sezioni/protezione.html" with url=links.antifraud level=2 suffix="detail" only %}
     {% if d.warnings %}<div class="scheda-avvisi">

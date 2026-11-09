@@ -20,7 +20,9 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.14; lane P2) — the head with its search pl
       Round 1 (QA_ROUND1 M7): ONE register, not a group a letter (ten terms under eight letters left a sparse column):
       a letter's first card carries the letter, set large in its corner as its marker — the letter's heading and the
       anchor the thumb index reaches (#lettre-X); the card answers the hand and the focus (its letter, its rule);
-  G3  E «il rimando» on stone: the FAQ, the pathways, the fraud page.
+  G3  E «il rimando»: the FAQ, the pathways, the fraud page.
+V5.24 (BACKGROUND_MATERIAL_V2 §3.3, §5.2; FINAL_DELIVERY_V2 §3.6; lane PUB2): the register on STONE — the white term
+cards become plates on a ground —, «il rimando» on PAPER before the night footer; the letters at 600 (0 B: attributes).
 {% endcomment %}
 {% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Glossaire{% endblocktranslate %}{% else %}{% translate "Glossaire" %}{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots : visto, permesso di soggiorno, nulla osta, codice fiscale…" %}{% endblock %}
@@ -63,7 +65,7 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.14; lane P2) — the head with its search pl
   </div>
 </section>
 {% elif letters %}
-<div class="sez sez--lessico lessico" data-sec="lessico" data-ground="paper" data-rhythm="band">
+<div class="sez sez--lessico lessico" data-sec="lessico" data-ground="stone" data-rhythm="band">
   <div class="container lessico__griglia">
     <nav class="az-index glossary__index" aria-label="{% translate 'Index alphabétique' %}" data-sec-js="spia">
       <ol class="az-index__list">
@@ -78,7 +80,7 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.14; lane P2) — the head with its search pl
 {% endif %}{# V5.12 §8: without a live term the page answers 404 (glossary.views.index) #}
 
 {% if rimando %}
-<aside class="sez sez--rimando glossary__related" data-sec="rimando" data-ground="stone" data-rhythm="strip" aria-labelledby="glossary-related-title">
+<aside class="sez sez--rimando glossary__related" data-sec="rimando" data-ground="paper" data-rhythm="strip" aria-labelledby="glossary-related-title">
   <div class="container">
     {% translate "Pour aller plus loin" as related_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="glossary-related-title" title=related_title only %}
     {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=rimando only %}

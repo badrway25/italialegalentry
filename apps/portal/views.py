@@ -19,7 +19,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
-from portal import services
+from portal import lists, services
 
 
 def portal_view(active: str, methods: tuple[str, ...] = ("GET", "HEAD")):
@@ -162,8 +162,16 @@ def documents(request):
     if services.organisation_audience(request.user):
         # The pieces register is a person's file; an organisation's documents are on «Mon organisation» (Q7).
         return redirect("portal:organisation")
-    context = services.documents_page(request.user)
-    context["page_obj"] = services.paginate(context.pop("documents"), request.GET.get("page"), per_page=20)
+    # V5.30 (stream C): the account's files on the platform's list toolkit — the spec narrows the queryset
+    # documents_page scopes (own, alive), never more (portal.lists.FILES).
+    state = lists.FILES.read(request.GET)
+    context = services.documents_page(request.user, narrow=lambda rows: lists.FILES.apply(rows, state))
+    files, scoped = context.pop("documents"), context.pop("documents_scoped")
+    context["page_obj"] = services.paginate(files, request.GET.get("page"), per_page=20)
+    if scoped is not None:
+        total = scoped.count()
+        context["listing"] = lists.FILES.context(state, scoped=scoped, count=len(files), total=total, path=request.path)
+        context["files_total"] = total
     return _render(request, "portal/documents.html", context, {"label": _("Mes documents"), "url": ""})
 
 
@@ -182,8 +190,20 @@ def deadlines(request):
 
 @portal_view("messages")
 def messages_list(request):
-    page_obj = services.paginate(services.inbox(request.user), request.GET.get("page"))
-    context = {"page_obj": page_obj, "unread_count": services.unread_count(request.user)}
+    # V5.30 (stream C): «Communications» on the platform's list toolkit — the spec narrows the inbox (own, visible),
+    # never more (portal.lists.MESSAGES).
+    scoped = services.inbox(request.user)
+    state = lists.MESSAGES.read(request.GET)
+    page_obj = services.paginate(lists.MESSAGES.apply(scoped, state), request.GET.get("page"))
+    total = scoped.count()
+    context = {
+        "page_obj": page_obj,
+        "unread_count": services.unread_count(request.user),
+        "messages_total": total,
+        "listing": lists.MESSAGES.context(
+            state, scoped=scoped, count=page_obj.paginator.count, total=total, path=request.path
+        ),
+    }
     return _render(request, "portal/messages.html", context, {"label": _("Communications"), "url": ""})
 
 

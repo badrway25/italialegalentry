@@ -797,24 +797,27 @@ def test_the_forum_s_drawing_never_lies_under_its_index(browser, site, lang):
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_portico_keeps_its_scale_when_the_question_opens(browser, site, lang):
-    """QA_ROUND2 m3: the identity's drawing is the plate's width on its own proportions, on the plate's foot — opening
-    the promoter's question (the row grows) shows more of the pediment and never re-scales the colonnade (four columns
-    became two, the strokes 1.6× thicker)."""
+def test_the_identity_plate_keeps_its_box_when_the_question_opens(browser, site, lang):
+    """QA_ROUND2 m3: opening the promoter's question (the row grows) never re-scales the identity's plate.
+    V5.30 §8 (the owner's final art direction, an approved decision; strict rule V5.20): the plate holds «En bref», the role
+    panel, instead of the drawn colonnade — the same invariant on what it now holds: the plate's box and its first fact stay
+    exactly where they were (the plate stands at the row's start, never stretched by the text column), and nothing in the
+    band is drawn."""
     for width, height in ((1440, 900), (1280, 800), (1024, 768)):
         context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion="reduce")
         try:
             page = context.new_page()
             page.goto(f"{site}/{lang}/agami/", wait_until="networkidle")
-            box = """() => { const s = document.querySelector('.colonnato').getBoundingClientRect();
-                const p = document.querySelector('.agami-identita__lastra').getBoundingClientRect();
-                return {w: Math.round(s.width), h: Math.round(s.height), foot: Math.round(p.bottom - s.bottom)}; }"""
+            box = """() => { const p = document.querySelector('.agami-identita__lastra').getBoundingClientRect();
+                const f = document.querySelector('.agami-breve__voce').getBoundingClientRect();
+                return {w: Math.round(p.width), h: Math.round(p.height), top: Math.round(f.top - p.top),
+                        drawn: document.querySelectorAll('.agami-identita svg').length}; }"""
             closed = page.evaluate(box)
             page.click("#agami-faq > summary")
             page.wait_for_timeout(300)
             opened = page.evaluate(box)
-            assert (opened["w"], opened["h"]) == (closed["w"], closed["h"]), (lang, width, closed, opened)
-            assert closed["foot"] == opened["foot"] == 0, (closed, opened)
+            assert opened == closed, (lang, width, closed, opened)
+            assert closed["drawn"] == 0, (lang, width, "the band draws nothing (V5.30 §8)")
         finally:
             context.close()
 
@@ -999,16 +1002,22 @@ def test_a_card_under_the_hand_keeps_its_row_and_the_rail_lights_every_letter(br
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_agami_s_identity_band_plays_its_signature_in_view_at_load(browser, site, lang):
-    """v522-p2-final-qa1 m2 (SECTION_SYSTEM_V2 §3.17 AG-1: «the plate is revealed from the reading edge (MASK, 900 ms) and
-    the colonnade line draws»): at 1440 and 390 the band stands in view at load, so the section runtime writes it no state
-    and it was drawn at rest — its signature never played. In view at load it now plays in the head's own sequence — the
-    plate's mask, then the colonnade's lines, mirrored on the Arabic page (the same drawing, its lines from the reading
-    edge) — and every animation ends; under reduced motion the band stands at rest, nothing running."""
+    """v522-p2-final-qa1 m2 (SECTION_SYSTEM_V2 §3.17 AG-1: «the plate is revealed from the reading edge (MASK, 900 ms)»): at
+    1440 and 390 the band stands in view at load, so the section runtime writes it no state and it was drawn at rest — its
+    signature never played. In view at load it plays in the head's own sequence and every animation ends; under reduced
+    motion the band stands at rest, nothing running.
+    V5.30 §8 (the owner's final art direction, an approved decision; strict rule V5.20): the plate holds the role panel, no
+    longer a colonnade — its signature is the plate's mask alone (no line left to draw: no sez-stroke), and the assertion
+    that the drawing was mirrored on the Arabic page becomes a stronger one: NOTHING of AGAMI's is mirrored — the official
+    logo in the head and the seal on the identification plate stand unflipped in both languages (the ribbon's national
+    colours are never mirrored: V5.29, the owner's correction of 6 Nov 13:12)."""
     band = """() => { const anims = document.getAnimations().filter((a) => a.effect && a.effect.target
                   && a.effect.target.closest && a.effect.target.closest('.agami-identita'));
+        const flips = [...document.querySelectorAll('.agami-insegna, .agami-insegna img, .agami-id__sigillo, .agami-id__sigillo img')]
+            .map((e) => getComputedStyle(e)).filter((cs) => cs.scale !== 'none' || cs.transform !== 'none').length;
         return {state: document.querySelector('.agami-identita').dataset.secState || null,
-                names: [...new Set(anims.map((a) => a.animationName))].sort(), running: anims.length,
-                scale: getComputedStyle(document.querySelector('.colonnato')).scale}; }"""
+                names: [...new Set(anims.map((a) => a.animationName))].sort(), running: anims.length, flips,
+                marks: document.querySelectorAll('.agami-insegna img, .agami-id__sigillo img').length}; }"""
     for width, height in ((1440, 900), (390, 844)):
         for motion in ("no-preference", "reduce"):
             context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion=motion)
@@ -1017,11 +1026,11 @@ def test_agami_s_identity_band_plays_its_signature_in_view_at_load(browser, site
                 page.goto(f"{site}/{lang}/agami/", wait_until="domcontentloaded")
                 first = page.evaluate(band)
                 assert first["state"] is None, (lang, width, "the band is in view at load", first)
-                assert first["scale"] == ("-1 1" if lang == "ar" else "none"), (lang, width, first)
+                assert first["marks"] == 2 and first["flips"] == 0, (lang, width, "the marks drawn unflipped", first)
                 if motion == "reduce":
                     assert first["names"] == [], (lang, width, "at rest under reduced motion", first)
                     continue
-                assert {"sez-mask", "sez-stroke"} <= set(first["names"]), (lang, width, first)
+                assert "sez-mask" in first["names"] and "sez-stroke" not in first["names"], (lang, width, first)
                 page.wait_for_function(f"() => ({band})().running === 0", timeout=6000)
             finally:
                 context.close()

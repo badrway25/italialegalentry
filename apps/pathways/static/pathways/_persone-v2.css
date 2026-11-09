@@ -44,13 +44,15 @@
   margin-inline: 0;
 }
 
-/* ---- Arabic: a label or a kicker in the page's language is never tracked nor set in ILE Mono (the letters of a word
-        join; a tracked Arabic word breaks apart) — the folio's own rule is for Latin runs ---- */
-:lang(ar) :is(.testa__label, .tracciato__nome, .traversata__kicker) {
-  font-family: var(--f-sans);
-  letter-spacing: 0;
-  text-transform: none;
+/* ---- the reading edge, measured from a band's own edge: the container's content start (its centred box, then its
+        margin) — where a page places «il raccordo» on its route (the library's material sheet --raccordo-x; V5.24 BACKGROUND_MATERIAL_V2
+        §3.2). A percentage here resolves where it is read: against the band ---- */
+.sez-raccordo {
+  --bordo-lettura: calc(max(0px, (100% - var(--container)) / 2) + var(--grid-margin));
 }
+
+/* (V5.24, Typography V2: the labels and kickers of the space carry the label role by name — `t-label`, v5/base.css —, whose
+   own Arabic rule drops the capitals and the tracking; the space's descendant-form rule left with it, F-7) */
 
 /* ---- a French title beside its marker on an Arabic page: one line on the marker's edge, as a station's label in «la
         linea» and a card's title (lane S's rule, extended to the milestones and the two times); a French paragraph

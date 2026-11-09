@@ -105,7 +105,7 @@ def index(request):
     page is the same page, because the answer comes from the same queryset; building a separate
     "professional view" would be building a second authorisation rule.
     """
-    cases = (
+    scoped = (
         CaseFile.objects.readable_by(request.user)
         .select_related("person")
         .prefetch_related("assignments__assignee")
@@ -113,9 +113,15 @@ def index(request):
     )
     from portal import services as portal_services
 
-    if not portal_services.shows_person_page(request.user, "cases") and not cases.exists():
+    if not portal_services.shows_person_page(request.user, "cases") and not scoped.exists():
         # An organisation's or a company's «Espace réservé» has no case file of its own (V5.12 Q7): its dashboard.
         return redirect("portal:dashboard")
+    # V5.30 (stream C): the platform's list toolkit narrows the ONE queryset above (cases.lists) — never a second rule.
+    from cases import lists
+
+    spec = lists.spec(request.user)
+    state = spec.read(request.GET)
+    cases = spec.apply(scoped, state)
     rows = []
     for case in cases:
         rows.append(
@@ -127,10 +133,17 @@ def index(request):
                 "responsible": services.responsible_for(case),
             }
         )
+    total = scoped.count()
     return _render(
         request,
         "cases/index.html",
-        {"rows": rows, "has_foreign": any(not row["is_own"] for row in rows)},
+        {
+            "rows": rows,
+            # the mandate's clause speaks for the whole list, whatever the narrowing shows
+            "has_foreign": scoped.exclude(person_id=request.user.pk).exists(),
+            "cases_total": total,
+            "listing": spec.context(state, scoped=scoped, count=len(rows), total=total, path=request.path),
+        },
         {"label": _("Dossiers"), "url": ""},
     )
 

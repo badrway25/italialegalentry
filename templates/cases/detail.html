@@ -125,7 +125,7 @@ discs' full (the dialogs' 12 only while one is open, over the scrim). Nothing mo
             <p class="db-task__title" id="{{ line.anchor }}-title"{% if line.words.lang %} lang="{{ line.words.lang }}" dir="{{ line.words.dir }}"{% endif %}>{% if line.piece_url %}<a class="reg-row__link" href="{{ line.piece_url }}">{{ line.title }}</a>{% else %}{{ line.title }}{% endif %}</p>
             <p class="file-row__who"><span class="db-task__who"><span class="visually-hidden">{% translate "Responsable" %} </span>{% include "components/glyph.html" with glyph=line.responsible_actor|actor_glyph size="sm" %}<span>{{ line.responsible }}{% if line.responsible_note %} — <span class="file-row__note" dir="auto">{{ line.responsible_note }}</span>{% endif %}</span></span></p>
             {% if line.detail %}<p class="db-task__meta"{% if line.words.lang %} lang="{{ line.words.lang }}" dir="{{ line.words.dir }}"{% else %} dir="auto"{% endif %}>{{ line.detail }}</p>{% endif %}
-            {% if line.source_ref or line.source_title %}<p class="db-task__meta reg-row__source"><span class="visually-hidden">{% translate "Fondement" %} </span>{% if line.source_ref %}<span class="reg-ref">{{ line.source_ref }}</span>{% else %}<span dir="auto">{{ line.source_title }}</span>{% endif %}</p>{% endif %}
+            {% if line.source_ref or line.source_title %}<p class="db-task__meta reg-row__source"><span class="visually-hidden">{% translate "Fondement" %} </span>{% if line.source_ref %}<span dir="ltr">{{ line.source_ref }}</span>{% else %}<span dir="auto">{{ line.source_title }}</span>{% endif %}</p>{% endif %}
           </div>
           <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip line.state "cases.ChecklistStatus" %}{{ line.state_label }}{% endchip %}</div>
           <div class="db-task__due">{% if line.due_date %}<span class="db-due{% if line.urgency %} db-due--{{ line.urgency }}{% endif %}">{% svg_icon line.urgency|concept:"due"|default:"calendar" "icon" %}<span class="visually-hidden">{% translate "Échéance" %} </span><time datetime="{{ line.due_date|date:'Y-m-d' }}">{{ line.due_date|date:"d.m.Y" }}</time>{% if line.due_word %}<span class="db-due__word">{{ line.due_word }}</span>{% endif %}</span>{% endif %}</div>
@@ -231,7 +231,7 @@ discs' full (the dialogs' 12 only while one is open, over the scrim). Nothing mo
       {% if assessment.rationale %}<p class="db-assessment__text"><span dir="auto">{{ assessment.rationale }}</span></p>{% endif %}
     </div>
     <p class="db-line">
-      <span>{% translate "Jeu de règles" %} <span class="db-ref">v{{ assessment.ruleset_version }}</span></span>
+      <span>{% translate "Jeu de règles" %} v{{ assessment.ruleset_version }}</span>
       <span>{% blocktranslate with date=assessment.assessed_at|date:"d.m.Y" %}évaluée le {{ date }}{% endblocktranslate %}</span>
     </p>
     <p class="file-assessment__more"><a class="db-link" href="{% url 'cases:assessment' case.reference assessment.pk %}">{% translate "Voir le détail et les fondements" %}{% svg_icon "chevron-end" "icon" %}</a></p>

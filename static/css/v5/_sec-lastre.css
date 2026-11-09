@@ -1,0 +1,257 @@
+/* ============================================================================================
+   K · «LO STRATO» and «LA PROTEZIONE» — the layered material plates and the compact trust band (design V5.22,
+   SECTION_SYSTEM_V2 §2 K; lane S; V5.24 lane LIB; V5.29 stream SYS). Page-only (after v5/_sezioni.css). Markup:
+   components/sezioni/strato.html, protezione.html. Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Spotlight»
+   35180 (a lit edge under the pointer — the M21 light of v5/_reveal.css), «Ocean grain» 24379 (static grain). Refused:
+   animated grain, glow, glass on paper. Signature DEPTH: the plates settle from 0.985 over their pre-painted shadow
+   layers (SH-4), one light sweep on the band.
+   V5.29 (owner, 6 Nov 2026: «protezione__campo too dominant … one global refined compact treatment»; stream SYS): the
+   sheet splits so a page draws what it uses — this one holds the plates and «la protezione»; v5/_sec-strato.css imports
+   it and adds «l'approdo», «la targa», «la scheda» and the bookend (the home draws none of them: −≈ 220 B on its total).
+   «La protezione» is one compact trust band: the seal beside the locked title and body (never collapsed: the text is
+   legally required whole and visible, so «expandable detail» is refused), the body at the small step in the legal ink,
+   in two columns from 64 rem, the call at the band's far end; a restrained laguna tint, the ink top rule; the drawing
+   table's sill and the far shield (V5.24) left with the size it gave the band.
+   ============================================================================================ */
+
+.strato {
+  position: relative;
+}
+
+.strato__lastre {
+  position: relative;
+  display: grid;
+  gap: var(--s-5);
+}
+
+@media (min-width: 64rem) {
+  .strato__lastre--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.strato__lastra {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  padding: var(--s-6) var(--s-6) var(--s-8);
+}
+
+/* V5.29 (stream SYS): the plate's question is the quiet line, the answer the strong one — the question at the ui step,
+   the act's weight, the secondary ink; «Non.» and the body carry the primary ink */
+.strato__titolo {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--sez-ink-2, var(--text-2));
+}
+
+
+.strato__corpo {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+/* «Non.»: the answer's own first sentence as the large keyword, an accent rule drawn under it */
+.strato__corpo--parola .ls-1 {
+  position: relative;
+  display: block;
+  inline-size: fit-content;
+  margin-block-end: var(--s-3);
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-title-2);
+}
+
+.strato__corpo--parola .ls-1::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -2px;
+  block-size: 2px;
+  background: var(--accent-mark);
+  transform-origin: 0 50%;
+}
+
+[dir="rtl"] .strato__corpo--parola .ls-1::after { transform-origin: 100% 50%; }
+
+/* the photographic ground under a stone veil; it drifts ≤ 24 px against the scroll */
+.strato__fondo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+}
+
+.strato__fondo :is(.foto, picture, img) {
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+}
+
+.strato__fondo img {
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.strato--foto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--surface-area) 60%, transparent);
+}
+
+
+/* ---- «la protezione»: the compact trust band ---- */
+/* a band that holds the protection alone keeps the strip's rhythm: the band never outweighs its page */
+.sez:has(> .container > .protezione__campo:only-child) {
+  padding-block: clamp(var(--s-8), 4vw, var(--s-12));
+}
+
+.protezione {
+  display: grid;
+  gap: var(--s-2) var(--s-4);
+  padding: var(--s-5);
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  background: color-mix(in srgb, var(--accent-wash) 30%, var(--surface-raised));
+}
+
+/* the 2 px ink top rule: the band's one line of authority */
+.protezione__soglia {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 2px;
+  background: var(--text-1);
+}
+
+/* the seal at the band's reading edge, one size down (24 in 44 × 54); on a phone the seal, the title, the body and the
+   call stack on ONE start (a French run on an Arabic page: the title and its body on one edge — lane H's m5) */
+.protezione__sigillo {
+  justify-self: start;
+  --sg-w: 44px;
+  --sg-h: 54px;
+  --sg-m: 24px;
+  --sg-sw: 2.75;
+}
+
+.protezione__sigillo::after {
+  content: none;
+}
+
+.protezione__titolo {
+  margin: 0;
+  font-size: var(--t-label);
+  line-height: var(--t-label-lh);
+  font-weight: var(--w-label);
+  letter-spacing: var(--track-label);
+  color: var(--text-legal);
+}
+
+.protezione__testo,
+.protezione__azione {
+  margin: 0;
+}
+
+.protezione__testo {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-legal);
+}
+
+.protezione__testo :is(.ls-1, .ls-4) {
+  display: block;
+  color: var(--text-1);
+}
+
+.protezione__testo .ls-1 {
+  margin-block-end: var(--s-2);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-title);
+}
+
+.protezione__testo .ls-4 {
+  margin-block-start: var(--s-2);
+  font-weight: var(--w-control);
+}
+
+@media (min-width: 48rem) {
+  .protezione {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: var(--s-5) var(--s-6);
+  }
+
+  .protezione__sigillo {
+    grid-row: span 3;
+  }
+
+  .protezione__testo,
+  .protezione__azione {
+    grid-column: 2;
+  }
+}
+
+/* from 64 rem: the body in two columns under its first sentence, the call at the band's far end */
+@media (min-width: 64rem) {
+  .protezione {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--s-6);
+  }
+
+  .protezione__testo {
+    columns: 2;
+    column-gap: var(--s-8);
+  }
+
+  .protezione__testo .ls-1 {
+    column-span: all;
+  }
+
+  .protezione__azione {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}
+
+/* the light sweep's layer on the band (LIGHT: v5/_reveal.css «sez-sweep», once as it enters) */
+.sez--approdo[data-verb~="light"]::before,
+.sez--strato[data-verb~="light"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 30%, color-mix(in oklab, var(--accent-mark) 9%, transparent) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .protezione__testo .ls-1 { color: var(--text-2); }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .protezione__testo .ls-1 {
+    animation: sez-ink var(--motion-slow) var(--ease-enter) 1500ms backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .protezione__soglia,
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .strato__corpo--parola .ls-1::after { scale: 0 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .strato__corpo--parola .ls-1::after {
+    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--sez-i, 0) * var(--motion-stagger) + 240ms) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .protezione .sigillo {
+    --sg-wait: 600ms;
+  }
+}
+
+
+@media (forced-colors: active) {
+  .protezione__soglia {
+    background: CanvasText;
+  }
+}

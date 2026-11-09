@@ -188,42 +188,60 @@ def test_the_head_photographs_draw_one_print():
 #: recorded budgets», the owner's V5.22 standing constraint; lane S): each page-only sheet its own ceiling (gzip -9),
 #: ratcheted to the measure by S-close. The blanket 6 KB of V5.15 W3 for four sheets becomes these ceilings plus the
 #: per-page totals below — page-only, each sheet capped, each page capped (V5.20 strict rule: a stronger invariant).
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 SHEETS = {
-    "core/reveal.css": 6_144,
-    "core/portico.css": 3_000,
-    "pages/css/fronte.css": 6_144,
-    "pages/css/hero.css": 11_264,
-    "pages/css/pages.css": 12_288,
-    "pages/css/interior.css": 11_264,
-    "ecosystem/ecosystem.css": 11_264,
-    "pathways/pathways.css": 11_264,
-    "cms/lettura.css": 9_216,
-    "forum/forum.css": 8_192,
-    "core/glyph.css": 2_048,
+    "core/reveal.css": 3_526,
+    "core/portico.css": 2_989,
+    "pages/css/fronte.css": 5_995,
+    "pages/css/hero.css": 10_849,
+    # V5.30 §7 (the owner's «Italy + Morocco: stronger presence … a homepage cooperation / pilot moment … Réseau»; stream A;
+    # V5.20 — re-recorded at the measure, NOTES docs/design-v5/QA/v530/art/NOTES.md §6 «ceilings re-recorded»): the
+    # primitive «l'intesa» (v5/_intesa.css + _intesa-atmosfera.css) enters the home's sheet and Réseau's route sheet; paid
+    # first with what the change made dead — the ecosystem's arch, its sill's light and its connector, the portico's
+    # drawing, the closing band's bookend — the rest is the feature the owner asked for: 11 239 → 11 626, 1 761 → 2 384
+    "pages/css/pages.css": 11_626,
+    "pages/css/interior.css": 7_842,
+    "ecosystem/ecosystem.css": 4_719,
+    "pathways/pathways.css": 4_423,
+    "cms/lettura.css": 6_543,
+    "forum/forum.css": 7_849,
+    "core/glyph.css": 1_571,
     # V5.22 lane P2 round 2 (QA_ROUND2 m5; the owner's V5.22 «route-specific bundles with their own recorded budgets»;
     # strict rule V5.20 — new sheets, new ceilings): a page's own compositions in a route sheet of its own
-    "cms/faq.css": 2_048,
-    "cms/lessico.css": 2_560,
-    "pages/css/rete.css": 2_048,
-    "pages/css/agami.css": 2_048,
-    "pages/css/frodi.css": 1_536,
+    # V5.29 §10–§13 (the owner's FAQ redesign, an explicit decision; V5.20 — re-recorded at the measure, lane PUB2, NOTES
+    # «ceilings re-recorded»: 2 048 → 2 207; nothing in the sheet was dead to pay for the glyph tiles' states and the
+    # empty search — every rule is named by faq/index.html or the library's indice.html)
+    "cms/faq.css": 2_207,
+    "cms/lessico.css": 2_351,
+    "pages/css/rete.css": 2_384,
+    # V5.30 §7–§8 (the owner's final art direction, an explicit decision; V5.20 — re-recorded at the measure, lane v530-agami,
+    # NOTES «ceilings re-recorded»: 1 778 → 2 015; the v530-art merge: 2 015 → 2 166, the one primitive v5/_intesa.css
+    # replacing ecosystem/_intesa.css): the page's Italy + Morocco ground joined the sheet; the retired colonnade, its light
+    # and sill and the corner brackets (v5/_squadre.css) paid about 470 B of it
+    "pages/css/agami.css": 2_166,
+    "pages/css/frodi.css": 1_199,
 }
 #: every sheet a page links on a desktop (the portico's included), summed: page type → (a page of the type, ceiling)
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 PAGE_TOTALS = {
-    "home": ("/fr/", 61_440),
-    "landing (ecosystem)": ("/fr/entreprises/", 56_320),
-    "interior (pages)": ("/fr/contact/", 56_320),
-    "pathways": ("/fr/parcours/", 56_320),
-    "reading": ("/fr/faq/", 54_272),
-    "forum": ("/fr/forum/", 54_272),
+    # V5.30 §7 (stream A; V5.20, re-recorded at the measure — NOTES «ceilings re-recorded»): the Italy + Morocco
+    # primitive on the home's cooperation moment and under Réseau's closing band (60 708 → 61 074, 54 218 → 54 553); every
+    # other page type fell 70–300 B with the head's grid, offset frame and the bookend gone
+    "home": ("/fr/", 61_074),
+    "landing (ecosystem)": ("/fr/entreprises/", 53_095),
+    "interior (pages)": ("/fr/contact/", 52_457),
+    "pathways": ("/fr/parcours/", 55_067),
+    "reading": ("/fr/faq/", 53_365),
+    "forum": ("/fr/forum/", 46_469),
     # V5.22 lane P2 round 2 (QA_ROUND2 m5): with route sheets the pages of a type no longer link the same sheets — each
     # route held to its type's total
-    "reading (glossary)": ("/fr/glossaire/", 54_272),
-    "reading (term)": ("/fr/glossaire/nulla_osta/", 54_272),
-    "reading (living)": ("/fr/vivre-en-italie/", 54_272),
-    "interior (network)": ("/fr/reseau/", 56_320),
-    "interior (promoter)": ("/fr/agami/", 56_320),
-    "interior (fraud)": ("/fr/attention-aux-fraudes/", 56_320),
+    "reading (glossary)": ("/fr/glossaire/", 53_509),
+    "reading (term)": ("/fr/glossaire/nulla_osta/", 53_509),
+    "reading (living)": ("/fr/vivre-en-italie/", 53_509),
+    "interior (network)": ("/fr/reseau/", 54_553),
+    # V5.30 §8 (V5.20, re-recorded at the measure with its route sheet above: 54 235 → 54 472)
+    "interior (promoter)": ("/fr/agami/", 54_472),
+    "interior (fraud)": ("/fr/attention-aux-fraudes/", 53_656),
 }
 FORM_SHEETS = {"css/dist/core/forms.css", "css/dist/core/steps.css", "css/dist/core/glyph.css"}
 STYLESHEET = re.compile(r'<link rel="stylesheet" href="/static/(css/dist/[^"?]+\.css)[^"]*"')
@@ -238,7 +256,7 @@ def test_the_new_sheets_are_page_only_and_inside_their_own_budgets():
     assert "_fronte.css" not in main and "_compose.css" not in main
     for partial in ("_sezioni.css", "_sigillo.css", "_sec-"):
         assert partial not in main, f"{partial}: a V2 sheet is page-only, never in main.css"
-    assert _gz("css/dist/main.css") <= 32_718, "main.css never rises above 32 718 B (the V5.20 ratchet)"
+    assert _gz("css/dist/main.css") <= 32_105, "main.css never rises above 32 105 B (the V5.20 ratchet, recorded at the measure by CLOSING, FINAL_DELIVERY_V2 §3.9 c)"
     for sheet, ceiling in SHEETS.items():
         assert _gz(f"css/dist/{sheet}") <= ceiling, (sheet, _gz(f"css/dist/{sheet}"), ceiling)
 
@@ -295,7 +313,6 @@ COMPOSED = {
     "/fr/reseau/": ("network", ['class="ingresso__aside fronte-rete"', 'data-slot="network.table"']),
     "/fr/contact/": ("contact", ['class="ingresso__aside fronte-piano"', 'data-slot="contact.square"', 'href="mailto:']),
     "/fr/le-projet/": ("arch", ['class="ingresso__aside fronte-arco"', 'data-slot="project.hall"']),
-    "/fr/entreprises/": ("skyline", ['data-slot="companies.hero"']),
     "/fr/attention-aux-fraudes/": ("notice", ['data-callout="antifraud"', 'data-locked="p3.antifraud.body"']),
     "/fr/agami/": ("name", ['class="fronte__name"']),
 }
@@ -314,6 +331,15 @@ def test_the_drawing_composes_the_head_on_the_pages_whose_meaning_is_a_drawing(g
     assert f'data-compose="{compose}"' in attrs, (path, attrs)
     for needle in inside:
         assert needle in body, (path, needle)
+
+
+@pytest.mark.django_db
+def test_the_companies_head_is_words_and_a_workplace_photograph_no_skyline(get):
+    """V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «workplace imagery, less decorative architecture» (V5.20 strict
+    rule; this decision replaces the skyline's row in COMPOSED): the head composes no drawing, its photograph stays in it."""
+    attrs, body = _head(_main(get("/fr/entreprises/")))
+    assert "data-compose" not in attrs, attrs
+    assert 'data-slot="companies.hero"' in body
 
 
 @pytest.mark.django_db

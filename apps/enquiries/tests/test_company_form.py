@@ -42,13 +42,27 @@ def test_field_order_and_labels():
     assert model_labels == locked_labels
 
 
-@pytest.mark.parametrize("lang", ["it", "en", "ar"])
+@pytest.mark.parametrize("lang", ["it", "en"])
 def test_labels_fallback_to_french_with_lang_marker(lang):
     with translation.override(lang):
         form = CompanyNeedsForm()
         first = form["company_name"]
         assert str(first.label) == locked_content.get("p1.companies.form.fields", "fr")[0][0]
         assert first.field.label_lang == "fr"
+        assert form.fields["consent"].label_lang == "fr"
+
+
+def test_arabic_labels_read_the_provisional_rendering_and_the_consent_stays_french():
+    """V5.27 «ARABIC OWNER DECISION — FINAL» (FINAL_DELIVERY_V2 R7′; lane AR, V5.20): the field labels are compositional
+    texts and read in their provisional Arabic without a language marker; the consent is a substantive text whose
+    French stands, marked ``fr`` — the it/en invariant above is unchanged."""
+    from cms import locked_renderings
+
+    with translation.override("ar"):
+        form = CompanyNeedsForm()
+        first = form["company_name"]
+        assert str(first.label) == locked_renderings.rendering("p1.companies.form.fields[0]")
+        assert first.field.label_lang == ""
         assert form.fields["consent"].label_lang == "fr"
 
 

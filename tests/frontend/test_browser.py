@@ -238,10 +238,11 @@ def test_fonts_are_self_hosted_and_loaded(browser, live_server, seeded):
             "performance.getEntriesByType('resource').filter(e => e.name.endsWith('.woff2'))"
             ".reduce((n, e) => n + (e.encodedBodySize || e.transferSize || 0), 0)"
         )
-        # the home still draws its labels in the mono (lane S's .testa__label, the folio of pages.css: TYPOGRAPHY_V2 F-3,
-        # the burn-down of LIB and HOME), so it fetches both mono files today: 30 916 B measured, recorded here as the
-        # figure to burn down to the ceiling (never up; CLOSING ratchets it to the measure)
-        assert 0 < fetched <= 30_916, (fetched, fonts)
-        assert fetched <= 22_000 or any("mono" in name for name in fonts), "over the ceiling without the mono: a new face"
+        # the home drew its labels in the mono (lane S's .testa__label, the folio of pages.css) and fetched both mono
+        # files: 30 916 B. TYPOGRAPHY_V2 F-3's burn-down (LIB, HOME) took the labels to the sans, and CLOSING (FINAL_DELIVERY_V2
+        # §3.9 c; V5.20, a ratchet) measured the home in Chromium: Host Grotesk and the wordmark only, 20 956 B — the
+        # figure recorded (test_fonts_budget_v2.PAGE_CEILINGS["latin_public"]), and no mono file on the home any more
+        assert 0 < fetched <= 20_956, (fetched, fonts)
+        assert not any("mono" in name for name in fonts), "the home draws no mono: a reference seat came back"
     finally:
         context.close()

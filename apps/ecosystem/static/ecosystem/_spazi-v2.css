@@ -50,34 +50,6 @@
   align-content: space-between;
 }
 
-.approdo__rotta {
-  inline-size: min(100%, 15rem);
-  block-size: auto;
-  margin-block-start: var(--s-2);
-  overflow: visible;
-  fill: none;
-  stroke-width: 1.5;
-}
-
-.approdo__rotta-linea {
-  stroke: color-mix(in srgb, var(--accent-mark) 55%, var(--line-structure));
-  stroke-width: 2;
-}
-
-.approdo__rotta-nodi {
-  fill: var(--surface-raised);
-  stroke: var(--accent-mark);
-}
-
-.approdo__rotta-arco {
-  fill: color-mix(in srgb, var(--accent-mark) 14%, transparent);
-  stroke: var(--text-1);
-}
-
-[dir="rtl"] .approdo__rotta {
-  scale: -1 1;
-}
-
 /* the help line on a dark ground (a photograph's veil, a night door): the live address in the night's accent */
 :is(.on-inverse, .sez[data-ground="photo"]) .aiuto {
   color: var(--text-on-night-2);
@@ -87,22 +59,11 @@
   color: var(--accent-night);
 }
 
-/* Arabic: a folio label or a kicker in the page's language is never tracked nor set in ILE Mono (a tracked Arabic word
-   breaks apart) */
-:lang(ar) :is(.testa__label, .filiera__kicker) {
-  font-family: var(--f-sans);
-  letter-spacing: 0;
-  text-transform: none;
-}
+/* (V5.24, Typography V2: the spaces' labels and kickers carry the label role by name — `t-label`, v5/base.css —, whose own
+   Arabic rule drops the capitals and the tracking; the descendant-form rule left with it, F-7) */
 
 /* the French words on a plate on an Arabic page — its title and its line, the branch's too — on ONE reading edge, the
    plate's, beside the kicker (a card's French runs, lane S's rule; QA_ROUND1 m1: the line stood on the other edge) */
 [dir="rtl"] .sez :is(.filiera__titolo, .filiera__riga, .filiera__ramo-titolo, .filiera__ramo-riga)[lang="fr"] {
   text-align: end;
-}
-
-@media (forced-colors: active) {
-  .approdo__rotta :is(path, circle) {
-    stroke: CanvasText;
-  }
 }

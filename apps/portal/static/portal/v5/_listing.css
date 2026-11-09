@@ -1,0 +1,357 @@
+/* ============================================================================================
+   THE LIST TOOLKIT — the bar, the chips, the drawer's form, the empty result (V5.30, stream C;
+   docs/design-v5/QA/v530/plat/NOTES.md §1). A partial (`_`): carried by its page sheet portal/listing.css, which the
+   pages that draw templates/components/listing/*.html link — never main.css, console.css or registers.css.
+   Product-first (V5.30 §14): calm surfaces, one interactive accent, strong controls; no motif. The controls are the
+   console's field (`--field-h`, `--field-edge`, `--field-radius`); the chips the selected wash with a hairline; the
+   count the primary's fill. Tokens only, logical properties only (Arabic mirrors by itself); no motion of its own —
+   the drawer's slide is the overlay system's, and it is a fade under reduced motion.
+   ============================================================================================ */
+
+/* ---- 1 · The bar: the search, then the tools at the inline end; one row on a desk, wrapped on a phone ---------- */
+.lst {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.lst__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.lst__search {
+  position: relative;
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+
+.lst__q {
+  padding-inline-end: var(--field-h);
+}
+
+/* the magnifier is the search's submit: the field's own height, at its inline end */
+.lst__go {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  inline-size: var(--field-h);
+  padding: 0;
+  border: 0;
+  border-radius: var(--field-radius);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.lst__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.lst__sort,
+.lst__open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--field-h);
+  padding-inline: var(--s-3);
+  border: 1px solid var(--field-edge);
+  border-radius: var(--field-radius);
+  background-color: var(--field-bg);
+  color: var(--text-1);
+  font-size: 1rem; /* the console's field text (the search beside it, «Rechercher une pièce») */
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  text-decoration: none;
+}
+
+.lst__sort .icon,
+.lst__open .icon,
+.lst__go .icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.lst__sort .icon,
+.lst__open .icon {
+  color: var(--text-2);
+}
+
+.lst__select {
+  min-block-size: calc(var(--field-h) - 2px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .lst__sort:hover,
+  .lst__open:hover {
+    border-color: var(--field-edge-hover);
+  }
+
+  .lst__go:hover,
+  .lst__x:hover {
+    color: var(--accent-text);
+  }
+
+  .lst__x:hover {
+    background-color: var(--surface-hover);
+  }
+}
+
+/* the number of filters in force — the primary's fill, the figure tabular */
+.lst__n {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 1.25rem;
+  block-size: 1.25rem;
+  padding-inline: var(--s-1);
+  border-radius: var(--radius-full);
+  background-color: var(--fill-primary);
+  color: var(--text-on-accent);
+  font-size: var(--u-caption);
+  line-height: 1.25rem;
+  font-variant-numeric: var(--numeric-data);
+}
+
+/* ---- 2 · The state: the count, the chips (they wrap — never one clipped row), «Tout effacer» ------------------- */
+.lst__state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+}
+
+.lst__found {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+.lst__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lst__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-block-size: 2rem;
+  max-inline-size: 100%;
+  padding-inline: var(--s-3) 2px;
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-selected);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+}
+
+.lst__field {
+  color: var(--text-2);
+}
+
+.lst__value {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+/* the chip's removal: a link, 28 px round (its target clears WCAG 2.5.8's 24 px), named by its field and value */
+.lst__x {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: var(--radius-full);
+  color: var(--text-2);
+}
+
+.lst__x .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.lst__clear {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+}
+
+/* a long list keeps its bar in reach on a desk, directly under the console's own sticky bar (--ctx-h + its hairline,
+   _shell.css §3); a phone scrolls it away */
+@media (min-width: 64rem) {
+  .lst {
+    position: sticky;
+    inset-block-start: calc(var(--ctx-h) + 1px);
+    z-index: var(--z-sticky); /* over the rows' stretched links (z-index 1 and 2, _registers.css), under the console bar */
+    padding-block: var(--s-2);
+    background-color: var(--surface-page);
+  }
+}
+
+/* ---- 3 · The drawer: outside the list, a direct child of the console's column — never that column's flow margin
+        (`.portal__main > * + *`, portal.css: 48 px pushed the fixed panel down and its foot under the fold) --------- */
+.portal__main > .overlay--drawer {
+  margin: 0;
+}
+
+/* its form: one fieldset a filter, its choices as rows, the period's two days */
+.lst-form {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.lst-form__set {
+  display: grid;
+  gap: var(--s-2);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lst-form__legend {
+  margin-block-end: var(--s-2);
+  padding: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.lst-form__options {
+  display: grid;
+  gap: 2px;
+}
+
+.lst-opt {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.lst-opt input {
+  flex: none;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  margin: 0;
+  accent-color: var(--fill-primary);
+}
+
+.lst-opt:has(:checked) {
+  background-color: var(--surface-selected);
+}
+
+@media (hover: hover) {
+  .lst-opt:hover {
+    background-color: var(--surface-hover);
+  }
+}
+
+.lst-form__dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+
+.lst-form__date {
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+}
+
+.lst-form__date label {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* the foot: «Tout effacer» a quiet link at the inline start, «Afficher les résultats» at the inline end */
+.lst-form__clear {
+  align-self: center;
+  margin-inline-end: auto;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+}
+
+/* ---- 4 · Nothing matches: a glyph in its disc, the title, one sentence, «Tout effacer» ------------------------ */
+.lst-empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  padding: var(--s-6) var(--s-4);
+  border-block: 1px solid var(--line-rhythm);
+}
+
+.lst-empty__glyph {
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-area);
+  color: var(--text-2);
+}
+
+.lst-empty__glyph .icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+.lst-empty__title {
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.lst-empty__text {
+  max-inline-size: 60ch;
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.lst-empty__act {
+  margin: var(--s-2) 0 0;
+}
+
+@media (forced-colors: active) {
+  .lst__chip,
+  .lst__n {
+    border: 1px solid CanvasText;
+  }
+
+  .lst-opt:has(:checked) {
+    outline: 2px solid Highlight;
+  }
+}

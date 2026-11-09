@@ -63,7 +63,7 @@ orientation/wizard.css), the page as a chain of questions:
         <ul class="registro wizard-result__family">
           <li class="registro__row" data-pathway="{{ r.pathway_key }}">
             <h3 class="registro__title"{% if pw.fallback %} lang="{{ pw.lang }}"{% endif %}>{{ pw.title }}</h3>
-            <p class="registro__text"{% if pw.fallback %} lang="{{ pw.lang }}"{% endif %}>{{ pw.description }}</p>
+            <p class="registro__text"{% if pw.description_fallback %} lang="{{ pw.description_lang }}"{% endif %}>{{ pw.description }}</p>
           </li>
         </ul>
         {% if pathway_url and phase3_open %}<p class="wizard-result__go"><a class="btn btn--secondary btn--lg" href="{{ pathway_url }}">{% translate "Consulter la page du parcours" %}</a></p>{% endif %}

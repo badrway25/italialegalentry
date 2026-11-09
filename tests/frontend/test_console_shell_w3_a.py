@@ -698,8 +698,12 @@ def test_the_bar_s_words_are_the_live_labels_whole_and_never_under_the_scale_s_f
     phone = _block(css, "@media (max-width: 63.999rem) {")
     item = _rule(phone, ".console-bottom__item")
     assert "font-size: 0.75rem;" in item and "line-height: 0.875rem;" in item, "12 / 14: the floor of the Latin scale"
-    arabic = _rule(phone, ":lang(ar) .console-bottom__item")
+    # Typography V2 (FINAL_DELIVERY_V2 R1, TYPOGRAPHY_V2 F-7: every portal Arabic type rule in the subject form
+    # ``.x:lang(ar)``; lane PLAT's approved conversion, merged 47838596 — V5.20, restated by lane CLOSING §3.9): the same
+    # invariant read where the rule now lives, and the descendant form cannot come back beside it
+    arabic = _rule(phone, ".console-bottom__item:lang(ar)")
     assert "font-size: 0.875rem;" in arabic, "never under 14 px in Arabic (D21)"
+    assert not re.search(r":lang\(ar\)\s+\.console-bottom__item", css), "the Arabic rule is written once, in the subject form"
     assert "white-space: nowrap;" in _rule(phone, ".console-bottom__line"), (
         "a label breaks between its two runs and nowhere else"
     )

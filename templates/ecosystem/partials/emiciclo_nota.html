@@ -1,25 +1,11 @@
 {% comment %}
-IN-H · the side annotation of the institutions' compact head (design V5.22, SECTION_SYSTEM_V2 §3.7 IN-H; lane P1),
-drawn in the frontispiece's end seat (pages/partials/_ingresso.html `aside_template`): a small drawing of the six-seat
-hemicycle — the assembly arc on its sill, its inner tier, six seats (aria-hidden: the words carry the content) —
-beside the locked recipients sentence, whole (p3.institutions.recipients, shown once gate G3 is open).
-
-Round 2 (QA_ROUND2 M2; §4.1 «no glyph stacked above a title», §6.2 «side annotation: 13–15 px beside a frame»): one
-annotation, never a doodle floating between two leads. The form pages load main.css, the reading sheet and the band's
-sheet only (no lane sheet of their own: the form is preserved), so the note is composed with what they already draw:
-the box under the lead (the band's `.ingresso__lead`: its margin and its measure, so the note hangs from the same
-reading edge as the lead, in Arabic as in French); inside it one row that never wraps (main.css's `.meta-row__item`:
-the drawing and its words side by side, centred on each other — the recipients are a fact of the page, as the
-sheets' «Nature» is), the drawing in a seat that never shrinks (main.css's `.chip__meter`: inline, `flex: none` — an
-SVG alone would give way, main.css capping every SVG at its box), the words in main.css's secondary text
-(`.card__text`: 15/24 in the quiet ink at the small measure — the side annotation's own voice, §6.2). So the drawing
-stands beside its words at every width, a phone's too. A French run on an Arabic page is its own left-to-right box
-beside the drawing, both hanging from the right (§1 rule 6). The drawing's few attributes are presentation attributes
-on the SVG, currentColor; its view box keeps 8 units of air on either side. Mirrors with the page in Arabic; never
-moves.
+IN-H · the side annotation of the institutions' compact head (design V5.22, SECTION_SYSTEM_V2 §3.7 IN-H; lane P1), drawn in
+the frontispiece's end seat (pages/partials/_ingresso.html `aside_template`): the locked recipients sentence, whole
+(p3.institutions.recipients, shown once gate G3 is open), in main.css's secondary text (`.card__text`, the side annotation's
+own voice, §6.2), hanging from the lead's reading edge. V5.30 VARIETY §7 («do not make every institutional relationship an
+arc»): the small hemicycle beside it left. A French run on an Arabic page is its own left-to-right box (§1 rule 6).
 {% endcomment %}<div class="ingresso__lead emiciclo-nota" data-annotation="recipients">
   <div class="meta-row__item">
-    <span class="chip__meter emiciclo-nota__segno" aria-hidden="true"><svg class="emiciclo-nota__disegno" viewBox="-8 0 136 68" width="108" height="54" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"><path d="M2 63h116" stroke-opacity=".5"/><path d="M12 58a48 48 0 0 1 96 0" stroke-opacity=".45"/><path d="M28 58a32 32 0 0 1 64 0" stroke-opacity=".3"/><g stroke-width="1.5"><circle cx="12" cy="58" r="4.5"/><circle cx="20.5" cy="34" r="4.5"/><circle cx="43" cy="13.5" r="4.5"/><circle cx="77" cy="13.5" r="4.5"/><circle cx="99.5" cy="34" r="4.5"/><circle cx="108" cy="58" r="4.5"/></g></svg></span>
     {% locked "p3.institutions.recipients" "p" "card__text emiciclo-nota__frase" %}
   </div>
 </div>

@@ -11,14 +11,15 @@ Design V5.12 (W2, lane C; DECISIONS §7): a 7 / 5 entrance with the reading-room
 sentence per language: never cut into chips by the team).
 
 Design V5.22 (SECTION_SYSTEM_V2 §3.8; lane P1 — Page Composition V2), below the approved entrance (KEEP; its folio's
-seal is `ile-sapere`): U1, the page's moment — B «la filiera di formazione». A route leaves the reading edge and
-carries three station plates of the persons' learning path — before the departure, in Italy (the research pathway
-branching off it), after the arrival — each a team kicker over the locked title and its one locked line, each plate
-one link (a pathway sheet only while it is live; the first also reaches /formation/'s first time). Their tiles are the
-route's nodes (`earth`, `university` and `flask-conical` on the branch, `presentation`); the route ends on the arch,
-the page's one gold arrival, and the campus frame stands at its end as the destination (6/12 from 64 rem, its top
-under the last plate: layered), developing as the route arrives. The help line is the route's footnote. Hovering or
-focusing a plate lights the route up to it. PATH PROGRESSION + DEVELOP. Without script: plates in order, all lit.
+seal is `ile-sapere`): U1, the page's moment — B «la filiera di formazione», recomposed by V5.30 VARIETY §7: image-led, the campus frame at its own 3:2 over
+the three stations (before the departure, in Italy with its research branch, after the arrival) as cards; from 64 rem the frame
+and the note at the reading edge, the cards beside them — each a team kicker over the locked title and its one locked line, its concept tile in the card (`earth`,
+`university` and `flask-conical` on the branch, `presentation`). No line joins them: reading order is the progression. The
+help line is the band's footnote. Hovering or focusing a card runs its tile's threshold. DEVELOP. Without script: plates in order, all lit.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.2, §3.3, §5.3; lane PUB1 — the ground and the seam; the
+composition KEPT): the filiera stands on the page's one wash (brand: the plates white on it, the frame's colour in its
+light) and its top fades in from the head's paper — «la sfumatura» (_universities.css, a still ground); the plates'
+kickers carry the label role (`t-label`).
 
 Before V5.12 (W3-F1): the entrance with the university door, the prescribed sentence whole as its lead, and the door's
 card carrying its way in — the prescribed button and its one sentence, the page's ONE action, in the first screen
@@ -40,7 +41,7 @@ it — the same words a second time, a screen below — left the page with V4.
 {% endif %}
 
 {% translate "Formation et mobilité régulière" as related_title %}
-<section id="filiere" class="sez sez--tracciato universita-filiera" data-sec="tracciato" data-ground="paper" data-rhythm="moment" aria-labelledby="related-header">
+<section id="filiere" class="sez sez--tracciato universita-filiera" data-sec="tracciato" data-ground="brand" data-rhythm="moment" aria-labelledby="related-header">
   <div class="container">
     {% include "components/sezioni/_testa.html" with role="process" title_id="related-header" title=related_title only %}
     <div class="filiera">
@@ -48,19 +49,18 @@ it — the same words a second time, a screen below — left the page with V4.
         {% for item in route %}<li class="filiera__stazione">
           <span class="filiera__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
           <div class="filiera__lastra sez-plate" data-verb="settle">
-            <p class="filiera__kicker">{{ item.kicker }}</p>
+            <p class="filiera__kicker t-label">{{ item.kicker }}</p>
             <h3 class="filiera__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{% if item.url %}<a class="filiera__link sez-stretch" href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
-            {% if item.line %}<p class="filiera__riga"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
+            {% if item.line %}<p class="filiera__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
             {% if item.more %}<p class="filiera__altro"><a class="link-arrow" href="{{ item.more.url }}">{{ item.more.label }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
             {% if item.branch %}{% with entry=item.branch %}<div class="filiera__ramo">
               <span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon entry.glyph "icon" %}</span>
               <p class="filiera__ramo-titolo"{% if entry.lang %} lang="{{ entry.lang }}"{% endif %}>{% if entry.url %}<a class="link-arrow" href="{{ entry.url }}">{{ entry.title }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a>{% else %}{{ entry.title }}{% endif %}</p>
-              <p class="filiera__ramo-riga"{% if entry.lang %} lang="{{ entry.lang }}"{% endif %}>{{ entry.line }}</p>
+              {% if entry.line %}<p class="filiera__ramo-riga"{% if entry.line_lang %} lang="{{ entry.line_lang }}"{% endif %}>{{ entry.line }}</p>{% endif %}
             </div>{% endwith %}{% endif %}
           </div>
         </li>{% endfor %}
       </ol>
-      <span class="filiera__arrivo" data-verb="node" aria-hidden="true">{% svg_icon arrival "icon" %}</span>
       <div class="filiera__meta">{% photo "universities.exchange" "filiera__foto" sizes=destination_sizes %}</div>
       <div class="filiera__nota">
         {% if links.pathways %}<p class="filiera__tutti"><a class="link-arrow" href="{{ links.pathways }}">{% translate "Tous les parcours réguliers" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}

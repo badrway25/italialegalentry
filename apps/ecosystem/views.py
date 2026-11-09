@@ -116,7 +116,6 @@ def universities(request):
         extra={
             "intro": intro,
             "route": services.universities_route(lang, services.related_links()),
-            "arrival": services.ARRIVAL,
             "destination_sizes": services.DESTINATION_SIZES,
         },
     )

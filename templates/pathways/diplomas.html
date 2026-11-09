@@ -28,7 +28,12 @@ typographic — there is no ILE mark for diplomas, and a library glyph's disc in
     (the route draws down, 120 ms a station) + MASK (a plate opens from its node's side) + DEPTH (the aside);
   * D2's callout — K «la protezione», its own band on the stone. DEPTH;
   * D3 — E «il mosaico»: the space's other areas, Formation the wide tile. STAGGER;
-  * D4 — A «la boussole». SEMANTIC TURN.
+  * D4 — A «la boussole»: the next step on a raised plate.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.2–§3.4, §5.3; lane PUB1 — the material pass; the dossier
+and its aside KEPT): the dossier's route continues across the seam into «la protezione» — «il raccordo», the first child
+of the pietra band, from its top edge down to the plate's 3 px rule (v5/_materia.css; its length and x in
+_diplomas.css); «la protezione» stands on «pietra»; the grid is «carta viva» (data-luce="origine"), its tiles ink and
+light (the library's verb). The page sheet imports v5/_materia.css.
 {% endcomment %}
 {% block page_title %}{% locked "p3.diplomas.title" as title_text %}{{ title_text|striptags }} · {% translate "Espace Personnes" %}{% endblock %}
 {% block meta_description %}{% locked "p3.diplomas.body" as body_text %}{{ body_text|striptags }}{% endblock %}
@@ -38,9 +43,12 @@ typographic — there is no ILE mark for diplomas, and a library glyph's disc in
 {% block content %}
 {% include "pathways/_preview_notice.html" %}
 {% locked_is_fallback "p3.diplomas.title" as title_fallback %}{% locked_lang "p3.diplomas.title" as title_lang %}
+{% locked_is_fallback "p3.diplomas.body" as body_fallback %}{% locked_lang "p3.diplomas.body" as body_lang %}{% locked_caption "p3.diplomas.body" as body_caption %}
 {% locked "p3.diplomas.title" as title_html %}{% locked "p3.diplomas.body" as body_html %}{% translate "Espace Personnes" as space_label %}
 {% if title_fallback %}
 {% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=body_html lead_lang=title_lang meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="award" slot="diplomas.hero" words_first=True fronte_linked=True only %}
+{% elif body_fallback %}{# V5.27 / R7′ (/ar/): the title in its provisional Arabic, the body the French source with its caption #}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=body_html lead_lang=body_lang lead_caption=body_caption meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="award" slot="diplomas.hero" words_first=True fronte_linked=True only %}
 {% else %}
 {% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=body_html meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="award" slot="diplomas.hero" words_first=True fronte_linked=True only %}
 {% endif %}
@@ -74,14 +82,14 @@ typographic — there is no ILE mark for diplomas, and a library glyph's disc in
   </div>
 </section>
 
-<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="stone" data-rhythm="band" aria-labelledby="protezione-title-diplomas">
+<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="pietra" data-rhythm="band" aria-labelledby="protezione-title-diplomas">
   <div class="container">
     {% include "components/sezioni/protezione.html" with url=links.antifraud level=2 suffix="diplomas" only %}
   </div>
 </section>
 
 {% translate "Dans l’Espace Personnes" as space_links_title %}
-<section class="sez sez--mosaico persone-spazio" data-sec="mosaico" data-ground="paper" data-rhythm="band" aria-labelledby="space-links-title">
+<section class="sez sez--mosaico persone-spazio" data-sec="mosaico" data-ground="paper" data-luce="origine" data-rhythm="band" aria-labelledby="space-links-title">
   <div class="container">
     {% include "components/sezioni/_testa.html" with role="router" title_id="space-links-title" title=space_links_title only %}
     {% include "components/sezioni/mosaico.html" with variant="grid" tiles=tiles label=space_links_title only %}

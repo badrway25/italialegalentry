@@ -18,7 +18,7 @@ view that returns its rows as an asynchronous fragment (W2-A's NOTES, «Handed t
 {% endcomment %}
 {% block page_title %}{% translate "Communications" %}{% endblock %}
 {% block meta_description %}{% translate "Les messages que l’équipe du projet vous a adressés." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
 {% block portal_header %}
 <header class="ws-head reg-head" data-atrium="register">
   {% include "portal/partials/atrium_art.html" with figure="exchange" %}
@@ -30,12 +30,16 @@ view that returns its rows as an asynchronous fragment (W2-A's NOTES, «Handed t
 </header>
 {% endblock %}
 {% block portal_content %}
-<div class="reg-page"{% if not page_obj.object_list %} data-platform{% endif %}>
-{% if page_obj.object_list %}
+<div class="reg-page"{% if not messages_total %} data-platform{% endif %}>
+{% if messages_total %}
   <div class="db-ledger reg-band">
     <p class="db-ledger__total reg-band__count{% if unread_count %} reg-band__count--unread{% endif %}" role="status" data-unread="{{ unread_count }}">{% if unread_count %}<span class="db-unread" aria-hidden="true"></span>{% blocktranslate count n=unread_count %}{{ n }} communication non lue{% plural %}{{ n }} communications non lues{% endblocktranslate %}{% else %}{% translate "Toutes vos communications sont lues." %}{% endif %}</p>
   </div>
 
+  {% comment %} V5.30 (stream C): the platform's list toolkit — the search, the sort, «Filtres» and its drawer, the chips
+  (components/listing/; portal.lists.MESSAGES). {% endcomment %}
+  {% include "components/listing/toolbar.html" %}
+  {% if page_obj.object_list %}
   <ul class="db-tasks reg-rows reg-rows--mail" role="list" aria-label="{% translate 'Communications' %}">
     {% for message in page_obj %}
     <li class="db-task reg-row reg-row--link{% if not message.is_read %} reg-row--unread{% endif %}">
@@ -55,16 +59,19 @@ view that returns its rows as an asynchronous fragment (W2-A's NOTES, «Handed t
     </li>
     {% endfor %}
   </ul>
-  {% include "components/pagination.html" with page_obj=page_obj %}
+  {% include "components/pagination.html" with page_obj=page_obj query=listing.page_query %}
+  {% else %}{% include "components/listing/empty.html" %}{% endif %}
 {% else %}
   {% comment %} The empty register (F1: an icon, a heading and a sentence over ~500 px of nothing): the calm panel of the
-  platform — the two porticoes joined by one route, the exchange this page is for — with the register's own words. {% endcomment %}
+  platform — the communications' own glyph in its disc (V5.30 product-first: no more porticoes) — with the register's own
+  words. {% endcomment %}
   <div class="org-calm reg-calm" role="status" data-spot>
-    {% include "portal/partials/calm_art.html" %}
+    {% include "portal/partials/calm_art.html" with calm_glyph="mail" %}
     <p class="org-calm__text">{% translate "Aucune communication" %}</p>
     <p class="reg-calm__lead">{% translate "Les messages que l’équipe vous adresse apparaîtront ici." %}</p>
   </div>
 {% endif %}
 </div>
+{% include "components/listing/drawer.html" %}
 {% endblock %}
-{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

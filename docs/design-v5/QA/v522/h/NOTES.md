@@ -1,5 +1,7 @@
 # V5.22 lane H — Homepage Composition V2 (label v522-h-build)
 
+> **Erratum (v524-home, 6 Nov 2026):** credits removed by v524 (V5.24 §2) — wherever this file says a photograph's credit stands in its corner or under its frame (M1 e, the pilot's halves, the Arabic page's credit colon), the credit is gone from the product; the provenance stays internal (lane PX, `IMAGE_LICENSES.md`).
+
 Branch `v522-h` (worktree `C:/tmp/ile_wt/v522-h`), cut from `design-v5` at `22b0ddd` (lanes S and M merged). Lane
 server 8785 on the lane database `ile_v5_l5`; tests on `test_ile_v5_l5`; headed `chromium-1234` under lock slot A.
 Binding: `directives/V5_22_*.md`, SECTION_SYSTEM_V2 §0, §0.1, §1, §2, §3.1, §4–§8, §9.3, §9.7–§9.9, §10; the audits in

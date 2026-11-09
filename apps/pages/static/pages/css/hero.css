@@ -71,10 +71,9 @@
   --vx: 264; --vy: 64; --vw: 368; --vh: 456;
   position: relative;
   aspect-ratio: 368 / 456;
-  inline-size: 100%;
   direction: ltr;                                    /* the door is not a reading-direction thing */
 }
-.he .door-stage > svg.door { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; overflow: visible; }
+.he .door-stage > svg.door { position: absolute; inline-size: 100%; overflow: visible; }
 .he .door { pointer-events: none; }
 .he .doorway__veil-a { stop-color: var(--surface-night); stop-opacity: 0; }
 .he .doorway__veil-b { stop-color: var(--surface-night); stop-opacity: 0.55; }
@@ -83,10 +82,10 @@
 .he .doorway__glow-c { stop-color: var(--brand-gold); stop-opacity: 0; }
 .he .vignette-a { stop-color: var(--surface-night); stop-opacity: 0; }
 .he .vignette-b { stop-color: var(--surface-night); stop-opacity: 0.65; }
-.he .doorway__arch-inset { fill: none; stroke: var(--line-night); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.he .doorway__inner { fill: var(--brand-navy); stroke: var(--he-door-inner-edge); stroke-width: 1; vector-effect: non-scaling-stroke; filter: none; }
+.he .doorway__arch-inset { stroke: var(--line-night); }
+.he .doorway__inner { fill: var(--brand-navy); stroke: var(--he-door-inner-edge); vector-effect: non-scaling-stroke; filter: none; }
 .he .doorway__glow { opacity: 0.7; }
-.he .doorway__arch { fill: none; stroke: var(--accent-night); stroke-width: 1.5; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: none; }
+.he .doorway__arch { fill: none; stroke-width: 1.5; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: none; }
 /* the key, an HTML layer in stage units (key.svg 60 × 130 at 420, 207, 56 × 122, «meet»; the crop x 10–50, y 11–105): at rest
    it IS the verbatim key, and the hero turns it on the compositor */
 .he .door-stage__key {
@@ -107,8 +106,8 @@
   inline-size: calc(var(--w) / var(--vw) * 100%);
   block-size: calc(var(--h) / var(--vh) * 100%);
 }
-.he .kt__l > svg { display: block; inline-size: 100%; block-size: 100%; overflow: visible; }
-.he .kg { --vx: 10; --vy: 11; --vw: 40; --vh: 94; position: relative; display: inline-block; block-size: 18px; aspect-ratio: 40 / 94; direction: ltr; color: currentColor; flex: none; vertical-align: middle; }
+.he .kt__l > svg { inline-size: 100%; block-size: 100%; overflow: visible; }
+.he .kg { --vx: 10; --vy: 11; --vw: 40; --vh: 94; position: relative; block-size: 18px; aspect-ratio: 40 / 94; direction: ltr; color: currentColor; flex: none; vertical-align: middle; }
 .he .kg__bow { --x: 15; --y: 11; --w: 30; --h: 30; }
 .he .kg__blade { --x: 10; --y: 39; --w: 40; --h: 66; }
 .he .kg .kt__l > svg { fill: currentColor; }
@@ -135,7 +134,7 @@
   position: absolute; z-index: 4; display: none;
   inset-inline-start: 50%; inset-block-start: 30.5%; inline-size: max(19.5%, 2.75rem); block-size: 25.7%;   /* the key's box with a margin (stage x 412–484, y 203–320), ≥ 44 px wide on the smallest phone stage: centred on the key, which is centred in the stage — the same box from either edge (the door box keeps the page's direction) */
   margin-inline-start: min(-9.75%, -1.375rem); min-block-size: 2.75rem;
-  margin-block: 0; padding: 0; border: 0; background: none; appearance: none; color: inherit;
+  margin-block: 0; background: none; appearance: none;
   border-radius: var(--radius-full); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
 .he.has-replay .he-replay { display: block; }
@@ -151,7 +150,6 @@
   isolation: isolate;
   overflow: clip;
   overflow-clip-margin: 0.5rem;
-  color: var(--text-1);
   background-color: var(--surface-page);           /* carta-50: the letterhead, the wall and chapter 01 one field */
   --reveal-w: 1rem;
   --gutter: 1.25rem;
@@ -190,16 +188,14 @@
 .he__promise {
   display: block;
   margin: 0;
-  max-inline-size: 13.9em;                         /* the promise's first line (13.5 em) always fits: two lines, broken at the comma */
-  font-family: var(--f-sans);
-  font-weight: 500;
+  max-inline-size: 13.9em;
+  font-weight: var(--w-display);                   /* V5.24 Typography V2 (F-1): the statement at the display weight, 600, and the display tracking, through the tokens alone — the composition's size (--promise-fs) and positions untouched (the preserved first screen; FINAL_DELIVERY_V2 §3.4 row 0) */
   font-size: var(--promise-fs);
   line-height: var(--promise-lh, 1.05);
-  letter-spacing: -0.028em;
-  color: var(--text-1);
+  letter-spacing: var(--track-display);
   text-wrap: balance;
 }
-.he__promise:lang(ar) { letter-spacing: 0; }   /* an Arabic promise (none today): no Latin tracking */
+.he__promise:lang(ar) { letter-spacing: 0; line-height: 1.35; }   /* an Arabic promise: no Latin tracking, and the Arabic leading floor (V5.24 TYPOGRAPHY_V2 §6) */
 /* the Arabic page: a French statement ends on the wall's start edge, with the action under it and the four below — one edge per column
    in both languages (design M-4); the description too on the desktop, where its box hugs that edge and is narrower than a wide
    wall (a left-aligned paragraph started mid-wall); on phones and tablets its box is the page's width and it keeps its own
@@ -210,10 +206,10 @@
 /* the interim variant (gate G3 closed): an editorial eyebrow over the promise, a lead under it — the stations' voice */
 .he__eyebrow { margin: 0 0 var(--s-3); font-size: var(--t-folio); line-height: 1rem; font-weight: var(--w-control); letter-spacing: 0.04em; text-transform: uppercase; font-feature-settings: var(--feat-caps); color: var(--he-label); }
 .he__eyebrow:lang(ar) { letter-spacing: 0; }
-.he__lead { margin: var(--s-4) 0 0; max-inline-size: 36ch; font-size: var(--t-ui); line-height: var(--t-ui-lh); color: var(--text-1); text-wrap: pretty; }
+.he__lead { margin: var(--s-4) 0 0; max-inline-size: 36ch; font-size: var(--t-ui); line-height: var(--t-ui-lh); text-wrap: pretty; }
 @media (min-width: 64rem) { .he__lead { max-inline-size: 46rem; font-size: var(--t-body); line-height: var(--t-body-lh); } }   /* under a 52 px title the lead is read at the reading size (17 / 28), on one line where the wall has the room (the review's M3: it was 15 px on two) */
 .he__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-6); margin-block-start: var(--gap-a, 2rem); }
-.he__primary { min-block-size: var(--cta-h, 3.25rem); font-size: var(--t-ui); }
+.he__primary { font-size: var(--t-ui); }
 .he__primary:focus-visible, .he__secondary:focus-visible { outline-color: var(--he-ring); }
 .he__primary:focus-visible { outline-offset: 6px; }   /* the ring clear of the 5 px halo (p5 4.55) */
 .he__primary .icon { inline-size: var(--icon-md); block-size: var(--icon-md); stroke-width: var(--he-stroke-md); }
@@ -223,14 +219,13 @@
   gap: var(--s-2);
   padding-inline: 0;
   text-decoration: none;
-  font-size: var(--t-ui);
   font-weight: var(--w-control);
   --btn-ink: var(--he-secondary);
   --btn-ink-hover: var(--he-secondary);
 }
 .he__secondary.btn--link::before, .he__secondary.btn--link::after { content: none; }   /* the system's rule under the whole link: here the text alone is underlined */
-.he__secondary .icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); stroke-width: var(--he-stroke-sm); color: var(--he-secondary); }
-.he__secondary-text { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; text-decoration-color: currentColor; transition: text-decoration-thickness var(--motion-fast) var(--ease-enter); }
+.he__secondary .icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); stroke-width: var(--he-stroke-sm); }
+.he__secondary-text { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; transition: text-decoration-thickness var(--motion-fast) var(--ease-enter); }
 @media (hover: hover) and (pointer: fine) { .he__secondary:hover .he__secondary-text { text-decoration-thickness: 2px; } }
 .he__secondary:focus-visible .he__secondary-text { text-decoration-thickness: 2px; transition: none; }
 
@@ -238,7 +233,7 @@
 /* the list's own rules carry the hero's class — (0,2,0) —: the product's reset (base.css: ol[role="list"] { padding-inline-start: 0 },
    (0,1,1)) would otherwise take the list's start padding, which places the rail's nodes on the rail (phones) and Maroc's disc on the
    path's corner (the compact desktop) */
-.he .he-stations { margin: 0; padding: 0; list-style: none; }
+.he .he-stations { padding: 0; list-style: none; }
 .he-station { position: relative; list-style: none; overflow-wrap: normal; }
 .he-station__label {
   display: block;
@@ -260,12 +255,11 @@
 
 /* ---- the origins (shared) ---- */
 .he-origins { position: relative; min-inline-size: 0; }
-.he-origins__list { margin: 0; padding: 0; list-style: none; }
+.he-origins__list { list-style: none; }
 .he-origin { position: relative; min-inline-size: 0; list-style: none; }
 .he-origin__link {
   position: relative;
   display: grid;
-  color: var(--text-1);
   text-decoration: none;
   border-radius: var(--radius-sm);
   -webkit-tap-highlight-color: transparent;
@@ -294,7 +288,7 @@
   box-shadow: var(--he-plate-edge);
 }
 .he-plate__bw, .he-plate__col { position: absolute; inset: 0; display: block; }
-.he-photo { display: block; inline-size: 100%; block-size: 100%; max-inline-size: none; object-fit: cover; }
+.he-photo { inline-size: 100%; block-size: 100%; max-inline-size: none; object-fit: cover; }
 .he-plate__bw .he-photo { filter: grayscale(1); }   /* the base grade as cut (C-6 d: the row sits one step under the path's line; the phone chips keep their 1.12) */
 .he-plate__col { opacity: 0; transition: opacity var(--motion-fast) var(--ease-enter) var(--he-grace, 0ms); }   /* out: 120 ms on the ease-out curve, after the grace */
 .he-plate__col .he-photo { filter: saturate(var(--he-chroma, 1)); }   /* the colour layer: the grade's own hues, a little stronger where the grade is near-neutral */
@@ -322,7 +316,7 @@
 .he-origin__call {                                 /* the origin's own call: a reserved line, opacity only, no layout shift; always in the AX description */
   display: block;
   min-block-size: 1rem;
-  font-size: 0.75rem; line-height: 1rem; font-weight: var(--w-title);
+  font-size: var(--t-caption); line-height: var(--t-caption-lh); font-weight: var(--w-title);   /* the caption step (12/16; 14/20 in Arabic — the floor, V5.24 TYPOGRAPHY_V2 §4.5) */
   letter-spacing: 0.04em; text-transform: uppercase; font-feature-settings: var(--feat-caps);
   color: var(--he-call);
   opacity: 0;
@@ -359,14 +353,13 @@
   background: var(--he-halo);                      /* a rim: transparent inside the arch (the stage covers it), warm just outside its outline, gone at the niche's walls */
 }
 .he-door-box { position: relative; z-index: 1; }
-.he-door { position: relative; inline-size: 100%; }
+.he-door { position: relative; }
 .he-door .lx { z-index: 2; }
 .he-door .door-stage__key { z-index: 3; perspective: calc(var(--stage-h) * 0.7696); }   /* ≈ 4 × the key's height: the turn reads as a turn, not a squash */
 .he-door .he-key-halo { z-index: 2; }              /* behind the key, over the stage */
 /* the photograph: the door-master derivatives — a <picture> in STAGE UNITS under the SVG (arch, inner door, key, steps stay vector) */
 .he .door-stage__photo {
   position: absolute;
-  display: block;
   --x: 288; --y: 80; --w: 320; --h: 427;
   inset-inline-start: calc((var(--x) - var(--vx)) / var(--vw) * 100%);
   inset-block-start: calc((var(--y) - var(--vy)) / var(--vh) * 100%);
@@ -377,11 +370,10 @@
   background: var(--he-door-photo-ground);
   filter: var(--he-door-photo-drop);
 }
-.he .door-stage__photo > img { display: block; inline-size: 100%; block-size: 100%; max-inline-size: none; object-fit: cover; opacity: 0.5; filter: saturate(0.8) contrast(1.05); }
+.he .door-stage__photo > img { inline-size: 100%; block-size: 100%; max-inline-size: none; object-fit: cover; opacity: 0.5; filter: saturate(0.8) contrast(1.05); }
 
 /* the steps — the owner's request, «the stair with more evident colour»: the stage's own laguna at .95 / .80 / .66 (top →
    bottom; the stage as first drawn had .55 / .38 / .24), each with a lit nosing; the markup of the stage is unchanged */
-.he .doorway__steps rect { fill: var(--he-step); }
 .he .doorway__steps rect:nth-child(1) { opacity: 0.95; }
 .he .doorway__steps rect:nth-child(2) { opacity: 0.8; }
 .he .doorway__steps rect:nth-child(3) { opacity: 0.66; }
@@ -514,7 +506,7 @@
   }
   .he-station { grid-row: 1; }
   .he-station__label { inline-size: var(--st-w, auto); }
-  .he-station--maroc { grid-column: 1; justify-self: start; text-align: start; }
+  .he-station--maroc { grid-column: 1; justify-self: start; }
   .he-station:nth-child(2) { grid-column: 1 / span 2; --st-w: 7.95em; }
   .he-station:nth-child(3) { grid-column: 2 / span 2; --st-w: 9.7em; }
   .he-station:nth-child(4) { grid-column: 3 / span 2; --st-w: 9.25em; }
@@ -685,7 +677,6 @@
 @media (min-width: 90rem) and (min-height: 54rem) { .he { --gap-labels: 2.5rem; } }   /* ≥ 1440 × 864: actions → stations 40 px */
 /* ≤ 1366: the word 16 px, the stations 12 px */
 @media (min-width: 64rem) and (max-width: 85.375rem) {
-  .he-origin__word { font-size: 1rem; line-height: 1.375rem; }
   .he-station__label { font-size: 0.75rem; line-height: 0.9375rem; letter-spacing: 0.05em; }
   .he-station__label:lang(ar) { font-size: 0.875rem; letter-spacing: 0; }   /* an Arabic station name never under 14 px (tokens: «never under 14 px in Arabic») */
   .he { --labels-h: 2.375rem; }
@@ -892,7 +883,6 @@
   .he-station__label { color: var(--text-on-night-1); min-inline-size: 0; max-inline-size: 100%; overflow-wrap: break-word; hyphens: manual; }   /* never hyphenated (CD C-1): a two-word label breaks between its words; only a single word wider than the space beside its node (a text-only enlargement) breaks inside it — the last resort —, never onto the door */
   .he-station__node { position: relative; flex: none; margin-block-start: 4.5px; background: var(--he-gold); box-shadow: 0 0 0 3px var(--surface-night); }
   .he-station__lit { z-index: 7; inset-inline-start: -3px; inset-block-start: 1.5px; inline-size: 13px; block-size: 13px; border-radius: 50%; background: var(--he-band-glint); }   /* after every word (C-7) */
-  .he-station--door .he-station__label { color: var(--he-gold); }
 
   /* the four tiles: a 1 : 1 chip (black-and-white at rest) beside the word, the arrow at the end; the whole tile the target */
   .he-origins { grid-column: wall-start / wall-end; grid-row: t1 / t2-end; z-index: 6; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }   /* the tiles and their moving colour layers after the band's labels (C-7) */
@@ -912,7 +902,7 @@
   .he-origin__link:focus-visible { box-shadow: 0 0 0 8px var(--surface-page); }   /* the ring on a clear field, over the spine where they meet */
   .he-plate { inline-size: var(--chip); aspect-ratio: 1; box-shadow: none; }
   .he-plate__bw .he-photo { filter: grayscale(1) contrast(1.12); }   /* the chips: a touch more contrast (Institutions, the lightest picture, at 56 px) */
-  .he-origin__word { position: relative; padding-block-end: 1.125rem; font-size: 1rem; line-height: 1.2; font-weight: var(--w-control); letter-spacing: -0.006em; overflow-wrap: break-word; hyphens: manual; }   /* 16 px at every phone width (RE-4, UX MOB-1); the arrow's own row, reserved under the word; never hyphenated */
+  .he-origin__word { position: relative; padding-block-end: 1.125rem; font-size: 1rem; line-height: calc(1.2 + var(--ar-lh-plus)); font-weight: var(--w-control); letter-spacing: -0.006em; overflow-wrap: break-word; hyphens: manual; }   /* 16 px at every phone width (RE-4, UX MOB-1) at 1.2, opened by the tokens' Arabic increment to 1.3 (V5.24 TYPOGRAPHY_V2 §6: an Arabic word on two lines never under 1.3 em; the Latin word keeps the 360 × 640 fold); the arrow's own row, reserved under the word; never hyphenated */
   .he-origin__word .he-origin__end { font-size: 0; }   /* on a tile the arrow leaves the line: no glue */
   .he-origin__word .he-origin__go { position: absolute; inset-inline-end: 0; inset-block-end: 0; display: flex; align-items: center; block-size: 1rem; margin: 0; line-height: 0; }   /* in the reserved row, at the word's end: never over a letter */
   .he-origin__word .he-origin__go .icon { inline-size: var(--icon-xs); block-size: var(--icon-xs); opacity: 1; }
@@ -1007,11 +997,16 @@
   .he { --arch-w: min(39vw, 17rem); --promise-fs: clamp(1.5rem, 6.6vw, 1.75rem); --gap-a: 0.75rem; --rail-top: 1.375rem; }
   .he__statement { padding-block: 1rem 0.75rem; }
 }
+/* the narrowest phones (≤ 360): the primary call's label on one line beside its arrow — at the step-up's 16 px the locked French
+   label broke into two lines and the call grew 14 px, pushing the fourth tile under a 640 px fold (V5.24: the hero's own call keeps
+   the ui size here; nothing under 14 px) */
+@media (max-width: 22.5rem) { .he__primary { font-size: 0.9375rem; } }
 /* landscape phones (844 × 390, 932 × 430): the door beside the statement, the four tiles under it, the six stations as a two-line
    plinth as the hero's last row; the short score without a travelling light (the rail and the spine are not drawn) */
 @media (max-width: 63.999rem) and (min-width: 36rem) and (orientation: landscape) and (max-height: 30rem) {
   .he {
     --arch-w: clamp(9rem, 34vh, 14rem);
+    --promise-fs: clamp(1.375rem, 4.6vh, 1.75rem); --promise-lh: 1.1;   /* the promise's own fluid fit, as every other width writes it */
     --tile-h: 3.25rem; --chip: 3rem;               /* 52 px tiles and 8 px gaps: 16 px more above the promise (taste m-4), the plinth and the door where they were */
     grid-template-columns: [full-start] var(--page-pad) [wall-start] minmax(0, 1fr) [mid-start] var(--gap) [mid-end] minmax(0, 1fr) [wall-end] 1rem [niche-start] calc(var(--stage-w) + 1rem) var(--page-pad) [full-end];
     grid-template-rows: [top] auto [band-start] 0.5rem [t1] minmax(var(--tile-h), auto) [t1-end] 0.5rem [t2] minmax(var(--tile-h), auto) [t2-end] 0.5rem [plinth] minmax(3.25rem, auto) [bottom];
@@ -1019,7 +1014,6 @@
   }
   [dir="rtl"] .he { background-image: none; }
   .he__statement { grid-column: wall-start / wall-end; grid-row: top; padding-block: 1rem 0.25rem; }
-  .he__promise { font-size: clamp(1.375rem, 4.6vh, 1.75rem); line-height: 1.1; }
   .he__actions { flex-direction: row; align-items: center; gap: var(--s-2) var(--s-5); margin-block-start: 0.5rem; }
   .he__primary { inline-size: auto; min-block-size: 2.75rem; }
   .he__secondary.btn--link { min-block-size: var(--hit-primary); }
@@ -1101,8 +1095,7 @@
   min-block-size: var(--btn-h-lg);
   padding-inline: var(--btn-pad-lg);
   border-radius: var(--radius-sm);
-  font-weight: var(--w-control);
-  line-height: var(--t-ui-lh);
+  line-height: var(--t-ui-lh);                     /* its weight is the primary call's (.btn--primary, v5/buttons.css: 600 — V5.24 Typography V2 through the token alone; FINAL_DELIVERY_V2 §3.4 row 0); its size the hero's own (.he__primary) */
   white-space: nowrap;
 }
 [dir="rtl"] .btn.cta-b { --cta-dir: -1; }
@@ -1119,7 +1112,7 @@
 .btn.cta-b:not(:disabled):not([aria-disabled="true"]):active, .btn.cta-b.is-pressed { --cta-leaf: var(--he-call); }   /* the press: one step darker by shade */
 .btn.cta-b:active::before, .btn.cta-b.is-pressed::before { transform: none; transition-duration: 0ms; }
 @media (max-width: 29.999rem) {
-  .btn.cta-b { inline-size: 100%; padding-inline: var(--s-2); white-space: normal; text-wrap: balance; max-inline-size: 100%; padding-block: var(--s-2); text-align: center; }
+  .btn.cta-b { padding-inline: var(--s-2); white-space: normal; text-wrap: balance; max-inline-size: 100%; padding-block: var(--s-2); }
   .btn.cta-b .btn__arrow { margin-inline-end: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .btn.cta-b { --cta-go: 0px; } }
@@ -1137,15 +1130,16 @@
   position: relative; z-index: 2;
   margin: 0;
   padding-block: 0.5rem 3.5rem;                    /* the hero's foot: 56 px of the hero's own ground under the description, before the chapter's ground */
-  max-inline-size: 58rem;
+  max-inline-size: 48rem;                          /* V5.29 (stream SYS): a reading measure (≈ 58 ch at 27 px), not the page's width */
   font-family: var(--f-sans);
   font-weight: 400;
   font-size: clamp(1.25rem, 1rem + 0.9vw, 1.6875rem);
   line-height: 1.32;
   letter-spacing: -0.014em;
-  color: var(--text-1);
+  color: var(--text-2);                            /* V5.29: a lead, not a block of ink — its first line (the fold's peek) in the primary ink, the rest in the slate */
   text-wrap: pretty;
 }
+.he__body::first-line { color: var(--text-1); }
 .he__body:lang(ar) { letter-spacing: 0; }
 .he + .home-entrances, .he + .home-banner + .home-entrances { padding-block-start: 1.25rem; }
 /* ON THE DESKTOP THE DESCRIPTION STANDS ON THE PAGE'S COLUMN (the review's M1; DL54-39 item 1's forward correction): it is the
@@ -1165,28 +1159,14 @@
   .he + .home-entrances { padding-block-start: 0.875rem; }
   .he__body { padding-block: 0.75rem 2rem; font-size: 1.25rem; }   /* the foot: 32 px on phones */
 }
-/* ---- V5.22 (SECTION_SYSTEM_V2 §3.1 H0, «la soglia»): the hero's route continues beside the statement — a 2 px line in the
-   route's bronze, 12 px off the reading edge (the orientation seal's sill starts there: the line turns into it), from the
-   statement's first line to the hero's foot; drawn once as it enters (data-sec, the verb draw-y of v5/_reveal.css), at rest
-   under reduced motion. Where the orientation follows (the register of phones hidden) the paper fades into its wash over
-   the statement's last 96 px — no cut — and the 56 px foot is gone; on a phone the line ends on its node above the doors. */
-.he__soglia { position: absolute; z-index: 2; grid-row: bottom; grid-column: wall-start / wall-end; inset-block: 1.25rem 0; inset-inline-start: 0.25rem; inline-size: 2px; pointer-events: none; }
-.he__soglia-linea { display: block; block-size: 100%; background: var(--he-bronze); }
-/* round 1 (QA_ROUND1 M1 a): the line leaves from a station of the route — the hero's own node (a 9 px bronze ring filled
-   with the wall), at the statement's first line; the line draws down from it */
-.he__soglia::before { content: ""; position: absolute; z-index: 1; inset-block-start: -4px; inset-inline-start: -3.5px; inline-size: 5px; block-size: 5px; border: 2px solid var(--he-bronze); border-radius: 50%; background: var(--surface-page); }
-.he__soglia-linea::after { content: ""; position: absolute; inset-block-end: 0; inset-inline-start: -1.5px; inline-size: 5px; block-size: 5px; border-radius: 50%; background: var(--he-bronze); }
-@media (max-width: 47.999rem) { .he__body { padding-inline-start: 1rem; } }
-@media (min-width: 48rem) { .he__soglia { inset-inline-start: -12px; } }
-@media (min-width: 64rem) { .he__soglia { grid-column: body-start / full-end; } }
+/* ---- V5.22 (SECTION_SYSTEM_V2 §3.1 H0, «la soglia»), V5.30 VARIETY §5: the hero's foot fades into the orientation's wash, no
+   line leaves it (the band under the door speaks another language) ---- */
 @media (min-width: 64rem), (min-width: 40rem) and (min-height: 30.0625rem) {
   .he:has(~ .home-orientation--soglia) .he__body { padding-block-end: 1.5rem; }
   .he:has(~ .home-orientation--soglia)::before {   /* its paint, paper into the wash: v5/_casa.css */
     content: ""; position: absolute; z-index: 1; inset: auto 0 0; block-size: 6rem; pointer-events: none;
   }
-  .he:has(~ .home-orientation--soglia) .he__soglia-linea::after { content: none; }
 }
-@media (forced-colors: active) { .he__soglia-linea, .he__soglia-linea::after { background: CanvasText; forced-color-adjust: none; } .he__soglia::before { border-color: CanvasText; } }
 
 /* ---- reduced motion: the complete still — the settled hero (the door ajar, the photographs black-and-white, the path at rest);
    nothing plays (hero.js); the hand's states at 0 ms (the tokens) ---- */

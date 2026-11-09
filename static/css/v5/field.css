@@ -41,10 +41,9 @@ body:not(.console) { --field-h: var(--control-lg); }
   letter-spacing: var(--track-entry);
   color: var(--text-1);
 }
-:lang(ar) .form__legend { letter-spacing: 0; }
+.form__legend:lang(ar) { letter-spacing: 0; }
 /* the group's last field gives its own margin up: two groups are 64 px apart, not 64 and a field's 24 */
 :is(.form__group, .form__fieldset) > :last-child { margin-block-end: 0; }
-.form__required-note { margin-block-end: var(--s-6); font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
 .form__actions {
   display: flex;
   flex-wrap: wrap;

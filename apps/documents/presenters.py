@@ -125,6 +125,14 @@ def present_version(version, *, user, requirement) -> dict:
 
 def present_requirement(requirement, *, user, with_versions: bool = False) -> dict:
     """One row of the register: the piece, its state, who is answerable, what can be done."""
+    # the piece's words in the reader's language when the catalogue has them (V5.24 §4–§5, W3.2): the title and the
+    # detail travel together with the language they are shown in
+    stored_lang = getattr(requirement, "language", "")
+    title, title_lang = services.displayed_text(requirement.title, stored_lang)
+    detail, detail_lang = services.displayed_text(requirement.detail, stored_lang)
+    words_lang = title_lang if title_lang == detail_lang or not requirement.detail else stored_lang
+    if words_lang != title_lang:  # one of the two has no rendering: both stay in the stored language, isolated together
+        title, detail = requirement.title, requirement.detail
     version = requirement.current_version
     state = requirement.derived_state()
     # One object-level answer per row, read three times below (``can`` costs queries on every call).
@@ -135,8 +143,8 @@ def present_requirement(requirement, *, user, with_versions: bool = False) -> di
     row = {
         "requirement": requirement,
         "id": str(requirement.pk),
-        "title": requirement.title,
-        "detail": requirement.detail,
+        "title": title,
+        "detail": detail,
         "code": requirement.code,
         "mandatory": requirement.mandatory,
         "due_date": requirement.due_date,
@@ -189,7 +197,7 @@ def present_requirement(requirement, *, user, with_versions: bool = False) -> di
     }
     row["due_word"] = DUE_WORDS.get(row["urgency"], "")
     row["act"] = row_act(row)
-    row["words"] = record_language(getattr(requirement, "language", ""))
+    row["words"] = record_language(words_lang)
     if with_versions:
         row["versions"] = [
             present_version(item, user=user, requirement=requirement)

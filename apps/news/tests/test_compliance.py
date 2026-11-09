@@ -42,6 +42,24 @@ def news_pages(client, own_seeds, phase3_open, newsletter_on, legal_published, a
 def test_locked_news_texts_rendered_verbatim(news_pages):
     for lang, path, html in news_pages:
         if path.startswith("actualites/") and not path.startswith("actualites/conformite"):
+            if lang == "ar":
+                # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the title, the
+                # body and the newsletter label are compositional (C-UI) — their provisional Arabic renderings, never
+                # the French; the newsletter consent is substantive (C-SUBST-FR) and this page is its source: its
+                # French, verbatim, said with lang="fr"
+                from cms import locked_renderings
+
+                for key in ("p3.news.title", "p3.news.body", "p3.news.newsletter_label"):
+                    assert locked_renderings.treatment(key) == "C-UI", key
+                    assert locked_renderings.rendering(key) in html, (lang, path, key)
+                    assert locked_content.text(key, "fr") not in html, (lang, path, key)
+                assert locked_renderings.treatment("p3.news.newsletter_consent") == "C-SUBST-FR"
+                assert locked_content.text("p3.news.newsletter_consent", "fr") in html, (lang, path)
+                assert 'lang="fr"' in html, (lang, path)
+                # V5.20, citing V5.27 §3 / R7′ (3) and the V5.29 matrix's B2: stronger, the French is also identified
+                assert 'data-locked-caption="p3.news.newsletter_consent"' in html, (lang, path)
+                continue
+            assert 'data-locked-caption="p3.news.newsletter_consent"' not in html, (lang, path)
             for key in ("p3.news.title", "p3.news.body", "p3.news.newsletter_label", "p3.news.newsletter_consent"):
                 assert locked_content.text(key, "fr") in html, (lang, path, key)
             if lang != "fr":

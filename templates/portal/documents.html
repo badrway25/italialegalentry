@@ -18,7 +18,7 @@ Contract, from portal.views.documents / portal.services.documents_page: `availab
 {% endcomment %}
 {% block page_title %}{% translate "Mes documents" %}{% endblock %}
 {% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
-{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
 
 {% block portal_header %}
 <header class="ws-head doc-head doc-head--register" data-atrium="person">
@@ -47,10 +47,15 @@ downloads it —, then the organisation's for a responsible. `page_obj` comes fr
 which lists EVERY file of the account, including those already shown above as a version of a piece: the section
 says what it is («tous les fichiers»), never a second register.
 {% endcomment %}
-{% if page_obj.object_list %}
+{% if files_total %}
 <section class="doc-files" aria-labelledby="files-title">
   <h2 class="doc-files__title" id="files-title">{% translate "Tous les fichiers de votre compte" %}</h2>
   <p class="doc-files__lead">{% translate "Le registre ci-dessus dit ce que votre dossier attend ; cette liste montre les fichiers eux-mêmes, dans l’ordre de dépôt." %}</p>
+  {% comment %} V5.30 (stream C): the platform's list toolkit — search, type, period, sort, chips (components/listing/;
+  portal.lists.FILES); the register's `?état=` rides along. Narrower than its columns, the table already lays each file out as
+  one item (portal/v5/_table.css, container `docfiles`). {% endcomment %}
+  {% include "components/listing/toolbar.html" %}
+  {% if page_obj.object_list %}
   <div class="doc-files__sheet">
     <table class="doc-files__table">
       <caption class="visually-hidden">{% translate "Tous les fichiers de votre compte" %}</caption>
@@ -78,7 +83,8 @@ says what it is («tous les fichiers»), never a second register.
       </tbody>
     </table>
   </div>
-  {% include "components/pagination.html" with page_obj=page_obj %}
+  {% include "components/pagination.html" with page_obj=page_obj query=listing.page_query %}
+  {% else %}{% include "components/listing/empty.html" %}{% endif %}
 </section>
 {% endif %}
 
@@ -131,5 +137,6 @@ says what it is («tous les fichiers»), never a second register.
 </div>
 {% comment %} The preview drawer: beside the register on desktop, a sheet on a phone — outside the page it reads again. {% endcomment %}
 {% if available and register.blocks %}{% include "documents/partials/piece_drawer.html" %}{% endif %}
+{% include "components/listing/drawer.html" %}
 {% endblock %}
-{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

@@ -118,6 +118,8 @@
   max-inline-size: 46rem;
 }
 
+/* the label role by name (`t-label`, v5/base.css — TYPOGRAPHY_V2 F-4, §4.2): the capitals, the weight and the tracking
+   are the role's; the console restates its own size, 12/16 (13/20 on phones; 14/20 in Arabic, no capitals) */
 .atrium__eyebrow,
 [data-atrium] .ctx__eyebrow {
   display: flex;
@@ -126,9 +128,6 @@
   margin: 0 0 var(--s-3);
   font-size: var(--u-eyebrow);
   line-height: var(--u-eyebrow-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
   color: var(--accent-text);
 }
 
@@ -150,19 +149,20 @@
 
 [data-atrium] .ctx__title,
 [data-atrium] .ws-head__title {
-  font-size: clamp(1.75rem, 1.45rem + 0.8vw, 2.25rem);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  font-size: var(--u-title-lg); /* 28 → 36, the workspace head's step (TYPOGRAPHY_V2 §4.2) */
+  line-height: calc(1.12 + var(--ar-lh-plus)); /* 1.22 in Arabic, the Latin value inside a lang="fr" run */
+  letter-spacing: var(--track-band); /* −0.016 em; 0 in Arabic through the tokens */
 }
 
 [data-atrium] .ctx__greeting {
-  font-weight: 500;
+  font-weight: var(--w-title);
   color: var(--text-2);
 }
 
 [data-atrium] .ws-head__lead,
 [data-atrium] .org-head__lead {
   color: var(--text-2);
+  max-inline-size: var(--measure-small); /* the platform lead's 29 rem (TYPOGRAPHY_V2 F-8, §4.4): the organisation's head too */
 }
 
 /* the drawing: its own column, bled to the head's top and reading end, as tall as the head's rows; it never sizes
@@ -376,7 +376,7 @@
   min-block-size: 2.75rem;
   font-size: var(--u-small);
   line-height: var(--u-small-lh);
-  font-weight: 600;
+  font-weight: var(--w-control);
   color: var(--accent-text);
   cursor: pointer;
   list-style: none;
@@ -495,7 +495,7 @@
   [data-atrium] .ctx__title,
   [data-atrium] .ws-head__title {
     font-size: 1.5rem;
-    line-height: 1.15;
+    line-height: calc(1.15 + var(--ar-lh-plus)); /* 1.25 in Arabic: Readex Pro's 1.25 em content area fits (TYPOGRAPHY_V2 §4.5) */
   }
 
   .atrium__art {
@@ -616,7 +616,7 @@
   margin: 0;
   font-size: var(--u-eyebrow);
   line-height: var(--u-eyebrow-lh);
-  font-weight: 600;
+  font-weight: var(--w-label);
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--text-3);
@@ -651,15 +651,16 @@
   min-block-size: 7rem;
 }
 
+/* the numeral role (TYPOGRAPHY_V2 F-3, §4.2 «numeral 28/32 600»): the console's figure in the sans, 600, tabular — never
+   the mono (the ledger's hand is for references) */
 .lattice__figure {
   margin: 0;
-  font-family: var(--f-mono);
-  font-size: 2.5rem;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: var(--u-numeral);
+  line-height: var(--u-numeral-lh);
+  font-weight: var(--w-title);
+  letter-spacing: 0;
   color: var(--text-1);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: var(--numeric-data);
 }
 
 @container (max-width: 26rem) {
@@ -671,10 +672,6 @@
     min-block-size: 0;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-  }
-
-  .lattice__figure {
-    font-size: 1.75rem;
   }
 }
 
@@ -793,12 +790,12 @@
 
 .ring-dial__count {
   grid-area: 1 / 1;
-  font-family: var(--f-mono);
-  font-size: var(--t-folio);
+  font-size: var(--u-small);
   line-height: 1;
-  letter-spacing: 0.02em;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
   color: var(--text-1);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: var(--numeric-data);
 }
 
 .ring-dial__count > span {
@@ -873,12 +870,11 @@
 }
 
 .db-next__day {
-  font-family: var(--f-mono);
-  font-size: 2.5rem;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
+  font-size: var(--u-numeral);
+  line-height: var(--u-numeral-lh);
+  font-weight: var(--w-title);
+  letter-spacing: 0;
+  font-variant-numeric: var(--numeric-data);
 }
 
 .db-next__month {
@@ -942,44 +938,20 @@
   border: 1px solid var(--line-rhythm);
 }
 
+/* the space's glyph in its disc (V5.30, stream C, product-first: the porticoes and their route left — §14) */
 .org-calm__art {
-  inline-size: 15rem;
-  max-inline-size: 100%;
-  block-size: auto;
-  overflow: visible;
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-area);
+  color: var(--accent-mark);
 }
 
-[dir="rtl"] .org-calm__art {
-  transform: scaleX(-1);
-}
-
-/* dashed on pathLength 1, so never `vector-effect: non-scaling-stroke` (round 1: the porticoes were cut at rest); the
-   drawing is set at 1 : 1 (240 units in 15 rem), its widths are its own */
-.org-calm__arch,
-.org-calm__route {
-  fill: none;
-  stroke-dasharray: 1 1;
-}
-
-.org-calm__arch {
-  stroke: var(--text-1);
-  stroke-width: 1.5;
-}
-
-.org-calm__route {
-  stroke: var(--accent-mark);
-  stroke-width: 1.5;
-}
-
-.org-calm__node {
-  fill: var(--p-carta-0);
-  stroke: var(--accent-mark);
-  stroke-width: 1.5;
-}
-
-.org-calm__node--key {
-  fill: var(--identity-key);
-  stroke: var(--identity-key);
+.org-calm__art .icon {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
 }
 
 .org-calm .org-calm__text {
@@ -1080,7 +1052,7 @@
 .org-refs--tiles .org-refs__link {
   grid-template-columns: auto auto minmax(0, 1fr) auto;
   gap: var(--s-4);
-  font-weight: 500;
+  font-weight: var(--w-control);
 }
 
 .org-refs--tiles .org-refs__disc {
@@ -1102,12 +1074,12 @@
 }
 
 .org-refs__index {
-  font-family: var(--f-mono);
-  font-size: var(--t-folio);
+  font-size: var(--u-small);
   line-height: 1;
-  letter-spacing: 0.06em;
+  font-weight: var(--w-title);
+  letter-spacing: 0;
   color: var(--text-3);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: var(--numeric-data);
 }
 
 .org-refs--tiles .org-refs__disc {
@@ -1169,12 +1141,10 @@
   background: var(--surface-sheet);
 }
 
+/* the facts' words: the label role by name (`t-label` on the dt) at the console's size */
 .org-id--lattice .org-id__fact > dt {
   font-size: var(--u-eyebrow);
   line-height: var(--u-eyebrow-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
   color: var(--text-3);
 }
 
@@ -1187,8 +1157,7 @@
 }
 
 .org-id__fact time {
-  font-family: var(--f-mono);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: var(--numeric-data); /* a date is not a reference: the sans, tabular (F-3) */
   white-space: nowrap;
 }
 
@@ -1423,12 +1392,6 @@ html[data-input="pointer"] [data-spot].is-lit::after {
     animation: plat-ring var(--motion-draw) var(--ease-enter) var(--motion-emphasized) backwards;
   }
 
-  html:not(.rm) .org-calm__arch,
-  html:not(.rm) .org-calm__route {
-    animation: plat-draw var(--motion-draw) var(--ease-enter) var(--motion-emphasized) backwards;
-  }
-
-  html:not(.rm) .org-calm__route { animation-delay: calc(var(--motion-emphasized) + var(--motion-slow)); }
 }
 
 /* the keyboard never animates (R-07): a change asked from the keyboard is there in the next frame */

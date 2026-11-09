@@ -231,6 +231,7 @@ def test_the_motivation_explains_the_need_and_still_refuses_an_age_criterion(com
 def test_a_taxonomy_row_reads_in_the_language_of_the_page(sector) -> None:
     """The Italian labels are seeded and editable; before this they reached no screen."""
     from django.utils import translation
+    from django.utils.translation import pgettext
 
     sector.label_it = "Edilizia e opere pubbliche"
     sector.save(update_fields=["label_it"])
@@ -238,7 +239,14 @@ def test_a_taxonomy_row_reads_in_the_language_of_the_page(sector) -> None:
         assert sector.label == "Edilizia e opere pubbliche"
     with translation.override("fr"):
         assert sector.label == sector.label_fr
-    # No Italian label: the French source, never an empty cell.
+    # No Italian label: the catalogue's Italian for a seeded sector (V5.24 W3.1, FINAL_DELIVERY_V2 §3.8; lane AR,
+    # V5.20 — the owner-approved W3.1 makes the seeded sectors read in the page's language), the French source for a
+    # row the catalogue does not know — never an empty cell, never the French where the catalogue has the Italian.
     sector.label_it = ""
+    sector.save(update_fields=["label_it"])
     with translation.override("it"):
-        assert sector.label == sector.label_fr
+        expected = pgettext("companies taxonomy", sector.label_fr)
+        assert sector.label == expected and sector.label
+    sector.label_fr = "Secteur ajouté par un éditeur"
+    with translation.override("it"):
+        assert sector.label == "Secteur ajouté par un éditeur"

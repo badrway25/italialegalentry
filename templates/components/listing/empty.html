@@ -1,0 +1,10 @@
+{% load i18n %}{% comment %}
+NOTHING MATCHES — the list's empty state once a narrowing is in force (V5.30, stream C; the platform's list toolkit,
+docs/design-v5/QA/v530/plat/NOTES.md §1; 21st «Empty» 19750, adapted: a glyph, a title, one sentence, one act — no
+illustration, no arch). The list's own empty state (nothing at all yet) stays the page's. Contract: `listing`.
+{% endcomment %}<div class="lst-empty">
+  <span class="lst-empty__glyph" aria-hidden="true">{% svg_icon "search" "icon" %}</span>
+  <p class="lst-empty__title">{% translate "Aucun résultat" %}</p>
+  <p class="lst-empty__text">{% translate "Aucun élément ne correspond à ces critères. Modifiez-les, ou effacez-les pour retrouver toute la liste." %}</p>
+  <p class="lst-empty__act"><a class="btn btn--secondary" href="{{ listing.clear_url }}">{% translate "Tout effacer" %}</a></p>
+</div>

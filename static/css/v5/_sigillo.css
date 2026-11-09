@@ -5,10 +5,15 @@
    main.css. Markup: templates/components/sezioni/sigillo.html; the mark inside is the generated
    components/sezioni/marks/_<id>.html (scripts/build_icons.py, from static/icons/marks/ on the 48-unit grid).
 
-     1 · the seat      a rectangle whose top is a full semicircle (radius = width / 2) standing on a sill that runs
-                       12 px past each side — the sill keeps the arch from reading as a headstone; its face paper or
-                       night, a 1 px edge (a border: forced colours keep it); on night a 1 px highlight inside
-                       the crown (v5/_sezioni.css — on paper the edge alone reads, round 1 m4);
+     1 · the seat      V5.30 (the owner's «geometry saturation»: arches and door forms are BRAND SIGNATURES, no longer
+                       every section's default): by default a quiet niche TILE — a square of the seat's width, the
+                       card's 8 px corner, the niche's face, a 1 px edge (a border: forced colours keep it), the mark at its centre,
+                       no sill; THE ARCH SEAT (`sigillo--arco`, the partial's `arch=True`) only where a template asks
+                       for it — a rectangle whose top is a full semicircle (radius = width / 2) standing on a sill that
+                       runs 12 px past each side (the sill keeps the arch from reading as a headstone): where its sill
+                       becomes a route (the Parcours head) and the brand's two bookends (the home's reserved door,
+                       the Forum's hemicycle); its face paper or night; on night a 1 px highlight
+                       inside the crown (v5/_sezioni.css — on paper the edge alone reads, round 1 m4);
      2 · the mark      40 in 72 × 88 (from 80 rem), 36 in 64 × 78 (to 64 rem), 32 in 56 × 68 (below; and the small
                        seat everywhere); 2 px at 40, 1.75 px at 32–36, square caps, mitre joins, currentColor; it
                        stands on the seat's sill (its own sill is the seat's), its tone 14 %;
@@ -39,19 +44,27 @@
   position: relative;
   isolation: isolate;
   display: inline-grid;
-  place-items: end center;
+  place-items: center;
   flex: none;
   inline-size: var(--sg-w);
-  block-size: var(--sg-h);
-  border: 1px solid var(--sg-edge); /* a border, so forced colours keep the arch (§4.10) */
-  border-block-end: 0;
-  border-radius: var(--radius-full) var(--radius-full) 0 0; /* clamped to half the width: a full semicircle */
+  block-size: var(--sg-w);
+  border: 1px solid var(--sg-edge); /* a border, so forced colours keep the seat (§4.10) */
+  border-radius: var(--radius-md); /* the targa's corner, on every page already: no new radius anywhere (the three-corner rule) */
   background: var(--sg-face);
   color: var(--text-1);
 }
 
-/* the sill: 12 px past each side (13 from inside the edge) */
-.sigillo::after {
+/* the arch seat (V5.30: only where a template asks — the file's header): the semicircle's crown clamped to half the
+   width, no edge at the foot, the mark standing on the sill */
+.sigillo--arco {
+  place-items: end center;
+  block-size: var(--sg-h);
+  border-block-end: 0;
+  border-radius: var(--radius-full) var(--radius-full) 0 0;
+}
+
+/* the arch's sill: 12 px past each side (13 from inside the edge) */
+.sigillo--arco::after {
   content: "";
   position: absolute;
   inset-inline: -13px;
@@ -88,13 +101,16 @@
 .sigillo__mark {
   inline-size: var(--sg-m);
   block-size: var(--sg-m);
-  margin-block-end: calc(var(--sg-m) * -6 / 48); /* the drawing's sill (y 42) on the seat's sill */
   overflow: visible;
   fill: none;
   stroke: currentColor;
   stroke-width: var(--sg-sw);
   stroke-linecap: square;
   stroke-linejoin: miter;
+}
+
+.sigillo--arco .sigillo__mark {
+  margin-block-end: calc(var(--sg-m) * -6 / 48); /* the drawing's sill (y 42) on the seat's sill */
 }
 
 .sigillo .sg-s {
@@ -123,7 +139,7 @@ html[data-input="key"] .sigillo__luce {
 /* forced colours: the browser draws the arch's border and the mark in the system's text, and drops the light layers
    (gradients); the sill, a background, is kept in the system's text (§4.10) */
 @media (forced-colors: active) {
-  .sigillo::after {
+  .sigillo--arco::after {
     forced-color-adjust: none;
     background: CanvasText;
   }

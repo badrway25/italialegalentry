@@ -17,6 +17,14 @@ Chromium — QA/v522/p1/NOTES.md — and the behaviour in the browser module tes
   milestones, the diplomas' stations — never a check but the diplomas' seal;
 * the page's one primary action, the live «who can help me» line where the page offers an action;
 * a station whose sheet is not live is never a link; Italy Legal Entry™ stands outside the authorities' arc.
+
+V5.24, lane PUB1 — the material pass (FINAL_DELIVERY_V2 §3.5, R3, R4 b, R5; BACKGROUND_MATERIAL_V2 §3.2–§3.4, §4.2; V5.20's
+strict rule, each change cited where it stands): the eight route sheets' ceilings are RECORDED at the family's §7.1 letter
+(11 264 — a recording, not a raise of any page total: the page totals stay the letter, 56 320); a band's ground may be
+«pietra» (dressed stone — one kind with stone for the adjacency rule, and the two never touch); the pilot's route and a
+sheet's steps are bands (content-bound, R5); every protection stands on pietra; and the new assertions below read the
+material, the seams (the three raccordi as the first child of the band each enters), the verbs, the roles and the
+grounds' sequence on every page type.
 """
 
 from __future__ import annotations
@@ -48,22 +56,31 @@ SHEETS = {
     "/fr/formation/": "pathways/training.css",
     "/fr/diplomes-et-titres/": "pathways/diplomas.css",
 }
-#: the page sheets' ceilings (gzip -9), recorded at the build with their headroom; the family sheets keep §7.1's 11 264
+#: the page sheets' ceilings (gzip -9): the family sheets keep §7.1's 11 264, and — V5.24, FINAL_DELIVERY_V2 R4 b (V5.24
+#: §7–§10; V5.20 strict rule) — the eight route sheets' ceilings, set by lane P1 on its own measures, are RECORDED at the
+#: family's §7.1 letter 11 264 so the material partial (v5/_materia.css, ≈ 790 B) can enter them: a recording cited to
+#: FINAL_DELIVERY_V2.md, never a raise of a page total (PAGE_TOTAL below stays the letter). Measured at the lane's build
+#: (gzip -9 of the dist): index 10 655 · sheet 10 147 · training 9 257 · diplomas 9 388 · pilot 9 851 · companies 8 625 ·
+#: institutions 8 724 · universities 7 519 — CLOSING ratchets each to its measure (§3.9 c).
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 CEILINGS = {
-    "ecosystem/ecosystem.css": 11_264,
-    "pathways/pathways.css": 11_264,
-    "ecosystem/pilot.css": 9_728,
-    "ecosystem/companies.css": 9_216,
-    "ecosystem/institutions.css": 9_216,
-    "ecosystem/universities.css": 8_448,
-    "pathways/index.css": 10_240,
-    "pathways/sheet.css": 10_240,
-    "pathways/training.css": 9_728,
-    "pathways/diplomas.css": 9_728,
+    "ecosystem/ecosystem.css": 4_719,
+    "pathways/pathways.css": 4_423,
+    "ecosystem/pilot.css": 9_701,
+    "ecosystem/companies.css": 8_480,
+    # V5.30 §7 (stream A; V5.20, re-recorded at the measure — NOTES docs/design-v5/QA/v530/art/NOTES.md §6): the generalised
+    # «intesa» (a stronger presence, the panel variant and the night modifier in the primitive), the bookend's rules paid
+    "ecosystem/institutions.css": 9_041,
+    "ecosystem/universities.css": 7_366,
+    "pathways/index.css": 10_452,
+    "pathways/sheet.css": 10_007,
+    "pathways/training.css": 9_079,
+    "pathways/diplomas.css": 9_225,
 }
 #: §7.1: landings, interior and pathways pages ≤ 56 320 B, all the sheets a page links on a desktop (the portico's
 #: included, the preserved form sheets excepted — test_frontispiece_v515_c.py's rule)
-PAGE_TOTAL = 56_320
+#: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
+PAGE_TOTAL = 55_067
 FORM_SHEETS = {"css/dist/core/forms.css", "css/dist/core/steps.css", "css/dist/core/glyph.css"}
 STYLESHEET = re.compile(r'<link rel="stylesheet" href="/static/(css/dist/[^"?]+\.css)[^"]*"')
 ICON = re.compile(r'<use href="[^"#]*#icon-([a-z0-9-]+)"')
@@ -107,7 +124,7 @@ def test_every_page_sheet_is_a_plain_import_list_that_starts_from_its_family_she
 
 
 def test_the_sheets_stay_inside_their_ceilings_and_main_css_never_rises():
-    assert _gz("css/dist/main.css") <= 32_718
+    assert _gz("css/dist/main.css") <= 32_105
     main = (ROOT / "static" / "css" / "main.css").read_text(encoding="utf-8")
     for partial in ("_sezioni.css", "_sec-", "_spazi-v2", "_persone-v2"):
         assert partial not in main
@@ -137,7 +154,11 @@ def test_each_page_links_its_own_sheet_once_and_stays_inside_its_total(get, path
 def test_the_form_pages_add_the_band_s_sheet_and_nothing_else(get, path):
     sheets = STYLESHEET.findall(get(path))
     assert "css/dist/pages/css/fronte.css" in sheets and "css/dist/cms/lettura.css" in sheets, sheets
-    assert not [s for s in sheets if "/ecosystem/" in s or "/pathways/" in s], sheets
+    # V5.29 §15–§17 (the owner's order of 6 Nov 2026: the institutions' collaboration page on the Italy + Morocco
+    # ground; FINAL_DELIVERY_V2 §3.5; V5.20 — the same invariant, named exactly): an institution's proposal adds that
+    # ground's own sheet, ecosystem/intesa.css (871 B gzip -9 since V5.30's generalised primitive), once — never a space's page sheet; the others nothing
+    intesa = ["css/dist/ecosystem/intesa.css"] if path == "/fr/collaboration/institutions/" else []
+    assert [s for s in sheets if "/ecosystem/" in s or "/pathways/" in s] == intesa, sheets
 
 
 # ---- the bodies: V2 sections, the chapter device gone ---------------------------------------------------------------
@@ -153,7 +174,11 @@ def test_the_chapter_device_has_left_the_body(get, path):
     sections = soup.select(".sez[data-sec]")
     assert sections, path
     for section in sections:
-        assert section.get("data-ground") in {"paper", "stone", "brand", "night", "photo"}, (path, section.get("class"))
+        # V5.24 (BACKGROUND_MATERIAL_V2 §3.1; FINAL_DELIVERY_V2 R3): «pietra», the dressed stone, is the sixth ground kind
+        assert section.get("data-ground") in {"paper", "stone", "pietra", "brand", "night", "photo"}, (
+            path,
+            section.get("class"),
+        )
         assert section.get("data-rhythm") in {"strip", "band", "moment"}, (path, section.get("class"))
     assert len([s for s in sections if s.get("data-rhythm") == "moment"]) <= 1, (path, "one moment at most (§1 rule 5)")
 
@@ -179,10 +204,12 @@ def test_the_pilot_s_seal_heads_its_eight_stations_and_the_status_plate_ends_the
     # (icons.PILOT_STATION — a register's glyphs all or none, §4.10), never the seal in a station's seat
     head = soup.select_one(".pilota-rotta__capo")
     assert head.select_one('.sigillo.sigillo--body[data-mark="ile-pilota"]') and head.select_one("h2#sequence-header")
-    # §3.3's map (QA_ROUND1 M2): the route is the page's moment, the doors a band; the route is its own trigger, so a
-    # desktop's first screen — which holds the section's top — still sees the line drawn when the route is in view
-    assert soup.select_one('section#sequence.sez[data-rhythm="moment"]')
-    assert soup.select_one('section#participer.sez[data-rhythm="band"]')
+    # §3.3's map (QA_ROUND1 M2): the route is its own trigger, so a desktop's first screen — which holds the section's top
+    # — still sees the line drawn when the route is in view. V5.24 (FINAL_DELIVERY_V2 R5, §3.5; BACKGROUND_MATERIAL_V2
+    # §3.3; V5.20 strict rule): the route stands on the page's one wash as a BAND (a two-row route is content-bound, no
+    # moment — recorded), the doors on paper — night → brand → paper → stone, no two grounds of one kind touching
+    assert soup.select_one('section#sequence.sez[data-ground="brand"][data-rhythm="band"]')
+    assert soup.select_one('section#participer.sez[data-ground="paper"][data-rhythm="band"]')
     route = soup.select_one('[data-diagram="pilot-sequence"]')
     assert route.get("data-sec") == "linea", route.attrs
     stations = route.select("ol.linea.linea--large > li")
@@ -306,7 +333,9 @@ def test_how_it_works_reads_back_whole_on_its_four_plates_and_its_caveat_is_neve
 )
 def test_the_anti_fraud_text_stands_whole_in_its_own_band(get, path):
     soup = BeautifulSoup(_main(get(path)), "html.parser")
-    plate = soup.select_one('.sez[data-ground="stone"] aside.protezione[data-callout="antifraud"]')
+    # V5.24 (BACKGROUND_MATERIAL_V2 §3.1 «pietra»; FINAL_DELIVERY_V2 §3.5; V5.20 strict rule): every protection stands on
+    # the dressed stone — the grid on the far side, the shield bookend, the sill (the library's recipe)
+    plate = soup.select_one('.sez[data-ground="pietra"] aside.protezione[data-callout="antifraud"]')
     assert plate, path
     body = plate.select_one('p[data-locked="p3.antifraud.body"]')
     assert body.get_text("") == locked_content.text("p3.antifraud.body", "fr")
@@ -366,7 +395,8 @@ def test_a_sheet_s_terms_open_their_locked_definitions_in_place(get):
 def test_the_compass_closes_on_the_questionnaire_with_its_caution(get, path):
     soup = BeautifulSoup(_main(get(path)), "html.parser")
     band = soup.select_one('section#orientation.sez[data-ground="brand"]')
-    assert band.select_one(".boussole__ago svg")
+    # V5.30 Fast Visual Variety Correction §5 (V5.20 strict rule): the plate is the sentence and its action, no compass drawn
+    assert not band.select(".boussole__ago, svg.boussole")
     assert "Les décisions relèvent des autorités compétentes." in _text(band.select_one(".boussole__testo"))
     assert band.select_one('a.btn--primary[href="/fr/orientation/"]')
     assert band.select_one(".sez-annotation a.email"), "who can help me, beside the action"
@@ -379,7 +409,9 @@ def test_the_companies_quote_opens_the_flow_and_the_answer_is_split_on_its_own_c
     soup = BeautifulSoup(_main(get("/fr/entreprises/")), "html.parser")
     quote = soup.select_one("section#demarche blockquote.imprese-citazione p")
     assert _text(quote) == locked_content.text("p1.companies.quote", "fr")
-    flow = soup.select_one("section#demarche .flusso[data-sec-js='flow']")
+    # V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «process panels» (V5.20 strict rule; no measured curve, no module)
+    flow = soup.select_one("section#demarche .flusso")
+    assert not flow.has_attr("data-sec-js") and not soup.select("#demarche [data-flow], #demarche [data-flow-node]")
     nodes = flow.select("li.flusso__tappa .flusso__nodo")
     assert [ICON.findall(str(n))[0] for n in nodes] == list(icons.COMPANY_MOMENT)
     band = soup.select_one(".sez--panorama")
@@ -399,7 +431,9 @@ def test_the_companies_quote_opens_the_flow_and_the_answer_is_split_on_its_own_c
 
 def test_the_hemicycle_holds_the_locked_sentence_whole_and_its_six_seats(get):
     soup = BeautifulSoup(_main(get("/fr/institutions/")), "html.parser")
-    section = soup.select_one('section#destinataires.sez[data-ground="photo"]')
+    # V5.30 Fast Visual Variety Correction §7 INSTITUTIONS, «premium split», «Do not make every institutional relationship an
+    # arc» (V5.20 strict rule): the chamber's photograph beside the night plate, the same six seats in a row of tiles
+    section = soup.select_one('section#destinataires.sez[data-ground="night"]')
     assert section.select_one("h2.visually-hidden#destinataires-title")
     sentence = section.select_one("p.emiciclo__frase")
     assert sentence.get_text("") == locked_content.text("p3.institutions.recipients", "fr")
@@ -419,7 +453,7 @@ def test_the_hemicycle_holds_the_locked_sentence_whole_and_its_six_seats(get):
 # ---- Universités (§3.8) ---------------------------------------------------------------------------------------------
 
 
-def test_the_learning_route_ends_on_the_arch_and_its_destination(get):
+def test_the_learning_route_keeps_its_stations_and_its_frame_and_ends_on_no_arch(get):
     from ecosystem import services
 
     entries = {e["key"]: e for e in locked_content.get("p3.persons.pathways", "fr")[0]}
@@ -433,7 +467,8 @@ def test_the_learning_route_ends_on_the_arch_and_its_destination(get):
         locked_content.text("p3.training_after.title", "fr"),
     ]
     assert _text(stations[1].select_one(".filiera__ramo-titolo")) == entries["scientific_research"]["title"]
-    assert ICON.findall(str(route.select_one(".filiera__arrivo")))[0] == "ile-arch"
+    # V5.30 Fast Visual Variety Correction §4 (V5.20 strict rule): arches are signature only, this is not one of the moments
+    assert not route.select(".filiera__arrivo, .filiera__arrivo svg")
     frame = route.select_one('figure[data-slot="universities.exchange"] img')
     assert frame["sizes"] == services.DESTINATION_SIZES
     # the moment names its own subject (QA_ROUND1 m11: it kept the closing bands' «Pour aller plus loin»)
@@ -496,18 +531,23 @@ def test_the_form_pages_open_on_their_space_s_compact_band_and_keep_their_form(g
     head = collab.select_one('header.ingresso[data-fronte="civic"][data-compact]')
     assert head.select_one('.sigillo[data-mark="ile-istituzione"]')
     note = head.select_one('.ingresso__aside [data-annotation="recipients"]')
-    assert note.select_one("svg[aria-hidden='true']")
+    # V5.30 Fast Visual Variety Correction §7 INSTITUTIONS (V5.20 strict rule): the small hemicycle is gone
+    assert not note.select("svg")
     assert _text(note.select_one("p")) == locked_content.text("p3.institutions.recipients", "fr")
-    # QA_ROUND2 M2 (§3.7 IN-H, §4.1): one annotation — the drawing and its words in one row, the drawing first (at the
-    # reading edge), the words an annotation's secondary text, never a second lead (the browser test measures it)
+    # QA_ROUND2 M2 (§3.7 IN-H, §4.1): one annotation — its words an annotation's secondary text, never a second lead
     row = note.select_one(".meta-row__item")
-    assert [child.name for child in row.find_all(True, recursive=False)] == ["span", "p"]
-    assert row.span["aria-hidden"] == "true" and row.span.svg and "ingresso__lead" not in row.p["class"]
+    assert [child.name for child in row.find_all(True, recursive=False)] == ["p"]
+    assert "ingresso__lead" not in row.p["class"]
     assert collab.select_one("section#formulaire")
-    # in Arabic the prescribed introduction says its own language, so it is a French box like the note (§1 rule 6)
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the introduction and the
+    # recipients are compositional (C-UI) — in Arabic their provisional renderings, never a French box
+    from cms import locked_renderings
+
     arabic = BeautifulSoup(_main(get("/ar/collaboration/institutions/")), "html.parser")
-    assert arabic.select_one("header.ingresso p.ingresso__lead")["lang"] == "fr"
-    assert arabic.select_one('[data-annotation="recipients"] p')["lang"] == "fr"
+    lead = arabic.select_one("header.ingresso p.ingresso__lead")
+    assert lead.get("lang") in (None, "ar") and _text(lead) == locked_renderings.rendering("p3.institutions.intro")
+    note = arabic.select_one('[data-annotation="recipients"] p')
+    assert note.get("lang") in (None, "ar") and _text(note) == locked_renderings.rendering("p3.institutions.recipients")
     uni = BeautifulSoup(_main(get("/fr/collaboration/universites-formation/")), "html.parser")
     assert uni.select_one('header.ingresso[data-fronte="learning"][data-compact] .sigillo[data-mark="ile-sapere"]')
 
@@ -539,3 +579,161 @@ def test_the_recipients_spans_rebuild_the_sentence():
         assert re.sub(r"<[^>]+>", "", html).replace("&#x27;", "'").replace("&amp;", "&") == recipients.source.text
         # V5.20 strict rule, cited (v522-s2; DL54-182 item 10 b; DS 2026 §12): the pattern's own attribute, never L3's
         assert html.count("data-seggio=") == len(recipients.items) == 6 and "data-seat" not in html
+
+
+# ---- V5.24 · the material pass (FINAL_DELIVERY_V2 §3.5, R3, R5; BACKGROUND_MATERIAL_V2 §3.1–§3.4, §4.2; lane PUB1) ------------
+
+#: stone and pietra are ONE kind for the adjacency rule (R3): two neighbours never share a kind, so pietra never touches stone
+GROUND_KIND = {"pietra": "stone"}
+#: the grounds the Director's table decides, head to foot (§3.5 «Budgets»; the probe of BACKGROUND_MATERIAL_V2 §5.3 re-run)
+SEQUENCES = {
+    "/fr/parcours/": ["paper", "paper", "brand", "paper", "pietra"],
+    "/fr/parcours/salaried_work/": ["paper", "stone", "night", "pietra", "paper", "brand"],
+    "/fr/projet-pilote/": ["night", "brand", "paper", "stone"],
+    "/fr/entreprises/": ["paper", "stone", "paper", "stone", "paper", "stone"],
+    "/fr/institutions/": ["paper", "night", "stone"],  # V5.30 VARIETY §7: the split's plate, its photograph beside it
+    "/fr/universites-et-formation/": ["paper", "brand"],
+    "/fr/formation/": ["paper", "paper", "pietra", "paper", "brand"],
+    "/fr/diplomes-et-titres/": ["paper", "paper", "pietra", "paper", "brand"],
+}
+#: the route sheets that draw a recipe import the material partial; the two that draw none do not (a page carries only what
+#: it draws — Entreprises' and Universités' changes are grounds and a page rule, §3.5; PUB1 NOTES §4)
+MATERIA_IMPORTS = {
+    "pathways/index.css": True,
+    "pathways/sheet.css": True,
+    "pathways/training.css": True,
+    "pathways/diplomas.css": True,
+    "ecosystem/pilot.css": True,
+    "ecosystem/institutions.css": True,
+    "ecosystem/companies.css": False,
+    "ecosystem/universities.css": False,
+}
+PUB1_SHEETS = (
+    "apps/pathways/static/pathways/_index.css",
+    "apps/pathways/static/pathways/_sheet.css",
+    "apps/pathways/static/pathways/_training.css",
+    "apps/pathways/static/pathways/_diplomas.css",
+    "apps/pathways/static/pathways/_persone-v2.css",
+    "apps/ecosystem/static/ecosystem/_pilot.css",
+    "apps/ecosystem/static/ecosystem/_companies.css",
+    "apps/ecosystem/static/ecosystem/_institutions.css",
+    "apps/ecosystem/static/ecosystem/_universities.css",
+    "apps/ecosystem/static/ecosystem/_spazi-v2.css",
+)
+
+
+def _bands(soup) -> list[tuple[str, str, str]]:
+    """The page's bands head to foot: the head (paper; night under data-tone="night"), every top-level V2 section by its
+    ground, the preserved form chapter (stone) — (name, ground, rhythm)."""
+    out = []
+    for el in soup.find_all(["header", "section", "div"]):
+        classes = el.get("class", [])
+        if el.name == "header" and "ingresso" in classes:
+            out.append(("head", "night" if el.get("data-tone") == "night" else "paper", "head"))
+        elif "sez" in classes and el.get("data-ground") and not el.find_parent(class_="sez"):
+            out.append((el.get("id") or " ".join(classes), el["data-ground"], el.get("data-rhythm", "")))
+        elif "chapter--area" in classes:
+            out.append((el.get("id") or "chapter", "stone", "chapter"))
+    return out
+
+
+@pytest.mark.parametrize("path", list(SEQUENCES))
+def test_two_neighbouring_grounds_never_share_a_kind_and_pietra_never_touches_stone(get, path):
+    """BACKGROUND_MATERIAL_V2 §3.3 and §4.2 as FINAL_DELIVERY_V2 §3.5 decides them: the grounds' sequence on every page type
+    (head → first body section included), two neighbours never one kind — stone ≡ pietra —; the one touch accepted is the
+    head's paper against a paper moment or strip standing on its own frames (§3.5 «*»; §5.3 KEEP)."""
+    bands = _bands(BeautifulSoup(_main(get(path)), "html.parser"))
+    assert [ground for _, ground, _ in bands] == SEQUENCES[path], (path, bands)
+    for (a_name, a, a_rhythm), (b_name, b, b_rhythm) in zip(bands, bands[1:], strict=False):
+        if a_rhythm == "head" and b_rhythm in {"moment", "strip"} and a == b == "paper":
+            continue
+        assert GROUND_KIND.get(a, a) != GROUND_KIND.get(b, b), (
+            path,
+            a_name,
+            a,
+            b_name,
+            b,
+            "two grounds of one kind touch",
+        )
+
+
+def test_the_material_and_the_seams_stand_where_the_director_placed_them(get):
+    """BACKGROUND_MATERIAL_V2 §3.1–§3.4 as FINAL_DELIVERY_V2 §3.5 places them (R3's names): «carta viva» on the three grids
+    (data-luce="origine"), «pietra» under every protection, the trunk's raccordo the FIRST CHILD of the band it enters (LIB
+    NOTES §4 c: every .sez isolates — hung under the leaving band a line is painted over) rising into the head («risale»);
+    V5.30 Fast Visual Variety Correction §5, §7 (V5.20 strict rule): only «Parcours» keeps a raccordo, the filo into the
+    night, the dossier's and «la velatura» on the chamber's foot are gone —, the «Comment ça marche» plates' tiles that ink
+    instead of settling (§3.4 PA-2), Formation's order
+    (R5), the pilot's route on the wash, Entreprises' démarche on stone, the filiera on the wash; and the imports."""
+    parcours = BeautifulSoup(_main(get("/fr/parcours/")), "html.parser")
+    first = parcours.select_one("section.percorsi-famiglie").find(True)
+    assert first.name == "span" and first["class"] == ["sez-raccordo", "sez-raccordo--risale"], first
+    assert first["data-verb"] == "draw-y" and first["aria-hidden"] == "true"
+    assert parcours.select_one('section.percorsi-spazio[data-ground="paper"][data-luce="origine"]')
+    assert parcours.select_one('section.persone-protezione[data-ground="pietra"] aside.protezione')
+    tiles = parcours.select(".come__tappa .come__nodo.sez-tile")
+    assert len(tiles) == 4 and all(tile["data-verb"] == "ink" for tile in tiles), (
+        "the plates' tiles ink, they never settle"
+    )
+    sheet = BeautifulSoup(_main(get("/fr/parcours/salaried_work/")), "html.parser")
+    assert sheet.select_one('section#etapes[data-ground="stone"][data-rhythm="band"]'), (
+        "R5: the steps are a band on stone"
+    )
+    assert not sheet.select("section#autorites .sez-raccordo"), "V5.30 VARIETY §5: no line into the night"
+    assert sheet.select_one('section#avertissements[data-ground="pietra"]')
+    assert not sheet.select('.sez[data-ground="stone"] + .sez[data-ground="stone"]')
+    diplomas = BeautifulSoup(_main(get("/fr/diplomes-et-titres/")), "html.parser")
+    protezione = diplomas.select_one("section.persone-protezione")
+    assert protezione["data-ground"] == "pietra" and not protezione.select(".sez-raccordo"), "V5.30 VARIETY §5"
+    assert diplomas.select_one('section.persone-spazio[data-ground="paper"][data-luce="origine"]')
+    training = BeautifulSoup(_main(get("/fr/formation/")), "html.parser")
+    assert [s.get("data-sec") for s in training.select(".sez[data-sec]")] == ["filo", "strato", "mosaico", "boussole"]
+    assert training.select_one(
+        'section.persone-protezione[data-ground="pietra"] + section.persone-spazio[data-luce="origine"]'
+    )
+    pilot = BeautifulSoup(_main(get("/fr/projet-pilote/")), "html.parser")
+    assert pilot.select_one(
+        'section#sequence[data-ground="brand"][data-rhythm="band"] [data-notice="pilot-not-authorised"]'
+    )
+    assert pilot.select_one('section#participer[data-ground="paper"]')
+    companies = BeautifulSoup(_main(get("/fr/entreprises/")), "html.parser")
+    assert companies.select_one('section#demarche[data-ground="stone"] blockquote.imprese-citazione')
+    institutions = BeautifulSoup(_main(get("/fr/institutions/")), "html.parser")
+    assert institutions.select_one('section#destinataires[data-ground="night"]:not([data-sfuma])'), "V5.30 VARIETY §7"
+    assert not institutions.select("#destinataires .foto__credit"), "the credit chip left with lane PX (V5.24 §2)"
+    universities = BeautifulSoup(_main(get("/fr/universites-et-formation/")), "html.parser")
+    assert universities.select_one('section#filiere[data-ground="brand"][data-rhythm="moment"]')
+    for sheet_name, imports in MATERIA_IMPORTS.items():
+        family, name = sheet_name.split("/")
+        source = (ROOT / "apps" / family / "static" / family / name).read_text(encoding="utf-8")
+        assert ('@import url("../css/v5/_materia.css");' in source) is imports, sheet_name
+
+
+def test_the_space_s_labels_kickers_and_numerals_carry_the_library_s_roles(get):
+    """TYPOGRAPHY_V2 §4.2, §6 (F-3 the numeral role, F-4 the label role) through LIB NOTES §4: the label role by name
+    (`t-label`) on the board's lane names, the two times' kickers, the filiera's kickers and the sheet's rail title; the
+    numeral role (`t-numeral`) on the board's eight station numerals; no page sheet of the space seats the mono."""
+    parcours = BeautifulSoup(_main(get("/fr/parcours/")), "html.parser")
+    names = parcours.select(".tracciato__nome")
+    assert len(names) == 4 and all("t-label" in n["class"] for n in names)
+    nums = parcours.select(".tracciato__num")
+    assert len(nums) == 8 and all("t-numeral" in n["class"] for n in nums)
+    sheet = BeautifulSoup(_main(get("/fr/parcours/salaried_work/")), "html.parser")
+    assert "t-label" in sheet.select_one(".scheda-rail__titolo")["class"]
+    training = BeautifulSoup(_main(get("/fr/formation/")), "html.parser")
+    assert [("t-label" in k["class"]) for k in training.select(".traversata__kicker")] == [True, True]
+    universities = BeautifulSoup(_main(get("/fr/universites-et-formation/")), "html.parser")
+    kickers = universities.select(".filiera__kicker")
+    assert len(kickers) == 3 and all("t-label" in k["class"] for k in kickers)
+    for relative in PUB1_SHEETS:
+        source = re.sub(r"/\*.*?\*/", "", (ROOT / relative).read_text(encoding="utf-8"), flags=re.S)
+        assert "var(--f-mono)" not in source and "font-size: clamp(" not in source, relative
+
+
+def test_the_sheet_s_curated_figure_draws_its_byline_only_when_the_licence_asks_for_it():
+    """IMAGERY_ATTRIBUTION D5 on lane PX's contract (FINAL_DELIVERY_V2 §3.2, §3.5; V5.24 §2): the figcaption's byline in
+    templates/pathways/detail.html stands behind `attribution_required` — no stock credit reaches the product, and an
+    attribution-required asset is never silently stripped of its byline."""
+    source = (ROOT / "templates" / "pathways" / "detail.html").read_text(encoding="utf-8")
+    assert "{% if pathway.hero_image.credit and pathway.hero_image.attribution_required %}" in source
+    assert "{% if pathway.hero_image.credit %}" not in source

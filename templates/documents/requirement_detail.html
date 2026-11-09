@@ -132,7 +132,7 @@ band took 200 px before the piece's state. The file itself is one rail entry awa
         </div>
         <dl class="doc-version__facts">
           <div><dt>{% translate "Déposée le" %}</dt><dd><time datetime="{{ version.filed_at|date:'c' }}">{{ version.filed_at|date:"d.m.Y H:i" }}</time></dd></div>
-          <div><dt>{% translate "Empreinte" %}</dt><dd><code class="t-ref">{{ version.sha256_short|default:"—" }}</code></dd></div>
+          <div><dt>{% translate "Empreinte" %}</dt><dd>{% if version.sha256_short %}<code class="t-ref">{{ version.sha256_short|upper }}</code>{% else %}—{% endif %}</dd></div>
           <div><dt>{% translate "Taille" %}</dt><dd>{% if version.size %}{{ version.size|filesizeformat }}{% else %}—{% endif %}</dd></div>
           {% if version.superseded_at %}<div><dt>{% translate "Remplacée le" %}</dt><dd><time datetime="{{ version.superseded_at|date:'c' }}">{{ version.superseded_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
         </dl>

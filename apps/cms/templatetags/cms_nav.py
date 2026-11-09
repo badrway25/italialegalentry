@@ -33,7 +33,7 @@ from django.utils.html import conditional_escape, format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from cms import locked_content
+from cms import locked_content, locked_renderings
 from cms.models import MenuItem, MenuLocation
 from core import flags, gates
 from core.links import path_is_open, public_url
@@ -131,7 +131,7 @@ _FALLBACK_MAIN: tuple = (
         _("Entreprises"),
         "ecosystem:companies",
         "",
-        _("Signalez les besoins professionnels de votre entreprise."),
+        _("Faites connaître les métiers et les compétences dont votre entreprise a besoin."),
         (
             (_("Besoins professionnels"), "enquiries:company_needs", ""),
             (_("Projet pilote"), "ecosystem:pilot", "phase3_public"),
@@ -516,6 +516,11 @@ def _portico(items: list[NavItem], lang: str) -> None:
                 child.description = ""
             source = _SECOND_LINES.get((item.audience, child.url_name)) or _SECOND_LINES.get(("", child.url_name))
             if not source:
+                continue
+            if source[0].startswith("locked") and not locked_renderings.menu_notice_allowed(str(source[1]), lang):
+                # V5.27 (R7′ (3); lane AR): a substantive prescribed block pending its Arabic validation is not said in
+                # the menu of an Arabic page — its own page carries it, identified; here it would be a French legal line
+                # or a pointer in a panel's foot (hiding is preferable to mixed-language content, V5.27 §2)
                 continue
             text, text_lang = _live_line(source[0], source[1], lang, phase3)
             if own_space and source[0].startswith("locked"):

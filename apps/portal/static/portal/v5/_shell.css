@@ -141,7 +141,7 @@ body.console[data-rail="closed"] {
   text-overflow: ellipsis;
 }
 
-:lang(ar) .rail__space {
+.rail__space:lang(ar) {
   line-height: 1.25rem;
 }
 
@@ -795,10 +795,6 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
   max-inline-size: 100%;
 }
 
-:lang(ar) .console .page-header__title {
-  letter-spacing: 0;
-}
-
 /* the ContextHeader and the workspace head already stand on the frame's edge at the title's size: the frame
    gives them the same distance to the content */
 .console__workspace > .ctx {
@@ -1147,8 +1143,9 @@ body.console[data-rail="closed"] .rail:not(.rail--drawer) .rail__tool {
     gap: 2px;
   }
 
-  /* never under 14 px in Arabic (D21); 17 px of line holds two lines inside the gate's 120 px */
-  :lang(ar) .console-bottom__item {
+  /* never under 14 px in Arabic (D21); 17 px of line holds two lines inside the gate's 120 px — the subject form:
+     a Latin run inside the Arabic bar keeps its own type (TYPOGRAPHY_V2 F-7) */
+  .console-bottom__item:lang(ar) {
     font-size: 0.875rem;
     line-height: 1.0625rem;
   }

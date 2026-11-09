@@ -770,35 +770,51 @@ def _open_obligations(case: CaseFile, reader=None) -> list[_Obligation]:
     """
     pieces = _open_pieces(case, reader)
     met_by_a_piece = {piece.checklist_item_id for piece in pieces if piece.checklist_item_id}
-    obligations = [
-        _Obligation(
-            kind="item",
-            label=item.requirement,
-            detail=item.detail,
-            due_date=item.due_date,
-            overdue=item.is_overdue,
-            responsible_actor=item.responsible_actor,
-            state=item.status,
-            pk=item.pk,
-            lang=item.language,
+    # V5.24 §4–§5 (the Arabic completeness audit's W3.2; lane AR): the obligation's words in the reader's language when
+    # the
+    # catalogue has them (documents.services.displayed_text), else in their own language, isolated by the templates
+    from documents.services import displayed_text
+
+    def _words(label: str, detail: str, lang: str) -> tuple[str, str, str]:
+        shown_label, label_lang = displayed_text(label, lang)
+        shown_detail, detail_lang = displayed_text(detail, lang)
+        if detail and detail_lang != label_lang:  # one of the two has no rendering: both stay in their own language
+            return label, detail, lang
+        return shown_label, shown_detail, label_lang
+
+    obligations = []
+    for item in open_items(case):
+        if item.pk in met_by_a_piece:
+            continue
+        label, detail, lang = _words(item.requirement, item.detail, item.language)
+        obligations.append(
+            _Obligation(
+                kind="item",
+                label=label,
+                detail=detail,
+                due_date=item.due_date,
+                overdue=item.is_overdue,
+                responsible_actor=item.responsible_actor,
+                state=item.status,
+                pk=item.pk,
+                lang=lang,
+            )
         )
-        for item in open_items(case)
-        if item.pk not in met_by_a_piece
-    ]
-    obligations += [
-        _Obligation(
-            kind="piece",
-            label=piece.title,
-            detail=piece.detail,
-            due_date=piece.due_date,
-            overdue=piece.is_overdue,
-            responsible_actor=piece.responsible_actor,
-            state=piece.derived_state(),
-            pk=piece.pk,
-            lang=piece.language,
+    for piece in pieces:
+        label, detail, lang = _words(piece.title, piece.detail, piece.language)
+        obligations.append(
+            _Obligation(
+                kind="piece",
+                label=label,
+                detail=detail,
+                due_date=piece.due_date,
+                overdue=piece.is_overdue,
+                responsible_actor=piece.responsible_actor,
+                state=piece.derived_state(),
+                pk=piece.pk,
+                lang=lang,
+            )
         )
-        for piece in pieces
-    ]
     return obligations
 
 

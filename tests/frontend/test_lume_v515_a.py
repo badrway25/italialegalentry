@@ -241,9 +241,9 @@ def test_the_shared_sheet_s_measured_exception():
     (docs/design-v5/QA/v515/a/NOTES.md): 31 414 → 33 600 B gzip at most, paid in part by W1's band line, the band's
     word, the arrival's light and the institutional bar, which left. V5.20: ratchet restored by dead-rule removal
     (v520-css, 30 October 2026: the declarations a later layer of the same context re-declares and the custom properties
-    nothing reads left the token layers; the shim shrank) — 33 530 → 32 718 B, the measure: the veil
+    nothing reads left the token layers; the shim shrank) — 33 530 → 32 657 B → 32 105 B (CLOSING, V5.29 09:41 item 2: the headroom under the hard 32 716), the measure: the veil
     stays in the shared sheet, under the restored ratchet."""
-    assert len(gzip.compress(DIST_MAIN.read_bytes(), 9)) <= 32_718
+    assert len(gzip.compress(DIST_MAIN.read_bytes(), 9)) <= 32_105
     # review round 1: the desktop's mega panel left main.css for a sheet a phone never waits for (33 565 → 33 152 B)
     base = _read(BASE)
     assert """<link rel="stylesheet" href="{% static 'css/dist/core/portico.css' %}" media="(min-width: 64rem)">""" in base

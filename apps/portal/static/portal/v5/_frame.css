@@ -38,7 +38,7 @@
   font-family: var(--f-sans);
   font-size: var(--u-body);
   line-height: var(--u-body-lh);
-  color: var(--ink-2);
+  color: var(--text-2);
 }
 
 /* the head's words may shrink below their longest word: a name an organisation wrote with a word longer than the
@@ -53,9 +53,9 @@
   font-family: var(--f-sans);
   font-size: var(--u-title);
   line-height: var(--u-title-lh);
-  font-weight: 600;
+  font-weight: var(--w-title);
   letter-spacing: var(--track-title);
-  color: var(--ink);
+  color: var(--text-1);
 }
 
 .ctx__meta {
@@ -67,7 +67,7 @@
   font-family: var(--f-sans);
   font-size: var(--u-small);
   line-height: var(--u-small-lh);
-  color: var(--ink-2);
+  color: var(--text-2);
   font-variant-numeric: tabular-nums;
 }
 
@@ -75,19 +75,17 @@
   font-family: var(--f-mono);
   font-size: var(--u-ref);
   line-height: var(--u-ref-lh);
-  color: var(--ink);
+  color: var(--text-1);
   letter-spacing: 0.02em;
 }
 
+/* the label role by name (`t-label`, v5/base.css — TYPOGRAPHY_V2 F-4): capitals, weight and tracking are the role's */
 .ctx__eyebrow {
   margin: 0 0 var(--s-1);
   font-family: var(--f-sans);
   font-size: var(--u-eyebrow);
   line-height: var(--u-eyebrow-lh);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--text-3);
 }
 
 /* ---- 2 · The workspace head: the same measures, the title first -------------------------------- */
@@ -105,9 +103,9 @@
   font-family: var(--f-sans);
   font-size: var(--u-title);
   line-height: var(--u-title-lh);
-  font-weight: 600;
+  font-weight: var(--w-title);
   letter-spacing: var(--track-title);
-  color: var(--ink);
+  color: var(--text-1);
 }
 
 .ws-head__lead {
@@ -115,8 +113,8 @@
   font-family: var(--f-sans);
   font-size: var(--u-body);
   line-height: var(--u-body-lh);
-  color: var(--ink-2);
-  max-inline-size: 65ch;
+  color: var(--text-2);
+  max-inline-size: var(--measure-small); /* 29 rem — TYPOGRAPHY_V2 F-8: 83–87 cpl at 15 px before */
 }
 
 .ws-head__action {
@@ -130,7 +128,7 @@
   font-family: var(--f-sans);
   font-size: var(--u-caption);
   line-height: var(--u-caption-lh);
-  color: var(--ink-3);
+  color: var(--text-3);
   max-inline-size: 28ch;
   text-align: end;
 }
@@ -144,7 +142,7 @@
   block-size: var(--glyph-disc-md);
   border-radius: var(--radius-full);
   background: var(--min-1);
-  color: var(--ink-2);
+  color: var(--text-2);
 }
 
 .glyph--sm { inline-size: var(--glyph-disc-sm); block-size: var(--glyph-disc-sm); }

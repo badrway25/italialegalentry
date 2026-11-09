@@ -71,6 +71,7 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods, require_POST
 
+from cms import locked_renderings
 from designpreview import access, live, personas, services
 
 #: Kept for the code that imported it from here: the loopback interface (designpreview.access).
@@ -257,6 +258,9 @@ def index(request):
         "outside": [{"key": key, "title": title, "role": role} for key, title, role in live.OUTSIDE],
         "error_pages": live.DEBUG_ERROR_PAGES,
         "coming": live.coming(status),
+        # V5.27 / R7′ (f): every prescribed text with its class and status under the Arabic policy (lane AR's listing)
+        "locked_rows": locked_renderings.board_rows(),
+        "locked_counts": locked_renderings.template_counts(),
         "login": live.public_url("login", "fr"),
         "orientation": live.public_url("orientation", "fr"),
         "csrf_token": _csrf(request),

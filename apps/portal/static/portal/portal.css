@@ -298,7 +298,7 @@
 }
 
 .portal-facts dt {
-  font-size: var(--font-size-small);
+  font-size: var(--u-ui); /* 15/20 — the legacy --font-size-small resolved to the same 0.9375rem (TYPOGRAPHY_V2 F-2) */
   color: var(--text-secondary);
 }
 

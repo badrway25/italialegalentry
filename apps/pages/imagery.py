@@ -31,6 +31,12 @@ V5.22 (SECTION_SYSTEM_V2 §8; label v522-m-build):
   {% photo "<key>" "<class>" variant="<name>" %}; the default rendering stays the one today's page draws, so nothing
   changes on a page before its lane recomposes it;
 - {% photo … sizes="…" %} lets a composition state the width it really draws, when it differs from the slot's.
+
+V5.30 §8 (label v530-agami-build): THE PROMOTER'S OWN MARKS (MARKS, at the end) — AGAMI's official logo, framed and
+seal forms, from static/brand/agami/PROVENANCE.json (tools/build_derivatives.py --marks). They are not photographs and
+not stock: no slot, no crop, no grade, no licence of a third party and no credit; the stock invariants of SLOTS (the
+Pexels licence, the author, one frame one slot) do not describe them, their own do
+(tests/compliance/test_agami_assets_v530.py: AGAMI's own source, no metadata, no photograph of a person).
 """
 
 from __future__ import annotations
@@ -375,8 +381,7 @@ SLOTS: tuple[Slot, ...] = (
         "4x5",
         _("Des mains câblent des contacteurs sur un tableau électrique, entre des goulottes bleues et des fils rouges"),
         narrow="3x2",
-        # I «la traversata»: the first station's frame under the crossing line (4/12) from 64 rem; at the 34 rem
-        # measure from 48 rem; the column below
+        # I «la traversata»: the first time's frame in its card (V5.30 VARIETY §7: the page passes its own sizes)
         sizes=(
             "(min-width: 90rem) 25rem, (min-width: 64rem) 28vw, (min-width: 48rem) 34rem, "
             "(min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)"
@@ -495,3 +500,86 @@ def all_files() -> list[Path]:
     for slot in SLOTS:
         out += [V5_DIR / slot.family / f["file"] for f in record(slot)["files"]]
     return out
+
+
+# ---- V5.30 §8 (label v530-agami-build): the promoter's own marks ----------------------------------------------------
+BRAND_DIR = Path(settings.BASE_DIR) / "static" / "brand" / "agami"
+#: the head's composed seat: the 6/12 track of the page container from 64 rem (the computation universities.exchange
+#: used until V5.30, exact at each container step), the container's width below — the plate capped at 34 rem everywhere
+#: (_agami.css)
+SEAT_SIZES = (
+    "(min-width: 90rem) 34rem, (min-width: 75rem) 33.5rem, (min-width: 64rem) calc(50vw - 3.25rem), "
+    "(min-width: 39rem) 34rem, (min-width: 26.875rem) calc(100vw - 3rem), calc(100vw - 2.5rem)"
+)
+
+
+@dataclass(frozen=True)
+class Mark:
+    """One of AGAMI's marks as the page draws it: drawn whole (never cropped, graded, recoloured or mirrored)."""
+
+    key: str
+    slug: str
+    alt: object  # a lazy msgid; "" for a mark set beside the words that already say it (decorative)
+    sizes: str
+    eager: bool = False  # the head's frame, the page's LCP candidate: eager with fetchpriority=high (one per page)
+
+
+MARKS: tuple[Mark, ...] = (
+    # the head's composed seat «l'insegna»: the official logo, framed, beside the promoter's name
+    Mark(
+        "agami.insegna",
+        "agami-insegna",
+        _(
+            "Logo officiel d’AGAMI Research Center : une balance de la justice traversée par un ruban aux couleurs "
+            "de l’Italie et du Maroc"
+        ),
+        sizes=SEAT_SIZES,
+        eager=True,
+    ),
+    # the identification plate's seal: decorative, the plate's words name the association
+    Mark("agami.sigillo", "agami-sigillo", "", sizes="5.5rem"),
+)
+MARKS_BY_KEY = {m.key: m for m in MARKS}
+
+
+@cache
+def mark_provenance() -> dict:
+    path = BRAND_DIR / "PROVENANCE.json"
+    return {m["slug"]: m for m in json.loads(path.read_bytes().decode("utf-8"))["marks"]}
+
+
+def mark(key: str) -> dict:
+    """Everything the page's mark partial needs: the AVIF and WebP sets, the WebP <img> (its middle width), the box, the
+    alt in the page's language (marked French while the catalogue lacks it, as picture() does)."""
+    m = MARKS_BY_KEY[key]
+    files = mark_provenance()[m.slug]["files"]
+
+    def srcset(fmt: str) -> str:
+        chosen = sorted((f for f in files if f["format"] == fmt), key=lambda f: f["width"])
+        return ", ".join(f"{static('brand/agami/' + f['file'])} {f['width']:d}w" for f in chosen)
+
+    webp = sorted((f for f in files if f["format"] == "webp"), key=lambda f: f["width"])
+    first = webp[0]
+    middle = next((f for f in webp if f["width"] >= 800), webp[-1])
+    alt = str(m.alt)
+    alt_lang = ""
+    if alt and get_language() not in (None, "fr"):
+        with override("fr"):
+            alt_lang = "fr" if alt == str(m.alt) else ""
+    return {
+        "key": m.key,
+        "alt": alt,
+        "alt_lang": alt_lang,
+        "avif": srcset("avif"),
+        "webp": srcset("webp"),
+        "src": static(f"brand/agami/{middle['file']}"),
+        "width": first["width"],
+        "height": first["height"],
+        "sizes": m.sizes,
+        "eager": m.eager,
+    }
+
+
+def mark_files() -> list[Path]:
+    """Every file a mark can serve (for the tests)."""
+    return [BRAND_DIR / f["file"] for record in mark_provenance().values() for f in record["files"]]

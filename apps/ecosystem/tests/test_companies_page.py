@@ -28,6 +28,21 @@ def test_page_is_online_in_every_language_with_both_gates_closed(get_html, seede
     assert gates.phase3_public() is False, "precondition: gate G3 closed"
     assert gates.public_forms_enabled().open is False, "precondition: gate G2 closed"
     html = get_html(lang, COMPANIES_PATH)
+    if lang == "ar":
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the title, the intro and
+        # the quotation are compositional texts (C-UI) — on /ar/ their provisional Arabic renderings, whole, and never
+        # the French; every other language keeps the prescribed French, whole
+        from cms import locked_renderings
+
+        for key, prescribed in (
+            ("p1.companies.title", TITLE),
+            ("p1.companies.intro", INTRO),
+            ("p1.companies.quote", QUOTE),
+        ):
+            assert locked_renderings.treatment(key) == "C-UI", key
+            assert locked_renderings.rendering(key) in html, (lang, key)
+            assert prescribed not in html, (lang, key)
+        return
     for prescribed in (TITLE, INTRO, QUOTE):
         assert prescribed in html, (lang, prescribed[:40])
 
@@ -237,7 +252,13 @@ def test_seo_head(get_html, seeded, curated_photo):
 
 
 def test_arabic_page_is_rtl(get_html, seeded):
+    from cms import locked_renderings
+
     html = get_html("ar", COMPANIES_PATH)
     assert '<html lang="ar" dir="rtl"' in html
-    assert re.search(r'<h1 class="ingresso__title[^"]*" lang="fr">', html)
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the title is a compositional
+    # text (C-UI) — its provisional Arabic rendering in the page's language, no French run
+    title = locked_renderings.rendering("p1.companies.title")
+    assert re.search(r'<h1 class="ingresso__title[^"]*">' + re.escape(title) + "</h1>", html)
+    assert not re.search(r'<h1 class="ingresso__title[^"]*" lang="fr">', html)
     assert html.count("<h1") == 1

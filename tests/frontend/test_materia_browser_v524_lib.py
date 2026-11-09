@@ -41,14 +41,14 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 
 ROUTE = "**/__fixture__/**"
-HEIGHTS = {1440: 900, 390: 844}
+HEIGHTS = {1440: 900, 1024: 768, 390: 844}
 
 #: the fixtures: a list of sections per page — (pattern, ground, rhythm, extra attributes, body template, the section's
 #: own children before its container: the raccordo's span, a child of the band it enters)
 PROTEZIONE = '{% include "components/sezioni/protezione.html" with url="#" %}'
-#: the entered band's head: a process head — its rule is the head's first line, at the strip's content edge, where the
-#: raccordo's node lands (a panel head's rule sits in its label's line: a page lane that lands on one sets
-#: --sez-raccordo on its placement, NOTES §4)
+#: the entered band's head: a process head — its first line stands at the strip's content edge, where the raccordo's node
+#: lands (V5.30 Fast Visual Variety Correction §5: only a panel head draws a rule, in its label's line: a page lane that lands
+#: on one sets --sez-raccordo on its placement, NOTES §4)
 STRIP_HEAD = ('{% include "components/sezioni/_testa.html" with role="process" title_id="t-next" title="La bande suivante"'
               ' title_lang=fr %}')
 RACCORDO = '<span class="sez-raccordo" data-verb="draw-y" aria-hidden="true" style="--raccordo-x: 23px"></span>'
@@ -130,8 +130,11 @@ def _luminance(pg, x: float, y: float, width: float, height: float) -> float:
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-@pytest.mark.parametrize("width", [1440, 390])
-def test_pietra_draws_its_grid_on_the_far_side_and_the_protection_its_sill_and_its_bookend(browser, live_server, lang, width):
+@pytest.mark.parametrize("width", [1440, 1024, 390])
+def test_pietra_draws_its_grid_on_the_far_side_and_the_protection_is_one_compact_band(browser, live_server, lang, width):
+    """V5.29 (owner, 6 Nov 2026: «protezione__campo too dominant … one global refined compact treatment»; stream SYS;
+    V5.20: the grid's letter kept, the band's held by stronger measures — it spans its field, the seal stands inside it
+    at the reading edge, it stays compact, the call at the far end on a desktop, the locked text whole and visible)."""
     pages = {f"pietra-{lang}": page("pietra", lang)}
     ctx, pg = _open(browser, pages, width)
     try:
@@ -140,51 +143,33 @@ def test_pietra_draws_its_grid_on_the_far_side_and_the_protection_its_sill_and_i
         mask = pg.evaluate("s => getComputedStyle(document.querySelector(s), '::before').maskImage", band)
         assert "linear-gradient(" in mask and ("to right" if lang == "ar" else "to left") in mask, (lang, mask)
         assert "48px" in pg.evaluate("s => getComputedStyle(document.querySelector(s), '::before').backgroundSize", band)
-        plate = pg.evaluate(RECT, ".protezione")
-        field = pg.evaluate(RECT, ".protezione__campo")
-        sill = pg.evaluate(RECT, ".protezione__davanzale")
-        assert abs(sill["top"] - plate["top"]) <= 1, "the sill is the plate's top rule, run on"
-        if width == 1440:
-            assert plate["width"] < field["width"], "the plate at its measure, the field the container"
+        plate, field = pg.evaluate(RECT, ".protezione"), pg.evaluate(RECT, ".protezione__campo")
+        seal, title = pg.evaluate(RECT, ".protezione__sigillo"), pg.evaluate(RECT, ".protezione__titolo")
+        assert abs(plate["width"] - field["width"]) <= 1, "the band spans its field"
+        assert plate["top"] - 1 <= seal["top"] and seal["top"] + seal["height"] <= plate["top"] + plate["height"] + 1, "the seal inside"
+        if width == 390:  # a phone: the seal above the title, both on the band's one start (lane H's m5)
+            assert seal["bottom"] <= title["top"] + 1, (seal, title)
             if lang == "ar":
-                assert abs(sill["right"] - plate["left"]) <= 1 and abs(sill["left"] - field["left"]) <= 1, (sill, plate, field)
+                assert plate["right"] - seal["right"] <= 40, (seal, plate)
             else:
-                assert abs(sill["left"] - plate["right"]) <= 1 and abs(sill["right"] - field["right"]) <= 1, (sill, plate, field)
-            shield = pg.evaluate(RECT, ".sez-fondale > svg")
-            assert pg.evaluate("getComputedStyle(document.querySelector('.sez-fondale > svg')).opacity") == "0.3"
-            assert round(shield["width"]) == 192, "12 rem"
-            if lang == "ar":
-                assert shield["right"] <= plate["left"] + 1, "low on the far side, never over the plate"
-            else:
-                assert shield["left"] >= plate["right"] - 1, "low on the far side, never over the plate"
-            assert shield["top"] > plate["top"] + plate["height"] / 2, "low"
+                assert abs(seal["left"] - title["left"]) <= 1 and seal["left"] - plate["left"] <= 40, (seal, title)
+        elif lang == "ar":
+            assert plate["right"] - seal["right"] <= 40 and seal["left"] > title["left"], (seal, plate)
         else:
-            assert sill["width"] <= 1, "on a phone the plate is the whole field: nothing to draw"
-            assert pg.evaluate("getComputedStyle(document.querySelector('.sez-fondale')).display") == "none"
+            assert seal["left"] - plate["left"] <= 40 and seal["left"] < title["left"], (seal, plate)
+        assert plate["height"] <= {1440: 260, 1024: 300, 390: 600}[width], ("compact", plate["height"])
+        assert pg.evaluate("document.querySelectorAll('.protezione__davanzale, .sez-fondale').length") == 0
+        if width >= 1024:
+            action = pg.evaluate(RECT, ".protezione__azione")
+            assert pg.evaluate("getComputedStyle(document.querySelector('.protezione__testo')).columnCount") == "2"
+            if lang == "ar":
+                assert action["left"] < title["left"], "the call at the band's far end"
+            else:
+                assert action["left"] > title["left"] + title["width"] / 2, "the call at the band's far end"
         assert pg.evaluate("document.querySelector('.protezione__testo').textContent").strip(), "the locked text stands"
+        assert pg.evaluate("getComputedStyle(document.querySelector('.protezione__testo')).visibility") == "visible"
     finally:
         ctx.close()
-
-
-def test_the_bookend_stands_down_where_the_field_s_free_span_is_under_its_twelve_rem(browser, live_server):
-    """B3 (V5.25 §2: the desktop composition at 1440 AND 1024): a field of 929 px at 1024 leaves 33 px beside the 56 rem
-    plate — the 12 rem shield would sit behind it; the container query stands it down, and the sill still runs."""
-    pages = {"pietra-fr": page("pietra", "fr")}
-    for width, shown in ((1440, True), (1024, False)):
-        ctx = browser.new_context(viewport={"width": width, "height": 900})
-        pg = ctx.new_page()
-        pg.route(ROUTE, lambda route: route.fulfill(body=pages[route.request.url.rsplit("/", 1)[1]], content_type="text/html; charset=utf-8"))
-        try:
-            _go(pg, live_server, "pietra-fr")
-            display = pg.evaluate("getComputedStyle(document.querySelector('.sez-fondale')).display")
-            assert (display != "none") is shown, (width, display)
-            plate, sill = pg.evaluate(RECT, ".protezione"), pg.evaluate(RECT, ".protezione__davanzale")
-            assert abs(sill["left"] - plate["right"]) <= 1 and sill["width"] >= 16, (width, "the sill from the plate's far edge", sill)
-            if shown:
-                shield = pg.evaluate(RECT, ".sez-fondale > svg")
-                assert shield["left"] >= plate["right"] - 1, "nothing over the plate"
-        finally:
-            ctx.close()
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
@@ -210,7 +195,7 @@ def test_carta_viva_lights_the_origin_corner_and_the_velatura_is_a_still_ground(
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 @pytest.mark.parametrize("width", [1440, 390])
-def test_the_raccordo_waits_draws_once_after_the_band_s_line_lands_on_its_head_rule_and_is_painted(browser, live_server, lang, width):
+def test_the_raccordo_waits_draws_once_after_the_band_s_line_lands_on_its_head_and_is_painted(browser, live_server, lang, width):
     pages = {f"raccordo-{lang}": page("raccordo", lang, spacer=True)}
     ctx, pg = _open(browser, pages, width)
     try:
@@ -229,11 +214,13 @@ def test_the_raccordo_waits_draws_once_after_the_band_s_line_lands_on_its_head_r
         pg.wait_for_timeout(3200)
         assert pg.evaluate(RUNNING, ".sez-raccordo") == [], "a finished entrance leaves getAnimations()"
         line = pg.evaluate(RECT, ".sez-raccordo")
-        rule = pg.evaluate(RECT, ENTERED + " .testa__rule")
+        # V5.20 strict rule, V5.30 Fast Visual Variety Correction §5: the head draws no rule, the same place is the head's top
+        rule = pg.evaluate(RECT, ENTERED + " .testa")
+        assert pg.evaluate("s => document.querySelector(s).querySelectorAll('.testa__rule').length", ENTERED) == 0
         band = pg.evaluate(RECT, ENTERED)
         assert round(line["height"]) == (32 if width == 390 else 48), line
         assert abs(line["top"] - band["top"]) <= 1, "it crosses the seam: from the band's top edge"
-        assert abs(line["bottom"] - rule["top"]) <= 2, ("the node on the band's head rule", line["bottom"], rule["top"])
+        assert abs(line["bottom"] - rule["top"]) <= 2, ("the node on the band's head", line["bottom"], rule["top"])
         node = pg.evaluate("s => { const cs = getComputedStyle(document.querySelector(s), '::after'); return [cs.width, cs.height, cs.backgroundColor]; }", ".sez-raccordo")
         assert node[0] == "6px" and node[1] == "6px", node
         x = pg.evaluate("getComputedStyle(document.querySelector('.sez-raccordo')).insetInlineStart")

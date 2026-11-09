@@ -147,8 +147,11 @@ def test_the_eight_registers_are_drawn_with_their_marks_at_24px_and_never_by_col
         styles = {register: chip["edge"] for register, chip in by_register.items()}
         assert styles == {**dict.fromkeys(chips.REGISTERS, "solid"), "attesa": "dashed", "nullo": "dotted"}, styles
         assert len({c["symbol"] for c in drawn}) == 9, "nine drawings for nine chips: the mark tells them apart"
-        # conforme is ink — the same ink for the word and the disc, no chroma to mean approval; «En examen» is lapis
-        assert by_register["conforme"]["colour"] == by_register["conforme"]["mark"]["colour"] == "rgb(21, 34, 42)"
+        # conforme is ink — the same ink for the word and the disc, no chroma to mean approval; «En examen» is lapis.
+        # The ink is the approved one: V5.29 §5 / §8 (stream SYS, accepted by the owner on 6 Nov 19:36) re-valued it,
+        # #15222a → --p-inchiostro-900 #222f3d, no near-black (c8d9f0e1) — V5.20, restated by the v524-closing steward
+        # (a red carried from SYS, identical on the base 88caed4a): the same invariant at the approved value
+        assert by_register["conforme"]["colour"] == by_register["conforme"]["mark"]["colour"] == "rgb(34, 47, 61)"
         assert by_register["esame"]["mark"]["colour"] == "rgb(82, 120, 193)", "the register's lapis, #5278c1"
         assert by_register["esame"]["symbol"] not in icons.CHECK_BEARING and by_register["conforme"]["symbol"] == "st-conforme"
     finally:

@@ -42,7 +42,7 @@ deliver: a record of the sessions attended.
   <section class="reg-sec" aria-labelledby="course-facts-title">
     <h2 class="db-h2 reg-sec__title" id="course-facts-title">{% svg_icon "book-open" "icon" %}<span>{% translate "Ce qu’il faut savoir" %}</span></h2>
     <dl class="portal-facts">
-      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.name }}{% if course.provider.city %} — {{ course.provider.city }}{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Organisme" %}</dt><dd>{{ course.provider.display_name }}{% if course.provider.city %} — {{ course.provider.city }}{% endif %}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Domaine" %}</dt><dd>{{ course.get_course_type_display }}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Langue d’enseignement" %}</dt><dd>{{ course.get_language_display }}</dd></div>
       <div class="portal-facts__row"><dt>{% translate "Modalité" %}</dt><dd>{{ course.get_course_format_display }}</dd></div>

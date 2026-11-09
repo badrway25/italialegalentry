@@ -60,8 +60,13 @@
     grid-row: 1;
   }
 
-  .db > .db-todo {
+  .db > :is(.db-todo, .db-activity) {
     grid-column: 1 / span 8;
+  }
+
+  /* «Activité récente» (V5.30) stands under «Mes documents»: the side column spans its row too */
+  .db > .db-side--tall {
+    grid-row: span 2;
   }
 
   .db > .db-side {
@@ -145,9 +150,8 @@
   max-inline-size: min(40rem, 100%);
 }
 
-:lang(ar) .db-now__title:not([lang]) {
-  letter-spacing: 0;
-  line-height: var(--ar-title-lh, var(--u-section-lh));
+.db-now__title:lang(ar) {
+  line-height: 2rem; /* 20/32 — TYPOGRAPHY_V2 §4.5: an entry title's Arabic leading (1.25 set it 20/25, tight) */
 }
 
 .db-now__text {

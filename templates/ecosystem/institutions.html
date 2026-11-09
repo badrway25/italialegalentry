@@ -23,6 +23,14 @@ Design V5.22 (SECTION_SYSTEM_V2 §3.7; lane P1 — Page Composition V2), below t
     head. RELATIONAL DRAW + DEVELOP;
   * IN-2 — K «l'approdo»: the Forum's night tile (Q4), the pilot's tile with its route in miniature, the civic
     colonnade low as the bookend; one light sweep.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.2, §5.3; lane PUB1 — the seam; everything KEPT): the
+chamber's foot dissolves into the approdo's stone over 12 rem — «la velatura» (data-sfuma="stone", v5/_materia.css: a
+still ground over the photograph, under the words; the band's foot gives it its own room, _institutions.css). The page
+sheet imports v5/_materia.css.
+Design V5.29 §15–§17 (lane PUB1): «Pour aller plus loin» — the Forum Vénétie–Maroc and the pilot, the bilateral
+cooperation itself — stands on «l'intesa», the Italy + Morocco ground the collaboration proposal's head carries too
+(ecosystem/partials/intesa.html, aria-hidden, behind the tiles on the band's stone; ecosystem/_intesa.css): one
+composition for the space, the flags never mirrored in Arabic, a still under reduced motion.
 
 Before V5.12 (W3-F1): the entrance with the institution door, whose card carries the door's way in — the prescribed
 button and its one sentence, the page's ONE action, in the first screen (W3-F1's review M1); who the space addresses
@@ -36,8 +44,8 @@ button and its one sentence, the page's ONE action, in the first screen (W3-F1's
 
 {% block space_main %}
 {% locked "p3.institutions.button" as button_label %}
-<section id="destinataires" class="sez sez--emiciclo istituzioni-aula" data-sec="emiciclo" data-ground="photo" data-rhythm="moment" aria-labelledby="destinataires-title" data-block="recipients">
-  <div class="istituzioni-aula__fondo">{% photo "institutions.chamber" "istituzioni-aula__foto" sizes="100vw" %}</div>
+<section id="destinataires" class="sez sez--emiciclo istituzioni-aula" data-sec="emiciclo" data-ground="night" data-rhythm="moment" aria-labelledby="destinataires-title" data-block="recipients">
+  <div class="istituzioni-aula__fondo">{% photo "institutions.chamber" "istituzioni-aula__foto" sizes="(min-width: 64rem) 42vw, 100vw" %}</div>
   <div class="container istituzioni-aula__palco">
     <h2 class="visually-hidden" id="destinataires-title">{% translate "Destinataires" %}</h2>
     {% include "components/sezioni/mappa.html" with layout="arc" nodes=seats sentence=recipients_sentence sentence_lang=recipients.source.lang_attr only %}
@@ -52,6 +60,7 @@ button and its one sentence, the page's ONE action, in the first screen (W3-F1's
 {% if links.forum or links.pilot or links.partners %}
 {% translate "Pour aller plus loin" as related_title %}
 <section class="sez sez--approdo ecosistema-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="related-header">
+  {% include "ecosystem/partials/intesa.html" with id="intesa-approdo" only %}
   <div class="container">
     {% include "ecosystem/partials/approdo.html" with title_id="related-header" title=related_title motif="civic" pilot=True %}
   </div>

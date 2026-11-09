@@ -1,8 +1,8 @@
 """
 V5.22 — HOMEPAGE COMPOSITION V2 in a real layout engine (SECTION_SYSTEM_V2 §2.0, §3.1, §5.3, §9.9; lane H).
 
-* the hand-off: the line beside the hero's statement and its continuation meet the orientation seal's sill — one route,
-  on the reading edge, in both directions, at the desktop and tablet widths;
+* the hand-off (V5.30 Fast Visual Variety Correction §5; V5.20 strict rule): no line crosses from the hero into the
+  orientation, the band follows the hero and its origin seal sits in its own cell, at the desktop and tablet widths;
 * the trigger contract on the real page: a section below the fold waits, plays its verbs once and holds nothing
   (V5.20: a finished entrance leaves document.getAnimations()); under reduced motion nothing is written and the page
   is its designed still — every line drawn, every photograph in colour;
@@ -10,7 +10,7 @@ V5.22 — HOMEPAGE COMPOSITION V2 in a real layout engine (SECTION_SYSTEM_V2 §2
 * the pilot's panels draw what their `sizes` say (object-fit: cover: the drawn width is the box's or its height's 2:3);
 * the reserved row's key turns on its own button, never under reduced motion;
 * the phone's doors: one rail the keyboard crosses plate by plate, every focused plate whole in the rail;
-* round 1 (QA_ROUND1, label v522-h-improve1): the hand-off without an empty run, the body seal at the route's origin,
+* round 1 (QA_ROUND1, label v522-h-improve1): the hand-off without an empty run, the panel's tile at the route's origin,
   «la protezione» on the reading edge, the gold key beside its button, the arch's square foot and its drawn doorway, the
   Arabic page's French runs each on its own edge and its folio in its own face;
 * round 2 (QA_ROUND2, label v522-h-improve2): on the Arabic page every French run hangs from one edge (the reserved
@@ -21,7 +21,8 @@ V5.22 — HOMEPAGE COMPOSITION V2 in a real layout engine (SECTION_SYSTEM_V2 §2
   dash the reviewer's 1.25× display did not paint; the class of that defect — a dash on a non-scaling stroke, laid in
   the screen's own pixels — is guarded structurally by test_home_v522_h.py, since the headless shell these tests run
   lays such a dash at 1× whatever the screen's factor); the Arabic index's eight French titles stand on one edge, the
-  reading edge's, at the eight review widths; the colophon's connector runs on its folio's rule;
+  reading edge's, at the eight review widths; the colophon's connector ran on its folio's rule (V5.30: it stands
+  down on the home, the band's one motif the Italy + Morocco field);
 * after the final review (v522-h-final-qa1, label v522-h-final-improve): with the catalogue's entry for the pilot's
   lead, the pilot's statement — the French title, the lead in the page's language, the link — shares the seam's axis
   from 64 rem and one reading edge below, in the four languages at the eight review widths, and its lead never ends on
@@ -88,36 +89,30 @@ def _scroll_through(page, step=0.5, pause=180):
 
 _MEET = """() => {
   const sec = document.querySelector('.home-orientation').getBoundingClientRect();
-  const hero = document.querySelector('.he__soglia').getBoundingClientRect();
-  const line = document.querySelector('.orienta__soglia').getBoundingClientRect();
   const seal = document.querySelector('.home-orientation .linea__step .sigillo').getBoundingClientRect();
+  const cell = document.querySelector('.home-orientation .linea__step').getBoundingClientRect();
   const heroBox = document.querySelector('.he').getBoundingClientRect();
-  const rtl = getComputedStyle(document.documentElement).direction === 'rtl';
-  return {rtl, hero: [hero.left, hero.right, hero.bottom], heroBottom: heroBox.bottom, top: sec.top,
-          line: [line.left, line.right, line.top, line.bottom], seal: [seal.left, seal.right, seal.bottom],
-          display: getComputedStyle(document.querySelector('.orienta__soglia')).display};
+  return {drawn: document.querySelectorAll('.he__soglia, .he__soglia-linea, .orienta__soglia').length,
+          heroBottom: heroBox.bottom, top: sec.top,
+          seal: [seal.left, seal.right, seal.top, seal.bottom], cell: [cell.left, cell.right, cell.top, cell.bottom]};
 }"""
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_hero_line_runs_down_into_the_orientation_seal_sill(browser, live_server, phase3_live, lang):
-    """H0 «la soglia» (§3.1): the 2 px line beside the statement, 12 px off the reading edge, reaches the hero's foot;
-    in the orientation's band it goes on from the band's top on the same axis and ends on the seal's sill, where the
-    route begins — so the hero's route and the orientation's are one line. Measured at rest (reduced motion)."""
+def test_no_line_crosses_from_the_hero_and_the_origin_seal_sits_in_its_cell(browser, live_server, phase3_live, lang):
+    """V5.30 Fast Visual Variety Correction §5, §7 HOME (V5.20 strict rule; this decision replaces H0 «la soglia»,
+    §3.1, the line that ran from the statement down to the seal's sill): no line is drawn between the two bands; the
+    band follows the hero with no gap, and the route's origin seal sits inside its own cell of the panel. Measured at
+    rest (reduced motion)."""
     for width, height in ((1440, 900), (1024, 768), (768, 1024)):
         context, page = _open(browser, live_server, f"/{lang}/", width, height, motion="reduce")
         try:
             m = page.evaluate(_MEET)
-            cell = (lang, width)
-            assert m["display"] == "block", cell
-            assert abs(m["hero"][0] - m["line"][0]) <= 0.5, (cell, "one axis", m)
-            assert abs(m["hero"][2] - m["heroBottom"]) <= 1 and abs(m["top"] - m["heroBottom"]) <= 1, (cell, m)
-            assert abs(m["line"][2] - m["top"]) <= 1, (cell, "from the band's top", m)
-            assert abs(m["line"][3] - m["seal"][2]) <= 1, (cell, "to the sill", m)
-            # the sill runs 12 px past the seal's side: the line stands at its outer end, on the reading edge
-            sill_end = m["seal"][1] + 12 if m["rtl"] else m["seal"][0] - 12
-            line_edge = m["line"][1] if m["rtl"] else m["line"][0]
-            assert abs(line_edge - sill_end) <= 1.5, (cell, m)
+            where = (lang, width)
+            assert m["drawn"] == 0, where
+            assert abs(m["top"] - m["heroBottom"]) <= 1, (where, m)
+            seal, cell = m["seal"], m["cell"]
+            assert cell[0] <= seal[0] and seal[1] <= cell[1] and cell[2] <= seal[2] and seal[3] <= cell[3], (where, m)
         finally:
             context.close()
 
@@ -161,14 +156,13 @@ def test_reduced_motion_writes_no_state_and_draws_the_still(browser, live_server
         still = page.evaluate(
             """() => ({
               states: [...document.querySelectorAll('[data-sec]')].filter(s => s.dataset.secState).length,
-              lines: [...document.querySelectorAll('.he__soglia-linea, .orienta__soglia, .pilota__filo')]
-                .map(e => getComputedStyle(e).scale),
+              lines: document.querySelectorAll('.he__soglia-linea, .orienta__soglia, .pilota__filo').length,
               grey: [...document.querySelectorAll('.pilota__quadro img')].map(i => getComputedStyle(i).filter),
               running: document.getAnimations().length,
             })"""
         )
         assert still["states"] == 0, still
-        assert all(scale in ("none", "1") for scale in still["lines"]), still
+        assert still["lines"] == 0, ("V5.30 Fast Visual Variety Correction §5: no such line is left to draw", still)
         assert all(f in ("none", "grayscale(0)") for f in still["grey"]), still
         assert still["running"] == 0, still
     finally:
@@ -335,12 +329,15 @@ _ROUND1 = """() => {
       const k = R('.home-reserved .sigillo'), b = R('.home-reserved__button');
       return rtl ? k.left - b.right : b.left - k.right;
     })(),
-    corners: [getComputedStyle(pic).borderBottomLeftRadius, getComputedStyle(pic).borderBottomRightRadius],
-    drawing: [R('.casa-arco__disegno').width, pic.getBoundingClientRect().width],
+    corners: (() => { const s = getComputedStyle(pic.querySelector('img'));
+                      return [s.borderTopLeftRadius, s.borderTopRightRadius,
+                              s.borderBottomRightRadius, s.borderBottomLeftRadius]; })(),
+    drawing: document.querySelectorAll('.home-ecosystem :is(.casa-arco, .casa-arco__disegno)').length,
     labels: [...document.querySelectorAll('.home-orientation .linea__label')].map((l) => {
       const s = getComputedStyle(l), box = l.getBoundingClientRect();
-      const step = l.closest('.linea__step').getBoundingClientRect();
-      return {dir: s.direction, align: s.textAlign, gap: rtl ? step.right - box.right : box.left - step.left};
+      const cell = l.closest('.linea__step'), step = cell.getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(cell).paddingInlineStart);
+      return {dir: s.direction, align: s.textAlign, gap: (rtl ? step.right - box.right : box.left - step.left) - pad};
     }),
     stage: panel ? [edge(panel.querySelector('.indice__titolo').getBoundingClientRect()),
                     edge(panel.querySelector('.parcours__descrizione').getBoundingClientRect()),
@@ -357,10 +354,14 @@ def test_round_1_the_home_holds_its_hand_off_its_edges_its_gold_and_its_arabic_r
 ):
     """QA_ROUND1 M1 and M2, measured at rest at 1440 × 900 (reduced motion: the designed still):
     * M1 a — the orientation's head follows the statement at the foot's own distance: no empty run of wash between them;
-    * M1 b — the route's origin is the body's seal, 72 × 88;
+    * M1 b — the route's origin was the body's seal, 72 × 88; RESTATED under V5.20 for V5.30 Fast Visual Variety
+      Correction §7 HOME: it is one of the panel's tiles, 48 × 48;
     * M1 c — «la protezione» hangs from the reading edge, the tablet's own edge above it, never centred;
     * M1 d, m10 — the key is drawn in the identity's gold, beside its button;
-    * M1 e — the arch's foot stands square on its sill, the doorway drawn 12 px around the frame;
+    * M1 e — the arch's foot stood square on its sill, the doorway drawn 12 px around the frame; RESTATED under V5.20
+      for the owner's V5.30 (7 Nov 2026, «geometry saturation» and §4 «reduce cumulative arches/lines/outlined
+      geometry»; stream A): the frame is plain — one corner, the card's, on its four corners — and NO doorway is drawn
+      around it;
     * M2 a — on the Arabic page each French station label is its own left-to-right box, on its station's edge;
     * M2 b — the stage's French title and description start on one edge;
     * M2 c — the Arabic folio is never set in a Latin monospace nor tracked."""
@@ -370,16 +371,24 @@ def test_round_1_the_home_holds_its_hand_off_its_edges_its_gold_and_its_arabic_r
         m = page.evaluate(_ROUND1)
         gap = m["head"]["top"] - m["statement"]["bottom"]
         assert 0 <= gap <= 40, (lang, "the head follows the statement", gap)
-        assert (round(m["seal"]["width"]), round(m["seal"]["height"])) == (72, 88), (lang, m["seal"])
+        assert (round(m["seal"]["width"]), round(m["seal"]["height"])) == (48, 48), (lang, m["seal"])
         side = "right" if m["rtl"] else "left"
         assert abs(m["plate"][side] - m["tablet"][side]) <= 1, (lang, "on the reading edge", m["plate"], m["tablet"])
         assert m["key"] == m["gold"], (lang, "the key in the identity's gold", m["key"], m["gold"])
         assert 0 <= m["keyToButton"] <= 32, (lang, "the seat beside its button", m["keyToButton"])
-        assert m["corners"] == ["0px", "0px"], (lang, "the arch's foot is square on its sill", m["corners"])
-        assert abs(m["drawing"][0] - (m["drawing"][1] + 24)) <= 1, (lang, "the doorway 12 px around the frame", m)
+        assert len(set(m["corners"])) == 1 and m["corners"][0] != "0px", (
+            lang,
+            "the frame on the card's corner",
+            m["corners"],
+        )
+        assert m["drawing"] == 0, (lang, "no doorway drawn around the frame (V5.30)", m["drawing"])
         if lang == "ar":
+            # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the station labels are
+            # the pilot sequence's provisional Arabic — right to left, on their start edge, hanging from their station
+            # (V5.30 Fast Visual Variety Correction §7 HOME, V5.20 strict rule: a station is now a cell of the panel, so
+            # the same exact invariant is read on the cell's content edge, its padding apart)
             for label in m["labels"]:
-                assert label["dir"] == "ltr" and label["align"] in ("start", "left"), label
+                assert label["dir"] == "rtl" and label["align"] in ("start", "right"), label
                 assert abs(label["gap"]) <= 1, ("a label hangs from its station's edge", label)
             assert abs(m["stage"][2] - m["stage"][3]) <= 1, ("one start edge for the stage's French", m["stage"])
             assert "mono" not in m["folio"][0].lower() and m["folio"][1] in ("0px", "normal"), m["folio"]
@@ -400,10 +409,13 @@ _ROUND2_AR = """() => {
                ink(document.querySelector('.home-reserved__body'))],
     colophon: [ink(col.querySelector('.fronte__name')), ink(col.querySelector('.fronte__name-rest')),
                ink(col.querySelector('.colofone__testo'))],
+    answer: {lang: col.querySelector('.colofone__testo').getAttribute('lang') || '',
+             dir: getComputedStyle(col.querySelector('.colofone__testo')).direction},
     across: getComputedStyle(step).gridTemplateColumns.trim().split(/\\s+/).length === 1,
     labels: [...document.querySelectorAll('.home-orientation .linea__label')].map((l) => {
       const s = l.closest('.linea__step').getBoundingClientRect(), box = l.getBoundingClientRect();
-      return {gap: s.right - box.right, width: box.width, em: parseFloat(getComputedStyle(l).fontSize)};
+      return {gap: s.right - box.right, width: box.width, em: parseFloat(getComputedStyle(l).fontSize),
+              lang: l.closest('[lang]').getAttribute('lang')};
     }),
   };
 }"""
@@ -415,19 +427,31 @@ def test_round_2_the_arabic_page_hangs_each_french_run_from_one_edge(browser, li
     box, aligned to its own start, hanging from the page's reading edge):
     * M1 a — the reserved row's French title and its sentence start on one edge, one quotation (from 64 rem the title
       stood 430–540 px from its sentence);
-    * m3 — the colophon's name, in its two parts, and the French answer start on one edge, one left-to-right box;
+    * m3 — the colophon's name, in its two parts, and the French answer start on one edge, one left-to-right box (since
+      V5.27 / R7′ the answer, off its page, is the Arabic pointer line: the name keeps its one box, the line reads RTL);
     * m4 — a station's French caption stands at a caption's measure (12.5 em), never its column's; across the route it
       hangs from its own station's edge."""
     context, page = _open(browser, live_server, "/ar/", width, height, motion="reduce")
     try:
         m = page.evaluate(_ROUND2_AR)
         title, body = m["reserved"]
-        assert abs(title["left"] - body["left"]) <= 1, (width, "one start edge for the reserved row", m["reserved"])
+        # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the reserved row's title
+        # and sentence are their provisional Arabic renderings (C-UI) — one start edge, the right one
+        assert abs(title["right"] - body["right"]) <= 1, (width, "one start edge for the reserved row", m["reserved"])
         name, rest, answer = m["colophon"]
-        for part in (name, rest):
-            assert abs(part["left"] - answer["left"]) <= 1, (width, "one left-to-right box", m["colophon"])
+        assert abs(name["left"] - rest["left"]) <= 1, (width, "the name in one left-to-right box", m["colophon"])
+        if m["answer"]["lang"] == "fr":
+            for part in (name, rest):
+                assert abs(part["left"] - answer["left"]) <= 1, (width, "one left-to-right box", m["colophon"])
+        else:
+            # V5.27 / R7′ (V5.20, an approved decision): the quoted FAQ answer is a substantive text off its own page —
+            # on /ar/ it stands in its hidden form, the Arabic pointer line, right to left and with no French `lang`
+            assert m["answer"] == {"lang": "", "dir": "rtl"}, (width, m["answer"])
         for label in m["labels"]:
-            assert label["width"] <= 12.5 * label["em"] + 0.5, (width, "a caption's measure", label)
+            # a FRENCH caption at a caption's measure (m4); since V5.27 / R7′ the labels are the pilot sequence's
+            # provisional Arabic (V5.20, an approved decision): the measure is the French run's rule, the edge stays
+            if label["lang"] == "fr":
+                assert label["width"] <= 12.5 * label["em"] + 0.5, (width, "a caption's measure", label)
             if m["across"]:
                 assert abs(label["gap"]) <= 1, (width, "on its station's edge", label)
     finally:
@@ -585,21 +609,19 @@ def _whole(runs):
     return len(runs) == 1 and runs[0][1] - runs[0][0] >= 234
 
 
-_OUTLINE = ".casa-arco__disegno > path.casa-arco__profilo"
-_SILL = ".casa-arco__disegno > path:not(.casa-arco__profilo)"
-
-
 @pytest.mark.parametrize("dsf", [1, 2])
 def test_final_the_doorway_is_painted_as_one_line_from_its_foot(browser, live_server, phase3_live, dsf):
-    """QA_ROUND3 m1 — the PAINTED assertion that replaces round 2's model of the dash (V5.20 strict rule;
-    SECTION_SYSTEM_V2 §3.1 S7 «the arch outline draws», §5.1 LINE DRAW: one line, never segments). Round 2's dash was
-    laid in DEVICE pixels: the far leg showed first on the reviewer's 1.25× display (1023, 1920), and on a 2× or 3×
-    screen the outline and the sill drew as pieces (measured with the full Chromium build at a forced factor). Each
-    line now draws through its own mask, a dash in the drawing's user space. Painted, sought frame by frame, at the
-    reviewer's widths, a phone's and the Arabic page's: while the outline waits (300 ms) nothing of it — its far leg
-    included — is painted and the sill grows from its end; on its way (1 000 ms) the outline is ONE run from its foot
-    at the verb's pace, its far leg still bare (round 2's line was already whole there at 390); after (1 650 ms) both
-    are whole."""
+    """QA_ROUND3 m1 asked the ecosystem's doorway — the sill and the arch's outline drawn around the frame — to paint as
+    ONE line from its foot at every pixel ratio. RESTATED under V5.20 (the strict test-update rule) for the owner's
+    V5.30 (7 Nov 2026, «geometry saturation»: «arches, lines, geometric frames … repeated door forms — keep them as
+    BRAND SIGNATURES, stop using them as the default»; §4 «Homepage: rebalance — reduce cumulative
+    arches/lines/outlined geometry, alternate with premium photography»; stream A): the arch, its sill and its drawn
+    outline left the frame, so the invariant held is the approved composition's and it is stronger than the old one's
+    letter — at the reviewer's widths, a phone's and the Arabic page's, at 1× and 2×, NO line is painted around the
+    frame at any time (no doorway drawing, no mask of one, no sill), the photograph opens and settles in its plain
+    frame on the card's corner, and the band's ground is the Italy + Morocco field (the primitive's own guards:
+    tests/frontend/test_intesa_browser_v530.py).
+    The old doorway cannot silently return."""
     for width, height, lang in ((1023, 768, "fr"), (1920, 1080, "fr"), (390, 844, "fr"), (1440, 900, "ar")):
         context = browser.new_context(
             viewport={"width": width, "height": height}, device_scale_factor=dsf, reduced_motion="no-preference"
@@ -608,20 +630,33 @@ def test_final_the_doorway_is_painted_as_one_line_from_its_foot(browser, live_se
         try:
             page.goto(live_server.url + f"/{lang}/", wait_until="networkidle")
             page.evaluate("document.fonts.ready")
-            assert page.evaluate("document.querySelector('.home-ecosystem').dataset.secState") == "wait"
-            page.evaluate(_CENTRE, ".home-ecosystem .campata__media")
-            shots = _seek_and_shoot(
-                page, ".home-ecosystem", [(_OUTLINE, "red"), (_SILL, "blue")], (300, 1000, 1650), dsf
-            )
             cell = (dsf, width, lang)
-            waiting, drawing, after = shots[300], shots[1000], shots[1650]
-            assert waiting[_OUTLINE] == [], (cell, "the outline waits: nothing of it painted", waiting)
-            assert len(waiting[_SILL]) == 1, (cell, "the sill: one line", waiting)
-            assert waiting[_SILL][0][0] <= 2 and waiting[_SILL][0][1] < 216, (cell, "from its end", waiting)
-            assert len(drawing[_OUTLINE]) == 1, (cell, "one line, never segments", drawing)
-            first, last = drawing[_OUTLINE][0]
-            assert first <= 2 and 24 <= last < 180, (cell, "from its foot, its far leg still bare", drawing)
-            assert _whole(after[_OUTLINE]) and _whole(after[_SILL]), (cell, "both lines whole", after)
+            assert page.evaluate("document.querySelector('.home-ecosystem').dataset.secState") == "wait", cell
+            page.evaluate(_CENTRE, ".home-ecosystem .campata__media")
+            for _ in range(60):  # the section's trigger (rise.js)
+                if page.evaluate("document.querySelector('.home-ecosystem').dataset.secState") == "in":
+                    break
+                page.wait_for_timeout(50)
+            page.wait_for_timeout(2500)
+            frame = page.evaluate(
+                """() => {
+                  const media = document.querySelector('.home-ecosystem .campata__media');
+                  const img = media.querySelector('img'), s = getComputedStyle(img);
+                  return {doorway: document.querySelectorAll(
+                            '.home-ecosystem :is(.casa-arco, .casa-arco__disegno, mask)').length,
+                          arch: media.closest('.campata').classList.contains('campata--arch'),
+                          painted: img.complete && img.naturalWidth > 0,
+                          corners: [s.borderTopLeftRadius, s.borderTopRightRadius, s.borderBottomRightRadius,
+                                    s.borderBottomLeftRadius],
+                          field: !!document.querySelector('.home-ecosystem > .intesa.intesa--atmosfera'),
+                          running: media.getAnimations({subtree: true}).length};
+                }"""
+            )
+            assert frame["doorway"] == 0 and not frame["arch"], (cell, "no doorway drawn around the frame", frame)
+            assert frame["painted"], (cell, "the photograph stands in its plain frame", frame)
+            assert len(set(frame["corners"])) == 1 and frame["corners"][0] != "0px", (cell, "the card's corner", frame)
+            assert frame["field"], (cell, "the band's ground is the Italy + Morocco field", frame)
+            assert frame["running"] == 0, (cell, "the frame's entrance has ended and left nothing applied", frame)
         finally:
             context.close()
 
@@ -674,9 +709,7 @@ _INDEX = """() => {
   const rule = document.querySelector('.colofone__label .testa__rule');
   const p = ponte.getBoundingClientRect(), q = rule.getBoundingClientRect();
   return {mode: ix.dataset.mode || '', rows,
-          ponte: {shown: getComputedStyle(ponte).display !== 'none',
-                  centre: p.top + p.height / 2 - (q.top + q.height / 2),
-                  meet: rtl ? p.left - q.right : q.left - p.right}};
+          ponte: {shown: getComputedStyle(ponte).display !== 'none' && p.width > 0, rule: q.width > 0}};
 }"""
 
 
@@ -692,8 +725,12 @@ def test_final_the_arabic_index_s_titles_stand_on_one_edge_and_the_connector_on_
       title that wrapped filled its row and started at the far edge, beside the chevron: the list zig-zagged at
       1024–1280 and on every phone); each title 12 px from its own glyph or tile, the glyphs one size — the RTL
       label exception of SECTION_SYSTEM_V2 §2 F; the widths where a title wraps hold the case M1 is about;
-    * m2 — from 64 rem the colophon's connector runs on its folio's rule (fr and ar): centre lines within 0.5 px, the
-      connector ending where the rule begins (it stood 6 px above it); below 64 rem it is not drawn."""
+    * m2 — from 64 rem the colophon's connector ran on its folio's rule (centre lines within 0.5 px, ending where the
+      rule begins); below 64 rem it was not drawn. RESTATED under V5.20 (the strict test-update rule) for the owner's
+      V5.30 (7 Nov 2026, the RULE «a section should not stack arch + route line + geometric plate + outlined circle +
+      connector»; stream A): the band's one motif is the Italy + Morocco field, so no connector is drawn on the home
+      at ANY of the eight widths, in both languages (the old «below 64 rem» case, now everywhere), and the folio's
+      own rule — the label role's — still stands."""
     for lang in ("ar", "fr"):
         context, page = _open(browser, live_server, f"/{lang}/", width, height, motion="reduce")
         try:
@@ -713,11 +750,8 @@ def test_final_the_arabic_index_s_titles_stand_on_one_edge_and_the_connector_on_
                 if width not in (1440, 768):
                     assert any(row["lines"] > 1 for row in rows), (cell, "a title wraps: the case under test", rows)
             ponte = m["ponte"]
-            if width >= 1024:
-                assert ponte["shown"] and abs(ponte["centre"]) <= 0.5, (cell, "the connector on its rule", ponte)
-                assert abs(ponte["meet"]) <= 1, (cell, "it ends where the rule begins", ponte)
-            else:
-                assert not ponte["shown"], (cell, ponte)
+            assert not ponte["shown"], (cell, "the connector stands down on the home (V5.30)", ponte)
+            assert ponte["rule"], (cell, "the folio keeps its rule", ponte)
         finally:
             context.close()
 
@@ -740,8 +774,8 @@ _PILOT = """() => {
     return res; };
   const q = (s) => document.querySelector(s);
   const title = q('.pilota__titolo'), lead = q('.pilota__lead');
-  const link = q('.pilota__azione a'), thread = q('.pilota__filo');
-  const t = thread.getBoundingClientRect(), a = link.getBoundingClientRect();
+  const link = q('.pilota__azione a'), panel = q('.pilota__testo');
+  const t = panel.getBoundingClientRect(), a = link.getBoundingClientRect();
   const tops = words(lead), last = tops[tops.length - 1];
   return {rtl: getComputedStyle(document.documentElement).direction === 'rtl',
           axis: t.width > 0 ? (t.left + t.right) / 2 : null, title: lines(title), lead: lines(lead),
@@ -755,17 +789,18 @@ _PILOT = """() => {
     "width,height",
     [(1440, 900), (1280, 800), (1024, 768), (768, 1024), (430, 932), (390, 844), (375, 812), (360, 780)],
 )
-def test_final_review_the_pilot_statement_stands_on_its_seam_axis_or_its_reading_edge(
+def test_final_review_the_pilot_statement_stands_on_its_panel_axis_or_its_reading_edge(
     browser, live_server, phase3_live, width, height
 ):
     """The final review's F-M1 and F-m2 (v522-h-final-qa1; label v522-h-final-improve), at rest, at the eight review
     widths, with the catalogue's entry for the pilot's lead present (the lead in the page's own language — Arabic on the
     Arabic page —, no `lang` on it; the title the locked French, `lang="fr"`, on it, en and ar):
     * F-M1 — the page's one moment says one statement on one alignment: from 64 rem the title's lines, the lead's lines
-      and the link share the seam's axis (the gold thread's centre) within 2 px; below 64 rem they hang from the reading
-      edge — the right on the Arabic page, the left on the others — within 1 px. On the Arabic page the French title
-      stood on its own left, 13–50 px off the axis and on the far edge from its lead, while the lead and link followed
-      the seam;
+      and the link share the panel's axis within 2 px (V5.30 Fast Visual Variety Correction §5, V5.20 strict rule:
+      the gold thread that marked it is gone, the same axis is read on the panel's own centre); below 64 rem they hang
+      from the reading edge — the right on the Arabic page, the left on the others — within 1 px. On the Arabic page
+      the French title stood on its own left, 13–50 px off the axis and on the far edge from its lead, while the lead
+      and link followed the seam;
     * F-m2 — the lead's last line is never one word («واحد.» alone at 768 on the Arabic page)."""
     for lang in ("ar", "fr", "it", "en"):
         context, page = _open(browser, live_server, f"/{lang}/", width, height, motion="reduce")
@@ -778,14 +813,17 @@ def test_final_review_the_pilot_statement_stands_on_its_seam_axis_or_its_reading
                 "the lead in the page's language: the catalogue carries it",
                 m["leadText"],
             )
-            assert m["titleLang"] == (None if lang == "fr" else "fr"), (cell, "the title is the locked French")
+            # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): on /ar/ the title is
+            # its provisional Arabic rendering (C-UI), in the page's language; it and en keep the locked French
+            assert m["titleLang"] == (None if lang in ("fr", "ar") else "fr"), (cell, "the title's language")
             if lang == "ar":
                 assert any("؀" <= ch <= "ۿ" for ch in m["leadText"]), (cell, "an Arabic lead", m["leadText"])
             assert len(m["title"]) == 2 and len(m["lead"]) >= 2, (cell, m["title"], m["lead"])
             if width >= 1024:
                 assert m["axis"] is not None, cell
                 centres = [(left + right) / 2 for left, right in m["title"] + m["lead"] + [m["link"]]]
-                assert max(abs(c - m["axis"]) for c in centres) <= 2, (cell, "one axis, the seam's", m["axis"], centres)
+                assert max(abs(c - m["axis"]) for c in centres) <= 2, (cell, "one axis, the panel's", m["axis"],
+                centres)
             else:
                 side = 1 if m["rtl"] else 0
                 edges = [box[side] for box in m["title"] + m["lead"] + [m["link"]]]

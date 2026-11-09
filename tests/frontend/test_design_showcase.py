@@ -17,8 +17,9 @@ Design V5 (W1-A, V5.4 plan §2.7): the palette a swatch paints is the EFFECTIVE 
 ``static/css/main.css`` in order, the last top-level ``:root`` declaration winning — since
 ``static/css/v4/tokens.css`` and ``static/css/v5/aliases.css`` re-value the V2 names the showcase lists.
 A named token must exist there, a swatch rule must paint one that does, and the caption must be the
-value the square paints. The last is not true yet, and the test says so (strict xfail, below): the
-showcase's reader and stylesheet have no owner in the V5.4 ownership manifest.
+value the square paints — true since CLOSING (V5.29 09:41 item 2; V5.20: the strict xfail's own stated fix,
+the marker dropped): apps/core/dev.py reads the effective cascade, and the V2 values a later layer re-declares
+left static/css/v2/tokens.css.
 """
 
 from __future__ import annotations
@@ -211,7 +212,7 @@ def test_every_named_token_exists_in_the_palette():
     """A renamed or retired token must not survive as a caption under a transparent square — and the palette is the
     cascade every page loads, not one of its layers (design V5 re-values the V2 names in static/css/v5/aliases.css)."""
     tokens = _effective()
-    assert dev.read_tokens(), "static/css/v2/tokens.css parsed to nothing"
+    assert dev.read_tokens(), "the sheets static/css/main.css imports parsed to nothing"
     named = [
         *ALL_COLOUR_TOKENS,
         *(token for token, _, _ in dev.TYPE_SCALE),
@@ -228,19 +229,10 @@ def test_no_swatch_rule_is_orphaned():
     assert not orphans, "static/css/dev/showcase.css paints tokens that no longer exist: " + ", ".join(orphans)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "apps/core/dev.py prints its captions from static/css/v2/tokens.css, one layer of the cascade: V4 re-valued "
-        "the night (--mid-*, --on-dark-*) and design V5 the states and the seal (--err-*, --pending-700, --seal-*), so "
-        "14 of the 44 captions name a hex no page paints, and the swatches show the V2 palette, not V5's. "
-        "apps/core/dev.py and static/css/dev/showcase.css have no owner in docs/design-v5/OWNERSHIP_V54.json: the "
-        "family the steward gives them reads the effective cascade, lists the V5 palette (plan §2.7), and drops this "
-        "marker — strict, so the fix cannot go unnoticed."
-    ),
-)
 def test_every_caption_is_the_value_its_swatch_paints():
-    """The showcase's own promise (apps/core/dev.py): «the hex printed under a swatch is the hex the browser paints»."""
+    """The showcase's own promise (apps/core/dev.py): «the hex printed under a swatch is the hex the browser paints».
+    CLOSING (V5.29 09:41 item 2; V5.20): the strict xfail this test carried named its fix — the reader takes the
+    effective cascade — and that fix is made: the marker is gone, the assertion is the test."""
     tokens, printed = _effective(), dev.read_tokens()
     wrong = {
         name: (printed.get(name), _painted(tokens, name))

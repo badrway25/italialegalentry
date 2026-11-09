@@ -171,13 +171,25 @@ def test_jsonld_faqpage_lists_the_nine_published_items_only(client, faq_seeded, 
 # --------------------------------------------------------------------------------------------
 def test_other_languages_fall_back_to_french_with_lang_attr(client, faq_seeded, phase3_open):
     # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the questions are the explorer's panels' headings
-    for lang in ("it", "en", "ar"):
+    for lang in ("it", "en"):
         soup = BeautifulSoup(client.get(f"/{lang}/faq/").content, "html.parser")
         questions = soup.select(".faq-esploratore h3.indice__titolo")
         assert len(questions) == 9
         assert all(q.get("lang") == "fr" for q in questions), lang
         answers = soup.select(".faq-esploratore p.faq-risposta")
         assert len(answers) == 9 and all(a.get("lang") == "fr" for a in answers), lang
+    # V5.27 / FINAL_DELIVERY_V2 R7′ (V5.20, the steward's amendment at the v524-pub2 merge): on /ar/ the question is
+    # compositional (C-UI) — the provisional Arabic, no lang of its own —, the answer substantive (C-SUBST-FR) on its
+    # own page — French, lang="fr", and preceded by its identification caption (stronger than the lang alone it held)
+    soup = BeautifulSoup(client.get("/ar/faq/").content, "html.parser")
+    questions = soup.select(".faq-esploratore h3.indice__titolo")
+    assert len(questions) == 9
+    assert all(q.get("lang") is None and re.search(r"[\u0600-\u06ff]", q.get_text()) for q in questions)
+    answers = soup.select(".faq-esploratore p.faq-risposta")
+    assert len(answers) == 9 and all(a.get("lang") == "fr" for a in answers)
+    for answer in answers:
+        caption = answer.find_previous_sibling("p")
+        assert caption is not None and caption.get("data-locked-caption", "").endswith("].answer"), caption
     soup_fr = BeautifulSoup(client.get("/fr/faq/").content, "html.parser")
     assert len(soup_fr.select(".faq-esploratore h3.indice__titolo")) == 9
     assert all(q.get("lang") is None for q in soup_fr.select(".faq-esploratore h3.indice__titolo"))
@@ -198,7 +210,10 @@ def test_published_translation_is_rendered_but_draft_is_not(client, faq_seeded, 
     row.status = TranslationStatus.PUBLISHED
     row.save()
     soup = BeautifulSoup(client.get("/it/faq/").content, "html.parser")
-    heading = soup.find("h3", string="Domanda ufficiale IT")
+    # V5.20 citing V5.29 §10–§13 / FINAL_DELIVERY_V2 §3.6 (lane PUB2): the heading now draws its question's glyph tile
+    # (aria-hidden) before its words, so its text is read whole — the same invariant: the published Italian is the
+    # heading's words, with no lang of its own
+    heading = next((h for h in soup.find_all("h3") if h.get_text(strip=True) == "Domanda ufficiale IT"), None)
     assert heading is not None and heading.get("lang") is None
     assert "Risposta ufficiale IT" in str(soup)
 
@@ -208,7 +223,13 @@ def test_arabic_is_rtl_and_renders(client_ar, faq_seeded, phase3_open):
     assert response.status_code == 200
     html = response.content.decode()
     assert '<html lang="ar" dir="rtl"' in html
-    assert registry.item("faq_visas")["question"] in html
+    # V5.27 / FINAL_DELIVERY_V2 R7′ (V5.20, the steward's amendment at the v524-pub2 merge): the question renders in its
+    # provisional Arabic (C-UI), never its French; the prescribed answer renders whole in French on its own page
+    from cms import locked_renderings
+
+    assert locked_renderings.rendering("p3.faq.items[0].question") in html
+    assert registry.item("faq_visas")["question"] not in html
+    assert registry.item("faq_visas")["answer"] in html
 
 
 # --------------------------------------------------------------------------------------------

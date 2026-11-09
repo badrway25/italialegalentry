@@ -25,6 +25,10 @@ from django.utils.safestring import SafeString, mark_safe
 
 #: the separators a cut may use, each kept with the part it closes
 SEPARATORS = {":": ": ", ";": "; ", "→": "→", ",": ", "}
+#: the same separators as Arabic writes them (V5.27, lane AR): a provisional Arabic rendering of a prescribed
+#: enumeration carries «؛ » and «، », and the Forum's stations and ring cut it as they cut the French — a cut by ";" or
+#: "," tries the Latin mark first, then the Arabic one; the part keeps whichever mark it closes with
+ARABIC_SEPARATORS = {";": "؛ ", ",": "، "}
 _SENTENCE_END = re.compile(r"(?<=[.?!…])(?: ?[»”])?\s+(?=\S)")
 
 
@@ -53,6 +57,8 @@ def split(text: str, on: str) -> tuple[str, ...] | None:
     if on not in SEPARATORS:
         raise ValueError(f"no separator {on!r}: one of {sorted(SEPARATORS)}")
     mark = SEPARATORS[on]
+    if mark not in text and on in ARABIC_SEPARATORS and ARABIC_SEPARATORS[on] in text:
+        mark = ARABIC_SEPARATORS[on]
     pieces = text.split(mark)
     parts = [piece + mark for piece in pieces[:-1]] + [pieces[-1]]
     return _checked(text, parts)

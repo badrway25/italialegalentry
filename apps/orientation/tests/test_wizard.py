@@ -180,7 +180,18 @@ def test_flow_in_arabic_falls_back_to_french_with_lang_attr(
     response = client_ar.get(reverse("orientation:result", kwargs={"session_id": session.id}))
     html = response.content.decode()
     assert response.status_code == 200 and '<html lang="ar" dir="rtl"' in html
-    assert DISCLAIMER in html and 'lang="fr"' in html
+    # V5.27 (FINAL_DELIVERY_V2 R7′; lane AR, V5.20): the route sentence is a compositional text — on /ar/ it reads its
+    # provisional Arabic rendering, never the French; the fixture's untranslated question still says French with its
+    # language attribute (above), so the fallback marking is asserted where it applies
+    from cms import locked_renderings
+
+    assert DISCLAIMER not in html
+    # the full C-UI rendering, read as text (v524-ar-fix: the prefix-only check was weaker), in no French run
+    note = _soup(response).select_one("p.wizard-result__disclaimer")
+    expected = " ".join(locked_renderings.rendering("p3.persons.how_it_works").split())
+    assert " ".join(note.get_text().split()) == expected
+    assert note.find_parent(attrs={"lang": "fr"}) is None and not note.find_all(attrs={"lang": "fr"})
+    assert note.get("lang") != "fr"
 
 
 def test_boolean_question_renders_radio_group(client, active_ruleset):

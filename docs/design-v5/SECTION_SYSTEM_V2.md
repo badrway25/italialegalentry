@@ -677,6 +677,20 @@ Eleven patterns, each with an internal name the code uses. **G (metric band) is 
 | K strato | S5 + S6, S8 (refined) | protezione ×4, approdo ×5, AG-3, term page, FO3, form heads |
 | L indice | S3 | Q1, G1, PS-4, D1, AG-2 |
 
+> **ERRATUM (V5.24, lane CLOSING, 7 Nov 2026 — FINAL_DELIVERY_V2.md R3; BACKGROUND_MATERIAL_V2 §3).** The library gained
+> its MATERIAL and its SEAMS (lane LIB, `static/css/v5/_materia.css`, page-only like `_casa.css`, imported after
+> `_sezioni.css` by the route sheets that use it, never by `main.css`): the ground kind **«pietra»**
+> (`data-ground="pietra"`: `--surface-area` + the 48 px drafting grid masked toward the plate; stone and pietra are ONE
+> kind for the adjacency rule of §1 and never touch), **«carta viva»** (`data-ground="paper" data-luce="origine"`: one
+> radial light at the origin corner, mirrored in RTL), **«velatura»** (`data-sfuma="stone|paper|brand|night"`: the
+> band's foot dissolves over 12 rem, 8 on phones, into the next ground; a still), **«il raccordo»** (`.sez-raccordo`,
+> `aria-hidden="true"`, `data-verb="draw-y"`; `--sez-raccordo` 48 px, 32 on phones; `--risale`, `--notte`; the FIRST
+> child of the band it enters; its x the page parameter `--raccordo-x`, read with its fallback and never declared by a
+> sheet — a route sheet writes `inset-inline-start` itself) and **«l'incastro»** (`data-incastro`: the band 64 px up,
+> its ground from 64 px down). The seam-crossing primitive is «il raccordo», not «il varco» (the entrance's name:
+> `_varco.css`, the `--varco-*` tokens). The tile's face is the niche (`--line-rhythm` → `--surface-raised`). The
+> refused list stands: no blurred image fields, no noise on paper, no glass, no light mesh, no arch seams.
+
 ---
 
 ## 3. Page-by-page section map
@@ -1759,6 +1773,21 @@ it from the 15 pages.
 
 ### 6.2 Typography: compositional, never a magazine
 
+> **ERRATUM (V5.24, lane CLOSING, 7 Nov 2026 — FINAL_DELIVERY_V2.md R1; TYPOGRAPHY_V2 §3–§6; V5.29).** «The public
+> scale stays eight sizes … No ninth size» and «Arabic follows the Vazirmatn rules» are SUPERSEDED: the public scale is
+> the **twelve steps** of `static/css/v5/tokens.css` (`--t-display`, `--t-title-1`, `--t-title-2`, `--t-band`,
+> `--t-entry`, `--t-lead`, `--t-body`, `--t-ui`, `--t-small`, `--t-label`, `--t-caption`, `--t-field`, each with its
+> `-lh`), the weight map 400 reads · 500 acts · 600 intitles · 700 emphasis only (`--w-display: 600`,
+> `--track-display: -0.03em`), the label role (`.t-label`, 600 capitals tracked, none in Arabic) and the numeral role
+> (the sans 600 tabular — the step markers are no longer ILE Mono), the public phone step-up under
+> `(max-width: 47.999rem), (pointer: coarse)` (nothing under 14 px), and ILE Mono on one seat only (`code, kbd, pre,
+> .t-ref, .ctx__ref, .ws-case__ref, .error-page__ref, .db-ref, .reg-ref`). Arabic is set in **Readex Pro** (OFL,
+> variable 400–700) at the French size and colour (ratio 1.0, floor 14 px, `--ar-lh-plus` for titles), every Arabic
+> type rule in the SUBJECT form (`.x:lang(ar)`); Vazirmatn is gone. V5.29 set the text on semantic roles (`--ink`, the
+> warm dark neutrals; no pure black) and the headings by size, weight and colour together, not by bold. The guard is
+> `tests/frontend/test_typography_v2.py`; what its five disciplines still count is the closed rule-by-rule register
+> `TYPOGRAPHY_EXCEPTIONS` (the preserved families' and the recorded residues), which only shrinks.
+
 - **The public scale stays eight sizes:** 64 display · 36 title · 28 band · 20 entry/lead · 17 body · 15 ui ·
   13 small · 12 caption. No ninth size. No serif (`--f-serif` is the sans for Latin, the V5.15 decision). Arabic
   follows the Vazirmatn rules: titles 600 at 1.4, body at 1.75, never under 14 px.
@@ -1859,6 +1888,17 @@ glossary term page (recorded). Section chunks are dynamic imports and are counte
 ---
 
 ## 8. Imagery plan (lane M)
+
+> **ERRATUM (V5.24, lane CLOSING, 7 Nov 2026 — V5.24 §2; FINAL_DELIVERY_V2.md R2; IMAGERY_ATTRIBUTION D1–D8).** Every
+> sentence of this document that makes a photograph carry a visible credit is SUPERSEDED: the «<figure> with its credit
+> <figcaption>» of patterns A and D, «The credit …» of D's plate, «Credits. Visible.», «its credit in the corner»,
+> «credit visible», «the credit stays the figcaption» of §6.2 and the credit column of §8.1 (lines 203, 316, 330, 793,
+> 801, 875, 1774 and 1892 of the text as V5.22 wrote it). The licence of every asset in use permits it: no photograph
+> carries a «Photo : … / Pexels» line, a chip, a `figcaption` or a `data-credit` / `data-author` attribute
+> (`templates/components/photo.html`); provenance stays internal (`docs/IMAGE_LICENSES.md`, `PROVENANCE.json`); a future
+> asset whose licence requires attribution follows IMAGE_LICENSES D8 (`MediaAsset.attribution_required` and the
+> one-condition guard of the curated caption templates). The production-facing guard is
+> `tests/compliance/test_imagery_credits_v524.py`.
 
 **Pipeline.**
 - Pexels only; originals outside the repository; self-hosted derivatives through `tools/build_derivatives.py` (AVIF +
@@ -2001,6 +2041,24 @@ Fraudes.
 
 ### 9.7 File ownership (no two lanes edit the same file)
 
+> **ERRATUM (V5.24, lane CLOSING, 7 Nov 2026 — FINAL_DELIVERY_V2.md §0.4, §3, R11).** The ownership of V5.24's final
+> delivery and V5.29's streams (each family in `OWNERSHIP_V54.json`, checked by `scripts/check_ownership.py`, whose
+> `FAMILY_ID` admits `v524-<lane>`; total and disjoint; a lane needing another lane's file wrote it in its notes):
+>
+> | Lane (merge order) | Owned (in short; the full lists in `FINAL_DELIVERY_V2.md` §3 and the manifest) |
+> |---|---|
+> | PX (first) | `templates/components/photo.html`, `apps/pages/imagery.py`, `MediaAsset.attribution_required`, the curated caption templates, the shared imagery tests, `IMAGE_LICENSES.md` |
+> | T | `static/css/v5/tokens.css` (§9.8 exception), `fonts.css`, `static/fonts/**`, `base.css`, `buttons.css`, `base.html:30-32` (the preloads), `test_typography_v2.py`, `test_fonts_budget_v2.py` |
+> | LIB | `static/css/v5/_materia.css` (new), `_sezioni.css`, `_sigillo.css`, `_sec-*.css`, `_fronte.css`, `_photo.css`, `_servizio.css`, `templates/components/sezioni/**`, the library's tests |
+> | SYS (V5.29) | the shared visual system behind `he__body`, `strato__lastre`, `sez-plate`, `sez-seq`, `home-trust__grid`, `integrita__tavola`, `indice__palco`, `protezione__campo` (the text roles, the plate, the icon hierarchy, the compact protection band) |
+> | HOME | `templates/pages/home.html`, `templates/pages/home/**`, `pages.css`, `hero.css` (the foot only), `home.js`, `apps/pages/services.py` |
+> | PUB1 | `templates/ecosystem/**`, `apps/ecosystem/**`, `templates/pathways/**`, `apps/pathways/**` |
+> | PUB2 | the reading and trust pages (`project`, `network`, `contact`, `agami`, `antifraud`), `templates/{faq,glossary,living,forum}/**`, their apps' sheets, `_lettura.css` |
+> | BRAND (V5.29) | the shell's three widths (`--content-wide`, `--site-shell-max`, `--form-wide`), the lock-up 36/19, the key's turn (`nav.js` `initBrandKey`) |
+> | PLAT | `templates/portal/**`, `apps/portal/**` (typography only, R8) |
+> | AR | `locale/**`, `cms_nav.py`, `apps/cms/locked_renderings.py` (new), the `get()` seam of `locked_content.py`, the Arabic tests |
+> | CLOSING (last, alone) | everything, in practice the dead rules, `rise.js`, the ceilings, the catalogue pass and the docs |
+
 | Files | Owner | Others |
 |---|---|---|
 | `static/js/src/rise.js`, `static/js/src/sezioni/**`; `static/css/v5/_reveal.css`, `_sezioni.css`, `_sigillo.css`, `_sec-*.css`, `_photo.css`, `_journey-passage.css`, `_pagina.css`, `_interior.css`, `_compose.css`, `_porta.css`, `_fronte.css`; `templates/components/sezioni/**`, `components/stepper.html`, `components/photo.html`, `pages/partials/_linea.html`, `_ingresso.html`, `_chapter_head.html`, `_section_header.html`; `apps/core/icons.py`, the sprites, `static/icons/src/**`, `scripts/build_icons.py`, `static/img/icons-marks.svg`; `apps/cms/locked_split.py` + its filters; `apps/accounts/static/accounts/entrance.css` (one rule); the shared guard tests; `COMPONENT_PROVENANCE.md`, `ICON_*.md`, `DESIGN_SYSTEM_V5.md` | **S** | H, P1 and P2 consume classes, partials and data attributes; any change goes to S in notes. Page-specific overrides go in their own family partials |
@@ -2024,6 +2082,17 @@ Fraudes.
   modules named `test_*_v522_<lane>.py`, so two lanes never edit one test file.
 
 ### 9.8 Preserved families: NOT touched
+
+> **ERRATUM (V5.24, lane CLOSING, 7 Nov 2026 — FINAL_DELIVERY_V2.md R1, R8; V5.29).** Three further exceptions were
+> recorded by the stewards, each inside a family's mandate: **(9)** `tokens.css` and `base.html:30-32` — Typography V2
+> (the twelve steps, the weight map, the Arabic block, the preloads of Readex Pro; lane T); **(10)** the platform's
+> typography and colour tokens (`templates/portal/**`, `apps/portal/**`: the label and numeral roles, the text roles,
+> Readex Pro through the same tokens; lane PLAT, «typography tokens on the platform», R8); **(11)** the preserved first
+> screen's weight through the tokens (the hero's display and title at `--w-display` 600 through `tokens.css`, its
+> composition untouched; lanes T and HOME). The preserved families' typographic residues that the guard still counts
+> are the register `TYPOGRAPHY_EXCEPTIONS` of `tests/frontend/test_typography_v2.py`, each with its reason. The two form
+> pages' `reveal-mark` and the portal's `data-rise` stay; the fade-up default of `rise.js` is gone from every page
+> without a V2 section and from every chapter head (CLOSING, §3.9 b).
 
 **Untouched:**
 - The navbar, the mega menus, the mobile sheet and the footer: `partials/header.html`, `main_nav.html`, the portico

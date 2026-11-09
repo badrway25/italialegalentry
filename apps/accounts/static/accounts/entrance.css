@@ -307,12 +307,12 @@
   line-height: 1.5rem;
 }
 
-:lang(ar) .varco .account-page__title {
+.varco .account-page__title:lang(ar) {
   line-height: var(--ar-title-lh);
   letter-spacing: 0;
 }
 
-:lang(ar) .varco .account-page__text {
+.varco .account-page__text:lang(ar) {
   line-height: var(--ar-body-lh);
 }
 

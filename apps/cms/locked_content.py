@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from typing import Any
 
 LockClass = str
@@ -879,17 +880,73 @@ def keys() -> list[str]:
     return sorted(LOCKED_TEXTS["fr"])
 
 
+#: one step into a compound value, as the register names a text: ``[3]`` (a list item), ``.question`` (a dict field)
+_SUBKEY_STEP = re.compile(r"\[(\d+)\]|\.([a-z_]+)")
+
+
+def split_key(key: str) -> tuple[str, list[int | str]]:
+    """``"p3.faq.items[0].answer"`` → ``("p3.faq.items", [0, "answer"])``; ``"legal.cookies.fr_courtesy.title"`` →
+    ``("legal.cookies.fr_courtesy", ["title"])``; a registry key, or an unknown key, → ``(key, [])`` (``get`` then raises)."""
+    if key in LOCKED_TEXTS["fr"]:
+        return key, []
+    # the longest registry key the sub-key starts with, followed by a step: ``[3]`` or ``.question``
+    base = ""
+    for candidate in LOCKED_TEXTS["fr"]:
+        if (
+            len(candidate) > len(base)
+            and key.startswith(candidate)
+            and key[len(candidate) : len(candidate) + 1] in "[."
+        ):
+            base = candidate
+    if not base:
+        return key, []
+    rest = key[len(base) :]
+    path: list[int | str] = []
+    position = 0
+    for match in _SUBKEY_STEP.finditer(rest):
+        if match.start() != position:
+            raise LockedContentMissing(key)
+        path.append(int(match.group(1)) if match.group(1) is not None else match.group(2))
+        position = match.end()
+    if position != len(rest):
+        raise LockedContentMissing(key)
+    return base, path
+
+
+def _walk(value: Any, path: list[int | str], key: str) -> Any:
+    for step in path:
+        try:
+            value = value[step]
+        except (IndexError, KeyError, TypeError):
+            raise LockedContentMissing(key) from None
+    return value
+
+
 def get(key: str, language: str | None = None) -> tuple[Any, str]:
     """
     Return ``(value, effective_language)``. Falls back to French when the requested language
     has no *official* locked version. Raises LockedContentMissing for unknown keys.
+
+    V5.27 (FINAL_DELIVERY_V2 R7′; lane AR): ``key`` may address one text of a compound value by its sub-key
+    (``p3.faq.items[0].question``), and the Arabic product's rendering policy (``cms.locked_renderings``) is asked before
+    the French fallback — a provisional professional Arabic rendering for a compositional text, the pointer line for a
+    substantive block quoted off its own page, the French (``"fr"``) otherwise. The French texts, ``LOCKED_TEXTS`` and the
+    checksums are not touched by this: the registry stays the source, the policy sits beside it.
     """
-    if key not in LOCKED_TEXTS["fr"]:
+    base, path = split_key(key)
+    if base not in LOCKED_TEXTS["fr"]:
         raise LockedContentMissing(key)
     lang = (language or FALLBACK_LANGUAGE).split("-")[0]
-    if lang in LOCKED_TEXTS and key in LOCKED_TEXTS[lang]:
-        return LOCKED_TEXTS[lang][key], lang
-    return LOCKED_TEXTS["fr"][key], "fr"
+    if not path and lang in LOCKED_TEXTS and base in LOCKED_TEXTS[lang]:
+        return LOCKED_TEXTS[lang][base], lang
+    french = _walk(LOCKED_TEXTS["fr"][base], path, key)
+    if lang != FALLBACK_LANGUAGE:
+        from cms import locked_renderings
+
+        rendered = locked_renderings.resolve_value(key, french, lang)
+        if rendered is not None:
+            return rendered
+    return french, "fr"
 
 
 class LockedText(str):

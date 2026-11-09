@@ -86,7 +86,7 @@
 .formwork__side :focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-night); outline-offset: 2px; }
 /* the side's rail only where the side is beside the panel; elsewhere the head rail across the panel's top speaks */
 .js .formwork--steps .steps-rail { display: none; }
-@container formwork (min-width: 60rem) {
+@container formwork (min-width: 56rem) {
   .js .formwork--steps .steps-rail { display: block; }
   .js .formwork--steps .steps-head { display: none; }
 }
@@ -117,7 +117,7 @@
   transition: transform var(--spring-soft-duration, 320ms) var(--spring-soft), background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
 }
 /* (V5.18 P10) the step's numeral at the Arabic floor, 14 px (tokens.css :lang(ar)); the 28 px tile holds it */
-:lang(ar) .steps-head__tile { font-size: var(--t-caption); }
+.steps-head__tile:lang(ar) { font-size: var(--t-caption); }
 .steps-head__tile.is-reachable { cursor: pointer; }
 .steps-head__tile.is-reachable::after { content: ""; position: absolute; inset: -8px; }
 .steps-head__item[data-state="current"] .steps-head__tile { background: var(--identity-key); box-shadow: 0 0 0 3px color-mix(in srgb, var(--identity-key) 24%, transparent); color: var(--surface-night); transform: scale(1); }
@@ -196,7 +196,7 @@
 .formwork.formwork--console .formwork__panel { border-radius: var(--radius-xl); box-shadow: inset 0 0 0 1px var(--line-rhythm), var(--shadow-2); }
 .formwork--console .formwork__side { border-radius: var(--radius-xl); background: var(--surface-sheet); box-shadow: inset 0 0 0 1px var(--line-rhythm); color: var(--text-2); }
 .formwork--console .formwork__side :focus-visible { outline-color: var(--focus-ring); }
-@container formwork (min-width: 60rem) { .formwork--console .formwork__side { padding: var(--s-8) var(--s-6); } }
+@container formwork (min-width: 56rem) { .formwork--console .formwork__side { padding: var(--s-8) var(--s-6); } }
 
 html[data-input="key"] :is(.steps-rail__tile, .steps-head__tile),
 html[data-input="key"] .steps-head__bar::after,

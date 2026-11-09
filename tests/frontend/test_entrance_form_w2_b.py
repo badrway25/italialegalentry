@@ -170,8 +170,12 @@ def test_the_sign_in_page_extends_allauth_s_own_template_and_restates_none_of_it
     assert re.findall(r"\{% block (\w+) %\}", body) == ["content"], "nothing of allauth's page is replaced"
     for tag in ("<form", "<input", "csrf_token", "{% element", "redirect_field"):
         assert tag not in body, f"{tag}: the form is allauth's, never a copy"
-    assert re.findall(r'\{% (?:translate|trans|blocktranslate|blocktrans)\b[^%]*%\}', body) == ['{% translate "Lire la Privacy Policy" %}']
-    assert '{% translate "Lire la Privacy Policy" %}' not in _body(LAYOUT)
+    # FINAL_DELIVERY_V2 §3.8 W5.3 (V5.20, the steward's amendment at the v524-ar merge): the page's one string is the
+    # link sentence with the policy's name isolated as English; still the only string, still not in the layout
+    assert re.findall(r'\{% (?:translate|trans|blocktranslate|blocktrans)\b[^%]*%\}', body) == [
+        "{% blocktranslate with policy='<span lang=\"en\" dir=\"ltr\">Privacy Policy</span>'|safe trimmed %}"
+    ]
+    assert "Lire la {{ policy }}" in body and "Lire la {{ policy }}" not in _body(LAYOUT)
     assert "Lire la Privacy Policy" in _read(ROOT / "apps" / "faq" / "services.py"), "the FAQ's own link, in the catalogue"
 
 
@@ -198,10 +202,13 @@ def test_the_assurance_is_the_locked_answer_verbatim(client, seeded, phase3_open
     block = re.search(r'<div class="varco__assurance" data-faq="faq_data_protection">(.*?)</div>', focus, re.S)
     assert block, "the assurance is on the sign-in's page once the FAQ is public"
     assert focus.index("varco__assurance") > focus.index("</form>"), "under the action"
+    # FINAL_DELIVERY_V2 §3.8 W5.3 (V5.20, the steward's amendment at the v524-ar merge): the policy's English name is
+    # isolated in its own lang="en" dir="ltr" span inside the sentence of the page's language (msgid «Lire la
+    # %(policy)s») — the same words, now with their language said
     with translation.override(lang):
-        more = gettext("Lire la Privacy Policy")
+        more = gettext("Lire la %(policy)s") % {"policy": '<span lang="en" dir="ltr">Privacy Policy</span>'}
     link = re.search(r'<p class="varco__assurance-more"><a href="([^"]+)">(.*?)</a></p>', block.group(1))
-    assert link and link.group(1) == f"/{lang}/privacy-policy/" and html_lib.unescape(link.group(2)) == more, "the link, in every language"
+    assert link and link.group(1) == f"/{lang}/privacy-policy/" and link.group(2) == more, "the link, in every language"
     if effective == lang:
         question = re.search(r'<h2 class="varco__assurance-q">(.*?)</h2>', block.group(1), re.S)
         answer = re.search(r'<p class="varco__assurance-a">(.*?)</p>', block.group(1), re.S)

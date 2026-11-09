@@ -17,16 +17,26 @@ register = template.Library()
 
 @register.simple_tag
 def locked_pathway(key: str):
+    """
+    The family's prescribed title and description for the result page, each with the language it is shown in: V5.27
+    (FINAL_DELIVERY_V2 R7′; lane AR) renders the title in provisional Arabic on /ar/ and keeps the description as the
+    French source — hidden here, off its own sheet, behind the pointer line the registry's seam gives — so the two parts
+    are read by their sub-keys (``p3.persons.pathways[<n>].title`` …), each carrying its own ``lang`` / ``fallback``.
+    """
     lang = (translation.get_language() or settings.LANGUAGE_CODE).split("-")[0]
-    entries, effective = locked_content.get("p3.persons.pathways", lang)
-    for entry in entries:
+    entries, _effective = locked_content.get("p3.persons.pathways", "fr")
+    for index, entry in enumerate(entries):
         if entry.get("key") == key:
+            title, title_lang = locked_content.get(f"p3.persons.pathways[{index}].title", lang)
+            description, description_lang = locked_content.get(f"p3.persons.pathways[{index}].description", lang)
             return {
                 "key": key,
-                "title": entry.get("title", ""),
-                "description": entry.get("description", ""),
-                "lang": effective,
-                "fallback": effective != lang,
+                "title": title,
+                "description": description,
+                "lang": title_lang,
+                "fallback": title_lang != lang,
+                "description_lang": description_lang,
+                "description_fallback": description_lang != lang,
             }
     return None
 

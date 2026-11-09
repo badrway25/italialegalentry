@@ -662,7 +662,11 @@ def test_the_account_menu_from_the_night_foot_draws_the_paper_ring(
                 )
                 page.keyboard.press("ArrowDown")
             assert trigger == "rgb(127, 209, 216)", (width, trigger)
-            assert rings and all(r == [True, "rgb(29, 138, 147)", "rgb(74, 90, 98)"] for r in rings), (width, rings)
+            # the glyph keeps the paper's ink (--icon-default on paper, --text-2), never the night's: V5.29 §5 / §8 (stream
+            # SYS, accepted by the owner on 6 Nov 19:36) re-valued that ink, #4a5a62 → --p-inchiostro-600 #4e5b68 (c8d9f0e1)
+            # — V5.20, restated by lane CLOSING (a red carried from SYS, found by CLOSING's browser batch): the same invariant
+            # at the approved value
+            assert rings and all(r == [True, "rgb(29, 138, 147)", "rgb(78, 91, 104)"] for r in rings), (width, rings)
         finally:
             context.close()
 

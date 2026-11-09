@@ -1,8 +1,16 @@
 """
 Built-in template tags (loaded automatically via TEMPLATES['OPTIONS']['builtins']).
 
-{% locked "key" %}                → renders the locked text (escaped) with lang attr on fallback
+{% locked "key" %}                → renders the locked text (escaped) with lang attr on fallback — V5.27: on /ar/ the
+                                    provisional Arabic rendering of a compositional text, the pointer line of a
+                                    substantive
+                                    block quoted off its page; the block form adds the identification caption before a
+                                    French substantive block on its own page (cms.locked_renderings)
 {% locked "key" as var %}         → assigns (str or list/dict) to a context variable
+{% locked "p3.faq.items[0].question" %} → one text of a compound key, by its sub-key
+{% locked_caption "key" %}        → the identification caption alone, "" when the block needs none here
+{% locked_treatment "key" %}      → C-UI / C-SUBST-FR / C-SUBST-IT / C-OFFICIAL
+{% locked_is_hidden "key" %}      → True when the block is in its hidden form on this page
 {% locked_lang "key" %}           → effective language code of the locked text
 {% flag "key" as var %}           → boolean feature flag
 {% svg_icon "name" %}             → one symbol of the ILE sprite, through the registry apps/core/icons.py (a <use>
@@ -47,22 +55,89 @@ logger = logging.getLogger(__name__)
 register = template.Library()
 
 
+#: the brand's run inside an Arabic rendering: one left-to-right unit, never broken (AR's M1; T's ``bdi[dir="ltr"]``
+#: rule)
+_BRAND_RUN = re.compile("Italy Legal Entry™?‎?")
+
+
+def _isolate_brand(escaped: str) -> str:
+    return _BRAND_RUN.sub(lambda m: f'<bdi dir="ltr">{m.group(0)}</bdi>', escaped)
+
+
+def _caption(key: str, lang: str, effective: str) -> str:
+    """V5.27 / R7′ (c): the identification caption of a block shown in its source language on a page of another language
+    —
+    the French of a substantive text on its own page, the Italian of a legal text — in the label role (``t-label``, no
+    CSS of
+    its own), before the block. "" for a rendering, a proper name or a French page."""
+    from cms import locked_renderings
+
+    if effective == lang.split("-")[0]:
+        return ""
+    text = locked_renderings.caption_text(key, lang)
+    if not text:
+        return ""
+    return format_html('<p class="t-label locked-caption" data-locked-caption="{}">{}</p>', key, text)
+
+
 @register.simple_tag(takes_context=True)
 def locked(context, key: str, tag: str = "", css_class: str = ""):
+    """
+    The prescribed text of ``key`` in the page's language (``cms.locked_content.get``: the official version, the Arabic
+    product's provisional rendering or the pointer line of a block hidden off its page — V5.27, R7′ —, else the French
+    source) — escaped, and wrapped in its ``lang`` when the words are not the page's. In the block form (``tag`` given)
+    a French substantive block on its own page, and an Italian authoritative text, are preceded by their identification
+    caption; the inline form carries none (a run inside a sentence). The brand's run inside an Arabic rendering is one
+    left-to-right unit (``bdi``).
+    """
     lang = translation.get_language() or settings.LANGUAGE_CODE
     value, effective = locked_content.get(key, lang)
     if not isinstance(value, str):
         return value
     needs_lang = effective != lang.split("-")[0]
     rendered = escape(value)
+    if effective == "ar":
+        rendered = _isolate_brand(rendered)
     if tag:
         attrs = f' class="{escape(css_class)}"' if css_class else ""
         if needs_lang:
             attrs += f' lang="{effective}"'
-        return format_html("<{}{}>{}</{}>", tag, mark_safe(attrs), mark_safe(rendered), tag)  # noqa: S308
+        block = format_html("<{}{}>{}</{}>", tag, mark_safe(attrs), mark_safe(rendered), tag)  # noqa: S308
+        caption = _caption(key, lang, effective)
+        return mark_safe(f"{caption}{block}") if caption else block  # noqa: S308
     if needs_lang:
         return format_html('<span lang="{}">{}</span>', effective, mark_safe(rendered))  # noqa: S308
     return mark_safe(rendered)  # noqa: S308
+
+
+@register.simple_tag
+def locked_caption(key: str):
+    """The identification caption alone (``{% locked_caption "p3.faq.items[0].answer" %}``) — for a template that
+    composes
+    a substantive block itself and must say, before it, that the words are the French source pending validation (or the
+    Italian authoritative text); "" when the block needs none on this page."""
+    lang = translation.get_language() or settings.LANGUAGE_CODE
+    _value, effective = locked_content.get(key, lang)
+    return _caption(key, lang, effective)
+
+
+@register.simple_tag
+def locked_treatment(key: str) -> str:
+    """The class of a prescribed text under the Arabic policy — ``C-UI``, ``C-SUBST-FR``, ``C-SUBST-IT``, ``C-OFFICIAL``
+    (cms.locked_renderings) — for a template that composes a compound key part by part."""
+    from cms import locked_renderings
+
+    return locked_renderings.treatment(key) or ""
+
+
+@register.simple_tag
+def locked_is_hidden(key: str) -> bool:
+    """Whether the block is in its hidden form on this page (a substantive French text quoted off its own page, on
+    ``/ar/``): the template then draws the pointer line ``{% locked key %}`` gives it and nothing else."""
+    from cms import locked_renderings
+
+    lang = translation.get_language() or settings.LANGUAGE_CODE
+    return locked_renderings.is_hidden(key, lang)
 
 
 @register.simple_tag

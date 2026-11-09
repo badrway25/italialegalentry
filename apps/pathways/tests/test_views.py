@@ -140,7 +140,13 @@ class TestPhase3Index:
         # strict rule): the eight stand on their family's lane — «the prescribed order shows in the numerals». Each
         # pathway once, each numeral its prescribed rank, the words exact (a stronger check than the document order)
         assert sorted(keys) == sorted(PATHWAY_KEYS) and len(keys) == 8
-        numerals = dict(re.findall(r'data-pathway="([a-z_]+)"[^>]*>.*?<span class="tracciato__num"[^>]*>(\d\d)<', html))
+        # V5.24 (FINAL_DELIVERY_V2 §3.5, TYPOGRAPHY_V2 §4.2; V5.20): the numeral also carries the numeral role by name
+        # (`t-numeral`) — the class read as the numeral's own first class, the same invariant
+        numerals = dict(
+            re.findall(
+                r'data-pathway="([a-z_]+)"[^>]*>.*?<span class="tracciato__num(?: t-numeral)?"[^>]*>(\d\d)<', html
+            )
+        )
         assert numerals == {key: f"{rank:02d}" for rank, key in enumerate(PATHWAY_KEYS, start=1)}
         for entry in LOCKED_ENTRIES:
             assert escape(entry["title"]) in html

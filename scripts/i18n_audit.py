@@ -86,6 +86,11 @@ REVIEWED_OVERLAPS: dict[str, str] = {
     "Représentations diplomatiques et consulaires": (
         "partner category label (four common nouns that also occur in the Forum audience list)"
     ),
+    "représentations diplomatiques et consulaires italiennes": (
+        "authority name on the pathway sheets' arc (pathways.services.GENERIC_AUTHORITY_LABELS): the seed's generic "
+        "designation, five common nouns that also close the locked visa definition (p3.glossary.terms[0]), which is "
+        "never translated; the v524-pub1 steward, V5.27 / R7′ (no team-set French on /ar/)"
+    ),
     "Institutions, universités et organismes de formation : présentez votre proposition de collaboration dans le "
     "cadre du projet Italy Legal Entry™. Elle sera examinée par l’équipe du projet, qui vous recontactera si "
     "nécessaire.": "form introduction; shares only the generic phrase « dans le cadre du projet Italy Legal Entry™ »",
@@ -141,21 +146,9 @@ REVIEWED_OVERLAPS: dict[str, str] = {
 #: Locked-derived wording found in a source file that this catalogue does not own. Until the owner removes
 #: it from the template, the msgstr MUST stay identical to the French msgid in every language, so that the
 #: team never translates a fragment of a prescribed text (the audit enforces msgstr == msgid).
-KEEP_SOURCE: dict[str, str] = {
-    "Espace permanent de dialogue et de coopération": (
-        "templates/forum/partials/hero.html — eyebrow lifted from p2.forum.what.body[0]; change requested: "
-        "render it from the locked registry or reword it"
-    ),
-    "Signalez les besoins professionnels de votre entreprise.": (
-        "apps/cms/templatetags/cms_nav.py — mega-menu description that truncates p3.entrances.company.text (its "
-        "opening clause, verb included); change requested: reword the description so it no longer abbreviates a "
-        "prescribed sentence"
-    ),
-    "Vivre en Italie — %(topic)s : fiches pratiques pour accompagner l’intégration après l’entrée régulière.": (
-        "templates/living/topic.html — meta description ending with the closing clause of p3.living.body; change "
-        "requested: reword it or build it from the locked registry"
-    ),
-}
+#: Empty since the v524-pub2 merge (7 Nov 2026): the Forum eyebrow and the living theme's meta description, its last
+#: two rows, were reworded as team strings of their own (ARABIC_AUDIT 02_class_b_wraps W1.2, W1.3; lane PUB2).
+KEEP_SOURCE: dict[str, str] = {}
 
 #: msgids that legitimately stay identical in every language (trademark, proper nouns, document names
 #: kept in the original as on the site, technical acronyms). Anything else left without Arabic script in

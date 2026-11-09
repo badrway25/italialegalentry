@@ -18,35 +18,9 @@
   padding-inline: var(--grid-margin);
 }
 
-/* ---- The three zones -------------------------------------------------------
-   RAIL (folio: ordinal, running head, date) · CONTENT · MARGIN (note, source,
-   caveat). Column 10 is a fixed empty channel: it is what makes the margin read
-   as a margin rather than as a second content column.
-
-   Below lg the rail becomes a horizontal folio line above the block and the
-   margin note moves beneath the block it annotates, keeping its marker.
-
-   A page with no real marginalia does NOT get this layout: it gets a centred
-   reading column (.container--read). That rule is the reason the previous
-   build's 576px column could sit alone inside 1200px for 1100px of scroll —
-   the layout was applied whether or not there was anything to put beside it.
-   -------------------------------------------------------------------------- */
-.zones {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-6);
-}
-
-@media (min-width: 75rem) {
-  .zones {
-    grid-template-columns:
-      var(--container-rail)
-      minmax(0, 1fr)
-      var(--container-rail);
-    gap: 0 var(--grid-gutter);
-    align-items: start;
-  }
-}
+/* ---- The three zones — V5.30 (stream A's container audit, docs/design-v5/QA/v530/art/NOTES.md §4): the V1 rail ·
+   content · margin grid (.zones) left the cascade — no template, view or CMS row writes it any more, and its 176–220 px
+   rail was a third structural width beside the column and the shell. The container roles live in v5/tokens.css §3.6. */
 
 /* ---- Sections: RANK sets the outer space -----------------------------------
    Space between sections is always greater than space inside them, and a
@@ -95,34 +69,13 @@
   min-inline-size: 0;
 }
 
-@media (min-width: 64rem) {
-  .lg\:col-3 { grid-column: span 3; }
-  .lg\:col-4 { grid-column: span 4; }
-  .lg\:col-6 { grid-column: span 6; }
-  .lg\:col-8 { grid-column: span 8; }
-}
-
-/* ---- Two-column editorial layouts ---------------------------------------- */
-/* text + figure split (hero-like); the sidebar layout left with its last consumer (allauth's manage layout,
-   W3-F2) in W3-F1's budget pass */
-.split {
-  display: grid;
-  gap: var(--space-10) var(--gutter);
-  grid-template-columns: minmax(0, 1fr);
-  align-items: center;
-}
-
-@media (min-width: 56rem) {
-  .split {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  }
-}
+/* ---- Two-column editorial layouts: V5.30 (stream A's container audit) — the V1 text + figure split (.split) left
+   with the zones: no template writes it (the compositions are the section system's, v5/_sec-campata.css) ---- */
 
 /* ---- Composition utilities ------------------------------------------------ */
 .stack > * + * {
   margin-block-start: var(--stack-gap);
 }
-
 
 .cluster {
   display: flex;
@@ -133,10 +86,6 @@
 
 .center {
   text-align: center;
-}
-
-.measure {
-  max-inline-size: var(--measure-prose);
 }
 
 .flow > * + * {

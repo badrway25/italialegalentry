@@ -74,7 +74,7 @@
     color: var(--text-1);
     text-wrap: pretty;
   }
-  :lang(ar) .portico__gloss { letter-spacing: 0; line-height: var(--ar-body-lh); }
+  .portico__gloss:lang(ar) { letter-spacing: 0; line-height: var(--ar-body-lh); }
   .portico__space { grid-column: 1; grid-row: 2; align-self: start; justify-self: start; margin: var(--s-4) var(--s-8) var(--s-4) var(--s-6); }
   .portico__entries { grid-column: 2; grid-row: 1 / span 2; padding: var(--s-5) var(--s-6) var(--s-5) 0; }
   .portico__foot { grid-column: 1 / -1; grid-row: 3; padding: var(--s-3) var(--s-6); border-block-start: 1px solid var(--line-rhythm); }
@@ -100,7 +100,7 @@
     text-transform: uppercase;
     color: var(--accent-text);
   }
-  :lang(ar) .portico__eyebrow { letter-spacing: 0; text-transform: none; }
+  .portico__eyebrow:lang(ar) { letter-spacing: 0; text-transform: none; }
   /* the lede at the body's size (review round 2: at 20 px it was the panel's tallest column and left a short door's
      tiles over white) */
   .portico--door .portico__gloss { grid-row: 2; padding: var(--s-2) 0 0 var(--s-6); font-size: var(--t-body); line-height: var(--t-body-lh); }
@@ -289,7 +289,7 @@
   .portico__lunetta .portico__disc .icon { inline-size: 26px; block-size: 26px; }
   .portico__lunetta-text { position: relative; z-index: 1; display: grid; gap: 2px; }
   .portico__kicker { font: var(--w-control) var(--t-caption) / var(--t-caption-lh) var(--f-sans); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--p-oro-300); }
-  :lang(ar) .portico__kicker { letter-spacing: 0; text-transform: none; }
+  .portico__kicker:lang(ar) { letter-spacing: 0; text-transform: none; }
   .portico__feature-title { display: block; font: var(--w-title) var(--t-body) / 1.4 var(--f-sans); text-wrap: balance; }
   .portico__feature-title .icon { display: inline-block; vertical-align: -0.15em; margin-inline-start: var(--s-2); inline-size: var(--icon-sm); block-size: var(--icon-sm); transition: translate var(--motion-standard) var(--ease-enter); }
   @media (hover: hover) and (pointer: fine) {
