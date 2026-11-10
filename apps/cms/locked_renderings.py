@@ -6,13 +6,14 @@ The registry (``cms.locked_content``) keeps every prescribed French text byte fo
 holds, BESIDE it, what the Arabic product does with each text — never a change to the text itself:
 
 * **C-UI** — compositional, non-legal copy (titles, entrances, buttons, the pilot's words, the Forum's institutional
-  copy, the FAQ questions, the form labels …): a PROVISIONAL professional Arabic rendering, served on ``/ar/`` as the
-  page's own text (no ``lang`` attribute), flagged ``STATUS_PROVISIONAL`` here and on the dev board — never on the
-  public UI;
-* **C-SUBST-FR** — substantive content whose only source is the prescribed French (the FAQ answers, the glossary
-  definitions, the pathways' descriptions, the anti-fraud and diplomas bodies, the persons' intro, the consent
-  sentences): on its OWN source page the French stands, isolated (``lang="fr"``) and identified by a caption; on every
-  other page that quotes it the French body is HIDDEN until validated and one Arabic line points to the source page;
+  copy, the FAQ questions and its informational answers, the form labels …): a PROVISIONAL professional Arabic
+  rendering, served on ``/ar/`` as the page's own text (no ``lang`` attribute), flagged ``STATUS_PROVISIONAL`` here
+  and on the dev board — never on the public UI;
+* **C-SUBST-FR** — substantive content whose only source is the prescribed French (the FAQ's substantive answers,
+  the glossary definitions, the pathways' descriptions, the anti-fraud and diplomas bodies, the persons' intro, the
+  consent sentences): on its OWN source page the French stands, isolated (``lang="fr"``) and identified by a caption;
+  on every other page that quotes it the French body is HIDDEN until validated and one Arabic line points to the
+  source page;
 * **C-SUBST-IT** — the legal texts whose authoritative version is Italian (the ``legal.*`` courtesy translations): the
   legal pages show the Italian and identify it (``apps/legal``); the French courtesy is never a fallback on ``/ar/``;
 * **C-OFFICIAL** — official titles and proper names kept in the original in every language (the trademark, the Forum's
@@ -77,7 +78,8 @@ _STEP = re.compile(r"\[(\d+)\]|\.([a-z_]+)")
 #: dict fields that are identifiers, never text (the FAQ's, the pathways' and the terms' ``key``)
 IDENTIFIER_FIELDS = frozenset({"key"})
 
-#: every text of the registry, by key or by pattern → its treatment. Total:
+#: every text of the registry, by key, by pattern or by sub-key (a sub-key's own row wins over its pattern's) → its
+#: treatment. Total:
 #: ``tests/i18n/test_locked_renderings_v524.py``
 #: asserts that each string leaf of ``LOCKED_TEXTS["fr"]`` resolves to exactly one class.
 TREATMENT: dict[str, str] = {
@@ -162,6 +164,16 @@ TREATMENT: dict[str, str] = {
     "p3.antifraud.body": C_SUBST_FR,
     "p3.faq.items[].question": C_UI,
     "p3.faq.items[].answer": C_SUBST_FR,
+    # the owner's decision of 10 Nov 2026 (DL54-211: «the Arabic FAQ must not normally show French answers»): each
+    # answer by what it says — informational or product copy (what the platform does and does not do, who promotes it,
+    # the advice against a «guaranteed» visa) reads its professional Arabic; a legal or substantive answer without a
+    # validated Arabic translation (no labour intermediation, the decreto flussi as an act, the effect of a prior
+    # refusal, the data protection commitment) keeps the pattern's treatment: its French source, identified on its page
+    "p3.faq.items[0].answer": C_UI,  # faq_visas
+    "p3.faq.items[2].answer": C_UI,  # faq_preassessment_guarantee
+    "p3.faq.items[4].answer": C_UI,  # faq_diplomas
+    "p3.faq.items[6].answer": C_UI,  # faq_who
+    "p3.faq.items[8].answer": C_UI,  # faq_guaranteed_visa_offer
     "p3.glossary.terms[].term": C_OFFICIAL,  # the Italian term, kept Italian in every language (I18N_RTL §9)
     "p3.glossary.terms[].definition": C_SUBST_FR,
     "p3.living.title": C_UI,
@@ -433,7 +445,7 @@ AR: dict[str, str] = {
     "p3.pilot.sequence[5]": "الدخول إلى إيطاليا",
     "p3.pilot.sequence[6]": "المواكبة",
     "p3.pilot.sequence[7]": "المتابعة",
-    # ---- Phase 3 — the anti-fraud title, the FAQ questions ------------------------------------------------
+    # ---- Phase 3 — the anti-fraud title, the FAQ questions and informational answers ----------------------
     "p3.antifraud.title": "احذروا الاحتيال",
     "p3.faq.items[0].question": "هل تمنح Italy Legal Entry‎ تأشيرات؟",
     "p3.faq.items[1].question": "هل Italy Legal Entry‎ وكالة توظيف؟",
@@ -444,6 +456,26 @@ AR: dict[str, str] = {
     "p3.faq.items[6].question": "من يقف وراء Italy Legal Entry‎؟",
     "p3.faq.items[7].question": "هل بياناتي محمية؟",
     "p3.faq.items[8].question": "يعرض عليّ شخص تأشيرة مضمونة مقابل مبلغ مالي. ماذا أفعل؟",
+    # the informational answers (DL54-211), in the catalogue's own words where it already says them («من اختصاص
+    # السلطات المختصة», «السبيل النظامي», «التصديق أو الأبوستيل», «احذروا الاحتيال»), the promoter as the Forum says it
+    "p3.faq.items[0].answer": (
+        "لا. فالتأشيرات وتصاريح الإقامة والتراخيص من اختصاص السلطات المختصة حصرًا. وتوجّهكم المنصة نحو السبيل "
+        "النظامي الأنسب وتساعدكم على الاستعداد."
+    ),
+    "p3.faq.items[2].answer": (
+        "لا. فهو توجيه ذو طابع إعلامي، يستند إلى المعلومات التي تقدّمونها. ويعود كل قرار إلى السلطات."
+    ),
+    "p3.faq.items[4].answer": (
+        "لا. فالاعتراف من اختصاص السلطات والهيئات المختصة؛ وتوجّهكم المنصة بشأن الوثائق والترجمات والتصديق أو "
+        "الأبوستيل والإجراءات الواجب اتباعها."
+    ),
+    "p3.faq.items[6].answer": (
+        "المشروع مبادرة من جمعية AGAMI — Dialogo Giuridico Interculturale APS‎، وهي جمعية حقوقيين تعمل منذ 2011 في "
+        "مجال الحوار القانوني بين إيطاليا والمغرب، ويُنجَز بمساهمة مهنيين وشركات ومؤسسات وهيئات تكوين."
+    ),
+    "p3.faq.items[8].answer": (
+        "ارفضوا. فلا يمكن ضمان أي نتيجة، ولا يمكن لأي وسيط أن يمنح تأشيرة. اطّلعوا على قسم «احذروا الاحتيال»."
+    ),
     # ---- Phase 3 — living, training, news, the virtual Forum, diplomas, the reserved area ---------------
     "p3.living.title": "العيش في إيطاليا",
     "p3.living.body": (
@@ -715,7 +747,7 @@ def board_rows() -> list[dict[str, Any]]:
                 "key": subkey,
                 "treatment": kind or "—",
                 "status": STATUS_OF.get(kind or "", "UNCLASSIFIED"),
-                "routes": ", ".join(source_routes(subkey)),
+                "routes": ", ".join(source_routes(subkey)) if kind == C_SUBST_FR else "",
                 "rendered": subkey in AR,
                 "words": len(french.split()),
             }

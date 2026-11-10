@@ -400,9 +400,16 @@ def test_french_fallback_blocks_are_isolated_left_to_right_on_arabic_pages(brows
     for form in ("/ar/entreprises/", "/ar/entreprises/recueil-des-besoins/"):
         assert [item for item in by_page[form] if item["tag"] == "label"], (form, "the locked consent sentence")
     assert [item for item in by_page["/ar/forum/"] if item["tag"] == "h1"], "the Forum's prescribed title, isolated"
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): the FAQ's French runs
+    # are its substantive answers (C-SUBST-FR) and no other — the informational ones read Arabic now
+    from cms import locked_renderings
+
     faq_items, _effective = locked_content.get("p3.faq.items", "fr")
+    substantive = [
+        i for i in range(len(faq_items)) if locked_renderings.treatment(f"p3.faq.items[{i}].answer") == "C-SUBST-FR"
+    ]
     answers = [item for item in by_page["/ar/faq/"] if item["tag"] == "p"]
-    assert len(answers) == len(faq_items), ("every FAQ answer, in its source language on its own page", len(answers))
+    assert len(answers) == len(substantive) == 4, ("every substantive FAQ answer, in its source language", len(answers))
     assert [item for item in found if item["direction"] != "ltr"] == []
 
 

@@ -195,11 +195,28 @@ def test_other_languages_fall_back_to_french_with_lang_attr(client, faq_seeded, 
     questions = soup.select(".faq-lista h3.faq-item__question")
     assert len(questions) == 9
     assert all(q.get("lang") is None and re.search(r"[\u0600-\u06ff]", q.get_text()) for q in questions)
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211: «the Arabic FAQ must
+    # not normally show French answers»): each answer takes the form its class gives it — an informational answer (C-UI)
+    # its provisional Arabic, no lang, no caption; a substantive one (C-SUBST-FR) the French source, lang="fr",
+    # preceded by its own identification caption — and no French answer stands without that treatment (unintended
+    # French = 0)
+    from cms import locked_renderings
+
     answers = soup.select(".faq-lista p.faq-risposta")
-    assert len(answers) == 9 and all(a.get("lang") == "fr" for a in answers)
+    assert len(answers) == 9
+    keys = registry.keys()
     for answer in answers:
-        caption = answer.find_previous_sibling("p")
-        assert caption is not None and caption.get("data-locked-caption", "").endswith("].answer"), caption
+        index = keys.index(answer.find_parent("details")["id"])
+        subkey = f"p3.faq.items[{index}].answer"
+        caption = answer.find_previous_sibling("p", class_="locked-caption")
+        if locked_renderings.treatment(subkey) == "C-UI":
+            assert answer.get("lang") is None and caption is None, subkey
+            assert answer.get_text().strip() == locked_renderings.rendering(subkey), subkey
+        else:
+            assert answer.get("lang") == "fr", subkey
+            assert answer.get_text().strip() == registry.items()[index]["answer"], subkey
+            assert caption is not None and caption.get("data-locked-caption") == subkey, caption
+    assert sum(1 for answer in answers if answer.get("lang") == "fr") == 4
     soup_fr = BeautifulSoup(client.get("/fr/faq/").content, "html.parser")
     assert len(soup_fr.select(".faq-lista h3.faq-item__question")) == 9
     assert all(q.get("lang") is None for q in soup_fr.select(".faq-lista h3.faq-item__question"))
@@ -239,7 +256,12 @@ def test_arabic_is_rtl_and_renders(client_ar, faq_seeded, phase3_open):
 
     assert locked_renderings.rendering("p3.faq.items[0].question") in html
     assert registry.item("faq_visas")["question"] not in html
-    assert registry.item("faq_visas")["answer"] in html
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): the first answer is
+    # informational — its provisional Arabic renders, its French does not; a substantive answer still renders whole in
+    # French on its own page
+    assert locked_renderings.rendering("p3.faq.items[0].answer") in html
+    assert registry.item("faq_visas")["answer"] not in html
+    assert registry.item("faq_data_protection")["answer"] in html
 
 
 # --------------------------------------------------------------------------------------------

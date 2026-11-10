@@ -5,6 +5,10 @@ only — no prescribed text, no personal datum (the French texts live in `apps/c
 `locked_content.sha256.json` unchanged). Supersedes the class-C part of `evidence/v524/arabic/03_locked_blocks_register.md`
 («131 class-C keys», option B) wherever the two differ: R7′ prevails.
 
+Amended 10 Nov 2026 (DL54-211, the owner's directive on the Arabic FAQ): the five informational FAQ answers
+(`p3.faq.items[0|2|4|6|8].answer`) are C-UI with their provisional Arabic; the four substantive ones (`[1|3|5|7]`:
+labour intermediation, the decreto flussi as an act, a prior refusal's effect, data protection) stay C-SUBST-FR.
+
 ## 1. The four treatments
 
 | class | treatment | reason |
@@ -18,15 +22,15 @@ only — no prescribed text, no personal datum (the French texts live in `apps/c
 
 | class | texts |
 |---|---|
-| C-UI | 139 |
+| C-UI | 144 |
 | C-SUBST-IT | 59 |
-| C-SUBST-FR | 34 |
+| C-SUBST-FR | 29 |
 | C-OFFICIAL | 17 |
 | **total** | **249** |
 
 The three figures of V5.27 §8: unintended French fallback on /ar/ **0** (the completeness crawl, with the burn-down
-equality of `tests/i18n/arabic_allowlist.py` owned by the page lanes); provisional non-legal Arabic **139** texts;
-untranslated authoritative legal blocks **34 C-SUBST-FR** texts (French source, identified on its page, hidden
+equality of `tests/i18n/arabic_allowlist.py` owned by the page lanes); provisional non-legal Arabic **144** texts;
+untranslated authoritative legal blocks **29 C-SUBST-FR** texts (French source, identified on its page, hidden
 elsewhere) + **6 C-SUBST-IT keys** (59 texts: titles, sections, paragraphs — the Italian authoritative text shown).
 
 ## 3. Key by key
@@ -193,23 +197,23 @@ elsewhere) + **6 C-SUBST-IT keys** (59 texts: titles, sections, paragraphs — t
 | `p3.entrances.university.text` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.entrances.university.title` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[0].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
-| `p3.faq.items[0].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
+| `p3.faq.items[0].answer` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[1].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[1].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
 | `p3.faq.items[2].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
-| `p3.faq.items[2].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
+| `p3.faq.items[2].answer` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[3].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[3].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
 | `p3.faq.items[4].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
-| `p3.faq.items[4].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
+| `p3.faq.items[4].answer` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[5].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[5].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
 | `p3.faq.items[6].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
-| `p3.faq.items[6].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
+| `p3.faq.items[6].answer` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[7].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.faq.items[7].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
 | `p3.faq.items[8].question` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
-| `p3.faq.items[8].answer` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | faq:index |
+| `p3.faq.items[8].answer` | C-UI | PROVISIONAL — PENDING LANGUAGE/LEGAL REVIEW | — |
 | `p3.glossary.terms[0].term` | C-OFFICIAL | ORIGINAL — kept in every language | — |
 | `p3.glossary.terms[0].definition` | C-SUBST-FR | SOURCE TEXT (FR) — identified on its page, hidden elsewhere until validated | glossary:index, glossary:term |
 | `p3.glossary.terms[1].term` | C-OFFICIAL | ORIGINAL — kept in every language | — |

@@ -5,7 +5,7 @@ import datetime as dt
 import pytest
 from django.core.exceptions import ValidationError
 
-from cms import locked_content
+from cms import locked_content, locked_renderings
 from cms.models import PublicationStatus, TranslationStatus
 from faq import registry, services
 from faq.models import FAQCategory, FAQItem, FAQItemTranslation
@@ -102,7 +102,20 @@ def test_entry_for_locked_item_uses_registry_and_marks_fallback(category):
     entry_fr = services.entry_for(item, "fr")
     assert entry_fr.answer == registry.item("faq_visas")["answer"]
     assert entry_fr.lang == "fr" and entry_fr.is_fallback is False
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): an informational
+    # answer reads its provisional Arabic, from the policy and never from the (mirrored) DB columns, and is no
+    # fallback; a substantive answer keeps its French source from the registry, marked as the fallback it is
     entry_ar = services.entry_for(item, "ar")
+    assert entry_ar.answer_key.endswith("[0].answer")
+    assert entry_ar.answer == locked_renderings.rendering(entry_ar.answer_key)
+    assert entry_ar.lang == "ar" and entry_ar.is_fallback is False
+    substantive = FAQItem.objects.create(
+        key="faq_data_protection", category=category, is_locked=True, question_fr="", answer_fr="", status="published"
+    )
+    FAQItem.objects.filter(pk=substantive.pk).update(answer_fr="db mirror tampered")  # bypasses save()
+    substantive.refresh_from_db()
+    entry_ar = services.entry_for(substantive, "ar")
+    assert entry_ar.answer == registry.item("faq_data_protection")["answer"]
     assert entry_ar.lang == "fr" and entry_ar.is_fallback is True
 
 

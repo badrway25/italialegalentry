@@ -15787,6 +15787,49 @@
           "source": "steward assignment (v530-d merge, 10 Nov 2026): the file stays v522-p2, v530-a, v530-agami, v530-b's"
         }
       ]
+    },
+    "v530-ar": {
+      "title": "The Arabic FAQ before PRODUCT ACCEPTED: five informational answers in their provisional Arabic, the four substantive ones in their identified French source",
+      "wave": 0,
+      "plan": "the owner's directive of 10 Nov 2026 (item 2, before PRODUCT ACCEPTED): «the Arabic FAQ must not normally show French answers» — each French answer classified, informational copy in professional Arabic, legal or substantive content in its identified source; targeted regression only",
+      "after": [
+        "v530-d"
+      ],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the merge, 10 November 2026: a family outside plan §3's waves (wave 0), the Arabic FAQ answers (branch v530-micro-e, worktree C:/tmp/ile_wt/v530-micro-e), merged into v530-micro (c737554e).",
+      "owns": [
+        {
+          "glob": "apps/cms/locked_renderings.py",
+          "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
+          "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays v524-ar, v524-closing's"
+        },
+        {
+          "glob": "apps/faq/tests/test_models.py",
+          "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
+          "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays nobody's"
+        },
+        {
+          "glob": "apps/faq/tests/test_views.py",
+          "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
+          "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays v518g-n, v522-p2, v524-pub2, v530-b's"
+        },
+        {
+          "glob": "docs/design-v5/QA/v524/ar/LOCKED_BLOCKS_REGISTER.md",
+          "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
+          "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays v524-ar's"
+        },
+        {
+          "glob": "tests/i18n/test_locked_renderings_v524.py",
+          "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
+          "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays v524-ar, v524-closing's"
+        },
+        {
+          "glob": "tests/i18n/test_rtl_browser.py",
+          "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
+          "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays v515-b, v518g-p, v522-p2, v524-closing, v524-t, w1-a, w1-b, w2-a, w2-b, w2-c1, w2-c2's"
+        }
+      ]
     }
   }
 }

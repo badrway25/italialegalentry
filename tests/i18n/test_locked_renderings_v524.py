@@ -52,13 +52,18 @@ def test_every_text_of_the_registry_has_exactly_one_class():
     assert unknown == []
     for pattern, kind in locked_renderings.TREATMENT.items():
         assert kind in locked_renderings.TREATMENTS, pattern
-    # every pattern names a text that exists (no stale row in the policy)
+    # every pattern names a text that exists (no stale row in the policy).
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): a row may class ONE text by its
+    # sub-key (the FAQ's five informational answers) — that text must exist too, and the row must change its class
     patterns = {locked_renderings.pattern(subkey) for subkey, _french in locked_renderings.leaves()}
     patterns |= {
         locked_renderings.pattern(subkey) for subkey, _french in locked_renderings.leaves() if "[" not in subkey
     }
-    for key in locked_renderings.TREATMENT:
-        assert key in patterns or key in locked_content.keys(), key  # noqa: SIM118
+    subkeys = {subkey for subkey, _french in locked_renderings.leaves()}
+    for key, kind in locked_renderings.TREATMENT.items():
+        assert key in patterns or key in subkeys or key in locked_content.keys(), key  # noqa: SIM118
+        if key in subkeys and key not in patterns:
+            assert kind != locked_renderings.TREATMENT.get(locked_renderings.pattern(key)), key
 
 
 def test_every_c_ui_text_has_its_rendering_and_nothing_else_has_one():
@@ -112,9 +117,11 @@ def test_the_counts_of_the_report():
     leaves = locked_renderings.leaves()
     assert sum(counts.values()) == len(leaves) + len(locked_renderings.OFFICIAL_MSGIDS)
     assert counts["C-UI"] == len(locked_renderings.AR)
-    # the register's figures, exactly (LOCKED_BLOCKS_REGISTER.md §2): a change of class is a decision and moves them
-    assert counts["C-UI"] == 139
-    assert counts["C-SUBST-FR"] == 34  # 9 answers + 10 definitions + 8 descriptions + intro + 3 bodies + 3 consents
+    # the register's figures, exactly (LOCKED_BLOCKS_REGISTER.md §2): a change of class is a decision and moves them.
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): five FAQ answers moved from
+    # C-SUBST-FR to C-UI, the figures moved with them
+    assert counts["C-UI"] == 144
+    assert counts["C-SUBST-FR"] == 29  # 4 answers + 10 definitions + 8 descriptions + intro + 3 bodies + 3 consents
     assert counts["C-OFFICIAL"] == 17  # the trademark, the names, the 10 Italian terms, the Forum's titles, the address
     # the six legal courtesy keys, counted by their texts (titles, sections, paragraphs)
     legal_keys = {key for key in locked_content.keys() if locked_renderings.treatment(key) == "C-SUBST-IT"}  # noqa: SIM118
@@ -225,14 +232,23 @@ def test_a_compound_value_is_rebuilt_part_by_part_or_stays_french_whole():
     # the form's labels: fourteen
     value, effective = locked_content.get("p1.companies.form.fields", "ar")
     assert effective == "ar" and len(value) == 14 and all(ARABIC.search(label) for label in value)
-    # the FAQ off its page: the questions in Arabic, the answers as pointer lines, the keys kept
+    # the FAQ off its page: the questions in Arabic, the answers as pointer lines, the keys kept.
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): an informational answer reads
+    # its rendering wherever it is quoted, a substantive one its pointer line — every answer held, not the first alone
     locked_renderings.set_route_for_tests("pages:home")
     with translation.override("ar"):
         value, effective = locked_content.get("p3.faq.items", "ar")
     assert effective == "ar" and [e["key"] for e in value] == [e["key"] for e in french["p3.faq.items"]]
     assert value[0]["question"] == locked_renderings.AR["p3.faq.items[0].question"]
-    assert "الأسئلة الشائعة" in value[0]["answer"] and not LATIN_WORD.search(value[0]["answer"])
-    # the FAQ on its own page: the answers must stay French → the whole value stays French (the page composes the parts)
+    rendered = [i for i in range(len(value)) if locked_renderings.treatment(f"p3.faq.items[{i}].answer") == "C-UI"]
+    assert rendered == [0, 2, 4, 6, 8], rendered
+    for i, entry in enumerate(value):
+        if i in rendered:
+            assert entry["answer"] == locked_renderings.AR[f"p3.faq.items[{i}].answer"], i
+        else:
+            assert "الأسئلة الشائعة" in entry["answer"] and not LATIN_WORD.search(entry["answer"]), i
+    # the FAQ on its own page: the substantive answers must stay French → the whole value stays French (the page
+    # composes the parts)
     locked_renderings.set_route_for_tests("faq:index")
     assert locked_content.get("p3.faq.items", "ar") == (french["p3.faq.items"], "fr")
     # the glossary off its page: the Italian terms untouched, the definitions pointed; on its page: French whole
@@ -400,8 +416,12 @@ def test_the_board_lists_every_key_with_its_class_and_status():
     assert by_key["p3.hero.subtitle"]["treatment"] == "C-UI"
     assert by_key["p3.hero.subtitle"]["status"] == locked_renderings.STATUS_PROVISIONAL
     assert by_key["p3.hero.subtitle"]["rendered"] is True
-    assert by_key["p3.faq.items[0].answer"]["treatment"] == "C-SUBST-FR"
-    assert by_key["p3.faq.items[0].answer"]["routes"] == "faq:index"
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211): the first answer is
+    # informational now — a rendering, no source page —, the second the substantive example the row held
+    assert by_key["p3.faq.items[1].answer"]["treatment"] == "C-SUBST-FR"
+    assert by_key["p3.faq.items[1].answer"]["routes"] == "faq:index"
+    assert by_key["p3.faq.items[0].answer"]["treatment"] == "C-UI" and by_key["p3.faq.items[0].answer"]["rendered"]
+    assert by_key["p3.faq.items[0].answer"]["routes"] == ""
     assert by_key["legal.privacy.fr_courtesy.title"]["treatment"] == "C-SUBST-IT"
     assert by_key["p1.trademark.mark"]["treatment"] == "C-OFFICIAL"
     assert all(row["status"] != "UNCLASSIFIED" for row in rows)
