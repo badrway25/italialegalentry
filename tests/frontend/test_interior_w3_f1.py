@@ -227,9 +227,10 @@ def test_french_on_an_arabic_page_says_so(client, seeded, phase3_open, legal_pub
     # the promoter's text, no longer a chapter — its question the disclosure's summary, still carrying its language
     # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the FAQ's question is
     # compositional (C-UI) and reads Arabic; its answer is substantive (C-SUBST-FR) and this is not its page — the
-    # Arabic pointer line in its place; neither says French
-    from django.utils import translation
-
+    # Arabic pointer line in its place; neither says French.
+    # RESTATED under V5.20 for the owner's directive of 10 Nov 2026 on the Arabic FAQ (DL54-211; the CI's red on
+    # 9be6c3d, DL54-212): the promoter's answer is informational now (C-UI) — off its page too it reads its provisional
+    # Arabic in the pointer line's place; neither the question nor the answer says French or carries a lang of its own
     from cms import locked_content, locked_renderings
 
     arabic = re.compile(r"[\u0600-\u06ff]")
@@ -239,10 +240,9 @@ def test_french_on_an_arabic_page_says_so(client, seeded, phase3_open, legal_pub
     entries = locked_content.LOCKED_TEXTS["fr"]["p3.faq.items"]
     index = next(i for i, item in enumerate(entries) if item["key"] == answer["data-faq"])
     subkey = f"p3.faq.items[{index}].answer"
-    assert locked_renderings.treatment(subkey) == "C-SUBST-FR"
-    with translation.override("ar"):
-        pointer = str(locked_renderings.pointer_line(subkey))
-    assert not answer.get("lang") and answer.get_text().strip() == pointer
+    assert locked_renderings.treatment(subkey) == "C-UI"
+    rendering = locked_renderings.rendering(subkey)
+    assert not answer.get("lang") and answer.get_text().strip() == rendering and arabic.search(rendering)
 
 
 #: the area's template folders (plan §3.5 item 1, «Owns»)

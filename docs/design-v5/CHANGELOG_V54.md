@@ -1,5 +1,6 @@
 # Novità della V5 (lo steward scrive, l'anteprima legge)
 
+- 2026-11-10 · v530/micro-f · Verifica CI: un test riformulato (la pagina AGAMI in arabo cita ora la risposta informativa in arabo). Nessuna modifica visibile oltre a quella della FAQ.
 - 2026-11-10 · v530/micro-e · FAQ in arabo: cinque risposte informative ora in arabo (visti, pre-valutazione, diplomi, chi promuove il progetto, l'offerta di un visto «garantito»); le quattro risposte di contenuto giuridico restano nel testo francese di riferimento, con la didascalia che lo identifica.
 - 2026-11-10 · v530/micro-d · Verifica finale: due test del browser riformulati dopo il controllo completo (la ricerca FAQ senza risultati mostra ora la sua icona senza disco; una misura legge la posizione delle righe nel documento). Nessuna modifica visibile.
 - 2026-11-10 · v530/micro-c · Micro-passaggio finale, il giro di correzione: sul telefono le quattro porte della home senza archi né dischi; la ricerca della FAQ e del glossario staccata dal sottotitolo, con un solo pulsante per cancellare e un testo d'esempio che non si taglia; il contorno del focus fuori dalla domanda; in Institutions la fascia finale senza il motivo Italia + Marocco sopra i link; lo zoom delle foto al passaggio del mouse ora funziona.

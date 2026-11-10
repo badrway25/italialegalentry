@@ -15797,7 +15797,7 @@
       ],
       "steward": false,
       "delegated": false,
-      "note": "Assigned by the steward at the merge, 10 November 2026: a family outside plan §3's waves (wave 0), the Arabic FAQ answers (branch v530-micro-e, worktree C:/tmp/ile_wt/v530-micro-e), merged into v530-micro (c737554e).",
+      "note": "Assigned by the steward at the merge, 10 November 2026: a family outside plan §3's waves (wave 0), the Arabic FAQ answers (branch v530-micro-e, worktree C:/tmp/ile_wt/v530-micro-e), merged into v530-micro (c737554e). Amended at the v530-micro-f merge (5de5319b): the CI's one red restated (DL54-212).",
       "owns": [
         {
           "glob": "apps/cms/locked_renderings.py",
@@ -15828,6 +15828,11 @@
           "glob": "tests/i18n/test_rtl_browser.py",
           "slice": "v530-ar's changed part: the Arabic FAQ's answers by their class (DL54-211)",
           "source": "steward assignment (v530-ar merge, 10 Nov 2026): the file stays v515-b, v518g-p, v522-p2, v524-closing, v524-t, w1-a, w1-b, w2-a, w2-b, w2-c1, w2-c2's"
+        },
+        {
+          "glob": "tests/frontend/test_interior_w3_f1.py",
+          "slice": "v530-ar's changed part: the CI's one red on 9be6c3d, the promoter's answer read in its Arabic (DL54-212)",
+          "source": "steward assignment (v530-ar amended at the v530-micro-f merge, 10 Nov 2026): the file stays v512-b, v515-b, v515-c, v519-k, v522-p1, v522-p2, v522-s, v522-s2, v524-px, v530-a, v530-b, v530-mfix, w3-d, w3-f1's"
         }
       ]
     }
