@@ -158,14 +158,13 @@ def test_the_promoter_s_band_is_lit_at_the_arch_s_sill():
     assert ".home-ecosystem .campata__media::before" not in casa, "the sill's light left with the arch"
     ecosystem = (HOME_TEMPLATES / "_ecosystem.html").read_text(encoding="utf-8").split("{% endcomment %}", 1)[1]
     assert "data-luce" not in ecosystem
-    assert '{% include "ecosystem/partials/intesa.html" with id="intesa-casa" variant="atmosfera" only %}' in ecosystem
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the band's lines, triangles and blurred fields left the home): the
+    # band draws no «intesa» and the home's sheet imports neither of its partials; the material partial still stands
+    # before «la casa»
+    assert "intesa" not in ecosystem
     imports = re.findall(r'@import url\("\.\./\.\./css/v5/(_[a-z0-9-]+)\.css"\);', PAGES.read_text(encoding="utf-8"))
-    assert (
-        imports.index("_materia")
-        < imports.index("_intesa")
-        < imports.index("_intesa-atmosfera")
-        < imports.index("_casa")
-    )
+    assert "_intesa" not in imports and "_intesa-atmosfera" not in imports
+    assert imports.index("_materia") < imports.index("_casa")
     materia = MATERIA.read_text(encoding="utf-8")
     assert 'data-luce="origine"' in materia and "radial-gradient(60% 50% at 0 0" in materia, "the recipe stands"
 
@@ -200,9 +199,11 @@ def test_the_home_s_sheets_read_the_twelve_steps_and_the_roles():
     for sheet in (pages, hero, CASA.read_text(encoding="utf-8")):
         assert "var(--f-mono)" not in _code_text(sheet)
         assert "foto__credit" not in sheet
-    assert _rule(pages, ".orienta__didascalia") == "margin: var(--s-6) 0 0; color: var(--accent-text);"
+    # FINAL MICRO-PASS §5 A1 (V5.20 strict rule: the route's caption drawn for the eye left — the section's head says
+    # it): no rule and no markup draw it; the whole sentence is still said once (test_home.py)
+    assert ".orienta__didascalia" not in _code_text(pages)
     orientation = (HOME_TEMPLATES / "_orientation.html").read_text(encoding="utf-8")
-    assert '<p class="orienta__didascalia t-label" aria-hidden="true"' in orientation
+    assert "orienta__didascalia" not in orientation.split("{% endcomment %}", 1)[1]
     colophon = (HOME_TEMPLATES / "_ecosystem_colophon.html").read_text(encoding="utf-8")
     assert colophon.count('class="testa__label colofone__label t-label"') == 2
     assert _rule(pages, ".colofone__nome") == (

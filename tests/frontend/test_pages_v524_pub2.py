@@ -201,9 +201,14 @@ def test_the_labels_carry_the_role_by_name(get, lang):
     source = (TEMPLATES / "pages" / "partials" / "_canali.html").read_text(encoding="utf-8")
     assert source.count('class="canale__kind t-label"') == 2 and source.count("canale__kind") == 2
     assert _main(get(f"/{lang}/reseau/")).select_one("h2.rete__etichetta.t-label#rete-hub-title") is not None
+    # FINAL MICRO-PASS §6 B1 (V5.20; was «the explorer's category heading carries the label role»): the explorer and its
+    # category heading left — the list is named by its heading for assistive technology, and the one label the FAQ
+    # still draws (the empty search's register) carries the role by name
     faq = _main(get(f"/{lang}/faq/"))
-    category = faq.select_one("h2.faq-esploratore__categoria")
-    assert "t-label" in category["class"] and "faq-esploratore__categoria--titolo" not in category["class"]
+    assert faq.select_one(".faq-esploratore__categoria, .faq-esploratore") is None
+    assert faq.select_one("section#questions h2#faq-domande-title.visually-hidden") is not None
+    empty = _main(get(f"/{lang}/faq/?q=zzzz-aucun"))
+    assert "t-label" in empty.select_one("h3#faq-index-title.faq-vuoto__titolo")["class"]
 
 
 def test_the_sheets_read_the_roles_and_the_steps():
@@ -218,13 +223,19 @@ def test_the_sheets_read_the_roles_and_the_steps():
     frodi = (APPS / "pages" / "static" / "pages" / "css" / "_frodi.css").read_text(encoding="utf-8")
     assert "cqi" not in frodi and re.search(r"@container \(min-width: 18rem\)\s*\{\s*\.frodi__indirizzo", frodi)
     lessico = (APPS / "cms" / "static" / "cms" / "_lessico-v2.css").read_text(encoding="utf-8")
-    assert re.search(r"\.lessico__lettera\s*\{[^}]*font-weight:\s*var\(--w-display\)", lessico)
+    # FINAL MICRO-PASS §6 B2 (V5.20; was the letter at the display weight): a modest letter heading — the entry's step,
+    # the title's weight, the accent ink; no giant letter
+    assert re.search(
+        r"\.lessico__lettera\s*\{[^}]*font-size:\s*var\(--t-entry\);[^}]*font-weight:\s*var\(--w-title\);[^}]*color:\s*var\(--accent-text\)",
+        lessico,
+    )
     assert "foto__credit" not in lessico, "the panorama's credit rule (PX, IMAGERY_ATTRIBUTION D3)"
     assert re.search(
         r"\.page-glossary-term \[data-fronte\]\[data-compact\] \.ingresso__title\s*\{[^}]*font-size:\s*var\(--t-display\)",
         lessico,
     )
-    assert re.search(r"\.scheda__iniziale\s*\{[^}]*font-size:\s*calc\(var\(--t-display\) \* 4\.5\)", lessico)
+    # FINAL MICRO-PASS §6 B2 (V5.20; was the term page's outlined initial at four and a half display steps): it left
+    assert "scheda__iniziale" not in lessico and "calc(var(--t-display) * 4.5)" not in lessico
     assert ":lang(ar) :is(" not in lessico, "the Arabic rule in the subject form"
     for name in ("_faq-v2.css",):
         sheet = (APPS / "cms" / "static" / "cms" / name).read_text(encoding="utf-8")

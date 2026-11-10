@@ -327,10 +327,15 @@ def test_the_index_and_the_targets_and_the_pilot_s_row_in_the_sheet():
     spaces = re.sub(r"/\*.*?\*/", "", spaces, flags=re.S)
     caps = r"\.pilota-rotta \.linea--large \.linea__label--caps \{\s*overflow-wrap: normal;\s*hyphens: manual;"
     assert re.search(caps, spaces)
-    row = spaces.split("@media (min-width: 80rem) {", 1)[1].split("\n}\n", 1)[0]
-    room = r"max-inline-size: calc\(200% \+ 2 \* var\(--s-6\) - var\(--s-4\)\);"
-    assert re.search(r"\.linea__step \.linea__label \{[^}]*grid-row: 1;[^}]*" + room, row)
-    assert re.search(r"\.linea__step:nth-child\(even\) \.linea__label \{\s*grid-row: 5;", row)
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the 80 rem stepped row — capitals · numeral · tile · numeral ·
+    # capitals — left with the stations' tiles and numerals): the eight stations stand on the route's own composition,
+    # four to a row from 48 rem (v5/_linea-v2.css), each label in its own column under its quiet marker, so no two labels
+    # can meet; the caps rule above still keeps every locked capital whole
+    assert "@media (min-width: 80rem)" not in spaces and "linea__segno" not in spaces
+    linea = re.sub(
+        r"/\*.*?\*/", "", (ROOT / "static" / "css" / "v5" / "_linea-v2.css").read_text(encoding="utf-8"), flags=re.S
+    )
+    assert "grid-template-columns: repeat(var(--lv-n, 4), minmax(0, 1fr));" in linea
     assert ".pilot-diagram" not in spaces, "the V5.4 rule left with its markup"
 
 
@@ -511,7 +516,8 @@ def test_the_pathway_sheet_has_its_index_in_the_entrance_and_no_sticky_bar(clien
         ("apps/pages/static/pages/css/agami.css", ["_agami.css"]),
         ("apps/pages/static/pages/css/frodi.css", ["_frodi.css"]),
         ("apps/pages/static/pages/css/projet.css", ["../../css/v5/_materia.css", "_projet.css"]),
-        ("apps/cms/static/cms/faq.css", ["../css/v5/_sec-indice.css", "_faq-v2.css"]),
+        # FINAL MICRO-PASS §6 B1 (V5.20): the explorer's pattern partial left the FAQ's route sheet with the explorer
+        ("apps/cms/static/cms/faq.css", ["_faq-v2.css"]),
         ("apps/cms/static/cms/lessico.css", ["_lessico-v2.css"]),
         (
             "apps/pathways/static/pathways/pathways.css",

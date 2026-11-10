@@ -1,56 +1,74 @@
 /* ============================================================================================
    ESPACE ENTREPRISES — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.6; lane P1). Page-only:
-   ecosystem/companies.css. EN-1 is lane S's «il flusso» (the measured curve) under the prescribed quotation set as the
-   band's statement; EN-2 lane S's «il panorama»; EN-3 the preserved form (the family's own rules, ecosystem/
+   ecosystem/companies.css. EN-1 is lane S's «il flusso» (FINAL MICRO-PASS §6 B3: the quiet sequence on its hairline)
+   under the prescribed quotation, set beside the territory's photograph (EN-2's panorama folded into it); EN-3 the preserved form (the family's own rules, ecosystem/
    _spaces.css); EN-4 the split of one locked answer; EN-5 «l'approdo» (ecosystem/_spazi-v2.css). Adapted from 21st.dev
    (NOTES, provenance): «Comparison Section» 26826 (two panels read side by side across one divider) — refused: the
    crosses and ticks (a mark reads as a verdict, O14), green and red, the before/after switch.
    ============================================================================================ */
 
-/* ---- EN-1 · the quotation opens the band: the statement at the title's size, the process's title under it, on its panel ---- */
-.imprese-citazione {
-  position: relative;
-  max-inline-size: 58rem;
-  margin: 0 0 var(--s-12);
+/* ---- EN-1 · the band opens on the statement beside the productive territory — FINAL MICRO-PASS §6 B3, after 21st.dev
+        «Split Content Section» (felipemenezes098/content-06, id 28310), adapted: two columns from 64 rem — the prescribed
+        quotation as the light headline, balanced, at the reading edge; the territory's photograph (the page's former
+        full-bleed panorama, the same slot) in the plates' corner with a quiet outline, answering a resting pointer
+        with a 3 % scale over 500 ms; its entrance is the system's mask (v5/_reveal.css). The process's title and the
+        moments on their hairline (v5/_sec-flusso.css) follow in their own band, on paper ---- */
+.imprese-apertura {
+  display: grid;
+  gap: var(--s-8);
+  align-items: center;
 }
 
-/* the statement on the section title's step (TYPOGRAPHY_V2 §4.2 --t-title-2: 28 → 36; V5.24): the title weight, the
-   step's tracking — a statement intitles (§4.3), never the lightest text of its band */
+.imprese-citazione {
+  max-inline-size: 36rem;
+  margin: 0;
+}
+
+/* the statement on the section title's step (TYPOGRAPHY_V2 §4.2 --t-title-2: 28 → 36), light: the body's weight
+   (BRIEF §2: lighter public type), the step's tracking, its lines balanced */
 .imprese-citazione p {
   margin: 0;
   font-size: var(--t-title-2);
   line-height: var(--t-title-2-lh);
-  font-weight: var(--w-title);
+  font-weight: var(--w-body);
   letter-spacing: var(--track-title-2);
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
-/* the process caption sits under the statement, closer to its route */
-.imprese-demarche .testa {
-  margin-block-end: var(--s-8);
+.imprese-apertura__foto > picture {
+  outline: 1px solid var(--line-rhythm);
+  outline-offset: -1px;
 }
 
-/* each moment's step marker (§2 F — a station of a real sequence, never a counter or a rank: the three moments' own
-   order; round 2, QA_ROUND2 «Entreprises composition 4 → 4.5»; V5.24 Typography V2: the numeral role — the sans at 600,
-   tabular, 36, never the mono): the panel opens on its numeral, its label at 20/28, its text at the body's 17/28 */
-.imprese-demarche .flusso__tappe {
-  counter-reset: tempo;
+.imprese-apertura__foto .foto__img {
+  block-size: 100%;
+  min-block-size: 18rem;
+  object-fit: cover;
+  transition: transform 500ms var(--ease-enter);
 }
 
-.imprese-demarche .flusso__tappa {
-  counter-increment: tempo;
+/* the hover's zoom is a `transform`: the reveal's scroll-driven zoom holds the img's `scale`, and an animation
+   outranks a declared `scale`, so the zoom never played (the review's defect 7,
+   as on Institutions); a transform composes with it */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .imprese-apertura__foto:hover .foto__img { transform: scale(1.03); }
 }
 
-.imprese-demarche .flusso__lastra::before {
-  content: counter(tempo, decimal-leading-zero);
-  font-size: var(--t-numeral-lg);
-  line-height: 1;
-  font-weight: var(--w-title);
-  font-variant-numeric: var(--numeric-data);
-  color: var(--text-2);
+@media (min-width: 64rem) {
+  .imprese-apertura {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--s-12);
+  }
+
+  .imprese-apertura__foto .foto__img { min-block-size: 26rem; }
 }
 
-.imprese-demarche .flusso__testo {
+/* «Trois temps», the band after the opening (on paper, where the panorama stood): the caption close to its route */
+.imprese-tempi .testa {
+  margin-block-end: var(--s-10);
+}
+
+.imprese-tempi .flusso__testo {
   font-size: var(--t-body);
   line-height: var(--t-body-lh);
 }
@@ -176,18 +194,14 @@
   min-inline-size: 0;
 }
 
+/* the request's sentence and where it goes: a quiet plate (FINAL MICRO-PASS §6 B3: its 2 px side stripe left) */
 .ecosystem-form__panel {
   display: grid;
   gap: var(--s-3);
   max-inline-size: var(--measure-lead);
   padding: var(--s-5) var(--s-6);
-  border-inline-start: 2px solid var(--accent-mark);
+  border-radius: var(--card-radius);
   background: var(--surface-raised);
-  border-radius: 0 var(--card-radius) var(--card-radius) 0;
-}
-
-[dir="rtl"] .ecosystem-form__panel {
-  border-radius: var(--card-radius) 0 0 var(--card-radius);
 }
 
 .ecosystem-form__panel-text {

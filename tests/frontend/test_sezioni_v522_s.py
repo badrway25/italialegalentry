@@ -38,7 +38,10 @@ SRC_JS = ROOT / "static" / "js" / "src"
 #: §2 / §7 ceilings of the pattern sheets, gzip -9 of each partial minified alone (1 KB = 1 024 B)
 #: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 SHEET_CEILINGS = {
-    "_sec-campata.css": 973, "_sec-tracciato.css": 1_420, "_sec-racconto.css": 915,
+    # FINAL MICRO-PASS §5 A2 (9 Nov 2026; re-recorded at the measure, NOTES_A §4): the board's station carries the quiet
+    # sequence marker on its title's first line — paid first with the origin's row and a duplicate rule that left with
+    # the compass tile: 1 420 → 1 430
+    "_sec-campata.css": 973, "_sec-tracciato.css": 1_430, "_sec-racconto.css": 915,
     # v524-lib (FINAL_DELIVERY_V2 R4 f, §3.3; BACKGROUND_MATERIAL_V2 §3.4, §4.1): the tile's face light — the layer, its
     # wait and in rules — lives in the mosaico sheet as the audit placed it (the shell is in every page sheet, R4 a):
     # 1 203 → 1 355 measured (the audited «≈ 120» was an estimate: the same block cost 70 B among the shell's neighbours and
@@ -64,6 +67,9 @@ INCREMENTS = {("_photo.css", "panorama"): 576, ("_journey-passage.css", "_linea-
 #: §7.2 ceilings of the section runtime and its modules (gzip -9 of the built files)
 #: CLOSING (FINAL_DELIVERY_V2 §3.9 c; V5.20, a ratchet): the values below recorded at their measure on v524-closing — only down.
 JS_CEILINGS = {"rise.js": 1_286, "indice": 1_536, "mappa": 1_536, "spia": 1_024, "racconto": 922}
+#: FINAL MICRO-PASS §6 B1–B2 (V5.20 — a new module, a new ceiling at its measure plus a few bytes): «la ricerca», the
+#: reading pages' live filter (static/js/src/cerca.js; the FAQ's and the glossary's index only), 896 B gzip -9 measured
+JS_CEILINGS["cerca.js"] = 900
 
 
 def _read(path: Path) -> str:
@@ -180,15 +186,15 @@ def test_the_seal_partial_draws_a_registered_mark_or_nothing():
 
 @pytest.mark.django_db
 def test_the_head_folios_draw_their_seal_or_stay_typographic(client, seeded, phase3_open, legal_published):
-    seals = {"/fr/entreprises/": "ile-impresa", "/fr/institutions/": "ile-istituzione", "/ar/parcours/": "ile-percorso",
-             "/fr/formation/": "ile-formazione", "/fr/attention-aux-fraudes/": "ile-scudo"}
-    for path, mark in seals.items():
-        html = client.get(path).content.decode()
-        folio = html.split('class="ingresso__label"', 1)[1].split("</p>", 1)[0]
-        assert f'data-mark="{mark}"' in folio and "fronte__glyph" not in folio, path
-    for path in ("/fr/contact/", "/fr/reseau/"):
+    # FINAL MICRO-PASS §2.1, §5 A3 (V5.20 strict rule: the heads' seals left with the eyebrow's tile and its trailing
+    # rule — «not an architecture website»): every head's folio is typographic, the five that drew a seal included — no
+    # seal, no glyph, no drawing — and still says its label
+    paths = ("/fr/entreprises/", "/fr/institutions/", "/ar/parcours/", "/fr/formation/", "/fr/attention-aux-fraudes/",
+             "/fr/contact/", "/fr/reseau/")
+    for path in paths:
         folio = client.get(path).content.decode().split('class="ingresso__label"', 1)[1].split("</p>", 1)[0]
-        assert "<svg" not in folio and "sigillo" not in folio, (path, "typographic")
+        assert "<svg" not in folio and "sigillo" not in folio and "data-mark" not in folio, (path, "typographic")
+        assert re.sub(r"<[^>]+>", "", folio.split(">", 1)[1]).strip(), (path, "the label's words")
 
 
 def test_the_chapter_heads_draw_no_glyph_above_their_title():
@@ -332,6 +338,7 @@ def test_the_panorama_and_the_passage_v2_add_no_more_than_their_ceilings():
 
 def test_the_section_runtime_and_its_modules_under_their_ceilings():
     assert _gz((DIST_JS / "rise.js").read_bytes()) <= JS_CEILINGS["rise.js"]
+    assert _gz((DIST_JS / "cerca.js").read_bytes()) <= JS_CEILINGS["cerca.js"]
     chunks = list((DIST_JS / "chunks").glob("*.js"))
     assert not [c for c in chunks if c.name.startswith("flow-")], "V5.30 VARIETY §5: the curve's module left no chunk"
     for name in ("indice", "mappa", "spia", "racconto"):
@@ -347,7 +354,9 @@ def test_the_section_runtime_and_its_modules_under_their_ceilings():
 def test_the_flow_is_one_panel_with_no_measured_overlay():
     """F «il flusso». V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «process panels» (V5.20 strict rule; this decision
     replaces «the measured flow draws its overlay in a wrapper»): no script draws over it; the list stands in its field,
-    each moment a cell with the registry's company moment's glyph, the end call kept."""
+    the end call kept. FINAL MICRO-PASS §6 B3 (V5.20; was «each moment a cell with the registry's company moment's
+    glyph»): no moment draws a tile or a glyph any more — the quiet sequence marker is the sheet's counter (BRIEF §2.2),
+    and every moment keeps its words."""
     html = Template(
         '{% include "components/sezioni/flusso.html" with steps=steps end_action=action %}'
     ).render(Context({"steps": [{"glyph": g, "label": f"Temps {i}"} for i, g in enumerate(icons.COMPANY_MOMENT)],
@@ -355,7 +364,16 @@ def test_the_flow_is_one_panel_with_no_measured_overlay():
     assert re.search(r'<div class="flusso__campo">\s*<ol class="flusso__tappe"', html), html[:400]
     assert "data-flow" not in html and "data-sec-js" not in html
     assert html.count('<li class="flusso__tappa">') == len(icons.COMPANY_MOMENT)
-    assert html.count("flusso__nodo sez-tile") == len(icons.COMPANY_MOMENT) and "data-azione" in html
+    assert "flusso__nodo" not in html and "sez-tile" not in html and "<svg" not in html and "data-azione" in html
+    assert [m.group(1) for m in re.finditer(r'class="flusso__titolo">([^<]+)<', html)] == [
+        f"Temps {i}" for i in range(len(icons.COMPANY_MOMENT))
+    ]
+    sheet = _css(V5 / "_sec-flusso.css")
+    marker = re.search(r"\.flusso__tappa::before \{([^}]*)\}", sheet).group(1)
+    for declaration in ("content: counter(flusso);", "font-size: var(--t-caption);", "font-weight: var(--w-control);",
+                        "font-variant-numeric: tabular-nums;", "color: var(--text-3);"):
+        assert declaration in marker, declaration
+    assert "decimal-leading-zero" not in sheet and "border-radius: 50%" not in sheet, "«1» not «01», never a disc"
 
 
 def test_a_french_run_beside_a_marker_hangs_from_its_edge_on_an_arabic_page():

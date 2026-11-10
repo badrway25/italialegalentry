@@ -45,6 +45,7 @@ PROBE = """() => {
   const r = el => el.getBoundingClientRect();
   return {vh: innerHeight, door: !!head.querySelector('.ingresso__way'), pad: parseFloat(getComputedStyle(head).paddingTop),
           band: r(head).top, column: r(column).top, label: r(label).bottom, title: r(h1).top,
+          labelTop: r(label).top, words: label.textContent.trim().length,
           seal: seal && getComputedStyle(seal).display !== 'none' ? r(seal).top : null, call: call ? r(call).bottom : null};
 }"""
 
@@ -89,23 +90,26 @@ def test_the_seal_folio_keeps_the_head_and_its_call_in_the_first_screen(browser,
                 phone_door = width < 768 and head["door"]
                 room = "door-short" if phone_door and height <= 760 else "door-phone" if phone_door else "head"
                 assert head["title"] - head["column"] <= ROOM[room], (*where, room, head)
+                # FINAL MICRO-PASS §2.1, §5 A3 (V5.20 strict rule: the folio's T1 seal, its tile and its trailing rule
+                # left — every head's folio is typographic, as a short phone's door head's always was): no seal, the
+                # folio's words said, never touching the trail, never crowding the title
+                assert head["seal"] is None and head["words"] > 0, (*where, "a typographic folio", head)
                 if room == "door-short":
-                    assert head["seal"] is None, (*where, "a short phone's door head keeps a typographic folio")
                     continue
-                assert head["seal"] is not None, (*where, "the page's T1 seal stands in its folio")
-                assert head["seal"] - head["band"] >= 8, (*where, "the seat never touches the trail", head)
-                assert head["title"] - head["label"] >= 12, (*where, "the sill never crowds the title", head)
+                assert head["labelTop"] - head["band"] >= 8, (*where, "the folio never touches the trail", head)
+                assert head["title"] - head["label"] >= 12, (*where, "the folio never crowds the title", head)
         finally:
             ctx.close()
 
 
 AXIS = """() => {
   const text = document.querySelector('[data-compose="route"] .ingresso__text');
-  const seal = text.querySelector('.ingresso__label > .sigillo').getBoundingClientRect();
-  const x = (el, pseudo) => { const r = el.getBoundingClientRect(), cs = getComputedStyle(el, pseudo);
-    return r.left + parseFloat(cs.left) + parseFloat(cs.width) / 2; };
-  return {seal: seal.left + seal.width / 2, line: x(text, '::before'),
-          rings: [...text.querySelectorAll('.ingresso__title, .ingresso__lead, .via__title')].map(el => x(el, '::before'))};
+  const drawn = (el, pseudo) => { const cs = getComputedStyle(el, pseudo);
+    return cs.content !== 'none' && cs.display !== 'none'; };
+  const said = [...text.querySelectorAll('.ingresso__title, .ingresso__lead')];
+  return {seals: text.querySelectorAll('.sigillo').length, line: drawn(text, '::before'),
+          rings: [...text.querySelectorAll('.ingresso__title, .ingresso__lead, .via__title')].map(el => drawn(el, '::before')),
+          words: said.map(el => el.textContent.trim().length)};
 }"""
 
 
@@ -117,7 +121,9 @@ def test_the_route_head_s_seal_line_and_stations_share_one_axis(browser, live_se
         try:
             page.goto(f"{live_server.url}/{lang}/parcours/", wait_until="load")
             axis = page.evaluate(AXIS)
-            assert abs(axis["line"] - axis["seal"]) <= 1, (lang, width, axis)
-            assert axis["rings"] and all(abs(ring - axis["line"]) <= 1 for ring in axis["rings"]), (lang, width, axis)
+            # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the route head's seal, its spine and its stations' rings
+            # left — no route is drawn in a head): none of the three is drawn; the title and the lead still said
+            assert axis["seals"] == 0 and not axis["line"] and not any(axis["rings"]), (lang, width, axis)
+            assert len(axis["words"]) == 2 and all(axis["words"]), (lang, width, axis)
         finally:
             ctx.close()

@@ -73,20 +73,17 @@ MAP = r"""() => {
           height: Math.round(root.querySelector('.rete__pannelli').getBoundingClientRect().height), y: Math.round(scrollY)};
 }"""
 
-EXPLORER = r"""() => {
-  const root = document.querySelector('.faq-esploratore .indice');
-  const tabs = [...root.querySelectorAll('.indice__voce')];
-  const panels = [...root.querySelectorAll('.indice__pannello')];
-  const shown = (el) => { const cs = getComputedStyle(el); return cs.display !== 'none' && cs.visibility !== 'hidden'
-                                                                   && el.getBoundingClientRect().height > 0; };
-  return {mode: root.dataset.mode || null, role: root.querySelector('.indice__lista').getAttribute('role'),
-          selected: tabs.filter((t) => t.getAttribute('aria-selected') === 'true').map((t) => t.hash),
-          shown: panels.filter((p) => shown(p.querySelector('.indice__corpo'))).map((p) => '#' + p.id),
-          buttons: [...root.querySelectorAll('.indice__apri')].map((b) => b.getAttribute('aria-expanded')),
+#: FINAL MICRO-PASS §6 B1 (V5.20): the FAQ is one list of the system's disclosures (the explorer's probe left with it)
+LIST = r"""() => {
+  const root = document.querySelector('section#questions[data-cerca]');
+  const rows = [...root.querySelectorAll('.faq-lista > details.faq-item')];
+  return {open: rows.filter((r) => r.open).map((r) => '#' + r.id),
+          shown: rows.filter((r) => !r.hidden && r.getBoundingClientRect().height > 0).map((r) => '#' + r.id),
+          pressed: [...root.querySelectorAll('.faq-tema')].filter((b) => b.getAttribute('aria-pressed') === 'true')
+            .map((b) => b.dataset.cercaTema),
+          count: root.querySelector('[data-cerca-conto]').textContent.trim(),
+          empty: !root.querySelector('[data-cerca-vuoto]').hidden,
           hash: location.hash, y: Math.round(scrollY),
-          stage: Math.round(root.querySelector('.indice__palco').getBoundingClientRect().height),
-          focused: document.activeElement ? [Math.round(document.activeElement.getBoundingClientRect().top),
-                                             Math.round(document.activeElement.getBoundingClientRect().bottom)] : null,
           header: Math.round(document.querySelector('.site-header').getBoundingClientRect().bottom)};
 }"""
 
@@ -237,67 +234,73 @@ def test_the_chosen_actor_s_spoke_ends_on_its_own_disc(browser, site, lang):
 
 # ---- the FAQ's explorer (§3.13 Q1) ------------------------------------------------------------------------------------
 @pytest.mark.parametrize("lang", ["fr", "ar"])
-def test_the_faq_explorer_selects_its_permalink_and_keeps_the_address_in_step(browser, site, lang):
+def test_a_faq_permalink_opens_its_row_and_the_list_answers_as_one_types(browser, site, lang):
+    """FINAL MICRO-PASS §6 B1 (V5.20 strict rule; replaces «the FAQ explorer selects its permalink and keeps the address in
+    step»): the explorer left for ONE list of the system's disclosures, after 21st.dev 37558. A permalink opens its row —
+    the only one open — under the letterhead; a theme narrows the list (its pill pressed, the live count saying how
+    many); a query narrows it as one types; a query without answer draws the inline empty state, whose button gives
+    every question back; Escape empties the field."""
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     try:
         page = context.new_page()
         page.goto(f"{site}/{lang}/faq/#faq_diplomas", wait_until="networkidle")
-        page.wait_for_selector(".faq-esploratore .indice[data-mode='tabs']")
-        state = page.evaluate(EXPLORER)
-        assert state["role"] == "tablist" and state["selected"] == ["#faq_diplomas"], state
-        assert state["shown"] == ["#faq_diplomas"], state
+        page.wait_for_selector("section#questions.cerca-viva")
         _settled(page)
-        # the permalink's answer stands in the screen, under the letterhead
+        state = page.evaluate(LIST)
+        assert state["open"] == ["#faq_diplomas"] and len(state["shown"]) == 9 and state["count"] == "", state
         top = page.evaluate("() => document.getElementById('faq_diplomas').getBoundingClientRect().top")
-        header = page.evaluate("() => document.querySelector('.site-header').getBoundingClientRect().bottom")
-        assert header - 1 <= top < 900 * 0.6, (top, header)
-        page.focus(".faq-esploratore a.indice__voce[aria-selected='true']")
-        _settled(page)
-        stage = page.evaluate(EXPLORER)["stage"]
-        for key, expected in (
-            ("ArrowDown", "#faq_prior_refusal"),
-            ("ArrowUp", "#faq_diplomas"),
-            ("End", "#faq_guaranteed_visa_offer"),
-            ("Home", "#faq_visas"),
-        ):
-            page.keyboard.press(key)
-            state = page.evaluate(EXPLORER)
-            where = (lang, key, state)
-            assert state["selected"] == [expected] and state["shown"] == [expected], where
-            assert state["hash"] == expected, where  # data-hash: the address names the question on screen
-            # the panels share one cell: a selection never changes the stage (CLS 0); the page moves only as far as the
-            # browser brings the focused question clear of the letterhead (WCAG 2.4.11)
-            assert abs(state["stage"] - stage) <= 1, where
-            assert state["focused"][0] >= state["header"] - 1 and state["focused"][1] <= 900, where
+        assert state["header"] - 1 <= top < 900 * 0.6, (top, state)
+        page.locator("button.faq-tema[data-cerca-tema='securite']").click()
+        state = page.evaluate(LIST)
+        assert state["pressed"] == ["securite"], state
+        assert state["shown"] == ["#faq_data_protection", "#faq_guaranteed_visa_offer"] and "2" in state["count"], state
+        page.locator("button.faq-tema[data-cerca-tema='']").click()
+        page.fill("#faq-q", "zzzz")
+        state = page.evaluate(LIST)
+        assert state["shown"] == [] and state["empty"] and "0" in state["count"], state
+        page.locator("[data-cerca-azzera]").click()
+        state = page.evaluate(LIST)
+        assert len(state["shown"]) == 9 and not state["empty"] and state["count"] == "" and state["pressed"] == [""], state
+        assert page.input_value("#faq-q") == ""
+        word = page.evaluate(
+            "() => document.querySelector('#faq_diplomas .faq-item__question').textContent.trim().split(/\\s+/)"
+            ".sort((a, b) => b.length - a.length)[0]"
+        )
+        page.fill("#faq-q", word)
+        state = page.evaluate(LIST)
+        assert "#faq_diplomas" in state["shown"] and 0 < len(state["shown"]) < 9 and state["count"], (word, state)
+        page.locator("#faq-q").press("Escape")
+        assert len(page.evaluate(LIST)["shown"]) == 9 and page.input_value("#faq-q") == ""
     finally:
         context.close()
+
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_below_64rem_the_faq_questions_are_exclusive_disclosures(browser, site, lang):
+    """FINAL MICRO-PASS §6 B1 (V5.20; the explorer's phone disclosures became the list's rows — the same invariant, now at
+    every width): the questions are native disclosures of one exclusive group — closed at load, Enter and Space open and
+    close them from the keyboard, one answer open at a time — and the summary holds the question's words."""
     context = browser.new_context(viewport={"width": 390, "height": 844})
     try:
         page = context.new_page()
         page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
-        page.wait_for_selector(".faq-esploratore .indice[data-mode='disclosure']")
-        state = page.evaluate(EXPLORER)
-        assert state["role"] == "list" and state["selected"] == [], state
-        assert state["buttons"] == ["false"] * 9 and state["shown"] == [], state
-        buttons = page.locator(".faq-esploratore .indice__apri")
-        buttons.nth(0).focus()
+        page.wait_for_selector("section#questions.cerca-viva")
+        state = page.evaluate(LIST)
+        assert state["open"] == [] and len(state["shown"]) == 9, state
+        summaries = page.locator("section#questions details.faq-item > summary")
+        summaries.nth(0).focus()
         page.keyboard.press("Enter")
-        state = page.evaluate(EXPLORER)
-        assert state["buttons"][0] == "true" and state["shown"] == ["#faq_visas"], state
-        buttons.nth(1).focus()
+        assert page.evaluate(LIST)["open"] == ["#faq_visas"]
+        summaries.nth(1).focus()
         page.keyboard.press("Space")
-        state = page.evaluate(EXPLORER)
-        assert state["buttons"][:2] == ["false", "true"] and state["shown"] == ["#faq_recruitment_agency"], state
+        assert page.evaluate(LIST)["open"] == ["#faq_recruitment_agency"], "one answer open at a time"
         page.keyboard.press("Space")
-        assert page.evaluate(EXPLORER)["shown"] == []
-        # the button holds the question's words: the heading stays the panel's name
-        assert buttons.nth(0).inner_text().strip() == page.locator("#faq_visas-title").inner_text().strip()
+        assert page.evaluate(LIST)["open"] == []
+        assert summaries.nth(0).inner_text().strip() == page.locator("#faq_visas-title").inner_text().strip()
     finally:
         context.close()
+
 
 
 # ---- the Forum's ring (§3.16 FO2b) ------------------------------------------------------------------------------------
@@ -328,6 +331,9 @@ def test_the_forum_ring_turns_round_its_hub_and_mirrors_in_arabic(browser, site)
 # ---- the glossary's rail (§3.14 G1) -----------------------------------------------------------------------------------
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_letter_rail_stands_beside_the_cards_and_a_letter_lands_under_the_letterhead(browser, site, lang):
+    """FINAL MICRO-PASS §6 B2 (V5.20; was «the rail stands beside the cards, at the reading edge»): the alphabet is a quiet
+    row ABOVE the register, its width — sticky under the letterhead, in the screen, at the same place while the register
+    scrolls; a letter followed lands under the letterhead and the row, and is the one current."""
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     try:
         page = context.new_page()
@@ -335,10 +341,11 @@ def test_the_letter_rail_stands_beside_the_cards_and_a_letter_lands_under_the_le
         geometry = """() => { const rail = document.querySelector('nav.az-index').getBoundingClientRect();
             const cards = document.querySelector('.lessico__registro').getBoundingClientRect();
             return {top: rail.top, bottom: rail.bottom, left: rail.left, right: rail.right,
-                    cardsLeft: cards.left, cardsRight: cards.right,
+                    cardsTop: cards.top, cardsLeft: cards.left, cardsRight: cards.right,
                     header: document.querySelector('.site-header').getBoundingClientRect().bottom}; }"""
-        # two places inside the rail's sticky range — the register is one grid of cards since round 1 (QA_ROUND1 M7),
-        # a viewport and a half tall: from its top + 300 to its top + 700 (it was a column of eight letter groups)
+        rest = page.evaluate(geometry)
+        assert rest["bottom"] <= rest["cardsTop"] + 0.5, ("above the register", rest)
+        assert abs(rest["left"] - rest["cardsLeft"]) <= 1 and abs(rest["right"] - rest["cardsRight"]) <= 1, rest
         start = page.evaluate(
             "() => Math.round(document.querySelector('.lessico__registro').getBoundingClientRect().top + scrollY)"
         )
@@ -348,20 +355,14 @@ def test_the_letter_rail_stands_beside_the_cards_and_a_letter_lands_under_the_le
         page.evaluate("(y) => window.scrollTo(0, y)", start + 700)
         page.wait_for_timeout(300)
         second = page.evaluate(geometry)
-        # sticky: under the letterhead, in the screen, at the same place while the register scrolls
         assert first["top"] >= first["header"] - 1 and first["bottom"] <= 900, first
         assert abs(second["top"] - first["top"]) <= 1, (first, second)
-        # beside the cards, at the reading edge (the right of an Arabic page)
-        if lang == "fr":
-            assert first["right"] <= first["cardsLeft"], first
-        else:
-            assert first["left"] >= first["cardsRight"], first
         link = page.locator(".az-index__link").nth(3)
         target = link.get_attribute("href")
         link.click()
         page.wait_for_timeout(700)
         landed = page.evaluate("(id) => document.getElementById(id).getBoundingClientRect().top", target[1:])
-        assert landed >= first["header"] - 1 and landed < 450, (landed, first)
+        assert landed >= first["bottom"] - 1 and landed < 450, (landed, first)
         page.wait_for_function(
             "(href) => document.querySelector(`.az-index__link[href='${href}']`).getAttribute('aria-current') === 'location'",
             arg=target,
@@ -370,6 +371,7 @@ def test_the_letter_rail_stands_beside_the_cards_and_a_letter_lands_under_the_le
         assert page.locator(".az-index__link[aria-current='location']").count() == 1
     finally:
         context.close()
+
 
 
 # ---- every page of the family, eight widths, two directions -----------------------------------------------------------
@@ -440,12 +442,18 @@ def test_without_script_every_entry_is_in_the_page_in_reading_order(browser, sit
                .map((p) => '#' + p.id)"""
         )
         assert shown == ["#rete-hub", *ACTORS]
+        # FINAL MICRO-PASS §6 B1 (V5.20; the explorer's nine panels stood open without script): the nine rows stand in the
+        # register's order, every answer in the page and opened by the browser alone, the search's submit drawn
         page.goto(f"{site}/fr/faq/", wait_until="load")
-        answers = page.evaluate(
-            """() => [...document.querySelectorAll('.faq-esploratore .indice__corpo')]
-                 .filter((b) => b.getBoundingClientRect().height > 0).length"""
-        )
-        assert answers == 9
+        rows = page.evaluate("() => [...document.querySelectorAll('.faq-lista > details.faq-item')].map((d) => d.id)")
+        assert len(rows) == 9 and rows[0] == "faq_visas" and rows[-1] == "faq_guaranteed_visa_offer", rows
+        assert page.locator(".faq-lista .faq-risposta").count() == 9
+        page.locator("#faq_diplomas > summary").click()
+        # the disclosure's content turns visible on its transition's first frame (v5/motion.css): read it then, not before
+        answer = page.locator("#faq_diplomas .faq-risposta")
+        answer.wait_for(state="visible")
+        assert page.evaluate("() => document.getElementById('faq_diplomas').open") and answer.bounding_box()["height"] > 0
+        assert page.locator(".faq__search .cerca__invio").is_visible()
         page.goto(f"{site}/fr/le-projet/", wait_until="load")
         steps = page.evaluate(
             """() => [...document.querySelectorAll('.racconto__passo')].map((s) => {
@@ -488,7 +496,7 @@ def test_a_faq_permalink_followed_from_another_page_lands_on_its_question(browse
                 # each permalink from another page: a fresh document (from /faq/#a, /faq/#b is the same document)
                 page.goto(f"{site}/{lang}/attention-aux-fraudes/", wait_until="networkidle")
                 page.goto(f"{site}/{lang}/faq/#{key}", wait_until="networkidle")
-                page.wait_for_selector(".faq-esploratore .indice[data-mode]")
+                page.wait_for_selector("section#questions.cerca-viva")
                 _settled(page)
                 box = page.evaluate(
                     """(key) => { const h = document.getElementById(key + '-title').getBoundingClientRect();
@@ -498,13 +506,9 @@ def test_a_faq_permalink_followed_from_another_page_lands_on_its_question(browse
                 )
                 where = (lang, width, key, box)
                 assert box["top"] >= box["header"] - 1 and box["bottom"] <= height, where
-                if width >= 1024:
-                    state = page.evaluate(EXPLORER)
-                    assert state["selected"] == [f"#{key}"] and state["shown"] == [f"#{key}"], (where, state)
-                else:
-                    state = page.evaluate(EXPLORER)
-                    assert state["shown"] == [f"#{key}"], (where, state)
-                    assert state["buttons"].count("true") == 1, (where, state)
+                # FINAL MICRO-PASS §6 B1 (V5.20): at every width the named row is the one open (it was the explorer's
+                # selected panel from 64 rem, its one expanded button below)
+                assert page.evaluate(LIST)["open"] == [f"#{key}"], where
         finally:
             context.close()
 
@@ -640,59 +644,47 @@ def test_a_faq_permalink_arrives_without_moving_the_page(browser, site, lang):
                 page.goto(f"{site}/{lang}/glossaire/", wait_until="networkidle")
                 page.evaluate("(href) => { location.href = href; }", f"/{lang}/faq/#{key}")
                 page.wait_for_url(f"**/faq/#{key}")
-                page.wait_for_selector(".faq-esploratore .indice[data-mode]")
+                page.wait_for_selector("section#questions.cerca-viva")
                 page.wait_for_load_state("networkidle")
                 page.wait_for_timeout(600)
                 cls = page.evaluate("() => window.__cls")
                 assert cls <= 0.1, (lang, width, key, cls)  # the gate (§5.3); 0.0001 measured at this round
-                if width >= 1024:
-                    state = page.evaluate(EXPLORER)
-                    assert state["selected"] == [f"#{key}"] and state["shown"] == [f"#{key}"], (lang, width, key, state)
+                # FINAL MICRO-PASS §6 B1 (V5.20): the named row is the one open, at every width
+                assert page.evaluate(LIST)["open"] == [f"#{key}"], (lang, width, key)
         finally:
             context.close()
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_glossary_letters_are_drawn_and_light_as_they_cross_the_reading_line(browser, site, lang):
-    """QA_ROUND2 M6 (§8.3 type-led imagery, §2.0 scrubbed progress): a letter of the register is drawn — outlined, as
-    the term page's initial — and takes the accent while it crosses the reading line (a row's letters together: one
-    stop), the rest grey; in view at load, the register's rules draw in the head's sequence (a STAGGER the section
-    runtime never played on a section in view)."""
+    """FINAL MICRO-PASS §6 B2 (V5.20; this decision replaces QA_ROUND2 M6's outlined letters scrubbed by the scroll and the
+    register's rules drawn at load — «no giant outlined letters», «existing reveal only»): a letter of the register is a
+    modest heading, solid in the accent ink, the same at rest and on the reading line; no rule of the register is drawn
+    — every row stands on its hairline, its term and its definition whole (the section's own reveal is the one motion)."""
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     try:
         page = context.new_page()
-        page.goto(f"{site}/{lang}/glossaire/", wait_until="commit")
-        page.wait_for_selector(".lessico__regola", state="attached")
-        page.wait_for_timeout(250)
-        drawing = page.evaluate(
-            "() => [...document.querySelectorAll('.lessico__regola')].filter((r) => r.getAnimations().length).length"
-        )
-        assert drawing >= 3, "the register's rules draw at load"
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(1500)
+        page.goto(f"{site}/{lang}/glossaire/", wait_until="networkidle")
+        page.wait_for_timeout(600)
+        assert page.locator(".lessico__regola").count() == 0
         letters = """() => [...document.querySelectorAll('.lessico__lettera')].map((h) => { const cs = getComputedStyle(h);
-            return {l: h.textContent, top: h.getBoundingClientRect().top, color: cs.color, fill: cs.webkitTextFillColor,
-                    stroke: parseFloat(cs.webkitTextStrokeWidth)}; })"""
+            return {l: h.textContent, color: cs.color, fill: cs.webkitTextFillColor, stroke: parseFloat(cs.webkitTextStrokeWidth),
+                    size: parseFloat(cs.fontSize)}; })"""
         rest = page.evaluate(letters)
-        assert all(x["fill"] == "rgba(0, 0, 0, 0)" and x["stroke"] > 0 for x in rest), rest
-        accent = page.evaluate(
-            "() => { const p = document.createElement('i'); p.style.color = 'var(--accent-mark)'; document.body.append(p);"
-            " const c = getComputedStyle(p).color; p.remove(); return c; }"
-        )
-        # bring the register's second row to the reading line (a third of the screen): its letters light, together
-        y = page.evaluate("() => document.getElementById('lettre-L').getBoundingClientRect().top + scrollY")
+        assert len(rest) >= 5 and all(x["fill"] == x["color"] and x["stroke"] == 0 and x["size"] <= 22 for x in rest), rest
+        y = page.evaluate("() => document.getElementById('lettre-N').getBoundingClientRect().top + scrollY")
         page.evaluate("(y) => window.scrollTo(0, y - 900 * 0.325)", y)
         page.wait_for_timeout(400)
-        lit = {x["l"]: x["color"] for x in page.evaluate(letters)}
-        rgb = {name: [int(v) for v in color[color.index("(") + 1 : -1].split(",")[:3]] for name, color in lit.items()}
-        target = [int(v) for v in accent[accent.index("(") + 1 : -1].split(",")[:3]]
-        gap = {name: max(abs(a - b) for a, b in zip(value, target, strict=True)) for name, value in rgb.items()}
-        # scrubbed by the scroll: at the line the stroke is the accent (within a few units of the keyframe's), the rows
-        # off the line their grey
-        assert gap["L"] <= 8 and gap["N"] <= 8, (lit, accent)
-        assert gap["C"] > 24 and gap["V"] > 24, (lit, accent)
+        assert page.evaluate(letters) == rest, "the scroll changes no letter"
+        rows = page.evaluate(
+            """() => [...document.querySelectorAll('.lessico__registro .lessico__carta')].map((c) =>
+                [c.querySelector('.lessico__termine').textContent.trim().length > 0,
+                 c.querySelector('.lessico__definizione').getBoundingClientRect().height > 0])"""
+        )
+        assert len(rows) == 10 and all(r[0] and r[1] for r in rows), rows
     finally:
         context.close()
+
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
@@ -738,36 +730,27 @@ def test_the_fraud_page_answers_its_question_and_its_address_answers_the_hand(br
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_vivre_s_seal_draws_in_the_head_and_its_door_answers_the_band_s_action(browser, site, lang):
-    """QA_ROUND2 M8 (§4.9 n° 13, §4.7): the head's T1 «ile-vivere» draws in the head's own sequence — the roofline and the
-    door, then the sprout — and its door lights when the band's action, the way down to «Pour s'installer», is hovered
-    or focused; under reduced motion it stands drawn."""
+    """QA_ROUND2 M8 (§4.9 n° 13, §4.7) RESTATED under V5.20 for FINAL MICRO-PASS §5 A3 (the heads' T1 seals left, the
+    living head's «ile-vivere» with them): the head draws no seal — nothing to stroke, no door to light — under either
+    motion, and the band's action stands, the way down to «Pour s'installer», under the hand and from the keyboard."""
     for motion in ("no-preference", "reduce"):
         context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion=motion)
         try:
             page = context.new_page()
-            page.goto(f"{site}/{lang}/vivre-en-italie/", wait_until="commit")
-            page.wait_for_selector(".vivere-testa__sigillo .sg-a0", state="attached")
-            page.wait_for_timeout(200)
-            drawing = page.evaluate(
-                "() => [...document.querySelectorAll('.vivere-testa__sigillo :is(.sg-a, .sg-m)')]"
-                ".filter((p) => p.getAnimations().some((a) => a.animationName === 'sez-stroke')).length"
+            page.goto(f"{site}/{lang}/vivre-en-italie/", wait_until="networkidle")
+            head = page.evaluate(
+                "() => { const h = document.querySelector('.vivere-testa__header');"
+                " return [h.querySelectorAll('.sigillo, .vivere-testa__sigillo, [data-mark]').length,"
+                " document.getAnimations().filter((a) => a.animationName === 'sez-stroke').length,"
+                " h.querySelector('h1').textContent.trim().length]; }"
             )
-            assert (drawing >= 2) if motion == "no-preference" else drawing == 0, (motion, drawing)
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(2000)
-            page.mouse.move(2, 2)
-            door = (
-                "() => parseFloat(getComputedStyle(document.querySelector('.vivere-testa__sigillo .sg-t')).fillOpacity)"
-            )
-            assert page.evaluate(door) < 0.2
+            assert head[0] == 0 and head[1] == 0 and head[2] > 0, (motion, head)
             page.hover(".vivere-testa__azione")
-            page.wait_for_timeout(700)
-            assert page.evaluate(door) > 0.6
-            page.mouse.move(2, 2)
-            page.wait_for_timeout(700)
+            assert page.evaluate("document.querySelector('.vivere-testa__azione').hash") == "#living-settle-title"
             page.focus(".vivere-testa__azione")
-            page.wait_for_timeout(700)
-            assert page.evaluate(door) > 0.6, "focus equals hover"
+            assert page.evaluate("document.activeElement.matches('.vivere-testa__azione')"), (
+                "the action takes the focus"
+            )
         finally:
             context.close()
 
@@ -851,37 +834,37 @@ def test_vivre_s_frame_meets_its_band(browser, site, lang):
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_a_glossary_row_holds_its_cards_parts_on_shared_lines(browser, site, lang):
-    """QA_ROUND3 m2: a row took its tallest card's height and «Où le rencontrer» stood at each card's foot, so a short card
-    held up to 154 px of blank between its definition and its chips (1440, «Dichiarazione di valore»). The cards' parts
-    stand on their row's three lines (a subgrid: the term, the definition, «Où le rencontrer»): in a row the definitions
-    start together and the rules align, and the room above a card's rule is only what the row's longest definition asks
-    (its 12 px gap aside) — what a card has to spare beyond it is at its foot."""
+    """FINAL MICRO-PASS §6 B2 (V5.20; was QA_ROUND3 m2's subgrid of cards side by side): the register is ONE column of
+    definition rows on hairlines, so no row holds another's blank — every term starts on one line and every definition
+    on another (from 64 rem the term holds its own column, the definition the second, as a dictionary's page — the
+    column's first line the term's, a French fallback's identification caption heading its definition); the rows follow
+    one another without overlap; below 64 rem the definition stands under its term."""
     for width, height in ((1440, 900), (1280, 800), (1024, 768), (768, 1024)):
         context = browser.new_context(viewport={"width": width, "height": height}, reduced_motion="reduce")
         try:
             page = context.new_page()
             page.goto(f"{site}/{lang}/glossaire/", wait_until="networkidle")
             rows = page.evaluate(
-                """() => { const rows = new Map();
-                    for (const card of document.querySelectorAll('.lessico__registro .lessico__carta')) {
-                      const top = Math.round(card.getBoundingClientRect().top), dove = card.querySelector('.lessico__dove');
-                      const d = card.querySelector('.lessico__definizione').getBoundingClientRect();
-                      if (!rows.has(top)) rows.set(top, []);
-                      rows.get(top).push({id: card.id, defTop: d.top, defH: d.height,
-                                          rule: dove ? dove.getBoundingClientRect().top : null,
-                                          blank: dove ? dove.getBoundingClientRect().top - d.bottom : null}); }
-                    return [...rows.values()]; }"""
+                """() => [...document.querySelectorAll('.lessico__registro .lessico__carta')].map((card) => {
+                    const box = card.getBoundingClientRect(), t = card.querySelector('.lessico__termine').getBoundingClientRect();
+                    const d = card.querySelector(':scope > .lessico__fonte, :scope > .lessico__definizione').getBoundingClientRect();
+                    return {id: card.id, top: box.top, bottom: box.bottom, termStart: document.dir === 'rtl' ? t.right : t.left,
+                            defStart: document.dir === 'rtl' ? d.right : d.left, termTop: t.top, defTop: d.top, termBottom: t.bottom,
+                            rule: getComputedStyle(card).borderBlockEndWidth}; })"""
             )
-            assert sum(len(row) for row in rows) == 10 and max(len(row) for row in rows) >= 2, (lang, width, rows)
-            for row in rows:
-                ruled = [card for card in row if card["rule"] is not None]
-                assert max(c["defTop"] for c in row) - min(c["defTop"] for c in row) <= 1, (lang, width, row)
-                assert max(c["rule"] for c in ruled) - min(c["rule"] for c in ruled) <= 1, (lang, width, row)
-                longest = max(c["defH"] for c in row)
-                for card in ruled:
-                    assert card["blank"] <= longest - card["defH"] + 12 + 1, (lang, width, card, longest)
+            assert len(rows) == 10, (lang, width, rows)
+            for a, b in zip(rows, rows[1:]):
+                assert b["top"] >= a["bottom"] - 0.5, (lang, width, "one row under another", a, b)
+            assert max(r["termStart"] for r in rows) - min(r["termStart"] for r in rows) <= 1, (lang, width, rows)
+            assert max(r["defStart"] for r in rows) - min(r["defStart"] for r in rows) <= 1, (lang, width, rows)
+            if width >= 1024:
+                assert all(abs(r["defTop"] - r["termTop"]) <= 8 and r["defStart"] != r["termStart"] for r in rows), (lang, width, rows)
+            else:
+                assert all(r["defTop"] >= r["termBottom"] - 0.5 for r in rows), (lang, width, rows)
+            assert sum(r["rule"] == "1px" for r in rows) >= 9, (lang, width, "the rows on hairlines", rows)
         finally:
             context.close()
+
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
@@ -943,17 +926,18 @@ def test_the_register_s_cards_stay_inside_a_narrow_phone(browser, site, lang):
                       const box = card.getBoundingClientRect(), letter = card.querySelector('.lessico__lettera');
                       const words = document.createRange(); words.selectNodeContents(card.querySelector('.lessico__termine'));
                       const runs = [...words.getClientRects()];
-                      let room = null;
-                      if (letter) { const l = document.createRange(); l.selectNodeContents(letter); const lb = l.getBoundingClientRect();
-                        room = rtl ? Math.min(...runs.map((r) => r.left)) - lb.right : lb.left - Math.max(...runs.map((r) => r.right)); }
+                      let above = true;
+                      if (letter) { const lb = letter.getBoundingClientRect(); above = lb.bottom <= Math.min(...runs.map((r) => r.top)) + 0.5; }
                       const text = card.querySelector('.lessico__termine a').firstChild, word = document.createRange();
                       word.setStart(text, 0); word.setEnd(text, text.data.split(' ')[0].length);
-                      cards.push({id: card.id, inside: box.left >= -0.5 && box.right <= cw + 0.5, room,
+                      cards.push({id: card.id, inside: box.left >= -0.5 && box.right <= cw + 0.5, above,
                                   whole: new Set([...word.getClientRects()].map((r) => Math.round(r.top))).size === 1}); }
                     return cards; }"""
             )
             assert all(card["inside"] for card in out), (lang, width, out)
-            assert all(card["room"] is None or card["room"] >= 0 for card in out), (lang, width, out)
+            # FINAL MICRO-PASS §6 B2 (V5.20; the outlined letter stood beside the term, «room» its distance): the letter is
+            # a heading above its first term — no term runs under it (stronger: never beside it either)
+            assert all(card["above"] for card in out), (lang, width, out)
             if width >= 360:
                 word = next(card for card in out if card["id"] == "ricongiungimento_familiare")
                 assert word["whole"], (lang, width, "«Ricongiungimento» whole on its line", word)
@@ -980,13 +964,19 @@ def test_a_card_under_the_hand_keeps_its_row_and_the_rail_lights_every_letter(br
                 page.evaluate("() => [...document.querySelectorAll('.lessico .az-index__link')].map((a) => a.hash)")
             )
             assert len(letters) >= 5, (lang, width, letters)
+            # FINAL MICRO-PASS §6 B2 (V5.20; the cards stood side by side, «its row» the cards' row): a definition row
+            # under the hand stays where it stands — it lifts, grows and shifts nothing.
+            # RESTATED under V5.20 for the FINAL MICRO-PASS's review (10 Nov 2026, defect 3: the search seated 32 px
+            # under the lead moved the register down; at 1440 in Arabic the first card's foot now enters the page's 8 px
+            # end scroll-padding, and Playwright's hover scrolls the page 2 px to bring it in — the card itself never
+            # moves, measured with the pointer moved by hand; DL54-210): a row's place is read in the document, its top
+            # plus the page's scroll — a card that lifts, grows or shifts still moves it, a scroll into view does not
+            where = "() => [...document.querySelectorAll('.lessico__registro .lessico__carta')].slice(0, 2).map((c) => c.getBoundingClientRect().top + scrollY)"
+            before = page.evaluate(where)
             page.locator(".lessico__registro .lessico__carta").first.hover()
             page.wait_for_timeout(400)
-            tops = page.evaluate(
-                """() => [...document.querySelectorAll('.lessico__registro .lessico__carta')].slice(0, 2)
-                    .map((card) => card.getBoundingClientRect().top)"""
-            )
-            assert abs(tops[0] - tops[1]) < 0.5, (lang, width, "the card under the hand stays on its row", tops)
+            tops = page.evaluate(where)
+            assert all(abs(a - b) < 0.5 for a, b in zip(before, tops)), (lang, width, "the row under the hand stays", before, tops)
             page.evaluate("window.scrollTo(0, 0)")
             page.wait_for_timeout(300)
             page.mouse.move(int(width * (0.22 if lang == "ar" else 0.78)), height // 2)
@@ -1042,12 +1032,14 @@ def test_a_v2_disclosure_s_rows_never_wait_for_the_legacy_rise(browser, site, la
     motion): AGAMI's question and the term page's related terms are rows of the system's accordion, which
     static/js/src/rise.js still holds below the fold (`data-rise`, until S-close removes the legacy rise) — they stood at
     opacity 0, 18 px low, until they entered. In these V2 sections a row the rise holds stands at rest: opacity 1, in its
-    place, before it enters and after."""
+    place, before it enters and after. FINAL MICRO-PASS §6 B1: the FAQ's questions became the same system's rows, and
+    stand at rest too (a permalink's row held 18 px low landed behind the letterhead)."""
     rows = """(sel) => [...document.querySelectorAll(sel)].map((row) => { const cs = getComputedStyle(row);
         return {rise: row.dataset.rise === undefined ? null : row.dataset.rise, opacity: cs.opacity, translate: cs.translate}; })"""
     for path, sel in (
         ("agami/", ".agami-identita .accordion > details"),
         ("glossaire/nulla_osta/", ".scheda .accordion > details"),
+        ("faq/", ".faq-lista > details"),
     ):
         for width, height in ((1440, 900), (390, 844)):
             context = browser.new_context(viewport={"width": width, "height": height})

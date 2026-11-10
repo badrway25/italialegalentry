@@ -154,10 +154,11 @@ def test_the_network_closes_on_the_approdo(page, seeded):
     assert forum is not None and forum.select_one("svg") is None  # Q4: the Forum's tile is typographic
     # round 1 (QA_ROUND1 m5): the night tile carries the Forum's own prescribed subtitle, whole — never an empty box
     assert forum.select_one("p.approdo__riga").get_text() == locked_content.get("p2.forum.header.subtitle", "fr")[0]
-    assert all(
-        tile.select_one(".sez-tile, .sez-disc")
-        for tile in band.select(".approdo__tessera:not(.approdo__tessera--forum)")
-    )
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the tiles' glyphs left — «l'approdo» is a divided link list, 21st.dev
+    # 28595): no row draws a glyph, a tile or a plate, and every row still says its title as its link
+    rows = band.select(".approdo__tessera")
+    assert len(rows) == 2 and all(row.select_one("svg, .sez-tile, .sez-disc") is None for row in rows)
+    assert all("sez-plate" not in row["class"] and row.select_one("a.approdo__link").get_text().strip() for row in rows)
 
 
 # ---- /contact/ (§3.12) -----------------------------------------------------------------------------------------------
@@ -280,13 +281,17 @@ def test_the_fraud_page_reports_and_informs_in_one_split(page, seeded, phase3_op
 
 
 # ---- /faq/ (§3.13) ---------------------------------------------------------------------------------------------------
-def test_the_faq_is_an_explorer_whose_panels_are_the_permalinks(page, seeded, phase3_open):
+def test_the_faq_is_one_list_whose_rows_are_the_permalinks(page, seeded, phase3_open):
+    """FINAL MICRO-PASS §6 B1 (V5.20 strict rule; replaces «the FAQ is an explorer whose panels are the permalinks»):
+    the questions are one list of the system's disclosures — no explorer, no index, no seal beside the answers — and its
+    rows keep the permalinks the trust band and the fraud page link to; the fraud row keeps its ink rule and its one
+    mark."""
     _response, html = page("/fr/faq/")
     main = _main(html)
-    explorer = main.select_one('.faq-esploratore .indice.indice--explorer[data-sec-js~="indice"][data-hash]')
-    assert explorer is not None
+    rows = main.select('section#questions[data-cerca="faq-q"] .accordion.faq-lista > details.accordion__item.faq-item')
+    assert rows and not main.select('.faq-esploratore, .indice, [data-sec-js~="indice"], .indice__tessera')
     # the trust band's four links and the fraud page's land on their question
-    ids = [p["id"] for p in explorer.select("section.indice__pannello")]
+    ids = [row["id"] for row in rows]
     for key in (
         "faq_visas",
         "faq_recruitment_agency",
@@ -295,11 +300,10 @@ def test_the_faq_is_an_explorer_whose_panels_are_the_permalinks(page, seeded, ph
         "faq_guaranteed_visa_offer",
     ):
         assert key in ids, key
-    fraud = explorer.select_one('a.indice__voce[href="#faq_guaranteed_visa_offer"]')
-    assert "indice__voce--marcata" in fraud["class"] and fraud.select_one("use[href*='ile-scudo']")
-    # the answer plate's one concept is its seal (no item tile beside it)
-    assert explorer.select_one(".indice__palco .sigillo[data-mark='ile-domande']") is not None
-    assert explorer.select(".indice__tessera") == []
+    fraud = main.select_one("details.faq-item#faq_guaranteed_visa_offer")
+    assert "faq-item--marcata" in fraud["class"] and fraud.select_one("summary use[href*='ile-scudo']")
+    # no seal and no item tile beside the answers: the answer is the row's own words
+    assert main.select(".sigillo[data-mark='ile-domande'], .faq-item__glifo, .faq-lista .sez-tile") == []
     # the foot «il rimando»
     tiles = [a["href"] for a in main.select(".faq-rimando ul.mosaico--rimando a")]
     assert tiles == ["/fr/glossaire/", "/fr/attention-aux-fraudes/", "/fr/contact/"]
@@ -352,7 +356,10 @@ def test_the_term_page_takes_its_frontispiece_and_its_plate(page, seeded, phase3
     assert '<link rel="stylesheet" href="/static/css/dist/pages/css/fronte.css">' in html.split("</head>", 1)[0]
     main = _main(html)
     head = main.select_one('header.ingresso[data-compact][data-fronte="learning"]')
-    assert head is not None and head.select_one(".sigillo[data-mark='ile-lessico']")
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the head folios' seals left — `ile-lessico` with them): the folio is
+    # typographic and still says its label
+    assert head is not None and head.select_one(".sigillo, [data-mark]") is None
+    assert head.select_one("p.ingresso__label").get_text(strip=True)
     # round 2 (QA_ROUND2 M5; strict rule V5.20 — the h1 carried lang="it" and stood as a left-to-right block 592 px
     # short of the Arabic reading edge): the h1 takes the page's direction and holds the term as a run of its language
     h1 = head.find("h1")
@@ -364,7 +371,9 @@ def test_the_term_page_takes_its_frontispiece_and_its_plate(page, seeded, phase3
     plate = main.select_one(".scheda__lastra.sez-plate")
     assert plate.select_one("p.glossary-term__definition") is not None
     assert plate.select_one("p.glossary-term__note") is not None  # «Définition à caractère informatif.»: always shown
-    assert main.select_one(".scheda__iniziale")["aria-hidden"] == "true"
+    # FINAL MICRO-PASS §6 B2 (V5.20; was «the outlined initial behind the plate is aria-hidden»): the 288 px initial
+    # left — the term is named once, by the h1; the plate and its rows below are unchanged
+    assert main.select_one(".scheda__iniziale") is None and main.get_text().count(h1.get_text()) >= 1
     assert main.select_one('.scheda__legami a.lessico__chip[href="/' + lang + '/parcours/salaried_work/"]') is not None
     # round 1 (QA_ROUND1 M7; §1 rule 7 «definitions behind glossary chips», §2 L): the related terms' definitions are
     # disclosed in place — native exclusive disclosures, closed, each definition whole in the page and its term's link;
@@ -386,12 +395,11 @@ def test_living_opens_on_its_panorama_and_closes_on_what_exists(page, seeded, ph
     _response, html = page(f"/{lang}/vivre-en-italie/")
     main = _main(html)
     head = main.select_one('.fronte-wrap[data-fronte="territory"]')
-    assert head.select_one(".sigillo[data-mark='ile-vivere']") and len(main.find_all("h1")) == 1
-    # round 2 (QA_ROUND2 M8): the head band's action — the way down to «Pour s'installer» — in the seal's scope, so its
-    # hover and focus light the seal's door (the seal system's data-azione)
-    scope = head.select_one("[data-sigillo-scope]")
-    assert scope.select_one(".sigillo[data-mark='ile-vivere']") is not None
-    assert scope.select_one('a.vivere-testa__azione[data-azione][href="#living-settle-title"]') is not None
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the head's `ile-vivere` seal in its niche left, and its scope with
+    # it): the head is the prescribed title and its way down — no seal, no drawing —, the action still there
+    assert head.select_one(".sigillo, [data-mark]") is None and len(main.find_all("h1")) == 1
+    assert head.select_one("[data-sigillo-scope]") is None
+    assert head.select_one('a.vivere-testa__azione[data-azione][href="#living-settle-title"]') is not None
     assert main.select_one("#living-settle-title") is not None
     frame = main.select_one(".vivere-panorama__quadro[data-parallax] figure[data-slot='living.street']")
     assert frame is not None and not frame.has_attr("data-reveal"), "the LCP is never masked"
@@ -444,7 +452,9 @@ def test_living_opens_on_its_panorama_and_closes_on_what_exists(page, seeded, ph
 #: letter, which the material on the shared sheet would have passed; every other institutional page is
 #: lighter by Le projet's compositions
 ROUTE_SHEETS = {
-    "apps/cms/static/cms/faq.css": (["../css/v5/_sec-indice.css", "_faq-v2.css"], ["faq/index.html"]),
+    # FINAL MICRO-PASS §6 B1 (V5.20; the same invariant on what the sheet now holds): the explorer's pattern partial
+    # (v5/_sec-indice.css) left the FAQ's route sheet with the explorer — the list is the system's accordion (main.css)
+    "apps/cms/static/cms/faq.css": (["_faq-v2.css"], ["faq/index.html"]),
     "apps/pages/static/pages/css/projet.css": (["../../css/v5/_materia.css", "_projet.css"], ["pages/project.html"]),
     "apps/cms/static/cms/lessico.css": (
         ["_lessico-v2.css"],

@@ -155,10 +155,20 @@ def test_an_empty_state_draws_its_space_or_the_neutral_mark_with_the_one_hand(br
 
 
 @pytest.mark.parametrize("scheme", ["light", "dark"])
-def test_under_forced_colours_every_icon_is_the_ink_of_its_text(browser, site, scheme):
+def test_under_forced_colours_every_icon_is_the_ink_of_its_text(browser, site, person_user, scheme):
     """A browser gives <svg> ``forced-color-adjust: preserve-parent-color``: an icon whose component colours it
     kept its authored hex under forced colours (the home's navy arrows at 1.4 : 1 on a dark canvas, the footer's
-    night ink at 1.8 : 1 on a light one). The .icon rule inherits again there, and drops any ground of its own."""
+    night ink at 1.8 : 1 on a light one). The .icon rule inherits again there, and drops any ground of its own.
+    RESTATED under V5.20 (the strict test-update rule) for the FINAL MICRO-PASS §6 B1–B2 (lane B, DL54-208: on the
+    reading list a search's empty state keeps the component's semantic glyph bare — its tile, its light and its
+    doorway arch left; DL54-210): the FAQ's empty search draws no disc any more, so it is held for that absence and
+    for what it still says, and the disc the forced check must have to hold is read where an empty state still draws
+    its tile — the profile of an account with no organisation (the neutral mark): in plain colours its tile paints
+    a ground, under forced colours its glyph is the ink of its text on no ground of its own."""
+    tiles_js = (
+        "() => [...document.querySelectorAll('.empty-state .glyph-tile')].map((t) => getComputedStyle(t).backgroundImage !== 'none'"
+        " || !['rgba(0, 0, 0, 0)', 'transparent'].includes(getComputedStyle(t).backgroundColor))"
+    )
     plain = browser.new_context(viewport={"width": 1440, "height": 900}, device_scale_factor=1, color_scheme=scheme)
     try:
         page = plain.new_page()
@@ -172,15 +182,20 @@ def test_under_forced_colours_every_icon_is_the_ink_of_its_text(browser, site, s
         # gates close the news' own page while no article is live, so the disc is read where an empty state still
         # stands — the FAQ's search without a match.
         page.goto(site + FAQ_NO_MATCH, wait_until="networkidle")
-        # V5.15 W3 (lane B; the v515-b merge): the empty state's glyph stands in its paper seal, the glyph tile that
-        # paints the ground (v5/_glyph.css) — the disc is the tile's, the icon inside it draws on no ground of its own
-        tiles = page.evaluate(
-            "() => [...document.querySelectorAll('.empty-state .glyph-tile')].map((t) => getComputedStyle(t).backgroundImage !== 'none'"
-            " || !['rgba(0, 0, 0, 0)', 'transparent'].includes(getComputedStyle(t).backgroundColor))"
-        )
-        assert [icon for icon in page.evaluate(ICONS_JS) if icon["ground"] not in TRANSPARENT] or any(tiles), (
-            "and one that paints its own disc (the FAQ's empty search)"
-        )
+        # V5.15 W3 (lane B; the v515-b merge): the empty state's glyph stood in its paper seal, the glyph tile that
+        # painted the ground (v5/_glyph.css) — the disc was the tile's, the icon inside it drew on no ground of its own.
+        # FINAL MICRO-PASS §6 B1–B2: on the reading list the glyph stands bare — one glyph on no ground, in a tile that
+        # paints none — and the empty state still says its title
+        bare = [icon for icon in page.evaluate(ICONS_JS) if "empty-state__icon" in icon["cls"]]
+        tiles = page.evaluate(tiles_js)
+        assert len(bare) == 1 and bare[0]["ground"] in TRANSPARENT and tiles == [False], (bare, tiles)
+        assert page.locator(".faq-vuoto .empty-state__title").inner_text().strip(), "the FAQ's empty search says it"
+        # the disc the forced check holds: an account's profile with no organisation still draws its tile
+        plain.add_cookies([_session(person_user, site)])
+        page.goto(site + "/fr/compte/profil/", wait_until="networkidle")
+        assert [icon for icon in page.evaluate(ICONS_JS) if icon["ground"] not in TRANSPARENT] or any(
+            page.evaluate(tiles_js)
+        ), "and one that paints its own disc (the profile's empty state)"
     finally:
         plain.close()
     forced = browser.new_context(
@@ -200,5 +215,10 @@ def test_under_forced_colours_every_icon_is_the_ink_of_its_text(browser, site, s
         discs = [icon for icon in page.evaluate(ICONS_JS) if "empty-state__icon" in icon["cls"]]
         assert len(discs) == 1, "the FAQ's empty search is on the page"
         assert discs[0]["ground"] in TRANSPARENT and discs[0]["stroke"] == discs[0]["text"], discs[0]
+        forced.add_cookies([_session(person_user, site)])
+        page.goto(site + "/fr/compte/profil/", wait_until="networkidle")
+        marks = [icon for icon in page.evaluate(ICONS_JS) if "empty-state__icon" in icon["cls"]]
+        assert len(marks) == 1, "the profile's empty state is on the page"
+        assert marks[0]["ground"] in TRANSPARENT and marks[0]["stroke"] == marks[0]["text"], marks[0]
     finally:
         forced.close()

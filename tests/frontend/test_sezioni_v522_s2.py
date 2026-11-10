@@ -119,23 +119,31 @@ def test_the_tile_s_glyph_and_rule_read_their_tile_s_keyboard_duration():
         r'html\[data-input="key"\] \.sez-tile,\s*html\[data-input="key"\] \.sez-disc,\s*html\[data-input="key"\] \.sg-g--key \{\s*--sez-t: 0s;',
         css,
     )
+    # FINAL MICRO-PASS §2.1, §5 A3 (V5.20 strict rule: the tile's threshold rule left with its vault — its `scale`
+    # transition with it): every transition that remains still reads the keyboard's duration, and no rule draws on a
+    # tile any more
     for transition in (
         "translate var(--sez-t, var(--motion-standard))",
-        "scale var(--sez-t, var(--motion-emphasized))",
         "box-shadow var(--sez-t, var(--motion-standard))",
         "rotate var(--sez-t, var(--motion-emphasized))",
     ):
         assert transition in css, transition
+    assert "scale var(--sez-t" not in css and ".sez-tile::after" not in css
 
 
 def test_the_hemicycle_and_the_registers_carry_the_library_s_own_attributes():
     """DL54-182 item 10 b and c: the hemicycle's seats and its sentence's items pair through `data-seggio` (never Lume's
     L3 seat, reserved for the fragment containers loader.js seats); a register of named entities is marked
-    `data-registro` (never the chip's `data-register`, which only the chip partial and two legends write)."""
+    `data-registro` (never the chip's `data-register`, which only the chip partial and two legends write).
+    FINAL MICRO-PASS §6 B4 (V5.20; was «the seats and the items pair through data-seggio — twelve pairing selectors»):
+    the arc's six seats left, so nothing is paired or lit — the sentence's items keep `data-seggio` (rendered by
+    ecosystem.services.recipients_sentence, held by tests/frontend/test_pages_v522_p1.py), the arc draws no seat and no
+    glyph, the sheet carries no pairing selector, and Lume's L3 `data-seat` is still written nowhere."""
     mappa = _read(SEZIONI / "mappa.html")
-    assert 'class="emiciclo__seggio" data-seggio="{{ forloop.counter }}"' in mappa and "data-seat" not in mappa
+    arc = mappa.split('{% if layout == "arc" %}', 1)[1].split("{% else %}", 1)[0]
+    assert "emiciclo__seggio" not in arc and "svg_icon" not in arc and "sez-disc" not in arc and "data-seat" not in mappa
     emiciclo = re.sub(r"/\*.*?\*/", "", _read(V5 / "_sec-emiciclo.css"), flags=re.S)
-    assert emiciclo.count('[data-seggio="') == 12 and "data-seat" not in emiciclo
+    assert "[data-seggio" not in emiciclo and "emiciclo__seggio" not in emiciclo and "data-seat" not in emiciclo
     for name in ("approdo", "filo", "flusso", "indice", "mappa", "mosaico", "tracciato"):
         source = _read(SEZIONI / f"{name}.html")
         assert "data-registro" in source and not re.search(r"\sdata-register[\s>{]", source), name

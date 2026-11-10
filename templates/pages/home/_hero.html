@@ -121,7 +121,10 @@ is a change here (apps/pages/tests/test_browser.py holds it).
   <div class="he-lights" aria-hidden="true" data-lights><span class="he-route he-route--wall"></span><span class="he-route he-route--night"></span><span class="he-wipe he-wipe--wall" data-wipe="wall"><span class="he-wipe__bar"></span></span><span class="he-wipe he-wipe--night" data-wipe="night"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--maroc" data-corner="maroc"></span><span class="he-wipe he-wipe--spine" data-wipe="spine"><span class="he-wipe__bar"></span></span><span class="he-junction" data-junction></span><span class="he-wipe he-wipe--rail" data-wipe="rail"><span class="he-wipe__bar"></span></span><span class="he-corner he-corner--rail" data-corner="rail"></span><span class="he-wipe he-wipe--floor" data-wipe="floor"><span class="he-wipe__bar"></span></span></div>
 
   {% comment %}7 · THE DESCRIPTION — the locked body: the hero's last row, whose first line is the fold. V5.30 VARIETY §5: no line leaves it for the band below, the hero's foot fades into
-  the orientation's wash.{% endcomment %}
-  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>{% endif %}
+  the orientation's wash. FINAL MICRO-PASS §5 A1 (A, B): set in two voices — the institutional statement at a light display
+  size, then its supporting clause in the lead's voice — by a VISUAL split only: ONE <p data-locked>, its language kept, one
+  span per clause cut at the text's own separator (pages.services.hero_body_cut), so its textContent is the locked text;
+  a text the cut does not know stands whole. Adapted from 21st.dev «Split Content Section» (felipemenezes098/content-06, id 28310): its large statement over its supporting paragraph, not its media column.{% endcomment %}
+  {% if d.body %}<p class="he__body{% if d.body_is_fragment %} home-plate__fragment{% endif %}"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}{% if d.variant == "phase3" %} data-locked="p3.hero.body"{% endif %}>{% if d.body_cut %}<span class="he__enunciato">{{ d.body_cut.0 }}</span><span class="he__seguito">{{ d.body_cut.1 }}</span>{% else %}{{ d.body }}{% endif %}</p>{% endif %}
 </section>
 {% endwith %}

@@ -1,4 +1,8 @@
 {% comment %}
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B4): the layout «arc» draws no seat any more — the six icon tiles over the
+Institutions' recipients left; the locked sentence stands whole as one typographic annotation (v5/_sec-emiciclo.css),
+its phrases keeping their `data-seggio` (the pattern's pairing attribute; `nodes` is ignored by this layout). The ring
+layout below is unchanged.
 H · «LA MAPPA» — the interactive actor map, and its variant «l'emiciclo» (design V5.22, SECTION_SYSTEM_V2 §2 H; lane S):
 when actors and their relations are the content — never a decoration of a list. static/css/v5/_sec-mappa.css;
 static/js/src/sezioni/mappa.js (the ring).
@@ -10,9 +14,9 @@ the module makes them a tablist — the hub first, Escape and the hub return to 
 selected spoke draws, the highlight glides, the panel crosses in from the node's side; on entry the nodes settle from
 0.92, 60 ms apart. Still: the ring drawn, the hub caption shown, the selection instant.
 
-«l'emiciclo» (`layout="arc"`, CSS only, words once — RH-5): the actors are glyph-only seats on an assembly arc
-(aria-hidden), the locked sentence stands whole beside them with its enumerated items as spans carrying `data-seggio`
-(cut at render on its own separators; the pattern's own attribute, never Lume's L3 seat: DS 2026 §12); hovering a seat or a phrase, or the focus on the phrase's link, lights both.
+«l'emiciclo» (`layout="arc"`, CSS only, words once — RH-5): since the FINAL MICRO-PASS no seat is drawn — the locked
+sentence stands whole, its enumerated items as spans carrying `data-seggio` (cut at render on its own separators; the
+pattern's own attribute, never Lume's L3 seat: DS 2026 §12), set as one typographic annotation; nothing lights.
 
 Contract: `id` (unique prefix); `label` (the tablist's name); `hub` — {"title" (the hub tab's name), "caption" (safe: the
 hub state, e.g. the «En bref» sentence), "caption_lang", "slot" (a photograph at the hub) or "mark" (an ILE mark)};
@@ -20,7 +24,6 @@ hub state, e.g. the «En bref» sentence), "caption_lang", "slot" (a photograph 
 `layout` ("ring" | "arc"); arc: `sentence` (safe: the whole sentence, its items as <span data-seggio="1"> …),
 `sentence_lang`. The caller wraps it in its section.
 {% endcomment %}{% load pages_imagery %}{% if layout == "arc" %}<div class="emiciclo">
-  <ol class="emiciclo__seggi sez-seq" aria-hidden="true" data-verb="mask" data-registro>{% for item in nodes %}<li class="emiciclo__seggio" data-seggio="{{ forloop.counter }}"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}><span class="sez-disc" data-verb="node">{% svg_icon item.glyph "icon" %}</span></li>{% endfor %}</ol>
   <p class="emiciclo__frase"{% if sentence_lang %} lang="{{ sentence_lang }}"{% endif %}>{{ sentence }}</p>
 </div>{% else %}<div class="mappa" data-sec-js="mappa"{% if label %} data-label="{{ label }}"{% endif %}>
   <div class="mappa__anello">

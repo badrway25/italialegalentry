@@ -1,28 +1,23 @@
 {% extends "base.html" %}{% load i18n static %}
 {% comment %}
 Glossaire — termes italiens expliqués (Phase 3, gate G3). Locked terms come from the registry through
-glossary.services (cms.locked_content). A–Z index lists only letters that have terms.
+glossary.services (cms.locked_content).
 
 Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): the head at the reading
-edge with the page's search in its end seat; the letter index under it, a band that stays under the letterhead while
-the register scrolls (PX25) from 48rem; one band for the register, a group a letter — the letter at the reading edge
-as the group's head, in sight while its terms scroll, the terms beside it, each definition visible (a glossary is read,
-not unfolded); a search's answer one chapter with its count as head; the foot a quiet chapter with the links that lead
-on. No glyph in the editorial body.
+edge; one band for the register, each definition visible (a glossary is read, not unfolded); a search's answer one
+chapter with its count as head. No glyph in the editorial body. V5.24: the register on STONE, «il rimando» on PAPER
+before the night footer.
 
-Design V5.22 (SECTION_SYSTEM_V2 §3.14; lane P2) — the head with its search plate KEEP (G0); then one band:
-  G1  L, the scroll-spy rail: the letters that have terms — a band under the letterhead on a phone, a thumb index at the
-      reading edge from 64 rem (sticky, the register beside it), its indicator plate gliding to the letter being read
-      (sezioni/spia.js; aria-current on the letter in view, announced on focus only); the letters' heads left the sticky
-      side column, so the index never covers half a letter;
-  G2  E «il lessico»: the term cards (two columns, three from 80 rem) — the Italian term, the prescribed definition
-      whole, «Où le rencontrer» (the pathways that name it); STAGGER: each card's reading-edge rule draws by column.
-      Round 1 (QA_ROUND1 M7): ONE register, not a group a letter (ten terms under eight letters left a sparse column):
-      a letter's first card carries the letter, set large in its corner as its marker — the letter's heading and the
-      anchor the thumb index reaches (#lettre-X); the card answers the hand and the focus (its letter, its rule);
-  G3  E «il rimando»: the FAQ, the pathways, the fraud page.
-V5.24 (BACKGROUND_MATERIAL_V2 §3.3, §5.2; FINAL_DELIVERY_V2 §3.6; lane PUB2): the register on STONE — the white term
-cards become plates on a ground —, «il rimando» on PAPER before the night footer; the letters at 600 (0 B: attributes).
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B2) — the dictionary as a reading list, not a wall of cards. After 21st.dev
+«Searchable Question Index» (ibrandify/searchable-question-index, id 37558), adapted as the FAQ's
+(templates/faq/index.html says how; static/js/src/cerca.js): the search under the lead — the field with its glyph, the clear button, the quiet
+submit of the path without script, the help line — filters the register as one types, with its live count and its
+empty state. The alphabet is one quiet row that stays under the letterhead: the whole alphabet, the letters that have
+terms links (the current one marked by sezioni/spia.js: aria-current), the others dimmed and out of the accessibility
+tree. Each term is a definition row on the register's hairlines — the Italian term, the prescribed definition whole,
+«Où le rencontrer» — under a modest letter heading (a letter's first row carries it: the anchor #lettre-X). The
+V5.22 thumb rail, the term cards' plates, their outlined letters and their reading-edge rule left. Without script
+the register is listed whole and the search is the server's (?q=).
 {% endcomment %}
 {% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Glossaire{% endblocktranslate %}{% else %}{% translate "Glossaire" %}{% endif %}{% endblock %}
 {% block meta_description %}{% translate "Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots : visto, permesso di soggiorno, nulla osta, codice fiscale…" %}{% endblock %}
@@ -34,16 +29,18 @@ cards become plates on a ground —, «il rimando» on PAPER before the night fo
 {% endif %}
 
 <div class="fronte-wrap" data-fronte="learning"><div class="fronte__ground" aria-hidden="true">{% include "pages/partials/motifs/_learning.html" %}</div>
-<header class="page-header page-header--seat container">
+<header class="page-header container">
   <div class="page-header__text">
     <h1 class="page-header__title">{% translate "Glossaire" %}</h1>
     <p class="page-header__lead">{% translate "Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots." %}</p>
   </div>
-  <form class="page-header__aside search-form glossary__search" method="get" action="{% url 'glossary:index' %}" role="search" aria-label="{% translate 'Rechercher un terme' %}">
-    <label class="search-form__label" for="glossary-q">{% translate "Rechercher un terme" %}</label>
-    <div class="search-form__row">
-      <input class="search-form__input" type="search" id="glossary-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="glossary-q-help">
-      <button class="btn btn--primary btn--lg" type="submit">{% translate "Rechercher" %}</button>
+  {% translate "Rechercher un terme" as search_label %}
+  <form class="page-header__aside search-form glossary__search"{% if not is_search %} data-cerca-viva{% endif %} method="get" action="{% url 'glossary:index' %}" role="search" aria-label="{{ search_label }}">
+    <label class="search-form__label visually-hidden" for="glossary-q">{{ search_label }}</label>
+    <div class="cerca__campo">
+      {% svg_icon "search" "icon cerca__glifo" %}<input class="search-form__input cerca__input" type="search" id="glossary-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="glossary-q-help" placeholder="{{ search_label }}">
+      <button class="cerca__pulisci" type="button" hidden aria-label="{% translate "Effacer la recherche et afficher tous les termes" %}">{% svg_icon "close" "icon" %}</button>
+      <button class="cerca__invio" type="submit">{% translate "Rechercher" %}</button>
     </div>
     <p class="search-form__help" id="glossary-q-help">{% translate "Saisissez un terme italien ou un mot de sa définition." %}</p>
     {% if is_search %}<p class="search-form__reset"><a href="{% url 'glossary:index' %}">{% translate "Effacer la recherche et afficher tous les termes" %}</a></p>{% endif %}
@@ -65,15 +62,22 @@ cards become plates on a ground —, «il rimando» on PAPER before the night fo
   </div>
 </section>
 {% elif letters %}
-<div class="sez sez--lessico lessico" data-sec="lessico" data-ground="stone" data-rhythm="band">
+<div class="sez sez--lessico lessico" data-sec="lessico" data-ground="stone" data-rhythm="band" data-cerca="glossary-q">
   <div class="container lessico__griglia">
-    <nav class="az-index glossary__index" aria-label="{% translate 'Index alphabétique' %}" data-sec-js="spia">
+    <nav class="az-index glossary__index" aria-label="{% translate "Index alphabétique" %}" data-sec-js="spia">
       <ol class="az-index__list">
-        {% for letter in letters %}<li><a class="az-index__link" href="#lettre-{{ letter }}">{{ letter }}</a></li>{% endfor %}
+        {% for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}{% if letter in letters %}<li><a class="az-index__link" href="#lettre-{{ letter }}">{{ letter }}</a></li>{% else %}<li class="az-index__vuota" aria-hidden="true">{{ letter }}</li>{% endif %}{% endfor %}
       </ol>
     </nav>
+    <p class="cerca-conto" role="status" data-cerca-conto></p>
+    <template data-cerca-conti><span>{% blocktranslate count n=0 %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</span>{% for item in lessico %}<span>{% blocktranslate count n=forloop.counter %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</span>{% endfor %}</template>
     <div class="lessico__registro">
       <div class="lessico__carte sez-seq">{% for card in lessico %}{% include "glossary/_entry.html" with card=card %}{% endfor %}</div>
+    </div>
+    <div class="cerca-vuoto" data-cerca-vuoto hidden>
+      <p class="cerca-vuoto__titolo">{% translate "Aucun terme ne correspond à votre recherche." %}</p>
+      <p class="cerca-vuoto__testo">{% translate "Essayez un autre mot ou parcourez l’index alphabétique." %}</p>
+      <p class="cerca-vuoto__vie"><button class="btn btn--secondary" type="button" data-cerca-azzera>{% translate "Voir tous les termes" %}</button></p>
     </div>
   </div>
 </div>
@@ -88,5 +92,5 @@ cards become plates on a ground —, «il rimando» on PAPER before the night fo
 </aside>
 {% endif %}
 {% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/lessico.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/lessico.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% if not is_search %}<script type="module" src="{% static 'js/dist/cerca.js' %}"></script>{% endif %}
 {% if glossary_jsonld %}<script type="application/ld+json">{{ glossary_jsonld }}</script>{% endif %}{% endblock %}

@@ -6,8 +6,8 @@
 
      H0 «la soglia»   the paper of the hero's foot fading into the orientation's wash over its last 96 px — no cut
      S2               the wash's first light at the band's top (the fade's end, so the two grounds meet with no seam)
-     S1               a door's arch, pressed, hovered or focused, lit in its audience's accent (the shell's --aud, on
-                      the night seat: audience colours live on night only, §4.3)
+     S1               FINAL MICRO-PASS, the review's defect 1: the doors' arched seats left the plates, and with them
+                      the arch lit in its audience's accent under the hand (the plates are pages.css's)
      S5               the stone veil deep under the band's head, so its words read on the stone as on paper, and light
                       around the tablet, so the dressed courses read as stone, not as a grey murk (round 1, QA_ROUND1
                       M1); the masonry fading into plain stone at the band's foot, where «la protezione» stands; a
@@ -35,10 +35,6 @@
   .he:has(~ .home-orientation--soglia)::before {
     background: linear-gradient(transparent, var(--accent-wash));
   }
-}
-
-.passaggio__lastra:has(.passaggio__porta:is(:hover, :focus-visible, :active)) .passaggio__arco {
-  stroke: var(--aud, var(--accent-night));
 }
 
 .page-home .home-trust .strato--foto::before {

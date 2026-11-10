@@ -251,18 +251,15 @@ def test_the_stills_under_forced_colours_and_in_print():
 
 
 def test_the_tile_s_face_is_a_niche_and_keeps_the_glyph_legible():
-    # V5.29 (owner: «icons … same colour everywhere … inconsistent containers»; stream SYS; V5.20: stronger — two inks,
-    # each held on the vault's darkest stop): the vault in the laguna's first light, the glyph's ink by importance
+    # FINAL MICRO-PASS §2.1, §5 A3 (V5.20 strict rule: the vault left — the owner's «not an architecture website»): the
+    # glyph is drawn BARE — no face, no ring, no shadow, no threshold rule — in the text's own ink (as legible as the words
+    # beside it), the large one in the accent's ink, which still holds 4.5:1 on the raised paper
     tile = _rule(SEZIONI, ".sez-tile")
-    vault = "color-mix(in srgb, var(--accent-wash) 55%, var(--surface-raised))"
-    assert f"background: linear-gradient({vault}, var(--surface-raised) 85%)" in tile
-    assert "color: var(--tile-ink, var(--text-2))" in tile
+    assert "background" not in tile and "box-shadow" not in tile and "border" not in tile
+    assert "color: var(--tile-ink, currentColor)" in tile
+    assert not re.search(r"\.sez-tile(?:--[a-z]+)?::(?:before|after)", _css(SEZIONI)), "no layer, no rule"
     assert "--tile-ink: var(--accent-text)" in _rule(SEZIONI, ".sez-tile--lg")
-    wash, white = _colour("--accent-wash").lstrip("#"), _colour("--surface-raised").lstrip("#")
-    darkest = "#" + "".join(f"{round(int(wash[i:i + 2], 16) * 0.55 + int(white[i:i + 2], 16) * 0.45):02x}" for i in (0, 2, 4))
-    for ink in ("--text-2", "--accent-text"):
-        ratio = _contrast(_colour(ink), darkest)
-        assert ratio >= 4.5, (ink, ratio)  # the slate 5.9 and the laguna 5.1 on the vault's darkest stop
+    assert _contrast(_colour("--accent-text"), _colour("--surface-raised")) >= 4.5
 
 
 def _state_rules(path: Path) -> list[tuple[str, str]]:
@@ -276,15 +273,12 @@ def test_a_tile_that_inks_lights_its_floor_once_on_the_trigger_and_the_shell_s_e
     placed them (the shell is in every page sheet — R4 a, the gate's B1), the tile's stacking context in the shell (m5);
     the state rules obey §5.1 (no-preference, :root:not(.rm), the keyboard excluded, fill backwards) — the same check
     lane S wrote for the pattern sheets, now over the shell, the material and the mosaico too."""
-    assert "isolation: isolate" in _rule(SEZIONI, ".sez-tile"), "every tile a stacking context: the layer between vault and glyph"
-    assert not re.search(r"\.sez-tile(?:\[[^\]]*\])?::before", _css(SEZIONI)), "no floor layer in the shell (B1: the light's home is the mosaico sheet)"
-    layer = _rule(MOSAICO, ".mosaico .sez-tile::before")
-    assert "background: linear-gradient(transparent 40%, var(--surface-raised))" in layer and "z-index: -1" in layer
-    assert "border-radius: inherit" in layer and "inset: 0" in layer
-    states = dict(_state_rules(MOSAICO))
-    lit = states[':root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .mosaico .sez-tile::before']
-    assert "animation: sez-layer var(--motion-standard) var(--ease-enter) calc(var(--motion-slow) + var(--sez-i, 0) * var(--motion-stagger)) backwards" in lit
-    assert "opacity: 0" in states[':root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .mosaico .sez-tile::before']
+    # FINAL MICRO-PASS §2.1, §5 A3 (V5.20 strict rule: the tile's face and its floor light left with the vault): no
+    # sheet of the library draws a layer on a tile any more — the shell's tile is no stacking context, the mosaico has
+    # no floor light, nothing waits on one; the state rules that remain still obey §5.1 (below)
+    assert "isolation" not in _rule(SEZIONI, ".sez-tile")
+    for sheet in (SEZIONI, MOSAICO):
+        assert not re.search(r"\.sez-tile(?:\[[^\]]*\])?::(?:before|after)", _css(sheet)), sheet.name
     for sheet in (SEZIONI, MATERIA, MOSAICO):
         text = _css(sheet)
         for match in re.finditer(r"([^{}]*)\{([^{}]*animation(?:-name)?:[^{}]*)\}", text):
@@ -339,10 +333,11 @@ def test_the_protection_is_one_compact_trust_band_and_keeps_its_text_whole():
     html = Template('{% include "components/sezioni/protezione.html" with url="#" %}').render(Context({}))
     assert html.count("protezione__campo") == 1 and html.strip().endswith("</div>")
     assert html.index('class="protezione__campo"') < html.index("<aside")
-    assert 'data-callout="antifraud"' in html and "data-sigillo-scope" in html and 'data-locked="p3.antifraud.body"' in html
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the shield is drawn bare — no seal's seat, so no seal's scope
+    assert 'data-callout="antifraud"' in html and "data-sigillo-scope" not in html and 'data-locked="p3.antifraud.body"' in html
     assert "<details" not in html and " hidden" not in html, "legally required: always visible, never collapsed"
     assert "protezione__davanzale" not in html and "sez-fondale" not in html and "sez-plate--raised" not in html
-    assert html.count('class="sigillo ') == 1, "the seal, once"
+    assert 'class="sigillo' not in html and html.count("#icon-ile-scudo") == 1, "the shield, once, bare"
     assert '@import url("_sec-lastre.css");' in _read(STRATO), "every importer of the strato sheet keeps the band"
     css = _css(LASTRE)
     assert "@container" not in css and "davanzale" not in css and "sez-fondale" not in css
@@ -357,7 +352,8 @@ def test_the_protection_is_one_compact_trust_band_and_keeps_its_text_whole():
     assert re.search(r"@media \(min-width: 64rem\) \{[^@]*\.protezione__testo \{\s*columns: 2;", css), "two columns on a desktop"
     assert re.search(r"\.protezione__testo \.ls-1 \{\s*column-span: all;", css), "the first sentence across both"
     seal = _rule(LASTRE, ".protezione__sigillo")
-    assert "--sg-w: 44px" in seal and "--sg-h: 54px" in seal and "position" not in seal, "in the band's flow, one size down"
+    assert "--sg-w" not in seal and "position" not in seal and "color: var(--text-1)" in seal, "bare, in the band's flow"
+    assert "inline-size: 1.5rem" in _rule(LASTRE, ".protezione__sigillo .icon"), "a glyph's size, never a seat's"
     assert "padding-block: clamp(var(--s-8), 4vw, var(--s-12))" in _rule(LASTRE, ".sez:has(> .container > .protezione__campo:only-child)")
 
 
@@ -385,23 +381,23 @@ def test_the_numerals_are_the_sans_at_600_tabular_and_the_keyword_and_the_term_t
     numeral = _rule(SEZIONI, ".sez-numeral")
     assert "font-family: var(--f-sans)" in numeral and "font-size: var(--t-numeral-lg)" in numeral
     assert "line-height: var(--t-numeral-lg-lh)" in numeral and "font-weight: var(--w-title)" in numeral and "var(--numeric-data)" in numeral
-    assert 'class="tracciato__num t-numeral"' in _read(SEZ_TPL / "tracciato.html"), "the station's marker: the role by name"
-    assert "font-family" not in _rule(V5 / "_sec-tracciato.css", ".tracciato__num")
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the display numerals gave way to the quiet sequence marker, 21st.dev
+    # 26891): every sequence marker of the library — the board's station, the large line's, the filo's — is a small
+    # figure in the quiet ink (--t-small, --text-3, the sans inherited), never the numeral role
+    assert '<span class="tracciato__num" aria-hidden="true">' in _read(SEZ_TPL / "tracciato.html")
+    station = _rule(V5 / "_sec-tracciato.css", ".tracciato__num")
+    assert "font-family" not in station and "font-size: var(--t-small)" in station and "color: var(--text-3)" in station
     down = _rule(V5 / "_linea-v2.css", ".linea--large .linea__num::before")
-    assert "font-size: var(--t-numeral)" in down and "line-height: var(--t-numeral-lh)" in down and "font-weight: var(--w-title)" in down
-    linea = _css(V5 / "_linea-v2.css")
-    # B6: the across numeral is a solo glyph whose line box is the grid's first row — its leading is its size (36 px, the
-    # row V5.22 composed the marks and lane H's hero line on: the home's hero line meets the orientation seal's sill
-    # again); the route's inset and the carriage return read the same 36 px
-    assert "font-size: var(--t-numeral-lg); line-height: 1;" in linea, "36 across, the row its size"
-    assert linea.count("var(--t-numeral-lg)") == 3, "the numeral, the route's inset and the carriage return read one size"
-    assert "var(--t-numeral-lg-lh)" not in linea and "var(--t-title)" not in linea
-    filo = _css(V5 / "_sec-filo.css")
-    assert "font-size: var(--t-numeral);" in filo and "font-size: var(--t-numeral-lg); line-height: var(--t-numeral-lg-lh)" in filo
+    assert "font-size: var(--t-small)" in down and "color: var(--text-3)" in down and "font-family" not in down
+    for name in ("_linea-v2.css", "_sec-filo.css"):
+        assert "var(--t-numeral" not in _css(V5 / name), name
+    assert "font-size: var(--t-small)" in _rule(V5 / "_sec-filo.css", ".filo__num")
+    # FINAL MICRO-PASS §5 A3/A4 (V5.20 strict rule): the keyword at the floor weight on its step; «Non.» lighter — the
+    # entry step at the floor weight
     keyword = _rule(SEZIONI, ".sez-keyword")
-    assert "font-weight: var(--w-title)" in keyword and "font-size: var(--t-title-2)" in keyword
+    assert "font-weight: var(--w-body)" in keyword and "font-size: var(--t-title-2)" in keyword
     parola = _rule(LASTRE, ".strato__corpo--parola .ls-1")
-    assert "font-weight: var(--w-title)" in parola and "font-size: var(--t-title-2)" in parola
+    assert "font-weight: var(--w-body)" in parola and "font-size: var(--t-entry)" in parola
     scheda = _rule(STRATO, ".strato__lastra--scheda .strato__titolo")
     assert "font-weight: var(--w-display)" in scheda and "letter-spacing: var(--track-display)" in scheda
     servizio = _css(V5 / "_servizio.css")

@@ -24,8 +24,17 @@ Contract: `variant` ("grid" | "porte" | "rimando"); `label` (the list's accessib
 actor's T2a disc), "audience" (person · company · institution · university · professional: a door's accent),
 "lead" (True: the grid's lead tile, first), "frame_slot" (the lead's frame)}];
 `foot` (safe: a help line or a link under the grid).
+
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): «il rimando» is a divided link list — no tile, no plate, no glyph: each row its
+title over its one line between two hairlines, a chevron at the row's end that moves 4 px along the reading direction
+under the hand or the focus (v5/_sec-mosaico.css). Adapted from 21st.dev «Split Image Blog List» (ziegfiroyt/blog25,
+id 28595): its divided rows, title over summary and moving arrow; not its
+images, dates, categories or React. The grid and «le porte» keep their composition (the grid's glyph drawn bare, §2.1).
 {% endcomment %}{% load pages_imagery %}<ul class="mosaico mosaico--{{ variant|default:'grid' }} sez-seq" role="list" data-registro{% if label %} aria-label="{{ label }}"{% endif %}>
-  {% for item in tiles %}<li class="mosaico__tessera sez-plate{% if item.lead %} mosaico__tessera--lead{% endif %}"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %} data-spotlight>
+  {% for item in tiles %}{% if variant == "rimando" %}<li class="mosaico__tessera">
+    <a class="mosaico__link sez-stretch" href="{{ item.href }}"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</a>
+    {% if item.line %}<p class="mosaico__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
+  </li>{% else %}<li class="mosaico__tessera sez-plate{% if item.lead %} mosaico__tessera--lead{% endif %}"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %} data-spotlight>
     {% if item.lead and item.frame_slot %}<div class="mosaico__foto" aria-hidden="true">{% photo item.frame_slot "mosaico__frame" %}</div>{% endif %}
     <div class="mosaico__parole">
       {% if item.glyph %}<span class="{% if item.disc or variant == 'porte' %}sez-disc{% if variant == 'porte' %} sez-disc--lg{% endif %}{% else %}sez-tile{% if item.lead and variant == 'grid' %} sez-tile--lg{% endif %}{% endif %}" aria-hidden="true" data-verb="{% if item.disc or variant == 'porte' %}node{% else %}ink{% endif %}">{% svg_icon item.glyph "icon" %}</span>{% endif %}
@@ -33,6 +42,6 @@ actor's T2a disc), "audience" (person · company · institution · university ·
       {% if item.line %}<p class="mosaico__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
       <span class="mosaico__soglia" data-verb="draw" aria-hidden="true"></span>
     </div>
-  </li>{% endfor %}
+  </li>{% endif %}{% endfor %}
 </ul>
 {% if foot %}<p class="mosaico__piede">{{ foot }}</p>{% endif %}

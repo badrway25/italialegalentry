@@ -39,6 +39,8 @@ pytestmark = pytest.mark.django_db
 
 ROOT = Path(settings.BASE_DIR)
 ICON = re.compile(r'<use href="[^"#]*#icon-([a-z0-9-]+)"')
+#: FINAL MICRO-PASS §5 A3: the affordances the owner kept — never counted as a register's glyphs
+AFFORDANCES = {"chevron", "arrow"}
 STEP2 = [
     "/fr/diplomes-et-titres/",
     "/fr/formation/",
@@ -118,7 +120,11 @@ def test_one_primary_action_and_at_most_six_icons_in_the_body(get, path):
     registers = re.findall(r"<(\w+)[^>]*\bdata-registr(?:o|er)\b[^>]*>(.*?)</\1>", main, flags=re.S)
     for _tag, register in registers:
         items = re.findall(r"<li\b[^>]*>(.*?)</li>", register, flags=re.S)
-        with_glyph = [item for item in items if "#icon-" in item]
+        # FINAL MICRO-PASS §5 A2/A3 (V5.20 strict rule; the owner's keep-list «link arrows, chevrons»): a control's
+        # affordance — a disclosure's chevron, a link's arrow — is no glyph of the register, so a sequence whose glyphs
+        # gave way to its quiet markers (the diplomas' dossier) keeps its terms' chevrons and arrows; the register's
+        # glyphs are still all or none
+        with_glyph = [item for item in items if set(ICON.findall(item)) - AFFORDANCES]
         assert not with_glyph or len(with_glyph) == len(items), (path, "a register's glyphs: all or none")
         for name in ICON.findall(register):
             body_icons.remove(name)
@@ -190,8 +196,9 @@ def test_the_fraud_warning_is_an_amber_notice_said_three_times(get, path):
     # (the protection's T1 seal `ile-scudo`, once; ink only: the home's prescription forbids the alarm's amber), its
     # kind in words (the locked title, a heading), its locked body whole and visible — never collapsed
     assert "protezione" in callout["class"] and "notice--institutional" not in callout["class"], path
-    marks = [seal["data-mark"] for seal in callout.select(".sigillo")]
-    assert marks == ["ile-scudo"], "the anti-fraud entry's mark, once"
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the mark is the shield drawn bare — no seal's seat —, still once
+    assert not callout.select(".sigillo"), "no seal's seat"
+    assert ICON.findall(str(callout.select_one(".protezione__sigillo"))) == ["ile-scudo"], "the warning's mark, once"
     title = callout.select_one(".protezione__titolo")
     assert title.name in ("h2", "h3") and title.get_text(strip=True) == "ATTENTION AUX FRAUDES", "the kind in words"
     body = callout.select_one('[data-locked="p3.antifraud.body"]')

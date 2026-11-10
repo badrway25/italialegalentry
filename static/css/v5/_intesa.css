@@ -2,12 +2,13 @@
    «L'INTESA» — THE ITALY + MOROCCO PRIMITIVE (V5.29 §15–§17, lane PUB1; generalised by V5.30 §7, stream A: ONE reusable
    visual primitive with contextual variants, a stronger presence — larger, partially cropped, layered behind content,
    atmospheric — and still secondary to the words). A PAGE-ONLY partial of the design system: imported by the page sheets
-   that draw it (ecosystem/intesa.css — the Institutions collaboration head —, ecosystem/institutions.css, pages/css/
-   pages.css — the home's cooperation moment —, pages/css/rete.css — Réseau), never main.css.
-   Markup and the include's API: templates/ecosystem/partials/intesa.html (`id`, `variant` campo · atmosfera · pannello,
-   `night`). This partial is the primitive, its default variant «campo», the panel variant «pannello» and the night modifier;
-   the broad «atmosfera» is a partial of its own (v5/_intesa-atmosfera.css), imported after this one by the sheet whose
-   page draws it — a page carries only what it draws.
+   that draw it (ecosystem/intesa.css — the Institutions collaboration head —, pages/css/rete.css — Réseau —,
+   pages/css/_agami.css — AGAMI), never main.css; ecosystem/institutions.css no more (FINAL MICRO-PASS, the review's
+   defect 5: the landing's closing band draws none).
+   Markup and the include's API: templates/ecosystem/partials/intesa.html (`id`, `variant` campo · pannello, `night`).
+   This partial is the primitive, its default variant «campo», the panel variant «pannello» and the night modifier.
+   FINAL MICRO-PASS §5 A3: the home's band no longer draws «l'intesa», so pages/css/pages.css imports neither partial,
+   and the broad «atmosfera» (v5/_intesa-atmosfera.css, the home's alone) was deleted — a page carries only what it draws.
    Very large, cropped forms derived from the two flags, at the band's two edges, meeting around the content: Italy's three
    vertical fields at the reading edge (the white is the paper), fading toward the words; Morocco's red as a broad soft field
    at the far edge with the green pentagram as one fine line. Tokens and colour mixes of tokens only; multiplied into the

@@ -254,14 +254,16 @@ def test_the_pilot_s_stations_never_break_a_word(browser, live_server, seeded, p
                 "getComputedStyle(document.querySelector('[data-diagram=\"pilot-sequence\"] .linea--across'))"
                 ".gridTemplateColumns.split(' ').length"
             )
-            assert columns == 8, (lang, width, columns)
-            # the stepped row: the odd stations' capitals above the route, the even ones' below it
+            # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the stepped row of eight tiles gave way to the quiet sequence
+            # marker): four stations to a row from 48 rem, each label in its own column under its marker — no two labels
+            # share a line, every word still whole (above)
+            assert columns == 4, (lang, width, columns)
             sides = page.evaluate(
                 "[...document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__step')].map(li => {"
-                " const t = li.querySelector('.sez-tile').getBoundingClientRect();"
+                " const t = li.querySelector('.linea__num').getBoundingClientRect();"
                 " const l = li.querySelector('.linea__label').getBoundingClientRect();"
                 " return l.bottom <= t.top ? 'above' : l.top >= t.bottom ? 'below' : 'beside'; })"
             )
-            assert sides == ["above", "below"] * 4, (lang, width, sides)
+            assert sides == ["below"] * 8, (lang, width, sides)
     finally:
         context.close()

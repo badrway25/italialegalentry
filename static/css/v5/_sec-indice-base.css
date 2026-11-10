@@ -130,6 +130,11 @@
   }
 }
 
+/* FINAL MICRO-PASS §5 A3: the stage (the detail card) draws no item tile — the row beside it already shows the glyph */
+.indice[data-mode="tabs"] .indice__tessera {
+  display: none;
+}
+
 /* ---- a phone: the panel heading discloses its body, one at a time; the index is said once, by the panels ---- */
 .indice[data-mode="disclosure"] .indice__lista,
 .indice[data-mode="disclosure"] .indice__tessera,
@@ -179,10 +184,6 @@
 @media (prefers-reduced-motion: no-preference) {
   :root:not(.rm):not([data-input="key"]) .indice[data-moved] .indice__pannello[data-on] {
     animation: sez-cross var(--motion-emphasized) var(--ease-enter) backwards;
-  }
-
-  :root:not(.rm):not([data-input="key"]) .indice[data-moved] .indice__pannello[data-on] .indice__tessera {
-    animation: sez-node var(--motion-slow) var(--spring-soft) 80ms backwards;
   }
 
   :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .indice__voce {

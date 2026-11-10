@@ -24,55 +24,41 @@
   list-style: none;
 }
 
-/* a station: its numeral over its node at the reading edge, its label beside, its plate under the label */
+/* FINAL MICRO-PASS §5 A2: a station is the quiet sequence marker of «la linea V2» (v5/_linea-v2.css; 21st.dev «How It
+   Works Steps», ln-dev7/how-it-works-09, id 26891) — a small figure in the quiet ink beside its label, a 1 px hairline
+   down to the next (dashed: the steps' details are still being verified) — no node tile, no display numeral */
 .dossier__tappa {
   position: relative;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  column-gap: var(--s-5);
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  column-gap: var(--s-4);
   row-gap: var(--s-3);
-  align-items: center;
+  align-items: start;
 }
 
-/* the route down the reading edge: from this node to the next — dashed: the steps' details are still being verified */
 .dossier__tappa:not(:last-child)::before {
   content: "";
   position: absolute;
-  inset-block: 52px calc(4px - var(--s-8));
-  inset-inline-start: 23px;
-  border-inline-start: 2px dashed var(--ds-c);
+  inset-block: calc(var(--t-entry-lh) + var(--s-1)) calc(var(--s-2) - var(--s-8));
+  inset-inline-start: calc(0.75rem - 0.5px);
+  border-inline-start: 1px dashed var(--ds-c);
   transform-origin: 50% 0;
 }
 
-/* the step marker: the numeral role (TYPOGRAPHY_V2 F-3; V5.24 — the sans at 600, tabular, never the mono), the quiet ink
-   (28 on a phone, 36 from 64 rem), its box its size */
 .dossier__num {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: var(--t-numeral);
-  line-height: 1;
-  font-weight: var(--w-title);
-  font-variant-numeric: var(--numeric-data);
-  color: var(--text-2);
-}
-
-.dossier__nodo {
   grid-column: 1;
-  grid-row: 1 / span 2;
-  align-self: start;
-  z-index: 1;
-}
-
-/* pending: the node's edge dashed, never by colour alone */
-.dossier__tappa--attesa .dossier__nodo {
-  box-shadow: none;
-  outline: 1px dashed var(--line-structure);
-  outline-offset: -1px;
+  grid-row: 1;
+  justify-self: center;
+  font-size: var(--t-small);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
 }
 
 .dossier__titolo {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1;
   margin: 0;
   font-size: var(--t-entry);
   line-height: var(--t-entry-lh);
@@ -188,27 +174,10 @@
     inset-block-start: calc(var(--header-h-scrolled, var(--header-h)) + var(--s-8));
   }
 
-  .dossier__tappa {
-    grid-template-columns: 56px minmax(0, 1fr);
-  }
-
-  .dossier__num {
-    font-size: var(--t-numeral-lg);
-  }
-
-  .dossier__nodo {
-    --tile: 56px;
-    --tile-glyph: 28px;
-  }
-
-  .dossier__tappa:not(:last-child)::before {
-    inset-block-start: 60px;
-    inset-inline-start: 27px;
-  }
 }
 
 /* the status in words beside its shape (§3.10 D1: never by colour alone): a quiet caption in the meta-row voice under
-   the stations, its dashed ring the legend of their nodes */
+   the stations, its short dashed rule the legend of their hairlines (FINAL MICRO-PASS §5 A2: the nodes left) */
 .dossier__didascalia {
   display: flex;
   align-items: center;
@@ -221,10 +190,8 @@
 
 .dossier__anello {
   flex: none;
-  inline-size: 14px;
-  block-size: 14px;
-  border: 2px dashed color-mix(in srgb, var(--accent-mark) 40%, var(--line-structure));
-  border-radius: var(--radius-full);
+  inline-size: 1.5rem;
+  border-block-start: 1px dashed color-mix(in srgb, var(--accent-mark) 40%, var(--line-structure));
 }
 
 /* the five stations' order, for the route's turn */
@@ -267,7 +234,7 @@ html[data-input="key"] .dossier__chevron {
 
 @media (forced-colors: active) {
   .dossier__tappa:not(:last-child)::before {
-    background: CanvasText;
+    border-color: CanvasText;
   }
 
   .dossier__dettaglio[open] > .dossier__voce {

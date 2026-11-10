@@ -9,7 +9,7 @@
    each with its own motion signature on the one timing language, no two neighbours alike:
      H0 «la soglia»      the hero's foot fades into the orientation's wash, no line (V5.30 VARIETY §5)      —
      S1 «il passaggio»   the four doors in a rail the thumb crosses (phones)                                  SLIDE
-     S2 «la linea V2»    the questionnaire's four steps on one panel beside its head (V5.30 VARIETY §7)     —
+     S2 «la linea V2»    the four steps on one hairline, the quiet marker (FINAL MICRO-PASS §5 A1)      —
      S3 «l'indice»       the eight regular pathways: an index and its stage                                GLIDE
      S4 «il panorama»    the pilot: the same gesture on two shores                                          DEVELOP
      S5+S6 «lo strato»   the integrity band: one tablet set in the dressed stone, then «la protezione»      DEPTH
@@ -39,8 +39,6 @@
 @import url("../../css/v5/_sec-lastre.css"); /* V5.29: the plates and «la protezione» only — the home draws no landing, address or term plate */
 @import url("../../css/v5/_sec-campata.css");
 @import url("../../css/v5/_materia.css");
-@import url("../../css/v5/_intesa.css"); /* V5.30 §7: the Italy + Morocco primitive … */
-@import url("../../css/v5/_intesa-atmosfera.css"); /* … in its «atmosfera»: the cooperation moment's ground */
 @import url("../../css/v5/_casa.css");
 
 /* ============================================================================
@@ -225,9 +223,10 @@
 
 /* ============================================================================
    4 · S1 «il passaggio» — the four doors (phones; drawn where the hero's tiles carry words alone, hero.css). The
-       rail is v5/_sec-passaggio.css's below 40 rem; here each plate's interior: an arched seat on the night with
-       its audience's disc, the prescribed question, its sentence, its call. On the stone between the hero's paper
-       and the orientation's wash. Wider (a landscape phone that still draws them): two by two.
+       rail is v5/_sec-passaggio.css's below 40 rem; here each plate's interior: the prescribed question, its
+       sentence, its call — the arched seat and its disc left (FINAL MICRO-PASS, the review's defect 1: on a phone they
+       were the page's arches after the hero's door). On the stone between the hero's paper and the orientation's
+       wash. Wider (a landscape phone that still draws them): two by two.
    ========================================================================== */
 .home-entrances .testa {
   margin-block-end: var(--s-6);
@@ -246,10 +245,10 @@
 .passaggio__porta {
   flex: 1;
   display: grid;
-  grid-template-rows: auto auto auto 1fr;
+  grid-template-rows: auto auto 1fr;
   align-content: start;
   gap: var(--s-2);
-  padding: 0 var(--s-5) var(--s-5);
+  padding: var(--s-5);
   overflow: clip;
   border-radius: var(--radius-md);
   background: var(--surface-raised);
@@ -261,30 +260,6 @@
 .passaggio__porta:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-}
-
-/* the seat: a door's lunette on the night, its arch the plate's top edge rising the seat's whole height (round 1, m6: a
-   40 px curve read as a header band), the disc on its sill */
-.passaggio__seggio {
-  position: relative;
-  display: grid;
-  place-items: end center;
-  block-size: 6.25rem;
-  margin: 0 calc(-1 * var(--s-5)) var(--s-3);
-  padding-block-end: var(--s-3);
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  background: var(--surface-night);
-}
-
-.page-home .passaggio__arco {
-  position: absolute;
-  inset: 0 0 auto;
-  inline-size: 100%;
-  block-size: 100%;
-  fill: none;
-  stroke: var(--line-night);
-  stroke-width: 1.5px;
-  transition: stroke var(--motion-standard) var(--ease-enter);
 }
 
 /* the prescribed question, never smaller than the sentence it titles (16 px: RE-4 on a phone) */
@@ -344,12 +319,11 @@
   letter-spacing: 0;
 }
 
-/* the keyboard sees the final state at once (§4.1 rule 5): no duration, the same tokens' end — the doors' arrows and
-   arches, and the promoter's photograph settling in its arch (§9): the home's one rule of the input's modality (final
-   review F-M2: its two rules folded into one; measured, they restyle no element at the first key — the flip's cost is
-   the library's and main.css's, QA/v522/h/NOTES.md §14) */
+/* the keyboard sees the final state at once (§4.1 rule 5): no duration, the same tokens' end — the doors' arrows (their
+   arches left with the seats: FINAL MICRO-PASS, the review's defect 1) and the promoter's photograph settling in its
+   arch (§9): the home's one rule of the input's modality (final review F-M2: its two rules folded into one; measured,
+   they restyle no element at the first key — the flip's cost is the library's and main.css's, QA/v522/h/NOTES.md §14) */
 html[data-input="key"] .passaggio__freccia,
-html[data-input="key"] .passaggio__arco,
 html[data-input="key"] .campata__media .foto__img {
   transition-duration: 0s;
 }
@@ -363,39 +337,25 @@ html[data-input="key"] .campata__media .foto__img {
 }
 
 /* ============================================================================
-   5 · S2 «la linea V2» — the orientation on the page's one brand wash: its head at the reading edge, its four
-       steps on one panel beside it. Its top stands in the wash's first light, so the hero's foot fades into it with
-       no seam (hero.css).
+   5 · S2 the orientation — FINAL MICRO-PASS §5 A1 (the owner did not approve the V5.30 panel): one calm column on the
+       page's one brand wash, under the hero's description (A and B, hero.css): C its head at the reading edge, the
+       page's head pattern, with real air above; D the progression on one hairline across the column (the quiet
+       sequence marker, v5/_linea-v2.css: no panel, no cell, no tile, no seal); E the caveat as a legal note; the call.
+       Its top stands in the wash's first light, so the hero's foot fades into it with no seam (hero.css, v5/_casa.css).
    ========================================================================== */
 .page-home .home-orientation {
   overflow: clip; /* its ground, the wash's first light at the top, is v5/_casa.css's */
 }
 
-/* V5.30 (the owner's «geometry saturation»): the portico's three arches left the band; the drawing's element holds the
-   needle's one gradient only (pages/home/_orientation.html) — out of the flow, no box */
-.orienta__portico {
-  position: absolute;
-  inline-size: 0;
-  block-size: 0;
-}
-
 .orienta__capo {
-  position: relative;
-  margin-block-end: var(--s-8);
+  margin-block-end: var(--s-12);
 }
 
 .orienta__capo .testa {
   margin-block-end: 0;
 }
 
-/* the sentence's own opening words, the route's caption («Comment ça marche :»): drawn for the eye, said whole once —
-   the label role by name (`t-label`, v5/base.css: Host Grotesk 13/16 600; V5.24 TYPOGRAPHY_V2 F-3 / F-4), in the accent */
-.orienta__didascalia {
-  margin: var(--s-6) 0 0;
-  color: var(--accent-text);
-}
-
-/* on the Arabic page a French LIST keeps the page's direction — the route runs right to left, the rows stand on the
+/* on the Arabic page a French LIST keeps the page's direction — the line runs right to left, the rows stand on the
    reading edge —: a list's lang names its items' language, and each item's French run keeps its own LTR box (the
    shell's rule for a French run, v5/_sezioni.css, is for a run, not for the list that holds the runs) */
 [dir="rtl"] .page-home .sez ol[lang] {
@@ -403,19 +363,11 @@ html[data-input="key"] .campata__media .foto__img {
   unicode-bidi: normal;
 }
 
-.orienta__didascalia[lang] {
-  inline-size: fit-content;
-}
-
-/* the route's French labels on the Arabic page (round 1, QA_ROUND1 M2 a: «ragged-left»): each its own left-to-right box
-   hanging from the reading edge under its station, its lines starting on its own start (§1 rule 6) — the passage's rule
-   sets a station's French words flush to the numeral's edge (v5/_journey-passage.css), which leaves their start ragged.
-   The box at a caption's measure, never its column's (round 2, QA_ROUND2 m4: a label filling its 292 px column began
-   24 px from the previous station's tile): hung from its own station's edge, it reads under its numeral and its mark */
+/* the line's French words on the Arabic page: each its own left-to-right box hanging from the reading edge under its
+   figure, its lines starting on its own start (§1 rule 6) */
 [dir="rtl"] .home-orientation .linea-v2 li > p[lang] {
   justify-self: start;
   inline-size: fit-content;
-  max-inline-size: 12.5em;
   text-align: start;
 }
 
@@ -426,113 +378,13 @@ html[data-input="key"] .campata__media .foto__img {
   line-height: var(--t-lead-lh);
 }
 
-/* V5.30 VARIETY §3, §7 HOME (the owner: «route only where meaningful … bento/material panels»; 21st.dev's «How It Works»
-   panels and ui-ux-pro-max's bento pattern, in this system's own terms): the door above is the page's arch, so this band
-   speaks another language — its head at the reading edge, beside it one raised panel of four numbered cells, no route
-   line, no arch. The stepper's markup is unchanged: the list stays aria-hidden under the whole sentence. The lattice is
-   the list's own 1 px gap over the hairline's paint, so it holds at 1 and 2 columns in either direction. */
+/* C with real air above: the band no longer takes the statement's hand at the foot's distance */
 .home-orientation--soglia {
-  padding-block-start: var(--s-6);
+  padding-block-start: clamp(var(--s-12), 6vw, var(--s-20));
 }
 
-.home-orientation .linea--large {
-  display: grid;
-  gap: 1px;
-  overflow: clip;
-  border-radius: var(--card-radius);
-  background: var(--line-rhythm);
-  box-shadow: 0 0 0 1px var(--line-rhythm), var(--shadow-1);
-}
-
-.home-orientation .linea--large > :not(:last-child)::before,
-.home-orientation .linea--large > :not(:last-child)::after,
-.home-orientation .linea--large .linea__step--ritorno :is(.linea__num, .linea__segno)::after {
-  content: none;
-}
-
-.home-orientation .linea--large .linea__step,
-.home-orientation .linea--large.linea--across .linea__step {
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  align-content: start;
-  gap: var(--s-4);
-  padding: var(--s-6);
-  background: var(--surface-raised);
-}
-
-.home-orientation .linea--large .linea__segno,
-.home-orientation .linea--large.linea--across .linea__segno {
-  grid-column: 1;
-  grid-row: 1;
-  justify-content: flex-start;
-  align-self: start;
-}
-
-.home-orientation .linea--large .linea__num::before,
-.home-orientation .linea--large.linea--across .linea__num::before {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: end;
-  font-size: var(--t-numeral-lg);
-  line-height: 1;
-  color: var(--text-2);
-}
-
-.home-orientation .linea--large .linea__label,
-.home-orientation .linea--large.linea--across .linea__label {
-  grid-column: 1 / -1;
-  margin: 0;
-}
-
-.home-orientation .linea__segno .sigillo {
-  --sg-w: 48px;
-  --sg-m: 28px;
-}
-
-@media (min-width: 48rem) {
-  .home-orientation .linea--large.linea--across {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-flow: row;
-    column-gap: 1px;
-  }
-}
-
-@media (min-width: 64rem) {
-  .orienta {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    column-gap: var(--s-16);
-    align-items: start;
-  }
-
-  .orienta > * {
-    grid-column: 2;
-  }
-
-  .orienta > .orienta__capo {
-    display: contents;
-  }
-
-  .orienta__capo > .testa {
-    grid-column: 1;
-    grid-row: 1 / span 3;
-  }
-
-  .orienta__capo > .orienta__didascalia {
-    grid-column: 2;
-    margin-block: 0 var(--s-3);
-  }
-
-  .page-home .orienta__capo .testa--process:has(.testa__lead) {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--s-4);
-  }
-}
-
-@media (forced-colors: active) {
-  .home-orientation .linea--large .linea__step {
-    border: 1px solid CanvasText;
-  }
+.home-orientation .linea-v2 {
+  gap: var(--s-10);
 }
 
 /* a paper band between the wash and the night: tighter than the bands around it, so the page's heights differ (round 1,
@@ -597,17 +449,17 @@ html[data-input="key"] .campata__media .foto__img {
   justify-content: start;
 }
 
-/* a phone's disclosure rows keep the pathway's glyph: its tile at 40 beside the title, the chevron at the row's end */
+/* a phone's disclosure rows keep the pathway's small glyph, bare (FINAL MICRO-PASS §5 A3), beside the title, the chevron
+   at the row's end */
 .home-pathways .indice[data-mode="disclosure"] .indice__pannello {
-  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-columns: 1.25rem minmax(0, 1fr);
   column-gap: var(--s-3);
   align-items: center;
 }
 
 .home-pathways .indice[data-mode="disclosure"] .indice__tessera {
-  --tile: 40px;
-  --tile-glyph: 20px;
   display: inline-grid;
+  color: var(--text-2);
 }
 
 .home-pathways .indice[data-mode="disclosure"] .indice__corpo {
@@ -838,6 +690,11 @@ html[data-input="key"] .campata__media .foto__img {
   translate: none;
 }
 
+/* FINAL MICRO-PASS §5 A3: the slab lighter, less boxed — its face and its hairline edge, no drop shadow under it */
+.integrita__tavola.sez-plate::after {
+  content: none;
+}
+
 .integrita__tavola.sez-plate:has(.sez-stretch:focus-visible) {
   outline: 0;
 }
@@ -932,10 +789,9 @@ html[data-input="key"] .campata__media .foto__img {
 /* ============================================================================
    9 · S7 «la campata, il colophon» — V5.30 (the owner's «geometry saturation» and §7; stream A): the home's
    COOPERATION MOMENT. The arch, its rise, its sill and its drawn outline left the frame (the hero's doors are the page's
-   door). The working-table photograph stands in a plain frame at the far edge, INSIDE its columns (no bleed: the band's
-   Italy + Morocco field «l'intesa», atmosfera, shows beyond it and under its near half — v5/_intesa.css), on the card's
-   corner and one soft depth; it opens from its outer edge and settles as every plain campata frame does (the library's
-   mask verb, v5/_sec-campata.css). The library's 1 px connector stands down here: the field is the band's one motif.
+   door). The working-table photograph stands in a plain frame at the far edge, INSIDE its columns (FINAL MICRO-PASS §5
+   A3: the Italy + Morocco field «l'intesa» left the band), on the card's corner and one soft depth; it opens from its outer edge and settles as every plain campata frame does (the library's
+   mask verb, v5/_sec-campata.css). The library's 1 px connector stands down here.
    ========================================================================== */
 .home-ecosystem .campata {
   --bleed-s: 0;
@@ -1139,7 +995,7 @@ html[data-input="key"] .campata__media .foto__img {
   }
 }
 
-/* phones: «Non.» at the band's size, the plates in one column, their reading text at 16/24 (RE-4) */
+/* phones: the plates in one column, their reading text at 16/24 (RE-4) */
 @media (max-width: 47.999rem) {
   .integrita__lastra {
     padding: var(--s-4) var(--s-4) var(--s-5);
@@ -1151,22 +1007,12 @@ html[data-input="key"] .campata__media .foto__img {
     line-height: 1.5rem;
   }
 
-  .integrita__risposta .ls-1 {
-    margin-block-end: var(--s-2);
-    font-size: var(--t-band);
-    line-height: var(--t-band-lh);
-  }
 }
 
-/* ---- forced colours: a ground is gone, its band keeps its edge as a rule; the seat keeps the
-        system's text ------------------------------------------------------------------------------------ */
+/* ---- forced colours: a ground is gone, its band keeps its edge as a rule ----------------------------------------- */
 @media (forced-colors: active) {
   .page-home .sez {
     border-block-start: 1px solid CanvasText;
-  }
-
-  .passaggio__seggio {
-    border: 1px solid CanvasText;
   }
 
   .pilota__quadro::after {
@@ -1176,8 +1022,7 @@ html[data-input="key"] .campata__media .foto__img {
 
 /* ---- Print ------------------------------------------------------------------ */
 @media print {
-  .home-banner__dismiss,
-  .orienta__portico {
+  .home-banner__dismiss {
     display: none !important;
   }
 }

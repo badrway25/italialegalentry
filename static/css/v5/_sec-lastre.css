@@ -54,29 +54,16 @@
   line-height: var(--t-body-lh);
 }
 
-/* «Non.»: the answer's own first sentence as the large keyword, an accent rule drawn under it */
+/* «Non.»: the answer's own first sentence said first, on its own line — FINAL MICRO-PASS §5 A3: lighter, the entry step at
+   the floor weight in the primary ink, no rule drawn under it */
 .strato__corpo--parola .ls-1 {
-  position: relative;
   display: block;
-  inline-size: fit-content;
-  margin-block-end: var(--s-3);
-  font-size: var(--t-title-2);
-  line-height: var(--t-title-2-lh);
-  font-weight: var(--w-title);
-  letter-spacing: var(--track-title-2);
+  margin-block-end: var(--s-2);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-body);
+  color: var(--text-1);
 }
-
-.strato__corpo--parola .ls-1::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: -2px;
-  block-size: 2px;
-  background: var(--accent-mark);
-  transform-origin: 0 50%;
-}
-
-[dir="rtl"] .strato__corpo--parola .ls-1::after { transform-origin: 100% 50%; }
 
 /* the photographic ground under a stone veil; it drifts ≤ 24 px against the scroll */
 .strato__fondo {
@@ -130,18 +117,18 @@
   background: var(--text-1);
 }
 
-/* the seal at the band's reading edge, one size down (24 in 44 × 54); on a phone the seal, the title, the body and the
-   call stack on ONE start (a French run on an Arabic page: the title and its body on one edge — lane H's m5) */
+/* the shield at the band's reading edge, drawn bare (FINAL MICRO-PASS §5 A3: no arch seat) — 24 px in the title's ink;
+   on a phone the shield, the title, the body and the call stack on ONE start (a French run on an Arabic page: the title
+   and its body on one edge — lane H's m5) */
 .protezione__sigillo {
+  display: inline-flex;
   justify-self: start;
-  --sg-w: 44px;
-  --sg-h: 54px;
-  --sg-m: 24px;
-  --sg-sw: 2.75;
+  color: var(--text-1);
 }
 
-.protezione__sigillo::after {
-  content: none;
+.protezione__sigillo .icon {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
 }
 
 .protezione__titolo {
@@ -238,15 +225,7 @@
     animation: sez-ink var(--motion-slow) var(--ease-enter) 1500ms backwards;
   }
 
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .protezione__soglia,
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .strato__corpo--parola .ls-1::after { scale: 0 1; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .strato__corpo--parola .ls-1::after {
-    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--sez-i, 0) * var(--motion-stagger) + 240ms) backwards;
-  }
-
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .protezione .sigillo {
-    --sg-wait: 600ms;
-  }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .protezione__soglia { scale: 0 1; }
 }
 
 

@@ -60,8 +60,7 @@ light (the library's verb). The page sheet imports v5/_materia.css.
       {% include "components/sezioni/_testa.html" with role="process" title_id="diploma-steps-title" title=steps_title only %}
       <ol class="dossier diploma-steps sez-seq" role="list" data-registro data-steps="{{ dossier|length }}">
         {% for step in dossier %}<li class="dossier__tappa{% if step.pending %} dossier__tappa--attesa{% endif %}" id="etape-{{ step.id }}">
-          <span class="dossier__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
-          <span class="dossier__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon step.glyph "icon" %}</span>
+          <span class="dossier__num" aria-hidden="true">{{ forloop.counter }}</span>
           <h3 class="dossier__titolo">{{ step.label }}</h3>
           {% for term in step.terms %}<details class="dossier__dettaglio" name="dossier"{% if step.open and forloop.first %} open{% endif %}>
             <summary class="dossier__voce"><span lang="it">{{ term.term }}</span>{% svg_icon "chevron" "icon icon--sm dossier__chevron" %}</summary>

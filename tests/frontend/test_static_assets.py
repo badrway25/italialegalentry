@@ -251,13 +251,19 @@ def _static_files() -> list[Path]:
 
 
 def test_every_icon_used_in_templates_exists_in_sprite():
-    # V5.12 W2: the chrome sprite and the domain one
-    sprite = "".join((STATIC / "img" / n).read_text(encoding="utf-8") for n in ("icons.svg", "icons-domain.svg"))
-    ids = set(re.findall(r'<symbol id="icon-([a-z0-9-]+)"', sprite))
-    used = set()
+    # V5.12 W2: the chrome sprite and the domain one. FINAL MICRO-PASS §5 A3 (V5.20 strict rule): «la protezione»
+    # draws its shield bare, `ile-scudo` at text size, the T2 copy in the V2 sections' own sprite (V5.22 §4.9,
+    # icons.SPRITE_MARKS) — which only a V2 section may name; every other owned template names the two others.
+    def symbols(*names: str) -> set[str]:
+        sprite = "".join((STATIC / "img" / n).read_text(encoding="utf-8") for n in names)
+        return set(re.findall(r'<symbol id="icon-([a-z0-9-]+)"', sprite))
+
+    ids, marks = symbols("icons.svg", "icons-domain.svg"), symbols("icons-marks.svg")
+    sections = TEMPLATES / "components" / "sezioni"
+    missing = set()
     for path in _owned_template_files():
-        used |= set(re.findall(r'svg_icon "([a-z0-9-]+)"', path.read_text(encoding="utf-8")))
-    missing = used - ids
+        used = set(re.findall(r'svg_icon "([a-z0-9-]+)"', path.read_text(encoding="utf-8")))
+        missing |= used - ids - (marks if sections in path.parents else set())
     assert not missing, missing
     # Design V5 (W1-B, plan §1.7): the sprite is built from static/icons/src by scripts/build_icons.py and
     # named by apps/core/icons.py — the four audiences, the identity tier, «i cerchi» and the utilities, plus

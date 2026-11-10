@@ -26,6 +26,9 @@ THE FORK (round 2, m9): two one-station lanes in a row (Famille, Autres voies) s
 
 Contract: `lanes` (pathways.services.route_board: key, label, frame_slot, frame_sizes, fork, stations), `counts`
 (family_counts), `orientation` (the questionnaire's address, or "" while it is not open).
+FINAL MICRO-PASS §5 A2/A3 (9 Nov 2026): each card's prescribed rank is the quiet sequence marker (21st.dev 26891) — «1»,
+never «01», a small figure in the quiet ink, no display numeral —; the origin's compass tile left; each card keeps its
+small category glyph, drawn bare (v5/_sezioni.css §3), and its link arrow.
 {% endcomment %}<fieldset class="tracciato tracciato--scelta percorsi-tracciato" data-pathways="8" data-families>
   <legend class="tracciato__legenda">{% translate "Familles de parcours" %}</legend>
   <div class="percorsi-scelta">
@@ -38,7 +41,7 @@ Contract: `lanes` (pathways.services.route_board: key, label, frame_slot, frame_
       {% for lane in lanes %}<span class="percorsi-conto__riga" data-count="{{ lane.key }}">{% blocktranslate count n=lane.stations|length %}{{ n }} parcours affiché{% plural %}{{ n }} parcours affichés{% endblocktranslate %}</span>{% endfor %}
     </p>
   </div>
-  <div class="tracciato__origine"><span class="sez-tile" aria-hidden="true">{% svg_icon "compass" "icon" %}</span><p class="tracciato__origine-testo">{% translate "Identifiez la voie régulière à explorer" %}{% if orientation %} <a class="link-arrow" href="{{ orientation }}">{% translate "Commencer le questionnaire d’orientation" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a>{% endif %}</p></div>
+  <div class="tracciato__origine"><p class="tracciato__origine-testo">{% translate "Identifiez la voie régulière à explorer" %}{% if orientation %} <a class="link-arrow" href="{{ orientation }}">{% translate "Commencer le questionnaire d’orientation" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a>{% endif %}</p></div>
   <ol class="tracciato__corsie sez-seq" role="list">
     {% for lane in lanes %}<li class="tracciato__corsia{% if lane.fork %} tracciato__corsia--{{ lane.fork }}{% endif %}" data-lane="{{ lane.key }}">
       <input class="percorsi-via" type="radio" name="pathway-family" id="family-{{ lane.key }}" value="{{ lane.key }}">
@@ -46,7 +49,7 @@ Contract: `lanes` (pathways.services.route_board: key, label, frame_slot, frame_
       <div class="tracciato__testa"><p class="tracciato__nome testa__label t-label">{{ lane.label }}</p>{% photo lane.frame_slot "tracciato__foto" sizes=lane.frame_sizes %}</div>
       <div class="tracciato__percorso">
         <ol class="tracciato__stazioni sez-seq" role="list" data-registro>
-          {% for item in lane.stations %}<li class="tracciato__stazione" data-pathway="{{ item.key }}" data-family="{{ lane.key }}">{% if item.url %}<a class="tracciato__carta" href="{{ item.url }}">{% else %}<div class="tracciato__carta tracciato__carta--attesa">{% endif %}<span class="tracciato__num t-numeral">{{ item.num }}</span><span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="tracciato__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="tracciato__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}{% if item.url %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span></a>{% else %}</div>{% endif %}</li>{% endfor %}
+          {% for item in lane.stations %}<li class="tracciato__stazione" data-pathway="{{ item.key }}" data-family="{{ lane.key }}">{% if item.url %}<a class="tracciato__carta" href="{{ item.url }}">{% else %}<div class="tracciato__carta tracciato__carta--attesa">{% endif %}<span class="tracciato__num">{{ item.num|add:0 }}</span><span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="tracciato__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="tracciato__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}{% if item.url %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span></a>{% else %}</div>{% endif %}</li>{% endfor %}
         </ol>
       </div>
     </li>{% endfor %}

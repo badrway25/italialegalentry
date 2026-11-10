@@ -294,25 +294,18 @@ html:has(.percorsi-tracciato) {
     padding-inline-start: var(--s-10);
   }
 
-  .percorsi-tracciato .tracciato__origine {
-    gap: var(--s-3);
-  }
-
   .percorsi-tracciato .tracciato__testa {
     padding-block-start: var(--s-4);
   }
 
-  /* the card is a row — numeral, tile and title on one line (the arrow at its end), the description under them, across
-     the card's whole width */
+  /* the card is the library's row (v5/_sec-tracciato.css) — the quiet marker, the bare glyph and the title on one line
+     (the arrow at its end), the description under them, across the card's whole width —, held a step closer */
   .percorsi-tracciato .tracciato__carta {
-    grid-template-columns: auto auto minmax(0, 1fr);
     gap: var(--s-1) var(--s-3);
     padding: var(--s-3) var(--s-4);
   }
 
   .percorsi-tracciato .tracciato__titolo {
-    grid-column: 3;
-    padding-inline-end: var(--s-6);
     line-height: 1.4;
   }
 
@@ -337,90 +330,88 @@ html:has(.percorsi-tracciato) {
   max-inline-size: var(--measure-lead);
 }
 
-/* ---- PA-2 · «Comment ça marche»: four step plates on one route, the caveat its terminal plate ---- */
+/* ---- PA-2 · «Comment ça marche» — FINAL MICRO-PASS §5 A2: the home's composition (v5/_linea-v2.css, 21st.dev «How It
+        Works Steps», ln-dev7/how-it-works-09, id 26891): the quiet sequence marker — a small figure in the quiet ink on
+        one hairline, across from 64 rem, down the reading edge below —, the fragment at body size and weight, no plate,
+        no tile; the caveat a quiet note under the steps (no plate, no stripe, no mark) ---- */
 .come {
   display: grid;
   gap: var(--s-8);
 }
 
 .come__tappe {
-  position: relative;
   display: grid;
-  gap: var(--s-4);
   margin: 0;
   padding: 0;
   list-style: none;
   counter-reset: come;
 }
 
-/* the route: down the reading edge through the nodes on a phone, across their row from 48 rem */
-.come__tappe::before {
-  content: "";
-  position: absolute;
-  inset-block: var(--s-6) var(--s-6);
-  inset-inline-start: calc(var(--s-5) + 23px);
-  inline-size: 2px;
-  background: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
-}
-
 .come__tappa {
   position: relative;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
   column-gap: var(--s-4);
-  align-items: center;
-  padding: var(--s-5);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--surface-raised) 80%, transparent);
-  box-shadow: inset 0 0 0 1px var(--line-rhythm);
-}
-
-/* the step marker is a counter (01 …): the locked sentence's element holds the sentence's words and nothing else */
-.come__tappa {
+  align-items: start;
+  padding-block-end: var(--s-6);
   counter-increment: come;
 }
 
-.come__num::before {
-  content: counter(come, decimal-leading-zero);
-}
-
-/* the numeral role (TYPOGRAPHY_V2 F-3; V5.24): the sans at 600, tabular — 28 on a phone, 36 from 64 rem —, its box its
-   size (a solo numeral: the route across reads the same step below) */
+/* the marker: the step's figure (a counter: the locked sentence's element holds its words and nothing else) and the
+   hairline from it to the next step */
 .come__num {
-  grid-column: 2;
-  font-size: var(--t-numeral);
-  line-height: 1;
-  font-weight: var(--w-title);
-  font-variant-numeric: var(--numeric-data);
-  color: var(--text-2);
-}
-
-.come__nodo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   grid-column: 1;
   grid-row: 1 / span 2;
-  z-index: 1;
+  align-self: stretch;
+  margin-block-end: calc(-1 * var(--s-6));
+  font-size: var(--t-small);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
 }
 
-.come__testo {
-  grid-column: 2;
-  margin: var(--s-2) 0 0;
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
+.come__num::before {
+  content: counter(come);
 }
 
-/* the interim page's two moments (G3 closed): a title and its line in the plate */
+.come__tappa:first-child .come__num::before {
+  color: var(--accent-text);
+}
+
+.come__num::after {
+  content: "";
+  flex: 1 1 auto;
+  inline-size: 1px;
+  margin-block: var(--s-1);
+  background: color-mix(in srgb, var(--line-structure) 35%, var(--line-rhythm));
+}
+
+.come__tappa:last-child .come__num::after {
+  visibility: hidden;
+}
+
+.come__testo,
 .come__titolo,
 .come__riga {
   grid-column: 2;
   margin: 0;
 }
 
+.come__testo {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  text-wrap: pretty;
+}
+
+/* the interim page's two moments (G3 closed): a title and its line */
 .come__titolo {
-  margin-block-start: var(--s-2);
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
-  font-weight: var(--w-title);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
 }
 
 .come__riga {
@@ -432,7 +423,7 @@ html:has(.percorsi-tracciato) {
   text-transform: uppercase;
 }
 
-/* a station that leads somewhere: the whole plate its target, its tile's rule lit under the hand or the focus */
+/* a station that leads somewhere: its words the link, the whole step its target */
 .come__link {
   color: inherit;
   text-decoration: underline 1px color-mix(in srgb, var(--accent-mark) 55%, transparent);
@@ -443,7 +434,6 @@ html:has(.percorsi-tracciato) {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: inherit;
 }
 
 .come__tappa:has(.come__link:focus-visible) {
@@ -455,182 +445,62 @@ html:has(.percorsi-tracciato) {
   outline: none;
 }
 
-.come__tappa:has(.come__link:is(:hover, :focus-visible)) .sez-tile::after {
-  scale: 1 1;
+.come__tappa:has(.come__link:hover) .come__link {
+  color: var(--accent-text);
 }
 
-.come__tappa:has(.come__link:is(:hover, :focus-visible)) .sez-tile .icon {
-  translate: 2px 0;
-}
-
-[dir="rtl"] .come__tappa:has(.come__link:is(:hover, :focus-visible)) .sez-tile .icon {
-  translate: -2px 0;
-}
-
-/* the caveat: the route's terminal plate, at body size, with its status mark — never small print */
+/* the caveat: a quiet note in the legal ink, never a plate */
 .come__avvertenza {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--s-3);
-  max-inline-size: 46rem;
+  max-inline-size: var(--measure-lead);
   margin: 0;
-  padding: var(--s-4) var(--s-5);
-  border-inline-start: 3px solid var(--line-structure);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: var(--surface-raised);
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
-  font-weight: var(--w-control);
-}
-
-[dir="rtl"] .come__avvertenza {
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-}
-
-.come__segno {
-  display: inline-grid;
-  place-items: center;
-  flex: none;
-  inline-size: 24px;
-  block-size: 24px;
-  border-radius: var(--radius-full);
-  box-shadow: inset 0 0 0 1.5px var(--tone-esame-mark);
-  color: var(--tone-esame-mark);
-}
-
-.come__segno .icon {
-  inline-size: 16px;
-  block-size: 16px;
-}
-
-@media (min-width: 48rem) {
-  .come__tappe {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .come__tappe::before {
-    display: none;
-  }
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-legal);
 }
 
 @media (min-width: 64rem) {
   .come__tappe {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--s-5);
-  }
-
-  .come__tappa {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto;
-    align-content: start;
-    row-gap: var(--s-4);
-    padding: var(--s-6);
-  }
-
-  .come__num,
-  .come__nodo,
-  .come__testo,
-  .come__titolo,
-  .come__riga {
-    grid-column: 1;
-    grid-row: auto;
+    column-gap: var(--s-6);
   }
 
   .come__tappe--due {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .come__tappa {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-4);
+    padding-block-end: 0;
+  }
+
   .come__num {
-    font-size: var(--t-numeral-lg);
+    flex-direction: row;
+    column-gap: var(--s-3);
+    grid-row: auto;
+    margin-block-end: 0;
+    margin-inline-end: calc(var(--s-3) - var(--s-6));
+    line-height: var(--t-small-lh);
   }
 
-  /* the route across: from each plate's tile to the next plate, behind the plates' gap */
-  .come__tappa:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    inset-block-start: calc(var(--s-6) + var(--t-numeral-lg) + var(--s-4) + 23px);
-    inset-inline: calc(var(--s-6) + 48px) calc(-1 * var(--s-5));
-    block-size: 2px;
-    background: color-mix(in srgb, var(--accent-mark) 45%, var(--line-structure));
-    transform-origin: 0 50%;
+  .come__num::after {
+    inline-size: auto;
+    block-size: 1px;
+    margin-block: 0;
   }
 
-  [dir="rtl"] .come__tappa:not(:last-child)::after {
-    transform-origin: 100% 50%;
+  .come__testo,
+  .come__titolo,
+  .come__riga {
+    grid-column: 1;
   }
-
-  /* the route light travels to the station under the hand or the focus (one segment after the other) */
-  .come__tappe:has(> :nth-child(2) .come__link:is(:hover, :focus-visible)) > :nth-child(1)::after,
-  .come__tappe:has(> :nth-child(3) .come__link:is(:hover, :focus-visible)) > :nth-child(-n + 2)::after {
-    background: var(--accent-mark);
-  }
-}
-
-/* the four plates' order, for the route's turn */
-.come__tappa:nth-child(2) { --co-i: 1; }
-.come__tappa:nth-child(3) { --co-i: 2; }
-.come__tappa:nth-child(4) { --co-i: 3; }
-
-/* STAGGER: the route draws behind the plates as the band enters (60 ms apart) */
-@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come__tappa::after { scale: 0 1; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come__tappa::after {
-    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--co-i, 0) * 60ms + 120ms) backwards;
-  }
-}
-
-/* V5.24 (BACKGROUND_MATERIAL_V2 §3.4 PA-2; lane PUB1): the plates' tiles no longer settle («the square pops»): each tile's
-   foot rule draws to its resting 40 %, its glyph inks (the verb on the tile, pathways/index.html) and the niche's floor
-   lights once, one step after the rule, 60 ms apart — a threshold. The light is the mosaico's (v5/_sec-mosaico.css) in
-   the page sheet's idiom: an inner shadow in the plate's token rising from the tile's foot, no gradient in a page sheet */
-.come .sez-tile::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  box-shadow: inset 0 -1.75rem 0.75rem -0.25rem var(--surface-raised);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come .sez-tile::before { opacity: 0; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come .sez-tile::before {
-    animation: sez-layer var(--motion-standard) var(--ease-enter) calc(var(--motion-slow) + var(--co-i, 0) * var(--motion-stagger)) backwards;
-  }
-
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .come .sez-tile::after { scale: 0 1; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .come .sez-tile::after {
-    animation: sez-draw var(--motion-draw) var(--ease-sine) calc(var(--co-i, 0) * var(--motion-stagger)) backwards;
-  }
-}
-
-/* ---- V5.24 · the head → the board (BACKGROUND_MATERIAL_V2 §3.2; FINAL_DELIVERY_V2 R3, §3.5): «il raccordo» rises from the
-        board 48 px into the head's foot — the route leaves the head (the span the board's first child; the library's material sheet
-        --risale; the reading edge: _persone-v2.css). Its x: on a phone the trunk's line, 23 px into the reading edge; from
-        48 rem the head draws its journey spine on the seal's axis (v5/_fronte.css: 27 px) and the raccordo stands 17 px
-        under the spine's arrival disc — it continues THAT line, the one the eye is on; the trunk begins its own course at
-        the origin tile 600 px lower, 4 px aside (two passed compositions; the seam joins the nearer) ---- */
-.percorsi-famiglie > .sez-raccordo {
-  inset-inline-start: calc(var(--bordo-lettura) + 23px);
-}
-
-@media (min-width: 48rem) {
-  .percorsi-famiglie > .sez-raccordo {
-    inset-inline-start: calc(var(--bordo-lettura) + 27px);
-  }
-}
-
-html[data-input="key"] .come .sez-tile .icon {
-  transition: none;
 }
 
 @media (forced-colors: active) {
-  .come__tappa {
-    border: 1px solid CanvasText;
-  }
-
-  .come__tappe::before,
-  .come__tappa::after {
+  .come__num::after {
     background: CanvasText;
   }
 }
+
+
+

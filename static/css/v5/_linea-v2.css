@@ -1,20 +1,18 @@
 /* ============================================================================================
-   V5.22 — «LA LINEA V2», the passage evolved for a real sequence that explains (SECTION_SYSTEM_V2 §2 F, §4.8 «Arch +
-   route», «Sequence»; lane S). A page-only partial of its own, after v5/_journey-passage.css (the one passage drawing
-   it extends — kept apart so that the questionnaire's sheet, which imports the passage, does not carry it): the family
-   sheets of the V2 pages import both. components/stepper.html with size="large": each station its numeral in the numeral
-   role (Host Grotesk 600, tabular — 36 across in a line box its own size, the grid's first row; 28/32 down the reading
-   edge; never the mono: TYPOGRAPHY_V2 F-3, V5.24), its T2 tile — or, at the origin, the section's T1 seal —, its label at 20/28
-   (locked capitals as written, at 15, tracked). Across its column the route is the ground the marks stand on: it runs
-   at their foot, the tiles' threshold rules lie on it, and the origin seal's sill is its first stretch (§4.8: «its sill
-   becomes the route»). From 80 rem every station on one row; 48–80 rem rows of four joined by a carriage return (the
-   route turns down at the row's end, runs back under it and enters the next row's first station, so row 2 still reads
-   in the reading direction); below, down the reading edge, the route leaving the seal's sill. Never a tracker: no
-   current station, no tick (O14). At rest — in view at load, from the keyboard, under reduced motion, in print — the
-   route stands drawn: the V5.12 scroll-linked reveal of the passage (v5/_reveal.css M5) never drives it.
-   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Klyv Animated Beam» 38286 (a connector between real boxes,
-   the light a dash of the same path: sezioni/flow.js), «How It Works» 19861 (stations on one line). Refused: infinite
-   pulses, rotated pinned cards, handwritten numerals. Signature LINE DRAW, 120 ms a station.
+   «LA LINEA V2» — a real sequence that explains (V5.22, SECTION_SYSTEM_V2 §2 F; lane S), redrawn by the FINAL MICRO-PASS
+   (§2.2, §5 A1–A2; 9 Nov 2026) as the site's ONE QUIET SEQUENCE MARKER. A page-only partial after
+   v5/_journey-passage.css (the passage it extends — kept apart so the questionnaire's sheet does not carry it); the
+   family sheets of the V2 pages import both. Markup: components/stepper.html size="large".
+   Adapted from 21st.dev «How It Works Steps» 26891 (ln-dev7/how-it-works-09):
+   one 1 px connector, small figures, no icons, the words carry
+   the sequence, one call under it. Kept: the figures on one hairline, the restraint; changed: this system's tokens, the
+   figure «1» (never «01») at the small step (13 px, 14 on phones and in Arabic) in the act's weight and the quiet ink —
+   the first in the accent —, tabular; the words at body size and regular weight; logical properties (the line runs right
+   to left in Arabic); a phone's rail at the inline start; no box, no tile, no seal, no numeral at 28–36 px.
+   Across its column from 48 rem: at most four stations a row, each figure followed by the hairline that runs to the next
+   one (the row's last station ends the line). Below: the figure on the words' first line, the rail down from it to the
+   next. Motion: the hairline draws once along the reading direction as the section enters, 120 ms a station; at rest — in
+   view at load, from the keyboard, under reduced motion, in print — it stands drawn. Never a tracker (O14).
    ============================================================================================ */
 
 .linea-v2 {
@@ -23,51 +21,69 @@
 }
 
 .linea--large {
-  --lv-tile: 48px; /* a station's mark: a tile, or the origin seal's 56 */
-  --lv-col: 48px; /* the marks' column down the reading edge */
-  --lv-mh: 48px; /* the marks' row across: the seal's 68 when the route leaves from one */
-  --lv-c: color-mix(in srgb, var(--accent-mark) 55%, var(--line-structure));
-  --lv-back: inset(0 0 0 100%);
-  --sez-step: 120ms;
-  row-gap: var(--s-8);
+  --lv-step: 120ms;
+  row-gap: 0;
 }
 
-[dir="rtl"] .linea--large {
-  --lv-back: inset(0 100% 0 0);
-}
-
-/* the stations light in their order along the route — all eight, not the six of a stagger */
+/* the stations light in their order along the line — all eight, not the six of a stagger */
 .linea--large > * {
   --sez-i: var(--reveal-i, 0);
 }
 
 .linea--large .linea__step {
-  grid-template-columns: var(--lv-col) minmax(0, 1fr);
-  column-gap: var(--s-5);
-  row-gap: var(--s-2);
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  column-gap: var(--s-4);
+  row-gap: var(--s-1);
   align-items: start;
-  padding-block-end: 0;
+  padding-block-end: var(--s-6);
 }
 
-/* the numeral role on the passage's marker (the sans and the tabular figures are the passage's own: v5/_journey-passage.css) */
+/* the passage's own line and ring are the marker's here */
+.linea--large .linea__step::before {
+  content: none;
+}
+
+/* the marker: the figure, then the hairline to the next station (down the rail on a phone) */
+.linea--large .linea__num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: stretch;
+  margin-block-end: calc(-1 * var(--s-6));
+}
+
 .linea--large .linea__num::before {
-  grid-column: 2;
-  font-size: var(--t-numeral);
-  line-height: var(--t-numeral-lh);
-  font-weight: var(--w-title);
+  content: counter(linea);
+  font-size: var(--t-small);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
+  color: var(--text-3);
+}
+
+.linea--large > :first-child .linea__num::before {
+  color: var(--accent-text);
 }
 
 .linea--large .linea__num::after {
-  display: none;
+  content: "";
+  flex: 1 1 auto;
+  inline-size: 1px;
+  block-size: auto;
+  margin-block: var(--s-1);
+  border: 0;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--line-structure) 35%, var(--line-rhythm)); /* the rhythm's hairline, a third of the way to the structure's ink: it holds on the brand wash as on paper */
+  transform-origin: 50% 0;
 }
 
-.linea--large .linea__segno {
-  grid-column: 1;
-  grid-row: 1 / span 3;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
+.linea--large > .linea__step:last-child {
+  padding-block-end: 0;
+}
+
+.linea--large > :last-child .linea__num::after {
+  visibility: hidden;
 }
 
 .linea--large :is(.linea__label, .linea__text) {
@@ -76,82 +92,47 @@
 }
 
 .linea--large .linea__label {
-  font-size: var(--t-entry);
-  line-height: var(--t-entry-lh);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-body);
+  color: var(--text-1);
+  text-wrap: pretty;
 }
 
+/* locked capitals as written, one step down and lightly tracked, whole words */
 .linea--large .linea__label--caps {
   font-size: var(--t-ui);
-  line-height: var(--t-ui-lh);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   overflow-wrap: normal;
-  hyphens: auto;
+  hyphens: manual;
 }
 
-/* a route that leaves from the section's T1 seal: its column and the marks' row are the seat's; its sill is drawn in
-   the route's ink and weight, so the route visibly starts from it */
-.linea--large:has(.sigillo) {
-  --lv-col: 56px;
-  --lv-mh: 56px;
-}
-
-.linea--large > :has(.sigillo) {
-  --lv-tile: 56px;
-  --lv-h: 56px;
-  --lv-o: 4px;
-}
-
-.linea--large .sigillo::after {
-  block-size: 2px;
-  background: var(--lv-c);
-}
-
-/* the line from this station's mark to the next one, and the light that runs it when the end call is hovered or
-   focused: down the reading edge, from under the mark (the seal's sill) to above the next */
-.linea--large > :not(:last-child)::before,
-.linea--large > :not(:last-child)::after {
-  content: "";
-  position: absolute;
-  inset-block: calc(var(--lv-h, 48px) + var(--lv-o, 4px)) calc(4px - var(--s-8));
-  inset-inline-start: calc(var(--lv-col) / 2 - 1px);
-  inline-size: 2px;
-  background: var(--lv-c);
-  transform-origin: 0 0;
-}
-
-/* the light is the accent's, never gold: hover adds no gold to a page body (§4.5); the gold is the arrival's alone */
-.linea--large > :not(:last-child)::after {
-  --lv-c: var(--accent-mark);
-  opacity: 0;
-}
-
+/* the route's last word: the caveat, or the editorial note, as a secondary legal note — no plate, no stripe */
 .linea__terminale {
-  max-inline-size: 46rem;
-  padding: var(--s-5) var(--s-6);
-  border-inline-start: 3px solid var(--line-structure);
-  background: var(--surface-raised);
+  max-inline-size: var(--measure-lead);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-legal);
 }
 
-/* the page's one arrival: a gold light under the end call, the last thing the route lights */
+.linea__terminale > * {
+  margin: 0;
+}
+
 .linea__arrivo {
-  position: relative;
-  isolation: isolate;
   justify-self: start;
   margin: 0;
 }
 
-.linea__arrivo::before {
-  content: "";
-  position: absolute;
-  inset: -14px -24px;
-  z-index: -1;
-  background: radial-gradient(closest-side, color-mix(in oklab, var(--identity-light) 26%, transparent), transparent);
+.linea-v2--terminale .linea__arrivo {
+  margin-block-start: calc(-1 * var(--s-3));
 }
 
 @media (min-width: 48rem) {
   .linea--large.linea--across {
     grid-template-columns: repeat(var(--lv-n, 4), minmax(0, 1fr));
     column-gap: var(--s-6);
+    row-gap: var(--s-10);
   }
 
   .linea--large.linea--across:has(> :nth-child(3):last-child) { --lv-n: 3; }
@@ -159,130 +140,60 @@
 
   .linea--large.linea--across .linea__step {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto var(--lv-mh);
+    row-gap: var(--s-4);
+    padding-block-end: 0;
   }
 
-  /* a solo numeral whose line box is the grid's first row: its leading is its size (36 px — the row V5.22 composed the
-     marks, the route and lane H's hero line on: pages.css .orienta__soglia reads --t-title + 8 px + the mark); the role's
-     40 px leading serves numerals in flow (the lane's gate, B6) */
-  .linea--large.linea--across .linea__num::before { grid-column: 1; font-size: var(--t-numeral-lg); line-height: 1; }
-  .linea--large.linea--across .linea__segno { grid-column: 1; grid-row: 2; align-self: end; justify-content: flex-start; }
-  .linea--large.linea--across :is(.linea__label, .linea__text) { grid-column: 1; }
-  .linea--large.linea--across .linea__label { margin-block-start: var(--s-3); }
+  /* the figure on the line, the line to the next figure through the columns' gap (a figure's own air before it) */
+  .linea--large.linea--across .linea__num {
+    flex-direction: row;
+    column-gap: var(--s-3);
+    grid-row: auto;
+    margin-block-end: 0;
+    margin-inline-end: calc(var(--s-3) - var(--s-6));
+  }
 
-  /* the route at the marks' foot, from one mark to the next (the seal's: from its edge, its sill run on) */
-  .linea--large.linea--across > :not(:last-child)::before,
-  .linea--large.linea--across > :not(:last-child)::after {
-    inset-block: calc(var(--t-numeral-lg) + var(--s-2) + var(--lv-mh) - 2px) auto; /* under the numeral's 36 px line box, at the marks' foot */
-    inset-inline: calc(var(--lv-tile) + var(--lv-o, 4px)) calc(4px - var(--s-6));
+  .linea--large.linea--across .linea__num::before {
+    line-height: var(--t-small-lh);
+  }
+
+  .linea--large.linea--across .linea__num::after {
     inline-size: auto;
-    block-size: 2px;
+    block-size: 1px;
+    margin-block: 0;
+    transform-origin: 0 50%;
   }
 
-}
-
-/* 48–80 rem, rows of four: the carriage return. The row's last station (--capo) turns its route down into the gap
-   between the rows; the next row's first (--ritorno) takes it back along that gap to the reading edge, down, and into
-   its mark — the run at the middle of the rows' 32 px gap (17 px: half the --s-8 row gap, and the line's own pixel).
-   The corners are the passage's own (the full-radius family), the ink the route's */
-@media (min-width: 48rem) and (max-width: 79.999rem) {
-  .linea--large.linea--across > .linea__step--capo::before,
-  .linea--large.linea--across > .linea__step--capo::after {
-    inset-block-end: -17px;
-    inset-inline-end: -14px;
-    block-size: auto;
-    border: 2px solid var(--lv-c);
-    border-inline-start: 0;
-    border-start-end-radius: 10px;
-    border-end-end-radius: 10px;
-    background: none;
+  [dir="rtl"] .linea--large.linea--across .linea__num::after {
+    transform-origin: 100% 50%;
   }
 
-  .linea--large .linea__step--ritorno :is(.linea__num, .linea__segno)::after {
-    content: "";
-    display: block;
-    position: absolute;
-    grid-area: auto;
-    border: 2px solid var(--lv-c);
-    border-radius: 0;
+  /* a row's last station ends its line: the line joins the stations, it never runs on */
+  .linea--large.linea--across > :nth-child(4n) .linea__num::after {
+    visibility: hidden;
   }
 
-  /* the run back, and the drop at the reading edge */
-  .linea--large .linea__step--ritorno .linea__num::after {
-    inset-block-start: -17px;
-    inset-inline-start: -14px;
-    inline-size: calc(400% + 3 * var(--s-6));
-    block-size: calc(var(--t-numeral-lg) + var(--lv-mh) + 13px); /* 17 + the numeral's 8 px gap − the 12 px turn */
-    border-inline-end: 0;
-    border-block-end: 0;
-    border-start-start-radius: 10px;
-    --reveal-from: var(--lv-back);
-  }
-
-  /* the turn into the station's mark */
-  .linea--large .linea__step--ritorno .linea__segno::after {
-    inset-block: auto 0;
-    block-size: 12px;
-    inset-inline: -14px calc(100% + 4px);
-    border-block-start: 0;
-    border-inline-end: 0;
-    border-end-start-radius: 10px;
-  }
-}
-
-/* from 80 rem every station on one row */
-@media (min-width: 80rem) {
-  .linea--large.linea--across {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
+  .linea--large.linea--across :is(.linea__label, .linea__text) {
+    grid-column: 1;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea--large .linea__step::before { scale: 1 0; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea--large .linea__step::before,
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea__step--ritorno :is(.linea__num, .linea__segno)::after {
-    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(var(--sez-i) * var(--sez-step)) backwards;
-  }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea__arrivo::before { opacity: 0; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea__arrivo::before {
-    animation: sez-layer var(--motion-slow) var(--ease-enter) 1.6s backwards;
-  }
-
-  /* hover or focus on the end call: one light along the route, a segment after the other — never from the keyboard,
-     which sees the final state at once (§4.1 rule 5) */
-  :root:not(.rm):not([data-input="key"]) .linea-v2:has(.linea__arrivo .btn:is(:hover, :focus-visible)) .linea__step::after {
-    animation: sez-flash var(--motion-slow) var(--ease-sine) calc(var(--sez-i) * var(--sez-step)) backwards;
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea--large .linea__num::after { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea--large .linea__num::after {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(var(--sez-i) * var(--lv-step)) backwards;
   }
 }
 
-/* across, the route opens by a mask from the reading edge (it mirrors by itself, and a scale would squash the carriage
-   return's corners); the return's run opens back towards the reading edge */
 @media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea--large.linea--across .linea__step::before,
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea__step--ritorno :is(.linea__num, .linea__segno)::after {
-    scale: none;
-    clip-path: var(--reveal-from);
-  }
-
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea--large.linea--across .linea__step::before,
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea__step--ritorno :is(.linea__num, .linea__segno)::after {
-    animation-name: sez-mask;
-  }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea--large.linea--across .linea__num::after { scale: 0 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea--large.linea--across .linea__num::after { animation-name: sez-draw; }
 }
 
-@keyframes sez-flash {
-  50% { opacity: 0.9; }
-}
-
-/* forced colours: the line keeps the passage's own rule (v5/_journey-passage.css, CanvasText) — the carriage return its
-   edges —, the light leaves */
+/* forced colours: the hairline in the system's text */
 @media (forced-colors: active) {
-  .linea__arrivo::before { display: none; }
-
-  /* the passage's rule keeps its own ink here (forced-color-adjust: none): the return's edge takes the system's */
-  .linea__step--capo::before {
-    border-color: CanvasText;
+  .linea--large .linea__num::after {
+    forced-color-adjust: none;
+    background: CanvasText;
   }
 }

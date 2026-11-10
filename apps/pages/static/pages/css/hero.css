@@ -1141,6 +1141,16 @@
 }
 .he__body::first-line { color: var(--text-1); }
 .he__body:lang(ar) { letter-spacing: 0; }
+/* FINAL MICRO-PASS §5 A1 (A, B): the description in two voices, ONE <p> (pages/home/_hero.html). A, the institutional
+   statement: the band step (--t-band, 24 → 28 px; a step of the scale, never a size of its own — the type register is
+   closed), the floor weight, the primary ink, a statement's measure (34 rem, about 40 characters at its size; tokens.css
+   measures in rem, TR C1) — its first line still the fold's peek (8 px of pad and a 32 px line in the 48 px of 1440 × 900
+   and in the 40 px of the short laptops; at 1280 × 720 the pair steps down to the entry and the body steps, below). B,
+   the supporting clause: the lead's voice (--t-lead, the slate, --measure-lead: under 60 characters) under it, with air.
+   A text the cut does not know keeps the one voice above. */
+.he__enunciato, .he__seguito { display: block; }
+.he__enunciato { max-inline-size: 34rem; font-size: var(--t-band); line-height: calc(1.12 + var(--ar-lh-plus)); letter-spacing: var(--track-title-2); color: var(--text-1); text-wrap: balance; }
+.he__seguito { max-inline-size: var(--measure-lead); margin-block-start: var(--s-5); font-size: var(--t-lead); line-height: var(--t-lead-lh); letter-spacing: 0; }
 .he + .home-entrances, .he + .home-banner + .home-entrances { padding-block-start: 1.25rem; }
 /* ON THE DESKTOP THE DESCRIPTION STANDS ON THE PAGE'S COLUMN (the review's M1; DL54-39 item 1's forward correction): it is the
    statement that opens what follows, so it starts where the chapters under it start — the page's pad below 75 rem, the
@@ -1154,7 +1164,11 @@
 }
 @media (min-width: 75rem) and (max-width: 95.999rem) { .he { --body-inset: calc((100% - var(--container)) / 2 + var(--grid-margin) - var(--page-pad)); } }
 @media (min-width: 64rem) and (max-height: 50rem) { .he__body { font-size: 1.375rem; } }   /* the short laptops: the peek is 40 px */
-@media (min-width: 64rem) and (max-height: 46rem) { .he__body { font-size: 1.25rem; line-height: 1.3; padding-block-start: 0.25rem; } }   /* 1280 × 720: the peek is 32 px */
+@media (min-width: 64rem) and (max-height: 46rem) {   /* 1280 × 720: the peek is 32 px */
+  .he__body { font-size: 1.25rem; line-height: 1.3; padding-block-start: 0.25rem; }
+  .he__enunciato { font-size: var(--t-entry); }
+  .he__seguito { font-size: var(--t-body); line-height: var(--t-body-lh); }
+}
 @media (max-width: 63.999rem) {
   .he + .home-entrances { padding-block-start: 0.875rem; }
   .he__body { padding-block: 0.75rem 2rem; font-size: 1.25rem; }   /* the foot: 32 px on phones */

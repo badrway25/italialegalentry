@@ -84,18 +84,27 @@ def test_page_structure_landmarks_headings_and_anchors(client, faq_seeded, phase
     form = soup.find("form", attrs={"role": "search"})
     assert form is not None and form["method"].lower() == "get"
     assert soup.find("label", attrs={"for": "faq-q"}) is not None
-    assert soup.find("section", id="cat-general") is not None
-    # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the category is an explorer (L «l'indice», master–detail)
-    # — the nine questions as its index, each answer a panel; every panel stays in the page (the module only chooses
-    # which one shows), each with its question as an h3 and its date, its id the question's key (the permalinks)
-    index = soup.select(".faq-esploratore .indice__lista a.indice__voce")
-    panels = soup.select(".faq-esploratore section.indice__pannello")
-    assert len(index) == 9 and len(panels) == 9
-    assert [a["href"] for a in index] == [f"#{panel['id']}" for panel in panels]
-    assert [panel["id"] for panel in panels] == [e["key"] for e in registry.items()]
-    for panel in panels:
-        assert panel.find("h3") is not None and panel.find("time") is not None
-    assert "2026-09-14" in str(panels[0])
+    # FINAL MICRO-PASS §6 B1 (V5.20 strict rule; this decision replaces V5.22's explorer, L «l'indice»): the questions
+    # are ONE list — the system's disclosures in one section, in the register's order, every answer in the page; each
+    # row's id its question's key (the permalinks) and its own permalink link, its question an h3 in its summary, its
+    # date; no explorer, no index of links, no panel is left — and the themes are aria-pressed buttons in one named
+    # group, «Toutes» first and pressed, their counts the register's nine
+    section = soup.find("section", id="questions")
+    assert section is not None and section.get("aria-labelledby") == "faq-domande-title"
+    rows = section.select(".accordion.faq-lista > details.accordion__item.faq-item")
+    assert [row["id"] for row in rows] == [e["key"] for e in registry.items()]
+    for row in rows:
+        assert row.select_one(":scope > summary > h3.faq-item__question") is not None and row.find("time") is not None
+        assert row.select_one(f'a.faq-item__permalink[href="/fr/faq/#{row["id"]}"]') is not None
+    assert "2026-09-14" in str(rows[0])
+    assert not soup.select(".faq-esploratore, .indice, .indice__voce, .indice__pannello, .faq-item__glifo")
+    group = section.select_one('.faq-temi[role="group"]')
+    pills = group.select('button.faq-tema[type="button"][aria-pressed]')
+    assert len(pills) == 4
+    assert pills[0]["aria-pressed"] == "true" and all(p["aria-pressed"] == "false" for p in pills[1:])
+    assert sum(int(p.select_one(".faq-tema__n").get_text()) for p in pills[1:]) == int(
+        pills[0].select_one(".faq-tema__n").get_text()
+    ) == 9
 
 
 def test_related_links_to_glossary_and_contextual_links(client, faq_seeded, phase3_open):
@@ -170,29 +179,30 @@ def test_jsonld_faqpage_lists_the_nine_published_items_only(client, faq_seeded, 
 # Languages (G10) and RTL
 # --------------------------------------------------------------------------------------------
 def test_other_languages_fall_back_to_french_with_lang_attr(client, faq_seeded, phase3_open):
-    # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the questions are the explorer's panels' headings
+    # V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the questions are the explorer's panels' headings —
+    # FINAL MICRO-PASS §6 B1 (V5.20): the list's rows' headings, the same invariants on the one list
     for lang in ("it", "en"):
         soup = BeautifulSoup(client.get(f"/{lang}/faq/").content, "html.parser")
-        questions = soup.select(".faq-esploratore h3.indice__titolo")
+        questions = soup.select(".faq-lista h3.faq-item__question")
         assert len(questions) == 9
         assert all(q.get("lang") == "fr" for q in questions), lang
-        answers = soup.select(".faq-esploratore p.faq-risposta")
+        answers = soup.select(".faq-lista p.faq-risposta")
         assert len(answers) == 9 and all(a.get("lang") == "fr" for a in answers), lang
     # V5.27 / FINAL_DELIVERY_V2 R7′ (V5.20, the steward's amendment at the v524-pub2 merge): on /ar/ the question is
     # compositional (C-UI) — the provisional Arabic, no lang of its own —, the answer substantive (C-SUBST-FR) on its
     # own page — French, lang="fr", and preceded by its identification caption (stronger than the lang alone it held)
     soup = BeautifulSoup(client.get("/ar/faq/").content, "html.parser")
-    questions = soup.select(".faq-esploratore h3.indice__titolo")
+    questions = soup.select(".faq-lista h3.faq-item__question")
     assert len(questions) == 9
     assert all(q.get("lang") is None and re.search(r"[\u0600-\u06ff]", q.get_text()) for q in questions)
-    answers = soup.select(".faq-esploratore p.faq-risposta")
+    answers = soup.select(".faq-lista p.faq-risposta")
     assert len(answers) == 9 and all(a.get("lang") == "fr" for a in answers)
     for answer in answers:
         caption = answer.find_previous_sibling("p")
         assert caption is not None and caption.get("data-locked-caption", "").endswith("].answer"), caption
     soup_fr = BeautifulSoup(client.get("/fr/faq/").content, "html.parser")
-    assert len(soup_fr.select(".faq-esploratore h3.indice__titolo")) == 9
-    assert all(q.get("lang") is None for q in soup_fr.select(".faq-esploratore h3.indice__titolo"))
+    assert len(soup_fr.select(".faq-lista h3.faq-item__question")) == 9
+    assert all(q.get("lang") is None for q in soup_fr.select(".faq-lista h3.faq-item__question"))
 
 
 def test_published_translation_is_rendered_but_draft_is_not(client, faq_seeded, phase3_open):

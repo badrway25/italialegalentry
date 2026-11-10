@@ -149,8 +149,10 @@ def test_institutions_recipients_are_the_prescribed_sentence_as_written(get_html
     sentences = soup.select("p.emiciclo__frase")
     assert len(sentences) == 1 and sentences[0].get_text("") == _t("p3.institutions.recipients")
     assert block.count(_t("p3.institutions.recipients")[:20]) <= 1
-    seats = soup.select("ol.emiciclo__seggi[aria-hidden='true'] > li")
-    assert len(seats) == 6 and not "".join(s.get_text(strip=True) for s in seats), "the seats carry no word"
+    # FINAL MICRO-PASS §6 B4 (V5.20; was «six seats, glyphs only, aria-hidden, carrying no word»): the seats left — the
+    # sentence is the section's one visible text with nothing drawn beside it: no seat, no glyph, no list of its words
+    assert not soup.select("ol.emiciclo__seggi, .emiciclo__seggio, .emiciclo svg, .emiciclo .sez-disc"), "no seat"
+    assert len(sentences[0].select(".emiciclo__voce[data-seggio]")) == 6, "its six recipients, each a phrase"
     assert "ecosystem-enum" not in block
 
 

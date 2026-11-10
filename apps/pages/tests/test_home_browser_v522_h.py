@@ -89,12 +89,16 @@ def _scroll_through(page, step=0.5, pause=180):
 
 _MEET = """() => {
   const sec = document.querySelector('.home-orientation').getBoundingClientRect();
-  const seal = document.querySelector('.home-orientation .linea__step .sigillo').getBoundingClientRect();
-  const cell = document.querySelector('.home-orientation .linea__step').getBoundingClientRect();
+  const first = document.querySelector('.home-orientation .linea__step');
+  const cell = first.getBoundingClientRect(), num = first.querySelector('.linea__num').getBoundingClientRect();
+  const label = first.querySelector('.linea__label'), words = label.getBoundingClientRect();
   const heroBox = document.querySelector('.he').getBoundingClientRect();
   return {drawn: document.querySelectorAll('.he__soglia, .he__soglia-linea, .orienta__soglia').length,
           heroBottom: heroBox.bottom, top: sec.top,
-          seal: [seal.left, seal.right, seal.top, seal.bottom], cell: [cell.left, cell.right, cell.top, cell.bottom]};
+          seals: document.querySelectorAll('.home-orientation .sigillo').length,
+          num: [num.top, num.bottom], said: label.textContent.trim(),
+          words: [words.left, words.right, words.top, words.bottom],
+          cell: [cell.left, cell.right, cell.top, cell.bottom]};
 }"""
 
 
@@ -103,7 +107,9 @@ def test_no_line_crosses_from_the_hero_and_the_origin_seal_sits_in_its_cell(brow
     """V5.30 Fast Visual Variety Correction §5, §7 HOME (V5.20 strict rule; this decision replaces H0 «la soglia»,
     §3.1, the line that ran from the statement down to the seal's sill): no line is drawn between the two bands; the
     band follows the hero with no gap, and the route's origin seal sits inside its own cell of the panel. Measured at
-    rest (reduced motion)."""
+    rest (reduced motion). FINAL MICRO-PASS §5 A1 (V5.20 strict rule: the origin's seal left — the route opens on its
+    quiet marker): no seal in the band; the first station's marker stands on its cell's rows and its words inside its
+    cell, said."""
     for width, height in ((1440, 900), (1024, 768), (768, 1024)):
         context, page = _open(browser, live_server, f"/{lang}/", width, height, motion="reduce")
         try:
@@ -111,8 +117,11 @@ def test_no_line_crosses_from_the_hero_and_the_origin_seal_sits_in_its_cell(brow
             where = (lang, width)
             assert m["drawn"] == 0, where
             assert abs(m["top"] - m["heroBottom"]) <= 1, (where, m)
-            seal, cell = m["seal"], m["cell"]
-            assert cell[0] <= seal[0] and seal[1] <= cell[1] and cell[2] <= seal[2] and seal[3] <= cell[3], (where, m)
+            words, cell = m["words"], m["cell"]
+            assert m["seals"] == 0 and m["said"], (where, m)
+            assert cell[0] <= words[0] and words[1] <= cell[1], (where, m)
+            assert cell[2] <= words[2] and words[3] <= cell[3], (where, m)
+            assert cell[2] <= m["num"][0] and m["num"][1] <= cell[3], (where, m)
         finally:
             context.close()
 
@@ -320,7 +329,7 @@ _ROUND1 = """() => {
   const panel = document.querySelector('.home-pathways .indice__pannello[data-on]');
   const edge = (r) => (rtl ? r.right : r.left);
   return {
-    rtl,
+    rtl, air: parseFloat(getComputedStyle(document.querySelector('.home-orientation')).paddingBlockStart),
     statement: R('.he__body'), head: R('.home-orientation .testa'),
     seal: R('.home-orientation .linea__step .sigillo'),
     tablet: R('.integrita__tavola'), plate: R('.home-antifraud .protezione'),
@@ -370,8 +379,13 @@ def test_round_1_the_home_holds_its_hand_off_its_edges_its_gold_and_its_arabic_r
         page.wait_for_function("document.querySelector('.home-pathways .indice')?.dataset.mode === 'tabs'")
         m = page.evaluate(_ROUND1)
         gap = m["head"]["top"] - m["statement"]["bottom"]
-        assert 0 <= gap <= 40, (lang, "the head follows the statement", gap)
-        assert (round(m["seal"]["width"]), round(m["seal"]["height"])) == (48, 48), (lang, m["seal"])
+        # FINAL MICRO-PASS §5 A1 (C, «the head with air»; V5.20 strict rule): M1 a's foot distance (≤ 40 px) gave way to
+        # the band's own air — the head stands exactly the band's top padding under the statement, never more than
+        # --s-20 (80 px), nothing else between them
+        assert abs(gap - m["air"]) <= 1 and 0 <= gap <= 80, (lang, "the head at the band's air", gap, m["air"])
+        # FINAL MICRO-PASS §5 A1 (V5.20 strict rule): M1 b's origin tile left with the seal — the route opens on its
+        # quiet marker, its four stations still said
+        assert m["seal"] is None and len(m["labels"]) == 4, (lang, m["seal"], m["labels"])
         side = "right" if m["rtl"] else "left"
         assert abs(m["plate"][side] - m["tablet"][side]) <= 1, (lang, "on the reading edge", m["plate"], m["tablet"])
         assert m["key"] == m["gold"], (lang, "the key in the identity's gold", m["key"], m["gold"])
@@ -648,24 +662,46 @@ def test_final_the_doorway_is_painted_as_one_line_from_its_foot(browser, live_se
                           painted: img.complete && img.naturalWidth > 0,
                           corners: [s.borderTopLeftRadius, s.borderTopRightRadius, s.borderBottomRightRadius,
                                     s.borderBottomLeftRadius],
-                          field: !!document.querySelector('.home-ecosystem > .intesa.intesa--atmosfera'),
+                          field: !!document.querySelector('.home-ecosystem .intesa'),
                           running: media.getAnimations({subtree: true}).length};
                 }"""
             )
             assert frame["doorway"] == 0 and not frame["arch"], (cell, "no doorway drawn around the frame", frame)
             assert frame["painted"], (cell, "the photograph stands in its plain frame", frame)
             assert len(set(frame["corners"])) == 1 and frame["corners"][0] != "0px", (cell, "the card's corner", frame)
-            assert frame["field"], (cell, "the band's ground is the Italy + Morocco field", frame)
+            # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the band's Italy + Morocco field left the home — no layer of
+            # it anywhere in the band; the photograph and its plain frame above still stand
+            assert not frame["field"], (cell, "no field drawn under the band", frame)
             assert frame["running"] == 0, (cell, "the frame's entrance has ended and left nothing applied", frame)
         finally:
             context.close()
+
+
+#: the first door's plate (FINAL MICRO-PASS, the review's defect 1): what the rail draws besides the calls' arrows, and
+#: the places of the plate's three words inside it
+_DOOR = """() => {
+  const rail = document.querySelector('.home-entrances .passaggio');
+  const plate = rail.querySelector('.passaggio__porta'), box = plate.getBoundingClientRect();
+  const parts = ['.passaggio__titolo', '.passaggio__testo', '.passaggio__cta'].map((s) => {
+    const r = plate.querySelector(s).getBoundingClientRect();
+    return {top: Math.round(r.top - box.top), height: r.height,
+            inside: r.left >= box.left - 1 && r.right <= box.right + 1};
+  });
+  const drawn = rail.querySelectorAll('.passaggio__seggio, .passaggio__arco, .sez-disc, mask, svg:not(.icon)');
+  return {drawn: drawn.length, parts};
+}"""
 
 
 @pytest.mark.parametrize("dsf", [1, 2])
 def test_final_a_phone_door_s_lunette_is_painted_as_one_line_from_its_foot(browser, live_server, phase3_live, dsf):
     """The same cause in the phone's doors (components/entrances.html; found with QA_ROUND3 m1's): on a 2× phone the
     lunette's far half was painted before its line began, on a 3× phone it drew as dashes. Drawn through its own mask,
-    it is bare before its line begins, one run from its foot on its way and whole after (390 fr, 360 ar)."""
+    it is bare before its line begins, one run from its foot on its way and whole after (390 fr, 360 ar).
+    RESTATED under V5.20 (the strict test-update rule) for the FINAL MICRO-PASS's review (10 Nov 2026, defect 1: on a
+    phone the four lunettes and their discs were the page's arches after the hero's door): the doors carry no seat, so
+    at either pixel ratio no lunette is painted — no arch, no seat, no disc, no drawing but the calls' arrows in the
+    rail — and once the band has entered, the first plate's words stand inside it in order, the question first with
+    the plate's own air above it (390 fr, 360 ar)."""
     for width, height, lang in ((390, 844, "fr"), (360, 780, "ar")):
         context = browser.new_context(
             viewport={"width": width, "height": height},
@@ -680,13 +716,13 @@ def test_final_a_phone_door_s_lunette_is_painted_as_one_line_from_its_foot(brows
             state = page.evaluate("document.querySelector('.home-entrances').dataset.secState")
             assert state == "wait", (width, lang, "the doors' band starts below the fold", state)
             page.evaluate(_CENTRE, ".home-entrances .passaggio")
-            arch = ".passaggio__lastra:first-child .passaggio__arco > path[mask]"
-            shots = _seek_and_shoot(page, ".home-entrances", [(arch, "red")], (0, 450, 1300), dsf)
+            page.wait_for_function("() => document.querySelector('.home-entrances').dataset.secState === 'in'")
+            plate = page.evaluate(_DOOR)
             cell = (dsf, width, lang)
-            assert shots[0][arch] == [], (cell, "nothing before the line begins", shots)
-            assert len(shots[450][arch]) == 1, (cell, "one line, never segments", shots)
-            assert shots[450][arch][0][0] <= 2 and shots[450][arch][0][1] < 180, (cell, "from its foot", shots)
-            assert _whole(shots[1300][arch]), (cell, "whole", shots)
+            assert plate["drawn"] == 0, (cell, "no seat, no arch, no disc on a door", plate)
+            tops = [part["top"] for part in plate["parts"]]
+            assert all(part["height"] > 0 and part["inside"] for part in plate["parts"]), (cell, plate)
+            assert tops == sorted(tops) and tops[0] >= 16, (cell, "the question first, with the plate's air", plate)
         finally:
             context.close()
 

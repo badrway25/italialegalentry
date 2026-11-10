@@ -169,7 +169,11 @@ def test_no_line_leaves_the_hero_and_the_orientation_keeps_its_origin_seal(reque
     assert "orienta__soglia" not in capo and 'id="home-orientation-title"' in capo
     route = block.split('<div class="linea-v2', 1)[1]
     first_station = route.split('<li class="linea__step', 2)[1]
-    assert 'data-mark="ile-orienta"' in first_station
+    # FINAL MICRO-PASS §5 A1/A2 (V5.20 strict rule: the origin's `ile-orienta` seal left): the first station is its
+    # quiet sequence marker and its words, as the three after it — no seal, no tile
+    assert "sigillo" not in route and "sez-tile" not in route
+    assert '<span class="linea__num" aria-hidden="true"></span>' in first_station
+    assert 'class="linea__label' in first_station
 
 
 def test_the_orientation_route_is_the_locked_sentence_cut_and_said_once(page, seeded, phase3_open):
@@ -178,7 +182,8 @@ def test_the_orientation_route_is_the_locked_sentence_cut_and_said_once(page, se
     cut = how_it_works("fr")
     data = services.build_orientation(services.BuildContext(request=None, lang="fr", phase3=True))
     assert [s["label"] for s in data["stations"]] == list(cut.steps)
-    assert [s["glyph"] for s in data["stations"]] == list(icons.HOW_STEP)
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule): a station carries no glyph — its marker is its place in the sequence
+    assert all("glyph" not in s for s in data["stations"])
     assert data["whole"] == locked_content.text("p3.persons.how_it_works", "fr")
     _response, html = page("/fr/")
     block = _block(html, "orientation")
@@ -302,7 +307,9 @@ def test_the_promoter_stands_beside_the_working_table_under_the_arch(page, seede
     _response, html = page("/fr/")
     block = _block(html, "ecosystem")
     assert '<div class="campata campata--end campata--wide">' in block and "campata--arch" not in block
-    assert 'class="intesa intesa--atmosfera" data-intesa aria-hidden="true"' in block, "the Italy + Morocco field"
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the band's lines, triangles and blurred fields left the home): the
+    # band draws no «intesa»; the content below stands as it was
+    assert "intesa" not in block, "no Italy + Morocco field drawn under the band"
     assert 'data-slot="home.ecosystem"' in block and "4x3-" in block, "lane M's 4:3 re-crop in its plain frame"
     assert '<span class="fronte__name" lang="it" dir="ltr">AGAMI</span>' in block
     for keyword in ("depuis 2011", "Italie–Maroc"):
@@ -410,11 +417,10 @@ def test_the_orientation_takes_the_hero_s_line_only_right_after_the_hero():
 def test_the_hand_off_class_marks_the_band_that_takes_the_line(page, seeded, phase3_open):
     _response, html = page("/fr/")
     assert re.search(r'<section class="sez sez--linea home-orientation home-orientation--soglia" ', html)
-    # the needle's north half: the page's one gradient, decorative
+    # FINAL MICRO-PASS §5 A1 (V5.20 strict rule: the portico and the needle's gradient left — the ground is the one
+    # wash): the band still takes the line, and draws no portico, no needle, no inline drawing at all
     block = _block(html, "orientation")
-    assert block.count('id="orienta-ago"') == 1
-    portico = re.search(r'<svg class="orienta__portico"[^>]*>(.*?)</svg>', block)
-    assert 'aria-hidden="true"' in portico.group(0) and '<linearGradient id="orienta-ago"' in portico.group(1)
+    assert "orienta-ago" not in block and "orienta__portico" not in block and "<svg" not in block
 
 
 def test_the_trust_answers_are_one_tablet_set_in_the_wall_with_its_plinth(page, seeded, phase3_open):
@@ -553,10 +559,11 @@ def test_the_round_1_rules_hold_the_reading_edge_and_the_arabic_page():
     sheet = (ROOT / "apps" / "pages" / "static" / "pages" / "css" / "pages.css").read_text(encoding="utf-8")
     code = re.sub(r"/\*.*?\*/", "", sheet, flags=re.S)
     assert not re.search(r"protezione[^{]*\{[^}]*margin-inline: auto", code), "never centred off the reading edge"
-    seal = r"\.home-orientation \.linea__segno \.sigillo \{\s*--sg-w: 48px;\s*--sg-m: 28px;"
+    # FINAL MICRO-PASS §5 A1/A2 (V5.20 strict rule): the route's origin seal left with its seat — no rule sizes it any
+    # more; the Arabic page's French labels still start on their own edge
+    assert "linea__segno" not in code and not re.search(r"\.home-orientation[^{]*\.sigillo", code)
     labels = r'\[dir="rtl"\] \.home-orientation \.linea-v2 li > p\[lang\] \{[^}]*text-align: start;'
-    for rule in (seal, labels):
-        assert re.search(rule, sheet), rule
+    assert re.search(labels, sheet), labels
     assert re.search(r"grid-template-columns: fit-content\(var\(--measure-lead\)\);", sheet)
     # V5.24 (TYPOGRAPHY_V2 F-3 / F-4; FINAL_DELIVERY_V2 §3.4; V5.20 strict rule): the folio is the label role by name —
     # `t-label` on the colophon's labels, whose Arabic (the page's face, no tracking, no capitals) is the role's own
@@ -620,17 +627,18 @@ def test_final_round_no_line_of_the_home_lays_its_dash_on_a_non_scaling_stroke(p
     lunettes are drawn through their own masks, one per door (unique ids, the door's rank). RESTATED under V5.20 (the
     strict test-update rule) for the owner's V5.30 (7 Nov 2026, «geometry saturation», §4 «reduce cumulative
     arches/lines/outlined geometry»; stream A): the ecosystem's doorway and its two masks left with the arch, so the
-    page's masks are exactly the four doors' — the same unique-id invariant, and no fifth may return unnoticed."""
+    page's masks are exactly the four doors' — the same unique-id invariant, and no fifth may return unnoticed.
+    RESTATED under V5.20 for the FINAL MICRO-PASS's review (10 Nov 2026, defect 1: on a phone the four lunettes and
+    their discs were the page's arches after the hero's door): the doors' seats left with their arches and their masks,
+    so the home draws no line through a mask at all — none may return unnoticed — and its four doors still stand."""
     for lang in ("fr", "ar"):
         _response, html = page(f"/{lang}/")
         main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
         both = [tag for tag in _SHAPE.findall(main) if 'data-verb="stroke"' in tag and "non-scaling-stroke" in tag]
         assert both == [], (lang, both)
-        doors = re.findall(r'<svg class="passaggio__arco"[^>]*>(.*?)</svg>', main, flags=re.S)
-        assert len(doors) == 4, (lang, len(doors))
-        ids = [_assert_drawn_through_masks(door)[0]["mask"] for door in doors]
-        assert ids == [f"passaggio-arco-{rank}" for rank in range(1, 5)], (lang, ids)
-        assert len(re.findall(r'<mask id="', main)) == len(set(re.findall(r'<mask id="([^"]+)"', main))) == 4, lang
+        assert "passaggio__arco" not in main and "passaggio__seggio" not in main, lang
+        assert re.findall(r'<mask id="([^"]+)"', main) == [], lang
+        assert main.count('class="passaggio__porta"') == 4, (lang, "the four doors")
 
 
 def test_final_round_the_arabic_titles_stand_against_their_glyphs_and_the_connector_on_its_rule():
@@ -701,7 +709,9 @@ def test_final_review_the_home_reads_the_input_s_modality_in_one_rule(page, seed
     (html[data-input], head.js) in ONE rule — the doors' arrows and arches and the promoter's photograph settling in its
     arch, no duration left to run from the keyboard — each subject filed under a class (never a tag, an :is() or a
     universal subject, which the flip would try against every element). Measured, the home's own rules restyle no
-    element at the first key (QA/v522/h/NOTES.md §14); the rest of the flip is the library's and main.css's."""
+    element at the first key (QA/v522/h/NOTES.md §14); the rest of the flip is the library's and main.css's.
+    RESTATED under V5.20 for the FINAL MICRO-PASS's review (10 Nov 2026, defect 1): the doors' arches left with their
+    seats, so the one rule's subjects are the doors' arrows and the promoter's photograph — none drawn, none read."""
     rules = []
     for path in (
         ROOT / "apps" / "pages" / "static" / "pages" / "css" / "pages.css",
@@ -717,11 +727,10 @@ def test_final_review_the_home_reads_the_input_s_modality_in_one_rule(page, seed
     subjects = [" ".join(part.split()) for part in selector.split(",")]
     assert name == "pages.css" and subjects == [
         'html[data-input="key"] .passaggio__freccia',
-        'html[data-input="key"] .passaggio__arco',
         'html[data-input="key"] .campata__media .foto__img',
     ], subjects
     assert " ".join(body.split()) == "transition-duration: 0s;", body
     _response, html = page("/fr/")
     main = html.split('<main id="main-content"', 1)[1].split("</main>", 1)[0]
-    assert main.count('class="icon passaggio__freccia') == 4 and main.count('<svg class="passaggio__arco"') == 4
+    assert main.count('class="icon passaggio__freccia') == 4 and main.count('<svg class="passaggio__arco"') == 0
     assert re.search(r'<div class="[^"]*campata__media[^"]*"[^>]*>.*?class="foto__img', main, flags=re.S)

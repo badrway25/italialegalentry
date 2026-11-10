@@ -23,11 +23,14 @@ Contract: `url` (the anti-fraud page; none on that page itself), `level` (2 by d
 h2), `suffix` (the heading's id suffix, when a page draws two). The caller wraps it in its band: <section class="sez
 sez--strato" data-sec="strato" data-ground="pietra"> … <div class="container"> (`stone` where the sheet does not import
 v5/_materia.css: the sill and the bookend draw on either).
+
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): the shield is drawn bare — the ILE mark `ile-scudo` at text size in the title's
+ink, no arch seat around it (components/sezioni/sigillo.html is no longer called here).
 {% endcomment %}{% locked_text "p3.antifraud.title" as af_title %}{% locked_lang "p3.antifraud.title" as af_title_lang %}{% locked_is_fallback "p3.antifraud.title" as af_title_fallback %}{% locked_text "p3.antifraud.body" as af_body %}{% locked_lang "p3.antifraud.body" as af_lang %}{% locked_is_fallback "p3.antifraud.body" as af_fallback %}
 <div class="protezione__campo">
-<aside class="protezione sez-plate" aria-labelledby="protezione-title-{{ suffix|default:'main' }}" data-verb="depth" data-callout="antifraud" data-sigillo-scope>
+<aside class="protezione sez-plate" aria-labelledby="protezione-title-{{ suffix|default:'main' }}" data-verb="depth" data-callout="antifraud">
   <span class="protezione__soglia" data-verb="draw" aria-hidden="true"></span>
-  {% include "components/sezioni/sigillo.html" with mark="ile-scudo" size="small" css_class="protezione__sigillo" only %}
+  <span class="protezione__sigillo" aria-hidden="true">{% svg_icon "ile-scudo" "icon" %}</span>
   <h{{ level|default:2 }} class="protezione__titolo" id="protezione-title-{{ suffix|default:'main' }}"{% if af_title_fallback %} lang="{{ af_title_lang }}"{% endif %}>{{ af_title }}</h{{ level|default:2 }}>
   <p class="protezione__testo" data-locked="p3.antifraud.body"{% if af_fallback %} lang="{{ af_lang }}"{% endif %}>{{ af_body|locked_spans:"sentence" }}</p>
   {% if url %}{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}<p class="protezione__azione"><a class="btn btn--secondary" href="{{ url }}" data-azione>{{ fraud_label|typo }}</a></p>{% endif %}

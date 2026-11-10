@@ -1,187 +1,198 @@
 /* ============================================================================================
-   THE FAQ'S EXPLORER V2 — the FAQ's own V5.22 compositions (design V5.22, SECTION_SYSTEM_V2 §3.13; lane P2): a partial
-   of cms/faq.css, the FAQ's route sheet, after the library's L «l'indice» (v5/_sec-indice.css); linked on /faq/ only,
-   after the reading pages' shared sheet (cms/lettura.css). Markup: templates/faq/index.html (+ _risposta.html,
-   _collegamenti.html). Round 2 (QA_ROUND2 m5): the reading pages' V2 rules left the one shared sheet for route sheets
-   of their own — the FAQ's here, the glossary's, the term page's and Vivre's in cms/lessico.css — so a page downloads
-   its own compositions and no other page's (the owner's V5.22 standing constraint: page-only sheets, route-specific
-   bundles with their own recorded budgets).
+   THE FAQ — the page's own compositions (FINAL MICRO-PASS, 9 Nov 2026; BRIEF §6 B1): a partial of cms/faq.css, the
+   FAQ's route sheet, linked on /faq/ only, after the reading pages' shared sheet (cms/lettura.css: the search field,
+   the live count and the empty state of a list that answers as one types — v5/_lettura.css §5). Markup:
+   templates/faq/index.html and _item.html; the behaviour: static/js/src/cerca.js.
+   After 21st.dev «Searchable Question Index» (ibrandify/searchable-question-index, id 37558), adapted to the system:
+   the themes as pills (aria-pressed; the count quieter beside the name; the chosen one filled with the ink), then one column of the
+   system's disclosures on hairlines (v5/tabs.css) — the question at the body's size and weight in the primary ink, the
+   accent under the pointer, the mark that turns as it folds to a minus, the answer in the secondary ink coming in with
+   the height's opening (v5/motion.css §5), its links quiet chips, its date and permalink on one quiet line. The V5.22
+   explorer (with L «l'indice»), V5.29's glyph tile a question and the answer plate's seal left with their rules.
    Tokens only; logical properties; the words never wait.
    ============================================================================================ */
 
-/* ---- 1 · FAQ ---- */
-/* the category's name while it is the only one: the label role (`t-label`, v5/base.css — Host Grotesk 13/16 600 +0.08 em;
-   V5.24 Typography V2 F-4: the mono folio retired), in the accent, with its 48 px rule; several categories: a band title */
-.faq-esploratore__categoria {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  margin: 0 0 var(--s-8);
-  color: var(--accent-text);
-}
-
-.faq-esploratore__categoria--titolo {
-  font-size: var(--t-band);
-  line-height: var(--t-band-lh);
-  font-weight: var(--w-title);
-  letter-spacing: var(--track-band);
-  color: var(--text-1);
-}
-
-.faq-risposta { margin: 0; }
-
-/* when script runs, the explorer is drawn from the first paint as the module will draw it (round 1, QA_ROUND1 M1, M3,
-   m13; round 2, QA_ROUND2 M1, M2): from 64 rem every answer stands in the stage's one grid cell (the stage the tallest
-   answer's height, as the tabs draw it), the first shown — the address's (#faq_…: the trust band's links, the fraud
-   page's) once Chromium matches :target, a switch of visibility, never of display, so a permalink lands without the
-   stage collapsing under it (CLS 0.10–0.14 in round 2); on a phone the index is said by the panels, each question its
-   row, every answer folded but the one the address names (`:not(:target)`), which sezioni/indice.js opens at arrival
-   (lane S's MC-1, v522/s2; this rule its first paint, the final review's M1). The browser's jump to a permalink then
-   lands where the module keeps the question, and nothing restacks after load. Without script every answer stays
-   listed, in order (§2.0) */
-@media (max-width: 63.999rem) {
-  .js .indice:not([data-mode]) :is(.indice__lista, .indice__sigillo),
-  .js .indice:not([data-mode]) .indice__pannello:not(:target) .indice__corpo { display: none; }
-
-  .js .indice:not([data-mode]) .indice__pannello {
-    padding-block: var(--s-4);
-    border-block-end: 1px solid var(--line-rhythm);
-  }
-
-  /* the question is the row its button will be: 44 px, its words where they will stand, the room of the chevron the
-     module draws (12 + 9 + 6 px) kept at the row's end, so no line breaks elsewhere once it does */
-  .js .indice:not([data-mode]) .indice__titolo {
-    display: flex;
-    align-items: center;
-    min-block-size: var(--hit-primary, 44px);
-    padding-inline-end: 27px;
-    gap: var(--s-3);
-    font-size: var(--t-entry);
-    line-height: var(--t-entry-lh);
-  }
-
-  [dir="rtl"] .js .indice:not([data-mode]) .indice__titolo[lang] { justify-content: flex-end; padding-inline: 27px 0; }
-}
+/* ---- 1 · the column: the themes, the count and the questions on one reading column at the reading edge ---- */
+.faq-colonna > * { max-inline-size: 52rem; }
 
 /* a question reached by its permalink, and a focus moved by the keyboard, stand under the letterhead, never behind it
    (WCAG 2.4.11) */
-html:has(.faq-esploratore) { scroll-padding-block-start: calc(var(--header-h-scrolled) + var(--s-4)); }
+html:has(.faq-lista) { scroll-padding-block-start: calc(var(--header-h-scrolled) + var(--s-4)); }
 
-@media (min-width: 64rem) {
-  .js .indice:not([data-mode]) .indice__pannello { grid-area: 1 / 1; }
-  .js .indice:not([data-mode]) :is(.indice__pannello ~ .indice__pannello, .indice__palco:has(:target) > .indice__pannello) { visibility: hidden; }
-  .js .indice:not([data-mode]) .indice__palco > .indice__pannello:target { visibility: visible; }
+/* ---- 2 · the themes: drawn with script only (the pills filter; without script every question is listed) ---- */
+.faq-temi { display: none; }
+
+.js .faq-temi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-5);
 }
 
-/* the review's M2 on the explorer (W3-F2; §1 rule 6 «beside a marker»): on the Arabic page a French question ends on
-   the reading edge — its index row (the marker glides on that edge; V5.29: its tile the row's first, on that edge,
-   the words beside it) and the answer plate's heading; the answer itself
-   reads from its own start, as a body does (v5/_sezioni.css) */
-[dir="rtl"] .faq-esploratore .indice__voce[lang] { flex-direction: row-reverse; text-align: end; padding-inline: var(--s-2) var(--s-4); }
-[dir="rtl"] .faq-esploratore .indice__voce[lang]::before { inset-inline: auto 0; }
-[dir="rtl"] .faq-esploratore .indice__titolo[lang] { text-align: end; }
-
-/* a phone's disclosure row is the whole row (a button shrinks to its words otherwise: the chevron's auto margin then
-   had no room, and a short question's chevron stood beside its words instead of at the row's end) */
-.faq-esploratore .indice[data-mode="disclosure"] .indice__apri { inline-size: 100%; }
-
-/* … and on the Arabic page, where the heading is its disclosure button: the words (their own direction, their
-   punctuation in place) end on the reading edge, the chevron at the far end of the Arabic row */
-[dir="rtl"] .faq-esploratore .indice[data-mode="disclosure"] .indice__titolo[lang] .indice__apri {
-  flex-direction: row-reverse;
-  justify-content: space-between;
-}
-
-/* the answer plate's seal in its corner (the seat's own `position: relative` comes later in the cascade: fronte.css) */
-@media (min-width: 64rem) {
-  .faq-esploratore .sigillo.indice__sigillo { position: absolute; }
-  .faq-esploratore .indice__palco { padding-inline-end: calc(var(--s-8) + 56px + var(--s-4)); }
-}
-
-/* the category's name in French on an Arabic page: a French run, left to right as every French block of the page
-   (its punctuation in place, tests/i18n), its row reversed so the rule still stands on the reading edge, the word
-   beside it */
-[dir="rtl"] .sez .faq-esploratore__categoria[lang] { flex-direction: row-reverse; justify-content: flex-start; }
-
-.faq-esploratore .indice__link { margin-block-start: var(--s-5); }
-
-/* an answer's link as a chip (the glossary's «Où le rencontrer» chips are the same drawing: cms/_lessico-v2.css) */
-.faq-chip {
-  position: relative;
+.faq-tema {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  min-block-size: var(--hit-min);
-  padding: var(--s-1) var(--s-4);
+  min-block-size: 2.25rem;
+  padding: 0 var(--s-4);
   border: 1px solid var(--line-structure);
   border-radius: var(--radius-full);
+  background-color: var(--surface-page);
+  font: inherit;
   font-size: var(--t-ui);
   line-height: var(--t-ui-lh);
   font-weight: var(--w-control);
-  color: var(--accent-text);
-  text-decoration: none;
-}
-
-.faq-chip:is(:hover, :focus-visible) { border-color: var(--accent-mark); color: var(--accent-text); }
-
-/* ---- V5.29 §10–§13 (lane PUB2): the question's glyph, its title, its open state, the empty search ----
-   One glyph per question (faq.views.GLYPHS) in the library's small tile (v5/_sezioni.css: the vault, the ink by
-   importance, the foot rule that runs when its owner is active). The index's question at rest in the secondary ink, the
-   primary under the pointer, the laguna when chosen — the row then a quiet face and its divider the structure line; the
-   stage's heading carries no tile beside the seal (one concept); on a phone the heading is the row and keeps it. Opening
-   a question: the tile inks and its rule runs, the divider deepens, the answer comes in (240 ms, ease-out) — from the
-   keyboard and under reduced motion, at once. */
-.faq-esploratore .indice__voce {
-  gap: var(--s-4);
   color: var(--text-2);
-  transition: color var(--motion-standard) var(--ease-enter);
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-enter), background-color var(--motion-fast) var(--ease-enter),
+    border-color var(--motion-fast) var(--ease-enter);
 }
 
-:is(.faq-esploratore .indice__voce, .faq-vuoto__voce):hover { color: var(--text-1); }
+.faq-tema__n {
+  font-size: var(--t-small);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
+}
 
-.faq-esploratore .indice__voce[aria-selected="true"] {
-  border-block-end-color: var(--line-structure);
-  background-color: color-mix(in srgb, var(--surface-raised) 60%, transparent);
+.faq-tema[aria-pressed="true"] {
+  border-color: var(--text-1);
+  background-color: var(--text-1);
+  color: var(--surface-page);
+}
+
+.faq-tema[aria-pressed="true"] .faq-tema__n { color: inherit; }
+
+
+@media (hover: hover) {
+  .faq-tema[aria-pressed="false"]:hover { border-color: var(--text-3); color: var(--text-1); }
+}
+
+/* ---- 3 · the questions: the system's disclosure on the band's ground — no plate opens under an answer, so the row
+   keeps the column's edges (the system's plate bled past them, and an open row's took the hover's ground at (0,3,1):
+   v5/tabs.css) ---- */
+.lettura .faq-lista .accordion__item,
+.lettura .faq-lista .accordion__item[open] {
+  margin-inline: 0;
+  padding-inline: 0;
+  background-color: transparent;
+}
+
+/* the legacy rise (static/js/src/rise.js holds the rows of every `.accordion` below the fold, transparent and 18 px low,
+   until they enter) holds none of the questions, as the term page's and AGAMI's rows: the words never wait (§1 rule
+   3), and a permalink's row lands where the browser places it, under the letterhead (FINAL MICRO-PASS §6 B1) */
+.lettura .faq-lista > [data-rise] { opacity: 1; translate: none; }
+
+.faq-item > .accordion__summary {
+  padding-block: var(--s-4);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-body);
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+.faq-item__question { flex: 1; }
+
+/* the mark turns while its upright bar folds away: a plus that becomes a minus, in the accent once open */
+.faq-item > .accordion__summary::after {
+  transition: background-size var(--motion-standard) var(--ease-enter), color var(--motion-fast) var(--ease-enter),
+    rotate var(--motion-standard) var(--ease-enter);
+}
+
+.faq-item[open] > .accordion__summary::after {
+  rotate: 180deg;
   color: var(--accent-text);
 }
 
-.faq-esploratore .indice__voce:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring);
-  outline-offset: -2px;
+@media (hover: hover) {
+  .faq-item > .accordion__summary:hover { color: var(--accent-text); }
 }
 
-html[data-input="key"] .faq-esploratore .indice__voce { transition: none; }
-
-@media (min-width: 64rem) {
-  .faq-esploratore .indice__titolo > .sez-tile { display: none; }
+/* the fraud question's one mark (BRIEF §2.1: the protection, once a page): bare, at the question's size, in its ink */
+.faq-item__segno {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  margin-inline-end: var(--s-2);
+  vertical-align: -0.125em;
 }
 
-@media (max-width: 63.999rem) {
-  .faq-esploratore .indice__palco { padding-inline: var(--s-3); }
+/* the answer: the body's size in the secondary ink (PX18: the question is never smaller than its answer) */
+.faq-risposta {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
 }
-
-.faq-esploratore .indice__pannello[data-on] { border-block-end-color: var(--line-structure); }
-
-:is(.indice__apri[aria-expanded="true"], .faq-item[open] > summary) .sez-tile { --tile-ink: var(--accent-text); }
-:is(.indice__apri[aria-expanded="true"], .faq-item[open] > summary) .sez-tile::after { scale: 1 1; }
 
 @media (prefers-reduced-motion: no-preference) {
-  :root:not(.rm):not([data-input="key"]) .faq-esploratore .indice__pannello[data-on]:has(.indice__apri:focus) .indice__corpo {
+  :root:not(.rm):not([data-input="key"]) .faq-domande .faq-item[open] > .faq-item__answer {
     animation: faq-svela var(--motion-standard) var(--ease-enter) backwards;
   }
 }
 
 @keyframes faq-svela {
-  from { opacity: 0; translate: 0 -6px; }
+  from { opacity: 0; translate: 0 -0.25rem; }
 }
 
-/* a search's answers: the tile before the question, the question the row's measure */
-.faq-item__question { flex: 1; }
+/* the answer's links: quiet chips on the accent's wash, no arrow (the glossary's «Où le rencontrer» chips: cms/_lessico-v2.css) */
+.faq-item__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: var(--s-4) 0 0;
+}
 
-/* the empty search: the state beside the whole register, each question one step from its permalink */
+.faq-chip {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2rem;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-full);
+  background-color: var(--accent-wash);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-enter);
+}
+
+.faq-chip:hover { background-color: var(--accent-wash-2); }
+
+.faq-item__meta {
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* the permalink: a 24 px target in its 20 px line (the trail's recipe; the accessibility check's A3) */
+.faq-item__permalink {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+/* a visible focus on every control of the list: the system's ring outside the pill and outside the question (the
+   review's defect 6: drawn inside the row, it touched the question's first letter) */
+:is(.faq-tema, .faq-item > .accordion__summary):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+html[data-input="key"] :is(.faq-tema, .faq-item > .accordion__summary, .faq-item > .accordion__summary::after, .faq-chip) { transition: none; }
+
+@media (pointer: coarse) {
+  .faq-tema,
+  .faq-chip { min-block-size: var(--hit-primary); }
+
+  .faq-item__links + .faq-item__meta { margin-block-start: var(--s-6); }
+}
+
+/* ---- 4 · a search without answer (the server's ?q=): the empty state beside the register, each question a link ---- */
 .faq-vuoto {
   display: grid;
-  gap: var(--s-8);
+  gap: var(--s-10);
   align-items: start;
 }
 
@@ -189,20 +200,25 @@ html[data-input="key"] .faq-esploratore .indice__voce { transition: none; }
   .faq-vuoto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 }
 
-.faq-vuoto__indice { padding: var(--s-6); }
+.faq-vuoto__titolo { margin: 0 0 var(--s-3); color: var(--text-2); }
 
-.faq-vuoto__titolo { margin: 0 0 var(--s-3); color: var(--accent-text); }
-
-.faq-vuoto__lista { margin: 0; padding: 0; list-style: none; }
+.faq-vuoto__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
 
 .faq-vuoto__voce {
   display: flex;
   align-items: center;
-  gap: var(--s-4);
-  min-block-size: 56px;
+  min-block-size: 3.5rem;
+  padding-block: var(--s-3);
   border-block-end: 1px solid var(--line-rhythm);
-  color: var(--text-2);
-  font-weight: var(--w-control);
+  color: var(--text-1);
   text-decoration: none;
 }
 
+@media (hover: hover) {
+  .faq-vuoto__voce:hover { color: var(--accent-text); }
+}

@@ -154,23 +154,26 @@ def test_agami_s_registers_are_in_the_label_role_s_face_never_the_mono(browser, 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_faq_explorer_stands_on_stone_with_its_plate_raised(browser, site, lang):
+    """FINAL MICRO-PASS §6 B1 (V5.20; was «the explorer stands on stone with its answer plate raised»): the questions stand
+    on the stone band and draw NO plate — a row, open or closed, is the band's own ground under its hairline (no white
+    card, no raised plate under an answer, no shadow); «il rimando» on paper."""
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     try:
         page = context.new_page()
-        page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
-        got = page.evaluate("""() => { const root = document.documentElement, cs = getComputedStyle(root);
-            const band = getComputedStyle(document.querySelector('.faq-esploratore')).backgroundColor;
-            const pcs = getComputedStyle(document.querySelector('.indice__palco'));
-            const plate = pcs.backgroundColor, plateImage = pcs.backgroundImage;
+        page.goto(f"{site}/{lang}/faq/#faq_diplomas", wait_until="networkidle")
+        got = page.evaluate("""() => {
+            const band = getComputedStyle(document.querySelector('section#questions')).backgroundColor;
+            const open = getComputedStyle(document.getElementById('faq_diplomas'));
+            const closed = getComputedStyle(document.getElementById('faq_visas'));
             const rimando = getComputedStyle(document.querySelector('.faq-rimando')).backgroundColor;
             const probe = document.createElement('div'); document.body.appendChild(probe);
             probe.style.background = 'var(--surface-area)'; const area = getComputedStyle(probe).backgroundColor;
             probe.style.background = 'var(--surface-page)'; const paper = getComputedStyle(probe).backgroundColor; probe.remove();
-            return {band, plate, plateImage, rimando, area, paper}; }""")
+            return {band, rimando, area, paper, isOpen: document.getElementById('faq_diplomas').open,
+                    open: [open.backgroundColor, open.backgroundImage, open.boxShadow],
+                    closed: [closed.backgroundColor, closed.backgroundImage, closed.boxShadow]}; }""")
         assert got["band"] == got["area"] and got["rimando"] == got["paper"], got
-        # the plate is painted, never the band's ground showing through: a face of its own colour, or SYS's layered
-        # material (V5.29 stream SYS, merged: the plate's face a gradient lit from above, its colour transparent)
-        painted = got["plate"] not in (got["area"], "rgba(0, 0, 0, 0)") or "gradient" in got["plateImage"]
-        assert painted, got
+        assert got["isOpen"] and got["open"] == got["closed"] == ["rgba(0, 0, 0, 0)", "none", "none"], got
     finally:
         context.close()
+

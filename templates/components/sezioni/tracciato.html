@@ -15,6 +15,9 @@ Contract: `id` (unique prefix); `origin` — {"glyph", "title", "url", "link_lab
 secondary link); `lanes` — [{"key", "label", "label_lang", "frame_slot" (treatment «select»), "stations": [{"num", "glyph",
 "title", "title_lang", "line", "line_lang", "url"}]}]; `control` — {"legend", "all" (the choice of every lane), "count"
 (the polite count line, as today)} (optional: without it every lane stands lit).
+FINAL MICRO-PASS §5 A2/A3 (9 Nov 2026): a station's rank is the quiet sequence marker (21st.dev 26891) — «1», never
+«01», a small figure in the quiet ink —; the origin's glyph tile left (`origin.glyph` stays in the contract, drawn no
+more); a station's glyph is drawn bare (v5/_sezioni.css §3).
 {% endcomment %}<div class="tracciato{% if control %} tracciato--scelta{% endif %}">
   {% if control %}<fieldset class="tracciato__scelta">
     <legend class="tracciato__legenda">{{ control.legend }}</legend>
@@ -22,14 +25,14 @@ secondary link); `lanes` — [{"key", "label", "label_lang", "frame_slot" (treat
     {% for lane in lanes %}<label class="tracciato__chip"><input type="radio" name="{{ id }}-corsia" value="{{ lane.key }}"><span{% if lane.label_lang %} lang="{{ lane.label_lang }}"{% endif %}>{{ lane.label }}</span></label>{% endfor %}
   </fieldset>
   {% if control.count %}<p class="tracciato__conto" aria-live="polite">{{ control.count }}</p>{% endif %}{% endif %}
-  {% if origin %}<div class="tracciato__origine"><span class="sez-tile" aria-hidden="true">{% svg_icon origin.glyph "icon" %}</span><p class="tracciato__origine-testo">{{ origin.title }}{% if origin.url %} <a class="link-arrow" href="{{ origin.url }}">{{ origin.link_label }}{% svg_icon "arrow" "icon icon--sm" %}</a>{% endif %}</p></div>{% endif %}
+  {% if origin %}<div class="tracciato__origine"><p class="tracciato__origine-testo">{{ origin.title }}{% if origin.url %} <a class="link-arrow" href="{{ origin.url }}">{{ origin.link_label }}{% svg_icon "arrow" "icon icon--sm" %}</a>{% endif %}</p></div>{% endif %}
   <ol class="tracciato__corsie sez-seq" role="list">
     {% for lane in lanes %}<li class="tracciato__corsia" data-lane="{{ lane.key }}">
       <span class="tracciato__linea" data-verb="draw" aria-hidden="true"></span>
       <div class="tracciato__testa"><p class="tracciato__nome testa__label"{% if lane.label_lang %} lang="{{ lane.label_lang }}"{% endif %}>{{ lane.label }}</p>{% if lane.frame_slot %}{% photo lane.frame_slot "tracciato__foto" %}{% endif %}</div>
       <div class="tracciato__percorso">
         <ol class="tracciato__stazioni sez-seq" role="list" data-registro>
-          {% for item in lane.stations %}<li class="tracciato__stazione"><a class="tracciato__carta" href="{{ item.url }}"><span class="tracciato__num t-numeral" aria-hidden="true">{{ item.num }}</span>{% if item.glyph %}<span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="tracciato__titolo"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="tracciato__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span></a></li>{% endfor %}
+          {% for item in lane.stations %}<li class="tracciato__stazione"><a class="tracciato__carta" href="{{ item.url }}"><span class="tracciato__num" aria-hidden="true">{{ item.num|add:0 }}</span>{% if item.glyph %}<span class="sez-tile sez-tile--sm" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="tracciato__titolo"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="tracciato__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}<span class="tracciato__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span></a></li>{% endfor %}
         </ol>
       </div>
     </li>{% endfor %}

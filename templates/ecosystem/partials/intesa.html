@@ -16,13 +16,14 @@ THE INCLUDE (the band that carries it must be a stacking context: every .sez iso
     {% include "ecosystem/partials/intesa.html" with id="<unique prefix>" variant="<variant>" night=<True|False> only %}
   `id`       — a unique prefix for the gradients' and the filter's ids (two grounds on one page never share one);
   `variant`  — "campo" (the default: a head's or a closing band's ground — the fields at the band's two edges, meeting
-               around its words: the Institutions collaboration head, the Institutions, Réseau and AGAMI closing bands);
-               "atmosfera" (a section's broad atmospheric field — larger, partially cropped, Morocco's field centred on
-               the far edge, integrated with the band's photograph: the home's cooperation moment);
+               around its words: the Institutions collaboration head, the Réseau and AGAMI closing bands — the
+               Institutions band's left: FINAL MICRO-PASS, the review's defect 5);
+               (FINAL MICRO-PASS §5 A3: "atmosfera", the home's broad field under its cooperation band, left with that
+               band's «intesa» — no page draws it, and its own partial was deleted);
                "pannello" (inside one contained panel or card — the fields measured on the panel, clipped by its corner);
   `night`    — True on a night ground (the fields screened into the night instead of multiplied into the paper).
 THE SHEETS: the page's sheet imports static/css/v5/_intesa.css (the primitive, «campo», «pannello», the night modifier) —
-from an app sheet `@import url("../css/v5/_intesa.css");` — and, for «atmosfera» only, v5/_intesa-atmosfera.css after it.
+from an app sheet `@import url("../css/v5/_intesa.css");`.
 The band keeps its words' contrast (measured ≥ 4.5 : 1 in the browser tests): the fields fade toward the content.
 {% endcomment %}
 <div class="intesa intesa--{{ variant|default:'campo' }}{% if night %} intesa--notte{% endif %}" data-intesa aria-hidden="true">

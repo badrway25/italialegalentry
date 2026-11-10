@@ -33,10 +33,12 @@ edge fading toward the words, Morocco's broad field and pentagram on the far edg
 over its near half) — the promoter's «dialogue juridique Italie–Maroc» said by the ground, never by a poster; aria-hidden,
 the flags never mirrored in Arabic, a still under reduced motion. One dominant motif: the field and the photograph.
 The frame: pages/home/_ecosystem_frame.html; the band's rules: pages.css «S7».
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): «l'intesa» left the home — its blurred fields, its lines and its pentagram were the
+band's geometry; the band is its ground, the photograph and the colophon (the Italy + Morocco ground stays where a page
+composes with it: Institutions, AGAMI).
 {% endcomment %}
 {% translate "Un écosystème institutionnel" as fallback_title %}
 <section class="sez sez--campata home-ecosystem" id="{{ s.anchor }}" aria-labelledby="home-ecosystem-title" data-section="ecosystem" data-sec="campata" data-ground="{{ s.ground }}" data-rhythm="band">
-  {% include "ecosystem/partials/intesa.html" with id="intesa-casa" variant="atmosfera" only %}
   <div class="container">
     {% if s.heading %}{% include "components/sezioni/_testa.html" with role="statement" title_id="home-ecosystem-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-ecosystem-title">{{ fallback_title }}</h2>{% endif %}
     {% include "components/sezioni/campata.html" with side="end" wide=True frame="plain" media_template="pages/home/_ecosystem_frame.html" body_template="pages/home/_ecosystem_colophon.html" d=d site=site only %}

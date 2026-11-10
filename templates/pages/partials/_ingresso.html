@@ -57,12 +57,18 @@ Finishing round F1: `words_first` = True marks a head whose title is long and se
 (Parcours, Entreprises, Diplômes, the pilot): on a phone its words and action come before its photograph, from 64 rem
 its lead is narrowed (_fronte.css). The page decides, not the case of the rendered string, so the Arabic page has the
 layout of the French one; `ingresso__title--caps` stays typographic only and needs a cased letter (Arabic has none).
+
+FINAL MICRO-PASS §2.1, §2.6, §5 A3 (9 Nov 2026; the owner: «a premium modern legal-tech platform, not an architecture
+website»): the folio is typographic on every head — the label alone, no seal in its tile or its arch seat, no rule
+after it —, and the page's motif is no longer drawn: the band is its paper or night, its light and its grain. `motif`,
+`glyph`, `seal` and `compose` stay in the contract (the band's `data-fronte` and `data-compose` still name the head's
+composition for its sheet); the drawings of pages/partials/motifs/ have no caller here any more.
 {% endcomment %}{% if not fronte_linked %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endif %}
 <header class="ingresso" data-fronte="{{ motif|default:'plain' }}"{% if compose %} data-compose="{{ compose }}"{% endif %}{% if tone %} data-tone="{{ tone }}"{% endif %}{% if audience %} data-audience="{{ audience }}"{% endif %}{% if words_first %} data-words-first{% endif %}{% if compact %} data-compact{% endif %}>
-  <div class="fronte__ground" aria-hidden="true">{% if motif %}{% with "pages/partials/motifs/_"|add:motif|add:".html" as motif_template %}{% include motif_template %}{% endwith %}{% endif %}</div>
+  <div class="fronte__ground" aria-hidden="true"></div>
   <div class="container ingresso__inner">
     <div class="ingresso__text">
-      {% if label %}{% firstof seal glyph|folio_mark as folio %}<p class="ingresso__label"{% if label_lang %} lang="{{ label_lang }}"{% endif %}>{% if folio %}{% if compose == "route" %}{% include "components/sezioni/sigillo.html" with mark=folio size="small" arch=True only %}{% else %}{% include "components/sezioni/sigillo.html" with mark=folio size="small" only %}{% endif %}{% endif %}{{ label }}{% if label_suffix %} {{ label_suffix }}{% endif %}</p>{% endif %}
+      {% if label %}<p class="ingresso__label"{% if label_lang %} lang="{{ label_lang }}"{% endif %}>{{ label }}{% if label_suffix %} {{ label_suffix }}{% endif %}</p>{% endif %}
       <h1 class="ingresso__title{% if title|striptags|upper == title|striptags and title|striptags|lower != title|striptags %} ingresso__title--caps{% endif %}"{% if title_id %} id="{{ title_id }}"{% endif %}{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h1>
       {% if lead and lead_caption %}{{ lead_caption }}{% endif %}{% if lead %}<p class="ingresso__lead"{% if lead_lang %} lang="{{ lead_lang }}"{% endif %}>{{ lead }}</p>{% endif %}
       {% if note %}<p class="ingresso__note">{{ note }}</p>{% endif %}

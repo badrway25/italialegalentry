@@ -31,10 +31,16 @@ Design V5.29 §15–§17 (lane PUB1): «Pour aller plus loin» — the Forum Vé
 cooperation itself — stands on «l'intesa», the Italy + Morocco ground the collaboration proposal's head carries too
 (ecosystem/partials/intesa.html, aria-hidden, behind the tiles on the band's stone; ecosystem/_intesa.css): one
 composition for the space, the flags never mirrored in Arabic, a still under reduced motion.
+FINAL MICRO-PASS, the review's defect 5 (10 Nov 2026): the band's «intesa» left — its pentagram's line crossed the list's
+rows and chevrons; the Italy + Morocco ground stays on the collaboration proposal's head, on Réseau and on AGAMI.
 
 Before V5.12 (W3-F1): the entrance with the institution door, whose card carries the door's way in — the prescribed
 button and its one sentence, the page's ONE action, in the first screen (W3-F1's review M1); who the space addresses
 (the prescribed sentence) with the live «who can help me» line; where next.
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B4): IN-1 after 21st.dev «Split Content Section» (felipemenezes098/content-06,
+id 28310) — the chamber's photograph framed inside the shell beside the copy; the six seat tiles left: the recipients
+are one typographic annotation (components/sezioni/mappa.html layout="arc", v5/_sec-emiciclo.css,
+ecosystem/_institutions.css). No arc, no outline drawn.
 {% endcomment %}
 {% block space_header %}
 {% locked "p3.institutions.intro" as intro_html %}{% translate "Écosystème" as space_label %}{% translate "Espace Institutions" as space_title %}
@@ -45,8 +51,9 @@ button and its one sentence, the page's ONE action, in the first screen (W3-F1's
 {% block space_main %}
 {% locked "p3.institutions.button" as button_label %}
 <section id="destinataires" class="sez sez--emiciclo istituzioni-aula" data-sec="emiciclo" data-ground="night" data-rhythm="moment" aria-labelledby="destinataires-title" data-block="recipients">
-  <div class="istituzioni-aula__fondo">{% photo "institutions.chamber" "istituzioni-aula__foto" sizes="(min-width: 64rem) 42vw, 100vw" %}</div>
-  <div class="container istituzioni-aula__palco">
+  <div class="container istituzioni-aula__griglia">
+  <div class="istituzioni-aula__fondo">{% photo "institutions.chamber" "istituzioni-aula__foto" sizes="(min-width: 64rem) 40vw, 100vw" %}</div>
+  <div class="istituzioni-aula__palco">
     <h2 class="visually-hidden" id="destinataires-title">{% translate "Destinataires" %}</h2>
     {% include "components/sezioni/mappa.html" with layout="arc" nodes=seats sentence=recipients_sentence sentence_lang=recipients.source.lang_attr only %}
     {% include "ecosystem/partials/note.html" %}
@@ -55,12 +62,12 @@ button and its one sentence, the page's ONE action, in the first screen (W3-F1's
       <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
     </div>
   </div>
+  </div>
 </section>
 
 {% if links.forum or links.pilot or links.partners %}
 {% translate "Pour aller plus loin" as related_title %}
 <section class="sez sez--approdo ecosistema-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="related-header">
-  {% include "ecosystem/partials/intesa.html" with id="intesa-approdo" only %}
   <div class="container">
     {% include "ecosystem/partials/approdo.html" with title_id="related-header" title=related_title motif="civic" pilot=True %}
   </div>

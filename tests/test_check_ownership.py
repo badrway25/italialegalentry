@@ -159,7 +159,8 @@ OUTSIDE_THE_WAVES = {
     "v522-m", "v522-s", "v522-p1", "v522-s2", "v522-h", "v522-p2",
     "v524-px", "v524-t", "v524-lib", "v524-cifix", "v524-ar", "v524-home", "v524-sys",
     "v524-pub1", "v524-pub2", "v524-brand", "v524-plat", "v524-closing",
-    "v530-agami", "v530-plat", "v530-art", "v530-integ", "v530-mfix", "v530-sys", "v530-cifix",
+    "v530-agami", "v530-plat", "v530-art", "v530-integ", "v530-mfix", "v530-sys", "v530-cifix", "v530-a", "v530-b",
+    "v530-c", "v530-d",
 }
 
 

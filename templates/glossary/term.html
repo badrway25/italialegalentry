@@ -23,6 +23,8 @@ definition plate on a ground, the page no longer one tone from head to foot. «P
 outlined initial) was conditional on _lettura.css freeing the partial's ≈ 770 B under the reading pages' 54 272 B letter;
 the coverage pass found less (NOTES §6), so the band takes stone as the ruling says. The term at display size, the
 initial four and a half display steps (the scale, not a clamp).
+FINAL MICRO-PASS (BRIEF §6 B2): the large outlined initial behind the plate left — the term at display size in the
+head names the page; the plate, its definition, its facts and its rows of chips are unchanged.
 {% endcomment %}
 {% block page_title %}{{ entry.term }} — {% translate "Glossaire" %}{% endblock %}
 {% block meta_description %}{{ entry.term }} : {{ entry.definition|truncatechars:150 }}{% endblock %}
@@ -37,7 +39,6 @@ initial four and a half display steps (the scale, not a clamp).
   {% include "pages/partials/_ingresso.html" with label=page_label title=title motif="learning" compact=True seal="ile-lessico" fronte_linked=True only %}
   <div class="sez sez--scheda scheda-band" data-sec="scheda" data-ground="stone" data-rhythm="band">
     <div class="container scheda">
-      <span class="scheda__iniziale" aria-hidden="true" lang="{{ entry.term_lang }}">{{ entry.initial }}</span>
       <div class="scheda__lastra sez-plate sez-plate--raised" data-verb="depth">
         <span class="scheda__regola" data-verb="draw" aria-hidden="true"></span>
         {% if entry.definition_key %}{% locked_caption entry.definition_key as caption %}{% endif %}{% if caption %}<div class="scheda__fonte">{{ caption }}{% endif %}<p class="glossary-term__definition scheda__definizione"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</p>{% if caption %}</div>{% endif %}

@@ -22,12 +22,12 @@ rail from 64 rem):
     in view marked (sezioni/spia.js, aria-current="location"), so the index is in reach wherever the reader is; below
     64 rem the head's «Sommaire» stays (the rail is a wide screen's);
   * PS-1, the page's moment — I «il filo» (components/sezioni/filo.html): the steps as milestones (the CMS seed
-    headings, pending: headings only, nothing invented), each its numeral and its concept tile (icons.SHEET_STEP).
-    SCROLL PROGRESSION;
-  * PS-2 — «chi decide» on the night: the competent authorities as a row of plates (V5.30 VARIETY §5: no arc) (the registry's building, neutral
-    ink, each name in its own language, its host beside a link — D26), Italy Legal Entry™ drawn OUTSIDE the arc as a
-    dotted node that never lights, captioned by the lead that says it intervenes with no authority. The drawing says
-    ILE is not an authority. RELATIONAL DRAW;
+    headings, pending: headings only, nothing invented), each its quiet sequence marker — FINAL MICRO-PASS §5 A2: a
+    small figure on a hairline, no tile, no concept glyph, no display numeral (a pending step's hairline dashed);
+  * PS-2 — «chi decide» on the night: the competent authorities as a row of plates (V5.30 VARIETY §5: no arc) (FINAL
+    MICRO-PASS §5 A3: no building glyph on every seat; each name in its own language, its host beside a link — D26), and under them the lead that says Italy Legal
+    Entry™ intervenes with no authority (FINAL MICRO-PASS §5 A3: its dotted node and the `ile-mark` in it left). The
+    words say ILE is not an authority. RELATIONAL DRAW;
   * PS-3 — K «la protezione» on the stone (the anti-fraud text, whole), the editors' warnings as plates under it. DEPTH;
   * PS-4 — L, definitions in place: each useful Italian term opens its locked definition (p3.glossary.terms, verbatim)
     with its way to the glossary (native exclusive <details>); the space's other areas a compact row. MASK / height;
@@ -108,8 +108,7 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
     <div class="filo">
       <ol class="filo__linea" role="list" data-registro data-steps="{{ milestones|length }}">
         {% for item in milestones %}<li class="filo__tappa{% if item.pending %} filo__tappa--attesa{% endif %}">
-          <span class="filo__num sez-numeral" aria-hidden="true">{{ item.num }}</span>
-          <span class="filo__nodo sez-tile sez-tile--sm" aria-hidden="true">{% if item.glyph %}{% svg_icon item.glyph "icon" %}{% endif %}</span>
+          <span class="filo__num" aria-hidden="true">{{ item.num|add:0 }}</span>
           <h3 class="filo__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.heading }}</h3>
           {% if item.body %}<div class="filo__corpo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.body|linebreaks }}</div>{% endif %}
         </li>{% endfor %}
@@ -143,12 +142,10 @@ lane S's library and the page's own V2 partials (apps/pathways/static/pathways/s
     <div class="decide">
       {% with glyph=authority_glyph %}<ol class="decide__arco sez-seq authority-list" role="list" data-registro data-verb="mask" data-seggi="{{ d.authorities|length }}">
         {% for a in d.authorities %}<li class="decide__seggio">
-          <span class="sez-disc" data-verb="node" aria-hidden="true">{% svg_icon glyph "icon" %}</span>
           {% if a.url %}<p class="decide__nome"><a class="autorita" href="{{ a.url }}" rel="noopener"><span{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</span></a>{% if a.host %} <span class="autorita__host">{{ a.host }}</span>{% endif %}</p>{% else %}<p class="decide__nome"{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</p>{% endif %}
         </li>{% endfor %}
       </ol>{% endwith %}
       <div class="decide__ile">
-        <span class="decide__nodo" aria-hidden="true">{% svg_icon "ile-mark" "icon" %}</span>
         <p class="decide__lead">{{ auth_lead }}</p>
       </div>
     </div>

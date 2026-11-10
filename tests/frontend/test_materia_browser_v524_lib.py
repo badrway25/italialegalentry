@@ -254,24 +254,29 @@ def test_the_incastro_begins_sixty_four_pixels_up_and_the_doors_stand_over_the_b
 
 
 def test_the_mosaico_s_tiles_ink_and_light_and_never_settle(browser, live_server):
+    """RESTATED under V5.20 for FINAL MICRO-PASS §5 A3 (the tile is bare: no vault, no lit floor, no foot rule): as
+    the section enters the glyph still inks in and the row's threshold still draws, but no layer of the tile runs and
+    nothing settles after it — the tile bare before and after."""
     pages = {"mosaico-fr": fx.page("mosaico", "fr", spacer=True)}
     ctx, pg = _open(browser, pages, 1440)
+    bare = (
+        "() => { const t = document.querySelector('.mosaico .sez-tile'), cs = getComputedStyle(t);"
+        " return [getComputedStyle(t, '::before').content, getComputedStyle(t, '::after').content,"
+        " cs.backgroundImage, cs.boxShadow, !!t.querySelector('svg.icon')]; }"
+    )
     try:
         _go(pg, live_server, "mosaico-fr")
         sec = '[data-sec="mosaico"]'
         assert pg.evaluate(STATE, sec) == "wait"
-        assert pg.evaluate("getComputedStyle(document.querySelector('.mosaico .sez-tile'), '::before').opacity") == "0"
+        assert pg.evaluate(bare) == ["none", "none", "none", "none", True]
         pg.evaluate("s => document.querySelector(s).scrollIntoView({block: 'center'})", sec)
         pg.wait_for_function("s => document.querySelector(s).dataset.secState === 'in'", arg=sec)
         running = pg.evaluate(RUNNING, sec)
         names = {a[0] for a in running}
-        assert "sez-node" not in names, running
-        assert {"sez-ink", "sez-layer", "sez-draw"} <= names, names
-        assert any(a[0] == "sez-layer" and a[1] == "::before" for a in running), "the floor's light is the tile's own layer"
+        assert not names & {"sez-node", "sez-layer"} and {"sez-ink", "sez-draw"} <= names, running
         pg.wait_for_timeout(3200)
         assert pg.evaluate(RUNNING, sec) == []
-        assert pg.evaluate("getComputedStyle(document.querySelector('.mosaico .sez-tile'), '::before').opacity") == "1"
-        assert pg.evaluate("getComputedStyle(document.querySelector('.mosaico .sez-tile')).backgroundImage").startswith("linear-gradient(")
+        assert pg.evaluate(bare) == ["none", "none", "none", "none", True]
     finally:
         ctx.close()
 

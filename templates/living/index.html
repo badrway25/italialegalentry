@@ -26,6 +26,8 @@ Final round (QA_ROUND3 m1) — the moment meets its band: no paper strip under t
 stone (on a desktop the frame fills it, so the frame's foot is the band's edge; below 64 rem the lead's plate overlaps
 the frame and stands on that stone), deliberately one ground with the band that follows.
 Page sheets apps/cms/static/cms/lettura.css and the route sheet lessico.css (+ _lessico-v2.css).
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): the head is the prescribed title and its way down — the «ile-vivere» seal in its
+niche and the band's territory drawing left (a page header draws no motif); the photograph and the plate carry the page.
 {% endcomment %}
 {% block page_title %}{% translate "Vivre en Italie" %}{% endblock %}
 {% block meta_description %}{% locked "p3.living.body" as living_body %}{{ living_body|striptags }}{% endblock %}
@@ -36,9 +38,9 @@ Page sheets apps/cms/static/cms/lettura.css and the route sheet lessico.css (+ _
 <div class="container">{% translate "Aperçu réservé à la rédaction — cette section n’est pas encore publiée." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
 {% endif %}
 
-<div class="fronte-wrap" data-fronte="territory"><div class="fronte__ground" aria-hidden="true">{% include "pages/partials/motifs/_territory.html" %}</div>
-<header class="page-header container vivere-testa__header" data-sigillo-scope>
-  <div class="vivere-testa__riga">{% include "components/sezioni/sigillo.html" with mark="ile-vivere" size="body" css_class="vivere-testa__sigillo" only %}{% locked_title "p3.living.title" %}{% if settle.terms or settle.routes %}<a class="vivere-testa__azione" href="#living-settle-title" data-azione>{% translate "Pour s’installer" %}{% svg_icon "chevron" "icon icon--sm" %}</a>{% endif %}</div>
+<div class="fronte-wrap" data-fronte="territory"><div class="fronte__ground" aria-hidden="true"></div>
+<header class="page-header container vivere-testa__header">
+  <div class="vivere-testa__riga">{% locked_title "p3.living.title" %}{% if settle.terms or settle.routes %}<a class="vivere-testa__azione" href="#living-settle-title" data-azione>{% translate "Pour s’installer" %}{% svg_icon "chevron" "icon icon--sm" %}</a>{% endif %}</div>
 </header>
 </div>
 <div class="sez vivere-panorama" data-ground="stone" data-rhythm="moment">

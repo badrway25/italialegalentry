@@ -60,23 +60,28 @@ PAGES = [
     "/fr/glossaire/",
     "/fr/partenaires/",
 ]
-#: the head folios that draw their page's T1 seal (icons.FOLIO): the concept said by the seal, once (V5.22 §0.1, §3)
-SEALS = {
-    "/fr/parcours/": "ile-percorso",
-    "/fr/parcours/salaried_work/": "ile-percorso",
-    "/ar/parcours/salaried_work/": "ile-percorso",
-    "/fr/formation/": "ile-formazione",
-    "/fr/entreprises/": "ile-impresa",
-    "/fr/institutions/": "ile-istituzione",
-    "/fr/universites-et-formation/": "ile-sapere",
-    "/fr/attention-aux-fraudes/": "ile-scudo",
-}
+#: FINAL MICRO-PASS §2.1, §5 A3 (V5.20 strict rule: the head folios' T1 seals left with the eyebrow's tile — «not an
+#: architecture website»): the eight folios that drew their page's seal are typographic, as the four below always were
+FORMER_SEALS = (
+    "/fr/parcours/",
+    "/fr/parcours/salaried_work/",
+    "/ar/parcours/salaried_work/",
+    "/fr/formation/",
+    "/fr/entreprises/",
+    "/fr/institutions/",
+    "/fr/universites-et-formation/",
+    "/fr/attention-aux-fraudes/",
+)
 #: the home, recomposed by lane H (SECTION_SYSTEM_V2 §3.1), is no longer exempt: it draws no bare mark, and its seals
 #: are exactly the three §3.1 places on it, each once — the orientation's origin, «la protezione»'s shield, the
 #: reserved row's key (V5.20 strict rule; the exemption V5.12 and lane S kept «until lane H recomposes it» goes)
-HOME_SEALS = {"/fr/": ["ile-orienta", "ile-scudo", "ile-accesso"], "/ar/": ["ile-orienta", "ile-scudo", "ile-accesso"]}
-#: the head folios whose concept has no ILE mark: typographic (a Lucide disc in the folio's seat was the old device)
-TYPOGRAPHIC = ("/fr/contact/", "/fr/reseau/", "/fr/diplomes-et-titres/", "/fr/agami/")
+#: FINAL MICRO-PASS §5 A1/A3 (V5.20 strict rule): the orientation's origin seal and «la protezione»'s seated shield
+#: left (the shield is drawn bare, no seal) — the home's one seal is the reserved door's key, its arch a brand signature
+#: the owner kept, once
+HOME_SEALS = {"/fr/": ["ile-accesso"], "/ar/": ["ile-accesso"]}
+#: the head folios whose concept has no ILE mark: typographic (a Lucide disc in the folio's seat was the old device) —
+#: and, FINAL MICRO-PASS §5 A3, every other head folio
+TYPOGRAPHIC = ("/fr/contact/", "/fr/reseau/", "/fr/diplomes-et-titres/", "/fr/agami/", *FORMER_SEALS)
 MARK = re.compile(r'<svg class="icon chapter__mark[^"]*"[^>]*><use href="[^"#]*#icon-([a-z0-9-]+)"')
 SEAL = re.compile(r'<span class="sigillo [^"]*" data-mark="([a-z-]+)"')
 HEAD = re.compile(r'<div class="(?:section__header )?chapter__head">(.*?)<h2', re.S)
@@ -112,14 +117,13 @@ def test_no_public_page_draws_the_stair_nor_a_glyph_above_a_title_and_each_folio
         assert len(seals) == len(set(seals)), (path, "one concept, said once a page by its seal", seals)
         assert set(seals) <= {mark.id for mark in icons.MARKS.values()}, (path, seals)
         if path in HOME_SEALS:
-            assert seals == HOME_SEALS[path], (path, "the home's three seals, each once, in the page's order", seals)
-        if path in SEALS:
-            assert seals[:1] == [SEALS[path]], (path, "the folio draws its page's T1 seal", seals)
-            folio = main.split('class="ingresso__label"', 1)[1].split("</p>", 1)[0]
-            assert folio.count("sigillo sigillo--small") == 1 and "#icon-" not in folio, (path, "one seal, no disc")
+            assert seals == HOME_SEALS[path], (path, "the home's one seal, once", seals)
+        if path in FORMER_SEALS:
+            assert not seals, (path, "no seal on the page any more", seals)
         if path in TYPOGRAPHIC:
             folio = main.split('class="ingresso__label"', 1)[1].split("</p>", 1)[0]
-            assert "<svg" not in folio, (path, "a typographic folio")
+            assert "<svg" not in folio and "sigillo" not in folio, (path, "a typographic folio")
+            assert re.sub(r"<[^>]+>", "", folio.split(">", 1)[1]).strip(), (path, "the folio's words")
 
 
 def test_the_stair_still_says_my_journey_in_the_console(client, seeded, person_user):

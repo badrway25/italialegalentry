@@ -427,31 +427,28 @@ def test_from_the_keyboard_nothing_in_the_family_animates(browser, showcase):
 
 
 def test_a_link_to_an_faq_row_opens_it(browser, site):
-    """V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the FAQ's rows are an explorer — a permalink still lands
-    on its answer: its question the selected one, its answer the one shown, the others' not. The accordion's drawn
+    """V5.22 (SECTION_SYSTEM_V2 §3.13 Q1; strict rule V5.20): the FAQ's rows were an explorer — FINAL MICRO-PASS §6 B1
+    (V5.20): they are the system's disclosures again, one exclusive group, and a permalink still lands on its answer:
+    its row the one open, its answer shown, the others' not; the list follows the address within the page. The accordion's drawn
     plus/minus (Accordion-09, V5.12 lane A W2) is kept where the accordion stays — the promoter's question on /agami/
     (§3.17 AG-2): a closed row draws the plus, the opened one the minus."""
     context, page = _open(browser)
     try:
         page.goto(site + "/fr/faq/", wait_until="networkidle")
-        ids = page.evaluate("[...document.querySelectorAll('.faq-esploratore .indice__pannello')].map((p) => p.id)")
+        ids = page.evaluate("[...document.querySelectorAll('.faq-lista > details.faq-item')].map((p) => p.id)")
         assert len(ids) >= 3  # the restored same-document step below names a third answer (v522-p2-final-qa1 M1)
         # a permalink is followed from another page (the trust band's, the fraud page's links): a fresh document
         page.goto(site + "/fr/attention-aux-fraudes/", wait_until="networkidle")
         page.goto(site + f"/fr/faq/#{ids[1]}", wait_until="networkidle")
-        page.wait_for_selector(".faq-esploratore .indice[data-mode='tabs']")
-        shown = """(id) => { const panel = document.getElementById(id);
-            return getComputedStyle(panel).visibility !== 'hidden'
-                && panel.querySelector('.indice__corpo').getBoundingClientRect().height > 0; }"""
+        page.wait_for_selector("section#questions.cerca-viva")
+        shown = """(id) => { const row = document.getElementById(id);
+            return row.open && row.querySelector('.faq-risposta').getBoundingClientRect().height > 0; }"""
         assert page.evaluate(shown, ids[1]), "the permalink lands on the answer"
         assert not page.evaluate(shown, ids[0])
-        assert page.get_attribute(f"#{ids[1]}-tab", "aria-selected") == "true"
-        # … and within the page (a link from one answer to another, the address bar): the explorer follows the address —
-        # the step the V5.22 build had to drop until sezioni/indice.js followed `hashchange` (QA_ROUND2 M2, restored)
+        # … and within the page (a link from one answer to another, the address bar): the list follows the address —
+        # (QA_ROUND2 M2's step; cerca.js follows `hashchange`)
         page.goto(site + f"/fr/faq/#{ids[2]}", wait_until="networkidle")
-        page.wait_for_function(
-            "(id) => document.getElementById(id + '-tab').getAttribute('aria-selected') === 'true'", arg=ids[2]
-        )
+        page.wait_for_function("(id) => document.getElementById(id).open", arg=ids[2])
         assert page.evaluate(shown, ids[2]) and not page.evaluate(shown, ids[1])
         page.goto(site + "/fr/agami/", wait_until="networkidle")
         row = "#agami-faq"

@@ -105,7 +105,7 @@ PROBE = r"""(raised) => {
   const main = document.querySelector('main');
   const out = {overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
                h1: document.querySelectorAll('h1').length, radii: [], formwork: !!main.querySelector('.formwork'),
-               shadows: [], wrong: [], icons: 0, explorer: 0, small: [], fields: []};
+               shadows: [], wrong: [], icons: 0, small: [], fields: []};
   const radii = new Set();
   // an allowed shadow as the browser computes it where the element stands: a probe beside it takes the expression
   const resolve = (el, expr) => {
@@ -133,10 +133,9 @@ PROBE = r"""(raised) => {
         out.wrong.push(`${el.className || el.tagName} (${rule[0]}): ${cs.boxShadow}`);
       }
     }
-    // V5.29 §10–§13 (the owner's FAQ, an approved decision; V5.20): the explorer gives each question its semantic
-    // glyph on its tile — those tiles are the explorer's, counted apart; every other glyph keeps the body's cap
-    if (el.matches('svg.icon') && el.closest('.faq-esploratore') && el.closest('.sez-tile')) out.explorer++;
-    else if (el.matches('svg.icon')) out.icons++;
+    // V5.29 §10–§13 counted the explorer's glyph tiles apart; FINAL MICRO-PASS §6 B1 (V5.20, stronger): the explorer and
+    // its tiles left — every glyph of the body counts against its cap
+    if (el.matches('svg.icon')) out.icons++;
     if ([...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) {
       const size = parseFloat(cs.fontSize);
       const arabic = (el.closest('[lang]') || document.documentElement).getAttribute('lang') === 'ar';
@@ -413,7 +412,7 @@ def test_the_letter_index_stays_under_the_letterhead_and_a_letter_lands_under_it
     stands under it. V5.22 (SECTION_SYSTEM_V2 §3.14 G1; strict rule V5.20): from 64 rem the index is a thumb rail at
     the reading edge, the cards beside it — it still stands at the letterhead's foot, and a letter reached from it lands
     under the letterhead and beside the rail (no longer under a band: the rail covers no card); between 48 and 64 rem
-    it is the band of before, the letter landing under it."""
+    it is the band of before, the letter landing under it. FINAL MICRO-PASS §6 B2: the band at every width."""
     context = browser.new_context(viewport={"width": width, "height": 900})
     try:
         page = context.new_page()
@@ -429,61 +428,52 @@ def test_the_letter_index_stays_under_the_letterhead_and_a_letter_lands_under_it
         page.locator(".az-index__link").nth(3).click()
         page.wait_for_timeout(600)
         landed = page.evaluate("""() => document.getElementById(location.hash.slice(1)).getBoundingClientRect().top""")
-        if width >= 1024:
-            beside = bar["right"] <= bar["cardsLeft"] if lang == "fr" else bar["left"] >= bar["cardsRight"]
-            assert beside, ("the rail stands beside the cards", bar)
-            assert landed >= bar["header"], (landed, bar)
-        else:
-            assert landed >= bar["bottom"], (landed, bar)
+        # FINAL MICRO-PASS §6 B2 (V5.20; was «from 64 rem a thumb rail beside the cards, a letter landing beside it»):
+        # the alphabet is ONE quiet row above the register at every width — it spans the register, stays at the
+        # letterhead's foot, and a letter reached from it lands under it (the band's promise, now at every width)
+        assert bar["left"] <= bar["cardsLeft"] + 1 and bar["right"] >= bar["cardsRight"] - 1, ("the row spans the register", bar)
+        assert landed >= bar["bottom"], (landed, bar)
     finally:
         context.close()
 
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_faq_disclosure_opens_and_closes_from_the_keyboard(browser, site, lang):
-    """V5.22 (SECTION_SYSTEM_V2 §3.13 Q1, the L «l'indice» explorer; strict rule V5.20): the answers no longer unfold
-    as <details> rows. The same promise — every answer opens and closes from the keyboard — now holds in both forms:
-    from 64 rem the questions are tabs (the Arrows select the next question, its answer the one on screen); below 64 rem
-    each question's heading is its disclosure button (Enter opens it, Space closes it)."""
-    context = browser.new_context(viewport={"width": 1440, "height": 900})
-    try:
-        page = context.new_page()
-        page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
-        page.wait_for_selector(".faq-esploratore .indice[data-mode='tabs']")
-        page.focus(".faq-esploratore a.indice__voce[aria-selected='true']")
-        page.keyboard.press("ArrowDown")
-        page.wait_for_timeout(200)
-        second = page.locator(".faq-esploratore .indice__pannello").nth(1)
-        assert second.evaluate("p => p.hasAttribute('data-on')") and second.locator(".indice__corpo").is_visible()
-        assert not page.locator(".faq-esploratore .indice__pannello").first.locator(".indice__corpo").is_visible()
-    finally:
-        context.close()
-    context = browser.new_context(viewport={"width": 390, "height": 844})
-    try:
-        page = context.new_page()
-        page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
-        page.wait_for_selector(".faq-esploratore .indice[data-mode='disclosure']")
-        page.focus(".faq-esploratore .indice__apri")
-        page.keyboard.press("Enter")
-        page.wait_for_timeout(200)
-        first = page.locator(".faq-esploratore .indice__pannello").first
-        assert first.locator(".indice__apri").get_attribute("aria-expanded") == "true"
-        assert first.locator(".indice__corpo").is_visible()
-        page.keyboard.press("Space")
-        page.wait_for_timeout(200)
-        assert first.locator(".indice__apri").get_attribute("aria-expanded") == "false"
-        assert not first.locator(".indice__corpo").is_visible()
-    finally:
-        context.close()
+    """FINAL MICRO-PASS §6 B1 (V5.20 strict rule; this decision replaces V5.22's explorer — its tabs from 64 rem, its
+    disclosure buttons below): the answers unfold as the system's <details> rows again, one list at every width. The same
+    promise holds: every answer opens and closes from the keyboard — Enter opens a question, Space closes it, the next
+    question opened closes the one before (one exclusive group)."""
+    for width, height in ((1440, 900), (390, 844)):
+        context = browser.new_context(viewport={"width": width, "height": height})
+        try:
+            page = context.new_page()
+            page.goto(f"{site}/{lang}/faq/", wait_until="networkidle")
+            page.wait_for_selector("section#questions.cerca-viva")
+            rows = page.locator("section#questions .faq-lista > details.faq-item")
+            rows.nth(0).locator("summary").focus()
+            page.keyboard.press("Enter")
+            page.wait_for_timeout(200)
+            assert rows.nth(0).evaluate("d => d.open") and rows.nth(0).locator(".faq-risposta").is_visible(), width
+            rows.nth(1).locator("summary").focus()
+            page.keyboard.press("Enter")
+            page.wait_for_timeout(200)
+            assert rows.nth(1).locator(".faq-risposta").is_visible(), width
+            assert not rows.nth(0).evaluate("d => d.open"), (width, "one answer open at a time")
+            page.keyboard.press("Space")
+            page.wait_for_timeout(200)
+            assert not rows.nth(1).evaluate("d => d.open") and not rows.nth(1).locator(".faq-risposta").is_visible()
+        finally:
+            context.close()
+
 
 
 #: where a head's words end, against its cell's reading edge: the right of the text's last box vs the cell's right (a
-#: FAQ question's cell is its row — the summary of a search's answer, the explorer's index row — inside its padding)
+#: FAQ question's cell is its row — its summary, on the list as on a search's answers — inside its padding)
 ALIGN = r"""(selector) => [...document.querySelectorAll(selector)].map((el) => {
   const range = document.createRange();
   range.selectNodeContents(el);
   const right = Math.max(...[...range.getClientRects()].filter((r) => r.width > 0).map((r) => r.right));
-  const row = el.closest('summary, .indice__voce');
+  const row = el.closest('summary');
   const cell = row ? row.getBoundingClientRect().right - parseFloat(getComputedStyle(row).paddingRight)
                    : el.getBoundingClientRect().right;
   return {text: el.textContent.trim().slice(0, 32), gap: Math.round((cell - right) * 10) / 10};
@@ -507,8 +497,8 @@ def test_the_latin_heads_of_the_arabic_pages_end_on_the_reading_edge(browser, si
             ("/ar/forum-virtuel/", ".community-rooms__title[lang]", True),
             # V5.27 / R7′ (the v524-pub2 steward; V5.20, an approved decision): the FAQ questions read their provisional
             # Arabic — a question left in another language is still measured, none is required any more
-            ("/ar/faq/", ".faq-esploratore .indice__titolo[lang]", False),
-            *((("/ar/faq/", ".faq-esploratore .indice__voce[lang]", False),) if width >= 1024 else ()),
+            # FINAL MICRO-PASS §6 B1 (V5.20): the explorer's headings and index rows became the list's rows' questions
+            ("/ar/faq/", ".faq-lista .faq-item__question[lang]", False),
             ("/ar/faq/?q=visa", ".faq-item__question[lang]", False),
             # V5.22 lane P2 round 2 (QA_ROUND2 M5): the term page's h1, an Italian term in the page's direction
             ("/ar/glossaire/nulla_osta/", ".ingresso__title", True),

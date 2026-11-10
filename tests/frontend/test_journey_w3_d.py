@@ -435,10 +435,13 @@ def test_the_home_draws_the_orientations_neutral_steps_on_the_public_passage():
     the same and pinned tighter: the one include, with every V2 parameter, and no `sequence__` class."""
     source = (ROOT / "templates" / "pages" / "home" / "_orientation.html").read_text(encoding="utf-8")
     assert source.count('{% include "components/stepper.html"') == 1
+    # FINAL MICRO-PASS §5 A1 (V5.20 strict rule: the route's origin seal left — every station its quiet marker): the
+    # one include, with every remaining V2 parameter, and no seal
     assert (
         '{% include "components/stepper.html" with size="large" steps=d.stations whole=d.whole lang=d.stations_lang '
-        'across=True origin_seal="ile-orienta" terminal=d.terminal end_action=d.end_action only %}'
+        "across=True terminal=d.terminal end_action=d.end_action only %}"
     ) in source
+    assert "origin_seal" not in source.split("{% endcomment %}", 1)[1]
     assert "sequence__" not in source
 
 

@@ -200,10 +200,11 @@ def test_one_primary_action_and_the_registry_s_glyphs_only(get, path):
 
 def test_the_pilot_s_seal_heads_its_eight_stations_and_the_status_plate_ends_them(get):
     soup = BeautifulSoup(_main(get("/fr/projet-pilote/")), "html.parser")
-    # §3.3 PP-1: the T1 `ile-pilota` seal beside the section's title; the eight stations each draw their concept tile
-    # (icons.PILOT_STATION — a register's glyphs all or none, §4.10), never the seal in a station's seat
+    # FINAL MICRO-PASS §5 A2/A3 (V5.20 strict rule: the T1 `ile-pilota` seal beside the title and the stations'
+    # concept tiles left — numbers only for sequence): the head is its title alone, no seal; each of the eight stations
+    # is its quiet sequence marker (21st.dev 26891) and its prescribed words — no tile, no glyph
     head = soup.select_one(".pilota-rotta__capo")
-    assert head.select_one('.sigillo.sigillo--body[data-mark="ile-pilota"]') and head.select_one("h2#sequence-header")
+    assert head.select_one(".sigillo, [data-mark]") is None and head.select_one("h2#sequence-header")
     # §3.3's map (QA_ROUND1 M2): the route is its own trigger, so a desktop's first screen — which holds the section's top
     # — still sees the line drawn when the route is in view. V5.24 (FINAL_DELIVERY_V2 R5, §3.5; BACKGROUND_MATERIAL_V2
     # §3.3; V5.20 strict rule): the route stands on the page's one wash as a BAND (a two-row route is content-bound, no
@@ -215,9 +216,8 @@ def test_the_pilot_s_seal_heads_its_eight_stations_and_the_status_plate_ends_the
     stations = route.select("ol.linea.linea--large > li")
     labels = [_text(li.select_one(".linea__label")) for li in stations]
     assert labels[:8] == locked_content.get("p3.pilot.sequence", "fr")[0], labels
-    assert not route.select(".sigillo"), "the seal stands in the head, never in a station's seat"
-    tiles = [ICON.findall(str(li.select_one(".linea__segno"))) for li in stations[:8]]
-    assert [t[0] for t in tiles] == list(icons.PILOT_STATION), tiles
+    assert not route.select_one("ol.linea").select(".sigillo, .sez-tile, .linea__segno, svg"), "no seal, tile or glyph"
+    assert all(len(li.select('span.linea__num[aria-hidden="true"]')) == 1 for li in stations[:8]), "one marker each"
     # the mandatory notice: the route's terminal plate, directly after the stations, whole, never collapsible
     after = str(route).split("</ol>", 1)[1]
     assert 'data-notice="pilot-not-authorised"' in after and "<details" not in after
@@ -254,7 +254,9 @@ def test_the_route_board_holds_the_eight_pathways_on_their_family_lanes(get):
     lanes = board.select(".tracciato__corsia")
     assert [lane["data-lane"] for lane in lanes] == ["work", "study", "family", "other"]
     stations = board.select(".tracciato__stazione")
-    assert sorted(s.select_one(".tracciato__num").get_text() for s in stations) == [f"0{i}" for i in range(1, 9)]
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: «01» gave way to the quiet sequence marker «1»): each station still
+    # says its prescribed rank — the eight ranks, once each
+    assert sorted(int(s.select_one(".tracciato__num").get_text()) for s in stations) == list(range(1, 9))
     entries = {e["key"]: e for e in locked_content.get("p3.persons.pathways", "fr")[0]}
     for station in stations:
         key = station["data-pathway"]
@@ -320,7 +322,10 @@ def test_how_it_works_reads_back_whole_on_its_four_plates_and_its_caveat_is_neve
     assert " ".join(block.get_text(" ").split()) == text
     plates = block.select("ol.come__tappe > li.come__tappa")
     assert len(plates) == 4
-    assert [ICON.findall(str(p.select_one(".come__nodo")))[0] for p in plates] == list(icons.HOW_STEP)
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the plates' concept tiles gave way to the quiet sequence marker):
+    # each plate is its marker and its words — no tile, no node
+    assert all(p.select_one('span.come__num[aria-hidden="true"]') for p in plates)
+    assert not block.select(".come__nodo, .sez-tile")
     assert plates[0].select_one('a[href="/fr/orientation/"]') and plates[2].select_one('a[href="/fr/formation/"]')
     assert not plates[1].select("a") and not plates[3].select("a")
     assert all(p.select_one(".come__testo .visually-hidden") for p in plates[:3]), "the arrows kept as text"
@@ -339,7 +344,8 @@ def test_the_anti_fraud_text_stands_whole_in_its_own_band(get, path):
     assert plate, path
     body = plate.select_one('p[data-locked="p3.antifraud.body"]')
     assert body.get_text("") == locked_content.text("p3.antifraud.body", "fr")
-    assert plate.select_one('.sigillo[data-mark="ile-scudo"]')
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the shield is drawn bare — no seal's seat —, once
+    assert ICON.findall(str(plate.select_one(".protezione__sigillo"))) == ["ile-scudo"] and not plate.select(".sigillo")
     assert "notice--warning" not in plate.get("class", []), "ink, never the alarm's amber (§0.1)"
 
 
@@ -351,7 +357,10 @@ def test_a_sheet_s_steps_run_on_the_thread_beside_the_page_s_rail(get):
     section = soup.select_one("section#etapes.sez[data-sec='filo']")
     milestones = section.select("ol.filo__linea > li.filo__tappa")
     assert len(milestones) == 5
-    assert [ICON.findall(str(m.select_one(".filo__nodo")))[0] for m in milestones] == list(icons.SHEET_STEP)
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the milestones' tiles gave way to the quiet sequence marker): each
+    # milestone says its rank, in order, and none draws a tile
+    assert [m.select_one(".filo__num").get_text() for m in milestones] == ["1", "2", "3", "4", "5"]
+    assert not section.select(".filo__nodo, .sez-tile")
     # V5.22 (SECTION_SYSTEM_V2 §3.5 PS-1: the rail «tracks Étapes → Autorités → Avertissements → Ressources →
     # Orientation»; QA_ROUND1 M4; V5.20 strict rule): the rail is the page's, not the first part's — one sticky index
     # whose span holds EVERY part it names, so it is in reach wherever the reader is (it was sticky inside «Étapes» only)
@@ -372,7 +381,10 @@ def test_italy_legal_entry_stands_outside_the_authorities_arc(get):
     section = soup.select_one('section#autorites.sez[data-ground="night"]')
     seats = section.select("ol.decide__arco > li.decide__seggio")
     assert len(seats) == 4
-    assert all(ICON.findall(str(s))[0] == icons.AUTHORITY_SEAT for s in seats)
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule: the seats' discs left — the arc of four is said by its names): no seat
+    # draws a disc or a glyph, and each still names its authority
+    assert not any(ICON.findall(str(s)) or s.select(".sez-disc, .sez-tile") for s in seats)
+    assert all(_text(s.select_one(".decide__nome")) for s in seats)
     ile = section.select_one(".decide__ile")
     assert ile and not ile.find_parent("ol"), "the node of ILE is outside the arc"
     assert "n’intervient pas auprès des autorités et ne délivre aucune autorisation" in _text(ile)
@@ -410,12 +422,24 @@ def test_the_companies_quote_opens_the_flow_and_the_answer_is_split_on_its_own_c
     quote = soup.select_one("section#demarche blockquote.imprese-citazione p")
     assert _text(quote) == locked_content.text("p1.companies.quote", "fr")
     # V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «process panels» (V5.20 strict rule; no measured curve, no module)
-    flow = soup.select_one("section#demarche .flusso")
-    assert not flow.has_attr("data-sec-js") and not soup.select("#demarche [data-flow], #demarche [data-flow-node]")
-    nodes = flow.select("li.flusso__tappa .flusso__nodo")
-    assert [ICON.findall(str(n))[0] for n in nodes] == list(icons.COMPANY_MOMENT)
-    band = soup.select_one(".sez--panorama")
-    assert band.select_one('figure[data-slot="companies.territory"]')
+    # FINAL MICRO-PASS §6 B3 (V5.20; was «the flow in the démarche's stone band, each moment opening on the registry's
+    # company-moment glyph» and «the territory's panorama band on paper»): the démarche's band opens on the quotation
+    # beside the territory's photograph (the same slot; no panorama band is left), and the three moments follow in the
+    # band the panorama held, on paper — the quiet sequence (BRIEF §2.2): no tile, no glyph, no disc in the markup (the
+    # sheet's counter draws «1», «2», «3»), each its title
+    flow = soup.select_one('section#trois-temps[data-ground="paper"] .flusso')
+    assert soup.select_one("section#demarche + section#trois-temps") is not None
+    assert not flow.has_attr("data-sec-js") and not soup.select("main [data-flow], main [data-flow-node]")
+    assert not soup.select("section#demarche .flusso")
+    moments = flow.select("ol.flusso__tappe > li.flusso__tappa")
+    assert len(moments) == len(icons.COMPANY_MOMENT) == 3
+    assert not flow.select(".flusso__tappe :is(.flusso__nodo, .sez-tile, .sez-disc, svg)")
+    assert all(m.select_one("h3.flusso__titolo").get_text(strip=True) for m in moments)
+    opening = soup.select_one("section#demarche .imprese-apertura")
+    assert opening.select_one(
+        ':scope > blockquote.imprese-citazione + figure.imprese-apertura__foto[data-slot="companies.territory"]'
+    )
+    assert not soup.select(".sez--panorama")
     answer = soup.select_one("section#transparence p.imprese-confine__risposta[data-faq]")
     faq = next(e for e in locked_content.get("p3.faq.items", "fr")[0] if e["key"] == "faq_recruitment_agency")
     assert answer.get_text("") == faq["answer"]
@@ -442,10 +466,13 @@ def test_the_hemicycle_holds_the_locked_sentence_whole_and_its_six_seats(get):
     # W1-D: «no server-rendered region seats», tests/frontend/test_loader_rules.py) — the same pairing, and now none of
     # the section's elements carries the seat's attribute (stronger)
     assert len(sentence.select("[data-seggio]")) == 6
-    assert [seat["data-seggio"] for seat in section.select("ol.emiciclo__seggi > li")] == [str(n) for n in range(1, 7)]
     assert not section.select("[data-seat]")
-    seats = section.select("ol.emiciclo__seggi[aria-hidden='true'] > li")
-    assert [ICON.findall(str(s))[0] for s in seats] == list(icons.RECIPIENT_SEAT)
+    # FINAL MICRO-PASS §6 B4 (V5.20; was «the six seats, a row of the registry's recipient glyph tiles, aria-hidden»): the
+    # seats left — no tile, no disc, no glyph in the band; the sentence is the one typographic annotation, its six
+    # phrases keeping the pattern's pairing attribute, in order, and its head the label
+    assert [phrase["data-seggio"] for phrase in sentence.select(".emiciclo__voce")] == [str(n) for n in range(1, 7)]
+    assert sentence.select_one(":scope > .emiciclo__capo") is not None
+    assert not section.select("ol.emiciclo__seggi, .emiciclo__seggio, .sez-disc, .sez-tile")
     assert section.select_one('figure[data-slot="institutions.chamber"][data-grade="bw-scroll"]')
     assert section.select_one(".aiuto a.email") and not section.select(".btn--primary")
 
@@ -506,7 +533,10 @@ def test_the_dossier_opens_its_locked_definitions_one_at_a_time_beside_who_decid
     assert len(stations) == 5 and all("dossier__tappa--attesa" in s["class"] for s in stations)
     # the status in words, never by its dashed ring alone (§3.10 D1): the caption under the stations, a catalogue msgid
     assert _text(soup.select_one(".diplomi-dossier .dossier__didascalia")) == "En attente de vérification"
-    assert [ICON.findall(str(s.select_one(".dossier__nodo")))[0] for s in stations] == list(icons.DIPLOMA_STEP)
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the stations' tiles gave way to the quiet sequence marker): each
+    # station says its rank, in order, and none draws a node
+    assert [s.select_one(".dossier__num").get_text() for s in stations] == ["1", "2", "3", "4", "5"]
+    assert not soup.select("ol.dossier .dossier__nodo, ol.dossier .sez-tile")
     assert not stations[0].select("details") and not stations[1].select("details"), "nothing invented"
     opened = soup.select("ol.dossier details[open]")
     assert len(opened) == 1 and opened[0].find_parent("li")["id"] == "etape-legalisation"
@@ -524,12 +554,13 @@ def test_the_dossier_opens_its_locked_definitions_one_at_a_time_beside_who_decid
 def test_the_form_pages_open_on_their_space_s_compact_band_and_keep_their_form(get):
     needs = BeautifulSoup(_main(get("/fr/entreprises/recueil-des-besoins/")), "html.parser")
     head = needs.select_one('header.ingresso[data-fronte="economic"][data-compact]')
-    assert head.select_one('.sigillo[data-mark="ile-impresa"]') and head.select_one("h1")
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the compact head's folio is typographic — no seal —, its title stands
+    assert not head.select(".sigillo, [data-mark]") and head.select_one("h1")
     assert _text(head.select_one(".ingresso__lead")) == locked_content.text("p1.companies.intro", "fr")
     assert needs.select_one("section#formulaire form")
     collab = BeautifulSoup(_main(get("/fr/collaboration/institutions/")), "html.parser")
     head = collab.select_one('header.ingresso[data-fronte="civic"][data-compact]')
-    assert head.select_one('.sigillo[data-mark="ile-istituzione"]')
+    assert not head.select(".sigillo, [data-mark]") and head.select_one("h1")
     note = head.select_one('.ingresso__aside [data-annotation="recipients"]')
     # V5.30 Fast Visual Variety Correction §7 INSTITUTIONS (V5.20 strict rule): the small hemicycle is gone
     assert not note.select("svg")
@@ -549,7 +580,8 @@ def test_the_form_pages_open_on_their_space_s_compact_band_and_keep_their_form(g
     note = arabic.select_one('[data-annotation="recipients"] p')
     assert note.get("lang") in (None, "ar") and _text(note) == locked_renderings.rendering("p3.institutions.recipients")
     uni = BeautifulSoup(_main(get("/fr/collaboration/universites-formation/")), "html.parser")
-    assert uni.select_one('header.ingresso[data-fronte="learning"][data-compact] .sigillo[data-mark="ile-sapere"]')
+    uni_head = uni.select_one('header.ingresso[data-fronte="learning"][data-compact]')
+    assert uni_head and not uni_head.select(".sigillo, [data-mark]") and uni_head.select_one("h1")
 
 
 # ---- the data the compositions draw: cuts that never retype -----------------------------------------------------------
@@ -666,15 +698,13 @@ def test_the_material_and_the_seams_stand_where_the_director_placed_them(get):
     instead of settling (§3.4 PA-2), Formation's order
     (R5), the pilot's route on the wash, Entreprises' démarche on stone, the filiera on the wash; and the imports."""
     parcours = BeautifulSoup(_main(get("/fr/parcours/")), "html.parser")
-    first = parcours.select_one("section.percorsi-famiglie").find(True)
-    assert first.name == "span" and first["class"] == ["sez-raccordo", "sez-raccordo--risale"], first
-    assert first["data-verb"] == "draw-y" and first["aria-hidden"] == "true"
+    # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the trunk's raccordo left with the head's route it rose into — the
+    # space's pages draw no raccordo at all
+    assert not parcours.select(".sez-raccordo")
     assert parcours.select_one('section.percorsi-spazio[data-ground="paper"][data-luce="origine"]')
     assert parcours.select_one('section.persone-protezione[data-ground="pietra"] aside.protezione')
-    tiles = parcours.select(".come__tappa .come__nodo.sez-tile")
-    assert len(tiles) == 4 and all(tile["data-verb"] == "ink" for tile in tiles), (
-        "the plates' tiles ink, they never settle"
-    )
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule): the «Comment ça marche» plates carry their quiet markers, no tile
+    assert not parcours.select(".come__tappa .sez-tile") and len(parcours.select(".come__tappa .come__num")) == 4
     sheet = BeautifulSoup(_main(get("/fr/parcours/salaried_work/")), "html.parser")
     assert sheet.select_one('section#etapes[data-ground="stone"][data-rhythm="band"]'), (
         "R5: the steps are a band on stone"
@@ -716,8 +746,11 @@ def test_the_space_s_labels_kickers_and_numerals_carry_the_library_s_roles(get):
     parcours = BeautifulSoup(_main(get("/fr/parcours/")), "html.parser")
     names = parcours.select(".tracciato__nome")
     assert len(names) == 4 and all("t-label" in n["class"] for n in names)
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule): the station's rank is the quiet sequence marker, never the numeral
+    # role — a small figure in the quiet ink (v5/_sec-tracciato.css) —, its rank still said
     nums = parcours.select(".tracciato__num")
-    assert len(nums) == 8 and all("t-numeral" in n["class"] for n in nums)
+    assert len(nums) == 8 and not any("t-numeral" in n.get("class", []) for n in nums)
+    assert all(_text(n).isdigit() for n in nums)
     sheet = BeautifulSoup(_main(get("/fr/parcours/salaried_work/")), "html.parser")
     assert "t-label" in sheet.select_one(".scheda-rail__titolo")["class"]
     training = BeautifulSoup(_main(get("/fr/formation/")), "html.parser")

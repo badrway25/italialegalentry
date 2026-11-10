@@ -15095,6 +15095,698 @@
           "source": "steward assignment (v530-cifix merge, 8 Nov 2026): the file stays rc-fix, steward, v524-cifix, v530-sys, w1-0's"
         }
       ]
+    },
+    "v530-a": {
+      "title": "FINAL MICRO-PASS lane A: the home's orientation and the shared public primitives made quiet",
+      "wave": 0,
+      "plan": "the owner's FINAL MICRO-PASS (9 Nov 2026) §1–§11, §15: the Homepage orientation section redesigned, the global numeric-marker treatment, the global geometric-icon reduction through the shared primitives, lighter public type",
+      "after": [
+        "v530-cifix"
+      ],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the merge, 9 November 2026: a family outside plan §3's waves (wave 0), lane A of the micro-pass (branch v530-micro-a, worktree C:/tmp/ile_wt/v530-micro-a), merged into v530-micro (7310f296).",
+      "owns": [
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_pilot.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v530-art, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_spaces.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v515-c, v522-p1, w3-d, w3-f1's"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_browser.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v524-px, w3-f1's"
+        },
+        {
+          "glob": "apps/pages/services.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays sec-f8, v512-c, v515-c, v519-k, v522-h, v524-closing, v524-home, v524-px, v524-sys, w2-d, w2-e's"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/_agami.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p2, v524-pub2, v524-sys, v530-agami, w3-d's"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/hero.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v515-c, v518-a, v520-css, v522-h, v524-home, v524-sys, v530-sys, w2-d, w3-d's"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/pages.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-h, v524-cifix, v524-home, v524-sys, v530-art, v530-sys, w2-d, w2-e, w3-d, w3-f1, w4-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_browser.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v518-a, v520-fixv, v522-h, v524-brand, v524-closing, v524-px, w2-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-b, v512-c, v515-c, v518g-n, v522-h, v524-home, v524-px, v524-sys, v530-sys, w2-d, w3-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home_browser_v522_h.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-h, v524-closing, v530-art, v530-sys, w2-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home_v522_h.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-h, v524-cifix, v524-closing, v524-home, v524-px, v524-sys, v530-art, v530-sys, w2-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home_v524_home.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-home, v524-sys, v530-art, v530-sys, w2-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_interior_v522.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p2, v524-pub2, v530-agami, v530-integ, v530-sys, w2-d's"
+        },
+        {
+          "glob": "apps/pathways/static/pathways/_diplomas.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v524-closing, v524-pub1, w3-d's"
+        },
+        {
+          "glob": "apps/pathways/static/pathways/_index.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v524-closing, v524-pub1, w3-d's"
+        },
+        {
+          "glob": "apps/pathways/static/pathways/_sheet.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v524-closing, v524-pub1, v530-sys, w3-d's"
+        },
+        {
+          "glob": "apps/pathways/tests/test_views.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v518g-n, v522-p1, v524-pub1, w3-f1's"
+        },
+        {
+          "glob": "static/css/v5/_fronte.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v515-c, v518-c, v518g-n, v520-fixv, v522-s, v524-closing, v524-lib, v530-art, v530-integ, v530-sys's"
+        },
+        {
+          "glob": "static/css/v5/_intesa-atmosfera.css",
+          "slice": "v530-a's removal: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): removed by v530-a; it was v530-art's"
+        },
+        {
+          "glob": "static/css/v5/_intesa.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v530-art's"
+        },
+        {
+          "glob": "static/css/v5/_linea-v2.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v524-lib, v530-sys's"
+        },
+        {
+          "glob": "static/css/v5/_sec-filo.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v524-lib's"
+        },
+        {
+          "glob": "static/css/v5/_sec-indice-base.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-sys's"
+        },
+        {
+          "glob": "static/css/v5/_sec-lastre.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-sys's"
+        },
+        {
+          "glob": "static/css/v5/_sec-mosaico.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib, v530-art's"
+        },
+        {
+          "glob": "static/css/v5/_sec-strato.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib, v524-sys, v530-art's"
+        },
+        {
+          "glob": "static/css/v5/_sec-tracciato.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib's"
+        },
+        {
+          "glob": "static/css/v5/_sezioni.css",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-closing, v524-lib, v524-sys, v530-sys's"
+        },
+        {
+          "glob": "templates/components/sezioni/approdo.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v530-art, w1-b's"
+        },
+        {
+          "glob": "templates/components/sezioni/filo.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib, w1-b's"
+        },
+        {
+          "glob": "templates/components/sezioni/indice.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-pub2, w1-b's"
+        },
+        {
+          "glob": "templates/components/sezioni/mosaico.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib, v530-art, w1-b's"
+        },
+        {
+          "glob": "templates/components/sezioni/protezione.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib, v524-sys, w1-b's"
+        },
+        {
+          "glob": "templates/components/sezioni/tracciato.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v524-lib, w1-b's"
+        },
+        {
+          "glob": "templates/components/stepper.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v522-s2, v530-art, v530-sys, w1-b, w3-d's"
+        },
+        {
+          "glob": "templates/ecosystem/partials/approdo.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v522-s2, v530-art, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/ecosystem/partials/intesa.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-pub1, v530-art, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/ecosystem/partials/pilot_flow.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v524-pub1, w1-b, w3-d, w3-f1's"
+        },
+        {
+          "glob": "templates/living/index.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-p2, v530-sys, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/pages/home/_ecosystem.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-h, v524-home, v524-sys, v530-art, w1-b, w2-d, w2-e's"
+        },
+        {
+          "glob": "templates/pages/home/_hero.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v515-c, v522-h, v530-sys, w1-b, w2-d's"
+        },
+        {
+          "glob": "templates/pages/home/_orientation.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-h, v524-home, v524-sys, v530-art, v530-sys, w1-b, w2-d, w2-e, w3-d's"
+        },
+        {
+          "glob": "templates/pages/network.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-p2, v530-art, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/pages/partials/_ingresso.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v515-c, v522-s, v522-s2, v524-px, v530-art, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/pathways/_tracciato.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v522-s2, v524-pub1, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/pathways/detail.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-p1, v522-s2, v524-pub1, v530-sys, w1-b, w1-c, w3-f1's"
+        },
+        {
+          "glob": "templates/pathways/diplomas.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-p1, v522-s2, v524-pub1, v530-sys, w1-b, w1-c, w3-f1's"
+        },
+        {
+          "glob": "templates/pathways/index.html",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-p1, v522-s2, v524-pub1, w1-b, w1-c, w3-f1's"
+        },
+        {
+          "glob": "tests/frontend/test_browser_w3_f1.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v518-a, v518-c, v520-fixv, v522-p1, w3-f1's"
+        },
+        {
+          "glob": "tests/frontend/test_chapter_marks.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-b, v522-h, v522-s's"
+        },
+        {
+          "glob": "tests/frontend/test_frontispiece_v515_c.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v515-c, v518-c, v520-fixv, v522-p2, v522-s, v524-closing, v524-pub2, v530-agami, v530-art, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_interior_w3_f1.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-b, v515-b, v515-c, v519-k, v522-p1, v522-p2, v522-s, v522-s2, v524-px, v530-mfix, w3-d, w3-f1's"
+        },
+        {
+          "glob": "tests/frontend/test_intesa_browser_v530.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v530-art's"
+        },
+        {
+          "glob": "tests/frontend/test_journey_w3_d.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-a, v512-b, v515-d, v518g-n, v522-h, v522-s, v530-sys, w3-d, w3-e's"
+        },
+        {
+          "glob": "tests/frontend/test_materia_browser_v524_lib.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-lib, v524-sys, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_materia_v524_lib.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-cifix, v524-lib, v524-pub2, v524-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_orientation_w3_f1.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-b, v522-p1, v522-s2, w3-d, w3-f1's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v522_p1.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v524-pub1, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v522_p2.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p2, v530-agami's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v524_pub1.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v524-pub1, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_v522_p1.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-p1, v522-s2, v524-closing, v524-pub1, v530-art, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_seal_heads_browser_v522_s.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_browser_v522_s2.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s2, v524-px's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_v522_s.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s, v524-cifix, v524-closing, v524-lib, v524-sys, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_v522_s2.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v522-s2, v524-px, v524-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_static_assets.py",
+          "slice": "v530-a's changed part: the micro-pass's quiet public primitives and the home's orientation",
+          "source": "steward assignment (v530-a merge, 9 Nov 2026): the file stays v512-b, v524-cifix, w1-a, w1-b, w2-a, w2-c2's"
+        }
+      ]
+    },
+    "v530-b": {
+      "title": "FINAL MICRO-PASS lane B: the FAQ a searchable list, the glossary a dictionary, Entreprises and Institutions split without tiles",
+      "wave": 0,
+      "plan": "the owner's FINAL MICRO-PASS (9 Nov 2026) §10, §12–§14: the FAQ as the representative test, the Glossaire, Entreprises and Institutions, with the 21st.dev adaptations",
+      "after": [
+        "v530-cifix"
+      ],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the merge, 9 November 2026: a family outside plan §3's waves (wave 0), lane B of the micro-pass (branch v530-micro-b, worktree C:/tmp/ile_wt/v530-micro-b), merged into v530-micro (0271dc6d).",
+      "owns": [
+        {
+          "glob": "apps/cms/static/cms/_faq-v2.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, v524-pub2, w3-d's"
+        },
+        {
+          "glob": "apps/cms/static/cms/_lessico-v2.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, v524-pub2, v530-sys, w3-d's"
+        },
+        {
+          "glob": "apps/cms/static/cms/_lettura-v2.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, w3-d's"
+        },
+        {
+          "glob": "apps/cms/static/cms/faq.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_companies.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p1, v524-pub1, v530-art, v530-sys, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_institutions.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p1, v522-s2, v524-pub1, v530-sys, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_companies_page.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v515-c, v522-p1, v524-ar, w3-f1's"
+        },
+        {
+          "glob": "apps/ecosystem/tests/test_gated_pages.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v512-c, v515-c, v518g-n, v522-p1, w3-f1's"
+        },
+        {
+          "glob": "apps/faq/tests/test_views.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v518g-n, v522-p2, v524-pub2's"
+        },
+        {
+          "glob": "apps/faq/views.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v512-c, v522-p2, v524-pub2's"
+        },
+        {
+          "glob": "apps/pages/tests/test_interior_v522.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, v524-pub2, v530-a, v530-agami, v530-integ, v530-sys, w2-d's"
+        },
+        {
+          "glob": "static/css/v5/_lettura.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, v530-art, w3-f1, w3-f2's"
+        },
+        {
+          "glob": "static/css/v5/_sec-emiciclo.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s, v522-s2, v530-sys's"
+        },
+        {
+          "glob": "static/css/v5/_sec-flusso.css",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s, v530-sys's"
+        },
+        {
+          "glob": "static/js/src/cerca.js",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): created by v530-b"
+        },
+        {
+          "glob": "templates/components/sezioni/flusso.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s, v522-s2, v530-sys, w1-b's"
+        },
+        {
+          "glob": "templates/components/sezioni/mappa.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s, v522-s2, w1-b's"
+        },
+        {
+          "glob": "templates/ecosystem/companies.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v515-c, v522-p1, v524-pub1, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/ecosystem/institutions.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v515-c, v522-p1, v524-pub1, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/faq/_collegamenti.html",
+          "slice": "v530-b's removal: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): removed by v530-b; it was v522-p2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/faq/_item.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v524-pub2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/faq/_risposta.html",
+          "slice": "v530-b's removal: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): removed by v530-b; it was v522-p2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/faq/index.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v512-b, v512-c, v515-c, v522-p2, v524-pub2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/glossary/_entry.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/glossary/index.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v512-c, v515-c, v522-p2, v524-pub2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "templates/glossary/term.html",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, v524-pub2, w1-b, w3-f2's"
+        },
+        {
+          "glob": "tests/frontend/test_browser_w1_c.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v518g-p, v522-p2, w1-c's"
+        },
+        {
+          "glob": "tests/frontend/test_content_pages_browser_w3_f2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v518-c, v518g-p, v520-fixv, v522-p2, v524-closing, w3-f2's"
+        },
+        {
+          "glob": "tests/frontend/test_content_pages_w3_f2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v512-c, v522-p2, w3-f1, w3-f2, w4-d's"
+        },
+        {
+          "glob": "tests/frontend/test_faq_v529_pub2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v524-pub2's"
+        },
+        {
+          "glob": "tests/frontend/test_interior_w3_f1.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v512-b, v515-b, v515-c, v519-k, v522-p1, v522-p2, v522-s, v522-s2, v524-px, v530-a, v530-mfix, w3-d, w3-f1's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v522_p1.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p1, v524-pub1, v530-a, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v522_p2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p2, v530-a, v530-agami's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v524_pub2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v524-pub2, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_v522_p1.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-p1, v522-s2, v524-closing, v524-pub1, v530-a, v530-art, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_v524_pub2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v524-pub2, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_browser_v522_s.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_browser_v522_s2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s2, v524-px, v530-a's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_v522_s.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s, v524-cifix, v524-closing, v524-lib, v524-sys, v530-a, v530-sys's"
+        },
+        {
+          "glob": "tests/frontend/test_sezioni_v522_s2.py",
+          "slice": "v530-b's changed part: the micro-pass's FAQ, glossary, companies and institutions pages",
+          "source": "steward assignment (v530-b merge, 9 Nov 2026): the file stays v522-s2, v524-px, v524-sys, v530-a's"
+        }
+      ]
+    },
+    "v530-c": {
+      "title": "FINAL MICRO-PASS, the review's one correction round: the phone doors without arched seats, the search seated, the Institutions band without «l'intesa»",
+      "wave": 0,
+      "plan": "the owner's FINAL MICRO-PASS (9 Nov 2026) §20: the one integration review's FAIL (question 5) and its seven defects, one correction round; §22's targeted regression (the merged tree's one red)",
+      "after": [
+        "v530-a",
+        "v530-b"
+      ],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the merge, 10 November 2026: a family outside plan §3's waves (wave 0), the micro-pass's one correction round (branch v530-micro-c, worktree C:/tmp/ile_wt/v530-micro-c), merged into v530-micro (15837293).",
+      "owns": [
+        {
+          "glob": "apps/cms/static/cms/_faq-v2.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-p2, v524-pub2, v530-b, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_companies.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-p1, v524-pub1, v530-art, v530-b, v530-sys, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/_institutions.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-p1, v522-s2, v524-pub1, v530-b, v530-sys, w3-d's"
+        },
+        {
+          "glob": "apps/ecosystem/static/ecosystem/institutions.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-p1, v524-pub1, v530-art, w3-d's"
+        },
+        {
+          "glob": "apps/pages/services.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays sec-f8, v512-c, v515-c, v519-k, v522-h, v524-closing, v524-home, v524-px, v524-sys, v530-a, w2-d, w2-e's"
+        },
+        {
+          "glob": "apps/pages/static/pages/css/pages.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v512-c, v515-c, v522-h, v524-cifix, v524-home, v524-sys, v530-a, v530-art, v530-sys, w2-d, w2-e, w3-d, w3-f1, w4-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v512-b, v512-c, v515-c, v518g-n, v522-h, v524-home, v524-px, v524-sys, v530-a, v530-sys, w2-d, w3-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home_browser_v522_h.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-h, v524-closing, v530-a, v530-art, v530-sys, w2-d's"
+        },
+        {
+          "glob": "apps/pages/tests/test_home_v522_h.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-h, v524-cifix, v524-closing, v524-home, v524-px, v524-sys, v530-a, v530-art, v530-sys, w2-d's"
+        },
+        {
+          "glob": "static/css/v5/_casa.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-h, v524-home, v524-sys, v530-art, v530-sys's"
+        },
+        {
+          "glob": "static/css/v5/_intesa.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v530-a, v530-art's"
+        },
+        {
+          "glob": "static/css/v5/_lettura.css",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-p2, v530-art, v530-b, w3-f1, w3-f2's"
+        },
+        {
+          "glob": "templates/components/entrances.html",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-h, w1-b, w2-d's"
+        },
+        {
+          "glob": "templates/ecosystem/institutions.html",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v515-c, v522-p1, v524-pub1, v530-b, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/ecosystem/partials/approdo.html",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-p1, v522-s2, v530-a, v530-art, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/ecosystem/partials/intesa.html",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v524-pub1, v530-a, v530-art, v530-sys, w1-b, w3-f1's"
+        },
+        {
+          "glob": "templates/pages/home/_entrances.html",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-h, w1-b, w2-d, w2-e's"
+        },
+        {
+          "glob": "tests/frontend/test_french_typography_w2_d.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v522-h, w2-d's"
+        },
+        {
+          "glob": "tests/frontend/test_intesa_browser_v530.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v530-a, v530-art's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v524_pub1.py",
+          "slice": "v530-c's changed part: the review's one correction round",
+          "source": "steward assignment (v530-c merge, 10 Nov 2026): the file stays v524-pub1, v530-a, v530-sys's"
+        }
+      ]
+    },
+    "v530-d": {
+      "title": "FINAL MICRO-PASS, the fresh-clone gate's three browser reds: two tests restated, nothing rendered changed",
+      "wave": 0,
+      "plan": "the owner's FINAL MICRO-PASS (9 Nov 2026) §22: the targeted regressions and the one final validation on the exact candidate; the gate's reds corrected without loosening a test",
+      "after": [
+        "v530-c"
+      ],
+      "steward": false,
+      "delegated": false,
+      "note": "Assigned by the steward at the merge, 10 November 2026: a family outside plan §3's waves (wave 0), the micro-pass's gate fix (branch v530-micro-d, worktree C:/tmp/ile_wt/v530-micro-d), merged into v530-micro (43576f07).",
+      "owns": [
+        {
+          "glob": "tests/frontend/test_browser_w1_b.py",
+          "slice": "v530-d's changed part: the fresh-clone gate's three reds",
+          "source": "steward assignment (v530-d merge, 10 Nov 2026): the file stays v512-b, w1-b, w2-d, w3-a's"
+        },
+        {
+          "glob": "tests/frontend/test_pages_browser_v522_p2.py",
+          "slice": "v530-d's changed part: the fresh-clone gate's three reds",
+          "source": "steward assignment (v530-d merge, 10 Nov 2026): the file stays v522-p2, v530-a, v530-agami, v530-b's"
+        }
+      ]
     }
   }
 }

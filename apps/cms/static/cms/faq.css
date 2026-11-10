@@ -1,7 +1,7 @@
 /* ============================================================================================
    THE FAQ'S ROUTE SHEET (design V5.22, SECTION_SYSTEM_V2 §3.13; lane P2, round 2 — QA_ROUND2 m5): linked on /faq/ only,
-   after the reading pages' shared sheet (cms/lettura.css): the library's L «l'indice» (lane S), then the explorer's own
-   compositions. The imports are written as they resolve in the collected tree (DS 2026 §2).
+   after the reading pages' shared sheet (cms/lettura.css): the page's own compositions. FINAL MICRO-PASS §6 B1: the
+   explorer and the library's L «l'indice» left the page (the home keeps L). The imports are written as they resolve
+   in the collected tree (DS 2026 §2).
    ============================================================================================ */
-@import url("../css/v5/_sec-indice.css");
 @import url("_faq-v2.css");

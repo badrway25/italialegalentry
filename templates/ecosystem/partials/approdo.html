@@ -2,26 +2,31 @@
 K · «L'APPRODO» ON THE FOUR SPACES — the closing «Pour aller plus loin» band (design V5.22, SECTION_SYSTEM_V2 §0.1
 «Closing bands», §3.3 PP-3, §3.6 EN-5, §3.7 IN-2; lane P1). It is lane S's composition (components/sezioni/approdo.html,
 static/css/v5/_sec-strato.css): the same classes and the same order, on the stone (V5.30: the page's motif no longer
-drawn low as a bookend — the head's drawing is never repeated at the foot; the Institutions band lays «l'intesa» under
-its tiles instead), one light sweep — with the one addition the spaces need, a tile that carries a drawing: the pilot's tile
+drawn low as a bookend — the head's drawing is never repeated at the foot; the Institutions band laid «l'intesa» under
+its tiles until the FINAL MICRO-PASS's review, defect 5), one light sweep — with the one addition the spaces need, a tile
+that carries a drawing: the pilot's tile
 holds a miniature of its eight-station route (aria-hidden; E's «live diagram» principle, §3.6 EN-5). The Forum's tile
 is typographic on its night face (Q4: no photograph stands for the Forum); with it in the band no tile draws a glyph
 (the register's glyphs are all or none, §4.10), so the tiles speak by their type, their faces and the drawing.
+
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): the rows are the library's divided link list (21st.dev «Split Image Blog List»,
+ziegfiroyt/blog25, id 28595): no plate, no depth verb, no night face —
+each row its title as its link, its line under it, a chevron at its end.
 
 Contract: `title_id`, `title`, `motif` (the page's frontispiece motif: kept in the contract, drawn no more), `pilot` (True: the pilot's tile, on the pages
 that are not the pilot's own), `links` (ecosystem.services.related_links).
 {% endcomment %}<div class="approdo">
   {% include "components/sezioni/_testa.html" with role="router" %}
   <ul class="approdo__tessere sez-seq" role="list" data-registro>
-    {% if links.forum %}{% locked "p2.forum.header.subtitle" as forum_subtitle %}<li class="approdo__tessera sez-plate approdo__tessera--forum" data-verb="depth">
+    {% if links.forum %}{% locked "p2.forum.header.subtitle" as forum_subtitle %}<li class="approdo__tessera approdo__tessera--forum">
       <a class="approdo__link sez-stretch" href="{{ links.forum }}">{% translate "Le Forum Vénétie–Maroc" %}</a>
       <p class="approdo__riga">{{ forum_subtitle }}</p>
     </li>{% endif %}
-    {% if pilot and links.pilot %}{% locked "p3.pilot.title" as pilot_title %}<li class="approdo__tessera sez-plate approdo__tessera--rotta" data-verb="depth">
+    {% if pilot and links.pilot %}{% locked "p3.pilot.title" as pilot_title %}<li class="approdo__tessera approdo__tessera--rotta">
       <a class="approdo__link sez-stretch" href="{{ links.pilot }}">{{ pilot_title }}</a>
       <p class="approdo__riga">{% translate "Présentation du projet et de la séquence proposée." %}</p>
     </li>{% endif %}
-    {% if links.partners %}<li class="approdo__tessera sez-plate" data-verb="depth">
+    {% if links.partners %}<li class="approdo__tessera">
       <a class="approdo__link sez-stretch" href="{{ links.partners }}">{% translate "Partenaires" %}</a>
       <p class="approdo__riga">{% translate "Les organisations qui participent à l’écosystème." %}</p>
     </li>{% endif %}

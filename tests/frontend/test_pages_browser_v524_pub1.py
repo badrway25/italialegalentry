@@ -15,7 +15,8 @@ V5.24 lane PUB1 — the material pass in Chromium (FINAL_DELIVERY_V2 §3.5 gate 
 * Formation's order (R5) and the pilot's route on the wash with its status plate standing on it; the filiera's sfumatura;
 * reduced motion: no state written, the raccordi stand drawn, nothing runs; the keyboard: nothing animates;
 * the eight pages hold their width at 1024 and 360 — the two widths the v522 twin does not read —, fr and ar, 0 console errors;
-* V5.29 §15–§17 «l'intesa» (the Italy + Morocco ground of the collaboration proposal's head and the landing's approdo):
+* V5.29 §15–§17 «l'intesa» (the Italy + Morocco ground of the collaboration proposal's head and the landing's approdo;
+  since the FINAL MICRO-PASS's review the landing's approdo draws none, and a closing band's ground is read on Réseau's):
   aria-hidden, no text, the flags NEVER mirrored (no transform, the Italian green at the hoist, the pentagram upright and
   unflipped) while the placement follows the reading edge, the words' contrast ≥ 4.5 on the composed ground (1440 and 390, fr
   and ar), one slow reveal from each outer edge that leaves getAnimations(), a still under reduced motion.
@@ -46,12 +47,10 @@ PAGES = (
 HEIGHTS = {1440: 900, 1024: 768, 390: 844, 360: 740}
 #: path → (the band the raccordo enters, the line its node lands on — None: the head's foot —, the modifier, the route the
 #: line continues and the x on it (fr; mirrored in Arabic), its length at 1440 and at 390)
-RACCORDI = {
-    # from 48 rem the head draws its spine on the seal's axis (27 px): the raccordo under its arrival disc continues it
-    "parcours/": ("section.percorsi-famiglie", None, "risale", (".tracciato__corsie", 27, 23), (48, 32)),
-    # V5.30 Fast Visual Variety Correction §5, §7 PARCOURS (V5.20 strict rule): only «Parcours» keeps its route's raccordo; the
-    # filo's into the night and the dossier's into the protection are gone (their absence: below and test_pages_v522_p1)
-}
+#: FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the board's trunk left with the head's spine and its arrival disc, so
+#: «Parcours» keeps no raccordo either — no page draws one (the filo's and the dossier's: below and test_pages_v522_p1);
+#: the band it entered and the route it continued still stand. path → (the band, the route)
+FORMER_RACCORDI = {"parcours/": ("section.percorsi-famiglie", ".tracciato__corsie")}
 
 RECT = "s => { const r = document.querySelector(s).getBoundingClientRect(); return {top: r.top, bottom: r.bottom, left: r.left, right: r.right, width: r.width, height: r.height}; }"
 RUNNING = """s => document.querySelector(s).getAnimations({subtree: true})
@@ -137,58 +136,14 @@ def test_each_raccordo_waits_draws_once_after_its_band_s_line_lands_on_its_line_
     context = browser.new_context(viewport={"width": width, "height": HEIGHTS[width]})
     page = context.new_page()
     try:
-        for path, (band, landing, modifier, (route, x_desk, x_phone), lengths) in RACCORDI.items():
+        # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the raccordo is absent from the page it served; the band it entered
+        # and the route it continued still stand, in French and in Arabic, at 1440 and 390
+        for path, (band, route) in FORMER_RACCORDI.items():
             where = (lang, width, path)
             page.goto(f"{live_server.url}/{lang}/{path}", wait_until="networkidle")
-            span = f"{band} > .sez-raccordo"
-            assert page.evaluate(
-                "s => document.querySelector(s).parentElement.firstElementChild === document.querySelector(s)", span
-            ), (where, "the first child of the band it enters")
-            classes = page.evaluate("s => [...document.querySelector(s).classList]", span)
-            assert classes == ["sez-raccordo"] + ([f"sez-raccordo--{modifier}"] if modifier else []), where
-            held = page.evaluate(STATE, band) == "wait"
-            if held:
-                assert page.evaluate("s => getComputedStyle(document.querySelector(s)).scale", span) == "1 0", (
-                    where,
-                    "the first frame",
-                )
-                _bring(page, band)
-                page.wait_for_function("s => document.querySelector(s).dataset.secState === 'in'", arg=band)
-                names = {a[0] for a in page.evaluate(RUNNING, span)}
-                assert "sez-draw-y" in names, (where, names)
-                assert (
-                    page.evaluate("s => getComputedStyle(document.querySelector(s)).animationDelay", span) == "0.9s"
-                ), (where, "after the band's own line: --sez-d = --motion-draw")
-                page.wait_for_timeout(3200)
-                assert page.evaluate(RUNNING, span) == [], (where, "a finished entrance leaves getAnimations()")
-            else:
-                # a band in view at load is never held (rise.js): the line stands drawn from the first paint
-                _bring(page, band)
-                assert page.evaluate(STATE, band) is None, where
-            assert page.evaluate("s => getComputedStyle(document.querySelector(s)).scale", span) == "none", where
-            line = page.evaluate(RECT, span)
-            box = page.evaluate(RECT, band)
-            assert round(line["height"]) == lengths[0 if width == 1440 else 1], (where, line)
-            assert round(line["width"]) == 2, where
-            if modifier == "risale":
-                assert abs(line["bottom"] - box["top"]) <= 1, (where, "it rises from the seam into the head's foot")
-            else:
-                assert abs(line["top"] - box["top"]) <= 1, (where, "it crosses the seam: from the band's top edge")
-                assert abs(line["bottom"] - page.evaluate(RECT, landing)["top"]) <= 2, (
-                    where,
-                    "the node on the band's head line",
-                )
-            # on the route's own line: the x the route draws its line at, mirrored in Arabic
-            track = page.evaluate(RECT, route)
-            x = x_desk if width >= 1024 else x_phone
-            expected = track["right"] - x - 2 if lang == "ar" else track["left"] + x
-            assert abs(line["left"] - expected) <= 1.5, (where, line["left"], expected)
-            # the paint (LIB's B2): the line's 2 px column against the ground 12 px beside it — a night line is lighter
-            x0, y0, h = line["left"] - 1, line["top"] + 2, line["height"] - 10
-            ink = _luminance(page, x0, y0, 4, h)
-            ground = _luminance(page, x0 + (-12 if lang == "ar" else 12), y0, 4, h)
-            contrast = ink - ground if modifier == "notte" else ground - ink
-            assert contrast >= 20, (where, "not one pixel of the line is painted", ink, ground)
+            assert page.evaluate("() => document.querySelectorAll('.sez-raccordo').length") == 0, where
+            _bring(page, band)
+            assert page.evaluate(RECT, band)["height"] > 0 and page.evaluate(RECT, route)["height"] > 0, where
     finally:
         context.close()
 
@@ -224,31 +179,19 @@ def test_the_come_plates_tiles_ink_and_light_and_never_settle_and_the_grids_are_
         page.goto(f"{live_server.url}/fr/parcours/", wait_until="networkidle")
         band = "section.percorsi-come"
         assert page.evaluate(STATE, band) == "wait"
-        assert page.evaluate("getComputedStyle(document.querySelector('.come .sez-tile'), '::before').opacity") == "0"
+        # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the plates' tiles, their ink and their lit floor left — a station is
+        # the quiet sequence marker): no tile; four markers, each its figure; the band enters, then nothing runs
+        assert page.evaluate("document.querySelectorAll('.come .sez-tile').length") == 0
+        figures = page.evaluate(
+            "[...document.querySelectorAll('.come .come__num')].map(n => getComputedStyle(n, '::before').content)"
+        )
+        assert len(figures) == 4 and all("counter" in f for f in figures), figures
         _bring(page, band, 120)
         page.wait_for_function("s => document.querySelector(s).dataset.secState === 'in'", arg=band)
-        running = page.evaluate(RUNNING, band)
-        names = {a[0] for a in running}
-        assert "sez-node" not in names, running
-        # the ink is a 200 ms verb with no delay: read the tile's computed animation (it stays while the state is `in`),
-        # not the list of running animations, which drops it the moment it has finished
-        verbs = page.evaluate(
-            "s => getComputedStyle(document.querySelector(s + ' .come .sez-tile')).animationName", band
-        )
-        assert "sez-ink" in verbs and "sez-node" not in verbs, verbs
-        assert {"sez-layer", "sez-draw"} <= names, names
-        assert any(a[0] == "sez-layer" and a[1] == "::before" for a in running), (
-            "the floor's light is the tile's own layer"
-        )
-        assert any(a[0] == "sez-draw" and a[1] == "::after" for a in running), "the tile's foot rule draws"
+        names = {a[0] for a in page.evaluate(RUNNING, band)}
+        assert not names & {"sez-node", "sez-ink", "sez-layer"}, names
         page.wait_for_timeout(3200)
         assert page.evaluate(RUNNING, band) == []
-        tile = "document.querySelector('.come .sez-tile')"
-        assert page.evaluate(f"getComputedStyle({tile}, '::before').opacity") == "1"
-        assert page.evaluate(f"getComputedStyle({tile}, '::after').scale") == "0.4 1", "the rule at its resting 40 %"
-        assert "inset" in page.evaluate(f"getComputedStyle({tile}, '::before').boxShadow"), (
-            "the lit floor, in the plate's token"
-        )
         for path in ("parcours/", "formation/", "diplomes-et-titres/"):
             page.goto(f"{live_server.url}/fr/{path}", wait_until="load")
             image = page.evaluate("getComputedStyle(document.querySelector('[data-luce=\"origine\"]')).backgroundImage")
@@ -294,16 +237,14 @@ def test_under_reduced_motion_and_from_the_keyboard_the_seams_stand_drawn_and_no
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
     page = context.new_page()
     try:
-        for path, (band, *_rest) in RACCORDI.items():
+        for path, (band, _route) in FORMER_RACCORDI.items():
             page.goto(f"{live_server.url}/fr/{path}", wait_until="networkidle")
             _bring(page, band)
             page.wait_for_timeout(300)
             assert page.evaluate("document.querySelectorAll('[data-sec-state]').length") == 0, path
             assert page.evaluate("document.getAnimations().filter(a => a.playState === 'running').length") == 0, path
-            assert (
-                page.evaluate("s => getComputedStyle(document.querySelector(s)).scale", f"{band} > .sez-raccordo")
-                == "none"
-            ), path
+            # FINAL MICRO-PASS §5 A3: the seam's raccordo left — nothing to stand drawn, nothing to run
+            assert page.evaluate("s => document.querySelector(s + ' > .sez-raccordo')", band) is None, path
         page.goto(f"{live_server.url}/fr/institutions/", wait_until="networkidle")
         page.mouse.wheel(0, 1600)
         page.wait_for_timeout(400)
@@ -483,13 +424,23 @@ def test_l_intesa_reveals_once_from_each_outer_edge_and_leaves_and_the_landing_s
         assert froms == ["inset(0 100% 0 0)", "inset(0 0 0 100%)"], ("each from its outer edge inward", froms)
         page.wait_for_timeout(3000)
         assert page.evaluate("document.querySelector('.intesa').getAnimations({subtree: true}).length") == 0
+        # RESTATED under V5.20 for the FINAL MICRO-PASS's review (10 Nov 2026, defect 5: the pentagram's line crossed the
+        # closing list's rows and chevrons): the Institutions landing's «Pour aller plus loin» draws no ground, its links
+        # still there; a closing band's ground — unmirrored, the band's first child, under its words, revealed on the
+        # band's own trigger — is read on Réseau's, the closing band that carries it: the same checks, another surface
         for lang in ("fr", "ar"):
             page.goto(f"{live_server.url}/{lang}/institutions/", wait_until="load")
+            landing = page.evaluate(
+                "() => [document.querySelectorAll('.intesa').length,"
+                " document.querySelectorAll('section.ecosistema-approdo a.approdo__link').length]"
+            )
+            assert landing[0] == 0 and landing[1] >= 2, (lang, "institutions/", landing)
+            page.goto(f"{live_server.url}/{lang}/reseau/", wait_until="load")
             state = page.evaluate(INTESA)
-            _assert_flags_unmirrored(state, (lang, 1440, "institutions/"), lang)
-            assert state["parentFirst"] and "ecosistema-approdo" in state["parent"] and state["z"] == "-1", state
-        # on the landing the band reveals on its own trigger (rise.js's wait / in), not at load below the fold
-        band = "section.ecosistema-approdo"
+            _assert_flags_unmirrored(state, (lang, 1440, "reseau/"), lang)
+            assert state["parentFirst"] and "rete-approdo" in state["parent"] and state["z"] == "-1", state
+        # on Réseau the band reveals on its own trigger (rise.js's wait / in), not at load below the fold
+        band = "section.rete-approdo"
         if page.evaluate(STATE, band) == "wait":
             assert page.evaluate(f"getComputedStyle(document.querySelector('{band} > .intesa svg')).clipPath") != "none"
             _bring(page, band, 120)

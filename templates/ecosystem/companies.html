@@ -36,6 +36,13 @@ M1): a secondary, because the form's submit stays the page's ONE action; then a 
 (the statement and the three moments on «la linea»), where do I start (the form, its six short single-line fields
 two by two from 64rem), what the platform does and does not do (the ONE inset), where next («Pour aller plus loin»).
 «Who can help me» is the live line under the form.
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B3): EN-1 opens on the prescribed quotation set light beside the productive
+territory's photograph — after 21st.dev «Split Content Section» (felipemenezes098/content-06, id 28310;
+ecosystem/_companies.css says how) —, EN-2's full-bleed panorama folded into it (the same slot, the page's one body
+frame), on stone; the three moments follow on paper, in the band the panorama held (the grounds keep their sequence:
+no two neighbours of one kind), columns on one hairline with the quiet sequence marker (components/sezioni/flusso.html:
+no tile, no 36 px numeral, no panel); the request's panel beside the form without its side stripe. The form itself,
+unchanged.
 {% endcomment %}
 {% block space_header %}
 {% translate "Espace Entreprises" as space_label %}{% translate "Recueil des besoins" as way_label %}
@@ -51,9 +58,15 @@ a truncation of p3.entrances.company.text; the fr-fallback branch stays for a ca
 
 {% block space_main %}
 {% translate "Trois temps, une même démarche" as moments_title %}{% translate "Les trois temps de la démarche" as moments_label %}
-<section id="demarche" class="sez sez--flusso imprese-demarche" data-sec="flusso" data-ground="stone" data-rhythm="band" aria-labelledby="demarche-header">
-  <div class="container">
+<section id="demarche" class="sez sez--apertura imprese-demarche" data-sec="apertura" data-ground="stone" data-rhythm="band" aria-label="{% translate 'La démarche' %}">
+  <div class="container imprese-apertura">
     <blockquote class="imprese-citazione"{% if quote.lang_attr %} lang="{{ quote.lang_attr }}"{% endif %}><p>{{ quote.text }}</p></blockquote>
+    {% photo "companies.territory" "imprese-apertura__foto" "" "(min-width: 64rem) 55vw, 100vw" %}
+  </div>
+</section>
+
+<section id="trois-temps" class="sez sez--flusso imprese-tempi" data-sec="flusso" data-ground="paper" data-rhythm="band" aria-labelledby="demarche-header">
+  <div class="container">
     {% include "components/sezioni/_testa.html" with role="process" title_id="demarche-header" title=moments_title only %}
     {% include "ecosystem/partials/note.html" %}
     {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral UI wording limited to the vocabulary of the prescribed introduction; no procedure, no delay, no outcome is described.{% endcomment %}
@@ -61,9 +74,6 @@ a truncation of p3.entrances.company.text; the fr-fallback branch stays for a ca
   </div>
 </section>
 
-<div class="sez sez--panorama imprese-territorio" data-sec="panorama" data-ground="paper" data-rhythm="band">
-  <div class="container">{% include "components/sezioni/panorama.html" with slot="companies.territory" only %}</div>
-</div>
 
 <section id="formulaire" class="chapter chapter--area ecosystem-form" aria-labelledby="formulaire-header">
   <div class="container chapter__inner">

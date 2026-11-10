@@ -355,16 +355,39 @@ def _interim_body(raw: str, lang: str) -> tuple[Text, bool]:
     return editorial(raw, lang), False
 
 
+#: The hero's description in two voices (FINAL MICRO-PASS §5 A1, A and B): the institutional statement, then its
+#: supporting clause — the locked p3.hero.body cut at the separator that closes «… vers l'Italie» and opens the
+#: participle of its second clause, in the text's OWN language (the Italian and English pages show the French text,
+#: so they take the French cut). Each entry is (the separator, the word that follows it): an anchor, never a retyped
+#: phrase. A language without an entry, or a text whose shape this does not know, is set whole.
+HERO_BODY_CUT: dict[str, tuple[str, str]] = {"fr": (", ", "développé "), "ar": ("، ", "طُوِّرت ")}
+
+
+def hero_body_cut(text: Any, lang: str) -> tuple[str, str] | None:
+    """The description's statement and its supporting clause, rebuilding the text character for character — or None:
+    then the template sets the text whole. The separator stays with the statement (cms.locked_split's rule)."""
+    if not isinstance(text, str) or lang not in HERO_BODY_CUT:
+        return None
+    separator, word = HERO_BODY_CUT[lang]
+    at = text.find(separator + word)
+    if at <= 0 or text.find(separator + word, at + 1) >= 0:
+        return None
+    statement, support = text[: at + len(separator)], text[at + len(separator) :]
+    return (statement, support) if statement + support == text else None
+
+
 def build_hero(ctx: BuildContext) -> dict | None:
     variant = HeroVariant.PHASE3 if ctx.phase3 else HeroVariant.INTERIM
     row = _hero_row(variant)
     data: dict[str, Any] = {"variant": variant, "eyebrow": editorial(row.eyebrow_fr, ctx.lang)}
     if ctx.phase3:
+        body = locked("p3.hero.body", ctx.lang)
         data.update(
             title=locked("p3.hero.title", ctx.lang),
             subtitle=locked("p3.hero.subtitle", ctx.lang),
-            body=locked("p3.hero.body", ctx.lang),
+            body=body,
             body_is_fragment=False,
+            body_cut=hero_body_cut(body.value, body.lang or ctx.lang),
         )
     else:
         body, is_locked = _interim_body(row.body_fr, ctx.lang)
@@ -497,20 +520,17 @@ def entrances(lang: str, phase3: bool) -> list[dict]:
 
 
 def build_entrances(ctx: BuildContext) -> dict | None:
-    items = entrances(ctx.lang, ctx.phase3)
-    for item in items:
-        # V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §4.2 T2a): each door plate seats its audience's disc — the registry's
-        # glyph of the actor, decorative (the question beside it names the audience)
-        item["glyph"] = icons.AUDIENCE.get(item["actor"], "")
-    return {"entrances": items}
+    # FINAL MICRO-PASS, the review's defect 1: the door plates seat no audience disc (V5.22 §4.2 T2a's glyph left with
+    # the arched seat, components/entrances.html), so the entrances pass as the registry gives them
+    return {"entrances": entrances(ctx.lang, ctx.phase3)}
 
 
 # ---- 5. Orientation --------------------------------------------------------------------------
 def build_orientation(ctx: BuildContext) -> dict | None:
     """
-    The orientation's route, «la linea V2» (V5.22, SECTION_SYSTEM_V2 §3.1 S2): four stations on the route the hero's
-    line comes down into — station 1 the T1 seal of orientation (`ile-orienta`), stations 2 to 4 the registry's
-    tiles (icons.HOW_STEP: an informative pre-assessment, never a check; the training; the authorities' stamp).
+    The orientation's route, «la linea V2» (V5.22, SECTION_SYSTEM_V2 §3.1 S2): four stations on one hairline —
+    FINAL MICRO-PASS §5 A1/A2: each its quiet sequence marker and its words, no seal and no tile (a station carries no
+    glyph).
 
     * gate G3 open: the locked «Comment ça marche» sentence cut on its own separators by the owner-approved cut
       (pathways.services.how_it_works, D-U4) — its lead the route's caption, its four steps the stations, its caveat
@@ -528,7 +548,6 @@ def build_orientation(ctx: BuildContext) -> dict | None:
         "terminal": "",
         "end_action": None,
     }
-    glyphs = icons.HOW_STEP
     if ctx.phase3:
         data["how_it_works"] = locked("p3.persons.how_it_works", ctx.lang)
         from pathways import services as pathway_services
@@ -536,18 +555,12 @@ def build_orientation(ctx: BuildContext) -> dict | None:
         cut = pathway_services.how_it_works(ctx.lang)
         if cut is not None:
             data.update(how=cut, whole=cut.text, stations_lang=cut.lang)
-            data["stations"] = [
-                {"label": step, "lang": cut.lang, "glyph": glyphs[i] if i < len(glyphs) else ""}
-                for i, step in enumerate(cut.steps)
-            ]
+            data["stations"] = [{"label": step, "lang": cut.lang} for step in cut.steps]
     else:
         steps = [ui(step) for step in content.ORIENTATION_STEPS]
         data["steps"] = [s.value for s in steps]
         data["steps_lang"] = data["stations_lang"] = steps[0].lang if steps else ""
-        data["stations"] = [
-            {"label": s.value, "lang": s.lang, "glyph": glyphs[i] if i < len(glyphs) else ""}
-            for i, s in enumerate(steps)
-        ]
+        data["stations"] = [{"label": s.value, "lang": s.lang} for s in steps]
     return data
 
 

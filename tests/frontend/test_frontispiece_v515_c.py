@@ -77,9 +77,10 @@ def test_every_important_page_opens_with_its_frontispiece(get, path):
     attrs, body = head.group(1), head.group(2)
     assert f'data-fronte="{motif}"' in attrs, (path, attrs)
     assert (f'data-tone="{tone}"' in attrs) if tone else ("data-tone" not in attrs), (path, attrs)
-    # the drawing is decoration: hidden, never focusable, mirrored by CSS in Arabic
-    ground = re.search(r'<div class="fronte__ground" aria-hidden="true"><svg class="fronte__motif"[^>]*>', body)
-    assert ground and 'focusable="false"' in ground.group(0), path
+    # FINAL MICRO-PASS §2.6, §5 A3 (V5.20 strict rule: the page-header motifs off — the band is its paper or night, its
+    # light and its grain): the ground is decoration, hidden, and draws nothing
+    assert '<div class="fronte__ground" aria-hidden="true"></div>' in body, path
+    assert "fronte__motif" not in body, path
     # its sheet is linked in the <head> (round 1: a link in the body blocked the band's paint and pushed the LCP)
     assert "css/dist/pages/css/fronte.css" in html.split("</head>", 1)[0], path
     assert "css/dist/pages/css/fronte.css" not in main, path
@@ -160,8 +161,10 @@ def test_the_band_moves_only_under_no_preference_and_never_on_html_rm():
         assert any(start < at for start, _end in blocks), "an animation outside no-preference"
         rule_head = css[:at].rsplit("{", 1)[0].rsplit("}", 1)[-1]
         assert ":root:not(.rm)" in rule_head, rule_head.strip()
-    # Arabic mirrors the drawing; nothing mirrors a photograph
-    assert '[dir="rtl"] .fronte__motif' in css and "scaleX(-1)" in css
+    # FINAL MICRO-PASS §2.6, §5 A3 (V5.20 strict rule): no head draws its motif any more — a drawing a reading page
+    # still includes stands down, so there is nothing to mirror —; nothing mirrors a photograph
+    assert re.search(r"(?m)^\.fronte__motif \{\s*display: none;\s*\}", css)
+    assert '[dir="rtl"] .fronte__motif' not in css
     assert not re.search(r"\.foto[^{]*\{[^}]*scaleX\(-1\)", css)
 
 

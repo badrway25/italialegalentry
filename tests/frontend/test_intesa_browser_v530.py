@@ -6,9 +6,9 @@ label v530-art-build) — the generalised «intesa» (templates/ecosystem/partia
 Chromium, headless (no lock slot), on the seeded site with the gate G3 open and the clock at 3 October 2026 through
 `core.clock.now` (a frozen monotonic clock stalls Playwright):
 
-* ONE primitive on its surfaces, each with its variant: the Institutions collaboration head and the Institutions «Pour aller
-  plus loin» (campo), the home's cooperation moment (atmosfera), Réseau's «Pour aller plus loin» (campo) — every layer
-  aria-hidden, without text, transparent to the pointer;
+* ONE primitive on its surfaces, each with its variant: the Institutions collaboration head and Réseau's «Pour aller plus
+  loin» (campo) — every layer aria-hidden, without text, transparent to the pointer; the home's cooperation moment
+  (atmosfera, FINAL MICRO-PASS §5 A3) and the Institutions «Pour aller plus loin» (campo, the micro-pass's review) left;
 * in Arabic AND in French the flags are NEVER mirrored: no transform, scale, rotate or translate on either drawing or any
   ancestor, positive screen matrices, the Italian green at the hoist (left of the red), the pentagram upright and unflipped
   — while the PLACEMENT follows the reading edge (Italy at the band's start edge, Morocco's centre on the far half);
@@ -30,11 +30,14 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 pytestmark = [pytest.mark.browser, pytest.mark.django_db(transaction=True)]
 
-#: path → (the band that carries the layer, its variant)
+#: path → (the band that carries the layer, its variant). FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the home's
+#: «atmosfera» left the home's cooperation band — its blurred fields, lines and pentagram were the band's geometry —, so
+#: the home is held apart: no layer of the primitive anywhere in the band, the band's words still there. RESTATED under
+#: V5.20 for the FINAL MICRO-PASS's review (10 Nov 2026, defect 5: the pentagram's line crossed the closing list's
+#: rows and chevrons): the Institutions «Pour aller plus loin» is held apart the same way — no layer in its band, its
+#: links still there
 SURFACES = {
     "collaboration/institutions/": (".intesa-campo", "campo"),
-    "institutions/": ("section.ecosistema-approdo", "campo"),
-    "": ("section.home-ecosystem", "atmosfera"),
     "reseau/": ("section.rete-approdo", "campo"),
 }
 HEIGHTS = {1440: 900, 1024: 768, 768: 1024, 390: 844}
@@ -132,6 +135,18 @@ def test_one_primitive_on_its_surfaces_never_mirrored_and_still_under_reduced_mo
                 where = (lang, width, path or "home")
                 _assert_unmirrored(state, where, lang, variant)
                 assert state["running"] == 0, (where, "a still composition under reduced motion")
+            page.goto(f"{live_server.url}/{lang}/", wait_until="networkidle")
+            home = page.evaluate(
+                "() => [document.querySelectorAll('section.home-ecosystem .intesa').length,"
+                " document.querySelector('section.home-ecosystem .testa__title').textContent.trim()]"
+            )
+            assert home[0] == 0 and home[1], (lang, width, "home", home)
+            page.goto(f"{live_server.url}/{lang}/institutions/", wait_until="networkidle")
+            band = page.evaluate(
+                "() => [document.querySelectorAll('section.ecosistema-approdo .intesa').length,"
+                " document.querySelectorAll('section.ecosistema-approdo a.approdo__link').length]"
+            )
+            assert band[0] == 0 and band[1] >= 2, (lang, width, "institutions/", band)
         finally:
             context.close()
 

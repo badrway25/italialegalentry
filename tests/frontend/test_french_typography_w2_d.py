@@ -117,8 +117,12 @@ def test_the_home_draws_its_own_strings_with_the_spaces_and_the_locked_copy_as_w
         assert _text_content(main, f'[data-faq="{key}"] .integrita__risposta') == [faq[key]["answer"]], key
     body = locked_content.text("p3.antifraud.body", "fr")
     assert _text_content(main, '[data-locked="p3.antifraud.body"]') == [body]
-    for key in ("p3.persons.how_it_works", "p3.hero.body"):
-        assert str(escape(locked_content.text(key, "fr"))) in main, key
+    assert str(escape(locked_content.text("p3.persons.how_it_works", "fr"))) in main
+    # FINAL MICRO-PASS §5 A1 (V5.20 strict rule; the owner's A–B hierarchy of the home's description): the hero's
+    # description is said in two voices inside its one element, the statement and its clause, so it is held as the
+    # texts above set in typographic levels are — its element's textContent, character for character
+    hero = locked_content.text("p3.hero.body", "fr")
+    assert _text_content(main, '[data-locked="p3.hero.body"]') == [hero]
     # and no locked element of the page carries a no-break space the registry does not hold
     registry = "".join(_registry_strings())
     assert NBSP not in registry

@@ -1,43 +1,41 @@
 """The FAQ (Phase 3, gate G3).
 
-V5.22 (SECTION_SYSTEM_V2 §3.13; lane P2): the listing is an explorer (L «l'indice», master–detail from 64 rem): the
-locked questions as the index, one answer plate beside it — the view hands the library's partial its items (the
-question, the answer with its links as chips, its date and its permalink) and the foot «il rimando» its tiles. The
-search's result list stays the system's disclosures, open.
+FINAL MICRO-PASS (9 Nov 2026, BRIEF §6 B1): the listing is one column of questions on the ground — the system's
+disclosures, searchable as one types and filtered by theme (21st.dev «Searchable Question Index», id 37558, adapted:
+templates/faq/index.html says how). The view hands the template each question with its theme and the themes' pills
+with their counts; the live count's sentences are the template's (one per count the page can show, in the language's
+plural forms); the search's result list stays the system's disclosures, open. The explorer (master–detail), V5.29's
+glyph a question (GLYPHS) and the answer plate's seal left.
 """
 
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render
-from django.template.loader import render_to_string
 from django.utils import translation
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.decorators.http import require_safe
 
 from core.links import public_url
 from faq import services
 
-#: the fraud question carries the protection's mark and an ink rule at its reading edge (§3.13 Q1)
+#: the fraud question keeps the protection's one mark, bare at the question's size (§3.13 Q1; BRIEF §2.1: the fraud
+#: warning, one per page)
 FRAUD_KEY = "faq_guaranteed_visa_offer"
 
-#: V5.29 §10–§13 (lane PUB2): each prescribed question says its subject by one glyph of the registry
-#: (apps/core/icons.py), drawn in the library's T2 tile (.sez-tile--sm, stream SYS) — never one icon twice
-#: (tests/frontend/test_faq_v529_pub2.py). An editor's question outside the register draws no glyph.
-GLYPHS = {
-    "faq_visas": "stamp",  # the visa: an act of the competent authority
-    "faq_recruitment_agency": "briefcase",  # work and its intermediaries
-    "faq_preassessment_guarantee": "compass",  # eligibility / orientation
-    "faq_decreto_flussi": "book-text",  # a legal source
-    "faq_diplomas": "university",  # diplomas and their recognition
-    "faq_prior_refusal": "signpost",  # the pathway after a refusal
-    "faq_who": "institution",  # who stands behind the platform
-    "faq_data_protection": "lock",  # security: the data under lock (no second shield beside fraud)
-    FRAUD_KEY: "ile-scudo",  # fraud: the protection's own mark
-}
-
-
-def glyph(key: str) -> str:
-    return GLYPHS.get(key, "")
+#: FINAL MICRO-PASS §6 B1: the nine prescribed questions grouped by subject for the page's thematic navigation while the
+#: register has one category — a presentation map (key → theme), never a category of the model. The names are existing
+#: catalogue strings; an editor's question outside the map shows under «Toutes» only. Two categories or more in the
+#: register: the categories are the themes.
+THEMES = (
+    ("projet", gettext_lazy("Le projet"), ("faq_visas", "faq_recruitment_agency", "faq_who")),
+    (
+        "parcours",
+        gettext_lazy("Parcours réguliers"),
+        ("faq_preassessment_guarantee", "faq_decreto_flussi", "faq_diplomas", "faq_prior_refusal"),
+    ),
+    ("securite", gettext_lazy("Sécurité"), ("faq_data_protection", FRAUD_KEY)),
+)
 
 
 def _url(name: str) -> str:
@@ -45,23 +43,23 @@ def _url(name: str) -> str:
     return public_url(name)
 
 
-def _explorer_items(group, request) -> list[dict]:
-    """The items of one category's explorer: the panel's id is the question's own key (the permalinks and the home's
-    trust links keep landing on their question)."""
-    items = []
-    for entry in group.entries:
-        items.append(
-            {
-                "id": entry.key,
-                "title": entry.question,
-                "title_lang": entry.question_lang if entry.question_is_fallback else "",
-                "glyph": glyph(entry.key),
-                "marked": entry.key == FRAUD_KEY,
-                "body": render_to_string("faq/_risposta.html", {"entry": entry}, request),
-                "links": render_to_string("faq/_collegamenti.html", {"entry": entry}, request) if entry.links else "",
-            }
-        )
-    return items
+def _themes(entries, groups) -> tuple[list[dict], dict[str, str]]:
+    """The pills (key, name, lang, count) and each question's theme; no pill row under two themes."""
+    if len(groups) > 1:
+        themes = [
+            {"key": g.category.anchor, "name": g.name, "lang": g.lang if g.is_fallback else "", "count": len(g.entries)}
+            for g in groups
+        ]
+        of = {entry.key: g.category.anchor for g in groups for entry in g.entries}
+        return themes, of
+    keys = {entry.key for entry in entries}
+    themes, of = [], {}
+    for key, name, members in THEMES:
+        present = [member for member in members if member in keys]
+        if present:
+            themes.append({"key": key, "name": name, "lang": "", "count": len(present)})
+            of.update(dict.fromkeys(present, key))
+    return (themes if len(themes) > 1 else []), of
 
 
 def _rimando(request) -> list[dict]:
@@ -92,31 +90,30 @@ def index(request):
         raise Http404
     lang = translation.get_language() or settings.LANGUAGE_CODE
     query = services.normalise_query(request.GET.get("q"))
-    suggestions = []
+    suggestions, themes, theme_of = [], [], {}
     if query:
         entries = services.entries_for(services.search_items(query), lang)
-        groups = []
         jsonld = ""
         if not entries:
             # V5.29 §13 (a strong empty search): every question stays one step away — the register's questions as
-            # links to their permalinks, each with its glyph, beside the empty state
-            suggestions = [
-                {"entry": entry, "glyph": glyph(entry.key)}
-                for entry in services.entries_for(services.live_items(), lang)
-            ]
+            # links to their permalinks beside the empty state (FINAL MICRO-PASS §6 B1: words only, no glyph)
+            suggestions = services.entries_for(services.live_items(), lang)
     else:
         entries = services.entries_for(services.live_items(), lang)
-        groups = services.group_entries(entries, lang)
+        themes, theme_of = _themes(entries, services.group_entries(entries, lang))
         jsonld = services.render_jsonld(services.faq_jsonld(entries, lang)) if entries else ""
     context = {
         "page_title": _("Questions fréquentes"),
         "query": query,
         "is_search": bool(query),
         "entries": entries,
-        "results": [{"entry": entry, "glyph": glyph(entry.key)} for entry in entries] if query else [],
+        "items": [
+            {"entry": entry, "theme": theme_of.get(entry.key, ""), "marked": entry.key == FRAUD_KEY}
+            for entry in entries
+        ],
+        "themes": themes,
         "suggestions": suggestions,
-        "groups": [{"group": g, "items": _explorer_items(g, request)} for g in groups],
-        "single_group": len(groups) == 1,
+        "contact_url": _url("pages:contact"),
         "rimando": _rimando(request),
         "faq_jsonld": jsonld,
         "is_preview": preview,

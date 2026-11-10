@@ -1,26 +1,15 @@
 /* ============================================================================================
    H · «L'EMICICLO» — the actor map's CSS-only variant (design V5.22, SECTION_SYSTEM_V2 §2 H; lane S), recomposed by V5.30
-   VARIETY §7 INSTITUTIONS («do not make every institutional relationship an arc»; 21st.dev's split media + content, in
-   this system's own terms): the actors as a row of glyph-only tiles (aria-hidden), the locked sentence whole beneath
-   them, its enumerated items as spans; a tile and its phrase light each other — words once (RH-5), no module, no tab
-   stop added; no arc is drawn. Page-only (Institutions). Markup: components/sezioni/mappa.html with layout="arc".
+   VARIETY §7 INSTITUTIONS, then by the FINAL MICRO-PASS (BRIEF §6 B4): the six glyph-only seat tiles left; the locked
+   sentence is ONE refined typographic annotation — its head («Destinataires :») a label on its own line in the accent,
+   the enumeration light at the band's step, each recipient in the primary ink and the joins (the commas, «et») in the
+   secondary: one element, its textContent the locked text (a visual split only). No module, no tab stop, no arc, no
+   tile. Page-only (Institutions). Markup: components/sezioni/mappa.html with layout="arc".
    ============================================================================================ */
 
 .emiciclo {
-  position: relative;
   display: grid;
   gap: var(--s-6);
-}
-
-.emiciclo__seggi {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .emiciclo__frase {
@@ -28,6 +17,22 @@
   margin: 0;
   font-size: var(--t-entry);
   line-height: var(--t-entry-lh);
+  font-weight: var(--w-body);
+  color: var(--sez-ink-2, var(--text-2));
+  text-wrap: pretty;
+}
+
+.emiciclo__capo {
+  display: block;
+  margin-block-end: var(--s-4);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+}
+
+.emiciclo__voce {
+  color: var(--sez-ink-1, var(--text-1));
 }
 
 @media (min-width: 48rem) {
@@ -36,18 +41,3 @@
     line-height: var(--t-band-lh);
   }
 }
-
-/* a seat and its phrase light each other — words once (RH-5), no module, no tab stop added; at once (the keyboard's
-   focus and the hand alike, §4.1 rule 5). The pair is the pattern's own `data-seggio`, never Lume's L3 `data-seat` (DS 2026
-   §12: no server-rendered region seats; v522-s2, DL54-182 item 10 b) */
-.emiciclo:has([data-seggio="1"]:is(:hover, :focus-within)) [data-seggio="1"],
-.emiciclo:has([data-seggio="2"]:is(:hover, :focus-within)) [data-seggio="2"],
-.emiciclo:has([data-seggio="3"]:is(:hover, :focus-within)) [data-seggio="3"],
-.emiciclo:has([data-seggio="4"]:is(:hover, :focus-within)) [data-seggio="4"],
-.emiciclo:has([data-seggio="5"]:is(:hover, :focus-within)) [data-seggio="5"],
-.emiciclo:has([data-seggio="6"]:is(:hover, :focus-within)) [data-seggio="6"] {
-  --disc-w: 2px;
-  --disc-ring: var(--accent-night);
-  color: var(--accent-night);
-}
-

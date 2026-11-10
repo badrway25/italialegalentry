@@ -77,15 +77,15 @@
   }
 }
 
-/* ---- PS-1 · the milestones: every step's details still being verified — its node's edge dashed, never a tick ---- */
-.scheda-filo .filo__tappa--attesa .sez-tile {
-  box-shadow: none;
-  outline: 1px dashed var(--line-structure);
-  outline-offset: -1px;
+/* ---- PS-1 · the milestones: every step's details still being verified — FINAL MICRO-PASS §5 A2: its hairline dashed
+   (v5/_sec-filo.css: the quiet marker), never a tick ---- */
+.scheda-filo .filo__tappa--attesa::before {
+  background: none;
+  border-inline-start: 1px dashed var(--line-structure);
 }
 
 .scheda-filo .filo__linea {
-  gap: var(--s-8);
+  --filo-gap: var(--s-8);
 }
 
 
@@ -126,19 +126,15 @@
 .decide__arco:has(> :nth-child(5):last-child) { --n: 5; }
 .decide__arco:has(> :nth-child(6):last-child) { --n: 6; }
 
+/* FINAL MICRO-PASS §5 A3: a seat is its name — the one building glyph repeated on every seat left */
 .decide__seggio {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--s-4);
+  align-content: start;
+  gap: var(--s-2);
   padding: var(--s-5);
   border-radius: var(--card-radius);
   background: var(--surface-night-sheet);
   box-shadow: inset 0 0 0 1px var(--line-night-soft);
-}
-
-.decide__seggio .sez-disc {
-  --disc-ring: var(--line-night);
 }
 
 .decide__nome {
@@ -159,28 +155,9 @@
   color: var(--text-on-night-2);
 }
 
-/* Italy Legal Entry™: a dotted node outside the seats, never lit, its caption the lead that says what it does not do */
+/* Italy Legal Entry™: the lead that says what it does not do, under the seats (FINAL MICRO-PASS §5 A3: no node) */
 .decide__ile {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--s-4);
   max-inline-size: 40rem;
-}
-
-.decide__nodo {
-  display: inline-grid;
-  place-items: center;
-  inline-size: 52px;
-  block-size: 52px;
-  border: 1.5px dashed var(--line-night);
-  border-radius: var(--radius-md);
-  color: var(--text-on-night-3);
-}
-
-.decide__nodo .icon {
-  inline-size: 22px;
-  block-size: 22px;
 }
 
 .decide__lead {
@@ -197,16 +174,6 @@
     column-gap: var(--s-4);
   }
 
-  .decide__seggio {
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
-    align-items: start;
-  }
-
-  .decide__seggio .sez-disc {
-    --disc: 52px;
-    --disc-glyph: 24px;
-  }
 }
 
 /* ---- PS-3 · the editors' warnings, when there are any: plates under the protection ---- */

@@ -150,7 +150,11 @@ def test_phase3_hero_renders_exact_prescribed_texts(page, seeded, phase3_open):
     assert promise.strip() == escaped(text_of("p3.hero.subtitle"))
     assert h1_text(hero) == text_of("p3.hero.title")
     assert "visually-hidden he__name" not in hero
-    assert escaped(text_of("p3.hero.body")) in hero
+    # FINAL MICRO-PASS §5 A1 (V5.20 strict rule: the unbroken string gave way to the description's two voices): ONE
+    # <p data-locked>, its statement and its supporting clause each a span, holds the locked text character for
+    # character — its textContent is the text, cut once, nothing retyped
+    assert _text_content(hero, '[data-locked="p3.hero.body"]') == [text_of("p3.hero.body")]
+    assert len(re.findall(r'<span class="he__(?:enunciato|seguito)">', hero)) == 2
     assert "Un écosystème pour les parcours réguliers" not in hero
     # The path's stations: the shore, then the pilot sequence's second to sixth steps — whole, in their prescribed
     # order.
@@ -356,7 +360,7 @@ def test_before_phase3_date_even_with_flag_enabled(page, seeded, before_phase3):
 #: V5.22 round 1 (QA_ROUND1 m5; §1 rule 6, an approved decision: a locked text is re-composed at render by spans; V5.20
 #: strict rule): the pilot's title keeps «VÉNÉTIE–MAROC» on one line by a render-time span (cms.locked_split.emphasize)
 #: — held to its heading's textContent, exactly the locked title: the same text, now checked as the whole element
-RECOMPOSED = {"p3.antifraud.body", "p3.pilot.title"}
+RECOMPOSED = {"p3.antifraud.body", "p3.pilot.title", "p3.hero.body"}  # FINAL MICRO-PASS §5 A1: the hero's two voices
 
 
 def _text_content(html: str, selector: str) -> list[str]:
@@ -376,6 +380,7 @@ def test_phase3_prescribed_texts_present_when_open(page, seeded, phase3_open):
         assert escaped(text_of(key)) in html, key
     assert _text_content(html, '[data-locked="p3.antifraud.body"]') == [text_of("p3.antifraud.body")]
     assert _text_content(html, "#home-pilot-title") == [text_of("p3.pilot.title")]
+    assert _text_content(html, '[data-locked="p3.hero.body"]') == [text_of("p3.hero.body")]
     from cms import locked_content
 
     # The pilot sequence is on the page where the hero's path carries it (its second to sixth steps, after the
@@ -434,13 +439,17 @@ def test_exactly_four_entrances_gate_closed(page, seeded):
     # 01–04, no landform glyph nobody could decode, one arrow beside the call's words. V5.22 (SECTION_SYSTEM_V2 §3.1 S1,
     # §4.2 T2a — an approved decision; V5.20 strict rule): each door's arched seat holds its AUDIENCE's disc — the
     # registry's glyph of that actor and no other, decorative —, so a plate names its door twice over, never a rank.
+    # RESTATED under V5.20 for the FINAL MICRO-PASS's review (10 Nov 2026, defect 1: on a phone the four arched seats
+    # and their discs were the page's arches after the hero's door): no seat, no arch, no disc, no glyph but the call's
+    # arrow — and every plate still says its prescribed question, its sentence and its call.
     assert not any("entrance-" in item and ".svg" in item for item in items)
     assert not any("entry__ordinal" in item or "route__glyph" in item or "linea__num" in item for item in items)
     assert all(item.count("#icon-arrow") == 1 and 'class="passaggio__cta"' in item for item in items)
     for item, actor in zip(items, ("person", "company", "institution", "university")):
         glyphs = re.findall(r'#icon-([a-z0-9-]+)"', item)
-        assert glyphs == [icons.AUDIENCE[actor], "arrow"], (actor, glyphs)
-        assert 'class="passaggio__seggio on-inverse" aria-hidden="true"' in item
+        assert glyphs == ["arrow"], (actor, glyphs)
+        assert not re.search(r"passaggio__seggio|passaggio__arco|sez-disc|<mask", item), actor
+        assert 'class="passaggio__titolo"' in item and 'class="passaggio__testo"' in item, actor
 
 
 def test_exactly_four_entrances_phase3_open_with_prescribed_texts(page, seeded, phase3_open):
@@ -513,15 +522,16 @@ def test_orientation_gate_closed_uses_neutral_stepper_and_disclaimer(page, seede
     block = html.split('data-section="orientation"', 1)[1].split("</section>", 1)[0]
     # the four neutral steps on the public passage (W3-D: components/stepper.html), across from 48rem — V5.22
     # (SECTION_SYSTEM_V2 §3.1 S2 «gate closed: the neutral four steps on the same route», §1 rule 8; V5.20 strict rule):
-    # the passage evolved, «la linea V2» (size="large"), the same pattern in both gate states: station 1 the T1 seal
-    # of orientation, stations 2 to 4 the registry's tiles, the editorial note as the route's terminal line
+    # the passage evolved, «la linea V2» (size="large"), the same pattern in both gate states, the editorial note as
+    # the route's terminal line. FINAL MICRO-PASS §5 A1/A2 (V5.20 strict rule: the seal at station 1 and the tiles of
+    # stations 2 to 4 left): each station is its quiet sequence marker and its words — no seal, no tile, no glyph —,
+    # the four words still there
     assert block.count('class="linea__step') == 4
     assert '<ol class="linea linea--large linea--across"' in block
-    assert block.count('class="sigillo sigillo--small" data-mark="ile-orienta"') == 1
-    tiles = re.findall(
-        r'<span class="sez-tile" data-verb="node"><svg class="icon"[^>]*><use href="[^"#]*#icon-([a-z-]+)"', block
-    )
-    assert tiles == list(icons.HOW_STEP[1:])
+    assert "sigillo" not in block and "sez-tile" not in block and "<svg" not in block
+    assert block.count('<span class="linea__num" aria-hidden="true"></span>') == 4
+    labels = re.findall(r'<p class="linea__label" data-verb="ink"[^>]*>([^<]+)</p>', block)
+    assert len(labels) == 4 and all(label.strip() for label in labels)
     assert "aria-current" not in block and "linea__rank" not in block  # an explanation, not a progress state
     assert "pré-évaluation à caractère informatif" in block
     assert "autorités compétentes" in block
@@ -547,10 +557,10 @@ def test_orientation_phase3_uses_the_prescribed_sentence(page, seeded, phase3_op
     assert re.search(r'<ol class="linea linea--large linea--across"[^>]* aria-hidden="true"', block)
     labels = re.findall(r'<p class="linea__label" data-verb="ink">([^<]+)</p>', block)
     assert labels == [escaped(step) for step in cut.steps]
-    # V5.24 (TYPOGRAPHY_V2 F-3 / F-4; FINAL_DELIVERY_V2 §3.4, V5.20 strict rule): the caption is the label role by
-    # name — the same part of the sentence, drawn for the eye only, no longer the home's one mono folio (stronger: the
-    # role is asserted)
-    assert f'<p class="orienta__didascalia t-label" aria-hidden="true">{escaped(cut.lead)}</p>' in block
+    # FINAL MICRO-PASS §5 A1 (V5.20 strict rule: the caption drawn for the eye left — the section's head says what the
+    # route is): the lead is no longer drawn apart, and it is still said, inside the whole sentence, once
+    assert "orienta__didascalia" not in block and "orienta__portico" not in block
+    assert escaped(cut.lead) in escaped(sentence) and block.count(escaped(sentence)) == 1
     assert f'<p class="orienta__avvertenza" aria-hidden="true">{escaped(cut.caveat)}</p>' in block
     assert "aria-current" not in block and 'class="sequence' not in block
 
@@ -634,9 +644,11 @@ def test_antifraud_callout_links_the_page_when_open(page, seeded, phase3_open):
     assert _text_content(block, '[data-locked="p3.antifraud.body"]') == [text_of("p3.antifraud.body")]
     assert 'href="/fr/attention-aux-fraudes/"' in block
     # one sign for one warning — V5.22 (SECTION_SYSTEM_V2 §0.1 «one locked text gets one rendering», §4.9 n.9; V5.20
-    # strict rule): «la protezione», the same plate on every page, signs the warning with its T1 seal `ile-scudo`, once;
-    # never the account-security shield, and no second, bare glyph beside it
-    assert block.count('<span class="sigillo sigillo--small protezione__sigillo" data-mark="ile-scudo"') == 1
+    # strict rule): «la protezione», the same plate on every page, signs the warning with the ILE shield `ile-scudo`,
+    # once; never the account-security shield. FINAL MICRO-PASS §5 A3: the shield is drawn bare — no arch seat
+    assert 'class="sigillo' not in block and "data-sigillo-scope" not in block and "data-mark=" not in block
+    assert block.count('<span class="protezione__sigillo" aria-hidden="true">') == 1
+    assert block.count("#icon-ile-scudo") == 1
     assert '#icon-shield"' not in block and "#icon-shield-alert" not in block
 
 
@@ -827,7 +839,9 @@ def test_the_morocco_italy_model_is_said_once_by_the_heros_path(page, seeded, ph
 
 #: the T1 seals the V2 home draws (V5.22, SECTION_SYSTEM_V2 §3.1, §4.2, §4.8): the orientation's at its route's origin
 #: (gate G3 open or closed: the same route), «la protezione»'s on its rule, the reserved row's key — each once a page
-HOME_SEALS = {"closed": ["ile-orienta"], "open": ["ile-orienta", "ile-scudo", "ile-accesso"]}
+#: FINAL MICRO-PASS §5 A1/A3 (V5.20 strict rule): the orientation's seal and «la protezione»'s arch seat left (the
+#: route is its quiet markers, the shield is drawn bare); the reserved row's key stays — once
+HOME_SEALS = {"closed": [], "open": ["ile-accesso"]}
 
 
 @pytest.mark.parametrize("state", ["closed", "open"])

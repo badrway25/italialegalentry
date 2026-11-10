@@ -14,12 +14,16 @@ line reaches it. Still: the route drawn, every node lit.
 Contract: `milestones` — [{"id", "num", "glyph", "heading", "heading_lang", "body" (safe), "body_lang", "frame_slot"}];
 `level` (the milestones' heading level: 3 by default); `rail` — {"label", "items": [{"id", "label", "lang"}]} (the
 page's parts, by their anchors); `crossing` (True).
+
+FINAL MICRO-PASS §5 A2 (9 Nov 2026): the milestones take the quiet sequence marker of «la linea V2» (21st.dev «How It
+Works Steps», ln-dev7/how-it-works-09, id 26891): a small figure
+in the quiet ink — «1», never «01» — on a 1 px hairline that runs down to the next milestone; no tile, no glyph, no
+display numeral (`num` and `glyph` stay in the contract: the figure is the milestone's own order).
 {% endcomment %}<div class="filo{% if rail %} filo--rail{% endif %}{% if crossing %} filo--traversata{% endif %}"{% if rail %} data-sec-js="spia"{% endif %}>
   {% if rail %}<nav class="filo__rail" aria-label="{{ rail.label }}"><ol class="filo__indice">{% for it in rail.items %}<li><a class="filo__voce" href="#{{ it.id }}"{% if it.lang %} lang="{{ it.lang }}"{% endif %}>{{ it.label }}</a></li>{% endfor %}</ol></nav>{% endif %}
   <ol class="filo__linea" role="list" data-registro>
     {% for item in milestones %}<li class="filo__tappa"{% if item.id %} id="{{ item.id }}"{% endif %}>
-      <span class="filo__num sez-numeral" aria-hidden="true">{% if item.num %}{{ item.num }}{% else %}{{ forloop.counter|stringformat:"02d" }}{% endif %}</span>
-      <span class="filo__nodo sez-tile sez-tile--sm" aria-hidden="true">{% if item.glyph %}{% svg_icon item.glyph "icon" %}{% endif %}</span>
+      <span class="filo__num" aria-hidden="true">{% if item.num %}{{ item.num|add:0 }}{% else %}{{ forloop.counter }}{% endif %}</span>
       <h{{ level|default:3 }} class="filo__titolo"{% if item.heading_lang %} lang="{{ item.heading_lang }}"{% endif %}>{{ item.heading }}</h{{ level|default:3 }}>
       {% if item.body %}<div class="filo__corpo"{% if item.body_lang %} lang="{{ item.body_lang }}"{% endif %}>{{ item.body }}</div>{% endif %}
       {% if item.frame_slot %}<div class="filo__foto">{% photo item.frame_slot "filo__frame" %}</div>{% endif %}

@@ -96,29 +96,9 @@
   }
 }
 
-/* ---- PP-1 · station 6, the entry into Italy — the brand's arch, the page's one gold arrival (§3.3, §4.5): its node edged
-        in gold, its threshold rule run to the whole foot in gold, a gold light at its sill; the glyph keeps its ink
-        (gold is never a glyph on paper, §4.4). Written on the route's own structure: the passage's classes are
-        qualified in the family's one modifier sheet (ecosystem/_spaces.css), which moves nothing ---- */
-.pilota-rotta__percorso li:nth-child(6) .sez-tile {
-  box-shadow: inset 0 0 0 1.5px var(--identity-light);
-}
-
-.pilota-rotta__percorso li:nth-child(6) .sez-tile::after {
-  scale: 1 1;
-  background: var(--identity-light);
-}
-
-.pilota-rotta__percorso li:nth-child(6) .sez-tile::before {
-  content: "";
-  position: absolute;
-  inset: 22% 14% -4%;
-  z-index: -1;
-  border-radius: var(--radius-full);
-  box-shadow: 0 0 1.75rem 0.9rem color-mix(in oklab, var(--identity-light) 26%, transparent);
-  pointer-events: none;
-}
-
+/* ---- PP-1 · station 6, the entry into Italy — FINAL MICRO-PASS §5 A2: the stations carry their quiet sequence marker
+        and no tile, so the arrival's gold node, its threshold rule and its light left; its words keep the title's
+        weight ---- */
 .pilota-rotta__percorso li:nth-child(6) p {
   font-weight: var(--w-title);
 }
@@ -132,10 +112,6 @@
 
   .pilota-rotta__percorso ol > li:has(~ li:hover)::after {
     opacity: 1;
-  }
-
-  .pilota-rotta__percorso ol > li:hover .sez-tile::after {
-    scale: 1 1;
   }
 }
 
@@ -152,20 +128,6 @@ html[data-input="key"] .pilota-rotta__percorso ol > li::after {
   :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="wait"] .linea-v2 > ol > li::before,
   :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="wait"] .linea-v2 > ol > li > span::after {
     animation: none;
-  }
-
-  :root:not(.rm):not([data-input="key"]) .pilota-rotta [data-sec-state="wait"] li:nth-child(6) .sez-tile::before {
-    opacity: 0;
-  }
-
-  :root:not(.rm):not([data-input="key"]) .pilota-rotta .pilota-rotta__percorso[data-sec-state="in"] li:nth-child(6) .sez-tile::before {
-    animation: sez-layer var(--motion-slow) var(--ease-enter) 1.4s backwards;
-  }
-}
-
-@media (forced-colors: active) {
-  .pilota-rotta__percorso li:nth-child(6) .sez-tile::before {
-    display: none;
   }
 }
 

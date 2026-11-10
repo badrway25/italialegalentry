@@ -30,32 +30,25 @@
 }
 
 
-/* ---- «l'approdo» ---- */
-.approdo {
-  position: relative;
-  isolation: isolate;
-}
-
+/* ---- «l'approdo» — FINAL MICRO-PASS §5 A3: a divided link list, as «il rimando» (v5/_sec-mosaico.css; 21st.dev
+   «Split Image Blog List», ziegfiroyt/blog25, id 28595): the rows between hairlines, no tile, no plate (the library's
+   partial and ecosystem/partials/approdo.html alike), the Forum's row typographic like the others, a chevron at each
+   row's end that moves 4 px under the hand or the focus ---- */
 .approdo__tessere {
   display: grid;
-  gap: var(--s-4);
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-@media (min-width: 48rem) {
-  .approdo__tessere {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  }
+  border-block-start: 1px solid var(--line-rhythm);
 }
 
 .approdo__tessera {
+  position: relative;
   display: grid;
-  align-content: start;
-  gap: var(--s-3);
-  padding: var(--s-5);
-  min-block-size: 9rem;
+  gap: var(--s-1);
+  padding-block: var(--s-5);
+  padding-inline: 0 var(--s-10);
+  border-block-end: 1px solid var(--line-rhythm);
 }
 
 .approdo__link {
@@ -64,27 +57,34 @@
   font-weight: var(--w-title);
 }
 
+.approdo__link::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--s-2);
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-block: auto;
+  border-block-start: 1.5px solid;
+  border-inline-end: 1.5px solid;
+  color: var(--text-3); /* the quiet ink, at rest and under the hand: only the link's words take the accent */
+  rotate: 45deg;
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+[dir="rtl"] .approdo__link::after { rotate: -45deg; }
+
+.approdo__tessera:is(:hover, :focus-within) .approdo__link { color: var(--accent-text); }
+.approdo__tessera:is(:hover, :focus-within) .approdo__link::after { translate: 4px 0; }
+[dir="rtl"] .approdo__tessera:is(:hover, :focus-within) .approdo__link::after { translate: -4px 0; }
+html[data-input="key"] .approdo__link::after { transition: none; }
+
 .approdo__riga {
   margin: 0;
+  max-inline-size: var(--measure-lead);
   font-size: var(--t-ui);
   line-height: 1.5;
   color: var(--text-2);
-}
-
-/* the Forum's tile: typographic, on its night face (Q4) */
-.approdo__tessera--forum {
-  background: var(--surface-night);
-  box-shadow: inset 0 0 0 1px var(--line-night-soft);
-  color: var(--text-on-night-1);
-}
-
-.approdo__tessera--forum .approdo__link {
-  font-size: var(--t-band);
-  line-height: var(--t-band-lh);
-}
-
-.approdo__tessera--forum .approdo__riga {
-  color: var(--text-on-night-2);
 }
 
 /* V5.30 (the owner's «geometry saturation»): the bookend — the page's motif drawn low across the closing band — left the

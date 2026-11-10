@@ -98,9 +98,13 @@ def test_no_recruitment_wording_of_the_former_page(get_html, seeded, lang):
 
 def test_three_neutral_moments_are_an_ordered_list(get_html, seeded):
     html = get_html("fr", COMPANIES_PATH)
-    section = html.split('id="demarche"', 1)[1].split("</section>", 1)[0]
+    # FINAL MICRO-PASS §6 B3 (V5.20; was «in the démarche's band, under its quotation»): the démarche opens on the
+    # quotation beside the territory's photograph (its band, on stone) and the three moments follow in their own band,
+    # on paper (the one the panorama held) — the same ordered list, one heading each, in their order
+    assert html.index('id="demarche"') < html.index('id="trois-temps"')
+    section = html.split('id="trois-temps"', 1)[1].split("</section>", 1)[0]
     # V5.22 (SECTION_SYSTEM_V2 §3.6 EN-1; strict rule): the three moments are «il flusso»'s stations — an ordered list,
-    # one heading each, in their order, on one measured curve
+    # one heading each, in their order
     assert re.search(r'<ol class="flusso__tappe" role="list"[^>]*data-steps="3"', section)
     assert section.count('<li class="flusso__tappa">') == 3
     labels = re.findall(r'<h3 class="flusso__titolo">(.*?)</h3>', section)

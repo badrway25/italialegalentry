@@ -140,14 +140,11 @@ class TestPhase3Index:
         # strict rule): the eight stand on their family's lane — «the prescribed order shows in the numerals». Each
         # pathway once, each numeral its prescribed rank, the words exact (a stronger check than the document order)
         assert sorted(keys) == sorted(PATHWAY_KEYS) and len(keys) == 8
-        # V5.24 (FINAL_DELIVERY_V2 §3.5, TYPOGRAPHY_V2 §4.2; V5.20): the numeral also carries the numeral role by name
-        # (`t-numeral`) — the class read as the numeral's own first class, the same invariant
-        numerals = dict(
-            re.findall(
-                r'data-pathway="([a-z_]+)"[^>]*>.*?<span class="tracciato__num(?: t-numeral)?"[^>]*>(\d\d)<', html
-            )
-        )
-        assert numerals == {key: f"{rank:02d}" for rank, key in enumerate(PATHWAY_KEYS, start=1)}
+        # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the display numeral «01» gave way to the quiet sequence marker
+        # «1»): each pathway's marker is still its prescribed rank — the same invariant, no leading zero
+        numerals = dict(re.findall(r'data-pathway="([a-z_]+)"[^>]*>.*?<span class="tracciato__num">(\d+)<', html))
+        assert numerals == {key: str(rank) for rank, key in enumerate(PATHWAY_KEYS, start=1)}
+        assert "t-numeral" not in html
         for entry in LOCKED_ENTRIES:
             assert escape(entry["title"]) in html
             assert escape(entry["description"]) in html
@@ -177,9 +174,11 @@ class TestPhase3Index:
         assert ANTIFRAUD_TITLE in html
         # V5.22 (SECTION_SYSTEM_V2 §0.1 «one component, la protezione», §3.4; strict rule): the anti-fraud plate in its
         # own band — its body cut on its own full stops into three levels, read whole in its element; its mark the
-        # protection's T1 seal (ile-scudo), never the alarm's amber
+        # protection's mark (ile-scudo), never the alarm's amber — FINAL MICRO-PASS §5 A3 (V5.20 strict rule): drawn
+        # bare, no arch seat
         assert _locked_text(html, "p3.antifraud.body") == locked_content.text("p3.antifraud.body", "fr")
-        assert 'data-mark="ile-scudo"' in html
+        assert '<span class="protezione__sigillo" aria-hidden="true">' in html and "#icon-ile-scudo" in html
+        assert 'data-mark="ile-scudo"' not in html
 
     def test_side_links_and_cta(self, client, pathways_seeded, phase3_open):
         html = _html(client.get(PATHWAY_URL))

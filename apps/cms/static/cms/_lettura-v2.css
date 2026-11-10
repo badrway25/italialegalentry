@@ -6,8 +6,13 @@
    Tokens only; logical properties; the words never wait.
    ============================================================================================ */
 
-/* ---- 0 · the head's search seat: three corners a screen (SECTION_SYSTEM_V2 §4.3–§4.4: 4 · 6 · full; tokens.css «Lo
-   spigolo»). The V2 bodies bring the plates' 6 and the seal's and the chips' full under the seat's 12 — the seat
-   takes the plates' corner, its frosted plate otherwise unchanged (v5/_fronte.css §7) ---- */
-.fronte-wrap form.search-form { border-radius: var(--radius-md); } /* the reading heads with a search: FAQ, glossary
-   (form: above the seat's own rule, v5/_fronte.css, which loads after this sheet) */
+/* ---- 0 · the head's search (FAQ, glossary): on the head's ground, no plate (FINAL MICRO-PASS §6 B1 — the frosted
+   seat of v5/_fronte.css §7, which loads after this sheet, is undone by a heavier selector; the field and its glyph:
+   v5/_lettura.css §5) ---- */
+.fronte-wrap form.search-form {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}

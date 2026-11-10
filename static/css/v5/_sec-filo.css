@@ -3,60 +3,55 @@
    Page-only (after v5/_sezioni.css). Markup: components/sezioni/filo.html; script static/js/src/sezioni/spia.js.
    Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Timeline» 857 (a sticky label column beside the content
    while a beam follows the scroll), «Scroll animated timeline» 35029 (the line draws as it is read). Refused: Lenis and
-   GSAP. Signature SCROLL PROGRESSION.
+   GSAP. Signature SCROLL PROGRESSION — FINAL MICRO-PASS §5 A2: the rail's indicator alone; the route is the quiet
+   sequence marker below, still.
    ============================================================================================ */
 
 .filo {
   display: grid;
   gap: var(--sez-gap);
-  view-timeline: --filo;
 }
 
 .filo__linea {
+  --filo-gap: var(--s-10);
   position: relative;
   display: grid;
-  gap: var(--s-10);
+  gap: var(--filo-gap);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* the route: a hairline down the reading edge, and its advance (scrubbed by the reading) over it */
-.filo__linea::before,
-.filo__linea::after {
-  content: "";
-  position: absolute;
-  inset-block: 20px;
-  inset-inline-start: 19px;
-  inline-size: 2px;
-  background: var(--line-rhythm);
-}
-
-.filo__linea::after {
-  background: var(--accent-mark);
-  transform-origin: 50% 0;
-}
-
+/* FINAL MICRO-PASS §5 A2: the quiet sequence marker of «la linea V2» (v5/_linea-v2.css; 21st.dev «How It Works Steps»,
+   ln-dev7/how-it-works-09, id 26891) — a small figure in the quiet ink at the reading edge, and from it a 1 px hairline down
+   to the next milestone; no tile, no glyph, no display numeral (the route's 2 px line, its scrubbed advance and the
+   nodes that lit left with them) */
 .filo__tappa {
   position: relative;
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  column-gap: var(--s-5);
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  column-gap: var(--s-4);
   row-gap: var(--s-2);
 }
 
-/* the step marker is the shell's (.sez-numeral: ILE Mono, tabular lining, the quiet ink), 28 on a phone */
 .filo__num {
-  grid-column: 2;
-  font-size: var(--t-numeral); /* the numeral role (v5/_sezioni.css .sez-numeral): 28/32 down the reading edge */
-  line-height: var(--t-numeral-lh);
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  font-size: var(--t-small);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
 }
 
-.filo__nodo {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  z-index: 1;
-  justify-self: center;
+.filo__tappa:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-block: calc(var(--t-entry-lh) + var(--s-1)) calc(var(--s-2) - var(--filo-gap));
+  inset-inline-start: calc(0.75rem - 0.5px);
+  inline-size: 1px;
+  background: color-mix(in srgb, var(--line-structure) 35%, var(--line-rhythm));
 }
 
 .filo__titolo {
@@ -122,59 +117,20 @@
     inset-block-start: calc(var(--header-h-scrolled) + var(--s-6));
   }
 
-  .filo__num { font-size: var(--t-numeral-lg); line-height: var(--t-numeral-lg-lh); } /* 36/40 beside the rail */
-
-  /* «la traversata»: two times joined by one horizontal line */
+  /* «la traversata»: two times side by side, each on its own marker */
   .filo--traversata .filo__linea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: var(--s-12);
   }
-
-  .filo--traversata .filo__linea::before,
-  .filo--traversata .filo__linea::after {
-    inset-block: 19px auto;
-    inset-inline: 20px;
-    inline-size: auto;
-    block-size: 2px;
-    transform-origin: 0 50%;
-  }
-
-  [dir="rtl"] .filo--traversata .filo__linea::after { transform-origin: 100% 50%; }
 }
 
 @media (max-width: 63.999rem) {
   .filo__rail { display: none; }
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    :root:not(.rm) .filo__linea::after {
-      animation: sez-draw-y linear both;
-      animation-timeline: --filo;
-      animation-range: entry 30% exit 60%;
-    }
-
-    :root:not(.rm) .filo--traversata .filo__linea::after {
-      animation-name: sez-draw;
-      animation-range: entry 40% cover 55%;
-    }
-
-    /* a node lights when the line reaches it: its tile's threshold rule runs to the whole foot */
-    :root:not(.rm) .filo__nodo::after {
-      animation: sez-node-light linear both;
-      animation-timeline: view();
-      animation-range: entry 70% cover 45%;
-    }
-  }
-}
-
-@keyframes sez-node-light {
-  to { scale: 1; }
-}
-
 html[data-input="key"] .filo__indice::before { transition: none; }
 
 @media (forced-colors: active) {
-  .filo__linea::after,
+  .filo__tappa::before { background: CanvasText; }
   .filo__indice[data-spia]::before { background: Highlight; }
 }

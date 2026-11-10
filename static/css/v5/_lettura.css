@@ -88,28 +88,6 @@
   display: inline-block;
 }
 
-/* the page's index under the lead — the FAQ's categories: links that wrap, 24 px apart */
-.page-index {
-  margin: var(--s-6) 0 0;
-}
-
-.page-index__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2) var(--s-6);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.page-index__list a {
-  display: inline-block;
-  padding-block: 2px;
-  font-size: var(--t-ui);
-  line-height: var(--t-ui-lh);
-  font-weight: var(--w-control);
-}
-
 @media (min-width: 48rem) {
   .lettura .page-header__glyph {
     inline-size: var(--icon-xl);
@@ -118,30 +96,12 @@
   }
 }
 
-/* the end seat: a page that is searched carries its search there, on the lead's last line (from 64rem) */
-@media (min-width: 64rem) {
-  .lettura .page-header--seat {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    align-items: end;
-    column-gap: var(--s-6);
-  }
-
-  .page-header__text {
-    grid-column: 1 / span 7;
-    min-inline-size: 0;
-  }
-
-  .page-header__aside {
-    grid-column: 8 / span 5;
-    min-inline-size: 0;
-  }
-}
-
-@media (max-width: 63.999rem) {
-  .lettura .page-header .page-header__aside {
-    margin-block-start: var(--s-8);
-  }
+/* a page that is searched carries its search under the lead, at the reading edge (FINAL MICRO-PASS §6 B1: the end
+   seat and its frosted plate left — the field stands on the head's ground, §5), 32 px under it. Said in the head
+   (0,3,0): §5's `margin: 0` on the form (0,2,0, later; it keeps the menu's search flush on a reading page) took the
+   seat back and the field sat on the lead (the review's defect 3) */
+.lettura .page-header > .page-header__aside {
+  margin-block-start: var(--s-8);
 }
 
 /* ---- 3 · the chapters' own (the device, the head, the body's columns, the label: v5/_pagina.css §3) ---------- */
@@ -216,8 +176,11 @@
 }
 
 /* ---- 5 · the tools ------------------------------------------------------------------------------------------- */
-/* the search of a page (the FAQ, the glossary): the label of a field (14/20 at 500, 8 px above), the plate and the
-   page's one primary on a row that wraps — the plate is v5/field.css's, 52 px on public pages */
+/* the search of a page (the FAQ, the glossary) — FINAL MICRO-PASS §6 B1–B2, after 21st.dev «Searchable Question
+   Index» (ibrandify, id 37558): one field on the head's ground (v5/field.css's plate), its search glyph inside at the
+   start, a clear button at its end while it holds text (static/js/src/cerca.js), the submit beside it for the path
+   without script — quiet, and gone where the list answers as one types —, the help line under it. The label is the
+   field's name, said by its placeholder too (visually hidden) */
 .lettura .search-form {
   display: grid;
   gap: var(--s-2);
@@ -225,23 +188,91 @@
   margin: 0;
 }
 
-.lettura .search-form__label {
-  font-family: var(--f-sans);
-  font-size: var(--u-ui);
-  line-height: var(--u-ui-lh);
-  font-weight: var(--w-control);
-  color: var(--text-1);
-}
-
-.lettura .search-form__row {
+.cerca__campo {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
   gap: var(--s-2);
 }
 
-.lettura .search-form__input {
-  flex: 1 1 12rem;
+.lettura .cerca__input {
+  flex: 1;
   min-inline-size: 0;
+  padding-inline: var(--hit-primary);
+}
+
+/* one clear control: the browser's own cancel mark gives way to the field's (the review's defect 2) */
+.cerca__input::-webkit-search-cancel-button,
+.cerca__input::-webkit-search-decoration {
+  appearance: none;
+}
+
+/* empty, the field shows no clear control (cerca.js hides it): its placeholder takes the end back, and on a narrow
+   phone it ends in an ellipsis, never in a cut word (the review's defect 4) */
+.lettura .cerca__input:placeholder-shown {
+  padding-inline-end: var(--s-4);
+  text-overflow: ellipsis;
+}
+
+.cerca__glifo {
+  position: absolute;
+  inset-block-start: calc(50% - var(--icon-sm) / 2);
+  inset-inline-start: var(--s-4);
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--icon-muted);
+  pointer-events: none;
+}
+
+.cerca__pulisci {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  inline-size: var(--hit-primary);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--icon-muted);
+  cursor: pointer;
+}
+
+.cerca__pulisci .icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.cerca__pulisci:focus-visible {
+  outline-offset: -6px;
+}
+
+.cerca__invio {
+  flex: none;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--field-radius);
+  background: none;
+  font: inherit;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .cerca__pulisci:hover {
+    color: var(--text-1);
+  }
+
+  .cerca__invio:hover {
+    border-color: var(--accent-mark);
+  }
+}
+
+.js [data-cerca-viva] .cerca__invio {
+  display: none;
 }
 
 .lettura .search-form__help,
@@ -257,70 +288,61 @@
   padding-block: 2px;
 }
 
-/* the letter index of the glossary: the letters that have terms, each a 44 px target; it stays under the letterhead
-   while the register scrolls (PX25) from 48rem, where one row holds it — on a phone it is a block of its own. The band
-   is a row of equal cells, 44 px at least and no gap, which take the gutter's first 16 px on both sides: a letter,
-   centred in its cell, stands on the reading edge with its drawing rather than with its box (as the identity glyphs
-   do), and eight letters hold one line from 360 px (352 px of band); a longer alphabet — or a narrower screen — wraps
-   into the same cells, a grid by design, never a letter left alone at the end of a line of loose links (the review's
-   m1) */
-.az-index {
-  border-block: 1px solid var(--line-rhythm);
-  background: var(--surface-page);
+/* the live count of a list that answers as one types (role=status; its line kept, so the list never jumps) and the
+   list's empty state: the search's own sentences, the way back to every entry, the contact */
+.cerca-conto {
+  min-block-size: var(--t-small-lh);
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
 }
 
-.az-index__list {
+.cerca-vuoto {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--hit-primary), 1fr));
-  margin-block: 0;
-  margin-inline: calc(var(--s-4) * -1);
-  padding: 0;
-  list-style: none;
+  justify-items: start;
+  gap: var(--s-2);
+  padding-block: var(--s-8);
 }
 
-.az-index__link {
-  display: grid;
-  place-items: center;
-  min-inline-size: var(--hit-primary);
-  min-block-size: var(--hit-primary);
+.cerca-vuoto > p {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+}
+
+.cerca-vuoto__titolo {
   font-size: var(--t-entry);
   line-height: var(--t-entry-lh);
   font-weight: var(--w-title);
   color: var(--text-1);
-  text-decoration: none;
 }
 
-@media (hover: hover) {
-  .az-index__link:hover {
-    color: var(--accent-text-hover);
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.2em;
-  }
+.cerca-vuoto__testo {
+  color: var(--text-2);
 }
 
-.az-index__link:focus-visible {
-  outline-offset: -2px;
-  border-radius: var(--radius-sm);
+/* a search's empty state on the reading list (the FAQ's, the glossary's): the component's semantic glyph bare — its
+   tile, its light and its doorway arch left (FINAL MICRO-PASS §6 B1–B2; components/empty_state.html is unchanged) */
+.lettura :is(.faq-vuoto, .glossary__results) .empty-state.empty-state--tile::before,
+.lettura :is(.faq-vuoto, .glossary__results) .empty-state--tile > .glyph-tile::after {
+  content: none; /* over core/glyph.css, which loads after this sheet */
 }
 
-@media (min-width: 48rem) {
-  .az-index {
-    position: sticky;
-    inset-block-start: calc(var(--header-h-scrolled) + 1px);
-    z-index: var(--z-sticky);
-  }
-
-  html.no-js .az-index {
-    position: static;
-  }
-
-  /* a letter or a term reached from a link (the index, «Retour au glossaire»), and a focus moved by the keyboard, stand
-     under the letterhead AND the index, never behind them (WCAG 2.4.11) */
-  html:has(.az-index) {
-    scroll-padding-block-start: calc(var(--header-h) + var(--hit-primary) + var(--s-5));
-  }
+.lettura :is(.faq-vuoto, .glossary__results) .empty-state--tile > .glyph-tile {
+  background: none;
+  box-shadow: none;
 }
+
+.lettura .cerca-vuoto__vie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-6);
+  margin-block-start: var(--s-4);
+}
+
+/* the letter index of the glossary: the glossary's own sheet (cms/_lessico-v2.css; FINAL MICRO-PASS §6 B2) */
 
 /* the category filter of the news: links on one hairline, the current one under the one indicator of the tabs */
 .filter-bar {
@@ -461,43 +483,7 @@
 }
 
 /* ---- 6 · the pages' own blocks ------------------------------------------------------------------------------- */
-/* THE FAQ — the system's disclosure (v5/tabs.css): the question at 17/24 on a 56 px row, the answer at the same size
-   under it (PX18: the question is never smaller than its answer), its links 24 px apart, its line of facts quiet */
-.faq-item__answer > p:first-child {
-  font-size: var(--t-body);
-  line-height: var(--t-body-lh);
-  color: var(--text-1);
-}
-
-.faq-item__links {
-  margin: var(--s-4) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.faq-item__links > li + li {
-  margin-block-start: var(--s-3);
-}
-
-.faq-item__links a {
-  display: inline-block;
-  font-size: var(--t-ui);
-  line-height: 1.5rem;
-}
-
-.faq-item__meta {
-  margin: var(--s-4) 0 0;
-  font-size: var(--t-small);
-  line-height: var(--t-small-lh);
-  font-variant-numeric: var(--numeric-data);
-  color: var(--text-2);
-}
-
-/* the permalink: a 24 px target in its 20 px line (the trail's recipe; the accessibility check's A3) */
-.faq-item__permalink {
-  display: inline-block;
-  padding-block: 2px;
-}
+/* THE FAQ — its rows are the FAQ's own sheet's (cms/_faq-v2.css; FINAL MICRO-PASS §6 B1) */
 
 /* THE GLOSSARY — V5.22 (SECTION_SYSTEM_V2 §3.14; lane P2): the register is «il lessico», term cards under their letters, and
    the term page «la scheda» — apps/cms/static/cms/_lessico-v2.css. The two-column register and its sticky letters left. */
@@ -954,18 +940,8 @@
 /* ---- under a finger, a link that stands alone answers on 44 px (SP-8) without a taller line: the target grows, the
         page does not; the rows of links open to 20 px so that two targets never overlap -------------------------- */
 @media (pointer: coarse) {
-  .lettura :is(.chapter__links, .page-index__list) {
+  .lettura .chapter__links {
     row-gap: var(--s-5);
-  }
-
-  .faq-item__links > li + li {
-    margin-block-start: var(--s-5);
-  }
-
-  /* the answer's line of facts carries the permalink: 24 px under the last link, so that their targets meet without
-     overlapping */
-  .faq-item__links + .faq-item__meta {
-    margin-block-start: var(--s-6);
   }
 
   /* each of these is a box of 24 px at least (its line, or its line and 2 px): 10 px above and below make 44, and a
@@ -975,11 +951,11 @@
      the stretch inside the term on a touch screen.
      W4-A: the help line's link and the consent's privacy link left the list for v5/_pagina.css — every page that
      draws them, the door pages' forms included (D2, D5) —, the pending legal notice's address for v5/notice.css (D3) */
-  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .search-form__reset a, .page-header__contact a) {
+  .lettura :is(.chapter__links a, .faq-item__permalink, .search-form__reset a, .page-header__contact a) {
     position: relative;
   }
 
-  .lettura :is(.chapter__links a, .page-index__list a, .faq-item__links a, .faq-item__permalink, .search-form__reset a, .page-header__contact a)::after {
+  .lettura :is(.chapter__links a, .faq-item__permalink, .search-form__reset a, .page-header__contact a)::after {
     content: "";
     position: absolute;
     inset-block: -10px;
@@ -1063,7 +1039,6 @@
 }
 
 @media print {
-  .az-index,
   .filter-bar,
   .page-header__aside,
   .lettura .pagination {

@@ -136,15 +136,18 @@ def test_a_section_below_the_fold_waits_plays_once_and_holds_nothing(browser, li
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     page = context.new_page()
     try:
-        for path, selector in (
-            ("parcours/", ".percorsi-come"),
-            ("projet-pilote/", ".pilota-porte"),
+        for path, selector, height in (
+            ("parcours/", ".percorsi-come", 900),
+            ("projet-pilote/", ".pilota-porte", 900),
             # QA_ROUND1 M2 f: the pilot's section starts in a desktop's first screen, its route is its own trigger —
-            # the line is held and draws when the route itself is seen
-            ("projet-pilote/", ".pilota-rotta__percorso"),
-            ("universites-et-formation/", ".universita-filiera"),
-            ("diplomes-et-titres/", ".persone-protezione"),
+            # the line is held and draws when the route itself is seen. FINAL MICRO-PASS §5 A3 (V5.20 strict rule):
+            # the heads lost their drawings, so at 1440 × 900 the route starts 11 px inside the first screen and
+            # stands at once; it is read on a 1440 × 800 desktop, where it starts under its fold — same invariant
+            ("projet-pilote/", ".pilota-rotta__percorso", 800),
+            ("universites-et-formation/", ".universita-filiera", 900),
+            ("diplomes-et-titres/", ".persone-protezione", 900),
         ):
+            page.set_viewport_size({"width": 1440, "height": height})
             page.goto(f"{live_server.url}/fr/{path}", wait_until="networkidle")
             assert page.eval_on_selector(selector, "s => s.dataset.secState") == "wait", path
             if selector == ".universita-filiera":
@@ -360,15 +363,18 @@ def test_the_pilot_s_status_plate_ends_the_route_across_its_width(browser, live_
           const ol = document.querySelector('[data-diagram="pilot-sequence"] ol').getBoundingClientRect();
           const plate = document.querySelector('[data-notice="pilot-not-authorised"] .notice').getBoundingClientRect();
           const steps = document.querySelectorAll('[data-diagram="pilot-sequence"] .linea__step');
-          const turn = getComputedStyle(steps[7], '::before');
-          const arrival = getComputedStyle(steps[5].querySelector('.sez-tile'));
+          const turn = getComputedStyle(steps[7], '::before'), arrival = steps[5].querySelector('p');
           return {olLeft: ol.left, olRight: ol.right, olBottom: ol.bottom, left: plate.left, right: plate.right,
-                  top: plate.top, turn: turn.content, turnStyle: turn.borderInlineEndStyle, arrival: arrival.boxShadow};
+                  top: plate.top, turn: turn.content, arrival: getComputedStyle(arrival).fontWeight,
+                  said: arrival.textContent.trim().length,
+                  tiles: document.querySelectorAll('[data-diagram="pilot-sequence"] .sez-tile').length};
         }""")
         assert abs(state["left"] - state["olLeft"]) <= 1 and abs(state["right"] - state["olRight"]) <= 1, state
         assert state["top"] > state["olBottom"], state
-        assert state["turn"] == '""' and state["turnStyle"] == "dashed", state
-        assert "inset" in state["arrival"] and "rgb(195, 154, 43)" in state["arrival"], state
+        # FINAL MICRO-PASS §5 A2, A3 (V5.20 strict rule: the route's dashed turn into the plate and station 6's gold
+        # node and light left with the stations' tiles): no turn, no tile; the arrival is its words, at the title's weight
+        assert state["turn"] in ("none", "normal") and state["tiles"] == 0, state
+        assert state["arrival"] == "500" and state["said"], state
     finally:
         context.close()
 
@@ -515,13 +521,14 @@ def test_an_arabic_page_keeps_its_french_titles_on_their_marker_s_edge(browser, 
     try:
         page.goto(f"{live_server.url}/ar/parcours/salaried_work/", wait_until="load")
         gaps = page.evaluate("""() => [...document.querySelectorAll('.filo__tappa')].map(li => {
-          const node = li.querySelector('.filo__nodo').getBoundingClientRect();
+          const node = li.querySelector('.filo__num').getBoundingClientRect();
           const title = li.querySelector('.filo__titolo');
           const range = document.createRange(); range.selectNodeContents(title);
           const text = range.getBoundingClientRect();
           return Math.round(node.left - text.right);
         })""")
-        assert gaps and all(0 <= gap <= 120 for gap in gaps), gaps
+        # FINAL MICRO-PASS §5 A2 (V5.20 strict rule): the node gave way to the quiet marker; the title hangs from it
+        assert len(gaps) == 5 and all(0 <= gap <= 120 for gap in gaps), gaps
         # an Arabic lane name is never tracked (a tracked Arabic word breaks apart)
         page.goto(f"{live_server.url}/ar/parcours/", wait_until="load")
         labels = page.evaluate(
@@ -548,11 +555,14 @@ def test_an_arabic_page_keeps_its_french_titles_on_their_marker_s_edge(browser, 
         # the pilot's route runs with the page, station 1 on the reading edge, though its list carries the labels'
         # lang="fr" (the library's French-run rule would turn the list itself left-to-right)
         page.goto(f"{live_server.url}/ar/projet-pilote/", wait_until="load")
+        # FINAL MICRO-PASS §5 A2 (V5.20 strict rule: the stations' tiles left — each is its quiet marker, four to a row
+        # from 48 rem): each row of four runs right to left, station 1 and station 5 on the reading edge
         xs = page.evaluate(
-            "[...document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__segno')]"
-            ".map(s => Math.round(s.getBoundingClientRect().left))"
+            "[...document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__num')]"
+            ".map(s => Math.round(s.getBoundingClientRect().right))"
         )
-        assert len(xs) == 8 and xs == sorted(xs, reverse=True), xs
+        assert len(xs) == 8 and xs[:4] == sorted(xs[:4], reverse=True) and xs[4:] == sorted(xs[4:], reverse=True), xs
+        assert xs[0] == xs[4] == max(xs), xs
     finally:
         context.close()
 
@@ -638,24 +648,33 @@ def test_the_campus_frame_and_the_note_stand_beside_the_three_cards(browser, liv
 
 
 def test_the_companies_three_moments_open_on_their_numerals(browser, live_server, open_pages):
-    """Round 2 (SECTION_SYSTEM_V2 §2 F, a station's ILE Mono numeral at 36; §3.6 EN-1): each of the three moments opens on
-    its numeral, the moments' own order. V5.30 Fast Visual Variety Correction §7 ENTREPRISES (V5.20 strict rule; it stood
-    beside the quotation from 80 rem, two blocks at unequal sizes): the process's title stands under the quotation, on its
-    panel."""
+    """Round 2 (SECTION_SYSTEM_V2 §2 F; §3.6 EN-1): each of the three moments opens on its numeral, the moments' own order.
+    V5.30 Fast Visual Variety Correction §7 ENTREPRISES (V5.20 strict rule): the process's title stands under the
+    quotation, on its panel. FINAL MICRO-PASS §6 B3 (V5.20; was «a station's ILE Mono numeral at 36 px»): the numeral is
+    the quiet sequence marker (BRIEF §2.2) — the counter at the caption's size, tabular, «1» not «01», the first in the
+    accent and the others in one quieter ink — the three on one line, each joined to the next by a 1 px hairline; they
+    stand in their own band after the démarche's opening (the quotation beside the territory), the title under it."""
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
     page = context.new_page()
     try:
         page.goto(f"{live_server.url}/fr/entreprises/", wait_until="load")
         state = page.evaluate("""() => {
-          const marks = [...document.querySelectorAll('.imprese-demarche .flusso__lastra')].map(p => {
-            const cs = getComputedStyle(p, '::before'); return [cs.content, cs.fontSize]; });
+          const cells = [...document.querySelectorAll('.imprese-tempi .flusso__tappa')];
+          const marks = cells.map(c => { const cs = getComputedStyle(c, '::before');
+            return [cs.content, cs.fontSize, cs.fontVariantNumeric, cs.color, Math.round(c.getBoundingClientRect().top)]; });
+          const lines = cells.map(c => getComputedStyle(c, '::after').height);
+          const caption = (() => { const p = document.createElement('i'); p.style.fontSize = 'var(--t-caption)';
+            document.body.append(p); const v = getComputedStyle(p).fontSize; p.remove(); return v; })();
           const quote = document.querySelector('.imprese-citazione').getBoundingClientRect();
-          const head = document.querySelector('.imprese-demarche .testa').getBoundingClientRect();
-          const panel = document.querySelector('.imprese-demarche .flusso').getBoundingClientRect();
-          return {marks, under: head.top >= quote.bottom - 1 && panel.top >= head.bottom - 1};
+          const head = document.querySelector('.imprese-tempi .testa').getBoundingClientRect();
+          const panel = document.querySelector('.imprese-tempi .flusso').getBoundingClientRect();
+          return {marks, lines, caption, under: head.top >= quote.bottom - 1 && panel.top >= head.bottom - 1};
         }""")
-        assert [mark[1] for mark in state["marks"]] == ["36px"] * 3, state
-        assert all(mark[0].startswith("counter(") for mark in state["marks"]), state
+        marks = state["marks"]
+        assert len(marks) == 3 and all(m[0] == "counter(flusso)" and m[2] == "tabular-nums" for m in marks), state
+        assert all(m[1] == state["caption"] for m in marks) and float(state["caption"][:-2]) <= 14, state
+        assert marks[0][3] != marks[1][3] == marks[2][3], (state, "the first in the accent")
+        assert len({m[4] for m in marks}) == 1 and state["lines"] == ["1px"] * 3, state
         assert state["under"], state
     finally:
         context.close()

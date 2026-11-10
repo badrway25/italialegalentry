@@ -1,11 +1,11 @@
 """
 Browser tests (Playwright, Chromium) of the four ecosystem spaces.
 
-Checks that need a real layout engine: no horizontal overflow at 390/800/1440 in LTR and RTL, the
-prescribed eight-step sequence laid out vertically on a phone and on one row on a desktop (mirrored
-in RTL), labels never clipped, nothing left hidden (with JavaScript, without JavaScript and with a
-reduced-motion preference), no request outside the site and no CSP violation. Skipped when Chromium is
-not installed. Design V5.4 (W3-F1): the sequence stands on «la linea», still at load (no entrance motion).
+Checks that need a real layout engine: no horizontal overflow at 390/800/1440 in LTR and RTL, the prescribed
+eight-step sequence laid out vertically on a phone and, on a desktop, in two rows of four (FINAL MICRO-PASS §5 A2;
+mirrored in RTL), labels never clipped, nothing left hidden (with JavaScript, without JavaScript and with a
+reduced-motion preference), no request outside the site and no CSP violation. Skipped when Chromium is not
+installed. Design V5.4 (W3-F1): the sequence stands on «la linea», still at load (no entrance motion).
 
 V5.22 (SECTION_SYSTEM_V2 §3.3, §3.6–§3.8 — an approved owner/product decision; lane P1; V5.20 strict rule): the
 spaces' bodies are V2 sections. The sequence is «la linea V2» in PP-1 (`[data-diagram="pilot-sequence"]`, the route its
@@ -139,14 +139,19 @@ def test_pilot_diagram_is_vertical_on_a_phone(browser, live_server, phase3_live,
 
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_pilot_diagram_is_one_mirrored_row_on_a_desktop(browser, live_server, phase3_live, lang):
+    # FINAL MICRO-PASS §5 A2 (V5.20 strict rule): the eight stations take the quiet sequence marker of «la linea V2»,
+    # four to a row on their hairline (v5/_linea-v2.css) — a desktop shows two rows of four on the same four
+    # columns, each row read in the writing direction; the figure is «1», never «01» (numbers only for sequence)
     context, page = _page(browser, 1440, 900)
     try:
         page.goto(f"{live_server.url}/{lang}/{PILOT}", wait_until="networkidle")
         boxes = _boxes(page)
         assert len(boxes) == 8
-        assert len({b["top"] for b in boxes}) == 1, "eight steps on one row"
+        tops = [b["top"] for b in boxes]
+        assert len(set(tops[:4])) == 1 and len(set(tops[4:])) == 1 and tops[0] < tops[4], "two rows of four, in order"
         lefts = [b["left"] for b in boxes]
-        assert lefts == sorted(lefts, reverse=(lang == "ar")), "reading order follows the writing direction"
+        assert lefts[:4] == lefts[4:], "the two rows share their four columns"
+        assert lefts[:4] == sorted(lefts[:4], reverse=(lang == "ar")), "reading order follows the writing direction"
         # Prescribed labels are never clipped nor hyphenated by the layout.
         clipped = page.evaluate(
             "Array.from(document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__label'))"
@@ -161,7 +166,7 @@ def test_pilot_diagram_is_one_mirrored_row_on_a_desktop(browser, live_server, ph
             "Array.from(document.querySelectorAll('[data-diagram=\"pilot-sequence\"] .linea__num'))"
             ".map(e => getComputedStyle(e, '::before').content)"
         )
-        assert numerals[0] in ("counter(linea, decimal-leading-zero)", '"01"'), numerals[0]
+        assert numerals == ["counter(linea)"] * 8, numerals
     finally:
         context.close()
 

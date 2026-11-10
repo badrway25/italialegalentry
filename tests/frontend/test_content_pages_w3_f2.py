@@ -87,7 +87,8 @@ def test_the_partial_is_page_only_css_imported_by_its_entry():
         "_lettura-v2.css",
     ]
     for route, imports in (
-        ("faq.css", ["../css/v5/_sec-indice.css", "_faq-v2.css"]),
+        # FINAL MICRO-PASS §6 B1 (V5.20): the explorer's pattern partial left the FAQ's route sheet with the explorer
+        ("faq.css", ["_faq-v2.css"]),
         ("lessico.css", ["_lessico-v2.css"]),
     ):
         assert re.findall(r'@import url\("([^"]+)"\);', _read(ENTRY.parent / route)) == imports, route
@@ -378,9 +379,21 @@ def test_the_partial_holds_the_review_s_rules():
         css,
     )
     assert lead and "inline-size: fit-content;" in lead.group(1) and "margin-inline-start: auto;" in lead.group(1)
-    # m1: the letter band is a row of equal cells, no letter left alone
-    band = re.search(r"\.az-index__list \{([^}]*)\}", css).group(1)
-    assert "grid-template-columns: repeat(auto-fill, minmax(var(--hit-primary), 1fr));" in band
+    # m1: the letter band is a row of equal cells, no letter left alone — FINAL MICRO-PASS §6 B2 (V5.20; the rule moved
+    # to the glossary's own sheet with the alphabet's quiet row): ONE line that never wraps (so no letter can be left
+    # alone on a line of its own), each letter a cell of the primary hit height; the empty letters join it from 64 rem
+    # only, where all twenty-six fit, so every letter that leads somewhere stays in sight on a phone
+    lessico = re.sub(r"/\*.*?\*/", "", _read(ROOT / "apps" / "cms" / "static" / "cms" / "_lessico-v2.css"), flags=re.S)
+    band = re.search(r"\.az-index__list \{([^}]*)\}", lessico).group(1)
+    assert "display: flex;" in band and "flex-wrap: nowrap;" in band
+    assert "margin-inline: calc(var(--s-4) * -1);" in band, "the gutter's first 16 px on both sides: 8 × 44 px from 360 px"
+    cell = re.search(r":is\(\.az-index__link, \.az-index__vuota\) \{([^}]*)\}", lessico).group(1)
+    assert "min-block-size: var(--hit-primary);" in cell
+    link = re.search(r"(?m)^\.az-index__link \{([^}]*)\}", lessico).group(1)
+    assert "min-inline-size: var(--hit-primary);" in link, "a letter that leads somewhere is a 44 px cell (the base's m1)"
+    assert re.search(r"\.az-index__vuota \{ display: none;", lessico)
+    assert re.search(r"@media \(min-width: 64rem\) \{\s*\.az-index__vuota \{ display: grid; \}", lessico)
+    assert ".az-index__list" not in css, "the alphabet's rules are the glossary's, never the shared partial's"
     # m6: the first legend of an enquiry form under a chapter's title stays for assistive technology only
     legend = re.search(r"\.enquiry-form > \.form__group:first-of-type > \.form__legend \{([^}]*)\}", css).group(1)
     assert "clip-path: inset(50%);" in legend and "position: absolute;" in legend and "display: none" not in legend

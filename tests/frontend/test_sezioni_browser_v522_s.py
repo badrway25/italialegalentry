@@ -288,10 +288,13 @@ def test_la_linea_stands_drawn_at_rest_in_view_at_load_and_from_the_keyboard(bro
             ctx.close()
 
 
+#: FINAL MICRO-PASS §6 B3 (V5.20): the moments' node tiles left — a moment is its cell, opened by the sheet's quiet counter
 FLOW = """() => ({
   overlay: document.querySelectorAll('.flow__svg, .flow__path, [data-flow], [data-flow-node]').length,
-  nodes: [...document.querySelectorAll('.flusso__tappa .flusso__nodo')].map(n => n.getBoundingClientRect().left),
+  nodes: [...document.querySelectorAll('.flusso__tappa')].map(n => n.getBoundingClientRect().left),
   tops: [...document.querySelectorAll('.flusso__tappa')].map(c => c.getBoundingClientRect().top),
+  marks: [...document.querySelectorAll('.flusso__tappa')].map(c => getComputedStyle(c, '::before').content),
+  tiles: document.querySelectorAll('.flusso__nodo, .flusso .sez-tile, .flusso .sez-disc').length,
 })"""
 
 
@@ -300,14 +303,17 @@ FLOW = """() => ({
 def test_the_flow_is_one_panel_read_in_order_with_no_overlay(browser, live_server, lang):
     """F «il flusso». V5.30 Fast Visual Variety Correction §7 ENTREPRISES, «process panels» (V5.20 strict rule; this decision
     replaces the measured curve through every node): nothing is drawn over the panel; the route still runs in the reading
-    direction, its cells in a row from 48 rem, stacked in their order below."""
+    direction, its cells in a row from 48 rem, stacked in their order below. FINAL MICRO-PASS §6 B3 (V5.20; the order was
+    read from the node tiles): no tile is drawn — each moment opens on the sheet's counter, and the order is read from the
+    moments themselves."""
     pages = {f"flusso-{lang}": fx.page("flusso", lang)}
     for width in (1440, 768, 390):
         ctx, page = _open(browser, live_server, pages, width)
         try:
             _go(page, live_server, f"flusso-{lang}")
             flow = page.evaluate(FLOW)
-            assert flow["overlay"] == 0 and len(flow["nodes"]) >= 2, (width, flow)
+            assert flow["overlay"] == 0 and len(flow["nodes"]) >= 2 and flow["tiles"] == 0, (width, flow)
+            assert all(mark == "counter(flusso)" for mark in flow["marks"]), (width, flow)
             if width >= 768:
                 first, last = flow["nodes"][0], flow["nodes"][-1]
                 assert (first > last) if lang == "ar" else (first < last), (width, "the route runs in the reading direction")

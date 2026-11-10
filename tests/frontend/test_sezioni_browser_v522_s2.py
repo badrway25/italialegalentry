@@ -274,29 +274,28 @@ def test_the_route_board_s_light_waits_beyond_the_rail_s_start_and_runs_in_the_p
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.parametrize("lang", ["fr", "ar"])
 def test_the_hemicycle_pairs_its_seats_and_phrases_through_its_own_attribute(browser, live_server, lang):
-    """DL54-182 item 10 b (tests/frontend/test_loader_rules.py's L3 guard): the seats and the locked sentence's items
-    carry `data-seggio`, the pattern's own — nothing of the section carries Lume's L3 `data-seat` —, and a phrase under
-    the hand lights its seat, a seat its phrase (words once, RH-5)."""
+    """DL54-182 item 10 b (tests/frontend/test_loader_rules.py's L3 guard): the locked sentence's items carry `data-seggio`,
+    the pattern's own — nothing of the section carries Lume's L3 `data-seat`. FINAL MICRO-PASS §6 B4 (V5.20; was «a
+    phrase under the hand lights its seat, a seat its phrase»): the six seat tiles left, so no seat is drawn and nothing
+    lights; the sentence is one typographic annotation — its six recipients in the primary ink, one ink for all six,
+    its joins and its head apart."""
     key = f"emiciclo-frase-{lang}"
     pages = {key: _extra("emiciclo-frase", lang)}
     ctx, page = _open(browser, pages, 1440)
     try:
         _go(page, live_server, key)
         counts = page.evaluate("""() => ({seat: document.querySelectorAll('[data-seat]').length,
-            seats: document.querySelectorAll('.emiciclo__seggio[data-seggio]').length,
+            seats: document.querySelectorAll('.emiciclo__seggio, .emiciclo__seggi, .emiciclo .sez-disc').length,
             phrases: document.querySelectorAll('.emiciclo__voce[data-seggio]').length})""")
-        assert counts == {"seat": 0, "seats": 6, "phrases": 6}, (lang, counts)
+        assert counts == {"seat": 0, "seats": 0, "phrases": 6}, (lang, counts)
         ink = "(sel) => getComputedStyle(document.querySelector(sel)).color"
-        rest = page.evaluate(ink, '.emiciclo__seggio[data-seggio="3"]')
+        inks = {page.evaluate(ink, f'.emiciclo__voce[data-seggio="{n}"]') for n in range(1, 7)}
+        assert len(inks) == 1, (lang, "one ink for the six recipients", inks)
+        assert inks != {page.evaluate(ink, ".emiciclo__frase")}, (lang, "the joins apart from the recipients")
+        rest = page.evaluate(ink, '.emiciclo__voce[data-seggio="3"]')
         page.hover('.emiciclo__voce[data-seggio="3"]')
         page.wait_for_timeout(100)
-        assert page.evaluate(ink, '.emiciclo__seggio[data-seggio="3"]') != rest, (lang, "the phrase lights its seat")
-        page.mouse.move(2, 2)
-        page.hover('.emiciclo__seggio[data-seggio="5"]', force=True)
-        page.wait_for_timeout(100)
-        assert page.evaluate(ink, '.emiciclo__voce[data-seggio="5"]') != page.evaluate(
-            ink, '.emiciclo__voce[data-seggio="1"]'
-        )
+        assert page.evaluate(ink, '.emiciclo__voce[data-seggio="3"]') == rest, (lang, "a phrase under the hand stays")
     finally:
         ctx.close()
 
@@ -431,10 +430,14 @@ def test_the_keyboard_s_tier_zero_is_filed_under_the_library_s_own_classes(brows
                 soglia: d(q('.mosaico__soglia')), door: d(q('.mosaico--porte .mosaico__tessera'))}; }"""
     ctx, page = _open(browser, pages, 1440)
     try:
-        for key, names in (("mosaico-fr", ("glyph", "rule", "soglia")), ("porte-fr", ("disc", "soglia", "door"))):
+        for key, names in (("mosaico-fr", ("glyph", "soglia")), ("porte-fr", ("disc", "soglia", "door"))):
             _go(page, live_server, key)
             pointer = page.evaluate(read)
             assert all(pointer[name] > 0 for name in names), (key, "a pointer gets its feedback", pointer)
+            if key == "mosaico-fr":
+                # FINAL MICRO-PASS §5 A3 (V5.20 strict rule): the bare tile draws no rule, so it has nothing to transition
+                rule = page.evaluate("getComputedStyle(document.querySelector('.sez-tile'), '::after').content")
+                assert pointer["rule"] == 0 and rule == "none", (key, pointer, rule)
             page.keyboard.press("Tab")
             keyboard = page.evaluate(read)
             assert page.evaluate("document.documentElement.dataset.input") == "key"

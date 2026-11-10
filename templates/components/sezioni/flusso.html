@@ -1,19 +1,19 @@
 {% comment %}
-F · «IL FLUSSO» (design V5.22, SECTION_SYSTEM_V2 §2 F; lane S), recomposed by V5.30 VARIETY §5, §7 ENTREPRISES: the moments
-are the cells of one raised panel on a hairline lattice — each with its T2 tile, a numeral (the page's sheet) and its words —
-and no curve joins them. Never a tracker: no current station, no tick (O14). static/css/v5/_sec-flusso.css (after
-v5/_linea-v2.css: the terminal plate and the arrival).
+F · «IL FLUSSO» (design V5.22, SECTION_SYSTEM_V2 §2 F; lane S), recomposed by V5.30 VARIETY §5, §7 ENTREPRISES, then by the
+FINAL MICRO-PASS (BRIEF §6 B3, §2.2 «the quiet sequence marker»): the moments are columns on ONE hairline that joins
+them, each opening on its figure (the sheet's counter: caption size, the control's weight, the tertiary ink, tabular,
+«1» not «01»; the first in the accent) — no panel, no tile, no large numeral, no curve. Never a tracker: no current
+station, no tick (O14). static/css/v5/_sec-flusso.css (after v5/_linea-v2.css: the terminal plate and the arrival).
 
-Contract: `steps` — [{"glyph", "label", "label_lang", "text", "text_lang"}] (two to four: a measured flow is short; the
-long sequences are «la linea V2», components/stepper.html); `level` (the labels' heading level, default 3); `label`
-(the list's accessible name, optional); `terminal` (safe: the caveat or status plate, the route's last word, always
-visible); `end_action` — {"url", "label"} (the call at the route's end: the page's one arrival). The caller wraps it in
-its section (`data-sec="flusso"`).
+Contract: `steps` — [{"label", "label_lang", "text", "text_lang"}] (two to four: a measured flow is short; the long
+sequences are «la linea V2», components/stepper.html; a step's `glyph` is no longer drawn); `level` (the labels'
+heading level, default 3); `label` (the list's accessible name, optional); `terminal` (safe: the caveat or status
+plate, the route's last word, always visible); `end_action` — {"url", "label"} (the call at the route's end: the page's
+one arrival). The caller wraps it in its section (`data-sec="flusso"`).
 {% endcomment %}<div class="flusso linea-v2"{% if end_action %} data-sigillo-scope{% endif %}>
   <div class="flusso__campo">
     <ol class="flusso__tappe" role="list" data-registro data-steps="{{ steps|length }}"{% if label %} aria-label="{{ label }}"{% endif %}>
       {% for item in steps %}<li class="flusso__tappa">
-        <span class="flusso__nodo sez-tile" aria-hidden="true">{% if item.glyph %}{% svg_icon item.glyph "icon" %}{% endif %}</span>
         <div class="flusso__lastra">
           <h{{ level|default:3 }} class="flusso__titolo"{% if item.label_lang %} lang="{{ item.label_lang }}"{% endif %}>{{ item.label }}</h{{ level|default:3 }}>
           {% if item.text %}<p class="flusso__testo"{% if item.text_lang %} lang="{{ item.text_lang }}"{% endif %}>{{ item.text }}</p>{% endif %}

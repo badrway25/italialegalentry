@@ -2,8 +2,9 @@
    «IL LESSICO» V2 — the glossary's, the term page's and Vivre en Italie's V5.22 compositions (design V5.22,
    SECTION_SYSTEM_V2 §3.14–§3.15; lane P2): a partial of cms/lessico.css, their route sheet, linked after the reading
    pages' shared sheet (cms/lettura.css). Markup: templates/glossary/{index,_entry,term}.html, templates/living/index.html.
-     2 · Glossaire — L, the scroll-spy rail (a thumb index from 64 rem, its indicator gliding: sezioni/spia.js) beside E
-         «il lessico» (term cards under their drawn letters, «Où le rencontrer»); the term page's K «la scheda»
+     2 · Glossaire — the alphabet, one quiet row under the letterhead (its current letter: sezioni/spia.js), over «il
+         lessico», one column of definition rows under modest letter headings, «Où le rencontrer» (FINAL MICRO-PASS
+         §6 B2: the thumb rail, the cards' plates, their outlined letters and rules left); the term page's K «la scheda»
      3 · Vivre en Italie — the head's seal and its action; D «il panorama» of the LCP street (no mask, no fade: a scale
          after the first paint, the drift, one light sweep as it leaves), the lead on an opaque paper plate; E «pour
          s'installer»
@@ -12,82 +13,141 @@
    ============================================================================================ */
 
 /* ---- 2 · Glossaire ---- */
-.lessico__griglia {
-  display: grid;
-  gap: var(--s-8);
+/* the alphabet (moved from v5/_lettura.css: the glossary's alone) — FINAL MICRO-PASS §6 B2: the whole alphabet on ONE
+   line that never wraps, so no letter is ever left alone at a line's end; the letters that have terms are links, the
+   others dimmed and out of the accessibility tree; the line scrolls sideways where a screen is narrower than the
+   alphabet, and stays under the letterhead while the register scrolls (PX25), at every width; the letter being read
+   takes the accent and its 2 px mark (aria-current: sezioni/spia.js) */
+.az-index {
+  position: sticky;
+  inset-block-start: calc(var(--header-h-scrolled) + 1px);
+  z-index: var(--z-sticky);
+  margin-block-end: var(--s-4);
+  border-block: 1px solid var(--line-rhythm);
+  background-color: color-mix(in srgb, var(--surface-area) 92%, transparent);
+  backdrop-filter: blur(12px);
 }
 
-/* ONE register (round 1, QA_ROUND1 M7): the ten cards in one grid — two columns from 48 rem, three from 80 — a row's
-   cards one height. Final round (QA_ROUND3 m2): a card's term, definition and «Où le rencontrer» stand on its row's
-   three shared lines (a subgrid), so a row's definitions start together and its rules and chips align on one line under
-   the row's longest definition — the chips no longer drop to a short card's foot, and a card with fewer chips keeps
-   its room at its foot */
-.lessico__carte {
-  --sez-i: 0; /* the stagger's rank, the library's .sez-seq numbering the cards after the first */
-  display: grid;
-  grid-template-columns: minmax(0, 1fr); /* a phone's one column never wider than its band (this round's own sweep) */
-  gap: var(--s-4);
+.az-index__list {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-block: 0;
+  margin-inline: calc(var(--s-4) * -1); /* the gutter's first 16 px on both sides: eight 44 px letters from 360 px (m1) */
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.lessico__carta {
+/* the cells share the row evenly, a live letter never under its 44 px: the letters stand at one pitch */
+.az-index__list > li { flex: 1 1 0; }
+
+:is(.az-index__link, .az-index__vuota) {
+  position: relative;
   display: grid;
-  grid-row: span 3;
-  grid-template-rows: subgrid;
-  row-gap: var(--s-3);
-  align-items: start;
-  padding-block: var(--s-6);
-  padding-inline: var(--s-8) var(--s-6);
+  place-items: center;
+  min-inline-size: 2rem;
+  min-block-size: var(--hit-primary);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
 }
 
-/* a letter's first card carries the letter, set large in its end corner: the register's heading for that letter and
-   the thumb index's anchor. Its box runs down the card's height (the letter stays at its top): the part sezioni/spia.js
-   watches is the card's band, so a letter followed from the rail — landing under the letterhead, above the spy's line —
-   still lights its row. Round 2 (QA_ROUND2 M6, §8.3 type-led imagery): the letter is DRAWN — outlined, as the term
-   page's initial — and lit: its stroke takes the accent as it crosses the reading line (scrubbed by the scroll, a row's
-   letters together: the row is one stop), and it fills under the hand or the focus of its card */
-.lessico__carta:has(> .lessico__lettera) { padding-inline-end: calc(min(var(--s-6), 3vw) + 2.75rem); } /* under 800 px
-   the letter's room gives up to 13 px of its margin, so a 360 px phone holds «Ricongiungimento» on one line (the
-   Arabic page sets the Italian term without the Latin pages' tightening: 231 px of word) */
+/* the letters without a term, dimmed, join the row from 64 rem, where all twenty-six fit; below it the row holds the
+   live letters only — one line, every letter that leads somewhere in sight, never a hidden scroll */
+.az-index__vuota { display: none; color: var(--line-structure); }
 
-.lessico__lettera {
+@media (min-width: 64rem) {
+  .az-index__vuota { display: grid; }
+}
+
+/* a letter that leads somewhere is a 44 px target (the review's m1); an empty letter is no target, its cell narrower */
+.az-index__link {
+  min-inline-size: var(--hit-primary);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+.az-index__link::after {
+  content: "";
   position: absolute;
-  inset-block: var(--s-4) 0;
-  inset-inline-end: var(--s-5);
-  margin: 0;
-  font-size: var(--t-display);
-  line-height: 1;
-  font-weight: var(--w-display); /* 600 — the family's display weight (V5.24 Typography V2) */
-  color: var(--text-3);
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 1.5px currentColor;
-  transition: -webkit-text-fill-color var(--motion-standard) var(--ease-enter);
-}
-
-.lessico__carta:is(:hover, :focus-within) .lessico__lettera { -webkit-text-fill-color: var(--accent-text); }
-
-/* the card's rule at its reading edge — it draws as the register enters, by column; under the hand or the focus it
-   runs from 40 % to its full height, as a tile's threshold does (§4.2 T2) */
-.lessico__regola {
-  position: absolute;
-  inset-block: var(--s-6);
-  inset-inline-start: var(--s-4);
-  inline-size: 2px;
+  inset-inline: 0;
+  inline-size: 1em; /* the glyph's width under the glyph, whatever the cell's: never past the band's hairline */
+  margin-inline: auto;
+  inset-block-end: 0;
+  block-size: 2px;
   background: var(--accent-mark);
-  scale: 1 0.4;
+  scale: 0 1;
   transition: scale var(--motion-standard) var(--ease-enter);
 }
 
-.lessico__carta:is(:hover, :focus-within) .lessico__regola { scale: 1; }
+.az-index__link[aria-current] { color: var(--accent-text); }
+
+.az-index__link[aria-current]::after { scale: 1; }
+
+@media (hover: hover) {
+  .az-index__link:hover { color: var(--accent-text-hover); }
+}
+
+.az-index__link:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+/* a letter or a term reached from a link (the alphabet, «Retour au glossaire»), and a focus moved by the keyboard, stand
+   under the letterhead AND the alphabet, never behind them (WCAG 2.4.11) */
+html:has(.az-index) { scroll-padding-block-start: calc(var(--header-h) + var(--hit-primary) + var(--s-5)); }
+
+/* the register: one column of definition rows on hairlines — the term, the definition at the reading measure, «Où le
+   rencontrer»; from 64 rem the term holds its own column and the definition the second, as a dictionary's page does */
+.lessico__carte {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.lessico__carta {
+  position: relative;
+  display: grid;
+  align-content: start;
+  row-gap: var(--s-2);
+  padding-block: var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+/* a letter's first row carries the letter: the register's heading for that letter and the alphabet's anchor —
+   modest, in the accent, its room above it (hidden while a search narrows the register: the rows then stand alone) */
+.lessico__lettera {
+  margin: var(--s-6) 0 var(--s-2);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  color: var(--accent-text);
+}
+
+.lessico__carta:first-child > .lessico__lettera { margin-block-start: 0; }
+
+[data-cerca-attiva] .lessico__lettera { display: none; }
 
 .lessico__termine {
   margin: 0;
-  font-size: var(--t-band);
-  line-height: var(--t-band-lh);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
   font-weight: var(--w-title);
-  overflow-wrap: anywhere; /* a term longer than a phone's line breaks inside the card, never under its letter */
+  overflow-wrap: anywhere; /* a term longer than a phone's line breaks inside its row */
 }
 
+.lessico__termine a {
+  color: var(--text-1);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+.lessico__carta:hover .lessico__termine a { color: var(--accent-text); }
+
 .lessico__definizione {
+  max-inline-size: var(--measure-body);
   margin: 0;
   font-size: var(--t-body);
   line-height: var(--t-body-lh);
@@ -95,17 +155,18 @@
 }
 
 /* V5.27 / R7′ (the v524-pub2 steward): a French definition on an Arabic page and its identification caption are one
-   grid item — the card's subgrid line, the plate's first column — the caption a label's step above the words */
+   grid item, the caption a label's step above the words */
 :is(.lessico__fonte, .scheda__fonte) { display: grid; gap: var(--s-1); }
 :is(.lessico__fonte, .scheda__fonte) > .locked-caption { margin: 0; }
 
 .lessico__dove {
   position: relative;
-  z-index: 2; /* above the card's stretched link: the chips are links of their own */
-  display: grid;
-  gap: var(--s-2);
-  padding-block-start: var(--s-3);
-  border-block-start: 1px solid var(--line-rhythm);
+  z-index: 2; /* above the row's stretched link: the chips are links of their own */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  margin-block-start: var(--s-2);
 }
 
 .lessico__etichetta,
@@ -128,82 +189,38 @@
   list-style: none;
 }
 
-/* a chip of «Où le rencontrer» (the FAQ's answers draw theirs in their own sheet: cms/_faq-v2.css); final round: its two
-   rules one — the same values, the bytes the register's subgrid and Vivre's seam needed */
+/* a chip of «Où le rencontrer»: quiet, on the accent's wash (the FAQ's answers draw theirs alike: cms/_faq-v2.css) */
 .lessico__chip {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: var(--s-2);
-  min-block-size: var(--hit-min);
+  min-block-size: 2rem;
   padding: var(--s-1) var(--s-3);
-  border: 1px solid var(--line-structure);
   border-radius: var(--radius-full);
+  background-color: var(--accent-wash);
   font-size: var(--t-small);
   line-height: var(--t-small-lh);
   font-weight: var(--w-control);
-  color: var(--text-1);
+  color: var(--accent-text);
   text-decoration: none;
-  transition: border-color var(--motion-standard) var(--ease-enter), color var(--motion-standard) var(--ease-enter);
+  transition: background-color var(--motion-fast) var(--ease-enter);
 }
 
-.lessico__chip:is(:hover, :focus-visible) { border-color: var(--accent-mark); color: var(--accent-text); }
+.lessico__chip:hover { background-color: var(--accent-wash-2); }
 
-@media (min-width: 48rem) {
-  .lessico__carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (pointer: coarse) {
+  .lessico__chip { min-block-size: var(--hit-primary); }
 }
 
-/* from 64 rem the letter index is a thumb index at the reading edge, sticky under the letterhead; its indicator plate
-   glides to the letter being read (--spia-y, --spia-h: sezioni/spia.js) */
 @media (min-width: 64rem) {
-  .lessico__griglia {
-    grid-template-columns: 7rem minmax(0, 1fr);
-    column-gap: var(--s-12);
-    align-items: start;
+  :is(.lessico__registro, .glossary__results) .lessico__carta {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    column-gap: var(--s-10);
+    padding-block: var(--s-6);
   }
 
-  .lessico .az-index {
-    padding-block-start: var(--s-6);
-    border-block: 0;
-    background: none;
-  }
+  :is(.lessico__registro, .glossary__results) .lessico__carta > :not(.lessico__termine, .lessico__lettera) { grid-column: 2; }
 
-  .lessico .az-index__list {
-    --spia-y: 0; /* sezioni/spia.js writes the letter in view's place and height inline, once it runs */
-    --spia-h: 0;
-    position: relative;
-    grid-template-columns: minmax(0, 1fr);
-    margin: 0;
-    border-inline-start: 1px solid var(--line-rhythm);
-  }
-
-  .lessico .az-index__link {
-    justify-items: start;
-    padding-inline-start: var(--s-5);
-    font-size: var(--t-band);
-    line-height: var(--t-band-lh);
-    color: var(--text-3);
-    transition: color var(--motion-standard) var(--ease-enter);
-  }
-
-  /* the indicator: the rail's 2 px accent gliding to the letter being read */
-  .lessico .az-index__list[data-spia]::before {
-    content: "";
-    position: absolute;
-    inset-inline-start: -1px;
-    inline-size: 2px;
-    block-size: var(--spia-h);
-    background: var(--accent-mark);
-    translate: 0 var(--spia-y);
-    transition: translate var(--spring-soft-duration) var(--spring-soft);
-  }
-}
-
-/* the letter in view — and, with lane S's row stops (NOTES R2.6), the row's other letters */
-.lessico .az-index__link:is([aria-current], [data-spia-con]) { color: var(--accent-text); }
-
-@media (min-width: 80rem) {
-  .lessico__carte { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lessico__lettera { grid-column: 1 / -1; }
 }
 
 /* the term page: the term at display size in the compact band (the scale's step — V5.24 Typography V2 §5: «the seam or
@@ -216,25 +233,8 @@
 }
 
 .scheda {
-  position: relative;
-  isolation: isolate;
   display: grid;
   gap: var(--s-8);
-}
-
-/* the large outlined initial behind the plate: a drawing, aria-hidden — on the plate's free side, the page's end, in
-   both directions: on the Arabic page the letter takes the page's direction (main.css turns an Italian run left to
-   right, and its logical inset, resolved on the run's own direction, stood it behind the plate — round 1, M7) */
-.scheda__iniziale {
-  position: absolute;
-  inset-block-start: calc(-1 * var(--s-16));
-  inset-inline-end: var(--s-4);
-  z-index: -1;
-  font-size: calc(var(--t-display) * 4.5); /* a drawing on the scale: four and a half display steps (198 → 288 px), no clamp of its own */
-  line-height: 0.8;
-  font-weight: var(--w-display);
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--line-structure);
 }
 
 .scheda__lastra {
@@ -276,6 +276,7 @@
 .scheda__fila {
   position: relative;
   display: grid;
+  align-content: start;
   gap: var(--s-3);
   padding-inline-start: var(--s-6);
 }
@@ -298,13 +299,8 @@
      (static/js/src/rise.js holds the rows of every `.accordion` below the fold, until S-close removes it) holds none of
      them — on a phone they stood at opacity 0 until they entered; the band's motion is its plate's depth and its
      hairlines' draw;
-   - a dictionary card under the hand (the final review's m1): it answers in place — its letter fills, its rule runs, its
-     shadow deepens — without the library's 2 px lift (v5/_sezioni.css), since sezioni/spia.js makes one stop of the
-     parts whose rendered tops are under 2 px apart: the card under a resting pointer left its row, and the rail never
-     lit that row's first letters in a read-through (C, L, P, Q at 1440). The root, a row grouped by its layout position,
-     is lane S's (S-close) */
-.scheda .accordion > [data-rise],
-.lessico__carta.sez-plate:hover { opacity: 1; translate: none; }
+   - (FINAL MICRO-PASS §6 B2: the dictionary's cards became rows on hairlines; their in-place answer left with them) */
+.scheda .accordion > [data-rise] { opacity: 1; translate: none; }
 
 @media (min-width: 64rem) {
   .scheda__lastra { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s-10); }
@@ -443,33 +439,14 @@
   .vivere-installer .lessico__carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-[dir="rtl"] .scheda__iniziale[lang] { direction: rtl; }
-
-/* the register's two motions (round 2, QA_ROUND2 M6): in view at load (the section runtime then writes no state, and
-   S's STAGGER never played), its cards' reading-edge rules draw in the head's own sequence, column by column; and as the
-   reader scrolls, each letter lights while it crosses the reading line — scrubbed, so it reverses with the scroll */
-@media (prefers-reduced-motion: no-preference) {
-  :root.js:not(.rm):not([data-input="key"]) .lessico:not([data-sec-state]) .lessico__regola {
-    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(320ms + var(--sez-i, 0) * var(--motion-stagger)) backwards;
-  }
-
-  @supports (animation-timeline: view()) {
-    :root:not(.rm) .lessico__lettera {
-      animation: lessico-luce linear both;
-      animation-timeline: view();
-      animation-range: cover 55vh cover 80vh;
-    }
-  }
-}
-
-@keyframes lessico-luce { 50% { color: var(--accent-mark); } }
-
-html[data-input="key"] :is(.lessico__chip, .lessico .az-index__link, .lessico__lettera, .lessico__regola, .vivere-testa__sigillo .sg-t, .vivere-testa__azione .icon),
-html[data-input="key"] .lessico .az-index__list::before {
+html[data-input="key"] :is(.lessico__chip, .az-index__link, .az-index__link::after, .lessico__termine a, .vivere-testa__sigillo .sg-t, .vivere-testa__azione .icon) {
   transition: none;
 }
 
 @media (forced-colors: active) {
-  .lessico .az-index__list[data-spia]::before { background: Highlight; }
-  .scheda__iniziale { display: none; }
+  .az-index__link::after { background: Highlight; }
+}
+
+@media print {
+  .az-index { display: none; }
 }

@@ -715,8 +715,9 @@ _SECTIONS = """() => {
   const notReading = '.testa__label, .orienta__didascalia, .home-pathways__more, .integrita__azione, ' +
     '.protezione__azione, .campata__azione, .pilota__azione, .home-news__more, .card__eyebrow, .linea__arrivo';
   // V5.29 §4 (stream SYS, the owner's compact trust band — an approved decision; V5.20): «la protezione»'s body is
-  // secondary copy at the small step in the legal ink; held apart at the system's floor (14 px), never under it
-  const compact = '.protezione__testo';
+  // secondary copy at the small step in the legal ink; held apart at the system's floor (14 px), never under it.
+  // FINAL MICRO-PASS §5 A1 E (V5.20 strict rule): the orientation's legal note joins it, at the small step
+  const compact = '.protezione__testo, .orienta__avvertenza';
   return {
     rtl, vw: document.documentElement.clientWidth, vh: innerHeight, pageH: document.documentElement.scrollHeight,
     sections: sections.map((s) => {
@@ -831,7 +832,8 @@ def test_the_home_under_the_hero_is_one_system(browser, live_server, phase3_live
     assert [s["key"] for s in g["sections"]][0] == "entrances", "on a phone the doors open the sections"
     sizes = sorted(set(g["reading"]))
     assert sizes and sizes[0] >= 16, ("nothing a person reads on a phone is under 16 px", sizes)
-    assert g["compact"] and min(g["compact"]) >= 14, ("the compact trust band at the system's floor", g["compact"])
+    # FINAL MICRO-PASS §5 A1 E: the trust band's body and the orientation's legal note, both shown, at the floor
+    assert len(g["compact"]) == 2 and min(g["compact"]) >= 14, ("the compact copy at the floor", g["compact"])
     for selector, title, text in g["pairs"]:
         if title is not None and text is not None:
             assert title >= text, (selector, title, text)

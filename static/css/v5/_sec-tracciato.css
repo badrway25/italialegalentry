@@ -69,11 +69,7 @@
   color: var(--text-2);
 }
 
-.tracciato__origine {
-  display: flex;
-  align-items: center;
-  gap: var(--s-4);
-}
+/* FINAL MICRO-PASS §5 A3: the origin is its sentence alone — its compass tile left, and the row that held them */
 
 
 .tracciato__corsie {
@@ -148,9 +144,9 @@
 .tracciato__carta {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto auto minmax(0, 1fr); /* FINAL MICRO-PASS §5 A2: the marker, the glyph and the title on one line */
   align-content: start;
-  align-items: center;
+  align-items: baseline; /* the marker and the glyph on the title's first line, however many it takes */
   gap: var(--s-2) var(--s-3);
   padding: var(--s-4);
   border: 1px solid var(--line-rhythm);
@@ -160,24 +156,22 @@
   text-decoration: none;
 }
 
-/* the station's marker: the numeral role (`t-numeral`, v5/base.css — Host Grotesk 600, tabular, 28/32; never the mono:
-   TYPOGRAPHY_V2 F-3, V5.24) in the register's second ink. The size, leading and weight are restated here for the board
-   that names the class without the role (pathways/_tracciato.html, lane PUB1 — LIB NOTES §4); the sans is inherited */
+
+/* the station's marker — FINAL MICRO-PASS §5 A2: the quiet sequence marker (v5/_linea-v2.css; 21st.dev 26891), a small
+   figure in the quiet ink, tabular, never the display numeral */
 .tracciato__num {
-  font-size: var(--t-numeral);
-  line-height: var(--t-numeral-lh);
-  font-weight: var(--w-title);
-  color: var(--text-2);
+  font-size: var(--t-small);
+  font-weight: var(--w-control);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
 }
 
 .tracciato__titolo {
+  grid-column: 3;
+  padding-inline-end: var(--s-6);
   font-weight: var(--w-title);
 }
 
-.tracciato__titolo,
-.tracciato__riga {
-  grid-column: 1 / -1;
-}
 
 .tracciato__freccia {
   position: absolute;
@@ -186,6 +180,7 @@
 }
 
 .tracciato__riga {
+  grid-column: 1 / -1;
   font-size: var(--t-ui);
   color: var(--text-2);
 }

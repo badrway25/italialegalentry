@@ -42,7 +42,7 @@
   gap: var(--s-3);
 }
 
-.mosaico .mosaico__tessera:is(:hover, :focus-within) {
+.mosaico .sez-plate:is(:hover, :focus-within) {
   box-shadow: inset 0 0 0 1px var(--line-rhythm); /* the M21 lift's shadow is the plate's layer here */
 }
 
@@ -94,30 +94,9 @@
   border-radius: 0;
 }
 
-/* the lead says it at a larger size; the glyph tile's own rule is the card's (§4.8 «Card head with threshold») */
+/* the lead says it at a larger size. FINAL MICRO-PASS §2.1: the glyph is drawn bare (v5/_sezioni.css §3) — the tile's
+   floor light and its rule left with the tile */
 .mosaico__tessera--lead .mosaico__link { font-size: var(--t-band); line-height: var(--t-band-lh); }
-.mosaico .sez-tile::after { content: none; }
-
-/* the tile's face light (V5.24, BACKGROUND_MATERIAL_V2 §3.4, §4.1 — the mosaico's own rules, as the audit placed them):
-   a tile that inks lights its floor once as the grid enters — the niche's lit floor as a layer over the vault, one step
-   after its rule has begun to draw (the ink and the rule are v5/_reveal.css's verbs; the shell's tile isolates, so the
-   layer sits between its vault and its glyph). PUB1's «Comment ça marche» plates take the same rules in _index.css
-   (§4.1, ≈ 80 B); a door's or an actor's disc settles and has no floor */
-.mosaico .sez-tile::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: linear-gradient(transparent 40%, var(--surface-raised));
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .mosaico .sez-tile::before { opacity: 0; }
-  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .mosaico .sez-tile::before {
-    animation: sez-layer var(--motion-standard) var(--ease-enter) calc(var(--motion-slow) + var(--sez-i, 0) * var(--motion-stagger)) backwards;
-  }
-}
 
 @media (min-width: 48rem) {
   .mosaico--grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -212,27 +191,47 @@
   }
 }
 
-/* ---- «il rimando»: three compact link tiles on stone ---- */
+/* ---- «il rimando» — FINAL MICRO-PASS §5 A3: a divided link list, no tile (components/sezioni/mosaico.html; adapted
+   from 21st.dev «Split Image Blog List», ziegfiroyt/blog25, id 28595: the divided rows, the title over its line, the
+   arrow that moves 4 px under the hand — here the library's chevron, drawn by the link) ---- */
+.mosaico--rimando {
+  gap: 0;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
 .mosaico--rimando .mosaico__tessera {
-  align-items: center;
+  position: relative;
+  gap: var(--s-1);
   min-block-size: 0;
-  padding: var(--s-5);
+  padding-block: var(--s-5);
+  padding-inline: 0 var(--s-10);
+  border-block-end: 1px solid var(--line-rhythm);
 }
 
-.mosaico--rimando .mosaico__parole {
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
+
+.mosaico--rimando .mosaico__link::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--s-2);
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-block: auto;
+  border-block-start: 1.5px solid;
+  border-inline-end: 1.5px solid;
+  color: var(--text-3); /* the quiet ink, at rest and under the hand: only the link's words take the accent */
+  rotate: 45deg;
+  transition: translate var(--motion-standard) var(--ease-enter);
 }
 
-.mosaico--rimando .mosaico__riga {
-  grid-column: 2;
-}
+[dir="rtl"] .mosaico--rimando .mosaico__link::after { rotate: -45deg; }
 
-@media (min-width: 48rem) {
-  .mosaico--rimando { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-}
+.mosaico--rimando .mosaico__tessera:is(:hover, :focus-within) .mosaico__link { color: var(--accent-text); }
+.mosaico--rimando .mosaico__tessera:is(:hover, :focus-within) .mosaico__link::after { translate: 4px 0; }
+[dir="rtl"] .mosaico--rimando .mosaico__tessera:is(:hover, :focus-within) .mosaico__link::after { translate: -4px 0; }
 
 /* the keyboard's tier 0 names what moves here (the rule, a door's width; the tiles' glyphs, discs, frames and links
    have their own): a universal subject made the first key of a page restyle the whole document (v522-s2) */
 html[data-input="key"] .mosaico__soglia,
-html[data-input="key"] .mosaico__tessera { transition: none; }
+html[data-input="key"] .mosaico__tessera,
+html[data-input="key"] .mosaico--rimando .mosaico__link::after { transition: none; }
