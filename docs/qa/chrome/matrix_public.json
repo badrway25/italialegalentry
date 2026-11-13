@@ -1,0 +1,1332 @@
+[
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "hero + sezioni",
+  "page": "home",
+  "path": "/fr/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "griglia di schede",
+  "page": "parcours",
+  "path": "/fr/parcours/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "procedura lunga",
+  "page": "parcours_detail",
+  "path": "/fr/parcours/salaried_work/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "prosa editoriale",
+  "page": "le_projet",
+  "path": "/fr/le-projet/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo",
+  "page": "contact_form",
+  "path": "/fr/contact/formulaire/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "modulo lungo",
+  "page": "signup",
+  "path": "/fr/compte/signup/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco definizioni",
+  "page": "glossaire",
+  "path": "/fr/glossaire/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "voce singola",
+  "page": "glossaire_voce",
+  "path": "/fr/glossaire/nulla_osta/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "fisarmonica",
+  "page": "faq",
+  "path": "/fr/faq/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "320x568",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "360x640",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "390x844",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "412x915",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "430x932",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "768x1024",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "1024x768",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "1280x800",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "1366x768",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "pagina di errore",
+  "page": "404",
+  "path": "/fr/questa-pagina-non-esiste/",
+  "viewport": "1920x1080",
+  "status": 404,
+  "findings": [
+   "pagina tecnica di Django (DEBUG=True) — la 404 del progetto si vede solo con DEBUG=False"
+  ],
+  "console_errors": [
+   {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   }
+  ]
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "autenticazione",
+  "page": "login",
+  "path": "/fr/compte/login/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL hero",
+  "page": "home_ar",
+  "path": "/ar/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL procedura",
+  "page": "parcours_ar",
+  "path": "/ar/parcours/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ }
+]

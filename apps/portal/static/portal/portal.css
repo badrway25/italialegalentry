@@ -1,0 +1,310 @@
+/* ============================================================================
+   Espace réservé — page-level styles (loaded only inside the portal).
+   Design tokens only (no literal colours), logical properties only (RTL-safe),
+   no decorative motion. Panels are typographic: a fine accent rule, no shadow.
+   ========================================================================== */
+
+/* The platform shell — the rail, the context bar, the page frame, the footer — is the console's own sheet:
+   apps/portal/static/portal/v5/_shell.css (design V5, W3-A). The V1 platform bar and the platform footer that
+   stood here left with it; `portal-bar` survives as a class name on the bar, the contract three test modules
+   hold the platform chrome to. */
+
+/* The case band (portal/partials/case_header.html) and the shell's next action (portal/partials/next_action.html)
+   left with the case file's redraw (design V5, W3-E step 3): the case file and its pre-assessment draw their
+   file in their own heads, the NowPanel says the next action — no page drew either any more. */
+
+/* ---- The work area -------------------------------------------------------- */
+.portal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8) var(--grid-gutter);
+  align-items: start;
+  padding-block: var(--s-8) var(--s-16);
+}
+
+@media (min-width: 64rem) {
+  .portal {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  }
+}
+
+/* ---- Data table ----------------------------------------------------------- */
+/* A register of columns — a skill and its level, a member and its mandate, a count by territory: always headed,
+   a dash for a null and never an empty cell; aligned by reading direction, so RTL resolves on its own. Design V5
+   (W3-E step 2; its consumers are the console's secondary pages): the head in the console's small type over a
+   structure hairline, the rows on decorative hairlines, the row's head at the control's weight — no tracked
+   capitals, no navy rule, no display serif. */
+.data-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+.data-table th,
+.data-table td {
+  text-align: start;
+  vertical-align: baseline;
+  padding-block: var(--s-3);
+  padding-inline: 0 var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.data-table thead th {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  border-block-end-color: var(--line-structure);
+}
+
+.data-table tbody th {
+  font-weight: var(--w-control);
+}
+
+.data-table tbody th .t-caption {
+  display: block;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: 400;
+  color: var(--text-2);
+}
+
+/* A table in its own scroll region (`.scroll-x`, focusable and labelled in the markup): the region is the
+   containing block of what it holds — the visually hidden label of an in-cell form is clipped with it instead of
+   widening the page —, the table reaches its natural width and scrolls, a narrow one still fills the column, and a
+   wide one (`--wide`) keeps the floor below which it stops being a table. Every console table scrolls the same way
+   (these lines came from selection.css, the first module that needed them). */
+.scroll-x {
+  position: relative;
+}
+
+.scroll-x > .data-table {
+  inline-size: auto;
+  min-inline-size: 100%;
+}
+
+.scroll-x > .data-table--wide {
+  min-inline-size: 34rem;
+}
+
+.data-table tr.is-overdue th {
+  border-inline-start: 2px solid var(--deadline-overdue-mark);
+  padding-inline-start: var(--s-3);
+}
+
+.table-region {
+  overflow-x: auto;
+  border-inline-end: 1px solid var(--rule-hair);
+}
+
+.table-region:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.table-region .data-table {
+  min-inline-size: 34rem;
+}
+
+/* A wide table on a phone — §14.5 of the art direction: "Below 768, a defined pop-in: each row
+   becomes a labelled stack of label / value pairs at 48px minimum, hairline separated. Never a
+   horizontal scroll for a four-column table."
+
+   This block replaces an argument that used to stand here for doing the opposite. That argument
+   held that WCAG 2.2 §1.4.10 excepts data tables from the ban on two-dimensional scrolling, and
+   that the columns must not be dropped on a narrow screen because each one carries a fact the
+   reader needs — what is required, who must do it, under which provision, by when. The second
+   half is right and the pop-in honours it: NOTHING is dropped. Every column becomes a labelled
+   line. The first half is a permission, not an instruction, and the art direction had already
+   declined it — as `apps/documents/static/documents/documents.css` says in as many words, having
+   built this same pop-in for the register because `.data-table` did not have it.
+
+   What it looked like before: the dashboard checklist at 390px put each column at roughly one word
+   per line — «Identifier / les / interlocuteurs / et / les / autorités» down the first column,
+   «À / FAIRE» down the second — and still overflowed the viewport.
+
+   The labels come from `data-label` on each cell, written from the `<thead>`, so the header row
+   stays the single source of the column names. Above 768 the table is a real table and the header
+   is read normally; below it the header is hidden visually and each cell carries its own name.
+
+   `table:has(tbody [data-label])` and not a class, because carrying the labels IS the contract. A
+   table that has them can pop in; a table that has not cannot, and must go on scrolling — the
+   allauth element templates render `.account-table` from a `{% slot %}` whose cells this project
+   does not write, and popping those in would hide the column names instead of moving them. The
+   guard is therefore the one condition that actually matters, and adding `data-label` to a
+   template is how a table opts in. */
+@media (max-width: 47.99rem) {
+  table:has(tbody [data-label]),
+  table:has(tbody [data-label]) tbody,
+  table:has(tbody [data-label]) tr,
+  table:has(tbody [data-label]) th,
+  table:has(tbody [data-label]) td {
+    display: block;
+    inline-size: auto;
+  }
+
+  table:has(tbody [data-label]) thead {
+    /* The column names live on the cells below this width. Hiding the header row visually — not
+       removing it — keeps the table's semantics intact for anyone above the breakpoint and for
+       anyone whose assistive technology reads the DOM rather than the rendering. */
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  table:has(tbody [data-label]) tbody tr {
+    border-block-end: 1px solid var(--line-structure);
+    padding-block: var(--s-3);
+  }
+
+  table:has(tbody [data-label]) tbody tr:last-child {
+    border-block-end: 0;
+  }
+
+  table:has(tbody [data-label]) tbody th,
+  table:has(tbody [data-label]) tbody td {
+    border-block-end: 1px solid var(--line-rhythm);
+    padding-block: var(--s-2);
+    padding-inline: 0;
+    min-block-size: 48px;
+  }
+
+  table:has(tbody [data-label]) tbody tr > :last-child {
+    border-block-end: 0;
+  }
+
+  /* the column's name above its value, in the head's own type (design V5: no tracked capitals, in any script) */
+  table:has(tbody [data-label]) tbody th::before,
+  table:has(tbody [data-label]) tbody td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: var(--u-small);
+    line-height: var(--u-small-lh);
+    font-weight: var(--w-control);
+    color: var(--text-2);
+    margin-block-end: var(--s-1);
+  }
+
+  /* The overdue marker was an inline-start border on the row's `<th>`; once the row is a stack it
+     belongs on the row, where it marks the whole entry rather than its first line. */
+  table:has(tbody [data-label]) tr.is-overdue {
+    border-inline-start: 2px solid var(--deadline-overdue-mark);
+    padding-inline-start: var(--s-3);
+  }
+
+  table:has(tbody [data-label]) tr.is-overdue th {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+
+  /* Nothing left to scroll: the scroll containers stop being scroll containers, and the minimum
+     width that forced the table wider than the phone is released. Both wrappers are covered —
+     `.table-region` here and the global `.scroll-x` of static/css/layout.css — because the pop-in
+     is a property of the table, not of whichever wrapper a template reached for.
+
+     `:has(table:has(tbody [data-label]))` and not the bare class: `.scroll-x` also wraps `.account-table`, which does
+     NOT pop in, and releasing its scroll container left « Mes demandes » overflowing 360px by 17px.
+     The existing browser test caught it in the same run that introduced it. A container only stops
+     scrolling when the thing inside it has stopped needing to be scrolled. */
+  .table-region:has(table:has(tbody [data-label])),
+  .scroll-x:has(table:has(tbody [data-label])) {
+    overflow-x: visible;
+    border-inline-end: 0;
+  }
+
+  .table-region table:has(tbody [data-label]),
+  .scroll-x > table:has(tbody [data-label]) {
+    min-inline-size: 0;
+  }
+}
+
+/* Breadcrumb labels of the detail pages are free text (a subject, a company name): a long unbroken
+   value must wrap instead of stretching the page on a phone. Scoped to the reserved area. */
+.page-portal .breadcrumbs__item {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.page-portal .breadcrumbs__item > span,
+.page-portal .breadcrumbs__item > a {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A grid item's automatic minimum size is its CONTENT, not zero, so `minmax(0, 1fr)` on the track
+   is not enough: one wide table inside pushes the whole column past the viewport and the PAGE
+   scrolls sideways instead of the table. Found at 390px in Arabic on the case file, where a
+   five-column register overflowed the document by 58px even though the table already had its own
+   scroll region. */
+.portal__main {
+  min-inline-size: 0;
+}
+
+.portal__main > * + * {
+  margin-block-start: var(--space-10);
+}
+
+/* ---- Notices (staff-editable, reserved area only) ------------------------- */
+.portal-notices {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* ---- The empty state inside the console's main column ---------------------- */
+/* components/empty_state.html across the column, on its start edge — not the
+   centred 42rem box of a public page. «Communications», «Mes échéances»,
+   «Mes demandes» and «Mon parcours» draw it; it left by mistake with the
+   bridge's card grid (the W3-B review's M3). W3-C and W3-E retire it when
+   they redraw those pages. */
+.portal__main .empty-state {
+  max-inline-size: none;
+  margin-inline: 0;
+}
+
+/* The item lists (`portal-list`), the message's body (`portal-message`) and the orientation results (`portal-result`)
+   left with the person's registers, design V5 (W3-E): apps/portal/static/portal/v5/_registers.css, the page sheet those
+   pages link (portal/registers.css). */
+
+/* ---- Facts (definition lists) ---------------------------------------------- */
+.portal-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.portal-facts__row {
+  display: grid;
+  gap: var(--space-1) var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: var(--space-3);
+  border-block-end: var(--border-width) solid var(--border-hairline);
+}
+
+.portal-facts__row:first-child {
+  border-block-start: var(--border-width) solid var(--border-hairline);
+}
+
+@media (min-width: 40rem) {
+  .portal-facts__row {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+  }
+}
+
+.portal-facts dt {
+  font-size: var(--u-ui); /* 15/20 — the legacy --font-size-small resolved to the same 0.9375rem (TYPOGRAPHY_V2 F-2) */
+  color: var(--text-secondary);
+}
+
+.portal-facts dd {
+  margin: 0;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}

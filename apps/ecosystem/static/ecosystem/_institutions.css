@@ -1,0 +1,154 @@
+/* ============================================================================================
+   ESPACE INSTITUTIONS — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.7; lane P1), recomposed by V5.30 VARIETY §7
+   INSTITUTIONS, then by the FINAL MICRO-PASS (BRIEF §6 B4). Page-only: ecosystem/institutions.css. IN-1, the page's
+   moment, on the night: after 21st.dev «Split Content Section» (felipemenezes098/content-06, id 28310), adapted —
+   the chamber's photograph framed inside the page's shell (the plates' corner, a quiet outline, a 3 % scale over
+   500 ms under a resting pointer; its develop kept: lane A's bw-scroll) beside the copy: the recipients as one
+   typographic annotation (v5/_sec-emiciclo.css; the six seat tiles left), the note, the one call and the help line.
+   Below 64 rem the photograph heads the band. Logical properties only, so Arabic mirrors the layout, never the
+   photograph.
+   ============================================================================================ */
+
+.sez.istituzioni-aula {
+  --sez-ink-1: var(--text-on-night-1);
+  --sez-ink-2: var(--text-on-night-2);
+  min-block-size: 0; /* the moment's height is the split's own */
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+.istituzioni-aula__griglia {
+  display: grid;
+  gap: var(--s-8);
+  align-items: center;
+}
+
+.istituzioni-aula__fondo {
+  position: relative;
+  overflow: clip;
+  border-radius: var(--card-radius);
+  outline: 1px solid var(--line-night-soft);
+  outline-offset: -1px;
+}
+
+.istituzioni-aula__fondo :is(.foto, picture, img) {
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+}
+
+.istituzioni-aula__fondo img {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: 50% 30%;
+  border-radius: 0;
+  transition: transform 500ms var(--ease-enter);
+}
+
+/* the hover's zoom is a `transform`: the reveal's scroll-driven zoom holds the img's `scale`, and an animation
+   outranks a declared `scale`, so the zoom never played (the review's defect 7); a transform composes with it */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .istituzioni-aula__fondo:hover img { transform: scale(1.03); }
+}
+
+.istituzioni-aula__palco {
+  display: grid;
+  align-content: center;
+  gap: var(--s-8);
+}
+
+.emiciclo__capo {
+  color: var(--accent-night);
+}
+
+@media (min-width: 64rem) {
+  .istituzioni-aula__griglia {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--s-16);
+  }
+
+  .istituzioni-aula__fondo img {
+    aspect-ratio: auto;
+    min-block-size: 30rem;
+  }
+}
+
+.istituzioni-aula .ecosystem-note {
+  max-inline-size: var(--measure-body);
+  color: var(--text-on-night-2);
+}
+
+.istituzioni-aula__piede {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+}
+
+.istituzioni-aula__via {
+  margin: 0;
+}
+
+.istituzioni-aula__via .link-arrow {
+  color: var(--accent-night);
+  font-weight: var(--w-control);
+}
+
+.istituzioni-aula .aiuto {
+  border-color: var(--line-night-soft);
+  color: var(--text-on-night-2);
+}
+
+.istituzioni-aula .aiuto a {
+  color: var(--accent-night);
+}
+
+
+/* V5.32 (lane C — the competent actors): the locked sentence set as the register of the actors the space addresses —
+   its head the register's label, each of the six recipients a row on the night's hairline, two columns from 40 rem; the
+   joins (commas, «et», the full stop) stay in the text for every reader, visually hidden on the register
+   (services.recipients_sentence). One element, its textContent the locked sentence; no glyph, no tile, no arc. */
+.istituzioni-aula .emiciclo__frase {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--s-8);
+  max-inline-size: 46rem;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+.istituzioni-aula .emiciclo__capo {
+  grid-column: 1 / -1;
+  margin-block-end: var(--s-3);
+}
+
+.istituzioni-aula .emiciclo__voce {
+  display: block;
+  padding-block: var(--s-4);
+  border-block-start: 1px solid var(--line-night-soft);
+  font-weight: var(--w-control);
+  text-wrap: balance;
+}
+
+/* a recipient of the locked sentence starts in lower case where the sentence runs on («organismes publics»): set as a
+   row, its first letter is a row's — presentation only, the text and the textContent untouched (V5.32, P2-6 of the
+   integration review; the team's precedent: pathways/_diplomas.css .dossier__definizione). The row is a block box, as
+   ::first-letter needs. Arabic has no case: its rows are left out, so no pseudo-element ever splits a joined word */
+.istituzioni-aula .emiciclo__voce:not(:lang(ar))::first-letter {
+  text-transform: capitalize;
+}
+
+.istituzioni-aula .emiciclo__giunto {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 40rem) {
+  .istituzioni-aula .emiciclo__frase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

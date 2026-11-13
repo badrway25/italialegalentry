@@ -1,0 +1,120 @@
+{% extends "base.html" %}{% load i18n static pages_typo %}
+{% comment %}
+FAQ — Questions fréquentes (Phase 3, gate G3). Locked answers are rendered from the registry through
+faq.services (cms.locked_content); editors only add unlocked entries in the back-office.
+Accordion = native <details>/<summary> (works without JavaScript); search results are rendered open.
+
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B1 — the owner's representative test: «if the FAQ still looks like geometric
+cards with repeated icons, the pass has failed»). The V5.22 explorer (master–detail), V5.29's glyph tile a question
+and the answer plate's «ile-domande» seal left; the page leaves components/sezioni/indice.html (the home keeps it).
+After 21st.dev «Searchable Question Index» (ibrandify/searchable-question-index, id 37558), adapted — Django
+templates, vanilla CSS and JS, the ILE tokens, progressive enhancement, logical properties; no code copied:
+  * the head: the title and the lead at the reading edge, the search under them — one field with its search glyph
+    inside, a clear button while it holds text, the submit kept for the no-script path and quiet (with script the list
+    answers as one types, so it steps aside), the help line; no plate around it (v5/_lettura.css §5);
+  * the themes: «Toutes» and each theme with its count, aria-pressed buttons drawn only with script and only for two
+    themes or more (faq.views.THEMES while the register has one category), then the live count (role=status);
+  * the questions: one column of the system's disclosures on the band's stone, hairlines between them (main.css: the
+    drawn plus — here it turns —, the height opening, none under reduced motion or from the keyboard), the question at
+    the body's weight, the answer in the secondary ink, its links as quiet chips, its date and its permalink; each row's
+    id its question's key (the permalinks; the address's question opens on load); the fraud question its one mark;
+  * typing filters by the question's and the answer's words, a pill by theme; with no answer, an inline empty state —
+    the search's own sentences, the way back to every question, the contact link (static/js/src/cerca.js).
+Without script every question is listed and opens natively; the search is the server's (?q=): its page keeps the
+answers open, and a search without answer the empty state beside the register of questions, each one link.
+«Il rimando» on PAPER before the night footer (stream A draws it).
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — a help centre's desk, after 21st.dev «FAQ Tabbed
+Explorer» (id 24874) and «Tabbed FAQ Accordion» (id 27107): from 64 rem the band is two columns — the GUIDE (the search,
+the themes as a vertical list with their counts, the way to a person: faq/_cerca.html, faq/_aiuto.html), sticky under
+the letterhead, beside the QUESTIONS; below 64 rem the guide stands above the list and the themes are a row of pills. The
+head is the title and the lead only (the frontispiece's route motif left: no geometry as filler); the search's page
+keeps the same desk.
+{% endcomment %}
+{% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Questions fréquentes{% endblocktranslate %}{% else %}{% translate "Questions fréquentes" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers vers l’Italie." %}{% endblock %}
+{% block body_class %}page-faq lettura{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
+{% endif %}
+
+<header class="page-header faq-testa container">
+  <div class="page-header__text">
+    <h1 class="page-header__title">{% translate "Questions fréquentes" %}</h1>
+    <p class="page-header__lead">{% translate "Les réponses aux questions les plus fréquentes sur Italy Legal Entry™ et sur les parcours réguliers vers l’Italie." %}</p>
+  </div>
+</header>
+
+{% translate "Questions fréquentes" as index_label %}
+{% if is_search %}
+<section class="sez faq-risultati faq-banco" data-ground="stone" data-rhythm="band" aria-labelledby="faq-results-title">
+  <div class="container faq-banco__griglia">
+    <aside class="faq-guida">
+      {% include "faq/_cerca.html" %}
+      {% include "faq/_aiuto.html" %}
+    </aside>
+    <div class="faq-colonna">
+    {% blocktranslate count counter=entries|length with q=query asvar results_title %}{{ counter }} résultat pour « {{ q }} »{% plural %}{{ counter }} résultats pour « {{ q }} »{% endblocktranslate %}
+    {% include "components/sezioni/_testa.html" with role="process" title_id="faq-results-title" title=results_title only %}
+    {% if items %}
+    <div class="accordion faq-lista">
+      {% for item in items %}{% include "faq/_item.html" with entry=item.entry marked=item.marked open=True %}{% endfor %}
+    </div>
+    {% else %}
+      {% url 'faq:index' as faq_index_url %}
+    <div class="faq-vuoto">
+      {% include "components/empty_state.html" with title=_("Aucune question ne correspond à votre recherche.") text=_("Essayez un autre mot-clé ou parcourez toutes les questions par catégorie.") action_label=_("Voir toutes les questions") action_url=faq_index_url icon="circle-help" %}
+      {% if suggestions %}
+      <nav class="faq-vuoto__indice" aria-labelledby="faq-index-title">
+        <h3 class="faq-vuoto__titolo t-label" id="faq-index-title">{{ index_label }}</h3>
+        <ul class="faq-vuoto__lista" role="list">
+          {% for entry in suggestions %}<li><a class="faq-vuoto__voce" href="{{ faq_index_url }}#{{ entry.key }}"{% if entry.question_is_fallback %} lang="{{ entry.question_lang }}"{% endif %}>{{ entry.question }}</a></li>{% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+    {% endif %}
+    </div>
+  </div>
+</section>
+{% else %}
+<section class="sez faq-domande faq-banco" id="questions" data-sec="domande" data-ground="stone" data-rhythm="band" aria-labelledby="faq-domande-title" data-cerca="faq-q">
+  <div class="container faq-banco__griglia">
+    <aside class="faq-guida">
+      {% include "faq/_cerca.html" %}
+      {% if themes %}<div class="faq-temi" role="group" aria-labelledby="faq-temi-titolo"><p class="faq-temi__titolo" id="faq-temi-titolo">{% translate "Thèmes" %}</p>
+        <button class="faq-tema" type="button" aria-pressed="true" data-cerca-tema="">{% translate "Toutes" %} <span class="faq-tema__n">{{ items|length }}</span></button>
+        {% for theme in themes %}<button class="faq-tema" type="button" aria-pressed="false" data-cerca-tema="{{ theme.key }}"><span{% if theme.lang %} lang="{{ theme.lang }}"{% endif %}>{{ theme.name }}</span> <span class="faq-tema__n">{{ theme.count }}</span></button>{% endfor %}
+      </div>{% endif %}
+      {% include "faq/_aiuto.html" %}
+    </aside>
+    <div class="faq-colonna">
+    <h2 class="visually-hidden" id="faq-domande-title">{{ index_label }}</h2>
+    {# the list's concept (apps/core/icons.py CHAPTER «faq»), named by its head: the bare mark is retired, the tag draws nothing (V5.22 §4.10) #}{% chapter_mark "faq" %}
+    <p class="cerca-conto" role="status" data-cerca-conto></p>
+    <template data-cerca-conti><span>{% blocktranslate count n=0 %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</span>{% for item in items %}<span>{% blocktranslate count n=forloop.counter %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</span>{% endfor %}</template>
+    <div class="accordion faq-lista">
+      {% for item in items %}{% include "faq/_item.html" with entry=item.entry theme=item.theme marked=item.marked group="faq-domande" %}{% endfor %}
+    </div>
+    <div class="cerca-vuoto" data-cerca-vuoto hidden>
+      <p class="cerca-vuoto__titolo">{% translate "Aucune question ne correspond à votre recherche." %}</p>
+      <p class="cerca-vuoto__testo">{% translate "Essayez un autre mot-clé ou parcourez toutes les questions par catégorie." %}</p>
+      <p class="cerca-vuoto__vie"><button class="btn btn--secondary" type="button" data-cerca-azzera>{% translate "Voir toutes les questions" %}</button></p>{# V5.32: the way to a person is the guide's help card, beside (desk) or under (phone) this state — not said twice #}
+    </div>
+    </div>
+  </div>
+</section>
+{% endif %}{# V5.12 §8: without a live question the page answers 404 (faq.views.index) #}
+
+{% if rimando %}
+<aside class="sez sez--rimando faq-rimando" data-sec="rimando" data-ground="paper" data-rhythm="strip" aria-labelledby="faq-related-title">
+  <div class="container">
+    {% translate "Pour aller plus loin" as related_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="faq-related-title" title=related_title only %}
+    {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=rimando only %}
+  </div>
+</aside>
+{% endif %}
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/faq.css' %}">{% if not is_search %}<script type="module" src="{% static 'js/dist/cerca.js' %}"></script>{% endif %}
+{% if faq_jsonld %}<script type="application/ld+json">{{ faq_jsonld }}</script>{% endif %}{% endblock %}

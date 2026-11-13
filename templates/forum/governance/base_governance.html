@@ -1,0 +1,34 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+The Forum permanent sits INSIDE the platform shell (templates/portal/base_portal.html): the same
+platform bar, the same navigation, the same footer. It is part of the member's workspace, not a
+second product, and nothing of the public shell is re-rendered here.
+
+This intermediate template exists for two reasons. The caveat that must appear on EVERY route of the
+module, whichever screen the reader arrived on:
+
+  * what is written here engages the organisations that wrote it, and nobody else;
+  * a proposal, a project or a monitoring entry is never a decision of an authority, and never a
+    promise about an outcome or a delay;
+  * a participation profile carries an organisation, a category and declared interests — and
+    nothing else, because FORUM_GOVERNANCE §5 says the Forum is not a contact directory.
+
+It is the registers' clause — the clause that qualifies the page, never the lead that opens it. And the module's one
+sheet: design V5 (W3-E step 2) draws the governance in the console's register grammar — the page's head, the rows of
+the commissions, proposals and projects, the facts, the steps, the clause — so the registers' page sheet
+(portal/registers.css) is linked here, page-only, never a shared bundle (the owner's V5.8); the module has no sheet of
+its own (the public Forum's forum/forum.css is not loaded here). Each page wraps its content in `.reg-page`.
+V5.32 lane E (the PLATFORM=READY round): the module speaks the console's product vocabulary — every head is the
+atrium's (`data-atrium`, the space's eyebrow: the platform sheet, portal/platform.css, linked here as on the help
+desk's pages), and the two long registers (the proposals, the projects) carry the platform's list toolkit
+(forum.governance_lists): its script here, where a list draws it (`listing.show`); its two sheets in the head of the
+two pages that draw one (proposals.html, projects.html — the overlay panels' contract: a page-only sheet is linked by
+the page that draws it, tests/frontend/test_overlays.py).
+{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block portal_content %}
+{% block governance_content %}{% endblock %}
+<p class="reg-note">{% translate "Le Forum permanent est un espace de coopération institutionnelle. Les propositions, les projets et les relevés de suivi qui y figurent engagent les organisations qui les déposent ; ils ne constituent ni une décision d’une autorité, ni un engagement sur une issue ou sur un délai. Les profils de participation indiquent l’organisation représentée, la catégorie et les intérêts déclarés : aucune coordonnée personnelle n’y est publiée." %}</p>
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

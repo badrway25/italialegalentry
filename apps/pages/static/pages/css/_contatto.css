@@ -1,0 +1,141 @@
+/* ============================================================================================
+   CONTACT V2 (design V5.22, SECTION_SYSTEM_V2 §3.12; lane P2) — a partial of interior.css, after _canali.css.
+   Markup: templates/pages/contact.html, pages/partials/_canali.html (the channels, unchanged),
+   pages/partials/fronte/_contatto_azione.html (the head's address and its caption).
+     1 · the head's caption: the address said once, its sentence under it
+     2 · E «il centralino»: one board on stone — its title in its first row, the channels and the form's plate on one
+         plane, the privacy link its legal foot; STAGGER: the discs settle in turn as the board enters
+     3 · E «le porte»: three night doors standing on one drawn line that carries the title (LINE DRAW)
+   ============================================================================================ */
+
+/* ---- 1 · the head's caption ---- */
+.fronte-azione__nota {
+  max-inline-size: var(--measure-small);
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* ---- 2 · the board ---- */
+.centralino {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.centralino .testa { margin-block-end: 0; }
+
+.centralino__piano {
+  display: grid;
+  gap: var(--s-4);
+}
+
+/* the form's plate: the channels' idiom (the disc, the kind, the act) — a link with the form open, the G2 notice in the
+   same plate with it closed (the pending register is the notice's own) */
+.canale__piastra {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+
+.canale__piastra .canale__body { gap: var(--s-3); }
+.canale__piastra :is(.canale__kind, .canale__azione, .form-unavailable) { margin: 0; }
+
+.centralino__dati {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  margin: 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-structure);
+  font-size: var(--t-ui);
+}
+
+.centralino__dati-label {
+  font-weight: var(--w-title);
+  color: var(--text-2);
+}
+
+@media (min-width: 64rem) {
+  .centralino {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    align-items: start;
+  }
+
+  .centralino__testa { grid-column: 1 / span 4; }
+  .centralino__piano { grid-column: 5 / span 8; }
+}
+
+/* STAGGER: the discs settle in turn (60 ms) as the board enters; the words never wait */
+.centralino .canale:nth-child(2) { --k: 1; }
+.centralino .canale--modulo { --k: 2; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .centralino .canale__disc { scale: 0.92; }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .centralino .canale__disc {
+    animation: sez-node var(--spring-soft-duration) var(--spring-soft) calc(var(--k, 0) * var(--motion-stagger)) backwards;
+  }
+}
+
+/* ---- 3 · the doors ---- */
+.contatto-porte .container {
+  position: relative;
+  display: grid;
+  gap: var(--s-8);
+}
+
+.contatto-porte__titolo {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+.contatto-porte .mosaico--porte .mosaico__tessera {
+  min-block-size: 13rem;
+  padding-block: var(--s-10) var(--s-8);
+}
+
+.contatto-porte .mosaico__link {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+/* the door's way in: its arrow shifts under the hand or the focus, in the night's accent; the words start under the arch
+   (one drawing with Le projet's doors — _projet.css §3 draws the same for its own, since V5.24 each page's sheet is its own) */
+.contatto-porte .mosaico__riga {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.contatto-porte .mosaico__riga .icon {
+  color: var(--accent-night);
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+.contatto-porte .mosaico__tessera:is(:hover, :focus-within) .mosaico__riga .icon { translate: 3px 0; }
+[dir="rtl"] .contatto-porte .mosaico__tessera:is(:hover, :focus-within) .mosaico__riga .icon { translate: -3px 0; }
+.contatto-porte .mosaico__tessera { align-content: start; }
+html[data-input="key"] .contatto-porte .mosaico__riga .icon { transition: none; }
+
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  .contatto-porte .mosaico--porte { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64rem) {
+  .contatto-porte .container {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    align-items: start;
+    column-gap: var(--s-8);
+  }
+}
+

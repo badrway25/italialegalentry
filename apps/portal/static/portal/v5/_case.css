@@ -1,0 +1,303 @@
+/* ============================================================================================
+   THE CASE FILE — design V5 (W3-E step 3): templates/cases/detail.html and its partials (templates/cases/partials/).
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7 · §1.3 corners · §1.4 SH-2 hairlines before boxes, SH-8 one raised
+   plane · §1.14 the overlay system · the platform map §3 «Case file» (C-3 the checklist as rows, C-5 the staff's
+   state changes through the row's menu and a dialog). A partial (`_`): imported by apps/portal/static/portal/case.css,
+   the page's own sheet — never an output of its own, never in a shared bundle (the owner's V5.8).
+
+   The page COMPOSES what the platform families shipped and draws here only what is its own:
+     the head, the sections, the rows, the ledger, the lists, the NowPanel   v5/_dashboard.css (W3-B, every console page)
+     the row's link, the answerable party, the form of an act, the clause   v5/_registers.css (W3-E, portal/registers.css)
+     the journey's spine and the timeline                                   v5/_journey-rail.css (W3-D, portal/journey.css)
+     the menu, the alert dialog, its scrim and its focus                    v5/overlays.css, v5/_overlay-panels.css (W2-A)
+     the chips, the fields, the radios                                      v5/chip.css, v5/field.css (W1-C)
+
+     1  the page — one column; from 80rem the file (2/3) and what changed (1/3), the clause above both; the NowPanel's
+        line keeps its id on the panel's wrapper
+     2  what is asked — the checklist's rows (the dashboard's row, four columns: the words, the state, the date, who
+        and the row's menu — the system's icon control, in a column of its own at the row's end), the pieces' block
+     3  who intervenes — the answerable parties, one hairline between two
+     4  the dialogs' bodies — the line or the file named, the consequence said, the choices
+     5  the phone's action bar — the NowPanel's act, where the bottom bar's entries stood (the shell's O63 contract)
+
+   No raised plane but the NowPanel (the action card's one shadow value); corners: the panel's 8, the controls' 4,
+   the chips' and the discs' full. Nothing moves at load. Tokens only, logical properties only.
+   ============================================================================================ */
+
+/* ---- 1 · The page ------------------------------------------------------------------------------ */
+.file {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-10);
+  align-items: start;
+}
+
+.file__main,
+.file__side {
+  display: grid;
+  gap: var(--s-10);
+  min-inline-size: 0;
+}
+
+.file > *,
+.file__main > *,
+.file__side > * {
+  min-inline-size: 0;
+}
+
+/* the mandate's clause and a suspension's reason open the page, across both columns */
+.file__mandate,
+.file__notice {
+  grid-column: 1 / -1;
+}
+
+.file__notice .notice {
+  margin: 0;
+}
+
+@media (min-width: 80rem) {
+  .file {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .file,
+  .file__main,
+  .file__side {
+    gap: var(--s-8);
+  }
+}
+
+/* the NowPanel's line (`#line-<pk>`: the line's POST returns to it, its dialog's «Fermer» leads back to it) stands clear
+   of the context bar, and takes the focus with the card's corner */
+.file-now {
+  border-radius: var(--card-radius);
+  scroll-margin-block: calc(var(--ctx-h) + var(--s-6)) var(--s-6);
+}
+
+.file-now:focus-visible {
+  outline-offset: 4px;
+}
+
+/* a section's head over a list that draws no hairline of its own above its first row (the timeline) */
+.file-history > .db-h2 {
+  margin-block-end: var(--s-4);
+}
+
+/* from 80rem the history stands in the side column (a third): the date heads its event and the event takes the
+   column's width — a long state's chip («Phase gérée par un acteur autorisé») holds on one line where, beside the
+   date, it took two (the review's minor 5; a chip is never cut, so it is given the room) */
+@media (min-width: 80rem) {
+  .file-history .tl__row {
+    row-gap: var(--s-1);
+  }
+
+  .file-history .tl__row > .tl__when,
+  .file-history .tl__what {
+    grid-column: 2 / -1;
+  }
+
+  /* a date keeps its own order (its digits) and stands at the reading start of its column */
+  .file-history .tl__row > .tl__when {
+    justify-self: start;
+  }
+
+  .file-history .tl__what {
+    grid-row: 2;
+  }
+}
+
+/* the line an event names, in its own words and direction, on the page's reading edge — the registers' one rule for
+   words in the other direction than the page (DL54-64) */
+:dir(rtl) .file-history .tl__detail:dir(ltr),
+:dir(ltr) .file-history .tl__detail:dir(rtl) {
+  text-align: end;
+}
+
+.file-assessment__more {
+  margin: var(--s-3) 0 0;
+}
+
+/* ---- 2 · What is asked ----------------------------------------------------------------------------
+   Two blocks under one head: the checklist's lines («Exigences», their count in words), then the file's pieces
+   («Pièces du dossier», «il registro»). A line's row is the dashboard's: four columns that line up from row to row
+   (subgrid) — the words (the line; who answers for it, a fact every line states; what the team wrote; the source in
+   ILE Mono), the state as a chip, the date with its glyph, then, where the reader may move the line, its menu «⋮». The
+   first line of every cell on the title's first line; the words take the room the facts leave (a long authority's
+   name wraps under the line, never squeezing it into a column of three words). */
+.file-block + .file-block {
+  margin-block-start: var(--s-8);
+}
+
+.file-block__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-4);
+}
+
+.file-block__head > .reg-sub {
+  margin: 0;
+}
+
+.file-block__lead {
+  margin: var(--s-1) 0 var(--s-3);
+}
+
+.file-rows > .db-task {
+  align-items: baseline;
+}
+
+.file-row__who {
+  margin: var(--s-1) 0 0;
+}
+
+/* the row the line's POST returns to (`#line-<pk>`) stands clear of the context bar, and takes the focus */
+.file-row {
+  scroll-margin-block: calc(var(--ctx-h) + var(--s-6)) var(--s-6);
+}
+
+.file-row:focus-visible {
+  outline-offset: 0;
+}
+
+.file-row__note {
+  overflow-wrap: anywhere;
+}
+
+/* the line's menu: its trigger is the system's icon control — 40 × 40, 44 × 44 for a finger (the dashboard stretches a
+   row's act across a phone: not this one) —, on the title's line */
+.db-task__end .file-row__menu {
+  flex: none;
+  inline-size: var(--btn-h-icon);
+  margin-block: calc(-1 * var(--s-2));
+}
+
+/* a phone: the words across, the trigger in a column of its own at the row's inline end — the same place on every row
+   —, the state and the date on the line under the words (the date never widens the trigger's column) */
+@media (max-width: 47.999rem) {
+  .file-rows > .db-task {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--s-3);
+  }
+
+  .file-rows > .db-task > .db-task__words {
+    grid-column: 1 / 3;
+    grid-row: 1;
+  }
+
+  .file-rows > .db-task > .db-task__state {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .file-rows > .db-task > .db-task__due {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .file-rows > .db-task > .file-row__end {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: start;
+    justify-content: flex-end;
+  }
+}
+
+/* «Bloqué» beside a piece's chip: the Conditions gate stops its filing (the register's word, W3-C) */
+.file-row__blocked {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-title);
+  color: var(--text-2);
+}
+
+/* ---- 3 · Who intervenes: the answerable parties, one hairline between two ------------------------- */
+.file-party + .file-party {
+  border-block-start: 0;
+}
+
+/* the file's state: the form of an act on the column's whole measure, its hairline as long as the sections' */
+.file-state {
+  max-inline-size: none;
+}
+
+/* ---- 4 · The dialogs' bodies -------------------------------------------------------------------------
+   The overlay system draws the alert dialog — its head with the consequence's disc, «Fermer», its foot with the safe
+   answer first —, the registers' sheet its body's rhythm (`.reg-dialog`: the guichet's and the selection's closures
+   draw the same). Here what names the line or the file: the line or the file with its state, what a change is, then
+   the choices — each a radio and the chip of the state it leads to (W1-C's row of a radio and its label, 44 px) —,
+   the closure's consequence under its choice. */
+.file-dialog__about {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.file-dialog__what {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  margin: 0;
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.file-dialog__words {
+  overflow-wrap: anywhere;
+}
+
+.file-dialog__note {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.file-choices {
+  margin: 0;
+}
+
+.file-choices__hint {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  padding-block-end: var(--s-2);
+  padding-inline-start: calc(1.5rem + var(--s-3));
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+/* ---- 5 · The phone's action bar -----------------------------------------------------------------------
+   Below 64rem the NowPanel's one act is the page's bar (`data-file-action-bar`, placed by the shell where the bottom
+   bar's entries stood, «Menu» kept at the reading end): the act across it, and not a second time in the panel. */
+.file-bar {
+  display: none;
+}
+
+@media (max-width: 63.999rem) {
+  .file-bar {
+    display: flex;
+    align-items: center;
+  }
+
+  .file-bar > .btn {
+    flex: 1 1 auto;
+  }
+
+  .file--bar .db-now__act {
+    display: none;
+  }
+}
+
+/* paper: the page as it is read — no bar, every section in the flow */
+@media print {
+  .file-bar {
+    display: none;
+  }
+}

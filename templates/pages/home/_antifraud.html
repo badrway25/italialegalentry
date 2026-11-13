@@ -1,0 +1,47 @@
+{% load i18n pages_typo locked_split %}{% comment %}
+9. ANTI-FRAUD — Phase 3 only. Prescribed p3.antifraud.title + p3.antifraud.body: highly visible, never sensationalist (no
+bright red, no alarm siren, no capitals added). While gate G3 is closed NOTHING is rendered: no substitute text is
+invented.
+
+V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026; lane B) — «l'allerta»: one sober warning band on an ochre/umber
+tint (the ambra ramp, never red), 21st.dev «Warning Alert» 23619 + «Chip» 13842 adapted. The shield (shield-alert) is the
+band's one large glyph; the locked title in its own capitals; the locked body ONE <p data-locked> cut on its own full
+stops (cms.locked_split) — its first sentence the primary warning at the lead's size, the rest quieter, the last (the
+platform's promise) behind a hairline; the body stays WHOLE and VISIBLE (legally required: never collapsed). The red
+flags are surfaced as compact chips — UI labels taken from the body's own words (guaranteed visa, guaranteed contract,
+forged documents, unofficial fast tracks, money for a guaranteed result), presented as signs to recognise, not as new
+claims; the details are the page «Attention aux fraudes», the band's call. No numbered list.
+
+V5.31 · CORRECTION ROUND (senior review, 10 Nov 2026; owner §22 «short primary warning; progressive disclosure for
+details»): p3.antifraud.body is ONE locked string — its lead, its two middle sentences and its promise are not separate
+locked units —, so no part of it goes behind a disclosure (a locked string is never cut apart: its one <p data-locked>
+keeps the whole text). FINAL correction (orchestrator, owner §22 again): the <p data-locked> still holds the WHOLE body,
+uncut, in the DOM; with the script its two middle sentences wait behind the button «Lire le détail» (aria-expanded), the
+lead and the platform's promise always in sight; without the script the whole body shows. The plate is recomposed
+shorter instead: from 64 rem the red flags stand beside the reading column and the call beside the title; a body said in
+one sentence (the Arabic page's pointer line, C-SUBST-FR) stands over the call, the flags beside them — no empty half.
+{% endcomment %}{% locked_text "p3.antifraud.title" as af_title %}{% locked_lang "p3.antifraud.title" as af_title_lang %}{% locked_is_fallback "p3.antifraud.title" as af_title_fallback %}{% locked_text "p3.antifraud.body" as af_body %}{% locked_lang "p3.antifraud.body" as af_lang %}{% locked_is_fallback "p3.antifraud.body" as af_fallback %}
+<section class="sez home-antifraud" id="{{ s.anchor }}" aria-labelledby="protezione-title-home" data-section="antifraud" data-sec="allerta" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container">
+    <div class="allerta" data-callout="antifraud">
+      <div class="allerta__capo">
+        <span class="allerta__scudo" aria-hidden="true">{% svg_icon "shield-alert" "icon" %}</span>
+        <h2 class="allerta__titolo" id="protezione-title-home"{% if af_title_fallback %} lang="{{ af_title_lang }}"{% endif %}>{{ af_title }}</h2>
+      </div>
+      <p class="allerta__testo" data-locked="p3.antifraud.body"{% if af_fallback %} lang="{{ af_lang }}"{% endif %}>{{ af_body|locked_spans:"sentence" }}</p>
+      <button type="button" class="btn btn--text allerta__apri" data-allerta-apri aria-expanded="false" hidden><span>{% translate "Lire le détail" %}</span>{% svg_icon "chevron" "icon" %}</button>
+      <div class="allerta__segnali">
+        <h3 class="allerta__etichetta t-label">{% translate "Signaux d’alerte" %}</h3>
+        <ul class="allerta__chips" role="list">
+          <li>{% svg_icon "stamp" "icon" %}{% translate "Visa garanti" %}</li>
+          <li>{% svg_icon "briefcase" "icon" %}{% translate "Contrat de travail garanti" %}</li>
+          <li>{% svg_icon "document" "icon" %}{% translate "Documents falsifiés" %}</li>
+          <li>{% svg_icon "split" "icon" %}{% translate "« Voies rapides » hors procédures officielles" %}</li>
+          <li>{% svg_icon "receipt" "icon" %}{% translate "Argent contre un résultat garanti" %}</li>
+        </ul>
+      </div>
+      {% if d.url %}{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}<p class="allerta__azione"><a class="btn btn--secondary allerta__cta" href="{{ d.url }}" data-azione><span>{{ fraud_label|typo }}</span>{% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    </div>
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+  </div>
+</section>

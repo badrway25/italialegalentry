@@ -1,0 +1,156 @@
+{% load static %}<!doctype html>
+<html lang="it" dir="ltr" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loader «Lume» — tavola dei fotogrammi (W1-D)</title>
+<meta name="description" content="Design V5 — la tavola campione del loader «Lume»: l'ingresso, il rilascio, la chiave occupata, la seduta; i fotogrammi fermi, il moto ridotto, il verso arabo.">
+<meta name="robots" content="noindex, nofollow">
+{% comment %}
+THE LOADER FILMSTRIPS — W1-D's specimen board (V5.4 plan §3.1 item 6; templates/dev/designpreview/specimens/
+README.md). A standalone document: the product's own sheets — dist/main.css (v5/loader.css inside it), the console
+entry (the generated _loader-light.css inside it) — and the board's dev sheet, which only lays the cells out and
+freezes the product's own animations at a given t (a negative delay, paused). No style attribute, no inline script,
+nothing remote. Italian chrome; the samples are the product's elements. «Rejouer» is a reload: every live cell plays
+once at load, as the product does — the release across a page load, the engage on a submit, the seat on an arrival.
+The live form submits to this page itself (GET), so the busy key is a real L2 on the way to the reload.
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/dist/portal/console.css' %}">
+<link rel="stylesheet" href="{% static 'css/dev/loader-board.css' %}">
+<script src="{% static 'js/head.js' %}"></script>
+</head>
+<body class="lb">
+<main id="main-content" class="container lb__main" tabindex="-1">
+  <p class="eyebrow">Design V5 · W1-D · tavola campione</p>
+  <h1 class="t-band">Loader «Lume» — i fotogrammi</h1>
+  <p class="lb__lede">Una sola macchina a stati per tre livelli — riposo → ingresso → apertura → riposo — e nulla gira in loop. Il marchio è disegnato a strati nelle sue unità (<code>v5/loader.css</code>): i piani, la porta e i gradini non si muovono mai; la chiave gira sul proprio gambo e torna sul marchio verbatim. Ogni cella viva suona una volta al caricamento; i fotogrammi sono le stesse animazioni ferme a <em>t</em>.</p>
+  <p class="cluster"><a class="btn btn--secondary btn--sm" href="">Rejouer — ricarica la tavola</a><a class="btn btn--ghost btn--sm" href="/__design-v5/">Anteprima V5</a></p>
+
+  <section class="lb__section" aria-labelledby="l1">
+    <h2 class="lb__h2" id="l1">L1 · l'ingresso — la chiave gira una volta e tiene (480 ms, <code>--ease-turn</code>)</h2>
+    <p class="lb__note">Sul palcoscenico del login, all'invio: <code>loader.js</code> aggiunge <code>.is-engaged</code> all'host; la chiave fa un giro intero (0 → 360°) e si ferma sul marchio verbatim — mai tenuta, disegnata o servita specchiata (DL54-08). Sotto il moto ridotto il token vale 0 ms e il marchio resta fermo.</p>
+    <div class="lb__board">
+      <div class="lb__cell"><p class="lb__cap">riposo · 160</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-160" %}</div></div>
+      <div class="lb__cell"><p class="lb__cap">ingresso · vivo</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-160 is-engaged" %}</div></div>
+      <div class="lb__cell"><p class="lb__cap">moto ridotto · il fermo</p><div class="lb__ground lb__ground--night lb-rm">{% include "components/loader.html" with css_class="lb__sig-160 is-engaged" %}</div></div>
+      <div class="lb__cell" dir="rtl" lang="ar"><p class="lb__cap" dir="ltr" lang="it">verso arabo · il marchio non si specchia</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-160 is-engaged" %}</div></div>
+    </div>
+    <p class="lb__cap">fotogrammi dell'ingresso · 96 px · t = 0 · 80 · 160 · 240 · 320 · 400 · 480 ms</p>
+    <div class="lb__board lb__strip">
+      <div class="lb__cell lb-t lb-t-0"><p class="lb__cap">0</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+      <div class="lb__cell lb-t lb-t-80"><p class="lb__cap">80</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+      <div class="lb__cell lb-t lb-t-160"><p class="lb__cap">160</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+      <div class="lb__cell lb-t lb-t-240"><p class="lb__cap">240</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+      <div class="lb__cell lb-t lb-t-320"><p class="lb__cap">320</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+      <div class="lb__cell lb-t lb-t-400"><p class="lb__cap">400</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+      <div class="lb__cell lb-t lb-t-480"><p class="lb__cap">480</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged" %}</div></div>
+    </div>
+    <p class="lb__cap">le parole di un'attesa lunga · 1 s · 10 s con «Riprova»</p>
+    <div class="lb__board">
+      <div class="lb__cell"><p class="lb__cap">a 1 s</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged is-worded" %}<p class="loader__status" role="status">Un momento…</p></div></div>
+      <div class="lb__cell"><p class="lb__cap">a 10 s</p><div class="lb__ground lb__ground--night">{% include "components/loader.html" with css_class="lb__sig-96 is-engaged is-slow" %}<p class="loader__status" role="status">Sta durando più del solito.</p><button class="btn btn--secondary btn--sm loader__retry" type="button">Riprova</button></div></div>
+    </div>
+  </section>
+
+  <section class="lb__section" aria-labelledby="release">
+    <h2 class="lb__h2" id="release">Il rilascio — la porta si illumina dall'occhio della chiave (una fase, <code>--motion-door</code> 1600 ms)</h2>
+    <p class="lb__note">Sulla prima pagina della console dopo un accesso riuscito, sul marchio della rail (sotto 64rem: della barra), una volta per sessione, attraverso il caricamento della pagina (DL54-07). La luce cresce dall'occhio e riempie la stanza dietro la porta, la chiave si legge in inchiostro, l'immagine tiene oltre 600 ms, poi tutto torna al marchio verbatim. I piani, la porta e i gradini non si muovono; la luce resta dentro la porta. Nessuno script: l'animazione parte al primo frame (<code>_loader-light.css</code>, solo console).</p>
+    <div class="lb__board">
+      <div class="lb__cell"><p class="lb__cap">vivo · 160</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-160" release=True %}</div></div>
+      <div class="lb__cell"><p class="lb__cap">la sede · rail 40 / 24</p><div class="lb__ground lb__ground--night"><span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+      <div class="lb__cell"><p class="lb__cap">la sede · barra 32 / 20</p><div class="lb__ground lb__ground--night"><span class="lb__tile-bar" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+      <div class="lb__cell"><p class="lb__cap">moto ridotto · il fermo</p><div class="lb__ground lb-rm">{% include "components/loader.html" with css_class="lb__sig-160" release=True %}</div></div>
+    </div>
+    <p class="lb__cap">fotogrammi del rilascio · 96 px · t = 0 · 40 · 80 · 120 · 200 · 360 · 700 · 1000 · 1200 · 1300 · 1400 ms</p>
+    <div class="lb__board lb__strip">
+      <div class="lb__cell lb-t lb-t-0"><p class="lb__cap">0</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-40"><p class="lb__cap">40</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-80"><p class="lb__cap">80</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-120"><p class="lb__cap">120</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-200"><p class="lb__cap">200</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-360"><p class="lb__cap">360</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-700"><p class="lb__cap">700</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-1000"><p class="lb__cap">1000</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-1200"><p class="lb__cap">1200</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-1300"><p class="lb__cap">1300</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+      <div class="lb__cell lb-t lb-t-1400"><p class="lb__cap">1400</p><div class="lb__ground">{% include "components/loader.html" with css_class="lb__sig-96" release=True %}</div></div>
+    </div>
+    <p class="lb__cap">gli stessi fotogrammi alla misura servita · la rail 40 / 24 · t = 0 · 120 · 360 · 1000 · 1300 ms</p>
+    <div class="lb__board lb__strip">
+      <div class="lb__cell lb-t lb-t-0"><p class="lb__cap">0</p><div class="lb__ground lb__ground--night"><span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+      <div class="lb__cell lb-t lb-t-120"><p class="lb__cap">120</p><div class="lb__ground lb__ground--night"><span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+      <div class="lb__cell lb-t lb-t-360"><p class="lb__cap">360</p><div class="lb__ground lb__ground--night"><span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+      <div class="lb__cell lb-t lb-t-1000"><p class="lb__cap">1000</p><div class="lb__ground lb__ground--night"><span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+      <div class="lb__cell lb-t lb-t-1300"><p class="lb__cap">1300</p><div class="lb__ground lb__ground--night"><span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=True %}</span></div></div>
+    </div>
+  </section>
+
+  <section class="lb__section" aria-labelledby="l2">
+    <h2 class="lb__h2" id="l2">L2 · la chiave occupata — su ogni bottone d'invio, senza markup (320 ms, poi tiene)</h2>
+    <p class="lb__note"><code>shell.js</code> mette <code>aria-busy</code> e <code>.is-busy</code> sul controllo nel task stesso dell'invio; <code>v5/loader.css</code> disegna la chiave sul suo <code>::after</code> (la maschera di <code>key.svg</code>, nel colore del testo), al centro del padding di fine riga, qualunque sia la taglia: l'etichetta non si sposta di un pixel e la chiave non la tocca. Attenuata finché aspetta (80 % dell'inchiostro: 4,0 : 1 sul teal, almeno 3 : 1 su ogni variante — WCAG 1.4.11), si accende alla risposta in pagina (<code>.is-lit</code>). <code>aria-disabled</code>, mai <code>disabled</code>, e solo dove lo script rifiuta il secondo invio (<code>data-single-submit</code>): il focus resta. Nessuna attesa è per sempre: la risposta che non sostituisce la pagina la chiude — subito se è data in pagina, a 10 s altrimenti, al ritorno dalla cache — e un form la cui risposta è un file porta <code>data-loader="none"</code> e non aspetta affatto.</p>
+    <div class="lb__board">
+      <div class="lb__cell"><p class="lb__cap">riposo</p><button class="btn btn--primary" type="button">Se connecter</button></div>
+      <div class="lb__cell"><p class="lb__cap">occupato · vivo</p><button class="btn btn--primary is-busy" type="button" aria-busy="true" aria-disabled="true">Se connecter</button></div>
+      <div class="lb__cell"><p class="lb__cap">acceso</p><button class="btn btn--primary is-busy is-lit" type="button" aria-busy="true" aria-disabled="true">Se connecter</button></div>
+      <div class="lb__cell"><p class="lb__cap">moto ridotto</p><div class="lb-rm"><button class="btn btn--primary is-busy" type="button" aria-busy="true" aria-disabled="true">Se connecter</button></div></div>
+      <div class="lb__cell" dir="rtl" lang="ar"><p class="lb__cap" dir="ltr" lang="it">verso arabo</p><button class="btn btn--primary is-busy" type="button" aria-busy="true" aria-disabled="true">فتح طلب</button></div>
+      <div class="lb__cell"><p class="lb__cap">una riga che aspetta</p><p class="lb__row-wait is-busy" aria-busy="true">{% include "components/busy_key.html" %}<span>Ouverture du document…</span></p></div>
+    </div>
+    <p class="lb__cap">ogni variante, occupata · la chiave al centro del padding di fine riga, all'80 % dell'inchiostro</p>
+    <div class="lb__board" data-lb-variants>
+      <div class="lb__cell"><p class="lb__cap">primario</p><button class="btn btn--primary is-busy" type="button" aria-busy="true">Enregistrer</button></div>
+      <div class="lb__cell"><p class="lb__cap">primario · piccolo</p><button class="btn btn--primary btn--sm is-busy" type="button" aria-busy="true">Transmettre au projet</button></div>
+      <div class="lb__cell"><p class="lb__cap">primario · grande</p><button class="btn btn--primary btn--large is-busy" type="button" aria-busy="true">Commencer</button></div>
+      <div class="lb__cell"><p class="lb__cap">secondario</p><button class="btn btn--secondary is-busy" type="button" aria-busy="true">Enregistrer et recalculer</button></div>
+      <div class="lb__cell"><p class="lb__cap">secondario · piccolo</p><button class="btn btn--secondary btn--sm is-busy" type="button" aria-busy="true">Mettre à jour</button></div>
+      <div class="lb__cell"><p class="lb__cap">pericolo</p><button class="btn btn--danger is-busy" type="button" aria-busy="true">Confirmer la suppression</button></div>
+      <div class="lb__cell"><p class="lb__cap">ghost</p><button class="btn btn--ghost is-busy" type="button" aria-busy="true">Retirer cette autorisation</button></div>
+      <div class="lb__cell"><p class="lb__cap">soft</p><button class="btn btn--soft is-busy" type="button" aria-busy="true">Enregistrer</button></div>
+      <div class="lb__cell" dir="rtl" lang="ar"><p class="lb__cap" dir="ltr" lang="it">piccolo · verso arabo</p><button class="btn btn--secondary btn--sm is-busy" type="button" aria-busy="true">تحديث</button></div>
+      <div class="lb__cell" dir="rtl" lang="ar"><p class="lb__cap" dir="ltr" lang="it">pericolo · verso arabo</p><button class="btn btn--danger is-busy" type="button" aria-busy="true">تأكيد الحذف</button></div>
+    </div>
+    <p class="lb__cap">dove la chiave non ha posto · un bottone-link è il suo testo: aspetta con <code>aria-busy</code> e resta com'è, senza chiave sopra le sue lettere</p>
+    <div class="lb__board" data-lb-keyless>
+      <div class="lb__cell"><p class="lb__cap">link · riposo</p><button class="btn btn--link btn--sm" type="button">Marquer comme lue</button></div>
+      <div class="lb__cell"><p class="lb__cap">link · in attesa</p><button class="btn btn--link btn--sm" type="button" aria-busy="true">Marquer comme lue</button></div>
+      <div class="lb__cell"><p class="lb__cap">text · in attesa</p><button class="btn btn--text" type="button" aria-busy="true">Supprimer</button></div>
+      <div class="lb__cell" dir="rtl" lang="ar"><p class="lb__cap" dir="ltr" lang="it">link · in attesa · verso arabo</p><button class="btn btn--link btn--sm" type="button" aria-busy="true">وضع علامة «مقروءة»</button></div>
+    </div>
+    <p class="lb__cap">fotogrammi del giro · t = 0 · 80 · 160 · 240 · 320 ms</p>
+    <div class="lb__board lb__strip">
+      <div class="lb__cell lb-t lb-t-0"><p class="lb__cap">0</p><button class="btn btn--primary is-busy" type="button">Se connecter</button></div>
+      <div class="lb__cell lb-t lb-t-80"><p class="lb__cap">80</p><button class="btn btn--primary is-busy" type="button">Se connecter</button></div>
+      <div class="lb__cell lb-t lb-t-160"><p class="lb__cap">160</p><button class="btn btn--primary is-busy" type="button">Se connecter</button></div>
+      <div class="lb__cell lb-t lb-t-240"><p class="lb__cap">240</p><button class="btn btn--primary is-busy" type="button">Se connecter</button></div>
+      <div class="lb__cell lb-t lb-t-320"><p class="lb__cap">320</p><button class="btn btn--primary is-busy" type="button">Se connecter</button></div>
+    </div>
+    <p class="lb__cap">dal vero · un invio reale (GET su questa tavola): la chiave gira nel frame del clic, la pagina si ricarica</p>
+    <form class="lb__form" method="get" action="" data-single-submit>
+      <label class="visually-hidden" for="lb-q">Campo di prova</label>
+      <input class="input" id="lb-q" name="q" type="text" value="prova" autocomplete="off">
+      <button class="btn btn--primary" type="submit">Se connecter</button>
+    </form>
+  </section>
+
+  <section class="lb__section" aria-labelledby="l3">
+    <h2 class="lb__h2" id="l3">L3 · la seduta — le righe di un frammento salgono di 4 px, una dopo l'altra (200 ms, scaglione <code>--motion-stagger</code>)</h2>
+    <p class="lb__note">Solo i contenitori il cui contenuto arriva in modo asincrono, al <em>primo</em> arrivo (<code>loader.js</code> <code>seat()</code>: <code>.is-seating</code> su <code>[data-seat]</code>); un aggiornamento sostituisce sul posto; mai una regione resa dal server. Nessuna luce: la firma appartiene a L1.</p>
+    <div class="lb__board">
+      <div class="lb__cell"><p class="lb__cap">arrivo · vivo</p><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div>
+      <div class="lb__cell"><p class="lb__cap">moto ridotto · il fermo</p><div class="lb-rm"><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div></div>
+    </div>
+    <p class="lb__cap">fotogrammi della seduta · t = 0 · 80 · 160 · 240 · 400 ms</p>
+    <div class="lb__board lb__strip">
+      <div class="lb__cell lb-t lb-t-0"><p class="lb__cap">0</p><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div>
+      <div class="lb__cell lb-t lb-t-80"><p class="lb__cap">80</p><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div>
+      <div class="lb__cell lb-t lb-t-160"><p class="lb__cap">160</p><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div>
+      <div class="lb__cell lb-t lb-t-240"><p class="lb__cap">240</p><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div>
+      <div class="lb__cell lb-t lb-t-400"><p class="lb__cap">400</p><ul class="lb__rows is-seating" data-seat><li>Extrait de casier judiciaire</li><li>Diplôme ou titre de formation</li><li>Acte d’état civil légalisé</li><li>Attestation de formation linguistique</li></ul></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="{% static 'js/main.js' %}"></script>
+<script type="module" src="{% static 'js/dist/shell.js' %}"></script>
+</body>
+</html>

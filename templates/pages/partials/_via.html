@@ -1,0 +1,17 @@
+{% load i18n %}{% comment %}
+THE DOOR'S WAY IN «la via» (design V5.4, W3-F1; static/css/v5/_interior.css §2) — what a door page offers first, in
+words and one control: drawn inside the door card «la porta» on the night, or under the lead when a curated
+photograph takes the entrance's end seat (D26). Included by pages/partials/_ingresso.html with its context.
+
+Contract: `way_title` (optional; the action card's title, an h2: the entrance holds the page's h1), `way_title_id`,
+`way_text` (one sentence: what the way gives and why), `way_text_lang` (its language, when the page shows it in
+another — a catalogue string the translators have not given yet), `way_label` + `way_url` (the control), `way_jump`
+(True when the control only leads to the page's own action further down — the companies' form: a secondary, the
+form's submit stays the page's one primary), `way_pending` (said, on the «attesa» chip, while the destination does not
+exist yet).
+Every text arrives as the page already says it (catalogue strings, the locked button labels): nothing is retyped.
+{% endcomment %}
+{% if way_title %}<h2 class="via__title"{% if way_title_id %} id="{{ way_title_id }}"{% endif %}>{{ way_title }}</h2>{% endif %}
+{% if way_text %}<p class="via__text"{% if way_text_lang %} lang="{{ way_text_lang }}"{% endif %}>{{ way_text }}</p>{% endif %}
+{% if way_url %}<p class="via__action"><a class="btn {% if way_jump %}btn--secondary{% else %}btn--primary{% endif %} btn--lg btn--arrow" href="{{ way_url }}">{{ way_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>
+{% elif way_pending %}<p class="via__action">{% chip register="attesa" role="status" %}{{ way_pending }}{% endchip %}</p>{% endif %}

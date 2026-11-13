@@ -1,0 +1,41 @@
+{% load i18n locked_split %}{% comment %}
+8b. THE FAQ PREVIEW — «le domande» (gate G3 open only: pages.services._narrative builds this section from the trust
+chapter's four prescribed FAQ entries — p3.faq.items: faq_visas, faq_recruitment_agency, faq_preassessment_guarantee,
+faq_diplomas — quoted verbatim, question + answer).
+
+V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026; lane B): ONE featured question, open, beside three compact ones in
+an exclusive native disclosure (<details name>), each with its topic label and glyph (never a numeral); the answer whole,
+its own «Non.» a small accent at render (cms.locked_split cuts on its own full stop — the textContent is the answer
+itself); an open question changes material, the disclosure opens smoothly where the browser can (interpolate-size; still
+otherwise). The Arabic pointer lines and their lang stay as the registry gives them (cms.locked_renderings, C-SUBST-FR).
+
+FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026; points 1, 5 and 9): a section of its own (it was the trust partial's
+second band), after the institutional ecosystem. The featured question is a light sheet (it was a night card: under the
+promoter's deep band and above the warning's dark plate it made three dark blocks in a row). Every question still
+opens its own entry on the FAQ page (the featured one by its title, a folded one by the way under its answer).
+{% endcomment %}
+<section class="sez home-faq" id="{{ s.anchor }}" aria-labelledby="home-faq-title" data-section="faq" data-sub="faq-preview" data-sec="domande" data-ground="{{ s.ground|default:'stone' }}" data-rhythm="band">
+  <div class="container domande">
+    <div class="domande__capo">
+      <h2 class="domande__titolo" id="home-faq-title">{% translate "Questions fréquentes" %}</h2>
+      {% if d.faq_url %}<a class="domande__tutte link-arrow" href="{{ d.faq_url }}">{% translate "Toutes les questions fréquentes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    </div>
+    <div class="domande__griglia" data-trust="faq">
+      {% for quote in d.quotes %}{% if forloop.first %}
+      <article class="domanda domanda--prima" data-faq="{{ quote.key }}"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>
+        {% if quote.topic %}<p class="domanda__tema t-label"{% if quote.topic.lang %} lang="{{ quote.topic.lang }}"{% endif %}><span aria-hidden="true">{% svg_icon quote.glyph "icon" %}</span>{{ quote.topic }}</p>{% endif %}
+        <h3 class="domanda__testo">{% if quote.href %}<a class="domanda__link" href="{{ quote.href }}">{{ quote.question }}</a>{% else %}{{ quote.question }}{% endif %}</h3>
+        <p class="domanda__risposta integrita__risposta">{{ quote.answer|locked_spans:"keyword" }}</p>
+      </article>
+      <div class="domande__altre">{% else %}
+        <details class="domanda domanda--breve" name="home-faq" data-faq="{{ quote.key }}"{% if quote.lang %} lang="{{ quote.lang }}"{% endif %}>
+          <summary class="domanda__sommario">{% if quote.topic %}<span class="domanda__tema t-label"{% if quote.topic.lang %} lang="{{ quote.topic.lang }}"{% endif %}><span aria-hidden="true">{% svg_icon quote.glyph "icon" %}</span>{{ quote.topic }}</span>{% endif %}<span class="domanda__testo" id="{{ quote.key }}-domanda">{{ quote.question }}</span>{% svg_icon "chevron" "icon domanda__chevron" %}</summary>
+          <div class="domanda__corpo">
+            <p class="domanda__risposta integrita__risposta">{{ quote.answer|locked_spans:"keyword" }}</p>
+            {% if quote.href %}<p class="domanda__via"><a class="link-arrow" href="{{ quote.href }}" aria-describedby="{{ quote.key }}-domanda">{% translate "Questions fréquentes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+          </div>
+        </details>{% endif %}{% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

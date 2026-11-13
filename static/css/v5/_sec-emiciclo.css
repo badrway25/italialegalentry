@@ -1,0 +1,43 @@
+/* ============================================================================================
+   H · «L'EMICICLO» — the actor map's CSS-only variant (design V5.22, SECTION_SYSTEM_V2 §2 H; lane S), recomposed by V5.30
+   VARIETY §7 INSTITUTIONS, then by the FINAL MICRO-PASS (BRIEF §6 B4): the six glyph-only seat tiles left; the locked
+   sentence is ONE refined typographic annotation — its head («Destinataires :») a label on its own line in the accent,
+   the enumeration light at the band's step, each recipient in the primary ink and the joins (the commas, «et») in the
+   secondary: one element, its textContent the locked text (a visual split only). No module, no tab stop, no arc, no
+   tile. Page-only (Institutions). Markup: components/sezioni/mappa.html with layout="arc".
+   ============================================================================================ */
+
+.emiciclo {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.emiciclo__frase {
+  max-inline-size: 40rem;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-body);
+  color: var(--sez-ink-2, var(--text-2));
+  text-wrap: pretty;
+}
+
+.emiciclo__capo {
+  display: block;
+  margin-block-end: var(--s-4);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+}
+
+.emiciclo__voce {
+  color: var(--sez-ink-1, var(--text-1));
+}
+
+@media (min-width: 48rem) {
+  .emiciclo__frase {
+    font-size: var(--t-band);
+    line-height: var(--t-band-lh);
+  }
+}

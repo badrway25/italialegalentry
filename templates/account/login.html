@@ -1,0 +1,31 @@
+{% extends "account/login.html" %}{% load i18n %}
+{% comment %}
+THE SIGN-IN PAGE OF «IL VARCO» (design V5, V5.4 plan §1.13; W2-B). It EXTENDS allauth's own `account/login.html`
+(Django resolves the same name in the next template directory): the view, the form, the field names, the CSRF
+token, the redirect field and the passkey and sign-in-code blocks are `block.super` — allauth's, at the installed
+version, never a copy that could drift from it — and so are its words («Connexion», the invitation to register),
+which stay messages of allauth's catalogue; the invitation is withheld while the sign-up is closed (G2), by
+templates/allauth/elements/p.html (W4-D part 2, F-4). The page's hierarchy is drawn around it by
+templates/allauth/layouts/entrance.html (the eyebrow, the one title) and the allauth elements
+(templates/allauth/elements/): the fields «la lastra», the password's «forgotten password» link at the end of its
+label's row (templates/components/form_field.html; accounts.forms.LoginForm asks for it), one primary action.
+
+What this page adds is THE ASSURANCE under the action: the locked answer of the FAQ on data protection, verbatim,
+with its question as a label and the FAQ's own link after it — never inside it. It is Phase-3 content, quoted from
+the locked registry as the home quotes the FAQ: only once the FAQ itself is public (gate G3), and only where the
+registry holds it in the page's language. Elsewhere — French until a translation is published — the page keeps the
+link alone: a French paragraph under the action of an English or an Arabic page reads as a missing translation
+exactly where it is meant to build trust (the review's m3). V5.27 (R7′; lane AR): on /ar/ the answer is a substantive
+text in its hidden form off the FAQ page (``locked_is_hidden``) — the page keeps the link alone there too, never a
+pointer line under the action. No «remember me»: it is not a feature of the product
+(ACCOUNT_SESSION_REMEMBER = False).
+{% endcomment %}
+{% block content %}{{ block.super }}
+{% if gates.phase3_public %}{% locked "p3.faq.items" as faq_items %}{% locked_is_fallback "p3.faq.items" as faq_fallback %}{% safe_url 'legal:privacy' as privacy_url %}{% for entry in faq_items %}{% if entry.key == "faq_data_protection" %}{% with index=forloop.counter0|stringformat:"d" %}{% with answer_key="p3.faq.items["|add:index|add:"].answer" %}{% locked_is_hidden answer_key as answer_hidden %}{% if privacy_url or not faq_fallback and not answer_hidden %}
+<div class="varco__assurance" data-faq="{{ entry.key }}">
+  {% if not faq_fallback and not answer_hidden %}<h2 class="varco__assurance-q">{{ entry.question }}</h2>
+  <p class="varco__assurance-a">{{ entry.answer }}</p>
+  {% endif %}{% if privacy_url %}<p class="varco__assurance-more"><a href="{{ privacy_url }}">{% blocktranslate with policy='<span lang="en" dir="ltr">Privacy Policy</span>'|safe trimmed %}Lire la {{ policy }}{% endblocktranslate %}</a></p>{% endif %}
+</div>
+{% endif %}{% endwith %}{% endwith %}{% endif %}{% endfor %}{% endif %}
+{% endblock content %}

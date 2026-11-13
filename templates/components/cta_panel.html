@@ -1,0 +1,16 @@
+{% comment %}
+Contract: `title`, `text` (optional), `primary_label`, `primary_url`, optional `secondary_label`,
+`secondary_url`, `lang`, `variant` ("inverse" for the deep-blue band).
+{% endcomment %}
+<section class="cta-panel{% if variant == 'inverse' %} cta-panel--inverse on-inverse{% endif %}" aria-labelledby="cta-{{ title|slugify }}">
+  <div class="container cta-panel__inner">
+    <div>
+      <h2 id="cta-{{ title|slugify }}" class="cta-panel__title"{% if lang %} lang="{{ lang }}"{% endif %}>{{ title }}</h2>
+      {% if text %}<p class="cta-panel__text"{% if lang %} lang="{{ lang }}"{% endif %}>{{ text }}</p>{% endif %}
+    </div>
+    <div class="cta-panel__actions">
+      {% if primary_url %}<a class="btn btn--primary btn--arrow{% if variant == 'inverse' %} btn--inverse{% endif %}" href="{{ primary_url }}"{% if lang %} lang="{{ lang }}"{% endif %}>{{ primary_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+      {% if secondary_url %}<a class="btn btn--secondary{% if variant == 'inverse' %} btn--inverse{% endif %}" href="{{ secondary_url }}"{% if lang %} lang="{{ lang }}"{% endif %}>{{ secondary_label }}</a>{% endif %}
+    </div>
+  </div>
+</section>

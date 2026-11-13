@@ -1,0 +1,93 @@
+{% load i18n %}{% comment %}
+The four ecosystem entrances — the most important object on the site, because they are the four
+doors of the ecosystem. Exactly four, never a fifth equivalent, and never fewer: when a gate is
+closed the destination changes, not the presence.
+
+A REGISTER (art direction A §7.4), not four cards: one frame, four rows (four bays from 48rem). Each
+row is one link — the prescribed title as its name, the sentence, and the call with its arrow beside
+the words, the block's one forward mark. Design V5.4 (W2-D step 3; DESIGN_SYSTEM_V5 PX02): the four
+are never ranked, so the ordinal 01–04 and the four landform glyphs of design V2 are retired; the
+rules are the home's (apps/pages/static/pages/css/pages.css), on the V5 tokens.
+
+Contract: optional `entrances` = list of 4 dicts {title, text, button, url, lang, actor}. When omitted
+the four prescribed blocks are rendered from the locked registry (p3.entrances.*), which the caller may
+only do when gate G3 is open. `heading_level` = "h2" (default) or "h3". Links resolve through
+safe_url, so an entrance whose destination does not exist yet is shown without a link rather than
+hidden. The list carries no name of its own: the section that includes it is labelled by its title.
+
+V5.22 (SECTION_SYSTEM_V2 §3.1 S1, §2 J «il passaggio»; lane H) — `rail=True` with `entrances` (each dict also carries
+`glyph`, the registry's audience glyph): the four DOORS on a phone, a native snap rail of four equal plates (78 % of the
+column, the next one peeking), the rail scrolling inside itself — static/css/v5/_sec-passaggio.css, the plates'
+interior pages.css. Each plate is one link: an arched seat on the night with its audience disc (T2a, the audience's
+accent ring), the prescribed question, the sentence and the call, every word visible at rest, as written. The arch's
+outline draws once as the rail enters (stroke, 60 ms apart). No arrows, no dots, no autoplay, no loop; Tab moves from
+plate to plate. Unranked (PX02): no numeral, no lead plate. Round 1 (QA_ROUND1 m6): the seat is a lunette — its arch
+rises the seat's whole height, so it reads as a doorway, never as a header band — and the call follows its sentence (the
+plates' common height gathers under the call, not above it).
+Final fix round (found with QA_ROUND3 m1's cause, pages/home/_ecosystem_frame.html): a stretched non-scaling stroke's dash
+is laid in device pixels, so on a 2× or 3× phone the lunette painted its far half first and drew as dashes. Its arch is
+drawn through its own mask instead — the same path, 12 user units wide, carrying the verb «stroke» in the drawing's user
+space (pathLength 0.99) —, so it grows as one line from its foot on every screen; each mask's id is its door's rank.
+FINAL MICRO-PASS, the review's defect 1 (10 Nov 2026): the arched seat — the lunette, its mask and the audience's disc —
+left the plates. On a phone they were the page's arches right after the hero's door, the page's one signature. Each
+plate is the prescribed question, its sentence and its call on the plate's raised ground, its air all round (pages.css).
+{% endcomment %}
+{% if rail and entrances %}<div class="passaggio-rail">
+<ol class="passaggio sez-seq" role="list">
+  {% for e in entrances %}
+  <li class="passaggio__lastra" data-route="{{ e.actor }}" data-audience="{{ e.actor }}">
+    {% if e.url %}<a class="passaggio__porta" href="{{ e.url }}"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{% else %}<div class="passaggio__porta"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{% endif %}
+      {% if heading_level == 'h3' %}<h3 class="passaggio__titolo">{{ e.title }}</h3>{% else %}<h2 class="passaggio__titolo">{{ e.title }}</h2>{% endif %}
+      <span class="passaggio__testo">{{ e.text }}</span>
+      {% if e.url %}<span class="passaggio__cta">{{ e.button }}{% svg_icon "arrow" "icon passaggio__freccia icon--flip-rtl" %}</span>{% endif %}
+    {% if e.url %}</a>{% else %}</div>{% endif %}
+  </li>
+  {% endfor %}
+</ol>
+</div>{% else %}
+{% if not entrances %}
+  {% safe_url 'pathways:index' as u_person %}{% safe_url 'ecosystem:companies' as u_company %}{% safe_url 'ecosystem:institutions' as u_institution %}{% safe_url 'ecosystem:universities' as u_university %}
+  {% locked_lang "p3.entrances.person.title" as locked_lang_code %}
+{% endif %}
+<ol class="register register--entrances">
+{% if entrances %}
+  {% for e in entrances %}
+  <li class="register__item" data-route="{{ e.actor }}">
+    {% if e.url %}<a class="entry" href="{{ e.url }}">{% else %}<div class="entry">{% endif %}
+      {% if heading_level == 'h3' %}<h3 class="entry__title"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.title }}</h3>{% else %}<h2 class="entry__title"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.title }}</h2>{% endif %}
+      <span class="entry__gloss"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.text }}</span>
+      {% if e.url %}<span class="entry__cta"{% if e.lang %} lang="{{ e.lang }}"{% endif %}>{{ e.button }}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</span>{% endif %}
+    {% if e.url %}</a>{% else %}</div>{% endif %}
+  </li>
+  {% endfor %}
+{% else %}
+  <li class="register__item" data-route="person">
+    {% if u_person %}<a class="entry" href="{{ u_person }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.person.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.person.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.person.text" "span" "entry__gloss" %}
+      {% if u_person %}<span class="entry__cta">{% locked "p3.entrances.person.button" %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</span>{% endif %}
+    {% if u_person %}</a>{% else %}</div>{% endif %}
+  </li>
+  <li class="register__item" data-route="company">
+    {% if u_company %}<a class="entry" href="{{ u_company }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.company.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.company.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.company.text" "span" "entry__gloss" %}
+      {% if u_company %}<span class="entry__cta">{% locked "p3.entrances.company.button" %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</span>{% endif %}
+    {% if u_company %}</a>{% else %}</div>{% endif %}
+  </li>
+  <li class="register__item" data-route="institution">
+    {% if u_institution %}<a class="entry" href="{{ u_institution }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.institution.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.institution.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.institution.text" "span" "entry__gloss" %}
+      {% if u_institution %}<span class="entry__cta">{% locked "p3.entrances.institution.button" %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</span>{% endif %}
+    {% if u_institution %}</a>{% else %}</div>{% endif %}
+  </li>
+  <li class="register__item" data-route="university">
+    {% if u_university %}<a class="entry" href="{{ u_university }}"{% if locked_lang_code != site.lang %} lang="{{ locked_lang_code }}"{% endif %}>{% else %}<div class="entry">{% endif %}
+      {% if heading_level == 'h3' %}{% locked "p3.entrances.university.title" "h3" "entry__title" %}{% else %}{% locked "p3.entrances.university.title" "h2" "entry__title" %}{% endif %}
+      {% locked "p3.entrances.university.text" "span" "entry__gloss" %}
+      {% if u_university %}<span class="entry__cta">{% locked "p3.entrances.university.button" %}{% svg_icon "arrow" "icon entry__arrow icon--flip-rtl" %}</span>{% endif %}
+    {% if u_university %}</a>{% else %}</div>{% endif %}
+  </li>
+{% endif %}
+</ol>{% endif %}

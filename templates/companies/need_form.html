@@ -1,0 +1,54 @@
+{% extends "companies/base_companies.html" %}{% load i18n static ile_forms %}
+{% comment %}
+Creating or editing a need — design V5 (W3-E step 2): the page's head (its title, the sentence on what a need
+describes), W1-C's form (v5/field.css: one group a fieldset with its legend, the actions after their hairline), the
+registers' clause.
+
+The form is grouped the way a company thinks about a post — where, what, how many, which skills,
+which language, which safety, when — and each group is a fieldset with its own legend, so the
+sequence is readable by ear as well as by eye.
+V5.15 W3 (lane B; DECISIONS §5.12): the groups are the form's four STEPS and a review (CompanyNeedForm.steps;
+components/form_steps.html; static/js/src/steps.js) — one at a time with the rail beside them, every field still in
+the page, so without script the four fieldsets follow each other as before.
+
+There is no age field, and there will not be one. The free-text criteria are validated against an
+age criterion as well: the previous platform structured an age band on every opening, which is
+direct age discrimination (Directive 2000/78/EC, D.lgs. 216/2003).
+{% endcomment %}
+{% block page_title %}{% if is_creation %}{% translate "Nouveau besoin" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Décrire un besoin en compétences : territoire, métier, tâches, compétences, langue, sécurité, calendrier." %}{% endblock %}
+
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="company">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% if is_creation %}{% translate "Exprimer un besoin en compétences" %}{% else %}{% translate "Modifier le besoin" %}{% endif %}</h1>
+    <p class="ws-head__lead">{% translate "Décrivez le poste. Ne décrivez jamais la personne attendue : aucun critère d’âge, d’origine, de situation familiale ou de santé n’a sa place ici, et la plateforme les refuse." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block companies_content %}
+<div class="reg-page db-main">{% form_steps form as steps %}
+  <div class="formwork formwork--steps formwork--console">
+  {% form_assets %}<div class="formwork__grid">
+  <form method="post" class="form formwork__panel" novalidate data-steps{% if form.steps_review %} data-steps-review-on{% endif %}{% include "components/_steps_msgs.html" %}>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=form %}
+    {% include "components/form_steps.html" with steps=steps review=form.steps_review %}
+    {# the actions (round 1): «Annuler» (outlined, DECISIONS §5.14) then the one primary at the far end — in the order they are reached; on the last step the script puts «Précédent» at the reading edge #}
+    <div class="form__actions">
+      <a class="btn btn--secondary btn--lg form__cancel" href="{% if is_creation %}{% url 'companies:needs' %}{% else %}{% url 'companies:need_detail' need.reference %}{% endif %}">{% translate "Annuler" %}</a>
+      <button type="submit" class="btn btn--primary btn--lg">
+        {% if is_creation %}{% translate "Créer le besoin" %}{% else %}{% translate "Enregistrer" %}{% endif %}
+      </button>
+    </div>
+  </form>
+  {% include "components/formwork_side.html" with steps=steps no_after=True %}</div>
+  </div>
+</div>
+
+<p class="reg-note">{% translate "Un besoin créé reste un brouillon. Il n’est transmis au projet que lorsque vous le décidez, et seulement si l’entreprise a été vérifiée." %}</p>
+{% endblock %}

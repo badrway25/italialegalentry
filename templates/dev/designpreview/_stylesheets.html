@@ -1,0 +1,11 @@
+{% load static %}{% comment %}
+V5 live preview — the stylesheets of a standalone preview document: the pickers (frame.html), the
+compare view (compare.html), the landing and the index. DEVELOPMENT ONLY.
+
+These documents hold frames, and base.css hides every iframe, by policy (`iframe { display: none
+!important }`): so they load the site's font and token layers, never the bundled cascade, then the
+dev sheet. The layers are read from static/css/main.css's own import list
+(designpreview.services.token_stylesheets), so the documents follow the foundation when it replaces
+its fonts and tokens, without an edit here.
+{% endcomment %}{% for sheet in stylesheets %}<link rel="stylesheet" href="{% static sheet %}">
+{% endfor %}<link rel="stylesheet" href="{% static 'css/dev/designpreview.css' %}">

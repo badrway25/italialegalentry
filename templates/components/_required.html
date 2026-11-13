@@ -1,0 +1,4 @@
+{% load i18n %}{% comment %}
+«obligatoire» after a required field's label, ONLY in a step whose required fields are the minority (V5.15 W3 round 1;
+DECISIONS §5.3: the minority is marked — there, the required ones). The French fallback says its language.
+{% endcomment %}{% get_current_language as page_lang %}{% translate "obligatoire" as word %}<span class="form-field__optional form-field__required"{% if word == "obligatoire" and page_lang|slice:":2" != "fr" %} lang="fr"{% endif %}>{{ word }}</span>

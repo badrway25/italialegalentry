@@ -1,0 +1,19 @@
+{% comment %}
+Tabs — WAI-ARIA tabs with JS (automatic activation, roving tabindex, one indicator: static/css/v5/tabs.css,
+initTabs in static/js/main.js); stacked, titled sections without JS.
+Contract: `tabs` = list of dicts {id, label, body (safe html)}; `label` (the tab list's name, A11Y A7); optional `id` (widget id). The first tab is
+the selected one; a link to a panel's `id` selects it. The choice is not remembered from one visit to the next.
+{% endcomment %}
+<div class="tabs" data-tabs id="{{ id|default:'tabs' }}">
+  <div class="tabs__list" role="tablist"{% if label %} aria-label="{{ label }}"{% endif %}>
+    {% for tab in tabs %}
+    <button class="tabs__tab" type="button" role="tab" id="{{ id|default:'tabs' }}-tab-{{ tab.id }}" aria-controls="{{ tab.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">{{ tab.label }}</button>
+    {% endfor %}
+  </div>
+  {% for tab in tabs %}
+  <section class="tabs__panel" role="tabpanel" id="{{ tab.id }}" aria-labelledby="{{ id|default:'tabs' }}-tab-{{ tab.id }}" tabindex="0"{% if not forloop.first %} hidden{% endif %}>
+    <h3 class="tabs__panel-title">{{ tab.label }}</h3>
+    {{ tab.body }}
+  </section>
+  {% endfor %}
+</div>

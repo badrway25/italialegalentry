@@ -1,0 +1,32 @@
+{% load i18n %}{% comment %}
+THE LIST'S FILTERS — the body and the foot of the drawer the bar's «Filtres» opens (V5.30, stream C; the platform's list
+toolkit, docs/design-v5/QA/v530/plat/NOTES.md §1): the overlay system's drawer component (a modal from the inline end —
+it mirrors in Arabic —, the scrim, the trap, Esc, «Fermer», the focus back on «Filtres»; a full-width sheet on a phone;
+reduced motion: no slide), drawn by components/listing/drawer.html with this file as its `body_template` and
+`actions_template`; the page links the panels' page-only sheet (overlay-panels.css) and portal/listing.css.
+
+  the body   ONE GET form: per filter a fieldset of radios — «Tous» then only the choices the rows hold (the one in force
+             always) —, then the period («Du», «Au», native date fields); the bar's search and sort ride along hidden
+  the foot   «Tout effacer» (a quiet link at the inline start: the list as it opens) and «Afficher les résultats» at the
+             inline end, which submits the body's form (`form`) — a secondary: the console keeps ONE primary a screen, the
+             page's own act (test_documents_w3_c), and a filter is a utility, not the page's act
+Contract: `listing` (ListSpec.context), `overlay_part` ("body" / "actions").
+{% endcomment %}{% if overlay_part == "body" %}<form class="lst-form" id="{{ listing.id }}-form" method="get" action="{{ listing.path }}" data-listing-form>
+  {% for key, value in listing.kept %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+  {% for key, value in listing.drawer_hidden %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+  {% for field in listing.fields %}<fieldset class="lst-form__set">
+    <legend class="lst-form__legend">{{ field.label }}</legend>
+    <div class="lst-form__options">
+      <label class="lst-opt"><input type="radio" name="{{ field.key }}" value=""{% if not field.value %} checked{% endif %}><span>{% translate "Tous" %}</span></label>
+      {% for option in field.options %}<label class="lst-opt"><input type="radio" name="{{ field.key }}" value="{{ option.value }}"{% if option.checked %} checked{% endif %}><span>{{ option.label }}</span></label>{% endfor %}
+    </div>
+  </fieldset>{% endfor %}
+  {% if listing.dates %}<fieldset class="lst-form__set">
+    <legend class="lst-form__legend">{{ listing.dates.label }}</legend>
+    <div class="lst-form__dates">
+      <p class="lst-form__date"><label for="{{ listing.id }}-start">{% translate "Du" %}</label><input class="input" type="date" id="{{ listing.id }}-start" name="{{ listing.dates.start_key }}" value="{{ listing.dates.start }}"></p>
+      <p class="lst-form__date"><label for="{{ listing.id }}-end">{% translate "Au" %}</label><input class="input" type="date" id="{{ listing.id }}-end" name="{{ listing.dates.end_key }}" value="{{ listing.dates.end }}"></p>
+    </div>
+  </fieldset>{% endif %}
+</form>{% else %}<a class="lst-form__clear" href="{{ listing.clear_url }}">{% translate "Tout effacer" %}</a>
+<button class="btn btn--secondary" type="submit" form="{{ listing.id }}-form">{% translate "Afficher les résultats" %}</button>{% endif %}

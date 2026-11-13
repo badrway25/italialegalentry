@@ -1,0 +1,25 @@
+{% load i18n %}{% comment %}
+The questionnaire's first page: the ONE action, the action card of v5/card.css, in the entrance's end seat from 64rem
+and right after the lead and its notice on a phone (pages/partials/_ingresso.html, `aside_template` — W3-F1's review
+M4: «Commencer» stood under the first screen at every width). What it is and why, «Commencer», the way back in with
+a resume code. Without a ruleset: the pending notice and the live «who can help me» line. Context (passed by the
+page): `available`, `csrf_token`, `site`.
+{% endcomment %}
+{% if available %}
+<div class="card card--action action wizard-intro__action" data-action="orientation-start">
+  <h2 class="card__title" id="start-title">{% translate "Questionnaire d’orientation" %}</h2>
+  <p class="card__text">{% translate "Vos réponses servent uniquement à une pré-évaluation à caractère informatif." %}</p>
+  <form method="post" action="{% url 'orientation:start' %}" class="wizard-intro__start card__action">
+    {% csrf_token %}
+    <button type="submit" class="btn btn--primary btn--lg btn--arrow">{% translate "Commencer" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</button>
+  </form>
+  <p class="wizard-intro__resume-link"><a href="{% url 'orientation:resume' %}">{% translate "Vous avez un code de reprise ? Reprendre une pré-évaluation" %}</a></p>
+</div>
+{% else %}
+<div class="wizard-intro__unavailable">
+  <h2 class="visually-hidden" id="start-title">{% translate "Questionnaire d’orientation" %}</h2>
+  {% translate "Le questionnaire d’orientation n’est pas disponible pour le moment. Vous pouvez consulter la présentation des parcours réguliers ou nous écrire." as unavailable_text %}
+  {% include "components/notice.html" with kind="pending" title=_("Questionnaire indisponible") text=unavailable_text %}
+  <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+</div>
+{% endif %}

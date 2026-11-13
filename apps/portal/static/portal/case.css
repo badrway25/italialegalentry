@@ -1,0 +1,19 @@
+/* ============================================================================================
+   THE CASE FILE — the page sheet of templates/cases/detail.html, design V5 (W3-E step 3; docs/design-v5/
+   V5_4_EXECUTION_PLAN.md §3.5 item 7, §2.3). Loaded in `extra_head` after the console's two sheets, the overlay
+   system's panels (where a dialog is drawn) and the registers' grammar (portal/registers.css: the rows' link, the
+   answerable party, the form of an act, the clause — the console's secondary pages' one grammar, fetched once), and
+   before the journey's sheet (portal/journey.css, last: W3-D). The owner's V5.8 (DL54-87, V5_8 «definitive ruling»):
+   a surface's own CSS loads where it is drawn — never in main.css, console.css or portal.css, which every console page
+   pays for —, and only what the case file draws beyond the grammars it composes.
+
+   This sheet is the page's IMPORT LIST and nothing else: the rules are a console partial (`_`-prefixed:
+   scripts/build_css.mjs bundles it into this entry and never builds it on its own, DL54-15). An import is written as
+   it resolves in the COLLECTED tree, from this sheet's collected path portal/case.css (DS 2026 §2;
+   tests/frontend/test_static_pipeline.py).
+
+     v5/_case.css   the page's two columns, the checklist's rows and their menu, the people, the dialogs' bodies,
+                    the phone's action bar
+   ========================================================================================== */
+
+@import url("v5/_case.css");

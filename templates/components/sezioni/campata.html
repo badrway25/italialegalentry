@@ -1,0 +1,24 @@
+{% load pages_imagery %}{% comment %}
+A · «LA CAMPATA» — the architectural split (design V5.22, SECTION_SYSTEM_V2 §2 A; lane S): one strong image and one
+identity or statement that belong together — never a list. static/css/v5/_sec-campata.css.
+
+The media on 7/12 (or 5/12) bleeding to the viewport's edge on its side, the text on the other columns, a 1 px connector
+from the image's edge into the text column; optionally the brand's arched frame on a sill, and a detail crop
+overlapping it. Signature MASK: the image opens from its outer edge (or its arch widens to the frame), 900 ms, settling
+from 1.06 to 1 over 1 080 ms; then the connector draws. The text never moves. A link on the image lifts the connector's
+light under a fine pointer. Still: the framed image in colour, the connector drawn.
+
+Contract: `media_slot` (an imagery slot: one body frame, 3:2, 4:3 or 4:5) or `media_template`; `side` ("start" | "end",
+the media's side; the text takes the other); `wide` (True: the media on 7/12, else 5/12); `frame` ("arch" | "plain");
+`detail_slot`; the head: `title_id`, `title`, `title_lang`, `lead`, `lead_lang`, `role` (see _testa.html), `label`;
+`body` (safe) or `body_template`; `action` ({"url", "label", "kind": "primary"|"secondary"}). The caller wraps it in its
+section (`<section class="sez sez--campata" data-sec="campata" …>` and a .container).
+{% endcomment %}<div class="campata campata--{{ side|default:'start' }}{% if wide %} campata--wide{% endif %}{% if frame == 'arch' %} campata--arch{% endif %}">
+  <div class="campata__media" data-verb="{% if frame == 'arch' %}arch{% else %}mask{% endif %}">{% if media_template %}{% include media_template %}{% elif media_slot %}{% photo media_slot "campata__foto" %}{% endif %}{% if detail_slot %}<div class="campata__dettaglio">{% photo detail_slot "campata__foto-dettaglio" %}</div>{% endif %}</div>
+  <div class="campata__testo">
+    <span class="campata__ponte" data-verb="draw" aria-hidden="true"></span>
+    {% if title %}{% include "components/sezioni/_testa.html" with role=role|default:"statement" %}{% endif %}
+    {% if body_template %}{% include body_template %}{% elif body %}<div class="campata__corpo">{{ body }}</div>{% endif %}
+    {% if action %}<p class="campata__azione"><a class="btn {% if action.kind == 'primary' %}btn--primary{% else %}btn--secondary{% endif %}" href="{{ action.url }}" data-azione>{{ action.label }}</a></p>{% endif %}
+  </div>
+</div>

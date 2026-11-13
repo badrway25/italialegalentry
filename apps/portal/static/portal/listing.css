@@ -1,0 +1,9 @@
+/* ============================================================================================
+   THE LIST TOOLKIT — the page sheet of the lists that draw it (V5.30, stream C; docs/design-v5/QA/v530/plat/NOTES.md
+   §1): «Communications» (templates/portal/messages.html), the account's files on «Mes documents»
+   (templates/portal/documents.html), «Mes dossiers» (templates/cases/index.html) — linked in `extra_head` after the
+   console's sheets, only while the bar is drawn (`listing.show`). Its IMPORT LIST and nothing else: the rules are the
+   console partial v5/_listing.css (DL54-15); written as it resolves in the COLLECTED tree (DS 2026 §2).
+   ========================================================================================== */
+
+@import url("v5/_listing.css");

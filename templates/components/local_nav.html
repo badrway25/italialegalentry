@@ -1,0 +1,20 @@
+{% comment %}
+Local / side navigation. Contract: `items` = list of dicts {label, url, current (bool), lang (optional),
+children (optional list of the same shape)}; optional `title`, `label` (aria-label).
+Desktop: sticky column (wrap it in .layout-sidebar__aside); mobile: pill list.
+{% endcomment %}
+<nav class="local-nav" aria-label="{{ label|default:title }}">
+  {% if title %}<p class="local-nav__title">{{ title }}</p>{% endif %}
+  <ul class="local-nav__list">
+    {% for item in items %}
+    <li>
+      <a class="local-nav__link" href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{% firstof item.lang item.label.fallback_lang as item_lang %}{% if item_lang %}<span lang="{{ item_lang }}">{{ item.label }}</span>{% else %}{{ item.label }}{% endif %}</a>
+      {% if item.children %}
+      <ul class="local-nav__list">
+        {% for child in item.children %}<li><a class="local-nav__link" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{% firstof child.lang child.label.fallback_lang as child_lang %}{% if child_lang %}<span lang="{{ child_lang }}">{{ child.label }}</span>{% else %}{{ child.label }}{% endif %}</a></li>{% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</nav>

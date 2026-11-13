@@ -1,0 +1,9 @@
+{
+ "label": "interim",
+ "base": "http://127.0.0.1:8770",
+ "pages_checked": 804,
+ "links_checked": 128,
+ "pages_with_issues": 0,
+ "broken_links": {},
+ "problems": []
+}

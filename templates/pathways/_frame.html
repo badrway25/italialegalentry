@@ -1,0 +1,6 @@
+{% load i18n %}{% comment %}
+A pathway's photograph (V5.32, lane B): the registry's art-directed rendering (pages.imagery.Picture — AVIF then WebP,
+explicit width and height) drawn in colour, without the shared reveal or grade (the explorer and the sheet move it
+themselves). `p` the Picture, `cls` the figure's class, `eager` True for the sheet's head (its LCP),
+`decorative` True where the words beside it already name it (a row's thumbnail).
+{% endcomment %}<picture class="{{ cls }}">{% for s in p.sources %}<source type="{{ s.type }}"{% if s.media %} media="{{ s.media }}"{% endif %} srcset="{{ s.srcset }}" sizes="{{ p.slot.sizes }}" width="{{ s.width }}" height="{{ s.height }}">{% endfor %}<img src="{{ p.src }}" srcset="{{ p.srcset }}" sizes="{{ p.slot.sizes }}" width="{{ p.width }}" height="{{ p.height }}" {% if decorative %}alt=""{% else %}alt="{{ p.alt }}"{% if p.alt_lang %} lang="{{ p.alt_lang }}"{% endif %}{% endif %}{% if eager %} fetchpriority="high" decoding="async"{% else %} loading="lazy" decoding="async"{% endif %}></picture>

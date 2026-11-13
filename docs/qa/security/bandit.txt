@@ -1,0 +1,40 @@
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts\fetch_fonts.py:71:13
+70	        cmd += ["-o", str(out)]
+71	    result = subprocess.run(cmd, check=True, capture_output=True)  # noqa: S603 - fixed binary, controlled args
+72	    return result.stdout
+
+--------------------------------------------------
+>> Issue: [B310:blacklist] Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+   Severity: Medium   Confidence: High
+   CWE: CWE-22 (https://cwe.mitre.org/data/definitions/22.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen
+   Location: scripts\fetch_images.py:367:13
+366	    try:
+367	        with urllib.request.urlopen(request, timeout=60) as response:  # noqa: S310 - https enforced above
+368	            data = response.read()
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 20262
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 7
+		Medium: 19
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 6
+		High: 20
+Files skipped (0):

@@ -1,0 +1,240 @@
+/* ============================================================================================
+   ATTENTION AUX FRAUDES — «l'avvertenza» (V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION, lane D, 12 Nov 2026): a
+   partial of pages/css/frodi.css, the page's route sheet. Markup: templates/pages/antifraud.html.
+   After 21st.dev «Destructive Alert with Action List» (id 29338) and «Warning Alert» (id 23619), quietened: amber, never
+   red; one mark per block; the hierarchy carries the warning, not colour.
+     1 · the head       folio · the prescribed title (its own capitals, at a section's size: no shouting) · the statement
+                        · beside it from 64 rem (under it below) the warning signs, the home band's list (P1-2)
+     2 · the sentences  the statement's own sentences given their hierarchy (the warning signs' on the amber rule)
+     3 · what to do     on stone: the report plate beside the ways to read (a disclosure, then two route rows)
+   The V5.22 compositions (the head's inset beside the title, the drawn sill, the stroked shield, the route tiles) left.
+   ============================================================================================ */
+
+/* ---- 1 · the head ---- */
+.avvertenza-testa { padding-block: var(--s-10) var(--s-12); }
+
+.avvertenza-testa__label { margin: 0 0 var(--s-3); color: var(--accent-text); }
+
+/* the prescribed title is written in capitals: set at the section's size with a little air, never at the display's */
+.avvertenza-testa__titolo {
+  margin: 0;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  font-weight: var(--w-strong);
+  color: var(--text-1);
+}
+
+.avvertenza-testa__titolo:not(:lang(ar)) { letter-spacing: 0.02em; }
+
+/* the base warning notice (its wash, its broken rule, its corners) at the head's measure; a phone: the mark beside the
+   panel's title only, the text across the whole panel (the body's box dissolves) */
+.avvertenza {
+  gap: var(--s-2) var(--s-3);
+  align-items: center;
+  max-inline-size: 52rem;
+  margin-block: var(--s-8) 0;
+  padding: var(--s-5) var(--s-4);
+}
+
+/* the mark is the notice's icon (its rule's ink, icon--lg: 24 px), placed by this panel's grid: beside the title on a
+   phone, the text's own column from 40 rem */
+.avvertenza__segno { grid-row: auto; align-self: auto; margin: 0; }
+
+.avvertenza__corpo { display: contents; }
+.avvertenza__corpo > * { grid-column: 1 / -1; margin: 0; }
+.avvertenza__corpo > .avvertenza__titolo { grid-column: 2; }
+
+@media (min-width: 40rem) {
+  .avvertenza { gap: var(--s-4); align-items: start; padding: var(--s-6); }
+  .avvertenza__corpo { display: block; }
+}
+
+/* the notice's title (its word's ink) a step stronger: the panel's name, not its message */
+.avvertenza__titolo {
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-strong);
+}
+
+.avvertenza__testo {
+  margin-block-start: var(--s-2);
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+/* the warning signs (V5.32 integration review P1-2): the home band's list (pages/home/_antifraud.html: its five
+   catalogue labels and their symbols), drawn as there — a pill each, the mark in the warning's ink, the wash and a
+   hairline of its amber — on paper; beside the notice from 64 rem (the head's 3 : 2, the home band's), its label on
+   the notice title's line; under it below. Nothing moves */
+.avvertenza-segnali { display: grid; gap: var(--s-3); margin-block-start: var(--s-6); }
+
+.avvertenza-segnali__etichetta { margin: 0; color: var(--tone-attesa-text); }
+
+.avvertenza-segnali__chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+
+.avvertenza-segnali__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--radius-full);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  background-color: var(--tone-attesa-bg);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone-attesa-mark) 32%, transparent);
+}
+
+.avvertenza-segnali__chips .icon { flex: none; inline-size: 1rem; block-size: 1rem; color: var(--tone-attesa-mark); }
+
+@media (min-width: 64rem) {
+  .avvertenza-testa {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    column-gap: var(--s-12);
+    align-items: start;
+  }
+
+  .avvertenza-testa > :not(.avvertenza, .avvertenza-segnali) { grid-column: 1 / -1; }
+  .avvertenza-segnali { margin-block-start: var(--s-8); padding-block-start: var(--s-6); }
+}
+
+/* ---- 2 · the statement's own sentences (cut at render: .ls-1 … .ls-4, the words unchanged): the first leads, the
+   warning signs' sentence stands on its own amber rule, the last closes on the protection ---- */
+.avvertenza__testo .ls { display: block; }
+.avvertenza__testo .ls + .ls { margin-block-start: var(--s-3); }
+
+.avvertenza__testo .ls-1 {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-strong);
+}
+
+.avvertenza__testo .ls-3 {
+  padding: var(--s-3) var(--s-4);
+  border-inline-start: 2px solid var(--tone-attesa-mark);
+  background-color: var(--surface-raised);
+  font-weight: var(--w-control);
+}
+
+.frodi__titolo {
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-strong);
+  color: var(--text-1);
+}
+
+/* ---- 3 · what to do ---- */
+.sez.frodi { padding-block: var(--s-12) var(--s-16); }
+
+
+.frodi__griglia {
+  display: grid;
+  gap: var(--s-8);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .frodi__griglia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--s-12); }
+}
+
+.frodi__sottotitolo {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-strong);
+  color: var(--text-1);
+}
+
+.frodi__segnala {
+  container-type: inline-size;
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+
+.frodi__frase {
+  margin: 0 0 var(--s-4);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+.frodi__azione { margin: 0; }
+
+.frodi__indirizzo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: 2.75rem;
+  font-size: var(--t-body); /* the step the plate holds on one line (by container query, no clamp) */
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@container (min-width: 18rem) {
+  .frodi__indirizzo { font-size: var(--t-entry); }
+}
+
+.frodi__indirizzo .email {
+  text-decoration: underline;
+  text-decoration-color: var(--line-structure);
+  text-underline-offset: 0.25em;
+}
+
+.frodi__disc {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-full);
+  color: var(--accent-text);
+}
+
+.frodi__indirizzo:is(:hover, :focus-visible, :active) .email { color: var(--accent-text); text-decoration-color: currentColor; }
+
+/* the ways to read: the prescribed question opens in place, then two route rows on hairlines */
+body:not(.console) .frodi__domanda .accordion__item {
+  margin-inline: 0;
+  padding-inline: 0;
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+}
+
+.frodi__domanda .accordion__summary { padding-inline: var(--s-5); font-weight: var(--w-control); }
+.frodi__domanda .accordion__panel { padding-inline: var(--s-5); color: var(--text-2); }
+.frodi__domanda-link a { display: inline-flex; align-items: center; gap: var(--s-1); color: var(--accent-text); }
+
+.frodi__rotte { margin-block-start: var(--s-4); border-block-start: 1px solid var(--line-rhythm); } /* ul[role=list]: base.css resets it */
+
+.frodi__rotta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-block-size: 3.5rem;
+  border-block-end: 1px solid var(--line-rhythm);
+  font-size: var(--t-body);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+/* rest · hover · pressed (a finger too: the row's words take the accent) · focus (the system's ring) */
+.frodi__rotta .icon { color: var(--icon-muted); transition: transform var(--motion-standard) var(--ease-enter); }
+.frodi__rotta:is(:hover, :active) { color: var(--accent-text); }
+.frodi__rotta:hover .icon { color: currentColor; transform: translateX(2px); }
+[dir="rtl"] .frodi__rotta:hover .icon { transform: scaleX(-1) translateX(2px); } /* the arrow stays mirrored */
+
+@media (prefers-reduced-motion: reduce) {
+  .frodi__rotta:hover .icon { transform: none; }
+  [dir="rtl"] .frodi__rotta:hover .icon { transform: scaleX(-1); }
+}

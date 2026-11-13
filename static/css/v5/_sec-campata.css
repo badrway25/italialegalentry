@@ -1,0 +1,154 @@
+/* ============================================================================================
+   A · «LA CAMPATA» — the architectural split (design V5.22, SECTION_SYSTEM_V2 §2 A; lane S). Page-only (after
+   v5/_sezioni.css). Markup: components/sezioni/campata.html; its variant «la boussole» is v5/_sec-boussole.css.
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Split Content Section» 28310 (a headline beside a media
+   frame that reveals), «Editorial Collage Hero» 19074 (two overlapping frames as layering), «SVG Clip Mask» 31436 (an
+   image seen through a shaped mask — here the brand's arch). Refused: stats and avatar rows, coloured twin panels, the
+   mask's morph loop.
+   Signature MASK: the image opens from its outer edge, or its arch widens; the frame settles; then the connector draws.
+   ============================================================================================ */
+
+.campata {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sez-gap);
+  align-items: center;
+}
+
+.campata__media {
+  position: relative;
+  container-type: inline-size;
+  min-inline-size: 0;
+}
+
+.campata__media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--radius-md);
+}
+
+.campata__testo {
+  position: relative;
+  display: grid;
+  gap: var(--s-5);
+  align-content: center;
+  max-inline-size: var(--measure-body);
+}
+
+.campata__testo > * {
+  margin: 0;
+}
+
+/* the connector: 1 px from the image's edge into the text column, at the head's rule */
+/* from 64 rem it spans the empty column between them: one column and two gaps */
+.campata__ponte {
+  --span: calc((100cqw - 11 * var(--sez-gap)) / 12 + 2 * var(--sez-gap));
+  position: absolute;
+  inset-block-start: 1px;
+  inset-inline-start: calc(-1 * var(--span));
+  inline-size: var(--span);
+  block-size: 1px;
+  background: var(--line-structure);
+}
+
+.campata--end .campata__ponte {
+  inset-inline: auto calc(-1 * var(--span));
+  transform-origin: 100% 0;
+}
+
+@media (max-width: 63.999rem) {
+  .campata__ponte { display: none; }
+}
+
+[dir="rtl"] .campata--end .campata__ponte {
+  transform-origin: 0 0;
+}
+
+.campata:has(.campata__media a:is(:hover, :focus-visible)) .campata__ponte {
+  background: var(--accent-mark);
+}
+
+/* the detail crop overlapping the frame by --s-8 */
+.campata__dettaglio {
+  position: absolute;
+  inset: auto calc(-1 * var(--s-8)) calc(-1 * var(--s-8)) auto;
+  inline-size: 34%;
+}
+
+/* the brand's arched frame on its sill — the arch is the icon integrated in the composition (§4.8 «Frame») */
+/* a full semicircle on a portrait frame; on a landscape one its rise is held to 40 % of the height, so the frame reads as
+   a doorway's arch, never a dome */
+.campata--arch .campata__media img {
+  border-radius: 50% 50% 0 0 / min(50cqi, 40%) min(50cqi, 40%) 0 0;
+}
+
+.campata--arch .campata__media picture {
+  position: relative;
+}
+
+.campata--arch .campata__media picture::after {
+  content: "";
+  position: absolute;
+  inset-inline: -12px;
+  inset-block-end: -1px;
+  block-size: 1px;
+  background: var(--line-structure);
+}
+
+/* the media's columns (--m) and the text's (--t): 6 / 5 to 80 rem, 7 / 4 when wide; the side swaps them */
+.campata { --m: 1 / span 6; --t: 8 / span 5; }
+.campata--end { --m: 7 / span 6; --t: 1 / span 5; }
+
+@media (min-width: 64rem) {
+  .campata { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .campata__media { grid-column: var(--m); grid-row: 1; }
+  .campata__testo { grid-column: var(--t); grid-row: 1; }
+
+  /* a plain frame bleeds to the viewport's edge on its side (an arch stands whole on its sill) */
+  .campata:not(.campata--arch) .campata__media { margin-inline: var(--bleed-s, 0) var(--bleed-e, 0); }
+  .campata--start { --bleed-s: calc((100cqw - 100vw) / 2); }
+  .campata--end { --bleed-e: calc((100cqw - 100vw) / 2); }
+}
+
+@media (min-width: 80rem) {
+  .campata--wide { --m: 1 / span 7; --t: 9 / span 4; }
+  .campata--wide.campata--end { --m: 6 / span 7; --t: 1 / span 4; }
+}
+
+/* a phone at 360: the arch flattens to a segmental arch, so the frame keeps its height */
+@media (max-width: 25rem) {
+  .campata--arch .campata__media img { border-radius: 50% 50% 0 0 / 24% 24% 0 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] [data-verb~="arch"] {
+    clip-path: inset(24% 20% 0 20% round 30cqi 30cqi 0 0);
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] [data-verb~="arch"] {
+    animation-name: sez-arch;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .campata__media img {
+    scale: var(--reveal-zoom);
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .campata__media img {
+    animation: sez-zoom 1080ms var(--ease-enter) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .campata__ponte {
+    --sez-d: 900ms;
+  }
+}
+
+/* the side of the frame the mask opens from is its outer edge */
+.campata--end [data-verb~="mask"] { --reveal-from: inset(0 0 0 100%); }
+[dir="rtl"] .campata--end [data-verb~="mask"] { --reveal-from: inset(0 100% 0 0); }
+
+@keyframes sez-arch {
+  to { clip-path: inset(0 round 50cqi 50cqi 0 0); }
+}
+

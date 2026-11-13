@@ -1,0 +1,199 @@
+/* ============================================================================================
+   «LA LINEA V2» — a real sequence that explains (V5.22, SECTION_SYSTEM_V2 §2 F; lane S), redrawn by the FINAL MICRO-PASS
+   (§2.2, §5 A1–A2; 9 Nov 2026) as the site's ONE QUIET SEQUENCE MARKER. A page-only partial after
+   v5/_journey-passage.css (the passage it extends — kept apart so the questionnaire's sheet does not carry it); the
+   family sheets of the V2 pages import both. Markup: components/stepper.html size="large".
+   Adapted from 21st.dev «How It Works Steps» 26891 (ln-dev7/how-it-works-09):
+   one 1 px connector, small figures, no icons, the words carry
+   the sequence, one call under it. Kept: the figures on one hairline, the restraint; changed: this system's tokens, the
+   figure «1» (never «01») at the small step (13 px, 14 on phones and in Arabic) in the act's weight and the quiet ink —
+   the first in the accent —, tabular; the words at body size and regular weight; logical properties (the line runs right
+   to left in Arabic); a phone's rail at the inline start; no box, no tile, no seal, no numeral at 28–36 px.
+   Across its column from 48 rem: at most four stations a row, each figure followed by the hairline that runs to the next
+   one (the row's last station ends the line). Below: the figure on the words' first line, the rail down from it to the
+   next. Motion: the hairline draws once along the reading direction as the section enters, 120 ms a station; at rest — in
+   view at load, from the keyboard, under reduced motion, in print — it stands drawn. Never a tracker (O14).
+   ============================================================================================ */
+
+.linea-v2 {
+  display: grid;
+  gap: var(--s-8);
+}
+
+.linea--large {
+  --lv-step: 120ms;
+  row-gap: 0;
+}
+
+/* the stations light in their order along the line — all eight, not the six of a stagger */
+.linea--large > * {
+  --sez-i: var(--reveal-i, 0);
+}
+
+.linea--large .linea__step {
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  column-gap: var(--s-4);
+  row-gap: var(--s-1);
+  align-items: start;
+  padding-block-end: var(--s-6);
+}
+
+/* the passage's own line and ring are the marker's here */
+.linea--large .linea__step::before {
+  content: none;
+}
+
+/* the marker: the figure, then the hairline to the next station (down the rail on a phone) */
+.linea--large .linea__num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: stretch;
+  margin-block-end: calc(-1 * var(--s-6));
+}
+
+.linea--large .linea__num::before {
+  content: counter(linea);
+  font-size: var(--t-small);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
+  color: var(--text-3);
+}
+
+.linea--large > :first-child .linea__num::before {
+  color: var(--accent-text);
+}
+
+.linea--large .linea__num::after {
+  content: "";
+  flex: 1 1 auto;
+  inline-size: 1px;
+  block-size: auto;
+  margin-block: var(--s-1);
+  border: 0;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--line-structure) 35%, var(--line-rhythm)); /* the rhythm's hairline, a third of the way to the structure's ink: it holds on the brand wash as on paper */
+  transform-origin: 50% 0;
+}
+
+.linea--large > .linea__step:last-child {
+  padding-block-end: 0;
+}
+
+.linea--large > :last-child .linea__num::after {
+  visibility: hidden;
+}
+
+.linea--large :is(.linea__label, .linea__text) {
+  grid-column: 2;
+  margin: 0;
+}
+
+.linea--large .linea__label {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-body);
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+
+/* locked capitals as written, one step down and lightly tracked, whole words */
+.linea--large .linea__label--caps {
+  font-size: var(--t-ui);
+  letter-spacing: 0.04em;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+/* the route's last word: the caveat, or the editorial note, as a secondary legal note — no plate, no stripe */
+.linea__terminale {
+  max-inline-size: var(--measure-lead);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-legal);
+}
+
+.linea__terminale > * {
+  margin: 0;
+}
+
+.linea__arrivo {
+  justify-self: start;
+  margin: 0;
+}
+
+.linea-v2--terminale .linea__arrivo {
+  margin-block-start: calc(-1 * var(--s-3));
+}
+
+@media (min-width: 48rem) {
+  .linea--large.linea--across {
+    grid-template-columns: repeat(var(--lv-n, 4), minmax(0, 1fr));
+    column-gap: var(--s-6);
+    row-gap: var(--s-10);
+  }
+
+  .linea--large.linea--across:has(> :nth-child(3):last-child) { --lv-n: 3; }
+  .linea--large.linea--across:has(> :nth-child(2):last-child) { --lv-n: 2; }
+
+  .linea--large.linea--across .linea__step {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-4);
+    padding-block-end: 0;
+  }
+
+  /* the figure on the line, the line to the next figure through the columns' gap (a figure's own air before it) */
+  .linea--large.linea--across .linea__num {
+    flex-direction: row;
+    column-gap: var(--s-3);
+    grid-row: auto;
+    margin-block-end: 0;
+    margin-inline-end: calc(var(--s-3) - var(--s-6));
+  }
+
+  .linea--large.linea--across .linea__num::before {
+    line-height: var(--t-small-lh);
+  }
+
+  .linea--large.linea--across .linea__num::after {
+    inline-size: auto;
+    block-size: 1px;
+    margin-block: 0;
+    transform-origin: 0 50%;
+  }
+
+  [dir="rtl"] .linea--large.linea--across .linea__num::after {
+    transform-origin: 100% 50%;
+  }
+
+  /* a row's last station ends its line: the line joins the stations, it never runs on */
+  .linea--large.linea--across > :nth-child(4n) .linea__num::after {
+    visibility: hidden;
+  }
+
+  .linea--large.linea--across :is(.linea__label, .linea__text) {
+    grid-column: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea--large .linea__num::after { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea--large .linea__num::after {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) calc(var(--sez-i) * var(--lv-step)) backwards;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .linea--large.linea--across .linea__num::after { scale: 0 1; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .linea--large.linea--across .linea__num::after { animation-name: sez-draw; }
+}
+
+/* forced colours: the hairline in the system's text */
+@media (forced-colors: active) {
+  .linea--large .linea__num::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}

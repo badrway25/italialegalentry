@@ -1,0 +1,20 @@
+{% load pages_imagery %}{% comment %}
+D · «IL PANORAMA» — the immersive image panel (design V5.22, SECTION_SYSTEM_V2 §2 D; lane S): one photograph that
+carries the section's meaning, or the page's full-bleed break. `.panorama` in static/css/v5/_photo.css (the layout);
+its motion in static/css/v5/_reveal.css («D · il panorama»: a photograph's motion has one home).
+
+The frame starts at the container's width with the card's corner and widens to full bleed, corner 0, as it enters
+(scroll-linked, it reverses with the scroll); the image drifts against its frame (M22, from 48 rem). Optionally a
+statement on a solid plate (never glass) at the reading edge; the credit in a corner. ≥ 64 rem 21:9 (60–82 vh), 48–64 rem
+16:9, below a 4:5 frame with no drift and the plate under the image, overlapping it by 40 px. The variant «develop in
+sequence» (`pair`): two frames that develop from black and white to colour on offset ranges while a seam line draws
+between them. Photographs never mirror. Still: full bleed, colour, no drift.
+
+Contract: `slot` (an imagery slot of role «band»: 21:9 + 4:5, lazy), `pair` (a second slot: the diptych), `plate` —
+{"title", "title_id", "title_lang", "text" (safe), "text_lang", "link": {"url", "label"}} (the statement; real text on
+an AA plate), `label` (the figure's accessible name when the plate does not say it).
+{% endcomment %}<div class="panorama{% if pair %} panorama--coppia{% endif %}{% if plate %} panorama--lastra{% endif %}">
+  <div class="panorama__quadro"{% if not pair %} data-parallax{% endif %}>{% photo slot "panorama__foto" %}</div>
+  {% if pair %}<span class="panorama__cucitura" data-verb="draw-y" aria-hidden="true"></span><div class="panorama__quadro">{% photo pair "panorama__foto" %}</div>{% endif %}
+  {% if plate %}<div class="panorama__lastra">{% if plate.title %}<h2 class="panorama__titolo"{% if plate.title_id %} id="{{ plate.title_id }}"{% endif %}{% if plate.title_lang %} lang="{{ plate.title_lang }}"{% endif %}>{{ plate.title }}</h2>{% endif %}{% if plate.text %}<p class="panorama__testo"{% if plate.text_lang %} lang="{{ plate.text_lang }}"{% endif %}>{{ plate.text }}</p>{% endif %}{% if plate.link %}<p class="panorama__azione"><a class="link-arrow" href="{{ plate.link.url }}">{{ plate.link.label }}{% svg_icon "arrow" "icon icon--sm" %}</a></p>{% endif %}</div>{% endif %}
+</div>

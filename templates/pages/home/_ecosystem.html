@@ -1,0 +1,33 @@
+{% load i18n pages_typo %}{% comment %}
+11. INSTITUTIONAL ECOSYSTEM — the promoter (AGAMI) and the AUTHORISED partners only
+(partners.services.authorized_partners(): live status AND written authorisation, gate G6).
+No logo is shown unless partner.logo_public; no institutional person is named; nothing suggests
+a public authority. When gate G3 is open the promoter is presented with the prescribed FAQ
+answer (faq_who); otherwise with a connective sentence stating only who promotes the project.
+CONTENT_PENDING_LEGAL_REVIEW — registered office, RUNTS number and tax code belong to the official
+« Mentions légales » (Allegato 1, not received): they are not published here.
+V5.12 §8 (W1-C): the partners stand only with an authorised partner (core.gates.partners_public, G6); until then the
+promoter stands alone — no sentence announces partners to come.
+
+V5.31 (the owner's FINAL HOMEPAGE REBUILD §24–§25; lane A): two movements in one section, no arch, no network drawing.
+1 · «la cooperazione» — an image-led media split on the light mineral ground: the working-table photograph (slot
+home.ecosystem: hands, annotated papers, the session's microphones; no face) large at the reading edge, bleeding to the
+viewport's edge from 64 rem, opening from that edge as it enters; beside it the section's head at a light display size and
+its lead (the editor's, verified). 2 · the PROMOTER — a dark institutional band (pages/home/_ecosystem_colophon.html):
+AGAMI's official logo on its white plate and its seal, the label, the name, three verified facts taken from the prescribed
+answer, the answer itself, the authorised partners (G6), the call. Adapted from 21st.dev «Editorial Image Hero»
+(felipemenezes098/hero-07, id 19077: the large image beside a light headline) and «Logo Cloud 3» (hirael, id 28279: the
+quiet mark row, then the statement).
+{% endcomment %}
+{% translate "Un écosystème institutionnel" as fallback_title %}
+<section class="sez home-ecosystem" id="{{ s.anchor }}" aria-labelledby="home-ecosystem-title" data-section="ecosystem" data-sec="cooperazione" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container eco-split">
+    <div class="eco-split__media">{% include "pages/home/_ecosystem_frame.html" %}</div>
+    <div class="eco-split__testo">
+      <h2 class="eco-split__titolo" id="home-ecosystem-title"{% if s.heading.lang %} lang="{{ s.heading.lang }}"{% endif %}>{% if s.heading %}{{ s.heading|typo }}{% else %}{{ fallback_title }}{% endif %}</h2>
+      {% if s.intro %}<p class="eco-split__lead"{% if s.intro.lang %} lang="{{ s.intro.lang }}"{% endif %}>{{ s.intro|typo }}</p>{% endif %}
+      {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+    </div>
+  </div>
+  {% include "pages/home/_ecosystem_colophon.html" %}
+</section>

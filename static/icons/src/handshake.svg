@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- handshake: ILE drawing (Italy Legal Entry) -->
+  <path fill="currentColor" fill-opacity=".12" stroke="none" d="M2.25 8.75 5.5 5.5h4.25L12 7.75l2.25-2.25h4.25l3.25 3.25-2 6.5-3.25 3.25-3.5-2-3.25 2-2.25-3.25Z"/>
+  <path d="M2.25 8.75 5.5 5.5h4.25L12 7.75l2.25-2.25h4.25l3.25 3.25-2 6.5-3.25 3.25-3.5-2-3.25 2-2.25-3.25ZM9.75 7.75 7.5 10.5l2.25 1.75 2.25-1.75"/>
+</svg>

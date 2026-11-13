@@ -1,0 +1,16 @@
+/* ============================================================================================
+   Formation (§3.9) — the page sheet (design V5.22, SECTION_SYSTEM_V2 §7.1; lane P1 — Page Composition V2): a plain list of
+   imports, written as they resolve in the collected static tree (DS 2026 §2). The family's own sheet first
+   (pathways/pathways.css, unchanged: the interior's page, the passage, the door, the photograph, the compositions,
+   the pathways' rules), then the shell of the V2 sections and the patterns this page composes, then its own rules —
+   one stylesheet for the page, as before; a page carries only what it draws.
+   V5.32 (lane B): the mosaic and the space's V2 partial leave this page — the register of links is _spazio.css.
+   The correction round of the senior integration review (P2-3): the register and the boussole leave — the page
+   closes on «la chiusura» (_chiusura.css), the register stands on /parcours/ alone.
+   ============================================================================================ */
+@import url("pathways.css");
+@import url("../css/v5/_sezioni.css");
+@import url("../css/v5/_sec-strato.css");
+@import url("../css/v5/_materia.css");
+@import url("_chiusura.css");
+@import url("_training.css");

@@ -1,0 +1,306 @@
+"""
+Espace réservé views — thin: authentication, HTTP method, rendering. Every rule about WHAT an
+account may see lives in ``portal.services`` / ``portal.policies`` (deny by default).
+
+All views are ``login_required`` (anonymous → login page, whatever the HTTP method), ``never_cache``
+(personal pages must never be stored by a shared cache) and ``noindex``.
+"""
+
+from __future__ import annotations
+
+from functools import wraps
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.text import Truncator
+from django.utils.translation import gettext as _
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_http_methods
+
+from portal import lists, services
+
+
+def portal_view(active: str, methods: tuple[str, ...] = ("GET", "HEAD")):
+    """
+    login_required (outermost, so an anonymous request is always sent to the login page) →
+    never_cache → allowed methods → back-office kill switch.
+    """
+
+    def decorator(view):
+        @wraps(view)
+        def wrapped(request, *args, **kwargs):
+            if not services.reserved_area_enabled() and not request.user.is_staff:
+                response = render(request, "portal/unavailable.html", {"noindex": True}, status=503)
+                return _noindex(response)
+            request.portal_active = active
+            return _noindex(view(request, *args, **kwargs))
+
+        return login_required(never_cache(require_http_methods(list(methods))(wrapped)))
+
+    return decorator
+
+
+def _noindex(response):
+    """
+    Say "do not index" in the HEADER as well as in the page.
+
+    ``base.html`` already emits the meta tag, and that is what a crawler parsing the body reads. The
+    header covers what the meta tag cannot: a HEAD request, a redirect, a 503, a file download —
+    every response from the reserved area that is not a rendered HTML body. Neither one is
+    sufficient on its own, and a personal case file is not somewhere to rely on the sufficient case.
+    """
+    response.headers.setdefault("X-Robots-Tag", "noindex, nofollow")
+    return response
+
+
+CRUMB_MAX_CHARS = 60
+
+
+def _crumb(label) -> dict:
+    """Last breadcrumb of a detail page: free text (subject, company name…) is shortened — the full
+    wording is the page's h1 — so a long, unbroken value can never stretch the page on a phone."""
+    return {"label": Truncator(str(label)).chars(CRUMB_MAX_CHARS), "url": ""}
+
+
+def person_page(key: str):
+    """
+    The person's pages (portal.services.PERSON_ONLY_PAGES: «Ma situation», «Mon parcours») send an account whose space
+    is an organisation's or a company's back to its dashboard (V5.12 Q7): an institution is never asked its date of
+    birth. Inside ``portal_view``, so the login, the cache and the kill switch come first.
+    """
+
+    def decorator(view):
+        @wraps(view)
+        def wrapped(request, *args, **kwargs):
+            if not services.shows_person_page(request.user, key):
+                return redirect("portal:dashboard")
+            return view(request, *args, **kwargs)
+
+        return wrapped
+
+    return decorator
+
+
+def organisation_only(view):
+    """A page of the organisation space alone («Mon organisation»): every other account goes to its dashboard."""
+
+    @wraps(view)
+    def wrapped(request, *args, **kwargs):
+        if not services.organisation_audience(request.user):
+            return redirect("portal:dashboard")
+        return view(request, *args, **kwargs)
+
+    return wrapped
+
+
+def _render(request, template: str, context: dict, *crumbs: dict):
+    # The trail starts with the space's own name, the word at the rail's head and in the eyebrow (shell_space): «Espace
+    # réservé» for a person, «Espace Institutions» / «Espace Universités et Formation» for an organisation (V5.12 W2
+    # review; B's account shell does the same).
+    root = {"label": services.shell_space(request.user)["label"], "url": reverse("portal:dashboard")}
+    if root["url"] == request.path:
+        root["url"] = ""  # never a link to the page one is on
+    context.update(
+        {
+            "portal_nav": services.navigation(request.user, getattr(request, "portal_active", "")),
+            "breadcrumbs": [root, *crumbs] if crumbs else [{**root, "url": ""}],
+            "noindex": True,
+        }
+    )
+    return render(request, template, context)
+
+
+@portal_view("dashboard")
+def dashboard(request):
+    # The space's first page ends its trail on itself, as every other page does — «Espace réservé › Tableau de
+    # bord», the word the rail lights — and not on the space's name (the W3-A review's m3).
+    if services.organisation_audience(request.user):
+        # An institution's, a university's, a training body's own dashboard (V5.12 Q7).
+        return _render(
+            request,
+            "portal/dashboard_organisation.html",
+            services.organisation_dashboard_context(request.user),
+            {"label": _("Tableau de bord"), "url": ""},
+        )
+    return _render(
+        request,
+        "portal/dashboard.html",
+        services.dashboard_context(request.user),
+        {"label": _("Tableau de bord"), "url": ""},
+    )
+
+
+@portal_view("requests")
+def requests_list(request):
+    # V5.32 lane E: «Mes demandes» on the platform's list toolkit (portal.lists.REQUESTS) — it narrows the account's own
+    # requests (services.requests_for re-checks each row as the account's), never more.
+    scoped = services.requests_for(request.user)
+    state = lists.REQUESTS.read(request.GET)
+    rows = lists.REQUESTS.apply(scoped, state)
+    context = {
+        "page_obj": services.paginate(rows, request.GET.get("page")),
+        "requests_total": len(scoped),
+        "listing": lists.REQUESTS.context(state, scoped=scoped, count=len(rows), total=len(scoped), path=request.path),
+    }
+    return _render(request, "portal/requests.html", context, {"label": _("Mes demandes"), "url": ""})
+
+
+@portal_view("requests")
+def request_detail(request, kind: str, pk: int):
+    context = services.get_own_request(request.user, kind, pk)
+    return _render(
+        request,
+        "portal/request_detail.html",
+        context,
+        {"label": _("Mes demandes"), "url": reverse("portal:requests")},
+        _crumb(context["item"].title),
+    )
+
+
+@portal_view("pathways")
+@person_page("pathways")
+def pathways(request):
+    context = services.pathways_page(request.user, request.GET.get("page"))
+    return _render(request, "portal/pathways.html", context, {"label": _("Mon parcours"), "url": ""})
+
+
+@portal_view("documents")
+def documents(request):
+    if services.organisation_audience(request.user):
+        # The pieces register is a person's file; an organisation's documents are on «Mon organisation» (Q7).
+        return redirect("portal:organisation")
+    # V5.30 (stream C): the account's files on the platform's list toolkit — the spec narrows the queryset
+    # documents_page scopes (own, alive), never more (portal.lists.FILES).
+    state = lists.FILES.read(request.GET)
+    context = services.documents_page(request.user, narrow=lambda rows: lists.FILES.apply(rows, state))
+    files, scoped = context.pop("documents"), context.pop("documents_scoped")
+    context["page_obj"] = services.paginate(files, request.GET.get("page"), per_page=20)
+    if scoped is not None:
+        total = scoped.count()
+        context["listing"] = lists.FILES.context(state, scoped=scoped, count=len(files), total=total, path=request.path)
+        context["files_total"] = total
+    return _render(request, "portal/documents.html", context, {"label": _("Mes documents"), "url": ""})
+
+
+@portal_view("organisation")
+@organisation_only
+def organisation(request):
+    context = services.organisation_page(request.user)
+    return _render(request, "portal/organisation.html", context, {"label": _("Mon organisation"), "url": ""})
+
+
+@portal_view("deadlines")
+def deadlines(request):
+    # V5.32 lane E: «Mes échéances» on the platform's list toolkit (portal.lists.DEADLINES) — the account's dates,
+    # narrowed; the band still counts every date ahead and every late one.
+    state = lists.DEADLINES.read(request.GET)
+    context = services.deadlines_page(request.user, narrow=lambda rows: lists.DEADLINES.apply(rows, state))
+    count = len(context["open_deadlines"]) + len(context["closed_deadlines"])
+    context["listing"] = lists.DEADLINES.context(
+        state,
+        scoped=services.deadlines_for(request.user),
+        count=count,
+        total=context["deadlines_total"],
+        path=request.path,
+    )
+    return _render(request, "portal/deadlines.html", context, {"label": _("Mes échéances"), "url": ""})
+
+
+@portal_view("messages")
+def messages_list(request):
+    # V5.30 (stream C): «Communications» on the platform's list toolkit — the spec narrows the inbox (own, visible),
+    # never more (portal.lists.MESSAGES).
+    scoped = services.inbox(request.user)
+    state = lists.MESSAGES.read(request.GET)
+    page_obj = services.paginate(lists.MESSAGES.apply(scoped, state), request.GET.get("page"))
+    total = scoped.count()
+    context = {
+        "page_obj": page_obj,
+        "unread_count": services.unread_count(request.user),
+        "messages_total": total,
+        "listing": lists.MESSAGES.context(
+            state, scoped=scoped, count=page_obj.paginator.count, total=total, path=request.path
+        ),
+    }
+    return _render(request, "portal/messages.html", context, {"label": _("Communications"), "url": ""})
+
+
+@portal_view("messages")
+def message_detail(request, pk):
+    message = services.get_own_message(request.user, pk)
+    context = {"message": message, "related_link": services.related_link(request.user, message)}
+    return _render(
+        request,
+        "portal/message_detail.html",
+        context,
+        {"label": _("Communications"), "url": reverse("portal:messages")},
+        _crumb(message.subject),
+    )
+
+
+@portal_view("messages", methods=("POST",))
+def message_read(request, pk):
+    message = services.mark_message_read(request.user, pk, request=request)
+    messages.success(request, _("Communication marquée comme lue."))
+    if request.POST.get("next") == "list":  # enumerated value — never a free URL (no open redirect)
+        return redirect("portal:messages")
+    return redirect("portal:message_detail", pk=message.pk)
+
+
+@portal_view("situation", methods=("GET", "HEAD", "POST"))
+@person_page("situation")
+def situation(request):
+    """
+    What the person tells us about their circumstances — and what changes when they tell us.
+
+    The page is not a settings form. Saving it re-runs the legal rules against the new facts, so a
+    person who reports a job offer sees their orientation move on the same visit. That is the whole
+    difference between a profile and a questionnaire nobody reads again.
+    """
+    from accounts import services as account_services
+    from accounts.profile_forms import SituationForm
+
+    user = account_services.concrete_user(request.user)
+    profile = account_services.get_or_create_profile(user)
+
+    if request.method == "POST":
+        form = SituationForm(request.POST, profile=profile)
+        if form.is_valid():
+            _profile, changed = account_services.update_situation(request, user, form.to_profile_values())
+            if changed:
+                updated = services.reassess_person(user, request=request)
+                if updated is not None:
+                    messages.success(
+                        request,
+                        _("Vos informations ont été enregistrées et votre orientation a été recalculée."),
+                    )
+                else:
+                    messages.success(request, _("Vos informations ont été enregistrées."))
+            else:
+                messages.info(request, _("Aucune modification à enregistrer."))
+            return redirect("portal:situation")
+    else:
+        form = SituationForm(profile=profile)
+
+    # Design V4 (§3.7): the Stepper fills a node per answered question — the profile's own ``answered()`` rule, plus the
+    # one question the rules do not read yet. One total for the person (W3-D's m4, W3-E): the counter under the Stepper
+    # counts the questions the page asks and the ones answered, as the Stepper's nodes and the foot's «1 / 8» do — it
+    # said «sur 7» (the fields the rules read) under eight nodes.
+    answered_fields = set(profile.answered()) | (
+        {"has_qualification_recognition"} if profile.has_qualification_recognition is not None else set()
+    )
+    return _render(
+        request,
+        "portal/situation.html",
+        {
+            "form": form,
+            "profile": profile,
+            "answered": len(answered_fields),
+            "total": len(form.visible_fields()),
+            "answered_fields": answered_fields,
+            "case": services.active_case(user),
+        },
+        _crumb(_("Ma situation")),
+    )

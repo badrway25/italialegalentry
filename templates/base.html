@@ -1,0 +1,90 @@
+{% load i18n static cms_nav %}{% site_context as site %}<!DOCTYPE html>
+<html lang="{{ site.lang }}" dir="{{ site.dir }}" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}{% block page_title %}{% endblock %} · {{ site.project_name }}{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+<meta name="generator" content="Italy Legal Entry™ {{ site.version_label }}">
+{% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+{% block head_seo %}{% include "partials/seo_head.html" %}{% endblock %}
+{% comment %}
+SVG first for the browsers that take it, .ico behind it for the rest — and, more to the point, so
+Chrome stops probing /favicon.ico at the site root and logging a 404 on every page of every
+session. Declaring only the SVG left one red line in a console that is otherwise clean.
+
+`{% comment %}`, not `{# #}`: the short form is SINGLE-LINE ONLY, and a three-line `{# #}` ships
+its own text into the rendered head of every page. Which is what happened here, and what
+tests/frontend/test_favicon.py caught one minute later.
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+<link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="48x48" type="image/x-icon">
+{% comment %}
+Every first-screen face is preloaded, per script (V5.4 plan §1.1 «Loading»; PFR §0: preloading the first
+screen's faces cut the French home's first-render task from 350 to 221 ms). A Latin page: Host Grotesk
+(every Latin role) and «ILE Wordmark» (the name in the letterhead). An Arabic page: Readex Pro (Typography
+V2, v524-t), Host Grotesk for the Latin runs and the digits, and the wordmark. Two preloads on a Latin page,
+three on an Arabic one (TYPOGRAPHY_V2 §4.7). The hrefs are the files static/css/v5/fonts.css names, so the
+hashed URL of the preload and of the bundle's url() are one request under the manifest storage.
+{% endcomment %}
+{% if site.is_rtl %}<link rel="preload" href="{% static 'fonts/v5-readex-pro-var-400-700-arabic.woff2' %}" as="font" type="font/woff2" crossorigin>
+{% endif %}<link rel="preload" href="{% static 'fonts/v5-host-grotesk-var-400-700.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'fonts/v5-ile-wordmark-600.woff2' %}" as="font" type="font/woff2" crossorigin>
+{% comment %}
+ONE stylesheet: static/css/dist/main.css, the @import cascade of static/css/main.css bundled and
+minified by `npm run build:css` (scripts/build_css.mjs). The 21 sheets it replaces held the six
+HTTP/1.1 connections for about 1.3 s while the LCP photograph queued behind them (Gate A, 26/09/2026).
+Edit the sources, rebuild; tests/frontend/test_css_bundle_is_current.py refuses a stale bundle.
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'css/dist/main.css' %}">
+{% comment %}The reading's motion (V5.12 §5; DECISIONS §2 M1–M5): a page-only sheet for the public pages, never in main.css
+(static/css/v5/_reveal.css) and the time-based rise of sections and rows, static/js/src/rise.js (review round 2, M-3: a
+scroll-linked rise finished off-screen). The console's base empties the block: its motion is the console's own partial.{% endcomment %}{% block reveal_sheet %}<link rel="stylesheet" href="{% static 'css/dist/core/reveal.css' %}"><link rel="stylesheet" href="{% static 'css/dist/core/portico.css' %}" media="(min-width: 64rem)"><script type="module" src="{% static 'js/dist/rise.js' %}" fetchpriority="low"></script>{% endblock %}
+<script src="{% static 'js/head.js' %}"></script>
+{% block extra_head %}{% endblock %}
+{% block jsonld %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}{% if site.is_rtl %} is-rtl{% endif %}">
+<a class="skip-link" href="#main-content">{% translate "Aller au contenu principal" %}</a>
+{% comment %}«Lume», the central loader — global brand infrastructure, public site and platform alike (V5.15 §8–§14;
+DECISIONS §15 lane A): decorative, never focusable, never in the way; its one status line follows it.{% endcomment %}{% include "components/lume_veil.html" %}
+{% comment %}
+The chrome is a BLOCK, not a fixed include: the public site and the authenticated platform share one
+identity and must not share one shell. Since V5.15 (§1: «ONE SINGLE HORIZONTAL ROW») the public chrome is the
+letterhead alone: the institutional bar's languages moved into its end zone, its promoter line into the panels' foot,
+the sheet's foot and the footer (the former partials/utility_bar.html was removed). Discovery and task completion are different problems, and the
+platform kept the public mega-menu — seven public sections offered to someone who has just signed in
+to find their next action.
+{% endcomment %}
+{% block chrome %}{% include "partials/header.html" %}{% endblock %}
+{% block banner %}{% endblock %}
+<main id="main-content" tabindex="-1">
+  {% block breadcrumbs %}{% endblock %}
+  {% if messages %}{% comment %}
+  The session's messages (V5.12 §5; the Director's DECISIONS §2 M9, §3 «Notifications»): each one a notice with its
+  kind's mark (core.icons.NOTICE), its words, and «Fermer» once static/js/src/notices.js has wired it. A success is
+  a confirmation of the person's own act: it stands in the toast region at the viewport's foot (v5/notice.css) and
+  leaves by itself after 6 s — paused under the pointer and the focus —, so that its going never moves the page
+  (CLS). Everything else stays in the page's flow and stays until the person closes it: an error is never dismissed
+  for them. Without script both are in the flow and simply stay.
+  {% endcomment %}
+  <div class="container messages" role="status" aria-live="polite" data-notices>
+    {% for message in messages %}{% if message.level_tag != 'success' %}{% include "components/session_notice.html" %}{% endif %}{% endfor %}
+  </div>
+  <div class="container messages messages--toast" role="status" aria-live="polite" data-notices>
+    {% for message in messages %}{% if message.level_tag == 'success' %}{% include "components/session_notice.html" with auto=True %}{% endif %}{% endfor %}
+  </div>
+  {% endif %}
+  {% block main_content %}{% block content %}{% endblock %}{% endblock %}
+</main>
+{% block site_footer %}{% include "partials/footer.html" %}{% endblock %}
+<script type="module" src="{% static 'js/main.js' %}"></script>
+{% comment %}
+The one public entry (V5.4 plan §2.3): static/js/src/shell.js — the navigation, the overlay system, the password
+toggles, the submit's busy key — bundled by esbuild, with no animation library (W4-B). Deferred by being a module;
+never inline (CSP script-src 'self').
+{% endcomment %}
+<script type="module" src="{% static 'js/dist/shell.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

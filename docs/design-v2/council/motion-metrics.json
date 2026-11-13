@@ -1,0 +1,3031 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "generated": "2026-09-23 17:54:23",
+  "pages": {
+    "a_home": {
+      "url": "http://127.0.0.1:8790/docs/design-v2/directions/a-luminous-network/home.html",
+      "hidden_in_fold_normal_t300": [
+        "aside.focus -> opacity 0",
+        "text.net__territory -> opacity 0",
+        "path.net__edge -> stroke undrawn (dashoffset 1px)",
+        "circle.net__packet -> opacity 0",
+        "g.net__node.relay -> opacity 0",
+        "g.net__node -> opacity 0",
+        "text.net__label -> opacity 0"
+      ],
+      "doorway_normal_t300": {
+        "key": {
+          "w": 64,
+          "h": 138,
+          "top": 373,
+          "left": 1008,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 187,
+          "h": 291,
+          "top": 297,
+          "left": 946,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "matrix(1, 0, 0, 1, -93.7422, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 361,
+          "h": 519,
+          "top": 234,
+          "left": 860,
+          "opacity": "0.5",
+          "effOpacity": 0.5,
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 186,
+            "h": 5,
+            "top": 688,
+            "left": 947,
+            "opacity": "0.9",
+            "effOpacity": 0.9,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 225,
+            "h": 5,
+            "top": 696,
+            "left": 928,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 264,
+            "h": 5,
+            "top": 704,
+            "left": 908,
+            "opacity": "0.3",
+            "effOpacity": 0.3,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": [
+          {
+            "w": 358,
+            "h": 480,
+            "top": 235,
+            "left": 861,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0.00212986px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 320,
+            "h": 460,
+            "top": 255,
+            "left": 880,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0.0182803px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "glow": {
+          "w": 225,
+          "h": 225,
+          "top": 329,
+          "left": 928,
+          "opacity": "0.98127",
+          "effOpacity": 0.981,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "capture_times_ms": {
+        "t300": 449,
+        "t1000": 1522,
+        "t2000": 1991,
+        "t4000": 3992
+      },
+      "doorway_normal_t4000": {
+        "key": {
+          "w": 64,
+          "h": 138,
+          "top": 372,
+          "left": 1008,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "matrix(1, 0, 0, 1, 0, -0.574322)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 187,
+          "h": 291,
+          "top": 297,
+          "left": 946,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "matrix(1, 0, 0, 1, -93.7422, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 361,
+          "h": 519,
+          "top": 234,
+          "left": 860,
+          "opacity": "0.5",
+          "effOpacity": 0.5,
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 186,
+            "h": 5,
+            "top": 688,
+            "left": 947,
+            "opacity": "0.9",
+            "effOpacity": 0.9,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 225,
+            "h": 5,
+            "top": 696,
+            "left": 928,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 264,
+            "h": 5,
+            "top": 704,
+            "left": 908,
+            "opacity": "0.3",
+            "effOpacity": 0.3,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": [
+          {
+            "w": 358,
+            "h": 480,
+            "top": 235,
+            "left": 861,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 320,
+            "h": 460,
+            "top": 255,
+            "left": 880,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "glow": {
+          "w": 225,
+          "h": 225,
+          "top": 329,
+          "left": 928,
+          "opacity": "0.778466",
+          "effOpacity": 0.778,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "animations_t4000": [
+        {
+          "kind": "CSSAnimation",
+          "name": "packet",
+          "target": "circle.net__packet",
+          "pseudo": null,
+          "duration": 24000,
+          "delay": 0,
+          "iterations": Infinity,
+          "direction": "normal",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "offsetDistance"
+          ]
+        },
+        {
+          "kind": "CSSAnimation",
+          "name": "keyglow",
+          "target": "i.door__glow",
+          "pseudo": null,
+          "duration": 4000,
+          "delay": 0,
+          "iterations": Infinity,
+          "direction": "alternate",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "opacity"
+          ]
+        },
+        {
+          "kind": "CSSAnimation",
+          "name": "keyfloat",
+          "target": "img.door__key",
+          "pseudo": null,
+          "duration": 6000,
+          "delay": 0,
+          "iterations": Infinity,
+          "direction": "alternate",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "transform"
+          ]
+        },
+        {
+          "kind": "Animation",
+          "name": "",
+          "target": "div.header__progress",
+          "pseudo": null,
+          "duration": 300,
+          "delay": 0,
+          "iterations": 1,
+          "direction": "normal",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "ScrollTimeline",
+          "props": [
+            "transform"
+          ]
+        },
+        {
+          "kind": "Animation",
+          "name": "",
+          "target": "div.hero__scene",
+          "pseudo": null,
+          "duration": 300,
+          "delay": 0,
+          "iterations": 1,
+          "direction": "normal",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "ViewTimeline",
+          "props": [
+            "transform"
+          ]
+        },
+        {
+          "kind": "Animation",
+          "name": "",
+          "target": "img.door__img",
+          "pseudo": null,
+          "duration": 300,
+          "delay": 0,
+          "iterations": 1,
+          "direction": "normal",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "ViewTimeline",
+          "props": [
+            "transform"
+          ]
+        },
+        {
+          "kind": "Animation",
+          "name": "",
+          "target": "i.proc__spine-fill",
+          "pseudo": null,
+          "duration": 300,
+          "delay": 0,
+          "iterations": 1,
+          "direction": "normal",
+          "easing": "linear",
+          "playState": "paused",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "transform"
+          ]
+        }
+      ],
+      "raf_1x": {
+        "0-3s": {
+          "frames": 136,
+          "dropped_est": 43,
+          "longFrames_gt50ms": 4,
+          "worst_ms": 250.1,
+          "p95_ms": 33.3,
+          "mean_ms": 21.96,
+          "fps_est": 45.5
+        },
+        "3-6s": {
+          "frames": 178,
+          "dropped_est": 2,
+          "longFrames_gt50ms": 1,
+          "worst_ms": 50.1,
+          "p95_ms": 16.8,
+          "mean_ms": 16.85,
+          "fps_est": 59.3
+        }
+      },
+      "trace": {
+        "0-0.5s": {
+          "Layout": {
+            "count": 12,
+            "ms": 254.6
+          },
+          "Paint": {
+            "count": 12,
+            "ms": 22.5
+          },
+          "UpdateLayoutTree": {
+            "count": 9,
+            "ms": 52.6
+          },
+          "PrePaint": {
+            "count": 15,
+            "ms": 5.7
+          },
+          "Commit": {
+            "count": 11,
+            "ms": 0.9
+          },
+          "Animation": {
+            "count": 25,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 19,
+            "ms": 64.7
+          },
+          "RunTask": {
+            "count": 1725,
+            "ms": 775.2
+          }
+        },
+        "0.5-3s": {
+          "Layout": {
+            "count": 60,
+            "ms": 108.9
+          },
+          "Paint": {
+            "count": 326,
+            "ms": 104.5
+          },
+          "UpdateLayoutTree": {
+            "count": 134,
+            "ms": 66.6
+          },
+          "PrePaint": {
+            "count": 142,
+            "ms": 30.4
+          },
+          "Commit": {
+            "count": 279,
+            "ms": 30.8
+          },
+          "Animation": {
+            "count": 129,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 484,
+            "ms": 107.1
+          },
+          "RunTask": {
+            "count": 4103,
+            "ms": 3359.8
+          }
+        },
+        "3-6s": {
+          "Layout": {
+            "count": 178,
+            "ms": 19.8
+          },
+          "Paint": {
+            "count": 24,
+            "ms": 5.8
+          },
+          "UpdateLayoutTree": {
+            "count": 178,
+            "ms": 53.5
+          },
+          "PrePaint": {
+            "count": 178,
+            "ms": 43.4
+          },
+          "Commit": {
+            "count": 364,
+            "ms": 37.2
+          },
+          "Animation": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 456,
+            "ms": 23.0
+          },
+          "RunTask": {
+            "count": 4281,
+            "ms": 1894.1
+          }
+        }
+      },
+      "counts": {
+        "domNodes": 572,
+        "svgPaths": 37,
+        "svgElements": 163,
+        "svgRoots": 56,
+        "dataReveal": 17,
+        "images": 5,
+        "scrollBehaviorHtml": "auto",
+        "scrollBehaviorBody": "auto",
+        "lenis": false,
+        "locomotive": false,
+        "gsap": false,
+        "listeners": [
+          {
+            "type": "scroll",
+            "target": "window",
+            "passive": true
+          },
+          {
+            "type": "keydown",
+            "target": "window",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "LI",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "LI",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "LI",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "LI",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "LI",
+            "passive": false
+          },
+          {
+            "type": "scroll",
+            "target": "window",
+            "passive": false
+          },
+          {
+            "type": "touchstart",
+            "target": "window",
+            "passive": false
+          }
+        ]
+      },
+      "network": {
+        "document": {
+          "count": 1,
+          "bodyBytes": 33070,
+          "files": {
+            "home.html": 33070
+          }
+        },
+        "stylesheet": {
+          "count": 2,
+          "bodyBytes": 73871,
+          "files": {
+            "fonts.css": 13998,
+            "styles.css": 59873
+          }
+        },
+        "image": {
+          "count": 3,
+          "bodyBytes": 950255,
+          "files": {
+            "arch-photo-original-2400.jpg": 948733,
+            "logo-mark.svg": 1040,
+            "key.svg": 482
+          }
+        },
+        "script": {
+          "count": 2,
+          "bodyBytes": 74179,
+          "files": {
+            "main.js": 8845,
+            "motion.js": 65334
+          }
+        },
+        "font": {
+          "count": 6,
+          "bodyBytes": 368284,
+          "files": {
+            "fira-sans-400-normal-latin.woff2": 23872,
+            "fira-sans-500-normal-latin.woff2": 24056,
+            "fira-sans-600-normal-latin.woff2": 24844,
+            "newsreader-200-800-normal-latin.woff2": 132000,
+            "fira-mono-400-normal-latin.woff2": 16640,
+            "newsreader-200-800-italic-latin.woff2": 146872
+          }
+        }
+      },
+      "content_encoding": {
+        "home.html": "identity",
+        "fonts.css": "identity",
+        "styles.css": "identity",
+        "arch-photo-original-2400.jpg": "identity",
+        "main.js": "identity",
+        "logo-mark.svg": "identity",
+        "key.svg": "identity",
+        "motion.js": "identity",
+        "fira-sans-400-normal-latin.woff2": "identity",
+        "fira-sans-500-normal-latin.woff2": "identity",
+        "fira-sans-600-normal-latin.woff2": "identity",
+        "newsreader-200-800-normal-latin.woff2": "identity",
+        "fira-mono-400-normal-latin.woff2": "identity",
+        "newsreader-200-800-italic-latin.woff2": "identity"
+      },
+      "wheel_probe": {
+        "after_120ms": 598,
+        "after_520ms": 584,
+        "native": false
+      },
+      "infinite_running_at_bottom": [
+        "circle.net__packet:packet",
+        "i.door__glow:keyglow",
+        "img.door__key:keyfloat"
+      ],
+      "scroll_timeline_animations": [
+        "div.header__progress transform",
+        "div.hero__scene transform",
+        "img.door__img transform"
+      ],
+      "infinite_running_after_live_reduce_toggle": [],
+      "reduced_capture_ms": 304,
+      "hidden_in_fold_reduced_t300": [
+        "circle.net__packet -> opacity 0"
+      ],
+      "doorway_reduced_t300": {
+        "key": {
+          "w": 64,
+          "h": 138,
+          "top": 373,
+          "left": 1008,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 187,
+          "h": 291,
+          "top": 297,
+          "left": 946,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "matrix(1, 0, 0, 1, -93.7422, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 361,
+          "h": 519,
+          "top": 234,
+          "left": 860,
+          "opacity": "0.5",
+          "effOpacity": 0.5,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 186,
+            "h": 5,
+            "top": 688,
+            "left": 947,
+            "opacity": "0.9",
+            "effOpacity": 0.9,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 225,
+            "h": 5,
+            "top": 696,
+            "left": 928,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 264,
+            "h": 5,
+            "top": 704,
+            "left": 908,
+            "opacity": "0.3",
+            "effOpacity": 0.3,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": [
+          {
+            "w": 358,
+            "h": 480,
+            "top": 235,
+            "left": 861,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 320,
+            "h": 460,
+            "top": 255,
+            "left": 880,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "glow": {
+          "w": 225,
+          "h": 225,
+          "top": 329,
+          "left": 928,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "reduced_running_animations_t1500": [],
+      "hidden_in_fold_reduced_t1500": [
+        "circle.net__packet -> opacity 0"
+      ],
+      "raf_4x": {
+        "0-3s": {
+          "frames": 4,
+          "dropped_est": 103,
+          "longFrames_gt50ms": 4,
+          "worst_ms": 1183.3,
+          "p95_ms": 383.4,
+          "mean_ms": 447.2,
+          "fps_est": 2.2
+        },
+        "3-6s": {
+          "frames": 106,
+          "dropped_est": 146,
+          "longFrames_gt50ms": 7,
+          "worst_ms": 1283.2,
+          "p95_ms": 66.6,
+          "mean_ms": 39.62,
+          "fps_est": 25.2
+        }
+      }
+    },
+    "a_dashboard": {
+      "url": "http://127.0.0.1:8790/docs/design-v2/directions/a-luminous-network/dashboard.html",
+      "hidden_in_fold_normal_t300": [],
+      "capture_times_ms": {
+        "t300": 401,
+        "t1000": 1006,
+        "t2000": 2005,
+        "t4000": 4000
+      },
+      "animations_t4000": [
+        {
+          "kind": "CSSAnimation",
+          "name": "herepulse",
+          "target": "span.rail2__bar.own--platform",
+          "pseudo": null,
+          "duration": 2800,
+          "delay": 0,
+          "iterations": Infinity,
+          "direction": "normal",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "boxShadow"
+          ]
+        }
+      ],
+      "raf_1x": {
+        "0-3s": {
+          "frames": 157,
+          "dropped_est": 23,
+          "longFrames_gt50ms": 3,
+          "worst_ms": 233.3,
+          "p95_ms": 16.8,
+          "mean_ms": 19.1,
+          "fps_est": 52.3
+        },
+        "3-6s": {
+          "frames": 180,
+          "dropped_est": 0,
+          "longFrames_gt50ms": 0,
+          "worst_ms": 16.8,
+          "p95_ms": 16.7,
+          "mean_ms": 16.67,
+          "fps_est": 60.0
+        }
+      },
+      "trace": {
+        "0-0.5s": {
+          "Layout": {
+            "count": 6,
+            "ms": 291.0
+          },
+          "Paint": {
+            "count": 34,
+            "ms": 15.8
+          },
+          "UpdateLayoutTree": {
+            "count": 7,
+            "ms": 59.8
+          },
+          "PrePaint": {
+            "count": 8,
+            "ms": 8.3
+          },
+          "Commit": {
+            "count": 13,
+            "ms": 1.5
+          },
+          "Animation": {
+            "count": 51,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 17,
+            "ms": 8.1
+          },
+          "RunTask": {
+            "count": 1762,
+            "ms": 679.9
+          }
+        },
+        "0.5-3s": {
+          "Layout": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "Paint": {
+            "count": 332,
+            "ms": 86.0
+          },
+          "UpdateLayoutTree": {
+            "count": 153,
+            "ms": 47.6
+          },
+          "PrePaint": {
+            "count": 152,
+            "ms": 29.8
+          },
+          "Commit": {
+            "count": 314,
+            "ms": 19.3
+          },
+          "Animation": {
+            "count": 24,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 206,
+            "ms": 13.4
+          },
+          "RunTask": {
+            "count": 5197,
+            "ms": 1084.8
+          }
+        },
+        "3-6s": {
+          "Layout": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "Paint": {
+            "count": 363,
+            "ms": 93.2
+          },
+          "UpdateLayoutTree": {
+            "count": 181,
+            "ms": 49.0
+          },
+          "PrePaint": {
+            "count": 180,
+            "ms": 26.5
+          },
+          "Commit": {
+            "count": 364,
+            "ms": 24.4
+          },
+          "Animation": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 287,
+            "ms": 16.0
+          },
+          "RunTask": {
+            "count": 3954,
+            "ms": 742.9
+          }
+        }
+      },
+      "counts": {
+        "domNodes": 511,
+        "svgPaths": 30,
+        "svgElements": 132,
+        "svgRoots": 52,
+        "dataReveal": 18,
+        "images": 1,
+        "scrollBehaviorHtml": "auto",
+        "scrollBehaviorBody": "auto",
+        "lenis": false,
+        "locomotive": false,
+        "gsap": false,
+        "listeners": [
+          {
+            "type": "keydown",
+            "target": "window",
+            "passive": false
+          },
+          {
+            "type": "touchstart",
+            "target": "window",
+            "passive": false
+          }
+        ]
+      },
+      "network": {
+        "document": {
+          "count": 1,
+          "bodyBytes": 24811,
+          "files": {
+            "dashboard.html": 24811
+          }
+        },
+        "stylesheet": {
+          "count": 2,
+          "bodyBytes": 73871,
+          "files": {
+            "fonts.css": 13998,
+            "styles.css": 59873
+          }
+        },
+        "script": {
+          "count": 2,
+          "bodyBytes": 74179,
+          "files": {
+            "main.js": 8845,
+            "motion.js": 65334
+          }
+        },
+        "image": {
+          "count": 1,
+          "bodyBytes": 1040,
+          "files": {
+            "logo-mark.svg": 1040
+          }
+        },
+        "font": {
+          "count": 6,
+          "bodyBytes": 246320,
+          "files": {
+            "fira-sans-400-normal-latin.woff2": 23872,
+            "newsreader-200-800-normal-latin.woff2": 132000,
+            "fira-sans-500-normal-latin.woff2": 24056,
+            "fira-sans-600-normal-latin.woff2": 24844,
+            "fira-sans-400-italic-latin.woff2": 24908,
+            "fira-mono-400-normal-latin.woff2": 16640
+          }
+        }
+      },
+      "content_encoding": {
+        "dashboard.html": "identity",
+        "fonts.css": "identity",
+        "styles.css": "identity",
+        "main.js": "identity",
+        "logo-mark.svg": "identity",
+        "motion.js": "identity",
+        "fira-sans-400-normal-latin.woff2": "identity",
+        "newsreader-200-800-normal-latin.woff2": "identity",
+        "fira-sans-500-normal-latin.woff2": "identity",
+        "fira-sans-600-normal-latin.woff2": "identity",
+        "fira-sans-400-italic-latin.woff2": "identity",
+        "fira-mono-400-normal-latin.woff2": "identity"
+      },
+      "wheel_probe": {
+        "after_120ms": 600,
+        "after_520ms": 600,
+        "native": true
+      },
+      "infinite_running_at_bottom": [
+        "span.rail2__bar.own--platform:herepulse"
+      ],
+      "scroll_timeline_animations": [],
+      "infinite_running_after_live_reduce_toggle": [],
+      "reduced_capture_ms": 308,
+      "hidden_in_fold_reduced_t300": [],
+      "reduced_running_animations_t1500": [],
+      "hidden_in_fold_reduced_t1500": [],
+      "raf_4x": {
+        "0-3s": {
+          "frames": 9,
+          "dropped_est": 169,
+          "longFrames_gt50ms": 6,
+          "worst_ms": 933.3,
+          "p95_ms": 600.0,
+          "mean_ms": 328.88,
+          "fps_est": 3.0
+        },
+        "3-6s": {
+          "frames": 156,
+          "dropped_est": 26,
+          "longFrames_gt50ms": 2,
+          "worst_ms": 216.6,
+          "p95_ms": 16.8,
+          "mean_ms": 19.44,
+          "fps_est": 51.4
+        }
+      }
+    },
+    "b_home": {
+      "url": "http://127.0.0.1:8790/docs/design-v2/directions/b-architectural-depth/home.html",
+      "hidden_in_fold_normal_t300": [
+        "p.eyebrow -> opacity 0",
+        "p.t-lead.hero__lead -> opacity 0",
+        "p.hero__body -> opacity 0",
+        "div.hero__actions -> opacity 0",
+        "p.hero__note.t-caption -> opacity 0",
+        "div.portal__plane -> opacity 0",
+        "div.arch__fill -> opacity 0",
+        "div.arch__photo -> opacity 0",
+        "div.arch__light -> opacity 0",
+        "div.arch__inner -> opacity 0",
+        "div.arch__glow -> opacity 0",
+        "div.arch__key-wrap -> opacity 0",
+        "path.is-outer -> stroke undrawn (dashoffset 1px)",
+        "path.is-inner -> stroke undrawn (dashoffset 1px)",
+        "p.portal__cap -> opacity 0"
+      ],
+      "doorway_normal_t300": {
+        "key": {
+          "w": 77,
+          "h": 168,
+          "top": 406,
+          "left": 1143,
+          "opacity": "1",
+          "effOpacity": 0,
+          "transform": "matrix(1, 0, 0, 1, 0, -6.4478)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 227,
+          "h": 352,
+          "top": 294,
+          "left": 1068,
+          "opacity": "0",
+          "effOpacity": 0,
+          "transform": "matrix(1, 0, 0, 1, 0, 28)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 437,
+          "h": 583,
+          "top": 202,
+          "left": 963,
+          "opacity": "0.34",
+          "effOpacity": 0,
+          "transform": "matrix(1, 0, 0, 1, 0, 11.9745)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 0,
+            "h": 6,
+            "top": 749,
+            "left": 1181,
+            "opacity": "0.34",
+            "effOpacity": 0.34,
+            "transform": "matrix(0, 0, 0, 1, 0, 0)",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 0,
+            "h": 6,
+            "top": 758,
+            "left": 1181,
+            "opacity": "0.24",
+            "effOpacity": 0.24,
+            "transform": "matrix(0, 0, 0, 1, 0, 0)",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 0,
+            "h": 6,
+            "top": 767,
+            "left": 1181,
+            "opacity": "0.16",
+            "effOpacity": 0.16,
+            "transform": "matrix(0, 0, 0, 1, 0, 0)",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": [
+          {
+            "w": 436,
+            "h": 582,
+            "top": 191,
+            "left": 963,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "1px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 404,
+            "h": 567,
+            "top": 207,
+            "left": 979,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "1px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "glow": {
+          "w": 209,
+          "h": 209,
+          "top": 371,
+          "left": 1077,
+          "opacity": "0",
+          "effOpacity": 0,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "capture_times_ms": {
+        "t300": 334,
+        "t1000": 1004,
+        "t2000": 2002,
+        "t4000": 4006
+      },
+      "doorway_normal_t4000": {
+        "key": {
+          "w": 77,
+          "h": 167,
+          "top": 352,
+          "left": 1143,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "matrix(1, 0, 0, 1, 0, -6.4478)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 227,
+          "h": 352,
+          "top": 266,
+          "left": 1068,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 437,
+          "h": 583,
+          "top": 202,
+          "left": 963,
+          "opacity": "0.34",
+          "effOpacity": 0.34,
+          "transform": "matrix(1, 0, 0, 1, 0, 11.9745)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 225,
+            "h": 6,
+            "top": 749,
+            "left": 1069,
+            "opacity": "0.34",
+            "effOpacity": 0.34,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 273,
+            "h": 6,
+            "top": 758,
+            "left": 1045,
+            "opacity": "0.24",
+            "effOpacity": 0.24,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 321,
+            "h": 6,
+            "top": 767,
+            "left": 1021,
+            "opacity": "0.16",
+            "effOpacity": 0.16,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": [
+          {
+            "w": 436,
+            "h": 582,
+            "top": 191,
+            "left": 963,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 404,
+            "h": 567,
+            "top": 207,
+            "left": 979,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "glow": {
+          "w": 209,
+          "h": 209,
+          "top": 343,
+          "left": 1077,
+          "opacity": "0.648123",
+          "effOpacity": 0.648,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "animations_t4000": [
+        {
+          "kind": "CSSAnimation",
+          "name": "glowBreath",
+          "target": "div.arch__glow",
+          "pseudo": null,
+          "duration": 24000,
+          "delay": 0,
+          "iterations": Infinity,
+          "direction": "alternate",
+          "easing": "linear",
+          "playState": "running",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "opacity"
+          ]
+        }
+      ],
+      "raf_1x": {
+        "0-3s": {
+          "frames": 149,
+          "dropped_est": 30,
+          "longFrames_gt50ms": 3,
+          "worst_ms": 249.9,
+          "p95_ms": 33.3,
+          "mean_ms": 20.04,
+          "fps_est": 49.9
+        },
+        "3-6s": {
+          "frames": 176,
+          "dropped_est": 4,
+          "longFrames_gt50ms": 1,
+          "worst_ms": 66.6,
+          "p95_ms": 16.8,
+          "mean_ms": 17.04,
+          "fps_est": 58.7
+        }
+      },
+      "trace": {
+        "0-0.5s": {
+          "Layout": {
+            "count": 9,
+            "ms": 320.3
+          },
+          "Paint": {
+            "count": 17,
+            "ms": 11.5
+          },
+          "UpdateLayoutTree": {
+            "count": 8,
+            "ms": 71.7
+          },
+          "PrePaint": {
+            "count": 15,
+            "ms": 7.5
+          },
+          "Commit": {
+            "count": 17,
+            "ms": 1.6
+          },
+          "Animation": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 7,
+            "ms": 1.0
+          },
+          "RunTask": {
+            "count": 2043,
+            "ms": 607.9
+          }
+        },
+        "0.5-3s": {
+          "Layout": {
+            "count": 10,
+            "ms": 9.5
+          },
+          "Paint": {
+            "count": 181,
+            "ms": 33.9
+          },
+          "UpdateLayoutTree": {
+            "count": 142,
+            "ms": 45.2
+          },
+          "PrePaint": {
+            "count": 147,
+            "ms": 32.1
+          },
+          "Commit": {
+            "count": 246,
+            "ms": 29.0
+          },
+          "Animation": {
+            "count": 55,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 355,
+            "ms": 55.0
+          },
+          "RunTask": {
+            "count": 3555,
+            "ms": 2385.0
+          }
+        },
+        "3-6s": {
+          "Layout": {
+            "count": 1,
+            "ms": 1.5
+          },
+          "Paint": {
+            "count": 4,
+            "ms": 3.0
+          },
+          "UpdateLayoutTree": {
+            "count": 176,
+            "ms": 43.6
+          },
+          "PrePaint": {
+            "count": 176,
+            "ms": 10.8
+          },
+          "Commit": {
+            "count": 189,
+            "ms": 27.8
+          },
+          "Animation": {
+            "count": 1,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 449,
+            "ms": 30.0
+          },
+          "RunTask": {
+            "count": 2739,
+            "ms": 1325.3
+          }
+        }
+      },
+      "counts": {
+        "domNodes": 424,
+        "svgPaths": 14,
+        "svgElements": 86,
+        "svgRoots": 23,
+        "dataReveal": 17,
+        "images": 5,
+        "scrollBehaviorHtml": "auto",
+        "scrollBehaviorBody": "auto",
+        "lenis": false,
+        "locomotive": false,
+        "gsap": false,
+        "listeners": [
+          {
+            "type": "scroll",
+            "target": "window",
+            "passive": true
+          },
+          {
+            "type": "keydown",
+            "target": "DIV",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "BUTTON",
+            "passive": false
+          },
+          {
+            "type": "scroll",
+            "target": "window",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "DETAILS",
+            "passive": false
+          },
+          {
+            "type": "touchstart",
+            "target": "window",
+            "passive": false
+          }
+        ]
+      },
+      "network": {
+        "document": {
+          "count": 1,
+          "bodyBytes": 24496,
+          "files": {
+            "home.html": 24496
+          }
+        },
+        "stylesheet": {
+          "count": 2,
+          "bodyBytes": 73969,
+          "files": {
+            "fonts.css": 13998,
+            "styles.css": 59971
+          }
+        },
+        "image": {
+          "count": 3,
+          "bodyBytes": 950255,
+          "files": {
+            "arch-photo-original-2400.jpg": 948733,
+            "logo-mark.svg": 1040,
+            "key.svg": 482
+          }
+        },
+        "script": {
+          "count": 3,
+          "bodyBytes": 75679,
+          "files": {
+            "head.js": 323,
+            "main.js": 10022,
+            "motion.js": 65334
+          }
+        },
+        "font": {
+          "count": 5,
+          "bodyBytes": 343440,
+          "files": {
+            "newsreader-200-800-italic-latin.woff2": 146872,
+            "fira-sans-400-normal-latin.woff2": 23872,
+            "newsreader-200-800-normal-latin.woff2": 132000,
+            "fira-sans-500-normal-latin.woff2": 24056,
+            "fira-mono-400-normal-latin.woff2": 16640
+          }
+        }
+      },
+      "content_encoding": {
+        "home.html": "identity",
+        "fonts.css": "identity",
+        "styles.css": "identity",
+        "arch-photo-original-2400.jpg": "identity",
+        "head.js": "identity",
+        "logo-mark.svg": "identity",
+        "key.svg": "identity",
+        "main.js": "identity",
+        "newsreader-200-800-italic-latin.woff2": "identity",
+        "fira-sans-400-normal-latin.woff2": "identity",
+        "newsreader-200-800-normal-latin.woff2": "identity",
+        "fira-sans-500-normal-latin.woff2": "identity",
+        "fira-mono-400-normal-latin.woff2": "identity",
+        "motion.js": "identity"
+      },
+      "wheel_probe": {
+        "after_120ms": 600,
+        "after_520ms": 600,
+        "native": true
+      },
+      "infinite_running_at_bottom": [
+        "div.arch__glow:glowBreath"
+      ],
+      "scroll_timeline_animations": [],
+      "infinite_running_after_live_reduce_toggle": [],
+      "reduced_capture_ms": 359,
+      "hidden_in_fold_reduced_t300": [],
+      "doorway_reduced_t300": {
+        "key": {
+          "w": 77,
+          "h": 168,
+          "top": 358,
+          "left": 1143,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 227,
+          "h": 352,
+          "top": 266,
+          "left": 1068,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 472,
+          "h": 630,
+          "top": 167,
+          "left": 945,
+          "opacity": "0.34",
+          "effOpacity": 0.34,
+          "transform": "matrix(1.08, 0, 0, 1.08, 0, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 225,
+            "h": 6,
+            "top": 749,
+            "left": 1069,
+            "opacity": "0.34",
+            "effOpacity": 0.34,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 273,
+            "h": 6,
+            "top": 758,
+            "left": 1045,
+            "opacity": "0.24",
+            "effOpacity": 0.24,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 321,
+            "h": 6,
+            "top": 767,
+            "left": 1021,
+            "opacity": "0.16",
+            "effOpacity": 0.16,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": [
+          {
+            "w": 436,
+            "h": 582,
+            "top": 191,
+            "left": 963,
+            "opacity": "1",
+            "effOpacity": 1,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 404,
+            "h": 567,
+            "top": 207,
+            "left": 979,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "glow": {
+          "w": 209,
+          "h": 209,
+          "top": 343,
+          "left": 1077,
+          "opacity": "0.8",
+          "effOpacity": 0.8,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "reduced_running_animations_t1500": [],
+      "hidden_in_fold_reduced_t1500": [],
+      "raf_4x": {
+        "0-3s": {
+          "frames": 5,
+          "dropped_est": 119,
+          "longFrames_gt50ms": 2,
+          "worst_ms": 1716.6,
+          "p95_ms": 277.3,
+          "mean_ms": 412.14,
+          "fps_est": 2.4
+        },
+        "3-6s": {
+          "frames": 143,
+          "dropped_est": 93,
+          "longFrames_gt50ms": 2,
+          "worst_ms": 1133.2,
+          "p95_ms": 33.3,
+          "mean_ms": 27.5,
+          "fps_est": 36.4
+        }
+      }
+    },
+    "b_dashboard": {
+      "url": "http://127.0.0.1:8790/docs/design-v2/directions/b-architectural-depth/dashboard.html",
+      "hidden_in_fold_normal_t300": [],
+      "capture_times_ms": {
+        "t300": 381,
+        "t1000": 1008,
+        "t2000": 1998,
+        "t4000": 3999
+      },
+      "animations_t4000": [],
+      "raf_1x": {
+        "0-3s": {
+          "frames": 163,
+          "dropped_est": 16,
+          "longFrames_gt50ms": 2,
+          "worst_ms": 200,
+          "p95_ms": 16.8,
+          "mean_ms": 18.33,
+          "fps_est": 54.5
+        },
+        "3-6s": {
+          "frames": 180,
+          "dropped_est": 0,
+          "longFrames_gt50ms": 0,
+          "worst_ms": 16.8,
+          "p95_ms": 16.8,
+          "mean_ms": 16.67,
+          "fps_est": 60.0
+        }
+      },
+      "trace": {
+        "0-0.5s": {
+          "Layout": {
+            "count": 7,
+            "ms": 256.4
+          },
+          "Paint": {
+            "count": 35,
+            "ms": 32.5
+          },
+          "UpdateLayoutTree": {
+            "count": 15,
+            "ms": 48.8
+          },
+          "PrePaint": {
+            "count": 16,
+            "ms": 8.7
+          },
+          "Commit": {
+            "count": 31,
+            "ms": 2.6
+          },
+          "Animation": {
+            "count": 22,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 33,
+            "ms": 9.8
+          },
+          "RunTask": {
+            "count": 2114,
+            "ms": 826.3
+          }
+        },
+        "0.5-3s": {
+          "Layout": {
+            "count": 6,
+            "ms": 7.1
+          },
+          "Paint": {
+            "count": 44,
+            "ms": 20.9
+          },
+          "UpdateLayoutTree": {
+            "count": 24,
+            "ms": 8.6
+          },
+          "PrePaint": {
+            "count": 151,
+            "ms": 7.9
+          },
+          "Commit": {
+            "count": 182,
+            "ms": 14.2
+          },
+          "Animation": {
+            "count": 13,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 190,
+            "ms": 11.2
+          },
+          "RunTask": {
+            "count": 2991,
+            "ms": 380.9
+          }
+        },
+        "3-6s": {
+          "Layout": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "Paint": {
+            "count": 4,
+            "ms": 2.1
+          },
+          "UpdateLayoutTree": {
+            "count": 3,
+            "ms": 3.2
+          },
+          "PrePaint": {
+            "count": 180,
+            "ms": 2.6
+          },
+          "Commit": {
+            "count": 186,
+            "ms": 17.1
+          },
+          "Animation": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 293,
+            "ms": 15.1
+          },
+          "RunTask": {
+            "count": 1577,
+            "ms": 231.4
+          }
+        }
+      },
+      "counts": {
+        "domNodes": 435,
+        "svgPaths": 10,
+        "svgElements": 56,
+        "svgRoots": 30,
+        "dataReveal": 11,
+        "images": 1,
+        "scrollBehaviorHtml": "auto",
+        "scrollBehaviorBody": "auto",
+        "lenis": false,
+        "locomotive": false,
+        "gsap": false,
+        "listeners": [
+          {
+            "type": "keydown",
+            "target": "DETAILS",
+            "passive": false
+          },
+          {
+            "type": "keydown",
+            "target": "DETAILS",
+            "passive": false
+          },
+          {
+            "type": "touchstart",
+            "target": "window",
+            "passive": false
+          }
+        ]
+      },
+      "network": {
+        "document": {
+          "count": 1,
+          "bodyBytes": 21404,
+          "files": {
+            "dashboard.html": 21404
+          }
+        },
+        "stylesheet": {
+          "count": 2,
+          "bodyBytes": 73969,
+          "files": {
+            "fonts.css": 13998,
+            "styles.css": 59971
+          }
+        },
+        "script": {
+          "count": 3,
+          "bodyBytes": 75679,
+          "files": {
+            "head.js": 323,
+            "main.js": 10022,
+            "motion.js": 65334
+          }
+        },
+        "image": {
+          "count": 1,
+          "bodyBytes": 1040,
+          "files": {
+            "logo-mark.svg": 1040
+          }
+        },
+        "font": {
+          "count": 4,
+          "bodyBytes": 196568,
+          "files": {
+            "fira-sans-500-normal-latin.woff2": 24056,
+            "fira-sans-400-normal-latin.woff2": 23872,
+            "fira-mono-400-normal-latin.woff2": 16640,
+            "newsreader-200-800-normal-latin.woff2": 132000
+          }
+        }
+      },
+      "content_encoding": {
+        "dashboard.html": "identity",
+        "fonts.css": "identity",
+        "styles.css": "identity",
+        "head.js": "identity",
+        "main.js": "identity",
+        "logo-mark.svg": "identity",
+        "motion.js": "identity",
+        "fira-sans-500-normal-latin.woff2": "identity",
+        "fira-sans-400-normal-latin.woff2": "identity",
+        "fira-mono-400-normal-latin.woff2": "identity",
+        "newsreader-200-800-normal-latin.woff2": "identity"
+      },
+      "wheel_probe": {
+        "after_120ms": 600,
+        "after_520ms": 600,
+        "native": true
+      },
+      "infinite_running_at_bottom": [],
+      "scroll_timeline_animations": [],
+      "infinite_running_after_live_reduce_toggle": [],
+      "reduced_capture_ms": 309,
+      "hidden_in_fold_reduced_t300": [],
+      "reduced_running_animations_t1500": [],
+      "hidden_in_fold_reduced_t1500": [],
+      "raf_4x": {
+        "0-3s": {
+          "frames": 15,
+          "dropped_est": 164,
+          "longFrames_gt50ms": 7,
+          "worst_ms": 816.7,
+          "p95_ms": 583.2,
+          "mean_ms": 198.86,
+          "fps_est": 5.0
+        },
+        "3-6s": {
+          "frames": 178,
+          "dropped_est": 3,
+          "longFrames_gt50ms": 0,
+          "worst_ms": 50,
+          "p95_ms": 16.8,
+          "mean_ms": 16.95,
+          "fps_est": 59.0
+        }
+      }
+    },
+    "c_home": {
+      "url": "http://127.0.0.1:8790/docs/design-v2/directions/c-contemporary-diplomacy/home.html",
+      "hidden_in_fold_normal_t300": [
+        "g.terr__station.is-in -> opacity 0"
+      ],
+      "doorway_normal_t300": {
+        "key": {
+          "w": 67,
+          "h": 145,
+          "top": 419,
+          "left": 1067,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 197,
+          "h": 305,
+          "top": 331,
+          "left": 1002,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 401,
+          "h": 535,
+          "top": 244,
+          "left": 900,
+          "opacity": "0.5",
+          "effOpacity": 0.5,
+          "transform": "matrix(1.06, 0, 0, 1.06, 0, -2.47059)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 0,
+            "h": 6,
+            "top": 743,
+            "left": 1100,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "matrix(0, 0, 0, 1, 0, 0)",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 6,
+            "h": 6,
+            "top": 752,
+            "left": 1097,
+            "opacity": "0.38",
+            "effOpacity": 0.38,
+            "transform": "matrix(0.0254163, 0, 0, 1, 0, 0)",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 218,
+            "h": 6,
+            "top": 761,
+            "left": 991,
+            "opacity": "0.24",
+            "effOpacity": 0.24,
+            "transform": "matrix(0.787305, 0, 0, 1, 0, 0)",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": {
+          "w": 379,
+          "h": 506,
+          "top": 262,
+          "left": 911,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0.0422856px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "glow": {
+          "w": 136,
+          "h": 136,
+          "top": 415,
+          "left": 1032,
+          "opacity": "0.45",
+          "effOpacity": 0.45,
+          "transform": "matrix(0.96, 0, 0, 0.96, 0, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "capture_times_ms": {
+        "t300": 310,
+        "t1000": 1503,
+        "t2000": 2008,
+        "t4000": 4025
+      },
+      "doorway_normal_t4000": {
+        "key": {
+          "w": 67,
+          "h": 145,
+          "top": 409,
+          "left": 1067,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 197,
+          "h": 305,
+          "top": 331,
+          "left": 1002,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 401,
+          "h": 535,
+          "top": 244,
+          "left": 900,
+          "opacity": "0.5",
+          "effOpacity": 0.5,
+          "transform": "matrix(1.06, 0, 0, 1.06, 0, -2.47059)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 195,
+            "h": 6,
+            "top": 743,
+            "left": 1003,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 236,
+            "h": 6,
+            "top": 752,
+            "left": 982,
+            "opacity": "0.38",
+            "effOpacity": 0.38,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 277,
+            "h": 6,
+            "top": 761,
+            "left": 961,
+            "opacity": "0.24",
+            "effOpacity": 0.24,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": {
+          "w": 379,
+          "h": 506,
+          "top": 262,
+          "left": 911,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "glow": {
+          "w": 141,
+          "h": 141,
+          "top": 413,
+          "left": 1030,
+          "opacity": "0.636225",
+          "effOpacity": 0.636,
+          "transform": "matrix(0.993145, 0, 0, 0.993145, 0, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "animations_t4000": [
+        {
+          "kind": "Animation",
+          "name": "",
+          "target": "span.doorway__glow",
+          "pseudo": null,
+          "duration": 6000,
+          "delay": 1200,
+          "iterations": Infinity,
+          "direction": "alternate",
+          "easing": "ease-in-out",
+          "playState": "running",
+          "timeline": "DocumentTimeline",
+          "props": [
+            "opacity"
+          ]
+        }
+      ],
+      "raf_1x": {
+        "0-3s": {
+          "frames": 92,
+          "dropped_est": 87,
+          "longFrames_gt50ms": 8,
+          "worst_ms": 250,
+          "p95_ms": 66.7,
+          "mean_ms": 32.43,
+          "fps_est": 30.8
+        },
+        "3-6s": {
+          "frames": 81,
+          "dropped_est": 98,
+          "longFrames_gt50ms": 10,
+          "worst_ms": 100,
+          "p95_ms": 66.7,
+          "mean_ms": 36.83,
+          "fps_est": 27.2
+        }
+      },
+      "trace": {
+        "0-0.5s": {
+          "Layout": {
+            "count": 7,
+            "ms": 254.3
+          },
+          "Paint": {
+            "count": 10,
+            "ms": 33.6
+          },
+          "UpdateLayoutTree": {
+            "count": 8,
+            "ms": 69.7
+          },
+          "PrePaint": {
+            "count": 14,
+            "ms": 7.2
+          },
+          "Commit": {
+            "count": 17,
+            "ms": 1.3
+          },
+          "Animation": {
+            "count": 18,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 9,
+            "ms": 9.8
+          },
+          "RunTask": {
+            "count": 1946,
+            "ms": 584.5
+          }
+        },
+        "0.5-3s": {
+          "Layout": {
+            "count": 85,
+            "ms": 9.5
+          },
+          "Paint": {
+            "count": 215,
+            "ms": 61.8
+          },
+          "UpdateLayoutTree": {
+            "count": 85,
+            "ms": 39.7
+          },
+          "PrePaint": {
+            "count": 84,
+            "ms": 26.0
+          },
+          "Commit": {
+            "count": 183,
+            "ms": 20.6
+          },
+          "Animation": {
+            "count": 19,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 298,
+            "ms": 39.6
+          },
+          "RunTask": {
+            "count": 3477,
+            "ms": 3317.9
+          }
+        },
+        "3-6s": {
+          "Layout": {
+            "count": 82,
+            "ms": 6.0
+          },
+          "Paint": {
+            "count": 162,
+            "ms": 47.0
+          },
+          "UpdateLayoutTree": {
+            "count": 82,
+            "ms": 23.2
+          },
+          "PrePaint": {
+            "count": 82,
+            "ms": 23.6
+          },
+          "Commit": {
+            "count": 172,
+            "ms": 18.8
+          },
+          "Animation": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 271,
+            "ms": 24.8
+          },
+          "RunTask": {
+            "count": 3264,
+            "ms": 3604.3
+          }
+        }
+      },
+      "counts": {
+        "domNodes": 548,
+        "svgPaths": 155,
+        "svgElements": 260,
+        "svgRoots": 31,
+        "dataReveal": 19,
+        "images": 3,
+        "scrollBehaviorHtml": "auto",
+        "scrollBehaviorBody": "auto",
+        "lenis": false,
+        "locomotive": false,
+        "gsap": false,
+        "listeners": [
+          {
+            "type": "keydown",
+            "target": "document",
+            "passive": false
+          },
+          {
+            "type": "scroll",
+            "target": "window",
+            "passive": false
+          },
+          {
+            "type": "touchstart",
+            "target": "window",
+            "passive": false
+          }
+        ]
+      },
+      "network": {
+        "document": {
+          "count": 1,
+          "bodyBytes": 91421,
+          "files": {
+            "home.html": 91421
+          }
+        },
+        "stylesheet": {
+          "count": 2,
+          "bodyBytes": 72922,
+          "files": {
+            "fonts.css": 13998,
+            "styles.css": 58924
+          }
+        },
+        "image": {
+          "count": 2,
+          "bodyBytes": 949773,
+          "files": {
+            "arch-photo-original-2400.jpg": 948733,
+            "logo-mark.svg": 1040
+          }
+        },
+        "script": {
+          "count": 2,
+          "bodyBytes": 74385,
+          "files": {
+            "main.js": 9051,
+            "motion.js": 65334
+          }
+        },
+        "font": {
+          "count": 6,
+          "bodyBytes": 368284,
+          "files": {
+            "newsreader-200-800-italic-latin.woff2": 146872,
+            "fira-sans-400-normal-latin.woff2": 23872,
+            "newsreader-200-800-normal-latin.woff2": 132000,
+            "fira-mono-400-normal-latin.woff2": 16640,
+            "fira-sans-600-normal-latin.woff2": 24844,
+            "fira-sans-500-normal-latin.woff2": 24056
+          }
+        }
+      },
+      "content_encoding": {
+        "home.html": "identity",
+        "fonts.css": "identity",
+        "styles.css": "identity",
+        "arch-photo-original-2400.jpg": "identity",
+        "logo-mark.svg": "identity",
+        "main.js": "identity",
+        "newsreader-200-800-italic-latin.woff2": "identity",
+        "fira-sans-400-normal-latin.woff2": "identity",
+        "newsreader-200-800-normal-latin.woff2": "identity",
+        "fira-mono-400-normal-latin.woff2": "identity",
+        "fira-sans-600-normal-latin.woff2": "identity",
+        "fira-sans-500-normal-latin.woff2": "identity",
+        "motion.js": "identity"
+      },
+      "wheel_probe": {
+        "after_120ms": 600,
+        "after_520ms": 600,
+        "native": true
+      },
+      "infinite_running_at_bottom": [
+        "span.doorway__glow"
+      ],
+      "scroll_timeline_animations": [],
+      "infinite_running_after_live_reduce_toggle": [
+        "span.doorway__glow"
+      ],
+      "reduced_capture_ms": 339,
+      "hidden_in_fold_reduced_t300": [],
+      "doorway_reduced_t300": {
+        "key": {
+          "w": 67,
+          "h": 145,
+          "top": 424,
+          "left": 1067,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "inner": {
+          "w": 197,
+          "h": 305,
+          "top": 344,
+          "left": 1002,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "photo": {
+          "w": 401,
+          "h": 535,
+          "top": 260,
+          "left": 900,
+          "opacity": "0.5",
+          "effOpacity": 0.5,
+          "transform": "matrix(1.06, 0, 0, 1.06, 0, 0)",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "steps": [
+          {
+            "w": 195,
+            "h": 6,
+            "top": 756,
+            "left": 1003,
+            "opacity": "0.55",
+            "effOpacity": 0.55,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 236,
+            "h": 6,
+            "top": 765,
+            "left": 982,
+            "opacity": "0.38",
+            "effOpacity": 0.38,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          },
+          {
+            "w": 277,
+            "h": 6,
+            "top": 774,
+            "left": 961,
+            "opacity": "0.24",
+            "effOpacity": 0.24,
+            "transform": "none",
+            "dashoffset": "0px",
+            "visibility": "visible",
+            "inFold": true
+          }
+        ],
+        "outline": {
+          "w": 379,
+          "h": 506,
+          "top": 275,
+          "left": 911,
+          "opacity": "1",
+          "effOpacity": 1,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        },
+        "glow": {
+          "w": 142,
+          "h": 142,
+          "top": 426,
+          "left": 1029,
+          "opacity": "0.7",
+          "effOpacity": 0.7,
+          "transform": "none",
+          "dashoffset": "0px",
+          "visibility": "visible",
+          "inFold": true
+        }
+      },
+      "reduced_running_animations_t1500": [],
+      "hidden_in_fold_reduced_t1500": [],
+      "raf_4x": {
+        "0-3s": {
+          "frames": 6,
+          "dropped_est": 169,
+          "longFrames_gt50ms": 6,
+          "worst_ms": 1150,
+          "p95_ms": 616.6,
+          "mean_ms": 486.22,
+          "fps_est": 2.1
+        },
+        "3-6s": {
+          "frames": 60,
+          "dropped_est": 122,
+          "longFrames_gt50ms": 15,
+          "worst_ms": 383.4,
+          "p95_ms": 100.1,
+          "mean_ms": 50.55,
+          "fps_est": 19.8
+        }
+      }
+    },
+    "c_dashboard": {
+      "url": "http://127.0.0.1:8790/docs/design-v2/directions/c-contemporary-diplomacy/dashboard.html",
+      "hidden_in_fold_normal_t300": [],
+      "capture_times_ms": {
+        "t300": 437,
+        "t1000": 1011,
+        "t2000": 2004,
+        "t4000": 4001
+      },
+      "animations_t4000": [],
+      "raf_1x": {
+        "0-3s": {
+          "frames": 160,
+          "dropped_est": 20,
+          "longFrames_gt50ms": 3,
+          "worst_ms": 183.5,
+          "p95_ms": 16.8,
+          "mean_ms": 18.7,
+          "fps_est": 53.5
+        },
+        "3-6s": {
+          "frames": 180,
+          "dropped_est": 0,
+          "longFrames_gt50ms": 0,
+          "worst_ms": 16.8,
+          "p95_ms": 16.7,
+          "mean_ms": 16.67,
+          "fps_est": 60.0
+        }
+      },
+      "trace": {
+        "0-0.5s": {
+          "Layout": {
+            "count": 7,
+            "ms": 224.0
+          },
+          "Paint": {
+            "count": 27,
+            "ms": 45.0
+          },
+          "UpdateLayoutTree": {
+            "count": 11,
+            "ms": 43.3
+          },
+          "PrePaint": {
+            "count": 15,
+            "ms": 12.9
+          },
+          "Commit": {
+            "count": 24,
+            "ms": 3.3
+          },
+          "Animation": {
+            "count": 18,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 29,
+            "ms": 11.9
+          },
+          "RunTask": {
+            "count": 1900,
+            "ms": 612.7
+          }
+        },
+        "0.5-3s": {
+          "Layout": {
+            "count": 7,
+            "ms": 3.7
+          },
+          "Paint": {
+            "count": 50,
+            "ms": 24.8
+          },
+          "UpdateLayoutTree": {
+            "count": 32,
+            "ms": 26.2
+          },
+          "PrePaint": {
+            "count": 148,
+            "ms": 10.1
+          },
+          "Commit": {
+            "count": 191,
+            "ms": 19.5
+          },
+          "Animation": {
+            "count": 9,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 223,
+            "ms": 24.6
+          },
+          "RunTask": {
+            "count": 2101,
+            "ms": 989.9
+          }
+        },
+        "3-6s": {
+          "Layout": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "Paint": {
+            "count": 4,
+            "ms": 2.4
+          },
+          "UpdateLayoutTree": {
+            "count": 2,
+            "ms": 0.3
+          },
+          "PrePaint": {
+            "count": 180,
+            "ms": 3.1
+          },
+          "Commit": {
+            "count": 186,
+            "ms": 19.0
+          },
+          "Animation": {
+            "count": 0,
+            "ms": 0.0
+          },
+          "FunctionCall": {
+            "count": 289,
+            "ms": 15.7
+          },
+          "RunTask": {
+            "count": 1593,
+            "ms": 294.6
+          }
+        }
+      },
+      "counts": {
+        "domNodes": 476,
+        "svgPaths": 87,
+        "svgElements": 147,
+        "svgRoots": 42,
+        "dataReveal": 8,
+        "images": 1,
+        "scrollBehaviorHtml": "auto",
+        "scrollBehaviorBody": "auto",
+        "lenis": false,
+        "locomotive": false,
+        "gsap": false,
+        "listeners": [
+          {
+            "type": "touchstart",
+            "target": "window",
+            "passive": false
+          }
+        ]
+      },
+      "network": {
+        "document": {
+          "count": 1,
+          "bodyBytes": 49035,
+          "files": {
+            "dashboard.html": 49035
+          }
+        },
+        "stylesheet": {
+          "count": 2,
+          "bodyBytes": 72922,
+          "files": {
+            "fonts.css": 13998,
+            "styles.css": 58924
+          }
+        },
+        "script": {
+          "count": 2,
+          "bodyBytes": 74385,
+          "files": {
+            "main.js": 9051,
+            "motion.js": 65334
+          }
+        },
+        "image": {
+          "count": 1,
+          "bodyBytes": 1040,
+          "files": {
+            "logo-mark.svg": 1040
+          }
+        },
+        "font": {
+          "count": 5,
+          "bodyBytes": 221412,
+          "files": {
+            "fira-sans-400-normal-latin.woff2": 23872,
+            "fira-sans-600-normal-latin.woff2": 24844,
+            "newsreader-200-800-normal-latin.woff2": 132000,
+            "fira-mono-400-normal-latin.woff2": 16640,
+            "fira-sans-500-normal-latin.woff2": 24056
+          }
+        }
+      },
+      "content_encoding": {
+        "dashboard.html": "identity",
+        "fonts.css": "identity",
+        "styles.css": "identity",
+        "main.js": "identity",
+        "logo-mark.svg": "identity",
+        "fira-sans-400-normal-latin.woff2": "identity",
+        "fira-sans-600-normal-latin.woff2": "identity",
+        "newsreader-200-800-normal-latin.woff2": "identity",
+        "fira-mono-400-normal-latin.woff2": "identity",
+        "fira-sans-500-normal-latin.woff2": "identity",
+        "motion.js": "identity"
+      },
+      "wheel_probe": {
+        "after_120ms": 600,
+        "after_520ms": 600,
+        "native": true
+      },
+      "infinite_running_at_bottom": [],
+      "scroll_timeline_animations": [],
+      "infinite_running_after_live_reduce_toggle": [],
+      "reduced_capture_ms": 394,
+      "hidden_in_fold_reduced_t300": [],
+      "reduced_running_animations_t1500": [],
+      "hidden_in_fold_reduced_t1500": [],
+      "raf_4x": {
+        "0-3s": {
+          "frames": 28,
+          "dropped_est": 152,
+          "longFrames_gt50ms": 5,
+          "worst_ms": 1183.3,
+          "p95_ms": 166.6,
+          "mean_ms": 107.04,
+          "fps_est": 9.3
+        },
+        "3-6s": {
+          "frames": 180,
+          "dropped_est": 0,
+          "longFrames_gt50ms": 0,
+          "worst_ms": 16.8,
+          "p95_ms": 16.8,
+          "mean_ms": 16.67,
+          "fps_est": 60.0
+        }
+      }
+    }
+  },
+  "static_gzip_bytes": {
+    "a": {
+      "dashboard.html": {
+        "raw": 24811,
+        "gzip": 5593
+      },
+      "home.html": {
+        "raw": 33070,
+        "gzip": 7228
+      },
+      "main.js": {
+        "raw": 8845,
+        "gzip": 2888
+      },
+      "styles.css": {
+        "raw": 59873,
+        "gzip": 12965
+      }
+    },
+    "b": {
+      "dashboard.html": {
+        "raw": 21404,
+        "gzip": 4707
+      },
+      "head.js": {
+        "raw": 323,
+        "gzip": 245
+      },
+      "home.html": {
+        "raw": 24496,
+        "gzip": 5831
+      },
+      "main.js": {
+        "raw": 10022,
+        "gzip": 3495
+      },
+      "styles.css": {
+        "raw": 59971,
+        "gzip": 12426
+      }
+    },
+    "c": {
+      "dashboard.html": {
+        "raw": 49035,
+        "gzip": 15266
+      },
+      "home.html": {
+        "raw": 91421,
+        "gzip": 32997
+      },
+      "main.js": {
+        "raw": 9051,
+        "gzip": 3219
+      },
+      "styles.css": {
+        "raw": 58924,
+        "gzip": 11470
+      }
+    },
+    "motion.js": {
+      "raw": 65334,
+      "gzip": 24021
+    },
+    "arch-photo": {
+      "raw": 948733
+    }
+  },
+  "probes2": {
+    "a_home_wheel_as_is": {
+      "header_h_at_top": 73,
+      "trials": [
+        {
+          "after_120ms": 598,
+          "after_620ms": 584,
+          "header_h": 57
+        },
+        {
+          "after_120ms": 598,
+          "after_620ms": 584,
+          "header_h": 57
+        },
+        {
+          "after_120ms": 590,
+          "after_620ms": 584,
+          "header_h": 57
+        }
+      ]
+    },
+    "a_home_wheel_header_layout_transitions_off": {
+      "header_h_at_top": 73,
+      "trials": [
+        {
+          "after_120ms": 584,
+          "after_620ms": 584,
+          "header_h": 57
+        },
+        {
+          "after_120ms": 584,
+          "after_620ms": 584,
+          "header_h": 57
+        },
+        {
+          "after_120ms": 584,
+          "after_620ms": 584,
+          "header_h": 57
+        }
+      ]
+    },
+    "c_home_top_moving": {
+      "t0": {
+        "tides": [
+          "g translateX(-1.52529px) translateY(-0.762643px)",
+          "g translateX(0.942088px) translateY(-0.471044px)",
+          "g translateX(-0.53385px) translateY(-0.266925px)"
+        ],
+        "key": "SPAN translateY(-1.60592px)",
+        "glow": "0.594285",
+        "tideBtn": {
+          "pressed": "false",
+          "static": "false"
+        }
+      },
+      "t400": {
+        "tides": [
+          "g translateX(-1.70357px) translateY(-0.851786px)",
+          "g translateX(1.05221px) translateY(-0.526103px)",
+          "g translateX(-0.59625px) translateY(-0.298125px)"
+        ],
+        "key": "SPAN translateY(-2.26193px)",
+        "glow": "0.645894",
+        "tideBtn": {
+          "pressed": "false",
+          "static": "false"
+        }
+      },
+      "tides_moving": true,
+      "key_moving": true,
+      "glow_moving": true
+    },
+    "c_home_bottom_offscreen": {
+      "t0": {
+        "tides": [
+          "g translateX(-1.71557px) translateY(-0.857786px)",
+          "g translateX(1.05962px) translateY(-0.529809px)",
+          "g translateX(-0.60045px) translateY(-0.300225px)"
+        ],
+        "key": "SPAN translateY(-3.65661px)",
+        "glow": "0.749549",
+        "tideBtn": {
+          "pressed": "false",
+          "static": "false"
+        }
+      },
+      "t400": {
+        "tides": [
+          "g translateX(-1.71557px) translateY(-0.857786px)",
+          "g translateX(1.05962px) translateY(-0.529809px)",
+          "g translateX(-0.60045px) translateY(-0.300225px)"
+        ],
+        "key": "SPAN translateY(-4.31869px)",
+        "glow": "0.796484",
+        "tideBtn": {
+          "pressed": "false",
+          "static": "false"
+        }
+      },
+      "tides_moving": false,
+      "key_moving": true,
+      "glow_moving": true
+    },
+    "c_home_after_pause_button": {
+      "t0": {
+        "tides": [
+          "g translateX(-1.97529px) translateY(-0.987643px)",
+          "g translateX(1.22003px) translateY(-0.610015px)",
+          "g translateX(-0.69135px) translateY(-0.345675px)"
+        ],
+        "key": "SPAN translateY(-5.45297px)",
+        "glow": "0.871572",
+        "tideBtn": {
+          "pressed": "true",
+          "static": "false"
+        }
+      },
+      "t400": {
+        "tides": [
+          "g translateX(-1.97529px) translateY(-0.987643px)",
+          "g translateX(1.22003px) translateY(-0.610015px)",
+          "g translateX(-0.69135px) translateY(-0.345675px)"
+        ],
+        "key": "SPAN translateY(-5.7583px)",
+        "glow": "0.889791",
+        "tideBtn": {
+          "pressed": "true",
+          "static": "false"
+        }
+      },
+      "tides_moving": false,
+      "key_moving": true,
+      "glow_moving": true
+    },
+    "c_home_after_live_reduce": {
+      "t0": {
+        "tides": [
+          "g translateX(-2.31643px) translateY(-1.15821px)",
+          "g translateX(1.43074px) translateY(-0.715368px)",
+          "g translateX(-0.81075px) translateY(-0.405375px)"
+        ],
+        "key": "SPAN translateY(-5.99991px)",
+        "glow": "0.899129",
+        "tideBtn": {
+          "pressed": "false",
+          "static": "false"
+        }
+      },
+      "t400": {
+        "tides": [
+          "g translateX(-2.49643px) translateY(-1.24821px)",
+          "g translateX(1.54191px) translateY(-0.770956px)",
+          "g translateX(-0.87375px) translateY(-0.436875px)"
+        ],
+        "key": "SPAN translateY(-5.94767px)",
+        "glow": "0.8909",
+        "tideBtn": {
+          "pressed": "false",
+          "static": "false"
+        }
+      },
+      "tides_moving": true,
+      "key_moving": true,
+      "glow_moving": true
+    },
+    "a_home_top_moving": {
+      "t0": {
+        "key": "matrix(1, 0, 0, 1, 0, -0.73697)",
+        "glow": "0.799554",
+        "packet": "6.66628%",
+        "ring": "no-ring"
+      },
+      "t400": {
+        "key": "matrix(1, 0, 0, 1, 0, -1.15877)",
+        "glow": "0.849988",
+        "packet": "8.33295%",
+        "ring": "no-ring"
+      }
+    },
+    "a_home_after_live_reduce": {
+      "t0": {
+        "key": "none",
+        "glow": "1",
+        "packet": "0px",
+        "ring": "no-ring"
+      },
+      "t400": {
+        "key": "none",
+        "glow": "1",
+        "packet": "0px",
+        "ring": "no-ring"
+      },
+      "still_moving": false
+    }
+  }
+}

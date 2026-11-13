@@ -1,0 +1,23 @@
+{% load i18n %}{% comment %}
+Sheet — the overlay system's bottom sheet (design V5, V5.4 plan §1.14; the contract
+docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). A native <dialog> that static/js/src/overlay.js opens modal (over the
+one scrim, the trap in script, aria-modal), from the bottom on the sheet's spring (550 ms, no overshoot), out in 200 ms; a 48 px bleed under the
+viewport's edge and the safe area kept clear. Esc, the scrim (never with unsaved input), «Fermer», a link inside it,
+or the grip dragged down close it; the grip is decorative — «Fermer» is always there (WCAG 2.5.7). It does not mirror.
+PAGE-ONLY CSS (CONTRACT §1, the owner's V5.8 budget): its rules are static/css/v5/_overlay-panels.css, not main.css
+— the page that includes it links {% static 'css/dist/core/overlay-panels.css' %} in its extra_head, after main.css
+(tests/frontend/test_overlays.py refuses a page that draws one without it).
+Contract: `id` (required); `title`; `body` (safe HTML) — or `body_template`, a template included with the context and `overlay_part` = "body";
+optional `actions` (safe HTML of the foot) — or `actions_template` (included with `overlay_part` = "actions"); `history` (True →
+Back closes it); `return_id` (where «Fermer» leads without script; default `main-content`). Open it with a link that
+also works without script:
+  <a href="#{{ id }}" data-overlay-open>…</a>
+{% endcomment %}<dialog class="overlay overlay--sheet" id="{{ id }}" data-overlay="sheet"{% if history %} data-overlay-history{% endif %} aria-labelledby="{{ id }}-title">
+  <span class="overlay__grip" data-overlay-grip aria-hidden="true"></span>
+  <div class="overlay__head">
+    <h2 class="overlay__title" id="{{ id }}-title">{{ title }}</h2>
+    <a class="overlay__close" href="#{{ return_id|default:'main-content' }}" data-overlay-close aria-label="{% translate 'Fermer' %}">{% svg_icon "close" "icon" %}</a>
+  </div>
+  <div class="overlay__body">{% if body_template %}{% include body_template with overlay_part="body" %}{% else %}{{ body }}{% endif %}</div>
+  {% if actions_template %}<div class="overlay__foot">{% include actions_template with overlay_part="actions" %}</div>{% elif actions %}<div class="overlay__foot">{{ actions }}</div>{% endif %}
+</dialog>

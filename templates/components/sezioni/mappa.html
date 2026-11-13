@@ -1,0 +1,46 @@
+{% comment %}
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B4): the layout «arc» draws no seat any more — the six icon tiles over the
+Institutions' recipients left; the locked sentence stands whole as one typographic annotation (v5/_sec-emiciclo.css),
+its phrases keeping their `data-seggio` (the pattern's pairing attribute; `nodes` is ignored by this layout). The ring
+layout below is unchanged.
+H · «LA MAPPA» — the interactive actor map, and its variant «l'emiciclo» (design V5.22, SECTION_SYSTEM_V2 §2 H; lane S):
+when actors and their relations are the content — never a decoration of a list. static/css/v5/_sec-mappa.css;
+static/js/src/sezioni/mappa.js (the ring).
+
+The ring: a hub (a photograph, a mark or a caption) and the actors' T2a discs on a ring, their spokes; the panel of the
+selected actor (its sentence and its link) docked beside the ring (≥ 64 rem) or under it; a highlight that glides to the
+selected node. The nodes are anchors to their entries (without script every entry is listed, and :target shows one);
+the module makes them a tablist — the hub first, Escape and the hub return to it. Motion RELATIONAL DRAW + GLIDE: the
+selected spoke draws, the highlight glides, the panel crosses in from the node's side; on entry the nodes settle from
+0.92, 60 ms apart. Still: the ring drawn, the hub caption shown, the selection instant.
+
+«l'emiciclo» (`layout="arc"`, CSS only, words once — RH-5): since the FINAL MICRO-PASS no seat is drawn — the locked
+sentence stands whole, its enumerated items as spans carrying `data-seggio` (cut at render on its own separators; the
+pattern's own attribute, never Lume's L3 seat: DS 2026 §12), set as one typographic annotation; nothing lights.
+
+Contract: `id` (unique prefix); `label` (the tablist's name); `hub` — {"title" (the hub tab's name), "caption" (safe: the
+hub state, e.g. the «En bref» sentence), "caption_lang", "slot" (a photograph at the hub) or "mark" (an ILE mark)};
+`nodes` — [{"key", "glyph", "audience", "label", "label_lang", "panel" (safe), "panel_lang", "href", "link_label"}];
+`layout` ("ring" | "arc"); arc: `sentence` (safe: the whole sentence, its items as <span data-seggio="1"> …),
+`sentence_lang`. The caller wraps it in its section.
+{% endcomment %}{% load pages_imagery %}{% if layout == "arc" %}<div class="emiciclo">
+  <p class="emiciclo__frase"{% if sentence_lang %} lang="{{ sentence_lang }}"{% endif %}>{{ sentence }}</p>
+</div>{% else %}<div class="mappa" data-sec-js="mappa"{% if label %} data-label="{{ label }}"{% endif %}>
+  <div class="mappa__anello">
+    <span class="mappa__cerchio" aria-hidden="true"></span>
+    {% for item in nodes %}<span class="mappa__raggio" data-verb="draw" aria-hidden="true"></span>{% endfor %}
+    <span class="mappa__luce" aria-hidden="true"></span>
+    <ul class="mappa__nodi sez-seq" role="list" data-registro>
+      <li class="mappa__nodo mappa__nodo--hub"><a class="mappa__tasto mappa__tasto--hub" id="{{ id }}-hub-tab" href="#{{ id }}-hub" data-i="0">{% if hub.slot %}<span class="mappa__foto" aria-hidden="true">{% photo hub.slot "mappa__hubfoto" %}</span>{% elif hub.mark %}{% include "components/sezioni/sigillo.html" with mark=hub.mark size="small" only %}{% endif %}<span class="mappa__nome">{{ hub.title }}</span></a></li>
+      {% for item in nodes %}<li class="mappa__nodo"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}><a class="mappa__tasto" id="{{ id }}-{{ item.key }}-tab" href="#{{ id }}-{{ item.key }}" data-i="{{ forloop.counter0 }}" data-node="{{ item.key }}"><span class="sez-disc" data-verb="node" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="mappa__nome"{% if item.label_lang %} lang="{{ item.label_lang }}"{% endif %}>{{ item.label }}</span></a></li>{% endfor %}
+    </ul>
+  </div>
+  <div class="mappa__pannelli" data-registro>
+    <section class="mappa__pannello mappa__pannello--hub" id="{{ id }}-hub" aria-label="{{ hub.title }}"><div class="mappa__testo"{% if hub.caption_lang %} lang="{{ hub.caption_lang }}"{% endif %}>{{ hub.caption }}</div></section>
+    {% for item in nodes %}<section class="mappa__pannello" id="{{ id }}-{{ item.key }}" aria-labelledby="{{ id }}-{{ item.key }}-tab"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}>
+      <span class="sez-disc sez-disc--lg" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+      <div class="mappa__testo"{% if item.panel_lang %} lang="{{ item.panel_lang }}"{% endif %}>{{ item.panel }}</div>
+      {% if item.href %}<p class="mappa__azione"><a class="link-arrow" href="{{ item.href }}">{{ item.link_label }}{% svg_icon "arrow" "icon icon--sm" %}</a></p>{% endif %}
+    </section>{% endfor %}
+  </div>
+</div>{% endif %}

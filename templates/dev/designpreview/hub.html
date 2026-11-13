@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static cms_nav %}
+{% comment %}
+V5 live preview — the research archive (/__design-v5/research/): the hub as it was until V5.4,
+moved under research/ when /__design-v5/ became the live V5 product (V5.4 plan §4.2). DEVELOPMENT
+ONLY: rendered by designpreview.views.hub, which exists in the process only when DEBUG is on and
+ILE_DESIGN_PREVIEW=1 (config/settings/dev.py, config/urls.py). Its old anchors (/__design-v5/#g-…)
+are sent here by the landing's script; its pickers and proof files answer under research/, and
+their old addresses redirect. The «Baseline V4 (controllo)» group left it (§4.3): it linked this
+server's own pages as V4, which they stop being when V5 enters the templates.
+
+It extends base.html for the fonts, the tokens and the bundled cascade, and replaces the public
+chrome with a one-line masthead. Its catalogue notes are kept as they were written (plan §4.2);
+since V5.4 only its framing changed (review W1-P M6): the title is the archive's, the lead says
+what it keeps and why, and one historical notice says that the notes date from before 4 October
+2026 — where they hand a choice to the owner, the council decides now, and a family that passes is
+propagated without waiting.
+
+The catalogue (order, notes, files) lives in designpreview/services.py; this file only draws it.
+Nothing here is approved — the notice says it first, and stays; a research prototype says it again
+where it stands (the group's tag, or the surface's when it sits among
+gate-0 comps). A link whose file is not on disk is printed as «manca», never as a link — looked
+up on every request, so what arrives is linked at the next reload. A link that carries a
+warning — «da non firmare come /ar/» — is one item of its row with it, so that on a phone the
+warning cannot fall beside the next link (review W1-4). A reference is a file this server does
+not serve (the hero council's minutes and sheets): its path is printed as text, never a link.
+The keys of the pickers and of the compare view are written here, and so is what a prototype's
+?rm=1 is not (research consolidation X-4): the reduced-motion state.
+{% endcomment %}
+
+{% block title %}Archivio della ricerca · Anteprima V5 · {{ site.project_name }}{% endblock %}
+{% block meta_description %}Anteprima V5, archivio della ricerca — solo sviluppo, non pubblica.{% endblock %}
+{% block head_seo %}{% endblock %}
+{% block body_class %}dp-page{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dev/designpreview.css' %}">{% endblock %}
+
+{% block chrome %}
+<header class="dp-masthead">
+  <div class="container dp-masthead__inner">
+    <a class="dp-masthead__brand" href="{% url 'designpreview:hub' %}" aria-label="{{ site.project_name }} — anteprima V5, archivio della ricerca">{% brand_lockup %}</a>
+    <p class="dp-masthead__tag"><span class="dp-masthead__dot" aria-hidden="true"></span>Anteprima V5 · archivio della ricerca · sviluppo · non pubblica</p>
+    <a class="dp-masthead__live" href="{% url 'designpreview:landing' %}">Il prodotto V5 dal vivo</a>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="dp" lang="it">
+
+  <header class="container dp-head">
+    <p class="dp-eyebrow">Archivio della ricerca · V5 «La soglia» · gate 0 «La prova» · ricerca, tre ondate</p>
+    <h1 class="dp-title">Archivio della ricerca</h1>
+    <p class="dp-archive-note">Questo è l’archivio: i prototipi e le maquette da cui la V5 è stata decisa, come erano. Il prodotto V5 di oggi è <a href="{% url 'designpreview:landing' %}">la pagina principale dell’anteprima</a>; l’<a href="{% url 'designpreview:index' %}">indice</a> elenca ogni superficie dal vivo.</p>
+    <p class="dp-lead">I prototipi e le maquette da cui la V5 è stata decisa, conservati come erano, per tracciabilità: i primi schermi con la direzione H-E e l’esito del consiglio, le maquette del gate 0 e i prototipi di ricerca delle tre ondate, in francese e in arabo, con il selettore del primo schermo, il selettore tipografico e un confronto affiancato. La V4 resta il controllo su 8771: l’indice del prodotto dal vivo la mette accanto a ogni pagina.</p>
+  </header>
+
+  <div class="container dp-notices">
+    {% include "components/notice.html" with kind="info" title="Le note sono quelle di allora" text="Scritte fino al 4 ottobre 2026. Dove dicono «decide il proprietario» o «la scelta è del proprietario», con la V5.4 decide il consiglio, e una famiglia che lo passa si propaga senza attendere. Niente di ciò che è mostrato è approvato: ogni prototipo porta il suo «prototipo di ricerca — non approvato». I prototipi di ricerca portano soltanto il giudizio di chi li ha costruiti — tranne i cinque primi schermi, che il consiglio sull’hero ha esaminato il 2 ottobre, e H-E, la cui revisione indipendente al 4 ottobre non è conclusa: per gli altri la revisione indipendente è in attesa. Il prodotto V5 di oggi è la pagina principale dell’anteprima. Questa pagina esiste soltanto in sviluppo (DEBUG e ILE_DESIGN_PREVIEW=1), risponde solo a 127.0.0.1 e non è indicizzata." %}
+    {% if not proof_present %}
+    {% include "components/notice.html" with kind="error" title="La cartella delle prove non è raggiungibile" text=proof_dir %}
+    {% endif %}
+  </div>
+
+  <nav class="container dp-toc" aria-label="Gruppi di superfici">
+    <ol class="dp-toc__list" role="list">
+      {% for group in groups %}<li><a href="#g-{{ group.key }}"><span class="dp-toc__n">{{ forloop.counter }}</span>{{ group.title }}</a></li>{% endfor %}
+    </ol>
+  </nav>
+
+  <section class="container dp-viewports" aria-labelledby="h-viewports">
+    <h2 class="dp-viewports__title" id="h-viewports">Larghezze consigliate</h2>
+    <ul class="dp-chips" role="list">
+      {% for width in viewports %}<li class="dp-chip">{{ width }}</li>{% endfor %}
+    </ul>
+    <p class="dp-viewports__note">In pixel CSS. Nei due selettori la larghezza si sceglie dalla barra, da 768 px di finestra in su; il confronto disegna i suoi due telefoni fino a 390 px, affiancati da 864 px di finestra e l’uno sotto l’altro in una più stretta; per le altre maquette, la barra dei dispositivi di Chrome.</p>
+    <dl class="dp-keys">
+      <div class="dp-keys__row"><dt>Tasti, primo schermo</dt><dd><kbd>0</kbd> <kbd>a</kbd> <kbd>b</kbd> <kbd>c</kbd> <kbd>d</kbd> <kbd>e</kbd> la variante, da H-0 a H-E (i concetti E1–E3 non hanno tasto) · <kbd>f</kbd> <kbd>r</kbd> la lingua · <kbd>3</kbd> <kbd>i</kbd> la fase</dd></div>
+      <div class="dp-keys__row"><dt>Tasti, tipografia</dt><dd><kbd>v</kbd> <kbd>a</kbd> <kbd>s</kbd> <kbd>p</kbd> <kbd>b</kbd> <kbd>c</kbd> <kbd>d</kbd> il sistema (V4, A, A-bis, A+, B, C, D) · <kbd>1</kbd>–<kbd>5</kbd> la superficie · <kbd>f</kbd> <kbd>r</kbd> la lingua</dd></div>
+      <div class="dp-keys__row"><dt>Tasti, confronto</dt><dd><kbd>f</kbd> <kbd>r</kbd> la lingua</dd></div>
+      <div class="dp-keys__row"><dt>Movimento ridotto</dt><dd>Il parametro <code>?rm=1</code> che l’hub offre per i tre caricatori e per il cassetto non è ancora lo stato di movimento ridotto: ferma le animazioni proprie di ciascun prototipo, ma il foglio dei token del gate 0 non azzera le durate sotto il parametro (MS7, aperto nella fondazione del gate 0), e una revisione del movimento fatta così vede ancora movimento. Lo stato vero è l’impostazione «riduci movimento» del sistema, o la sua emulazione in Chrome (DevTools › Rendering). Il banco del movimento azzera da sé le durate sotto lo stesso parametro.</dd></div>
+    </dl>
+  </section>
+
+  <ol class="container dp-groups" role="list">
+    {% for group in groups %}
+    <li class="dp-group" id="g-{{ group.key }}">
+      <div class="dp-group__head">
+        <h2 class="dp-group__title"><span class="dp-group__n">{{ forloop.counter }}</span>{{ group.title }}</h2>
+        {% if group.tag %}<p class="dp-tag">{{ group.tag }}</p>{% endif %}
+        <p class="dp-group__lead">{{ group.lead }}</p>
+      </div>
+      <ul class="dp-surfaces" role="list">
+        {% for surface in group.surfaces %}
+        <li class="dp-surface{% if surface.pending %} dp-surface--pending{% endif %}">
+          <div class="dp-surface__main">
+            <h3 class="dp-surface__title">{% if surface.code %}<span class="dp-surface__code">{{ surface.code }}</span> {% endif %}{{ surface.title }}</h3>
+            {% if surface.tag %}<p class="dp-tag">{{ surface.tag }}</p>{% endif %}
+            <p class="dp-surface__note">{{ surface.note }}</p>
+          </div>
+          <div class="dp-surface__links">
+            {% if surface.pending %}<span class="dp-pending">{{ surface.pending }}</span>{% endif %}
+            {% for link in surface.links %}
+            {% if link.available %}{% if link.note %}<span class="dp-link-pair">{% endif %}<a class="dp-link dp-link--{{ link.kind }}" href="{{ link.url }}"{% if link.lang %} hreflang="{{ link.lang }}"{% endif %}>{{ link.label }}</a>{% if link.note %}<span class="dp-link__note">{{ link.note }}</span></span>{% endif %}{% else %}<span class="dp-link dp-link--missing" title="{{ link.path }}">{{ link.label }} · manca</span>{% endif %}
+            {% endfor %}
+            {% for reference in surface.references %}
+            <p class="dp-ref"><span class="dp-ref__label">{{ reference.label }}</span> <code class="dp-ref__path">{{ reference.path }}</code>{% if not reference.present %} <span class="dp-ref__missing">manca</span>{% endif %}</p>
+            {% endfor %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ol>
+
+  <footer class="container dp-foot">
+    <p>Cartella delle prove: <code>{{ proof_dir }}</code>{% if proof_index_url %} · <a href="{{ proof_index_url }}">indice del pacchetto</a>{% endif %}. Si spegne togliendo <code>ILE_DESIGN_PREVIEW=1</code> dall’ambiente; si rimuove cancellando <code>apps/designpreview/</code>, <code>templates/dev/designpreview/</code>, il foglio e lo script <code>dev/designpreview</code>, il blocco in <code>config/settings/dev.py</code> e il montaggio in <code>config/urls.py</code>.</p>
+  </footer>
+
+</div>
+{% endblock %}
+
+{% block site_footer %}{% endblock %}

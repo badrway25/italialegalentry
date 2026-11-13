@@ -1,0 +1,74 @@
+{% load i18n forum_tags forum_v2 locked_split %}
+{% comment %}
+Sections in the order prescribed by the document §2.1 — every text is a locked key, verbatim, said once.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.16 FO1, FO2a, FO2b; lane P2) — the Forum in compositions, never a report's columns;
+no photograph (Q4: no stock as the Forum; Q5: no archive): its images are drawn.
+  FO1   A, typographic: «QUI SOMMES-NOUS» — the paragraph's opening clause (up to its first comma, cut at render) at
+        the band's size, the rest at the body's; «POURQUOI ITALY LEGAL ENTRY» — the paragraph's last sentence set in
+        place as the emphasised statement (a 2 px rule at its reading edge), never duplicated as a pull-quote; a
+        hairline between the two draws top to bottom in the head's sequence, one light crosses the statement;
+  FO2a  I «dal dialogo ai progetti»: «QU'EST-CE QUE LE FORUM» (its three paragraphs) sticky beside «OBJECTIFS» as a
+        line of eight clause-stations — the ONE locked sentence cut on its own « ; », in order, its punctuation kept:
+        the stations read top to bottom read the sentence; the arrival, the last clause, carries the ile-forum mark and
+        the page's one arrival light (SCROLL PROGRESSION: the line advances as it is read);
+  FO2b  H on a night plate, the page's moment: «À QUI S'ADRESSE-T-IL» — the nine actors of the locked sentence are its
+        own spans set on a ring around the Forum, clockwise in the sentence's order (counter-clockwise in Arabic), the
+        punctuation kept in the night's second ink; the four that name an ILE audience carry its disc; no link inside
+        the sentence (RELATIONAL DRAW + SETTLE). A phone reads a vertical constellation.
+Without a cut that rebuilds its text, a text stands whole (forum_v2). The anchors and the page index are unchanged.
+V5.24 (BACKGROUND_MATERIAL_V2 §3.2, §3.3, §5.2; FINAL_DELIVERY_V2 §3.6, R3; lane PUB2): FO2a stands on STONE (night → paper
+→ stone → night → stone: the paper → paper touch goes), and the seam A → I is «il raccordo» — the stations' line starts in
+the pair's foot: a 2 px structure line, the FIRST CHILD of the band it enters (v5/_materia.css), rises 48 px (32 on
+phones) into the pair and runs down to the band's head line, where its node lands; from 64 rem it stands on the
+objectives' station axis (the title moved onto the stations' text axis, the grey route line run up to the node), below
+it on the reading edge where the statement's rule stood (forum/_forum.css). It draws once, after the band's own line.
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — a dialogue's page, not a diagram: FO1 keeps its
+pair (the opening clause and the statement in place); FO2a's objectives are a plain list of their clauses (each its own
+« ; », in order) on hairlines with one quiet accent rule — the stations' line, its nodes and the arrival mark left;
+FO2b says the audience as the locked sentence WHOLE, set as the band's statement (the ring that cut it into nine floating
+words and their commas left: a sentence is read, not orbited). The anchors and the page index are unchanged.
+{% endcomment %}
+{% event_text event "who.title" as who_title %}{% event_text event "why.title" as why_title %}
+{% forum_raw event "who.body" as who_text %}{% forum_raw_lang event "who.body" as who_lang %}
+{% forum_raw event "why.body" as why_text %}{% forum_raw_lang event "why.body" as why_lang %}
+<section class="sez sez--campata forum-pair" data-ground="paper" data-rhythm="band" aria-labelledby="forum-who-title forum-why-title">
+  <div class="container forum-pair__inner">
+    <div class="forum-pair__item" id="forum-who">
+      <h2 class="forum-titolo" id="forum-who-title">{{ who_title }}</h2>
+      <p class="forum-pair__chi"{% if who_lang %} lang="{{ who_lang }}"{% endif %} data-locked="p2.forum.who.body">{{ who_text|locked_spans:"clause" }}</p>
+    </div>
+    <span class="forum-pair__divisore" aria-hidden="true"></span>
+    <div class="forum-pair__item" id="forum-why">
+      <h2 class="forum-titolo" id="forum-why-title">{{ why_title }}</h2>
+      <p class="forum-pair__perche"{% if why_lang %} lang="{{ why_lang }}"{% endif %} data-locked="p2.forum.why.body">{{ why_text|locked_spans:"sentence" }}</p>
+    </div>
+  </div>
+</section>
+
+{% event_text event "what.title" as what_title %}{% event_text event "objectives.title" as objectives_title %}
+{% event_text event "what.body" as what_paragraphs %}{% event_lang event "what.body" as what_lang %}
+{% forum_raw event "objectives.body" as objectives_text %}{% forum_raw_lang event "objectives.body" as objectives_lang %}
+<section class="sez sez--filo forum-filo" data-sec="filo" data-ground="stone" data-rhythm="band" aria-labelledby="forum-what-title">
+  <div class="container forum-filo__griglia">
+    <div class="forum-filo__cosa" id="forum-what">
+      <h2 class="forum-titolo" id="forum-what-title">{{ what_title }}</h2>
+      <div class="forum-filo__prosa"{% if what_lang != site.lang %} lang="{{ what_lang }}"{% endif %}>
+        {% for paragraph in what_paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+      </div>
+    </div>
+    <div class="forum-filo__obiettivi" id="forum-objectives">
+      <h2 class="forum-titolo" id="forum-objectives-title">{{ objectives_title }}</h2>
+      {% with clauses=objectives_text|forum_clauses %}{% if clauses %}<ol class="forum-obiettivi" role="list" data-locked="p2.forum.objectives.body"{% if objectives_lang %} lang="{{ objectives_lang }}"{% endif %}>{% for clause in clauses %}<li class="forum-obiettivi__tappa">{{ clause|forum_coda }}</li>{% endfor %}</ol>{% else %}<p class="forum-obiettivi__intero"{% if objectives_lang %} lang="{{ objectives_lang }}"{% endif %} data-locked="p2.forum.objectives.body">{{ objectives_text }}</p>{% endif %}{% endwith %}
+    </div>
+  </div>
+</section>
+
+{% event_text event "audience.title" as audience_title %}
+{% forum_raw event "audience.body" as audience_text %}{% forum_raw_lang event "audience.body" as audience_lang %}
+<section class="sez sez--mappa forum-uditorio" data-sec="mappa" data-ground="paper" data-rhythm="band" id="forum-audience" aria-labelledby="forum-audience-title">
+  <div class="container">
+    <h2 class="forum-titolo forum-uditorio__titolo" id="forum-audience-title">{{ audience_title }}</h2>
+    <p class="forum-uditorio__frase"{% if audience_lang %} lang="{{ audience_lang }}"{% endif %} data-locked="p2.forum.audience.body">{{ audience_text }}</p>
+  </div>
+</section>

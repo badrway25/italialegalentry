@@ -1,0 +1,27 @@
+{% load pages_imagery locked_split %}{% comment %}
+K · «LO STRATO» — the layered material section (design V5.22, SECTION_SYSTEM_V2 §2 K; lane S): statements, an action or
+a notice that must feel institutional and physical — plates on a ground. static/css/v5/_sec-strato.css.
+
+A ground (stone, a graded photograph under a veil, or night with its grain); one to five raised plates at --radius-md,
+a 1 px edge and a pre-painted shadow layer (at most one --shadow-2 a first screen: `raised` on one plate); drawn
+architectural marks (sill lines, corner brackets as formwork marks). Motion DEPTH: the plates settle from 0.985 while
+their shadow layers come in, 60 ms apart; a photographic ground drifts by at most 24 px against the scroll; on a night or
+stone band one light sweep crosses once. Nothing shakes, pulses or loops. Plates that open something are links (the
+heading carries a stretched link). Legal texts stay whole and visible.
+
+Contract: `ground_slot` (an imagery slot for a photographic ground, desaturated in the file — never a CSS grayscale) or
+nothing; `plates` — [{"heading", "heading_lang", "text" (a plain locked or team text, cut at render: with "keyword"
+True its first sentence — «Non.» — is the large keyword and an accent rule draws under it, the rest follows; one <p>,
+the textContent the text itself), "body" (safe, when there is no `text`), "body_lang", "href", "raised", "variant":
+"targa" (one contact or identity plate on night: the address as a large type element) | "scheda" (the glossary term
+page's definition plate)}]; `columns` (2: the 2 × 2 arrangement from 64 rem).
+The caller wraps it: <section class="sez sez--strato" data-sec="strato" data-ground="stone|night|photo">.
+{% endcomment %}<div class="strato{% if ground_slot %} strato--foto{% endif %}">
+  {% if ground_slot %}<div class="strato__fondo" aria-hidden="true">{% photo ground_slot "strato__foto" %}</div>{% endif %}
+  <div class="strato__lastre sez-seq{% if columns == 2 %} strato__lastre--2{% endif %}">
+    {% for plate in plates %}<article class="strato__lastra sez-plate{% if plate.raised %} sez-plate--raised{% endif %}{% if plate.variant %} strato__lastra--{{ plate.variant }}{% endif %}" data-verb="depth">
+      {% if plate.heading %}<h3 class="strato__titolo"{% if plate.heading_lang %} lang="{{ plate.heading_lang }}"{% endif %}>{% if plate.href %}<a class="strato__link sez-stretch" href="{{ plate.href }}">{{ plate.heading }}</a>{% else %}{{ plate.heading }}{% endif %}</h3>{% endif %}
+      {% if plate.text %}<p class="strato__corpo{% if plate.keyword %} strato__corpo--parola{% endif %}"{% if plate.body_lang %} lang="{{ plate.body_lang }}"{% endif %}>{% if plate.keyword %}{{ plate.text|locked_spans:"keyword" }}{% else %}{{ plate.text }}{% endif %}</p>{% elif plate.body %}<div class="strato__corpo"{% if plate.body_lang %} lang="{{ plate.body_lang }}"{% endif %}>{{ plate.body }}</div>{% endif %}
+    </article>{% endfor %}
+  </div>
+</div>

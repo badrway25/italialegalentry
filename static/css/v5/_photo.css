@@ -1,0 +1,204 @@
+/* ============================================================================================
+   THE V5 PHOTOGRAPH «la foto» (V5.12 DECISIONS §6; label v512-c-w2) — a partial: only the page sheets of the pages that
+   draw a photograph import it (ecosystem.css, pathways.css, pages.css), never main.css (the V5.8 ratchet: shared CSS
+   only goes down). The markup: templates/components/photo.html, drawn by {% photo %} from apps/pages/imagery.py. No
+   credit under or on a frame since V5.24 §2 (IMAGERY_ATTRIBUTION D1–D8: the licence permits it, provenance stays
+   internal — docs/IMAGE_LICENSES.md, static/brand/v5/PROVENANCE.json).
+
+     1 · the figure: the frame's box is the image's own ratio (width and height on the <img>, CLS 0); corners and the
+         passe-partout of «la figura» (v5/_pagina.css), so a photograph sits in the same hand as the rest of the page;
+     2 · the entrance with a photograph in its end seat: 7 / 5 on a wide screen, the photograph above the words on a
+         phone (a 3:2 band, art-directed by the <source>s);
+     3 · motion is NOT here: the mask reveal (data-reveal="mask") and black-and-white -> colour (data-grade) are lane
+         A's one mechanism, static/css/v5/_reveal.css (the W2 review's M-3), which honours html.rm and reduced motion.
+   Logical properties only; nothing mirrors in RTL (a photograph is never flipped).
+   ============================================================================================ */
+
+/* ---- 1 · the figure ---- */
+.foto {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.foto picture {
+  display: block;
+}
+
+.foto__img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--card-radius, var(--radius-md));
+  background: var(--surface-area);
+  box-shadow: var(--passe-partout, none);
+}
+
+/* ---- 2 · the entrance with a photograph in its end seat ---- */
+.ingresso__inner:has(> .ingresso__photo) {
+  row-gap: var(--s-6);
+}
+
+@media (max-width: 63.999rem) {
+  .ingresso__photo {
+    order: -1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .ingresso__inner:has(> .ingresso__photo) {
+    align-items: center;
+  }
+
+  .ingresso__inner:has(> .ingresso__photo) > .ingresso__text {
+    grid-column: 1 / span 7;
+  }
+
+  .ingresso__inner:has(> .ingresso__photo) > .ingresso__photo {
+    grid-column: 8 / span 5;
+  }
+}
+
+@media (forced-colors: active) {
+  .foto__img {
+    box-shadow: none;
+    border: 1px solid CanvasText;
+  }
+}
+
+/* a body frame that is both masked (lane A's M2: the zoom on its img) and developed (M3 bw-scroll: the colour on the
+   same img) runs BOTH animations — two shorthands on one img let the zoom win and the frame stayed grey (round 2 of
+   W3, MJ-1). Page-only, in lane A's terms; to move into v5/_reveal.css when lane A lands its combined rule. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not(.rm) [data-reveal="mask"][data-grade="bw-scroll"] > picture > img {
+      animation: reveal-zoom linear both, reveal-colour linear both;
+      animation-timeline: view(), view();
+      animation-range: entry 0% cover 45%, entry 40% cover 50%;
+    }
+  }
+}
+
+/* ============================================================================================
+   V5.22 (SECTION_SYSTEM_V2 §2 D, §8 «Treatments»; lane S)
+   ============================================================================================ */
+
+/* the «select» treatment: black and white at rest, colour when its lane is chosen, hovered or focused — a meaningful
+   interaction (V5.12 §9), the Parcours family frames; in colour under reduced motion and html.rm (the B lane's still) */
+[data-grade="select"] img {
+  filter: grayscale(1);
+  transition: filter var(--motion-slow) var(--ease-enter);
+}
+
+:is(:hover, :focus-within, [data-lit]) > [data-grade="select"] img,
+[data-grade="select"]:is(:hover, :focus-within) img {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-grade="select"] img { filter: none; }
+}
+
+html.rm [data-grade="select"] img { filter: none; }
+
+/* from the keyboard the frame is in colour at once (§4.1 rule 5) */
+html[data-input="key"] [data-grade="select"] img { transition: none; }
+
+/* ---- D · «il panorama»: the frame widens from the container to full bleed as it enters; the image drifts (M22) ----
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Scroll Reveal Image» 24466 (the frame widens to full bleed,
+   its corner to 0), «Parallax Image» 20023 (the image drifts against its frame). Refused: blur on scroll, zoom
+   tunnels, scroll-jacking, video. */
+.panorama {
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+}
+
+.panorama__quadro {
+  position: relative;
+  margin-inline: calc((100cqw - 100vw) / 2);
+  overflow: clip;
+}
+
+.panorama__quadro .foto {
+  margin: 0;
+}
+
+.panorama__quadro img {
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 82vh;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* the statement on a solid plate (never glass, SH-5) at the reading edge: under the image on a phone, over it from 64 rem;
+   its title takes the plate's ink (the global heading ink is the paper's) */
+.panorama__lastra {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: 36rem;
+  margin: -40px var(--s-4) 0;
+  padding: var(--s-6);
+  border-radius: var(--radius-md);
+  background: var(--plate-night-photo);
+  color: var(--text-on-night-1);
+}
+
+.panorama__titolo {
+  margin: 0;
+  color: inherit;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+.panorama__testo,
+.panorama__azione {
+  margin: 0;
+}
+
+.panorama__azione .link-arrow {
+  color: inherit;
+}
+
+@media (min-width: 64rem) {
+  .panorama__quadro img {
+    min-block-size: 60vh;
+  }
+
+  .panorama--lastra .panorama__lastra {
+    position: absolute;
+    inset-block-end: var(--s-10);
+    inset-inline-start: 0;
+    margin: 0;
+  }
+}
+
+/* a band slot without its portrait crop (21:9 alone): on a phone it is drawn as the strip it is — its plate under it,
+   never over it, and its moment's height released, so a short frame never floats in an empty screen (round 1,
+   QA_ROUND1 m11; the crop itself is lane M's to add) */
+@media (max-width: 47.999rem) {
+  .panorama:has(.foto--21x9:not([class*="foto--to-"])) .panorama__lastra { margin-block-start: var(--s-4); }
+  .sez:has(.panorama .foto--21x9:not([class*="foto--to-"])) { min-block-size: 0; }
+}
+
+/* the diptych that develops in sequence: two frames, a seam line between them */
+.panorama--coppia {
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  gap: var(--s-4);
+}
+
+.panorama--coppia .panorama__quadro {
+  margin-inline: 0;
+}
+
+.panorama__cucitura {
+  background: var(--identity-light); /* the home pilot's seam: the hero's light continued (§4.5) */
+  transform-origin: 50% 0;
+}
+
+/* the panorama's motion — the frame widening as it enters, the diptych's second frame developing later — is the
+   reveal sheet's (v5/_reveal.css, «D · il panorama»): a photograph's motion has one home, and this sheet animates
+   nothing of its own (apps/ecosystem/tests/test_compliance.py) */

@@ -1,0 +1,902 @@
+/* ============================================================================================
+   V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026), lane A: the home body's type, the intro and its actors, the pilot,
+   the institutional ecosystem and the promoter. Imported by pages.css after «la casa». Tokens of tokens.css only (colour
+   mixes of tokens; no literal colour), logical properties except where a drawing must never mirror (the national fields,
+   the pilot's stage: physical, left to right in every language). Motion: v5/_reveal.css's own mechanisms (M2 mask, M3
+   develop, the section verbs), the edges and ranges set here; transform and opacity only; reduced motion sees the still.
+   ============================================================================================ */
+
+/* ---- 0 · THE HOME BODY'S TYPE (lane B uses these): Host Grotesk at its floor weight, hierarchy by size, spacing and tone
+   — never by bold; short measures; generous leading. Arabic: Readex Pro, never tracked, a little more leading. ---- */
+/* the sections' content edge (pages.css §2: the page's pad below 75 rem, the container's margin from there) and the
+   distance from it to the viewport's edge — what a full-bleed frame crosses */
+.page-home {
+  --hb-edge: var(--page-pad);
+  --hb-bleed: var(--hb-edge);
+}
+
+@media (min-width: 75rem) {
+  .page-home {
+    --hb-edge: var(--grid-margin);
+    --hb-bleed: calc(max(0px, (100vw - var(--container)) / 2) + var(--grid-margin));
+  }
+}
+
+@media (max-width: 74.999rem) {
+  .page-home .home-intro .container {
+    padding-inline: var(--page-pad);
+  }
+}
+
+.page-home {
+  /* the home's two display sizes (art pass, correction round, P2-5): L, the statements (hero statement, orientation, pilot,
+     ecosystem, AGAMI's name); S, the sections (pathways, «chiaro», FAQ). Both under the hero's promise at every width
+     (28 / 37 / 52 px at 390 / 1024 / 1440): the promise leads, the serif follows */
+  --t-home-title: clamp(1.625rem, 1.15rem + 1.6vw, 2.75rem);
+  --t-home-sub: clamp(1.375rem, 1.2rem + 0.55vw, 1.75rem);
+  --t-home-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --hb-w: 400;
+  --hb-w-strong: 500;
+  --hb-lh-title: 1.1;
+  --hb-lh-lead: 1.6;
+  --hb-track-title: -0.026em;
+  --hb-track-label: 0.16em;
+  --hb-measure: 34rem;
+  --hb-paper: color-mix(in oklab, var(--surface-page), var(--he-bronze) 6%);
+  --hb-ink-deep: color-mix(in oklab, var(--surface-night), var(--p-laguna-550) 14%);
+  /* the two territories' colours (precision pass, 11 Nov 2026): the mark's own green and red — the flag's, as the
+     product already draws them — and Morocco's red one step deeper; the product's teal and garnet did not say them */
+  --hb-rosso-ma: color-mix(in oklab, var(--brand-red), var(--p-granata-800) 40%);
+  --hb-rosso-it: var(--brand-red);
+  --hb-verde-it: var(--brand-green);
+}
+
+.page-home :lang(ar) {
+  --hb-track-title: 0;
+  --hb-track-label: 0;
+  --hb-lh-title: 1.3;
+  --hb-lh-lead: 1.8;
+}
+
+/* THE INSTITUTIONAL DISPLAY ROLE (V5.31 FINAL ART PASS, owner, 11 Nov 2026, A2) — every statement of the home: the hero's
+   statement (its opening phrase), the sections' H2 statements. «ILE Serif» (Source Serif 4, 400 only: never bolder, never
+   synthesised — v5/fonts.css) through --f-display-inst, which is Readex Pro on an Arabic run (tokens.css); hierarchy by
+   size, measure and ink, the display cut's own spacing. The text, UI and label roles stay Host Grotesk (evaluated once against
+   Public Sans in Chrome at 1440 and 390: wider by 6–9 %, it broke the hero's columns, the station labels and the
+   pathway rail into extra lines, and read generic) — the role tokens: docs/design/DESIGN_SYSTEM_2026.md «Ruoli». */
+.page-home :is(.he__apertura, .sez .testa__title, .chiaro__enunciato, .eco-split__titolo, .domande__titolo) {   /* not the pilot's title: a name in its copy's capitals */
+  font-family: var(--f-display-inst);
+  font-size: var(--t-home-sub);   /* S (22 → 28 px); L below */
+  font-weight: 400;
+  letter-spacing: 0;   /* the opsz-48 cut is spaced for display */
+}
+
+/* L (--t-home-title): the hero's statement (under the promise at every width; hero.css reads no token of this sheet),
+   the orientation's and the ecosystem's statements */
+.page-home :is(.he__apertura, .home-orientation .testa__title, .eco-split__titolo) {
+  font-size: var(--t-home-title);
+}
+
+.page-home .sez .testa__lead {
+  max-inline-size: var(--hb-measure);
+  line-height: var(--hb-lh-lead);
+}
+
+/* the label voice: the label role (`t-label` in the markup: its size, capitals and Arabic rule), spaced wider, in the
+   third ink */
+.colofone__label {
+  margin: 0;
+  letter-spacing: var(--hb-track-label);
+  color: var(--text-3);
+}
+
+/* ---- the call of the night bands: a pill of light on the night, its arrow in a disc that moves under the hand ---- */
+.home-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-block-size: 3.25rem;
+  padding-block: var(--s-2);
+  padding-inline: var(--s-6) var(--s-2);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: var(--hb-w-strong);
+  text-decoration: none;
+  transition: background-color var(--motion-standard) var(--ease-enter);
+}
+
+.home-cta--night {
+  background: color-mix(in srgb, var(--text-on-night-1) 10%, transparent);
+  color: var(--text-on-night-1);
+}
+
+.home-cta__freccia {
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: var(--radius-full);
+  background: var(--text-on-night-1);
+  color: var(--surface-night);
+  transition: translate var(--motion-emphasized) var(--ease-enter);
+}
+
+.home-cta:is(:hover, :focus-visible) {
+  background: color-mix(in srgb, var(--text-on-night-1) 18%, transparent);
+}
+
+.home-cta:is(:hover, :focus-visible) .home-cta__freccia {
+  translate: 4px 0;
+}
+
+[dir="rtl"] .home-cta:is(:hover, :focus-visible) .home-cta__freccia {
+  translate: -4px 0;
+}
+
+/* ============================================================================================
+   1 · THE INTRODUCTION — a new chapter under the hero: the statement is its head (hero.css), then, on the page's own
+   split and the warm paper, the photograph beside the six actors as a ledger (final visual QA, 11 Nov 2026, point 8).
+   ============================================================================================ */
+.home-intro {
+  padding-block: var(--s-8) var(--s-16);
+  background: linear-gradient(var(--surface-page), var(--hb-paper) 10rem);
+}
+
+.home-intro__grid {
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* the two media splits' photographs (the introduction's, the ecosystem's): one frame, one ratio */
+.home-intro__foto,
+.eco-split__foto {
+  margin: 0;
+}
+
+.home-intro__foto img,
+.eco-split__foto img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+/* the six actors: fine rows on one hairline each — a glyph in its own tint, a name; no card */
+.home-intro__lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-intro__attore {
+  --tinta: var(--accent-mark);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-2);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--t-body);
+  line-height: 1.3;
+  color: var(--text-1);
+}
+
+/* a name longer than its column on the narrowest phones («Organismes de formation» at 320 px passed the page by 2 px)
+   breaks at a syllable, never past the page */
+.home-intro__nome {
+  min-inline-size: 0;
+  hyphens: auto;
+}
+
+.home-intro__attore--entreprises { --tinta: var(--p-cotto-600); }
+.home-intro__attore--institutions { --tinta: var(--surface-night); }
+.home-intro__attore--universites { --tinta: var(--he-bronze); }
+.home-intro__attore--formation { --tinta: var(--cooperation); }
+.home-intro__attore--professionnels { --tinta: var(--p-granata-600); }
+
+.home-intro__icona {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--tinta) 10%, transparent);
+  color: var(--tinta);
+}
+
+.home-intro__icona .icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+/* phones: the two splits' photographs to the page's edges */
+@media (max-width: 47.999rem) {
+  .home-intro__media,
+  .eco-split__media {
+    margin-inline: calc(-1 * var(--hb-edge));
+  }
+
+  .home-intro .home-intro__foto > picture,
+  .home-intro .home-intro__foto img,
+  .home-ecosystem .eco-split__foto > picture,
+  .home-ecosystem .eco-split__foto img {
+    border-radius: 0;
+  }
+}
+
+@media (min-width: 48rem) {
+  .home-intro__lista {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  /* the chapter's head and its split, one grid twice: the statement (ONE <p>: its opening phrase at the reading edge,
+     the continuation and the supporting clause beside it), then the photograph beside the actors — on the sections'
+     own column (the page's pad below 75 rem, the container's content edge from there) */
+  .page-home .he__body:has(.he__apertura),
+  .home-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    column-gap: var(--s-12);
+  }
+
+  .page-home .he__body:has(.he__apertura) {
+    inline-size: calc(100% - var(--page-pad));
+    max-inline-size: none;
+  }
+
+  .page-home .he__body span.he__enunciato {
+    display: contents;
+  }
+
+  .page-home .he__apertura {
+    grid-row: span 2;
+    margin: 0;
+  }
+
+  .he__continua,
+  .he__seguito {
+    grid-column: 2;
+  }
+
+  /* beside the photograph: two columns of three modules — the glyph over the name — filling the frame's height */
+  .home-intro__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: space-between;
+    block-size: 100%;
+  }
+
+  .home-intro__attore {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: var(--s-4) 0;
+    font-size: var(--t-entry);
+  }
+
+  .home-intro__foto img,
+  .eco-split__foto img {
+    aspect-ratio: 2 / 1;
+  }
+}
+
+@media (min-width: 75rem) {
+  .page-home .he__body:has(.he__apertura) {
+    inline-size: calc(var(--container) - 2 * var(--grid-margin));
+  }
+}
+
+/* a pathway WITHOUT a fitting photograph (pages.services.PATHWAY_FRAMES: today the family reunification). ART PASS
+   (owner, 11 Nov 2026, B4 + correction round P1-3): the approved pipeline was searched once more — no frame says family
+   without a minor or a cliché — so the stage draws a FIELD in the frame's own box (it is an .esplora__foto: the same
+   3:2 / 5:2 / 15 rem as the photographs, never taller), with the same corner badge as the photo cards: a deep lagoon
+   material lit from one corner and warmed from the opposite one, the household glyph set at its centre on a frosted
+   tile of the material itself (an object, not a ring or an arc) */
+.esplora .esplora__campo {
+  display: grid;
+  place-items: center;
+  color: var(--p-carta-0);
+  background: radial-gradient(60% 80% at 80% 15%, var(--p-laguna-700), transparent 70%), radial-gradient(50% 70% at 10% 100%, var(--p-cotto-900), transparent 70%), linear-gradient(160deg, var(--p-laguna-800), var(--p-notte-800));
+}
+
+.esplora__campo span {
+  display: grid;
+  padding: 2rem;
+  border: 1px solid color-mix(in oklab, var(--p-carta-0) 22%, transparent);
+  border-radius: 2rem;
+  background: color-mix(in oklab, var(--p-carta-0) 9%, transparent);
+}
+
+.esplora__campo .icon {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+}
+
+/* the Blue Card's frame keeps the person's head in the stage's wide crop */
+[data-pathway="skilled_work_eu_blue_card"] .esplora__foto img {
+  object-position: 50% 12%;
+}
+
+/* THE PHONES' DOORS (FINAL PRECISION PASS, owner, 11 Nov 2026, §3) — the hero's four tiles show the word alone on a
+   phone: each carries a real button on its chip's corner (a 20 px disc, a 44 px target) that opens the tile's sentence
+   under its row (the sentence's own rules: pages/css/hero.css «the phones' sentence»; home.js un-hides the button and
+   keeps one open). Drawn here, in the home's sheet, because the hero's sheet is at its byte ceiling. */
+.he-origin__more {
+  display: none;
+}
+
+@media (max-width: 39.999rem), (max-width: 63.999rem) and (max-height: 30.0624rem) {
+  .he-origin__more:not([hidden]) {
+    position: absolute;
+    z-index: 2;
+    inset-block-start: -0.4375rem;                       /* ART PASS (A6): centred on the photograph's top inner corner — off the spine */
+    inset-inline-start: calc(var(--chip) - 0.6875rem);   /* and the page's edge, clear of the word in a row, a wrapped or a stacked tile */
+    display: grid;
+    place-items: center;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--surface-night);
+    color: var(--text-on-night-1);
+    box-shadow: 0 0 0 2px var(--surface-page);   /* cut out of the frame, not laid on it */
+  }
+
+  .he-origin__more::before {
+    content: "";
+    position: absolute;
+    inset: -0.75rem;   /* 20 + 2 × 12 = 44 px */
+  }
+
+  .he-origin__more .icon {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+  }
+
+  .he-origin__more[aria-expanded="true"] .icon {
+    rotate: 45deg;
+  }
+
+  .he-origin__link .he-plate {
+    align-self: flex-start;   /* the chips of a row on one line, the disc's corner always at the tile's top */
+  }
+}
+
+/* ============================================================================================
+   2 · THE PILOT — photography first: the stage of the two shores opens the band, each half carrying its territory (its
+   name, its national field); the head stands under it on the night (final visual QA, 11 Nov 2026, point 6).
+   FINAL PRECISION PASS (owner, 11 Nov 2026, §12–§15 — «Italy and Morocco still not perceived»): each territory is ONE
+   broad vertical field of its flag's colours at its outer flank, running the section's whole height — through the
+   photograph (blended into the material: the red soaks the cedar, the three Italian fields are light on the dark
+   wool) — since the ART PASS (11 Nov 2026, B3) soft light inside each photograph only, never a band. Morocco: its deep red, a restrained
+   green at its heart. Italy: green, white, red, soft-edged, in the flag's order. Physical sides in every language
+   (Morocco left, Italy right): never mirrored. The hands and the seam stay the photographs' own colours.
+   ============================================================================================ */
+.page-home .home-pilot {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  padding-block: 0 var(--s-12);
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* the stage: two halves, left to right in every language (the cedar, then the marble) — never mirrored */
+.pilota-scena {
+  order: -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2px, 0.3vw, 6px);
+  position: relative;
+  margin-block-end: var(--s-12);
+  direction: ltr;
+}
+
+/* ART PASS (owner, 11 Nov 2026, B3): the fields stay INSIDE the photographs — the night under them carries no colour
+   of its own (its glows at the band's two flanks read as two more flag ends on a phone); the head stands on the night */
+.pilota-riva {
+  position: relative;
+  overflow: clip;
+  --reveal-from: inset(0 100% 0 0);
+}
+
+.pilota-riva--marmo {
+  --reveal-from: inset(0 0 0 100%);
+}
+
+.pilota-riva .foto {
+  margin: 0;
+  block-size: 100%;
+}
+
+.pilota-riva picture {
+  block-size: 100%;
+  border-radius: 0;
+}
+
+.pilota-riva img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.pilota__foto--marmo img {
+  object-position: 62% 50%;
+}
+
+/* the national fields inside the photographs: the section's own geometry, blended into each material.
+   Physical edges: Morocco at the left, Italy at the right, in every language */
+.pilota-campo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ART PASS (owner, 11 Nov 2026, B3 — «at 768 and on phones a literal flag band»): the fields are light in the
+   material, never stripes. Each is drawn in its own half's measure (percent, not the window's width), as broad soft
+   ellipses cropped by the outer edge: Morocco a deep red soaking the cedar from its flank, a green ember held small
+   in it; Italy three overlapping glows on the dark wool, in the flag's order on a diagonal (green high, a pale light,
+   red low at the edge). No edge is hard anywhere, so no width reads a flag; the photograph keeps its centre */
+.pilota-campo--ma {
+  background:
+    radial-gradient(26% 18% at 16% 24%, var(--hb-verde-it), transparent 72%),
+    radial-gradient(80% 90% at -8% 60%, var(--hb-rosso-ma), transparent 72%);
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+.pilota-campo--it {
+  background:
+    radial-gradient(42% 50% at 104% 62%, var(--hb-rosso-it), transparent 72%),
+    radial-gradient(30% 36% at 88% 34%, var(--p-carta-0), transparent 72%),
+    radial-gradient(42% 46% at 72% 4%, var(--hb-verde-it), transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+/* FINAL CLOSURE PASS (owner, 12 Nov 2026 — «on a phone the Italian field is too faint»): a phone's half is a tall 2 : 3
+   strip whose lower half is the name's shade, so Italy's lights sat under it or were cropped by the edge. The same three
+   lights, broader and higher in the strip, a little stronger; Morocco's red risen out of the shade. Glows, never bands */
+@media (max-width: 47.999rem) {
+  .pilota-campo--ma {
+    background:
+      radial-gradient(34% 16% at 18% 20%, var(--hb-verde-it), transparent 72%),
+      radial-gradient(90% 70% at -8% 46%, var(--hb-rosso-ma), transparent 72%);
+    opacity: 0.95;
+  }
+
+  .pilota-campo--it {
+    background:
+      radial-gradient(66% 32% at 104% 46%, var(--hb-rosso-it), transparent 72%),
+      radial-gradient(46% 22% at 88% 26%, var(--p-carta-0), transparent 72%),
+      radial-gradient(66% 28% at 72% 3%, var(--hb-verde-it), transparent 72%);
+    opacity: 0.85;
+  }
+}
+
+.agami-banda__campo--it {
+  background: linear-gradient(to right, var(--hb-verde-it) 26%, var(--p-carta-0) 44% 62%, var(--hb-rosso-it) 82%);
+}
+
+/* the foot's shade under the territory's name (a legibility layer, not a decoration) */
+.pilota-riva::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  block-size: 10rem;   /* the name's own foot only: the material above it stays the photograph's */
+  background: linear-gradient(transparent, color-mix(in srgb, var(--surface-night) 84%, transparent) 42%, color-mix(in srgb, var(--surface-night) 94%, transparent));
+  pointer-events: none;
+}
+
+.pilota-riva__parola {
+  position: absolute;
+  z-index: 1;
+  inset: auto auto var(--s-6) var(--s-6);
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+  color: var(--text-on-night-2);
+}
+
+.pilota-riva--marmo .pilota-riva__parola {
+  inset-inline: auto var(--s-6);
+  text-align: end;
+}
+
+.pilota-riva__terra {
+  font-size: var(--t-home-sub);
+  line-height: 1.15;
+  letter-spacing: var(--hb-track-title);
+  color: var(--text-on-night-1);
+}
+
+.pilota-testa {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.pilota__titolo {
+  font-size: var(--t-home-title);
+  margin: 0;
+  max-inline-size: 16ch;
+  line-height: var(--hb-lh-title);
+  font-weight: var(--hb-w);
+  letter-spacing: -0.012em;
+  color: var(--text-on-night-1);
+  text-wrap: balance;
+}
+
+.pilota__titolo:lang(ar) {
+  letter-spacing: 0;
+}
+
+.pilota__titolo .em-keyword {
+  font-weight: inherit;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.pilota-testa__a-lato {
+  display: grid;
+  gap: var(--s-5);
+  justify-items: start;
+  max-inline-size: 30rem;
+}
+
+.pilota__lead,
+.pilota__nota,
+.pilota__azione {
+  margin: 0;
+}
+
+.pilota__lead {
+  font-size: var(--t-home-lead);
+  line-height: var(--hb-lh-lead);
+  color: var(--text-on-night-2);
+  text-wrap: pretty;
+}
+
+.pilota__nota {
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-on-night-3);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* the marble a beat after the cedar: its mask and its colour come later in the stage's entry; each territory's
+       field arrives with its photograph's own colour */
+    :root:not(.rm) .pilota-riva--marmo [data-reveal="mask"] > picture {
+      animation-range: entry 25% cover 35%;
+    }
+
+    :root:not(.rm) .pilota-riva [data-grade="bw-scroll"] img {
+      animation-range: entry 60% cover 45%;
+    }
+
+    :root:not(.rm) .pilota-riva--marmo [data-grade="bw-scroll"] img {
+      animation-range: cover 25% cover 55%;
+    }
+
+    :root:not(.rm) .pilota-campo {
+      animation: pilota-campo linear both;
+      animation-timeline: view();
+      animation-range: cover 25% cover 55%;
+    }
+  }
+}
+
+@keyframes pilota-campo {
+  from { opacity: 0; }
+}
+
+@media (min-width: 48rem) {
+  .pilota-riva img {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+@media (min-width: 64rem) {
+  .pilota__titolo {
+    grid-column: 1 / span 6;
+  }
+
+  .pilota-testa__a-lato {
+    grid-column: 7 / 11;   /* clear of Italy's field at the band's right flank */
+  }
+
+  .pilota-riva img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .pilota-riva__parola {
+    inset-block-end: var(--s-10);
+    inset-inline-start: var(--hb-bleed);
+  }
+
+  .pilota-riva--marmo .pilota-riva__parola {
+    inset-inline: auto var(--hb-bleed);
+  }
+}
+
+/* ============================================================================================
+   3 · THE INSTITUTIONAL ECOSYSTEM — the working table large at the reading edge, the head beside it; then the promoter.
+   ============================================================================================ */
+.page-home .home-ecosystem {
+  overflow-x: clip;
+  padding-block: var(--s-10) 0;
+  --sez-ground: var(--sez-luce), var(--surface-area);
+}
+
+.eco-split {
+  display: grid;
+  gap: var(--s-8);
+  padding-block-end: var(--s-10);
+}
+
+.eco-split__testo {
+  display: grid;
+  gap: var(--s-5);
+  align-content: center;
+}
+
+.eco-split__titolo {
+  margin: 0;
+  line-height: var(--hb-lh-title);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.eco-split__lead {
+  margin: 0;
+  max-inline-size: var(--hb-measure);
+  font-size: var(--t-home-lead);
+  line-height: var(--hb-lh-lead);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+@media (min-width: 64rem) {
+  /* the frame bleeds to the viewport's reading edge */
+  .eco-split__media {
+    grid-column: 1 / span 7;
+    margin-inline-start: calc(-1 * var(--hb-bleed));
+  }
+
+  .home-ecosystem .eco-split__foto > picture,
+  .home-ecosystem .eco-split__foto img {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  .eco-split__testo {
+    grid-column: 9 / -1;
+  }
+}
+
+/* ============================================================================================
+   4 · THE PROMOTER — a deep institutional band in two registers: the official lockup on its plate beside the identity,
+   then the three verified facts as a ledger across the band (final visual QA, 11 Nov 2026, point 3: no seal).
+   ============================================================================================ */
+.agami-banda {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: var(--s-16) var(--s-10);
+  background: var(--hb-ink-deep);
+  color: var(--text-on-night-1);
+}
+
+.agami-banda__campi {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  direction: ltr;
+  pointer-events: none;
+}
+
+/* one Italy field, one Morocco field, low at the band's two feet (physical edges: never mirrored) */
+.agami-banda__campo {
+  position: absolute;
+  inset-block: 35% 0;
+  inline-size: clamp(16rem, 34vw, 32rem);
+  opacity: 0.2;
+  mask-image: radial-gradient(farthest-side at var(--campo-x) 100%, var(--surface-night) 10%, transparent);
+}
+
+.agami-banda__campo--it {
+  --campo-x: 0%;
+  inset-inline-start: 0;
+}
+
+.agami-banda__campo--ma {
+  --campo-x: 100%;
+  inset-inline-end: 0;
+  background: var(--hb-rosso-ma);
+}
+
+.agami-banda__griglia {
+  display: grid;
+  gap: var(--s-10);
+}
+
+.agami-banda__targa {
+  justify-self: start;
+  inline-size: min(100%, 32rem);
+  padding: var(--s-5);
+  border-radius: var(--radius-xl);
+  background: var(--p-carta-0);
+  box-shadow: var(--shadow-4);
+}
+
+.agami-banda__logo,
+.agami-banda__logo img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.agami-banda .colofone {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+}
+
+.agami-banda .colofone > * {
+  margin: 0;
+}
+
+.agami-banda .colofone__label {
+  color: var(--accent-night);
+}
+
+/* the partners' link, drawn once a partner is live and authorised (G6), takes the band's accent as its label does:
+   the light ground's link colour read 2.38 : 1 on the night plate (certification v532-cert, WCAG 1.4.3); 8.6 : 1 */
+.agami-banda .link-arrow {
+  color: var(--accent-night);
+}
+
+.colofone__nome {
+  font-size: var(--t-home-title);
+  line-height: var(--hb-lh-title);
+  font-weight: var(--hb-w);
+  letter-spacing: var(--hb-track-title);
+  color: var(--text-on-night-1);
+}
+
+/* the Italian name in ONE left-to-right box, at its column's start in every language */
+.agami-banda .colofone__nome {
+  direction: ltr;
+}
+
+.colofone__nome .fronte__name,
+.colofone__nome .fronte__name-rest {
+  unicode-bidi: isolate;
+}
+
+.colofone__nome .fronte__name-rest {
+  display: block;
+  margin-block-start: var(--s-2);
+  font-size: var(--t-home-sub);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-on-night-2);
+}
+
+.agami-banda .colofone__testo {
+  max-inline-size: 38rem;
+  font-size: var(--t-home-lead);
+  line-height: var(--hb-lh-lead);
+  color: var(--text-on-night-2);
+}
+
+.agami-banda .colofone__testo .em-keyword {
+  font-weight: var(--hb-w-strong);
+  color: var(--text-on-night-1);
+}
+
+/* the facts: a ledger on the band's hairline — a glyph, a phrase of the answer */
+.agami-fatti {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-night-soft);
+}
+
+.agami-fatti__voce {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-4);
+  border-block-end: 1px solid var(--line-night-soft);
+  font-size: var(--t-home-lead);
+  line-height: 1.5rem;
+  color: var(--text-on-night-1);
+}
+
+.agami-fatti__voce .icon {
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  color: var(--accent-night);
+}
+
+.colofone__partner {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.colofone__elenco {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-ecosystem__partner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.home-ecosystem__logo {
+  max-block-size: 2.5rem;
+  inline-size: auto;
+}
+
+.agami-banda__azione {
+  margin-block-start: var(--s-3);
+}
+
+@media (min-width: 48rem) {
+  .agami-fatti {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .agami-fatti__voce {
+    border: 0;
+    padding-block: var(--s-5) 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  /* the body's twelve columns: the pilot's head, the ecosystem's split, the promoter's band */
+  .pilota-testa,
+  .eco-split,
+  .agami-banda__griglia {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--s-6);
+    align-items: center;
+  }
+
+  .pilota-testa {
+    align-items: start;
+  }
+
+  .agami-banda__griglia {
+    row-gap: var(--s-12);
+  }
+
+  .agami-banda__targa {
+    grid-column: 1 / span 5;
+  }
+
+  .agami-banda .colofone {
+    grid-column: 7 / -1;
+  }
+
+  .agami-fatti {
+    grid-column: 1 / -1;
+  }
+}

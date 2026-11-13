@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-forum: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - the Forum Venetie-Maroc: a cavea of three concentric tiers cut by two aisles, facing a small arch on the sill; the tiers draw outer to inner, then the light at the arch (n.7) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M22 42V39A2 2 0 0 1 26 39V42Z"/>
+  <path data-layer="arch" d="M4 42A20 20 0 0 1 44 42"/>
+  <path data-layer="arch" d="M10 42A14 14 0 0 1 38 42"/>
+  <path data-layer="arch" d="M16 42A8 8 0 0 1 32 42"/>
+  <path data-layer="mark" d="M18.3 36.3 9.9 27.9M29.7 36.3 38.1 27.9"/>
+  <path data-layer="route" d="M22 42V39A2 2 0 0 1 26 39V42"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-review: ILE drawing (Italy Legal Entry) - what was written, read again before it is sent: the sheet under the lens -->
+  <path fill="currentColor" fill-opacity=".18" stroke="none" d="M19.5 16a3.5 3.5 0 1 1-7 0a3.5 3.5 0 0 1 7 0Z"/>
+  <path d="M10.5 21.5H4.5v-19h9l4.5 4.5v3.5M13.5 2.5v4.5H18M7.5 9.5h6M7.5 13h3M19.5 16a3.5 3.5 0 1 1-7 0a3.5 3.5 0 0 1 7 0ZM18.5 18.5l3 3"/>
+</svg>

@@ -1,0 +1,94 @@
+/* ============================================================================================
+   J · «IL PASSAGGIO» — a controlled horizontal scroll, phones only (design V5.22, SECTION_SYSTEM_V2 §2 J; lane S): the
+   home's four entrances below 640 px, today the one place a stacked list would cost more than a screen. Page-only
+   (the home's sheet). Markup (lane H, components/entrances.html with rail=True): an <ol class="passaggio" role="list">
+   (the project's styled list: base.css takes its bullets) of four <li class="passaggio__lastra">, each one link with all
+   its locked text visible, its arch drawn by an <svg class="passaggio__arco"><path pathLength="1" data-verb="stroke" …/>
+   </svg> (the plate's own layout is the home's sheet's).
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Horizontal Depth Fade» 18439 (the item in view in full
+   ink, its neighbours muted), «Horizontal Feature Reveal» 26062 (a fallback that simply stacks). Refused: pinning and
+   scrubbing, blur, GSAP. No arrows, no dots, no autoplay, no loop. Signature DIRECTIONAL SLIDE (native snap).
+   ============================================================================================ */
+
+@media (max-width: 39.999rem) {
+  /* (0,1,1): base.css's ul/ol[role="list"] (0,1,1) would take the rail's bleed and its start padding */
+  :is(ol, ul).passaggio {
+    display: flex;
+    gap: var(--s-3);
+    margin: 0 calc(-1 * var(--grid-margin));
+    padding: 0 var(--grid-margin) var(--s-5);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--grid-margin);
+    scrollbar-width: none;
+    scroll-timeline: --passaggio inline;
+  }
+
+  .passaggio__lastra {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+
+  /* Tab moves plate to plate: while a plate holds the keyboard's focus it is the rail's one snap position, so the rail
+     brings the whole plate in (the browser's own focus scroll leaves a peeking plate where it is) — CSS only */
+  .passaggio:has(:focus-visible) > :not(:focus-within) {
+    scroll-snap-align: none;
+  }
+
+  .passaggio__arco {
+    inline-size: 100%;
+    block-size: 2.5rem;
+    fill: none;
+    stroke: var(--line-structure);
+    stroke-width: 1.5;
+  }
+
+  /* the pressed plate lights its arch's top edge */
+  .passaggio__lastra:has(a:is(:active, :focus-visible)) .passaggio__arco {
+    stroke: var(--accent-mark);
+  }
+
+  /* the slim position rule under the rail, bound to the rail's own scroll */
+  .passaggio-rail {
+    position: relative;
+    timeline-scope: --passaggio;
+  }
+
+  .passaggio-rail::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0; /* the foot, edge to edge (the same in both directions) */
+    block-size: 2px;
+    background: var(--accent-mark);
+    transform-origin: 0 50%;
+    scale: 0.25 1;
+  }
+
+  [dir="rtl"] .passaggio-rail::after { transform-origin: 100% 50%; }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      :root:not(.rm) .passaggio-rail::after {
+        animation: sez-rail linear both;
+        animation-timeline: --passaggio;
+      }
+
+      /* the plate in view in full ink, the peeking one at --text-2 */
+      :root:not(.rm) .passaggio__lastra {
+        animation: sez-peek linear both;
+        animation-timeline: view(inline);
+      }
+    }
+  }
+}
+
+/* from the rule's own 25 % */
+@keyframes sez-rail {
+  to { scale: 1 1; }
+}
+
+@keyframes sez-peek {
+  0%, 100% { color: var(--text-2); }
+  30%, 70% { color: var(--text-1); }
+}

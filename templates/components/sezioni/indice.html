@@ -1,0 +1,37 @@
+{% comment %}
+L · «L'INDICE» — the interactive content reveal (design V5.22, SECTION_SYSTEM_V2 §2 L; lane S): a set better read one
+item at a time, every item in the DOM. static/css/v5/_sec-indice.css; static/js/src/sezioni/indice.js (tabs and
+master–detail ≥ 64 rem, the exclusive disclosure of a phone) or spia.js (the rail).
+
+Forms: `tabs` and `explorer` — an index at the inline start (rows with a 20 px glyph and the title, a 2 px marker that
+glides), the stage beside it (a T2 tile 64 with its 32 px glyph, the title at 28, the text at 20/28, its links); the first
+item selected, the order the locked order (never a ranking); `explorer` is the FAQ's master–detail: the stage sticky
+under the letterhead, the address following the item (permalinks). `disclosure` — native <details name="…">, all closed,
+one open at a time (definitions in place). Without script: the index is a list of anchors, every panel shown, in order.
+Motion GLIDE: the marker glides (--spring-soft), the stage's content crosses in by clip-path from the index's side
+(320 ms) and its glyph's strokes come; the keyboard's change is instant. No content behind a hover.
+
+Contract: `form` (tabs | explorer | disclosure); `id` (the set's prefix: unique on the page); `label` (the index's
+accessible name); `items` — [{"id", "title", "title_lang", "glyph", "body" (safe), "body_lang", "links" (safe: the
+stage's links row), "marked" (True: an ink reading-edge rule — the FAQ's fraud question)}]; `name` (disclosure: the
+<details> group's name); `seal` (explorer: the answer plate's small T1 seal, a mark id — the plate's one concept: the
+stage then draws no item tile beside it, §4.10 «one concept once a section»). V5.29 §10–§13 (lane PUB2, the FAQ): an
+explorer's row glyph stands in the library's small T2 tile (stream SYS's icon primitive), and with a seal the panel
+heading carries the same tile — drawn on a phone, where the heading is the question's row; hidden beside the stage's
+seal (cms/_faq-v2.css).
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): the stage (the detail card) draws no item tile — its glyph is drawn only where the
+panel is the list's row (a phone's disclosure), bare, at text size (v5/_sec-indice-base.css).
+{% endcomment %}{% if form == "disclosure" %}<div class="indice indice--disclosure">{% for item in items %}<details class="indice__dettaglio" name="{{ name }}"{% if item.id %} id="{{ item.id }}"{% endif %}><summary class="indice__sommario"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{% if item.glyph %}<span class="indice__glifo" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span>{{ item.title }}</span>{% svg_icon "chevron" "icon icon--sm indice__chevron" %}</summary><div class="indice__corpo"{% if item.body_lang %} lang="{{ item.body_lang }}"{% endif %}>{{ item.body }}{% if item.links %}<p class="indice__link">{{ item.links }}</p>{% endif %}</div></details>{% endfor %}</div>
+{% else %}<div class="indice indice--{{ form|default:'tabs' }}" data-sec-js="indice"{% if form == "explorer" %} data-hash{% endif %}>
+  <ul class="indice__lista" role="list" data-registro{% if label %} aria-label="{{ label }}"{% endif %}>
+    {% for item in items %}<li class="indice__riga"><a class="indice__voce{% if item.marked %} indice__voce--marcata{% endif %}" id="{{ item.id }}-tab" href="#{{ item.id }}"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{% if item.glyph %}<span class="indice__glifo{% if form == 'explorer' %} sez-tile sez-tile--sm{% endif %}" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="indice__nome">{{ item.title }}</span></a></li>{% endfor %}
+  </ul>
+  <div class="indice__palco{% if form == 'explorer' %} sez-plate{% endif %}" data-registro>
+    {% if seal %}{% include "components/sezioni/sigillo.html" with mark=seal size="small" css_class="indice__sigillo" only %}{% endif %}
+    {% for item in items %}<section class="indice__pannello" id="{{ item.id }}" aria-labelledby="{{ item.id }}-title">
+      {% if item.glyph and not seal %}<span class="sez-tile indice__tessera" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}
+      <h3 class="indice__titolo" id="{{ item.id }}-title"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{% if item.glyph and seal %}<span class="sez-tile sez-tile--sm indice__glifo" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}{{ item.title }}</h3>
+      <div class="indice__corpo"{% if item.body_lang %} lang="{{ item.body_lang }}"{% endif %}>{{ item.body }}{% if item.links %}<p class="indice__link">{{ item.links }}</p>{% endif %}</div>
+    </section>{% endfor %}
+  </div>
+</div>{% endif %}

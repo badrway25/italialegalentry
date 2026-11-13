@@ -1,0 +1,17 @@
+{% comment %}
+THE PLATFORM'S EMPTY STATE — V5.32 lane E (the PLATFORM=READY round of the owner's GLOBAL SITE + PLATFORM DESIGN
+COMPLETION directive): ONE anatomy for a console page whose register holds nothing yet — the calm panel «Communications»
+drew alone until now (portal/v5/_platform.css §4, `.org-calm.reg-calm`; V5.15 lane D F1, product-first since V5.30):
+the space's glyph in its disc, the title, the one sentence that names who fills the place and when, and at most one way
+on — a secondary, the page's own act stays the head's. It replaces, on the console, the public pages' tile and its
+doorway arch (components/empty_state.html: the portico's figure — the public site's vocabulary, which the console's
+heads left in round 1). A SECTION of a page that holds other things keeps the register's one sentence (`db-empty`); a
+narrowing that matches nothing is the list toolkit's own «Aucun résultat» (components/listing/empty.html).
+The page links the platform sheet (portal/platform.css). Every word is the page's, from the catalogue.
+Contract: `title`, `text`, `icon` (a sprite id: the space's own concept), optional `action_label` + `action_url`.
+{% endcomment %}<div class="org-calm reg-calm" role="status" data-spot>
+    {% include "portal/partials/calm_art.html" with calm_glyph=icon %}
+    <p class="org-calm__text">{{ title }}</p>
+    {% if text %}<p class="reg-calm__lead">{{ text }}</p>{% endif %}
+    {% if action_label and action_url %}<p class="reg-calm__act"><a class="btn btn--secondary" href="{{ action_url }}">{{ action_label }}</a></p>{% endif %}
+  </div>

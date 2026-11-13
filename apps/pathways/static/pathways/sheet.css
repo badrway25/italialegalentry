@@ -1,0 +1,16 @@
+/* ============================================================================================
+   A pathway sheet (§3.5) — the page sheet (design V5.22, SECTION_SYSTEM_V2 §7.1; lane P1 — Page Composition V2): a plain list of
+   imports, written as they resolve in the collected static tree (DS 2026 §2). The family's own sheet first
+   (pathways/pathways.css, unchanged: the interior's page, the passage, the door, the photograph, the compositions,
+   the pathways' rules), then the shell of the V2 sections and the patterns this page composes, then its own rules —
+   one stylesheet for the page, as before; a page carries only what it draws.
+   V5.32 (lane B): «il filo», «l'indice», the material, the space's V2 partial and _sheet.css leave this page —
+   _scheda.css draws the head, the navigation, the chapters and the resources on one paper body. The correction round
+   of the senior integration review (P2-3): the boussole's partial leaves too — the sheet closes on «la chiusura»
+   (_chiusura.css: the anti-fraud notice and the questionnaire's action, one chapter).
+   ============================================================================================ */
+@import url("pathways.css");
+@import url("../css/v5/_sezioni.css");
+@import url("../css/v5/_sec-strato.css");
+@import url("_chiusura.css");
+@import url("_scheda.css");

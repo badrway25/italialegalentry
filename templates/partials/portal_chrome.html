@@ -1,0 +1,103 @@
+{% load i18n static cms_nav ile_core entrance %}{% comment %}
+THE CONSOLE SHELL — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.18 D06 «Tre livelli», §3.5 item 3; W3-A).
+Quiet, contextual, task-oriented: the public shell answers "what is this site", this one answers "where am I and
+how do I get to my work".
+
+From 64rem, two regions:
+  1. the RAIL — night, at the reading edge (the right one in Arabic), 248 px open / 64 px compact, the choice
+     remembered (static/js/rail-pref.js, console.js). Three levels, by form: the SPACE at its head (the mark on
+     its paper plate, the name, and under it the space the page belongs to — «Espace réservé», «Espace
+     entreprise» — then the way to the account's other space when it has one), the SECTIONS (a word on the text
+     axis) and the PAGES (glyph + word; the current one is «il lume»: its glyph on a lit paper disc). Its FOOT is
+     pinned — the list scrolls under it: the account (the glyph and the word of who it is → the profile),
+     sign-out, the rail's control, the language and «Site public».
+  2. the CONTEXT BAR — 56 px of glass, sticky: the level of the page (the breadcrumb).
+
+Below 64rem the rail is laid flat — the same night, in three pieces (DL54-66 … DL54-71):
+  1. the TOP BAR is the rail's head: the mark on its paper tile (→ the space's first page), the level of the page
+     as its title, the account. No «≡» here: «Menu» stands in the thumb's zone, once.
+  2. the BOTTOM BAR is the rail's pages: four entries at most — glyph + word, the current one on its lit disc —
+     and «Menu» at the reading end. A page that declares a phone action bar (`data-console-action`; the case
+     file's own bar today) takes the four entries' place and keeps «Menu» at the same end.
+  3. the DRAWER holds the whole rail — the other space, the sections and their pages, the foot — in a native
+     <dialog> from the reading edge, on the overlay system (static/js/src/overlay.js, imported by console.js;
+     W2-A): «Menu» is a link to it (`data-overlay-open`) that the system makes the button of a modal drawer —
+     «Slide» in and out, the one scrim, the trap, Esc, the focus on the page one is on and back to «Menu»;
+     without script it stays a link, the system's stylesheet shows the drawer it points at (`:target`), and the
+     close control — a link too — leads back to the page.
+
+The page header and the next action are rendered by the page (base_portal.html), not here.
+Contract, from every producer of a console page (portal.services.shell_navigation): `portal_nav` (see
+portal/partials/rail_nav.html), `breadcrumbs`.
+The class `portal-bar` on the context bar is the contract three test modules hold the platform
+chrome to ("the platform chrome, not the public header").
+
+The entrance release (W1-D, V5.4 plan §1.9; DL54-07; V5.12 §4, the Director's DECISIONS §1 T1–T3): the mark of the
+rail's tile — below 64rem the top bar's — is the mark in layers (components/loader.html) on every console page, so
+that a navigation's threshold can turn its key (static/js/src/lume/threshold.js) and the View Transition `ile-mark`
+can land on it (the sign-in's door flies into this tile). On the first console page after a successful sign-in, and
+on the first page of each further space the session enters (person, company, and the organisation spaces as they
+come), it carries `release=True`: the lit doorway plays once, across the page load, never over painted content, and
+the 40 px plate itself takes the light (the console's _loader-light.css). The flags are set by accounts.signals on
+`user_logged_in` and read here, once per space per session, by `{% entrance_release space.key %}`. A long wait is
+said by the central veil's one status line (components/lume_veil.html, base.html; V5.15 §9: the loader is the same on
+the platform), no longer by the context bar.
+{% endcomment %}{% with space=portal_nav.0.space %}{% entrance_release space.key as lume_release %}
+<nav class="rail" id="console-rail" aria-label="{% translate 'Navigation de l’espace réservé' %}" data-rail tabindex="-1">
+  <div class="rail__head">
+    <a class="rail__brand" href="{% if space.url %}{{ space.url }}{% else %}{% url 'portal:dashboard' %}{% endif %}" aria-label="{{ site.project_name }} — {% if space %}{{ space.label }}{% else %}{% translate 'Espace réservé' %}{% endif %}" data-rail-tip data-label="{% if space %}{{ space.label }}{% else %}{% translate 'Espace réservé' %}{% endif %}">
+      <span class="rail__tile" aria-hidden="true">{% include "components/loader.html" with release=lume_release %}</span>
+      <span class="rail__name"><span class="rail__wordmark">{% brand "rail__wm" %}</span><span class="rail__space" data-rail-space>{% if space %}{{ space.label }}{% else %}{% translate "Espace réservé" %}{% endif %}</span></span>
+    </a>
+    {% include "portal/partials/rail_nav.html" with part="space" %}
+  </div>
+  <div class="rail__scroll" data-rail-scroll>
+    {% include "portal/partials/rail_nav.html" with id_prefix="rail" %}
+  </div>
+  {% include "portal/partials/rail_nav.html" with part="foot" where="rail" %}
+</nav>
+
+<header class="portal-bar console-bar" data-console-bar>
+  <div class="console-bar__inner">
+    <a class="console-bar__tile" href="{% if space.url %}{{ space.url }}{% else %}{% url 'portal:dashboard' %}{% endif %}" aria-label="{{ site.project_name }} — {% if space %}{{ space.label }}{% else %}{% translate 'Espace réservé' %}{% endif %}">
+      {% include "components/loader.html" with release=lume_release %}
+    </a>
+    <div class="console-bar__crumbs">{% include "components/breadcrumbs.html" %}</div>
+    {% with last=breadcrumbs|last %}<p class="console-bar__title">{% if last.lang %}<span lang="{{ last.lang }}">{{ last.label }}</span>{% else %}{{ last.label }}{% endif %}</p>{% endwith %}
+    {% comment %}
+    From 64rem the account, the language and «Site public» are the rail's foot; below it the rail is not drawn:
+    the top bar keeps the account — the overlay system's account popover (W2-A) — and the drawer's foot is the
+    rail's own.
+    {% endcomment %}
+    <nav class="console-bar__actions" aria-label="{% translate 'Mon compte' %}">
+      {% include "components/account_menu.html" with popover=True menu_id="console-account" %}
+    </nav>
+  </div>
+</header>
+
+<nav class="console-bottom" id="console-bottom" aria-label="{% translate 'Navigation rapide' %}">
+  <ul class="console-bottom__list" role="list">
+    {% for item in portal_nav %}{% if item.bottom %}
+    <li class="console-bottom__cell{% if item.yields %} console-bottom__cell--yields-{{ item.yields }}{% endif %}"><a class="console-bottom__item" href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %} data-key="{{ item.key }}"><span class="console-bottom__stack"><span class="console-bottom__disc">{% svg_icon item.icon "icon" %}</span><span class="console-bottom__label{% if item.stacks %} console-bottom__label--stacks{% endif %}">{% for line in item.lines %}<span class="console-bottom__line">{{ line }}</span>{% if not forloop.last %} {% endif %}{% empty %}{{ item.label }}{% endfor %}</span></span></a></li>
+    {% endif %}{% endfor %}
+    <li class="console-bottom__cell console-bottom__cell--menu"><a class="console-bottom__item console-bottom__menu" id="console-menu" href="#console-drawer" data-console-menu data-overlay-open aria-controls="console-drawer"><span class="console-bottom__stack"><span class="console-bottom__disc">{% svg_icon "menu" "icon" %}</span><span class="console-bottom__label">{% translate "Menu" %}</span></span></a></li>
+  </ul>
+</nav>
+
+<dialog class="console-drawer overlay overlay--drawer" id="console-drawer" data-overlay="drawer" data-overlay-edge="start" data-console-drawer aria-label="{% translate 'Navigation de l’espace réservé' %}">
+  <div class="console-drawer__head">
+    <a class="rail__brand" href="{% if space.url %}{{ space.url }}{% else %}{% url 'portal:dashboard' %}{% endif %}" aria-label="{{ site.project_name }} — {% if space %}{{ space.label }}{% else %}{% translate 'Espace réservé' %}{% endif %}">
+      <span class="rail__tile" aria-hidden="true"><img src="{% static 'brand/original/logo-mark.svg' %}" alt="" width="24" height="24" decoding="async"></span>
+      <span class="rail__name"><span class="rail__wordmark">{% brand "rail__wm" %}</span><span class="rail__space">{% if space %}{{ space.label }}{% else %}{% translate "Espace réservé" %}{% endif %}</span></span>
+    </a>
+    <a class="console-drawer__close" href="#main-content" data-console-close data-overlay-close>{% svg_icon "close" "icon" %}<span class="visually-hidden">{% translate "Fermer le menu" %}</span></a>
+  </div>
+  <nav class="rail rail--drawer" aria-label="{% translate 'Menu' %}">
+    <div class="rail__scroll">
+      {% include "portal/partials/rail_nav.html" with part="space" %}
+      {% include "portal/partials/rail_nav.html" with id_prefix="drawer" %}
+    </div>
+    {% include "portal/partials/rail_nav.html" with part="foot" where="drawer" %}
+  </nav>
+</dialog>
+{% endwith %}

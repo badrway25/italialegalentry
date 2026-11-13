@@ -1,0 +1,406 @@
+{
+ "what": "V5 photographs, family «projet» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "codici-rilegati",
+   "pexels_id": 29976379,
+   "photographer": "Magda Ehlers",
+   "photographer_url": "https://www.pexels.com/@magda-ehlers-pexels",
+   "page": "https://www.pexels.com/photo/close-up-of-antique-leather-bound-books-29976379/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Detailed view of classic leather-bound books lined on a shelf.",
+   "original_px": [
+    5472,
+    3648
+   ],
+   "original_sha256": "6026a8ab3b1107f00d68f1fbc2c490bc8f7d1423db331e203f09158c02a5482b",
+   "role": "band",
+   "crops": [
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.37,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      55,
+      1350,
+      5417,
+      3648
+     ],
+     "master_px": [
+      5362,
+      2298
+     ]
+    },
+    {
+     "ratio": "16x9",
+     "crop_fraction": [
+      0.12,
+      0.37,
+      0.87,
+      1.0
+     ],
+     "crop_px": [
+      666,
+      1350,
+      4752,
+      3648
+     ],
+     "master_px": [
+      4086,
+      2298
+     ]
+    },
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.0,
+      0.37,
+      0.34,
+      1.0
+     ],
+     "crop_px": [
+      11,
+      1349,
+      1850,
+      3648
+     ],
+     "master_px": [
+      1839,
+      2299
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights turned cool: r -1.5 %, b +2.5 %); Lanczos; soft {21x9: 0.6, 16x9: 0.6, 4x5: 1.0}; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "leather-bound volumes on a shelf, raised bands and gilt tooling in raking light; every crop starts under the spines' title labels (y 0.37 of the frame; the lowest label ends at 0.35), so no title is in any crop and nothing needs a redaction; nobody; a different scale and subject from the Universités reading room",
+   "files": [
+    {
+     "file": "codici-rilegati-21x9-800.avif",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 27839,
+     "budget": 61440,
+     "sha256": "63611454a7225d5fa119ac2f7c1074c33d168ceaa600efbf550ca67a2567537d"
+    },
+    {
+     "file": "codici-rilegati-21x9-800.webp",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 45536,
+     "budget": 61440,
+     "sha256": "66ed3c9f3948aa24feb1399fa95095c91756d8a9f5d9632827e3e7f3df7bc22c"
+    },
+    {
+     "file": "codici-rilegati-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 56832,
+     "budget": 61440,
+     "sha256": "7eb7a102f7ad323346cec89b809a7d3ff5f33a87675f5d52901a40389dd76e16"
+    },
+    {
+     "file": "codici-rilegati-21x9-1600.avif",
+     "ratio": "21x9",
+     "width": 1600,
+     "height": 686,
+     "format": "avif",
+     "quality": 40,
+     "bytes": 59032,
+     "budget": 61440,
+     "sha256": "458a3c4f0d7436ee91960ef09ba70125848b793c8df001d1996541fe4e2224a8"
+    },
+    {
+     "file": "codici-rilegati-21x9-1920.avif",
+     "ratio": "21x9",
+     "width": 1920,
+     "height": 823,
+     "format": "avif",
+     "quality": 31,
+     "bytes": 54157,
+     "budget": 61440,
+     "sha256": "830ea7314d2f47fe4cefa3a83b530fa76dc4a5ec1c77aedc78d48ff3b765c79d"
+    },
+    {
+     "file": "codici-rilegati-16x9-480.avif",
+     "ratio": "16x9",
+     "width": 480,
+     "height": 270,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13920,
+     "budget": 61440,
+     "sha256": "072cbc12a533b7aea6f775655de5b42869cd8ebe7b0114ec18222a8679ccc481"
+    },
+    {
+     "file": "codici-rilegati-16x9-480.webp",
+     "ratio": "16x9",
+     "width": 480,
+     "height": 270,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22626,
+     "budget": 61440,
+     "sha256": "dd90e7aa0bb899825257b7ae1dea687356d5a78abc7556274620b792e0caf02e"
+    },
+    {
+     "file": "codici-rilegati-16x9-800.avif",
+     "ratio": "16x9",
+     "width": 800,
+     "height": 450,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 36054,
+     "budget": 61440,
+     "sha256": "e38f7499fded461cde455ef151f4364c5443c5fa48a6cb875432710a461c2f05"
+    },
+    {
+     "file": "codici-rilegati-16x9-800.webp",
+     "ratio": "16x9",
+     "width": 800,
+     "height": 450,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 59516,
+     "budget": 61440,
+     "sha256": "cd82eb6facd53df34e85b76094f6d89724a72cb22ac133e993fd3bba3c62822b"
+    },
+    {
+     "file": "codici-rilegati-16x9-1200.avif",
+     "ratio": "16x9",
+     "width": 1200,
+     "height": 675,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 57376,
+     "budget": 61440,
+     "sha256": "55d9a4ad0dba7c480f5f5cfac9cd364460c2f5377380b1a3ad97ade45bac3c5c"
+    },
+    {
+     "file": "codici-rilegati-16x9-1600.avif",
+     "ratio": "16x9",
+     "width": 1600,
+     "height": 900,
+     "format": "avif",
+     "quality": 34,
+     "bytes": 57430,
+     "budget": 61440,
+     "sha256": "fd7697d75df531c0d9c3f571b68b7c81794986f216b49d888f2660b104778f78"
+    },
+    {
+     "file": "codici-rilegati-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 22459,
+     "budget": 46080,
+     "sha256": "3281a99610ec7a7f9a0e2753bca2955001c576bb42c41d09af784be503e9b9f3"
+    },
+    {
+     "file": "codici-rilegati-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 36082,
+     "budget": 46080,
+     "sha256": "ad29ae229bc11914583c220af5d440dd576b26d8de27154d6839e0b20dca7a6c"
+    },
+    {
+     "file": "codici-rilegati-4x5-640.avif",
+     "ratio": "4x5",
+     "width": 640,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 36276,
+     "budget": 46080,
+     "sha256": "4021ca1d78c6d8f3c9e4273614deeba6687f4b10a4604079388174bc2f5e369f"
+    },
+    {
+     "file": "codici-rilegati-4x5-640.webp",
+     "ratio": "4x5",
+     "width": 640,
+     "height": 800,
+     "format": "webp",
+     "quality": 50,
+     "bytes": 46054,
+     "budget": 46080,
+     "sha256": "be2a793cf83dbb282dee843fe5055616cb99b5a0e1d0af710a03df4687cf7e01"
+    },
+    {
+     "file": "codici-rilegati-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 43539,
+     "budget": 46080,
+     "sha256": "674fe9f2c6ff68ffcd2c77e93d072fd930a7713a68d2c2b03fb221265424a7e7"
+    }
+   ],
+   "ceilings": {
+    "21x9": 61440,
+    "16x9": 61440,
+    "4x5": 46080
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "codici-rilegati-21x9-1200.webp",
+    "codici-rilegati-21x9-1600.webp",
+    "codici-rilegati-21x9-1920.webp",
+    "codici-rilegati-16x9-1200.webp",
+    "codici-rilegati-16x9-1600.webp",
+    "codici-rilegati-4x5-800.webp"
+   ],
+   "label": "v522-m-build"
+  },
+  {
+   "slug": "grande-salle-etude",
+   "pexels_id": 10323211,
+   "photographer": "versolaluce",
+   "photographer_url": "https://www.pexels.com/@versolaluce-53441205",
+   "page": "https://www.pexels.com/photo/photo-of-people-in-a-library-10323211/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A bustling library in Çanakkale, Turkey, filled with students studying under natural light.",
+   "original_px": [
+    2992,
+    4000
+   ],
+   "original_sha256": "dfed233679c8be5e566ec1c0d1f6e6483df0d96881ece4e72265d9fc3f267bb7",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.16,
+      1.0,
+      0.66
+     ],
+     "crop_px": [
+      0,
+      643,
+      2992,
+      2638
+     ],
+     "master_px": [
+      2992,
+      1995
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a great study hall seen from a gallery: glazed walls, long tables; the people are small, seen from above, none turned to the camera; the near readers of the full frame's foot are below the crop (O55)",
+   "files": [
+    {
+     "file": "grande-salle-etude-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 14499,
+     "budget": 61440,
+     "sha256": "6b104907545e1a18b758830d12d8915bfd2095c6c9a9917f28ea261d60fdb882"
+    },
+    {
+     "file": "grande-salle-etude-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 21466,
+     "budget": 61440,
+     "sha256": "17d32c6bb1bbd57a6ed8c4d4076f666bd341bb56303d5686563ad40a5031c6bb"
+    },
+    {
+     "file": "grande-salle-etude-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 30760,
+     "budget": 61440,
+     "sha256": "db68e4a52c914b25dfb34cb782b8002ac71dd08415b7b2f49ec352aa704da2a4"
+    },
+    {
+     "file": "grande-salle-etude-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 44060,
+     "budget": 61440,
+     "sha256": "47cdc2e03ee51080d6e4c1168ad9ac93c01d5bf782b94618a16f2c1e938b3133"
+    },
+    {
+     "file": "grande-salle-etude-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 54521,
+     "budget": 61440,
+     "sha256": "fe921e9ffff824663db6f112319c17146296d3e4c09321c93d8a6ddeea212a99"
+    },
+    {
+     "file": "grande-salle-etude-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 59,
+     "bytes": 60760,
+     "budget": 61440,
+     "sha256": "35265f789c060b6e20f939a1fb729f169dfbaf237fec2e088d3e7959b8d0038c"
+    },
+    {
+     "file": "grande-salle-etude-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 83312,
+     "budget": null,
+     "sha256": "dab38901b70b3f0f7a114b655fbe2f22f7e5d74d7f5645e777f82be6323689aa"
+    },
+    {
+     "file": "grande-salle-etude-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 114628,
+     "budget": null,
+     "sha256": "9192de73c8de1917d17d520001e7eed71cc58db26aec32c9359299cd1cd2f17e"
+    }
+   ]
+  }
+ ]
+}

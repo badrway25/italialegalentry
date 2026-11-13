@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-mark: ILE drawing (Italy Legal Entry) -->
+  <path fill="currentColor" stroke="none" d="M2.5 3 7.5 5.5v13.5l-5 1.5ZM21.5 3 16.5 5.5v13.5l5 1.5Z"/>
+  <path d="M9.75 19v-7.25a2.25 2.25 0 0 1 4.5 0V19M6.5 21.75h11"/>
+</svg>

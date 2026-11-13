@@ -1,0 +1,69 @@
+/* ============================================================================================
+   «LA CHIUSURA» — THE ESPACE PERSONNES' ONE COMPACT CLOSING BAND (V5.32, lane B; the correction round of the senior
+   integration review, P2-3; markup pathways/_chiusura.html). The anti-fraud notice — the shared «protezione», its
+   locked text whole — and the next step (the questionnaire's sentence and its one primary, the way to the space's
+   register, the help line) as ONE composition where three bands stood: on a pathway sheet the closing chapter of its
+   paper body, the next step under the notice behind a rule; on Formation and Diplômes one band on «pietra», the next
+   step the notice's neighbour from 64 rem, its rule level with the notice's sill. The next step is one column at every
+   width — its sentence at the reading measure, the primary under it (beside it, measured at 768 and at 1024 in a
+   sheet's column, the sentence fell to five short lines). The notice keeps its one-column composition — the text at
+   its measure, the call under it — so no sentence is split.
+   Tokens of static/css/v5/tokens.css only; logical properties only.
+   ============================================================================================ */
+
+.chiusura {
+  display: grid;
+  gap: var(--s-6);
+  align-items: start;
+}
+
+.chiusura__seguito {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.chiusura__seguito > * {
+  margin: 0;
+}
+
+.chiusura__testo {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+@media (min-width: 64rem) {
+  .container.chiusura {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: clamp(var(--s-8), 5vw, var(--s-16));
+  }
+
+  .chiusura .protezione {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .chiusura .protezione__testo {
+    columns: auto;
+    max-inline-size: var(--measure-body);
+  }
+
+  /* one measure keeps the sentences' own flow (V5.32 integration): the shared band's two-column sentence blocks
+     (v5/_sec-lastre.css, from 80 rem) do not apply here, where no column is drawn */
+  .chiusura .protezione__testo :is(.ls-2, .ls-3) {
+    display: inline;
+  }
+
+  .chiusura .protezione__testo .ls-4 {
+    margin-block-start: var(--s-2);
+  }
+
+  .chiusura .protezione__azione {
+    grid-column: 2;
+    grid-row: auto;
+    align-self: start;
+  }
+}

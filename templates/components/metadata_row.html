@@ -1,0 +1,13 @@
+{% comment %}
+Metadata row (date, place, category…). Contract: `items` = list of dicts {label, value, icon,
+datetime (optional ISO string → <time>), url (optional)}.
+{% endcomment %}
+<dl class="meta-row">
+  {% for item in items %}
+  <div class="meta-row__item">
+    {% if item.icon %}{% svg_icon item.icon "icon" %}{% endif %}
+    <dt>{{ item.label }}</dt>
+    <dd>{% if item.url %}<a href="{{ item.url }}">{% endif %}{% if item.datetime %}<time datetime="{{ item.datetime }}">{{ item.value }}</time>{% else %}{{ item.value }}{% endif %}{% if item.url %}</a>{% endif %}</dd>
+  </div>
+  {% endfor %}
+</dl>

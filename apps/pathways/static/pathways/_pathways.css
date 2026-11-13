@@ -1,0 +1,31 @@
+/* ============================================================================================
+   THE REGULAR PATHWAYS — what the Espace Personnes' family sheet draws beyond the interior's grammar (design V5.4,
+   W3-F1; imported by pathways/pathways.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only;
+   logical properties.
+   V5.22 (SECTION_SYSTEM_V2 §3.4, §3.5, §3.9, §3.10; lane P1): the space's bodies are composed of the library V2 — each
+   page's own rules are in its page sheet (pathways/index.css, sheet.css, training.css, diplomas.css and their
+   partials) — so the V5.4/V5.12 compositions that stood here left with their markup (the numbered register and its
+   families filter, «Comment ça marche» on the old line, the tags of «Termes utiles», the two times on the old line, the
+   five pending stations, the amber callout, the registers of the space's areas and of the documents). What stays is
+   the sheet's head: its metadata row and the photograph an editor may give it.
+   ============================================================================================ */
+
+/* ---- a sheet's metadata row under its entrance: the facts in the quiet ink, wrapping as a phrase ------------- */
+.pathway-entrance .meta-row {
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.pathway-entrance .meta-row__item {
+  align-items: baseline;
+}
+
+/* ---- the sheet's photograph, when an editor gives it one with its caption apparatus ------------------------- */
+.pathway-figure {
+  padding-block-end: var(--s-12);
+}
+
+.pathway-figure .figura,
+.pathway-figure__img {
+  max-inline-size: 48rem;
+}

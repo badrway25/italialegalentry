@@ -1,0 +1,11 @@
+{% load i18n %}{% comment %}
+The questionnaire's first page: the ONE inset, «À lire avant de commencer», drawn under the entrance's lead
+(pages/partials/_ingresso.html, `meta_template`) so that it is read before the action beside it (W3-F1's review
+M4). The prescribed sentence (p3.persons.how_it_works) once gate G3 is open; before that a neutral sentence with the
+same meaning. Context (passed by the page): `phase3_public`, `disclaimer_locked_key`.
+{% endcomment %}
+<aside class="notice notice--info wizard-disclaimer" role="note" aria-labelledby="disclaimer-title">
+  {% svg_icon "info" "icon notice__icon" %}
+  <p class="notice__title" id="disclaimer-title">{% translate "À lire avant de commencer" %}</p>
+  <div class="notice__body"><p>{% if phase3_public %}{% locked disclaimer_locked_key %}{% else %}{% translate "Le résultat du questionnaire est une pré-évaluation à caractère informatif : les décisions relèvent des autorités compétentes." %}{% endif %}</p></div>
+</aside>

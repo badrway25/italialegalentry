@@ -1,0 +1,254 @@
+{
+ "what": "V5.12 photographs, family «vivre» (DECISIONS §6): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "rue-facades-couleurs",
+   "pexels_id": 12900263,
+   "photographer": "Helena Jankovičová Kováčová",
+   "photographer_url": "https://www.pexels.com/@helen1",
+   "page": "https://www.pexels.com/photo/cars-parked-beside-brown-concrete-building-12900263/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Colorful historic buildings and parked cars line the sunny streets of Verona, Italy.",
+   "original_px": [
+    6192,
+    4128
+   ],
+   "original_sha256": "64c377c623c9b300703dd3f51b35528a686dbbbda75924eb2dbac8551a0a80a6",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.03,
+      1.0,
+      0.69
+     ],
+     "crop_px": [
+      0,
+      159,
+      6192,
+      2813
+     ],
+     "master_px": [
+      6192,
+      2654
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      0.62,
+      0.62
+     ],
+     "crop_px": [
+      0,
+      0,
+      3839,
+      2559
+     ],
+     "master_px": [
+      3839,
+      2559
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.08,
+      0.65,
+      0.105,
+      0.68
+     ],
+     "radius_px": 10,
+     "reason": "the house number"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a street of stucco façades, shutters and balconies; the parked cars, their plates and the cyclist stay below the crop; the alt names no city",
+   "files": [
+    {
+     "file": "rue-facades-couleurs-21x9-800.avif",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 15480,
+     "budget": null,
+     "sha256": "a39ecf6da6c48415796f1d4d9f5251955534a593fd3d0d59edfcbdf5c08d0238"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-800.webp",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22486,
+     "budget": null,
+     "sha256": "c866ecf5a1d53cc28d17eb1f8fef1ca5c164fad85447cbc249d6489751dcf38a"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 31372,
+     "budget": 61440,
+     "sha256": "bd8207adf7e49b8dd033cf8a8d0547319a7e3e16d69431ca39935950c47da384"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-1200.webp",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 45696,
+     "budget": 61440,
+     "sha256": "e2d7cc356dcefd886448e7ffbfda4f56427757de35224d23ceaf943e3ed55b53"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-1600.avif",
+     "ratio": "21x9",
+     "width": 1600,
+     "height": 686,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 52481,
+     "budget": 61440,
+     "sha256": "caaf2d27fc894de60d0319b7787b03626dd06b0163a0e5edcc05cf8164b5954a"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-1600.webp",
+     "ratio": "21x9",
+     "width": 1600,
+     "height": 686,
+     "format": "webp",
+     "quality": 56,
+     "bytes": 60332,
+     "budget": 61440,
+     "sha256": "e12f96084a99ce2bb9af0b955721c75bbb89dfa906b1473150770c800abfbc8d"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-1920.avif",
+     "ratio": "21x9",
+     "width": 1920,
+     "height": 823,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 73616,
+     "budget": null,
+     "sha256": "2cf81bb2d2dc91433537ec1ae33f767a62dda73abfdbb4537038b4e079abfc0d"
+    },
+    {
+     "file": "rue-facades-couleurs-21x9-1920.webp",
+     "ratio": "21x9",
+     "width": 1920,
+     "height": 823,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 107786,
+     "budget": null,
+     "sha256": "948306b2961535479b732402e5cf8d01c80cd8de71b9758887779b624950f15b"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 9394,
+     "budget": 61440,
+     "sha256": "d06cc95c5c895f6ba512f5e8340944db97017d3e7b7f5c5f32a57e85ff34f373"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 14102,
+     "budget": 61440,
+     "sha256": "abce8a64534b405f0ed11108243e8d3e98012b622806f61cc68927ae1919d3f7"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 24721,
+     "budget": 61440,
+     "sha256": "fa03c6d1ad259f1ac31c7f560fe7e60fccefaf2f4d3f201ef33c255603469fd7"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 37470,
+     "budget": 61440,
+     "sha256": "34bc5752d7d4d80b4958fcce68636c776e24aac21dce66fa8e4930834f164719"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 53569,
+     "budget": 61440,
+     "sha256": "d8bd94369bfbf08a67e466ab7168778aecc7e6aa3db03181698cb327b0b7066d"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 53,
+     "bytes": 59980,
+     "budget": 61440,
+     "sha256": "e79a921a4e22a8885ae0caf659bd14695a617559324e7f9930a490a2528dfcfc"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 94584,
+     "budget": null,
+     "sha256": "d8ac7050f29310ab5f1322dc600f6ec2a707b560942877c4ade4d4771ff7c0f5"
+    },
+    {
+     "file": "rue-facades-couleurs-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 139578,
+     "budget": null,
+     "sha256": "0341c94729e676c3fb84a2d15270a90db9a6a24096a9174fbb6094d88c99f6d3"
+    }
+   ]
+  }
+ ]
+}

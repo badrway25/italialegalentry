@@ -1,0 +1,104 @@
+{% load i18n static pages_imagery %}{% comment %}
+THE ENTRANCE «l'ingresso» — the one header of a page of the public interior (design V5.4, W3-F1;
+static/css/v5/_interior.css §2). The space's name, the h1 and the lead at the reading edge, verbatim; beside them, in
+the end seat:
+  * `aside_template` — a template drawn in the seat with this partial's context (the questionnaire's action card on
+    its first page; the composed seats of V5.15). It comes first (round 2 of W3, m-7): a page that composes its head
+    never falls back to a curated library photograph;
+  * else `photo` — a curated photograph of the space (cms.MediaAsset, publishable only with its caption apparatus): the
+    caption and the credit stand under it (D26), and it is the page's LCP image, never lazy. A door's way in then
+    moves under the lead;
+  * else `slot` — a V5 photograph of the space (apps/pages/imagery.py, V5.12 DECISIONS §6/§7: the landing's LCP frame,
+    drawn by {% photo %}; no caption, stock is never documentary): the entrance becomes 7 / 5 (v5/_photo.css §2) and
+    the door's way in moves under the lead, on the paper, as with a curated photograph;
+  * else, on a door (`audience` and a way in) — the door card «la porta», carrying the door's way in: the night
+    plate, the audience glyph once on the 36 px night disc, the door's accent as a 3 px rule along its foot (the
+    portico's door card, v5/chrome.css §5), and on it what the door offers first — its title, its sentence, its one
+    control (pages/partials/_via.html). The plate is the door's first task, never a picture standing in for one
+    (W3-F1's review M1: the drawn stair read as a photograph that failed to load, and the page's action sat screens
+    below);
+  * else `index` — the page's «Sommaire de la page», for a page long enough to need one.
+
+Contract: `title` (safe; the h1), `title_lang`, `title_id`, `label` (the space's name), `label_suffix`, `label_lang`,
+`lead` (safe), `lead_lang`, `lead_caption` (safe: the lead's identification caption, `{% locked_caption %}` — a
+substantive French lead on its own Arabic page, V5.27 / R7′), `note` (one quiet line under the lead), `meta_template` (a template drawn under the lead,
+with this partial's context), `photo` (pages.services.Photo or ecosystem.services.Photo), `slot` (an imagery slot key; with `slot_pair`, a diptych: the second a step lower), `audience` (person · company
+· institution · university), the way in (`way_title`, `way_title_id`, `way_text`, `way_text_lang`, `way_label`,
+`way_url`, `way_jump`, `way_pending` — pages/partials/_via.html), `aside_template`, `index` (a list of {"url" or "id",
+"label", "lang"}), `motif`, `tone`, `glyph`, `seal`, `compact` (the frontispiece, below).
+The prescribed texts arrive whole from the locked registry: nothing here alters a word.
+
+V5.15 (label v515-c-build) — THE FRONTISPIECE «il frontespizio»: the entrance is the page's first screen, one system with
+a purposeful composition per page (V5.15 §3, §4). The band carries a material ground (paper or night, a light from the
+reading edge's far side, the architectural grid) and the page's MOTIF, an inline drawing that says what the page is
+about — `motif`: route (orientation, pathways: a journey), economic (companies), civic (institutions: architecture,
+governance), learning (universities, training: a progression), mission (the project, the pilot: the brand's arch),
+contact (a place found), legal (restrained margin rules), territory (living: contour lines), network (the network,
+the Forum: nodes around one centre). `tone` = "night" sets the band on the night. `glyph` = the page's concept symbol
+(lane B's sprite) — since V5.22 (SECTION_SYSTEM_V2 §0.1, §4.2; lane S) the folio draws its T1 seal instead of the 18 px
+disc that read as a bullet: the concept's ILE mark in the small arch seat (components/sezioni/sigillo.html; the map is
+core.icons.FOLIO, through the `folio_mark` filter), the label at its foot, the label's drawn rule the seal's sill; a
+concept without an ILE mark leaves the folio typographic. V5.30 (the owner's «geometry saturation»): the folio's seal is the
+quiet niche tile, the label's rule after its words; the arch seat on its sill stays on the route head alone (`compose`
+"route": its sill becomes the journey's spine). `seal` = a mark id or an icons.MARKS concept, for a head that
+names its seal itself. `compact` = True: the compact band of a form page or a term page (V5.22 §3.6 EN-H, §3.7 IN-H,
+§3.14 T0) — the same material in at most half the first screen at 1440. The drawing is decorative (aria-hidden), mirrored in Arabic, drawn once under
+no-preference and still under reduced motion (static/css/v5/_fronte.css, the page-only sheet linked here, before the
+band, so the band never paints unstyled).
+
+V5.15 round 1 (label v515-c-improve1): `compose` names a head whose drawing composes the page instead of standing behind
+a photograph — route (the journey spine from the folio down to the orientation action), network (the diagram of the
+five actors around the shared table), contact (the square's photograph, the address as the action),
+arch (the photograph in the brand's arch),
+notice (the page's one notice is the head's panel). `fronte_linked` = True when the page links the band's sheet in its
+<head> (every lane C page: {% block extra_head %}); the in-body link stays only for a head included without it.
+
+Finishing round F1: `words_first` = True marks a head whose title is long and set in capitals in its source copy
+(Parcours, Entreprises, Diplômes, the pilot): on a phone its words and action come before its photograph, from 64 rem
+its lead is narrowed (_fronte.css). The page decides, not the case of the rendered string, so the Arabic page has the
+layout of the French one; `ingresso__title--caps` stays typographic only and needs a cased letter (Arabic has none).
+
+FINAL MICRO-PASS §2.1, §2.6, §5 A3 (9 Nov 2026; the owner: «a premium modern legal-tech platform, not an architecture
+website»): the folio is typographic on every head — the label alone, no seal in its tile or its arch seat, no rule
+after it —, and the page's motif is no longer drawn: the band is its paper or night, its light and its grain. `motif`,
+`glyph`, `seal` and `compose` stay in the contract (the band's `data-fronte` and `data-compose` still name the head's
+composition for its sheet); the drawings of pages/partials/motifs/ have no caller here any more.
+{% endcomment %}{% if not fronte_linked %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endif %}
+<header class="ingresso" data-fronte="{{ motif|default:'plain' }}"{% if compose %} data-compose="{{ compose }}"{% endif %}{% if tone %} data-tone="{{ tone }}"{% endif %}{% if audience %} data-audience="{{ audience }}"{% endif %}{% if words_first %} data-words-first{% endif %}{% if compact %} data-compact{% endif %}>
+  <div class="fronte__ground" aria-hidden="true"></div>
+  <div class="container ingresso__inner">
+    <div class="ingresso__text">
+      {% if label %}<p class="ingresso__label"{% if label_lang %} lang="{{ label_lang }}"{% endif %}>{{ label }}{% if label_suffix %} {{ label_suffix }}{% endif %}</p>{% endif %}
+      <h1 class="ingresso__title{% if title|striptags|upper == title|striptags and title|striptags|lower != title|striptags %} ingresso__title--caps{% endif %}"{% if title_id %} id="{{ title_id }}"{% endif %}{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h1>
+      {% if lead and lead_caption %}{{ lead_caption }}{% endif %}{% if lead %}<p class="ingresso__lead"{% if lead_lang %} lang="{{ lead_lang }}"{% endif %}>{{ lead }}</p>{% endif %}
+      {% if note %}<p class="ingresso__note">{{ note }}</p>{% endif %}
+      {% if meta_template %}<div class="ingresso__meta">{% include meta_template %}</div>{% endif %}
+      {% if photo or slot %}{% if way_url or way_pending %}<div class="ingresso__way via">{% include "pages/partials/_via.html" %}</div>{% endif %}{% endif %}
+    </div>
+    {% if aside_template %}
+    <div class="ingresso__aside">{% include aside_template %}</div>
+    {% elif photo %}
+    <figure class="ingresso__aside figura">
+      <picture>
+        {% firstof photo.webp_srcset photo.srcset as srcset %}{% if srcset %}<source type="image/webp" srcset="{{ srcset }}" sizes="(min-width: 64rem) 25rem, 100vw">{% endif %}
+        <img src="{{ photo.src }}" alt="{{ photo.alt }}"{% if photo.alt_lang %} lang="{{ photo.alt_lang }}"{% endif %} width="{{ photo.width }}" height="{{ photo.height }}" decoding="async" fetchpriority="high">
+      </picture>
+      <figcaption>{% if photo.caption %}{{ photo.caption }}{% endif %}{% if photo.place %} · {{ photo.place }}{% endif %}{% if photo.date %}, {{ photo.date|date:"j F Y" }}{% endif %}{% if photo.credit and photo.attribution_required %} — {% get_current_language as credit_lang %}{% translate "Photo" %}{% if credit_lang == "fr" %}&nbsp;:{% else %}:{% endif %} {{ photo.credit }}{% endif %}</figcaption>
+    </figure>
+    {% elif slot and slot_pair %}
+    <div class="ingresso__aside ingresso__pair">{% photo slot "ingresso__photo" %}{% photo slot_pair "ingresso__photo" %}</div>
+    {% elif slot %}
+    {% photo slot "ingresso__aside ingresso__photo" %}
+    {% elif audience and way_url or audience and way_pending %}
+    <div class="ingresso__aside porta via on-inverse" data-way="{{ audience }}">
+      <span class="porta__disc" aria-hidden="true">{% svg_icon audience|concept:"audience" "icon icon--md" %}</span>
+      {% include "pages/partials/_via.html" %}
+    </div>
+    {% elif index %}
+    <nav class="ingresso__aside sommaire" aria-labelledby="sommaire-title">
+      <p class="sommaire__title" id="sommaire-title">{% translate "Sommaire de la page" %}</p>
+      <ul class="sommaire__list">{% for item in index %}<li><a class="sommaire__link" href="{% if item.url %}{{ item.url }}{% else %}#{{ item.id }}{% endif %}"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.label }}</a></li>{% endfor %}</ul>
+    </nav>
+    {% endif %}
+  </div>
+</header>

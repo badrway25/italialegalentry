@@ -1,0 +1,30 @@
+{
+  "base": "http://127.0.0.1:8770",
+  "console_errors": [],
+  "situation_status": "loaded",
+  "situation_h1": "Ma situation",
+  "situation_saved": true,
+  "questionnaire_steps": 3,
+  "result_url": "http://127.0.0.1:8770/fr/orientation/session/5f7b2fd2-2708-452d-a45f-b7b0f7b14605/resultat/",
+  "dashboard_status": "loaded",
+  "case_reference": "E12273C5DF",
+  "outcome": "Exigence manquante",
+  "sources": [
+    "Conditions d’entrée pour un séjour de courte durée — Reg. (UE) 2016/399 (codice frontiere Schengen), art. 6 consultée le 2026-09-21",
+    "Document de voyage — Reg. (CE) n. 810/2009 (codice dei visti), art. 12 consultée le 2026-09-21",
+    "Assurance médicale de voyage — Reg. (CE) n. 810/2009 (codice dei visti), art. 15 consultée le 2026-09-21",
+    "Décret fixant les quotas annuels d’entrée — D.Lgs. 286/1998, art. 3, comma 4 consultée le 2026-09-21",
+    "Travail salarié à durée déterminée et indéterminée — D.Lgs. 286/1998, art. 22 consultée le 2026-09-21",
+    "Règlement d’application du texte unique — D.P.R. 31 agosto 1999, n. 394 consultée le 2026-09-21"
+  ],
+  "checklist_rows": 9,
+  "no_source_notice": "JEU DE RÈGLES v1 évaluée le 22.09.2026",
+  "case_list_rows": 1,
+  "case_detail_url": "http://127.0.0.1:8770/fr/espace-reserve/dossiers/E12273C5DF/",
+  "case_detail_h1": "Dossier",
+  "checklist_with_a_source": 4,
+  "assessment_url": "http://127.0.0.1:8770/fr/espace-reserve/dossiers/E12273C5DF/pre-evaluation/7/",
+  "assessment_sources": 6,
+  "assessment_rules": 9,
+  "assessment_is_reproducible": true
+}

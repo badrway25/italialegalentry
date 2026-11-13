@@ -1,0 +1,84 @@
+# REVISIONE INDIPENDENTE — overlays
+
+Round 1 · premium_lift **6/10** · conforme: **NO** · implementabile: **NO**
+
+> The audit in §1 is the best I have reviewed on this council: I re-ran §1.1 against the live site and reproduced it exactly (Italiano hit-tests to `.main-nav__list`, Français to `.site-header__inner`, all links 166×32), and the proposed one-line fix genuinely works — after applying `details[data-dropdown][open]{position:relative;z-index:910}` via CSSOM all four languages became reachable. Every contrast figure I recomputed matches to the second decimal (5.34, 3.63, 6.82, 6.27, 5.10) with exact compositing, the bundle arithmetic is byte-perfect (26143+613+897+5309 = 32962 B), and `apps.cms.forbidden.scan()` over the spec file returns zero. That earned trust is then spent badly: the proposal is not implementable as written and it breaks the binding design system in four places. Measured at 390×844, the UA `dialog:modal` clamp `max-width/max-height: calc(100% - 38px)` leaves the drawer 19px short of the top and the sheet with 19px of scrim down each side — the exact "desktop modal shrunk down" defect §1.5 attacks — because §4.3 claims "selettori esatti" and never resets `max-block-size`/`max-inline-size` on `.ovl`; and `elementFromPoint` proves a toast at `--layer-toast:920` is hidden behind any open `showModal()` dialog, because the top layer beats every z-index, which makes the whole `--layer-*` ladder fiction. §1.8 correctly indicts the current code for an instantaneous `close()`, then §5 specifies five exit animations without ever naming the mechanism that defers it — `@starting-style` and `allow-discrete` appear nowhere in the spec or the project. Premium-wise it fixes correctness far more than it raises spectacle: the flagship gesture, "la soglia", is a 1px line that will read as a rendering artefact, the vignette scrim's 16-alpha-point delta is below the just-noticeable difference, and the 40×4 grip with 16px top corners is the stock vaul/shadcn silhouette that §8 names as a risk and then does not actually change.
+
+## Violazioni dei vincoli non negoziabili
+
+1. DS §2 level 6 — «`backdrop-filter` **solo** sull'header scrollato» — and level 5 — «mai vetro sul contenuto». Broken by §4.3: `.ovl[data-ovl="palette"]::backdrop{ -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%); }`. §7 admits the second instance («backdrop-filter solo sullo scrim della palette … e sull'header scrollato che già esiste») without declaring it as an amendment to the DS.
+
+2. ONE interactive accent — static/css/v2/tokens.css: «ONE colour is interactive: links, the primary action and the focus ring share it, and nothing else may use it.» Broken by §4.1: `--ovl-edge: rgb(127 209 216 / .40)` — that literal IS `--accent-dark` #7fd1d8, used as decorative panel chrome. Hardcoding the hex instead of `color-mix(in srgb, var(--accent-dark) …)` also hides the reuse from any grep-based token test and silently desyncs if the token changes.
+
+3. DS §2 level 5 dark surface is `--mid-2`; `--mid-4` is level 3 (elevated). Broken by §4.1: `--ovl-panel: var(--min-2); /* livello 5, DS §2 */` immediately followed by `--ovl-panel-dark: var(--mid-4);` — the spec cites DS §2 as its authority on the line above and then takes the level-3 dark surface. Correcting it to `--mid-2` drops `--ovl-edge` from 3.63:1 to 3.03:1, so the whole dark-palette contrast set in §4.1 has to be recomputed.
+
+4. WCAG 2.2 AA 1.4.11 (non-text contrast) on the focus indicator. §4.3 «Stati» declares one focus state for every anchor: `focus-visible: outline:2px solid var(--accent-ring)`. `--accent-ring` #1d8a93 on `--ovl-panel-dark` #223a46 computes to **2.90:1**, below 3:1, on a surface (`data-ovl="palette"`) that is navigated by keyboard only. DS §2 level 4 already prescribes `--accent-dark` for the dark focus ring, and the spec's OWN §4.1 table computes `--accent-dark` on `--ovl-panel-dark` at 6.82:1 — it has the right answer in the document and does not use it.
+
+5. Progressive enhancement (non-negotiable: «server-rendered templates + progressive enhancement»). §4.2 makes the drawer an anchor of the `<dialog>` primitive. A `<dialog>` cannot be opened without JS, and `static/css/components.css:866` and `:879` currently carry a working `html.no-js .nav-drawer` fallback (`html` ships with `class="no-js"` at templates/base.html:2, swapped by static/js/head.js:3). §4.0 and §4.4 never mention it, so mobile navigation without JS is silently dropped.
+
+## Lacune (ciò che l'implementatore dovrebbe inventare)
+
+1. The exit mechanism for `<dialog>` is never specified. §1.8 indicts the current code precisely because «`close()` è istantaneo», then §5 lists `overlay.scrim.out`, `overlay.dialog.out`, `overlay.pop.out`, `overlay.sheet.dismiss`, `overlay.toast.out`. A synchronous `close()` sets `display:none` immediately. Neither `@starting-style` nor `transition-behavior: allow-discrete` nor an await-then-close pattern appears in the spec, and `grep -rn 'starting-style\|allow-discrete' static/css/ docs/design-v3/specs/overlays.md` returns nothing. Five of seventeen motion entries are unimplementable as written.
+
+2. `SPRING_SETTLE` does not exist. `grep -rn 'SPRING_SETTLE' static/js/src/` returns nothing — static/js/src/motion.js only re-exports `{animate, scroll, inView, stagger, spring, hover, press}` and defines `reducedMotion`/`withMotion`. Two §5 entries (`overlay.sheet.settle`, `overlay.toast.stack`) depend on it, and §4.0's file list omits motion.js, so the implementer must both invent the constant and edit a file the spec says is untouched.
+
+3. How `::backdrop` is animated is never stated. §5 says «Tutte tramite `withMotion(fn, settle)`» but a pseudo-element is not selectable. Motion 13.4.1 does support the `pseudoElement` option (it is in node_modules/motion-dom/dist/es/animation/NativeAnimation.mjs), so this is achievable — but the implementer has to discover it, and §1.8's own finding is that the current `::backdrop` has `animation: none`.
+
+4. `--dir` is never defined. §4.3 uses `transform:translateX(calc(var(--ovl-drag) * var(--dir,1)))` and §6 refers to «`--dir` (`1`/`-1`) moltiplicato nel gesto», but no `[dir="rtl"]{ --dir:-1 }` rule is given in §4.3 and none exists in the project. Every RTL drag silently falls back to the LTR sign.
+
+5. The palette's role gate cannot be written. §4.6: «solo operatore / professionista / redattore / admin». `AccountType` is {person, company, institution, university, professional, staff}; `operator` exists only as a per-case assignment role (apps/cases/models.py:311, «ruolo nell'incarico»); `redattore` is not a role at all (it appears once as a demo `full_name` in apps/rules/management/commands/rules_activate_demonstration.py:177); `admin` is not a role. The implementer must invent the template condition, and per-case vs per-account gating are different security models.
+
+6. Whether the drawer is a `<dialog>` or a `<div>` is never decided, and the two branches differ completely. §4.2 lists `drawer` as an anchor of the `<dialog>` primitive (→ top layer, automatic inert, automatic Escape, `::backdrop` scrim), while §4.6 rule (4) applies `inert` to `#main-content`/`.site-footer` by hand, which is only meaningful for a non-dialog. §4.6 rule (1) also allows drawer + dialog simultaneously while rule (2) forbids two scrims, without saying how the drawer's `::backdrop` is suppressed.
+
+7. §4.5 gives no mechanism for splitting Django messages. It says `components/toasts.html` «sostituisce il blocco `{% if messages %}` di `base.html` 57-60 per i soli tag success/info» and §8 says error/warning stay in flow, but the in-flow branch's markup is never given and Django templates have no clean membership test on `message.tags`. The intent is stated twice; the code shape is stated zero times.
+
+8. `.ovl` never resets the UA `dialog:modal` box. Measured at 390×844: `max-width`/`max-height` computed to `calc(100% - 38px)`, dialog rect 352×806 at y=19 while the panel measured 358.8×844 — the panel overflows its own dialog horizontally and vertically. §4.3 overrides padding, border, background, inset, margin, overflow and color but not `max-block-size`/`max-inline-size`.
+
+9. `overlays.js` at «≈ 6,5 KB grezzi / ≈ 2,2 KB gzip» is not credible for the feature list: overlay stack, focus trap and return, `inert` management, scroll lock with scrollTop restore, rAF-throttled pointer drag with a velocity threshold, a toast queue with spring restacking, timers and pause-on-hover/focus/hidden, plus a command palette that harvests links at runtime, groups them and does keyboard nav. static/js/main.js is 19,944 B raw for materially less. Realistic is 18–25 KB raw / 6–8 KB gz, which still fits 45 (32.96 + ~8 ≈ 41) but makes the claimed 9.8 KB margin closer to 4 KB.
+
+10. The `--ovl-drag` write is CSP-sensitive and the spec never says so. I verified the boundary: Playwright's `add_style_tag` was refused by `style-src 'self'`, while `document.adoptedStyleSheets` and `element.style.setProperty('--ovl-drag', …)` both went through. The technique is sound, but an implementer who hits the first error may reach for a `<style>` injection or a nonce.
+
+## Segnali di «cheap / generico / default»
+
+1. The bottom sheet silhouette is the stock vaul/shadcn one: a 40×4 grey grip plus 16px top corners. §8 names the risk and then does not remove it — the guard only recolours the grip to `--hairline-strong`, limits the radius to two corners and sets 2px buttons, none of which changes the outline a viewer actually reads. `--radius-vestibule: 16px` is also the single deviation from a strict 0/2/6px radius system (DS §2: «Raggi: 0 sui capitoli e sui fogli, 2 px sui controlli, 6 px sul tassello del marchio, 999 sulle pillole di stato. Nessun altro»), spent on the most template-like element in the whole proposal.
+
+2. The toast stack maths is the Sonner default adopted verbatim — `scale(1 → .965 → .93)` with 8px/16px setback (§3 candidate 8, §4.5). It is acknowledged as borrowed and taken unchanged, so it will read as the library everyone recognises.
+
+3. The vignette scrim is effort without effect. `--ovl-scrim` moves from `rgb(10 21 28/.62)` at 50%/38% to `/.78` at the edge — a 16-alpha-point delta that §8 itself caps as the guard. That is at or below the just-noticeable difference on most screens; it costs a token, a fallback and a test line and will be invisible to the owner, who will read the scrim as flat anyway.
+
+4. «La soglia» is the proposal's signature and it is 1px. `.ovl__panel::before{ block-size:1px; background:var(--ovl-threshold) }` at `rgb(63 166 175 / .55)` on a 390px-wide sheet will read as a rendering seam, not as a doorway. The concept is the best idea in the document and it is given the least visual weight of anything in §4.
+
+5. Raw `color:#fff` in `.ovl__foot .btn--primary` — the only hardcoded colour in an otherwise fully tokenised sheet, in a system whose owner complained the result is not coherent.
+
+6. The whole proposal is corrective rather than spectacular. Against an owner who rejected V2 for «not speaking enough» and «backgrounds too simple or unmemorable», §4 delivers a flat `--min-2` sheet with a hairline border, `--shadow-5` and a 1px line. Nothing in the anatomy would make someone say «wow» — the premium is in the rules (no work happens in an overlay, drag-linked scrim, focus never on Fermer), which is real craft but invisible in a screenshot.
+
+## MUST-FIX
+
+1. Reset the UA modal box on `.ovl`: add `max-block-size:none; max-inline-size:none;` (and `inline-size:100%`/`block-size:100%` where the anchor needs it). Measured proof at 390×844: computed `max-width`/`max-height` = `calc(100% - 38px)`, dialog rect [0,19,352,806] against a panel rect [0,19,358.8,844]. Without this the drawer floats 19px below the top edge and the sheet gets 19px of scrim down each side — reproducing §1.5, the defect the spec exists to kill.
+
+2. Reconcile the top layer with the `--layer-*` ladder, or delete the ladder. Measured: with a `showModal()` dialog open, `elementFromPoint` at the centre of a `position:fixed` toast at `z-index:920` returns the dialog panel — the toast is invisible and unclickable. Either render the toast list inside the top-layer overlay when one is open, or promote `.ovl-toasts` to its own always-open `<dialog>`/popover. `--layer-scrim:900` and `--layer-overlay:901` are dead tokens for `<dialog>` and should be removed so nobody trusts them.
+
+3. Specify the exit mechanism. §5 defines five exit animations against a `close()` that is synchronous. Name one of: (a) `transition-behavior:allow-discrete` + `@starting-style` on `.ovl` and `.ovl::backdrop` with `close()` in `transitionend`, or (b) `withMotion` on the panel and on `::backdrop` via Motion's `pseudoElement` option, awaiting `.finished` before `close()`. State which, with the selector and the guard for reduced-motion (where `settle` must call `close()` immediately).
+
+4. Fix the dark focus ring. Add `.ovl[data-ovl="palette"] :focus-visible{ outline-color: var(--accent-dark); }` — `--accent-ring` #1d8a93 on `--ovl-panel-dark` #223a46 is **2.90:1**, failing 1.4.11 on a keyboard-only surface. DS §2 level 4 already prescribes `--accent-dark` for dark, and §4.1's own table computes it at 6.82:1.
+
+5. Remove `--ovl-edge` as an accent derivative. `rgb(127 209 216 / .40)` is `--accent-dark` hardcoded, breaking the one-accent rule in tokens.css. Use `--hairline-dark-strong` (`rgba(214,226,228,0.28)`): composited over `--mid-4` it gives rgb(84,105,114) = **3.17:1** against the darkened midnight ground, clearing 1.4.11 without touching the interactive accent and without a new token.
+
+6. Either drop `backdrop-filter` from the palette scrim, or amend DESIGN_SYSTEM_V2 §2 in the same change. As written it violates level 5 («mai vetro sul contenuto») and level 6 («`backdrop-filter` **solo** sull'header scrollato»). If the glass is kept, say so as an explicit DS amendment with the rationale and the single permitted selector, rather than asserting it in §7 as if already allowed.
+
+7. Correct `--ovl-panel-dark` to `var(--mid-2)` per DS §2 level 5, or state explicitly that level 5 dark is being changed to `--mid-4` and why. Then recompute the dark table: with `--mid-2` the `--ovl-edge` figure falls from 3.63:1 to 3.03:1, which no longer has margin.
+
+8. Preserve the promoter attribution in the drawer. templates/partials/header.html:26 carries `<p class="drawer-utility__identity"><strong>{{ site.promoter }}</strong> — promoteur du projet</p>`, and `.utility-bar{display:none}` below 47.999rem (static/css/v2/shell.css) makes the drawer the only place it appears on mobile. §4.4's head/body/foot anatomy has no slot for it. Also carry over the existing guards on the «Espace réservé» link — `{% flag "reserved_area_public_link" %}`, `site.settings.reserved_area_enabled` and `not user.is_authenticated` — which §4.4 states unconditionally.
+
+9. Decide the drawer's element and write it down. If `<dialog>`: say that `inert` rule (4) is redundant for it, say how the drawer's `::backdrop` is suppressed when a confirm opens above it (rule 2 forbids two scrims), and replace the lost `html.no-js .nav-drawer` fallback at components.css:866/879 so mobile navigation survives without JS. If `<div>`: specify the focus trap, the scrim element and the `inert` targets explicitly.
+
+10. Define `--dir`. Add `[dir="rtl"]{ --dir:-1 }` (and `:root{ --dir:1 }`) to §4.3; the drag transform and §6's RTL claim both depend on a variable that is declared nowhere.
+
+11. Re-express the palette's role gate in the product's actual vocabulary. Give the template condition against `AccountType` {person, company, institution, university, professional, staff} and/or `is_staff`, and if per-case `operator` (apps/cases/models.py:311) is genuinely intended, say how a per-case assignment role gates a global chrome surface.
+
+12. Add `SPRING_SETTLE = { stiffness: 260, damping: 30 }` to static/js/src/motion.js and add that file to §4.0's touched list. MOTION_SYSTEM §1 names it as binding but it is not implemented, and §5 uses it twice.
+
+13. Re-baseline the JS budget with a real estimate for overlays.js (18–25 KB raw / 6–8 KB gz for the listed behaviour, against main.js at 19,944 B raw for less), and say what gets cut first if the command palette pushes past 45 KB gz. The measured floor of 32,962 B gz is correct and verified; the claimed 9.8 KB headroom is not.
+
+14. Give the sheet and the threshold enough presence to survive a screenshot, or admit the proposal is corrective. A 1px `--terr-line` seam and a 16-alpha-point vignette will not answer «non abbastanza parlante». Options inside the rules: give the threshold 2–3px with the `--terr-line` gradient already used in the hero, or let the sheet's entry draw the threshold (`scaleX 0→1`, 320ms, `--ease-out`, ORIENTAMENTO) so the door is a gesture rather than a hairline.
+

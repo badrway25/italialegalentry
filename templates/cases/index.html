@@ -1,0 +1,78 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+«MES DOSSIERS» — every case file the caller may read, from ONE queryset (cases.views.index). Design V5 (docs/design-v5/
+V5_4_EXECUTION_PLAN.md §3.5 item 7; W3-E step 3): the registers' grammar of the console's secondary pages
+(apps/portal/static/portal/v5/_registers.css, the page sheet portal/registers.css).
+
+A person normally sees a single row. A professional or an operator sees the files they hold a live mandate for, and
+their own if they have one. There is deliberately no separate "professional view": a second page would mean a second
+authorisation rule, and the two would eventually disagree.
+
+  the head    the workspace head — the title and its line; no eyebrow repeating the level the breadcrumb gives
+  the clause  when a row is not the reader's: the mandate's terms, said once, above the rows
+  the rows    the dashboard's row (`.db-task`) in the registers' columns — the file (its objective, its reference in ILE
+              Mono, whose it is when it is entrusted, its count in words, its late lines in the dates' grammar — the
+              glyph and the words, azione), its state as a chip, the day it reached that state; the whole row the way
+              to the file
+  empty       one line naming how a file comes to exist, and the way to begin
+
+A case file is a fact with an objective, a reference, a state with a date and a responsible actor: no card, no tile,
+no percentage. Every word is the catalogue's.
+{% endcomment %}
+{% block page_title %}{% translate "Mes dossiers" %}{% endblock %}
+{% block meta_description %}{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}{% endblock %}
+{% comment %}The registers' page-only sheet, after the shell's two (W3-E; the owner's V5.8).{% endcomment %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="person">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Mes dossiers" %}</h1>
+    <p class="ws-head__lead">{% translate "Les dossiers que vous pouvez consulter : le vôtre, et ceux qui vous sont confiés." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="reg-page">
+{% if cases_total %}
+  {% if has_foreign %}
+  <p class="reg-note">{% blocktranslate %}Cette liste contient des dossiers qui ne sont pas les vôtres : ils vous sont confiés par un mandat daté. Chaque consultation est enregistrée.{% endblocktranslate %}</p>
+  {% endif %}
+  {% comment %} V5.30 (stream C): the platform's list toolkit — a state, an objective, whose file, a search, three orders
+  (components/listing/; cases.lists) — drawn from two files on: a person's single file needs none. {% endcomment %}
+  {% include "components/listing/toolbar.html" %}
+  {% if rows %}
+
+  <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Mes dossiers' %}">
+    {% for row in rows %}
+    <li class="db-task reg-row reg-row--link" data-case="{{ row.case.reference }}">
+      <div class="db-task__words">
+        <p class="db-task__title"><a class="reg-row__link" href="{% url 'cases:detail' row.case.reference %}">{{ row.case.get_purpose_display }} <span class="reg-ref">{{ row.case.reference }}</span></a></p>
+        <p class="db-task__meta reg-row__meta">
+          {% if not row.is_own %}<span>{% blocktranslate with name=row.case.person.get_full_name %}Dossier confié — {{ name }}{% endblocktranslate %}</span>{% endif %}
+          {% with step=row.case.get_person_status_parts.1 %}{% if step %}<span class="reg-row__step">{{ step }}</span>{% endif %}{% endwith %}
+          <span>{% blocktranslate with done=row.progress.done total=row.progress.total %}{{ done }} sur {{ total }} éléments complétés{% endblocktranslate %}</span>
+          {% if row.progress.overdue %}<span class="db-due db-due--overdue">{% svg_icon "alarm-clock" "icon" %}{% blocktranslate count n=row.progress.overdue %}{{ n }} en retard{% plural %}{{ n }} en retard{% endblocktranslate %}</span>{% endif %}
+        </p>
+      </div>
+      {% comment %} The step chip («Étape 1 sur 7»: a draft file's rank on the journey, its step's title under the row's title) is the page's own chip — the draft's register, attesa —, never the case status's: the status's three-phase gauge beside a rank of seven read as «1 of 3» (the V5.32 integration review's P2-12). Every other state is the status's chip, its gauge included. {% endcomment %}
+      <div class="db-task__state"><span class="visually-hidden">{% translate "État" %} </span>{% with state=row.case.get_person_status_parts %}{% if state.1 %}{% chip register="attesa" %}{{ state.0 }}{% endchip %}{% else %}{% chip row.case.status "cases.CaseStatus" %}{{ state.0 }}{% endchip %}{% endif %}{% endwith %}</div>
+      <div class="db-task__due"><span class="db-due">{% blocktranslate with date=row.case.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span></div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}{% include "components/listing/empty.html" %}{% endif %}
+{% else %}
+  {% comment %} One line naming how a file comes to exist — never a dashed box with an icon — and the way to begin. {% endcomment %}
+  <p class="db-empty">
+    {% translate "Vous n’avez pas encore de dossier. Il s’en ouvre un lorsque vous terminez le questionnaire d’orientation, et il conserve alors votre résultat, votre liste de pièces et les personnes responsables de chaque étape." %}
+    {% url 'orientation:start' as orientation_url %}
+    {% if orientation_url %}<a href="{{ orientation_url }}">{% translate "Commencer l’orientation" %}</a>{% endif %}
+  </p>
+{% endif %}
+</div>
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

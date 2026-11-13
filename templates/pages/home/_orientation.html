@@ -1,0 +1,45 @@
+{% load i18n pages_typo %}{% comment %}
+5. ORIENTATION — how the questionnaire works.
+   * gate G3 open   → the prescribed p3.persons.how_it_works sentence, cut on its own separators (pathways.services
+     .how_it_works): said WHOLE once for a screen reader, its four stations and its caveat drawn for the eye;
+   * gate G3 closed → the four neutral steps + the editorial note (pages.services._route_ends).
+
+V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026; lane B) — «il viaggio»: the deep ink band, the four moments as ONE
+connected journey (21st.dev «Feature Tab Switcher» 27081 + «Features With Panel» 29767, adapted in vanilla: a tablist of
+four moments beside a stage whose photograph changes with the moment). Each moment its keyword (a UI label: Orientation,
+Pré-évaluation, Formation, Procédure régulière — the station's words are the locked cut, never retyped), its semantic
+glyph (compass, list-checks, book-open, scroll-text) and its library photograph. No numeral anywhere: the order is the
+list's. The tabs are real (home.js «tabs»: roving tabindex, arrows, Home/End, RTL); without script every moment is shown
+in order. The call ends the band as a composed action panel: the locked caveat as its reassurance, the button its
+direction. Never a progress (no current step, no tick): the selected moment is a view, not a state of the reader.
+{% endcomment %}
+{% translate "Le questionnaire d’orientation" as fallback_title %}{% translate "Les moments de l’orientation" as moments_label %}
+<section class="sez home-orientation" id="{{ s.anchor }}" aria-labelledby="home-orientation-title" data-section="orientation" data-sec="viaggio" data-ground="{{ s.ground|default:'night' }}" data-rhythm="band">
+  <div class="container viaggio">
+    <div class="viaggio__capo">
+      {% if s.heading %}{% include "components/sezioni/_testa.html" with role="process" title_id="home-orientation-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-orientation-title">{{ fallback_title }}</h2>{% endif %}
+    </div>
+    {% if d.moments %}
+    {% if d.whole %}<p class="visually-hidden"{% if d.stations_lang %} lang="{{ d.stations_lang }}"{% endif %}>{{ d.whole }}</p>{% endif %}
+    <div class="viaggio__corpo" data-tabs="viaggio">
+      <ul class="viaggio__tappe" role="list" aria-label="{{ moments_label }}">
+        {% for m in d.moments %}<li class="viaggio__tappa"><a class="viaggio__voce" id="momento-{{ m.key }}-tab" href="#momento-{{ m.key }}" data-tab><span class="viaggio__glifo" aria-hidden="true">{% svg_icon m.glyph "icon" %}</span><span class="viaggio__nome"{% if m.label.lang %} lang="{{ m.label.lang }}"{% endif %}>{{ m.label }}</span><span class="viaggio__parole"{% if m.station.lang %} lang="{{ m.station.lang }}"{% endif %}{% if d.whole %} aria-hidden="true"{% endif %}>{{ m.station.label }}</span></a></li>{% endfor %}
+      </ul>
+      <div class="viaggio__palco">
+        {% for m in d.moments %}<div class="viaggio__scena" id="momento-{{ m.key }}" data-panel>
+          {% if m.frame %}<picture class="viaggio__foto"><source type="image/webp" srcset="{{ m.frame.srcset }}" sizes="{{ m.frame.sizes }}"><img src="{{ m.frame.src }}" width="{{ m.frame.width }}" height="{{ m.frame.height }}" alt="{{ m.frame.alt }}" loading="lazy" decoding="async"></picture>{% endif %}
+          <div class="viaggio__didascalia" aria-hidden="true"><span class="viaggio__emblema">{% svg_icon m.glyph "icon" %}</span><span class="viaggio__chiave t-label">{{ m.label }}</span><span class="viaggio__frase"{% if m.station.lang %} lang="{{ m.station.lang }}"{% endif %}>{{ m.station.label }}</span></div>
+        </div>{% endfor %}
+      </div>
+    </div>
+    {% elif d.how_it_works %}
+    <p class="viaggio__intera"{% if d.how_it_works.lang %} lang="{{ d.how_it_works.lang }}"{% endif %} data-locked="p3.persons.how_it_works">{{ d.how_it_works }}</p>
+    {% endif %}
+    {% if d.end_action or d.terminal %}
+    <div class="viaggio__azione">
+      {% if d.terminal %}<div class="viaggio__garanzia"><span class="viaggio__info" aria-hidden="true">{% svg_icon "info" "icon" %}</span>{{ d.terminal }}</div>{% endif %}
+      {% if d.end_action %}<a class="btn btn--primary viaggio__cta" href="{{ d.end_action.url }}" data-azione><span>{{ d.end_action.label }}</span>{% svg_icon "arrow" "icon icon--flip-rtl" %}</a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>

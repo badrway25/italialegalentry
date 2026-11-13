@@ -1,0 +1,60 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Espace Personnes — INTERIM page rendered while gate G3 (Phase 3) is closed.
+Only Phase 1 locked texts (p1.persons.replacement_1/2) and neutral UI strings: no p3.* text here.
+
+Design V5.4 (W3-F1 — the public interior, static/css/v5/_interior.css): the entrance with the person door, whose card
+carries the door's way in — the questionnaire, the page's ONE action (W3-F1's review M1); how it works (the two
+moments on «la linea»), what comes next (the sheets, said in words; the address as the live «who can help me» line).
+
+Design V5.22 (SECTION_SYSTEM_V2 §9.4: «index_interim.html kept coherent»; lane P1): the interim page speaks the
+recomposed Parcours' language — its two moments as the step plates of «Comment ça marche» on the brand wash (the
+same composition as the open page's PA-2), then what comes next as a strip with the live help line.
+Its sheet (V5.22, one request): css/dist/pathways/index.css — the family's pathways/pathways.css, unchanged, then
+lane S's library and the page's own V2 partials (apps/pathways/static/pathways/index.css).
+
+Design V5.32 (lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026): still the open page's
+language, in the open page's order — the entrance with the questionnaire's panel in its end seat (pathways/
+_via_panel.html, the page's one primary); where the explorer will stand, a strip saying the sheets are coming, with the
+live help line; then «Comment ça marche» on the stone, its two moments on the open page's one rail (a ring each, no
+figure, no icon tile — pathways/_esplora.css).
+{% endcomment %}
+{% block page_title %}{% translate "Espace Personnes" %}{% endblock %}
+{% block meta_description %}{% locked "p1.persons.replacement_1" as lead_text %}{% translate "Espace Personnes d’Italy Legal Entry™ :" %} {{ lead_text|striptags }}{% endblock %}
+{% block body_class %}page-pathways page-pathways--interim interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/index.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% translate "Italy Legal Entry™ pour les personnes" as space_label %}{% translate "Espace Personnes" as space_title %}{% locked "p1.persons.replacement_1" as lead_html %}
+{% translate "Identifiez la voie régulière à explorer" as way_title %}{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." as way_text %}{% translate "Commencer le questionnaire d’orientation" as way_label %}{% translate "Le questionnaire d’orientation sera disponible prochainement." as way_pending %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=space_title lead=lead_html audience="person" aside_template="pathways/_via_panel.html" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
+
+{% translate "Fiches des parcours réguliers" as sheets_title %}
+<section class="sez esplora-attesa" data-sec="esplora" data-ground="paper" data-rhythm="strip" aria-labelledby="interim-notice-title">
+  <div class="container">
+    <h2 class="esplora-sez__titolo" id="interim-notice-title">{{ sheets_title }}</h2>
+    <p class="esplora-sez__lead">{% translate "Les fiches détaillées des parcours réguliers vers l’Italie seront publiées progressivement dans cet espace. Aucun résultat administratif n’est promis : les décisions relèvent des autorités compétentes." %}</p>
+    <p class="aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  </div>
+</section>
+
+<section class="sez esplora-come" id="orientation" data-sec="come" data-ground="stone" data-rhythm="band" aria-labelledby="interim-how-title">
+  <div class="container">
+    <h2 class="esplora-sez__titolo" id="interim-how-title">{% translate "Comment ça marche" %}</h2>
+    <div class="come">
+      <ol class="come__tappe" role="list" data-steps="2">
+        <li class="come__tappa">
+          <span class="come__punto" aria-hidden="true"></span>
+          <h3 class="come__titolo">{% translate "Orientation" %}</h3>
+          <p class="come__riga">{% translate "Répondez à quelques questions pour identifier les voies régulières à explorer, avec les étapes et la documentation généralement requises." %}</p>
+        </li>
+        <li class="come__tappa">
+          <span class="come__punto" aria-hidden="true"></span>
+          <h3 class="come__titolo">{% translate "Accompagnement" %}</h3>
+          <p class="come__riga">{% locked "p1.persons.replacement_2" %}</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+{% endblock %}

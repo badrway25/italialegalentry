@@ -1,0 +1,37 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% if previous %}
+  <p>{% blocktrans with old=previous.version new=rule.version %}Differenze fra la versione {{ old }} e la versione {{ new }}.{% endblocktrans %}</p>
+{% else %}
+  <p>{% trans "Questa è la prima versione della regola: non esiste una versione precedente con cui confrontarla." %}</p>
+{% endif %}
+
+<table style="width:100%;border-collapse:collapse">
+  <thead>
+    <tr>
+      <th scope="col" style="text-align:left;padding:.5rem;border-bottom:2px solid currentColor">{% trans "Campo" %}</th>
+      <th scope="col" style="text-align:left;padding:.5rem;border-bottom:2px solid currentColor">{% trans "Versione precedente" %}</th>
+      <th scope="col" style="text-align:left;padding:.5rem;border-bottom:2px solid currentColor">{% trans "Questa versione" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+      <tr{% if row.changed %} style="background:#fdf6e3"{% endif %}>
+        <th scope="row" style="text-align:left;padding:.5rem;vertical-align:top">
+          {{ row.field }}{% if row.changed %} <span aria-label="{% trans 'modificato' %}">●</span>{% endif %}
+        </th>
+        <td style="padding:.5rem;vertical-align:top"><pre style="margin:0;white-space:pre-wrap">{{ row.old }}</pre></td>
+        <td style="padding:.5rem;vertical-align:top"><pre style="margin:0;white-space:pre-wrap">{{ row.new }}</pre></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p style="margin-top:1.5rem">
+  <a href="{% url 'admin:rules_legalrule_change' rule.pk %}">{% trans "Torna alla regola" %}</a>
+</p>
+{% endblock %}

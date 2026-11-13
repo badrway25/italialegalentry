@@ -1,0 +1,164 @@
+/* ============================================================================================
+   THE GLYPH TILE — the ILE treatment of an icon (V5.15 W3, lane B; DECISIONS §15 «Icon Visual System»; V5.15 §16).
+   Partial, imported by the page-only sheets that draw it (v5/_form.css → core/forms.css; orientation/wizard.css
+   through _choice.css; accounts/entrance.css) and offered to the other lanes' page sheets — never in main.css (the
+   shared bundle only ratchets down).
+
+   A Lucide or ILE symbol is not shown bare where it names a CONCEPT (a step, a section of a form, an empty state, a
+   document, an audience): it sits in a tile that gives it a place and a weight —
+     - optical sizing: the glyph is a smaller share of a larger tile (sm 32 → 16, md 44 → 22, lg 56 → 26 px), so a
+       large tile reads calm instead of loud; the 1.5 px stroke of the sprite never scales;
+     - the material (round 2): A PAPER SEAL — the raised sheet falling to the page's sheet, a soft rhythm edge (not
+       the structural hairline: the tile is not a box), a 1 px highlight inside its top edge and a faint under-shade;
+     - the ILE light (round 2): 2 px along the top edge, from the reading corner to 55 % and fading at its end — the
+       light of the doorway, the brand's one ornament (--identity-key); it runs to the far corner (100 %) when its
+       owner (a link, a button, a card, a step being filled) is hovered or focused, in 320 ms of the enter curve;
+       at once from the keyboard, still under reduced motion (the motion contract: DESIGN_SYSTEM_2026.md §10);
+     - interaction: inside a link, a button or a card the tile rises 1 px and its glyph scales to 1.06 in the soft
+       spring; nothing loops, nothing spins; at once from the keyboard, still under reduced motion;
+     - hierarchy: lg heads a section, md heads a step or a card, sm leads a row or a note; --solid is the current
+       or chosen one (white on the lagoon), --warm a caution, --night the tile on a dark chapter.
+   Decorative: the tile is aria-hidden, the words beside it say the concept. Tokens only; logical properties.
+   ============================================================================================ */
+.glyph-tile {
+  --gt: 2.75rem;
+  --gi: 1.375rem;
+  --gt-light: var(--identity-key);
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--gt);
+  block-size: var(--gt);
+  overflow: hidden;
+  border-radius: calc(var(--gt) * 0.2);
+  background: linear-gradient(180deg, var(--surface-raised), var(--surface-sheet));
+  /* the under-shade on the shadow hierarchy (V5.20): level 1 in its night twin, the 12 % the seal was drawn with */
+  box-shadow: inset 0 0 0 1px var(--line-rhythm), inset 0 1px 0 var(--surface-raised), var(--shadow-1-dark);
+  color: var(--accent-text);
+  transition: transform var(--spring-soft-duration, 320ms) var(--spring-soft), box-shadow var(--motion-standard) var(--ease-enter), background-color var(--motion-standard) var(--ease-enter), color var(--motion-standard) var(--ease-enter);
+}
+.glyph-tile::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 2px;
+  background: linear-gradient(90deg, var(--gt-light) 70%, transparent);
+  /* (F1) a faint underglow: at 1x the resting light reads as light, not as a small gold tab */
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--gt-light) 30%, transparent);
+  transform: scaleX(0.55);
+  transform-origin: 0 50%;
+  transition: transform 320ms var(--ease-enter);
+}
+[dir="rtl"] .glyph-tile::after { background: linear-gradient(270deg, var(--gt-light) 70%, transparent); transform-origin: 100% 50%; }
+.glyph-tile > .icon {
+  inline-size: var(--gi);
+  block-size: var(--gi);
+  transition: transform var(--spring-soft-duration, 320ms) var(--spring-soft);
+}
+/* the empty state's glyph inside its tile: the tile is its ground (main.css's disc rule left for pages that still
+   draw the bare mark) */
+.glyph-tile > .icon.empty-state__icon { margin: 0; padding: 0; border-radius: 0; background: none; box-shadow: none; inline-size: var(--gi); block-size: var(--gi); }
+/* a chapter's mark inside its tile keeps its class (the registry's tests read it) and loses the bare mark's offsets */
+.glyph-tile > .icon.chapter__mark { margin: 0; inline-size: var(--gi); block-size: var(--gi); }
+.glyph-tile--sm { --gt: 2rem; --gi: 1rem; }
+.glyph-tile--lg { --gt: 3.5rem; --gi: 1.625rem; }
+.glyph-tile--xl { --gt: 4.5rem; --gi: 2rem; }
+.glyph-tile--lg::after,
+.glyph-tile--xl::after { block-size: 3px; }
+.glyph-tile--warm { background: var(--tone-attesa-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone-attesa-mark) 40%, transparent); color: var(--tone-attesa-text); }
+.glyph-tile--neutral { background: var(--surface-area); color: var(--text-2); }
+.glyph-tile--solid { background: var(--fill-primary); box-shadow: none; color: var(--text-on-accent); }
+.glyph-tile--night,
+.chapter--dark .glyph-tile,
+.formwork__side .glyph-tile {
+  --gt-light: var(--identity-light-night);
+  background: var(--surface-night-sheet);
+  box-shadow: inset 0 0 0 1px var(--line-night-soft, var(--line-night)), inset 0 1px 0 color-mix(in srgb, var(--text-on-night-1) 8%, transparent);
+  color: var(--identity-key-night-text);
+}
+/* interaction: the tile answers its owner (a link, a button, a card, the step being filled), never itself — the
+   light runs to the far corner; under the pointer the tile also rises 1 px and its glyph scales to 1.06 */
+:is(a, button, .choice, [data-tile-host]):focus-visible .glyph-tile::after,
+:is(.choice, [data-tile-host]):focus-within .glyph-tile::after,
+.form-step:focus-within > .form-step__legend .glyph-tile::after { transform: scaleX(1); }
+@media (hover: hover) {
+  :is(a, button, label, .choice, [data-tile-host]):hover .glyph-tile { transform: translateY(-1px); box-shadow: inset 0 0 0 1px var(--accent-mark), 0 2px 6px -2px color-mix(in srgb, var(--surface-night) 18%, transparent); }
+  :is(a, button, label, .choice, [data-tile-host]):hover .glyph-tile::after { transform: scaleX(1); }
+  :is(a, button, label, .choice, [data-tile-host]):hover .glyph-tile > .icon { transform: scale(1.06); }
+}
+html[data-input="key"] :is(.glyph-tile, .glyph-tile::after, .glyph-tile > .icon) { transition-duration: 0ms; }
+@media (prefers-reduced-motion: reduce) { :is(.glyph-tile, .glyph-tile::after, .glyph-tile > .icon) { transition: none; } }
+html.rm :is(.glyph-tile, .glyph-tile::after, .glyph-tile > .icon) { transition: none; }
+@media (forced-colors: active) {
+  .glyph-tile { border: 1px solid CanvasText; box-shadow: none; background: Canvas; }
+  .glyph-tile::after { display: none; }
+}
+
+/* ---- the empty state (components/empty_state.html — 21st.dev «Empty Background» 18266, adapted). F1: the page's
+   OPENING STATEMENT, not a box: no surface; the domain's glyph in the xl tile (72 px) standing in a doorway — a 1 px
+   rhythm arch (~120 px) behind it at the reading corner, the portico's one figure, fading into the page at its foot;
+   the title at the entry size, one sentence in --text-2 at the text measure, the view's own action as a secondary.
+   The tile's light runs from 55 % to the far corner once as the state arrives (320 ms of the enter curve) and stays
+   there — the space is open; at once under reduced motion. Here and not in main.css: the empty state's template
+   brings this sheet ({% glyph_assets %}), so the shared bundle ratchets down. */
+.empty-state.empty-state--tile {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-2) var(--s-8);
+  max-inline-size: var(--measure-body, 40rem);
+  margin: 0;
+  padding: var(--s-8) 0 var(--s-6) var(--s-2);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: start;
+}
+/* the doorway: an arch drawn on the rhythm line, the tile on its threshold */
+.empty-state.empty-state--tile::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block-start: 0;
+  inset-inline-start: calc(var(--s-2) - 0.5rem);
+  inline-size: 5.5rem;
+  block-size: 7.5rem;
+  border: 1px solid var(--line-rhythm);
+  border-block-end: 0;
+  border-start-start-radius: 2.75rem;
+  border-start-end-radius: 2.75rem;
+  -webkit-mask-image: linear-gradient(180deg, black 55%, transparent);
+  mask-image: linear-gradient(180deg, black 55%, transparent);
+  pointer-events: none;
+}
+.empty-state--tile > .glyph-tile { grid-row: 1 / span 3; margin-block-start: var(--s-6); background: linear-gradient(180deg, var(--surface-raised), var(--surface-sheet)); }
+.empty-state--tile > .glyph-tile::after { transform: scaleX(1); animation: empty-light 320ms var(--ease-enter) 160ms backwards; }
+@keyframes empty-light { from { transform: scaleX(0.55); } }
+html.rm .empty-state--tile > .glyph-tile::after { animation: none; }
+@media (prefers-reduced-motion: reduce) { .empty-state--tile > .glyph-tile::after { animation: none; } }
+.empty-state--tile > :not(.glyph-tile) { grid-column: 2; margin: 0; }
+.empty-state.empty-state--tile .empty-state__title {
+  margin-block-start: var(--s-6);
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+.empty-state.empty-state--tile .empty-state__title:lang(ar) { letter-spacing: 0; }
+.empty-state.empty-state--tile .empty-state__text { max-inline-size: var(--measure-small, 34rem); font-size: var(--t-ui); line-height: 1.5rem; color: var(--text-2); }
+.empty-state--tile > p:last-child:has(.btn) { margin-block-start: var(--s-4); }
+@media (max-width: 29.999rem) {
+  .empty-state.empty-state--tile { grid-template-columns: minmax(0, 1fr); padding-inline-start: var(--s-2); }
+  .empty-state--tile > .glyph-tile { grid-row: auto; margin-block-end: var(--s-2); }
+  .empty-state--tile > :not(.glyph-tile) { grid-column: 1; }
+  .empty-state.empty-state--tile .empty-state__title { margin-block-start: var(--s-4); }
+}
+@media (forced-colors: active) { .empty-state.empty-state--tile::before { border-color: CanvasText; } }

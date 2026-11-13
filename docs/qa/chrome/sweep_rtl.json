@@ -1,0 +1,348 @@
+[
+ {
+  "page": "home_ar",
+  "path": "/ar/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/",
+  "title": "Italy Legal Entry™ · المسارات النظامية نحو إيطاليا",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "ITALY LEGAL ENTRY™"
+  ],
+  "headings": [
+   "H1:ITALY LEGAL ENTRY™",
+   "H2:أربعة مداخل إلى المنظومة",
+   "H3:ÊTES-VOUS UNE PERSONNE ?",
+   "H3:ÊTES-VOUS UNE ENTREPRISE ?",
+   "H3:ÊTES-VOUS UNE INSTITUTION ?",
+   "H3:ÊTES-VOUS UNE UNIVERSITÉ OU UN ORGANISME DE ",
+   "H2:كيف يعمل التوجيه",
+   "H2:المسارات النظامية",
+   "H3:Travail salarié",
+   "H3:Travail qualifié — Carte bleue européenne",
+   "H3:Formation dans le pays d’origine",
+   "H3:Études et formation en Italie",
+   "H3:Regroupement familial",
+   "H3:Travail indépendant et entrepreneuriat",
+   "H3:Recherche scientifique",
+   "H3:Autres voies régulières",
+   "H2:PROJET PILOTE VÉNÉTIE–MAROC",
+   "H2:ما تقوم به المنصة وما لا تقوم به",
+   "H3:Italy Legal Entry délivre-t-elle des visas ?",
+   "H3:Italy Legal Entry est-elle une agence de rec",
+   "H3:La pré-évaluation garantit-elle l’entrée en ",
+   "H3:Italy Legal Entry reconnaît-elle les diplôme",
+   "H2:ATTENTION AUX FRAUDES",
+   "H2:الأخبار"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "persone_ar",
+  "path": "/ar/parcours/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/parcours/",
+  "title": "فضاء الأفراد · VOTRE PARCOURS RÉGULIER VERS L’ITALIE · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "VOTRE PARCOURS RÉGULIER VERS L’ITALIE"
+  ],
+  "headings": [
+   "H1:VOTRE PARCOURS RÉGULIER VERS L’ITALIE",
+   "H2:المسارات النظامية",
+   "H3:Travail salarié",
+   "H3:Travail qualifié — Carte bleue européenne",
+   "H3:Formation dans le pays d’origine",
+   "H3:Études et formation en Italie",
+   "H3:Regroupement familial",
+   "H3:Travail indépendant et entrepreneuriat",
+   "H3:Recherche scientifique",
+   "H3:Autres voies régulières",
+   "H2:حدّدوا السبيل النظامي الذي يمكن استكشافه",
+   "H2:كيف يعمل ذلك",
+   "H2:ATTENTION AUX FRAUDES",
+   "H2:المعلومات القانونية",
+   "H2:التنقل",
+   "H2:المشروع"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "imprese_ar",
+  "path": "/ar/entreprises/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/entreprises/",
+  "title": "فضاء الشركات · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREPRISE A-T-ELLE BESOIN ?"
+  ],
+  "headings": [
+   "H1:DE QUELS PROFILS PROFESSIONNELS VOTRE ENTREP",
+   "H2:ثلاث مراحل ومنهجية واحدة",
+   "H2:رصد الاحتياجات",
+   "H2:ما تقوم به المنصة وما لا تقوم به",
+   "H2:لمعرفة المزيد",
+   "H3:منتدى Vénétie–Maroc",
+   "H3:PROJET PILOTE VÉNÉTIE–MAROC",
+   "H2:المعلومات القانونية",
+   "H2:التنقل",
+   "H2:المشروع"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [
+   {
+    "tag": "div",
+    "cls": "hp-field",
+    "right": 11424
+   },
+   {
+    "tag": "label",
+    "cls": "",
+    "right": 11424
+   },
+   {
+    "tag": "input",
+    "cls": "hp-field",
+    "right": 21423
+   }
+  ],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 2,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "forum_ar",
+  "path": "/ar/forum/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/forum/",
+  "title": "FORUM PERMANENT VÉNÉTIE–MAROC · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "FORUM PERMANENT VÉNÉTIE–MAROC"
+  ],
+  "headings": [
+   "H1:FORUM PERMANENT VÉNÉTIE–MAROC",
+   "H2:QUI SOMMES-NOUS",
+   "H2:POURQUOI ITALY LEGAL ENTRY",
+   "H2:QU’EST-CE QUE LE FORUM",
+   "H2:OBJECTIFS",
+   "H2:À QUI S’ADRESSE-T-IL",
+   "H2:PROGRAMME",
+   "H2:INTERVIENNENT",
+   "H2:المشاركة والتعاون",
+   "H2:المعلومات القانونية",
+   "H2:التنقل",
+   "H2:المشروع"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "cruscotto_ar",
+  "path": "/ar/espace-reserve/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/espace-reserve/",
+  "title": "الفضاء الخاص · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "لوحة المتابعة"
+  ],
+  "headings": [
+   "H1:لوحة المتابعة",
+   "H2:أين وصلت",
+   "H2:ما تبقى إنجازه، ومَن يتولاه",
+   "H2:وثائقكم",
+   "H2:تقييمكم الأولي",
+   "H2:الرسائل",
+   "H2:تواريخ ينبغي تذكّرها",
+   "H2:حسابي"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 1,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "fascicoli_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/espace-reserve/dossiers/",
+  "title": "ملفاتي · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "ملفاتي"
+  ],
+  "headings": [
+   "H1:ملفاتي"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "documenti_ar",
+  "path": "/ar/espace-reserve/mes-documents/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/espace-reserve/mes-documents/",
+  "title": "مستنداتي · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "مستنداتي"
+  ],
+  "headings": [
+   "H1:مستنداتي"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 2,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "academy_ar",
+  "path": "/ar/espace-reserve/formation/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/ar/espace-reserve/formation/",
+  "title": "الأكاديمية · Italy Legal Entry™",
+  "lang": "ar",
+  "dir": "rtl",
+  "h1": [
+   "الأكاديمية"
+  ],
+  "headings": [
+   "H1:الأكاديمية",
+   "H2:الدورات المتاحة",
+   "H3:Éducation civique : institutions et vie quot",
+   "H3:Italien A1 — premiers échanges",
+   "H3:Préparation au départ : démarches, arrivée, ",
+   "H3:Fondamentaux des métiers de l’agroalimentair",
+   "H3:Droits et devoirs de la personne qui travail",
+   "H3:Culture du travail et organisation de l’entr",
+   "H3:Sécurité au travail — repères généraux",
+   "H2:أين وصلت"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ }
+]

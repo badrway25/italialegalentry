@@ -1,0 +1,98 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Glossaire — termes italiens expliqués (Phase 3, gate G3). Locked terms come from the registry through
+glossary.services (cms.locked_content).
+
+Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): the head at the reading
+edge; one band for the register, each definition visible (a glossary is read, not unfolded); a search's answer one
+chapter with its count as head. No glyph in the editorial body. V5.24: the register on STONE, «il rimando» on PAPER
+before the night footer.
+
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B2) — the dictionary as a reading list, not a wall of cards. After 21st.dev
+«Searchable Question Index» (ibrandify/searchable-question-index, id 37558), adapted as the FAQ's
+(templates/faq/index.html says how; static/js/src/cerca.js): the search under the lead — the field with its glyph, the clear button, the quiet
+submit of the path without script, the help line — filters the register as one types, with its live count and its
+empty state. The alphabet is one quiet row that stays under the letterhead: the whole alphabet, the letters that have
+terms links (the current one marked by sezioni/spia.js: aria-current), the others dimmed and out of the accessibility
+tree. Each term is a definition row on the register's hairlines — the Italian term, the prescribed definition whole,
+«Où le rencontrer» — under a modest letter heading (a letter's first row carries it: the anchor #lettre-X). The
+V5.22 thumb rail, the term cards' plates, their outlined letters and their reading-edge rule left. Without script
+the register is listed whole and the search is the server's (?q=).
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — a legal-tech reference tool: the head is the
+title and the lead at the reading edge with the search in its end seat from 64 rem (the field is the page's first
+tool, at eye level, not under the lead); the frontispiece's «learning» motif left (no geometry as filler); the term at
+the strong weight over its definition, the letter a modest heading, the sticky alphabet unchanged.
+{% endcomment %}
+{% block page_title %}{% if is_search %}{% blocktranslate with q=query %}Résultats pour « {{ q }} » — Glossaire{% endblocktranslate %}{% else %}{% translate "Glossaire" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots : visto, permesso di soggiorno, nulla osta, codice fiscale…" %}{% endblock %}
+{% block body_class %}page-glossary lettura{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
+{% endif %}
+
+<header class="page-header glossario-testa container">
+  <div class="page-header__text">
+    <h1 class="page-header__title">{% translate "Glossaire" %}</h1>
+    <p class="page-header__lead">{% translate "Les termes italiens que vous rencontrerez dans les démarches, expliqués en quelques mots." %}</p>
+  </div>
+  {% translate "Rechercher un terme" as search_label %}
+  <form class="page-header__aside search-form glossary__search"{% if not is_search %} data-cerca-viva{% endif %} method="get" action="{% url 'glossary:index' %}" role="search" aria-label="{{ search_label }}">
+    <label class="search-form__label visually-hidden" for="glossary-q">{{ search_label }}</label>
+    <div class="cerca__campo">
+      {% svg_icon "search" "icon cerca__glifo" %}<input class="search-form__input cerca__input" type="search" id="glossary-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="glossary-q-help" placeholder="{{ search_label }}">
+      <button class="cerca__pulisci" type="button" hidden aria-label="{% translate "Effacer la recherche et afficher tous les termes" %}">{% svg_icon "close" "icon" %}</button>
+      <button class="cerca__invio" type="submit">{% translate "Rechercher" %}</button>
+    </div>
+    <p class="search-form__help" id="glossary-q-help">{% translate "Saisissez un terme italien ou un mot de sa définition." %}</p>
+    {% if is_search %}<p class="search-form__reset"><a href="{% url 'glossary:index' %}">{% translate "Effacer la recherche et afficher tous les termes" %}</a></p>{% endif %}
+  </form>
+</header>
+
+{% if is_search %}
+<section class="sez glossary__results" data-ground="paper" data-rhythm="band" aria-labelledby="glossary-results-title">
+  <div class="container">
+    {% blocktranslate count counter=entries|length with q=query asvar results_title %}{{ counter }} terme pour « {{ q }} »{% plural %}{{ counter }} termes pour « {{ q }} »{% endblocktranslate %}
+    {% include "components/sezioni/_testa.html" with role="process" title_id="glossary-results-title" title=results_title only %}
+    {% if results %}
+    <div class="lessico__carte">{% for card in results %}{% include "glossary/_entry.html" with card=card %}{% endfor %}</div>
+    {% else %}
+      {% url 'glossary:index' as glossary_index_url %}
+      {% include "components/empty_state.html" with title=_("Aucun terme ne correspond à votre recherche.") text=_("Essayez un autre mot ou parcourez l’index alphabétique.") action_label=_("Voir tous les termes") action_url=glossary_index_url icon="book-a" %}
+    {% endif %}
+  </div>
+</section>
+{% elif letters %}
+<div class="sez sez--lessico lessico" data-sec="lessico" data-ground="stone" data-rhythm="band" data-cerca="glossary-q">
+  <div class="container lessico__griglia">
+    <nav class="az-index glossary__index" aria-label="{% translate "Index alphabétique" %}" data-sec-js="spia">
+      <ol class="az-index__list">
+        {% for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}{% if letter in letters %}<li><a class="az-index__link" href="#lettre-{{ letter }}">{{ letter }}</a></li>{% else %}<li class="az-index__vuota" aria-hidden="true">{{ letter }}</li>{% endif %}{% endfor %}
+      </ol>
+    </nav>
+    <p class="cerca-conto" role="status" data-cerca-conto></p>
+    <template data-cerca-conti><span>{% blocktranslate count n=0 %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</span>{% for item in lessico %}<span>{% blocktranslate count n=forloop.counter %}{{ n }} résultat{% plural %}{{ n }} résultats{% endblocktranslate %}</span>{% endfor %}</template>
+    <div class="lessico__registro">
+      <div class="lessico__carte sez-seq">{% for card in lessico %}{% include "glossary/_entry.html" with card=card %}{% endfor %}</div>
+    </div>
+    <div class="cerca-vuoto" data-cerca-vuoto hidden>
+      <p class="cerca-vuoto__titolo">{% translate "Aucun terme ne correspond à votre recherche." %}</p>
+      <p class="cerca-vuoto__testo">{% translate "Essayez un autre mot ou parcourez l’index alphabétique." %}</p>
+      <p class="cerca-vuoto__vie"><button class="btn btn--secondary" type="button" data-cerca-azzera>{% translate "Voir tous les termes" %}</button></p>
+    </div>
+  </div>
+</div>
+{% endif %}{# V5.12 §8: without a live term the page answers 404 (glossary.views.index) #}
+
+{% if rimando %}
+<aside class="sez sez--rimando glossary__related" data-sec="rimando" data-ground="paper" data-rhythm="strip" aria-labelledby="glossary-related-title">
+  <div class="container">
+    {% translate "Pour aller plus loin" as related_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="glossary-related-title" title=related_title only %}
+    {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=rimando only %}
+  </div>
+</aside>
+{% endif %}
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/lessico.css' %}">{% if not is_search %}<script type="module" src="{% static 'js/dist/cerca.js' %}"></script>{% endif %}
+{% if glossary_jsonld %}<script type="application/ld+json">{{ glossary_jsonld }}</script>{% endif %}{% endblock %}

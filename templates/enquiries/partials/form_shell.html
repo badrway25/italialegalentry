@@ -1,0 +1,43 @@
+{% load i18n ile_forms %}
+{% comment %}
+Contract: `form` (a PublicSubmissionForm), `form_action` (URL, optional), `form_id`, `form_class`,
+`legend` (str), `submit_label_key` (locked key rendered with {% locked %}) OR `submit_label` (plain).
+Renders CSRF, honeypot fields (off-screen, never focusable), the data fields in the form's order,
+the consent checkbox (never pre-checked) and the submit button. Works without JavaScript.
+V5.12 W2 (DECISIONS §5.3): no asterisk and no «fields marked with an asterisk» note — the optional fields say
+«facultatif», the required ones carry `required`.
+
+V5.15 W3 (lane B; DECISIONS §5.12–5.13) — THE FORMWORK: the form is a panel (a raised sheet with its own head, the
+fields on a two-column grid from 36rem of the formwork, V5.29), and beside it from 56rem the sticky side
+(components/formwork_side.html: the steps' rail, what happens after sending, the privacy notice). A form that says
+its steps (`form.steps`, the «Recueil des besoins») is asked one step at a time by static/js/src/steps.js — the
+fields keep their prescribed order, the consent and the button are the locked ones, unchanged; without script the
+steps are fieldsets in sequence. A form without steps keeps its one group and the consent group.
+Round 1: the privacy link and its shield are said ONCE — beside the consent; the side of a form in steps no longer
+repeats them (its rail and «Après l’envoi»).
+{% endcomment %}{% form_steps form as steps %}{% url 'legal:privacy' as privacy_url %}
+<div class="formwork{% if steps %} formwork--steps{% endif %}">
+{% form_assets %}<div class="formwork__grid">
+<form method="post" action="{{ form_action|default:'' }}" class="form formwork__panel enquiry-form {{ form_class|default:'' }}" id="{{ form_id|default:'formulaire' }}" novalidate{% if steps %} data-steps{% if form.steps_review %} data-steps-review-on{% endif %}{% include "components/_steps_msgs.html" %}{% endif %}>
+  {% csrf_token %}
+  {% include "components/form_errors.html" with form=form %}
+  {% for hp in form.spam_fields %}{% if hp.name == "website_url" %}<div class="hp-field" aria-hidden="true"><label for="{{ hp.id_for_label }}">{% translate "Ne pas remplir ce champ" %}</label>{{ hp }}</div>{% else %}{{ hp }}{% endif %}{% endfor %}
+  {% if steps %}
+  {% include "components/form_steps.html" with steps=steps review=form.steps_review privacy_url=privacy_url field_template="enquiries/partials/form_field.html" %}
+  {% else %}
+  <fieldset class="form__group">
+    <legend class="form__legend">{{ legend }}</legend>
+    <div class="form-step__body">{% for field in form.prescribed_fields %}{% include "enquiries/partials/form_field.html" with field=field %}{% endfor %}</div>
+  </fieldset>
+  <fieldset class="form__group form__group--consent">
+    <legend class="form__legend">{% translate "Données personnelles" %}</legend>
+    {% include "enquiries/partials/form_field.html" with field=form.consent %}
+    <p class="form__privacy-link">{% svg_icon "shield" "icon" %}<a href="{{ privacy_url }}">{% translate "Consulter l’information sur le traitement des données personnelles (Privacy Policy)" %}</a></p>
+  </fieldset>
+  {% endif %}
+  <div class="form__actions">
+    <button type="submit" class="btn btn--primary btn--lg">{% if submit_label_key %}{% locked submit_label_key %}{% else %}{{ submit_label }}{% endif %}</button>
+  </div>
+</form>
+{% if steps %}{% include "components/formwork_side.html" with steps=steps privacy_url="" %}{% else %}{% include "components/formwork_side.html" with privacy_url=privacy_url %}{% endif %}</div>
+</div>

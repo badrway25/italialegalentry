@@ -1,0 +1,7 @@
+{% load i18n %}{% comment %}The FAQ guide's foot (V5.32, lane D): the way to a person when no answer fits — said once on the page
+(the closing «rimando» no longer repeats it). Context: `contact_url` (empty when the page is gated shut).{% endcomment %}
+{% if contact_url %}<div class="faq-aiuto">
+  <p class="faq-aiuto__titolo">{% translate "Vous n’avez pas trouvé de réponse ?" %}</p>
+  <p class="faq-aiuto__testo">{% translate "Une adresse unique pour toutes les demandes relatives au projet." %}</p>
+  <p class="faq-aiuto__azione"><a class="link-arrow" href="{{ contact_url }}">{% translate "Contact" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>
+</div>{% endif %}

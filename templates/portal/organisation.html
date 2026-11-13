@@ -1,0 +1,80 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+«MON ORGANISATION» — the organisation space's identity page (V5.12 Q7: «organisation identity/profile»), on the
+console's frame. Each organisation the account belongs to, as its identity sheet — name, nature, place, website, the
+account's own role and since when (portal.services.organisation_identity: the organisation's public identity and the
+account's membership, never another member's data) —; for the organisation's responsible, the documents its members
+filed for it (portal.services.organisation_documents_for, the policy of documents.policies); then the account's own
+settings. The attachment of an account to an organisation is the project team's act: the page says so, and offers
+no form of its own. Rules: portal/organisation.css (page-only). Every word is the catalogue's.
+{% endcomment %}
+{% block page_title %}{% translate "Mon organisation" %}{% endblock %}
+{% block meta_description %}{% translate "Mon organisation" %} — {{ space_label }}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/organisation.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head org-head" data-atrium="{{ audience|default:'institution' }}">
+  <div class="ws-head__words">
+    <p class="ctx__eyebrow atrium__eyebrow t-label">{{ space_label }}</p>
+    <h1 class="ws-head__title">{% translate "Mon organisation" %}</h1>
+    <p class="ws-head__lead">{% translate "Le rattachement de votre compte à une organisation est effectué par l’équipe du projet." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="org-page" data-platform>
+  {% for organisation in organisations %}
+  <section class="org-id org-id--page org-id--lattice" data-spot-group aria-labelledby="org-{{ forloop.counter }}-name">
+    <div class="org-id__sheet" data-spot>
+      <span class="org-id__disc" aria-hidden="true">{% svg_icon audience_glyph "icon" %}</span>
+      <h2 class="org-id__name" id="org-{{ forloop.counter }}-name" dir="auto">{{ organisation.name }}</h2>
+      <dl class="org-id__facts">
+        <div class="org-id__fact"><dt class="t-label">{% translate "Nature de l’organisme" %}</dt><dd>{{ organisation.kind_label }}</dd></div>
+        {% if organisation.city %}<div class="org-id__fact"><dt class="t-label">{% translate "Ville" %}</dt><dd dir="auto">{{ organisation.city }}</dd></div>{% endif %}
+        {% if organisation.country %}<div class="org-id__fact"><dt class="t-label">{% translate "Pays" %}</dt><dd dir="auto">{{ organisation.country }}</dd></div>{% endif %}
+        {% if organisation.website %}<div class="org-id__fact"><dt class="t-label">{% translate "Site web" %}</dt><dd><a href="{{ organisation.website }}" rel="noopener" dir="ltr">{{ organisation.website }}</a></dd></div>{% endif %}
+        <div class="org-id__fact"><dt class="t-label">{% translate "Votre rôle" %}</dt><dd>{{ organisation.role_label }}</dd></div>
+        <div class="org-id__fact"><dt class="t-label">{% translate "Depuis le" %}</dt><dd><time datetime="{{ organisation.since|date:'Y-m-d' }}">{{ organisation.since|date:"d.m.Y" }}</time></dd></div>
+      </dl>
+    </div>
+  </section>
+  {% empty %}
+  <p class="db-empty">{% translate "Aucune organisation rattachée" %}</p>
+  {% endfor %}
+
+  {% if organisation_documents %}
+  <section class="doc-files org-docs" aria-labelledby="org-documents-title">
+    <h2 class="db-h2" id="org-documents-title">{% svg_icon "document" "icon" %}<span>{% translate "Documents de mon organisation" %}</span></h2>
+    <ul class="db-list" role="list">
+      {% for doc in organisation_documents %}
+      <li class="db-list__row">
+        {% if doc.url %}<a class="db-list__link" href="{{ doc.url }}"><span class="db-list__title" dir="auto">{{ doc.name }}</span></a>{% else %}<span class="db-list__title" dir="auto">{{ doc.name }}</span>{% endif %}
+        <span class="db-list__meta"><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time> · <span>{{ doc.kind_label }}</span> · <span>{{ doc.size|filesizeformat }}</span></span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if references %}
+  <nav class="org-refs org-refs--grid org-refs--tiles" aria-labelledby="org-refs-title" data-rise data-spot-group>
+    <h2 class="db-h2" id="org-refs-title"><span>{% translate "Le projet" %}</span></h2>
+    <ul class="org-refs__list" role="list">
+      {% for reference in references %}
+      <li><a class="org-refs__link" href="{{ reference.url }}" data-spot><span class="org-refs__disc" aria-hidden="true">{% svg_icon reference.glyph "icon" %}</span><span class="org-refs__label">{{ reference.label }}</span>{% svg_icon "chevron-end" "icon org-refs__go" %}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  <section class="db-account" aria-labelledby="org-account-title">
+    <h2 class="db-account__title" id="org-account-title">{% translate "Mon compte" %}</h2>
+    <ul class="db-account__links" role="list">
+      {% if profile_url %}<li><a href="{{ profile_url }}">{% translate "Profil" %}</a></li>{% endif %}
+      {% if mfa_url %}<li><a href="{{ mfa_url }}">{% translate "Sécurité du compte" %}</a></li>{% endif %}
+    </ul>
+  </section>
+</div>
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

@@ -1,0 +1,42 @@
+{% load i18n %}{% comment %}
+DocumentRow — design V5, «Mes pièces» V5.2 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5;
+DOCUMENT_WORKSPACE.md §6; W3-C): one required piece of a case file as a row of SIX zones on the columns every row
+of the collection shares — piece · state · responsible · deadline · act · open — and, when there is one, the NOTE as
+the row's footer on its full measure (the motive of a refusal, the reason a replacement was asked). Rules:
+apps/portal/static/portal/v5/_workspace.css. Below 52rem of register the same markup is a card (placed by `order`):
+there is no second template for the phone.
+
+V5.15 W3 (lane B; DECISIONS §3 «File List Item» 28496): the piece's meta says its current FILE — its version and
+its size (filesizeformat, the reader's units); never its stored name: the register is not a file browser
+(apps/documents/tests/test_requirement_views.py). «Télécharger» stays on the piece's page and in its drawer: the row
+is the link, and a quiet row (filed, in review, valid) offers no second control (W3-C, W-3).
+
+THE ROW IS THE LINK. The title's link is stretched over the whole row, above the chip, the actor, the date and the
+note — every point of the row that shows its hover state opens the piece (gate 0 left 14 of 30 dead) — and under
+the act, the one other control. No row menu and no «Consulter»: «Télécharger» and the deposits are on the piece's
+page. The act is there only where the reader acts — «Déposer la pièce», «Remplacer la pièce» on an open piece —
+and it is described by the piece's title (W-3: no two
+controls of the collection share a name and a description). Where the reader cannot act the zone stays empty —
+where the Conditions gate blocks the filing too: «Bloqué» beside the chip, the strip says why (the acceptance flow
+waits on the legal texts, G1: no button promises an act its target cannot do).
+
+Every state is a WORD with its register (the chip pair; data-register from apps/core/chips.py, never chosen here);
+nothing in the row says «approved». The date keeps its glyph whatever its urgency (the registry's DUE map), with
+«Bientôt» / «En retard» beside it; once a piece is filed the date is drawn calm (F8, documents.presenters). «Bloqué»
+is the Conditions gate, beside the chip (RequirementState has no blocked: plan's D8, the owner's).
+
+Contract: `row` = one entry of documents.presenters.register_rows / register_for_case (id, title, words, mandatory,
+current, version_count, health, state, state_label, state_reason, action_blocked, responsible, responsible_note,
+responsible_glyph, due_date, urgency, due_word, act {label, url, glyph, aria_label} or None, detail_url).
+{% endcomment %}<li class="doc-row" data-state="{{ row.state }}" data-piece="{{ row.id }}">
+  <div class="doc-row__piece">
+    <p class="doc-row__title" id="piece-{{ row.id }}"><a class="doc-row__link" href="{{ row.detail_url }}"{% if row.state_reason %} aria-describedby="note-{{ row.id }}"{% endif %}{% if row.words.lang %} lang="{{ row.words.lang }}" dir="{{ row.words.dir }}"{% endif %}>{{ row.title }}</a>{% if not row.mandatory %} <span class="doc-row__qualifier">{% translate "Facultative" %}</span>{% endif %}</p>
+    {% if row.current or row.health %}<p class="doc-row__meta">{% if row.current %}<span>{% blocktranslate with n=row.version_count %}version {{ n }}{% endblocktranslate %}</span>{% if row.current.size %}<span class="doc-row__size">{{ row.current.size|filesizeformat }}</span>{% endif %}{% endif %}{% if row.health %}<span>{{ row.health }}</span>{% endif %}</p>{% endif %}
+  </div>
+  <div class="doc-row__state"><span class="visually-hidden">{% translate "État" %} </span>{% chip row.state "documents.RequirementState" %}{{ row.state_label }}{% endchip %}{% if row.action_blocked %} <span class="doc-row__blocked">{% translate "Bloqué" %}</span>{% endif %}</div>
+  {% if row.state_reason %}<p class="doc-row__note{% if row.state == 'invalid' %} doc-row__note--refusal{% endif %}" id="note-{{ row.id }}">{% if row.state == 'invalid' %}{% svg_icon "circle-alert" "icon" %}{% else %}{% svg_icon "info" "icon" %}{% endif %}<span dir="auto">{{ row.state_reason }}</span></p>{% endif %}
+  <div class="doc-row__resp"><span class="visually-hidden">{% translate "Responsable" %} </span>{% include "components/glyph.html" with glyph=row.responsible_glyph size="sm" %}<span class="doc-row__actor">{{ row.responsible }}{% if row.responsible_note %} <span class="doc-row__actor-note">— {{ row.responsible_note }}</span>{% endif %}</span></div>
+  <div class="doc-row__due">{% if row.due_date %}<span class="visually-hidden">{% translate "Échéance" %} </span><span class="doc-due{% if row.urgency %} doc-due--{{ row.urgency }}{% endif %}"><span class="doc-due__mark">{% svg_icon row.urgency|concept:"due" "icon" %}</span><time datetime="{{ row.due_date|date:'Y-m-d' }}">{{ row.due_date|date:"d.m.Y" }}</time>{% if row.due_word %}<span class="doc-due__word">{{ row.due_word }}</span>{% endif %}</span>{% endif %}</div>
+  {% if row.act %}<div class="doc-row__act"><a class="btn btn--secondary btn--sm" href="{{ row.act.url }}" aria-describedby="piece-{{ row.id }}"{% if row.act.aria_label %} aria-label="{{ row.act.aria_label }}"{% endif %}>{% if row.act.glyph == "refresh-cw" %}{% svg_icon "refresh-cw" "icon" %}{% elif row.act.glyph == "upload" %}{% svg_icon "upload" "icon" %}{% endif %}{{ row.act.label }}</a></div>{% endif %}
+  <span class="doc-row__open" aria-hidden="true">{% svg_icon "chevron-end" "icon" %}</span>
+</li>

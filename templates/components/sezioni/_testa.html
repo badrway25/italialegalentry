@@ -1,0 +1,12 @@
+{% comment %}
+THE HEAD OF A V2 SECTION «la testa» (design V5.22, SECTION_SYSTEM_V2 §2.0 «Head roles», §6.2; lane S) — static/css/v5/
+_sezioni.css §2. No glyph above the title (the bare 24 px mark is retired: a section's theme, when it has one, is a T1
+integrated in its composition — §4.1 rule 1), never sticky; its one punctuation is the rule that draws once.
+
+Contract: `role` — statement (title --t-title-2, 28 → 36: an identity, a thesis), process (--t-band, 24 → 28: the route's
+caption), router (24 → 28: short, over doors), panel (the label in the label role — `t-label`, v5/base.css: Host Grotesk
+13/16 600, never the mono (V5.24 Typography V2) — with its 48 px rule, then the title at 24 → 28); `title_id`,
+`title` (safe), `title_lang`, `lead` (safe), `lead_lang`, `label`, `label_lang` (panel), `level` (2 by default; 3 for a
+head inside a section), `center` (True: the router's centred head over doors), `hidden` (True: the title is for the
+outline only — a visually hidden h2, when the composition itself says it, as «l'emiciclo» does).
+{% endcomment %}<div class="testa testa--{{ role|default:'statement' }}{% if center %} testa--center{% endif %}">{% if role == "panel" and label %}<p class="testa__label t-label"{% if label_lang %} lang="{{ label_lang }}"{% endif %}><span class="testa__rule" data-verb="draw" aria-hidden="true"></span>{{ label }}</p>{% endif %}<h{{ level|default:2 }} class="testa__title{% if hidden %} visually-hidden{% endif %}" id="{{ title_id }}"{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h{{ level|default:2 }}>{% if lead %}<p class="testa__lead"{% if lead_lang %} lang="{{ lead_lang }}"{% endif %}>{{ lead }}</p>{% endif %}</div>

@@ -1,0 +1,36 @@
+{% extends "portal/base_portal.html" %}{% load i18n static console_state %}
+{% comment %}
+THE ERROR STATES INSIDE THE CONSOLE — V5.32 lane E, correction round P2-8 (the integration review: a signed-in user who
+reached a permission or an unavailable state was thrown into the public site's shell with the home's door drawing, the
+rail and the console's head gone). A signed-in account whose console is open (accounts.shell.in_console) refused at an
+address of the console — /<lang>/espace-reserve/… — stays in it: the rail the address would have drawn, the context bar
+with the trail «<space> › <the state>» (portal.services.console_state_shell, read through the `console_state` tag: the
+403 is drawn by core.views.error_403, which gives the page nothing but the request), the console's page head and its
+one primary at the reading end — and no door: the drawing at rest is the public site's error page. The page keeps the
+error page's grammar in the console's words: WHAT HAPPENED — the status as the head's label (hidden from assistive
+technology, as on the public page: the title says it), the title, the one sentence —, WHAT TO DO — the one primary, the
+rail's own «Tableau de bord» (portal.services.console_state_dashboard) —; the way on is the rail, and «who can help me»
+the console foot's address.
+
+Two pages are drawn in this frame: errors/403.html (its first line chooses this frame or errors/base_error.html) and
+the Forum permanent's module that is not open yet (forum/governance/unavailable_console.html, chosen by
+forum.governance_views). The blocks are base_error.html's — error_code, error_code_display, error_title, error_text,
+error_extra, error_actions —, so a page fills the same blocks in either frame; error_label is the head's label as a
+whole (a module's name in the status's seat). The trail's last crumb is the page's `error_crumb`, which a page sets
+around its chrome block. Every other state, the 404 among them, keeps the public frame.
+{% endcomment %}
+{% block page_title %}{% translate "Erreur" %} {% block error_code %}{% endblock %}{% endblock %}
+{% block meta_description %}{% translate "Page d’erreur" %}{% endblock %}
+{% block extra_head %}{{ block.super }}{% if not noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}<link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+{% block chrome %}{% console_state error_crumb as console %}{% with portal_nav=console.portal_nav breadcrumbs=console.breadcrumbs %}{{ block.super }}{% endwith %}{% endblock %}
+{% block portal_header %}
+<header class="ws-head" data-atrium="state">
+  <div class="ws-head__words">
+    {% block error_label %}<p class="atrium__eyebrow t-label" aria-hidden="true">{% translate "Erreur" %} {% block error_code_display %}{% endblock %}</p>{% endblock %}
+    <h1 class="ws-head__title" id="error-title">{% block error_title %}{% translate "Une erreur est survenue" %}{% endblock %}</h1>
+    <p class="ws-head__lead">{% block error_text %}{% translate "La page demandée n’est pas disponible." %}{% endblock %}</p>
+    {% block error_extra %}{% endblock %}
+  </div>
+  {% block error_actions %}{% console_state_dashboard as dashboard %}<div class="ws-head__action"><a class="btn btn--primary" href="{{ dashboard }}">{% translate "Tableau de bord" %}</a></div>{% endblock %}
+</header>
+{% endblock %}

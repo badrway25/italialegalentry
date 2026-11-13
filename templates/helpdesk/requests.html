@@ -1,0 +1,75 @@
+{% extends "helpdesk/base_helpdesk.html" %}{% load i18n static %}
+{% comment %}
+THE PERSON'S REQUESTS — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §3.1 item 7; W3-E step 2), in the
+console's register grammar (the person's registers' own: apps/portal/static/portal/v5/_registers.css).
+
+What this replaces: a button labelled «Assistant ItalyLegalEntry», present on every screen of the
+previous platform, which opened a third-party language model offering to answer «tout sur les visas
+proposés, les documents à fournir» — no source, no version, no human, no trace
+(previous-platform audit, part 2 §7, private register).
+
+Here a request is an object with a reference, a state, a date and, when it has been confided, a
+professional who is answerable for it. Nothing on this page is generated; everything on it was
+written by somebody.
+
+The page's head (the title, its line of context, the page's one primary — opening a request — at the head's reading end;
+no eyebrow repeating the level the breadcrumb gives), the band (how many are still open, in the module's own words),
+then one row a request: its subject — the way to its page, stretched over the row —, its reference in ILE Mono and the
+file it is about, its state as a chip, the day it was opened. A register, not cards. An empty register is one sentence
+naming who fills it and when, never a box. The clause closes the page.
+V5.32 lane E (the PLATFORM=READY round): the register on the platform's list toolkit (helpdesk.lists, components/listing/) —
+the search (the subject and the references), the state the chip says, the period it was opened in, two orders;
+the band keeps counting every open request; nothing matches → the toolkit's «Aucun résultat».
+{% endcomment %}
+{% block page_title %}{% translate "Guichet numérique" %}{% endblock %}
+{% block meta_description %}{% translate "Vos demandes au guichet numérique, leur état et la suite prévue." %}{% endblock %}
+
+{% block extra_head %}{{ block.super }}{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="register">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Guichet numérique" %}</h1>
+    <p class="ws-head__lead">{% translate "Poser une question à une personne, pas à une machine." %}</p>
+  </div>
+  <div class="ws-head__action"><a class="btn btn--primary" href="{% url 'helpdesk:open' %}">{% translate "Ouvrir une demande" %}</a></div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="reg-page">
+{% if tickets_total %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count">{% blocktranslate count n=open_count %}{{ n }} demande en cours.{% plural %}{{ n }} demandes en cours.{% endblocktranslate %}</p>
+  </div>
+{% endif %}
+
+  <section class="reg-sec" aria-labelledby="requests-title">
+    <h2 class="db-h2 reg-sec__title" id="requests-title"><span>{% translate "Ce que j’ai demandé, et où cela en est" %}</span></h2>
+    {% include "components/listing/toolbar.html" %}
+    {% if tickets %}
+    <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Vos demandes au guichet' %}">
+      {% for ticket in tickets %}
+      <li class="db-task reg-row reg-row--link" data-ticket="{{ ticket.reference }}">
+        <div class="db-task__words">
+          <p class="db-task__title"><a class="reg-row__link" href="{% url 'helpdesk:detail' uuid=ticket.uuid %}" dir="auto">{{ ticket.subject }}</a></p>
+          <p class="db-task__meta reg-row__meta"><span class="reg-ref">{{ ticket.reference }}</span>{% if ticket.case %}<span>{% blocktranslate with reference=ticket.case.reference %}dossier {{ reference }}{% endblocktranslate %}</span>{% endif %}</p>
+        </div>
+        <div class="db-task__state">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}</div>
+        <div class="db-task__due"><span class="db-due"><time datetime="{{ ticket.created_at|date:'c' }}">{{ ticket.created_at|date:"d.m.Y" }}</time></span></div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% elif listing.narrowed %}
+    {% include "components/listing/empty.html" %}
+    {% else %}
+    <p class="db-empty">{% translate "Vous n’avez encore adressé aucune demande au guichet. Une demande peut être ouverte à tout moment ; elle est lue par une personne et jamais par un automate." %}</p>
+    {% endif %}
+  </section>
+</div>
+
+<p class="reg-note">{% translate "Aucune réponse n’est produite automatiquement : lorsque votre situation dépasse ce que l’orientation peut établir, la demande est confiée à un professionnel désigné, dont la fonction et la date de réponse sont inscrites au dossier." %} {% translate "Le guichet numérique oriente et transmet. Il ne délivre ni visa, ni titre de séjour, ni autorisation, et aucune réponse reçue ici n’est une décision administrative." %}</p>
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

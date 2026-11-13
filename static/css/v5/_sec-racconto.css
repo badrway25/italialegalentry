@@ -1,0 +1,135 @@
+/* ============================================================================================
+   C · «IL RACCONTO» — the sticky story (design V5.22, SECTION_SYSTEM_V2 §2 C; lane S). Page-only (after
+   v5/_sezioni.css). Markup: components/sezioni/racconto.html; script static/js/src/sezioni/racconto.js.
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Scroll Reveal Content A» 19203 (a bar per step, the figure
+   changing at thresholds), «Services Stack» 33309 (a sticky figure whose drawing acts out the active step). Refused: the
+   300 vh scroll trap, 50 % opacity on inactive text, looping drawings, card scale-out. Signature LAYERING.
+   ============================================================================================ */
+
+.racconto {
+  display: grid;
+  gap: var(--sez-gap);
+}
+
+.racconto__figura {
+  position: relative;
+  display: grid;
+  place-items: center;
+  block-size: 15rem;
+  padding: var(--s-6);
+  border-radius: var(--radius-md);
+  background: var(--mesh-dark), var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+.racconto__figura svg {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+/* a drawing at display scale keeps the ILE hand's weight: a non-scaling 2 px line, never the 48 grid's units blown up
+   (§4.6; round 1, QA_ROUND1 m12 — «la boussole» draws the same way) */
+.racconto__figura svg * {
+  vector-effect: non-scaling-stroke;
+}
+
+[dir="rtl"] .racconto__figura svg {
+  scale: -1 1;
+}
+
+.racconto__passi {
+  display: grid;
+  gap: var(--s-12);
+}
+
+.racconto__passo {
+  position: relative;
+  padding-inline-start: var(--s-6);
+  transition: color var(--motion-slow) var(--ease-enter);
+}
+
+/* the step's bar at its reading edge: a hairline at rest, it fills as the step is read */
+.racconto__passo::before,
+.racconto__passo::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 2px;
+  background: var(--line-rhythm);
+}
+
+.racconto__passo::after {
+  background: var(--accent-mark);
+  transform-origin: 50% 0;
+}
+
+.racconto__titolo {
+  margin: 0 0 var(--s-4);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+.racconto__testo {
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.racconto__testo > :first-child { margin-block-start: 0; }
+.racconto__testo > :last-child { margin-block-end: 0; }
+
+@media (min-width: 64rem) {
+  .racconto {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-16);
+    align-items: start;
+  }
+
+  .racconto__figura {
+    position: sticky;
+    inset-block-start: calc(var(--header-h-scrolled) + 24px);
+    block-size: min(32rem, 70vh);
+  }
+
+  .racconto__passi {
+    gap: var(--s-20);
+    padding-block: var(--s-12);
+  }
+
+  /* the active step at full ink, the others at --text-2 (never an opacity): only while the module drives the story */
+  .racconto[data-live] .racconto__passo:not([data-active]) {
+    color: var(--text-2);
+  }
+
+  /* the figure's layers: drawn from their step on (data-from), dim before it; the drawing changes, never the words */
+  .racconto__figura [data-from] {
+    transition: opacity var(--motion-slow) var(--ease-enter), stroke-dashoffset var(--motion-draw) var(--ease-sine);
+  }
+
+  .racconto__figura[data-step="1"] :is([data-from="2"], [data-from="3"], [data-from="4"]),
+  .racconto__figura[data-step="2"] :is([data-from="3"], [data-from="4"]),
+  .racconto__figura[data-step="3"] [data-from="4"] {
+    opacity: 0.14;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not(.rm) .racconto__passo::after {
+      animation: sez-draw-y linear both;
+      animation-timeline: view();
+      animation-range: entry 40% cover 60%;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .racconto__figura { border: 1px solid CanvasText; }
+  .racconto__passo::after { background: Highlight; }
+}

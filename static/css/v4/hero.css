@@ -1,0 +1,114 @@
+/* ============================================================================
+   V4 — THE DOOR'S PAINT for templates/components/doorway.html (what is left of «il portico»)
+   docs/design-v2/BRAND_ASSETS.md §2 · docs/design-v4/CREATIVE_DIRECTION.md §3.1 · V5.4 plan §2.3
+
+   The V4 home hero («il portico e la console») left with design V5.4's hero (W2-D, 8 October
+   2026, the deletion map of plan §2.3): its immersive chapter, grid, copy column, routes, exits,
+   current and glass legend are gone — the V5 hero is templates/pages/home/_hero.html, with its
+   own page sheet (apps/pages/static/pages/css/hero.css) and its module (static/js/src/hero.js).
+
+   What this file still carries is the paint of the owner's door as the doorway COMPONENT draws
+   it — today for the entrance page only (templates/allauth/layouts/entrance.html): the gradient
+   stops (classes, no literal colour in the markup), the photograph, the arch, the inner door,
+   the key, the three steps, and their forced-colours rules. Nothing animates it. It leaves
+   main.css when W2-B's static/css/v5/_door.css takes the stage as drawn; the last named consumer
+   deletes the file (plan §2.1 «delete what you supersede»).
+   ========================================================================== */
+
+/* The stage is not mirrored: the door is the door, at the stage's right. */
+.doorway {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+  direction: ltr;
+}
+
+/* The door — the owner's composition. Colours through classes on the gradient stops: no literal
+   colour in the markup, and the stops follow the tokens. */
+.doorway__body-a { stop-color: var(--mid-3); }
+.doorway__body-b { stop-color: var(--mid-1); }
+.doorway__veil-a { stop-color: var(--mid-1); stop-opacity: 0; }
+.doorway__veil-b { stop-color: var(--mid-1); stop-opacity: 0.55; }
+.doorway__glow-a { stop-color: var(--brand-gold); stop-opacity: 0.3; }
+.doorway__glow-b { stop-color: var(--brand-gold); stop-opacity: 0.12; }
+.doorway__glow-c { stop-color: var(--brand-gold); stop-opacity: 0; }
+
+/* The door never takes the pointer. */
+.doorway__door {
+  pointer-events: none;
+}
+
+/* The door's shadow role, in the SVG's own syntax (--drop-door beside --shadow-door). */
+.doorway__body {
+  filter: var(--drop-door);
+}
+
+/* The owner's photograph, inside the arch: opacity .5 (on navy the original .28 disappears),
+   saturation .8 so the stone sits under the teal rather than against it. */
+.doorway__img {
+  opacity: 0.5;
+  filter: saturate(0.8) contrast(1.05);
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transform: scale(1.06);
+}
+
+.doorway__arch-inset {
+  fill: none;
+  stroke: var(--hairline-dark-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The inner arch: SOLID official navy, as in the original, so the key keeps its 5.80:1. */
+.doorway__inner {
+  fill: var(--brand-navy);
+  stroke: color-mix(in srgb, var(--accent-dark) 18%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  filter: var(--drop-door);
+}
+
+.doorway__glow {
+  opacity: 0.7;
+}
+
+.doorway__key {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* Three steps, 66/80/94 %. No hover on the stage: it is not interactive. */
+.doorway__steps rect {
+  fill: var(--accent-dark);
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.doorway__steps rect:nth-child(1) { opacity: 0.55; }
+.doorway__steps rect:nth-child(2) { opacity: 0.38; }
+.doorway__steps rect:nth-child(3) { opacity: 0.24; }
+
+/* The arch outline: a hairline, drawn from the first frame. */
+.doorway__arch {
+  fill: none;
+  stroke: var(--accent-dark);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* ---- Forced colours --------------------------------------------------------- */
+@media (forced-colors: active) {
+  .doorway__arch, .doorway__arch-inset { stroke: CanvasText; }
+  /* The inner arch keeps its navy, the key's ground (rounds 5–6, 18, 20). */
+  .doorway__inner { stroke: CanvasText; }
+  /* Each step carries a Canvas edge: in the light palette CanvasText on the photograph's dark stone
+     was 1.9–2.4:1. */
+  .doorway__steps rect:nth-child(n) { opacity: 1; stroke: Canvas; stroke-width: 2px; paint-order: stroke; vector-effect: non-scaling-stroke; }
+  .doorway__steps rect { fill: CanvasText; forced-color-adjust: none; }
+  .doorway__body, .doorway__inner { filter: none; }
+}

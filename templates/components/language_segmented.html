@@ -1,0 +1,24 @@
+{% load i18n static %}{% comment %}
+The language control — four links, one per language: choosing a language is a navigation, and the page
+reloads in it (no script). Each link carries lang / hreflang / dir so screen readers switch voice, and its
+accessible name is the language's own name (the `site.languages` context processor: translate_url of the
+current page).
+
+One drawing (design V5, docs/design-v5/V5_4_EXECUTION_PLAN.md §1.11): the four names visible in their own language
+(Italiano · Français · English · العربية — never «ع», DL A25), the current one marked by a line and by its weight,
+never by colour alone; 24 px targets on a fine pointer, 44 on a coarse one. Drawn on night in the institutional bar
+and at the foot of the console's rail, on paper — its night inks re-pointed — first in the phone's sheet
+(static/css/v5/chrome.css §2 and §7). Design V4's segmented track FR · IT · EN · ع left with the drawer it was drawn
+for (W2-C2). `lang_names` is accepted and changes nothing.
+
+`flags=True` (the phone sheet, partials/main_nav.html; V5.31 precision pass, 11 Nov 2026) draws the same four links as
+plates — each language's flag (`l.flag`, core.context_processors.LANGUAGE_FLAGS; an <img>, never mirrored), its name,
+the current one tinted with a check and aria-current — on the sheet's paper (v5/chrome.css §7).
+{% endcomment %}
+<nav class="lang-seg" aria-label="{% translate 'Choisir la langue' %}">
+  <ul class="lang-seg__list lang-seg__list--{% if flags %}flags{% else %}names{% endif %}" role="list">
+    {% for l in site.languages %}
+    <li class="lang-seg__item"><a class="lang-seg__link" href="{{ l.url }}" lang="{{ l.code }}" hreflang="{{ l.code }}" dir="{{ l.dir }}"{% if l.active %} aria-current="true"{% endif %}>{% if flags and l.flag %}<img class="flag" src="{% static l.flag %}" alt="" width="21" height="14">{% endif %}<span class="lang-seg__name">{{ l.name }}</span>{% if flags and l.active %}{% svg_icon "check" "icon" %}{% endif %}</a></li>
+    {% endfor %}
+  </ul>
+</nav>

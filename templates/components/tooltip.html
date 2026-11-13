@@ -1,0 +1,17 @@
+{% comment %}
+Tooltip — an icon-only control and the visible twin of its name (design V5, V5.4 plan §1.14, R-21; the contract
+docs/design-v5/QA/v54/w2-a/CONTRACT.md; W2-A). The tip is the control's own ::after reading its `aria-label`
+(static/css/v5/_overlay-panels.css): it waits 400 ms under the pointer and fades in 120 ms, it is there at once
+under the keyboard's focus, it leaves at 0 ms; the pointer may rest on it (WCAG 1.4.13); Esc and a press put it away
+(static/js/src/overlay.js). Inside a group (`data-tip-group` on the toolbar) a neighbour shows at once. None on a
+phone: the name is the control's accessible name. Inside a clipping ancestor (a scrolled list, a table, a drawer's
+body) `layer` uses the one shared top-layer tip instead.
+PAGE-ONLY CSS (CONTRACT §1, the owner's V5.8 budget): the control's own ::after tip is
+static/css/v5/_overlay-panels.css, not main.css — a page that includes this component without `layer` links
+{% static 'css/dist/core/overlay-panels.css' %} in its extra_head, after main.css. The top-layer tip (`layer`, the
+product's: the rail's words, «⋮» of a row) is main.css's (v5/overlays.css §6).
+Contract: `label` (required: the accessible name and the tip's words — a live string); `icon` (an icon id); `href`
+(a link) or a button of `type` (default "button"); optional `css_class` (default "btn btn--icon btn--ghost"); `side`
+= "block-end" | "inline-end" | "inline-start" (default: above); `layer` (True → the top-layer tip); `popovertarget`
+(the id of the menu this button opens).
+{% endcomment %}{% if href %}<a class="{{ css_class|default:'btn btn--icon btn--ghost' }}" href="{{ href }}" aria-label="{{ label }}" data-tip{% if layer %}="layer"{% endif %}{% if side %} data-tip-side="{{ side }}"{% endif %}>{% svg_icon icon "icon" %}</a>{% else %}<button class="{{ css_class|default:'btn btn--icon btn--ghost' }}" type="{{ type|default:'button' }}" aria-label="{{ label }}" data-tip{% if layer %}="layer"{% endif %}{% if side %} data-tip-side="{{ side }}"{% endif %}{% if popovertarget %} popovertarget="{{ popovertarget }}"{% endif %}>{% svg_icon icon "icon" %}</button>{% endif %}

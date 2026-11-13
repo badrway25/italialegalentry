@@ -1,0 +1,86 @@
+title: Information sur les cookies et les technologies de stockage
+notice: Traduction de courtoisie — la version italienne fait foi
+italian_link: Lire la version italienne, qui fait foi
+pending: traduction en attente de relecture juridique
+---
+Information fournie conformément aux « Lignes directrices cookies et autres outils de traçage » du Garante per la protezione dei dati personali du 10 juin 2021, à l’art. 122 du D.Lgs. 196/2003 et à l’art. 13 du Règlement (UE) 2016/679 (« RGPD »). Le responsable du traitement et ses coordonnées sont indiqués dans l’Information sur le traitement des données personnelles.
+
+## 1. En bref
+
+Le site et la plateforme Italy Legal Entry™ n’utilisent que des cookies techniques propres et quelques espaces de stockage du navigateur pour l’état de l’interface. Ils n’utilisent ni cookies de profilage ou de marketing, propres ou de tiers, ni outils de mesure d’audience ou de traçage.
+
+Les pages ne chargent ni polices, ni scripts, ni images, ni cartes, ni vidéos depuis d’autres sites : aucun tiers ne reçoit l’adresse IP des personnes qui les consultent. Les outils techniques décrits ici ne requièrent pas de consentement ; c’est pourquoi le site n’affiche pas de bandeau relatif aux cookies.
+
+## 2. Cookies techniques
+
+### sessionid
+
+- Finalité : maintenir la session — la connexion à l’espace réservé et la vérification du second facteur, le questionnaire d’orientation en cours, les messages de confirmation d’une page à l’autre.
+- Dépôt : uniquement lorsque la session est nécessaire (connexion, questionnaire, message de confirmation).
+- Durée : sans connexion, jusqu’à 8 heures ; après la connexion, jusqu’à la fermeture du navigateur. Sur le serveur, la session expire 8 heures après sa dernière mise à jour.
+- Contenu : un identifiant aléatoire ; les données de la session restent sur le serveur.
+- Type : cookie propre ; illisible par les scripts de la page (HttpOnly), non envoyé avec les requêtes provenant d’autres sites (SameSite=Lax), transmis uniquement par une connexion chiffrée.
+
+### csrftoken
+
+- Finalité : sécurité — protéger l’envoi des formulaires contre les requêtes falsifiées provenant d’autres sites (CSRF).
+- Dépôt : lors de l’affichage d’une page qui contient un formulaire. Après la connexion, le bouton de déconnexion de l’espace réservé est lui aussi un formulaire : le cookie est donc déposé sur chaque page.
+- Durée : 52 semaines.
+- Contenu : une valeur aléatoire de contrôle.
+- Type : cookie propre ; HttpOnly, SameSite=Lax, transmis uniquement par une connexion chiffrée.
+
+### ile_language
+
+- Finalité : mémoriser la langue de lecture choisie (italien, français, anglais ou arabe).
+- Dépôt : lors de la consultation d’une page du site dans l’une de ces langues.
+- Durée : 365 jours.
+- Contenu : le code de la langue, en deux lettres.
+- Type : cookie propre ; HttpOnly, SameSite=Lax, transmis uniquement par une connexion chiffrée.
+
+## 3. Stockage local du navigateur
+
+Certaines préférences d’affichage sont conservées dans la mémoire du navigateur (localStorage ou sessionStorage). Ces valeurs restent sur l’appareil et ne sont jamais envoyées au serveur. Elles ne contiennent aucun identifiant, sauf l’historique des recherches de l’interface d’administration (commandHistory), qui reprend les textes saisis par le membre du personnel et peut donc contenir, par exemple, un nom ou une adresse e-mail recherchés.
+
+### ile.rail (localStorage)
+
+- Finalité : mémoriser si le menu latéral de l’espace réservé est ouvert ou fermé.
+- Durée : jusqu’à ce que l’utilisateur efface les données du site dans son navigateur.
+- Valeur : « open » ou « closed ».
+
+### ile.lume (sessionStorage)
+
+- Finalité : transmettre à la page suivante l’indication de la transition en cours (par exemple un changement de langue), pour que l’animation de passage soit continue.
+- Durée : lue dans les 5 secondes puis aussitôt effacée ; elle disparaît en tout état de cause à la fermeture de l’onglet.
+- Valeur : le type de transition et l’heure à laquelle elle a commencé.
+
+### ile.hero.discovered (sessionStorage)
+
+- Finalité : n’afficher qu’une fois par onglet l’animation d’ouverture de la page d’accueil.
+- Durée : jusqu’à la fermeture de l’onglet.
+- Valeur : « 1 ».
+
+### ile.dismissed.<identifiant> (sessionStorage)
+
+- Finalité : mémoriser que l’utilisateur a fermé un avis institutionnel, pour qu’il ne réapparaisse pas dans le même onglet.
+- Durée : jusqu’à la fermeture de l’onglet.
+- Valeur : « 1 ».
+
+### adminTheme (localStorage, personnel uniquement)
+
+- Finalité : mémoriser le thème d’affichage choisi par le personnel dans l’interface d’administration (clair, sombre ou automatique).
+- Durée : jusqu’à ce que le membre du personnel efface les données du site dans son navigateur.
+- Valeur : « light », « dark » ou « auto ».
+
+### sidebarOpen, sidebarWidth, commandHistory (localStorage, personnel uniquement)
+
+- Finalité : l’état de l’interface d’administration utilisée par le personnel — ouverture et largeur du menu latéral, dernières recherches effectuées.
+- Durée : jusqu’à ce que le membre du personnel efface les données du site dans son navigateur.
+- Valeur : des préférences d’affichage et le texte des recherches, qui restent sur l’appareil du membre du personnel.
+
+## 4. Gérer les cookies et le stockage local
+
+L’utilisateur peut à tout moment gérer ou désactiver les cookies et effacer le stockage local depuis les paramètres de son navigateur. La désactivation des cookies techniques peut toutefois compromettre certaines fonctionnalités du site, par exemple l’accès à l’espace réservé.
+
+## 5. Modifications
+
+Si des cookies analytiques ou de tiers étaient introduits à l’avenir, le site adopterait préalablement un bandeau de recueil du consentement conforme aux Lignes directrices du Garante et la présente information serait mise à jour, avec indication de la date de dernière révision.

@@ -1,0 +1,587 @@
+/* ============================================================================================
+   PARCOURS — «l'esploratore» (V5.32, lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026).
+   The head's end seat: the questionnaire as one finished panel; the families as the navigation with one sticky preview beside
+   them from 64 rem (static/js/src/esplora.js; 21st.dev «Project Index» / «Interactive List Preview»: a row reveals
+   its cover — here a static column that follows the focus as well as the pointer);
+   «Comment ça marche» on one rail without figures (the space's register of links: _spazio.css).
+   Replaces the route board (_sec-tracciato, _sec-mosaico, pathways/_index.css): this page imports neither now.
+   Tokens of static/css/v5/tokens.css only; logical properties only; motion on transform/opacity, off under reduced motion.
+   ============================================================================================ */
+
+/* ---- the head's end seat: the questionnaire as one finished panel (pathways/_via_panel.html in the shared entrance;
+   its title, sentence and control are the way's own, drawn by the door partial the family sheet imports) ---- */
+.esplora-via {
+  display: grid;
+  gap: var(--s-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-tile);
+  box-shadow: var(--shadow-2);
+  padding: clamp(var(--s-6), 3vw, var(--s-8));
+}
+
+.esplora-via .via__action {
+  margin-block-start: var(--s-3);
+}
+
+/* the panel IS the door's way in (`ingresso__way`): below 48 rem it is that way under the lead, as on every door head —
+   no plate; the head held a step closer and the control right under its question (v5/_fronte.css), so the control
+   reaches the first screen down to 375 × 667 (V5.18 B2) */
+@media (max-width: 47.999rem) {
+  .ingresso__inner:has(> .ingresso__aside > .esplora-via) {
+    row-gap: 0;
+  }
+
+  .esplora-via {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .esplora-via .via__action {
+    margin-block-start: 0;
+  }
+}
+
+/* the interim head's lead is a locked fragment (p1.persons.replacement_1): on its own it opens on a capital, as a
+   sheet's head does (presentation only — the words are the registry's) */
+.page-pathways--interim .ingresso__lead::first-letter {
+  text-transform: capitalize;
+}
+
+/* from 48 rem the plate, in the seat's own place (the way's margin under a lead is not its) */
+@media (min-width: 48rem) {
+  .esplora-via.via.ingresso__way {
+    margin-block-start: 0;
+  }
+}
+
+/* the panel takes five of the entrance's twelve columns (the shared seat's four broke its control on three lines at
+   1024): the words keep their seven — on the open page and on the interim one */
+@media (min-width: 64rem) {
+  .ingresso__inner > .ingresso__aside:has(> .esplora-via) {
+    grid-column: 8 / span 5;
+    align-self: center;
+  }
+
+  .esplora-via.via.ingresso__way {
+    max-inline-size: none;
+  }
+}
+
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  .esplora-via {
+    padding: var(--s-6);
+  }
+}
+
+/* ---- the section heads (the explorer is the library's strip under the head's paper: its compact padding) ---- */
+@media (min-width: 64rem) {
+  /* the section's title over the families' column, its lead over the preview's: the two columns the explorer draws */
+  .esplora-sez__testa {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(var(--s-8), 5vw, var(--s-16));
+    align-items: end;
+  }
+
+  .esplora-sez__testa .esplora-sez__lead {
+    margin: 0;
+  }
+}
+
+.esplora-sez__titolo {
+  margin: 0;
+  font-size: var(--t-title-2);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: var(--track-title-2);
+  color: var(--text-1);
+}
+
+.esplora-sez__lead {
+  margin: var(--s-4) 0 0;
+  max-inline-size: 42rem;
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.esplora-sez__testa {
+  margin-block-end: clamp(var(--s-8), 4vw, var(--s-12));
+}
+
+/* ---- l'esploratore: the families and their rows ---- */
+.esplora {
+  display: grid;
+  gap: var(--s-8);
+  align-items: start;
+}
+
+.esplora__famiglia + .esplora__famiglia {
+  margin-block-start: var(--s-8);
+}
+
+/* without the preview (a tablet; a wide screen without script) the families stand two by two */
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  .esplora__indice {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-8) var(--s-8);
+    align-items: start;
+  }
+
+  .esplora__famiglia + .esplora__famiglia {
+    margin-block-start: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  .esplora:not([data-esplora-pronto]) .esplora__indice {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-8) var(--s-12);
+    align-items: start;
+  }
+
+  .esplora:not([data-esplora-pronto]) .esplora__famiglia + .esplora__famiglia {
+    margin-block-start: 0;
+  }
+}
+
+.esplora__famiglia-nome {
+  margin: 0 0 var(--s-2);
+  padding-block-end: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+  color: var(--text-1);
+}
+
+.esplora__voci {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.esplora__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  column-gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-3);
+  margin-inline: calc(-1 * var(--s-3));
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: background-color var(--motion-standard) var(--ease-enter), box-shadow var(--motion-standard) var(--ease-enter);
+}
+
+.esplora__miniatura {
+  display: block;
+  inline-size: 4.5rem;
+  aspect-ratio: 1;
+  border-radius: var(--radius-control);
+  overflow: hidden;
+  background: var(--surface-area);
+}
+
+.esplora__miniatura img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.esplora__testi {
+  display: grid;
+  gap: var(--s-1);
+  min-inline-size: 0;
+}
+
+.esplora__titolo {
+  font-size: var(--t-body);
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+.esplora__riga {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.esplora__riga::first-letter {
+  text-transform: capitalize;
+}
+
+.esplora__freccia {
+  display: inline-flex;
+  color: var(--accent-text);
+  transition: transform var(--motion-standard) var(--ease-enter);
+}
+
+a.esplora__link:hover {
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+
+a.esplora__link:hover .esplora__titolo {
+  color: var(--accent-text-hover);
+}
+
+a.esplora__link:hover .esplora__freccia {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] a.esplora__link:hover .esplora__freccia {
+  transform: translateX(-3px);
+}
+
+a.esplora__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  background: var(--surface-raised);
+}
+
+a.esplora__link:active {
+  background: var(--accent-wash);
+}
+
+/* ---- the preview (from 64 rem, once the module runs) ---- */
+.esplora__anteprime {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .esplora[data-esplora-pronto] {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(var(--s-8), 5vw, var(--s-16));
+  }
+
+  .esplora[data-esplora-pronto] .esplora__anteprime {
+    display: block;
+    position: sticky;
+    inset-block-start: calc(var(--header-h, 4rem) + var(--s-6));
+  }
+
+  /* the rows become the navigation: the title alone, the line kept for a screen reader, the photograph in the preview */
+  .esplora[data-esplora-pronto] .esplora__link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: var(--s-3) var(--s-4);
+    margin-inline: calc(-1 * var(--s-4));
+  }
+
+  .esplora[data-esplora-pronto] .esplora__miniatura {
+    display: none;
+  }
+
+  .esplora[data-esplora-pronto] .esplora__riga {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .esplora[data-esplora-pronto] .esplora__link[data-attiva] {
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-1);
+  }
+
+  .esplora[data-esplora-pronto] .esplora__link[data-attiva]::before {
+    content: "";
+    position: absolute;
+    inset-block: var(--s-3);
+    inset-inline-start: 0;
+    inline-size: 3px;
+    border-radius: 3px;
+    background: var(--accent-mark);
+  }
+
+  .esplora[data-esplora-pronto] .esplora__link[data-attiva] .esplora__titolo {
+    color: var(--accent-text-hover);
+  }
+}
+
+/* the preview card is the head's panel's sibling: its corner and its shadow (three corners a screen with the
+   letterhead's — W3-F1 §1.3; no raised shadow at rest — §1.4 SH-8) */
+.esplora__anteprima {
+  background: var(--surface-raised);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-tile);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+
+.esplora__anteprima[hidden] {
+  display: none;
+}
+
+/* the frame gives up height before the card leaves a laptop's screen (1366 × 768, 1280 × 720): the sticky preview
+   stays whole under the letterhead — its width, and so its `sizes`, unchanged (a definite width: the ratio's cap never
+   narrows it; the photograph is cropped, never squeezed) */
+.esplora__foto {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 16 / 9;
+  max-block-size: max(12rem, 100vh - 32rem);
+  overflow: hidden;
+  background: var(--surface-area);
+}
+
+.esplora__foto img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* the semantic plate (a pathway drawn without a photograph: family reunification) — one flat tint of the sand, never a
+   gradient: an app sheet draws none (DS 2026 §2.1; the correction round of the senior integration review); after the frame's own rule, which
+   would otherwise give the preview's plate back its grey ground and block flow (V5.32 integration) */
+.esplora__miniatura--piastra,
+.esplora__foto--piastra {
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--p-ambra-25), var(--p-sabbia-300));
+  color: var(--p-inchiostro-600);
+}
+
+.esplora__foto--piastra {
+  place-items: end start;
+  padding: var(--s-8);
+}
+
+.esplora__segno {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  opacity: 0.72;
+}
+
+.esplora__corpo {
+  padding: var(--s-6) var(--s-8) var(--s-8);
+}
+
+.esplora__corpo > :first-child {
+  margin-block-start: 0;
+}
+
+.esplora__a-famiglia {
+  margin: 0;
+  color: var(--accent-text);
+}
+
+.esplora__a-titolo {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-band);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+}
+
+.esplora__a-riga {
+  margin: var(--s-3) 0 0;
+  max-inline-size: 40rem;
+  font-size: var(--t-body);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.esplora__a-riga::first-letter {
+  text-transform: capitalize;
+}
+
+.esplora__attori {
+  margin-block-start: var(--s-6);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.esplora__a-label {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-small);
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.esplora__attori-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.esplora__attori-lista li {
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--surface-area);
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--text-1);
+}
+
+.esplora__attori-lista li::first-letter {
+  text-transform: capitalize;
+}
+
+.esplora__a-azione {
+  margin: var(--s-6) 0 0;
+}
+
+/* the preview's entrance: the frame settles, the words rise — transform and opacity only */
+@media (prefers-reduced-motion: no-preference) {
+  .esplora__anteprima.is-entering img {
+    animation: esplora-foto var(--motion-slow) var(--ease-enter) both;
+  }
+
+  .esplora__anteprima.is-entering .esplora__corpo {
+    animation: esplora-parole var(--motion-emphasized) var(--ease-enter) both;
+  }
+}
+
+@keyframes esplora-foto {
+  from { opacity: 0.4; transform: scale(1.04); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes esplora-parole {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---- «Comment ça marche»: one rail, four moments, no figures ---- */
+.esplora-come .come {
+  margin-block-start: clamp(var(--s-8), 4vw, var(--s-12));
+}
+
+.come__tappe {
+  position: relative;
+  display: grid;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.come__tappa {
+  position: relative;
+  padding-inline-start: var(--s-8);
+}
+
+.come__punto {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.45em;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--accent-mark);
+  background: var(--surface-area);
+}
+
+.come__tappa:last-child .come__punto {
+  background: var(--accent-mark);
+}
+
+/* the rail between the moments (a phone: down the reading edge) */
+.come__tappa:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(0.375rem - 0.5px);
+  inset-block: calc(0.45em + 0.875rem) calc(-1 * var(--s-6) + 0.25rem);
+  inline-size: 1px;
+  background: var(--line-structure);
+  opacity: 0.5;
+}
+
+.come__testo {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.55;
+  color: var(--text-1);
+}
+
+.come__testo::first-letter {
+  text-transform: capitalize;
+}
+
+.come__link {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+.come__link:hover {
+  color: var(--accent-text-hover);
+  text-decoration-thickness: 2px;
+}
+
+/* the interim page's two moments (gate G3 closed — pathways/index_interim.html): a title and its line, on the rail */
+.come__titolo {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.55;
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.come__riga {
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-body);
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+/* …and where the explorer will stand, the sheets' notice with the live help line under it */
+.esplora-attesa .aiuto {
+  margin-block-start: var(--s-8);
+}
+
+.come__avvertenza {
+  margin: var(--s-8) 0 0;
+  max-inline-size: 42rem;
+  font-size: var(--t-body);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .come__tappe {
+    grid-template-columns: repeat(var(--come-n, 4), minmax(0, 1fr));
+    column-gap: var(--s-8);
+  }
+
+  /* as many columns as moments */
+  .come__tappe:has(> :nth-child(2):last-child) { --come-n: 2; }
+  .come__tappe:has(> :nth-child(3):last-child) { --come-n: 3; }
+
+  .come__tappa {
+    padding-inline-start: 0;
+    padding-block-start: var(--s-8);
+  }
+
+  .come__punto {
+    inset-block-start: 0;
+  }
+
+  .come__tappa:not(:last-child)::after {
+    inset-block: calc(0.375rem - 0.5px) auto;
+    inset-inline: 1.25rem calc(-1 * var(--s-8) + 0.5rem);
+    inline-size: auto;
+    block-size: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .esplora__link,
+  .esplora__freccia {
+    transition: none;
+  }
+}

@@ -1,0 +1,66 @@
+{% extends "companies/base_companies.html" %}{% load i18n static %}
+{% comment %}
+Declaring the company, or modifying its identity — design V5 (W3-E step 2): ONE head, ONE h1 (the declaration had two:
+the page header's and the section's — W3-A's finding), its line of context; W1-C's form; the registers' clause.
+{% endcomment %}
+{% block page_title %}{% if is_creation %}{% translate "Déclarer mon entreprise" %}{% else %}{% translate "Modifier l’identité de l’entreprise" %}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Déclarer l’identité de l’entreprise pour que l’équipe du projet puisse procéder à sa vérification." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="company">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% if is_creation %}{% translate "Déclarer mon entreprise" %}{% else %}{% translate "Modifier l’identité de l’entreprise" %}{% endif %}</h1>
+    {% if is_creation %}<p class="ws-head__lead">{% translate "Le compte déclare ; le projet vérifie. Tant que la vérification n’est pas prononcée, vous pouvez préparer vos besoins sans pouvoir les transmettre." %}</p>{% endif %}
+    <p class="ws-head__lead">{% translate "Seuls les éléments qui rendent une vérification possible sont demandés : la personne morale, son immatriculation, son secteur et un référent identifié par sa fonction." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block companies_content %}
+<div class="reg-page db-main">
+  <form method="post" class="form" novalidate>
+    {% csrf_token %}
+    {% include "components/form_errors.html" with form=form %}
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "La personne morale" %}</legend>
+      {% include "components/form_field.html" with field=form.legal_name %}
+      {% include "components/form_field.html" with field=form.trade_name %}
+      {% include "components/form_field.html" with field=form.registration_number %}
+      {% include "components/form_field.html" with field=form.vat_number %}
+      {% include "components/form_field.html" with field=form.sector %}
+      {% include "components/form_field.html" with field=form.size %}
+      {% include "components/form_field.html" with field=form.year_founded %}
+    </fieldset>
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "Le référent" %}</legend>
+      {% include "components/form_field.html" with field=form.contact_name %}
+      {% include "components/form_field.html" with field=form.contact_function %}
+      {% include "components/form_field.html" with field=form.contact_email %}
+      {% include "components/form_field.html" with field=form.contact_phone %}
+    </fieldset>
+
+    <fieldset class="form__group">
+      <legend class="form__legend">{% translate "L’établissement" %}</legend>
+      {% include "components/form_field.html" with field=form.address_line %}
+      {% include "components/form_field.html" with field=form.postal_code %}
+      {% include "components/form_field.html" with field=form.city %}
+      {% include "components/form_field.html" with field=form.province %}
+      {% include "components/form_field.html" with field=form.country %}
+      {% include "components/form_field.html" with field=form.website %}
+    </fieldset>
+
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">
+        {% if is_creation %}{% translate "Déclarer l’entreprise" %}{% else %}{% translate "Enregistrer" %}{% endif %}
+      </button>
+      {% if not is_creation %}<a class="btn btn--secondary" href="{% url 'companies:profile' %}">{% translate "Annuler" %}</a>{% endif %}
+    </div>
+  </form>
+</div>
+
+<p class="reg-note">{% translate "Les données du référent sont des données personnelles : elles servent à la vérification de l’entreprise et à la correspondance du projet, et à rien d’autre. Vous pouvez en demander la copie ou la rectification depuis votre compte." %}</p>
+{% endblock %}

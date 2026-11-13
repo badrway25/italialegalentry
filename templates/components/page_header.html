@@ -1,0 +1,10 @@
+{% comment %}
+Contract: `title` (str), optional `eyebrow`, `lead` (str), `lang` (lang attr for locked texts),
+`meta` (safe html for a metadata row rendered under the lead), `align` ("center" for centred).
+{% endcomment %}
+<header class="page-header container{% if align == 'center' %} page-header--center{% endif %}">
+  {% if eyebrow %}<p class="page-header__eyebrow">{{ eyebrow }}</p>{% endif %}
+  <h1 class="page-header__title"{% if lang %} lang="{{ lang }}"{% endif %}>{{ title }}</h1>
+  {% if lead %}<p class="page-header__lead"{% if lang %} lang="{{ lang }}"{% endif %}>{{ lead }}</p>{% endif %}
+  {% if meta %}<div class="page-header__meta">{{ meta }}</div>{% endif %}
+</header>

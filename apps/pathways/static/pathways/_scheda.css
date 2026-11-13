@@ -1,0 +1,623 @@
+/* ============================================================================================
+   A PATHWAY SHEET (V5.32, lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026): an editorial
+   sheet. The shared entrance with the pathway's photograph in its seat; ONE paper body in two columns from 64 rem — the local navigation
+   sticky at the reading edge (static/js/src/sezioni/spia.js marks the part in view), the chapters at their measure;
+   below 64 rem the navigation is one sticky bar of anchors scrolling on itself. 21st.dev «Table of Contents» (an
+   «on this page» scroll-spy marking the part in view), adapted to vanilla CSS; ui-ux-pro-max «Focus Not Obscured
+   (Minimum)» (WCAG 2.4.11: sticky UI offset by scroll-padding) for the phone's bar.
+   Replaces the sheet's V5.22 compositions (_sec-filo, _sec-indice, the night band of the authorities, _sheet.css).
+   Tokens of static/css/v5/tokens.css only; logical properties only.
+   ============================================================================================ */
+
+/* ---- the head: the shared entrance (v5/_interior.css, _fronte.css); its end seat holds the photograph, five of the
+   twelve columns from 64 rem (the shared seat's four drew it smaller than the words' weight) ---- */
+/* the head photographs' corner (6, as .foto__img on an interior page) and their one depth, the print a door head's
+   photograph stands on (the raised surface W3-F1 §1.4 admits a head's photograph at rest) — never level 3. The print
+   is v5/_fronte.css's --fronte-print, its recipe written here in tokens: an app sheet reads the design tokens only
+   (DS 2026 §2.1), never a partial's private name; test_pathways_v532_b.py keeps the two recipes one */
+.scheda-foto {
+  display: block;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-tile);
+  overflow: hidden;
+  background: var(--surface-area);
+  box-shadow:
+    0 2px 4px color-mix(in srgb, var(--p-notte-950) 6%, transparent),
+    0 28px 56px -24px color-mix(in srgb, var(--p-notte-950) 42%, transparent);
+}
+
+.scheda-foto img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* the semantic plate in the photograph's seat: the explorer's flat tint (_esplora.css), never a gradient (DS 2026 §2.1) */
+.scheda-foto--piastra {
+  display: grid;
+  place-items: end start;
+  padding: var(--s-8);
+  background: color-mix(in srgb, var(--p-ambra-25), var(--p-sabbia-300));
+  color: var(--p-inchiostro-600);
+}
+
+.scheda-foto__segno {
+  inline-size: 4rem;
+  block-size: 4rem;
+  opacity: 0.72;
+}
+
+/* the description is the locked fragment that a sentence continues elsewhere: on its own as the lead it opens on a
+   capital (presentation only — the words are the registry's) */
+.pathway-entrance .ingresso__lead::first-letter {
+  text-transform: capitalize;
+}
+
+/* /ar/: the Arabic title's dots fall below its line box — the caption stands clear of the ink (as _spazio.css on the
+   space's other entrances) */
+.pathway-entrance .ingresso__title:lang(ar) + .locked-caption {
+  margin-block-start: var(--s-4);
+}
+
+@media (min-width: 64rem) {
+  .pathway-entrance .ingresso__inner > .ingresso__text {
+    grid-column: 1 / span 6;
+  }
+
+  .pathway-entrance .ingresso__inner > .ingresso__aside {
+    grid-column: 8 / span 5;
+    align-self: center;
+  }
+}
+
+/* stacked under the words (below 64 rem) the frame is a band, never a screen-tall picture; and what scrolls into
+   view — an anchor's chapter, a link Shift+Tab brings in from below — stops clear of the letterhead AND of the
+   sticky bar of anchors under it (WCAG 2.4.11; chrome.css clears the letterhead alone) */
+@media (max-width: 63.999rem) {
+  .scheda-foto {
+    aspect-ratio: 16 / 9;
+  }
+
+  html:has(.scheda-nav[data-sec-js]) {
+    scroll-padding-block-start: calc(var(--header-h, 3.5rem) + 4.5rem);
+  }
+}
+
+/* ---- the body: the navigation and the chapters ---- */
+.scheda-corpo {
+  background: var(--surface-page);
+  border-block-start: 1px solid var(--line-rhythm);
+  padding-block: 0 clamp(var(--s-12), 6vw, var(--s-24));
+}
+
+.scheda-corpo__griglia {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.scheda-nav {
+  position: sticky;
+  inset-block-start: var(--header-h, 3.5rem);
+  z-index: 2;
+  margin-inline: calc(-1 * var(--grid-margin));
+  padding-inline: var(--grid-margin);
+  background: var(--surface-page);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.scheda-nav__titolo {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.scheda-nav__voci {
+  display: flex;
+  gap: var(--s-1);
+  margin: 0;
+  padding: var(--s-2) 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.scheda-nav__voce {
+  display: block;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--radius-control);
+  font-size: var(--t-ui);
+  line-height: 1.4;
+  color: var(--text-2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--motion-standard) var(--ease-enter), color var(--motion-standard) var(--ease-enter);
+}
+
+.scheda-nav__voce:hover {
+  color: var(--text-1);
+  background: var(--surface-area);
+}
+
+.scheda-nav__voce:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: calc(-1 * var(--focus-ring-width));
+}
+
+.scheda-nav__voce[aria-current] {
+  color: var(--accent-text-hover);
+  background: var(--accent-wash);
+  font-weight: 500;
+}
+
+.scheda-nav__azione {
+  display: none;
+}
+
+.scheda-capitoli {
+  min-inline-size: 0;
+}
+
+.scheda-cap {
+  padding-block: clamp(var(--s-8), 5vw, var(--s-16)) 0;
+}
+
+.scheda-cap + .scheda-cap {
+  margin-block-start: clamp(var(--s-8), 5vw, var(--s-12));
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.scheda-cap__titolo {
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-title-2);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: var(--track-title-2);
+  color: var(--text-1);
+}
+
+.scheda-cap__lead {
+  margin: calc(-1 * var(--s-2)) 0 var(--s-6);
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+@media (min-width: 64rem) {
+  .scheda-corpo__griglia {
+    grid-template-columns: minmax(12rem, 3fr) minmax(0, 9fr);
+    column-gap: clamp(var(--s-8), 5vw, var(--s-16));
+    align-items: start;
+  }
+
+  .scheda-nav {
+    inset-block-start: calc(var(--header-h, 4rem) + var(--s-8));
+    margin: clamp(var(--s-8), 5vw, var(--s-16)) 0 0;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .scheda-nav__titolo {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    clip-path: none;
+    margin: 0 0 var(--s-3);
+    color: var(--text-1);
+  }
+
+  .scheda-nav__voci {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    overflow: visible;
+    border-inline-start: 1px solid var(--line-rhythm);
+  }
+
+  .scheda-nav__voce {
+    position: relative;
+    padding: var(--s-2) var(--s-4);
+    border-radius: 0;
+    white-space: normal;
+  }
+
+  .scheda-nav__voce:hover {
+    background: none;
+  }
+
+  .scheda-nav__voce[aria-current] {
+    background: none;
+  }
+
+  .scheda-nav__voce[aria-current]::before {
+    content: "";
+    position: absolute;
+    inset-block: var(--s-1);
+    inset-inline-start: -1px;
+    inline-size: 2px;
+    background: var(--accent-mark);
+  }
+
+  .scheda-nav__azione {
+    display: block;
+    margin: var(--s-6) 0 0;
+    padding-block-start: var(--s-4);
+    border-block-start: 1px solid var(--line-rhythm);
+  }
+
+  /* the words wrap in their own box and the arrow stands at its end, on the last line — never alone on a line of its
+     own (the column is narrower than the label at every width) */
+  .scheda-nav__link {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: var(--s-2);
+    font-size: var(--t-ui);
+    font-weight: 500;
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+
+  .scheda-nav__link .icon {
+    flex: none;
+    margin-block-end: 0.3em;
+  }
+
+  .scheda-nav__link:hover {
+    color: var(--accent-text-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .scheda-nav__link:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .scheda-capitoli > .scheda-cap:first-child {
+    padding-block-start: clamp(var(--s-8), 5vw, var(--s-16));
+  }
+}
+
+/* ---- the overview ---- */
+.scheda-apercu__prosa {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: 1.7;
+  color: var(--text-1);
+}
+
+.scheda-apercu .notice + .scheda-apercu__prosa {
+  margin-block-start: var(--s-6);
+}
+
+/* ---- the milestones: one rail, dots, no figures ---- */
+.scheda-tappe {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-inline-size: 44rem;
+}
+
+.scheda-tappa {
+  position: relative;
+  padding-inline-start: var(--s-8);
+  padding-block-end: var(--s-6);
+}
+
+.scheda-tappa:last-child {
+  padding-block-end: 0;
+}
+
+.scheda-tappa__punto {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.5em;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--accent-mark);
+  background: var(--surface-page);
+}
+
+/* a verified milestone (its text reviewed and drawn) fills its dot; one still under review keeps the ring — the
+   rail says which is which without a figure or a dashed edge that read as a spinner */
+.scheda-tappa:not(.scheda-tappa--attesa) .scheda-tappa__punto {
+  background: var(--accent-mark);
+}
+
+.scheda-tappa:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(0.375rem - 0.5px);
+  inset-block: calc(0.5em + 0.875rem) 0.125rem;
+  inline-size: 1px;
+  background: var(--line-structure);
+  opacity: 0.45;
+}
+
+
+.scheda-tappa__titolo {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+.scheda-tappa__corpo {
+  margin-block-start: var(--s-2);
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.scheda-tappa__corpo p {
+  margin: 0 0 var(--s-2);
+}
+
+.scheda-tappa__via {
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-ui);
+}
+
+/* ---- the documentation ---- */
+.scheda-documenti__lista {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-inline-size: 44rem;
+}
+
+.scheda-documenti__voce {
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-control);
+  background: var(--surface-raised);
+}
+
+.scheda-documenti__titolo {
+  margin: 0;
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+.scheda-documenti__testo {
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-ui);
+  color: var(--text-2);
+}
+
+/* ---- the competent actors: a register, each its official link and host ---- */
+.scheda-attori__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-inline-size: 44rem;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.scheda-attori__voce {
+  padding-block: var(--s-4);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.scheda-attori__nome {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+.scheda-attori__nome::first-letter {
+  text-transform: capitalize;
+}
+
+.scheda-attori__nome .autorita {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.scheda-attori__nome .autorita:hover {
+  color: var(--accent-text-hover);
+  text-decoration-thickness: 2px;
+}
+
+.scheda-attori__nome .autorita__host {
+  display: block;
+  margin-block-start: var(--s-1);
+  font-size: var(--t-small);
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.scheda-attori__nota {
+  margin: var(--s-6) 0 0;
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-ui);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ---- the sheet's verified warnings, under the anti-fraud notice in the closing band (_chiusura.css composes the
+   notice in the chapters' column) ---- */
+.scheda-avvisi {
+  display: grid;
+  gap: var(--s-3);
+}
+
+/* ---- the resources ---- */
+.scheda-risorse__griglia {
+  display: grid;
+  gap: var(--s-10, 2.5rem);
+}
+
+.scheda-risorse__titolo {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-small);
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.scheda-termini {
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.scheda-termine {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.scheda-termine__sommario {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-4);
+  min-block-size: var(--hit-primary, 44px);
+  padding: var(--s-4) var(--s-1);
+  font-size: var(--t-body);
+  font-weight: 500;
+  color: var(--text-1);
+  cursor: pointer;
+  list-style: none;
+}
+
+.scheda-termine__sommario::-webkit-details-marker {
+  display: none;
+}
+
+.scheda-termine__sommario:hover {
+  color: var(--accent-text-hover);
+}
+
+.scheda-termine__sommario:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.scheda-termine__chevron {
+  flex: none;
+  color: var(--text-3);
+  transition: transform var(--motion-standard) var(--ease-enter);
+}
+
+.scheda-termine[open] .scheda-termine__chevron {
+  transform: rotate(180deg);
+}
+
+.scheda-termine__corpo {
+  padding: 0 var(--s-1) var(--s-4);
+  font-size: var(--t-ui);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.scheda-termine__corpo p {
+  margin: 0;
+}
+
+.scheda-termine__corpo p::first-letter {
+  text-transform: capitalize;
+}
+
+.scheda-termine__link {
+  margin-block-start: var(--s-2) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scheda-termine[open] .scheda-termine__corpo {
+    animation: scheda-apri var(--motion-emphasized) var(--ease-enter) both;
+  }
+}
+
+@keyframes scheda-apri {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.scheda-vicini {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.scheda-vicini li {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.scheda-vicino {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-3) var(--s-1);
+  font-size: var(--t-body);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: color var(--motion-standard) var(--ease-enter);
+}
+
+.scheda-vicino .icon {
+  flex: none;
+  color: var(--accent-text);
+  transition: transform var(--motion-standard) var(--ease-enter);
+}
+
+.scheda-vicino:hover {
+  color: var(--accent-text-hover);
+}
+
+.scheda-vicino:hover .icon {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .scheda-vicino:hover .icon {
+  transform: translateX(-3px);
+}
+
+.scheda-vicino:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.scheda-risorse__tutti {
+  margin: var(--s-6) 0 0;
+}
+
+/* a pathway alone in its family (Regroupement familial, Autres voies): since the correction round (P2-3) the way to all
+   of them is the column's one line — level with the terms' title, never floating under an empty seat */
+.scheda-risorse__tutti:first-child {
+  margin-block-start: 0;
+}
+
+@media (min-width: 48rem) {
+  .scheda-risorse__griglia {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-12);
+    align-items: start;
+  }
+}
+
+[dir="rtl"] .scheda-tappa__titolo[lang="fr"],
+[dir="rtl"] .scheda-attori__nome[lang="fr"] {
+  text-align: end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scheda-nav__voce,
+  .scheda-vicino,
+  .scheda-vicino .icon,
+  .scheda-termine__chevron {
+    transition: none;
+  }
+}

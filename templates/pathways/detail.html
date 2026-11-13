@@ -1,0 +1,141 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Pathway sheet (gate G3). Title and description are locked (registry, by key); steps, documents, authorities and
+warnings are editorial and CONTENT_PENDING_LEGAL_REVIEW: pending items expose their heading only, and a chapter with
+nothing verified to say is not drawn — nor named in the page's index (pathways.services.detail_context: `d.sections`).
+
+Design V5.32 (lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026): an editorial sheet, not a
+timeline diagram.
+  * the head: the space's shared entrance (pages/partials/_ingresso.html, the frontispiece of the Espace Personnes'
+    pages) — «Parcours régulier · <family>» (no ordinal), the locked title and description (each in the language the
+    seam gives it, the description's caption on /ar/), the metadata row (nature, last verification), and in the end
+    seat the pathway's photograph (pathways/_scheda_media.html) — the site's one pairing
+    (pages.services.PATHWAY_FRAMES); family reunification keeps its semantic plate (no rights-safe family
+    photograph, no identifiable minors);
+  * the body: ONE paper surface in two columns from 64 rem — the local navigation sticky at the reading edge (the
+    scroll-spy of static/js/src/sezioni/spia.js, «Sommaire de la page» with the questionnaire under it), the
+    chapters at their measure beside it; below 64 rem the navigation is one sticky bar of anchors that scrolls on
+    itself;
+  * «Étapes»: the milestones as a quiet sequence on one rail (dots, no figures), the space's page that answers a
+    milestone under it (preparing before departure → Formation; the questionnaire is the navigation's action);
+  * the documentation (when verified items exist); the competent actors as a register — each its name, its official
+    link with its host (the source reference); Italy Legal Entry™'s position stated under them, outside the list;
+  * «Ressources»: the terms with their locked definitions in place (one open at a time), the pathways of the same
+    family, the way to all of them;
+  * the closing chapter (#avertissements) — the correction round of the senior integration review, P2-3: the notices,
+    the space's pages and the orientation's plate ended this sheet as three chapters, as they ended ten other pages;
+    they are ONE compact band, «la chiusura» (pathways/_chiusura.html): the anti-fraud notice whole, the sheet's
+    verified warnings, the questionnaire's caution and its one primary, the way to the space's register on /parcours/,
+    the help line.
+Its sheet: css/dist/pathways/sheet.css (apps/pathways/static/pathways/sheet.css).
+{% endcomment %}
+{% block page_title %}{{ d.title }} · {% translate "Espace Personnes" %}{% endblock %}
+{% block meta_description %}{{ d.title }} — {{ d.description }}{% endblock %}
+{% block body_class %}page-pathways page-pathways--detail interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/sheet.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% include "pathways/_preview_notice.html" %}
+{% locked_caption d.description_key as description_caption %}
+{% translate "Parcours régulier" as order_label %}
+<div class="pathway-entrance" data-pathway="{{ pathway.key }}" data-family="{{ neighbours.family }}">
+{# V5.27 / R7′ (the v524-pub1 steward): the title and the description each in the language the seam gives them #}
+{% include "pages/partials/_ingresso.html" with label=order_label label_suffix=neighbours.label_suffix title=d.title title_lang=d.title_lang lead=d.description lead_lang=d.description_lang lead_caption=description_caption meta_template="pathways/_review_meta.html" reviewed_at=pathway.last_reviewed_at aside_template="pathways/_scheda_media.html" frame=frame family=neighbours.family plate_glyph=pathway.icon motif="route" glyph="signpost" fronte_linked=True only %}
+</div>
+{% if pathway.hero_image and pathway.hero_image.is_publishable %}
+<div class="container pathway-figure">
+  {% if pathway.hero_image.is_decorative %}
+  <img class="pathway-figure__img" src="{{ pathway.hero_image.file.url }}" alt="" width="{{ pathway.hero_image.width }}" height="{{ pathway.hero_image.height }}" loading="lazy" decoding="async">
+  {% else %}
+  <figure class="figura">
+    <img src="{{ pathway.hero_image.file.url }}" alt="{{ pathway.hero_image.alt_fr }}" lang="fr" width="{{ pathway.hero_image.width }}" height="{{ pathway.hero_image.height }}" loading="lazy" decoding="async">
+    <figcaption lang="fr">{{ pathway.hero_image.caption_fr }}{% if pathway.hero_image.caption_place %} · {{ pathway.hero_image.caption_place }}{% endif %}{% if pathway.hero_image.caption_date %}, {{ pathway.hero_image.caption_date|date:"j F Y" }}{% endif %}{% if pathway.hero_image.credit and pathway.hero_image.attribution_required %} — {% translate "Photo" %} : {{ pathway.hero_image.credit }}{% endif %}</figcaption>
+  </figure>
+  {% endif %}
+</div>
+{% endif %}
+<div class="scheda-corpo" data-ground="paper">
+  <div class="container scheda-corpo__griglia">
+    <nav class="scheda-nav" aria-labelledby="rail-title" data-sec-js="spia">
+      <p class="scheda-nav__titolo t-label" id="rail-title">{% translate "Sommaire de la page" %}</p>
+      <ol class="scheda-nav__voci" role="list">{% for item in d.sections %}<li><a class="scheda-nav__voce" href="#{{ item.id }}"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.label }}</a></li>{% endfor %}</ol>
+      {% if boussole.action %}<p class="scheda-nav__azione"><a class="scheda-nav__link" href="{{ boussole.action.url }}">{{ boussole.action.label }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+    </nav>
+    <div class="scheda-capitoli">
+{% if d.eligibility or d.is_training_in_origin_country %}
+      <section id="apercu" class="scheda-cap scheda-apercu" aria-labelledby="apercu-title">
+        <h2 class="scheda-cap__titolo" id="apercu-title">{% translate "Aperçu" %}</h2>
+        {% if d.is_training_in_origin_country %}
+          {% comment %}CONTENT_PENDING_LEGAL_REVIEW — fixed neutral notice required by Implementation §3.3 Note (never presented as an already authorised channel).{% endcomment %}
+          <div class="notice notice--info" role="status" data-notice="training-in-origin-country">
+            <span class="notice__icon" aria-hidden="true">{% svg_icon "info" %}</span>
+            <div class="notice__body"><p>{% translate "Parcours en construction avec les acteurs compétents ; aucun canal n’est présenté comme déjà autorisé." %}</p></div>
+          </div>
+        {% endif %}
+        {% if d.eligibility %}
+          <div class="scheda-apercu__prosa"{% if d.eligibility_lang != site.lang %} lang="{{ d.eligibility_lang }}"{% endif %}>{{ d.eligibility|linebreaks }}</div>
+        {% endif %}
+        {% comment %}CONTENT_PENDING_LEGAL_REVIEW — eligibility context is written and verified by the legal reviewer; nothing is invented here.{% endcomment %}
+      </section>
+{% endif %}
+{% if d.steps %}
+      <section id="etapes" class="scheda-cap scheda-etapes" aria-labelledby="etapes-title">
+        <h2 class="scheda-cap__titolo" id="etapes-title">{% translate "Étapes" %}</h2>
+        <ol class="scheda-tappe" role="list" data-steps="{{ milestones|length }}">
+          {% for item in milestones %}<li class="scheda-tappa{% if item.pending %} scheda-tappa--attesa{% endif %}">
+            <span class="scheda-tappa__punto" aria-hidden="true"></span>
+            <h3 class="scheda-tappa__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.heading }}</h3>
+            {% if item.body %}<div class="scheda-tappa__corpo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.body|linebreaks }}</div>{% endif %}
+            {% if item.url %}<p class="scheda-tappa__via"><a class="link-arrow" href="{{ item.url }}">{% translate "Voir la page Formation" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+          </li>{% endfor %}
+        </ol>
+      </section>
+{% endif %}
+{% if d.documents %}
+      <section id="documentation" class="scheda-cap scheda-documenti" aria-labelledby="documentation-title">
+        <h2 class="scheda-cap__titolo" id="documentation-title">{% translate "Documentation généralement requise" %}</h2>
+        <p class="scheda-cap__lead">{% translate "Liste indicative : les documents effectivement demandés dépendent de votre situation et des indications des autorités compétentes." %}</p>
+        <ul class="scheda-documenti__lista" role="list">
+          {% for doc in d.documents %}<li class="scheda-documenti__voce{% if doc.pending %} scheda-documenti__voce--attesa{% endif %}">
+            <p class="scheda-documenti__titolo"{% if doc.lang != site.lang %} lang="{{ doc.lang }}"{% endif %}>{{ doc.heading }}</p>
+            {% if doc.body %}<p class="scheda-documenti__testo">{{ doc.body }}</p>{% endif %}
+          </li>{% endfor %}
+        </ul>
+        {% comment %}CONTENT_PENDING_LEGAL_REVIEW — no document list is invented; editors add verified items in the back-office.{% endcomment %}
+      </section>
+{% endif %}
+{% if d.authorities %}
+      <section id="autorites" class="scheda-cap scheda-attori" aria-labelledby="autorites-title">
+        <h2 class="scheda-cap__titolo" id="autorites-title">{% translate "Autorités et acteurs compétents" %}</h2>
+        <ul class="scheda-attori__lista authority-list" role="list" data-attori="{{ d.authorities|length }}">
+          {% for a in d.authorities %}<li class="scheda-attori__voce">
+            {% if a.url %}<p class="scheda-attori__nome"><a class="autorita" href="{{ a.url }}" rel="noopener"><span{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</span></a>{% if a.host %} <span class="autorita__host">{{ a.host }}</span>{% endif %}</p>{% else %}<p class="scheda-attori__nome"{% if a.lang != site.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</p>{% endif %}
+          </li>{% endfor %}
+        </ul>
+        <p class="scheda-attori__nota">{% translate "Liste indicative des acteurs généralement concernés. Italy Legal Entry™ n’intervient pas auprès des autorités et ne délivre aucune autorisation." %}</p>
+      </section>
+{% endif %}
+      <section id="ressources" class="scheda-cap scheda-risorse" aria-labelledby="ressources-title">
+        <h2 class="scheda-cap__titolo" id="ressources-title">{% translate "Ressources" %}</h2>
+        <div class="scheda-risorse__griglia">
+          {% if terms %}<div class="scheda-risorse__termini">
+            <h3 class="scheda-risorse__titolo">{% translate "Termes utiles" %}</h3>
+            <div class="scheda-termini termes" data-glossary="{{ terms|length }}">{% for t in terms %}<details class="scheda-termine" name="termini">
+              <summary class="scheda-termine__sommario"><span lang="it">{{ t.term }}</span>{% svg_icon "chevron" "icon icon--sm scheda-termine__chevron" %}</summary>
+              <div class="scheda-termine__corpo"><p{% if t.definition_lang %} lang="{{ t.definition_lang }}"{% endif %}>{{ t.definition }}</p>{% if t.url %}<p class="scheda-termine__link"><a class="link-arrow" href="{{ t.url }}">{% translate "Voir dans le glossaire" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}</div>
+            </details>{% endfor %}</div>
+          </div>{% endif %}
+          <div class="scheda-risorse__vicini">
+            {% if neighbours.same %}<h3 class="scheda-risorse__titolo">{% blocktranslate with family=neighbours.family_label %}Autres parcours · {{ family }}{% endblocktranslate %}</h3>
+            <ul class="scheda-vicini" role="list">{% for n in neighbours.same %}<li><a class="scheda-vicino" href="{{ n.url }}"><span{% if n.lang %} lang="{{ n.lang }}"{% endif %}>{{ n.title }}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></li>{% endfor %}</ul>{% endif %}
+            <p class="scheda-risorse__tutti"><a class="link-arrow" href="{% url 'pathways:index' %}">{% translate "Tous les parcours réguliers" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>
+          </div>
+        </div>
+      </section>
+      <section id="avertissements" class="scheda-cap chiusura" aria-labelledby="protezione-title-detail" data-action="orientation">
+        {% include "pathways/_chiusura.html" with url=links.antifraud suffix="detail" boussole=boussole warnings=d.warnings lang=site.lang only %}
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

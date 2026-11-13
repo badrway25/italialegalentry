@@ -1,0 +1,118 @@
+/* ============================================================================
+   AUTHORISED SELECTION — design V5 (W3-E step 2; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7).
+
+   The selection draws in the console's register grammar: the page's head, the
+   band and the rows of the processes, the answerable party (the authorised
+   actor, its authorisation, its jurisdiction, its validity — the registers'
+   §12, on every screen where a stage is visible), the phases as the registers'
+   sequence with the current one marked, the forms of an act, the clause — the
+   registers' page sheet, apps/portal/static/portal/v5/_registers.css, linked
+   before this one by every template of the module. The tables are the
+   console's (portal.css `.data-table`, which also took this sheet's scroll
+   rules). The V1 devices this sheet carried (the band on the process ground
+   between a navy and a rubric rule, the facts under a navy rule, the forms'
+   fieldsets and their legends in tracked capitals, the disclosure's coloured
+   rule) left with that redraw.
+
+   What follows is only what the selection draws beyond it. No card, no
+   shadow, no gradient, no KPI grid, no percentage meter, no colour as the only
+   carrier of a state. Tokens only, logical properties only.
+   ========================================================================== */
+
+/* the actor's authorisations, one under the other: one hairline between two parties, never two */
+.selection-actors > .reg-party + .reg-party {
+  border-block-start: 0;
+}
+
+/* the scope of an authorisation, under the clause */
+.responsible__scope {
+  display: block;
+  margin-block-start: var(--s-1);
+}
+
+/* a reference and its state on one line */
+.selection-fact__inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-3);
+}
+
+/* a line of counts with a state worth saying beside it */
+.selection-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  margin: 0 0 var(--s-4);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+/* what became of the process: its word at the section's size, the note, the clause */
+.selection-outcome,
+.selection-disclosure,
+.selection-read {
+  margin-block-start: var(--s-6);
+}
+
+.selection-outcome__kind {
+  margin: 0 0 var(--s-2);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+/* a form inside a table cell or under a decision: it never breaks its row */
+.selection-inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.selection-inline-form select {
+  min-block-size: var(--field-h);
+}
+
+/* the person's decisions, each a block on its hairline: the company, the purpose, the state, the way to withdraw
+   it, every consultation underneath */
+.selection-decisions {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.selection-decision {
+  display: grid;
+  gap: var(--s-3);
+  min-inline-size: 0;
+  padding-block: var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.selection-decision__meta {
+  margin: 0;
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  color: var(--text-2);
+}
+
+.selection-decision__form {
+  max-inline-size: var(--container-narrow);
+}
+
+.selection-accesses caption {
+  padding-block-end: var(--s-2);
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-weight: var(--w-control);
+  text-align: start;
+  color: var(--text-2);
+}

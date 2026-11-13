@@ -1,0 +1,220 @@
+{% extends "companies/base_companies.html" %}{% load i18n static %}
+{% comment %}
+ONE NEED — the working page of the company, design V5 (W3-E step 2), in the console's register grammar (the registers'
+page sheet, then companies.css).
+
+It answers, in order: what is the state, who answers for it, what does the need say, what is still
+missing before it can be transmitted, and what happened so far. It contains no person, no count of
+persons and no link to one: the only name on this page is the name of the party ANSWERABLE for the
+need, which the company has a right to know and which is named by organisation or by role.
+
+  the head          the need's title in its own direction; its reference in ILE Mono, its state as a chip and since
+                    when; at its reading end the company's acts on it (modify; transmit — the one primary, a POST)
+  what is missing   a pending notice before transmission; the verification's sentence while the company is not
+                    verified; the withdrawal, a form of its own with its reason in view
+  the party         who answers for it: each live assignment's actor glyph, name, role, authorisation and validity —
+                    or, in words, that the project has not designated an actor yet
+  the post          what the need describes, as facts on hairlines
+  the skills        a table: the skill, its level as a tag, its note
+  the history       the registers' log: each change its state as a chip, its date, its note, who answered for it
+  the clause
+{% endcomment %}
+{% block page_title %}{{ need.title }}{% endblock %}
+{% block meta_description %}{% translate "Le détail d’un besoin exprimé par votre entreprise." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/companies.css' %}"><link rel="stylesheet" href="{% static 'css/dist/companies/course.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if can_withdraw %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}">{% endif %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="company">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title reg-head__title" id="need-title" dir="auto">{{ need.title }}</h1>
+    <p class="reg-head__meta"><span class="reg-ref">{{ need.reference }}</span>{% chip need.status "companies.NeedStatus" %}{{ need.get_status_display }}{% endchip %}<span>{% blocktranslate with date=need.status_since|date:"d.m.Y" %}depuis le {{ date }}{% endblocktranslate %}</span></p>
+  </div>
+  {% if can_change or can_submit %}
+  <div class="ws-head__action reg-acts">
+    {% if can_change %}<a class="btn btn--secondary" href="{% url 'companies:need_edit' need.reference %}">{% translate "Modifier le besoin" %}</a>{% endif %}
+    {% if can_submit %}
+    <form method="post" action="{% url 'companies:need_submit' need.reference %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--primary">{% translate "Transmettre au projet" %}</button>
+    </form>
+    {% endif %}
+  </div>
+  {% endif %}
+</header>
+{% endblock %}
+
+{% block companies_content %}
+<div class="reg-page db-main">
+  {% if missing %}
+  {% translate "Avant transmission" as missing_title %}
+  {% translate "Il manque encore :" as missing_lead %}
+  {% with missing_text=missing|join:", " %}
+  {% include "components/notice.html" with kind="pending" title=missing_title text=missing_lead|add:" "|add:missing_text %}
+  {% endwith %}
+  {% endif %}
+
+  {% if not company.is_verified and need.status == "draft" %}
+  <p class="reg-note company-verification">{% translate "La transmission d’un besoin est possible une fois la vérification de l’entreprise prononcée par l’équipe du projet. Vous pouvez préparer le besoin dès maintenant." %}</p>
+  {% endif %}
+
+  {% comment %}
+  WHERE THE NEED STANDS (V5.32 lane C — the platform's contextual progression): its course from the record — the declared
+  states in their order (companies.services.need_course): the stations passed (with their date when the history records
+  it), the one the need is on (the head says since when), the ones to come; each station's mark is its state's chip mark
+  (chips.REGISTER, the register's counts draw the same), in the page's ink: the register's colour stays the head's chip's.
+  A pause is said on the station it holds; a withdrawn need has no course. Not a promise: no delay, no outcome — the
+  states are facts about the file. Its sheet: companies/course.css (this page only).
+  {% endcomment %}
+  {% if course %}
+  <section class="reg-sec need-course-sec" aria-labelledby="need-course-title">
+    <h2 class="db-h2 reg-sec__title" id="need-course-title"><span>{% translate "Où en est ce besoin" %}</span></h2>
+    <ol class="need-course" role="list">
+      {% for stop in course %}<li class="need-course__stop" data-state="{{ stop.state }}"{% if stop.state == "current" %} aria-current="step"{% endif %}>
+        <span class="need-course__mark" aria-hidden="true">{% svg_icon stop.status|chip_mark:"companies.NeedStatus" "icon" %}</span>
+        <span class="need-course__words">
+          <span class="need-course__name">{{ stop.label }}</span>
+          {% if stop.state == "done" %}<span class="visually-hidden">{% translate "Étape franchie" %}</span>{% if stop.date %}<time class="need-course__date" datetime="{{ stop.date|date:'c' }}">{{ stop.date|date:"d.m.Y" }}</time>{% endif %}{% elif stop.state == "todo" %}<span class="visually-hidden">{% translate "Étape à venir" %}</span>{% elif course_held %}{% chip need.status "companies.NeedStatus" size="s" css_class="need-course__hold" %}{{ need.get_status_display }}{% endchip %}{% endif %}
+        </span>
+      </li>{% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+
+  {% comment %} WHO IS ANSWERABLE — never « personne »: when nobody is designated, the honest answer is that the project has not designated an actor yet. {% endcomment %}
+  <section class="reg-sec" aria-labelledby="need-responsible-title">
+    <h2 class="db-h2 reg-sec__title" id="need-responsible-title"><span>{% translate "Responsable" %}</span></h2>
+    {% with live=need.live_assignments %}
+    {% if live %}
+    {% for actor in live %}
+    <div class="reg-party need-party">
+      {% with glyph=actor.role|actor_glyph %}<span class="reg-row__seal" aria-hidden="true">{% if glyph %}{% svg_icon glyph "icon" %}{% endif %}</span>{% endwith %}
+      <div class="reg-party__words">
+        <p class="reg-party__label">{{ actor.get_role_display }}</p>
+        <p class="reg-party__name" dir="auto">{{ actor.display_name }}</p>
+      </div>
+      {% if actor.role == "authorised_actor" %}
+      <dl class="reg-party__facts">
+        <div class="reg-party__fact"><dt>{% translate "Autorisation" %}</dt><dd><span class="reg-ref">{{ actor.authorisation_reference }}</span></dd></div>
+        {% if actor.authorisation_valid_until %}<div class="reg-party__fact"><dt>{% translate "Validité" %}</dt><dd>{% blocktranslate with date=actor.authorisation_valid_until|date:"d.m.Y" %}valable jusqu’au {{ date }}{% endblocktranslate %}</dd></div>{% endif %}
+      </dl>
+      {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="db-empty">{% translate "Aucun intervenant désigné à ce jour. La désignation appartient à l’équipe du projet." %}</p>
+    {% endif %}
+    {% endwith %}
+    {% if need.hold_reason %}
+    <dl class="portal-facts need-hold">
+      <div class="portal-facts__row"><dt>{% translate "Motif de l’attente" %}</dt><dd dir="auto">{{ need.hold_reason }}</dd></div>
+    </dl>
+    {% endif %}
+  </section>
+
+  <section class="reg-sec" aria-labelledby="need-post-title">
+    <h2 class="db-h2 reg-sec__title" id="need-post-title"><span>{% translate "Ce que décrit le besoin" %}</span></h2>
+    <dl class="portal-facts need-facts">
+      <div class="portal-facts__row"><dt>{% translate "Territoire" %}</dt><dd>{% if need.territory %}{{ need.territory.label }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Lieu de travail" %}</dt><dd>{% if need.work_place %}{{ need.work_place }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Secteur" %}</dt><dd>{% if need.sector %}{{ need.sector.label }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Profil professionnel" %}</dt><dd dir="auto">{% if need.professional_profile %}{{ need.professional_profile }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Tâches confiées" %}</dt><dd dir="auto">{% if need.duties %}{{ need.duties|linebreaksbr }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Motif du besoin" %}</dt><dd dir="auto">{% if need.motivation %}{{ need.motivation|linebreaksbr }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Forme de l’engagement" %}</dt><dd>{% if need.engagement_type %}{{ need.get_engagement_type_display }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row"><dt>{% translate "Nombre de profils" %}</dt><dd>{{ need.headcount }}</dd></div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Expérience" %}</dt>
+        <dd>{% if need.experience_years_min %}{% blocktranslate count n=need.experience_years_min %}{{ n }} année minimum{% plural %}{{ n }} années minimum{% endblocktranslate %}{% else %}{% translate "Pas une condition" %}{% endif %}{% if need.experience_note %}<span class="need-facts__note">{{ need.experience_note }}</span>{% endif %}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Langue" %}</dt>
+        <dd>{% if need.language_requirement %}{{ need.language_requirement }}{% else %}—{% endif %}{% if need.language_note %}<span class="need-facts__note">{{ need.language_note }}</span>{% endif %}</dd>
+      </div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Formation à la sécurité" %}</dt>
+        <dd>{% if need.safety_training_required %}{% translate "Requise" %}{% else %}{% translate "Non requise pour ce poste" %}{% endif %}{% if need.safety_training_note %}<span class="need-facts__note">{{ need.safety_training_note }}</span>{% endif %}</dd>
+      </div>
+      <div class="portal-facts__row"><dt>{% translate "Besoins de formation" %}</dt><dd dir="auto">{% if need.training_needs %}{{ need.training_needs|linebreaksbr }}{% else %}—{% endif %}</dd></div>
+      <div class="portal-facts__row">
+        <dt>{% translate "Calendrier" %}</dt>
+        <dd>{% if need.start_from %}<time datetime="{{ need.start_from|date:'Y-m-d' }}">{% blocktranslate with date=need.start_from|date:"d.m.Y" %}à partir du {{ date }}{% endblocktranslate %}</time>{% else %}—{% endif %}{% if need.timing_note %}<span class="need-facts__note">{{ need.timing_note }}</span>{% endif %}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="reg-sec" aria-labelledby="need-skills-title">
+    <h2 class="db-h2 reg-sec__title" id="need-skills-title"><span>{% translate "Compétences obligatoires et souhaitées" %}</span></h2>
+    {% if mandatory_skills or preferred_skills %}
+    <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-need-detail-2">
+      <table class="data-table">
+        <caption id="t-need-detail-2" class="visually-hidden">{% translate "Compétences attendues pour ce poste, par niveau d’exigence" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Compétence" %}</th>
+            <th scope="col">{% translate "Niveau d’exigence" %}</th>
+            <th scope="col">{% translate "Précision" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for skill in mandatory_skills %}
+          <tr>
+            <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
+            <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
+            <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+          {% for skill in preferred_skills %}
+          <tr>
+            <th scope="row" dir="auto" data-label="{% translate 'Compétence' %}">{{ skill.label }}</th>
+            <td data-label="{% translate 'Niveau d’exigence' %}"><span class="tag">{{ skill.get_level_display }}</span></td>
+            <td data-label="{% translate 'Précision' %}">{% if skill.note %}{{ skill.note }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="db-empty">
+      {% translate "Aucune compétence renseignée. Un besoin transmis en porte au moins une, obligatoire : c’est ce qui permet de construire un parcours de formation." %}
+      {% if can_change %}<a href="{% url 'companies:need_edit' need.reference %}">{% translate "Renseigner les compétences" %}</a>{% endif %}
+    </p>
+    {% endif %}
+  </section>
+
+  <section class="reg-sec" aria-labelledby="need-history-title">
+    <h2 class="db-h2 reg-sec__title" id="need-history-title">{% svg_icon "history" "icon" %}<span>{% translate "Ce qui s’est passé" %}</span></h2>
+    {% if events %}
+    <ol class="reg-steps reg-steps--log">
+      {% for event in events %}
+      <li class="reg-step">
+        <div class="reg-step__words">
+          <p class="reg-step__title">{% chip event.to_status "companies.NeedStatus" %}{{ event.get_to_status_display }}{% endchip %}<time class="need-event__date" datetime="{{ event.created_at|date:'c' }}">{{ event.created_at|date:"d.m.Y" }}</time></p>
+          {% if event.note %}<p class="reg-step__text" dir="auto">{{ event.note }}</p>{% endif %}
+        </div>
+        {% if event.responsible_label %}<div class="reg-step__end"><span class="db-task__who" dir="auto">{{ event.responsible_label }}</span></div>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="db-empty">{% translate "Les étapes de traitement de ce besoin apparaîtront ici." %}</p>
+    {% endif %}
+  </section>
+
+  {% comment %}
+  Withdrawing is a consequential act that does not come back (WITHDRAWN is terminal). V5.30 §10: the destructive-action
+  treatment with a confirm step — the overlay system's alert dialog, the help desk closure's grammar
+  (companies/partials/withdraw_dialog.html): the opener here, styled as what it is; in the dialog the need named, the
+  consequence, the reason's field in view, «Annuler» the safe answer, the garnet outline last. Without script the opener
+  shows the same form in place (:target).
+  {% endcomment %}
+  {% if can_withdraw %}
+  <div class="form__actions">
+    <a class="btn btn--danger" href="#need-withdraw-dialog" data-overlay-open>{% translate "Retirer le besoin" %}</a>
+  </div>
+  {% endif %}
+</div>
+
+<p class="reg-note">{% translate "Italy Legal Entry ne sélectionne personne et ne présente aucune personne à une entreprise. Les activités de recherche et de sélection relèvent des soggetti autorizzati, nommés ci-dessus lorsqu’ils sont désignés." %}</p>
+{% if can_withdraw %}{% translate "Retirer le besoin" as withdraw_title %}{% include "components/dialog.html" with id="need-withdraw-dialog" kind="alert" title=withdraw_title describedby="need-withdraw-text" body_template="companies/partials/withdraw_dialog.html" actions_template="companies/partials/withdraw_dialog.html" return_id="main-content" %}{% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% load i18n %}{% autoescape off %}{{ project.PROJECT_NAME }} — {% translate "Nouvelle inscription" %} — {{ event_title }}
+{{ event_meta }}
+
+{% translate "Prénom" %} : {{ registration.first_name }}
+{% translate "Nom" %} : {{ registration.last_name }}
+{% translate "Organisme / Entreprise" %} : {{ registration.organisation|default:"—" }}
+{% translate "Fonction" %} : {{ registration.role|default:"—" }}
+{% translate "E-mail" %} : {{ registration.email }}
+{% translate "Téléphone" %} : {{ registration.phone|default:"—" }}
+{% translate "Pays" %} : {{ registration.country|default:"—" }}
+{% translate "Catégorie" %} : {{ category_label }}
+{% translate "Secteur d’intérêt" %} : {{ registration.sector_of_interest|default:"—" }}
+{% translate "Langue" %} : {{ registration.language }}
+
+{% translate "Consentement" %} : {{ consent_version }} — {{ registration.consent.given_at|date:"Y-m-d H:i" }} ({{ registration.consent.get_purpose_display }})
+{% translate "Référence" %} : forum.ForumRegistration:{{ registration.pk }}
+
+--
+{{ project.PROMOTER }}
+{% endautoescape %}

@@ -1,0 +1,11 @@
+{% comment %}
+IN-H · the side annotation of the institutions' compact head (design V5.22, SECTION_SYSTEM_V2 §3.7 IN-H; lane P1), drawn in
+the frontispiece's end seat (pages/partials/_ingresso.html `aside_template`): the locked recipients sentence, whole
+(p3.institutions.recipients, shown once gate G3 is open), in main.css's secondary text (`.card__text`, the side annotation's
+own voice, §6.2), hanging from the lead's reading edge. V5.30 VARIETY §7 («do not make every institutional relationship an
+arc»): the small hemicycle beside it left. A French run on an Arabic page is its own left-to-right box (§1 rule 6).
+{% endcomment %}<div class="ingresso__lead emiciclo-nota" data-annotation="recipients">
+  <div class="meta-row__item">
+    {% locked "p3.institutions.recipients" "p" "card__text emiciclo-nota__frase" %}
+  </div>
+</div>

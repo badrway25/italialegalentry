@@ -1,0 +1,1509 @@
+"""
+Homepage and institutional pages — business logic (views stay thin).
+
+Rules enforced here, not in templates:
+
+* **Prescribed texts** are read only through ``cms.locked_content.get()`` and handed to the templates
+  together with their effective language (French fallback is tagged ``lang="fr"``).
+* **Gates**: Phase 3 texts are never put in a context while ``core.gates.phase3_public()`` is
+  closed, whatever the back-office rows say (defence in depth on top of ``HomeSection.requires_gate``).
+* **Composition**: the homepage is the ordered list of live, enabled ``HomeSection`` rows whose gate
+  is open and whose builder returned content. A section without content is skipped, never rendered
+  as an empty box.
+* **Editorial strings** stored in the database go through gettext so untouched defaults follow the
+  ``.po`` catalogues; a text containing a forbidden formulation is never rendered.
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from functools import lru_cache
+from typing import Any
+
+from django.conf import settings
+from django.templatetags.static import static
+from django.urls import NoReverseMatch, reverse
+from django.utils import formats, translation
+from django.utils.translation import gettext, gettext_noop
+from django.utils.translation import gettext_lazy as _
+
+from cms import forbidden, locked_content
+from cms.models import HeroVariant, HomeHero, MediaAsset
+from cms.templatetags.cms_nav import gate_open
+from cms.translation import resolve
+from core import contact, flags, gates, icons
+from core.links import public_url
+from core.models import SiteSettings
+from pages import content, imagery, prescribed
+from pages.models import HomeSection, SectionKey
+
+log = logging.getLogger("ile.pages")
+
+FALLBACK_LANGUAGE = settings.CONTENT_FALLBACK_LANGUAGE
+
+
+# --------------------------------------------------------------------------------------------
+# Small helpers
+# --------------------------------------------------------------------------------------------
+def current_language() -> str:
+    return (translation.get_language() or settings.LANGUAGE_CODE).split("-")[0]
+
+
+def safe_reverse(name: str, **kwargs) -> str:
+    """URL of a (possibly not yet available) route; "" when it does not resolve."""
+    if not name:
+        return ""
+    try:
+        return reverse(name, kwargs=kwargs or None)
+    except NoReverseMatch:
+        return ""
+
+
+def first_url(names: tuple[str, ...] | list[str]) -> str:
+    for name in names:
+        url = safe_reverse(name)
+        if url:
+            return url
+    return ""
+
+
+@dataclass(frozen=True)
+class Text:
+    """A renderable string with the ``lang`` attribute it needs ("" = page language)."""
+
+    value: Any = ""
+    lang: str = ""
+
+    def __bool__(self) -> bool:
+        return bool(self.value)
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+
+EMPTY = Text()
+
+
+def locked(key: str, lang: str | None = None) -> Text:
+    """Prescribed text (str, list or dict) with its effective language — the only door to the registry."""
+    lang = lang or current_language()
+    value, effective = locked_content.get(key, lang)
+    return Text(value, "" if effective == lang else effective)
+
+
+def is_clean(value: str) -> bool:
+    """False when an editorial string contains a forbidden formulation (cms.forbidden)."""
+    return not forbidden.scan(value or "")
+
+
+def is_publishable(value: str) -> bool:
+    """
+    False when an editorial string carries Phase 3 prescribed wording while gate G3 is closed.
+
+    Editorial columns (``HomeSection``, ``cms.HomeHero``, translation rows) are free text: a Phase 3
+    sentence pasted there must not become public before the gate, whatever the back-office holds.
+    The gate is only evaluated when a fragment is actually found.
+    """
+    if not prescribed.phase3_only(value or ""):
+        return True
+    return gates.phase3_public()
+
+
+def editorial(value: Any, lang: str | None = None, default: Any = "") -> Text:
+    """
+    Editorial (non-prescribed) French source string → text for the current language.
+
+    An untouched seeded default is a gettext msgid and gets translated by the catalogues; an
+    editor-written value has no catalogue entry and is shown in French with ``lang="fr"``.
+    """
+    lang = lang or current_language()
+    source = str(value or "").strip()
+    if source and not is_clean(source):
+        log.warning("Editorial text dropped: forbidden formulation detected.")
+        source = ""
+    if source and not is_publishable(source):
+        log.warning("Editorial text dropped: Phase 3 prescribed wording while gate G3 is closed.")
+        source = ""
+    if not source:
+        source = str(default or "").strip()
+    if not source:
+        return EMPTY
+    if lang == FALLBACK_LANGUAGE:
+        with translation.override(FALLBACK_LANGUAGE):
+            return Text(gettext(source), "")
+    translated = gettext(source)
+    if translated != source:
+        return Text(translated, "")
+    return Text(source, FALLBACK_LANGUAGE)
+
+
+def ui(message: Any) -> Text:
+    """A code-level gettext string (French source) with the right ``lang`` attribute."""
+    return editorial(str_source(message))
+
+
+def str_source(message: Any) -> str:
+    """French msgid of a lazy string, whatever the active language."""
+    with translation.override(None):
+        return str(message)
+
+
+# --------------------------------------------------------------------------------------------
+# Photography — cms.MediaAsset rows seeded from static/img/photos/manifest.json
+# --------------------------------------------------------------------------------------------
+@dataclass(frozen=True)
+class Photo:
+    src: str
+    srcset: str
+    alt: str
+    alt_lang: str
+    width: int
+    height: int
+    share_path: str = ""  # JPG used for social previews
+    #: The archive caption. A photograph on this site says where, when, what and by whom — a plate
+    #: in a register, not an illustration. ``photo_from_asset`` refuses to build a Photo whose asset
+    #: cannot fill these, so an uncaptioned image cannot reach a template at all.
+    place: str = ""
+    date: object = None
+    caption: str = ""
+    credit: str = ""
+    #: V5.24 §2 (label v524-px): the byline is drawn only when the asset's licence demands it
+    #: (``cms.MediaAsset.attribution_required``); the credit itself stays recorded.
+    attribution_required: bool = False
+
+
+@lru_cache(maxsize=1)
+def _manifest() -> dict[str, dict]:
+    from cms.seeds_media import MANIFEST_PATH
+
+    try:
+        data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {entry["slug"]: entry for entry in data.get("images", []) if "slug" in entry}
+
+
+def _note_value(notes: str, name: str) -> str:
+    for part in (notes or "").split(";"):
+        label, _sep, value = part.strip().partition("=")
+        if label == name:
+            return value.strip()
+    return ""
+
+
+def asset_for_slot(slot: str) -> MediaAsset | None:
+    """The library photo curated for a usage slot (recorded by the media seed in ``license_notes``)."""
+    return MediaAsset.objects.filter(license_notes__contains=f"slot={slot};").order_by("pk").first()
+
+
+def photo_from_asset(asset: MediaAsset | None, lang: str | None = None) -> Photo | None:
+    """
+    Build a Photo, or refuse.
+
+    An asset that cannot fill its caption apparatus — place, date, a factual sentence, a credit —
+    does not become a Photo, so it reaches no template and renders nowhere. Art direction A §6.2
+    makes a figure without a figcaption a defect; enforcing it HERE rather than in eleven templates
+    is what makes anonymous stock photography structurally impossible instead of discouraged.
+
+    The library inherited from the previous build fills none of those fields: six interchangeable
+    frames served fifty-two pages, none captioned, none credited. Those assets therefore render
+    nowhere until they are curated, and the pages carry themselves on type — which is the test the
+    direction set for itself.
+    """
+    if asset is None or not asset.file:
+        return None
+    if not asset.is_publishable:
+        log.info("Photo %s is not publishable: its caption apparatus is incomplete.", asset.pk)
+        return None
+    lang = lang or current_language()
+    localized = getattr(asset, f"alt_{lang}", "")
+    alt = "" if asset.is_decorative else (localized or asset.alt_fr)
+    alt_lang = "" if (localized or lang == FALLBACK_LANGUAGE or not alt) else FALLBACK_LANGUAGE
+    entry = _manifest().get(_note_value(asset.license_notes, "slug"))
+    if entry:
+        try:
+            webp = entry["files"]["webp"]
+            widths = sorted(int(w) for w in webp)
+            srcset = ", ".join(f"{static('img/photos/' + webp[str(w)])} {w}w" for w in widths)
+            jpg = "img/photos/" + entry["files"]["jpg"]
+            ratio = entry["height"] / entry["width"]
+            return Photo(
+                src=static(jpg),
+                srcset=srcset,
+                alt=alt,
+                alt_lang=alt_lang,
+                width=1440,
+                height=round(1440 * ratio),
+                share_path=static(jpg),
+                place=asset.caption_place,
+                date=asset.caption_date,
+                caption=asset.caption(lang),
+                credit=asset.credit,
+                attribution_required=asset.attribution_required,
+            )
+        except (KeyError, ValueError, ZeroDivisionError):  # incomplete manifest entry or missing static file
+            log.info("Photo derivatives unavailable for asset %s; using the stored file.", asset.pk)
+    try:
+        url = asset.file.url
+    except ValueError:
+        return None
+    return Photo(
+        src=url,
+        srcset="",
+        alt=alt,
+        alt_lang=alt_lang,
+        width=asset.width or 1440,
+        height=asset.height or 960,
+        place=asset.caption_place,
+        date=asset.caption_date,
+        caption=asset.caption(lang),
+        credit=asset.credit,
+        attribution_required=asset.attribution_required,
+    )
+
+
+def photo_for_slot(slot: str, lang: str | None = None) -> Photo | None:
+    return photo_from_asset(asset_for_slot(slot), lang)
+
+
+# --------------------------------------------------------------------------------------------
+# Homepage — section builders
+# --------------------------------------------------------------------------------------------
+@dataclass
+class BuildContext:
+    request: Any
+    lang: str
+    phase3: bool
+
+
+@dataclass
+class SectionView:
+    key: str
+    template: str
+    anchor: str
+    heading: Text = EMPTY
+    intro: Text = EMPTY
+    note: Text = EMPTY
+    data: dict = field(default_factory=dict)
+    ground: str = ""  # V5.22: the section's ground, resolved from its neighbours (_grounds)
+    sfuma: str = ""  # V5.24: the ground the section's foot dissolves into («sfumatura», the orientation only; _grounds)
+
+
+def _section_texts(row: HomeSection, lang: str) -> tuple[Text, Text, Text]:
+    """Heading / intro / note: PUBLISHED translation row, else the (gettext-aware) French source."""
+    if row.is_fully_locked:
+        return EMPTY, EMPTY, EMPTY
+    translated = None
+    if row.pk and lang != FALLBACK_LANGUAGE:
+        candidate, effective, is_fallback = resolve(row, lang)
+        if candidate is not None and effective == lang and not is_fallback:
+            translated = candidate
+
+    def pick(tr_field: str, fr_field: str) -> Text:
+        if translated is not None:
+            value = (getattr(translated, tr_field, "") or "").strip()
+            if value and is_clean(value) and is_publishable(value):
+                return Text(value, "")
+        # A field blanked by an editor stays blank: defaults are only what the seed wrote.
+        return editorial(getattr(row, fr_field, ""), lang)
+
+    heading = EMPTY if row.has_locked_heading else pick("heading", "heading_fr")
+    return heading, pick("intro", "intro_fr"), pick("note", "note_fr")
+
+
+# ---- 2. Hero ---------------------------------------------------------------------------------
+CTA_FALLBACKS: dict[str, str] = {
+    "ecosystem:companies": "enquiries:company_needs",
+    "ecosystem:institutions": "enquiries:institution_proposal",
+    "ecosystem:universities": "enquiries:university_proposal",
+}
+# Locked references an editor may use in the interim hero body: never a Phase 3 key.
+INTERIM_LOCKED_PREFIXES: tuple[str, ...] = ("p1.",)
+
+
+def _hero_row(variant: str) -> HomeHero:
+    row = HomeHero.objects.live().filter(variant=variant).select_related("image").first()
+    if row is not None:
+        return row
+    defaults = content.HERO_PHASE3 if variant == HeroVariant.PHASE3 else content.HERO_INTERIM
+    return HomeHero(variant=variant, **{name: str_source(value) for name, value in defaults.items()})
+
+
+def _cta(label: str, url_name: str, lang: str) -> dict | None:
+    url = first_url([url_name, CTA_FALLBACKS.get(url_name, "")])
+    text = editorial(label, lang)
+    if not (url and text):
+        return None
+    return {"label": text, "url": url}
+
+
+def _interim_body(raw: str, lang: str) -> tuple[Text, bool]:
+    raw = (raw or "").strip()
+    if raw.startswith(content.LOCKED_PREFIX):
+        key = raw[len(content.LOCKED_PREFIX) :].strip()
+        if key.startswith(INTERIM_LOCKED_PREFIXES):
+            try:
+                value = locked(key, lang)
+            except locked_content.LockedContentMissing:
+                return EMPTY, False
+            if isinstance(value.value, str):
+                return value, True
+        return EMPTY, False
+    return editorial(raw, lang), False
+
+
+#: The hero's description in two voices (FINAL MICRO-PASS §5 A1, A and B): the institutional statement, then its
+#: supporting clause — the locked p3.hero.body cut at the separator that closes «… vers l'Italie» and opens the
+#: participle of its second clause, in the text's OWN language (the Italian and English pages show the French text,
+#: so they take the French cut). Each entry is (the separator, the word that follows it): an anchor, never a retyped
+#: phrase. A language without an entry, or a text whose shape this does not know, is set whole.
+HERO_BODY_CUT: dict[str, tuple[str, str]] = {"fr": (", ", "développé "), "ar": ("، ", "طُوِّرت ")}
+#: V5.31 (the owner's FINAL HOMEPAGE REBUILD, §8): the statement's four notions set in the primary ink over the
+#: statement's
+#: lighter tone — exact substrings of the locked text, emphasis only (cms.locked_split.emphasize: a needle the text does
+#: not hold is ignored; the textContent stays the text). Whole words in Arabic, so no letter loses its joining.
+HERO_BODY_NOTIONS: dict[str, str] = {
+    "fr": "l’orientation|la formation|l’accompagnement|parcours réguliers",
+    "ar": "للتوجيه|والتكوين|ومواكبة|المسارات النظامية",
+}
+
+
+#: FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026, point 8): the statement's OPENING PHRASE — everything before the word
+#: that opens its continuation, in the text's own language (an anchor, never a retyped phrase: HERO_BODY_CUT's rule) —
+#: is set as the chapter's display line, the rest of the statement as its lighter continuation (the four notions in
+#: the ink): structure and spans only, the textContent is the locked text.
+HERO_BODY_CONTINUATION: dict[str, str] = {"fr": " dédié ", "ar": " مخصصة "}
+
+
+def hero_statement(statement: str, lang: str):
+    """The statement in two spans — its opening phrase, its continuation with the four notions emphasised — rebuilding
+    the statement character for character; a statement without the known anchor is set in one voice (the notions
+    only)."""
+    from django.utils.html import format_html
+
+    from cms import locked_split
+
+    notions = [n for n in HERO_BODY_NOTIONS.get(lang, "").split("|") if n]
+    anchor = HERO_BODY_CONTINUATION.get(lang, "")
+    at = statement.find(anchor) if anchor else -1
+    if at <= 0:
+        return locked_split.emphasize(statement, notions)
+    return format_html(
+        '<span class="he__apertura">{}</span><span class="he__continua">{}</span>',
+        statement[:at],
+        locked_split.emphasize(statement[at:], notions),
+    )
+
+
+def hero_body_cut(text: Any, lang: str) -> tuple[str, str] | None:
+    """The description's statement and its supporting clause, rebuilding the text character for character — or None:
+    then the template sets the text whole. The separator stays with the statement (cms.locked_split's rule)."""
+    if not isinstance(text, str) or lang not in HERO_BODY_CUT:
+        return None
+    separator, word = HERO_BODY_CUT[lang]
+    at = text.find(separator + word)
+    if at <= 0 or text.find(separator + word, at + 1) >= 0:
+        return None
+    statement, support = text[: at + len(separator)], text[at + len(separator) :]
+    return (statement, support) if statement + support == text else None
+
+
+#: V5.31 (the owner's FINAL HOMEPAGE REBUILD §9): the six actors the hero's statement names, under it as mini-cards —
+#: each
+#: its own semantic icon (apps/core/icons.py), in the statement's order; labels from the catalogue, no number.
+INTRO_ACTORS: tuple[tuple[str, str, Any], ...] = (
+    ("personnes", "person", _("Personnes")),
+    ("entreprises", "building", _("Entreprises")),
+    ("institutions", "institution", _("Institutions")),
+    ("universites", "university", _("Universités")),
+    ("formation", "presentation", _("Organismes de formation")),
+    ("professionnels", "briefcase", _("Professionnels")),
+)
+
+
+def build_hero(ctx: BuildContext) -> dict | None:
+    variant = HeroVariant.PHASE3 if ctx.phase3 else HeroVariant.INTERIM
+    row = _hero_row(variant)
+    data: dict[str, Any] = {"variant": variant, "eyebrow": editorial(row.eyebrow_fr, ctx.lang)}
+    if ctx.phase3:
+        body = locked("p3.hero.body", ctx.lang)
+        cut = hero_body_cut(body.value, body.lang or ctx.lang)
+        data.update(
+            title=locked("p3.hero.title", ctx.lang),
+            subtitle=locked("p3.hero.subtitle", ctx.lang),
+            body=body,
+            body_is_fragment=False,
+            body_cut=cut,
+            body_notions=HERO_BODY_NOTIONS.get(body.lang or ctx.lang, ""),
+            body_statement=hero_statement(cut[0], body.lang or ctx.lang) if cut else "",
+            actors=INTRO_ACTORS,
+        )
+    else:
+        body, is_locked = _interim_body(row.body_fr, ctx.lang)
+        data.update(
+            title=editorial(row.title_fr, ctx.lang, default=content.HERO_INTERIM["title_fr"]),
+            subtitle=editorial(row.subtitle_fr, ctx.lang),
+            body=body,
+            body_is_fragment=is_locked,
+        )
+    data["primary"] = _cta(row.primary_cta_label_fr, row.primary_cta_url_name, ctx.lang)
+    data["secondary"] = _cta(row.secondary_cta_label_fr, row.secondary_cta_url_name, ctx.lang)
+    data["photo"] = photo_from_asset(row.image, ctx.lang) if row.image_id else photo_for_slot("hero", ctx.lang)
+    data["exits"] = hero_exits(data["eyebrow"])
+    data["legend"] = hero_legend(ctx.lang, ctx.phase3, with_exits=bool(data["exits"]))
+    return data
+
+
+# ---- 2b. The stage of the hero (design V4, docs/design-v4/CREATIVE_DIRECTION.md §4) ----------
+# The no-JavaScript drawing of the four routes on the 640×520 stage: origins at the reading edge
+# where the legend rows fall, one lane each through the solid navy of the inner arch (x 365–531)
+# where the stroke dissolves — or, when the eyebrow names them, on to three exits at x 624.
+# static/js/src/home.js re-anchors each route to its legend row once the page is laid out, so
+# these values only have to be a sensible drawing when it has not.
+STAGE_ORIGINS: tuple[tuple[int, int], ...] = ((34, 348), (34, 394), (34, 440), (34, 486))
+# Which exit each actor's route reaches: persons → orientation, universities and training bodies →
+# training, companies and institutions → regular mobility. The words are the eyebrow's.
+STAGE_EXITS: dict[str, int] = {"person": 1, "university": 2, "company": 3, "institution": 3}
+_EXIT_Y = {1: 200, 2: 300, 3: 400}
+
+
+def _route_path(x0: int, y0: int, lane: int, exit_y: int, with_exits: bool) -> str:
+    """The same curve home.js draws: into the arch, through the braid — the lane a route enters
+    on is not the one it leaves on, the four cross in the middle of the navy — and out to the
+    exit, if named."""
+    # The braid sits at the threshold — the foot of the inner navy (its arch ends at y 397), not
+    # halfway up the wall (round-2 review, correction 4).
+    y_in = 372 + lane * 6
+    y_out = 372 + (3 - lane) * 6
+    c1 = round(x0 + (365 - x0) * 0.55)
+    start = f"M{x0} {y0} C{c1} {y0}, 325 {y_in}, 365 {y_in}"
+    if not with_exits:
+        return f"{start} C448 {y_in}, 448 {y_out}, 531 {y_out}"
+    # With named exits every crossing stays in the navy: the braid is shortened to x 496, each
+    # route climbs (or drops) to its exit's height between x 496 and 520 — still inside the arch,
+    # right of the key — and leaves the arch level, straight to its node. Round 3 climbed on the
+    # stone jamb (x 531–555), where the risers crossed and ran within a casing of each other
+    # (round-4 review, defect 13a); a route crossing an exit word's height further right struck
+    # the word through (round 3, defect 8).
+    return f"{start} C431 {y_in}, 431 {y_out}, 496 {y_out} C508 {y_out}, 508 {exit_y}, 520 {exit_y} H624"
+
+
+def hero_legend(lang: str, phase3: bool, *, with_exits: bool = False) -> list[dict]:
+    """The four entrances, with the geometry of their route on the stage."""
+    items = entrances(lang, phase3)
+    for lane, item in enumerate(items):
+        x0, y0 = STAGE_ORIGINS[lane]
+        exit_no = STAGE_EXITS.get(item["actor"], 2)
+        item.update(x0=x0, y0=y0, exit=exit_no, path=_route_path(x0, y0, lane, _EXIT_Y[exit_no], with_exits))
+    return items
+
+
+def hero_exits(eyebrow: Any) -> list[dict]:
+    """The three exit labels: the eyebrow's words when it has exactly three — else no labels.
+
+    Each label sits above its node, set to end at x 636. A label of more than one word breaks
+    before its last word (two lines 14 units apart): on one line «MOBILITÉ RÉGULIÈRE» reached back
+    to x 503, into the navy where the four routes braid (round-3 review, defect 8)."""
+    parts = [part.strip() for part in str(eyebrow or "").replace("•", "·").split("·") if part.strip()]
+    if len(parts) != 3:
+        return []
+    exits = []
+    for n, part in enumerate(parts, start=1):
+        words = part.split()
+        texts = [" ".join(words[:-1]), words[-1]] if len(words) > 1 else [part]
+        base = _EXIT_Y[n] - 10
+        lines = [{"text": text, "y": base - 14 * (len(texts) - 1 - k)} for k, text in enumerate(texts)]
+        exits.append({"label": part, "y": _EXIT_Y[n], "lines": lines})
+    return exits
+
+
+# ---- 3. Forum banner -------------------------------------------------------------------------
+def build_banner(ctx: BuildContext) -> dict | None:
+    if not gates.forum_banner_visible():
+        return None
+    from forum import services as forum_services
+
+    try:
+        banner = forum_services.banner_context()
+    except NoReverseMatch:  # the forum route is not mounted
+        return None
+    return {"banner": banner} if banner.get("visible") else None
+
+
+# ---- 4. Four entrances -----------------------------------------------------------------------
+def entrance_url(actor: str, phase3: bool) -> str:
+    default = content.ENTRANCES_BY_ACTOR[actor]
+    return first_url(default.open_targets if phase3 else default.interim_targets)
+
+
+def entrances(lang: str, phase3: bool) -> list[dict]:
+    """Exactly four entrances, in the prescribed order — prescribed texts only when G3 is open."""
+    items = []
+    for default in content.ENTRANCES:
+        if phase3:
+            title = locked(f"p3.entrances.{default.actor}.title", lang)
+            text = locked(f"p3.entrances.{default.actor}.text", lang)
+            button = locked(f"p3.entrances.{default.actor}.button", lang)
+        else:
+            title, text, button = ui(default.title), ui(default.text), ui(default.button)
+        label = ui(content.ENTRANCE_LABELS[default.actor])
+        items.append(
+            {
+                "actor": default.actor,
+                "title": title.value,
+                "text": text.value,
+                "button": button.value,
+                "lang": title.lang,
+                "label": label.value,
+                # The legend names a row by its label and describes it by its text: each carries
+                # its own language (on /ar/ with G3 open the text falls back to French while the
+                # label is Arabic — round-4 review, 6b).
+                "label_lang": label.lang,
+                "text_lang": text.lang,
+                "url": entrance_url(default.actor, phase3),
+                "icon": default.icon,
+                "illustration": static(default.illustration),
+            }
+        )
+    return items
+
+
+def build_entrances(ctx: BuildContext) -> dict | None:
+    # FINAL MICRO-PASS, the review's defect 1: the door plates seat no audience disc (V5.22 §4.2 T2a's glyph left with
+    # the arched seat, components/entrances.html), so the entrances pass as the registry gives them
+    return {"entrances": entrances(ctx.lang, ctx.phase3)}
+
+
+# ---- 5. Orientation --------------------------------------------------------------------------
+def build_orientation(ctx: BuildContext) -> dict | None:
+    """
+    The orientation's route, «la linea V2» (V5.22, SECTION_SYSTEM_V2 §3.1 S2): four stations on one hairline —
+    FINAL MICRO-PASS §5 A1/A2: each its quiet sequence marker and its words, no seal and no tile (a station carries no
+    glyph).
+
+    * gate G3 open: the locked «Comment ça marche» sentence cut on its own separators by the owner-approved cut
+      (pathways.services.how_it_works, D-U4) — its lead the route's caption, its four steps the stations, its caveat
+      the route's terminal line; the whole sentence said once for a screen reader. A sentence whose shape the cut
+      does not know is set whole (``how_it_works`` without ``how``): nothing is retyped;
+    * gate G3 closed: the four neutral steps on the same route, the editorial note at its end.
+    """
+    data: dict[str, Any] = {
+        "url": safe_reverse("orientation:start"),
+        "illustration": static("img/illustrations/orientation.svg"),
+        "how": None,
+        "whole": "",
+        "stations": [],
+        "stations_lang": "",
+        "terminal": "",
+        "end_action": None,
+    }
+    if ctx.phase3:
+        data["how_it_works"] = locked("p3.persons.how_it_works", ctx.lang)
+        from pathways import services as pathway_services
+
+        cut = pathway_services.how_it_works(ctx.lang)
+        if cut is not None:
+            data.update(how=cut, whole=cut.text, stations_lang=cut.lang)
+            data["stations"] = [{"label": step, "lang": cut.lang} for step in cut.steps]
+    else:
+        steps = [ui(step) for step in content.ORIENTATION_STEPS]
+        data["steps"] = [s.value for s in steps]
+        data["steps_lang"] = data["stations_lang"] = steps[0].lang if steps else ""
+        data["stations"] = [{"label": s.value, "lang": s.lang} for s in steps]
+    data["moments"] = _moments(data["stations"])
+    return data
+
+
+#: V5.31 (owner's FINAL HOMEPAGE REBUILD, 10 Nov 2026; lane B): the orientation's four moments — each its keyword (a UI
+#: label beside the locked station, never a rewording of it), its semantic glyph and its photograph (static/img/photos,
+#: the library's own frames; their record is static/img/photos/manifest.json). No numeral: the order is the list's.
+MOMENTS: tuple[tuple[str, str, Any, str, Any], ...] = (
+    (
+        "orientation",
+        "compass",
+        _("Orientation"),
+        "orientation-ecran",
+        _("Une main désigne un élément à l’écran d’un ordinateur pendant une séance d’orientation"),
+    ),
+    (
+        "pre-evaluation",
+        "list-checks",
+        _("Pré-évaluation"),
+        "entretien-accompagnement",
+        _("Deux personnes travaillent côte à côte avec des ordinateurs et un carnet de notes pendant un entretien"),
+    ),
+    (
+        "formation",
+        "book-open",
+        _("Formation"),
+        "salle-de-formation",
+        _("Salle de formation : un formateur s’adresse à des participants assis en rangées"),
+    ),
+    (
+        "procedure",
+        "scroll-text",
+        _("Procédure régulière"),
+        "demarches-ecriture",
+        _("Une personne remplit des documents à la main sur une table, avec une tasse et un carnet"),
+    ),
+)
+#: the drawn width of a moment's frame: 7/12 of the container from 64 rem, the container below
+MOMENT_SIZES = "(min-width: 80rem) 44rem, (min-width: 64rem) 55vw, calc(100vw - 2.5rem)"
+
+
+def library_frame(slug: str, alt: Any) -> dict | None:
+    """One frame of the photo library (static/img/photos/manifest.json) as a <picture> draws it: the WebP ladder, the
+    JPEG fallback, its box (CLS 0) and a translated alt. None when the manifest lacks it."""
+    entry = _manifest().get(slug)
+    if not entry:
+        return None
+    try:
+        webp = entry["files"]["webp"]
+        srcset = ", ".join(f"{static('img/photos/' + webp[w])} {w}w" for w in sorted(webp, key=int))
+        return {
+            "src": static("img/photos/" + entry["files"]["jpg"]),
+            "srcset": srcset,
+            "width": 1440,
+            "height": round(1440 * entry["height"] / entry["width"]),
+            "alt": str(alt),
+            "sizes": MOMENT_SIZES,
+        }
+    except (KeyError, ValueError, ZeroDivisionError):
+        return None
+
+
+def _moments(stations: list[dict]) -> list[dict]:
+    if len(stations) != len(MOMENTS):
+        return []
+    return [
+        {"key": key, "glyph": glyph, "label": ui(label), "station": station, "frame": library_frame(slug, alt)}
+        for (key, glyph, label, slug, alt), station in zip(MOMENTS, stations, strict=True)
+    ]
+
+
+# ---- 6. Regular pathways ---------------------------------------------------------------------
+def build_pathways(ctx: BuildContext) -> dict | None:
+    """
+    «L'indice» of the eight regular pathways (V5.22, SECTION_SYSTEM_V2 §3.1 S3): an index of eight rows — the registry's
+    PATHWAY glyph and the prescribed title — beside the stage of the selected one (its tile, its title, its prescribed
+    description and, for a published sheet, the way to it). The order is the locked order, never a ranking; every
+    description stays in the page (a hidden panel, a closed disclosure). With gate G3 closed, the neutral families
+    stand as a static index: no stage, no destination.
+    """
+    index_url = safe_reverse("pathways:index")
+    if not ctx.phase3:
+        families = [
+            {"label": ui(label), "glyph": icons.PATHWAY.get(key, "")}
+            for label, key in zip(content.PATHWAY_FAMILIES, content.PATHWAY_FAMILY_KEYS, strict=True)
+        ]
+        return {"families": families, "index_url": index_url}
+    from pathways import services as pathway_services
+
+    # V5.27 / R7′ (FINAL_DELIVERY_V2 §3.9, AR NOTES §4 «HOME»): the titles and the descriptions read by their sub-keys
+    # in the page's language — the titles' provisional Arabic on /ar/, the description's pointer line off its own page
+    # (the sheet carries the French source with its caption) — each part with its own `lang` when it is not the page's
+    entries = pathway_services.index_entries(lang=ctx.lang)
+    if not entries:
+        return None
+    items = [
+        {"title": entry.title, "text": entry.description, "url": entry.url or index_url, "lang": entry.title_lang}
+        for entry in entries
+    ]
+    from django.utils.html import format_html
+
+    stages = []
+    for entry in entries:
+        anchor = f"parcours-{entry.key.replace('_', '-')}"
+        # the way to a published sheet only (an unpublished one has none: the section's foot link leads to the space),
+        # described by its panel's title — eight links of one name, each told apart by its pathway; said in the page's
+        # language (language of parts), or tagged as the French it falls back to. Round 2 (QA_ROUND2, institutional
+        # quality on it/en/ar): the product's own words for this way, the orientation result's «Consulter la page du
+        # parcours», already in the it/en/ar catalogues — the stage no longer waits for a new msgid
+        label = ui(gettext_noop("Consulter la page du parcours"))
+        link = (
+            format_html(
+                '<a class="btn btn--secondary" href="{}" aria-describedby="{}-title"{}>{}</a>',
+                entry.url,
+                anchor,
+                format_html(' lang="{}"', label.lang) if label.lang else "",
+                label,
+            )
+            if entry.url
+            else ""
+        )
+        stages.append(
+            {
+                "id": anchor,
+                # the prescribed title, whole, in a span the index's entrance inks (the verb «ink», 60 ms a row: the
+                # GLIDE's entry on every form of the index — a phone's disclosure rows too, QA_ROUND1 m2); its text is
+                # the title itself, character for character
+                "title": format_html('<span class="indice__parola" data-verb="ink">{}</span>', entry.title),
+                "title_lang": entry.title_lang,
+                "glyph": icons.PATHWAY.get(entry.key, ""),
+                # the prescribed description carries its own language, never the stage's way to its sheet, which is
+                # said in the page's (QA_ROUND1 m4: language of parts, WCAG 3.1.2)
+                "body": format_html(
+                    '<p class="parcours__descrizione"{}>{}</p>',
+                    format_html(' lang="{}"', entry.description_lang) if entry.description_lang else "",
+                    entry.description,
+                ),
+                "body_lang": "",
+                "links": link,
+                "key": entry.key,
+                "frame": _pathway_frame(entry.key),
+            }
+        )
+    return {"pathway_items": items, "pathway_stages": stages, "index_url": index_url}
+
+
+#: V5.31 (lane B): each pathway's photograph in the explorer's stage — the registry's lazy body frames (AVIF, WebP,
+#: translated alts; apps/pages/imagery.py), none the hero's, none another home section's
+#: FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026, point 7 — «if the text disappeared, would this image still support the
+#: section?»), each frame looked at: salaried work → the warehouse aisle (a workplace); the EU Blue Card → a person at a
+#: desk before a tall window (qualified work; the Personnes landing's frame, drawn here lazily — variant «tappa»);
+#: training in the country of origin → hands wiring an electrical board (vocational training); study → a hand taking
+#: notes before an open book; self-employment → a craftsman's hands measuring a part at the bench (an independent
+#: trade; the Entreprises landing's frame, lazily); research → the row of microscopes; other routes → the vineyards
+#: (the description names seasonal work). FAMILY REUNIFICATION HAS NO FRAME: no existing asset says family, reunion or
+#: household (the shared table of olives the stage drew is a meal, not a family) — its stage is drawn without a
+#: photograph, a material panel carrying the pathway's large glyph (v5/_home-a.css), until the owner supplies one.
+#: ART PASS (owner, 11 Nov 2026, B4–B5): searched once more — static/img/v5, static/img/photos and the council's local
+#: Pexels caches with their triage (proof/research/images: no «family» search was ever run; the one «home» candidate,
+#: Pexels 28295552, a façade whose windows are the subject, stays out under O54) — still no rights-safe frame, so the
+#: panel stays semantic (now a deep material field). The seven frames re-walked with the title hidden: each still
+#: says its pathway; none replaced.
+#: No frame twice on the page; none is the hero's.
+#: V5.32 (lane B, the correction round of the senior integration review): this map is the site's ONE pairing — the
+#: Parcours explorer, each sheet's head and the questionnaire's result draw it too (pathways.services.pathway_frame) —
+#: so a frame here is the pathway's alone. P2-1: self-employment draws its own frame (a shoemaker at his bench,
+#: «pathways.independent»), and the Entreprises landing's calliper stays Entreprises' only; P1-1: research draws the
+#: microscopes from their own slot («pathways.research»: the same files and alt, so this stage is unchanged), and
+#: Formation's «après l'arrivée» card, which drew them as «training.after», now shows a class for adults.
+PATHWAY_FRAMES: dict[str, tuple[str, str]] = {
+    "salaried_work": ("pathways.family.work", ""),
+    "skilled_work_eu_blue_card": ("pathways.hero", "tappa"),
+    "training_in_origin_country": ("training.before", ""),
+    "study_and_training_in_italy": ("pathways.family.study", ""),
+    "self_employment_entrepreneurship": ("pathways.independent", ""),
+    "scientific_research": ("pathways.research", ""),
+    "other_regular_routes": ("pathways.family.other", ""),
+}
+PATHWAY_FRAME_SIZES = "(min-width: 80rem) 50rem, (min-width: 64rem) 62vw, calc(100vw - 2.5rem)"
+
+
+def _pathway_frame(key: str):
+    from pages import imagery
+
+    slot, variant = PATHWAY_FRAMES.get(key, ("", ""))
+    return imagery.picture(slot, variant, sizes=PATHWAY_FRAME_SIZES) if slot in imagery.BY_KEY else None
+
+
+# ---- 7. Pilot project ------------------------------------------------------------------------
+def build_pilot(ctx: BuildContext) -> dict | None:
+    if not ctx.phase3:
+        return None
+    title = locked("p3.pilot.title", ctx.lang)
+    sequence = locked("p3.pilot.sequence", ctx.lang)
+    return {
+        "title": title,
+        "steps": list(sequence.value),
+        "steps_lang": sequence.lang,
+        "url": safe_reverse("ecosystem:pilot"),
+    }
+
+
+# ---- 8. Trust / transparency -----------------------------------------------------------------
+def faq_entry(key: str, lang: str) -> dict | None:
+    """A prescribed FAQ entry (question / answer verbatim) — Phase 3 content."""
+    items = locked("p3.faq.items", lang)
+    for entry in items.value:
+        if entry["key"] == key:
+            return {"key": key, "question": entry["question"], "answer": entry["answer"], "lang": items.lang}
+    return None
+
+
+#: The four stretches of the model and who answers for each. This was the data behind the
+#: jurisdiction bar, the one device all four Design Council judges asked for independently — its component and
+#: rules left with V5.29 09:41 item 2 (CLOSING: no template had included it since 9 Oct 2026, DL54-41); the
+#: data stays in the trust chapter's context, read by nothing (a post-acceptance candidate). ``share`` is a
+#: RELATIVE weight for the four stretches, not a duration and not a measured quantity — the caption beside the
+#: bar said so, because a bar that looks like a timeline while meaning something else is worse than no bar.
+#:
+#: The owners are deliberately named as functions, never as organisations: "les autorités
+#: compétentes", not a ministry. The platform's own stretch is the smallest one, and that is the
+#: honest shape of this project.
+JURISDICTION_SEGMENTS: tuple[tuple[str, str, int], ...] = (
+    ("morocco", _("Pays d’origine : formation et préparation"), 3),
+    ("platform", _("Italy Legal Entry™ : information et orientation"), 2),
+    ("authority", _("Autorités compétentes : décisions administratives"), 3),
+    ("italy", _("Territoire italien : accueil et inclusion"), 2),
+)
+
+
+def jurisdiction_segments() -> list[dict]:
+    return [{"owner": owner, "label": label, "share": share} for owner, label, share in JURISDICTION_SEGMENTS]
+
+
+#: V5.31 (lane B): each previewed question's topic — a UI label and its glyph, never a numeral
+FAQ_TOPICS: dict[str, tuple[Any, str]] = {
+    "faq_visas": (_("Visas"), "stamp"),
+    "faq_recruitment_agency": (_("Recrutement"), "briefcase-business"),
+    "faq_preassessment_guarantee": (_("Pré-évaluation"), "file-search"),
+    "faq_diplomas": (_("Diplômes et titres"), "award"),
+}
+
+
+def build_trust(ctx: BuildContext) -> dict | None:
+    """
+    The integrity band's four plates (V5.22, SECTION_SYSTEM_V2 §3.1 S5): each prescribed question opens its own entry on
+    the FAQ page (``/xx/faq/#<key>``, the permalinks the FAQ keeps), and its answer stands whole on the plate — the
+    answer's own first sentence, «Non.», set as the large keyword at render (cms.locked_split, the text unchanged).
+    """
+    if ctx.phase3:
+        quotes = [entry for entry in (faq_entry(key, ctx.lang) for key in content.TRUST_FAQ_KEYS) if entry]
+        if not quotes:
+            return None
+        faq_url = safe_reverse("faq:index")
+        for quote in quotes:
+            quote["href"] = f"{faq_url}#{quote['key']}" if faq_url else ""
+            topic = FAQ_TOPICS.get(quote["key"])
+            if topic:
+                quote["topic"], quote["glyph"] = ui(topic[0]), topic[1]
+        return {
+            "quotes": quotes,
+            "faq_url": faq_url,
+            "jurisdiction": jurisdiction_segments(),
+            # V5.31 (lane B): the clarity split above the questions — what it does, the prescribed Phase 1 fragments;
+            # what it does not, the neutral statements of the Disclaimer's meaning (no text invented)
+            "does": [locked(key, ctx.lang) for key in content.TRUST_DOES_LOCKED_KEYS],
+            "does_not": [ui(statement) for statement in content.TRUST_DOES_NOT],
+        }
+    return {
+        "does": [locked(key, ctx.lang) for key in content.TRUST_DOES_LOCKED_KEYS],
+        "does_not": [ui(statement) for statement in content.TRUST_DOES_NOT],
+        "disclaimer_url": public_url("legal:disclaimer"),  # gated while unpublished (V5.14 C/D, M-2)
+        "jurisdiction": jurisdiction_segments(),
+    }
+
+
+# ---- 9. Anti-fraud ---------------------------------------------------------------------------
+def build_antifraud(ctx: BuildContext) -> dict | None:
+    if not ctx.phase3:
+        return None  # no substitute text is invented while the prescribed one is gated
+    return {
+        "title": locked("p3.antifraud.title", ctx.lang),
+        "body": locked("p3.antifraud.body", ctx.lang),
+        "url": safe_reverse("pages:antifraud"),
+    }
+
+
+# ---- 10. Latest news -------------------------------------------------------------------------
+NEWS_LIMIT = 3
+
+
+def latest_news(lang: str, limit: int = NEWS_LIMIT) -> list[dict]:
+    from news import services as news_services
+
+    cards = []
+    for article in news_services.latest_articles(limit):
+        texts = article.texts(lang)
+        published = article.date_published
+        cards.append(
+            {
+                "title": texts.title,
+                "summary": texts.summary,
+                "url": article.get_absolute_url(),
+                "category": article.category.name(lang),
+                "date": formats.date_format(published, "DATE_FORMAT") if published else "",
+                "lang": texts.language if texts.is_fallback else "",
+            }
+        )
+    return cards
+
+
+def build_news(ctx: BuildContext) -> dict | None:
+    articles = latest_news(ctx.lang)
+    if not articles:
+        # The chapter appears once something is published, in either gate state. With gate G3 open it used to
+        # announce itself empty (« Aucune actualité publiée pour le moment ») between the warning and the promoter:
+        # a chapter about nothing on the page that introduces the project (design V5.4, W2-D review fix, m4). The
+        # news index keeps its own empty state; the partial keeps its empty row, so the revert is this condition.
+        return None
+    return {"articles": articles, "index_url": public_url("news:index")}
+
+
+# ---- 11. Institutional ecosystem -------------------------------------------------------------
+def authorized_partner_cards(lang: str) -> list:
+    from partners import services as partner_services
+
+    return [partner_services.card_for(partner, lang) for partner in partner_services.authorized_partners()]
+
+
+def build_ecosystem(ctx: BuildContext) -> dict | None:
+    return {
+        "promoter": settings.ILE["PROMOTER"],
+        "promoter_quote": faq_entry(content.PROMOTER_FAQ_KEY, ctx.lang) if ctx.phase3 else None,
+        "partners": authorized_partner_cards(ctx.lang),
+        "agami_url": safe_reverse("pages:agami"),
+        "partners_url": public_url("partners:index"),
+        # V5.31: the promoter's band draws AGAMI's own marks — lazily, below the fold (the home's one LCP is the door)
+        # FINAL HOMEPAGE VISUAL QA (11 Nov 2026, point 3): the official lockup alone, larger — the seal left the band
+        "insegna": {
+            **imagery.mark("agami.insegna"),
+            "eager": False,
+            "sizes": "(min-width: 64rem) 30rem, (min-width: 36rem) 30rem, calc(100vw - 5rem)",
+        },
+    }
+
+
+# ---- 12. Reserved area -----------------------------------------------------------------------
+def reserved_area_link_enabled() -> bool:
+    if not flags.is_enabled("reserved_area_public_link"):
+        return False
+    try:
+        return bool(SiteSettings.load().reserved_area_enabled)
+    except Exception:  # pragma: no cover - before migrations
+        return False
+
+
+def build_reserved(ctx: BuildContext) -> dict | None:
+    if not ctx.phase3 or not reserved_area_link_enabled():
+        return None
+    user = getattr(ctx.request, "user", None)
+    authenticated = bool(user is not None and user.is_authenticated)
+    url = first_url(["portal:dashboard", "account_login"] if authenticated else ["account_login"])
+    if not url:
+        return None
+    return {
+        "title": locked("p3.reserved.title", ctx.lang),
+        "body": locked("p3.reserved.body", ctx.lang),
+        "button": locked("p3.reserved.button", ctx.lang),
+        "url": url,
+        "authenticated": authenticated,
+    }
+
+
+BUILDERS: dict[str, Callable[[BuildContext], dict | None]] = {
+    SectionKey.HERO: build_hero,
+    SectionKey.BANNER: build_banner,
+    SectionKey.ENTRANCES: build_entrances,
+    SectionKey.ORIENTATION: build_orientation,
+    SectionKey.PATHWAYS: build_pathways,
+    SectionKey.PILOT: build_pilot,
+    SectionKey.TRUST: build_trust,
+    SectionKey.ANTIFRAUD: build_antifraud,
+    SectionKey.NEWS: build_news,
+    SectionKey.ECOSYSTEM: build_ecosystem,
+    SectionKey.RESERVED: build_reserved,
+}
+
+
+# --------------------------------------------------------------------------------------------
+# Homepage — composition
+# --------------------------------------------------------------------------------------------
+def default_sections() -> list[HomeSection]:
+    """Unsaved rows in the prescribed order — used only when the table has never been seeded."""
+    return [
+        HomeSection(
+            key=d.key,
+            order=d.order,
+            requires_gate=d.requires_gate,
+            heading_fr=str_source(d.heading),
+            intro_fr=str_source(d.intro),
+            note_fr=str_source(d.note),
+        )
+        for d in content.SECTION_DEFAULTS
+    ]
+
+
+def section_rows() -> list[HomeSection]:
+    if not HomeSection.objects.exists():
+        return default_sections()
+    return list(HomeSection.objects.visible().prefetch_related("translations"))
+
+
+def section_gate_open(row: HomeSection, phase3: bool) -> bool:
+    if row.key in content.PHASE3_ONLY_SECTIONS and not phase3:
+        return False
+    return gate_open(row.requires_gate)
+
+
+def home_sections(request) -> list[SectionView]:
+    ctx = BuildContext(request=request, lang=current_language(), phase3=gates.phase3_public())
+    views: list[SectionView] = []
+    rows = section_rows()
+    for row in rows:
+        builder = BUILDERS.get(row.key)
+        if builder is None or not section_gate_open(row, ctx.phase3):
+            continue
+        data = builder(ctx)
+        if data is None:
+            continue
+        heading, intro, note = _section_texts(row, ctx.lang)
+        views.append(
+            SectionView(
+                key=row.key,
+                template=f"pages/home/_{row.key}.html",
+                anchor=f"home-{row.key}",
+                heading=heading,
+                intro=intro,
+                note=note,
+                data=data,
+            )
+        )
+    views = _narrative(views, {row.key: row.order for row in rows})
+    _say_once(views)
+    _route_ends(views)
+    _hand_off(views)
+    _grounds(views)
+    return views
+
+
+#: FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026, points 1 and 2) — THE HOME'S NARRATIVE. The back office still decides
+#: which sections are live, their gates and their texts; the ORDER the page tells them in is the owner's: the hero and
+#: its introduction, the orientation, the pathways, the pilot, what the platform does and does not do, the institutional
+#: ecosystem and its promoter, the FAQ preview, the news when something is published, and the warning against frauds as
+#: the page's last word before the footer. A key this tuple does not name keeps its back-office place after them.
+FAQ_PREVIEW = "faq"  # not a back-office row: the trust chapter's four prescribed questions, a band of their own
+HOME_NARRATIVE: tuple[str, ...] = (
+    SectionKey.HERO,
+    SectionKey.BANNER,
+    SectionKey.ENTRANCES,
+    SectionKey.ORIENTATION,
+    SectionKey.PATHWAYS,
+    SectionKey.PILOT,
+    SectionKey.TRUST,
+    SectionKey.ECOSYSTEM,
+    FAQ_PREVIEW,
+    SectionKey.NEWS,
+    SectionKey.ANTIFRAUD,
+)
+#: Sections the home's composition no longer draws, whatever the back office says (point 2: the reserved closing row
+#: repeated the header's «Espace réservé» and the pathways' Espace Personnes). The row, its builder, its partial and its
+#: prescribed texts stay: taking the key out of this set draws it again.
+HOME_OMITS: frozenset[str] = frozenset({SectionKey.RESERVED})
+
+
+def _narrative(views: list[SectionView], orders: dict[str, int] | None = None) -> list[SectionView]:
+    """The sections in the home's narrative order, the omitted ones left out, and the FAQ preview — the trust chapter's
+    prescribed questions — given its own place as a section of its own (pages/home/_faq.html), no longer the trust
+    partial's second band.
+
+    THE BACK OFFICE STILL ORDERS THE HOME: a row whose `order` is still its seeded default takes the narrative's place
+    (the owner's order, without a data migration); a row an editor has moved keeps the number the editor gave it —
+    both on the defaults' own scale (10, 20, …), so a section moved to 25 stands between the banner and the doors."""
+    orders = orders or {}
+    views = [view for view in views if view.key not in HOME_OMITS]
+    trust = next((view for view in views if view.key == SectionKey.TRUST), None)
+    if trust is not None and trust.data.get("quotes"):
+        views.append(
+            SectionView(
+                key=FAQ_PREVIEW,
+                template="pages/home/_faq.html",
+                anchor="home-faq",
+                data={"quotes": trust.data["quotes"], "faq_url": trust.data.get("faq_url", "")},
+            )
+        )
+
+    def place(view: SectionView) -> float:
+        narrative = (HOME_NARRATIVE.index(view.key) + 1) * 10 if view.key in HOME_NARRATIVE else 1000
+        default = content.SECTION_DEFAULTS_BY_KEY.get(view.key)
+        given = orders.get(view.key)
+        if given is None or default is None or given == default.order:
+            return narrative
+        return given
+
+    return sorted(views, key=place)
+
+
+#: Each section's ground on the V2 home (V5.22, SECTION_SYSTEM_V2 §3.1 «After V2»: grounds and signatures; V5.24
+#: BACKGROUND_MATERIAL_V2 §3.3, §5.1 — FINAL_DELIVERY_V2 §3.4): the doors on stone, the orientation on the page's one
+#: brand wash, the pathways' index and its stage sheet on stone (a sheet on a desk, not a white card on off-white), the
+#: pilot's panel and the reserved row on the night, the trust plates on the masonry photograph, «la protezione» on the
+#: dressed stone «pietra» (the drawing table of v5/_materia.css: the grid, the sill, the shield bookend), the promoter
+#: on paper.
+SECTION_GROUNDS: dict[str, str] = {
+    SectionKey.BANNER: "stone",  # the Forum's notice is a band on the stone (pages.css §3), not a V2 section
+    SectionKey.ENTRANCES: "stone",
+    SectionKey.ORIENTATION: "night",  # V5.31 (lane B): the orientation is the deep ink band
+    SectionKey.PATHWAYS: "stone",
+    SectionKey.PILOT: "night",
+    SectionKey.TRUST: "paper",  # V5.31 (lane B): the clarity split on paper, its two surfaces the material
+    # FINAL HOMEPAGE VISUAL QA (11 Nov 2026): the warning is a dark warm plate set on the page's paper, light air
+    # under it before the footer's night (v5/_home-b.css «l'allerta») — no longer the dressed stone
+    SectionKey.ANTIFRAUD: "paper",
+    SectionKey.NEWS: "paper",
+    SectionKey.ECOSYSTEM: "paper",
+    SectionKey.RESERVED: "night",
+    FAQ_PREVIEW: "stone",
+}
+
+#: The light grounds by KIND: stone and pietra are one kind for the adjacency rule (the same colour;
+#: BACKGROUND_MATERIAL_V2 §3.3 «stone and pietra count as ONE kind for adjacency; pietra never touches stone»); paper is
+#: the other.
+LIGHT_KIND: dict[str, str] = {"paper": "paper", "stone": "stone", "pietra": "stone"}
+
+
+def _grounds(views: list[SectionView]) -> None:
+    """Two grounds of one kind never touch (V5.22, SECTION_SYSTEM_V2 §1 rule 5, §6.1; V5.24 BACKGROUND_MATERIAL_V2
+    §3.3). The back office orders the home: a section whose ground would repeat its neighbour's KIND — paper after the
+    hero's wall or after paper, stone or pietra after stone or pietra (the news between «la protezione» and the
+    promoter) — takes the other of the two light kinds (paper, or stone). The night, the wash and the photograph are the
+    composition's own and never change. The seams the Director named (FINAL_DELIVERY_V2 §3.4) follow the resolved
+    grounds: the orientation's wash dissolves over its last 6 rem into the light ground that follows it (`sfuma`: the
+    velatura of v5/_materia.css at the sfumatura's height, _casa.css), and the pilot's gold seam begins above the night
+    only where a light band precedes it (`data["raccordo"]`: the raccordo primitive, drawn as the panel's first
+    child)."""
+    previous = "paper"  # the hero's wall
+    for view in views:
+        if view.key == SectionKey.HERO:
+            previous = "paper"
+            continue
+        ground = SECTION_GROUNDS.get(view.key, "paper")
+        kind = LIGHT_KIND.get(ground)
+        if kind and kind == LIGHT_KIND.get(previous):
+            ground = "stone" if kind == "paper" else "paper"
+        view.ground = ground
+        if view.key == SectionKey.PILOT:
+            view.data["raccordo"] = previous in LIGHT_KIND
+        previous = ground
+    for before, after in zip(views, views[1:], strict=False):
+        if before.key == SectionKey.ORIENTATION and after.ground in LIGHT_KIND:
+            before.sfuma = LIGHT_KIND[after.ground]
+
+
+def _hand_off(views: list[SectionView]) -> None:
+    """The hero's hand (V5.22, SECTION_SYSTEM_V2 §3.1 H0 «la soglia»; round 1, QA_ROUND1 M1 a): the orientation takes
+    the hero's line on only when it comes right after the hero — the phone's doors between them excepted (they are drawn
+    on a phone only, where the line ends above them). Its band then follows the statement at the foot's own distance and
+    the line runs down its reading edge into the route's origin (pages.css, hero.css, v5/_casa.css:
+    `.home-orientation--soglia`)."""
+    keys = [view.key for view in views]
+    for i, view in enumerate(views):
+        if view.key != SectionKey.ORIENTATION:
+            continue
+        before = [key for key in keys[:i] if key != SectionKey.ENTRANCES]
+        follows = keys[i - 1] in (SectionKey.HERO, SectionKey.ENTRANCES) if i else False
+        view.data["soglia"] = bool(before) and before[-1] == SectionKey.HERO and follows
+
+
+def _route_ends(views: list[SectionView]) -> None:
+    """The orientation route's two ends (V5.22, SECTION_SYSTEM_V2 §3.1 S2): its terminal line — the locked caveat cut
+    from the sentence (drawn for the eye: the whole sentence is said once for a screen reader), or, with gate G3
+    closed, the section's editorial note in the French spacing — and the call at its end, which takes the page's one
+    arrival light. Built once the section's texts are resolved, each with its own language."""
+    from django.utils.html import format_html
+
+    from pages.templatetags.pages_typo import typo
+
+    for view in views:
+        if view.key != SectionKey.ORIENTATION:
+            continue
+        data = view.data
+        how = data.get("how")
+        if how is not None:
+            lang = format_html(' lang="{}"', how.lang) if how.lang else ""
+            data["terminal"] = format_html(
+                '<p class="orienta__avvertenza" aria-hidden="true"{}>{}</p>', lang, how.caveat
+            )
+        elif data.get("stations") and view.note:
+            lang = format_html(' lang="{}"', view.note.lang) if view.note.lang else ""
+            data["terminal"] = format_html('<p class="orienta__avvertenza"{}>{}</p>', lang, typo(str(view.note)))
+        if data.get("url"):
+            data["end_action"] = {"url": data["url"], "label": gettext("Commencer le questionnaire d’orientation")}
+
+
+def _say_once(views: list[SectionView]) -> None:
+    """One thing once: a prescribed sentence the hero shows as its description is not printed again under it.
+
+    While gate G3 is closed the hero's description is, by default, a Phase 1 fragment (``content.HERO_INTERIM``) that
+    the trust chapter also lists under « what the platform does » — the same sentence twice on one page, 2 000 px
+    apart. The chapter then keeps its other statements. No text is changed: an editor who gives the hero another
+    description gets the whole list back, and the order of the sections is still the back office's.
+    """
+    hero = next((view for view in views if view.key == SectionKey.HERO), None)
+    said = str(hero.data.get("body") or "").strip() if hero is not None else ""
+    if not said:
+        return
+    for view in views:
+        does = view.data.get("does")
+        if view.key == SectionKey.TRUST and does:
+            view.data["does"] = [statement for statement in does if str(statement).strip() != said]
+
+
+_JSON_ESCAPES = {ord(">"): "\\u003E", ord("<"): "\\u003C", ord("&"): "\\u0026"}
+
+
+def render_jsonld(data: dict) -> str:
+    """JSON safe inside <script type="application/ld+json"> (no raw <, > or &)."""
+    return json.dumps(data, ensure_ascii=False).translate(_JSON_ESCAPES)
+
+
+def home_jsonld(request, lang: str | None = None) -> dict:
+    """
+    Organization (the promoter, a private association — never a public authority) + WebSite.
+    Deliberately absent: GovernmentOrganization, logo of a public body, sameAs, any authority claim.
+    """
+    lang = lang or current_language()
+    home_url = request.build_absolute_uri(reverse("pages:home"))
+    try:
+        site_settings = SiteSettings.load()
+        email = site_settings.public_contact_email
+    except Exception:  # pragma: no cover - before migrations
+        site_settings, email = None, settings.ILE["PUBLIC_CONTACT_EMAIL"]
+    organization_id = f"{home_url}#promoter"
+    organization = {
+        "@type": "Organization",
+        "@id": organization_id,
+        "name": settings.ILE["PROMOTER"],
+        "url": home_url,
+        "email": email,
+    }
+    # V5.19: the existing node gains the confirmed telephone line (the Numero Verde, as the site writes it); no new
+    # type — WhatsApp is a messaging channel, which schema.org's Organization does not name.
+    freephone = contact.public_channels(site_settings)["freephone"]
+    if freephone is not None:
+        organization["telephone"] = freephone.label
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            organization,
+            {
+                "@type": "WebSite",
+                "@id": f"{home_url}#website",
+                "name": locked_content.text("p1.trademark.mark", "fr"),
+                "url": home_url,
+                "inLanguage": lang,
+                "publisher": {"@id": organization_id},
+            },
+        ],
+    }
+
+
+def home_context(request) -> dict:
+    lang = current_language()
+    sections = home_sections(request)
+    hero = next((s for s in sections if s.key == SectionKey.HERO), None)
+    description = str(hero.data["subtitle"] or hero.data["body"] or "") if hero is not None else ""
+    description = description or str(ui(content.HERO_INTERIM["subtitle_fr"]))
+    return {
+        "sections": sections,
+        "has_hero": hero is not None,
+        "phase3": gates.phase3_public(),
+        "meta_description": description,
+        # No "image": the homepage keeps the project-wide social card (static img/og-default.png).
+        "seo": {"title": settings.ILE["PROJECT_NAME"], "description": description},
+        "jsonld": render_jsonld(home_jsonld(request, lang)),
+    }
+
+
+# --------------------------------------------------------------------------------------------
+# Institutional pages
+# --------------------------------------------------------------------------------------------
+INSTITUTIONAL_NAV: tuple[tuple[str, Any, str], ...] = (
+    ("pages:project", _("Le projet"), ""),
+    ("pages:agami", _("AGAMI, le promoteur"), ""),
+    ("pages:network", _("Le réseau"), ""),
+    ("pages:contact", _("Contact"), ""),
+    ("pages:antifraud", _("Attention aux fraudes"), "phase3_public"),
+)
+
+
+def institutional_nav(current: str) -> list[dict]:
+    items = []
+    for url_name, label, gate in INSTITUTIONAL_NAV:
+        if not gate_open(gate):
+            continue
+        url = safe_reverse(url_name)
+        if url:
+            items.append({"label": str(label), "url": url, "current": url_name == current})
+    return items
+
+
+def can_preview(request) -> bool:
+    """Back-office users may preview a gated page with ``?preview=1`` (rendered noindex) — once the session meets the
+    second-factor policy, as anywhere a staff privilege is exercised (``accounts.middleware.require_second_factor``)."""
+    user = getattr(request, "user", None)
+    if not (user is not None and user.is_authenticated and user.is_staff and request.GET.get("preview") == "1"):
+        return False
+    from accounts.middleware import require_second_factor
+
+    require_second_factor(request)
+    return True
+
+
+def _page_seo(title: str, description: str, photo: Photo | None = None) -> dict:
+    return {"title": title, "description": description, "image": photo.share_path if photo else ""}
+
+
+def space_links(lang: str, phase3: bool) -> list[dict]:
+    """The four spaces of the ecosystem, with the same targets as the homepage entrances."""
+    links = []
+    for actor in content.NETWORK_ACTORS:
+        if not actor.entrance:
+            continue
+        url = entrance_url(actor.entrance, phase3)
+        if url:
+            # the space's one line (the network register's own sentence): the tile says what the space is for
+            links.append({"label": ui(actor.link_label), "url": url, "icon": actor.icon, "text": ui(actor.text)})
+    return links
+
+
+def project_context(request) -> dict:
+    lang, phase3 = current_language(), gates.phase3_public()
+    photo = photo_for_slot("workshop", lang)
+    lead = ui(content.HERO_INTERIM["subtitle_fr"])
+    return {
+        "nav": institutional_nav("pages:project"),
+        "phase3": phase3,
+        "lead": lead,
+        "why_title": locked("p2.forum.why.title", lang),
+        "why_body": locked("p2.forum.why.body", lang),
+        "presentation": locked("p3.hero.body", lang) if phase3 else None,
+        "promoter_quote": faq_entry(content.PROMOTER_FAQ_KEY, lang) if phase3 else None,
+        "promoter": settings.ILE["PROMOTER"],
+        "trademark_mark": locked_content.text("p1.trademark.mark", "fr"),
+        # V5.27 / R7′ (the v524-pub2 steward): the words in the page's language through the registry's door — the
+        # provisional Arabic on /ar/ (C-UI), the French elsewhere but on the Italian page (its official words)
+        "trademark_words": (
+            Text(locked_content.text("p1.trademark.words_it", "fr"), "")
+            if lang == "it"
+            else locked("p1.trademark.words_fr", lang)
+        ),
+        "spaces": space_links(lang, phase3),
+        "links": {
+            "agami": safe_reverse("pages:agami"),
+            "network": safe_reverse("pages:network"),
+            "forum": public_url("forum:index"),
+            "orientation": safe_reverse("orientation:start"),
+            "contact": safe_reverse("pages:contact"),
+        },
+        "photo": photo,
+        "meta_description": str(lead),
+        "seo": _page_seo(settings.ILE["PROJECT_NAME"], str(lead), photo),
+    }
+
+
+def agami_context(request) -> dict:
+    lang, phase3 = current_language(), gates.phase3_public()
+    photo = photo_for_slot("entrance_institution", lang)
+    description = ui(_("AGAMI — Dialogo Giuridico Interculturale APS est le promoteur du projet Italy Legal Entry™."))
+    return {
+        "nav": institutional_nav("pages:agami"),
+        "phase3": phase3,
+        "promoter": settings.ILE["PROMOTER"],
+        "who_body": locked("p2.forum.who.body", lang),
+        "promoter_quote": faq_entry(content.PROMOTER_FAQ_KEY, lang) if phase3 else None,
+        "links": {
+            "project": safe_reverse("pages:project"),
+            "network": safe_reverse("pages:network"),
+            "partners": public_url("partners:index"),
+            "forum": public_url("forum:index"),
+            "notices": public_url("legal:notices"),  # gated while unpublished (V5.14 C/D, M-2)
+            "contact": safe_reverse("pages:contact"),
+        },
+        "photo": photo,
+        "meta_description": str(description),
+        "seo": _page_seo(settings.ILE["PROMOTER"], str(description), photo),
+    }
+
+
+def network_context(request) -> dict:
+    lang, phase3 = current_language(), gates.phase3_public()
+    photo = photo_for_slot("forum_event", lang)
+    actors = []
+    for actor in content.NETWORK_ACTORS:
+        url = entrance_url(actor.entrance, phase3) if actor.entrance else safe_reverse(actor.url_name)
+        actors.append(
+            {
+                "key": actor.key,
+                "icon": actor.icon,
+                "title": ui(actor.title),
+                "text": ui(actor.text),
+                "link_label": ui(actor.link_label),
+                "url": url,
+            }
+        )
+    description = ui(
+        _(
+            "Les acteurs de l’écosystème Italy Legal Entry™ : personnes, entreprises, institutions, "
+            "universités et organismes de formation, professionnels."
+        )
+    )
+    return {
+        "nav": institutional_nav("pages:network"),
+        "phase3": phase3,
+        "presentation": locked("p3.hero.body", lang) if phase3 else None,
+        "actors": actors,
+        "partners": authorized_partner_cards(lang),
+        "links": {
+            "partners": public_url("partners:index"),
+            "forum": public_url("forum:index"),
+            "agami": safe_reverse("pages:agami"),
+        },
+        "photo": photo,
+        "meta_description": str(description),
+        "seo": _page_seo(str(ui(_("Le réseau"))), str(description), photo),
+    }
+
+
+def contact_context(request) -> dict:
+    phase3 = gates.phase3_public()
+    forms_gate = gates.public_forms_enabled()
+    # The address itself is printed by the template through site.contact_email only.
+    description = ui(
+        _("Contacter Italy Legal Entry™ : une adresse unique pour toutes les demandes relatives au projet.")
+    )
+    dedicated = [
+        {"label": ui(_("Entreprises : signaler vos besoins professionnels")), "url_name": "enquiries:company_needs"},
+        {
+            "label": ui(_("Institutions : proposer une collaboration")),
+            "url_name": "enquiries:institution_proposal",
+        },
+        {
+            "label": ui(_("Universités et organismes de formation : proposer un partenariat")),
+            "url_name": "enquiries:university_proposal",
+        },
+    ]
+    return {
+        "nav": institutional_nav("pages:contact"),
+        "phase3": phase3,
+        "forms_open": forms_gate.open,
+        "contact_form_url": safe_reverse("enquiries:contact"),
+        "dedicated_forms": [
+            {"label": item["label"], "url": safe_reverse(item["url_name"])}
+            for item in dedicated
+            if safe_reverse(item["url_name"])
+        ],
+        "links": {"privacy": safe_reverse("legal:privacy"), "forum": public_url("forum:index")},
+        "meta_description": str(description),
+        "seo": _page_seo(str(ui(_("Contact"))), str(description)),
+    }
+
+
+def antifraud_context(request, is_preview: bool = False) -> dict:
+    lang = current_language()
+    title = locked("p3.antifraud.title", lang)
+    body = locked("p3.antifraud.body", lang)
+    faq_url = safe_reverse("faq:index")
+    return {
+        "nav": institutional_nav("pages:antifraud"),
+        "title": title,
+        "body": body,
+        "is_preview": is_preview,
+        "noindex": is_preview,
+        # The FAQ link is labelled with the prescribed question itself (never a paraphrase of it).
+        "faq_question": faq_entry(content.ANTIFRAUD_FAQ_KEY, lang),
+        "links": {
+            "faq": f"{faq_url}#{content.ANTIFRAUD_FAQ_KEY}" if faq_url else "",
+            "pathways": safe_reverse("pathways:index"),
+            "glossary": safe_reverse("glossary:index"),
+            "orientation": safe_reverse("orientation:start"),
+        },
+        # The prescribed body is used whole (never shortened) as the page description.
+        "meta_description": str(body.value),
+        "seo": _page_seo(str(title.value), str(body.value)),
+    }

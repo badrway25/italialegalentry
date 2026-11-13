@@ -1,0 +1,14 @@
+/* ============================================================================================
+   Espace Entreprises (§3.6) — the page sheet (design V5.22, SECTION_SYSTEM_V2 §7.1; lane P1 — Page Composition V2): a plain list of
+   imports, written as they resolve in the collected static tree (DS 2026 §2). The family's own sheet first
+   (ecosystem/ecosystem.css, unchanged: the interior's page, the passage, the door, the photograph, the compositions,
+   the spaces' rules), then the shell of the V2 sections and the patterns this page composes, then its own rules —
+   one stylesheet for the page, as before; a page carries only what it draws («il flusso» here draws neither the
+   terminal plate nor the arrival, so «la linea V2»'s sheet is not needed).
+   ============================================================================================ */
+@import url("ecosystem.css");
+@import url("../css/v5/_sezioni.css");
+@import url("../css/v5/_sec-flusso.css");
+@import url("../css/v5/_sec-strato.css");
+@import url("_spazi-v2.css");
+@import url("_companies.css");

@@ -1,0 +1,98 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Diplômes et titres étrangers (gate G3) — locked p3.diplomas.title / p3.diplomas.body (Implementation §3.9).
+The platform never states that it validates or evaluates diplomas itself: the step skeleton below is
+headings only (CONTENT_PENDING_LEGAL_REVIEW) derived from the wording of the locked text.
+
+Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/_interior.css, through pathways/pathways.css), the
+page as a chain of questions, one section device at the reading edge:
+  * the entrance: the space's name, the prescribed title (capitals, tracked) and body, the sheet's metadata row
+    (its nature — no glyph; V5.12 §8, W1-C: no «being verified» row, no «published as they are verified» line);
+  * how does it go? — the five moments on «la linea» down the reading edge, each station open and broken (its
+    details are still being verified), the Italian terms of the glossary under the station they belong to;
+  * who decides? — the authorities alone, said in words; then the ONE inset, the anti-fraud callout (the warning's
+    register);
+  * where else? — the space's other areas as a register (no side column: the chrome holds the doors);
+  * where do I start? — on the stone, the page's ONE action (the orientation questionnaire) and the live «who can
+    help me» line, as at the end of a pathway's sheet.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.10; lane P1 — Page Composition V2), below the approved head (KEEP; its folio
+typographic — there is no ILE mark for diplomas, and a library glyph's disc in the folio's seat would be the old device):
+  * D1 + D2, the page's moment — F «le dossier, pièce par pièce» with C's sticky aside: the five stations (columns
+    1–8 from 64 rem: a numeral, a concept tile in a dashed «pending» node — their details are still being verified —
+    the label at 20/28); stations 3–5 open, one at a time (native exclusive <details>: the summary is the control,
+    its state exposed), the locked definition of their term (p3.glossary.terms, verbatim) and its glossary page — the
+    first open at load; stations 1–2 carry nothing (nothing is invented). «Qui décide ?» is the aside, sticky beside
+    the process from 64 rem (columns 9–12): a raised stone plate, the `stamp` tile, the h2 and the statement (team
+    wording with legal weight, verbatim) as an emphasised legal statement; on a phone it closes the process. LINE
+    (the route draws down, 120 ms a station) + MASK (a plate opens from its node's side) + DEPTH (the aside);
+  * D2's callout — K «la protezione», its own band on the stone. DEPTH;
+  * D3 — E «il mosaico»: the space's other areas, Formation the wide tile. STAGGER;
+  * D4 — A «la boussole»: the next step on a raised plate.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.2–§3.4, §5.3; lane PUB1 — the material pass; the dossier
+and its aside KEPT): the dossier's route continues across the seam into «la protezione» — «il raccordo», the first child
+of the pietra band, from its top edge down to the plate's 3 px rule (v5/_materia.css; its length and x in
+_diplomas.css); «la protezione» stands on «pietra»; the grid is «carta viva» (data-luce="origine"), its tiles ink and
+light (the library's verb). The page sheet imports v5/_materia.css.
+Design V5.32 (lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026: no decorative numbering, no
+identical icon boxes): the dossier's stations are rings on its rail (the order is the list's own; pathways/_diplomas.css);
+D3's mosaic of icon tiles is the space's register of links (pathways/_spazio.html — a row each, its words, the live help
+line); a locked definition's first letter is set as a sentence's (presentation only). «Il raccordo» of V5.24 is not
+drawn in the band since V5.29 §4: its rules left _diplomas.css.
+The correction round of the senior integration review (P2-3): D2's callout, D3 and D4 — the protection, the register and
+the boussole, which ended this page as they ended ten others — are ONE compact closing band on «pietra», «la chiusura»
+(pathways/_chiusura.html): the anti-fraud notice whole and, beside it from 64 rem, the questionnaire's caution and its
+one primary, the way to the space's register (it stands on /parcours/), the help line.
+{% endcomment %}
+{% block page_title %}{% locked "p3.diplomas.title" as title_text %}{{ title_text|striptags }} · {% translate "Espace Personnes" %}{% endblock %}
+{% block meta_description %}{% locked "p3.diplomas.body" as body_text %}{{ body_text|striptags }}{% endblock %}
+{% block body_class %}page-pathways page-pathways--diplomas interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/diplomas.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% include "pathways/_preview_notice.html" %}
+{% locked_is_fallback "p3.diplomas.title" as title_fallback %}{% locked_lang "p3.diplomas.title" as title_lang %}
+{% locked_is_fallback "p3.diplomas.body" as body_fallback %}{% locked_lang "p3.diplomas.body" as body_lang %}{% locked_caption "p3.diplomas.body" as body_caption %}
+{% locked "p3.diplomas.title" as title_html %}{% locked "p3.diplomas.body" as body_html %}{% translate "Espace Personnes" as space_label %}
+{% if title_fallback %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=body_html lead_lang=title_lang meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="award" slot="diplomas.hero" words_first=True fronte_linked=True only %}
+{% elif body_fallback %}{# V5.27 / R7′ (/ar/): the title in its provisional Arabic, the body the French source with its caption #}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=body_html lead_lang=body_lang lead_caption=body_caption meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="award" slot="diplomas.hero" words_first=True fronte_linked=True only %}
+{% else %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=body_html meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="award" slot="diplomas.hero" words_first=True fronte_linked=True only %}
+{% endif %}
+
+{% translate "Les démarches, étape par étape" as steps_title %}{% translate "Qui décide ?" as who_title %}
+<section class="sez sez--linea diplomi-dossier" id="demarches" data-sec="linea" data-ground="paper" data-rhythm="moment" aria-labelledby="diploma-steps-title">
+  <div class="container dossier-campo">
+    <div class="dossier-campo__processo">
+      {% include "components/sezioni/_testa.html" with role="process" title_id="diploma-steps-title" title=steps_title only %}
+      <ol class="dossier diploma-steps sez-seq" role="list" data-registro data-steps="{{ dossier|length }}">
+        {% for step in dossier %}<li class="dossier__tappa{% if step.pending %} dossier__tappa--attesa{% endif %}" id="etape-{{ step.id }}">
+          <span class="dossier__num" aria-hidden="true"></span>
+          <h3 class="dossier__titolo">{{ step.label }}</h3>
+          {% for term in step.terms %}<details class="dossier__dettaglio" name="dossier"{% if step.open and forloop.first %} open{% endif %}>
+            <summary class="dossier__voce"><span lang="it">{{ term.term }}</span>{% svg_icon "chevron" "icon icon--sm dossier__chevron" %}</summary>
+            <div class="dossier__lastra sez-plate">
+              <p class="dossier__definizione"{% if term.definition_lang %} lang="{{ term.definition_lang }}"{% endif %}>{{ term.definition }}</p>
+              {% if term.url %}<p class="dossier__link"><a class="link-arrow" href="{{ term.url }}">{% translate "Voir dans le glossaire" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+            </div>
+          </details>{% endfor %}
+        </li>{% endfor %}
+      </ol>
+      {% if dossier_pending %}<p class="dossier__didascalia"><span class="dossier__anello" aria-hidden="true"></span>{% translate "En attente de vérification" %}</p>{% endif %}
+    </div>
+    <aside class="diplomi-decide sez-plate sez-plate--raised" id="qui-decide" aria-labelledby="diploma-who-title" data-verb="depth">
+      <span class="diplomi-decide__timbro sez-tile sez-tile--lg" aria-hidden="true">{% svg_icon "stamp" "icon" %}</span>
+      <h2 class="diplomi-decide__titolo" id="diploma-who-title">{{ who_title }}</h2>
+      <p class="diplomi-decide__testo">{% translate "Les décisions relatives aux diplômes et aux titres relèvent exclusivement des autorités et organismes compétents. Italy Legal Entry™ vous oriente sur les étapes et les interlocuteurs, sans intervenir dans la procédure." %}</p>
+    </aside>
+  </div>
+</section>
+
+<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="pietra" data-rhythm="strip" aria-labelledby="protezione-title-diplomas" data-action="orientation">
+  <div class="container chiusura">
+    {% include "pathways/_chiusura.html" with url=links.antifraud suffix="diplomas" boussole=boussole only %}
+  </div>
+</section>
+{% endblock %}

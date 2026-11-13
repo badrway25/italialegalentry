@@ -1,0 +1,378 @@
+{
+ "what": "V5 photographs, family «universites» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "bibliotheque-salle-lecture",
+   "pexels_id": 9489906,
+   "photographer": "Yaroslav Shuraev",
+   "photographer_url": "https://www.pexels.com/@yaroslav-shuraev",
+   "page": "https://www.pexels.com/photo/women-studying-in-a-library-9489906/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Two women studying in a quiet, well-lit library with spiral stairs and classic decor.",
+   "original_px": [
+    6000,
+    4000
+   ],
+   "original_sha256": "aed879326263fc1ca0a4fca26223434c10ce7426438cefcd2e10560eb17adf49",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.715,
+      0.3,
+      1.0,
+      0.83
+     ],
+     "crop_px": [
+      4297,
+      1200,
+      5993,
+      3320
+     ],
+     "master_px": [
+      1696,
+      2120
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.7,
+      0.4,
+      1.0,
+      0.7
+     ],
+     "crop_px": [
+      4200,
+      1600,
+      6000,
+      2800
+     ],
+     "master_px": [
+      1800,
+      1200
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "the reading room's end bay: bookcases, a lamp, the long tables by the windows; the two readers and the spiral stair stay out of the crop (O55, O54)",
+   "files": [
+    {
+     "file": "bibliotheque-salle-lecture-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 14104,
+     "budget": 61440,
+     "sha256": "b07169f122f3e403c2750564237199144d68551124c3bdc47e53656b4183676e"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 20434,
+     "budget": 61440,
+     "sha256": "56d16f0bdece91f9d97ad0167219573123dd524161c37aa6926e71334f9e4fd3"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 27502,
+     "budget": 61440,
+     "sha256": "6a5cf27ee94b95ca91d5b1fb2ac2dbe7a2f718c7702957bbb3f5f54b308cac03"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 38334,
+     "budget": 61440,
+     "sha256": "823c0497cad8bce34d004cb6eee3089ae09f983d7738fd191f1242a4ec93099f"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 44925,
+     "budget": null,
+     "sha256": "605ccc2a29861c798be038edf5bf8ffd6cd73d0ae340586bdbaad6c64de144df"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 59980,
+     "budget": null,
+     "sha256": "f20f3acba776d9738a64341f41682595e54dfc74bc5b7d51bc5dca8040f8e169"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 65624,
+     "budget": null,
+     "sha256": "5f06188b7a19d96071d01388a64a207c0c464fd4de19a70f2f7901d3a34f411b"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 83670,
+     "budget": null,
+     "sha256": "e140de98050889ded610fc4fe56b8ee502b62cdebe27768266d1a16ef73bf898"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 8595,
+     "budget": 61440,
+     "sha256": "21451029726d8432789976f377d6913b470e84dd129ee64484a2f00cd251584b"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 12728,
+     "budget": 61440,
+     "sha256": "51be07c8c6d8a9d0838242920a4095d7f76903414c7aa2cf9646c8d7deafa9a7"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 16889,
+     "budget": 61440,
+     "sha256": "a75cbe1894063045b65bf91a5ddfe429867c3fa0083fee4ffc4ff4a8b382ff94"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 23452,
+     "budget": 61440,
+     "sha256": "912099aacaa80ef7b1f888079a9167703afaf75dc69ac25d7d4319a7c34569da"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 27594,
+     "budget": 61440,
+     "sha256": "efa6f96612d77dd4e21adf59bb71bd90eb00067f1341621a965b0d5c5c786513"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 36390,
+     "budget": 61440,
+     "sha256": "f979ae3dfd42be916faae5d36f0fedb5e90e17de8067064b91f0ca509cf3ae01"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 39889,
+     "budget": null,
+     "sha256": "bdd3ea3deb21d286645f762d2854bc9df0b3b42f3aec823f38bb2a8a0d1eee12"
+    },
+    {
+     "file": "bibliotheque-salle-lecture-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 49642,
+     "budget": null,
+     "sha256": "e7bae4c1d71baef8cd5527af763d6969f89601e36e8ffc916148eb022ddeaf68"
+    }
+   ]
+  },
+  {
+   "slug": "etudiants-echange-campus",
+   "pexels_id": 31367507,
+   "photographer": "Yusuf Çelik",
+   "photographer_url": "https://www.pexels.com/@zandatsu",
+   "page": "https://www.pexels.com/photo/diverse-students-discussion-outdoors-31367507/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Three students engaged in conversation on campus stairs.",
+   "original_px": [
+    6720,
+    4480
+   ],
+   "original_sha256": "c73091422dc8e65912beb3a0c33f137daf178c5f64d42a5d7afe4cc11786d2f0",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.58,
+      0.44,
+      1.0,
+      0.86
+     ],
+     "crop_px": [
+      3898,
+      1971,
+      6720,
+      3852
+     ],
+     "master_px": [
+      2822,
+      1881
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "the exchange told by hands: one student's explaining gesture, the other's folio case held against her; the book and its cover, the second book and every face are outside the crop (O55), so no redaction",
+   "files": [
+    {
+     "file": "etudiants-echange-campus-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 9473,
+     "budget": 46080,
+     "sha256": "1a4c4e8432b52c09971b9acd817cc912b4fe63445a7f155cac50b87d75001b98"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 13216,
+     "budget": 46080,
+     "sha256": "eb78c8f2ff60f1ecac0e6bca68eabeac786fc5bd98bd8c5d5b083ae47733ca11"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 21692,
+     "budget": 46080,
+     "sha256": "ee0e85e120fc981ec39e56f90d664192c6393b0cec0b2bcadb7d07c771b67eb5"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 27866,
+     "budget": 46080,
+     "sha256": "4b2840a7eb26bf64352a9eff123e7138903c59372f094016a1cc15d513e9f560"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 39161,
+     "budget": 46080,
+     "sha256": "16fdf73e39ad0d4f190cfbc4cfb18693e973591c844a81d6b88e58a8105743b8"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 68,
+     "bytes": 45178,
+     "budget": 46080,
+     "sha256": "daf620015209de79deda996cbc868fccb18f8e59c388567b4f8a3d895f4cc05d"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 43317,
+     "budget": 46080,
+     "sha256": "bac091c5f3f99ff75385b1b9dae59b4f60d7ff88116435207a40f325b50ddd9c"
+    },
+    {
+     "file": "etudiants-echange-campus-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 41,
+     "bytes": 44898,
+     "budget": 46080,
+     "sha256": "f99397f3e457fecf512f7a734a9a4506bda668cca461634bce0d78a8dc9f616b"
+    }
+   ],
+   "ceilings": {
+    "3x2": 46080
+   },
+   "webp_floor": 40,
+   "webp_not_built": [],
+   "label": "v522-m-build"
+  }
+ ]
+}

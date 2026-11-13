@@ -1,0 +1,383 @@
+{
+ "what": "V5.12 photographs, family «institutions» (DECISIONS §6): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "hemicycle-pupitres",
+   "pexels_id": 32266781,
+   "photographer": "Héctor Berganza",
+   "photographer_url": "https://www.pexels.com/@hberganza",
+   "page": "https://www.pexels.com/photo/empty-government-chamber-with-desk-rows-and-microphones-32266781/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A detailed view of an empty legislative chamber with rows of desks and microphones, evoking governance.",
+   "original_px": [
+    7992,
+    5328
+   ],
+   "original_sha256": "31d2b2fa5fecfbe77e022a54c89fdb1813d040321fbf9465ff29540aee761aff",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.22,
+      0.77,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      1199,
+      6154,
+      5302
+     ],
+     "master_px": [
+      6154,
+      4103
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.49,
+      0.52,
+      1.0,
+      0.76
+     ],
+     "radius_px": 30,
+     "reason": "the printed sheet on the desk"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "the desks and microphones of an assembly hall; the flags and coats of arms under the windows are above the crop; the chamber is not recognisable in the crop",
+   "files": [
+    {
+     "file": "hemicycle-pupitres-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7225,
+     "budget": 46080,
+     "sha256": "c910e90d16e196e9f7b1fab59d0299f6c9a5cd37ec4923cbd3e5ce85e9c09354"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 11422,
+     "budget": 46080,
+     "sha256": "6d43f40a71dd5d6c1401d337b0e6b2b384c48f0bbacf5cefd25896ca3a62744f"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13963,
+     "budget": 46080,
+     "sha256": "a1bb555f40c821d1859486ee99b15d2f4ad18a1f49a56be7c4c43b25ab5eabec"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 21132,
+     "budget": 46080,
+     "sha256": "dddef3de6696d702e9be37cb01504decbac076b4bf4de767a87dbe33b29ae49c"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 27615,
+     "budget": 46080,
+     "sha256": "19026f46994728a3fc40d31bd9c0887790a62f6b544ace81c7ea5083408643a6"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 40186,
+     "budget": 46080,
+     "sha256": "c65085b4b181d6b47539512c74534fbb0c0d8f6b1017109d6e8ca20b8c902987"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 60050,
+     "budget": null,
+     "sha256": "051dbb6cbbecdc0a394d3d82fe8d46daacec42e01d25616ceed8d46ae7623a98"
+    },
+    {
+     "file": "hemicycle-pupitres-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 96326,
+     "budget": null,
+     "sha256": "b262afc7af8f015dbfce4da64816095cc66c0ccd799cbf2f70b6541c5687bb90"
+    }
+   ]
+  },
+  {
+   "slug": "table-des-institutions",
+   "pexels_id": 6949366,
+   "photographer": "Werner Pfennig",
+   "photographer_url": "https://www.pexels.com/@werner-pfennig",
+   "page": "https://www.pexels.com/photo/monitors-and-microphone-on-wooden-table-top-6949366/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A modern conference room featuring sleek monitors and microphones on a wooden tabletop, perfect for meetings.",
+   "original_px": [
+    6720,
+    4480
+   ],
+   "original_sha256": "f43f4192c88b3d264d1d62a0f000758a2e7e125ef609717ca1410524d5a201a4",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.33,
+      0.03,
+      0.87,
+      0.97
+     ],
+     "crop_px": [
+      2348,
+      134,
+      5716,
+      4344
+     ],
+     "master_px": [
+      3368,
+      4210
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.05,
+      0.15,
+      1.0,
+      0.95
+     ],
+     "crop_px": [
+      840,
+      672,
+      6216,
+      4256
+     ],
+     "master_px": [
+      5376,
+      3584
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "an empty council table: microphones, screens off, blank name cards; no emblem",
+   "files": [
+    {
+     "file": "table-des-institutions-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7402,
+     "budget": 61440,
+     "sha256": "c2a57ba08fa6262c372f7039cd412352440fd8a50cff9edc827f29c1d53c2e74"
+    },
+    {
+     "file": "table-des-institutions-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 9816,
+     "budget": 61440,
+     "sha256": "0eec2a3211c30e3d03251b705b80049dbb2a23e59820901f9425e5da2c3027d3"
+    },
+    {
+     "file": "table-des-institutions-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 14419,
+     "budget": 61440,
+     "sha256": "334fc391d8922db4c9c816a41fd06f03555f3c8772c9c0fe8cfdb599cf6cecf8"
+    },
+    {
+     "file": "table-des-institutions-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 19406,
+     "budget": 61440,
+     "sha256": "6086e294145ebbc48b5c0f04ed42d087cf471ba77bb5f86d02a3720de6710b89"
+    },
+    {
+     "file": "table-des-institutions-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 24591,
+     "budget": null,
+     "sha256": "27ae0e8b7df11a0c2d4afcc6f7bf32159544265de9f3e7d7bb7aab8774e7d94f"
+    },
+    {
+     "file": "table-des-institutions-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 33336,
+     "budget": null,
+     "sha256": "8c51217e71d3ed6e289f2e8d04d82e47f516e7c6785ec89fc9b333abebfd14b2"
+    },
+    {
+     "file": "table-des-institutions-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 38604,
+     "budget": null,
+     "sha256": "30ed68a7a0a7515376fc05c5ec8f12b8e0b33ed92c65b5574ff08243b4a71f88"
+    },
+    {
+     "file": "table-des-institutions-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 52884,
+     "budget": null,
+     "sha256": "4cff0bec89d13ffe403d8ab212b5c1aaf978e0fdb8dda52b162283e6f438d497"
+    },
+    {
+     "file": "table-des-institutions-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 6184,
+     "budget": 61440,
+     "sha256": "b03666858a9894b3e85089c6c2b6bb928ca45c8eaa4412101cd4cbf3dff56bc5"
+    },
+    {
+     "file": "table-des-institutions-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 7908,
+     "budget": 61440,
+     "sha256": "e6b6a1f46b3fc32304f1143f1adb72d9193bc9654a3e4ea5b02cb269294c210f"
+    },
+    {
+     "file": "table-des-institutions-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 11238,
+     "budget": 61440,
+     "sha256": "d853e677b670f24ea644222df9b8cd7b7ea0bd9d85a31aa379117868dd17ffe1"
+    },
+    {
+     "file": "table-des-institutions-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 14834,
+     "budget": 61440,
+     "sha256": "f017fb6b7ad1036afbb02bc16ed6dc64505ce0e9dfb21e7126e29e4a18ed3005"
+    },
+    {
+     "file": "table-des-institutions-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 18658,
+     "budget": 61440,
+     "sha256": "90a34d50ab9fb34c5cf1cf785e19a912888671024d59acc12738a37f164f2e81"
+    },
+    {
+     "file": "table-des-institutions-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 24926,
+     "budget": 61440,
+     "sha256": "5b74d1e900647078c6f903e6adf7f4eda0e09778a332218fba9687834df5c614"
+    },
+    {
+     "file": "table-des-institutions-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 27152,
+     "budget": null,
+     "sha256": "346ded1e33c2b674533d7d9c50ec902baca1a708e0430c9ebe4c0d06c7737362"
+    },
+    {
+     "file": "table-des-institutions-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 36858,
+     "budget": null,
+     "sha256": "dd0c7e8a17a049f984ec64f219b66c5f1c57ef590fb4394f22e70811ac401fe7"
+    }
+   ]
+  }
+ ]
+}

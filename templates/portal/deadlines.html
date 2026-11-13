@@ -1,0 +1,70 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+«MES ÉCHÉANCES» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.2; platform.md §3; W3-E). The dates of
+the signed-in account (portal.services.deadlines_page), entered by the team from a written source shown under «Origine» —
+the platform never computes a legal time-limit.
+
+The register's grammar, the dashboard's and «Mes pièces»' own: the page's head (the title and its line of context — no
+eyebrow repeating the level the breadcrumb gives), then the BAND — how many dates are still ahead, how many are late, in
+the bridge's own words, each counted once —, then the dates by section, each a row with its state as a chip
+(portal/partials/deadline_item.html). One sheet of the page's own, linked here only (portal/registers.css; the owner's
+V5.8: never in the shared bundles).
+{% endcomment %}
+{% block page_title %}{% translate "Mes échéances" %}{% endblock %}
+{% block meta_description %}{% translate "Les dates qui vous ont été communiquées par l’équipe du projet." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="register">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Mes échéances" %}</h1>
+    <p class="ws-head__lead">{% translate "Les dates qui vous ont été communiquées par l’équipe. Ce rappel est informatif : seule la communication d’origine fait foi." %}</p>
+  </div>
+</header>
+{% endblock %}
+{% block portal_content %}
+<div class="reg-page">
+{% if deadlines_total %}
+  <div class="db-ledger reg-band">
+    {% if ahead_count or not overdue_count %}<p class="db-ledger__total reg-band__count"><span class="reg-band__n">{{ ahead_count }}</span> {{ ahead_label }}</p>{% endif %}
+    {% if overdue_label %}<p class="reg-band__state">{% chip register="azione" %}{{ overdue_label }}{% endchip %}</p>{% endif %}
+  </div>
+{% endif %}
+{% comment %} V5.32 lane E (the PLATFORM=READY round): the platform's list toolkit (portal.lists.DEADLINES) — a search, the kind,
+the state and the period of the due date — from two dates on; the two sections keep their own order, and a section
+the narrowing empties steps aside. {% endcomment %}
+{% include "components/listing/toolbar.html" %}
+{% if not deadlines_total %}
+  {% translate "Aucune échéance" as empty_title %}
+  {% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." as empty_text %}
+  {% include "portal/partials/empty.html" with title=empty_title text=empty_text icon="calendar-clock" %}
+{% elif listing.narrowed and not open_deadlines and not closed_deadlines %}
+  {% include "components/listing/empty.html" %}
+{% else %}
+{% if open_deadlines or not listing.narrowed %}
+
+  <section class="reg-sec" aria-labelledby="deadlines-open-title">
+    <h2 class="db-h2 reg-sec__title" id="deadlines-open-title">{% svg_icon "calendar-clock" "icon" %}<span>{% translate "À venir" %}</span></h2>
+    {% if open_deadlines %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for row in open_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Les dates qui vous sont communiquées par l’équipe apparaîtront ici." %}</p>
+    {% endif %}
+  </section>
+{% endif %}
+
+{% if closed_deadlines %}
+  <section class="reg-sec" aria-labelledby="deadlines-closed-title">
+    <h2 class="db-h2 reg-sec__title" id="deadlines-closed-title">{% svg_icon "history" "icon" %}<span>{% translate "Terminées ou annulées" %}</span></h2>
+    <ul class="db-tasks reg-rows" role="list">
+      {% for row in closed_deadlines %}{% include "portal/partials/deadline_item.html" with row=row %}{% endfor %}
+    </ul>
+  </section>
+{% endif %}
+{% endif %}
+</div>
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

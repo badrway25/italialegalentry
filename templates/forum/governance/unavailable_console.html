@@ -1,0 +1,20 @@
+{% extends "errors/console_error.html" %}{% load i18n %}
+{% comment %}
+The Forum permanent's module, not open yet, INSIDE THE CONSOLE (V5.32 lane E, correction round P2-8): drawn (HTTP 503)
+by forum.governance_views for a signed-in account whose console is open — the twin of forum/governance/unavailable.html,
+which every other visitor still gets (an anonymous visitor, an account while the reserved area is switched off). The
+same words, the same order: the module's name in the label's seat where an error page names its status, the title,
+the page's own sentences — « pas encore ouvert », never « maintenance » —, the one act: the Forum's public page while a
+live edition opens it (core.gates.forum_public); without one, where the public page draws no act, the console's own
+«Tableau de bord» holds the seat (errors/console_error.html's error_actions). The frame is the console's error state:
+the account's own space's rail — the Forum's rows are not drawn while the module is closed
+(portal.services.console_state_shell) —, the trail «Espace réservé › Forum permanent», no door. Nothing here is new
+copy.
+{% endcomment %}
+{% block page_title %}{% translate "Forum permanent" %}{% endblock %}
+{% block meta_description %}{% translate "L’espace de gouvernance du Forum permanent n’est pas encore ouvert." %}{% endblock %}
+{% block chrome %}{% with error_crumb=_("Forum permanent") %}{{ block.super }}{% endwith %}{% endblock %}
+{% block error_label %}<p class="atrium__eyebrow t-label">{% translate "Forum permanent" %}</p>{% endblock %}
+{% block error_title %}{% translate "Espace momentanément indisponible" %}{% endblock %}
+{% block error_text %}{% translate "L’espace de gouvernance du Forum permanent — commissions, tables, propositions, projets et relation annuelle — n’est pas encore ouvert aux participants. La page publique du Forum reste consultable." %}{% endblock %}
+{% block error_actions %}{% safe_url 'forum:index' as forum_url %}{% if forum_url %}<div class="ws-head__action"><a class="btn btn--primary" href="{{ forum_url }}">{% translate "Consulter la page publique du Forum" %}</a></div>{% else %}{{ block.super }}{% endif %}{% endblock %}

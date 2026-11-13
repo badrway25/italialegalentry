@@ -1,0 +1,359 @@
+/* ============================================================================
+   THE REGISTER — the proprietary graphic language of art direction A.
+
+   Six devices carry the identity. The site must be recognisable with no
+   photographs at all, and on a 200px crop a designer must know WHICH site this
+   is, not merely which category it belongs to.
+
+     .register      the entry list — replaces the card, everywhere
+     (.jurisdiction, the jurisdiction bar, left with its component: V5.29 09:41 item 2, CLOSING — no template
+     had included it since 9 October 2026, DL54-41)
+     .plate         the one full-bleed band per page
+     .note          the margin apparatus where the legal caveats live
+
+   Everything here draws structure with border, outline or text, never with a
+   background on a pseudo-element: a painted pseudo-element is repainted Canvas
+   under Windows High Contrast and the structure vanishes. See the
+   forced-colors layer at the end of this file.
+   ========================================================================== */
+
+/* THE FOLIO (the rail device: ordinal, rule, running head, date) left with its last pages, the console's
+   secondary pages and the case file's pre-assessment (design V5, W3-E: the registers' grammar); the home and
+   the public interior had left it before (W2-E, W3-F1, W3-F2). */
+
+/* ---- THE ENTRY AND THE REGISTER --------------------------------------------
+   The atomic content object. It replaces the card everywhere.
+
+   A card survives in this system only if it links to a detail page, carries
+   content unique relative to its siblings, groups HETEROGENEOUS content types,
+   appears at most four in a row and holds exactly one link. Applied to the
+   build this replaces, essentially nothing passed.
+
+   Rows may be unequal in height. They align on their top rule, never on a
+   forced baseline grid.
+
+   Design V5 (W3-C, the deletion map's row «register.css's register and entry»):
+   the documents pages no longer draw these — «Mes pièces» is its own register
+   (apps/portal/static/portal/v5/_workspace.css); the current entry's rules left
+   with it. The console's secondary pages and the case file left them for the
+   registers' grammar (W3-E): their ordinal and their responsible actor left with
+   them. What stays is drawn by the four entrances and the home's pathways.
+   -------------------------------------------------------------------------- */
+.register {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-block: 2px solid var(--navy);
+  counter-reset: entry;
+}
+
+.register__item + .register__item {
+  border-block-start: 1px solid var(--rule-hair);
+}
+
+.entry {
+  display: grid;
+  /* The `actor` area must exist at EVERY width: a grid item assigned to a named
+     area the template does not declare is placed in an implicit row instead,
+     which silently stretched one entrance row to 821px on a phone. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "ordinal title arrow"
+    "ordinal gloss arrow"
+    "ordinal actor arrow";
+  align-items: baseline;
+  gap: var(--s-1) var(--s-4);
+  padding-block: var(--s-4);
+  min-block-size: 104px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  border-inline-start: 2px solid transparent;
+  padding-inline-start: var(--s-3);
+  transition: border-color var(--motion-fast) var(--ease-out);
+}
+
+@media (min-width: 48rem) {
+  .entry {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "ordinal title  actor arrow"
+      "ordinal gloss  actor arrow";
+    min-block-size: 64px;
+    column-gap: var(--s-6);
+  }
+}
+
+.entry__title {
+  grid-area: title;
+  font-family: var(--font-display);
+  font-size: var(--t-entry-size);
+  line-height: var(--t-entry-lh);
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.entry__gloss {
+  grid-area: gloss;
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink-secondary);
+  max-inline-size: var(--measure-gloss);
+}
+
+.entry__arrow {
+  grid-area: arrow;
+  inline-size: 20px;
+  block-size: 20px;
+  color: var(--ink-muted);
+  flex: none;
+}
+
+/* Hover and focus: a rule appears on the inline-start edge. No background change, no shadow, no lift. */
+.entry:hover,
+.entry:focus-visible {
+  border-inline-start-color: var(--rubric);
+}
+
+/* THE SEQUENCE (the vertical list of a module's, a need's or a turn's stages) left with its last consumers, the console's
+   secondary pages, which W3-E redrew on the registers' grammar: no template draws `.sequence` any more (V5.12 W2, lane
+   A: its bytes paid for the notices and the disclosure's height in main.css). */
+
+/* ---- THE JURISDICTION BAR --------------------------------------------------
+   The graft all four judges of the Design Council asked for independently, and
+   the one device that answers this project's actual subject: not WHERE you are
+   in a sequence, which every process diagram on the web encodes, but WHO is
+   answerable for each stretch of it.
+
+   Segments are sized by their share of the process and labelled by owner. The
+   owner is carried by a HATCH PATTERN as well as a colour, so the bar is
+   readable in greyscale, under forced colours and by a colour-blind reader.
+   -------------------------------------------------------------------------- */
+
+/* The relative width of a stretch. A data attribute rather than an inline style:
+   the public CSP is self-only with no unsafe-inline, so a style attribute would
+   be dropped in production and every segment would render equal. */
+
+/* Four owners, four textures. The repeating-linear-gradient here is a HATCH,
+   not a decorative gradient: it encodes the owner and it is the fallback for a
+   reader who cannot use the colour. */
+
+/* ---- THE PLATE AND THE VERSO BAND ------------------------------------------
+   Full bleed, exactly once per page, never twice. Either a photograph at 2:1
+   with an archive caption, or a typographic navy band where the institution
+   speaks. Opened at the top by a 2px navy rule where it meets paper, closed at
+   the bottom by a 2px rubric rule.
+
+   The band class this replaces was declared in the stylesheet, documented in
+   the design system and used ZERO times across 169 templates, so the only dark
+   surface on any page was the footer — which became the heaviest visual event
+   on the site by accident.
+   -------------------------------------------------------------------------- */
+.plate {
+  border-block-start: 2px solid var(--navy);
+  margin-block-end: var(--rank-a-after);
+}
+
+/* ---- THE MARGIN NOTE -------------------------------------------------------
+   The device that reads as PUBLISHED rather than assembled, and where the legal
+   apparatus lives: the source, the date, the caveat, the ruleset version, the
+   responsible authority. In the build this replaces, those clauses were small
+   grey lines and low-contrast footnotes.
+
+   Below lg the note moves beneath the block it annotates, keeping its marker.
+   -------------------------------------------------------------------------- */
+/* ---- THE GLOSS -------------------------------------------------------------
+   A secondary sentence BESIDE the thing it explains: what a count means, what
+   a page does not ask for, why a list is short. `.t-gloss` is the type role;
+   this is the block that carries it, in the same relation `.note` has to the
+   caption role.
+
+   It existed in the templates before it existed here: fourteen pages used
+   `class="gloss"` and no rule matched, so every one of them rendered at running
+   prose size in the ink colour and read as a second paragraph of the argument
+   rather than as an aside. Found by the Forum lane, which flagged it rather
+   than inventing a rule in a file it did not own.
+   -------------------------------------------------------------------------- */
+.gloss {
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink-secondary);
+  max-inline-size: var(--measure-gloss);
+  margin-block-start: var(--s-3);
+}
+
+.gloss > li {
+  margin-block-start: var(--s-2);
+}
+
+.note {
+  font-family: var(--font-ui);
+  font-size: var(--t-caption-size);
+  line-height: var(--t-caption-lh);
+  color: var(--ink-muted);
+  max-inline-size: var(--measure-note);
+  border-block-start: 1px solid var(--rule-hair);
+  padding-block-start: var(--s-2);
+  margin-block-start: var(--s-4);
+}
+
+/* the note's marker (.note__marker) left with its last page, «Mes pièces»' prescribed note (W3-C); no template names
+   it any more (W4-A's fix pass) */
+
+/* ---- THE SOURCE LIST -------------------------------------------------------
+   The closing region of a rule outcome and of any page that states a legal
+   requirement. It is the single element that converts "a questionnaire result"
+   into "an institutional finding", and the result page this replaces had none.
+   -------------------------------------------------------------------------- */
+.sources {
+  list-style: none;
+  margin: var(--s-6) 0 0;
+  padding: 0;
+  border-block-start: 2px solid var(--navy);
+  counter-reset: source;
+}
+
+.sources__item {
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr);
+  gap: var(--s-3);
+  padding-block: var(--s-3);
+  border-block-start: 1px solid var(--rule-hair);
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+}
+
+.sources__item:first-child {
+  border-block-start: 0;
+}
+
+.sources__item::before {
+  counter-increment: source;
+  content: counter(source, decimal-leading-zero);
+  font-family: var(--font-display);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--rubric);
+}
+
+.sources__consulted {
+  color: var(--ink-muted);
+}
+
+/* ---- THE OUTCOME -----------------------------------------------------------
+   Five kinds, each a WORD at title size with a 4px state rule on the inline
+   start. Never a coloured box, never colour alone, and never a word that could
+   be read as an administrative decision: there is no "eligible" here, for the
+   same reason there is none in the domain.
+   -------------------------------------------------------------------------- */
+.outcome {
+  border-inline-start: 4px solid var(--state-info-br);
+  padding-inline-start: var(--s-4);
+}
+
+.outcome__kind {
+  font-family: var(--font-display);
+  font-size: var(--t-title-size);
+  line-height: var(--t-title-lh);
+  letter-spacing: var(--track-title);
+  margin: 0 0 var(--s-2);
+}
+
+.outcome--possible {
+  border-inline-start-color: var(--state-done-br);
+}
+
+.outcome--missing {
+  border-inline-start-color: var(--state-pending-br);
+}
+
+.outcome--warning {
+  border-inline-start-color: var(--state-warn-br);
+}
+
+.outcome--stop {
+  border-inline-start-color: var(--state-error-br);
+}
+
+.outcome--review {
+  border-inline-start-color: var(--state-info-br);
+}
+
+/* ---- THE EMPTY REGION ------------------------------------------------------
+   One hairline and one left-aligned sentence naming who fills it and when,
+   with the resolving action inline as a text link. NOT a dashed box with a
+   centred icon: the dashboard this replaces rendered six of those on one
+   screen, five of them identical, each with the same icon twice.
+   -------------------------------------------------------------------------- */
+.empty {
+  border-block-start: 1px solid var(--rule-hair);
+  padding-block-start: var(--s-3);
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  color: var(--ink-secondary);
+  max-inline-size: var(--measure-gloss);
+}
+
+/* ---- FORCED COLOURS --------------------------------------------------------
+   The layer that did not exist: `grep -n "forced-colors" static/css/*.css`
+   returned nothing before this file. Under Windows High Contrast every painted
+   surface is repainted Canvas, so a structure drawn with backgrounds vanishes.
+   Here the structure is drawn with borders, and this layer restores the rules
+   and states with system colours.
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .register,
+  .sources,
+  .plate {
+    border-color: CanvasText;
+  }
+
+  .entry:hover,
+  .entry:focus-visible {
+    border-inline-start-color: Highlight;
+  }
+
+  .sources__item::before {
+    color: CanvasText;
+  }
+
+  /* The hatch is a background image and is dropped: the legend's words and the
+     segment borders carry the meaning on their own. */
+
+  .outcome {
+    border-inline-start-color: CanvasText;
+  }
+}
+
+/* An entrance's inline-end label is the prescribed CALL TO ACTION, not a
+   responsible actor. It takes the same position and the same size, but not the
+   actor's uppercase register: a reader must not mistake a button label for a
+   statement about who is answerable. */
+.entry__cta {
+  grid-area: actor;
+  font-family: var(--font-ui);
+  font-size: var(--t-gloss-size);
+  line-height: var(--t-gloss-lh);
+  font-weight: 500;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+}
+
+/* A register row with no destination carries no underline: nothing opens. */
+.entry:not(a) .entry__title {
+  text-decoration: none;
+}
+
+/* An institutional notice that follows the plate is ATTACHED to it: the
+   institution speaks, and this is what it is announcing right now. A 96px gap
+   would turn the site's most newsworthy item into a floating strip — which is
+   how the Forum banner read before, at the visual weight of a cookie bar. */
+.plate:has(+ .home-banner) {
+  margin-block-end: 0;
+}

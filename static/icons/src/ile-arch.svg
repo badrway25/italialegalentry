@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-arch: ILE drawing (Italy Legal Entry) -->
+  <path fill="currentColor" fill-opacity=".12" stroke="none" d="M9 21v-9.5a3 3 0 0 1 6 0V21Z"/>
+  <path d="M4.5 21v-9.5a7.5 7.5 0 0 1 15 0V21M9 21v-9.5a3 3 0 0 1 6 0V21M1.5 21h21"/>
+</svg>

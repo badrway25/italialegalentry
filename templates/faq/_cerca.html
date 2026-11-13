@@ -1,0 +1,13 @@
+{% load i18n pages_typo %}{% comment %}The FAQ's search (V5.32, lane D): the head of the guide column (faq/index.html), on the index (live, cerca.js)
+and on a search's page (the server's ?q=). Context: `query`, `is_search`.{% endcomment %}
+{% translate "Rechercher dans les questions fréquentes" as search_label %}
+<form class="search-form faq__search"{% if not is_search %} data-cerca-viva{% endif %} method="get" action="{% url 'faq:index' %}" role="search" aria-label="{{ search_label }}">
+  <label class="search-form__label visually-hidden" for="faq-q">{{ search_label }}</label>
+  <div class="cerca__campo">
+    {% svg_icon "search" "icon cerca__glifo" %}<input class="search-form__input cerca__input" type="search" id="faq-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" aria-describedby="faq-q-help" placeholder="{{ search_label }}">
+    <button class="cerca__pulisci" type="button" hidden aria-label="{% translate "Effacer la recherche et afficher toutes les questions" %}">{% svg_icon "close" "icon" %}</button>
+    <button class="cerca__invio" type="submit">{% translate "Rechercher" %}</button>
+  </div>
+  {% translate "Saisissez un mot-clé, par exemple « visa » ou « diplôme »." as search_help %}<p class="search-form__help" id="faq-q-help">{{ search_help|typo }}</p>
+  {% if is_search %}<p class="search-form__reset"><a href="{% url 'faq:index' %}">{% translate "Effacer la recherche et afficher toutes les questions" %}</a></p>{% endif %}
+</form>

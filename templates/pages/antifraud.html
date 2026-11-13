@@ -1,0 +1,82 @@
+{% extends "pages/institutional_base.html" %}{% load i18n static locked_split %}
+{% comment %}
+/attention-aux-fraudes/ — Phase 3 page (gate G3: 404 while closed; staff preview is noindex).
+The page body IS the prescribed text: p3.antifraud.title (h1) and p3.antifraud.body, verbatim (on /ar/ the French source
+preceded by its identification caption). Calm design: no red wall, no alarm pictogram, no added capitals.
+
+CONTENT_PENDING_LEGAL_REVIEW — links to official authorities and reporting channels: NONE is authorised yet, so none is
+published. The official links must be supplied in writing (which authority, which URL, in which languages) before an
+« official resources » list is added. Do not add embassy, police, ministry or portal links on the team's initiative.
+
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — «l'avvertenza»: a calm institutional warning in
+two steps of a strong hierarchy, after 21st.dev «Destructive Alert with Action List» (sean0205, id 29338: a warning,
+then a checklist of what to look for) and «Warning Alert» (id 23619), adapted and quietened — amber, never red:
+  1  the head: the folio «Espace Personnes», the prescribed title, then the prescribed text whole as the page's
+     statement in the base components' warning notice (notice--warning: the amber wash, the broken rule at its reading
+     edge — never colour alone — and its one mark, the protection's shield), the page sheet giving it its measure;
+     The statement's hierarchy is the text's own sentences, cut at render (cms locked_split «sentence», the words and
+     their order unchanged): the first — nobody can «sell» an entry — leads at the entry's size; the warning signs'
+     sentence («Méfiez-vous de quiconque…») stands as its own block on the amber rule; the others read at the lead's
+     size. The statement is never restated in team words (scripts/i18n_audit.py: no locked fragment outside its key);
+  1b the warning signs (V5.32 integration review P1-2: the page showed less than the home's teaser of it): the home
+     band's list carried as it is (templates/pages/home/_antifraud.html, frozen) — «Signaux d'alerte», its five
+     catalogue labels and their symbols, the same msgids, drawn as there (a pill each, the warning's mark on its
+     wash): UI labels from the statement's own words, never new claims (tests/frontend/test_trust_pages_v532_d.py holds
+     them to the home's). A register of named signs (data-registro: its glyphs all or none, counted as one register,
+     never as loose body icons). Beside the notice from 64 rem, under it below;
+  2  «Que faire ?»: the report plate (the live address, its at-sign disc) beside the ways to read about the regular
+     routes — the prescribed FAQ question as a disclosure opening its prescribed answer in place (progressive
+     disclosure), then the Personnes space and the glossary. Internal links only. The disclosure stays (P1-2): its
+     answer is locked FAQ copy (p3.faq.items, never cut), whose first sentences are the page's direct instruction —
+     its last, a pointer to «Attention aux fraudes», is the FAQ's own and harmless here.
+Route sheet pages/css/frodi.css (_frodi.css).
+{% endcomment %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/interior.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/frodi.css' %}">{% endblock %}{# V5.32: no frontispiece on this page — its sheet is not linked #}
+{% block page_header %}
+<header class="avvertenza-testa container">
+  <p class="avvertenza-testa__label t-label">{% translate "Espace Personnes" %}</p>
+  <h1 class="avvertenza-testa__titolo"{% if title.lang %} lang="{{ title.lang }}"{% endif %}>{{ title }}</h1>
+  <div class="avvertenza notice notice--warning" data-callout="antifraud" role="note" aria-labelledby="antifraud-inset-title">
+    {% svg_icon "shield-alert" "icon icon--lg notice__icon avvertenza__segno" %}
+    <div class="avvertenza__corpo">
+      <h2 class="avvertenza__titolo notice__title" id="antifraud-inset-title">{% translate "Votre protection" %}</h2>
+      {% locked_caption "p3.antifraud.body" %}<p class="avvertenza__testo"{% if body.lang %} lang="{{ body.lang }}"{% endif %} data-locked="p3.antifraud.body">{{ body|locked_spans:"sentence" }}</p>
+    </div>
+  </div>
+  <div class="avvertenza-segnali">
+    <h2 class="avvertenza-segnali__etichetta t-label">{% translate "Signaux d’alerte" %}</h2>
+    <ul class="avvertenza-segnali__chips" role="list" data-registro>
+      <li>{% svg_icon "stamp" "icon" %}{% translate "Visa garanti" %}</li>
+      <li>{% svg_icon "briefcase" "icon" %}{% translate "Contrat de travail garanti" %}</li>
+      <li>{% svg_icon "document" "icon" %}{% translate "Documents falsifiés" %}</li>
+      <li>{% svg_icon "split" "icon" %}{% translate "« Voies rapides » hors procédures officielles" %}</li>
+      <li>{% svg_icon "receipt" "icon" %}{% translate "Argent contre un résultat garanti" %}</li>
+    </ul>
+  </div>
+</header>
+{% endblock %}
+{% block page_body %}
+<div class="sez sez--frodi frodi" data-sec="frodi" data-ground="stone" data-rhythm="band">
+  <div class="container">
+    <h2 class="frodi__titolo">{% translate "Que faire ?" %}</h2>
+    <div class="frodi__griglia">
+      <section class="frodi__segnala" aria-labelledby="antifraud-report-title">
+        <h3 class="frodi__sottotitolo" id="antifraud-report-title">{% translate "Signaler une offre suspecte" %}</h3>
+        <p class="frodi__frase">{% translate "Si une offre vous paraît suspecte, vous pouvez la signaler à l’adresse suivante :" %}</p>
+        <p class="frodi__azione"><a class="frodi__indirizzo" href="mailto:{{ site.contact_email }}"><span class="frodi__disc" aria-hidden="true">{% svg_icon "at-sign" "icon" %}</span><span class="email">{{ site.contact_email }}</span></a></p>
+      </section>
+      <section class="frodi__vie" aria-labelledby="antifraud-more-title">
+        <h3 class="frodi__sottotitolo" id="antifraud-more-title">{% translate "S’informer sur les voies régulières" %}</h3>
+        {% if links.faq and faq_question.answer %}<div class="accordion frodi__domanda"><details class="accordion__item" id="frodi-domanda">
+          <summary class="accordion__summary"><span class="frodi__domanda-testo"{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %}>{{ faq_question.question }}</span></summary>
+          <div class="accordion__panel"><p{% if faq_question.lang %} lang="{{ faq_question.lang }}"{% endif %}>{{ faq_question.answer }}</p><p class="frodi__domanda-link"><a href="{{ links.faq }}">{% translate "Questions fréquentes" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p></div>
+        </details></div>{% endif %}
+        {% if route_tiles %}<ul class="frodi__rotte" role="list">
+          {% for tile in route_tiles %}<li><a class="frodi__rotta" href="{{ tile.href }}"{% if tile.title_lang %} lang="{{ tile.title_lang }}"{% endif %}><span>{{ tile.title }}</span>{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></li>{% endfor %}
+        </ul>{% endif %}
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

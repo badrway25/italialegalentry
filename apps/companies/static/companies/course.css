@@ -1,0 +1,126 @@
+/* ============================================================================
+   ESPACE ENTREPRISE — where a need stands (V5.32 lane C, the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION
+   directive of 12 Nov 2026): the need's course on its own page (templates/companies/need_detail.html, from
+   companies.services.need_course — the record only). Its own bundle, linked by that page alone: the space's sheet
+   (companies.css) stays at its measure.
+
+   The declared states in their order, one station each: its mark is the state's chip mark (the register's counts and
+   the history draw the same) in the page's ink — the register's colour stays the head's chip's, and data-register is
+   written by the chip partial alone —, its name, the date it was reached when the history holds it. One hairline joins
+   two stations: solid where the need has gone, dotted ahead of it. The station the need is on: its mark ringed in the
+   accent and its name in the control weight — never colour alone, and the words say it to every reader. A column on phones (the
+   rail on the reading edge), a row from 48 rem. No card, no meter, no percentage. Tokens and logical properties only.
+   ========================================================================== */
+.need-course {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.need-course__stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: start;
+  padding-block-end: var(--s-5);
+}
+
+.need-course__stop:last-child {
+  padding-block-end: 0;
+}
+
+/* the hairline to the next station */
+.need-course__stop:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-block: calc(1.75rem + var(--s-1)) var(--s-1);
+  inset-inline-start: calc(0.875rem - 0.5px);
+  border-inline-start: 1px solid var(--line-structure);
+}
+
+.need-course__stop:not([data-state="done"])::after {
+  border-inline-start-style: dotted;
+}
+
+.need-course__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: 50%;
+  color: var(--text-2);
+}
+
+.need-course__mark .icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.need-course__stop[data-state="todo"] .need-course__mark {
+  color: var(--text-3);
+}
+
+.need-course__stop[data-state="current"] .need-course__mark {
+  color: var(--accent-text);
+  outline: 1px solid currentColor;
+  outline-offset: -1px;
+}
+
+.need-course__words {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-1);
+  padding-block-start: var(--s-1);
+}
+
+.need-course__name {
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  color: var(--text-2);
+  text-wrap: balance;
+}
+
+.need-course__stop[data-state="current"] .need-course__name {
+  color: var(--text-1);
+  font-weight: var(--w-control);
+}
+
+.need-course__date {
+  font-size: var(--u-small);
+  line-height: var(--u-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .need-course {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  /* the row is as tall as its tallest station: each station's rows stay packed at its top (the names on one line) */
+  .need-course__stop {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    row-gap: var(--s-2);
+    padding-block-end: 0;
+    padding-inline-end: var(--s-4);
+  }
+
+  .need-course__stop:not(:last-child)::after {
+    inset-block: calc(0.875rem - 0.5px) auto;
+    inset-inline: calc(1.75rem + var(--s-2)) var(--s-2);
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line-structure);
+  }
+
+  .need-course__stop:not([data-state="done"])::after {
+    border-block-start-style: dotted;
+  }
+
+  .need-course__words {
+    padding-block-start: 0;
+  }
+}

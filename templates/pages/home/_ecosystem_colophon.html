@@ -1,0 +1,54 @@
+{% load i18n locked_split pages_imagery %}{% comment %}
+THE PROMOTER'S BAND (V5.31, the owner's FINAL HOMEPAGE REBUILD §25; lane A) — a dark institutional band inside the
+ecosystem's section, full-bleed: AGAMI's own marks (pages.imagery.MARKS, drawn whole, never cropped, recoloured or
+mirrored — the framed logo on its white plate, informative; the seal decorative; both lazy: the home's one LCP is the
+door), over two broad, low-opacity Italy + Morocco fields cropped by the band's edges (never mirrored, aria-hidden). Then
+the label, the name in two weights (pages_imagery.fronte_name: Italian, left to right), three VERIFIED facts set as
+chips — each a phrase of the prescribed answer itself, never a new claim; aria-hidden, because the answer under them says
+each of them — the prescribed answer with its two ink keywords (cms.locked_split.emphasize: the textContent is the answer),
+the authorised partners (G6) and the call. The hooks home-ecosystem__grid / --single / home-ecosystem__partners say
+whether partners stand (apps/partners/tests).
+
+FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026; point 3): AGAMI's identity stood twice (the lockup and the round seal) —
+the SEAL LEFT this composition (pages.imagery keeps it for the promoter's own page); the official rectangular lockup is
+the band's one mark, larger, whole, on a wider plate with its own air. The band is recomposed in two registers instead
+of logo / paragraph / link stacked: above, the plate beside the identity (label, name, the prescribed answer, the call);
+below, across the band on one hairline, the three verified facts as a ledger — each its glyph and its phrase of the
+answer (aria-hidden: the answer says them). One Italy field and one Morocco field, low, at the band's two feet.
+{% endcomment %}<div class="agami-banda on-inverse">
+  <div class="agami-banda__campi" aria-hidden="true"><span class="agami-banda__campo agami-banda__campo--it"></span><span class="agami-banda__campo agami-banda__campo--ma"></span></div>
+  <div class="container agami-banda__griglia">
+    <div class="agami-banda__targa" data-verb="settle">{% include "pages/partials/agami/_marchio.html" with m=d.insegna cls="agami-banda__logo" only %}</div>
+    <div class="colofone home-ecosystem__grid{% if not d.partners %} home-ecosystem__grid--single{% endif %}">
+      <p class="testa__label colofone__label t-label">{% translate "Promoteur" %}</p>
+      <h3 class="colofone__nome" translate="no">{{ d.promoter|fronte_name }}</h3>
+      {% if d.promoter_quote %}
+      <p class="colofone__testo"{% if d.promoter_quote.lang %} lang="{{ d.promoter_quote.lang }}"{% endif %} data-faq="{{ d.promoter_quote.key }}">{{ d.promoter_quote.answer|emphasize:"depuis 2011|Italie–Maroc" }}</p>
+      {% else %}
+      <p class="colofone__testo">{% blocktranslate with project=site.project_name promoter=d.promoter %}{{ project }} est promu par {{ promoter }}.{% endblocktranslate %}</p>
+      {% endif %}
+      {% if d.partners %}
+      <div class="home-ecosystem__partners colofone__partner">
+        <p class="testa__label colofone__label t-label">{% translate "Partenaires" %}</p>
+        <ul class="colofone__elenco" data-partners="{{ d.partners|length }}" role="list">
+          {% for card in d.partners %}
+          <li class="home-ecosystem__partner">
+            {% if card.partner.logo_public %}<img class="home-ecosystem__logo" src="{{ card.partner.logo.file.url }}" alt="" width="{{ card.partner.logo.width|default:'160' }}" height="{{ card.partner.logo.height|default:'80' }}" loading="lazy" decoding="async">{% endif %}
+            <span class="home-ecosystem__partner-name">{{ card.partner.name }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% if d.partners_url %}<p class="colofone__altro"><a class="link-arrow" href="{{ d.partners_url }}">{% translate "Voir les partenaires" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+      </div>
+      {% endif %}
+      {% if d.agami_url %}<p class="agami-banda__azione"><a class="home-cta home-cta--night" href="{{ d.agami_url }}" data-azione><span class="home-cta__testo">{% translate "En savoir plus sur le promoteur" %}</span><span class="home-cta__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span></a></p>{% endif %}
+    </div>
+    {% if d.promoter_quote %}
+    <ul class="agami-fatti sez-seq" role="list" aria-hidden="true">
+      <li class="agami-fatti__voce" data-verb="slide">{% svg_icon "scale" "icon" %}<span>{% translate "Association de juristes" %}</span></li>
+      <li class="agami-fatti__voce" data-verb="slide">{% svg_icon "history" "icon" %}<span>{% translate "Depuis 2011" %}</span></li>
+      <li class="agami-fatti__voce" data-verb="slide">{% svg_icon "messages-square" "icon" %}<span>{% translate "Dialogue juridique Italie–Maroc" %}</span></li>
+    </ul>
+    {% endif %}
+  </div>
+</div>

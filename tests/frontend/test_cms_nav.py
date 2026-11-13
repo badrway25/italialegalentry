@@ -1,0 +1,333 @@
+"""cms_nav template tags: menu tree from CMS rows or the static fallback, gates, brand tags."""
+
+from __future__ import annotations
+
+import re
+
+import pytest
+from django.template import Context, Template
+from django.test import RequestFactory
+from django.utils import translation
+
+from cms.models import MenuItem, MenuLocation
+from cms.templatetags import cms_nav
+
+pytestmark = pytest.mark.django_db
+
+
+def _labels(items):
+    return [i.label for i in items]
+
+
+def test_fallback_main_menu_hides_gated_and_unresolvable_items(seeded, before_phase3):
+    items = cms_nav.build_menu(MenuLocation.MAIN, lang="fr")
+    labels = _labels(items)
+    assert "Institutions" not in labels  # gated by phase3_public
+    assert "Universités & Formation" not in labels
+    assert "Actualités" not in labels
+    for item in items:
+        assert item.url or item.children, item
+        for child in item.children:
+            assert child.url
+
+
+def test_fallback_main_menu_after_phase3_only_lists_resolvable_routes(seeded, phase3_open):
+    items = cms_nav.build_menu(MenuLocation.MAIN, lang="fr")
+    for item in items:
+        assert item.url or item.children
+        for child in item.children:
+            assert child.url.startswith("/fr/")
+
+
+def test_rows_override_fallback_and_respect_visibility_flags_and_gates(seeded, set_flag):
+    parent = MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        order=1,
+        label_fr="Projet",
+        label_it="Progetto",
+        label_en="Project",
+        url_name="pages:home",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=1,
+        label_fr="Privacy",
+        label_it="Privacy",
+        label_en="Privacy",
+        url_name="legal:privacy",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=2,
+        label_fr="Caché",
+        label_it="Nascosto",
+        label_en="Hidden",
+        url_name="legal:cookies",
+        is_visible=False,
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=3,
+        label_fr="Flag",
+        label_it="Flag",
+        label_en="Flag",
+        url_name="pages:contact",  # an open route: the terms (category D) 404 until published (M-2)
+        requires_flag="virtual_forum",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=4,
+        label_fr="Gate",
+        label_it="Gate",
+        label_en="Gate",
+        url_name="legal:notices",
+        requires_gate="phase3_public",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=5,
+        label_fr="Inconnu",
+        label_it="Ignoto",
+        label_en="Unknown",
+        url_name="nope:missing",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        order=2,
+        label_fr="Externe",
+        label_it="Esterno",
+        label_en="External",
+        url="/fr/privacy-policy/",  # an open route (the C/D legal pages 404 until published: M-2)
+        open_in_new_tab=True,
+    )
+
+    items = cms_nav.build_menu(MenuLocation.MAIN, lang="it", path="/it/privacy-policy/")
+    assert _labels(items) == ["Progetto", "Esterno"]
+    assert _labels(items[0].children) == ["Privacy"]
+    assert items[0].children[0].is_current is True
+    assert items[0].is_current is True
+    assert items[1].new_tab is True and items[1].url == "/fr/privacy-policy/"
+
+    set_flag("virtual_forum", True)
+    items = cms_nav.build_menu(MenuLocation.MAIN, lang="fr")
+    assert _labels(items[0].children) == ["Privacy", "Flag"]
+
+
+def test_home_is_current_only_on_exact_path(seeded):
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN, order=1, label_fr="Accueil", label_it="Home", label_en="Home", url_name="pages:home"
+    )
+    items = cms_nav.build_menu(MenuLocation.MAIN, lang="fr", path="/fr/privacy-policy/")
+    assert items[0].is_current is False
+    items = cms_nav.build_menu(MenuLocation.MAIN, lang="fr", path="/fr/")
+    assert items[0].is_current is True
+
+
+def test_footer_menu_fallback_and_rows(seeded):
+    items = cms_nav.build_menu(MenuLocation.FOOTER_1, lang="fr")
+    assert all(i.url for i in items)
+    MenuItem.objects.create(
+        location=MenuLocation.FOOTER_1,
+        order=1,
+        label_fr="Privacy",
+        label_it="Privacy",
+        label_en="Privacy",
+        url_name="legal:privacy",
+    )
+    items = cms_nav.build_menu(MenuLocation.FOOTER_1, lang="fr")
+    assert _labels(items) == ["Privacy"]
+
+
+def test_gate_open_mapping(seeded, set_flag):
+    assert cms_nav.gate_open("") is True
+    assert cms_nav.gate_open("phase3_public") is False
+    assert cms_nav.gate_open("public_forms") is False
+    assert cms_nav.gate_open("unknown_flag_name") is False
+    set_flag("unknown_flag_name", True)
+    assert cms_nav.gate_open("unknown_flag_name") is True
+
+
+def test_brand_tags_use_locked_registry():
+    tpl = Template('{% load cms_nav %}{% brand %}|{% brand "x" %}|{% brand_words %}')
+    with translation.override("fr"):
+        out = tpl.render(Context({}))
+    assert '<span class="brand__wordmark" translate="no" dir="ltr" lang="en">Italy Legal Entry™</span>' in out
+    assert '<span class="x" translate="no" dir="ltr" lang="en">Italy Legal Entry™</span>' in out
+    assert out.endswith("marque déposée")
+    with translation.override("it"):
+        assert Template("{% load cms_nav %}{% brand_words %}").render(Context({})) == "marchio depositato"
+    with translation.override("ar"):
+        assert Template("{% load cms_nav %}{% brand_words %}").render(Context({})) == ""
+    assert "®" not in out
+
+
+def test_site_context_rebinds_dict_when_shadowed(seeded):
+    from django.contrib.sites.models import Site
+
+    request = RequestFactory().get("/fr/")
+    tpl = Template("{% load cms_nav %}{% site_context as site %}{{ site.project_name }}|{{ site.dir }}")
+    with translation.override("fr"):
+        out = tpl.render(Context({"request": request, "site": Site(domain="example.com", name="x")}))
+    assert out == "Italy Legal Entry™|ltr"
+    with translation.override("ar"):
+        out = tpl.render(Context({"request": request, "site": {"project_name": "kept", "dir": "rtl"}}))
+    assert out == "kept|rtl"
+
+
+def test_main_menu_tag_renders_in_template(client, seeded):
+    parent = MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        order=1,
+        label_fr="Projet",
+        label_it="Progetto",
+        label_en="Project",
+        url_name="pages:home",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=1,
+        label_fr="Privacy",
+        label_it="Privacy",
+        label_en="Privacy",
+        url_name="legal:privacy",
+    )
+    html = client.get("/fr/privacy-policy/").content.decode()
+    # «Il portico» (design V5, W2-C1): the tree as disclosure buttons with their panels in the letterhead
+    assert f'aria-controls="nav-main-{parent.id}-portico" data-portico-door aria-current="true"' in html
+    assert f'id="nav-main-{parent.id}-portico" data-portico-panel' in html
+    # the sheet below 80rem (W2-C2): the same tree, each section a door unfolding in place — the current section's
+    # open and marked, its current entry marked — so the entry is drawn twice, once in each
+    assert '<details class="nav-sheet__door" name="nav-sheet-doors" open>' in html
+    assert '<summary class="nav-sheet__row" aria-current="true">' in html
+    assert html.count('class="portico__link" href="/fr/privacy-policy/" aria-current="page"') == 2
+
+
+def test_portico_gives_every_door_its_panel_from_live_content(seeded, legal_published, phase3_open):
+    """«Il portico» (V5.4 plan §1.12): a section leading to an audience's space is a door, drawn with the door
+    card's locked gloss, its audience glyph and its photograph; a door without CMS children carries the door card's
+    two live task links; the anti-fraud page is the panel's foot, not an entry; a second line exists only where a
+    short live sentence does, whole; the hairline stands before the first item after the doors."""
+    items = {item.label: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr")}
+    doors = [item for item in items.values() if item.audience]
+    assert [door.audience for door in doors] == ["person", "company", "institution", "university"]
+    for door in doors:
+        assert door.is_section and door.children and door.icon, door.label
+        assert door.photo["src"].endswith("-640.webp") and " 960w" in door.photo["srcset"], door.label
+        assert door.photo["width"] == 640 and door.photo["height"] == 800
+        assert door.gloss and door.gloss_lang == "", door.label  # the locked gloss, in the page's language
+        for child in door.children:
+            assert child.url_name != cms_nav._FOOT_ROUTE
+            assert len(child.description) <= cms_nav._SECOND_LINE_MAX
+    assert items["Personnes"].foot_url.endswith("/attention-aux-fraudes/")
+    # the door's own space's line is its legal notice, in the foot, not a second line (finishing round F1, M-2)
+    # its six entries are titles alone, all alike (V5.18, P-4: two of them have no short live sentence)
+    assert [bool(c.description) for c in items["Personnes"].children] == [False] * 6
+    assert items["Personnes"].notice and items["Personnes"].notice_lang == ""
+    # the needs form's line repeated the door's gloss, word for word (V5.18 §2, B3): the entry is its title alone
+    assert [bool(c.description) for c in items["Entreprises"].children] == [False, True]
+    assert items["Entreprises"].gloss.startswith("Signalez les besoins professionnels de votre entreprise")
+    assert [c.url_name for c in items["Institutions"].children] == ["enquiries:institution_proposal", "forum:index"]
+    assert [c.label for c in items["Universités & Formation"].children] == [
+        "Proposer un partenariat",
+        "Formation : avant le départ et après l’arrivée",
+    ]
+    forum, project = items["Forum Vénétie–Maroc"], items["Projet"]
+    assert forum.after_doors is True and not forum.is_section and not forum.audience
+    assert project.is_section and not project.photo and not project.audience
+    assert project.gloss == "Le projet, son promoteur et son réseau." and project.gloss_lang == ""
+    # V5.12 §8 (the hide gates, W1-C): «Actualités» leaves the panel while no article is live (core.gates.news_public)
+    assert [c.label for c in project.children] == ["Italy Legal Entry", "AGAMI", "Réseau", "Contact"]
+    # the pages' own standfirsts, where one is short enough; AGAMI: its page's first chapter head (finishing round F1)
+    assert [bool(c.description) for c in project.children] == [True, True, True, True]
+    assert project.children[1].description == "Le promoteur du projet"
+    assert project.children[3].description == "Une adresse unique pour toutes les demandes relatives au projet."
+
+
+def test_portico_glosses_and_second_lines_carry_their_language(seeded, legal_published, phase3_open):
+    """On an Arabic page a prescribed French gloss says lang="fr" (and is drawn LTR in its run), a translated
+    gloss is in the page's language and says nothing, and a second line is shown only in the page's own language —
+    a panel never mixes a French line into an Arabic list."""
+    from cms import locked_renderings
+
+    arabic = re.compile(r"[\u0600-\u06ff]")
+    # V5.27 (FINAL_DELIVERY_V2 R7′; V5.20, the steward's amendment at the v524-ar merge): the person door's prescribed
+    # gloss is a compositional text (C-UI) — on /ar/ its provisional Arabic rendering, in the page's language; on /it/
+    # (no official version) the prescribed French, said with lang="fr", as before
+    italian = {item.audience: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="it")}
+    assert italian["person"].gloss and italian["person"].gloss_lang == "fr"
+    items = {item.audience or item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="ar")}
+    assert locked_renderings.treatment("p3.entrances.person.text") == "C-UI"
+    assert items["person"].gloss == locked_renderings.rendering("p3.entrances.person.text")
+    assert arabic.search(items["person"].gloss) and items["person"].gloss_lang == ""
+    assert arabic.search(items["pages:project"].gloss) and items["pages:project"].gloss_lang == ""
+    lines = [c.description for item in items.values() for c in item.children if c.description]
+    assert lines and all(arabic.search(line) for line in lines), lines
+    # a description written in the back-office is French: it is the gloss on the French page only
+    parent = MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        order=1,
+        label_fr="Projet",
+        label_it="Progetto",
+        label_en="Project",
+        label_ar="المشروع",
+        url_name="pages:project",
+        description_fr="Une phrase écrite dans le back-office.",
+    )
+    MenuItem.objects.create(
+        location=MenuLocation.MAIN,
+        parent=parent,
+        order=1,
+        label_fr="Contact",
+        label_it="Contatto",
+        label_en="Contact",
+        label_ar="اتصل",
+        url_name="pages:contact",
+        description_fr="Écrire à l’équipe.",
+    )
+    fr = cms_nav.build_menu(MenuLocation.MAIN, lang="fr")[0]
+    assert fr.gloss == "Une phrase écrite dans le back-office." and fr.gloss_lang == ""
+    assert fr.children[0].description == "Écrire à l’équipe."
+    ar = cms_nav.build_menu(MenuLocation.MAIN, lang="ar")[0]
+    assert ar.gloss == "Une phrase écrite dans le back-office." and ar.gloss_lang == "fr"
+    # the French back-office line never reaches the Arabic list; the destination's own live Arabic sentence does
+    # (the contact page's lead, in _SECOND_LINES), as the plan's precedence says: description_<lang>, then the live line
+    assert ar.children[0].description != "Écrire à l’équipe." and arabic.search(ar.children[0].description)
+
+
+def test_portico_notice_stands_in_every_language_and_one_item_is_current(seeded, legal_published, phase3_open):
+    """Finishing round F1 (v515-a, M-2 and a minor): the Personnes door's legal notice («… ne délivre pas de visas …»)
+    is the panel's foot on every page — in the locked French, said with lang="fr", until the prescribed text is in the
+    page's language — never only on the French page; the brand in a line is one isolated LTR run; on the Forum, the
+    Forum's own item is current and the Institutions door, whose panel lists it, is not."""
+    from cms import locked_renderings
+
+    fr = {item.audience or item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr")}
+    for lang in ("it", "en"):
+        person = {item.audience: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang=lang)}["person"]
+        assert person.notice, lang
+        assert person.notice_lang in ("", "fr"), lang
+        assert person.notice_lang == "fr" or person.notice != fr["person"].notice, lang
+        assert not person.children[0].description, "the notice is never drawn twice"
+    # V5.27 (FINAL_DELIVERY_V2 R7′ (3); V5.27 §2 «hiding is preferable to mixed-language content»; V5.20, the
+    # steward's amendment at the v524-ar merge): the notice is a substantive text pending its Arabic validation
+    # (C-SUBST-FR) — an Arabic menu does not say it at all, neither its French nor a pointer; its own page carries it,
+    # identified
+    assert locked_renderings.treatment("p3.persons.intro") == "C-SUBST-FR"
+    assert not locked_renderings.menu_notice_allowed("p3.persons.intro", "ar")
+    menu_ar = cms_nav.build_menu(MenuLocation.MAIN, lang="ar")
+    person = {item.audience: item for item in menu_ar}["person"]
+    assert person.notice == "" and person.notice_lang == ""
+    assert not person.children[0].description, "the notice is never drawn twice"
+    assert all(fr["person"].notice not in (item.notice, item.gloss) for item in menu_ar)
+    line = str(cms_nav.brand_bdi("Les réponses sur Italy Legal Entry™ et <b>les parcours</b>"))
+    assert '<bdi dir="ltr">Italy Legal Entry™</bdi>' in line and "&lt;b&gt;" in line, line
+    items = {item.url_name: item for item in cms_nav.build_menu(MenuLocation.MAIN, lang="fr", path="/fr/forum/")}
+    assert items["forum:index"].is_current
+    assert not items["ecosystem:institutions"].is_current
+    assert not any(child.is_current for child in items["ecosystem:institutions"].children)

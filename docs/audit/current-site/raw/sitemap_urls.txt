@@ -1,0 +1,10 @@
+--- https://legalitalentry.it/wp-sitemap-index.xsl"
+--- ?>
+--- https://legalitalentry.it/wp-sitemap-posts-post-1.xml
+https://legalitalentry.it/hello-world/
+--- https://legalitalentry.it/wp-sitemap-posts-page-1.xml
+https://legalitalentry.it/
+--- https://legalitalentry.it/wp-sitemap-taxonomies-category-1.xml
+https://legalitalentry.it/category/uncategorized/
+--- https://legalitalentry.it/wp-sitemap-users-1.xml
+https://legalitalentry.it/author/[REDATTO]/

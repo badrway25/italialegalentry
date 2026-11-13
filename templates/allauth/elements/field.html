@@ -1,0 +1,27 @@
+{% load allauth i18n ile_core ile_forms %}{% comment %}
+allauth's `field` element (its explicit fields: the one-time codes, the authenticator's code) — an adapter of THE field
+(components/form_field.html; V5.12 W2, DECISIONS §5.1): the same anatomy from allauth's `attrs` instead of a
+BoundField — the label always visible with «facultatif» when it is optional (no asterisk), the control plate with its
+trailing status slot, the help, the one message row (aria-live, the field's only announcement channel: no role="alert"
+inside it) whose server error has the `_error` id the control names. The inline check reads `required` and the type from the control itself.
+{% endcomment %}{% form_assets %}
+<div class="form-field{% if attrs.errors %} form-field--error{% endif %} form-field--{% if attrs.type == 'textarea' %}textarea{% elif attrs.type == 'checkbox' or attrs.type == 'radio' %}checkbox{% else %}text{% endif %}{% if attrs.required %} form-field--required{% else %} form-field--optional{% endif %}" data-field>
+  {% if attrs.type == "checkbox" or attrs.type == "radio" %}
+    <div class="form-field__check">
+      <input {% if attrs.required %}required{% endif %} {% if attrs.disabled %}disabled{% endif %} {% if attrs.readonly %}readonly{% endif %} {% if attrs.checked %}checked{% endif %} {% if attrs.name %}name="{{ attrs.name }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %} type="{{ attrs.type }}"{% if slots.help_text or attrs.errors %} aria-describedby="{% if slots.help_text %}{{ attrs.id }}_helptext{% endif %}{% if attrs.errors %} {{ attrs.id }}_error{% endif %}"{% endif %}>
+      <label for="{{ attrs.id }}">{% slot label %}{% endslot %}{% if not attrs.required %} {% include "components/_optional.html" %}{% endif %}</label>
+    </div>
+  {% else %}
+    <label class="form-field__label" for="{{ attrs.id }}"><span>{% slot label %}{% endslot %}</span>{% if not attrs.required %} {% include "components/_optional.html" %}{% endif %}</label>
+    <div class="form-field__control">
+    {% if attrs.type == "textarea" %}
+      <textarea {% if attrs.required %}required{% endif %} {% if attrs.rows %}rows="{{ attrs.rows }}"{% endif %} {% if attrs.disabled %}disabled{% endif %} {% if attrs.readonly %}readonly{% endif %} {% if attrs.name %}name="{{ attrs.name }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}{% if slots.help_text or attrs.errors %} aria-describedby="{% if slots.help_text %}{{ attrs.id }}_helptext{% endif %}{% if attrs.errors %} {{ attrs.id }}_error{% endif %}"{% endif %}{% if attrs.errors %} aria-invalid="true"{% endif %}>{% slot value %}{% endslot %}</textarea>
+    {% else %}
+      <input {% if attrs.required %}required{% endif %} {% if attrs.disabled %}disabled{% endif %} {% if attrs.readonly %}readonly{% endif %} {% if attrs.name %}name="{{ attrs.name }}"{% endif %} {% if attrs.id %}id="{{ attrs.id }}"{% endif %} {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %} {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %} {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %} type="{{ attrs.type }}"{% if attrs.type == "email" or attrs.type == "tel" or attrs.type == "password" or attrs.type == "url" %} dir="ltr"{% endif %}{% if slots.help_text or attrs.errors %} aria-describedby="{% if slots.help_text %}{{ attrs.id }}_helptext{% endif %}{% if attrs.errors %} {{ attrs.id }}_error{% endif %}"{% endif %}{% if attrs.errors %} aria-invalid="true"{% endif %}>
+    {% endif %}
+      <span class="form-field__status" aria-hidden="true">{% if attrs.errors %}{% svg_icon "circle-alert" "icon" %}{% elif attrs.readonly %}{% svg_icon "lock" "icon" %}{% endif %}</span>
+    </div>
+  {% endif %}
+  {% if slots.help_text %}<div class="form-field__help" id="{{ attrs.id }}_helptext">{% slot help_text %}{% endslot %}</div>{% endif %}
+  <div class="form-field__msg" aria-live="polite" data-field-msg><div class="form-field__msg-in">{% if attrs.errors %}<div class="form-field__errors" id="{{ attrs.id }}_error"><ul class="form-field__error-list">{% for error in attrs.errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}</div></div>
+</div>

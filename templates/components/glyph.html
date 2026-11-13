@@ -1,0 +1,9 @@
+{% comment %}
+Avatar / Glyph (design V4, DESIGN_SYSTEM_V4.md §8.6): a disc with the glyph of an ACTOR — person,
+building, institution, university, shield for an authority — beside the actor's type and, when it
+exists, the real name. Never a photograph of a person, never a glyph alone: the caller prints the
+words next to it. An actor with no glyph gets the dashed disc.
+
+Contract: `glyph` (icon id of static/img/icons.svg, may be empty), optional `size` = "sm" (24) ·
+"md" (32, default) · "lg" (40), optional `dark` (True on a navy surface). Decorative: aria-hidden.
+{% endcomment %}<span class="glyph glyph--{{ size|default:'md' }}{% if dark %} glyph--dark{% endif %}{% if not glyph %} glyph--none{% endif %}" aria-hidden="true">{% if glyph %}{% svg_icon glyph "icon glyph__icon" %}{% endif %}</span>

@@ -1,0 +1,28 @@
+{% load i18n forum_tags %}
+{% comment %}
+Registration form (gate G2 open). Fields in the prescribed order, anti-spam honeypot (hidden to
+humans and assistive technologies), mandatory non-pre-ticked consent with the locked wording.
+{% endcomment %}
+<form method="post" action="{% url 'forum:register' %}" class="forum-form" id="forum-registration-form" novalidate>
+  {% csrf_token %}
+  {% if form.errors %}
+    <div class="notice notice--error forum-form__summary" role="alert" tabindex="-1" id="forum-form-errors">
+      <p><strong>{% translate "Le formulaire contient des erreurs. Merci de vérifier les champs signalés." %}</strong></p>
+      {% if form.non_field_errors %}<ul>{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+  {% endif %}
+  <div class="forum-form__grid" lang="fr">
+    {% for field in form.public_fields %}
+      {% include "components/form_field.html" with field=field %}
+    {% endfor %}
+  </div>
+  <div class="hp-field" aria-hidden="true">
+    <label for="{{ form.website_url.id_for_label }}">{{ form.website_url.label }}</label>
+    {{ form.website_url }}
+  </div>
+  {{ form.form_started_at }}
+  <p class="forum-form__required-note"><span aria-hidden="true">*</span> {% translate "Champs obligatoires" %}</p>
+  <div class="forum-form__actions">
+    <button type="submit" class="btn btn--primary btn--lg">{% event_text event "registration.button_primary" %}</button>
+  </div>
+</form>

@@ -1,0 +1,15 @@
+{% load i18n %}{% comment %}One term of the glossary — a definition row of «il lessico» (FINAL MICRO-PASS §6 B2): the Italian term, the
+row's heading and its link to the term's page (a stretched link: the row is the target, the name stays the term); the
+prescribed definition, whole, always visible (a glossary is read, not unfolded); «Où le rencontrer»: the pathways whose
+sheets name the term, as chips (links above the stretched one). A letter's first row carries the letter — its modest
+heading (h2, before the rows' h3) and the anchor of the alphabet (#lettre-X). The term and the definition are what the
+live search matches (static/js/src/cerca.js). Contract: `card` ({"entry": glossary.services.GlossaryEntry, "chips":
+[{"label", "url", "lang"}], "letter": the letter its row opens in the register, or nothing}). V5.27 / R7′ (the
+v524-pub2 steward): a French definition on an Arabic page is preceded by its identification caption
+(`card.entry.definition_key`) — the two one grid item (.lessico__fonte). The V5.22 card's plate and its reading-edge
+rule left (BRIEF §6 B2: no shadowed cards, no side stripe).{% endcomment %}<article class="lessico__carta" id="{{ card.entry.key }}" aria-labelledby="{{ card.entry.key }}-term" data-cerca-voce>
+  {% if card.letter %}<h2 class="lessico__lettera" id="lettre-{{ card.letter }}">{{ card.letter }}</h2>{% endif %}
+  <h3 class="glossary-entry__term lessico__termine" data-cerca-testo id="{{ card.entry.key }}-term" lang="{{ card.entry.term_lang }}"><a class="sez-stretch" href="{{ card.entry.url }}">{{ card.entry.term }}</a></h3>
+  {% if card.entry.definition_key %}{% locked_caption card.entry.definition_key as caption %}{% endif %}{% if caption %}<div class="lessico__fonte">{{ caption }}{% endif %}<p class="lessico__definizione" data-cerca-testo{% if card.entry.is_fallback %} lang="{{ card.entry.lang }}"{% endif %}>{{ card.entry.definition }}</p>{% if caption %}</div>{% endif %}
+  {% if card.chips %}<div class="lessico__dove"><p class="lessico__etichetta">{% translate "Où le rencontrer" %}</p><ul class="lessico__chips" role="list">{% for chip in card.chips %}<li><a class="lessico__chip" href="{{ chip.url }}"{% if chip.lang %} lang="{{ chip.lang }}"{% endif %}>{{ chip.label }}</a></li>{% endfor %}</ul></div>{% endif %}
+</article>

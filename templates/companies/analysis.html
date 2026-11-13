@@ -1,0 +1,137 @@
+{% extends "companies/base_companies.html" %}{% load i18n static %}
+{% comment %}
+TERRITORIAL AND SECTORAL ANALYSIS — counts only (REQ-B2B-05). A staff page: in design V5 (W3-E step 2) its chrome only
+— the page's head without an eyebrow, the sections' heads, the console's tables and the registers' clause; the staff's
+working screens as a whole are recorded as design debt (QA/v54/w3-e/NOTES.md).
+
+Not visible to a company: it aggregates the needs of every company. It shows counts, and nothing
+that could be turned back into a row — no company name, no need title, no identifier. Drafts and
+withdrawn needs are excluded: a draft is a private working document and a withdrawn need is not a
+need.
+
+No meter, no percentage, no chart. A headed table with a dash for a null, which is what a count is.
+{% endcomment %}
+{% block page_title %}{% translate "Analyse territoriale des besoins" %}{% endblock %}
+{% block meta_description %}{% translate "Les besoins exprimés, agrégés par territoire et par secteur." %}{% endblock %}
+
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="company">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Analyse territoriale des besoins" %}</h1>
+    <p class="ws-head__lead">{% translate "Les besoins exprimés, comptés par territoire et par secteur. Des effectifs, jamais des personnes." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block companies_content %}
+<div class="reg-page db-main">
+<section class="reg-sec" aria-labelledby="totals-title">
+  <h2 class="db-h2 reg-sec__title" id="totals-title">{% svg_icon "map" "icon" %}<span>{% translate "Ce qui est compté" %}</span></h2>
+  <dl class="portal-facts">
+    <div class="portal-facts__row">
+      <dt>{% translate "Besoins exprimés" %}</dt>
+      <dd>{{ aggregate.total_needs }}</dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "Profils cumulés" %}</dt>
+      <dd>{{ aggregate.total_headcount }}</dd>
+    </div>
+    <div class="portal-facts__row">
+      <dt>{% translate "États retenus" %}</dt>
+      <dd>{{ aggregate.counted_states|join:", " }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="reg-sec" aria-labelledby="territory-title">
+  <h2 class="db-h2 reg-sec__title" id="territory-title"><span>{% translate "Par territoire" %}</span></h2>
+  {% if aggregate.by_territory %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-1">
+    <table class="data-table">
+      <caption id="t-analysis-1" class="visually-hidden">{% translate "Nombre de besoins et de profils par territoire" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Territoire" %}</th>
+          <th scope="col">{% translate "Besoins" %}</th>
+          <th scope="col">{% translate "Profils" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in aggregate.by_territory %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Territoire' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Besoins' %}">{{ row.needs }}</td>
+          <td data-label="{% translate 'Profils' %}">{{ row.headcount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="db-empty">{% translate "Aucun besoin transmis à ce jour : l’agrégation apparaîtra dès la première transmission." %}</p>
+  {% endif %}
+</section>
+
+<section class="reg-sec" aria-labelledby="sector-title">
+  <h2 class="db-h2 reg-sec__title" id="sector-title"><span>{% translate "Par secteur" %}</span></h2>
+  {% if aggregate.by_sector %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-2">
+    <table class="data-table">
+      <caption id="t-analysis-2" class="visually-hidden">{% translate "Nombre de besoins et de profils par secteur d’activité" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Secteur" %}</th>
+          <th scope="col">{% translate "Besoins" %}</th>
+          <th scope="col">{% translate "Profils" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in aggregate.by_sector %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Secteur' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Besoins' %}">{{ row.needs }}</td>
+          <td data-label="{% translate 'Profils' %}">{{ row.headcount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="db-empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
+  {% endif %}
+</section>
+
+<section class="reg-sec" aria-labelledby="status-title">
+  <h2 class="db-h2 reg-sec__title" id="status-title"><span>{% translate "Par état de traitement" %}</span></h2>
+  {% if aggregate.by_status %}
+  <div class="scroll-x" tabindex="0" role="region" aria-labelledby="t-analysis-3">
+    <table class="data-table">
+      <caption id="t-analysis-3" class="visually-hidden">{% translate "Nombre de besoins par état de traitement" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "État" %}</th>
+          <th scope="col">{% translate "Besoins" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in aggregate.by_status %}
+        <tr>
+          <th scope="row" data-label="{% translate 'État' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Besoins' %}">{{ row.needs }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="db-empty">{% translate "Aucun besoin transmis à ce jour." %}</p>
+  {% endif %}
+</section>
+
+</div>
+
+<p class="reg-note">{% translate "Cette page agrège des besoins. Elle ne contient ni nom d’entreprise, ni intitulé de besoin, ni identifiant, et elle ne compte aucune personne." %}</p>
+{% endblock %}

@@ -1,0 +1,23 @@
+/* ============================================================================================
+   THE DOCUMENTS PAGES — the page sheet, design V5 (W3-C; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 5, §2.3)
+   Loaded in `extra_head` by the five pages that draw the register or a piece: templates/portal/documents.html
+   («Mes pièces» in the reserved area), templates/documents/{index,requirement_detail,upload,terms_required}.html.
+
+   This sheet is the pages' IMPORT LIST and nothing else: the document workspace is drawn by three console partials
+   (`_`-prefixed: scripts/build_css.mjs bundles them into this entry and never builds them on their own, DL54-15),
+   kept out of main.css and out of console.css — only the pages that draw the register load them. An import is
+   written as it resolves in the COLLECTED tree, from this sheet's collected path documents/documents.css: a partial
+   of apps/portal/static/portal/v5/ is ../portal/v5/_x.css (DS 2026 §2; tests/frontend/test_static_pipeline.py).
+
+     ../portal/v5/_workspace.css   «Mes pièces»: the page header, the file's block, «il registro», the date, the
+                                   state filter and its sheet, the collection, the row, the three layouts
+     ../portal/v5/_table.css       the files themselves: a real table below the register
+     ../portal/v5/_depot.css       one piece: its state, its deposit, what is asked, its source, its deposits
+
+   The V4 rules this file held (the register table and its pop-in, the outcome borders, the entry-based deposits,
+   the page's own title at the public size) are replaced by the three partials.
+   ========================================================================================== */
+
+@import url("../portal/v5/_workspace.css");
+@import url("../portal/v5/_table.css");
+@import url("../portal/v5/_depot.css");

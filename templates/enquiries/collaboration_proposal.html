@@ -1,0 +1,52 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The collaboration proposals of institutions and of universities and training bodies (gate G2). Design V5.4 (W3-F2 —
+the content pages): the head at the reading edge (the space's name, the title, the introduction — prescribed once gate
+G3 opens — and the recipients); the form a chapter — the section device beside it from 75rem — drawn by
+v5/field.css, its one primary (its label locked).
+V5.22 (SECTION_SYSTEM_V2 §3.7 IN-H; lane P1, the header block only — the form is untouched): the head is its space's
+band, compact (pages/partials/_ingresso.html compact=True) — for an institution the civic band, its T1 `ile-istituzione`
+seal, the locked introduction, and the locked recipients sentence as a side annotation beside a small drawing of the
+six-seat hemicycle (ecosystem/partials/emiciclo_nota.html, aria-hidden); for a university or a training body the
+learning band and its `ile-sapere` seal — in at most half the first screen at 1440, so the formwork still starts in it.
+The page links the band's sheet (pages/css/fronte.css: +1 request, recorded).
+Round 2 (QA_ROUND2 M2): the prescribed introduction carries its own language (`lead_lang`, the registry's), so on an
+Arabic page the lead is a French box like the recipients' note, both on one edge; the note one annotation, the drawing
+beside its words.
+V5.32 (P2-2 of the integration review): a university's head draws NO photograph — round 2 seated
+`universities.exchange` there, the campus frame of /universites-et-formation/, the page one click before; a frame is
+never reused across two pages, and no provenance-backed photograph is free for this form, so the head stays the
+learning band's words (its sheet ecosystem/proposta.css retired with it).
+V5.29 §15–§17 (lane PUB1, the header block only — the form is untouched): an institution's head stands in «l'intesa», the
+Italy + Morocco ground (ecosystem/partials/intesa.html, aria-hidden; ecosystem/intesa.css, +1 request, an institution's page
+only): Italy's three vertical fields at the reading edge, Morocco's red field and fine green pentagram at the far edge,
+meeting around the head's words; the flags never mirrored in Arabic, a still under reduced motion.
+V5.32 (lane C, GLOBAL SITE + PLATFORM DESIGN COMPLETION): the form head's concept tile left — the steps' own tiles and the
+side already say the concept; the head is its title (and its quote).
+{% endcomment %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--collaboration lettura{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<article class="enquiry-page enquiry-page--collaboration" data-kind="{{ kind }}">
+  {% if kind == "university" %}{% translate "Espace Universités et Formation" as space_label %}{% else %}{% translate "Espace Institutions" as space_label %}{% endif %}
+  {% if phase3_public %}{% if kind == "university" %}{% locked "p3.universities.intro" as lead_html %}{% locked_lang "p3.universities.intro" as lead_lang %}{% else %}{% locked "p3.institutions.intro" as lead_html %}{% locked_lang "p3.institutions.intro" as lead_lang %}{% endif %}{% else %}{% comment %}CONTENT_PENDING_LEGAL_REVIEW — no prescribed introduction exists for this page before Phase 3; the locked p3.institutions.* / p3.universities.* texts render automatically once gate G3 opens.{% endcomment %}{% translate "Institutions, universités et organismes de formation : présentez votre proposition de collaboration dans le cadre du projet Italy Legal Entry™. Elle sera examinée par l’équipe du projet, qui vous recontactera si nécessaire." as lead_html %}{% endif %}
+  {% if kind != "university" %}<div class="intesa-campo">{% include "ecosystem/partials/intesa.html" with id="intesa-testa" only %}{% endif %}
+  {% if kind == "university" %}{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=lead_html lead_lang=lead_lang motif="learning" seal="ile-sapere" compact=True fronte_linked=True only %}{% elif phase3_public %}{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=lead_html lead_lang=lead_lang motif="civic" seal="ile-istituzione" aside_template="ecosystem/partials/emiciclo_nota.html" compact=True fronte_linked=True only %}{% else %}{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=lead_html motif="civic" seal="ile-istituzione" compact=True fronte_linked=True only %}{% endif %}
+  {% if kind != "university" %}</div>{% endif %}
+  <section class="formwork-section enquiry-page__form" id="formulaire" aria-labelledby="collaboration-form-title">
+    <div class="container">
+      <div class="formwork-section__head">
+        <h2 id="collaboration-form-title" class="formwork-section__title enquiry-page__form-title">{% translate "Votre proposition" %}</h2>
+      </div>
+      {% if not forms_open or not form %}
+        {% include "components/form_unavailable.html" %}
+      {% else %}
+        {% include "enquiries/partials/form_shell.html" with form=form form_id="formulaire-collaboration" form_class="enquiry-form--collaboration" legend=_("Votre organisme et votre proposition") submit_label_key=button_key %}
+      {% endif %}
+    </div>
+  </section>
+</article>
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% if kind != "university" %}<link rel="stylesheet" href="{% static 'css/dist/ecosystem/intesa.css' %}">{% endif %}{% endblock %}

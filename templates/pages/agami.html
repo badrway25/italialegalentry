@@ -1,0 +1,105 @@
+{% extends "pages/institutional_base.html" %}{% load i18n static pages_imagery locked_split %}
+{% comment %}
+/agami/ — the promoter. Prescribed texts: p2.forum.who.body (Phase 2, already public) and, when gate G3 is open, the
+prescribed FAQ entry faq_who (question + answer, verbatim). No institutional person is named and no logo of a public
+body is shown.
+
+V5.23 (the owner's Q9 decision A, 30 October 2026; SECTION_SYSTEM_V2 §11.1): the page shows the association's verified
+public identification ITSELF — its name, legal form, tax code, RUNTS entry, registration decree, registered and
+operational offices, official contact and website, as the owner gave them, from ONE canonical source
+(apps/pages/identity.py; the name and the address are the site's own constants), and no other identifier. It never
+sends a visitor to the unpublished «Mentions légales» to identify the association; once they are published the plate
+links to them for more (links.notices), and stays understandable on its own.
+
+CONTENT_PENDING_LEGAL_REVIEW — the official «Mentions légales» (Allegato 1 — Testi legali, Q2:
+BLOCKED_BY_MISSING_OFFICIAL_SOURCE) stay unpublished: the plate links them only once they are (links.notices).
+
+V5.30 §8 (the owner's final art direction, 7 Nov 2026; label v530-agami-build) — an institutional composition from VERIFIED
+material, the drawn colonnade retired (the page drew a temple three times: the head, the identity plate, the bookend):
+  head   «l'insegna» — the name in two weights (KEEP) and AGAMI's own published tagline as the lead (its four published
+         versions, agamieuromed.org: the catalogue carries them, never a team translation), beside it in the composed
+         seat the OFFICIAL LOGO on its white plate (pages/partials/agami/_insegna.html; the promoter's own mark,
+         pages.imagery.MARKS, static/brand/agami): the page's real image — the seat composes the head, so the ground's
+         drawing stands down (_agami.css), as on every composed head;
+  band   A «l'identità» on stone — the promoter's text and the FAQ's near-identical answer (KEEP, both texts unchanged), beside
+         them «En bref», the role panel on the raised plate (pages/partials/agami/_in_breve.html): promoter of
+         Italy Legal Entry™ and of the Forum Vénétie–Maroc, legal dialogue Italy – Morocco, active since 2011 — every value
+         from ILE's tracked copy (p2.forum.who.body, faq_who, the page's description); MASK from the reading edge;
+  band   K «la targa» on night: the identification plate (KEEP, every Q9 field unchanged), now headed by the official seal
+         (decorative: the plate's words name the association) — the identification reads as the association's own card;
+  strip  K «l'approdo» on stone — the relationship: «Entre l'Italie et le Maroc», AGAMI's own published motto as its lead
+         (four published versions), the ways on (the project, the network, the Forum) on the Italy + Morocco ground
+         (ecosystem/partials/intesa.html, the one primitive's default «campo» variant, a closing band's ground, as under the
+         Espace Institutions' and Réseau's «Pour aller plus loin»); no drawn bookend.
+No photograph: the AGAMI project's portraits are personal data of third parties and its round-table photographs show
+identifiable people (docs/design-v5/QA/v530/agami/PROVENANCE.md) — the logo is the page's one image, never a stock frame.
+Route sheet agami.css (+ _agami.css, which imports the intesa's partial).
+{% endcomment %}
+{% block page_title %}{% translate "AGAMI, le promoteur" %}{% endblock %}
+{% block route_sheet %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/agami.css' %}">{% endblock %}
+{% block page_header %}
+{% translate "Le promoteur" as page_label %}{# Translators: AGAMI's own published tagline (its official site, its fr/it/en/ar pages): use the version AGAMI publishes in each language, word for word — never a new translation. #}
+{% translate "Du dialogue juridique à la coopération internationale" as tagline %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=promoter|fronte_name lead=tagline motif="civic" glyph="scale" compose="name" aside_template="pages/partials/agami/_insegna.html" insegna=insegna fronte_linked=True only %}
+{% endblock %}
+{% block page_body %}
+<section class="sez sez--campata agami-identita" data-sec="campata" data-ground="stone" data-rhythm="band" aria-labelledby="agami-who-title">
+  <div class="container agami-identita__griglia">
+    <div class="agami-identita__lastra" data-verb="mask">{% include "pages/partials/agami/_in_breve.html" %}</div>
+    <div class="agami-identita__testo">
+      {% translate "Le promoteur du projet" as who_title %}{% include "components/sezioni/_testa.html" with role="statement" title_id="agami-who-title" title=who_title only %}
+      <p class="agami-identita__chi"{% if who_body.lang %} lang="{{ who_body.lang }}"{% endif %} data-locked="p2.forum.who.body">{{ who_body.value|emphasize:who_emphasis }}</p>
+      {% if promoter_quote %}
+      <div class="accordion agami-identita__fisarmonica"><details class="accordion__item agami-identita__domanda" id="agami-faq">
+        <summary class="accordion__summary" data-azione><span class="agami-identita__question" id="agami-faq-title"{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %}>{{ promoter_quote.question }}</span></summary>
+        <div class="accordion__panel"><p{% if promoter_quote.lang %} lang="{{ promoter_quote.lang }}"{% endif %} data-faq="{{ promoter_quote.key }}">{{ promoter_quote.answer }}</p></div>
+      </details></div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="sez sez--strato agami-targa" data-sec="strato" data-ground="night" data-rhythm="band" aria-labelledby="agami-contact-title">
+  <div class="container agami-id">
+    <div class="agami-id__identita">
+      <div class="agami-id__testata">
+        {% include "pages/partials/agami/_marchio.html" with m=sigillo cls="agami-id__sigillo" only %}
+        <div class="agami-id__titolo">
+          <h2 class="agami-id__etichetta t-label" id="agami-contact-title"><span class="testa__rule" data-verb="draw" aria-hidden="true"></span>{% translate "Identification et contact" %}</h2>
+          <p class="agami-id__nome" lang="it">{{ identification.name }}</p>
+          <p class="agami-id__forma" lang="it">{{ identification.legal_form }}</p>
+        </div>
+      </div>
+      <div class="agami-id__gruppi sez-seq">
+        <div class="agami-id__gruppo">
+          <span class="sez-tile" aria-hidden="true" data-verb="node">{% svg_icon "stamp" "icon" %}</span>
+          <dl class="agami-id__voci">
+            {% for row in identification.registers %}<div class="agami-id__voce"><dt class="t-label"{% if row.label_lang %} lang="{{ row.label_lang }}"{% endif %}>{{ row.label }}</dt><dd{% if row.lang %} lang="{{ row.lang }}"{% endif %}>{{ row.value }}</dd></div>{% endfor %}
+          </dl>
+        </div>
+        <div class="agami-id__gruppo">
+          <span class="sez-tile" aria-hidden="true" data-verb="node">{% svg_icon "map-pin" "icon" %}</span>
+          <dl class="agami-id__voci">
+            {% translate "Italie" as country %}{% for office in identification.offices %}<div class="agami-id__voce"><dt class="t-label">{{ office.label }}</dt><dd><span class="agami-id__luogo" lang="it"><span class="agami-id__riga">{{ office.address.street }}</span><span class="visually-hidden">, </span><span class="agami-id__riga">{{ office.address.postcode }} {{ office.address.town }}{% if office.address.province %} ({{ office.address.province }}){% endif %}</span></span><span class="visually-hidden">, </span><span class="agami-id__riga">{{ country }}</span></dd></div>{% endfor %}
+          </dl>
+        </div>
+      </div>
+    </div>
+    <dl class="agami-id__contatto">
+      <dt class="agami-id__etichetta-voce t-label">{% translate "Contact officiel" %}</dt>
+      <dd class="agami-id__azione"><a class="agami-id__indirizzo" href="mailto:{{ site.contact_email }}"><span class="sez-disc" aria-hidden="true">{% svg_icon "at-sign" "icon" %}</span><span class="email">{{ site.contact_email }}</span></a></dd>
+      <dt class="agami-id__etichetta-voce t-label">{{ identification.website.label }}</dt>
+      <dd class="agami-id__sito"><span class="email" lang="en" translate="no">{{ identification.website.host }}</span></dd>
+      {% if links.notices %}<dd class="agami-id__note"><a class="link-arrow" href="{{ links.notices }}">{% translate "Mentions légales" %}{% svg_icon "arrow" "icon icon--sm" %}</a></dd>{% endif %}
+    </dl>
+  </div>
+</section>
+
+<section class="sez sez--approdo agami-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="agami-more-title">
+  {% include "ecosystem/partials/intesa.html" with id="intesa-agami" only %}
+  <div class="container">
+    {% translate "Entre l’Italie et le Maroc" as more_title %}{# Translators: AGAMI's own published motto with its quotation marks (its official site, its fr/it/en/ar pages): use the version AGAMI publishes in each language, word for word — never a new translation. #}
+    {% translate "« Connaître ses racines pour construire des ponts entre les cultures, les ordres juridiques et les générations. »" as bridges %}{% include "components/sezioni/approdo.html" with title_id="agami-more-title" title=more_title lead=bridges tiles=approdo only %}
+  </div>
+</section>
+{% endblock %}

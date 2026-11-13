@@ -1,0 +1,267 @@
+/* ============================================================================================
+   ESPACE ENTREPRISES — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.6; lane P1). Page-only:
+   ecosystem/companies.css. EN-1 is lane S's «il flusso» (FINAL MICRO-PASS §6 B3: the quiet sequence on its hairline)
+   under the prescribed quotation, set beside the territory's photograph (EN-2's panorama folded into it); EN-3 the preserved form (the family's own rules, ecosystem/
+   _spaces.css); EN-4 the split of one locked answer; EN-5 «l'approdo» (ecosystem/_spazi-v2.css). Adapted from 21st.dev
+   (NOTES, provenance): «Comparison Section» 26826 (two panels read side by side across one divider) — refused: the
+   crosses and ticks (a mark reads as a verdict, O14), green and red, the before/after switch.
+   ============================================================================================ */
+
+/* ---- EN-1 · the band opens on the statement beside the productive territory — FINAL MICRO-PASS §6 B3, after 21st.dev
+        «Split Content Section» (felipemenezes098/content-06, id 28310), adapted: two columns from 64 rem — the prescribed
+        quotation as the light headline, balanced, at the reading edge; the territory's photograph (the page's former
+        full-bleed panorama, the same slot) in the plates' corner with a quiet outline, answering a resting pointer
+        with a 3 % scale over 500 ms; its entrance is the system's mask (v5/_reveal.css). The process's title and the
+        moments on their hairline (v5/_sec-flusso.css) follow in their own band, on paper ---- */
+.imprese-apertura {
+  display: grid;
+  gap: var(--s-8);
+  align-items: center;
+}
+
+.imprese-citazione {
+  max-inline-size: 36rem;
+  margin: 0;
+}
+
+/* the statement on the section title's step (TYPOGRAPHY_V2 §4.2 --t-title-2: 28 → 36), light: the body's weight
+   (BRIEF §2: lighter public type), the step's tracking, its lines balanced */
+.imprese-citazione p {
+  margin: 0;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  font-weight: var(--w-body);
+  letter-spacing: var(--track-title-2);
+  text-wrap: balance;
+}
+
+.imprese-apertura__foto > picture {
+  outline: 1px solid var(--line-rhythm);
+  outline-offset: -1px;
+}
+
+.imprese-apertura__foto .foto__img {
+  block-size: 100%;
+  min-block-size: 18rem;
+  object-fit: cover;
+  transition: transform 500ms var(--ease-enter);
+}
+
+/* the hover's zoom is a `transform`: the reveal's scroll-driven zoom holds the img's `scale`, and an animation
+   outranks a declared `scale`, so the zoom never played (the review's defect 7,
+   as on Institutions); a transform composes with it */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .imprese-apertura__foto:hover .foto__img { transform: scale(1.03); }
+}
+
+@media (min-width: 64rem) {
+  .imprese-apertura {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--s-12);
+  }
+
+  .imprese-apertura__foto .foto__img { min-block-size: 26rem; }
+}
+
+/* «Trois temps», the band after the opening (on paper, where the panorama stood): the caption close to its route */
+.imprese-tempi .testa {
+  margin-block-end: var(--s-10);
+}
+
+.imprese-tempi .flusso__testo {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+/* ---- EN-4 · the split: «Non.» large, what the platform does not do | a drawn divider | what it does ---- */
+.imprese-confine__risposta,
+.imprese-confine__intera {
+  position: relative;
+  max-inline-size: 64rem;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+.imprese-confine__risposta {
+  display: grid;
+  gap: var(--s-4) var(--s-16);
+}
+
+.imprese-confine__risposta .giu-1 {
+  font-size: var(--t-title);
+  line-height: var(--t-title-lh);
+  font-weight: 500;
+}
+
+/* the two halves at one ink and one weight: the boundary — what the platform never does — is the sentence that
+   matters most and never the quieter half (QA_ROUND1 m3: it was the secondary ink at 400 beside an emphasised half) */
+.imprese-confine__risposta :is(.giu-2, .giu-3) {
+  color: var(--text-1);
+  font-weight: var(--w-title);
+  text-wrap: pretty; /* V5.32: the French « : » never alone on the half's last line */
+}
+
+.imprese-confine__risposta .giu-3 {
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-structure);
+}
+
+@media (min-width: 48rem) {
+  .imprese-confine__risposta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .imprese-confine__risposta .giu-1 {
+    grid-column: 1 / -1;
+  }
+
+  .imprese-confine__risposta .giu-3 {
+    padding-block-start: 0;
+    border: 0;
+  }
+
+  /* the divider: between the two halves, from the keyword's foot down — it draws (LINE DRAW) */
+  .imprese-confine__risposta::after {
+    content: "";
+    position: absolute;
+    inset-block: calc(var(--t-title-lh) + var(--s-4)) 0;
+    inset-inline-start: 50%;
+    inline-size: 1px;
+    background: var(--line-structure);
+    transform-origin: 50% 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="wait"] .imprese-confine__risposta::after { scale: 1 0; }
+  :root:not(.rm):not([data-input="key"]) [data-sec-state="in"] .imprese-confine__risposta::after {
+    animation: sez-draw-y var(--motion-draw) var(--ease-sine) 120ms backwards;
+  }
+}
+
+.imprese-confine__faq {
+  margin: var(--s-8) 0 0;
+}
+
+@media (forced-colors: active) {
+  .imprese-confine__risposta::after {
+    background: CanvasText;
+  }
+}
+
+/* ---- EN-3 · «Recueil des besoins», the preserved form (V5.22 §24): its chapter beside its sticky side panel — moved
+        here unchanged from the family's partial (ecosystem/_spaces.css, round 1), its one page's sheet ---- */
+/* the form's chapter: the side panel and the form are the chapter's own two columns (the shared page sheet's §3 places
+   .chapter__head on 1 / span 4, sticky, wherever it stands) */
+.ecosystem-form__side > * {
+  grid-column: 1 / -1;
+}
+
+/* the form on the stone: «la lastra» fields on their sheet, at the reading measure */
+.ecosystem-form .form {
+  max-inline-size: 40rem;
+}
+
+/* its six short single-line fields (the company, the sector, the seat, the contact, the e-mail, the telephone) two by
+   two from 64rem, the others across the form — about 300 px less of a task that is not reading (W3-F1's review M2;
+   the form's region stands outside RH-3's cadence, DL54) */
+@media (min-width: 64rem) {
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-6);
+  }
+
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) > * {
+    grid-column: 1 / -1;
+  }
+
+  .ecosystem-form .enquiry-form--company-needs .form__group:not(.form__group--consent) > .form-field:nth-of-type(-n+6) {
+    grid-column: auto;
+  }
+}
+
+/* the form's band head: the chapter's head, the request's sentence and where it goes. V5.30 (the V5.29 baseline
+   matrix's blocker 1, the container roles): since V5.29 the formwork spans the band on the shell (--form-wide,
+   v5/_formwork.css F1) with its own sticky night side, so the side panel no longer stands BESIDE it — sticky on 1 / span
+   4 it stood OVER the wide form while it scrolled. From 64 rem it is the band's head: across the band, static, the
+   chapter's head beside the request's panel; the form under it — one grid, nothing over the form */
+.ecosystem-form__side {
+  display: grid;
+  align-content: start;
+  gap: var(--s-6);
+  min-inline-size: 0;
+}
+
+/* where the request goes (V5.32: the sentence said once, in the entrance): a quiet plate (FINAL MICRO-PASS §6 B3: its 2 px side stripe left) */
+.ecosystem-form__panel {
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: var(--measure-lead);
+  padding: var(--s-5) var(--s-6);
+  border-radius: var(--card-radius);
+  background: var(--surface-raised);
+}
+
+.ecosystem-form__destination {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+@media (min-width: 64rem) {
+  .ecosystem-form__side {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure-lead));
+    align-items: end;
+    column-gap: var(--s-12);
+  }
+
+  .ecosystem-form__side > * {
+    grid-column: auto;
+  }
+
+  .ecosystem-form__side .chapter__head {
+    position: static;
+  }
+}
+
+/* ---- V5.32 round 2 (lane C) — «Trois temps» as a progression (ecosystem/partials/tempi.html): no numeral; each moment
+        opens on its concept glyph, a stop on ONE hairline across the row (broken only by the stops), which draws from the
+        reading edge as the band enters while each stop settles (v5/_reveal.css «draw», «node»; still under reduced
+        motion). The glyph is the moment's meaning, in the accent ink, never a tile, a disc or a lit «current» stop ---- */
+.imprese-tempi .flusso__tappa::before,
+.imprese-tempi .flusso__tappa::after {
+  content: none;
+}
+
+.imprese-flusso .flusso__segno {
+  display: block;
+  color: var(--accent-text);
+  line-height: 0;
+}
+
+.imprese-flusso .flusso__segno .icon {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.imprese-flusso .flusso__filo {
+  block-size: 1px;
+  background: var(--line-structure);
+}
+
+@media (min-width: 48rem) {
+  .imprese-flusso .flusso__filo {
+    margin-inline-end: var(--s-3);
+  }
+}
+
+@media (forced-colors: active) {
+  .imprese-flusso .flusso__filo {
+    background: CanvasText;
+  }
+}

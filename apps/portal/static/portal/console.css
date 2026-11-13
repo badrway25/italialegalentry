@@ -1,0 +1,58 @@
+/* ============================================================================
+   THE CONSOLE — the platform shell's entry, design V5
+   docs/design-v5/V5_4_EXECUTION_PLAN.md §2.3 («Console-only CSS — out of main.css»), §3.5 item 3 (W3-A) ·
+   loaded by templates/portal/base_portal.html after portal.css, and kept by every console template through
+   `{{ block.super }}` (tests/frontend/test_console_shell_stylesheets.py).
+
+   This sheet is the console's IMPORT LIST and nothing else: each family of the console adds the import of
+   its own partial here, in order, and writes its rules there. A partial is `_`-prefixed: scripts/build_css.mjs
+   bundles it into this entry and never builds it on its own (DL54-15). An import is written as it resolves in the
+   COLLECTED tree, from this sheet's collected path portal/console.css: a partial of static/css/v5/ is
+   ../css/v5/_x.css, never a source-tree path — that one stops collectstatic in production (DS 2026 §2).
+
+     ../css/v5/_loader-light.css       the loader's entrance release, on the rail's mark (W1-D; static/css/v5/)
+     v5/_shell.css                     the shell: the rail, the context bar, the page frame, the phone's
+                                       bars and drawer (W3-A)
+     v5/_dashboard.css                 the dashboards: the NowPanel, the file's facts, «il registro», the
+                                       lists, what folds (W3-B)
+     v5/_frame.css                     the frame's heads (the ContextHeader, the workspace head), the actor's glyph
+                                       disc, the frame's focus ring — what every console page still drew from
+                                       v4/workspace.css when the case file redrew the rest (W3-E)
+     v5/_motion.css                    the console's half of the loader «Lume» across a navigation: the tile's View
+                                       Transition name, the context bar's threshold line and word, the tile's key and
+                                       its arrival's light, their stills (V5.12 §4; DECISIONS §1 T1–T3; v512-a W1)
+
+   Not here — each the CSS of the pages that draw it, in a page-only sheet linked after this one (the owner's V5.8,
+   11 October 2026, and the orchestrator's definitive ruling of 12 October: the shared bundles never rise; a
+   surface's own CSS goes into a page-only sheet, and each page loads only what it draws):
+     «La soglia», the console's one rail drawing (W3-D) — v5/_journey-nodes.css with v5/_journey-rail.css in
+       portal/journey.css (the dashboard, «Mon parcours», the case file), with v5/_journey-stepper.css in
+       portal/situation.css («Ma situation»);
+     «Ma situation»'s guided form (W3-F1) — v5/_wizard.css, in portal/situation.css (it stood in this list from
+       W3-F1's merge to W3-D's).
+
+   The V4 console rules this file held (the mesh-lit rail with its edge bar, the glyph-only rail below 90rem,
+   the bar with the account and the segmented language control) are replaced by v5/_shell.css.
+   ========================================================================== */
+
+/* Design V5 — the loader's entrance release (V5.4 plan §1.9, §2.3; W1-D): the generated light sheet of the lit
+   doorway, console-only, imported here and never by main.css. It comes first because an @import must precede every
+   rule; its selectors (.sig, [data-lume]) share nothing with the console's. */
+@import url("../css/v5/_loader-light.css");
+
+/* Design V5 — the console shell (V5.4 plan §3.5 item 3; W3-A). After the light sheet: the shell's seats decide
+   the size of the mark the release plays on. */
+@import url("v5/_shell.css");
+
+/* Design V5 — the dashboards (V5.4 plan §3.5 item 4; W3-B). After the shell: a dashboard is drawn inside its frame. */
+@import url("v5/_dashboard.css");
+
+/* Design V5 — the frame's heads, the actor's glyph disc and the frame's focus ring (W3-E, the deletion map's last row
+   of v4/workspace.css). After the shell and the dashboards: neither draws these heads, the disc or the ring at their
+   weight (the shell's rules on the heads are the frame's own, more specific; its focus rules are the chrome's, outside
+   the frame; the dashboards write no focus rule), so no tie changes hands. */
+@import url("v5/_frame.css");
+
+/* V5.12 — the console's motion across a navigation (the Director's DECISIONS §1 T1–T3): last, because it only adds
+   states (html.is-departing, html.lume-arrive) and the View Transition's name to what the shell draws. */
+@import url("v5/_motion.css");

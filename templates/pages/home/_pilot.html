@@ -1,0 +1,53 @@
+{% load i18n pages_typo pages_imagery locked_split %}{% comment %}
+7. PILOT / COOPERATION — Phase 3 only (pages.services.build_pilot returns nothing while G3 is
+closed). The title is prescribed (p3.pilot.title) and rendered verbatim; the full page belongs to the
+ecosystem app. The pilot is never presented as an already authorised entry channel — that is what the
+section note says when an editor writes one, and it stays.
+
+THE MOROCCO → ITALY MODEL IS SAID ONCE, IN THE HERO: its path carries the stations of the pilot sequence, and the whole
+prescribed sequence stands on the pilot's own page (templates/ecosystem/partials/pilot_flow.html). This band draws no
+route.
+
+V5.31 (the owner's FINAL HOMEPAGE REBUILD §17–§18; lane A): ONE OF THE PAGE'S STRONGEST VISUAL MOMENTS — photography leads.
+A night band: its head (the diptych's name as the eyebrow, the prescribed title at a light display size, the team's lead,
+the note, the call) over two broad, low-opacity colour fields cropped by the band's edges — Morocco's red at the left,
+Italy's three fields at the right, drawn left to right in every language (never mirrored; aria-hidden) — then the STAGE:
+the diptych «le même geste» (a hand guiding a chisel through cedar, a hand guiding a chisel on marble; nobody
+identifiable, no place named) full-bleed, the two halves side by side at every width (3:2 halves from 64 rem, tall 2:3
+halves on phones), left to right like the fields. As the stage enters, each half opens from its OUTER edge toward the seam
+and develops from black and white to colour, the marble a beat after the cedar: two shores meeting (v5/_reveal.css's M2
+and M3, the edges set here). Under a fine pointer a half lifts its veil. Each half carries its material's word. Reduced
+motion: colour, still. Adapted from 21st.dev «Image Compare» (0xuser64bit, id 35803; ibelick «Image Comparison», id 1466):
+the two images meeting at a seam, the divider driven by the scroll instead of a handle.
+Round 1 (QA_ROUND1 m5): the two shores' names stay together — «VÉNÉTIE–MAROC» never breaks after its dash (a span set
+at render by cms.locked_split.emphasize; the title's text is the locked text itself). FINAL CLOSURE PASS (owner, 12 Nov
+2026): in Arabic the prescribed «المشروع التجريبي Vénétie–Maroc» keeps its bytes; its French name is isolated at render as
+one left-to-right unit (<bdi dir="ltr">, the isolate_ltr filter; no lang: the heading would turn ltr as a whole) — the dash never reordered, the Arabic phrase
+right to left around it.
+
+FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026; point 6 — the previous ground «does not say Italy ↔ Morocco»): PHOTOGRAPHY
+FIRST. The stage opens the band, full-bleed (drawn first; the head stays first in the document): the two hands, two
+materials, two territories. Each half now carries ITS territory: its name set large at its outer foot over its
+material's word (Maroc · cèdre — Vénétie · marbre), and its national field INSIDE the photograph — Morocco's red with
+its green at the cedar's outer edge, Italy's green, white and red at the marble's — broad, cropped by the stage,
+dissolving toward the seam and blended into the material's light (mix-blend-mode; v5/_home-a.css). The fields are
+aria-hidden and drawn left to right in every language: never mirrored. The two blurred fields behind the head and the
+eyebrow «Le même geste» (the lead's own first words, said twice) left; the diptych's name stays the stage's label.
+The head — the prescribed title, the lead, the call — stands under the stage on the night. «Vénétie» is the catalogue's
+existing entry (context «companies taxonomy»: Veneto, فينيتو) — no new string.
+{% endcomment %}
+{% translate "Le même geste" as diptych_label %}
+<section class="sez home-pilot on-inverse" id="{{ s.anchor }}" aria-labelledby="home-pilot-title" data-section="pilot" data-sec="pilota" data-ground="night" data-rhythm="moment">
+  <div class="container pilota-testa">
+    <h2 class="pilota__titolo" id="home-pilot-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{% if LANGUAGE_BIDI %}{{ d.title|isolate_ltr:"Vénétie–Maroc|VÉNÉTIE–MAROC" }}{% else %}{{ d.title|emphasize:"VÉNÉTIE–MAROC" }}{% endif %}</h2>
+    <div class="pilota-testa__a-lato">
+      {% if s.intro %}<p class="pilota__lead"{% if s.intro.lang %} lang="{{ s.intro.lang }}"{% endif %}>{{ s.intro|typo }}</p>{% endif %}
+      {% if s.note %}<p class="pilota__nota"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+      {% if d.url %}<p class="pilota__azione"><a class="home-cta home-cta--night" href="{{ d.url }}"><span class="home-cta__testo">{% translate "Découvrir le projet pilote" %}</span><span class="home-cta__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--flip-rtl" %}</span></a></p>{% endif %}
+    </div>
+  </div>
+  <div class="pilota-scena" role="group" aria-label="{{ diptych_label }}">
+    <div class="pilota-riva pilota-riva--cedro">{% photo "home.pilot.cedar" "pilota__foto" variant="riva" %}<span class="pilota-campo pilota-campo--ma" aria-hidden="true"></span><p class="pilota-riva__parola"><span class="pilota-riva__terra">{% translate "Maroc" %}</span><span class="t-label">{% translate "Cèdre" %}</span></p></div>
+    <div class="pilota-riva pilota-riva--marmo">{% photo "home.pilot.marble" "pilota__foto pilota__foto--marmo" variant="riva" %}<span class="pilota-campo pilota-campo--it" aria-hidden="true"></span><p class="pilota-riva__parola"><span class="pilota-riva__terra">{% translate "Vénétie" context "companies taxonomy" %}</span><span class="t-label">{% translate "Marbre" %}</span></p></div>
+  </div>
+</section>

@@ -1,0 +1,220 @@
+/* ============================================================================================
+   THE LEGAL READER «il documento» (V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION, lane A, 12 Nov 2026) — the legal pages'
+   own route sheet, linked by templates/legal/document.html AFTER the content pages' sheet (cms/lettura.css, whose legal
+   rules it keeps: the head, the verification line, the prose, the courtesy inset, the help line).
+   A legal text is read the way an official document is consulted: the head closes on a hairline, the text at the
+   reading edge at its measure, and beside it — from 64 rem — the document's own headings as a sticky «Sommaire de la
+   page» that marks the part in view (static/js/src/sezioni/spia.js, the library's scroll-spy: aria-current="location",
+   no scroll listener). Under 64 rem the index folds into one disclosure above the text (native <details>: no script).
+   Tokens only; logical properties; the mark moves on colour and a 2 px rule, never a layout animation.
+   ============================================================================================ */
+
+.lettura .legal-page > .legal-page__header {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.legale {
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* the text stands 40 px under the head's hairline (the content sheet zeroes the head's next sibling) */
+.lettura .legal-page > .page-header + .legale { margin-block-start: var(--s-10); }
+
+.legale__testo {
+  display: grid;
+  align-content: start;
+  gap: var(--s-8);
+  min-inline-size: 0;
+}
+
+.legale__testo > * { margin-block: 0; }
+
+/* the text's headings land under the sticky bar when followed from the index */
+.legal-page__body :is(h2, h3) { scroll-margin-block-start: 6rem; }
+
+/* ---- the index ---- */
+.legale__piega {
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
+}
+
+.legale__sommario {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-block-size: var(--hit-primary);
+  padding-inline: var(--s-5);
+  border-radius: var(--radius-md);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  cursor: pointer;
+  list-style: none;
+}
+
+.legale__sommario::-webkit-details-marker { display: none; }
+
+/* the fold's sign: a chevron drawn by two borders, turned when open (no glyph to load) */
+.legale__sommario::after {
+  content: "";
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-block-end: 1.5px solid currentcolor;
+  border-inline-end: 1.5px solid currentcolor;
+  rotate: 45deg;
+  translate: 0 -2px;
+  transition: rotate var(--motion-standard) var(--ease-enter);
+}
+
+.legale__piega[open] > .legale__sommario::after { rotate: 225deg; translate: 0 2px; }
+
+.legale__sommario:hover { background: var(--surface-hover); }
+
+.legale__voci {
+  display: grid;
+  margin: 0;
+  padding: var(--s-2) var(--s-3) var(--s-4);
+  list-style: none;
+}
+
+.legale__voce {
+  display: block;
+  padding: var(--s-2) var(--s-3);
+  border-inline-start: 2px solid transparent;
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-enter), border-color var(--motion-fast) var(--ease-enter);
+}
+
+.legale__voce:hover {
+  color: var(--text-1);
+  background: var(--surface-hover);
+}
+
+.legale__voce:active { background: var(--surface-selected); }
+
+.legale__voce[aria-current="location"] {
+  color: var(--text-1);
+  font-weight: var(--w-control);
+  border-inline-start-color: var(--accent-mark);
+}
+
+/* an Italian text's headings on the Arabic page: the index reads as the text does, left to right */
+[dir="rtl"] .legal-page[lang="it"] .legale__voci { direction: ltr; }
+
+@media (min-width: 64rem) {
+  .legale {
+    grid-template-columns: minmax(0, 40rem) minmax(14rem, 18rem);
+    grid-template-areas: "testo indice";
+    column-gap: clamp(var(--s-12), 7vw, 7rem);
+    align-items: start;
+  }
+
+  .legale__testo { grid-area: testo; }
+
+  .legale__indice {
+    grid-area: indice;
+    position: sticky;
+    inset-block-start: 6rem;
+    max-block-size: calc(100vh - 8rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* from 64 rem the index is always open: the fold's content shows whatever the disclosure's state, its summary is
+     the index's title */
+  .legale__piega {
+    background: none;
+    box-shadow: none;
+  }
+
+  .legale__piega::details-content {
+    content-visibility: visible;
+    block-size: auto;
+  }
+
+  /* the index's title reads as the site's other «Sommaire de la page» (pages/partials/_ingresso.html, _interior.css
+     .sommaire__title): the small step at the control weight, in the second ink — no capitals outside the label role
+     (TYPOGRAPHY_V2 §4.2; V5.32 integration) */
+  .legale__sommario {
+    min-block-size: 0;
+    padding: 0 0 var(--s-3);
+    border-block-end: 1px solid var(--line-rhythm);
+    border-radius: 0;
+    font-size: var(--t-small);
+    line-height: var(--t-small-lh);
+    color: var(--text-2);
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .legale__sommario::after { display: none; }
+
+  /* the index on its rail: the part in view marks it with its 2 px rule */
+  .legale__voci {
+    margin-block-start: var(--s-3);
+    padding: 0;
+    border-inline-start: 1px solid var(--line-rhythm);
+  }
+
+  .legale__voce { margin-inline-start: -1px; }
+}
+
+/* ---- a text still awaited: the published legal texts one step away ---- */
+.legale-altri {
+  display: grid;
+  gap: var(--s-3);
+  max-inline-size: 40rem;
+}
+
+.legale-altri__titolo { margin: 0; color: var(--text-2); }
+
+.legale-altri__lista {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.legale-altri__lista > li { border-block-end: 1px solid var(--line-rhythm); }
+
+.legale-altri__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-block-size: var(--hit-primary);
+  padding: var(--s-3) var(--s-2);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-enter);
+}
+
+.legale-altri__link .icon { color: var(--accent-text); transition: translate var(--motion-standard) var(--ease-enter); }
+.legale-altri__link:is(:hover, :focus-visible) { background: var(--surface-hover); }
+.legale-altri__link:is(:hover, :focus-visible) > span { text-decoration: underline; text-underline-offset: 0.2em; }
+.legale-altri__link:is(:hover, :focus-visible) .icon { translate: 3px 0; }
+[dir="rtl"] .legale-altri__link:is(:hover, :focus-visible) .icon { translate: -3px 0; }
+.legale-altri__link:active { background: var(--surface-selected); }
+
+@media (prefers-reduced-motion: reduce) {
+  .legale-altri__link .icon,
+  .legale__sommario::after,
+  .legale__voce { transition: none; }
+}
+
+@media print {
+  .legale__indice { display: none; }
+}

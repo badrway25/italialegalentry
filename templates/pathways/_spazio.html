@@ -1,0 +1,16 @@
+{% load i18n %}{% comment %}
+The Espace Personnes' register of links (V5.32, lane B; pathways/_spazio.css): «Dans l'Espace Personnes» — the space's
+other pages, each its name and its line, the arrow; the live help line under them. The band is «carta viva»
+(data-luce="origine", v5/_materia.css); the links are a register (`data-registro`: every row its arrow). Since the
+correction round of the senior integration review (P2-3) it stands on /parcours/ alone: #espace-personnes is where the
+closing band of the sheets, Formation and Diplômes leads (pathways/_chiusura.html).
+Contract: `tiles` (pathways.services.space_tiles), `email` (the public address).
+{% endcomment %}<section class="sez spazio" id="espace-personnes" data-sec="spazio" data-ground="paper" data-rhythm="band" data-luce="origine" aria-labelledby="space-links-title">
+  <div class="container spazio__griglia">
+    <h2 class="spazio__titolo" id="space-links-title">{% translate "Dans l’Espace Personnes" %}</h2>
+    <ul class="spazio__voci" role="list" data-registro>
+      {% for item in tiles %}<li><a class="spazio__voce" href="{{ item.href }}"><span class="spazio__nome">{{ item.title }}</span>{% if item.line %}<span class="spazio__riga">{{ item.line }}</span>{% endif %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl spazio__freccia" %}</a></li>{% endfor %}
+    </ul>
+    <p class="aiuto spazio__aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ email }}">{{ email }}</a></p>
+  </div>
+</section>

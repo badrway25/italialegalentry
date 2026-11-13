@@ -1,0 +1,318 @@
+/* ============================================================================================
+   AGAMI V2 (design V5.22, SECTION_SYSTEM_V2 §3.17; V5.23 Q9 decision A; lane P2) — the partial of AGAMI's route sheet.
+   Markup: templates/pages/agami.html and pages/partials/agami/; the identification's one source apps/pages/identity.py.
+   V5.30 §8 (the owner's final art direction; label v530-agami-build): verified material instead of the drawn colonnade —
+     0 · the head's composed seat «l'insegna»: the official logo on its white plate (the seat composes the head: the
+         ground's drawing stands down, as on every composed head)
+     1 · A «l'identità»: «En bref», the role panel on the raised plate (5/12), beside the promoter's text (7/12); MASK from
+         the reading edge; the FAQ's near-identical answer a disclosure under the text (the system's accordion)
+     2 · K «la targa»: the identification plate on night — headed by the official seal, then the name, its legal form, two
+         groups of fields (the registers, the offices) each with its concept tile, the official address as the plate's
+         action, the website
+     3 · «l'approdo»: the ways on over the Italy + Morocco ground (v5/_intesa.css, imported below: the one primitive,
+         its «campo» variant, a closing band's ground)
+   ============================================================================================ */
+@import url("../../css/v5/_intesa.css"); /* V5.30 §7, §8: the Italy + Morocco ground of the relationship band */
+
+/* ---- 0 · the head's seat: the official logo ---- */
+.ingresso:has(.agami-insegna) .fronte__motif { display: none; }
+
+/* the plate at most 34 rem, on the seat's far edge: the name keeps its air beside it (pages.imagery.SEAT_SIZES) */
+.agami-insegna { max-inline-size: 34rem; margin-inline-start: auto; }
+
+/* V5.32 (lane A; the owner's «no heavy black type»): the association's name at the display step and the display weight —
+   the frontispiece's 104 px / 700 read as a poster beside the official logo; the logo is the head's image, the name its
+   title. Its second line keeps the frontispiece's size, one step under it */
+.ingresso:has(.agami-insegna) .fronte__name {
+  font-size: var(--t-display);
+  line-height: var(--t-display-lh);
+  font-weight: var(--w-display);
+}
+
+.agami-insegna__logo {
+  display: block;
+  overflow: clip;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised); /* the logo's own white: its navy frame is the plate's edge */
+  box-shadow: var(--shadow-3);
+}
+
+/* ---- 1 · the identity: the role panel beside the promoter's text ---- */
+.agami-identita__griglia {
+  display: grid;
+  gap: clamp(var(--s-8), 4vw, var(--s-12)); /* the section's gap (v5/_sezioni.css) */
+}
+
+.agami-identita__lastra {
+  display: grid;
+  align-content: start;
+  gap: var(--s-5);
+  padding: var(--s-8) var(--s-8) var(--s-6);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised); /* the plate on the band's stone (V5.24 BACKGROUND_MATERIAL_V2 §5.2) */
+  box-shadow: var(--shadow-2);
+}
+
+.agami-breve__etichetta {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  color: var(--accent-text);
+}
+
+.agami-breve { margin: 0; }
+
+.agami-breve__voce {
+  display: grid;
+  gap: var(--s-1);
+  padding-block: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.agami-breve__voce dt { color: var(--text-2); }
+
+.agami-breve__voce dd {
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.agami-breve__anno {
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-title-2);
+  font-variant-numeric: var(--numeric-data);
+}
+
+.agami-identita__testo {
+  display: grid;
+  align-content: start;
+  gap: var(--s-6);
+  max-inline-size: var(--measure-body);
+}
+
+.agami-identita__testo .testa { margin: 0; }
+
+.agami-identita__chi {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.agami-identita__domanda .accordion__summary { font-weight: var(--w-title); }
+.agami-identita__domanda .accordion__panel p { margin: 0; }
+
+@media (min-width: 64rem) {
+  .agami-identita__griglia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--s-16); align-items: start; }
+}
+
+/* the plate opens from the reading edge (--reveal-from mirrors by itself) — the words never wait. In view at load (at 1440
+   and 390, in French and in Arabic, the band starts above 92 % of the viewport, so the section runtime writes no state) the
+   band plays its mask in the head's own sequence, as the fraud page's sill does; below the fold the runtime plays it on its
+   trigger. Nothing is mirrored: the plate holds words, never a drawing */
+@media (prefers-reduced-motion: no-preference) {
+  :root.js:not(.rm):not([data-input="key"]) .agami-identita:not([data-sec-state]) .agami-identita__lastra { animation: sez-mask var(--motion-draw) var(--ease-enter) 360ms backwards; }
+}
+
+/* the band's words never wait (§1 rule 3; the final review's m3): the legacy rise (static/js/src/rise.js holds the rows of
+   every `.accordion` below the fold until S-close removes it) holds no row of this V2 section — the question stands at
+   rest, and the band's motion is its plate's */
+.agami-identita .accordion > [data-rise] { opacity: 1; translate: none; }
+
+/* ---- 2 · the identification plate on night ---- */
+.agami-id {
+  display: grid;
+  gap: var(--s-10);
+}
+
+.agami-id__identita,
+.agami-id__contatto {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  min-inline-size: 0;
+}
+
+/* the plate's head: the official seal beside the label, the name and the legal form (decorative: the words name it) */
+.agami-id__testata {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-4) var(--s-6);
+}
+
+.agami-id__titolo {
+  display: grid;
+  gap: var(--s-4);
+  min-inline-size: 0;
+}
+
+.agami-id__sigillo {
+  display: block;
+  inline-size: 5.5rem;
+}
+
+:is(.agami-insegna__logo, .agami-id__sigillo) img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+@media (max-width: 29.999rem) {
+  .agami-id__testata { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* the plate's label and the registers' labels: the label role (`t-label`, v5/base.css — Host Grotesk 13/16 600; Readex Pro
+   14/20 without capitals in Arabic; V5.24 Typography V2 F-3/F-4: the mono folio and its system fallback retired) */
+.agami-id__etichetta {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  color: var(--accent-night);
+}
+
+.agami-id__etichetta .testa__rule { background: var(--accent-night); }
+
+.agami-id__nome {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  text-wrap: balance;
+}
+
+.agami-id__forma {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-on-night-2);
+}
+
+.agami-id__gruppi {
+  display: grid;
+  gap: var(--s-6);
+  margin-block-start: var(--s-4);
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-night-soft);
+}
+
+.agami-id__gruppo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-5);
+}
+
+/* FINAL MICRO-PASS §5 A3: the identity's glyphs are drawn bare (v5/_sezioni.css §3), no night tile under them */
+
+.agami-id__voci {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+}
+
+.agami-id__voce dt,
+.agami-id__etichetta-voce {
+  margin: 0;
+  color: var(--text-on-night-2);
+}
+
+.agami-id__voce dd {
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-variant-numeric: var(--numeric-data);
+}
+
+.agami-id__riga { display: block; }
+
+/* an office's Italian lines are one left-to-right box (round 1, m8): on the Arabic page it hangs from the reading
+   edge, its lines on their own start, the country in the page's language under it — one alignment per box (§1.6) */
+.agami-id__luogo { display: block; inline-size: fit-content; direction: ltr; unicode-bidi: isolate; text-align: start; }
+
+/* the contact column is a size container: the address takes the scale's step its column holds on one line (round 1, M6 —
+   it broke inside its domain at 1280, 1024 and 360; V5.24 Typography V2: the steps by container query, no clamp of the
+   sheet's own — the band step from 24 rem, the entry step from 18 rem, the body step under it) */
+.agami-id__contatto { container-type: inline-size; margin: 0; }
+.agami-id__azione,
+.agami-id__sito,
+.agami-id__note { margin: var(--s-1) 0 var(--s-5); }
+
+.agami-id__sito {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+/* the official address: the plate's action, at the band's size, its at-sign disc (the contact page's idiom) */
+.agami-id__indirizzo {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  min-block-size: var(--hit-primary);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-title);
+  color: var(--text-on-night-1);
+  text-decoration: none;
+}
+
+@container (min-width: 18rem) {
+  .agami-id__indirizzo { font-size: var(--t-entry); line-height: var(--t-entry-lh); }
+}
+
+@container (min-width: 24rem) {
+  .agami-id__indirizzo { font-size: var(--t-band); line-height: var(--t-band-lh); }
+}
+
+.agami-id__indirizzo .email { white-space: nowrap; }
+
+.agami-id__indirizzo .sez-disc {
+  --disc: 48px;
+  --disc-glyph: 22px;
+  --disc-ring: var(--accent-night);
+}
+
+.agami-id__indirizzo:is(:hover, :focus-visible) .sez-disc {
+  --disc-w: 2px;
+  background: var(--accent-night);
+  color: var(--surface-night);
+}
+
+.agami-id__indirizzo:is(:hover, :focus-visible) .email { text-decoration: underline; text-underline-offset: 0.2em; }
+
+.agami-id__note .link-arrow { color: var(--accent-night); }
+
+@media (min-width: 48rem) {
+  .agami-id__gruppi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* the contact column beside the registers only where it holds the address at its size (from 80 rem); under them before,
+   on a hairline of its own */
+@media (min-width: 80rem) {
+  .agami-id {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--s-16);
+  }
+
+  .agami-id__contatto {
+    padding-inline-start: var(--s-10);
+    border-inline-start: 1px solid var(--line-night-soft);
+  }
+}
+
+@media (max-width: 79.999rem) {
+  .agami-id__contatto { padding-block-start: var(--s-8); border-block-start: 1px solid var(--line-night-soft); }
+}
+
+/* ---- 3 · the relationship band: AGAMI's motto in the primary ink — a quotation, and words that cross Italy's fields at the
+   reading edge keep ≥ 4.5 : 1 on the ground's darkest pixel at every width (the lead role's secondary ink reached 4.50) ---- */
+.agami-approdo .testa__lead { color: var(--text-1); }
+
+html[data-input="key"] .agami-id__indirizzo .sez-disc { transition: none; }

@@ -1,0 +1,48 @@
+/* ============================================================================
+   THE DIGITAL HELP DESK — design V5 (W3-E step 2; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7).
+
+   The help desk draws in the console's register grammar: the page's head, the
+   band, the rows of the requests, the exchange (each turn headed by a function,
+   its actor's glyph, a date and its kind), the answerable party (the appointed
+   professional and the mandate), the forms of an act and the clause are the
+   registers' page sheet — apps/portal/static/portal/v5/_registers.css, linked
+   before this one by templates/helpdesk/base_helpdesk.html. The V1 devices this
+   sheet carried (the state's word at title size with its coloured rule, the
+   exchange as a `.sequence`, the forms' navy rule and tracked capitals, the
+   mandate in caption type) left with that redraw.
+
+   What follows is only what the help desk draws beyond it. Tokens only, logical
+   properties only; no shadow, no radius, no gradient — and no colour that
+   carries a state on its own: a state is a chip, its word and its mark.
+   ========================================================================== */
+
+/* the request's facts, under what happens next */
+.desk-facts {
+  margin-block-start: var(--s-6);
+}
+
+/* The dispatch form lives inside a <details> in a table row: it opens with no
+   script, which is the whole progressive-enhancement contract (ADR-009).
+   ``display: list-item`` keeps the native disclosure marker, which is the only
+   thing that tells a reader the row opens; ``display: flex`` removes it
+   silently. The underline says the same thing a second time, for a reader
+   whose browser hides the marker. */
+.desk-dispatch__summary {
+  display: list-item;
+  list-style-position: inside;
+  min-block-size: var(--hit-primary);
+  padding-block: var(--s-3);
+  font-size: var(--u-ui);
+  line-height: var(--u-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.desk-dispatch__form {
+  max-inline-size: var(--container-narrow);
+  padding-block: var(--s-4);
+}

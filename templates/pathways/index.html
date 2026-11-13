@@ -1,0 +1,77 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+Espace Personnes — the regular pathways (Phase 3, gate G3 open). Design V5.32 (lane B — the owner's GLOBAL SITE +
+PLATFORM DESIGN COMPLETION, 12 Nov 2026): an exploration, not a catalogue.
+  * the head: the space's shared entrance (pages/partials/_ingresso.html — the frontispiece of every door, its caps
+    title, words first on a phone): the space's name, the locked title and intro, and in the end seat the questionnaire
+    as one finished panel (pathways/_via_panel.html) — what it is, its caution, the page's one primary; on a phone the
+    panel is the door's way under the lead (its control in the first screen down to 375 × 667). The seat no longer
+    holds the person-at-the-window photograph: it is the qualified-work pathway's frame, drawn just below;
+  * «l'esploratore» (pathways/_esplora.html): the four families as the navigation — each its name and its pathways as
+    rows (the locked title; the locked line on a phone and without script) — and, from 64 rem with script, one
+    sticky preview beside them: the pathway's photograph, its family, its locked title and line, the actors its sheet
+    lists, the way to the sheet. A row is a link to its sheet; pointing at it or focusing it previews it
+    (static/js/src/esplora.js). No numbering, no icon boxes: the prescribed order is the order of the rows;
+  * «Comment ça marche»: the locked sentence cut on its own arrows into four moments on one rail (no figures), the
+    whole sentence once for a screen reader, its caveat a quiet note;
+  * the space's other pages as one line of links with the live help line; then the anti-fraud plate on the stone.
+Its sheet: css/dist/pathways/index.css (apps/pathways/static/pathways/index.css).
+{% endcomment %}
+{% block page_title %}{% locked "p3.persons.title" as title_text %}{% translate "Espace Personnes" %} · {{ title_text|striptags }}{% endblock %}
+{% block meta_description %}{% locked "p3.persons.intro" as intro_text %}{{ intro_text|striptags }}{% endblock %}
+{% block body_class %}page-pathways page-pathways--index interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/index.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% include "pathways/_preview_notice.html" %}
+{% locked_is_fallback "p3.persons.title" as title_fallback %}{% locked_lang "p3.persons.title" as title_lang %}
+{% locked_is_fallback "p3.persons.intro" as intro_fallback %}{% locked_lang "p3.persons.intro" as intro_lang %}{% locked_caption "p3.persons.intro" as intro_caption %}
+{% locked "p3.persons.title" as title_html %}{% locked "p3.persons.intro" as intro_html %}{% translate "Espace Personnes" as space_label %}
+{% translate "Identifiez la voie régulière à explorer" as way_title %}{% translate "Le questionnaire d’orientation vous propose, en quelques questions progressives, une pré-évaluation à caractère informatif. Les décisions relèvent des autorités compétentes." as way_text %}{% translate "Commencer le questionnaire d’orientation" as way_label %}{% translate "Le questionnaire d’orientation sera disponible prochainement." as way_pending %}
+{% if title_fallback %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html title_lang=title_lang lead=intro_html lead_lang=title_lang audience="person" aside_template="pathways/_via_panel.html" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
+{% elif intro_fallback %}{# V5.27 / R7′ (/ar/): the title in its provisional Arabic, the intro the French source with its caption #}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=intro_html lead_lang=intro_lang lead_caption=intro_caption audience="person" aside_template="pathways/_via_panel.html" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
+{% else %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title_html lead=intro_html audience="person" aside_template="pathways/_via_panel.html" way_title=way_title way_title_id="orientation-title" way_text=way_text way_label=way_label way_url=links.orientation way_pending=way_pending motif="route" glyph="compass" compose="route" words_first=True fronte_linked=True only %}
+{% endif %}
+
+<section class="sez esplora-sez" data-sec="esplora" data-ground="paper" data-rhythm="strip" aria-labelledby="pathways-title">
+  <div class="container">
+    <div class="esplora-sez__testa">
+      <h2 class="esplora-sez__titolo" id="pathways-title">{% translate "Les parcours réguliers" %}</h2>
+      <p class="esplora-sez__lead">{% translate "Huit voies d’entrée régulière, présentées avec leurs principales étapes. Chaque fiche est informative : la voie adaptée à votre situation se vérifie avec le questionnaire d’orientation et auprès des acteurs compétents." %}</p>
+    </div>
+    {% include "pathways/_esplora.html" with families=families counts=family_counts only %}
+  </div>
+</section>
+
+<section class="sez esplora-come" id="orientation" data-sec="come" data-ground="stone" data-rhythm="band" aria-labelledby="how-it-works-title" data-callout="how-it-works">
+  <div class="container">
+    <h2 class="esplora-sez__titolo" id="how-it-works-title">{% translate "Comment ça marche" %}</h2>
+    {% if how %}
+    <div class="come" data-locked="p3.persons.how_it_works">
+      <p class="visually-hidden"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{{ how.lead }}</p>
+      <ol class="come__tappe" role="list" data-steps="{{ how_steps|length }}">
+        {% for item in how_steps %}<li class="come__tappa{% if item.url %} come__tappa--via{% endif %}">
+          <span class="come__punto" aria-hidden="true"></span>
+          <p class="come__testo"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{% if item.url %}<a class="come__link" href="{{ item.url }}">{{ item.text }}</a>{% else %}{{ item.text }}{% endif %}{% if not item.last %}<span class="visually-hidden"> {{ how.arrow }}</span>{% endif %}</p>
+        </li>{% endfor %}
+      </ol>
+      <p class="come__avvertenza"{% if how.lang %} lang="{{ how.lang }}"{% endif %}>{{ how.caveat }}</p>
+    </div>
+    {% else %}
+    {% locked "p3.persons.how_it_works" "p" "come__intera" %}
+    {% endif %}
+  </div>
+</section>
+
+{% include "pathways/_spazio.html" with tiles=tiles email=site.contact_email only %}
+
+<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="pietra" data-rhythm="band" aria-labelledby="protezione-title-index">
+  <div class="container">
+    {% include "components/sezioni/protezione.html" with url=links.antifraud level=2 suffix="index" only %}
+  </div>
+</section>
+{% endblock %}
+{% block extra_scripts %}<script type="module" src="{% static 'js/dist/esplora.js' %}"></script>{% endblock %}

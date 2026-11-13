@@ -1,0 +1,140 @@
+title: Informativa sul trattamento dei dati personali
+---
+Informativa resa ai sensi degli artt. 13 e 14 del Regolamento (UE) 2016/679 («GDPR») e del D.Lgs. 196/2003, come modificato dal D.Lgs. 101/2018, a chi visita il sito e a chi utilizza la piattaforma Italy Legal Entry™. Descrive i trattamenti che il sito e la piattaforma effettuano nella loro configurazione attuale.
+
+## 1. Titolare del trattamento
+
+Il titolare del trattamento è AGAMI — Dialogo Giuridico Interculturale APS, associazione di promozione sociale iscritta al RUNTS (Rep. n. 149809), codice fiscale 91036640240, con sede legale in Via Sandrigo 29, 36061 Bassano del Grappa (VI), e sede operativa in Viale Giuseppe Mazzini 142, 00195 Roma. Il titolare può essere contattato all’indirizzo contact@agamieuromed.org.
+
+[DA COMPLETARE — OF-01 — OWNER CONFIRMATION REQUIRED: AGAMI APS è il titolare candidato; il proprietario conferma per iscritto che AGAMI APS è il titolare del trattamento per Italy Legal Entry e che denominazione, sedi e indirizzo di contatto sono attuali alla data di pubblicazione]
+
+## 2. Responsabile della protezione dei dati
+
+[DA COMPLETARE — OF-08 — LEGAL REVIEW REQUIRED: DPO STATUS = TO BE CONFIRMED; esito della valutazione dell’art. 37 GDPR: indicare che non è designato un responsabile della protezione dei dati oppure, se designato, il suo nome e i suoi dati di contatto]
+
+## 3. Dati trattati, finalità e basi giuridiche
+
+### 3.1 Navigazione del sito: registri del server
+
+A ogni richiesta, il server che pubblica il sito registra: l’indirizzo IP del dispositivo in forma ridotta (per un indirizzo IPv4 l’ultima parte è sostituita da zero; per un indirizzo IPv6 sono conservati solo i primi tre gruppi), la data e l’ora, il metodo e il percorso della pagina richiesta senza i parametri dell’indirizzo, il protocollo, il codice e la dimensione della risposta, il tempo di risposta, il nome del sito richiesto e un identificativo tecnico della richiesta. Il registro non contiene il tipo di browser né la pagina di provenienza.
+
+Quando il server rileva un’anomalia nella gestione di una richiesta, il registro degli errori riporta l’indirizzo IP completo e la richiesta completa, compresi gli eventuali parametri dell’indirizzo. Le richieste indirizzate al server con un nome diverso da quello del sito sono rifiutate e annotate nel registro standard del server, con l’indirizzo IP completo, la richiesta completa, il tipo di browser e la pagina di provenienza.
+
+L’applicazione annota nel registro di sistema del server gli eventi tecnici e di sicurezza con identificativi interni (per esempio il numero dell’account, mai l’indirizzo e-mail) e, in caso di errore, il percorso della pagina senza parametri. Non vi annota gli indirizzi IP né il contenuto dei moduli.
+
+Finalità: funzionamento del sito, sicurezza e diagnosi dei malfunzionamenti. Base giuridica: legittimo interesse del titolare a garantire la sicurezza del sito e a prevenire gli abusi (art. 6, par. 1, lett. f, GDPR). I registri del server sono ruotati ogni giorno e conservati per 14 giorni.
+
+[DA COMPLETARE — OF-05 — PRODUCTION CONFIGURATION REQUIRED: durata di conservazione del registro di sistema dell’applicazione e rotazione di 14 giorni dei registri del server, da verificare sul server di produzione]
+
+### 3.2 Sicurezza e prevenzione degli abusi
+
+L’applicazione non conserva l’indirizzo IP in chiaro: ne calcola un’impronta (funzione di hash SHA-256 con una chiave segreta) e conserva soltanto questa. L’impronta è un dato pseudonimizzato, non anonimo: chi dispone della chiave può verificare se corrisponde a un indirizzo noto.
+
+Il registro di sicurezza riporta, con l’account interessato, la data, l’impronta dell’indirizzo IP e un identificativo della richiesta, le operazioni rilevanti per la sicurezza: accessi e uscite dall’area riservata, tentativi di accesso non riusciti (senza l’indirizzo e-mail digitato), assegnazione di ruoli, scaricamento di documenti, consultazione di pratiche e le altre operazioni sensibili.
+
+Per limitare i tentativi ripetuti, il server tiene in memoria contatori di breve durata: per l’accesso, la registrazione e il recupero della password sono associati all’indirizzo IP; per l’accesso, il recupero della password e la conferma dell’indirizzo e-mail anche a un’impronta (hash SHA-256) dell’indirizzo e-mail digitato; per la modifica della password e dell’indirizzo e-mail, all’account. Scadono dopo un periodo compreso tra 1 minuto e 1 ora. Per i moduli pubblici sono associati all’impronta dell’indirizzo IP e scadono dopo 10 minuti. Questi contatori restano nella memoria del server e si cancellano alla scadenza.
+
+Finalità: proteggere gli account, i dati e i servizi da accessi non autorizzati e da abusi. Base giuridica: legittimo interesse del titolare (art. 6, par. 1, lett. f, GDPR).
+
+[DA COMPLETARE — OF-06 — LEGAL REVIEW REQUIRED: durata di conservazione del registro di sicurezza, che oggi non è cancellato automaticamente]
+
+### 3.3 Area riservata: account, sessione e secondo fattore
+
+Per l’account sono trattati: indirizzo e-mail, nome e cognome, lingua preferita, tipo di account, date di iscrizione e di ultimo accesso, accettazione delle condizioni; nel profilo, paese di residenza e numero di telefono; l’eventuale organizzazione di appartenenza e i dati della verifica dell’account. La password è conservata solo in forma di hash non reversibile. Il secondo fattore di autenticazione usa un codice temporaneo generato da un’applicazione di autenticazione e codici di recupero; è obbligatorio per il personale e per i ruoli che accedono a dati di altre persone.
+
+Dopo l’accesso, la sessione è conservata nel database del server e scade 8 ore dopo l’ultimo aggiornamento; le sessioni scadute sono cancellate ogni giorno.
+
+Finalità: fornire l’area riservata richiesta e proteggerne l’accesso.
+
+[DA COMPLETARE — OF-10 — LEGAL REVIEW REQUIRED: base giuridica dell’area riservata (account, secondo fattore, documenti, pratiche, sportello, formazione, selezione) e delle copie di sicurezza]
+
+I dati dell’account sono conservati fino alla cancellazione dell’account, che l’utente può chiedere dalla pagina del proprio profilo; la cancellazione rende anonimi i dati dell’account.
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED: regola di conservazione per gli account inattivi, se prevista]
+
+### 3.4 Questionario di orientamento
+
+Il questionario di orientamento si compila anche senza account. Sono conservati le risposte, scelte tra opzioni predefinite, la lingua, l’impronta dell’indirizzo IP, l’impronta del codice che permette di riprendere il questionario e il risultato, con le versioni delle regole applicate.
+
+Finalità: rispondere alla richiesta di orientamento. Base giuridica: esecuzione di misure precontrattuali adottate su richiesta dell’interessato (art. 6, par. 1, lett. b, GDPR). Senza account, i dati del questionario sono cancellati automaticamente dopo 30 giorni; se il questionario è collegato a un account, seguono la conservazione dell’account.
+
+### 3.5 Documenti e pratiche nell’area riservata
+
+Nell’area riservata l’utente può caricare documenti (PDF, JPEG o PNG), anche documenti d’identità, e seguire pratiche, liste di controllo, valutazioni, messaggi, scadenze, richieste allo sportello, percorsi di formazione e di selezione. Per ogni documento sono conservati il file, il nome originale, il tipo, la dimensione, un’impronta del contenuto, una descrizione e l’impronta dell’indirizzo IP da cui è stato caricato.
+
+I documenti sono conservati sul server fuori da ogni cartella accessibile dal web e si scaricano solo dall’area riservata, con un collegamento personale valido 10 minuti. Vi accedono l’utente, il referente della sua organizzazione e il personale autorizzato, nei limiti del rispettivo ruolo. L’utente è invitato a non inserire nei campi liberi categorie particolari di dati ai sensi dell’art. 9 del GDPR, non richieste per le finalità del servizio.
+
+Finalità: preparare la documentazione del percorso richiesto e seguirne le fasi. La base giuridica è indicata al punto 3.3.
+
+[DA COMPLETARE — OF-13 — LEGAL REVIEW REQUIRED: SPECIAL CATEGORY LEGAL BASIS REQUIRED: condizione dell’art. 9 GDPR per le categorie particolari di dati che possono comparire nei documenti caricati e nei testi liberi dell’area riservata]
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED: durata di conservazione dei documenti, delle pratiche, dei messaggi, delle scadenze, delle richieste allo sportello, della formazione e della selezione]
+
+### 3.6 Messaggi di posta elettronica
+
+La piattaforma invia messaggi di servizio: verifica dell’indirizzo e-mail, recupero della password e notifiche. Di ogni messaggio il database conserva una copia (destinatario, oggetto e testo) per gestirne l’invio e gli eventuali nuovi tentativi. Finalità e base giuridica sono quelle del servizio che ha prodotto il messaggio.
+
+[DA COMPLETARE — OF-03 — PRODUCTION CONFIGURATION REQUIRED: fornitore del servizio di posta in uscita usato in produzione (denominazione, sede, accordo ai sensi dell’art. 28 GDPR) e fornitore che ospita la casella contact@agamieuromed.org]
+
+[DA COMPLETARE — OF-07 — LEGAL REVIEW REQUIRED: durata di conservazione delle copie dei messaggi, che oggi non sono cancellate automaticamente]
+
+### 3.7 Copie di sicurezza
+
+Ogni notte è eseguita una copia di sicurezza cifrata del database e dei documenti caricati. La copia è conservata sul server per 7 giorni ed è prevista una copia fuori dal server. Finalità: continuità del servizio e ripristino dei dati in caso di guasto. La base giuridica è indicata al punto 3.3.
+
+[DA COMPLETARE — OF-04 — PRODUCTION CONFIGURATION REQUIRED: luogo, fornitore e regione delle copie conservate fuori dal server, chi vi può accedere e la loro durata di conservazione]
+
+### 3.8 Servizi non attivi
+
+I moduli pubblici di contatto e di collaborazione, l’iscrizione agli eventi, la registrazione di nuovi account, la newsletter e il Forum virtuale non sono attivi. Prima della loro attivazione questa informativa sarà aggiornata con i dati trattati, la base giuridica e la durata di conservazione di ciascuno. Le integrazioni con sistemi esterni di gestione dei contatti non sono attive.
+
+## 4. Natura del conferimento e processi decisionali
+
+Il conferimento dei dati richiesti nel questionario e nell’area riservata è facoltativo, ma senza i dati indicati come necessari il servizio richiesto non può essere fornito. I risultati restituiti dalla piattaforma sono pre-valutazioni a carattere esclusivamente informativo: nessun trattamento dà luogo a decisioni basate unicamente su un trattamento automatizzato che producano effetti giuridici sull’interessato ai sensi dell’art. 22 del GDPR, e ogni decisione amministrativa spetta esclusivamente alle autorità pubbliche.
+
+## 5. Destinatari dei dati
+
+- il personale del titolare e i soggetti autorizzati, ciascuno nei limiti del proprio ruolo;
+- il fornitore dei servizi di hosting del sito e della piattaforma, in qualità di responsabile del trattamento ai sensi dell’art. 28 del GDPR (fornitore previsto: DigitalOcean);
+- il fornitore del servizio di posta in uscita (punto 3.6);
+- il fornitore che conserva le copie di sicurezza fuori dal server (punto 3.7).
+
+[DA COMPLETARE — OF-12 — LEGAL REVIEW REQUIRED: ruolo di ciascuna categoria di destinatari interni ed esterni (ruoli del personale, operatori autorizzati, enti di formazione, professionisti, imprese): responsabile del trattamento, titolare autonomo o contitolare]
+
+[DA COMPLETARE — OF-02 — PRODUCTION CONFIGURATION REQUIRED: accettazione dell’accordo ai sensi dell’art. 28 GDPR (DPA) di DigitalOcean ed elenco dei sub-responsabili, da verificare quando è creata l’infrastruttura di produzione]
+
+I dati non sono diffusi. Le pagine del sito non caricano risorse di terze parti (caratteri, script, immagini, mappe o video) né strumenti di analisi: nessun soggetto terzo riceve l’indirizzo IP di chi visita il sito.
+
+## 6. Luogo del trattamento e trasferimenti
+
+[DA COMPLETARE — OF-02 — PRODUCTION CONFIGURATION REQUIRED: regione DigitalOcean del server, del database e dei volumi, ed eventuali trasferimenti di dati verso Paesi terzi con la relativa garanzia (artt. 44 e ss. GDPR), anche per il servizio di posta (OF-03) e per le copie di sicurezza fuori dal server (OF-04), da verificare sull’infrastruttura di produzione]
+
+Gli utenti che accedono dal Regno del Marocco beneficiano inoltre, per quanto necessario, delle tutele previste dalla legge marocchina n. 09-08 relativa alla protezione delle persone fisiche nei confronti del trattamento dei dati a carattere personale.
+
+## 7. Durata di conservazione: riepilogo
+
+- registri del server: 14 giorni, con rotazione giornaliera;
+- contatori contro gli abusi: da 1 minuto a 1 ora, solo in memoria;
+- sessioni: 8 ore dall’ultimo aggiornamento;
+- questionario di orientamento senza account: 30 giorni;
+- copie di sicurezza sul server: 7 giorni;
+- account: fino alla cancellazione dell’account;
+- registro di sistema dell’applicazione, registro di sicurezza, documenti e pratiche, copie dei messaggi, copie di sicurezza fuori dal server: come indicato ai punti 3.1, 3.2, 3.5, 3.6 e 3.7.
+
+## 8. Diritti dell’interessato
+
+L’interessato può esercitare in qualsiasi momento i diritti riconosciuti dagli artt. 15–22 del GDPR — accesso, rettifica, cancellazione, limitazione del trattamento, portabilità e opposizione — scrivendo a contact@agamieuromed.org. Dall’area riservata può inoltre chiedere direttamente la cancellazione del proprio account.
+
+Resta salvo il diritto di proporre reclamo al Garante per la protezione dei dati personali ai sensi dell’art. 77 del GDPR (www.garanteprivacy.it).
+
+## 9. Misure di sicurezza
+
+Il sito è servito solo tramite connessione cifrata (HTTPS). L’accesso del personale e dei ruoli che consultano dati di altre persone richiede un secondo fattore di autenticazione. Gli indirizzi IP sono conservati solo come impronta, le copie di sicurezza sono cifrate e i documenti caricati non sono mai serviti direttamente dal web.
+
+## 10. Cookie e tecnologie di memorizzazione
+
+Il sito usa solo cookie tecnici di prima parte e alcune memorie locali del browser per lo stato dell’interfaccia. L’elenco completo, con finalità e durata di ciascuno, è nell’Informativa sui cookie e sulle tecnologie di memorizzazione.
+
+## 11. Aggiornamenti
+
+Questa informativa è aggiornata quando cambiano i trattamenti. La versione in vigore è indicata in testa alla pagina e il titolare conserva ogni versione pubblicata.

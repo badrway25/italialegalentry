@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-scudo: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - protection: a shield whose inner field is the key's keyhole (the bow ring and a short shaft); ink only, the keyhole's tone deepens on the link's hover and focus (n.9) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M22 22.46A4 4 0 1 1 26 22.46L27.2 30.5H20.8Z"/>
+  <path data-layer="arch" d="M24 5 39 10.5V22C39 31.5 33 38.5 24 43C15 38.5 9 31.5 9 22V10.5Z"/>
+  <path data-layer="mark" d="M22 22.46A4 4 0 1 1 26 22.46L27.2 30.5H20.8Z"/>
+</svg>

@@ -1,0 +1,47 @@
+{% load i18n %}{% comment %}
+«LA SOGLIA» — THE PUBLIC PASSAGE, design V5 (W3-D: V5.4 plan §3.5 item 6, §1.18 D16), drawn by
+static/css/v5/_journey-passage.css — the site's ONE passage drawing, «la linea»: a real sequence on a level line, the
+numerals over open stations (an outline is open: nothing on this site settles a step for anyone), the words under them.
+Down the reading edge on a phone; across its column from 48rem when `across` is set. A semantic <ol>: the order is the
+list's, the numerals are CSS counters, decorative. A page that draws it imports the partial in its page sheet.
+
+A flow (a multi-step form) passes `current`: the steps behind it filled, its own item aria-current="step" and its
+rank in words under the passage. An explanation of how something works passes no `current`: it is not a progress.
+
+Contract: `steps` — a list of str, or of dicts {label | heading, text | body, pending, lang}; optional `current` (the
+1-based place of a flow), `label` (the list's accessible name), `lang`, `across` (True), `cols` (the stations of one
+row from 48rem, for the long passages).
+
+V5.22 (SECTION_SYSTEM_V2 §2 F «la linea V2», lane S), redrawn by the FINAL MICRO-PASS (§2.2, §5 A1–A2; 9 Nov 2026) —
+`size="large"`: a real sequence of stations that explains a procedure (never a tracker: no current station, no tick),
+drawn as the site's ONE quiet sequence marker (21st.dev «How It Works Steps» 26891, ln-dev7/how-it-works-09, adapted: one 1 px connector, small figures, no icons): each
+station its figure — «1», never «01»; the caption's size, the act's weight, the quiet ink, tabular; the first in the
+accent —, its words at body size and regular weight under it. Across its column from 48 rem the figures stand on one
+hairline that joins them (at most four a row: eight stations are two rows of four); below, a vertical rail at the inline
+start. No tile, no seal, no numeral at 28–36 px, no box. Optional: `terminal` (safe: the caveat or the editorial note,
+set as a secondary legal note under the line — no plate, no stripe), `end_action` ({"url", "label"}: the one call under
+it), `whole` (the locked sentence the stations are cut from, said once for a screen reader: the drawn stations are then
+aria-hidden). Motion: the hairline draws once along the reading direction as the section enters and the words come to
+their full ink, 120 ms a station; still: drawn.
+{% endcomment %}{% if size == "large" %}<div class="linea-v2{% if terminal %} linea-v2--terminale{% endif %}">
+{% if whole %}<p class="visually-hidden"{% if lang %} lang="{{ lang }}"{% endif %}>{{ whole }}</p>{% endif %}
+<ol class="linea linea--large{% if across %} linea--across{% endif %}" data-registro data-steps="{{ steps|length }}"{% if label and not whole %} aria-label="{{ label }}"{% endif %}{% if lang %} lang="{{ lang }}"{% endif %}{% if whole %} aria-hidden="true"{% endif %}>
+  {% for step in steps %}<li class="linea__step{% if step.pending %} linea__step--pending{% endif %}">
+    <span class="linea__num" aria-hidden="true"></span>
+    {% firstof step.label step.heading step as words %}<p class="linea__label{% if words|upper == words and words|lower != words %} linea__label--caps{% endif %}" data-verb="ink"{% if step.lang and step.lang != site.lang %} lang="{{ step.lang }}"{% endif %}>{% if step.label %}{{ step.label }}{% elif step.heading %}{{ step.heading }}{% else %}{{ step }}{% endif %}</p>
+    {% if step.text %}<p class="linea__text">{{ step.text }}</p>{% endif %}
+  </li>{% endfor %}
+</ol>
+{% if terminal %}<div class="linea__terminale">{{ terminal }}</div>{% endif %}
+{% if end_action %}<p class="linea__arrivo"><a class="btn btn--primary" href="{{ end_action.url }}" data-azione>{{ end_action.label }}</a></p>{% endif %}
+</div>{% else %}
+<ol class="linea{% if across %} linea--across{% endif %}" data-steps="{{ steps|length }}"{% if cols %} data-cols="{{ cols }}"{% endif %}{% if label %} aria-label="{{ label }}"{% elif current %} aria-label="{% translate 'Progression' %}"{% endif %}{% if lang %} lang="{{ lang }}"{% endif %}>
+  {% for step in steps %}
+  <li class="linea__step{% if step.pending %} linea__step--pending{% endif %}{% if current %}{% if forloop.counter < current %} linea__step--done{% elif forloop.counter == current %} linea__step--current{% endif %}{% endif %}"{% if current and forloop.counter == current %} aria-current="step"{% endif %}>
+    <span class="linea__num" aria-hidden="true"></span>
+    <p class="linea__label"{% if step.lang and step.lang != site.lang %} lang="{{ step.lang }}"{% endif %}>{% if step.label %}{{ step.label }}{% elif step.heading %}{{ step.heading }}{% else %}{{ step }}{% endif %}</p>
+    {% if step.text %}<p class="linea__text">{{ step.text }}</p>{% elif step.body %}<div class="linea__text"{% if step.lang and step.lang != site.lang %} lang="{{ step.lang }}"{% endif %}>{{ step.body|linebreaks }}</div>{% endif %}
+  </li>
+  {% endfor %}
+</ol>
+{% if current %}<p class="linea__rank">{% blocktranslate with n=current total=steps|length %}Étape {{ n }} sur {{ total }}{% endblocktranslate %}</p>{% endif %}{% endif %}

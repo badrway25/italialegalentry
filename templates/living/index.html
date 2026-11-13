@@ -1,0 +1,83 @@
+{% extends "base.html" %}{% load i18n static lettura pages_imagery %}
+{% comment %}
+«Vivre en Italie» — the topics (gate G3). Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through
+cms/lettura.css): the head at the reading edge (the prescribed title and lead, whole); the topics as a register in two
+columns, each row the way to its topic — typographic, without glyphs.
+V5.12 §8 / §14 (W1-C): the register lists only the themes that carry a live, reviewed sheet (living.services
+.public_topics); a theme without one — health among them — is not shown and its page answers 404. With none, the
+page is the approved introduction alone (S1 §3.8.4): never «sheets in preparation».
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.15; lane P2):
+  head + moment  D «il panorama»: the prescribed title stays in its band with the page's T1 seal «ile-vivere» beside it;
+                 the street frame (living.street, the LCP: never masked, never faded) follows full bleed, outside the
+                 band, and the prescribed lead stands whole on an opaque paper plate over its lower third from 64 rem
+                 (under it on a phone; no glass). Motion: a controlled scale 1.04 → 1 after the first paint, the M22
+                 drift from 48 rem, one light sweep as the frame leaves the screen; still under reduced motion;
+  band           E «pour s'installer» (apps/living/views.py) on stone: the training after the arrival, the two prescribed
+                 terms everyone meets, the FAQ — only what exists (Q8: no theme card, no «coming soon»). Round 1
+                 (QA_ROUND1 M8): two rows of one kind each — the two terms as the glossary's dictionary cards (the
+                 definition whole, «Où le rencontrer», the card answering the hand and the focus), then the two ways on
+                 as compact route tiles; the lead's plate is no longer a head (its words never wait: m10).
+Round 2 (QA_ROUND2 M8) — what carries the page's interaction: the seal «ile-vivere» draws in the head's own sequence
+(the roofline and the door, then the sprout rises, the door's tone last), and the head's title row ends on the band's
+action — «Pour s'installer», the way down to the band — whose hover and focus light the seal's door across the row (the seal system's
+data-azione on the head's scope); then the band's dictionary cards and route tiles answer the hand and the focus.
+Final round (QA_ROUND3 m1) — the moment meets its band: no paper strip under the frame; the moment's ground is its band's
+stone (on a desktop the frame fills it, so the frame's foot is the band's edge; below 64 rem the lead's plate overlaps
+the frame and stands on that stone), deliberately one ground with the band that follows.
+Page sheets apps/cms/static/cms/lettura.css and the route sheet lessico.css (+ _lessico-v2.css).
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): the head is the prescribed title and its way down — the «ile-vivere» seal in its
+niche and the band's territory drawing left (a page header draws no motif); the photograph and the plate carry the page.
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — human, civic, practical: the prescribed title's
+capitals at the title's size with a little air (never shouted), no frontispiece wrapper; the street frame kept (the
+page's photograph, relevant: daily life in an Italian street) at a calmer height; the lead's plate and «Pour
+s'installer» unchanged in substance — no topic is shown before a reviewed sheet exists (V5.12 §8).
+{% endcomment %}
+{% block page_title %}{% translate "Vivre en Italie" %}{% endblock %}
+{% block meta_description %}{% locked "p3.living.body" as living_body %}{{ living_body|striptags }}{% endblock %}
+{% block body_class %}page-living lettura{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if preview %}
+<div class="container">{% translate "Aperçu réservé à la rédaction — cette section n’est pas encore publiée." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
+{% endif %}
+
+<header class="page-header container vivere-testa__header">
+  <div class="vivere-testa__riga">{% locked_title "p3.living.title" %}{% if settle.terms or settle.routes %}<a class="vivere-testa__azione" href="#living-settle-title" data-azione>{% translate "Pour s’installer" %}{% svg_icon "chevron" "icon icon--sm" %}</a>{% endif %}</div>
+</header>
+<div class="sez vivere-panorama" data-ground="stone" data-rhythm="moment">
+  <div class="container vivere-panorama__cornice">
+    <div class="vivere-panorama__quadro" data-parallax>{% photo "living.street" "vivere-panorama__foto" %}</div>
+    <div class="vivere-panorama__lastra sez-plate sez-plate--raised">{% locked "p3.living.body" "p" "page-header__lead" %}</div>
+  </div>
+</div>
+
+{% if topics %}
+<section class="chapter living-topics" aria-label="{% translate 'Thèmes' %}">
+  <div class="container chapter__inner">
+    <div class="chapter__body">
+      <ul class="registro registro--two registro--links topic-grid">
+        {% for topic, texts in topics %}
+        <li class="registro__row topic-card">
+          <p class="registro__title topic-card__title"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}><a class="topic-card__link" href="{{ topic.get_absolute_url }}">{{ texts.title }}</a></p>
+          <p class="registro__meta topic-card__count">{% blocktranslate count n=topic.sheet_count %}{{ n }} fiche{% plural %}{{ n }} fiches{% endblocktranslate %}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if settle.terms or settle.routes %}
+<section class="sez sez--mosaico vivere-installer" data-sec="mosaico" data-ground="stone" data-rhythm="band" aria-labelledby="living-settle-title">
+  <div class="container vivere-installer__griglia">
+    {% translate "Pour s’installer" as settle_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="living-settle-title" title=settle_title only %}
+    {% if settle.terms %}<div class="lessico__carte vivere-installer__termini sez-seq">{% for card in settle.terms %}{% include "glossary/_entry.html" with card=card %}{% endfor %}</div>{% endif %}
+    {% if settle.routes %}{% include "components/sezioni/mosaico.html" with variant="rimando" tiles=settle.routes only %}{% endif %}
+  </div>
+</section>
+{% endif %}
+{# CONTENT_PENDING_LEGAL_REVIEW: sheet content is created from the back-office after legal review; nothing is seeded. #}
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/lessico.css' %}">{% endblock %}

@@ -1,0 +1,39 @@
+/* ============================================================================================
+   THE PLATFORM'S GROUNDS — the images the console's lattice, NowPanel and organisation panels are drawn on
+   (V5.18 stabilisation, lane D, m-6). A partial of the design system, page-only: imported by
+   apps/portal/static/portal/platform.css right AFTER v5/_platform.css, never by main.css or console.css.
+
+   Why here and not in the app sheet: an app stylesheet draws no gradient (AGENT_CONVENTIONS §3,
+   tests/frontend/test_design_docs.py::test_conforming_app_stylesheets_use_only_design_tokens) — its images are the
+   design system's. Why not tokens in tokens.css: these images read values that only exist on the element that draws
+   them (the pointer's position, --spot-x/--spot-y; the console's own area surface, the overdue edge's light line),
+   so a :root token cannot hold them; and tokens.css is in main.css, whose gzip budget has no room for a page-only
+   image (DL54-170: 33 600 B, «no further rise»).
+
+   Every stop is a v5 token, one import after the app sheet, so each wins over the app sheet's own rules for those
+   elements. V5.32 lane E (the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION directive, 12 Nov 2026: «no geometry
+   as filler», «decorative imagery dramatically reduced» on the platform) retired the atrium's grounds — its two washes,
+   the architect's grid and the masks of the drawing and of the phone's band — and the calm panel's lagoon wash (a calm
+   state is a clean sheet, not a glow). What stays draws information: the glyph tiles' paper, the overdue edge, the
+   spotlight under a fine pointer.
+   ============================================================================================ */
+
+/* the lattice's glyph tile and the organisation's tile disc: paper toward the console's area surface */
+.lattice__glyph,
+.org-refs--tiles .org-refs__disc {
+  background: linear-gradient(160deg, var(--p-carta-0), var(--surface-area));
+}
+
+/* the NowPanel's edge when its date is overdue: the light line in terracotta */
+.db-now--overdue::before {
+  background: linear-gradient(var(--lume-line-to), transparent, var(--p-cotto-600));
+}
+
+/* the spotlight under a fine pointer (static/js/src/platform.js sets --spot-x / --spot-y) */
+[data-spot]::after {
+  background: radial-gradient(
+    280px circle at var(--spot-x) var(--spot-y),
+    color-mix(in srgb, var(--p-laguna-400) 16%, transparent),
+    transparent 70%
+  );
+}

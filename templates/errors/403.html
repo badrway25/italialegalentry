@@ -1,0 +1,25 @@
+{% extends request|account_frame|cut:"allauth/layouts/_console.html"|add:request.path|slice:"3:19"|add:"#"|cut:"/espace-reserve/#"|yesno:"errors/base_error.html,errors/console_error.html" %}{% load i18n %}{% comment %}
+The 403. To a person who is not signed in, the sign-in is the one primary — its sentence asks for it — and it carries
+the refused address (`next`: allauth goes there after the sign-in, and only to an address of this site), so the person
+lands where they were going, not on the dashboard (the review's m9); a signed-in person gets the home and the way back.
+
+THE FRAME (V5.32 lane E, correction round P2-8): a signed-in account whose console is open, refused at an address of
+the console (/<lang>/espace-reserve/…), stays in the console — errors/console_error.html: the rail the address would
+have drawn, the console's head, the rail's «Tableau de bord» as the one primary, no door; everyone else, at every other
+address, gets the public page exactly as before (errors/base_error.html). The first line decides with builtin filters
+only, because `{% extends %}` must be a template's first tag and no `{% load %}` may precede it: `request|account_frame`
+names the console's frame for an account the console is open to (accounts.shell.frame, the rule the account pages
+follow: signed in, and the reserved area open or a member of staff) — cut to nothing —, else the public layout's
+name; the path is appended and its sixteen characters after the language prefix kept; «/espace-reserve/» is cut from
+them with a closing «#», so that only that prefix, whole, leaves nothing (a path shorter than it keeps its «#»).
+Nothing left: the console's frame (`yesno`'s second name); anything left: the public one. The trail's last crumb is
+the state's name (`error_crumb`, set around the chrome: the public frame's header ignores it).
+{% endcomment %}
+{% block chrome %}{% with error_crumb=_("Accès non autorisé") %}{{ block.super }}{% endwith %}{% endblock %}
+{% block error_code %}403{% endblock %}{% block error_code_display %}403{% endblock %}
+{% block error_title %}{% translate "Accès non autorisé" %}{% endblock %}
+{% block error_text %}{% translate "Vous n’avez pas les droits nécessaires pour consulter cette ressource. Si vous pensez qu’il s’agit d’une erreur, connectez-vous avec le compte approprié ou contactez-nous." %}{% endblock %}
+{% block error_actions %}{% safe_url 'account_login' as login_url %}{% if login_url and not user.is_authenticated %}<div class="error-page__actions">
+  <a class="btn btn--primary btn--arrow" href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">{% translate "Se connecter" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a>
+  <a class="btn btn--secondary" href="{% url 'pages:home' %}">{% translate "Retour à l’accueil" %}</a>
+</div>{% else %}{{ block.super }}{% endif %}{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+Shell of the company workspace — «Espace entreprise», a space of the console with ONE rail of its own (W3-A: the
+shell builds one rail per space; companies.services.navigation gives its entries).
+
+It EXTENDS the platform shell — it never re-renders the public one and never redraws the shell itself. Design V5
+(W3-E step 2): each page draws its own head — the dashboard its legal name and verification (W3-B), the register
+its title and its one act, a need its title, its reference and its state — so the V1 company band that every page
+repeated left with the redraw (one identity per screen, the rail's space and the page's subject). Each page links
+the sheets it draws with: the registers' page sheet (portal/registers.css) and, for the pages that draw beyond it,
+companies/companies.css; the dashboard draws with the console's own (v5/_dashboard.css) and links neither.
+
+The shell's regions are reused as they are:
+  · the platform bar, with `portal_context` set to the company name
+  · the next action — ONE priority — from companies.services.next_action
+  · the local navigation, from companies.services.navigation
+
+Contract: `portal_nav`, `breadcrumbs`, `noindex`, optional `company`, `next_action`.
+Blocks: `companies_content`.
+{% endcomment %}
+{% block body_class %}page-portal page-companies console{% endblock %}
+
+{% comment %}
+Flash messages are NOT repeated here: ``base.html`` already renders them once, above the
+breadcrumbs, in a live region. Rendering them again produced the same sentence twice on one screen,
+which is how a reader learns to stop reading them.
+{% endcomment %}
+{% block portal_content %}{% block companies_content %}{% endblock %}{% endblock %}

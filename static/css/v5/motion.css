@@ -1,0 +1,201 @@
+/* ============================================================================
+   MOTION — the shared motion of every page, design V5.12 (the Director's DECISIONS §1 T1–T3, §2; V5.12 §4, §5).
+   A layer of main.css, after the loader «Lume» (v5/loader.css: the mark in layers, the key's turn `sig-turn`): what
+   moves ACROSS a navigation. Page-only motion lives in page-only sheets (v5/reveal.css, the console's _motion.css).
+
+   1. THE PAGE CHANGE — cross-document View Transitions (T1), a progressive enhancement: a browser without them
+      navigates as before. Under prefers-reduced-motion: reduce there is none (the at-rule is declared under
+      no-preference only); from the keyboard, on the preview hub and under html.rm static/js/head.js skips it.
+      · the page cross-fades — the old one out over --motion-fast, the new one in over --motion-standard: opacity
+        only, so content never travels (MS-O3 holds for the content) and text never waits (K17: the new page is
+        painted under the snapshot, and the fade is over in 200 ms);
+      · the mark is the one thing that travels: `ile-mark` on the letterhead's mark, on the sign-in's door
+        (#varco-door) and on the console's tile (the rail's from 64rem, the top bar's below: the console's own
+        partial, apps/portal/static/portal/v5/_motion.css) — the door the key has just turned flies into the rail's
+        tile, where the release lights (T3). --motion-emphasized, --ease-layout;
+      · a language switch cross-fades only (html.vt-lang, head.js): the mark never travels, so it never mirrors.
+      One name per page: the sign-in's letterhead gives its name up to the door.
+
+   2. THE LETTERHEAD'S MARK in layers, laid over the lock-up's <img> (below): what the View Transition carries.
+      V5.15 (DECISIONS §15 lane A): W1's threshold in the band — the light line on the rule, the band's turning key,
+      the band's word — and the arrival's light on the mark left this sheet: «a gold line under the header is NOT the
+      primary branded loader». The wait and the page change are the central veil's (v5/lume.css): when it is drawn,
+      head.js skips the View Transition, which stays for what the veil does not take (the sign-in's door into the
+      console, back / forward).
+
+   3. `lume-fade` and `lume-still` (below) stay: the console's release and its reduced-motion still read them
+      (scripts/gen_loader_light.py), the console loads main.css first.
+
+   4. THE NOTICES (V5.12 §5; DECISIONS §2 M9) — a session message comes --reveal-shift from its edge over
+      --motion-standard, its words read at once (opacity 1 from the first frame: text never waits, §2 rule 1); the toast
+      at the viewport's foot rises and fades in, an overlay. It leaves over --motion-fast (static/js/src/notices.js:
+      «Fermer», a success's 6 s). Under reduced motion the tokens are 0 ms: it is there, and gone.
+
+   5. THE DISCLOSURE'S HEIGHT (M6) — an accordion opens its answer in --motion-standard and closes it in --motion-fast
+      (`interpolate-size` and `::details-content`, where the browser has them: elsewhere it opens at once, as before).
+      From the keyboard at once; under reduced motion at once.
+
+   The keyframes carry the tokens' literal curves (var() does not animate inside a keyframe; DS 2026 §3.5) and
+   nothing loops (tests/frontend/test_loader_rules.py reads this sheet with the loader's).
+   ========================================================================== */
+
+/* ---- 1. The page change -------------------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-old(root) {
+  animation: lume-out var(--motion-fast) var(--ease-enter) 1 both;
+}
+
+::view-transition-new(root) {
+  animation: lume-in var(--motion-standard) var(--ease-enter) 1 both;
+}
+
+::view-transition-group(ile-mark) {
+  animation-duration: var(--motion-emphasized);
+  animation-timing-function: var(--ease-layout);
+}
+
+.site-header .lock-sig,
+#varco-door {
+  view-transition-name: ile-mark;
+}
+
+.page-entrance .site-header .lock-sig,
+:is(.vt-lang, .lume-go, .lume-in) :is(.lock-sig, #varco-door) {
+  view-transition-name: none;
+}
+
+/* under the central veil (v5/lume.css) the page change is the veil's: the View Transition is only a --motion-fast dissolve of
+   the held old frame into the veiled new page — no mark travels, the new page is there at once under it (v515-a
+   review round 1, M-2: the cut from the paint-held frame to the full veil) */
+html.lume-in::view-transition-old(root) {
+  animation: lume-out var(--motion-fast) var(--ease-enter) 1 both;
+}
+
+html.lume-in::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes lume-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes lume-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---- 2. The threshold: the band's mark — the letterhead's lock-up mark in layers, laid over its <img> -------- */
+/* The lock-up is cms_nav's `brand_lockup` (an <img> of the mark); the header lays the layered mark
+   (components/loader.html) exactly over it — the same file's geometry, pixel for pixel at rest — and hides the
+   <img>, so the key has a layer to turn. The anchor is ltr, as the lock-up is: the mark is its first --sig-size. */
+
+.site-header .brand--lockup {
+  position: relative;
+  direction: ltr;
+}
+
+.site-header .lock-sig {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+
+.site-header .lock-sig + .lock .lock__mark {
+  visibility: hidden;
+}
+
+/* its size is the letterhead's --sig-size, the lock-up's own (v5/chrome.css §3: one size for the mark and its layers) */
+
+/* (V5.15, DECISIONS §15 lane A) W1's light line on the band's rule and the band's word are gone: «a gold line under
+   the header is NOT the primary branded loader» — the wait is carried by the central veil, its sill and its one status
+   line (v5/lume.css, components/lume_veil.html). */
+
+/* ---- 3. The arrival's light on the letterhead's mark (W1) left with the band's line: the veil's arrival is the light
+   now (v5/lume.css). The keyframes below stay: the console's release and its stills read them (_loader-light.css). */
+
+@keyframes lume-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lume-still {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---- 4. The notices ------------------------------------------------------------------------------------------ */
+
+.alert {
+  transition: opacity var(--motion-standard) var(--ease-enter), translate var(--motion-standard) var(--ease-enter);
+}
+
+@starting-style {
+  .alert {
+    translate: 0 calc(-1 * var(--reveal-shift));
+  }
+
+  .messages--toast .alert {
+    opacity: 0;
+    translate: 0 var(--reveal-shift);
+  }
+}
+
+.alert.is-leaving {
+  opacity: 0;
+  translate: 0 calc(-1 * var(--reveal-shift));
+  transition-duration: var(--motion-fast);
+}
+
+.messages--toast .alert.is-leaving {
+  translate: 0 var(--reveal-shift);
+}
+
+[data-input="key"] .alert.is-leaving {
+  transition-duration: 0ms;
+}
+
+/* ---- 5. The disclosure's height ------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports selector(::details-content) {
+    /* the height interpolates for a pointer, never from the keyboard: from the keyboard it is not interpolable, so the
+       answer opens and closes at once. The keyboard's condition stands on the accordion, a class Blink scopes — never
+       on a rule ending on ::details-content, which it cannot, so that the first key of every page restyled the whole
+       document (v522-s2: lane H's QA_ROUND3 M2, NOTES §12.5; main.css's ratchet held, 32 716 B gzip -9) */
+    html:not([data-input="key"]) .accordion {
+      interpolate-size: allow-keywords;
+    }
+
+    .accordion__item::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size var(--motion-fast) var(--ease-layout), content-visibility var(--motion-fast) allow-discrete;
+    }
+
+    .accordion__item[open]::details-content {
+      block-size: auto;
+      transition-duration: var(--motion-standard);
+      transition-timing-function: var(--ease-enter);
+    }
+  }
+}

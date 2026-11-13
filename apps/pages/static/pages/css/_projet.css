@@ -1,0 +1,283 @@
+/* ============================================================================================
+   LE PROJET — «la carta del progetto» (V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION, lane A, 12 Nov 2026). The partial of
+   Le projet's own route sheet pages/css/projet.css, linked on /le-projet/ only after the institutional pages' shared sheet
+   (interior.css). Markup: templates/pages/project.html, pages/partials/projet/.
+   The page presents an institution's project the way a charter does: one thesis, the reason, the bearer, the spaces —
+   four bands, each its own composition, no drawn geometry, no repeated list:
+     1 · «la tesi» on paper: «En bref» as a label at the reading edge, the prescribed presentation beside it as the page's
+         statement (24 → 28, the body weight: a statement, not a shout)
+     2 · «il perché» on stone: the prescribed «Pourquoi» in its three levels (the problem, the alternative, the principle
+         with its 2 px rule) beside ONE photograph that carries its argument — the bound law volumes, a portrait crop
+         (the spines stand); the frame opens with the library's mask (_reveal.css), still under reduced motion
+     3 · «chi lo porta» on paper: the bearer as a raised plate — the promoter's official seal (static/brand/agami: the
+         step names AGAMI, the seal is its own mark, decorative) beside the prescribed answer and the way to its page
+     4 · «gli spazi» on night: the four spaces as a two-by-two index of real links — the disc in the actor's accent, the
+         space's name, its way in; the whole row is the control (rest · hover · focus · active designed)
+     5 · the foot strip: three ways on, then the trademark line
+   Tokens only; logical properties; motion on transform only, none on the keyboard path.
+   ============================================================================================ */
+
+/* ---- 0 · the bands' titles ---- */
+.projet-titolo {
+  margin: 0;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-title-2);
+  font-weight: var(--w-title);
+  text-wrap: balance;
+}
+
+/* the prescribed title written in capitals («POURQUOI ITALY LEGAL ENTRY»): tracked with the case features, one optical
+   step under the page's mixed-case titles; never on an Arabic title */
+.projet-titolo[id="project-why-title"]:not(:lang(ar)) {
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  letter-spacing: var(--track-display-caps);
+  font-feature-settings: var(--feat-caps);
+}
+
+/* ---- 1 · la tesi ---- */
+.projet-tesi__griglia {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.projet-tesi__etichetta {
+  margin: 0;
+  padding-block-start: var(--s-3);
+  border-block-start: 2px solid var(--accent-mark);
+  inline-size: fit-content;
+  color: var(--accent-text);
+}
+
+.projet__enunciato {
+  max-inline-size: 34em;
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-body);
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+
+/* a French statement on the Arabic page keeps the Latin leading (the tokens' boundary, V5.24 Typography V2 F-7) */
+.projet-tesi__testo > p[lang] {
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+}
+
+@media (min-width: 64rem) {
+  .projet-tesi__griglia {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    column-gap: var(--s-12);
+    align-items: start;
+  }
+}
+
+/* ---- 2 · il perché ---- */
+.projet-perche-band__griglia {
+  display: grid;
+  gap: var(--s-10);
+}
+
+.projet-perche-band__testo {
+  display: grid;
+  align-content: start;
+  gap: var(--s-6);
+  min-inline-size: 0;
+}
+
+.projet__perche {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.projet__perche .ls-1 { display: block; }
+
+.projet__perche .ls-2 {
+  display: block;
+  margin-block-start: var(--s-4);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+.projet__perche .ls-3 {
+  display: block;
+  margin-block-start: var(--s-6);
+  padding-inline-start: var(--s-5);
+  border-inline-start: 2px solid var(--accent-mark);
+  font-weight: var(--w-strong);
+  color: var(--text-1);
+}
+
+.projet-perche-band .foto__img {
+  aspect-ratio: 4 / 3;
+  block-size: auto;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-2);
+}
+
+/* on a tablet the frame spans the column under the words: a wide crop, so the band stays one screen of reading */
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  .projet-perche-band .foto__img { aspect-ratio: 2 / 1; }
+}
+
+@media (min-width: 64rem) {
+  .projet-perche-band__griglia {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--s-16);
+    align-items: center;
+  }
+
+  .projet-perche-band .foto__img { aspect-ratio: 4 / 5; }
+}
+
+/* ---- 3 · chi lo porta ---- */
+.projet-chi__lastra {
+  display: grid;
+  gap: var(--s-6);
+  max-inline-size: 60rem;
+  padding: var(--s-8) var(--s-6);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm), var(--shadow-1);
+}
+
+.projet-chi__sigillo {
+  display: block;
+  inline-size: 5.5rem;
+}
+
+.projet-chi__sigillo img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.projet-chi__testo {
+  display: grid;
+  gap: var(--s-4);
+  min-inline-size: 0;
+}
+
+.projet-chi__testo > p:not(.projet__oltre) {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.projet__oltre { margin: var(--s-2) 0 0; }
+
+@media (min-width: 48rem) {
+  .projet-chi__lastra {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-10);
+    padding: var(--s-10);
+  }
+}
+
+/* ---- 4 · gli spazi ---- */
+.projet-spazi__griglia {
+  display: grid;
+  gap: var(--s-8);
+}
+
+.projet-spazi__titolo { color: var(--text-on-night-1); }
+
+.projet-spazi__lista {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-night-soft);
+}
+
+.projet-spazio { border-block-end: 1px solid var(--line-night-soft); }
+
+.projet-spazio__link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-1) var(--s-5);
+  min-block-size: var(--hit-primary);
+  padding: var(--s-5) var(--s-4);
+  border-radius: var(--radius-sm);
+  color: var(--text-on-night-1);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-enter);
+}
+
+.projet-spazio__link .sez-disc { grid-row: span 2; }
+
+.projet-spazio__nome {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.projet-spazio__via {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--accent-night);
+}
+
+.projet-spazio__via .icon { transition: translate var(--motion-standard) var(--ease-enter); }
+
+.projet-spazio__link:is(:hover, :focus-visible) { background-color: var(--surface-night-raised); }
+.projet-spazio__link:is(:hover, :focus-visible) .sez-disc { --disc-w: 2px; }
+.projet-spazio__link:is(:hover, :focus-visible) .projet-spazio__nome { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+.projet-spazio__link:is(:hover, :focus-visible) .projet-spazio__via .icon { translate: 3px 0; }
+[dir="rtl"] .projet-spazio__link:is(:hover, :focus-visible) .projet-spazio__via .icon { translate: -3px 0; }
+.projet-spazio__link:active { background-color: var(--surface-night-sheet); }
+
+@media (min-width: 48rem) {
+  .projet-spazi__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-8);
+  }
+}
+
+@media (min-width: 64rem) {
+  .projet-spazi__griglia {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: var(--s-12);
+    align-items: start;
+  }
+}
+
+/* ---- 5 · the foot strip ---- */
+.projet-piede__inner {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.projet-piede__vie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.projet-piede .page-trademark {
+  margin: 0;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projet-spazio__link,
+  .projet-spazio__via .icon { transition: none; }
+}
+
+/* the keyboard path never animates */
+html[data-input="key"] :is(.projet-spazio__link, .projet-spazio__via .icon) { transition: none; }

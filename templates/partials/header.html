@@ -1,0 +1,67 @@
+{% load i18n static cms_nav %}{% main_menu as menu %}
+{% comment %}
+«Il portico» — THE LETTERHEAD, ONE ROW (V5.15 §1, §2; DECISIONS §15 lane A; built on W2-C1/W2-C2's portico). At every
+desktop width it is one horizontal line: [ BRAND ] [ PRIMARY NAVIGATION ] [ LANGUAGE · ACCESS · PRIMARY ACTION ] — no
+institutional bar above it any more (its languages are the end zone's switch, its promoter line the panels' and the
+sheet's foot and the footer's), no second row, no stacked secondary navigation. Paper, sticky, 64 px → 56 px once the
+page has moved, glass and a soft shadow then.
+
+* The brand: the official lock-up (docs/design-v2/BRAND_ASSETS.md §1, `brand_lockup`; a back-office logo still wins),
+  with the mark in layers laid over it (components/loader.html, `lock-sig`) — the one thing a View Transition carries
+  between two pages when no veil is drawn (from the keyboard, a language switch).
+* The navigation (partials/main_nav.html): four doors with their mega panels, a hairline, Forum, Projet — every item
+  in the row from 64rem, compressed (the lock-up 32/17, tighter gaps, no chevrons) below 90rem; one soft plate glides
+  under the pointer and one architrave marks the open or current item (static/js/src/nav.js).
+* The end zone: the LANGUAGE control (V5.31 precision pass, 11 Nov 2026: the current language's flag, its code and a
+  chevron on one plate; a popover of the overlay system with the four languages — flag, the name in its own language,
+  the current one on a tinted plate with a check and aria-current — W2-A's contract; without script the popover opens
+  natively; the flag of each language is `l.flag`, core.context_processors.LANGUAGE_FLAGS, never mirrored) and the
+  ACCESS, which is the row's
+  PRIMARY ACTION: «la targa» filled in night with its gold key and «Espace réservé» from 90rem (the key alone below,
+  its name in the top-layer tooltip; signed in, the account popover). Measured (QA/v515/a/NOTES.md): a third control —
+  «Commencer l’orientation», 228 px in French — never fits the 1 360 px column beside the six items; the orientation
+  questionnaire is the Personnes panel's highlighted destination at every desktop width, and the home's first action.
+* Below 64rem: the lock-up, the language switch (from 48rem) and «la targa», and «Menu», which opens the premium sheet —
+  a full-height layered drawer (partials/main_nav.html, «sheet»): its rows come in one after the other, a door unfolds
+  in place with its photograph, the foot holds the access on night.
+
+THE LOADER «LUME» is not drawn here any more: the central veil (components/lume_veil.html, included by base.html) is
+the transition, with its one status line. The mark in layers stays for the keyboard's and the language switch's page
+change. A logo uploaded in the back-office has no layers: it neither turns nor travels.
+
+The menu tree is built once here and drawn twice: the bar, and — after the letterhead, at the body's level, as a
+trapped panel of the overlay system must be — the sheet (partials/main_nav.html, «sheet»).
+{% endcomment %}
+<header class="site-header" id="site-header">
+  <div class="container site-header__inner">
+    <a class="brand brand--lockup" href="{% url 'pages:home' %}" aria-label="{{ site.project_name }} — {% translate 'accueil' %}">
+      {% if site.settings and site.settings.use_logo_image and site.settings.logo %}
+        <img class="brand__logo" src="{{ site.settings.logo.url }}" alt="{{ site.project_name }}" width="160" height="40">
+      {% else %}
+        {% include "components/loader.html" with css_class="lock-sig" %}{% brand_lockup %}
+      {% endif %}
+    </a>
+    <nav class="main-nav" aria-label="{% translate 'Navigation principale' %}" data-portico>
+      {% include "partials/main_nav.html" %}
+    </nav>
+    {% flag "reserved_area_public_link" as reserved_link %}{% safe_url 'account_login' as login_url %}
+    <div class="site-header__end">
+      {% translate "Choisir la langue" as lang_label %}{% for l in site.languages %}{% if l.active %}
+      <button class="lang-switch" type="button" popovertarget="lang-menu" aria-label="{{ l.name }} — {{ lang_label }}">{% if l.flag %}<img class="flag" src="{% static l.flag %}" alt="" width="21" height="14">{% endif %}<span class="lang-switch__code" lang="{{ l.code }}">{{ l.code }}</span>{% svg_icon "chevron" "icon lang-switch__chevron" %}</button>{% endif %}{% endfor %}
+      <div class="overlay overlay--popover lang-menu" id="lang-menu" data-overlay="popover" popover role="group" aria-label="{{ lang_label }}">
+        <p class="overlay__caption" aria-hidden="true">{{ lang_label }}</p>
+        <div class="overlay__body"><ul class="overlay__list" role="list">
+          {% for l in site.languages %}<li><a class="overlay__item lang-menu__item" href="{{ l.url }}" lang="{{ l.code }}" hreflang="{{ l.code }}"{% if l.active %} aria-current="true"{% endif %}>{% if l.flag %}<img class="flag" src="{% static l.flag %}" alt="" width="21" height="14" loading="lazy">{% endif %}<span dir="{{ l.dir }}">{{ l.name }}</span>{% if l.active %}{% svg_icon "check" "icon lang-menu__check" %}{% endif %}</a></li>
+          {% endfor %}</ul></div>
+      </div>
+      {% if user.is_authenticated %}
+        <div class="targa-seat">{% include "components/account_menu.html" with popover=True menu_id="account-menu" %}</div>
+      {% elif reserved_link and site.settings.reserved_area_enabled and login_url %}
+        {% translate "Espace réservé" as reserved_label %}<a class="targa" href="{{ login_url }}" aria-label="{{ reserved_label }}" data-tip="layer" data-tip-side="block-end">{% svg_icon "ile-key" "icon targa__key" %}<span class="targa__label">{{ reserved_label }}</span></a>
+      {% endif %}
+      <a class="nav-toggle" href="#nav-sheet" data-overlay-open data-nav-toggle>{% svg_icon "menu" "icon" %}<span class="nav-toggle__word"><span>{% translate "Menu" %}</span><span class="nav-toggle__alt" aria-hidden="true">{% translate "Fermer" %}</span></span></a>
+    </div>
+  </div>
+  <div class="portico-scrim" data-portico-scrim hidden></div>
+</header>
+{% include "partials/main_nav.html" with nav_variant="sheet" %}

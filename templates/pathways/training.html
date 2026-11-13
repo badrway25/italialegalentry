@@ -1,0 +1,85 @@
+{% extends "base.html" %}{% load i18n static pages_typo pages_imagery locked_split %}
+{% comment %}
+Formation — two moments of one path (Implementation §3.8.5): before departure (neutral UI wording,
+CONTENT_PENDING_LEGAL_REVIEW, Annexe §5 nature: orientation/preparation, never an administrative approval)
+and after arrival (locked p3.training_after.title / p3.training_after.body).
+
+Design V5.4 (W3-F1, step 2 — the public interior, static/css/v5/_interior.css, through pathways/pathways.css): the
+entrance (the space's name, the h1, the lead, the sheet's metadata row — no glyph); then the two moments as what
+they are, one path: two stations on «la linea» down the reading edge, each with its word («Premier temps», «Second
+temps») beside its open ring, its title, its text at the reading size and measure, and its one way further — the
+first carries the page's notice (no attestation is an administrative approval); then the space's other areas with
+the ONE anti-fraud inset; on the stone, the page's ONE action and the live «who can help me» line, as at the end of
+a pathway's sheet. No card, no side column.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.9; lane P1 — Page Composition V2), below the approved head (KEEP: its seal
+`ile-formazione`, the «Nature» meta row):
+  * F1, the page's moment — I «la traversata» (V5.30 VARIETY §7): the two times as two raised cards on shared rows, no line
+    joining them (pathways/_training.css).
+  * F2b — K «la protezione», its own band. DEPTH;
+  * F2 — E «il mosaico»: the space's other areas, Diplômes the wide tile. STAGGER;
+  * F3 — A «la boussole»: the questionnaire's action on a raised plate, its caution kept, the help line beside it.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5, R5; BACKGROUND_MATERIAL_V2 §3.3, §5.3; lane PUB1 — the material pass; the
+traversata KEPT): the order is Diplômes' — the traversata, then «la protezione» on «pietra», then the grid on «carta
+viva» (data-luce="origine"; its tiles ink and light, no settle: the library's verb), then the boussole — the paper →
+paper touch between the traversata and the grid ends without a byte; the two times' kickers carry the label role
+(`t-label`). The page sheet imports v5/_materia.css.
+Design V5.32 (lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026: no identical icon boxes): F2's
+mosaic of icon tiles is the space's register of links (pathways/_spazio.html — a row each, its words, the live help line).
+The correction round of the senior integration review (P2-3): F2b, F2 and F3 — the protection, the register and the
+boussole, which ended this page as they ended ten others — are ONE compact closing band on «pietra», «la chiusura»
+(pathways/_chiusura.html): the anti-fraud notice whole and, beside it from 64 rem, the questionnaire's caution and its
+one primary, the way to the space's register (it stands on /parcours/), the help line.
+{% endcomment %}
+{% block page_title %}{% translate "Formation : avant le départ et après l’arrivée" %} · {% translate "Espace Personnes" %}{% endblock %}
+{% block meta_description %}{% translate "Formation avant le départ et après l’arrivée : deux temps d’un même parcours régulier vers l’Italie." %}{% endblock %}
+{% block body_class %}page-pathways page-pathways--training interior{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pathways/training.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% include "pathways/_preview_notice.html" %}
+{% translate "Espace Personnes" as space_label %}{% translate "Formation : avant le départ et après l’arrivée" as page_title %}{% translate "Deux temps d’un même parcours : se préparer dans le pays d’origine, puis continuer à se former en Italie. Les formations ont une finalité d’orientation et de préparation." as page_lead %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=page_title lead=page_lead meta_template="pathways/_review_meta.html" reviewed_at=None motif="learning" glyph="presentation" slot="training.hero" fronte_linked=True only %}
+
+{% locked_is_fallback "p3.training_after.title" as after_fallback %}{% locked_lang "p3.training_after.title" as after_lang %}{% locked "p3.training_after.title" as after_title %}
+{% locked_text "p3.training_after.body" as after_body %}{% locked_lang "p3.training_after.body" as body_lang %}{% locked_is_fallback "p3.training_after.body" as body_fallback %}
+<div class="sez sez--filo formazione-traversata" data-sec="filo" data-ground="paper" data-rhythm="moment">
+  <div class="container">
+    <ol class="traversata" role="list" data-registro data-phases="2">
+      <li class="traversata__tempo" id="avant-le-depart">
+        <span class="traversata__nodo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon "earth" "icon" %}</span>
+        <p class="traversata__kicker t-label">{% translate "Premier temps" %}</p>
+        <h2 class="traversata__titolo" id="training-before-title">{% translate "Formation avant le départ" %}</h2>
+        <div class="traversata__testo">
+          {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral wording; no programme, duration or attestation value is described.{% endcomment %}
+          <p>{% translate "Avant le départ, des parcours de formation professionnelle et civico-linguistique peuvent être organisés dans le pays d’origine avec des organismes partenaires : langue italienne, connaissance de la vie en Italie, compétences utiles au parcours envisagé." %}</p>
+          {% if origin_pathway_url %}<p class="traversata__altro"><a class="link-arrow" href="{{ origin_pathway_url }}">{% translate "Voir le parcours « Formation dans le pays d’origine »" as origin_label %}{{ origin_label|typo }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+        </div>
+        <div class="traversata__media">
+          {% photo "training.before" "traversata__foto" sizes=before_sizes %}
+          <div class="traversata__nota" role="status" data-notice="training-before" data-verb="slide">
+            <span class="traversata__segno" aria-hidden="true">{% svg_icon "info" "icon" %}</span>
+            <p>{% translate "Les formations sont promues avec des organismes partenaires ; aucune attestation n’a valeur d’approbation administrative." %}</p>
+          </div>
+        </div>
+      </li>
+      <li class="traversata__tempo" id="apres-l-arrivee">
+        <span class="traversata__nodo traversata__nodo--arrivo sez-tile" data-verb="node" aria-hidden="true">{% svg_icon "ile-arch" "icon" %}</span>
+        <p class="traversata__kicker t-label">{% translate "Second temps" %}</p>
+        <h2 class="traversata__titolo{% if after_title|striptags|upper == after_title|striptags and after_title|striptags|lower != after_title|striptags %} traversata__titolo--caps{% endif %}" id="training-after-title"{% if after_fallback %} lang="{{ after_lang }}"{% endif %}>{{ after_title }}</h2>
+        <div class="traversata__testo">
+          {% locked_caption "p3.training_after.body" %}<p class="traversata__corpo" data-locked="p3.training_after.body"{% if body_fallback %} lang="{{ body_lang }}"{% endif %}>{{ after_body|locked_spans:"sentence" }}</p>
+          {% if links.living %}<p class="traversata__altro"><a class="link-arrow" href="{{ links.living }}">{% translate "Découvrir « Vivre en Italie »" as living_label %}{{ living_label|typo }}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+        </div>
+        <div class="traversata__media">{% photo "training.after" "traversata__foto" sizes=after_sizes %}</div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<section class="sez sez--strato persone-protezione" data-sec="strato" data-ground="pietra" data-rhythm="strip" aria-labelledby="protezione-title-training" data-action="orientation">
+  <div class="container chiusura">
+    {% include "pathways/_chiusura.html" with url=links.antifraud suffix="training" boussole=boussole only %}
+  </div>
+</section>
+{% endblock %}

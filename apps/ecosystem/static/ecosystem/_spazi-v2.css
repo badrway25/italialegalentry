@@ -1,0 +1,69 @@
+/* ============================================================================================
+   THE FOUR SPACES, V2 — what their compositions share (design V5.22, SECTION_SYSTEM_V2 §3.3, §3.6–§3.8; lane P1).
+   Page-only: imported by the spaces' page sheets (ecosystem/pilot.css, companies.css, institutions.css,
+   universities.css) after the shell (v5/_sezioni.css) and the patterns they compose. Tokens of static/css/v5/
+   tokens.css only; logical properties only; motion keyed to the section runtime's trigger (data-sec-state), under
+   no-preference, never on html.rm, never from the keyboard.
+   ============================================================================================ */
+
+/* ---- the rhythm: two grounds of one kind never touch (§1 rule 5) — «l'approdo» on the stone after a stone band
+        stands after a paper gap ---- */
+:is(.sez[data-ground="stone"], .chapter--area) + .ecosistema-approdo {
+  margin-block-start: var(--s-12);
+}
+
+/* ---- «l'approdo» on the spaces (ecosystem/partials/approdo.html, lane S's band): the pilot's tile carries its eight
+        stations in miniature (§3.6 EN-5: E's «live diagram»); a band of ONE tile lays it across the band beside the
+        head — its name and its line side by side on its face —, never a lone card in half an empty strip (QA_ROUND1
+        M2 d: the pilot's Forum tile) ---- */
+@media (min-width: 64rem) {
+  .ecosistema-approdo .approdo:has(.approdo__tessere > :only-child) {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: var(--s-6);
+    align-items: center;
+  }
+
+  .ecosistema-approdo .approdo:has(.approdo__tessere > :only-child) .testa {
+    margin-block-end: 0;
+  }
+
+  .ecosistema-approdo .approdo__tessere:has(> :only-child) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ecosistema-approdo .approdo__tessere > :only-child {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--s-8);
+    min-block-size: 0;
+    padding: var(--s-8) var(--s-10);
+  }
+
+  .ecosistema-approdo .approdo__tessere > :only-child .approdo__riga {
+    max-inline-size: 26rem;
+    font-size: var(--t-body);
+  }
+}
+
+.approdo__tessera--rotta {
+  align-content: space-between;
+}
+
+/* the help line on a dark ground (a photograph's veil, a night door): the live address in the night's accent */
+:is(.on-inverse, .sez[data-ground="photo"]) .aiuto {
+  color: var(--text-on-night-2);
+}
+
+:is(.on-inverse, .sez[data-ground="photo"]) .aiuto a {
+  color: var(--accent-night);
+}
+
+/* (V5.24, Typography V2: the spaces' labels and kickers carry the label role by name — `t-label`, v5/base.css —, whose own
+   Arabic rule drops the capitals and the tracking; the descendant-form rule left with it, F-7) */
+
+/* the French words on a plate on an Arabic page — its title and its line, the branch's too — on ONE reading edge, the
+   plate's, beside the kicker (a card's French runs, lane S's rule; QA_ROUND1 m1: the line stood on the other edge) */
+[dir="rtl"] .sez :is(.filiera__titolo, .filiera__riga, .filiera__ramo-titolo, .filiera__ramo-riga)[lang="fr"] {
+  text-align: end;
+}

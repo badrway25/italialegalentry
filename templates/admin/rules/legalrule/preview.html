@@ -1,0 +1,38 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<p>{% trans "La prova non scrive nulla: serve a verificare che la regola si attivi quando deve e taccia quando non deve." %}</p>
+
+<p><strong>{% trans "Condizione" %}:</strong> <code>{{ readable }}</code></p>
+
+{% if condition_error %}
+  <p style="color:#8a1c1c"><strong>{% trans "La condizione non è valida" %}:</strong> {{ condition_error }}</p>
+{% else %}
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="facts">{% trans "Fatti (oggetto JSON)" %}</label><br>
+      <textarea id="facts" name="facts" rows="12" cols="70" style="font-family:monospace">{{ raw }}</textarea>
+    </p>
+    <p><button type="submit">{% trans "Esegui la prova" %}</button></p>
+  </form>
+
+  {% if error %}
+    <p style="color:#8a1c1c"><strong>{% trans "JSON non leggibile" %}:</strong> {{ error }}</p>
+  {% elif fired is not None %}
+    {% if fired %}
+      <p><strong>{% trans "La regola si attiva." %}</strong>
+      {% trans "Effetto" %}: {{ rule.get_effect_display }} — {{ rule.message_fr }}</p>
+    {% else %}
+      <p><strong>{% trans "La regola non si attiva con questi fatti." %}</strong></p>
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+<p style="margin-top:1.5rem">
+  <a href="{% url 'admin:rules_legalrule_change' rule.pk %}">{% trans "Torna alla regola" %}</a>
+</p>
+{% endblock %}

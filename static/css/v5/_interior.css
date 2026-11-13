@@ -1,0 +1,344 @@
+/* ============================================================================================
+   THE DOORS, THE PROJECT PAGES AND ORIENTATION — design V5.4, W3-F1 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5
+   item 1; §1.18 D26 «the grammar of a legal page»; §1.4 RH-1 … RH-8, SP-1 … SP-8, SH-1 … SH-9; §1.3 three corners a
+   screen; §1.7 the six-icon ceiling; §1.16 imagery): what W3-F1's pages draw beside the page of the public interior.
+
+   A page partial (plan §2.3): never in main.css; imported, right after static/css/v5/_pagina.css — the components
+   every page of the public interior draws, drawn once for W3-F1's pages and W3-F2's (the trail, the head, the
+   chapters, the register, D26's shared slots; the owner's V5.8: one component, one drawing) — by the page sheets of
+   W3-F1's pages: ecosystem/ecosystem.css, forum/forum.css, pages/css/interior.css, pathways/pathways.css,
+   orientation/wizard.css, each a plain list of imports, so that a later family adds its own line beside these —
+   W3-D's public passage, v5/_journey-passage.css, in the three that draw «la linea» (pathways, ecosystem,
+   orientation). The door card «la porta» is the doors' own: v5/_porta.css, imported by the two door sheets alone
+   (pathways, ecosystem — V5.8: a surface's own CSS loads only where it is drawn).
+
+   What is W3-F1's own, on the home's grammar under the hero (W2-D):
+     1 · the targets           — a chapter's forward link and its row of arrows on SP-8's 24 px floor, 44 px under a
+                                 finger (boxes, so that two rows of links never overlap);
+     2 · the entrance «l'ingresso» — its grid and its end seat: on a door page the door card «la porta» carrying the
+                                 door's way in (v5/_porta.css) or a curated, captioned photograph — the way in then
+                                 under the lead; on the questionnaire's first page, its action card; on a page that
+                                 is long, its index («Sommaire de la page»), one link a row at every width;
+     3 · the chapters' own     — a chapter's anchor under the letterhead, the area band, the rhythm of a body, the
+                                 prescribed statement, prose, small print, the wide chapter, the quiet chapter's space;
+     4 · the register's own    — titles in ink, the whole row the target (no glyph and no arrow; a row carries a glyph
+                                 only when it says WHO — the editorial body keeps ≤ 6 icons), a fragment, a row still
+                                 being prepared, a register of words;
+     5 · the line «la linea»   — drawn by v5/_journey-passage.css (W3-D: the site's one passage drawing), which the
+                                 page sheets of the pages that draw it import after this partial;
+     6 · D26's slots           — the one inset (a notice) and the one action (the action card, the raised panel of
+                                 its screen);
+     7 · Arabic, forced colours, print.
+
+   Corners (§1.3): 6 (the plate, the cards — folded into the chrome's 6), 4 (buttons, fields, notices), full (the
+   disc, chips) — three. Shadows (§1.4): hairlines before boxes; the action card is level 2; nothing at rest reaches
+   level 3. Type on the 4 px line (RH-1); every size and space a token of static/css/v5/tokens.css; logical properties
+   only.
+   ============================================================================================ */
+
+/* ---- 1 · the targets ------------------------------------------------------------------------------------------ */
+/* SP-8 (plan §1.4): 24 px is the floor of every target — a chapter's forward link and its row of arrows are runs of
+   15/20 text, so their boxes stand on the floor (§3: 44 px under a finger). The trail's links are the shared page's
+   (v5/_pagina.css §1). */
+.chapter__more > a,
+.chapter__links > a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--hit-min);
+}
+
+/* ---- 2 · the entrance «l'ingresso»: its grid and its end seat (its label, h1 and lead: v5/_pagina.css §2) - */
+.ingresso__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8) var(--s-6);
+}
+
+.ingresso__text {
+  min-inline-size: 0;
+}
+
+.ingresso__note {
+  max-inline-size: var(--measure-small);
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+@media (min-width: 64rem) {
+  .ingresso__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .ingresso__text {
+    grid-column: 1 / span 8;
+  }
+
+  .ingresso__aside {
+    grid-column: 9 / span 4;
+  }
+}
+
+/* the page's index «Sommaire de la page» in the entrance's end seat: a list on hairlines, no box */
+.sommaire {
+  margin: 0;
+}
+
+.sommaire__title {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.sommaire__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.sommaire__list > li {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.sommaire__link {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--hit-primary);
+  padding-block: var(--s-2);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .sommaire__link:hover {
+    color: var(--accent-text-hover);
+    text-decoration: underline;
+  }
+}
+
+/* below 64rem the index stands under the lead as it stands in the seat — one link a row, each on its hairline: a
+   row of wrapped links read two entries as one phrase («QU'EST-CE QUE LE FORUM  OBJECTIFS», W3-F1's review m3) */
+
+/* ---- 3 · the chapters' own (the section device, the head, the body's columns: v5/_pagina.css §3) ----------- */
+/* a chapter reached by its anchor (the index, a forward link) lands under the letterhead */
+.chapter {
+  scroll-margin-block-start: var(--header-h);
+}
+
+.chapter--area {
+  background: var(--surface-area);
+}
+
+.chapter--area,
+.chapter--area + .chapter {
+  border-block-start: 0;
+}
+
+.chapter .chapter__body > * + * {
+  margin-block-start: var(--s-8);
+}
+
+/* a visually hidden sentence (the verbatim text a presentational list repeats) does not push the list down */
+.chapter .chapter__body > .visually-hidden:first-child + * {
+  margin-block-start: 0;
+}
+
+/* a prescribed statement set whole, as written: the chapter's lead-sized words */
+.chapter__statement {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+  text-wrap: pretty;
+}
+
+/* prose: the reading measure and the reading size (PX24, «long-form prose») */
+.chapter__prose {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.chapter__prose > :first-child {
+  margin-block-start: 0;
+}
+
+.chapter__prose > :last-child {
+  margin-block-end: 0;
+}
+
+.chapter__prose p {
+  margin-block: 0 var(--s-4);
+}
+
+/* the small print under a body: what is published as it is verified */
+.chapter__fine {
+  max-inline-size: var(--measure-small);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* the doors' chapter lead and statement rise with the lead from 48rem */
+@media (min-width: 48rem) {
+  .chapter__lead,
+  .chapter__statement {
+    font-size: var(--t-lead);
+    line-height: var(--t-lead-lh);
+  }
+}
+
+/* the chapter's one forward link, at the interface size */
+.chapter__more {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+/* under a finger every target answers on 44 px (SP-8), as «Sommaire de la page» does — the forward links: boxes,
+   not pseudo-targets, so that two rows of links never overlap (a sheet raises its own: the useful terms in
+   _pathways.css, the address in _institutional.css; the trail's: v5/_pagina.css §1) */
+@media (pointer: coarse) {
+  .chapter__more > a,
+  .chapter__links > a {
+    min-block-size: var(--hit-primary);
+  }
+}
+
+/* the quiet chapter at a page's foot (the mark, the data note): its label is the shared page's (v5/_pagina.css §3) */
+.chapter--quiet {
+  padding-block: var(--s-8);
+}
+
+/* ---- 4 · the register's own: titles in ink, the whole row the target (the rows: v5/_pagina.css §4) --------- */
+.registro__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* one destination, one tab stop: the title's link covers the row */
+.registro__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+@media (hover: hover) {
+  .registro__row:has(a):hover {
+    border-block-end-color: var(--line-structure);
+  }
+
+  .registro__row:has(a):hover .registro__title a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.registro__row:focus-within {
+  border-block-end-color: var(--line-structure);
+}
+
+/* a register that names (an enumeration of a prescribed sentence, the recipients): words, no link */
+.registro--words .registro__row {
+  min-block-size: 0;
+  padding-block: var(--s-3);
+}
+
+.registro--words .registro__title {
+  font-weight: var(--w-body);
+}
+
+/* ---- 5 · the line «la linea» — drawn by static/css/v5/_journey-passage.css ------------------------------ */
+/* The site's one passage drawing (W3-D: «one passage and one rail drawing, never a third»): the numerals over open
+   stations, the words under them, down the reading edge or across its column from 48rem. The w3-d merge moved this
+   section's rules there (they were the same grammar); the page sheets that draw it import that partial after this
+   one. A page's modifiers — «Formation»'s two phases, the diplomas' steps, a fragment's first letter, the pilot's
+   eight stations — stay in the pages' own partials (_pathways.css, _spaces.css, orientation/wizard.css). */
+
+/* ---- 6 · D26's slots: the inset and the action (the host, the photograph, «who can help me»: v5/_pagina.css §5) */
+/* the one inset: a notice, at the reading measure, in the body's own flow */
+.chapter__body > .notice {
+  margin-block-end: 0;
+}
+
+.chapter__body > .notice:first-child {
+  margin-block-start: 0;
+}
+
+/* the one action: the action card of v5/card.css, laid out for a page's body */
+.action {
+  max-inline-size: 44rem;
+}
+
+.action .card__title {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+.action .card__text {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.action .card__action {
+  margin-block-start: var(--s-3);
+}
+
+@media (max-width: 47.999rem) {
+  .action .card__action .btn {
+    inline-size: 100%;
+    justify-content: space-between;
+    white-space: normal;
+    text-align: start;
+  }
+}
+
+/* ---- 7 · Arabic, forced colours, print -------------------------------------------------------- */
+/* A prescribed text shown in French on the Arabic page keeps its own direction (static/css/base.css, the fallback
+   rule: its punctuation never moves). A HEAD — the space's name, the h1, a chapter's title — ends on the reading edge,
+   under the mark, one edge per column as on the home; a LEAD keeps its own start, as the bodies do, in a box that
+   stands on the reading edge and is no wider than its words (W3-F1's review m7: seven to eleven French lines ended on
+   the right left a ragged left edge; a one-line lead still meets the reading edge). */
+[dir="rtl"] .interior :is(.ingresso__text, .chapter__head) :is(h1, h2, .ingresso__label):is([lang="fr"], :has(> span[lang="fr"]:only-child)) {
+  direction: ltr;
+  text-align: end;
+}
+
+[dir="rtl"] .interior :is(.ingresso__text, .chapter__head) p:not(.ingresso__label):is([lang="fr"], :has(> span[lang="fr"]:only-child)) {
+  inline-size: fit-content;
+  direction: ltr;
+  text-align: start;
+}
+
+/* a French BLOCK that is not a text element — a notice, an editor's note, a body of prose — keeps its own direction
+   too (base.css's rule names the text-level elements only); lists and figures keep the page's, mirrored */
+[dir="rtl"] .interior div:is([lang="fr"], [lang="it"], [lang="en"]) {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+@media (forced-colors: active) {
+  .chapter--area {
+    background: Canvas;
+    border-block-start: 1px solid CanvasText;
+  }
+}
+
+@media print {
+  .sommaire {
+    display: none;
+  }
+}

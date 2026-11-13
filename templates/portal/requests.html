@@ -1,0 +1,57 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+«MES DEMANDES» — design V5 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7, §1.2; platform.md §3; W3-E). Every
+request transmitted from the account (portal.services.requests_for), newest first.
+
+The register's grammar: the page's head, the BAND — how many requests, in the bridge's own words —, then one row a
+request, in the dashboard's row grammar (`.db-task`): its subject in its own direction, its kind and its reference in
+ILE Mono (a ledger reference: «contact-3»), its state as a chip — the member's register through the registry
+(core.chips: a Forum registration's «forum.RegistrationStatus», the others' «enquiries.SubmissionStatus»), never a word
+painted by hand —, the day it was sent. The whole row is the way to the request (0 dead points); the table V4 drew
+(`account-table`) is gone with its columns.
+{% endcomment %}
+{% block page_title %}{% translate "Mes demandes" %}{% endblock %}
+{% block meta_description %}{% translate "Les demandes transmises depuis votre compte et leur état de traitement." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/registers.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="register">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Mes demandes" %}</h1>
+    <p class="ws-head__lead">{% translate "Les demandes transmises depuis votre compte, de la plus récente à la plus ancienne. Vous seul pouvez les consulter ici." %}</p>
+  </div>
+</header>
+{% endblock %}
+{% block portal_content %}
+<div class="reg-page">
+{% if requests_total %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count"><span class="reg-band__n">{{ requests_total }}</span> {% blocktranslate count n=requests_total %}demande transmise{% plural %}demandes transmises{% endblocktranslate %}</p>
+  </div>
+  {% comment %} V5.32 lane E (the PLATFORM=READY round): the platform's list toolkit (portal.lists.REQUESTS, components/listing/)
+  — a search, the kind and the state, the period, two orders — from two requests on. {% endcomment %}
+  {% include "components/listing/toolbar.html" %}
+  {% if page_obj.object_list %}
+  <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Liste de vos demandes' %}">
+    {% for item in page_obj %}
+    <li class="db-task reg-row reg-row--link" data-request="{{ item.reference }}">
+      <div class="db-task__words">
+        <p class="db-task__title"><a class="reg-row__link" href="{{ item.url }}" dir="auto">{{ item.title }}</a></p>
+        <p class="db-task__meta reg-row__meta"><span>{{ item.kind_label }}</span><span class="reg-ref">{{ item.reference|upper }}</span></p>
+      </div>
+      <div class="db-task__state">{% if item.is_registration %}{% chip item.status "forum.RegistrationStatus" %}{{ item.status_label }}{% endchip %}{% else %}{% chip item.status "enquiries.SubmissionStatus" %}{{ item.status_label }}{% endchip %}{% endif %}</div>
+      <div class="db-task__due"><span class="db-due"><span class="visually-hidden">{% translate "Transmise le" %} </span><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y" }}</time></span></div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% include "components/pagination.html" with page_obj=page_obj query=listing.page_query %}
+  {% else %}{% include "components/listing/empty.html" %}{% endif %}
+{% else %}
+  {% translate "Aucune demande" as empty_title %}
+  {% translate "Les demandes transmises depuis votre compte apparaîtront ici." as empty_text %}
+  {% include "portal/partials/empty.html" with title=empty_title text=empty_text icon="send" %}
+{% endif %}
+</div>
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

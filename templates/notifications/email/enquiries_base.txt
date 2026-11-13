@@ -1,0 +1,13 @@
+{% autoescape off %}{{ project.PROJECT_NAME }} — {{ kind_label }}
+
+{% block intro %}Nouvelle demande reçue le {{ submitted_at|date:"d.m.Y H:i" }} (langue du site : {{ language }}).
+Référence : {{ reference }}{% endblock %}
+{% block body %}{% for label, value in rows %}
+{{ label }} :
+{{ value|default:"—" }}
+{% endfor %}{% endblock %}
+Consentement : {{ consent.consent_text.locked_key|default:consent.consent_text.purpose }} — version {{ consent.consent_text.version }} — donné le {{ consent.given_at|date:"d.m.Y H:i" }} ({{ consent.language }}).
+
+--
+{{ project.PROMOTER }}
+Message généré automatiquement par le site et adressé uniquement à la boîte de réception configurée pour les formulaires ({{ project.FORMS_DESTINATION_EMAIL }}). Ne pas transférer les données ci-dessus à des tiers sans base juridique.{% endautoescape %}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- ile-vivere: ILE drawing (Italy Legal Entry), V5.22 SECTION_SYSTEM_V2 4.9 - living in Italy: a low roofline of three pitched houses, the central door the toned arch opening, a two-leaf sprout beside it; the roofline draws, then the sprout rises (n.13) -->
+  <path data-layer="tone" fill="currentColor" fill-opacity=".14" stroke="none" d="M20 42V34A4 4 0 0 1 28 34V42Z"/>
+  <path data-layer="arch" d="M4 42V29L10 23 16 29 24 19 32 29 38 23 44 29V42"/>
+  <path data-layer="arch" d="M20 42V34A4 4 0 0 1 28 34V42"/>
+  <path data-layer="mark" data-group="sprout" d="M36 42V35.5"/>
+  <path data-layer="mark" data-group="sprout" d="M36 37C36 34 38.5 33 41 33C41 35.5 39 37 36 37Z"/>
+  <path data-layer="mark" data-group="sprout" d="M36 38.5C36 36 33.5 35 31 35C31 37.5 33 38.5 36 38.5Z"/>
+  <path data-layer="sill" d="M3 42H45"/>
+</svg>

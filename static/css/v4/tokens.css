@@ -1,0 +1,88 @@
+/* ============================================================================
+   TOKENS V4 — «Il portico e la console»
+   docs/design-v4/DESIGN_SYSTEM_V4.md · decided in docs/design-v4/CREATIVE_DIRECTION.md
+   after the owner's directive of 24 September 2026 (OWNER_DIRECTIVE_2026-09-24.md)
+   and the 20:58 clarification that made the previous art direction non-binding.
+
+   Loaded LAST, on purpose. It keeps the V2 names — the sheets that consume
+   them (shell, hero, routes, voyage, buttons, chip) change value without
+   changing a line — and adds what V4 needs: the navy chapter evolved from
+   the official brand navy, the accent as a family with two gradients, the
+   background recipes, five depths with six shadow roles, five radii, the
+   Plex superfamily, the console scale, the console layout, control and icon
+   measures, ten z-index levels, six durations and three curves.
+
+   Two cascade facts this file has to respect, because it comes after
+   v2/tokens.css and after tokens.css:
+     · a `:root` declaration here beats a `:root` declaration inside a media
+       query up there, whatever the query — so every narrow-viewport and
+       reduced-motion override V2 relied on is restated at the bottom;
+     · a name that the shim (_legacy-tokens.css) already uses as a COLOUR
+       (--border-strong, --border-accent) is not redefined as a border
+       shorthand: the line tokens are --line-* for that reason.
+
+   Every contrast figure in a comment is computed (WCAG 2.x relative
+   luminance) against the ground named on the line and re-verified by
+   tests/frontend/test_v4_tokens.py.
+
+   V5.20 (v520-css, 30 October 2026 — «shared stylesheet over budget», fixed by
+   dead-rule removal): design V5 closes the cascade and re-declares, after this
+   file, almost every name V4 gave a value — the navy chapter, the accent and
+   its gradients, the surfaces, the shadows and radii, the Plex faces, both type
+   scales, the console layout, the controls and icons, the z-index levels, the
+   durations and curves, the reduced-motion zeroes. A later :root of the same
+   context always wins, so those declarations never reached a page: they left
+   this file. What stays is what no later layer declares, and the narrow block
+   test_v4_tokens.py reads.
+   ========================================================================== */
+
+:root {
+  /* ---- MINERAL — the reading chapter: conserved from v2/tokens.css ------ */
+  /* --min-0 #f4f3f0 · --min-1 #ecebe6 · --min-2 #fbfaf8 · --min-3 #ffffff
+     --ink #15222a · --ink-2 #4a5a62 · --ink-3 #55646b
+     --hairline #d3d2cc · --hairline-strong #7a868b */
+
+  /* ---- BACKGROUND RECIPES (DS §1.4) — FOCUS ------------------------------ */
+  --light-focus: radial-gradient(80% 60% at 50% 0%, #ffffff, transparent 70%);
+
+  /* ---- DEPTH ------------------------------------------------------------ */
+  --drop-door: drop-shadow(0 32px 40px rgba(7, 18, 38, 0.6)); /* the door's shadow role, for the door drawn in SVG */
+  /* V2 alias, for the sheets not yet migrated */
+  --shadow-5: var(--shadow-4);
+
+  /* ---- LAYOUT — the console ------------------------------------------- */
+  /* the letterhead: utility 36 → 32, header 64 that becomes 56 on scroll */
+  --utility-height: var(--utility-h); /* V2 name */
+  --header-height: var(--header-h);   /* V2 name */
+
+  /* ---- LINES — shorthands (see the header for why they are not --border-*) */
+  --line-hair: 1px solid var(--hairline);
+  --line-strong: 1px solid var(--hairline-strong);
+  --line-accent: 2px solid var(--accent);
+  --line-dash: 1.5px dashed var(--hairline-strong);
+  --line-grad-err: linear-gradient(135deg, var(--err-700), transparent 70%);         /* the next step, overdue or blocked */
+
+  /* ---- Z-INDEX — the old names on the ten levels V5 declares ------------ */
+  --z-dropdown: var(--z-popover);
+  --z-dialog: var(--z-modal);
+  --z-skiplink: calc(var(--z-tooltip) + 1);
+
+  /* ---- MOTION ----------------------------------------------------------- */
+  --motion-ambient: 28s;      /* the current of the routes — the one loop */
+  /* V2 aliases, for the sheets not yet migrated */
+  --motion-instant: var(--motion-fast);
+  --motion-base: var(--motion-standard);
+  --ease-out: var(--ease-enter);
+  --ease-standard: var(--ease-layout);
+}
+
+/* Below md the letterhead is 56px in total and the page padding halves.
+   Restated here because the same override in v2/tokens.css sits earlier in
+   the cascade and would lose to the :root block above. */
+@media (max-width: 47.999rem) {
+  :root {
+    --utility-h: 0px;
+    --header-h: 56px;
+    --page-pad: 16px;
+  }
+}

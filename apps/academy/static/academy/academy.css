@@ -1,0 +1,42 @@
+/* ============================================================================
+   ACADEMY — design V5 (W3-E step 2; docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 7).
+
+   The Academy draws in the console's register grammar: the page's head (the
+   course's title in its own language, the page's one act at its reading end),
+   the domains as the register's filter, the rows of the courses and of the
+   enrolments, the sequence of modules with the one current step, the clause —
+   the registers' page sheet, apps/portal/static/portal/v5/_registers.css, linked
+   before this one by templates/academy/base_academy.html. The V1 devices this
+   sheet carried (the filter's rubric rule, the attendance between two navy
+   rules with its title in tracked capitals, the inline form of a `.sequence`)
+   left with that redraw.
+
+   What follows is only what the Academy draws beyond it. Nothing here
+   introduces a card, a shadow, a gradient, a KPI tile or a percentage meter —
+   a progress meter is forbidden by the brief and by the domain: attendance is
+   counted in modules, and the count is printed as words. Tokens only, logical
+   properties only.
+   ========================================================================== */
+
+/* «Ce cours n'est pas ouvert aux inscriptions»: under the facts */
+.academy-closed {
+  margin-block-start: var(--s-4);
+}
+
+/* the record of attendance: its reference in ILE Mono at the card's size — the
+   ledger's hand, never a seal and never the colour of an approval */
+.academy-attendance__ref {
+  margin: 0 0 var(--s-4);
+  font-family: var(--f-mono);
+  font-size: var(--u-card);
+  line-height: var(--u-card-lh);
+  color: var(--text-1);
+  direction: ltr;
+  unicode-bidi: isolate;
+  inline-size: fit-content;
+}
+
+/* a plan's note, under its facts */
+.academy-plan-note {
+  margin-block-start: var(--s-4);
+}

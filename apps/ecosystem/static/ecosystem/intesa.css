@@ -1,0 +1,6 @@
+/* ============================================================================================
+   The collaboration proposal of an institution (enquiries:institution_proposal) — the page's own sheet for «l'intesa»
+   (V5.29 §15–§17; lane PUB1): the Italy + Morocco ground of its head, and nothing else. Linked by
+   templates/enquiries/collaboration_proposal.html for an institution only (a university's page draws none).
+   ============================================================================================ */
+@import url("../css/v5/_intesa.css");

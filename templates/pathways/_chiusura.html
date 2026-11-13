@@ -1,0 +1,24 @@
+{% load i18n %}{% comment %}
+«LA CHIUSURA» — the Espace Personnes' one compact closing band (V5.32, lane B; the correction round of the senior
+integration review, P2-3). The same trio — the anti-fraud band, the «Dans l'Espace Personnes» register, the
+questionnaire's plate — ended eleven pages, so two sheets read one after the other ended alike. A pathway sheet,
+Formation and Diplômes now close on ONE band; /parcours/ keeps the full trio (the questionnaire's panel in its head,
+its register, the anti-fraud band).
+  * the anti-fraud notice: the locked p3.antifraud title and body WHOLE, by the one component that renders them
+    (components/sezioni/protezione.html — legally required, always visible, never shortened or collapsed);
+  * a sheet's own verified warnings under it (pathways.services.public_warnings; none while they await review);
+  * the next step: the questionnaire's sentence with its caution («Les décisions relèvent des autorités compétentes»),
+    its one primary — or the sentence a closed questionnaire shows —, the way to the space's register on /parcours/
+    and the live help line.
+The caller draws the frame — the sheet's closing chapter (section#avertissements.scheda-cap.chiusura) or a band on
+«pietra» (Formation, Diplômes: .container.chiusura) — and pathways/_chiusura.css composes the two parts in it.
+Contract: `url` (the anti-fraud page), `suffix` (its heading's id suffix), `boussole` (pathways.views._boussole),
+`warnings` and `lang` (a sheet's verified warnings and the page's language; optional).
+{% endcomment %}{% include "components/sezioni/protezione.html" with url=url level=2 suffix=suffix only %}
+{% if warnings %}<div class="scheda-avvisi">{% for w in warnings %}<div class="scheda-avvisi__lastra notice notice--warning" role="status"{% if w.lang != lang %} lang="{{ w.lang }}"{% endif %}><div class="notice__body">{{ w.body|linebreaks }}</div></div>{% endfor %}</div>{% endif %}
+<div class="chiusura__seguito">
+  <p class="chiusura__testo">{{ boussole.text }}</p>
+  {% if boussole.action %}<p class="chiusura__azione"><a class="btn btn--primary" href="{{ boussole.action.url }}" data-azione>{{ boussole.action.label }}</a></p>{% elif boussole.pending %}<p class="chiusura__testo">{{ boussole.pending }}</p>{% endif %}
+  <p class="chiusura__spazio"><a class="link-arrow" href="{% url 'pathways:index' %}#espace-personnes">{% translate "Voir l’Espace Personnes" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>
+  <p class="sez-annotation chiusura__aiuto">{{ boussole.help }}</p>
+</div>

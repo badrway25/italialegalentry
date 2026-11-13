@@ -1,0 +1,27 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+A file that answers NO requirement — a personal copy an account keeps in its own space (design V5: docs/design-v5/
+V5_4_EXECUTION_PLAN.md §3.5 item 5; W3-C). The register («Mes documents», portal/documents.html) is the main road; this
+is the layby, and it says so. On the console's page frame; the deposit is the Dépôt (documents/partials/depot.html,
+its loose road): the same zone, the same guards, the same answers composed in place, with this road's own words — «Document
+téléversé.», and the antivirus sentence of a loose file.
+{% endcomment %}
+{% block page_title %}{% translate "Déposer un fichier" %}{% endblock %}
+{% block meta_description %}{% translate "Dépôt d’un fichier privé." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head doc-head" data-atrium="person">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Déposer un fichier" %}</h1>
+    <p class="ws-head__lead">{% translate "Ce fichier ne répondra à aucune pièce demandée. Pour déposer une pièce exigée par votre dossier, passez par sa ligne dans le registre." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="doc-piece doc-piece--loose">
+{% include "documents/partials/depot.html" with upload_form=form row=None %}
+</div>
+{% endblock %}

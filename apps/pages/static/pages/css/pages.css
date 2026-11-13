@@ -1,0 +1,437 @@
+/* ============================================================================
+   Italy Legal Entry™ — the homepage (pages app).
+   Loaded only by templates/pages/home.html, after main.css. Tokens only through
+   var(--…): no literal colour, no literal paint; logical properties everywhere.
+
+   V5.22 — HOMEPAGE COMPOSITION V2 (SECTION_SYSTEM_V2 §3.1, §9.3; lane H). The home is no longer one chapter
+   device seven times: under the approved hero each section is composed from ONE pattern of the composition
+   library (lane S, static/css/v5/_sezioni.css and the _sec-* partials imported below), chosen for its content,
+   each with its own motion signature on the one timing language, no two neighbours alike:
+     H0 «la soglia»      the hero's foot fades into the orientation's wash, no line (V5.30 VARIETY §5)      —
+     S1 «il passaggio»   the four doors in a rail the thumb crosses (phones)                                  SLIDE
+     S2 «la linea V2»    the four steps on one hairline, the quiet marker (FINAL MICRO-PASS §5 A1)      —
+     S3 «l'indice»       the eight regular pathways: an index and its stage                                GLIDE
+     S4 «il panorama»    the pilot: the same gesture on two shores                                          DEVELOP
+     S5+S6 «lo strato»   the integrity band: one tablet set in the dressed stone, then «la protezione»      DEPTH
+     S7 «la campata»     the promoter's colophon beside the working table under the brand's arch           MASK
+     (S8, the reserved row, left the home's composition: final visual QA of 11 Nov 2026, pages.services.HOME_OMITS)
+   This sheet holds the home's own composition — the grounds, the plates' interiors, the panel, the colophon;
+   the patterns are lane S's; every entrance is a verb of v5/_reveal.css (data-verb), so this sheet animates
+   nothing of its own: transitions on duration tokens only. Text never waits.
+
+   The passage «la linea» (v5/_journey-passage.css, W3-D) left this sheet with the closure pass (12 Nov 2026): since the
+   V5.31 rebuild no element of the home draws it — the dev showcase, the one page that still showed it through this
+   sheet, links css/dist/core/sezioni.css, the library's own sheet. The
+   photograph (v5/_photo.css), the shell (v5/_sezioni.css; the seat's sheet v5/_sigillo.css left with the reserved row,
+   the home's last seal: final visual QA of 11 Nov 2026) and the pattern
+   partials — page-only partials, imported here as they resolve in the COLLECTED tree (DS 2026 §2).
+
+   V5.24 (BACKGROUND_MATERIAL_V2 §3, §5.1; TYPOGRAPHY_V2 §4.2, §6; FINAL_DELIVERY_V2 §3.4; lane HOME): the material
+   partial v5/_materia.css (the grounds' recipes and the seams' primitives, lane LIB) imported before «la casa», which
+   places them — S3 on stone, S6 on «pietra», the sfumatura, the raccordo, the velatura and the sill's light; the type
+   on the twelve steps (the label role by name, the display weight through the tokens); no credit rule (V5.24 §2).
+   ========================================================================== */
+
+@import url("../../css/v5/_photo.css");
+@import url("../../css/v5/_sezioni.css");
+@import url("../../css/v5/_sec-passaggio.css");
+@import url("../../css/v5/_materia.css");
+@import url("../../css/v5/_casa.css");
+@import url("../../css/v5/_home-a.css"); /* V5.31 home rebuild: intro, pilot, ecosystem, promoter, the body type */
+@import url("../../css/v5/_home-b.css"); /* V5.31 home rebuild: orientation, pathways, clarity, FAQ preview, frauds */
+
+/* ============================================================================
+   1 · Shared helpers
+   ========================================================================== */
+/* Prescribed texts shown in their French version inside the Arabic page keep their own writing direction (block-level
+   text only: links and buttons follow the page so that directional arrows stay coherent). */
+[dir="rtl"] .page-home :is(p, h1, h2, h3, li, article, section, blockquote)[lang="fr"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+/* Same rule for the Forum banner, whose partial carries lang="fr" on its wrapper: only its three text lines switch
+   direction, the band itself keeps the page layout. */
+[dir="rtl"] .home-banner .forum-banner[lang="fr"] .forum-banner__title,
+[dir="rtl"] .home-banner .forum-banner[lang="fr"] .forum-banner__meta,
+[dir="rtl"] .home-banner .forum-banner[lang="fr"] .forum-banner__quote {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+/* A prescribed fragment starts with a lower-case letter: presentation only, the text itself is never altered (the
+   interim hero's description and «what the platform does», the pathways' descriptions). The stations cut from
+   «Comment ça marche» keep the sentence's own case: under its caption they read as the sentence they are. */
+.home-plate__fragment::first-letter,
+.home-trust__statement--fragment > span:last-child::first-letter,
+.parcours__descrizione::first-letter {
+  text-transform: capitalize;
+}
+
+/* ============================================================================
+   2 · The shell on the home: the sections stand on the hero's column (the page's pad below 75 rem, the
+       container's edge from there — nothing under the hero a few pixels off it); the last one joins the footer
+   ========================================================================== */
+@media (max-width: 74.999rem) {
+  .page-home :is(.sez, .home-banner) .container {
+    padding-inline: var(--page-pad);
+  }
+}
+
+.page-home .site-footer {
+  margin-block-start: 0;
+}
+
+.page-home .sez h2,
+.page-home .sez h3 {
+  color: inherit;
+}
+
+/* a statement's head from 64 rem: the title on the reading edge, its lead beside it on the same rule — a head that names
+   the band and gets out of its way (§2.0 «the lead beside or under it»), never a heading over a paragraph; the process
+   head of the orientation the same (round 1, QA_ROUND1 M1 b: a head stacked on the left left 55 % of its band empty) */
+@media (min-width: 64rem) {
+  .page-home .testa--statement:has(.testa__lead),
+  .page-home .testa--process:has(.testa__lead) {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    column-gap: var(--s-12);
+    align-items: end;
+    max-inline-size: none;
+  }
+
+
+  .page-home :is(.testa--statement, .testa--process) .testa__lead {
+    max-inline-size: var(--measure-lead);
+  }
+}
+
+.home-section__note,
+.home-pathways__pending {
+  max-inline-size: var(--measure-small);
+  margin-block: var(--s-6) 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.page-home main .link-arrow {
+  position: relative;
+  min-block-size: var(--s-6);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+/* Under a finger a link answers on 44 px (SP-8) without a taller line: the target grows, the page does not. */
+@media (pointer: coarse) {
+  .page-home main .link-arrow::after {
+    content: "";
+    position: absolute;
+    inset-block: calc((var(--s-6) - var(--hit-primary)) / 2);
+    inset-inline: 0;
+  }
+}
+
+/* ============================================================================
+   3 · The institutional notice
+   ========================================================================== */
+/* ---- 3 · the institutional notice (the Forum's banner): a quiet band in the flow, never an
+        overlay; the dismiss control never sits on the text ---------------------------------- */
+.home-banner {
+  position: relative;
+  background: var(--surface-area);
+  border-block: 1px solid var(--line-rhythm);
+}
+
+.home-banner .forum-banner__inner {
+  display: grid;
+  gap: var(--s-4) var(--s-8);
+  align-items: center;
+  padding-block: var(--s-6);
+  padding-inline-end: calc(var(--page-pad) + var(--control-md));
+}
+
+.home-banner .forum-banner__title {
+  margin: 0;
+  font-size: var(--t-entry);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-display-caps);
+}
+
+.home-banner .forum-banner__meta {
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.home-banner .forum-banner__quote {
+  max-inline-size: var(--measure-body);
+  margin: var(--s-3) 0 0;
+  padding-inline-start: var(--s-4);
+  border-inline-start: 1px solid var(--line-structure);
+  color: var(--text-2);
+}
+
+@media (min-width: 64rem) {
+  .home-banner .forum-banner__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .home-banner .forum-banner__text {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-10);
+    align-items: center;
+  }
+
+  .home-banner .forum-banner__title {
+    grid-area: 1 / 1;
+  }
+
+  .home-banner .forum-banner__meta {
+    grid-area: 2 / 1;
+  }
+
+  .home-banner .forum-banner__quote {
+    grid-area: 1 / 2 / span 2;
+    margin: 0;
+  }
+}
+
+.home-banner__dismiss {
+  position: absolute;
+  inset-block-start: var(--s-2);
+  inset-inline-end: var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--control-md);
+  block-size: var(--control-md);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  transition: background-color var(--motion-fast) var(--ease-enter), color var(--motion-fast) var(--ease-enter);
+}
+
+.home-banner__dismiss:hover {
+  background: var(--surface-hover);
+  color: var(--text-1);
+}
+
+/* ============================================================================
+   4 · S1 «il passaggio» — the four doors (phones; drawn where the hero's tiles carry words alone, hero.css). The
+       rail is v5/_sec-passaggio.css's below 40 rem; here each plate's interior: the prescribed question, its
+       sentence, its call — the arched seat and its disc left (FINAL MICRO-PASS, the review's defect 1: on a phone they
+       were the page's arches after the hero's door). On the stone between the hero's paper and the orientation's
+       wash. Wider (a landscape phone that still draws them): two by two.
+   ========================================================================== */
+.home-entrances .testa {
+  margin-block-end: var(--s-6);
+}
+
+.page-home .passaggio {
+  --grid-margin: var(--page-pad);
+  margin: 0;
+  padding: 0;
+}
+
+.passaggio__lastra {
+  display: flex;
+}
+
+.passaggio__porta {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  overflow: clip;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm), var(--shadow-1);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.passaggio__porta:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* the prescribed question, never smaller than the sentence it titles (16 px: RE-4 on a phone) */
+.passaggio__titolo {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  letter-spacing: var(--track-display-caps);
+}
+
+.passaggio__testo {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.passaggio__cta {
+  display: inline-flex;
+  align-self: start;
+  align-items: center;
+  gap: var(--s-2);
+  margin-block-start: var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-display-caps);
+  color: var(--accent-text);
+}
+
+.passaggio__freccia {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+.passaggio__porta:is(:hover, :focus-visible) .passaggio__freccia {
+  translate: 3px 0;
+}
+
+[dir="rtl"] .passaggio__porta:is(:hover, :focus-visible) .passaggio__freccia {
+  translate: -3px 0;
+}
+
+/* a call that stands in French on the Arabic page reads left to right: its arrow points, and moves, the way it reads */
+[dir="rtl"] .passaggio__porta[lang]:not([lang="ar"]) .passaggio__freccia {
+  transform: none;
+}
+
+[dir="rtl"] .passaggio__porta[lang]:not([lang="ar"]):is(:hover, :focus-visible) .passaggio__freccia {
+  translate: 3px 0;
+}
+
+/* Arabic is never tracked: the doors' question and call */
+.passaggio__titolo:lang(ar),
+.passaggio__cta:lang(ar) {
+  letter-spacing: 0;
+}
+
+/* the keyboard sees the final state at once (§4.1 rule 5): no duration, the same tokens' end — the doors' arrows (their
+   arches left with the seats: FINAL MICRO-PASS, the review's defect 1) and the promoter's photograph settling in its
+   arch (§9): the home's one rule of the input's modality (final review F-M2: its two rules folded into one; measured,
+   they restyle no element at the first key — the flip's cost is the library's and main.css's, QA/v522/h/NOTES.md §14) */
+html[data-input="key"] .passaggio__freccia {
+  transition-duration: 0s;
+}
+
+@media (min-width: 40rem) {
+  .page-home .passaggio {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+}
+
+/* ============================================================================
+   5 · V5.31 (lane B): the orientation and the pathways are v5/_home-b.css's; this rule stays for the home's lists
+   ========================================================================== */
+/* on the Arabic page a French LIST keeps the page's direction — the line runs right to left, the rows stand on the
+   reading edge —: a list's lang names its items' language, and each item's French run keeps its own LTR box (the
+   shell's rule for a French run, v5/_sezioni.css, is for a run, not for the list that holds the runs) */
+[dir="rtl"] .page-home .sez ol[lang] {
+  direction: rtl;
+  unicode-bidi: normal;
+}
+
+/* ============================================================================
+   7 · S4 the pilot — V5.31: v5/_home-a.css (the night band, the national fields, the stage of the two shores).
+   ========================================================================== */
+/* ============================================================================
+   9 · S7 the ecosystem and its promoter — V5.31: v5/_home-a.css (the media split, the promoter's band).
+   ========================================================================== */
+/* ---- 10 · the news: rows of a register (category and date, title, summary); while nothing is
+         published, one plain sentence in the same row — no dashed frame, no pictogram. --------- */
+.home-news__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-block-start: 1px solid var(--line-structure);
+}
+
+.home-news .card,
+.home-news .card--link:hover,
+.home-news .card--link:focus-within {
+  border-color: var(--line-rhythm);
+  box-shadow: none;
+}
+
+.home-news .card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "eyebrow meta"
+    "title title"
+    "text text";
+  gap: var(--s-1) var(--s-4);
+  padding: var(--s-5) 0;
+  background: none;
+  border: 0;
+  border-block-end: 1px solid var(--line-rhythm);
+  border-radius: 0;
+}
+
+.home-news .card__eyebrow {
+  grid-area: eyebrow;
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  letter-spacing: 0;
+}
+
+.home-news .card__meta {
+  grid-area: meta;
+}
+
+.home-news .card__title {
+  grid-area: title;
+  font-weight: var(--w-title);
+}
+
+.home-news .card__title a:hover {
+  text-decoration: underline 1px;
+}
+
+.home-news .card__text {
+  grid-area: text;
+}
+
+/* ---- the reading text of a row is 16 px below 64rem (RE-4: nothing a person reads on a phone or a small tablet
+        is under 16 px) ---------------------------------------------------------------------------------- */
+@media (max-width: 63.999rem) {
+  .home-section__note,
+  .home-pathways__pending,
+  .home-news .card__text {
+    font-size: 1rem;
+  }
+}
+
+/* phones: the plates in one column, their reading text at 16/24 (RE-4) */
+@media (max-width: 47.999rem) {
+  .integrita__risposta {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* ---- forced colours: a ground is gone, its band keeps its edge as a rule ----------------------------------------- */
+@media (forced-colors: active) {
+  .page-home .sez {
+    border-block-start: 1px solid CanvasText;
+  }
+}
+
+/* ---- Print ------------------------------------------------------------------ */
+@media print {
+  .home-banner__dismiss {
+    display: none !important;
+  }
+}

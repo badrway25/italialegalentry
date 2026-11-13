@@ -1,0 +1,75 @@
+{% extends "pages/institutional_base.html" %}{% load i18n static pages_imagery %}
+{% comment %}
+/reseau/ — the actors of the ecosystem: persons, enterprises, institutions, universities and training bodies,
+professionals. Neutral translated descriptions (pages.content.NETWORK_ACTORS): they only restate the list of actors that
+the prescribed presentation texts enumerate, and attribute no power, role or promise to anyone. The prescribed
+p3.hero.body is Le projet's «En bref» (gate G3): this page links it, never repeats it (V5.32 integration review P2-4).
+Partners: authorised ones only (gate G6) — names, never a logo without written authorisation.
+
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — «l'esploratore»: the network is said by its
+relations where they mean something, not drawn as rings, nodes and lines. After 21st.dev «Feature Tab Switcher»
+(mohammadshehadeh/feature-11, id 27081: a vertical tab list beside the panel it shows, arrow keys between the tabs),
+adapted to the existing tablist runtime (static/js/src/sezioni/mappa.js: roving tabindex, Arrows, Home, End, Escape,
+hover preview on a fine pointer):
+  head      the folio «Le projet» (the head's one label: the page's section), the h1, the network's own line, then —
+            while G3 is open — the way to the project's presentation (Le projet's «En bref», #project-presentation,
+            where p3.hero.body stands whole: linked, never repeated here); the shared table seen from above
+            (network.table, the page's LCP) beside it from 64 rem;
+  explorer  «Les acteurs de l'écosystème»: the five actors as a vertical tab list (their audience's disc, their name)
+            beside the selected actor's panel (its sentence and the way to its space). Without script every panel is
+            listed in order, each tab an anchor to it;
+  approdo   «Pour aller plus loin» on stone: the Forum, the promoter (and the authorised partners, G6) as the reading
+            pages' divided rows. The V5.30 «intesa» flags under the band left (no flag as decoration).
+Route sheet pages/css/rete.css (_rete.css). Views: apps/pages/views.py builds `map_entries` and `approdo`.
+{% endcomment %}
+{% block page_title %}{% translate "Le réseau" %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/interior.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/rete.css' %}">{% endblock %}{# V5.32: no frontispiece on this page — its sheet is not linked #}
+{% block page_header %}
+<header class="rete-testa">
+  <div class="container rete-testa__griglia">
+    <div class="rete-testa__testo">
+      <p class="rete-testa__label t-label">{% translate "Le projet" %}</p>
+      <h1 class="rete-testa__titolo">{% translate "Le réseau" %}</h1>
+      <p class="rete-testa__lead">{% translate "Un projet construit avec les acteurs compétents, chacun dans son rôle." %}</p>
+      {% if presentation %}<p class="rete-testa__rinvio"><a class="link-arrow" href="{% url 'pages:project' %}#project-presentation">{% translate "Consulter la présentation du projet" %}</a></p>{% endif %}
+    </div>
+    <div class="rete-testa__foto">{% photo "network.table" "rete-testa__img" %}</div>
+  </div>
+</header>
+{% endblock %}
+{% block page_body %}
+{% translate "Les acteurs de l’écosystème" as map_label %}
+<section class="rete-esplora" aria-labelledby="rete-actors-title" data-sec-js="mappa" data-label="{{ map_label }}">
+  <div class="container">
+    <h2 class="rete-esplora__titolo" id="rete-actors-title">{{ map_label }}</h2>
+    <div class="rete-esplora__griglia">
+      <ul class="rete-esplora__schede mappa__nodi mappa__anello" role="list" data-registro>
+        {% for item in map_entries %}<li class="rete-esplora__voce" data-audience="{{ item.audience }}"><a class="mappa__tasto rete-esplora__tasto" id="rete-{{ item.key }}-tab" href="#rete-{{ item.key }}" data-i="{{ item.i }}" data-node="{{ item.key }}"><span class="rete-esplora__disc" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="rete-esplora__nome"{% if item.title.lang %} lang="{{ item.title.lang }}"{% endif %}>{{ item.title }}</span></a></li>{% endfor %}
+      </ul>
+      <div class="rete__pannelli" data-registro>
+        {% for item in map_entries %}<section class="rete__pannello" id="rete-{{ item.key }}" aria-labelledby="rete-{{ item.key }}-title" data-actor="{{ item.key }}" data-audience="{{ item.audience }}">
+          <span class="rete__disc" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+          <h3 class="rete__titolo" id="rete-{{ item.key }}-title"{% if item.title.lang %} lang="{{ item.title.lang }}"{% endif %}>{{ item.title }}</h3>
+          <p class="rete__testo"{% if item.text.lang %} lang="{{ item.text.lang }}"{% endif %}>{{ item.text }}</p>
+          {% if item.url %}<p class="rete__azione"><a class="btn btn--secondary btn--arrow" href="{{ item.url }}"{% if item.link_label.lang %} lang="{{ item.link_label.lang }}"{% endif %}>{{ item.link_label }} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+        </section>{% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %}V5.12 §8 (W1-C): the partners stand only with an authorised partner (core.gates.partners_public, G6) — never a
+sentence announcing partners to come; until then the Forum and the promoter close the page on their own.{% endcomment %}
+<section class="sez rete-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" aria-labelledby="network-partners-title">
+  <div class="container">
+    {% if partners %}{% translate "Partenaires" as partners_title %}{% else %}{% translate "Pour aller plus loin" as partners_title %}{% endif %}
+    <h2 class="rete-esplora__titolo" id="network-partners-title">{{ partners_title }}</h2>
+    {% include "components/sezioni/mosaico.html" with variant="rimando" tiles=approdo only %}
+    {% if partners %}
+    <ul class="registro registro--two registro--words rete-partner" data-partners="{{ partners|length }}">
+      {% for card in partners %}<li class="registro__row"><p class="registro__title">{{ card.partner.name }}</p></li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

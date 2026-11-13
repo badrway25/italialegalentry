@@ -1,0 +1,4 @@
+{% extends "errors/base_error.html" %}{% load i18n %}
+{% block error_code %}429{% endblock %}{% block error_code_display %}429{% endblock %}
+{% block error_title %}{% translate "Trop de requêtes" %}{% endblock %}
+{% block error_text %}{% translate "Vous avez atteint la limite d’envois autorisée. Merci de réessayer dans quelques minutes ; rien n’a été perdu de votre côté." %}{% endblock %}

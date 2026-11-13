@@ -1,0 +1,255 @@
+"""
+"Ma situation" — the page where a person tells the platform about their circumstances.
+
+What is being defended:
+
+* the page belongs to the person and to nobody else (deny by default, like every reserved page);
+* a question is asked only when something reads the answer, and the page says what;
+* saving re-runs the rules, so the orientation is dynamic rather than a photograph taken once;
+* "I do not know yet" is preserved as a distinct answer from "no", because a rule that cannot tell
+  them apart will fire on an absence of information.
+"""
+
+from __future__ import annotations
+
+import datetime as dt
+import re
+
+import pytest
+from django.utils import timezone
+
+from accounts.models import EducationLevel, PersonProfile
+
+pytestmark = pytest.mark.django_db
+
+SITUATION = "/fr/espace-reserve/ma-situation/"
+LOGIN = "/fr/compte/login/"
+
+
+@pytest.fixture
+def signed_in(client, alice, seeded):
+    client.force_login(alice)
+    return client
+
+
+def post(client, **overrides):
+    data = {
+        "date_of_birth": "",
+        "nationality": "",
+        "country_of_residence": "",
+        "education_level": "",
+        "years_of_experience": "",
+        "languages": [],
+        "has_job_offer": "",
+        "has_qualification_recognition": "",
+    }
+    data.update(overrides)
+    return client.post(SITUATION, data)
+
+
+class TestAccess:
+    def test_an_anonymous_visitor_is_sent_to_the_login_page(self, client, seeded):
+        response = client.get(SITUATION)
+        assert response.status_code == 302
+        assert LOGIN in response["Location"]
+
+    def test_the_page_is_never_indexed_and_never_cached(self, signed_in):
+        response = signed_in.get(SITUATION)
+        assert response.status_code == 200
+        assert "noindex" in response["X-Robots-Tag"].lower()
+        assert "no-store" in response["Cache-Control"]
+
+    def test_a_person_sees_their_own_answers_and_only_their_own(self, client, alice, bob, seeded):
+        PersonProfile.objects.update_or_create(user=bob, defaults={"nationality": "BOB-NATIONALITY-UNIQUE"})
+        client.force_login(alice)
+        body = client.get(SITUATION).content.decode()
+        assert "BOB-NATIONALITY-UNIQUE" not in body
+
+
+class TestTheQuestionsExplainThemselves:
+    def test_every_question_says_what_it_is_used_for(self, signed_in):
+        from accounts.profile_forms import SituationForm
+
+        for name, field in SituationForm().fields.items():
+            assert str(field.help_text).strip(), f"{name} asks for personal data without saying why"
+
+    def test_the_page_states_what_it_does_not_ask_for(self, signed_in):
+        body = signed_in.get(SITUATION).content.decode()
+        assert "passeport" in body.lower()
+        assert "reconnaît aucun" in body or "reconnaît aucune" in body
+
+    def test_no_field_is_required(self, signed_in):
+        from accounts.profile_forms import SituationForm
+
+        assert not any(field.required for field in SituationForm().fields.values())
+
+    def test_an_empty_submission_is_accepted(self, signed_in):
+        assert post(signed_in).status_code == 302
+
+
+class TestSaving:
+    def test_answers_are_recorded(self, signed_in, alice):
+        post(
+            signed_in,
+            nationality="MA",
+            country_of_residence="MA",
+            education_level=EducationLevel.HIGHER,
+            years_of_experience="7",
+            languages=["ar", "fr"],
+            has_job_offer="yes",
+        )
+        profile = PersonProfile.objects.get(user=alice)
+        assert profile.nationality == "MA"
+        assert profile.education_level == EducationLevel.HIGHER
+        assert profile.years_of_experience == 7
+        assert profile.languages == ["ar", "fr"]
+        assert profile.has_job_offer is True
+
+    def test_i_do_not_know_yet_is_not_the_same_answer_as_no(self, signed_in, alice):
+        post(signed_in, has_job_offer="no")
+        assert PersonProfile.objects.get(user=alice).has_job_offer is False
+        post(signed_in, has_job_offer="")
+        assert PersonProfile.objects.get(user=alice).has_job_offer is None
+
+    def test_a_future_date_of_birth_is_refused(self, signed_in, alice):
+        # Tomorrow in Rome, the calendar the form checks (``timezone.localdate``): the host's
+        # ``date.today()`` is still yesterday at 00:30 in Rome on a UTC host, and «tomorrow» was today.
+        future = (timezone.localdate() + dt.timedelta(days=1)).isoformat()
+        response = post(signed_in, date_of_birth=future)
+        assert response.status_code == 200
+        assert PersonProfile.objects.get(user=alice).date_of_birth is None
+
+    def test_saving_is_audited_by_field_name_and_never_by_value(self, signed_in, alice):
+        from audit.models import AuditEvent
+
+        # V5.12 W2: the nationality is an ISO code chosen from the CLDR list; a value no list holds is refused
+        post(signed_in, nationality="TN")
+        event = AuditEvent.objects.filter(action="account.situation_updated").latest("created_at")
+        assert "nationality" in event.metadata["fields"]
+        assert "TN" not in str(event.metadata)
+
+    def test_an_unchanged_submission_records_no_audit_event(self, signed_in, alice):
+        from audit.models import AuditEvent
+
+        post(signed_in, nationality="MA")
+        before = AuditEvent.objects.filter(action="account.situation_updated").count()
+        post(signed_in, nationality="MA")
+        assert AuditEvent.objects.filter(action="account.situation_updated").count() == before
+
+
+class TestTheDateOfBirthControl:
+    """V5.32 certification (13 Nov 2026), a browser run of «Ma situation»: an <input type="date"> holds only an ISO date
+    (yyyy-mm-dd; any other value is sanitised to the empty string), and Django renders a DateInput's value in the active
+    language's format unless the widget names one. In French and Italian the page drew «15/03/1994»: the browser showed
+    an empty field, and the next save (the submit stands on every step) sent it empty and erased the stored date."""
+
+    @pytest.mark.parametrize("lang", ["fr", "it", "en", "ar"])
+    def test_a_saved_date_comes_back_in_its_control_and_a_save_that_leaves_it_keeps_it(self, signed_in, alice, lang):
+        post(signed_in, date_of_birth="1994-03-15")  # what a browser sends from a date control
+        url = f"/{lang}/espace-reserve/ma-situation/"
+        control = re.search(r'<input[^>]*name="date_of_birth"[^>]*>', signed_in.get(url).content.decode()).group(0)
+        assert 'type="date"' in control
+        value = re.search(r'value="([^"]*)"', control)
+        assert value and value.group(1) == "1994-03-15", control
+        # the browser submits the control as it holds it: a value that is not an ISO date is sent empty
+        sent = value.group(1) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value.group(1)) else ""
+        fields = {
+            "date_of_birth": sent,
+            "nationality": "",
+            "country_of_residence": "",
+            "education_level": "",
+            "years_of_experience": "",
+            "languages": [],
+            "has_job_offer": "",
+            "has_qualification_recognition": "",
+        }
+        assert signed_in.post(url, fields).status_code == 302
+        assert PersonProfile.objects.get(user=alice).date_of_birth == dt.date(1994, 3, 15)
+
+
+class TestTheAnswersReachTheRuleEngine:
+    def test_the_declared_facts_are_the_ones_a_rule_may_read(self, signed_in, alice):
+        from rules.engine import ALLOWED_FIELDS
+        from rules.facts import facts_for
+
+        post(
+            signed_in,
+            date_of_birth="1994-03-15",
+            nationality="MA",
+            country_of_residence="MA",
+            education_level=EducationLevel.HIGHER,
+            years_of_experience="7",
+            languages=["ar", "fr"],
+            has_job_offer="yes",
+        )
+        alice.refresh_from_db()
+        facts = facts_for(person=alice)
+        assert facts["nationality"] == "MA"
+        assert facts["residence_country"] == "MA"
+        assert facts["languages"] == ["ar", "fr"]
+        assert facts["has_job_offer"] is True
+        assert isinstance(facts["age"], int)
+        for key in facts:
+            assert key.split(".", 1)[0] in ALLOWED_FIELDS, f"{key} is not a fact a rule may read"
+
+    def test_the_date_of_birth_itself_never_reaches_a_rule(self, signed_in, alice):
+        """A rule reads an age. Holding the date in the fact set would copy it into every snapshot."""
+        from rules.facts import facts_for
+
+        post(signed_in, date_of_birth="1994-03-15")
+        alice.refresh_from_db()
+        facts = facts_for(person=alice)
+        assert "date_of_birth" not in facts
+        assert "1994-03-15" not in str(facts)
+
+
+class TestCompleteness:
+    def test_the_counter_counts_answers_and_nothing_else(self, alice):
+        profile = PersonProfile.objects.create(user=alice)
+        assert profile.completeness == 0
+        profile.nationality = "MA"
+        profile.has_job_offer = False
+        profile.save()
+        assert profile.completeness == 2, "answering 'no' is an answer"
+
+    def test_a_complete_profile_says_so(self, alice):
+        profile = PersonProfile.objects.create(
+            user=alice,
+            date_of_birth=dt.date(1994, 3, 15),
+            nationality="MA",
+            country_of_residence="MA",
+            education_level=EducationLevel.HIGHER,
+            years_of_experience=7,
+            languages=["fr"],
+            has_job_offer=True,
+        )
+        assert profile.is_complete is True
+
+    def test_the_page_counts_one_total_the_questions_it_asks(self, signed_in, alice):
+        # W3-D's m4 (W3-E): the counter under the Stepper counts what the Stepper's nodes and the foot's «1 / 8» count
+        # — the questions the page asks; it said «sur 7» (the fields the rules read) under eight nodes
+        post(signed_in, nationality="MA", has_qualification_recognition="no")
+        response = signed_in.get(SITUATION)
+        asked = len(response.context["form"].visible_fields())
+        assert response.context["total"] == asked == 8
+        assert response.context["answered"] == 2, "the question the rules do not read yet is still a question answered"
+        assert f"2 question(s) renseignée(s) sur {asked}." in response.content.decode()
+
+
+class TestTheExportIncludesEverything:
+    def test_the_personal_data_export_carries_the_situation(self, signed_in, alice):
+        from accounts.services import export_user_data
+
+        post(signed_in, nationality="MA", languages=["fr"], has_job_offer="no")
+        alice.refresh_from_db()
+        exported = export_user_data(alice)["profile"]
+        assert exported["nationality"] == "MA"
+        assert exported["languages"] == ["fr"]
+        assert exported["has_job_offer"] is False
+
+    def test_deleting_the_account_removes_the_situation(self, signed_in, alice):
+        from accounts.services import anonymise_user
+
+        post(signed_in, nationality="MA")
+        anonymise_user(alice, reason="test")
+        assert not PersonProfile.objects.filter(user=alice).exists()

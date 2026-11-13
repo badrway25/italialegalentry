@@ -1,0 +1,455 @@
+/* ============================================================================================
+   «IL LESSICO» V2 — the glossary's, the term page's and Vivre en Italie's V5.22 compositions (design V5.22,
+   SECTION_SYSTEM_V2 §3.14–§3.15; lane P2): a partial of cms/lessico.css, their route sheet, linked after the reading
+   pages' shared sheet (cms/lettura.css). Markup: templates/glossary/{index,_entry,term}.html, templates/living/index.html.
+     2 · Glossaire — the alphabet, one quiet row under the letterhead (its current letter: sezioni/spia.js), over «il
+         lessico», one column of definition rows under modest letter headings, «Où le rencontrer» (FINAL MICRO-PASS
+         §6 B2: the thumb rail, the cards' plates, their outlined letters and rules left); the term page's K «la scheda»
+     3 · Vivre en Italie — the head's seal and its action; D «il panorama» of the LCP street (no mask, no fade: a scale
+         after the first paint, the drift, one light sweep as it leaves), the lead on an opaque paper plate; E «pour
+         s'installer»
+   Round 2 (QA_ROUND2 m5): out of the shared sheet into this route sheet (cms/_faq-v2.css says why).
+   Tokens only; logical properties; the words never wait.
+   ============================================================================================ */
+
+/* ---- 2 · Glossaire ---- */
+/* the alphabet (moved from v5/_lettura.css: the glossary's alone) — FINAL MICRO-PASS §6 B2: the whole alphabet on ONE
+   line that never wraps, so no letter is ever left alone at a line's end; the letters that have terms are links, the
+   others dimmed and out of the accessibility tree; the line scrolls sideways where a screen is narrower than the
+   alphabet, and stays under the letterhead while the register scrolls (PX25), at every width; the letter being read
+   takes the accent and its 2 px mark (aria-current: sezioni/spia.js) */
+.az-index {
+  position: sticky;
+  inset-block-start: calc(var(--header-h-scrolled) + 1px);
+  z-index: var(--z-sticky);
+  margin-block-end: var(--s-4);
+  border-block: 1px solid var(--line-rhythm);
+  background-color: color-mix(in srgb, var(--surface-area) 92%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.az-index__list {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-block: 0;
+  margin-inline: calc(var(--s-4) * -1); /* the gutter's first 16 px on both sides: eight 44 px letters from 360 px (m1) */
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+/* the cells share the row evenly, a live letter never under its 44 px: the letters stand at one pitch */
+.az-index__list > li { flex: 1 1 0; }
+
+:is(.az-index__link, .az-index__vuota) {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-inline-size: 2rem;
+  min-block-size: var(--hit-primary);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+}
+
+/* the letters without a term, dimmed, join the row from 64 rem, where all twenty-six fit; below it the row holds the
+   live letters only — one line, every letter that leads somewhere in sight, never a hidden scroll */
+.az-index__vuota { display: none; color: var(--line-structure); }
+
+@media (min-width: 64rem) {
+  .az-index__vuota { display: grid; }
+}
+
+/* a letter that leads somewhere is a 44 px target (the review's m1); an empty letter is no target, its cell narrower */
+.az-index__link {
+  min-inline-size: var(--hit-primary);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+.az-index__link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inline-size: 1em; /* the glyph's width under the glyph, whatever the cell's: never past the band's hairline */
+  margin-inline: auto;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--accent-mark);
+  scale: 0 1;
+  transition: scale var(--motion-standard) var(--ease-enter);
+}
+
+.az-index__link[aria-current] { color: var(--accent-text); }
+
+.az-index__link[aria-current]::after { scale: 1; }
+
+@media (hover: hover) {
+  .az-index__link:hover { color: var(--accent-text-hover); }
+}
+
+.az-index__link:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+/* a letter or a term reached from a link (the alphabet, «Retour au glossaire»), and a focus moved by the keyboard, stand
+   under the letterhead AND the alphabet, never behind them (WCAG 2.4.11) */
+html:has(.az-index) { scroll-padding-block-start: calc(var(--header-h) + var(--hit-primary) + var(--s-5)); }
+
+/* the register: one column of definition rows on hairlines — the term, the definition at the reading measure, «Où le
+   rencontrer»; from 64 rem the term holds its own column and the definition the second, as a dictionary's page does */
+.lessico__carte {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.lessico__carta {
+  position: relative;
+  display: grid;
+  align-content: start;
+  row-gap: var(--s-2);
+  padding-block: var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+/* a letter's first row carries the letter: the register's heading for that letter and the alphabet's anchor —
+   modest, in the accent, its room above it (hidden while a search narrows the register: the rows then stand alone) */
+.lessico__lettera {
+  margin: var(--s-6) 0 var(--s-2);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  color: var(--accent-text);
+}
+
+.lessico__carta:first-child > .lessico__lettera { margin-block-start: 0; }
+
+[data-cerca-attiva] .lessico__lettera { display: none; }
+
+.lessico__termine {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-strong);
+  overflow-wrap: anywhere; /* a term longer than a phone's line breaks inside its row */
+}
+
+.lessico__termine a {
+  color: var(--text-1);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+.lessico__carta:hover .lessico__termine a { color: var(--accent-text); }
+
+.lessico__definizione {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+/* a prescribed definition starts in lower case, as the glossary writes it («permis de séjour délivré…»): its first
+   letter set as a sentence's at display only — the words untouched (V5.32 integration review P2-6; as the Diplômes
+   definitions, pathways/_diplomas.css). The glossary's rows and Vivre's cards (the same _entry.html); a <p>, a block
+   box; the Arabic script has no case */
+.lessico__definizione::first-letter { text-transform: capitalize; }
+
+/* V5.27 / R7′ (the v524-pub2 steward): a French definition on an Arabic page and its identification caption are one
+   grid item, the caption a label's step above the words */
+:is(.lessico__fonte, .scheda__fonte) { display: grid; gap: var(--s-1); }
+:is(.lessico__fonte, .scheda__fonte) > .locked-caption { margin: 0; }
+
+.lessico__dove {
+  position: relative;
+  z-index: 2; /* above the row's stretched link: the chips are links of their own */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  margin-block-start: var(--s-2);
+}
+
+.lessico__etichetta,
+.scheda__etichetta {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+:is(.lessico__etichetta, .scheda__etichetta):lang(ar) { font-size: var(--t-ui); line-height: var(--t-ui-lh); }
+
+:is(.lessico__chips, .scheda__chips) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a chip of «Où le rencontrer»: quiet, on the accent's wash (the FAQ's answers draw theirs alike: cms/_faq-v2.css) */
+.lessico__chip {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2rem;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-full);
+  background-color: var(--accent-wash);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-enter);
+}
+
+.lessico__chip:hover { background-color: var(--accent-wash-2); }
+
+/* the press (a finger too): the hover's wash, the accent's deeper ink — on the chips, the letters, the term and the
+   head's action alike */
+.lessico__chip:active { background-color: var(--accent-wash-2); }
+:is(.lessico__chip, .az-index__link, .lessico__carta .lessico__termine a, .vivere-testa__azione):active { color: var(--accent-text-hover); }
+
+@media (pointer: coarse) {
+  .lessico__chip { min-block-size: var(--hit-primary); }
+}
+
+@media (min-width: 64rem) {
+  :is(.lessico__registro, .glossary__results) .lessico__carta {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    column-gap: var(--s-10);
+    padding-block: var(--s-6);
+  }
+
+  :is(.lessico__registro, .glossary__results) .lessico__carta > :not(.lessico__termine, .lessico__lettera) { grid-column: 2; }
+
+  .lessico__lettera { grid-column: 1 / -1; }
+}
+
+/* the term page: the term at display size in the compact band (the scale's step — V5.24 Typography V2 §5: «the seam or
+   term title once below the header»; an Italian run keeps its Latin leading on the Arabic page through the tokens'
+   boundary), the definition plate on its shadow layer */
+.page-glossary-term [data-fronte][data-compact] .ingresso__title { /* over the compact head's title-2 (v5/_fronte.css, which loads after this sheet) */
+  font-size: var(--t-display);
+  line-height: var(--t-display-lh);
+  letter-spacing: var(--track-display);
+}
+
+.scheda {
+  display: grid;
+  gap: var(--s-8);
+}
+
+.scheda__lastra {
+  display: grid;
+  gap: var(--s-5);
+  max-inline-size: 52rem;
+  padding: var(--s-8);
+}
+
+.scheda__regola {
+  display: block;
+  inline-size: var(--s-12);
+  block-size: 2px;
+  background: var(--accent-mark);
+}
+
+.scheda__definizione {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+.scheda__fatti {
+  display: grid;
+  gap: var(--s-2);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  color: var(--text-2);
+}
+
+.scheda__fatti > * { margin: 0; }
+
+.scheda__legami {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.scheda__fila {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  padding-inline-start: var(--s-6);
+}
+
+/* the hairline that ties a row of chips to the plate — it draws as the band enters */
+.scheda__filo {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  background: var(--line-structure);
+  transform-origin: top;
+}
+
+.scheda__ritorno { margin: 0; }
+
+/* final improve round — two things that stay where they are drawn (one rule, the same values: the glossary family's
+   total has no byte to spare):
+   - the related terms' rows (the final review's m3; §1 rule 3, the words never wait): the legacy rise
+     (static/js/src/rise.js holds the rows of every `.accordion` below the fold, until S-close removes it) holds none of
+     them — on a phone they stood at opacity 0 until they entered; the band's motion is its plate's depth and its
+     hairlines' draw;
+   - (FINAL MICRO-PASS §6 B2: the dictionary's cards became rows on hairlines; their in-place answer left with them) */
+.scheda .accordion > [data-rise] { opacity: 1; translate: none; }
+
+@media (min-width: 64rem) {
+  .scheda__lastra { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s-10); }
+  .scheda__regola { grid-column: 1 / -1; }
+  .scheda__fatti { padding-inline-start: var(--s-6); border-inline-start: 1px solid var(--line-rhythm); }
+  .scheda__legami { grid-template-columns: repeat(2, minmax(0, 1fr)); max-inline-size: 52rem; }
+}
+
+/* ---- 3 · Vivre en Italie ---- */
+.vivere-testa__riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--s-4) var(--s-6);
+}
+
+.vivere-testa__riga .page-header__title { margin: 0; }
+
+.vivere-testa__riga .page-header__title--caps:not(:lang(ar)) {
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: 0.03em;
+}
+
+/* V5.32 (lane D): the glossary's head — the search in its end seat from 64 rem, at the lead's height */
+@media (min-width: 64rem) {
+  .glossario-testa {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--s-16);
+    align-items: end;
+  }
+
+  .lettura .glossario-testa > .page-header__aside { margin-block-start: 0; }
+}
+
+.vivere-testa__azione {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-primary);
+  margin-inline-start: auto;
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.vivere-testa__azione .icon { transition: translate var(--motion-standard) var(--ease-enter); } /* the chevron points down in both scripts */
+.vivere-testa__azione:is(:hover, :focus-visible) { text-decoration: underline; text-underline-offset: 0.2em; }
+.vivere-testa__azione:is(:hover, :focus-visible) .icon { translate: 0 3px; }
+
+/* final round (QA_ROUND3 m1): the moment meets its band — no paper strip under the frame (96 px at 1440, 64 at 390):
+   on a desktop the frame's foot is the band's edge; below 64 rem the lead's plate overlaps the frame and stands on the
+   band's stone, which begins at the frame's foot (the section's ground is the band's: templates/living/index.html) */
+.vivere-panorama { padding-block: 0; }
+
+/* the frame is the moment (60–82 vh): the section is as tall as it is */
+.vivere-panorama[data-rhythm="moment"] { min-block-size: 0; }
+
+.vivere-panorama__cornice {
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+}
+
+.vivere-panorama__quadro {
+  position: relative;
+  margin-inline: calc((100cqw - 100vw) / 2);
+  overflow: clip;
+}
+
+.vivere-panorama__quadro .foto { margin: 0; }
+
+.vivere-panorama__quadro img {
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 82vh;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vivere-panorama__lastra {
+  position: relative;
+  z-index: 1;
+  max-inline-size: 38rem;
+  margin: -40px var(--s-4) 0;
+  padding: var(--s-6) var(--s-8);
+}
+
+.vivere-panorama__lastra .page-header__lead {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+@media (min-width: 64rem) {
+  .vivere-panorama__quadro img { min-block-size: 56vh; max-block-size: 72vh; }
+
+  .vivere-panorama__lastra {
+    position: absolute;
+    inset-block-end: var(--s-10);
+    inset-inline-start: 0;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the LCP's controlled scale (§3.15: 1.04 → 1 over 1 200 ms from the first paint; never a mask, never an opacity) —
+     on the photograph's own picture, inside its figure (round 1, QA_ROUND1 M8a: the selector named a picture the frame
+     does not hold, so it never ran); the drift (M22) moves the image inside it */
+  :root:not(.rm) .vivere-panorama__quadro .foto > picture {
+    display: block;
+    animation: vivere-scala var(--motion-route-light) var(--ease-enter) backwards;
+  }
+}
+
+@keyframes vivere-scala {
+  from { scale: 1.04; }
+}
+
+/* «pour s'installer» on stone: the two dictionary cards side by side from 48 rem, the two ways on under them */
+.vivere-installer__griglia { display: grid; gap: var(--s-6); }
+.vivere-installer__griglia .testa { margin: 0; }
+
+@media (min-width: 48rem) {
+  .vivere-installer .lessico__carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+html[data-input="key"] :is(.lessico__chip, .az-index__link, .az-index__link::after, .lessico__termine a, .vivere-testa__azione .icon) {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .az-index__link::after { background: Highlight; }
+}
+
+@media print {
+  .az-index { display: none; }
+}

@@ -1,0 +1,225 @@
+/* ============================================================================
+   LOADER «LUME» — THE FILMSTRIP BOARD · DEVELOPMENT ONLY (V5.4 plan §3.1 item 6, §2.3 «Templates»; W1-D)
+
+   Loaded by templates/dev/designpreview/specimens/loader.html alone, which is served only when DEBUG is on and
+   ILE_DESIGN_PREVIEW=1 (/__design-v5/specimens/loader/). Never imported by main.css
+   (tests/frontend/test_design_docs.py::test_the_dev_stylesheet_stays_out_of_the_production_cascade).
+
+   What it adds, and only that: the board's own layout — cells, captions, the swatches that stand for the
+   console's tiles — and the FILMSTRIP: a frame is the product's own host with its animations paused at a
+   negative delay, so each cell shows the picture at t ms exactly as v5/loader.css and _loader-light.css draw
+   it. Nothing of the loader is redrawn here. The reduced-motion column re-declares the zeroed tokens on its
+   wrapper, which is what prefers-reduced-motion: reduce does on :root (v5/tokens.css): the stills are the
+   product's stills. Tokens only, logical properties only, no literal colour.
+   ========================================================================== */
+
+/* ---- the page ---------------------------------------------------------------------------------------------- */
+
+.lb {
+  background: var(--surface-page);
+  color: var(--text-1);
+}
+
+.lb__main {
+  padding-block: var(--s-10) var(--s-16);
+}
+
+.lb__lede {
+  max-inline-size: 72ch;
+  color: var(--text-2);
+}
+
+.lb__section {
+  margin-block-start: var(--s-12);
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.lb__h2 {
+  margin: 0 0 var(--s-2);
+  font-family: var(--f-sans);
+  font-size: var(--u-section);
+  line-height: var(--u-section-lh);
+  font-weight: 600;
+}
+
+.lb__note {
+  max-inline-size: 78ch;
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+/* ---- the board: cells with a caption; a strip is a row of frames ------------------------------------------- */
+
+.lb__board {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--s-6);
+  padding: var(--s-4);
+  background: var(--surface-area);
+  border-radius: var(--radius-md);
+}
+
+.lb__cell {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  justify-items: start;
+}
+
+.lb__cap {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  direction: ltr;
+  text-align: start;
+}
+
+.lb__strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.lb__strip .lb__cell {
+  gap: var(--s-1);
+}
+
+/* the grounds a host sits on: paper (a public sheet), night (the entrance stage, the rail) */
+.lb__ground {
+  display: grid;
+  place-items: center;
+  padding: var(--s-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-sheet);
+}
+
+.lb__ground--night {
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+}
+
+/* the console's two tiles, as console.css draws them: the rail's (40, the mark at 24, by console.css itself) and
+   the top bar's (32, the mark at 20 — console.css shows it below 64rem only, so the board draws its box) */
+.lb__tile-bar {
+  display: grid;
+  place-items: center;
+  inline-size: 32px;
+  block-size: 32px;
+  background: var(--min-1);
+  border-radius: var(--radius-sm);
+}
+
+.lb__tile-bar > .sig {
+  --sig-size: 20px;
+}
+
+/* the sizes a host takes on this board */
+.lb__sig-160 { --sig-size: 160px; }
+.lb__sig-96 { --sig-size: 96px; }
+.lb__sig-48 { --sig-size: 48px; }
+
+/* the L3 list: the rows of a fetched fragment */
+.lb__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  inline-size: 260px;
+}
+
+.lb__rows > li {
+  padding-block: var(--s-3);
+  border-block-start: 1px solid var(--line-rhythm);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.lb__row-wait {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--text-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+/* ---- the filmstrip: the product's animations, paused at t --------------------------------------------------- */
+/* a frame's every animated part — the engage's turning face, the release's light and ink, the busy key, the
+   seated rows — is held at -t ms. The declarations below override only the clock, never the drawing. */
+
+.lb-t .sig__turn,
+.lb-t .sig__lume,
+.lb-t .sig__face--ink,
+.lb-t .btn.is-busy::after,
+.lb-t .busy-key__turn,
+.lb-t [data-seat] > * {
+  animation-play-state: paused !important;
+}
+
+.lb-t-0 .sig__turn, .lb-t-0 .sig__lume, .lb-t-0 .sig__face--ink, .lb-t-0 .btn.is-busy::after, .lb-t-0 .busy-key__turn { animation-delay: 0ms !important; }
+.lb-t-40 .sig__turn, .lb-t-40 .sig__lume, .lb-t-40 .sig__face--ink, .lb-t-40 .btn.is-busy::after, .lb-t-40 .busy-key__turn { animation-delay: -40ms !important; }
+.lb-t-80 .sig__turn, .lb-t-80 .sig__lume, .lb-t-80 .sig__face--ink, .lb-t-80 .btn.is-busy::after, .lb-t-80 .busy-key__turn { animation-delay: -80ms !important; }
+.lb-t-120 .sig__turn, .lb-t-120 .sig__lume, .lb-t-120 .sig__face--ink, .lb-t-120 .btn.is-busy::after, .lb-t-120 .busy-key__turn { animation-delay: -120ms !important; }
+.lb-t-160 .sig__turn, .lb-t-160 .sig__lume, .lb-t-160 .sig__face--ink, .lb-t-160 .btn.is-busy::after, .lb-t-160 .busy-key__turn { animation-delay: -160ms !important; }
+.lb-t-200 .sig__turn, .lb-t-200 .sig__lume, .lb-t-200 .sig__face--ink, .lb-t-200 .btn.is-busy::after, .lb-t-200 .busy-key__turn { animation-delay: -200ms !important; }
+.lb-t-240 .sig__turn, .lb-t-240 .sig__lume, .lb-t-240 .sig__face--ink, .lb-t-240 .btn.is-busy::after, .lb-t-240 .busy-key__turn { animation-delay: -240ms !important; }
+.lb-t-320 .sig__turn, .lb-t-320 .sig__lume, .lb-t-320 .sig__face--ink, .lb-t-320 .btn.is-busy::after, .lb-t-320 .busy-key__turn { animation-delay: -320ms !important; }
+.lb-t-360 .sig__turn, .lb-t-360 .sig__lume, .lb-t-360 .sig__face--ink { animation-delay: -360ms !important; }
+.lb-t-400 .sig__turn, .lb-t-400 .sig__lume, .lb-t-400 .sig__face--ink { animation-delay: -400ms !important; }
+.lb-t-480 .sig__turn, .lb-t-480 .sig__lume, .lb-t-480 .sig__face--ink { animation-delay: -480ms !important; }
+.lb-t-700 .sig__lume, .lb-t-700 .sig__face--ink { animation-delay: -700ms !important; }
+.lb-t-1000 .sig__lume, .lb-t-1000 .sig__face--ink { animation-delay: -1000ms !important; }
+.lb-t-1200 .sig__lume, .lb-t-1200 .sig__face--ink { animation-delay: -1200ms !important; }
+.lb-t-1300 .sig__lume, .lb-t-1300 .sig__face--ink { animation-delay: -1300ms !important; }
+.lb-t-1400 .sig__lume, .lb-t-1400 .sig__face--ink { animation-delay: -1400ms !important; }
+
+/* the seat's frames keep each row's own stagger: row n at n × --motion-stagger − t */
+.lb-t-0 [data-seat] > :nth-child(1) { animation-delay: 0ms !important; }
+.lb-t-0 [data-seat] > :nth-child(2) { animation-delay: var(--motion-stagger) !important; }
+.lb-t-0 [data-seat] > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger)) !important; }
+.lb-t-0 [data-seat] > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger)) !important; }
+.lb-t-80 [data-seat] > :nth-child(1) { animation-delay: -80ms !important; }
+.lb-t-80 [data-seat] > :nth-child(2) { animation-delay: calc(var(--motion-stagger) - 80ms) !important; }
+.lb-t-80 [data-seat] > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger) - 80ms) !important; }
+.lb-t-80 [data-seat] > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger) - 80ms) !important; }
+.lb-t-160 [data-seat] > :nth-child(1) { animation-delay: -160ms !important; }
+.lb-t-160 [data-seat] > :nth-child(2) { animation-delay: calc(var(--motion-stagger) - 160ms) !important; }
+.lb-t-160 [data-seat] > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger) - 160ms) !important; }
+.lb-t-160 [data-seat] > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger) - 160ms) !important; }
+.lb-t-240 [data-seat] > :nth-child(1) { animation-delay: -240ms !important; }
+.lb-t-240 [data-seat] > :nth-child(2) { animation-delay: calc(var(--motion-stagger) - 240ms) !important; }
+.lb-t-240 [data-seat] > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger) - 240ms) !important; }
+.lb-t-240 [data-seat] > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger) - 240ms) !important; }
+.lb-t-400 [data-seat] > :nth-child(1) { animation-delay: -400ms !important; }
+.lb-t-400 [data-seat] > :nth-child(2) { animation-delay: calc(var(--motion-stagger) - 400ms) !important; }
+.lb-t-400 [data-seat] > :nth-child(3) { animation-delay: calc(2 * var(--motion-stagger) - 400ms) !important; }
+.lb-t-400 [data-seat] > :nth-child(4) { animation-delay: calc(3 * var(--motion-stagger) - 400ms) !important; }
+
+/* ---- the reduced-motion column: what :root gets under the setting, on one wrapper ------------------------- */
+
+.lb-rm {
+  --motion-fast: 0ms;
+  --motion-standard: 0ms;
+  --motion-emphasized: 0ms;
+  --motion-slow: 0ms;
+  --motion-stagger: 0ms;
+  --motion-key: 0ms;
+  --motion-door: 0ms;
+  --motion-luce: 0ms;
+}
+
+/* ---- the live form of L2: a real submit, the page reloads with the busy face on the way ------------------ */
+
+.lb__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+}

@@ -1,0 +1,64 @@
+/* ============================================================================================
+   L · «L'INDICE» — the whole index: v5/_sec-indice-base.css (the list, the tabs, the phone's disclosure) and here the
+   explorer's form (the FAQ: its stage sticky, its seal), the marked row and the native disclosure (definitions in place)
+   (design V5.22, SECTION_SYSTEM_V2 §2 L; lane S; V5.29 stream SYS: split so the home, which draws the tabs only, bundles
+   the base alone — every other importer keeps this sheet and the whole index, in the same order). Page-only (after
+   v5/_sezioni.css). Markup: components/sezioni/indice.html; script static/js/src/sezioni/indice.js.
+   ============================================================================================ */
+@import url("_sec-indice-base.css");
+
+.indice__voce--marcata::before {
+  background: var(--text-1);
+}
+
+@media (min-width: 64rem) {
+  .indice--explorer {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  .indice--explorer .indice__palco {
+    position: sticky;
+    inset-block-start: calc(var(--header-h-scrolled) + var(--s-6));
+    padding: var(--s-8);
+  }
+
+  .indice__sigillo {
+    position: absolute;
+    inset-block-start: var(--s-6);
+    inset-inline-end: var(--s-6);
+  }
+}
+
+/* ---- the native disclosure (definitions in place) ---- */
+.indice__dettaglio {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.indice__sommario {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: var(--hit-primary, 44px);
+  cursor: pointer;
+  font-weight: var(--w-control);
+  list-style: none;
+}
+
+.indice__sommario::-webkit-details-marker { display: none; }
+
+.indice__chevron {
+  margin-inline-start: auto;
+  transition: rotate var(--motion-standard) var(--ease-enter);
+}
+
+.indice__dettaglio[open] .indice__chevron { rotate: 180deg; }
+
+.indice__dettaglio .indice__corpo {
+  padding-block: 0 var(--s-4);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+html[data-input="key"] .indice__chevron {
+  transition: none;
+}

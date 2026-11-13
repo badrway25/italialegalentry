@@ -1,0 +1,634 @@
+/* ============================================================================================
+   THE FRONTISPIECE «il frontespizio» — V5.15 §3/§4/§18/§19 (label v515-c-build): the page header of every important
+   public page. One system, a purposeful composition per page. A PAGE-ONLY partial: bundled by
+   apps/pages/static/pages/css/fronte.css (static/css/dist/pages/css/fronte.css), which pages/partials/_ingresso.html
+   links right before the band — main.css carries none of it (the shared bundle only ratchets down).
+
+   Adapted, not imported (docs/design-v5/COMPONENT_PROVENANCE.md, lane C rows): the material ground of 21st.dev's
+   «Animated Grid» (rmahammad, CSS-only drifting grid, radial fade, reduced-motion aware) and «Background Beams»
+   (manuarora700, SVG paths that carry light) — rebuilt as an architectural 12-column hairline grid and one drawn
+   route per page; the layered frame of «Editorial Collage Hero» (felipemenezes098) — rebuilt as a passe-partout
+   offset behind the photograph. No React, no library, ILE tokens only.
+
+     1 · the band        — paper (sheet → page, a warm light from the far side) or night (notte 800 → 950, the
+                           doorway's gold light), a grain (V5.30: the 12-column hairline grid left);
+     2 · the trail       — the breadcrumbs sit on the band (full-bleed by a border image cast sideways), on night in night inks;
+     3 · the type        — the folio (V5.22: the page's T1 seal in its small arch seat, the label in tracked capitals,
+                           the rule that draws becoming the seal's sill — or the label alone where the page's concept
+                           has no ILE mark), the h1 at a
+                           display size (Host Grotesk 600 / Readex Pro in Arabic, every size a step of tokens.css —
+                           V5.24 Typography V2; V5.15 §19, decided: one grotesk family, stronger hierarchy, never a
+                           newspaper), the lead at 20–22 px;
+     4 · the motif       — the page's drawing at the band's far side: its strokes draw once (pathLength 1), its nodes
+                           come one after another, its light settles; a slow parallax as the band leaves (scroll
+                           timeline); mirrored in Arabic; still under reduced motion and html.rm; V5.30: drawn only on a
+                           head that composes with it (`data-compose`), never behind a photograph;
+     5 · the photograph  — the entrance frame on its print, the image's depth shadow (V5.30: the offset hairline frame
+                           and its slide into register left);
+     6 · night tone, forced colours, print.
+   Logical properties only; every colour a token or a token-derived mix.
+   ============================================================================================ */
+
+/* ---- 1 · the band ------------------------------------------------------------------------------------------ */
+[data-fronte] {
+  --fronte-ink: var(--accent-mark);
+  --fronte-node: var(--identity-light);
+  --fronte-light: color-mix(in srgb, var(--identity-light) 16%, transparent);
+  --fronte-bg-1: var(--surface-sheet);
+  --fronte-bg-2: var(--surface-page);
+  /* the print: a head photograph's drop under its passe-partout (lane C; once, for the entrance's and the plan's) */
+  --fronte-print: 0 2px 4px color-mix(in srgb, var(--p-notte-950) 6%, transparent), 0 28px 56px -24px color-mix(in srgb, var(--p-notte-950) 42%, transparent);
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--s-10) var(--s-16);
+  background:
+    radial-gradient(60rem 28rem at 88% 8%, var(--fronte-light), transparent 70%),
+    linear-gradient(180deg, var(--fronte-bg-1), var(--fronte-bg-2));
+}
+
+[dir="rtl"] [data-fronte] {
+  background:
+    radial-gradient(60rem 28rem at 12% 8%, var(--fronte-light), transparent 70%),
+    linear-gradient(180deg, var(--fronte-bg-1), var(--fronte-bg-2));
+}
+
+.fronte__ground {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* V5.30 (the owner's «geometry saturation»: «every page the same architecture-themed template»): the twelve-column
+   hairline grid left every head's ground — the band is its paper or night, its light and its grain. The page's drawing
+   (§4) stands only where the head COMPOSES with it (`data-compose`: the route's spine, the network's ring, the contact's
+   plate, the brand's arch, the notice): a head that shows a photograph draws no motif behind it */
+[data-fronte]:not([data-compose]) .fronte__motif {
+  display: none;
+}
+
+/* the grain: a fine noise, so the material reads as paper or stone, never as a flat fill */
+.fronte__ground::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+}
+
+/* the band's foot: a hairline in the structure's ink, the chapter that follows starts on it */
+[data-fronte] + .chapter {
+  border-block-start-color: color-mix(in srgb, var(--line-structure) 45%, transparent);
+}
+
+/* the compact band (V5.22 §3.6 EN-H, §3.7 IN-H, §3.14 T0: `compact=True`): the frontispiece of a form page or a term
+   page — the same material, the motif at the far side, the folio's seal; a tighter band and a smaller title keep it
+   within half the first screen at 1440 and one screen at 390, so the form or the definition still starts in the first
+   screen (never a clamped height: a clamp would let a long title spill out of its band) */
+[data-fronte][data-compact] {
+  padding-block: var(--s-8) var(--s-10);
+}
+
+[data-fronte][data-compact] :is(.ingresso__title, .page-header__title) {
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-title-2);
+}
+
+/* ---- 2 · the trail on the band ----------------------------------------------------------------------------- */
+/* the full bleed is a border image cast out sideways, never a clip (V5.18, P7): the former box-shadow held to the row by
+   clip-path also clipped the 44 px target a link carries under a finger (v5/_pagina.css §1) to the trail's own box —
+   «Accueil» answered on 24 px on the heads; the image paints the same ground and clips nothing */
+main:has([data-fronte]) > .breadcrumbs {
+  position: relative;
+  z-index: 1;
+  background: var(--fronte-trail, var(--surface-sheet));
+  border-image: linear-gradient(var(--fronte-trail, var(--surface-sheet)) 0 0) fill 0 / 0 / 0 100vmax;
+}
+
+main:has([data-fronte][data-tone="night"]) > .breadcrumbs {
+  --fronte-trail: var(--p-notte-800);
+  --text-1: var(--text-on-night-1);
+  --text-2: var(--text-on-night-2);
+  --text-3: var(--text-on-night-3);
+  --focus-ring: var(--focus-ring-night);
+}
+
+main:has([data-fronte][data-tone="night"]) > .breadcrumbs [aria-current] {
+  color: var(--text-on-night-1);
+}
+
+/* ---- 3 · the type ------------------------------------------------------------------------------------------ */
+/* the folio's label in the label role's values (TYPOGRAPHY_V2 F-4, V5.24 §13: Host Grotesk 13/16 600 +0.08 em; 14/20 on
+   phones and in Arabic through the tokens; no capitals in Arabic). The role is restated here because the head's markup
+   (pages/partials/_ingresso.html, lane PX's file) does not yet carry `t-label`: when it does, these declarations and the
+   Arabic rule below go (LIB NOTES, request to CLOSING) */
+[data-fronte] .ingresso__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-block-end: var(--s-5);
+  font-size: var(--t-label);
+  line-height: var(--t-label-lh);
+  font-weight: var(--w-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  font-feature-settings: var(--feat-caps);
+  color: var(--accent-text);
+}
+
+[data-fronte] .ingresso__label:lang(ar) {
+  text-transform: none;
+}
+
+/* FINAL MICRO-PASS §2.1, §5 A3: the folio is typographic on every head — the label alone, no seal in its tile or arch
+   seat, no rule drawn after it (pages/partials/_ingresso.html) */
+
+/* the h1 on --t-title-1 (34 → 56 / 1.08 / −0.028 em; Arabic 1.18 and no tracking, and a French title on an Arabic page at
+   its Latin leading, through the tokens' :lang(ar) block and its Latin boundary — TYPOGRAPHY_V2 §4.2, §4.5, F-7) */
+[data-fronte] :is(.ingresso__title, .page-header__title) {
+  max-inline-size: 17em;
+  font-size: var(--t-title-1);
+  line-height: var(--t-title-1-lh);
+  letter-spacing: var(--track-title);
+  font-weight: var(--w-body); /* FINAL MICRO-PASS §2.5, §5 A4: the page's h1 at the floor weight — its size is the rank */
+}
+
+/* a title written in capitals in its source copy (the Forum's prescribed name): one step down, the capitals' tracking */
+[data-fronte] :is(.ingresso__title--caps, .page-header__title--caps):not(:lang(ar)) {
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-display-caps);
+}
+
+[data-fronte] :is(.ingresso__lead, .page-header__lead) {
+  max-inline-size: var(--measure-lead);
+  margin-block-start: var(--s-5);
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-2); /* FINAL MICRO-PASS §5 A4: a lead in the second ink, at the lead's measure */
+}
+
+/* V5.27 / R7′ (the v524-pub1 steward): a French lead on its own Arabic page carries its identification caption in the
+   label role, set ON the lead (one block, a label’s step above it) — the head’s call stays in the first screen */
+[data-fronte] .ingresso__text > .locked-caption {
+  margin-block: var(--s-1);
+}
+
+[data-fronte] .ingresso__text > .locked-caption + .ingresso__lead {
+  margin-block-start: 0;
+}
+
+/* the caption’s line is paid by the way in: the call keeps the first screen it had */
+[data-fronte] .ingresso__text:has(> .locked-caption) > .ingresso__way {
+  margin-block-start: var(--s-3);
+}
+
+@media (min-width: 64rem) {
+  [data-fronte] :is(.ingresso__title--caps, .page-header__title--caps):not(:lang(ar)) {
+    max-inline-size: 23em;
+  }
+
+  /* a head titled in capitals keeps its lead at 20/28 (the tokens' 22/32 is the plain head's): the way's control stays
+     in the first screen, and a French lead on an Arabic page keeps a Latin leading (≤ 1.5: TYPOGRAPHY_V2 F-7) */
+  [data-fronte][data-words-first] .ingresso__lead {
+    max-inline-size: 34rem;
+    font-size: var(--t-entry);
+    line-height: var(--t-entry-lh);
+  }
+
+  [data-fronte] .ingresso__inner {
+    align-items: center;
+  }
+
+  /* a head without a seat: the words keep the reading edge, the motif holds the far side */
+  [data-fronte]:not(.fronte-wrap):not(:has(.ingresso__aside)) {
+    padding-block: var(--s-16) var(--s-20);
+  }
+}
+
+/* ---- 4 · the motif — FINAL MICRO-PASS §2.6, §5 A3: no longer drawn (the band is its paper or night, its light and its
+   grain); a drawing a page still includes stands down ---------------------------------------------------------- */
+.fronte__motif {
+  display: none;
+}
+
+/* a title written in capitals already fills a phone's first screen: its frame is drawn 16:9, the words come sooner */
+@media (max-width: 63.999rem) {
+  [data-fronte][data-words-first] .ingresso__inner > .ingresso__photo img {
+    aspect-ratio: 16 / 9;
+    block-size: auto;
+    object-fit: cover;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    :root:not(.rm) .fronte__ground {
+      animation: fronte-drift linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+
+@keyframes fronte-drift {
+  to { transform: translateY(-12%); }
+}
+
+/* below 64 rem the words and the action come first and the photograph after them on a door page (a head carrying
+   its way in under the lead, `.ingresso__way`: Parcours, Entreprises, Institutions, Universités & Formation) and on
+   a head titled in capitals in its source copy (`words_first`, F1: the page decides, so the Arabic page lays out as
+   the French one) — round 2 of W3, m-3 / m-11, widened by V5.18 (B2): between 48 and 64 rem, and on the Institutions
+   and Universités phones, the photograph and its frame stood first and the page's one action fell under the first
+   screen; the drawing then stands down */
+@media (max-width: 63.999rem) {
+  :is([data-fronte][data-words-first], [data-fronte]:has(.ingresso__way)) .ingresso__inner > .ingresso__photo {
+    order: 1;
+  }
+
+  :is([data-fronte][data-words-first], [data-fronte]:has(.ingresso__way)):has(.ingresso__inner > .ingresso__photo) .fronte__motif {
+    display: none;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  [data-fronte][data-words-first] .ingresso__lead {
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+  }
+
+  /* on a phone the way's control stands right under the way's question (V5.18, B2): its sentence follows the button,
+     the lead above them untouched — at 360 the Parcours lead runs thirteen lines */
+  [data-fronte] .ingresso__way {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin-block-start: var(--s-4);
+  }
+
+  [data-fronte] .ingresso__way > .via__title {
+    order: -2;
+  }
+
+  [data-fronte] .ingresso__way > .via__action {
+    order: -1;
+  }
+
+  /* a door head on a phone is held a step closer — 24 px under the trail, 16 px between its parts, its lead at the
+     body's size on a 1.5 line (WCAG 1.4.8's spacing) — so the way's control reaches the first screen (V5.18, B2) */
+  [data-fronte]:has(.ingresso__way) {
+    padding-block-start: var(--s-6);
+  }
+
+  [data-fronte]:has(.ingresso__way) .ingresso__label {
+    margin-block-end: var(--s-4);
+  }
+
+  [data-fronte]:has(.ingresso__way) .ingresso__lead {
+    margin-block-start: var(--s-4);
+    font-size: var(--t-body);
+    line-height: 1.5;
+  }
+}
+
+/* a short phone (up to 760 px tall: 375 × 667, 360 × 740): the head is held one step closer again, so the way's control
+   reaches the first screen with the way's question still above it — the title, the button and the sentence read in the
+   order of the document (V5.18, B2; the integrated review's polish items 1 and 2: the button first had been put before
+   its own question here, WCAG 1.3.2 / 2.4.3). At 375 × 667 the Parcours lead (the locked notice, eleven lines) leaves
+   the least room: the lead at 16 px on a 1.5 line, 12 px between the head's parts, 8 px between the way's */
+@media (max-width: 47.999rem) and (max-height: 760px) {
+  /* the head stands 16 px under the trail, its parts 12 px apart */
+  [data-fronte]:has(.ingresso__way) {
+    padding-block-start: var(--s-4);
+  }
+
+  [data-fronte]:has(.ingresso__way) .ingresso__label {
+    margin-block-end: var(--s-3);
+  }
+
+  /* FINAL MICRO-PASS §5 A3: the head's label is typographic everywhere — no seal to hide here any more */
+
+  [data-fronte]:has(.ingresso__way) .ingresso__lead {
+    margin-block-start: var(--s-3);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  [data-fronte] .ingresso__way {
+    gap: var(--s-2);
+    margin-block-start: var(--s-3);
+  }
+}
+
+/* ---- 5 · the photograph in its passe-partout ---------------------------------------------------------------- */
+[data-fronte] .ingresso__aside:is(.foto, .figura) {
+  position: relative;
+  z-index: 0;
+}
+
+[data-fronte] .ingresso__aside:is(.foto, .figura) > picture {
+  position: relative;
+  display: block;
+}
+
+/* V5.30 (the owner's «geometry saturation»: geometric frames): the hairline frame offset behind the photograph left —
+   the photograph stands on its own print, the one depth of the head */
+[data-fronte] .ingresso__aside:is(.foto, .figura) img {
+  box-shadow: var(--fronte-print);
+}
+
+/* a diptych in the entrance (the pilot): two frames, the second a step lower */
+.ingresso__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+  align-items: start;
+}
+
+.ingresso__pair > .foto:nth-child(2) {
+  margin-block-start: var(--s-12);
+}
+
+.ingresso__pair .foto img {
+  box-shadow: 0 28px 56px -24px color-mix(in srgb, var(--p-notte-950) 50%, transparent);
+}
+
+/* ---- 6 · the night tone ------------------------------------------------------------------------------------ */
+[data-fronte][data-tone="night"] {
+  --fronte-ink: var(--accent-night);
+  --fronte-node: var(--identity-light-night);
+  --fronte-light: color-mix(in srgb, var(--p-oro-300) 14%, transparent);
+  --fronte-bg-1: var(--p-notte-800);
+  --fronte-bg-2: var(--p-notte-950);
+  --text-1: var(--text-on-night-1);
+  --text-2: var(--text-on-night-2);
+  --text-3: var(--text-on-night-3);
+  --accent-text: var(--p-laguna-400);
+  --accent-mark: var(--p-laguna-400);
+  --surface-raised: var(--p-notte-700);
+  --focus-ring: var(--focus-ring-night);
+  --focus-halo: var(--focus-halo-night);
+  color: var(--text-on-night-1);
+}
+
+[data-fronte][data-tone="night"] .fronte__ground::after {
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+}
+
+[data-fronte][data-tone="night"] + .chapter {
+  border-block-start-color: transparent;
+}
+
+@media (forced-colors: active) {
+  [data-fronte] {
+    background: Canvas;
+  }
+
+  .fronte__ground {
+    display: none;
+  }
+
+}
+
+@media print {
+  .fronte__ground,
+  [data-fronte] .ingresso__aside > picture::before {
+    display: none;
+  }
+
+  [data-fronte] {
+    background: none;
+    color: var(--p-inchiostro-900);
+    min-block-size: 0;
+  }
+}
+
+/* a 3:2 entrance frame takes half the band on a wide screen (a landscape needs the width a portrait does not) */
+@media (min-width: 64rem) {
+  [data-fronte] .ingresso__inner:has(> .ingresso__photo.foto--3x2) > .ingresso__text {
+    grid-column: 1 / span 6;
+  }
+
+  [data-fronte] .ingresso__inner:has(> .ingresso__photo.foto--3x2) > .ingresso__photo {
+    grid-column: 7 / span 6;
+  }
+}
+
+/* on a phone the passe-partout steps in by 12 px, inside the 16 px gutter (no horizontal scroll) */
+@media (max-width: 47.999rem) {
+  [data-fronte] .ingresso__aside:is(.foto, .figura) > picture::before {
+    inset: var(--s-3) calc(-1 * var(--s-3)) calc(-1 * var(--s-3)) var(--s-3);
+  }
+
+  [dir="rtl"] [data-fronte] .ingresso__aside:is(.foto, .figura) > picture::before {
+    inset: var(--s-3) var(--s-3) calc(-1 * var(--s-3)) calc(-1 * var(--s-3));
+  }
+}
+
+/* ============================================================================================
+   8 · THE COMPOSED HEADS — round 1 of W3 (label v515-c-improve1): where the page's meaning asks for it, the head
+   COMPOSES its seat (data-compose, pages/partials/_ingresso.html). Two compositions remain:
+     route    — Parcours (FINAL MICRO-PASS §2.6: the spine's drawing left; the seat holds the questionnaire's panel);
+     name     — AGAMI: the name in two weights before the colonnade.
+   V5.32 (the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION directive, 12 Nov 2026: «no geometry as filler»):
+   Réseau, Contact and Fraudes open on heads of their own (lane D), Le projet's arch became a plain frame (lane A);
+   their drawings, crops, motion and the reading pages' wrap left this sheet.
+   ============================================================================================ */
+
+/* a head with a photograph, an index or a search plate (round 2, m-1): the drawing stands between the words and the
+   seat and ends at the content's edge — nothing in the outer gutter, no lone gold end beside the plate */
+@media (min-width: 64rem) {
+  [data-fronte]:not([data-compose]):has(.ingresso__aside) .fronte__motif {
+    inset-inline-end: max(0px, (100% - var(--container)) / 2 + var(--grid-margin));
+    inline-size: min(56%, 52rem);
+  }
+
+  [data-fronte]:not([data-compose]):has(.ingresso__aside) .fronte__motif :is(.m-node--end, .m-halo) {
+    display: none;
+  }
+}
+
+@media (min-width: 64rem) {
+  [data-fronte][data-compose]:not([data-compose="route"]) .ingresso__inner > .ingresso__text {
+    grid-column: 1 / span 6;
+  }
+
+  [data-fronte][data-compose]:not([data-compose="route"]) .ingresso__inner > .ingresso__aside {
+    grid-column: 7 / span 6;
+  }
+
+  [data-fronte][data-compose="route"] .ingresso__inner {
+    align-items: start;
+  }
+
+  [data-fronte][data-compose="route"] .ingresso__inner > .ingresso__text {
+    grid-column: 1 / span 7;
+  }
+
+  [data-fronte][data-compose="route"] .ingresso__inner > .ingresso__photo {
+    grid-column: 9 / span 4;
+  }
+
+  /* the orientation action inside the first screen at 1024 and 1440 (round 2 of W3, m-3): the lead at the body's
+     17/28 on 34 rem (V5.24: the scale's step in place of an 18 px literal), the spine's stations a step closer */
+  [data-fronte][data-compose="route"] .ingresso__lead {
+    max-inline-size: 34rem;
+    margin-block-start: var(--s-4);
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+  }
+
+  [data-compose="route"] .ingresso__way {
+    margin-block-start: var(--s-6);
+  }
+
+  [data-compose="route"] .via__text {
+    font-size: var(--t-small);
+    line-height: var(--t-small-lh);
+  }
+}
+
+/* ---- route — FINAL MICRO-PASS §2.6: the journey spine, its stations' rings and the arrival's light left the head ---- */
+
+/* the address, the head's action */
+.fronte-azione {
+  margin: var(--s-8) 0 0;
+}
+
+.fronte-azione__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-4);
+  max-inline-size: 100%;
+  padding-block: var(--s-2);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.fronte-azione__disc {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 48px;
+  block-size: 48px;
+  border-radius: var(--radius-md);
+  color: var(--accent-mark);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-mark) 35%, transparent), var(--shadow-2);
+}
+
+.fronte-azione__disc .icon {
+  inline-size: 22px;
+  block-size: 22px;
+}
+
+.fronte-azione__text {
+  padding-block-end: 2px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fronte-azione__link:hover .fronte-azione__text {
+    background-image: linear-gradient(var(--accent-mark), var(--accent-mark));
+    background-size: 100% 2px;
+  }
+
+  .fronte-azione__link:hover .fronte-azione__disc {
+    color: var(--surface-raised);
+    background: var(--accent-mark);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm) .fronte-azione__disc {
+    transition: background-color var(--motion-slow) var(--ease-enter), color var(--motion-slow) var(--ease-enter);
+  }
+}
+
+/* ---- name: the promoter's name in two weights ---- */
+[data-compose="name"] .ingresso__title {
+  max-inline-size: 14em;
+}
+
+/* the name device keeps its own size and weight; its tracking is the display's (FINAL_DELIVERY_V2 §3.3: «.fronte__name
+   takes --track-display and nothing else») */
+.fronte__name {
+  display: block;
+  font-size: clamp(3.25rem, 1.8rem + 5vw, 6.5rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: var(--track-display);
+}
+
+.fronte__name-rest {
+  display: block;
+  margin-block-start: var(--s-4);
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  color: var(--text-2);
+}
+
+/* the name is isolated left-to-right (lang it); on an Arabic page both lines still stand on the reading edge, beside
+   the folio (stronger than base.css's start-aligned Latin run: the head's h1 is one block aligned with its label) */
+[dir="rtl"] .ingresso__title > :is(.fronte__name, .fronte__name-rest) {
+  text-align: end; /* the run is dir="ltr": its end is the right edge, the Arabic page's reading edge */
+}
+
+/* ---- the diptych (the pilot): half the band, frames about 280 px, the second a step lower, the arch behind ---- */
+@media (min-width: 64rem) {
+  [data-fronte] .ingresso__inner:has(> .ingresso__pair) > .ingresso__text {
+    grid-column: 1 / span 6;
+  }
+
+  [data-fronte] .ingresso__inner > .ingresso__pair {
+    grid-column: 7 / span 6;
+    gap: var(--s-6);
+  }
+
+  [data-fronte] .ingresso__pair > .foto:nth-child(2) {
+    margin-block-start: var(--s-16);
+  }
+
+  [data-fronte]:has(.ingresso__pair) .fronte__motif {
+    inset-inline-end: 3%;
+    inline-size: 48%;
+    opacity: 0.6;
+  }
+}
+
+[data-fronte]:has(.ingresso__pair) .fronte__motif :is(.m-node--end, .m-halo) {
+  display: none;
+}
+
+/* between 48 and 64 rem the pair is held to 34 rem and centred (frames about 260 px, the band under a screen) — m-9 */
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  [data-fronte] .ingresso__inner > .ingresso__pair {
+    inline-size: 100%;
+    max-inline-size: 34rem;
+    justify-self: center;
+  }
+}
+
+/* ---- the page's index in the head: a raised plate, so the drawing never runs through its links ---- */
+[data-fronte] .ingresso__aside.sommaire {
+  padding: var(--s-5) var(--s-6) var(--s-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line-structure) 26%, transparent), var(--shadow-2);
+}
+
+@media (forced-colors: active) {
+  .fronte-azione__disc {
+    border: 1px solid CanvasText;
+  }
+}

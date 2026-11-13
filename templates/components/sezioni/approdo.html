@@ -1,0 +1,27 @@
+{% comment %}
+K · «L'APPRODO» — the closing «Pour aller plus loin» band (design V5.22, SECTION_SYSTEM_V2 §0.1 «Closing bands», §2 K;
+lane S): on stone — a night band above the night footer would make a night–paper–night sandwich. Weighted tiles: the
+Forum's typographic on a night face (Q4: no photograph stands for the Forum), the others raised paper with their T2 or
+T2a glyph; the page's motif drawn low at 30 % as a bookend (the frontispiece's own drawing, pages/partials/motifs/).
+static/css/v5/_sec-strato.css. Motion: DEPTH (the tiles settle over their shadow layers, 60 ms apart) and one LIGHT
+sweep across the band as it enters. Still: the tiles at rest.
+
+Contract: `title_id`, `title`, `title_lang`; `tiles` — [{"href", "title", "title_lang", "line", "line_lang", "glyph"
+(a registry symbol), "disc" (True: an actor's disc, T2a), "audience", "forum" (True: the Forum's night tile)}];
+`motif` (a frontispiece motif, kept in the callers' contracts and drawn no more). V5.30 (the owner's «geometry
+saturation»: the head's drawing repeated at the page's foot was the repetition itself): the bookend left the library — the
+band is its tiles on the stone, or the ground the page lays under it (the Italy–Morocco «intesa», ecosystem/partials/
+intesa.html).
+FINAL MICRO-PASS §5 A3 (9 Nov 2026): the band is a divided link list, as «il rimando» — no tile, no plate, no glyph,
+the Forum's row typographic like the others; a chevron at each row's end moves 4 px under the hand or the focus
+(v5/_sec-strato.css). Adapted from 21st.dev «Split Image Blog List» (ziegfiroyt/blog25, id 28595). `glyph`, `disc` and `forum` stay in the contract, drawn no more.
+The caller wraps it: <section class="sez sez--approdo" data-sec="approdo" data-ground="stone" data-verb="light">.
+{% endcomment %}<div class="approdo">
+  {% include "components/sezioni/_testa.html" with role="router" %}
+  <ul class="approdo__tessere sez-seq" role="list" data-registro>
+    {% for item in tiles %}<li class="approdo__tessera{% if item.forum %} approdo__tessera--forum{% endif %}"{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}>
+      <a class="approdo__link sez-stretch" href="{{ item.href }}"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</a>
+      {% if item.line %}<p class="approdo__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
+    </li>{% endfor %}
+  </ul>
+</div>

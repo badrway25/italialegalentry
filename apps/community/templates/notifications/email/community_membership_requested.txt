@@ -1,0 +1,15 @@
+{% autoescape off %}{{ project.PROJECT_NAME }} — Forum Virtuel : nouvelle demande d’accès
+
+Une demande d’accès au Forum Virtuel attend l’examen de la modération.
+
+Demande n° : {{ membership.pk }}
+Catégorie : {{ membership.get_category_display }}
+Organisme / Entreprise : {{ membership.organisation|default:"—" }}
+Compte : {{ user_email }}
+Date : {{ membership.created_at|date:"d/m/Y H:i" }}
+
+Approbation : back-office → Forum Virtuale → Membri del Forum Virtuale.
+
+--
+{{ project.PROMOTER }}
+{% endautoescape %}

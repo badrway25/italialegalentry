@@ -1,0 +1,62 @@
+{% extends "helpdesk/base_helpdesk.html" %}{% load i18n static %}
+{% comment %}
+THE PROFESSIONAL'S REGISTER — design V5 (W3-E step 2), the register's grammar: the page's head, the band (how many are
+still open), one row a mandate's request (its subject the way to its page, its reference in ILE Mono, since when it is
+in its state, until when the mandate runs; its state as a chip), the clause.
+
+Only what a mandate covers. There is no list of people, no search across requests and no way to
+reach a file that was not confided: the rows come from ``services.queue_for``, which is built on
+``readable_by`` — the authorisation is the query, not a filter applied afterwards.
+
+No identity of the person is shown. A mandate is about a question and a file reference.
+{% endcomment %}
+{% block page_title %}{% translate "Demandes qui me sont confiées" %}{% endblock %}
+{% block meta_description %}{% translate "Les demandes du guichet numérique confiées à votre mandat." %}{% endblock %}
+
+{% block extra_head %}{{ block.super }}{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="register">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Demandes qui me sont confiées" %}</h1>
+    <p class="ws-head__lead">{% translate "Uniquement les demandes que vous avez reçues en mandat, pour la durée de ce mandat. Chaque réponse que vous transmettez est datée et attribuée à votre fonction, jamais à votre nom." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="reg-page">
+{% if tickets_total %}
+  <div class="db-ledger reg-band">
+    <p class="db-ledger__total reg-band__count">{% blocktranslate count n=open_count %}{{ n }} demande ouverte.{% plural %}{{ n }} demandes ouvertes.{% endblocktranslate %}</p>
+  </div>
+{% endif %}
+
+  <section class="reg-sec" aria-labelledby="queue-title">
+    <h2 class="db-h2 reg-sec__title" id="queue-title">{% svg_icon "inbox" "icon" %}<span>{% translate "Ce qui m’a été confié" %}</span></h2>
+    {% include "components/listing/toolbar.html" %}
+    {% if tickets %}
+    <ul class="db-tasks reg-rows" role="list" aria-label="{% translate 'Demandes confiées à votre mandat' %}">
+      {% for ticket in tickets %}
+      <li class="db-task reg-row reg-row--link" data-ticket="{{ ticket.reference }}">
+        <div class="db-task__words">
+          <p class="db-task__title"><a class="reg-row__link" href="{% url 'helpdesk:detail' uuid=ticket.uuid %}" dir="auto">{{ ticket.subject }}</a></p>
+          <p class="db-task__meta reg-row__meta"><span class="reg-ref">{{ ticket.reference }}</span><span>{% blocktranslate with date=ticket.status_since|date:"d.m.Y" %}dans cet état depuis le {{ date }}{% endblocktranslate %}</span>{% if ticket.mandate_valid_until %}<span>{% blocktranslate with date=ticket.mandate_valid_until|date:"d.m.Y" %}mandat jusqu’au {{ date }}{% endblocktranslate %}</span>{% endif %}</p>
+        </div>
+        <div class="db-task__state">{% chip ticket.effective_status "helpdesk.TicketStatus" %}{{ ticket.effective_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% elif listing.narrowed %}
+    {% include "components/listing/empty.html" %}
+    {% else %}
+    <p class="db-empty">{% translate "Aucune demande ne vous est confiée aujourd’hui. Une demande apparaît ici lorsqu’un mandat vous est enregistré, et disparaît le jour où ce mandat prend fin." %}</p>
+    {% endif %}
+  </section>
+</div>
+
+<p class="reg-note">{% translate "Votre accès à une demande cesse à l’expiration ou à la révocation du mandat. Vos notes professionnelles ne sont pas visibles par la personne ; seule une réponse transmise l’est." %}</p>
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

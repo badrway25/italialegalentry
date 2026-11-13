@@ -1,0 +1,188 @@
+/* The chip and card board (design V5, W1-C) — development only. Loaded by
+   templates/dev/designpreview/specimens/chips.html after css/dist/main.css — which holds the chip, the tag
+   and the cards themselves — and after the icon board's sheet, whose `sp-` frame it shares. Tokens only,
+   logical properties; nothing here reaches a product page. */
+
+/* 1 · the board: one row per chip, the three grounds as continuous bands */
+.cb-board {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1.1fr) repeat(3, minmax(0, 1fr));
+  overflow: clip;
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+}
+
+.cb-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.cb-row:last-child {
+  border-block-end: 0;
+}
+
+.cb-row--head > * {
+  padding: var(--s-2) var(--s-4);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+}
+
+.cb-row--head > :nth-child(2) {
+  background: var(--p-carta-50);
+}
+
+.cb-row--head > :nth-child(3) {
+  background: var(--p-carta-0);
+}
+
+.cb-row--head > :nth-child(4) {
+  background: var(--p-notte-900);
+  color: var(--text-on-night-2);
+}
+
+.cb-what {
+  padding: var(--s-3) var(--s-4);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.cb-what code {
+  display: block;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.cb-cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  padding: var(--s-3) var(--s-4);
+}
+
+/* the wrapper that carries the sample's language draws no line box of its own: the chip is measured, not the
+   strut of the face around it */
+.cb-cell > span {
+  display: flex;
+}
+
+.cb-cell--stone {
+  background: var(--p-carta-50);
+}
+
+.cb-cell--sheet {
+  background: var(--p-carta-0);
+}
+
+.cb-cell--night {
+  background: var(--p-notte-900);
+}
+
+/* 2 · the sizes */
+.cb-sizes {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background: var(--p-carta-0);
+}
+
+.cb-size {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-4);
+  margin: 0;
+}
+
+.cb-size__label {
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  color: var(--text-2);
+}
+
+.cb-size__chips,
+.cb-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* 3 · the long word in a 180 px column, the table cell, the line */
+.cb-cases {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--s-6);
+  padding: var(--s-5);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background: var(--p-carta-0);
+}
+
+.cb-narrow {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  inline-size: 180px;
+  padding: var(--s-2);
+  outline: 1px dashed var(--line-rhythm);
+}
+
+.cb-table {
+  inline-size: 4rem;
+  border-collapse: collapse;
+}
+
+.cb-table td {
+  padding: var(--s-2);
+  border: 1px dashed var(--line-rhythm);
+}
+
+.cb-line {
+  flex: 1 1 24rem;
+}
+
+/* 4 · the cards */
+.cb-cards {
+  display: grid;
+  gap: var(--s-6);
+  max-inline-size: 46rem;
+  margin-block-start: var(--s-6);
+}
+
+.cb-records {
+  display: grid;
+  gap: var(--s-5);
+}
+
+@media (max-width: 47.999rem) {
+  .cb-board,
+  .cb-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cb-row--head {
+    display: none;
+  }
+
+  .cb-size {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-2);
+  }
+}
+
+@media (forced-colors: active) {
+  .cb-board,
+  .cb-sizes,
+  .cb-cases {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,668 @@
+[
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "cruscotto",
+  "page": "dashboard",
+  "path": "/fr/espace-reserve/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "1440x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "1600x900",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella",
+  "page": "dossiers",
+  "path": "/fr/espace-reserve/dossiers/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "tabella di date",
+  "page": "echeances",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "elenco documenti",
+  "page": "documents",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "riepilogo",
+  "page": "situation",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "messaggi",
+  "page": "communications",
+  "path": "/fr/espace-reserve/communications/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "320x568",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "360x640",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "390x844",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "412x915",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "430x932",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "768x1024",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "1024x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "1280x800",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "1366x768",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ },
+ {
+  "archetype": "RTL tabella",
+  "page": "dossiers_ar",
+  "path": "/ar/espace-reserve/dossiers/",
+  "viewport": "1920x1080",
+  "status": 200,
+  "findings": [],
+  "console_errors": []
+ }
+]

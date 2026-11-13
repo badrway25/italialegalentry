@@ -1,0 +1,34 @@
+{% comment %}
+12. RESERVED AREA — secondary, never protagonist (Implementation §3.10): one slim row at the foot of
+the page. Prescribed p3.reserved.title / body / button (gate G3) and the reserved_area_public_link flag
+are both checked by pages.services.build_reserved(). The button leads to the login page, or to the
+dashboard for a signed-in visitor. No CRM widget on the homepage.
+
+Design V5.4 (DESIGN_SYSTEM_V5 PX13 «la porta riservata»): the page's last door, on the night the footer continues — the
+prescribed title and sentence, one quiet button. A row, not a chapter: it never competes with the hero's action.
+
+V5.22 (SECTION_SYSTEM_V2 §3.1 S8, §4.2 T5, §4.7 «Semantic turn»; lane H): KEEP, refined. The door's sign is the key of the
+mark become the T5 `ile-accesso` — the key standing in the doorway's opening (Lume's first frame at the icon's scale),
+32 in its 56 × 68 night arch seat, in the identity's gold (not a padlock: a lock reads «not for you»). It answers its own
+action: on the hover and the focus of the row's button the seat's light rises and the key turns a quarter about its bow
+(v5/_sigillo.css, v5/_sezioni.css; never under reduced motion, at once from the keyboard). The row joins the footer by the
+night's 1 px rule (pages.css; chrome.css and the footer untouched).
+
+Round 1 (QA_ROUND1 M1 d, m10): the door and its handle stand together — the seat at the row's far end, beside the row's
+button, so the key turns where the eye already is; the words hang from the reading edge. The key alone takes the identity's gold
+(the doorway it stands in keeps the night's ink).
+{% endcomment %}
+<section class="sez home-reserved on-inverse" id="{{ s.anchor }}" aria-labelledby="home-reserved-title" data-section="reserved" data-sec="porta" data-ground="night" data-rhythm="strip">
+  <div class="container">
+    <div class="home-reserved__panel">
+      <div class="home-reserved__text">
+        <h2 class="home-reserved__title" id="home-reserved-title"{% if d.title.lang %} lang="{{ d.title.lang }}"{% endif %}>{{ d.title }}</h2>
+        <p class="home-reserved__body"{% if d.body.lang %} lang="{{ d.body.lang }}"{% endif %}>{{ d.body }}</p>
+      </div>
+      <div class="home-reserved__porta">
+        {% include "components/sezioni/sigillo.html" with mark="ile-accesso" size="small" arch=True night=True css_class="home-reserved__sigillo" only %}
+        <a class="btn btn--secondary home-reserved__button" href="{{ d.url }}"{% if d.button.lang %} lang="{{ d.button.lang }}"{% endif %} data-azione>{{ d.button }}</a>
+      </div>
+    </div>
+  </div>
+</section>

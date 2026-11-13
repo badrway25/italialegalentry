@@ -1,0 +1,88 @@
+{% extends "academy/base_academy.html" %}{% load i18n static %}
+{% comment %}
+The catalogue — design V5 (W3-E step 2): one register, its filter, and where the person stands.
+
+Deliberately NOT a grid of course cards with a cover image, a rating and a "popular" badge. A
+course is a row of a register: its title (the way to its page, stretched over the row), the body
+that delivers it, what it is, and its facts — its domain, its form, its length, its modules and its
+language.
+
+V5.32 lane E: the catalogue is a list of the platform's list toolkit (academy.lists.CATALOGUE,
+components/listing/): the search and the order in the bar, the domain, the form and the teaching
+language in the drawer «Filtres», the result count and one chip per criterion once something narrows,
+«Tout effacer». The domain tabs — eight links that wrapped on two lines — left. The row leads with the
+course's title, then the body that delivers it on its own line (a learner must always be able to
+say who is answerable for what they are being taught), the summary, and the course's facts. A
+course the person already follows carries the chip «déjà inscrit»: a word with its mark, not a colour.
+Then «Où j'en suis»: the person's follow-up in W1-C's summary strip, the way to «Mes formations».
+{% endcomment %}
+{% block page_title %}{% translate "Academy" %}{% endblock %}
+{% block meta_description %}{% translate "Le catalogue de formation : langue, droits et devoirs, éducation civique, sécurité, culture du travail, formation professionnelle, préparation au départ." %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="person">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Academy" %}</h1>
+    <p class="ws-head__lead">{% translate "Les formations ouvertes à toute personne disposant d’un compte." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block extra_head %}{{ block.super }}{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+
+{% block academy_content %}
+{% safe_url 'academy:mine' as mine_url %}
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="catalogue-title">
+    <h2 class="db-h2 reg-sec__title" id="catalogue-title">{% svg_icon "book-open" "icon" %}<span>{% translate "Les cours disponibles" %}</span></h2>
+
+    {% include "components/listing/toolbar.html" %}
+
+    {% if courses %}
+    <ul class="db-tasks reg-rows academy-rows" role="list">
+      {% for course in courses %}
+      {% safe_url 'academy:course' course.slug as course_url %}
+      <li class="db-task reg-row academy-row{% if course_url %} reg-row--link{% endif %}" data-course="{{ course.slug }}">
+        <div class="db-task__words">
+          <h3 class="db-task__title" lang="{{ course.text_language }}" dir="auto">{% if course_url %}<a class="reg-row__link" href="{{ course_url }}">{{ course.title }}</a>{% else %}{{ course.title }}{% endif %}</h3>
+          <p class="academy-row__by">{{ course.provider.display_name }}</p>
+          <p class="db-task__meta reg-row__text" lang="{{ course.text_language }}" dir="auto">{{ course.summary }}</p>
+          <p class="db-task__meta reg-row__meta academy-row__facts"><span>{{ course.get_course_type_display }}</span><span>{{ course.get_course_format_display }}</span><span>{% blocktranslate with hours=course.duration_hours %}{{ hours }} h{% endblocktranslate %}</span><span>{% blocktranslate count modules=course.modules_count %}{{ modules }} module{% plural %}{{ modules }} modules{% endblocktranslate %}</span><span>{% blocktranslate with language=course.get_language_display %}enseigné en {{ language }}{% endblocktranslate %}</span></p>
+        </div>
+        <div class="db-task__state">{% if course.id in enrolled_ids %}{% chip register="conforme" %}{% translate "déjà inscrit" %}{% endchip %}{% endif %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% elif listing.narrowed %}
+    {% include "components/listing/empty.html" %}
+    {% else %}
+    <p class="db-empty">{% translate "Le catalogue est constitué par l’équipe du projet à partir des besoins de compétences recensés sur le territoire ; les cours publiés apparaîtront ici." %}</p>
+    {% endif %}
+  </section>
+
+  <section class="reg-sec" aria-labelledby="catalogue-mine-title">
+    <div class="db-sec__head">
+      <h2 class="db-h2" id="catalogue-mine-title"><span>{% translate "Où j’en suis" %}</span></h2>
+      {% if mine_url %}{% if summary.ongoing or summary.completed or summary.plans %}<a class="db-link" href="{{ mine_url }}">{% translate "Voir mes formations" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}{% endif %}
+    </div>
+    {% if summary.ongoing or summary.completed or summary.plans %}
+    {% comment %} The three counts as the platform's lattice (V5.15 lane D, round 1: the flat strip): each a cell, its count set large
+    in ILE Mono, its word under it — counts the system holds, never a percentage. Round 2: each cell is the way to its register on «Mes
+    formations» (the whole cell is the link's hit area, its focus ring the cell's), its glyph in the squared container.
+    portal/v5/_platform.css §2. {% endcomment %}
+    <div class="lattice lattice--counts" data-spot-group>
+      <dl class="lattice__grid lattice__grid--counts">
+        <div class="lattice__cell lattice__cell--link" data-spot><dt class="lattice__label"><span class="lattice__glyph" aria-hidden="true">{% svg_icon "book-open" "icon" %}</span><a class="lattice__go" href="{% url 'academy:mine' %}#mine-ongoing-title">{% translate "Formations en cours" %}</a></dt><dd class="lattice__figure">{{ summary.ongoing }}</dd></div>
+        <div class="lattice__cell lattice__cell--link" data-spot><dt class="lattice__label"><span class="lattice__glyph" aria-hidden="true">{% svg_icon "history" "icon" %}</span><a class="lattice__go" href="{% url 'academy:mine' %}#mine-done-title">{% translate "Formations suivies jusqu’au terme" %}</a></dt><dd class="lattice__figure">{{ summary.completed }}</dd></div>
+        <div class="lattice__cell lattice__cell--link" data-spot><dt class="lattice__label"><span class="lattice__glyph" aria-hidden="true">{% svg_icon "map" "icon" %}</span><a class="lattice__go" href="{% url 'academy:mine' %}#mine-plans-title">{% translate "Plans de formation" %}</a></dt><dd class="lattice__figure">{{ summary.plans }}</dd></div>
+      </dl>
+    </div>
+    {% else %}
+    <p class="db-empty">{% translate "Vous ne suivez encore aucun cours. Choisissez-en un dans le catalogue ci-dessus : l’inscription est immédiate et n’exige aucune démarche préalable." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

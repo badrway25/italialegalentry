@@ -1,0 +1,88 @@
+{% extends "pages/institutional_base.html" %}{% load i18n static cms_nav pages_imagery %}
+{% comment %}
+/le-projet/ — what Italy Legal Entry™ is. Assembled ONLY from prescribed texts:
+  * p2.forum.why.title / p2.forum.why.body (Phase 2, already public on the Forum page);
+  * p3.hero.body and the prescribed FAQ answer faq_who — only when gate G3 is open;
+  * the trademark line: p1.trademark.mark + p1.trademark.words_fr (words_it on the Italian page).
+The connective sentences are neutral and state nothing beyond those texts. Never the registered sign.
+
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane A, 12 Nov 2026) — «la carta del progetto»: the page presents the
+project the way a charter does, four bands, each its own composition, no drawn geometry and no list said twice:
+  head    «l'ingresso» on night: the name drawn once as the h1 (Q1) and the lead; the study hall as a plain frame (the
+          arch crop retired: geometry as decoration, the owner's lesson list);
+  tesi    «En bref» (G3) as the label at the reading edge, the prescribed presentation beside it as the page's statement;
+  perché  on stone: the prescribed «Pourquoi» in its three levels beside the bound law volumes (project.volumes), the one
+          photograph that carries the legality thesis, now a frame beside its words instead of a text-less panorama;
+  chi     the bearer as a raised plate: AGAMI's official seal (pages.imagery.MARKS, decorative) beside the prescribed answer
+          and the way to the promoter's page;
+  spazi   on night: the four spaces as a two-by-two index of real links (the actor's disc, the space, its way in) — the
+          five-actor figure that repeated them left with the sticky story;
+  strip   the foot: the questionnaire, the network and the Forum, then the trademark line, quiet and always visible.
+Each step keeps its chapter's anchor (#project-why-title still lands on «Pourquoi»). Route sheet pages/css/projet.css
+(_projet.css alone: the material partial left with the incastro). Views: apps/pages/views.py builds the steps.
+{% endcomment %}
+{% block page_title %}{% translate "Le projet" %}{% endblock %}
+{% block body_class %}page-institutional interior projet{% endblock %}
+{% block route_sheet %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/projet.css' %}">{% endblock %}
+{% block page_header %}
+{% translate "Le projet" as page_label %}{% brand "page-header__wordmark" as brand_html %}
+{% include "pages/partials/_ingresso.html" with label=page_label title=brand_html lead=lead lead_lang=lead.lang motif="mission" tone="night" slot="project.hall" fronte_linked=True only %}
+{% endblock %}
+{% block page_body %}
+{% for s in story %}
+{% if s.id == "project-presentation" %}
+<section class="sez projet-tesi" id="{{ s.id }}" data-ground="paper" data-rhythm="band" aria-labelledby="{{ s.id }}-title">
+  <div class="container projet-tesi__griglia">
+    <h2 class="projet-tesi__etichetta t-label" id="{{ s.id }}-title"{% if s.heading_lang %} lang="{{ s.heading_lang }}"{% endif %}>{{ s.heading }}</h2>
+    <div class="projet-tesi__testo">{{ s.body }}</div>
+  </div>
+</section>
+{% elif s.id == "project-why" %}
+<section class="sez projet-perche-band" id="{{ s.id }}" data-ground="stone" data-rhythm="band" aria-labelledby="{{ s.id }}-title">
+  <div class="container projet-perche-band__griglia">
+    <div class="projet-perche-band__testo">
+      <h2 class="projet-titolo" id="{{ s.id }}-title"{% if s.heading_lang %} lang="{{ s.heading_lang }}"{% endif %}>{{ s.heading }}</h2>
+      {{ s.body }}
+    </div>
+    {% photo "project.volumes" "projet-perche-band__foto" %}
+  </div>
+</section>
+{% else %}
+<section class="sez projet-chi" id="{{ s.id }}" data-ground="paper" data-rhythm="band" aria-labelledby="{{ s.id }}-title">
+  <div class="container">
+    <div class="projet-chi__lastra">
+      {% if sigillo %}{% include "pages/partials/agami/_marchio.html" with m=sigillo cls="projet-chi__sigillo" only %}{% endif %}
+      <div class="projet-chi__testo">
+        <h2 class="projet-titolo" id="{{ s.id }}-title"{% if s.heading_lang %} lang="{{ s.heading_lang }}"{% endif %}>{{ s.heading }}</h2>
+        {{ s.body }}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endfor %}
+
+{% if doors %}
+<section class="sez projet-spazi" data-ground="night" data-rhythm="band" aria-labelledby="project-spaces-title">
+  <div class="container projet-spazi__griglia">
+    <h2 class="projet-titolo projet-spazi__titolo" id="project-spaces-title">{% translate "Les espaces de l’écosystème" %}</h2>
+    <ul class="projet-spazi__lista" role="list" data-registro>
+      {% for item in doors %}<li class="projet-spazio" data-audience="{{ item.audience }}"><a class="projet-spazio__link" href="{{ item.href }}"><span class="sez-disc" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span><span class="projet-spazio__nome"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</span><span class="projet-spazio__via"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span></a></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<div class="sez projet-piede" data-ground="paper" data-rhythm="strip">
+  <div class="container projet-piede__inner">
+    {% if links.orientation or links.network or links.forum %}
+    <ul class="projet-piede__vie" role="list">
+      {% if links.orientation %}<li><a class="link-arrow" href="{{ links.orientation }}">{% translate "Questionnaire d’orientation" %}{% svg_icon "arrow" "icon icon--sm" %}</a></li>{% endif %}
+      {% if links.network %}<li><a class="link-arrow" href="{{ links.network }}">{% translate "Le réseau" %}{% svg_icon "arrow" "icon icon--sm" %}</a></li>{% endif %}
+      {% if links.forum %}<li><a class="link-arrow" href="{{ links.forum }}">{% translate "Forum Vénétie–Maroc" %}{% svg_icon "arrow" "icon icon--sm" %}</a></li>{% endif %}
+    </ul>
+    {% endif %}
+    <p class="page-trademark" data-trademark><span translate="no" dir="ltr" lang="en">{{ trademark_mark }}</span> — <span{% if trademark_words.lang %} lang="{{ trademark_words.lang }}"{% endif %}>{{ trademark_words }}</span></p>
+  </div>
+</div>
+{% endblock %}

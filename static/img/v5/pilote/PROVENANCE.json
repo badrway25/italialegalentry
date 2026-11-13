@@ -1,0 +1,892 @@
+{
+ "what": "V5 photographs, family «pilote» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "champs-montagnes-printemps",
+   "pexels_id": 36909829,
+   "photographer": "mouad simou",
+   "photographer_url": "https://www.pexels.com/@mouad-simou-52731165",
+   "page": "https://www.pexels.com/photo/scenic-landscape-with-atlas-mountains-in-morocco-36909829/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Beautiful view of the Atlas Mountains and fields in Marrakesh, Morocco during the day.",
+   "original_px": [
+    4032,
+    3024
+   ],
+   "original_sha256": "c298e0ec73e077a1cec2270ab0e0f46904b7eeb6ca53b1149d278ba023666bc4",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      0.55,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      126,
+      2218,
+      2898
+     ],
+     "master_px": [
+      2218,
+      2772
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "flowering fields under a snow-capped range; the alt names no place",
+   "files": [
+    {
+     "file": "champs-montagnes-printemps-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 14437,
+     "budget": 46080,
+     "sha256": "7388f6ea460e7a41269f5c789d1321ee8c74a913ba6fa56fb99976c29639c31d"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22172,
+     "budget": 46080,
+     "sha256": "a9e15277652547698513f28accc0ce08a9392c7cf89605c9f26c59489961f0af"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 39744,
+     "budget": 46080,
+     "sha256": "0de1b8330d80be3a0134a01ffaf70f1a24a03c49cbf8907325f9368442e0b975"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 53,
+     "bytes": 45018,
+     "budget": 46080,
+     "sha256": "cdb4cdb0af6c3d9fc2fd804c171ed229408baf9b6f19d151274a958c507f43e2"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 88925,
+     "budget": null,
+     "sha256": "35b1bef93bc8b7c71b046ec1bb72fc943aaa2ce3140e0690456e83ffff2f4930"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 130420,
+     "budget": null,
+     "sha256": "dbf90bcea9f49e0f8d4ef421300fbf28eb42c9321575660ea7947c206fb767a0"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 145333,
+     "budget": null,
+     "sha256": "bc0f4a06cfd074b26a5270d62486ef3462c42fec2202183961bb5f7b58c814b7"
+    },
+    {
+     "file": "champs-montagnes-printemps-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 216364,
+     "budget": null,
+     "sha256": "b1b9d39b51938ca778677261d9fa05811cbf4da88209a27e744e78271601d0c8"
+    }
+   ]
+  },
+  {
+   "slug": "main-cedre-ciseau",
+   "pexels_id": 30563520,
+   "photographer": "Moussa Idrissi",
+   "photographer_url": "https://www.pexels.com/@mographe",
+   "page": "https://www.pexels.com/photo/intricate-wood-carving-in-fes-morocco-workshop-30563520/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Close-up of an artisan's hands skillfully carving wood in a traditional Moroccan workshop.",
+   "original_px": [
+    4547,
+    3035
+   ],
+   "original_sha256": "3de54e10fe6a9c5efb43b0a49ed9f9b017bda1adc3f753adf1667e0e7992e3a3",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.3,
+      0.0,
+      0.76,
+      1.0
+     ],
+     "crop_px": [
+      1364,
+      210,
+      3456,
+      2825
+     ],
+     "master_px": [
+      2092,
+      2615
+     ]
+    },
+    {
+     "ratio": "2x3",
+     "crop_fraction": [
+      0.31,
+      0.0,
+      0.755,
+      1.0
+     ],
+     "crop_px": [
+      1410,
+      0,
+      3433,
+      3034
+     ],
+     "master_px": [
+      2023,
+      3034
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.02,
+      0.18,
+      0.8,
+      1.0
+     ],
+     "crop_px": [
+      91,
+      608,
+      3638,
+      2973
+     ],
+     "master_px": [
+      3547,
+      2365
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "the hand guiding the chisel through the cedar carving; the face and the shirt's pocket stay out (the 2:3 panel holds the chisel hand, the ringed hand and the carving; the 3:2 band stops before the pocket)",
+   "files": [
+    {
+     "file": "main-cedre-ciseau-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 18702,
+     "budget": 46080,
+     "sha256": "57d90d49c09d23233b2abdd1f622a8910dd6550c6bd9f52931d18935cb4bf4f6"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 28234,
+     "budget": 46080,
+     "sha256": "cb2baa3414b2be9ce1a6cc09eac0b81deeaa09e01cc346de7fc137effc5918f9"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 43089,
+     "budget": 46080,
+     "sha256": "548bc5b693ed0404a7bc38724d0454c01d274ab8d0a713631cdb55b077e88195"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 50,
+     "bytes": 45512,
+     "budget": 46080,
+     "sha256": "f5dd94fb28247d9399b21c13ea9a1540ab212e3c2ecb7ce91d7008317a9a23ba"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 85099,
+     "budget": null,
+     "sha256": "3ea301a7581b17d0b73732a1f4d3eae3139cacb6458a62f7c25d67f99ef259e2"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 123058,
+     "budget": null,
+     "sha256": "89e0cccfec073e76259e7f550c245e4558b42b39783f044699164a5966c501f3"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 140440,
+     "budget": null,
+     "sha256": "5d0a4bc5de7a4d5d6256eb3f170f942fa7942939e44baf9d1fed071ce5e7e359"
+    },
+    {
+     "file": "main-cedre-ciseau-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 194406,
+     "budget": null,
+     "sha256": "1183e2574e39fca20ed86d91d0fd38e76bea348f3a5fed8e082871312b72fa17"
+    },
+    {
+     "file": "main-cedre-ciseau-2x3-480.avif",
+     "ratio": "2x3",
+     "width": 480,
+     "height": 720,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 20557,
+     "budget": 61440,
+     "sha256": "b1c232fb83cc1f1caa08cc39f5967aa72d7f163b81f3bb7fe75ebafe812e3575"
+    },
+    {
+     "file": "main-cedre-ciseau-2x3-480.webp",
+     "ratio": "2x3",
+     "width": 480,
+     "height": 720,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 31620,
+     "budget": 61440,
+     "sha256": "f6423a31c828b80cbdd874055066b256b31d1190ba0d065f1dd62709e038a87a"
+    },
+    {
+     "file": "main-cedre-ciseau-2x3-800.avif",
+     "ratio": "2x3",
+     "width": 800,
+     "height": 1200,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 47863,
+     "budget": 61440,
+     "sha256": "9e8ca53c753241d19ea007df11b2e015029f16682227ea18fbfa6936a694563e"
+    },
+    {
+     "file": "main-cedre-ciseau-2x3-800.webp",
+     "ratio": "2x3",
+     "width": 800,
+     "height": 1200,
+     "format": "webp",
+     "quality": 62,
+     "bytes": 59528,
+     "budget": 61440,
+     "sha256": "18c67b4a6858afeeb06514e92c34df3f51e0e5885756be90b6f8853c5e27ae00"
+    },
+    {
+     "file": "main-cedre-ciseau-2x3-1200.avif",
+     "ratio": "2x3",
+     "width": 1200,
+     "height": 1800,
+     "format": "avif",
+     "quality": 43,
+     "bytes": 56143,
+     "budget": 61440,
+     "sha256": "cc92702c43e7d9a94c824f32828149dee3ddde05bdfcf9d100831bbe1d225a69"
+    },
+    {
+     "file": "main-cedre-ciseau-2x3-1600.avif",
+     "ratio": "2x3",
+     "width": 1600,
+     "height": 2400,
+     "format": "avif",
+     "quality": 34,
+     "bytes": 57781,
+     "budget": 61440,
+     "sha256": "edb29fc214dc3756a84fbf4df19e0daa083d8ba00f214460477f799f83e94fe2"
+    },
+    {
+     "file": "main-cedre-ciseau-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13234,
+     "budget": 46080,
+     "sha256": "44bf42f28d79773bbc00d4a9fce295b1d822ae2e633329418bfb267f045be75e"
+    },
+    {
+     "file": "main-cedre-ciseau-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 21022,
+     "budget": 46080,
+     "sha256": "529bb007ea8136224fc1daf71df1cb3ea04da43f376c446adb1d67a4f8115adf"
+    },
+    {
+     "file": "main-cedre-ciseau-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 29386,
+     "budget": 46080,
+     "sha256": "9c83e05786835667ce87d8650c89b9a34854c28a771b0af73fd32732638585ca"
+    },
+    {
+     "file": "main-cedre-ciseau-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 45988,
+     "budget": 46080,
+     "sha256": "911fc9cac51790671c6bc0fdea5f8fd08036978808cf2d3f9bfb98f6a3bf631e"
+    },
+    {
+     "file": "main-cedre-ciseau-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 42043,
+     "budget": 46080,
+     "sha256": "a80544ae965c2ee86e346e2985244a39afde4538cc538adfca09216bdc4a4a8c"
+    }
+   ],
+   "ceilings": {
+    "2x3": 61440,
+    "3x2": 46080
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "main-cedre-ciseau-2x3-1200.webp",
+    "main-cedre-ciseau-2x3-1600.webp",
+    "main-cedre-ciseau-3x2-1200.webp"
+   ],
+   "label": "v522-m-build"
+  },
+  {
+   "slug": "main-marbre-ciseau",
+   "pexels_id": 6713855,
+   "photographer": "Tima Miroshnichenko",
+   "photographer_url": "https://www.pexels.com/@tima-miroshnichenko",
+   "page": "https://www.pexels.com/photo/man-person-hands-people-6713855/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A detailed view of an artisan's hand engraving a piece of stone with precision and skill.",
+   "original_px": [
+    6000,
+    4000
+   ],
+   "original_sha256": "6e705d36e7f9b5d5c08b1cbaa0a4b1fb129b60499b4ec31a3160f324b774502c",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.17,
+      0.0,
+      0.64,
+      1.0
+     ],
+     "crop_px": [
+      1020,
+      238,
+      3840,
+      3763
+     ],
+     "master_px": [
+      2820,
+      3525
+     ]
+    },
+    {
+     "ratio": "2x3",
+     "crop_fraction": [
+      0.31,
+      0.0,
+      0.7545,
+      1.0
+     ],
+     "crop_px": [
+      1860,
+      0,
+      4527,
+      4000
+     ],
+     "master_px": [
+      2667,
+      4000
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      0,
+      6000,
+      4000
+     ],
+     "master_px": [
+      6000,
+      4000
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "the hand and the chisel on marble; the block is not a recognisable work (the 3:2 band shows the whole frame: hands, chisel, block, sleeves; no face); the 2:3 panel holds the fist, the whole blade and its contact with the stone (the blade's corner at 0.814 of the panel), the thumb trimmed",
+   "files": [
+    {
+     "file": "main-marbre-ciseau-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7267,
+     "budget": 46080,
+     "sha256": "5f4363e10cedee6943c9e12022d900ce98fc4d1a543d0a06eb7715e8d76a1891"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 8932,
+     "budget": 46080,
+     "sha256": "a5c4e4c3fe002b5807777be9650c41409afed0b755f30cf2d4138d8aa67dbe8b"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13765,
+     "budget": 46080,
+     "sha256": "15be04f19e2eab0a96d3b9774ee813df4937e409b77f8ddb43ddc01030e796e1"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 17734,
+     "budget": 46080,
+     "sha256": "29a5102e8be4b78377b222d1c145c5f8324ba9bf53e7525492314bc180bdab34"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 24407,
+     "budget": null,
+     "sha256": "1d436c4c25b48ae33092d92259200b4eedd2699e771cdea3c7bf7d088e9ce4ee"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 32220,
+     "budget": null,
+     "sha256": "0ec7f7614d9ced9294d9a71153d2f1362173d02d1ffddad5471e954e12584611"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 39802,
+     "budget": null,
+     "sha256": "39bab8b598e825da64ea9ecf40ba860a3bf2a3d8057b330fca09d205859b26ab"
+    },
+    {
+     "file": "main-marbre-ciseau-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 58960,
+     "budget": null,
+     "sha256": "bf6df99e523b1ae5d3ebc453785a263f9817620373124aa1c2913283990c1368"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-480.avif",
+     "ratio": "2x3",
+     "width": 480,
+     "height": 720,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 8899,
+     "budget": 61440,
+     "sha256": "e028a69fb7a45337af1b95b7ed49db81639d9a76157be372e0c211dd03d914b1"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-480.webp",
+     "ratio": "2x3",
+     "width": 480,
+     "height": 720,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 10364,
+     "budget": 61440,
+     "sha256": "308560345869b6186325e3a4305a4f4478cb45b077de482cb1ad67f7f6c9184b"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-800.avif",
+     "ratio": "2x3",
+     "width": 800,
+     "height": 1200,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 17276,
+     "budget": 61440,
+     "sha256": "4cf639cda4439a69146c2364fea05998f600ebb384026fd816e3e367525b9e12"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-800.webp",
+     "ratio": "2x3",
+     "width": 800,
+     "height": 1200,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 20690,
+     "budget": 61440,
+     "sha256": "897d88bd8e3da88033a7decf79309c737b1ffe1fb54b08de6f37897615ac4baf"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-1200.avif",
+     "ratio": "2x3",
+     "width": 1200,
+     "height": 1800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 30880,
+     "budget": 61440,
+     "sha256": "b04976b3a95ed80a2a14245cde875492273a4069f0d5a5e4d41d373bbf658be9"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-1200.webp",
+     "ratio": "2x3",
+     "width": 1200,
+     "height": 1800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 39294,
+     "budget": 61440,
+     "sha256": "c7d149740c8bc8084403c1e66b6c3ecb48c33ef9a176bec73feece570a38ba2b"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-1600.avif",
+     "ratio": "2x3",
+     "width": 1600,
+     "height": 2400,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 50786,
+     "budget": 61440,
+     "sha256": "d5e6704496b6507423bc6d2d3019598c912659906bca56b122269748ad756afb"
+    },
+    {
+     "file": "main-marbre-ciseau-2x3-1600.webp",
+     "ratio": "2x3",
+     "width": 1600,
+     "height": 2400,
+     "format": "webp",
+     "quality": 65,
+     "bytes": 59966,
+     "budget": 61440,
+     "sha256": "4158b7f802b594d4130f6c8918f72221dfde1492eddab20e01b4234f0a44363a"
+    },
+    {
+     "file": "main-marbre-ciseau-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 5727,
+     "budget": 46080,
+     "sha256": "fca5a3231961a5d12b2c3ea82997e66396ee0f40214d85aa9c65b34affab2238"
+    },
+    {
+     "file": "main-marbre-ciseau-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 6804,
+     "budget": 46080,
+     "sha256": "02cf541f44c9789702be54215a43dae692d4ba537d17362018a6b881a60cf593"
+    },
+    {
+     "file": "main-marbre-ciseau-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10823,
+     "budget": 46080,
+     "sha256": "1dff2076c0874971a041dd174c4062e88f9dcfea3f35be4eb1cb36d3351191b9"
+    },
+    {
+     "file": "main-marbre-ciseau-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 13366,
+     "budget": 46080,
+     "sha256": "482eab1a7ec40af89de33054c6b83d0e6dd9b36ca23e16b30977de93361a660d"
+    },
+    {
+     "file": "main-marbre-ciseau-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 17775,
+     "budget": 46080,
+     "sha256": "8d4e60c6bd109f89933e6136b9ce808d530c68e5b64a3da0f6e5c0281cce2966"
+    },
+    {
+     "file": "main-marbre-ciseau-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22856,
+     "budget": 46080,
+     "sha256": "80f717b84346b05011e470387f685670f9600e3b17b52590762720bbb3d6a50a"
+    }
+   ],
+   "ceilings": {
+    "2x3": 61440,
+    "3x2": 46080
+   },
+   "webp_floor": 40,
+   "webp_not_built": [],
+   "label": "v522-m-improve1"
+  },
+  {
+   "slug": "plaine-peupliers-hiver",
+   "pexels_id": 11010756,
+   "photographer": "Serena Koi",
+   "photographer_url": "https://www.pexels.com/@serenakoi",
+   "page": "https://www.pexels.com/photo/bare-trees-lined-near-a-field-11010756/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A serene winter scene with fog and bare trees in Isola della Scala, Veneto, Italy.",
+   "original_px": [
+    8256,
+    5504
+   ],
+   "original_sha256": "0c1db2f8445f290e3d9bc66dd75b9c52b2582ac73e1aea4600a6c765a77ce7af",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      0.6,
+      1.0
+     ],
+     "crop_px": [
+      275,
+      0,
+      4678,
+      5504
+     ],
+     "master_px": [
+      4403,
+      5504
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a row of bare poplars over a ploughed plain in the mist; the alt names no place (stock is never documentary)",
+   "files": [
+    {
+     "file": "plaine-peupliers-hiver-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 18450,
+     "budget": 61440,
+     "sha256": "5e6ca107a73f2e3c5009eea98d4ca0d760e770ab8eb8697d5a3da5055679c090"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 24542,
+     "budget": 61440,
+     "sha256": "a06b005904eb629e1c7acc706ef6ee216863fbe891be0b878f6e91c634d112fa"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 49137,
+     "budget": 61440,
+     "sha256": "1f27bbb0009103091a8adaaf161fb3c94bbbbb186b9b29c1ba73bb7ce67fa733"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 68,
+     "bytes": 61434,
+     "budget": 61440,
+     "sha256": "23eebfdace90a089fb001d8d7188a945319ccdd7fdd0f702fcf98ce44b98f49e"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 105993,
+     "budget": null,
+     "sha256": "ea66d5a777e05bd34be5becd2e049ce3e469f754ea2b5954c468a831421db150"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-1200.webp",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 144508,
+     "budget": null,
+     "sha256": "608b000f7b24e13cf09de116612bba72910535d80782fb40b50601d6ff0d91f8"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-1600.avif",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 180864,
+     "budget": null,
+     "sha256": "e006ac0a2b40724aff75ed446c4bd089dcc8d2c3ed795ab59d81c8b891fc3bd2"
+    },
+    {
+     "file": "plaine-peupliers-hiver-4x5-1600.webp",
+     "ratio": "4x5",
+     "width": 1600,
+     "height": 2000,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 246602,
+     "budget": null,
+     "sha256": "9e180fcf8d7b7829b0c2cc94b17b53bbc69347a11b833f52da1831456abc5c64"
+    }
+   ]
+  }
+ ]
+}

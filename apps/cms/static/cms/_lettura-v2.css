@@ -1,0 +1,18 @@
+/* ============================================================================================
+   «LA LETTURA» V2 — what the reading pages' V5.22 compositions share (design V5.22, SECTION_SYSTEM_V2 §3.13–§3.15; lane
+   P2): a partial of cms/lettura.css, after the library's shell and pattern (v5/_sezioni.css, _sec-mosaico.css) and the
+   area's own partial (v5/_lettura.css). Each page's own compositions are its route sheet's (round 2, QA_ROUND2 m5):
+   cms/faq.css (the FAQ's explorer, with L «l'indice») and cms/lessico.css (the glossary, the term page, Vivre).
+   Tokens only; logical properties; the words never wait.
+   ============================================================================================ */
+
+/* ---- 0 · the head's search (FAQ, glossary): on the head's ground, no plate (FINAL MICRO-PASS §6 B1 — the frosted
+   seat of v5/_fronte.css §7, which loads after this sheet, is undone by a heavier selector; the field and its glyph:
+   v5/_lettura.css §5) ---- */
+.fronte-wrap form.search-form {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}

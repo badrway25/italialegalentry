@@ -1,0 +1,24 @@
+{% comment %}
+«Trois temps» — the companies' approach as a PROGRESSION (V5.32 lane C, the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION
+directive of 12 Nov 2026: no decorative numeric marker anywhere). It replaces, for Espace Entreprises, the shared «il flusso»
+(components/sezioni/flusso.html), whose CSS counter drew «1 2 3»: the order is the list's own (an <ol>, read in order), and
+each moment now opens on its concept glyph (icons.COMPANY_MOMENT: the need described, the pathways built with the competent
+actors, training and mobility) — a stop on ONE hairline that runs across the row and is broken only by the stops; the line
+draws from the reading edge and each stop settles as the band enters (v5/_reveal.css verbs «draw» and «node», together —
+no stagger; still under reduced motion). Not a tracker: no current stop, no tick, nothing lit (O14). Classes of «il flusso» are kept, so its sheet
+(v5/_sec-flusso.css) lays the columns out; ecosystem/_companies.css draws the stops and the line.
+Contract: `steps` — [{"glyph", "label", "text"}]; `label` — the list's accessible name.
+{% endcomment %}<div class="flusso imprese-flusso">
+  <div class="flusso__campo">
+    <ol class="flusso__tappe" role="list" data-registro data-steps="{{ steps|length }}"{% if label %} aria-label="{{ label }}"{% endif %}>
+      {% for item in steps %}<li class="flusso__tappa">
+        <span class="flusso__segno" data-verb="node" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+        <span class="flusso__filo" data-verb="draw" aria-hidden="true"></span>
+        <div class="flusso__lastra">
+          <h3 class="flusso__titolo">{{ item.label }}</h3>
+          {% if item.text %}<p class="flusso__testo">{{ item.text }}</p>{% endif %}
+        </div>
+      </li>{% endfor %}
+    </ol>
+  </div>
+</div>

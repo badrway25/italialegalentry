@@ -1,0 +1,93 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% comment %}
+Back-office home: the publication-gate status comes first (core.admin_base.dashboard_callback), then
+the standard application list. Editors must see at a glance why a form or a page is not public.
+{% endcomment %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    {% if ile_gate_rows %}
+    <section class="mb-8 rounded border border-base-200 bg-white p-4 shadow-xs dark:border-base-800 dark:bg-base-900" aria-labelledby="ile-gates-title">
+        <h2 id="ile-gates-title" class="mb-1 text-base font-semibold text-font-important-light dark:text-font-important-dark">{% translate "Stato dei gate di pubblicazione" %}</h2>
+        <p class="mb-4 text-sm text-font-subtle-light dark:text-font-subtle-dark">{% translate "Riferimento temporale" %}: {{ ile_gates.now|date:"d.m.Y H:i" }} (Europe/Rome). {% translate "I gate si modificano in Core / Gate → Feature flag; ogni modifica è tracciata nell’audit." %}</p>
+        <table class="w-full text-sm">
+            <caption class="sr-only">{% translate "Gate di pubblicazione e loro stato attuale" %}</caption>
+            <thead>
+                <tr class="border-b border-base-200 text-left dark:border-base-800">
+                    <th scope="col" class="py-2 pr-4 font-medium">{% translate "Gate" %}</th>
+                    <th scope="col" class="py-2 font-medium">{% translate "Stato" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for label, is_open in ile_gate_rows %}
+                <tr class="border-b border-base-100 dark:border-base-800">
+                    <th scope="row" class="py-2 pr-4 text-left font-normal">{{ label }}</th>
+                    <td class="py-2">
+                        {% if is_open %}<span class="rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-800 dark:bg-green-500/20 dark:text-green-300">{% translate "APERTO" %}</span>
+                        {% else %}<span class="rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-800 dark:bg-red-500/20 dark:text-red-300">{% translate "CHIUSO" %}</span>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if not ile_gates.legal_pages_available %}
+        <p class="mt-4 rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
+            <strong>BLOCKED_BY_MISSING_OFFICIAL_SOURCE</strong> — {% translate "le cinque pagine legali attendono il testo ufficiale italiano («Allegato 1 — Testi legali»). Finché non sono pubblicate, i form pubblici restano disattivati." %}
+        </p>
+        {% if ile_gates.public_forms_enabled %}
+        <p class="mt-3 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-900 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-200" role="alert">
+            <strong>{% translate "ATTENZIONE — override attivo" %}</strong> — {% translate "i form pubblici sono APERTI senza pagine legali pubblicate (flag forms_override_without_legal). Questa configurazione non è conforme al documento §1.4 e va usata solo in ambienti di prova." %}
+        </p>
+        {% endif %}
+        {% endif %}
+    </section>
+    {% endif %}
+    {% if ile_phase_console %}
+    <section class="mb-8 rounded border border-base-200 bg-white p-4 shadow-xs dark:border-base-800 dark:bg-base-900" aria-labelledby="ile-console-title">
+        <h2 id="ile-console-title" class="mb-1 text-base font-semibold text-font-important-light dark:text-font-important-dark">{% translate "Console delle fasi" %}</h2>
+        <p class="mb-4 text-sm text-font-subtle-light dark:text-font-subtle-dark">{% translate "Che cosa apre ciascun gate, da che cosa dipende e perché esiste. Un gate bloccato da una dipendenza non si apre modificando il proprio flag." %}</p>
+        <table class="w-full text-sm">
+            <caption class="sr-only">{% translate "Gate di pubblicazione, ciò che aprono e le loro dipendenze" %}</caption>
+            <thead>
+                <tr class="border-b border-base-200 text-left dark:border-base-800">
+                    <th scope="col" class="py-2 pr-4 font-medium">{% translate "Gate" %}</th>
+                    <th scope="col" class="py-2 pr-4 font-medium">{% translate "Stato" %}</th>
+                    <th scope="col" class="py-2 pr-4 font-medium">{% translate "Che cosa apre" %}</th>
+                    <th scope="col" class="py-2 font-medium">{% translate "Flag" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in ile_phase_console %}
+                <tr class="border-b border-base-100 align-top dark:border-base-800">
+                    <th scope="row" class="py-3 pr-4 text-left font-medium">
+                        {{ row.label }}
+                        <p class="mt-1 max-w-md text-xs font-normal text-font-subtle-light dark:text-font-subtle-dark">{{ row.reason }}</p>
+                    </th>
+                    <td class="py-3 pr-4">
+                        {% if row.open %}<span class="rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-800 dark:bg-green-500/20 dark:text-green-300">{% translate "APERTO" %}</span>
+                        {% else %}<span class="rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-800 dark:bg-red-500/20 dark:text-red-300">{% translate "CHIUSO" %}</span>{% endif %}
+                        {% if row.blocked_by %}
+                        <p class="mt-2 text-xs text-amber-800 dark:text-amber-300">
+                            {% translate "Bloccato da" %}: {% for blocker in row.blocked_by %}{{ blocker }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </p>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 pr-4 max-w-sm">{{ row.opens }}</td>
+                    <td class="py-3">
+                        {% if row.flag %}<code class="text-xs">{{ row.flag }}</code>
+                        {% else %}<span class="text-xs text-font-subtle-light dark:text-font-subtle-dark">{% translate "nessun flag — dipende dai contenuti pubblicati" %}</span>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+    {% include "unfold/helpers/dashboard_default.html" %}
+{% endblock %}

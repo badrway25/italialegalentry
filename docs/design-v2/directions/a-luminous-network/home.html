@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Italy Legal Entry™ · Parcours réguliers vers l’Italie — Direction A · Rete luminosa</title>
+  <meta name="description" content="Prototype de direction A (Réseau lumineux) : hero avec la porte officielle, quatre accès, visualisation du processus.">
+  <meta name="theme-color" content="#06121f">
+  <link rel="stylesheet" href="/static/css/fonts.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-home">
+<a class="skip" href="#main">Aller au contenu</a>
+
+<!-- icon sprite (own set, 1.5px stroke). The brand mark is NOT here: it is the official file, untouched. -->
+<svg width="0" height="0" class="visually-hidden" aria-hidden="true" focusable="false">
+  <symbol id="g-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6"/></symbol>
+  <symbol id="g-company" viewBox="0 0 24 24"><path d="M4 20h16M6 20V5.5A1.5 1.5 0 0 1 7.5 4h6A1.5 1.5 0 0 1 15 5.5V20M15 10h3.5A1.5 1.5 0 0 1 20 11.5V20M9 8h3M9 12h3M9 16h3"/></symbol>
+  <symbol id="g-institution" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5M5 9.5V18M9.5 9.5V18M14.5 9.5V18M19 9.5V18M3 20h18"/></symbol>
+  <symbol id="g-university" viewBox="0 0 24 24"><path d="M12 5.5C9.5 4 6.5 4 4 5v13c2.5-1 5.5-1 8 .5 2.5-1.5 5.5-1.5 8-.5V5c-2.5-1-5.5-1-8 .5ZM12 5.5V18.5"/></symbol>
+  <symbol id="g-authority" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><path d="m9.8 12.2 1.5 1.5 3-3"/></symbol>
+  <symbol id="g-training" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="1.5"/><path d="M8 8h8M8 11.5h5M10 16v4l2-1.5 2 1.5v-4"/></symbol>
+  <symbol id="g-territory" viewBox="0 0 24 24"><path d="M4 20v-8.5a8 8 0 0 1 16 0V20M4 20h16M9 20v-5a3 3 0 0 1 6 0v5"/></symbol>
+  <symbol id="g-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="g-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.5 3.8 5.3 3.8 8.5s-1.2 6-3.8 8.5c-2.6-2.5-3.8-5.3-3.8-8.5s1.2-6 3.8-8.5Z"/></symbol>
+  <symbol id="g-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="g-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="g-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="g-chevron-end" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="g-arrow" viewBox="0 0 24 24"><path d="M4 12h16M13 5l7 7-7 7"/></symbol>
+</svg>
+
+<!-- UTILITY BAR (ink) -->
+<div class="utility" role="region" aria-label="Barre institutionnelle">
+  <div class="wrap utility__in">
+    <p class="utility__id"><strong>AGAMI — Dialogo Giuridico Interculturale APS</strong><span class="hide-m"> — promoteur du projet</span></p>
+    <div class="utility__acts">
+      <a href="#login"><svg class="ic" aria-hidden="true"><use href="#g-lock"/></svg><span>Espace réservé</span></a>
+      <button type="button" aria-haspopup="menu" aria-expanded="false"><svg class="ic" aria-hidden="true"><use href="#g-globe"/></svg><span lang="fr">Français</span><svg class="ic" aria-hidden="true"><use href="#g-chevron"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER (paper) — the official lock-up, verbatim: mark 38px + serif wordmark + tagline -->
+<header class="header" data-header>
+  <div class="wrap header__in">
+    <a class="lock" href="#top" aria-label="Italy Legal Entry — accueil">
+      <img class="lock__mark" src="/static/brand/original/logo-mark.svg" alt="" width="38" height="38" decoding="async">
+      <span class="lock__text">
+        <span class="lock__wm"><span class="g">Italy</span> Legal <span class="r">Entry</span></span>
+        <span class="lock__tag">Digital Pathways to Italy</span>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-controls="nav" aria-expanded="false">
+      <svg class="ic ic--menu" aria-hidden="true"><use href="#g-menu"/></svg>
+      <svg class="ic ic--close" aria-hidden="true"><use href="#g-close"/></svg>
+      <span>Menu</span>
+    </button>
+    <nav class="nav" id="nav" aria-label="Navigation principale" data-nav>
+      <ul class="nav__list">
+        <li class="nav__item" data-nav-item>
+          <a class="nav__link" href="#personnes">Personnes</a>
+          <button class="nav__btn" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="p-personnes"><span class="visually-hidden">Ouvrir le sous-menu « Personnes »</span><svg class="ic" aria-hidden="true"><use href="#g-chevron"/></svg></button>
+          <div class="nav__panel nav__panel--wide" id="p-personnes">
+            <p class="nav__panel-title">Votre parcours régulier vers l’Italie</p>
+            <p class="nav__panel-desc">Huit familles de parcours. Le questionnaire d’orientation vous indique celle qui correspond à votre situation.</p>
+            <ul class="nav__sub">
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Travail salarié<small>quotas annuels (décret flux)</small></span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Travail qualifié — Carte bleue européenne<small>profils hautement qualifiés</small></span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Formation dans le pays d’origine<small>avant le départ</small></span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Études et formation en Italie<small>inscription, échanges, mobilité</small></span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Regroupement familial</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Travail indépendant et entrepreneuriat</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Recherche scientifique</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic ic--flip" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Autres voies régulières<small>à vérifier au cas par cas</small></span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav__item" data-nav-item>
+          <a class="nav__link" href="#entreprises">Entreprises</a>
+          <button class="nav__btn" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="p-entreprises"><span class="visually-hidden">Ouvrir le sous-menu « Entreprises »</span><svg class="ic" aria-hidden="true"><use href="#g-chevron"/></svg></button>
+          <div class="nav__panel" id="p-entreprises">
+            <p class="nav__panel-title">Espace Entreprises</p>
+            <p class="nav__panel-desc">Signalez vos besoins professionnels ; nous construisons les parcours avec les acteurs compétents.</p>
+            <ul class="nav__sub">
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Manifester votre intérêt</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Besoins et compétences</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Projet pilote Vénétie–Maroc</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav__item" data-nav-item>
+          <a class="nav__link" href="#institutions">Institutions</a>
+          <button class="nav__btn" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="p-institutions"><span class="visually-hidden">Ouvrir le sous-menu « Institutions »</span><svg class="ic" aria-hidden="true"><use href="#g-chevron"/></svg></button>
+          <div class="nav__panel" id="p-institutions">
+            <p class="nav__panel-title">Espace Institutions</p>
+            <p class="nav__panel-desc">Régions, Communes, organismes publics, Chambres de Commerce, représentations diplomatiques.</p>
+            <ul class="nav__sub">
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Proposer une collaboration institutionnelle</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Forum Permanent Vénétie–Maroc</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav__item" data-nav-item>
+          <a class="nav__link" href="#universites">Universités &amp; Formation</a>
+          <button class="nav__btn" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="p-universites"><span class="visually-hidden">Ouvrir le sous-menu « Universités et Formation »</span><svg class="ic" aria-hidden="true"><use href="#g-chevron"/></svg></button>
+          <div class="nav__panel" id="p-universites">
+            <p class="nav__panel-title">Universités et organismes de formation</p>
+            <p class="nav__panel-desc">Formation, stages, mobilité internationale, programmes conjoints, formation avant le départ.</p>
+            <ul class="nav__sub">
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Proposer un partenariat</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Academy — plans de formation</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Diplômes et titres</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav__item"><a class="nav__link" href="#forum">Forum Vénétie–Maroc</a></li>
+        <li class="nav__item"><a class="nav__link" href="#actualites">Actualités</a></li>
+        <li class="nav__item nav__item--end" data-nav-item>
+          <a class="nav__link" href="#projet">Projet</a>
+          <button class="nav__btn" type="button" data-nav-panel-toggle aria-expanded="false" aria-controls="p-projet"><span class="visually-hidden">Ouvrir le sous-menu « Projet »</span><svg class="ic" aria-hidden="true"><use href="#g-chevron"/></svg></button>
+          <div class="nav__panel" id="p-projet">
+            <p class="nav__panel-title">Le projet</p>
+            <p class="nav__panel-desc">Un écosystème institutionnel promu par AGAMI, association de juristes active depuis 2011.</p>
+            <ul class="nav__sub">
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Le projet et le promoteur</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Ce que la plateforme fait, et ne fait pas</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Attention aux fraudes</span></a></li>
+              <li><a class="nav__sublink" href="#"><svg class="ic" aria-hidden="true"><use href="#g-chevron-end"/></svg><span>Contact</span></a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="header__progress" data-progress aria-hidden="true"></div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ══════════════════════ HERO — the doorway at the centre of the luminous network ══════════════════════ -->
+  <section class="hero ink" id="top" aria-labelledby="hero-title">
+    <div class="wrap hero__grid">
+
+      <div class="hero__copy">
+        <p class="hero__eyebrow t-eyebrow" data-reveal>Écosystème numérique · Maroc ↔ Italie</p>
+        <h1 class="hero__mark">
+          <span class="line"><span>ITALY LEGAL ENTRY<span class="tm">™</span></span></span>
+        </h1>
+        <p class="hero__display t-display" id="hero-title">
+          <span class="line"><span>Le parcours <em>régulier</em></span></span>
+          <span class="line"><span>vers l’Italie, de l’orientation</span></span>
+          <span class="line"><span>à l’intégration.</span></span>
+        </p>
+        <p class="hero__body" data-reveal>Italy Legal Entry est un écosystème numérique italien dédié à l’orientation, à la formation et à l’accompagnement des parcours réguliers vers l’Italie, développé à travers la collaboration entre personnes, entreprises, institutions, universités, organismes de formation et professionnels.</p>
+        <div class="hero__acts" data-reveal>
+          <a class="btn btn--primary" href="#orientation">Découvrir le questionnaire d’orientation <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="#entreprises">Espace entreprises</a>
+        </div>
+        <p class="hero__meta" data-reveal>
+          <span><i></i>Orientation à caractère informatif</span>
+          <span><i class="line"></i>Les décisions relèvent des autorités compétentes</span>
+        </p>
+        <aside class="focus" aria-labelledby="focus-title" data-reveal>
+          <p class="focus__date" aria-hidden="true"><b>02</b><small>oct.</small></p>
+          <div>
+            <p class="focus__title" id="focus-title">Forum Vénétie–Maroc</p>
+            <p class="focus__meta">Rovigo | 2 octobre 2026 | 15h00–18h00</p>
+            <p class="focus__quote">« Institutions, entreprises, universités et professionnels pour construire de nouvelles relations entre la Vénétie et le Maroc. »</p>
+          </div>
+          <p class="focus__cta"><a class="link-arrow" href="#forum">Découvrez le Forum <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a></p>
+        </aside>
+      </div>
+
+      <div class="hero__scene" data-scene>
+        <!-- LAYER 1 — the network: actors on both shores, pathways converging on the doorway -->
+        <svg class="net" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="net-title net-desc" data-net>
+          <title id="net-title">Le réseau institutionnel autour de la porte</title>
+          <desc id="net-desc">Des acteurs au Maroc — personne, organisme de formation, université — et en Italie — entreprise, institution, autorité compétente, université — sont reliés par des lignes lumineuses qui convergent vers une porte : la voie régulière d’entrée. La ligne principale suit une personne qui franchit la porte et rejoint une entreprise.</desc>
+          <path class="net__arc" d="M-40 220 Q 600 110 1240 220"/>
+          <path class="net__arc" d="M-40 520 Q 600 410 1240 520"/>
+          <path class="net__arc" d="M-40 820 Q 600 710 1240 820"/>
+          <text class="net__territory" x="40" y="892">Maroc</text>
+          <text class="net__territory" x="1150" y="84" text-anchor="end">Italie</text>
+          <g class="net__edges">
+            <path class="net__edge" pathLength="1" d="M230 840 C 320 850, 420 880, 520 896"/>
+            <path class="net__edge" pathLength="1" d="M110 470 C 200 470, 280 440, 360 400"/>
+            <path class="net__edge" pathLength="1" d="M240 320 C 300 300, 360 260, 430 200"/>
+            <path class="net__edge" pathLength="1" d="M110 470 C 150 420, 190 360, 240 320"/>
+            <path class="net__edge" pathLength="1" d="M940 150 C 880 110, 800 60, 720 40"/>
+            <path class="net__edge" pathLength="1" d="M720 40 C 680 60, 630 80, 600 110"/>
+            <path class="net__edge" pathLength="1" d="M940 150 C 900 210, 870 260, 840 330"/>
+            <path class="net__edge" pathLength="1" d="M1060 300 C 1040 380, 1030 450, 1010 520"/>
+            <path class="net__edge" pathLength="1" d="M1010 520 C 960 540, 920 560, 860 600"/>
+            <path class="net__edge" pathLength="1" d="M1010 520 C 1050 580, 1080 640, 1090 700"/>
+            <path class="net__edge" pathLength="1" d="M1090 700 C 1060 760, 1010 810, 960 830"/>
+            <path class="net__edge" pathLength="1" d="M960 830 C 900 860, 840 890, 720 896"/>
+            <path class="net__edge" pathLength="1" d="M150 700 C 160 760, 190 810, 230 840"/>
+            <path class="net__edge" pathLength="1" d="M150 700 C 120 640, 110 550, 110 470"/>
+            <path class="net__edge" pathLength="1" d="M1060 300 C 1020 240, 990 190, 940 150"/>
+          </g>
+          <!-- the regular pathway: a person crosses the doorway and reaches a company -->
+          <path class="net__route" pathLength="1" d="M150 700 C 220 700, 240 600, 270 600 S 520 860, 600 880 S 760 700, 800 600 S 980 380, 1060 300"/>
+          <circle class="net__packet" r="4"/>
+          <g class="net__node relay"><circle class="core" cx="270" cy="600" r="3"/></g>
+          <g class="net__node relay"><circle class="core" cx="240" cy="320" r="3"/></g>
+          <g class="net__node relay"><circle class="core" cx="720" cy="40" r="3"/></g>
+          <g class="net__node relay"><circle class="core" cx="960" cy="830" r="3"/></g>
+          <g class="net__node"><circle class="halo" cx="150" cy="700" r="16"/><circle class="core" cx="150" cy="700" r="6"/></g>
+          <g class="net__node"><circle class="halo" cx="230" cy="840" r="14"/><circle class="core" cx="230" cy="840" r="6"/></g>
+          <g class="net__node"><circle class="halo" cx="110" cy="470" r="14"/><circle class="core" cx="110" cy="470" r="6"/></g>
+          <g class="net__node"><circle class="halo" cx="1060" cy="300" r="16"/><circle class="core" cx="1060" cy="300" r="6"/></g>
+          <g class="net__node"><circle class="halo" cx="1010" cy="520" r="14"/><circle class="core" cx="1010" cy="520" r="6"/></g>
+          <g class="net__node"><circle class="halo" cx="940" cy="150" r="14"/><circle class="core" cx="940" cy="150" r="6"/></g>
+          <g class="net__node"><circle class="halo" cx="1090" cy="700" r="14"/><circle class="core" cx="1090" cy="700" r="6"/></g>
+          <text class="net__label" x="172" y="734">Personne</text>
+          <text class="net__label" x="208" y="846" text-anchor="end">Organisme de formation</text>
+          <text class="net__label" x="132" y="464">Université</text>
+          <text class="net__label" x="1082" y="296">Entreprise</text>
+          <text class="net__label" x="1032" y="554">Institution</text>
+          <text class="net__label" x="962" y="144">Autorité compétente</text>
+          <text class="net__label" x="1090" y="736" text-anchor="middle">Université</text>
+        </svg>
+
+        <!-- LAYER 2 — the official doorway, evolved: arch · owner's photograph · navy inner arch · golden key · three steps -->
+        <div class="door" data-door aria-hidden="true">
+          <div class="door__arch">
+            <div class="door__photo">
+              <img class="door__img" src="/docs/design-v2/brand-original/arch-photo-original-2400.jpg" alt="" decoding="sync" loading="eager" fetchpriority="high">
+              <div class="door__overlay"></div>
+            </div>
+            <svg class="door__lines" viewBox="0 0 300 400" preserveAspectRatio="none">
+              <path class="door__outline" pathLength="1" d="M1 400 V150 A149 149 0 0 1 299 150 V400"/>
+              <path class="door__outline door__outline--inner" pathLength="1" d="M17 400 V150 A133 133 0 0 1 283 150 V400"/>
+            </svg>
+            <div class="door__inner">
+              <i class="door__glow"></i>
+              <img class="door__key" src="/static/brand/original/key.svg" alt="" width="60" height="130" decoding="async">
+            </div>
+            <div class="door__steps"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <p class="door__cap t-mono">A doorway, not a shortcut</p>
+        <p class="hero__legend" aria-hidden="true">
+          <span><i class="k-node"></i>Acteurs</span>
+          <span><i class="k-edge"></i>Parcours réguliers</span>
+          <span><i class="k-door"></i>La porte : la voie régulière</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ FOUR ACCESS ROUTES ══════════════════════ -->
+  <section class="sec" id="acces" aria-labelledby="routes-title">
+    <div class="wrap">
+      <div class="sec__head" data-reveal-children>
+        <p class="t-eyebrow"><span class="sec__num">01</span> L’écosystème</p>
+        <h2 class="t-title" id="routes-title">Quatre accès à l’écosystème</h2>
+        <p class="t-lead">Personnes, entreprises, institutions, universités et organismes de formation : chaque acteur dispose de son espace. Chaque entrée est une ligne du même réseau.</p>
+      </div>
+
+      <div class="routes">
+        <p class="routes__hub" aria-hidden="true"><img class="routes__hub-mark" src="/static/brand/original/logo-mark.svg" alt="" width="22" height="22">Italy Legal Entry<span class="tm">™</span></p>
+        <i class="routes__stem" aria-hidden="true"></i>
+        <i class="routes__bus" aria-hidden="true"></i>
+        <ul class="routes__grid" data-reveal-children>
+          <li class="route route--person" id="personnes">
+            <div class="route__top">
+              <span class="route__glyph" aria-hidden="true"><svg class="ic"><use href="#g-person"/></svg></span>
+              <span class="route__code" aria-hidden="true">R1 · Personne</span>
+            </div>
+            <h3 class="route__title">ÊTES-VOUS UNE PERSONNE ?</h3>
+            <p class="route__text">Identifiez le parcours régulier le plus adapté à votre situation et découvrez les principales étapes.</p>
+            <a class="route__cta" href="#orientation">DÉCOUVREZ VOTRE PARCOURS <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a>
+          </li>
+          <li class="route route--company" id="entreprises">
+            <div class="route__top">
+              <span class="route__glyph" aria-hidden="true"><svg class="ic"><use href="#g-company"/></svg></span>
+              <span class="route__code" aria-hidden="true">R2 · Entreprise</span>
+            </div>
+            <h3 class="route__title">ÊTES-VOUS UNE ENTREPRISE ?</h3>
+            <p class="route__text">Signalez les besoins professionnels de votre entreprise et découvrez les parcours de formation et de mobilité régulière.</p>
+            <a class="route__cta" href="#">MANIFESTEZ VOTRE INTÉRÊT <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a>
+          </li>
+          <li class="route route--institution" id="institutions">
+            <div class="route__top">
+              <span class="route__glyph" aria-hidden="true"><svg class="ic"><use href="#g-institution"/></svg></span>
+              <span class="route__code" aria-hidden="true">R3 · Institution</span>
+            </div>
+            <h3 class="route__title">ÊTES-VOUS UNE INSTITUTION ?</h3>
+            <p class="route__text">Construisons ensemble des programmes et des partenariats de mobilité régulière, de formation et de coopération internationale.</p>
+            <a class="route__cta" href="#">PROPOSEZ UNE COLLABORATION <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a>
+          </li>
+          <li class="route route--university" id="universites">
+            <div class="route__top">
+              <span class="route__glyph" aria-hidden="true"><svg class="ic"><use href="#g-university"/></svg></span>
+              <span class="route__code" aria-hidden="true">R4 · Université</span>
+            </div>
+            <h3 class="route__title">ÊTES-VOUS UNE UNIVERSITÉ OU UN ORGANISME DE FORMATION ?</h3>
+            <p class="route__text">Formation, mobilité, stages, échanges et coopération internationale.</p>
+            <a class="route__cta" href="#">COLLABOREZ AVEC NOUS <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ PROCESS — NEED → INCLUSION ══════════════════════ -->
+  <section class="sec proc ink" id="orientation" aria-labelledby="proc-title" data-proc>
+    <div class="wrap">
+      <div class="sec__head" data-reveal-children>
+        <p class="t-eyebrow"><span class="sec__num">02</span> Le parcours</p>
+        <h2 class="t-title" id="proc-title">Du besoin à l’inclusion, une seule ligne régulière</h2>
+        <p class="t-lead">Comment ça marche : répondez aux questions d’orientation → recevez une pré-évaluation à caractère informatif → préparez-vous avec la formation avant le départ → suivez la procédure régulière avec les acteurs compétents. Aucun résultat administratif n’est promis ni garanti.</p>
+      </div>
+
+      <div class="proc__wave" aria-hidden="true">
+        <svg class="proc__svg" viewBox="0 0 1200 160" preserveAspectRatio="none">
+          <path class="proc__base" d="M0 96 C 60 96, 70 40, 100 40 S 250 120, 300 120 S 450 40, 500 40 S 650 120, 700 120 S 850 40, 900 40 S 1050 120, 1100 120 S 1170 96, 1200 96"/>
+          <path class="proc__path" pathLength="1" d="M0 96 C 60 96, 70 40, 100 40 S 250 120, 300 120 S 450 40, 500 40 S 650 120, 700 120 S 850 40, 900 40 S 1050 120, 1100 120 S 1170 96, 1200 96"/>
+          <circle class="proc__dot" cx="100" cy="40" r="6"/><circle class="proc__dotring" cx="100" cy="40" r="13"/>
+          <circle class="proc__dot" cx="300" cy="120" r="6"/><circle class="proc__dotring" cx="300" cy="120" r="13"/>
+          <circle class="proc__dot" cx="500" cy="40" r="6"/><circle class="proc__dotring" cx="500" cy="40" r="13"/>
+          <circle class="proc__dot" cx="700" cy="120" r="6"/><circle class="proc__dotring" cx="700" cy="120" r="13"/>
+          <circle class="proc__dot" cx="900" cy="40" r="6"/><circle class="proc__dotring" cx="900" cy="40" r="13"/>
+          <circle class="proc__dot" cx="1100" cy="120" r="6"/><circle class="proc__dotring" cx="1100" cy="120" r="13"/>
+        </svg>
+      </div>
+
+      <ol class="proc__stations">
+        <i class="proc__spine" aria-hidden="true"><i class="proc__spine-fill"></i></i>
+        <li class="proc__station">
+          <p class="proc__k"><span class="proc__n">01</span><span class="proc__stage">Besoin</span></p>
+          <h3 class="proc__title">Besoins des entreprises</h3>
+          <p class="proc__owner"><svg class="ic" aria-hidden="true"><use href="#g-company"/></svg><span>Responsable : l’entreprise, avec la plateforme</span></p>
+          <p class="proc__terr">Italie · Vénétie</p>
+        </li>
+        <li class="proc__station">
+          <p class="proc__k"><span class="proc__n">02</span><span class="proc__stage">Compétences</span></p>
+          <h3 class="proc__title">Profils et compétences</h3>
+          <p class="proc__owner"><svg class="ic" aria-hidden="true"><use href="#g-person"/></svg><span>Responsable : la personne, orientée par la plateforme</span></p>
+          <p class="proc__terr">Maroc</p>
+        </li>
+        <li class="proc__station">
+          <p class="proc__k"><span class="proc__n">03</span><span class="proc__stage">Formation</span></p>
+          <h3 class="proc__title">Formation dans le pays d’origine<small>Préparation avant le départ</small></h3>
+          <p class="proc__owner"><svg class="ic" aria-hidden="true"><use href="#g-training"/></svg><span>Responsable : l’organisme de formation</span></p>
+          <p class="proc__terr">Maroc</p>
+        </li>
+        <li class="proc__station">
+          <p class="proc__k"><span class="proc__n">04</span><span class="proc__stage">Parcours régulier</span></p>
+          <h3 class="proc__title">Procédures régulières</h3>
+          <p class="proc__owner"><svg class="ic" aria-hidden="true"><use href="#g-authority"/></svg><span>Responsable : les autorités compétentes</span></p>
+          <p class="proc__terr">Maroc ↔ Italie</p>
+        </li>
+        <li class="proc__station">
+          <p class="proc__k"><span class="proc__n">05</span><span class="proc__stage">Entrée</span></p>
+          <h3 class="proc__title">Entrée en Italie</h3>
+          <p class="proc__owner"><svg class="ic" aria-hidden="true"><use href="#g-authority"/></svg><span>Responsable : les autorités compétentes</span></p>
+          <p class="proc__terr">Italie</p>
+        </li>
+        <li class="proc__station">
+          <p class="proc__k"><span class="proc__n">06</span><span class="proc__stage">Inclusion</span></p>
+          <h3 class="proc__title">Accompagnement<small>Suivi</small></h3>
+          <p class="proc__owner"><svg class="ic" aria-hidden="true"><use href="#g-territory"/></svg><span>Responsable : le territoire d’accueil et ses institutions</span></p>
+          <p class="proc__terr">Italie · Vénétie</p>
+        </li>
+      </ol>
+
+      <div class="proc__foot" data-reveal-children>
+        <div>
+          <p class="proc__disclaimer">Italy Legal Entry ne délivre pas de visas, de permis de séjour ni d’autorisations : <strong>ces décisions relèvent exclusivement des autorités compétentes.</strong> La plateforme vous oriente, à travers des questions progressives, vers la voie d’entrée régulière la plus adaptée à votre situation.</p>
+          <p class="proc__cta"><a class="btn btn--primary" href="#">Commencer le questionnaire d’orientation <svg class="ic ic--arrow" aria-hidden="true"><use href="#g-arrow"/></svg></a></p>
+        </div>
+        <div class="juris">
+          <p class="t-folio juris__title">Qui est responsable, tout au long de la ligne</p>
+          <div class="juris__bar" role="img" aria-label="Répartition des responsabilités le long du parcours : entreprise, personne, organisme de formation, autorités compétentes, territoire d’accueil">
+            <span class="juris__seg own--company" data-share="1"></span>
+            <span class="juris__seg own--person" data-share="1"></span>
+            <span class="juris__seg own--training" data-share="2"></span>
+            <span class="juris__seg own--authority" data-share="3"></span>
+            <span class="juris__seg own--territory" data-share="2"></span>
+          </div>
+          <ul class="juris__legend">
+            <li class="juris__key"><i class="juris__sw own--company"></i><svg class="ic" aria-hidden="true"><use href="#g-company"/></svg>Entreprise</li>
+            <li class="juris__key"><i class="juris__sw own--person"></i><svg class="ic" aria-hidden="true"><use href="#g-person"/></svg>Personne</li>
+            <li class="juris__key"><i class="juris__sw own--training"></i><svg class="ic" aria-hidden="true"><use href="#g-training"/></svg>Organisme de formation</li>
+            <li class="juris__key"><i class="juris__sw own--authority"></i><svg class="ic" aria-hidden="true"><use href="#g-authority"/></svg>Autorités compétentes</li>
+            <li class="juris__key"><i class="juris__sw own--territory"></i><svg class="ic" aria-hidden="true"><use href="#g-territory"/></svg>Territoire d’accueil</li>
+          </ul>
+          <p class="t-cap">Répartition indicative ; la plateforme n’exerce aucune compétence administrative.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <a class="lock lock--foot" href="#top" aria-label="Italy Legal Entry — haut de page">
+      <img class="lock__mark" src="/static/brand/original/logo-mark.svg" alt="" width="38" height="38" decoding="async">
+      <span class="lock__text">
+        <span class="lock__wm"><span class="g">Italy</span> Legal <span class="r">Entry</span></span>
+        <span class="lock__tag">Digital Pathways to Italy</span>
+      </span>
+    </a>
+    <p class="t-cap">AGAMI — Dialogo Giuridico Interculturale APS · <a href="mailto:contact@agamieuromed.org">contact@agamieuromed.org</a> · © 2026 AGAMI · Italy Legal Entry™ — marque déposée</p>
+    <ul class="foot__legal">
+      <li><a href="#">Mentions légales</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Cookie Policy</a></li>
+      <li><a href="#">Conditions d’utilisation</a></li>
+      <li><a href="#">Avertissement</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% comment %}
+The message row of a field (V5.12 W2; DECISIONS §5.2, M10): ONE live region (polite) under the control, and the
+only announcement channel of the field — nothing inside it carries role="alert" (an alert inside a live region is
+said twice; review W2). At load it holds the server's errors — `{{ error_id }}`, the id Django's aria-describedby
+names (the summary at the form's head is the alert and has the focus; this one is said when the field is reached,
+through the control's description) —; the inline check
+(static/js/src/fieldcheck.js) writes its own error, warning or confirmation in it after. The row opens from 0fr to
+1fr in 160 ms (the page-only sheet core/forms.css); nothing shakes. Contract: `errors` (an ErrorList, may be
+empty), `error_id`.
+{% endcomment %}<div class="form-field__msg" aria-live="polite" data-field-msg><div class="form-field__msg-in">{% if errors %}<div class="form-field__errors" id="{{ error_id }}"><ul class="form-field__error-list">{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}</div></div>

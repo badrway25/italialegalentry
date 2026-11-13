@@ -1,0 +1,560 @@
+/* ============================================================================================
+   ORIENTATION — the questionnaire's pages: the start, the steps, the pre-evaluation, the resume code. The page sheet.
+   Design V5.4, W3-F1 step 2 (docs/design-v5/V5_4_EXECUTION_PLAN.md §3.5 item 1; §1.18 D26; §1.4 SP-1 … SP-8,
+   SH-1 … SH-9; §1.3 three corners a screen; §1.7 the six-icon ceiling; §1.8 52 px on a public page).
+
+   The public interior's grammar first — the shared page (the trail, the head, the chapters, the register, D26's
+   slots; v5/_pagina.css), then W3-F1's own parts of it (the entrance's seat, the action card; v5/_interior.css),
+   then the public passage «la linea» (W3-D's v5/_journey-passage.css) — imported as they resolve in the collected
+   static tree (DS 2026 §2); then what the questionnaire
+   draws on
+   the core components of static/css/v5/ (the field «la lastra»: typed text at 16 px, 52 px on a public page; the
+   native checkbox and radio drawn at 24 px; the buttons; the notices):
+     1 · the start          the inset and the action in the entrance; the three moments' words; the way back in
+     2 · the step           the page's compact title; the progress as a quiet register («Question n sur N» in
+                            words over a 2 px line on its hairline — never a percentage, FM12); the question as
+                            the legend; «why this question?» as a disclosure;
+                            the choices as plates around the native controls, the whole plate the target; the error
+                            in words beside its mark, the plates' edges doubled in the refusal's ink — never colour
+                            alone; ONE primary, then «Précédent», after a hairline
+     3 · the pre-evaluation the banner in the entrance, the groups of the checklist, «Points d'attention» on the
+                            warning's broken edge, the record's note, the code shown once, the actions
+     4 · Arabic, forced colours, print
+
+   Corners (§1.3): 6 (the plates, the fields, the buttons — the formwork's md since V5.32 — and the chrome's
+   controls), full (the radios, the marks), 4 (the notices, the code, the result's frame), the letterhead's flag 3:
+   three on any one screen. Shadows: none at rest. Motion: an edge and a fill answer the person's own act on the duration tokens
+   (0 ms under reduced motion, DL54-38) and at once from the keyboard (html[data-input="key"], DL54-51); nothing
+   moves on its own. Tokens of static/css/v5/tokens.css only; logical properties only.
+   ============================================================================================ */
+@import url("../css/v5/_pagina.css");
+@import url("../css/v5/_interior.css");
+@import url("../css/v5/_journey-passage.css");
+@import url("../css/v5/_choice.css");
+
+/* ---- 1 · the start ------------------------------------------------------------------------------ */
+/* a moment's words that the source writes as a fragment (lower case first): presentation only, the words stay */
+.linea__text--fragment::first-letter {
+  text-transform: uppercase;
+}
+
+.wizard-intro__resume-link {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+/* the paragraph is its link: one box whatever lines its words take — 24 px a line, 48 on two (it was an inline run
+   of 20 px line boxes); 10 px more above and below under a finger, 44 px on one line (SP-8; W4-A, D4) */
+.wizard-intro__resume-link a {
+  display: inline-block;
+}
+
+@media (pointer: coarse) {
+  .wizard-intro__resume-link a {
+    position: relative;
+  }
+
+  .wizard-intro__resume-link a::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: 0;
+  }
+}
+
+/* the ONE inset under the entrance's lead, read before the action beside it (W3-F1's review M4) */
+.ingresso__meta > .wizard-disclaimer {
+  max-inline-size: var(--measure-lead);
+  margin: 0;
+}
+
+.wizard-intro__unavailable > * + * {
+  margin-block-start: var(--s-4);
+}
+
+/* ---- 2 · the step ------------------------------------------------------------------------------- */
+/* the head is the page's compact title alone: its sentence is said once, on the first page (W3-F1's review m5) */
+.wizard {
+  padding-block: var(--s-8) var(--s-12);
+}
+
+.wizard__header {
+  max-inline-size: var(--measure-lead);
+  margin: 0 0 var(--s-4);
+}
+
+.wizard__title {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+/* one column at the form's measure, at the reading edge — the trail's edge */
+.wizard__step {
+  max-inline-size: calc(var(--measure-body) + var(--s-16));
+}
+
+/* the progress: the count in words over a 2 px line on its hairline, filled from the reading edge */
+.wizard__progress {
+  margin: 0 0 var(--s-6);
+}
+
+.wizard__progress-label {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.wizard__progress-bar {
+  block-size: 2px;
+  background-color: var(--line-rhythm);
+}
+
+.wizard__progress-fill {
+  block-size: 100%;
+  inline-size: 0;
+  background-color: var(--text-1);
+}
+
+.wizard__progress-fill--0 { inline-size: 0; }
+.wizard__progress-fill--5 { inline-size: 5%; }
+.wizard__progress-fill--10 { inline-size: 10%; }
+.wizard__progress-fill--15 { inline-size: 15%; }
+.wizard__progress-fill--20 { inline-size: 20%; }
+.wizard__progress-fill--25 { inline-size: 25%; }
+.wizard__progress-fill--30 { inline-size: 30%; }
+.wizard__progress-fill--35 { inline-size: 35%; }
+.wizard__progress-fill--40 { inline-size: 40%; }
+.wizard__progress-fill--45 { inline-size: 45%; }
+.wizard__progress-fill--50 { inline-size: 50%; }
+.wizard__progress-fill--55 { inline-size: 55%; }
+.wizard__progress-fill--60 { inline-size: 60%; }
+.wizard__progress-fill--65 { inline-size: 65%; }
+.wizard__progress-fill--70 { inline-size: 70%; }
+.wizard__progress-fill--75 { inline-size: 75%; }
+.wizard__progress-fill--80 { inline-size: 80%; }
+.wizard__progress-fill--85 { inline-size: 85%; }
+.wizard__progress-fill--90 { inline-size: 90%; }
+.wizard__progress-fill--95 { inline-size: 95%; }
+.wizard__progress-fill--100 { inline-size: 100%; }
+
+/* the question: the legend of its group, at the entry's size */
+.wizard__fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.wizard__legend {
+  margin: 0 0 var(--s-3);
+  padding: 0;
+}
+
+.wizard__question {
+  display: block;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.wizard__question:lang(ar):not(:lang(fr)) {
+  letter-spacing: 0;
+}
+
+/* a target the script focuses (tabindex -1), never a stop of the tab order: the legend needs no ring */
+.wizard__question:focus {
+  outline: none;
+}
+
+/* «Pourquoi cette question ?» — a native disclosure, its mark drawn and turning on the person's own act */
+.wizard__help {
+  margin: 0 0 var(--s-4);
+}
+
+.wizard__help-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: var(--hit-min);
+  list-style: none;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  cursor: pointer;
+}
+
+.wizard__help-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.wizard__help-toggle::after {
+  content: "";
+  flex: none;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border: solid currentcolor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform var(--motion-standard) var(--ease-enter);
+}
+
+.wizard__help[open] > .wizard__help-toggle::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+@media (hover: hover) {
+  .wizard__help-toggle:hover {
+    color: var(--accent-text-hover);
+    text-decoration: underline;
+  }
+}
+
+@media (pointer: coarse) {
+  .wizard__help-toggle {
+    min-block-size: var(--hit-primary);
+  }
+}
+
+.wizard__help-text {
+  max-inline-size: var(--measure-body);
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* said before the choices, and the group is described by it */
+.wizard__hint {
+  margin: 0 0 var(--s-4);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* the error: the words beside the refusal's mark, in its ink — announced, and the group described by it */
+.wizard__error {
+  display: grid;
+  grid-template-columns: var(--icon-md) minmax(0, 1fr);
+  gap: var(--s-2);
+  max-inline-size: var(--measure-body);
+  margin: 0 0 var(--s-4);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  color: var(--tone-rifiuto-text);
+}
+
+.wizard__error-mark {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: 2px;
+  color: var(--tone-rifiuto-mark);
+}
+
+/* the choices: the form system's choice cards (v5/_choice.css, imported above; V5.12 W2, DECISIONS §5.6 — the
+   questionnaire's `wizard__choice` and the console's OptionCard are one drawing now): the native input over its whole
+   card, the person's own check that scales in, the edge and the tint in 120 ms */
+.wizard__choices { grid-template-columns: minmax(0, 1fr); }
+.wizard__label { font-size: var(--t-body); line-height: 1.5rem; cursor: pointer; }
+/* here the label is the input's sibling (the step's markup): the label's target covers the card, the input under it
+   keeps the focus and the keyboard — one press anywhere on the card chooses */
+.wizard__choice > .wizard__input { pointer-events: none; }
+.wizard__label::after { content: ""; position: absolute; inset: 0; }
+
+/* a group in error: every card's edge doubles in the refusal's ink, under the words that say why */
+.wizard__fieldset[aria-invalid="true"] .wizard__choice:not(:has(> input:checked)) {
+  border-color: var(--field-edge-invalid);
+  box-shadow: inset 0 0 0 1px var(--field-edge-invalid);
+}
+
+/* tier 0 (plan §1.5, R-07): asked from the keyboard, the change is there in the next frame */
+html[data-input="key"] .wizard__help-toggle::after {
+  transition-duration: 0ms;
+}
+
+/* the foot: ONE primary, then «Précédent», after a hairline — part of the page, never a bar over it */
+.wizard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  margin-block-start: var(--s-8);
+  padding-block-start: var(--s-6);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+@media (max-width: 47.999rem) {
+  .wizard__actions > .btn--primary {
+    flex: 1 1 auto;
+  }
+}
+
+.wizard__reference {
+  margin: var(--s-6) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.wizard__reference-code {
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+@media (min-width: 48rem) {
+  .wizard {
+    padding-block: var(--s-8) var(--s-16);
+  }
+}
+
+/* ---- 3 · the pre-evaluation --------------------------------------------------------------------- */
+/* the banner stands in the entrance, under the h1: the result and what it is worth read together */
+.wizard-result__banner {
+  margin: 0;
+}
+
+.wizard-result__go {
+  margin: 0;
+}
+
+/* the checklist: a group's word over its list, at the reading size and measure */
+.wizard-result__group-title {
+  margin: 0 0 var(--s-2);
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.wizard-result__list {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding-inline-start: 1.25em;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.wizard-result__list > li + li {
+  margin-block-start: var(--s-2);
+}
+
+/* «Points d'attention»: its word and the warning's broken edge at the reading edge — never colour alone */
+.wizard-result__group--warnings {
+  padding-inline-start: var(--s-4);
+  border-inline-start: 2px dashed var(--notice-warning-edge);
+}
+
+/* the record's note: the disclaimer and the record's facts, quiet, under its label */
+.wizard-result__note .chapter__body > * + * {
+  margin-block-start: var(--s-2);
+}
+
+.wizard-result__disclaimer {
+  max-inline-size: var(--measure-body);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-1);
+}
+
+.wizard-result__note .wizard-result__meta {
+  margin-block-start: var(--s-6);
+}
+
+.wizard-result__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--s-4) var(--s-6);
+  margin: 0;
+}
+
+.wizard-result__meta dt {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.wizard-result__meta dd {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+}
+
+/* the code, shown once: the warning's register (its mark, its words, its broken edge), the code on a plate */
+.wizard-result__token {
+  margin: 0;
+}
+
+.wizard-result__token .notice__title {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: 0;
+}
+
+.wizard-result__token .notice__body > * {
+  margin-block: 0 var(--s-3);
+}
+
+.wizard-result__token-value {
+  display: block;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-sm);
+  background-color: var(--field-bg);
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.wizard-result__token-page {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.wizard-result__token-page a {
+  overflow-wrap: anywhere;
+}
+
+.wizard-result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+}
+
+.wizard-result__actions > form {
+  margin: 0;
+}
+
+.wizard-result__saved {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+/* ---- 4 · Arabic, forced colours, print --------------------------------------------------------- */
+/* on the Arabic page a French question and a French choice read left to right and end on the reading edge — the
+   question as every French head of the interior does (_interior.css §7), a choice beside its control */
+[dir="rtl"] :is(.wizard__question, .wizard__label):is([lang="fr"], [lang="it"], [lang="en"]) {
+  text-align: end;
+}
+
+@media (forced-colors: active) {
+  .wizard__progress-bar {
+    forced-color-adjust: none;
+    background-color: GrayText;
+  }
+
+  .wizard__progress-fill {
+    background-color: CanvasText;
+  }
+
+  .wizard__choice {
+    border-color: CanvasText;
+  }
+
+  .wizard-result__group--warnings {
+    border-inline-start-color: CanvasText;
+  }
+}
+
+@media print {
+  .site-header,
+  .utility-bar,
+  .site-footer,
+  .breadcrumbs,
+  .wizard-result__actions,
+  .skip-link {
+    display: none;
+  }
+
+  .chapter--area {
+    background: none;
+  }
+
+  .wizard-result__token {
+    border: 1px solid;
+  }
+}
+
+/* V5.32 (lane B — the owner's GLOBAL SITE + PLATFORM DESIGN COMPLETION, 12 Nov 2026: no decorative numbering): the
+   questionnaire's three moments keep their rings and their line, without the «01 02 03» figures — the order is the
+   list's own; across from 48 rem the rings take the first row and the line runs through their middle (the ring is
+   v5/_journey-passage.css's 12 px, --s-3: an app sheet reads the design tokens only, DS 2026 §2.1 — the passage's own
+   --linea-node is a partial's private name; the correction round of the senior integration review) */
+.wizard-intro__steps .linea__num::before {
+  content: none;
+}
+
+@media (min-width: 48rem) {
+  .wizard-intro__steps .linea__num::after {
+    grid-row: 1;
+  }
+
+  .wizard-intro__steps .linea__step:not(:last-child)::before {
+    inset-block: calc(var(--s-3) / 2 - 0.5px) auto;
+  }
+}
+
+/* V5.32 (lane B): the questionnaire is a public form — its choice plates, its fields and its buttons on the
+   formwork's md (v5/_formwork.css, DL54-173's family), the marks full. On the old 4 a step painted four corners at
+   1440 beside the letterhead's flag (3) and controls (6) — W3-F1 §1.3: three a screen */
+.page-orientation main {
+  --field-radius: var(--radius-md);
+  --btn-radius: var(--radius-md);
+}
+
+/* V5.32 (lane B): the pre-evaluation's pathway beside its photograph — the same frame its sheet and the Parcours
+   explorer draw (pathways/_frame.html); 16 rem beside the row from 48 rem, the reading column above it below */
+.wizard-result__percorso--foto {
+  display: grid;
+  gap: var(--s-4);
+  max-inline-size: var(--measure-body);
+}
+
+.wizard-result__foto {
+  display: block;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-area);
+}
+
+.wizard-result__foto img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* the pathway's line is the locked fragment a sentence continues elsewhere: on its own it opens on a capital, as on
+   its sheet's head (presentation only — the words are the registry's) */
+.wizard-result__family .registro__text::first-letter {
+  text-transform: capitalize;
+}
+
+@media (min-width: 48rem) {
+  .wizard-result__percorso--foto {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    column-gap: var(--s-6);
+    align-items: center;
+    max-inline-size: none;
+  }
+}

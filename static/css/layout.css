@@ -1,0 +1,116 @@
+/* ============================================================================
+   Layout — containers, the three-zone register grid, sections, rhythm.
+
+   The build this replaces used ONE container width for every band on every
+   page at every viewport: seven of seven on the home page at 1440 AND at 1920,
+   where 37.5% of the screen became empty gutter. A page whose every band shares
+   an edge cannot have a hierarchy of moments.
+
+   Here the container is a function of the viewport (tokens.css) AND of the
+   section's rank, and a band may break it in either direction.
+   ========================================================================== */
+
+/* ---- Containers ----------------------------------------------------------- */
+.container {
+  inline-size: 100%;
+  max-inline-size: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+/* ---- The three zones — V5.30 (stream A's container audit, docs/design-v5/QA/v530/art/NOTES.md §4): the V1 rail ·
+   content · margin grid (.zones) left the cascade — no template, view or CMS row writes it any more, and its 176–220 px
+   rail was a third structural width beside the column and the shell. The container roles live in v5/tokens.css §3.6. */
+
+/* ---- Sections: RANK sets the outer space -----------------------------------
+   Space between sections is always greater than space inside them, and a
+   section's rank decides how much. The build this replaces used 72/72 on every
+   section at 1440 and 80/80 at 1920 — so a page read top to bottom was six
+   beats of identical duration, which is why nothing on it seemed to matter
+   more than anything else.
+
+   Rank A  the plate: one per page, full bleed, no inner padding
+   Rank B  a spread: title + prose + margin apparatus
+   Rank C  a register, a table, a sequence
+   Rank D  a notice, a marginal band, legal text
+   -------------------------------------------------------------------------- */
+.section {
+  padding-block: var(--rank-b-block);
+}
+
+/* The night verso left with its last page, the case file's pre-assessment, whose text stood at 1.06 : 1 on it
+   (design V5, W3-E: the page's own ground). */
+
+.section__header {
+  max-inline-size: var(--measure-lead);
+  margin-block-end: var(--s-8);
+}
+
+.section__title {
+  margin-block-end: var(--s-3);
+}
+
+.section__lead {
+  color: var(--ink-secondary);
+  font-family: var(--font-display);
+  font-size: var(--t-lead-size);
+  line-height: var(--t-lead-lh);
+}
+
+/* ---- Editorial grid (12 columns, collapses to 1 under 48rem) -------------- */
+.grid {
+  display: grid;
+  gap: var(--space-6) var(--gutter);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.grid > * {
+  grid-column: span 12;
+  min-inline-size: 0;
+}
+
+/* ---- Two-column editorial layouts: V5.30 (stream A's container audit) — the V1 text + figure split (.split) left
+   with the zones: no template writes it (the compositions are the section system's, v5/_sec-campata.css) ---- */
+
+/* ---- Composition utilities ------------------------------------------------ */
+.stack > * + * {
+  margin-block-start: var(--stack-gap);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  align-items: center;
+}
+
+.center {
+  text-align: center;
+}
+
+.flow > * + * {
+  margin-block-start: var(--space-4);
+}
+
+.mt-4 { margin-block-start: var(--space-4); }
+.mb-4 { margin-block-end: var(--space-4); }
+.mb-8 { margin-block-end: var(--space-8); }
+
+/* ---- Rules ---------------------------------------------------------------- */
+.rule {
+  border: 0;
+  border-block-start: var(--border-width) solid var(--border-hairline);
+  margin-block: var(--space-8);
+}
+
+/* ---- Scroll container for wide content (tables, diagrams) ---------------- */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.scroll-x:focus-visible {
+  outline-offset: -2px;
+}
+

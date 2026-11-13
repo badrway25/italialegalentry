@@ -1,0 +1,349 @@
+/* ============================================================================
+   Components — catalogue and contracts in docs/DESIGN_SYSTEM.md
+   Order: controls → feedback → navigation shell → content patterns → forms →
+   overlays → motion.
+   ========================================================================== */
+
+/* =========================================================================
+   2. Icons — design V5 (W1-B, plan §1.7). One sprite, one hand: every stroke of
+   static/img/icons.svg carries vector-effect: non-scaling-stroke, so the stroke-width
+   below is CSS px at every size — 1.5 px from 14 to 24 px, 1.67 px at 32 px, 2 px at
+   48 px — whatever a component sizes the box to. Square caps, miter joins, currentcolor.
+   The six sizes are the scale's (--icon-xs … --icon-hero, v5/tokens.css); a component
+   that sizes .icon itself keeps the 1.5 px stroke. A stroke-width written for the old
+   scaling sprite (units of the 24 grid) is now px: do not write one below 1.5 (the
+   empty state's 1.25 left §23 with the review's fix pass: its glyph is this rule's).
+   ========================================================================= */
+.icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  flex: none;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  vertical-align: middle;
+}
+
+.icon--xs {
+  inline-size: var(--icon-xs);
+  block-size: var(--icon-xs);
+}
+
+.icon--sm {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+.icon--md {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+}
+
+.icon--lg {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+}
+
+.icon--xl {
+  inline-size: var(--icon-xl);
+  block-size: var(--icon-xl);
+  stroke-width: 1.67;
+}
+
+.icon--hero {
+  inline-size: var(--icon-hero);
+  block-size: var(--icon-hero);
+  stroke-width: 2;
+}
+
+/* .icon--inline (a glyph set in a line of text) left with V5.12 W2 (lane A): no template wrote it any more. */
+
+/* Forced colours: an icon is the ink of the text beside it, and nothing else. A browser gives <svg>
+   `forced-color-adjust: preserve-parent-color`, which follows the system palette only while the svg's
+   own `color` is inherited; a component that colours its glyph — the door's chevron, the footer's
+   marks, a row's arrow, an empty state — kept its authored hex there: the navy arrow at 1.4 : 1 on a
+   dark canvas, the footer's night ink at 1.8 : 1 on a light one (measured, 9 October 2026). So under
+   forced colours every icon inherits again, whatever rule coloured it — hence the two !important of
+   this section: CanvasText in running text, LinkText in a link, ButtonText in a button, HighlightText
+   on a selection, each on the ground the system pairs it with. And it paints no ground of its own:
+   the empty state's disc would stay light under an ink turned white. */
+@media (forced-colors: active) {
+  .icon {
+    color: inherit !important;
+    background: none !important;
+  }
+}
+
+/* =========================================================================
+   9. Breadcrumbs — the skeleton every trail reads: the list, the item, the chevron and its mirror. Each surface
+   draws the rest: the public interior's shared page (static/css/v5/_pagina.css §1, W3-F1 and W3-F2), the account
+   pages (static/css/v5/_servizio.css §1, W3-F2), the console's bar (apps/portal/static/portal/v5/_shell.css §3,
+   W3-A). The box, the type, the links, their hover and the current page left the shared sheet with W3-F1's budget
+   pass (12 October 2026): every page that draws a trail re-drew them.
+   ========================================================================= */
+.breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumbs__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+}
+
+.breadcrumbs__item + .breadcrumbs__item::before {
+  content: "";
+  inline-size: 0.375rem;
+  block-size: 0.375rem;
+  border-inline-end: 1px solid var(--color-accent-600);
+  border-block-end: 1px solid var(--color-accent-600);
+  transform: rotate(-45deg);
+  flex: none;
+}
+
+[dir="rtl"] .breadcrumbs__item + .breadcrumbs__item::before {
+  transform: rotate(45deg); /* border-inline-end is the LEFT border here: 45deg draws « ‹ » */
+}
+
+/* =========================================================================
+   10. Page header — what the console still reads
+   The legacy page header's box, title, lead, meta and centred variant left the shared sheet with W3-F1's budget
+   pass (12 October 2026): the public interior draws its head in its shared page (static/css/v5/_pagina.css §2: the
+   content pages' components/page_header.html and W3-F1's entrance, one drawing), the console in its frame
+   (apps/portal/static/portal/v5/_shell.css §4), each re-drawing every one of those declarations. The label keeps what
+   the console's frame reads from here: the running head in capitals with the case-sensitive forms (none in Arabic).
+   ========================================================================= */
+.page-header__eyebrow {
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+}
+
+:lang(ar) .page-header__eyebrow {
+  text-transform: none;
+}
+
+/* =========================================================================
+   11. Institutional banner (event notice — quiet, configurable, not a popup)
+   ========================================================================= */
+
+/* Institutional quote (p1.companies.quote) */
+.blockquote-institutional {
+  margin: var(--space-10) 0;
+  padding-inline-start: var(--space-6);
+  border-inline-start: 2px solid var(--color-accent-600);
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-tight);
+  color: var(--color-primary-900);
+  max-inline-size: var(--measure-lead);
+}
+
+.blockquote-institutional p {
+  margin: 0;
+}
+
+.blockquote-institutional cite {
+  display: block;
+  margin-block-start: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--font-size-caption);
+  font-style: normal;
+  color: var(--text-muted);
+}
+
+/* =========================================================================
+   19. CTA panel
+   ========================================================================= */
+.cta-panel {
+  padding-block: var(--space-12);
+  margin-block: var(--space-12);
+  border-block: var(--border-width) solid var(--border-subtle);
+}
+
+.cta-panel__inner {
+  display: grid;
+  gap: var(--space-6) var(--space-10);
+  align-items: center;
+}
+
+@media (min-width: 64rem) {
+  .cta-panel__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.cta-panel__title {
+  margin-block-end: var(--space-2);
+}
+
+.cta-panel__text {
+  margin: 0;
+  color: var(--text-secondary);
+  max-inline-size: var(--measure-lead);
+}
+
+.cta-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.cta-panel--inverse {
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  border: 0;
+}
+
+.cta-panel--inverse .cta-panel__title {
+  color: inherit;
+}
+
+.cta-panel--inverse .cta-panel__text {
+  color: var(--text-on-inverse-muted);
+}
+
+/* =========================================================================
+   22. Pagination
+   ========================================================================= */
+.pagination {
+  margin-block: var(--space-10);
+  font-size: var(--font-size-small);
+}
+
+.pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--control-height);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-primary-900);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.pagination__link:hover {
+  background: var(--surface-2);
+  border-color: var(--color-primary-900);
+}
+
+.pagination__status {
+  padding-inline: var(--space-3);
+  color: var(--text-muted);
+}
+
+/* =========================================================================
+   23. Empty state — design V5 (W3-E; DESIGN_SYSTEM_V5 §10.8 «EmptyState (page)»)
+   templates/components/empty_state.html: the domain's glyph in its 40 px toned disc, the title at 20/28 and 600,
+   one sentence, one action — at the reading edge, on a hairline. No dashed box and nothing centred: on V5 a broken
+   edge is the register of what is due («attesa»), and an empty list owes nothing. The component's own drawing,
+   for every page that includes it; V4's box (here and in v4/workspace.css) is gone. The pages that set the state
+   in their own composition still do, from their sheets (the interior's `.lettura`, the service pages', the Forum,
+   the home's news). Under forced colours the disc keeps an outline: a glyph paints no ground there (W1-B, DL54-34).
+   ========================================================================= */
+.empty-state {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: var(--s-6) 0 0;
+  border-block-start: 1px solid var(--line-rhythm);
+  text-align: start;
+}
+
+.empty-state__icon {
+  inline-size: var(--icon-lg);
+  block-size: var(--icon-lg);
+  margin: 0 0 var(--s-2);
+  padding: var(--s-2);
+  box-sizing: content-box;
+  border-radius: var(--radius-full);
+  background: var(--icon-disc-bg);
+  color: var(--icon-disc-fg);
+}
+
+.empty-state__title {
+  margin: 0;
+  font-family: var(--f-sans);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  letter-spacing: var(--track-entry);
+  color: var(--text-1);
+}
+
+:lang(ar) .empty-state__title {
+  letter-spacing: 0;
+}
+
+.empty-state__text {
+  max-inline-size: var(--measure-small);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+.empty-state > p:last-child:not(.empty-state__title, .empty-state__text) {
+  margin: var(--s-4) 0 0;
+}
+
+@media (forced-colors: active) {
+  .empty-state__icon {
+    outline: 1px solid CanvasText;
+  }
+}
+
+/* =========================================================================
+   27. Account pages — what the entrance and the console still read
+   The error pages (§26, whole) and the account pages' frame, card and panels left for the service pages' partial
+   static/css/v5/_servizio.css (design V5, W3-F2 step 2; cms/servizio.css). Two readers keep these rules: the entrance
+   «Il varco» (W2-B) draws allauth's second title through this one (`account-panel__title`: «Options alternatives» on
+   the reauthentication and the second factor), and the console's requests list (templates/portal/requests.html,
+   W3-E) and the design showcase draw `account-table`.
+   ========================================================================= */
+.account-panel__title {
+  font-size: var(--font-size-h4);
+  margin-block-end: var(--space-2);
+}
+
+.account-table {
+  inline-size: 100%;
+  font-size: var(--font-size-small);
+}
+
+.account-table th,
+.account-table td {
+  text-align: start;
+  padding: var(--space-3) var(--space-2);
+  border-block-end: var(--border-width) solid var(--border-hairline);
+  vertical-align: middle;
+}
+
+.account-table th {
+  font-weight: var(--weight-semibold);
+  color: var(--text-strong);
+}

@@ -1,0 +1,86 @@
+title: Cookie and storage technologies notice
+notice: Courtesy translation — the Italian version prevails
+italian_link: Read the Italian version, which prevails
+pending: translation pending legal review
+---
+This notice is given in accordance with the “Guidelines on cookies and other tracking tools” of the Garante per la protezione dei dati personali of 10 June 2021, Article 122 of Legislative Decree 196/2003 and Article 13 of Regulation (EU) 2016/679 (the “GDPR”). The data controller and its contact details are given in the Personal data processing notice.
+
+## 1. In brief
+
+The Italy Legal Entry™ website and platform use only first-party technical cookies and a few browser storage entries for the state of the interface. They use no profiling or marketing cookies, whether first-party or third-party, and no audience-measurement or tracking tools.
+
+The pages load no fonts, scripts, images, maps or videos from other sites: no third party receives the IP address of the people who view them. The technical tools described here do not require consent, which is why the website shows no cookie banner.
+
+## 2. Technical cookies
+
+### sessionid
+
+- Purpose: keeps the session — sign-in to the reserved area and the second-factor check, the orientation questionnaire in progress, confirmation messages from one page to the next.
+- When it is set: only when a session is needed (sign-in, questionnaire, confirmation message).
+- Duration: without sign-in, up to 8 hours; after sign-in, until the browser is closed. On the server, the session expires 8 hours after its last update.
+- Content: a random identifier; the session data stay on the server.
+- Type: first-party; not readable by the page’s scripts (HttpOnly), not sent with requests coming from other sites (SameSite=Lax), transmitted only over an encrypted connection.
+
+### csrftoken
+
+- Purpose: security — protects form submissions against forged requests coming from other sites (CSRF).
+- When it is set: when a page containing a form is displayed. Once signed in, the sign-out button of the reserved area is also a form, so the cookie is set on every page.
+- Duration: 52 weeks.
+- Content: a random check value.
+- Type: first-party; HttpOnly, SameSite=Lax, transmitted only over an encrypted connection.
+
+### ile_language
+
+- Purpose: remembers the reading language chosen (Italian, French, English or Arabic).
+- When it is set: when a page of the website is viewed in one of these languages.
+- Duration: 365 days.
+- Content: the two-letter language code.
+- Type: first-party; HttpOnly, SameSite=Lax, transmitted only over an encrypted connection.
+
+## 3. Browser storage
+
+Some display preferences are kept in the browser’s storage (localStorage or sessionStorage). These values stay on the device and are never sent to the server. They contain no identifier, except the search history of the administration interface (commandHistory), which holds the text typed by the staff member and may therefore contain, for example, a name or an e-mail address that was searched for.
+
+### ile.rail (localStorage)
+
+- Purpose: remembers whether the side menu of the reserved area is open or closed.
+- Duration: until the user clears the website’s data in the browser.
+- Value: “open” or “closed”.
+
+### ile.lume (sessionStorage)
+
+- Purpose: passes to the next page the transition in progress (for example a change of language), so that the page-change animation is continuous.
+- Duration: read within 5 seconds and deleted at once; in any case it disappears when the tab is closed.
+- Value: the type of transition and the time it started.
+
+### ile.hero.discovered (sessionStorage)
+
+- Purpose: makes the home page’s opening animation play only once per tab.
+- Duration: until the tab is closed.
+- Value: “1”.
+
+### ile.dismissed.<identifier> (sessionStorage)
+
+- Purpose: remembers that the user closed an institutional notice, so that it does not reappear in the same tab.
+- Duration: until the tab is closed.
+- Value: “1”.
+
+### adminTheme (localStorage, staff only)
+
+- Purpose: remembers the display theme chosen by staff in the administration interface (light, dark or automatic).
+- Duration: until the staff member clears the website’s data in the browser.
+- Value: “light”, “dark” or “auto”.
+
+### sidebarOpen, sidebarWidth, commandHistory (localStorage, staff only)
+
+- Purpose: the state of the administration interface used by staff — whether the side menu is open, its width, and the latest searches made.
+- Duration: until the staff member clears the website’s data in the browser.
+- Value: display preferences and the text of the searches, which stay on the staff member’s device.
+
+## 4. Managing cookies and browser storage
+
+Users can manage or disable cookies and clear browser storage at any time in their browser settings. Disabling technical cookies may, however, impair some of the website’s features, for example access to the reserved area.
+
+## 5. Changes
+
+Should analytics or third-party cookies be introduced in the future, the website would first adopt a consent banner that complies with the Garante’s Guidelines, and this notice would be updated, stating the date of the latest revision.

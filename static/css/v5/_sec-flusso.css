@@ -1,0 +1,91 @@
+/* ============================================================================================
+   F · «IL FLUSSO» (design V5.22, SECTION_SYSTEM_V2 §2 F; lane S), recomposed by V5.30 VARIETY §5, §7 ENTREPRISES, then
+   by the FINAL MICRO-PASS (BRIEF §6 B3; §2.2 «the quiet sequence marker», the spec both streams write as it stands):
+   the moments are columns on ONE 1 px hairline that joins them, each opening on its figure — the caption's size, the
+   control's weight, the tertiary ink, tabular, «1» not «01»; the first in the accent — then its words. No panel, no
+   tile, no large numeral, no curve: reading order is the progression (in Arabic, right to left). Page-only (after
+   v5/_sezioni.css and v5/_linea-v2.css: the terminal plate and the arrival). Markup: components/sezioni/flusso.html.
+   ============================================================================================ */
+
+.flusso__tappe {
+  display: grid;
+  gap: var(--s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: flusso;
+}
+
+/* a moment: its figure, the hairline running from it to the next moment's, its words under them */
+.flusso__tappa {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start; /* the moments' figures on one line, whatever the length of their words */
+  align-items: center;
+  gap: var(--s-4) var(--s-3);
+  counter-increment: flusso;
+}
+
+.flusso__tappa::before {
+  content: counter(flusso);
+  font-size: var(--t-caption);
+  line-height: var(--t-caption-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+
+.flusso__tappa:first-child::before {
+  color: var(--accent-text);
+}
+
+.flusso__tappa::after {
+  content: "";
+  grid-area: 1 / 2;
+  block-size: 1px;
+  background: var(--line-rhythm);
+}
+
+.flusso__lastra {
+  grid-column: 1 / -1;
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+  max-inline-size: 24rem;
+}
+
+.flusso__titolo {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.flusso__testo {
+  margin: 0;
+  color: var(--text-2);
+}
+
+/* from 48 rem the moments stand side by side and their hairlines meet: one line across the row, broken only by the
+   figures */
+@media (min-width: 48rem) {
+  .flusso__tappe {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .flusso__tappa::after {
+    margin-inline-end: var(--s-3);
+  }
+
+  .flusso__lastra {
+    padding-inline-end: var(--s-8);
+  }
+}
+
+@media (forced-colors: active) {
+  .flusso__tappa::after {
+    background: CanvasText;
+  }
+}

@@ -1,0 +1,653 @@
+{
+ "what": "V5 photographs, family «formation» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "atelier-soudure-geste",
+   "pexels_id": 5265332,
+   "photographer": "Jeswin  Thomas",
+   "photographer_url": "https://www.pexels.com/@jeswin",
+   "page": "https://www.pexels.com/photo/persons-wearing-protective-gears-using-tools-in-a-workshop-5265332/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Two welders in protective gear concentrate on a project in a workshop setting.",
+   "original_px": [
+    6000,
+    4000
+   ],
+   "original_sha256": "ffb77c2be153baf2cf389b2c3d0d187f2ecb80e955ae36ec4c18367806beabbe",
+   "role": "lcp",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.22,
+      0.38,
+      0.84,
+      1.0
+     ],
+     "crop_px": [
+      1320,
+      1520,
+      5040,
+      4000
+     ],
+     "master_px": [
+      3720,
+      2480
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.425,
+      0.525,
+      0.47,
+      0.57
+     ],
+     "radius_px": 18,
+     "reason": "the jacket's brand mark"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a trainee hands the torch to another over the vice; the one face in the full frame (right, in profile) is above the crop (O55); the helmets' decals are outside it; 3:2 only (a 4:5 cut brings the profile back)",
+   "files": [
+    {
+     "file": "atelier-soudure-geste-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 10879,
+     "budget": 61440,
+     "sha256": "66fbb799434e550ff1c2dc528b3a1eb49d2504ee161482e363b9cd2c73bdaa75"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 15936,
+     "budget": 61440,
+     "sha256": "769e8f79ecacd6a8366eb73fe722d5b76ec71fe03396455e5dc06f4379e86291"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 20804,
+     "budget": 61440,
+     "sha256": "5f29aaad2030705d8e7387c33f9a3ff0033e304cc9f36bdc51be5a90bf24627a"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 29332,
+     "budget": 61440,
+     "sha256": "32558ce2bbd61cbe4fb947822c2f9583c4a4137584535f6b0217504c930960b0"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 34520,
+     "budget": 61440,
+     "sha256": "6ffb84ceb23a536503adfeeb6b11c691089b66aac554e614691b2649b919b485"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 46960,
+     "budget": 61440,
+     "sha256": "b16c151c2837ec016c1e255bdcf24ba2719c4f4472db7ce1d76ca845344fc3dc"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 50327,
+     "budget": null,
+     "sha256": "8a5c9cf173a53594c9fe14b2d3e5a087e0b6a24374e91b9191f68ff6124decf3"
+    },
+    {
+     "file": "atelier-soudure-geste-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 68778,
+     "budget": null,
+     "sha256": "0480e7d6f93a8ef51fcfa64850e347e57344084510a93f07f37da29e2107d8b3"
+    }
+   ]
+  },
+  {
+   "slug": "banc-electrique-mains",
+   "pexels_id": 34526423,
+   "photographer": "mickael ange konan",
+   "photographer_url": "https://www.pexels.com/@mickael-ange-konan-2156070331",
+   "page": "https://www.pexels.com/photo/female-technician-working-on-electrical-control-panel-34526423/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Young female technician repairing electrical control panel in industrial setting.",
+   "original_px": [
+    6240,
+    4160
+   ],
+   "original_sha256": "7924c25a339d88e95855fe22dfa924e406d5b1a1321c4e4a798a84da2386b6be",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.3,
+      0.28,
+      0.56,
+      0.77
+     ],
+     "crop_px": [
+      1872,
+      1170,
+      3494,
+      3198
+     ],
+     "master_px": [
+      1622,
+      2028
+     ]
+    },
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.3,
+      0.4,
+      0.56,
+      0.66
+     ],
+     "crop_px": [
+      1872,
+      1664,
+      3494,
+      2745
+     ],
+     "master_px": [
+      1622,
+      1081
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.36,
+      0.428,
+      0.399,
+      0.475
+     ],
+     "radius_px": 9,
+     "reason": "a motor-protection breaker's maker's logo and printed label",
+     "mode": "median"
+    },
+    {
+     "box_fraction": [
+      0.43,
+      0.4,
+      0.462,
+      0.462
+     ],
+     "radius_px": 9,
+     "reason": "a miniature breaker's printed markings",
+     "mode": "median"
+    },
+    {
+     "box_fraction": [
+      0.431,
+      0.583,
+      0.498,
+      0.64
+     ],
+     "radius_px": 9,
+     "reason": "the control relays' model codes and terminal numbers",
+     "mode": "median"
+    },
+    {
+     "box_fraction": [
+      0.383,
+      0.612,
+      0.408,
+      0.636
+     ],
+     "radius_px": 9,
+     "reason": "a module's CE label",
+     "mode": "median"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "hands wiring control relays on an electrical training bench, between blue wire ducts and red leads; the face (x 0.17–0.27) is outside both crops, which start at x 0.30 (O55); the breaker's maker's logo and label, the relays' model codes and terminal numbers and a CE label are erased by a median filter (the shapes stay crisp, so nothing reads as a blurred patch); the supply panel's lettering and the louvred window stay outside the crops; distinct from the welding head and the companies' calliper. Chosen over 34938452 (the same subject on a workbench), whose Pexels author is a company account: the caption would have printed a commercial brand under the frame",
+   "files": [
+    {
+     "file": "banc-electrique-mains-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 23015,
+     "budget": 46080,
+     "sha256": "3f48226372fba2c87bf0a5c89f2e56e3defe6c37087a77db0f7192fde619596f"
+    },
+    {
+     "file": "banc-electrique-mains-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 34242,
+     "budget": 46080,
+     "sha256": "34dc4c65cdba84af4ca4be775ca4f45d90097605ce4961326118ec0be70b1d1e"
+    },
+    {
+     "file": "banc-electrique-mains-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 49,
+     "bytes": 42372,
+     "budget": 46080,
+     "sha256": "d877d385d8e3435bbba01bc48dcde7f864f07a1d9a667df72fe1c3c8152fc4d3"
+    },
+    {
+     "file": "banc-electrique-mains-4x5-800.webp",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "webp",
+     "quality": 44,
+     "bytes": 45724,
+     "budget": 46080,
+     "sha256": "352d7614d9a95a600d4a9df227868c9ad2a53c5e0d42876c426006630a3c44c7"
+    },
+    {
+     "file": "banc-electrique-mains-4x5-1200.avif",
+     "ratio": "4x5",
+     "width": 1200,
+     "height": 1500,
+     "format": "avif",
+     "quality": 37,
+     "bytes": 45983,
+     "budget": 46080,
+     "sha256": "a2d8d6563bc2c80993911482749619dba33cc318c510d49e59b63d260f59028d"
+    },
+    {
+     "file": "banc-electrique-mains-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13271,
+     "budget": 46080,
+     "sha256": "0096c7ad573b5342cf9c157bc092b6a13dc31514ac523a7521f1faf9862e7e75"
+    },
+    {
+     "file": "banc-electrique-mains-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 20390,
+     "budget": 46080,
+     "sha256": "03b3b6153da8a8e4982df18c0f5896bc5bc1e5ab4a8df2374d3fb02e4b05178d"
+    },
+    {
+     "file": "banc-electrique-mains-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 28737,
+     "budget": 46080,
+     "sha256": "1867098bc47b8c87eb7d7225b2037dd90cef15124701b17c5d4a5b5cd479b31d"
+    },
+    {
+     "file": "banc-electrique-mains-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 40730,
+     "budget": 46080,
+     "sha256": "a820a73b61e00d73202da2ab709b659749adf59bd03cd79ca1de9e6852b4b7f7"
+    },
+    {
+     "file": "banc-electrique-mains-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 40778,
+     "budget": 46080,
+     "sha256": "09be3c40c07ebea2f7bcb679c2e86faccfc5416da1534ddfd0611c9afa72d027"
+    },
+    {
+     "file": "banc-electrique-mains-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 41,
+     "bytes": 44630,
+     "budget": 46080,
+     "sha256": "ef2083044f5c85c2ce49fd9d33921c7a7e05a14dfe71becede63a6a8dd226e00"
+    }
+   ],
+   "ceilings": {
+    "4x5": 46080,
+    "3x2": 46080
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "banc-electrique-mains-4x5-1200.webp"
+   ],
+   "label": "v522-m-build"
+  },
+  {
+   "slug": "cours-paperboard-dos",
+   "pexels_id": 6814351,
+   "photographer": "cottonbro studio",
+   "photographer_url": "https://www.pexels.com/@cottonbro",
+   "page": "https://www.pexels.com/photo/a-speaker-writing-on-a-whiteboard-6814351/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Three colleagues collaborating during an office meeting with a whiteboard discussion.",
+   "original_px": [
+    4123,
+    6185
+   ],
+   "original_sha256": "ebc9b0aad8ca8af8081a90a5e479348794afca4da2502d0627a5ea464f5e6dba",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.14,
+      0.182,
+      1.0,
+      0.5642
+     ],
+     "crop_px": [
+      577,
+      1126,
+      4123,
+      3490
+     ],
+     "master_px": [
+      3546,
+      2364
+     ]
+    }
+   ],
+   "redactions": [
+    {
+     "box_fraction": [
+      0.396,
+      0.247,
+      0.4565,
+      0.2705
+     ],
+     "radius_px": 41,
+     "reason": "the handwritten word on the flipchart",
+     "mode": "median"
+    }
+   ],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a trainer seen from behind writes on a flipchart before two participants seated at a table, also seen from behind: a class for adults; nobody identifiable (O55); the glazed door with blinds at the frame's left edge is outside the crop, which starts at x 0.14 (O54); the handwritten word on the sheet is erased by a median filter (the sheet reads blank, never a blurred patch); the wall screen shows nothing",
+   "files": [
+    {
+     "file": "cours-paperboard-dos-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 8361,
+     "budget": 46080,
+     "sha256": "d1aa27c6c0291e836775218e07820fe732e1c62c7f058ac6cf3f1dcfefd5736e"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 12458,
+     "budget": 46080,
+     "sha256": "b7c8c7e1e47f3efce844e4394df8e845d861389fc93f98e2b118efe9deaede09"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 15825,
+     "budget": 46080,
+     "sha256": "8b4f554393f8c527a177769292e29e3a4720bc80b8d2757f4848b43eb0f44880"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 25738,
+     "budget": 46080,
+     "sha256": "dde590cfc25ad74c6a7a3438037ba61c4d1ee32db86c130d0c43024258fc1db0"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 27753,
+     "budget": 46080,
+     "sha256": "2f824e59b509115022a1c50b716647d723f6a1b24436c241de05dba22a47161f"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 71,
+     "bytes": 44592,
+     "budget": 46080,
+     "sha256": "637e3fe741cbc3f0278f98f1f29c466af7d21683a0d4632246139614a769eedf"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 43194,
+     "budget": null,
+     "sha256": "8e405e734241532564c85c4e9869fb69fc32e7d521f4b62501e81fd1cf5a3c46"
+    },
+    {
+     "file": "cours-paperboard-dos-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 74346,
+     "budget": null,
+     "sha256": "7be1ee6d49cfc729256643b0be625fb68d33113bbf56ab8bb3fdbdfec3e44a22"
+    }
+   ],
+   "label": "v532-b-correction"
+  },
+  {
+   "slug": "microscopes-rangee",
+   "pexels_id": 15290006,
+   "photographer": "Vladimir Srajber",
+   "photographer_url": "https://www.pexels.com/@vladimirsrajber",
+   "page": "https://www.pexels.com/photo/microscopes-on-the-floor-15290006/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "A series of microscopes on a lab table, ideal for scientific research and education.",
+   "original_px": [
+    8368,
+    5584
+   ],
+   "original_sha256": "e7b7ecefc384c715dd1de1415d15382ef79a6dfb1f83a1960e95c92c42f136b1",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+     ],
+     "crop_px": [
+      0,
+      3,
+      8368,
+      5582
+     ],
+     "master_px": [
+      8368,
+      5579
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "a row of microscopes on a pale bench: structured learning, nobody in the frame",
+   "files": [
+    {
+     "file": "microscopes-rangee-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 6379,
+     "budget": 46080,
+     "sha256": "55bf6fa35ffc6af5ff0546f11033f08608e0f7850c0c59ae5b2bb43c2eae5c32"
+    },
+    {
+     "file": "microscopes-rangee-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 9406,
+     "budget": 46080,
+     "sha256": "ed5fe0adf7e7ea0444c66206c9c68965563c86756efe4940205136edc17c42be"
+    },
+    {
+     "file": "microscopes-rangee-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 11567,
+     "budget": 46080,
+     "sha256": "d2ef0a6b8450c89553b28bc7a712d223f4b7b46f5acb634735fb69ce4e0fb42a"
+    },
+    {
+     "file": "microscopes-rangee-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 17364,
+     "budget": 46080,
+     "sha256": "55561739b7502a0ce47cd26f62d33e07af7c77df36967f4d54328485fe93f56c"
+    },
+    {
+     "file": "microscopes-rangee-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 18806,
+     "budget": 46080,
+     "sha256": "4a2e36ecdc680d5ca7b887f43ae742aa320a42e32a9ec0f50838d0536ad6976d"
+    },
+    {
+     "file": "microscopes-rangee-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 27408,
+     "budget": 46080,
+     "sha256": "a1a705569da21982832a1e713b9398cb1f33b84470b9d377202ea72fb4bb05e6"
+    },
+    {
+     "file": "microscopes-rangee-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 26003,
+     "budget": null,
+     "sha256": "0572967e76a48a75ae7cae303246f919eb3363453a3f6879839eb74ce784bf7a"
+    },
+    {
+     "file": "microscopes-rangee-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 38726,
+     "budget": null,
+     "sha256": "077b48a8e2a65bd4e4283824f7b6de964c83bdfae8f2b56e14fa354a2c50ba31"
+    }
+   ]
+  }
+ ]
+}

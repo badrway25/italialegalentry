@@ -1,0 +1,179 @@
+/* ============================================================================================
+   SECTION COMPOSITIONS — V5.15 §17/§18 (label v515-c-build): «white background + title + three cards» replaced, page by
+   page, by the pattern its content asks for. A PAGE-ONLY partial: imported by the page sheets that draw them
+   (ecosystem/ecosystem.css, pathways/pathways.css, pages/css/interior.css), never main.css.
+
+     1 · the editorial split   — Espace Institutions: the recipients' statement beside the assembly hall, the frame
+                                 offset a step down so the two read as one spread (from 64 rem);
+     2 · the photographic band — Espace Entreprises: the productive territory, 21:9, between the three times and the
+                                 form; a night hairline frame, the image's depth shadow;
+     3 · the second time       — Formation: the after-arrival frame under its text, on the line, B/W -> colour as it
+                                 enters (lane A's data-grade="bw-scroll");
+     4 · the spaces            — Le projet: the four spaces as weighted tiles — the audience glyph in its disc, the
+                                 audience accent as a rule along the foot, depth on hover, the whole tile the target;
+   Logical properties only; tokens only; motion under no-preference and never on html.rm.
+   ============================================================================================ */
+
+@media (min-width: 64rem) {
+  .destinataires .chapter__body {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--s-10);
+    align-items: start;
+  }
+
+  .destinataires .chapter__body > * {
+    grid-column: 1;
+  }
+}
+
+/* ---- 3 · the second time ----------------------------------------------------------------------------------- */
+.training-phase__photo {
+  grid-column: 2;
+  max-inline-size: 30rem;
+  margin-block-start: var(--s-6);
+}
+
+/* ---- 4 · the spaces as weighted tiles ---------------------------------------------------------------------- */
+.spazi {
+  display: grid;
+  gap: var(--s-4);
+  border: 0;
+}
+
+.spazi > .registro__row {
+  position: relative;
+  padding: var(--s-6) var(--s-6) var(--s-8);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line-structure) 26%, transparent), var(--shadow-1);
+  transition: box-shadow var(--motion-slow) var(--ease-enter), translate var(--motion-slow) var(--ease-enter);
+}
+
+/* the audience's accent: a rule along the tile's foot, drawn across on hover */
+.spazi > .registro__row::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--s-6);
+  inset-block-end: var(--s-4);
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--accent-mark);
+  transform: scaleX(0.18);
+  transform-origin: 0 50%;
+  transition: transform var(--motion-slow) var(--ease-enter);
+}
+
+[dir="rtl"] .spazi > .registro__row::after {
+  transform-origin: 100% 50%;
+}
+
+.spazi .registro__title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  letter-spacing: var(--track-entry);
+}
+
+/* round 1 (v515-c-improve1): the tile says what the space is for — its one line under the name, so the four tiles
+   are four answers, not four labels; the name is the tile's link without an underline (the foot rule is the cue) */
+.spazi .page-links__link {
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+/* the whole tile is the link's target */
+.spazi .page-links__link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+@media (min-width: 48rem) {
+  .spazi {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spazi > .registro__row:hover {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-mark) 40%, transparent), var(--shadow-3);
+  }
+
+  .spazi > .registro__row:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) and (pointer: fine) {
+    :root:not(.rm) .spazi > .registro__row:hover {
+      translate: 0 -2px;
+    }
+  }
+}
+
+.spazi > .registro__row:focus-within {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring), var(--shadow-3);
+}
+
+.spazi > .registro__row:focus-within::after {
+  transform: scaleX(1);
+}
+
+@media (forced-colors: active) {
+  .spazi > .registro__row {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* from 64 rem the two times are an editorial split (round 2 of W3, MJ-3; round 1 had moved the frame out from over
+   the locked «Second temps» text): the chapter's body takes the whole container, each time reads in a 34 rem column
+   (the node | the words | the frame), and the after-arrival frame fills the third track to the container's edge,
+   top-aligned with its title. «Premier temps» keeps the same two first tracks, so the two times pair. */
+@media (min-width: 64rem) {
+  .chapter .chapter__inner > .chapter__body:has(> .training-phases) {
+    grid-column: 1 / -1;
+  }
+
+  .training-phases > .training-phase {
+    grid-template-columns: var(--linea-node) minmax(0, 34rem) minmax(0, 1fr);
+    column-gap: var(--s-4);
+  }
+
+  .training-phases > .training-phase > .linea__text {
+    max-inline-size: none;
+  }
+
+  .training-phase > .training-phase__photo {
+    grid-column: 3;
+    grid-row: 2 / span 3;
+    align-self: start;
+    max-inline-size: none;
+    margin: 0;
+    margin-inline-start: var(--s-10);
+  }
+}
+
+/* ---- 5 · the capitals chapter title (finishing round F1): a prescribed section title written in capitals
+        («POURQUOI ITALY LEGAL ENTRY» on Le projet) is tracked as every capital run is (TR rule 6), with the case
+        features, and from 48 rem it stands one optical step under its mixed-case neighbours (24/32 against 28/36):
+        a capital line at the band size read louder than the titles beside it. The words are unchanged. Doubled class: on
+        the Arabic page the French run must outweigh base.css's `:lang(ar) :is(h1, h2, h3, .t-band)` reset (0,3,0). ---- */
+.chapter__title.chapter__title--caps:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+  font-feature-settings: var(--feat-caps);
+}
+
+@media (min-width: 48rem) {
+  .chapter__title.chapter__title--caps:not(:lang(ar)) {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    letter-spacing: var(--track-display-caps);
+  }
+}

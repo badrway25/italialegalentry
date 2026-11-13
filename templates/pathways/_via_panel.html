@@ -1,0 +1,8 @@
+{% load i18n %}{% comment %}
+Parcours — the questionnaire's panel in the entrance's end seat (V5.32, lane B; pages/partials/_ingresso.html
+`aside_template`, drawn with the entrance's context): the door's way in — its question, its sentence, its one control
+(pages/partials/_via.html) — as one finished panel. It takes the seat the person-at-the-window photograph held: that
+frame is the qualified-work pathway's own (pages.services.PATHWAY_FRAMES), drawn by the explorer just below.
+It carries the way's own class (`ingresso__way`): below 48 rem it is drawn as every door head's way under the lead, no
+plate (v5/_fronte.css holds the head a step closer so the control reaches the first screen; pathways/_esplora.css).
+{% endcomment %}<div class="esplora-via via ingresso__way">{% include "pages/partials/_via.html" %}</div>

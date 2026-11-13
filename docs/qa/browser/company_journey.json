@@ -1,0 +1,27 @@
+{
+  "base": "http://127.0.0.1:8770",
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ],
+  "forbidden_found": [],
+  "dashboard_status": 200,
+  "dashboard_h1": "Cantiere Adriatico S.r.l.",
+  "profile_status": 200,
+  "profile_h1": "Mon entreprise",
+  "verification_stated": true,
+  "needs_reached_by_click": true,
+  "needs_rows": 4,
+  "need_detail_url": "http://127.0.0.1:8770/fr/espace-reserve/entreprise/mes-besoins/BA2E6298AF/",
+  "need_detail_h1": "Soudure d’assemblage sur charpente métallique",
+  "need_skills_rows": 17,
+  "need_state": "VÉRIFIÉE",
+  "responsible_named": true,
+  "analysis_status": 403,
+  "analysis_h1": "Accès non autorisé",
+  "analysis_refused_to_the_company": true,
+  "pages_visited": [
+    "dashboard",
+    "profile",
+    "analysis"
+  ]
+}

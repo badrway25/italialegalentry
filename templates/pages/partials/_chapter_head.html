@@ -1,0 +1,24 @@
+{% comment %}
+THE CHAPTER HEAD of a page of the public interior (design V5.4, W3-F1; static/css/v5/_interior.css §3) — the home's
+section device carried into the interior: the mark of the section's concept, the title, the lead. No eyebrow, no
+ordinal. The headings are the live strings, verbatim (the reader's questions are the owner's copy packet, B1 item 7).
+
+The mark (V5.12 §7, W1): the registry's CHAPTER map names the concept of the section from its anchor — «Par e-mail»
+draws the at-sign, «Autorités» the stamp, the closing «Orientation» the compass — and a section that says no concept
+(«En bref», «Pourquoi», «Pour aller plus loin») draws none: its title is the device. Never `ile-steps`, the journey's
+own mark (apps/core/icons.py, CHAPTER / CHAPTER_OF).
+
+V5.22 (SECTION_SYSTEM_V2 §0 item 3, §4.1 rule 1; lane S): the bare 24 px mark above the title is RETIRED — «No glyph is
+stacked above a title»: a theme is a T1 seal integrated in its section's composition (components/sezioni/), or it is
+not drawn. The anchor still names the section's concept in the registry (icons.CHAPTER_OF: the concept registry), and
+this head draws no glyph; a page recomposed into a V2 pattern takes components/sezioni/_testa.html instead.
+
+Contract: `title_id`, `title` (safe), optional `title_lang`, `lead` (safe), `lead_lang`; `chapter_concept` and `tile`
+are still accepted from the callers of V5.12–V5.15 and draw nothing. A prescribed title written in capitals (Le projet's «why»
+section title) adds `chapter__title--caps` (v5/_compose.css §5: tracked, one optical step down), as the h1 and the
+phases' label do.
+{% endcomment %}
+<div class="chapter__head">
+  <h2 class="chapter__title{% if title|striptags|upper == title|striptags and title|striptags|lower != title|striptags %} chapter__title--caps{% endif %}" id="{{ title_id }}"{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h2>
+  {% if lead %}<p class="chapter__lead"{% if lead_lang %} lang="{{ lead_lang }}"{% endif %}>{{ lead }}</p>{% endif %}
+</div>

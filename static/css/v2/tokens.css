@@ -1,0 +1,60 @@
+/* ============================================================================
+   TOKENS V2 — «Due rive, una porta»
+   docs/design-v2/DESIGN_SYSTEM_V2.md · decided in docs/design-v2/COUNCIL_DECISION.md
+
+   Two chapters, one accent. The mineral chapter is for reading, the midnight
+   chapter for the immersive moments (hero, process, platform bar). ONE colour
+   is interactive: links, the primary action and the focus ring share it, and
+   nothing else may use it. The teal of the territory is graphics — lines,
+   ticks, glyphs — never text, never a control.
+
+   Contrast figures are computed (WCAG 2.x relative luminance) against the
+   ground named on the line and re-verified by tests/frontend/test_v2_tokens.py.
+
+   V5.20 (v520-css, 30 October 2026): every declaration that a later layer
+   (v4/tokens.css, v5/) re-declares in the same context never reached a page and
+   left this file — the shadows, the three voices, the line heights and the
+   tracking, three space steps, the curves, two radii, the letterhead's heights
+   and their narrow override.
+   V5.29 09:41 item 2 (CLOSING, 7 November 2026): the 45 values v520 kept for the
+   design showcase's captions left too — the mineral and midnight palettes, the
+   accent, the error, seal and pending steps, the eleven type sizes and the six
+   durations: v5/aliases.css, v5/tokens.css and v4/tokens.css re-declare every one
+   of them, so none ever reached a page, and apps/core/dev.py now prints the value
+   the swatch paints (the effective cascade), not this layer's. What stays is what
+   no later layer declares: the success steps, the official brand, the routes, the
+   responsible actors, the night's strong hairline and the chrome's height.
+   ========================================================================== */
+
+:root {
+  /* ---- MINERAL, MIDNIGHT, THE ACCENT, the error / seal / pending steps: valued by
+     v5/aliases.css and v5/tokens.css since design V5 (the showcase prints those) - */
+
+  /* ---- MIDNIGHT — the immersive chapter --------------------------------- */
+  --hairline-dark-strong: rgba(214, 226, 228, 0.28);
+
+  /* ---- SEMANTIC — never a brand colour ---------------------------------- */
+  --ok-700: #1e7a4d;   --ok-100: #dcefe4;   --ok-300: #7ccfa0;   /* regular, done, valid */
+
+  /* ---- OFFICIAL BRAND — never altered, never used elsewhere ------------- */
+  --brand-green: #157a3c; /* 5.19:1 on --min-2 */
+  --brand-navy: #0f2547;  /* 14.63:1 on --min-2 */
+  --brand-red: #c4142b;   /* 5.78:1 on --min-2 */
+  --brand-gold: #c39a2b;  /* 5.80:1 on --brand-navy — the key */
+
+  /* ---- THE FOUR ROUTES — never alone: index + glyph + text -------------- */
+  --route-1: #0f6a72; --route-2: #1c5f7c; --route-3: #34506a; --route-4: #2f6b5c;
+
+  /* ---- RESPONSIBLE ACTORS (rail 2.0) — never alone: texture + glyph + word */
+  --owner-person: #0f6a72;
+  --owner-project: #34506a;
+  --owner-training: #1c5f7c;
+  --owner-authority: #8c6d4b;
+  --owner-territory: #2f6b5c;
+
+  /* ---- TYPE and MOTION: the twelve steps and the durations are v5/tokens.css's
+     (Typography V2), the V4 names v4/tokens.css's — the showcase prints those -- */
+
+  /* ---- LAYOUT ------------------------------------------------------------ */
+  --chrome-height: calc(var(--utility-height) + var(--header-height));
+}

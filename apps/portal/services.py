@@ -1,0 +1,3313 @@
+"""
+Business logic of the Espace réservé (views stay thin).
+
+Absolute rule: every function takes the *account* and returns ONLY rows owned by that account.
+Nothing here accepts a free-form user id from the request, and the ``get_own_*`` helpers are the
+single door to a detail page (404 when the row does not exist, 403 when it belongs to somebody
+else — never a silent fallback).
+
+Sibling apps are reached defensively (``apps.get_model`` / ``import_module`` guarded against
+``LookupError`` / ``ImportError``) so the reserved area keeps working — with an honest
+« section indisponible » card — while another app is being changed. Documented couplings:
+
+* enquiries     ``enquiries.services.submissions_for_user`` (fallback: the three submission models
+                filtered by ``owner``), ``PublicSubmission.data_rows()`` and ``.consent``;
+* forum         ``forum.ForumRegistration`` filtered by its ``user`` FK (never by e-mail);
+* orientation   ``orientation.services.sessions_for_user`` and ``present_result``;
+* documents     ``documents.PrivateDocument.objects.for_owner`` and ``services.user_may_upload``;
+* accounts      ``Membership`` rows of the account (organisation summary, no other member's data).
+"""
+
+from __future__ import annotations
+
+import logging
+import re
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from importlib import import_module
+from typing import Any
+
+from django.apps import apps
+from django.core.exceptions import FieldError, PermissionDenied, ValidationError
+from django.core.paginator import Page, Paginator
+from django.db import transaction
+from django.http import Http404
+from django.urls import NoReverseMatch, reverse
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
+
+from accounts import roles
+from accounts.models import MembershipRole
+from accounts.permissions import can, member_of
+from audit.services import record as audit_record
+from core import clock, icons
+from portal.models import Deadline, DeadlineStatus, Message, PortalNotice
+from portal.policies import audiences_of
+
+log = logging.getLogger("ile.portal")
+
+DASHBOARD_LATEST = 3
+PAGE_SIZE = 10
+
+#: Failures that mean « a sibling app changed under us » — never database errors (requests are atomic).
+SIBLING_ERRORS = (ImportError, LookupError, AttributeError, TypeError, FieldError)
+
+ORGANISATION_ACCOUNT_TYPES = frozenset({"company", "institution", "university"})
+ORGANISATION_ROLES = (roles.COMPANY, roles.INSTITUTION, roles.UNIVERSITY)
+ORIENTATION_ACCOUNT_TYPES = frozenset({"person", "professional"})
+
+
+# ---------------------------------------------------------------------------------------------
+# Small helpers
+# ---------------------------------------------------------------------------------------------
+def safe_reverse(name: str, *args, **kwargs) -> str:
+    """Reverse a (possibly foreign) URL name; "" while the sibling route does not exist."""
+    try:
+        return reverse(name, args=args or None, kwargs=kwargs or None)
+    except NoReverseMatch:
+        return ""
+
+
+def _get_model(app_label: str, model_name: str):
+    try:
+        return apps.get_model(app_label, model_name)
+    except LookupError:
+        return None
+
+
+def _import(module: str):
+    try:
+        return import_module(module)
+    except ImportError:
+        return None
+
+
+def paginate(items, page_number, per_page: int = PAGE_SIZE) -> Page:
+    """Lenient pagination: a junk or out-of-range ``?page=`` never raises."""
+    return Paginator(items, per_page).get_page(page_number)
+
+
+def reserved_area_enabled() -> bool:
+    """Back-office kill switch (``core.SiteSettings.reserved_area_enabled``)."""
+    from core.models import SiteSettings
+
+    return bool(SiteSettings.load().reserved_area_enabled)
+
+
+# ---------------------------------------------------------------------------------------------
+# Messages
+# ---------------------------------------------------------------------------------------------
+def inbox(user):
+    return Message.objects.inbox(user)
+
+
+def unread_messages(user):
+    """Unread, already visible messages of the account (QuerySet — ``.count()`` for the badge)."""
+    return Message.objects.inbox(user).unread()
+
+
+def unread_count(user) -> int:
+    return unread_messages(user).count()
+
+
+def get_own_message(user, pk) -> Message:
+    """
+    The caller's own message, or 404 — never 403 (L-06/L-07, REQ-IAM-06).
+
+    A 403 on somebody else's message says "this message exists and is not yours", which is a
+    disclosure in itself: the identifier is sequential enough to walk, and the answer alone maps out
+    who is corresponding with the project. A 404 says nothing at all, and says it identically for a
+    message that was never created.
+
+    The authorisation is applied IN THE QUERY rather than after the fetch, so the row is never loaded
+    for a caller who may not have it. Fetch-then-check is only ever one refactor away from becoming
+    fetch-then-forget-to-check.
+    """
+    message = Message.objects.inbox(user).filter(pk=pk).first()
+    if message is None or not can(user, "view", message) or not message.is_visible():
+        raise Http404
+    return message
+
+
+@transaction.atomic
+def mark_message_read(user, pk, request=None) -> Message:
+    """Flip the read state of the caller's OWN message (idempotent). Anything else → 403/404."""
+    message = get_own_message(user, pk)
+    if not can(user, "mark_read", message):
+        # Reached only for a message the caller CAN see, so its existence is already known to them
+        # and 403 is the honest answer here. This is the one case where 403 is right.
+        raise PermissionDenied
+    if not message.is_read:
+        message.is_read = True
+        message.read_at = clock.now()
+        message.save(update_fields=["is_read", "read_at", "updated_at"])
+        audit_record(request, action="portal.message.read", target=message, actor=user)
+    return message
+
+
+def send_message(*, recipient, subject: str, body: str, sender=None, related=None, visible_from=None, request=None):
+    """Create a staff-authored message (used by the admin and by future CRM hooks) + audit row."""
+    message = Message(recipient=recipient, sender=sender, subject=subject, body=body, visible_from=visible_from)
+    if related is not None:
+        message.related_object = related
+    message.full_clean()
+    message.save()
+    audit_message_created(message, request=request, actor=sender)
+    try:
+        # The notification ATTACHES to this row rather than writing a second one: the person must
+        # see the subject the author chose, once, not a machine paraphrase of it alongside.
+        from notifications.services import notify_for_message
+
+        notify_for_message(message, request=request, actor=sender)
+    except Exception:  # noqa: BLE001 - the message exists and is audited; announcing it is an extra
+        log.exception("message %s could not be announced", message.pk)
+    return message
+
+
+def audit_message_created(message: Message, *, request=None, actor=None) -> None:
+    """Audit metadata never contains the subject/body or the recipient's e-mail."""
+    audit_record(
+        request,
+        action="portal.message.created",
+        target=message,
+        actor=actor,
+        metadata={
+            "recipient_id": message.recipient_id,
+            "scheduled": message.visible_from is not None,
+            "related": message.content_type.model if message.content_type_id else "",
+        },
+    )
+
+
+def related_link(user, message: Message) -> dict[str, str] | None:
+    """
+    Link from a message to the record it is about — only when that record belongs to the reader.
+    A staff mistake (linking somebody else's record) therefore never leaks anything.
+    """
+    if not message.content_type_id or not message.object_id:
+        return None
+    try:
+        target = message.related_object
+    except (*SIBLING_ERRORS, ValueError, ValidationError):
+        return None
+    if target is None:
+        return None
+    for kind in REQUEST_KINDS.values():
+        model = kind.model()
+        if model is not None and isinstance(target, model):
+            if getattr(target, f"{kind.owner_field}_id", None) != user.id:
+                return None
+            return {
+                "label": _("Voir la demande concernée"),
+                "url": reverse("portal:request_detail", kwargs={"kind": kind.slug, "pk": target.pk}),
+            }
+    if isinstance(target, Deadline):
+        if target.owner_id != user.id:
+            return None
+        return {"label": _("Voir mes échéances"), "url": reverse("portal:deadlines")}
+    document_model = _get_model("documents", "PrivateDocument")
+    if document_model is not None and isinstance(target, document_model):
+        if target.owner_id != user.id or target.deleted_at is not None:
+            return None
+        return {"label": _("Voir mes documents"), "url": reverse("portal:documents")}
+    return None
+
+
+# ---------------------------------------------------------------------------------------------
+# Deadlines
+# ---------------------------------------------------------------------------------------------
+def deadlines_for(user):
+    return Deadline.objects.for_owner(user)
+
+
+def present_deadline(deadline: Deadline, today=None) -> dict[str, Any]:
+    """
+    One date of the account, as the deadline registers draw it. Design V5, F13 (plan §1.2, the platform map's F13;
+    W3-C): a date past due speaks ``overdue`` — azione, terracotta, a disc with clock hands — and a date close by
+    ``soon`` — attesa, amber, the dashed ring. Before, «En retard» went out as ``error`` (rifiuto: struck, garnet —
+    the gesture that annuls an entry) and «Bientôt» as ``warning``: red never means lateness. The kinds reach the
+    chip through ``core.chips.KIND_REGISTER``; the words are unchanged.
+    """
+    today = today or clock.today()
+    badge_label, badge_kind = "", ""
+    if deadline.is_overdue(today):
+        badge_label, badge_kind = _("En retard"), "overdue"
+    elif deadline.is_soon(today):
+        badge_label, badge_kind = _("Bientôt"), "soon"
+    elif deadline.status == DeadlineStatus.DONE:
+        badge_label, badge_kind = deadline.get_status_display(), "success"
+    elif deadline.status == DeadlineStatus.CANCELLED:
+        badge_label, badge_kind = deadline.get_status_display(), "neutral"
+    return {
+        "obj": deadline,
+        "pk": deadline.pk,
+        "title": deadline.title,
+        "due_on": deadline.due_on,
+        "kind_label": deadline.get_kind_display(),
+        # the member, for the chip of a date that is closed (core.chips «portal.DeadlineStatus»: done is a fact, a
+        # cancelled date carries nothing); an open one is said by its urgency, or by its date alone
+        "status": deadline.status,
+        "status_label": deadline.get_status_display(),
+        "description": deadline.description,
+        "source_note": deadline.source_note,
+        "badge_label": badge_label,
+        "badge_kind": badge_kind,
+        # the date's own glyph follows the same register (the DUE map: alarm-clock late, clock close by, calendar)
+        "urgency": badge_kind if badge_kind in ("overdue", "soon") else "",
+        "is_open": deadline.is_open,
+    }
+
+
+def deadlines_page(user, narrow=None) -> dict[str, Any]:
+    """
+    «Mes échéances» (design V5, W3-E): the open dates first — the late ones lead, being the earliest —, then the closed
+    ones, the latest first; and the register's band under the page's head: how many dates are still ahead and how many
+    are late, in the bridge's own words (``_deadlines_card``) — one count each, the late ones never counted twice.
+    V5.32 lane E: ``narrow`` (the list toolkit's, portal.lists.DEADLINES) narrows the rows the two sections draw; the
+    band keeps counting every date of the account.
+    """
+    today = clock.today()
+    every = list(deadlines_for(user))
+    rows = every if narrow is None else list(narrow(deadlines_for(user)))
+    open_rows = [present_deadline(d, today) for d in rows if d.is_open]
+    closed_rows = [present_deadline(d, today) for d in rows if not d.is_open]
+    closed_rows.sort(key=lambda r: r["due_on"], reverse=True)
+    still_open = [d for d in every if d.is_open]
+    overdue = sum(1 for d in still_open if d.is_overdue(today))
+    ahead = len(still_open) - overdue
+    return {
+        "open_deadlines": open_rows,
+        "closed_deadlines": closed_rows,
+        "deadlines_total": len(every),
+        "ahead_count": ahead,
+        "ahead_label": ngettext("échéance à venir", "échéances à venir", ahead),
+        "overdue_count": overdue,
+        "overdue_label": (_("%(n)d en retard") % {"n": overdue}) if overdue else "",
+    }
+
+
+# ---------------------------------------------------------------------------------------------
+# Notices
+# ---------------------------------------------------------------------------------------------
+def notices_for(user) -> list[PortalNotice]:
+    return list(PortalNotice.objects.live().for_audiences(audiences_of(user)).order_by("order", "-created_at"))
+
+
+# ---------------------------------------------------------------------------------------------
+# Requests (« Mes demandes »)
+# ---------------------------------------------------------------------------------------------
+FORUM_FIELDS = (
+    "first_name",
+    "last_name",
+    "organisation",
+    "role",
+    "email",
+    "phone",
+    "country",
+    "category",
+    "sector_of_interest",
+)
+
+STATUS_BADGES = {
+    "new": "info",
+    "in_progress": "pending",
+    "handled": "success",
+    "archived": "neutral",
+    "pending": "pending",
+    "confirmed": "success",
+    "cancelled": "neutral",
+    "attended": "success",
+}
+
+
+@dataclass(frozen=True)
+class RequestKind:
+    """One kind of record listed under « Mes demandes » (slug = URL segment)."""
+
+    slug: str
+    app_label: str
+    model_name: str
+    owner_field: str
+    title_attr: str = ""
+    fields: tuple[str, ...] = ()
+
+    def model(self):
+        return _get_model(self.app_label, self.model_name)
+
+    def title_of(self, obj) -> str:
+        value = getattr(obj, self.title_attr, "") if self.title_attr else ""
+        return str(value) if value else str(obj._meta.verbose_name)
+
+
+REQUEST_KINDS: dict[str, RequestKind] = {
+    k.slug: k
+    for k in (
+        RequestKind("besoins-entreprise", "enquiries", "CompanyNeedsRequest", "owner", "company_name"),
+        RequestKind("collaboration", "enquiries", "CollaborationProposal", "owner", "organisation_name"),
+        RequestKind("contact", "enquiries", "ContactRequest", "owner", "subject"),
+        RequestKind("inscription-forum", "forum", "ForumRegistration", "user", "", FORUM_FIELDS),
+    )
+}
+
+
+def _kind_of(obj) -> RequestKind | None:
+    for kind in REQUEST_KINDS.values():
+        model = kind.model()
+        if model is not None and type(obj) is model:
+            return kind
+    return None
+
+
+@dataclass(frozen=True)
+class RequestItem:
+    kind: str
+    pk: Any
+    title: str
+    kind_label: str
+    status_label: str
+    status_kind: str
+    created_at: Any
+    url: str
+    #: the member, for the chip (core.chips: «forum.RegistrationStatus» for a Forum registration, the enquiries'
+    #: «enquiries.SubmissionStatus» for the others) — the register is the member's, never the word's
+    status: str = ""
+
+    @property
+    def reference(self) -> str:
+        """The request's reference as the page has always said it — its kind and its number («contact-3»): a ledger
+        reference, drawn in ILE Mono."""
+        return f"{self.kind}-{self.pk}"
+
+    @property
+    def is_registration(self) -> bool:
+        return self.kind == "inscription-forum"
+
+
+def _present_request(obj, kind: RequestKind) -> RequestItem:
+    status = getattr(obj, "status", "")
+    display = getattr(obj, "get_status_display", None)
+    return RequestItem(
+        kind=kind.slug,
+        pk=obj.pk,
+        title=kind.title_of(obj),
+        kind_label=str(obj._meta.verbose_name),
+        status_label=str(display()) if callable(display) else str(status),
+        status_kind=STATUS_BADGES.get(status, "neutral"),
+        created_at=obj.created_at,
+        url=reverse("portal:request_detail", kwargs={"kind": kind.slug, "pk": obj.pk}),
+        status=str(status or ""),
+    )
+
+
+def _enquiry_rows(user) -> list:
+    services = _import("enquiries.services")
+    helper = getattr(services, "submissions_for_user", None) if services else None
+    if callable(helper):
+        return list(helper(user))
+    # Fallback coupling: the submission models filtered by their ``owner`` FK.
+    rows: list = []
+    for kind in REQUEST_KINDS.values():
+        if kind.app_label != "enquiries":
+            continue
+        model = kind.model()
+        if model is not None:
+            rows.extend(model.objects.filter(owner=user, anonymised_at__isnull=True))
+    return rows
+
+
+def _forum_rows(user) -> list:
+    model = REQUEST_KINDS["inscription-forum"].model()
+    if model is None:
+        return []
+    # Strictly the linked account — never a match on the e-mail address.
+    return list(model.objects.filter(user=user, anonymised_at__isnull=True))
+
+
+def requests_for(user) -> list[RequestItem]:
+    """Every request of the account, newest first. Rows of an unknown model are ignored."""
+    if not getattr(user, "is_authenticated", False):
+        return []
+    items: list[RequestItem] = []
+    for obj in [*_enquiry_rows(user), *_forum_rows(user)]:
+        kind = _kind_of(obj)
+        # Belt and braces: re-check ownership on every row returned by a sibling helper.
+        if kind is None or getattr(obj, f"{kind.owner_field}_id", None) != user.id:
+            continue
+        items.append(_present_request(obj, kind))
+    items.sort(key=lambda item: item.created_at, reverse=True)
+    return items
+
+
+def _data_rows(obj, kind: RequestKind) -> list[tuple[str, str]]:
+    helper = getattr(obj, "data_rows", None)
+    if callable(helper):
+        return [(str(label), str(value)) for label, value in helper()]
+    rows = []
+    for name in kind.fields:
+        model_field = obj._meta.get_field(name)
+        value = getattr(obj, name)
+        if getattr(model_field, "choices", None):
+            value = getattr(obj, f"get_{name}_display")()
+        rows.append((str(model_field.verbose_name), "" if value is None else str(value)))
+    return rows
+
+
+def _consent_meta(obj) -> dict[str, Any] | None:
+    """What the person is entitled to know about their own consent (purpose, version, timestamp)."""
+    consent = getattr(obj, "consent", None)
+    if consent is None:
+        return None
+    text = getattr(consent, "consent_text", None)
+    purpose_display = getattr(consent, "get_purpose_display", None)
+    return {
+        "purpose": str(purpose_display()) if callable(purpose_display) else str(getattr(consent, "purpose", "")),
+        "version": getattr(text, "version", None),
+        "given_at": getattr(consent, "given_at", None),
+        "language": getattr(consent, "language", ""),
+        "withdrawn_at": getattr(consent, "withdrawn_at", None),
+    }
+
+
+def get_own_request(user, kind_slug: str, pk) -> dict[str, Any]:
+    kind = REQUEST_KINDS.get(kind_slug)
+    model = kind.model() if kind else None
+    if model is None:
+        raise Http404
+    # Ownership is part of the QUERY, so a row belonging to somebody else is never loaded and the
+    # answer for "not yours" is indistinguishable from "does not exist" — the same 404, from the
+    # same branch, with no timing difference worth measuring.
+    owned = model.objects.filter(pk=pk, **{kind.owner_field: user}).select_related("consent__consent_text")
+    obj = owned.first()
+    if obj is None or not can(user, "view", obj):
+        raise Http404
+    if getattr(obj, "anonymised_at", None) is not None:
+        # An anonymised record is gone as far as anyone is concerned, including the person it
+        # described. Answering 403 would assert that something is still there.
+        raise Http404
+    return {
+        "item": _present_request(obj, kind),
+        "rows": [(label, value) for label, value in _data_rows(obj, kind) if value],
+        "consent": _consent_meta(obj),
+        "language": getattr(obj, "language", ""),
+    }
+
+
+# ---------------------------------------------------------------------------------------------
+# Orientation (« Mon parcours »)
+# ---------------------------------------------------------------------------------------------
+def _own_sessions(user):
+    """(orientation.services module, the account's sessions — newest first). One query."""
+    module = _import("orientation.services")
+    helper = getattr(module, "sessions_for_user", None) if module else None
+    if not callable(helper):
+        raise LookupError("orientation.services.sessions_for_user is not available")
+    # Belt and braces: re-check ownership on every row returned by the sibling helper.
+    return module, [session for session in helper(user) if session.user_id == user.id]
+
+
+def _present_session(session, module, *, with_result: bool = True) -> dict[str, Any]:
+    """
+    One row of « Mon parcours ». ``with_result=False`` skips ``present_result`` (several queries per
+    result: checklist, translations) when the caller only needs the metadata of the session.
+    """
+    present = getattr(module, "present_result", None)
+    result = getattr(session, "result", None) if session.is_completed else None
+    row: dict[str, Any] = {
+        "reference": session.reference,
+        "status_label": session.get_status_display(),
+        "is_completed": bool(result),
+        "updated_at": session.updated_at,
+        "ruleset_version": session.ruleset.version,
+        "result": None,
+        "url": "",
+        "date": session.updated_at,
+    }
+    if result is not None:
+        row["ruleset_version"] = result.ruleset_version
+        row["date"] = result.created_at
+        row["disclaimer_version"] = result.disclaimer_version
+        row["result"] = present(result) if with_result and callable(present) else None
+        row["url"] = safe_reverse("orientation:result", session_id=session.id)
+    elif session.status == "in_progress":
+        row["url"] = safe_reverse("orientation:step", session_id=session.id)
+    return row
+
+
+def pathway_sessions(user, present_first: int | None = None) -> list[dict[str, Any]]:
+    """
+    The account's orientation sessions; completed ones carry the frozen, presented result.
+    ``present_first=N`` presents the result of the first N completed sessions only (the dashboard
+    shows one): the cost of a page must not follow the size of the account's history.
+    """
+    module, sessions = _own_sessions(user)
+    rows: list[dict[str, Any]] = []
+    presented = 0
+    for session in sessions:
+        wanted = present_first is None or presented < present_first
+        row = _present_session(session, module, with_result=wanted)
+        if row["result"] is not None:
+            presented += 1
+        rows.append(row)
+    return rows
+
+
+def pathways_page(user, page_number=None) -> dict[str, Any]:
+    """
+    « Mon parcours »: where the person stands — the journey of their file, the dashboard's (``journey_for``; empty
+    without a file) — then the saved pre-assessments: paginate FIRST, then present only the sessions of the
+    requested page.
+    """
+    try:
+        module, sessions = _own_sessions(user)
+        page_obj = paginate(sessions, page_number)
+        page_obj.object_list = [_present_session(session, module) for session in page_obj.object_list]
+        # the register's band (design V5, W3-E): every saved pre-assessment of the account, not this page's alone
+        page_obj.results_count = sum(1 for session in sessions if session.is_completed)
+        available = True
+    except SIBLING_ERRORS:
+        log.exception("portal pathways unavailable", extra={"event": "portal.pathways_unavailable"})
+        page_obj, available = paginate([], None), False
+    return {
+        "journey": journey_for(active_case(user)),
+        "page_obj": page_obj,
+        "available": available,
+        "orientation_url": safe_reverse("orientation:start"),
+    }
+
+
+# ---------------------------------------------------------------------------------------------
+# Documents
+# ---------------------------------------------------------------------------------------------
+SCAN_BADGES = {"pending": "pending", "clean": "success", "infected": "error", "error": "warning"}
+
+
+def _present_document(doc, *, own: bool, deletable: bool = False) -> dict[str, Any]:
+    downloadable = doc.has_file and not doc.is_infected and (own or doc.is_clean)
+    return {
+        "pk": doc.pk,
+        "name": doc.original_name,
+        "description": doc.description,
+        "kind_label": doc.get_kind_display(),
+        "size": doc.size,
+        "created_at": doc.created_at,
+        "scan_label": doc.get_scan_status_display(),
+        "scan_kind": SCAN_BADGES.get(doc.scan_status, "neutral"),
+        "organisation": doc.organisation.name if doc.organisation_id else "",
+        "url": safe_reverse("documents:download", pk=doc.pk) if downloadable else "",
+        # a file of the account's own that answers no requirement may be deleted by its owner (documents.policies: a
+        # piece filed against a requirement is evidence in a case file, never quietly removed) — the deletion's POST
+        # still asks the policy
+        "delete_url": safe_reverse("documents:delete", pk=doc.pk) if own and deletable else "",
+    }
+
+
+def documents_for(user):
+    model = _get_model("documents", "PrivateDocument")
+    if model is None:
+        raise LookupError("documents.PrivateDocument is not available")
+    return model.objects.for_owner(user).select_related("organisation")
+
+
+#: Upper bound of the « Documents de mon organisation » table (most recent first).
+ORGANISATION_DOCUMENTS_LIMIT = 50
+
+
+def organisation_documents_for(user, limit: int = ORGANISATION_DOCUMENTS_LIMIT) -> list[dict[str, Any]]:
+    """
+    Documents attached to an organisation the account is RESPONSIBLE for (membership role « owner »),
+    uploaded by its other members — mirrors ``documents.policies`` so every listed row is one the
+    account may actually open. Never another organisation's documents, never the uploader's identity.
+
+    Cost: the object-level policy is consulted ONCE PER ORGANISATION (on its most recent document),
+    not once per row — ``accounts.permissions.can`` costs two queries per call, which used to make
+    the page cost follow the number of documents. The rows themselves are already restricted by the
+    query (alive, organisation owned by the account); a refusal drops the whole organisation. The
+    list is bounded to the ``limit`` most recent documents.
+    """
+    model = _get_model("documents", "PrivateDocument")
+    if model is None:
+        return []
+    organisation_ids = list(
+        user.memberships.filter(role=MembershipRole.OWNER).values_list("organisation_id", flat=True)
+    )
+    if not organisation_ids:
+        return []
+    docs = (
+        model.objects.alive()
+        .filter(organisation_id__in=organisation_ids)
+        .exclude(owner=user)
+        .select_related("organisation")
+        .order_by("-created_at")[:limit]
+    )
+    verdicts: dict[Any, bool] = {}
+    rows = []
+    for doc in docs:
+        if doc.organisation_id not in verdicts:
+            verdicts[doc.organisation_id] = can(user, "view", doc)  # deny by default
+        if verdicts[doc.organisation_id]:
+            rows.append(_present_document(doc, own=False))
+    return rows
+
+
+def may_upload(user) -> bool:
+    services = _import("documents.services")
+    helper = getattr(services, "user_may_upload", None) if services else None
+    return bool(helper(user)) if callable(helper) else False
+
+
+def documents_page(user, narrow=None) -> dict[str, Any]:
+    """Own documents (+ those of an organisation the account is responsible for); upload entry point.
+
+    `narrow` (V5.30, the platform's list toolkit: portal.lists.FILES) narrows and orders the account's own files — the
+    queryset scoped here, returned as `documents_scoped` for the toolkit's counts and choices; never the organisation's
+    files.
+    """
+    scoped = None
+    try:
+        scoped = documents_for(user)
+        # the account's files that answer no requirement (V5.32 correction round, P2-11: /documents/ now leads here,
+        # and their «Supprimer» with it) — one query, the documents app's own relation
+        loose = set(scoped.filter(requirement_versions__isnull=True).values_list("pk", flat=True))
+        own = [_present_document(d, own=True, deletable=d.pk in loose) for d in (narrow(scoped) if narrow else scoped)]
+        shared = organisation_documents_for(user)
+        available = True
+    except SIBLING_ERRORS:
+        log.exception("portal documents unavailable", extra={"event": "portal.documents_unavailable"})
+        own, shared, available, scoped, loose = [], [], False, None, set()
+    return {
+        "documents": own,
+        "documents_scoped": scoped,
+        # the files' table carries its «Action» column whenever the account has a file it may delete (on every page)
+        "documents_deletable": bool(loose),
+        "organisation_documents": shared,
+        "organisation_documents_limit": ORGANISATION_DOCUMENTS_LIMIT
+        if len(shared) >= ORGANISATION_DOCUMENTS_LIMIT
+        else 0,
+        "available": available,
+        "may_upload": may_upload(user),
+        "upload_url": safe_reverse("documents:upload"),
+    }
+
+
+# ---------------------------------------------------------------------------------------------
+# Organisation
+# ---------------------------------------------------------------------------------------------
+def shows_organisation_card(user) -> bool:
+    if getattr(user, "account_type", "") in ORGANISATION_ACCOUNT_TYPES:
+        return True
+    if user.is_superuser:
+        return False
+    return roles.has_role(user, *ORGANISATION_ROLES)
+
+
+def organisations_for(user) -> list[dict[str, Any]]:
+    """Membership summary — the organisation's public identity and the account's own role only."""
+    rows = []
+    for membership in user.memberships.select_related("organisation").order_by("organisation__name"):
+        organisation = membership.organisation
+        if not member_of(user, organisation.pk):  # accounts.permissions — deny by default
+            continue
+        place = ", ".join(part for part in (organisation.city, country_label(organisation.country)) if part)
+        rows.append(
+            {
+                "name": organisation.name,
+                "kind_label": organisation.get_kind_display(),
+                "place": place,
+                "role_label": membership.get_role_display(),
+                "since": membership.created_at,
+            }
+        )
+    return rows
+
+
+# ---------------------------------------------------------------------------------------------
+# Navigation — the console's shell
+# ---------------------------------------------------------------------------------------------
+#: The console's spaces — level 1 of the rail (design V5: V5.4 plan §1.18 D06, §3.5 item 3; W3-A). A space is a
+#: set of pages that share ONE rail: «Espace réservé», which every account has, and «Espace entreprise», the
+#: company workspace. A page belongs to one space by its route, and to no other: nothing about it is stored.
+SPACE_PERSON = "person"
+SPACE_COMPANY = "company"
+#: The organisation space of an institution, a university or a training body (V5.12 Q7, the owner's answer of 28 Oct
+#: 2026): their own rail, their own dashboard, their own name at the rail's head — «Espace Institutions», «Espace
+#: Universités et Formation», the names the Implementation document gives their public spaces (S1 §3.4, §3.5). A key of
+#: its own, so the console's first page of that space lights once (accounts.signals.consume_space_release, lane A).
+SPACE_ORGANISATION = "organisation"
+
+#: A rail entry is a page of its space, or the way to another space — drawn at the rail's head, never in its list.
+KIND_PAGE = "page"
+KIND_SPACE = "space"
+
+
+def shell_navigation(user, space: str = SPACE_PERSON, active: str = "", *, company=None) -> list[dict[str, Any]]:
+    """
+    The rail of one space of the console — the ONE builder of every rail (plan §1.18 D06).
+
+    Three levels, in the shape the rail draws them: the space (``space`` on every entry: its name, and who the
+    account is — the glyph and the word of the rail's foot), the section (``group``) and the page (the entry).
+    Every producer of a console page asks this function, so the keys of a space's rail are the same on each of
+    its URLs — the Academy, the help desk and the selection workspace each used to add or drop rows on their own
+    pages, which is how an operator's dispatch desk was reachable from the help desk only and a professional's
+    queue was listed twice there.
+
+    * ``space`` — ``SPACE_PERSON`` («Espace réservé») or ``SPACE_COMPANY`` («Espace entreprise», whose own
+      entries are companies.services.navigation's: the module decides what a company, a prospect and a project
+      reader may be offered, and it is not second-guessed here).
+    * ``active`` — the key of the entry the page belongs to; at most one entry is ``current``.
+    * an entry of ``kind`` ``KIND_SPACE`` is the way to the account's OTHER space: the rail draws it at its
+      head, the bottom bar among its four; it is never a page of this rail.
+    * ``bottom`` — at most four entries, for every role (``_bottom_keys``); ``yields`` — on the one of the four
+      that leaves the bar where four words and «Menu» do not hold on one row, the width at which it leaves
+      (``_bottom_yield``: ``"narrow"``, ``"phone"``; ``""`` on every other entry); ``lines`` — the label of an
+      entry of the bar as the one or two runs the bar may put on two lines (``_bar_lines``), and ``stacks`` —
+      whether a phone's bar always does (``_bar_stacks``: the bar's words do not hold on one line of a phone).
+    """
+    if space == SPACE_COMPANY:
+        return _company_rail(user, active, company)
+    if organisation_audience(user):
+        # An institution, a university, a training body: «Espace réservé» is THEIR space (Q7) — every console page
+        # that asks for the person's rail gets the organisation's, so no page of theirs offers a person's module.
+        return _organisation_rail(user, active)
+    return _person_rail(user, active)
+
+
+def navigation(user, active: str = "") -> list[dict[str, Any]]:
+    """
+    The reserved area's own navigation — ``shell_navigation`` for «Espace réservé».
+
+    The Academy and the help desk are listed HERE, not only on their own pages. Each module used to
+    append its row to this list from inside itself, which reads sensibly until you ask how somebody
+    reaches the first page of a module they have never opened: the row appeared once you were
+    already there. Both surfaces answered 200, had a correct single `h1` and no console errors, and
+    were unreachable by clicking — found by walking the mandate's flow
+    `… → DOCUMENTI → FORMAZIONE/SPORTELLO` in a browser instead of trusting that each page worked.
+
+    The same holds for the surfaces a ROLE owns — a professional's assigned queue, an operator's
+    dispatch desk, an authorised actor's processes: they are rows of this rail, on every page.
+    """
+    return shell_navigation(user, SPACE_PERSON, active)
+
+
+def console_state_shell(request, crumb: str = "") -> dict[str, Any]:
+    """
+    The rail and the trail of a STATE the console answers in its own frame (V5.32 lane E, correction round P2-8;
+    templates/errors/console_error.html): a refusal (the 403) or a module that is not open (the Forum permanent's
+    503) reached at an address of the console by a signed-in account whose console is open. The page keeps the rail
+    the address would have drawn — «Espace entreprise» under its prefix, the Forum permanent's own rail under the
+    Forum's while the module is open, the account's «Espace réservé» everywhere else (the person's, or the
+    organisation's) — with the row of the module that refused marked when the account has it (each module's
+    decorator names it before its view refuses: ``portal_active``, ``companies_active``,
+    ``forum_governance_active``). The trail is «<space> › <the state>» (``crumb``, the state's name).
+    """
+    user, path = request.user, request.path
+    company_root = safe_reverse("companies:dashboard")
+    forum_root = safe_reverse("forum_governance:participation")
+    if company_root and path.startswith(company_root):
+        company = None
+        try:
+            from companies import services as company_services
+
+            company = company_services.company_for(user)
+        except SIBLING_ERRORS:  # pragma: no cover - the sibling app is always installed
+            log.exception("company unavailable", extra={"event": "portal.console_state_company_unavailable"})
+        nav = shell_navigation(user, SPACE_COMPANY, getattr(request, "companies_active", ""), company=company)
+        root = {"label": _("Espace entreprise"), "url": company_root}
+    elif forum_root and path.startswith(forum_root) and _forum_governance_open():
+        from forum import governance_services
+
+        nav = governance_services.navigation(user, getattr(request, "forum_governance_active", ""))
+        root = {"label": _("Forum permanent"), "url": forum_root}
+    else:
+        # the person's or the organisation's rail — and, under the Forum's prefix while the module is closed, the
+        # same: the Forum's rows would each lead to the closed page
+        nav = shell_navigation(user, SPACE_PERSON, getattr(request, "portal_active", ""))
+        root = {"label": _("Espace réservé"), "url": reverse("portal:dashboard")}
+    crumbs = [root, {"label": crumb, "url": ""}] if crumb else [{**root, "url": ""}]
+    return {"portal_nav": nav, "breadcrumbs": crumbs}
+
+
+def console_state_dashboard(request) -> str:
+    """A console state's one primary: the «Tableau de bord» of the rail it keeps — the company's under the company
+    space's prefix, the reserved area's everywhere else (console_state_shell; no query: the address decides)."""
+    company_root = safe_reverse("companies:dashboard")
+    return company_root if company_root and request.path.startswith(company_root) else reverse("portal:dashboard")
+
+
+def _forum_governance_open() -> bool:
+    """The Forum permanent's gate (``virtual_forum``), read through the module; closed while it cannot answer."""
+    try:
+        from forum import governance_services
+    except ImportError:  # pragma: no cover - the sibling app is always installed
+        return False
+    return governance_services.governance_enabled()
+
+
+def shell_space(user, space: str = SPACE_PERSON, *, held: set[str] | None = None) -> dict[str, Any]:
+    """
+    Level 1 of the rail: the space's name — the line under the name at the rail's head — its own glyph and
+    where it starts (``url``: where the mark leads, the phone's tile, the way back from the other space); and
+    who the account is, in every space alike (``who``, ``who_icon``: the disc and the word beside the account's
+    name at the rail's foot): Persona ≠ Impresa ≠ Istituzione ≠ Università, in the registry's glyphs. The disc
+    is drawn from ``who_domain`` and ``who_key`` through the registry's ``concept`` filter (W1-C's O14 lint reads
+    the template); ``who_icon`` is the same symbol, resolved here. ``held`` spares a query to a caller that has
+    already read the account's roles.
+    """
+    held = roles.roles_of(user) if held is None else held
+    (who_domain, who_key), who = _audience(user, held)
+    who_icon = icons.concept(who_domain, who_key)
+    audience = organisation_audience(user, held)
+    if space == SPACE_ORGANISATION or (space == SPACE_PERSON and audience):
+        audience = audience or "institution"
+        return {
+            "key": SPACE_ORGANISATION,
+            "label": str(ORGANISATION_SPACE_LABELS[audience]),
+            "url": reverse("portal:dashboard"),
+            "icon": icons.AUDIENCE[audience],
+            "who": who,
+            "who_icon": who_icon,
+            "who_domain": who_domain,
+            "who_key": who_key,
+        }
+    if space == SPACE_COMPANY:
+        return {
+            "key": SPACE_COMPANY,
+            "label": str(_("Espace entreprise")),
+            "url": safe_reverse("companies:dashboard"),
+            "icon": icons.AUDIENCE["company"],
+            "who": who,
+            "who_icon": who_icon,
+            "who_domain": who_domain,
+            "who_key": who_key,
+        }
+    return {
+        "key": SPACE_PERSON,
+        "label": str(_("Espace réservé")),
+        "url": _person_space_start(user, held),
+        "icon": SPACE_PERSON_GLYPH,
+        "who": who,
+        "who_icon": who_icon,
+        "who_domain": who_domain,
+        "who_key": who_key,
+    }
+
+
+def _person_space_start(user, held: set[str]) -> str:
+    """
+    Where «Espace réservé» starts for this account — where its rail starts. For an account that holds a role's
+    register, the first entry of «Mon rôle»: the dispatch desk, the professional's queue, the assigned processes.
+    The mark and the phone's tile took the administrator and every role account to a person's dashboard, whose
+    one thing to do is an applicant's questionnaire (the W3-A review's M1): the dashboard stays one key away,
+    under «Parcours». For every other account, the dashboard. No query: the roles are the caller's.
+    """
+    for key, _label, url in _role_surfaces(user, held):
+        if key not in ROLE_SPACES:
+            return url
+    return reverse("portal:dashboard")
+
+
+#: «Espace réservé» as a destination — the way back from another space: the registry's `ile-key` («Espace
+#: réservé: access»), the glyph the public chrome's account menu draws for the same entry.
+SPACE_PERSON_GLYPH = "ile-key"
+
+#: Who the account is, for the rail's foot: the registry's concept — its domain and key in apps/core/icons.py,
+#: AUDIENCE or ACTOR — per role. Which role names the account is accounts.roles.audience_role (the project's team
+#: first; then the account's ROLES, because a privilege is a group here whatever the account's type says and the type
+#: defaults to «person»; then the type); its word is accounts.roles.AUDIENCE_SPACE_LABELS — «Espace Personnes», never
+#: the role word «Personne» (V5.12 §11; Director's decisions §9). The concept, not the glyph, reaches the template: the
+#: rail's foot draws it through the registry's `concept` filter, where W1-C's O14 lint can see that the symbol is
+#: registry-fed (a variable symbol inside a status context; tests/frontend/test_o14_lint.py).
+_AUDIENCE_CONCEPTS: dict[str, tuple[str, str]] = {
+    roles.STAFF: ("actor", "project_team"),
+    roles.INSTITUTION: ("audience", "institution"),
+    roles.UNIVERSITY: ("audience", "university"),
+    roles.TRAINING_PROVIDER: ("actor", "training_body"),
+    roles.AUTHORISED_ACTOR: ("actor", "authorised_actor"),
+    roles.PROFESSIONAL: ("actor", "professional"),
+    roles.PERSON: ("audience", "person"),
+    roles.COMPANY: ("audience", "company"),
+}
+
+
+def _audience(user, held: set[str]) -> tuple[tuple[str, str], str]:
+    """((domain, key), word) of who the account is — the registry's concept and the visitor's word for it."""
+    role = roles.audience_role(user, held)
+    return _AUDIENCE_CONCEPTS[role], roles.space_label(user, held)
+
+
+#: The organisation audiences — the role that names the account (accounts.roles.audience_role) → the audience of
+#: its space: a training body works in the universities' and training bodies' space (S1 §3.5).
+ORGANISATION_AUDIENCES: dict[str, str] = {
+    roles.INSTITUTION: "institution",
+    roles.UNIVERSITY: "university",
+    roles.TRAINING_PROVIDER: "university",
+}
+
+#: The space's name at the rail's head, the breadcrumb's root and the dashboard's eyebrow — the public spaces' own
+#: names (S1 §3.4, §3.5; the binding glossary's «Espace …» rows), already in the four catalogues.
+ORGANISATION_SPACE_LABELS: dict[str, Any] = {
+    "institution": gettext_lazy("Espace Institutions"),
+    "university": gettext_lazy("Espace Universités et Formation"),
+}
+
+#: A company account's atrium eyebrow (V5.15 lane D, finishing round F1): the public space's own name, as the
+#: institutions' and the universities' — «Espace Entreprises», already in every catalogue (apps/pages/content.py) —,
+#: never the account type's bare «Entreprise», which broke the «Espace …» pattern of the other spaces.
+COMPANY_SPACE_LABEL = gettext_lazy("Espace Entreprises")
+
+#: The person's modules an organisation never sees (Q7: «no person-oriented language or modules»), and neither does a
+#: company's «Espace réservé» (its work is «Espace entreprise»): the questionnaire about one's own circumstances, the
+#: orientation's pathway, the case files. Their routes send such an account back to its dashboard (portal.views).
+PERSON_ONLY_PAGES = frozenset({"situation", "pathways", "cases"})
+
+
+def organisation_audience(user, held: set[str] | None = None) -> str:
+    """«institution» or «university» for an account whose space is an organisation's (Q7), «» for every other one —
+    the project's team, a person, a company, a professional, an authorised actor (accounts.roles.audience_role)."""
+    if not getattr(user, "is_authenticated", False):
+        return ""
+    return ORGANISATION_AUDIENCES.get(roles.audience_role(user, held), "")
+
+
+def atrium_space_label(user, held: set[str] | None = None) -> str:
+    """
+    The atrium's eyebrow (V5.15 lane D, round 2): the account's space name, the word its dashboard's head says —
+    the organisation's space («Espace Institutions», «Espace Universités et Formation»: ``ORGANISATION_SPACE_LABELS``,
+    the organisation dashboard's eyebrow) or the account's own («Espace Personnes», «Entreprise» …:
+    ``roles.space_label``, the person dashboard's eyebrow). Every atrium page says the same word as the dashboard.
+    """
+    held = roles.roles_of(user) if held is None else held
+    audience = organisation_audience(user, held)
+    if audience:
+        return str(ORGANISATION_SPACE_LABELS[audience])
+    if is_company_audience(user, held):
+        return str(COMPANY_SPACE_LABEL)
+    return roles.space_label(user, held)
+
+
+def is_company_audience(user, held: set[str] | None = None) -> bool:
+    """A company account in «Espace réservé»: named by the company's role (or type), never the person's."""
+    return getattr(user, "is_authenticated", False) and roles.audience_role(user, held) == roles.COMPANY
+
+
+def shows_person_page(user, key: str) -> bool:
+    """Whether the account is offered the person's page ``key`` (``PERSON_ONLY_PAGES``) — the rail and the route."""
+    if key not in PERSON_ONLY_PAGES:
+        return True
+    held = roles.roles_of(user)
+    return not (organisation_audience(user, held) or is_company_audience(user, held))
+
+
+def academy_open(user) -> bool:
+    """
+    Whether the Academy is a page of the rail: at least one course is published, or the account already holds an
+    enrolment (its own training is never taken away from it). Where demonstration data is off and nothing reviewed is
+    published (DECISIONS §8, «the Academy rail entry is hidden while 0 courses are published»), the entry is absent,
+    never a catalogue that says it is empty.
+    """
+    course = _get_model("academy", "Course")
+    if course is None:
+        return False
+    try:
+        if course.objects.published().exists():
+            return True
+        enrolment = _get_model("academy", "Enrolment")
+        return bool(
+            enrolment and getattr(user, "is_authenticated", False) and enrolment.objects.filter(person=user).exists()
+        )
+    except (FieldError, AttributeError):
+        return False
+
+
+def _person_rail(user, active: str) -> list[dict[str, Any]]:
+    unread = unread_count(user)
+    messages_label = _("Communications")
+    if unread:
+        messages_label = _("Communications (%(count)d)") % {"count": unread}
+    # In the order of the rail's sections (design V4, CREATIVE_DIRECTION.md §3.9): the journey, the
+    # file, the exchanges, the Academy. The registers a role owns come BEFORE them (below): they are
+    # what that account signs in for, and at the foot of ten rows they sat under the fold of a laptop.
+    pages = [
+        ("dashboard", _("Tableau de bord"), reverse("portal:dashboard")),
+        ("situation", _("Ma situation"), reverse("portal:situation")),
+        ("pathways", _("Mon parcours"), reverse("portal:pathways")),
+        ("cases", _("Mes dossiers"), reverse("cases:index")),
+        ("requests", _("Mes demandes"), reverse("portal:requests")),
+        ("documents", _("Mes documents"), reverse("portal:documents")),
+        ("deadlines", _("Mes échéances"), reverse("portal:deadlines")),
+        ("messages", messages_label, reverse("portal:messages")),
+        ("helpdesk", _("Guichet numérique"), reverse("helpdesk:requests")),
+    ]
+    if academy_open(user):
+        pages.append(("academy", _("Academy"), reverse("academy:catalogue")))
+    panel = _identity_panel(user)
+    if panel:
+        pages.insert(len(pages) - (1 if pages[-1][0] == "academy" else 0), panel)  # the last of «Échanges»
+    held = roles.roles_of(user)
+    if is_company_audience(user, held):
+        # A company's «Espace réservé» is its account's: the person's questionnaire, pathway and files are not its own.
+        pages = [page for page in pages if page[0] not in PERSON_ONLY_PAGES]
+    registers: list[tuple[str, Any, str, str, str]] = []
+    spaces: list[tuple[str, Any, str, str, str]] = []
+    for key, label, url in _role_entries(user):
+        if key in ROLE_SPACES:
+            # Another space of the account: named as that space names itself, drawn at the rail's head.
+            other = shell_space(user, ROLE_SPACES[key], held=held)
+            spaces.append((key, other["label"], url, other["label"], KIND_SPACE))
+        else:
+            registers.append((key, label, url, str(NAV_GROUP_ROLE), KIND_PAGE))
+    groups = {key: str(NAV_GROUPS[key]) for key, _label, _url in pages}
+    if is_company_audience(user, held):
+        # «Parcours» would hold the dashboard alone: it is the space's ungrouped first row (DECISIONS §9, D-22)
+        groups["dashboard"] = str(shell_space(user, SPACE_PERSON, held=held)["label"])
+    entries = [
+        *registers,
+        *((key, label, url, groups[key], KIND_PAGE) for key, label, url in pages),
+        *spaces,
+    ]
+    keys = [key for key, *_rest in entries]
+    bottom = _bottom_keys(keys)
+    yields, when = _bottom_yield([key for key in keys if key in bottom])
+    stacks = _bar_stacks(
+        [label for key, label, *_rest in entries if key in bottom and not (key == yields and when == YIELDS_PHONE)]
+    )
+    plate = shell_space(user, SPACE_PERSON, held=held)
+    return [
+        {
+            "key": key,
+            "label": label,
+            "url": url,
+            "current": key == active,
+            "icon": NAV_GLYPHS.get(key, "chevron-end"),
+            "group": group,
+            "bottom": key in bottom,
+            "yields": when if key == yields else "",
+            "lines": _bar_lines(label) if key in bottom else [],
+            "stacks": stacks and key in bottom,
+            "kind": kind,
+            "space": plate,
+        }
+        for key, label, url, group, kind in entries
+    ]
+
+
+#: The organisation rail's section — the institutional word of the space (S1 §3.4: «coopération institutionnelle»).
+NAV_GROUP_COOPERATION = gettext_lazy("Coopération")
+
+#: The organisation rail's glyphs: the registry's own symbols for the entries the person's rail shares (icons.NAV),
+#: and the organisation's audience for «Mon organisation» — an institution's `institution`, a university's
+#: `university` (icons.AUDIENCE): who the organisation is, never the company's building. Asked of lane B as
+#: `icons.ORGANISATION_NAV` (V5.12 lane D W2 notes); until the registry holds it, it is composed from the registry here.
+ORGANISATION_NAV_ORDER: tuple[str, ...] = ("dashboard", "organisation", "requests", "deadlines", "messages")
+
+
+def organisation_nav_glyph(key: str, audience: str) -> str:
+    if key == "organisation":
+        return icons.AUDIENCE[audience]
+    return icons.NAV[key]
+
+
+def _organisation_rail(user, active: str) -> list[dict[str, Any]]:
+    """
+    The rail of an institution, a university or a training body (V5.12 Q7): its dashboard, its organisation, what it
+    has asked and what is due, its communications. No person's module — no questionnaire about «ma situation», no
+    pathway, no case file, no pieces register, no help desk ticket of a person, no Academy enrolment —: nothing their
+    role cannot use is offered (« un module non disponible ne se montre pas »). The dates are a page of the rail only
+    once the project's team has set one for the account: an empty register is not a destination.
+    """
+    held = roles.roles_of(user)
+    audience = organisation_audience(user, held) or "institution"
+    unread = unread_count(user)
+    messages_label = _("Communications")
+    if unread:
+        messages_label = _("Communications (%(count)d)") % {"count": unread}
+    plate = shell_space(user, SPACE_ORGANISATION, held=held)
+    pages: list[tuple[str, Any, str, str]] = [
+        ("dashboard", _("Tableau de bord"), reverse("portal:dashboard"), plate["label"]),
+        ("organisation", _("Mon organisation"), reverse("portal:organisation"), str(NAV_GROUP_COOPERATION)),
+        ("requests", _("Mes demandes"), reverse("portal:requests"), str(NAV_GROUP_COOPERATION)),
+    ]
+    if deadlines_for(user).exists():
+        pages.append(("deadlines", _("Mes échéances"), reverse("portal:deadlines"), str(NAV_GROUP_COOPERATION)))
+    pages.append(("messages", messages_label, reverse("portal:messages"), str(NAV_GROUP_ECHANGES)))
+    bottom = [key for key in ("dashboard", "organisation", "requests", "messages") if any(p[0] == key for p in pages)]
+    bottom = bottom[:NAV_BOTTOM_MAX]
+    # Where four words and «Menu» do not hold (``NAV_BOTTOM_YIELDS``), the organisation's sheet leaves the bar first:
+    # it changes least, and the drawer keeps it one press further — never the communications.
+    yields, when = ("organisation", YIELDS_NARROW) if len(bottom) == NAV_BOTTOM_MAX else ("", "")
+    stacks = _bar_stacks(
+        [label for key, label, *_rest in pages if key in bottom and not (key == yields and when == YIELDS_PHONE)]
+    )
+    return [
+        {
+            "key": key,
+            "label": label,
+            "url": url,
+            "current": key == active,
+            "icon": organisation_nav_glyph(key, audience),
+            "group": group,
+            "bottom": key in bottom,
+            "yields": when if key == yields else "",
+            "lines": _bar_lines(label) if key in bottom else [],
+            "stacks": stacks and key in bottom,
+            "kind": KIND_PAGE,
+            "space": plate,
+        }
+        for key, label, url, group in pages
+    ]
+
+
+def _identity_panel(user) -> tuple[str, Any, str] | None:
+    """
+    «Communications d’identité» — the person's own panel of the selection module — as a page of the rail, for
+    the account somebody has asked to know.
+
+    Not an eleventh destination for everybody: the ten are kept (plan §1.18 D06). The module used to list the
+    panel in a rail of its own, drawn on its own pages only; under one builder that row is either lost or given
+    a place — and a consent that can be withdrawn at any moment has to stay within reach of the person who gave
+    it. The keys still do not depend on the page: they depend on the account.
+    """
+    if not getattr(user, "is_authenticated", False):
+        return None
+    url = safe_reverse("selection:disclosures")
+    selection = _import("selection.services")
+    if not url or selection is None:
+        return None
+    try:
+        asked = selection.has_disclosures(user)
+    except SIBLING_ERRORS:
+        log.exception("identity panel unavailable", extra={"event": "portal.identity_panel_unavailable"})
+        return None
+    return ("disclosures", _("Communications d’identité"), url) if asked else None
+
+
+def _company_rail(user, active: str, company) -> list[dict[str, Any]]:
+    """
+    «Espace entreprise»: the module's own entries (companies.services.navigation), then the way back to
+    «Espace réservé», which every account has. A deployment without the module has no such space.
+    """
+    try:
+        from companies import services as company_services
+
+        rail = [dict(item) for item in company_services.navigation(user, active, company=company)]
+    except SIBLING_ERRORS:
+        log.exception("company rail unavailable", extra={"event": "portal.company_rail_unavailable"})
+        rail = []
+    held = roles.roles_of(user)
+    plate = shell_space(user, SPACE_COMPANY, held=held)
+    for item in rail:
+        item.setdefault("kind", KIND_PAGE)
+        item["space"] = plate
+    # The module flags the entries of its own bottom bar (four for a company). The cap is the shell's, and so is
+    # the rest of the bar: an account the module offers fewer flagged entries — a project reader without a company
+    # has «Analyse territoriale» and «Communications» — keeps its pages on the bar, in the rail's order, while
+    # there is room. The page one is on was missing from a bar that showed one entry and «Menu».
+    flagged = [item for item in rail if item.get("bottom")]
+    for item in flagged[NAV_BOTTOM_MAX:]:
+        item["bottom"] = False
+    room = NAV_BOTTOM_MAX - min(len(flagged), NAV_BOTTOM_MAX)
+    for item in rail:
+        if room and not item.get("bottom"):
+            item["bottom"] = True
+            room -= 1
+    yields, when = _bottom_yield([item["key"] for item in rail if item["bottom"]])
+    stacks = _bar_stacks(
+        [item["label"] for item in rail if item["bottom"] and not (item["key"] == yields and when == YIELDS_PHONE)]
+    )
+    for item in rail:
+        item["yields"] = when if item["key"] == yields else ""
+        item["lines"] = _bar_lines(item["label"]) if item["bottom"] else []
+        item["stacks"] = stacks and bool(item["bottom"])
+    home = shell_space(user, SPACE_PERSON, held=held)
+    rail.append(
+        {
+            "key": "reserved",
+            "label": home["label"],
+            "url": home["url"],
+            "current": False,
+            "icon": home["icon"],  # `ile-key`
+            "group": home["label"],
+            "bottom": False,
+            "yields": "",
+            "lines": [],
+            "stacks": False,
+            "kind": KIND_SPACE,
+            "space": plate,
+        }
+    )
+    return rail
+
+
+#: The glyph of each entry in the rail, the bottom bar and the drawer — glyph + word, never the glyph
+#: alone. It is the icon registry's map (apps/core/icons.py NAV; design V5, V5.4 plan §1.7): one concept,
+#: one glyph — the journey is the steps of the mark, a case its folder, the help desk its bell, the
+#: Academy its book; `briefcase`, `handshake`, `university` and `calendar` keep the meaning they have
+#: everywhere else (the professional, the Forum, the training body, a date). A key added to the rail is
+#: added to the registry first: tests/frontend/test_icons.py holds the two equal, entry by entry.
+NAV_GLYPHS: dict[str, str] = dict(icons.NAV)
+
+#: The rail's sections — level 2. The titles were proposed for the copy review (directive §92) and are the
+#: catalogue's; a section whose title only repeats its one entry («Academy») is drawn as a rule, without the
+#: word (templates/portal/partials/rail_nav.html). A role's own registers sit under their own title.
+NAV_GROUP_PARCOURS = gettext_lazy("Parcours")
+NAV_GROUP_DOSSIER = gettext_lazy("Dossier")
+NAV_GROUP_ECHANGES = gettext_lazy("Échanges")
+NAV_GROUP_ACADEMY = gettext_lazy("Academy")
+NAV_GROUP_ROLE = gettext_lazy("Mon rôle")
+NAV_GROUPS: dict[str, Any] = {
+    "dashboard": NAV_GROUP_PARCOURS,
+    "situation": NAV_GROUP_PARCOURS,
+    "pathways": NAV_GROUP_PARCOURS,
+    "cases": NAV_GROUP_DOSSIER,
+    "requests": NAV_GROUP_DOSSIER,
+    "documents": NAV_GROUP_DOSSIER,
+    "deadlines": NAV_GROUP_DOSSIER,
+    "messages": NAV_GROUP_ECHANGES,
+    "helpdesk": NAV_GROUP_ECHANGES,
+    "disclosures": NAV_GROUP_ECHANGES,
+    "academy": NAV_GROUP_ACADEMY,
+}
+
+#: The bottom bar below 64rem shows FOUR entries and «Menu», for every role (design V4 §3.9; V5.4 plan §3.5
+#: item 3, the platform audit's S-4: a company account had five flagged entries, six columns with «Menu»).
+#: The first four of this order that the rail holds: the dashboard, the surface the account's role owns — in
+#: the place of the cases, when it has one — then the pieces and the communications.
+NAV_BOTTOM_MAX = 4
+NAV_BOTTOM: tuple[str, ...] = ("dashboard", "documents", "messages", "cases")
+
+
+def _bottom_keys(keys: list[str]) -> frozenset[str]:
+    """The entries of a rail that the bottom bar draws: never more than ``NAV_BOTTOM_MAX``."""
+    own = [key for _role, key, _route in ROLE_SURFACES if key in keys][:1]
+    wanted = [*(key for key in NAV_BOTTOM[:3] if key in keys), *own, *(key for key in NAV_BOTTOM[3:] if key in keys)]
+    return frozenset(wanted[:NAV_BOTTOM_MAX])
+
+
+#: Four words and «Menu» do not hold on one row at every width. The labels are the live ones — none is
+#: shortened — so where the row is too short the bar keeps THREE entries and «Menu», and one entry leaves: the
+#: first of this order that the bar holds — the cases for a person (the dashboard opens on the case), the pieces
+#: where a role's own register is on the bar, the company's sheet in «Espace entreprise». It stays in the
+#: drawer, one press further. Measured on the lane, ten accounts × four languages × six widths:
+#:
+#: * ``YIELDS_NARROW`` — below 22.5rem (a 320 px phone, a window at 400 %), for every bar: a person's four
+#:   words hold from 360 px with air between them, not below;
+#: * ``YIELDS_PHONE`` — below 30rem, for a bar that carries a role's register («Demandes qui me sont confiées»,
+#:   «Désignation des professionnels», «Processus assignés» and their translations): with four entries its
+#:   words stood 4 px apart from 360 to 430 px, and a professional's needed a third line in English.
+NAV_BOTTOM_YIELDS: tuple[str, ...] = ("cases", "documents", "profile")
+YIELDS_NARROW = "narrow"
+YIELDS_PHONE = "phone"
+
+
+def _bottom_yield(on_the_bar: list[str]) -> tuple[str, str]:
+    """(key, when) of the entry that leaves a full bottom bar where the row is too short; ``("", "")`` when the
+    bar is not full."""
+    if len(on_the_bar) < NAV_BOTTOM_MAX:
+        return "", ""
+    key = next((key for key in NAV_BOTTOM_YIELDS if key in on_the_bar), on_the_bar[-1])
+    registers = {surface for _role, surface, _route in ROLE_SURFACES if surface not in ROLE_SPACES}
+    return key, YIELDS_PHONE if registers & set(on_the_bar) else YIELDS_NARROW
+
+
+def _bar_lines(label) -> list[str]:
+    """
+    A label of the bottom bar as the one or two runs it may stand on: split at the space that leaves the
+    shorter longest run («Tableau» · «de bord», «Demandes qui me» · «sont confiées», «Communications» · «(2)»).
+
+    The words are the live labels, whole — the bar never cuts one and never shortens one. A stylesheet can
+    size a seat to a label's longest word or to its whole line, not to its two balanced lines: left to wrap by
+    itself, a register's name took three or four lines in a seat that two would have filled. The bar breaks a
+    label between these runs and nowhere else (v5/_shell.css §5), so a seat is never narrower than the longer
+    run and a label is one line or two, never three.
+    """
+    words = str(label).split()
+    if len(words) < 2:
+        return [str(label)]
+    head = min(
+        range(1, len(words)),
+        key=lambda cut: (max(len(" ".join(words[:cut])), len(" ".join(words[cut:]))), cut),
+    )
+    return [" ".join(words[:head]), " ".join(words[head:])]
+
+
+#: Whether a phone's bar draws its labels on their two runs AT ONCE (below 30rem), or lets each stand on one line
+#: while the row holds. A row that cannot hold its labels on one line makes some of them wrap — and a seat sized
+#: for a line it no longer draws kept 30 px of air while «Communications» and «Espace entreprise» stood 4 px apart
+#: beside it. So the bar is estimated, once, for the row of a 360 px phone: its labels on one line — 6.3 px a
+#: character of Latin at 12 px, 5.6 px of Arabic at 14 px (measured on the live labels of the four languages) —
+#: the air of each seat and «Menu»'s own seat. Over the row, every label of the bar stands on its two runs and each
+#: seat asks for its longer run; under it — an Arabic bar, a bar of two entries — the labels keep their line.
+BAR_ROW = 350
+BAR_SEAT_AIR = 16
+BAR_MENU_SEAT = 56
+BAR_CHARACTER = 6.3
+BAR_CHARACTER_ARABIC = 5.6
+
+
+def _bar_stacks(labels: list) -> bool:
+    """Whether the bar that holds these labels draws them on two runs on a phone (see ``BAR_ROW``)."""
+    need = BAR_MENU_SEAT
+    for label in labels:
+        text = str(label)
+        arabic = any(0x0600 <= ord(char) <= 0x06FF for char in text)
+        need += len(text) * (BAR_CHARACTER_ARABIC if arabic else BAR_CHARACTER) + BAR_SEAT_AIR
+    return need > BAR_ROW
+
+
+#: Surfaces that belong to a role, not to everybody. Each is offered only to the role that can use
+#: it — « un module non disponible ne se montre pas », and a menu item that answers 403 tells
+#: somebody that something exists. A row may name several roles: any of them opens the surface (the
+#: dispatch desk answers an operator and an administrator — helpdesk.views.dispatch).
+ROLE_SURFACES: tuple[tuple[str | tuple[str, ...], str, str], ...] = (
+    (roles.AUTHORISED_ACTOR, "selection", "selection:workspace"),
+    (roles.COMPANY, "company", "companies:dashboard"),
+    (roles.PROFESSIONAL, "helpdesk-queue", "helpdesk:queue"),
+    ((roles.OPERATOR, roles.ADMINISTRATOR), "helpdesk-dispatch", "helpdesk:dispatch"),
+)
+
+ROLE_SURFACE_LABELS = {
+    "selection": gettext_lazy("Processus assignés"),
+    "company": gettext_lazy("Mon entreprise"),
+    "helpdesk-queue": gettext_lazy("Demandes qui me sont confiées"),
+    "helpdesk-dispatch": gettext_lazy("Désignation des professionnels"),
+}
+
+#: The role surfaces that are a SPACE of their own, with its own rail: the entry is the way there.
+ROLE_SPACES: dict[str, str] = {"company": SPACE_COMPANY}
+
+
+def _role_entries(user) -> list[tuple[str, Any, str]]:
+    """
+    The way BACK to a role's own surface.
+
+    Each role lands on its own screen at sign-in, and each of those screens links here. None of
+    them was linked FROM here — so an authorised actor who followed «Tableau de bord» once had no
+    route back to the only surface their role exists for, short of signing in again. The modules
+    could not fix this from their own side: they are not rendered on this page.
+
+    Defensive by design. A deployment without one of these apps must not break the reserved area
+    for everybody, so a route that does not resolve is simply not offered.
+    """
+    if not getattr(user, "is_authenticated", False):
+        return []
+    # One read of the account's roles for every row; a superuser is offered each surface, as
+    # ``roles.has_role`` answers for it.
+    return _role_surfaces(user, set() if user.is_superuser else roles.roles_of(user))
+
+
+def _role_surfaces(user, held: set[str]) -> list[tuple[str, Any, str]]:
+    """The role surfaces offered to an account whose roles are already read (``held``): ``_role_entries``'s rows,
+    and where «Espace réservé» starts (``_person_space_start``) — one rule for both."""
+    if not getattr(user, "is_authenticated", False):
+        return []
+    superuser = bool(getattr(user, "is_superuser", False))
+    entries: list[tuple[str, Any, str]] = []
+    for role, key, route in ROLE_SURFACES:
+        wanted = {role} if isinstance(role, str) else set(role)
+        if not (superuser or held & wanted):
+            continue
+        try:
+            entries.append((key, ROLE_SURFACE_LABELS[key], reverse(route)))
+        except NoReverseMatch:  # pragma: no cover - a module that is not installed
+            continue
+    return entries
+
+
+# ---------------------------------------------------------------------------------------------
+# Dashboard
+# ---------------------------------------------------------------------------------------------
+@dataclass
+class CardItem:
+    title: str
+    url: str = ""
+    meta: str = ""
+    date: Any = None
+    badge_label: str = ""
+    badge_kind: str = ""
+    lang: str = ""
+    #: design V5 (W3-E step 2): the row's state as the CHIP draws it — through its producer, never a legacy `kind`
+    #: (templates/portal/partials/card.html; components/badge.html is retired on console pages): the member of a
+    #: request (``is_registration`` names its producer) or of a scan; a date's urgency (azione late, attesa close by)
+    chip_value: str = ""
+    is_registration: bool = False
+    urgency: str = ""
+    #: a communication not yet read: the dot, the weight and the word «Non lue» — never a chip, never a colour alone
+    unread: bool = False
+
+
+@dataclass
+class Card:
+    key: str
+    title: str
+    icon: str
+    available: bool = True
+    count: int = 0
+    count_label: str = ""
+    badge_label: str = ""
+    badge_kind: str = ""
+    items: list[CardItem] = field(default_factory=list)
+    url: str = ""
+    url_label: str = ""
+    empty_title: str = ""
+    empty_text: str = ""
+    empty_action_label: str = ""
+    empty_action_url: str = ""
+    #: the register's own glyph when the registry's CARD map is not enough — the organisation register draws the
+    #: account's audience (an institution ≠ a university ≠ a company: platform.md §3), never the company's building
+    glyph: str = ""
+
+
+def _requests_card(user) -> Card:
+    items = requests_for(user)
+    return Card(
+        key="requests",
+        title=_("Mes demandes"),
+        icon="list",
+        count=len(items),
+        count_label=ngettext("demande transmise", "demandes transmises", len(items)),
+        items=[
+            CardItem(
+                title=i.title,
+                url=i.url,
+                meta=i.kind_label,
+                date=i.created_at,
+                badge_label=i.status_label,
+                badge_kind=i.status_kind,
+                chip_value=i.status,
+                is_registration=i.is_registration,
+            )
+            for i in items[:DASHBOARD_LATEST]
+        ],
+        url=reverse("portal:requests"),
+        url_label=_("Toutes mes demandes"),
+        empty_title=_("Aucune demande"),
+        empty_text=_("Les demandes transmises depuis votre compte apparaîtront ici."),
+    )
+
+
+def _orientation_card(user) -> Card:
+    sessions = pathway_sessions(user, present_first=1)
+    completed = [s for s in sessions if s["is_completed"]]
+    latest = (completed or sessions)[:1]
+    items = []
+    for row in latest:
+        result = row["result"] or {}
+        items.append(
+            CardItem(
+                title=result.get("title") or _("Questionnaire en cours"),
+                url=reverse("portal:pathways"),
+                meta=_("Pré-évaluation à caractère informatif — règles v%(version)s")
+                % {"version": row["ruleset_version"]},
+                date=row["date"],
+                lang=result.get("lang", ""),
+            )
+        )
+    return Card(
+        key="orientation",
+        title=_("Mon orientation"),
+        icon="compass",
+        count=len(completed),
+        count_label=ngettext("pré-évaluation enregistrée", "pré-évaluations enregistrées", len(completed)),
+        items=items,
+        url=reverse("portal:pathways"),
+        url_label=_("Mon parcours"),
+        empty_title=_("Aucune pré-évaluation enregistrée"),
+        empty_text=_("Le questionnaire d’orientation vous indique, à titre informatif, une famille de parcours."),
+        empty_action_label=_("Commencer l’orientation"),
+        empty_action_url=safe_reverse("orientation:start"),
+    )
+
+
+def _documents_card(user) -> Card:
+    docs = documents_for(user)
+    total = docs.count()
+    return Card(
+        key="documents",
+        title=_("Mes documents"),
+        icon="document",
+        count=total,
+        count_label=ngettext("document privé", "documents privés", total),
+        items=[
+            CardItem(
+                title=d.original_name,
+                meta=d.get_kind_display(),
+                date=d.created_at,
+                # only a blocked file says anything about its scan, as on the person's dashboard
+                # (``_dashboard_documents``, ``_person_scan_word``); the register is the scan's member (core.chips)
+                badge_label=_person_scan_word(d.scan_status),
+                badge_kind=SCAN_BADGES.get(d.scan_status, "neutral"),
+                chip_value=d.scan_status,
+            )
+            for d in docs[:DASHBOARD_LATEST]
+        ],
+        url=reverse("portal:documents"),
+        url_label=_("Tous mes documents"),
+        empty_title=_("Aucun document"),
+        empty_text=_("Ne téléversez que les documents qui vous sont demandés dans le cadre de votre parcours."),
+    )
+
+
+def _deadlines_card(user) -> Card:
+    today = clock.today()
+    open_rows = list(deadlines_for(user).open().order_by("due_on", "id"))
+    overdue = sum(1 for d in open_rows if d.is_overdue(today))
+    items = []
+    for deadline in open_rows[:DASHBOARD_LATEST]:
+        presented = present_deadline(deadline, today)
+        items.append(
+            CardItem(
+                title=deadline.title,
+                meta=presented["kind_label"],
+                date=deadline.due_on,
+                badge_label=presented["badge_label"],
+                # a date past due speaks azione on a dashboard, as on the person's (plan §1.2: terracotta, never the
+                # red of a refusal); the deadlines page keeps its own register (W3-C)
+                badge_kind="overdue" if presented["badge_kind"] == "error" else presented["badge_kind"],
+                urgency=presented["urgency"],
+            )
+        )
+    return Card(
+        key="deadlines",
+        title=_("Mes échéances"),
+        icon="calendar",
+        count=len(open_rows),
+        count_label=ngettext("échéance à venir", "échéances à venir", len(open_rows)),
+        badge_label=(_("%(n)d en retard") % {"n": overdue}) if overdue else "",
+        badge_kind="overdue",
+        items=items,
+        url=reverse("portal:deadlines"),
+        url_label=_("Toutes mes échéances"),
+        empty_title=_("Aucune échéance"),
+        empty_text=_("Les dates qui vous sont communiquées par l’équipe apparaîtront ici."),
+    )
+
+
+def _messages_card(user) -> Card:
+    messages = inbox(user)
+    total = messages.count()
+    unread = unread_count(user)
+    return Card(
+        key="messages",
+        title=_("Communications"),
+        icon="mail",
+        count=total,
+        count_label=ngettext("communication reçue", "communications reçues", total),
+        badge_label=(ngettext("%(n)d non lue", "%(n)d non lues", unread) % {"n": unread}) if unread else "",
+        badge_kind="primary",
+        items=[
+            CardItem(
+                title=m.subject,
+                url=reverse("portal:message_detail", kwargs={"pk": m.pk}),
+                date=m.created_at,
+                badge_label="" if m.is_read else _("Non lue"),
+                badge_kind="primary",
+                unread=not m.is_read,
+            )
+            for m in messages[:DASHBOARD_LATEST]
+        ],
+        url=reverse("portal:messages"),
+        url_label=_("Toutes mes communications"),
+        empty_title=_("Aucune communication"),
+        empty_text=_("Les messages que l’équipe vous adresse apparaîtront ici."),
+    )
+
+
+def _organisation_glyph(user) -> str:
+    """The organisation register's glyph: the account's audience in the registry's AUDIENCE map — an institution's
+    `institution`, a university's `university`, a company's `building` — or the CARD map's when the account type has
+    none (a professional, an administrator)."""
+    account_type = getattr(user, "account_type", "")
+    if account_type not in ORGANISATION_ACCOUNT_TYPES:
+        return ""
+    try:
+        return icons.concept("audience", account_type)
+    except icons.UnknownIcon:  # pragma: no cover - the three organisation types are the registry's audiences
+        return ""
+
+
+def _organisation_card(user) -> Card:
+    rows = organisations_for(user)
+    return Card(
+        key="organisation",
+        title=_("Mon organisation"),
+        icon="building",
+        glyph=_organisation_glyph(user),
+        count=len(rows),
+        count_label=ngettext("organisation rattachée", "organisations rattachées", len(rows)),
+        items=[
+            CardItem(
+                title=row["name"],
+                # the account's role in the organisation is a fact of the membership, not a state: a word of the
+                # row's line, never a chip (design V5, W3-E)
+                meta=" · ".join(part for part in (row["kind_label"], row["place"], row["role_label"]) if part),
+            )
+            for row in rows
+        ],
+        url=safe_reverse("accounts:profile"),
+        url_label=_("Mon profil"),
+        empty_title=_("Aucune organisation rattachée"),
+        empty_text=_("Le rattachement de votre compte à une organisation est effectué par l’équipe du projet."),
+    )
+
+
+_CARD_TITLES: dict[str, tuple[Callable[[], str], str]] = {
+    "requests": (lambda: _("Mes demandes"), "list"),
+    "orientation": (lambda: _("Mon orientation"), "compass"),
+    "documents": (lambda: _("Mes documents"), "document"),
+    "deadlines": (lambda: _("Mes échéances"), "calendar"),
+    "messages": (lambda: _("Communications"), "mail"),
+    "organisation": (lambda: _("Mon organisation"), "building"),
+}
+
+
+def _safe_card(key: str, builder: Callable[[Any], Card], user) -> Card:
+    try:
+        return builder(user)
+    except SIBLING_ERRORS:
+        # No personal data in logs: only the card key and the exception type.
+        log.exception("portal card unavailable", extra={"event": "portal.card_unavailable", "card": key})
+        title, icon = _CARD_TITLES[key]
+        return Card(key=key, title=title(), icon=icon, available=False)
+
+
+def _wants_orientation(user) -> bool:
+    """Whether an account is offered the orientation — its card on the bridge, the legacy pre-assessment on a person's
+    dashboard: by its account type and its roles, or because it already holds a session (deny by default)."""
+    held = roles.roles_of(user)
+    if organisation_audience(user, held) or is_company_audience(user, held):
+        # a company's or an organisation's space is not asked the person's questionnaire (V5.12 Q7, D-09): only an
+        # orientation it already holds is shown
+        return _has_orientation_sessions(user)
+    wants = getattr(user, "account_type", "") in ORIENTATION_ACCOUNT_TYPES or (
+        not user.is_superuser and roles.has_role(user, roles.PERSON, roles.PROFESSIONAL)
+    )
+    return wants or _has_orientation_sessions(user)
+
+
+def card_builders_for(user) -> list[tuple[str, Callable[[Any], Card]]]:
+    """Which cards an account gets — driven by its account type and roles (deny by default)."""
+    builders: list[tuple[str, Callable[[Any], Card]]] = [("requests", _requests_card)]
+    if _wants_orientation(user):
+        builders.append(("orientation", _orientation_card))
+    builders += [("documents", _documents_card), ("deadlines", _deadlines_card), ("messages", _messages_card)]
+    if shows_organisation_card(user) or user.memberships.exists():
+        builders.append(("organisation", _organisation_card))
+    return builders
+
+
+def bridge_cards(user) -> list[Card]:
+    """
+    The card grid of the accounts that are not a person — company, institution, university, professional — kept as
+    a bridge until their own workspaces exist (templates/portal/dashboard.html). A person's dashboard never draws
+    it, so it is never built for a person (the platform map's F9, W3-B): six presenters and their queries ran on
+    every person's dashboard for a grid nobody saw.
+    """
+    return [_safe_card(key, builder, user) for key, builder in card_builders_for(user)]
+
+
+def is_person_account(user) -> bool:
+    """The dashboard of a person: the account type, or the person's role on an account of another type (the QA
+    persona «personne avec dossier» is typed company and holds the person's role — DL54-59). An account named by an
+    organisation's or a company's role (accounts.roles.audience_role) is not a person whatever its type defaults to:
+    its role and its type can never contradict on screen (V5.12 D-09) — a company is never asked to start the
+    person's questionnaire."""
+    role = roles.audience_role(user)
+    if role == roles.COMPANY or role in ORGANISATION_AUDIENCES:
+        return False
+    return (getattr(user, "account_type", "") == "person") or roles.has_role(user, roles.PERSON)
+
+
+def _has_orientation_sessions(user) -> bool:
+    model = _get_model("orientation", "OrientationSession")
+    if model is None:
+        return False
+    try:
+        return model.objects.filter(user=user).exists()
+    except FieldError:
+        return False
+
+
+#: The case lifecycle as a person reads it. Not the eleven internal states — a person does not need
+#: to know that SUSPENDED and CLOSED exist until one applies to them — but the spine of the model,
+#: which is also the spine of the public site: need, skills, training, legal pathway, entry,
+#: inclusion. ``side`` says which shore is answerable, so the sequence can draw the crossing.
+JOURNEY_STEPS: tuple[tuple[str, str, object], ...] = (
+    ("draft", "morocco", gettext_lazy("Votre situation et votre objectif")),
+    ("oriented", "morocco", gettext_lazy("Pré-évaluation et parcours possibles")),
+    ("training", "morocco", gettext_lazy("Préparation et formation avant le départ")),
+    ("admin_process", "italy", gettext_lazy("Procédures auprès des autorités compétentes")),
+    ("pre_departure", "italy", gettext_lazy("Préparation du départ")),
+    ("entered", "italy", gettext_lazy("Arrivée et premières démarches")),
+    ("post_entry", "italy", gettext_lazy("Accompagnement et inclusion")),
+)
+
+
+#: The two thresholds of «La soglia» (V5.4 plan §1.18 D16; JOURNEY_SIGNATURE.md §5.1; the glyphs `stamp` and `ile-arch`
+#: are core.icons.JOURNEY's): where the jurisdiction changes — never a step of its own. A, the competent authorities,
+#: stands before the first step answered on the Italian side; B, the Italian territory, before the arrival. Each is
+#: captioned by the site's own jurisdiction label (pages.services.JURISDICTION_SEGMENTS: the same catalogue entries).
+JOURNEY_THRESHOLDS: dict[str, tuple[str, object]] = {
+    "admin_process": ("a", gettext_lazy("Autorités compétentes : décisions administratives")),
+    "entered": ("b", gettext_lazy("Territoire italien : accueil et inclusion")),
+}
+
+#: Where a file stands on the line, by its status: a step's index — or a threshold, half a step before the step it
+#: opens. A threshold is a PLACE (OJ2): SELECTION, the phase an authorised actor handles between the training and the
+#: administrative procedure, stands ON threshold A. A status with no place here (SUSPENDED, CLOSED) has none on the
+#: line: no item is current and nothing says «Vous êtes ici» — the header's chip says the state. How far such a file
+#: had come is in its audit trail, not in its status: the case file reads it (cases.presenters.journey_with_dates).
+_JOURNEY_POSITION: dict[str, float] = {
+    "draft": 0,
+    "oriented": 1,
+    "review_required": 1,
+    "training": 2,
+    "selection": 2.5,
+    "admin_process": 3,
+    "pre_departure": 4,
+    "entered": 5,
+    "post_entry": 6,
+}
+
+
+def journey_place(status) -> float | None:
+    """Where a status stands on the journey's line — a step's index, or a threshold's half step — or None: SUSPENDED
+    and CLOSED have no place on it."""
+    return _JOURNEY_POSITION.get(str(status))
+
+
+def _journey_state(place: float, position: float | None, stopped_at: float | None) -> str:
+    if position is None:
+        # off the line: what the trail says the file reached is behind it, the rest ahead — and nothing current
+        return "done" if stopped_at is not None and place <= stopped_at else "upcoming"
+    return "done" if place < position else "current" if place == position else "upcoming"
+
+
+def journey_for(case, *, stopped_at: float | None = None) -> list[dict]:
+    """
+    The case lifecycle rendered as a sequence, with the current step marked.
+
+    A person asks "where am I", and the honest answer is a position in a named sequence — not a
+    percentage, and not a state machine diagram.
+
+    Each step carries its own ``status`` (its glyph: ``core.icons.JOURNEY``), its ``state`` (done · current · upcoming)
+    and, on the step a threshold opens, that ``threshold``: its key, its caption, its own state, and — when the file
+    stands on it — the words of the file's state («Phase gérée par un acteur autorisé»). Then no step is current: the
+    threshold is (templates/components/journey_rail.html draws it as the list's current item).
+
+    A file whose status has no place on the line (SUSPENDED, CLOSED) has NO current item: nothing says «Vous êtes
+    ici», the header's chip says the state. ``stopped_at`` — the last place it held on the line, which only its trail
+    knows (``cases.presenters.journey_with_dates`` reads it) — puts every item up to that place behind it, the item
+    there marked ``stop`` (the line is not travelled past it); without it, every item is ahead. A file on the line
+    ignores it: its status says where it stands.
+    """
+    if case is None:
+        return []
+    from cases.models import CaseStatus
+
+    position = journey_place(case.status)
+    if position is not None:
+        stopped_at = None
+    # The frontier MA→IT sits before the first step of the Italian side (design V4 JourneyRail): threshold A.
+    first_italy = next((i for i, (_s, side, _l) in enumerate(JOURNEY_STEPS) if side == "italy"), None)
+    steps = []
+    for index, (status, side, label) in enumerate(JOURNEY_STEPS):
+        state = _journey_state(index, position, stopped_at)
+        threshold = None
+        if status in JOURNEY_THRESHOLDS:
+            key, caption = JOURNEY_THRESHOLDS[status]
+            gate = _journey_state(index - 0.5, position, stopped_at)
+            threshold = {
+                "key": key,
+                "caption": caption,
+                "state": gate,
+                "is_current": gate == "current",
+                "stop": stopped_at == index - 0.5,
+                "label": CaseStatus(case.status).label if gate == "current" else "",
+            }
+        steps.append(
+            {
+                "status": status,
+                "label": label,
+                "side": side,
+                "state": state,
+                "is_current": state == "current",
+                "stop": stopped_at == index,
+                "frontier": index == first_italy,
+                "threshold": threshold,
+                "detail": "",
+                "actor": "",
+            }
+        )
+    return steps
+
+
+def active_case(user):
+    """The person's case file, or None. Authorisation is applied in the queryset, as always."""
+    from cases.models import CaseFile
+
+    return CaseFile.objects.readable_by(user).filter(person=user).active().order_by("-created_at").first()
+
+
+def held_case(user):
+    """
+    The person's file when none is active (sec-f7): the latest SUSPENDED one — it can still move again —, else the
+    latest CLOSED one; None when the person has never had a file. The dashboard tells such a person the truth about it
+    instead of «pas encore de dossier» — ``active_case`` stays what its other callers need (the reassessment never
+    touches a suspended or closed file). Authorisation in the queryset, as always.
+    """
+    from cases.models import CaseFile, CaseStatus
+
+    files = CaseFile.objects.readable_by(user).filter(person=user).order_by("-created_at")
+    return files.filter(status=CaseStatus.SUSPENDED).first() or files.filter(status=CaseStatus.CLOSED).first()
+
+
+#: Scan status -> the seven user-visible document states of art direction A §13.3. The scanner
+#: reports on a file; the person needs to know what it means for their file, which is not the same
+#: question. Never a raw technical status in front of someone assembling a legal dossier.
+#: `ScanStatus` -> the `.state--*` modifier of static/css/register.css.
+#:
+#: "skipped" is not a scan status and never was — `ScanStatus` reads NOT_CONFIGURED, PENDING,
+#: CLEAN, INFECTED, ERROR — so that key had matched nothing since the status was renamed, and an
+#: unscanned file fell through to the default. It now says so by name.
+DOCUMENT_STATES = {
+    "not_configured": "review",
+    "pending": "review",
+    "clean": "valid",
+    "infected": "invalid",
+    "error": "review",
+}
+
+
+def _person_scan_word(status: str) -> object:
+    """
+    What the person is told about the antivirus scan of their own file (V5.12 §11; Director's decisions §9): nothing,
+    unless the file is blocked — «Fichier bloqué». «non analysé», «en attente», «sain» are the platform's workflow
+    words, not the person's: the scan's full state stays on the back office and in the register's rules.
+    """
+    if status == "infected":
+        return _("Fichier bloqué")
+    return ""
+
+
+def _safe_rows(key: str, builder, user) -> list[dict]:
+    """
+    Rows for one register of the dashboard, or an empty list.
+
+    A sibling app that disappears or changes shape must produce an honest empty region, never a 500
+    on the page a person opens to find their next action. The cards this replaced had that guarantee
+    through ``_safe_card``; the registers need it just as much, and for the same reason.
+
+    No personal data in the log: the register key and the exception type, nothing else.
+    """
+    return _rows_and_availability(key, builder, user)[0]
+
+
+def _rows_and_availability(key: str, builder, user) -> tuple[list[dict], bool]:
+    """
+    ``_safe_rows`` that also says whether the register could be read: the person's side column draws a register only
+    with rows or when it cannot be read — an honest «indisponible», never «… apparaîtront ici» (V5.12 D-20).
+    """
+    try:
+        return builder(user), True
+    except SIBLING_ERRORS:
+        log.exception("portal register unavailable", extra={"event": "portal.register_unavailable", "register": key})
+        return [], False
+
+
+def _dashboard_documents(user) -> list[dict]:
+    return [
+        {
+            "label": document.original_name,
+            "detail": document.get_kind_display(),
+            "state": DOCUMENT_STATES.get(document.scan_status, "review"),
+            # The raw member, for the chip's register (core.chips, keyed on documents.ScanStatus):
+            # the CSS word above is a colour with extra steps and cannot say what the scan found.
+            "scan_status": document.scan_status,
+            # Nothing about the scan unless the file is blocked («Fichier bloqué»): the scan's other states are
+            # the platform's workflow words, not the person's (V5.12 §11; ``_person_scan_word``).
+            "state_label": _person_scan_word(document.scan_status),
+        }
+        for document in documents_for(user)[:DASHBOARD_LATEST]
+    ]
+
+
+def _dashboard_messages(user) -> list[dict]:
+    return [
+        {
+            "subject": message.subject,
+            "date": message.created_at,
+            "is_unread": message.read_at is None,
+            "url": safe_reverse("portal:message_detail", message.pk),
+        }
+        for message in inbox(user)[:DASHBOARD_LATEST]
+    ]
+
+
+def _dashboard_deadlines(user) -> list[dict]:
+    from documents.requirements import due_urgency
+
+    rows = []
+    for deadline in deadlines_for(user).open().order_by("due_on", "id")[:DASHBOARD_LATEST]:
+        urgency = due_urgency(deadline.due_on)
+        rows.append(
+            {
+                "pk": deadline.pk,
+                "title": deadline.title,
+                "date": deadline.due_on,
+                "urgency": urgency,
+                "word": _due_word(urgency),
+                "kind_label": deadline.get_kind_display(),
+                "source_note": deadline.source_note,
+            }
+        )
+    return rows
+
+
+def _due_word(urgency: str) -> str:
+    """A due date's word beside its glyph and its date — «Bientôt», «En retard» — never a colour alone (plan §1.2:
+    «soon» is attesa, «overdue» is azione); the catalogue's words of the deadlines page, nothing new."""
+    return {"soon": _("Bientôt"), "overdue": _("En retard")}.get(urgency, "")
+
+
+#: How many of the file's pieces the dashboard lists — every piece the person must act on is listed, then the ones
+#: in somebody else's hands until the list holds this many; the register holds the rest («Voir mes documents»).
+DASHBOARD_PIECES = 5
+
+
+def _dashboard_pieces(user, case, skip: str = "") -> dict:
+    """
+    The file's pieces as the dashboard shows them — the same presenter and the same authorisation as the register
+    itself (documents.presenters.register_for_case):
+
+    * ``marks``: one per piece, the register's order — «il registro» drawn as the chips' marks, decoration over the
+      counts' words (``counts``, the register's own);
+    * ``rows``: every piece the person must act on (an open state, the person answerable), then the pieces in
+      somebody else's hands — filed, in review, or asked of another actor — up to DASHBOARD_PIECES; a settled piece
+      is counted, not listed;
+    * ``now``: the row of the piece the NowPanel draws (``skip``), which no list draws again — one piece, drawn once.
+
+    «Il registro» (O62): the pieces by who holds them — the colour is the group, the shape is the state. The group
+    words are the catalogue's until the copy review signs «À vous · En cours · Réglées» (plan §1.18 D15): «À faire»
+    and «En cours» (the checklist's own states), «Valide» (the piece's).
+    """
+    from cases.models import ChecklistStatus
+    from documents import presenters
+    from documents.models import OPEN_STATES, RequirementState
+
+    if case is None:
+        return {}
+    register = presenters.register_for_case(user, case)
+    rows = register["rows"]
+    if not rows:
+        return {}
+    to_act = [row for row in rows if row["is_for_the_person"] and row["state"] in OPEN_STATES]
+    settled = [row for row in rows if row["state"] == RequirementState.VALID]
+    in_hand = [row for row in rows if row not in to_act and row not in settled]
+    now = next((row for row in rows if skip and row["id"] == skip), None)
+    yours = [row for row in to_act if row is not now]
+    others = [row for row in in_hand if row is not now]
+    shown = yours + others[: max(0, DASHBOARD_PIECES - len(yours))]
+    for row in shown:
+        row["is_yours"] = row in yours
+        row["due_word"] = _due_word(row["urgency"])
+        row["words"] = _data_lang(getattr(row["requirement"], "language", ""))
+    groups = [
+        {"key": key, "label": label, "states": [row["state"] for row in members]}
+        for key, label, members in (
+            ("to-act", ChecklistStatus.PENDING.label, to_act),
+            ("in-hand", ChecklistStatus.IN_PROGRESS.label, in_hand),
+            ("settled", RequirementState.VALID.label, settled),
+        )
+        if members
+    ]
+    return {
+        "counts": register["counts"],
+        "groups": groups,
+        "rows": shown,
+        "more": len(yours) + len(others) - len(shown),
+        "now": now,
+    }
+
+
+def _dashboard_academy(user) -> dict | None:
+    """The person's current enrolment, if any — real progress only, never an invented one."""
+    try:
+        from academy import services as academy_services
+    except ImportError:  # pragma: no cover - the Academy is optional in a deployment
+        return None
+    enrolments = list(academy_services.enrolments_for(user)[:1])
+    if not enrolments:
+        return None
+    enrolment = enrolments[0]
+    return {
+        "course": enrolment.course.title,
+        "status": enrolment.status,
+        "status_label": enrolment.get_status_display(),
+        "url": safe_reverse("academy:enrolment", enrolment.uuid) if safe_reverse("academy:catalogue") else "",
+    }
+
+
+def _dashboard_assessment(cards, assessment) -> dict | None:
+    """
+    The pre-assessment shown on the dashboard: the outcome, the rules behind it, and its sources.
+
+    Two paths, for one transition. The questionnaire now opens a ``CaseFile`` and freezes a
+    ``PathwayAssessment``, which is the path that matters. A person who completed the questionnaire
+    BEFORE the case file existed still has only an ``OrientationSession``, and must still see their
+    result, so the legacy session is read as a fallback until those sessions age out.
+
+    Both paths carry the ruleset version and the evaluation date, because an outcome without them
+    cannot be reproduced and should not be trusted. Only the first can carry SOURCES, and that is the
+    whole difference between the two: an outcome that cites the provisions behind it is a finding,
+    and one that cannot is an opinion. Neither path ever prints a word that could be read as an
+    administrative decision.
+    """
+    if assessment is not None:
+        return {
+            "outcome_kind": assessment.outcome.replace("_requirement", "").replace("review_required", "review"),
+            "outcome_label": assessment.get_outcome_display(),
+            "rationale": assessment.rationale,
+            "ruleset_version": assessment.ruleset_version,
+            "assessed_at": assessment.assessed_at,
+            "sources": assessment.sources,
+            # The rules are named, not just counted: "three rules in force were applied" is a claim,
+            # and a person disputing the outcome needs to be able to ask about a specific one.
+            "applied_rules": [
+                {"rule_id": applied.get("rule_id", ""), "message": applied.get("message", "")}
+                for applied in (assessment.applied_rules or [])
+            ],
+            "missing_count": len(assessment.missing_requirements or []),
+        }
+
+    # Read from the card already built rather than querying again: ``pathway_sessions`` is the
+    # dashboard's most expensive call and it must run once per request, which
+    # test_pathways_page_presents_only_the_requested_page guards.
+    card = next((c for c in cards if c.key == "orientation" and c.available), None)
+    if card is None or not card.items:
+        return None
+    item = card.items[0]
+    version = ""
+    if item.meta:
+        _, _, tail = item.meta.rpartition("v")
+        version = tail.strip()
+    return {
+        # A legacy session records a pathway family, not one of the five outcome kinds: presenting
+        # it as an outcome would claim more than the row contains.
+        "outcome_kind": "possible",
+        "outcome_label": item.title,
+        "rationale": "",
+        "ruleset_version": version,
+        "assessed_at": item.date,
+        "sources": [],
+        "applied_rules": [],
+        "missing_count": 0,
+    }
+
+
+#: The glyph of each section of a person's dashboard — the registry's symbol of its domain (apps/core/icons.py), the
+#: same as the rail's entry for that domain: one concept, one glyph (plan §1.7).
+DASHBOARD_GLYPHS: dict[str, str] = {
+    "journey": icons.concept("nav", "pathways"),
+    "file": icons.concept("nav", "cases"),
+    "pieces": icons.concept("card", "documents"),
+    "dates": icons.concept("card", "deadlines"),
+    "messages": icons.concept("card", "messages"),
+    "academy": icons.concept("nav", "academy"),
+    "assessment": icons.concept("journey", "oriented"),
+    "deposits": "history",
+    "activity": "history",
+}
+
+#: «Activité récente» (V5.30, stream C: the role dashboards show recent activity «only from existing audit / history
+#: data»): the person's file's latest events, read from the audit trail by the case file's own presenter
+#: (cases.presenters.timeline — the actor a type, never a name), the whole history one link away on the file.
+DASHBOARD_ACTIVITY = 3
+
+
+def _dashboard_activity(user, case) -> list[dict]:
+    if case is None:
+        return []
+    try:
+        from cases import presenters as case_presenters
+
+        return case_presenters.timeline(case, limit=DASHBOARD_ACTIVITY, reader=user)
+    except SIBLING_ERRORS:
+        log.exception("portal dashboard activity unavailable", extra={"event": "portal.activity_unavailable"})
+        return []
+
+
+# ---- The NowPanel: the person's dashboard's one raised panel, chosen by the system --------------------------
+#: Its four variants (plan §1.15 item 1): the system orders priority — nobody arranges a board.
+NOW_YOURS = "yours"  # «à vous» — the next action is the person's
+NOW_THIRD = "third"  # «en attente d'un tiers» — it is in somebody else's hands
+NOW_NOTHING = "nothing"  # «rien à faire» — the file asks nothing of anybody now
+NOW_NO_CASE = "no-case"  # «pas encore de dossier» — the questionnaire opens the file
+#: A person whose latest file is held (sec-f7): the file's state, as the case file says it, and the way to the file.
+NOW_SUSPENDED = "suspended"  # «Dossier suspendu» — and why, in the words of whoever suspended it
+NOW_CLOSED = "closed"  # «Parcours clôturé» — a closed file does not reopen: the questionnaire opens a new one
+
+
+def _data_lang(lang: str) -> dict[str, str]:
+    """The language of a record's own words when it is not the page's: a piece's title is written in French and stays
+    French on an Arabic page, isolated so its direction and its punctuation hold (gate-0 A6)."""
+    from django.utils import translation
+
+    current = (translation.get_language() or "fr").split("-")[0]
+    if not lang or lang == current:
+        return {"lang": "", "dir": ""}
+    try:
+        bidi = translation.get_language_info(lang)["bidi"]
+    except KeyError:
+        bidi = False
+    return {"lang": lang, "dir": "rtl" if bidi else "ltr"}
+
+
+def _overdue_deadline(deadlines: list[dict], action) -> dict | None:
+    """An overdue date of the account takes over the NowPanel (plan §1.15 item 1) — unless the next action is already
+    overdue or a blocking outcome stops the path: the precedence's first rungs stay first."""
+    if action is not None and action.urgency in ("overdue", "blocked"):
+        return None
+    return next((row for row in deadlines if row["urgency"] == "overdue"), None)
+
+
+def _now_acts(case, action, piece: dict | None) -> tuple[dict | None, dict | None]:
+    """
+    The NowPanel's acts: ONE primary — the act itself, on the obligation's own page — or none when nothing is the
+    person's to do; in somebody else's hands, a quiet way to read the piece. The words are the register's
+    (components/document_row.html) and the catalogue's: nothing new is written here.
+
+    A piece whose filing the Conditions gate blocks is read on its own page («Consulter», the dashboard's rows say
+    the same), which states the gate; the panel's note says why (``_now_gate_note``). Never a button that promises
+    an act its target cannot do: the terms page has nothing to accept until the acceptance flow exists (G1).
+    """
+    from core.links import public_url
+
+    if action.is_for_someone_else:
+        if action.kind == "piece" and action.url:
+            return None, {"label": _("Consulter"), "url": action.url}
+        return None, None
+    if action.kind == "piece":
+        if piece is not None and piece.get("may_file"):
+            label = _("Remplacer la pièce") if piece.get("current") else _("Déposer la pièce")
+            return {"label": label, "url": action.url}, None
+        return ({"label": _("Consulter"), "url": action.url} if action.url else None), None
+    if action.kind == "item":
+        # a checklist item has no page of its own: it is worked from the case file, which lists it
+        url = public_url("cases:detail", case.reference)
+        return ({"label": _("Continuer"), "url": url} if url else None), None
+    if action.kind == "outcome" and action.url:
+        return {"label": _("Voir le détail de la pré-évaluation"), "url": action.url}, None
+    if action.url:
+        return {"label": action.cta_label or _("Continuer"), "url": action.url}, None
+    return None, None
+
+
+#: The registry's glyph of what the NowPanel is about (apps/core/icons.py): a piece, a checklist item of the file,
+#: the pre-assessment's outcome, the orientation.
+_NOW_GLYPHS = {
+    "piece": ("card", "documents"),
+    "item": ("nav", "cases"),
+    "outcome": ("journey", "oriented"),
+    "orientation": ("card", "orientation"),
+}
+
+
+def _now_gate_note(action, piece: dict | None) -> str:
+    """The note of a NowPanel whose piece the Conditions gate blocks — the register's own words
+    (templates/components/document_row.html) —, or ''."""
+    if action.kind == "piece" and piece is not None and piece.get("action_blocked"):
+        return _("Acceptation des Conditions d’utilisation requise.")
+    return ""
+
+
+def _now_holder(assignments) -> dict[str, str] | None:
+    """Whose hands the file is in, for a NowPanel that asks nothing («rien à faire»): the file's most recent live
+    assignment (``cases.services.responsible_for``, newest first) — its role, and its organisation when it has one
+    (a record's own words, isolated by the partial), as the file's own strip says them («Qui intervient sur ce
+    dossier»). None when nobody is assigned."""
+    assignment = next(iter(assignments or ()), None)
+    if assignment is None:
+        return None
+    organisation = assignment.organisation.name if assignment.organisation_id else ""
+    return {"actor": assignment.role, "label": assignment.get_role_display(), "organisation": organisation}
+
+
+#: The words of a record whose language the data does not hold — a date the team wrote, its source note —: their
+#: direction is the text's own (``dir="auto"``), so on an Arabic page a French title keeps its brackets and its final
+#: point where it wrote them, and its box stands on the panel's reading edge.
+_OWN_WORDS = {"lang": "", "dir": "auto"}
+
+
+def _now_base() -> dict[str, Any]:
+    """Every key the NowPanel's partial reads (templates/portal/partials/now_panel.html), empty."""
+    return {
+        "takeover": "",
+        "words": {"lang": "", "dir": ""},
+        "text_label": "",
+        "state": None,
+        "due": None,
+        "responsible": None,
+        "note": "",
+        "primary": None,
+        "secondary": None,
+        "piece_id": "",
+        "need_ref": "",
+        "deadline_pk": None,
+        # the case file's own (W3-E): the source a checklist line rests on, and the id the line's row would carry
+        "source": None,
+        "line_anchor": "",
+    }
+
+
+def now_panel(
+    user, case, action, *, takeover: dict | None = None, piece: dict | None = None, assignments=None, own: bool = True
+) -> dict[str, Any]:
+    """
+    What the person's dashboard puts first, in its one raised panel: the next action with its piece, its date and
+    who answers for it, and the ONE primary that does it — composed from ``cases.services.next_action`` (T1) and
+    the account's dates, never chosen by the person and never remembered (plan §1.15).
+
+    The variant says whose move it is: «à vous» (NOW_YOURS), «en attente d'un tiers» (NOW_THIRD), «rien à faire»
+    (NOW_NOTHING — with whose hands the file is in, from the file's live ``assignments``), «pas encore de dossier»
+    (NOW_NO_CASE); an overdue date takes the panel over (``takeover``): its title and its source note — under the
+    deadlines page's «Origine :» — are the team's own words, drawn in their own direction. A file that is suspended or
+    closed says so first (NOW_SUSPENDED, NOW_CLOSED: ``_held_now``) — the state is the frame everything else is read in.
+    """
+    from cases import presenters as case_presenters
+    from core.links import public_url
+    from documents.requirements import due_urgency, state_label
+
+    base = _now_base()
+    if case is not None and not case.is_active:
+        return _held_now(case)
+    if takeover is not None:
+        deadlines_url = public_url("portal:deadlines")
+        return {
+            **base,
+            "variant": NOW_YOURS,
+            "takeover": "overdue",
+            "eyebrow": _("Votre prochaine action"),
+            "glyph": icons.concept("due", "overdue"),
+            "title": takeover["title"],
+            "text": takeover["source_note"],
+            "text_label": _("Origine :") if takeover["source_note"] else "",
+            "words": dict(_OWN_WORDS),
+            "due": {"date": takeover["date"], "urgency": "overdue", "word": _due_word("overdue")},
+            "primary": {"label": _("Toutes mes échéances"), "url": deadlines_url} if deadlines_url else None,
+            "deadline_pk": takeover["pk"],
+        }
+    if case is None:
+        start = public_url("orientation:start")
+        return {
+            **base,
+            "variant": NOW_NO_CASE,
+            "eyebrow": _("Votre prochaine action"),
+            "glyph": icons.concept("card", "orientation"),
+            "title": _("Le questionnaire d’orientation"),
+            "text": _(
+                "Vous n’avez pas encore de dossier. Il s’en ouvre un lorsque vous terminez le questionnaire "
+                "d’orientation, et il conserve alors votre résultat, votre liste de pièces et les personnes "
+                "responsables de chaque étape."
+            ),
+            "primary": {"label": _("Commencer le questionnaire"), "url": start} if start else None,
+        }
+    if action is None:
+        return {
+            **base,
+            "variant": NOW_NOTHING,
+            "eyebrow": _("Prochaine étape"),
+            "glyph": icons.concept("nav", "cases"),
+            "title": _("Aucune action ne vous est demandée pour l’instant."),
+            "text": "",
+            "responsible": _now_holder(assignments),
+        }
+    state = None
+    if action.kind == "piece" and action.state:
+        state = {"value": action.state, "producer": "documents.RequirementState", "label": state_label(action.state)}
+    elif action.kind == "item" and action.state:
+        from cases.models import ChecklistStatus
+
+        state = {
+            "value": action.state,
+            "producer": "cases.ChecklistStatus",
+            "label": ChecklistStatus(action.state).label,
+        }
+    due = None
+    if action.due_date:
+        urgency = due_urgency(action.due_date, overdue=action.urgency == "overdue")
+        due = {"date": action.due_date, "urgency": urgency, "word": _due_word(urgency)}
+    primary, secondary = _now_acts(case, action, piece)
+    yours = not action.is_for_someone_else
+    domain, key = _NOW_GLYPHS.get(action.kind, ("nav", "cases"))
+    return {
+        **base,
+        "variant": NOW_YOURS if yours else NOW_THIRD,
+        "takeover": "overdue" if action.urgency == "overdue" else "",
+        "eyebrow": _("Votre prochaine action") if yours else _("Prochaine étape"),
+        "glyph": icons.concept(domain, key),
+        "title": action.label,
+        "text": action.detail,
+        "words": _data_lang(action.lang),
+        "state": state,
+        "due": due,
+        # «Vous» on one's own next action, «La personne concernée» to a mandated reader — never «La personne»
+        "responsible": {
+            "actor": action.responsible_actor,
+            "label": case_presenters.responsible_label(
+                action.responsible_actor, action.get_responsible_display(), own=own
+            ),
+        },
+        "note": _now_gate_note(action, piece) if yours else _("Cette étape ne dépend pas de vous."),
+        "primary": primary,
+        "secondary": secondary,
+        "piece_id": action.piece_id,
+    }
+
+
+def _held_now(case) -> dict[str, Any]:
+    """
+    The NowPanel of a person whose latest file is suspended or closed (sec-f7) — never «Vous n'avez pas encore de
+    dossier…»: the file's state in the case file's own words, and the way to the file. Suspended: «Dossier suspendu»
+    and the reason, as the case file pairs them (templates/cases/detail.html: its NowPanel, the reason drawn once) —
+    the reason in the words of whoever suspended it, their direction its own —, the file as the primary; nothing else
+    is offered: the questionnaire would open a second file beside it (``cases.intake.case_for_purpose`` reads the
+    active files only). Closed: the state's label and the domain's own sentence — a closed file does not reopen, a new
+    one is opened —, the questionnaire that opens it as the primary, the file, read-only, beside it. Every word the
+    catalogue's.
+    """
+    from cases.models import CaseStatus
+    from core.links import public_url
+
+    base = _now_base()
+    case_url = public_url("cases:detail", case.reference)
+    to_the_file = {"label": _("Votre dossier"), "url": case_url} if case_url else None
+    if case.status == CaseStatus.SUSPENDED:
+        reason = (case.suspension_reason or "").strip()
+        return {
+            **base,
+            "variant": NOW_SUSPENDED,
+            "eyebrow": _("Votre dossier"),
+            "glyph": icons.concept("nav", "cases"),
+            "title": _("Dossier suspendu"),
+            "text": reason,
+            "words": dict(_OWN_WORDS) if reason else base["words"],
+            "primary": to_the_file,
+        }
+    start = public_url("orientation:start")
+    return {
+        **base,
+        "variant": NOW_CLOSED,
+        "eyebrow": _("Votre dossier"),
+        "glyph": icons.concept("nav", "cases"),
+        "title": str(CaseStatus(case.status).label),
+        "text": _("Un fascicolo concluso non si riapre: se ne apre uno nuovo."),
+        "primary": {"label": _("Commencer le questionnaire"), "url": start} if start else None,
+        "secondary": to_the_file,
+    }
+
+
+def _safe_pieces(user, case, skip: str) -> dict:
+    """The dashboard's pieces, or an honest empty region when the documents sibling changed under us."""
+    try:
+        return _dashboard_pieces(user, case, skip)
+    except SIBLING_ERRORS:
+        log.exception(
+            "portal register unavailable", extra={"event": "portal.register_unavailable", "register": "pieces"}
+        )
+        return {}
+
+
+# ---- The case file (design V5, W3-E step 3) ------------------------------------------------------------------------
+#: The glyph of each section of the case file — the dashboard's own where the two pages draw the same thing, the
+#: registry's «history» for what happened to the file (one concept, one glyph: plan §1.7). «Qui intervient sur ce
+#: dossier» and the file's state carry their words alone: the registry names no concept for either.
+CASE_GLYPHS: dict[str, str] = {
+    "journey": DASHBOARD_GLYPHS["journey"],
+    "asked": DASHBOARD_GLYPHS["pieces"],
+    "history": "history",
+    "assessment": DASHBOARD_GLYPHS["assessment"],
+    "messages": DASHBOARD_GLYPHS["messages"],
+    "dates": DASHBOARD_GLYPHS["dates"],
+}
+
+
+def case_lines(user, case, checklist, *, own: bool | None = None) -> list[dict[str, Any]]:
+    """
+    The file's checklist as the register's rows (the platform map's C-3: never a table) — each line its words in
+    their own language, its state as a chip, who answers for it, its date with its glyph and its word while the line
+    is open (F8: a settled line's date is drawn calm), its source in ILE Mono, and, when one of the file's pieces
+    satisfies it (``DocumentRequirement.checklist_item``) and the reader may read that piece, the way to the piece:
+    the line's title is then the row's link. ``can_change`` is the object policy's answer, asked per line by the view
+    (``cases.views.detail``): the row offers its menu only where the policy says yes, and the POST asks again. Reads
+    only: nothing here decides, counts a percentage or names a person. ``own``: whether the reader is the file's
+    person — who answers is then «Vous», and «La personne concernée» to anybody else (``responsible_label``); by
+    default, the file's own person.
+    """
+    from cases import presenters as case_presenters
+    from documents.requirements import due_urgency
+    from documents.services import displayed_text
+
+    if own is None:
+        own = getattr(case, "person_id", None) == getattr(user, "pk", object())
+    pieces: dict[int, str] = {}
+    if checklist:
+        try:
+            from documents.models import DocumentRequirement
+
+            linked = list(
+                DocumentRequirement.objects.readable_by(user)
+                .filter(case=case, checklist_item_id__in=[item.pk for item in checklist])
+                .order_by("order", "title", "pk")
+                .values_list("checklist_item_id", "pk")
+            )
+        except SIBLING_ERRORS:
+            log.exception(
+                "portal register unavailable", extra={"event": "portal.register_unavailable", "register": "lines"}
+            )
+            linked = []
+        for item_id, pk in linked:
+            url = safe_reverse("documents:requirement", pk)
+            if url:
+                pieces.setdefault(item_id, url)
+    rows = []
+    for item in checklist:
+        urgency = due_urgency(item.due_date, overdue=item.is_overdue) if item.due_date and item.is_open else ""
+        anchor = f"line-{item.pk}"
+        # lane AR's W3.2 (FINAL_DELIVERY_V2 §3.7, §3.8; documents.services.displayed_text): the line's words through
+        # the reader's catalogue when an entry exists — the row is then in the page's language and carries no lang /
+        # dir of its own; otherwise the record's words, isolated in the record's language. The title and the detail
+        # share one lang / dir in the templates: a line whose detail has no entry keeps both in the record's words
+        title, title_lang = displayed_text(item.requirement, item.language)
+        detail, detail_lang = displayed_text(item.detail, item.language)
+        if item.detail and detail_lang != title_lang:
+            title, detail, title_lang = item.requirement, item.detail, item.language
+        rows.append(
+            {
+                "pk": item.pk,
+                # the row's id (the fragment the line's POST returns to, the NowPanel's act), its menu, its dialog
+                "anchor": anchor,
+                "menu_id": f"{anchor}-menu",
+                "dialog_id": f"{anchor}-state",
+                "title": title,
+                "detail": detail,
+                "words": _data_lang(title_lang),
+                "state": item.status,
+                "state_label": item.get_status_display(),
+                "responsible_actor": item.responsible_actor,
+                "responsible": case_presenters.responsible_label(
+                    item.responsible_actor, item.get_responsible_actor_display(), own=own
+                ),
+                "responsible_note": item.responsible_note,
+                "due_date": item.due_date,
+                "urgency": urgency,
+                "due_word": _due_word(urgency),
+                "source_ref": item.source_ref,
+                "source_title": item.source_title,
+                "piece_url": pieces.get(item.pk, ""),
+                "can_change": bool(getattr(item, "can_change", False)),
+                "is_open": item.is_open,
+            }
+        )
+    return rows
+
+
+def case_pieces(user, case, skip: str = "") -> dict[str, Any]:
+    """
+    The file's pieces as the case file draws them: «il registro» — the dashboard's ledger, the pieces grouped by whose
+    move it is (``documents.presenters.register_groups``: the register's own partition), each a mark of its state —,
+    then EVERY piece the reader may read, in the register's order (``documents.presenters.register_for_case``: the
+    register's own presenter and authorisation), each row the way to its piece and its act where the reader acts. The
+    NowPanel's piece (``skip``) is drawn there and only there: one piece, drawn once (W3-B's rule). ``{}`` when the
+    file has no piece the reader may read — or when the documents sibling changed under us (an honest empty region).
+    """
+    try:
+        from documents import presenters
+
+        register = presenters.register_for_case(user, case)
+        rows = register["rows"]
+        if not rows:
+            return {}
+        groups = presenters.register_groups(rows)
+    except SIBLING_ERRORS:
+        log.exception(
+            "portal register unavailable", extra={"event": "portal.register_unavailable", "register": "pieces"}
+        )
+        return {}
+    now = next((row for row in rows if skip and row["id"] == skip), None)
+    return {
+        "counts": register["counts"],
+        "groups": [
+            {"key": group["key"], "label": group["label"], "states": [row["state"] for row in group["rows"]]}
+            for group in groups
+            if group["rows"]
+        ],
+        "rows": [row for row in rows if row is not now],
+        "now": now,
+    }
+
+
+#: The NowPanel variants of a held file — a person's latest file that is suspended or closed (sec-f7: ``now_panel``
+#: draws the file's state and, suspended, its reason in the words of whoever suspended it).
+HELD_NOW_VARIANTS = (NOW_SUSPENDED, NOW_CLOSED)
+
+
+def _now_line(lines: list[dict[str, Any]], action) -> dict[str, Any] | None:
+    """The row of the checklist line the file's next action is about (``case_lines``), or None. ``next_action`` names
+    an obligation by its words, its date, its holder and its state (T1); an open line answers all four."""
+    if action is None or action.kind != "item":
+        return None
+    return next(
+        (
+            line
+            for line in lines
+            if line["is_open"]
+            and line["title"] == action.label
+            and line["due_date"] == action.due_date
+            and line["responsible_actor"] == action.responsible_actor
+            and line["state"] == action.state
+        ),
+        None,
+    )
+
+
+def _case_held_now(now: dict[str, Any], case, *, is_own: bool) -> dict[str, Any]:
+    """
+    A held file's NowPanel on its own page (sec-f7's variants): the state and, suspended, the reason — drawn there and
+    only there (DS 2026 §11.7: «the reason drawn once»; the page draws no notice of its own then) —, never a way to the
+    page one is on, and the person's act (the questionnaire that opens a new file) for the person only; a mandated
+    reader is not addressed as the file's owner («Votre dossier» is the person's word: «Dossier» says the subject).
+    """
+    from core.links import public_url
+
+    here = public_url("cases:detail", case.reference)
+    held = {**now}
+    for key in ("primary", "secondary"):
+        act = held.get(key)
+        if act and act.get("url") == here:
+            held[key] = None
+    if not is_own:
+        held.update({"eyebrow": _("Dossier"), "primary": None, "secondary": None})
+    return held
+
+
+def case_now_panel(user, case, action, *, piece=None, assignments=None, is_own=True, line=None) -> dict[str, Any]:
+    """
+    The case file's NowPanel: the dashboard's (``now_panel`` over the same one next action, T1 — so the dashboard, the
+    case and the documents name the same thing), with the corrections that are the case file's own:
+
+    * a checklist line has no page of its own — the case file holds it, and the NowPanel draws it there and only there
+      (``line``: the row of ``case_lines`` the action is about; «Exigences» skips it, as «Pièces du dossier» skips the
+      NowPanel's piece — one line, drawn once): its words, its state, its date, who answers for it with the team's
+      note, and the source it rests on. Its act is the line's own — «Nouvel état de cette ligne», which opens the
+      line's alert dialog on this page (``overlay``: the overlay system's opener) — where the reader may move the line
+      (the object policy's ``can_change``), and nothing where the reader may not: never a link that only scrolls;
+    * a mandated reader (a professional, an operator, an administrator) is told the file's next step in nobody's voice
+      — «Prochaine étape», whose it is in the facts —: «Votre prochaine action» and «Cette étape ne dépend pas de vous»
+      speak to the person, and the person's act is not the reader's to take: no primary — a piece stays readable
+      («Consulter»), a line the policy lets them move keeps its act, quietly (the secondary);
+    * a held file (sec-f7's variants): ``_case_held_now``.
+
+    No overdue date of the account takes it over here: the takeover is the dashboard's, for the account's own dates;
+    the case file speaks of the file.
+    """
+    now = now_panel(user, case, action, piece=piece, assignments=assignments, own=is_own)
+    if now.get("variant") in HELD_NOW_VARIANTS:
+        return _case_held_now(now, case, is_own=is_own)
+    if action is None:
+        return now
+    line_act = None
+    if action.kind == "item":
+        # the dashboard's «Continuer» leads to this page: here the act is the line's, or there is none
+        now["primary"] = None
+        if line is not None:
+            if now.get("responsible") and line["responsible_note"]:
+                now["responsible"] = {**now["responsible"], "organisation": line["responsible_note"]}
+            if line["source_ref"] or line["source_title"]:
+                now["source"] = {"ref": line["source_ref"], "title": line["source_title"]}
+            now["line_anchor"] = line["anchor"]
+            if line["can_change"]:
+                line_act = {"label": _("Nouvel état de cette ligne"), "url": f"#{line['dialog_id']}", "overlay": True}
+                now["primary"] = line_act if is_own else None
+    if not is_own:
+        secondary = line_act
+        if action.kind == "piece" and action.url:
+            secondary = {"label": _("Consulter"), "url": action.url}
+        now.update(
+            {
+                "variant": NOW_THIRD,
+                "eyebrow": _("Prochaine étape"),
+                "note": "",
+                "primary": None,
+                "secondary": secondary,
+            }
+        )
+    return now
+
+
+def case_file(user, case, checklist, action, responsible, *, is_own: bool) -> dict[str, Any]:
+    """
+    What the case file draws beyond the domain's own reads (design V5, W3-E step 3; templates/cases/detail.html): the
+    NowPanel, the checklist's rows, the file's pieces, the sections' glyphs, and whether a line offers its menu (its
+    dialog: the page then links the overlay system's page-only sheet). The NowPanel's line is drawn there only:
+    ``asked_lines`` are the rows «Exigences» draws — every line but that one (its count, «n sur m», stays the file's)
+    —, ``lines`` every line, for the dialogs (the NowPanel's act opens its line's). Presenter reads only — the
+    permissions, the state machine and the audit trail are the case module's, asked by the view.
+    """
+    pieces = case_pieces(user, case, skip=action.piece_id if action is not None else "")
+    lines = case_lines(user, case, checklist, own=is_own)
+    now = case_now_panel(
+        user,
+        case,
+        action,
+        piece=pieces.get("now"),
+        assignments=responsible,
+        is_own=is_own,
+        line=_now_line(lines, action),
+    )
+    drawn = now.get("line_anchor") or ""
+    return {
+        "now": now,
+        "lines": lines,
+        "asked_lines": [line for line in lines if line["anchor"] != drawn],
+        "lines_changeable": any(line["can_change"] for line in lines),
+        "pieces": pieces,
+        "glyphs": CASE_GLYPHS,
+        "documents_url": safe_reverse("portal:documents"),
+        "messages_url": safe_reverse("portal:messages"),
+        "deadlines_url": safe_reverse("portal:deadlines"),
+    }
+
+
+# ---- The company's dashboard (design V5, W3-B step 2) ---------------------------------------------------------
+#: The glyph of each section of the company's dashboard — the rail's own glyph for that page (icons.COMPANY_NAV):
+#: one concept, one glyph (plan §1.7).
+COMPANY_GLYPHS: dict[str, str] = {
+    "company": icons.concept("company_nav", "profile"),
+    "needs": icons.concept("company_nav", "needs"),
+    "messages": icons.concept("company_nav", "messages"),
+}
+
+#: How many of the company's needs the dashboard lists — its own drafts first, then the needs in somebody else's
+#: hands, then the closed ones; the ledger counts them all and the register («Tous mes besoins») lists them all.
+DASHBOARD_NEEDS = DASHBOARD_PIECES
+
+
+def _action_need(action, needs):
+    """The need a company's next action is about — the need whose page its act opens — or None (the declaration, the
+    verification, the needs under review: no need of their own)."""
+    if action is None or not action.url:
+        return None
+    for need in needs:
+        if action.url in (
+            safe_reverse("companies:need_detail", need.reference),
+            safe_reverse("companies:need_edit", need.reference),
+        ):
+            return need
+    return None
+
+
+def company_now_panel(company, action, need=None, *, transmit: bool = False) -> dict[str, Any]:
+    """
+    The company dashboard's NowPanel — the person's raised plane, with the company's one next action
+    (``companies.services.next_action``, unchanged): «à vous» when the act is the company's — declare the company,
+    complete or transmit a need, express the first one — with its ONE primary, the presenter's own words; «en attente
+    d'un tiers» when the project team verifies the company or examines the needs (no primary); «rien à faire». The
+    need the act is about lends its state and its reference, and is drawn here only (``need_ref``).
+
+    ``transmit`` — the account may transmit that need now (``can(user, "submit", need)``): the primary is then the
+    need page's own act, its POST form and its words («Transmettre au projet»), with the need in view — its title,
+    its state, its reference —, and «Ouvrir le besoin» stays beside it, quiet, for a last reading. One verb, one
+    click; the link is never relabelled as the act (the W3-B review's m4).
+    """
+    base = _now_base()
+    if action is None:
+        return {
+            **base,
+            "variant": NOW_NOTHING,
+            "eyebrow": _("Prochaine étape"),
+            "glyph": COMPANY_GLYPHS["needs"],
+            "title": _("Aucune action ne vous est demandée pour l’instant."),
+            "text": "",
+        }
+    yours = not action.is_for_someone_else
+    state = None
+    if need is not None:
+        state = {"value": need.status, "producer": "companies.NeedStatus", "label": need.get_status_display()}
+    about_needs = need is not None or (company is not None and company.is_verified)
+    primary = {"label": action.cta_label or _("Continuer"), "url": action.url} if yours and action.url else None
+    secondary = None
+    submit_url = safe_reverse("companies:need_submit", need.reference) if transmit and need is not None else ""
+    if yours and submit_url:
+        primary, secondary = {"label": _("Transmettre au projet"), "url": submit_url, "method": "post"}, primary
+    return {
+        **base,
+        "variant": NOW_YOURS if yours else NOW_THIRD,
+        "eyebrow": _("Votre prochaine action") if yours else _("Prochaine étape"),
+        "glyph": COMPANY_GLYPHS["needs" if about_needs else "company"],
+        "title": action.label,
+        "text": action.detail,
+        "state": state,
+        "responsible": {
+            "actor": action.responsible_actor,
+            "label": _("Votre entreprise") if yours else action.get_responsible_display(),
+        },
+        "note": "" if yours else _("Cette étape ne dépend pas de vous."),
+        "primary": primary,
+        "secondary": secondary,
+        "need_ref": need.reference if need is not None else "",
+    }
+
+
+def _need_groups(needs) -> list[tuple[str, Any, list]]:
+    """The company's needs by who holds them — to act (its drafts), in hand (transmitted, under review, taken over, on
+    hold — the project's or an actor's), closed (closed, withdrawn) —, each group with its words, in that order. The
+    group words are the catalogue's: «À faire», «En cours» (the checklist's own states, as on the person's dashboard)
+    and «Clos» (the need's)."""
+    from cases.models import ChecklistStatus
+    from companies.models import NeedStatus
+
+    settled_states = (NeedStatus.CLOSED, NeedStatus.WITHDRAWN)
+    to_act = [need for need in needs if need.status == NeedStatus.DRAFT]
+    settled = [need for need in needs if need.status in settled_states]
+    in_hand = [need for need in needs if need.status != NeedStatus.DRAFT and need.status not in settled_states]
+    return [
+        ("to-act", ChecklistStatus.PENDING.label, to_act),
+        ("in-hand", ChecklistStatus.IN_PROGRESS.label, in_hand),
+        ("settled", NeedStatus.CLOSED.label, settled),
+    ]
+
+
+def _company_needs(needs, skip=None) -> dict[str, Any]:
+    """
+    «Il registro» of the company's needs — by who holds them, as the person's pieces (O62: the colour is the group,
+    the shape is the state; the groups of ``_need_groups``). Then the rows, in that order, up to DASHBOARD_NEEDS — the
+    need of the NowPanel (``skip``) is drawn there and only there.
+    """
+    grouped = _need_groups(needs)
+    groups = [
+        {"key": key, "label": label, "states": [need.status for need in members]}
+        for key, label, members in grouped
+        if members
+    ]
+    ordered = [need for _key, _label, members in grouped for need in members if need is not skip]
+    return {"groups": groups, "rows": ordered[:DASHBOARD_NEEDS], "more": max(0, len(ordered) - DASHBOARD_NEEDS)}
+
+
+def needs_register(needs, group: str = "") -> dict[str, Any]:
+    """
+    «Mes besoins en compétences» (design V5, W3-E step 2; platform.md E-3: «the counts become the needs table's filter,
+    not tiles»): the dashboard's groups (``_need_groups``) as the register's filter — «Tous» and each group with its
+    count and the marks of its states, a group with no need a word —, then the rows of the chosen group (`?état=`), in
+    the register's order. An unknown group filters nothing. Read-only: ``companies.services.needs_of`` decides which
+    needs the account sees.
+    """
+    grouped = _need_groups(needs)
+    chosen = group if group in {key for key, _label, _members in grouped} else ""
+    return {
+        "needs_filters": [
+            {"key": key, "label": label, "count": len(members), "states": [need.status for need in members]}
+            for key, label, members in grouped
+        ],
+        "needs_total": len(needs),
+        "needs_group": chosen,
+        "needs_rows": [need for key, _label, members in grouped if not chosen or key == chosen for need in members],
+    }
+
+
+def company_dashboard(company, needs, action, *, user=None) -> dict[str, Any]:
+    """
+    What the company's dashboard draws beside the workspace's own context (design V5, W3-B step 2): the NowPanel,
+    the needs by who holds them and the sections' glyphs. Read-only: the company app decides what the account may
+    see and do (``companies.services``, ``companies.policies``), this only composes it — the NowPanel offers to
+    transmit a need only when the next action opens that need's page and ``user`` may submit it now.
+    """
+    need = _action_need(action, needs)
+    transmit = bool(
+        user is not None
+        and need is not None
+        and action.url == safe_reverse("companies:need_detail", need.reference)
+        and can(user, "submit", need)
+    )
+    return {
+        "now": company_now_panel(company, action, need, transmit=transmit),
+        "needs_ledger": _company_needs(needs, skip=need) if needs else {},
+        "activity": _company_activity(needs),
+        "glyphs": COMPANY_GLYPHS,
+    }
+
+
+def _company_activity(needs) -> list[dict[str, Any]]:
+    """
+    The company's «Activité récente» (V5.30, stream C — recent activity «only from existing audit / history data»):
+    the latest events of ITS needs — `needs` is the list the company app already scoped (companies.services.needs_of) —
+    read from companies.NeedEvent, the company's own copy of each need's history: a state, a date, the need it moved,
+    a party named by organisation or role, never a person. Newest first, the dashboard's three; each row opens its need.
+    """
+    if not needs:
+        return []
+    try:
+        from companies.models import NeedEvent
+
+        events = list(
+            NeedEvent.objects.filter(need__in=needs)
+            .select_related("need")
+            .order_by("-created_at", "-id")[:DASHBOARD_ACTIVITY]
+        )
+    except SIBLING_ERRORS:
+        log.exception("company dashboard activity unavailable", extra={"event": "portal.company_activity_unavailable"})
+        return []
+    return [
+        {
+            "when": event.created_at,
+            "title": event.need.title,
+            "status": event.to_status,
+            "status_label": event.get_to_status_display(),
+            "url": safe_reverse("companies:need_detail", event.need.reference),
+        }
+        for event in events
+    ]
+
+
+#: Two figures and the word between them — «0 sur 5», «0 من 5», «0 of 5» — kept on one line.
+_FIGURES = re.compile(r"(\d+) (\S+) (\d+)")
+
+
+def _progress_words(progress: dict | None) -> str:
+    """The file's progress in the catalogue's words («%(done)s sur %(total)s éléments complétés»), its two figures
+    and the word between them tied by no-break spaces: in the summary strip's narrow cell the Arabic line left its
+    total alone on the next line («العناصر المكتملة: 0 من» / «5»). Nothing else changes: no word, no digit."""
+    if not progress or not progress.get("total"):
+        return ""
+    words = _("%(done)s sur %(total)s éléments complétés") % {"done": progress["done"], "total": progress["total"]}
+    return _FIGURES.sub("\\1\u00a0\\2\u00a0\\3", words)
+
+
+def journey_at(journey: list[dict]) -> dict[str, Any] | None:
+    """
+    Where the file stands on its journey, for the dashboard's lattice (V5.15 lane D: the «Étape» cell): the current
+    step's rank among the journey's steps, in the catalogue's words («Étape %(n)s sur %(total)s»), and its label. A
+    threshold that holds the file is said by its own words (the file's state) on the step it opens. None when nothing
+    is current (no file, a suspended or closed file): the cell is then not drawn — a place the system does not know is
+    never shown.
+    """
+    total = len(journey)
+    for index, step in enumerate(journey, start=1):
+        threshold = step.get("threshold") or {}
+        if step.get("is_current") or threshold.get("is_current"):
+            label = threshold.get("label") if threshold.get("is_current") else step.get("label")
+            return {
+                "n": index,
+                "total": total,
+                "words": _("Étape %(n)s sur %(total)s") % {"n": index, "total": total},
+                "label": label or step.get("label"),
+            }
+    return None
+
+
+def progress_figure(progress: dict | None) -> dict[str, Any] | None:
+    """
+    The file's progress as the lattice's ring draws it (V5.15 lane D): the two counts of ``cases.services.progress`` —
+    verifiable figures, never an invented percentage (the client's rule) — and the arc they make, on a path of length
+    100 (``pathLength``), for the SVG's own ``stroke-dasharray`` attribute (the CSP allows no inline style). None
+    without a checklist: no ring over nothing.
+
+    Up to ``RING_SEGMENTS_MAX`` items the ring is SEGMENTED (round 1: at «0 sur 5» an unbroken grey circle read as a
+    spinner): one segment per item, a 2-unit gap between two, each its own dash pair and offset on the same path —
+    the done ones first. Beyond that, a continuous arc.
+    """
+    if not progress or not progress.get("total"):
+        return None
+    done, total = int(progress["done"]), int(progress["total"])
+    figure: dict[str, Any] = {"done": done, "total": total, "arc": round(100 * done / total), "segments": []}
+    if total <= RING_SEGMENTS_MAX:
+        step = 100 / total
+        figure["segments"] = [
+            {
+                "dash": f"{step - RING_SEGMENT_GAP:.2f} 100",
+                "offset": f"{-(i * step + RING_SEGMENT_GAP / 2):.2f}",
+                "done": i < done,
+            }
+            for i in range(total)
+        ]
+    return figure
+
+
+#: The ring's segments (progress_figure): one per checklist item up to this count, a 2-unit gap on pathLength 100.
+RING_SEGMENTS_MAX = 12
+RING_SEGMENT_GAP = 2
+
+
+def _bridge_space(user) -> dict[str, str] | None:
+    """
+    Where the work of an account that is not a person lives, for the bridge's one quiet link (the W3-B review's m10):
+    the account's first role surface, named as the rail names it — another space by the space's own name («Espace
+    entreprise»), a role's register by its entry («Processus assignés», «Demandes qui me sont confiées»,
+    «Désignation des professionnels»). None for an account that holds none (an institution, a university): the
+    page claims nothing the system does not know.
+    """
+    held = roles.roles_of(user)
+    surfaces = _role_surfaces(user, held)
+    if not surfaces:
+        return None
+    key, label, url = surfaces[0]
+    if key in ROLE_SPACES:
+        label = shell_space(user, ROLE_SPACES[key], held=held)["label"]
+    return {"label": str(label), "url": url}
+
+
+def company_bridge_now(user, space: dict[str, str] | None) -> tuple[dict[str, Any] | None, bool]:
+    """
+    A company's NowPanel on «Espace réservé» (V5.32 correction round, the integration review's P1-4: the reserved area
+    told the referent «Aucune action ne vous est demandée pour l'instant» while «Espace entreprise» opened on
+    «Transmettez le besoin « … » au projet»). Both pages now say one thing: the company's ONE next action —
+    ``companies.services.next_action``, read as the company's dashboard reads it (``company_for``, ``needs_of``),
+    never restated — in the company's own panel (``company_now_panel``), whose way on is «Espace entreprise», where
+    the act is done: the panel's ONE primary when the act is the company's, its quiet secondary when the step is in
+    the project team's hands (the panel's «en attente d'un tiers» has no primary). Nothing is posted from here.
+
+    Returns ``(panel, read)``. No panel when the company app answers no act — the calm panel then says so —, or when
+    the bridge's way (``space``, ``_bridge_space``) is not «Espace entreprise»: the page never sends anybody where the
+    rail does not. ``read`` is False when the company app could not be read (logged): the page then claims neither an
+    act nor a calm.
+    """
+    target = safe_reverse("companies:dashboard")
+    if space is None or not target or space.get("url") != target:
+        return None, True
+    try:
+        from companies import services as company_services
+
+        company = company_services.company_for(user)
+        needs = list(company_services.needs_of(company)) if company is not None else []
+        action = company_services.next_action(company, needs)
+    except SIBLING_ERRORS:
+        log.exception("company next action unavailable", extra={"event": "portal.company_now_unavailable"})
+        return None, False
+    if action is None:
+        return None, True
+    now = company_now_panel(company, action, _action_need(action, needs))
+    way = {"label": space["label"], "url": space["url"]}
+    now["primary"], now["secondary"] = (way, None) if now["variant"] == NOW_YOURS else (None, way)
+    return now, True
+
+
+def dashboard_context(user) -> dict[str, Any]:
+    """
+    Everything the dashboard shows — real rows of THIS account or an explicit empty state.
+
+    A person's dashboard (design V5, W3-B): the NowPanel (``now``) composed from the one next action (T1) and the
+    account's dates; the journey; the file's facts; its pieces, each drawn once; the dates and the communications;
+    what is secondary folds. The card grid is built only for the accounts that draw it (``bridge_cards``, F9).
+
+    A person whose latest file is suspended or closed (sec-f7) is told so — that file, its state and the way to it
+    (``held_case``, ``_held_now``) —, never «pas encore de dossier»: the file asks for no next action and no date takes
+    its panel over (the dates stay listed), and its journey is read from its trail (W3-D's ``journey_with_dates``: where
+    it stopped, nothing «here»).
+    """
+    from cases import presenters as case_presenters
+    from cases import services as case_services
+
+    person = is_person_account(user)
+    case = active_case(user) or held_case(user)
+    held = case is not None and not case.is_active
+    assessment = case_services.latest_assessment(case) if case else None
+    action = case_services.next_action(case, reader=user) if case and not held else None
+    responsible = case_services.responsible_for(case) if case else []
+    progress = case_services.progress(case) if case else None
+    deadlines, deadlines_available = _rows_and_availability("deadlines", _dashboard_deadlines, user)
+    messages_list, messages_available = _rows_and_availability("messages", _dashboard_messages, user)
+    journey = case_presenters.journey_with_dates(case) if held else journey_for(case)
+    space = None
+    company = None
+    took_date = False  # the NowPanel drew a date: the side column is not «nothing», even with no row left
+    if person:
+        takeover = None if held else _overdue_deadline(deadlines, action)
+        pieces = _safe_pieces(user, case, "" if takeover or action is None else action.piece_id)
+        now = now_panel(user, case, action, takeover=takeover, piece=pieces.get("now"), assignments=responsible)
+        if takeover is not None:
+            deadlines = [row for row in deadlines if row is not takeover]
+            took_date = True
+        cards: list[Card] = []
+        # the legacy pre-assessment (an orientation session from before the case file) is read from its card alone
+        legacy = (
+            [_safe_card("orientation", _orientation_card, user)]
+            if assessment is None and _wants_orientation(user)
+            else []
+        )
+    else:
+        pieces, now, cards = {}, None, bridge_cards(user)
+        legacy = cards
+        space = _bridge_space(user)
+        if is_company_audience(user):
+            # The company's own composition (F1: under a composed atrium the bridge read as a bare text list): its
+            # identity sheet — the organisation's public identity and the account's membership, as an institution's
+            # (organisation_identity, deny by default) — and its audience's seal.
+            company = {"identity": organisation_identity(user), "glyph": icons.AUDIENCE["company"]}
+            # …and its one next act, as «Espace entreprise» opens on it (V5.32 correction round, P1-4)
+            company["now"], company["read"] = company_bridge_now(user, space)
+        # The empty-state wall (V5.12 D-20): a register is drawn only with rows — or an action of its own, the
+        # orientation's start — or when it cannot be read; the organisation the account belongs to always stands.
+        cards = [
+            card
+            for card in cards
+            if card.key == "organisation" or card.items or not card.available or card.empty_action_url
+        ]
+    return {
+        "cards": cards,
+        "company": company,
+        # the calm panel only when there is truly nothing: no register with rows and, for a company, no act of its own
+        # (an act the company app could not read is not «nothing» either)
+        "calm": not person
+        and not any(card.key != "organisation" for card in cards)
+        and (company is None or (company["now"] is None and company["read"])),
+        # The person's side column under the same rule (V5.12 D-20): the dates and the communications are drawn only
+        # with rows or when they cannot be read; with neither, one calm sentence in their place.
+        "deadlines_unavailable": not deadlines_available,
+        "messages_unavailable": not messages_available,
+        "side_calm": person
+        and deadlines_available
+        and messages_available
+        and not deadlines
+        and not messages_list
+        and not took_date,
+        "notices": notices_for(user),
+        "unread_count": unread_count(user),
+        "case": case,
+        "responsible": responsible,
+        "progress": progress,
+        "progress_words": _progress_words(progress),
+        "progress_figure": progress_figure(progress),
+        "next_action": action,
+        "now": now,
+        "space": space,
+        "journey": journey,
+        "journey_at": journey_at(journey) if person else None,
+        "assessment": _dashboard_assessment(legacy, assessment),
+        "documents": _safe_rows("documents", _dashboard_documents, user),
+        "pieces": pieces,
+        "activity": _dashboard_activity(user, case) if person else [],
+        "academy": _safe_rows("academy", _dashboard_academy, user),
+        "messages_list": messages_list,
+        "deadlines": deadlines,
+        "orientation_url": safe_reverse("orientation:start"),
+        "documents_url": safe_reverse("portal:documents"),
+        "deadlines_url": safe_reverse("portal:deadlines"),
+        "messages_url": safe_reverse("portal:messages"),
+        "case_url": safe_reverse("cases:detail", case.reference) if case else "",
+        "pathways_url": safe_reverse("portal:pathways"),
+        "portal_context": case.reference if case else "",
+        "is_person": person,
+        "glyphs": DASHBOARD_GLYPHS,
+        "account": {
+            # ``get_full_name()`` falls back to the e-mail address: never print the address twice.
+            "name": (getattr(user, "full_name", "") or "").strip(),
+            "email": user.email,
+            "type_label": roles.space_label(user),
+            "last_login": user.last_login,
+            "profile_url": safe_reverse("accounts:profile"),
+            "mfa_url": safe_reverse("mfa_index"),
+            "backoffice_url": safe_reverse("admin:index") if user.is_staff else "",
+        },
+    }
+
+
+# ---------------------------------------------------------------------------------------------
+# The organisation space — institutions, universities, training bodies (V5.12 Q7)
+# ---------------------------------------------------------------------------------------------
+#: The locked lead of each organisation space: the Implementation document's own presentation of the public space
+#: (S1 §3.4, §3.5), rendered through {% locked %} — never retyped, never a person's «votre espace personnel».
+ORGANISATION_LEADS: dict[str, str] = {"institution": "p3.institutions.intro", "university": "p3.universities.intro"}
+
+#: The approved way to propose a collaboration (S1 §3.2 buttons), offered only while the public form is open (G2): no
+#: CTA for a capability that is closed (Q7: «Do not expose a CTA or promise for a capability that is not implemented»).
+ORGANISATION_ACTIONS: dict[str, tuple[str, str]] = {
+    "institution": ("p3.entrances.institution.button", "enquiries:institution_proposal"),
+    "university": ("p3.entrances.university.button", "enquiries:university_proposal"),
+}
+
+#: The project's public pages an organisation works with, in the order its role reads them (docs/platform/
+#: ROLE_JOURNEYS.md §6, §7): its own public space, the training (a university's), the pilot project, the regular
+#: pathways, the Forum. Each is offered only while its page is public (core.links.public_url: a closed gate is no
+#: link), with the glyph of its section (icons.CHAPTER) and the label the site's own navigation uses.
+ORGANISATION_REFERENCES: dict[str, tuple[tuple[str, str, Any], ...]] = {
+    "institution": (
+        ("ecosystem:institutions", "institutions", gettext_lazy("Espace Institutions")),
+        ("ecosystem:pilot", "italy", gettext_lazy("Projet pilote")),
+        ("pathways:index", "pathways", gettext_lazy("Parcours réguliers")),
+        ("forum:index", "forum", gettext_lazy("Forum Vénétie–Maroc")),
+    ),
+    "university": (
+        ("ecosystem:universities", "universities", gettext_lazy("Espace Universités et Formation")),
+        ("pathways:training", "training", gettext_lazy("Formation")),
+        ("ecosystem:pilot", "italy", gettext_lazy("Projet pilote")),
+        ("pathways:index", "pathways", gettext_lazy("Parcours réguliers")),
+        ("forum:index", "forum", gettext_lazy("Forum Vénétie–Maroc")),
+    ),
+}
+
+#: The Forum has no CHAPTER of its own: its glyph is the registry's meeting of the parties (`handshake`, the Forum's
+#: in the registry); every other reference draws its section's mark.
+_REFERENCE_GLYPHS: dict[str, str] = {"forum": "handshake"}
+
+
+def _public_url(name: str) -> str:
+    from core.links import public_url
+
+    return public_url(name)
+
+
+def organisation_references(audience: str) -> list[dict[str, str]]:
+    """The public pages of ``ORGANISATION_REFERENCES`` that are open today: {url, label, glyph}."""
+    rows = []
+    for route, concept, label in ORGANISATION_REFERENCES.get(audience, ()):
+        url = _public_url(route)
+        if url:
+            glyph = _REFERENCE_GLYPHS.get(concept) or icons.CHAPTER[concept]
+            rows.append({"url": url, "label": str(label), "glyph": glyph})
+    return rows
+
+
+def organisation_action(audience: str) -> dict[str, str] | None:
+    """The approved collaboration CTA of the audience, or None while its public form is closed (G2)."""
+    from core import gates
+
+    key, route = ORGANISATION_ACTIONS.get(audience, ("", ""))
+    if not key or not gates.public_forms_enabled().open:
+        return None
+    url = _public_url(route)
+    return {"locked_key": key, "url": url} if url else None
+
+
+def country_label(value: str) -> str:
+    """
+    An organisation's stored country in the reader's language: an ISO code — or a name in one of the four languages,
+    as the earlier free field held («Italia») — read through lane B's CLDR table (``core.countries``), never the raw
+    stored word on a French or an Arabic page (the V5.12 W2 review). A value the table does not know is shown as stored.
+    """
+    value = (value or "").strip()
+    if not value:
+        return ""
+    from django.utils import translation
+
+    try:
+        from core import countries
+    except ImportError:  # pragma: no cover - before lane B's table is merged
+        return value
+    code = countries.match(value)
+    return countries.name(code, (translation.get_language() or "fr").split("-")[0]) if code else value
+
+
+def organisation_identity(user) -> list[dict[str, Any]]:
+    """
+    The organisations of the account, each as its identity sheet: name, nature, place, website, the account's own
+    role and since when — the organisation's public identity and the account's membership, nothing of another member
+    (``organisations_for``'s rule: accounts.permissions.member_of, deny by default).
+    """
+    rows = []
+    for membership in user.memberships.select_related("organisation").order_by("organisation__name"):
+        organisation = membership.organisation
+        if not member_of(user, organisation.pk):
+            continue
+        rows.append(
+            {
+                "name": organisation.name,
+                "kind_label": organisation.get_kind_display(),
+                "city": organisation.city,
+                "country": country_label(organisation.country),
+                "website": organisation.website,
+                "role_label": membership.get_role_display(),
+                "is_owner": membership.role == MembershipRole.OWNER,
+                "since": membership.created_at,
+            }
+        )
+    return rows
+
+
+def registers_with_rows(user, builders: tuple[tuple[str, Callable[[Any], Card]], ...] | None = None) -> list[Card]:
+    """
+    The registers that have something to say — what is due, what came in, what was sent — each drawn only when it has
+    rows (or cannot be read: an honest «indisponible»), never a heading over «… apparaîtront ici» (V5.12 D-20, the
+    empty-state wall). ``builders`` defaults to the organisation's three, in the order the page reads them.
+    """
+    builders = builders or (("deadlines", _deadlines_card), ("messages", _messages_card), ("requests", _requests_card))
+    cards = [_safe_card(key, builder, user) for key, builder in builders]
+    return [card for card in cards if card.items or not card.available]
+
+
+def organisation_dashboard_context(user) -> dict[str, Any]:
+    """
+    The dashboard of an institution, a university or a training body (V5.12 Q7): who the organisation is, what it has
+    under way with the project — its proposals and requests, the dates the team set, the communications — and the
+    project's pages it works with. Composed for the organisation, not borrowed from a person: no NowPanel, no journey,
+    no file, no pieces. The registers are drawn only with rows; with none, one sentence and — while the public form is
+    open — the audience's approved collaboration CTA, so the page is calm, never a wall of empty headings.
+    """
+    held = roles.roles_of(user)
+    audience = organisation_audience(user, held) or "institution"
+    identity = organisation_identity(user)
+    registers = registers_with_rows(user)
+    return {
+        "audience": audience,
+        "space_label": str(ORGANISATION_SPACE_LABELS[audience]),
+        "lead_key": ORGANISATION_LEADS[audience],
+        "organisations": identity,
+        "organisation_name": identity[0]["name"] if identity else "",
+        "audience_glyph": icons.AUDIENCE[audience],
+        "registers": registers,
+        "calm": not registers,
+        "action": organisation_action(audience),
+        "references": organisation_references(audience),
+        "notices": notices_for(user),
+        "organisation_url": safe_reverse("portal:organisation"),
+        "account": {
+            "name": (getattr(user, "full_name", "") or "").strip(),
+            "email": user.email,
+            "type_label": roles.space_label(user, held),
+            "last_login": user.last_login,
+            "profile_url": safe_reverse("accounts:profile"),
+            "mfa_url": safe_reverse("mfa_index"),
+            "backoffice_url": "",
+        },
+    }
+
+
+def organisation_page(user) -> dict[str, Any]:
+    """«Mon organisation»: the identity sheet of each organisation of the account and, for its responsible, the
+    documents its members filed for it (``organisation_documents_for``: never another organisation's)."""
+    held = roles.roles_of(user)
+    audience = organisation_audience(user, held) or "institution"
+    try:
+        shared = organisation_documents_for(user)
+    except SIBLING_ERRORS:
+        log.exception(
+            "organisation documents unavailable", extra={"event": "portal.organisation_documents_unavailable"}
+        )
+        shared = []
+    return {
+        "audience": audience,
+        "space_label": str(ORGANISATION_SPACE_LABELS[audience]),
+        "audience_glyph": icons.AUDIENCE[audience],
+        "organisations": organisation_identity(user),
+        "organisation_documents": shared,
+        "references": organisation_references(audience),
+        "profile_url": safe_reverse("accounts:profile"),
+        "mfa_url": safe_reverse("mfa_index"),
+    }
+
+
+def reassess_person(user, *, request=None):
+    """
+    Re-run the legal rules on the person's open case after their situation changed.
+
+    Returns the new assessment, or None when nothing moved — the caller uses that to decide whether
+    to tell the person their orientation was recalculated, and saying so when nothing changed would
+    be a small lie that teaches them to distrust the bigger statements.
+    """
+    case = active_case(user)
+    if case is None:
+        return None
+    try:
+        from cases.intake import reassess
+
+        return reassess(case, request=request, reason="situation_updated")
+    except Exception:  # noqa: BLE001 - a failed recomputation must not lose what the person just saved
+        log.exception("reassessment failed for case %s", getattr(case, "reference", "?"))
+        return None

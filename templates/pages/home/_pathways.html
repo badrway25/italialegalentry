@@ -1,0 +1,57 @@
+{% load i18n pages_typo %}{% comment %}
+6. REGULAR PATHWAYS OVERVIEW.
+   * gate G3 open   → the eight prescribed pathways (titles + descriptions from p3.persons.pathways,
+     through pathways.services.index_entries);
+   * gate G3 closed → neutral family labels only: no prescribed title, no description, no
+     eligibility statement; everything points to the Espace Personnes.
+CONTENT_PENDING_LEGAL_REVIEW — the detailed sheets (eligibility, steps, documents) belong to the
+pathways app and to the legal reviewers; nothing of that kind is written here.
+
+V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026; lane B) — «l'esploratore»: a pathway explorer on the light mineral
+ground (21st.dev «Category List» 5151 + «Media Accordion» 27691, adapted in vanilla). An index rail — each pathway its
+registry glyph in a toned tile and its prescribed title, the order the locked order (never a ranking, never a numeral) —
+beside a large stage: the selected pathway's photograph (lazy registry frames, apps/pages/services.PATHWAY_FRAMES),
+its glyph, its title, its prescribed description and the way to its published sheet. The rail ends on the Espace
+Personnes as the place the reader continues in, not a stray link after the list. (FINAL VISUAL QA, 11 Nov 2026: the card says
+the space once — its kicker «Espace Personnes» repeated the call's own words.) On a phone the rail is a horizontal
+scroll-snap strip of chips above the stage. The tabs are home.js «tabs» (roving tabindex, arrows, Home/End, RTL);
+without script, eight anchors and eight panels in order. Gate closed: the neutral families as a still rail.
+{% endcomment %}
+{% translate "Les parcours réguliers" as fallback_title %}{% translate "Parcours réguliers" as index_label %}
+<section class="sez home-pathways" id="{{ s.anchor }}" aria-labelledby="home-pathways-title" data-section="pathways" data-sec="esploratore" data-ground="{{ s.ground }}" data-rhythm="band">
+  <div class="container">
+    {% if s.heading %}{% include "components/sezioni/_testa.html" with role="statement" title_id="home-pathways-title" title=s.heading|typo title_lang=s.heading.lang lead=s.intro|typo lead_lang=s.intro.lang only %}{% else %}<h2 class="visually-hidden" id="home-pathways-title">{{ fallback_title }}</h2>{% endif %}
+    {% if d.pathway_stages %}
+    <div class="esplora" data-tabs="parcours" data-pathways="{{ d.pathway_stages|length }}">
+      <div class="esplora__indice">
+        <ul class="esplora__lista" role="list" aria-label="{{ index_label }}">
+          {% for item in d.pathway_stages %}<li class="esplora__riga"><a class="esplora__voce" id="{{ item.id }}-tab" href="#{{ item.id }}"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %} data-tab>{% if item.glyph %}<span class="esplora__tessera" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="esplora__nome">{{ item.title }}</span></a></li>{% endfor %}
+        </ul>
+        {% if d.index_url %}<a class="esplora__spazio home-pathways__more" href="{{ d.index_url }}"><span class="esplora__spazio-glifo" aria-hidden="true">{% svg_icon "circle-user-round" "icon" %}</span><span class="esplora__spazio-via">{% translate "Voir l’Espace Personnes" %}</span>{% svg_icon "arrow" "icon icon--flip-rtl esplora__freccia" %}</a>{% endif %}
+      </div>
+      <div class="esplora__palco">
+        {% for item in d.pathway_stages %}<section class="esplora__pannello" id="{{ item.id }}" aria-labelledby="{{ item.id }}-title" data-panel data-pathway="{{ item.key }}">
+          {% if item.frame %}<picture class="esplora__foto">{% for src in item.frame.sources %}<source type="{{ src.type }}"{% if src.media %} media="{{ src.media }}"{% endif %} srcset="{{ src.srcset }}" sizes="{{ item.frame.slot.sizes }}" width="{{ src.width }}" height="{{ src.height }}">{% endfor %}<img src="{{ item.frame.src }}" srcset="{{ item.frame.srcset }}" sizes="{{ item.frame.slot.sizes }}" width="{{ item.frame.width }}" height="{{ item.frame.height }}" alt="{{ item.frame.alt }}"{% if item.frame.alt_lang %} lang="{{ item.frame.alt_lang }}"{% endif %} loading="lazy" decoding="async"></picture>{% else %}<div class="esplora__foto esplora__campo" aria-hidden="true"><span>{% svg_icon item.glyph "icon" %}</span></div>{% endif %}
+          <div class="esplora__testo">
+            {% if item.glyph %}<span class="esplora__emblema" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}
+            <h3 class="esplora__titolo" id="{{ item.id }}-title"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</h3>
+            <div class="esplora__corpo">{{ item.body }}</div>
+            {% if item.links %}<p class="esplora__link">{{ item.links }}</p>{% endif %}
+          </div>
+        </section>{% endfor %}
+      </div>
+    </div>
+    {% else %}
+    {% comment %}The families are a closed list of legal pathway families with no destination yet: still chips, no arrow (there
+    is nothing to open) and no numeral (they are not ranked); the note of what comes beside them.{% endcomment %}
+    <div class="home-families__banda">
+    <ul class="home-families" role="list" aria-label="{% translate 'Familles de parcours' %}">
+      {% for family in d.families %}<li class="home-families__voce"{% if family.label.lang %} lang="{{ family.label.lang }}"{% endif %}>{% if family.glyph %}<span class="esplora__tessera" aria-hidden="true">{% svg_icon family.glyph "icon" %}</span>{% endif %}<span>{{ family.label }}</span></li>{% endfor %}
+    </ul>
+    <p class="home-pathways__pending">{% translate "Les fiches détaillées des parcours seront publiées progressivement dans l’Espace Personnes." %}</p>
+    </div>
+    {% if d.index_url %}<p class="home-pathways__more"><a class="link-arrow" href="{{ d.index_url }}">{% translate "Voir l’Espace Personnes" %} {% svg_icon "arrow" "icon icon--flip-rtl" %}</a></p>{% endif %}
+    {% endif %}
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+  </div>
+</section>

@@ -1,0 +1,36 @@
+{% load i18n forum_tags forum_v2 %}
+{% comment %}
+Primary CTA anchors to the registration form (event mode, registrations open). Secondary CTAs
+(document §2.1 « Boutons secondaires ») point to the companies form and the collaboration form
+owned by the enquiries app — resolved with safe_url so the page renders while those routes land.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.16 FO3; lane P2) — K «lo strato» on STONE (from the night: no night–paper–night
+sandwich above the footer, RH-8): two raised action plates, each with its audience's disc — the pilot's interest (the
+companies' needs form: `building`, the company's accent), the collaboration (`institution`) — the locked labels their
+title-buttons (each plate one link), the registration first while it is open; the live «who can help me» line as the
+foot. Signature DEPTH: the plates settle over their shadow layers. V5.30 (the owner's «geometry saturation»: the head's
+hemicycle repeated at the page's foot): the Forum's mark no longer stands faint behind the plates — the hub of «À qui
+s'adresse-t-il ?» draws it once below the head's; the plates' depth is the band's language.
+{% endcomment %}
+{% safe_url "enquiries:company_needs" as pilot_url %}{% safe_url "enquiries:institution_proposal" as collab_url %}{% forum_mark as forum_mark_id %}
+<section class="sez sez--strato forum-azioni" data-sec="strato" data-ground="stone" data-rhythm="band" id="forum-cta" aria-labelledby="forum-cta-title">
+  <div class="container forum-azioni__inner">
+    {% translate "Participer et collaborer" as cta_title %}{% include "components/sezioni/_testa.html" with role="router" title_id="forum-cta-title" title=cta_title only %}
+    {% if not is_permanent and registration_open %}
+    <p class="forum-azioni__registrazione"><a class="btn btn--primary btn--lg" href="#forum-registration">{% event_text event "registration.button_primary" %}</a></p>
+    {% endif %}
+    <ul class="forum-azioni__lastre sez-seq" role="list">
+      <li class="forum-azioni__lastra sez-plate{% if is_permanent or not registration_open %} sez-plate--raised{% endif %}" data-audience="company" data-verb="depth">
+        <span class="sez-disc sez-disc--lg" aria-hidden="true">{% svg_icon "building" "icon" %}</span>
+        {% if pilot_url %}<a class="forum-azioni__link sez-stretch" data-azione href="{{ pilot_url }}">{% event_text event "registration.button_secondary_pilot" %}</a>{% else %}<span class="forum-azioni__link is-disabled" aria-disabled="true" data-pending-route="enquiries:company_needs">{% event_text event "registration.button_secondary_pilot" %}</span>{% endif %}
+        <span class="forum-azioni__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span>
+      </li>
+      <li class="forum-azioni__lastra sez-plate" data-audience="institution" data-verb="depth">
+        <span class="sez-disc sez-disc--lg" aria-hidden="true">{% svg_icon "institution" "icon" %}</span>
+        {% if collab_url %}<a class="forum-azioni__link sez-stretch" data-azione href="{{ collab_url }}">{% event_text event "registration.button_secondary_collab" %}</a>{% else %}<span class="forum-azioni__link is-disabled" aria-disabled="true" data-pending-route="enquiries:institution_proposal">{% event_text event "registration.button_secondary_collab" %}</span>{% endif %}
+        <span class="forum-azioni__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm" %}</span>
+      </li>
+    </ul>
+    <p class="aiuto forum-azioni__aiuto">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  </div>
+</section>

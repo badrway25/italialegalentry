@@ -1,0 +1,20 @@
+{% comment %}
+ONE V5 PHOTOGRAPH (V5.12 DECISIONS §6) — drawn by {% photo "<slot key>" %} (pages_imagery; the registry apps/pages/imagery.py).
+AVIF then WebP, the wide ratio from 64 rem and the narrow one below it (art direction), explicit width and height
+(CLS 0). The landing's one LCP image is eager with fetchpriority=high; every other frame is lazy and decodes async.
+No caption (V5.24 §2, label v524-px): stock is never documentary (AUM rule 5), so the frame names no place, no date and
+no event, and the Pexels License requires no attribution — the full record (licence, author, Pexels page) is
+static/img/v5/<family>/PROVENANCE.json and docs/IMAGE_LICENSES.md §3; data-slot is the figure's pointer to it. No
+data-credit or data-author either: nothing reads it, and a person's name lives in one place (SECTION_SYSTEM_V2 §8). A
+curated plate (cms.MediaAsset, pages/partials/_ingresso.html) keeps its caption apparatus — place, date, sentence — and
+its byline renders only when the licence demands it (MediaAsset.attribution_required). Held by
+tests/compliance/test_imagery_credits_v524.py.
+Motion is lane A's ONE mechanism (static/css/v5/_reveal.css, the public reveal sheet; W2 review M-3): a body frame
+carries data-reveal="mask" (M2: the mask opens from the reading edge and the frame settles under it — never the eager
+LCP frame); a black-and-white frame carries data-grade: "bw-scroll" (treatment «develop»: colour as it enters) or "bw"
+(treatment «bw»: colour under the pointer or the focus) or "select" (V5.22, treatment «select»: black and white at rest,
+colour when its lane is chosen, hovered or focused — the B pattern's family frames; static/css/v5/_photo.css). Reduced
+motion and html.rm see colour, still. A head's second
+frame (role «head», the pilot's diptych) is eager without fetchpriority and never masked: a head is never masked. The <img> stays
+inside the <picture>, so the frame can settle under its mask.
+{% endcomment %}<figure class="foto foto--{{ p.ratio }}{% if p.slot.narrow %} foto--to-{{ p.slot.narrow }}{% endif %}{% if css_class %} {{ css_class }}{% endif %}" data-slot="{{ p.slot.key }}"{% if not p.eager and not p.head %} data-reveal="mask"{% endif %}{% if p.slot.treatment == "develop" %} data-grade="bw-scroll"{% elif p.slot.treatment == "bw" %} data-grade="bw"{% elif p.slot.treatment == "select" %} data-grade="select"{% endif %}><picture>{% for s in p.sources %}<source type="{{ s.type }}"{% if s.media %} media="{{ s.media }}"{% endif %} srcset="{{ s.srcset }}" sizes="{{ p.slot.sizes }}" width="{{ s.width }}" height="{{ s.height }}">{% endfor %}<img class="foto__img" src="{{ p.src }}" srcset="{{ p.srcset }}" sizes="{{ p.slot.sizes }}" width="{{ p.width }}" height="{{ p.height }}" alt="{{ p.alt }}"{% if p.alt_lang %} lang="{{ p.alt_lang }}"{% endif %}{% if p.eager %} fetchpriority="high" decoding="async"{% elif p.head %} decoding="async"{% else %} loading="lazy" decoding="async"{% endif %}></picture></figure>

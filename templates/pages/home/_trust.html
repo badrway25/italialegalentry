@@ -1,0 +1,65 @@
+{% load i18n pages_typo locked_split %}{% comment %}
+8. TRUST / TRANSPARENCY — « ce que fait / ce que ne fait pas la plateforme », built only from prescribed or verified
+material, then the FAQ preview:
+   * gate G3 open   → the clarity split — what it does: the two prescribed Phase 1 fragments (p1.persons.replacement_1
+     / _2); what it does not: the neutral statements mirroring the official Disclaimer (content.TRUST_DOES_NOT) —, then
+     the four prescribed FAQ entries (p3.faq.items: faq_visas, faq_recruitment_agency, faq_preassessment_guarantee,
+     faq_diplomas) quoted verbatim, question + answer;
+   * gate G3 closed → the clarity split alone (the fragment the hero already shows is said once: services._say_once),
+     and the way to the Disclaimer. No legal text is invented, no outcome is promised.
+
+V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026; lane B):
+  «la chiarezza» — the statement (the section's title and its lead) over TWO material surfaces (21st.dev «Us vs Them
+  Comparison» 21217, adapted: no tick and no cross — each line its own semantic glyph): the light sheet of what the
+  platform does, the tinted mineral of what it does not do — side by side, the sheet's two statements stand at the statement's size, so
+  both surfaces end together (V5.31 correction round: no void under the shorter one);
+  «le domande» — the FAQ preview as its own band (21st.dev «FAQ Accordion Reveal» 26803 + «slit-type FAQ» 38218,
+  adapted): ONE featured question, open, beside three compact ones in an exclusive native disclosure (<details name>),
+  each with its topic label and glyph (never a numeral); the answer whole, its own «Non.» a small accent at render
+  (cms.locked_split cuts on its own full stop — the textContent is the answer itself); an open question changes material
+  (the sheet lifts to paper), the disclosure opens smoothly where the browser can (interpolate-size; still otherwise).
+  Each question links to its own entry on the FAQ page. The Arabic pointer lines and their lang stay as the registry
+  gives them (cms.locked_renderings, C-SUBST-FR).
+
+FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026; points 1 and 5):
+  the FAQ preview is a section of its own, placed by the home's narrative after the institutional ecosystem
+  (pages.services._narrative; pages/home/_faq.html) — this partial is «la chiarezza» alone;
+  ONE THING ONCE — the section's title said «what the platform does, and what it does not do» and the two surfaces'
+  heads said it again, one line under it: the title now stays in the outline (a visually hidden h2) and the section
+  opens on its lead, the statement that already says both halves, at the statement's size; the two surfaces' heads
+  are the visible titles. A section without a lead keeps its visible title.
+
+FINAL ART PASS (owner, 11 Nov 2026, B1–B2): the two sides say their meaning before a word is read — «what it does» a
+  check on a mature institutional green plate, each of its lines a check; «what it does not do» a cross on a bordeaux
+  plate, each line a cross (the owner's ruling for this split; v5/_home-b.css). The surfaces' titles are short and
+  parallel («Ce qu’elle fait» / «Ce qu’elle ne fait pas»): the lead above already names the platform, so the title adds
+  only the side; the lines below carry the substance. No sentence reworded.
+{% endcomment %}
+{% translate "Ce que fait la plateforme, et ce qu’elle ne fait pas" as fallback_title %}
+<section class="sez home-trust" id="{{ s.anchor }}" aria-labelledby="home-trust-title" data-section="trust" data-sec="chiarezza" data-ground="{{ s.ground|default:'paper' }}" data-rhythm="band">
+  <div class="container">
+    {% if s.heading and s.intro %}<h2 class="visually-hidden" id="home-trust-title"{% if s.heading.lang %} lang="{{ s.heading.lang }}"{% endif %}>{{ s.heading|typo }}</h2>
+    <p class="chiaro__enunciato"{% if s.intro.lang %} lang="{{ s.intro.lang }}"{% endif %}>{{ s.intro|typo }}</p>
+    {% elif s.heading %}{% include "components/sezioni/_testa.html" with role="statement" title_id="home-trust-title" title=s.heading|typo title_lang=s.heading.lang only %}{% else %}<h2 class="visually-hidden" id="home-trust-title">{{ fallback_title }}</h2>{% endif %}
+    <div class="chiaro" data-trust="{% if d.quotes %}split{% else %}interim{% endif %}">
+      {% if d.does %}
+      <article class="chiaro__faccia chiaro__faccia--fa">
+        <h3 class="chiaro__titolo"><span class="chiaro__segno" aria-hidden="true">{% svg_icon "check" "icon" %}</span>{% translate "Ce qu’elle fait" %}</h3>
+        <ul class="chiaro__elenco" role="list">
+          {% for statement in d.does %}<li class="chiaro__voce home-trust__statement home-trust__statement--fragment"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}><span class="chiaro__glifo" aria-hidden="true">{% svg_icon "check" "icon" %}</span><span>{{ statement }}</span></li>{% endfor %}
+        </ul>
+      </article>
+      {% endif %}
+      <article class="chiaro__faccia chiaro__faccia--non">
+        <h3 class="chiaro__titolo"><span class="chiaro__segno" aria-hidden="true">{% svg_icon "close" "icon" %}</span>{% translate "Ce qu’elle ne fait pas" %}</h3>
+        <ul class="chiaro__elenco" role="list">
+          {% for statement in d.does_not %}<li class="chiaro__voce home-trust__statement"{% if statement.lang %} lang="{{ statement.lang }}"{% endif %}><span class="chiaro__glifo" aria-hidden="true">{% svg_icon "close" "icon" %}</span><span>{{ statement|typo }}</span></li>{% endfor %}
+        </ul>
+      </article>
+    </div>
+    {% if s.note %}<p class="home-section__note"{% if s.note.lang %} lang="{{ s.note.lang }}"{% endif %}>{{ s.note|typo }}</p>{% endif %}
+    {% if not d.quotes %}
+    {% if d.disclaimer_url %}<p class="chiaro__azione"><a class="btn btn--secondary" href="{{ d.disclaimer_url }}">{% translate "Lire l’avertissement" %}</a></p>{% endif %}
+    {% endif %}
+  </div>
+</section>

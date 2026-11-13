@@ -1,0 +1,344 @@
+[
+ {
+  "page": "cruscotto",
+  "path": "/fr/espace-reserve/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/",
+  "title": "Espace réservé · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Tableau de bord"
+  ],
+  "headings": [
+   "H1:Tableau de bord",
+   "H2:Où j’en suis",
+   "H2:Ce qui reste à faire, et par qui",
+   "H2:Vos documents",
+   "H2:Votre pré-évaluation",
+   "H2:Messages",
+   "H2:Dates à retenir",
+   "H2:Mon compte"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 1,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "situazione",
+  "path": "/fr/espace-reserve/ma-situation/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/ma-situation/",
+  "title": "Ma situation · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Ma situation"
+  ],
+  "headings": [
+   "H1:Ma situation",
+   "H2:Ce que nous ne demandons pas"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 2,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "fascicoli",
+  "path": "/fr/espace-reserve/dossiers/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/dossiers/",
+  "title": "Mes dossiers · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Mes dossiers"
+  ],
+  "headings": [
+   "H1:Mes dossiers"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "documenti",
+  "path": "/fr/espace-reserve/mes-documents/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/mes-documents/",
+  "title": "Mes pièces · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Mes pièces"
+  ],
+  "headings": [
+   "H1:Mes pièces"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 2,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "scadenze",
+  "path": "/fr/espace-reserve/mes-echeances/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/mes-echeances/",
+  "title": "Mes échéances · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Mes échéances"
+  ],
+  "headings": [
+   "H1:Mes échéances",
+   "H2:À venir"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "comunicazioni",
+  "path": "/fr/espace-reserve/communications/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/communications/",
+  "title": "Communications · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Communications"
+  ],
+  "headings": [
+   "H1:Communications"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "richieste",
+  "path": "/fr/espace-reserve/mes-demandes/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/mes-demandes/",
+  "title": "Mes demandes · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Mes demandes"
+  ],
+  "headings": [
+   "H1:Mes demandes"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 1,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "percorso",
+  "path": "/fr/espace-reserve/mon-parcours/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/mon-parcours/",
+  "title": "Mon parcours · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Mon parcours"
+  ],
+  "headings": [
+   "H1:Mon parcours",
+   "H2:Orientation vers un parcours de travail sala",
+   "H3:Prochaines étapes à caractère informatif",
+   "H2:Questionnaire 93BB2854"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "academy",
+  "path": "/fr/espace-reserve/formation/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/formation/",
+  "title": "Academy · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Academy"
+  ],
+  "headings": [
+   "H1:Academy",
+   "H2:Les cours disponibles",
+   "H3:Éducation civique : institutions et vie quot",
+   "H3:Italien A1 — premiers échanges",
+   "H3:Préparation au départ : démarches, arrivée, ",
+   "H3:Fondamentaux des métiers de l’agroalimentair",
+   "H3:Droits et devoirs de la personne qui travail",
+   "H3:Culture du travail et organisation de l’entr",
+   "H3:Sécurité au travail — repères généraux",
+   "H2:Où j’en suis"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ },
+ {
+  "page": "sportello",
+  "path": "/fr/espace-reserve/guichet/",
+  "status": 200,
+  "url": "http://127.0.0.1:8771/fr/espace-reserve/guichet/",
+  "title": "Guichet numérique · Italy Legal Entry™",
+  "lang": "fr",
+  "dir": "ltr",
+  "h1": [
+   "Guichet numérique"
+  ],
+  "headings": [
+   "H1:Guichet numérique",
+   "H2:Ce que j’ai demandé, et où cela en est"
+  ],
+  "horizontal_scroll": false,
+  "viewport": {
+   "w": 1425,
+   "h": 900
+  },
+  "document_width": 1425,
+  "overflowing": [],
+  "small_targets": [],
+  "images_without_alt": 0,
+  "images_broken": 0,
+  "forms": 1,
+  "inputs_without_label": 0,
+  "tables": 0,
+  "tables_without_th": 0,
+  "console_errors": [],
+  "console_warnings": [],
+  "requests_failed": []
+ }
+]

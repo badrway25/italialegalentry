@@ -1,0 +1,140 @@
+/* ============================================================================================
+   «LA MATERIA» — the grounds' material and the seams between sections (design V5.24, BACKGROUND_MATERIAL_V2 §3.1,
+   §3.2, §3.5; FINAL_DELIVERY_V2 R3; lane LIB). A PAGE-ONLY partial of the design system, like _casa.css and
+   _platform-grounds.css: a route sheet that uses a recipe imports it AFTER v5/_sezioni.css — never main.css. The
+   material of a band is composed of the tokens only (no literal colour, colour-mix of tokens for an alpha); every
+   property is logical; nothing here adds a duration or a curve; a fade is a ground, never a verb.
+
+     pietra      data-ground="pietra"            dressed stone: the architect's grid (1 px every 48) standing on the far
+                                                  side and fading toward the plate (the platform's own drafting lines);
+                                                  stone and pietra are ONE kind for the adjacency rule, and never touch
+     carta viva  data-ground="paper" data-luce="origine"   lit paper: one radial light at the band's origin corner
+     velatura    data-sfuma="stone|paper|brand|night"      the mask continuation: the band's foot dissolves over 12 rem
+                                                  (8 on phones) into the next ground; z above a photograph, under the words
+     raccordo    .sez-raccordo (data-verb="draw-y", aria-hidden)   a section's route line crosses the seam and runs
+                                                  --sez-raccordo (48 px; 32 on phones) into the next band, ending on a 6 px
+                                                  node on that band's head line. The span is the FIRST CHILD OF THE BAND IT
+                                                  ENTERS: every .sez isolates, and a later sibling paints over an earlier
+                                                  one — a line hung under the leaving band's foot was covered by the new
+                                                  ground (the lane's gate, B2). --raccordo-x places it on the route;
+                                                  --risale rises from a band into the one above; --notte enters a night
+                                                  band; it draws after the band's own line
+     incastro    data-incastro                    the overlap: the band starts 64 px up with no top padding, its ground
+                                                  painted from 64 px down, so the doors' arched tops stand the whole 64 px
+                                                  over the photograph above them
+   Stills: forced colours (the lines in the system's ink, the layers gone), print (the layers gone, the lines drawn).
+   ============================================================================================ */
+
+/* ---- pietra ---- */
+.sez[data-ground="pietra"] { --sez-ground: var(--surface-area); }
+
+.sez[data-ground="pietra"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  --riga: color-mix(in srgb, var(--line-rhythm) 70%, transparent);
+  background:
+    linear-gradient(90deg, var(--riga) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(var(--riga) 1px, transparent 1px) 0 0 / 48px 48px;
+  /* the grid stands on the far side and fades toward the plate (a mask reads alpha only: the night ink is «opaque») */
+  mask-image: linear-gradient(to left, var(--p-notte-950) 0%, transparent 62%);
+}
+
+[dir="rtl"] .sez[data-ground="pietra"]::before {
+  mask-image: linear-gradient(to right, var(--p-notte-950) 0%, transparent 62%);
+}
+
+/* ---- carta viva ---- */
+.sez[data-ground="paper"][data-luce="origine"] {
+  --sez-ground: radial-gradient(60% 50% at 0 0, color-mix(in srgb, var(--accent-mark) 10%, transparent), transparent 70%), var(--surface-page);
+}
+
+[dir="rtl"] .sez[data-ground="paper"][data-luce="origine"] {
+  --sez-ground: radial-gradient(60% 50% at 100% 0, color-mix(in srgb, var(--accent-mark) 10%, transparent), transparent 70%), var(--surface-page);
+}
+
+/* ---- velatura ---- */
+.sez[data-sfuma="stone"] { --sez-next: var(--surface-area); }
+.sez[data-sfuma="paper"] { --sez-next: var(--surface-page); }
+.sez[data-sfuma="brand"] { --sez-next: var(--accent-wash); } /* the wash's first light, as _casa.css's H0 */
+.sez[data-sfuma="night"] { --sez-next: var(--surface-night); }
+
+.sez[data-sfuma]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: -1;
+  block-size: 12rem;
+  background: linear-gradient(transparent, var(--sez-next));
+}
+
+/* ---- raccordo ---- */
+.sez-raccordo {
+  --sez-raccordo: clamp(var(--s-8), 4vw, var(--s-12)); /* 48 px; 32 on phones — a strip's own padding, so the node lands on its head line */
+  --sez-d: var(--motion-draw); /* after the band's own line */
+  position: absolute;
+  inset-block-start: 0; /* from the seam down, inside the band it enters — never hung under the leaving band (B2) */
+  inset-inline-start: var(--raccordo-x, 0);
+  z-index: 1;
+  inline-size: 2px;
+  block-size: var(--sez-raccordo);
+  background: var(--line-structure);
+  pointer-events: none;
+}
+
+/* the 6 px node where the line arrives: on the next band's head line */
+.sez-raccordo::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -3px;
+  inset-inline-start: -2px;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: var(--radius-full);
+  background: var(--accent-mark);
+}
+
+/* the line that rises from a band into the one above (the board's trunk into the head's foot) — the same child of the
+   later band, drawn upward: its node at the top */
+.sez-raccordo--risale {
+  inset-block: calc(-1 * var(--sez-raccordo)) auto;
+}
+
+.sez-raccordo--risale[data-verb] { transform-origin: 0 100%; }
+.sez-raccordo--risale::after { inset-block: -3px auto; }
+
+/* entering a night band */
+.sez-raccordo--notte { background: var(--accent-night); }
+
+/* ---- incastro ---- */
+.sez[data-incastro] {
+  margin-block-start: calc(-1 * var(--s-16));
+  padding-block-start: 0; /* the doors begin at the raised edge: the band's own top padding sank them under the seam (B4) */
+  background: linear-gradient(transparent var(--s-16), var(--surface-area) 0);
+}
+
+.sez[data-incastro] > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 47.999rem) {
+  .sez[data-sfuma]::after { block-size: 8rem; }
+}
+
+/* the raccordo's motion is the draw-y verb of v5/_reveal.css and nothing of its own: on the trigger of the band it
+   enters the line scales from the seam over --motion-draw on --ease-sine, --sez-d after the band's own line, fill backwards; the
+   node is the line's tip and rounds off as the draw ends; under reduced motion, from the keyboard, without script and
+   in print the line stands drawn. The velatura, the grid and the light never move (a gradient is a ground). */
+
+@media (forced-colors: active), print {
+  .sez[data-ground="pietra"]::before,
+  .sez[data-sfuma]::after { display: none; }
+}
+
+@media (forced-colors: active) {
+  .sez-raccordo,
+  .sez-raccordo::after { background: CanvasText; }
+}

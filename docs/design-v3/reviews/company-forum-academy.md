@@ -1,0 +1,108 @@
+# REVISIONE INDIPENDENTE — company-forum-academy
+
+Round 1 · premium_lift **7/10** · conforme: **NO** · implementabile: **NO**
+
+> The audit half is the best I have checked: every measurement I re-verified is exact (forum.css:104 `.forum-section--accent`; `btn--primary btn--lg` at h=52 on rgb(15,37,71) in the author's own report2.json; the Motion chunk at 70,441 raw / 26,143 gz; `--terr-line` on `--mid-2` = 5.51 and `--on-dark` on `--mid-2` = 14.08, both to the second decimal), and a scan of the file through apps/cms/forbidden.py returns 0 violations. The proposal half does not survive the same scrutiny. It contains a self-contradiction that blocks implementation outright — §4.0's meter reads `[data-at="N"]` while §4.A.3 sets `--at:0..4` as a custom property, and a custom property cannot drive `:nth-child()`, so the single shared object of all three surfaces does not work as written — and three of its own colour decisions fail the 3:1 it claims to have computed everywhere (accent fill 2.52:1 on `--mid-2`, secondary border 2.20:1, meter tick 2.44:1 on `--mid-1`), which is precisely the sin it convicts the current build of in §1.2. Worse for the owner's actual complaint: he asked for "not enough elegant modern coherent IMAGES" and the Academy answer is a large outlined glyph on a tinted panel, sold as a virtue because it "costs 0 KB d'immagine" — that is a placeholder, repeated seven times. And the five-segment workflow bar asserts a linear pipeline the domain explicitly refuses: STATUS_TRANSITIONS allows UNDER_REVIEW → CLOSED directly, so `closed → at:4` paints "Pris en charge" filled for a need that was never taken in charge, which on this product is not an aesthetic defect but a false statement.
+
+## Violazioni dei vincoli non negoziabili
+
+1. ONE interactive accent / `--accent-dark` on midnight — §4.B.4 ('il bottone primario passa ad --accent') puts a `--accent` #0f6a72 FILL on a band it has just moved to `--mid-2`. DESIGN_SYSTEM_V2 §1.3.1 is explicit: «Link, CTA primaria e anello di focus condividono --accent (--accent-dark su scuro)». Computed: #0f6a72 (L=0.1163) on #14242e (L=0.01606) = **2.52:1** — the control's own silhouette is invisible and fails WCAG 2.2 1.4.11.
+
+2. WCAG 2.2 AA non-text contrast — §4.B.4, same line: «i due secondari prendono il bordo --hairline-dark-strong … (contrasto 14,08:1 su --mid-2)». The 14.08 is the TEXT figure and is correct; the BORDER is rgba(214,226,228,.28) composited on #14242e = #4A5961 (L=0.0951) = **2.20:1**. The spec's whole stated purpose here — «cessano di leggere come testo» — is not achieved by a 2.20:1 outline.
+
+3. WCAG 2.2 AA non-text contrast — §4.A.1 places the meter inside the midnight company band, while §4.0's meter.css hardcodes the filled tick as `var(--owner-ink, var(--ink-2))`. `--ink-2` #4a5a62 (L=0.0965) on `--mid-1` #0e1b23 (L=0.00999) = **2.44:1**. §6's contrast table only ever computes the meter against `--min-0` (3.37) and never against the ground §4.A.1 actually puts it on.
+
+4. State conveyed by shape alone, invisible to AT — §6(a): «Il misuratore è aria-hidden="true"; il significato sta nella parola accanto». In §4.0's markup the word (`.meter__word`) is INSIDE `.meter`. An implementer following §6 literally hides the only accessible rendering of the status. §4.0 puts `aria-hidden` on `.meter__track` alone; the two sections contradict each other and one of them removes the status from the accessibility tree.
+
+5. «implementable without touching Django views or the data contract» (task constraint, restated by the spec at §4: «Nessuna vista Django, nessun servizio… toccato») — §4.C.1's resume row requires «il prossimo modulo per nome». `apps/academy/views.py:mine` (verified, lines 183-196) supplies only `ongoing/completed/withdrawn/plans/mandated_plans/summary`. `next_module` is computed by `services.next_module(enrolment)` and exists only in `enrolment_detail`'s context. The fallback («il primo corso consigliato dal plan più recente») is likewise not in context. The headline feature of the Academy redesign cannot be built without a view/service change.
+
+6. MOTION_SYSTEM §1 «Nessun altro numero» / «i token vivono in CSS e JS come un solo insieme; un valore che compare in uno e non nell'altro è un difetto» — §5 `academy-hero-glyph` specifies «tracciato 600 ms». The only immersive-trace token is `--motion-draw: 900ms` (static/css/v2/tokens.css). 600 is inside the 600–900 band DESIGN_SYSTEM_V2 §5 names, but it has no token, and the spec defines none.
+
+7. MOTION_SYSTEM §2, FOCUS family («anello 2 px + alone 3 px al 30 %») — §4.A.3 specifies «anello 2 px --accent-ring + alone **5 px** al 30 %». Silent redefinition of the system's focus signature on three surfaces.
+
+8. DESIGN_SYSTEM_V2 §2, level 2: «`--shadow-2` solo in hover» — §4.C.1 gives the Academy resume row `--shadow-2` at rest («un foglio di livello 2 … con --shadow-2»). The author knows the rule: §4.B.4 applies it correctly to `.forum-cards` («--shadow-2 solo in hover»).
+
+9. DESIGN_SYSTEM_V2 §7 mode table + «Ogni template dichiara `data-mode`; un test lo verifica» — §4.A.1 puts `data-mode="rich"` on `company_header.html`, which is a PARTIAL included by seven templates (base_companies.html:24, dashboard:22, needs:6, need_detail:14, need_form:17, profile:6, profile_form:7). It therefore stamps `rich` onto `need_detail`, which §4.A.4 and §5 declare DENSE — and the binding §7 table lists «fabbisogno impresa» under RICH, not DENSE, so the spec contradicts the system and itself in the same move. The same include also drops a `.chapter--dark` midnight band onto the two FORM pages, which the spec never mentions.
+
+10. DESIGN_SYSTEM_V2 §10 («PRIMARY … 48 px») and the sibling buttons.md (`--btn-h: 48px`, 48 under `pointer: coarse`) — §6(f) prescribes «44 px su touch per ogni controllo delle tre superfici», after §1.9 itself convicted the current build of ignoring the prescribed 48. The spec's own header says «i bottoni sono di buttons.md … Qui non si ridefinisce nulla di loro», then redefines their target size and, in §4.B.4, their colours.
+
+## Lacune (ciò che l'implementatore dovrebbe inventare)
+
+1. THE BLOCKER: §4.0 meter.css selects on the ATTRIBUTE (`[data-at="1"] .meter__tick:nth-child(-n+1)` … `[data-at="5"]`, `[data-state="held"]`, `[data-state="void"]`), while §4.A.3's block sets CUSTOM PROPERTIES (`.need[data-status="draft"] .meter { --at:0 }`, `{ --state:held }`). A custom property cannot parameterise `:nth-child()` or match an attribute selector. Either the template emits `data-at`/`data-state` (contradicting «prende il suo data-at dal solo {{ need.status }}, **in CSS**, senza calcolo») or the CSS is rewritten as seven `.need[data-status="…"] .meter__tick:nth-child(…)` chains. The spec must pick one; as written neither file works.
+
+2. Off-by-one in the meter, never stated: five ticks, `at` runs 0–4, so `closed` fills 4 of 5 and the meter can never complete; but §6 words it «Étape 2 sur 5», i.e. étape = at+1. Nobody is told the offset, and nobody is told what a completed need looks like.
+
+3. `[data-at]` rules stop at 5, but §4.C.2 says «le tacche sono `total`» and only falls back to a bare figure «quando total > 8». A 6-, 7- or 8-module course renders ZERO filled ticks. No rule exists for 6, 7 or 8, and the `positions` parameter in the partial's contract is never consumed by any selector.
+
+4. The owner texture — the load-bearing device of the whole spec («la trama del responsabile vive qui e non altrove») — has NO CSS. §4.0 names five appearances (pieno / hachures 45° / punti / linee orizzontali / tratteggio) and one token (`--owner-authority`), but gives no `repeating-linear-gradient` values, no `[data-owner="…"] { --owner-ink: … }` mapping, no angle, no stop widths. Risk #7 then legislates «passo minimo 4 px, tratto 1,5 px» for a gradient that was never written.
+
+5. The texture taxonomy does not fit the data. `ActorRole` (apps/companies/models.py:705) is exactly four values — `authorised_actor`, `training_body`, `professional`, `project_team`. The spec's five textures are impresa / équipe du projet / organisme de formation / acteur autorisé / territorio. **`professional` («Professionnel mandaté») has no texture**, `impresa` and `territorio` are not roles a need can carry, and the case the current register handles in words — «aucun intervenant désigné» — has no appearance at all. The `border-inline-start` of a register row is therefore undefined for two of the four real roles plus the empty case.
+
+6. `ON_HOLD` and `WITHDRAWN` have no segment in the five-segment `<ol class="workflow">` and no `data-at`. §4.0 makes `[data-state="held"]` dash ALL five ticks, so «posizione tenuta» holds nothing: a need that was `in_progress` and went on hold loses its position entirely. What `aria-current="step"` points at for these two statuses is not specified.
+
+7. Load order is specified wrongly, twice. §4 says the four v3 files are «caricati in `templates/base.html` dopo `css/v2/voyage.css` (riga 38)». Line 38 of base.html is a `<link rel="preload">`; the cascade is built by `@import` inside `static/css/main.css` (which §1 itself correctly observes). Worse, `companies.css`, `academy.css` and `forum.css` are linked in `{% block extra_head %}` AFTER main.css (base_companies.html:20, base_academy.html:17, forum/index.html:6), so anything loaded from base.html or main.css loses to them at equal specificity. The spec implies the legacy files «si riducono» but never instructs anyone to edit them, while simultaneously promising «nessun'altra modifica».
+
+8. Where the three new page bundles are actually loaded is never said. `shell.js` is a `<script type="module">` at base.html:70; `workbench.js` / `forum.js` / `academy.js` need a block and a template each. (The claim that esbuild auto-collects top-level entries and shares one Motion chunk IS correct — `scripts/build_frontend.mjs` has `splitting: true` — and the 26 KB figure is exact.)
+
+9. `scripts/territory.py` is invoked three times (company cartouche ≤4 KB, forum relation ≤22 KB, hero contours ≤43 KB) with no output contract: no viewBox, no stop list, no `stroke-width`, no naming, no statement of where the generated files land or how they are committed. It is also never said that the emitted SVG must carry presentation attributes only — one `<style>` element or one `style=""` from that generator breaks `style-src 'self'`, and §8 does not guard it.
+
+10. `as_heading` — company_header.html switches the company name between `<h1>` and `<p>` depending on whether the page's subject is the company (dashboard, needs) or not (need_detail, forms). §4.A.1 rebuilds that partial as a fixed `--t-title` 48/52 band and never mentions the branch. Follow it literally and every company page gets two h1s or none.
+
+11. The dashboard's no-company state is unaddressed. `dashboard.html:32-45` has a whole second branch (`{% if not company %}` → `components/page_header.html` with «Le projet recueille des besoins : il ne présente aucune personne et ne promet aucun résultat.» + the «Déclarer votre entreprise» section). §4.A.2 redesigns only the four-region `{% else %}` branch. That is the FIRST screen every new company account sees and the spec leaves it on the old design.
+
+12. §4.A.2 defines region `02 CE QUI EST DEMANDÉ` as «competenze obbligatorie raccolte dai besoins aperti, ciascuna con il besoin che la richiede» — a cross-need aggregation. `open_needs` is in context (verified) and each need exposes `mandatory_skills()`, but deduplication, ordering, and the cap when 4 needs × 8 skills = 32 rows are undefined, and the «prima data start_from» requires a min() across needs that the template language cannot express without `|dictsort` gymnastics the spec does not write.
+
+13. «su `need_detail` il partial itera `need.live_assignments` e non `responsible`» is ambiguous about scope. `services.responsible_for` (services.py:423) is the only thing carrying `authorisation` and `valid_until`; `NeedAssignment` carries `authorisation_reference` / `authorisation_valid_until` under different names. If the swap is read as replacing the Responsable block rather than only feeding the texture, «Autorisation {ref} — valable jusqu'au {date}» silently disappears.
+
+14. Every stated file size in §7 is a guess dressed as a measurement («~2,4 KB», «~5,4 KB»), and two of them are load-bearing for the claim that `companies.css` (6,3 KB) and `forum.css` (11,9 KB) shrink. Nothing says which rules are deleted from those files, so the reduction is unenforceable.
+
+## Segnali di «cheap / generico / default»
+
+1. The Academy's answer to «not enough elegant modern coherent IMAGES» is NO images: §4.C.3's «frontespizio generato» is a large outlined domain glyph on `--min-2`, justified as «Costa 0 KB d'immagine ed è coerente in sette domini». A big thin-stroke icon on a tinted rectangle is what a missing-asset placeholder looks like, and it will appear on every course card and every course page. This is the one point where the spec answers the owner's verdict with its opposite and calls it a feature.
+
+2. The tick meter as drawn — five 18×8px rectangles, 3px gap, 1px `--hairline-strong` border, greyish `--ink-2` fill — is a battery/signal-strength indicator. It is the 2013 flat-UI segmented bar. At 18×8 with a 1px hairline it will read as tiny and washed out, and on the midnight band (2.44:1) as barely there. It is also, functionally, a cumulative progress bar: risk #1 defends it against becoming one while `:nth-child(-n+N)` makes it one.
+
+3. `repeating-linear-gradient` hachures at 4px on a 10px bar is Excel-97 pattern fill. Risk #7 anticipates the moiré but not the look. Five textures multiplied across register rows, workflow segments and participation rows will read as a technical drawing, not as premium.
+
+4. The sticky translucent nav with `backdrop-filter` (§4.B.3) is the single most generic 2024 SaaS gesture in the document — and it contradicts §7's own acceptance test («0 layout e 0 paint oltre il primo frame»), because a backdrop-filtered sticky element repaints on every scroll frame.
+
+5. «Bento» appears three times and produces `grid-template-columns: minmax(0,7fr) minmax(0,5fr)` — a 60/40 two-column split. That is not bento, it is the same two-column dashboard the owner already rejected, re-proportioned. §1.3's complaint («il cruscotto impresa È il cruscotto della persona con parole diverse») is answered mainly by a 280px graticule cartouche that disappears below 768.
+
+6. The 96px empty strip is prescribed three times (communications, each empty Academy register, mandated plans by implication). On a fresh account — which is the state the owner will look at — the Academy becomes a stack of four identical grey bars with the same arch-and-steps glyph in each. That is the «sei riquadri tratteggiati identici» defect the spec convicts others of, at a different height.
+
+7. `border-radius: var(--radius-control)` = 2px plus `--shadow-2` plus a coloured left rule is the default shadcn card with the corners filed off. Nothing in §4.A.3's anatomy is specific to this product except the texture that was never written.
+
+8. §4.B.4 normalises partner logos to `block-size: 40px; object-fit: contain` on `--min-2`. A logo strip is the classic «Client Logos» move the spec itself rejects in UI-UX-Pro-Max query 7 as impossible under gate G6 — and with G6 in force the strip will usually be empty, so the page ships a row that renders nothing.
+
+## MUST-FIX
+
+1. Resolve the `--at` / `data-at` contradiction. Pick the attribute form, emit `data-at` and `data-state` from the template (`{% include "components/meter.html" with at=… state=… %}`), and delete the `--at:` block in §4.A.3 — or write the seven `.need[data-status="…"] .meter__tick:nth-child(…)` chains in full. Until then nothing in §4.0, §4.A.3, §4.C.2 or §4.B.5 can be built.
+
+2. Fix the three sub-3:1 colour decisions, with the numbers in the spec. On `--mid-2` the primary CTA must be `--accent-dark` #7fd1d8 with a `--mid-1` label (DESIGN_SYSTEM_V2 §1.3.1), not `--accent` (2.52:1). The secondary buttons need a boundary at ≥3:1 — `--on-dark-3` #8fa0a3 or a solid `--mid-4` fill — not `--hairline-dark-strong` (2.20:1). The meter needs an explicit dark-ground variant: `--on-dark-2` or `--terr-line` for the filled tick, `--hairline-dark-strong` for the empty one, with the ratios computed (`--ink-2` on `--mid-1` is 2.44:1).
+
+3. Stop the workflow bar from asserting a pipeline the state machine does not have. `ALLOWED` (models.py:362-372) permits UNDER_REVIEW → CLOSED with no IN_PROGRESS, and UNDER_REVIEW → SUBMITTED backwards; ON_HOLD and WITHDRAWN are outside the line entirely. Fill only the segments the need's own `NeedEvent` history actually records (`need.events`, already in `need_detail`'s context), and define what the bar and the meter show for `on_hold`, `withdrawn`, and a `closed` that never passed `in_progress`. As drawn, `closed → at:4` paints «Pris en charge» for a need nobody took in charge — a false legal statement on a company's screen.
+
+4. Remove `data-mode="rich"` from `company_header.html`. That partial is included by seven templates including two forms and `need_detail`; the mode belongs on each template's root. Then reconcile `need_detail`'s mode with DESIGN_SYSTEM_V2 §7, which lists «fabbisogno impresa» as RICH while §4.A.4 and §5 call it DENSE, and say explicitly whether the midnight band appears on `need_form.html` and `profile_form.html` (it will, as written).
+
+5. Re-scope §4.C.1 to what `mine`'s context holds, or state plainly that it needs `services.next_module` per row and own that as a view change. Verified: `apps/academy/views.py:mine` supplies `ongoing/completed/withdrawn/plans/mandated_plans/summary` and the annotations `row.modules_total` / `row.modules_attended` — NOT `progress.attended` / `progress.total` (those exist only on `enrolment_detail`) and not `next_module`. §4.C.2 names the wrong variables for the page it is written for.
+
+6. Address `mandated_plans`. `mine.html` has FIVE registers, not the three §1.7 and §4.C.1 describe. The fifth is «Plans que je consulte au titre d'un mandat», deliberately kept separate («a page headed « Mes formations » that listed another person's record among the reader's own would say something false about whose record it is»), each row naming the case reference and carrying «Ce parcours n'est pas le vôtre : vous le consultez au titre de votre affectation sur ce dossier, tant qu'elle est en cours.» «La colonna dei plans passa a destra, 5/12» invites an implementer to merge the two. Say it must not be merged.
+
+7. Write the owner-texture CSS and complete the role map. Give the five `repeating-linear-gradient` declarations, the `[data-owner="…"] { --owner-ink: … }` block, and a texture for `ActorRole.PROFESSIONAL` and for «aucun intervenant désigné» — both real, both currently undefined.
+
+8. Fix §6(a): the meter partial's `aria-hidden` belongs on `.meter__track` only, and the sentence «Il misuratore è aria-hidden="true"» must be corrected, or the status word leaves the accessibility tree. Also reconcile «la parola … prodotta da una catena {% if %} nel partial» with the partial's own `label` parameter.
+
+9. Correct the load instructions: `@import` the four v3 files at the tail of `static/css/main.css` (as buttons.md already does for `v3/buttons.css`), add the matching preloads, and name which rules are deleted from `apps/companies/static/companies/companies.css`, `apps/forum/static/forum/forum.css` and `apps/academy/static/academy/academy.css` — those three are linked in `extra_head` AFTER main.css and will override everything v3 does otherwise. Also name the template block where `workbench.js` / `forum.js` / `academy.js` are loaded.
+
+10. Bring §6(f) to 48px to match DESIGN_SYSTEM_V2 §10 and buttons.md, give `academy-hero-glyph` the existing 900ms `--motion-draw` (or define a second trace token), and restore the focus halo to 3px per MOTION_SYSTEM §2.
+
+11. Replace the Academy «frontespizio generato» with a real image direction, or confine the outlined glyph to a genuine fallback behind an art-directed AVIF/WebP. DESIGN_SYSTEM_V2 §6 already permits photography on RICH; the owner asked for more images, and the spec answers with none and argues it is cheaper.
+
+12. Add the CSP guard §8 is missing: `scripts/territory.py` must emit presentation attributes only — no `<style>`, no `style=""` — and a test should assert it, since three inline SVGs on three surfaces all come from that generator.
+
+13. Preserve the two legal captions §4.C.1 compresses into «una frase»: «Chaque formation suivie jusqu'au terme donne lieu à une attestation de participation. Elle décrit ce qui a été suivi ; elle ne vaut ni titre ni autorisation.» and the plans empty state «…il ne conditionne jamais l'accès aux cours, qui restent ouverts à tous.» A 96px strip will not hold them.
+
+14. Add a one-line warning that `{% if speaker.person_name %}` is safe ONLY because `services.speakers()` pre-applies gate G5 (`SpeakerRole.public_name(site_flag)`); iterating `event.speaker_roles.all` in the new `partials/speakers.html` grid would publish unauthorised names.
+
+15. Soften §1.2's rhetoric to match its own evidence: the four states render identically in COLOUR and SHAPE, but the WORDS already differ («Vérifiée», «Transmis au projet», «En cours d'examen», «Pris en charge») — the spec quotes them itself two lines later. «Quattro etichette identiche» is false and weakens an otherwise exact audit. Note too that `STATE_MODIFIERS` (SUBMITTED and IN_PROGRESS both → `filed`) lives in `apps/companies/models.py`, which the spec refuses to touch, so the chip half of the §1.2 defect is not fixed by anything in §4.
+

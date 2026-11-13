@@ -1,0 +1,97 @@
+{% extends "pages/institutional_base.html" %}{% load i18n static ile_forms %}
+{% comment %}
+/contact/ — one public address only: contact@agamieuromed.org (site.contact_email, gate G8). No postal address is invented
+(CONTENT_PENDING_LEGAL_REVIEW — registered office: official « Mentions légales » only). The telephone channels are the
+owner's (V5.19): the Numero Verde and WhatsApp, from the site's settings only (site.channels; a blank number is not
+announced); each number is <bdi dir="ltr"> and never written in a template.
+
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane D, 12 Nov 2026) — «lo sportello»: a modern professional contact
+desk instead of a chain of bands. After 21st.dev «Contact Form» (kevingirelli, id 35258: details beside a form card with
+its pending/success/error states) and «Contact Page» (efferd, id 7139: the address with a copy action), adapted to
+Django templates, vanilla CSS/JS and the ILE tokens:
+  * the head: the label, the h1, the lead — at the reading edge, no photograph (nothing on the page needs one);
+  * the desk, two columns from 64 rem: the CHANNELS (the address first with its copy action and its caption, then the
+    Numéro vert and WhatsApp when the settings hold them, then the privacy foot) and the FORM itself on a raised sheet —
+    an unbound enquiries ContactForm posting to enquiries:contact, which keeps validation, consent, honeypot, throttle
+    and the G2 gate (its errors come back on its page, drawn by the same sheet; the success is enquiries:done). Gate G2
+    closed: the design-system notice stands in the sheet;
+  * «Une demande précise ?»: the three dedicated forms as quiet rows on paper, each with its audience's glyph.
+The channels' titles keep the registry's anchors (apps/core/icons.py CHAPTER_OF: #contact-email-title → «email»,
+#contact-voice-title → «telephone»), and their discs draw that concept through it ({% chapter_mark %}).
+Route sheet pages/css/contatto.css (_contatto-v532.css); the copy action static/js/src/contatto.js.
+{% endcomment %}
+{% block page_title %}{% translate "Contact" %}{% endblock %}
+{% comment %}The head: the page's own sheet and script only — the interior's shared sheet and the frontispiece's draw nothing
+here (the trail's rules are copied into _contatto-v532.css), the form's sheet comes with the form (form_assets).{% endcomment %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/contatto.css' %}"><script type="module" src="{% static 'js/dist/contatto.js' %}"></script>{% endblock %}
+{% block page_header %}
+<header class="sportello-testa container">
+  <p class="sportello-testa__label t-label">{% translate "Nous écrire" %}</p>
+  <h1 class="sportello-testa__titolo">{% translate "Contact" %}</h1>
+  <p class="sportello-testa__lead">{% translate "Une adresse unique pour toutes les demandes relatives au projet." %}</p>
+</header>
+{% endblock %}
+{% block page_body %}
+<section class="sportello">{# no name of its own: its two halves are named by their h2 #}
+  <div class="container sportello__griglia">
+    <div class="sportello__canali">
+      <h2 class="sportello__titolo" id="contact-channels-title">{% translate "Canaux de contact" %}</h2>
+      <ul class="sportello__lista" role="list" aria-labelledby="contact-channels-title">
+        <li class="sportello-canale sportello-canale--email">
+          <span class="sportello-canale__disc" aria-hidden="true">{% chapter_mark "contact-email-title" "icon" %}</span>
+          <div class="sportello-canale__corpo">
+            <p class="sportello-canale__tipo t-label" id="contact-email-title">{% translate "Par e-mail" %}</p>
+            <p class="sportello-canale__valore"><a class="email" href="mailto:{{ site.contact_email }}" id="contact-address">{{ site.contact_email }}</a></p>
+            <p class="sportello-canale__nota">{% translate "Tous les formulaires du site sont acheminés vers cette adresse." %}</p>
+            <p class="sportello-canale__azioni"><button class="sportello-copia" type="button" data-copia="contact-address" data-copia-fatto="{% translate "Adresse copiée" %}" hidden>{% svg_icon "copy" "icon icon--sm" %}<span data-copia-testo>{% translate "Copier l’adresse" %}</span></button><span class="visually-hidden" role="status" data-copia-stato></span></p>
+          </div>
+        </li>
+        {% with freephone=site.channels.freephone whatsapp=site.channels.whatsapp %}
+        {% if freephone %}<li class="sportello-canale sportello-canale--voce">
+          {% blocktranslate trimmed asvar freephone_name with number=freephone.label %}Appeler le numéro vert {{ number }}{% endblocktranslate %}
+          <span class="sportello-canale__disc" aria-hidden="true">{% chapter_mark "contact-voice-title" "icon" %}</span>
+          <div class="sportello-canale__corpo">
+            <p class="sportello-canale__tipo t-label" id="contact-voice-title">{% translate "Numéro vert" %}</p>
+            <p class="sportello-canale__valore"><a class="sportello-canale__link" href="{{ freephone.tel_url }}" aria-label="{{ freephone_name }}"><bdi class="phone" dir="ltr">{{ freephone.label }}</bdi></a></p>
+            <p class="sportello-canale__nota">{% translate "Appeler" %}</p>
+          </div>
+        </li>{% endif %}
+        {% if whatsapp %}<li class="sportello-canale sportello-canale--whatsapp">
+          {% blocktranslate trimmed asvar whatsapp_name with number=whatsapp.label %}Contacter Italy Legal Entry sur WhatsApp au {{ number }}{% endblocktranslate %}
+          <span class="sportello-canale__disc" aria-hidden="true">{% svg_icon "message-circle" "icon" %}</span>
+          <div class="sportello-canale__corpo">
+            <p class="sportello-canale__tipo t-label">WhatsApp</p>
+            <p class="sportello-canale__valore"><a class="sportello-canale__link" href="{{ whatsapp.url }}" aria-label="{{ whatsapp_name }}"><bdi class="phone" dir="ltr">{{ whatsapp.label }}</bdi></a></p>
+            <p class="sportello-canale__nota">{% translate "Écrire sur WhatsApp" %}</p>
+          </div>
+        </li>{% endif %}
+        {% endwith %}
+      </ul>
+      {% if links.privacy %}
+      {# The sentence about data processing is prescribed wording (consent texts): only the link is shown here. #}
+      <p class="sportello__dati">{% svg_icon "shield" "icon icon--sm" %}<span>{% translate "Vos données" %}</span> <a href="{{ links.privacy }}">{% translate "Lire la Privacy Policy" %}</a></p>
+      {% endif %}
+    </div>
+
+    <div class="sportello__modulo" id="formulaire">
+      <h2 class="sportello__titolo" id="contact-form-title">{% translate "Votre message" %}</h2>
+      {% include "enquiries/partials/sportello_form.html" with form=contact_form action=contact_form_url %}
+    </div>
+  </div>
+</section>
+
+{% if dedicated_doors %}
+<section class="sportello-mirate" aria-labelledby="contact-dedicated-title">
+  <div class="container">
+    <h2 class="sportello__titolo" id="contact-dedicated-title">{% translate "Une demande précise ?" %}</h2>
+    <ul class="sportello-mirate__lista" role="list" data-registro>
+      {% for item in dedicated_doors %}<li class="sportello-porta" data-audience="{{ item.audience }}">
+        <span class="sportello-porta__disc" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>
+        <a class="sportello-porta__link" href="{{ item.href }}"{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</a>
+        <span class="sportello-porta__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span>
+      </li>{% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+A topic of «Vivre en Italie» (gate G3). Design V5.4 (W3-F2 — the content pages): the head at the reading edge — the
+section's name, the title with the topic's glyph, once on the page (the icon registry's LIVING map: beside the topic's
+own words, not the section's — a house beside «Vivre en Italie» read as «home»; the review's m10), a fallback title as
+a run of its own (`<span lang dir="ltr">`: the h1 keeps the page's direction and the glyph its seat), the introduction
+at the lead's size; the sheets as records on shared hairlines, each row the way to its sheet, its
+verification date when it has one. A theme without a live, reviewed sheet has no page (V5.12 §8: it answers 404).
+{% endcomment %}
+{% block page_title %}{{ texts.title }} · {% translate "Vivre en Italie" %}{% endblock %}
+{% block meta_description %}{% if texts.body %}{{ texts.body|truncatechars:160 }}{% else %}{% blocktranslate with topic=texts.title %}Vivre en Italie — {{ topic }} : repères pratiques pour s’installer et vivre au quotidien en Italie.{% endblocktranslate %}{% endif %}{% endblock %}
+{% block body_class %}page-living-topic lettura{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if preview %}
+<div class="container">{% translate "Aperçu réservé à la rédaction — cette section n’est pas encore publiée." as preview_text %}{% include "components/notice.html" with kind="warning" text=preview_text %}</div>
+{% endif %}
+<header class="page-header container">
+  <p class="page-header__eyebrow">{% translate "Vivre en Italie" %}</p>
+  <h1 class="page-header__title">{% with glyph=topic.slug|concept:"living"|default:topic.icon %}{% if glyph %}{% svg_icon glyph "icon page-header__glyph" %}{% endif %}{% endwith %}{% if texts.is_fallback %}<span lang="{{ texts.language }}" dir="ltr">{{ texts.title }}</span>{% else %}{{ texts.title }}{% endif %}</h1>
+  {% if intro_blocks %}
+  <div class="page-header__lead"{% if texts.is_fallback %} lang="{{ texts.language }}"{% endif %}>
+    {% for block in intro_blocks %}
+      {% if block.kind == "h2" or block.kind == "h3" %}<p><strong>{{ block.text }}</strong></p>
+      {% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>
+      {% else %}<p>{{ block.text|linebreaksbr }}</p>{% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</header>
+
+<section class="chapter living-sheets" aria-labelledby="living-sheets-title">
+  <div class="container chapter__inner">
+    <div class="chapter__head">
+      {% chapter_mark "living-sheets-title" %}
+      <h2 class="chapter__title" id="living-sheets-title">{% translate "Fiches pratiques" %}</h2>
+    </div>
+    <div class="chapter__body">
+      {% if sheets %}
+      <ul class="registro registro--links sheet-list">
+        {% for sheet, sheet_texts in sheets %}
+        <li class="registro__row sheet-card">
+          <h3 class="registro__title sheet-card__title"{% if sheet_texts.is_fallback %} lang="{{ sheet_texts.language }}"{% endif %}><a href="{{ sheet.get_absolute_url }}">{{ sheet_texts.title }}</a></h3>
+          {% if sheet_texts.summary %}<p class="registro__text sheet-card__summary"{% if sheet_texts.is_fallback %} lang="{{ sheet_texts.language }}"{% endif %}>{{ sheet_texts.summary }}</p>{% endif %}
+          {% if sheet.last_reviewed_at %}<p class="registro__meta sheet-card__meta">{% translate "Vérifiée le" %} <time datetime="{{ sheet.last_reviewed_at|date:'c' }}">{{ sheet.last_reviewed_at|date:"d.m.Y" }}</time></p>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}{# V5.12 §8: a theme without a live, reviewed sheet answers 404 (living.services.public_topics) #}
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}">{% endblock %}

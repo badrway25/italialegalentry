@@ -1,0 +1,9 @@
+/* ============================================================================================
+   THE PUBLIC FORUM'S BUNDLE (V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION, lane D, 12 Nov 2026): linked by
+   templates/forum/index.html only. The public interior's page and the composition library's shell, then the page's
+   own partial. forum/forum.css (lane E's) keeps serving the registration pages.
+   ============================================================================================ */
+@import url("../css/v5/_pagina.css");
+@import url("../css/v5/_interior.css");
+@import url("../css/v5/_sezioni.css");
+@import url("_forum-pubblico.css");

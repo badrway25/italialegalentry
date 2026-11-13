@@ -1,0 +1,329 @@
+{
+ "what": "V5 photographs, family «accueil» (V5.12 DECISIONS §6; V5.22 SECTION_SYSTEM_V2 §8): one frame, one context; slots in apps/pages/imagery.py.",
+ "builder": "tools/build_derivatives.py (originals outside the repository; never hotlinked)",
+ "policy": "Self-hosted only. Pexels License: free use and modification, no endorsement implied; the author is recorded anyway. Nobody identifiable (O55); no arcade, step, vault, door or gridded window as the subject (O54); stock is never documentary.",
+ "photos": [
+  {
+   "slug": "dossier-feuillete-a-deux",
+   "pexels_id": 8453943,
+   "photographer": "cottonbro studio",
+   "photographer_url": "https://www.pexels.com/@cottonbro",
+   "page": "https://www.pexels.com/photo/coworkers-working-together-8453943/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Two professionals engaged in a workplace discussion reviewing documents.",
+   "original_px": [
+    6720,
+    4480
+   ],
+   "original_sha256": "0709028fc38faf4d8be5f876963c0ebdc0a806a6be1c41a878cccad39aa8beaf",
+   "role": "body",
+   "crops": [
+    {
+     "ratio": "3x2",
+     "crop_fraction": [
+      0.07,
+      0.14,
+      0.93,
+      1.0
+     ],
+     "crop_px": [
+      470,
+      627,
+      6250,
+      4480
+     ],
+     "master_px": [
+      5780,
+      3853
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); Lanczos; unsharp 0.5; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "two people lean over one table and turn the pages of the same file, kraft folders beside it — accompaniment over a dossier; two torsos, no face, no legible text (faint pencil notes, unreadable)",
+   "files": [
+    {
+     "file": "dossier-feuillete-a-deux-3x2-480.avif",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 7984,
+     "budget": 46080,
+     "sha256": "2be3a75a16b7318d25c2c2c968cf514ef33c4f5e72f07321cd30ff7a7bffd24b"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-480.webp",
+     "ratio": "3x2",
+     "width": 480,
+     "height": 320,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 10298,
+     "budget": 46080,
+     "sha256": "3d6a11915e0732879835da8fcad330278f7eabd82292631bbf7f25b16aae07ec"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-800.avif",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 14987,
+     "budget": 46080,
+     "sha256": "3e28ec52d9076f7a7bfc04a5d33312dc74bbaad7e18048d51076f2016ea0cfd5"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-800.webp",
+     "ratio": "3x2",
+     "width": 800,
+     "height": 533,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 18244,
+     "budget": 46080,
+     "sha256": "eb6fb50c8719d6ef078f86c656eed1c809e8697a30cf35249105810bf472e2db"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-1200.avif",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 24568,
+     "budget": 46080,
+     "sha256": "a942a1a4f63d1ffd2aa499be4bf76d5552699379657e216c231689d45712cd0a"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-1200.webp",
+     "ratio": "3x2",
+     "width": 1200,
+     "height": 800,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 30618,
+     "budget": 46080,
+     "sha256": "92fe00cdace1aac5bde353408b145c49b7c0a541ae04a86c8b34cf6841fdd65f"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-1600.avif",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 35634,
+     "budget": null,
+     "sha256": "0a5031b030089f5819e4e671bb52e67aa2dc0d9aa5d16705dc4093338078ad42"
+    },
+    {
+     "file": "dossier-feuillete-a-deux-3x2-1600.webp",
+     "ratio": "3x2",
+     "width": 1600,
+     "height": 1067,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 43892,
+     "budget": null,
+     "sha256": "24268534c15f1eb6374a5fa911bcbda0b0610f087151369a65a556b0008ff6e4"
+    }
+   ],
+   "label": "v531-precision"
+  },
+  {
+   "slug": "pierre-appareillee",
+   "pexels_id": 11499083,
+   "photographer": "Engin Akyurt",
+   "photographer_url": "https://www.pexels.com/@enginakyurt",
+   "page": "https://www.pexels.com/photo/gray-stone-wall-in-close-up-photography-11499083/",
+   "license": "Pexels License (https://www.pexels.com/license/)",
+   "pexels_alt": "Close-up of a textured stone wall with natural light highlighting rough surfaces.",
+   "original_px": [
+    9661,
+    7245
+   ],
+   "original_sha256": "6dcca5e540386b8e4ac5931a5c496ca1ceba3a19f5ee31abd86b45baf70d6580",
+   "role": "ground",
+   "crops": [
+    {
+     "ratio": "21x9",
+     "crop_fraction": [
+      0.0,
+      0.2,
+      1.0,
+      0.77
+     ],
+     "crop_px": [
+      13,
+      1449,
+      9648,
+      5578
+     ],
+     "master_px": [
+      9635,
+      4129
+     ]
+    },
+    {
+     "ratio": "4x5",
+     "crop_fraction": [
+      0.22,
+      0.0,
+      0.82,
+      1.0
+     ],
+     "crop_px": [
+      2126,
+      0,
+      7922,
+      7245
+     ],
+     "master_px": [
+      5796,
+      7245
+     ]
+    }
+   ],
+   "redactions": [],
+   "treatment": "the one V5 grade (contrast +8 %, saturation -15 %, S-curve a = 0.08, blacks toward notte-900, highlights +4 % warm); the whole frame -35 % saturation in the file; Lanczos; soft 1.6; AVIF (speed 4, 4:2:0) + WebP (method 6); metadata and ICC stripped",
+   "note": "dressed stone courses in raking light, close and frontal: block faces, joints and their shadows; no opening of any kind, no mark, no lettering, nobody; the 21:9 keeps the full width, the 4:5 the frame's centre",
+   "files": [
+    {
+     "file": "pierre-appareillee-21x9-800.avif",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13041,
+     "budget": 61440,
+     "sha256": "21f56bec996ec728e4057ea28e6c6b2b5c42bcbd05e6b86546a91762fa0015de"
+    },
+    {
+     "file": "pierre-appareillee-21x9-800.webp",
+     "ratio": "21x9",
+     "width": 800,
+     "height": 343,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 21068,
+     "budget": 61440,
+     "sha256": "7a816065b5bb05d209cb0fc63a4ecbd6a2748e268f4d5696eab16c63b727d07c"
+    },
+    {
+     "file": "pierre-appareillee-21x9-1200.avif",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 29232,
+     "budget": 61440,
+     "sha256": "c6248c373e26ba53ffb7784c8b7166ece69604e723cc5964994e7f38032be04a"
+    },
+    {
+     "file": "pierre-appareillee-21x9-1200.webp",
+     "ratio": "21x9",
+     "width": 1200,
+     "height": 514,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 49490,
+     "budget": 61440,
+     "sha256": "cd81872842d36870bae40c695cfa9f711e896333d23252470788b1ee66e6d5d1"
+    },
+    {
+     "file": "pierre-appareillee-21x9-1600.avif",
+     "ratio": "21x9",
+     "width": 1600,
+     "height": 686,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 52083,
+     "budget": 61440,
+     "sha256": "d33e03d541ef69adf4d0914e93792d3576fc11b548035f7d49337e238b2ca9a6"
+    },
+    {
+     "file": "pierre-appareillee-21x9-1920.avif",
+     "ratio": "21x9",
+     "width": 1920,
+     "height": 823,
+     "format": "avif",
+     "quality": 46,
+     "bytes": 61415,
+     "budget": 61440,
+     "sha256": "7dc56f7e839f46382e7595a3ff071a355600750ead45fcdbcf65bd97bf3e9b60"
+    },
+    {
+     "file": "pierre-appareillee-4x5-480.avif",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 13547,
+     "budget": 40960,
+     "sha256": "50cffa5d8a478ea6cffc63e1709828c35fa2de717e82162f790cfcc0040d9c2e"
+    },
+    {
+     "file": "pierre-appareillee-4x5-480.webp",
+     "ratio": "4x5",
+     "width": 480,
+     "height": 600,
+     "format": "webp",
+     "quality": 74,
+     "bytes": 22620,
+     "budget": 40960,
+     "sha256": "95e1236e79b7f594d679801fd310ff7fbb8fd1f88e025c78b80bfaa386252260"
+    },
+    {
+     "file": "pierre-appareillee-4x5-640.avif",
+     "ratio": "4x5",
+     "width": 640,
+     "height": 800,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 24103,
+     "budget": 40960,
+     "sha256": "2d3fa38518fce1677d9bc8b189d00db0be3c3f5ceb0e14ccbe62d8e670925ea9"
+    },
+    {
+     "file": "pierre-appareillee-4x5-640.webp",
+     "ratio": "4x5",
+     "width": 640,
+     "height": 800,
+     "format": "webp",
+     "quality": 68,
+     "bytes": 39950,
+     "budget": 40960,
+     "sha256": "30d09ff0b982caead7cb13c7fff78a77188b6d87da2d0a7938bfcff32157ab1b"
+    },
+    {
+     "file": "pierre-appareillee-4x5-800.avif",
+     "ratio": "4x5",
+     "width": 800,
+     "height": 1000,
+     "format": "avif",
+     "quality": 52,
+     "bytes": 38221,
+     "budget": 40960,
+     "sha256": "2f3142e201e787020319d6bcfcdaa2cfde3d313f79bb131a2c9ea3dcac90339e"
+    }
+   ],
+   "ceilings": {
+    "21x9": 61440,
+    "4x5": 40960
+   },
+   "webp_floor": 40,
+   "webp_not_built": [
+    "pierre-appareillee-21x9-1600.webp",
+    "pierre-appareillee-21x9-1920.webp",
+    "pierre-appareillee-4x5-800.webp"
+   ],
+   "label": "v522-m-build"
+  }
+ ]
+}

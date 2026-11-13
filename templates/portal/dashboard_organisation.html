@@ -1,0 +1,114 @@
+{% extends "portal/base_portal.html" %}{% load i18n static %}
+{% comment %}
+THE ORGANISATION'S DASHBOARD — an institution, a university, a training body (V5.12 Q7, the owner's answer of 28 Oct
+2026: «a deliberately designed role-aware organisation experience»). Not the person's page with modules removed: its
+own composition, on the console's frame (W3-A), in the dashboard's grammar (v5/_dashboard.css: flat registers under
+hairlines, no box but the identity's) and its own page-only sheet (portal/organisation.css).
+
+  the page header   the space by its name («Espace Institutions», «Espace Universités et Formation»: S1 §3.4, §3.5),
+                    the title, the organisation's name, and the space's locked presentation (p3.institutions.intro,
+                    p3.universities.intro), through {% locked %}, never retyped
+  the main column   what the organisation has under way with the project, in the order it acts on it: the dates the
+                    team set, the communications, the proposals and requests it sent — each register drawn ONLY with
+                    rows (portal.services.registers_with_rows, V5.12 D-20). With none: one calm sentence and, while the
+                    public form is open (G2), the audience's approved CTA — no CTA for a closed capability (Q7)
+                      then «Le projet»: the public pages the role works with (its own space, the pilot project, the
+                    regular pathways, the training, the Forum), each only while it is public — two columns from 48rem
+  the side          «Mon organisation» — the identity sheet: the organisation's name, nature, place, the account's own
+                    role and since when, a lattice decided by the sheet's own width; with registers under way, the
+                    approved CTA as its foot action
+  the account       one quiet line, last, as on every dashboard
+
+No NowPanel, no journey, no file, no pieces, no questionnaire: an organisation has none of a person's (ROLE_JOURNEYS
+§6, §7: «nessun accesso ai fascicoli individuali»). Every word is the catalogue's or locked; nothing animates at load.
+{% endcomment %}
+{% block page_title %}{{ space_label }}{% endblock %}
+{% block meta_description %}{% translate "Tableau de bord" %} — {{ space_label }}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/portal/organisation.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% endblock %}
+
+{% block case_header %}{% endblock %}
+{% block next_action_block %}{% endblock %}
+
+{% block portal_header %}
+<header class="ctx db-head org-head" data-atrium="{{ audience }}">
+  <div class="ctx__words">
+    <p class="ctx__eyebrow atrium__eyebrow t-label">{{ space_label }}</p>
+    <h1 class="ctx__title">{% translate "Tableau de bord" %}</h1>
+    {% if organisation_name %}<p class="org-head__name atrium__plate"><span class="atrium__seal" aria-hidden="true">{% svg_icon audience_glyph "icon" %}</span><span dir="auto">{{ organisation_name }}</span></p>{% endif %}
+    {% comment %} The space's locked presentation, verbatim: in the head from 80rem (F2: at 1024–1279 the university's four lines
+    dwarfed its seal); below, folded under «Présentation» (round 1: the
+    university's head was 290 px at 390 and pushed the page down) — portal/v5/_platform.css §1. {% endcomment %}
+    <details class="atrium__intro"><summary>{% translate "Présentation" %}</summary>{% if audience == "university" %}{% locked "p3.universities.intro" "p" "org-head__lead" %}{% else %}{% locked "p3.institutions.intro" "p" "org-head__lead" %}{% endif %}</details>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="db db--bridge db--organisation" data-platform>
+  <div class="db-main">
+    {% for card in registers %}{% include "portal/partials/card.html" with card=card %}{% endfor %}
+    {% if calm %}
+    <div class="org-calm" data-spot>
+      {% comment %} The calm state is a composed panel, not a stray line: the space's seal in its disc (decorative; V5.30 product-first — no more porticoes). {% endcomment %}
+      {% include "portal/partials/calm_art.html" with calm_glyph=audience_glyph %}
+      <p class="org-calm__text">{% translate "Aucune action ne vous est demandée pour l’instant." %}</p>
+      {% if action %}<p class="org-calm__act"><a class="btn btn--primary" href="{{ action.url }}">{% if audience == "university" %}{% locked "p3.entrances.university.button" %}{% else %}{% locked "p3.entrances.institution.button" %}{% endif %}</a></p>{% endif %}
+    </div>
+    {% endif %}
+    {% if references %}
+    <nav class="org-refs org-refs--grid org-refs--tiles" aria-labelledby="org-refs-title" data-rise data-spot-group>
+      <h2 class="db-h2" id="org-refs-title"><span>{% translate "Le projet" %}</span></h2>
+      <ul class="org-refs__list" role="list">
+        {% for reference in references %}
+        <li><a class="org-refs__link" href="{{ reference.url }}" data-spot><span class="org-refs__disc" aria-hidden="true">{% svg_icon reference.glyph "icon" %}</span><span class="org-refs__label">{{ reference.label }}</span>{% svg_icon "chevron-end" "icon org-refs__go" %}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+    {% if notices %}
+    <section class="portal-notices db-notices" aria-label="{% translate 'Avis de l’équipe' %}">
+      {% for notice in notices %}
+      {% include "components/notice.html" with kind="institutional" title=notice.heading_fr text=notice.body_fr|linebreaksbr lang="fr" %}
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+
+  <div class="db-side">
+    <section class="org-id org-id--lattice" aria-labelledby="org-id-title" data-card="organisation" data-spot-group>
+      <div class="db-sec__head">
+        <h2 class="db-h2" id="org-id-title">{% svg_icon audience_glyph "icon" %}<span>{% translate "Mon organisation" %}</span></h2>
+        {% if organisation_url and organisations %}<a class="db-link" href="{{ organisation_url }}" aria-describedby="org-id-title">{% translate "Consulter" %}{% svg_icon "chevron-end" "icon" %}</a>{% endif %}
+      </div>
+      {% for organisation in organisations %}
+      <div class="org-id__sheet" data-spot>
+        <span class="org-id__disc" aria-hidden="true">{% svg_icon audience_glyph "icon" %}</span>
+        <p class="org-id__name" dir="auto">{{ organisation.name }}</p>
+        <dl class="org-id__facts">
+          <div class="org-id__fact"><dt class="t-label">{% translate "Nature de l’organisme" %}</dt><dd>{{ organisation.kind_label }}</dd></div>
+          {% if organisation.city %}<div class="org-id__fact"><dt class="t-label">{% translate "Ville" %}</dt><dd dir="auto">{{ organisation.city }}</dd></div>{% endif %}
+          {% if organisation.country %}<div class="org-id__fact"><dt class="t-label">{% translate "Pays" %}</dt><dd dir="auto">{{ organisation.country }}</dd></div>{% endif %}
+          <div class="org-id__fact"><dt class="t-label">{% translate "Votre rôle" %}</dt><dd>{{ organisation.role_label }}</dd></div>
+          <div class="org-id__fact"><dt class="t-label">{% translate "Depuis le" %}</dt><dd><time datetime="{{ organisation.since|date:'Y-m-d' }}">{{ organisation.since|date:"d.m.Y" }}</time></dd></div>
+        </dl>
+      </div>
+      {% empty %}
+      <p class="db-empty">{% translate "Le rattachement de votre compte à une organisation est effectué par l’équipe du projet." %}</p>
+      {% endfor %}
+      {% comment %} With registers under way, the approved CTA is the sheet's foot action (F1: alone on its row it floated between two sections) — with none, the calm panel holds it. {% endcomment %}
+      {% if action and not calm %}<p class="org-id__act"><a class="btn btn--secondary" href="{{ action.url }}">{% if audience == "university" %}{% locked "p3.entrances.university.button" %}{% else %}{% locked "p3.entrances.institution.button" %}{% endif %}</a></p>{% endif %}
+    </section>
+
+  </div>
+
+  <section class="db-account" aria-labelledby="db-account-title">
+    <h2 class="db-account__title" id="db-account-title">{% translate "Mon compte" %}</h2>
+    <p class="db-account__who">{% if account.name %}<span dir="auto">{{ account.name }}</span> · {% endif %}<span class="email" dir="ltr">{{ account.email }}</span>{% if account.last_login %} · <span>{% translate "Dernière connexion :" %} <time datetime="{{ account.last_login|date:'c' }}">{{ account.last_login|date:"d.m.Y H:i" }}</time></span>{% endif %}</p>
+    <ul class="db-account__links" role="list">
+      {% if account.profile_url %}<li><a href="{{ account.profile_url }}">{% translate "Profil" %}</a></li>{% endif %}
+      {% if account.mfa_url %}<li><a href="{{ account.mfa_url }}">{% translate "Sécurité du compte" %}</a></li>{% endif %}
+    </ul>
+  </section>
+</div>
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% endblock %}

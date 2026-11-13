@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:17-alpine
+    # 100 connections is the PostgreSQL default and it is not enough here: several pytest runs can
+    # be in flight at once, each on its own test database, alongside two development servers with
+    # `CONN_MAX_AGE`. Exhausting the pool produces «sorry, too many clients already» — which looks
+    # like a code failure and is a capacity one. 300 leaves room without pretending this is
+    # production tuning.
+    command: ["postgres", "-c", "max_connections=300"]
+    environment:
+      POSTGRES_DB: ile
+      POSTGRES_USER: ile
+      POSTGRES_PASSWORD: ile-dev-password
+    ports:
+      - "127.0.0.1:5439:5432"
+    volumes:
+      - ile_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ile -d ile"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py seed_all &&
+             python manage.py runserver 0.0.0.0:8000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://ile:ile-dev-password@db:5432/ile
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["full"]
+volumes:
+  ile_pgdata:

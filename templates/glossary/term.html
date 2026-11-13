@@ -1,0 +1,79 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}Permalink of one glossary term (Phase 3, gate G3). Contract: `entry` (GlossaryEntry), `related` (list), `related_items`
+(the same terms as the disclosure's items: title, body, links), `where` (the pathways that name the term:
+[{"label", "url", "lang"}]).
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.14 T0 + T1; lane P2) — the page that had no frontispiece takes the compact band of its
+index's motif (`learning`, pages/partials/_ingresso.html compact=True: the folio's T1 seal «ile-lessico», the
+glossary's name, the Italian term as the h1 at display size — a run of its own language inside an h1 of the
+page's direction, so it ends on the reading edge in Arabic too: QA_ROUND2 M5), then K «la scheda»: a raised definition plate — a drawn
+rule, the prescribed definition set as a dictionary entry (no character added), the source and the verification as a
+side annotation, «Définition à caractère informatif.» always visible — a large outlined initial standing behind it
+(aria-hidden); «Termes liés» and «Où le rencontrer» as two rows of chips, hairlines drawn to them; the way back a
+secondary button. Signature DEPTH (the plate settles over its shadow layer) + LINE (the hairlines). The page links
+pages/css/fronte.css (+1 request, recorded in SECTION_SYSTEM_V2 §7.2).
+Round 1 (QA_ROUND1 M7): the related terms' definitions are disclosed in place (§1 rule 7: definitions behind glossary
+chips) — a native exclusive disclosure (one open at a time, every definition in the page, whole), each with the way to
+its term's own page; the large outlined initial stands on the plate's free side in both directions (it stood behind the
+plate on the Arabic page). Round 2 (QA_ROUND2 m5): the disclosure is the system's accordion (main.css: its drawn plus,
+its open plate, its height opening as the AGAMI and fraud pages' questions do), so the page's route sheet needs no
+pattern sheet of its own; the page links cms/lessico.css after the shared cms/lettura.css.
+V5.24 (BACKGROUND_MATERIAL_V2 §5.2; FINAL_DELIVERY_V2 §3.6, R4 e; lane PUB2): the scheda band on STONE — the raised
+definition plate on a ground, the page no longer one tone from head to foot. «Pietra» (the drafting grid behind the
+outlined initial) was conditional on _lettura.css freeing the partial's ≈ 770 B under the reading pages' 54 272 B letter;
+the coverage pass found less (NOTES §6), so the band takes stone as the ruling says. The term at display size, the
+initial four and a half display steps (the scale, not a clamp).
+FINAL MICRO-PASS (BRIEF §6 B2): the large outlined initial behind the plate left — the term at display size in the
+head names the page; the plate, its definition, its facts and its rows of chips are unchanged.
+{% endcomment %}
+{% block page_title %}{{ entry.term }} — {% translate "Glossaire" %}{% endblock %}
+{% block meta_description %}{{ entry.term }} : {{ entry.definition|truncatechars:150 }}{% endblock %}
+{% block body_class %}page-glossary-term lettura{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+{% if is_preview %}
+<div class="container">{% include "components/notice.html" with kind="pending" title=_("Aperçu réservé au personnel") text=_("Cette page fait partie de la Phase 3 : elle n’est pas encore publiée pour le public.") %}</div>
+{% endif %}
+<article class="glossary-term">
+  {% translate "Glossaire" as page_label %}
+  {% include "pages/partials/_ingresso.html" with label=page_label title=title motif="learning" compact=True seal="ile-lessico" fronte_linked=True only %}
+  <div class="sez sez--scheda scheda-band" data-sec="scheda" data-ground="stone" data-rhythm="band">
+    <div class="container scheda">
+      <div class="scheda__lastra sez-plate sez-plate--raised" data-verb="depth">
+        <span class="scheda__regola" data-verb="draw" aria-hidden="true"></span>
+        {% if entry.definition_key %}{% locked_caption entry.definition_key as caption %}{% endif %}{% if caption %}<div class="scheda__fonte">{{ caption }}{% endif %}<p class="glossary-term__definition scheda__definizione"{% if entry.is_fallback %} lang="{{ entry.lang }}"{% endif %}>{{ entry.definition }}</p>{% if caption %}</div>{% endif %}
+        <div class="glossary-term__facts scheda__fatti">
+          {% if entry.source or entry.last_reviewed_at %}
+          <dl class="verifica glossary-term__meta">
+            {% if entry.source %}<div><dt>{% translate "Source" %}</dt><dd{% if site.lang != site.fallback_language %} lang="{{ site.fallback_language }}"{% endif %}>{{ entry.source }}</dd></div>{% endif %}
+            {% if entry.last_reviewed_at %}<div><dt>{% translate "Dernière vérification" %}</dt><dd><time datetime="{{ entry.last_reviewed_at|date:'Y-m-d' }}">{{ entry.last_reviewed_at|date:"d.m.Y" }}</time></dd></div>{% endif %}
+          </dl>
+          {% endif %}
+          <p class="fine glossary-term__note">{% translate "Définition à caractère informatif." %}</p>
+        </div>
+      </div>
+      <div class="scheda__legami sez-seq">
+        {% if related_items %}
+        <section class="glossary-term__related scheda__fila" aria-labelledby="related-terms-title">
+          <span class="scheda__filo" data-verb="draw" aria-hidden="true"></span>
+          <h2 class="scheda__etichetta" id="related-terms-title">{% translate "Termes liés" %}</h2>
+          <div class="accordion glossary-term__related-list">{% for item in related_items %}<details class="accordion__item" name="termini-legati"><summary class="accordion__summary"><span{% if item.title_lang %} lang="{{ item.title_lang }}"{% endif %}>{{ item.title }}</span></summary><div class="accordion__panel">{% if item.body_key %}{% locked_caption item.body_key %}{% endif %}<p{% if item.body_lang %} lang="{{ item.body_lang }}"{% endif %}>{{ item.body }}</p><p class="scheda__link">{{ item.links }}</p></div></details>{% endfor %}</div>
+        </section>
+        {% endif %}
+        {% if where %}
+        <section class="scheda__fila" aria-labelledby="where-title">
+          <span class="scheda__filo" data-verb="draw" aria-hidden="true"></span>
+          <h2 class="scheda__etichetta" id="where-title">{% translate "Où le rencontrer" %}</h2>
+          <ul class="scheda__chips" role="list">
+            {% for chip in where %}<li><a class="lessico__chip" href="{{ chip.url }}"{% if chip.lang %} lang="{{ chip.lang }}"{% endif %}>{{ chip.label }}</a></li>{% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+      </div>
+      <p class="actions scheda__ritorno"><a class="btn btn--secondary" href="{% url 'glossary:index' %}#{{ entry.key }}">{% translate "Retour au glossaire" %}</a></p>
+    </div>
+  </div>
+</article>
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/cms/lessico.css' %}"><link rel="stylesheet" href="{% static 'css/dist/pages/css/fronte.css' %}">
+{% if term_jsonld %}<script type="application/ld+json">{{ term_jsonld }}</script>{% endif %}{% endblock %}

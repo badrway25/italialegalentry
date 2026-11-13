@@ -1,0 +1,105 @@
+/* ============================================================================
+   THE NICHE'S PAINTS — «Il varco», the entrance's stage (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.13, §2.3
+   «Page-only CSS»; DL54-15; W2-B). A `_` partial: never a build entry, never in main.css — imported by
+   apps/accounts/static/accounts/entrance.css, after _door.css.
+
+   WHAT IS HERE, AND WHY HERE. Every gradient of the stage: the niche's shadows, the wall's reveal and the
+   shadow it casts, the band's pool and its sill, the threshold, the warm pool at the steps' foot, the four
+   ways and their light. The page sheet places and moves these parts and may not write a gradient (an app
+   sheet reads tokens only); as tokens of v5/tokens.css the same paints rode in main.css on every page of the
+   site (579 B gzip, measured) for the one page that draws them. Here they are composed from colour tokens —
+   the night's steps, the key's gold on night, the paper's stone, and the four light colours the stage adds
+   (block §4.3 of v5/tokens.css) — with `color-mix(in srgb, <colour> N%, transparent)` for an alpha: no
+   literal colour leaves the token sheet, and only the entrance carries its own picture.
+
+   The selectors are entrance.css's own, one rule each; that sheet comes after this one in the bundle, so what
+   it says about the same parts — the forced-colours state above all — still has the last word. What mirrors
+   with the page (the band's pool, the wall's reveal and its cast shadow) has its [dir="rtl"] twin; the floor
+   is part of the drawing (the scene is direction: ltr) and has none.
+   ========================================================================== */
+
+/* ---- the plate: below 64rem a band with a pool of the next night step behind the door; from 64rem the
+   niche, with the wall's lintel and floor shadows (fixed depths: the plate may be taller than the screen) --- */
+
+.varco__stage {
+  background-image: radial-gradient(40% 90% at 12% 50%, var(--surface-night-area) 0%, transparent 100%);
+}
+
+[dir="rtl"] .varco__stage {
+  background-image: radial-gradient(40% 90% at 88% 50%, var(--surface-night-area) 0%, transparent 100%);
+}
+
+/* the sill: two rings of the wall's stone under the band */
+.varco__stage::after {
+  background: linear-gradient(to bottom, var(--p-carta-200) 0 50%, var(--p-carta-150) 50% 100%);
+}
+
+@media (min-width: 64rem) {
+  .varco__stage,
+  [dir="rtl"] .varco__stage {
+    background-image:
+      linear-gradient(to bottom, color-mix(in srgb, var(--surface-night-deep) 60%, transparent), transparent 10rem),
+      linear-gradient(to top, color-mix(in srgb, var(--surface-night-deep) 72%, transparent), transparent 17rem);
+  }
+
+  /* the seam: the wall's thickness seen from the niche — two rings of its stone and a lit arris on the wall's
+     side — and the shadow the wall casts into the niche */
+  .varco__stage::after {
+    background:
+      linear-gradient(to right, var(--p-carta-200) 0 50%, var(--p-carta-150) 50% 100%) 100% 0 / var(--varco-reveal) 100% no-repeat,
+      linear-gradient(to left, color-mix(in srgb, var(--surface-night-deep) 78%, transparent), color-mix(in srgb, var(--surface-night-deep) 34%, transparent) 30%, transparent 100%) 0 0 / calc(100% - var(--varco-reveal)) 100% no-repeat;
+    box-shadow: inset -1px 0 0 color-mix(in srgb, var(--p-carta-0) 70%, transparent);
+  }
+
+  [dir="rtl"] .varco__stage::after {
+    background:
+      linear-gradient(to left, var(--p-carta-200) 0 50%, var(--p-carta-150) 50% 100%) 0 0 / var(--varco-reveal) 100% no-repeat,
+      linear-gradient(to right, color-mix(in srgb, var(--surface-night-deep) 78%, transparent), color-mix(in srgb, var(--surface-night-deep) 34%, transparent) 30%, transparent 100%) 100% 0 / calc(100% - var(--varco-reveal)) 100% no-repeat;
+    box-shadow: inset 1px 0 0 color-mix(in srgb, var(--p-carta-0) 70%, transparent);
+  }
+}
+
+/* a quiet pool of the next night step behind the door */
+.varco__plinth::before {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--surface-night-sheet) 95%, transparent) 0%, color-mix(in srgb, var(--surface-night-sheet) 45%, transparent) 42%, transparent 100%);
+}
+
+/* ---- the floor: the threshold, the warm pool at the steps' foot ------------------------------------------- */
+
+.varco__threshold {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--varco-hairline) 24%, transparent) 30%, color-mix(in srgb, var(--varco-hairline) 24%, transparent) 70%, transparent);
+}
+
+.varco__threshold--lit {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--identity-light-night) 85%, transparent) 26%, var(--varco-light) 50%, color-mix(in srgb, var(--identity-light-night) 85%, transparent) 74%, transparent);
+}
+
+/* at rest: 12 % at most */
+.varco__pool {
+  background: radial-gradient(50% 100% at 50% 0%, color-mix(in srgb, var(--identity-light-night) 12%, transparent), color-mix(in srgb, var(--identity-light-night) 4.5%, transparent) 44%, transparent 100%);
+}
+
+/* the threshold holds the light: warm at the steps' foot, gone within the door's width */
+.varco__pool--lit {
+  background: radial-gradient(50% 100% at 50% 0%, color-mix(in srgb, var(--varco-light-warm) 46%, transparent), color-mix(in srgb, var(--varco-light-amber) 17%, transparent) 38%, color-mix(in srgb, var(--identity-light-night) 5%, transparent) 68%, transparent 100%);
+}
+
+/* ---- a way: drawn out of the night toward the threshold (a mask along its length); lit, its core with a
+   halo in its own accent; its light, a bead of the key's gold with a tail in the way's accent ---------------- */
+
+/* the mask's colour is never seen — its alpha is: 0, .42 at 40 %, 1 at the threshold */
+.varco__way-line,
+.varco__way-lit {
+  -webkit-mask: linear-gradient(to right, transparent 0%, color-mix(in srgb, var(--surface-night-deep) 42%, transparent) 40%, var(--surface-night-deep) 100%);
+  mask: linear-gradient(to right, transparent 0%, color-mix(in srgb, var(--surface-night-deep) 42%, transparent) 40%, var(--surface-night-deep) 100%);
+}
+
+.varco__way-lit {
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, currentColor 24%, transparent) 32%, currentColor 44%, currentColor 56%, color-mix(in srgb, currentColor 24%, transparent) 68%, transparent);
+}
+
+.varco__way-light {
+  background:
+    radial-gradient(circle at calc(100% - 8px) 50%, var(--varco-light-core) 0 1.6px, color-mix(in srgb, var(--varco-light) 90%, transparent) 3px, color-mix(in srgb, var(--identity-light-night) 42%, transparent) 5.5px, transparent 8px),
+    linear-gradient(to right, transparent calc(100% - 7.5rem), color-mix(in srgb, currentColor 78%, transparent) calc(100% - 8px), transparent calc(100% - 8px)) 0 50% / 100% 2px no-repeat;
+}

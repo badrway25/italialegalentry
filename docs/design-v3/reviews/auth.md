@@ -1,0 +1,92 @@
+# REVISIONE INDIPENDENTE — auth
+
+Round 1 · premium_lift **6/10** · conforme: **NO** · implementabile: **NO**
+
+> The audit is the best part of this document: sixteen measured, falsifiable defects, and I re-verified the load-bearing ones (`--hairline-strong` #7A868B = 3.74:1 on white, `--accent-ring` #1D8A93 = 3.94/4.11:1, `main.js:30` focus move, shell.js shipping the 26 KB Motion chunk to a login page that uses none of it, every referenced token exists). Then the proposal quietly does three things it promised not to. It rewrites the globally shared `components/form_field.html` — used by ~40 templates from `companies/need_form.html` to `community/join.html` — to put help above the control, which contradicts DESIGN_SYSTEM_V2 §10 ("errore accanto, aiuto sotto") and silently reflows every form in the product from an auth spec. It replaces the public footer on twelve screens with a three-item legal row, deleting the only links to `legal:privacy` and `legal:terms` from the one screen whose consent label — a CONTENT_PENDING_LEGAL_REVIEW sentence — literally reads "J'ai lu la Privacy Policy et j'accepte les Conditions d'utilisation", and replacing the locked prescribed text `{% locked "p3.antifraud.title" %}` and its `gates.phase3_public` guard with the invented phrase "attention aux fraudes". And it passes `step`/`steps` into a partial that no allauth view supplies, while claiming on the same page to touch "nessuna vista, nessun contratto di dati". On the owner's actual complaint it under-delivers: the surface he called unmemorable becomes a flat `--mid-1` rectangle with a 160 px graticule and one 900 ms arch that then stands permanently still — a split dark-left/form-right screen, which is four of the spec's own eight 21st.dev candidates, plus a four-tick password meter and unlabelled decorative coordinates. It is more austere than V2 on exactly the axis that was rejected.
+
+## Violazioni dei vincoli non negoziabili
+
+1. LEGAL/LOCKED TEXT + PUBLICATION GATE — §4.1 line 114 ("in fondo al foglio una riga con contatto, note legali e il link alla pagina prescritta antifrode") and the markup at line 218 (`<p class="sheet__legal">…contact · mentions légales · attention aux fraudes…</p>`). The real footer renders that link as `{% if gates.phase3_public %}{% safe_url 'pages:antifraud' as antifraud_url %}{% if antifraud_url %}… {% locked "p3.antifraud.title" %}`. The spec substitutes free French wording for a LOCKED prescribed text and drops the publication gate; with Phase 3 closed (:8770) the link is dead or the reverse fails. Constraint breached: "publication gates … locked prescribed texts" are untouchable.
+
+2. LEGAL TRUTH / CONSENT INTEGRITY — same line 114 + 218. `allauth/layouts/base.html` currently inherits `templates/partials/footer.html`, which carries Mentions légales, Privacy Policy, Cookie Policy, Conditions d'utilisation, Avertissement, the promoter, the copyright, the version label and the content-verified date. The three-item replacement row deletes Privacy Policy, Cookie Policy, Conditions d'utilisation and Avertissement — on the signup screen whose `accept_terms` label (apps/accounts/forms.py:31, flagged CONTENT_PENDING_LEGAL_REVIEW, prescribed by §3.8.7/§3.10) names the Privacy Policy and the Conditions d'utilisation by title. The user is asked to consent to two documents the page no longer links to. Constraint breached: "legal wording … GDPR".
+
+3. COLOUR RULE — ONE ACCENT / TRICOLOUR ONLY IN THE MARK — §4.2 token table line 137: "chiave (solo esito riuscito) | `--brand-gold` su `--brand-navy` | 5,80". DESIGN_SYSTEM_V2 §1.3 regola 4: "Il tricolore vive solo nel marchio. Nessun altro elemento usa `--brand-*`." The key is placed inside the page's arch, whose ground is `--mid-1`, not `--brand-navy` — so either a `--brand-navy` tile is introduced as a page surface (breaks regola 4 and the one-midnight-chapter count) or the stated 5.80:1 ratio is computed against a ground that does not exist on the screen. The spec does not say which.
+
+4. SELF-CONTRADICTION ON §6 — §4.1 lines 116-118: "L'arco non porta né fotografia né chiave: §8.8 esclude la fotografia, §6 esclude la porta intera fuori dall'hero. La chiave torna una sola volta … si posa dentro l'arco e si ferma." Arch + three steps + key IS the whole door (BRAND_ASSETS.md §1 enumerates exactly those parts). The spec cites the rule forbidding the whole door outside the hero and then composes the whole door outside the hero on three screens.
+
+5. MOTION SYSTEM §1 — §5 row A2 line 236: "240 ms, stagger 90 ms". MOTION_SYSTEM.md §1 binds chained signature animations to "ritardi scaglionati di 40–60 ms per riga" and closes with "Nessun altro numero." 90 ms is outside the band. Same row invents `delay .35` (350 ms); row A11 line 245 specifies "600 ms" with no token — tokens.css declares only `--motion-draw: 900ms` for the immersive trace, so the implementer writes a bare literal into a system whose test counts declared values.
+
+6. DELIVERY CONSTRAINT "implementable without touching Django views or the data contract" (§4.7 header, line 201) — contradicted by the markup on line 212: `{% include "allauth/partials/_threshold.html" with step=step steps=steps %}` and by `_entrance_progress.html` / "Étape 2 sur 3" (line 108). No allauth view (LoginView, SignupView, PasswordResetView, MFA views) puts `step` or `steps` in context. As written the progress element renders empty on all twelve screens; making it work requires a view, a context processor or per-template hardcodes — none specified.
+
+## Lacune (ciò che l'implementatore dovrebbe inventare)
+
+1. WHERE `.entrance` ACTUALLY LANDS. The markup (line 209-221) overrides `{% block body %}`, but in `templates/allauth/layouts/base.html` that block sits inside `<section class="container account-page account-page--entrance">`. A `.container` max-width wrapper makes the 54/46 full-bleed, 100svh threshold impossible. The spec never says to override `{% block main_content %}` or neutralise `.account-page`. It also silently drops `{% block account_help %}` (the existing contact-email paragraph) without saying so.
+
+2. `data-mode="rich"` HAS NO HOOK. Audit point 15 is correct — `data-mode` appears nowhere in `templates/`. §4.7 says `allauth/layouts/base.html` "dichiara `data-mode=\"rich\"`", but the `<body>` tag lives in `templates/base.html` line 44 and exposes only `{% block body_class %}`. Adding the attribute requires editing `templates/base.html`, which is not in the touched-templates list.
+
+3. `.portal-bar` IS NOT 56 px AND IS NOT IN THE FILES NAMED. It is styled in `apps/portal/static/portal/portal.css:20`, an app-level sheet loaded by its own `<link>` (portal/base_portal.html:20), outside the `main.css` @import chain. It has NO height: `padding: var(--s-3) var(--grid-margin)` + `flex-wrap: wrap`, so its height is intrinsic and wraps; it also carries `border-block-end: 2px solid var(--rubric-on-navy)`. The §8 guard "`--entrance-bar-h` è un solo token usato da entrambe" therefore requires rewriting portal.css — a file never listed, and owned by platform-shell.md. (The colour claim survives: bridge.css:32 maps `--navy-deep: var(--mid-1)`.)
+
+4. THE 768-1199 px BAND IS UNDEFINED. The diagram binds the 54/46 split to "≥ 75rem" (line 104) and the single column to "Sotto 768 px" (line 223). Nothing covers 768-1199 — and the spec claims to have produced `login_tablet.png` at 768×1024. At 1024 the split yields a 471 px sheet around a 432 px measure: 19 px gutters against a focus ring that projects 9 px outside the control, inside `contain: paint`.
+
+5. NO `<select>` SPECIFICATION. Signup's `account_type` (apps/accounts/forms.py:29, five public choices) is a required select. §4.3's state table covers text, password, checkbox and OTP only — no 48 px select, no `appearance: none` + custom chevron, no RTL chevron mirroring for it, no error/disabled/open states.
+
+6. NO `:-webkit-autofill` OVERRIDE. The whole premise of §4.3 is a white `--min-3` field on a `--min-2` sheet. On the login screen — the one screen where autofill is the norm — Chrome forces `background-color: rgb(232,240,254)` and its own `-webkit-text-fill-color`, erasing the new surface and the contrast figures. Not mentioned anywhere.
+
+7. WHO OWNS `scroll-padding`. §4.1 line 113 makes `.entrance__sheet` its own scroll container; §6 line 256 puts `scroll-padding-block-start` at `--entrance-bar-h` without naming an element. The error-summary links (`href="#{{ field.id_for_label }}"`, form_errors.html) jump INSIDE that nested container, which needs `scroll-padding` on the container and `scroll-margin` on the fields, not on the root. Also unstated: whether the sheet's own scroll is disabled below 768 where the signup form "resta in flusso".
+
+8. CSS DELIVERY IS SELF-CONTRADICTORY. Line 194: "importato in `main.css` dopo `v2/voyage.css` e precaricato in `base.html` come gli altri livelli". The other V2 layers are not individually preloaded — `main.css` is a single entry point with a 13-deep `@import` chain (the spec's own §7 counts 14 sheets and calls it out). Either auth.css becomes the 15th render-blocking serial `@import` shipped to every page, or it is a per-page `<link>` — for which no template hook is specified.
+
+9. `contain: layout paint` ON A CONTAINER WITH 9 px OUTSIDE FOCUS RINGS. Line 293 applies it to `.entrance__sheet`; §4.3 gives fields `outline 2px` + `outline-offset 2px` + a 5 px halo. At the 27rem measure inside a ≥1200 px column there is room; at 1024 and at the stated 16 px mobile margins it is 9 px against 16-19 px. No minimum inline padding is specified.
+
+10. `--dir` IS USED BUT NOT DECLARED ANYWHERE NAMED. A9 (line 243) and §6 (line 267) rely on `--dir: -1`. `tests/frontend/test_css_tokens_exist.py` fails any `var()` whose property is not declared in a discovered stylesheet and allow-lists only `--nav-drawer-top` and `--reveal-index`. The spec must say the `[dir="rtl"] { --dir: -1 }` declaration lives in auth.css.
+
+11. GUARDS THAT CITE A TEST THAT DOES NOT EXIST. §8 rows lean on "il test conta i loop" and MOTION_SYSTEM's `tests/frontend/test_motion_system.py`. That file is not in `tests/frontend/`. The guards are aspirational.
+
+12. MIS-CITED FACT IN A TRUST CLAIM. Line 121 cites `ACCOUNT_RATE_LIMITS["login_failed"] = "5/5m"`; config/settings/base.py:192 is `"5/5m/ip,5/5m/key"`. Minor, but the section's own rule is that every line be "ancorata a un'impostazione citabile".
+
+13. BINDING-DOC DEVIATIONS NOT RECORDED AS AMENDMENTS. §8.8 prescribes the sheet "con lock-up" (the spec moves it to the bar) and "crossfade 320 ms con la barra della piattaforma che scende in scena" (A12 line 248 explicitly refuses the entrance of the bar). Both are defensible; neither is filed as a change to DESIGN_SYSTEM_V2.md, so the next reviewer reads a contradiction. Likewise DESIGN_SYSTEM_V2 §2 level 4 says a 5 px halo while MOTION_SYSTEM §2 (FOCUS family) says 3 px — the spec picks 5 without flagging the conflict.
+
+## Segnali di «cheap / generico / default»
+
+1. THE LAYOUT ITSELF IS THE DEFAULT. Dark panel left, form sheet right is the single most templated auth screen of 2024-2026 — four of the spec's own eight candidates (login-03, sign-in-6, auth-section-2, auth-section-3) are it. The differentiation is one drawn arch. Cover the arch and you are looking at login-03.
+
+2. THE BACKGROUND IS THE THING THE OWNER REJECTED. `--mid-1` flat fill + a 160 px graticule + one 900 ms arch draw that then stands still forever, with "Nessun loop ambientale" written in at §5 line 231. On the surface the owner called "too simple or unmemorable" and "not dynamic enough", the spec ships something quieter than V2 and forbids itself any further life. The graticule is a regular 160 px grid of lines — the cheapest possible "technical" background.
+
+3. THREE SECURITY FACTS WITH GLYPHS ON THE DARK HALF. This is the SOC2-trust-badge block that ANTI_PATTERNS.md §1 names by name ("muro di loghi → card → carosello → metriche → badge SOC2"). The spec's own 21st.dev row 2 criticises auth-section-2 for decorating the dark side and then takes "tre fatti di sicurezza" from it. The guard offered — "coprire l'arco e chiedersi se il pannello dice ancora qualcosa" — is a vibe check, not a guard.
+
+4. UNLABELLED DECORATIVE COORDINATES. "coordinate 33.97°N … 45.41°N" (lines 109, 304) name no place, serve no task and are readable by nobody as information. Coordinates-as-texture is the current tell for AI-generated "premium technical" UI, and it is the same family as the fake telemetry ANTI_PATTERNS.md §1 flags under "placeholder" and "social proof inventata". The risk table guards the arch and never guards these.
+
+5. THE FOUR-TICK PASSWORD STRENGTH METER. The most shipped component in every Bootstrap/shadcn/Tailwind auth kit. Worse, it is product-untrue here: §4.3 says it "non blocca mai l'invio, l'autorità resta ai quattro validatori Django". A meter reading «Solide» on a password that `CommonPasswordValidator` or `UserAttributeSimilarityValidator` then rejects is a second, contradictory opinion on the screen — cheaper than showing nothing.
+
+6. «Étape 2 sur 3» ON A LOGIN SCREEN. A progress indicator over a flow that has no steps, fed by variables no view provides. Fabricated progress is a textbook generated-UI signal.
+
+7. A FULL-WIDTH FLAT TEAL RECTANGLE AS THE PRIMARY ACTION. §4.4 asserts full width is "l'unico posto dove è giusto" without arguing it. The mooring-line rule is the one genuinely proprietary gesture in the button and it is 16 px wide, appearing only on hover/focus — i.e. invisible in the screenshot the owner will judge.
+
+8. THE ONE MEMORABLE MOMENT IS SPENT WHERE ALMOST NOBODY IS. A11, the key, fires only on `email_confirm`, MFA-verified and `password_reset_from_key_done` — three low-traffic terminal screens. The login screen, which is the one the owner opens, gets a 900 ms line drawing and then nothing.
+
+## MUST-FIX
+
+1. Restore the locked antifraud text and its gate verbatim in `sheet__legal`: `{% if gates.phase3_public %}{% safe_url 'pages:antifraud' as u %}{% if u %}<a href="{{ u }}">{% locked "p3.antifraud.title" %}</a>{% endif %}{% endif %}`. Replace the `…` placeholder on line 218 with the explicit, final list — and that list must include Privacy Policy and Conditions d'utilisation on at least the signup, login and reset screens, because `accept_terms` names them. Enumerate what is intentionally dropped (promoter, ©, version label, content-verified date) and get it signed off, or keep them in a second row.
+
+2. Remove `components/form_field.html` from the touched list, or split the change. Help-above-control in that shared partial reflows ~40 templates across companies, community, accounts and every allauth form, and contradicts DESIGN_SYSTEM_V2 §10 ("errore accanto, aiuto sotto"). If help-above is genuinely right, it is a system-wide amendment with its own spec and its own sign-off — not a line item in an auth surface. Scope the auth-only hooks (`data-reveal-password`, `data-strength`, `data-caps`, `data-otp`) as attributes added under `.entrance`, leaving DOM order alone.
+
+3. Delete `step`/`steps` and «Étape 2 sur 3», or define where they come from. As written the include passes context no allauth view supplies, breaking the spec's own "nessuna vista, nessun contratto di dati" guarantee. If a progress element stays, it belongs only on the genuinely multi-step flow (signup → email confirm → first sign-in) with the step number hardcoded per template, and never on login.
+
+4. Resolve the key. Either drop A11 and the `--brand-gold` / `--brand-navy` token row entirely (cleanest: §1.3 regola 4 and §6 both point that way), or amend DESIGN_SYSTEM_V2 explicitly to permit the mark's key on terminal success screens, state the ground it sits on, and recompute the ratio against that ground.
+
+5. Specify where `.entrance` lives in the template tree: which block is overridden so the grid escapes `.container.account-page`, what happens to `{% block account_help %}`, and which file gains the `data-mode` attribute hook on `<body>` (it does not exist today).
+
+6. Add `apps/portal/static/portal/portal.css` to the touched files with the exact edit, and state the coordination with platform-shell.md. `.portal-bar` has no height today — `padding: var(--s-3) var(--grid-margin)` with `flex-wrap: wrap` plus a 2 px `--rubric-on-navy` bottom border. Say whether the 2 px border is reproduced on the entrance bar, and whether the equality test compares border-box or content-box.
+
+7. Specify the 768-1199 px band: the split ratio or the breakpoint at which it collapses, the sheet's minimum inline padding (≥ 12 px so the 9 px focus ring survives `contain: paint`), and whether `.entrance__sheet` keeps its own scroll below 1200.
+
+8. Add the `:-webkit-autofill` / `:autofill` rule set (background, `-webkit-text-fill-color`, `box-shadow: inset 0 0 0 100px var(--min-3)` or `transition-delay` trick under `style-src 'self'`) — without it the core field redesign is invisible on the login screen.
+
+9. Specify the `<select>` for `account_type`: 48 px, `appearance: none`, the chevron glyph, its RTL behaviour and all six states.
+
+10. Fix the motion numbers: A2 stagger to 40-60 ms per MOTION_SYSTEM §1, express A1's 350 ms delay as a chained value rather than a new number, and either give A11 a declared token (e.g. `--motion-reveal: 600ms` in the new-tokens list) or reuse `--motion-draw`. State which element carries `scroll-padding-block-start` and add `scroll-margin-block-start` on the fields the error summary links to.
+
+11. Answer the owner's actual complaint about the background before this ships. The threshold is currently a flat rectangle plus a grid. Either earn one scroll-linked or pointer-linked object on the threshold within §4 of MOTION_SYSTEM (RICH permits one of the two, and the spec spends neither), or give the graticule a non-uniform, cartographically motivated structure. Replace the unlabelled coordinates with a labelled, readable statement or remove them.
+
+12. Re-read `apps/cms/forbidden.py` against the final trust wording before merge: `scan()` regex-matches `google-analytics\.com`, `googletagmanager\.com`, `\bfbq\(`, `hotjar\.com`, `fonts\.googleapis\.com` over the RENDERED page. A "no trackers" trust line that names a tracker by domain is a self-inflicted violation on a public route. Add that to the HUMAN_QA_REQUIRED note, which currently only says the wording needs legal review.
+

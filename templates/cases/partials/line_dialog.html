@@ -1,0 +1,34 @@
+{% load i18n %}{% comment %}
+A LINE'S STATE, CHANGED IN A DIALOG — the body and the foot of the overlay system's alert dialog (its dialog
+component, `kind="alert"`; W2-A, CONTRACT §1–§4), drawn once per line the reader may move by the case file
+(templates/cases/detail.html — the page that links the panels' page-only sheet). Platform map C-5: the
+consequence named, the safe choice the default, the focus returned.
+
+  the body   the line — its words, in their own language, and its state as a chip —, then what the change is: «Seules
+             les évolutions permises par l'état actuel sont proposées. Chaque changement est enregistré.» (the two
+             are the dialog's description, `aria-describedby`); then the states the line may move to, each a radio
+             and its chip — the current one is not offered, so a press never records a change that changes nothing;
+             one is required
+  the foot   «Annuler» — the safe answer: it takes the focus when the dialog opens, Esc presses it, the scrim never
+             closes the dialog —, then «Mettre à jour», the form's submit (the `form` attribute: the foot is outside
+             the body's form)
+
+The form posts to the line's own view (cases.views.set_item_status), which asks the policy again, records the change
+through the service (the audit trail, its author) and returns to the row. Every word is the catalogue's.
+
+Contract: `line` = one row of portal.services.case_lines (pk, dialog_id, title, words, state, state_label); `case`;
+`statuses` = ChecklistStatus.choices; `overlay_part` — "body" or "actions" (the component includes this file for both).
+{% endcomment %}{% if overlay_part == "body" %}<form class="reg-dialog file-dialog" id="{{ line.dialog_id }}-form" method="post" action="{% url 'cases:set_item_status' case.reference line.pk %}">
+  {% csrf_token %}
+  <div class="file-dialog__about" id="{{ line.dialog_id }}-text">
+    <p class="file-dialog__what"><span class="file-dialog__words"{% if line.words.lang %} lang="{{ line.words.lang }}" dir="{{ line.words.dir }}"{% endif %}>{{ line.title }}</span> {% chip line.state "cases.ChecklistStatus" %}{{ line.state_label }}{% endchip %}</p>
+    <p class="file-dialog__note">{% translate "Seules les évolutions permises par l’état actuel sont proposées. Chaque changement est enregistré." %}</p>
+  </div>
+  <fieldset class="reg-form__fieldset file-choices">
+    <legend>{% translate "Nouvel état" %}</legend>
+    {% for value, label in statuses %}{% if value != line.state %}
+    <div class="form-field__check"><input type="radio" id="{{ line.dialog_id }}-{{ value }}" name="status" value="{{ value }}" required><label for="{{ line.dialog_id }}-{{ value }}">{% chip value "cases.ChecklistStatus" %}{{ label }}{% endchip %}</label></div>
+    {% endif %}{% endfor %}
+  </fieldset>
+</form>{% else %}<button class="btn btn--secondary" type="button" data-overlay-close data-overlay-safe>{% translate "Annuler" %}</button>
+<button class="btn btn--primary" type="submit" form="{{ line.dialog_id }}-form">{% translate "Mettre à jour" %}</button>{% endif %}

@@ -1,0 +1,7 @@
+{% load i18n %}{% comment %}
+A pathway sheet's photograph in the entrance's end seat (V5.32, lane B; pages/partials/_ingresso.html `aside_template`,
+drawn with the entrance's context): the site's one pairing (pages.services.PATHWAY_FRAMES — the same frame the
+explorer and the home draw for this pathway), the page's LCP; family reunification keeps its semantic plate (no
+rights-safe family photograph, no identifiable minors). Contract: `frame` (pathways.services.pathway_frame or None),
+`family`, `plate_glyph`.
+{% endcomment %}{% if frame %}{% include "pathways/_frame.html" with p=frame cls="scheda-foto" eager=True only %}{% else %}<div class="scheda-foto scheda-foto--piastra" data-family="{{ family }}" aria-hidden="true">{% svg_icon plate_glyph|default:"users" "icon scheda-foto__segno" %}</div>{% endif %}

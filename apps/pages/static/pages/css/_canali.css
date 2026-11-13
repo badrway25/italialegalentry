@@ -1,0 +1,129 @@
+/* ============================================================================================
+   THE CONTACT PAGE'S TELEPHONE CHANNELS (V5.19, owner-confirmed 29 October 2026; lane v519-k) — imported by
+   pages/css/interior.css after _institutional.css; drawn by templates/pages/partials/_canali.html. Two plates, the
+   head's own disc idiom (_fronte.css «fronte-azione»): the Numero Verde with the telephone, WhatsApp with its channel
+   glyph and its word. One link per plate, 44 px and more; the number in the band's size, left to right, never broken.
+   Tokens of static/css/v5/tokens.css only; logical properties.
+   V5.22 (SECTION_SYSTEM_V2 §3.12; lane P2): the plates stand in the channel board «il centralino» (_contatto.css) beside
+   the contact form's plate, the same idiom; the disc's fill answers the keyboard's focus as it answers the hand (§4.10
+   «Parity»); the Numéro vert is the wide plate.
+   ============================================================================================ */
+/* V5.22 round 1 (QA_ROUND1 M5): a row that wraps, never a fixed 5fr / 4fr — each plate is at least as wide as its own
+   words (a flex item's automatic minimum: the number, never broken, can no longer overflow its plate, as WhatsApp's
+   did at 1280 and 1024), the two side by side only where both stand at ease (≈ 88 rem with the board's title beside
+   them), the Numéro vert the wider; stacked below, each the board's full width */
+.canali {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.canale--voce { flex: 5 1 24rem; }
+.canale--whatsapp { flex: 4 1 22rem; }
+
+.canale__link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  block-size: 100%;
+  min-block-size: var(--hit-primary);
+  padding: var(--s-5) var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md); /* the plates' 6 (round 1, m7: three corners a screen — 4 · 6 · full) */
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.canale__disc {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 48px;
+  block-size: 48px;
+  border-radius: var(--radius-md);
+  color: var(--accent-mark);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-mark) 35%, transparent), var(--shadow-2);
+}
+
+.canale__disc .icon {
+  inline-size: 22px;
+  block-size: 22px;
+}
+
+.canale__body {
+  display: grid;
+  gap: var(--s-1);
+  min-inline-size: 0;
+}
+
+/* the kind: the label role (`t-label`, v5/base.css — V5.24 Typography V2 F-4), in the quiet ink */
+.canale__kind {
+  color: var(--text-2);
+}
+
+.canale__number {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+  font-variant-numeric: var(--numeric-data);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+@media (min-width: 48rem) {
+  .canale__number {
+    font-size: var(--t-band); /* 24 → 28, the band step (V5.24 Typography V2: no clamp of the sheet's own) */
+    line-height: var(--t-band-lh);
+  }
+}
+
+.canale__act {
+  justify-self: start;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-mark);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .canale__link:hover {
+    border-color: color-mix(in srgb, var(--accent-mark) 45%, var(--line-rhythm));
+    box-shadow: var(--shadow-2);
+  }
+}
+
+/* hover equals focus: the disc fills, the act's underline thickens */
+.canale__link:is(:hover, :focus-visible) .canale__disc {
+  color: var(--surface-raised);
+  background: var(--accent-mark);
+}
+
+.canale__link:is(:hover, :focus-visible) .canale__act {
+  text-decoration-thickness: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .canale__link {
+    transition: border-color var(--motion-standard) var(--ease-enter), box-shadow var(--motion-standard) var(--ease-enter);
+  }
+
+  :root:not(.rm):not([data-input="key"]) .canale__disc {
+    transition: background-color var(--motion-slow) var(--ease-enter), color var(--motion-slow) var(--ease-enter);
+  }
+}
+
+@media (forced-colors: active) {
+  .canale__link,
+  .canale__disc {
+    border: 1px solid CanvasText;
+  }
+}

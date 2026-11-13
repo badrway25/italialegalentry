@@ -1,0 +1,92 @@
+/* ============================================================================================
+   K · «LO STRATO» — «l'approdo», «la targa», «la scheda», over the plates and «la protezione» of v5/_sec-lastre.css
+   (design V5.22, SECTION_SYSTEM_V2 §2 K; lane S; V5.29 stream SYS: the sheet split so the home draws only what it uses —
+   a page that draws a landing, an address plate or a term plate imports this sheet; the plates alone, v5/_sec-lastre.css).
+   Page-only (after v5/_sezioni.css). Markup: components/sezioni/approdo.html, strato.html (variants targa, scheda).
+   ============================================================================================ */
+@import url("_sec-lastre.css");
+
+/* «la targa»: one plate on night, the address as a large type element */
+.strato__lastra--targa {
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+  box-shadow: inset 0 0 0 1px var(--line-night-soft);
+}
+
+.strato__lastra--targa .strato__corpo {
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  overflow-wrap: anywhere;
+}
+
+/* «la scheda»: the term page's definition plate — the term at display size, a drawn rule, the definition */
+.strato__lastra--scheda .strato__titolo {
+  font-size: var(--t-display);
+  line-height: var(--t-display-lh);
+  font-weight: var(--w-display);
+  letter-spacing: var(--track-display);
+  padding-block-end: var(--s-4);
+  border-block-end: 1px solid var(--line-structure);
+}
+
+
+/* ---- «l'approdo» — FINAL MICRO-PASS §5 A3: a divided link list, as «il rimando» (v5/_sec-mosaico.css; 21st.dev
+   «Split Image Blog List», ziegfiroyt/blog25, id 28595): the rows between hairlines, no tile, no plate (the library's
+   partial and ecosystem/partials/approdo.html alike), the Forum's row typographic like the others, a chevron at each
+   row's end that moves 4 px under the hand or the focus ---- */
+.approdo__tessere {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.approdo__tessera {
+  position: relative;
+  display: grid;
+  gap: var(--s-1);
+  padding-block: var(--s-5);
+  padding-inline: 0 var(--s-10);
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.approdo__link {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.approdo__link::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--s-2);
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-block: auto;
+  border-block-start: 1.5px solid;
+  border-inline-end: 1.5px solid;
+  color: var(--text-3); /* the quiet ink, at rest and under the hand: only the link's words take the accent */
+  rotate: 45deg;
+  transition: translate var(--motion-standard) var(--ease-enter);
+}
+
+[dir="rtl"] .approdo__link::after { rotate: -45deg; }
+
+.approdo__tessera:is(:hover, :focus-within) .approdo__link { color: var(--accent-text); }
+.approdo__tessera:is(:hover, :focus-within) .approdo__link::after { translate: 4px 0; }
+[dir="rtl"] .approdo__tessera:is(:hover, :focus-within) .approdo__link::after { translate: -4px 0; }
+html[data-input="key"] .approdo__link::after { transition: none; }
+
+.approdo__riga {
+  margin: 0;
+  max-inline-size: var(--measure-lead);
+  font-size: var(--t-ui);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* V5.30 (the owner's «geometry saturation»): the bookend — the page's motif drawn low across the closing band — left the
+   library with its markup (components/sezioni/approdo.html): the head's drawing is never repeated at the foot
+   (V5.29: the protection's far shield, `.sez-fondale`, had left with the drawing table) */

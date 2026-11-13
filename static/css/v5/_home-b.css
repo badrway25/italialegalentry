@@ -1,0 +1,1248 @@
+/* V5.31 · FINAL HOMEPAGE REBUILD (owner, 10 Nov 2026), lane B: orientation, pathways explorer, what the platform does and
+   does not do, FAQ preview, frauds, their icons. Tokens only; logical properties; motion on transform and opacity, on the
+   duration tokens (0 under reduced motion) — the keyboard never animates; the entrances are keyed to rise.js's
+   data-sec-state (a section in view at load is drawn at rest). No numeral, no arch, no drawn geometry: photography,
+   material surfaces, semantic glyphs and type. 21st.dev patterns adapted: Feature Tab Switcher + Features With Panel
+   (orientation), Category List + Media Accordion (explorer), Us vs Them (clarity), FAQ Accordion Reveal (questions),
+   Warning Alert + Chip (frauds). */
+
+.page-home :is(.home-orientation, .home-pathways, .home-trust, .home-faq, .home-antifraud) {
+  --hb-r: 1.25rem;
+  --hb-r-lg: 1.75rem;
+  padding-block: var(--s-12);
+}
+
+/* the clarity, the questions and the warning are one run of three short bands (the home holds to eight screens): one
+   short step at every width */
+.page-home :is(.home-trust, .home-faq, .home-antifraud) {
+  padding-block: var(--s-10) var(--s-8);
+}
+
+/* FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026; agent B §5): the phones' rail of the four doors is not drawn — the hero
+   has shown the four, and a second set in another dress repeated them between the statement and the orientation */
+.page-home .home-entrances {
+  display: none;
+}
+
+.viaggio__tappe,
+.esplora__lista,
+.home-families,
+.chiaro__elenco,
+.allerta__chips,
+.allerta__azione {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* the tabs' stage: panels stacked in one cell once script runs (CLS 0); without it, every panel in order */
+:is(.viaggio__palco, .esplora__palco) {
+  display: grid;
+  gap: var(--s-6);
+}
+
+[data-tabs][data-ready] :is(.viaggio__palco, .esplora__palco) > [data-panel] {
+  grid-area: 1 / 1;
+}
+
+/* the cross-fade only once the reader has chosen: the first selection, at load, is drawn at rest */
+:root:not([data-input="key"]) [data-tabs][data-moved] [data-panel] {
+  transition: opacity var(--motion-emphasized) var(--ease-enter), visibility 0s linear var(--motion-emphasized);
+}
+
+[data-tabs][data-ready] [data-panel]:not([data-on]) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* the shown panel is visible from the first frame (FINAL VISUAL QA, 11 Nov 2026, B §6: this rule lost to the one above —
+   0,4,0 against 0,5,0 — so the arriving panel stayed hidden for the whole fade and the stage stood empty 320 ms) */
+:root [data-tabs][data-ready] [data-panel][data-on] {
+  transition-delay: 0s;
+}
+
+/* a frame waits for its panel: only the shown moment's or pathway's photograph is fetched — `display: none` defers a
+   lazy image — so the page asks for one frame, never all twelve (before the tabs are ready, the first panel's) */
+.js [data-tabs]:not([data-ready]) [data-panel]:not(:first-child) :is(.viaggio__foto, .esplora__foto),
+[data-tabs][data-ready] [data-panel]:not([data-on]) :is(.viaggio__foto, .esplora__foto) {
+  display: none;
+}
+
+/* the ring is base.css's one focus system (2 px at 2 px, the night's tone inside the orientation) */
+[data-tab] {
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes hb-develop {
+  from { transform: scale(1.05); filter: grayscale(1); }
+}
+
+/* ============================================================================
+   «il viaggio» — the orientation on the deep ink
+   ========================================================================== */
+.page-home .home-orientation {
+  --sez-ink-2: var(--text-on-night-2);
+  --focus-ring: var(--focus-ring-night);
+}
+
+.viaggio__capo .testa {
+  margin-block-end: var(--s-8);
+}
+
+.home-orientation .testa__title {
+  line-height: var(--t-title-1-lh);
+}
+
+.viaggio__tappe {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.viaggio__voce {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: var(--s-4);
+  border-radius: var(--hb-r);
+  transition: background-color var(--motion-standard) var(--ease-layout);
+}
+
+.viaggio__glifo,
+.esplora__tessera,
+.chiaro__segno,
+.chiaro__glifo,
+.allerta__scudo,
+.esplora__emblema,
+.viaggio__emblema,
+.esplora__spazio-glifo {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+
+.viaggio__glifo {
+  grid-row: span 2;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 0.875rem;
+  color: var(--accent-night);
+  background: color-mix(in srgb, var(--accent-night) 12%, transparent);
+  transition: background-color var(--motion-standard) var(--ease-layout), color var(--motion-standard) var(--ease-layout);
+}
+
+.viaggio__glifo .icon {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+}
+
+.viaggio__nome {
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  letter-spacing: var(--track-entry);
+  color: var(--text-on-night-1);
+}
+
+.viaggio__parole {
+  font-size: var(--t-ui);
+  line-height: 1.375rem;
+  color: var(--text-on-night-3);
+}
+
+/* the Arabic page's French words (a language without its rendering) start on their own edge */
+[dir="rtl"] .home-orientation :is(.viaggio__parole, .viaggio__frase)[lang] {
+  text-align: start;
+}
+
+.viaggio__voce:hover {
+  background: color-mix(in srgb, var(--text-on-night-1) 5%, transparent);
+}
+
+/* the selected moment: the lifted ground, a hairline of the accent round it, its glyph filled (QA 11 Nov, B §4) */
+.viaggio__voce[aria-selected="true"] {
+  background: color-mix(in srgb, var(--text-on-night-1) 9%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-night) 45%, transparent);
+}
+
+.viaggio__voce[aria-selected="true"] .viaggio__glifo {
+  color: var(--surface-night);
+  background: var(--accent-night);
+}
+
+.viaggio__voce[aria-selected="true"] .viaggio__parole {
+  color: var(--text-on-night-2);
+}
+
+.viaggio__scena {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--hb-r-lg);
+  background: var(--surface-night-area);
+  aspect-ratio: 4 / 5;
+}
+
+.viaggio__foto img,
+.esplora__foto img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.viaggio__foto {
+  position: absolute;
+  inset: 0;
+}
+
+/* a scrim under the caption only, so its words read on any photograph */
+.viaggio__scena::after {
+  content: "";
+  position: absolute;
+  inset: 40% 0 0;
+  background: linear-gradient(to top, color-mix(in srgb, var(--surface-night-deep) 88%, transparent), transparent);
+}
+
+.viaggio__didascalia {
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  padding: var(--s-6);
+  color: var(--text-on-night-1);
+}
+
+/* the two stages' emblems: one seat, one glyph size */
+.viaggio__emblema,
+.esplora__emblema {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: 1.125rem;
+}
+
+:is(.viaggio__emblema, .esplora__emblema) .icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.viaggio__emblema {
+  margin-block-end: var(--s-2);
+  color: var(--surface-night);
+  background: var(--accent-night);
+}
+
+.viaggio__chiave {
+  font-size: var(--t-label);
+  line-height: var(--t-label-lh);
+  font-weight: var(--w-label);
+  letter-spacing: var(--track-label);
+  color: var(--identity-key-night-text);
+}
+
+.viaggio__frase,
+.esplora__titolo {
+  margin: 0;
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-title-2);
+}
+
+.viaggio__frase {
+  max-inline-size: 22ch;
+  text-wrap: balance;
+}
+
+.viaggio__frase::first-letter {
+  text-transform: capitalize;
+}
+
+@keyframes hb-rise {
+  from { opacity: 0; transform: translateY(0.75rem); }
+}
+
+/* the call: a composed action panel — the locked caveat its reassurance, the button its direction */
+.viaggio__azione {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  margin-block-start: var(--s-6);
+  padding: var(--s-6);
+  border-radius: var(--hb-r-lg);
+  background: color-mix(in srgb, var(--text-on-night-1) 6%, transparent);
+}
+
+.viaggio__garanzia {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--text-on-night-2);
+}
+
+.viaggio__garanzia p {
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+}
+
+.viaggio__info {
+  color: var(--identity-key-night-text);
+}
+
+.viaggio__intera {
+  max-inline-size: var(--measure-lead);
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+:is(.viaggio__cta, .allerta__cta) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  border-radius: 999px;
+}
+
+.viaggio__cta {
+  min-block-size: 3.5rem;
+  padding-inline: var(--s-8) var(--s-6);
+  background: var(--accent-night);
+  border-color: transparent;
+  color: var(--surface-night);
+  font-size: var(--t-body);
+}
+
+/* hover: a lighter tone of its own accent and the arrow's step — never the inversion to white (QA 11 Nov, B §1) */
+.viaggio__cta:hover {
+  background: color-mix(in srgb, var(--accent-night) 72%, var(--text-on-night-1));
+  border-color: transparent;
+  color: var(--surface-night);
+}
+
+:is(.viaggio__cta, .allerta__cta, .esplora__spazio) .icon {
+  transition: transform var(--motion-emphasized) var(--ease-enter);
+}
+
+:is(.viaggio__cta, .allerta__cta, .esplora__spazio):is(:hover, :focus-visible) .icon:last-child {
+  transform: translateX(0.25rem);
+}
+
+[dir="rtl"] :is(.viaggio__cta, .allerta__cta, .esplora__spazio):is(:hover, :focus-visible) .icon:last-child {
+  transform: scaleX(-1) translateX(0.25rem);
+}
+
+@media (min-width: 64rem) {
+  /* the moments and the call share the rail's column; the stage stands beside both */
+  .viaggio {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "capo capo" "tappe palco" "azione palco";
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--s-12);
+  }
+
+  .viaggio__capo { grid-area: capo; }
+  .viaggio__corpo { display: contents; }
+  .viaggio__tappe { grid-area: tappe; flex-direction: column; }
+  .viaggio__palco { grid-area: palco; align-self: start; }
+
+  .viaggio__azione {
+    grid-area: azione;
+    align-self: end;
+  }
+
+  .viaggio__voce {
+    padding: var(--s-3) var(--s-6);
+    row-gap: var(--s-1);
+  }
+
+  .viaggio__scena {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* once the tabs stack the moments, the stage stands the rail's full height: no empty run under the photograph */
+  [data-ready] > .viaggio__palco {
+    align-self: stretch;
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  [data-ready] > .viaggio__palco > .viaggio__scena {
+    aspect-ratio: auto;
+    min-block-size: 22rem;
+  }
+
+  .viaggio__didascalia {
+    padding: var(--s-12);
+  }
+}
+
+/* 64–80 rem: the rail's column is too narrow for the call's label — the call closes the band as one bar */
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  .viaggio {
+    grid-template-areas: "capo capo" "tappe palco" "azione azione";
+  }
+}
+
+/* a tablet's stage never outgrows the screen: landscape frames (at 768 the 4:5 frame stood 920 px tall; QA 11 Nov, B §5) */
+@media (min-width: 40rem) and (max-width: 63.999rem) {
+  .viaggio__scena {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  /* a phone's rail: four chips the thumb crosses, the stage under them */
+  .viaggio__tappe,
+  .esplora__lista {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--page-pad));
+    padding: var(--s-1) var(--page-pad) var(--s-5);
+    scroll-padding-inline: var(--page-pad);
+  }
+
+  :is(.viaggio__tappe, .esplora__lista)::-webkit-scrollbar {
+    display: none;
+  }
+
+  .viaggio__tappa,
+  .esplora__riga {
+    flex: none;
+    scroll-snap-align: start;
+  }
+
+  .viaggio__voce {
+    display: flex;
+    padding: var(--s-2) var(--s-5) var(--s-2) var(--s-2);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text-on-night-1) 6%, transparent);
+  }
+
+  .viaggio__glifo {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: 999px;
+  }
+
+  .viaggio__nome {
+    font-size: var(--t-ui);
+  }
+
+  [data-ready] .viaggio__parole {
+    display: none;
+  }
+
+  .viaggio__azione {
+    padding: var(--s-5);
+  }
+
+  .viaggio__cta {
+    inline-size: 100%;
+    justify-content: space-between;
+    padding: var(--s-3) var(--s-5);
+    border-radius: var(--hb-r);
+    text-align: start;
+  }
+}
+
+/* ============================================================================
+   «l'esploratore» — the pathways on the light mineral ground
+   ========================================================================== */
+.esplora__lista {
+  display: flex;
+  gap: var(--s-1);
+}
+
+.esplora__voce {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  border-radius: var(--s-3);
+  color: var(--text-2);
+  transition: background-color var(--motion-standard) var(--ease-layout), color var(--motion-standard) var(--ease-layout), box-shadow var(--motion-standard) var(--ease-layout);
+}
+
+.esplora__tessera {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 0.75rem;
+  color: var(--accent-text);
+  background: var(--accent-wash);
+  transition: background-color var(--motion-standard) var(--ease-layout), color var(--motion-standard) var(--ease-layout);
+}
+
+.esplora__tessera .icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.esplora__voce:hover {
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--surface-raised) 60%, transparent);
+}
+
+.esplora__voce[aria-selected="true"] {
+  color: var(--text-1);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+
+.esplora__voce[aria-selected="true"] .esplora__tessera {
+  color: var(--text-on-accent);
+  background: var(--accent-mark);
+}
+
+.esplora__nome {
+  font-size: var(--t-body);
+  line-height: 1.375rem;
+}
+
+/* the Arabic page's French titles (a pathway without its rendering): each the row's remainder, left to right in its
+   own isolate, set against its tile — the RTL label exception (SECTION_SYSTEM_V2 §2 F) */
+[dir="rtl"] .esplora__voce[lang] .esplora__nome,
+[dir="rtl"] .esplora__titolo[lang] {
+  flex: 1;
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: end;
+}
+
+/* the reader's continuation: the Espace Personnes as the place the explorer leads into */
+.esplora__spazio {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-block-start: var(--s-6);
+  padding: var(--s-5);
+  border-radius: var(--hb-r);
+  color: var(--text-on-night-1);
+  background: var(--surface-night);
+  text-decoration: none;
+  transition: background-color var(--motion-standard) var(--ease-layout);
+}
+
+.esplora__spazio:hover {
+  background: var(--surface-night-sheet);
+}
+
+.esplora__spazio-glifo {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: 999px;
+  color: var(--surface-night);
+  background: var(--identity-key-night-text);
+}
+
+.esplora__spazio-via {
+  flex: 1;
+  white-space: nowrap;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.esplora__pannello {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--hb-r-lg);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-2);
+}
+
+.esplora__foto {
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--surface-area);
+}
+
+.esplora__testo {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+  padding: var(--s-6) var(--s-6) var(--s-8);
+}
+
+/* the stage on the Arabic page (QA_ROUND1 M2 b): a French title and its description are one box hanging from the
+   reading edge — the column as wide as its widest French run, so both start on the same edge */
+[dir="rtl"] .esplora__testo:has(> [lang]) {
+  grid-template-columns: fit-content(var(--measure-lead));
+}
+
+.esplora__emblema {
+  position: absolute;
+  inset: var(--s-5);
+  color: var(--accent-text);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-2);
+}
+
+.esplora__corpo p {
+  margin: 0;
+  max-inline-size: 52ch;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-2);
+}
+
+.esplora__link {
+  margin: var(--s-2) 0 0;
+}
+
+.esplora__link .btn {
+  padding-inline: var(--s-6);
+  border-radius: 999px;
+}
+
+.esplora__link .btn:hover {
+  border-color: var(--accent-mark);
+  background: var(--accent-wash);
+}
+
+.home-families {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.home-families__voce {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-5) var(--s-2) var(--s-2);
+  border-radius: 999px;
+  background: var(--surface-raised);
+}
+
+@media (min-width: 64rem) {
+  .esplora {
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 15fr);
+    gap: var(--s-10);
+    align-items: start;
+  }
+
+  .esplora__lista {
+    flex-direction: column;
+  }
+
+  .esplora__voce {
+    padding: var(--s-1) var(--s-3);
+  }
+
+  /* one height from 64 rem: 5:2 at 1024, 10:3 at 1440 — the 10:3 ratio alone was a 180 px slit at 1024 (QA 11 Nov, B §4) */
+  .esplora__foto {
+    aspect-ratio: auto;
+    block-size: 15rem;
+  }
+
+  .esplora__testo {
+    gap: var(--s-3);
+    padding: var(--s-6) var(--s-8) var(--s-8);
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .esplora {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .esplora__indice {
+    display: contents;
+  }
+
+  .esplora__spazio {
+    order: 3;
+  }
+
+  .esplora__voce {
+    padding: var(--s-1) var(--s-4) var(--s-1) var(--s-1);
+    border-radius: 999px;
+    background: var(--surface-sheet);
+  }
+
+  .esplora__tessera {
+    border-radius: 999px;
+  }
+
+  .esplora__nome {
+    font-size: var(--t-ui);
+    white-space: nowrap;
+  }
+}
+
+/* a tablet's photograph: landscape, like the stage above it */
+@media (min-width: 40rem) and (max-width: 63.999rem) {
+  .esplora__foto {
+    aspect-ratio: 5 / 2;
+  }
+
+}
+
+/* ============================================================================
+   «la chiarezza» — what the platform does, and does not: two material surfaces
+   ========================================================================== */
+/* final visual QA (11 Nov 2026, point 5): the section opens on its lead — the statement that says both halves — at the
+   statement's size; its title stays in the outline, the two surfaces' heads are the visible titles (one thing once) */
+.chiaro__enunciato {
+  max-inline-size: 46rem;
+  margin: 0 0 var(--s-8);
+  line-height: var(--t-title-2-lh);
+  text-wrap: balance;
+}
+
+.chiaro {
+  display: grid;
+  gap: var(--s-5);
+}
+
+/* gate closed: one statement beside three — each surface stands at its own height, never an empty plate */
+.chiaro[data-trust="interim"] {
+  align-items: start;
+}
+
+/* ART PASS (owner, 11 Nov 2026, B1): the two sides by meaning — a mature institutional green for what it does, a
+   bordeaux for what it does not (the register's granata, never a traffic light): the plate, the line marks, a hairline
+   edge and a breath of tint in the material; the words stay the ink's */
+.chiaro__faccia {
+  --chiaro-tono: color-mix(in oklab, var(--brand-green), var(--p-inchiostro-900) 22%);
+  display: grid;
+  align-content: start;
+  gap: var(--s-6);
+  padding: var(--s-8);
+  border: 1px solid color-mix(in oklab, var(--chiaro-tono) 16%, transparent);
+  border-radius: var(--hb-r-lg);
+  background: color-mix(in oklab, var(--chiaro-tono) 3%, var(--surface-raised));
+  box-shadow: var(--shadow-1);
+}
+
+.chiaro__faccia--non {
+  --chiaro-tono: var(--p-granata-600);
+}
+
+.chiaro__titolo {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  letter-spacing: var(--track-band);
+}
+
+.chiaro__segno {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: 50%;
+  color: var(--p-carta-0);
+  background: var(--chiaro-tono);
+}
+
+.chiaro__elenco {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.chiaro__voce {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-4);
+  align-items: start;
+  max-inline-size: 40rem;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.chiaro__glifo {
+  inline-size: 1.25rem;
+  block-size: 1.5em;
+  color: var(--chiaro-tono);
+}
+
+:is(.chiaro__segno, .chiaro__glifo) .icon {
+  stroke-width: 2.25;
+}
+
+.chiaro__azione {
+  margin: var(--s-8) 0 0;
+}
+
+@media (min-width: 48rem) {
+  .chiaro {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6);
+  }
+
+  /* two statements beside three: the sheet says its two at the statement's size, the mineral its three at the body's;
+     each list fills its surface, first line under the title and last line on the foot — the two surfaces end together,
+     neither holds a void under its words (V5.31 correction round) */
+  .chiaro__faccia {
+    grid-template-rows: minmax(4.375rem, auto) 1fr;   /* the head: two lines of either side's title (P1-2), the first items together */
+    gap: var(--s-5);
+    padding: var(--s-6) var(--s-10) var(--s-8);
+  }
+
+  .chiaro__elenco {
+    align-content: space-between;
+  }
+}
+
+/* ============================================================================
+   «le domande» — one featured question, three compact ones
+   ========================================================================== */
+.domande__capo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--s-4) var(--s-8);
+  margin-block-end: var(--s-6);
+}
+
+.domande__titolo {
+  margin: 0;
+  line-height: var(--t-title-2-lh);
+}
+
+.domande__griglia {
+  display: grid;
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.domande__altre {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.domanda {
+  border-radius: var(--hb-r);
+}
+
+/* final visual QA (11 Nov 2026, points 1 and 9): a light sheet under the accent's wash — it was a night card, the
+   second of three dark blocks in a row (the promoter's band above it, the warning's plate under it) */
+.domanda--prima {
+  display: grid;
+  gap: var(--s-5);
+  padding: var(--s-10);
+  border-radius: var(--hb-r-lg);
+  background: linear-gradient(155deg, var(--accent-wash), var(--surface-raised) 60%);
+  box-shadow: var(--shadow-2);
+}
+
+.domanda__tema {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--t-label);
+  line-height: var(--t-label-lh);
+  font-weight: var(--w-label);
+  letter-spacing: var(--track-label);
+  color: var(--accent-text);
+}
+
+.domanda__tema .icon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.domanda__testo {
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-body);
+}
+
+.domanda--prima .domanda__testo {
+  font-size: var(--t-home-sub);   /* reconciliation: at its section title's S size, never above it (a title is never smaller than what it titles) */
+  line-height: var(--t-title-2-lh);
+  letter-spacing: var(--track-title-2);
+  text-wrap: pretty;
+}
+
+.domanda__link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--motion-standard) var(--ease-layout);
+}
+
+.domanda__link:is(:hover, :focus-visible) {
+  text-decoration-color: currentColor;
+}
+
+.domanda__risposta {
+  margin: 0;
+  max-inline-size: 60ch;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+.domanda--prima .domanda__risposta {
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+}
+
+/* «Non.» — the answer's own first sentence, a small accent before the explanation (the text unchanged) */
+.domanda__risposta .ls-1 {
+  display: inline-block;
+  margin-inline-end: var(--s-2);
+  padding: 0 var(--s-3);
+  border-radius: 999px;
+  font-size: var(--t-small);
+  line-height: 1.625rem;
+  font-weight: var(--w-strong);
+  vertical-align: 0.0625rem;
+  color: var(--accent-text);
+  background: var(--accent-wash);
+}
+
+.domanda--prima .ls-1 {
+  color: var(--text-on-accent);
+  background: var(--accent-mark);
+}
+
+.domanda--breve {
+  background: color-mix(in srgb, var(--surface-sheet) 70%, transparent);
+  transition: background-color var(--motion-emphasized) var(--ease-layout), box-shadow var(--motion-emphasized) var(--ease-layout);
+}
+
+.domanda--breve:hover,
+.domanda--breve[open] {
+  background: var(--surface-raised);
+}
+
+.domanda--breve[open] {
+  box-shadow: var(--shadow-2);
+}
+
+.domanda__sommario {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--s-2) var(--s-4);
+  align-items: center;
+  padding: var(--s-4) var(--s-6);
+  list-style: none;
+  cursor: pointer;
+  border-radius: var(--hb-r);
+}
+
+.domanda__sommario::-webkit-details-marker {
+  display: none;
+}
+
+.domanda__sommario:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.domanda__sommario .domanda__tema {
+  grid-column: 1 / -1;
+}
+
+.domanda__chevron {
+  color: var(--text-3);
+  transition: transform var(--motion-emphasized) var(--ease-enter);
+}
+
+.domanda--breve[open] .domanda__chevron {
+  transform: rotate(180deg);
+}
+
+.domanda__corpo {
+  display: grid;
+  gap: var(--s-3);
+  padding: 0 var(--s-6) var(--s-6);
+}
+
+.domanda__via {
+  margin: 0;
+  font-size: var(--t-ui);
+}
+
+/* the opening, where the browser animates to auto; the keyboard and reduced motion open at once */
+html:not([data-input="key"]) .home-faq {
+  interpolate-size: allow-keywords;
+}
+
+html:not([data-input="key"]) .domanda--breve::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size var(--motion-emphasized) var(--ease-enter), content-visibility var(--motion-emphasized) allow-discrete;
+}
+
+html:not([data-input="key"]) .domanda--breve[open]::details-content {
+  block-size: auto;
+}
+
+@media (min-width: 64rem) {
+  .domande__griglia {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--s-6);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .domanda--prima {
+    padding: var(--s-8) var(--s-6);
+  }
+
+  .domanda__sommario {
+    padding: var(--s-4) var(--s-5);
+  }
+
+  .domanda__corpo {
+    padding: 0 var(--s-5) var(--s-5);
+  }
+}
+
+/* ============================================================================
+   «l'allerta» — the frauds: a dark warm mineral plate (deep burgundy-brown, one amber accent; never red, never ochre)
+   set on the page's paper, light air under it before the footer's night (final visual QA, 11 Nov 2026, point 4)
+   ========================================================================== */
+.page-home .home-antifraud {
+  padding-block-end: var(--s-16);
+}
+
+.allerta {
+  --allerta-2: color-mix(in srgb, var(--p-ambra-50) 76%, transparent);
+  --allerta-riga: color-mix(in srgb, var(--p-ambra-300) 28%, transparent);
+  --focus-ring: var(--p-ambra-300);
+  display: grid;
+  gap: var(--s-6);
+  padding: var(--s-8) var(--s-6);
+  border-radius: var(--hb-r-lg);
+  color: var(--p-ambra-25);
+  background:
+    radial-gradient(70% 130% at 0 0, color-mix(in srgb, var(--p-ambra-600) 24%, transparent), transparent 70%),
+    color-mix(in oklab, var(--p-granata-900), var(--p-notte-950) 34%);
+  box-shadow: var(--shadow-3);
+}
+
+.allerta__capo {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.allerta__scudo {
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+  border-radius: 0.875rem;
+  color: var(--p-ambra-900);
+  background: var(--p-ambra-300);
+}
+
+.allerta__scudo .icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.allerta__titolo,
+.allerta__etichetta {
+  margin: 0;
+  font-size: var(--t-label);
+  line-height: var(--t-label-lh);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-label);
+  color: var(--p-ambra-300);
+}
+
+.allerta__titolo {
+  font-size: var(--t-ui);
+}
+
+/* the body: ONE locked text (never cut apart). Said in one sentence (the Arabic page's pointer line) it stands at the
+   warning's size; in its own sentences, the warning first and large, the promise last behind a hairline */
+.allerta__testo {
+  max-inline-size: 46rem;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+}
+
+.allerta__testo .ls {
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--allerta-2);
+}
+
+.allerta__testo .ls-1 {
+  display: block;
+  margin-block-end: var(--s-3);
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  letter-spacing: var(--track-band);
+  color: inherit;
+  text-wrap: balance;
+}
+
+.allerta__testo .ls-4 {
+  display: block;
+  margin-block-start: var(--s-4);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--allerta-riga);
+  color: inherit;
+}
+
+/* V5.31 correction (owner §22, progressive disclosure): with the script, the two middle sentences wait behind «Lire le
+   détail» — the lead and the promise stay in sight, the <p data-locked> keeps the whole text */
+.allerta__testo:has(+ [aria-expanded="false"]:not([hidden])) :is(.ls-2, .ls-3) {
+  display: none;
+}
+
+.allerta .allerta__apri {
+  --btn-ink: var(--p-ambra-300);
+  --btn-ink-hover: var(--p-ambra-50);
+  justify-self: start;
+}
+
+.allerta .allerta__cta {
+  --btn-fill: var(--p-ambra-50);
+  --btn-fill-hover: var(--p-carta-0);
+  --btn-fill-press: var(--p-ambra-100);
+  --btn-ink: var(--p-ambra-900);
+  --btn-edge: transparent;
+  --btn-edge-hover: transparent;
+}
+
+.allerta__segnali {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+}
+
+.allerta__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.allerta__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--hb-r);
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  background: color-mix(in srgb, var(--p-ambra-50) 8%, transparent);
+  box-shadow: inset 0 0 0 1px var(--allerta-riga);
+}
+
+.allerta__chips .icon {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  color: var(--p-ambra-300);
+}
+
+/* from 64 rem the red flags stand beside the reading column, which the body fills: a short body (the pointer line) over
+   the call, which closes the column; the body in its sentences alone, the call up beside the title — no empty half */
+@media (min-width: 64rem) {
+  .allerta {
+    grid-template: auto auto 1fr / 3fr 2fr;
+    gap: var(--s-5) var(--s-12);
+    padding: var(--s-8) var(--s-12);
+  }
+
+  .allerta__segnali {
+    grid-area: 1 / 2 / span 3;
+  }
+
+  .allerta:has(.ls) .allerta__segnali {
+    grid-row: 2 / span 2;
+  }
+
+  .allerta:has(.ls) .allerta__azione {
+    grid-area: 1 / 2;
+  }
+}
+
+/* ============================================================================
+   The entrances — each band its own verb, once, as it enters (rise.js data-sec-state); still otherwise
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* a selection: the photograph settles from a slight scale and from grey into colour, the words rise after it */
+  :root:not(.rm):not([data-input="key"]) [data-moved] [data-on] :is(.viaggio__foto, .esplora__foto) img {
+    animation: hb-develop var(--motion-slow) var(--ease-enter) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-moved] [data-on] :is(.viaggio__didascalia, .esplora__testo) > * {
+    animation: hb-rise var(--motion-slow) var(--ease-enter) backwards;
+  }
+
+  :root:not(.rm):not([data-input="key"]) [data-moved] [data-on] :is(.viaggio__didascalia, .esplora__testo) > :nth-child(n + 2) { animation-delay: 60ms; }
+
+  :root:not(.rm):not([data-input="key"]) .page-home [data-sec-state="wait"] :is(.viaggio__tappa, .esplora__riga, .chiaro__faccia, .domanda, .allerta__chips li, .allerta__scudo, .viaggio__scena, .esplora__pannello) {
+    opacity: 0;
+  }
+
+  .page-home [data-sec-state="in"] :is(.viaggio__tappa, .esplora__riga, .allerta__chips li) {
+    animation: hb-rise var(--motion-slow) var(--ease-enter) backwards;
+  }
+
+  /* the two surfaces settle one after the other (the second on the rows' own beat); a question and the shield the same
+     way (V5.31 correction round: one keyframe for the three, the sheet's bytes paid back) */
+  .page-home [data-sec-state="in"] :is(.chiaro__faccia, .domanda, .allerta__scudo, .viaggio__scena, .esplora__pannello) {
+    animation: hb-settle var(--motion-slow) var(--ease-enter) backwards;
+  }
+
+
+  .page-home [data-sec-state="in"] :is(.viaggio__tappa, .esplora__riga, .chiaro__faccia, .domanda, .allerta__chips li):nth-child(2) { animation-delay: 60ms; }
+  .page-home [data-sec-state="in"] :is(.viaggio__tappa, .esplora__riga, .domanda, .allerta__chips li):nth-child(3) { animation-delay: 120ms; }
+  .page-home [data-sec-state="in"] :is(.viaggio__tappa, .esplora__riga, .domanda, .allerta__chips li):nth-child(4) { animation-delay: 180ms; }
+  .page-home [data-sec-state="in"] :is(.viaggio__tappa, .esplora__riga, .domanda, .allerta__chips li):nth-child(n + 5) { animation-delay: 240ms; }
+
+  /* tier 0 (owner, 12 Nov 2026): the rows' 12 px lift runs only under :root:not(.rm):not([data-input="key"]). From the
+     keyboard and under html.rm it takes no time, so a focused row is never below its own place (its ring whole at the
+     screen's edge); the animation stays, instant, so the pointer's return (head.js) never replays it */
+  :root:is(.rm, [data-input="key"]) .page-home [data-sec-state="in"] :is(.viaggio__tappa, .esplora__riga, .allerta__chips li) {
+    animation-duration: 0s;
+    animation-delay: 0s;
+  }
+}
+
+@keyframes hb-settle {
+  from { opacity: 0; transform: scale(0.98); }
+}
+
+@media (forced-colors: active) {
+  .viaggio__voce[aria-selected="true"],
+  .esplora__voce[aria-selected="true"] {
+    outline: 2px solid Highlight;
+  }
+}
+
+/* ============================================================================
+   «interaction pass» — FINAL HOMEPAGE VISUAL QA (owner, 11 Nov 2026; agent B §1): hover and focus on the page's
+   components by their existing class names (the other lane's included) — real Chrome, mouse and keyboard, fr and ar
+   ========================================================================== */
+/* a link on a night plate keeps its ink under the pointer: base.css's a:hover (0,1,1) painted the label in the light
+   ground's dark accent, and the words went out on the dark pill (the Espace Personnes card, the pilot's and the
+   promoter's calls) */
+:is(.esplora__spazio, .home-cta--night):hover {
+  color: var(--text-on-night-1);
+}
+
+/* the featured question's ring is one box round its lines, never a broken outline line by line */
+.domanda__link {
+  display: inline-block;
+}
+
+/* a phone: the frauds' call on two lines is a plate set from its start edge, like the orientation's — never words
+   centred in a pill */
+@media (max-width: 63.999rem) {
+  .allerta__cta {
+    justify-content: space-between;
+    padding-block: var(--s-3);
+    border-radius: var(--hb-r);
+    text-align: start;
+  }
+}

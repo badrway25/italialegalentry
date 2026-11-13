@@ -1,0 +1,148 @@
+{% load i18n cms_nav pages_typo %}{% if not menu %}{% main_menu as menu %}{% endif %}
+{% comment %}
+V5.15 (DECISIONS §15 lane A): the bar is one row with every item from 64rem; the panels float under it as one mega
+panel that changes its content from the side the pointer travelled (nav.js, `data-from`) and morphs to each door's own
+height; the soft plate `main-nav__plate` follows the pointer over the items; the sheet unfolds each door.
+Review round 1 (v515-a-improve1): a door's panel is composed in three zones — the lede (the door's name, its gloss,
+«Voir l’espace»), its entries on a two-column grid of hairline rows, and «la lunetta», the door's night plate: the
+portico's three arches drawn in gold, the door's glyph in the inner arch, and the door's HIGHLIGHTED DESTINATION as the
+plate itself (the person door: the orientation questionnaire; the others: the door's space). The plate carries a
+photograph only when lane C gives the menu a frame of its own (`item.photo.menu_only`): the four portico frames repeat
+the home's door tiles, and V5.15 §2 says «Do NOT repeat the same image». The sheet's search is one field with its
+glyph and an icon submit; Projet has its glyph.
+Review round 2 (v515-a-improve2, M-2): every entry of a door carries its destination's glyph on a tinted disc
+(partials/_portico_glyph.html); a long door's entries are compact rows of one rhythm (a title, at most one line), a
+short door's are tiles sized to their content; the door's own space's line — the legal notice «… ne délivre pas de
+visas …» — is never clamped: it stands whole in the panel's foot (`portico__notice`, the entry's description); the
+lunetta of a short door says only «Voir l’espace» (the door's name is the eyebrow already). The sheet's search field
+shows the short «Rechercher» and keeps the long name as its label.
+Finishing round F1 (v515f-a-improve1, M-2): a long door's rows carry their line WHOLE (never an ellipsis; the
+two columns share each row; below 80rem the title alone); the brand in a line is one isolated LTR run (`brand_bdi`); a short door's
+entries are destination rows (glyph, title and whole line, the way forward); Projet's entries carry their glyphs and
+AGAMI its line; the door's own space's legal notice (`item.notice`) stands in the foot in every language — in the locked
+French, said with lang="fr", until the prescribed text is translated; the sheet's entries carry the same glyphs.
+
+Main navigation: cms.MenuItem rows for location "main" (fallback: the D-U3 structure in
+cms/templatetags/cms_nav.py, decorated there by `_portico()` with live content only). Two drawings of
+one tree, never on screen together:
+
+* nav_variant unset — «IL PORTICO», the letterhead's bar (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.12,
+  W2-C1): every section is a disclosure button (`button[aria-expanded][aria-controls]`, the APG
+  «disclosure navigation», not an ARIA menu) followed by its panel INSIDE its <li>, so Tab walks
+  bar → open panel → next door with no script. A door's panel is the door card opened: the locked gloss
+  (a prescribed French gloss on a page of another language carries lang + dir on its paragraph, so the
+  French block is set ragged-right in its column until the copy is signed: B1), «Voir l’espace» right
+  under it, the entries on hairline rows with a live second line where one exists, the door's
+  photograph at the inline end with its audience glyph, the anti-fraud foot where the menu carries it.
+  A section that is not a door (Projet) has a plain panel. One travelling indicator, «l'architrave».
+  static/js/src/nav.js adds intent, the keyboard model, the scrim and the photographs' idle prefetch;
+  without it a panel opens on hover and on focus-within (static/css/v5/chrome.css).
+* nav_variant "sheet" — THE SHEET below 80rem (plan §1.12 item 8, §1.14; W2-C2), included by header.html after the
+  letterhead, at the body's level (a trapped panel of the overlay system never sits in a stacking context): the
+  overlay system's modal drawer, opened by «Menu» (static/js/src/overlay.js — show(), aria-modal, the trap, the one
+  scrim, Esc, «Fermer», a link; the focus back on «Menu»). It owns its header line — the lock-up and «Fermer», on
+  the letterhead's own row; «Fermer» takes the first focus and holds «Menu», hidden, for one width — then the Fase 3
+  order: the languages (their names in their own language) → the four doors as 64 px rows on night discs, each
+  unfolding in place (an exclusive <details name>: the door's locked gloss, its entries, «Voir l’espace»; the current
+  section's door is open) → Forum · Projet → the search (the FAQ's, the one public search; only when that page is
+  public) → the primary → the anti-fraud line → the pinned foot on night: «la targa» (signed in, the account popover)
+  and the promoter — on the phone and on the side sheet from 48rem alike. The foot is not `on-inverse`: chrome.css
+  gives its own controls the night's ring, and the account menu that opens from it keeps the paper's. From 64rem the
+  doors are in the bar, so the sheet carries Forum · Projet · the languages · the search. Without the script «Menu»
+  is a link to the sheet, which shows in place (:target), and «Fermer» a link back.
+{% endcomment %}
+{% if nav_variant == "sheet" %}{% flag "reserved_area_public_link" as reserved_link %}
+<dialog class="overlay overlay--drawer nav-sheet" id="nav-sheet" data-overlay="drawer" aria-label="{% translate 'Menu' %}">
+  <div class="container nav-sheet__head">
+    <a class="brand brand--lockup" href="{% url 'pages:home' %}" aria-label="{{ site.project_name }} — {% translate 'accueil' %}">{% if site.settings and site.settings.use_logo_image and site.settings.logo %}<img class="brand__logo" src="{{ site.settings.logo.url }}" alt="{{ site.project_name }}" width="160" height="40">{% else %}{% brand_lockup %}{% endif %}</a>
+    <a class="nav-toggle" href="#site-header" data-overlay-close data-overlay-focus>{% svg_icon "close" "icon" %}<span class="nav-toggle__word"><span>{% translate "Fermer" %}</span><span class="nav-toggle__alt" aria-hidden="true">{% translate "Menu" %}</span></span></a>
+  </div>
+  <div class="nav-sheet__body">
+    {% include "components/language_segmented.html" with lang_names=True flags=True %}
+    <ul class="nav-sheet__list" role="list" data-accordion="single">
+    {% for item in menu %}
+      {% if item.is_section %}
+      <li class="nav-sheet__item{% if item.audience %} nav-sheet__item--door{% endif %}{% if item.after_doors %} nav-sheet__item--after-doors{% endif %}">
+        <details class="nav-sheet__door" name="nav-sheet-doors"{% if item.is_current %} open{% endif %}>
+          <summary class="nav-sheet__row"{% if item.is_current %} aria-current="true"{% endif %}>{% if item.icon %}<span class="portico__disc">{% svg_icon item.icon "icon" %}</span>{% else %}<span class="nav-sheet__slot">{% svg_icon "ile-arch" "icon" %}</span>{% endif %}<span>{{ item.label }}</span>{% svg_icon "chevron" "icon nav-sheet__chevron" %}</summary>
+          <div class="nav-sheet__panel">
+            {% if item.photo.menu_only %}<img class="nav-sheet__photo" src="{{ item.photo.src }}" srcset="{{ item.photo.srcset }}" sizes="(min-width: 48rem) 22rem, 90vw" width="{{ item.photo.width }}" height="{{ item.photo.height }}" alt="" loading="lazy" decoding="async">{% endif %}
+            {% if item.gloss %}<p class="nav-sheet__gloss"{% if item.gloss_lang %} lang="{{ item.gloss_lang }}" dir="ltr"{% endif %}>{{ item.gloss }}</p>{% endif %}
+            <ul class="portico__entries" role="list">
+              {% for child in item.children %}
+              <li class="portico__entry"><a class="portico__link" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}{% if item.notice and child.url_name == item.url_name %} aria-describedby="{{ item.id }}-sheet-notice"{% elif child.description %} aria-describedby="{{ child.id }}-sheet-line"{% endif %}><span class="portico__glyph" aria-hidden="true">{% include "partials/_portico_glyph.html" %}</span><span class="portico__title">{{ child.label }}</span>{% if child.description %}<span class="portico__line" id="{{ child.id }}-sheet-line" aria-hidden="true">{{ child.description|brand_bdi }}</span>{% endif %}</a></li>
+              {% endfor %}
+            </ul>
+            {% if item.notice %}<p class="portico__foot nav-sheet__notice" id="{{ item.id }}-sheet-notice">{% svg_icon "info" "icon icon--sm" %}<span{% if item.notice_lang %} lang="{{ item.notice_lang }}" dir="ltr"{% endif %}>{{ item.notice|brand_bdi }}</span></p>{% endif %}
+            {% if item.url %}<a class="portico__space" href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{% translate "Voir l’espace" %}</a>{% endif %}
+          </div>
+        </details>
+      </li>
+      {% elif item.url %}
+      <li class="nav-sheet__item{% if item.after_doors %} nav-sheet__item--after-doors{% endif %}"><a class="nav-sheet__row" href="{{ item.url }}"{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}><span class="nav-sheet__slot">{% if item.url_name == "forum:index" %}{% svg_icon "handshake" "icon" %}{% endif %}</span><span>{{ item.label }}</span></a></li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+    {% safe_url 'faq:index' as faq_url %}{% if faq_url %}
+    <form class="search-form nav-sheet__search" method="get" action="{{ faq_url }}" role="search" aria-label="{% translate 'Rechercher dans les questions fréquentes' %}">
+      <label class="search-form__label" for="nav-sheet-q">{% translate "Rechercher dans les questions fréquentes" %}</label>
+      <div class="search-form__row nav-sheet__field">
+        {% svg_icon "search" "icon nav-sheet__field-glyph" %}<input class="search-form__input" type="search" id="nav-sheet-q" name="q" maxlength="100" autocomplete="off" enterkeyhint="search" placeholder="{% translate 'Rechercher' %}">
+        <button class="nav-sheet__field-go" type="submit" aria-label="{% translate 'Rechercher' %}">{% svg_icon "arrow" "icon icon--flip-rtl" %}</button>
+      </div>
+    </form>{% endif %}
+    {% safe_url 'orientation:start' as orientation_url %}{% if orientation_url %}
+    <a class="btn btn--primary btn--lg btn--block btn--arrow nav-sheet__primary" href="{{ orientation_url }}">{% translate "Découvrir le questionnaire d’orientation" %}{% svg_icon "arrow" "icon btn__arrow icon--flip-rtl" %}</a>{% endif %}
+    {% safe_url 'pages:antifraud' as fraud_url %}{% if fraud_url %}
+    <p class="portico__foot nav-sheet__fraud">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ fraud_url }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}</a></p>{% endif %}
+  </div>
+  <div class="nav-sheet__foot">
+    {% comment %} V5.19 (lane v519-k): the phone's contact action — the two channels, first in the pinned foot, on night, a thumb's reach away: the Numero Verde dials, WhatsApp opens the app (site.channels; chrome.css «the sheet's channels»). {% endcomment %}
+    {% with freephone=site.channels.freephone whatsapp=site.channels.whatsapp %}{% if freephone or whatsapp %}<ul class="nav-sheet__channels" role="list" aria-label="{% translate 'Nous contacter' %}">
+      {% if freephone %}{% blocktranslate trimmed asvar freephone_name with number=freephone.label %}Appeler le numéro vert {{ number }}{% endblocktranslate %}<li><a class="nav-sheet__channel" href="{{ freephone.tel_url }}" aria-label="{{ freephone_name }}">{% svg_icon "phone" "icon icon--md" %}<bdi class="phone" dir="ltr">{{ freephone.label }}</bdi></a></li>{% endif %}
+      {% if whatsapp %}{% blocktranslate trimmed asvar whatsapp_name with number=whatsapp.label %}Contacter Italy Legal Entry sur WhatsApp au {{ number }}{% endblocktranslate %}<li><a class="nav-sheet__channel" href="{{ whatsapp.url }}" aria-label="{{ whatsapp_name }}">{% svg_icon "message-circle" "icon icon--md" %}<span>WhatsApp</span></a></li>{% endif %}
+    </ul>{% endif %}{% endwith %}
+    {% if user.is_authenticated %}{% include "components/account_menu.html" with popover=True menu_id="account-menu-sheet" %}
+    {% elif reserved_link and site.settings.reserved_area_enabled %}{% safe_url 'account_login' as login_url_sheet %}{% if login_url_sheet %}<a class="targa targa--night" href="{{ login_url_sheet }}">{% svg_icon "ile-key" "icon targa__key" %}<span>{% translate "Espace réservé" %}</span></a>{% endif %}
+    {% endif %}<p class="nav-sheet__promoter"><strong>{{ site.promoter }}</strong> — {% translate "promoteur du projet" %}</p>
+  </div>
+</dialog>
+{% else %}{% safe_url 'orientation:start' as orientation_url %}
+<ul class="main-nav__list" role="list">
+{% for item in menu %}
+  {% if item.is_section %}
+  <li class="main-nav__item main-nav__item--section{% if item.audience %} main-nav__item--door{% endif %}{% if item.after_doors %} main-nav__item--after-doors{% endif %}">
+    <button class="main-nav__link main-nav__door" type="button" aria-expanded="false" aria-controls="{{ item.id }}-portico" data-portico-door{% if item.is_current %} aria-current="true"{% endif %}><span class="main-nav__word">{{ item.label }}</span>{% svg_icon "chevron" "icon icon--chevron" %}</button>
+    <div class="portico{% if item.audience %} portico--door{% else %} portico--plain{% endif %}" id="{{ item.id }}-portico" data-portico-panel{% if item.audience %} data-audience="{{ item.audience }}"{% endif %}>
+      <div class="portico__sheet">
+        {% if item.audience %}<p class="portico__eyebrow" aria-hidden="true">{{ item.label }}</p>{% endif %}
+        {% if item.gloss %}<p class="portico__gloss"{% if item.gloss_lang %} lang="{{ item.gloss_lang }}" dir="ltr"{% endif %}>{{ item.gloss }}</p>{% endif %}
+        <ul class="portico__entries" role="list">
+          {% for child in item.children %}{% if item.notice and child.url_name == item.url_name %}
+          <li class="portico__entry"><a class="portico__link" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %} aria-describedby="{{ item.id }}-notice"><span class="portico__glyph" aria-hidden="true">{% include "partials/_portico_glyph.html" %}</span><span class="portico__title">{{ child.label }}</span></a></li>{% else %}
+          <li class="portico__entry"><a class="portico__link" href="{{ child.url }}"{% if child.is_current %} aria-current="page"{% endif %}{% if child.new_tab %} target="_blank" rel="noopener"{% endif %}{% if child.description %} aria-describedby="{{ child.id }}-line"{% endif %}><span class="portico__glyph" aria-hidden="true">{% include "partials/_portico_glyph.html" %}</span><span class="portico__title">{{ child.label }}</span>{% if child.description %}<span class="portico__line" id="{{ child.id }}-line" aria-hidden="true">{{ child.description|brand_bdi }}</span>{% endif %}</a></li>{% endif %}
+          {% endfor %}
+        </ul>
+        {% if item.notice %}<p class="portico__notice" id="{{ item.id }}-notice">{% svg_icon "info" "icon icon--sm" %}<span{% if item.notice_lang %} lang="{{ item.notice_lang }}" dir="ltr"{% endif %}>{{ item.notice|brand_bdi }}</span></p>{% endif %}
+        {% if item.url %}{% if not item.audience or orientation_url and item.audience == "person" %}<a class="portico__space" href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{% translate "Voir l’espace" %}</a>{% endif %}{% endif %}
+        {% if item.foot_url %}<p class="portico__foot">{% svg_icon "shield-alert" "icon icon--sm" %}<a href="{{ item.foot_url }}">{% translate "Lire la page « Attention aux fraudes »" as fraud_label %}{{ fraud_label|typo }}</a></p>{% endif %}
+      </div>
+      {% if item.audience %}
+      {% if item.audience == "person" and orientation_url %}<a class="portico__feature portico__lunetta" href="{{ orientation_url }}">{% elif item.url %}<a class="portico__feature portico__lunetta" href="{{ item.url }}"{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}>{% else %}<div class="portico__lunetta">{% endif %}
+        {% if item.photo.menu_only %}<img class="portico__photo" src="{{ item.photo.src }}" srcset="{{ item.photo.srcset }}" sizes="(min-width: 100rem) 28rem, 25rem" width="{{ item.photo.width }}" height="{{ item.photo.height }}" alt="" loading="lazy" decoding="async" fetchpriority="low" data-portico-photo>{% endif %}
+        <svg class="portico__arches" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false"><path d="M40 300V200a160 160 0 0 1 320 0v100"/><path d="M78 300V206a122 122 0 0 1 244 0v94"/><path d="M116 300V214a84 84 0 0 1 168 0v86"/></svg>
+        <span class="portico__disc" aria-hidden="true">{% svg_icon item.icon "icon" %}</span>
+        {% if item.audience == "person" and orientation_url %}<span class="portico__lunetta-text"><span class="portico__kicker">{% translate "Questionnaire d’orientation" %}</span><span class="portico__feature-title">{% translate "Commencer l’orientation" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</span></span></a>
+        {% elif item.url %}<span class="portico__lunetta-text"><span class="portico__feature-title">{% translate "Voir l’espace" %}{% svg_icon "arrow" "icon icon--flip-rtl" %}</span></span></a>
+        {% else %}</div>{% endif %}
+      {% endif %}
+    </div>
+  </li>
+  {% elif item.url %}
+  <li class="main-nav__item{% if item.after_doors %} main-nav__item--after-doors{% endif %}"><a class="main-nav__link" href="{{ item.url }}"{% if item.is_current %} aria-current="{% if item.url == request.path %}page{% else %}true{% endif %}"{% endif %}{% if item.new_tab %} target="_blank" rel="noopener"{% endif %}><span class="main-nav__word">{{ item.label }}</span></a></li>
+  {% endif %}
+{% endfor %}
+</ul>
+<span class="main-nav__plate" aria-hidden="true" data-portico-plate></span>
+<span class="main-nav__architrave" aria-hidden="true" data-portico-architrave></span>
+{% endif %}

@@ -1,0 +1,42 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n %}
+{% comment %}
+The commissions a member can open — design V5 (W3-E step 2): the page's head, then the register — one row a
+commission, its name the way to its page (stretched over the row), its edition and its field, its state as a chip.
+Access follows a dated mandate: a commission without one does not appear, and the empty register says who opens it.
+{% endcomment %}
+{% block page_title %}{% translate "Commissions du Forum permanent" %}{% endblock %}
+{% block meta_description %}{% translate "Les commissions mixtes du Forum permanent que vous pouvez consulter." %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="register">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Commissions" %}</h1>
+    <p class="ws-head__lead">{% translate "Chaque priorité de l’édition est confiée à une commission mixte. Vous accédez à celles où vous détenez un mandat en cours." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block governance_content %}
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="commissions-title">
+    <h2 class="db-h2 reg-sec__title" id="commissions-title"><span>{% translate "Les commissions ouvertes à votre consultation" %}</span></h2>
+    {% if commissions %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for commission in commissions %}
+      {% safe_url 'forum_governance:commission_detail' commission.key as commission_url %}
+      <li class="db-task reg-row{% if commission_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if commission_url %}<a class="reg-row__link" href="{{ commission_url }}">{{ commission.name_fr }}</a>{% else %}{{ commission.name_fr }}{% endif %}</h3>
+          <p class="db-task__meta">{{ commission.edition.title_fr }}{% if commission.scope_fr %} — {{ commission.scope_fr }}{% endif %}</p>
+        </div>
+        <div class="db-task__state">{% chip commission.status "forum.CommissionStatus" %}{{ commission.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="db-empty">{% translate "Aucune commission ne vous est ouverte. L’accès suit un mandat daté : dès qu’un mandat est ouvert à votre nom par le secrétariat du Forum, la commission correspondante apparaît ici." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

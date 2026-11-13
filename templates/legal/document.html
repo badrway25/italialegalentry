@@ -1,0 +1,102 @@
+{% extends "base.html" %}{% load i18n static legal_links %}
+{% comment %}
+The five legal pages: the official Italian text when it has been transmitted (gate G1), else a notice that says so —
+never a provisional text.
+
+Design V5.4 (W3-F2 — the content pages, static/css/v5/_lettura.css through cms/lettura.css): D26 «the grammar of a
+legal page» as layout slots, with the headings verbatim (the official text's own; the reader's questions are the
+owner's copy, B1 item 7): the head at the reading edge with the verification line where a date exists (the effective
+date and the version); the text as long-form prose at the reading measure; the one inset — the courtesy translation
+with its notice, or, while the text is awaited, the notice that says so (its address is the page's «who can help
+me»); then «who can help me» in live words. The markup the i18n tests pin is kept (`container legal-page`,
+`legal-page__meta`, `data-gate="legal-blocked"`).
+The trail, as on every page of the area (the view gives none: the breadcrumbs component's markup, Accueil › the page;
+the review's m3). The title's language is said where it is not the page's (WCAG 3.1.2; the accessibility check's A4):
+the official Italian title, or the policy's English name («Privacy Policy», «Cookie Policy», kept in the original in
+every language) — as a run of its own, `<span lang dir="ltr">`, so the h1 keeps the page's direction and its reading
+edge (the pattern of `{% locked_title %}`).
+V5.14 (privacy lane): the privacy notice (A) and the cookie information (B) are written from the verified processing
+and carry courtesy translations. On /fr/, /en/, /ar/ the page shows the translation in the page's language
+(`data-courtesy-translation`), its «the Italian prevails» notice in the meta line (`data-italian-prevails`) and a link
+to the Italian master (`data-italian-version`); on /it/ the master. In a preview only, an open field
+«[DA COMPLETARE …]» is highlighted (`mark.legal-open-field`, with its V5.16 class in `data-open-field-class`) under a
+notice listing the open fields by class; production
+never shows such a text (legal.models.open_fields_allowed). The body is escaped blocks (legal.rendering).
+V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION (lane A, 12 Nov 2026) — «il documento»: the text at the reading edge and,
+from 64 rem, its own headings as a sticky «Sommaire de la page» (the view anchors each h2, legal.views; the library's
+scroll-spy marks the part in view), folded into one native disclosure under 64 rem; an awaited text lists the legal texts
+already published (legal_links: published only, never itself). Route sheet legal/legale.css after the content sheet.
+{% endcomment %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_title }} — Italy Legal Entry™{% endblock %}
+{% block body_class %}page-legal lettura{% endblock %}
+{% block breadcrumbs %}{% if translation %}{% firstof site.lang as title_lang %}{% elif available and document.title_it %}{% firstof "it" as title_lang %}{% elif kind == "privacy" or kind == "cookies" %}{% firstof "en" as title_lang %}{% endif %}
+<nav class="breadcrumbs container" aria-label="{% translate 'Fil d’Ariane' %}">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item"><a href="{% url 'pages:home' %}">{% translate "Accueil" %}</a></li>
+    <li class="breadcrumbs__item" aria-current="page"><span{% if title_lang and title_lang != site.lang %} lang="{{ title_lang }}"{% endif %}>{{ page_title }}</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}{% if translation %}{% firstof site.lang as title_lang %}{% elif available and document.title_it %}{% firstof "it" as title_lang %}{% elif kind == "privacy" or kind == "cookies" %}{% firstof "en" as title_lang %}{% elif available %}{% firstof site.lang as title_lang %}{% endif %}
+<article class="container legal-page"{% if translation %} lang="{{ site.lang }}" data-courtesy-translation{% elif available %} lang="it"{% endif %}>
+  <header class="page-header legal-page__header">
+    <h1 class="page-header__title">{% if title_lang and title_lang != site.lang %}<span lang="{{ title_lang }}" dir="ltr">{{ page_title }}</span>{% elif title_lang %}<span lang="{{ title_lang }}">{{ page_title }}</span>{% else %}{{ page_title }}{% endif %}</h1>
+    {% if translation %}
+      <p class="legal-page__meta" lang="{{ site.lang }}" data-italian-prevails>{{ translation.notice }}{% if document.effective_date %} · {{ document.effective_date|date:"d.m.Y" }}{% endif %} · v{{ document.version }}{% if translation_pending %} · <span data-translation-pending>{{ translation.pending }}</span>{% endif %}</p>
+    {% elif available %}
+      <p class="legal-page__meta" lang="{{ site.lang }}">{% translate "Version officielle en italien" %}{% if document.effective_date %} · {% translate "en vigueur depuis le" %} {{ document.effective_date|date:"d.m.Y" }}{% endif %} · v{{ document.version }}</p>
+    {% endif %}
+  </header>
+  {% if available %}
+  <div class="legale">
+    {% if toc|length > 1 %}<nav class="legale__indice" aria-labelledby="legale-indice-title" data-sec-js="spia">
+      <details class="legale__piega"><summary class="legale__sommario" id="legale-indice-title" lang="{{ site.lang }}">{% translate "Sommaire de la page" %}</summary>
+        <ol class="legale__voci" role="list">{% for entry in toc %}<li><a class="legale__voce" href="#{{ entry.id }}">{{ entry.html }}</a></li>{% endfor %}</ol>
+      </details>
+    </nav>{% endif %}
+    <div class="legale__testo">
+    {% if open_fields %}
+    <div class="notice legal-page__open-fields" role="status" lang="it" dir="ltr" data-open-fields="{{ open_fields|length }}">
+      <p class="notice__title">Anteprima — campi da completare prima della pubblicazione: {{ open_fields|join:", " }}</p>
+      <div class="notice__body">
+        <ul>{% for label, ids in open_field_classes %}<li data-open-field-class-list>{{ label }}: {{ ids|join:", " }}</li>{% endfor %}</ul>
+        <p>In produzione questo testo non può essere pubblicato finché ogni «[DA COMPLETARE …]» evidenziato non è sostituito dal dato verificato, qualunque sia la sua classe.</p>
+      </div>
+    </div>
+    {% endif %}
+    <div class="legal-page__body prose">
+      {% for block in blocks %}{% if block.kind == "h2" %}<h2{% if block.id %} id="{{ block.id }}"{% endif %}>{{ block.html }}</h2>{% elif block.kind == "h3" %}<h3>{{ block.html }}</h3>{% elif block.kind == "ul" %}<ul>{% for item in block.items %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>{{ block.html }}</p>{% endif %}{% endfor %}
+    </div>
+    {% if translation %}{% language "it" %}{% url document.url_name as italian_url %}{% endlanguage %}
+    <p class="legal-page__original"><a href="{{ italian_url }}" hreflang="it" data-italian-version>{{ translation.italian_link }}</a></p>
+    {% endif %}
+    {% if courtesy %}
+    <aside class="legal-page__courtesy inset" lang="fr" aria-labelledby="courtesy-title">
+      <p class="legal-page__courtesy-notice" id="courtesy-title"><strong>{{ courtesy_notice }}</strong></p>
+      <h2>{{ courtesy.title }}</h2>
+      {% if courtesy.intro %}<p>{{ courtesy.intro }}</p>{% endif %}
+      {% for section in courtesy.sections %}{% if section.heading %}<h3>{{ section.heading }}</h3>{% endif %}<p>{{ section.body }}</p>{% endfor %}
+    </aside>
+    {% endif %}
+    <p class="aiuto legal-page__help" lang="{{ site.lang }}">{% translate "Besoin d’aide ? Écrivez-nous :" %} <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+    </div>
+  </div>
+  {% else %}
+    <div class="notice notice--pending legal-page__pending" role="status" data-gate="legal-blocked">
+      {% with notice_kind="pending" %}{% svg_icon notice_kind|concept:"notice" "icon notice__icon" %}{% endwith %}
+      <p class="notice__title">{% translate "Page en cours de préparation." %}</p>
+      <div class="notice__body">
+        <p>{% translate "Le texte officiel de cette page (version italienne) sera publié dès sa transmission. Aucun texte provisoire n’est affiché." %}</p>
+        <p><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      </div>
+    </div>
+    {# V5.32 (lane A): while this text is awaited, the legal texts already published stay one step away (the footer's own list, legal_links: published pages only) #}
+    {% legal_links as published %}{% if published %}<nav class="legale-altri" aria-labelledby="legale-altri-title">
+      <h2 class="legale-altri__titolo t-label" id="legale-altri-title">{% translate "Informations légales" %}</h2>
+      <ul class="legale-altri__lista" role="list">{% for row in published %}{% if row.kind != kind %}<li><a class="legale-altri__link" href="{{ row.url }}"{% if row.lang %} lang="{{ row.lang }}"{% endif %}><span>{{ row.label }}</span>{% svg_icon "arrow" "icon icon--sm" %}</a></li>{% endif %}{% endfor %}</ul>
+    </nav>{% endif %}
+  {% endif %}
+</article>
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/cms/lettura.css' %}"><link rel="stylesheet" href="{% static 'css/dist/legal/legale.css' %}">{% endblock %}

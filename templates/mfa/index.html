@@ -1,0 +1,121 @@
+{% extends "mfa/base_manage.html" %}
+{% load allauth i18n ile_forms %}
+{% comment %}
+THE SECOND FACTOR (V5.18 P-2, lane B) — allauth's mfa/index.html, recomposed; the flows, the URLs and allauth's own
+words are unchanged (activation, deactivation, recovery codes: allauth's views and forms).
+The authenticator app's block adapts 21st «Enable 2FA Card» (id 5751; also «Two-Factor Authentication Card», 29246),
+in ILE tokens and without React: the security glyph in the system's glyph tile (`shield`, `shield-check` once it is on —
+apps/core/icons.py; the profile's «Sécurité du compte» says the same), the block's title with its STATE CHIP (the
+profile's words «activée» / «non activée», the system's registers, never a colour alone), allauth's sentence, then —
+while the app is not active — the three numbered steps the activation asks for (install an app, scan the code, enter
+the code) on one hairline route, and the one primary «Activer». The steps' six sentences are new msgids: until lane D's
+catalogue pass a sentence still in its French source says so (`ui_lang`: lang="fr", dir="auto" — WCAG 3.1.2). Once it is on, the steps give way to the deactivation
+(the system's danger button; allauth's confirmation follows). Rules: static/css/v5/_servizio.css («the second
+factor»), through cms/servizio.css.
+{% endcomment %}
+{% block head_title %}
+    {% trans "Two-Factor Authentication" %}
+{% endblock head_title %}
+{% block content %}
+    {% element h1 tags="mfa,index" %}
+        {% trans "Two-Factor Authentication" %}
+    {% endelement %}
+    {% if "totp" in MFA_SUPPORTED_TYPES %}
+    {% glyph_assets %}
+    {% url 'mfa_deactivate_totp' as deactivate_url %}{% url 'mfa_activate_totp' as activate_url %}
+    <section class="account-panel tfa{% if authenticators.totp %} tfa--on{% endif %}" aria-labelledby="tfa-totp-title">
+      <div class="tfa__head">
+        <span class="glyph-tile glyph-tile--lg tfa__tile" aria-hidden="true">{% if authenticators.totp %}{% svg_icon "shield-check" "icon" %}{% else %}{% svg_icon "shield" "icon" %}{% endif %}</span>
+        <div class="tfa__words">
+          <h2 class="account-panel__title tfa__title" id="tfa-totp-title"><span>{% translate "Authenticator App" %}</span> {% if authenticators.totp %}{% chip register="conforme" %}{% translate "activée" %}{% endchip %}{% else %}{% chip register="neutro" %}{% translate "non activée" %}{% endchip %}{% endif %}</h2>
+          <p class="account-page__text tfa__text">{% if authenticators.totp %}{% translate "Authentication using an authenticator app is active." %}{% else %}{% translate "An authenticator app is not active." %}{% endif %}</p>
+        </div>
+      </div>
+      {% if not authenticators.totp %}
+      <ol class="tfa-steps" role="list">
+        <li class="tfa-steps__step"><span class="tfa-steps__n" aria-hidden="true">1</span><div class="tfa-steps__words"><p class="tfa-steps__title"{% ui_lang "Installez une application d’authentification" %} dir="auto">{% translate "Installez une application d’authentification" %}</p><p class="tfa-steps__text"{% ui_lang "Sur votre téléphone, une application qui génère des codes à usage unique." %} dir="auto">{% translate "Sur votre téléphone, une application qui génère des codes à usage unique." %}</p></div></li>
+        <li class="tfa-steps__step"><span class="tfa-steps__n" aria-hidden="true">2</span><div class="tfa-steps__words"><p class="tfa-steps__title"{% ui_lang "Scannez le code QR" %} dir="auto">{% translate "Scannez le code QR" %}</p><p class="tfa-steps__text"{% ui_lang "La page d’activation affiche un code QR propre à votre compte : l’application l’enregistre." %} dir="auto">{% translate "La page d’activation affiche un code QR propre à votre compte : l’application l’enregistre." %}</p></div></li>
+        <li class="tfa-steps__step"><span class="tfa-steps__n" aria-hidden="true">3</span><div class="tfa-steps__words"><p class="tfa-steps__title"{% ui_lang "Saisissez le code" %} dir="auto">{% translate "Saisissez le code" %}</p><p class="tfa-steps__text"{% ui_lang "Le code affiché par l’application confirme l’activation." %} dir="auto">{% translate "Le code affiché par l’application confirme l’activation." %}</p></div></li>
+      </ol>
+      {% endif %}
+      <ul class="account-panel__actions" role="list">
+        <li>{% if authenticators.totp %}{% element button href=deactivate_url tags="danger,delete,panel" %}{% translate "Deactivate" %}{% endelement %}{% else %}{% element button href=activate_url tags="panel" %}{% translate "Activate" %}{% endelement %}{% endif %}</li>
+      </ul>
+    </section>
+    {% endif %}
+    {% if "webauthn" in MFA_SUPPORTED_TYPES %}
+        {% element panel %}
+            {% slot title %}
+                {% translate "Security Keys" %}
+            {% endslot %}
+            {% slot body %}
+                {% if authenticators.webauthn|length %}
+                    {% element p %}
+                        {% blocktranslate count count=authenticators.webauthn|length %}You have added {{ count }} security key.{% plural %}You have added {{ count }} security keys.{% endblocktranslate %}
+                    {% endelement %}
+                {% else %}
+                    {% element p %}
+                        {% translate "No security keys have been added." %}
+                    {% endelement %}
+                {% endif %}
+            {% endslot %}
+            {% slot actions %}
+                {% if authenticators.webauthn|length %}
+                    {% url 'mfa_list_webauthn' as webauthn_list_url %}
+                    {% element button href=webauthn_list_url %}
+                        {% translate "Manage" %}
+                    {% endelement %}
+                {% else %}
+                    {% url 'mfa_add_webauthn' as webauthn_add_url %}
+                    {% element button href=webauthn_add_url %}
+                        {% translate "Add" %}
+                    {% endelement %}
+                {% endif %}
+            {% endslot %}
+        {% endelement %}
+    {% endif %}
+    {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
+        {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
+            {% element panel %}
+                {% slot title %}
+                    {% translate "Recovery Codes" %}
+                {% endslot %}
+                {% slot body %}
+                    {% if authenticators.recovery_codes %}
+                        {% element p %}
+                            {% blocktranslate count unused_count=unused_count %}There is {{ unused_count }} out of {{ total_count }} recovery codes available.{% plural %}There are {{ unused_count }} out of {{ total_count }} recovery codes available.{% endblocktranslate %}
+                        {% endelement %}
+                    {% else %}
+                        {% element p %}
+                            {% translate "No recovery codes set up." %}
+                        {% endelement %}
+                    {% endif %}
+                {% endslot %}
+                {% if is_mfa_enabled %}
+                    {% if authenticators.recovery_codes %}
+                        {% if unused_count > 0 and not MFA_RECOVERY_CODES_SHOW_ONCE %}
+                            {% slot actions %}
+                                {% url 'mfa_view_recovery_codes' as view_url %}
+                                {% element button href=view_url tags="panel" %}
+                                    {% translate "View" %}
+                                {% endelement %}
+                            {% endslot %}
+                            {% slot actions %}
+                                {% url 'mfa_download_recovery_codes' as download_url %}
+                                {% element button href=download_url tags="secondary,panel" %}
+                                    {% translate "Download" %}
+                                {% endelement %}
+                            {% endslot %}
+                        {% endif %}
+                    {% endif %}
+                    {% slot actions %}
+                        {% url 'mfa_generate_recovery_codes' as generate_url %}
+                        {% element button href=generate_url tags="secondary,panel" %}
+                            {% translate "Generate" %}
+                        {% endelement %}
+                    {% endslot %}
+                {% endif %}
+            {% endelement %}
+        {% endwith %}
+    {% endif %}
+{% endblock content %}

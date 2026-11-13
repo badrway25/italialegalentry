@@ -1,0 +1,20 @@
+{% load i18n ile_core %}{% comment %}
+THE DATE — day / month / year (V5.12 W2, lane B; DECISIONS §5.8; 21st.dev «Calendar» 34713, its look only: no custom
+calendar grid). In that order in all four languages; the Arabic field runs right to left with its own words.
+
+Progressive by construction: the server renders the NATIVE date input inside the field — with the script off it is
+the browser's own control, and the form submits what it always did. static/js/src/fieldcheck.js turns it into three
+segmented inputs (`inputmode="numeric"`, 2 / 2 / 4 digits, the focus moving on when a segment is full and back on
+Backspace in an empty one) inside a fieldset whose legend is the label, and keeps the native input as the hidden ISO
+value (YYYY-MM-DD) the form submits. An incomplete or impossible date is said in the server's own words
+(`data-msg-type`, DateField's «invalid»). Contract: `field` (a BoundField of a DateField or a DateInput), `ui` (the
+field_ui of form_field.html), optional `help`, `label_lang`.
+{% endcomment %}<div class="form-field{% if field.errors %} form-field--error{% endif %} form-field--date{% if field.field.required %} form-field--required{% else %} form-field--optional{% endif %}" id="wrap_{{ field.id_for_label }}" data-field data-date data-label-day="{% translate 'Jour' %}" data-label-month="{% translate 'Mois' %}" data-label-year="{% translate 'Année' %}"{% for key, text in ui.messages.items %} data-msg-{{ key }}="{{ text }}"{% endfor %}>
+  {% include "components/_field_label.html" with for_id=field.id_for_label label=field.label optional=ui.optional lang=label_lang %}
+  <div class="form-field__control date-field" data-date-control>
+    {{ field }}
+    <span class="form-field__status" aria-hidden="true">{% if field.errors %}{% svg_icon "circle-alert" "icon" %}{% endif %}</span>
+  </div>
+  {% if help %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ help }}</div>{% elif field.help_text %}<div class="form-field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</div>{% endif %}
+  {% include "components/_field_msg.html" with errors=field.errors error_id=field.auto_id|add:"_error" %}
+</div>

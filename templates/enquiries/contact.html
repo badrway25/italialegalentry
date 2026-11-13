@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% load i18n static %}
+{% comment %}
+The contact form (gate G2; the form, its consent, honeypot, throttle and recipient are the enquiries app's and stay as
+they are). V5.32 (lane D, 12 Nov 2026): the contact page carries the form itself (templates/pages/contact.html); this
+page is where a submission with errors comes back, and the no-script path. It speaks the contact page's language —
+«lo sportello» (pages/css/contatto.css): the head at the reading edge, the address beside the form's raised sheet
+(enquiries/partials/sportello_form.html: the system's fields — 16 px, an error said by its edge, its mark and its words,
+wired with aria-describedby, never by colour alone — and the error summary on top), the one primary.
+{% endcomment %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+{% block body_class %}page-enquiries page-enquiries--contact{% endblock %}
+{% block breadcrumbs %}{% include "components/breadcrumbs.html" %}{% endblock %}
+{% block content %}
+<article class="enquiry-page enquiry-page--contact">
+  <header class="sportello-testa container">
+    <p class="sportello-testa__label t-label">{% translate "Contact" %}</p>
+    <h1 class="sportello-testa__titolo">{{ page_title }}</h1>
+    <p class="sportello-testa__lead">{% translate "Pour toute question sur le projet, utilisez ce formulaire ou écrivez directement à l’adresse ci-dessous." %}</p>
+  </header>
+  <section class="sportello">
+    <div class="container sportello__griglia">
+      <div class="sportello__canali">
+        <ul class="sportello__lista" role="list">
+          <li class="sportello-canale">
+            <span class="sportello-canale__disc" aria-hidden="true">{% chapter_mark "contact-email-title" "icon" %}</span>
+            <div class="sportello-canale__corpo">
+              <p class="sportello-canale__tipo t-label" id="contact-email-title">{% translate "Par e-mail" %}</p>
+              <p class="sportello-canale__valore"><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="sportello__modulo" id="formulaire">
+        <h2 class="sportello__titolo" id="contact-form-title">{% translate "Votre message" %}</h2>
+        {% include "enquiries/partials/sportello_form.html" with form=form action="" %}
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dist/pages/css/contatto.css' %}">{% endblock %}

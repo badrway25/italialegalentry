@@ -1,0 +1,5 @@
+{% comment %}
+OptionCard (design V4) is now the form system's choice cards (V5.12 W2, DECISIONS §5.6): this name stays for its
+callers (portal/situation.html, the dev showcase) and draws components/choice_cards.html — one component, one drawing.
+Contract: as choice_cards.html (`field`, optional `ordinal`).
+{% endcomment %}{% include "components/choice_cards.html" with field=field ordinal=ordinal %}

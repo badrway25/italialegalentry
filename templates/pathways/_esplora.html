@@ -1,0 +1,39 @@
+{% load i18n %}{% comment %}
+«L'ESPLORATORE» — the eight regular pathways as an exploration (V5.32, lane B; the owner's GLOBAL SITE + PLATFORM DESIGN
+COMPLETION, 12 Nov 2026). 21st.dev «Project Index» / «Interactive List Preview» (a row reveals its cover), adapted
+to vanilla HTML/CSS and one small module (static/js/src/esplora.js): a static preview column that follows the focus
+as well as the pointer, no cursor-follow, no blend inversion; never the home's pathway explorer.
+  * the families are the navigation: each its name over its pathways, in the prescribed order (no numbering — the order
+    is the rows'); a row is the LINK to its sheet (a pathway whose sheet is not live yet stands without a link: never a
+    link to a 404), its locked title and line, its photograph as a thumbnail (decorative: the words name it);
+  * from 64 rem with script, one sticky preview beside the rows: pointing at a row, or focusing it, shows that
+    pathway — its photograph (or, for family reunification, its semantic plate: no rights-safe family photograph), its
+    family, its title and line, the actors its own sheet lists (verified rows, never invented), the way to the sheet.
+    The rows keep their lines for a screen reader (visually hidden there); the preview repeats them for the eye and is
+    hidden from assistive technology (its link leaves the tab order: the row is the link);
+  * a pathway whose sheet is not live is listed without a link and without a word about it (V5.12 §8: never
+    «in preparation»); each family's rows are a register (`data-registro`: their glyphs all or none);
+  * below 64 rem, and without script, there is no preview: every row shows its line and its thumbnail.
+Contract: `families` (pathways.services.explorer).
+{% endcomment %}<div class="esplora" data-esplora data-pathways="{{ counts.all }}">
+  <div class="esplora__indice">
+    {% for fam in families %}<div class="esplora__famiglia" data-family="{{ fam.key }}">
+      <h3 class="esplora__famiglia-nome t-label" id="famille-{{ fam.key }}">{{ fam.label }}</h3>
+      <ul class="esplora__voci" role="list" aria-labelledby="famille-{{ fam.key }}" data-registro>
+        {% for item in fam.items %}<li class="esplora__voce" data-pathway="{{ item.key }}" data-family="{{ fam.key }}">{% if item.url %}<a class="esplora__link" href="{{ item.url }}" data-esplora-voce="{{ item.key }}">{% else %}<div class="esplora__link esplora__link--attesa" data-esplora-voce="{{ item.key }}">{% endif %}{% if item.thumb %}{% include "pathways/_frame.html" with p=item.thumb cls="esplora__miniatura" decorative=True only %}{% else %}<span class="esplora__miniatura esplora__miniatura--piastra" aria-hidden="true">{% svg_icon item.glyph "icon" %}</span>{% endif %}<span class="esplora__testi"><span class="esplora__titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</span>{% if item.line %}<span class="esplora__riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</span>{% endif %}</span>{% if item.url %}<span class="esplora__freccia" aria-hidden="true">{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</span></a>{% else %}</div>{% endif %}</li>{% endfor %}
+      </ul>
+    </div>{% endfor %}
+  </div>
+  <div class="esplora__anteprime" aria-hidden="true">
+    {% for fam in families %}{% for item in fam.items %}<article class="esplora__anteprima" data-esplora-anteprima="{{ item.key }}" data-family="{{ fam.key }}"{% if not forloop.parentloop.first or not forloop.first %} hidden{% endif %}>
+      {% if item.frame %}{% include "pathways/_frame.html" with p=item.frame cls="esplora__foto" decorative=True only %}{% else %}<div class="esplora__foto esplora__foto--piastra" data-family="{{ fam.key }}">{% svg_icon item.glyph "icon esplora__segno" %}</div>{% endif %}
+      <div class="esplora__corpo">
+        <p class="esplora__a-famiglia t-label">{{ fam.label }}</p>
+        <p class="esplora__a-titolo"{% if item.lang %} lang="{{ item.lang }}"{% endif %}>{{ item.title }}</p>
+        {% if item.line %}<p class="esplora__a-riga"{% if item.line_lang %} lang="{{ item.line_lang }}"{% endif %}>{{ item.line }}</p>{% endif %}
+        {% if item.actors %}<div class="esplora__attori"><p class="esplora__a-label">{% translate "Acteurs généralement concernés" %}</p><ul class="esplora__attori-lista" role="list">{% for a in item.actors %}<li{% if a.lang %} lang="{{ a.lang }}"{% endif %}>{{ a.name }}</li>{% endfor %}</ul></div>{% endif %}
+        {% if item.url %}<p class="esplora__a-azione"><a class="btn btn--secondary" href="{{ item.url }}" tabindex="-1">{% translate "Ouvrir la fiche" %}</a></p>{% endif %}
+      </div>
+    </article>{% endfor %}{% endfor %}
+  </div>
+</div>

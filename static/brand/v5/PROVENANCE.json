@@ -1,0 +1,374 @@
+{
+ "what": "The home hero's door photograph (V5.4 W2-D): the door-master derivatives served by templates/pages/home/_hero.html, copied byte for byte from C:/tmp/ile_v5_council/proof/research/hero/door-master/ (never re-encoded, never upscaled).",
+ "source": {
+  "what": "The door photograph (the owner's arch photograph, docs/IMAGE_LICENSES.md section 7.1): the arch strip, AVIF + WebP, cut without upscaling.",
+  "built": "2026-10-02 20:19:29",
+  "builder": "tools/build_derivatives.py - Python 3.13.5, Pillow 12.3.0",
+  "source_master": {
+   "file": "source/arch-photo-cdn-native-4765x3177.png",
+   "width": 4765,
+   "height": 3177,
+   "sha256": "49cad28823d2e63ee5c32ee92c8d22e8f445c3469cee3fbe7e2cddb98c6a53f5",
+   "bytes": 24230344,
+   "origin": "https://images.unsplash.com/photo-1525874684015-58379d421a52?fm=png (the CDN family the previous site hotlinks; native size per its fm=json metadata; fetched once, 2 Oct 2026; never requested at runtime)",
+   "icc_profile": "Adobe RGB (1998)"
+  },
+  "strip": {
+   "definition": "the central 50 % of the width, full height - the region static/brand/v2/doorway-arch-400.webp covers",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_master_px_max_native": [
+    1191,
+    0,
+    3574,
+    3177
+   ],
+   "native_strip_px": [
+    2383,
+    3177
+   ],
+   "registration": "the served 400 x 533 file is reproduced byte for byte from doorway-1200.webp[300:900, 0:800]; error 0 px by construction, <= 0.004 native px by fit (see DOOR_MASTER.md)"
+  },
+  "colour": "as served: the master's Adobe RGB numbers, no embedded profile - the same rendering as today's doorway-arch-400.webp; no grade, no vignette (CSS/SVG applies them)"
+ },
+ "rights": "The owner's arch photograph (docs/IMAGE_LICENSES.md section 7.1). Its rights record is an owner action before anything goes remote (V5.4 plan §1.18 D22).",
+ "files": [
+  {
+   "file": "doorway-arch-400.avif",
+   "format": "avif",
+   "width": 400,
+   "height": 533,
+   "bytes": 33418,
+   "sha256": "5f14b498a9f7dcc61a88e73a82a92679e74145133f65a656379b28473e099352",
+   "quality": 62,
+   "encoder": "libavif 1.4.2 (aom) speed 4, 4:2:0",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.16789,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 34.82,
+    "ssim_luma": 0.9606,
+    "ssim_in_situ_1to1": 0.9802,
+    "psnr_in_situ_1to1_db": 41.95,
+    "bits_per_pixel": 1.254
+   }
+  },
+  {
+   "file": "doorway-arch-400.webp",
+   "format": "webp",
+   "width": 400,
+   "height": 533,
+   "bytes": 44008,
+   "sha256": "ebaeb03fca812ca26c6d713b4efb0da4039c9876996fa4e20588b4aef9b61f8d",
+   "quality": 78,
+   "encoder": "libwebp 1.6.0 method 6",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.16789,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 36.16,
+    "ssim_luma": 0.9688,
+    "ssim_in_situ_1to1": 0.9848,
+    "psnr_in_situ_1to1_db": 43.33,
+    "bits_per_pixel": 1.651
+   }
+  },
+  {
+   "file": "doorway-arch-576.avif",
+   "format": "avif",
+   "width": 576,
+   "height": 768,
+   "bytes": 47115,
+   "sha256": "d6ad66dde445f32c41e22e39ca39f5878954e7a5f8054aec4384e4d893276129",
+   "quality": 54,
+   "encoder": "libavif 1.4.2 (aom) speed 4, 4:2:0",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.24176,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 32.95,
+    "ssim_luma": 0.9355,
+    "ssim_in_situ_1to1": 0.9688,
+    "psnr_in_situ_1to1_db": 40.1,
+    "bits_per_pixel": 0.852
+   }
+  },
+  {
+   "file": "doorway-arch-576.webp",
+   "format": "webp",
+   "width": 576,
+   "height": 768,
+   "bytes": 58534,
+   "sha256": "81679248e5513dda2eab965ba1b4e51dc405ae58d1d272bb795f0e66a70becfd",
+   "quality": 58,
+   "encoder": "libwebp 1.6.0 method 6",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.24176,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 33.56,
+    "ssim_luma": 0.9404,
+    "ssim_in_situ_1to1": 0.9719,
+    "psnr_in_situ_1to1_db": 40.78,
+    "bits_per_pixel": 1.059
+   }
+  },
+  {
+   "file": "doorway-arch-800.avif",
+   "format": "avif",
+   "width": 800,
+   "height": 1067,
+   "bytes": 61586,
+   "sha256": "c68232e792e1d911c5a3f8d2bce525903c9ae9ec2940f285e9f1e3b1998f2f92",
+   "quality": 46,
+   "encoder": "libavif 1.4.2 (aom) speed 4, 4:2:0",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.33578,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 31.58,
+    "ssim_luma": 0.9064,
+    "ssim_in_situ_1to1": 0.9556,
+    "psnr_in_situ_1to1_db": 38.76,
+    "bits_per_pixel": 0.577
+   }
+  },
+  {
+   "file": "doorway-arch-800.webp",
+   "format": "webp",
+   "width": 800,
+   "height": 1067,
+   "bytes": 91992,
+   "sha256": "4ede8b9476edbcfaffefda07e31a97d01e043f6f34901635c9f54f138265de9c",
+   "quality": 50,
+   "encoder": "libwebp 1.6.0 method 6",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.33578,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 33.05,
+    "ssim_luma": 0.9243,
+    "ssim_in_situ_1to1": 0.966,
+    "psnr_in_situ_1to1_db": 40.29,
+    "bits_per_pixel": 0.862
+   }
+  },
+  {
+   "file": "doorway-arch-960.avif",
+   "format": "avif",
+   "width": 960,
+   "height": 1280,
+   "bytes": 84364,
+   "sha256": "8f97dfd214e354570a6d3be138e2436aecc0e6e4b5a0054cf9331060430af40f",
+   "quality": 46,
+   "encoder": "libavif 1.4.2 (aom) speed 4, 4:2:0",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.40294,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 31.94,
+    "ssim_luma": 0.9059,
+    "ssim_in_situ_1to1": 0.9569,
+    "psnr_in_situ_1to1_db": 39.14,
+    "bits_per_pixel": 0.549
+   }
+  },
+  {
+   "file": "doorway-arch-960.webp",
+   "format": "webp",
+   "width": 960,
+   "height": 1280,
+   "bytes": 116700,
+   "sha256": "0de337c3eafa460ddddc7ffaa12a1be02b2a853be8155590007e34c1793a1cd5",
+   "quality": 46,
+   "encoder": "libwebp 1.6.0 method 6",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.40294,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 32.82,
+    "ssim_luma": 0.9133,
+    "ssim_in_situ_1to1": 0.9622,
+    "psnr_in_situ_1to1_db": 40.06,
+    "bits_per_pixel": 0.76
+   }
+  },
+  {
+   "file": "doorway-arch-1200.avif",
+   "format": "avif",
+   "width": 1200,
+   "height": 1600,
+   "bytes": 104079,
+   "sha256": "deab693b458e6402ec4b8cf4b9eac34c398b1a1457c47e2379e8e3294474de65",
+   "quality": 42,
+   "encoder": "libavif 1.4.2 (aom) speed 4, 4:2:0",
+   "source_master": "source/arch-photo-cdn-native-4765x3177.png",
+   "crop_box_master_px": [
+    1191.25,
+    0.0,
+    3573.75,
+    3177.0
+   ],
+   "crop_box_percent": [
+    25.0,
+    0.0,
+    75.0,
+    100.0
+   ],
+   "resampling": "LANCZOS",
+   "scale_from_master": 0.50367,
+   "upscaled": false,
+   "embedded_icc_profile": false,
+   "within_120kb_per_viewport": true,
+   "in_recommended_srcset": true,
+   "fidelity": {
+    "reference": "lossless LANCZOS cut of the master at the same size",
+    "psnr_luma_db": 31.47,
+    "ssim_luma": 0.8887,
+    "ssim_in_situ_1to1": 0.9503,
+    "psnr_in_situ_1to1_db": 38.68,
+    "bits_per_pixel": 0.434
+   }
+  }
+ ]
+}

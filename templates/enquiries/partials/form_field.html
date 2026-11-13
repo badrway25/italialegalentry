@@ -1,0 +1,6 @@
+{% comment %}
+The enquiry forms' field — a thin adapter of THE field (components/form_field.html; V5.12 W2, DECISIONS §5.1): one
+anatomy, one drawing. The locked label rendered in fallback French while the official translation is missing (gate
+G10) keeps its `lang`: the form sets `field.field.label_lang`, which the partial reads.
+Contract: include with `field` (a BoundField).
+{% endcomment %}{% include "components/form_field.html" with field=field %}

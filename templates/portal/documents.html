@@ -1,0 +1,157 @@
+{% extends "portal/base_portal.html" %}{% load i18n static documents_register %}
+{% comment %}
+«MES PIÈCES» in the reserved area — design V5, the document workspace V5.2 (docs/design-v5/V5_4_EXECUTION_PLAN.md
+§3.5 item 5; DOCUMENT_WORKSPACE.md §0; W3-C), on the console's page frame (W3-A). Rules: the documents page sheet
+(apps/documents/static/documents/documents.css) and the console partials it imports.
+
+  the page header   the locked title and its line of context (on a phone the line stays for assistive technology
+                    only: the first screen is for the pieces — W-1). No action here: the page's ONE primary is in the
+                    register strip, with its piece and its date
+  the register      documents/partials/register.html — the presenter and the authorisation the requirement pages
+                    share: the strip, the state filter, the collection in three groups
+  the files         the account's own files, then the organisation's for a responsible: real tables, named for what
+                    they are, below the register — a file that answers no requirement with its «Supprimer»; then the
+                    way out to a deposit and, once, the Conditions gate
+
+Contract, from portal.views.documents / portal.services.documents_page: `available`, `may_upload`, `upload_url`,
+`page_obj` (each file with its `delete_url` when it may be deleted), `documents_deletable`, `organisation_documents`,
+`organisation_documents_limit`; the register comes from the register tag (documents.presenters).
+V5.32 correction round (the integration review's P2-11): /documents/ drew this same register under other breadcrumbs;
+it now leads here, and the loose files' «Supprimer» came with it.
+{% endcomment %}
+{% block page_title %}{% translate "Mes documents" %}{% endblock %}
+{% block meta_description %}{% translate "Les pièces demandées dans votre dossier, leur état et la personne responsable." %}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/documents/documents.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/platform.css' %}">{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head doc-head doc-head--register" data-atrium="person">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Mes documents" %}</h1>
+    <p class="ws-head__lead">{% translate "Chaque ligne est une pièce demandée par votre dossier : son état, la personne ou l’institution responsable, et l’échéance lorsqu’il y en a une." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block portal_content %}
+<div class="doc-page">
+{% if not available %}
+  {% translate "Cette rubrique est momentanément indisponible. Vos données ne sont pas affectées." as unavailable_text %}
+  {% include "components/notice.html" with kind="pending" text=unavailable_text %}
+{% else %}
+
+{% register_data as register %}
+{% include "documents/partials/register.html" with register=register request=request %}
+
+{% comment %}
+THE FILES THEMSELVES, below the register: the account's files as a real table — the file name is the link that
+downloads it —, then the organisation's for a responsible. `page_obj` comes from portal.services.documents_page,
+which lists EVERY file of the account, including those already shown above as a version of a piece: the section
+says what it is («tous les fichiers»), never a second register.
+{% endcomment %}
+{% if files_total %}
+<section class="doc-files" aria-labelledby="files-title">
+  <h2 class="doc-files__title" id="files-title">{% translate "Tous les fichiers de votre compte" %}</h2>
+  <p class="doc-files__lead">{% translate "Le registre ci-dessus dit ce que votre dossier attend ; cette liste montre les fichiers eux-mêmes, dans l’ordre de dépôt." %}</p>
+  {% comment %} V5.30 (stream C): the platform's list toolkit — search, type, period, sort, chips (components/listing/;
+  portal.lists.FILES); the register's `?état=` rides along. Narrower than its columns, the table already lays each file out as
+  one item (portal/v5/_table.css, container `docfiles`).
+  V5.32 correction round (P2-11): a file of the account's own that answers no requirement carries «Supprimer» in an
+  «Action» column — drawn when the account has such a file —, described by its file (W-3: n buttons called «Supprimer»
+  said nothing), and asks first (REVIEW m4): it opens the overlay system's alert dialog (`data-overlay-open`,
+  documents/partials/delete_confirm.html) — the file's name in the question, «Annuler» the safe answer, «Supprimer»
+  the garnet outline that sends this row's form. Without script the button posts its form at once. A piece filed
+  against a requirement has no «Supprimer»: evidence in a case file is superseded, never quietly removed
+  (documents.policies). {% endcomment %}
+  {% include "components/listing/toolbar.html" %}
+  {% if page_obj.object_list %}
+  <div class="doc-files__sheet">
+    <table class="doc-files__table">
+      <caption class="visually-hidden">{% translate "Tous les fichiers de votre compte" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Fichier" %}</th>
+          <th scope="col">{% translate "Type" %}</th>
+          <th scope="col">{% translate "Taille" %}</th>
+          <th scope="col">{% translate "Déposé le" %}</th>
+          {% if documents_deletable %}<th scope="col">{% translate "Action" %}</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in page_obj %}
+        <tr>
+          <th scope="row">
+            <span class="doc-files__name" dir="auto"{% if doc.delete_url %} id="loose-{{ doc.pk }}"{% endif %}>{% if doc.url %}<a class="doc-files__link" href="{{ doc.url }}">{{ doc.name }}</a>{% else %}{{ doc.name }}{% endif %}</span>
+            {% if doc.description %}<span class="doc-files__gloss">{{ doc.description }}</span>{% endif %}
+            {% if doc.organisation %}<span class="doc-files__gloss">{{ doc.organisation }}</span>{% endif %}
+          </th>
+          <td>{{ doc.kind_label }}</td>
+          <td>{{ doc.size|filesizeformat }}</td>
+          <td><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
+          {% if documents_deletable %}<td class="doc-files__act">{% if doc.delete_url %}
+            <form method="post" action="{{ doc.delete_url }}" class="doc-files__form" id="loose-delete-{{ doc.pk }}" data-doc-delete="{{ doc.name }}">{% csrf_token %}
+              <button type="submit" class="btn btn--text" aria-describedby="loose-{{ doc.pk }}" data-overlay-open="loose-delete">{% translate "Supprimer" %}</button>
+            </form>
+          {% endif %}</td>{% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "components/pagination.html" with page_obj=page_obj query=listing.page_query %}
+  {% else %}{% include "components/listing/empty.html" %}{% endif %}
+  {% if documents_deletable %}{% translate "Supprimer" as delete_title %}
+  {% include "components/dialog.html" with id="loose-delete" kind="alert" glyph="trash-2" title=delete_title describedby="loose-delete-text" body_template="documents/partials/delete_confirm.html" actions_template="documents/partials/delete_confirm.html" %}{% endif %}
+</section>
+{% endif %}
+
+{% if organisation_documents %}
+<section class="doc-files" aria-labelledby="org-documents-title">
+  <h2 class="doc-files__title" id="org-documents-title">{% translate "Documents de mon organisation" %}</h2>
+  <p class="doc-files__lead">{% translate "En tant que responsable, vous pouvez consulter les documents rattachés à votre organisation par ses membres." %}{% if organisation_documents_limit %} {% blocktranslate with n=organisation_documents_limit %}Seuls les {{ n }} documents les plus récents sont affichés.{% endblocktranslate %}{% endif %}</p>
+  <div class="doc-files__sheet">
+    <table class="doc-files__table">
+      <caption class="visually-hidden">{% translate "Documents de mon organisation" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Document" %}</th>
+          <th scope="col">{% translate "Organisation" %}</th>
+          <th scope="col">{% translate "Type" %}</th>
+          <th scope="col">{% translate "Déposé le" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in organisation_documents %}
+        <tr>
+          <th scope="row"><span class="doc-files__name" dir="auto">{% if doc.url %}<a class="doc-files__link" href="{{ doc.url }}">{{ doc.name }}</a>{% else %}{{ doc.name }}{% endif %}</span></th>
+          <td>{{ doc.organisation }}</td>
+          <td>{{ doc.kind_label }}</td>
+          <td><time datetime="{{ doc.created_at|date:'c' }}">{{ doc.created_at|date:"d.m.Y" }}</time></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% comment %} (V5.18 P-5) With nothing required, the empty register's tile carries this act: said once. (V5.32
+correction round, P2-11) «Registre complet» left: its address now leads to this very page. {% endcomment %}
+{% if may_upload and upload_url and register.blocks %}<p class="doc-aside"><a href="{{ upload_url }}">{% translate "Déposer un fichier hors exigence" %}</a></p>{% endif %}
+
+{% if not may_upload %}
+  {% comment %}
+  The Conditions gate, said once at the foot of the page. It is ALSO carried on each row that it blocks, with the act
+  that resolves it: a banner above an empty box leaves the reader to work out which row it was about.
+  {% endcomment %}
+  {% translate "Le dépôt de fichiers nécessite l’acceptation des Conditions d’utilisation et de la Privacy Policy." as terms_text %}
+  {% include "components/notice.html" with kind="pending" text=terms_text %}
+{% endif %}
+
+{% endif %}
+</div>
+{% comment %} The preview drawer: beside the register on desktop, a sheet on a phone — outside the page it reads again. {% endcomment %}
+{% if available and register.blocks %}{% include "documents/partials/piece_drawer.html" %}{% endif %}
+{% include "components/listing/drawer.html" %}
+{% endblock %}
+{% block extra_scripts %}{{ block.super }}<script type="module" src="{% static 'js/dist/platform.js' %}"></script>{% if listing.show %}<script type="module" src="{% static 'js/dist/listing.js' %}"></script>{% endif %}{% endblock %}

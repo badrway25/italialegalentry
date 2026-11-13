@@ -1,0 +1,134 @@
+/* ============================================================================================
+   THE ESPACE PERSONNES' REGISTER OF LINKS (V5.32, lane B): the space's other pages as one register — each its name, its
+   line when it has one, the arrow; two columns from 48 rem; the help line under it. Replaces the mosaic of identical
+   icon tiles (_sec-mosaico, _persone-v2.css) on /parcours/, Formation and Diplômes (pathways/_spazio.html); since the
+   correction round of the senior integration review (P2-3) on /parcours/ alone — the other pages lead to it from their
+   closing band (_chiusura.css).
+   Tokens of static/css/v5/tokens.css only; logical properties only.
+   ============================================================================================ */
+
+.spazio__griglia {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.spazio__titolo {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: var(--track-band);
+  color: var(--text-1);
+}
+
+.spazio__voci {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.spazio__voci li {
+  border-block-end: 1px solid var(--line-rhythm);
+}
+
+.spazio__voce {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-4) var(--s-2);
+  color: var(--text-1);
+  text-decoration: none;
+  transition: background-color var(--motion-standard) var(--ease-enter);
+}
+
+.spazio__nome {
+  font-size: var(--t-body);
+  font-weight: 500;
+}
+
+.spazio__riga {
+  grid-column: 1;
+  font-size: var(--t-small);
+  color: var(--text-2);
+}
+
+.spazio__riga::first-letter {
+  text-transform: capitalize;
+}
+
+.spazio__freccia {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--accent-text);
+  transition: transform var(--motion-standard) var(--ease-enter);
+}
+
+.spazio__voce:hover {
+  background: var(--surface-raised);
+}
+
+.spazio__voce:hover .spazio__nome {
+  color: var(--accent-text-hover);
+}
+
+.spazio__voce:hover .spazio__freccia {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .spazio__voce:hover .spazio__freccia {
+  transform: translateX(-3px);
+}
+
+.spazio__voce:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.spazio__aiuto {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-inline-size: none;
+  font-size: var(--t-ui);
+  color: var(--text-2);
+}
+
+@media (min-width: 48rem) {
+  .spazio__voci {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-8);
+  }
+}
+
+@media (min-width: 64rem) {
+  .spazio__griglia {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: clamp(var(--s-8), 5vw, var(--s-16));
+  }
+
+  .spazio__aiuto {
+    grid-column: 2;
+  }
+}
+
+.persone-protezione .protezione {
+  margin-inline: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spazio__voce,
+  .spazio__freccia {
+    transition: none;
+  }
+}
+
+/* the space's entrance on /parcours/ in /ar/: an Arabic display title's dots fall below its line box — measured at 1440,
+   the identification caption under it met them; the caption stands clear of the ink (Diplômes carries the same rule in
+   its own sheet since the correction round of the senior integration review, P2-3 — Formation's title is a catalogue
+   string, no caption follows it; a pathway sheet's in _scheda.css) */
+[data-fronte] .ingresso__title:lang(ar) + .locked-caption {
+  margin-block-start: var(--s-4);
+}

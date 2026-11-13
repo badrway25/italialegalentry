@@ -1,0 +1,83 @@
+title: Informativa sui cookie e sulle tecnologie di memorizzazione
+---
+Informativa resa ai sensi delle «Linee guida cookie e altri strumenti di tracciamento» del Garante per la protezione dei dati personali del 10 giugno 2021, dell’art. 122 del D.Lgs. 196/2003 e dell’art. 13 del Regolamento (UE) 2016/679 («GDPR»). Il titolare del trattamento e i suoi dati di contatto sono indicati nell’Informativa sul trattamento dei dati personali.
+
+## 1. In sintesi
+
+Il sito e la piattaforma Italy Legal Entry™ usano solo cookie tecnici di prima parte e alcune memorie locali del browser per lo stato dell’interfaccia. Non usano cookie di profilazione o di marketing, né propri né di terze parti, né strumenti di analisi statistica o di tracciamento.
+
+Le pagine non caricano caratteri, script, immagini, mappe o video da altri siti: nessun soggetto terzo riceve l’indirizzo IP di chi le visita. Per gli strumenti tecnici descritti qui non è richiesto il consenso; per questo il sito non mostra un banner per i cookie.
+
+## 2. Cookie tecnici
+
+### sessionid
+
+- Finalità: mantiene la sessione — l’accesso all’area riservata e la verifica del secondo fattore, il questionario di orientamento in corso, i messaggi di conferma tra una pagina e l’altra.
+- Quando viene impostato: solo quando la sessione serve (accesso, questionario, messaggio di conferma).
+- Durata: senza accesso, fino a 8 ore; dopo l’accesso, fino alla chiusura del browser. Sul server la sessione scade 8 ore dopo l’ultimo aggiornamento.
+- Contenuto: un identificativo casuale; i dati della sessione restano sul server.
+- Tipo: di prima parte; non leggibile dagli script della pagina (HttpOnly), non inviato con le richieste provenienti da altri siti (SameSite=Lax), trasmesso solo su connessione cifrata.
+
+### csrftoken
+
+- Finalità: sicurezza — protegge l’invio dei moduli contro le richieste contraffatte provenienti da altri siti (CSRF).
+- Quando viene impostato: quando si visualizza una pagina che contiene un modulo. Dopo l’accesso anche il pulsante di uscita dall’area riservata è un modulo, quindi il cookie è impostato su ogni pagina.
+- Durata: 52 settimane.
+- Contenuto: un valore casuale di controllo.
+- Tipo: di prima parte; HttpOnly, SameSite=Lax, trasmesso solo su connessione cifrata.
+
+### ile_language
+
+- Finalità: ricorda la lingua di lettura scelta (italiano, francese, inglese o arabo).
+- Quando viene impostato: alla visita di una pagina del sito in una di queste lingue.
+- Durata: 365 giorni.
+- Contenuto: il codice di due lettere della lingua.
+- Tipo: di prima parte; HttpOnly, SameSite=Lax, trasmesso solo su connessione cifrata.
+
+## 3. Memorie locali del browser
+
+Alcune preferenze di visualizzazione sono conservate nella memoria del browser (localStorage o sessionStorage). Questi valori restano sul dispositivo e non sono mai inviati al server. Non contengono identificativi, salvo la cronologia delle ricerche dell’interfaccia di amministrazione (commandHistory), che riporta i testi digitati dal membro del personale e può quindi contenere, per esempio, un nome o un indirizzo e-mail cercato.
+
+### ile.rail (localStorage)
+
+- Finalità: ricorda se il menu laterale dell’area riservata è aperto o chiuso.
+- Durata: finché l’utente non cancella i dati del sito dal browser.
+- Valore: «open» o «closed».
+
+### ile.lume (sessionStorage)
+
+- Finalità: passa alla pagina successiva l’indicazione della transizione in corso (per esempio un cambio di lingua), perché l’animazione di passaggio sia continua.
+- Durata: è letta entro 5 secondi e subito cancellata; in ogni caso scompare alla chiusura della scheda.
+- Valore: il tipo di transizione e l’ora in cui è iniziata.
+
+### ile.hero.discovered (sessionStorage)
+
+- Finalità: fa sì che l’animazione di apertura della pagina iniziale sia mostrata una sola volta per scheda.
+- Durata: fino alla chiusura della scheda.
+- Valore: «1».
+
+### ile.dismissed.<identificativo> (sessionStorage)
+
+- Finalità: ricorda che l’utente ha chiuso un avviso istituzionale, perché non riappaia nella stessa scheda.
+- Durata: fino alla chiusura della scheda.
+- Valore: «1».
+
+### adminTheme (localStorage, solo personale)
+
+- Finalità: ricorda il tema di visualizzazione scelto dal personale nell’interfaccia di amministrazione (chiaro, scuro o automatico).
+- Durata: finché il membro del personale non cancella i dati del sito dal browser.
+- Valore: «light», «dark» o «auto».
+
+### sidebarOpen, sidebarWidth, commandHistory (localStorage, solo personale)
+
+- Finalità: lo stato dell’interfaccia di amministrazione usata dal personale: apertura e larghezza del menu laterale e ultime ricerche effettuate.
+- Durata: finché il membro del personale non cancella i dati del sito dal browser.
+- Valore: preferenze di visualizzazione e testi delle ricerche, che restano sul dispositivo del membro del personale.
+
+## 4. Come gestire cookie e memorie locali
+
+L’utente può in ogni momento gestire o disattivare i cookie e cancellare le memorie locali dalle impostazioni del proprio browser. La disattivazione dei cookie tecnici può tuttavia compromettere alcune funzionalità del sito, per esempio l’accesso all’area riservata.
+
+## 5. Modifiche
+
+Se in futuro fossero introdotti cookie analitici o di terze parti, il sito adotterebbe preventivamente un banner di raccolta del consenso conforme alle Linee guida del Garante e questa informativa sarebbe aggiornata, con l’indicazione della data dell’ultima revisione.

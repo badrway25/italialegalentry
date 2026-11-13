@@ -1,0 +1,19 @@
+{% load i18n %}{% comment %}
+The account's sections (design V5, W3-F2 step 2) — one navigation for every page of «Mon compte», the product's
+(the profile, the deletion request) and allauth's (the e-mail addresses, the password, the second factor). From
+64rem it stands in the chapter head's seat at the reading edge, a list on a rule with the current section on the
+tabs' indicator; below, it is a band of links above the page, as the news' categories are. A section's link is
+`aria-current="page"` on the section's own page, `aria-current="true"` on one of its pages (the deletion request
+in the profile, the authenticator's set-up in the second factor).
+The way to the reserved area and the sign-out are the letterhead's account menu: this list holds the account only.
+Replaces accounts/partials/account_menu.html and the side list of allauth/layouts/manage.html: two lists, two
+drawings, the first one floating over the page's title under the header menu's own class names.
+{% endcomment %}{% safe_url 'accounts:profile' as u_profile %}{% safe_url 'accounts:delete_request' as u_delete %}{% safe_url 'account_email' as u_email %}{% safe_url 'account_change_password' as u_pwd %}{% safe_url 'account_set_password' as u_pwd_set %}{% safe_url 'mfa_index' as u_mfa %}
+<nav class="conto-nav" aria-label="{% translate 'Gestion du compte' %}">
+  <ul class="conto-nav__list">
+    {% if u_profile %}<li><a class="conto-nav__link" href="{{ u_profile }}"{% if request.path == u_profile %} aria-current="page"{% elif request.path == u_delete %} aria-current="true"{% endif %}>{% translate "Profil" %}</a></li>{% endif %}
+    {% if u_email %}<li><a class="conto-nav__link" href="{{ u_email }}"{% if request.path == u_email %} aria-current="page"{% endif %}>{% translate "Adresses e-mail" %}</a></li>{% endif %}
+    {% if u_pwd %}<li><a class="conto-nav__link" href="{{ u_pwd }}"{% if request.path == u_pwd %} aria-current="page"{% elif request.path == u_pwd_set %} aria-current="true"{% endif %}>{% translate "Mot de passe" %}</a></li>{% endif %}
+    {% if u_mfa %}<li><a class="conto-nav__link" href="{{ u_mfa }}"{% if request.path == u_mfa %} aria-current="page"{% elif u_mfa in request.path %} aria-current="true"{% endif %}>{% translate "Authentification à deux facteurs" %}</a></li>{% endif %}
+  </ul>
+</nav>

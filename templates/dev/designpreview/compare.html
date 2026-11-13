@@ -1,0 +1,60 @@
+{% load static cms_nav %}<!DOCTYPE html>
+<html lang="it" dir="ltr" class="dp-frame-root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} · Confronto · Italy Legal Entry™</title>
+<meta name="robots" content="noindex, nofollow">
+{% comment %}
+V5 live preview — the compare view (designpreview.views.compare). DEVELOPMENT ONLY.
+
+Two proof pages of one surface, framed side by side at the same phone width, each in an iframe of
+its own — so each scrolls on its own — under the bar of the pickers. It answers one entry of the
+research consolidation (K5): the two phone versions of «Mes pièces» two lanes built. A standalone
+document for the reason frame.html gives (base.css hides every iframe), loading the same layers;
+the pages it frames are served by designpreview.views.proof with frame-ancestors 'self', and this
+response carries frame-src 'self', per view.
+
+The bar is data (services.compare_view): the way back, the language — a choice whose two pages are
+not both on disk is struck through, and still a link — and, from 48 rem, the line that says what
+is compared and in what order. The two are named by their authors' roles and stand in the order
+they arrived, never in an order of preference: nothing on the page says which one is the
+candidate. The caption of each frame carries the status, so it is drawn at every window width
+(the bar's second line gives way below 48 rem, as in the pickers); a caution that belongs to the
+whole comparison — the Arabic faces — stands above the two frames, at every width too. A page
+that is not on disk is said to be missing where its frame would be. From 54 rem the two frames
+stand side by side, 390 px each; below, one under the other, each as wide as the window allows,
+up to the same 390 px.
+{% endcomment %}
+<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+{% include "dev/designpreview/_stylesheets.html" %}
+</head>
+<body class="dp-frame-page">
+<header class="dp-bar dp-bar--compare" data-dp-bar>
+  <a class="dp-bar__home" href="{% url 'designpreview:hub' %}" aria-label="Anteprima V5 — hub">{% brand_lockup "dark" %}<span class="dp-bar__hub">Hub</span></a>
+  {% include "dev/designpreview/bar_group.html" with group=lang_group %}
+  <p class="dp-bar__note"><span class="dp-bar__what"><span class="dp-bar__code">{{ code }}</span> {{ name }}</span> <span class="dp-bar__order">{{ order }}</span></p>
+</header>
+<main class="dp-compare">
+  {% if warning %}<p class="dp-compare__caution">{{ warning }}</p>{% endif %}
+  <div class="dp-compare__pair">
+    {% for frame in frames %}
+    <figure class="dp-compare__item">
+      <figcaption class="dp-compare__head">
+        <span class="dp-compare__who">{{ frame.author }}</span>
+        <span class="dp-compare__wave">{{ frame.wave }}</span>
+        <span class="dp-compare__status">{{ status }}</span>
+        {% if frame.url %}<a class="dp-compare__open" href="{{ frame.url }}" target="_blank" rel="noopener" title="Apri il file da solo, in una nuova scheda">Apri</a>{% endif %}
+      </figcaption>
+      {% if frame.url %}
+      <iframe class="dp-compare__frame" src="{{ frame.url }}" title="{{ frame.author }} — {{ status }}"></iframe>
+      {% else %}
+      <div class="dp-compare__message" role="status"><p>{{ frame.message }}</p></div>
+      {% endif %}
+    </figure>
+    {% endfor %}
+  </div>
+</main>
+<script src="{% static 'js/dev/designpreview.js' %}" defer></script>
+</body>
+</html>

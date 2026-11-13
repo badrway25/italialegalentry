@@ -1,0 +1,13 @@
+{% comment %}
+Accordion — native <details>/<summary> (keyboard and screen-reader support built in, works
+without JS). Contract: `items` = list of dicts {id, title, body (safe html), open (bool), lang};
+optional `single` (True → only one panel open at a time, via `name` + JS fallback).
+{% endcomment %}
+<div class="accordion"{% if single %} data-accordion="single"{% endif %}>
+  {% for item in items %}
+  <details class="accordion__item" id="{{ item.id|default:forloop.counter }}"{% if item.open %} open{% endif %}{% if single %} name="{{ group|default:'accordion' }}"{% endif %}{% if item.lang %} lang="{{ item.lang }}"{% endif %}>
+    <summary class="accordion__summary"><span>{{ item.title }}</span>{% svg_icon "plus" "icon" %}</summary>
+    <div class="accordion__body">{{ item.body }}</div>
+  </details>
+  {% endfor %}
+</div>

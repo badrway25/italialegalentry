@@ -1,0 +1,310 @@
+/* ============================================================================================
+   THE FORMWORK — a form as a premium institutional surface (V5.15 W3, lane B; DECISIONS §5.12–5.13, V5.15 §15).
+   Partial of core/forms.css (page-only: the pages that render a field). Markup: enquiries/partials/form_shell.html,
+   companies/need_form.html, components/form_steps.html, _steps_rail.html, formwork_side.html; the steps' behaviour
+   static/js/src/steps.js (21st.dev «Wizard Steps» 23576 ported: square tiles, connectors that fill, the current
+   label, a 22 px direction-aware panel slide — no tick on a done step, O14).
+     1. the formwork: ONE object (round 1) — a night side joined to a paper panel, no gap between them; from 56rem
+        of its own width the side is the reading-edge column (its content sticky), below that the side follows the
+        panel as its night foot and the steps' rail is a night strip across the panel's top
+     2. the panel: paper, the lagoon-to-gold light (3 px) on its top edge, drawn again on each step's arrival; its
+        fields on a TWO-column grid from 36rem — a line field one cell, a pair, a text area and the details across
+        both, a text area growing from three rows (no half rows); one column on a phone
+     3. a step: its head (tile · «Étape n sur N» · title), its body; the rail beside it (vertical) and, where the
+        side is not shown, the head rail above it (horizontal, built by the script)
+     4. the review, the steps' navigation, the side's notes
+     5. the plate inside the formwork: 6 px corners, a sheet face that turns raised under the pointer and the focus,
+        the leading glyph taking the accent on focus; «facultatif» as a quiet capsule
+     6. the new password's checklist (a ring that becomes a plain disc — never a tick, O14)
+   The corners (V5.20; plan §1.3, tokens.css «at most three distinct radii on a screen at rest»): the formwork holds
+   the scale's three — xl (12) its containers (the grid, the panel, the head rail's strip, the section's lg tile),
+   md (6) every control and plate inside it (fields, buttons, the consent's box, the review's parts, the step tiles,
+   the glyph tiles), full its capsule and its bars — md being the letterhead's targa: one set with the page's chrome.
+   Round 2: ONE reading measure (--measure) inside the panel: the steps' rule, the fields, the review and the actions
+   end at it. V5.29 («layout & brand refinement», §1): the formwork and its band are the letterhead's shell (--form-wide,
+   v5/tokens.css: one system with the content's column) — the side a quarter of it, the panel the rest, its measure 60rem
+   so that two columns of fields fill the paper; the short pairs the form names share a row; the details of «Le besoin» sit under a quiet sub-head; the console's side is
+   PAPER (the console already has its night rail); the rail's inks are custom properties (--r-*), night by default and
+   paper where the rail stands on paper (the console's side, the sign-up's head rail outside a formwork).
+   Without script every step is shown and no rail state is drawn (`.js` gates the steps' paint). Tokens only;
+   logical properties; motion through the motion tokens (0 ms under reduced motion), at once from the keyboard.
+   ============================================================================================ */
+
+/* ---- 1. The formwork: a night side and a paper panel, one object --------------------------------------------- */
+.formwork { container: formwork / inline-size; max-inline-size: var(--form-wide); margin-block: var(--s-6) 0; --field-radius: var(--radius-md); --btn-radius: var(--radius-md); --pad: clamp(var(--s-6), 5cqi, var(--s-12)); --measure: 60rem; }
+.formwork__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  border-radius: var(--radius-xl);
+  background: var(--surface-night);
+  box-shadow: var(--shadow-3);
+  isolation: isolate;
+}
+/* the night ground of the side's column (the side itself is sticky inside it) — a gold light from the reading corner */
+.formwork__grid::before {
+  content: "";
+  grid-row: 1;
+  grid-column: 1;
+  align-self: stretch;
+  border-radius: inherit;
+  background: radial-gradient(130% 34% at 0% 0%, color-mix(in srgb, var(--identity-key) 16%, transparent), transparent 70%), var(--surface-night);
+  pointer-events: none;
+}
+[dir="rtl"] .formwork__grid::before { background: radial-gradient(130% 34% at 100% 0%, color-mix(in srgb, var(--identity-key) 16%, transparent), transparent 70%), var(--surface-night); }
+.formwork__side { display: grid; gap: var(--s-8); align-content: start; min-inline-size: 0; padding: var(--s-8) var(--pad); color: var(--text-on-night-2); }
+.formwork__side:not(:has(*)) { display: none; }
+@container formwork (max-width: 55.999rem) {
+  .formwork__grid::before { display: none; }
+  /* a side whose only content is the rail (hidden here: the head rail speaks) is not drawn: no empty night band */
+  .js .formwork--steps .formwork__side:not(:has(.formwork__notes)) { display: none; }
+}
+@container formwork (min-width: 56rem) {
+  .formwork__grid { grid-template-columns: minmax(15rem, 26%) minmax(0, 1fr); align-items: stretch; }
+  .formwork__side { grid-column: 1; grid-row: 1; align-self: start; position: sticky; inset-block-start: calc(var(--header-h) + var(--s-6)); padding: var(--s-10) var(--s-8); }
+  .formwork__panel { grid-column: 2; grid-row: 1; }
+}
+
+/* V5.29 §1: the band that holds a public formwork stands on the letterhead's shell (--form-wide), its head with it */
+:is(.formwork-section, .chapter):has(.formwork) > .container { max-inline-size: var(--form-wide); }
+
+/* (F1) a chapter that holds a formwork (the audience page /entreprises/): its head above and the formwork across the
+   container — in the 8-of-12 body the formwork stayed under 60rem and the night side never appeared at desktop */
+@media (min-width: 75rem) {
+  .chapter__inner:has(> .chapter__body .formwork) > :is(.chapter__head, .chapter__body) { grid-column: 1 / -1; }
+  .chapter__inner:has(> .chapter__body .formwork) > .chapter__head { position: static; max-inline-size: 60rem; }
+}
+
+/* the section that holds a public formwork: its head (the concept's tile, the title, a prescribed quote) */
+.formwork-section { padding-block: var(--s-12) var(--s-20); }
+.formwork-section__head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-2) var(--s-5); align-items: center; max-inline-size: 60rem; }
+.formwork-section__title { margin: 0; font-size: var(--t-title); line-height: var(--t-title-lh, 1.2); font-weight: var(--w-title); letter-spacing: var(--track-title); color: var(--text-1); }
+.formwork-section__title:lang(ar) { letter-spacing: 0; }
+.formwork-section__head > :not(.glyph-tile, .formwork-section__title) { grid-column: 1 / -1; margin-block: var(--s-4) 0; }
+/* the form's first group is the section's own subject: its title says it on the screen, once, and the legend stays the
+   fieldset's name for assistive technology, off the screen (the review's m6, as _lettura.css does in a chapter — the
+   v515-b merge: «Votre message» then «Vos coordonnées et votre message»). The consent's group keeps its legend. */
+.formwork-section__head ~ .formwork .enquiry-form > .form__group:first-of-type > .form__legend {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- 2. The panel ---------------------------------------------------------------------------------------- */
+.formwork .formwork__panel {
+  position: relative;
+  max-inline-size: none;
+  margin: 0;
+  padding: var(--pad);
+  border-radius: var(--radius-xl);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--line-rhythm);
+}
+@container formwork (max-width: 55.999rem) {
+  .formwork .formwork__panel:has(~ .formwork__side > *) { border-end-start-radius: 0; border-end-end-radius: 0; }
+  .js .formwork--steps .formwork__panel:not(:has(~ .formwork__side .formwork__notes)) { border-end-start-radius: var(--radius-xl); border-end-end-radius: var(--radius-xl); }
+}
+@container formwork (min-width: 56rem) { .formwork .formwork__panel:has(~ .formwork__side > *) { border-start-start-radius: 0; border-end-start-radius: 0; } }
+/* the light on the panel's upper edge: lagoon at the reading edge into gold; drawn from the reading edge as the page
+   arrives and again as each step arrives (steps.js: `.is-arriving`) */
+.formwork .formwork__panel::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline: var(--pad) auto;
+  inline-size: min(calc(100% - 2 * var(--pad)), calc(var(--measure) * 0.62));
+  block-size: 3px;
+  border-radius: 0 0 var(--radius-full) var(--radius-full);
+  background: linear-gradient(90deg, var(--accent-mark), var(--identity-key));
+  transform-origin: 0 50%;
+  animation: formwork-light 720ms var(--ease-enter) 120ms backwards;
+}
+[dir="rtl"] .formwork .formwork__panel::before { background: linear-gradient(270deg, var(--accent-mark), var(--identity-key)); transform-origin: 100% 50%; }
+.formwork .formwork__panel.is-arriving::before { animation-name: formwork-light-again; animation-delay: 0ms; }
+@keyframes formwork-light { from { transform: scaleX(0); opacity: 0.4; } }
+@keyframes formwork-light-again { from { transform: scaleX(0); opacity: 0.4; } }
+html.rm .formwork .formwork__panel::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .formwork .formwork__panel::before { animation: none; } }
+.formwork .form__group { margin-block-end: var(--s-10); }
+.formwork .form__actions { margin-block-start: var(--s-6); }
+
+/* the panel's content at ONE measure, at the reading edge (the night strip of the head rail alone runs edge to edge) */
+.formwork .formwork__panel > :not(.steps-head) { max-inline-size: var(--measure); }
+/* the fields (V5.29 §1): one column on a phone; from 36rem two equal columns, the pairs' own — a line field takes the
+   first cell (never stretched across the measure), a pair, a text area and the details run across both. A form
+   without steps names no pair: its line fields share the rows two by two (the contact's name and e-mail). A number
+   or a date (a true short field) keeps its own short measure. */
+.form-step__body { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--s-5); align-items: start; }
+.form-step__body > *, .form-step__pair > * { min-inline-size: 0; }
+.formwork .form-step__body :is(.form-field--number, .form-field--date) { max-inline-size: 20rem; }
+.form-step__pair { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--s-5); align-items: start; }
+@container formwork (min-width: 36rem) {
+  .formwork :is(.form-step__body, .form-step__pair) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formwork .form-step__body > * { grid-column: 1 / -1; }
+  .formwork .form-step__body > .form-field--text { grid-column: 1; }
+  .formwork:not(.formwork--steps) .form-step__body > .form-field--text { grid-column: auto; }
+}
+/* the details of «Le besoin»: a quiet sub-head on a hairline, the text areas from two rows */
+.form-step__more { display: grid; grid-template-columns: minmax(0, 1fr); margin-block-start: var(--s-4); padding-block-start: var(--s-6); border-block-start: 1px solid var(--line-rhythm); }
+.form-step__subhead { margin: 0 0 var(--s-5); font-size: var(--u-ui); line-height: var(--u-ui-lh); font-weight: var(--w-title); color: var(--text-2); }
+/* (F1) the details pair only like with like: the form names the pairs (two text areas side by side, never a line beside
+   a text area — round 3's ragged rows); a single-line detail standing alone keeps a short measure, the free notes run
+   across. In the prescribed order: Nombre · Qualifications + Expérience · Langues + Formation · Calendrier · Notes. */
+.formwork .form-step__more > .form-field:not(:has(textarea)) { max-inline-size: 20rem; }
+/* a text area starts at three rows and grows with what is written (no script; a browser without field-sizing keeps
+   the three rows and its resize handle) */
+.formwork .form-field textarea { min-block-size: calc(3lh + 2 * var(--s-3) + 2px); field-sizing: content; max-block-size: 22rem; }
+.formwork .form-step__more textarea { min-block-size: calc(2lh + 2 * var(--s-3) + 2px); }
+
+/* ---- 3. A step ------------------------------------------------------------------------------------------- */
+.form-step { min-inline-size: 0; margin: 0 0 var(--s-10); padding: 0; border: 0; }
+.form-step__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  inline-size: 100%;
+  margin-block-end: var(--s-8);
+  padding: 0 0 var(--s-5);
+  border-block-end: 1px solid var(--line-rhythm);
+  float: inline-start; /* a legend that floats is laid out as a block: its rule runs the whole width */
+}
+.form-step__legend + * { clear: both; }
+.form-step__words { display: grid; gap: 2px; min-inline-size: 0; }
+.form-step__count {
+  font-size: var(--u-eyebrow);
+  line-height: 1.3;
+  font-weight: var(--w-control);
+  letter-spacing: var(--track-eyebrow, 0.08em);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.form-step__count:lang(ar) { letter-spacing: 0; text-transform: none; }
+.form-step__title { font-size: var(--t-entry); line-height: var(--t-entry-lh, 1.3); font-weight: var(--w-title); letter-spacing: var(--track-entry); color: var(--text-1); }
+.form-step__title:lang(ar) { letter-spacing: 0; }
+/* (F1) a head still in French on an Arabic page keeps its own direction (its punctuation does not move) but ends on
+   the page's reading edge, beside its tile and the Arabic words around it (as _lettura.css does for a French head) */
+[dir="rtl"] :is(.form-step__title, .formwork__note-title, .form-step__subhead, .form-review__title)[lang]:not([lang="ar"]) { text-align: end; }
+.form-step__body { clear: both; }
+.form-step__privacy,
+.form__privacy-link { display: flex; align-items: center; gap: var(--s-2); margin: var(--s-2) 0 0; font-size: var(--t-small); line-height: var(--t-small-lh); }
+.form-step__privacy .icon,
+.form__privacy-link .icon { inline-size: 1rem; block-size: 1rem; color: var(--icon-muted); flex: none; }
+/* «obligatoire», where the required fields are a step's minority: the same capsule, the accent's ink */
+.formwork .form-field__required { background: var(--accent-wash); color: var(--accent-text); }
+
+/* with script, one step at a time: the others are hidden by the script (the `hidden` attribute) */
+.js [data-steps] .form-step[hidden] { display: none; }
+.js [data-steps] .form-step { margin-block-end: 0; }
+.js [data-steps] .form-step:focus { outline: none; }
+.js [data-steps] .form-step__legend:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: 4px; border-radius: var(--radius-xs); }
+
+/* (round 2) the rails, the head rail, the review, the steps' navigation and the console's side are the steps'
+   own sheet: v5/_steps.css (core/steps.css, linked by components/form_steps.html — only a form in steps). */
+
+/* ---- 4. The side's notes --------------------------------------------------------------------------------- */
+.formwork__notes { display: grid; gap: var(--s-5); margin: 0; padding: 0; list-style: none; }
+/* (F1) base.css draws a hairline and 32 px above and below every `ul[role="list"]` (0,1,1), which the bare class
+   (0,1,0) lost to: a paper rule and a 64 px void above «Après l’envoi» in the night foot. The formwork says its own. */
+.formwork .formwork__notes { margin: 0; border: 0; }
+@container formwork (min-width: 56rem) { .js .formwork--steps .steps-rail + .formwork__notes { padding-block-start: var(--s-6); border-block-start: 1px solid var(--line-night-soft); } }
+.formwork__note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); align-items: start; }
+.formwork__note-title { margin: 0 0 2px; font-size: var(--u-ui); line-height: var(--u-ui-lh); font-weight: var(--w-title); color: var(--text-on-night-1); }
+.formwork__note-text { margin: 0; font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-on-night-2); }
+.formwork__note-text a { color: var(--identity-key-night-text); text-underline-offset: 3px; }
+
+/* the panel's slide between two steps is the script's (WAAPI, 22 px in the direction of travel, 280 ms); this
+   only keeps the panel from showing its overflow while it moves */
+[data-steps] { overflow-x: clip; }
+
+/* ---- 5. The plate inside the formwork ---------------------------------------------------------------------- */
+.formwork .form-field :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea) {
+  background-color: var(--surface-sheet);
+  transition: border-color var(--motion-fast) var(--ease-enter), background-color var(--motion-fast) var(--ease-enter), box-shadow var(--motion-fast) var(--ease-enter);
+}
+@media (hover: hover) {
+  .formwork .form-field :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):hover:not(:disabled, :focus) { background-color: var(--surface-raised); box-shadow: var(--shadow-1); }
+}
+.formwork .form-field :where(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):focus { background-color: var(--surface-raised); }
+.formwork .form-field__control:focus-within > .form-field__glyph { color: var(--accent-text); }
+.form-field__glyph { transition: color var(--motion-fast) var(--ease-enter); }
+.formwork .form-field__label { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-1) 0; }
+.formwork .form-field__optional {
+  padding: 0 var(--s-2);
+  border-radius: var(--radius-full);
+  background: var(--surface-area);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+  color: var(--text-2);
+}
+/* (V5.18 P10) never under 14 px in Arabic (tokens.css :lang(ar), DL A7/A25): the tag takes the Arabic caption */
+.formwork .form-field__optional:lang(ar) { font-size: var(--t-caption); letter-spacing: 0; }
+/* the glyph tiles on the scale (V5.20): md inside the formwork, as its controls; xl at the section's head, as the
+   formwork's containers — the Icon Visual System's 0.2 × side gave 6.4, 8.8 and 11.2 px here */
+.formwork .glyph-tile { border-radius: var(--radius-md); }
+/* its buttons read the formwork's --btn-radius in the console too, whose `.console .btn` sets sm (this sheet comes after) */
+.formwork .btn { border-radius: var(--btn-radius); }
+.formwork-section__head > .glyph-tile { border-radius: var(--radius-xl); }
+.formwork .form-field--consent .form-field__check { padding: var(--s-4); border-radius: var(--radius-md); background: var(--surface-sheet); box-shadow: inset 0 0 0 1px var(--line-rhythm); }
+
+/* ---- 6. The new password's checklist ----------------------------------------------------------------------- */
+.pw-rules__list { display: grid; gap: var(--s-2); margin: var(--s-1) 0 0; padding: 0; list-style: none; }
+/* (F1) the entrance's `.varco .form-field__help ul { padding-inline-start: 1.25em }` (0,2,1) pushed the discs 20 px in,
+   off the note's edge (round 3: the note at 831, the rule texts at 847); the checklist keeps its own edge */
+.form-field__help.pw-rules > .pw-rules__list { margin: var(--s-1) 0 0; padding: 0; }
+.pw-rule { display: grid; grid-template-columns: var(--pw-disc, 0.875rem) minmax(0, 1fr); gap: var(--pw-gap, var(--s-2)); align-items: start; color: var(--text-2); transition: color var(--motion-fast) var(--ease-enter); }
+.pw-rule__mark {
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  margin-block-start: 0.2em;
+  border: 1.5px solid var(--text-3);
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color var(--motion-fast) var(--ease-enter), border-color var(--motion-fast) var(--ease-enter), transform var(--spring-soft-duration, 320ms) var(--spring-soft);
+}
+.pw-rule[data-met="1"] { color: var(--text-1); }
+.pw-rule[data-met="1"] .pw-rule__mark { border-color: var(--accent-mark); background: var(--accent-mark); transform: scale(0.86); }
+/* the rules the server alone judges: one quiet sentence under the checklist, no mark (round 1) */
+.pw-rules { --pw-disc: 0.875rem; --pw-gap: var(--s-2); }
+.pw-rules .pw-rules__note { margin: var(--s-2) 0 0; padding-inline-start: calc(var(--pw-disc) + var(--pw-gap)); font-size: var(--t-small); line-height: var(--t-small-lh); color: var(--text-2); }
+html[data-input="key"] :is(.pw-rule, .pw-rule__mark) { transition-duration: 0ms; }
+
+/* ---- 7. The drop zone of a file field (DECISIONS §5.10; 21st.dev «File Dropzone» 19201, its geometry) ------------
+   A solid hairline (a dashed edge is the register of «attesa» on V5), the upload tile, the words; the native input
+   is invisible over the whole zone. Under the pointer the zone lifts; once a file is chosen it takes the lagoon's wash
+   and its name is said under the words. */
+.dropzone {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6);
+  border-radius: var(--radius-lg);
+  background: var(--surface-sheet);
+  box-shadow: inset 0 0 0 1px var(--field-edge);
+  transition: background-color var(--motion-fast) var(--ease-enter), box-shadow var(--motion-fast) var(--ease-enter);
+}
+.form-field .dropzone > input[type="file"] { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; opacity: 0; cursor: pointer; }
+.dropzone__words { display: grid; gap: 2px; font-size: var(--u-ui); line-height: var(--u-ui-lh); color: var(--text-2); }
+.dropzone__cta { font-weight: var(--w-title); color: var(--accent-text); }
+.dropzone__name { font-weight: var(--w-control); color: var(--text-1); overflow-wrap: anywhere; }
+.dropzone__name:empty { display: none; }
+@media (hover: hover) { .dropzone:hover { background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--field-edge-hover), var(--shadow-2); } }
+.dropzone.has-file { background: var(--accent-wash); box-shadow: inset 0 0 0 1px var(--accent-mark); }
+.dropzone:has(> input:focus-visible) { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+.form-field--error .dropzone { box-shadow: inset 0 0 0 2px var(--field-edge-invalid); }
+
+@media (forced-colors: active) {
+  .dropzone { border: 1px solid CanvasText; }
+  .formwork .formwork__panel, .formwork__side { border: 1px solid CanvasText; }
+  .formwork__grid::before { display: none; }
+  .pw-rule[data-met="1"] .pw-rule__mark { forced-color-adjust: none; background: CanvasText; border-color: CanvasText; }
+}

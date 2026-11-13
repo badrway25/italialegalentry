@@ -1,0 +1,20 @@
+{% extends request.user.is_authenticated|yesno:"errors/429.html,allauth/layouts/entrance.html" %}{% load i18n %}
+{% comment %}
+TOO MANY REQUESTS, as allauth answers them (design V5 «Il varco», V5.4 plan §1.13; acceptance L12; W2-B).
+allauth's rate limits — a sign-in posted too often, the signup, the password reset, a verification e-mail asked
+again — answer 429 with the template named `429.html`; without this file it fell back on a page of its own, in
+English and unstyled («429 Too Many Requests»). The words are the product's, already in the four catalogues
+(templates/errors/429.html): one title, one sentence — nothing was lost, try again in a few minutes — and no
+countdown; which limit was reached is never said.
+
+WHERE IT IS DRAWN. A person who is not signed in was at the entrance: the page is «Il varco», at rest (no
+arrival: the page answers a form of the entrance), with the way back to the sign-in the layout gives every
+page that is not a form. A signed-in person met the limit on an account page (the password, the e-mail
+addresses): the product's own error page, with its recovery navigation — `block.super` below is that page's
+content, untouched. The status is allauth's: 429.
+{% endcomment %}
+{% block head_title %}{% translate "Trop de requêtes" %}{% endblock head_title %}
+{% block content %}{% if request.user.is_authenticated %}{{ block.super }}{% else %}
+<h1 class="account-page__title">{% translate "Trop de requêtes" %}</h1>
+<p class="account-page__text">{% translate "Vous avez atteint la limite d’envois autorisée. Merci de réessayer dans quelques minutes ; rien n’a été perdu de votre côté." %}</p>
+{% endif %}{% endblock content %}

@@ -1,0 +1,33 @@
+{% load i18n ile_forms %}{% comment %}
+The contact form on a raised sheet (V5.32, lane D) — /contact/ (unbound) and /contact/formulaire/ (bound: its errors).
+Contract: `form` (an enquiries ContactForm or None while gate G2 is closed), `action` (enquiries:contact's URL).
+It lives with the enquiries app's form partials (form_shell.html, form_field.html): the form, its consent and the
+privacy link's words are that app's (scripts/i18n_audit.py admits the link's label; apps/pages' sources never copy it).
+The fields, the consent, the honeypot and the CSRF are the enquiries app's; the summary of errors is the system's.
+Two groups, as the system's form shell has them: the fields' fieldset, named by its legend for assistive
+technology only (the sheet's title «Votre message» says it on the screen, once — the review's m6), and the
+consent's fieldset with its visible legend.
+{% endcomment %}{% if form %}
+{% form_assets %}{% url 'legal:privacy' as privacy_url %}
+<form class="form enquiry-form sportello-form" method="post" action="{{ action }}" id="formulaire-contact" novalidate aria-labelledby="contact-form-title">
+  {% csrf_token %}
+  {% include "components/form_errors.html" with form=form %}
+  {% for hp in form.spam_fields %}{% if hp.name == "website_url" %}<div class="hp-field" aria-hidden="true"><label for="{{ hp.id_for_label }}">{% translate "Ne pas remplir ce champ" %}</label>{{ hp }}</div>{% else %}{{ hp }}{% endif %}{% endfor %}
+  <fieldset class="form__group">
+    <legend class="form__legend visually-hidden">{% translate "Vos coordonnées et votre message" %}</legend>
+    <div class="sportello-form__campi">{% for field in form.prescribed_fields %}{% include "enquiries/partials/form_field.html" with field=field %}{% endfor %}</div>
+  </fieldset>
+  <div class="sportello-form__consenso">
+    <fieldset class="form__group form__group--consent">
+      <legend class="form__legend">{% translate "Données personnelles" %}</legend>
+      {% include "enquiries/partials/form_field.html" with field=form.consent %}
+      <p class="form__privacy-link"><a href="{{ privacy_url }}">{% translate "Consulter l’information sur le traitement des données personnelles (Privacy Policy)" %}</a></p>
+    </fieldset>
+  </div>
+  <div class="sportello-form__azioni">
+    <button type="submit" class="btn btn--primary btn--lg">{% translate "Envoyer le message" %}</button>
+  </div>
+</form>
+{% else %}
+{% include "components/form_unavailable.html" %}
+{% endif %}

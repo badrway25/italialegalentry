@@ -1,0 +1,136 @@
+/* ============================================================================================
+   I · «IL FILO» — the timeline with a sticky rail, and «la traversata» (design V5.22, SECTION_SYSTEM_V2 §2 I; lane S).
+   Page-only (after v5/_sezioni.css). Markup: components/sezioni/filo.html; script static/js/src/sezioni/spia.js.
+   Adapted from 21st.dev (COMPONENT_PROVENANCE, V5.22 rows): «Timeline» 857 (a sticky label column beside the content
+   while a beam follows the scroll), «Scroll animated timeline» 35029 (the line draws as it is read). Refused: Lenis and
+   GSAP. Signature SCROLL PROGRESSION — FINAL MICRO-PASS §5 A2: the rail's indicator alone; the route is the quiet
+   sequence marker below, still.
+   ============================================================================================ */
+
+.filo {
+  display: grid;
+  gap: var(--sez-gap);
+}
+
+.filo__linea {
+  --filo-gap: var(--s-10);
+  position: relative;
+  display: grid;
+  gap: var(--filo-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* FINAL MICRO-PASS §5 A2: the quiet sequence marker of «la linea V2» (v5/_linea-v2.css; 21st.dev «How It Works Steps»,
+   ln-dev7/how-it-works-09, id 26891) — a small figure in the quiet ink at the reading edge, and from it a 1 px hairline down
+   to the next milestone; no tile, no glyph, no display numeral (the route's 2 px line, its scrubbed advance and the
+   nodes that lit left with them) */
+.filo__tappa {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  column-gap: var(--s-4);
+  row-gap: var(--s-2);
+}
+
+.filo__num {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  font-size: var(--t-small);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-control);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+
+.filo__tappa:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-block: calc(var(--t-entry-lh) + var(--s-1)) calc(var(--s-2) - var(--filo-gap));
+  inset-inline-start: calc(0.75rem - 0.5px);
+  inline-size: 1px;
+  background: color-mix(in srgb, var(--line-structure) 35%, var(--line-rhythm));
+}
+
+.filo__titolo {
+  grid-column: 2;
+  margin: 0;
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-title);
+}
+
+.filo__corpo,
+.filo__foto {
+  grid-column: 2;
+}
+
+.filo__corpo > *,
+.filo__foto .foto { margin-block: 0; }
+
+/* the rail: the page's «Sommaire», sticky beside the route from 64 rem; its indicator glides to the part in view */
+.filo__indice {
+  position: relative;
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  padding-inline-start: var(--s-4); /* logical: in Arabic the rail's rule and its indent are on the right */
+  list-style: none;
+  border-inline-start: 1px solid var(--line-rhythm);
+}
+
+.filo__voce {
+  display: block;
+  padding-block: var(--s-2);
+  color: var(--text-2);
+  font-size: var(--t-ui);
+  text-decoration: none;
+}
+
+.filo__voce[aria-current] {
+  color: var(--accent-text);
+}
+
+.filo__indice[data-spia]::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -1px;
+  inset-block-start: 0;
+  inline-size: 2px;
+  block-size: var(--spia-h, 0);
+  background: var(--accent-mark);
+  translate: 0 var(--spia-y, 0);
+  transition: translate var(--spring-soft-duration) var(--spring-soft);
+}
+
+@media (min-width: 64rem) {
+  .filo--rail {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    align-items: start;
+  }
+
+  .filo__rail {
+    position: sticky;
+    inset-block-start: calc(var(--header-h-scrolled) + var(--s-6));
+  }
+
+  /* «la traversata»: two times side by side, each on its own marker */
+  .filo--traversata .filo__linea {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-12);
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .filo__rail { display: none; }
+}
+
+html[data-input="key"] .filo__indice::before { transition: none; }
+
+@media (forced-colors: active) {
+  .filo__tappa::before { background: CanvasText; }
+  .filo__indice[data-spia]::before { background: Highlight; }
+}

@@ -1,0 +1,553 @@
+/* ============================================================================================
+   THE PUBLIC FORUM — a partial of forum/pubblico.css (V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION, lane D, 12 Nov
+   2026): the public page's own bundle — forum/forum.css and its _forum.css are lane E's. Part 1 is the V5.4 base the
+   public page still draws (the night entrance, the programme, the records, the registration, the empty state), forked
+   from forum/_forum.css as it stood at 21394af6; part 2 is V5.32's composition. Tokens only; logical properties.
+   ============================================================================================ */
+
+/* ---- the entrance on the night ground: the page's one night chapter above the footer's (RH-8) ------------- */
+.ingresso--night {
+  margin-block-start: var(--s-4);
+  background: var(--surface-night);
+  color: var(--text-on-night-1);
+  --focus-ring: var(--focus-ring-night);
+}
+
+.ingresso--night .ingresso__label,
+.ingresso--night .forum-hero__patronage {
+  color: var(--text-on-night-2);
+}
+
+.ingresso--night .ingresso__title {
+  color: var(--text-on-night-1);
+}
+
+.ingresso--night .ingresso__lead {
+  color: var(--text-on-night-2);
+}
+
+.forum-hero__meta {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-6) 0 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  font-weight: var(--w-control);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-on-night-1);
+}
+
+.forum-hero__patronage {
+  max-inline-size: var(--measure-lead);
+  margin: var(--s-2) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+}
+
+.forum-hero__logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin: var(--s-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-hero__logo img {
+  inline-size: auto;
+  max-block-size: 4rem;
+  padding: var(--s-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+
+.forum-hero__actions {
+  margin: var(--s-8) 0 0;
+}
+
+.forum-hero__img,
+.forum-hero__figure {
+  max-inline-size: 36rem;
+  margin-block-start: var(--s-8);
+}
+
+.forum-hero__figure figcaption {
+  color: var(--text-on-night-2);
+}
+
+/* ---- the tribune and the records -------------------------------------------------------------------- */
+.forum-speakers .registro__row {
+  min-block-size: 0;
+}
+
+.forum-doc-link {
+  font-weight: var(--w-control);
+}
+
+.forum-card__url {
+  overflow-wrap: anywhere;
+  font-variant-numeric: var(--numeric-data);
+}
+
+.forum-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-gallery__image,
+.forum-gallery__video {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--surface-area);
+}
+
+/* a video's controls never mirror: play, the timeline and the time read left to right on the Arabic page too
+   (plan §2.5; W4-A, D19) */
+.forum-gallery__video {
+  direction: ltr;
+}
+
+/* registration closed: the notice's one link stands alone in its paragraph — one box of 24 px (it was its 20 px
+   line), 44 px under a finger (SP-8; W4-A, D6) */
+[data-registration="closed"] .notice__body a {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+@media (pointer: coarse) {
+  [data-registration="closed"] .notice__body a {
+    position: relative;
+  }
+
+  [data-registration="closed"] .notice__body a::after {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    inset-inline: 0;
+  }
+}
+
+.forum-partners {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forum-partners__item img {
+  inline-size: auto;
+  max-block-size: 4.5rem;
+}
+
+/* ---- registration: the form on its sheet, two columns of «la lastra» fields from 40rem ------------------ */
+.forum-form {
+  max-inline-size: 44rem;
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background: var(--surface-sheet);
+}
+
+.forum-form__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-5) var(--s-6);
+}
+
+@media (min-width: 40rem) {
+  .forum-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .forum-form__grid .form-field:nth-last-child(-n+2) {
+    grid-column: 1 / -1;
+  }
+}
+
+.forum-form__summary {
+  margin-block: 0 var(--s-5);
+}
+
+.forum-form__required-note {
+  margin: var(--s-5) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  color: var(--text-2);
+}
+
+.forum-form__actions {
+  margin-block-start: var(--s-5);
+}
+
+.forum-privacy-note {
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+  color: var(--text-2);
+}
+
+/* ---- the Forum with no edition yet: the empty state's own glyph says which space is empty (W1-B: the handshake),
+        drawn as the interior's «attesa» row — the glyph in its disc at the reading edge, the words beside it; no
+        dashed box, nothing centred (the component's legacy look is W3-E's to redraw) ----------------------------- */
+.page-forum .empty-state {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  justify-items: start;
+  align-items: start;
+  gap: var(--s-1) var(--s-4);
+  max-inline-size: var(--measure-body);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: start;
+}
+
+.page-forum .empty-state__icon {
+  grid-row: 1 / span 3;
+  margin: 0;
+}
+
+.page-forum .empty-state > :not(.empty-state__icon) {
+  grid-column: 2;
+  margin: 0;
+}
+
+.page-forum .empty-state__title {
+  font-size: var(--t-body);
+  line-height: 1.5rem;
+}
+
+.page-forum .empty-state__text {
+  max-inline-size: none;
+  font-size: var(--t-ui);
+  line-height: 1.5rem;
+}
+
+.page-forum .empty-state p:last-child:not(.empty-state__title, .empty-state__text) {
+  margin-block-start: var(--s-3);
+}
+
+@media (max-width: 47.999rem) {
+  .forum-form {
+    padding: var(--s-4);
+  }
+
+  .forum-programme--timed .forum-programme__item {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-forum {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (forced-colors: active) {
+  .ingresso--night {
+    border-block: 1px solid CanvasText;
+  }
+}
+
+@media print {
+  .forum-hero__actions {
+    display: none;
+  }
+
+  .ingresso--night {
+    background: none;
+    color: CanvasText;
+  }
+}
+
+/* ============================================================================================
+   PART 2 · V5.32 — «il dialogo»: an institutional dialogue's page, not a diagram (no hemicycle, no ring, no stations'
+   line). The calm two-column reading of 21st.dev «Feature Tab Switcher» (id 27081) and a help centre's index bar.
+     H   the night entrance: the words at the reading edge, the FACT SHEET in the end seat (launch meeting, patronage);
+         the prescribed capitals of the h1 at a section's size with a little air
+     N   the page's index: its own bar under the entrance, sticky from 64 rem, a sideways row on a phone
+     P   who · why: two columns of reading, the opening clause and the statement in place
+     F   what · objectives: prose beside a plain list of the clauses on hairlines
+     A   the audience: the locked sentence whole, the band's statement
+     C   the actions: two raised plates, the prescribed labels in their capitals at the control's size
+   ============================================================================================ */
+.forum-titolo {
+  margin: 0 0 var(--s-5);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-strong);
+  color: inherit;
+}
+
+.forum-titolo:not(:lang(ar)) { letter-spacing: 0.04em; }
+
+/* ---- H ---- */
+.forum-hero { padding-block: var(--s-12); }
+
+/* the two seats hang from the head's first line: what one receives after the first paint (a late face, the patronage's
+   logos) moves nothing of the other (V5.22 QA_ROUND3 m6: a seat centred on the head's height moved 44 px) */
+.forum-hero .ingresso__inner { display: grid; gap: var(--s-8); align-items: start; }
+
+@media (min-width: 64rem) {
+  .forum-hero .ingresso__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--s-16); }
+  .forum-hero .ingresso__text { grid-column: auto; }
+}
+
+.forum-hero .forum-hero__title:not(:lang(ar)) {
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  letter-spacing: 0.03em;
+}
+
+.forum-hero__scheda {
+  padding: var(--s-6);
+  border: 1px solid var(--line-night-soft);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-night-raised);
+}
+
+.forum-hero__scheda > * { margin: 0; }
+
+.forum-hero__scheda-titolo {
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-on-night-2);
+}
+
+.forum-hero__scheda .forum-hero__meta {
+  margin-block-start: var(--s-2);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+}
+
+.forum-hero__scheda .forum-hero__patronage {
+  margin-block-start: var(--s-4);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--line-night-soft);
+  color: var(--text-on-night-2);
+}
+
+/* ---- N ---- */
+.forum-localnav {
+  position: sticky;
+  z-index: 2;
+  inset-block-start: var(--header-h-scrolled);
+  border-block-end: 1px solid var(--line-rhythm);
+  background-color: var(--surface-page);
+}
+
+.forum-localnav .forum-localnav__list {
+  display: flex;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  border: 0;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.forum-localnav .forum-localnav__list > li { flex: none; border: 0; }
+
+/* a block, never a flex box: a title holding an isolate (the Arabic «why Italy Legal Entry», its brand an isolate) keeps the space between
+   its runs — a flex container makes each run an item and drops the space at its edge */
+.forum-localnav .sommaire__link {
+  display: block;
+  padding-block: calc((3rem - var(--t-small-lh)) / 2);
+  padding-inline: var(--s-3);
+  border-block-end: 2px solid transparent;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.forum-localnav .sommaire__link:not(:lang(ar)) { letter-spacing: 0.04em; }
+.forum-localnav .sommaire__link:hover { color: var(--text-1); }
+.forum-localnav .sommaire__link:active { color: var(--accent-text); } /* the press (a finger too) */
+.forum-localnav .sommaire__link[aria-current] { border-block-end-color: var(--accent-text); color: var(--text-1); }
+.forum-localnav .sommaire__link:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: -2px; }
+
+@media (max-width: 63.99rem) {
+  .forum-localnav { position: static; }
+}
+
+html:has(.forum-localnav) { scroll-padding-block-start: calc(var(--header-h-scrolled) + 3rem + var(--s-4)); }
+
+/* ---- P ---- */
+.forum-pair__inner { display: grid; gap: var(--s-10); }
+
+@media (min-width: 64rem) {
+  .forum-pair__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-16); }
+}
+
+.forum-pair__divisore { display: none; }
+
+.forum-pair__chi,
+.forum-pair__perche {
+  max-inline-size: 36rem;
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+/* the opening clause (its own span, cut at render by locked_spans) at the entry's size; the last sentence the
+   statement with its 2 px rule — the same words, set in place, never repeated */
+.forum-pair__chi > :first-child {
+  display: block;
+  margin-block-end: var(--s-3);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+.forum-pair__perche > :last-child:not(:first-child) {
+  display: block;
+  margin-block-start: var(--s-4);
+  padding-inline-start: var(--s-4);
+  border-inline-start: 2px solid var(--accent-text);
+  font-weight: var(--w-control);
+  color: var(--text-1);
+}
+
+/* ---- F ---- */
+.forum-filo__griglia { display: grid; gap: var(--s-10); }
+
+@media (min-width: 64rem) {
+  .forum-filo__griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-16); }
+}
+
+.forum-filo__prosa { max-inline-size: 36rem; color: var(--text-2); }
+.forum-filo__prosa p { margin: 0 0 var(--s-4); font-size: var(--t-body); line-height: var(--t-body-lh); }
+
+.forum-obiettivi {
+  margin: 0;
+  padding: 0;
+  border-block-start: 1px solid var(--line-rhythm);
+  list-style: none;
+}
+
+.forum-obiettivi__tappa {
+  position: relative;
+  padding-block: var(--s-3);
+  padding-inline-start: var(--s-6);
+  border-block-end: 1px solid var(--line-rhythm);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-1);
+}
+
+.forum-obiettivi__tappa::before {
+  content: "";
+  position: absolute;
+  inset-block-start: calc(var(--s-3) + 0.8125rem);
+  inset-inline-start: 0;
+  inline-size: 0.75rem;
+  block-size: 2px;
+  background-color: var(--accent-text);
+}
+
+.forum-obiettivi__intero { margin: 0; color: var(--text-1); }
+
+/* ---- A ---- */
+.forum-uditorio__frase {
+  max-inline-size: 48rem;
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-1);
+}
+
+@media (min-width: 64rem) {
+  .forum-uditorio__frase { font-size: var(--t-band); line-height: 1.45; }
+}
+
+/* ---- C ---- */
+.forum-azioni__lastre {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .forum-azioni__lastre { grid-template-columns: repeat(2, minmax(0, 1fr)); max-inline-size: 60rem; }
+}
+
+.forum-azioni__lastra {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+}
+
+.forum-azioni__lastra:hover,
+.forum-azioni__lastra:focus-within { border-color: var(--line-structure); box-shadow: var(--shadow-2); }
+.forum-azioni__lastra:active { box-shadow: var(--shadow-1); } /* the press: the plate settles */
+
+.forum-azioni__lastra[data-audience="company"] { --aud: var(--aud-impresa); }
+.forum-azioni__lastra[data-audience="institution"] { --aud: var(--aud-istituzione); }
+
+.forum-azioni__lastra .sez-disc {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--aud, var(--accent-text)) 30%, var(--surface-raised));
+  color: var(--text-1);
+}
+
+.forum-azioni__link {
+  font-size: var(--t-small);
+  line-height: 1.4;
+  font-weight: var(--w-strong);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.forum-azioni__link:not(:lang(ar)) { letter-spacing: 0.04em; }
+.forum-azioni__link::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.forum-azioni__link:focus-visible { outline: none; }
+
+.forum-azioni__lastra:has(.forum-azioni__link:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.forum-azioni__freccia { color: var(--icon-muted); }
+.forum-azioni__lastra:hover .forum-azioni__freccia { color: var(--accent-text); }
+[dir="rtl"] .forum-azioni__freccia .icon { scale: -1 1; }
+
+.forum-azioni__aiuto { margin: var(--s-6) 0 0; font-size: var(--t-ui); color: var(--text-2); }
+.forum-azioni__registrazione { margin: 0 0 var(--s-5); }
+
+/* the plates' one motion: the arrow's nudge (transform only; never under reduced motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .forum-azioni__freccia { transition: transform var(--motion-standard) var(--ease-enter); }
+  .forum-azioni__lastra:hover .forum-azioni__freccia { transform: translateX(2px); }
+  [dir="rtl"] .forum-azioni__lastra:hover .forum-azioni__freccia { transform: translateX(-2px); }
+}

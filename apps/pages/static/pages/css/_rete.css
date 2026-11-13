@@ -1,0 +1,192 @@
+/* ============================================================================================
+   LE RÉSEAU — «l'esploratore» (V5.32 GLOBAL SITE + PLATFORM DESIGN COMPLETION, lane D, 12 Nov 2026): a partial of
+   pages/css/rete.css, the page's route sheet. Markup: templates/pages/network.html; behaviour: sezioni/mappa.js (the
+   tablist). After 21st.dev «Feature Tab Switcher» (id 27081), adapted. The V5.22 night ring (circles, spokes, nodes,
+   the glide of light) and the V5.30 flags under the closing band left: relations are said by the explorer, not drawn.
+     1 · the head       the folio, the h1, the network's own line and the way to Le projet's presentation (linked,
+                        never repeated); the shared table beside it from 64 rem
+     2 · the explorer   a vertical tab list (5 parts) beside the selected panel (7 parts); below 48 rem the list above
+     3 · the approdo    the reading pages' divided rows on stone
+   ============================================================================================ */
+
+/* ---- 1 · the head ---- */
+.rete-testa { padding-block: var(--s-10) var(--s-12); }
+
+.rete-testa__griglia { display: grid; gap: var(--s-8); align-items: center; }
+
+@media (min-width: 64rem) {
+  .rete-testa__griglia { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--s-16); }
+}
+
+/* the folio: the page's section (Le projet), the head's one label, as the other trust pages' heads */
+.rete-testa__label { margin: 0 0 var(--s-3); color: var(--accent-text); }
+
+.rete-testa__titolo {
+  margin: 0;
+  font-size: var(--t-title-1);
+  line-height: var(--t-title-1-lh);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-title);
+  color: var(--text-1);
+}
+
+.rete-testa__lead {
+  max-inline-size: 36rem;
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-lead);
+  line-height: var(--t-lead-lh);
+  color: var(--text-2);
+}
+
+/* the presentation is Le projet's «En bref», one click away: linked, never repeated (V5.32 integration review P2-4) —
+   the system's text link (its 44 px under a finger), no arrow: the head draws nothing */
+.rete-testa__rinvio { margin: var(--s-6) 0 0; }
+
+.rete-testa__foto { overflow: hidden; border-radius: var(--radius-lg); }
+
+.rete-testa__img,
+.rete-testa__img img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+/* ---- 2 · the explorer ---- */
+.rete-esplora {
+  padding-block: var(--s-12) var(--s-16);
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.rete-esplora__titolo {
+  margin: 0 0 var(--s-6);
+  font-size: var(--t-title-2);
+  line-height: var(--t-title-2-lh);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-title-2);
+  color: var(--text-1);
+}
+
+.rete-esplora__griglia { display: grid; gap: var(--s-6); align-items: start; }
+
+/* the list's column never under the module's 300 px (sezioni/mappa.js: narrower, the list stays the map) */
+@media (min-width: 48rem) {
+  .rete-esplora__griglia { grid-template-columns: minmax(19rem, 5fr) minmax(0, 7fr); column-gap: var(--s-10); }
+}
+
+.rete-esplora__schede {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.rete-esplora__voce[data-audience="person"] { --aud: var(--aud-persona); }
+.rete-esplora__voce[data-audience="company"],
+.rete__pannello[data-audience="company"] { --aud: var(--aud-impresa); }
+.rete-esplora__voce[data-audience="institution"],
+.rete__pannello[data-audience="institution"] { --aud: var(--aud-istituzione); }
+.rete-esplora__voce[data-audience="university"],
+.rete__pannello[data-audience="university"] { --aud: var(--aud-universita); }
+.rete__pannello[data-audience="person"] { --aud: var(--aud-persona); }
+
+.rete-esplora__tasto {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: 3.5rem;
+  padding-inline: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+  border-inline-start: 2px solid transparent;
+  font-size: var(--t-body);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.rete-esplora__disc,
+.rete__disc {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--radius-full);
+  background-color: color-mix(in srgb, var(--aud, var(--accent-text)) 30%, var(--surface-raised));
+  box-shadow: inset 0 0 0 1px var(--line-rhythm); /* the institutions' silver stays a disc on the raised paper */
+  color: var(--text-1);
+}
+
+.rete-esplora__tasto:hover { color: var(--text-1); background-color: var(--surface-hover); }
+.rete-esplora__tasto:active { background-color: var(--surface-selected); }
+
+.rete-esplora__tasto[aria-selected="true"] {
+  border-inline-start-color: var(--accent-text);
+  background-color: var(--surface-raised);
+  color: var(--text-1);
+}
+
+.rete-esplora__tasto:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: -2px; }
+
+/* the panels: without script every panel stands in order; with the tablist, one at a time in one grid cell — from the
+   first paint (html.js), the entry the module will show already shown (the address's #rete-… or the first), so nothing
+   restacks when it runs (V5.22 round 1, QA_ROUND1 M3: CLS); the module's choice then rules (data-sel, data-on). Only
+   where the list is wide enough for the module (a viewport of 360 px and more) */
+.rete__pannelli { display: grid; gap: var(--s-4); }
+
+.rete__pannello {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  padding: var(--s-6);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+
+.rete__pannello > * { margin: 0; }
+
+.rete__disc { inline-size: 3rem; block-size: 3rem; }
+
+.rete__titolo {
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-strong);
+  color: var(--text-1);
+}
+
+.rete__testo { max-inline-size: 36rem; font-size: var(--t-body); line-height: var(--t-body-lh); color: var(--text-2); }
+/* the panel's way out at md, the letterhead's targa and the photograph's corner: with the panel's lg and the discs'
+   full, the screen's three corners (tokens.css «at most three distinct radii»; the system's button is sm) */
+.rete__azione { margin-block-start: var(--s-2); --btn-radius: var(--radius-md); }
+
+@media (min-width: 22.5rem) {
+  .js .rete-esplora .rete__pannelli { gap: 0; }
+  .js .rete-esplora .rete__pannello { grid-area: 1 / 1; }
+  .js .rete-esplora:not([data-sel]) .rete__pannelli:not(:has(:target)) > .rete__pannello:not(:first-child),
+  .js .rete-esplora:not([data-sel]) .rete__pannelli:has(:target) > .rete__pannello:not(:target) { visibility: hidden; }
+}
+
+.rete-esplora[data-sel] .rete__pannelli { gap: 0; }
+.rete-esplora[data-sel] .rete__pannello { grid-area: 1 / 1; }
+.rete-esplora[data-sel] .rete__pannello:not([data-on]) { visibility: hidden; }
+
+@media (min-width: 48rem) {
+  .rete__pannello { padding: var(--s-8) var(--s-10); min-block-size: 100%; }
+}
+
+/* a choice: the panel left goes at once, the one chosen fades in (an exit faster than the entry — two panels never
+   cross-fade over each other in the one cell); at load and under reduced motion, at once */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm) .rete-esplora[data-moved] .rete__pannello[data-on] {
+    animation: rete-entra var(--motion-standard) var(--ease-enter) backwards;
+  }
+}
+
+@keyframes rete-entra { from { opacity: 0; } }
+
+/* ---- 3 · the approdo ---- */
+.rete-approdo .rete-esplora__titolo { font-size: var(--t-band); line-height: var(--t-band-lh); margin-block-end: var(--s-4); }

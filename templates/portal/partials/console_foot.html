@@ -1,0 +1,20 @@
+{% load i18n console_foot legal_links %}{% comment %}
+THE CONSOLE'S FOOT — V5.12 lane D W2 (D-16; V5.12 §16 «authority without pretending to be a public authority»). The
+platform's footer is one line (portal/base_portal.html: not the institutional footer with its four columns): the
+promoter, as every public page names it (the utility bar, the menu sheet: «AGAMI — … — promoteur du projet»), the
+locked statement that Italy Legal Entry delivers no visa, permit or authorisation (the first sentence of
+p3.persons.intro, through `locked_sentence`, never retyped), the published legal pages only (legal_links: an
+unpublished page is absent, V5.12 Q2 / V5.14 §13) and the contact address.
+
+Included by portal/base_portal.html's `site_footer` block in place of its inline footer (lane A, the shell's owner,
+adds the include line: DECISIONS §10.0). Its rules are the shell's `.portal-footer` (v5/_shell.css); the two new lines
+take the margins of `.portal-footer__contact` (the shell's rule), so no rule is added here.
+{% endcomment %}{% legal_links "privacy" "cookies" "terms" "disclaimer" as console_legal %}
+<footer class="portal-footer console__footer">
+  <div class="portal-footer__inner">
+    <p class="portal-footer__contact portal-footer__promoter"><strong>{{ site.promoter }}</strong> — {% translate "promoteur du projet" %}</p>
+    <p class="portal-footer__contact portal-footer__statement">{% locked_sentence "p3.persons.intro" %}</p>
+    {% if console_legal %}<p class="portal-footer__legal">{% for link in console_legal %}<a href="{{ link.url }}"{% if link.lang %} lang="{{ link.lang }}"{% endif %}>{{ link.label }}</a>{% endfor %}</p>{% endif %}
+    <p class="portal-footer__contact"><a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+  </div>
+</footer>

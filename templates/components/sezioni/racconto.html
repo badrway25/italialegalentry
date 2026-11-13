@@ -1,0 +1,23 @@
+{% comment %}
+C · «IL RACCONTO» — the sticky story (design V5.22, SECTION_SYSTEM_V2 §2 C; lane S): a short run of statements that
+explains one system, and one figure that acts it out. Not for long prose. static/css/v5/_sec-racconto.css;
+static/js/src/sezioni/racconto.js.
+
+From 64 rem a sticky figure column (5/12, at the inline start, on a night plate) beside the steps (7/12), each with its
+own heading and a 2 px bar at its reading edge that fills as it is read; the step in the middle band of the viewport is
+the active one: the figure takes its state (its layers draw or light), its text is at full ink, the others at --text-2.
+Below 64 rem nothing is pinned: the figure stands once above the steps, in its final drawing. The section is exactly as
+tall as its text: no artificial scroll length. The figure is aria-hidden — the words carry the content. Motion
+LAYERING. Still: the figure in its final drawing, every step at full ink.
+
+Contract: `figure_template` (an inline SVG partial whose layers carry `data-from="n"`: drawn from step n on), `steps` —
+[{"id", "heading", "heading_lang", "body" (safe), "body_lang"}], `label` (an optional label for the figure plate).
+{% endcomment %}<div class="racconto" data-sec-js="racconto">
+  <div class="racconto__figura" aria-hidden="true" data-step="{{ steps|length }}">{% include figure_template %}</div>
+  <div class="racconto__passi">
+    {% for s in steps %}<section class="racconto__passo" id="{{ s.id }}" aria-labelledby="{{ s.id }}-title" data-step="{{ forloop.counter }}">
+      <h2 class="racconto__titolo" id="{{ s.id }}-title"{% if s.heading_lang %} lang="{{ s.heading_lang }}"{% endif %}>{{ s.heading }}</h2>
+      <div class="racconto__testo"{% if s.body_lang %} lang="{{ s.body_lang }}"{% endif %}>{{ s.body }}</div>
+    </section>{% endfor %}
+  </div>
+</div>

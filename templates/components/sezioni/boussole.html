@@ -1,0 +1,17 @@
+{% comment %}
+A · «LA BOUSSOLE» — the shared closing «Orientation» band (design V5.22, SECTION_SYSTEM_V2 §2 A; lane S). V5.30 VARIETY §5,
+§11 (decorative line drawings leave, material over drawing): the compass's drawing is gone; the band is the page's next
+step on one raised plate — its title, its text, the primary button at the far edge, the help line as an annotation.
+v5/_sec-boussole.css. The orientation card's caution («Les décisions relèvent des autorités compétentes») is the
+caller's text and stays visible (§1 rule 7).
+
+Contract: `title_id`, `title`, `title_lang`, `text` (safe), `text_lang`, `action` ({"url", "label"}; or `pending` — the
+sentence a closed questionnaire shows instead), `help` (safe: the side annotation).
+{% endcomment %}<div class="boussole">
+  <div class="boussole__carta">
+    <h2 class="boussole__titolo" id="{{ title_id }}"{% if title_lang %} lang="{{ title_lang }}"{% endif %}>{{ title }}</h2>
+    {% if text %}<p class="boussole__testo"{% if text_lang %} lang="{{ text_lang }}"{% endif %}>{{ text }}</p>{% endif %}
+    {% if action %}<p class="boussole__azione"><a class="btn btn--primary" href="{{ action.url }}" data-azione>{{ action.label }}</a></p>{% elif pending %}<p class="boussole__testo">{{ pending }}</p>{% endif %}
+    {% if help %}<p class="sez-annotation">{{ help }}</p>{% endif %}
+  </div>
+</div>

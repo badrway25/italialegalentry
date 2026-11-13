@@ -1,0 +1,48 @@
+{% extends "forum/governance/base_governance.html" %}{% load i18n static %}
+{% comment %}
+The projects — design V5 (W3-E step 2): the page's head, then the register — one row a project, its title the way to
+it (stretched over the row), the organisation answerable for it and its commission, its state as a chip. V5.32 lane
+E: from two projects on, the platform's list toolkit (forum.governance_lists.projects); nothing matches → the
+toolkit's «Aucun résultat».
+{% endcomment %}
+{% block extra_head %}{{ block.super }}{% if listing.show %}<link rel="stylesheet" href="{% static 'css/dist/core/overlay-panels.css' %}"><link rel="stylesheet" href="{% static 'css/dist/portal/listing.css' %}">{% endif %}{% endblock %}
+{% block page_title %}{% translate "Projets du Forum permanent" %}{% endblock %}
+{% block meta_description %}{% translate "Les projets issus des propositions retenues : responsable, partenaires, jalons et suivi." %}{% endblock %}
+
+{% block portal_header %}
+<header class="ws-head reg-head" data-atrium="register">
+  <div class="ws-head__words">
+    {% include "portal/partials/atrium_eyebrow.html" %}
+    <h1 class="ws-head__title">{% translate "Projets" %}</h1>
+    <p class="ws-head__lead">{% translate "Une proposition retenue devient un projet : un responsable, des partenaires, des jalons datés et un suivi." %}</p>
+  </div>
+</header>
+{% endblock %}
+
+{% block governance_content %}
+<div class="reg-page">
+  <section class="reg-sec" aria-labelledby="projects-title">
+    <h2 class="db-h2 reg-sec__title" id="projects-title"><span>{% translate "Les projets que je peux consulter" %}</span></h2>
+    {% include "components/listing/toolbar.html" %}
+    {% if projects %}
+    <ul class="db-tasks reg-rows" role="list">
+      {% for project in projects %}
+      {% safe_url 'forum_governance:project_detail' project.uuid as project_url %}
+      <li class="db-task reg-row{% if project_url %} reg-row--link{% endif %}">
+        <div class="db-task__words">
+          <h3 class="db-task__title">{% if project_url %}<a class="reg-row__link" href="{{ project_url }}" dir="auto">{{ project.title_fr }}</a>{% else %}{{ project.title_fr }}{% endif %}</h3>
+          <p class="db-task__meta reg-row__meta"><span>{% blocktranslate with organisation=project.lead.display_label %}Responsable : {{ organisation }}{% endblocktranslate %}</span><span>{{ project.commission.name_fr }}</span></p>
+        </div>
+        <div class="db-task__state">{% chip project.status "forum.ProjectStatus" %}{{ project.get_status_display }}{% endchip %}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% elif listing.narrowed %}
+    {% include "components/listing/empty.html" %}
+    {% else %}
+    <p class="db-empty">{% translate "Aucun projet ne vous est ouvert. Les projets apparaissent ici dès qu’une proposition est retenue dans une commission où vous détenez un mandat en cours." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% include "components/listing/drawer.html" %}
+{% endblock %}

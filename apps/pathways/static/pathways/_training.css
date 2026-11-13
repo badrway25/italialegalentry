@@ -1,0 +1,180 @@
+/* ============================================================================================
+   FORMATION — Page Composition V2 (design V5.22, SECTION_SYSTEM_V2 §3.9; lane P1), recomposed by V5.30 VARIETY §7 FORMATION
+   (the owner: «learning progression, campus imagery, stations/cards»; 21st.dev's Onboarding Timeline 29486, in this system's
+   own terms). Page-only: pathways/training.css. F1 «la traversata»: two times, two raised cards side by side from 64 rem on
+   shared rows (a subgrid: the tile and the kicker, the titles, the texts and the frames each on one row), the first time's
+   legally required notice docked under its frame; stacked below. No line joins them: «Premier temps» and «Second temps» say
+   the order. Under the hand or the focus a time answers: its tile's threshold runs. Signature DEVELOP (lane A's bw-scroll).
+   ============================================================================================ */
+
+.traversata {
+  display: grid;
+  gap: var(--s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.traversata__tempo {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-4);
+  row-gap: var(--s-4);
+  align-content: start;
+  padding: var(--s-6);
+  border-radius: var(--card-radius);
+  background: var(--surface-raised);
+  box-shadow: 0 0 0 1px var(--line-rhythm), var(--shadow-1);
+}
+
+.traversata__tempo > :not(.traversata__nodo, .traversata__kicker) {
+  grid-column: 1 / -1;
+}
+
+.traversata__nodo {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* the time's kicker in the label role (`t-label`, v5/base.css: Host Grotesk 13/16 600 +0.08 em, uppercase; 14/20 and no
+   capitals in Arabic — V5.24 Typography V2, never the mono), in the accent's ink */
+.traversata__kicker {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  margin: 0;
+  color: var(--accent-text);
+}
+
+.traversata__titolo {
+  margin: 0;
+  font-size: var(--t-band);
+  line-height: var(--t-band-lh);
+  font-weight: var(--w-title);
+}
+
+/* the two times' titles at one size (QA_ROUND1 m5): the locked capitals as written, tracked, at the band's 28 */
+.traversata__titolo--caps:not(:lang(ar)) {
+  letter-spacing: var(--track-display-caps);
+}
+
+/* a French block on an Arabic page (the locked title and body of the second time): one reading edge for the whole
+   block, its own start — a running text reads from its start (§1 rule 6; QA_ROUND1 m1) */
+[dir="rtl"] .traversata__tempo :is(.traversata__titolo, .traversata__corpo)[lang="fr"] {
+  text-align: start;
+}
+
+/* a time answers the hand and the focus alike (§4.1 rule 5): its node's threshold runs to the whole foot, its glyph
+   shifts 2 px along the reading direction */
+.traversata__tempo:has(a:is(:hover, :focus-visible)) .traversata__nodo::after {
+  scale: 1 1;
+}
+
+.traversata__tempo:has(a:is(:hover, :focus-visible)) .traversata__nodo .icon {
+  translate: 2px 0;
+}
+
+[dir="rtl"] .traversata__tempo:has(a:is(:hover, :focus-visible)) .traversata__nodo .icon {
+  translate: -2px 0;
+}
+
+html[data-input="key"] .traversata__nodo .icon {
+  transition: none;
+}
+
+.traversata__testo {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+}
+
+.traversata__testo > * {
+  margin: 0;
+}
+
+/* the locked body whole: its first sentence set larger, in place (emphasis, not a cut — §6.2) */
+.traversata__corpo .ls-1 {
+  display: block;
+  margin-block-end: var(--s-3);
+  font-size: var(--t-entry);
+  line-height: var(--t-entry-lh);
+  font-weight: 600;
+}
+
+.traversata__media {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  margin-block-start: var(--s-2);
+}
+
+.traversata__media .foto {
+  margin: 0;
+}
+
+.traversata__media img {
+  inline-size: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+/* the first time's notice: a side annotation docked to its frame's edge, always visible */
+.traversata__nota {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-3);
+  padding-inline-start: var(--s-4);
+  border-inline-start: 2px solid var(--tone-esame-mark);
+  font-size: var(--t-ui);
+  line-height: 1.5;
+  color: var(--text-1);
+}
+
+.traversata__nota p {
+  margin: 0;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+.traversata__segno {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1.5px var(--tone-esame-mark);
+  color: var(--tone-esame-mark);
+}
+
+.traversata__segno .icon {
+  inline-size: 14px;
+  block-size: 14px;
+}
+
+/* from 64 rem: two cards, their rows shared (a subgrid: the two tiles and kickers, titles, texts and frames each on one row) */
+@media (min-width: 64rem) {
+  .traversata {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, auto);
+    gap: var(--s-4) var(--s-6);
+  }
+
+  .traversata__tempo {
+    grid-row: 1 / span 4;
+    grid-template-rows: subgrid;
+  }
+}
+
+@media (forced-colors: active) {
+  .traversata__tempo {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* V5.32 (lane B; moved from the retired _persone-v2.css): on /ar/, a French title of the two times keeps its box from
+   its own start (§1 rule 6) */
+[dir="rtl"] .sez .traversata__titolo[lang="fr"] {
+  text-align: end;
+}

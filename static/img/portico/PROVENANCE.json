@@ -1,0 +1,152 @@
+{
+ "what": "The four door photographs of the navigation panels «Il portico» (docs/design-v5/V5_4_EXECUTION_PLAN.md §1.12, §1.16; W2-C1).",
+ "source": "The Image Art Director's test derivatives of 2 October 2026 (C:/tmp/ile_v5_council/proof/research/images/derivatives/, DERIVATIVES.json), copied byte for byte: the one V5 grade, unsharp 0.5 after downscale, WebP q78, metadata stripped.",
+ "rulings": "ASSET_USAGE_MATRIX.md rows 2–5 (one image, one context: the audience's door card, panel and landing hero; the Persona panel takes the wide 4:5, the card the tighter 4:5t). Status PROVISIONAL under the owner's image rulings O54 (no arcade, passage, step, vault, door or gridded window) and O55 (no identifiable person: people seen from behind). In colour everywhere but the home hero (DL54-12).",
+ "license": "Pexels License — https://www.pexels.com/license/ (free use and modification; no endorsement implied; no sale of unaltered copies). Self-hosted; never hotlinked.",
+ "files": [
+  {
+   "audience": "person",
+   "slug": "lectrice-bibliotheque-dos",
+   "pexels_id": 29492060,
+   "photographer": "Julio Lopez",
+   "photographer_url": "https://www.pexels.com/@julio-lopez-75309646",
+   "page": "https://www.pexels.com/photo/young-adult-studying-in-modern-library-setting-29492060/",
+   "alt_fr": "Lectrice vue de dos, assise seule à une longue table de bibliothèque en bois",
+   "note": "«4x5t» is a tighter 4:5 for the door card: in the wide 4:5 the reader is small, and on the phone card (88 px wide) the card's actor disc sits against her; the tight crop loses the lamp shade",
+   "redactions": [],
+   "treatment": "the one V5 grade; unsharp 0.5 after downscale; WebP q78 method 6; metadata stripped; no row match",
+   "derivatives": {
+    "640": {
+     "file": "lectrice-bibliotheque-dos-4x5-640.webp",
+     "px": [
+      640,
+      800
+     ],
+     "bytes": 29478,
+     "sha256": "b626d07013a8dccf7aae44ce5f33a18701e9ae0981692f5937716e7fe917134f"
+    },
+    "960": {
+     "file": "lectrice-bibliotheque-dos-4x5-960.webp",
+     "px": [
+      960,
+      1200
+     ],
+     "bytes": 51838,
+     "sha256": "a4fe6de8da156b6aabe09d652617b56e4717d10b1b583467d4327a30e3976ebf"
+    }
+   }
+  },
+  {
+   "audience": "company",
+   "slug": "chai-cuve-chene",
+   "pexels_id": 30557565,
+   "photographer": "Liv Kao",
+   "photographer_url": "https://www.pexels.com/@liv-kao-2149337698",
+   "page": "https://www.pexels.com/photo/winemaker-cleaning-oak-barrels-in-french-cellar-30557565/",
+   "alt_fr": "Vu d’en haut, un ouvrier de chai nettoie au jet d’eau une grande cuve en chêne",
+   "note": null,
+   "redactions": [
+    {
+     "box_fraction": [
+      0.495,
+      0.405,
+      0.515,
+      0.435
+     ],
+     "radius_px": 8,
+     "reason": "a red tab on the jacket sleeve"
+    }
+   ],
+   "treatment": "the one V5 grade; unsharp 0.5 after downscale; WebP q78 method 6; metadata stripped; no row match",
+   "derivatives": {
+    "640": {
+     "file": "chai-cuve-chene-4x5-640.webp",
+     "px": [
+      640,
+      800
+     ],
+     "bytes": 35508,
+     "sha256": "40583d1eaf5c10849a7196eca3b0eb16763e67b8757205f86b278d9bff763436"
+    },
+    "960": {
+     "file": "chai-cuve-chene-4x5-960.webp",
+     "px": [
+      960,
+      1200
+     ],
+     "bytes": 82248,
+     "sha256": "af537bbbf832e4cf0de6293d8273a051b97cc88d34ae43b5e5d94730a47dc196"
+    }
+   }
+  },
+  {
+   "audience": "institution",
+   "slug": "table-en-seance",
+   "pexels_id": 6949886,
+   "photographer": "Werner Pfennig",
+   "photographer_url": "https://www.pexels.com/@werner-pfennig",
+   "page": "https://www.pexels.com/photo/tablets-on-table-in-conference-room-6949886/",
+   "alt_fr": "Table de réunion publique en séance : micros et chevalet vierge au premier plan, deux participants flous à l’arrière-plan",
+   "note": "every crop starts at 12 % of the height: a surgical mask sits on the top edge",
+   "redactions": [],
+   "treatment": "the one V5 grade; unsharp 0.5 after downscale; WebP q78 method 6; metadata stripped; no row match",
+   "derivatives": {
+    "640": {
+     "file": "table-en-seance-4x5-640.webp",
+     "px": [
+      640,
+      800
+     ],
+     "bytes": 19430,
+     "sha256": "84478ff221d30391dd97486470bc825115bda3faa30049955e746b6e68a1376b"
+    },
+    "960": {
+     "file": "table-en-seance-4x5-960.webp",
+     "px": [
+      960,
+      1200
+     ],
+     "bytes": 33330,
+     "sha256": "2aa9727b164f74a0784f35ce26316eb0e8f2437b7f2aeebbfeacf7277732022a"
+    }
+   }
+  },
+  {
+   "audience": "university",
+   "slug": "cours-tableau-dos",
+   "pexels_id": 37811164,
+   "photographer": "Eduard Perez",
+   "photographer_url": "https://www.pexels.com/@eduard-perez-2158828645",
+   "page": "https://www.pexels.com/photo/university-lecture-scene-with-female-teacher-writing-on-whiteboard-37811164/",
+   "alt_fr": "Cours vu du fond de la salle : une enseignante écrit au tableau, des étudiants vus de dos au premier plan",
+   "note": "the whole whiteboard (a legible lesson in Spanish) is blurred through a feathered mask that spares the teacher and the students",
+   "redactions": [
+    {
+     "mask": "the whiteboard, feathered (radius 30, feather 20), sparing the people",
+     "reason": "a legible lesson in Spanish"
+    }
+   ],
+   "treatment": "the one V5 grade; unsharp 0.5 after downscale; WebP q78 method 6; metadata stripped; no row match",
+   "derivatives": {
+    "640": {
+     "file": "cours-tableau-dos-4x5-640.webp",
+     "px": [
+      640,
+      800
+     ],
+     "bytes": 24680,
+     "sha256": "5e527114c6246b142606d7f86cda631bb8b0aa16af1fb74267a46a0f0cb0974f"
+    },
+    "960": {
+     "file": "cours-tableau-dos-4x5-960.webp",
+     "px": [
+      960,
+      1200
+     ],
+     "bytes": 45662,
+     "sha256": "9cb22f0f64ec7debabdb634cc6c62a8f34c6cb75df20c0de4afbfc41089fad3e"
+    }
+   }
+  }
+ ]
+}

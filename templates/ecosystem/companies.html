@@ -1,0 +1,120 @@
+{% extends "ecosystem/_layout.html" %}{% load i18n enquiries_tags pages_imagery %}
+{% comment %}
+Espace Entreprises — PHASE 1 (Implementation §1.1): online now, never gated, independent of gate G3.
+Replaces the former recruitment page: no ranking, no selection, no candidate profiles.
+Prescribed texts: p1.companies.title (h1), p1.companies.intro (lead), p1.companies.quote (the statement of «La
+démarche»), and — only while gate G3 is open — the prescribed FAQ answer faq_recruitment_agency (p3.faq.items).
+The form is NOT re-implemented here: {% company_needs_form %} (enquiries) renders the one canonical « Recueil des
+besoins » form, posting to enquiries:company_needs; while gate G2 is closed the same tag renders
+components/form_unavailable.html.
+
+Design V5.12 (W2, lane C; DECISIONS §7): the workshop photograph in the entrance (slot «companies.hero», 3:2, the
+LCP), the way in under the lead; «Trois temps» on the three-station linea under the prescribed quotation set as a
+pull-quote; the form beside a side-anchored panel (the chapter's head, the request's sentence and where it goes),
+sticky from 64 rem; «Pour aller plus loin» as weighted tiles.
+
+Design V5.22 (SECTION_SYSTEM_V2 §3.6; lane P1 — Page Composition V2), below the approved entrance (KEEP):
+  * EN-1 — F «il flusso»: the prescribed quotation opens the band as its statement (36/44), then the
+    three moments (team strings, CONTENT_PENDING_LEGAL_REVIEW) as the cells of ONE raised panel
+    (components/sezioni/flusso.html, V5.30 VARIETY §7), their concept tiles the marks (icons.COMPANY_MOMENT);
+  * EN-2 — D «il panorama»: the productive territory, the page's only drifting image, widening to full bleed;
+  * EN-3 — the form, preserved (V5.22 §24): its chapter, its sticky side panel, the canonical tag;
+  * EN-4 — A split of ONE locked answer: the question is the band's title, the answer's own «Non.» its large keyword,
+    the answer cut at its own colon into what the platform does not do | what it does — three spans of one paragraph
+    whose textContent is the answer — and a rule between them that draws. No mark (a slash or a tick reads as a
+    verdict); the FAQ link an arrow row. LINE;
+  * EN-5 — K «l'approdo»: the Forum's night tile (Q4), the pilot's tile, the skyline low
+    as the bookend; one light sweep.
+Design V5.24 (FINAL_DELIVERY_V2 §3.5; BACKGROUND_MATERIAL_V2 §3.3, §5.3; lane PUB1 — the ground, 0 bytes; the compositions
+KEPT): «la démarche» stands on stone — the quotation and its panel read on it, and the head's
+paper no longer touches the body's: paper → stone → paper (the panorama) → stone (the form) → paper → stone, a strict
+alternation. No material recipe on this page: its sheet does not import v5/_materia.css (a page carries only what it draws).
+
+Before V5.12 (W3-F1): the entrance with the company door, whose card carries the door's way in — its sentence (the
+door's own, as the portico's panel says it) and the way to «Recueil des besoins», in the first screen (W3-F1's review
+M1): a secondary, because the form's submit stays the page's ONE action; then a chain of questions — how does it work
+(the statement and the three moments on «la linea»), where do I start (the form, its six short single-line fields
+two by two from 64rem), what the platform does and does not do (the ONE inset), where next («Pour aller plus loin»).
+«Who can help me» is the live line under the form.
+FINAL MICRO-PASS (9 Nov 2026; BRIEF §6 B3): EN-1 opens on the prescribed quotation set light beside the productive
+territory's photograph — after 21st.dev «Split Content Section» (felipemenezes098/content-06, id 28310;
+ecosystem/_companies.css says how) —, EN-2's full-bleed panorama folded into it (the same slot, the page's one body
+frame), on stone; the three moments follow on paper, in the band the panorama held (the grounds keep their sequence:
+no two neighbours of one kind), columns on one hairline with the quiet sequence marker (components/sezioni/flusso.html:
+no tile, no 36 px numeral, no panel); the request's panel beside the form without its side stripe. The form itself,
+unchanged.
+V5.32 (lane C, GLOBAL SITE + PLATFORM DESIGN COMPLETION): the form's side panel no longer repeats the entrance's way line
+(«Faites connaître…», said once, in the entrance); it keeps where the request goes.
+V5.32 round 2: «Trois temps» leaves the shared flusso's «1 2 3» counter — ecosystem/partials/tempi.html, each moment
+opening on its concept glyph, a stop on one hairline that draws (no numeral, no tile, no tracker).
+{% endcomment %}
+{% block space_header %}
+{% translate "Espace Entreprises" as space_label %}{% translate "Recueil des besoins" as way_label %}
+{% comment %}V5.27 / R7′ (the v524-pub1 steward): the way line is the mega-menu's reviewed line (lane AR's W1.1), no longer
+a truncation of p3.entrances.company.text; the fr-fallback branch stays for a catalogue without it (WCAG 3.1.2){% endcomment %}
+{% get_current_language as page_lang %}{% translate "Faites connaître les métiers et les compétences dont votre entreprise a besoin." as way_text %}
+{% if page_lang != "fr" and way_text == "Faites connaître les métiers et les compétences dont votre entreprise a besoin." %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_text_lang="fr" way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" words_first=True fronte_linked=True only %}
+{% else %}
+{% include "pages/partials/_ingresso.html" with label=space_label title=title.text title_lang=title.lang_attr lead=intro.text lead_lang=intro.lang_attr audience="company" photo=photo slot="companies.hero" way_text=way_text way_label=way_label way_url="#formulaire" way_jump=True motif="economic" glyph="factory" words_first=True fronte_linked=True only %}
+{% endif %}
+{% endblock %}
+
+{% block space_main %}
+{% translate "Trois temps, une même démarche" as moments_title %}{% translate "Les trois temps de la démarche" as moments_label %}
+<section id="demarche" class="sez sez--apertura imprese-demarche" data-sec="apertura" data-ground="stone" data-rhythm="band" aria-label="{% translate 'La démarche' %}">
+  <div class="container imprese-apertura">
+    <blockquote class="imprese-citazione"{% if quote.lang_attr %} lang="{{ quote.lang_attr }}"{% endif %}><p>{{ quote.text }}</p></blockquote>
+    {% photo "companies.territory" "imprese-apertura__foto" "" "(min-width: 64rem) 55vw, 100vw" %}
+  </div>
+</section>
+
+<section id="trois-temps" class="sez sez--flusso imprese-tempi" data-sec="flusso" data-ground="paper" data-rhythm="band" aria-labelledby="demarche-header">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="process" title_id="demarche-header" title=moments_title only %}
+    {% include "ecosystem/partials/note.html" %}
+    {% comment %}CONTENT_PENDING_LEGAL_REVIEW — neutral UI wording limited to the vocabulary of the prescribed introduction; no procedure, no delay, no outcome is described.{% endcomment %}
+    {% include "ecosystem/partials/tempi.html" with steps=moments label=moments_label only %}
+  </div>
+</section>
+
+
+<section id="formulaire" class="chapter chapter--area ecosystem-form" aria-labelledby="formulaire-header">
+  <div class="container chapter__inner">
+    <div class="ecosystem-form__side">
+      {% translate "Recueil des besoins" as form_title %}
+      {% include "pages/partials/_chapter_head.html" with title_id="formulaire-header" title=form_title only %}
+      <div class="ecosystem-form__panel">
+        <p class="ecosystem-form__destination">
+          {% translate "Toutes les demandes transmises par les formulaires du site parviennent à une adresse unique :" %}
+          <a class="email" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
+        </p>
+      </div>
+    </div>
+    <div class="chapter__body">
+      {% company_needs_form %}
+    </div>
+  </div>
+</section>
+
+{% if guarantee %}
+{% translate "Transparence" as guarantee_label %}
+<section id="transparence" class="sez sez--campata imprese-confine" data-sec="campata" data-ground="paper" data-rhythm="band" aria-labelledby="transparence-header" data-block="recruitment-guarantee">
+  <div class="container">
+    {% include "components/sezioni/_testa.html" with role="panel" label=guarantee_label title_id="transparence-header" title=guarantee.question title_lang=guarantee.lang_attr only %}
+    {% if guarantee_split %}<p class="imprese-confine__risposta" data-faq{% if guarantee.lang_attr %} lang="{{ guarantee.lang_attr }}"{% endif %}>{{ guarantee_split }}</p>
+    {% else %}<p class="imprese-confine__intera" data-faq{% if guarantee.lang_attr %} lang="{{ guarantee.lang_attr }}"{% endif %}>{{ guarantee.answer }}</p>{% endif %}
+    {% if guarantee.faq_url %}<p class="imprese-confine__faq"><a class="link-arrow" href="{{ guarantee.faq_url }}">{% translate "Toutes les questions fréquentes" %}{% svg_icon "arrow" "icon icon--sm icon--flip-rtl" %}</a></p>{% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if links.forum or links.pilot %}
+{% translate "Pour aller plus loin" as related_title %}
+<section class="sez sez--approdo ecosistema-approdo" data-sec="approdo" data-ground="stone" data-rhythm="strip" data-verb="light" aria-labelledby="related-header">
+  <div class="container">
+    {% include "ecosystem/partials/approdo.html" with title_id="related-header" title=related_title motif="economic" pilot=True %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

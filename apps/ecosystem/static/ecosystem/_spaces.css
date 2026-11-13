@@ -1,0 +1,34 @@
+/* ============================================================================================
+   THE ECOSYSTEM SPACES — what the four spaces' family sheet draws beyond the interior's grammar (design V5.4, W3-F1;
+   imported by ecosystem/ecosystem.css after css/v5/_interior.css). Tokens of static/css/v5/tokens.css only; logical
+   properties.
+   V5.22 (SECTION_SYSTEM_V2 §3.3, §3.6–§3.8; lane P1): the spaces' bodies are composed of the library V2 — each page's
+   own rules are in its page sheet (ecosystem/pilot.css, companies.css, institutions.css, universities.css and their
+   partials) — so the V5.4/V5.12 compositions that stood here left with their markup (the pilot's sequence on the old
+   line, «gli approdi», the recipients' statement, «lo scambio», the pull-quote, the wide chapter), and the preserved
+   form's chapter (V5.22 §24, EN-3) went with the one page that draws it (ecosystem/_companies.css, round 1: the three
+   other pages no longer carry it). What stays is the family's one modifier of the passage — the pilot's capitals, its
+   stepped row and the turn into its status plate (the one sheet of the spaces that may qualify «la linea»,
+   tests/frontend/test_journey_w3_d.py) —, layout only: the family's partial moves nothing.
+   ============================================================================================ */
+
+/* PP-1 (§3.3): the pilot's locked capitals stay whole words on «la linea V2» (lane S's review, n4: «ACCOMPAGNE-» /
+   «MENT» at eight a row): no automatic hyphen, never a break inside a word. This sheet comes first in the page's
+   bundle: each rule qualifies the large passage's own (v5/_linea-v2.css) by one more class. */
+.pilota-rotta .linea--large .linea__label--caps {
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+/* in Arabic the route runs with the page (01 on the reading edge): the stations' list carries the locked labels'
+   `lang="fr"`, and the library's run rule for a French text in a section (v5/_sezioni.css, `[dir="rtl"] .sez
+   [lang="fr"]`) would turn the whole list left-to-right — a list is a container, it keeps the page's direction
+   (static/css/base.css); its French labels keep theirs, ending on their tile's side */
+[dir="rtl"] .pilota-rotta .linea--large[lang] {
+  direction: rtl;
+  text-align: start;
+}
+
+/* FINAL MICRO-PASS §5 A2: the eight stations take the quiet sequence marker (v5/_linea-v2.css) — two rows of four on
+   their hairline from 48 rem, the rail below; the stepped row, its numerals beside their tiles and the route's turn into
+   the status plate left with the tiles and the 36 px numerals */

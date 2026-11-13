@@ -1,0 +1,311 @@
+/* ============================================================================================
+   THE FAQ — the page's own compositions (FINAL MICRO-PASS, 9 Nov 2026; BRIEF §6 B1): a partial of cms/faq.css, the
+   FAQ's route sheet, linked on /faq/ only, after the reading pages' shared sheet (cms/lettura.css: the search field,
+   the live count and the empty state of a list that answers as one types — v5/_lettura.css §5). Markup:
+   templates/faq/index.html and _item.html; the behaviour: static/js/src/cerca.js.
+   After 21st.dev «Searchable Question Index» (ibrandify/searchable-question-index, id 37558), adapted to the system:
+   the themes as pills (aria-pressed; the count quieter beside the name; the chosen one filled with the ink), then one column of the
+   system's disclosures on hairlines (v5/tabs.css) — the question at the body's size and weight in the primary ink, the
+   accent under the pointer, the mark that turns as it folds to a minus, the answer in the secondary ink coming in with
+   the height's opening (v5/motion.css §5), its links quiet chips, its date and permalink on one quiet line. The V5.22
+   explorer (with L «l'indice»), V5.29's glyph tile a question and the answer plate's seal left with their rules.
+   Tokens only; logical properties; the words never wait.
+   ============================================================================================ */
+
+/* ---- 1 · the desk (V5.32, lane D; after 21st.dev «FAQ Tabbed Explorer» 24874): the guide beside the questions from
+   64 rem — the search, the themes as a vertical list, the way to a person — sticky under the letterhead; above the list
+   below 64 rem. The head is the title and the lead; the band follows it closely (no empty half). ---- */
+.faq-testa { padding-block-end: var(--s-8); }
+
+.faq-banco__griglia { display: grid; gap: var(--s-8); }
+
+.faq-guida { display: grid; gap: var(--s-6); align-content: start; }
+
+.faq-guida .faq__search { margin: 0; }
+.faq-guida .search-form__help { margin-block-end: 0; }
+
+.faq-temi__titolo,
+.faq-aiuto__titolo {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-title);
+  color: var(--text-1);
+}
+
+.faq-temi__titolo { flex-basis: 100%; }
+
+.faq-aiuto {
+  padding: var(--s-5);
+  border: 1px solid var(--line-rhythm);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+}
+
+.faq-aiuto > * { margin: 0; }
+.faq-aiuto__testo { margin-block: var(--s-1) var(--s-3); font-size: var(--t-ui); line-height: 1.5; color: var(--text-2); }
+
+.faq-colonna > * { max-inline-size: 52rem; }
+
+.lettura .faq-banco { padding-block-start: var(--s-10); }
+
+/* below 64 rem the guide's parts join the desk's grid: the search and the themes above the questions, the way to a
+   person after them */
+@media (max-width: 63.99rem) {
+  .faq-guida { display: contents; }
+  .faq-colonna { order: 1; }
+  .faq-aiuto { order: 2; }
+}
+
+@media (min-width: 64rem) {
+  .faq-banco__griglia {
+    grid-template-columns: minmax(16rem, 4fr) minmax(0, 8fr);
+    column-gap: var(--s-16);
+    align-items: start;
+  }
+
+  .faq-guida { position: sticky; inset-block-start: calc(var(--header-h-scrolled) + var(--s-6)); }
+
+  /* the themes: a vertical list, the count at the far edge, the chosen one marked by a 2 px rule at the reading edge */
+  .js .faq-temi { flex-direction: column; flex-wrap: nowrap; gap: 0; margin: 0; }
+  .faq-temi__titolo { flex-basis: auto; margin-block-end: var(--s-2); }
+
+  .js .faq-temi .faq-tema {
+    justify-content: space-between;
+    min-block-size: 2.75rem;
+    padding: 0 var(--s-3);
+    border: 0;
+    border-inline-start: 2px solid var(--line-rhythm);
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--text-2);
+    text-align: start;
+  }
+
+  .js .faq-temi .faq-tema[aria-pressed="true"] {
+    border-inline-start-color: var(--accent-text);
+    background-color: var(--surface-raised);
+    color: var(--text-1);
+  }
+
+  .js .faq-temi .faq-tema[aria-pressed="true"] .faq-tema__n { color: var(--accent-text); }
+}
+
+/* a question reached by its permalink, and a focus moved by the keyboard, stand under the letterhead, never behind it
+   (WCAG 2.4.11) */
+html:has(.faq-lista) { scroll-padding-block-start: calc(var(--header-h-scrolled) + var(--s-4)); }
+
+/* ---- 2 · the themes: drawn with script only (the pills filter; without script every question is listed) ---- */
+.faq-temi { display: none; }
+
+.js .faq-temi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-5);
+}
+
+.faq-tema {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: 2.25rem;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line-structure);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-page);
+  font: inherit;
+  font-size: var(--t-ui);
+  line-height: var(--t-ui-lh);
+  font-weight: var(--w-control);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-enter), background-color var(--motion-fast) var(--ease-enter),
+    border-color var(--motion-fast) var(--ease-enter);
+}
+
+.faq-tema__n {
+  font-size: var(--t-small);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-3);
+}
+
+.faq-tema[aria-pressed="true"] {
+  border-color: var(--text-1);
+  background-color: var(--text-1);
+  color: var(--surface-page);
+}
+
+.faq-tema[aria-pressed="true"] .faq-tema__n { color: inherit; }
+
+
+@media (hover: hover) {
+  .faq-tema[aria-pressed="false"]:hover { border-color: var(--text-3); color: var(--text-1); }
+  .faq-tema[aria-pressed="false"]:hover .faq-tema__n { color: var(--text-2); }
+}
+
+.faq-tema:active { background-color: var(--surface-selected); }
+
+/* ---- 3 · the questions: the system's disclosure on the band's ground — no plate opens under an answer, so the row
+   keeps the column's edges (the system's plate bled past them, and an open row's took the hover's ground at (0,3,1):
+   v5/tabs.css) ---- */
+.lettura .faq-lista .accordion__item,
+.lettura .faq-lista .accordion__item[open] {
+  margin-inline: 0;
+  padding-inline: 0;
+  background-color: transparent;
+}
+
+/* the legacy rise (static/js/src/rise.js holds the rows of every `.accordion` below the fold, transparent and 18 px low,
+   until they enter) holds none of the questions, as the term page's and AGAMI's rows: the words never wait (§1 rule
+   3), and a permalink's row lands where the browser places it, under the letterhead (FINAL MICRO-PASS §6 B1) */
+.lettura .faq-lista > [data-rise] { opacity: 1; translate: none; }
+
+.lettura .faq-lista { border-block-start: 1px solid var(--line-rhythm); }
+
+.faq-item > .accordion__summary {
+  padding-block: var(--s-5);
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  font-weight: var(--w-body);
+  transition: color var(--motion-fast) var(--ease-enter);
+}
+
+.faq-item__question { flex: 1; }
+
+.faq-item__answer { max-inline-size: 44rem; padding-block-end: var(--s-6); }
+
+/* the mark turns while its upright bar folds away: a plus that becomes a minus, in the accent once open */
+.faq-item > .accordion__summary::after {
+  transition: background-size var(--motion-standard) var(--ease-enter), color var(--motion-fast) var(--ease-enter),
+    rotate var(--motion-standard) var(--ease-enter);
+}
+
+.faq-item[open] > .accordion__summary::after {
+  rotate: 180deg;
+  color: var(--accent-text);
+}
+
+@media (hover: hover) {
+  .faq-item > .accordion__summary:hover { color: var(--accent-text); }
+}
+
+/* the fraud question's one mark (BRIEF §2.1: the protection, once a page): bare, at the question's size, in its ink */
+.faq-item__segno {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  margin-inline-end: var(--s-2);
+  vertical-align: -0.125em;
+}
+
+/* the answer: the body's size in the secondary ink (PX18: the question is never smaller than its answer) */
+.faq-risposta {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: var(--t-body-lh);
+  color: var(--text-2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.rm):not([data-input="key"]) .faq-domande .faq-item[open] > .faq-item__answer {
+    animation: faq-svela var(--motion-standard) var(--ease-enter) backwards;
+  }
+}
+
+@keyframes faq-svela {
+  from { opacity: 0; translate: 0 -0.25rem; }
+}
+
+/* the answer's links: quiet chips on the accent's wash, no arrow (the glossary's «Où le rencontrer» chips: cms/_lessico-v2.css) */
+.faq-item__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: var(--s-4) 0 0;
+}
+
+.faq-chip {
+  display: inline-block; /* not a flex box: a label's inner run (<span lang="en">Privacy Policy</span>) keeps its space */
+  min-block-size: 2rem;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--radius-full);
+  background-color: var(--accent-wash);
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-weight: var(--w-control);
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-enter);
+}
+
+.faq-chip:hover { background-color: var(--accent-wash-2); }
+
+.faq-item__meta {
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-small);
+  line-height: var(--t-small-lh);
+  font-variant-numeric: var(--numeric-data);
+  color: var(--text-2);
+}
+
+/* the permalink: a 24 px target in its 20 px line (the trail's recipe; the accessibility check's A3) */
+.faq-item__permalink {
+  display: inline-block;
+  padding-block: 2px;
+}
+
+/* a visible focus on every control of the list: the system's ring outside the pill and outside the question (the
+   review's defect 6: drawn inside the row, it touched the question's first letter) */
+:is(.faq-tema, .faq-item > .accordion__summary):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+html[data-input="key"] :is(.faq-tema, .faq-item > .accordion__summary, .faq-item > .accordion__summary::after, .faq-chip) { transition: none; }
+
+@media (pointer: coarse) {
+  .faq-tema,
+  .faq-chip { min-block-size: var(--hit-primary); }
+
+  .faq-item__links + .faq-item__meta { margin-block-start: var(--s-6); }
+}
+
+/* ---- 4 · a search without answer (the server's ?q=): the empty state beside the register, each question a link ---- */
+.faq-vuoto {
+  display: grid;
+  gap: var(--s-10);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .faq-vuoto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+}
+
+.faq-vuoto__titolo { margin: 0 0 var(--s-3); color: var(--text-2); }
+
+.faq-vuoto__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-rhythm);
+}
+
+.faq-vuoto__voce {
+  display: flex;
+  align-items: center;
+  min-block-size: 3.5rem;
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--line-rhythm);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .faq-vuoto__voce:hover { color: var(--accent-text); }
+}
+
+/* the press (a finger too): the chips keep the hover's wash; the chips, the questions and the suggestions take the
+   accent's deeper ink */
+.faq-chip:active { background-color: var(--accent-wash-2); }
+:is(.faq-chip, .faq-vuoto__voce, .faq-item > .accordion__summary):active { color: var(--accent-text-hover); }

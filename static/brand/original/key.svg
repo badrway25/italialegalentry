@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 130" aria-hidden="true" focusable="false">
+  <!-- The key inside the hero doorway, recovered verbatim from legalitalentry.it (.portal .inner > svg). -->
+  <g fill="#C39A2B">
+    <circle cx="30" cy="26" r="15"/>
+    <circle cx="30" cy="26" r="6.4" fill="#0F2547"/>
+    <rect x="25.6" y="39" width="8.8" height="66"/>
+    <rect x="34" y="72" width="16" height="8"/>
+    <rect x="34" y="88" width="12" height="8"/>
+  </g>
+</svg>
